@@ -42,6 +42,7 @@
     <string name="description_source_glimp">Primește valorile glicemiei din aplicația Glimp.</string>
     <string name="description_source_mm640g">Primește valorile glicemiei din aplicația 600SeriesAndroidUploader (Medtronic).</string>
     <string name="description_source_ns_client">Descarcă datele despre glicemii din Nightscout</string>
+    <string name="description_source_xdrip">Primește valorile glicemiei din xDrip+.</string>
     <string name="description_treatments">Salvează toate tratamentele făcute</string>
     <string name="description_wear">Monitorizează și controlează aplicația AndroidAPS folosind smartwatchul WearOS.</string>
     <string name="description_xdrip_status_line">Afișează informații privind starea buclei pe watchface-ul xDrip+.</string>
@@ -118,6 +119,7 @@
     <string name="changeyourinput">Schimbați ceea ce ați introdus!</string>
     <string name="configbuilder_bgsource">Sursă glicemie</string>
     <string name="configbuilder_bgsource_description">De unde trebuie să primească AndroidAPS datele?</string>
+    <string name="xdrip">xDrip+</string>
     <string name="apsmode_title">Mod APS</string>
     <string name="closedloop">Buclă închisă</string>
     <string name="openloop">Buclă deschisă</string>
@@ -350,6 +352,9 @@
     <string name="smscommunicator_invalidphonennumber">Număr de telefon SMS invalid</string>
     <string name="overview_calibration">Calibrare</string>
     <string name="xdripnotinstalled">xDrip+ nu este instalat.</string>
+    <string name="calibrationsent">Calibrare trimisă către xDrip+</string>
+    <string name="smscommunicator_calibrationsent">Calibrare trimisă. Recepționarea trebuie să fie activată și în xDrip+.</string>
+    <string name="smscommunicator_calibrationfailed">xDrip+ nu recepționează calibrări</string>
     <string name="pumpsuspended">Livrare de insulină suspendată</string>
     <string name="executing">Se execută</string>
     <string name="virtualpump_settings">Setări pompă virtuală</string>
@@ -448,6 +453,8 @@
     <string name="nav_about">Despre</string>
     <string name="smscommunicator_missingsmspermission">Lipsesc permisiunile de SMS</string>
     <string name="smscommunicator_missingphonestatepermission">Nu este acordată permisiunea de citire a stării telefonului</string>
+    <string name="xdripstatus_settings">Stare xDrip+ (ceas)</string>
+    <string name="xdripstatus">Linie de stare xDrip+ (ceas)</string>
     <string name="xdripstatus_shortname">xds</string>
     <string name="wear_showbgi_title">Arată BGI</string>
     <string name="wear_showbgi_summary">Adaugă BGI în linia de status</string>
@@ -614,6 +621,7 @@
     <string name="enablesmbwithhightemptarget">Activează SMB cu ținte temporare mari</string>
     <string name="enablesmbwithhightemptarget_summary">Activați SMB atunci când există o țintă temporară activă (exerciții fizice, peste 100mg/dl sau 5.5mmol/l)</string>
     <string name="overview_insulin_label">Insulină</string>
+    <string name="overview_carbs_label">CH</string>
     <string name="overview_buttons_selection">Butoane</string>
     <string name="show_calibration_button_summary">Trimite calibrarea către xDrip+ sau deschide calibrarea pentru G5</string>
     <string name="show_cgm_button_summary">Deschide xDrip+, butonul de înapoi returnează la AAPS</string>
