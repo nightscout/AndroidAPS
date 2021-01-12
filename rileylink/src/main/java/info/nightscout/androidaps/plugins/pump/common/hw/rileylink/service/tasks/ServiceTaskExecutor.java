@@ -20,7 +20,7 @@ public class ServiceTaskExecutor extends ThreadPoolExecutor {
     @Inject RileyLinkUtil rileyLinkUtil;
     @Inject AAPSLogger aapsLogger;
 
-    private static LinkedBlockingQueue<Runnable> taskQueue = new LinkedBlockingQueue<>();
+    private static final LinkedBlockingQueue<Runnable> taskQueue = new LinkedBlockingQueue<>();
 
     @Inject
     public ServiceTaskExecutor() {
@@ -33,7 +33,7 @@ public class ServiceTaskExecutor extends ThreadPoolExecutor {
     }
 
     // FIXME
-    protected void beforeExecute(Thread t, Runnable r) {
+    @Override protected void beforeExecute(Thread t, Runnable r) {
         // This is run on either caller UI thread or Service UI thread.
         ServiceTask task = (ServiceTask) r;
         aapsLogger.debug(LTag.PUMPBTCOMM, "About to run task " + task.getClass().getSimpleName());
@@ -43,7 +43,7 @@ public class ServiceTaskExecutor extends ThreadPoolExecutor {
 
 
     // FIXME
-    protected void afterExecute(Runnable r, Throwable t) {
+    @Override protected void afterExecute(Runnable r, Throwable t) {
         // This is run on either caller UI thread or Service UI thread.
         ServiceTask task = (ServiceTask) r;
         task.postOp();

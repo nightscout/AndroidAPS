@@ -1,2 +1,68 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources></resources>
+<resources>
+    <string name="objectives_button_start">Start</string>
+    <string name="objectives_button_verify">Kontroller</string>
+    <string name="nth_objective">%1$d. Læringsmål</string>
+    <string name="objectivenotstarted">Læringsmål %1$d ikke startet</string>
+    <string name="objectivenotfinished">Læringsmål %1$d er ikke ferdig</string>
+    <string name="objectives_0_objective">Stiller inn utseende og overvåking for analyser av basaler og forholdstall</string>
+    <string name="objectives_0_gate">Kontroller at BS er tilgjengelig i Nightscout og at insulindata fra pumpen lastes opp</string>
+    <string name="objectives_openloop_objective">Starter med åpen loop</string>
+    <string name="objectives_openloop_gate">Kjør i \"Åpen Loop\" modus i noen dager og aktiver flere temp basaler. Konfigurer og aktiver flere midlertidige og default temp BS mål (f.eks. for Aktivitet eller Hypo behandling)</string>
+    <string name="objectives_maxbasal_objective">Forstå din åpen loop, inkludert den temp basal anbefalingen</string>
+    <string name="objectives_maxbasal_gate">Ut ifra hva du har erfart og lært, avgjør hva din max basal skal være og still den inn i både pumpen og AAPS innstillinger</string>
+    <string name="objectives_maxiobzero_objective">Begynn å bruk lukket loop med aktivert funksjon for stopping av insulin ved lavt BS</string>
+    <string name="objectives_maxiobzero_gate">Aktiver closed loop med max IOB = 0 i noen dager uten for mange episoder hvor systemet stopper insulintilførsel på grunn av lavt BS</string>
+    <string name="objectives_maxiob_objective">Finjustering av lukket loop med gradvis økende maks IOB over 0 og redusering av BS målverdi</string>
+    <string name="objectives_maxiob_gate">Kjør i noen dager og opplev minst en natt uten lavt BS alarmer før du begynner å redusere målverdi for BS</string>
+    <string name="objectives_autosens_objective">Juster om nødvendig basal og forholdstall, og deretter aktiverer du autosens</string>
+    <string name="objectives_autosens_gate">1 uke vellykket looping på dagtid hvor alle måltider (KH) angis</string>
+    <string name="objectives_ama_objective">Aktiver ekstra funksjoner for bruk på dagtid, slik som avansert måltidsassistent (AMA)</string>
+    <string name="objectives_smb_objective">Aktiver ekstra funksjoner for bruk på dagtid, slik som SMB (Super Micro Bolus)</string>
+    <string name="objectives_auto_objective">Aktiver Automatisering</string>
+    <string name="objectives_smb_gate">Du må lese wiki og øke din maxIOB for å få SMB til å fungere. Et godt utgangspunkt er maxIOB = gjennomsnittlig måltidsbolus + 3*max daglig basal</string>
+    <string name="objectives_auto_gate">Les dokumentasjonen på hvordan Automatisering virker. La din første regel være enkel. I stedet for å utføre en behandling, få AAPS til å vise en melding i stedet. Kun når du er sikker på at Automatisering aktiveres korrekt kan du erstatte meldingsvarselet med en behandlingskommando. (https://androidaps.readthedocs.io/en/latest/EN/Usage/Automation.html)</string>
+    <string name="objectives_bgavailableinns">BS tilgjengelig i NS</string>
+    <string name="objectives_pumpstatusavailableinns">Pumpe status tilgjengelig i NS</string>
+    <string name="objectives_manualenacts">Manuell kommando</string>
+    <string name="accomplished">Utført: %1$s</string>
+    <string name="objectives_usage_objective">Lær hvordan du kontrollerer AndroidAPS</string>
+    <string name="objectives_usage_gate">Utfør forskjellige handlinger i AndroidAPS</string>
+    <string name="objectives_useprofileswitch">Angi profil 90% for 10 min (langt-trykk på profilnavn i Oversikt)</string>
+    <string name="objectives_usedisconnectpump">Simuler dusjing. Frakoble pumpen i 1t (langt trykk på Åpen Loop)</string>
+    <string name="objectives_usereconnectpump">... og koble til igjen på samme måte</string>
+    <string name="objectives_usetemptarget">Opprett egendefinerte midlertidige BS mål med 10 min varighet (langt-trykk på gjeldende mål)</string>
+    <string name="objectives_useactions">I Konfigurasjonsverktøyet aktiverer du Hendelser plugin, og gjør det synlig og viser innholdet fra menyen i øverste linje</string>
+    <string name="objectives_useloop">Vis innholdet i Loop plugin</string>
+    <string name="objectives_usescale">Test skaleringsfunksjonen ved et langt trykk på BS grafen</string>
+    <string name="objectives_button_enter">Angi</string>
+    <string name="enter_code_obtained_from_developers_to_bypass_the_rest_of_objectives">Om du kan dokumentere minst 3 måneders erfaring med et annet lukket loop system så kan det hende du kvalifiserer for å hoppe over læringsmålene. Se https://androidaps.readthedocs.io/en/latest/EN/Usage/Objectives.html#skip-objectives for flere detaljer.</string>
+    <string name="codeaccepted">Kode akseptert</string>
+    <string name="codeinvalid">Kode ugyldig</string>
+    <string name="objectives_exam_objective">Bevis kunnskapen din</string>
+    <string name="objectives_exam_gate">Studer spørsmålene. Hvert spørsmål har fire svaralternativer. Det kan være flere enn ett riktig svar. Marker alle riktige svar og velg KONTROLLER.</string>
+    <string name="answerdisabledto">Besvarelser deaktivert til: %1$s</string>
+    <string name="wronganswer">Feil svar!</string>
+    <string name="unfinshed_button">Neste uferdig</string>
+    <string name="requestcode">Be om kode: %1$s</string>
+    <string name="objectives_hint">(kontroller alle riktige svar)</string>
+    <string name="disconnectpump_hint" formatted="false">https://androidaps.readthedocs.io/en/latest/EN/Getting-Started/FAQ.html#what-to-do-when-taking-a-shower-or-bath</string>
+    <string name="usetemptarget_hint" formatted="false">https://androidaps.readthedocs.io/en/latest/EN/Getting-Started/Screenshots.html#the-homescreen</string>
+    <string name="useaction_hint" formatted="false">https://androidaps.readthedocs.io/en/latest/EN/Getting-Started/Screenshots.html#config-builder</string>
+    <string name="usescale_hint" formatted="false">https://androidaps.readthedocs.io/en/latest/EN/Getting-Started/Screenshots.html#the-homescreen</string>
+    <string name="notconnected">Ikke koblet til Internett</string>
+    <string name="failedretrievetime">Feil ved henting av tid</string>
+    <string name="requirementnotmet">Læringmålets krav er ikke oppfylt</string>
+    <plurals name="objective_days">
+        <item quantity="one">%1$d dag</item>
+        <item quantity="other">%1$d dager</item>
+    </plurals>
+    <plurals name="objective_hours">
+        <item quantity="one">%1$d time</item>
+        <item quantity="other">%1$d timer</item>
+    </plurals>
+    <plurals name="objective_minutes">
+        <item quantity="one">%1$d minutt</item>
+        <item quantity="other">%1$d minutter</item>
+    </plurals>
+</resources>

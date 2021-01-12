@@ -46,7 +46,7 @@
                         android:layout_height="wrap_content"
                         android:paddingLeft="10dp"
                         android:text="Sample button text"
-                        android:textAppearance="@android:style/TextAppearance.Material.Medium"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
                         android:textStyle="normal|bold"
                         android:textColor="@color/cardObjectiveText" />
 
@@ -56,7 +56,7 @@
                         android:layout_height="wrap_content"
                         android:paddingLeft="10dp"
                         android:text="36g"
-                        android:textAppearance="@android:style/TextAppearance.Material.Medium"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
                         android:textColor="@color/cardObjectiveText"
                         android:textStyle="normal|bold" />
 
@@ -75,7 +75,7 @@
                         android:paddingLeft="10dp"
                         android:paddingRight="5dp"
                         android:text="@string/overview_editquickwizard_valid"
-                        android:textAppearance="@android:style/TextAppearance.Material.Medium" />
+                        android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
 
                     <TextView
                         android:id="@+id/overview_quickwizard_item_from"
@@ -84,7 +84,7 @@
                         android:layout_gravity="center_vertical"
                         android:paddingRight="10dp"
                         android:text="07:45"
-                        android:textAppearance="@android:style/TextAppearance.Material.Medium"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
                         android:textStyle="normal|bold" />
 
                     <TextView
@@ -99,7 +99,7 @@
                         android:layout_gravity="center_vertical"
                         android:paddingLeft="10dp"
                         android:text="11:45"
-                        android:textAppearance="@android:style/TextAppearance.Material.Medium"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
                         android:textStyle="normal|bold" />
 
                 </LinearLayout>

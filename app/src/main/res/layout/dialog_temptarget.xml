@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -25,7 +26,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:contentDescription="@string/careportal_temporarytarget"
-                android:src="@drawable/ic_actions_temptarget" />
+                app:srcCompat="@drawable/ic_temptarget_high" />
 
             <TextView
                 android:layout_width="match_parent"
@@ -58,31 +59,8 @@
                 android:layout_gravity="center_vertical"
                 android:width="120dp"
                 android:padding="10dp"
-                android:text="@string/reason"
-                android:textAppearance="@android:style/TextAppearance.Material.Small"
-                android:textStyle="bold" />
-
-            <Spinner
-                android:id="@+id/overview_temptarget_reason"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical" />
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
-                android:width="120dp"
-                android:padding="10dp"
                 android:text="@string/target_label"
-                android:textAppearance="@android:style/TextAppearance.Material.Small"
+                android:textAppearance="@style/TextAppearance.AppCompat.Small"
                 android:textStyle="bold" />
 
             <info.nightscout.androidaps.utils.ui.NumberPicker
@@ -117,7 +95,7 @@
                 android:width="120dp"
                 android:padding="10dp"
                 android:text="@string/careportal_newnstreatment_duration_label"
-                android:textAppearance="@android:style/TextAppearance.Material.Small"
+                android:textAppearance="@style/TextAppearance.AppCompat.Small"
                 android:textStyle="bold" />
 
             <info.nightscout.androidaps.utils.ui.MinutesNumberPicker
@@ -138,7 +116,98 @@
 
         </LinearLayout>
 
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:width="120dp"
+                android:padding="10dp"
+                android:text="@string/reason"
+                android:textAppearance="@style/TextAppearance.AppCompat.Small"
+                android:textStyle="bold" />
+
+            <Spinner
+                android:id="@+id/overview_temptarget_reason"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingLeft="5dp"
+                android:paddingRight="5dp"
+                android:layout_gravity="center_vertical" />
+
+        </LinearLayout>
+
         <include layout="@layout/datetime" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <info.nightscout.androidaps.utils.ui.SingleClickButton
+                android:id="@+id/overview_temptarget_cancel"
+                style="?android:attr/buttonStyle"
+                android:layout_width="0px"
+                android:layout_height="fill_parent"
+                android:layout_marginEnd="-4dp"
+                android:layout_weight="0.5"
+                android:paddingLeft="5dp"
+                android:paddingRight="5dp"
+                android:drawableTop="@drawable/ic_target_cancel"
+                android:text="@string/cancel"
+                android:textColor="@color/tempTargetConfirmation"
+                android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                android:textSize="11sp" />
+
+            <info.nightscout.androidaps.utils.ui.SingleClickButton
+                android:id="@+id/overview_temptarget_eating_soon"
+                style="?android:attr/buttonStyle"
+                android:layout_width="0px"
+                android:layout_height="fill_parent"
+                android:layout_marginEnd="-4dp"
+                android:layout_weight="0.5"
+                android:paddingLeft="5dp"
+                android:paddingRight="5dp"
+                android:drawableTop="@drawable/ic_target_eatingsoon"
+                android:text="@string/eatingsoon"
+                android:textColor="@color/carbs"
+                android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                android:textSize="11sp" />
+
+            <info.nightscout.androidaps.utils.ui.SingleClickButton
+                android:id="@+id/overview_temptarget_activity"
+                style="?android:attr/buttonStyle"
+                android:layout_width="0px"
+                android:layout_height="fill_parent"
+                android:layout_marginEnd="-4dp"
+                android:layout_weight="0.5"
+                android:paddingLeft="5dp"
+                android:paddingRight="5dp"
+                android:drawableTop="@drawable/ic_target_activity"
+                android:text="@string/activity"
+                android:textColor="@color/exercise"
+                android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                android:textSize="11sp" />
+
+            <info.nightscout.androidaps.utils.ui.SingleClickButton
+                android:id="@+id/overview_temptarget_hypo"
+                style="?android:attr/buttonStyle"
+                android:layout_width="0px"
+                android:layout_height="fill_parent"
+                android:layout_weight="0.5"
+                android:paddingLeft="5dp"
+                android:paddingRight="5dp"
+                android:drawableTop="@drawable/ic_target_hypo"
+                android:text="@string/hypo"
+                android:textColor="@color/low"
+                android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                android:textSize="11sp" />
+
+        </LinearLayout>
 
         <include layout="@layout/okcancel" />
 

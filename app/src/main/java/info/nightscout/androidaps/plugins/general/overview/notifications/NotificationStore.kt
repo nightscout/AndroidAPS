@@ -22,7 +22,7 @@ import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.logging.LTag
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper
 import info.nightscout.androidaps.plugins.general.overview.events.EventDismissNotification
-import info.nightscout.androidaps.services.AlarmSoundService
+import info.nightscout.androidaps.services.AlarmSoundServiceHelper
 import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.resources.IconsProvider
 import info.nightscout.androidaps.utils.resources.ResourceHelper
@@ -39,6 +39,7 @@ class NotificationStore @Inject constructor(
     private val resourceHelper: ResourceHelper,
     private val context: Context,
     private val iconsProvider: IconsProvider,
+    private val alarmSoundServiceHelper: AlarmSoundServiceHelper,
     private val dateUtil: DateUtil
 ) {
 
@@ -46,10 +47,12 @@ class NotificationStore @Inject constructor(
     private var usesChannels = false
 
     companion object {
+
         private const val CHANNEL_ID = "AndroidAPS-Overview"
     }
 
     inner class NotificationComparator : Comparator<Notification> {
+
         override fun compare(o1: Notification, o2: Notification): Int {
             return o1.level - o2.level
         }
@@ -68,17 +71,9 @@ class NotificationStore @Inject constructor(
         store.add(n)
         if (sp.getBoolean(R.string.key_raise_notifications_as_android_notifications, false) && n !is NotificationWithAction) {
             raiseSystemNotification(n)
-            if (usesChannels && n.soundId != null && n.soundId != 0) {
-                val alarm = Intent(context, AlarmSoundService::class.java)
-                alarm.putExtra("soundid", n.soundId)
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) context.startForegroundService(alarm) else context.startService(alarm)
-            }
+            if (usesChannels && n.soundId != null && n.soundId != 0) alarmSoundServiceHelper.startAlarm(context, n.soundId)
         } else {
-            if (n.soundId != null && n.soundId != 0) {
-                val alarm = Intent(context, AlarmSoundService::class.java)
-                alarm.putExtra("soundid", n.soundId)
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) context.startForegroundService(alarm) else context.startService(alarm)
-            }
+            if (n.soundId != null && n.soundId != 0) alarmSoundServiceHelper.startAlarm(context, n.soundId)
         }
         Collections.sort(store, NotificationComparator())
         return true
@@ -87,10 +82,7 @@ class NotificationStore @Inject constructor(
     @Synchronized fun remove(id: Int): Boolean {
         for (i in store.indices) {
             if (store[i].id == id) {
-                if (store[i].soundId != null) {
-                    val alarm = Intent(context, AlarmSoundService::class.java)
-                    context.stopService(alarm)
-                }
+                if (store[i].soundId != null) alarmSoundServiceHelper.stopService(context)
                 store.removeAt(i)
                 return true
             }
@@ -195,10 +187,10 @@ class NotificationStore @Inject constructor(
             @Suppress("SetTextI18n")
             holder.text.text = dateUtil.timeString(notification.date) + " " + notification.text
             when (notification.level) {
-                Notification.URGENT       -> holder.cv.setBackgroundColor(resourceHelper.gc(R.color.notificationUrgent))
-                Notification.NORMAL       -> holder.cv.setBackgroundColor(resourceHelper.gc(R.color.notificationNormal))
-                Notification.LOW          -> holder.cv.setBackgroundColor(resourceHelper.gc(R.color.notificationLow))
-                Notification.INFO         -> holder.cv.setBackgroundColor(resourceHelper.gc(R.color.notificationInfo))
+                Notification.URGENT -> holder.cv.setBackgroundColor(resourceHelper.gc(R.color.notificationUrgent))
+                Notification.NORMAL -> holder.cv.setBackgroundColor(resourceHelper.gc(R.color.notificationNormal))
+                Notification.LOW -> holder.cv.setBackgroundColor(resourceHelper.gc(R.color.notificationLow))
+                Notification.INFO -> holder.cv.setBackgroundColor(resourceHelper.gc(R.color.notificationInfo))
                 Notification.ANNOUNCEMENT -> holder.cv.setBackgroundColor(resourceHelper.gc(R.color.notificationAnnouncement))
             }
         }
@@ -208,6 +200,7 @@ class NotificationStore @Inject constructor(
         }
 
         inner class NotificationsViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+
             var cv: CardView = itemView.findViewById(R.id.notification_cardview)
             var text: TextView = itemView.findViewById(R.id.notification_text)
             var dismiss: Button = itemView.findViewById(R.id.notification_dismiss)

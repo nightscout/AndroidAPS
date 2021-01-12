@@ -1,8 +1,46 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- Medtronic (MDT) - Base -->
+    <string name="description_pump_medtronic">Tilkobling av Medtronic pumpe krever en RileyLink enhet og spesifikk pumpemodell</string>
     <!-- MDT Configuration -->
+    <string name="medtronic_serial_number">Pumpens serienummer</string>
+    <string name="medtronic_pump_type">Pumpens modellnummer</string>
+    <string name="medtronic_pump_frequency">Pumpens frekvens</string>
+    <string name="medtronic_pump_bolus_delay">Forsinkelse før Bolus dose startes (sek)</string>
+    <string name="medtronic_pump_max_bolus">Maks Bolus dose på pumpen (Enheter)</string>
+    <string name="medtronic_pump_max_basal">Maks Basal på pumpen (Enheter/time)</string>
+    <string name="medtronic_pump_encoding">Medtronic koding</string>
+    <string name="medtronic_pump_frequency_us_ca">USA &amp; Canada (916 MHz)</string>
+    <string name="medtronic_pump_frequency_worldwide">Worldwide (868 Mhz)</string>
+    <string name="medtronic_pump_encoding_4b6b_local">Software 4b6b koding</string>
+    <string name="medtronic_pump_encoding_4b6b_rileylink">Hardware 4b6b koding</string>
+    <string name="medtronic_custom_action_wake_and_tune">Oppstart og enhetssøk</string>
+    <string name="medtronic_custom_action_clear_bolus_block">Nullstill Bolus blokk</string>
+    <string name="medtronic_custom_action_reset_rileylink">Tilbakestill RileyLink oppsett</string>
+    <string name="medtronic_pump_battery_select">Batteri type (Strømvisning)</string>
+    <string name="medtronic_pump_battery_no">Ikke valgt (Enkel visning)</string>
+    <string name="medtronic_pump_battery_alkaline">Alkaline (Utvidet visning)</string>
+    <string name="medtronic_pump_battery_lithium">Lithium (Utvidet visning)</string>
+    <string name="medtronic_pump_battery_nizn">NiZn (Utvidet visning)</string>
+    <string name="medtronic_pump_battery_nimh">NiMH (Utvidet visning)</string>
+    <string name="medtronic_bolus_debugging">Feilsøking bolus/behandlingsinformasjon</string>
     <!-- MDT Errors -->
+    <string name="medtronic_errors">Feil</string>
+    <string name="medtronic_error_serial_not_set">Serienummer ikke definert.</string>
+    <string name="medtronic_error_serial_invalid">Serienummer ikke gyldig.</string>
+    <string name="medtronic_error_pump_type_not_set">Pumpetype ikke definert.</string>
+    <string name="medtronic_error_pump_type_invalid">Pumpetypen støttes ikke.</string>
+    <string name="medtronic_error_pump_frequency_not_set">Pumpefrekvens ikke innstilt.</string>
+    <string name="medtronic_error_pump_frequency_invalid">Pumpefrekvensen støttes ikke.</string>
+    <string name="medtronic_error_rileylink_address_invalid">RileyLink adressen er ugyldig.</string>
+    <string name="medtronic_error_pump_type_set_differs_from_detected">Oppdaget pumpetype er forskjellig fra innstilt pumpetype.</string>
+    <string name="medtronic_error_pump_basal_profiles_not_enabled">Basal profil/program innstilling ikke aktivert. Aktiver denne på pumpen.</string>
+    <string name="medtronic_error_pump_incorrect_basal_profile_selected">Basalprofil på pumpen er feil (må være STANDARD).</string>
+    <string name="medtronic_error_pump_wrong_tbr_type_set">Feil TBR valgt på pumpen (må være E/timen).</string>
+    <string name="medtronic_error_pump_wrong_max_bolus_set">Feil maks bolus valgt på pumpe (må være %1$.2f).</string>
+    <string name="medtronic_error_pump_wrong_max_basal_set">Feil maks basal valgt på pumpe (må være %1$.2f).</string>
+    <string name="medtronic_error_operation_not_possible_no_configuration">Operasjon ikke mulig.\n\n Du må konfigurere Medtronic pumpen før du kan bruke denne operasjonen.</string>
+    <string name="medtronic_error_pump_24h_time_change_requested">Mer enn 24t tidsendring ble forespurt.</string>
     <!-- MDT History -->
     <!--    <string name="medtronic_history_group_basal">Basals</string>-->
     <!--    <string name="medtronic_history_group_configuration">Configurations</string>-->
@@ -10,8 +48,39 @@
     <!--    <string name="medtronic_history_group_statistic">Statistics</string>-->
     <!--    <string name="medtronic_history_group_unknown">Unknowns</string>-->
     <!--    <string name="medtronic_history_group_all">All</string>-->
+    <string name="medtronic_pump_history">Medtronic pumpe historie</string>
     <!-- <string name="medtronic_cmd_profile_not_set">Remote Basal profile setting is not supported. Please modify Basal profile on your pump manually.</string> -->
+    <string name="medtronic_cmd_cancel_bolus_not_supported">Du kansellerte bolus, etter at den var satt på pumpen. Siden Medtronic pumper ikke støtter kansellering må dette gjøres manuelt. STOPP pumpen og velg GJENOPPTA (hvis du fortsatt ønsker å kansellere). Applikasjon vil lese inn endringen på neste pumpeavlesing (innen 5 minutter).</string>
+    <string name="medtronic_cmd_cant_read_tbr">Kunne ikke lese gjeldende TBR.</string>
+    <string name="medtronic_cmd_cant_cancel_tbr_stop_op">Kunne ikke avbryte gjeldende TBR. Stopper operasjonen.</string>
+    <string name="medtronic_cmd_set_profile_pattern_overflow">Profil sett feilet fordi påfølgende basalverdi i programmet har for høy verdi: %1$s</string>
+    <string name="medtronic_cmd_bolus_could_not_be_delivered">Bolus dose kunne ikke leveres.</string>
+    <string name="medtronic_cmd_bolus_could_not_be_delivered_no_insulin">Bolus kunne ikke leveres fordi tilgjengelig insulinmengde (%1$.2f) er mindre enn nødvendig bolus (%2$.2f).</string>
+    <string name="medtronic_cmd_tbr_could_not_be_delivered">TBR kunne ikke settes.</string>
+    <string name="medtronic_cmd_cant_cancel_tbr">Kunne ikke avbryte gjeldende TBR.</string>
+    <string name="medtronic_cmd_basal_profile_could_not_be_set">Basalprofilen kunne ikke settes.</string>
+    <string name="medtronic_cmd_basal_profile_not_set_is_same">Basalprofilen er den samme, så den blir ikke satt igjen.</string>
+    <string name="medtronic_cmd_desc_get_history">Henter historikk - side %1$d (%2$d/16)</string>
+    <string name="medtronic_cmd_desc_get_history_request">Henter historikk - side %1$d</string>
+    <string name="medtronic_cmd_desc_get_time">Henter pumpe tid</string>
+    <string name="medtronic_cmd_desc_get_settings">Henter innstillinger</string>
+    <string name="medtronic_cmd_desc_get_model">Henter pumpe modell</string>
+    <string name="medtronic_cmd_desc_get_basal_profile">Henter basal profil</string>
+    <string name="medtronic_cmd_desc_set_basal_profile">Angi basal profil</string>
+    <string name="medtronic_cmd_desc_get_tbr">Henter Temp Basal</string>
+    <string name="medtronic_cmd_desc_set_tbr">Angi Temp Basal</string>
+    <string name="medtronic_cmd_desc_set_bolus">Angi Bolus</string>
+    <string name="medtronic_pump_status_pump_unreachable">Pumpe utilgjengelig</string>
+    <string name="medtronic_warning">Advarsel</string>
     <!-- medtronic_warning -->
+    <string name="medtronic_pump_connected_now">Nå</string>
     <!-- combo_pump_connected_now -->
+    <string name="ago">siden</string>
+    <string name="medtronic_notification_check_time_date">Pumpens tid må oppdateres</string>
     <!-- combo_notification_check_time_date -->
+    <string name="common_on">På</string>
+    <string name="common_off">Av</string>
+    <string name="pump_time_updated">Pumpens tid ble oppdatert</string>
+    <string name="set_neutral_temps_title">Sett nøytrale temp basaler</string>
+    <string name="set_neutral_temps_summary">Hvis aktivert så vil den stoppe en temp basal rett før hver hele time for å stoppe noen pumpers varsler/vibreringer på hver hele time.</string>
 </resources>

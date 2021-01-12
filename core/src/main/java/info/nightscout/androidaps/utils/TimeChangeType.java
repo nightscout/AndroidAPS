@@ -1,8 +1,8 @@
 package info.nightscout.androidaps.utils;
 
 public enum TimeChangeType {
-    TimezoneChange,
+    TimezoneChanged,
     DST_Started,
     DST_Ended,
-    ManualTimeChange
+    TimeChanged
 }

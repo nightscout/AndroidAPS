@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="objectives_button_back">Atrás</string>
     <string name="objectives_button_start">Inicio</string>
     <string name="objectives_button_verify">Verificar</string>
     <string name="nth_objective">%1$d. Objetivo</string>
@@ -37,11 +36,11 @@
     <string name="objectives_useloop">Mostrar contenido del plugin Loop</string>
     <string name="objectives_usescale">Usar función de escala mediante un gráfico BG pulsado largo</string>
     <string name="objectives_button_enter">Intro</string>
-    <string name="enter_code_obtained_from_developers_to_bypass_the_rest_of_objectives">Si tienes al menos 3 meses de experiencia con el lazo cerrado de otros sistemas puedes cualificarte para obtener un código para saltarte los objetivos. Para información detallada (en inglés): https://androidaps.readthedocs.io/en/latest/EN/Usage/Objectives.html#skip-objectives.</string>
+    <string name="enter_code_obtained_from_developers_to_bypass_the_rest_of_objectives">Si tienes al menos 3 meses de experiencia con el bucle cerrado de otros sistemas puedes cualificarte para obtener un código para saltarte los objetivos. Para información detallada (en inglés): https://androidaps.readthedocs.io/en/latest/EN/Usage/Objectives.html#skip-objectives.</string>
     <string name="codeaccepted">Código aceptado</string>
     <string name="codeinvalid">Código no válido</string>
     <string name="objectives_exam_objective">Compruebe su conocimiento</string>
-    <string name="objectives_exam_gate">Responder correctamente</string>
+    <string name="objectives_exam_gate">Estudia las preguntas. Se te dan cuatro respuestas posibles para cada pregunta. Puede haber más de una respuesta correcta. Por favor, marca todas las que son correctas y seleccione VERIFICAR.</string>
     <string name="answerdisabledto">Respuesta deshabilitada a: %1$s</string>
     <string name="wronganswer">Respuesta incorrecta!</string>
     <string name="unfinshed_button">Siguien&amp;te sin terminar</string>

@@ -15,7 +15,7 @@ class BuildHelper @Inject constructor(private val config: Config) {
 
     init {
         val extFilesDir = LoggerUtils.getLogDirectory()
-        val engineeringModeSemaphore = File(extFilesDir, "engineering_mode")
+        val engineeringModeSemaphore = File(extFilesDir, "engineering__mode")
 
         engineeringMode = engineeringModeSemaphore.exists() && engineeringModeSemaphore.isFile
         devBranch = BuildConfig.VERSION.contains("-") || BuildConfig.VERSION.matches(Regex(".*[a-zA-Z]+.*"))
@@ -25,7 +25,7 @@ class BuildHelper @Inject constructor(private val config: Config) {
         if (!config.APS) true else engineeringMode || !devBranch
 
     fun isEngineeringMode(): Boolean =
-        if (!config.APS) true else engineeringMode || !devBranch
+        engineeringMode
 
     fun isDev(): Boolean = devBranch
 }

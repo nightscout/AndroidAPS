@@ -47,7 +47,7 @@ class InsulinOrefUltraRapidActingPluginTest {
 
     @Test
     fun getIdTest() {
-        assertEquals(InsulinInterface.OREF_ULTRA_RAPID_ACTING, sut.id)
+        assertEquals(InsulinInterface.InsulinType.OREF_ULTRA_RAPID_ACTING, sut.id)
     }
 
     @Test

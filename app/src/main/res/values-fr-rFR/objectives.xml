@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="objectives_button_back">Retour</string>
     <string name="objectives_button_start">Départ</string>
     <string name="objectives_button_verify">Vérifier</string>
     <string name="nth_objective">%1$d. Objectif</string>
@@ -41,7 +40,7 @@
     <string name="codeaccepted">Code accepté</string>
     <string name="codeinvalid">Code invalide</string>
     <string name="objectives_exam_objective">Prouver ses connaissances</string>
-    <string name="objectives_exam_gate">Étudiez et répondez correctement aux questions</string>
+    <string name="objectives_exam_gate">Étudiez les questions. Vous avez quatre réponses possibles pour chaque question. Il peut y avoir plusieurs réponses correctes. Veuillez vérifier celles qui sont correctes et sélectionnez VÉRIFIER.</string>
     <string name="answerdisabledto">Réponse désactivée jusqu\'à : %1$s</string>
     <string name="wronganswer">Mauvaise réponse !</string>
     <string name="unfinshed_button">Prochain non terminé</string>

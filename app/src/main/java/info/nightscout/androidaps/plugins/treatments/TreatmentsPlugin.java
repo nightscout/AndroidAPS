@@ -30,13 +30,12 @@ import info.nightscout.androidaps.data.NonOverlappingIntervals;
 import info.nightscout.androidaps.data.OverlappingIntervals;
 import info.nightscout.androidaps.data.Profile;
 import info.nightscout.androidaps.data.ProfileIntervals;
-import info.nightscout.androidaps.db.Treatment;
-import info.nightscout.androidaps.interfaces.ProfileStore;
 import info.nightscout.androidaps.db.ExtendedBolus;
 import info.nightscout.androidaps.db.ProfileSwitch;
 import info.nightscout.androidaps.db.Source;
 import info.nightscout.androidaps.db.TempTarget;
 import info.nightscout.androidaps.db.TemporaryBasal;
+import info.nightscout.androidaps.db.Treatment;
 import info.nightscout.androidaps.events.EventReloadProfileSwitchData;
 import info.nightscout.androidaps.events.EventReloadTempBasalData;
 import info.nightscout.androidaps.events.EventReloadTreatmentData;
@@ -45,13 +44,15 @@ import info.nightscout.androidaps.interfaces.ActivePluginProvider;
 import info.nightscout.androidaps.interfaces.PluginBase;
 import info.nightscout.androidaps.interfaces.PluginDescription;
 import info.nightscout.androidaps.interfaces.PluginType;
+import info.nightscout.androidaps.interfaces.ProfileFunction;
+import info.nightscout.androidaps.interfaces.ProfileStore;
 import info.nightscout.androidaps.interfaces.PumpInterface;
 import info.nightscout.androidaps.interfaces.TreatmentsInterface;
 import info.nightscout.androidaps.logging.AAPSLogger;
 import info.nightscout.androidaps.logging.LTag;
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper;
-import info.nightscout.androidaps.interfaces.ProfileFunction;
 import info.nightscout.androidaps.plugins.general.nsclient.NSUpload;
+import info.nightscout.androidaps.plugins.general.nsclient.UploadQueue;
 import info.nightscout.androidaps.plugins.general.overview.events.EventDismissNotification;
 import info.nightscout.androidaps.plugins.general.overview.notifications.Notification;
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.AutosensResult;
@@ -75,10 +76,11 @@ public class TreatmentsPlugin extends PluginBase implements TreatmentsInterface 
     private final ProfileFunction profileFunction;
     private final ActivePluginProvider activePlugin;
     private final NSUpload nsUpload;
+    private final UploadQueue uploadQueue;
     private final FabricPrivacy fabricPrivacy;
     private final DateUtil dateUtil;
 
-    private CompositeDisposable disposable = new CompositeDisposable();
+    private final CompositeDisposable disposable = new CompositeDisposable();
 
     protected TreatmentService service;
 
@@ -103,11 +105,13 @@ public class TreatmentsPlugin extends PluginBase implements TreatmentsInterface 
             ActivePluginProvider activePlugin,
             NSUpload nsUpload,
             FabricPrivacy fabricPrivacy,
-            DateUtil dateUtil
+            DateUtil dateUtil,
+            UploadQueue uploadQueue
     ) {
         super(new PluginDescription()
                         .mainType(PluginType.TREATMENT)
                         .fragmentClass(TreatmentsFragment.class.getName())
+                        .pluginIcon(R.drawable.ic_treatments)
                         .pluginName(R.string.treatments)
                         .shortName(R.string.treatments_shortname)
                         .alwaysEnabled(true)
@@ -124,6 +128,7 @@ public class TreatmentsPlugin extends PluginBase implements TreatmentsInterface 
         this.fabricPrivacy = fabricPrivacy;
         this.dateUtil = dateUtil;
         this.nsUpload = nsUpload;
+        this.uploadQueue = uploadQueue;
     }
 
     @Override
@@ -338,8 +343,7 @@ public class TreatmentsPlugin extends PluginBase implements TreatmentsInterface 
         if (last == null) {
             getAapsLogger().debug(LTag.DATATREATMENTS, "Last bolus time: NOTHING FOUND");
             return 0;
-        }
-        else {
+        } else {
             getAapsLogger().debug(LTag.DATATREATMENTS, "Last bolus time: " + dateUtil.dateAndTimeString(last.date));
             return last.date;
         }
@@ -350,8 +354,7 @@ public class TreatmentsPlugin extends PluginBase implements TreatmentsInterface 
         if (last == null) {
             getAapsLogger().debug(LTag.DATATREATMENTS, "Last manual bolus time: NOTHING FOUND");
             return 0;
-        }
-        else {
+        } else {
             getAapsLogger().debug(LTag.DATATREATMENTS, "Last manual bolus time: " + dateUtil.dateAndTimeString(last.date));
             return last.date;
         }
@@ -362,8 +365,7 @@ public class TreatmentsPlugin extends PluginBase implements TreatmentsInterface 
         if (last == null) {
             getAapsLogger().debug(LTag.DATATREATMENTS, "Last Carb time: NOTHING FOUND");
             return 0;
-        }
-        else {
+        } else {
             getAapsLogger().debug(LTag.DATATREATMENTS, "Last Carb time: " + dateUtil.dateAndTimeString(last.date));
             return last.date;
         }
@@ -385,6 +387,16 @@ public class TreatmentsPlugin extends PluginBase implements TreatmentsInterface 
     @Override
     public boolean isTempBasalInProgress() {
         return getTempBasalFromHistory(System.currentTimeMillis()) != null;
+    }
+
+    @Override public void removeTempBasal(TemporaryBasal tempBasal) {
+        String tempBasalId = tempBasal._id;
+        if (NSUpload.isIdValid(tempBasalId)) {
+            nsUpload.removeCareportalEntryFromNS(tempBasalId);
+        } else {
+            uploadQueue.removeID("dbAdd", tempBasalId);
+        }
+        MainApp.getDbHelper().delete(tempBasal);
     }
 
     @Override

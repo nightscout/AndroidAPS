@@ -6,8 +6,8 @@ import info.nightscout.androidaps.plugins.pump.omnipod.R;
  * Created by andy on 4.8.2019
  */
 public enum OmnipodCommandType {
-    PAIR_AND_PRIME_POD(R.string.omnipod_cmd_pair_and_prime), // First step of Pod activation
-    FILL_CANNULA_AND_SET_BASAL_PROFILE(R.string.omnipod_cmd_fill_cannula_set_basal_profile), // Second step of Pod activation
+    INITIALIZE_POD(R.string.omnipod_cmd_initialize_pod), // First step of Pod activation
+    INSERT_CANNULA(R.string.omnipod_cmd_insert_cannula), // Second step of Pod activation
     DEACTIVATE_POD(R.string.omnipod_cmd_deactivate_pod), //
     SET_BASAL_PROFILE(R.string.omnipod_cmd_set_basal_schedule), //
     SET_BOLUS(R.string.omnipod_cmd_set_bolus), //
@@ -19,10 +19,12 @@ public enum OmnipodCommandType {
     SET_TIME(R.string.omnipod_cmd_set_time), //
     CONFIGURE_ALERTS(R.string.omnipod_cmd_configure_alerts), //
     ACKNOWLEDGE_ALERTS(R.string.omnipod_cmd_acknowledge_alerts), //
-    GET_POD_PULSE_LOG(R.string.omnipod_cmd_get_pulse_log), //
-    SUSPEND_DELIVERY(R.string.omnipod_cmd_suspend_delivery);
+    READ_POD_PULSE_LOG(R.string.omnipod_cmd_read_pulse_log), //
+    SUSPEND_DELIVERY(R.string.omnipod_cmd_suspend_delivery),
+    RESUME_DELIVERY(R.string.omnipod_cmd_resume_delivery),
+    PLAY_TEST_BEEP(R.string.omnipod_cmd_play_test_beep);
 
-    private int resourceId;
+    private final int resourceId;
 
     OmnipodCommandType(int resourceId) {
         this.resourceId = resourceId;

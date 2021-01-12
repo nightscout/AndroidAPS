@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="objectives_button_back">Назад</string>
     <string name="objectives_button_start">Старт</string>
     <string name="objectives_button_verify">Потвърждаване</string>
     <string name="nth_objective">Цел %1$d </string>
@@ -22,7 +21,7 @@
     <string name="objectives_smb_objective">Добавяне на допълнителни функции за използване през деня, като SMB</string>
     <string name="objectives_auto_objective">Разрешаване на автоматизация</string>
     <string name="objectives_smb_gate">Трябва да прочетете wiki и увеличите maxIOB за да може SMB да работи добре! Добро начало е maxIOB = средния болус за хранене + 3 пъти най-големия базал от профила</string>
-    <string name="objectives_auto_gate">Прочетете документацията как работи автоматизацията. Настройте първите си прости правила. Вместо да прави действия нека AAPS покаже само известие. Когато сте сигурни, автоматизацията се задейства в точното време, за да заменете известяването с реални действия. (https: //androidaps.readthedocs.io/en/latest/EN/Usage/Automation.html)</string>
+    <string name="objectives_auto_gate">Прочетете документацията как работи автоматизацията. Настройте първите си прости правила. Нека AAPS показва само известия. Когато сте сигурни, автоматизацията се задейства в точното време, за да заменете известяването с реални действия. (https: //androidaps.readthedocs.io/en/latest/EN/Usage/Automation.html)</string>
     <string name="objectives_bgavailableinns">КЗ да се вижда в NS</string>
     <string name="objectives_pumpstatusavailableinns">Статуса на помпата да е достъпен в NS</string>
     <string name="objectives_manualenacts">Ръчно приложени</string>
@@ -37,11 +36,11 @@
     <string name="objectives_useloop">Отворете съдържанието на Цикъл плъгина.</string>
     <string name="objectives_usescale">Използвайте функцията за удължаване на периода на графиката, като задържите върху нея.</string>
     <string name="objectives_button_enter">Въведи</string>
-    <string name="enter_code_obtained_from_developers_to_bypass_the_rest_of_objectives">Ако имате поне 3 месеца опит с други системи, които биха може да получите код за пропускане на целите. Прочетете https://androidaps.readthedocs.io/en/latest/EN/Usage/Objectives.html#skip-objectives за получаване на подробна информация.</string>
+    <string name="enter_code_obtained_from_developers_to_bypass_the_rest_of_objectives">Ако имате поне 3 месеца опит с други затворени системи, може да получите код за пропускане на целите. Прочетете https://androidaps.readthedocs.io/en/latest/EN/Usage/Objectives.html#skip-objectives за получаване на подробна информация.</string>
     <string name="codeaccepted">Код приет!</string>
     <string name="codeinvalid">Неправилен код</string>
     <string name="objectives_exam_objective">Докажете знанията си</string>
-    <string name="objectives_exam_gate">Отговорете правилно на въпросите</string>
+    <string name="objectives_exam_gate">Четете внимателно въпросите.  Имате четири възможни отговора за всеки въпрос. Може да има повече от един правилен отговор. Моля, изберете всички, които са правилни, и натиснете VERIFY.</string>
     <string name="answerdisabledto">Изключено до: %1$s</string>
     <string name="wronganswer">Грешен отговор!</string>
     <string name="unfinshed_button">Следващия неотговорен</string>

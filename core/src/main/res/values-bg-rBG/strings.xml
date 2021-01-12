@@ -66,6 +66,8 @@
     <string name="btwatchdog_title">BT ограничения</string>
     <string name="btwatchdog_summary">Изключва Bluetooth на телефона за една секунда, ако няма връзка с помпата. Това може да помогне на някои телефони, където Bluetooth блокира.</string>
     <string name="pairing">Сдвояване</string>
+    <string name="yes">Да</string>
+    <string name="no">Не</string>
     <!--    Constraints-->
     <string name="limitingbasalratio">Ограничаване на макс. базална стойност до %1$.2f Е/ч поради %2$s</string>
     <string name="pumplimit">лимит на помпата</string>
@@ -170,7 +172,7 @@
     <string name="waitingforpumpresult">Изчаква резултат от помпата</string>
     <string name="smb_shortname">SMB</string>
     <!--    CarbsReq-->
-    <string name="carbsreq">%dгр допълнителни въглехидрати ще са необходими до %d минути</string>
+    <string name="carbsreq">%1$dгр допълнителни въглехидрати ще са необходими до %2$d минути</string>
     <!--    TDDStatsActivity-->
     <string name="stats">Статистика</string>
     <string name="cumulative_tdd">Комулативна TDD</string>
@@ -212,6 +214,7 @@
     <string name="history_group_prime">Пълнене</string>
     <string name="history_group_alarm">Аларми</string>
     <string name="history_group_glucose">Кръвна захар</string>
+    <string name="mute5min">Изключи за 5 минути</string>
     <!--    <string name="medtronic_pump_status_never_contacted">Never contacted</string>-->
     <!--    <string name="medtronic_pump_status_waking_up">Waking up</string>-->
     <!--    <string name="medtronic_pump_status_error_comm">Error with communication</string>-->

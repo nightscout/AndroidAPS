@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -25,7 +26,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:contentDescription="@string/careportal_profileswitch"
-                android:src="@drawable/ic_actions_profileswitch" />
+                app:srcCompat="@drawable/ic_actions_profileswitch" />
 
             <TextView
                 android:layout_width="match_parent"
@@ -58,41 +59,8 @@
                 android:layout_gravity="center_horizontal"
                 android:width="120dp"
                 android:padding="10dp"
-                android:text="@string/careportal_newnstreatment_duration_label"
-                android:textAppearance="@android:style/TextAppearance.Material.Small"
-                android:textStyle="bold" />
-
-            <info.nightscout.androidaps.utils.ui.MinutesNumberPicker
-                android:id="@+id/overview_profileswitch_duration"
-                android:layout_width="130dp"
-                android:layout_height="40dp" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
-                android:gravity="start"
-                android:minWidth="45dp"
-                android:paddingStart="5dp"
-                android:paddingEnd="5dp"
-                android:text="@string/unit_minute_short"
-                android:textAppearance="?android:attr/textAppearanceSmall" />
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
-                android:width="120dp"
-                android:padding="10dp"
                 android:text="@string/careportal_newnstreatment_profile_label"
-                android:textAppearance="@android:style/TextAppearance.Material.Small"
+                android:textAppearance="@style/TextAppearance.AppCompat.Small"
                 android:textStyle="bold" />
 
             <Spinner
@@ -113,11 +81,12 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
+                android:layout_gravity="center"
                 android:width="120dp"
-                android:padding="10dp"
+                android:paddingLeft="10dp"
+                android:paddingRight="10dp"
                 android:text=""
-                android:textAppearance="@android:style/TextAppearance.Material.Small"
+                android:textAppearance="@style/TextAppearance.AppCompat.Small"
                 android:textStyle="bold" />
 
             <Button
@@ -147,11 +116,46 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
+                android:layout_gravity="center"
                 android:width="120dp"
-                android:padding="10dp"
+                android:paddingLeft="10dp"
+                android:paddingRight="10dp"
+                android:text="@string/careportal_newnstreatment_duration_label"
+                android:textAppearance="@style/TextAppearance.AppCompat.Small"
+                android:textStyle="bold" />
+
+            <info.nightscout.androidaps.utils.ui.MinutesNumberPicker
+                android:id="@+id/overview_profileswitch_duration"
+                android:layout_width="130dp"
+                android:layout_height="40dp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:gravity="start"
+                android:minWidth="45dp"
+                android:paddingStart="5dp"
+                android:paddingEnd="5dp"
+                android:text="@string/unit_minute_short"
+                android:textAppearance="?android:attr/textAppearanceSmall" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:width="120dp"
+                android:paddingLeft="10dp"
+                android:paddingRight="10dp"
                 android:text="@string/careportal_newnstreatment_percentage_label"
-                android:textAppearance="@android:style/TextAppearance.Material.Small"
+                android:textAppearance="@style/TextAppearance.AppCompat.Small"
                 android:textStyle="bold" />
 
             <info.nightscout.androidaps.utils.ui.NumberPicker
@@ -180,11 +184,12 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
+                android:layout_gravity="center"
                 android:width="120dp"
-                android:padding="10dp"
+                android:paddingLeft="10dp"
+                android:paddingRight="10dp"
                 android:text="@string/careportal_newnstreatment_timeshift_label"
-                android:textAppearance="@android:style/TextAppearance.Material.Small"
+                android:textAppearance="@style/TextAppearance.AppCompat.Small"
                 android:textStyle="bold" />
 
             <info.nightscout.androidaps.utils.ui.NumberPicker

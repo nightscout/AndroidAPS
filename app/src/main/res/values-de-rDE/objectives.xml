@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="objectives_button_back">Zurück</string>
     <string name="objectives_button_start">Start</string>
     <string name="objectives_button_verify">Bestätigen</string>
     <string name="nth_objective">%1$d. Objective (Ziel)</string>
@@ -23,7 +22,7 @@
     <string name="objectives_auto_objective">Automatisierung aktivieren</string>
     <string name="objectives_smb_gate">Lies das Wiki und erhöhe maxIOB, damit der SMB gut funktioniert. Ein guter Anfang ist
 die Formel maxIOB = durchschnittlicher Essensbolus + 3 x höchste Basalrate</string>
-    <string name="objectives_auto_gate">Lies in den Docs wie Automatisierung funktioniert und erstelle dann eine erste einfache Regel. Verwende eine Benachrichtigung statt der tatsächlichen Aktion. Wenn die Automatisierung zum richtigen Zeitpunkt auslöst, ersetze die Benachrichtigung durch die gewünschte Aktion. (https://androidaps.readthedocs.io/en/latest/CROWDIN/de/Usage/Automation.html)</string>
+    <string name="objectives_auto_gate">Lies in der Dokumentation nach, wie Automation funktioniert. Richte dir erst einfache Regeln ein. Zunächst sollte AAPS keine Änderungen vornehmen, sondern dir nur eine Benachrichtigung anzeigen. Wenn du dir sicher bist, dass die Automation im richtigen Moment angetriggert wird, dann kannst du die Benachrichtigung durch eine Aktion ersetzen (https://androidaps.readthedocs.io/en/latest/CROWDIN/de/Usage/Automation.html)</string>
     <string name="objectives_bgavailableinns">BZ in Nightscout verfügbar</string>
     <string name="objectives_pumpstatusavailableinns">Pumpen-Status in Nightscout verfügbar</string>
     <string name="objectives_manualenacts">Manuelle Aktionen</string>
@@ -42,7 +41,7 @@ die Formel maxIOB = durchschnittlicher Essensbolus + 3 x höchste Basalrate</str
     <string name="codeaccepted">Code akzeptiert</string>
     <string name="codeinvalid">Code ungültig</string>
     <string name="objectives_exam_objective">Prüfe Dein Wissen</string>
-    <string name="objectives_exam_gate">Lies und beantworte die Fragen richtig</string>
+    <string name="objectives_exam_gate">Beschäftige dich mit den Fragen. Dir werden für jede Frage vier Antwortmöglichkeiten vorgegeben. Es kann mehr als eine richtige Antwort geben. Bitte hake alle richtigen an und wähle BESTÄTIGEN.</string>
     <string name="answerdisabledto">Frage gesperrt bis: %1$s</string>
     <string name="wronganswer">Falsch!</string>
     <string name="unfinshed_button">Nächste offene</string>

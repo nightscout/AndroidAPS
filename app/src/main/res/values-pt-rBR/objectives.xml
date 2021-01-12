@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="objectives_button_back">Voltar</string>
     <string name="objectives_button_start">Iniciar</string>
     <string name="objectives_button_verify">Verificar</string>
     <string name="nth_objective">%1$d. Objetivo</string>
@@ -22,7 +21,6 @@
     <string name="objectives_smb_objective">Ativando recursos adicionais para uso durante o dia, como SMB</string>
     <string name="objectives_auto_objective">A ativar a automação</string>
     <string name="objectives_smb_gate">Deverá ler a wiki e aumentar a IOB máx para que os SMBs funcionem devidamente! Inicialmente poderá considerar maxIOB=média dos bólus + 3 x a basal máxima</string>
-    <string name="objectives_auto_gate">Leia os documentos de como a automação funciona. Configure primeiro regras simples. Em vez de ação deixe AAPS apresentar apenas a notificação. Quando tem certeza de automação é acionada no momento certo substitua a notificação por ação real. (https://androidaps.readthedocs.io/en/latest/EN/Usage/Automation.html)</string>
     <string name="objectives_bgavailableinns">Glic disponível no NS</string>
     <string name="objectives_pumpstatusavailableinns">Estado da Bomba disponível no NS</string>
     <string name="objectives_manualenacts">Execução manual</string>
@@ -37,11 +35,9 @@
     <string name="objectives_useloop">Mostrar conteúdo do plugin Loop</string>
     <string name="objectives_usescale">Utilizar a função de escala premindo longamente gráfico Glic</string>
     <string name="objectives_button_enter">Inserir</string>
-    <string name="enter_code_obtained_from_developers_to_bypass_the_rest_of_objectives">Se tiver pelo menos 3 meses de experiência com Close Loop com outros sistemas, pode-se qualificar para um código para ignorar objetivos. Ver https://androidaps.readthedocs.io/en/latest/EN/Usage/Objectives.html#skip-objectives para mais detalhes.</string>
     <string name="codeaccepted">Código aceito</string>
     <string name="codeinvalid">Código inválido</string>
     <string name="objectives_exam_objective">Prove seu conhecimento</string>
-    <string name="objectives_exam_gate">Estude e responda as perguntas corretamente</string>
     <string name="answerdisabledto">Resposta desativada para: %1$s</string>
     <string name="wronganswer">Resposta errada!</string>
     <string name="unfinshed_button">Próximo inacabado</string>

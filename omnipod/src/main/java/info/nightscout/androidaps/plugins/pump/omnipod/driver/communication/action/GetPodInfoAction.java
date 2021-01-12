@@ -3,7 +3,6 @@ package info.nightscout.androidaps.plugins.pump.omnipod.driver.communication.act
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.communication.message.command.GetStatusCommand;
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.communication.message.response.podinfo.PodInfoResponse;
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.definition.PodInfoType;
-import info.nightscout.androidaps.plugins.pump.omnipod.driver.exception.ActionInitializationException;
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.manager.PodStateManager;
 import info.nightscout.androidaps.plugins.pump.omnipod.rileylink.manager.OmnipodRileyLinkCommunicationManager;
 
@@ -13,10 +12,10 @@ public class GetPodInfoAction implements OmnipodAction<PodInfoResponse> {
 
     public GetPodInfoAction(PodStateManager podStateManager, PodInfoType podInfoType) {
         if (podStateManager == null) {
-            throw new ActionInitializationException("Pod state manager cannot be null");
+            throw new IllegalArgumentException("Pod state manager cannot be null");
         }
         if (podInfoType == null) {
-            throw new ActionInitializationException("Pod info type cannot be null");
+            throw new IllegalArgumentException("Pod info type cannot be null");
         }
         this.podStateManager = podStateManager;
         this.podInfoType = podInfoType;

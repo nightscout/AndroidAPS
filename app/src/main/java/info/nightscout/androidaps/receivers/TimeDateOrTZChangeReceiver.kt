@@ -49,14 +49,14 @@ class TimeDateOrTZChangeReceiver : DaggerBroadcastReceiver() {
 
             Intent.ACTION_TIMEZONE_CHANGED == action -> {
                 aapsLogger.info(LTag.PUMP, "TimeDateOrTZChangeReceiver::Timezone changed. Notifying pump driver.")
-                activePump.timezoneOrDSTChanged(TimeChangeType.TimezoneChange)
+                activePump.timezoneOrDSTChanged(TimeChangeType.TimezoneChanged)
             }
 
             Intent.ACTION_TIME_CHANGED == action     -> {
                 val currentDst = calculateDST()
                 if (currentDst == isDST) {
                     aapsLogger.info(LTag.PUMP, "TimeDateOrTZChangeReceiver::Time changed (manual). Notifying pump driver.")
-                    activePump.timezoneOrDSTChanged(TimeChangeType.ManualTimeChange)
+                    activePump.timezoneOrDSTChanged(TimeChangeType.TimeChanged)
                 } else {
                     if (currentDst) {
                         aapsLogger.info(LTag.PUMP, "TimeDateOrTZChangeReceiver::DST started. Notifying pump driver.")

@@ -42,22 +42,6 @@
             android:summary="@string/rs_logcanulachange_summary"
             android:title="@string/rs_logcanulachange_title" />
 
-        <androidx.preference.PreferenceScreen
-            android:key="absorption_danars_advanced"
-            android:title="@string/advancedsettings_title">
-
-            <PreferenceCategory android:title="@string/bluetooth">
-
-                <SwitchPreference
-                    android:defaultValue="false"
-                    android:key="@string/key_btwatchdog"
-                    android:summary="@string/btwatchdog_summary"
-                    android:title="@string/btwatchdog_title" />
-
-            </PreferenceCategory>
-
-        </androidx.preference.PreferenceScreen>
-
     </PreferenceCategory>
 
 </androidx.preference.PreferenceScreen>

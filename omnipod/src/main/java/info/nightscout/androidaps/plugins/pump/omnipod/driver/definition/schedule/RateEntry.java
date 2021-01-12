@@ -9,6 +9,8 @@ import info.nightscout.androidaps.plugins.pump.common.utils.ByteUtil;
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.communication.message.IRawRepresentable;
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.definition.OmnipodConstants;
 
+import static info.nightscout.androidaps.plugins.pump.omnipod.driver.definition.OmnipodConstants.BASAL_STEP_DURATION;
+
 public class RateEntry implements IRawRepresentable {
 
     private final double totalPulses;
@@ -21,6 +23,13 @@ public class RateEntry implements IRawRepresentable {
     }
 
     public static List<RateEntry> createEntries(double rate, Duration duration) {
+        if (Duration.ZERO.equals(duration)) {
+            throw new IllegalArgumentException("Duration may not be 0 minutes.");
+        }
+        if (duration.getStandardMinutes() % BASAL_STEP_DURATION.getStandardMinutes() != 0) {
+            throw new IllegalArgumentException("Duration must be a multiple of " + BASAL_STEP_DURATION.getStandardMinutes() + " minutes.");
+        }
+
         List<RateEntry> entries = new ArrayList<>();
         int remainingSegments = (int) Math.round(duration.getStandardSeconds() / 1800.0);
         double pulsesPerSegment = (int) Math.round(rate / OmnipodConstants.POD_PULSE_SIZE) / 2.0;
