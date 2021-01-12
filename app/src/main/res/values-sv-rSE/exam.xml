@@ -157,7 +157,7 @@
     <string name="nsclient_label">Fjärrövervakning</string>
     <string name="nsclient_howcanyou">Hur kan du övervaka AndroidAPS (till exempel för ditt barn) på distans?</string>
     <string name="nsclient_nightscout">NS Client-appen, Nightscout-app och webbsidan för Nightscout tillåter att du följer AndroidAPS på distans.</string>
-    <string name="nsclient_dexcomfollow">Andra appar (t.ex. Dexcom Follow, xDrip i följarläge) gör att du kan följa vissa parametrar (t.ex. BG-värden) men använder andra algoritmer så IOB och COB kanske inte överenstämmer.</string>
+    <string name="nsclient_dexcomfollow">Andra appar (t.ex. Dexcom Follow, xDrip+ i följarläge) gör att du kan följa vissa parametrar (t.ex. BG-värden) men använder andra algoritmer så IOB och COB kanske inte överenstämmer.</string>
     <string name="nsclient_data">För att följa AndroidAPS måste båda enheterna ha Internetåtkomst (via WiFi eller mobildata).</string>
     <string name="nsclient_fullcontrol">NS Client som används som följare kommer både kunna övervaka och ge full kontroll över AndroidAPS.</string>
     <string name="nsclient_hint1">https://androidaps.readthedocs.io/en/latest/EN/Children/Children.html</string>
