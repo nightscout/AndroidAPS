@@ -7,7 +7,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
-import androidx.cardview.widget.CardView
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import dagger.android.support.DaggerFragment
@@ -22,8 +21,9 @@ import info.nightscout.androidaps.plugins.general.nsclient.events.EventNSClientR
 import info.nightscout.androidaps.plugins.treatments.fragments.TreatmentsCareportalFragment.RecyclerViewAdapter.CareportalEventsViewHolder
 import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.FabricPrivacy
-import info.nightscout.androidaps.utils.alertDialogs.OKDialog
 import info.nightscout.androidaps.utils.Translator
+import info.nightscout.androidaps.utils.alertDialogs.OKDialog
+import info.nightscout.androidaps.utils.buildHelper.BuildHelper
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 import info.nightscout.androidaps.utils.sharedPreferences.SP
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -45,6 +45,7 @@ class TreatmentsCareportalFragment : DaggerFragment() {
     @Inject lateinit var nsUpload: NSUpload
     @Inject lateinit var uploadQueue: UploadQueue
     @Inject lateinit var dateUtil: DateUtil
+    @Inject lateinit var buildHelper: BuildHelper
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
@@ -57,7 +58,7 @@ class TreatmentsCareportalFragment : DaggerFragment() {
         careportal_recyclerview.layoutManager = LinearLayoutManager(view.context)
         careportal_recyclerview.adapter = RecyclerViewAdapter(MainApp.getDbHelper().getCareportalEvents(false))
 
-        val nsUploadOnly = sp.getBoolean(R.string.key_ns_upload_only, false)
+        val nsUploadOnly = sp.getBoolean(R.string.key_ns_upload_only, true) && buildHelper.isEngineeringMode()
         if (nsUploadOnly) {
             swipeRefresh.isEnabled = false
         } else {
@@ -137,7 +138,6 @@ class TreatmentsCareportalFragment : DaggerFragment() {
         }
 
         inner class CareportalEventsViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-            var cv: CardView = itemView.findViewById(R.id.careportal_cardview)
             var date: TextView = itemView.findViewById(R.id.careportal_date)
             var duration: TextView = itemView.findViewById(R.id.careportal_duration)
             var type: TextView = itemView.findViewById(R.id.careportal_type)

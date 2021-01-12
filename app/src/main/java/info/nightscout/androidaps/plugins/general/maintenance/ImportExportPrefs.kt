@@ -21,6 +21,7 @@ import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.logging.LTag
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper
 import info.nightscout.androidaps.plugins.general.maintenance.formats.*
+import info.nightscout.androidaps.setupwizard.SetupWizardActivity
 import info.nightscout.androidaps.utils.AndroidPermission
 import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.ToastUtils
@@ -269,6 +270,8 @@ class ImportExportPrefs @Inject constructor(
             if (activity is SingleFragmentActivity)
                 activity.callForPrefFile.launch(null)
             if (activity is MainActivity)
+                activity.callForPrefFile.launch(null)
+            if (activity is SetupWizardActivity)
                 activity.callForPrefFile.launch(null)
         } catch (e: IllegalArgumentException) {
             // this exception happens on some early implementations of ActivityResult contracts

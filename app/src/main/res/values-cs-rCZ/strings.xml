@@ -285,8 +285,8 @@
     <string name="mealbolus">Bolus</string>
     <string name="correctionbous">Korekce</string>
     <string name="actions">Akce</string>
-    <string name="ns_upload_only">(NEBEZPEČNÉ ZAKÁZAT) Pouze odeslání NS</string>
-    <string name="ns_upload_only_summary">Pouze nahrávání do NS. Neplatí pro glykémie, pokud je NS vybrán jako zdroj glykémií. Neplatí pro profily, pokud je vybraný NS Profil.\n!!! VAROVÁNÍ!!! Vypnutí této možnosti může způsobit chybné chování a předávkování inzulínem, pokud je některá z vašich komponent (AAPS, NS, xDrip+) špatně nastavena. Pečlivě sledujte, jestli data zobrazená AAPS odpovídají stavu pumpy!</string>
+    <string name="ns_upload_only">(NEBEZPEČNÉ ZAKÁZAT) Pouze odesílání do NS</string>
+    <string name="ns_upload_only_summary">Pouze nahrávání do NS. Neplatí pro glykémie, pokud je NS vybrán jako zdroj glykémií. Neplatí pro profily, pokud je vybraný NS Profil.\n!!! VAROVÁNÍ!!! Vypnutí této možnosti může způsobit chybné chování a předávkování inzulínem, pokud je některá z vašich komponent (AAPS, NS, xDrip+) špatně nastavena. Pečlivě sledujte, jestli data zobrazená v AAPS odpovídají stavu pumpy!</string>
     <string name="pumpNotInitialized">Pumpa není inicializována!</string>
     <string name="primefill">Plnění/doplňování</string>
     <string name="fillwarning">Prosím ujistěte se, že hodnota odpovídá specifikaci Vašeho setu!</string>
@@ -1193,7 +1193,7 @@
     <string name="bolusadvisor">Poradce pro bolus</string>
     <string name="bolusadvisormessage">Máte vysokou glykémii. Namísto jídla doporučujeme vyčkat na lepší glykémii a připomenout, až bude čas na jídlo. Přejete si poslat korekční bolus a připomenout, až bude čas k jídlu? V tomto případě nebudou zapsané žádné sacharidy, a později opět musíte spustit kalkulátor, jakmile vám to připomeneme.</string>
     <string name="enablebolusadvisor">Povolit poradce s bolusem</string>
-    <string name="enablebolusadvisor_summary">Použij připomenutí, abys začal jíst později, namísto výsledku z kalkulátoru během vysoké glykémie (\"pre-bolus\")</string>
+    <string name="enablebolusadvisor_summary">Při vysoké glykémii použijte připomenutí, abyste začali jíst později, namísto výsledku z kalkulátoru („prebolus“)</string>
     <string name="time_to_eat">Čas k jídlu!\nSpusťte Bolusovou kalkulačku a proveďte výpočet znovu.</string>
     <string name="timetoeat">Čas k jídlu</string>
     <string name="fabric_upload_disabled">Nahrávání protokolů o pádech zakázáno!</string>

@@ -127,7 +127,6 @@ Context | Edit Context</string>
     <string name="sensitivity_hint1">https://androidaps.readthedocs.io/en/latest/EN/Configuration/Sensitivity-detection-and-COB.html</string>
     <string name="wrongcarbs_label">Ошибки записи углеводов</string>
     <string name="wrongcarbs_whattodo">Что нужно делать, если сделан неправильный ввод углеводов?</string>
-    <string name="iob_negiob">Отрицательное значение IOB в течеие продолжительного периода времени при отсутствии физ. нагрузки означает, что ваш профиль слишком сильный и вам нужно убавить подачу инсулина в настройках.</string>
     <string name="breadgrams_grams">Для оценки и записи потребляемых углеводов следует использовать только граммы.</string>
     <string name="breadgrams_decay">AndroidAPS использует динамическую модель для оценки \"распада\" и расчета COB.</string>
     <string name="breadgrams_calc">Если уровень глюкозы в крови находится вне допустимых значений (слишком низкое или слишком высокое), то калькулятор болюса может быть использован для внесения предложений по коррекции соотношения инсулин/углеводы.</string>

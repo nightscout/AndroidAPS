@@ -13,7 +13,7 @@ import androidx.core.content.res.ResourcesCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
-
+import info.nightscout.androidaps.utils.buildHelper.BuildHelper;
 import javax.inject.Inject;
 
 import dagger.android.support.DaggerFragment;
@@ -179,7 +179,7 @@ public class TreatmentsTempTargetFragment extends DaggerFragment {
         swipeRefresh.setColorSchemeResources(R.color.orange, R.color.green, R.color.blue);
         swipeRefresh.setProgressBackgroundColorSchemeColor(ResourcesCompat.getColor(getResources(), R.color.swipe_background, null));
 
-        boolean nsUploadOnly = sp.getBoolean(R.string.key_ns_upload_only, true);
+        boolean nsUploadOnly = sp.getBoolean(R.string.key_ns_upload_only, true) && buildHelper.isEngineeringMode();
         if (nsUploadOnly) {
             swipeRefresh.setEnabled(false);
         } else {
