@@ -286,6 +286,7 @@
     <string name="correctionbous">תיקון</string>
     <string name="actions">פעולות</string>
     <string name="ns_upload_only">(מסוכן להשבית) העלאה בלבד לנייטסקאוט</string>
+    <string name="ns_upload_only_summary">העלאה בלבד של נתונים לנייטסקאוט. לא מתאים לשימוש אלא אם מקור נתוני הסוכר הוא מקומי כדוגמת xDrip. לא מתאים לשימוש בפרופילים מקוונים מנייטסקאוט.\n!!! אזהרה !!! ביטול אפשרות זו עלולה לגרום לתקלות ולמינון יתר של אינסולין אם אחד או יותר מרכיבי המערכת (AAPS, xDrip, נייטסקאוט) אינו מוגדר כהלכה. וודאו היטב שהנתונים המוצגים ב-AAPS תואמים את מצב המשאבה!</string>
     <string name="pumpNotInitialized">משאבה לא הופעלה!</string>
     <string name="primefill">תיחול\\מילוי</string>
     <string name="fillwarning">נא ודאו שהכמות מתאימה למפרט ערכת העירוי שלכם!</string>
@@ -355,6 +356,8 @@
     <string name="overview_calibration">כיול</string>
     <string name="xdripnotinstalled">xDrip+ אינו מותקן</string>
     <string name="calibrationsent">כיול נשלח ל-xDrip+</string>
+    <string name="smscommunicator_calibrationsent">הכיול נשלח. יש לאשר את קבלת כיולים ב-xDrip+.</string>
+    <string name="smscommunicator_calibrationfailed">xDrip אינו מקבל כיולים</string>
     <string name="pumpsuspended">משאבה מושהית</string>
     <string name="executing">מבצע</string>
     <string name="virtualpump_settings">הגדרות משאבה וירטואלית</string>
