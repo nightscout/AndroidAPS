@@ -40,7 +40,6 @@
     <string name="description_source_glimp">Receber valores BG do Glimp.</string>
     <string name="description_source_mm640g">Receber valores de Glucose do 600SeriesAndroidUploader.</string>
     <string name="description_source_ns_client">Downloads de dados de Glicose do Nightscout</string>
-    <string name="description_source_xdrip">Receber valores BG de xDrip.</string>
     <string name="description_treatments">Salva todos os tratamentos que foram feitos</string>
     <string name="description_wear">Monitore e controle AndroidAPS usando seu relógio WearOS.</string>
     <string name="description_xdrip_status_line">Mostrar informações sobre o loop no watchface do xDrip+.</string>
@@ -117,7 +116,6 @@
     <string name="changeyourinput">Altere sua entrada!</string>
     <string name="configbuilder_bgsource">Fonte de BG</string>
     <string name="configbuilder_bgsource_description">De onde o AndroidAPS deve obter os dados?</string>
-    <string name="xdrip">xDrip</string>
     <string name="apsmode_title">Modo APS</string>
     <string name="closedloop">Loop Fechado</string>
     <string name="openloop">Loop Aberto</string>
@@ -260,8 +258,6 @@
     <string name="mealbolus">Refeição</string>
     <string name="correctionbous">Correção</string>
     <string name="actions">Ações</string>
-    <string name="ns_upload_only">Envio do NS apenas (sincronização desativada)</string>
-    <string name="ns_upload_only_summary">Apenas upload para NS. Não é eficaz em SGV a menos que uma fonte local como xDrip esteja selecionada. Não é eficaz em perfis enquanto NS-Profiles é usado.</string>
     <string name="pumpNotInitialized">Bomba não inicializada!</string>
     <string name="primefill">Purgar/Preencher</string>
     <string name="fillwarning">Por favor certifique-se que o valor corresponde ao especificado para o seu conjunto de infusão!</string>
@@ -316,7 +312,6 @@
     <string name="smscommunicator_shortname">SMS</string>
     <string name="short_tabtitles">Abreviar títulos dos separadores</string>
     <string name="always_use_shortavg">Usar sempre delta médio curto em vez de delta simples</string>
-    <string name="always_use_shortavg_summary">Útil quando há ruído nos dados de fontes sem filtro como o xDrip.</string>
     <string name="profile">Perfil</string>
     <string name="openapsama_max_daily_safety_multiplier_summary">Valor padrão: 3 Por segurança é o valor limite estabelecido por OpenAPS. O que faz é limitar a basal a x3 a basal mázima. Se necessário modificar este valor, por favor ter em conta que os dados apontam para que os limites de segurança sejam - 3 x max diario ou 4x valor atual (qual seja menor) como valores máximos.</string>
     <string name="openapsama_current_basal_safety_multiplier_summary">Valor padrão: 4 Esta é a outra parte dos valores limites de segurança - 3 x max diário ou 4x valor actual - do OpenAPS. Isto define que não importa o valor da basal máxima definido na bomba, o valor máximo da basal temporária não pode ser maior que 4 x o valor da basal definida na bomba. O objetivo é evitar que sejam determinadas basais temporárias muito elevadas antes que se perceba como o algoritmo funciona. 4x é um valor que a maior parte das pessoas nunca necessitará de alterar pois o mais provável é necessitar de alterar outras definições para não necessitar de \"ultrapassar\" este limite de segurança.</string>
@@ -330,9 +325,6 @@
     <string name="smscommunicator_invalidphonennumber">SMS número de telefone inválido</string>
     <string name="overview_calibration">Calibração</string>
     <string name="xdripnotinstalled">xDrip+ não está instalado</string>
-    <string name="calibrationsent">Calibração enviada para o xDrip</string>
-    <string name="smscommunicator_calibrationsent">Calibração enviada. Recepção têm de estar activada no xDrip.</string>
-    <string name="smscommunicator_calibrationfailed">O xDrip não esta a receber as calibrações</string>
     <string name="pumpsuspended">Bomba suspensa</string>
     <string name="executing">Executando</string>
     <string name="virtualpump_settings">Definições da bomba virtual</string>
@@ -402,16 +394,12 @@
     <string name="show_statuslights">Mostrar luzes de estado no ecrã principal</string>
     <string name="statuslights_res_warning">Limite de aviso de nível de reservatório [U]</string>
     <string name="statuslights_res_critical">Limite crítico de nível de reservatório [U]</string>
-    <string name="statuslights_bat_warning">Limite de aviso de nível de bateria [%]</string>
-    <string name="statuslights_bat_critical">Limite de crítico de nível de bateria [%]</string>
     <string name="iob">IOB</string>
     <string name="cob">COB</string>
     <string name="activity_shortname">ACT</string>
     <string name="nav_about">Sobre</string>
     <string name="smscommunicator_missingsmspermission">Falta de permissão SMS</string>
     <string name="smscommunicator_missingphonestatepermission">Falta permissão do estado do telefone</string>
-    <string name="xdripstatus_settings">Estado xDrip (relógio)</string>
-    <string name="xdripstatus">Linha estado xDrip (relógio)</string>
     <string name="xdripstatus_shortname">xds</string>
     <string name="wear_showbgi_title">Mostrar BGI</string>
     <string name="wear_showbgi_summary">Adicionar BGI à linha de status</string>
@@ -446,7 +434,6 @@
     <string name="mdtp_cancel">Cancelar</string>
     <string name="notloadedplugins">Nem todos perfis foram carregados!</string>
     <string name="valuesnotstored">Valores não guardados!</string>
-    <string name="ns_localbroadcasts">Ative as transmissões para outros apps (como xDrip). Não ative se você tiver mais de uma instância de AAPS ou NSClient instalada!</string>
     <string name="ns_localbroadcasts_title">Ativar partilha local.</string>
     <string name="careportal_newnstreatment_duration_min_label">Duração [min]</string>
     <string name="openapssmb">SMB OpenAPS</string>

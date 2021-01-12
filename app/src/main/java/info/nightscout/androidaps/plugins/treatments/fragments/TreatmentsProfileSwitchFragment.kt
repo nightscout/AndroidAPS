@@ -28,6 +28,7 @@ import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.FabricPrivacy
 import info.nightscout.androidaps.utils.T
 import info.nightscout.androidaps.utils.alertDialogs.OKDialog
+import info.nightscout.androidaps.utils.buildHelper.BuildHelper
 import info.nightscout.androidaps.utils.extensions.toVisibility
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 import info.nightscout.androidaps.utils.sharedPreferences.SP
@@ -47,6 +48,7 @@ class TreatmentsProfileSwitchFragment : DaggerFragment() {
     @Inject lateinit var nsUpload: NSUpload
     @Inject lateinit var uploadQueue: UploadQueue
     @Inject lateinit var dateUtil: DateUtil
+    @Inject lateinit var buildHelper: BuildHelper
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
@@ -62,7 +64,7 @@ class TreatmentsProfileSwitchFragment : DaggerFragment() {
         swipeRefresh.setColorSchemeResources(R.color.orange, R.color.green, R.color.blue)
         swipeRefresh.setProgressBackgroundColorSchemeColor(ResourcesCompat.getColor(resources, R.color.swipe_background, null))
 
-        val nsUploadOnly = sp.getBoolean(R.string.key_ns_upload_only, false)
+        val nsUploadOnly = sp.getBoolean(R.string.key_ns_upload_only, true) && buildHelper.isEngineeringMode()
         if (nsUploadOnly) {
             swipeRefresh.isEnabled = false
         } else {

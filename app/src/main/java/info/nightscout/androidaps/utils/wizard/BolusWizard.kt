@@ -300,7 +300,7 @@ class BolusWizard @Inject constructor(
             if (carbTime > 0) {
                 timeShift += " (+" + resourceHelper.gs(R.string.mins, carbTime) + ")"
             } else if (carbTime < 0) {
-                timeShift += " (-" + resourceHelper.gs(R.string.mins, carbTime) + ")"
+                timeShift += " (" + resourceHelper.gs(R.string.mins, carbTime) + ")"
             }
             actions.add(resourceHelper.gs(R.string.carbs) + ": " + resourceHelper.gs(R.string.format_carbs, carbs).formatColor(resourceHelper, R.color.carbs) + timeShift)
         }

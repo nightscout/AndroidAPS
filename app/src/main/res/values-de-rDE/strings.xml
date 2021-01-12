@@ -42,7 +42,7 @@
     <string name="description_source_glimp">Empfange Blutzuckerwerte von Glimp.</string>
     <string name="description_source_mm640g">Empfange Blutzuckerwerte vom 600SeriesAndroidUploader.</string>
     <string name="description_source_ns_client">Lade Blutzuckerdaten von Nightscout</string>
-    <string name="description_source_xdrip">Empfange Blutzuckerwerte von xDrip.</string>
+    <string name="description_source_xdrip">Empfange Blutzuckerwerte von xDrip+.</string>
     <string name="description_treatments">Speichert alle eingegebenen Behandlungen</string>
     <string name="description_wear">Überwache und steuere AndroidAPS mit Deiner WearOS-Smartwatch.</string>
     <string name="description_xdrip_status_line">Zeige Loop-Informationen auf Deinem xDrip+-Watchface.</string>
@@ -119,7 +119,7 @@
     <string name="changeyourinput">Ändere deine Eingabe!</string>
     <string name="configbuilder_bgsource">BZ-Quelle</string>
     <string name="configbuilder_bgsource_description">Woher soll AndroidAPS seine Blutzuckerwerte beziehen?</string>
-    <string name="xdrip">xDrip</string>
+    <string name="xdrip">xDrip+</string>
     <string name="apsmode_title">APS-Modus</string>
     <string name="closedloop">Closed Loop</string>
     <string name="openloop">Open Loop</string>
@@ -285,8 +285,8 @@
     <string name="mealbolus">Essensbolus</string>
     <string name="correctionbous">Korr</string>
     <string name="actions">Aktionen</string>
-    <string name="ns_upload_only">Zu Nightscout nur hochladen (keine Synchronisation)</string>
-    <string name="ns_upload_only_summary">Zu Nightscout nur hochladen. Nicht wirksam bei BZ-Werten, wenn nicht eine lokale Quelle wie z. B. xDrip gewählt wird; nicht wirksam bei Profilen, wenn Nightscout-Profile verwendet werden.</string>
+    <string name="ns_upload_only">(DEAKTIVIEREN GEFÄHRLICH) Zu NS nur hochladen</string>
+    <string name="ns_upload_only_summary">Zu Nightscout nur hochladen (keine Synchronisation). Gilt nicht für CGM-Werte falls nicht eine lokale Quelle wie xDrip+ ausgewählt wurde. Gilt ebenfalls nicht für Profildaten, wenn ein NS-Profil genutzt wird. \n!!! WARNUNG !!! Deaktivieren dieser Option kann zu Fehlfunktionen und Insulin-Überdosierung führen, wenn eine der Komponenten (AAPS, NS, xDrip+) falsch konfiguriert ist. Achte sorgfältig darauf, ob die in AAPS angezeigten Daten mit denen der Pumpe übereinstimmen!</string>
     <string name="pumpNotInitialized">Pumpe nicht initialisiert!</string>
     <string name="primefill">Katheterwechsel</string>
     <string name="fillwarning">Bitte vergewissere Dich, dass die Füllmenge den Eigenschaften des Katheters entspricht!</string>
@@ -341,7 +341,7 @@
     <string name="smscommunicator_shortname">SMS</string>
     <string name="short_tabtitles">Kurze Tab-Überschriften</string>
     <string name="always_use_shortavg">Verwende immer das kurze durchschnittliche Delta statt des einfachen Deltas</string>
-    <string name="always_use_shortavg_summary">Das ist sinnvoll, wenn die Daten von einer ungefilterten Quelle Signalrauschen haben.</string>
+    <string name="always_use_shortavg_summary">Das ist sinnvoll, wenn die Daten von einer ungefilterten Quelle wie xDrip+ Signalrauschen haben.</string>
     <string name="profile">Profil</string>
     <string name="openapsama_max_daily_safety_multiplier_summary">Standardwert: 3\nDies ist eine wichtige Sicherheitseinstellung. Sie begrenzt die maximale Basal-Abgabe auf die dreifache Menge (im Standardfall) deiner größten Basalrate im Profil. In der Regel solltest Du diesen Wert nicht ändern. Aber Du solltest wissen, was \"3x max daily, 4x current\" als Sicherheitseinstellung bedeutet.</string>
     <string name="openapsama_current_basal_safety_multiplier_summary">Standardwert: 4\nDies ist die andere wichtige Sicherheitseinstellung, die zweite Hälfte von \"3x max daily, 4x current\". Diese Grenze beschränkt die Basal-Abgabe auf die (im Standardfall) vierfache Menge der aktuellen Basalrate im Profil. Dies ist wichtig, um Nutzer davor zu bewahren, zuviel Basal-Insulin zu verabreichen. Nochmals, der Standardwert ist 4x. Die meisten Nutzer werden niemals diese Einstellung verändern, sondern andere Einstellungen anpassen, um sich nicht dieser Sicherheitsgrenze zu nähern.</string>
@@ -355,9 +355,9 @@
     <string name="smscommunicator_invalidphonennumber">Falsche/ungültige Telefonnummer</string>
     <string name="overview_calibration">Kalibrierung</string>
     <string name="xdripnotinstalled">xDrip+ nicht installiert</string>
-    <string name="calibrationsent">Kalibrierung an xDrip+ gesendet</string>
-    <string name="smscommunicator_calibrationsent">Kalibrierung gesendet. Das Empfangen von Kalbrierungen muss in xDrip+ aktiviert sein.</string>
-    <string name="smscommunicator_calibrationfailed">xDrip+ hat die Kalbrierung nicht erhalten</string>
+    <string name="calibrationsent">Kalibrierung an xDrip+ gesendet+</string>
+    <string name="smscommunicator_calibrationsent">Kalibrierung gesendet. Das Empfangen von Kalbrierungen muss in xDrip+ aktiviert sein+.</string>
+    <string name="smscommunicator_calibrationfailed">xDrip+ erhält keine Kalibrierungen</string>
     <string name="pumpsuspended">Pumpe pausiert</string>
     <string name="executing">Wird ausgeführt</string>
     <string name="virtualpump_settings">Einstellungen der virtuellen Pumpe</string>
@@ -432,8 +432,8 @@
     <string name="fastactinginsulincomment">NovoRapid, NovoLog, Humalog</string>
     <string name="ultrafastactinginsulincomment">Fiasp</string>
     <string name="insulin_shortname">INS</string>
-    <string name="enablesuperbolus">Aktiviere Superbolus im Wizard</string>
-    <string name="enablesuperbolus_summary">Aktiviere die SuperBolus-Funktion im Wizard. Nicht aktivieren, wenn Du nicht weißt, welche Auswirkungen dieser Bolus hat! ES KANN ZU EINER ÜBERDOSIERUNG AN INSULIN KOMMEN!</string>
+    <string name="enablesuperbolus">Aktiviere Superbolus im Bolus-Rechner</string>
+    <string name="enablesuperbolus_summary">Aktiviere die SuperBolus-Funktion im Bolus-Rechner. Nicht aktivieren, wenn Du nicht weißt, welche Auswirkungen dieser Bolus hat! ES KANN ZU EINER ÜBERDOSIERUNG AN INSULIN KOMMEN!</string>
     <string name="show_statuslights">Statusanzeige auf Homescreen</string>
     <string name="statuslights_cage_warning">Warnschwelle Kanülenalter [h]</string>
     <string name="statuslights_cage_critical">Warnschwelle kritisches Kanülenalter [h]</string>
@@ -441,14 +441,14 @@
     <string name="statuslights_iage_critical">Warnschwelle kritisches Insulinalter [h]</string>
     <string name="statuslights_sage_warning">Warnschwelle Sensoralter [h]</string>
     <string name="statuslights_sage_critical">Warnschwelle kritisches Sensoralter [h]</string>
-    <string name="statuslights_sbat_warning">Warnschwelle Sensor-Batteriestand [%]</string>
-    <string name="statuslights_sbat_critical">Warnschwelle kritischer Sensor-Batteriestand [%]</string>
-    <string name="statuslights_bage_warning">Warnschwelle Batteriealter [h]</string>
-    <string name="statuslights_bage_critical">Warnschwelle kritisches Batteriealter [h]</string>
+    <string name="statuslights_sbat_warning">Warnschwelle Sensor-Akkustand [%]</string>
+    <string name="statuslights_sbat_critical">Warnschwelle kritischer Sensor-Akkustand [%]</string>
+    <string name="statuslights_bage_warning">Warnschwelle Pumpenbatterie-Alter [h]</string>
+    <string name="statuslights_bage_critical">Warnschwelle kritisches Pumpenbatterie-Alter [h]</string>
     <string name="statuslights_res_warning">Warnschwelle Reservoirstand [IE]</string>
     <string name="statuslights_res_critical">Warnschwelle kritischer Reservoirstand [IE]</string>
-    <string name="statuslights_bat_warning">Warnschwelle Batteriestand [%]</string>
-    <string name="statuslights_bat_critical">Warnschwelle kritischer Batteriestand [%]</string>
+    <string name="statuslights_bat_warning">Warnschwelle Pumpenbatterie-Stand [%]</string>
+    <string name="statuslights_bat_critical">Warnschwelle kritischer Pumpenbatterie-Stand [%]</string>
     <string name="prediction_shortname">PRED</string>
     <string name="iob">IOB</string>
     <string name="cob">COB</string>
@@ -504,7 +504,7 @@
     <string name="mdtp_cancel">Abbrechen</string>
     <string name="notloadedplugins">Es sind nicht alle Profile geladen!</string>
     <string name="valuesnotstored">Werte nicht gespeichert!</string>
-    <string name="ns_localbroadcasts">Aktiviere die Datenübertragung zu anderen Apps (z.B. xDrip). Nicht aktivieren, falls Du mehr als eine Instanz von AAPS oder NSClient installiert hast!</string>
+    <string name="ns_localbroadcasts">Aktiviere die Datenübertragung zu anderen Apps (z.B. xDrip+). Nicht aktivieren, falls Du mehr als eine Instanz von AAPS oder NSClient installiert hast!</string>
     <string name="ns_localbroadcasts_title">Aktiviere lokale Broadcasts</string>
     <string name="careportal_newnstreatment_duration_min_label">Dauer [min]</string>
     <string name="openapssmb">OpenAPS SMB</string>
@@ -1034,8 +1034,8 @@ Unerwartetes Verhalten.</string>
     <string name="cobvsiob">COB vs IOB</string>
     <string name="bolusconstraintappliedwarn">Bolus Einschränkung angewandt: %2$.2f U statt %1$.2f U</string>
     <string name="slowabsorptiondetected"><![CDATA[<font color=\'%1$s\'>!!!!! Langsamer Kohlenhydrat-Abbau erkannt: %2$d%% der Zeit. Überprüfe Deine Berechnung. COB könnte zu hoch sein und deswegen zu viel Insulin abgegeben werden!!!!!</font>]]></string>
-    <string name="partialboluswizard">Abgabe von [%] des Ergebnisses des Bolusrechners</string>
-    <string name="deliverpartofboluswizard">Der Bolus-Assistent führt Berechnungen durch, aber nur dieser Teil der berechneten Insulin wird abgegeben. Nützlich mit SMB-Algorithmus.</string>
+    <string name="partialboluswizard">Abgabe von [%] des Ergebnisses des Bolus-Rechners</string>
+    <string name="deliverpartofboluswizard">Der Bolus-Rechner führt Berechnungen durch, aber nur dieser Teil der berechneten Insulin wird abgegeben. Nützlich mit SMB-Algorithmus.</string>
     <string name="loading">Lädt ...</string>
     <string name="snooze">Schlummern</string>
     <string name="time_range">Zeitraum</string>
@@ -1188,13 +1188,15 @@ Unerwartetes Verhalten.</string>
     <string name="cta_dont_kill_my_app_info">Don\'t kill my app?</string>
     <string name="alarm">Alarm</string>
     <string name="smscommunicator_report_pump_ureachable_summary">SMS senden, wenn Pumpe nicht erreichbar</string>
-    <string name="smscommunicator_pump_ureachable">Bericht Pumpe nicht erreichbar</string>
+    <string name="smscommunicator_pump_ureachable">Hinweis Pumpe nicht erreichbar</string>
     <string name="advisoralarm">Alarmiere mich, wenn es Zeit zum Essen ist. </string>
     <string name="alarminxmin">Alarm in %1$d Min.</string>
     <string name="bolusadvisor">Bolus-Berater</string>
     <string name="bolusadvisormessage">Deine BZ-Werte sind hoch. Statt jetzt zu essen solltest Du abwarten, bis die Werte gesunken sind. Willst du jetzt einen Korrekturbolus abgeben und erinnert werden, wenn es Zeit zum Essen ist? In diesem Fall werden die Kohlenhydrate nicht übernommen und Du musst nach der Erinnerung den Bolus-Rechner erneut verwenden.</string>
     <string name="enablebolusadvisor">Bolus-Berater aktivieren</string>
-    <string name="enablebolusadvisor_summary">Bei hohen BZ-Werten Essenserinnerung statt Bolus-Wizard verwenden</string>
+    <string name="enablebolusadvisor_summary">Option zur Erinnerung an späteres Essen (z.B. bei hohen BZ-Werten) im Bolus-Rechner (\"Spritz-Ess-Abstand\")</string>
     <string name="time_to_eat">Zeit zum Essen!\nStarte den Bolus-Rechner und gib die KH ein. </string>
     <string name="timetoeat">Zeit zum Essen</string>
+    <string name="fabric_upload_disabled">Hochladen von Crash-Protokollen deaktiviert!</string>
+    <string name="graph_menu_divider_header">Diagramm</string>
 </resources>

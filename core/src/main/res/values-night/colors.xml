@@ -175,11 +175,15 @@
     <color name="dialogbackground">#374764</color>
     <color name="common_background">#707991</color>
 
-    <!---The 3 pills in overview page-->
+    <!---The 2 pills in overview page-->
     <color name="overviewPillColor">#5a6275</color>
-    <!---The 3 pills in overview page with gradient color-->
+    <!---The 2 pills in overview page with gradient color-->
     <color name="PillColorStart">#FF91908D</color>
     <color name="PillColorEnd">#FF393938</color>
+    <color name="PillColorWarningStart">#FFFF00</color>
+    <color name="PillColorWarningEnd">#D4D400</color>
+    <color name="PillColortempTargetStart">#FAFAE1</color>
+    <color name="PillColortempTargetEnd">#F0F0D7</color>
 
     <!---Background Gradient Blue-->
     <color name="background_start_color_blue">#FF1E05AD</color>

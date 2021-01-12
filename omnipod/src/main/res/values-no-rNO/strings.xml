@@ -11,8 +11,7 @@
     <string name="omnipod_config_suspend_delivery_button_enabled">Vis Pause insulintilførsel knapp i Omnipod meny</string>
     <string name="omnipod_config_pulse_log_button_enabled">Vis Puls logg knappen i Pod menyen</string>
     <string name="omnipod_config_rileylink_stats_button_enabled">Vis RileyLink status knapp i Pod menyen</string>
-    <string name="omnipod_config_use_riley_link_battery_level">Bruk batterinivå rapportert av EmaLink/OrangeLink</string>
-    <string name="omnipod_config_use_riley_link_battery_level_summary">Virker IKKE med RileyLink. Kan hende den ikke fungerer med andre RileyLink-alternativer.</string>
+    <string name="omnipod_config_battery_change_logging_enabled">Aktiver logging av batteribytte i Aksjoner</string>
     <string name="omnipod_config_time_change_enabled">DST/Tidssone deteksjon aktivert</string>
     <string name="omnipod_config_expiration_reminder_enabled">Utløpspåminnelse aktivert</string>
     <string name="omnipod_config_expiration_reminder_hours_before_shutdown">Timer før nedstenging</string>
@@ -67,6 +66,7 @@
     <string name="omnipod_error_rileylink_address_invalid">RileyLink adressen er ugyldig.</string>
     <string name="omnipod_error_operation_not_possible_no_configuration">Operasjon ikke mulig.\n\n Du må konfigurere Medtronic pumpen før du kan bruke denne funksjonen.</string>
     <string name="omnipod_error_pod_not_attached">Ingen aktiv Pod</string>
+    <string name="omnipod_error_time_out_of_sync">Tid på Pod er ikke synkronisert. Vennligst oppdater tiden i Omnipod fanen.</string>
     <string name="omnipod_error_unexpected_exception">En uventet feil oppstod. Vennligst rapporter (%1$s: %2$s).</string>
     <string name="omnipod_error_crc_mismatch">Kommunikasjonsfeil: klarte ikke å verifisere meldingen</string>
     <string name="omnipod_error_invalid_packet_type">Kommunikasjonsfeil: mottok en ugyldig datapakke fra Pod</string>

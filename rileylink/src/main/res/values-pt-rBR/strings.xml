@@ -29,5 +29,5 @@
     <string name="rileylink_error_pod_unreachable">Pod inacessível</string>
     <!-- RileyLink - Common -->
     <string name="rileylink_target_device_medtronic">Bomba Medtronic</string>
-    <string name="rileylink_target_device_omnipod">Omnipod</string>
+    <!-- RileyLink - Preferences -->
 </resources>

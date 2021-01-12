@@ -3,6 +3,7 @@ package info.nightscout.androidaps.plugins.general.overview
 import android.annotation.SuppressLint
 import android.app.NotificationManager
 import android.content.Context
+import android.graphics.Color
 import android.graphics.PorterDuff
 import android.graphics.Typeface
 import android.graphics.drawable.AnimationDrawable
@@ -290,14 +291,15 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
         if (childFragmentManager.isStateSaved) return
         activity?.let { activity ->
             when (v.id) {
-                R.id.overview_temptarget        -> protectionCheck.queryProtection(activity, ProtectionCheck.Protection.BOLUS, UIRunnable { TempTargetDialog().show(childFragmentManager, "Overview") })
-                R.id.overview_activeprofile     -> {
-                    val args = Bundle()
-                    args.putLong("time", DateUtil.now())
-                    args.putInt("mode", ProfileViewerDialog.Mode.RUNNING_PROFILE.ordinal)
-                    val pvd = ProfileViewerDialog()
-                    pvd.arguments = args
-                    pvd.show(childFragmentManager, "ProfileViewDialog")
+                R.id.overview_temptarget -> protectionCheck.queryProtection(activity, ProtectionCheck.Protection.BOLUS, UIRunnable { if(isAdded) TempTargetDialog().show(childFragmentManager, "Overview") })
+
+                R.id.overview_activeprofile -> {
+                    ProfileViewerDialog().also { pvd ->
+                        pvd.arguments = Bundle().also {
+                            it.putLong("time", DateUtil.now())
+                            it.putInt("mode", ProfileViewerDialog.Mode.RUNNING_PROFILE.ordinal)
+                        }
+                    }.show(childFragmentManager, "ProfileViewDialog")
                 }
 
                 R.id.overview_accepttempbutton -> {
@@ -306,24 +308,26 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
                         val lastRun = loopPlugin.lastRun
                         loopPlugin.invoke("Accept temp button", false)
                         if (lastRun?.lastAPSRun != null && lastRun.constraintsProcessed?.isChangeRequested == true) {
-                            OKDialog.showConfirmation(activity, resourceHelper.gs(R.string.tempbasal_label), lastRun.constraintsProcessed?.toSpanned()
-                                ?: "".toSpanned(), {
-                                aapsLogger.debug("USER ENTRY: ACCEPT TEMP BASAL")
-                                overview_accepttempbutton?.visibility = View.GONE
-                                (context?.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager).cancel(Constants.notificationID)
-                                actionStringHandler.handleInitiate("cancelChangeRequest")
-                                loopPlugin.acceptChangeRequest()
+                            protectionCheck.queryProtection(activity, ProtectionCheck.Protection.BOLUS, UIRunnable {
+                                OKDialog.showConfirmation(activity, resourceHelper.gs(R.string.tempbasal_label), lastRun.constraintsProcessed?.toSpanned()
+                                    ?: "".toSpanned(), {
+                                    aapsLogger.debug("USER ENTRY: ACCEPT TEMP BASAL")
+                                    overview_accepttempbutton?.visibility = View.GONE
+                                    (context?.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager).cancel(Constants.notificationID)
+                                    actionStringHandler.handleInitiate("cancelChangeRequest")
+                                    loopPlugin.acceptChangeRequest()
+                                })
                             })
                         }
                     }
                 }
 
                 R.id.overview_apsmode -> {
-                    val args = Bundle()
-                    args.putInt("showOkCancel", 1)                  // 1-> true
-                    val pvd = LoopDialog()
-                    pvd.arguments = args
-                    pvd.show(childFragmentManager, "Overview")
+                    protectionCheck.queryProtection(activity, ProtectionCheck.Protection.BOLUS, UIRunnable {
+                        if(isAdded)  LoopDialog().also { dialog ->
+                            dialog.arguments = Bundle().also { it.putInt("showOkCancel", 1) }
+                        }.show(childFragmentManager, "Overview")
+                    })
                 }
             }
         }
@@ -427,10 +431,81 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
     }
 
     @SuppressLint("SetTextI18n")
+    fun setTempTargetPill(profile: Profile, lastRun: LoopInterface.LastRun?) {
+        val units = profileFunction.getUnits()
+        val tempTarget = treatmentsPlugin.tempTargetFromHistory
+        if (tempTarget != null) {
+            overview_temptarget?.text = Profile.toTargetRangeString(tempTarget.low, tempTarget.high, Constants.MGDL, units) + " " + DateUtil.untilString(tempTarget.end(), resourceHelper)
+            val drawable: Drawable = overview_temptarget.background
+            val drawableLeft: Array<Drawable?> = overview_temptarget.compoundDrawables
+            if (drawableLeft[0] != null) resourceHelper.gc(R.color.ribbonTextWarning).let { drawableLeft[0]!!.setTint(it) }
+            drawable.setColorFilter(resources.getColor(R.color.ribbonWarning, requireContext().theme), PorterDuff.Mode.SRC_IN)
+            resourceHelper.gc(R.color.ribbonTextWarning).let { overview_temptarget.setTextColor(it) }
+            overview_temptarget.setTypeface(null, Typeface.BOLD)
+        } else {
+            // If the target is not the same as set in the profile then oref has overridden it
+            val targetUsed = lastRun?.constraintsProcessed?.targetBG ?: 0.0
+
+            if (targetUsed != 0.0 && abs(profile.targetMgdl - targetUsed) > 0.01) {
+                aapsLogger.debug("Adjusted target. Profile: ${profile.targetMgdl} APS: $targetUsed")
+                overview_temptarget?.text = Profile.toTargetRangeString(targetUsed, targetUsed, Constants.MGDL, units)
+                val drawable: Drawable = overview_temptarget.background
+                val drawableLeft: Array<Drawable?> = overview_temptarget.compoundDrawables
+                if (drawableLeft[0] != null) resourceHelper.gc(R.color.ribbonTextWarning).let { drawableLeft[0]!!.setTint(it) }
+                drawable.setColorFilter(resources.getColor(R.color.tempTargetBackground, requireContext().theme), PorterDuff.Mode.SRC_IN)
+                resourceHelper.gc(R.color.ribbonTextWarning).let { overview_temptarget.setTextColor(it) }
+                overview_temptarget.setTypeface(null, Typeface.BOLD)
+            } else {
+                val theme = requireContext().theme
+                if (theme != null) {
+                    overview_temptarget?.text = Profile.toTargetRangeString(profile.targetLowMgdl, profile.targetHighMgdl, Constants.MGDL, units)
+                    setPillStyle(overview_temptarget,R.attr.PillColorStart, R.attr.PillColorEnd , R.color.ribbonTextDefault)
+                }
+            }
+        }
+    }
+
+    @SuppressLint("SetTextI18n")
+    fun setActiveProfilePill(profile: Profile) {
+        overview_activeprofile?.text = profileFunction.getProfileNameWithDuration()
+        if (profile.percentage != 100 || profile.timeshift != 0) {
+            val drawable: Drawable = overview_activeprofile.background
+            val drawableLeft: Array<Drawable?> = overview_activeprofile.compoundDrawables
+            if (drawableLeft[0] != null) resourceHelper.gc(R.color.ribbonTextWarning).let { drawableLeft[0]!!.setTint(it) }
+            drawable.setColorFilter(resources.getColor(R.color.ribbonWarning, requireContext().theme), PorterDuff.Mode.SRC_IN)
+            resourceHelper.gc(R.color.ribbonTextWarning).let { overview_activeprofile.setTextColor(it) }
+            overview_activeprofile.setTypeface(null, Typeface.BOLD)
+        } else {
+            val drawableLeft: Array<Drawable?> = overview_activeprofile.compoundDrawables
+            val theme = requireContext().theme
+            if (theme != null) {
+                setPillStyle(overview_activeprofile,R.attr.PillColorStart, R.attr.PillColorEnd , R.color.ribbonTextDefault)
+            }
+        }
+    }
+
+    fun setPillStyle(textView: TextView, colorStart: Int, colorEnd: Int, colorText: Int  ){
+        val drawableLeft: Array<Drawable?> = textView.compoundDrawables
+        val theme = requireContext().theme
+        if (theme != null) {
+            // create a gradient drawable
+            val typedValueStart = TypedValue()
+            theme.resolveAttribute(colorStart, typedValueStart, true)
+            val typedValueEnd = TypedValue()
+            theme.resolveAttribute(colorEnd, typedValueEnd, true)
+            val colors = intArrayOf(typedValueStart.data, typedValueEnd.data)
+            val gradientDrawable = GradientDrawable(GradientDrawable.Orientation.TOP_BOTTOM, colors)
+            gradientDrawable.shape = GradientDrawable.RECTANGLE
+            gradientDrawable.cornerRadius = 40f
+            textView.background = gradientDrawable
+            if (drawableLeft[0] != null) resourceHelper.gc(colorText).let { drawableLeft[0]!!.setTint(it) }
+            resourceHelper.gc(colorText).let { textView.setTextColor(it) }
+        }
+    }
+
+    @SuppressLint("SetTextI18n")
     fun updateGUI(from: String) {
         aapsLogger.debug("UpdateGUI from $from")
-
-        //overview_time?.text = dateUtil.timeString(Date())
 
         if (!profileFunction.isProfileValid("Overview")) {
             overview_pumpstatus?.setText(R.string.noprofileset)
@@ -444,7 +519,6 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
 
         val profile = profileFunction.getProfile() ?: return
         val pump = activePlugin.activePump
-        val units = profileFunction.getUnits()
         val lowLine = defaultValueHelper.determineLowLine()
         val highLine = defaultValueHelper.determineHighLine()
         val lastRun = loopPlugin.lastRun
@@ -457,48 +531,9 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
         }
 
         // temp target
-        val tempTarget = treatmentsPlugin.tempTargetFromHistory
-        if (tempTarget != null) {
-            overview_temptarget?.text = Profile.toTargetRangeString(tempTarget.low, tempTarget.high, Constants.MGDL, units) + " " + DateUtil.untilString(tempTarget.end(), resourceHelper)
-            val drawable: Drawable = overview_temptarget.background
-            val drawableLeft: Array<Drawable?> = overview_temptarget.compoundDrawables
-            if (drawableLeft[0] != null) resourceHelper.gc(R.color.ribbonTextWarning).let { drawableLeft[0]!!.setTint(it) }
-            drawable.setColorFilter(resources.getColor(R.color.ribbonWarning, requireContext().theme), PorterDuff.Mode.SRC_IN)
-            resourceHelper.gc(R.color.ribbonTextWarning).let { overview_temptarget.setTextColor(it) }
-            overview_activeprofile.setTypeface(null, Typeface.BOLD)
-        } else {
-            // If the target is not the same as set in the profile then oref has overridden it
-            val targetUsed = lastRun?.constraintsProcessed?.targetBG ?: 0.0
-
-            if (targetUsed != 0.0 && abs(profile.targetMgdl - targetUsed) > 0.01) {
-                aapsLogger.debug("Adjusted target. Profile: ${profile.targetMgdl} APS: $targetUsed")
-                overview_temptarget?.text = Profile.toTargetRangeString(targetUsed, targetUsed, Constants.MGDL, units)
-                val drawable: Drawable = overview_temptarget.background
-                val drawableLeft: Array<Drawable?> = overview_temptarget.compoundDrawables
-                if (drawableLeft[0] != null) resourceHelper.gc(R.color.ribbonTextWarning).let { drawableLeft[0]!!.setTint(it) }
-                drawable.setColorFilter(resources.getColor(R.color.tempTargetBackground, requireContext().theme), PorterDuff.Mode.SRC_IN)
-                resourceHelper.gc(R.color.ribbonTextWarning).let { overview_temptarget.setTextColor(it) }
-                overview_activeprofile.setTypeface(null, Typeface.BOLD)
-            } else {
-                val drawableLeft: Array<Drawable?> = overview_temptarget.compoundDrawables
-                val theme = requireContext().theme
-                if (theme != null) {
-                    // create a gradient drawable
-                    overview_temptarget?.text = Profile.toTargetRangeString(profile.targetLowMgdl, profile.targetHighMgdl, Constants.MGDL, units)
-                    val typedValueStart = TypedValue()
-                    theme.resolveAttribute(R.attr.PillColorStart, typedValueStart, true)
-                    val typedValueEnd = TypedValue()
-                    theme.resolveAttribute(R.attr.PillColorEnd, typedValueEnd, true)
-                    val colors = intArrayOf(typedValueStart.data, typedValueEnd.data)
-                    val gradientDrawable = GradientDrawable(GradientDrawable.Orientation.TOP_BOTTOM, colors)
-                    gradientDrawable.shape = GradientDrawable.RECTANGLE
-                    gradientDrawable.cornerRadius = 40f
-                    overview_temptarget.background = gradientDrawable
-                    if (drawableLeft[0] != null) resourceHelper.gc(R.color.ribbonTextDefault).let { drawableLeft[0]!!.setTint(it) }
-                    resourceHelper.gc(R.color.ribbonTextDefault).let { overview_temptarget.setTextColor(it) }
-                }
-            }
-        }
+        setTempTargetPill(profile, lastRun)
+        // Active profile pill button
+        setActiveProfilePill(profile)
 
         // Basal, TBR
         val activeTemp = treatmentsPlugin.getTempBasalFromHistory(System.currentTimeMillis())
@@ -533,33 +568,6 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
         }
         overview_extended_llayout?.visibility = (extendedBolus != null && !pump.isFakingTempsByExtendedBoluses).toVisibility()
 
-        // Active profile pill button
-        overview_activeprofile?.text = profileFunction.getProfileNameWithDuration()
-        if (profile.percentage != 100 || profile.timeshift != 0) {
-            val drawable: Drawable = overview_activeprofile.background
-            val drawableLeft: Array<Drawable?> = overview_activeprofile.compoundDrawables
-            if (drawableLeft[0] != null) resourceHelper.gc(R.color.ribbonTextWarning).let { drawableLeft[0]!!.setTint(it) }
-            drawable.setColorFilter(resources.getColor(R.color.ribbonWarning, requireContext().theme), PorterDuff.Mode.SRC_IN)
-            resourceHelper.gc(R.color.ribbonTextWarning).let { overview_activeprofile.setTextColor(it) }
-            overview_activeprofile.setTypeface(null, Typeface.BOLD)
-        } else {
-            val drawableLeft: Array<Drawable?> = overview_activeprofile.compoundDrawables
-            val theme = requireContext().theme
-            if (theme != null) {
-                // create a gradient drawable
-                val typedValueStart = TypedValue()
-                theme.resolveAttribute(R.attr.PillColorStart, typedValueStart, true)
-                val typedValueEnd = TypedValue()
-                theme.resolveAttribute(R.attr.PillColorEnd, typedValueEnd, true)
-                val colors = intArrayOf(typedValueStart.data, typedValueEnd.data)
-                val gradientDrawable = GradientDrawable(GradientDrawable.Orientation.TOP_BOTTOM, colors)
-                gradientDrawable.shape = GradientDrawable.RECTANGLE
-                gradientDrawable.cornerRadius = 40f
-                overview_activeprofile.background = gradientDrawable
-                if (drawableLeft[0] != null) resourceHelper.gc(R.color.ribbonTextDefault).let { drawableLeft[0]!!.setTint(it) }
-                resourceHelper.gc(R.color.ribbonTextDefault).let { overview_activeprofile.setTextColor(it) }
-            }
-        }
 
         processButtonsVisibility()
 

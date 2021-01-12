@@ -87,7 +87,7 @@
     <string name="prerequisites_supportedcgm">Ein unterstütztes CGM.</string>
     <string name="prerequisites2_label">Voraussetzungen</string>
     <string name="prerequisites2_what">Was ist wichtig für die Einrichtung und Nutzung von AndroidAPS?</string>
-    <string name="prerequisites2_profile">Geprüfte Informationen zum Einrichten eines Profils (ISF, I:C Verhältnis, Basalraten, DIA etc.).</string>
+    <string name="prerequisites2_profile">Überprüfte und belastbare Profileinstellungen (ISF, I:C Verhältnis, Basalraten, DIA etc.).</string>
     <string name="prerequisites2_device">Ein kompatibles Android-Gerät (z.B. Handy, Android-Uhr oder Tablet).</string>
     <string name="prerequisites2_internet">AndroidAPS benötigt eine Internetverbindung, um im Closed Loop laufen zu können.</string>
     <string name="prerequisites2_supportedcgm">Ein unterstütztes CGM und eine passende App, um Blutzuckerwerte auf dem Gerät zu erhalten.</string>

@@ -168,16 +168,18 @@ class OmnipodOverviewFragment : DaggerFragment() {
             }
             R.id.omnipod_overview_button_pod_management -> {
                 showOut()
-                if (omnipodPumpPlugin.rileyLinkService?.verifyConfiguration() == true) {
-                    activity?.let { activity ->
+            if (omnipodPumpPlugin.rileyLinkService?.verifyConfiguration() == true) {
+                activity?.let { activity ->
+                    context?.let { context ->
                         protectionCheck.queryProtection(
                             activity, ProtectionCheck.Protection.PREFERENCES,
-                            UIRunnable(Runnable { startActivity(Intent(context, PodManagementActivity::class.java)) })
+                            UIRunnable { startActivity(Intent(context, PodManagementActivity::class.java)) }
                         )
                     }
-                } else {
-                    displayNotConfiguredDialog()
                 }
+            } else {
+                displayNotConfiguredDialog()
+            }
             }
             R.id.omnipod_overview_button_acknowledge_active_alerts -> {
                 showOut()
@@ -321,7 +323,7 @@ class OmnipodOverviewFragment : DaggerFragment() {
             omnipod_overview_firmware_version.text = resourceHelper.gs(R.string.omnipod_firmware_version_value, podStateManager.pmVersion.toString(), podStateManager.piVersion.toString())
 
             omnipod_overview_time_on_pod.text = readableZonedTime(podStateManager.time)
-            omnipod_overview_time_on_pod.setTextColor(if (podStateManager.timeDeviatesMoreThan(Duration.standardMinutes(5))) {
+            omnipod_overview_time_on_pod.setTextColor(if (podStateManager.timeDeviatesMoreThan(OmnipodConstants.TIME_DEVIATION_THRESHOLD)) {
                 resourceHelper.getAttributeColor(context, R.attr.statuslight_alarm)
             } else {
                 resourceHelper.getAttributeColor(context, R.attr.statuslight_normal)
@@ -589,10 +591,10 @@ class OmnipodOverviewFragment : DaggerFragment() {
 
     private fun displayNotConfiguredDialog() {
         context?.let {
-            UIRunnable(Runnable {
+            UIRunnable {
                 OKDialog.show(it, resourceHelper.gs(R.string.omnipod_warning),
-                    resourceHelper.gs(R.string.omnipod_error_operation_not_possible_no_configuration), null,sp)
-            }).run()
+                    resourceHelper.gs(R.string.omnipod_error_operation_not_possible_no_configuration), null, sp)
+            }.run()
         }
     }
 

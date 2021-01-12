@@ -28,7 +28,7 @@
     <string name="objectives_usage_objective">Aprenda como controlar AndroidAPS</string>
     <string name="objectives_usage_gate">Executar diferentes acções no AndroidAPS</string>
     <string name="objectives_useprofileswitch">Definir perfil de 90% por 10 min (pressione longo no nome de perfil na Visão Geral)</string>
-    <string name="objectives_usedisconnectpump">Simular chuveiro. Desligar a bomba de 1h (Pressione longo em Open Loop)</string>
+    <string name="objectives_usedisconnectpump">Simular chuveiro. Desconectar a bomba por 1h (Pressione longo em Open Loop)</string>
     <string name="objectives_usereconnectpump">... e volte a ligar de volta da mesma forma</string>
     <string name="objectives_usetemptarget">Crie um alvo temporário personalizado com 10 min de duração (pressione longo no seu alvo actual)</string>
     <string name="objectives_useactions">No Configurador active o plugiin de Acções, torne-o visível e exiba o seu conteúdo no menu superior</string>

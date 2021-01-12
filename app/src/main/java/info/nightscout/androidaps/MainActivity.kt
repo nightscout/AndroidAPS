@@ -34,6 +34,7 @@ import androidx.viewpager2.widget.ViewPager2
 import com.google.android.material.bottomappbar.BottomAppBar.FAB_ALIGNMENT_MODE_CENTER
 import com.google.android.material.bottomappbar.BottomAppBar.FAB_ALIGNMENT_MODE_END
 import com.google.android.material.tabs.TabLayoutMediator
+import com.google.firebase.crashlytics.FirebaseCrashlytics
 import com.joanzapata.iconify.Iconify
 import com.joanzapata.iconify.fonts.FontAwesomeModule
 import com.ms_square.etsyblur.BlurSupport
@@ -968,8 +969,10 @@ open class MainActivity : NoSplashAppCompatActivity() {
     }
 
     private fun setPluginPreferenceMenuName() {
-        val plugin = (main_pager.adapter as TabPageAdapter).getPluginAt(main_pager.currentItem)
-        this.menu?.findItem(R.id.nav_plugin_preferences)?.title = resourceHelper.gs(R.string.nav_preferences_plugin, plugin.name)
+        if (main_pager.currentItem > 0) {
+            val plugin = (main_pager.adapter as TabPageAdapter).getPluginAt(main_pager.currentItem)
+            this.menu?.findItem(R.id.nav_plugin_preferences)?.title = resourceHelper.gs(R.string.nav_preferences_plugin, plugin.name)
+        }
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
@@ -1033,6 +1036,7 @@ open class MainActivity : NoSplashAppCompatActivity() {
                 message += "Flavor: ${BuildConfig.FLAVOR}${BuildConfig.BUILD_TYPE}\n"
                 message += "${resourceHelper.gs(R.string.configbuilder_nightscoutversion_label)} ${nsSettingsStatus.nightscoutVersionName}"
                 if (buildHelper.isEngineeringMode()) message += "\n${resourceHelper.gs(R.string.engineering_mode_enabled)}"
+                if (!fabricPrivacy.fabricEnabled()) message += "\n${resourceHelper.gs(R.string.fabric_upload_disabled)}"
                 message += resourceHelper.gs(R.string.about_link_urls)
                 val messageSpanned = SpannableString(message)
                 Linkify.addLinks(messageSpanned, Linkify.WEB_URLS)
@@ -1114,6 +1118,12 @@ open class MainActivity : NoSplashAppCompatActivity() {
         fabricPrivacy.firebaseAnalytics.setUserProperty("Profile", activePlugin.activeProfileInterface.javaClass.simpleName)
         activePlugin.activeSensitivity.let { fabricPrivacy.firebaseAnalytics.setUserProperty("Sensitivity", it::class.java.simpleName) }
         activePlugin.activeInsulin.let { fabricPrivacy.firebaseAnalytics.setUserProperty("Insulin", it::class.java.simpleName) }
+        // Add to crash log too
+        FirebaseCrashlytics.getInstance().setCustomKey("HEAD", BuildConfig.HEAD)
+        FirebaseCrashlytics.getInstance().setCustomKey("Version", BuildConfig.VERSION)
+        FirebaseCrashlytics.getInstance().setCustomKey("Remote", remote)
+        FirebaseCrashlytics.getInstance().setCustomKey("Commited", BuildConfig.COMMITED)
+        FirebaseCrashlytics.getInstance().setCustomKey("Hash", hashes[0])
     }
 
 }

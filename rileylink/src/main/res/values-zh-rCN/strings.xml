@@ -28,5 +28,5 @@
     <string name="rileylink_error_pod_unreachable">无法连接主机</string>
     <!-- RileyLink - Common -->
     <string name="rileylink_target_device_medtronic">美敦力泵</string>
-    <string name="rileylink_target_device_omnipod">Omnipod</string>
+    <!-- RileyLink - Preferences -->
 </resources>

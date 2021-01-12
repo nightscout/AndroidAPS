@@ -106,8 +106,10 @@ public class MedtronicPumpHistoryDecoder extends MedtronicHistoryDecoder<PumpHis
                 int els = getUnsignedInt(elements);
 
                 for (int k = 0; k < (els - 2); k++) {
-                    listRawData.add(dataClear.get(counter));
-                    counter++;
+                    if (counter<1022) {
+                        listRawData.add(dataClear.get(counter));
+                        counter++;
+                    }
                 }
 
                 special = true;

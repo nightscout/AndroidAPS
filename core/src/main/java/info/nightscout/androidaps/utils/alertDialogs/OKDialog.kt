@@ -15,6 +15,7 @@ import androidx.fragment.app.FragmentActivity
 import info.nightscout.androidaps.core.R
 import info.nightscout.androidaps.plugins.general.themeselector.util.ThemeUtil
 import info.nightscout.androidaps.utils.extensions.runOnUiThread
+import info.nightscout.androidaps.utils.resources.ResourceHelper
 import info.nightscout.androidaps.utils.sharedPreferences.SP
 import javax.inject.Provider
 
@@ -28,7 +29,9 @@ object OKDialog {
 
         val adb: AlertDialog.Builder = AlertDialog.Builder(context)
         adb
-           // .setCustomTitle(AlertDialogHelper.buildCustomTitle(context, notEmptytitle))
+            .setCustomTitle(AlertDialogHelper.buildCustomTitle(context, notEmptytitle))
+            //.setIcon(R.drawable.ic_check_while_48dp)
+            //.setTitle(title)
             .setMessage(message)
             .setPositiveButton(context.getString(R.string.ok)) { dialog: DialogInterface, _: Int ->
                 if (okClicked) return@setPositiveButton
@@ -104,6 +107,7 @@ object OKDialog {
         adb
             .setMessage(message)
            // .setCustomTitle(AlertDialogHelper.buildCustomTitle(activity, title))
+            .setTitle(title)
             .setPositiveButton(android.R.string.ok) { dialog: DialogInterface, _: Int ->
                 if (okClicked) return@setPositiveButton
                 else {
@@ -135,6 +139,7 @@ object OKDialog {
         adb
             .setMessage(message)
             //.setCustomTitle(AlertDialogHelper.buildCustomTitle(activity, title))
+            .setTitle(title)
             .setPositiveButton(android.R.string.ok) { dialog: DialogInterface, _: Int ->
                 if (okClicked) return@setPositiveButton
                 else {
@@ -169,7 +174,9 @@ object OKDialog {
         val adb: AlertDialog.Builder =  AlertDialogHelper.Builder(context)
         adb
             .setMessage(message)
-            //.setCustomTitle(AlertDialogHelper.buildCustomTitle(context, title))
+            .setCustomTitle(AlertDialogHelper.buildCustomTitle(context, title))
+            //.setIcon(R.drawable.ic_check_while_48dp)
+            //.setTitle(title)
             .setPositiveButton(android.R.string.ok) { dialog: DialogInterface, _: Int ->
                 if (okClicked) return@setPositiveButton
                 else {

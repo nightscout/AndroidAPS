@@ -116,8 +116,8 @@ import static info.nightscout.androidaps.plugins.pump.omnipod.driver.definition.
  */
 @Singleton
 public class OmnipodPumpPlugin extends PumpPluginBase implements PumpInterface, RileyLinkPumpDevice {
-    private static final long RILEY_LINK_CONNECT_TIMEOUT_MILLIS = 3 * 60 * 1000L; // 3 minutes
-    private static final long STATUS_CHECK_INTERVAL_MILLIS = 60 * 1000L; // 1 minute
+    private static final long RILEY_LINK_CONNECT_TIMEOUT_MILLIS = 3 * 60 * 1_000L; // 3 minutes
+    private static final long STATUS_CHECK_INTERVAL_MILLIS = 60 * 1_000L; // 1 minute
     public static final int STARTUP_STATUS_REQUEST_TRIES = 2;
     public static final double RESERVOIR_OVER_50_UNITS_DEFAULT = 75.0;
 
@@ -150,12 +150,11 @@ public class OmnipodPumpPlugin extends PumpPluginBase implements PumpInterface, 
     private RileyLinkOmnipodService rileyLinkOmnipodService;
     private boolean busy = false;
     private int timeChangeRetries;
-    private long nextPodCheck;
+    private long nextPodWarningCheck;
     private long lastConnectionTimeMillis;
     private final Handler loopHandler = new Handler(Looper.getMainLooper());
 
     private final Runnable statusChecker;
-    private boolean isCancelTempBasalRunning;
 
     @Inject
     public OmnipodPumpPlugin(
@@ -238,25 +237,29 @@ public class OmnipodPumpPlugin extends PumpPluginBase implements PumpInterface, 
 
         statusChecker = new Runnable() {
             @Override public void run() {
-                if (podStateManager.isPodRunning() && !podStateManager.isSuspended()) {
-                    aapsOmnipodManager.cancelSuspendedFakeTbrIfExists();
+                if (commandQueue.size() == 0) {
+                    if (podStateManager.isPodRunning() && !podStateManager.isSuspended()) {
+                        aapsOmnipodManager.cancelSuspendedFakeTbrIfExists();
+                    } else {
+                        aapsOmnipodManager.createSuspendedFakeTbrIfNotExists();
+                    }
+
+                    if (OmnipodPumpPlugin.this.hasTimeDateOrTimeZoneChanged) {
+                        getCommandQueue().customCommand(new CommandHandleTimeChange(false), null);
+                    }
+                    if (!OmnipodPumpPlugin.this.verifyPodAlertConfiguration()) {
+                        getCommandQueue().customCommand(new CommandUpdateAlertConfiguration(), null);
+                    }
+
+                    if (aapsOmnipodManager.isAutomaticallyAcknowledgeAlertsEnabled() && podStateManager.isPodActivationCompleted() && !podStateManager.isPodDead() &&
+                            podStateManager.getActiveAlerts().size() > 0 && !getCommandQueue().isCustomCommandInQueue(CommandAcknowledgeAlerts.class)) {
+                        queueAcknowledgeAlertsCommand();
+                    }
                 } else {
-                    aapsOmnipodManager.createSuspendedFakeTbrIfNotExists();
+                    aapsLogger.debug(LTag.PUMP, "Skipping Pod status check because command queue is not empty");
                 }
 
-                if (OmnipodPumpPlugin.this.hasTimeDateOrTimeZoneChanged) {
-                    getCommandQueue().customCommand(new CommandHandleTimeChange(false), null);
-                }
-                if (!OmnipodPumpPlugin.this.verifyPodAlertConfiguration()) {
-                    getCommandQueue().customCommand(new CommandUpdateAlertConfiguration(), null);
-                }
-
-                if (aapsOmnipodManager.isAutomaticallyAcknowledgeAlertsEnabled() && podStateManager.isPodActivationCompleted() && !podStateManager.isPodDead() &&
-                        podStateManager.getActiveAlerts().size() > 0 && !getCommandQueue().isCustomCommandInQueue(CommandAcknowledgeAlerts.class)) {
-                    queueAcknowledgeAlertsCommand();
-                }
-
-                doPodCheck();
+                updatePodWarningNotifications();
 
                 loopHandler.postDelayed(this, STATUS_CHECK_INTERVAL_MILLIS);
             }
@@ -315,7 +318,8 @@ public class OmnipodPumpPlugin extends PumpPluginBase implements PumpInterface, 
                             event.isChanged(getResourceHelper(), OmnipodStorageKeys.Preferences.SUSPEND_DELIVERY_BUTTON_ENABLED) ||
                             event.isChanged(getResourceHelper(), OmnipodStorageKeys.Preferences.PULSE_LOG_BUTTON_ENABLED) ||
                             event.isChanged(getResourceHelper(), OmnipodStorageKeys.Preferences.RILEY_LINK_STATS_BUTTON_ENABLED) ||
-                            event.isChanged(getResourceHelper(), OmnipodStorageKeys.Preferences.USE_RILEY_LINK_BATTERY_LEVEL) ||
+                            event.isChanged(getResourceHelper(), OmnipodStorageKeys.Preferences.SHOW_RILEY_LINK_BATTERY_LEVEL) ||
+                            event.isChanged(getResourceHelper(), OmnipodStorageKeys.Preferences.BATTERY_CHANGE_LOGGING_ENABLED) ||
                             event.isChanged(getResourceHelper(), OmnipodStorageKeys.Preferences.TIME_CHANGE_EVENT_ENABLED) ||
                             event.isChanged(getResourceHelper(), OmnipodStorageKeys.Preferences.NOTIFICATION_UNCERTAIN_TBR_SOUND_ENABLED) ||
                             event.isChanged(getResourceHelper(), OmnipodStorageKeys.Preferences.NOTIFICATION_UNCERTAIN_SMB_SOUND_ENABLED) ||
@@ -360,10 +364,6 @@ public class OmnipodPumpPlugin extends PumpPluginBase implements PumpInterface, 
     }
 
     private void handleCancelledTbr() {
-        // Only report TBR cancellations if they haven't been explicitly requested
-        if (isCancelTempBasalRunning) {
-            return;
-        }
         if (!podStateManager.isTempBasalRunning() && activePlugin.getActiveTreatments().isTempBasalInProgress() && !aapsOmnipodManager.hasSuspendedFakeTbr()) {
             aapsOmnipodManager.reportCancelledTbr();
         }
@@ -445,19 +445,30 @@ public class OmnipodPumpPlugin extends PumpPluginBase implements PumpInterface, 
         });
     }
 
-    private void doPodCheck() {
-        if (System.currentTimeMillis() > this.nextPodCheck) {
+    private void updatePodWarningNotifications() {
+        if (System.currentTimeMillis() > this.nextPodWarningCheck) {
             if (!podStateManager.isPodRunning()) {
                 Notification notification = new Notification(Notification.OMNIPOD_POD_NOT_ATTACHED, resourceHelper.gs(R.string.omnipod_error_pod_not_attached), Notification.NORMAL);
                 rxBus.send(new EventNewNotification(notification));
             } else {
+                rxBus.send(new EventDismissNotification(Notification.OMNIPOD_POD_NOT_ATTACHED));
+
                 if (podStateManager.isSuspended()) {
                     Notification notification = new Notification(Notification.OMNIPOD_POD_SUSPENDED, resourceHelper.gs(R.string.omnipod_error_pod_suspended), Notification.NORMAL);
                     rxBus.send(new EventNewNotification(notification));
+                } else {
+                    rxBus.send(new EventDismissNotification(Notification.OMNIPOD_POD_SUSPENDED));
+
+                    if (podStateManager.timeDeviatesMoreThan(OmnipodConstants.TIME_DEVIATION_THRESHOLD)) {
+                        Notification notification = new Notification(Notification.OMNIPOD_TIME_OUT_OF_SYNC, resourceHelper.gs(R.string.omnipod_error_time_out_of_sync), Notification.NORMAL);
+                        rxBus.send(new EventNewNotification(notification));
+                    } else {
+                        rxBus.send(new EventDismissNotification(Notification.OMNIPOD_TIME_OUT_OF_SYNC));
+                    }
                 }
             }
 
-            this.nextPodCheck = DateTimeUtil.getTimeInFutureFromMinutes(15);
+            this.nextPodWarningCheck = DateTimeUtil.getTimeInFutureFromMinutes(15);
         }
     }
 
@@ -510,11 +521,10 @@ public class OmnipodPumpPlugin extends PumpPluginBase implements PumpInterface, 
     }
 
     @Override public RileyLinkPumpInfo getPumpInfo() {
-        String pumpDescription = "Eros";
         String frequency = resourceHelper.gs(R.string.omnipod_frequency);
-        String connectedModel = podStateManager.isPodInitialized() ? "Eros Pod" : "-";
+        String connectedModel = "Eros";
         String serialNumber = podStateManager.isPodInitialized() ? String.valueOf(podStateManager.getAddress()) : "-";
-        return new RileyLinkPumpInfo(pumpDescription, frequency, connectedModel, serialNumber);
+        return new RileyLinkPumpInfo(frequency, connectedModel, serialNumber);
     }
 
     // Required by RileyLinkPumpDevice interface.
@@ -615,9 +625,8 @@ public class OmnipodPumpPlugin extends PumpPluginBase implements PumpInterface, 
 
     @Override
     public int getBatteryLevel() {
-        if (aapsOmnipodManager.isUseRileyLinkBatteryLevel()) {
-            Integer batteryLevel = omnipodRileyLinkCommunicationManager.getBatteryLevel();
-            return batteryLevel == null ? 0 : batteryLevel;
+        if (aapsOmnipodManager.isShowRileyLinkBatteryLevel()) {
+            return Optional.ofNullable(rileyLinkServiceData.batteryLevel).orElse(0);
         }
 
         return 0;
@@ -695,12 +704,7 @@ public class OmnipodPumpPlugin extends PumpPluginBase implements PumpInterface, 
             return new PumpEnactResult(getInjector()).success(true).enacted(false);
         }
 
-        isCancelTempBasalRunning = true;
-        try {
-            return executeCommand(OmnipodCommandType.CANCEL_TEMPORARY_BASAL, aapsOmnipodManager::cancelTemporaryBasal);
-        } finally {
-            isCancelTempBasalRunning = false;
-        }
+        return executeCommand(OmnipodCommandType.CANCEL_TEMPORARY_BASAL, aapsOmnipodManager::cancelTemporaryBasal);
     }
 
     // TODO improve (i8n and more)
@@ -957,12 +961,18 @@ public class OmnipodPumpPlugin extends PumpPluginBase implements PumpInterface, 
 
     @Override
     public void timezoneOrDSTChanged(TimeChangeType timeChangeType) {
-        aapsLogger.warn(LTag.PUMP, "Time, Date and/or TimeZone changed. [changeType=" + timeChangeType.name() + ", eventHandlingEnabled=" + aapsOmnipodManager.isTimeChangeEventEnabled() + "]");
+        aapsLogger.info(LTag.PUMP, "Time, Date and/or TimeZone changed. [changeType=" + timeChangeType.name() + ", eventHandlingEnabled=" + aapsOmnipodManager.isTimeChangeEventEnabled() + "]");
 
-        if (podStateManager.isPodRunning()) {
-            aapsLogger.info(LTag.PUMP, "Time, Date and/or TimeZone changed event received and will be consumed by driver.");
-            hasTimeDateOrTimeZoneChanged = true;
+        if (timeChangeType == TimeChangeType.TimeChanged) {
+            aapsLogger.info(LTag.PUMP, "Ignoring time change because it is not a DST or TZ change");
+            return;
+        } else if (!podStateManager.isPodRunning()) {
+            aapsLogger.info(LTag.PUMP, "Ignoring time change because no Pod is active");
+            return;
         }
+
+        aapsLogger.info(LTag.PUMP, "DST and/or TimeZone changed event will be consumed by driver");
+        hasTimeDateOrTimeZoneChanged = true;
     }
 
     @Override
@@ -1049,7 +1059,11 @@ public class OmnipodPumpPlugin extends PumpPluginBase implements PumpInterface, 
     }
 
     public boolean isUseRileyLinkBatteryLevel() {
-        return aapsOmnipodManager.isUseRileyLinkBatteryLevel();
+        return aapsOmnipodManager.isShowRileyLinkBatteryLevel();
+    }
+
+    public boolean isBatteryChangeLoggingEnabled() {
+        return aapsOmnipodManager.isBatteryChangeLoggingEnabled();
     }
 
     private void initializeAfterRileyLinkConnection() {

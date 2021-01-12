@@ -42,7 +42,7 @@
     <string name="description_source_glimp">Primește valorile glicemiei din aplicația Glimp.</string>
     <string name="description_source_mm640g">Primește valorile glicemiei din aplicația 600SeriesAndroidUploader (Medtronic).</string>
     <string name="description_source_ns_client">Descarcă datele despre glicemii din Nightscout</string>
-    <string name="description_source_xdrip">Primește valorile glicemiei din xDrip.</string>
+    <string name="description_source_xdrip">Primește valorile glicemiei din xDrip+.</string>
     <string name="description_treatments">Salvează toate tratamentele făcute</string>
     <string name="description_wear">Monitorizează și controlează aplicația AndroidAPS folosind smartwatchul WearOS.</string>
     <string name="description_xdrip_status_line">Afișează informații privind starea buclei pe watchface-ul xDrip+.</string>
@@ -58,7 +58,7 @@
     <string name="tempbasals_netinsulin_label_string">Ins:</string>
     <string name="tempbasals_iob_label_string">IOB:</string>
     <string name="tempbasals_iobtotal_label_string">IOB totală:</string>
-    <string name="treatments_wizard_bg_label">Glicemie</string>
+    <string name="treatments_wizard_bg_label">Gl</string>
     <string name="treatments_wizard_tt_label">TT</string>
     <string name="treatments_wizard_carbs_label">Carbohidrați</string>
     <string name="treatments_wizard_correction_label">Corecție</string>
@@ -76,7 +76,7 @@
     <string name="result">Rezultat</string>
     <string name="result_insulin_carbs">Rezultat: %1$s %2$s</string>
     <string name="openapsma_noglucosedata">Nu există date despre glicemie</string>
-    <string name="openapsma_request_label">Solicită</string>
+    <string name="openapsma_request_label">Solicitare</string>
     <string name="glucose">Glicemie</string>
     <string name="delta">Diferență</string>
     <string name="sms_delta">Diferență:</string>
@@ -114,12 +114,12 @@
     <string name="overview_calculator_label">Calculator</string>
     <string name="constraintapllied">Limitare aplicată!</string>
     <string name="sms_bolus">Bolus:</string>
-    <string name="basal">Bazală</string>
+    <string name="basal">Rate bazale</string>
     <string name="sms_basal">Bazală:</string>
     <string name="changeyourinput">Schimbați ceea ce ați introdus!</string>
     <string name="configbuilder_bgsource">Sursă glicemie</string>
     <string name="configbuilder_bgsource_description">De unde trebuie să primească AndroidAPS datele?</string>
-    <string name="xdrip">xDrip</string>
+    <string name="xdrip">xDrip+</string>
     <string name="apsmode_title">Mod APS</string>
     <string name="closedloop">Buclă închisă</string>
     <string name="openloop">Buclă deschisă</string>
@@ -285,8 +285,6 @@
     <string name="mealbolus">Masă</string>
     <string name="correctionbous">Corecție</string>
     <string name="actions">Acțiuni</string>
-    <string name="ns_upload_only">Doar încărcare în NS (sincronizare dezactivată)</string>
-    <string name="ns_upload_only_summary">Doar încărcare în NS. Nu are efect asupra SGV decât în cazul selectării unei surse locale, precum xDrip. Nu acționează asupra Profilurilor cât timp se folosesc profilurile din Nightscout.</string>
     <string name="pumpNotInitialized">Pompa nu este inițializată!</string>
     <string name="primefill">Pregătire/umplere</string>
     <string name="fillwarning">Asigurați-vă că aveți cantitatea specificată de instrucțiunile setului de infuzie!</string>
@@ -323,7 +321,7 @@
     <string name="openapsama_useautosens">Folosește opțiunea de autosensibilitate</string>
     <string name="refresheventsfromnightscout">Sincronizează cu NS</string>
     <string name="deletefuturetreatments">Ștergerea tratamentelor înregistrate în viitor</string>
-    <string name="eatingsoon">Masă în curând</string>
+    <string name="eatingsoon">Mănânc în curând</string>
     <string name="hypo">Hipo</string>
     <string name="activity">Activitate</string>
     <string name="removerecord">Șterge înregistrarea</string>
@@ -341,7 +339,6 @@
     <string name="smscommunicator_shortname">SMS</string>
     <string name="short_tabtitles">Scurtează titlurile secțiunilor</string>
     <string name="always_use_shortavg">Folosește întotdeauna media scurtă a diferenței în locul diferenței simple</string>
-    <string name="always_use_shortavg_summary">Folositor când datele vin de la surse nefiltrate, ca atunci când xDrip are măsurători zgomotoase.</string>
     <string name="profile">Profil</string>
     <string name="openapsama_max_daily_safety_multiplier_summary">Valoare implicită: 3\nAceasta este o setare de critică de securitate a OpenAPS. Asta înseamnă că se limitează bazala lade 3x valoarea maximă a bazalelor tale.Cel mai probabil nu veți schimba această valoare, dar trebuie să țineți cont de ce se discută despre “3x max zilnic; 4x curent” ca valori de siguranță.</string>
     <string name="openapsama_current_basal_safety_multiplier_summary">Valoare implicită: 4\nAceasta este cealaltă jumătate a cheii de siguranță a OpenAPS și cealaltă jumătate a \"3x max zilnic; 4x curent\" al setărilor de siguranță.Aceasta înseamnă că bazala dumneavoastră, indiferent de bazala maximă configurată în pompă, nu poate fi mai mare de acest număr înmulțit cu nivelul curent al bazalei active. Această limitare este impusă pentru a evita posibilitatea de a intra pe un teritoriu periculos prin setarea unei bazale maxime excesiv de mari înainte de a înțelege funcționarea algoritmului. Din nou, valoarea implictă este 4x; majoritatea oamenilor nu vor trebui să ajusteze această valoare și vor modifica, mai degrabă, alte valori dacă vor simți că această valoare le stă în cale.</string>
@@ -355,9 +352,9 @@
     <string name="smscommunicator_invalidphonennumber">Număr de telefon SMS invalid</string>
     <string name="overview_calibration">Calibrare</string>
     <string name="xdripnotinstalled">xDrip+ nu este instalat.</string>
-    <string name="calibrationsent">Calibrare trimisă către xDrip</string>
-    <string name="smscommunicator_calibrationsent">Calibrare trimisă. Recepționarea trebuie să fie activată și în xDrip.</string>
-    <string name="smscommunicator_calibrationfailed">xDrip nu recepționează calibrări</string>
+    <string name="calibrationsent">Calibrare trimisă către xDrip+</string>
+    <string name="smscommunicator_calibrationsent">Calibrare trimisă. Recepționarea trebuie să fie activată și în xDrip+.</string>
+    <string name="smscommunicator_calibrationfailed">xDrip+ nu recepționează calibrări</string>
     <string name="pumpsuspended">Livrare de insulină suspendată</string>
     <string name="executing">Se execută</string>
     <string name="virtualpump_settings">Setări pompă virtuală</string>
@@ -443,12 +440,12 @@
     <string name="statuslights_sage_critical">Prag critic vechime senzor [h]</string>
     <string name="statuslights_sbat_warning">Prag de avertizare nivel baterie senzor [%]</string>
     <string name="statuslights_sbat_critical">Prag nivel critic baterie senzor [%]</string>
-    <string name="statuslights_bage_warning">Prag de avertizare nivel baterie [h]</string>
-    <string name="statuslights_bage_critical">Prag critic nivel baterie [h]</string>
+    <string name="statuslights_bage_warning">Prag de avertizare vârstă baterie [h]</string>
+    <string name="statuslights_bage_critical">Prag critic vârstă baterie [h]</string>
     <string name="statuslights_res_warning">Pragul de avertisment pentru insulina din rezervor [U]</string>
     <string name="statuslights_res_critical">Pragul critic al nivelului insulinei în rezervor [U]</string>
-    <string name="statuslights_bat_warning">Pragul de avertizare nivel baterie [%]</string>
-    <string name="statuslights_bat_critical">Pragul critic al nivelului baterie [%]</string>
+    <string name="statuslights_bat_warning">Prag de avertizare nivel baterie [%]</string>
+    <string name="statuslights_bat_critical">Prag critic nivel baterie [%]</string>
     <string name="prediction_shortname">PRED</string>
     <string name="iob">IOB</string>
     <string name="cob">COB</string>
@@ -460,8 +457,8 @@
     <string name="nav_about">Despre</string>
     <string name="smscommunicator_missingsmspermission">Lipsesc permisiunile de SMS</string>
     <string name="smscommunicator_missingphonestatepermission">Nu este acordată permisiunea de citire a stării telefonului</string>
-    <string name="xdripstatus_settings">Status xDrip (ceas)</string>
-    <string name="xdripstatus">Linie de status xDrip (ceas)</string>
+    <string name="xdripstatus_settings">Stare xDrip+ (ceas)</string>
+    <string name="xdripstatus">Linie de stare xDrip+ (ceas)</string>
     <string name="xdripstatus_shortname">xds</string>
     <string name="wear_showbgi_title">Arată BGI</string>
     <string name="wear_showbgi_summary">Adaugă BGI în linia de status</string>
@@ -504,7 +501,7 @@
     <string name="mdtp_cancel">Renunță</string>
     <string name="notloadedplugins">Nu s-au încărcat toate profilurile!</string>
     <string name="valuesnotstored">Nu s-au salvat valorile!</string>
-    <string name="ns_localbroadcasts">Activează mesajele pentru alte aplicații (cum ar fi xDrip). Nu activați dacă aveți mai mult de o instanță de AAPS sau NSClient instalată!</string>
+    <string name="ns_localbroadcasts">Activați transmisiunile către alte aplicații (cum ar fi xDrip+). Nu activați dacă aveți mai mult de o instanță de AAPS sau NSClient instalat!</string>
     <string name="ns_localbroadcasts_title">Permite anunțuri locale.</string>
     <string name="careportal_newnstreatment_duration_min_label">Durată [min]</string>
     <string name="openapssmb">OpenAPS SMB</string>
@@ -524,8 +521,8 @@
     <string name="careportal_newnstreatment_percentage_label">Procentaj</string>
     <string name="careportal_newnstreatment_timeshift_label">Decalare</string>
     <string name="default_temptargets">Ținte-Temporare implicite</string>
-    <string name="eatingsoon_duration">durată se-mănâncă-în-curând</string>
-    <string name="eatingsoon_target">țintă se-mănâncă-în-curând</string>
+    <string name="eatingsoon_duration">durată mănânc-în-curând</string>
+    <string name="eatingsoon_target">țintă mănânc-în-curând</string>
     <string name="activity_duration">durată activitate</string>
     <string name="activity_target">țintă activitate</string>
     <string name="hypo_duration">durată țintă</string>
@@ -629,7 +626,7 @@
     <string name="enablesmbwithhightemptarget">Activează SMB cu ținte temporare mari</string>
     <string name="enablesmbwithhightemptarget_summary">Activați SMB atunci când există o țintă temporară activă (exerciții fizice, peste 100mg/dl sau 5.5mmol/l)</string>
     <string name="overview_insulin_label">Insulină</string>
-    <string name="overview_carbs_label">Carbohidrați</string>
+    <string name="overview_carbs_label">CH</string>
     <string name="overview_buttons_selection">Butoane</string>
     <string name="show_calibration_button_summary">Trimite calibrarea către xDrip+ sau deschide calibrarea pentru G5</string>
     <string name="show_cgm_button_summary">Deschide xDrip+, butonul de înapoi returnează la AAPS</string>
@@ -814,7 +811,6 @@
     <string name="resettodefaults">Resetare la setările implicite</string>
     <string name="nsmalfunction">Funcționare incorectă a NSClient. Aveți în vedere un restart al NS și al NSClient.</string>
     <string name="versionavailable">Versiunea %1$s este disponibilă</string>
-    <string name="time_offset">Diferență de fus orar</string>
     <string name="setupwizard_preferred_aps_mode">Modul APS preferat</string>
     <string name="treatments_wizard_total_label">Total</string>
     <string name="calculation_short">Calc</string>
@@ -1086,7 +1082,7 @@
     <string name="statistics">Statistici</string>
     <string name="randombg">Glicemie aleatoare</string>
     <string name="description_source_randombg">Generare glicemie aleator (doar mod Demo)</string>
-    <string name="randombg_short">Glicemie</string>
+    <string name="randombg_short">Gl</string>
     <string name="tools">Instrumente</string>
     <string name="show_calculation">Arată calculul</string>
     <string name="automation_event">Eveniment automatizare</string>
@@ -1175,7 +1171,6 @@
     <string name="donate_your_data_to_science">Donează datele în scopuri științifice</string>
     <string name="open_humans_short">OH</string>
     <string name="you_have_been_signed_out_of_open_humans">Ai fost deconectat de la Open Humans</string>
-    <string name="click_here_to_sign_in_again_if_this_wasnt_on_purpose">Dați click aici pentru a vă conecta din nou dacă nu a fost intenționat.</string>
     <string name="only_upload_if_connected_to_wifi">Încarcă numai pe conexiune WiFi</string>
     <string name="only_upload_if_charging">Încărca numai dacă telefonul este la încărcat</string>
     <string name="worker_state">Stare prelucrare: %s</string>
@@ -1187,13 +1182,12 @@
     <string name="cta_dont_kill_my_app_info">Nu-mi opri aplicația?</string>
     <string name="alarm">Alarmă</string>
     <string name="smscommunicator_report_pump_ureachable_summary">Trimite SMS dacă este generata o alarma de eroare conexiune pompa</string>
-    <string name="smscommunicator_pump_ureachable">Raportează eroare conexiune pompa</string>
     <string name="advisoralarm">Rulează alarma când este timpul să mănânci</string>
     <string name="alarminxmin">Rulează alarma în %1$d min</string>
     <string name="bolusadvisor">Consilier bolus</string>
     <string name="bolusadvisormessage">Glicemia ta e mare. In loc sa mănânci acum, este recomandat sa mai aștepți un pic. Vrei sa faci un bolus de corecție acum si sa setezi o alarma pentru a manca mai târziu? In acest caz, nu vor fi înregistrați carbohidrați si va trebui sa folosești calculatorul de bolus din nou când îți vom reaminti.</string>
     <string name="enablebolusadvisor">Activare consilier bolus</string>
-    <string name="enablebolusadvisor_summary">Folosește o alarma de reamintire pentru a începe sa mănânci în loc de calculatorul de bolus în timpul hiperglicemiei</string>
     <string name="time_to_eat">Timpul sa mănânci!\nRuleaza Calculatorul de Bolus pentru a face calculele din nou.</string>
     <string name="timetoeat">Timpul sa mănânci</string>
+    <string name="graph_menu_divider_header">Grafic</string>
 </resources>

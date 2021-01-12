@@ -27,5 +27,5 @@
     <string name="rileylink_error_pod_unreachable">Pod onbereikbaar</string>
     <!-- RileyLink - Common -->
     <string name="rileylink_target_device_medtronic">Medtronic Pomp</string>
-    <string name="rileylink_target_device_omnipod">Omnipod</string>
+    <!-- RileyLink - Preferences -->
 </resources>

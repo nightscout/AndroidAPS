@@ -39,8 +39,8 @@ public class MainMenuActivity extends MenuListActivity {
 
         if(!sharedPreferences.getBoolean("wearcontrol", false)){
             return new String[] {
-                    "Settings",
-                    "Re-Sync"};
+                    aaps.gs(R.string.menu_settings),
+                    aaps.gs(R.string.menu_resync)};
         }
 
 

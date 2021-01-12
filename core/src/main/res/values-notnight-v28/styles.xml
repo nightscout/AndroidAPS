@@ -45,6 +45,10 @@
         <!-- Color of pills -->
         <item name="PillColorStart">@color/PillColorStart</item>
         <item name="PillColorEnd">@color/PillColorEnd</item>
+        <item name="PillColorWarningStart">@color/PillColorWarningStart</item>
+        <item name="PillColorWarningEnd">@color/PillColorWarningEnd</item>
+        <item name="PillColortempTargetStart">@color/PillColortempTargetStart</item>
+        <item name="PillColortempTargetEnd">@color/PillColortempTargetStart</item>
         <!-- Color of dialog -->
         <item name="colorPrimaryDialog">?attr/colorPrimary</item>
         <item name="colorPrimaryDarkDialog">?attr/colorPrimaryDark</item>
