@@ -79,7 +79,7 @@ class TreatmentsCareportalFragment : DaggerFragment() {
             }
         }
 
-        val nsUploadOnly = sp.getBoolean(R.string.key_ns_upload_only, true) && buildHelper.isEngineeringMode()
+        val nsUploadOnly = sp.getBoolean(R.string.key_ns_upload_only, true) || !buildHelper.isEngineeringMode()
         if (nsUploadOnly) careportal_refreshfromnightscout.visibility = View.GONE
     }
 

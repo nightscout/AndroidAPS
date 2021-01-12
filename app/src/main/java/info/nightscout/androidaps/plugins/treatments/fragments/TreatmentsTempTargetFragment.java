@@ -182,7 +182,7 @@ public class TreatmentsTempTargetFragment extends DaggerFragment {
                     rxBus.send(new EventNSClientRestart());
                 }));
 
-        boolean nsUploadOnly = sp.getBoolean(R.string.key_ns_upload_only, true) && buildHelper.isEngineeringMode();
+        boolean nsUploadOnly = sp.getBoolean(R.string.key_ns_upload_only, true) || !buildHelper.isEngineeringMode();
         if (nsUploadOnly)
             refreshFromNS.setVisibility(View.GONE);
 
