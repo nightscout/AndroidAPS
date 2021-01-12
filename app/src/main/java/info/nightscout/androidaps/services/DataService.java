@@ -37,6 +37,7 @@ import info.nightscout.androidaps.plugins.source.TomatoPlugin;
 import info.nightscout.androidaps.plugins.source.XdripPlugin;
 import info.nightscout.androidaps.receivers.DataReceiver;
 import info.nightscout.androidaps.utils.JsonHelper;
+import info.nightscout.androidaps.utils.buildHelper.BuildHelper;
 import info.nightscout.androidaps.utils.sharedPreferences.SP;
 
 
@@ -57,6 +58,7 @@ public class DataService extends DaggerIntentService {
     @Inject NSProfilePlugin nsProfilePlugin;
     @Inject ActivePluginProvider activePlugin;
     @Inject Config config;
+    @Inject BuildHelper buildHelper;
 
     public DataService() {
         super("DataService");
@@ -69,7 +71,7 @@ public class DataService extends DaggerIntentService {
         aapsLogger.debug(LTag.DATASERVICE, "onHandleIntent " + BundleLogger.log(intent.getExtras()));
 
 
-        boolean acceptNSData = !sp.getBoolean(R.string.key_ns_upload_only, true) || config.getNSCLIENT();
+        boolean acceptNSData = !sp.getBoolean(R.string.key_ns_upload_only, true) && buildHelper.isEngineeringMode() || config.getNSCLIENT();
 
         final String action = intent.getAction();
         if (Intents.ACTION_NEW_BG_ESTIMATE.equals(action)) {
