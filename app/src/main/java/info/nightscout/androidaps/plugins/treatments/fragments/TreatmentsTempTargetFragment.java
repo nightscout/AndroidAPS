@@ -52,6 +52,7 @@ public class TreatmentsTempTargetFragment extends DaggerFragment {
     @Inject UploadQueue uploadQueue;
     @Inject FabricPrivacy fabricPrivacy;
     @Inject DateUtil dateUtil;
+    @Inject BuildHelper buildHelper;
 
     private final CompositeDisposable disposable = new CompositeDisposable();
 
