@@ -459,6 +459,7 @@
     <string name="smscommunicator_missingsmspermission">Autorizzazione SMS mancante</string>
     <string name="smscommunicator_missingphonestatepermission">Autorizzazione stato telefono mancante</string>
     <string name="xdripstatus_settings">Stato xDrip+ (smartwatch)</string>
+    <string name="xdripstatus">Statusline xDrip+ (smartwatch)</string>
     <string name="xdripstatus_shortname">xds</string>
     <string name="wear_showbgi_title">Mostra BGI</string>
     <string name="wear_showbgi_summary">Aggiungi BGI alla statusline</string>
@@ -501,6 +502,7 @@
     <string name="mdtp_cancel">Annulla</string>
     <string name="notloadedplugins">Non tutti i profili caricati!</string>
     <string name="valuesnotstored">Valori non memorizzati!</string>
+    <string name="ns_localbroadcasts">Abilita trasmissioni ad altre app (come xDrip+). Non abilitare se hai installato più di un\'istanza di AAPS o NSClient!</string>
     <string name="ns_localbroadcasts_title">Abilita le trasmissioni locali.</string>
     <string name="careportal_newnstreatment_duration_min_label">Durata [min]</string>
     <string name="openapssmb">OpenAPS SMB</string>
