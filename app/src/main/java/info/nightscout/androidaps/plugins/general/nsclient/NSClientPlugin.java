@@ -201,9 +201,11 @@ public class NSClientPlugin extends PluginBase {
             SwitchPreference key_ns_autobackfill = preferenceFragment.findPreference(resourceHelper.gs(R.string.key_ns_autobackfill));
             if (key_ns_autobackfill != null) key_ns_autobackfill.setVisible(false);
             SwitchPreference key_ns_create_announcements_from_errors = preferenceFragment.findPreference(resourceHelper.gs(R.string.key_ns_create_announcements_from_errors));
-            if (key_ns_create_announcements_from_errors != null) key_ns_create_announcements_from_errors.setVisible(false);
+            if (key_ns_create_announcements_from_errors != null)
+                key_ns_create_announcements_from_errors.setVisible(false);
             SwitchPreference key_ns_create_announcements_from_carbs_req = preferenceFragment.findPreference(resourceHelper.gs(R.string.key_ns_create_announcements_from_carbs_req));
-            if (key_ns_create_announcements_from_carbs_req != null) key_ns_create_announcements_from_carbs_req.setVisible(false);
+            if (key_ns_create_announcements_from_carbs_req != null)
+                key_ns_create_announcements_from_carbs_req.setVisible(false);
             SwitchPreference key_ns_upload_only = preferenceFragment.findPreference(resourceHelper.gs(R.string.key_ns_upload_only));
             if (key_ns_upload_only != null) {
                 key_ns_upload_only.setVisible(false);
@@ -214,7 +216,8 @@ public class NSClientPlugin extends PluginBase {
         } else {
             // APS or pumpcontrol mode
             SwitchPreference key_ns_upload_only = preferenceFragment.findPreference(resourceHelper.gs(R.string.key_ns_upload_only));
-            key_ns_upload_only.setVisible(buildHelper.isEngineeringMode());
+            if (key_ns_upload_only != null)
+                key_ns_upload_only.setVisible(buildHelper.isEngineeringMode());
         }
     }
 
