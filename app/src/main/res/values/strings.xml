@@ -67,7 +67,7 @@
     <string name="description_source_glimp">Receive BG values from Glimp.</string>
     <string name="description_source_mm640g">Receive BG values from the 600SeriesAndroidUploader.</string>
     <string name="description_source_ns_client">Downloads BG data from Nightscout</string>
-    <string name="description_source_xdrip">Receive BG values from xDrip.</string>
+    <string name="description_source_xdrip">Receive BG values from xDrip+.</string>
     <string name="description_treatments">Saves all treatments that were made</string>
     <string name="description_wear">Monitor and control AndroidAPS using your WearOS watch.</string>
     <string name="description_xdrip_status_line">Show information about your loop on your xDrip+ watchface.</string>
@@ -149,7 +149,7 @@
     <string name="changeyourinput">Change your input!</string>
     <string name="configbuilder_bgsource">BG Source</string>
     <string name="configbuilder_bgsource_description">Where should AndroidAPS gain  it\'s data from?</string>
-    <string name="xdrip">xDrip</string>
+    <string name="xdrip">xDrip+</string>
     <string name="apsmode_title">APS Mode</string>
 
     <string name="closedloop">Closed Loop</string>
@@ -331,8 +331,8 @@
     <string name="mealbolus">Meal</string>
     <string name="correctionbous">Corr</string>
     <string name="actions">Actions</string>
-    <string name="ns_upload_only">NS upload only (disabled sync)</string>
-    <string name="ns_upload_only_summary">NS upload only. Not effective on SGV unless a local source like xDrip is selected. Not effective on Profiles while NS-Profiles is used.</string>
+    <string name="ns_upload_only">(DANGEROUS TO DISABLE) NS upload only</string>
+    <string name="ns_upload_only_summary">NS upload only (disabled sync). Not effective on SGV unless a local source like xDrip+ is selected. Not effective on Profiles while NS-Profiles is used.\n!!! WARNING !!! Disabling this option may cause malfunctions and insulin overdose if any of your component (AAPS, NS, xDrip+) is wrong configured. Carefully watch if data displayed by AAPS match the pump state!</string>
     <string name="pumpNotInitialized">Pump not initialized!</string>
     <string name="primefill">Prime/Fill</string>
     <string name="fillwarning">Please make sure the amount matches the specification of your infusion set!</string>
@@ -387,7 +387,7 @@
     <string name="smscommunicator_shortname">SMS</string>
     <string name="short_tabtitles">Shorten tab titles</string>
     <string name="always_use_shortavg">Always use short average delta instead of simple delta</string>
-    <string name="always_use_shortavg_summary">Useful when data from unfiltered sources like xDrip gets noisy.</string>
+    <string name="always_use_shortavg_summary">Useful when data from unfiltered sources like xDrip+ gets noisy.</string>
     <string name="profile">Profile</string>
     <string name="openapsama_max_daily_safety_multiplier_summary">Default value: 3 This is a key OpenAPS safety cap. What this does is limit your basals to be 3x (in this people) your biggest basal rate. You likely will not need to change this, but you should be aware that’s what is discussed about “3x max daily; 4x current” for safety caps.</string>
     <string name="openapsama_current_basal_safety_multiplier_summary">Default value: 4 This is the other half of the key OpenAPS safety caps, and the other half of “3x max daily; 4x current” of the safety caps. This means your basal, regardless of max basal set on your pump, cannot be any higher than this number times the current level of your basal. This is to prevent people from getting into dangerous territory by setting excessively high max basals before understanding how the algorithm works. Again, the default is 4x; most people will never need to adjust this and are instead more likely to need to adjust other settings if they feel like they are “running into” this safety cap.</string>
@@ -407,9 +407,9 @@
     <string name="smscommunicator_invalidphonennumber">Invalid SMS phone number</string>
     <string name="overview_calibration">Calibration</string>
     <string name="xdripnotinstalled">xDrip+ not installed</string>
-    <string name="calibrationsent">Calibration sent to xDrip</string>
-    <string name="smscommunicator_calibrationsent">Calibration sent. Receiving must be enabled in xDrip.</string>
-    <string name="smscommunicator_calibrationfailed">xDrip is not receiving calibrations</string>
+    <string name="calibrationsent">Calibration sent to xDrip+</string>
+    <string name="smscommunicator_calibrationsent">Calibration sent. Receiving must be enabled in xDrip+.</string>
+    <string name="smscommunicator_calibrationfailed">xDrip+ is not receiving calibrations</string>
     <string name="pumpsuspended">Pump suspended</string>
     <string name="executing">Executing</string>
     <string name="virtualpump_settings">Virtual pump settings</string>
@@ -520,17 +520,17 @@
     <string name="key_statuslights_sbat_critical" translatable="false">statuslights_sbat_critical</string>
     <string name="statuslights_sbat_critical">Threshold critical sensor battery level [%]</string>
     <string name="key_statuslights_bage_warning" translatable="false">statuslights_bage_warning</string>
-    <string name="statuslights_bage_warning">Threshold warning battery age [h]</string>
+    <string name="statuslights_bage_warning">Threshold warning pump battery age [h]</string>
     <string name="key_statuslights_bage_critical" translatable="false">statuslights_bage_critical</string>
-    <string name="statuslights_bage_critical">Threshold critical battery age [h]</string>
+    <string name="statuslights_bage_critical">Threshold critical pump battery age [h]</string>
     <string name="key_statuslights_res_warning" translatable="false">statuslights_res_warning</string>
     <string name="statuslights_res_warning">Threshold warning reservoir level [U]</string>
     <string name="key_statuslights_res_critical" translatable="false">statuslights_res_critical</string>
     <string name="statuslights_res_critical">Threshold critical reservoir level [U]</string>
     <string name="key_statuslights_bat_warning" translatable="false">statuslights_bat_warning</string>
-    <string name="statuslights_bat_warning">Threshold warning battery level [%]</string>
+    <string name="statuslights_bat_warning">Threshold warning pump battery level [%]</string>
     <string name="key_statuslights_bat_critical" translatable="false">statuslights_bat_critical</string>
-    <string name="statuslights_bat_critical">Threshold critical battery level [%]</string>
+    <string name="statuslights_bat_critical">Threshold critical pump battery level [%]</string>
     <string name="prediction_shortname">PRED</string>
     <string name="iob">IOB</string>
     <string name="cob">COB</string>
@@ -542,14 +542,14 @@
     <string name="nav_about">About</string>
     <string name="smscommunicator_missingsmspermission">Missing SMS permission</string>
     <string name="smscommunicator_missingphonestatepermission">Missing phone state permission</string>
-    <string name="xdripstatus_settings">xDrip Status (watch)</string>
-    <string name="xdripstatus">xDrip Statusline (watch)</string>
+    <string name="xdripstatus_settings">xDrip+ Status (watch)</string>
+    <string name="xdripstatus">xDrip+ Statusline (watch)</string>
     <string name="xdripstatus_shortname">xds</string>
     <string name="wear_showbgi_title">Show BGI</string>
     <string name="wear_showbgi_summary">Add BGI to status line</string>
     <string name="ns_noupload">No upload to NS</string>
     <string name="ns_noupload_summary">All data sent to NS are dropped. AAPS is connected to NS but no change in NS is done</string>
-    <string name="key_ns_upload_only" translatable="false">ns_upload_only</string>
+    <string name="key_ns_upload_only" translatable="false">ns_upload_only2</string>
     <string name="key_ns_noupload" translatable="false">ns_noupload</string>
     <string name="overview_extendedbolus_cancel_button">Cancel Extended Bolus</string>
     <string name="doprofileswitch">Do Profile Switch</string>
@@ -598,7 +598,7 @@
     <string name="valuesnotstored">Values not stored!</string>
     <string name="combopump" translatable="false">Accu-Chek Combo</string>
     <string name="combopump_shortname" translatable="false">COMBO</string>
-    <string name="ns_localbroadcasts">Enable broadcasts to other apps (like xDrip). Do not enable if you have more than one instance of AAPS or NSClient installed!</string>
+    <string name="ns_localbroadcasts">Enable broadcasts to other apps (like xDrip+). Do not enable if you have more than one instance of AAPS or NSClient installed!</string>
     <string name="ns_localbroadcasts_title">Enable local Broadcasts.</string>
     <string name="careportal_newnstreatment_duration_min_label">Duration [min]</string>
     <string name="openapssmb">OpenAPS SMB</string>
@@ -1405,7 +1405,7 @@
     <string name="donate_your_data_to_science">Donate your data to science</string>
     <string name="open_humans_short">OH</string>
     <string name="you_have_been_signed_out_of_open_humans">You have been signed out of Open Humans</string>
-    <string name="click_here_to_sign_in_again_if_this_wasnt_on_purpose">Click here to sign in a again if this wasn\'t on purpose.</string>
+    <string name="click_here_to_sign_in_again_if_this_wasnt_on_purpose">Click here to sign in again if this wasn\'t on purpose.</string>
     <string name="only_upload_if_connected_to_wifi">Only upload if connected to WiFi</string>
     <string name="only_upload_if_charging">Only upload if charging</string>
     <string name="worker_state">Worker State: %s</string>
@@ -1418,15 +1418,17 @@
     <string name="alarm">Alarm</string>
     <string name="key_smscommunicator_report_pump_ureachable" translatable="false">smscommunicator_report_pump_ureachable</string>
     <string name="smscommunicator_report_pump_ureachable_summary">Send SMS if unreachable pump event is triggered</string>
-    <string name="smscommunicator_pump_ureachable">Report  pump ureachable</string>
+    <string name="smscommunicator_pump_ureachable">Report pump unreachable</string>
     <string name="advisoralarm">Run alarm when is time to eat</string>
     <string name="alarminxmin">Run alarm in %1$d min</string>
     <string name="bolusadvisor">Bolus advisor</string>
     <string name="bolusadvisormessage">You have high glycemia. Instead of eating now it\'s recommended to wait for better glycemia. Do you want to do a correction bolus now and remind you when it\'s time to eat? In this case no carbs will be recorded and you must use wizard again when we remind you.</string>
     <string name="key_usebolusadvisor" translatable="false">use_bolus_advisor</string>
     <string name="enablebolusadvisor">Enable bolus advisor</string>
-    <string name="enablebolusadvisor_summary">Use reminder to start eating instead of wizard during high glycemia</string>
+    <string name="enablebolusadvisor_summary">Use reminder to start eating later instead of wizard result during high glycemia ("pre-bolus")</string>
     <string name="time_to_eat">Time to eat!\nRun Bolus wizard and do calculation again.</string>
     <string name="timetoeat">Time to eat</string>
+    <string name="fabric_upload_disabled">Crash logs upload disabled!</string>
+    <string name="graph_menu_divider_header">Graph</string>
 
 </resources>

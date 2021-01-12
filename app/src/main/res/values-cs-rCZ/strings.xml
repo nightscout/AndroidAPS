@@ -42,7 +42,7 @@
     <string name="description_source_glimp">Příjem glykémií z Glimpu.</string>
     <string name="description_source_mm640g">Příjem glykémií z Uploaderu 640G.</string>
     <string name="description_source_ns_client">Příjem glykémií z Nightscoutu</string>
-    <string name="description_source_xdrip">Příjem glykémií z xDripu.</string>
+    <string name="description_source_xdrip">Příjem glykémií z xDripu+.</string>
     <string name="description_treatments">Ukládá všechny ošetření do databáze</string>
     <string name="description_wear">Zobrazování stavu a řízení AndroidAPS z hodinek s WearOS</string>
     <string name="description_xdrip_status_line">Zobrazování informací o smyčce na xDrip+ watchface.</string>
@@ -119,7 +119,7 @@
     <string name="changeyourinput">Změňte zadání!</string>
     <string name="configbuilder_bgsource">Zdroj glykémie</string>
     <string name="configbuilder_bgsource_description">Odkud má získávat AndroidAPS glykémie?</string>
-    <string name="xdrip">xDrip</string>
+    <string name="xdrip">xDrip+</string>
     <string name="apsmode_title">Typ smyčky</string>
     <string name="closedloop">Uzavřená smyčka</string>
     <string name="openloop">Otevřená smyčka</string>
@@ -285,8 +285,8 @@
     <string name="mealbolus">Bolus</string>
     <string name="correctionbous">Korekce</string>
     <string name="actions">Akce</string>
-    <string name="ns_upload_only">Pouze nahrávání do NS (zakázaná synchronizace)</string>
-    <string name="ns_upload_only_summary">Pouze nahrávání dat do NS. Neplatí pro glykémie, dokud není vybraný místní zdroj dat jako xDrip. Neplatí pro profily, pokud se používá NS profil.</string>
+    <string name="ns_upload_only">(NEBEZPEČNÉ ZAKÁZAT) Pouze odesílání do NS</string>
+    <string name="ns_upload_only_summary">Pouze nahrávání do NS. Neplatí pro glykémie, pokud je NS vybrán jako zdroj glykémií. Neplatí pro profily, pokud je vybraný NS Profil.\n!!! VAROVÁNÍ!!! Vypnutí této možnosti může způsobit chybné chování a předávkování inzulínem, pokud je některá z vašich komponent (AAPS, NS, xDrip+) špatně nastavena. Pečlivě sledujte, jestli data zobrazená v AAPS odpovídají stavu pumpy!</string>
     <string name="pumpNotInitialized">Pumpa není inicializována!</string>
     <string name="primefill">Plnění/doplňování</string>
     <string name="fillwarning">Prosím ujistěte se, že hodnota odpovídá specifikaci Vašeho setu!</string>
@@ -341,7 +341,7 @@
     <string name="smscommunicator_shortname">SMS</string>
     <string name="short_tabtitles">Krátké názvy modulů</string>
     <string name="always_use_shortavg">Vždy používat krátkodobý průměrný rozdíl glykémií místo rozdílu posledních 2 hodnot</string>
-    <string name="always_use_shortavg_summary">Výhodné, pokud data z xDripu obsahují velký šum.</string>
+    <string name="always_use_shortavg_summary">Výhodné, pokud data z xDripu+ obsahují velký šum.</string>
     <string name="profile">Profil</string>
     <string name="openapsama_max_daily_safety_multiplier_summary">Výchozí hodnota: 3 Toto je klíčová hodnota zabezpečení. Říká, že maximální nastavitelný bazál je trojnásobkem maximálního denního bazálu. Patrně to nebudete muset měnit, případně si přečtete o tématu \"3x max denní; 4x aktuální\".</string>
     <string name="openapsama_current_basal_safety_multiplier_summary">Výchozí hodnota: 4 Toto je druhá klíčová hodnota. Říká, že maximální hodnota dočasného bazálu nikdy nebude větší, než čtyřnásobek aktuálního bazálu. Je to proto, aby se lidé nedostali do nebezpečných hodnot dříve, než pochopí jak OpenAPS pracuje. Znovu, výchozí hodnota je 4 a většina lidí ji nikdy nebude muset změnit. Pokud nestačí, obvykle je problém někde jinde.</string>
@@ -355,9 +355,9 @@
     <string name="smscommunicator_invalidphonennumber">Špatné telefonní číslo</string>
     <string name="overview_calibration">Kalibrace</string>
     <string name="xdripnotinstalled">xDrip+ není nainstalován</string>
-    <string name="calibrationsent">Kalibrace odeslána do xDripu</string>
-    <string name="smscommunicator_calibrationsent">Kalibrace odeslána. Příjem musí být v xDripu povolený.</string>
-    <string name="smscommunicator_calibrationfailed">xDrip nepřijímá kalibrace</string>
+    <string name="calibrationsent">Kalibrace odeslána do xDripu+</string>
+    <string name="smscommunicator_calibrationsent">Kalibrace odeslána. Příjem musí být v xDripu+ povolený.</string>
+    <string name="smscommunicator_calibrationfailed">xDrip+ nepřijímá kalibrace</string>
     <string name="pumpsuspended">Pumpa pozastavena</string>
     <string name="executing">Provádím</string>
     <string name="virtualpump_settings">Nastavení virtuální pumpy</string>
@@ -443,12 +443,12 @@
     <string name="statuslights_sage_critical">Úroveň kritického stáří senzoru [h]</string>
     <string name="statuslights_sbat_warning">Úroveň varování stavu baterie senzoru [%]</string>
     <string name="statuslights_sbat_critical">Úroveň kritického varování stavu baterie senzoru [%]</string>
-    <string name="statuslights_bage_warning">Úroveň varování stáří baterie [h]</string>
-    <string name="statuslights_bage_critical">Úroveň kritického varování stáří baterie [h]</string>
+    <string name="statuslights_bage_warning">Úroveň varování stáří baterie pumpy [h]</string>
+    <string name="statuslights_bage_critical">Úroveň kritického varování stáří baterie pumpy [h]</string>
     <string name="statuslights_res_warning">Úroveň varování stavu zásobníku [U]</string>
     <string name="statuslights_res_critical">Úroveň kritického varování stavu zásobníku [U]</string>
-    <string name="statuslights_bat_warning">Úroveň varování stavu baterie [%]</string>
-    <string name="statuslights_bat_critical">Úroveň kritického varování stavu baterie [%]</string>
+    <string name="statuslights_bat_warning">Úroveň varování stavu baterie pumpy [%]</string>
+    <string name="statuslights_bat_critical">Úroveň kritického varování stavu baterie pumpy [%]</string>
     <string name="prediction_shortname">PRED</string>
     <string name="iob">IOB</string>
     <string name="cob">COB</string>
@@ -460,8 +460,8 @@
     <string name="nav_about">O aplikaci</string>
     <string name="smscommunicator_missingsmspermission">Chybějící povolení SMS</string>
     <string name="smscommunicator_missingphonestatepermission">Chybí oprávnění pro zjišťování stavu telefonu</string>
-    <string name="xdripstatus_settings">Status z xDripu (hodinky)</string>
-    <string name="xdripstatus">Statusový řádek xDripu (hodinky)</string>
+    <string name="xdripstatus_settings">Status z xDripu+ (hodinky)</string>
+    <string name="xdripstatus">Stavová řádka xDrip+ (hodinky)</string>
     <string name="xdripstatus_shortname">XDS</string>
     <string name="wear_showbgi_title">Zobrazovat BGI</string>
     <string name="wear_showbgi_summary">Přidat BGI do stavové řádky</string>
@@ -504,7 +504,7 @@
     <string name="mdtp_cancel">Zrušit</string>
     <string name="notloadedplugins">Všechny profily nenačteny!</string>
     <string name="valuesnotstored">Hodnoty nejsou uloženy!</string>
-    <string name="ns_localbroadcasts">Povolit vysílání do jiných aplikací (například xDrip). Nepovolujte, pokud máte instalovánu více než jednu instanci AAPS nebo NSClient!</string>
+    <string name="ns_localbroadcasts">Povolit vysílání do jiných aplikací (například xDrip+). Nepovolujte, pokud máte instalovánu více než jednu instanci AAPS nebo NSClient!</string>
     <string name="ns_localbroadcasts_title">Povolení odesílaní</string>
     <string name="careportal_newnstreatment_duration_min_label">Trvání [min]</string>
     <string name="openapssmb">OpenAPS SMB</string>
@@ -1193,7 +1193,9 @@
     <string name="bolusadvisor">Poradce pro bolus</string>
     <string name="bolusadvisormessage">Máte vysokou glykémii. Namísto jídla doporučujeme vyčkat na lepší glykémii a připomenout, až bude čas na jídlo. Přejete si poslat korekční bolus a připomenout, až bude čas k jídlu? V tomto případě nebudou zapsané žádné sacharidy, a později opět musíte spustit kalkulátor, jakmile vám to připomeneme.</string>
     <string name="enablebolusadvisor">Povolit poradce s bolusem</string>
-    <string name="enablebolusadvisor_summary">Během vysoké glykémie spusťte připomenutí namísto průvodce</string>
+    <string name="enablebolusadvisor_summary">Při vysoké glykémii použijte připomenutí, abyste začali jíst později, namísto výsledku z kalkulátoru („prebolus“)</string>
     <string name="time_to_eat">Čas k jídlu!\nSpusťte Bolusovou kalkulačku a proveďte výpočet znovu.</string>
     <string name="timetoeat">Čas k jídlu</string>
+    <string name="fabric_upload_disabled">Nahrávání protokolů o pádech zakázáno!</string>
+    <string name="graph_menu_divider_header">Graf</string>
 </resources>

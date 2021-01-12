@@ -2,6 +2,15 @@
 <resources>
     <!-- RL keys -->
     <!-- RL BLE Config -->
+    <string name="riley_link_ble_config_button_scan_start">Procurar</string>
+    <string name="riley_link_ble_config_scan_stop">Parar</string>
+    <string name="riley_link_ble_config_scan_selected">Seleccionado</string>
+    <string name="riley_link_ble_config_scan_title">Procura RileyLink</string>
+    <string name="riley_link_ble_config_scan_scanning">A procurar</string>
+    <string name="riley_link_ble_config_scan_finished">Procura terminada</string>
+    <string name="riley_link_ble_config_scan_error">Erro de Procura: %1$d</string>
+    <string name="riley_link_ble_config_connected_never">Nunca</string>
+    <string name="riley_link_ble_config_remove_riley_link">Remover</string>
     <!-- RL Status Page -->
     <string name="rileylink_settings_tab1">Definições</string>
     <string name="rileylink_settings_tab2">Histórico</string>
@@ -9,7 +18,14 @@
     <string name="medtronic_pump_status">Estado da Bomba</string>
     <string name="title_activity_rileylink_settings">Definições do RileyLink</string>
     <string name="rileylink_title">RileyLink</string>
+    <string name="rileylink_connection_status">Estado de Ligação:</string>
+    <string name="rileylink_connection_error">Erro de Ligação:</string>
     <string name="rileylink_device">Dispositivo</string>
+    <string name="rileylink_device_type">Tipo de dispositivo:</string>
+    <string name="rileylink_firmware_version_value">BLE113: %1$s\nCC110: %2$s</string>
+    <string name="rileylink_pump_serial_number">Número de série da Bomba:</string>
+    <string name="rileylink_pump_frequency">Frequência da Bomba:</string>
+    <string name="rileylink_pump_frequency_value">%1$.2f MHz</string>
     <!-- RL State -->
     <string name="rileylink_state_bt_init">A iniciar o Bluetooth...</string>
     <string name="rileylink_state_bt_error">Erro de Bluetooth</string>
@@ -31,7 +47,10 @@
     <string name="rileylink_error_pod_unreachable">Pod inacessível</string>
     <!-- RileyLink - Common -->
     <string name="rileylink_target_device_medtronic">Bomba Medtronic</string>
-    <string name="rileylink_target_device_omnipod">Omnipod</string>
+    <string name="rileylink_target_device_omnipod">Omnipod (Eros)</string>
+    <string name="riley_link_common_yes">Sim</string>
+    <string name="riley_link_common_no">Não</string>
+    <!-- RileyLink - Preferences -->
     <plurals name="duration_days">
         <item quantity="one">%1$d dia</item>
         <item quantity="other">%1$d dias</item>

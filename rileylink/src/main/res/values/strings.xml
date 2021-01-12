@@ -6,6 +6,7 @@
     <string name="key_medtronic_pump_encoding_4b6b_rileylink" translatable="false">medtronic_pump_encoding_4b6b_rileylink</string>
     <string name="key_rileylink_mac_address" translatable="false">pref_rileylink_mac_address</string>
     <string name="key_rileylink_name" translatable="false">pref_rileylink_name</string>
+    <string name="key_riley_link_show_battery_level" translatable="false">pref_riley_link_show_reported_battery_level</string>
     <string name="key_medtronic_encoding" translatable="false">pref_medtronic_encoding</string>
 
     <!-- RL BLE Config -->
@@ -30,19 +31,23 @@
     <string name="medtronic_pump_status">Pump Status</string>
     <string name="title_activity_rileylink_settings">RileyLink Settings</string>
     <string name="rileylink_title">RileyLink</string>
-    <string name="rileylink_configured_riley_link_address">Configured RileyLink Address:</string>
-    <string name="rileylink_configured_riley_link_name">Configured RileyLink Name:</string>
-    <string name="rileylink_connected_device">Connected Device:</string>
+    <string name="rileylink_address">Address:</string>
+    <string name="rileylink_name">Name:</string>
+    <string name="rileylink_battery_level">Battery Level:</string>
+    <string name="rileylink_battery_level_value">%1$d%%</string>
     <string name="rileylink_connection_status">Connection Status:</string>
     <string name="rileylink_connection_error">Connection Error:</string>
     <string name="rileylink_device">Device</string>
     <string name="rileylink_device_type">Device Type:</string>
-    <string name="rileylink_device_model">Device Model:</string>
+    <string name="rileylink_configured_device_model">Configured Device Model:</string>
+    <string name="rileylink_connected_device_model">Connected Device Model:</string>
     <string name="rileylink_last_used_frequency">Last Used Frequency:</string>
     <string name="rileylink_last_device_contact">Last Device Contact:</string>
     <string name="rileylink_firmware_version">Firmware Version:</string>
+    <string name="rileylink_firmware_version_value">BLE113: %1$s\nCC110: %2$s</string>
     <string name="rileylink_pump_serial_number">Pump Serial Number:</string>
     <string name="rileylink_pump_frequency">Pump Frequency:</string>
+    <string name="rileylink_pump_frequency_value">%1$.2f MHz</string>
 
     <!-- RL State -->
     <string name="rileylink_state_bt_init">Bluetooth Initializing…</string>
@@ -67,9 +72,13 @@
 
     <!-- RileyLink - Common -->
     <string name="rileylink_target_device_medtronic">Medtronic Pump</string>
-    <string name="rileylink_target_device_omnipod">Omnipod</string>
+    <string name="rileylink_target_device_omnipod">Omnipod (Eros)</string>
     <string name="riley_link_common_yes">Yes</string>
     <string name="riley_link_common_no">No</string>
+
+    <!-- RileyLink - Preferences -->
+    <string name="riley_link_show_battery_level">Show battery level reported by OrangeLink/EmaLink</string>
+    <string name="riley_link_show_battery_level_summary">DOES NOT work with the original RileyLink. May not work with other RileyLink alternatives.</string>
 
     <plurals name="duration_days">
         <item quantity="one">%1$d day</item>

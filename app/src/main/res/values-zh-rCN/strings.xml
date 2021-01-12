@@ -37,7 +37,6 @@
     <string name="description_source_glimp">从 Glimp 接收血糖值。</string>
     <string name="description_source_mm640g">从美敦力600Series 的AndroidUploader 接收血糖值。</string>
     <string name="description_source_ns_client">从 Nightscout 下载 血糖数据</string>
-    <string name="description_source_xdrip">从 xDrip 接收血糖值。</string>
     <string name="description_treatments">保存所做的所有治疗</string>
     <string name="description_wear">使用您的 WearOS 手表监视和控制 AndroidAPS。</string>
     <string name="description_xdrip_status_line">在 xDrip + 表盘上显示有关闭环的信息。</string>
@@ -113,7 +112,6 @@
     <string name="changeyourinput">更改您的输入!</string>
     <string name="configbuilder_bgsource">血糖来源</string>
     <string name="configbuilder_bgsource_description">AndroidAPS 从何处获取数据？</string>
-    <string name="xdrip">xDrip</string>
     <string name="apsmode_title">APS模式</string>
     <string name="closedloop">闭环</string>
     <string name="openloop">开环</string>
@@ -196,8 +194,6 @@
     <string name="mealbolus">饮食</string>
     <string name="correctionbous">矫正</string>
     <string name="actions">手动操作</string>
-    <string name="ns_upload_only">只上传到NS服务器 (禁用同步)</string>
-    <string name="ns_upload_only_summary">只上传给NS服务器，对SGV没有影响除非选择了本地血糖来源，例如 xDrip. 对配置文件没有影响当选择NS-配置文件时.</string>
     <string name="pumpNotInitialized">泵未初始化!</string>
     <string name="primefill">充盈</string>
     <string name="fillwarning">请确保数量和输液器里的药量匹配</string>
@@ -247,7 +243,6 @@
     <string name="smscommunicator_shortname">手机SMS</string>
     <string name="short_tabtitles">标题名称缩写</string>
     <string name="always_use_shortavg">总是使用短时间的平均增量代替简单增量</string>
-    <string name="always_use_shortavg_summary">当数据来自没有过滤的源头时，例如 xDrip 偶尔出现噪音数据.</string>
     <string name="profile">配置文件</string>
     <string name="openapsama_max_daily_safety_multiplier_summary">默认值: 3 这是一个关键的 OpenAPS 安全阀值。这是限制你的闭环可以最大扩张3倍的日最大基础率。你可能不需要改变这个值 但你应该这个值的含义。日最大基础率的3倍，当前基础率的4倍，这是建议的安全阀值</string>
     <string name="openapsama_current_basal_safety_multiplier_summary">默认值: 4 这是另一个的关键 OpenAPS 安全阀值, 日最大基础率的3倍，当前基础率的4倍，这是建议的安全阀值。这意味着你的基础率, 无论你的泵上的最大基础率设置的多少，也 不能超过你的当前基础率的4倍。这是为了防止人们在了解该算法的工作原理之前进入危险的领域 。同样, 默认值为 4倍; 大多数人将永远不需要调整, 而是更有可能需要调整其他设置,</string>
@@ -260,9 +255,6 @@
     <string name="smscommunicator_invalidphonennumber">无效的SMS手机号码</string>
     <string name="overview_calibration">校准</string>
     <string name="xdripnotinstalled">没有安装xDrip+</string>
-    <string name="calibrationsent">校准发送到 xDrip</string>
-    <string name="smscommunicator_calibrationsent">校准值发送了，必须在xDrip开启允许通过其他app使用它的校准功能</string>
-    <string name="smscommunicator_calibrationfailed">xDrip 没有收到校准</string>
     <string name="pumpsuspended">泵暂停了</string>
     <string name="executing">正在执行</string>
     <string name="virtualpump_settings">虚拟泵设置</string>
@@ -331,8 +323,6 @@
     <string name="nav_about">关于</string>
     <string name="smscommunicator_missingsmspermission">缺少 SMS 短信权限</string>
     <string name="smscommunicator_missingphonestatepermission">缺少手机状态权限</string>
-    <string name="xdripstatus_settings">xDrip 状态 (手表)</string>
-    <string name="xdripstatus">xDrip 状态线 (手表)</string>
     <string name="xdripstatus_shortname">xdrip</string>
     <string name="wear_showbgi_title">显示血糖线</string>
     <string name="wear_showbgi_summary">添加血糖线到状态线</string>

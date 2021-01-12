@@ -39,7 +39,6 @@
     <string name="description_source_glimp">Λάβετε τις τιμές BG από το Glimp.</string>
     <string name="description_source_mm640g">Λάβετε τις τιμές BG από το 600SeriesAndroidUploader.</string>
     <string name="description_source_ns_client">Λήψη δεδομένων BG από Nightscout</string>
-    <string name="description_source_xdrip">Λάβετε τις τιμές BG από το xDrip.</string>
     <string name="description_treatments">Σώζει όλες τις θεραπείες που έγιναν</string>
     <string name="description_wear">Παρακολουθεί και ελέγχει το AndroidAPS χρησιμοποιώντας το ρολόι σας WearOS.</string>
     <string name="description_xdrip_status_line">Δείτε πληροφορίες σχετικά με το κύκλωμά σας στην πρόσοψη xDrip +.</string>
@@ -116,7 +115,6 @@
     <string name="changeyourinput">Αλλάξτε αυτό που εισάγατε!</string>
     <string name="configbuilder_bgsource">Πηγή BG</string>
     <string name="configbuilder_bgsource_description">Από πού πρέπει το AndroidAPS να πάρει τα δεδομένα του;</string>
-    <string name="xdrip">xDrip</string>
     <string name="apsmode_title">Λειτουργία APS</string>
     <string name="closedloop">Κλειστό Κύκλωμα</string>
     <string name="openloop">Ανοιχτό Κύκλωμα</string>
@@ -199,8 +197,6 @@
     <string name="mealbolus">Γεύμα</string>
     <string name="correctionbous">Διορθ</string>
     <string name="actions">Ενέργειες</string>
-    <string name="ns_upload_only">NS φορτώνεται μόνο (απενεργοποίηση συγχρ)</string>
-    <string name="ns_upload_only_summary">NS φορτώνεται μόνο. Δεν είναι αποτελεσματικό στο SGV εκτός εάν έχει επιλεγεί μία τοπική πηγή όπως το xDrip. Δεν είναι αποτελεσματικό στα Προφίλ ενώ χρησιμοποιείται το NS-Profiles.</string>
     <string name="pumpNotInitialized">Η αντλία δεν έχει ρυθμιστεί!</string>
     <string name="primefill">Πλήρωση/Γέμισμα</string>
     <string name="fillwarning">Παρακαλώ ελέγξτε ότι η ποσότητα ταιριάζει με τις προδιαγραφές του σετ έγχυσης!</string>
@@ -250,7 +246,6 @@
     <string name="smscommunicator_shortname">SMS</string>
     <string name="short_tabtitles">Συντομογραφίες ενοτήτων</string>
     <string name="always_use_shortavg">Χρησιμοποιείτε πάντα τη βραχυπρόθεσμη μέση διαφορά αντί της απλής διαφοράς</string>
-    <string name="always_use_shortavg_summary">Χρήσιμο όταν δεδομένα από μη φιλτραρισμένες πηγές όπως το xDrip αποκτούν θόρυβο.</string>
     <string name="profile">Προφίλ</string>
     <string name="openapsama_max_daily_safety_multiplier_summary">Προεπιλεγμένη τιμή: 3 Αυτό είναι ένα κλειδί ασφαλείας του OpenAPS. Αυτό περιορίζει την αύξηση του βασικού x3 (σε αυτούς τους ανθρώους) από την μεγαλύτερη τιμή του. Συνήθως δεν χρειάζεται να το αλλάξετε, αλλά πρέπει να ξέρετε τι σημαίνει “3x μέγιστο ημερήσιο; 4x τρέχων” για λόγους ασφαλείας.</string>
     <string name="openapsama_current_basal_safety_multiplier_summary">Προεπιλεγμένη τιμή: 4 Αυτό είναι το μισό του θέματος ασφαλείας του OpenAPS, και το άλλο μισό του «3 x μέγιστο ημέρας: 4 x τρέχων» των θεμάτων ασφαλείας. Αυτό σημαίνει ότι ο βασικός ρυθμός, ανεξάρτητα από την μέγιστη τιμή βασικού ρυθμού στην αντλία σας, δεν μπορεί να είναι υψηλότερος από το πολλαπλάσιο αυτού του αριθμού. Αυτό γίνεται για να αποτρέψει τους ανθρώπους από το να μπουν σε επικίνδυνες καταστάσεις θέτωντας υψηλό βασικό πριν κατανοήσουν πλήρως πώς λειτουργεί ο αλγόριθμος. Και πάλι, η προεπιλεγμένη τιμή είναι 4x: οι περισσότεροι άνθρωποι ποτέ δεν θα χρειαστεί να το προσαρμόσουν και αντίθετα είναι πιο πιθανό να χρειαστεί να προσαρμόσουν άλλες ρυθμίσεις αν αισθάνονται ότι κινούνται με ασφάλεια.</string>
@@ -263,9 +258,6 @@
     <string name="smscommunicator_invalidphonennumber">Μη έγκυρος αριθμός τηλεφώνου για SMS</string>
     <string name="overview_calibration">Καλιμπράρισμα</string>
     <string name="xdripnotinstalled">xDrip+ μη εγκατεστημένο</string>
-    <string name="calibrationsent">Το καλιμπράρισμα εστάλει στο xDrip</string>
-    <string name="smscommunicator_calibrationsent">Το καλιμπράρισμα στάλθηκε. Η λήψη πρέπει να είναι ενεργοποιημένη στο xDrip.</string>
-    <string name="smscommunicator_calibrationfailed">το xDrip δεν λαμβάνει καλιμπραρίσματα</string>
     <string name="pumpsuspended">Η αντλία είναι σε παύση</string>
     <string name="executing">Εκτελείτε</string>
     <string name="virtualpump_settings">Ρυθμίσεις Εικονικής αντλίας</string>
@@ -331,15 +323,11 @@
     <string name="show_statuslights">Εμφάνιση του φωτισμού κατάστασης στην αρχική οθόνη</string>
     <string name="statuslights_res_warning">Όριο προειδοποίησης χαμηλής αμπούλας [U]</string>
     <string name="statuslights_res_critical">Όριο προειδοποίησης πολύ χαμηλής αμπούλας [U]</string>
-    <string name="statuslights_bat_warning">Όριο προειδοποίησης χαμηλής μπαταρίας [%]</string>
-    <string name="statuslights_bat_critical">Όριο προειδοποίησης πολύ χαμηλής μπαταρίας [%]</string>
     <string name="iob">IOB</string>
     <string name="cob">COB</string>
     <string name="nav_about">Σχετικά με</string>
     <string name="smscommunicator_missingsmspermission">Απουσία δικαιωμάτων SMS</string>
     <string name="smscommunicator_missingphonestatepermission">Λείπει η άδεια κατάστασης τηλεφώνου</string>
-    <string name="xdripstatus_settings">Κατάσταση xDrip (ρολόι)</string>
-    <string name="xdripstatus">Γραμμή Κατάστασης xDrip (ρολόι)</string>
     <string name="xdripstatus_shortname">xds</string>
     <string name="wear_showbgi_title">Δείξε BGI</string>
     <string name="wear_showbgi_summary">Πρόσθεσε BGI στην γραμμή κατάστασης</string>
@@ -373,7 +361,6 @@
     <string name="mdtp_cancel">Ακύρωση</string>
     <string name="notloadedplugins">Δεν έχουν φορτωθεί όλα τα προφίλ!</string>
     <string name="valuesnotstored">Οι τιμές δεν αποθηκεύτηκαν!</string>
-    <string name="ns_localbroadcasts">Ενεργοποιήστε εκπομπές σε άλλες εφαρμογές (όπως το xDrip). Μην το ενεργοποιήσετε εάν έχετε περισσότερες από μία εγκατεστημένες εφαρμογές του AAPS ή NSClient!</string>
     <string name="ns_localbroadcasts_title">Ενεργοποιήστε τις τοπικές αποστολές.</string>
     <string name="careportal_newnstreatment_duration_min_label">Διάρκεια [min]</string>
     <string name="openapssmb">OpenAPS SMB</string>

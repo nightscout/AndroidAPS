@@ -138,7 +138,7 @@
     <string name="iob_label">Aktivní inzulín (IOB)</string>
     <string name="iob_which">Zatrhněte všechny správné odpovědi.</string>
     <string name="iob_value">Hodnota IOB je ovlivněna vydanými dočasnými bazály.</string>
-    <string name="iob_hightemp">Vysoký dočasný bazál nebude spuštěn, pokud je Váše glykémie nižší než cíl.</string>
+    <string name="iob_hightemp">Vysoký dočasný bazál nebude spuštěn, pokud je Vaše glykémie nižší než cíl.</string>
     <string name="iob_negiob">Negativní IOB po značnou dobu bez cvičení naznačuje, že váš profil je příliš \"silný\" a ve vašem profilu je potřeba méně inzulínu.</string>
     <string name="iob_posiob">Pozitivní IOB na značnou dobu naznačuje rezistenci vůči inzulinu nebo neohlášené jídlo.</string>
     <string name="breadgrams_label">Zadávání sacharidů a bolusy</string>

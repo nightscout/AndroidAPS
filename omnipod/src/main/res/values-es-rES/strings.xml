@@ -11,8 +11,6 @@
     <string name="omnipod_config_suspend_delivery_button_enabled">Mostrar el botón Suspender entrega en la pestaña Omnipod</string>
     <string name="omnipod_config_pulse_log_button_enabled">Mostrar botón de registro de pulso en el menú de gestión del pod</string>
     <string name="omnipod_config_rileylink_stats_button_enabled">Mostrar botón de estadísticas de RileyLink en el menú de gestión del pod</string>
-    <string name="omnipod_config_use_riley_link_battery_level">Usar el nivel de batería reportado por EmaLink/Orangelink</string>
-    <string name="omnipod_config_use_riley_link_battery_level_summary">NO funciona con el RileyLink original. Puede que no funcione con otras alternativas de RiyeyLink.</string>
     <string name="omnipod_config_time_change_enabled">Detección de zona DST/hora activada</string>
     <string name="omnipod_config_expiration_reminder_enabled">Recordatorio de expiración activado</string>
     <string name="omnipod_config_expiration_reminder_hours_before_shutdown">Horas antes del apagado</string>

@@ -42,7 +42,7 @@
     <string name="description_source_glimp">Motta BS verdier fra Glimp.</string>
     <string name="description_source_mm640g">Motta BS verdier fra 600SeriesAndroidUploader.</string>
     <string name="description_source_ns_client">Last ned BS verdier fra Nightscout</string>
-    <string name="description_source_xdrip">Motta BS verdier fra xDrip.</string>
+    <string name="description_source_xdrip">Motta BS verdier fra xDrip+.</string>
     <string name="description_treatments">Lagre data om alle behandlinger som er utført</string>
     <string name="description_wear">Monitorer og kontroller AndroidAPS med din WearOS klokke.</string>
     <string name="description_xdrip_status_line">Vis informasjon om loop på din xDrip+ urskive.</string>
@@ -119,7 +119,7 @@
     <string name="changeyourinput">Endre dine inndata!</string>
     <string name="configbuilder_bgsource">BS kilde</string>
     <string name="configbuilder_bgsource_description">Hvor skal AndroidAPS hente sine data fra?</string>
-    <string name="xdrip">xDrip</string>
+    <string name="xdrip">xDrip+</string>
     <string name="apsmode_title">APS modus</string>
     <string name="closedloop">Lukket loop</string>
     <string name="openloop">Åpen loop</string>
@@ -285,8 +285,8 @@
     <string name="mealbolus">Måltid</string>
     <string name="correctionbous">Korreksjon</string>
     <string name="actions">Handlinger</string>
-    <string name="ns_upload_only">Kun NS opplasting (deaktivert sync)</string>
-    <string name="ns_upload_only_summary">Kun opplast til NS. Påvirker ikke SGV (BS) med mindre en lokal kilde som xDrip er valgt. Påvirker ikke profiler hvis NS profiler benyttes.</string>
+    <string name="ns_upload_only">(FARLIG Å DEAKTIVERE) Kun NS opplast</string>
+    <string name="ns_upload_only_summary">Kun NS opplasting (deaktivert sync). Ikke effektiv på SGV med mindre en lokal kilde som xDrip+ er valgt. Ikke effektiv på Profiler mens NS-Profiler brukes.\n!!! ADVARSEL !!! Deaktivering av dette alternativet kan føre til funksjonsfeil og overdosering av insulin hvis noen av dine komponenter (AAPS, NS, xDrip+) er feil konfigurert. Observer at data som vises i AAPS samsvarer med pumpestatus!</string>
     <string name="pumpNotInitialized">Pumpen ikke initialisert!</string>
     <string name="primefill">Prime/fylling</string>
     <string name="fillwarning">Kontroller at mengden samsvarer med spesifikasjonen for slangesettet ditt!</string>
@@ -341,7 +341,7 @@
     <string name="smscommunicator_shortname">SMS</string>
     <string name="short_tabtitles">Korte navn i menyfaner</string>
     <string name="always_use_shortavg">Bruk alltid kort gjennomsnittsverdi delta i stedet for enkel delta</string>
-    <string name="always_use_shortavg_summary">Nyttig når data fra ufiltrerte kilder som xDrip registrerer mye støy.</string>
+    <string name="always_use_shortavg_summary">Nyttig når data fra ufiltrerte kilder som xDrip+ registrerer mye støy.</string>
     <string name="profile">Profil</string>
     <string name="openapsama_max_daily_safety_multiplier_summary">Standardverdi: 3 Dette er en viktig OpenAPS sikkerhetsbegrensning. Dette begrenser dine basaler til maks 3x av din høyeste basalverdi. Du vil trolig ikke behøve å endre denne verdien, men les og forstå hva som menes med \"3x max daglig; 4x gjeldende\" som sikkerhetsinnstilling.</string>
     <string name="openapsama_current_basal_safety_multiplier_summary">Standardverdi: 4 Dette er en viktig OpenAPS sikkerhetsbegrensning. Dette begrenser dine temp basal til max 4 ganger din nåværende basal dose, uansett hva som er maks basal i pumpen. Dette er for å unngå at man setter farlige høye maks basal doser uten at man har forstått algoritmene. Når du taket i denne begrensningen bør du i stedet fokusere på å endre andre innstillinger.</string>
@@ -355,9 +355,9 @@
     <string name="smscommunicator_invalidphonennumber">Ugyldig SMS mobilnummer</string>
     <string name="overview_calibration">Kalibrering</string>
     <string name="xdripnotinstalled">xDrip+ ikke installert</string>
-    <string name="calibrationsent">Kalibrering er sendt til xDrip</string>
-    <string name="smscommunicator_calibrationsent">Kalibrering sendt. Vær oppmerksom på at xDrip må være konfigurert til å ta imot kalibreringer.</string>
-    <string name="smscommunicator_calibrationfailed">xDrip tar ikke imot kalibreringer</string>
+    <string name="calibrationsent">Kalibrering er sendt til xDrip+</string>
+    <string name="smscommunicator_calibrationsent">Kalibrering sendt. Mottak må være aktivert i xDrip+.</string>
+    <string name="smscommunicator_calibrationfailed">xDrip+ tar ikke imot kalibreringer</string>
     <string name="pumpsuspended">Pumpen er pauset</string>
     <string name="executing">Utfører</string>
     <string name="virtualpump_settings">Virtuelle pumpe innstillinger</string>
@@ -443,12 +443,12 @@
     <string name="statuslights_sage_critical">Advarsel: alder CGM [h]</string>
     <string name="statuslights_sbat_warning">Nivå for når batterivarsel skal gis [%]</string>
     <string name="statuslights_sbat_critical">Nivå for når kritisk batteriadvarsel skal gis [%]</string>
-    <string name="statuslights_bage_warning">OBS: alder batteri [h]</string>
-    <string name="statuslights_bage_critical">Advarsel: alder batteri [h]</string>
+    <string name="statuslights_bage_warning">Nivå for når batterivarsel for pumpe skal gis [h]</string>
+    <string name="statuslights_bage_critical">Nivå for når kritisk batteriadvarsel for pumpe skal gis [h]</string>
     <string name="statuslights_res_warning">OBS: nivå insulinreservoar [U]</string>
     <string name="statuslights_res_critical">Advarsel: nivå insulinreservoar [U]</string>
-    <string name="statuslights_bat_warning">OBS: batterivarsel [%]</string>
-    <string name="statuslights_bat_critical">Advarsel: lavt batterinivå [%]</string>
+    <string name="statuslights_bat_warning">Nivå for når batterivarsel for pumpe skal gis [%]</string>
+    <string name="statuslights_bat_critical">Nivå for når kritisk batteriadvarsel for pumpe skal gis [%]</string>
     <string name="prediction_shortname">PROGN</string>
     <string name="iob">IOB</string>
     <string name="cob">COB</string>
@@ -460,8 +460,8 @@
     <string name="nav_about">Om</string>
     <string name="smscommunicator_missingsmspermission">Mangler SMS tillatelse</string>
     <string name="smscommunicator_missingphonestatepermission">Mangler app tillatelse til telefon</string>
-    <string name="xdripstatus_settings">xDrip Status (klokke)</string>
-    <string name="xdripstatus">xDrip Statuslinje (klokke)</string>
+    <string name="xdripstatus_settings">xDrip+ Status (klokke)</string>
+    <string name="xdripstatus">xDrip+ Statuslinje (klokke)</string>
     <string name="xdripstatus_shortname">xds</string>
     <string name="wear_showbgi_title">Vis BGI</string>
     <string name="wear_showbgi_summary">Legg til BGI i statuslinje</string>
@@ -504,7 +504,7 @@
     <string name="mdtp_cancel">Avbryt</string>
     <string name="notloadedplugins">Ikke alle profiler ble lastet!</string>
     <string name="valuesnotstored">Verdier ikke lagret!</string>
-    <string name="ns_localbroadcasts">Aktiver sending til andre apper (som xDrip). Ikke aktiver dette hvis du har mer enn en AAPS eller NSClient installert!</string>
+    <string name="ns_localbroadcasts">Aktiver kringkasting til andre apper (som xDrip+). Ikke aktiver dette hvis du har mer enn en AAPS eller NSClient installert!</string>
     <string name="ns_localbroadcasts_title">Aktiver lokale sendinger.</string>
     <string name="careportal_newnstreatment_duration_min_label">Varighet [min]</string>
     <string name="openapssmb">OpenAPS SMB</string>
@@ -1187,13 +1187,15 @@
     <string name="cta_dont_kill_my_app_info">Avslutte app?</string>
     <string name="alarm">Alarm</string>
     <string name="smscommunicator_report_pump_ureachable_summary">Send SMS hvis det ikke oppnås kontakt med pumpa</string>
-    <string name="smscommunicator_pump_ureachable">Rapporter når pumpe ikke kan tilkobles</string>
+    <string name="smscommunicator_pump_ureachable">Rapporter når kontakt med pumpe ikke oppnås</string>
     <string name="advisoralarm">Aktiver alarm når det er på tide å spise</string>
     <string name="alarminxmin">Aktiver alarm om %1$d min</string>
     <string name="bolusadvisor">Bolusguide</string>
     <string name="bolusadvisormessage">Du har høyt blodsukker. I stedet for å spise nå er det bedre å utsette det til du har et lavere blodsukker. Ønsker du å sette en korrigerings bolus nå og få en påminnelse om når den er på tide å spise? I dette tilfellet vil ingen karbohydrater registreres nå, og du må bruke måltids veiviseren igjen når vi gir deg en påminnelse.</string>
     <string name="enablebolusadvisor">Aktiver boluskalkulator</string>
-    <string name="enablebolusadvisor_summary">Få påminnelse om å spise i stedet for å bruke wizard når du har høyt blodsukker</string>
+    <string name="enablebolusadvisor_summary">Bruk en påminnelse om å spise senere enn kalkulator resultatet fra wizard ved høyt blodsukker (\"pre-bolus\")</string>
     <string name="time_to_eat">Nå må du spise!\Bruk bolus veiviseren og beregn på nytt.</string>
     <string name="timetoeat">Nå må du spise</string>
+    <string name="fabric_upload_disabled">Opplast av krasj logger er deaktivert!</string>
+    <string name="graph_menu_divider_header">Graf</string>
 </resources>

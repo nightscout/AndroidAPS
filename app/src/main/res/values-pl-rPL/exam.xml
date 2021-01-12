@@ -93,7 +93,7 @@
     <string name="prerequisites2_supportedcgm">Wspierany CGM i odpowiednia aplikacja, aby otrzymywać wartości glukozy we krwi na telefonie/urządzeniu.</string>
     <string name="prerequisites2_hint1">https://androidaps.readthedocs.io/en/latest/EN/Module/module.html</string>
     <string name="update_label">Aktualizowanie AndroidAPS</string>
-    <string name="whatistrue">Sprawdź/Zaznacz wszystkie prawidłowe odpowiedzi.</string>
+    <string name="whatistrue">Zaznacz wszystkie prawidłowe odpowiedzi.</string>
     <string name="update_git">Musisz mieć zainstalowany i skonfigurowany Git na komputerze.</string>
     <string name="update_asap">Po wydaniu zaktualizowanych wersji AndroidAPS wcześniejsze wersje mogą być zdalnie ograniczone po określonym czasie.</string>
     <string name="update_keys">Powinieneś/powinnaś zapisać i zanotować lokalizację swojego klucza i użyć tego samego klucza do aktualizacji jak dla poprzedniej instalacji.</string>
@@ -117,7 +117,7 @@
     <string name="insulin_actrapid">Actrapid ® /Humulin R ®/\"zwykła\" insulina ludzka.</string>
     <string name="insulin_hint1">https://androidaps.readthedocs.io/en/latest/EN/Configuration/Config-Builder.html#insulin</string>
     <string name="sensitivity_label">Wtyczki wrażliwości</string>
-    <string name="sensitivity_which">Sprawdź/Zaznacz wszystkie prawidłowe odpowiedzi.</string>
+    <string name="sensitivity_which">Zaznacz wszystkie prawidłowe odpowiedzi.</string>
     <string name="sensitivity_adjust">Wtyczki wrażliwości pozwalają AndroidAPS dostosować się do czasowych lub krótkotrwałych zmian wrażliwości na insulinę (na przykład zmiany hormonalne lub problemy z wchłanianiem w miejscu wkłucia).</string>
     <string name="sensitivity_edit">Wtyczki wrażliwości dostarczają użytkownikowi sugerowane zmiany w dawkach bazowych, współczynnikach I:C i ISF, które mogą być używane do edycji profilu.</string>
     <string name="sensitivity_cannula">Rejestracja zmiany wkłucia spowoduje zresetowanie współczynnika Autosens z powrotem do 100%.</string>

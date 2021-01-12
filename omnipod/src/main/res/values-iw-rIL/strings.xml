@@ -11,8 +11,7 @@
     <string name="omnipod_config_suspend_delivery_button_enabled">הצג לחצן \"השהיית מתן אינסולין\" בלשונית אומניפוד</string>
     <string name="omnipod_config_pulse_log_button_enabled">הצג לחצן \"יומן פעימות\" בתפריט ניהול פוד</string>
     <string name="omnipod_config_rileylink_stats_button_enabled">הצג לחצן \"סטטיסטיקת ריילילינק\" בתפריט ניהול פוד</string>
-    <string name="omnipod_config_use_riley_link_battery_level">השתמש ברמת סוללה המדווחת מ-EmaLink/OrangeLink</string>
-    <string name="omnipod_config_use_riley_link_battery_level_summary">לא עובד עם ריילילינק המקורי. עלול שלא לעבוד עם חלופות ריילילינק אחרות.</string>
+    <string name="omnipod_config_battery_change_logging_enabled">אפשר רישום החלפת סוללה בפעולות</string>
     <string name="omnipod_config_time_change_enabled">זיהוי אזור זמן ושעון קיץ מופעל</string>
     <string name="omnipod_config_expiration_reminder_enabled">תזכורת לתפוגה מופעלת</string>
     <string name="omnipod_config_expiration_reminder_hours_before_shutdown">שעות לפני כיבוי</string>
@@ -67,6 +66,7 @@
     <string name="omnipod_error_rileylink_address_invalid">כתובת ריילילינק לא חוקית.</string>
     <string name="omnipod_error_operation_not_possible_no_configuration">הפעולה אינה אפשרית.\n\nיש להגדיר קודם את אומניפוד על מנת לבצע פעולה זו.</string>
     <string name="omnipod_error_pod_not_attached">אין פוד פעיל</string>
+    <string name="omnipod_error_time_out_of_sync">הזמן בפוד אינו מסונכרן. בבקשה עדכנו את השעה בלשונית Omnipod.</string>
     <string name="omnipod_error_unexpected_exception">אירעה שגיאה לא צפויה. נא לדווח! (%1$s: %2$s).</string>
     <string name="omnipod_error_crc_mismatch">התקשורת נכשלה: אימות תקינות ההודעה נכשל</string>
     <string name="omnipod_error_invalid_packet_type">התקשורת נכשלה: התקבלה חבילת נתונים לא חוקית מהפוד</string>
@@ -135,7 +135,7 @@
     <string name="omnipod_cmd_get_pod_info">קבל מידע על הפוד</string>
     <string name="omnipod_cmd_set_time">הגדרת שעה</string>
     <string name="omnipod_cmd_configure_alerts">הגדרת התראות</string>
-    <string name="omnipod_cmd_acknowledge_alerts">קבלת ההתראות</string>
+    <string name="omnipod_cmd_acknowledge_alerts">אשר התראות</string>
     <string name="omnipod_cmd_suspend_delivery">השהה הזרקה</string>
     <string name="omnipod_cmd_resume_delivery">חידוש הזרקה</string>
     <string name="omnipod_cmd_unknown_entry">רשומה לא ידועה</string>
@@ -202,7 +202,7 @@
     <string name="omnipod_overview_button_refresh">רענן</string>
     <string name="omnipod_overview_button_resume_delivery">חידוש הזרקה</string>
     <string name="omnipod_overview_button_pod_management">ניהול הפוד</string>
-    <string name="omnipod_overview_button_acknowledge_active_alerts">קבל התראות</string>
+    <string name="omnipod_overview_button_acknowledge_active_alerts">אשר התראות</string>
     <string name="omnipod_overview_pod_status">סטטוס הפוד</string>
     <string name="omnipod_overview_total_delivered">סה\"כ שהוזרק</string>
     <string name="omnipod_overview_total_delivered_value">%1$.2f יח\'</string>
@@ -216,7 +216,7 @@
     <string name="omnipod_overview_pod_active_alerts">התראות פוד פעילות</string>
     <string name="omnipod_overview_firmware_version">גרסת קושחה</string>
     <string name="omnipod_overview_time_on_pod">זמן פעילות הפוד</string>
-    <string name="omnipod_overview_temp_basal_value">%1$.2f יח\'\ש\' @ %2$s (%3$d\%4$d דק\')</string>
+    <string name="omnipod_overview_temp_basal_value">%1$.2f יח\'\\ש\' @ %2$s (%3$d\%4$d דק\')</string>
     <string name="omnipod_overview_reservoir_value">%1$.2f יח\' נותרו</string>
     <string name="omnipod_overview_reservoir_value_over50">נותרו יותר מ-50 יח\'</string>
     <string name="omnipod_overview_errors">שגיאות</string>

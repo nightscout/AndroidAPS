@@ -42,7 +42,6 @@
     <string name="description_source_glimp">Получать данные гликемии от Glimp.</string>
     <string name="description_source_mm640g">Получать данные гликемии от 600SeriesAndroidUploader.</string>
     <string name="description_source_ns_client">Получать данные гликемии с сайта Nightscout</string>
-    <string name="description_source_xdrip">Получать данные гликемии от xDrip.</string>
     <string name="description_treatments">Сохраняет все выполненные назначения</string>
     <string name="description_wear">Мониторить и контролировать AndroidAPS при помощи часов WearOS.</string>
     <string name="description_xdrip_status_line">Показать информацию о работе алгоритма ИПЖ на экране смарт-часов xDrip+.</string>
@@ -119,7 +118,6 @@
     <string name="changeyourinput">измените введенные данные</string>
     <string name="configbuilder_bgsource">источник СК</string>
     <string name="configbuilder_bgsource_description">Откуда должен получать данные AndroidAPS?</string>
-    <string name="xdrip">xDrip +</string>
     <string name="apsmode_title">режим APS</string>
     <string name="closedloop">Замкнутый цикл</string>
     <string name="openloop">открытый цикл</string>
@@ -285,8 +283,6 @@
     <string name="mealbolus">болюс на еду</string>
     <string name="correctionbous">коррекция</string>
     <string name="actions">действия</string>
-    <string name="ns_upload_only">только передача в NS (синхронизация отсутствует)</string>
-    <string name="ns_upload_only_summary">только передача в NS. Не работает в SGV пока не выбран местный источник вроде xdrip. Не работает в Профилях при действующем профиле NS.</string>
     <string name="pumpNotInitialized">помпа не инициализирована</string>
     <string name="primefill">прайм/заполнение</string>
     <string name="fillwarning">убедитесь что количество соответствует характеристикам вашей инфузионной системы</string>
@@ -341,7 +337,6 @@
     <string name="smscommunicator_shortname">SMS</string>
     <string name="short_tabtitles">сокращенные имена табул</string>
     <string name="always_use_shortavg">всегда используйте укороченное среднее приращение вместо простого</string>
-    <string name="always_use_shortavg_summary">Полезно когда данные из нефильтрованных источников вроде xDrip+ начинают \"шуметь\".</string>
     <string name="profile">профиль</string>
     <string name="openapsama_max_daily_safety_multiplier_summary">значение по умолчанию:3 Это ключевой ограничитель безопасности OpenAPS. Он ограничивает величину вашего базала максимум до 3x максимума. Вам вероятно не понадобится менять эту величину но вам следует понимать, что она входит в формулу дуэта \"максимум 3x ежедневное; 4x текущее\"</string>
     <string name="openapsama_current_basal_safety_multiplier_summary">значение по умолчанию: 4 . Это вторая половина обеспечения безопасности OpenAPS из дуэта \"максимум 3x ежедневное; 4x текущее\" Означает что ваша база независимо от установок помпы не может быть выше чем это число умноженное на текущее значение базала. Ограничение для того, чтобы предотвратить вторжение в опасную зону из-за высокого уровня установленных значений базы без понимания алгоритма работы приложения. Большинству людей никогда не потребуется изменять это значение, скорее всего нужно поменять другие настройки если вы чувствуете, что вам мешает это ограничение.</string>
@@ -355,9 +350,6 @@
     <string name="smscommunicator_invalidphonennumber">неверный номер телефона для смс</string>
     <string name="overview_calibration">калибровка</string>
     <string name="xdripnotinstalled">xdrip+ не установлен</string>
-    <string name="calibrationsent">калибровка передается на xdrip</string>
-    <string name="smscommunicator_calibrationsent">Калибровка отправлена. Активируйте прием в xDrip+.</string>
-    <string name="smscommunicator_calibrationfailed">xdrip не получает калибровок</string>
     <string name="pumpsuspended">Работа помпы остановлена</string>
     <string name="executing">выполнение</string>
     <string name="virtualpump_settings">настройки вирт помпы</string>
@@ -406,11 +398,18 @@
     <string name="suspendloopfor3h">приостановить цикл на 3 часа</string>
     <string name="suspendloopfor10h">приостановить цикл на 10 часов</string>
     <string name="suspendloopforXmin">Приостановить цикл на %1$d мин</string>
+    <string name="disconnectpump">Отключить помпу</string>
     <string name="disconnectpumpfor15m">отсоединить помпу на 15 мин</string>
     <string name="disconnectpumpfor30m">отсоединить помпу на 30 мин</string>
     <string name="disconnectpumpfor1h">отсоединить помпу на 1 час</string>
     <string name="disconnectpumpfor2h">отсоединить помпу на 2 часа</string>
     <string name="disconnectpumpfor3h">отсоединить помпу на 3 часа</string>
+    <string name="duration15m">15 мин</string>
+    <string name="duration30m">30 мин</string>
+    <string name="duration1h">1 час</string>
+    <string name="duration2h">2 часа</string>
+    <string name="duration3h">3 часа</string>
+    <string name="duration10h">10 часов</string>
     <string name="resume">возобновить</string>
     <string name="reconnect">Возобновить соединение с помпой</string>
     <string name="smscommunicator_wrongduration">неверное значение длительности</string>
@@ -453,8 +452,6 @@
     <string name="nav_about">о приложении</string>
     <string name="smscommunicator_missingsmspermission">отсутствует смс подтверждение</string>
     <string name="smscommunicator_missingphonestatepermission">Отсутствует разрешение телефона</string>
-    <string name="xdripstatus_settings">состояние xdrip (часы)</string>
-    <string name="xdripstatus">строка состояния xdrip (часы)</string>
     <string name="xdripstatus_shortname">Статус xDrip</string>
     <string name="wear_showbgi_title">показать BGI</string>
     <string name="wear_showbgi_summary">добавить BGI в строку состояния</string>
@@ -497,7 +494,6 @@
     <string name="mdtp_cancel">отмена</string>
     <string name="notloadedplugins">не все профили загружены!</string>
     <string name="valuesnotstored">Данные не сохранены!</string>
-    <string name="ns_localbroadcasts">Включить трансляцию для других приложений (например, xDrip). Не включайте, если установлено несколько экземпляров приложений AAPS или NSClient!</string>
     <string name="ns_localbroadcasts_title">Активировать локальную передачу</string>
     <string name="careportal_newnstreatment_duration_min_label">Длительность (мин)</string>
     <string name="openapssmb">Супер микро болюс OpenAPS</string>
@@ -1183,4 +1179,13 @@ Context | Edit Context</string>
     <string name="alarm">Сигнал</string>
     <string name="smscommunicator_report_pump_ureachable_summary">Отправить SMS, если инициируется запись о недоступности помпы</string>
     <string name="smscommunicator_pump_ureachable">Сообщить о недоступности помпы</string>
+    <string name="advisoralarm">Напомнить о еде</string>
+    <string name="alarminxmin">Напомнить через %1$d мин</string>
+    <string name="bolusadvisor">Помощник болюса</string>
+    <string name="bolusadvisormessage">У вас высокая глюкоза крови. Лучше подождать, чем есть сейчас. Хотите сделать болюс на коррекцию и установить напоминание, когда будет пора есть? В этом случае углеводы не будут записаны и после напоминания надо будет снова воспользоваться помощником.</string>
+    <string name="enablebolusadvisor">Вкл помощник болюса</string>
+    <string name="enablebolusadvisor_summary">Используйте напоминание для того, чтобы начать есть позже, вместо того, чтобы воспользоваться помощником болюса на высоких значениях ГК (\"пре-болюс\")</string>
+    <string name="time_to_eat">Пора есть!\nЗапустите помощник болюса снова для подсчета.</string>
+    <string name="timetoeat">Пора есть</string>
+    <string name="fabric_upload_disabled">Загрузка журналов сбоя на сервер отключена!</string>
 </resources>

@@ -277,6 +277,7 @@ class DanaRSService : DaggerService() {
                     danaPump.bolusStopped = true
                     danaPump.bolusStopForced = true
                     aapsLogger.debug(LTag.PUMPCOMM, "Communication stopped")
+                    bleComm.disconnect("Communication stopped")
                 }
             }
         }

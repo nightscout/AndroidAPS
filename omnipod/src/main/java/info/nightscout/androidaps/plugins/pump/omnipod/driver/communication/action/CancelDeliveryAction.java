@@ -1,13 +1,17 @@
 package info.nightscout.androidaps.plugins.pump.omnipod.driver.communication.action;
 
+import org.joda.time.Duration;
+
 import java.util.ArrayList;
 import java.util.EnumSet;
 import java.util.List;
 
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.communication.message.MessageBlock;
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.communication.message.OmnipodMessage;
+import info.nightscout.androidaps.plugins.pump.omnipod.driver.communication.message.command.BeepConfigCommand;
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.communication.message.command.CancelDeliveryCommand;
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.communication.message.response.StatusResponse;
+import info.nightscout.androidaps.plugins.pump.omnipod.driver.definition.BeepConfigType;
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.definition.BeepType;
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.definition.DeliveryType;
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.manager.PodStateManager;
@@ -35,23 +39,14 @@ public class CancelDeliveryAction implements OmnipodAction<StatusResponse> {
     public StatusResponse execute(OmnipodRileyLinkCommunicationManager communicationService) {
         List<MessageBlock> messageBlocks = new ArrayList<>();
 
-        if (acknowledgementBeep && deliveryTypes.size() > 1) {
-            // Workaround for strange beep behaviour when cancelling multiple delivery types
-            List<DeliveryType> deliveryTypeList = new ArrayList<>(deliveryTypes);
+        messageBlocks.add(new CancelDeliveryCommand(podStateManager.getCurrentNonce(), BeepType.NO_BEEP, deliveryTypes));
 
-            EnumSet<DeliveryType> deliveryTypeWithBeep = EnumSet.of(deliveryTypeList.remove(deliveryTypeList.size() - 1));
-            EnumSet<DeliveryType> deliveryTypesWithoutBeep = EnumSet.copyOf(deliveryTypeList);
-
-            messageBlocks.add(new CancelDeliveryCommand(podStateManager.getCurrentNonce(), BeepType.NO_BEEP, deliveryTypesWithoutBeep));
-            messageBlocks.add(new CancelDeliveryCommand(podStateManager.getCurrentNonce(), BeepType.BEEP, deliveryTypeWithBeep));
-        } else {
-            messageBlocks.add(new CancelDeliveryCommand(podStateManager.getCurrentNonce(),
-                    acknowledgementBeep && deliveryTypes.size() == 1 ? BeepType.BEEP : BeepType.NO_BEEP, deliveryTypes));
+        // Workaround for strange behavior where the Pod beeps for each specified delivery type
+        if (acknowledgementBeep) {
+            messageBlocks.add(new BeepConfigCommand(BeepConfigType.BEEP, false, Duration.ZERO, false, Duration.ZERO, false, Duration.ZERO));
         }
 
-        StatusResponse statusResponse = communicationService.exchangeMessages(StatusResponse.class, podStateManager,
+        return communicationService.exchangeMessages(StatusResponse.class, podStateManager,
                 new OmnipodMessage(podStateManager.getAddress(), messageBlocks, podStateManager.getMessageNumber()));
-
-        return statusResponse;
     }
 }

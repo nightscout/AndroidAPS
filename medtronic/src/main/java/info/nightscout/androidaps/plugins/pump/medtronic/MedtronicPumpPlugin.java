@@ -48,7 +48,6 @@ import info.nightscout.androidaps.plugins.bus.RxBusWrapper;
 import info.nightscout.androidaps.plugins.common.ManufacturerType;
 import info.nightscout.androidaps.plugins.general.actions.defs.CustomAction;
 import info.nightscout.androidaps.plugins.general.actions.defs.CustomActionType;
-import info.nightscout.androidaps.queue.commands.CustomCommand;
 import info.nightscout.androidaps.plugins.general.overview.events.EventNewNotification;
 import info.nightscout.androidaps.plugins.general.overview.notifications.Notification;
 import info.nightscout.androidaps.plugins.pump.common.PumpPluginAbstract;
@@ -86,6 +85,7 @@ import info.nightscout.androidaps.plugins.pump.medtronic.events.EventMedtronicPu
 import info.nightscout.androidaps.plugins.pump.medtronic.service.RileyLinkMedtronicService;
 import info.nightscout.androidaps.plugins.pump.medtronic.util.MedtronicConst;
 import info.nightscout.androidaps.plugins.pump.medtronic.util.MedtronicUtil;
+import info.nightscout.androidaps.queue.commands.CustomCommand;
 import info.nightscout.androidaps.utils.DateUtil;
 import info.nightscout.androidaps.utils.FabricPrivacy;
 import info.nightscout.androidaps.utils.TimeChangeType;
@@ -327,11 +327,10 @@ public class MedtronicPumpPlugin extends PumpPluginAbstract implements PumpInter
     }
 
     @Override public RileyLinkPumpInfo getPumpInfo() {
-        String pumpDescription = pumpType.getDescription();
         String frequency = resourceHelper.gs(medtronicPumpStatus.pumpFrequency.equals("medtronic_pump_frequency_us_ca") ? R.string.medtronic_pump_frequency_us_ca : R.string.medtronic_pump_frequency_worldwide);
         String model = medtronicPumpStatus.medtronicDeviceType == null ? "???" : "Medtronic " + medtronicPumpStatus.medtronicDeviceType.getPumpModel();
         String serialNumber = medtronicPumpStatus.serialNumber;
-        return new RileyLinkPumpInfo(pumpDescription, frequency, model, serialNumber);
+        return new RileyLinkPumpInfo(frequency, model, serialNumber);
     }
 
     @Override public long getLastConnectionTimeMillis() {
@@ -422,14 +421,16 @@ public class MedtronicPumpPlugin extends PumpPluginAbstract implements PumpInter
 
     @Override
     public void getPumpStatus(String reason) {
+        boolean needRefresh = true;
 
         if (firstRun) {
-            initializePump(!isRefresh);
+            needRefresh = initializePump(!isRefresh);
         } else {
             refreshAnyStatusThatNeedsToBeRefreshed();
         }
 
-        rxBus.send(new EventMedtronicPumpValuesChanged());
+        if (needRefresh)
+            rxBus.send(new EventMedtronicPumpValuesChanged());
     }
 
 
@@ -556,7 +557,10 @@ public class MedtronicPumpPlugin extends PumpPluginAbstract implements PumpInter
     }
 
 
-    private void initializePump(boolean realInit) {
+    private boolean initializePump(boolean realInit) {
+
+        if (rileyLinkMedtronicService==null)
+            return false;
 
         aapsLogger.info(LTag.PUMP, getLogPrefix() + "initializePump - start");
 
@@ -571,7 +575,7 @@ public class MedtronicPumpPlugin extends PumpPluginAbstract implements PumpInter
 
                 setRefreshButtonEnabled(true);
 
-                return;
+                return true;
             }
 
             medtronicUtil.dismissNotification(MedtronicNotificationType.PumpUnreachable, rxBus);
@@ -614,7 +618,7 @@ public class MedtronicPumpPlugin extends PumpPluginAbstract implements PumpInter
             aapsLogger.error("Number of error counts was 5 or more. Starting tunning.");
             setRefreshButtonEnabled(true);
             serviceTaskExecutor.startTask(new WakeAndTuneTask(getInjector()));
-            return;
+            return true;
         }
 
         medtronicPumpStatus.setLastCommunicationToNow();
@@ -628,6 +632,8 @@ public class MedtronicPumpPlugin extends PumpPluginAbstract implements PumpInter
         // this.pumpState = PumpDriverState.Initialized;
 
         this.firstRun = false;
+
+        return true;
     }
 
     private void getBasalProfiles() {

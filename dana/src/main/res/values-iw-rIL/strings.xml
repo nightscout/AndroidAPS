@@ -14,7 +14,7 @@
     <string name="insulinlimitviolation">כמות אינסולין גבוהה מדי</string>
     <string name="boluserrorcode">התבקש: %1$.2f יח\' הוזרק: %2$.2f יח\' קוד שגיאה: %3$s</string>
     <string name="danar_valuenotsetproperly">ערך לא מוגדר כראוי</string>
-    <string name="danar_setbasalstep001">הגדר מינון באזלי ל-0.01 יח\'\שעה</string>
+    <string name="danar_setbasalstep001">הגדר מינון באזלי ל-0.01 יח\'\\שעה</string>
     <string name="resetpairing">לאפס את נתוני הצימוד?</string>
     <string name="dana_model">%1$s\nדגם: %2$02X\nפרוטוקול: %3$02X\nקוד: %4$02X</string>
     <string name="processinghistory">מעבד אירוע</string>
@@ -98,8 +98,8 @@
     <string name="bolus_step">צעד במינון בולוס</string>
     <string name="virtualpump_firmware_label">קושחה</string>
     <string name="danar_pump_settings">הגדרות משאבת Dana</string>
-    <string name="timeformat12h">12 שע\'</string>
-    <string name="timeformat24h">24 שע\'</string>
+    <string name="timeformat12h">12 שעות</string>
+    <string name="timeformat24h">24 שעות</string>
     <string name="option_on">מופעל</string>
     <string name="option_off">כבוי</string>
     <string name="danar_bt_name_title">מכשיר בלוטות\' DanaR</string>

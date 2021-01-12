@@ -69,6 +69,7 @@
     <string name="menu_ecarb">eWęgle</string>
     <string name="menu_settings">Ustawienia</string>
     <string name="menu_status">Status</string>
+    <string name="menu_resync">Ponowna synchronizacja</string>
     <string name="menu_prime_fill">Wypełnianie</string>
     <string name="menu_none">Brak</string>
     <string name="menu_default">Domyślnie</string>

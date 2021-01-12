@@ -149,8 +149,14 @@ public class MedtronicConverter {
 
         if (rawData.length > 1) {
 
+            Double d = null;
+
             // if response in 3 bytes then we add additional information
-            double d = (ByteUtil.toInt(rawData[1], rawData[2]) * 1.0d) / 100.0d;
+            if (rawData.length == 2) {
+                d = (rawData[1] * 1.0d) / 100.0d;
+            } else {
+                d = (ByteUtil.toInt(rawData[1], rawData[2]) * 1.0d) / 100.0d;
+            }
 
             batteryStatus.voltage = d;
             batteryStatus.extendedDataReceived = true;
@@ -171,7 +177,14 @@ public class MedtronicConverter {
             startIdx = 2;
         }
 
-        float value = ByteUtil.toInt(rawData[startIdx], rawData[startIdx + 1]) / (1.0f * strokes);
+        int reqLength = startIdx+1;
+        float value = 0;
+
+        if (reqLength >= rawData.length) {
+            value = rawData[startIdx] / (1.0f * strokes);
+        } else {
+            value = ByteUtil.toInt(rawData[startIdx], rawData[startIdx + 1]) / (1.0f * strokes);
+        }
 
         aapsLogger.debug(LTag.PUMPCOMM, "Remaining insulin: " + value);
         return value;
