@@ -31,6 +31,7 @@ import lecho.lib.hellocharts.model.Viewport;
  */
 public class BgGraphBuilder {
     public static final double MAX_PREDICTION__TIME_RATIO = (3d / 5);
+    public static final double UPPER_CUTOFF_SGV = 400;
     private final long predictionEndTime;
     private final List<BgWatchData> predictionsList;
     private final ArrayList<BolusWatchData> bolusWatchDataList;
@@ -317,7 +318,7 @@ public class BgGraphBuilder {
         long endTime = getPredictionEndTime();
         for (BgWatchData bwd : predictionsList) {
             if (bwd.timestamp <= endTime) {
-                double value = bwd.sgv < 300 ? bwd.sgv : 300;
+                double value = Math.min(bwd.sgv, UPPER_CUTOFF_SGV);
                 if (!values.containsKey(bwd.color)) {
                     values.put(bwd.color, new ArrayList<>());
                 }

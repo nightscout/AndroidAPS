@@ -11,8 +11,6 @@
     <string name="omnipod_config_suspend_delivery_button_enabled">Afișare buton de Suspendare Livrare în secțiunea Omnipod</string>
     <string name="omnipod_config_pulse_log_button_enabled">Afişare buton Jurnal Puls în meniul Gestionare Pod-uri</string>
     <string name="omnipod_config_rileylink_stats_button_enabled">Afişare buton Status RileyLink în meniul Gestionare Pod-uri</string>
-    <string name="omnipod_config_use_riley_link_battery_level">Utilizare nivel baterie raportat de OrangeLink/EmaLink</string>
-    <string name="omnipod_config_use_riley_link_battery_level_summary">NU funcționează cu RileyLink original. Este posibil sa nu funcționeze nici cu versiuni alternative de RileyLink.</string>
     <string name="omnipod_config_time_change_enabled">Detectare fusului orar activată</string>
     <string name="omnipod_config_expiration_reminder_enabled">Notificare expirare activat</string>
     <string name="omnipod_config_expiration_reminder_hours_before_shutdown">Numar de ore înainte de oprire</string>

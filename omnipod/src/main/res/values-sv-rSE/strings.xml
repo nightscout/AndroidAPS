@@ -11,8 +11,7 @@
     <string name="omnipod_config_suspend_delivery_button_enabled">Visa knapp för Pausa Leverans i Omnipod-fliken</string>
     <string name="omnipod_config_pulse_log_button_enabled">Visa Pulse Log-knapp i menyn Podhantering</string>
     <string name="omnipod_config_rileylink_stats_button_enabled">Visa knappen Riley Link-statistik i menyn Pod-hantering</string>
-    <string name="omnipod_config_use_riley_link_battery_level">Använd batterinivå som rapporterats av OrangeLink/EmaLink</string>
-    <string name="omnipod_config_use_riley_link_battery_level_summary">Fungerar inte med original Riley Link. Fungerar eventuellt inte med alla motsvarigheter heller.</string>
+    <string name="omnipod_config_battery_change_logging_enabled">Aktivera inloggning av batteribyte i Åtgärder</string>
     <string name="omnipod_config_time_change_enabled">Automatisk avkänning av tidszon aktiverad</string>
     <string name="omnipod_config_expiration_reminder_enabled">Påminnelse för utgångstid aktiverad</string>
     <string name="omnipod_config_expiration_reminder_hours_before_shutdown">Timmar före avstängning</string>
@@ -67,6 +66,7 @@
     <string name="omnipod_error_rileylink_address_invalid">Riley Link adress felaktig.</string>
     <string name="omnipod_error_operation_not_possible_no_configuration">Operationen inte möjlig.\n\n Du måste konfigurera Omnipod innan du kan använda denna funktion.</string>
     <string name="omnipod_error_pod_not_attached">Ingen aktiv pod</string>
+    <string name="omnipod_error_time_out_of_sync">Tiden på Podden är ur synk. Vänligen uppdatera tiden i Omnipod fliken.</string>
     <string name="omnipod_error_unexpected_exception">Ett oväntat fel uppstod. Vänligen rapportera! (%1$s: %2$s).</string>
     <string name="omnipod_error_crc_mismatch">Kommunikationsfel: Lyckades inte verifiera meddelandet</string>
     <string name="omnipod_error_invalid_packet_type">Kommunikationsfel: Mottog ett ogiltigt datapaket från pod</string>

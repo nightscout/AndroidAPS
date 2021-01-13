@@ -1,2 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources></resources>
+<resources>
+    <string name="alert_r7_description"><![CDATA[总数: <b>%1$d%%</b>\nDuration: <b>%2$s h</b>]]></string>
+    <string name="alert_w36_description"><![CDATA[总数: <b>%1$d%%</b><br/>Duration: <b>%2$s h</b>]]></string>
+</resources>

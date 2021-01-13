@@ -69,7 +69,8 @@
     <string name="menu_ecarb">פחמימות ממושכות</string>
     <string name="menu_settings">הגדרות</string>
     <string name="menu_status">סטטוס</string>
-    <string name="menu_prime_fill">תיחול\מילוי</string>
+    <string name="menu_resync">סנכרן מחדש </string>
+    <string name="menu_prime_fill">תיחול\\מילוי</string>
     <string name="menu_none">ללא</string>
     <string name="menu_default">ברירת מחדל</string>
     <string name="menu_menu">תפריט</string>

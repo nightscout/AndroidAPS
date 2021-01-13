@@ -25,9 +25,6 @@ import info.nightscout.androidaps.core.R;
 import info.nightscout.androidaps.utils.SafeParse;
 import info.nightscout.androidaps.utils.ToastUtils;
 
-/**
- * Created by mike on 28.06.2016.
- */
 public class NumberPicker extends LinearLayout implements View.OnKeyListener,
         View.OnTouchListener, View.OnClickListener {
 

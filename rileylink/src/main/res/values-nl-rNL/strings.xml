@@ -22,19 +22,23 @@
     <string name="medtronic_pump_status">Pompstatus</string>
     <string name="title_activity_rileylink_settings">RileyLink Instellingen</string>
     <string name="rileylink_title">RileyLink</string>
-    <string name="rileylink_configured_riley_link_address">Geconfigureerd RileyLink-adres:</string>
-    <string name="rileylink_configured_riley_link_name">Geconfigureerde RileyLink-naam:</string>
-    <string name="rileylink_connected_device">Aangesloten apparaat:</string>
+    <string name="rileylink_address">Adres:</string>
+    <string name="rileylink_name">Naam:</string>
+    <string name="rileylink_battery_level">Batterijniveau:</string>
+    <string name="rileylink_battery_level_value">%1$d%%</string>
     <string name="rileylink_connection_status">Verbindingsstatus:</string>
     <string name="rileylink_connection_error">Verbindingsfout:</string>
     <string name="rileylink_device">Apparaat</string>
     <string name="rileylink_device_type">Apparaattype:</string>
-    <string name="rileylink_device_model">Model apparaat:</string>
+    <string name="rileylink_configured_device_model">Geconfigureerd apparaatmodel:</string>
+    <string name="rileylink_connected_device_model">Verbonden apparaatmodel:</string>
     <string name="rileylink_last_used_frequency">Laatst gebruikte frequentie:</string>
     <string name="rileylink_last_device_contact">Laatste contact met apparaat:</string>
     <string name="rileylink_firmware_version">Firmwareversie:</string>
+    <string name="rileylink_firmware_version_value">BLE113: %1$s\nCC110: %2$s</string>
     <string name="rileylink_pump_serial_number">Serienummer van de pomp:</string>
     <string name="rileylink_pump_frequency">Pompfrequentie:</string>
+    <string name="rileylink_pump_frequency_value">%1$.2f MHz</string>
     <!-- RL State -->
     <string name="rileylink_state_bt_init">Bluetooth initialiseren…</string>
     <string name="rileylink_state_bt_error">Bluetooth fout</string>
@@ -56,9 +60,12 @@
     <string name="rileylink_error_pod_unreachable">Pod niet bereikbaar</string>
     <!-- RileyLink - Common -->
     <string name="rileylink_target_device_medtronic">Medtronic Pomp</string>
-    <string name="rileylink_target_device_omnipod">Omnipod</string>
+    <string name="rileylink_target_device_omnipod">Omnipod (Eros)</string>
     <string name="riley_link_common_yes">Ja</string>
     <string name="riley_link_common_no">Nee</string>
+    <!-- RileyLink - Preferences -->
+    <string name="riley_link_show_battery_level">Toon batterijniveau van OrangeLink/EmaLink</string>
+    <string name="riley_link_show_battery_level_summary">Werkt NIET met de originele RileyLink. Werkt mogelijk niet met andere RileyLink-alternatieven.</string>
     <plurals name="duration_days">
         <item quantity="one">%1$d dag</item>
         <item quantity="other">%1$d dagen</item>

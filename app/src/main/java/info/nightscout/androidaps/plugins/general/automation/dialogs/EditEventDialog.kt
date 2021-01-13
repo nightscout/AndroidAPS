@@ -70,7 +70,7 @@ class EditEventDialog : DialogFragmentWithDate() {
         binding.okcancel.ok.visibility = (!event.readOnly).toVisibility()
 
         binding.inputEventTitle.setText(event.title)
-        binding.inputEventTitle.isFocusable = false
+        binding.inputEventTitle.isFocusable = !event.readOnly
         binding.triggerDescription.text = event.trigger.friendlyDescription()
 
         binding.editTrigger.visibility = (!event.readOnly).toVisibility()

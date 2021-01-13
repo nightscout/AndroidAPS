@@ -24,7 +24,7 @@
     <string name="format_carbs">%1$d גר\'</string>
     <string name="reservoirvalue">%1$.0f / %2$d יח\'</string>
     <string name="pump_basebasalrate">%1$.2f יח\' לשעה</string>
-    <string name="format_hours">%1$.2f שע\'</string>
+    <string name="format_hours">%1$.2f ש\'</string>
     <string name="format_mins">%1$d דק\'</string>
     <string name="pumpbusy">המשאבה אינה פנויה</string>
     <string name="connectionerror">שגיאה בחיבור המשאבה</string>
@@ -112,8 +112,8 @@
     <string name="minimalbasalvaluereplaced">ערכי הבזאלי הוחלפו בהערכים המינימליים שנתמכים: %1$s</string>
     <string name="maximumbasalvaluereplaced">ערכי הבזאלי הוחלפו בערכים הנתמכים המינימליים: %1$s</string>
     <string name="profile_per_unit">/יח\'</string>
-    <string name="profile_ins_units_per_hour">יח\'\שע\'</string>
-    <string name="profile_carbs_per_unit">גר\'\יח\'</string>
+    <string name="profile_ins_units_per_hour">יח\'\\שעה</string>
+    <string name="profile_carbs_per_unit">גר\'\\יח\'</string>
     <!--    ProfileFunction-->
     <string name="noprofileselected">לא נבחר פרופיל</string>
     <!--    PumpType-->
@@ -191,7 +191,7 @@
     <string name="timedetection">זיהוי שעה</string>
     <string name="format_hour_minute">%1$d ש\' %2$d דק\'</string>
     <!-- PumoCommon - Pump Abstract -->
-    <string name="pump_operation_not_supported_by_pump_driver">הפעולה לא נתמכת ע\"י המשאבה ו\או מנהל התקן.</string>
+    <string name="pump_operation_not_supported_by_pump_driver">הפעולה לא נתמכת ע\"י המשאבה ו\\או מנהל התקן.</string>
     <string name="pump_operation_not_yet_supported_by_pump">הפעולה עוד לא נתמכת על ידי המשאבה.</string>
     <string name="common_resultok">אישור</string>
     <!-- PumoCommon - Pump Status -->

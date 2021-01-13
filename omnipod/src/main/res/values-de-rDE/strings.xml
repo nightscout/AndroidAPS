@@ -11,8 +11,7 @@
     <string name="omnipod_config_suspend_delivery_button_enabled">Button \'Insulinabgabe unterbrechen\' im Omnipod Tab anzeigen</string>
     <string name="omnipod_config_pulse_log_button_enabled">Button \'Pulse Log\' im Menü Pod Mgmt. anzeigen</string>
     <string name="omnipod_config_rileylink_stats_button_enabled">Button \'RileyLink Status\' im Menü Pod Mgmt. anzeigen</string>
-    <string name="omnipod_config_use_riley_link_battery_level">Batteriestand von OrangeLink/EmaLink verwenden</string>
-    <string name="omnipod_config_use_riley_link_battery_level_summary">FUNKTIONIERT NICHT mit dem original RileyLink. Funktioniert vielleicht nicht mit anderen RileyLink Alternativen.</string>
+    <string name="omnipod_config_battery_change_logging_enabled">Aktiviere die Protokollierung des Akkuwechsels im Aktionen-Tab/Menü</string>
     <string name="omnipod_config_time_change_enabled">Sommerzeit/Zeitzonen-Erkennung aktiviert</string>
     <string name="omnipod_config_expiration_reminder_enabled">Ablauferinnerung aktiviert</string>
     <string name="omnipod_config_expiration_reminder_hours_before_shutdown">Stunden bis zum Podende</string>
@@ -67,6 +66,7 @@
     <string name="omnipod_error_rileylink_address_invalid">RileyLink Adresse ungültig.</string>
     <string name="omnipod_error_operation_not_possible_no_configuration">Aktion ist nicht möglich.\n\n Du musst zuerst den Omnipod konfigurieren, bevor Du diese Operation verwenden kannst.</string>
     <string name="omnipod_error_pod_not_attached">Kein aktiver Pod</string>
+    <string name="omnipod_error_time_out_of_sync">Zeit auf dem Pod ist nicht synchron. Aktualisiere die Zeit auf der Registerkarte \"Omnipod\".</string>
     <string name="omnipod_error_unexpected_exception">Es ist ein unerwarteter Fehler aufgetreten. Bitte melden! (%1$s: %2$s)</string>
     <string name="omnipod_error_crc_mismatch">Kommunikation fehlgeschlagen: Die Überprüfung der Nachrichtenintegrität ist fehlgeschlagen</string>
     <string name="omnipod_error_invalid_packet_type">Kommunikation fehlgeschlagen: Es wurde ein ungültiges Paket vom Pod empfangen.</string>

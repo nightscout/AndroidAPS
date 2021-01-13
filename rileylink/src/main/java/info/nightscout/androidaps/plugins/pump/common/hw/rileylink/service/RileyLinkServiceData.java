@@ -20,6 +20,7 @@ import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.defs.RileyLin
  * Created by andy on 16/05/2018.
  */
 
+// FIXME encapsulation
 @Singleton
 public class RileyLinkServiceData {
 
@@ -36,6 +37,7 @@ public class RileyLinkServiceData {
     public RileyLinkTargetFrequency rileyLinkTargetFrequency;
     public String rileyLinkAddress;
     public String rileyLinkName;
+    public Integer batteryLevel;
     long lastTuneUpTime = 0L;
     public Double lastGoodFrequency;
 
@@ -76,7 +78,6 @@ public class RileyLinkServiceData {
     }
 
     private synchronized RileyLinkServiceState workWithServiceState(RileyLinkServiceState newState, RileyLinkError errorCode, boolean set) {
-
         if (set) {
             rileyLinkServiceState = newState;
             lastServiceStateChange = System.currentTimeMillis();
@@ -90,7 +91,6 @@ public class RileyLinkServiceData {
         } else {
             return rileyLinkServiceState;
         }
-
     }
 
 }

@@ -11,6 +11,18 @@
             <intent android:action="info.nightscout.androidaps.plugins.PumpCommon.dialog.RileyLinkBLEConfigActivity" />
         </Preference>
 
+        <SwitchPreference
+            android:defaultValue="false"
+            android:key="@string/key_riley_link_show_battery_level"
+            android:summary="@string/riley_link_show_battery_level_summary"
+            android:title="@string/riley_link_show_battery_level" />
+
+        <SwitchPreference
+            android:defaultValue="false"
+            android:dependency="@string/key_riley_link_show_battery_level"
+            android:key="@string/key_omnipod_battery_change_logging_enabled"
+            android:title="@string/omnipod_config_battery_change_logging_enabled" />
+
     </PreferenceCategory>
 
     <PreferenceCategory android:title="@string/omnipod_preference_category_confirmation_beeps">
@@ -113,12 +125,6 @@
             android:defaultValue="false"
             android:key="@string/key_omnipod_riley_link_stats_button_enabled"
             android:title="@string/omnipod_config_rileylink_stats_button_enabled" />
-
-        <SwitchPreference
-            android:defaultValue="false"
-            android:key="@string/key_omnipod_use_riley_link_battery_level"
-            android:summary="@string/omnipod_config_use_riley_link_battery_level_summary"
-            android:title="@string/omnipod_config_use_riley_link_battery_level" />
 
         <SwitchPreference
             android:defaultValue="true"

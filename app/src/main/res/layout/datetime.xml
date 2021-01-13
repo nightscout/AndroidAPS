@@ -7,9 +7,10 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
+        android:layout_gravity="center"
         android:width="120dp"
-        android:padding="10dp"
+        android:paddingLeft="10dp"
+        android:paddingRight="4dp"
         android:text="@string/event_time_label"
         android:textAppearance="@style/TextAppearance.AppCompat.Small"
         android:textStyle="bold" />
@@ -19,7 +20,7 @@
         android:id="@+id/overview_eventdate"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
+        android:layout_gravity="center"
         android:padding="10dp"
         android:text="2017/05/05" />
 
@@ -27,7 +28,7 @@
         android:id="@+id/overview_eventtime"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
+        android:layout_gravity="center"
         android:padding="10dp"
         android:text="08:20pm" />
 

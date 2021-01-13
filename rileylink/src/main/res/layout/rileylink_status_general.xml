@@ -42,7 +42,7 @@
                     android:layout_marginLeft="30dp"
                     android:layout_weight="35"
                     android:gravity="center_vertical"
-                    android:text="@string/rileylink_configured_riley_link_address" />
+                    android:text="@string/rileylink_address" />
 
                 <TextView
                     android:id="@+id/rls_t1_configured_riley_link_address"
@@ -69,7 +69,7 @@
                     android:layout_marginLeft="30dp"
                     android:layout_weight="35"
                     android:gravity="center_vertical"
-                    android:text="@string/rileylink_configured_riley_link_name" />
+                    android:text="@string/rileylink_name" />
 
                 <TextView
                     android:id="@+id/rls_t1_configured_riley_link_name"
@@ -83,12 +83,14 @@
             </LinearLayout>
 
             <LinearLayout
+                android:id="@+id/rls_t1_battery_level_row"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="5dp"
                 android:layout_marginBottom="5dp"
                 android:gravity="center_vertical"
-                android:orientation="horizontal">
+                android:orientation="horizontal"
+                android:visibility="gone">
 
                 <TextView
                     android:layout_width="58dp"
@@ -96,10 +98,10 @@
                     android:layout_marginLeft="30dp"
                     android:layout_weight="35"
                     android:gravity="center_vertical"
-                    android:text="@string/rileylink_connected_device" />
+                    android:text="@string/rileylink_battery_level" />
 
                 <TextView
-                    android:id="@+id/rls_t1_connected_device"
+                    android:id="@+id/rls_t1_battery_level"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:layout_marginLeft="10dp"
@@ -234,34 +236,68 @@
                     android:textAlignment="center" />
             </LinearLayout>
 
-
             <LinearLayout
+                android:id="@+id/rls_t1_connected_device_details"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="5dp"
-                android:layout_marginBottom="5dp"
-                android:gravity="center_vertical"
-                android:orientation="horizontal">
+                android:orientation="vertical"
+                android:visibility="gone">
 
-                <TextView
-                    android:layout_width="58dp"
-                    android:layout_height="match_parent"
-                    android:layout_marginLeft="30dp"
-                    android:layout_weight="35"
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="5dp"
+                    android:layout_marginBottom="5dp"
                     android:gravity="center_vertical"
-                    android:text="@string/rileylink_device_model" />
+                    android:orientation="horizontal">
 
-                <TextView
-                    android:id="@+id/rls_t1_device_model"
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:layout_marginLeft="10dp"
-                    android:layout_weight="65"
+                    <TextView
+                        android:layout_width="58dp"
+                        android:layout_height="match_parent"
+                        android:layout_marginLeft="30dp"
+                        android:layout_weight="35"
+                        android:gravity="center_vertical"
+                        android:text="@string/rileylink_configured_device_model" />
+
+                    <TextView
+                        android:id="@+id/rls_t1_configured_device_model"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:layout_marginLeft="10dp"
+                        android:layout_weight="65"
+                        android:gravity="center_vertical"
+                        android:text="        "
+                        android:textAlignment="center" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="5dp"
+                    android:layout_marginBottom="5dp"
                     android:gravity="center_vertical"
-                    android:text="        "
-                    android:textAlignment="center" />
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="58dp"
+                        android:layout_height="match_parent"
+                        android:layout_marginLeft="30dp"
+                        android:layout_weight="35"
+                        android:gravity="center_vertical"
+                        android:text="@string/rileylink_connected_device_model" />
+
+                    <TextView
+                        android:id="@+id/rls_t1_connected_device_model"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:layout_marginLeft="10dp"
+                        android:layout_weight="65"
+                        android:gravity="center_vertical"
+                        android:text="        "
+                        android:textAlignment="center" />
+                </LinearLayout>
+
             </LinearLayout>
-
 
             <LinearLayout
                 android:layout_width="match_parent"

@@ -7,6 +7,7 @@
     <string name="treatmentssafety_title">Bezpečnosť zadania ošetrenia</string>
     <string name="treatmentssafety_maxbolus_title">Maximálny povolený bolus [JI]</string>
     <string name="treatmentssafety_maxcarbs_title">Maximálne povolené množstvo sacharidov [g]</string>
+    <string name="nav_preferences_plugin">Nastavenie pluginu %1$s</string>
     <string name="nav_preferences">Nastavenia</string>
     <string name="nav_refreshtreatments">Obnoviť ošetrenia z NS</string>
     <string name="nav_resetdb">Vymaž databázu</string>
@@ -41,7 +42,6 @@
     <string name="description_source_glimp">Získavať hodnoty glykémií z aplikácie Glimp.</string>
     <string name="description_source_mm640g">Získavať hodnoty glykémií z 600SeriesAndroidUploader.</string>
     <string name="description_source_ns_client">Získavať hodnoty glykémií z Nightscoutu</string>
-    <string name="description_source_xdrip">Získavať hodnoty glykémií z xDripu.</string>
     <string name="description_treatments">Ukladá všetky ošetrenia do databázy</string>
     <string name="description_wear">Zobrazovanie stavu a riadenie AndroidAPS z hodiniek s WearOS.</string>
     <string name="description_xdrip_status_line">Zobraz informácie o uzavretom okruhu na xDrip+ watchface.</string>
@@ -118,7 +118,6 @@
     <string name="changeyourinput">Zmeňte zadanie!</string>
     <string name="configbuilder_bgsource">Zdroj glykémie</string>
     <string name="configbuilder_bgsource_description">Odkiaľ má AndroidAPS získavať glykémie?</string>
-    <string name="xdrip">xDrip</string>
     <string name="apsmode_title">APS mód</string>
     <string name="closedloop">Uzavretý okruh</string>
     <string name="openloop">Otvorený okruh</string>
@@ -284,8 +283,6 @@
     <string name="mealbolus">Bolus</string>
     <string name="correctionbous">Korekcia</string>
     <string name="actions">Akcie</string>
-    <string name="ns_upload_only">Iba nahrávanie do NS (synchronizácia deaktivovaná)</string>
-    <string name="ns_upload_only_summary">Iba nahrávanie dát do NS. Neúčinné pri hodnotách glykémie, pokiaľ nieje vybraný lokálny zdroj dát ako xDrip. Neúčinné pri profiloch, pokiaľ sa používajú NS profily.</string>
     <string name="pumpNotInitialized">Pumpa nie je inicializovaná!</string>
     <string name="primefill">Plnenie/doplňovanie</string>
     <string name="fillwarning">Prosím uistite sa, že hodnota zodpovedá špecifikácií Vášho setu!</string>
@@ -340,7 +337,6 @@
     <string name="smscommunicator_shortname">SMS</string>
     <string name="short_tabtitles">Krátke názvy modulov</string>
     <string name="always_use_shortavg">Vždy používať krátkodobý priemerný rozdiel glykémií, namiesto rozdielu posledných dvoch hodnôt</string>
-    <string name="always_use_shortavg_summary">Zmysluplné, pokiaľ dáta z xDripu obsahujú veľký šum.</string>
     <string name="profile">Profil</string>
     <string name="openapsama_max_daily_safety_multiplier_summary">Štandardná hodnota: 3 Toto je kľúčová hodnota zabezpečenia. Hovorí, že maximálny nastaviteľný bazál je trojnásobkom maximálneho denného bazálu. Spravidla to zrejme nebudete musieť meniť, prípadne si prečítate o téme \"3x max denný; 4x aktuálny\".</string>
     <string name="openapsama_current_basal_safety_multiplier_summary">Štandardná hodnota: 4 Toto je druhá kľúčová hodnota. Hovorí, že maximálna hodnota dočasného bazálu nikdy nebude väčšia, ako štvornásobok aktuálneho bazálu. Je to preto, aby se ľudia nedostali do nebezpečných hodnôt skôr, ako pochopia ako OpenAPS pracuje. Znovu, štandardná hodnota je 4 a väčšina ľudí ju nikdy nebude musieť meniť. Pokiaľ nestačí, obvykle je problém niekde inde.</string>
@@ -354,9 +350,6 @@
     <string name="smscommunicator_invalidphonennumber">Chybné telefónne číslo</string>
     <string name="overview_calibration">Kalibrácia</string>
     <string name="xdripnotinstalled">xDrip+ nie je nainštalovaný</string>
-    <string name="calibrationsent">Kalibrácia odoslaná do xDripu</string>
-    <string name="smscommunicator_calibrationsent">Kalibrácia odoslaná. Príjem kalibrácií musí byť v xDripe povolený.</string>
-    <string name="smscommunicator_calibrationfailed">xDrip neprijíma kalibrácie</string>
     <string name="pumpsuspended">Pumpa pozastavená</string>
     <string name="executing">Vykonávam</string>
     <string name="virtualpump_settings">Nastavenie virtuálnej pumpy</string>
@@ -405,11 +398,18 @@
     <string name="suspendloopfor3h">Pozastaviť uzavretý okruh na 3 h</string>
     <string name="suspendloopfor10h">Pozastaviť uzavretý okruh na 10 h</string>
     <string name="suspendloopforXmin">Pozastaviť uzavretý okruh na %1$d min</string>
+    <string name="disconnectpump">Odpojenie pumpy</string>
     <string name="disconnectpumpfor15m">Odpojiť pumpu na 15 min</string>
     <string name="disconnectpumpfor30m">Odpojiť pumpu na 30 min</string>
     <string name="disconnectpumpfor1h">Odpojiť pumpu na 1 h</string>
     <string name="disconnectpumpfor2h">Odpojiť pumpu na 2 h</string>
     <string name="disconnectpumpfor3h">Odpojiť pumpu na 3 h</string>
+    <string name="duration15m">15 minút</string>
+    <string name="duration30m">30 minút</string>
+    <string name="duration1h">1 hodina</string>
+    <string name="duration2h">2 hodiny</string>
+    <string name="duration3h">3 hodiny</string>
+    <string name="duration10h">10 hodiny</string>
     <string name="resume">Pokračovať</string>
     <string name="reconnect">Znovu pripojiť pumpu</string>
     <string name="smscommunicator_wrongduration">Nesprávna doba trvania</string>
@@ -435,12 +435,8 @@
     <string name="statuslights_sage_critical">Prah kritického veku senzora [h]</string>
     <string name="statuslights_sbat_warning">Prah upozornenia na úroveň batérie senzora [%]</string>
     <string name="statuslights_sbat_critical">Prah kritickej úrovne batérie senzora [%]</string>
-    <string name="statuslights_bage_warning">Prah upozornenia na úroveň batérie [h]</string>
-    <string name="statuslights_bage_critical">Prah kritickej úrovne batérie [h]</string>
     <string name="statuslights_res_warning">Prah upozornenia na úroveň hladiny zásobníka [JI]</string>
     <string name="statuslights_res_critical">Prah kritickej úrovne hladiny zásobníka [JI]</string>
-    <string name="statuslights_bat_warning">Prah upozornenia na úroveň batérie [%]</string>
-    <string name="statuslights_bat_critical">Prah kritickej úrovne batérie [%]</string>
     <string name="prediction_shortname">PRED</string>
     <string name="iob">IOB</string>
     <string name="cob">COB</string>
@@ -452,8 +448,6 @@
     <string name="nav_about">O aplikácii</string>
     <string name="smscommunicator_missingsmspermission">Chýbajúce povolenie SMS príkazov</string>
     <string name="smscommunicator_missingphonestatepermission">Chýba oprávnenia pre zisťovanie stavu telefónu</string>
-    <string name="xdripstatus_settings">Stav z xDripu (hodinky)</string>
-    <string name="xdripstatus">Stavový riadok xDripu (hodinky)</string>
     <string name="xdripstatus_shortname">XDS</string>
     <string name="wear_showbgi_title">Zobrazovať BGI</string>
     <string name="wear_showbgi_summary">Pridať BGI do stavového riadku</string>
@@ -496,7 +490,6 @@
     <string name="mdtp_cancel">Zrušiť</string>
     <string name="notloadedplugins">Nenačítané všetky profily!</string>
     <string name="valuesnotstored">Hodnoty nie sú uložené!</string>
-    <string name="ns_localbroadcasts">Povoliť vysielanie do iných aplikácií (napr. xDrip). Nepovoľujte, pokiaľ máte nainštalovanú viac ako jednu AAPS, alebo NSClient inštanciu!</string>
     <string name="ns_localbroadcasts_title">Povoliť lokálne vysielanie.</string>
     <string name="careportal_newnstreatment_duration_min_label">Trvanie [min]</string>
     <string name="openapssmb">OpenAPS SMB</string>
@@ -758,6 +751,8 @@
     <string name="diawarning">Prosím, zapamätajte si: Nové inzulínové profily vyžadujú DIA minimálne 5h. DIA 5-6 hodín zodpovedá zhruba nastaveniam 3h na starších typoch profilu.</string>
     <string name="setupwizard_profile_description">Vyberte zdroj profilov. Pokiaľ ide o dieťa, využijete pravdepodobne NS profil. Pokiaľ Vás nikto cez NS nesleduje, budete pravdepodobne preferovať lokálny profil. Uvedomte si, že nastavujete iba zdroj profilov. Na to aby se naozaj profil začal používať, je potrebné vykonať aktiváciu profilu použitím funkcie \"Prepnutie profilu\"</string>
     <string name="setupwizard_aps_description">Vyberte jeden z algoritmov. Sú zoradené od najstaršieho po najnovší. Novší je obvykle lepší a agresívnejší, ale vyžaduje presnejšie nastavenie. Preto pokiaľ s uzavretým okruhom začínate, mali by ste najskôr vybrať jen AMA a nie ten posledný. Nezabudnite si prečítať dokumentáciu k OpenAPS a prejsť nastavenia, kým ho začnete používať.</string>
+    <string name="setupwizard_pump_waiting_for_riley_link_connection">Prosím nakonfigurujte svoj RileyLink nižšie. Po výbere RileyLinku bude možné pokračovať v nastavení, akonáhle je stav RileyLinku \"Pripojené\". Táto akcia môže chvíľku trvať.\n</string>
+    <string name="setupwizard_pump_pump_not_initialized"><b>Poznámka:</b> Po nastavení pumpy môžete pokračovať v nastavení.\n</string>
     <string name="startobjective">Spusťte prvý cieľ</string>
     <string name="permission">Povolenie</string>
     <string name="askforpermission">Vyžiadať si povolenie</string>
@@ -971,7 +966,9 @@
     <string name="description_source_dexcom">Prijímaj hodnoty glykémie z upravenej Dexcom aplikácie.</string>
     <string name="notification">Notifikácia</string>
     <string name="notification_message">Notifikácia: %1$s</string>
+    <string name="alarm_message">Výstraha: %1$s</string>
     <string name="message_short">Spr:</string>
+    <string name="alarm_short">Alarm:</string>
     <string name="profilepercentage">Percentuálny profil</string>
     <string name="percent_u">Percentá [%]:</string>
     <string name="startprofile">Začiatok profilu %1$d%% na %2$d min</string>
@@ -1163,7 +1160,6 @@
     <string name="donate_your_data_to_science">Darujte svoje údaje vede</string>
     <string name="open_humans_short">OH</string>
     <string name="you_have_been_signed_out_of_open_humans">Boli ste odhlásený z Open Humans</string>
-    <string name="click_here_to_sign_in_again_if_this_wasnt_on_purpose">Kliknite sem, ak sa chcete prihlásiť znova, v prípade, že sa to nestalo omylom.</string>
     <string name="only_upload_if_connected_to_wifi">Odoslať iba ak ste pripojený k Wi-Fi</string>
     <string name="only_upload_if_charging">Odoslať iba pri nabíjaní</string>
     <string name="worker_state">Stav procesu: %s</string>
@@ -1173,4 +1169,13 @@
     <string name="filter">Filter</string>
     <string name="copytolocalprofile_invalid">Nie je možné vytvoriť lokálny profil. Profil je neplatný.</string>
     <string name="cta_dont_kill_my_app_info">Nepotláčať moju aplikáciu?</string>
+    <string name="alarm">Alarm</string>
+    <string name="smscommunicator_report_pump_ureachable_summary">Odoslať SMS, pokiaľ pumpa nie je dostupná</string>
+    <string name="advisoralarm">Spustiť výstrahu, keď je čas na jedlo</string>
+    <string name="alarminxmin">Spustiť výstrahu za %1$d min</string>
+    <string name="bolusadvisor">Bolusový poradca</string>
+    <string name="bolusadvisormessage">Máte vysokú glykémiu. Namiesto jedla doporučujeme počkať na lepšiu glykémiu a pripomenúť, keď bude čas na jedlo. Prajete si poslať korekčný bolus a pripomenúť, keď bude čas na jedlo? V tomto prípade nebudú zapísané žiadne sacharidy, a neskôr musíte opäť spustiť kalkulačku, akonáhle vám to pripomenieme.</string>
+    <string name="enablebolusadvisor">Povoliť bolusového poradcu</string>
+    <string name="time_to_eat">Čas na jedlo!\nSpustite Bolusovú kalkulačku a urobte výpočet znova.</string>
+    <string name="timetoeat">Čas na jedlo</string>
 </resources>
