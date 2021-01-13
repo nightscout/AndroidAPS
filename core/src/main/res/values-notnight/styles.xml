@@ -209,9 +209,10 @@
         <item name="colorPrimary">@color/primaryColorLightBlue</item>
         <item name="colorPrimaryDark">@color/primaryDarkColorLightBlue</item>
         <item name="colorAccent">@color/secondaryColorLightBlue</item>
-        <item name="overviewPillColor">@color/overviewPillColorLightBlue</item>
-        <item name="iconColor">@color/sphere_plastic_grey</item>
-        <item name="iconColorToolbar">@color/sphere_plastic_grey</item>
+        <item name="PillColorStart">@color/primaryColorLightBlue</item>
+        <item name="PillColorEnd">@color/primaryDarkColorLightBlue</item>
+        <item name="iconColor">@color/white_alpha_80</item>
+        <item name="iconColorToolbar">@color/white_alpha_80</item>
         <item name="iconColorbottomAppbar">@color/white</item>
         <item name="android:textColorPrimary">@color/black</item>
         <item name="android:textColor">@color/black</item>
