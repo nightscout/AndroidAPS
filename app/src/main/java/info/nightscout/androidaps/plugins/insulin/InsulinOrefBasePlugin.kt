@@ -3,16 +3,16 @@ package info.nightscout.androidaps.plugins.insulin
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.data.Iob
+import info.nightscout.androidaps.db.Treatment
 import info.nightscout.androidaps.interfaces.InsulinInterface
 import info.nightscout.androidaps.interfaces.PluginBase
 import info.nightscout.androidaps.interfaces.PluginDescription
 import info.nightscout.androidaps.interfaces.PluginType
+import info.nightscout.androidaps.interfaces.ProfileFunction
 import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper
-import info.nightscout.androidaps.interfaces.ProfileFunction
 import info.nightscout.androidaps.plugins.general.overview.events.EventNewNotification
 import info.nightscout.androidaps.plugins.general.overview.notifications.Notification
-import info.nightscout.androidaps.db.Treatment
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 
 /**
@@ -29,21 +29,23 @@ abstract class InsulinOrefBasePlugin(
 ) : PluginBase(PluginDescription()
     .mainType(PluginType.INSULIN)
     .fragmentClass(InsulinFragment::class.java.name)
+    .pluginIcon(R.drawable.ic_insulin)
     .shortName(R.string.insulin_shortname)
     .visibleByDefault(false),
     aapsLogger, resourceHelper, injector
 ), InsulinInterface {
 
     private var lastWarned: Long = 0
-    override fun getDia(): Double {
-        val dia = userDefinedDia
-        return if (dia >= MIN_DIA) {
-            dia
-        } else {
-            sendShortDiaNotification(dia)
-            MIN_DIA
+    override val dia
+        get(): Double {
+            val dia = userDefinedDia
+            return if (dia >= MIN_DIA) {
+                dia
+            } else {
+                sendShortDiaNotification(dia)
+                MIN_DIA
+            }
         }
-    }
 
     open fun sendShortDiaNotification(dia: Double) {
         if (System.currentTimeMillis() - lastWarned > 60 * 1000) {
@@ -62,17 +64,13 @@ abstract class InsulinOrefBasePlugin(
             return profile?.dia ?: MIN_DIA
         }
 
-    fun iobCalcForTreatment(treatment: Treatment, time: Long): Iob {
-        return this.iobCalcForTreatment(treatment, time, 0.0)
-    }
-
     override fun iobCalcForTreatment(treatment: Treatment, time: Long, dia: Double): Iob {
         val result = Iob()
         val peak = peak
         if (treatment.insulin != 0.0) {
             val bolusTime = treatment.date
             val t = (time - bolusTime) / 1000.0 / 60.0
-            val td = getDia() * 60 //getDIA() always >= MIN_DIA
+            val td = dia * 60 //getDIA() always >= MIN_DIA
             val tp = peak.toDouble()
             // force the IOB to 0 if over DIA hours have passed
             if (t < td) {
@@ -86,19 +84,21 @@ abstract class InsulinOrefBasePlugin(
         return result
     }
 
-    override fun getComment(): String {
-        var comment = commentStandardText()
-        val userDia = userDefinedDia
-        if (userDia < MIN_DIA) {
-            comment += "\n" + resourceHelper.gs(R.string.dia_too_short, userDia, MIN_DIA)
+    override val comment
+        get(): String {
+            var comment = commentStandardText()
+            val userDia = userDefinedDia
+            if (userDia < MIN_DIA) {
+                comment += "\n" + resourceHelper.gs(R.string.dia_too_short, userDia, MIN_DIA)
+            }
+            return comment
         }
-        return comment
-    }
 
     abstract val peak: Int
     abstract fun commentStandardText(): String
 
     companion object {
+
         const val MIN_DIA = 5.0
     }
 }

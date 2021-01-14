@@ -66,6 +66,8 @@
     <string name="btwatchdog_title">Дежурный режим Watchdog</string>
     <string name="btwatchdog_summary">Выключает bluetooth телефона на одну секунду, если подключение к помпе невозможно. Это помогает на тех телефонах, где зависает модуль bluetooth.</string>
     <string name="pairing">Сопряжение</string>
+    <string name="yes">Да</string>
+    <string name="no">Нет</string>
     <!--    Constraints-->
     <string name="limitingbasalratio">Макс базальный уровень ограничен до %1$.2f ед/ч вследствие %2$s</string>
     <string name="pumplimit">лимит помпы</string>
@@ -170,7 +172,7 @@
     <string name="waitingforpumpresult">Ожидание результата</string>
     <string name="smb_shortname">Супер микро болюс SMB</string>
     <!--    CarbsReq-->
-    <string name="carbsreq">Необходимо дополнительно %d г углеводов в течение %d минут</string>
+    <string name="carbsreq">Необходимо дополнительно %1$d г углеводов в течение %2$d минут</string>
     <!--    TDDStatsActivity-->
     <string name="stats">Статистика</string>
     <string name="cumulative_tdd">накопительные TDD</string>
@@ -212,6 +214,7 @@
     <string name="history_group_prime">Заполнение инфузионной системы</string>
     <string name="history_group_alarm">Оповещения об опасности</string>
     <string name="history_group_glucose">Гликемия</string>
+    <string name="mute5min">Отключить уведомления на 5 минут</string>
     <!--    <string name="medtronic_pump_status_never_contacted">Never contacted</string>-->
     <!--    <string name="medtronic_pump_status_waking_up">Waking up</string>-->
     <!--    <string name="medtronic_pump_status_error_comm">Error with communication</string>-->

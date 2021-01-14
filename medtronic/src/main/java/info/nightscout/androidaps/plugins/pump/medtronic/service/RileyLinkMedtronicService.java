@@ -42,7 +42,7 @@ public class RileyLinkMedtronicService extends RileyLinkService {
     @Inject MedtronicCommunicationManager medtronicCommunicationManager;
 
     private MedtronicUIComm medtronicUIComm;
-    private IBinder mBinder = new LocalBinder();
+    private final IBinder mBinder = new LocalBinder();
 
     private boolean serialChanged = false;
     private String[] frequencies;
@@ -96,8 +96,9 @@ public class RileyLinkMedtronicService extends RileyLinkService {
 
         setPumpIDString(sp.getString(MedtronicConst.Prefs.PumpSerial, "000000"));
 
-        // get most recently used RileyLink address
-        rileyLinkServiceData.rileylinkAddress = sp.getString(RileyLinkConst.Prefs.RileyLinkAddress, "");
+        // get most recently used RileyLink address and name
+        rileyLinkServiceData.rileyLinkAddress = sp.getString(RileyLinkConst.Prefs.RileyLinkAddress, "");
+        rileyLinkServiceData.rileyLinkName = sp.getString(RileyLinkConst.Prefs.RileyLinkName, "");
 
         rfspy.startReader();
 
@@ -180,7 +181,7 @@ public class RileyLinkMedtronicService extends RileyLinkService {
     }
 
 
-    public boolean verifyConfiguration() {
+    public boolean verifyConfiguration(boolean forceRileyLinkAddressRenewal) {
         try {
             String regexSN = "[0-9]{6}";
             String regexMac = "([\\da-fA-F]{1,2}(?:\\:|$)){6}";
@@ -316,7 +317,7 @@ public class RileyLinkMedtronicService extends RileyLinkService {
             //boolean bolusDebug = bolusDebugEnabled != null && bolusDebugEnabled.equals(resourceHelper.gs(R.string.common_on));
             //MedtronicHistoryData.doubleBolusDebug = bolusDebug;
 
-            reconfigureService();
+            reconfigureService(forceRileyLinkAddressRenewal);
 
             return true;
 
@@ -327,7 +328,7 @@ public class RileyLinkMedtronicService extends RileyLinkService {
         }
     }
 
-    private boolean reconfigureService() {
+    private boolean reconfigureService(boolean forceRileyLinkAddressRenewal) {
 
         if (!inPreInit) {
 
@@ -336,7 +337,7 @@ public class RileyLinkMedtronicService extends RileyLinkService {
                 serialChanged = false;
             }
 
-            if (rileyLinkAddressChanged) {
+            if (rileyLinkAddressChanged || forceRileyLinkAddressRenewal) {
                 rileyLinkUtil.sendBroadcastMessage(RileyLinkConst.Intents.RileyLinkNewAddressSet, this);
                 rileyLinkAddressChanged = false;
             }
@@ -380,6 +381,6 @@ public class RileyLinkMedtronicService extends RileyLinkService {
     public boolean setNotInPreInit() {
         this.inPreInit = false;
 
-        return reconfigureService();
+        return reconfigureService(false);
     }
 }

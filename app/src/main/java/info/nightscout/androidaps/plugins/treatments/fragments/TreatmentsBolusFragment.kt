@@ -26,6 +26,7 @@ import info.nightscout.androidaps.plugins.treatments.fragments.TreatmentsBolusFr
 import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.FabricPrivacy
 import info.nightscout.androidaps.utils.alertDialogs.OKDialog
+import info.nightscout.androidaps.utils.buildHelper.BuildHelper
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 import info.nightscout.androidaps.utils.sharedPreferences.SP
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -45,6 +46,7 @@ class TreatmentsBolusFragment : DaggerFragment() {
     @Inject lateinit var nsUpload: NSUpload
     @Inject lateinit var uploadQueue: UploadQueue
     @Inject lateinit var dateUtil: DateUtil
+    @Inject lateinit var buildHelper: BuildHelper
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
@@ -79,7 +81,7 @@ class TreatmentsBolusFragment : DaggerFragment() {
                 })
             }
         }
-        val nsUploadOnly = sp.getBoolean(R.string.key_ns_upload_only, true)
+        val nsUploadOnly = sp.getBoolean(R.string.key_ns_upload_only, true) || !buildHelper.isEngineeringMode()
         if (nsUploadOnly) treatments_reshreshfromnightscout.visibility = View.GONE
     }
 

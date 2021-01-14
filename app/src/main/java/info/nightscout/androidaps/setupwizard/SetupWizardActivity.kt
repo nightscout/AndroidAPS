@@ -14,6 +14,8 @@ import info.nightscout.androidaps.events.EventProfileNeedsUpdate
 import info.nightscout.androidaps.events.EventProfileStoreChanged
 import info.nightscout.androidaps.events.EventPumpStatusChanged
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper
+import info.nightscout.androidaps.plugins.general.maintenance.ImportExportPrefs
+import info.nightscout.androidaps.plugins.general.maintenance.PrefsFileContract
 import info.nightscout.androidaps.plugins.general.nsclient.events.EventNSClientStatus
 import info.nightscout.androidaps.plugins.profile.local.LocalProfilePlugin
 import info.nightscout.androidaps.plugins.pump.common.events.EventRileyLinkDeviceStatusChange
@@ -42,12 +44,19 @@ class SetupWizardActivity : NoSplashAppCompatActivity() {
     @Inject lateinit var resourceHelper: ResourceHelper
     @Inject lateinit var sp: SP
     @Inject lateinit var fabricPrivacy: FabricPrivacy
+    @Inject lateinit var importExportPrefs: ImportExportPrefs
 
     private val disposable = CompositeDisposable()
     private lateinit var screens: List<SWScreen>
     private var currentWizardPage = 0
 
     private val intentMessage = "WIZZARDPAGE"
+
+    val callForPrefFile = registerForActivityResult(PrefsFileContract()) {
+        it?.let {
+            importExportPrefs.importSharedPreferences(this, it)
+        }
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

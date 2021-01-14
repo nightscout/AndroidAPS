@@ -1,6 +1,5 @@
 package info.nightscout.androidaps.dialogs
 
-import android.app.Activity
 import android.os.Bundle
 import android.os.SystemClock
 import android.view.LayoutInflater
@@ -157,7 +156,6 @@ class BolusProgressDialog : DaggerDialogFragment() {
         Thread(Runnable {
             SystemClock.sleep(5000)
             bolusEnded = true
-            val activity: Activity? = activity
             activity?.runOnUiThread {
                 if (running) {
                     aapsLogger.debug(LTag.UI, "executing")

@@ -1,12 +1,13 @@
 package info.nightscout.androidaps.plugins.pump.omnipod.ui.wizard.common.activity
 
-import android.app.AlertDialog
+import androidx.appcompat.app.AlertDialog
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import info.nightscout.androidaps.activities.NoSplashAppCompatActivity
 import info.nightscout.androidaps.plugins.pump.omnipod.R
 
 abstract class OmnipodWizardActivityBase : NoSplashAppCompatActivity() {
+
     override fun onBackPressed() {
         exitActivityAfterConfirmation()
     }

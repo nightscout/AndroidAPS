@@ -26,6 +26,7 @@ import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.FabricPrivacy
 import info.nightscout.androidaps.utils.T
 import info.nightscout.androidaps.utils.alertDialogs.OKDialog
+import info.nightscout.androidaps.utils.buildHelper.BuildHelper
 import info.nightscout.androidaps.utils.extensions.toVisibility
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 import info.nightscout.androidaps.utils.sharedPreferences.SP
@@ -45,6 +46,7 @@ class TreatmentsProfileSwitchFragment : DaggerFragment() {
     @Inject lateinit var nsUpload: NSUpload
     @Inject lateinit var uploadQueue: UploadQueue
     @Inject lateinit var dateUtil: DateUtil
+    @Inject lateinit var buildHelper: BuildHelper
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
@@ -59,13 +61,13 @@ class TreatmentsProfileSwitchFragment : DaggerFragment() {
 
         profileswitch_refreshfromnightscout.setOnClickListener {
             activity?.let { activity ->
-                OKDialog.showConfirmation(activity, resourceHelper.gs(R.string.refresheventsfromnightscout) + "?", Runnable {
+                OKDialog.showConfirmation(activity, resourceHelper.gs(R.string.refresheventsfromnightscout) + "?") {
                     MainApp.getDbHelper().resetProfileSwitch()
                     rxBus.send(EventNSClientRestart())
-                })
+                }
             }
         }
-        if (sp.getBoolean(R.string.key_ns_upload_only, true)) profileswitch_refreshfromnightscout.visibility = View.GONE
+        if (sp.getBoolean(R.string.key_ns_upload_only, true) || !buildHelper.isEngineeringMode()) profileswitch_refreshfromnightscout.visibility = View.GONE
     }
 
     @Synchronized
@@ -145,8 +147,12 @@ class TreatmentsProfileSwitchFragment : DaggerFragment() {
                             OKDialog.showConfirmation(activity, resourceHelper.gs(R.string.careportal_profileswitch), resourceHelper.gs(R.string.copytolocalprofile) + "\n" + profileSwitch.customizedName + "\n" + dateUtil.dateAndTimeString(profileSwitch.date), Runnable {
                                 profileSwitch.profileObject?.let {
                                     val nonCustomized = it.convertToNonCustomizedProfile()
-                                    localProfilePlugin.addProfile(localProfilePlugin.copyFrom(nonCustomized, profileSwitch.customizedName + " " + dateUtil.dateAndTimeString(profileSwitch.date).replace(".", "_")))
-                                    rxBus.send(EventLocalProfileChanged())
+                                    if (nonCustomized.isValid(resourceHelper.gs(R.string.careportal_profileswitch, false))) {
+                                        localProfilePlugin.addProfile(localProfilePlugin.copyFrom(nonCustomized, profileSwitch.customizedName + " " + dateUtil.dateAndTimeString(profileSwitch.date).replace(".", "_")))
+                                        rxBus.send(EventLocalProfileChanged())
+                                    } else {
+                                        OKDialog.show(activity, resourceHelper.gs(R.string.careportal_profileswitch), resourceHelper.gs(R.string.copytolocalprofile_invalid))
+                                    }
                                 }
                             })
                         }

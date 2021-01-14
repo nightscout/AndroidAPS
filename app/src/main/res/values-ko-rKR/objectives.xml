@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="objectives_button_back">뒤로</string>
     <string name="objectives_button_start">시작</string>
     <string name="objectives_button_verify">확인</string>
     <string name="nth_objective">%1$d. 목표</string>
@@ -38,7 +37,6 @@
     <string name="codeaccepted">코드 인증</string>
     <string name="codeinvalid">잘못된 코드</string>
     <string name="objectives_exam_objective">당신의 지식을 확인해봅니다</string>
-    <string name="objectives_exam_gate">다음 질문에 대해 공부하고 올바른 답을 선택하세요</string>
     <string name="answerdisabledto">다음 시간까지 답변 불가능: %1$s</string>
     <string name="wronganswer">잘못된 답변!</string>
     <string name="unfinshed_button">다음 미답변</string>

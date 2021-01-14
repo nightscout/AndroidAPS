@@ -39,6 +39,11 @@ class PluginDescriptionTest {
         Assert.assertEquals(false, pluginDescription.showInList)
     }
 
+    @Test fun pluginIcon() {
+        val pluginDescription = PluginDescription().pluginIcon(10)
+        Assert.assertEquals(10, pluginDescription.pluginIcon.toLong())
+    }
+
     @Test fun pluginName() {
         val pluginDescription = PluginDescription().pluginName(10)
         Assert.assertEquals(10, pluginDescription.pluginName.toLong())

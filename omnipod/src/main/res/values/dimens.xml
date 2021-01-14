@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <dimen name="omnipod_wizard_vertical_spacing">10dp</dimen>
+    <dimen name="omnipod_icon_button_drawable_padding">4dp</dimen>
 </resources>

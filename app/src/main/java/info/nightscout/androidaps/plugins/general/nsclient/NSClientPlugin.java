@@ -10,6 +10,7 @@ import android.os.IBinder;
 import android.text.Spanned;
 
 import androidx.preference.PreferenceFragmentCompat;
+import androidx.preference.SwitchPreference;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -43,6 +44,7 @@ import info.nightscout.androidaps.plugins.general.nsclient.services.NSClientServ
 import info.nightscout.androidaps.utils.FabricPrivacy;
 import info.nightscout.androidaps.utils.HtmlHelper;
 import info.nightscout.androidaps.utils.ToastUtils;
+import info.nightscout.androidaps.utils.buildHelper.BuildHelper;
 import info.nightscout.androidaps.utils.resources.ResourceHelper;
 import info.nightscout.androidaps.utils.sharedPreferences.SP;
 import io.reactivex.disposables.CompositeDisposable;
@@ -50,7 +52,7 @@ import io.reactivex.schedulers.Schedulers;
 
 @Singleton
 public class NSClientPlugin extends PluginBase {
-    private CompositeDisposable disposable = new CompositeDisposable();
+    private final CompositeDisposable disposable = new CompositeDisposable();
 
     private final AAPSLogger aapsLogger;
     private final RxBusWrapper rxBus;
@@ -59,6 +61,7 @@ public class NSClientPlugin extends PluginBase {
     private final FabricPrivacy fabricPrivacy;
     private final SP sp;
     private final Config config;
+    private final BuildHelper buildHelper;
 
     public Handler handler;
 
@@ -72,7 +75,7 @@ public class NSClientPlugin extends PluginBase {
 
     public NSClientService nsClientService = null;
 
-    private NsClientReceiverDelegate nsClientReceiverDelegate;
+    private final NsClientReceiverDelegate nsClientReceiverDelegate;
 
     @Inject
     public NSClientPlugin(
@@ -84,11 +87,13 @@ public class NSClientPlugin extends PluginBase {
             FabricPrivacy fabricPrivacy,
             SP sp,
             NsClientReceiverDelegate nsClientReceiverDelegate,
-            Config config
+            Config config,
+            BuildHelper buildHelper
     ) {
         super(new PluginDescription()
                         .mainType(PluginType.GENERAL)
                         .fragmentClass(NSClientFragment.class.getName())
+                        .pluginIcon(R.drawable.ic_nightscout_syncs)
                         .pluginName(R.string.nsclientinternal)
                         .shortName(R.string.nsclientinternal_shortname)
                         .preferencesId(R.xml.pref_nsclientinternal)
@@ -104,6 +109,7 @@ public class NSClientPlugin extends PluginBase {
         this.sp = sp;
         this.nsClientReceiverDelegate = nsClientReceiverDelegate;
         this.config = config;
+        this.buildHelper = buildHelper;
 
         if (config.getNSCLIENT()) {
             getPluginDescription().alwaysEnabled(true).visibleByDefault(true);
@@ -190,11 +196,32 @@ public class NSClientPlugin extends PluginBase {
         super.preprocessPreferences(preferenceFragment);
 
         if (config.getNSCLIENT()) {
-            preferenceFragment.findPreference(resourceHelper.gs(R.string.key_statuslights_overview_advanced));
+            SwitchPreference key_ns_uploadlocalprofile = preferenceFragment.findPreference(resourceHelper.gs(R.string.key_ns_uploadlocalprofile));
+            if (key_ns_uploadlocalprofile != null) key_ns_uploadlocalprofile.setVisible(false);
+            SwitchPreference key_ns_autobackfill = preferenceFragment.findPreference(resourceHelper.gs(R.string.key_ns_autobackfill));
+            if (key_ns_autobackfill != null) key_ns_autobackfill.setVisible(false);
+            SwitchPreference key_ns_create_announcements_from_errors = preferenceFragment.findPreference(resourceHelper.gs(R.string.key_ns_create_announcements_from_errors));
+            if (key_ns_create_announcements_from_errors != null)
+                key_ns_create_announcements_from_errors.setVisible(false);
+            SwitchPreference key_ns_create_announcements_from_carbs_req = preferenceFragment.findPreference(resourceHelper.gs(R.string.key_ns_create_announcements_from_carbs_req));
+            if (key_ns_create_announcements_from_carbs_req != null)
+                key_ns_create_announcements_from_carbs_req.setVisible(false);
+            SwitchPreference key_ns_upload_only = preferenceFragment.findPreference(resourceHelper.gs(R.string.key_ns_upload_only));
+            if (key_ns_upload_only != null) {
+                key_ns_upload_only.setVisible(false);
+                key_ns_upload_only.setEnabled(false);
+            }
+            SwitchPreference key_ns_sync_use_absolute = preferenceFragment.findPreference(resourceHelper.gs(R.string.key_ns_sync_use_absolute));
+            if (key_ns_sync_use_absolute != null) key_ns_sync_use_absolute.setVisible(false);
+        } else {
+            // APS or pumpcontrol mode
+            SwitchPreference key_ns_upload_only = preferenceFragment.findPreference(resourceHelper.gs(R.string.key_ns_upload_only));
+            if (key_ns_upload_only != null)
+                key_ns_upload_only.setVisible(buildHelper.isEngineeringMode());
         }
     }
 
-    private ServiceConnection mConnection = new ServiceConnection() {
+    private final ServiceConnection mConnection = new ServiceConnection() {
 
         public void onServiceDisconnected(ComponentName name) {
             aapsLogger.debug(LTag.NSCLIENT, "Service is disconnected");
@@ -261,7 +288,7 @@ public class NSClientPlugin extends PluginBase {
     }
 
     public boolean hasWritePermission() {
-        return nsClientService.hasWriteAuth;
+        return NSClientService.hasWriteAuth;
     }
 
     public void handleClearAlarm(NSAlarm originalAlarm, long silenceTimeInMsec) {

@@ -2,12 +2,17 @@ package info.nightscout.androidaps.plugins.sensitivity;
 
 import androidx.collection.LongSparseArray;
 
+import org.jetbrains.annotations.NotNull;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.util.List;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
 import dagger.android.HasAndroidInjector;
+import info.nightscout.androidaps.Constants;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.data.Profile;
@@ -31,9 +36,9 @@ import info.nightscout.androidaps.utils.sharedPreferences.SP;
 @Singleton
 public class SensitivityWeightedAveragePlugin extends AbstractSensitivityPlugin {
 
-    private SP sp;
-    private DateUtil dateUtil;
-    private ProfileFunction profileFunction;
+    private final SP sp;
+    private final DateUtil dateUtil;
+    private final ProfileFunction profileFunction;
 
     @Inject
     public SensitivityWeightedAveragePlugin(
@@ -46,6 +51,7 @@ public class SensitivityWeightedAveragePlugin extends AbstractSensitivityPlugin 
     ) {
         super(new PluginDescription()
                         .mainType(PluginType.SENSITIVITY)
+                        .pluginIcon(R.drawable.ic_generic_icon)
                         .pluginName(R.string.sensitivityweightedaverage)
                         .shortName(R.string.sensitivity_shortname)
                         .preferencesId(R.xml.pref_absorption_aaps)
@@ -198,5 +204,37 @@ public class SensitivityWeightedAveragePlugin extends AbstractSensitivityPlugin 
                 + " mealCOB: " + current.cob);
 
         return output;
+    }
+
+    @NotNull @Override public SensitivityType getId() {
+        return SensitivityType.SENSITIVITY_WEIGHTED;
+    }
+
+    @NotNull @Override public JSONObject configuration() {
+        JSONObject c = new JSONObject();
+        try {
+            c.put(getResourceHelper().gs(R.string.key_absorption_maxtime), getSp().getDouble(R.string.key_absorption_maxtime, Constants.DEFAULT_MAX_ABSORPTION_TIME));
+            c.put(getResourceHelper().gs(R.string.key_openapsama_autosens_period), getSp().getInt(R.string.key_openapsama_autosens_period, 24));
+            c.put(getResourceHelper().gs(R.string.key_openapsama_autosens_max), getSp().getDouble(R.string.key_openapsama_autosens_max, 1.2));
+            c.put(getResourceHelper().gs(R.string.key_openapsama_autosens_min), getSp().getDouble(R.string.key_openapsama_autosens_min, 0.7));
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return c;
+    }
+
+    @Override public void applyConfiguration(@NotNull JSONObject configuration) {
+        try {
+            if (configuration.has(getResourceHelper().gs(R.string.key_absorption_maxtime)))
+                getSp().putDouble(R.string.key_absorption_maxtime, configuration.getDouble(getResourceHelper().gs(R.string.key_absorption_maxtime)));
+            if (configuration.has(getResourceHelper().gs(R.string.key_openapsama_autosens_period)))
+                getSp().putDouble(R.string.key_openapsama_autosens_period, configuration.getDouble(getResourceHelper().gs(R.string.key_openapsama_autosens_period)));
+            if (configuration.has(getResourceHelper().gs(R.string.key_openapsama_autosens_max)))
+                getSp().getDouble(R.string.key_openapsama_autosens_max, configuration.getDouble(getResourceHelper().gs(R.string.key_openapsama_autosens_max)));
+            if (configuration.has(getResourceHelper().gs(R.string.key_openapsama_autosens_min)))
+                getSp().getDouble(R.string.key_openapsama_autosens_min, configuration.getDouble(getResourceHelper().gs(R.string.key_openapsama_autosens_min)));
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
     }
 }

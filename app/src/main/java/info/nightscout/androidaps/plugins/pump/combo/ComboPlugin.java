@@ -147,6 +147,7 @@ public class ComboPlugin extends PumpPluginBase implements PumpInterface, Constr
         super(new PluginDescription()
                         .mainType(PluginType.PUMP)
                         .fragmentClass(ComboFragment.class.getName())
+                        .pluginIcon(R.drawable.ic_combo_128)
                         .pluginName(R.string.combopump)
                         .shortName(R.string.combopump_shortname)
                         .description(R.string.description_pump_combo),
@@ -337,7 +338,7 @@ public class ComboPlugin extends PumpPluginBase implements PumpInterface, Constr
      * Runs pump initialization if needed and reads the pump state from the main screen.
      */
     @Override
-    public synchronized void getPumpStatus() {
+    public synchronized void getPumpStatus(String reason) {
         getAapsLogger().debug(LTag.PUMP, "getPumpStatus called");
         if (!pump.initialized) {
             initializePump();
@@ -451,7 +452,7 @@ public class ComboPlugin extends PumpPluginBase implements PumpInterface, Constr
         }
     }
 
-    private BolusProgressReporter bolusProgressReporter = (state, percent, delivered) -> {
+    private final BolusProgressReporter bolusProgressReporter = (state, percent, delivered) -> {
         EventOverviewBolusProgress event = EventOverviewBolusProgress.INSTANCE;
         switch (state) {
             case PROGRAMMING:
@@ -966,9 +967,7 @@ public class ComboPlugin extends PumpPluginBase implements PumpInterface, Constr
             checkPumpTime(preCheckResult.state);
             checkBasalRate(preCheckResult.state);
             CommandResult historyCheckError = checkHistory();
-            if (historyCheckError != null) {
-                return historyCheckError;
-            }
+            return historyCheckError;
         } else {
             long now = System.currentTimeMillis();
             TemporaryBasal aapsTbr = treatmentsPlugin.getTempBasalFromHistory(now);

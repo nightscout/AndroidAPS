@@ -37,7 +37,7 @@ class DefaultProfileDPV @Inject constructor(val injector: HasAndroidInjector) {
         profile.put("dia", 5.0)
         profile.put("carbs_hr", 20) // not used
         profile.put("delay", 5.0) // not used
-        profile.put("timezone", TimeZone.getDefault().getID())
+        profile.put("timezone", TimeZone.getDefault().id)
         profile.put("target_high", JSONArray().put(JSONObject().put("time", "00:00").put("value", Profile.fromMgdlToUnits(108.0, units))))
         profile.put("target_low", JSONArray().put(JSONObject().put("time", "00:00").put("value", Profile.fromMgdlToUnits(108.0, units))))
         profile.put("units", units)

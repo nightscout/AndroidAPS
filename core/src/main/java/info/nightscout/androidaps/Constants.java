@@ -30,7 +30,7 @@ public class Constants {
 
     // Circadian Percentage Profile
     public static final int CPP_MIN_PERCENTAGE = 30;
-    public static final int CPP_MAX_PERCENTAGE = 200;
+    public static final int CPP_MAX_PERCENTAGE = 250;
     public static final int CPP_MIN_TIMESHIFT = -6;
     public static final int CPP_MAX_TIMESHIFT = 23;
 

@@ -170,7 +170,8 @@ public class PumpEnactResult {
                 ret += "<br><b>" + resourceHelper.gs(R.string.absolute) + "</b>: " + DecimalFormatter.to2Decimal(absolute) + " U/h";
             }
         } else {
-            ret += "<br><b>" + resourceHelper.gs(R.string.comment) + "</b>: " + comment;
+            if (!comment.isEmpty())
+                ret += "<br><b>" + resourceHelper.gs(R.string.comment) + "</b>: " + comment;
         }
         return ret;
     }

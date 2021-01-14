@@ -61,7 +61,7 @@ public class RuffyScripter implements RuffyCommands {
 
     private final Object screenlock = new Object();
 
-    private IRTHandler mHandler = new IRTHandler.Stub() {
+    private final IRTHandler mHandler = new IRTHandler.Stub() {
         @Override
         public void log(String message) {
             if (log.isTraceEnabled()) {
@@ -667,7 +667,7 @@ public class RuffyScripter implements RuffyCommands {
         synchronized (screenlock) {
             try {
                 // updates usually come in every ~500, occasionally up to 1100ms
-                screenlock.wait((long) 2000);
+                screenlock.wait(2000);
             } catch (InterruptedException e) {
                 throw new CommandException("Interrupted");
             }

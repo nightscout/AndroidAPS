@@ -34,12 +34,15 @@ class EversensePlugin @Inject constructor(
 ) : PluginBase(PluginDescription()
     .mainType(PluginType.BGSOURCE)
     .fragmentClass(BGSourceFragment::class.java.name)
+    .pluginIcon(R.drawable.ic_eversense)
     .pluginName(R.string.eversense)
     .shortName(R.string.eversense_shortname)
     .preferencesId(R.xml.pref_bgsource)
     .description(R.string.description_source_eversense),
     aapsLogger, resourceHelper, injector
 ), BgSourceInterface {
+
+    private var sensorBatteryLevel = -1
 
     override fun advancedFilteringSupported(): Boolean {
         return false
@@ -53,7 +56,10 @@ class EversensePlugin @Inject constructor(
         if (bundle.containsKey("glucoseLevel")) aapsLogger.debug(LTag.BGSOURCE, "glucoseLevel: " + bundle.getInt("glucoseLevel"))
         if (bundle.containsKey("glucoseTrendDirection")) aapsLogger.debug(LTag.BGSOURCE, "glucoseTrendDirection: " + bundle.getString("glucoseTrendDirection"))
         if (bundle.containsKey("glucoseTimestamp")) aapsLogger.debug(LTag.BGSOURCE, "glucoseTimestamp: " + dateUtil.dateAndTimeString(bundle.getLong("glucoseTimestamp")))
-        if (bundle.containsKey("batteryLevel")) aapsLogger.debug(LTag.BGSOURCE, "batteryLevel: " + bundle.getString("batteryLevel"))
+        if (bundle.containsKey("batteryLevel")) {
+            aapsLogger.debug(LTag.BGSOURCE, "batteryLevel: " + bundle.getString("batteryLevel"))
+            //sensorBatteryLevel = bundle.getString("batteryLevel").toInt()       // TODO: Philoul: Line to check I don't have eversens so I don't know what kind of information is sent...
+        }
         if (bundle.containsKey("signalStrength")) aapsLogger.debug(LTag.BGSOURCE, "signalStrength: " + bundle.getString("signalStrength"))
         if (bundle.containsKey("transmitterVersionNumber")) aapsLogger.debug(LTag.BGSOURCE, "transmitterVersionNumber: " + bundle.getString("transmitterVersionNumber"))
         if (bundle.containsKey("isXLVersion")) aapsLogger.debug(LTag.BGSOURCE, "isXLVersion: " + bundle.getBoolean("isXLVersion"))
@@ -112,5 +118,9 @@ class EversensePlugin @Inject constructor(
                 }
             }
         }
+    }
+
+    override fun getSensorBatteryLevel(): Int {
+        return sensorBatteryLevel
     }
 }

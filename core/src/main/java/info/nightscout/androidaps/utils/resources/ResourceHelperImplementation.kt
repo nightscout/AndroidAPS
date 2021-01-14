@@ -44,7 +44,7 @@ class ResourceHelperImplementation @Inject constructor(private val context: Cont
         BitmapFactory.decodeResource(context.resources, id)
 
     override fun getDisplayMetrics():DisplayMetrics =
-        context.resources.getDisplayMetrics()
+        context.resources.displayMetrics
 
     override fun dpToPx(dp: Int): Int {
         val scale = context.resources.displayMetrics.density

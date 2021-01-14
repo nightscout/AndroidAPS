@@ -16,21 +16,26 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.function.Supplier;
 
 import info.nightscout.androidaps.logging.AAPSLogger;
 import info.nightscout.androidaps.logging.LTag;
+import info.nightscout.androidaps.plugins.pump.omnipod.driver.communication.message.OmnipodMessage;
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.communication.message.response.StatusUpdatableResponse;
-import info.nightscout.androidaps.plugins.pump.omnipod.driver.communication.message.response.podinfo.PodInfoFaultEvent;
+import info.nightscout.androidaps.plugins.pump.omnipod.driver.communication.message.response.podinfo.PodInfoDetailedStatus;
+import info.nightscout.androidaps.plugins.pump.omnipod.driver.definition.ActivationProgress;
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.definition.AlertSet;
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.definition.AlertSlot;
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.definition.AlertType;
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.definition.DeliveryStatus;
+import info.nightscout.androidaps.plugins.pump.omnipod.driver.definition.FaultEventCode;
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.definition.FirmwareVersion;
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.definition.OmnipodConstants;
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.definition.OmnipodCrc;
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.definition.PodProgressStatus;
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.definition.schedule.BasalSchedule;
+import info.nightscout.androidaps.plugins.pump.omnipod.driver.util.TimeUtil;
 
 // TODO add nullchecks on some setters
 public abstract class PodStateManager {
@@ -79,7 +84,7 @@ public abstract class PodStateManager {
      * @return true if we have a Pod state and the Pod activation has been completed. The pod could also be dead at this point
      */
     public final boolean isPodActivationCompleted() {
-        return isPodInitialized() && podState.getPodProgressStatus().isAtLeast(PodProgressStatus.ABOVE_FIFTY_UNITS) && podState.getPodProgressStatus() != PodProgressStatus.ACTIVATION_TIME_EXCEEDED;
+        return getActivationProgress().isCompleted();
     }
 
     /**
@@ -98,14 +103,21 @@ public abstract class PodStateManager {
     }
 
     /**
+     * @return true if the Pod's activation time has been exceeded
+     */
+    public final boolean isPodActivationTimeExceeded() {
+        return isPodInitialized() && getPodProgressStatus() == PodProgressStatus.ACTIVATION_TIME_EXCEEDED;
+    }
+
+    /**
      * @return true if we have a Pod state and the Pod is dead, meaning it is either in a fault state or activation time has been exceeded or it is deactivated
      */
-    public boolean isPodDead() {
+    public final boolean isPodDead() {
         return isPodInitialized() && getPodProgressStatus().isDead();
     }
 
     public final void setInitializationParameters(int lot, int tid, FirmwareVersion piVersion, FirmwareVersion pmVersion, DateTimeZone timeZone, PodProgressStatus podProgressStatus) {
-        if (isPodInitialized() && getPodProgressStatus().isAfter(PodProgressStatus.REMINDER_INITIALIZED)) {
+        if (isPodInitialized() && getActivationProgress().isAtLeast(ActivationProgress.PAIRING_COMPLETED)) {
             throw new IllegalStateException("Cannot set pairing parameters: pairing parameters have already been set");
         }
         if (piVersion == null) {
@@ -227,21 +239,8 @@ public abstract class PodStateManager {
         return getSafe(() -> podState.getLastUpdatedFromResponse());
     }
 
-    /**
-     * @return true if the Pod State contains a fault event. Is the Pod state does not contain
-     * a fault event, this does NOT necessarily mean that the Pod is not faulted. For a reliable
-     * indication on whether or not the pod is faulted, see {@link #isPodFaulted() isPodFaulted()}
-     */
-    public final boolean hasFaultEvent() {
-        return podState != null && podState.getFaultEvent() != null;
-    }
-
-    public final PodInfoFaultEvent getFaultEvent() {
-        return getSafe(() -> podState.getFaultEvent());
-    }
-
-    public final void setFaultEvent(PodInfoFaultEvent faultEvent) {
-        setAndStore(() -> podState.setFaultEvent(faultEvent));
+    public final FaultEventCode getFaultEventCode() {
+        return getSafe(() -> podState.getFaultEventCode());
     }
 
     public final AlertType getConfiguredAlertType(AlertSlot alertSlot) {
@@ -331,6 +330,17 @@ public abstract class PodStateManager {
         return activatedAt == null ? null : activatedAt.withZone(getSafe(() -> podState.getTimeZone())).plus(OmnipodConstants.NOMINAL_POD_LIFE);
     }
 
+    public final ActivationProgress getActivationProgress() {
+        if (hasPodState()) {
+            return Optional.ofNullable(podState.getActivationProgress()).orElse(ActivationProgress.NONE);
+        }
+        return ActivationProgress.NONE;
+    }
+
+    public final void setActivationProgress(ActivationProgress activationProgress) {
+        setAndStore(() -> podState.setActivationProgress(activationProgress));
+    }
+
     public final PodProgressStatus getPodProgressStatus() {
         return getSafe(() -> podState.getPodProgressStatus());
     }
@@ -348,8 +358,7 @@ public abstract class PodStateManager {
     }
 
     public final Duration getScheduleOffset() {
-        DateTime now = getTime();
-        return new Duration(now.withTimeAtStartOfDay(), now);
+        return TimeUtil.toDuration(getTime());
     }
 
     public final BasalSchedule getBasalSchedule() {
@@ -358,6 +367,15 @@ public abstract class PodStateManager {
 
     public final void setBasalSchedule(BasalSchedule basalSchedule) {
         setAndStore(() -> podState.setBasalSchedule(basalSchedule));
+    }
+
+    public final boolean isBasalCertain() {
+        Boolean certain = getSafe(() -> podState.isBasalCertain());
+        return certain == null || certain;
+    }
+
+    public final void setBasalCertain(boolean certain) {
+        setAndStore(() -> podState.setBasalCertain(certain));
     }
 
     public final DateTime getLastBolusStartTime() {
@@ -408,14 +426,18 @@ public abstract class PodStateManager {
     }
 
     public final void setTempBasalCertain(boolean certain) {
-        setSafe(() -> podState.setTempBasalCertain(certain));
+        setAndStore(() -> {
+            if (!Objects.equals(podState.isTempBasalCertain(), certain)) {
+                podState.setTempBasalCertain(certain);
+            }
+        });
     }
 
-    public final void setTempBasal(DateTime startTime, Double amount, Duration duration, boolean certain) {
-        setTempBasal(startTime, amount, duration, certain, true);
+    public final void setTempBasal(DateTime startTime, Double amount, Duration duration) {
+        setTempBasal(startTime, amount, duration, true);
     }
 
-    public final void setTempBasal(DateTime startTime, Double amount, Duration duration, Boolean certain, boolean store) {
+    private void setTempBasal(DateTime startTime, Double amount, Duration duration, boolean store) {
         DateTime currentStartTime = getTempBasalStartTime();
         Double currentAmount = getTempBasalAmount();
         Duration currentDuration = getTempBasalDuration();
@@ -424,7 +446,6 @@ public abstract class PodStateManager {
                 podState.setTempBasalStartTime(startTime);
                 podState.setTempBasalAmount(amount);
                 podState.setTempBasalDuration(duration);
-                podState.setTempBasalCertain(certain);
             };
 
             if (store) {
@@ -434,6 +455,14 @@ public abstract class PodStateManager {
             }
             onTbrChanged();
         }
+    }
+
+    public final void clearTempBasal() {
+        clearTempBasal(true);
+    }
+
+    private void clearTempBasal(boolean store) {
+        setTempBasal(null, null, null, store);
     }
 
     /**
@@ -449,13 +478,22 @@ public abstract class PodStateManager {
      * @return true when a Temp Basal is stored in the Pod State and this temp basal is currently running (based on start time and duration)
      */
     public final boolean isTempBasalRunning() {
-        return isTempBasalRunningAt(DateTime.now());
+        return isTempBasalRunningAt(null);
     }
 
     /**
-     * @return true when a Temp Basal is stored in the Pod State and this temp basal is running at the given time (based on start time and duration)
+     * @param time the time for which to look up whether a temp basal is running, null meaning now
+     * @return true when a Temp Basal is stored in the Pod State and this temp basal is running at the given time (based on start time and duration),
+     * or when the time provided is null and the delivery status of the Pod inidicated that a TBR is running, but not TBR is stored
+     * This can happen in some rare cases.
      */
     public final boolean isTempBasalRunningAt(DateTime time) {
+        if (time == null) { // now
+            if (!hasTempBasal() && getLastDeliveryStatus().isTbrRunning()) {
+                return true;
+            }
+            time = DateTime.now();
+        }
         if (hasTempBasal()) {
             DateTime tempBasalStartTime = getTempBasalStartTime();
             DateTime tempBasalEndTime = tempBasalStartTime.plus(getTempBasalDuration());
@@ -486,7 +524,7 @@ public abstract class PodStateManager {
         if (isTempBasalRunningAt(time)) {
             return getTempBasalAmount();
         }
-        Duration offset = new Duration(time.withTimeAtStartOfDay(), time);
+        Duration offset = TimeUtil.toDuration(time);
         return basalSchedule.rateAt(offset);
     }
 
@@ -513,32 +551,86 @@ public abstract class PodStateManager {
     /**
      * Does not automatically store pod state in order to decrease I/O load
      */
-    public final void updateFromResponse(StatusUpdatableResponse statusResponse) {
+    public final void updateFromResponse(StatusUpdatableResponse status, OmnipodMessage requestMessage) {
         setSafe(() -> {
             if (podState.getActivatedAt() == null) {
-                DateTime activatedAtCalculated = DateTime.now().withZone(podState.getTimeZone()).minus(statusResponse.getTimeActive());
+                DateTime activatedAtCalculated = DateTime.now().withZone(podState.getTimeZone()).minus(status.getTimeActive());
                 podState.setActivatedAt(activatedAtCalculated);
             }
-            podState.setSuspended(statusResponse.getDeliveryStatus() == DeliveryStatus.SUSPENDED);
-            podState.setActiveAlerts(statusResponse.getUnacknowledgedAlerts());
-            podState.setLastDeliveryStatus(statusResponse.getDeliveryStatus());
-            podState.setReservoirLevel(statusResponse.getReservoirLevel());
-            podState.setTotalTicksDelivered(statusResponse.getTicksDelivered());
-            podState.setPodProgressStatus(statusResponse.getPodProgressStatus());
-            podState.setTimeActive(statusResponse.getTimeActive());
-            if (statusResponse.getDeliveryStatus().isTbrRunning()) {
-                if (!isTempBasalCertain() && isTempBasalRunning()) {
-                    podState.setTempBasalCertain(true);
-                }
-            } else {
-                // Triggers {@link #onTbrChanged() onTbrChanged()} when appropriate
-                setTempBasal(null, null, null, true, false);
+            podState.setSuspended(status.getDeliveryStatus() == DeliveryStatus.SUSPENDED);
+            if (!Objects.equals(status.getUnacknowledgedAlerts(), podState.getActiveAlerts())) {
+                podState.setActiveAlerts(status.getUnacknowledgedAlerts());
+                onActiveAlertsChanged();
             }
+            podState.setLastDeliveryStatus(status.getDeliveryStatus());
+            podState.setReservoirLevel(status.getReservoirLevel());
+            podState.setTotalTicksDelivered(status.getTicksDelivered());
+            podState.setPodProgressStatus(status.getPodProgressStatus());
+            podState.setTimeActive(status.getTimeActive());
+
+            boolean wasBasalCertain = podState.isBasalCertain() == null || podState.isBasalCertain();
+            boolean wasTempBasalCertain = podState.isTempBasalCertain() == null || podState.isTempBasalCertain();
+            if (!status.getDeliveryStatus().isTbrRunning() && hasTempBasal()) {
+                if (wasTempBasalCertain || requestMessage.isSuspendDeliveryMessage()) {
+                    clearTempBasal(); // Triggers onTbrChanged when appropriate
+                } else {
+                    // Don't trigger onTbrChanged as we will trigger onUncertainTbrRecovered below
+                    podState.setTempBasalStartTime(null);
+                    podState.setTempBasalAmount(null);
+                    podState.setTempBasalDuration(null);
+                }
+            }
+
+            if (!wasTempBasalCertain) {
+                podState.setTempBasalCertain(true);
+
+                // We exclusively use get status messages to recover from uncertain TBRs
+                // DO NOT change this as the recovery mechanism will otherwise interfere with normal delivery commands
+                if (requestMessage.isGetStatusMessage()) {
+                    onUncertainTbrRecovered();
+                }
+            }
+            if (!wasBasalCertain) {
+                podState.setBasalCertain(true);
+            }
+
+            if (status instanceof PodInfoDetailedStatus) {
+                PodInfoDetailedStatus detailedStatus = (PodInfoDetailedStatus) status;
+                if (detailedStatus.isFaulted()) {
+                    if (!Objects.equals(podState.getFaultEventCode(), detailedStatus.getFaultEventCode())) {
+                        podState.setFaultEventCode(detailedStatus.getFaultEventCode());
+                        onFaultEventChanged();
+                    }
+                }
+            }
+
             podState.setLastUpdatedFromResponse(DateTime.now());
         });
+
+        onUpdatedFromResponse();
     }
 
     protected void onTbrChanged() {
+        // Deliberately left empty
+        // Can be overridden in subclasses
+    }
+
+    protected void onUncertainTbrRecovered() {
+        // Deliberately left empty
+        // Can be overridden in subclasses
+    }
+
+    protected void onActiveAlertsChanged() {
+        // Deliberately left empty
+        // Can be overridden in subclasses
+    }
+
+    protected void onFaultEventChanged() {
+        // Deliberately left empty
+        // Can be overridden in subclasses
+    }
+
+    protected void onUpdatedFromResponse() {
         // Deliberately left empty
         // Can be overridden in subclasses
     }
@@ -626,15 +718,17 @@ public abstract class PodStateManager {
         private DateTimeZone timeZone;
         private DateTime activatedAt;
         private Duration timeActive;
-        private PodInfoFaultEvent faultEvent;
+        private FaultEventCode faultEventCode;
         private Double reservoirLevel;
         private Integer totalTicksDelivered;
         private boolean suspended;
         private NonceState nonceState;
+        private ActivationProgress activationProgress = ActivationProgress.NONE;
         private PodProgressStatus podProgressStatus;
         private DeliveryStatus lastDeliveryStatus;
         private AlertSet activeAlerts;
         private BasalSchedule basalSchedule;
+        private Boolean basalCertain;
         private DateTime lastBolusStartTime;
         private Double lastBolusAmount;
         private Duration lastBolusDuration;
@@ -751,12 +845,12 @@ public abstract class PodStateManager {
             this.timeActive = timeActive;
         }
 
-        PodInfoFaultEvent getFaultEvent() {
-            return faultEvent;
+        FaultEventCode getFaultEventCode() {
+            return faultEventCode;
         }
 
-        void setFaultEvent(PodInfoFaultEvent faultEvent) {
-            this.faultEvent = faultEvent;
+        void setFaultEventCode(FaultEventCode faultEventCode) {
+            this.faultEventCode = faultEventCode;
         }
 
         Double getReservoirLevel() {
@@ -799,6 +893,14 @@ public abstract class PodStateManager {
             this.nonceState = nonceState;
         }
 
+        ActivationProgress getActivationProgress() {
+            return activationProgress;
+        }
+
+        void setActivationProgress(ActivationProgress activationProgress) {
+            this.activationProgress = activationProgress;
+        }
+
         PodProgressStatus getPodProgressStatus() {
             return podProgressStatus;
         }
@@ -829,6 +931,14 @@ public abstract class PodStateManager {
 
         void setBasalSchedule(BasalSchedule basalSchedule) {
             this.basalSchedule = basalSchedule;
+        }
+
+        Boolean isBasalCertain() {
+            return basalCertain;
+        }
+
+        void setBasalCertain(Boolean certain) {
+            this.basalCertain = certain;
         }
 
         DateTime getLastBolusStartTime() {
@@ -930,11 +1040,12 @@ public abstract class PodStateManager {
                     ", timeZone=" + timeZone +
                     ", activatedAt=" + activatedAt +
                     ", timeActive=" + timeActive +
-                    ", faultEvent=" + faultEvent +
+                    ", faultEventCode=" + faultEventCode +
                     ", reservoirLevel=" + reservoirLevel +
                     ", totalTicksDelivered=" + totalTicksDelivered +
                     ", suspended=" + suspended +
                     ", nonceState=" + nonceState +
+                    ", activationProgress=" + activationProgress +
                     ", podProgressStatus=" + podProgressStatus +
                     ", lastDeliveryStatus=" + lastDeliveryStatus +
                     ", activeAlerts=" + activeAlerts +
