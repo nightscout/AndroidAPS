@@ -165,9 +165,13 @@ public class ATProfile {
                 json.put("curve","ultra-rapid");
             else if (insulinInterface.getId() == InsulinInterface.InsulinType.OREF_RAPID_ACTING)
                 json.put("curve","rapid-acting");
-            else if (insulinInterface.getId() == InsulinInterface.InsulinType.OREF_FREE_PEAK) {
+            else if (insulinInterface.getId() == InsulinInterface.InsulinType.OREF_LYUMJEV) {
+                json.put("curve", "ultra-rapid");
+                json.put("useCustomPeakTime", true);
+                json.put("insulinPeakTime", 45);
+            } else if (insulinInterface.getId() == InsulinInterface.InsulinType.OREF_FREE_PEAK) {
                 int peaktime = sp.getInt(resourceHelper.gs(R.string.key_insulin_oref_peak),75);
-                json.put("curve", peaktime > 50 ? "rapid-acting" : "ultra-rapid");
+                json.put("curve", peaktime > 30 ? "rapid-acting" : "ultra-rapid");
                 json.put("useCustomPeakTime",true);
                 json.put("insulinPeakTime",peaktime);
             }

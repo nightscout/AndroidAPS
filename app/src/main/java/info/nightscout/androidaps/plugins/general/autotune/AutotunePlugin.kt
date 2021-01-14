@@ -247,9 +247,9 @@ class AutotunePlugin @Inject constructor(
             jsonSettings.put("categorize_uam_as_basal", sp.getBoolean(R.string.key_autotune_categorize_uam_as_basal, false))
             jsonSettings.put("tune_insulin_curve", false)
             //todo: philoul Check in oref0-autotune if Tune insulin works with exponential curve (aaps don't use bilinear curve...)
-            if (insulinInterface.id == InsulinInterface.InsulinType.OREF_ULTRA_RAPID_ACTING) jsonSettings.put("curve", "ultra-rapid") else if (insulinInterface.id == InsulinInterface.InsulinType.OREF_RAPID_ACTING) jsonSettings.put("curve", "rapid-acting") else if (insulinInterface.id == InsulinInterface.InsulinType.OREF_FREE_PEAK) {
+            if (insulinInterface.id == InsulinInterface.InsulinType.OREF_ULTRA_RAPID_ACTING || insulinInterface.id == InsulinInterface.InsulinType.OREF_LYUMJEV) jsonSettings.put("curve", "ultra-rapid") else if (insulinInterface.id == InsulinInterface.InsulinType.OREF_RAPID_ACTING) jsonSettings.put("curve", "rapid-acting") else if (insulinInterface.id == InsulinInterface.InsulinType.OREF_FREE_PEAK) {
                 val peaktime = sp.getInt(resourceHelper.gs(R.string.key_insulin_oref_peak), 75)
-                jsonSettings.put("curve", if (peaktime > 50) "rapid-acting" else "ultra-rapid")
+                jsonSettings.put("curve", if (peaktime > 30) "rapid-acting" else "ultra-rapid")
                 jsonSettings.put("useCustomPeakTime", true)
                 jsonSettings.put("insulinPeakTime", peaktime)
             }
