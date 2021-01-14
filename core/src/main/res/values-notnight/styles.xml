@@ -37,6 +37,8 @@
         <item name="textAppearanceCaption">@style/TextAppearance.MaterialComponents.Caption</item>
         <item name="textAppearanceButton">@style/TextAppearance.MaterialComponents.Button</item>
         <item name="textAppearanceOverline">@style/TextAppearance.MaterialComponents.Overline</item>
+        <item name="popupMenuStyle">@style/Widget.MaterialComponents.PopupMenu</item>
+        <item name="actionOverflowMenuStyle">@style/Widget.MaterialComponents.PopupMenu.Overflow</item>
         <!-- Color of bg value -->
         <item name="bgInRange">@color/inrange_bg</item>
         <item name="bgLow">@color/low</item>
@@ -70,6 +72,10 @@
         <!-- Graph specific colors  -->
         <item name="graphHorizontalLabelText">@color/graphHorizontalLabelText</item>
         <item name="graphVerticalLabelText">@color/graphVerticalLabelText</item>
+        <!-- Dialog -->
+        <item name="dialogTitleBackground">@color/dialog_title_background</item>
+        <item name="dialogTitleColor">@color/dialog_title_color</item>
+        <item name="dialogTitleIconTint">@color/dialog_title_icon_tint</item>
         <!-- TDD Stats   -->
         <item name="backgroundStatsColor">@color/background_stats_color</item>
         <!---Android Dark ans Light Theme Base colors-->
@@ -92,7 +98,7 @@
     <item name="android:singleLine">true</item>
     </style>
 
-    <style name="AppTheme.base" parent="Theme.AppCompat.NoActionBar">
+    <style name="AppTheme.base" parent="Theme.MaterialComponents">
         <item name="android:textColorSecondary">@color/white</item>
     </style>
 
@@ -101,7 +107,7 @@
         <item name="windowNoTitle">true</item>
     </style>
 
-    <style name="AppTheme.DEFAULT" parent="Theme.MaterialComponents.Light.NoActionBar">
+    <style name="AppTheme.DEFAULT" parent="Theme.MaterialComponents.DayNight.NoActionBar">
         <!-- Customize your theme here. -->
         <item name="colorPrimary">@color/plastic_grey</item>
         <item name="colorPrimaryDark">@color/darkgray</item>
@@ -422,7 +428,8 @@
     <style name="Buton.Borderless" parent="Widget.AppCompat.Button.Borderless"/>
     <style name="Buton.Borderless.Colored" parent="Widget.AppCompat.Button.Borderless.Colored"/>
 
-    <style name="Theme.AppCompat.Translucent" parent="Theme.MaterialComponents.Dialog">
+
+    <style name="Theme.AppCompat.Translucent" parent="AppTheme">
         <item name="android:windowNoTitle">true</item>
         <item name="android:windowBackground">@android:color/transparent</item>
         <item name="android:colorBackgroundCacheHint">@null</item>
@@ -433,6 +440,12 @@
     <style name="InsightAlertDialog" parent="Theme.MaterialComponents.Dialog">
         <item name="android:windowMinWidthMajor">96%</item>
         <item name="android:windowMinWidthMinor">96%</item>
+    </style>
+
+    <style name="StandardDialogs" parent="Theme.MaterialComponents.Dialog.Alert">
+        <item name="colorSurface">@color/black_alpha_20</item>
+        <item name="colorPrimarySurface">@color/black_alpha_20</item>
+        <item name="colorSecondary">@color/black_alpha_20</item>
     </style>
 
     <style name="ButtonSmallFontStyle">
