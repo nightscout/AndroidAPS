@@ -285,6 +285,8 @@
     <string name="mealbolus">Pasto</string>
     <string name="correctionbous">Corr</string>
     <string name="actions">Azioni</string>
+    <string name="ns_upload_only">Solo upload su NS (PERICOLOSO DISABILITARE)</string>
+    <string name="ns_upload_only_summary">Solo upload su NS (no sincronizzazione). Non ha effetto su SGV a meno che non sia selezionata una fonte locale come xDrip+. Non ha effetto sui profili mentre vengono usati i profili NS.\n!!! ATTENZIONE !!! Disabilitare questa opzione potrebbe causare malfunzionamenti e sovra-dosaggio di insulina se uno dei tuoi strumenti (AAPS, NS, xDrip+) è configurato in modo errato. Guarda attentamente se i dati visualizzati da AAPS corrispondono allo stato del micro!</string>
     <string name="pumpNotInitialized">Micro non inizializzato!</string>
     <string name="primefill">Carica/Riempi</string>
     <string name="fillwarning">Assicurati che la quantità corrisponda alla specifica del tuo set di infusione!</string>
@@ -459,6 +461,7 @@
     <string name="smscommunicator_missingsmspermission">Autorizzazione SMS mancante</string>
     <string name="smscommunicator_missingphonestatepermission">Autorizzazione stato telefono mancante</string>
     <string name="xdripstatus_settings">Stato xDrip+ (smartwatch)</string>
+    <string name="xdripstatus">Statusline xDrip+ (smartwatch)</string>
     <string name="xdripstatus_shortname">xds</string>
     <string name="wear_showbgi_title">Mostra BGI</string>
     <string name="wear_showbgi_summary">Aggiungi BGI alla statusline</string>
@@ -501,6 +504,7 @@
     <string name="mdtp_cancel">Annulla</string>
     <string name="notloadedplugins">Non tutti i profili caricati!</string>
     <string name="valuesnotstored">Valori non memorizzati!</string>
+    <string name="ns_localbroadcasts">Abilita trasmissioni ad altre app (come xDrip+). Non abilitare se hai installato più di un\'istanza di AAPS o NSClient!</string>
     <string name="ns_localbroadcasts_title">Abilita le trasmissioni locali.</string>
     <string name="careportal_newnstreatment_duration_min_label">Durata [min]</string>
     <string name="openapssmb">OpenAPS SMB</string>

@@ -77,8 +77,6 @@
         <item name="iconCgm">@drawable/ic_blooddrop_48</item>
         <!-- Fragment background for some themes default transparent  -->
         <item name="fragmentbackground">@color/transparent</item>
-        <!-- Dialog -->
-        <item name="android:dialogCornerRadius">10dp</item>
         <!-- TDD Stats   -->
         <item name="backgroundStatsColor">@color/background_stats_color</item>
         <!---Android Dark ans Light Theme Base colors-->
