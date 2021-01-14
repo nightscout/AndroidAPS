@@ -22,15 +22,23 @@
     <string name="medtronic_pump_status">Статус помпы</string>
     <string name="title_activity_rileylink_settings">Настройки RileyLink</string>
     <string name="rileylink_title">RileyLink</string>
+    <string name="rileylink_address">Адрес:</string>
+    <string name="rileylink_name">Имя:</string>
+    <string name="rileylink_battery_level">Уровень заряда riley:</string>
+    <string name="rileylink_battery_level_value">%1$d%%</string>
     <string name="rileylink_connection_status">Статус подключения:</string>
     <string name="rileylink_connection_error">Ошибка подключения:</string>
     <string name="rileylink_device">Устройство</string>
     <string name="rileylink_device_type">Тип устройства:</string>
+    <string name="rileylink_configured_device_model">Настроенная модель устройства:</string>
+    <string name="rileylink_connected_device_model">Подключенное устройство:</string>
     <string name="rileylink_last_used_frequency">Последняя использованная частота:</string>
     <string name="rileylink_last_device_contact">Контакт последнего устройства:</string>
     <string name="rileylink_firmware_version">Версия прошивки:</string>
+    <string name="rileylink_firmware_version_value">BLE113: %1$s\nCC110: %2$s</string>
     <string name="rileylink_pump_serial_number">Серийный номер помы:</string>
     <string name="rileylink_pump_frequency">Частота помпы:</string>
+    <string name="rileylink_pump_frequency_value">%1$.2f МГц</string>
     <!-- RL State -->
     <string name="rileylink_state_bt_init">Инициализация Bluetooth…</string>
     <string name="rileylink_state_bt_error">Ошибка Bluetooth</string>
@@ -52,9 +60,12 @@
     <string name="rileylink_error_pod_unreachable">POD недоступен</string>
     <!-- RileyLink - Common -->
     <string name="rileylink_target_device_medtronic">Помпа Medtronic</string>
+    <string name="rileylink_target_device_omnipod">Omnompod (Eros)</string>
     <string name="riley_link_common_yes">Да</string>
     <string name="riley_link_common_no">Нет</string>
     <!-- RileyLink - Preferences -->
+    <string name="riley_link_show_battery_level">Использовать уровень заряда батареи, который передает OrangeLink/EmaLink</string>
+    <string name="riley_link_show_battery_level_summary">НЕ РАБОТАЕТ с оригинальной RileyLink. Может не работать с альтернативными RileyLink.</string>
     <plurals name="duration_days">
         <item quantity="one">%1$d день</item>
         <item quantity="few">%1$d дня</item>
