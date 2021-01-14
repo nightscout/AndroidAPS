@@ -18,7 +18,7 @@ class BuildHelper @Inject constructor(private val config: Config) {
         val engineeringModeSemaphore = File(extFilesDir, "engineering__mode")
 
         engineeringMode = engineeringModeSemaphore.exists() && engineeringModeSemaphore.isFile
-        devBranch = BuildConfig.VERSION.contains("-dev")
+        devBranch = BuildConfig.VERSION.contains("-dev") /* || BuildConfig.VERSION.matches(Regex(".*[a-zA-Z]+.*")) */
     }
 
     fun isEngineeringModeOrRelease(): Boolean =

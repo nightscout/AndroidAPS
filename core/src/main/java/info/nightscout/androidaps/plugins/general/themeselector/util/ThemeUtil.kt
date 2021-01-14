@@ -82,7 +82,7 @@ object ThemeUtil {
             THEME_DEEPPURPLE -> themeName = if ( mIsNightMode) "Deep Purple" else "Deep Purple"
             THEME_INDIGO     -> themeName = if ( mIsNightMode) "Blue ball" else "Indigo"
             THEME_BLUE       -> themeName = if ( mIsNightMode) "Blue" else "Frozen"
-            THEME_LIGHTBLUE  -> themeName = if ( mIsNightMode) "Lightblue" else "Lightblue"
+            THEME_LIGHTBLUE  -> themeName = if ( mIsNightMode) "Lightblue" else "Winter"
             THEME_CYAN       -> themeName = if ( mIsNightMode) "Tron Legacy" else "Cyan"
             THEME_TEAL       -> themeName = if ( mIsNightMode) "Green domina" else "Teal"
             THEME_GREEN      -> themeName = if ( mIsNightMode) "Green" else "Green"

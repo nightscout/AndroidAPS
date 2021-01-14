@@ -309,6 +309,6 @@ class DanaFragment : DaggerFragment() {
             binding.queue.text = status
         }
         //hide user options button if not an RS pump or old firmware
-        binding.fabDanaMenuUserOptions?.visibility = (pump.hwModel != 1 && pump.protocol != 0x00).toVisibility()
+        binding.fabDanaMenuUserOptions.visibility = (pump.hwModel != 1 && pump.protocol != 0x00).toVisibility()
     }
 }

@@ -11,6 +11,7 @@
     <string name="omnipod_config_suspend_delivery_button_enabled">Показывать кнопку Приостановить подачу на вкладке Omnipod</string>
     <string name="omnipod_config_pulse_log_button_enabled">Показывать кнопку Pulse Log в меню управления Pod</string>
     <string name="omnipod_config_rileylink_stats_button_enabled">Показывать кнопку статистики RileyLink в меню управления подом</string>
+    <string name="omnipod_config_battery_change_logging_enabled">Включить учет расхода заряда батареи</string>
     <string name="omnipod_config_time_change_enabled">Включено обнаружение часового пояса</string>
     <string name="omnipod_config_expiration_reminder_enabled">Включено напоминание об истечении срока действия</string>
     <string name="omnipod_config_expiration_reminder_hours_before_shutdown">Часов до выключения</string>
@@ -65,6 +66,7 @@
     <string name="omnipod_error_rileylink_address_invalid">Недопустимый адрес RileyLink.</string>
     <string name="omnipod_error_operation_not_possible_no_configuration">Операция невозможна.\n\n Сначала нужно настроить помпу Omnipod.</string>
     <string name="omnipod_error_pod_not_attached">Активная помпа не включена</string>
+    <string name="omnipod_error_time_out_of_sync">Время в Pod не синхронизировано. Обновите время на вкладке Omnipod.</string>
     <string name="omnipod_error_unexpected_exception">Непредвиденная ошибка. Сообщите об ошибке! (%1$s:%2$s).</string>
     <string name="omnipod_error_crc_mismatch">Ошибка связи: не удалось проверить целостность сообщения</string>
     <string name="omnipod_error_invalid_packet_type">Ошибка связи: получен недопустимый пакет от Pod</string>
