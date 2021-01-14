@@ -158,7 +158,7 @@ class TreatmentsBolusFragment : DaggerFragment() {
                 }
                 calculation.paintFlags = calculation.paintFlags or Paint.UNDERLINE_TEXT_FLAG
                 remove.setOnClickListener {
-                    val treatment = it.tag as Treatment
+                    val treatment = it.tag as Treatment? ?: return@setOnClickListener
                     activity?.let { activity ->
                         val text = resourceHelper.gs(R.string.configbuilder_insulin) + ": " +
                             resourceHelper.gs(R.string.formatinsulinunits, treatment.insulin) + "\n" +
