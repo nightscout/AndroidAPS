@@ -100,6 +100,9 @@
     <string name="action_timeshift">timeshift</string>
     <string name="action_bolus">bolus</string>
 
+    <string name="bolus_progress">Bolus Progress</string>
+    <string name="press_to_cancel">press to cancel</string>
+    <string name="cancel_bolus">CANCEL BOLUS</string>
 
     <string name="status_pump">Pump</string>
     <string name="status_loop">Loop</string>
