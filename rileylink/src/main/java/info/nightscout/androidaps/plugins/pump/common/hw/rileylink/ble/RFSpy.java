@@ -2,6 +2,8 @@ package info.nightscout.androidaps.plugins.pump.common.hw.rileylink.ble;
 
 import android.os.SystemClock;
 
+import org.apache.commons.lang3.ArrayUtils;
+
 import java.util.Optional;
 import java.util.UUID;
 
@@ -111,13 +113,17 @@ public class RFSpy {
     public Integer retrieveBatteryLevel() {
         BLECommOperationResult result = rileyLinkBle.readCharacteristic_blocking(batteryServiceUUID, batteryLevelUUID);
         if (result.resultCode == BLECommOperationResult.RESULT_SUCCESS) {
-            int value = result.value[0];
-            aapsLogger.debug(LTag.PUMPBTCOMM, "BLE battery level: {}", value);
-            return value;
+            if (ArrayUtils.isNotEmpty(result.value)) {
+                int value = result.value[0];
+                aapsLogger.debug(LTag.PUMPBTCOMM, "BLE battery level: {}", value);
+                return value;
+            } else {
+                aapsLogger.error(LTag.PUMPBTCOMM, "getBatteryLevel received an empty result. Value: " + result.value);
+            }
         } else {
             aapsLogger.error(LTag.PUMPBTCOMM, "getBatteryLevel failed with code: " + result.resultCode);
-            return null;
         }
+        return null;
     }
 
     // This gets the version from the BLE113, not from the CC1110.
