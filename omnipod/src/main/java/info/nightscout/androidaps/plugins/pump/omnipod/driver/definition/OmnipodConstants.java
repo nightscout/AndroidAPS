@@ -30,4 +30,7 @@ public class OmnipodConstants {
     public static final double POD_SETUP_UNITS = POD_PRIME_BOLUS_UNITS + POD_CANNULA_INSERTION_BOLUS_UNITS;
 
     public static final int DEFAULT_MAX_RESERVOIR_ALERT_THRESHOLD = 20;
+
+    // when the time deviates more than the threshold, the user will get warned and will get the option to change the time
+    public static final Duration TIME_DEVIATION_THRESHOLD = Duration.standardMinutes(5);
 }

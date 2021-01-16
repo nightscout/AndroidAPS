@@ -15,7 +15,6 @@
     <string name="key_medtronic_encoding" translatable="false">pref_medtronic_encoding</string>
     <string name="key_medtronic_battery_type" translatable="false">pref_medtronic_battery_type</string>
     <string name="key_medtronic_bolus_debug" translatable="false">pref_medtronic_bolus_debug</string>
-    <string name="key_rileylink_mac_address" translatable="false">pref_rileylink_mac_address</string>
     <string name="key_medtronic_pump_frequency_us_ca" translatable="false">medtronic_pump_frequency_us_ca</string>
     <string name="key_medtronic_pump_frequency_worldwide" translatable="false">medtronic_pump_frequency_worldwide</string>
     <string name="key_medtronic_pump_encoding_4b6b_local" translatable="false">medtronic_pump_encoding_4b6b_local</string>

@@ -13,7 +13,7 @@ import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.defs.RileyLin
  */
 public class WakeAndTuneTask extends PumpTask {
 
-    @Inject ActivePluginProvider activePlugin;
+    //@Inject ActivePluginProvider activePlugin;
     @Inject RxBusWrapper rxBus;
 
     private static final String TAG = "WakeAndTuneTask";
@@ -24,6 +24,10 @@ public class WakeAndTuneTask extends PumpTask {
 
     @Override
     public void run() {
+        if (!isRileyLinkDevice()) {
+            return;
+        }
+
         RileyLinkPumpDevice pumpDevice = (RileyLinkPumpDevice) activePlugin.getActivePump();
         rxBus.send(new EventRefreshButtonState(false));
         pumpDevice.setBusy(true);

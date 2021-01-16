@@ -42,7 +42,6 @@
     <string name="description_source_glimp">Gauti kraujo gliukozės vertes iš Glimp.</string>
     <string name="description_source_mm640g">Gauti kraujo gliukozės vertes iš 600SeriesAndroidUploader.</string>
     <string name="description_source_ns_client">Gauti kraujo gliukozės vertes iš Nightscout</string>
-    <string name="description_source_xdrip">Gauti kraujo gliukozės vertes iš xDrip.</string>
     <string name="description_treatments">Išsaugoti visus terapijos pakeitimus</string>
     <string name="description_wear">Stebėti ir kontroliuoti AndroidAPS naudojant WearOS laikrodį.</string>
     <string name="description_xdrip_status_line">Rodyti Ciklo informaciją laikrodyje, xDrip+ pradžios ekrane.</string>
@@ -119,7 +118,6 @@
     <string name="changeyourinput">Pakeiskite įvestus duomenis!</string>
     <string name="configbuilder_bgsource">Glikemijos šaltinis</string>
     <string name="configbuilder_bgsource_description">Iš kur AndroidAPS gaus duomenis?</string>
-    <string name="xdrip">xDrip</string>
     <string name="apsmode_title">DKS režimas</string>
     <string name="closedloop">Uždaras Ciklas</string>
     <string name="openloop">Atviras Ciklas</string>
@@ -285,8 +283,6 @@
     <string name="mealbolus">Maistas</string>
     <string name="correctionbous">Korekcija</string>
     <string name="actions">Veiksmai</string>
-    <string name="ns_upload_only">Tik įkelti duomenis į NS (ne sinchronizuoti)</string>
-    <string name="ns_upload_only_summary">Duomenys tik perkeliami į Nightscout. Gliukozės duomenys perkeliami tik tada, kai naudojama lokali programa, pvz.: xDrip. Naudojant NS-profilį, kiti profiliai neaktyvūs.</string>
     <string name="pumpNotInitialized">Pompa neprijungta!</string>
     <string name="primefill">Užpildymas</string>
     <string name="fillwarning">Įsitikinkite, kad nurodytas kiekis atitinka Jūsų infuzijos rinkinio specifikaciją!</string>
@@ -341,7 +337,6 @@
     <string name="smscommunicator_shortname">SMS</string>
     <string name="short_tabtitles">Naudoti sutrumpintus skirtukų pavadinimus</string>
     <string name="always_use_shortavg">Visada naudoti trumpo laikotarpio vidutinį pokyti vietoj paprasto pokyčio</string>
-    <string name="always_use_shortavg_summary">Naudinga, kai duomenys, gaunami iš nefiltruoto šaltinio, tokio kaip xDrip, tampa nestabilūs.</string>
     <string name="profile">Profilis</string>
     <string name="openapsama_max_daily_safety_multiplier_summary">Numatytoji reikšmė: 3 tai pagrindinis OpenAPS saugiklis. Jis apriboja Jūsų valandinę bazę iki trigubos maksimalios valandinės bazės (standartiniu atveju). Jums greičiausiai neprireiks šios reikšmės keisti, tačiau turėtumėte žinoti, kad ji naudojama kaip saugiklis apskaičiuojant \"3x maksimali dienos bazė; 4x dabartinė valandinė bazė\".</string>
     <string name="openapsama_current_basal_safety_multiplier_summary">Numatytoji reikšmė: 4 tai antras pagrindinis OpenAPS saugiklis, apskaičiuojant \"3x maksimali dienos bazė; 4x dabartinė valandinė bazė\". Jis reiškia, kad jūsų valandinė bazė, nepriklausomai nuo to, kokia maksimali valandinė bazė suprogramuota pompoje, negali būti didesnė, nei keturguba dabartinė valandinė bazė. Tai apsaugo Jus nuo pavojingų situacijų, kai nustatoma pernelyg didelė valandinė bazė, pilnai nesuprantant, kaip veikia algoritmas. Numatytoji reikšmė yra 4x; daugumai vartotojų niekada neprireikia šio skaičiaus keisti, o pajutus, kad \"atsitrenkiama\" į saugiklį, rekomenduojama peržiūrėti kitus nustatymus.</string>
@@ -355,9 +350,6 @@
     <string name="smscommunicator_invalidphonennumber">Neteisingas SMS telefono numeris</string>
     <string name="overview_calibration">Kalibravimas</string>
     <string name="xdripnotinstalled">xDrip+ neįdiegta</string>
-    <string name="calibrationsent">Kalibracija nusiųsta į xDrip</string>
-    <string name="smscommunicator_calibrationsent">Kalibracija išsiųsta. xDrip programoje turi būti įgalintas gavimas.</string>
-    <string name="smscommunicator_calibrationfailed">xDrip negauna kalibracijų</string>
     <string name="pumpsuspended">Pompa sustabdyta</string>
     <string name="executing">Vykdoma</string>
     <string name="virtualpump_settings">Virtualios pompos nustatymai</string>
@@ -443,12 +435,8 @@
     <string name="statuslights_sage_critical">Jutiklio kritinio laiko įspėjimas [h]</string>
     <string name="statuslights_sbat_warning">Įspėjimo apie žemą sensoriaus baterijos lygį riba [%]</string>
     <string name="statuslights_sbat_critical">Įspėjimo apie kritiškai žemą sensoriaus baterijos lygį riba [%]</string>
-    <string name="statuslights_bage_warning">Baterijos ribinio laiko įspėjimas [h]</string>
-    <string name="statuslights_bage_critical">Baterijos kritinio laiko įspėjimas [h]</string>
     <string name="statuslights_res_warning">Įspėjimo apie žemą rezervuaro lygį riba [U]</string>
     <string name="statuslights_res_critical">Įspėjimo apie kritiškai žemą rezervuaro lygį riba [U]</string>
-    <string name="statuslights_bat_warning">Įspėjimo apie žemą baterijos įkrovimo lygį riba [%]</string>
-    <string name="statuslights_bat_critical">Įspėjimo apie kritiškai žemą baterijos įkrovimo lygį riba [%]</string>
     <string name="prediction_shortname">PROGN</string>
     <string name="iob">AIO</string>
     <string name="cob">AAO</string>
@@ -460,8 +448,6 @@
     <string name="nav_about">Apie</string>
     <string name="smscommunicator_missingsmspermission">Trūksta leidimo SMS</string>
     <string name="smscommunicator_missingphonestatepermission">Trūksta telefono būsenos leidimo</string>
-    <string name="xdripstatus_settings">xDrip statusas (laikrodžio)</string>
-    <string name="xdripstatus">xDrip linija (laikrodžio)</string>
     <string name="xdripstatus_shortname">xds</string>
     <string name="wear_showbgi_title">Rodyti KG</string>
     <string name="wear_showbgi_summary">Pridėti KG prie statuso linijos</string>
@@ -504,7 +490,6 @@
     <string name="mdtp_cancel">Atšaukti</string>
     <string name="notloadedplugins">Ne visi profiliai įkelti!</string>
     <string name="valuesnotstored">Reikšmės neišsaugotos!</string>
-    <string name="ns_localbroadcasts">Įgalinti perdavimą į kitas programas (pvz., „XDrip“). Neįgalinkite, jei įdiegta daugiau nei vienas AAPS arba NSClient egzempliorius!</string>
     <string name="ns_localbroadcasts_title">Įgalinti lokalų duomenų perdavimą.</string>
     <string name="careportal_newnstreatment_duration_min_label">Trukmė [min]</string>
     <string name="openapssmb">OpenAPS SMB</string>
@@ -1175,7 +1160,6 @@
     <string name="donate_your_data_to_science">Paaukokite savo duomenis mokslui</string>
     <string name="open_humans_short">OH</string>
     <string name="you_have_been_signed_out_of_open_humans">Jūs buvote atjungtas iš Open Humans</string>
-    <string name="click_here_to_sign_in_again_if_this_wasnt_on_purpose">Spustelėkite čia, kad prisijungtumėte dar kartą, jei tai atsitiko netyčia.</string>
     <string name="only_upload_if_connected_to_wifi">Tik įkelti, jei prijungta prie WiFi</string>
     <string name="only_upload_if_charging">Įkelti tik akumuliatoriaus įkrovimo metu</string>
     <string name="worker_state">Darbinė Būklė: %s</string>
@@ -1187,13 +1171,12 @@
     <string name="cta_dont_kill_my_app_info">Don\'t kill my app?</string>
     <string name="alarm">Aliarmas</string>
     <string name="smscommunicator_report_pump_ureachable_summary">Siųsti SMS, jei aptinkamas įrašas apie nepasiekiamą pompą</string>
-    <string name="smscommunicator_pump_ureachable">Pranešti apie nepasiekiamą pompą</string>
     <string name="advisoralarm">Pranešti apie laiką valgyti</string>
     <string name="alarminxmin">Pranešti po %1$d min</string>
     <string name="bolusadvisor">Boluso patarėjas</string>
     <string name="bolusadvisormessage">Jūsų glikemija yra aukšta. Užuot valgę dabar, turėtumėte palaukti, kol sumažės glikemija. Ar norite dabar susileisti korekcinį bolusą ir nustatyti priminimą, kada ateis laikas valgyti? Tokiu atveju angliavandeniai nebus įrašyti, o po priminimo turėsite vėl naudoti boluso skaičiuoklę.</string>
     <string name="enablebolusadvisor">Įgalinti boluso patarėją</string>
-    <string name="enablebolusadvisor_summary">Jei jūsų glikemija yra aukšta, naudokite priminimą apie laiką valgyti, o ne Boluso patarėją</string>
+    <string name="enablebolusadvisor_summary">Galimybė priminti jums valgyti vėliau (pvz., esant aukštai glikemijai) boliuso vedlyje („po susileidimo palaukti ir valgyti vėliau“)</string>
     <string name="time_to_eat">Laikas valgyti!\nĮjunkite Boluso patarėją ir atlikite skaičiavimą dar kartą.</string>
     <string name="timetoeat">Laikas valgyti</string>
 </resources>

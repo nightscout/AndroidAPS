@@ -78,6 +78,7 @@ public class Notification {
     public static final int OMNIPOD_UNCERTAIN_SMB = 67;
     public static final int OMNIPOD_UNKNOWN_TBR = 68;
     public static final int OMNIPOD_STARTUP_STATUS_REFRESH_FAILED = 69;
+    public static final int OMNIPOD_TIME_OUT_OF_SYNC = 70;
 
     public static final int IMPORTANCE_HIGH = 2;
 

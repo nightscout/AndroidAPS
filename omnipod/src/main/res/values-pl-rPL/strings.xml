@@ -11,8 +11,7 @@
     <string name="omnipod_config_suspend_delivery_button_enabled">Pokaż przycisk wstrzymania podawania w zakładce Omnipod</string>
     <string name="omnipod_config_pulse_log_button_enabled">Pokaż przycisk Puls Log w menu zarządzania Podem</string>
     <string name="omnipod_config_rileylink_stats_button_enabled">Pokaż przycisk Statystyki RileyLink w menu zarządzania Podem</string>
-    <string name="omnipod_config_use_riley_link_battery_level">Użyj poziomu baterii zgłoszonego przez OrangeLink/EmaLink</string>
-    <string name="omnipod_config_use_riley_link_battery_level_summary">NIE działa z oryginalnym RileyLinkiem. Może nie działać z innymi alternatywami RileyLink.</string>
+    <string name="omnipod_config_battery_change_logging_enabled">Włącz rejestrowanie zmiany baterii w Akcjach</string>
     <string name="omnipod_config_time_change_enabled">Włączone wykrywanie strefy czasowej DST</string>
     <string name="omnipod_config_expiration_reminder_enabled">Przypomnienie o utracie ważności włączone</string>
     <string name="omnipod_config_expiration_reminder_hours_before_shutdown">Godziny przed wyłączeniem</string>
@@ -67,6 +66,7 @@
     <string name="omnipod_error_rileylink_address_invalid">Adres RileyLink niewłaściwy.</string>
     <string name="omnipod_error_operation_not_possible_no_configuration">To działanie nie jest możliwe.\n\n Musisz skonfigurować Omnipod przed uruchomieniem tego działania.</string>
     <string name="omnipod_error_pod_not_attached">Brak aktywnego Poda</string>
+    <string name="omnipod_error_time_out_of_sync">Zegar Pod-a jest rozsynchronizowany. Proszę zaktualizować czas w zakładce Omnipod.</string>
     <string name="omnipod_error_unexpected_exception">Wystąpił nieoczekiwany błąd. Proszę zgłosić! (%1$s: %2$s).</string>
     <string name="omnipod_error_crc_mismatch">Komunikacja nie powiodła się: weryfikacja integralności komunikatu nie powiodła się</string>
     <string name="omnipod_error_invalid_packet_type">Komunikacja nie powiodła się: odebrano niepoprawny pakiet (komunikat) z Poda</string>

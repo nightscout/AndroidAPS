@@ -69,6 +69,7 @@
     <string name="menu_ecarb">eCarb</string>
     <string name="menu_settings">Impostazioni</string>
     <string name="menu_status">Stato</string>
+    <string name="menu_resync">Re-Sincronizza</string>
     <string name="menu_prime_fill">Carica/Riempi</string>
     <string name="menu_none">Nessuno</string>
     <string name="menu_default">Default</string>

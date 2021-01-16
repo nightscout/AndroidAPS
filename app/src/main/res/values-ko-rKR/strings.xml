@@ -39,7 +39,6 @@
     <string name="description_source_glimp">Glimp에서 혈당값 받기</string>
     <string name="description_source_mm640g">600SeriesAndroidUploader에서 혈당값 받기</string>
     <string name="description_source_ns_client">Nightscout에서 다운로드하여 혈당값 받기</string>
-    <string name="description_source_xdrip">xDrip에서 혈당값 받기</string>
     <string name="description_treatments">모든 관리를 저장합니다.</string>
     <string name="description_wear">WearOS 워치를 이용하여 AndroidAPS를 모니터하고 제어합니다.</string>
     <string name="description_xdrip_status_line">xDrip+ 워치페이스에서 Loop정보 보여주기</string>
@@ -116,7 +115,6 @@
     <string name="changeyourinput">입력값을 변경하세요!</string>
     <string name="configbuilder_bgsource">혈당 출처</string>
     <string name="configbuilder_bgsource_description">AndroidAPS가 어디에서 데이터를 가져옵니까?</string>
-    <string name="xdrip">xDrip</string>
     <string name="apsmode_title">APS 모드</string>
     <string name="closedloop">Closed Loop</string>
     <string name="openloop">Open Loop</string>
@@ -213,8 +211,6 @@
     <string name="mealbolus">Meal</string>
     <string name="correctionbous">교정주입</string>
     <string name="actions">실행</string>
-    <string name="ns_upload_only">NS에 업로드만 하기(동기화 안됨)</string>
-    <string name="ns_upload_only_summary">NS에 업로드만 하기. xDrip같은 로컬 혈당 출처가 선택되지 않다면 SGV에는 효력이 없습니다. NS프로파일이 사용중이라면 프로파일에는 효력이 없습니다.</string>
     <string name="pumpNotInitialized">펌프가 초기화 되지 않았습니다!</string>
     <string name="primefill">교체/채움</string>
     <string name="fillwarning">양이 인퓨전세트의 사양과 일치하는지 확인하세요!</string>
@@ -268,7 +264,6 @@
     <string name="smscommunicator_shortname">SMS</string>
     <string name="short_tabtitles">탭 이름 단축</string>
     <string name="always_use_shortavg">단순증분값 대신 단기평균증분값을 항상 사용합니다.</string>
-    <string name="always_use_shortavg_summary">xDrip의 혈당데이터에 노이즈가 심할경우 유용합니다.</string>
     <string name="profile">프로파일</string>
     <string name="openapsama_max_daily_safety_multiplier_summary">기본값: 3\n이 값은 중요한 OpenAPS 안전장치입니다. 이 값의 역할은 펌프에 설정되어 있는 최대Basal보다 3배를 초과할 수 없게 제한하는 것입니다. 이 값을 변경할 필요는 없을 것이지만, 안전을 위해 \"3x max daily; 4x current\"이 의미하는 바를 알고 있어야 합니다.</string>
     <string name="openapsama_current_basal_safety_multiplier_summary">기본값: 4\n이 값은 \"3x max daily; 4x current\"의 나머지 절반에 해당하는 또 다른 중요한 OpenAPS 안전장치입니다. 이것은, 펌프에 설정된 최대 Basal과는 관계없이, Basal이 설정된 현재시간의 Basal에 이 값을 곱한 양을 초과할 수 없다는 것을 의미합니다. 이는 알고리즘의 작동 방식을 이해하기 전에 과도하게 높은 최대 기본을 설정하여 위험한 상황에 빠지지 않도록 보호하기 위한 것입니다. 다시한번, 기본 값은 4배인 것을 알아두세요; 일반적으로 이것을 조정할 필요는 전혀 없으며, 대신 이 안전장치를 변경해야할것처럼 생각이 된다면, 다른 설정을 변경해야 할 가능성이 더 큽니다.</string>
@@ -281,9 +276,6 @@
     <string name="smscommunicator_invalidphonennumber">SMS폰번호가 유효하지 않습니다</string>
     <string name="overview_calibration">보정</string>
     <string name="xdripnotinstalled">xDrip+가 설치되지 않았습니다</string>
-    <string name="calibrationsent">보정이 xDrip으로 전송되었습니다</string>
-    <string name="smscommunicator_calibrationsent">보정 전송됨. xDrip에서 수신이 되도록 설정되어 있어야 합니다.</string>
-    <string name="smscommunicator_calibrationfailed">xDrip에서 보정을 받지 못합니다.</string>
     <string name="pumpsuspended">펌프 일시중지됨</string>
     <string name="executing">실행중</string>
     <string name="virtualpump_settings">가상펌프 설정</string>
@@ -349,15 +341,11 @@
     <string name="show_statuslights">홈화면에 상태 표시등 보여주기</string>
     <string name="statuslights_res_warning">주사기량 경고 기준값[U]</string>
     <string name="statuslights_res_critical">주사기량 위험 기준값[U]</string>
-    <string name="statuslights_bat_warning">배터리 잔량 경고값 [%]</string>
-    <string name="statuslights_bat_critical">배터리 잔량 위험값 [%]</string>
     <string name="iob">IOB</string>
     <string name="cob">COB</string>
     <string name="nav_about">버전정보</string>
     <string name="smscommunicator_missingsmspermission">SMS 권한 누락</string>
     <string name="smscommunicator_missingphonestatepermission">전화 상태 권한이 허가되지 않았습니다</string>
-    <string name="xdripstatus_settings">xDrip 상태(워치)</string>
-    <string name="xdripstatus">xDrip 상태표시라인(워치)</string>
     <string name="xdripstatus_shortname">xds</string>
     <string name="wear_showbgi_title">BGI 보기</string>
     <string name="wear_showbgi_summary">BGI를 상태라인에 추가하기</string>
@@ -392,7 +380,6 @@
     <string name="mdtp_cancel">취소</string>
     <string name="notloadedplugins">모든 프로파일이 로드되지 않았습니다.</string>
     <string name="valuesnotstored">값이 저장되지 않았습니다!</string>
-    <string name="ns_localbroadcasts">다른 앱 (예 : xDrip)으로 데이터 전송을 활성화합니다. AAPS 또는 NSClient 인스턴스를 두 개 이상 설치 한 경우 활성화하지 마세요!</string>
     <string name="ns_localbroadcasts_title">Local Broadcasts 활성화하기</string>
     <string name="careportal_newnstreatment_duration_min_label">기간 [min]</string>
     <string name="openapssmb">OpenAPS SMB</string>

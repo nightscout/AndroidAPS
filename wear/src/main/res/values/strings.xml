@@ -77,6 +77,7 @@
     <string name="menu_ecarb">eCarb</string>
     <string name="menu_settings">Settings</string>
     <string name="menu_status">Status</string>
+    <string name="menu_resync">Re-Sync</string>
     <string name="menu_prime_fill">Prime/Fill</string>
     <string name="menu_none">None</string>
     <string name="menu_default">Default</string>

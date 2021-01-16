@@ -92,7 +92,7 @@
     <string name="danarv2pump">DanaRv2</string>
     <string name="danar_disableeasymode">EasyUI modus in pomp deactiveren</string>
     <string name="profile_set_failed">Instellen van basaal profiel mislukt</string>
-    <string name="danar_bluetooth_status">Bluetooh status</string>
+    <string name="danar_bluetooth_status">Bluetooth status</string>
     <string name="danar_iob_label">Pomp IOB</string>
     <string name="basal_step">Basaal Stap</string>
     <string name="bolus_step">Bolus Stap</string>

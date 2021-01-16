@@ -28,5 +28,5 @@
     <string name="rileylink_error_pod_unreachable">Το Pod δεν είναι διαθέσιμο</string>
     <!-- RileyLink - Common -->
     <string name="rileylink_target_device_medtronic">Αντλία Medtronic</string>
-    <string name="rileylink_target_device_omnipod">Omnipod</string>
+    <!-- RileyLink - Preferences -->
 </resources>
