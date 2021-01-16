@@ -5,7 +5,6 @@ import android.app.NotificationManager
 import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
-import android.os.Build
 import androidx.core.app.NotificationCompat
 import androidx.core.app.RemoteInput
 import androidx.core.app.TaskStackBuilder
@@ -106,11 +105,9 @@ class PersistentNotificationPlugin @Inject constructor(
     }
 
     private fun createNotificationChannel() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            val mNotificationManager = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-            val channel = NotificationChannel(notificationHolder.channelID, notificationHolder.channelID as CharSequence, NotificationManager.IMPORTANCE_HIGH)
-            mNotificationManager.createNotificationChannel(channel)
-        }
+        val mNotificationManager = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+        val channel = NotificationChannel(notificationHolder.channelID, notificationHolder.channelID as CharSequence, NotificationManager.IMPORTANCE_HIGH)
+        mNotificationManager.createNotificationChannel(channel)
     }
 
     override fun onStop() {
@@ -121,10 +118,7 @@ class PersistentNotificationPlugin @Inject constructor(
 
     private fun triggerNotificationUpdate() {
         updateNotification()
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)
-            context.startForegroundService(Intent(context, DummyService::class.java))
-        else
-            context.startService(Intent(context, DummyService::class.java))
+        context.startForegroundService(Intent(context, DummyService::class.java))
     }
 
     private fun updateNotification() {
