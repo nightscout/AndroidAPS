@@ -2,6 +2,7 @@ package info.nightscout.androidaps.activities
 
 import android.content.Context
 import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
@@ -13,12 +14,14 @@ import info.nightscout.androidaps.plugins.general.maintenance.ImportExportPrefs
 import info.nightscout.androidaps.plugins.general.maintenance.PrefsFileContract
 import info.nightscout.androidaps.utils.locale.LocaleHelper
 import info.nightscout.androidaps.utils.protection.ProtectionCheck
+import info.nightscout.androidaps.utils.resources.ResourceHelper
 import javax.inject.Inject
 
 class SingleFragmentActivity : DaggerAppCompatActivity() {
     @Inject lateinit var pluginStore: PluginStore
     @Inject lateinit var protectionCheck: ProtectionCheck
     @Inject lateinit var importExportPrefs: ImportExportPrefs
+    @Inject lateinit var resourceHelper: ResourceHelper
 
     private var plugin: PluginBase? = null
 
@@ -52,12 +55,25 @@ class SingleFragmentActivity : DaggerAppCompatActivity() {
                 startActivity(i)
             }, null)
             return true
+        } else if (item.itemId == R.id.nav_plugin_help) {
+            val intent = Intent(Intent.ACTION_VIEW)
+            intent.data = plugin?.helpUrl
+            startActivity(intent)
+            return true
         }
         return false
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
-        if (plugin?.preferencesId != -1) menuInflater.inflate(R.menu.menu_single_fragment, menu)
+        menuInflater.inflate(R.menu.menu_single_fragment, menu)
+        if (plugin?.preferencesId == -1) {
+            val menuItem = menu.findItem(R.id.nav_plugin_preferences);
+            menuItem.setVisible(false);
+        }
+        if (plugin?.helpUrl == null) {
+            val menuItem = menu.findItem(R.id.nav_plugin_help);
+            menuItem.setVisible(false);
+        }
         return super.onCreateOptionsMenu(menu)
     }
 

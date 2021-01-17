@@ -39,6 +39,8 @@
                 android:textAlignment="center"
                 android:textAppearance="?android:attr/textAppearanceLarge" />
 
+            <include layout="@layout/help_button_dialog" />
+
         </RelativeLayout>
 
         <LinearLayout

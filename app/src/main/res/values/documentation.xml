@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="doc_base_url" translatable="false">https://androidaps.readthedocs.io/en/</string>
+    <string name="dialog_carbs_help_url">EN/Getting-Started/Screenshots.html#carbs</string>
+    <string name="dialog_insulin_help_url">EN/Getting-Started/Screenshots.html#insulin</string>
+    <string name="plugin_localProfile_help_url">EN/Configuration/Config-Builder.html#local-profile-recommended</string>
+    <string name="plugin_overview_help_url">EN/Getting-Started/Screenshots.html#the-homescreen</string>
+    <string name="plugin_virtualPump_help_url">EN/Configuration/Config-Builder.html#pump</string>
+</resources>

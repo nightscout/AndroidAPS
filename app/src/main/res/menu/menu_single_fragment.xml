@@ -3,6 +3,12 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".MainActivity">
     <item
+        android:id="@+id/nav_plugin_help"
+        app:showAsAction="ifRoom"
+        android:icon="@drawable/ic_help_outline"
+        android:title="@string/help_button_description" />
+
+    <item
         android:id="@+id/nav_plugin_preferences"
         app:showAsAction="ifRoom"
         android:icon="@drawable/ic_settings"

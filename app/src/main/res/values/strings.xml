@@ -540,6 +540,8 @@
     <string name="abs_insulin_shortname">ABS</string>
     <string name="devslope_shortname">DEVSLOPE</string>
     <string name="nav_about">About</string>
+    <string name="nav_plugin_help">Help</string>
+    <string name="help_button_description">Open documentation</string>
     <string name="smscommunicator_missingsmspermission">Missing SMS permission</string>
     <string name="smscommunicator_missingphonestatepermission">Missing phone state permission</string>
     <string name="xdripstatus_settings">xDrip+ Status (watch)</string>

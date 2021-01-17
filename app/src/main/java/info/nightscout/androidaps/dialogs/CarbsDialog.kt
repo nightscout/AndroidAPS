@@ -1,5 +1,6 @@
 package info.nightscout.androidaps.dialogs
 
+import android.content.Intent
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
@@ -21,15 +22,13 @@ import info.nightscout.androidaps.plugins.general.nsclient.NSUpload
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.IobCobCalculatorPlugin
 import info.nightscout.androidaps.plugins.treatments.CarbsGenerator
 import info.nightscout.androidaps.plugins.treatments.TreatmentsPlugin
-import info.nightscout.androidaps.utils.DateUtil
-import info.nightscout.androidaps.utils.DecimalFormatter
-import info.nightscout.androidaps.utils.DefaultValueHelper
-import info.nightscout.androidaps.utils.HtmlHelper
-import info.nightscout.androidaps.utils.ToastUtils
+import info.nightscout.androidaps.utils.*
 import info.nightscout.androidaps.utils.alertDialogs.OKDialog
 import info.nightscout.androidaps.utils.extensions.formatColor
+import info.nightscout.androidaps.utils.Documentation.getHelpUri
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 import kotlinx.android.synthetic.main.dialog_carbs.*
+import kotlinx.android.synthetic.main.help_button_dialog.*
 import kotlinx.android.synthetic.main.notes.*
 import kotlinx.android.synthetic.main.okcancel.*
 import java.text.DecimalFormat
@@ -142,6 +141,11 @@ class CarbsDialog : DialogFragmentWithDate() {
         overview_carbs_eating_soon_tt.setOnClickListener {
             overview_carbs_hypo_tt.isChecked = false
             overview_carbs_activity_tt.isChecked = false
+        }
+        overview_insulin_help.setOnClickListener {
+            val intent = Intent(Intent.ACTION_VIEW)
+            intent.data = getHelpUri(resourceHelper, R.string.dialog_carbs_help_url)
+            startActivity(intent);
         }
     }
 

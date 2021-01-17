@@ -36,6 +36,10 @@
         app:showAsAction="never"
         android:title="@string/nav_about" />
     <item
+        android:id="@+id/nav_plugin_help"
+        app:showAsAction="never"
+        android:title="@string/nav_plugin_help" />
+    <item
         android:id="@+id/nav_exit"
         app:showAsAction="never"
         android:title="@string/nav_exit" />

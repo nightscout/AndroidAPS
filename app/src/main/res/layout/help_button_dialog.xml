@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@android:color/transparent"
+    android:gravity="end|right">
+
+    <ImageButton
+        android:id="@+id/overview_insulin_help"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:background="@null"
+        android:padding="12dp"
+        android:contentDescription="@string/help_button_description"
+        android:src="@drawable/ic_help_outline" />
+
+</LinearLayout>

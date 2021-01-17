@@ -28,6 +28,7 @@ import info.nightscout.androidaps.plugins.pump.common.defs.PumpType
 import info.nightscout.androidaps.plugins.pump.virtual.events.EventVirtualPumpUpdateGui
 import info.nightscout.androidaps.plugins.treatments.TreatmentsPlugin
 import info.nightscout.androidaps.utils.DateUtil
+import info.nightscout.androidaps.utils.Documentation
 import info.nightscout.androidaps.utils.FabricPrivacy
 import info.nightscout.androidaps.utils.InstanceId.instanceId
 import info.nightscout.androidaps.utils.TimeChangeType
@@ -63,6 +64,7 @@ class VirtualPumpPlugin @Inject constructor(
     .shortName(R.string.virtualpump_shortname)
     .preferencesId(R.xml.pref_virtualpump)
     .description(R.string.description_pump_virtual)
+    .helpUrl(Documentation.getHelpUri(resourceHelper, R.string.plugin_virtualPump_help_url))
     .setDefault(),
     injector, aapsLogger, resourceHelper, commandQueue
 ), PumpInterface {

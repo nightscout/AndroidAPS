@@ -96,6 +96,7 @@ class MainActivity : NoSplashAppCompatActivity() {
 
     private lateinit var actionBarDrawerToggle: ActionBarDrawerToggle
     private var pluginPreferencesMenuItem: MenuItem? = null
+    private var pluginHelpMenuItem: MenuItem? = null
     private var menu: Menu? = null
 
     val callForPrefFile = registerForActivityResult(PrefsFileContract()) {
@@ -163,6 +164,7 @@ class MainActivity : NoSplashAppCompatActivity() {
 
     private fun checkPluginPreferences(viewPager: ViewPager2) {
         if (viewPager.currentItem >= 0) pluginPreferencesMenuItem?.isEnabled = (viewPager.adapter as TabPageAdapter).getPluginAt(viewPager.currentItem).preferencesId != -1
+        if (viewPager.currentItem >= 0) pluginHelpMenuItem?.isEnabled = (viewPager.adapter as TabPageAdapter).getPluginAt(viewPager.currentItem).helpUrl != null
     }
 
     override fun onPostCreate(savedInstanceState: Bundle?, persistentState: PersistableBundle?) {
@@ -286,6 +288,7 @@ class MainActivity : NoSplashAppCompatActivity() {
        this.menu = menu
         menuInflater.inflate(R.menu.menu_main, menu)
         pluginPreferencesMenuItem = menu.findItem(R.id.nav_plugin_preferences)
+        pluginHelpMenuItem = menu.findItem(R.id.nav_plugin_help)
         setPluginPreferenceMenuName()
         checkPluginPreferences(main_pager)
         return true
@@ -366,6 +369,14 @@ class MainActivity : NoSplashAppCompatActivity() {
 
             R.id.nav_stats -> {
                 startActivity(Intent(this, StatsActivity::class.java))
+                return true
+            }
+
+            R.id.nav_plugin_help -> {
+                val plugin = (main_pager.adapter as TabPageAdapter).getPluginAt(main_pager.currentItem)
+                val intent = Intent(Intent.ACTION_VIEW)
+                intent.data = plugin.helpUrl
+                startActivity(intent)
                 return true
             }
         }

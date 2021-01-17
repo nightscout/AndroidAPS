@@ -13,6 +13,7 @@ import info.nightscout.androidaps.plugins.bus.RxBusWrapper
 import info.nightscout.androidaps.plugins.general.nsclient.NSUpload
 import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.DecimalFormatter
+import info.nightscout.androidaps.utils.Documentation
 import info.nightscout.androidaps.utils.alertDialogs.OKDialog
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 import info.nightscout.androidaps.utils.sharedPreferences.SP
@@ -41,6 +42,7 @@ class LocalProfilePlugin @Inject constructor(
     .pluginName(R.string.localprofile)
     .shortName(R.string.localprofile_shortname)
     .description(R.string.description_profile_local)
+    .helpUrl(Documentation.getHelpUri(resourceHelper, R.string.plugin_localProfile_help_url))
     .setDefault(),
     aapsLogger, resourceHelper, injector
 ), ProfileInterface {

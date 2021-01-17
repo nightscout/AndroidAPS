@@ -21,16 +21,18 @@ import info.nightscout.androidaps.db.TempTarget
 import info.nightscout.androidaps.interfaces.ActivePluginProvider
 import info.nightscout.androidaps.interfaces.CommandQueueProvider
 import info.nightscout.androidaps.interfaces.Constraint
-import info.nightscout.androidaps.plugins.configBuilder.ConstraintChecker
 import info.nightscout.androidaps.interfaces.ProfileFunction
+import info.nightscout.androidaps.plugins.configBuilder.ConstraintChecker
 import info.nightscout.androidaps.queue.Callback
 import info.nightscout.androidaps.utils.*
 import info.nightscout.androidaps.utils.alertDialogs.OKDialog
 import info.nightscout.androidaps.utils.extensions.formatColor
 import info.nightscout.androidaps.utils.extensions.toSignedString
 import info.nightscout.androidaps.utils.extensions.toVisibility
+import info.nightscout.androidaps.utils.Documentation.getHelpUri
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 import kotlinx.android.synthetic.main.dialog_insulin.*
+import kotlinx.android.synthetic.main.help_button_dialog.*
 import kotlinx.android.synthetic.main.notes.*
 import kotlinx.android.synthetic.main.okcancel.*
 import java.text.DecimalFormat
@@ -119,6 +121,11 @@ class InsulinDialog : DialogFragmentWithDate() {
             overview_insulin_amount.value = max(0.0, overview_insulin_amount.value
                 + sp.getDouble(resourceHelper.gs(R.string.key_insulin_button_increment_3), PLUS3_DEFAULT))
             validateInputs()
+        }
+        overview_insulin_help.setOnClickListener {
+            val intent = Intent(Intent.ACTION_VIEW)
+            intent.data = getHelpUri(resourceHelper, R.string.dialog_insulin_help_url)
+            startActivity(intent)
         }
 
         overview_insulin_time_layout.visibility = View.GONE

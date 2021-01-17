@@ -1,5 +1,6 @@
 package info.nightscout.androidaps.interfaces
 
+import android.net.Uri
 import androidx.preference.Preference
 import androidx.preference.PreferenceFragmentCompat
 import dagger.android.HasAndroidInjector
@@ -26,6 +27,9 @@ abstract class PluginBase(
 
     open val menuIcon: Int
         get() = pluginDescription.pluginIcon
+
+    open val helpUrl: Uri?
+        get() = pluginDescription.helpUrl
 
     open val name: String
         get() = if (pluginDescription.pluginName == -1) "UNKNOWN" else resourceHelper.gs(pluginDescription.pluginName)
