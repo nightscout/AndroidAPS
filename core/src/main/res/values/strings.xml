@@ -137,6 +137,11 @@
     <string name="unit_weeks">weeks</string>
     <string name="shortminute">m</string>
     <string name="shortday">d</string>
+    <string name="yesterday">Yesterday</string>
+    <string name="today">Today</string>
+    <string name="tomorrow">Tomorrow</string>
+    <string name="next">Next %1$s</string>
+    <string name="last">Last %1$s</string>
 
     <!--    Protection-->
     <string name="wrongpassword">Wrong password</string>

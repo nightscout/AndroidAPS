@@ -261,7 +261,7 @@ class OmnipodOverviewFragment : DaggerFragment() {
                 omnipod_overview_pod_expiry_date.text = PLACEHOLDER
                 omnipod_overview_pod_expiry_date.setTextColor(Color.WHITE)
             } else {
-                omnipod_overview_pod_expiry_date.text = readableZonedTime(expiresAt)
+                omnipod_overview_pod_expiry_date.text = readableZonedTimeRelative(expiresAt)
                 omnipod_overview_pod_expiry_date.setTextColor(if (DateTime.now().isAfter(expiresAt)) {
                     Color.RED
                 } else {
@@ -540,6 +540,19 @@ class OmnipodOverviewFragment : DaggerFragment() {
                 OKDialog.show(it, title, message, null)
             }.run()
         }
+    }
+
+    private fun readableZonedTimeRelative(time: DateTime): String {
+        val timeAsJavaData = time.toLocalDateTime().toDate()
+        val timeZone = podStateManager.timeZone.toTimeZone()
+        if (timeZone == TimeZone.getDefault()) {
+            return dateUtil.dateAndTimeStringRelative(timeAsJavaData)
+        }
+
+        val isDaylightTime = timeZone.inDaylightTime(timeAsJavaData)
+        val locale = resources.configuration.locales.get(0)
+        val timeZoneDisplayName = timeZone.getDisplayName(isDaylightTime, TimeZone.SHORT, locale) + " " + timeZone.getDisplayName(isDaylightTime, TimeZone.LONG, locale)
+        return resourceHelper.gs(R.string.omnipod_time_with_timezone, dateUtil.dateAndTimeStringRelative(timeAsJavaData), timeZoneDisplayName)
     }
 
     private fun readableZonedTime(time: DateTime): String {
