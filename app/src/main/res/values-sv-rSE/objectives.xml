@@ -53,16 +53,4 @@
     <string name="notconnected">Inte ansluten till internet</string>
     <string name="failedretrievetime">Fel vid hämtning av tid</string>
     <string name="requirementnotmet">Målets krav är inte uppfyllda</string>
-    <plurals name="objective_days">
-        <item quantity="one">%1$d dag</item>
-        <item quantity="other">%1$d dagar</item>
-    </plurals>
-    <plurals name="objective_hours">
-        <item quantity="one">%1$d tim</item>
-        <item quantity="other">%1$d tim</item>
-    </plurals>
-    <plurals name="objective_minutes">
-        <item quantity="one">%1$d min</item>
-        <item quantity="other">%1$d min</item>
-    </plurals>
 </resources>
