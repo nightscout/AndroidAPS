@@ -638,7 +638,6 @@
     <string name="nav_logsettings">Logboekinstellings</string>
     <string name="resettodefaults">Herstel na verstek</string>
     <string name="nsmalfunction">NSClient onklaar. Oorweeg om NS en NSClient te herlaai.</string>
-    <string name="versionavailable">Weergawe %1$s beskikbaar</string>
     <string name="time_offset">Tyd verskil</string>
     <string name="setupwizard_preferred_aps_mode">Verkose APS modus</string>
     <string name="treatments_wizard_total_label">Totaal</string>
@@ -786,8 +785,6 @@
     <string name="copy_short">Kopieer</string>
     <string name="addnew">Voeg nuwe by</string>
     <string name="versionChecker">Weergawe Navolger</string>
-    <string name="signature_verifier">Handtekening verifieerder</string>
-    <string name="running_invalid_version">Die weergawe is ongeldig. Lus afgeskakel!</string>
     <string name="old_version">ou weergawe</string>
     <string name="very_old_version">baie ou weergawe</string>
     <string name="twohours">2h</string>
