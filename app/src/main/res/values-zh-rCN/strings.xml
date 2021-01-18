@@ -635,7 +635,6 @@
     <string name="nav_logsettings">日志设置</string>
     <string name="resettodefaults">重置为默认值</string>
     <string name="nsmalfunction">NSClient故障。 考虑Nightscout和NSClient重启。</string>
-    <string name="versionavailable">版本 %1$s 可用</string>
     <string name="time_offset">时区偏移</string>
     <string name="setupwizard_preferred_aps_mode">首选的APS模式</string>
     <string name="treatments_wizard_total_label">总计</string>
