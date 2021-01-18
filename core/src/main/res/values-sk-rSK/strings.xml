@@ -253,4 +253,5 @@
     <string name="signature_verifier">Overenie podpisu</string>
     <string name="running_invalid_version">Zistili sme, že používate neplatnú verziu. Uzavretý okruh zakázaný!</string>
     <string name="versionavailable">Verzia %1$s je k dispozícii</string>
+    <!-- Permissions -->
 </resources>
