@@ -29,4 +29,5 @@
     <!-- Maintenance -->
     <!-- VersionChecker -->
     <string name="versionavailable">Sürüm %1$s mevcut</string>
+    <!-- Permissions -->
 </resources>
