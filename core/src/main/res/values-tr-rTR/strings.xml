@@ -28,4 +28,5 @@
     <!-- PumpCommon - History Group -->
     <!-- Maintenance -->
     <!-- VersionChecker -->
+    <string name="versionavailable">Sürüm %1$s mevcut</string>
 </resources>
