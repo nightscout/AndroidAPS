@@ -253,4 +253,5 @@
     <string name="signature_verifier">Verificatore firma</string>
     <string name="running_invalid_version">Abbiamo rilevato che stai eseguendo una versione non valida. Loop disabilitato!</string>
     <string name="versionavailable">Versione %1$s disponibile</string>
+    <!-- Permissions -->
 </resources>
