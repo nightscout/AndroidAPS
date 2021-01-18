@@ -641,7 +641,6 @@
     <string name="nav_logsettings">Ρυθμίσεις Αρχείου Καταγραφής</string>
     <string name="resettodefaults">Επαναφορά προεπιλογών</string>
     <string name="nsmalfunction">Δυσλειτουργία NSClient. Εξετάστε την επανεκκίνηση του NS και του NSClient.</string>
-    <string name="versionavailable">Έκδοση %1$s διαθέσιμη</string>
     <string name="time_offset">Χρονική μετατόπιση</string>
     <string name="setupwizard_preferred_aps_mode">Προτιμώμενη λειτουργία APS</string>
     <string name="treatments_wizard_total_label">Σύνολο</string>
@@ -789,8 +788,6 @@
     <string name="copy_short">Αντιγραφή</string>
     <string name="addnew">Προσθήκη νέου</string>
     <string name="versionChecker">Έλεγχος Έκδοσης</string>
-    <string name="signature_verifier">Έλεγχος υπογραφής</string>
-    <string name="running_invalid_version">Διαπιστώσαμε ότι εκτελείτε μη έγκυρη έκδοση. Κύκλωμα απενεργοποιήθηκε!</string>
     <string name="old_version">παλιά έκδοση</string>
     <string name="very_old_version">πολύ παλιά έκδοση</string>
     <string name="twohours">2ώρες</string>
