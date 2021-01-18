@@ -3,8 +3,8 @@ package info.nightscout.androidaps.plugins.general.maintenance
 import android.os.Parcelable
 import info.nightscout.androidaps.plugins.general.maintenance.formats.PrefMetadata
 import info.nightscout.androidaps.plugins.general.maintenance.formats.PrefsMetadataKey
-import kotlinx.android.parcel.Parcelize
-import kotlinx.android.parcel.RawValue
+import kotlinx.parcelize.RawValue
+import kotlinx.parcelize.Parcelize
 import java.io.File
 
 @Parcelize

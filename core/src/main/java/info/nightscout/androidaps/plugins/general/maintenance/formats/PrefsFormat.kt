@@ -5,7 +5,7 @@ import android.os.Parcelable
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
 import info.nightscout.androidaps.core.R
-import kotlinx.android.parcel.Parcelize
+import kotlinx.parcelize.Parcelize
 import java.io.File
 
 enum class PrefsMetadataKey(val key: String, @DrawableRes val icon: Int, @StringRes val label: Int) {
