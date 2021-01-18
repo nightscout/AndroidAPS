@@ -53,22 +53,4 @@
     <string name="notconnected">אין חיבור לאינטרנט</string>
     <string name="failedretrievetime">אחזור השעה נכשל</string>
     <string name="requirementnotmet">דרישות המשימה לא נענו</string>
-    <plurals name="objective_days">
-        <item quantity="one">%1$d יום</item>
-        <item quantity="two">%1$d ימים</item>
-        <item quantity="many">%1$d ימים</item>
-        <item quantity="other">%1$d ימים</item>
-    </plurals>
-    <plurals name="objective_hours">
-        <item quantity="one">%1$d שעה</item>
-        <item quantity="two">%1$d שעות</item>
-        <item quantity="many">%1$d שעות</item>
-        <item quantity="other">%1$d שעות</item>
-    </plurals>
-    <plurals name="objective_minutes">
-        <item quantity="one">%1$d דקה</item>
-        <item quantity="two">%1$d דקות</item>
-        <item quantity="many">%1$d דקות</item>
-        <item quantity="other">%1$d דקות</item>
-    </plurals>
 </resources>
