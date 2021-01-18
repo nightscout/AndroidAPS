@@ -254,6 +254,7 @@
     <string name="signature_verifier">Vérificateur de signature</string>
     <string name="running_invalid_version">Nous avons détecté que vous utilisez une version invalide. Boucle désactivée !</string>
     <string name="versionavailable">Version %1$s disponible</string>
+    <!-- Permissions -->
     <plurals name="days">
         <item quantity="one">%1$d jour</item>
         <item quantity="other">%1$d jours</item>
