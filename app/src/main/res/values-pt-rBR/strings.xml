@@ -13,7 +13,6 @@
     <string name="reset_db_confirm">Você realmente quer redefinir os bancos de dados?</string>
     <string name="nav_exit">Sair</string>
     <string name="ns_sync_use_absolute_title">Sempre usar valores absolutos basais</string>
-    <string name="alert_dialog_storage_permission_text">Por favor, reinicie seu telefone ou reinicie o AndroidAPS nas Configurações do Sistema \nCaso contrário o Android APS não terá registro (importante para rastrear e verificar que os algoritmos estão funcionando corretamente)!</string>
     <string name="alert_dialog_permission_battery_optimization_failed">Este dispositivo não parece suportar a optimização de bateria na lista de permissões - pode ter problemas de desempenho.</string>
     <string name="description_actions">Alguns botões para acessar rapidamente a funções comuns</string>
     <string name="description_config_builder">Usado para configurar os plugins ativos</string>
