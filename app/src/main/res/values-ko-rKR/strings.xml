@@ -661,7 +661,6 @@
     <string name="nav_logsettings">로그 설정</string>
     <string name="resettodefaults">기본값으로 초기화</string>
     <string name="nsmalfunction">NSClient가 정상적으로 작동하지 않습니다. Nightscout와 NSClient를 재시작 해보세요.</string>
-    <string name="versionavailable">%1$s 버전이 사용 가능합니다.</string>
     <string name="time_offset">시간 이동</string>
     <string name="setupwizard_preferred_aps_mode">선호하는 APS 모드</string>
     <string name="treatments_wizard_total_label">합계</string>
@@ -811,8 +810,6 @@
     <string name="copy_short">복사</string>
     <string name="addnew">새로 추가</string>
     <string name="versionChecker">버전 검사기</string>
-    <string name="signature_verifier">서명 확인</string>
-    <string name="running_invalid_version">유효하지 않은 버전을 이용 중입니다. Loop가 비활성화 되었습니다!</string>
     <string name="old_version">오래된 버전</string>
     <string name="very_old_version">아주 오래된 버전</string>
     <string name="new_version_warning">최소 %1$d일 새버전이 가능합니다! %2$d일 후엔 LGS(저혈당주입중지)으로 복귀되며, %3$d일이후엔 Loop가 비활성화 될 것입니다</string>
