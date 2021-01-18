@@ -13,7 +13,6 @@
     <string name="reset_db_confirm">Θέλετε πραγματικά να επαναφέρετε την βάση δεδομένων;</string>
     <string name="nav_exit">Έξοδος</string>
     <string name="ns_sync_use_absolute_title">Χρησιμοποιείτε πάντα απόλυτες τιμές βασικού</string>
-    <string name="alert_dialog_storage_permission_text">Παρακαλώ κάντε επανεκίνηση στο τηλέφώνο ή restart στο AndroidAPS από τις Ρυθμίσεις Συστήματος, \nαλλιώς το AndroidAPS δεν θα έχει καταγραφή (επαληθεύστε ότι οι αλγόριθμοι δουλεύουν σωστά)!</string>
     <string name="alert_dialog_permission_battery_optimization_failed">Αυτή η συσκευή δεν φαίνεται να υποστηρίζει τη λίστα κατάτμησης βελτιστοποίησης μπαταρίας - ενδέχεται να αντιμετωπίσετε προβλήματα απόδοσης.</string>
     <string name="description_actions">Ορισμένα πλήκτρα για γρήγορη πρόσβαση σε κοινά χαρακτηριστικά</string>
     <string name="description_config_builder">Χρησιμοποιείται για ρύθμιση ενεργών συνδέσεων</string>
