@@ -1,6 +1,5 @@
 package info.nightscout.androidaps.plugins.general.maintenance
 
-import android.os.Build
 import android.os.Environment
 import info.nightscout.androidaps.core.R
 import info.nightscout.androidaps.interfaces.ConfigInterface
@@ -17,9 +16,6 @@ import java.io.File
 import javax.inject.Inject
 import javax.inject.Singleton
 import kotlin.math.abs
-
-fun getCurrentDeviceModelString() =
-    Build.MANUFACTURER + " " + Build.MODEL + " (" + Build.DEVICE + ")"
 
 @Singleton
 class PrefFileListProvider @Inject constructor(
@@ -117,7 +113,7 @@ class PrefFileListProvider @Inject constructor(
         }
 
         meta[PrefsMetadataKey.DEVICE_MODEL]?.let { model ->
-            if (model.value != getCurrentDeviceModelString()) {
+            if (model.value != config.currentDeviceModelString) {
                 model.status = PrefsStatus.WARN
                 model.info = resourceHelper.gs(R.string.metadata_warning_different_device)
             }

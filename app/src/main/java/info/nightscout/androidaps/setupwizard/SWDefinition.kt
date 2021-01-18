@@ -118,7 +118,7 @@ class SWDefinition @Inject constructor(
         .add(SWButton(injector)
             .text(R.string.askforpermission)
             .visibility { androidPermission.permissionNotGranted(context, Manifest.permission.REQUEST_IGNORE_BATTERY_OPTIMIZATIONS) }
-            .action { androidPermission.askForPermission(activity, Manifest.permission.REQUEST_IGNORE_BATTERY_OPTIMIZATIONS, AndroidPermission.CASE_BATTERY) })
+            .action { androidPermission.askForPermission(activity, Manifest.permission.REQUEST_IGNORE_BATTERY_OPTIMIZATIONS) })
         .visibility { androidPermission.permissionNotGranted(activity, Manifest.permission.REQUEST_IGNORE_BATTERY_OPTIMIZATIONS) }
         .validator { !androidPermission.permissionNotGranted(activity, Manifest.permission.REQUEST_IGNORE_BATTERY_OPTIMIZATIONS) }
     private val screenPermissionBt = SWScreen(injector, R.string.permission)
@@ -129,7 +129,7 @@ class SWDefinition @Inject constructor(
         .add(SWButton(injector)
             .text(R.string.askforpermission)
             .visibility { androidPermission.permissionNotGranted(activity, Manifest.permission.ACCESS_FINE_LOCATION) }
-            .action { androidPermission.askForPermission(activity, Manifest.permission.ACCESS_FINE_LOCATION, AndroidPermission.CASE_LOCATION) })
+            .action { androidPermission.askForPermission(activity, Manifest.permission.ACCESS_FINE_LOCATION) })
         .visibility { androidPermission.permissionNotGranted(activity, Manifest.permission.ACCESS_FINE_LOCATION) }
         .validator { !androidPermission.permissionNotGranted(activity, Manifest.permission.ACCESS_FINE_LOCATION) }
     private val screenPermissionStore = SWScreen(injector, R.string.permission)
@@ -140,7 +140,7 @@ class SWDefinition @Inject constructor(
         .add(SWButton(injector)
             .text(R.string.askforpermission)
             .visibility { androidPermission.permissionNotGranted(activity, Manifest.permission.WRITE_EXTERNAL_STORAGE) }
-            .action { androidPermission.askForPermission(activity, Manifest.permission.WRITE_EXTERNAL_STORAGE, AndroidPermission.CASE_STORAGE) })
+            .action { androidPermission.askForPermission(activity, Manifest.permission.WRITE_EXTERNAL_STORAGE) })
         .visibility { androidPermission.permissionNotGranted(activity, Manifest.permission.WRITE_EXTERNAL_STORAGE) }
         .validator { !androidPermission.permissionNotGranted(activity, Manifest.permission.WRITE_EXTERNAL_STORAGE) }
     private val screenImport = SWScreen(injector, R.string.nav_import)

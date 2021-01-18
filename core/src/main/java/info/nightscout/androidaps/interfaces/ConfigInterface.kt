@@ -8,4 +8,5 @@ interface ConfigInterface {
     val PUMPDRIVERS: Boolean
     val FLAVOR: String
     val VERSION_NAME: String
+    val currentDeviceModelString : String
 }

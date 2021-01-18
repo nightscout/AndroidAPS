@@ -2,7 +2,6 @@ package info.nightscout.androidaps
 
 import android.content.Context
 import android.content.Intent
-import android.content.pm.PackageManager
 import android.graphics.Rect
 import android.os.Bundle
 import android.os.PersistableBundle
@@ -22,7 +21,6 @@ import android.widget.TextView
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.widget.Toolbar
-import androidx.core.app.ActivityCompat
 import androidx.viewpager2.widget.ViewPager2
 import com.google.android.material.tabs.TabLayoutMediator
 import com.google.firebase.crashlytics.FirebaseCrashlytics
@@ -58,7 +56,6 @@ import info.nightscout.androidaps.utils.extensions.isRunningRealPumpTest
 import info.nightscout.androidaps.utils.locale.LocaleHelper
 import info.nightscout.androidaps.utils.protection.ProtectionCheck
 import info.nightscout.androidaps.utils.resources.IconsProvider
-import info.nightscout.androidaps.utils.resources.ResourceHelper
 import info.nightscout.androidaps.utils.sharedPreferences.SP
 import info.nightscout.androidaps.utils.tabs.TabPageAdapter
 import info.nightscout.androidaps.utils.ui.UIRunnable
@@ -77,7 +74,6 @@ class MainActivity : NoSplashAppCompatActivity() {
     @Inject lateinit var rxBus: RxBusWrapper
     @Inject lateinit var androidPermission: AndroidPermission
     @Inject lateinit var sp: SP
-    @Inject lateinit var resourceHelper: ResourceHelper
     @Inject lateinit var versionCheckerUtils: VersionCheckerUtils
     @Inject lateinit var smsCommunicatorPlugin: SmsCommunicatorPlugin
     @Inject lateinit var loopPlugin: LoopPlugin
@@ -231,21 +227,6 @@ class MainActivity : NoSplashAppCompatActivity() {
             TabLayoutMediator(tabs_normal, main_pager) { tab, position ->
                 tab.text = (main_pager.adapter as TabPageAdapter).getPluginAt(position).name
             }.attach()
-        }
-    }
-
-    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>, grantResults: IntArray) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
-        if (permissions.isNotEmpty()) {
-            if (ActivityCompat.checkSelfPermission(this, permissions[0]) == PackageManager.PERMISSION_GRANTED) {
-                when (requestCode) {
-                    AndroidPermission.CASE_STORAGE ->                         //show dialog after permission is granted
-                        OKDialog.show(this, "", resourceHelper.gs(R.string.alert_dialog_storage_permission_text))
-
-                    AndroidPermission.CASE_LOCATION, AndroidPermission.CASE_SMS, AndroidPermission.CASE_BATTERY, AndroidPermission.CASE_PHONE_STATE, AndroidPermission.CASE_SYSTEM_WINDOW -> {
-                    }
-                }
-            }
         }
     }
 

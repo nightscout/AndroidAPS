@@ -24,15 +24,14 @@ import info.nightscout.androidaps.utils.T
 import info.nightscout.androidaps.utils.ToastUtils
 import info.nightscout.androidaps.utils.alertDialogs.OKDialog
 import info.nightscout.androidaps.utils.extensions.toVisibility
-import info.nightscout.androidaps.utils.resources.ResourceHelper
 import info.nightscout.androidaps.utils.stats.TddCalculator
 import kotlinx.android.synthetic.main.activity_profilehelper.*
 import java.text.DecimalFormat
 import javax.inject.Inject
 
 class ProfileHelperActivity : NoSplashAppCompatActivity() {
+
     @Inject lateinit var aapsLogger: AAPSLogger
-    @Inject lateinit var resourceHelper: ResourceHelper
     @Inject lateinit var tddCalculator: TddCalculator
     @Inject lateinit var profileFunction: ProfileFunction
     @Inject lateinit var defaultProfile: DefaultProfile
@@ -229,7 +228,9 @@ class ProfileHelperActivity : NoSplashAppCompatActivity() {
                 ProfileType.AVAILABLE_PROFILE -> activePlugin.activeProfileInterface.profile?.getSpecificProfile(profileList[profileUsed[tab]].toString())
                 ProfileType.PROFILE_SWITCH    -> profileSwitch[profileSwitchUsed[tab]].profileObject?.convertToNonCustomizedProfile()
             }
-        } catch (e: Exception) { null }
+        } catch (e: Exception) {
+            null
+        }
 
     private fun getProfileName(age: Double, tdd: Double, weight: Double, basalSumPct: Double, tab: Int): String =
         when (typeSelected[tab]) {

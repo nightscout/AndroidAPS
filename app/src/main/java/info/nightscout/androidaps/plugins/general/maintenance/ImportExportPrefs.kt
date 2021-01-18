@@ -16,6 +16,7 @@ import info.nightscout.androidaps.R
 import info.nightscout.androidaps.activities.DaggerAppCompatActivityWithResult
 import info.nightscout.androidaps.activities.PreferencesActivity
 import info.nightscout.androidaps.events.EventAppExit
+import info.nightscout.androidaps.interfaces.ConfigInterface
 import info.nightscout.androidaps.interfaces.ImportExportPrefsInterface
 import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.logging.LTag
@@ -53,6 +54,7 @@ class ImportExportPrefs @Inject constructor(
     private val buildHelper: BuildHelper,
     private val rxBus: RxBusWrapper,
     private val passwordCheck: PasswordCheck,
+    private val config: ConfigInterface,
     private val androidPermission: AndroidPermission,
     private val classicPrefsFormat: ClassicPrefsFormat,
     private val encryptedPrefsFormat: EncryptedPrefsFormat,
@@ -74,8 +76,8 @@ class ImportExportPrefs @Inject constructor(
             if (permission != PackageManager.PERMISSION_GRANTED) {
                 // We don't have permission so prompt the user
                 fragment.activity?.let {
-                    androidPermission.askForPermission(it, arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE,
-                        Manifest.permission.WRITE_EXTERNAL_STORAGE), AndroidPermission.CASE_STORAGE)
+                    androidPermission.askForPermission(it,
+                        arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE))
                 }
             } else {
                 onGranted.run()
@@ -91,7 +93,7 @@ class ImportExportPrefs @Inject constructor(
         metadata[PrefsMetadataKey.CREATED_AT] = PrefMetadata(DateUtil.toISOString(Date()), PrefsStatus.OK)
         metadata[PrefsMetadataKey.AAPS_VERSION] = PrefMetadata(BuildConfig.VERSION_NAME, PrefsStatus.OK)
         metadata[PrefsMetadataKey.AAPS_FLAVOUR] = PrefMetadata(BuildConfig.FLAVOR, PrefsStatus.OK)
-        metadata[PrefsMetadataKey.DEVICE_MODEL] = PrefMetadata(getCurrentDeviceModelString(), PrefsStatus.OK)
+        metadata[PrefsMetadataKey.DEVICE_MODEL] = PrefMetadata(config.currentDeviceModelString, PrefsStatus.OK)
 
         if (prefsEncryptionIsDisabled()) {
             metadata[PrefsMetadataKey.ENCRYPTION] = PrefMetadata("Disabled", PrefsStatus.DISABLED)

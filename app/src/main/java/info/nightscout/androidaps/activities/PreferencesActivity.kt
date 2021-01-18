@@ -8,13 +8,9 @@ import androidx.preference.PreferenceFragmentCompat
 import androidx.preference.PreferenceScreen
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.utils.locale.LocaleHelper
-import info.nightscout.androidaps.utils.resources.ResourceHelper
 import kotlinx.android.synthetic.main.activity_preferences.*
-import javax.inject.Inject
 
 class PreferencesActivity : NoSplashAppCompatActivity(), PreferenceFragmentCompat.OnPreferenceStartScreenCallback {
-
-    @Inject lateinit var resourceHelper: ResourceHelper
 
     var preferenceId = 0
     var myPreferenceFragment: MyPreferenceFragment? = null

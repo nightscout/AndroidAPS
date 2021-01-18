@@ -5,23 +5,23 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.MenuItem
-import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
 import androidx.fragment.app.FragmentActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import dagger.android.support.DaggerAppCompatActivity
 import info.nightscout.androidaps.core.R
+import info.nightscout.androidaps.core.databinding.MaintenanceImportListActivityBinding
+import info.nightscout.androidaps.core.databinding.MaintenanceImportListItemBinding
 import info.nightscout.androidaps.plugins.general.maintenance.PrefFileListProvider
 import info.nightscout.androidaps.plugins.general.maintenance.PrefsFile
 import info.nightscout.androidaps.plugins.general.maintenance.PrefsFileContract
 import info.nightscout.androidaps.plugins.general.maintenance.PrefsFormatsHandler
 import info.nightscout.androidaps.plugins.general.maintenance.formats.PrefsMetadataKey
 import info.nightscout.androidaps.plugins.general.maintenance.formats.PrefsStatus
+import info.nightscout.androidaps.utils.extensions.toVisibility
 import info.nightscout.androidaps.utils.locale.LocaleHelper
 import info.nightscout.androidaps.utils.resources.ResourceHelper
-import kotlinx.android.synthetic.main.maintenance_importlist_activity.*
 import javax.inject.Inject
 
 class PrefImportListActivity : DaggerAppCompatActivity() {
@@ -29,50 +29,46 @@ class PrefImportListActivity : DaggerAppCompatActivity() {
     @Inject lateinit var resourceHelper: ResourceHelper
     @Inject lateinit var prefFileListProvider: PrefFileListProvider
 
+    private lateinit var binding: MaintenanceImportListActivityBinding
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setTheme(R.style.AppTheme)
-        setContentView(R.layout.maintenance_importlist_activity)
+        binding = MaintenanceImportListActivityBinding.inflate(layoutInflater)
+        val view = binding.root
+        setContentView(view)
 
         title = resourceHelper.gs(R.string.preferences_import_list_title)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         supportActionBar?.setDisplayShowHomeEnabled(true)
         supportActionBar?.setDisplayShowTitleEnabled(true)
 
-        importlist_recyclerview.layoutManager = LinearLayoutManager(this)
-        importlist_recyclerview.adapter = RecyclerViewAdapter(prefFileListProvider.listPreferenceFiles(loadMetadata = true))
+        binding.recyclerview.layoutManager = LinearLayoutManager(this)
+        binding.recyclerview.adapter = RecyclerViewAdapter(prefFileListProvider.listPreferenceFiles(loadMetadata = true))
     }
 
     inner class RecyclerViewAdapter internal constructor(private var prefFileList: List<PrefsFile>) : RecyclerView.Adapter<RecyclerViewAdapter.PrefFileViewHolder>() {
 
-        inner class PrefFileViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-
-            var fileName: TextView = itemView.findViewById(R.id.filelist_name)
-            var fileDir: TextView = itemView.findViewById(R.id.filelist_dir)
-            var metaDateTime: TextView = itemView.findViewById(R.id.meta_date_time)
-            var metaDeviceName: TextView = itemView.findViewById(R.id.meta_device_name)
-            var metaAppVersion: TextView = itemView.findViewById(R.id.meta_app_version)
-            var metaVariantFormat: TextView = itemView.findViewById(R.id.meta_variant_format)
-
-            var metalineName: View = itemView.findViewById(R.id.metaline_name)
-            var metaDateTimeIcon: View = itemView.findViewById(R.id.meta_date_time_icon)
+        inner class PrefFileViewHolder(val maintenanceImportListItemBinding: MaintenanceImportListItemBinding) : RecyclerView.ViewHolder(maintenanceImportListItemBinding.root) {
 
             init {
-                itemView.isClickable = true
-                itemView.setOnClickListener {
-                    val prefFile = fileName.tag as PrefsFile
-                    val i = Intent()
+                with(maintenanceImportListItemBinding) {
+                    root.isClickable = true
+                    maintenanceImportListItemBinding.root.setOnClickListener {
+                        val prefFile = filelistName.tag as PrefsFile
+                        val i = Intent()
 
-                    i.putExtra(PrefsFileContract.OUTPUT_PARAM, prefFile)
-                    setResult(FragmentActivity.RESULT_OK, i)
-                    finish()
+                        i.putExtra(PrefsFileContract.OUTPUT_PARAM, prefFile)
+                        setResult(FragmentActivity.RESULT_OK, i)
+                        finish()
+                    }
                 }
             }
         }
 
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PrefFileViewHolder {
-            val v = LayoutInflater.from(parent.context).inflate(R.layout.maintenance_importlist_item, parent, false)
-            return PrefFileViewHolder(v)
+            val binding = MaintenanceImportListItemBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+            return PrefFileViewHolder(binding)
         }
 
         override fun getItemCount(): Int {
@@ -81,44 +77,45 @@ class PrefImportListActivity : DaggerAppCompatActivity() {
 
         override fun onBindViewHolder(holder: PrefFileViewHolder, position: Int) {
             val prefFile = prefFileList[position]
-            holder.fileName.text = prefFile.file.name
-            holder.fileName.tag = prefFile
+            with(holder.maintenanceImportListItemBinding) {
+                filelistName.text = prefFile.file.name
+                filelistName.tag = prefFile
 
-            holder.fileDir.text = resourceHelper.gs(R.string.in_directory, prefFile.file.parentFile.absolutePath)
+                filelistDir.text = resourceHelper.gs(R.string.in_directory, prefFile.file.parentFile.absolutePath)
 
-            val visible = if (prefFile.handler == PrefsFormatsHandler.CLASSIC) View.GONE else View.VISIBLE
-            holder.metalineName.visibility = visible
-            holder.metaDateTimeIcon.visibility = visible
-            holder.metaAppVersion.visibility = visible
+                val visible = (prefFile.handler != PrefsFormatsHandler.CLASSIC).toVisibility()
+                metalineName.visibility = visible
+                metaDateTimeIcon.visibility = visible
+                metaAppVersion.visibility = visible
 
-            if (prefFile.handler == PrefsFormatsHandler.CLASSIC) {
-                holder.metaVariantFormat.text = resourceHelper.gs(R.string.metadata_format_old)
-                holder.metaVariantFormat.setTextColor(resourceHelper.gc(R.color.metadataTextWarning))
-                holder.metaDateTime.text = " "
-            } else {
+                if (prefFile.handler == PrefsFormatsHandler.CLASSIC) {
+                    metaVariantFormat.text = resourceHelper.gs(R.string.metadata_format_old)
+                    metaVariantFormat.setTextColor(resourceHelper.gc(R.color.metadataTextWarning))
+                    metaDateTime.text = " "
+                } else {
 
-                prefFile.metadata[PrefsMetadataKey.AAPS_FLAVOUR]?.let {
-                    holder.metaVariantFormat.text = it.value
-                    val color = if (it.status == PrefsStatus.OK) R.color.metadataOk else R.color.metadataTextWarning
-                    holder.metaVariantFormat.setTextColor(resourceHelper.gc(color))
+                    prefFile.metadata[PrefsMetadataKey.AAPS_FLAVOUR]?.let {
+                        metaVariantFormat.text = it.value
+                        val color = if (it.status == PrefsStatus.OK) R.color.metadataOk else R.color.metadataTextWarning
+                        metaVariantFormat.setTextColor(resourceHelper.gc(color))
+                    }
+
+                    prefFile.metadata[PrefsMetadataKey.CREATED_AT]?.let {
+                        metaDateTime.text = prefFileListProvider.formatExportedAgo(it.value)
+                    }
+
+                    prefFile.metadata[PrefsMetadataKey.AAPS_VERSION]?.let {
+                        metaAppVersion.text = it.value
+                        val color = if (it.status == PrefsStatus.OK) R.color.metadataOk else R.color.metadataTextWarning
+                        metaAppVersion.setTextColor(resourceHelper.gc(color))
+                    }
+
+                    prefFile.metadata[PrefsMetadataKey.DEVICE_NAME]?.let {
+                        metaDeviceName.text = it.value
+                    }
+
                 }
-
-                prefFile.metadata[PrefsMetadataKey.CREATED_AT]?.let {
-                    holder.metaDateTime.text = prefFileListProvider.formatExportedAgo(it.value)
-                }
-
-                prefFile.metadata[PrefsMetadataKey.AAPS_VERSION]?.let {
-                    holder.metaAppVersion.text = it.value
-                    val color = if (it.status == PrefsStatus.OK) R.color.metadataOk else R.color.metadataTextWarning
-                    holder.metaAppVersion.setTextColor(resourceHelper.gc(color))
-                }
-
-                prefFile.metadata[PrefsMetadataKey.DEVICE_NAME]?.let {
-                    holder.metaDeviceName.text = it.value
-                }
-
             }
-
         }
     }
 
