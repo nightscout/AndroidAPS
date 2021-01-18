@@ -83,7 +83,8 @@
 
                 <TableRow
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent">
+                    android:layout_height="match_parent"
+                    android:gravity="center_vertical">
 
                     <TextView
                         android:id="@+id/profilehelper_age_label"
@@ -104,7 +105,8 @@
                 <TableRow
                     android:id="@+id/profilehelper_tdd_row"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent">
+                    android:layout_height="match_parent"
+                    android:gravity="center_vertical">
 
                     <TextView
                         android:id="@+id/profilehelper_tdd_label"
@@ -125,7 +127,8 @@
                 <TableRow
                     android:id="@+id/profilehelper_weight_row"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent">
+                    android:layout_height="match_parent"
+                    android:gravity="center_vertical">
 
                     <TextView
                         android:id="@+id/profilehelper_weigth_label"
@@ -146,7 +149,8 @@
                 <TableRow
                     android:id="@+id/profilehelper_basalpctfromtdd_row"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent">
+                    android:layout_height="match_parent"
+                    android:gravity="center_vertical">
 
                     <TextView
                         android:id="@+id/profilehelper_basalpctfromtdd_label"

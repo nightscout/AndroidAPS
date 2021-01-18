@@ -11,8 +11,7 @@
     <string name="omnipod_config_suspend_delivery_button_enabled">Knop voor het onderbreken van insulinetoediening weergeven in het Omnipod-tabblad</string>
     <string name="omnipod_config_pulse_log_button_enabled">Knop voor het uitlezen van het Pulslog weergeven in het Podbeheer menu</string>
     <string name="omnipod_config_rileylink_stats_button_enabled">Knop voor RileyLink statistieken weergeven in het Omnipod-tabblad</string>
-    <string name="omnipod_config_use_riley_link_battery_level">Gebruik batterijniveau van OrangeLink/EmaLink</string>
-    <string name="omnipod_config_use_riley_link_battery_level_summary">Werkt NIET met de originele RileyLink. Werkt mogelijk niet met andere RileyLink alternatieven.</string>
+    <string name="omnipod_config_battery_change_logging_enabled">Loggen van batterijwissel in Acties inschakelen</string>
     <string name="omnipod_config_time_change_enabled">Zomertijd-/tijdzonedetectie ingeschakeld</string>
     <string name="omnipod_config_expiration_reminder_enabled">Pieptonen voor uiterste gebruiksdatum ingeschakeld</string>
     <string name="omnipod_config_expiration_reminder_hours_before_shutdown">Aantal uur voordat de Pod stopt</string>
@@ -67,6 +66,7 @@
     <string name="omnipod_error_rileylink_address_invalid">RileyLink adres ongeldig.</string>
     <string name="omnipod_error_operation_not_possible_no_configuration">Bewerking is niet mogelijk.\n\nJe moet eerst Omnipod ingesteld hebben, voordat je deze bewerking kunt gebruiken.</string>
     <string name="omnipod_error_pod_not_attached">Geen actieve Pod</string>
+    <string name="omnipod_error_time_out_of_sync">De tijd op de Pod wijkt af. Werk de tijd bij op het Omnipod-tabblad.</string>
     <string name="omnipod_error_unexpected_exception">Er is een onverwachte fout opgetreden. A.u.b rapporteren! (%1$s: %2$s).</string>
     <string name="omnipod_error_crc_mismatch">Communicatie mislukt: berichtintegriteit kon niet worden geverifieerd</string>
     <string name="omnipod_error_invalid_packet_type">Communicatie mislukt: ongeldige gegevens ontvangen van de Pod</string>
@@ -143,7 +143,7 @@
     <string name="omnipod_cmd_insert_cannula">Canule inbrengen</string>
     <string name="omnipod_cmd_read_pulse_log">Pulslog uitlezen</string>
     <string name="omnipod_cmd_set_fake_suspended_tbr">Neppe tijdelijk basaal omdat insulinetoediening onderbroken is</string>
-    <string name="omnipod_cmd_cancel_fake_suspended_tbr">Annuleren van vals tijdelijk basaal wat ontstaan is omdat de insulinetoediening onderbroken was</string>
+    <string name="omnipod_cmd_cancel_fake_suspended_tbr">Annuleren van neppe tijdelijk basaal die is aangemaakt omdat de insulinetoediening onderbroken was</string>
     <string name="omnipod_cmd_split_tbr">Tijdelijke basaal gesplitst als gevolg van een onzekere fout bij annulering</string>
     <string name="omnipod_cmd_beep_config">Pieptoonconfiguratie</string>
     <string name="omnipod_cmd_play_test_beep">Testpieptoon afspelen</string>

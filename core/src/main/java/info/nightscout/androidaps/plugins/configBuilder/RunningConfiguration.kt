@@ -51,33 +51,40 @@ class RunningConfiguration @Inject constructor(
 
     // called in NSClient mode only
     fun apply(configuration: JSONObject) {
-        val insulin = InsulinInterface.InsulinType.fromInt(JsonHelper.safeGetInt(configuration, "insulin", InsulinInterface.InsulinType.UNKNOWN.value))
-        for (p in activePlugin.getSpecificPluginsListByInterface(InsulinInterface::class.java)) {
-            val insulinPlugin = p as InsulinInterface
-            if (insulinPlugin.id == insulin) {
-                if (!p.isEnabled()) {
-                    aapsLogger.debug(LTag.CORE, "Changing insulin plugin to ${insulin.name}")
-                    configBuilder.performPluginSwitch(p, true, PluginType.INSULIN)
+        if (configuration.has("insulin")) {
+            val insulin = InsulinInterface.InsulinType.fromInt(JsonHelper.safeGetInt(configuration, "insulin", InsulinInterface.InsulinType.UNKNOWN.value))
+            for (p in activePlugin.getSpecificPluginsListByInterface(InsulinInterface::class.java)) {
+                val insulinPlugin = p as InsulinInterface
+                if (insulinPlugin.id == insulin) {
+                    if (!p.isEnabled()) {
+                        aapsLogger.debug(LTag.CORE, "Changing insulin plugin to ${insulin.name}")
+                        configBuilder.performPluginSwitch(p, true, PluginType.INSULIN)
+                    }
+                    insulinPlugin.applyConfiguration(configuration.getJSONObject("insulinConfiguration"))
                 }
-                insulinPlugin.applyConfiguration(configuration.getJSONObject("insulinConfiguration"))
             }
         }
 
-        val sensitivity = SensitivityInterface.SensitivityType.fromInt(JsonHelper.safeGetInt(configuration, "sensitivity", SensitivityInterface.SensitivityType.UNKNOWN.value))
-        for (p in activePlugin.getSpecificPluginsListByInterface(SensitivityInterface::class.java)) {
-            val sensitivityPlugin = p as SensitivityInterface
-            if (sensitivityPlugin.id == sensitivity) {
-                if (!p.isEnabled()) {
-                    aapsLogger.debug(LTag.CORE, "Changing sensitivity plugin to ${sensitivity.name}")
-                    configBuilder.performPluginSwitch(p, true, PluginType.SENSITIVITY)
+        if (configuration.has("sensitivity")) {
+            val sensitivity = SensitivityInterface.SensitivityType.fromInt(JsonHelper.safeGetInt(configuration, "sensitivity", SensitivityInterface.SensitivityType.UNKNOWN.value))
+            for (p in activePlugin.getSpecificPluginsListByInterface(SensitivityInterface::class.java)) {
+                val sensitivityPlugin = p as SensitivityInterface
+                if (sensitivityPlugin.id == sensitivity) {
+                    if (!p.isEnabled()) {
+                        aapsLogger.debug(LTag.CORE, "Changing sensitivity plugin to ${sensitivity.name}")
+                        configBuilder.performPluginSwitch(p, true, PluginType.SENSITIVITY)
+                    }
+                    sensitivityPlugin.applyConfiguration(configuration.getJSONObject("sensitivityConfiguration"))
                 }
-                sensitivityPlugin.applyConfiguration(configuration.getJSONObject("sensitivityConfiguration"))
             }
         }
 
-        val pumpType = JsonHelper.safeGetString(configuration, "pump", PumpType.GenericAAPS.description)
-        sp.putString(R.string.key_virtualpump_type, pumpType)
-        activePlugin.activePump.pumpDescription.setPumpDescription(PumpType.getByDescription(pumpType))
+        if (configuration.has("pump")) {
+            val pumpType = JsonHelper.safeGetString(configuration, "pump", PumpType.GenericAAPS.description)
+            sp.putString(R.string.key_virtualpump_type, pumpType)
+            activePlugin.activePump.pumpDescription.setPumpDescription(PumpType.getByDescription(pumpType))
+            aapsLogger.debug(LTag.CORE, "Changing pump type to ${pumpType}")
+        }
 
         if (configuration.has("overviewConfiguration"))
             activePlugin.activeOverview.applyConfiguration(configuration.getJSONObject("overviewConfiguration"))

@@ -22,14 +22,10 @@
     <string name="medtronic_pump_status">Stare pompă</string>
     <string name="title_activity_rileylink_settings">Setări RileyLink</string>
     <string name="rileylink_title">RileyLink</string>
-    <string name="rileylink_configured_riley_link_address">Adresă RileyLink configurată:</string>
-    <string name="rileylink_configured_riley_link_name">Nume RileyLink configurat:</string>
-    <string name="rileylink_connected_device">Dispozitiv conectat:</string>
     <string name="rileylink_connection_status">Stare conexiune:</string>
     <string name="rileylink_connection_error">Eroare conexiune:</string>
     <string name="rileylink_device">Dispozitiv</string>
     <string name="rileylink_device_type">Tip dispozitiv:</string>
-    <string name="rileylink_device_model">Model dispozitiv:</string>
     <string name="rileylink_last_used_frequency">Ultima frecvență utilizată:</string>
     <string name="rileylink_last_device_contact">Ultima conexiune cu dispozitivul:</string>
     <string name="rileylink_firmware_version">Versiune Firmware:</string>
@@ -56,9 +52,9 @@
     <string name="rileylink_error_pod_unreachable">Nu se poate comunica cu pod-ul</string>
     <!-- RileyLink - Common -->
     <string name="rileylink_target_device_medtronic">Pompă Medtronic</string>
-    <string name="rileylink_target_device_omnipod">Omnipod</string>
     <string name="riley_link_common_yes">Da</string>
     <string name="riley_link_common_no">Nu</string>
+    <!-- RileyLink - Preferences -->
     <plurals name="duration_days">
         <item quantity="one">%1$d zi</item>
         <item quantity="few">%1$d zile</item>

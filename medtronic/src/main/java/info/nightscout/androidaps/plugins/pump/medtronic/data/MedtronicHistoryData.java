@@ -1523,7 +1523,9 @@ public class MedtronicHistoryData {
     // HELPER METHODS
 
     private void sort(List<PumpHistoryEntry> list) {
-        Collections.sort(list, new PumpHistoryEntry.Comparator());
+        if (list!=null && !list.isEmpty()) {
+            Collections.sort(list, new PumpHistoryEntry.Comparator());
+        }
     }
 
 

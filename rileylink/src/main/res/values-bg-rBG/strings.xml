@@ -22,14 +22,10 @@
     <string name="medtronic_pump_status">Статус на помпата</string>
     <string name="title_activity_rileylink_settings">RileyLink настройки</string>
     <string name="rileylink_title">RileyLink</string>
-    <string name="rileylink_configured_riley_link_address">Адрес на RileyLink:</string>
-    <string name="rileylink_configured_riley_link_name">Име на RileyLink:</string>
-    <string name="rileylink_connected_device">Свързано устройство:</string>
     <string name="rileylink_connection_status">Състояние на връзката:</string>
     <string name="rileylink_connection_error">Грешка при свързване:</string>
     <string name="rileylink_device">Устройство</string>
     <string name="rileylink_device_type">Тип на устройството:</string>
-    <string name="rileylink_device_model">Модел:</string>
     <string name="rileylink_last_used_frequency">Последна честота:</string>
     <string name="rileylink_last_device_contact">Последно връзка:</string>
     <string name="rileylink_firmware_version">Firmware версия:</string>
@@ -56,9 +52,9 @@
     <string name="rileylink_error_pod_unreachable">Pod е недостъпen</string>
     <!-- RileyLink - Common -->
     <string name="rileylink_target_device_medtronic">Medtronic помпа</string>
-    <string name="rileylink_target_device_omnipod">Omnipod</string>
     <string name="riley_link_common_yes">Да</string>
     <string name="riley_link_common_no">Не</string>
+    <!-- RileyLink - Preferences -->
     <plurals name="duration_days">
         <item quantity="one">%1$d ден</item>
         <item quantity="other">%1$d дни</item>

@@ -35,6 +35,7 @@ class AndroidPermission @Inject constructor(
 ) {
 
     companion object {
+
         const val CASE_STORAGE = 0x1
         const val CASE_SMS = 0x2
         const val CASE_LOCATION = 0x3
@@ -103,13 +104,11 @@ class AndroidPermission @Inject constructor(
                 rxBus.send(EventNewNotification(notification))
             } else rxBus.send(EventDismissNotification(Notification.PERMISSION_SMS))
             // Following is a bug in Android 8
-            if (Build.VERSION.SDK_INT == Build.VERSION_CODES.O) {
-                if (permissionNotGranted(activity, Manifest.permission.READ_PHONE_STATE)) {
-                    val notification = NotificationWithAction(injector, Notification.PERMISSION_PHONESTATE, resourceHelper.gs(R.string.smscommunicator_missingphonestatepermission), Notification.URGENT)
-                    notification.action(R.string.request, Runnable { askForPermission(activity, arrayOf(Manifest.permission.READ_PHONE_STATE), CASE_PHONE_STATE) })
-                    rxBus.send(EventNewNotification(notification))
-                } else rxBus.send(EventDismissNotification(Notification.PERMISSION_PHONESTATE))
-            }
+            if (permissionNotGranted(activity, Manifest.permission.READ_PHONE_STATE)) {
+                val notification = NotificationWithAction(injector, Notification.PERMISSION_PHONESTATE, resourceHelper.gs(R.string.smscommunicator_missingphonestatepermission), Notification.URGENT)
+                notification.action(R.string.request, Runnable { askForPermission(activity, arrayOf(Manifest.permission.READ_PHONE_STATE), CASE_PHONE_STATE) })
+                rxBus.send(EventNewNotification(notification))
+            } else rxBus.send(EventDismissNotification(Notification.PERMISSION_PHONESTATE))
         }
     }
 

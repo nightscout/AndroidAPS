@@ -5,7 +5,6 @@ import android.app.NotificationManager
 import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
-import android.os.Build
 import androidx.core.app.NotificationCompat
 import androidx.core.app.RemoteInput
 import androidx.core.app.TaskStackBuilder
@@ -31,18 +30,20 @@ import io.reactivex.schedulers.Schedulers
 import javax.inject.Inject
 import javax.inject.Singleton
 
+@Suppress("PrivatePropertyName")
 @Singleton
 class PersistentNotificationPlugin @Inject constructor(
     injector: HasAndroidInjector,
     aapsLogger: AAPSLogger,
     resourceHelper: ResourceHelper,
-    private var profileFunction: ProfileFunction,
-    private var fabricPrivacy: FabricPrivacy,
-    private var activePlugins: ActivePluginProvider,
-    private var iobCobCalculatorPlugin: IobCobCalculatorPlugin,
-    private var rxBus: RxBusWrapper,
-    private var context: Context,
-    private var notificationHolder: NotificationHolder,
+    private val profileFunction: ProfileFunction,
+    private val fabricPrivacy: FabricPrivacy,
+    private val activePlugins: ActivePluginProvider,
+    private val iobCobCalculatorPlugin: IobCobCalculatorPlugin,
+    private val rxBus: RxBusWrapper,
+    private val context: Context,
+    private val notificationHolder: NotificationHolder,
+    private val dummyServiceHelper: DummyServiceHelper,
     private val iconsProvider: IconsProvider,
     private val databaseHelper: DatabaseHelperInterface
 ) : PluginBase(PluginDescription()
@@ -106,25 +107,20 @@ class PersistentNotificationPlugin @Inject constructor(
     }
 
     private fun createNotificationChannel() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            val mNotificationManager = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-            val channel = NotificationChannel(notificationHolder.channelID, notificationHolder.channelID as CharSequence, NotificationManager.IMPORTANCE_HIGH)
-            mNotificationManager.createNotificationChannel(channel)
-        }
+        val mNotificationManager = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+        val channel = NotificationChannel(notificationHolder.channelID, notificationHolder.channelID as CharSequence, NotificationManager.IMPORTANCE_HIGH)
+        mNotificationManager.createNotificationChannel(channel)
     }
 
     override fun onStop() {
         disposable.clear()
-        context.stopService(Intent(context, DummyService::class.java))
+        dummyServiceHelper.stopService(context)
         super.onStop()
     }
 
     private fun triggerNotificationUpdate() {
         updateNotification()
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)
-            context.startForegroundService(Intent(context, DummyService::class.java))
-        else
-            context.startService(Intent(context, DummyService::class.java))
+        dummyServiceHelper.startService(context)
     }
 
     private fun updateNotification() {
@@ -134,31 +130,31 @@ class PersistentNotificationPlugin @Inject constructor(
         var line3: String? = null
         var unreadConversationBuilder: NotificationCompat.CarExtender.UnreadConversation.Builder? = null
         if (profileFunction.isProfileValid("Notification")) {
-            var line1_aa: String
+            var line1aa: String
             val units = profileFunction.getUnits()
             val lastBG = iobCobCalculatorPlugin.lastBg()
             val glucoseStatus = GlucoseStatus(injector).glucoseStatusData
             if (lastBG != null) {
-                line1_aa = lastBG.valueToUnitsToString(units)
-                line1 = line1_aa
+                line1aa = lastBG.valueToUnitsToString(units)
+                line1 = line1aa
                 if (glucoseStatus != null) {
                     line1 += ("  Δ" + Profile.toSignedUnitsString(glucoseStatus.delta, glucoseStatus.delta * Constants.MGDL_TO_MMOLL, units)
                         + " avgΔ" + Profile.toSignedUnitsString(glucoseStatus.avgdelta, glucoseStatus.avgdelta * Constants.MGDL_TO_MMOLL, units))
-                    line1_aa += "  " + lastBG.directionToSymbol(databaseHelper)
+                    line1aa += "  " + lastBG.directionToSymbol(databaseHelper)
                 } else {
                     line1 += " " +
                         resourceHelper.gs(R.string.old_data) +
                         " "
-                    line1_aa += "$line1."
+                    line1aa += "$line1."
                 }
             } else {
-                line1_aa = resourceHelper.gs(R.string.missed_bg_readings)
-                line1 = line1_aa
+                line1aa = resourceHelper.gs(R.string.missed_bg_readings)
+                line1 = line1aa
             }
             val activeTemp = activePlugins.activeTreatments.getTempBasalFromHistory(System.currentTimeMillis())
             if (activeTemp != null) {
                 line1 += "  " + activeTemp.toStringShort()
-                line1_aa += "  " + activeTemp.toStringShort() + "."
+                line1aa += "  " + activeTemp.toStringShort() + "."
             }
             //IOB
             activePlugins.activeTreatments.updateTotalIOBTreatments()
@@ -166,11 +162,11 @@ class PersistentNotificationPlugin @Inject constructor(
             val bolusIob = activePlugins.activeTreatments.lastCalculationTreatments.round()
             val basalIob = activePlugins.activeTreatments.lastCalculationTempBasals.round()
             line2 = resourceHelper.gs(R.string.treatments_iob_label_string) + " " + DecimalFormatter.to2Decimal(bolusIob.iob + basalIob.basaliob) + "U " + resourceHelper.gs(R.string.cob) + ": " + iobCobCalculatorPlugin.getCobInfo(false, "PersistentNotificationPlugin").generateCOBString()
-            val line2_aa = resourceHelper.gs(R.string.treatments_iob_label_string) + " " + DecimalFormatter.to2Decimal(bolusIob.iob + basalIob.basaliob) + "U. " + resourceHelper.gs(R.string.cob) + ": " + iobCobCalculatorPlugin.getCobInfo(false, "PersistentNotificationPlugin").generateCOBString() + "."
+            val line2aa = resourceHelper.gs(R.string.treatments_iob_label_string) + " " + DecimalFormatter.to2Decimal(bolusIob.iob + basalIob.basaliob) + "U. " + resourceHelper.gs(R.string.cob) + ": " + iobCobCalculatorPlugin.getCobInfo(false, "PersistentNotificationPlugin").generateCOBString() + "."
             line3 = DecimalFormatter.to2Decimal(pump.baseBasalRate) + " U/h"
-            var line3_aa = DecimalFormatter.to2Decimal(pump.baseBasalRate) + " U/h."
+            var line3aa = DecimalFormatter.to2Decimal(pump.baseBasalRate) + " U/h."
             line3 += " - " + profileFunction.getProfileName()
-            line3_aa += " - " + profileFunction.getProfileName() + "."
+            line3aa += " - " + profileFunction.getProfileName() + "."
             /// For Android Auto
             val msgReadIntent = Intent()
                 .addFlags(Intent.FLAG_INCLUDE_STOPPED_PACKAGES)
@@ -194,12 +190,12 @@ class PersistentNotificationPlugin @Inject constructor(
             // Build a RemoteInput for receiving voice input from devices
             val remoteInput = RemoteInput.Builder(EXTRA_VOICE_REPLY).build()
             // Create the UnreadConversation
-            unreadConversationBuilder = NotificationCompat.CarExtender.UnreadConversation.Builder(line1_aa + "\n" + line2_aa)
+            unreadConversationBuilder = NotificationCompat.CarExtender.UnreadConversation.Builder(line1aa + "\n" + line2aa)
                 .setLatestTimestamp(System.currentTimeMillis())
                 .setReadPendingIntent(msgReadPendingIntent)
                 .setReplyAction(msgReplyPendingIntent, remoteInput)
             /// Add dot to produce a "more natural sounding result"
-            unreadConversationBuilder.addMessage(line3_aa)
+            unreadConversationBuilder.addMessage(line3aa)
             /// End Android Auto
         } else {
             line1 = resourceHelper.gs(R.string.noprofileset)

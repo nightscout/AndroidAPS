@@ -3,6 +3,7 @@ package info.nightscout.androidaps.plugins.general.persistentNotification
 import android.app.Notification
 import android.app.Service
 import android.content.Intent
+import android.os.Binder
 import android.os.IBinder
 import dagger.android.DaggerService
 import info.nightscout.androidaps.events.EventAppExit
@@ -27,7 +28,13 @@ class DummyService : DaggerService() {
 
     private val disposable = CompositeDisposable()
 
-    override fun onBind(intent: Intent?): IBinder? = null
+    inner class LocalBinder : Binder() {
+
+        fun getService(): DummyService = this@DummyService
+    }
+
+    private val binder = LocalBinder()
+    override fun onBind(intent: Intent): IBinder = binder
 
     override fun onCreate() {
         super.onCreate()
@@ -44,7 +51,7 @@ class DummyService : DaggerService() {
             .subscribe({
                 aapsLogger.debug(LTag.CORE, "EventAppExit received")
                 stopSelf()
-            }, fabricPrivacy::logException )
+            }, fabricPrivacy::logException)
         )
     }
 

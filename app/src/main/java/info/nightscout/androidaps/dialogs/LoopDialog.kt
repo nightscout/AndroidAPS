@@ -237,18 +237,21 @@ class LoopDialog : DaggerDialogFragment() {
         val profile = profileFunction.getProfile() ?: return true
         when (v.id) {
             R.id.overview_closeloop -> {
+                aapsLogger.debug("USER ENTRY: CLOSED LOOP MODE")
                 sp.putString(R.string.key_aps_mode, "closed")
                 rxBus.send(EventPreferenceChange(resourceHelper.gs(R.string.closedloop)))
                 return true
             }
 
             R.id.overview_lgsloop -> {
+                aapsLogger.debug("USER ENTRY: LGS LOOP MODE")
                 sp.putString(R.string.key_aps_mode, "lgs")
                 rxBus.send(EventPreferenceChange(resourceHelper.gs(R.string.lowglucosesuspend)))
                 return true
             }
 
             R.id.overview_openloop -> {
+                aapsLogger.debug("USER ENTRY: OPEN LOOP MODE")
                 sp.putString(R.string.key_aps_mode, "open")
                 rxBus.send(EventPreferenceChange(resourceHelper.gs(R.string.lowglucosesuspend)))
                 return true

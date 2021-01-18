@@ -11,8 +11,7 @@
     <string name="omnipod_config_suspend_delivery_button_enabled">Mostra tasto \"sospendi erogazione\" nella scheda Omnipod</string>
     <string name="omnipod_config_pulse_log_button_enabled">Mostra tasto \"log impulsi\" nel menu gestione pod</string>
     <string name="omnipod_config_rileylink_stats_button_enabled">Mostra tasto \"statistiche RileyLink\" nel menu gestione pod</string>
-    <string name="omnipod_config_use_riley_link_battery_level">Usa livello batteria riportato da OrangeLink/EmaLink</string>
-    <string name="omnipod_config_use_riley_link_battery_level_summary">NON funziona con il RileyLink originale. Potrebbe non funzionare con altre alternative al RileyLink.</string>
+    <string name="omnipod_config_battery_change_logging_enabled">Abilita log cambio batteria in \"Azioni\"</string>
     <string name="omnipod_config_time_change_enabled">Rilevamento ora legale/fuso orario abilitato</string>
     <string name="omnipod_config_expiration_reminder_enabled">Promemoria scadenza abilitato</string>
     <string name="omnipod_config_expiration_reminder_hours_before_shutdown">Ore prima dell\'arresto</string>
@@ -67,6 +66,7 @@
     <string name="omnipod_error_rileylink_address_invalid">Indirizzo RileyLink non valido.</string>
     <string name="omnipod_error_operation_not_possible_no_configuration">Operazione non possibile.\n\nDevi prima configurare Omnipod.</string>
     <string name="omnipod_error_pod_not_attached">Nessun pod attivo</string>
+    <string name="omnipod_error_time_out_of_sync">L\'ora sul pod non è sincronizzata. Aggiorna l\'ora nella scheda Omnipod.</string>
     <string name="omnipod_error_unexpected_exception">Si è verificato un errore imprevisto. Segnalalo! (%1$s: %2$s).</string>
     <string name="omnipod_error_crc_mismatch">Comunicazione fallita: verifica dell\'integrità del messaggio fallita</string>
     <string name="omnipod_error_invalid_packet_type">Comunicazione fallita: ricevuto un pacchetto non valido dal pod</string>

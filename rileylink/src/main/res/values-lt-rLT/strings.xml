@@ -22,14 +22,10 @@
     <string name="medtronic_pump_status">Pompos statusas</string>
     <string name="title_activity_rileylink_settings">RileyLink parametrai</string>
     <string name="rileylink_title">RileyLink</string>
-    <string name="rileylink_configured_riley_link_address">Konfigūruoti RileyLink adresą:</string>
-    <string name="rileylink_configured_riley_link_name">Konfigūruoti RileyLink vardą:</string>
-    <string name="rileylink_connected_device">Prijungtas įrenginys:</string>
     <string name="rileylink_connection_status">Ryšio būsena:</string>
     <string name="rileylink_connection_error">Prisijungimo klaida:</string>
     <string name="rileylink_device">Įrenginys</string>
     <string name="rileylink_device_type">Įrenginio tipas:</string>
-    <string name="rileylink_device_model">Įrenginio modelis:</string>
     <string name="rileylink_last_used_frequency">Paskutinis naudotas dažnis:</string>
     <string name="rileylink_last_device_contact">Paskutinis įrenginio kontaktas:</string>
     <string name="rileylink_firmware_version">Programinės įrangos versija:</string>
@@ -56,9 +52,9 @@
     <string name="rileylink_error_pod_unreachable">Pod nepasiekiamas</string>
     <!-- RileyLink - Common -->
     <string name="rileylink_target_device_medtronic">Pompa Medtronic</string>
-    <string name="rileylink_target_device_omnipod">Omnipod</string>
     <string name="riley_link_common_yes">Taip</string>
     <string name="riley_link_common_no">Ne</string>
+    <!-- RileyLink - Preferences -->
     <plurals name="duration_days">
         <item quantity="one">%1$d d.</item>
         <item quantity="few">%1$d d.</item>
