@@ -611,7 +611,6 @@ Aktif Karbonhidratın ne kadar hızlı sindirildiğine ve KŞ\'nin beklenenden d
     <string name="nav_logsettings">Günlük ayarları</string>
     <string name="resettodefaults">Varsayılanlara sıfırla</string>
     <string name="nsmalfunction">NSClient arızası. NS ve NSClient yeniden başlatmayı düşünün.</string>
-    <string name="versionavailable">Sürüm %1$s mevcut</string>
     <string name="time_offset">Saat farkı</string>
     <string name="setupwizard_preferred_aps_mode">Tercih edilen APS modu</string>
     <string name="treatments_wizard_total_label">Toplam</string>
