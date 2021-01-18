@@ -253,4 +253,5 @@
     <string name="signature_verifier">Verificador de firma</string>
     <string name="running_invalid_version">Hemos detectado que está ejecutando una versión no válida. ¡Bucle desactivado!</string>
     <string name="versionavailable">Versión %1$s disponible</string>
+    <!-- Permissions -->
 </resources>
