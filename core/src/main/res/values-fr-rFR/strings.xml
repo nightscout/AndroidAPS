@@ -216,6 +216,7 @@
     <string name="history_group_glucose">Glucose</string>
     <string name="mute5min">Muet pendant 5 minutes</string>
     <!-- Maintenance -->
+    <string name="metadata_label_format">Format de fichier</string>
     <string name="metadata_label_created_at">Créé le</string>
     <string name="metadata_label_aaps_version">Version d\'AAPS</string>
     <string name="metadata_label_aaps_flavour">Variante de Build</string>
@@ -253,4 +254,16 @@
     <string name="signature_verifier">Vérificateur de signature</string>
     <string name="running_invalid_version">Nous avons détecté que vous utilisez une version invalide. Boucle désactivée !</string>
     <string name="versionavailable">Version %1$s disponible</string>
+    <plurals name="days">
+        <item quantity="one">%1$d jour</item>
+        <item quantity="other">%1$d jours</item>
+    </plurals>
+    <plurals name="hours">
+        <item quantity="one">%1$d heure</item>
+        <item quantity="other">%1$d heures</item>
+    </plurals>
+    <plurals name="minutes">
+        <item quantity="one">%1$d minute</item>
+        <item quantity="other">%1$d minutes</item>
+    </plurals>
 </resources>
