@@ -253,4 +253,5 @@
     <string name="signature_verifier">Signaturverifierare</string>
     <string name="running_invalid_version">Du kör en ogiltig version. Loop avstängd!</string>
     <string name="versionavailable">Version %1$s tillgänglig</string>
+    <!-- Permissions -->
 </resources>
