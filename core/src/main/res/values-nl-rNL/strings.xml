@@ -253,4 +253,5 @@
     <string name="signature_verifier">Handtekening controle</string>
     <string name="running_invalid_version">We hebben gedetecteerd dat je een ongeldige versie gebruikt. Loop is uitgeschakeld!</string>
     <string name="versionavailable">Versie %1$s is beschikbaar</string>
+    <!-- Permissions -->
 </resources>
