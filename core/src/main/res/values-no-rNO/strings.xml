@@ -253,4 +253,5 @@
     <string name="signature_verifier">Verifisering av signatur</string>
     <string name="running_invalid_version">Vi har oppdaget at du kjører en ugyldig versjon. Loop deaktivert!</string>
     <string name="versionavailable">Versjon %1$s er tilgjengelig</string>
+    <!-- Permissions -->
 </resources>
