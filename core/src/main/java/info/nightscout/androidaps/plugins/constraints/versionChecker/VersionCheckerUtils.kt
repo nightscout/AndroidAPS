@@ -2,9 +2,8 @@ package info.nightscout.androidaps.plugins.constraints.versionChecker
 
 import android.content.Context
 import android.net.ConnectivityManager
-import info.nightscout.androidaps.BuildConfig
-import info.nightscout.androidaps.MainApp
-import info.nightscout.androidaps.R
+import info.nightscout.androidaps.core.R
+import info.nightscout.androidaps.interfaces.ConfigInterface
 import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.logging.LTag
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper
@@ -24,6 +23,7 @@ class VersionCheckerUtils @Inject constructor(
     val sp: SP,
     val resourceHelper: ResourceHelper,
     val rxBus: RxBusWrapper,
+    private val config: ConfigInterface,
     val context: Context
 ) {
 
@@ -50,7 +50,7 @@ class VersionCheckerUtils @Inject constructor(
         Thread {
             try {
                 val version: String? = findVersion(URL("https://raw.githubusercontent.com/nightscout/AndroidAPS/master/app/build.gradle").readText())
-                compareWithCurrentVersion(version, BuildConfig.VERSION_NAME)
+                compareWithCurrentVersion(version, config.VERSION_NAME)
             } catch (e: IOException) {
                 aapsLogger.error(LTag.CORE, "Github master version check error: $e")
             }
@@ -130,6 +130,7 @@ class VersionCheckerUtils @Inject constructor(
     }
 
     companion object {
+
         private val CHECK_EVERY = TimeUnit.DAYS.toMillis(1)
         private val WARN_EVERY = TimeUnit.DAYS.toMillis(1)
     }
@@ -148,7 +149,7 @@ fun findVersion(file: String?): String? {
 fun String.versionStrip() = this.mapNotNull {
     when (it) {
         in '0'..'9' -> it
-        '.'         -> it
+        '.' -> it
         else        -> null
     }
 }.joinToString(separator = "")

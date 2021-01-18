@@ -12,11 +12,11 @@ import androidx.fragment.app.FragmentActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import dagger.android.support.DaggerAppCompatActivity
-import info.nightscout.androidaps.R
+import info.nightscout.androidaps.core.R
 import info.nightscout.androidaps.plugins.general.maintenance.PrefFileListProvider
 import info.nightscout.androidaps.plugins.general.maintenance.PrefsFile
 import info.nightscout.androidaps.plugins.general.maintenance.PrefsFileContract
-import info.nightscout.androidaps.plugins.general.maintenance.formats.PrefsFormatsHandler
+import info.nightscout.androidaps.plugins.general.maintenance.PrefsFormatsHandler
 import info.nightscout.androidaps.plugins.general.maintenance.formats.PrefsMetadataKey
 import info.nightscout.androidaps.plugins.general.maintenance.formats.PrefsStatus
 import info.nightscout.androidaps.utils.locale.LocaleHelper
@@ -46,6 +46,7 @@ class PrefImportListActivity : DaggerAppCompatActivity() {
     inner class RecyclerViewAdapter internal constructor(private var prefFileList: List<PrefsFile>) : RecyclerView.Adapter<RecyclerViewAdapter.PrefFileViewHolder>() {
 
         inner class PrefFileViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+
             var fileName: TextView = itemView.findViewById(R.id.filelist_name)
             var fileDir: TextView = itemView.findViewById(R.id.filelist_dir)
             var metaDateTime: TextView = itemView.findViewById(R.id.meta_date_time)
