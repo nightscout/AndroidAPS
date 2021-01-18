@@ -253,4 +253,5 @@
     <string name="signature_verifier">Проверка на подпис</string>
     <string name="running_invalid_version">Използвате грешна версия. APS е изключен!</string>
     <string name="versionavailable">Има налично обновяване до версия %1$s </string>
+    <!-- Permissions -->
 </resources>
