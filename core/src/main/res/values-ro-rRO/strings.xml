@@ -254,4 +254,5 @@
     <string name="signature_verifier">Verificare semnătură</string>
     <string name="running_invalid_version">S-a detectat rularea unei versiuni invalide. Buclă dezactivată!</string>
     <string name="versionavailable">Versiunea %1$s este disponibilă</string>
+    <!-- Permissions -->
 </resources>
