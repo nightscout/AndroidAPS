@@ -58,12 +58,12 @@ class TempTargetDialog : DialogFragmentWithDate() {
         if (profileFunction.getUnits() == Constants.MMOL)
             overview_temptarget_temptarget.setParams(
                 savedInstanceState?.getDouble("overview_temptarget_temptarget")
-                    ?: Constants.MIN_TT_MMOL,
+                    ?: 8.0,
                 Constants.MIN_TT_MMOL, Constants.MAX_TT_MMOL, 0.1, DecimalFormat("0.0"), false, ok)
         else
             overview_temptarget_temptarget.setParams(
                 savedInstanceState?.getDouble("overview_temptarget_temptarget")
-                    ?: Constants.MIN_TT_MGDL,
+                    ?: 144.0,
                 Constants.MIN_TT_MGDL, Constants.MAX_TT_MGDL, 1.0, DecimalFormat("0"), false, ok)
 
         val units = profileFunction.getUnits()
