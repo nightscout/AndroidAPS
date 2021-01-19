@@ -30,8 +30,8 @@
     <string name="rileylink_connection_error">Erreur de Connexion :</string>
     <string name="rileylink_device">Appareil</string>
     <string name="rileylink_device_type">Type d\'appareil :</string>
-    <string name="rileylink_configured_device_model">Rileylink configuré :</string>
-    <string name="rileylink_connected_device_model">Rileylink connecté :</string>
+    <string name="rileylink_configured_device_model">Appareils configurés :</string>
+    <string name="rileylink_connected_device_model">Appareil connecté :</string>
     <string name="rileylink_last_used_frequency">Dernière fréquence utilisée :</string>
     <string name="rileylink_last_device_contact">Dernier contact appareil :</string>
     <string name="rileylink_firmware_version">Version du firmware :</string>
