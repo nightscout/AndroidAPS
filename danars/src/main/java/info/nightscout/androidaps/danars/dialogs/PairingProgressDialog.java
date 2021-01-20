@@ -60,8 +60,10 @@ public class PairingProgressDialog extends DaggerDialogFragment {
                     FragmentActivity activity = getActivity();
                     if (activity != null) {
                         activity.runOnUiThread(() -> {
-                            binding.danarsPairingprogressProgressbar.setProgress(100);
-                            binding.danarsPairingprogressStatus.setText(R.string.danars_pairingok);
+                            if (binding != null) {
+                                binding.danarsPairingprogressProgressbar.setProgress(100);
+                                binding.danarsPairingprogressStatus.setText(R.string.danars_pairingok);
+                            }
                             try {
                                 Thread.sleep(1000);
                             } catch (InterruptedException ignored) {
@@ -72,7 +74,7 @@ public class PairingProgressDialog extends DaggerDialogFragment {
                         dismiss();
                     return;
                 }
-                binding.danarsPairingprogressProgressbar.setProgress(i * 5);
+                if (binding != null) binding.danarsPairingprogressProgressbar.setProgress(i * 5);
                 try {
                     Thread.sleep(1000);
                 } catch (InterruptedException ignored) {
@@ -81,9 +83,11 @@ public class PairingProgressDialog extends DaggerDialogFragment {
             FragmentActivity activity = getActivity();
             if (activity != null) {
                 activity.runOnUiThread(() -> {
-                    binding.danarsPairingprogressProgressbar.setProgress(100);
-                    binding.danarsPairingprogressStatus.setText(R.string.danars_pairingtimedout);
-                    binding.ok.setVisibility(View.VISIBLE);
+                    if (binding != null) {
+                        binding.danarsPairingprogressProgressbar.setProgress(100);
+                        binding.danarsPairingprogressStatus.setText(R.string.danars_pairingtimedout);
+                        binding.ok.setVisibility(View.VISIBLE);
+                    }
                 });
             }
         };
@@ -131,12 +135,20 @@ public class PairingProgressDialog extends DaggerDialogFragment {
         disposable.clear();
     }
 
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        binding = null;
+    }
+
     private void setViews() {
-        binding.danarsPairingprogressProgressbar.setMax(100);
-        binding.danarsPairingprogressProgressbar.setProgress(0);
-        binding.danarsPairingprogressStatus.setText(resourceHelper.gs(R.string.danars_waitingforpairing));
-        binding.ok.setVisibility(View.GONE);
-        binding.ok.setOnClickListener(v -> dismiss());
+        if (binding != null) {
+            binding.danarsPairingprogressProgressbar.setMax(100);
+            binding.danarsPairingprogressProgressbar.setProgress(0);
+            binding.danarsPairingprogressStatus.setText(resourceHelper.gs(R.string.danars_waitingforpairing));
+            binding.ok.setVisibility(View.GONE);
+            binding.ok.setOnClickListener(v -> dismiss());
+        }
         handler.post(runnable);
     }
 
