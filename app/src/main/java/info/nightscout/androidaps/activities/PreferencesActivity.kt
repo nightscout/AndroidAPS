@@ -33,23 +33,21 @@ class PreferencesActivity : NoSplashAppCompatActivity(), PreferenceFragmentCompa
         supportActionBar?.setDisplayShowHomeEnabled(true)
         myPreferenceFragment = MyPreferenceFragment()
         preferenceId = intent.getIntExtra("id", -1)
-        val args = Bundle()
-        args.putInt("id", preferenceId)
-        args.putString("filter", pref_filter.text.toString())
-        myPreferenceFragment?.arguments = args
-        supportFragmentManager.beginTransaction().replace(R.id.frame_layout, myPreferenceFragment!!).commit()
+        myPreferenceFragment?.arguments = Bundle().also {
+            it.putInt("id", preferenceId)
+            it.putString("filter", pref_filter.text.toString())
+        }
+        if (savedInstanceState == null)
+            supportFragmentManager.beginTransaction().replace(R.id.frame_layout, myPreferenceFragment!!).commit()
     }
 
     override fun onPreferenceStartScreen(caller: PreferenceFragmentCompat, pref: PreferenceScreen): Boolean {
         val fragment = MyPreferenceFragment()
-        val args = Bundle()
-        args.putString(PreferenceFragmentCompat.ARG_PREFERENCE_ROOT, pref.key)
-        args.putInt("id", preferenceId)
-        fragment.arguments = args
-        supportFragmentManager.beginTransaction()
-            .replace(R.id.frame_layout, fragment, pref.key)
-            .addToBackStack(pref.key)
-            .commit()
+        fragment.arguments = Bundle().also {
+            it.putString(PreferenceFragmentCompat.ARG_PREFERENCE_ROOT, pref.key)
+            it.putInt("id", preferenceId)
+        }
+        supportFragmentManager.beginTransaction().replace(R.id.frame_layout, fragment, pref.key).addToBackStack(pref.key).commit()
         return true
     }
 
