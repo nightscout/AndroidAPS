@@ -256,5 +256,22 @@
     <string name="alarm_message">Aláram: %1$s</string>
     <string name="alarm_short">Aláram:</string>
     <string name="wifissidcompared">WiFi SSID %1$s %2$s</string>
+    <string name="name_short">Ainm:</string>
+    <string name="locationis">%1$s %2$s</string>
+    <string name="triggercoblabel">COB</string>
+    <string name="cobcompared">COB %1$s %2$.0f</string>
+    <string name="format_bg_isf">%1$s ISF: %2$.1f</string>
+    <string name="format_carbs_ic">%1$.0fg IC: %2$.1f</string>
+    <string name="format_cob_ic">%1$.1fg IC: %2$.1f</string>
+    <string name="format_percent">%1$d%%</string>
+    <string name="unit_minute_short">nóim</string>
+    <string name="profile_name">Ainm Próifíle:</string>
+    <string name="unitsnosemicolon">Aonaid</string>
+    <string name="dia_short">DIA</string>
+    <string name="ic_short">IC</string>
+    <string name="isf_short">ISF</string>
+    <string name="age">Aois:</string>
+    <string name="randombg_short">BG</string>
     <!-- SMS Communicator & OTP Authenticator -->
+    <string name="alarm">Aláram</string>
 </resources>
