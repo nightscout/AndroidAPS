@@ -13,7 +13,6 @@
     <string name="reset_db_confirm">Veritabanlarını gerçekten sıfırlamak istiyor musunuz?</string>
     <string name="nav_exit">Çıkış</string>
     <string name="ns_sync_use_absolute_title">Her zaman bazal mutlak değerleri kullan</string>
-    <string name="alert_dialog_storage_permission_text">Lütfen telefonunu yeniden başlat, yada Android APS sistem ayarları üzerinden yeniden başlat.\nAksi taktirde Android APS hiç bir günlük tutmayacak (takip ve doğrulama, algoritmanın düzenli çalışmasi için önemli)!</string>
     <string name="description_actions">Ortak özelliklere hızlıca erişmek için bazı düğmeler</string>
     <string name="description_config_builder">Aktif eklentileri yapılandırmak için kullanılan</string>
     <string name="description_objectives">Eğitim programı</string>
@@ -611,7 +610,6 @@ Aktif Karbonhidratın ne kadar hızlı sindirildiğine ve KŞ\'nin beklenenden d
     <string name="nav_logsettings">Günlük ayarları</string>
     <string name="resettodefaults">Varsayılanlara sıfırla</string>
     <string name="nsmalfunction">NSClient arızası. NS ve NSClient yeniden başlatmayı düşünün.</string>
-    <string name="versionavailable">Sürüm %1$s mevcut</string>
     <string name="time_offset">Saat farkı</string>
     <string name="setupwizard_preferred_aps_mode">Tercih edilen APS modu</string>
     <string name="treatments_wizard_total_label">Toplam</string>

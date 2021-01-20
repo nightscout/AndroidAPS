@@ -90,6 +90,9 @@
     <string name="action_confirm">אישור</string>
     <string name="action_timeshift">היסט זמן</string>
     <string name="action_bolus">בולוס</string>
+    <string name="bolus_progress">התקדמות הבולוס</string>
+    <string name="press_to_cancel">לחצו לביטול</string>
+    <string name="cancel_bolus">ביטול בולוס</string>
     <string name="status_pump">משאבה</string>
     <string name="status_loop">לולאה</string>
     <string name="status_cpp">CPP</string>

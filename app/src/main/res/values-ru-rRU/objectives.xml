@@ -53,22 +53,4 @@
     <string name="notconnected">Нет подключения к Интернету</string>
     <string name="failedretrievetime">Не удалось загрузить время</string>
     <string name="requirementnotmet">Требования к цели не выполнены</string>
-    <plurals name="objective_days">
-        <item quantity="one">%1$d день</item>
-        <item quantity="few">%1$d дня</item>
-        <item quantity="many">%1$d дней</item>
-        <item quantity="other">%1$d д</item>
-    </plurals>
-    <plurals name="objective_hours">
-        <item quantity="one">%1$d час</item>
-        <item quantity="few">%1$d часа</item>
-        <item quantity="many">%1$d часов</item>
-        <item quantity="other">%1$d ч</item>
-    </plurals>
-    <plurals name="objective_minutes">
-        <item quantity="one">%1$d минута</item>
-        <item quantity="few">%1$d минут(ы)</item>
-        <item quantity="many">%1$d минут</item>
-        <item quantity="other">%1$d мин</item>
-    </plurals>
 </resources>

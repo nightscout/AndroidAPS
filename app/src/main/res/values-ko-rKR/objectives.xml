@@ -49,13 +49,4 @@
     <string name="notconnected">인터넷에 연결되지 않음</string>
     <string name="failedretrievetime">시간을 가져오지 못했습니다</string>
     <string name="requirementnotmet">목표 요구 사항이 충족되지 않음</string>
-    <plurals name="objective_days">
-        <item quantity="other">%1$d 일</item>
-    </plurals>
-    <plurals name="objective_hours">
-        <item quantity="other">%1$d 시간</item>
-    </plurals>
-    <plurals name="objective_minutes">
-        <item quantity="other">%1$d 분</item>
-    </plurals>
 </resources>

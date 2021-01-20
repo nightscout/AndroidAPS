@@ -1,2 +1,28 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources></resources>
+<resources>
+    <string name="danarspump">DanaRS</string>
+    <string name="danarspump_shortname">Dana</string>
+    <string name="overview_bolusprogress_delivered">Seachadta</string>
+    <string name="overview_bolusprogress_stoped">Stopadh</string>
+    <string name="lowbattery">Ceallraí Íseal</string>
+    <string name="danar_history_alarm">Aláraim</string>
+    <string name="danar_history_bolus">Bólasi</string>
+    <string name="danar_history_carbohydrates">Carbaihiodráití</string>
+    <string name="danar_history_dailyinsulin">Inslin lá</string>
+    <string name="danar_history_errors">Earráidí</string>
+    <string name="danar_history_glucose">Glúcóis</string>
+    <string name="danar_history_refill">Athlán</string>
+    <string name="danar_history_syspend">Fionraí</string>
+    <string name="danar_pumpalarm">Aláram</string>
+    <string name="danar_glucoseunits">Aonaid Glúcóis</string>
+    <string name="danarpump_shortname">DANA</string>
+    <string name="danarkoreanpump">DanaR Cóiréis</string>
+    <string name="danarpump">DanaR</string>
+    <string name="danarv2pump">DanaRv2</string>
+    <string name="danar_bluetooth_status">Bluetooth stádas</string>
+    <string name="basal_step">Bunaidh Céim</string>
+    <string name="bolus_step">Bólas Céim</string>
+    <string name="timeformat12h">12u</string>
+    <string name="timeformat24h">24u</string>
+    <string name="danar_bt_name_title">DanaR Bluetooth gléas</string>
+</resources>
