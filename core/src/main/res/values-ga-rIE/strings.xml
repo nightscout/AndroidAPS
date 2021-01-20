@@ -14,6 +14,7 @@
     <string name="formatinsulinunits1">%1$.1f A</string>
     <string name="formatinsulinunits">%1$.2f A</string>
     <string name="formatsignedinsulinunits">%1$+.2f A</string>
+    <string name="format_carbs">%1$d g</string>
     <string name="reservoirvalue">%1$.0f / %2$d A</string>
     <string name="pump_basebasalrate">%1$.2f A/u</string>
     <string name="format_hours">%1$.2f u</string>
