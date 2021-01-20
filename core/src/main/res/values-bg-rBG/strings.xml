@@ -215,24 +215,43 @@
     <string name="history_group_alarm">Аларми</string>
     <string name="history_group_glucose">Кръвна захар</string>
     <string name="mute5min">Изключи за 5 минути</string>
-    <!--    <string name="medtronic_pump_status_never_contacted">Never contacted</string>-->
-    <!--    <string name="medtronic_pump_status_waking_up">Waking up</string>-->
-    <!--    <string name="medtronic_pump_status_error_comm">Error with communication</string>-->
-    <!--    <string name="medtronic_pump_status_timeout_comm">Timeout on communication</string>-->
-    <!--    <string name="medtronic_pump_status_pump_unreachable">Pump unreachable</string>-->
-    <!--    <string name="medtronic_pump_status_invalid_config">Invalid configuration</string>-->
-    <!--    <string name="medtronic_pump_status_active">Active</string>-->
-    <!--    <string name="medtronic_pump_status_sleeping">Sleeping</string>-->
-    <!--    <string name="danar_history_alarm">Alarms</string>-->
-    <!--    <string name="danar_history_glucose">Glucose</string>-->
-    <!--    All(R.string.medtronic_history_group_all), //-->
-    <!--    Bolus(R.string.danar_history_bolus), //-->
-    <!--    Basal(R.string.medtronic_history_group_basal), //-->
-    <!--    Prime(R.string.danar_history_prime), //-->
-    <!--    Configuration(R.string.medtronic_history_group_configuration), //-->
-    <!--    Alarm(R.string.danar_history_alarm), //-->
-    <!--    Glucose(R.string.danar_history_glucose), //-->
-    <!--    Notification(R.string.medtronic_history_group_notification), //-->
-    <!--    Statistic(R.string.medtronic_history_group_statistic),-->
-    <!--    Unknown(R.string.medtronic_history_group_unknown), //-->
+    <!-- Maintenance -->
+    <string name="metadata_label_created_at">Създаден на</string>
+    <string name="metadata_label_aaps_version">Версия на AAPS</string>
+    <string name="metadata_label_aaps_flavour">вариант</string>
+    <string name="metadata_label_device_name">Име на пациента</string>
+    <string name="metadata_label_device_model">Модел на телефона:</string>
+    <string name="metadata_label_encryption">Криптиране</string>
+    <string name="metadata_format_old">Стар формат</string>
+    <string name="metadata_format_new">Нов формат</string>
+    <string name="metadata_format_debug">Нов формат (незащитен)</string>
+    <string name="metadata_format_other">Непознат формат</string>
+    <string name="exported_ago" comment="at placeholder we add pluralized number of hours/minutes">от преди %1$s</string>
+    <string name="exported_at" comment="at placeholder we add export date">от %1$s</string>
+    <string name="exported_less_than_hour_ago">от преди по-малко от час</string>
+    <string name="in_directory" comment="placeholder is for exported file path">в директория: %1$s</string>
+    <string name="preferences_import_list_title">Изберете файл</string>
+    <string name="metadata_warning_different_flavour">Настройките са създадени с различен вариант на AAPS (%1$s) докато Вие сте с: %2$s.\n\nНякои настройки може да липсват или са невалидни!След импортиране, моля, проверете и актуализирайте своите настройки.</string>
+    <string name="metadata_warning_different_device">Настройките са създадени на друго устройство. Това е ОК, ако импортирате от по-стар/различен телефон, но се уверете, че тези настройки са правилни!</string>
+    <string name="metadata_warning_outdated_format">Използвате остарял формат от старите версии на AAPS, който не е защитен! Използвайте го само като крайна мярка, или експортирайте в JSON формат.</string>
+    <string name="metadata_warning_old_export">Импортираните настройки са стари %1$s дни! Може би имате по-актуални настройки или сте избрали грешен файл? Не забравяйте да експортирате настройки редовно!</string>
+    <string name="metadata_warning_date_format">Невалиден формат на датата!</string>
+    <string name="metadata_warning_different_version">Настройки от различна под-версия на приложението. Това е ОК, ако импортирате след надстройка, но проверете след вноса, ако настройки са все още правилни!</string>
+    <string name="metadata_urgent_different_version">Настройки от различна главна версия на приложението. Основните версии се различават значително и могат да имат несъвместими настройки! Уверете се, че след импорт, че преференциите са все още правилни!</string>
+    <string name="prefdecrypt_settings_tampered">Файлът с настройки е преправян</string>
+    <string name="prefdecrypt_settings_secure">Файлът с настройки е сигурен</string>
+    <string name="prefdecrypt_settings_unencrypted">Използване на нешифровани настройки е рисково</string>
+    <string name="prefdecrypt_wrong_json">Грешка във формат JSON, липсва поле (формат, съдържание, метаданни или сигурност)</string>
+    <string name="prefdecrypt_wrong_password">Грешка при декриптиране, грешна парола</string>
+    <string name="prefdecrypt_issue_missing_file_hash">Контролна сума (hash) липсва, не може да се провери автентичността на настройките!</string>
+    <string name="prefdecrypt_issue_modified">Файлът е бил модифициран след експорт!</string>
+    <string name="prefdecrypt_issue_parsing">Грешка при декриптиране, възстановяването неуспешно!</string>
+    <string name="prefdecrypt_issue_wrong_pass">Грешка при декриптиране, грешна парола или файлът с настройки е модифициран! Възможно е импортираният файл да е експортиран с различна парола.</string>
+    <string name="prefdecrypt_issue_wrong_format">Липсва конфигурация на шифроване, форматът на настройките е невалиден!</string>
+    <string name="prefdecrypt_issue_wrong_algorithm">Неподдържан или непотвърден алгоритъм за криптиране!</string>
+    <!-- VersionChecker -->
+    <string name="signature_verifier">Проверка на подпис</string>
+    <string name="running_invalid_version">Използвате грешна версия. APS е изключен!</string>
+    <string name="versionavailable">Има налично обновяване до версия %1$s </string>
+    <!-- Permissions -->
 </resources>

@@ -90,6 +90,9 @@
     <string name="action_confirm">POTVRDIT</string>
     <string name="action_timeshift">posun času</string>
     <string name="action_bolus">bolus</string>
+    <string name="bolus_progress">Průběh vydávání bolusu</string>
+    <string name="press_to_cancel">stisknutím tlačítka akci zrušíte</string>
+    <string name="cancel_bolus">ZRUŠIT BOLUS</string>
     <string name="status_pump">Pumpa</string>
     <string name="status_loop">Smyčka</string>
     <string name="status_cpp">CPP</string>

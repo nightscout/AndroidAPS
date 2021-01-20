@@ -23,24 +23,36 @@
     <!-- PumoCommon - Pump Abstract -->
     <!-- PumoCommon - Pump Status -->
     <!-- PumpCommon - History Group -->
-    <!--    <string name="medtronic_pump_status_never_contacted">Never contacted</string>-->
-    <!--    <string name="medtronic_pump_status_waking_up">Waking up</string>-->
-    <!--    <string name="medtronic_pump_status_error_comm">Error with communication</string>-->
-    <!--    <string name="medtronic_pump_status_timeout_comm">Timeout on communication</string>-->
-    <!--    <string name="medtronic_pump_status_pump_unreachable">Pump unreachable</string>-->
-    <!--    <string name="medtronic_pump_status_invalid_config">Invalid configuration</string>-->
-    <!--    <string name="medtronic_pump_status_active">Active</string>-->
-    <!--    <string name="medtronic_pump_status_sleeping">Sleeping</string>-->
-    <!--    <string name="danar_history_alarm">Alarms</string>-->
-    <!--    <string name="danar_history_glucose">Glucose</string>-->
-    <!--    All(R.string.medtronic_history_group_all), //-->
-    <!--    Bolus(R.string.danar_history_bolus), //-->
-    <!--    Basal(R.string.medtronic_history_group_basal), //-->
-    <!--    Prime(R.string.danar_history_prime), //-->
-    <!--    Configuration(R.string.medtronic_history_group_configuration), //-->
-    <!--    Alarm(R.string.danar_history_alarm), //-->
-    <!--    Glucose(R.string.danar_history_glucose), //-->
-    <!--    Notification(R.string.medtronic_history_group_notification), //-->
-    <!--    Statistic(R.string.medtronic_history_group_statistic),-->
-    <!--    Unknown(R.string.medtronic_history_group_unknown), //-->
+    <!-- Maintenance -->
+    <string name="metadata_label_created_at">Creat:</string>
+    <string name="metadata_label_aaps_version">Versió d\'AAPS</string>
+    <string name="metadata_label_aaps_flavour">Variant de compilació</string>
+    <string name="metadata_label_device_name">Exportant nom del pacient del dispositiu</string>
+    <string name="metadata_label_device_model">Exportant model del dispositiu</string>
+    <string name="metadata_label_encryption">Encriptació d\'arxius</string>
+    <string name="metadata_format_old">Format d\'exportació antic</string>
+    <string name="metadata_format_new">Format nou d\'encriptació</string>
+    <string name="metadata_format_debug">Nou format de debug (no encriptat)</string>
+    <string name="metadata_format_other">Format d\'exportació desconegut</string>
+    <string name="preferences_import_list_title">Selecciona l\'arxiu a importar</string>
+    <string name="metadata_warning_different_flavour">La configuració va ser creada amb una altra versió d\'AAPS (%1$s) i ara teniu la: %2$s.\n\nAlguns dels valors poden faltar o no ser vàlids - si us plau, comproveu la configuració després d\'importar.</string>
+    <string name="metadata_warning_different_device">La configuració va ser creada en un altre dispositiu. No hi ha problema si esteu important des d\'un telèfon més antic/diferent però comproveu que la configuració importada és correcta!</string>
+    <string name="metadata_warning_outdated_format">Esteu utilitzant un format obsolet heretat de versions antigues d\'APPS, i això pot donar problemes! Feu-ho només com a últim recurs, si no teniu una exportació feta en el format JSON actual.</string>
+    <string name="metadata_warning_old_export">La configuració importada és de fa %1$s dies! Potser teniu una configuració més recent o heu escollit el fitxer incorrecte? Recordeu exportar la configuració regularment!</string>
+    <string name="metadata_warning_date_format">Format de data-hora incorrecte!</string>
+    <string name="metadata_warning_different_version">Configuració d\'una versió menor diferent. Cap problema si esteu important després d\'una actualització, però comproveu després d\'importar que la configuració encara sigui correcta!</string>
+    <string name="metadata_urgent_different_version">Configuració d\'una versió major diferent. Les versions majors poden tenir grans diferències i tenir configuracions incompatibles! Comproveu després d\'importar que la configuració encara sigui correcta!</string>
+    <string name="prefdecrypt_settings_tampered">L\'arxiu de configuració ha estat alterat</string>
+    <string name="prefdecrypt_settings_secure">L\'arxiu de configuració és segur</string>
+    <string name="prefdecrypt_settings_unencrypted">Utilitzant format de configuració no segur, no encriptat</string>
+    <string name="prefdecrypt_wrong_json">Error de format JSON, falta camp necessari (format, contingut, metadades o seguretat)</string>
+    <string name="prefdecrypt_wrong_password">Error de desencriptació, la clau proporcionada no pot desencriptar l\'arxiu</string>
+    <string name="prefdecrypt_issue_missing_file_hash">Falta el checksum de l\'arxiu (hash), no es pot verificar l\'autenticitat de la configuració!</string>
+    <string name="prefdecrypt_issue_modified">L\'arxiu ha estat modificat després de l\'exportació!</string>
+    <string name="prefdecrypt_issue_parsing">Error de desencriptació, l\'anàlisi de la configuració ha fallat!</string>
+    <string name="prefdecrypt_issue_wrong_pass">Error de desencriptació, la clau proporcionada no és vàlida o l\'arxiu de configuració ha estat alterat! Pot donar-se si l\'arxiu importat va ser exportat amb una clau mestra diferent.</string>
+    <string name="prefdecrypt_issue_wrong_format">Falta la configuració per encriptar, el format de la configuració és incorrecte!</string>
+    <string name="prefdecrypt_issue_wrong_algorithm">Algoritme d\'encriptació no compatible o no especificat!</string>
+    <!-- VersionChecker -->
+    <!-- Permissions -->
 </resources>

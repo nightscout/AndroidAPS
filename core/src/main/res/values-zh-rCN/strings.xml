@@ -27,24 +27,40 @@
     <string name="pump_operation_not_yet_supported_by_pump">泵不支持操作 YYT 。</string>
     <!-- PumoCommon - Pump Status -->
     <!-- PumpCommon - History Group -->
-    <!--    <string name="medtronic_pump_status_never_contacted">Never contacted</string>-->
-    <!--    <string name="medtronic_pump_status_waking_up">Waking up</string>-->
-    <!--    <string name="medtronic_pump_status_error_comm">Error with communication</string>-->
-    <!--    <string name="medtronic_pump_status_timeout_comm">Timeout on communication</string>-->
-    <!--    <string name="medtronic_pump_status_pump_unreachable">Pump unreachable</string>-->
-    <!--    <string name="medtronic_pump_status_invalid_config">Invalid configuration</string>-->
-    <!--    <string name="medtronic_pump_status_active">Active</string>-->
-    <!--    <string name="medtronic_pump_status_sleeping">Sleeping</string>-->
-    <!--    <string name="danar_history_alarm">Alarms</string>-->
-    <!--    <string name="danar_history_glucose">Glucose</string>-->
-    <!--    All(R.string.medtronic_history_group_all), //-->
-    <!--    Bolus(R.string.danar_history_bolus), //-->
-    <!--    Basal(R.string.medtronic_history_group_basal), //-->
-    <!--    Prime(R.string.danar_history_prime), //-->
-    <!--    Configuration(R.string.medtronic_history_group_configuration), //-->
-    <!--    Alarm(R.string.danar_history_alarm), //-->
-    <!--    Glucose(R.string.danar_history_glucose), //-->
-    <!--    Notification(R.string.medtronic_history_group_notification), //-->
-    <!--    Statistic(R.string.medtronic_history_group_statistic),-->
-    <!--    Unknown(R.string.medtronic_history_group_unknown), //-->
+    <!-- Maintenance -->
+    <string name="metadata_label_created_at">创建于</string>
+    <string name="metadata_label_aaps_version">AAPS 版本</string>
+    <string name="metadata_label_aaps_flavour">构建变体</string>
+    <string name="metadata_label_device_name">导出设备的患者姓名</string>
+    <string name="metadata_label_device_model">导出设备型号</string>
+    <string name="metadata_label_encryption">文件加密密钥。</string>
+    <string name="metadata_format_old">无效的导出格式</string>
+    <string name="metadata_format_new">新的加密格式</string>
+    <string name="metadata_format_debug">新调试格式 (未加密)</string>
+    <string name="metadata_format_other">未知的导出格式</string>
+    <string name="exported_ago" comment="at placeholder we add pluralized number of hours/minutes">已导出 %1$s</string>
+    <string name="exported_less_than_hour_ago">不到 1 小时前更新过</string>
+    <string name="preferences_import_list_title">选择要导入的文件</string>
+    <string name="metadata_warning_different_flavour">使用 AAPS 的不同版本创建首选项 (%1$s) 而你有 %2$s\n\n某些设置可能缺失或无效 - 导入后，请检查并更新首选项。</string>
+    <string name="metadata_warning_different_device">首选项是在不同的设备上创建的。 如果要从较旧/不同的电话导入，但确保导入的首选项正确 !</string>
+    <string name="metadata_warning_outdated_format">您正在使用旧版本的 AAPS 中过时的旧格式，这不安全 ! 仅当您没有当前的 JSON 格式的导出时，才将其用作最后的手段。</string>
+    <string name="metadata_warning_old_export">导入的首选项已存在 %1$s 天 ! 您可能有更多最新的首选项，还是选择了错误的文件? 请记住定期导出首选项 !</string>
+    <string name="metadata_warning_date_format">日期-时间格式无效 !</string>
+    <string name="metadata_warning_different_version">来自应用程序的不同次版本的首选项。 升级后输入正常，但如果首选项仍然正确，请在导入后进行检查 !</string>
+    <string name="metadata_urgent_different_version">来自不同主要应用程序版本的首选项。 主要版本差别很大，可能有不兼容的首选项 ! 请确保导入后首选项仍然正确!</string>
+    <string name="prefdecrypt_settings_tampered">设置文件已更改</string>
+    <string name="prefdecrypt_settings_secure">设置文件是安全</string>
+    <string name="prefdecrypt_settings_unencrypted">使用不安全且未加密的设置格式</string>
+    <string name="prefdecrypt_wrong_json">JSON 格式错误，缺少必填字段 (格式，内容，元数据或安全性)</string>
+    <string name="prefdecrypt_wrong_password">解密错误，该密码无法解密文件</string>
+    <string name="prefdecrypt_issue_modified">导出后文件已修改 !</string>
+    <string name="prefdecrypt_issue_parsing">解密错误，解析首选项失败!</string>
+    <string name="prefdecrypt_issue_wrong_pass">解密错误，提供的密码无效或设置文件已修改! 导入的文件可能是使用其他主密码导出的。</string>
+    <string name="prefdecrypt_issue_wrong_format">缺少加密配置，设置格式无效!</string>
+    <string name="prefdecrypt_issue_wrong_algorithm">不支持或未指定加密算法!</string>
+    <!-- VersionChecker -->
+    <string name="signature_verifier">验证签名</string>
+    <string name="running_invalid_version">我们检测到您运行的版本无效。 已禁用循环!</string>
+    <string name="versionavailable">版本 %1$s 可用</string>
+    <!-- Permissions -->
 </resources>
