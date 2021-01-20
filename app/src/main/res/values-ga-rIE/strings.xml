@@ -4,6 +4,7 @@
     <!--   <string name="he_lang" translatable="false">Hebrew</string> -->
     <!--    <string name="ga_lang" translatable="false">Irish</string> -->
     <!--    <string name="ja_lang" translatable="false">Japanese</string> -->
+    <string name="nav_preferences_plugin">%1$s Sainroghanna</string>
     <string name="nav_preferences">Sainroghanna</string>
     <string name="reset_db_confirm">An bhfuil tú cinnte gur mian leat an bhunachair sonraí a athshocrú?</string>
     <string name="nav_exit">Scoir</string>
