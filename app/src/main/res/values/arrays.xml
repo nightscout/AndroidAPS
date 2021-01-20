@@ -134,6 +134,7 @@
         <item>Tandem t:flex</item>
         <item>Tandem t:slim G4</item>
         <item>Tandem t:slim X2</item>
+        <item>YpsoPump</item>
     </string-array>
 
     <string-array name="medtronicPumpTypeArray">
