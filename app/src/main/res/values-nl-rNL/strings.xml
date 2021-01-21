@@ -495,7 +495,6 @@
     <string name="activity_target">Activiteit streefdoel</string>
     <string name="hypo_duration">Hypo tijdsduur</string>
     <string name="hypo_target">Hypo streefdoel</string>
-    <string name="reuse">Herbruik</string>
     <string name="wearcontrol_title">Bedieningen via horloge</string>
     <string name="wearcontrol_summary">Stel tijdelijke doelen en bolussen in vanop je horloge.</string>
     <string name="food">Voeding</string>
