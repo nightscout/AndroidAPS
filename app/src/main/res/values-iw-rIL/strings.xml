@@ -593,7 +593,6 @@
     <string name="enablesmbwithhightemptarget">הפעלת SMB עם ערכי מטרה גבוהים</string>
     <string name="enablesmbwithhightemptarget_summary">הפעלת SMB כאשר יש ערך מטרה זמני גבוה פעיל (פעילות, מעל 100 mg/dl או 5.5 mmol/l)</string>
     <string name="overview_insulin_label">אינסולין</string>
-    <string name="overview_carbs_label">פחמימות</string>
     <string name="overview_buttons_selection">מקשים</string>
     <string name="show_calibration_button_summary">שולח כיול ל- xDrip או פותח את חלון הכיול של G5</string>
     <string name="show_cgm_button_summary">פותח xDrip, לחצני אחורה חוזר ל-AAPS</string>
