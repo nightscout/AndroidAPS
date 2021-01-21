@@ -495,7 +495,6 @@
     <string name="activity_target">целевое значение СК при физической нагрузке</string>
     <string name="hypo_duration">длительность гипо</string>
     <string name="hypo_target">целевое значение СК при гипо</string>
-    <string name="reuse">повторное использование</string>
     <string name="wearcontrol_title">Контроль с часов</string>
     <string name="wearcontrol_summary">Ставить временные цели и вводить назначения с часов.</string>
     <string name="food">Еда</string>
