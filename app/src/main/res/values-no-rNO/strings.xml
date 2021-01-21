@@ -495,7 +495,6 @@
     <string name="activity_target">aktivitet målverdi</string>
     <string name="hypo_duration">hypo varighet</string>
     <string name="hypo_target">hypo målverdi</string>
-    <string name="reuse">gjenbruk</string>
     <string name="wearcontrol_title">Kontroller fra klokke</string>
     <string name="wearcontrol_summary">Sett temp målverdi og angi behandlinger fra klokken.</string>
     <string name="food">Mat</string>
