@@ -474,7 +474,6 @@
     <string name="enablesmbwithtemptarget_summary">Ενεργοποίηση του SMB όταν υπάρχει ενεργός προσωρινός στόχος (τρώω σύντομα, άσκηση)</string>
     <string name="enablesmbwithhightemptarget">Ενεργοποίηση SMB με υψηλούς προσωρινούς στόχους</string>
     <string name="overview_insulin_label">Ινσουλίνη</string>
-    <string name="overview_carbs_label">Υδατάνθρακες</string>
     <string name="overview_buttons_selection">Πλήκτρα</string>
     <string name="show_calibration_button_summary">Στέλνει καλιμπράρισμα στο xDrip + ή ανοίγει το παράθυρο διαλόγου καλιμπραρίσματος του G5</string>
     <string name="show_cgm_button_summary">Ανοίγει το xDrip +, το πλήκτρο πίσω επιστρέφει στο AndroidAPS</string>
