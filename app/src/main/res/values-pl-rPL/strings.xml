@@ -496,7 +496,6 @@
     <string name="activity_target">Ćwiczenia cel</string>
     <string name="hypo_duration">Hipo czas trwania</string>
     <string name="hypo_target">Hipo cel</string>
-    <string name="reuse">użyj ponownie</string>
     <string name="wearcontrol_title">Sterowanie z zegarka</string>
     <string name="wearcontrol_summary">Ustawiaj wartości docelowe i wprowadzaj leczenie z zegarka.</string>
     <string name="food">Posiłek</string>
