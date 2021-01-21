@@ -593,7 +593,6 @@
     <string name="enablesmbwithhightemptarget">Включить супер микро болюс SMB с высокими значениями временных целей</string>
     <string name="enablesmbwithhightemptarget_summary">Включить микроболюс SMB, когда активна высока временная цель (нагрузка, выше 100 мг/дл или 5,5 ммоль/л)</string>
     <string name="overview_insulin_label">Инсулин</string>
-    <string name="overview_carbs_label">Кол-во углеводов</string>
     <string name="overview_buttons_selection">Кнопки</string>
     <string name="show_calibration_button_summary">Отправить калибровки на xDrip+ или открыть диалоговое окно калибровки G5</string>
     <string name="show_cgm_button_summary">Открывает xDrip +, кнопка назад возвращает в AAPS</string>
