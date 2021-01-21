@@ -594,7 +594,6 @@
     <string name="enablesmbwithhightemptarget">Aktiviere SMB bei temporären Zielen oberhalb des regulären Ziels</string>
     <string name="enablesmbwithhightemptarget_summary">Aktiviere SMB bei hohen temporären Zielen (Sport, über 100 mg/dl bzw. 5,5 mmol/L)</string>
     <string name="overview_insulin_label">Insulin</string>
-    <string name="overview_carbs_label">Kohlenhydrate</string>
     <string name="overview_buttons_selection">Schaltflächen</string>
     <string name="show_calibration_button_summary">Sendet eine Kalibierung an xDrip+ oder öffnet den G5 Kalibrierungs-Dialog.</string>
     <string name="show_cgm_button_summary">Öffnet xDrip+, mit der Zurück-Schaltfläche gelangst du zurück zu AndroidAPS.</string>
