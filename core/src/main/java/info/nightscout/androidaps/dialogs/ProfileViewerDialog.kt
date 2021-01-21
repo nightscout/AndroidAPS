@@ -190,8 +190,8 @@ class ProfileViewerDialog : DaggerDialogFragment() {
     }
 
     private fun basals(profile1: Profile, profile2: Profile): Spanned {
-        var prev1 = 0.0
-        var prev2 = 0.0
+        var prev1 = -1.0
+        var prev2 = -1.0
         val s = StringBuilder()
         for (hour in 0..23) {
             val val1 = profile1.getBasalTimeFromMidnight(hour * 60 * 60)
@@ -213,8 +213,8 @@ class ProfileViewerDialog : DaggerDialogFragment() {
     }
 
     private fun ics(profile1: Profile, profile2: Profile): Spanned {
-        var prev1 = 0.0
-        var prev2 = 0.0
+        var prev1 = -1.0
+        var prev2 = -1.0
         val s = StringBuilder()
         for (hour in 0..23) {
             val val1 = profile1.getIcTimeFromMidnight(hour * 60 * 60)
@@ -230,8 +230,8 @@ class ProfileViewerDialog : DaggerDialogFragment() {
     }
 
     private fun isfs(profile1: Profile, profile2: Profile): Spanned {
-        var prev1 = 0.0
-        var prev2 = 0.0
+        var prev1 = -1.0
+        var prev2 = -1.0
         val units = profileFunction.getUnits()
         val s = StringBuilder()
         for (hour in 0..23) {
@@ -248,10 +248,10 @@ class ProfileViewerDialog : DaggerDialogFragment() {
     }
 
     private fun targets(profile1: Profile, profile2: Profile):Spanned {
-        var prev1l = 0.0
-        var prev1h = 0.0
-        var prev2l = 0.0
-        var prev2h = 0.0
+        var prev1l = -1.0
+        var prev1h = -1.0
+        var prev2l = -1.0
+        var prev2h = -1.0
         val units = profileFunction.getUnits()
         val s = StringBuilder()
         for (hour in 0..23) {

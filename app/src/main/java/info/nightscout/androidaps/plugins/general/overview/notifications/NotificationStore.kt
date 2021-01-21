@@ -8,7 +8,6 @@ import android.content.Context
 import android.content.Intent
 import android.media.AudioManager
 import android.media.RingtoneManager
-import android.os.Build
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -132,14 +131,12 @@ class NotificationStore @Inject constructor(
     }
 
     fun createNotificationChannel() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            usesChannels = true
-            val mNotificationManager = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-            @SuppressLint("WrongConstant") val channel = NotificationChannel(CHANNEL_ID,
-                CHANNEL_ID,
-                NotificationManager.IMPORTANCE_HIGH)
-            mNotificationManager.createNotificationChannel(channel)
-        }
+        usesChannels = true
+        val mNotificationManager = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+        @SuppressLint("WrongConstant") val channel = NotificationChannel(CHANNEL_ID,
+            CHANNEL_ID,
+            NotificationManager.IMPORTANCE_HIGH)
+        mNotificationManager.createNotificationChannel(channel)
     }
 
     @Synchronized
@@ -162,16 +159,6 @@ class NotificationStore @Inject constructor(
         return clone
     }
 
-    /*
-        private fun unSnooze() {
-            if (sp.getBoolean(R.string.key_nsalarm_staledata, false)) {
-                val notification = Notification(Notification.NSALARM, resourceHelper.gs(R.string.nsalarm_staledata), Notification.URGENT)
-                sp.putLong(R.string.key_snoozedTo, System.currentTimeMillis())
-                add(notification)
-                aapsLogger.debug(LTag.NOTIFICATION, "Snoozed to current time and added back notification!")
-            }
-        }
-    */
     inner class NotificationRecyclerViewAdapter internal constructor(private val notificationsList: List<Notification>) : RecyclerView.Adapter<NotificationRecyclerViewAdapter.NotificationsViewHolder>() {
 
         override fun onCreateViewHolder(viewGroup: ViewGroup, viewType: Int): NotificationsViewHolder {
