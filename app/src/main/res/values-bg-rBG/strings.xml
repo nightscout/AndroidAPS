@@ -495,7 +495,6 @@
     <string name="activity_target">Целева КЗ при физ. активност</string>
     <string name="hypo_duration">Продължителност на вр. цел при хипоглекимия</string>
     <string name="hypo_target">Временна цел при хипоглекимия</string>
-    <string name="reuse">отново</string>
     <string name="wearcontrol_title">Контролиране от часовник</string>
     <string name="wearcontrol_summary">Задаване временни цели и въвеждане Лечения от часовник Android wear</string>
     <string name="food">Храна</string>
