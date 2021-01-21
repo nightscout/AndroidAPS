@@ -495,7 +495,6 @@
     <string name="activity_target">Cíl při aktivitě</string>
     <string name="hypo_duration">Trvání dočasného cíle při hypoglykémii</string>
     <string name="hypo_target">Cílová glykémie při hypoglykémii</string>
-    <string name="reuse">znovu použít</string>
     <string name="wearcontrol_title">Řízení z hodinek Wear</string>
     <string name="wearcontrol_summary">Nastavování dočasných cílů a vkládání ošetření na hodinkách Wear.</string>
     <string name="food">Jídlo</string>
