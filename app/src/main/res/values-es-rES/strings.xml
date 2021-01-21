@@ -480,7 +480,6 @@
     <string name="activity_target">objetivo actividad</string>
     <string name="hypo_duration">Duración Hipo</string>
     <string name="hypo_target">Objetivo Hipo</string>
-    <string name="reuse">usar otra vez</string>
     <string name="wearcontrol_title">Control desde reloj</string>
     <string name="wearcontrol_summary">Editar y emitir objetivos temp. y tratamientos desde reloj.</string>
     <string name="food">Comida</string>
