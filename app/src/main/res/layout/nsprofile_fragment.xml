@@ -6,7 +6,7 @@
     android:orientation="vertical">
 
     <info.nightscout.androidaps.utils.ui.SingleClickButton
-        android:id="@+id/nsprofile_profileswitch"
+        android:id="@+id/profileswitch"
         style="@style/Widget.MaterialComponents.Button"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -34,7 +34,7 @@
         android:background="@drawable/aps_spinner"
         android:orientation="horizontal">
         <Spinner
-            android:id="@+id/nsprofile_spinner"
+            android:id="@+id/spinner"
             android:layout_width="match_parent"
             android:layout_height="@android:dimen/app_icon_size"
             android:layout_gravity="center_horizontal"
@@ -45,6 +45,7 @@
     </RelativeLayout>
 
     <include
+        android:id="@+id/profileviewer"
         layout="@layout/profileviewer_fragment"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
