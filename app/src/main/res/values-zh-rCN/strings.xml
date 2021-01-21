@@ -379,7 +379,6 @@
     <string name="activity_target">运动临时目标</string>
     <string name="hypo_duration">持续时间短</string>
     <string name="hypo_target">低目标</string>
-    <string name="reuse">重复用</string>
     <string name="wearcontrol_title">从手表上控制</string>
     <string name="wearcontrol_summary">设置临时目标并从手表中进行治疗操作。</string>
     <string name="food">食物</string>
