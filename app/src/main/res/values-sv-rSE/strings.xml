@@ -496,7 +496,6 @@ Eversense-appen.</string>
     <string name="activity_target">Mål vid träning</string>
     <string name="hypo_duration">Hypo [min]</string>
     <string name="hypo_target">Mål vid Hypo</string>
-    <string name="reuse">återanvänd</string>
     <string name="wearcontrol_title">Kontrollera från klockan</string>
     <string name="wearcontrol_summary">Sätt temp målvärde och ange behandlingar från klockan.</string>
     <string name="food">Matdatabas</string>
