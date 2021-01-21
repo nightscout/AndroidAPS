@@ -362,7 +362,6 @@ Aktif Karbonhidratın ne kadar hızlı sindirildiğine ve KŞ\'nin beklenenden d
     <string name="activity_target">eğzersiz hedefi</string>
     <string name="hypo_duration">hipo süresi</string>
     <string name="hypo_target">hipo hedefi</string>
-    <string name="reuse">yeniden kullanım</string>
     <string name="wearcontrol_title">Saat tarafından kontrol</string>
     <string name="wearcontrol_summary">Tedavileri ve Geçici hedefleri saat tarafından girin.</string>
     <string name="food">Yiyecek</string>
