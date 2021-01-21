@@ -476,7 +476,6 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
             resourceHelper.gc(R.color.ribbonTextWarning).let { overview_activeprofile.setTextColor(it) }
             overview_activeprofile.setTypeface(null, Typeface.BOLD)
         } else {
-            val drawableLeft: Array<Drawable?> = overview_activeprofile.compoundDrawables
             val theme = requireContext().theme
             if (theme != null) {
                 setPillStyle(overview_activeprofile,R.attr.PillColorStart, R.attr.PillColorEnd , R.color.ribbonTextDefault)

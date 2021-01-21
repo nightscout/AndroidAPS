@@ -51,7 +51,7 @@ class StatusLightHandler @Inject constructor(
 
         if (!config.NSCLIENT) {
             if (pump.model() == PumpType.Insulet_Omnipod && pump is OmnipodPumpPlugin) { // instanceof check is needed because at startup, pump can still be VirtualPumpPlugin and that will cause a crash because of the class cast below
-                handleOmnipodBatteryLevel(careportal_battery_level, R.string.key_statuslights_bat_critical, 26.0, R.string.key_statuslights_bat_warning, 51.0, pump.batteryLevel.toDouble(), "%", (pump as OmnipodPumpPlugin).isUseRileyLinkBatteryLevel ,ColorNormal, ColorWarning, ColorAlarm)
+                handleOmnipodBatteryLevel(careportal_battery_level, R.string.key_statuslights_bat_critical, 26.0, R.string.key_statuslights_bat_warning, 51.0, pump.batteryLevel.toDouble(), "%", pump.isUseRileyLinkBatteryLevel ,ColorNormal, ColorWarning, ColorAlarm)
             } else if (pump.model() != PumpType.AccuChekCombo) {
                 handleLevel(careportal_battery_level, R.string.key_statuslights_bat_critical, 26.0, R.string.key_statuslights_bat_warning, 51.0, pump.batteryLevel.toDouble(), "%",ColorNormal, ColorWarning, ColorAlarm)
             }
