@@ -65,7 +65,7 @@
                 android:textStyle="bold" />
 
             <Spinner
-                android:id="@+id/overview_profileswitch_profile"
+                android:id="@+id/profile"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical" />
@@ -73,7 +73,7 @@
         </LinearLayout>
 
         <LinearLayout
-            android:id="@+id/overview_profileswitch_reuselayout"
+            android:id="@+id/reuselayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
@@ -91,10 +91,10 @@
                 android:textStyle="bold" />
 
             <Button
-                android:id="@+id/overview_profileswitch_reusebutton"
+                android:id="@+id/reusebutton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/reuse" />
+                android:text="@string/reuse_profile_pct_hours" />
 
             <TextView
                 android:layout_width="wrap_content"
@@ -126,7 +126,7 @@
                 android:textStyle="bold" />
 
             <info.nightscout.androidaps.utils.ui.MinutesNumberPicker
-                android:id="@+id/overview_profileswitch_duration"
+                android:id="@+id/duration"
                 android:layout_width="130dp"
                 android:layout_height="40dp" />
 
@@ -160,7 +160,7 @@
                 android:textStyle="bold" />
 
             <info.nightscout.androidaps.utils.ui.NumberPicker
-                android:id="@+id/overview_profileswitch_percentage"
+                android:id="@+id/percentage"
                 android:layout_width="130dp"
                 android:layout_height="40dp" />
 
@@ -194,7 +194,7 @@
                 android:textStyle="bold" />
 
             <info.nightscout.androidaps.utils.ui.NumberPicker
-                android:id="@+id/overview_profileswitch_timeshift"
+                android:id="@+id/timeshift"
                 android:layout_width="130dp"
                 android:layout_height="40dp" />
 
@@ -211,11 +211,17 @@
 
         </LinearLayout>
 
-        <include layout="@layout/notes" />
+        <include
+            android:id="@+id/notes_layout"
+            layout="@layout/notes" />
 
-        <include layout="@layout/datetime" />
+        <include
+            android:id="@+id/datetime"
+            layout="@layout/datetime" />
 
-        <include layout="@layout/okcancel" />
+        <include
+            android:id="@+id/okcancel"
+            layout="@layout/okcancel" />
 
     </LinearLayout>
 
