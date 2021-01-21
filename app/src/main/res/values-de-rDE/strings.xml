@@ -495,7 +495,6 @@
     <string name="activity_target">Aktivitäts-Zielwert</string>
     <string name="hypo_duration">Hypo-Dauer</string>
     <string name="hypo_target">Hypo - Zielwert</string>
-    <string name="reuse">Erneut verwenden</string>
     <string name="wearcontrol_title">Steuerung durch die Uhr</string>
     <string name="wearcontrol_summary">Setze temporäre Ziele und Behandlungen mit der Uhr</string>
     <string name="food">Essen</string>
