@@ -193,7 +193,9 @@ class AutomationPlugin @Inject constructor(
         }
 
         aapsLogger.debug(LTag.AUTOMATION, "processActions")
-        for (event in automationEvents) {
+        val iterator = automationEvents.iterator()
+        while (iterator.hasNext()) {
+            val event = iterator.next()
             if (event.isEnabled && event.shouldRun() && event.trigger.shouldRun() && event.getPreconditions().shouldRun()) {
                 if (event.systemAction || userEventsEnabled) {
                     val actions = event.actions

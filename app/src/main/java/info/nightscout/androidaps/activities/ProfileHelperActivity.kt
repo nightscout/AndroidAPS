@@ -234,13 +234,15 @@ class ProfileHelperActivity : NoSplashAppCompatActivity() {
     }
 
     private fun getProfile(age: Double, tdd: Double, weight: Double, basalPct: Double, tab: Int): Profile? =
-        when (typeSelected[tab]) {
-            ProfileType.MOTOL_DEFAULT     -> defaultProfile.profile(age, tdd, weight, profileFunction.getUnits())
-            ProfileType.DPV_DEFAULT       -> defaultProfileDPV.profile(age, tdd, basalPct, profileFunction.getUnits())
-            ProfileType.CURRENT           -> profileFunction.getProfile()?.convertToNonCustomizedProfile()
-            ProfileType.AVAILABLE_PROFILE -> activePlugin.activeProfileInterface.profile?.getSpecificProfile(profileList[profileUsed[tab]].toString())
-            ProfileType.PROFILE_SWITCH    -> profileSwitch[profileSwitchUsed[tab]].profileObject?.convertToNonCustomizedProfile()
-        }
+        try { // profile must not exist
+            when (typeSelected[tab]) {
+                ProfileType.MOTOL_DEFAULT     -> defaultProfile.profile(age, tdd, weight, profileFunction.getUnits())
+                ProfileType.DPV_DEFAULT       -> defaultProfileDPV.profile(age, tdd, basalPct, profileFunction.getUnits())
+                ProfileType.CURRENT           -> profileFunction.getProfile()?.convertToNonCustomizedProfile()
+                ProfileType.AVAILABLE_PROFILE -> activePlugin.activeProfileInterface.profile?.getSpecificProfile(profileList[profileUsed[tab]].toString())
+                ProfileType.PROFILE_SWITCH    -> profileSwitch[profileSwitchUsed[tab]].profileObject?.convertToNonCustomizedProfile()
+            }
+        } catch (e: Exception) { null }
 
     private fun getProfileName(age: Double, tdd: Double, weight: Double, basalSumPct: Double, tab: Int): String =
         when (typeSelected[tab]) {
