@@ -593,7 +593,6 @@
     <string name="enablesmbwithhightemptarget">Povolit SMB s vysokými dočasnými cíli</string>
     <string name="enablesmbwithhightemptarget_summary">Povolit SMB, je-li aktivní vysoký cíl (cvičení, vyšší než 100 mg/dl nebo 5,5 mmol/l)</string>
     <string name="overview_insulin_label">Inzulín</string>
-    <string name="overview_carbs_label">Sacharidy</string>
     <string name="overview_buttons_selection">Tlačítka</string>
     <string name="show_calibration_button_summary">Odeslání kalibrace do xDripu+, nebo otevření kalibračního dialogu na G5</string>
     <string name="show_cgm_button_summary">Otevře xDrip+, tlačítko zpět vrátí do AndroidAPS</string>
