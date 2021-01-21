@@ -403,7 +403,6 @@
     <string name="activity_target">활동 목표</string>
     <string name="hypo_duration">저혈당 기간</string>
     <string name="hypo_target">저혈당 목표</string>
-    <string name="reuse">재사용</string>
     <string name="wearcontrol_title">워치로 제어하기</string>
     <string name="wearcontrol_summary">임시목표와 관리입력을 워치로 설정합니다.</string>
     <string name="food">음식</string>
