@@ -495,6 +495,7 @@
     <string name="activity_target">target \"attività fisica\"</string>
     <string name="hypo_duration">target \"ipoglicemia\" - durata</string>
     <string name="hypo_target">target \"ipoglicemia\"</string>
+    <string name="reuse_profile_pct_hours">Riusa %1$d%% %2$dh</string>
     <string name="wearcontrol_title">Controlli da smartwatch</string>
     <string name="wearcontrol_summary">Imposta Temp-Target e inserisci trattamenti dallo smartwatch.</string>
     <string name="food">Cibo</string>
