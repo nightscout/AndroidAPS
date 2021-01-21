@@ -594,7 +594,6 @@
     <string name="enablesmbwithhightemptarget">Abilita SMB con target temporanei \"alti\"</string>
     <string name="enablesmbwithhightemptarget_summary">Abilita SMB quando è attivo un target temporaneo \"alto\" (attività fisica, sopra 100 mg/dl o 5.5 mmol/l)</string>
     <string name="overview_insulin_label">Insulina</string>
-    <string name="overview_carbs_label">CHO</string>
     <string name="overview_buttons_selection">Tasti</string>
     <string name="show_calibration_button_summary">Invia una calibrazione a xDrip+ o apre la finestra di calibrazione del G5</string>
     <string name="show_cgm_button_summary">Apre xDrip+, il tasto indietro torna ad AAPS</string>
