@@ -473,6 +473,7 @@ public class TreatmentsPlugin extends PluginBase implements TreatmentsInterface 
 
         for (long i = time - range(); i < time; i += T.mins(5).msecs()) {
             Profile profile = profileFunction.getProfile(i);
+            if (profile == null) continue;
             double basal = profile.getBasal(i);
             TemporaryBasal runningTBR = getTempBasalFromHistory(i);
             double running = basal;

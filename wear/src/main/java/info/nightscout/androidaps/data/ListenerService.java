@@ -37,6 +37,7 @@ import com.google.android.gms.wearable.WearableListenerService;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
+import info.nightscout.androidaps.aaps;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.interaction.AAPSPreferences;
 import info.nightscout.androidaps.interaction.actions.AcceptActivity;
@@ -635,13 +636,13 @@ public class ListenerService extends WearableListenerService implements GoogleAp
         NotificationCompat.Builder notificationBuilder =
                 new NotificationCompat.Builder(this, AAPS_NOTIFY_CHANNEL_ID_BOLUSPROGRESS)
                         .setSmallIcon(R.drawable.ic_icon)
-                        .setContentTitle("Bolus Progress")
+                        .setContentTitle(aaps.gs(R.string.bolus_progress))
                         .setContentText(progresspercent + "% - " + progresstatus)
-                        .setSubText("press to cancel")
+                        .setSubText(aaps.gs(R.string.press_to_cancel))
                         .setContentIntent(cancelPendingIntent)
                         .setPriority(NotificationCompat.PRIORITY_MAX)
                         .setVibrate(vibratePattern)
-                        .addAction(R.drawable.ic_cancel, "CANCEL BOLUS", cancelPendingIntent);
+                        .addAction(R.drawable.ic_cancel, aaps.gs(R.string.cancel_bolus), cancelPendingIntent);
 
         NotificationManagerCompat notificationManager =
                 NotificationManagerCompat.from(this);
