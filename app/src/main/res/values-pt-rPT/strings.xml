@@ -484,7 +484,6 @@
     <string name="activity_target">alvo actividade</string>
     <string name="hypo_duration">duração hipo</string>
     <string name="hypo_target">alvo hipo</string>
-    <string name="reuse">reutilizar</string>
     <string name="wearcontrol_title">Controles do Relógio</string>
     <string name="wearcontrol_summary">Definir Alvo-Temp and inserir Tratamentos do relógio.</string>
     <string name="food">Alimentos</string>
