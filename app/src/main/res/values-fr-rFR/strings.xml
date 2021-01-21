@@ -496,7 +496,6 @@ L\'ENSEMBLE DES RISQUES LIÉS À LA QUALITÉ ET À LA PERFORMANCE DU PROGRAMME S
     <string name="activity_target">Cible Glycémie pour l\'activité</string>
     <string name="hypo_duration">durée hypo [min]</string>
     <string name="hypo_target">Cible Glycémie pendant l’hypo</string>
-    <string name="reuse">réutiliser</string>
     <string name="wearcontrol_title">Commandes depuis la montre</string>
     <string name="wearcontrol_summary">Définir les Cibles Temp et entrer les Traitements depuis la montre</string>
     <string name="food">Aliments</string>
