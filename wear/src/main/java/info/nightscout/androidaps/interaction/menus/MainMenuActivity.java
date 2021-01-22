@@ -13,8 +13,8 @@ import info.nightscout.androidaps.interaction.AAPSPreferences;
 import info.nightscout.androidaps.interaction.actions.BolusActivity;
 import info.nightscout.androidaps.interaction.actions.ECarbActivity;
 import info.nightscout.androidaps.interaction.actions.TempTargetActivity;
-import info.nightscout.androidaps.interaction.utils.MenuListActivity;
 import info.nightscout.androidaps.interaction.actions.WizardActivity;
+import info.nightscout.androidaps.interaction.utils.MenuListActivity;
 
 /**
  * Created by adrian on 09/02/17.
@@ -35,19 +35,19 @@ public class MainMenuActivity extends MenuListActivity {
     protected String[] getElements() {
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
 
-        if(!sharedPreferences.getBoolean("wearcontrol", false)){
-            return new String[] {
+        if (!sharedPreferences.getBoolean("wearcontrol", false)) {
+            return new String[]{
                     getString(R.string.menu_settings),
                     getString(R.string.menu_resync)};
         }
 
 
-        boolean showPrimeFill  = sp.getBoolean("primefill", false);
-        boolean showWizard  = sp.getBoolean("showWizard", true);
+        boolean showPrimeFill = sp.getBoolean("primefill", false);
+        boolean showWizard = sp.getBoolean("showWizard", true);
 
         Vector<String> menuitems = new Vector<String>();
         menuitems.add(getString(R.string.menu_tempt));
-        if(showWizard) menuitems.add(getString(R.string.menu_wizard));
+        if (showWizard) menuitems.add(getString(R.string.menu_wizard));
         menuitems.add(getString(R.string.menu_ecarb));
         menuitems.add(getString(R.string.menu_bolus));
         menuitems.add(getString(R.string.menu_settings));
@@ -66,7 +66,7 @@ public class MainMenuActivity extends MenuListActivity {
             intent = new Intent(this, AAPSPreferences.class);
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             this.startActivity(intent);
-        } else if ("Re-Sync".equals(action)) {
+        } else if (getString(R.string.menu_resync).equals(action)) {
             ListenerService.requestData(this);
         } else if (getString(R.string.menu_tempt).equals(action)) {
             intent = new Intent(this, TempTargetActivity.class);
@@ -89,9 +89,9 @@ public class MainMenuActivity extends MenuListActivity {
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             this.startActivity(intent);
         } else if (getString(R.string.menu_ecarb).equals(action)) {
-        intent = new Intent(this, ECarbActivity.class);
-        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        this.startActivity(intent);
-    }
+            intent = new Intent(this, ECarbActivity.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            this.startActivity(intent);
+        }
     }
 }
