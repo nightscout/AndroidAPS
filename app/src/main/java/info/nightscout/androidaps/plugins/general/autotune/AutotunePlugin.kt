@@ -57,7 +57,7 @@ class AutotunePlugin @Inject constructor(
 ) : PluginBase(PluginDescription()
     .mainType(PluginType.GENERAL)
     .fragmentClass(AutotuneFragment::class.qualifiedName)
-    .pluginIcon(R.drawable.ic_generic_icon)
+    .pluginIcon(R.drawable.ic_autotune)
     .pluginName(R.string.autotune)
     .shortName(R.string.autotune_shortname)
     .preferencesId(R.xml.pref_autotune)
