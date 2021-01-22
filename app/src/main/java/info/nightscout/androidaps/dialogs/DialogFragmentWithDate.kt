@@ -57,14 +57,14 @@ abstract class DialogFragmentWithDate : DaggerDialogFragment() {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        val eventDateView = view.findViewById(R.id.eventdate) as TextView
-        val eventTimeView = view.findViewById(R.id.eventtime) as TextView
+        val eventDateView = view.findViewById(R.id.eventdate) as TextView?
+        val eventTimeView = view.findViewById(R.id.eventtime) as TextView?
 
         eventTime = savedInstanceState?.getLong("eventTime") ?: DateUtil.now()
         eventTimeChanged = savedInstanceState?.getBoolean("eventTimeChanged") ?: false
 
-        eventDateView.text = DateUtil.dateString(eventTime)
-        eventTimeView.text = dateUtil.timeString(eventTime)
+        eventDateView?.text = DateUtil.dateString(eventTime)
+        eventTimeView?.text = dateUtil.timeString(eventTime)
 
         // create an OnDateSetListener
         val dateSetListener = DatePickerDialog.OnDateSetListener { _, year, monthOfYear, dayOfMonth ->
@@ -75,10 +75,10 @@ abstract class DialogFragmentWithDate : DaggerDialogFragment() {
             cal.set(Calendar.DAY_OF_MONTH, dayOfMonth)
             eventTime = cal.timeInMillis
             eventTimeChanged = true
-            eventDateView.text = DateUtil.dateString(eventTime)
+            eventDateView?.text = DateUtil.dateString(eventTime)
         }
 
-        eventDateView.setOnClickListener {
+        eventDateView?.setOnClickListener {
             context?.let {
                 val cal = Calendar.getInstance()
                 cal.timeInMillis = eventTime
@@ -99,10 +99,10 @@ abstract class DialogFragmentWithDate : DaggerDialogFragment() {
             cal.set(Calendar.SECOND, seconds++) // randomize seconds to prevent creating record of the same time, if user choose time manually
             eventTime = cal.timeInMillis
             eventTimeChanged = true
-            eventTimeView.text = dateUtil.timeString(eventTime)
+            eventTimeView?.text = dateUtil.timeString(eventTime)
         }
 
-        eventTimeView.setOnClickListener {
+        eventTimeView?.setOnClickListener {
             context?.let {
                 val cal = Calendar.getInstance()
                 cal.timeInMillis = eventTime
@@ -114,9 +114,9 @@ abstract class DialogFragmentWithDate : DaggerDialogFragment() {
             }
         }
 
-        (view.findViewById(R.id.notes_layout) as View).visibility = sp.getBoolean(R.string.key_show_notes_entry_dialogs, false).toVisibility()
+        (view.findViewById(R.id.notes_layout) as View?)?.visibility = sp.getBoolean(R.string.key_show_notes_entry_dialogs, false).toVisibility()
 
-        (view.findViewById(R.id.ok) as Button).setOnClickListener {
+        (view.findViewById(R.id.ok) as Button?)?.setOnClickListener {
             synchronized(okClicked) {
                 if (okClicked) {
                     aapsLogger.warn(LTag.UI, "guarding: ok already clicked")
@@ -127,7 +127,7 @@ abstract class DialogFragmentWithDate : DaggerDialogFragment() {
                 }
             }
         }
-        (view.findViewById(R.id.cancel) as Button).setOnClickListener { dismiss() }
+        (view.findViewById(R.id.cancel) as Button?)?.setOnClickListener { dismiss() }
     }
 
     override fun show(manager: FragmentManager, tag: String?) {
