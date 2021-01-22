@@ -132,4 +132,8 @@
     <string name="digitalstyle_pref_your_color">הצבע שלך:</string>
     <string name="digitalstyle_pref_your_color_saturation">רווית הצבע שלך:</string>
     <string name="digitalstyle_pref_your_color_opacity">אטימות הצבע שלכם:</string>
+    <string name="bolus_progress_channel_name">התקדמות הבולוס</string>
+    <string name="bolus_progress_silent_channel_name">התקדמות בולוס שקטה</string>
+    <string name="bolus_progress_channel_description">התקדמות הבולוס וביטול</string>
+    <string name="bolus_progress_silent_channel_description">התקדמות הבולוס וביטול עם פחות רטט</string>
 </resources>
