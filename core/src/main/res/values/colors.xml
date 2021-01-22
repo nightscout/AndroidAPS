@@ -4,8 +4,7 @@
     <color name="colorPrimaryDark">#000000</color>
     <color name="colorAccent">#40bbaa</color>
     <color name="mdtp_button_selected">#33969696</color>
-    <color name="mdtp_accent_color">#009688</color>
-    <color name="mdtp_button_color">@color/mdtp_accent_color</color>
+    <color name="mdtp_button_color">@color/colorAccent</color>
     <color name="mdtp_white">#ffffff</color>
     <color name="mdtp_line_dark">#808080</color>
     <color name="colorLightGray">#d8d8d8</color>
