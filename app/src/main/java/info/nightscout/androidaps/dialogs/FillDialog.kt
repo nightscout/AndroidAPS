@@ -111,7 +111,7 @@ class FillDialog : DialogFragmentWithDate() {
         val siteChange = binding.fillCatheterChange.isChecked
         if (siteChange)
             actions.add(resourceHelper.gs(R.string.record_pump_site_change).formatColor(resourceHelper, R.color.actionsConfirm))
-        val insulinChange = binding.fillCatheterChange.isChecked
+        val insulinChange = binding.fillCartridgeChange.isChecked
         if (insulinChange)
             actions.add(resourceHelper.gs(R.string.record_insulin_cartridge_change).formatColor(resourceHelper, R.color.actionsConfirm))
         val notes = binding.notesLayout.notes.text.toString()
@@ -122,7 +122,7 @@ class FillDialog : DialogFragmentWithDate() {
         if (eventTimeChanged)
             actions.add(resourceHelper.gs(R.string.time) + ": " + dateUtil.dateAndTimeString(eventTime))
 
-        if (insulinAfterConstraints > 0 || binding.fillCatheterChange.isChecked || binding.fillCatheterChange.isChecked) {
+        if (insulinAfterConstraints > 0 || binding.fillCatheterChange.isChecked || binding.fillCartridgeChange.isChecked) {
             activity?.let { activity ->
                 OKDialog.showConfirmation(activity, resourceHelper.gs(R.string.primefill), HtmlHelper.fromHtml(Joiner.on("<br/>").join(actions)), {
                     if (insulinAfterConstraints > 0) {
