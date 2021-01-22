@@ -10,7 +10,7 @@ import org.junit.runner.RunWith;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
-import info.nightscout.androidaps.aaps;
+import info.nightscout.androidaps.Aaps;
 import info.nightscout.androidaps.data.RawDisplayData;
 import info.nightscout.androidaps.testing.mockers.AAPSMocker;
 import info.nightscout.androidaps.testing.mockers.WearUtilMocker;
@@ -30,7 +30,7 @@ import static org.junit.Assert.assertThat;
  */
 
 @RunWith(PowerMockRunner.class)
-@PrepareForTest( { WearUtil.class, Log.class, SharedPreferences.class, Context.class, aaps.class } )
+@PrepareForTest( { WearUtil.class, Log.class, SharedPreferences.class, Context.class, Aaps.class } )
 public class DisplayFormatTest {
 
     @Before

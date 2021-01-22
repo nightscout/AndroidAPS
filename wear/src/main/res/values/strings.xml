@@ -150,7 +150,10 @@
     <string name="digitalstyle_pref_your_color">Your color:</string>
     <string name="digitalstyle_pref_your_color_saturation">Your color saturation:</string>
     <string name="digitalstyle_pref_your_color_opacity">Your color opacity:</string>
-
+    <string name="bolus_progress_channel_name">AAPS Bolus Progress</string>
+    <string name="bolus_progress_silent_channel_name">AAPS Bolus Progress Silent</string>
+    <string name="bolus_progress_channel_description">Bolus progress and cancel</string>
+    <string name="bolus_progress_silent_channel_description">Bolus progress and cancel with less vibrations</string>
 
 
 </resources>
