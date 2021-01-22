@@ -5,19 +5,16 @@ import android.app.Application;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.os.Build;
 import android.preference.PreferenceManager;
 
-import androidx.annotation.StringRes;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
-import info.nightscout.androidaps.interaction.utils.Persistence;
 
 /**
  * Created for xDrip+ by Emma Black on 3/21/15.
  * Adapted for AAPS by dlvoy 2019-11-06.
  */
 
-public class aaps extends Application implements SharedPreferences.OnSharedPreferenceChangeListener {
+public class Aaps extends Application implements SharedPreferences.OnSharedPreferenceChangeListener {
 
     @SuppressLint("StaticFieldLeak")
     private static Context context;
@@ -26,7 +23,7 @@ public class aaps extends Application implements SharedPreferences.OnSharedPrefe
 
     @Override
     public void onCreate() {
-        aaps.context = getApplicationContext();
+        Aaps.context = getApplicationContext();
         SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(this);
         sharedPrefs.registerOnSharedPreferenceChangeListener(this);
         updatePrefs(sharedPrefs);
@@ -39,19 +36,7 @@ public class aaps extends Application implements SharedPreferences.OnSharedPrefe
     }
 
     public static Context getAppContext() {
-        return aaps.context;
-    }
-
-    private static boolean isWear2OrAbove() {
-        return Build.VERSION.SDK_INT > 23;
-    }
-
-    public static String gs(@StringRes final int id) {
-        return getAppContext().getString(id);
-    }
-
-    public static String gs(@StringRes final int id, String... args) {
-        return getAppContext().getString(id, (Object[]) args);
+        return Aaps.context;
     }
 
     public static Boolean areComplicationsUnicode() {

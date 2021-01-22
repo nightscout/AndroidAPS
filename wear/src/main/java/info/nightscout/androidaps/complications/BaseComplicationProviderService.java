@@ -19,7 +19,7 @@ import java.util.Set;
 
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 import info.nightscout.androidaps.R;
-import info.nightscout.androidaps.aaps;
+import info.nightscout.androidaps.Aaps;
 import info.nightscout.androidaps.data.RawDisplayData;
 import info.nightscout.androidaps.data.ListenerService;
 import info.nightscout.androidaps.interaction.utils.Constants;
@@ -94,11 +94,11 @@ public abstract class BaseComplicationProviderService extends ComplicationProvid
                 }
                 break;
             case ComplicationData.TYPE_LONG_TEXT:
-                builder.setLongTitle(ComplicationText.plainText(aaps.gs(R.string.label_warning_sync)));
+                builder.setLongTitle(ComplicationText.plainText(getString(R.string.label_warning_sync)));
                 if (since > 0) {
-                    builder.setLongText(ComplicationText.plainText(String.format(aaps.gs(R.string.label_warning_since), DisplayFormat.shortTimeSince(since))));
+                    builder.setLongText(ComplicationText.plainText(String.format(getString(R.string.label_warning_since), DisplayFormat.shortTimeSince(since))));
                 } else {
-                    builder.setLongText(ComplicationText.plainText(aaps.gs(R.string.label_warning_sync_aaps)));
+                    builder.setLongText(ComplicationText.plainText(getString(R.string.label_warning_sync_aaps)));
                 }
                 break;
             case ComplicationData.TYPE_LARGE_IMAGE:
@@ -143,11 +143,11 @@ public abstract class BaseComplicationProviderService extends ComplicationProvid
                 }
                 break;
             case ComplicationData.TYPE_LONG_TEXT:
-                builder.setLongTitle(ComplicationText.plainText(aaps.gs(R.string.label_warning_old)));
+                builder.setLongTitle(ComplicationText.plainText(getString(R.string.label_warning_old)));
                 if (since > 0) {
-                    builder.setLongText(ComplicationText.plainText(String.format(aaps.gs(R.string.label_warning_since), DisplayFormat.shortTimeSince(since))));
+                    builder.setLongText(ComplicationText.plainText(String.format(getString(R.string.label_warning_since), DisplayFormat.shortTimeSince(since))));
                 } else {
-                    builder.setLongText(ComplicationText.plainText(aaps.gs(R.string.label_warning_sync_aaps)));
+                    builder.setLongText(ComplicationText.plainText(getString(R.string.label_warning_sync_aaps)));
                 }
                 break;
             case ComplicationData.TYPE_LARGE_IMAGE:
@@ -223,7 +223,7 @@ public abstract class BaseComplicationProviderService extends ComplicationProvid
         // We pass the complication id, so we can only update the specific complication tapped.
         final PendingIntent complicationPendingIntent =
                 ComplicationTapBroadcastReceiver.getTapActionIntent(
-                        aaps.getAppContext(), thisProvider, complicationId, getComplicationAction());
+                        Aaps.getAppContext(), thisProvider, complicationId, getComplicationAction());
 
         final Persistence persistence = new Persistence();
 
@@ -242,12 +242,12 @@ public abstract class BaseComplicationProviderService extends ComplicationProvid
         if (WearUtil.msSince(persistence.whenDataUpdated()) > Constants.STALE_MS) {
             // no new data arrived - probably configuration or connection error
             final PendingIntent infoToast = ComplicationTapBroadcastReceiver.getTapWarningSinceIntent(
-                    aaps.getAppContext(), thisProvider, complicationId, ComplicationAction.WARNING_SYNC, persistence.whenDataUpdated());
+                    Aaps.getAppContext(), thisProvider, complicationId, ComplicationAction.WARNING_SYNC, persistence.whenDataUpdated());
             complicationData = buildNoSyncComplicationData(dataType, raw, complicationPendingIntent, infoToast, persistence.whenDataUpdated());
         } else if (WearUtil.msSince(raw.datetime) > Constants.STALE_MS) {
             // data arriving from phone AAPS, but it is outdated (uploader/NS/xDrip/Sensor error)
             final PendingIntent infoToast = ComplicationTapBroadcastReceiver.getTapWarningSinceIntent(
-                    aaps.getAppContext(), thisProvider, complicationId, ComplicationAction.WARNING_OLD, raw.datetime);
+                    Aaps.getAppContext(), thisProvider, complicationId, ComplicationAction.WARNING_OLD, raw.datetime);
             complicationData = buildOutdatedComplicationData(dataType, raw, complicationPendingIntent, infoToast, raw.datetime);
         } else {
             // data is up-to-date, we can render standard complication
@@ -349,8 +349,8 @@ public abstract class BaseComplicationProviderService extends ComplicationProvid
             Inevitable.task("update-req-"+provider, 700, () -> {
                 if (WearUtil.isBelowRateLimit("update-req-"+provider, 2)) {
                     Log.d(TAG, "Requesting update of "+provider);
-                    final ComponentName componentName = new ComponentName(aaps.getAppContext(), provider);
-                    final ProviderUpdateRequester providerUpdateRequester = new ProviderUpdateRequester(aaps.getAppContext(), componentName);
+                    final ComponentName componentName = new ComponentName(Aaps.getAppContext(), provider);
+                    final ProviderUpdateRequester providerUpdateRequester = new ProviderUpdateRequester(Aaps.getAppContext(), componentName);
                     providerUpdateRequester.requestUpdateAll();
                 }
             });

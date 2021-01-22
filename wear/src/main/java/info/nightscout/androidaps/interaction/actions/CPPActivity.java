@@ -14,7 +14,6 @@ import android.widget.ImageView;
 import java.text.DecimalFormat;
 
 import info.nightscout.androidaps.R;
-import info.nightscout.androidaps.aaps;
 import info.nightscout.androidaps.data.ListenerService;
 import info.nightscout.androidaps.interaction.utils.PlusMinusEditText;
 import info.nightscout.androidaps.interaction.utils.SafeParse;
@@ -40,11 +39,12 @@ public class CPPActivity extends ViewSelectorActivity {
         percentage = extras.getInt("percentage", -1);
         timeshift = extras.getInt("timeshift", -1);
 
-        if (percentage ==-1 || timeshift ==-25){
-            finish(); return;
+        if (percentage == -1 || timeshift == -25) {
+            finish();
+            return;
         }
 
-        if(timeshift < 0) timeshift += 24;
+        if (timeshift < 0) timeshift += 24;
 
         setContentView(R.layout.grid_layout);
         final Resources res = getResources();
@@ -77,24 +77,24 @@ public class CPPActivity extends ViewSelectorActivity {
         @Override
         public Object instantiateItem(ViewGroup container, int row, int col) {
 
-            if(col == 0){
+            if (col == 0) {
                 final View view = getInflatedPlusMinusView(container);
                 double def = timeshift;
-                if (editTimeshift != null){
+                if (editTimeshift != null) {
                     def = SafeParse.stringToDouble(editTimeshift.editText.getText().toString());
                 }
                 editTimeshift = new PlusMinusEditText(view, R.id.amountfield, R.id.plusbutton, R.id.minusbutton, def, 0d, 23d, 1d, new DecimalFormat("0"), true, true);
-                setLabelToPlusMinusView(view, aaps.gs(R.string.action_timeshift));
+                setLabelToPlusMinusView(view, getString(R.string.action_timeshift));
                 container.addView(view);
                 return view;
-            } else if(col == 1){
+            } else if (col == 1) {
                 final View view = getInflatedPlusMinusView(container);
                 double def = percentage;
-                if (editPercentage != null){
+                if (editPercentage != null) {
                     def = SafeParse.stringToDouble(editPercentage.editText.getText().toString());
                 }
                 editPercentage = new PlusMinusEditText(view, R.id.amountfield, R.id.plusbutton, R.id.minusbutton, def, 30d, 250d, 1d, new DecimalFormat("0"), false);
-                setLabelToPlusMinusView(view, aaps.gs(R.string.action_percentage));
+                setLabelToPlusMinusView(view, getString(R.string.action_percentage));
                 container.addView(view);
                 return view;
             } else {
@@ -108,7 +108,7 @@ public class CPPActivity extends ViewSelectorActivity {
                         //check if it can happen that the fagment is never created that hold data?
                         // (you have to swipe past them anyways - but still)
 
-                        String actionstring = "cppset " +SafeParse.stringToInt(editTimeshift.editText.getText().toString())
+                        String actionstring = "cppset " + SafeParse.stringToInt(editTimeshift.editText.getText().toString())
                                 + " " + SafeParse.stringToInt(editPercentage.editText.getText().toString());
                         ListenerService.initiateAction(CPPActivity.this, actionstring);
                         finish();
@@ -123,12 +123,12 @@ public class CPPActivity extends ViewSelectorActivity {
         public void destroyItem(ViewGroup container, int row, int col, Object view) {
             // Handle this to get the data before the view is destroyed?
             // Object should still be kept by this, just setup for reinit?
-            container.removeView((View)view);
+            container.removeView((View) view);
         }
 
         @Override
         public boolean isViewFromObject(View view, Object object) {
-            return view==object;
+            return view == object;
         }
 
 
