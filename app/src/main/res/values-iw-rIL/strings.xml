@@ -495,6 +495,7 @@
     <string name="activity_target">ערך מטרת פעילות</string>
     <string name="hypo_duration">משך היפו</string>
     <string name="hypo_target">ערך מטרת היפו</string>
+    <string name="reuse_profile_pct_hours">שימוש מחדש %1$d%% %2$d שעות</string>
     <string name="wearcontrol_title">שליטה מהשעון</string>
     <string name="wearcontrol_summary">הגדירו ערכי מטרה זמניים וציינו טיפולים מהשעון.</string>
     <string name="food">מזון</string>
