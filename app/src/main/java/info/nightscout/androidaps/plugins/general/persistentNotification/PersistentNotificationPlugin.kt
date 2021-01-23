@@ -23,6 +23,7 @@ import info.nightscout.androidaps.plugins.iob.iobCobCalculator.events.EventAutos
 import info.nightscout.androidaps.utils.DecimalFormatter
 import info.nightscout.androidaps.utils.FabricPrivacy
 import info.nightscout.androidaps.utils.androidNotification.NotificationHolder
+import info.nightscout.androidaps.utils.androidNotification.openAppIntent
 import info.nightscout.androidaps.utils.resources.IconsProvider
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 import io.reactivex.disposables.CompositeDisposable
@@ -215,15 +216,7 @@ class PersistentNotificationPlugin @Inject constructor(
                 .setUnreadConversation(unreadConversationBuilder.build()))
         }
         /// End Android Auto
-        val resultIntent = Intent(context, MainActivity::class.java)
-        val stackBuilder = TaskStackBuilder.create(context)
-        stackBuilder.addParentStack(MainActivity::class.java)
-        stackBuilder.addNextIntent(resultIntent)
-        val resultPendingIntent = stackBuilder.getPendingIntent(
-            0,
-            PendingIntent.FLAG_UPDATE_CURRENT
-        )
-        builder.setContentIntent(resultPendingIntent)
+        builder.setContentIntent(openAppIntent(context))
         val mNotificationManager = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
         val notification = builder.build()
         mNotificationManager.notify(notificationHolder.notificationID, notification)
