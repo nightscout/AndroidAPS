@@ -69,6 +69,7 @@
     <string name="menu_ecarb">eCarbs/производные углеводы</string>
     <string name="menu_settings">Настройки</string>
     <string name="menu_status">Состояние</string>
+    <string name="menu_resync">Синхронизировать повторно</string>
     <string name="menu_prime_fill">Прайм/заполнение</string>
     <string name="menu_none">Не показывать</string>
     <string name="menu_default">По умолчанию</string>
@@ -89,6 +90,9 @@
     <string name="action_confirm">ПОДТВЕРДИТЬ</string>
     <string name="action_timeshift">сдвиг по времени</string>
     <string name="action_bolus">болюс</string>
+    <string name="bolus_progress">Подается болюс</string>
+    <string name="press_to_cancel">нажмите для отмены</string>
+    <string name="cancel_bolus">ОТМЕНИТЬ БОЛЮС</string>
     <string name="status_pump">Помпа</string>
     <string name="status_loop">Замкнутый цикл</string>
     <string name="status_cpp">Суточный профиль в процентах</string>

@@ -3,7 +3,7 @@
     <string name="dia_whatmeansdia">מה נכון לגבי משך פעילות אינסולין (DIA)?</string>
     <string name="dia_label_exam">משך פעילות האינסולין (DIA)</string>
     <string name="dia_profile">יש לקבוע ערך DIA בפרופיל.</string>
-    <string name="dia_minimumis5h">ערך המינימום המותר הוא 5 שעות.</string>
+    <string name="dia_minimumis5h">הערך המינימלי הוא 5 שעות.</string>
     <string name="dia_hint1">https://androidaps.readthedocs.io/en/latest/EN/Configuration/Config-Builder.html?#insulin</string>
     <string name="dia_meaningisequaltodiapump">אם ערך ה- DIA אותו קבעתם במשאבה לפני המעבר ל- AndroidAPS עבד היטב, אפשר להמשיך להשתמש באותו ערך עם הלולאה.</string>
     <string name="dia_valuemustbedetermined">עליכם לקבוע לעצמכם את ערך ה- DIA הרצוי.</string>
@@ -41,7 +41,7 @@
     <string name="noisycgm_label">נתוני הסנסור אינם יציבים.</string>
     <string name="noisycgm_whattodo">מה לעשות אם נתוני הסנסור לא יציבים?</string>
     <string name="noisycgm_nothing">אין צורך לעשות כלום - AndroidAPS יטפל בכך.</string>
-    <string name="noisycgm_pause">הפסיקו את הלולאה כדי למנוע מינון איסולין גבוה מדי \\ נמוך מדי.</string>
+    <string name="noisycgm_pause">הפסיקו את הלולאה כדי למנוע מינון איסולין גבוה מדי\\נמוך מדי.</string>
     <string name="noisycgm_replacesensor">יש להחליף סנסור שבאופן קבוע מספק נתוני רועשים ו/או לא מדויקים.</string>
     <string name="noisycgm_checksmoothing">יש לוודא שיישום הסנסור מספק נתונים איכותיים ו- \"חלקים\".</string>
     <string name="noisycgm_hint1">https://androidaps.readthedocs.io/en/latest/EN/Usage/Smoothing-Blood-Glucose-Data-in-xDrip.html#smoothing-blood-glucose-data</string>

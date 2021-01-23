@@ -90,6 +90,9 @@
     <string name="action_confirm">אישור</string>
     <string name="action_timeshift">היסט זמן</string>
     <string name="action_bolus">בולוס</string>
+    <string name="bolus_progress">התקדמות הבולוס</string>
+    <string name="press_to_cancel">לחצו לביטול</string>
+    <string name="cancel_bolus">ביטול בולוס</string>
     <string name="status_pump">משאבה</string>
     <string name="status_loop">לולאה</string>
     <string name="status_cpp">CPP</string>
@@ -129,4 +132,8 @@
     <string name="digitalstyle_pref_your_color">הצבע שלך:</string>
     <string name="digitalstyle_pref_your_color_saturation">רווית הצבע שלך:</string>
     <string name="digitalstyle_pref_your_color_opacity">אטימות הצבע שלכם:</string>
+    <string name="bolus_progress_channel_name">התקדמות הבולוס</string>
+    <string name="bolus_progress_silent_channel_name">התקדמות בולוס שקטה</string>
+    <string name="bolus_progress_channel_description">התקדמות הבולוס וביטול</string>
+    <string name="bolus_progress_silent_channel_description">התקדמות הבולוס וביטול עם פחות רטט</string>
 </resources>

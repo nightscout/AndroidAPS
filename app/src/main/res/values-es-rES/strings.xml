@@ -14,7 +14,6 @@
     <string name="reset_db_confirm">¿Realmente quiere restablecer las bases de datos?</string>
     <string name="nav_exit">Salir</string>
     <string name="ns_sync_use_absolute_title">Usar siempre valores basales absolutos</string>
-    <string name="alert_dialog_storage_permission_text">Por favor reinicia el teléfono o AndroidAPS desde ajustes de sistema, sino AndroidAPS no guardará registros (importante para trazar y verificar que el algoritmo funcione correctamente)</string>
     <string name="alert_dialog_permission_battery_optimization_failed">Este dispositivo no parece soportar la optimización de la batería por los ajustes - pueden ocurrir problemas de funcionamiento.</string>
     <string name="description_actions">Algunos botones para acceder rápidamente a funciones comunes</string>
     <string name="description_config_builder">Utilizado para configurar complementos activos</string>
@@ -166,7 +165,6 @@
     <string name="old_master_password">Contraseña Maestra antigua</string>
     <string name="different_password_used">Este archivo se ha exportado y cifrado con una contraseña maestra diferente. Insertar contraseña maestra antigua para descifrar el archivo.</string>
     <string name="master_password_will_be_replaced">Como resultado de la importación correcta, la contraseña maestra actual SE SUSTITUIRÁ por la contraseña maestra antigua!</string>
-    <string name="preferences_import_list_title">Seleccionar fichero para importar</string>
     <string name="check_preferences_before_import">Por favor, compruebe las preferencias antes de importar:</string>
     <string name="check_preferences_cannot_import">¡Las preferencias no se pueden importar!</string>
     <string name="check_preferences_dangerous_import">¡Las preferencias no se deben importar!</string>
@@ -174,39 +172,6 @@
     <string name="check_preferences_details_title">Importar Detalles del problema</string>
     <string name="check_preferences_import_btn">Importar</string>
     <string name="check_preferences_import_anyway_btn">Importar de todos modos (¡PELIGROSO!)</string>
-    <string name="metadata_warning_different_flavour">Las preferencias se han creado con distinta versión de AAPS (%1$s), la versión instalada es: %2$s.\n\nAlgunos valores pueden faltar o no ser válidos después de importar, por favor, compruebe y actualice sus preferencias.</string>
-    <string name="metadata_warning_different_device">Las preferencias se han creado en un dispositivo distinto. Está bien si va a importar desde un teléfono más antiguo/diferente, pero ¡asegúrese de que las preferencias importadas son correctas!</string>
-    <string name="metadata_warning_outdated_format">¡Estás usando el obsoleto formato heredado de versiones antiguas de AAPS, que no es seguro! Únicamente utilizarlo como último recurso, si no tiene una exportación en formato JSON actual.</string>
-    <string name="metadata_warning_old_export">Las preferencias importadas ya tienen %1$s días! ¿Tal vez tengas preferencias más actualizadas o eligiste el archivo equivocado? ¡Recuerda exportar las preferencias regularmente!</string>
-    <string name="metadata_warning_date_format">¡Formato de fecha no válido!</string>
-    <string name="metadata_warning_different_version">Preferencias de una versión menor de la aplicación. Está bien si va a importar después de la actualización, pero ¡compruebe después de la importación si las preferencias siguen siendo correctas!</string>
-    <string name="metadata_urgent_different_version">Preferencias de la versión principal distinta de la aplicación. ¡Las versiones principales difieren significativamente y pueden tener preferencias incompatibles! ¡Asegúrese de que, después de importar, las preferencias siguen siendo correctas!</string>
-    <string name="metadata_label_format">Formato del archivo</string>
-    <string name="metadata_label_created_at">Creado el</string>
-    <string name="metadata_label_aaps_version">Versión de AAPS</string>
-    <string name="metadata_label_aaps_flavour">Construir Variante</string>
-    <string name="metadata_label_device_name">Exportar el nombre del paciente del dispositivo</string>
-    <string name="metadata_label_device_model">Exportar modelo de dispositivo</string>
-    <string name="metadata_label_encryption">Encriptación de archivos</string>
-    <string name="metadata_format_old">Formato de exportación antiguo</string>
-    <string name="metadata_format_new">Nuevo formato cifrado</string>
-    <string name="metadata_format_debug">Nuevo formato de depuración (sin cifrar)</string>
-    <string name="metadata_format_other">Formato de exportación desconocido</string>
-    <string name="prefdecrypt_settings_tampered">Archivo de configuración alterado</string>
-    <string name="prefdecrypt_settings_secure">El archivo de configuración es seguro</string>
-    <string name="prefdecrypt_settings_unencrypted">Uso no seguro, sin cifrar del formato de configuración</string>
-    <string name="prefdecrypt_wrong_json">Error de formato JSON, falta campo necesario (formato, contenido, metadatos o seguridad)</string>
-    <string name="prefdecrypt_wrong_password">Error de descifrado, la contraseña proporcionada no puede descifrar el archivo</string>
-    <string name="prefdecrypt_issue_missing_file_hash">Falta el archivo de la suma de comprobación (hash), ¡no se puede verificar la autenticidad de configuración!</string>
-    <string name="prefdecrypt_issue_modified">¡El archivo se ha modificado tras la exportación!</string>
-    <string name="prefdecrypt_issue_parsing">Error de descifrado, ¡el análisis de las preferencias ha fallado!</string>
-    <string name="prefdecrypt_issue_wrong_pass">Error de descifrado, ¡la contraseña proporcionada no es válida o se ha modificado el archivo de ajustes! Puede suceder que el archivo importado se haya exportado con una contraseña maestra distinta.</string>
-    <string name="prefdecrypt_issue_wrong_format">Falta la configuración de cifrado, ¡el formato configuración no es válido!</string>
-    <string name="prefdecrypt_issue_wrong_algorithm">¡Algoritmo de cifrado no soportado o no especificado!</string>
-    <string name="exported_ago" comment="at placeholder we add pluralized number of hours/minutes">exportado hace %1$s</string>
-    <string name="exported_at" comment="at placeholder we add export date">exportado en %1$s</string>
-    <string name="exported_less_than_hour_ago">exportado hace menos de una hora</string>
-    <string name="in_directory" comment="placeholder is for exported file path">en el directorio: %1$s</string>
     <string name="end_user_license_agreement">Acuerdo de licencia de usuario final</string>
     <string name="end_user_license_agreement_text">NO DEBE UTILIZARSE PARA TOMAR DECISIONES MÉDICAS. NO HAY NINGUNA GARANTÍA PARA EL PROGRAMA, EN LA MEDIDA PERMITIDA POR LA LEY APLICABLE. EXCEPTO CUANDO SE INDIQUE LO CONTRARIO POR ESCRITO, LOS TITULARES DE LOS DERECHOS DE AUTOR Y/O OTRAS PARTES PROPORCIONAN EL PROGRAMA \"TAL CUAL\" SIN GARANTÍA DE NINGÚN TIPO, YA SEA EXPRESA O IMPLÍCITA, INCLUIDAS, ENTRE OTRAS, LAS GARANTÍAS IMPLÍCITAS DE COMERCIABILIDAD Y ADECUACIÓN PARA UN PROPÓSITO EN PARTICULAR. TODO EL RIESGO EN CUANTO A LA CALIDAD Y EL RENDIMIENTO DEL PROGRAMA ES SUYA. SI EL PROGRAMA TUVIERA UN ERROR, USTED ASUME EL COSTE DE TODO SERVICIO, REPARACIÓN O CORRECCIÓN NECESARIOS.</string>
     <string name="end_user_license_agreement_i_understand">ENTIENDO Y ACEPTO</string>
@@ -515,7 +480,6 @@
     <string name="activity_target">objetivo actividad</string>
     <string name="hypo_duration">Duración Hipo</string>
     <string name="hypo_target">Objetivo Hipo</string>
-    <string name="reuse">usar otra vez</string>
     <string name="wearcontrol_title">Control desde reloj</string>
     <string name="wearcontrol_summary">Editar y emitir objetivos temp. y tratamientos desde reloj.</string>
     <string name="food">Comida</string>
@@ -614,7 +578,6 @@
     <string name="enablesmbwithhightemptarget">Habilitar SMB con Objetivo Temporal Alto</string>
     <string name="enablesmbwithhightemptarget_summary">Habilitar SMB cuando hay un objetivo temporal alto activo (ejercicio, superior a 100 mg/dl o 5.5 mmol/l)</string>
     <string name="overview_insulin_label">Insulina</string>
-    <string name="overview_carbs_label">Carbohidratos</string>
     <string name="overview_buttons_selection">Botones</string>
     <string name="show_calibration_button_summary">Envía una calibración a xDrip+ o abre el diálogo de calibración G5</string>
     <string name="show_cgm_button_summary">Abre xDrip+, el botón atrás regresará a AAPS</string>
@@ -798,7 +761,6 @@
     <string name="nav_logsettings">Ajustes del registro</string>
     <string name="resettodefaults">Restablecer valores predeterminados</string>
     <string name="nsmalfunction">NSClient fallando. Considera reiniciar NS y NSClient.</string>
-    <string name="versionavailable">Versión %1$s disponible</string>
     <string name="time_offset">Retardo</string>
     <string name="setupwizard_preferred_aps_mode">Modo preferido de APS</string>
     <string name="treatments_wizard_total_label">Total</string>
@@ -955,8 +917,6 @@
     <string name="copy_short">COPIA</string>
     <string name="addnew">Añadir nuevo</string>
     <string name="versionChecker">Verificador de versión</string>
-    <string name="signature_verifier">Verificador de firma</string>
-    <string name="running_invalid_version">Hemos detectado que está ejecutando una versión no válida. ¡Bucle desactivado!</string>
     <string name="old_version">versión antigua</string>
     <string name="very_old_version">versión muy antigua</string>
     <string name="new_version_warning">Nueva versión desde al menos %1$d dias disponible! Respaldo a LGS después de %2$d días, se deshabilitará el lazo después de %3$d días</string>

@@ -53,16 +53,4 @@
     <string name="notconnected">Niet verbonden met het internet</string>
     <string name="failedretrievetime">Ophalen tijd mislukt</string>
     <string name="requirementnotmet">Vereisten van doel niet behaald</string>
-    <plurals name="objective_days">
-        <item quantity="one">%1$d dag</item>
-        <item quantity="other">%1$d dagen</item>
-    </plurals>
-    <plurals name="objective_hours">
-        <item quantity="one">%1$d uur</item>
-        <item quantity="other">%1$d uren</item>
-    </plurals>
-    <plurals name="objective_minutes">
-        <item quantity="one">%1$d minuut</item>
-        <item quantity="other">%1$d minuten</item>
-    </plurals>
 </resources>

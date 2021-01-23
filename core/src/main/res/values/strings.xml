@@ -266,29 +266,65 @@
     <string name="history_group_glucose">Glucose</string>
     <string name="mute5min">Mute for 5 minutes</string>
 
-    <!--    <string name="medtronic_pump_status_never_contacted">Never contacted</string>-->
-    <!--    <string name="medtronic_pump_status_waking_up">Waking up</string>-->
-    <!--    <string name="medtronic_pump_status_error_comm">Error with communication</string>-->
-    <!--    <string name="medtronic_pump_status_timeout_comm">Timeout on communication</string>-->
-    <!--    <string name="medtronic_pump_status_pump_unreachable">Pump unreachable</string>-->
-    <!--    <string name="medtronic_pump_status_invalid_config">Invalid configuration</string>-->
-    <!--    <string name="medtronic_pump_status_active">Active</string>-->
-    <!--    <string name="medtronic_pump_status_sleeping">Sleeping</string>-->
+    <!-- Maintenance -->
+    <string name="metadata_label_format">File format</string>
+    <string name="metadata_label_created_at">Created at</string>
+    <string name="metadata_label_aaps_version">AAPS Version</string>
+    <string name="metadata_label_aaps_flavour">Build Variant</string>
+    <string name="metadata_label_device_name">Exporting device patient name</string>
+    <string name="metadata_label_device_model">Exporting device model</string>
+    <string name="metadata_label_encryption">File encryption</string>
+    <string name="metadata_format_old">Old export format</string>
+    <string name="metadata_format_new">New encrypted format</string>
+    <string name="metadata_format_debug">New debug format (unencrypted)</string>
+    <string name="metadata_format_other">Unknown export format</string>
+    <string name="exported_ago" comment="at placeholder we add pluralized number of hours/minutes">exported %1$s ago</string>
+    <string name="exported_at" comment="at placeholder we add export date">exported at %1$s</string>
+    <string name="exported_less_than_hour_ago">exported less than hour ago</string>
+    <string name="in_directory" comment="placeholder is for exported file path">in directory: %1$s</string>
+    <string name="preferences_import_list_title">Select file to import</string>
+    <string name="metadata_warning_different_flavour">Preferences were created with different variant of AAPS (%1$s) while you have: %2$s.\n\nSome settings may be missing or invalid - after importing please check and update your preferences.</string>
+    <string name="metadata_warning_different_device">Preferences were created on a different device. It is OK if you are importing from older/different phone, but make sure imported preferences are correct!</string>
+    <string name="metadata_warning_outdated_format">You are using the outdated legacy format from old versions of AAPS, which is not secure! Only use it as a last resort, if you do not have an export in current, JSON format.</string>
+    <string name="metadata_warning_old_export">Imported preferences are already %1$s days old! Maybe you have more up-to-date preferences or you choose the wrong file? Remember to export preferences regularly!</string>
+    <string name="metadata_warning_date_format">Invalid date-time format!</string>
+    <string name="metadata_warning_different_version">Preferences from different minor version of application. It is OK if you are importing after upgrade, but check after import if preferences are still correct!</string>
+    <string name="metadata_urgent_different_version">Preferences from different major version of application. Major versions differ significantly and may have incompatible preferences! Make sure after import that preferences are still correct!</string>
+    <string name="prefdecrypt_settings_tampered">Settings file tampered</string>
+    <string name="prefdecrypt_settings_secure">Settings file is secure</string>
+    <string name="prefdecrypt_settings_unencrypted">Using not secure, unencrypted settings format</string>
+    <string name="prefdecrypt_wrong_json">JSON format error, missing required field (format, content, metadata or security)</string>
+    <string name="prefdecrypt_wrong_password">Decryption error, the given password cannot decrypt the file</string>
+    <string name="prefdecrypt_issue_missing_file_hash">File checksum (hash) missing, cannot verify the authenticity of settings!</string>
+    <string name="prefdecrypt_issue_modified">File was modified after export!</string>
+    <string name="prefdecrypt_issue_parsing">Decryption error, parsing preferences failed!</string>
+    <string name="prefdecrypt_issue_wrong_pass">Decryption error, the provided password is invalid or settings file was modified! It may happen that the imported file was exported with a different Master password.</string>
+    <string name="prefdecrypt_issue_wrong_format">Missing encryption configuration, settings format is invalid!</string>
+    <string name="prefdecrypt_issue_wrong_algorithm">Unsupported or not specified encryption algorithm!</string>
 
-    <!--    <string name="danar_history_alarm">Alarms</string>-->
-    <!--    <string name="danar_history_glucose">Glucose</string>-->
+    <!-- VersionChecker -->
+    <string name="key_last_time_this_version_detected" translatable="false">last_time_this_version_detected</string>
+    <string name="key_last_versionchecker_warning" translatable="false">last_versionchecker_waring</string>
+    <string name="key_last_versionchecker_plugin_warning" translatable="false">last_versionchecker_plugin_waring</string>
+    <string name="key_last_revoked_certs_check" translatable="false">last_revoked_certs_check</string>
+    <string name="signature_verifier">Signature verifier</string>
+    <string name="running_invalid_version">We have detected that you are running an invalid version. Loop disabled!</string>
+    <string name="versionavailable">Version %1$s available</string>
 
+    <!-- Permissions -->
+    <string name="alert_dialog_storage_permission_text">Please reboot your phone or restart AndroidAPS from the System Settings \notherwise Android APS will not have logging (important to track and verify that the algorithms are working correctly)!</string>
 
-    <!--    All(R.string.medtronic_history_group_all), //-->
-    <!--    Bolus(R.string.danar_history_bolus), //-->
-    <!--    Basal(R.string.medtronic_history_group_basal), //-->
-    <!--    Prime(R.string.danar_history_prime), //-->
-    <!--    Configuration(R.string.medtronic_history_group_configuration), //-->
-    <!--    Alarm(R.string.danar_history_alarm), //-->
-    <!--    Glucose(R.string.danar_history_glucose), //-->
-    <!--    Notification(R.string.medtronic_history_group_notification), //-->
-    <!--    Statistic(R.string.medtronic_history_group_statistic),-->
-    <!--    Unknown(R.string.medtronic_history_group_unknown), //-->
-
+    <plurals name="days">
+        <item quantity="one">%1$d day</item>
+        <item quantity="other">%1$d days</item>
+    </plurals>
+    <plurals name="hours">
+        <item quantity="one">%1$d hour</item>
+        <item quantity="other">%1$d hours</item>
+    </plurals>
+    <plurals name="minutes">
+        <item quantity="one">%1$d minute</item>
+        <item quantity="other">%1$d minutes</item>
+    </plurals>
 
 </resources>

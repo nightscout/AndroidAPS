@@ -36,10 +36,10 @@ public class NumberPicker extends LinearLayout implements View.OnKeyListener,
     Button minusButton;
     Button plusButton;
 
-    Double value;
-    Double minValue = 0d;
-    Double maxValue = 1d;
-    Double step = 1d;
+    double value = 0;
+    double minValue = 0d;
+    double maxValue = 1d;
+    double step = 1d;
     NumberFormat formatter;
     boolean allowZero = false;
     TextWatcher textWatcher = null;

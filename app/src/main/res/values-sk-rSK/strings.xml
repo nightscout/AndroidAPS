@@ -14,7 +14,6 @@
     <string name="reset_db_confirm">Naozaj chcete vymazať databázu?</string>
     <string name="nav_exit">Ukončiť</string>
     <string name="ns_sync_use_absolute_title">Vždy používaj absolútne hodnoty bazálov</string>
-    <string name="alert_dialog_storage_permission_text">Prosím reštartuj svoj telefón, alebo reštartuj AndroidAPS zo systémových nastavení \nv opačnom prípade AndroidAPS nebude mocť zapisovať údaje (dôležité kvôli sledovaniu a overovaniu, že algoritmus pracuje správne)!</string>
     <string name="alert_dialog_permission_battery_optimization_failed">Toto zariadenie zrejme neumožňuje vypnúť optimalizáciu batérie - môže dochádzať k problémom s výkonom.</string>
     <string name="description_actions">Niektoré tlačidlá na rýchly prístup do spoločných funkcií</string>
     <string name="description_config_builder">Používané na konfiguráciu aktívnych pluginov</string>
@@ -42,6 +41,7 @@
     <string name="description_source_glimp">Získavať hodnoty glykémií z aplikácie Glimp.</string>
     <string name="description_source_mm640g">Získavať hodnoty glykémií z 600SeriesAndroidUploader.</string>
     <string name="description_source_ns_client">Získavať hodnoty glykémií z Nightscoutu</string>
+    <string name="description_source_xdrip">Prijímať hodnoty glykémií z xDrip+.</string>
     <string name="description_treatments">Ukladá všetky ošetrenia do databázy</string>
     <string name="description_wear">Zobrazovanie stavu a riadenie AndroidAPS z hodiniek s WearOS.</string>
     <string name="description_xdrip_status_line">Zobraz informácie o uzavretom okruhu na xDrip+ watchface.</string>
@@ -118,6 +118,7 @@
     <string name="changeyourinput">Zmeňte zadanie!</string>
     <string name="configbuilder_bgsource">Zdroj glykémie</string>
     <string name="configbuilder_bgsource_description">Odkiaľ má AndroidAPS získavať glykémie?</string>
+    <string name="xdrip">xDrip+</string>
     <string name="apsmode_title">APS mód</string>
     <string name="closedloop">Uzavretý okruh</string>
     <string name="openloop">Otvorený okruh</string>
@@ -166,7 +167,6 @@
     <string name="old_master_password">Staré hlavné heslo</string>
     <string name="different_password_used">Tento súbor bol exportovaný a zašifrovaný iným hlavným heslom. Pre dešifrovanie súboru použite staré hlavné heslo.</string>
     <string name="master_password_will_be_replaced">V dôsledku úspešného importu bude aktuálne hlavné heslo NAHRADENÉ týmto starým hlavným heslom!</string>
-    <string name="preferences_import_list_title">Vyberte súbor, ktorý chcete importovať</string>
     <string name="check_preferences_before_import">Prosím skontrolujte nastavenia predtým, ako importujete:</string>
     <string name="check_preferences_cannot_import">Nastavenia nemôžu byť importované!</string>
     <string name="check_preferences_dangerous_import">Nastavenia by nemali byť importované!</string>
@@ -174,39 +174,6 @@
     <string name="check_preferences_details_title">Podrobnosti chýb pri importe</string>
     <string name="check_preferences_import_btn">Importovať</string>
     <string name="check_preferences_import_anyway_btn">Importovať rovnako (NEBEZPEČNÉ!)</string>
-    <string name="metadata_warning_different_flavour">Nastavenia boli vytvorené inou verziou AAPS (%1$s) pretože máte: %2$s.\n\nNiektoré nastavenia môžu chýbať, alebo byť poškodené - po importovaní prosím skontrolujte a upravte nastavenia.</string>
-    <string name="metadata_warning_different_device">Nastavenia boli vytvorené na inom zariadení. Je to v poriadku, keď importujete zo staršieho/iného telefónu, ale skontrolujte, že importované nastavenia sú správne!</string>
-    <string name="metadata_warning_outdated_format">Používate zastaralý formát zo staršej verzie AAPS, čo nie je bezpečné! Používajte len ako poslednú možnosť, ak nemáte export v aktuálnom, JSON formáte.</string>
-    <string name="metadata_warning_old_export">Importované nastavenia sú už %1$s dní staré! Možno máte viacero novších nastavení, alebo ste zvolili nesprávny súbor? Nezabúdajte pravidelne exportovať nastavenia!</string>
-    <string name="metadata_warning_date_format">Nesprávny formát dátumu a času!</string>
-    <string name="metadata_warning_different_version">Nastavenie z odlišnej, nižšej verzie aplikácie. Je to v poriadku, pokiaľ importujete po aktualizácii, po importe však skontrolujte, či sú nastavenia stále správne!</string>
-    <string name="metadata_urgent_different_version">Nastavenia z odlišnej hlavnej verzie aplikácie. Hlavná verzia sa výrazne líši a nemusia mať kompatibilné nastavenia. Po importe skontrolujte, či sú nastavenia stále správne!</string>
-    <string name="metadata_label_format">Formát súboru</string>
-    <string name="metadata_label_created_at">Vytvorené</string>
-    <string name="metadata_label_aaps_version">Verzia AAPS</string>
-    <string name="metadata_label_aaps_flavour">Verzia zostavy</string>
-    <string name="metadata_label_device_name">Meno pacienta použité pri exporte</string>
-    <string name="metadata_label_device_model">Model zariadenia použitý pri exporte</string>
-    <string name="metadata_label_encryption">Šifrovanie súborov</string>
-    <string name="metadata_format_old">Zastaralý formát exportu</string>
-    <string name="metadata_format_new">Nový šifrovaný formát</string>
-    <string name="metadata_format_debug">Nový formát pre ladenie (nešifrovaný)</string>
-    <string name="metadata_format_other">Neznámy formát exportu</string>
-    <string name="prefdecrypt_settings_tampered">Súbor s nastaveniami poškodený</string>
-    <string name="prefdecrypt_settings_secure">Súbor s nastaveniami je zabezpečený</string>
-    <string name="prefdecrypt_settings_unencrypted">Použitie nezabezpečeného, nešifrovaného formátu nastavení</string>
-    <string name="prefdecrypt_wrong_json">Chyba formátu JSON, chýba povinné pole (formát, obsah, metadáta, alebo zabezpečenie)</string>
-    <string name="prefdecrypt_wrong_password">Chyba dešifrovania, dané heslo nemôže dešifrovať súbor</string>
-    <string name="prefdecrypt_issue_missing_file_hash">Chýba kontrolný súčet súboru (hash), nedá sa overiť pravosť nastavení!</string>
-    <string name="prefdecrypt_issue_modified">Súbor bol po exporte zmenený!</string>
-    <string name="prefdecrypt_issue_parsing">Chyba dešifrovania, analýza nastavení zlyhala!</string>
-    <string name="prefdecrypt_issue_wrong_pass">Chyba dešifrovania, zadané heslo je neplatné, alebo bol súbor nastavení zmenený! Môže sa stať, že importovaný súbor bol exportovaný s iným hlavným heslom.</string>
-    <string name="prefdecrypt_issue_wrong_format">Chýba konfigurácia šifrovania, formát nastavení je neplatný!</string>
-    <string name="prefdecrypt_issue_wrong_algorithm">Nepodporovaný alebo neurčený šifrovací algoritmus!</string>
-    <string name="exported_ago" comment="at placeholder we add pluralized number of hours/minutes">exportované pred %1$s</string>
-    <string name="exported_at" comment="at placeholder we add export date">exportované v %1$s</string>
-    <string name="exported_less_than_hour_ago">exportované pred menej ako hodinou</string>
-    <string name="in_directory" comment="placeholder is for exported file path">v adresári: %1$s</string>
     <string name="end_user_license_agreement">Licenčná zmluva s koncovým používateľom</string>
     <string name="end_user_license_agreement_text">Tento program nemôže byť použitý na medicínske rozhodnutia. Na program neexistuje žiadna záruka, alebo garantovaná podpora v akejkoľvek podobe. Keď už sa rozhodneš pre používanie, tak jeho kvalita a celkové schopnosti tohto projektu závisia len na Tebe samotnom. Ak by sa ukázalo, že je program chybný, preberáš všetky potrebné náklady na liečbu, prípadne náklady na iné servisné služby, opravy, alebo korekcie.</string>
     <string name="end_user_license_agreement_i_understand">ROZUMIEM A POTVRDZUJEM</string>
@@ -283,6 +250,8 @@
     <string name="mealbolus">Bolus</string>
     <string name="correctionbous">Korekcia</string>
     <string name="actions">Akcie</string>
+    <string name="ns_upload_only">(DEAKTIVOVANIE NEBEZPEČNÉ) Iba odosielanie do NS</string>
+    <string name="ns_upload_only_summary">Iba odosielanie do NS. Neplatí pre glykémie, pokiaľ je NS zvolený, ako zdroj glykémií. Neplatí pre profily, pokiaľ je zvolený NS Profil.\n!!! VAROVANIE!!! Vypnutie tejto možnosti môže spôsobiť nesprávne fungovanie a predávkovanie inzulínom, pokiaľ je niektorý z vašich komponentov (AAPS, NS, xDrip+) nesprávne nastavený. Starostlivo sledujte, či dáta zobrazené v AAPS, zodpovedajú aktuálnemu stavu na pumpe!</string>
     <string name="pumpNotInitialized">Pumpa nie je inicializovaná!</string>
     <string name="primefill">Plnenie/doplňovanie</string>
     <string name="fillwarning">Prosím uistite sa, že hodnota zodpovedá špecifikácií Vášho setu!</string>
@@ -337,6 +306,7 @@
     <string name="smscommunicator_shortname">SMS</string>
     <string name="short_tabtitles">Krátke názvy modulov</string>
     <string name="always_use_shortavg">Vždy používať krátkodobý priemerný rozdiel glykémií, namiesto rozdielu posledných dvoch hodnôt</string>
+    <string name="always_use_shortavg_summary">Zmysluplné, pokiaľ dáta z xDrip+ obsahujú veľký šum.</string>
     <string name="profile">Profil</string>
     <string name="openapsama_max_daily_safety_multiplier_summary">Štandardná hodnota: 3 Toto je kľúčová hodnota zabezpečenia. Hovorí, že maximálny nastaviteľný bazál je trojnásobkom maximálneho denného bazálu. Spravidla to zrejme nebudete musieť meniť, prípadne si prečítate o téme \"3x max denný; 4x aktuálny\".</string>
     <string name="openapsama_current_basal_safety_multiplier_summary">Štandardná hodnota: 4 Toto je druhá kľúčová hodnota. Hovorí, že maximálna hodnota dočasného bazálu nikdy nebude väčšia, ako štvornásobok aktuálneho bazálu. Je to preto, aby se ľudia nedostali do nebezpečných hodnôt skôr, ako pochopia ako OpenAPS pracuje. Znovu, štandardná hodnota je 4 a väčšina ľudí ju nikdy nebude musieť meniť. Pokiaľ nestačí, obvykle je problém niekde inde.</string>
@@ -350,6 +320,9 @@
     <string name="smscommunicator_invalidphonennumber">Chybné telefónne číslo</string>
     <string name="overview_calibration">Kalibrácia</string>
     <string name="xdripnotinstalled">xDrip+ nie je nainštalovaný</string>
+    <string name="calibrationsent">Kalibrácia odoslaná do xDrip+</string>
+    <string name="smscommunicator_calibrationsent">Kalibrácia odoslaná. Príjem kalibrácií musí byť povolený v xDrip+.</string>
+    <string name="smscommunicator_calibrationfailed">xDrip+ neprijíma kalibrácie</string>
     <string name="pumpsuspended">Pumpa pozastavená</string>
     <string name="executing">Vykonávam</string>
     <string name="virtualpump_settings">Nastavenie virtuálnej pumpy</string>
@@ -435,8 +408,12 @@
     <string name="statuslights_sage_critical">Prah kritického veku senzora [h]</string>
     <string name="statuslights_sbat_warning">Prah upozornenia na úroveň batérie senzora [%]</string>
     <string name="statuslights_sbat_critical">Prah kritickej úrovne batérie senzora [%]</string>
+    <string name="statuslights_bage_warning">Prah upozornenia na vek batérie v pumpe [h]</string>
+    <string name="statuslights_bage_critical">Prah kritického veku batérie v pumpe [h]</string>
     <string name="statuslights_res_warning">Prah upozornenia na úroveň hladiny zásobníka [JI]</string>
     <string name="statuslights_res_critical">Prah kritickej úrovne hladiny zásobníka [JI]</string>
+    <string name="statuslights_bat_warning">Prah upozornenia na úroveň batérie v pumpe [%]</string>
+    <string name="statuslights_bat_critical">Prah kritickej úrovne batérie v pumpe [%]</string>
     <string name="prediction_shortname">PRED</string>
     <string name="iob">IOB</string>
     <string name="cob">COB</string>
@@ -448,6 +425,8 @@
     <string name="nav_about">O aplikácii</string>
     <string name="smscommunicator_missingsmspermission">Chýbajúce povolenie SMS príkazov</string>
     <string name="smscommunicator_missingphonestatepermission">Chýba oprávnenia pre zisťovanie stavu telefónu</string>
+    <string name="xdripstatus_settings">Stav z xDrip+ (hodinky)</string>
+    <string name="xdripstatus">Stavový riadok xDrip+ (hodinky)</string>
     <string name="xdripstatus_shortname">XDS</string>
     <string name="wear_showbgi_title">Zobrazovať BGI</string>
     <string name="wear_showbgi_summary">Pridať BGI do stavového riadku</string>
@@ -490,6 +469,7 @@
     <string name="mdtp_cancel">Zrušiť</string>
     <string name="notloadedplugins">Nenačítané všetky profily!</string>
     <string name="valuesnotstored">Hodnoty nie sú uložené!</string>
+    <string name="ns_localbroadcasts">Povoliť vysielanie do iných aplikácií (napr. xDrip+). Nepovoľujte, pokiaľ máte nainštalovanú viac ako jednu AAPS, alebo NSClient inštanciu!</string>
     <string name="ns_localbroadcasts_title">Povoliť lokálne vysielanie.</string>
     <string name="careportal_newnstreatment_duration_min_label">Trvanie [min]</string>
     <string name="openapssmb">OpenAPS SMB</string>
@@ -515,7 +495,7 @@
     <string name="activity_target">Cieľ pri aktivite</string>
     <string name="hypo_duration">Trvanie dočasného cieľa pri hypoglykémii</string>
     <string name="hypo_target">Cieľová hodnota pri hypoglykémii</string>
-    <string name="reuse">Znovu použiť</string>
+    <string name="reuse_profile_pct_hours">Znovu použiť %1$d%% %2$dh</string>
     <string name="wearcontrol_title">Ovládanie z hodiniek</string>
     <string name="wearcontrol_summary">Nastavovanie dočasných cieľov a vkladanie ošetrení hodinkami.</string>
     <string name="food">Jedlo</string>
@@ -614,7 +594,6 @@
     <string name="enablesmbwithhightemptarget">Povoliť SMB s vysokými dočasnými cieľmi</string>
     <string name="enablesmbwithhightemptarget_summary">Povoliť SMB, ak je aktívny vysoký cieľ (cvičenie, vyšší ako 5,5 mmol/l)</string>
     <string name="overview_insulin_label">Inzulín</string>
-    <string name="overview_carbs_label">Sacharidy</string>
     <string name="overview_buttons_selection">Tlačidlá</string>
     <string name="show_calibration_button_summary">Odošle kalibráciu do xDripu+, alebo otvorenie kalibračného dialógu na G5</string>
     <string name="show_cgm_button_summary">Otvorí xDrip+, tlačidlom späť sa vrátiš do AndroidAPS</string>
@@ -798,7 +777,6 @@
     <string name="nav_logsettings">Nastavenie logovania</string>
     <string name="resettodefaults">Obnoviť predvolené</string>
     <string name="nsmalfunction">Chyba NSClienta. Zvážte reštart NS a NSClienta.</string>
-    <string name="versionavailable">Verzia %1$s je k dispozícii</string>
     <string name="time_offset">Časový posun</string>
     <string name="setupwizard_preferred_aps_mode">Preferovaný režim APS</string>
     <string name="treatments_wizard_total_label">Spolu</string>
@@ -955,8 +933,6 @@
     <string name="copy_short">KOPÍROVAŤ</string>
     <string name="addnew">Pridať nový</string>
     <string name="versionChecker">Kontrola verzie</string>
-    <string name="signature_verifier">Overenie podpisu</string>
-    <string name="running_invalid_version">Zistili sme, že používate neplatnú verziu. Uzavretý okruh zakázaný!</string>
     <string name="old_version">stará verzia</string>
     <string name="very_old_version">veľmi stará verzia</string>
     <string name="new_version_warning">Nová verzia je dostupná minimálne %1$d dní! Prepnutie na ochranu pred nízkou glykémiou po %2$d dňoch, vypnutie uzavretého okruhu po %3$d dňoch</string>
@@ -1160,6 +1136,7 @@
     <string name="donate_your_data_to_science">Darujte svoje údaje vede</string>
     <string name="open_humans_short">OH</string>
     <string name="you_have_been_signed_out_of_open_humans">Boli ste odhlásený z Open Humans</string>
+    <string name="click_here_to_sign_in_again_if_this_wasnt_on_purpose">Kliknite sem, ak sa chcete prihlásiť znova, v prípade, že sa to stalo nedopatrením.</string>
     <string name="only_upload_if_connected_to_wifi">Odoslať iba ak ste pripojený k Wi-Fi</string>
     <string name="only_upload_if_charging">Odoslať iba pri nabíjaní</string>
     <string name="worker_state">Stav procesu: %s</string>
@@ -1171,11 +1148,15 @@
     <string name="cta_dont_kill_my_app_info">Nepotláčať moju aplikáciu?</string>
     <string name="alarm">Alarm</string>
     <string name="smscommunicator_report_pump_ureachable_summary">Odoslať SMS, pokiaľ pumpa nie je dostupná</string>
+    <string name="smscommunicator_pump_ureachable">Nahlásiť nedostupnú pumpu</string>
     <string name="advisoralarm">Spustiť výstrahu, keď je čas na jedlo</string>
     <string name="alarminxmin">Spustiť výstrahu za %1$d min</string>
     <string name="bolusadvisor">Bolusový poradca</string>
     <string name="bolusadvisormessage">Máte vysokú glykémiu. Namiesto jedla doporučujeme počkať na lepšiu glykémiu a pripomenúť, keď bude čas na jedlo. Prajete si poslať korekčný bolus a pripomenúť, keď bude čas na jedlo? V tomto prípade nebudú zapísané žiadne sacharidy, a neskôr musíte opäť spustiť kalkulačku, akonáhle vám to pripomenieme.</string>
     <string name="enablebolusadvisor">Povoliť bolusového poradcu</string>
+    <string name="enablebolusadvisor_summary">Pri vysokej glykémii spustiť pripomienku namiesto výsledku z kalkulačky, aby ste začali jesť neskôr (tzv. \"prebolus\")</string>
     <string name="time_to_eat">Čas na jedlo!\nSpustite Bolusovú kalkulačku a urobte výpočet znova.</string>
     <string name="timetoeat">Čas na jedlo</string>
+    <string name="fabric_upload_disabled">Odosielanie protokolov o zlyhaní je zakázané!</string>
+    <string name="graph_menu_divider_header">Graf</string>
 </resources>

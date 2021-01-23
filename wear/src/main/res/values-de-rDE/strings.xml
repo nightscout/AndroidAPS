@@ -90,6 +90,9 @@
     <string name="action_confirm">BESTÄTIGEN</string>
     <string name="action_timeshift">Zeitverschiebung</string>
     <string name="action_bolus">Bolus</string>
+    <string name="bolus_progress">Bolusabgabe läuft </string>
+    <string name="press_to_cancel">Zum Abbrechen drücken</string>
+    <string name="cancel_bolus">Bolus löschen </string>
     <string name="status_pump">Pumpe</string>
     <string name="status_loop">Loop</string>
     <string name="status_cpp">CPP</string>
@@ -129,4 +132,8 @@
     <string name="digitalstyle_pref_your_color">Ihre Farbe:</string>
     <string name="digitalstyle_pref_your_color_saturation">Ihre Farbsättigung:</string>
     <string name="digitalstyle_pref_your_color_opacity">Deine Farbtransparenz:</string>
+    <string name="bolus_progress_channel_name">AAPS Bolus Fortschritt</string>
+    <string name="bolus_progress_silent_channel_name">AAPS Bolus-Fortschritt stumm</string>
+    <string name="bolus_progress_channel_description">Bolus-Fortschritt und Abbruch</string>
+    <string name="bolus_progress_silent_channel_description">Bolus Fortschritt und Abbruch mit weniger Vibrationen</string>
 </resources>

@@ -22,15 +22,23 @@
     <string name="medtronic_pump_status">Stav pumpy</string>
     <string name="title_activity_rileylink_settings">Nastavenie RileyLink</string>
     <string name="rileylink_title">RileyLink</string>
+    <string name="rileylink_address">Adresa:</string>
+    <string name="rileylink_name">Meno:</string>
+    <string name="rileylink_battery_level">Úroveň batérie:</string>
+    <string name="rileylink_battery_level_value">%1$d%%</string>
     <string name="rileylink_connection_status">Stav pripojenia:</string>
     <string name="rileylink_connection_error">Chyba pripojenia:</string>
     <string name="rileylink_device">Zariadenie</string>
     <string name="rileylink_device_type">Typ zariadenia:</string>
+    <string name="rileylink_configured_device_model">Model nakonfigurovaného zariadenia:</string>
+    <string name="rileylink_connected_device_model">Model pripojeného zariadenia:</string>
     <string name="rileylink_last_used_frequency">Posledná použitá frekvencia:</string>
     <string name="rileylink_last_device_contact">Posledné spojenie zo zariadením:</string>
     <string name="rileylink_firmware_version">Verzia firmvéru:</string>
+    <string name="rileylink_firmware_version_value">BLE113: %1$s\nCC110: %2$s</string>
     <string name="rileylink_pump_serial_number">Sériové číslo pumpy:</string>
     <string name="rileylink_pump_frequency">Frekvencia pumpy:</string>
+    <string name="rileylink_pump_frequency_value">%1$.2f MHz</string>
     <!-- RL State -->
     <string name="rileylink_state_bt_init">Inicializácia Bluetooth...</string>
     <string name="rileylink_state_bt_error">Chyba Bluetooth</string>
@@ -52,9 +60,12 @@
     <string name="rileylink_error_pod_unreachable">Pod nedostupný</string>
     <!-- RileyLink - Common -->
     <string name="rileylink_target_device_medtronic">Pumpa Medtronic</string>
+    <string name="rileylink_target_device_omnipod">Omnipod (Eros)</string>
     <string name="riley_link_common_yes">Áno</string>
     <string name="riley_link_common_no">Nie</string>
     <!-- RileyLink - Preferences -->
+    <string name="riley_link_show_battery_level">Ukázať úroveň batérie nahlásenú OrangeLinkom/RileyLinkom</string>
+    <string name="riley_link_show_battery_level_summary">NEPRACUJE s pôvodným RileyLinkom. Nemusí pracovať s inými alternatívami RileyLinku.</string>
     <plurals name="duration_days">
         <item quantity="one">%1$d deň</item>
         <item quantity="few">%1$d dní</item>

@@ -14,7 +14,6 @@
     <string name="reset_db_confirm">Sigur resetați bazele de date?</string>
     <string name="nav_exit">Ieșire</string>
     <string name="ns_sync_use_absolute_title">Folosește întotdeauna valori absolute ale bazalei</string>
-    <string name="alert_dialog_storage_permission_text">Restartați telefonul sau reporniți aplicația AndroidAPS din System Settings \naltfel AndroidAPS nu va putea face loguri (importante pentru verificarea corectitudinii funcționării algoritmilor)!</string>
     <string name="alert_dialog_permission_battery_optimization_failed">Acest dispozitiv nu permite folosirea excluderii din lista de optimizare a bateriei - se poate să întâmpinați probleme de performanță.</string>
     <string name="description_actions">Butoane pentru accesarea celor mai comune facilităţi</string>
     <string name="description_config_builder">Folosit pentru configurarea facilităţilor active</string>
@@ -168,7 +167,6 @@
     <string name="old_master_password">Parola Master veche</string>
     <string name="different_password_used">Acest fişier a fost exportat şi criptat cu o parolă master diferită. Furnizaţi parola master veche pentru a decripta fişierul.</string>
     <string name="master_password_will_be_replaced">Ca rezultat al unui import reusit, parola master curenta VA FI INLOCUITA cu parola master veche!</string>
-    <string name="preferences_import_list_title">Selectați fișierul pentru import</string>
     <string name="check_preferences_before_import">Verificați preferințele înainte de a le importa:</string>
     <string name="check_preferences_cannot_import">Preferințele nu pot fi importate!</string>
     <string name="check_preferences_dangerous_import">Preferințele nu ar trebui importate!</string>
@@ -176,39 +174,6 @@
     <string name="check_preferences_details_title">Detalii probleme de import</string>
     <string name="check_preferences_import_btn">Importă</string>
     <string name="check_preferences_import_anyway_btn">Importă oricum (PERICOL!)</string>
-    <string name="metadata_warning_different_flavour">Preferințele au fost create folosind o alta versiune de AAPS (%1$s) în timp ce versiunea curentă este: %2$s.\n\nCâteva setări pot lipsi sau pot fi invalide - după import verificați și actualizați preferințele.</string>
-    <string name="metadata_warning_different_device">Preferințele au fost create pe un dispozitiv diferit. Este în regulă să le importați de pe un alt telefon, dar asigurați-vă că sunt corecte!</string>
-    <string name="metadata_warning_outdated_format">Folosiți un format neactualizat dintr-o versiune veche de AAPS care nu este securizat! Folosiți acest format în ultima instanța, doar dacă nu aveți un export în formatul curent de JSON.</string>
-    <string name="metadata_warning_old_export">Preferințele importate sunt vechi de %1$s zile deja! Poate aveți preferințe mai recente sau ați ales un fișier greșit? Amintiți-vă să exportați preferințele în mod regulat!</string>
-    <string name="metadata_warning_date_format">Format dată invalid!</string>
-    <string name="metadata_warning_different_version">Preferințe dintr-o versiune minoră diferită a aplicației. Este OK dacă importați după upgrade, dar verificați după import că preferințele sunt corecte!</string>
-    <string name="metadata_urgent_different_version">Preferințe dintr-o versiune majoră a aplicației. Versiunile majore au diferențe semnificative și pot avea preferințe incompatibile! Asigurați-vă după import ca preferințele sunt corecte!</string>
-    <string name="metadata_label_format">Formatul fișierului</string>
-    <string name="metadata_label_created_at">Creat la</string>
-    <string name="metadata_label_aaps_version">Versiune AAPS</string>
-    <string name="metadata_label_aaps_flavour">Versiune de build</string>
-    <string name="metadata_label_device_name">Exporta numele dispozitivului pacientului</string>
-    <string name="metadata_label_device_model">Exportarea modelului dispozitivului</string>
-    <string name="metadata_label_encryption">Criptarea fișierului</string>
-    <string name="metadata_format_old">Format vechi de export</string>
-    <string name="metadata_format_new">Format nou criptat</string>
-    <string name="metadata_format_debug">Format nou pentru debug (necriptat)</string>
-    <string name="metadata_format_other">Format de export necunoscut</string>
-    <string name="prefdecrypt_settings_tampered">Fişier de setări modificat</string>
-    <string name="prefdecrypt_settings_secure">Fișierul de setări este securizat</string>
-    <string name="prefdecrypt_settings_unencrypted">Folosirea formatului nesecurizat, necriptat pentru setări</string>
-    <string name="prefdecrypt_wrong_json">Eroare format JSON, lipsește un câmp necesar (format, conținut, metadate sau securitate)</string>
-    <string name="prefdecrypt_wrong_password">Eroare la decriptare, parola dată nu poate decripta fişierul</string>
-    <string name="prefdecrypt_issue_missing_file_hash">Suma de control a fişierului (hash) lipseşte, nu se poate verifica autenticitatea setărilor!</string>
-    <string name="prefdecrypt_issue_modified">Fişierul a fost modificat după export!</string>
-    <string name="prefdecrypt_issue_parsing">Eroare la decriptare, parsarea preferinţelor a eşuat!</string>
-    <string name="prefdecrypt_issue_wrong_pass">Eroare la decriptare, parola furnizată este invalidă sau fişierul de setări a fost modificat! Se poate întâmpla ca fişierul importat să fi fost exportat cu o parolă master diferită.</string>
-    <string name="prefdecrypt_issue_wrong_format">Lipseşte configuraţia de criptare, formatul setărilor este invalid!</string>
-    <string name="prefdecrypt_issue_wrong_algorithm">Algoritm de criptare nesuportat sau nespecificat!</string>
-    <string name="exported_ago" comment="at placeholder we add pluralized number of hours/minutes">exportat cu %1$s în urmă</string>
-    <string name="exported_at" comment="at placeholder we add export date">exportat în data de %1$s</string>
-    <string name="exported_less_than_hour_ago">exportat acum mai puțin de o ora</string>
-    <string name="in_directory" comment="placeholder is for exported file path">în folderul: %1$s</string>
     <string name="end_user_license_agreement">Licență utilizator final</string>
     <string name="end_user_license_agreement_text">NU FOLOSIȚI PENTRU LUAREA DE DECIZII MEDICALE. NU EXISTĂ RĂSPUNDERE LEGALĂ SAU GARANȚIE PENTRU ACEST PROGRAM, ÎN LIMITA APLICABILĂ A LEGII. CU EXCEPTIA CAZURILOR SPECIAL MENȚIONATE, AUTORUL ȘI/SAU ALTE PERSOANE IMPLICATE PUN LA DISPOZIȚIE ACEST PROGRAM FĂRĂ NICIO GARANȚIE, IMPLICITĂ SAU EXPLICITĂ, INCLUZÂND, DAR FĂRĂ A SE LIMITA LA, GARANȚIILE LEGATE DE VĂNZAREA SAU POTRIVIREA PENTRU UN ANUME SCOP. ÎNTREGUL RISC LEGAT DE CALITATEA ȘI PERFORMANȚA ACESTUI PROGRAM CAD ÎN RESPONSABILITATEA DUMNEAVOASTRĂ. DACĂ PROGRAMUL SE DOVEDEȘTE A FI DEFECT, DUMNEAVOASTRĂ VĂ ASUMAȚI ÎNTREAGA RĂSPUNDERE, PRECUM ȘI TOATE COSTURILE LEGATE DE SERVICE, REPARAȚII SAU CORECȚII.</string>
     <string name="end_user_license_agreement_i_understand">ÎNȚELEG ȘI SUNT DE ACORD</string>
@@ -527,7 +492,6 @@
     <string name="activity_target">țintă activitate</string>
     <string name="hypo_duration">durată țintă</string>
     <string name="hypo_target">țintă hipo</string>
-    <string name="reuse">refolosire</string>
     <string name="wearcontrol_title">Controlare din ceas</string>
     <string name="wearcontrol_summary">Setare Ținte-Temporare și se introduc Tratamente din ceas.</string>
     <string name="food">Mâncare</string>
@@ -626,7 +590,6 @@
     <string name="enablesmbwithhightemptarget">Activează SMB cu ținte temporare mari</string>
     <string name="enablesmbwithhightemptarget_summary">Activați SMB atunci când există o țintă temporară activă (exerciții fizice, peste 100mg/dl sau 5.5mmol/l)</string>
     <string name="overview_insulin_label">Insulină</string>
-    <string name="overview_carbs_label">CH</string>
     <string name="overview_buttons_selection">Butoane</string>
     <string name="show_calibration_button_summary">Trimite calibrarea către xDrip+ sau deschide calibrarea pentru G5</string>
     <string name="show_cgm_button_summary">Deschide xDrip+, butonul de înapoi returnează la AAPS</string>
@@ -810,7 +773,6 @@
     <string name="nav_logsettings">Setări loguri</string>
     <string name="resettodefaults">Resetare la setările implicite</string>
     <string name="nsmalfunction">Funcționare incorectă a NSClient. Aveți în vedere un restart al NS și al NSClient.</string>
-    <string name="versionavailable">Versiunea %1$s este disponibilă</string>
     <string name="setupwizard_preferred_aps_mode">Modul APS preferat</string>
     <string name="treatments_wizard_total_label">Total</string>
     <string name="calculation_short">Calc</string>
@@ -966,8 +928,6 @@
     <string name="copy_short">COPI</string>
     <string name="addnew">Adăugare</string>
     <string name="versionChecker">Verificator versiune</string>
-    <string name="signature_verifier">Verificare semnătură</string>
-    <string name="running_invalid_version">S-a detectat rularea unei versiuni invalide. Buclă dezactivată!</string>
     <string name="old_version">versiune veche</string>
     <string name="very_old_version">versiune foarte veche</string>
     <string name="new_version_warning">O versiune nouă este disponibilă de cel puțin %1$d zile! Reveniți la LGS după %2$d zile, bucla închisă va fi dezactivată după %3$d zile</string>

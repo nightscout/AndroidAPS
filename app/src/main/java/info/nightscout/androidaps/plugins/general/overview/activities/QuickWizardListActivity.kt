@@ -17,7 +17,6 @@ import info.nightscout.androidaps.plugins.general.overview.events.EventQuickWiza
 import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.FabricPrivacy
 import info.nightscout.androidaps.utils.extensions.plusAssign
-import info.nightscout.androidaps.utils.resources.ResourceHelper
 import info.nightscout.androidaps.utils.wizard.QuickWizard
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
@@ -26,7 +25,6 @@ import javax.inject.Inject
 
 class QuickWizardListActivity : NoSplashAppCompatActivity() {
     @Inject lateinit var rxBus: RxBusWrapper
-    @Inject lateinit var resourceHelper: ResourceHelper
     @Inject lateinit var fabricPrivacy: FabricPrivacy
     @Inject lateinit var quickWizard: QuickWizard
     @Inject lateinit var dateUtil: DateUtil

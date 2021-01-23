@@ -30,7 +30,7 @@
                 app:srcCompat="@drawable/ic_calibration" />
 
             <TextView
-                android:id="@+id/actions_care_title"
+                android:id="@+id/title"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_centerInParent="true"
@@ -51,7 +51,7 @@
             android:padding="5dp" />
 
         <LinearLayout
-            android:id="@+id/action_care_bg_layout"
+            android:id="@+id/bg_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
@@ -68,12 +68,12 @@
                 android:textStyle="bold" />
 
             <info.nightscout.androidaps.utils.ui.NumberPicker
-                android:id="@+id/overview_calibration_bg"
+                android:id="@+id/bg"
                 android:layout_width="130dp"
                 android:layout_height="40dp" />
 
             <TextView
-                android:id="@+id/overview_calibration_units"
+                android:id="@+id/units"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
@@ -86,7 +86,9 @@
 
         </LinearLayout>
 
-        <include layout="@layout/okcancel" />
+        <include
+            android:id="@+id/okcancel"
+            layout="@layout/okcancel" />
 
     </LinearLayout>
 

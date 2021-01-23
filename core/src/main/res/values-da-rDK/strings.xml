@@ -23,24 +23,40 @@
     <!-- PumoCommon - Pump Abstract -->
     <!-- PumoCommon - Pump Status -->
     <!-- PumpCommon - History Group -->
-    <!--    <string name="medtronic_pump_status_never_contacted">Never contacted</string>-->
-    <!--    <string name="medtronic_pump_status_waking_up">Waking up</string>-->
-    <!--    <string name="medtronic_pump_status_error_comm">Error with communication</string>-->
-    <!--    <string name="medtronic_pump_status_timeout_comm">Timeout on communication</string>-->
-    <!--    <string name="medtronic_pump_status_pump_unreachable">Pump unreachable</string>-->
-    <!--    <string name="medtronic_pump_status_invalid_config">Invalid configuration</string>-->
-    <!--    <string name="medtronic_pump_status_active">Active</string>-->
-    <!--    <string name="medtronic_pump_status_sleeping">Sleeping</string>-->
-    <!--    <string name="danar_history_alarm">Alarms</string>-->
-    <!--    <string name="danar_history_glucose">Glucose</string>-->
-    <!--    All(R.string.medtronic_history_group_all), //-->
-    <!--    Bolus(R.string.danar_history_bolus), //-->
-    <!--    Basal(R.string.medtronic_history_group_basal), //-->
-    <!--    Prime(R.string.danar_history_prime), //-->
-    <!--    Configuration(R.string.medtronic_history_group_configuration), //-->
-    <!--    Alarm(R.string.danar_history_alarm), //-->
-    <!--    Glucose(R.string.danar_history_glucose), //-->
-    <!--    Notification(R.string.medtronic_history_group_notification), //-->
-    <!--    Statistic(R.string.medtronic_history_group_statistic),-->
-    <!--    Unknown(R.string.medtronic_history_group_unknown), //-->
+    <!-- Maintenance -->
+    <string name="metadata_label_created_at">Oprettet den</string>
+    <string name="metadata_label_aaps_version">AAPS Version</string>
+    <string name="metadata_label_aaps_flavour">Build Variant</string>
+    <string name="metadata_label_device_name">Eksporterer enhedens patientnavn</string>
+    <string name="metadata_label_device_model">Eksporterer enhedsmodel</string>
+    <string name="metadata_label_encryption">Filkryptering</string>
+    <string name="metadata_format_old">Gammelt eksportformat</string>
+    <string name="metadata_format_new">Nyt krypteret format</string>
+    <string name="metadata_format_debug">Nyt debug format (ukrypteret)</string>
+    <string name="metadata_format_other">Ukendt eksportformat</string>
+    <string name="exported_ago" comment="at placeholder we add pluralized number of hours/minutes">eksporteret %1$s siden</string>
+    <string name="exported_at" comment="at placeholder we add export date">eksporteret ved %1$s</string>
+    <string name="exported_less_than_hour_ago">eksporteret for mindre end time siden</string>
+    <string name="in_directory" comment="placeholder is for exported file path">i mappe %1$s</string>
+    <string name="preferences_import_list_title">Vælg fil, der skal importeres</string>
+    <string name="metadata_warning_different_flavour">Præferencer er oprettet med forskellig variant af AAPS (%1$s) Mens du har: %2$s.\n\nNogle indstillinger mangler eller er ugyldige-efter import, tjek og opdatér dine præferencer.</string>
+    <string name="metadata_warning_different_device">Indstillinger er oprettet på en anden enhed. Det er OK, hvis du importerer fra ældre / anden telefon, men sørg for, at importerede præferencer er korrekte!</string>
+    <string name="metadata_warning_outdated_format">Du bruger det forældede ældre format fra gamle versioner af AAPS, som ikke er sikret. Brug kun den som en sidste udvej, hvis du ikke har en eksport i aktuelt, JSON-format.</string>
+    <string name="metadata_warning_old_export">Importerede præferencer er allerede %1$s dag(e) gammel! Måske har du flere opdaterede præferencer, eller vælger du den forkerte fil? Husk at eksportere præferencer regelmæssigt!</string>
+    <string name="metadata_warning_date_format">Ugyldigt datoformat!</string>
+    <string name="metadata_warning_different_version">Indstillinger fra en anden mindre version af applikationen. Det er OK, hvis du importerer efter opgradering, men tjek efter import, hvis indstillingerne stadig er korrekte!</string>
+    <string name="metadata_urgent_different_version">Indstillinger fra en anden overordnet version af applikationen. Større versioner er forskellige, og de kan have inkompatible præferencer. Sørg for, at indstillingerne stadig er korrekte, når du har importeret!</string>
+    <string name="prefdecrypt_settings_tampered">Opsætnings fil manipuleret</string>
+    <string name="prefdecrypt_settings_secure">Indstillingsfilen er sikker</string>
+    <string name="prefdecrypt_settings_unencrypted">Bruger ikke sikker, ukrypteret indstillingsformat</string>
+    <string name="prefdecrypt_wrong_json">JSON-formatfejl. Der mangler et påkrævet felt (format, indhold, metadata eller sikkerhed)</string>
+    <string name="prefdecrypt_wrong_password">Dekrypteringsfejl. Det angivne kodeord kan ikke dekryptere filen</string>
+    <string name="prefdecrypt_issue_missing_file_hash">Filkontrolsum (hash) mangler, kan ikke verificere valideringsindstillingerne!</string>
+    <string name="prefdecrypt_issue_modified">Filen er ændret efter eksport!</string>
+    <string name="prefdecrypt_issue_parsing">Dekrypteringsfejl, parsing præferencer mislykkedes!</string>
+    <string name="prefdecrypt_issue_wrong_pass">Dekrypteringsfejl, det angivne kodeord er ugyldigt, eller indstillingsfilen er ændret. Det kan forekomme, at den importerede fil er eksporteret med et andet masterkodeord.</string>
+    <string name="prefdecrypt_issue_wrong_format">Manglende krypteringskonfiguration, indstillingsformat er ugyldigt!</string>
+    <string name="prefdecrypt_issue_wrong_algorithm">Ikke-understøttet eller ikke angivet krypteringsalgoritme!</string>
+    <!-- VersionChecker -->
+    <!-- Permissions -->
 </resources>

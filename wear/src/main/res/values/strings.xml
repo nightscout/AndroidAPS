@@ -100,6 +100,9 @@
     <string name="action_timeshift">timeshift</string>
     <string name="action_bolus">bolus</string>
 
+    <string name="bolus_progress">Bolus Progress</string>
+    <string name="press_to_cancel">press to cancel</string>
+    <string name="cancel_bolus">CANCEL BOLUS</string>
 
     <string name="status_pump">Pump</string>
     <string name="status_loop">Loop</string>
@@ -147,7 +150,10 @@
     <string name="digitalstyle_pref_your_color">Your color:</string>
     <string name="digitalstyle_pref_your_color_saturation">Your color saturation:</string>
     <string name="digitalstyle_pref_your_color_opacity">Your color opacity:</string>
-
+    <string name="bolus_progress_channel_name">AAPS Bolus Progress</string>
+    <string name="bolus_progress_silent_channel_name">AAPS Bolus Progress Silent</string>
+    <string name="bolus_progress_channel_description">Bolus progress and cancel</string>
+    <string name="bolus_progress_silent_channel_description">Bolus progress and cancel with less vibrations</string>
 
 
 </resources>

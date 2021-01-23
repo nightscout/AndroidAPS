@@ -1,5 +1,6 @@
 package info.nightscout.androidaps.data;
 
+import android.annotation.TargetApi;
 import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
@@ -81,7 +82,8 @@ public class ListenerService extends WearableListenerService implements GoogleAp
 
     private static final String ACTION_RESEND_BULK = "com.dexdrip.stephenblack.nightwatch.RESEND_BULK_DATA";
     private static final String AAPS_NOTIFY_CHANNEL_ID_OPENLOOP = "AndroidAPS-Openloop";
-    private static final String AAPS_NOTIFY_CHANNEL_ID_BOLUSPROGRESS = "AndroidAPS-bolus-progress";
+    private static final String AAPS_NOTIFY_CHANNEL_ID_BOLUSPROGRESS = "bolus progress vibration";
+    private static final String AAPS_NOTIFY_CHANNEL_ID_BOLUSPROGRESS_SILENT = "bolus progress  silent";
 
 
     GoogleApiClient googleApiClient;
@@ -113,7 +115,6 @@ public class ListenerService extends WearableListenerService implements GoogleAp
             payload = thispayload;
             // Log.d(TAG, logPrefix + "DataRequester DataRequester: " + thispath + " lastRequest:" + lastRequest);
         }
-
 
 
         @Override
@@ -158,8 +159,8 @@ public class ListenerService extends WearableListenerService implements GoogleAp
                         }
 
                         Log.d(TAG, "doInBackground connected.  CapabilityApi.GetCapabilityResult mPhoneNodeID="
-                            + (phoneNode != null ? phoneNode.getId() : "") + " count=" + count + " localnode="
-                            + localnode);// KS
+                                + (phoneNode != null ? phoneNode.getId() : "") + " count=" + count + " localnode="
+                                + localnode);// KS
 
                         if (count > 0) {
 
@@ -168,11 +169,11 @@ public class ListenerService extends WearableListenerService implements GoogleAp
                                 // Log.d(TAG, "doInBackground path: " + path);
 
                                 switch (path) {
-                                // simple send as is payloads
+                                    // simple send as is payloads
 
                                     case WEARABLE_RESEND_PATH:
                                         Wearable.MessageApi.sendMessage(googleApiClient, node.getId(),
-                                            WEARABLE_RESEND_PATH, null);
+                                                WEARABLE_RESEND_PATH, null);
                                         break;
                                     case WEARABLE_DATA_PATH:
                                     case WEARABLE_CANCELBOLUS_PATH:
@@ -207,7 +208,7 @@ public class ListenerService extends WearableListenerService implements GoogleAp
                     }
                 } else {
                     Log.d(TAG, logPrefix + "Not connected for sending: api "
-                        + ((googleApiClient == null) ? "is NULL!" : "not null"));
+                            + ((googleApiClient == null) ? "is NULL!" : "not null"));
                     if (googleApiClient != null) {
                         googleApiClient.connect();
                     } else {
@@ -227,12 +228,12 @@ public class ListenerService extends WearableListenerService implements GoogleAp
     public CapabilityInfo getCapabilities() {
 
         CapabilityApi.GetCapabilityResult capabilityResult = Wearable.CapabilityApi.getCapability(googleApiClient,
-            CAPABILITY_PHONE_APP, CapabilityApi.FILTER_REACHABLE).await(GET_CAPABILITIES_TIMEOUT_MS,
-            TimeUnit.MILLISECONDS);
+                CAPABILITY_PHONE_APP, CapabilityApi.FILTER_REACHABLE).await(GET_CAPABILITIES_TIMEOUT_MS,
+                TimeUnit.MILLISECONDS);
 
         if (!capabilityResult.getStatus().isSuccess()) {
             Log.e(TAG, logPrefix + "doInBackground Failed to get capabilities, status: "
-                + capabilityResult.getStatus().getStatusMessage());
+                    + capabilityResult.getStatus().getStatusMessage());
             return null;
         }
 
@@ -364,7 +365,7 @@ public class ListenerService extends WearableListenerService implements GoogleAp
         }
 
         Log.d(TAG, logPrefix + "sendData: execute lastRequest:" + WearUtil.dateTimeText(lastRequest));
-        mDataRequester = (DataRequester)new DataRequester(this, path, payload).execute();
+        mDataRequester = (DataRequester) new DataRequester(this, path, payload).execute();
         // executeTask(mDataRequester);
 
         // if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
@@ -402,7 +403,6 @@ public class ListenerService extends WearableListenerService implements GoogleAp
     }
 
 
-
     private void forceGoogleApiConnect() {
         if (googleApiClient == null || (!googleApiClient.isConnected() && !googleApiClient.isConnecting())) {
             try {
@@ -424,7 +424,7 @@ public class ListenerService extends WearableListenerService implements GoogleAp
         if (intent != null && ACTION_RESEND.equals(intent.getAction())) {
             googleApiConnect();
             requestData();
-        } else if(intent != null && ACTION_CANCELBOLUS.equals(intent.getAction())){
+        } else if (intent != null && ACTION_CANCELBOLUS.equals(intent.getAction())) {
             googleApiConnect();
 
             //dismiss notification
@@ -436,7 +436,7 @@ public class ListenerService extends WearableListenerService implements GoogleAp
             cancelBolus();
 
 
-        } else if(intent != null && ACTION_CONFIRMATION.equals(intent.getAction())){
+        } else if (intent != null && ACTION_CONFIRMATION.equals(intent.getAction())) {
             googleApiConnect();
 
             //dismiss notification
@@ -447,7 +447,7 @@ public class ListenerService extends WearableListenerService implements GoogleAp
             String actionstring = intent.getStringExtra("actionstring");
             sendConfirmActionstring(actionstring);
 
-        } else if(intent != null && ACTION_CONFIRMCHANGE.equals(intent.getAction())){
+        } else if (intent != null && ACTION_CONFIRMCHANGE.equals(intent.getAction())) {
             googleApiConnect();
 
             //dismiss notification
@@ -458,7 +458,7 @@ public class ListenerService extends WearableListenerService implements GoogleAp
             String actionstring = intent.getStringExtra("actionstring");
             sendConfirmActionstring(actionstring);
 
-         } else if(intent != null && ACTION_INITIATE_ACTION.equals(intent.getAction())){
+        } else if (intent != null && ACTION_INITIATE_ACTION.equals(intent.getAction())) {
             googleApiConnect();
 
             String actionstring = intent.getStringExtra("actionstring");
@@ -497,7 +497,7 @@ public class ListenerService extends WearableListenerService implements GoogleAp
                     String message = DataMapItem.fromDataItem(event.getDataItem()).getDataMap().getString("message");
                     String actionstring = DataMapItem.fromDataItem(event.getDataItem()).getDataMap().getString("actionstring");
 
-                    if("opencpp".equals(title) && actionstring.startsWith("opencpp")){
+                    if ("opencpp".equals(title) && actionstring.startsWith("opencpp")) {
                         String[] act = actionstring.split("\\s+");
                         Intent intent = new Intent(this, CPPActivity.class);
                         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
@@ -518,16 +518,16 @@ public class ListenerService extends WearableListenerService implements GoogleAp
                     messageIntent.putExtra("status", dataMap.toBundle());
                     Persistence.storeDataMap(RawDisplayData.STATUS_PERSISTENCE_KEY, dataMap);
                     LocalBroadcastManager.getInstance(this).sendBroadcast(messageIntent);
-                } else if (path.equals(BASAL_DATA_PATH)){
+                } else if (path.equals(BASAL_DATA_PATH)) {
                     dataMap = DataMapItem.fromDataItem(event.getDataItem()).getDataMap();
                     Intent messageIntent = new Intent();
                     messageIntent.setAction(Intent.ACTION_SEND);
                     messageIntent.putExtra("basals", dataMap.toBundle());
                     Persistence.storeDataMap(RawDisplayData.BASALS_PERSISTENCE_KEY, dataMap);
                     LocalBroadcastManager.getInstance(this).sendBroadcast(messageIntent);
-                } else if (path.equals(NEW_PREFERENCES_PATH)){
+                } else if (path.equals(NEW_PREFERENCES_PATH)) {
                     dataMap = DataMapItem.fromDataItem(event.getDataItem()).getDataMap();
-                    if(dataMap.containsKey("wearcontrol")) {
+                    if (dataMap.containsKey("wearcontrol")) {
                         boolean wearcontrol = dataMap.getBoolean("wearcontrol", false);
                         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
                         SharedPreferences.Editor editor = sharedPreferences.edit();
@@ -555,20 +555,20 @@ public class ListenerService extends WearableListenerService implements GoogleAp
     }
 
     private void notifyChangeRequest(String title, String message, String actionstring) {
-            // Create the NotificationChannel, but only on API 26+ because
-            // the NotificationChannel class is new and not in the support library
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                CharSequence name = "AAPS Open Loop";
-                String description = "Open Loop request notiffication";//getString(R.string.channel_description);
-                NotificationChannel channel = new NotificationChannel(AAPS_NOTIFY_CHANNEL_ID_OPENLOOP, name, NotificationManager.IMPORTANCE_HIGH);
-                channel.setDescription(description);
-                channel.enableVibration(true);
+        // Create the NotificationChannel, but only on API 26+ because
+        // the NotificationChannel class is new and not in the support library
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            CharSequence name = "AAPS Open Loop";
+            String description = "Open Loop request notiffication";//getString(R.string.channel_description);
+            NotificationChannel channel = new NotificationChannel(AAPS_NOTIFY_CHANNEL_ID_OPENLOOP, name, NotificationManager.IMPORTANCE_HIGH);
+            channel.setDescription(description);
+            channel.enableVibration(true);
 
-                // Register the channel with the system; you can't change the importance
-                // or other notification behaviors after this
-                NotificationManager notificationManager = getSystemService(NotificationManager.class);
-                notificationManager.createNotificationChannel(channel);
-            }
+            // Register the channel with the system; you can't change the importance
+            // or other notification behaviors after this
+            NotificationManager notificationManager = getSystemService(NotificationManager.class);
+            notificationManager.createNotificationChannel(channel);
+        }
 
         NotificationCompat.Builder builder =
                 new NotificationCompat.Builder(this, AAPS_NOTIFY_CHANNEL_ID_OPENLOOP);
@@ -607,43 +607,33 @@ public class ListenerService extends WearableListenerService implements GoogleAp
 
     private void showBolusProgress(int progresspercent, String progresstatus) {
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            CharSequence name = "AAPS Bolus Progress";
-            String description = "Bolus progress and cancel";
-            NotificationChannel channel = new NotificationChannel(AAPS_NOTIFY_CHANNEL_ID_BOLUSPROGRESS, name, NotificationManager.IMPORTANCE_HIGH);
-            channel.setDescription(description);
-            channel.enableVibration(true);
+        long[] vibratePattern;
+        boolean vibrate = PreferenceManager
+                .getDefaultSharedPreferences(this).getBoolean("vibrateOnBolus", true);
+        if (vibrate) {
+            vibratePattern = new long[]{0, 50, 1000};
+        } else {
+            vibratePattern = new long[]{0, 1, 1000};
+        }
 
-            // Register the channel with the system; you can't change the importance
-            // or other notification behaviors after this
-            NotificationManager notificationManager = getSystemService(NotificationManager.class);
-            notificationManager.createNotificationChannel(channel);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            createBolusProgressChannels();
         }
 
         Intent cancelIntent = new Intent(this, ListenerService.class);
         cancelIntent.setAction(ACTION_CANCELBOLUS);
         PendingIntent cancelPendingIntent = PendingIntent.getService(this, 0, cancelIntent, 0);
 
-        long[] vibratePattern;
-        boolean vibreate = PreferenceManager
-                .getDefaultSharedPreferences(this).getBoolean("vibrateOnBolus", true);
-        if(vibreate){
-            vibratePattern = new long[]{0, 50, 1000};
-        } else {
-            vibratePattern = new long[]{0, 1, 1000};
-        }
-
-        // TODO: proper channel. Does cancel work?
         NotificationCompat.Builder notificationBuilder =
-                new NotificationCompat.Builder(this, AAPS_NOTIFY_CHANNEL_ID_BOLUSPROGRESS)
+                new NotificationCompat.Builder(this, vibrate ? AAPS_NOTIFY_CHANNEL_ID_BOLUSPROGRESS: AAPS_NOTIFY_CHANNEL_ID_BOLUSPROGRESS_SILENT)
                         .setSmallIcon(R.drawable.ic_icon)
-                        .setContentTitle("Bolus Progress")
+                        .setContentTitle(getString(R.string.bolus_progress))
                         .setContentText(progresspercent + "% - " + progresstatus)
-                        .setSubText("press to cancel")
+                        .setSubText(getString(R.string.press_to_cancel))
                         .setContentIntent(cancelPendingIntent)
                         .setPriority(NotificationCompat.PRIORITY_MAX)
                         .setVibrate(vibratePattern)
-                        .addAction(R.drawable.ic_cancel, "CANCEL BOLUS", cancelPendingIntent);
+                        .addAction(R.drawable.ic_cancel, getString(R.string.cancel_bolus), cancelPendingIntent);
 
         NotificationManagerCompat notificationManager =
                 NotificationManagerCompat.from(this);
@@ -652,9 +642,28 @@ public class ListenerService extends WearableListenerService implements GoogleAp
         notificationManager.cancel(CONFIRM_NOTIF_ID); // multiple watch setup
 
 
-        if (progresspercent == 100){
+        if (progresspercent == 100) {
             scheduleDismissBolusprogress(5);
         }
+    }
+
+    @TargetApi(value = 26)
+    private void createBolusProgressChannels() {
+        createNotificationChannel(new long[]{0, 50, 1000}, AAPS_NOTIFY_CHANNEL_ID_BOLUSPROGRESS, getString(R.string.bolus_progress_channel_name), getString(R.string.bolus_progress_channel_description));
+        createNotificationChannel(new long[]{0, 1, 1000}, AAPS_NOTIFY_CHANNEL_ID_BOLUSPROGRESS_SILENT, getString(R.string.bolus_progress_silent_channel_name), getString(R.string.bolus_progress_silent_channel_description));
+    }
+
+    @TargetApi(value = 26)
+    private void createNotificationChannel(long[] vibratePattern, String channelID, CharSequence name, String description) {
+        NotificationChannel channel = new NotificationChannel(channelID, name, NotificationManager.IMPORTANCE_HIGH);
+        channel.setDescription(description);
+        channel.enableVibration(true);
+        channel.setVibrationPattern(vibratePattern);
+
+        // Register the channel with the system; you can't change the importance
+        // or other notification behaviors after this
+        NotificationManager notificationManager = getSystemService(NotificationManager.class);
+        notificationManager.createNotificationChannel(channel);
     }
 
     private void showConfirmationDialog(String title, String message, String actionstring) {
@@ -675,18 +684,17 @@ public class ListenerService extends WearableListenerService implements GoogleAp
     }
 
 
-
-    private class DismissThread extends Thread{
+    private class DismissThread extends Thread {
         private final int notificationID;
         private final int seconds;
         private boolean valid = true;
 
-        DismissThread(int notificationID, int seconds){
+        DismissThread(int notificationID, int seconds) {
             this.notificationID = notificationID;
             this.seconds = seconds;
         }
 
-        public synchronized void invalidate(){
+        public synchronized void invalidate() {
             valid = false;
         }
 
@@ -694,7 +702,7 @@ public class ListenerService extends WearableListenerService implements GoogleAp
         public void run() {
             SystemClock.sleep(seconds * 1000);
             synchronized (this) {
-                if(valid) {
+                if (valid) {
                     NotificationManagerCompat notificationManager =
                             NotificationManagerCompat.from(ListenerService.this);
                     notificationManager.cancel(notificationID);
@@ -738,7 +746,7 @@ public class ListenerService extends WearableListenerService implements GoogleAp
             public void onCapabilityChanged(CapabilityInfo capabilityInfo) {
                 updatePhoneSyncBgsCapability(capabilityInfo);
                 Log.d(TAG, logPrefix + "onConnected onCapabilityChanged mPhoneNodeID:" + mPhoneNodeId
-                    + ", Capability: " + capabilityInfo);
+                        + ", Capability: " + capabilityInfo);
             }
         };
 
@@ -768,7 +776,7 @@ public class ListenerService extends WearableListenerService implements GoogleAp
             public void onResult(NodeApi.GetLocalNodeResult getLocalNodeResult) {
                 if (!getLocalNodeResult.getStatus().isSuccess()) {
                     Log.e(TAG, "ERROR: failed to getLocalNode Status="
-                        + getLocalNodeResult.getStatus().getStatusMessage());
+                            + getLocalNodeResult.getStatus().getStatusMessage());
                 } else {
                     Log.d(TAG, "getLocalNode Status=: " + getLocalNodeResult.getStatus().getStatusMessage());
                     Node getnode = getLocalNodeResult.getNode();
@@ -791,5 +799,5 @@ public class ListenerService extends WearableListenerService implements GoogleAp
             Wearable.MessageApi.removeListener(googleApiClient, this);
             Wearable.ChannelApi.removeListener(googleApiClient, this);
         }
-  }
+    }
 }

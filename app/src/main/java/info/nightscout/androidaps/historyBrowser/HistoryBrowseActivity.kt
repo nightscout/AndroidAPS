@@ -31,7 +31,6 @@ import info.nightscout.androidaps.utils.FabricPrivacy
 import info.nightscout.androidaps.utils.T
 import info.nightscout.androidaps.utils.buildHelper.BuildHelper
 import info.nightscout.androidaps.utils.extensions.toVisibility
-import info.nightscout.androidaps.utils.resources.ResourceHelper
 import info.nightscout.androidaps.utils.sharedPreferences.SP
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
@@ -49,7 +48,6 @@ class HistoryBrowseActivity : NoSplashAppCompatActivity() {
     @Inject lateinit var aapsLogger: AAPSLogger
     @Inject lateinit var rxBus: RxBusWrapper
     @Inject lateinit var sp: SP
-    @Inject lateinit var resourceHelper: ResourceHelper
     @Inject lateinit var profileFunction: ProfileFunction
     @Inject lateinit var defaultValueHelper: DefaultValueHelper
     @Inject lateinit var iobCobCalculatorPluginHistory: IobCobCalculatorPluginHistory
@@ -68,6 +66,8 @@ class HistoryBrowseActivity : NoSplashAppCompatActivity() {
     private var axisWidth: Int = 0
     private var rangeToDisplay = 24 // for graph
     private var start: Long = 0
+
+    private val graphLock = Object()
 
     private var eventCustomCalculationFinished = EventCustomCalculationFinished()
 
@@ -218,40 +218,40 @@ class HistoryBrowseActivity : NoSplashAppCompatActivity() {
     }
 
     private fun prepareGraphsIfNeeded(numOfGraphs: Int) {
+        synchronized(graphLock) {
+            if (numOfGraphs != secondaryGraphs.size - 1) {
+                //aapsLogger.debug("New secondary graph count ${numOfGraphs-1}")
+                // rebuild needed
+                secondaryGraphs.clear()
+                secondaryGraphsLabel.clear()
+                history_iobgraph.removeAllViews()
+                for (i in 1 until numOfGraphs) {
+                    val relativeLayout = RelativeLayout(this)
+                    relativeLayout.layoutParams = RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT)
 
-        if (numOfGraphs != secondaryGraphs.size - 1) {
-            //aapsLogger.debug("New secondary graph count ${numOfGraphs-1}")
-            // rebuild needed
-            secondaryGraphs.clear()
-            secondaryGraphsLabel.clear()
-            history_iobgraph.removeAllViews()
-            for (i in 1 until numOfGraphs) {
-                val relativeLayout = RelativeLayout(this)
-                relativeLayout.layoutParams = RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT)
+                    val graph = GraphView(this)
+                    graph.layoutParams = LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, resourceHelper.dpToPx(100)).also { it.setMargins(0, resourceHelper.dpToPx(15), 0, resourceHelper.dpToPx(10)) }
+                    graph.gridLabelRenderer?.gridColor = resourceHelper.gc(R.color.graphgrid)
+                    graph.gridLabelRenderer?.reloadStyles()
+                    graph.gridLabelRenderer?.isHorizontalLabelsVisible = false
+                    graph.gridLabelRenderer?.labelVerticalWidth = axisWidth
+                    graph.gridLabelRenderer?.numVerticalLabels = 3
+                    graph.viewport.backgroundColor = Color.argb(20, 255, 255, 255) // 8% of gray
+                    relativeLayout.addView(graph)
 
-                val graph = GraphView(this)
-                graph.layoutParams = LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, resourceHelper.dpToPx(100)).also { it.setMargins(0, resourceHelper.dpToPx(15), 0, resourceHelper.dpToPx(10)) }
-                graph.gridLabelRenderer?.gridColor = resourceHelper.gc(R.color.graphgrid)
-                graph.gridLabelRenderer?.reloadStyles()
-                graph.gridLabelRenderer?.isHorizontalLabelsVisible = false
-                graph.gridLabelRenderer?.labelVerticalWidth = axisWidth
-                graph.gridLabelRenderer?.numVerticalLabels = 3
-                graph.viewport.backgroundColor = Color.argb(20, 255, 255, 255) // 8% of gray
-                relativeLayout.addView(graph)
+                    val label = TextView(this)
+                    val layoutParams = RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT).also { it.setMargins(resourceHelper.dpToPx(30), resourceHelper.dpToPx(25), 0, 0) }
+                    layoutParams.addRule(RelativeLayout.ALIGN_PARENT_TOP)
+                    layoutParams.addRule(RelativeLayout.ALIGN_PARENT_LEFT)
+                    label.layoutParams = layoutParams
+                    relativeLayout.addView(label)
+                    secondaryGraphsLabel.add(label)
 
-                val label = TextView(this)
-                val layoutParams = RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT).also { it.setMargins(resourceHelper.dpToPx(30), resourceHelper.dpToPx(25), 0, 0) }
-                layoutParams.addRule(RelativeLayout.ALIGN_PARENT_TOP)
-                layoutParams.addRule(RelativeLayout.ALIGN_PARENT_LEFT)
-                label.layoutParams = layoutParams
-                relativeLayout.addView(label)
-                secondaryGraphsLabel.add(label)
-
-                history_iobgraph.addView(relativeLayout)
-                secondaryGraphs.add(graph)
+                    history_iobgraph.addView(relativeLayout)
+                    secondaryGraphs.add(graph)
+                }
             }
         }
-
     }
 
     private fun runCalculation(from: String) {
@@ -317,55 +317,59 @@ class HistoryBrowseActivity : NoSplashAppCompatActivity() {
                         graphData.addBasals(fromTime, toTime, lowLine / graphData.maxY / 1.2)
                     }
                     // ------------------ 2nd graph
-                    for (g in 0 until secondaryGraphs.size) {
-                        val secondGraphData = GraphData(injector, secondaryGraphs[g], iobCobCalculatorPluginHistory, treatmentsPluginHistory)
-                        var useIobForScale = false
-                        var useCobForScale = false
-                        var useDevForScale = false
-                        var useRatioForScale = false
-                        var useDSForScale = false
-                        var useIAForScale = false
-                        var useABSForScale = false
-                        when {
-                            menuChartSettings[g + 1][OverviewMenus.CharType.IOB.ordinal]      -> useIobForScale = true
-                            menuChartSettings[g + 1][OverviewMenus.CharType.COB.ordinal]      -> useCobForScale = true
-                            menuChartSettings[g + 1][OverviewMenus.CharType.DEV.ordinal]      -> useDevForScale = true
-                            menuChartSettings[g + 1][OverviewMenus.CharType.SEN.ordinal]      -> useRatioForScale = true
-                            menuChartSettings[g + 1][OverviewMenus.CharType.ACT.ordinal]      -> useIAForScale = true
-                            menuChartSettings[g + 1][OverviewMenus.CharType.ABS.ordinal]      -> useABSForScale = true
-                            menuChartSettings[g + 1][OverviewMenus.CharType.DEVSLOPE.ordinal] -> useDSForScale = true
+                    synchronized(graphLock) {
+                        for (g in 0 until secondaryGraphs.size) {
+                            val secondGraphData = GraphData(injector, secondaryGraphs[g], iobCobCalculatorPluginHistory, treatmentsPluginHistory)
+                            var useIobForScale = false
+                            var useCobForScale = false
+                            var useDevForScale = false
+                            var useRatioForScale = false
+                            var useDSForScale = false
+                            var useIAForScale = false
+                            var useABSForScale = false
+                            when {
+                                menuChartSettings[g + 1][OverviewMenus.CharType.IOB.ordinal]      -> useIobForScale = true
+                                menuChartSettings[g + 1][OverviewMenus.CharType.COB.ordinal]      -> useCobForScale = true
+                                menuChartSettings[g + 1][OverviewMenus.CharType.DEV.ordinal]      -> useDevForScale = true
+                                menuChartSettings[g + 1][OverviewMenus.CharType.SEN.ordinal]      -> useRatioForScale = true
+                                menuChartSettings[g + 1][OverviewMenus.CharType.ACT.ordinal]      -> useIAForScale = true
+                                menuChartSettings[g + 1][OverviewMenus.CharType.ABS.ordinal]      -> useABSForScale = true
+                                menuChartSettings[g + 1][OverviewMenus.CharType.DEVSLOPE.ordinal] -> useDSForScale = true
+                            }
+
+                            if (menuChartSettings[g + 1][OverviewMenus.CharType.IOB.ordinal]) secondGraphData.addIob(fromTime, toTime, useIobForScale, 1.0, menuChartSettings[g + 1][OverviewMenus.CharType.PRE.ordinal])
+                            if (menuChartSettings[g + 1][OverviewMenus.CharType.COB.ordinal]) secondGraphData.addCob(fromTime, toTime, useCobForScale, if (useCobForScale) 1.0 else 0.5)
+                            if (menuChartSettings[g + 1][OverviewMenus.CharType.DEV.ordinal]) secondGraphData.addDeviations(fromTime, toTime, useDevForScale, 1.0)
+                            if (menuChartSettings[g + 1][OverviewMenus.CharType.SEN.ordinal]) secondGraphData.addRatio(fromTime, toTime, useRatioForScale, 1.0)
+                            if (menuChartSettings[g + 1][OverviewMenus.CharType.ACT.ordinal]) secondGraphData.addActivity(fromTime, toTime, useIAForScale, 0.8)
+                            if (menuChartSettings[g + 1][OverviewMenus.CharType.ABS.ordinal]) secondGraphData.addAbsIob(fromTime, toTime, useABSForScale, 1.0)
+                            if (menuChartSettings[g + 1][OverviewMenus.CharType.DEVSLOPE.ordinal] && buildHelper.isDev()) secondGraphData.addDeviationSlope(fromTime, toTime, useDSForScale, 1.0)
+
+                            // set manual x bounds to have nice steps
+                            secondGraphData.formatAxis(fromTime, toTime)
+                            secondGraphData.addNowLine(pointer)
+                            secondaryGraphsData.add(secondGraphData)
                         }
-
-                        if (menuChartSettings[g + 1][OverviewMenus.CharType.IOB.ordinal]) secondGraphData.addIob(fromTime, toTime, useIobForScale, 1.0, menuChartSettings[g + 1][OverviewMenus.CharType.PRE.ordinal])
-                        if (menuChartSettings[g + 1][OverviewMenus.CharType.COB.ordinal]) secondGraphData.addCob(fromTime, toTime, useCobForScale, if (useCobForScale) 1.0 else 0.5)
-                        if (menuChartSettings[g + 1][OverviewMenus.CharType.DEV.ordinal]) secondGraphData.addDeviations(fromTime, toTime, useDevForScale, 1.0)
-                        if (menuChartSettings[g + 1][OverviewMenus.CharType.SEN.ordinal]) secondGraphData.addRatio(fromTime, toTime, useRatioForScale, 1.0)
-                        if (menuChartSettings[g + 1][OverviewMenus.CharType.ACT.ordinal]) secondGraphData.addActivity(fromTime, toTime, useIAForScale, 0.8)
-                        if (menuChartSettings[g + 1][OverviewMenus.CharType.ABS.ordinal]) secondGraphData.addAbsIob(fromTime, toTime, useABSForScale, 1.0)
-                        if (menuChartSettings[g + 1][OverviewMenus.CharType.DEVSLOPE.ordinal] && buildHelper.isDev()) secondGraphData.addDeviationSlope(fromTime, toTime, useDSForScale, 1.0)
-
-                        // set manual x bounds to have nice steps
-                        secondGraphData.formatAxis(fromTime, toTime)
-                        secondGraphData.addNowLine(pointer)
-                        secondaryGraphsData.add(secondGraphData)
                     }
                 }
             }
             // finally enforce drawing of graphs in UI thread
             graphData.performUpdate()
             if (!bgOnly)
-                for (g in 0 until secondaryGraphs.size) {
-                    secondaryGraphsLabel[g].text = overviewMenus.enabledTypes(g + 1)
-                    secondaryGraphs[g].visibility = (!bgOnly && (
-                        menuChartSettings[g + 1][OverviewMenus.CharType.IOB.ordinal] ||
-                            menuChartSettings[g + 1][OverviewMenus.CharType.COB.ordinal] ||
-                            menuChartSettings[g + 1][OverviewMenus.CharType.DEV.ordinal] ||
-                            menuChartSettings[g + 1][OverviewMenus.CharType.SEN.ordinal] ||
-                            menuChartSettings[g + 1][OverviewMenus.CharType.ACT.ordinal] ||
-                            menuChartSettings[g + 1][OverviewMenus.CharType.ABS.ordinal] ||
-                            menuChartSettings[g + 1][OverviewMenus.CharType.DEVSLOPE.ordinal]
-                        )).toVisibility()
-                    secondaryGraphsData[g].performUpdate()
+                synchronized(graphLock) {
+                    for (g in 0 until secondaryGraphs.size) {
+                        secondaryGraphsLabel[g].text = overviewMenus.enabledTypes(g + 1)
+                        secondaryGraphs[g].visibility = (!bgOnly && (
+                            menuChartSettings[g + 1][OverviewMenus.CharType.IOB.ordinal] ||
+                                menuChartSettings[g + 1][OverviewMenus.CharType.COB.ordinal] ||
+                                menuChartSettings[g + 1][OverviewMenus.CharType.DEV.ordinal] ||
+                                menuChartSettings[g + 1][OverviewMenus.CharType.SEN.ordinal] ||
+                                menuChartSettings[g + 1][OverviewMenus.CharType.ACT.ordinal] ||
+                                menuChartSettings[g + 1][OverviewMenus.CharType.ABS.ordinal] ||
+                                menuChartSettings[g + 1][OverviewMenus.CharType.DEVSLOPE.ordinal]
+                            )).toVisibility()
+                        secondaryGraphsData[g].performUpdate()
+                    }
                 }
         }
     }

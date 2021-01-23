@@ -215,24 +215,43 @@
     <string name="history_group_alarm">Alarmes</string>
     <string name="history_group_glucose">Glucose</string>
     <string name="mute5min">Silenciar por 5 minutos</string>
-    <!--    <string name="medtronic_pump_status_never_contacted">Never contacted</string>-->
-    <!--    <string name="medtronic_pump_status_waking_up">Waking up</string>-->
-    <!--    <string name="medtronic_pump_status_error_comm">Error with communication</string>-->
-    <!--    <string name="medtronic_pump_status_timeout_comm">Timeout on communication</string>-->
-    <!--    <string name="medtronic_pump_status_pump_unreachable">Pump unreachable</string>-->
-    <!--    <string name="medtronic_pump_status_invalid_config">Invalid configuration</string>-->
-    <!--    <string name="medtronic_pump_status_active">Active</string>-->
-    <!--    <string name="medtronic_pump_status_sleeping">Sleeping</string>-->
-    <!--    <string name="danar_history_alarm">Alarms</string>-->
-    <!--    <string name="danar_history_glucose">Glucose</string>-->
-    <!--    All(R.string.medtronic_history_group_all), //-->
-    <!--    Bolus(R.string.danar_history_bolus), //-->
-    <!--    Basal(R.string.medtronic_history_group_basal), //-->
-    <!--    Prime(R.string.danar_history_prime), //-->
-    <!--    Configuration(R.string.medtronic_history_group_configuration), //-->
-    <!--    Alarm(R.string.danar_history_alarm), //-->
-    <!--    Glucose(R.string.danar_history_glucose), //-->
-    <!--    Notification(R.string.medtronic_history_group_notification), //-->
-    <!--    Statistic(R.string.medtronic_history_group_statistic),-->
-    <!--    Unknown(R.string.medtronic_history_group_unknown), //-->
+    <!-- Maintenance -->
+    <string name="metadata_label_created_at">Criado em</string>
+    <string name="metadata_label_aaps_version">Versão AAPS</string>
+    <string name="metadata_label_aaps_flavour">Variante de Compilação</string>
+    <string name="metadata_label_device_name">A exportar nome do paciente do dispositivo</string>
+    <string name="metadata_label_device_model">A exportar modelo do dispositivo</string>
+    <string name="metadata_label_encryption">Encriptação do Ficheiro</string>
+    <string name="metadata_format_old">Antigo Formato de Exportação</string>
+    <string name="metadata_format_new">Novo formato de encriptação</string>
+    <string name="metadata_format_debug">Novo formato de depuração (não encriptado)</string>
+    <string name="metadata_format_other">Formato de exportação desconhecido</string>
+    <string name="exported_ago" comment="at placeholder we add pluralized number of hours/minutes">exportado há %1$s</string>
+    <string name="exported_at" comment="at placeholder we add export date">exportado às %1$s</string>
+    <string name="exported_less_than_hour_ago">exportado há menos de uma hora</string>
+    <string name="in_directory" comment="placeholder is for exported file path">no diretório: %1$s</string>
+    <string name="preferences_import_list_title">Seleccione o ficheiro para importação</string>
+    <string name="metadata_warning_different_flavour">As preferências foram criadas com uma variante diferente do AAPS (%1$s) enquanto tem: %2$s.\n\nAlgumas definições podem estar ausentes ou inválidas - após a importação, por favor verifique e actualize suas preferências.</string>
+    <string name="metadata_warning_different_device">Preferências foram criadas num dispositivo diferente. Não há problema se estiver a importar de telefone diferente/antigo, mas se certifique que as preferências importadas estão corretas!</string>
+    <string name="metadata_warning_outdated_format">Está a usar formato ultrapassado herdado a partir de versões antigas do AAPS, o que não é seguro! Use-o apenas como um último recurso, se não tiver uma exportação no actual no formato JSON.</string>
+    <string name="metadata_warning_old_export">Preferências importadas já são %1$s dias antigas! Talvez tenha preferências mais actualizadas ou escolheu o ficheiro errado? Lembre-se de exportar preferências regularmente!</string>
+    <string name="metadata_warning_date_format">Formato de data-hora inválido!</string>
+    <string name="metadata_warning_different_version">Preferências de uma versão menor diferente de aplicação. Está OK se está a importar após o upgrade, mas verifique após a importação se as preferências ainda estão correctas!</string>
+    <string name="metadata_urgent_different_version">Preferências de uma versão principal diferente de aplicação. As principais versões diferem significativamente e podem ter preferências incompatíveis! Certifique-se depois de importar que as preferências ainda estão corretas!</string>
+    <string name="prefdecrypt_settings_tampered">Ficheiro de definições adulterado</string>
+    <string name="prefdecrypt_settings_secure">Ficheiro de definições é seguro</string>
+    <string name="prefdecrypt_settings_unencrypted">A usar um formato de definições não seguro e não encriptado</string>
+    <string name="prefdecrypt_wrong_json">Erro de formato JSON, campo necessário ausente (formato, conteúdo, metadados ou segurança)</string>
+    <string name="prefdecrypt_wrong_password">Erro ao desencriptar, a senha inserida não pode desencriptar o ficheiro</string>
+    <string name="prefdecrypt_issue_missing_file_hash">Ficheiro de verificação (hash) em falta, não é possível verificar a autenticidade das definições!</string>
+    <string name="prefdecrypt_issue_modified">Ficheiro foi modificado após exportação!</string>
+    <string name="prefdecrypt_issue_parsing">Erro Desencriptação, a análise de preferências falhou!</string>
+    <string name="prefdecrypt_issue_wrong_pass">Erro de Desencriptação, a senha é inválida ou configurações de arquivo foram modificadas! Pode acontecer que o ficheiro importado foi exportado com uma Senha Mestra diferente.</string>
+    <string name="prefdecrypt_issue_wrong_format">Configuração de encriptação ausente, formato de definições é inválido!</string>
+    <string name="prefdecrypt_issue_wrong_algorithm">Algoritmo de encriptação não suportado ou não especificado!</string>
+    <!-- VersionChecker -->
+    <string name="signature_verifier">Verificador de assinatura</string>
+    <string name="running_invalid_version">Detectamos que está a correr uma versão inválida. Loop desactivado!</string>
+    <string name="versionavailable">Disponível %1$s disponível</string>
+    <!-- Permissions -->
 </resources>

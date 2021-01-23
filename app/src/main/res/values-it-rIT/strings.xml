@@ -14,7 +14,6 @@
     <string name="reset_db_confirm">Vuoi davvero resettare i database?</string>
     <string name="nav_exit">Esci</string>
     <string name="ns_sync_use_absolute_title">Usa sempre valori basali assoluti</string>
-    <string name="alert_dialog_storage_permission_text">Per favore riavvia il tuo telefono oppure fai ripartire AndroidAPS dalle impostazioni di sistema \naltrimenti Android APS non farà il log (è importante monitorare e verificare che gli algoritmi stiano funzionando correttamente)!</string>
     <string name="alert_dialog_permission_battery_optimization_failed">Questo dispositivo non sembra supportare la whitelist dell\'ottimizzazione batteria: potrebbero verificarsi problemi di prestazioni.</string>
     <string name="description_actions">Alcuni tasti per accedere rapidamente alle funzioni comuni</string>
     <string name="description_config_builder">Usato per configurare i plugin attivi</string>
@@ -168,7 +167,6 @@
     <string name="old_master_password">Password Master precedente</string>
     <string name="different_password_used">Questo file è stato esportato e crittografato con una password master differente. Fornire la password master precedente per decrittare il file.</string>
     <string name="master_password_will_be_replaced">Come risultato dell\'importazione riuscita, la password master corrente VERRÀ SOSTITUITA con la password master precedente contenuta nel file importato!</string>
-    <string name="preferences_import_list_title">Seleziona il file da importare</string>
     <string name="check_preferences_before_import">Controlla le preferenze prima dell\'importazione:</string>
     <string name="check_preferences_cannot_import">Le preferenze non possono essere importate!</string>
     <string name="check_preferences_dangerous_import">Le preferenze non dovrebbero essere importate!</string>
@@ -176,39 +174,6 @@
     <string name="check_preferences_details_title">Dettagli dei problemi di importazione</string>
     <string name="check_preferences_import_btn">Importa</string>
     <string name="check_preferences_import_anyway_btn">Importa comunque (PERICOLOSO!)</string>
-    <string name="metadata_warning_different_flavour">Le preferenze sono state create con una differente versione di AAPS (%1$s) mentre invece tu hai: %2$s.\n\nAlcune impostazioni potrebbero mancare o non essere valide - dopo l\'importazione controlla e aggiornare le tue preferenze.</string>
-    <string name="metadata_warning_different_device">Le preferenze sono state create su un dispositivo diverso. Va bene importarle da un vecchio/diverso telefono, ma assicurati che le preferenze importate siano corrette!</string>
-    <string name="metadata_warning_outdated_format">Stai usando il formato precedente (obsoleto) delle vecchie versioni di APPS, che non è sicuro! Usalo solo come ultima risorsa, se non hai un\'esportazione nel corrente formato JSON.</string>
-    <string name="metadata_warning_old_export">Le preferenze importate hanno già %1$s giorni! Forse hai preferenze più aggiornate. Hai scelto il file sbagliato? Ricorda di esportare le preferenze regolarmente!</string>
-    <string name="metadata_warning_date_format">Formato data-ora non valido!</string>
-    <string name="metadata_warning_different_version">Le preferenze arrivano da una differente versione secondaria dell\'applicazione (minor). Va bene se le stai importando dopo l\'aggiornamento, ma controlla che, dopo l\'importazione, le preferenze siano ancora corrette!</string>
-    <string name="metadata_urgent_different_version">Le preferenze arrivano da una differente versione principale dell\'applicazione (major). Le versioni principali differiscono in modo significativo e potrebbero avere preferenze incompatibili! Assicurati che, dopo l\'importazione, le preferenze siano ancora corrette!</string>
-    <string name="metadata_label_format">Formato file</string>
-    <string name="metadata_label_created_at">Creato:</string>
-    <string name="metadata_label_aaps_version">Versione AAPS</string>
-    <string name="metadata_label_aaps_flavour">Variante build</string>
-    <string name="metadata_label_device_name">Nome paziente del dispositivo esportatore</string>
-    <string name="metadata_label_device_model">Modello dispositivo esportatore</string>
-    <string name="metadata_label_encryption">Crittografia file</string>
-    <string name="metadata_format_old">Vecchio formato esportazione</string>
-    <string name="metadata_format_new">Nuovo formato crittografato</string>
-    <string name="metadata_format_debug">Nuovo formato di debug (non crittografato)</string>
-    <string name="metadata_format_other">Formato esportazione sconosciuto</string>
-    <string name="prefdecrypt_settings_tampered">File delle impostazioni manomesso</string>
-    <string name="prefdecrypt_settings_secure">Il file delle impostazioni è sicuro</string>
-    <string name="prefdecrypt_settings_unencrypted">Uso non sicuro, formato impostazioni non crittografato</string>
-    <string name="prefdecrypt_wrong_json">Errore formato JSON, campo obbligatorio mancante (formato, contenuto, metadati o sicurezza)</string>
-    <string name="prefdecrypt_wrong_password">Errore decrittazione, la password data non può decrittare il file</string>
-    <string name="prefdecrypt_issue_missing_file_hash">File checksum (hash) mancante, impossibile verificare l\'autenticità delle impostazioni!</string>
-    <string name="prefdecrypt_issue_modified">Il file è stato modificato dopo l\'esportazione!</string>
-    <string name="prefdecrypt_issue_parsing">Errore decrittazione, analisi preferenze fallita!</string>
-    <string name="prefdecrypt_issue_wrong_pass">Errore decrittazione, la password fornita è errata o il file delle impostazioni è stato modificato! È possibile che il file importato sia stato esportato con una diversa password master.</string>
-    <string name="prefdecrypt_issue_wrong_format">Configurazione crittografia mancante, il formato delle impostazioni non è valido!</string>
-    <string name="prefdecrypt_issue_wrong_algorithm">Algoritmo di crittografia non supportato o non specificato!</string>
-    <string name="exported_ago" comment="at placeholder we add pluralized number of hours/minutes">esportato %1$s fa</string>
-    <string name="exported_at" comment="at placeholder we add export date">esportato il %1$s</string>
-    <string name="exported_less_than_hour_ago">esportato meno di un\'ora fa</string>
-    <string name="in_directory" comment="placeholder is for exported file path">nella directory: %1$s</string>
     <string name="end_user_license_agreement">Contratto di licenza per l\'utente</string>
     <string name="end_user_license_agreement_text">NON DEVE ESSERE USATO PER PRENDERE DECISIONI MEDICHE. NON ESISTE ALCUNA GARANZIA PER IL PROGRAMMA, NELLA MISURA CONSENTITA DALLA LEGGE APPLICABILE. TRANNE QUANDO DIVERSAMENTE INDICATO PER ISCRITTO, I DETENTORI DEL COPYRIGHT E/O ALTRE PARTI FORNISCONO IL PROGRAMMA \"COSÌ COM\'È\" SENZA GARANZIA DI ALCUN TIPO, ESPLICITA O IMPLICITA, INCLUSE, MA NON LIMITATAMENTE A, GARANZIE IMPLICITE DI COMMERCIABILITÀ E IDONEITÀ PER UN SCOPO PARTICOLARE. L\'INTERO RISCHIO RIGUARDO LA QUALITÀ E LE PRESTAZIONI DEL PROGRAMMA È TUO. SE IL PROGRAMMA DOVESSE RISULTARE DIFETTOSO, TI ASSUMI IL COSTO DI TUTTE LE NECESSARIE MANUTENZIONI, RIPARAZIONI O CORREZIONI.</string>
     <string name="end_user_license_agreement_i_understand">COMPRENDO E ACCETTO</string>
@@ -285,6 +250,8 @@
     <string name="mealbolus">Pasto</string>
     <string name="correctionbous">Corr</string>
     <string name="actions">Azioni</string>
+    <string name="ns_upload_only">Solo upload su NS (PERICOLOSO DISABILITARE)</string>
+    <string name="ns_upload_only_summary">Solo upload su NS (no sincronizzazione). Non ha effetto su SGV a meno che non sia selezionata una fonte locale come xDrip+. Non ha effetto sui profili mentre vengono usati i profili NS.\n!!! ATTENZIONE !!! Disabilitare questa opzione potrebbe causare malfunzionamenti e sovra-dosaggio di insulina se uno dei tuoi strumenti (AAPS, NS, xDrip+) è configurato in modo errato. Guarda attentamente se i dati visualizzati da AAPS corrispondono allo stato del micro!</string>
     <string name="pumpNotInitialized">Micro non inizializzato!</string>
     <string name="primefill">Carica/Riempi</string>
     <string name="fillwarning">Assicurati che la quantità corrisponda alla specifica del tuo set di infusione!</string>
@@ -459,6 +426,7 @@
     <string name="smscommunicator_missingsmspermission">Autorizzazione SMS mancante</string>
     <string name="smscommunicator_missingphonestatepermission">Autorizzazione stato telefono mancante</string>
     <string name="xdripstatus_settings">Stato xDrip+ (smartwatch)</string>
+    <string name="xdripstatus">Statusline xDrip+ (smartwatch)</string>
     <string name="xdripstatus_shortname">xds</string>
     <string name="wear_showbgi_title">Mostra BGI</string>
     <string name="wear_showbgi_summary">Aggiungi BGI alla statusline</string>
@@ -501,7 +469,8 @@
     <string name="mdtp_cancel">Annulla</string>
     <string name="notloadedplugins">Non tutti i profili caricati!</string>
     <string name="valuesnotstored">Valori non memorizzati!</string>
-    <string name="ns_localbroadcasts_title">Abilita le trasmissioni locali.</string>
+    <string name="ns_localbroadcasts">Abilita trasmissioni ad altre app (come xDrip+). Non abilitare se hai installato più di un\'istanza di AAPS o NSClient!</string>
+    <string name="ns_localbroadcasts_title">Abilita trasmissioni locali</string>
     <string name="careportal_newnstreatment_duration_min_label">Durata [min]</string>
     <string name="openapssmb">OpenAPS SMB</string>
     <string name="enableuam">Abilita UAM</string>
@@ -526,7 +495,7 @@
     <string name="activity_target">target \"attività fisica\"</string>
     <string name="hypo_duration">target \"ipoglicemia\" - durata</string>
     <string name="hypo_target">target \"ipoglicemia\"</string>
-    <string name="reuse">riuso</string>
+    <string name="reuse_profile_pct_hours">Riusa %1$d%% %2$dh</string>
     <string name="wearcontrol_title">Controlli da smartwatch</string>
     <string name="wearcontrol_summary">Imposta Temp-Target e inserisci trattamenti dallo smartwatch.</string>
     <string name="food">Cibo</string>
@@ -625,7 +594,6 @@
     <string name="enablesmbwithhightemptarget">Abilita SMB con target temporanei \"alti\"</string>
     <string name="enablesmbwithhightemptarget_summary">Abilita SMB quando è attivo un target temporaneo \"alto\" (attività fisica, sopra 100 mg/dl o 5.5 mmol/l)</string>
     <string name="overview_insulin_label">Insulina</string>
-    <string name="overview_carbs_label">CHO</string>
     <string name="overview_buttons_selection">Tasti</string>
     <string name="show_calibration_button_summary">Invia una calibrazione a xDrip+ o apre la finestra di calibrazione del G5</string>
     <string name="show_cgm_button_summary">Apre xDrip+, il tasto indietro torna ad AAPS</string>
@@ -809,7 +777,6 @@
     <string name="nav_logsettings">Impostazioni Log</string>
     <string name="resettodefaults">Ripristina valori predefiniti</string>
     <string name="nsmalfunction">Malfunzionamento NSClient. Considera il riavvio di NS e NSClient.</string>
-    <string name="versionavailable">Versione %1$s disponibile</string>
     <string name="time_offset">Offset</string>
     <string name="setupwizard_preferred_aps_mode">Modalità APS preferita</string>
     <string name="treatments_wizard_total_label">Totale</string>
@@ -966,8 +933,6 @@
     <string name="copy_short">COPIA</string>
     <string name="addnew">Aggiungi nuovo</string>
     <string name="versionChecker">Controllo versione</string>
-    <string name="signature_verifier">Verificatore firma</string>
-    <string name="running_invalid_version">Abbiamo rilevato che stai eseguendo una versione non valida. Loop disabilitato!</string>
     <string name="old_version">versione datata</string>
     <string name="very_old_version">versione molto datata</string>
     <string name="new_version_warning">Nuova versione disponibile da almeno %1$d giorni! Ritorno a LGS dopo %2$d giorni, disattivazione del loop dopo %3$d giorni</string>

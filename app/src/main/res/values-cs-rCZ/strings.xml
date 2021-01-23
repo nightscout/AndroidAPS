@@ -14,7 +14,6 @@
     <string name="reset_db_confirm">Opravdu resetovat všechny databáze?</string>
     <string name="nav_exit">Konec</string>
     <string name="ns_sync_use_absolute_title">Vždy použít absolutní hodnoty bazálu</string>
-    <string name="alert_dialog_storage_permission_text">Prosím restartujte Váš telefon nebo restartujte AndroidAPS z nastavení systému\njinak nebudou zaznamenány ladící informace (důležité pro sledování a kontrolu, zda algoritmus pracuje správně)!</string>
     <string name="alert_dialog_permission_battery_optimization_failed">Toto zařízení zřejmě neumožňuje vypnout optimalizaci baterie - může docházet k problémům s výkonem.</string>
     <string name="description_actions">Tlačítka k běžně používaným úkonům</string>
     <string name="description_config_builder">Nastavení konfigurace (povolování součástí systému)</string>
@@ -168,7 +167,6 @@
     <string name="old_master_password">Původní hlavní heslo</string>
     <string name="different_password_used">Tento soubor byl exportován a zašifrován jiným hlavním heslem. Chcete-li dešifrovat soubor, zadejte staré hlavní heslo.</string>
     <string name="master_password_will_be_replaced">V důsledku úspěšného importu bude aktuální hlavní heslo NAHRAZENO tímto starým hlavním heslem!</string>
-    <string name="preferences_import_list_title">Vyberte soubor, který chcete importovat</string>
     <string name="check_preferences_before_import">Před importem zkontrolujte předvolby:</string>
     <string name="check_preferences_cannot_import">Předvolby nelze importovat!</string>
     <string name="check_preferences_dangerous_import">Předvolby by neměly být importovány!</string>
@@ -176,39 +174,6 @@
     <string name="check_preferences_details_title">Detaily problémů importu</string>
     <string name="check_preferences_import_btn">Import</string>
     <string name="check_preferences_import_anyway_btn">Přesto importovat (NEBEZPEČNÉ!)</string>
-    <string name="metadata_warning_different_flavour">Předvolby byly vytvořeny s jinou variantou AAPS (%1$s) a když máte: %2$s.\n\nNěkterá nastavení mohou chybět nebo mohou být neplatná - po importu zkontrolujte konfiguraci a aktualizujte předvolby.</string>
-    <string name="metadata_warning_different_device">Předvolby byly vytvořeny na jiném zařízení. Je to v pořádku, pokud importujete ze staršího/jiného telefonu, ale ujistěte se, že importované předvolby jsou správné!</string>
-    <string name="metadata_warning_outdated_format">Používáte zastaralý formát od starých verzí AAPS, který není zabezpečený! Použijte jej pouze jako poslední možnost, pokud nemáte exporty v aktuálním formátu JSON.</string>
-    <string name="metadata_warning_old_export">Importované předvolby jsou staré již %1$s dní! Možná máte aktualnější export nebo jste vybral špatný soubor? Nezapomeňte předvolby pravidelně exportovat!</string>
-    <string name="metadata_warning_date_format">Neplatný formát datumu!</string>
-    <string name="metadata_warning_different_version">Nastavení z odlišné nižší verze aplikace. Je to v pořádku, pokud importujete po aktualizaci, po importu však zkontrolujte, zda jsou nastavení stálé správná!</string>
-    <string name="metadata_urgent_different_version">Nastavení z odlišné hlavní verze aplikace. Hlavní verze se výrazně liší a nemusejí mít kompatibilní nastavení. Po importu zkontrolujte, zda jsou nastavení stálé správná!</string>
-    <string name="metadata_label_format">Formát souboru</string>
-    <string name="metadata_label_created_at">Vytvořeno</string>
-    <string name="metadata_label_aaps_version">Verze AAPS</string>
-    <string name="metadata_label_aaps_flavour">Varianta sestavení</string>
-    <string name="metadata_label_device_name">Jméno pacienta použité při exportu</string>
-    <string name="metadata_label_device_model">Model zaříení použitý při exportu</string>
-    <string name="metadata_label_encryption">Šifrování souboru</string>
-    <string name="metadata_format_old">Starý formát exportu</string>
-    <string name="metadata_format_new">Nový zašifrovaný formát</string>
-    <string name="metadata_format_debug">Nový formát pro ladění (nešifrovaný)</string>
-    <string name="metadata_format_other">Neznámý formát souboru</string>
-    <string name="prefdecrypt_settings_tampered">Soubor s nastavením poškozen</string>
-    <string name="prefdecrypt_settings_secure">Soubor nastavení je zabezpečen</string>
-    <string name="prefdecrypt_settings_unencrypted">Použití nezabezpečeného, nešifrovaného formátu nastavení</string>
-    <string name="prefdecrypt_wrong_json">Chyba formátu JSON, chybí povinné pole (formát, obsah, metadata nebo zabezpečení)</string>
-    <string name="prefdecrypt_wrong_password">Chyba dešifrování, dané heslo nemůže dešifrovat soubor</string>
-    <string name="prefdecrypt_issue_missing_file_hash">Chybí kontrolní součet souboru (hash), nelze ověřit pravost nastavení!</string>
-    <string name="prefdecrypt_issue_modified">Soubor byl po exportu změněn!</string>
-    <string name="prefdecrypt_issue_parsing">Chyba dešifrování, analýza předvoleb se nezdařila!</string>
-    <string name="prefdecrypt_issue_wrong_pass">Chyba dešifrování, zadané heslo je neplatné, nebo byl soubor nastavení změněn! Může se stát, že importovaný soubor byl exportován s jiným hlavním heslem.</string>
-    <string name="prefdecrypt_issue_wrong_format">Chybí konfigurace šifrování, formát nastavení je neplatný!</string>
-    <string name="prefdecrypt_issue_wrong_algorithm">Nepodporovaný nebo neurčený šifrovací algoritmus!</string>
-    <string name="exported_ago" comment="at placeholder we add pluralized number of hours/minutes">exportováno před %1$s</string>
-    <string name="exported_at" comment="at placeholder we add export date">exportováno v %1$s</string>
-    <string name="exported_less_than_hour_ago">exportováno před méně než hodinou</string>
-    <string name="in_directory" comment="placeholder is for exported file path">v adresáři: %1$s</string>
     <string name="end_user_license_agreement">Licenční ujednání</string>
     <string name="end_user_license_agreement_text">MUST NOT BE USED TO MAKE MEDICAL DECISIONS. THERE IS NO WARRANTY FOR THE PROGRAM, TO THE EXTENT PERMITTED BY APPLICABLE LAW. EXCEPT WHEN OTHERWISE STATED IN WRITING THE COPYRIGHT HOLDERS AND/OR OTHER PARTIES PROVIDE THE PROGRAM “AS IS” WITHOUT WARRANTY OF ANY KIND, EITHER EXPRESSED OR IMPLIED, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE. THE ENTIRE RISK AS TO THE QUALITY AND PERFORMANCE OF THE PROGRAM IS WITH YOU. SHOULD THE PROGRAM PROVE DEFECTIVE, YOU ASSUME THE COST OF ALL NECESSARY SERVICING, REPAIR OR CORRECTION.</string>
     <string name="end_user_license_agreement_i_understand">ROZUMÍM A POTVRZUJI</string>
@@ -530,7 +495,7 @@
     <string name="activity_target">Cíl při aktivitě</string>
     <string name="hypo_duration">Trvání dočasného cíle při hypoglykémii</string>
     <string name="hypo_target">Cílová glykémie při hypoglykémii</string>
-    <string name="reuse">znovu použít</string>
+    <string name="reuse_profile_pct_hours">Znovu použít %1$d%% %2$dh</string>
     <string name="wearcontrol_title">Řízení z hodinek Wear</string>
     <string name="wearcontrol_summary">Nastavování dočasných cílů a vkládání ošetření na hodinkách Wear.</string>
     <string name="food">Jídlo</string>
@@ -629,7 +594,6 @@
     <string name="enablesmbwithhightemptarget">Povolit SMB s vysokými dočasnými cíli</string>
     <string name="enablesmbwithhightemptarget_summary">Povolit SMB, je-li aktivní vysoký cíl (cvičení, vyšší než 100 mg/dl nebo 5,5 mmol/l)</string>
     <string name="overview_insulin_label">Inzulín</string>
-    <string name="overview_carbs_label">Sacharidy</string>
     <string name="overview_buttons_selection">Tlačítka</string>
     <string name="show_calibration_button_summary">Odeslání kalibrace do xDripu+, nebo otevření kalibračního dialogu na G5</string>
     <string name="show_cgm_button_summary">Otevře xDrip+, tlačítko zpět vrátí do AndroidAPS</string>
@@ -813,7 +777,6 @@
     <string name="nav_logsettings">Nastavení logování</string>
     <string name="resettodefaults">Obnovit výchozí</string>
     <string name="nsmalfunction">Chyba NSClienta. Zvažte restart NS a NSClienta.</string>
-    <string name="versionavailable">Verze %1$s je k dispozici</string>
     <string name="time_offset">Časový posun</string>
     <string name="setupwizard_preferred_aps_mode">Preferovaný režim APS</string>
     <string name="treatments_wizard_total_label">Výsledek</string>
@@ -970,8 +933,6 @@
     <string name="copy_short">KOPIE</string>
     <string name="addnew">Přidat nový</string>
     <string name="versionChecker">Kontrola verze</string>
-    <string name="signature_verifier">Ověření podpisu</string>
-    <string name="running_invalid_version">Zjistili jsme, že používáte neplatnou verzi, smyčka zakázána!</string>
     <string name="old_version">stará verze</string>
     <string name="very_old_version">velmi stará verze</string>
     <string name="new_version_warning">Nová verze je dostupná minimálně %1$d dní! Přepnutí na ochranu před nízkou glykémií po %2$d dnech, vypnutí smyčky po %3$d dnech</string>

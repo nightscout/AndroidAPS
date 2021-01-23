@@ -3,18 +3,42 @@
     <!-- Omnipod - Keys -->
     <!-- Omnipod - Non translatable -->
     <!-- Omnipod - Preferences -->
+    <string name="omnipod_preference_category_rileylink">RileyLink</string>
+    <string name="omnipod_preference_category_other">Eile</string>
+    <string name="omnipod_preference_category_alerts">Aláraim</string>
     <!-- Omnipod - Pod Status -->
+    <string name="omnipod_pod_status_running">Ag reáchtáil</string>
+    <string name="omnipod_pod_status_suspended">Ar fionraí</string>
+    <string name="omnipod_pod_status_inactive">Neamhghníomhach</string>
     <!-- Omnipod - Alerts -->
     <!-- Omnipod - History -->
+    <string name="omnipod_history_item_date">Dáta</string>
+    <string name="omnipod_history_bolus_value">%1$.2f A</string>
     <!-- Omnipod - Short status -->
     <!-- Omnipod - Error -->
+    <string name="omnipod_warning">Rabhadh</string>
     <!-- Omnipod - Confirmation -->
     <!-- Omnipod - Commands -->
     <!-- Omnipod - Pod Management -->
+    <string name="omnipod_pod_management_heading_actions">Gníomhartha</string>
     <!-- Omnipod - Wizard common -->
+    <string name="omnipod_wizard_button_next">Ar Aghaidh</string>
+    <string name="omnipod_wizard_exit_confirmation_title">Scoir</string>
     <!-- Omnipod - Pod activation Wizard -->
     <!-- Omnipod - Pod deactivation Wizard -->
     <!-- Omnipod - Overview -->
+    <string name="omnipod_overview_button_suspend_delivery">Fionraí</string>
+    <string name="omnipod_overview_button_refresh">Athnuachan</string>
+    <string name="omnipod_overview_total_delivered_value">%1$.2f A</string>
+    <string name="omnipod_overview_reservoir">Taiscumar</string>
+    <string name="omnipod_overview_temp_basal_value">%1$.2fA/u @%2$s (%3$d/%4$d nóiméad)</string>
+    <string name="omnipod_overview_errors">Earráidí</string>
     <!-- Omnipod - Other -->
+    <string name="omnipod_yes">Tá</string>
+    <string name="omnipod_no">Níl</string>
+    <string name="omnipod_ok">Ceart go leor</string>
+    <string name="omnipod_cancel">Cuir ar ceal</string>
     <!-- Omnipod - Times -->
+    <string name="omnipod_composite_time">%1$s agus %2$s</string>
+    <string name="omnipod_time_ago">%1$s ó shin</string>
 </resources>

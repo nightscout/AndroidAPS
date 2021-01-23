@@ -13,7 +13,6 @@
     <string name="reset_db_confirm">Wil jy regtig die databasis herstel?</string>
     <string name="nav_exit">Gaan uit</string>
     <string name="ns_sync_use_absolute_title">Gebruik altyd absolute basale aardes</string>
-    <string name="alert_dialog_storage_permission_text">Herlaai jou foon of herlaai AndroidAPS met die stelsel instellings \nanders sal AndroidAPS nie geskiedenis hê nie! (Belangrik om te spoor en te verifieer dat die algoritmes korrek werk)!</string>
     <string name="description_actions">\'n Paar knoppies vir vinnige algemene nutsfunskies</string>
     <string name="description_config_builder">Gebruik vir die aktiewe plugins te konfigureer</string>
     <string name="description_objectives">Onderrig program</string>
@@ -383,7 +382,6 @@
     <string name="activity_target">aktiwiteit doelwit</string>
     <string name="hypo_duration">hipo duur</string>
     <string name="hypo_target">hipo doelwit</string>
-    <string name="reuse">hergebruik</string>
     <string name="wearcontrol_title">Kontroles van horlosie</string>
     <string name="wearcontrol_summary">Stel tydeleike doelwitte en behandelings vanaf horlosie.</string>
     <string name="food">Kos</string>
@@ -474,7 +472,6 @@
     <string name="enablesmbwithtemptarget_summary">Aktiveer SMB wanneer daar tydelike doelwitte aktief is (eetgou, oefen)</string>
     <string name="enablesmbwithhightemptarget">Aktiveer SMB met hoë tydelike doelwitte</string>
     <string name="overview_insulin_label">Insulien</string>
-    <string name="overview_carbs_label">Karbs</string>
     <string name="overview_buttons_selection">Knoppies</string>
     <string name="show_calibration_button_summary">Stuur \'n kalibrasie na xDrip+ of open G5 kalibrasie dialoog</string>
     <string name="show_cgm_button_summary">Open xDrip +, terug knoppies keer terug na AAPS</string>
@@ -638,7 +635,6 @@
     <string name="nav_logsettings">Logboekinstellings</string>
     <string name="resettodefaults">Herstel na verstek</string>
     <string name="nsmalfunction">NSClient onklaar. Oorweeg om NS en NSClient te herlaai.</string>
-    <string name="versionavailable">Weergawe %1$s beskikbaar</string>
     <string name="time_offset">Tyd verskil</string>
     <string name="setupwizard_preferred_aps_mode">Verkose APS modus</string>
     <string name="treatments_wizard_total_label">Totaal</string>
@@ -786,8 +782,6 @@
     <string name="copy_short">Kopieer</string>
     <string name="addnew">Voeg nuwe by</string>
     <string name="versionChecker">Weergawe Navolger</string>
-    <string name="signature_verifier">Handtekening verifieerder</string>
-    <string name="running_invalid_version">Die weergawe is ongeldig. Lus afgeskakel!</string>
     <string name="old_version">ou weergawe</string>
     <string name="very_old_version">baie ou weergawe</string>
     <string name="twohours">2h</string>

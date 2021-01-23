@@ -1,7 +1,7 @@
 package info.nightscout.androidaps.plugins.general.maintenance.formats
 
 import info.nightscout.androidaps.Constants
-import info.nightscout.androidaps.R
+import info.nightscout.androidaps.core.R
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 import info.nightscout.androidaps.utils.storage.Storage
 import java.io.File
@@ -17,6 +17,7 @@ class ClassicPrefsFormat @Inject constructor(
 ) : PrefsFormat {
 
     companion object {
+
         val FORMAT_KEY = "aaps_old"
     }
 

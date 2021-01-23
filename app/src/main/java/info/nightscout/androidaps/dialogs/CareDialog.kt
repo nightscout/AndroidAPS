@@ -13,6 +13,7 @@ import info.nightscout.androidaps.Constants
 import info.nightscout.androidaps.MainApp
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.data.Profile
+import info.nightscout.androidaps.databinding.DialogCareBinding
 import info.nightscout.androidaps.db.CareportalEvent
 import info.nightscout.androidaps.db.Source
 import info.nightscout.androidaps.interfaces.ProfileFunction
@@ -23,15 +24,13 @@ import info.nightscout.androidaps.utils.HtmlHelper
 import info.nightscout.androidaps.utils.Translator
 import info.nightscout.androidaps.utils.alertDialogs.OKDialog
 import info.nightscout.androidaps.utils.resources.ResourceHelper
-import kotlinx.android.synthetic.main.dialog_care.*
-import kotlinx.android.synthetic.main.notes.*
-import kotlinx.android.synthetic.main.okcancel.*
 import org.json.JSONObject
 import java.text.DecimalFormat
 import java.util.*
 import javax.inject.Inject
 
 class CareDialog : DialogFragmentWithDate() {
+
     @Inject lateinit var injector: HasAndroidInjector
     @Inject lateinit var mainApp: MainApp
     @Inject lateinit var resourceHelper: ResourceHelper
@@ -60,18 +59,25 @@ class CareDialog : DialogFragmentWithDate() {
         return this
     }
 
+    private var _binding: DialogCareBinding? = null
+
+    // This property is only valid between onCreateView and
+    // onDestroyView.
+    private val binding get() = _binding!!
+
     override fun onSaveInstanceState(savedInstanceState: Bundle) {
         super.onSaveInstanceState(savedInstanceState)
-        savedInstanceState.putDouble("actions_care_bg", actions_care_bg.value)
-        savedInstanceState.putDouble("actions_care_duration", actions_care_duration.value)
+        savedInstanceState.putDouble("bg", binding.bg.value)
+        savedInstanceState.putDouble("duration", binding.duration.value)
         savedInstanceState.putInt("event", event)
         savedInstanceState.putInt("options", options.ordinal)
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
-                              savedInstanceState: Bundle?): View? {
+                              savedInstanceState: Bundle?): View {
         onCreateViewGeneral()
-        return inflater.inflate(R.layout.dialog_care, container, false)
+        _binding = DialogCareBinding.inflate(inflater, container, false)
+        return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -82,7 +88,7 @@ class CareDialog : DialogFragmentWithDate() {
             options = EventType.values()[savedInstanceState.getInt("options", 0)]
         }
 
-        actions_care_icon.setImageResource(when (options) {
+        binding.icon.setImageResource(when (options) {
             EventType.BGCHECK        -> R.drawable.ic_cp_bgcheck
             EventType.SENSOR_INSERT  -> R.drawable.ic_cp_cgm_insert
             EventType.BATTERY_CHANGE -> R.drawable.ic_cp_pump_battery
@@ -91,7 +97,7 @@ class CareDialog : DialogFragmentWithDate() {
             EventType.QUESTION       -> R.drawable.ic_cp_question
             EventType.ANNOUNCEMENT   -> R.drawable.ic_cp_announcement
         })
-        actions_care_title.text = resourceHelper.gs(when (options) {
+        binding.title.text = resourceHelper.gs(when (options) {
             EventType.BGCHECK        -> R.string.careportal_bgcheck
             EventType.SENSOR_INSERT  -> R.string.careportal_cgmsensorinsert
             EventType.BATTERY_CHANGE -> R.string.careportal_pumpbatterychange
@@ -104,21 +110,21 @@ class CareDialog : DialogFragmentWithDate() {
         when (options) {
             EventType.QUESTION,
             EventType.ANNOUNCEMENT,
-            EventType.BGCHECK        -> {
-                action_care_duration_layout.visibility = View.GONE
+            EventType.BGCHECK -> {
+                binding.durationLayout.visibility = View.GONE
             }
 
             EventType.SENSOR_INSERT,
             EventType.BATTERY_CHANGE -> {
-                action_care_bg_layout.visibility = View.GONE
-                actions_care_bgsource.visibility = View.GONE
-                action_care_duration_layout.visibility = View.GONE
+                binding.bgLayout.visibility = View.GONE
+                binding.bgsource.visibility = View.GONE
+                binding.durationLayout.visibility = View.GONE
             }
 
             EventType.NOTE,
-            EventType.EXERCISE       -> {
-                action_care_bg_layout.visibility = View.GONE
-                actions_care_bgsource.visibility = View.GONE
+            EventType.EXERCISE -> {
+                binding.bgLayout.visibility = View.GONE
+                binding.bgsource.visibility = View.GONE
             }
         }
 
@@ -128,23 +134,28 @@ class CareDialog : DialogFragmentWithDate() {
             override fun afterTextChanged(s: Editable) {}
             override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {}
             override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
-                if (actions_care_sensor.isChecked) actions_care_meter.isChecked = true
+                if (binding.sensor.isChecked) binding.meter.isChecked = true
             }
         }
 
         if (profileFunction.getUnits() == Constants.MMOL) {
-            actions_care_bgunits.text = resourceHelper.gs(R.string.mmol)
-            actions_care_bg.setParams(savedInstanceState?.getDouble("actions_care_bg")
-                ?: bg, 2.0, 30.0, 0.1, DecimalFormat("0.0"), false, ok, bgTextWatcher)
+            binding.bgunits.text = resourceHelper.gs(R.string.mmol)
+            binding.bg.setParams(savedInstanceState?.getDouble("bg")
+                ?: bg, 2.0, 30.0, 0.1, DecimalFormat("0.0"), false, binding.okcancel.ok, bgTextWatcher)
         } else {
-            actions_care_bgunits.text = resourceHelper.gs(R.string.mgdl)
-            actions_care_bg.setParams(savedInstanceState?.getDouble("actions_care_bg")
-                ?: bg, 36.0, 500.0, 1.0, DecimalFormat("0"), false, ok, bgTextWatcher)
+            binding.bgunits.text = resourceHelper.gs(R.string.mgdl)
+            binding.bg.setParams(savedInstanceState?.getDouble("bg")
+                ?: bg, 36.0, 500.0, 1.0, DecimalFormat("0"), false, binding.okcancel.ok, bgTextWatcher)
         }
-        actions_care_duration.setParams(savedInstanceState?.getDouble("actions_care_duration")
-            ?: 0.0, 0.0, Constants.MAX_PROFILE_SWITCH_DURATION, 10.0, DecimalFormat("0"), false, ok)
+        binding.duration.setParams(savedInstanceState?.getDouble("duration")
+            ?: 0.0, 0.0, Constants.MAX_PROFILE_SWITCH_DURATION, 10.0, DecimalFormat("0"), false, binding.okcancel.ok)
         if (options == EventType.NOTE || options == EventType.QUESTION || options == EventType.ANNOUNCEMENT)
-            notes_layout?.visibility = View.VISIBLE // independent to preferences
+            binding.notesLayout.root.visibility = View.VISIBLE // independent to preferences
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 
     override fun submit(): Boolean {
@@ -156,20 +167,20 @@ class CareDialog : DialogFragmentWithDate() {
         if (options == EventType.BGCHECK || options == EventType.QUESTION || options == EventType.ANNOUNCEMENT) {
             val type =
                 when {
-                    actions_care_meter.isChecked  -> CareportalEvent.FINGER
-                    actions_care_sensor.isChecked -> CareportalEvent.SENSOR
-                    else                          -> CareportalEvent.MANUAL
+                    binding.meter.isChecked  -> CareportalEvent.FINGER
+                    binding.sensor.isChecked -> CareportalEvent.SENSOR
+                    else                     -> CareportalEvent.MANUAL
                 }
             actions.add(resourceHelper.gs(R.string.careportal_newnstreatment_glucosetype) + ": " + translator.translate(type))
-            actions.add(resourceHelper.gs(R.string.treatments_wizard_bg_label) + ": " + Profile.toCurrentUnitsString(profileFunction, actions_care_bg.value) + " " + resourceHelper.gs(unitResId))
-            json.put("glucose", actions_care_bg.value)
+            actions.add(resourceHelper.gs(R.string.treatments_wizard_bg_label) + ": " + Profile.toCurrentUnitsString(profileFunction, binding.bg.value) + " " + resourceHelper.gs(unitResId))
+            json.put("glucose", binding.bg.value)
             json.put("glucoseType", type)
         }
         if (options == EventType.NOTE || options == EventType.EXERCISE) {
-            actions.add(resourceHelper.gs(R.string.careportal_newnstreatment_duration_label) + ": " + resourceHelper.gs(R.string.format_mins, actions_care_duration.value.toInt()))
-            json.put("duration", actions_care_duration.value.toInt())
+            actions.add(resourceHelper.gs(R.string.careportal_newnstreatment_duration_label) + ": " + resourceHelper.gs(R.string.format_mins, binding.duration.value.toInt()))
+            json.put("duration", binding.duration.value.toInt())
         }
-        val notes = notes.text.toString()
+        val notes = binding.notesLayout.notes.text.toString()
         if (notes.isNotEmpty()) {
             actions.add(resourceHelper.gs(R.string.careportal_newnstreatment_notes_label) + ": " + notes)
             json.put("notes", notes)
@@ -195,7 +206,7 @@ class CareDialog : DialogFragmentWithDate() {
             json.put("enteredBy", enteredBy)
 
         activity?.let { activity ->
-            OKDialog.showConfirmation(activity, resourceHelper.gs(event), HtmlHelper.fromHtml(Joiner.on("<br/>").join(actions)), Runnable {
+            OKDialog.showConfirmation(activity, resourceHelper.gs(event), HtmlHelper.fromHtml(Joiner.on("<br/>").join(actions)), {
                 val careportalEvent = CareportalEvent(injector)
                 careportalEvent.date = eventTime
                 careportalEvent.source = Source.USER

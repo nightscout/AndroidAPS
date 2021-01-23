@@ -87,7 +87,7 @@ def gitAvailable = { ->
 
 }
 
-def allCommited = { ->
+def allCommitted = { ->
     StringBuilder stringBuilder = new StringBuilder()
     try {
         def stdout = new ByteArrayOutputStream()
@@ -120,12 +120,12 @@ android {
         targetSdkVersion 28
         multiDexEnabled true
         versionCode 1500
-        version "2.8.1.1"
+        version "2.8.2"
         buildConfigField "String", "VERSION", '"' + version + '"'
         buildConfigField "String", "BUILDVERSION", '"' + generateGitBuild() + '-' + generateDate() + '"'
         buildConfigField "String", "REMOTE", '"' + generateGitRemote() + '"'
         buildConfigField "String", "HEAD", '"' + generateGitBuild() + '"'
-        buildConfigField "String", "COMMITED", '"' + allCommited() + '"'
+        buildConfigField "String", "COMMITTED", '"' + allCommitted() + '"'
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         // if you change minSdkVersion to less than 11, you need to change executeTask for wear
 
@@ -315,12 +315,12 @@ tasks.whenTaskAdded { task ->
 printf('--------------\n')
 printf('isMaster: %s\n', isMaster().toString())
 printf('gitAvailable: %s\n', gitAvailable().toString())
-printf('allCommited: %s\n', allCommited().toString())
+printf('allCommitted: %s\n', allCommitted().toString())
 printf('--------------\n')
 if (isMaster() && !gitAvailable()) {
     throw new GradleException('GIT system is not available. On Windows try to run Android Studio as an Administrator. Check if GIT is installed and Studio have permissions to use it')
 }
-if (isMaster() && !allCommited()) {
+if (isMaster() && !allCommitted()) {
     throw new GradleException('There are uncommitted changes. Clone sources again as described in wiki and do not allow gradle update')
 }
 

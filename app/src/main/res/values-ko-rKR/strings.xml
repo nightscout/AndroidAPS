@@ -13,7 +13,6 @@
     <string name="reset_db_confirm">데이터 베이스를 정말 초기화하시겠습니까?</string>
     <string name="nav_exit">종료</string>
     <string name="ns_sync_use_absolute_title">Basal 절대값 사용하기</string>
-    <string name="alert_dialog_storage_permission_text">폰을 재부팅하거나 AndroidAPS를 재시작하세요 \n그렇지 않으면 로그 기록이 되지 않습니다.(알고리즘이 정상적인 작동하는지 확인하기 위해 로그가 필요합니다.)!</string>
     <string name="alert_dialog_permission_battery_optimization_failed">이 장치는 배터리 최적화 화이트리스트를 지원하지 않습니다 - 성능 문제가 발생할 수 있습니다.</string>
     <string name="description_actions">일반 기능을 빠르게 실행시킬 버튼</string>
     <string name="description_config_builder">활성화된 플러그인을 구성하는 데 사용됩니다.</string>
@@ -404,7 +403,6 @@
     <string name="activity_target">활동 목표</string>
     <string name="hypo_duration">저혈당 기간</string>
     <string name="hypo_target">저혈당 목표</string>
-    <string name="reuse">재사용</string>
     <string name="wearcontrol_title">워치로 제어하기</string>
     <string name="wearcontrol_summary">임시목표와 관리입력을 워치로 설정합니다.</string>
     <string name="food">음식</string>
@@ -495,7 +493,6 @@
     <string name="enablesmbwithtemptarget_summary">활성화된 임시 목표(식사직전, 운동)가 있으면 SMB를 사용합니다.</string>
     <string name="enablesmbwithhightemptarget">높은 임시 목표에서 SMB 사용하기</string>
     <string name="overview_insulin_label">인슐린</string>
-    <string name="overview_carbs_label">탄수화물</string>
     <string name="overview_buttons_selection">버튼</string>
     <string name="show_calibration_button_summary">xDrip+에 보정값을 전송하거나 G5 보정창을 엽니다.</string>
     <string name="show_cgm_button_summary">xDrip+를 열고, 뒤로 버튼을 누르면 AAPS로 돌아갑니다.</string>
@@ -661,7 +658,6 @@
     <string name="nav_logsettings">로그 설정</string>
     <string name="resettodefaults">기본값으로 초기화</string>
     <string name="nsmalfunction">NSClient가 정상적으로 작동하지 않습니다. Nightscout와 NSClient를 재시작 해보세요.</string>
-    <string name="versionavailable">%1$s 버전이 사용 가능합니다.</string>
     <string name="time_offset">시간 이동</string>
     <string name="setupwizard_preferred_aps_mode">선호하는 APS 모드</string>
     <string name="treatments_wizard_total_label">합계</string>
@@ -811,8 +807,6 @@
     <string name="copy_short">복사</string>
     <string name="addnew">새로 추가</string>
     <string name="versionChecker">버전 검사기</string>
-    <string name="signature_verifier">서명 확인</string>
-    <string name="running_invalid_version">유효하지 않은 버전을 이용 중입니다. Loop가 비활성화 되었습니다!</string>
     <string name="old_version">오래된 버전</string>
     <string name="very_old_version">아주 오래된 버전</string>
     <string name="new_version_warning">최소 %1$d일 새버전이 가능합니다! %2$d일 후엔 LGS(저혈당주입중지)으로 복귀되며, %3$d일이후엔 Loop가 비활성화 될 것입니다</string>

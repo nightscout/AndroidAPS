@@ -90,6 +90,9 @@
     <string name="action_confirm">CONFERMA</string>
     <string name="action_timeshift">timeshift</string>
     <string name="action_bolus">bolo</string>
+    <string name="bolus_progress">Progresso bolo</string>
+    <string name="press_to_cancel">premi per cancellare</string>
+    <string name="cancel_bolus">CANCELLA BOLO</string>
     <string name="status_pump">Micro</string>
     <string name="status_loop">Loop</string>
     <string name="status_cpp">CPP</string>

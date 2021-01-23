@@ -11,6 +11,7 @@
     <string name="omnipod_config_suspend_delivery_button_enabled">Zobraziť tlačítko \"Pozastaviť podávanie\" na záložke Omnipod</string>
     <string name="omnipod_config_pulse_log_button_enabled">Zobraziť tlačítko Pulzný Log v menu Správa Podu</string>
     <string name="omnipod_config_rileylink_stats_button_enabled">Zobraziť tlačítko Štatistika RileyLink v menu Správa Podu</string>
+    <string name="omnipod_config_battery_change_logging_enabled">V Akciách povoliť zaznamenávanie výmeny batérie</string>
     <string name="omnipod_config_time_change_enabled">Letný čas / Detekcia časového pásma povolená</string>
     <string name="omnipod_config_expiration_reminder_enabled">Pripomenutie vypršania platnosti povolené</string>
     <string name="omnipod_config_expiration_reminder_hours_before_shutdown">Hodiny pred vypnutím</string>
@@ -65,6 +66,7 @@
     <string name="omnipod_error_rileylink_address_invalid">Neplatná adresa RileyLinku.</string>
     <string name="omnipod_error_operation_not_possible_no_configuration">Operácia nie je možná.\n\nNajskôr je nutné nakonfigurovať Omnipod, kým bude možné túto funkciu použiť.</string>
     <string name="omnipod_error_pod_not_attached">Žiadny aktívny Pod</string>
+    <string name="omnipod_error_time_out_of_sync">Čas na Pode nie je synchronizovaný. Aktualizujte prosím čas na záložke Omnipod.</string>
     <string name="omnipod_error_unexpected_exception">Došlo k neočakávanej chybe. Prosíme o jej nahlásenie! (%1$s: %2$s).</string>
     <string name="omnipod_error_crc_mismatch">Komunikácia zlyhala: overenie integrity správy zlyhalo</string>
     <string name="omnipod_error_invalid_packet_type">Komunikácia zlyhala: boli prijaté neplatné pakety z Podu</string>
