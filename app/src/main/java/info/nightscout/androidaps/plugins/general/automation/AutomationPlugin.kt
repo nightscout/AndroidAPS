@@ -200,7 +200,7 @@ class AutomationPlugin @Inject constructor(
         }
 
         aapsLogger.debug(LTag.AUTOMATION, "processActions")
-        val iterator = automationEvents.iterator()
+        val iterator : MutableIterator<AutomationEvent> = automationEvents.iterator()
         while (iterator.hasNext()) {
             val event = iterator.next()
             if (event.isEnabled && event.shouldRun() && event.trigger.shouldRun() && event.getPreconditions().shouldRun()) {
@@ -240,11 +240,13 @@ class AutomationPlugin @Inject constructor(
         storeToSP() // save last run time
     }
 
+    @Synchronized
     fun add(event: AutomationEvent) {
         automationEvents.add(event)
         rxBus.send(EventAutomationDataChanged())
     }
 
+    @Synchronized
     fun addIfNotExists(event: AutomationEvent) {
         for (e in automationEvents) {
             if (event.title == e.title) return
@@ -253,20 +255,24 @@ class AutomationPlugin @Inject constructor(
         rxBus.send(EventAutomationDataChanged())
     }
 
+    @Synchronized
     fun set(event: AutomationEvent, index: Int) {
         automationEvents[index] = event
         rxBus.send(EventAutomationDataChanged())
     }
 
+    @Synchronized
     fun removeAt(index: Int) {
         automationEvents.removeAt(index)
         rxBus.send(EventAutomationDataChanged())
     }
 
+    @Synchronized
     fun at(index: Int) = automationEvents[index]
 
     fun size() = automationEvents.size
 
+    @Synchronized
     fun swap(fromPosition: Int, toPosition: Int) {
         Collections.swap(automationEvents, fromPosition, toPosition)
         rxBus.send(EventAutomationDataChanged())
