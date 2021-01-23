@@ -362,7 +362,6 @@ Aktif Karbonhidratın ne kadar hızlı sindirildiğine ve KŞ\'nin beklenenden d
     <string name="activity_target">eğzersiz hedefi</string>
     <string name="hypo_duration">hipo süresi</string>
     <string name="hypo_target">hipo hedefi</string>
-    <string name="reuse">yeniden kullanım</string>
     <string name="wearcontrol_title">Saat tarafından kontrol</string>
     <string name="wearcontrol_summary">Tedavileri ve Geçici hedefleri saat tarafından girin.</string>
     <string name="food">Yiyecek</string>
@@ -449,7 +448,6 @@ Aktif Karbonhidratın ne kadar hızlı sindirildiğine ve KŞ\'nin beklenenden d
     <string name="enablesmbwithtemptarget_summary">Geçici hedef aktif olduğunda SMB\'yi etkinleştir (yakında yeme, egzersiz)</string>
     <string name="enablesmbwithhightemptarget">Yüksek geçici bazal oran hedefleriyle SMB\'yi etkinleştir</string>
     <string name="overview_insulin_label">İnsülin</string>
-    <string name="overview_carbs_label">Karbonhidrat</string>
     <string name="overview_buttons_selection">Tuşlar</string>
     <string name="show_calibration_button_summary">xDrip+ \'ya bir kalibrasyon gönderir veya G5 kalibrasyon iletişim kutusunu açar</string>
     <string name="show_cgm_button_summary">xDrip+ açık, geri düğmeleri ile AndroidAPS\'ye gerisin geri döner</string>

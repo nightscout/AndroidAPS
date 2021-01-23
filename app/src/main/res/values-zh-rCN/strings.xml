@@ -379,7 +379,6 @@
     <string name="activity_target">运动临时目标</string>
     <string name="hypo_duration">持续时间短</string>
     <string name="hypo_target">低目标</string>
-    <string name="reuse">重复用</string>
     <string name="wearcontrol_title">从手表上控制</string>
     <string name="wearcontrol_summary">设置临时目标并从手表中进行治疗操作。</string>
     <string name="food">食物</string>
@@ -470,7 +469,6 @@
     <string name="enablesmbwithtemptarget_summary">当临时目标处于活动状态时启用 SMB (很快吃饭, 运动)</string>
     <string name="enablesmbwithhightemptarget">启用具有高临时目标的 SMB</string>
     <string name="overview_insulin_label">胰岛素</string>
-    <string name="overview_carbs_label">碳水</string>
     <string name="overview_buttons_selection">按钮</string>
     <string name="show_calibration_button_summary">向 xDrip + 发送校准请求或打开 G5 校准对话框</string>
     <string name="show_cgm_button_summary">打开 xDrip +, 后退按钮返回到 AAPS</string>

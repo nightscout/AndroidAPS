@@ -132,4 +132,8 @@
     <string name="digitalstyle_pref_your_color">Ihre Farbe:</string>
     <string name="digitalstyle_pref_your_color_saturation">Ihre Farbsättigung:</string>
     <string name="digitalstyle_pref_your_color_opacity">Deine Farbtransparenz:</string>
+    <string name="bolus_progress_channel_name">AAPS Bolus Fortschritt</string>
+    <string name="bolus_progress_silent_channel_name">AAPS Bolus-Fortschritt stumm</string>
+    <string name="bolus_progress_channel_description">Bolus-Fortschritt und Abbruch</string>
+    <string name="bolus_progress_silent_channel_description">Bolus Fortschritt und Abbruch mit weniger Vibrationen</string>
 </resources>

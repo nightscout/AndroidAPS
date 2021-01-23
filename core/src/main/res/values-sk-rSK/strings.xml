@@ -216,6 +216,7 @@
     <string name="history_group_glucose">Glykémia</string>
     <string name="mute5min">Stíšiť na 5 minút</string>
     <!-- Maintenance -->
+    <string name="metadata_label_format">Formát súboru</string>
     <string name="metadata_label_created_at">Vytvorené</string>
     <string name="metadata_label_aaps_version">Verzia AAPS</string>
     <string name="metadata_label_aaps_flavour">Verzia zostavy</string>
@@ -254,4 +255,23 @@
     <string name="running_invalid_version">Zistili sme, že používate neplatnú verziu. Uzavretý okruh zakázaný!</string>
     <string name="versionavailable">Verzia %1$s je k dispozícii</string>
     <!-- Permissions -->
+    <string name="alert_dialog_storage_permission_text">Prosím reštartujte Váš telefón, alebo reštartujte AndroidAPS z nastavení \nv opačnom prípade AndroidAPS nebude mocť zaznamenávať logy (dôležité kvôli sledovaniu a overovaniu, že algoritmus pracuje správne)!</string>
+    <plurals name="days">
+        <item quantity="one">%1$d deň</item>
+        <item quantity="few">%1$d dní</item>
+        <item quantity="many">%1$d dní</item>
+        <item quantity="other">%1$d dní</item>
+    </plurals>
+    <plurals name="hours">
+        <item quantity="one">%1$d hodina</item>
+        <item quantity="few">%1$d hodín</item>
+        <item quantity="many">%1$d hodín</item>
+        <item quantity="other">%1$d hodín</item>
+    </plurals>
+    <plurals name="minutes">
+        <item quantity="one">%1$d minúta</item>
+        <item quantity="few">%1$d minút</item>
+        <item quantity="many">%1$d minút</item>
+        <item quantity="other">%1$d minút</item>
+    </plurals>
 </resources>

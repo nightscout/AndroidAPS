@@ -496,7 +496,7 @@ L\'ENSEMBLE DES RISQUES LIÉS À LA QUALITÉ ET À LA PERFORMANCE DU PROGRAMME S
     <string name="activity_target">Cible Glycémie pour l\'activité</string>
     <string name="hypo_duration">durée hypo [min]</string>
     <string name="hypo_target">Cible Glycémie pendant l’hypo</string>
-    <string name="reuse">réutiliser</string>
+    <string name="reuse_profile_pct_hours">Réutiliser %1$d%% %2$dh</string>
     <string name="wearcontrol_title">Commandes depuis la montre</string>
     <string name="wearcontrol_summary">Définir les Cibles Temp et entrer les Traitements depuis la montre</string>
     <string name="food">Aliments</string>
@@ -595,7 +595,6 @@ L\'ENSEMBLE DES RISQUES LIÉS À LA QUALITÉ ET À LA PERFORMANCE DU PROGRAMME S
     <string name="enablesmbwithhightemptarget">Activer SMB avec cibles temp. hautes</string>
     <string name="enablesmbwithhightemptarget_summary">Activer les SMB quand il y a une cible temp haute active (exercise, au dessus de 100 mg/dl ou 5.5 mmol/l)</string>
     <string name="overview_insulin_label">Insuline</string>
-    <string name="overview_carbs_label">Glucides</string>
     <string name="overview_buttons_selection">Boutons</string>
     <string name="show_calibration_button_summary">Envoie un étalonnage à xDrip+ ou ouvre la boîte de dialogue de calibration du G5</string>
     <string name="show_cgm_button_summary">Ouvre xDrip+, le bouton de retour renverra vers AAPS</string>

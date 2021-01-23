@@ -132,4 +132,8 @@
     <string name="digitalstyle_pref_your_color">Vaše barva:</string>
     <string name="digitalstyle_pref_your_color_saturation">Vaše nasycení barvy:</string>
     <string name="digitalstyle_pref_your_color_opacity">Průhlednost barvy:</string>
+    <string name="bolus_progress_channel_name">AAPS Průběh vydávání bolusu</string>
+    <string name="bolus_progress_silent_channel_name">AAPS Průběh vydávání bolusu tichý</string>
+    <string name="bolus_progress_channel_description">Průběh bolusu a zrušení</string>
+    <string name="bolus_progress_silent_channel_description">Průběh bolusu a zrušení s méně vibracemi</string>
 </resources>

@@ -495,7 +495,6 @@
     <string name="activity_target">Целева КЗ при физ. активност</string>
     <string name="hypo_duration">Продължителност на вр. цел при хипоглекимия</string>
     <string name="hypo_target">Временна цел при хипоглекимия</string>
-    <string name="reuse">отново</string>
     <string name="wearcontrol_title">Контролиране от часовник</string>
     <string name="wearcontrol_summary">Задаване временни цели и въвеждане Лечения от часовник Android wear</string>
     <string name="food">Храна</string>
@@ -594,7 +593,6 @@
     <string name="enablesmbwithhightemptarget">Разреши SMB с по-високи временни цели на КЗ</string>
     <string name="enablesmbwithhightemptarget_summary">Активирайте SMB, когато има висока временна цел (опитайте с над 100 мг/дл или 5,5 ммол/л)</string>
     <string name="overview_insulin_label">Инсулин</string>
-    <string name="overview_carbs_label">Въглехидрати</string>
     <string name="overview_buttons_selection">Бутони</string>
     <string name="show_calibration_button_summary">Изпраща калибрация към xDrip+ или отваря G5 диалог за калибрация</string>
     <string name="show_cgm_button_summary">Отваря xDrip+, бутонът назад връща към AAPS</string>

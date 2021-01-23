@@ -492,7 +492,6 @@
     <string name="activity_target">țintă activitate</string>
     <string name="hypo_duration">durată țintă</string>
     <string name="hypo_target">țintă hipo</string>
-    <string name="reuse">refolosire</string>
     <string name="wearcontrol_title">Controlare din ceas</string>
     <string name="wearcontrol_summary">Setare Ținte-Temporare și se introduc Tratamente din ceas.</string>
     <string name="food">Mâncare</string>
@@ -591,7 +590,6 @@
     <string name="enablesmbwithhightemptarget">Activează SMB cu ținte temporare mari</string>
     <string name="enablesmbwithhightemptarget_summary">Activați SMB atunci când există o țintă temporară activă (exerciții fizice, peste 100mg/dl sau 5.5mmol/l)</string>
     <string name="overview_insulin_label">Insulină</string>
-    <string name="overview_carbs_label">CH</string>
     <string name="overview_buttons_selection">Butoane</string>
     <string name="show_calibration_button_summary">Trimite calibrarea către xDrip+ sau deschide calibrarea pentru G5</string>
     <string name="show_cgm_button_summary">Deschide xDrip+, butonul de înapoi returnează la AAPS</string>
