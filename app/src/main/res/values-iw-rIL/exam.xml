@@ -155,7 +155,7 @@
     <string name="extendedcarbs_rescue">רישום פחמימות בהם השתמשתם להצלה מהיפוגליקמיה. </string>
     <string name="extendedcarbs_hint1">https://androidaps.readthedocs.io/en/latest/EN/Usage/Extended-Carbs.html</string>
     <string name="nsclient_label">ניטור מרוחק</string>
-    <string name="nsclient_howcanyou">איך לפקח על AndroidAPS (למשל של הילד שלכם) מרחוק?</string>
+    <string name="nsclient_howcanyou">איך לפקח על AndroidAPS (למשל של הילד\\ה שלכם) מרחוק?</string>
     <string name="nsclient_nightscout">אפלקציית NS Client, אפליקציית נייטסקאוט ואתר נייטסקאוט מאפשרים כולם לעקוב אחר AndroidAPS מרחוק.</string>
     <string name="nsclient_dexcomfollow">אפליקציות אחרות(לדוגמה, דקסקום Follow ו-xDrip במצב מעקב) מאפשרים לכם לעקוב אחר פרמטרים מסוימים (לדוגמה, ערכי סוכר) מרחוק, אך משתמשים באלגוריתמים שונים, כך עשויים להציג ערכי אינסולין ופחמימות פעילים לא מדויקים.</string>
     <string name="nsclient_data">כדי לעקוב אחר AndroidAPS מרחוק, שני ההתקנים חייבים להיות בעלי גישה לאינטרנט (למשל באמצעות רשת אינטרנט אלחוטית או אינטרנט סלולרי).</string>
