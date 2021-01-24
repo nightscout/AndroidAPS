@@ -17,11 +17,11 @@ import info.nightscout.androidaps.data.Profile
 import info.nightscout.androidaps.db.BgReading
 import info.nightscout.androidaps.interfaces.ActivePluginProvider
 import info.nightscout.androidaps.interfaces.LoopInterface
+import info.nightscout.androidaps.interfaces.ProfileFunction
 import info.nightscout.androidaps.interfaces.TreatmentsInterface
 import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.logging.LTag
 import info.nightscout.androidaps.plugins.aps.openAPSSMB.SMBDefaults
-import info.nightscout.androidaps.interfaces.ProfileFunction
 import info.nightscout.androidaps.plugins.general.overview.graphExtensions.*
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.AutosensResult
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.IobCobCalculatorPlugin
@@ -80,15 +80,19 @@ class GraphData(
             for (prediction in predictions) if (prediction.value >= 40) bgListArray.add(prediction)
         }
         maxBgValue = Profile.fromMgdlToUnits(maxBgValue, units)
-        maxBgValue = if (units == Constants.MGDL) Round.roundTo(maxBgValue, 40.0) + 80 else Round.roundTo(maxBgValue, 2.0) + 4
+        maxBgValue = addUpperChartMargin(maxBgValue)
         if (highLine > maxBgValue) maxBgValue = highLine
-        val numOfVerticalLines = if (units == Constants.MGDL) (maxBgValue / 40 + 1).toInt() else (maxBgValue / 2 + 1).toInt()
         maxY = maxBgValue
         minY = 0.0
-        // set manual y bounds to have nice steps
-        graph.gridLabelRenderer.numVerticalLabels = numOfVerticalLines
         addSeries(PointsWithLabelGraphSeries(Array(bgListArray.size) { i -> bgListArray[i] }))
     }
+
+    internal fun setNumVerticalLables() {
+        graph.gridLabelRenderer.numVerticalLabels = if (units == Constants.MGDL) (maxY / 40 + 1).toInt() else (maxY / 2 + 1).toInt()
+    }
+
+    private fun addUpperChartMargin(maxBgValue: Double) =
+        if (units == Constants.MGDL) Round.roundTo(maxBgValue, 40.0) + 80 else Round.roundTo(maxBgValue, 2.0) + 4
 
     fun addInRangeArea(fromTime: Long, toTime: Long, lowLine: Double, highLine: Double) {
         val inRangeAreaSeries: AreaGraphSeries<DoubleDataPoint>
@@ -233,44 +237,45 @@ class GraphData(
 
     fun addTreatments(fromTime: Long, endTime: Long) {
         val filteredTreatments: MutableList<DataPointWithLabelInterface> = ArrayList()
-        val treatments = treatmentsPlugin.treatmentsFromHistory
-        for (tx in treatments.indices) {
-            val t = treatments[tx]
-            if (t.x < fromTime || t.x > endTime) continue
-            if (t.isSMB && !t.isValid) continue
-            t.y = getNearestBg(t.x.toLong())
-            filteredTreatments.add(t)
-        }
+        treatmentsPlugin.treatmentsFromHistory
+            .filterTimeframe(fromTime, endTime)
+            .filter { !it.isSMB || it.isValid }
+            .forEach {
+                it.y = getNearestBg(it.x.toLong())
+                filteredTreatments.add(it)
+            }
 
         // ProfileSwitch
-        val profileSwitches = treatmentsPlugin.profileSwitchesFromHistory.list
-        for (tx in profileSwitches.indices) {
-            val t: DataPointWithLabelInterface = profileSwitches[tx]
-            if (t.x < fromTime || t.x > endTime) continue
-            filteredTreatments.add(t)
-        }
+        treatmentsPlugin.profileSwitchesFromHistory.list
+            .filterTimeframe(fromTime, endTime)
+            .forEach(filteredTreatments::add)
 
         // Extended bolus
         if (!activePlugin.activePump.isFakingTempsByExtendedBoluses) {
-            val extendedBoluses = treatmentsPlugin.extendedBolusesFromHistory.list
-            for (tx in extendedBoluses.indices) {
-                val t: DataPointWithLabelInterface = extendedBoluses[tx]
-                if (t.x + t.duration < fromTime || t.x > endTime) continue
-                if (t.duration == 0L) continue
-                t.y = getNearestBg(t.x.toLong())
-                filteredTreatments.add(t)
-            }
+            treatmentsPlugin.extendedBolusesFromHistory.list
+                .filterTimeframe(fromTime, endTime)
+                .filter { it.duration != 0L }
+                .forEach {
+                    it.y = getNearestBg(it.x.toLong())
+                    filteredTreatments.add(it)
+                }
         }
 
         // Careportal
-        val careportalEvents = MainApp.getDbHelper().getCareportalEventsFromTime(fromTime - 6 * 60 * 60 * 1000, true)
-        for (tx in careportalEvents.indices) {
-            val t: DataPointWithLabelInterface = careportalEvents[tx]
-            if (t.x + t.duration < fromTime || t.x > endTime) continue
-            t.y = getNearestBg(t.x.toLong())
-            filteredTreatments.add(t)
-        }
-        addSeries(PointsWithLabelGraphSeries(Array(filteredTreatments.size) { i -> filteredTreatments[i] }))
+        MainApp.getDbHelper().getCareportalEventsFromTime(fromTime - 6 * 60 * 60 * 1000, true)
+            .filterTimeframe(fromTime, endTime)
+            .forEach {
+                it.y = getNearestBg(it.x.toLong())
+                filteredTreatments.add(it)
+            }
+
+        // increase maxY if a treatment forces it's own height that's higher than a BG value
+        filteredTreatments.map { it.y }
+            .maxOrNull()
+            ?.let(::addUpperChartMargin)
+            ?.let { maxY = maxOf(maxY, it) }
+
+        addSeries(PointsWithLabelGraphSeries(filteredTreatments.toTypedArray()))
     }
 
     private fun getNearestBg(date: Long): Double {
@@ -604,3 +609,6 @@ class GraphData(
         graph.onDataChanged(false, false)
     }
 }
+
+private fun <E : DataPointWithLabelInterface> List<E>.filterTimeframe(fromTime: Long, endTime: Long): List<E> =
+    filter { it.x + it.duration >= fromTime && it.x <= endTime }

@@ -308,8 +308,6 @@ class HistoryBrowseActivity : NoSplashAppCompatActivity() {
                 // **** BG ****
                 graphData.addBgReadings(fromTime, toTime, lowLine, highLine, null)
 
-                // set manual x bounds to have nice steps
-                graphData.formatAxis(fromTime, toTime)
 
                 // add target line
                 graphData.addTargetLine(fromTime, toTime, profile, null)
@@ -363,6 +361,10 @@ class HistoryBrowseActivity : NoSplashAppCompatActivity() {
                         }
                     }
                 }
+
+                // set manual x bounds to have nice steps
+                graphData.setNumVerticalLables()
+                graphData.formatAxis(fromTime, toTime)
             }
             // finally enforce drawing of graphs in UI thread
             graphData.performUpdate()
