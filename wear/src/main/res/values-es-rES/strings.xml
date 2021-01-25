@@ -69,6 +69,7 @@
     <string name="menu_ecarb">eCarb</string>
     <string name="menu_settings">Configuración</string>
     <string name="menu_status">Estado</string>
+    <string name="menu_resync">Re-sincronizar</string>
     <string name="menu_prime_fill">Cebar/llenar</string>
     <string name="menu_none">Ninguno</string>
     <string name="menu_default">Por defecto</string>
@@ -89,6 +90,9 @@
     <string name="action_confirm">Confirmar</string>
     <string name="action_timeshift">intervalo de tiempo</string>
     <string name="action_bolus">bolo</string>
+    <string name="bolus_progress">Progreso del bolo</string>
+    <string name="press_to_cancel">presiona para cancelar</string>
+    <string name="cancel_bolus">CANCELAR BOLO</string>
     <string name="status_pump">Bomba</string>
     <string name="status_loop">Lazo</string>
     <string name="status_cpp">CPP</string>
