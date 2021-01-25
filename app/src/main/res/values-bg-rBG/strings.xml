@@ -1158,4 +1158,5 @@
     <string name="timetoeat">Време е за ядене</string>
     <string name="fabric_upload_disabled">Качването на данни за проблеми е забранено!(Fabric)</string>
     <string name="graph_menu_divider_header">Графика</string>
+    <string name="chart_menu">Меню на графиката</string>
 </resources>
