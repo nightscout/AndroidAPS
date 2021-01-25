@@ -43,7 +43,7 @@
             validate:testType="numericRange" />
 
         <SwitchPreference
-            android:defaultValue="false"
+            android:defaultValue="true"
             android:key="@string/key_raise_notifications_as_android_notifications"
             android:title="@string/raise_notifications_as_android_notifications" />
 
