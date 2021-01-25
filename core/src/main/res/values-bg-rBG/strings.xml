@@ -254,4 +254,5 @@
     <string name="running_invalid_version">Използвате грешна версия. APS е изключен!</string>
     <string name="versionavailable">Има налично обновяване до версия %1$s </string>
     <!-- Permissions -->
+    <string name="alert_dialog_storage_permission_text">Рестартирайте телефона или AndroidAPS от системните настройки \nили Android APS няма да записва проблемите (което е важно за работата на алгоритъма)!</string>
 </resources>
