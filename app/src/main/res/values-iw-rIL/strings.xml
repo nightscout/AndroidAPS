@@ -1159,4 +1159,5 @@
     <string name="timetoeat">זמן לאכול</string>
     <string name="fabric_upload_disabled">העלאת רשומות קריסה מושבתת!</string>
     <string name="graph_menu_divider_header">גרף</string>
+    <string name="clear_filter">נקה סינון</string>
 </resources>
