@@ -8,6 +8,7 @@ import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.MainActivity
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.activities.NoSplashAppCompatActivity
+import info.nightscout.androidaps.databinding.ActivitySetupwizardBinding
 import info.nightscout.androidaps.events.EventProfileNeedsUpdate
 import info.nightscout.androidaps.events.EventProfileStoreChanged
 import info.nightscout.androidaps.events.EventPumpStatusChanged
@@ -23,7 +24,6 @@ import info.nightscout.androidaps.utils.locale.LocaleHelper.update
 import info.nightscout.androidaps.utils.sharedPreferences.SP
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
-import kotlinx.android.synthetic.main.activity_setupwizard.*
 import javax.inject.Inject
 import kotlin.math.max
 import kotlin.math.min
@@ -43,10 +43,14 @@ class SetupWizardActivity : NoSplashAppCompatActivity() {
 
     private val intentMessage = "WIZZARDPAGE"
 
+    private lateinit var binding: ActivitySetupwizardBinding
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         update(applicationContext)
-        setContentView(R.layout.activity_setupwizard)
+        binding = ActivitySetupwizardBinding.inflate(layoutInflater)
+        setContentView(binding.root)
+
         screens = swDefinition.getScreens()
         val intent = intent
         currentWizardPage = intent.getIntExtra(intentMessage, 0)
@@ -114,7 +118,7 @@ class SetupWizardActivity : NoSplashAppCompatActivity() {
             val currentItem = currentScreen.items[i]
             currentItem.generateDialog(layout)
         }
-        sw_scrollview?.smoothScrollTo(0, 0)
+        binding.swScrollview.smoothScrollTo(0, 0)
     }
 
     override fun updateButtons() {
