@@ -61,7 +61,7 @@ class AutotuneIob(
     private val iobTable = LongSparseArray<IobTotal>() // oldest at index 0
     private fun range(): Long {
         var dia = Constants.defaultDIA
-        if (profileFunction!!.getProfile() != null) dia = profileFunction!!.getProfile()!!.dia
+        if (profileFunction.getProfile() != null) dia = profileFunction.getProfile()!!.dia
         return (60 * 60 * 1000L * dia).toLong()
     }
 
@@ -89,8 +89,8 @@ class AutotuneIob(
     //nsTreatment is used only for export data, meals is used in AutotunePrep
     private fun initializeTreatmentData(from: Long, to: Long) {
         val oldestBgDate = if (glucose.size > 0) glucose[glucose.size - 1].date else from
-        log.debug("AutotunePlugin Check BG date: BG Size: " + glucose.size + " OldestBG: " + dateUtil!!.dateAndTimeAndSecondsString(oldestBgDate) + " to: " + dateUtil!!.dateAndTimeAndSecondsString(to))
-        val temp = treatmentsPluginHistory!!.service.getTreatmentDataFromTime(from, to, false)
+        log.debug("AutotunePlugin Check BG date: BG Size: " + glucose.size + " OldestBG: " + dateUtil.dateAndTimeAndSecondsString(oldestBgDate) + " to: " + dateUtil.dateAndTimeAndSecondsString(to))
+        val temp = treatmentsPluginHistory.service.getTreatmentDataFromTime(from, to, false)
         log.debug("AutotunePlugin Nb treatments after query: " + temp.size)
         meals.clear()
         treatments.clear()
@@ -142,7 +142,7 @@ class AutotuneIob(
                 var minutesToFill = (tb.date - previousend).toInt() / (60 * 1000)
                 //log.debug("D/AutotunePlugin Minutes to fill: "+ minutesToFill);
                 while (minutesToFill > 0) {
-                    val profile = profileFunction!!.getProfile(previousend)
+                    val profile = profileFunction.getProfile(previousend)
                     if (Profile.secondsFromMidnight(tb.date) / 3600 == Profile.secondsFromMidnight(previousend) / 3600) {  // next tbr is in the same hour
                         val neutralTbr = TemporaryBasal(injector)
                         neutralTbr.date = previousend + 1000 //add 1s to be sure it starts after endEvent
@@ -202,8 +202,8 @@ class AutotuneIob(
 
     fun getCalculationToTimeTreatments(time: Long): IobTotal {
         val total = IobTotal(time)
-        val profile = profileFunction!!.getProfile(time) ?: return total
-        val pumpInterface = activePlugin!!.activePump
+        val profile = profileFunction.getProfile(time) ?: return total
+        val pumpInterface = activePlugin.activePump
         val dia = profile.dia
         for (pos in treatments.indices) {
             val t = treatments[pos]
@@ -217,7 +217,7 @@ class AutotuneIob(
                 // instead of dividing the DIA that only worked on the bilinear curves,
                 // multiply the time the treatment is seen active.
                 val timeSinceTreatment = time - t.date
-                val snoozeTime = t.date + (timeSinceTreatment * sp!!.getDouble(R.string.key_openapsama_bolussnooze_dia_divisor, 2.0)).toLong()
+                val snoozeTime = t.date + (timeSinceTreatment * sp.getDouble(R.string.key_openapsama_bolussnooze_dia_divisor, 2.0)).toLong()
                 val bIOB = t.iobCalc(snoozeTime, dia)
                 total.bolussnooze += bIOB.iobContrib
             }
@@ -233,12 +233,12 @@ class AutotuneIob(
 
     fun getCalculationToTimeTempBasals(time: Long, truncate: Boolean, truncateTime: Long, currentBasal: Double): IobTotal {
         val total = IobTotal(time)
-        val pumpInterface = activePlugin!!.activePump
+        val pumpInterface = activePlugin.activePump
         for (pos in 0 until tempBasals2.size()) {
             val t = tempBasals2[pos]
             if (t.date > time) continue
             var calc: IobTotal?
-            val profile = profileFunction!!.getProfile(t.date) ?: continue
+            val profile = profileFunction.getProfile(t.date) ?: continue
             calc = if (truncate && t.end() > truncateTime) {
                 val dummyTemp = TemporaryBasal(injector)
                 dummyTemp.copyFrom(t)
@@ -256,7 +256,7 @@ class AutotuneIob(
                 val e = extendedBoluses[pos]
                 if (e.date > time) continue
                 var calc: IobTotal?
-                val profile = profileFunction!!.getProfile(e.date) ?: continue
+                val profile = profileFunction.getProfile(e.date) ?: continue
                 calc = if (truncate && e.end() > truncateTime) {
                     val dummyExt = ExtendedBolus(injector)
                     dummyExt.copyFrom(e)
@@ -382,13 +382,13 @@ class AutotuneIob(
             if (t.isAbsolute)
                 absoluteRate = Round.roundTo(t.absoluteRate, 0.001)
             else {
-                val profile = profileFunction?.getProfile(date)
-                absoluteRate = profile!!.getBasal(temporaryBasal!!.date) * temporaryBasal!!.percentRate / 100 ?:0.0
+                val profile = profileFunction.getProfile(date)
+                absoluteRate = profile!!.getBasal(temporaryBasal!!.date) * temporaryBasal!!.percentRate / 100
             }
             isValid = t.isValid
             isEndingEvent = t.isEndingEvent
             eventType = CareportalEvent.TEMPBASAL
-            enteredBy = "openaps://" + resourceHelper!!.gs(R.string.app_name)
+            enteredBy = "openaps://" + resourceHelper.gs(R.string.app_name)
             duration = t.realDuration
             percentRate = t.percentRate
             isFakeExtended = t.isFakeExtended

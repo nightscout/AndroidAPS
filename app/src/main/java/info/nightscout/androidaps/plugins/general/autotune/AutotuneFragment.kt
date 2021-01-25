@@ -61,7 +61,7 @@ class AutotuneFragment : DaggerFragment() {
     // onDestroyView.
     private val binding get() = _binding!!
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         _binding = AutotuneFragmentBinding.inflate(inflater, container, false)
         return binding.root
     }
@@ -112,7 +112,7 @@ class AutotuneFragment : DaggerFragment() {
         }
 
         binding.autotuneProfileswitch.setOnClickListener{
-            val name = resourceHelper.gs(R.string.autotune_tunedprofile_name)
+            //val name = resourceHelper.gs(R.string.autotune_tunedprofile_name)
             val profileStore = AutotunePlugin.tunedProfile!!.profileStore
             log("ProfileSwitch pressed")
             if (profileStore != null) {
@@ -131,7 +131,7 @@ class AutotuneFragment : DaggerFragment() {
             binding.tuneDays.setText(AutotunePlugin.lastNbDays)
         } else { //if new day reinit result, default days, warning and button's visibility
             binding.tuneWarning.text = addWarnings()
-            binding.tuneDays.setText(sp!!.getString(R.string.key_autotune_default_tune_days, "5"))
+            binding.tuneDays.setText(sp.getString(R.string.key_autotune_default_tune_days, "5"))
             AutotunePlugin.result = ""
             AutotunePlugin.tunedProfile = null
             AutotunePlugin.profileSwitchButtonVisibility = View.GONE
@@ -203,7 +203,6 @@ class AutotuneFragment : DaggerFragment() {
         if (profile.isfSize > 1) {
             //warning = nl + "Autotune works with only one ISF value, your profile has " + profile.getIsfSize() + " values. Average value is " + profile.isf/toMgDl + profileFunction.getUnits() + "/U";
             warning = nl + resourceHelper.gs(R.string.format_autotune_isf_warning, profile.isfSize, Profile.fromMgdlToUnits(profile.isf, profileFunction.getUnits()), profileFunction.getUnits())
-            nl = "\n"
         }
         return warning
     }

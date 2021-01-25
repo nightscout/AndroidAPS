@@ -9,6 +9,7 @@ import info.nightscout.androidaps.plugins.general.autotune.data.PreppedGlucose
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.IobCobCalculatorPlugin
 import info.nightscout.androidaps.utils.Round
 import info.nightscout.androidaps.utils.sharedPreferences.SP
+import java.time.LocalDateTime
 import java.util.*
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -31,10 +32,10 @@ class AutotuneCore(private val injector: HasAndroidInjector) {
         var carbRatio = previousAutotune.ic
         //console.error(carbRatio);
         var csf = isf / carbRatio
-        val dia = previousAutotune.dia
-        val insulinInterface = activePlugin!!.activeInsulin
-        var peak = 75
-        if (insulinInterface.id == InsulinInterface.InsulinType.OREF_ULTRA_RAPID_ACTING) peak = 55 else if (insulinInterface.id == InsulinInterface.InsulinType.OREF_FREE_PEAK) peak = sp!!.getInt(R.string.key_insulin_oref_peak, 75)
+        //val dia = previousAutotune.dia
+        //val insulinInterface = activePlugin.activeInsulin
+        //var peak = 75
+        //if (insulinInterface.id == InsulinInterface.InsulinType.OREF_ULTRA_RAPID_ACTING) peak = 55 else if (insulinInterface.id == InsulinInterface.InsulinType.OREF_FREE_PEAK) peak = sp.getInt(R.string.key_insulin_oref_peak, 75)
         val csfGlucose = preppedGlucose.csfGlucoseData
         val isfGlucose = preppedGlucose.isfGlucoseData
         val basalGlucose = preppedGlucose.basalGlucoseData
@@ -45,9 +46,9 @@ class AutotuneCore(private val injector: HasAndroidInjector) {
         val pumpCarbRatio = pumpProfile.ic
         val pumpCSF = pumpISF / pumpCarbRatio
         // Autosens constraints
-        val autotuneMax = sp!!.getDouble(R.string.key_openapsama_autosens_max, 1.2)
-        val autotuneMin = sp!!.getDouble(R.string.key_openapsama_autosens_min, 0.7)
-        val min5minCarbImpact = sp!!.getDouble(R.string.key_openapsama_min_5m_carbimpact, 3.0)
+        val autotuneMax = sp.getDouble(R.string.key_openapsama_autosens_max, 1.2)
+        val autotuneMin = sp.getDouble(R.string.key_openapsama_autosens_min, 0.7)
+        val min5minCarbImpact = sp.getDouble(R.string.key_openapsama_min_5m_carbimpact, 3.0)
 
         /*******Tune DIA (#57-#99) and Peak (#101-#139) disabled for the first version code below in js********************************************************************************************************
          * // tune DIA
@@ -149,10 +150,10 @@ class AutotuneCore(private val injector: HasAndroidInjector) {
             val crDatum = crData[i]
             val crBGChange = crDatum.crEndBG - crDatum.crInitialBG
             val crInsulinReq = crBGChange / isf
-            val crIOBChange = crDatum.crEndIOB - crDatum.crInitialIOB
+            //val crIOBChange = crDatum.crEndIOB - crDatum.crInitialIOB
             crDatum.crInsulinTotal = crDatum.crInitialIOB + crDatum.crInsulin + crInsulinReq
             //log(crDatum.crInitialIOB + " " + crDatum.crInsulin + " " + crInsulinReq + " " + crDatum.crInsulinTotal);
-            val cr = Round.roundTo(crDatum.crCarbs / crDatum.crInsulinTotal, 0.001)
+            //val cr = Round.roundTo(crDatum.crCarbs / crDatum.crInsulinTotal, 0.001)
             //log(crBGChange + " " + crInsulinReq + " " + crIOBChange + " " + crDatum.crInsulinTotal);
             //log("CRCarbs: " + crDatum.crCarbs + " CRInsulin: " + crDatum.crInsulinTotal + " CR:" + cr);
             if (crDatum.crInsulin > 0) {
@@ -309,7 +310,7 @@ class AutotuneCore(private val injector: HasAndroidInjector) {
                 deviations += csfGlucose[i].deviation
                 // compare the sum of deviations from start to end vs. current csf * mealCarbs
                 //log.debug(csf,mealCarbs);
-                val csfRise = csf * mealCarbs
+                //val csfRise = csf * mealCarbs
                 //log.debug(deviations,isf);
                 //log.debug("csfRise:",csfRise,"deviations:",deviations);
                 totalMealCarbs += mealCarbs
@@ -355,9 +356,9 @@ class AutotuneCore(private val injector: HasAndroidInjector) {
         totalDeviations = Round.roundTo(totalDeviations, 0.001)
         log("totalMealCarbs: $totalMealCarbs totalDeviations: $totalDeviations oldCSF $oldCSF fullNewCSF: $fullNewCSF newCSF: $newCSF")
         // this is where csf is set based on the outputs
-        if (newCSF != 0.0) {
-            csf = newCSF
-        }
+        //if (newCSF != 0.0) {
+        //    csf = newCSF
+        //}
         var fullNewCR: Double
         fullNewCR = if (totalCR == 0.0) {
             // if no meals today, CR is unchanged
@@ -509,7 +510,7 @@ class AutotuneCore(private val injector: HasAndroidInjector) {
     }
 
     private fun log(message: String) {
-        autotunePlugin!!.atLog("[Core] $message")
+        autotunePlugin.atLog("[Core] $message")
     }
 
     init {

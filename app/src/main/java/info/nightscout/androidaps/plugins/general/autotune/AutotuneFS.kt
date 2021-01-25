@@ -87,7 +87,7 @@ class AutotuneFS @Inject constructor(private val injector: HasAndroidInjector) {
     fun exportTunedProfile(tunedProfile: ATProfile) {
         createAutotunefile(TUNEDPROFILE + formatDate(Date(tunedProfile.from)) + ".json", tunedProfile.profiletoOrefJSON())
         try {
-            createAutotunefile(resourceHelper!!.gs(R.string.autotune_tunedprofile_name) + ".json", tunedProfile.data.toString(2).replace("\\/", "/"), true)
+            createAutotunefile(resourceHelper.gs(R.string.autotune_tunedprofile_name) + ".json", tunedProfile.data.toString(2).replace("\\/", "/"), true)
         } catch (e: JSONException) {
         }
     }
@@ -121,9 +121,9 @@ class AutotuneFS @Inject constructor(private val injector: HasAndroidInjector) {
     }
 
     private fun createAutotunefile(fileName: String?, stringFile: String, isSettingFile: Boolean = false) {
-        var stringFile = stringFile
+        //var stringFile = stringFile
         if (fileName != null && !fileName.isEmpty()) {
-            if (stringFile.isEmpty()) stringFile = ""
+            //if (stringFile.isEmpty()) stringFile = ""
             val autotuneFile = File(if (isSettingFile) autotuneSettings!!.absolutePath else autotunePath!!.absolutePath, fileName)
             try {
                 val fw = FileWriter(autotuneFile)
@@ -170,7 +170,7 @@ class AutotuneFS @Inject constructor(private val injector: HasAndroidInjector) {
     }
 
     private fun log(message: String) {
-        autotunePlugin!!.atLog("[FS] $message")
+        autotunePlugin.atLog("[FS] $message")
     }
 
     companion object {
@@ -186,7 +186,7 @@ class AutotuneFS @Inject constructor(private val injector: HasAndroidInjector) {
                     val bis = BufferedInputStream(FileInputStream(file))
                     //long bytesRead = 0;
                     val bytesIn = ByteArray(BUFFER_SIZE)
-                    var read = 0
+                    var read: Int
                     while (bis.read(bytesIn).also { read = it } != -1) {
                         out.write(bytesIn, 0, read)
                         //bytesRead += read;
