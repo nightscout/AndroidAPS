@@ -4,7 +4,7 @@
     <!--   <string name="he_lang" translatable="false">Hebrew</string> -->
     <!--    <string name="ga_lang" translatable="false">Irish</string> -->
     <!--    <string name="ja_lang" translatable="false">Japanese</string> -->
-    <string name="treatmentssafety_title">Sikkerhetsbegrensninger for behandlinger</string>
+    <string name="treatmentssafety_title">Sikkerhet ved behandlinger</string>
     <string name="treatmentssafety_maxbolus_title">Maks tillat bolus [U]</string>
     <string name="treatmentssafety_maxcarbs_title">Maks tillat karbo [g]</string>
     <string name="nav_preferences_plugin">%1$s innstillinger</string>
@@ -1160,4 +1160,5 @@
     <string name="fabric_upload_disabled">Opplast av krasj logger er deaktivert!</string>
     <string name="graph_menu_divider_header">Graf</string>
     <string name="chart_menu">Diagram meny</string>
+    <string name="clear_filter">Nullstill filtre</string>
 </resources>
