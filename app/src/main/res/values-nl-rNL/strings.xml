@@ -495,7 +495,6 @@
     <string name="activity_target">Activiteit streefdoel</string>
     <string name="hypo_duration">Hypo tijdsduur</string>
     <string name="hypo_target">Hypo streefdoel</string>
-    <string name="reuse">Herbruik</string>
     <string name="wearcontrol_title">Bedieningen via horloge</string>
     <string name="wearcontrol_summary">Stel tijdelijke doelen en bolussen in vanop je horloge.</string>
     <string name="food">Voeding</string>
@@ -594,7 +593,6 @@
     <string name="enablesmbwithhightemptarget">Gebruik SMB met een hoog tijdelijk streefdoel</string>
     <string name="enablesmbwithhightemptarget_summary">Schakel SMB in wanneer er een hoog tijdelijk doel actief is (uitvoeren boven 100 mg/dl of 5,5 mmol/l)</string>
     <string name="overview_insulin_label">Insuline</string>
-    <string name="overview_carbs_label">Koolhydraten</string>
     <string name="overview_buttons_selection">Knoppen</string>
     <string name="show_calibration_button_summary">Stuurt een kalibratie naar xDrip+ of opent het G5 calibratie venster</string>
     <string name="show_cgm_button_summary">Opent xDrip+, terug knop voor terug naar AAPS te gaan</string>

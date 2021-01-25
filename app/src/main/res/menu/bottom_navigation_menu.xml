@@ -16,7 +16,7 @@
         android:icon="?attr/iconCarbs"
         app:showAsAction="ifRoom"
         android:tint="?attr/iconColorbottomAppbar"
-        android:title="@string/overview_carbs_label"/>
+        android:title="@string/treatments_carbs_label_string"/>
 
     <item
         android:id="@+id/placeholder"

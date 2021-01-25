@@ -65,13 +65,13 @@
                 android:textStyle="bold" />
 
             <info.nightscout.androidaps.utils.ui.NumberPicker
-                android:id="@+id/overview_temptarget_temptarget"
+                android:id="@+id/temptarget"
                 android:layout_width="130dp"
                 android:layout_height="40dp"
                 android:layout_gravity="center_vertical" />
 
             <TextView
-                android:id="@+id/overview_temptarget_units"
+                android:id="@+id/units"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
@@ -100,7 +100,7 @@
                 android:textStyle="bold" />
 
             <info.nightscout.androidaps.utils.ui.MinutesNumberPicker
-                android:id="@+id/overview_temptarget_duration"
+                android:id="@+id/duration"
                 android:layout_width="130dp"
                 android:layout_height="40dp" />
 
@@ -133,12 +133,12 @@
                 android:textStyle="bold" />
 
             <Spinner
-                android:id="@+id/overview_temptarget_reason"
+                android:id="@+id/reason"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
                 android:paddingLeft="5dp"
-                android:paddingRight="5dp"
-                android:layout_gravity="center_vertical" />
+                android:paddingRight="5dp" />
 
         </LinearLayout>
 
@@ -158,9 +158,9 @@
                 android:layout_height="fill_parent"
                 android:layout_marginEnd="4dp"
                 android:layout_weight="0.5"
+                android:drawableTop="@drawable/ic_target_cancel"
                 android:paddingLeft="5dp"
                 android:paddingRight="5dp"
-                android:drawableTop="@drawable/ic_target_cancel"
                 android:text="@string/cancel"
                 android:textAppearance="@style/TextAppearance.AppCompat.Medium"
                 android:textSize="12dp" />
@@ -172,9 +172,9 @@
                 android:layout_height="fill_parent"
                 android:layout_marginEnd="4dp"
                 android:layout_weight="0.5"
+                android:drawableTop="@drawable/ic_target_eatingsoon"
                 android:paddingLeft="5dp"
                 android:paddingRight="5dp"
-                android:drawableTop="@drawable/ic_target_eatingsoon"
                 android:text="@string/eatingsoon"
                 android:textAppearance="@style/TextAppearance.AppCompat.Medium"
                 android:textSize="12dp" />
@@ -186,9 +186,9 @@
                 android:layout_height="fill_parent"
                 android:layout_marginEnd="4dp"
                 android:layout_weight="0.5"
+                android:drawableTop="@drawable/ic_target_activity"
                 android:paddingLeft="5dp"
                 android:paddingRight="5dp"
-                android:drawableTop="@drawable/ic_target_activity"
                 android:text="@string/activity"
                 android:textAppearance="@style/TextAppearance.AppCompat.Medium"
                 android:textSize="12dp" />
@@ -199,16 +199,18 @@
                 android:layout_width="0px"
                 android:layout_height="fill_parent"
                 android:layout_weight="0.5"
+                android:drawableTop="@drawable/ic_target_hypo"
                 android:paddingLeft="5dp"
                 android:paddingRight="5dp"
-                android:drawableTop="@drawable/ic_target_hypo"
                 android:text="@string/hypo"
                 android:textAppearance="@style/TextAppearance.AppCompat.Medium"
                 android:textSize="12dp" />
 
         </LinearLayout>
 
-        <include layout="@layout/okcancel" />
+        <include
+            android:id="@+id/okcancel"
+            layout="@layout/okcancel" />
 
     </LinearLayout>
 

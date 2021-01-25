@@ -480,7 +480,6 @@
     <string name="activity_target">\"Aktyvumas\" tikslas</string>
     <string name="hypo_duration">\"Hipo\" trukmė</string>
     <string name="hypo_target">\"Hipo\" tikslas</string>
-    <string name="reuse">naudoti pakartotinai</string>
     <string name="wearcontrol_title">Laikrodžio valdikliai</string>
     <string name="wearcontrol_summary">Nustatyti Laikinus Tikslus ir įvesti terapinius įrašus iš laikrodžio.</string>
     <string name="food">Maistas</string>
@@ -579,7 +578,6 @@
     <string name="enablesmbwithhightemptarget">Įjungti SMB su intensyviais laikinais tikslais</string>
     <string name="enablesmbwithhightemptarget_summary">Įjungti SMB, kai yra aktyvus aukštas tikslas (aktyvumas, daugiau nei 100 mg/dl arba 5,5 mmol/l)</string>
     <string name="overview_insulin_label">Insulinas</string>
-    <string name="overview_carbs_label">AV</string>
     <string name="overview_buttons_selection">Mygtukai</string>
     <string name="show_calibration_button_summary">Siunčia kalibravimą į xDrip+ arba atidaro G5 kalibravimo dialogą</string>
     <string name="show_cgm_button_summary">Atidaro xDrip+, o mygtukas ATGAL gražina į AAPS</string>

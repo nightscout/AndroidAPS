@@ -9,6 +9,7 @@ import androidx.core.content.res.ResourcesCompat
 import dagger.android.support.DaggerFragment
 import info.nightscout.androidaps.MainApp
 import info.nightscout.androidaps.R
+import info.nightscout.androidaps.databinding.LoopFragmentBinding
 import info.nightscout.androidaps.interfaces.Constraint
 import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.plugins.aps.loop.events.EventLoopSetLastRunGui
@@ -22,7 +23,6 @@ import info.nightscout.androidaps.utils.resources.ResourceHelper
 import info.nightscout.androidaps.utils.sharedPreferences.SP
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
-import kotlinx.android.synthetic.main.loop_fragment.*
 import java.util.*
 import javax.inject.Inject
 
@@ -40,16 +40,23 @@ class LoopFragment : DaggerFragment() {
     private lateinit var mRunnable:Runnable
     private var disposable: CompositeDisposable = CompositeDisposable()
 
+    private var _binding: LoopFragmentBinding? = null
+
+    // This property is only valid between onCreateView and
+    // onDestroyView.
+    private val binding get() = _binding!!
+
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
-                              savedInstanceState: Bundle?): View? {
-        return inflater.inflate(R.layout.loop_fragment, container, false)
+                              savedInstanceState: Bundle?): View {
+        _binding = LoopFragmentBinding.inflate(inflater, container, false)
+        return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        swipeRefresh_loop.setColorSchemeResources(R.color.orange, R.color.green, R.color.blue)
-        swipeRefresh_loop.setProgressBackgroundColorSchemeColor(ResourcesCompat.getColor(resources, R.color.swipe_background, null))
+        binding.swipeRefreshLoop.setColorSchemeResources(R.color.orange, R.color.green, R.color.blue)
+        binding.swipeRefreshLoop.setProgressBackgroundColorSchemeColor(ResourcesCompat.getColor(resources, R.color.swipe_background, null))
 
         // Initialize a new Random instance
         mRandom = Random()
@@ -57,12 +64,12 @@ class LoopFragment : DaggerFragment() {
         // Initialize the handler instance
         mHandler = Handler()
 
-        swipeRefresh_loop.setOnRefreshListener {
+        binding.swipeRefreshLoop.setOnRefreshListener {
             mRunnable = Runnable {
-                loop_lastrun.text = resourceHelper.gs(R.string.executing)
+                binding.loopLastrun.text = resourceHelper.gs(R.string.executing)
                 Thread { loopPlugin.invoke("Loop button", true) }.start()
                 // Hide swipe to refresh icon animation
-                swipeRefresh_loop.isRefreshing = false
+                binding.swipeRefreshLoop.isRefreshing = false
             }
 
             // Execute the task after specified time
@@ -88,7 +95,7 @@ class LoopFragment : DaggerFragment() {
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe({
                 clearGUI()
-                loop_lastrun?.text = it.text
+                binding.loopLastrun.text = it.text
             }, { fabricPrivacy.logException(it) })
 
         updateGUI()
@@ -102,22 +109,28 @@ class LoopFragment : DaggerFragment() {
     }
 
     @Synchronized
-    fun updateGUI() {
-        if (loop_request == null) return
-        loopPlugin.lastRun?.let {
-            loop_request?.text = it.request?.toSpanned() ?: ""
-            loop_constraintsprocessed?.text = it.constraintsProcessed?.toSpanned() ?: ""
-            loop_source?.text = it.source ?: ""
-            loop_lastrun?.text = dateUtil.dateAndTimeString(it.lastAPSRun)
-                ?: ""
-            loop_smbrequest_time?.text = dateUtil.dateAndTimeAndSecondsString(it.lastSMBRequest)
-            loop_smbexecution_time?.text = dateUtil.dateAndTimeAndSecondsString(it.lastSMBEnact)
-            loop_tbrrequest_time?.text = dateUtil.dateAndTimeAndSecondsString(it.lastTBRRequest)
-            loop_tbrexecution_time?.text = dateUtil.dateAndTimeAndSecondsString(it.lastTBREnact)
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
+    }
 
-            loop_tbrsetbypump?.text = it.tbrSetByPump?.let { tbrSetByPump -> HtmlHelper.fromHtml(tbrSetByPump.toHtml()) }
+    @Synchronized
+    fun updateGUI() {
+        if (_binding == null) return
+        loopPlugin.lastRun?.let {
+            binding.loopRequest.text = it.request?.toSpanned() ?: ""
+            binding.loopConstraintsprocessed.text = it.constraintsProcessed?.toSpanned() ?: ""
+            binding.loopSource.text = it.source ?: ""
+            binding.loopLastrun.text = dateUtil.dateAndTimeString(it.lastAPSRun)
                 ?: ""
-            loop_smbsetbypump?.text = it.smbSetByPump?.let { smbSetByPump -> HtmlHelper.fromHtml(smbSetByPump.toHtml()) }
+            binding.loopSmbrequestTime.text = dateUtil.dateAndTimeAndSecondsString(it.lastSMBRequest)
+            binding.loopSmbexecutionTime.text = dateUtil.dateAndTimeAndSecondsString(it.lastSMBEnact)
+            binding.loopTbrrequestTime.text = dateUtil.dateAndTimeAndSecondsString(it.lastTBRRequest)
+            binding.loopTbrexecutionTime.text = dateUtil.dateAndTimeAndSecondsString(it.lastTBREnact)
+
+            binding.loopTbrsetbypump.text = it.tbrSetByPump?.let { tbrSetByPump -> HtmlHelper.fromHtml(tbrSetByPump.toHtml()) }
+                ?: ""
+            binding.loopSmbsetbypump.text = it.smbSetByPump?.let { smbSetByPump -> HtmlHelper.fromHtml(smbSetByPump.toHtml()) }
                 ?: ""
 
             val constraints =
@@ -127,22 +140,22 @@ class LoopFragment : DaggerFragment() {
                     constraintsProcessed.smbConstraint?.let { smbConstraint -> allConstraints.copyReasons(smbConstraint) }
                     allConstraints.getMostLimitedReasons(aapsLogger)
                 } ?: ""
-            loop_constraints?.text = constraints
+            binding.loopConstraints.text = constraints
         }
     }
 
     @Synchronized
     private fun clearGUI() {
-        loop_request?.text = ""
-        loop_constraints?.text = ""
-        loop_constraintsprocessed?.text = ""
-        loop_source?.text = ""
-        loop_lastrun?.text = ""
-        loop_smbrequest_time?.text = ""
-        loop_smbexecution_time?.text = ""
-        loop_tbrrequest_time?.text = ""
-        loop_tbrexecution_time?.text = ""
-        loop_tbrsetbypump?.text = ""
-        loop_smbsetbypump?.text = ""
+        binding.loopRequest.text = ""
+        binding.loopConstraints.text = ""
+        binding.loopConstraintsprocessed.text = ""
+        binding.loopSource.text = ""
+        binding.loopLastrun.text = ""
+        binding.loopSmbrequestTime.text = ""
+        binding.loopSmbexecutionTime.text = ""
+        binding.loopTbrrequestTime.text = ""
+        binding.loopTbrexecutionTime.text = ""
+        binding.loopTbrsetbypump.text = ""
+        binding.loopSmbsetbypump.text = ""
     }
 }

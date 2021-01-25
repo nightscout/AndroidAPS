@@ -495,7 +495,7 @@
     <string name="activity_target">aktivitet målverdi</string>
     <string name="hypo_duration">hypo varighet</string>
     <string name="hypo_target">hypo målverdi</string>
-    <string name="reuse">gjenbruk</string>
+    <string name="reuse_profile_pct_hours">Gjenbruk %1$d%% %2$dt</string>
     <string name="wearcontrol_title">Kontroller fra klokke</string>
     <string name="wearcontrol_summary">Sett temp målverdi og angi behandlinger fra klokken.</string>
     <string name="food">Mat</string>
@@ -594,7 +594,6 @@
     <string name="enablesmbwithhightemptarget">Aktiver SMB ved høye temp målverdier</string>
     <string name="enablesmbwithhightemptarget_summary">Aktiver SMB når det er aktive temp målverdier (trening, over 100 mg/dl eller 5,5 mmol/l)</string>
     <string name="overview_insulin_label">Insulin</string>
-    <string name="overview_carbs_label">Karbo</string>
     <string name="overview_buttons_selection">Knapper</string>
     <string name="show_calibration_button_summary">Sender en kalibrering til xDrip+ eller åpner en G5 kalibreringsdialog</string>
     <string name="show_cgm_button_summary">Åpner xDrip+, tilbake knappen returnerer til AAPS</string>

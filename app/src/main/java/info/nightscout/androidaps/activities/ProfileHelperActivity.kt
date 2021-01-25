@@ -12,6 +12,7 @@ import info.nightscout.androidaps.R
 import info.nightscout.androidaps.data.Profile
 import info.nightscout.androidaps.data.defaultProfile.DefaultProfile
 import info.nightscout.androidaps.data.defaultProfile.DefaultProfileDPV
+import info.nightscout.androidaps.databinding.ActivityProfilehelperBinding
 import info.nightscout.androidaps.db.ProfileSwitch
 import info.nightscout.androidaps.dialogs.ProfileViewerDialog
 import info.nightscout.androidaps.interfaces.ActivePluginProvider
@@ -27,9 +28,6 @@ import info.nightscout.androidaps.utils.ToastUtils
 import info.nightscout.androidaps.utils.alertDialogs.OKDialog
 import info.nightscout.androidaps.utils.extensions.toVisibility
 import info.nightscout.androidaps.utils.stats.TddCalculator
-import kotlinx.android.synthetic.main.activity_profilehelper.*
-import kotlinx.android.synthetic.main.activity_profilehelper.tabLayout
-import kotlinx.android.synthetic.main.localprofile_fragment.*
 import java.text.DecimalFormat
 import javax.inject.Inject
 
@@ -68,14 +66,17 @@ class ProfileHelperActivity : NoSplashAppCompatActivity() {
     private lateinit var profileSwitch: List<ProfileSwitch>
     private val profileSwitchUsed = arrayOf(0, 0)
 
+    private lateinit var binding: ActivityProfilehelperBinding
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_profilehelper)
 
-        tabLayout.addTab(tabLayout.newTab().setText("1"))
-        tabLayout.addTab(tabLayout.newTab().setText("2"))
+        binding = ActivityProfilehelperBinding.inflate(layoutInflater)
+        setContentView(binding.root)
+        binding.tabLayout.addTab(binding.tabLayout.newTab().setText("1"))
+        binding.tabLayout.addTab(binding.tabLayout.newTab().setText("2"))
 
-        tabLayout.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
+        binding.tabLayout.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
             override fun onTabSelected(tab: TabLayout.Tab) {
                 if ( tab.text == "1") {
                      switchTab(0, typeSelected[0])
@@ -88,16 +89,16 @@ class ProfileHelperActivity : NoSplashAppCompatActivity() {
             override fun onTabReselected(tab: TabLayout.Tab) {}
         })
 
-        profilehelper_profiletype.setOnClickListener {
-            PopupMenu(this, profilehelper_profiletype).apply {
+        binding.profiletype.setOnClickListener {
+            PopupMenu(this, binding.profiletype).apply {
                 menuInflater.inflate(R.menu.menu_profilehelper, menu)
                 setOnMenuItemClickListener { item ->
-                    profilehelper_profiletype.setText(item.title)
+                    binding.profiletype.setText(item.title)
                     when (item.itemId) {
-                        R.id.menu_default       -> switchTab(tabSelected, ProfileType.MOTOL_DEFAULT)
-                        R.id.menu_default_dpv   -> switchTab(tabSelected, ProfileType.DPV_DEFAULT)
-                        R.id.menu_current       -> switchTab(tabSelected, ProfileType.CURRENT)
-                        R.id.menu_available     -> switchTab(tabSelected, ProfileType.AVAILABLE_PROFILE)
+                        R.id.menu_default -> switchTab(tabSelected, ProfileType.MOTOL_DEFAULT)
+                        R.id.menu_default_dpv -> switchTab(tabSelected, ProfileType.DPV_DEFAULT)
+                        R.id.menu_current -> switchTab(tabSelected, ProfileType.CURRENT)
+                        R.id.menu_available -> switchTab(tabSelected, ProfileType.AVAILABLE_PROFILE)
                         R.id.menu_profileswitch -> switchTab(tabSelected, ProfileType.PROFILE_SWITCH)
                     }
                     true
@@ -109,12 +110,12 @@ class ProfileHelperActivity : NoSplashAppCompatActivity() {
         // Active profile
         profileList = activePlugin.activeProfileInterface.profile?.getProfileList() ?: ArrayList()
 
-        profilehelper_available_profile_list.setOnClickListener {
-            PopupMenu(this, profilehelper_available_profile_list).apply {
+        binding.availableProfileList.setOnClickListener {
+            PopupMenu(this, binding.availableProfileList).apply {
                 var order = 0
                 for (name in profileList) menu.add(Menu.NONE, order, order++, name)
                 setOnMenuItemClickListener { item ->
-                    profilehelper_available_profile_list.setText(item.title)
+                    binding.availableProfileList.setText(item.title)
                     profileUsed[tabSelected] = item.itemId
                     true
                 }
@@ -125,12 +126,12 @@ class ProfileHelperActivity : NoSplashAppCompatActivity() {
         // Profile switch
         profileSwitch = databaseHelper.getProfileSwitchData(dateUtil._now() - T.months(2).msecs(), true)
 
-        profilehelper_profileswitch_list.setOnClickListener {
-            PopupMenu(this, profilehelper_profileswitch_list).apply {
+        binding.profileswitchList.setOnClickListener {
+            PopupMenu(this, binding.profileswitchList).apply {
                 var order = 0
                 for (name in profileSwitch) menu.add(Menu.NONE, order, order++, name.customizedName)
                 setOnMenuItemClickListener { item ->
-                    profilehelper_profileswitch_list.setText(item.title)
+                    binding.profileswitchList.setText(item.title)
                     profileSwitchUsed[tabSelected] = item.itemId
                     true
                 }
@@ -139,7 +140,7 @@ class ProfileHelperActivity : NoSplashAppCompatActivity() {
         }
 
         // Default profile
-        profilehelper_copytolocalprofile.setOnClickListener {
+        binding.copytolocalprofile.setOnClickListener {
             val age = ageUsed[tabSelected]
             val weight = weightUsed[tabSelected]
             val tdd = tddUsed[tabSelected]
@@ -154,31 +155,31 @@ class ProfileHelperActivity : NoSplashAppCompatActivity() {
             }
         }
 
-        profilehelper_age.setParams(0.0, 1.0, 18.0, 1.0, DecimalFormat("0"), false, null)
-        profilehelper_weight.setParams(0.0, 0.0, 150.0, 1.0, DecimalFormat("0"), false, null, object : TextWatcher {
+        binding.age.setParams(0.0, 1.0, 18.0, 1.0, DecimalFormat("0"), false, null)
+        binding.weight.setParams(0.0, 0.0, 150.0, 1.0, DecimalFormat("0"), false, null, object : TextWatcher {
             override fun afterTextChanged(s: Editable) {}
             override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {}
             override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
-                profilehelper_tdd_row.visibility = (profilehelper_weight.value == 0.0).toVisibility()
+                binding.tddRow.visibility = (binding.weight.value == 0.0).toVisibility()
             }
         })
-        profilehelper_tdd.setParams(0.0, 0.0, 200.0, 1.0, DecimalFormat("0"), false, null, object : TextWatcher {
+        binding.tdd.setParams(0.0, 0.0, 200.0, 1.0, DecimalFormat("0"), false, null, object : TextWatcher {
             override fun afterTextChanged(s: Editable) {}
             override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {}
             override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
-                profilehelper_weight_row.visibility = (profilehelper_tdd.value == 0.0).toVisibility()
+                binding.weightRow.visibility = (binding.tdd.value == 0.0).toVisibility()
             }
         })
 
-        profilehelper_basalpctfromtdd.setParams(32.0, 32.0, 37.0, 1.0, DecimalFormat("0"), false, null)
+        binding.basalpctfromtdd.setParams(32.0, 32.0, 37.0, 1.0, DecimalFormat("0"), false, null)
 
-        profilehelper_tdds.text = tddCalculator.stats()
+        binding.tdds.text = tddCalculator.stats()
 
         // Current profile
-        profilehelper_current_profile_text.text = profileFunction.getProfileName()
+        binding.currentProfileText.text = profileFunction.getProfileName()
 
         // General
-        profilehelper_compareprofile.setOnClickListener {
+        binding.compareprofile.setOnClickListener {
             storeValues()
             for (i in 0..1) {
                 if (typeSelected[i] == ProfileType.MOTOL_DEFAULT) {
@@ -235,11 +236,11 @@ class ProfileHelperActivity : NoSplashAppCompatActivity() {
     private fun getProfile(age: Double, tdd: Double, weight: Double, basalPct: Double, tab: Int): Profile? =
         try { // profile must not exist
             when (typeSelected[tab]) {
-                ProfileType.MOTOL_DEFAULT     -> defaultProfile.profile(age, tdd, weight, profileFunction.getUnits())
-                ProfileType.DPV_DEFAULT       -> defaultProfileDPV.profile(age, tdd, basalPct, profileFunction.getUnits())
-                ProfileType.CURRENT           -> profileFunction.getProfile()?.convertToNonCustomizedProfile()
+                ProfileType.MOTOL_DEFAULT -> defaultProfile.profile(age, tdd, weight, profileFunction.getUnits())
+                ProfileType.DPV_DEFAULT -> defaultProfileDPV.profile(age, tdd, basalPct, profileFunction.getUnits())
+                ProfileType.CURRENT -> profileFunction.getProfile()?.convertToNonCustomizedProfile()
                 ProfileType.AVAILABLE_PROFILE -> activePlugin.activeProfileInterface.profile?.getSpecificProfile(profileList[profileUsed[tab]].toString())
-                ProfileType.PROFILE_SWITCH    -> profileSwitch[profileSwitchUsed[tab]].profileObject?.convertToNonCustomizedProfile()
+                ProfileType.PROFILE_SWITCH -> profileSwitch[profileSwitchUsed[tab]].profileObject?.convertToNonCustomizedProfile()
             }
         } catch (e: Exception) {
             null
@@ -247,18 +248,18 @@ class ProfileHelperActivity : NoSplashAppCompatActivity() {
 
     private fun getProfileName(age: Double, tdd: Double, weight: Double, basalSumPct: Double, tab: Int): String =
         when (typeSelected[tab]) {
-            ProfileType.MOTOL_DEFAULT     -> if (tdd > 0) resourceHelper.gs(R.string.formatwithtdd, age, tdd) else resourceHelper.gs(R.string.formatwithweight, age, weight)
-            ProfileType.DPV_DEFAULT       -> resourceHelper.gs(R.string.formatwittddandpct, age, tdd, (basalSumPct * 100).toInt())
-            ProfileType.CURRENT           -> profileFunction.getProfileName()
+            ProfileType.MOTOL_DEFAULT -> if (tdd > 0) resourceHelper.gs(R.string.formatwithtdd, age, tdd) else resourceHelper.gs(R.string.formatwithweight, age, weight)
+            ProfileType.DPV_DEFAULT -> resourceHelper.gs(R.string.formatwittddandpct, age, tdd, (basalSumPct * 100).toInt())
+            ProfileType.CURRENT -> profileFunction.getProfileName()
             ProfileType.AVAILABLE_PROFILE -> profileList[profileUsed[tab]].toString()
-            ProfileType.PROFILE_SWITCH    -> profileSwitch[profileSwitchUsed[tab]].customizedName
+            ProfileType.PROFILE_SWITCH -> profileSwitch[profileSwitchUsed[tab]].customizedName
         }
 
     private fun storeValues() {
-        ageUsed[tabSelected] = profilehelper_age.value
-        weightUsed[tabSelected] = profilehelper_weight.value
-        tddUsed[tabSelected] = profilehelper_tdd.value
-        pctUsed[tabSelected] = profilehelper_basalpctfromtdd.value
+        ageUsed[tabSelected] = binding.age.value
+        weightUsed[tabSelected] = binding.weight.value
+        tddUsed[tabSelected] = binding.tdd.value
+        pctUsed[tabSelected] = binding.basalpctfromtdd.value
     }
 
     private fun switchTab(tab: Int, newContent: ProfileType, storeOld: Boolean = true) {
@@ -267,10 +268,10 @@ class ProfileHelperActivity : NoSplashAppCompatActivity() {
 
         tabSelected = tab
         typeSelected[tabSelected] = newContent
-        profilehelper_profiletype_title.defaultHintTextColor = ColorStateList.valueOf(resourceHelper.gc(if (tab == 0) R.color.tabBgColorSelected else R.color.examinedProfile))
+        binding.profiletypeTitle.defaultHintTextColor = ColorStateList.valueOf(resourceHelper.gc(if (tab == 0) R.color.tabBgColorSelected else R.color.examinedProfile))
 
         // show new content
-        profilehelper_profiletype.setText(
+        binding.profiletype.setText(
             when (typeSelected[tabSelected]) {
                 ProfileType.MOTOL_DEFAULT     -> resourceHelper.gs(R.string.motoldefaultprofile)
                 ProfileType.DPV_DEFAULT       -> resourceHelper.gs(R.string.dpvdefaultprofile)
@@ -278,22 +279,22 @@ class ProfileHelperActivity : NoSplashAppCompatActivity() {
                 ProfileType.AVAILABLE_PROFILE -> resourceHelper.gs(R.string.availableprofile)
                 ProfileType.PROFILE_SWITCH    -> resourceHelper.gs(R.string.careportal_profileswitch)
             })
-        profilehelper_default_profile.visibility = (newContent == ProfileType.MOTOL_DEFAULT || newContent == ProfileType.DPV_DEFAULT).toVisibility()
-        profilehelper_current_profile.visibility = (newContent == ProfileType.CURRENT).toVisibility()
-        profilehelper_available_profile.visibility = (newContent == ProfileType.AVAILABLE_PROFILE).toVisibility()
-        profilehelper_profile_switch.visibility = (newContent == ProfileType.PROFILE_SWITCH).toVisibility()
+        binding.defaultProfile.visibility = (newContent == ProfileType.MOTOL_DEFAULT || newContent == ProfileType.DPV_DEFAULT).toVisibility()
+        binding.currentProfile.visibility = (newContent == ProfileType.CURRENT).toVisibility()
+        binding.availableProfile.visibility = (newContent == ProfileType.AVAILABLE_PROFILE).toVisibility()
+        binding.profileSwitch.visibility = (newContent == ProfileType.PROFILE_SWITCH).toVisibility()
 
         // restore selected values
-        profilehelper_age.value = ageUsed[tabSelected]
-        profilehelper_weight.value = weightUsed[tabSelected]
-        profilehelper_tdd.value = tddUsed[tabSelected]
-        profilehelper_basalpctfromtdd.value = pctUsed[tabSelected]
+        binding.age.value = ageUsed[tabSelected]
+        binding.weight.value = weightUsed[tabSelected]
+        binding.tdd.value = tddUsed[tabSelected]
+        binding.basalpctfromtdd.value = pctUsed[tabSelected]
 
-        profilehelper_basalpctfromtdd_row.visibility = (newContent == ProfileType.DPV_DEFAULT).toVisibility()
+        binding.basalpctfromtddRow.visibility = (newContent == ProfileType.DPV_DEFAULT).toVisibility()
         if (profileList.isNotEmpty())
-            profilehelper_available_profile_list.setText(profileList[profileUsed[tabSelected]].toString())
+            binding.availableProfileList.setText(profileList[profileUsed[tabSelected]].toString())
         if (profileSwitch.isNotEmpty())
-            profilehelper_profileswitch_list.setText(profileSwitch[profileSwitchUsed[tabSelected]].customizedName)
+            binding.profileswitchList.setText(profileSwitch[profileSwitchUsed[tabSelected]].customizedName)
     }
 
 }

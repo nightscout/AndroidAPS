@@ -17,6 +17,8 @@ import androidx.core.content.ContextCompat
 import com.ms_square.etsyblur.BlurConfig
 import com.ms_square.etsyblur.BlurDialogFragment
 import com.ms_square.etsyblur.SmartAsyncPolicy
+import android.widget.Button
+import android.widget.TextView
 import androidx.fragment.app.FragmentManager
 import dagger.android.support.DaggerDialogFragment
 import info.nightscout.androidaps.R
@@ -89,10 +91,14 @@ abstract class DialogFragmentWithDate : BlurDialogFragment()  {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        val eventDateView = view.findViewById(R.id.eventdate) as TextView?
+        val eventTimeView = view.findViewById(R.id.eventtime) as TextView?
+
         eventTime = savedInstanceState?.getLong("eventTime") ?: DateUtil.now()
         eventTimeChanged = savedInstanceState?.getBoolean("eventTimeChanged") ?: false
-        overview_eventdate?.text = DateUtil.dateString(eventTime)
-        overview_eventtime?.text = dateUtil.timeString(eventTime)
+
+        eventDateView?.text = DateUtil.dateString(eventTime)
+        eventTimeView?.text = dateUtil.timeString(eventTime)
 
         val themeToSet = sp.getInt("theme", ThemeUtil.THEME_DARKSIDE)
         try {
@@ -112,10 +118,10 @@ abstract class DialogFragmentWithDate : BlurDialogFragment()  {
             cal.set(Calendar.DAY_OF_MONTH, dayOfMonth)
             eventTime = cal.timeInMillis
             eventTimeChanged = true
-            overview_eventdate?.text = DateUtil.dateString(eventTime)
+            eventDateView?.text = DateUtil.dateString(eventTime)
         }
 
-        overview_eventdate?.setOnClickListener {
+        eventDateView?.setOnClickListener {
             context?.let {
                 val cal = Calendar.getInstance()
                 cal.timeInMillis = eventTime
@@ -136,10 +142,10 @@ abstract class DialogFragmentWithDate : BlurDialogFragment()  {
             cal.set(Calendar.SECOND, seconds++) // randomize seconds to prevent creating record of the same time, if user choose time manually
             eventTime = cal.timeInMillis
             eventTimeChanged = true
-            overview_eventtime?.text = dateUtil.timeString(eventTime)
+            eventTimeView?.text = dateUtil.timeString(eventTime)
         }
 
-        overview_eventtime?.setOnClickListener {
+        eventTimeView?.setOnClickListener {
             context?.let {
                 val cal = Calendar.getInstance()
                 cal.timeInMillis = eventTime
@@ -151,9 +157,9 @@ abstract class DialogFragmentWithDate : BlurDialogFragment()  {
             }
         }
 
-        notes_layout?.visibility = sp.getBoolean(R.string.key_show_notes_entry_dialogs, false).toVisibility()
+        (view.findViewById(R.id.notes_layout) as View?)?.visibility = sp.getBoolean(R.string.key_show_notes_entry_dialogs, false).toVisibility()
 
-        ok.setOnClickListener {
+        (view.findViewById(R.id.ok) as Button?)?.setOnClickListener {
             synchronized(okClicked) {
                 if (okClicked) {
                     aapsLogger.warn(LTag.UI, "guarding: ok already clicked")
@@ -164,7 +170,7 @@ abstract class DialogFragmentWithDate : BlurDialogFragment()  {
                 }
             }
         }
-        cancel.setOnClickListener { dismiss() }
+        (view.findViewById(R.id.cancel) as Button?)?.setOnClickListener { dismiss() }
     }
 
     override fun show(manager: FragmentManager, tag: String?) {

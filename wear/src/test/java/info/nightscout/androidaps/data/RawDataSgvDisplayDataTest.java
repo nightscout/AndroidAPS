@@ -1,7 +1,42 @@
-buildscript {
-    repositories {
-        jcenter()
-        maven { url "https://plugins.gradle.org/m2/" } // jacoco 0.2
+package info.nightscout.androidaps.data;
+
+import android.content.Context;
+import android.content.Intent;
+import android.content.SharedPreferences;
+import android.os.Bundle;
+import android.util.Log;
+
+import com.google.android.gms.wearable.DataMap;
+
+import org.junit.Before;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.powermock.core.classloader.annotations.PrepareForTest;
+import org.powermock.modules.junit4.PowerMockRunner;
+
+import info.nightscout.androidaps.Aaps;
+import info.nightscout.androidaps.interaction.utils.Constants;
+import info.nightscout.androidaps.interaction.utils.Persistence;
+import info.nightscout.androidaps.interaction.utils.WearUtil;
+import info.nightscout.androidaps.testing.mockers.AAPSMocker;
+import info.nightscout.androidaps.testing.mockers.AndroidMocker;
+import info.nightscout.androidaps.testing.mockers.WearUtilMocker;
+import info.nightscout.androidaps.testing.mocks.BundleMock;
+import info.nightscout.androidaps.testing.mocks.IntentMock;
+
+import static org.hamcrest.CoreMatchers.is;
+import static org.junit.Assert.assertThat;
+
+@RunWith(PowerMockRunner.class)
+@PrepareForTest( { WearUtil.class, Log.class, SharedPreferences.class, Context.class, Aaps.class, android.util.Base64.class, Intent.class } )
+public class RawDataSgvDisplayDataTest {
+
+    @Before
+    public void mock() throws Exception {
+        AAPSMocker.prepareMock();
+        AAPSMocker.resetMockedSharedPrefs();
+        AndroidMocker.mockBase64();
+        WearUtilMocker.prepareMockNoReal();
     }
 
     dependencies {

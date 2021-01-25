@@ -1,5 +1,6 @@
 package info.nightscout.androidaps.data;
 
+import android.annotation.TargetApi;
 import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
@@ -37,7 +38,6 @@ import com.google.android.gms.wearable.WearableListenerService;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
-import info.nightscout.androidaps.aaps;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.interaction.AAPSPreferences;
 import info.nightscout.androidaps.interaction.actions.AcceptActivity;
@@ -82,7 +82,8 @@ public class ListenerService extends WearableListenerService implements GoogleAp
 
     private static final String ACTION_RESEND_BULK = "com.dexdrip.stephenblack.nightwatch.RESEND_BULK_DATA";
     private static final String AAPS_NOTIFY_CHANNEL_ID_OPENLOOP = "AndroidAPS-Openloop";
-    private static final String AAPS_NOTIFY_CHANNEL_ID_BOLUSPROGRESS = "AndroidAPS-bolus-progress";
+    private static final String AAPS_NOTIFY_CHANNEL_ID_BOLUSPROGRESS = "bolus progress vibration";
+    private static final String AAPS_NOTIFY_CHANNEL_ID_BOLUSPROGRESS_SILENT = "bolus progress  silent";
 
 
     GoogleApiClient googleApiClient;
@@ -616,17 +617,7 @@ public class ListenerService extends WearableListenerService implements GoogleAp
         }
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            CharSequence name = "AAPS Bolus Progress";
-            String description = "Bolus progress and cancel";
-            NotificationChannel channel = new NotificationChannel(AAPS_NOTIFY_CHANNEL_ID_BOLUSPROGRESS, name, NotificationManager.IMPORTANCE_HIGH);
-            channel.setDescription(description);
-            channel.enableVibration(true);
-            channel.setVibrationPattern(vibratePattern);
-
-            // Register the channel with the system; you can't change the importance
-            // or other notification behaviors after this
-            NotificationManager notificationManager = getSystemService(NotificationManager.class);
-            notificationManager.createNotificationChannel(channel);
+            createBolusProgressChannels();
         }
 
         Intent cancelIntent = new Intent(this, ListenerService.class);
@@ -634,15 +625,15 @@ public class ListenerService extends WearableListenerService implements GoogleAp
         PendingIntent cancelPendingIntent = PendingIntent.getService(this, 0, cancelIntent, 0);
 
         NotificationCompat.Builder notificationBuilder =
-                new NotificationCompat.Builder(this, AAPS_NOTIFY_CHANNEL_ID_BOLUSPROGRESS)
+                new NotificationCompat.Builder(this, vibrate ? AAPS_NOTIFY_CHANNEL_ID_BOLUSPROGRESS: AAPS_NOTIFY_CHANNEL_ID_BOLUSPROGRESS_SILENT)
                         .setSmallIcon(R.drawable.ic_icon)
-                        .setContentTitle(aaps.gs(R.string.bolus_progress))
+                        .setContentTitle(getString(R.string.bolus_progress))
                         .setContentText(progresspercent + "% - " + progresstatus)
-                        .setSubText(aaps.gs(R.string.press_to_cancel))
+                        .setSubText(getString(R.string.press_to_cancel))
                         .setContentIntent(cancelPendingIntent)
                         .setPriority(NotificationCompat.PRIORITY_MAX)
                         .setVibrate(vibratePattern)
-                        .addAction(R.drawable.ic_cancel, aaps.gs(R.string.cancel_bolus), cancelPendingIntent);
+                        .addAction(R.drawable.ic_cancel, getString(R.string.cancel_bolus), cancelPendingIntent);
 
         NotificationManagerCompat notificationManager =
                 NotificationManagerCompat.from(this);
@@ -654,6 +645,25 @@ public class ListenerService extends WearableListenerService implements GoogleAp
         if (progresspercent == 100) {
             scheduleDismissBolusprogress(5);
         }
+    }
+
+    @TargetApi(value = 26)
+    private void createBolusProgressChannels() {
+        createNotificationChannel(new long[]{0, 50, 1000}, AAPS_NOTIFY_CHANNEL_ID_BOLUSPROGRESS, getString(R.string.bolus_progress_channel_name), getString(R.string.bolus_progress_channel_description));
+        createNotificationChannel(new long[]{0, 1, 1000}, AAPS_NOTIFY_CHANNEL_ID_BOLUSPROGRESS_SILENT, getString(R.string.bolus_progress_silent_channel_name), getString(R.string.bolus_progress_silent_channel_description));
+    }
+
+    @TargetApi(value = 26)
+    private void createNotificationChannel(long[] vibratePattern, String channelID, CharSequence name, String description) {
+        NotificationChannel channel = new NotificationChannel(channelID, name, NotificationManager.IMPORTANCE_HIGH);
+        channel.setDescription(description);
+        channel.enableVibration(true);
+        channel.setVibrationPattern(vibratePattern);
+
+        // Register the channel with the system; you can't change the importance
+        // or other notification behaviors after this
+        NotificationManager notificationManager = getSystemService(NotificationManager.class);
+        notificationManager.createNotificationChannel(channel);
     }
 
     private void showConfirmationDialog(String title, String message, String actionstring) {

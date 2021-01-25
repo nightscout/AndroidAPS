@@ -13,6 +13,7 @@ import com.jjoe64.graphview.GraphView
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.activities.NoSplashAppCompatActivity
+import info.nightscout.androidaps.databinding.ActivityHistorybrowseBinding
 import info.nightscout.androidaps.events.EventCustomCalculationFinished
 import info.nightscout.androidaps.events.EventRefreshOverview
 import info.nightscout.androidaps.interfaces.ActivePluginProvider
@@ -35,7 +36,6 @@ import info.nightscout.androidaps.utils.sharedPreferences.SP
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
-import kotlinx.android.synthetic.main.activity_historybrowse.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -71,19 +71,23 @@ class HistoryBrowseActivity : NoSplashAppCompatActivity() {
 
     private var eventCustomCalculationFinished = EventCustomCalculationFinished()
 
+    private lateinit var binding: ActivityHistorybrowseBinding
+    private var destroyed = false
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_historybrowse)
+        binding = ActivityHistorybrowseBinding.inflate(layoutInflater)
+        setContentView(binding.root)
 
-        historybrowse_left.setOnClickListener {
+        binding.left.setOnClickListener {
             start -= T.hours(rangeToDisplay.toLong()).msecs()
             runCalculation("onClickLeft")
         }
-        historybrowse_right.setOnClickListener {
+        binding.right.setOnClickListener {
             start += T.hours(rangeToDisplay.toLong()).msecs()
             runCalculation("onClickRight")
         }
-        historybrowse_end.setOnClickListener {
+        binding.end.setOnClickListener {
             val calendar = Calendar.getInstance()
             calendar.timeInMillis = System.currentTimeMillis()
             calendar[Calendar.MILLISECOND] = 0
@@ -93,12 +97,12 @@ class HistoryBrowseActivity : NoSplashAppCompatActivity() {
             start = calendar.timeInMillis
             runCalculation("onClickEnd")
         }
-        historybrowse_zoom.setOnClickListener {
+        binding.zoom.setOnClickListener {
             rangeToDisplay += 6
             rangeToDisplay = if (rangeToDisplay > 24) 6 else rangeToDisplay
             updateGUI("rangeChange", false)
         }
-        historybrowse_zoom.setOnLongClickListener {
+        binding.zoom.setOnLongClickListener {
             val calendar = Calendar.getInstance()
             calendar.timeInMillis = start
             calendar[Calendar.MILLISECOND] = 0
@@ -122,11 +126,11 @@ class HistoryBrowseActivity : NoSplashAppCompatActivity() {
             cal[Calendar.MINUTE] = 0
             cal[Calendar.HOUR_OF_DAY] = 0
             start = cal.timeInMillis
-            historybrowse_date?.text = dateUtil.dateAndTimeString(start)
+            binding.date.text = dateUtil.dateAndTimeString(start)
             runCalculation("onClickDate")
         }
 
-        historybrowse_date.setOnClickListener {
+        binding.date.setOnClickListener {
             val cal = Calendar.getInstance()
             cal.timeInMillis = start
             DatePickerDialog(this, dateSetListener,
@@ -140,11 +144,11 @@ class HistoryBrowseActivity : NoSplashAppCompatActivity() {
         windowManager?.defaultDisplay?.getMetrics(dm)
 
         axisWidth = if (dm.densityDpi <= 120) 3 else if (dm.densityDpi <= 160) 10 else if (dm.densityDpi <= 320) 35 else if (dm.densityDpi <= 420) 50 else if (dm.densityDpi <= 560) 70 else 80
-        historybrowse_bggraph?.gridLabelRenderer?.gridColor = resourceHelper.gc(R.color.graphgrid)
-        historybrowse_bggraph?.gridLabelRenderer?.reloadStyles()
-        historybrowse_bggraph?.gridLabelRenderer?.labelVerticalWidth = axisWidth
+        binding.bggraph.gridLabelRenderer?.gridColor = resourceHelper.gc(R.color.graphgrid)
+        binding.bggraph.gridLabelRenderer?.reloadStyles()
+        binding.bggraph.gridLabelRenderer?.labelVerticalWidth = axisWidth
 
-        overviewMenus.setupChartMenu(overview_chartMenuButton)
+        overviewMenus.setupChartMenu(binding.overviewChartMenuButton)
         prepareGraphsIfNeeded(overviewMenus.setting.size)
         savedInstanceState?.let { bundle ->
             rangeToDisplay = bundle.getInt("rangeToDisplay", 0)
@@ -157,6 +161,12 @@ class HistoryBrowseActivity : NoSplashAppCompatActivity() {
         super.onPause()
         disposable.clear()
         iobCobCalculatorPluginHistory.stopCalculation("onPause")
+    }
+
+    @Synchronized
+    override fun onDestroy() {
+        destroyed = true
+        super.onDestroy()
     }
 
     public override fun onResume() {
@@ -184,7 +194,7 @@ class HistoryBrowseActivity : NoSplashAppCompatActivity() {
         disposable.add(rxBus
             .toObservable(EventIobCalculationProgress::class.java)
             .observeOn(AndroidSchedulers.mainThread())
-            .subscribe({ overview_iobcalculationprogess?.text = it.progress }, fabricPrivacy::logException)
+            .subscribe({ binding.overviewIobcalculationprogess.text = it.progress }, fabricPrivacy::logException)
         )
         disposable.add(rxBus
             .toObservable(EventRefreshOverview::class.java)
@@ -224,7 +234,7 @@ class HistoryBrowseActivity : NoSplashAppCompatActivity() {
                 // rebuild needed
                 secondaryGraphs.clear()
                 secondaryGraphsLabel.clear()
-                history_iobgraph.removeAllViews()
+                binding.iobGraph.removeAllViews()
                 for (i in 1 until numOfGraphs) {
                     val relativeLayout = RelativeLayout(this)
                     relativeLayout.layoutParams = RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT)
@@ -247,7 +257,7 @@ class HistoryBrowseActivity : NoSplashAppCompatActivity() {
                     relativeLayout.addView(label)
                     secondaryGraphsLabel.add(label)
 
-                    history_iobgraph.addView(relativeLayout)
+                    binding.iobGraph.addView(relativeLayout)
                     secondaryGraphs.add(graph)
                 }
             }
@@ -264,6 +274,7 @@ class HistoryBrowseActivity : NoSplashAppCompatActivity() {
         }
     }
 
+    @Synchronized
     fun updateGUI(from: String, bgOnly: Boolean) {
         val menuChartSettings = overviewMenus.setting
         prepareGraphsIfNeeded(menuChartSettings.size)
@@ -275,13 +286,13 @@ class HistoryBrowseActivity : NoSplashAppCompatActivity() {
         val highLine = defaultValueHelper.determineHighLine()
 
         lifecycleScope.launch(Dispatchers.Main) {
-            historybrowse_noprofile?.visibility = (profile == null).toVisibility()
+            binding.noprofile.visibility = (profile == null).toVisibility()
             profile ?: return@launch
 
-            historybrowse_bggraph ?: return@launch
-            historybrowse_date?.text = dateUtil.dateAndTimeString(start)
-            historybrowse_zoom?.text = rangeToDisplay.toString()
-            val graphData = GraphData(injector, historybrowse_bggraph, iobCobCalculatorPluginHistory, treatmentsPluginHistory)
+            if (destroyed) return@launch
+            binding.date.text = dateUtil.dateAndTimeString(start)
+            binding.zoom.text = rangeToDisplay.toString()
+            val graphData = GraphData(injector, binding.bggraph, iobCobCalculatorPluginHistory, treatmentsPluginHistory)
             val secondaryGraphsData: ArrayList<GraphData> = ArrayList()
 
             // do preparation in different thread

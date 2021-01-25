@@ -40,7 +40,8 @@ interface SkinInterface {
         val landscape = screenHeight < screenWidth
 
         if (landscape) {
-            val iobLayoutParams = view.overview_iob_llayout.layoutParams as ConstraintLayout.LayoutParams
+            val iobLayout = view.findViewById<LinearLayout>(R.id.overview_iob_llayout)
+            val iobLayoutParams = iobLayout.layoutParams as ConstraintLayout.LayoutParams
             iobLayoutParams.startToStart = ConstraintLayout.LayoutParams.UNSET
            // iobLayoutParams.startToEnd = view.overview_time_llayout.id
             iobLayoutParams.topToBottom = ConstraintLayout.LayoutParams.UNSET
@@ -50,11 +51,11 @@ interface SkinInterface {
            // timeLayoutParams.endToStart = view.overview_iob_llayout.id
             val cobLayoutParams = view.overview_cob_llayout.layoutParams as ConstraintLayout.LayoutParams
             cobLayoutParams.topToTop = ConstraintLayout.LayoutParams.PARENT_ID
-            val basalLayoutParams = view.overview_basal_llayout.layoutParams as ConstraintLayout.LayoutParams
+            val basalLayoutParams = view.findViewById<LinearLayout>(R.id.overview_basal_llayout).layoutParams as ConstraintLayout.LayoutParams
             basalLayoutParams.topToTop = ConstraintLayout.LayoutParams.PARENT_ID
-            val extendedLayoutParams = view.overview_extended_llayout.layoutParams as ConstraintLayout.LayoutParams
+            val extendedLayoutParams = view.findViewById<LinearLayout>(R.id.overview_extended_llayout).layoutParams as ConstraintLayout.LayoutParams
             extendedLayoutParams.topToTop = ConstraintLayout.LayoutParams.PARENT_ID
-            val asLayoutParams = view.overview_as_llayout.layoutParams as ConstraintLayout.LayoutParams
+            val asLayoutParams = view.findViewById<LinearLayout>(R.id.overview_as_llayout).layoutParams as ConstraintLayout.LayoutParams
             asLayoutParams.topToTop = ConstraintLayout.LayoutParams.PARENT_ID
 
             if (isTablet) {

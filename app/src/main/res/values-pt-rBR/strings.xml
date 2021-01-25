@@ -427,7 +427,6 @@
     <string name="activity_target">alvo da atividade</string>
     <string name="hypo_duration">duração hipo</string>
     <string name="hypo_target">alvo hipo</string>
-    <string name="reuse">reutilizar</string>
     <string name="wearcontrol_title">Controles do Relógio</string>
     <string name="wearcontrol_summary">Definir Alvo-Temp and inserir Tratamentos do relógio.</string>
     <string name="food">Alimentos</string>
@@ -521,7 +520,6 @@
     <string name="enablesmbwithtemptarget_summary">SMB activo quando há valor alvo temporário activo (exercício, etc)</string>
     <string name="enablesmbwithhightemptarget">SMB activo com alvos temporários elevados</string>
     <string name="overview_insulin_label">Insulina</string>
-    <string name="overview_carbs_label">Carbos</string>
     <string name="overview_buttons_selection">Botões</string>
     <string name="show_calibration_button_summary">Enviar calibrações para o xDrip+ ou abrir sistema de calibração do G5</string>
     <string name="show_cgm_button_summary">Abre xDrip+, botão retorcer volta ao AAPS</string>

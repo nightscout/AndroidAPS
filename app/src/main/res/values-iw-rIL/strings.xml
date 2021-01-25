@@ -495,7 +495,7 @@
     <string name="activity_target">ערך מטרת פעילות</string>
     <string name="hypo_duration">משך היפו</string>
     <string name="hypo_target">ערך מטרת היפו</string>
-    <string name="reuse">שימוש חוזר</string>
+    <string name="reuse_profile_pct_hours">שימוש מחדש %1$d%% %2$d שעות</string>
     <string name="wearcontrol_title">שליטה מהשעון</string>
     <string name="wearcontrol_summary">הגדירו ערכי מטרה זמניים וציינו טיפולים מהשעון.</string>
     <string name="food">מזון</string>
@@ -594,7 +594,6 @@
     <string name="enablesmbwithhightemptarget">הפעלת SMB עם ערכי מטרה גבוהים</string>
     <string name="enablesmbwithhightemptarget_summary">הפעלת SMB כאשר יש ערך מטרה זמני גבוה פעיל (פעילות, מעל 100 mg/dl או 5.5 mmol/l)</string>
     <string name="overview_insulin_label">אינסולין</string>
-    <string name="overview_carbs_label">פחמימות</string>
     <string name="overview_buttons_selection">מקשים</string>
     <string name="show_calibration_button_summary">שולח כיול ל- xDrip או פותח את חלון הכיול של G5</string>
     <string name="show_cgm_button_summary">פותח xDrip, לחצני אחורה חוזר ל-AAPS</string>

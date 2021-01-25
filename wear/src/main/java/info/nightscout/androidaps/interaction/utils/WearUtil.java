@@ -4,7 +4,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.PowerManager;
-import android.os.SystemClock;
 import android.util.Log;
 
 import com.google.android.gms.wearable.DataMap;
@@ -15,7 +14,7 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
-import info.nightscout.androidaps.aaps;
+import info.nightscout.androidaps.Aaps;
 
 /**
  * Created by andy on 3/5/19.
@@ -66,7 +65,7 @@ public class WearUtil {
     }
 
     public static PowerManager.WakeLock getWakeLock(final String name, int millis) {
-        final PowerManager pm = (PowerManager) aaps.getAppContext().getSystemService(Context.POWER_SERVICE);
+        final PowerManager pm = (PowerManager) Aaps.getAppContext().getSystemService(Context.POWER_SERVICE);
         PowerManager.WakeLock wl = pm.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, "AAPS::"+name);
         wl.acquire(millis);
         if (debug_wakelocks) Log.d(TAG, "getWakeLock: " + name + " " + wl.toString());
@@ -80,11 +79,11 @@ public class WearUtil {
     }
 
     public static void startActivity(Class c) {
-        aaps.getAppContext().startActivity(getStartActivityIntent(c));
+        Aaps.getAppContext().startActivity(getStartActivityIntent(c));
     }
 
     public static Intent getStartActivityIntent(Class c) {
-        return new Intent(aaps.getAppContext(), c).setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        return new Intent(Aaps.getAppContext(), c).setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
     }
 
     public static void threadSleep(long millis) {

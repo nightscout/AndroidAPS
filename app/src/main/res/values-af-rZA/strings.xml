@@ -382,7 +382,6 @@
     <string name="activity_target">aktiwiteit doelwit</string>
     <string name="hypo_duration">hipo duur</string>
     <string name="hypo_target">hipo doelwit</string>
-    <string name="reuse">hergebruik</string>
     <string name="wearcontrol_title">Kontroles van horlosie</string>
     <string name="wearcontrol_summary">Stel tydeleike doelwitte en behandelings vanaf horlosie.</string>
     <string name="food">Kos</string>
@@ -473,7 +472,6 @@
     <string name="enablesmbwithtemptarget_summary">Aktiveer SMB wanneer daar tydelike doelwitte aktief is (eetgou, oefen)</string>
     <string name="enablesmbwithhightemptarget">Aktiveer SMB met hoë tydelike doelwitte</string>
     <string name="overview_insulin_label">Insulien</string>
-    <string name="overview_carbs_label">Karbs</string>
     <string name="overview_buttons_selection">Knoppies</string>
     <string name="show_calibration_button_summary">Stuur \'n kalibrasie na xDrip+ of open G5 kalibrasie dialoog</string>
     <string name="show_cgm_button_summary">Open xDrip +, terug knoppies keer terug na AAPS</string>

@@ -199,7 +199,6 @@
     <string name="combo_reservoir_normal">Gnáth</string>
     <string name="combo_notification_check_time_date">Is nuashonrú gá clog Caidéil</string>
     <string name="overview_insulin_label">Inslin</string>
-    <string name="overview_carbs_label">Carbí</string>
     <string name="overview_buttons_selection">Cnaipi</string>
     <string name="overview_cgm">CGM</string>
     <string name="temptargetshort">TT</string>

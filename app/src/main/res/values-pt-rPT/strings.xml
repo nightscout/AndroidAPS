@@ -41,6 +41,7 @@
     <string name="description_source_glimp">Receber valores Glucose do Glimp.</string>
     <string name="description_source_mm640g">Receber valores de Glucose do 600SeriesAndroidUploader.</string>
     <string name="description_source_ns_client">Descarrega dados de Glucose do Nightscout</string>
+    <string name="description_source_xdrip">Receber valores de Glicose do xDrip+.</string>
     <string name="description_treatments">Guarda todos os tratamentos que foram feitos</string>
     <string name="description_wear">Monitorizar e controlar o AndroidAPS usando o seu relógio WearOS.</string>
     <string name="description_xdrip_status_line">Mostrar informações sobre o loop no mostrador do xDrip+.</string>
@@ -117,6 +118,7 @@
     <string name="changeyourinput">Altere o seu input!</string>
     <string name="configbuilder_bgsource">Origem dos valores de Glucose</string>
     <string name="configbuilder_bgsource_description">De onde deve o AndroidAPS obter os dados?</string>
+    <string name="xdrip">xDrip+</string>
     <string name="apsmode_title">Modo APS</string>
     <string name="closedloop">Closed Loop</string>
     <string name="openloop">Open Loop</string>
@@ -248,6 +250,8 @@
     <string name="mealbolus">Refeição</string>
     <string name="correctionbous">Corr</string>
     <string name="actions">Acções</string>
+    <string name="ns_upload_only">(PERIGOSO DESACTIVAR) Envio NS apenas</string>
+    <string name="ns_upload_only_summary">Envio NS apenas (sincronização desactivada). Não efectivo no SGV a menos que uma fonte local como o xDrip seja selecionada. Não efectivo em Perfis enquanto NS-Perfis é usado.\n!!! AVISO !!! A desactivação desta opção pode causar malfuncionamento e overdose de insulina se qualquer um de seu componente (AAPS, NS, xDrip+) estiver mal configurado. Assista cuidadosamente se dados exibidos pela AAPS combinam com o estado da bomba!</string>
     <string name="pumpNotInitialized">Bomba não inicializada!</string>
     <string name="primefill">Purgar/Preencher</string>
     <string name="fillwarning">Por favor certifique-se que o valor corresponde ao especificado para o seu conjunto de infusão!</string>
@@ -302,6 +306,7 @@
     <string name="smscommunicator_shortname">SMS</string>
     <string name="short_tabtitles">Abreviar títulos dos separadores</string>
     <string name="always_use_shortavg">Usar sempre delta médio curto em vez de delta simples</string>
+    <string name="always_use_shortavg_summary">Útil quando há ruído nos dados de fontes sem filtro como xDrip+.</string>
     <string name="profile">Perfil</string>
     <string name="openapsama_max_daily_safety_multiplier_summary">Valor padrão: 3 Por segurança é o valor limite estabelecido por OpenAPS. O que faz é limitar a basal a x3 a basal mázima. Se necessário modificar este valor, por favor ter em conta que os dados apontam para que os limites de segurança sejam - 3 x max diario ou 4x valor actual (qual seja menor) como valores máximos.</string>
     <string name="openapsama_current_basal_safety_multiplier_summary">Valor padrão: 4 Esta é a outra parte dos valores limites de segurança - 3 x max diário ou 4x valor actual - do OpenAPS. Isto define que não importa o valor da basal máxima definido na bomba, o valor máximo da basal temporária não pode ser maior que 4 x o valor da basal definida na bomba. O objectivo é evitar que sejam determinadas basais temporárias demasiado elevadas antes que se perceba como o algoritmo funciona. 4x é um valor que a maior parte das pessoas nunca necessitará de alterar pois o mais provável é necessitar de alterar outras definições para não necessitar de \"ultrapassar\" este limite de segurança.</string>
@@ -315,6 +320,9 @@
     <string name="smscommunicator_invalidphonennumber">SMS número de telefone inválido</string>
     <string name="overview_calibration">Calibração</string>
     <string name="xdripnotinstalled">xDrip+ não está instalado</string>
+    <string name="calibrationsent">Calibração enviada para xDrip+</string>
+    <string name="smscommunicator_calibrationsent">Calibração enviada. Recepção têm de estar activada na xDrip+.</string>
+    <string name="smscommunicator_calibrationfailed">O xDrip+ não esta a receber as calibrações</string>
     <string name="pumpsuspended">Bomba suspensa</string>
     <string name="executing">A Executar</string>
     <string name="virtualpump_settings">Definições da bomba virtual</string>
@@ -417,6 +425,8 @@
     <string name="nav_about">Acerca</string>
     <string name="smscommunicator_missingsmspermission">Falta de permissão SMS</string>
     <string name="smscommunicator_missingphonestatepermission">Falta permissão do estado do telefone</string>
+    <string name="xdripstatus_settings">Estado xDrip+ (relógio)</string>
+    <string name="xdripstatus">Linha Estado xDrip+ (relógio)</string>
     <string name="xdripstatus_shortname">xds</string>
     <string name="wear_showbgi_title">Mostrar BGI</string>
     <string name="wear_showbgi_summary">Adicionar BGI à linha de status</string>
@@ -459,6 +469,7 @@
     <string name="mdtp_cancel">Cancelar</string>
     <string name="notloadedplugins">Nem todos perfis foram carregados!</string>
     <string name="valuesnotstored">Valores não guardados!</string>
+    <string name="ns_localbroadcasts">Activar transmissões para outras aplicações (como xDrip+). Não habilite se tiver mais de uma instância de AAPS ou ClienteNS instalado!</string>
     <string name="ns_localbroadcasts_title">Activar partilha local.</string>
     <string name="careportal_newnstreatment_duration_min_label">Duração [min]</string>
     <string name="openapssmb">OpenAPS SMB</string>
@@ -484,7 +495,7 @@
     <string name="activity_target">alvo actividade</string>
     <string name="hypo_duration">duração hipo</string>
     <string name="hypo_target">alvo hipo</string>
-    <string name="reuse">reutilizar</string>
+    <string name="reuse_profile_pct_hours">Reutilizar %1$d%% %2$dh</string>
     <string name="wearcontrol_title">Controles do Relógio</string>
     <string name="wearcontrol_summary">Definir Alvo-Temp and inserir Tratamentos do relógio.</string>
     <string name="food">Alimentos</string>
@@ -583,7 +594,6 @@
     <string name="enablesmbwithhightemptarget">SMB activo com alvos temporários elevados</string>
     <string name="enablesmbwithhightemptarget_summary">Activar SMB quando há alvo temporário elevado activo (exercício, acima de 100 mg/dl ou 5,5 mmol/l)</string>
     <string name="overview_insulin_label">Insulina</string>
-    <string name="overview_carbs_label">Hidratos</string>
     <string name="overview_buttons_selection">Botões</string>
     <string name="show_calibration_button_summary">Enviar calibrações para o xDrip+ ou abrir sistema de calibração do G5</string>
     <string name="show_cgm_button_summary">Abre xDrip+, botão retorcer volta ao AAPS</string>

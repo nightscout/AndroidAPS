@@ -17,7 +17,7 @@
 
 
     <TextView
-        android:id="@+id/overview_eventdate"
+        android:id="@+id/eventdate"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
@@ -25,7 +25,7 @@
         android:text="2017/05/05" />
 
     <TextView
-        android:id="@+id/overview_eventtime"
+        android:id="@+id/eventtime"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
