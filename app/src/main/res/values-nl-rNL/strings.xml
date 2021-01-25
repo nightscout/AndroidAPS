@@ -14,7 +14,6 @@
     <string name="reset_db_confirm">Wil je echt de database wissen?</string>
     <string name="nav_exit">Afsluiten</string>
     <string name="ns_sync_use_absolute_title">Gebruik altijd absolute basale waarden</string>
-    <string name="alert_dialog_storage_permission_text">Herstart je telefoon of herstart AndroidAPS vanuit de systeem instellingen a. u. b. \nanders zal AndroidAPS geen logboek hebben (Belangrijk om te controleren of de algoritmes correct werken)!</string>
     <string name="alert_dialog_permission_battery_optimization_failed">Dit apparaat lijkt geen ondersteuning te bieden voor whitelisten voor batterijoptimalisatie - u kunt prestatieproblemen ervaren.</string>
     <string name="description_actions">Een aantal knoppen voor snelle toegang tot algemene functies</string>
     <string name="description_config_builder">Gebruikt om actieve plugins te configureren</string>
@@ -168,7 +167,6 @@
     <string name="old_master_password">Oud masterwachtwoord</string>
     <string name="different_password_used">Dit bestand is geëxporteerd en gecodeerd met een ander masterwachtwoord. Geef het oude masterwachtwoord op om het bestand te kunnen decoderen.</string>
     <string name="master_password_will_be_replaced">Als gevolg van het importeren, zal het huidige masterwachtwoord worden vervangen door het oude masterwachtwoord!</string>
-    <string name="preferences_import_list_title">Kies bestand om te importeren</string>
     <string name="check_preferences_before_import">Controleer instellingen voor het importeren:</string>
     <string name="check_preferences_cannot_import">Instellingen kunnen niet worden geïmporteerd!</string>
     <string name="check_preferences_dangerous_import">Instellingen zouden niet moeten worden geïmporteerd!</string>
@@ -176,39 +174,6 @@
     <string name="check_preferences_details_title">Importeer problemen - details</string>
     <string name="check_preferences_import_btn">Importeren</string>
     <string name="check_preferences_import_anyway_btn">Toch importeren (GEVAARLIJK!)</string>
-    <string name="metadata_warning_different_flavour">Instellingen zijn gemaakt met een andere variant van AAPS (%1$s) terwijl je nu: %2$s gebruikt.\n\nEr kunnen instellingen ontbreken of ongeldig zijn - controleer aub jouw instellingen na het importeren en corrigeer ze zonodig.</string>
-    <string name="metadata_warning_different_device">Instellingen zijn gemaakt op een ander apparaat. Het is OK als ze zijn geïmporteerd van een oude/andere telefoon, maar zorg ervoor dat de geïmporteerde instellingen correct zijn!</string>
-    <string name="metadata_warning_outdated_format">Je gebruikt de verouderde indeling van een vorige AAPS versie, dit is niet veilig! Gebruik dit alleen als je niet anders kunt, wanneer je geen export hebt met de huidige JSON-indeling.</string>
-    <string name="metadata_warning_old_export">Geïmporteerde instellingen zijn al %1$s dagen oud! Misschien heb je een meer recente versie of heb je het verkeerde bestand gekozen? Vergeet niet om regelmatig jouw instellingen te exporteren!</string>
-    <string name="metadata_warning_date_format">Ongeldige notatie voor datum/tijd!</string>
-    <string name="metadata_warning_different_version">Instellingen zijn afkomstig van een vorige minor versie van de AAPS app. Het is OK als je deze importeert na een app upgrade, maar controleer na importeren dan wel of de instellingen nog steeds correct zijn!</string>
-    <string name="metadata_urgent_different_version">Instellingen van een andere major versie van de AAPS app. Deze versies kunnen aanzienlijk verschillen en kunnen instellingen hebben die incompatibel zijn! Zorg ervoor dat na het importeren alle instellingen nog steeds correct zijn!</string>
-    <string name="metadata_label_format">Bestandsformaat</string>
-    <string name="metadata_label_created_at">Gemaakt op</string>
-    <string name="metadata_label_aaps_version">AAPS versie</string>
-    <string name="metadata_label_aaps_flavour">Build variant</string>
-    <string name="metadata_label_device_name">Patiëntnaam van exporterend apparaat</string>
-    <string name="metadata_label_device_model">Modelnaam/nr van exporterend apparaat</string>
-    <string name="metadata_label_encryption">Bestandsversleuteling</string>
-    <string name="metadata_format_old">Oude export indeling</string>
-    <string name="metadata_format_new">Nieuwe versleutelde indeling</string>
-    <string name="metadata_format_debug">Nieuwe debug indeling (onversleuteld)</string>
-    <string name="metadata_format_other">Onbekende export indeling</string>
-    <string name="prefdecrypt_settings_tampered">Geknoeid met instellingenbestand</string>
-    <string name="prefdecrypt_settings_secure">Instellingenbestand is veilig</string>
-    <string name="prefdecrypt_settings_unencrypted">Gebruikt niet veilige, niet-versleutelde indeling voor instellingen</string>
-    <string name="prefdecrypt_wrong_json">JSON-indelingsfout, vereist veld ontbreekt (indeling, inhoud, metagegevens of beveiliging)</string>
-    <string name="prefdecrypt_wrong_password">Decryptie fout, het opgegeven wachtwoord kan het bestand niet ontsleutelen</string>
-    <string name="prefdecrypt_issue_missing_file_hash">Bestand checksum (hash) ontbreekt, kan de authenticiteit van instellingen niet controleren!</string>
-    <string name="prefdecrypt_issue_modified">Bestand is gewijzigd na export!</string>
-    <string name="prefdecrypt_issue_parsing">Decoderingsfout, uitlezen van instellingen is mislukt!</string>
-    <string name="prefdecrypt_issue_wrong_pass">Decoderingsfout, het opgegeven wachtwoord is ongeldig of het instellingenbestand is gewijzigd / mee geknoeid. Wellicht was het geïmporteerde bestand geëxporteerd met een ander masterwachtwoord.</string>
-    <string name="prefdecrypt_issue_wrong_format">Ontbrekende versleutelingsconfiguratie, instellingen indeling is ongeldig!</string>
-    <string name="prefdecrypt_issue_wrong_algorithm">Niet-ondersteund of niet opgegeven versleutelingsalgoritme!</string>
-    <string name="exported_ago" comment="at placeholder we add pluralized number of hours/minutes">%1$s geleden geëxporteerd</string>
-    <string name="exported_at" comment="at placeholder we add export date">geëxporteerd op %1$s</string>
-    <string name="exported_less_than_hour_ago">minder dan een uur geleden geëxporteerd</string>
-    <string name="in_directory" comment="placeholder is for exported file path">in map: %1$s</string>
     <string name="end_user_license_agreement">Eind gebruiker overeenkomst</string>
     <string name="end_user_license_agreement_text">MUST NOT BE USED TO MAKE MEDICAL DECISIONS. THERE IS NO WARRANTY FOR THE PROGRAM, TO THE EXTENT PERMITTED BY APPLICABLE LAW. EXCEPT WHEN OTHERWISE STATED IN WRITING THE COPYRIGHT HOLDERS AND/OR OTHER PARTIES PROVIDE THE PROGRAM “AS IS” WITHOUT WARRANTY OF ANY KIND, EITHER EXPRESSED OR IMPLIED, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE. THE ENTIRE RISK AS TO THE QUALITY AND PERFORMANCE OF THE PROGRAM IS WITH YOU. SHOULD THE PROGRAM PROVE DEFECTIVE, YOU ASSUME THE COST OF ALL NECESSARY SERVICING, REPAIR OR CORRECTION.</string>
     <string name="end_user_license_agreement_i_understand">Begrepen en goedgekeurd</string>
@@ -530,7 +495,6 @@
     <string name="activity_target">Activiteit streefdoel</string>
     <string name="hypo_duration">Hypo tijdsduur</string>
     <string name="hypo_target">Hypo streefdoel</string>
-    <string name="reuse">Herbruik</string>
     <string name="wearcontrol_title">Bedieningen via horloge</string>
     <string name="wearcontrol_summary">Stel tijdelijke doelen en bolussen in vanop je horloge.</string>
     <string name="food">Voeding</string>
@@ -629,7 +593,6 @@
     <string name="enablesmbwithhightemptarget">Gebruik SMB met een hoog tijdelijk streefdoel</string>
     <string name="enablesmbwithhightemptarget_summary">Schakel SMB in wanneer er een hoog tijdelijk doel actief is (uitvoeren boven 100 mg/dl of 5,5 mmol/l)</string>
     <string name="overview_insulin_label">Insuline</string>
-    <string name="overview_carbs_label">Koolhydraten</string>
     <string name="overview_buttons_selection">Knoppen</string>
     <string name="show_calibration_button_summary">Stuurt een kalibratie naar xDrip+ of opent het G5 calibratie venster</string>
     <string name="show_cgm_button_summary">Opent xDrip+, terug knop voor terug naar AAPS te gaan</string>
@@ -813,7 +776,6 @@
     <string name="nav_logsettings">Log instellingen</string>
     <string name="resettodefaults">Terug naar standaardinstellingen</string>
     <string name="nsmalfunction">NSClient werkt niet goed. Overweg een herstart van NS en NSClient.</string>
-    <string name="versionavailable">Versie %1$s is beschikbaar</string>
     <string name="time_offset">Tijdverschuiving</string>
     <string name="setupwizard_preferred_aps_mode">Voorkeur APS-modus</string>
     <string name="treatments_wizard_total_label">Totaal</string>
@@ -970,8 +932,6 @@
     <string name="copy_short">COPY</string>
     <string name="addnew">Voeg nieuwe toe</string>
     <string name="versionChecker">Versie Checker</string>
-    <string name="signature_verifier">Handtekening controle</string>
-    <string name="running_invalid_version">We hebben gedetecteerd dat je een ongeldige versie gebruikt. Loop is uitgeschakeld!</string>
     <string name="old_version">oude versie</string>
     <string name="very_old_version">zeer oude versie</string>
     <string name="new_version_warning">Nieuwe versie al zeker %1$d dagen beschikbaar! Terugval LGS na %2$d dagen, loop zal worden uitgeschakeld na %3$d dagen</string>

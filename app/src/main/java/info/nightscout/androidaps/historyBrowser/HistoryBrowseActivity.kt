@@ -13,6 +13,7 @@ import com.jjoe64.graphview.GraphView
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.activities.NoSplashAppCompatActivity
+import info.nightscout.androidaps.databinding.ActivityHistorybrowseBinding
 import info.nightscout.androidaps.events.EventCustomCalculationFinished
 import info.nightscout.androidaps.events.EventRefreshOverview
 import info.nightscout.androidaps.interfaces.ActivePluginProvider
@@ -31,12 +32,10 @@ import info.nightscout.androidaps.utils.FabricPrivacy
 import info.nightscout.androidaps.utils.T
 import info.nightscout.androidaps.utils.buildHelper.BuildHelper
 import info.nightscout.androidaps.utils.extensions.toVisibility
-import info.nightscout.androidaps.utils.resources.ResourceHelper
 import info.nightscout.androidaps.utils.sharedPreferences.SP
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
-import kotlinx.android.synthetic.main.activity_historybrowse.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -49,7 +48,6 @@ class HistoryBrowseActivity : NoSplashAppCompatActivity() {
     @Inject lateinit var aapsLogger: AAPSLogger
     @Inject lateinit var rxBus: RxBusWrapper
     @Inject lateinit var sp: SP
-    @Inject lateinit var resourceHelper: ResourceHelper
     @Inject lateinit var profileFunction: ProfileFunction
     @Inject lateinit var defaultValueHelper: DefaultValueHelper
     @Inject lateinit var iobCobCalculatorPluginHistory: IobCobCalculatorPluginHistory
@@ -69,21 +67,27 @@ class HistoryBrowseActivity : NoSplashAppCompatActivity() {
     private var rangeToDisplay = 24 // for graph
     private var start: Long = 0
 
+    private val graphLock = Object()
+
     private var eventCustomCalculationFinished = EventCustomCalculationFinished()
+
+    private lateinit var binding: ActivityHistorybrowseBinding
+    private var destroyed = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_historybrowse)
+        binding = ActivityHistorybrowseBinding.inflate(layoutInflater)
+        setContentView(binding.root)
 
-        historybrowse_left.setOnClickListener {
+        binding.left.setOnClickListener {
             start -= T.hours(rangeToDisplay.toLong()).msecs()
             runCalculation("onClickLeft")
         }
-        historybrowse_right.setOnClickListener {
+        binding.right.setOnClickListener {
             start += T.hours(rangeToDisplay.toLong()).msecs()
             runCalculation("onClickRight")
         }
-        historybrowse_end.setOnClickListener {
+        binding.end.setOnClickListener {
             val calendar = Calendar.getInstance()
             calendar.timeInMillis = System.currentTimeMillis()
             calendar[Calendar.MILLISECOND] = 0
@@ -93,12 +97,12 @@ class HistoryBrowseActivity : NoSplashAppCompatActivity() {
             start = calendar.timeInMillis
             runCalculation("onClickEnd")
         }
-        historybrowse_zoom.setOnClickListener {
+        binding.zoom.setOnClickListener {
             rangeToDisplay += 6
             rangeToDisplay = if (rangeToDisplay > 24) 6 else rangeToDisplay
             updateGUI("rangeChange", false)
         }
-        historybrowse_zoom.setOnLongClickListener {
+        binding.zoom.setOnLongClickListener {
             val calendar = Calendar.getInstance()
             calendar.timeInMillis = start
             calendar[Calendar.MILLISECOND] = 0
@@ -122,11 +126,11 @@ class HistoryBrowseActivity : NoSplashAppCompatActivity() {
             cal[Calendar.MINUTE] = 0
             cal[Calendar.HOUR_OF_DAY] = 0
             start = cal.timeInMillis
-            historybrowse_date?.text = dateUtil.dateAndTimeString(start)
+            binding.date.text = dateUtil.dateAndTimeString(start)
             runCalculation("onClickDate")
         }
 
-        historybrowse_date.setOnClickListener {
+        binding.date.setOnClickListener {
             val cal = Calendar.getInstance()
             cal.timeInMillis = start
             DatePickerDialog(this, dateSetListener,
@@ -140,11 +144,11 @@ class HistoryBrowseActivity : NoSplashAppCompatActivity() {
         windowManager?.defaultDisplay?.getMetrics(dm)
 
         axisWidth = if (dm.densityDpi <= 120) 3 else if (dm.densityDpi <= 160) 10 else if (dm.densityDpi <= 320) 35 else if (dm.densityDpi <= 420) 50 else if (dm.densityDpi <= 560) 70 else 80
-        historybrowse_bggraph?.gridLabelRenderer?.gridColor = resourceHelper.gc(R.color.graphgrid)
-        historybrowse_bggraph?.gridLabelRenderer?.reloadStyles()
-        historybrowse_bggraph?.gridLabelRenderer?.labelVerticalWidth = axisWidth
+        binding.bggraph.gridLabelRenderer?.gridColor = resourceHelper.gc(R.color.graphgrid)
+        binding.bggraph.gridLabelRenderer?.reloadStyles()
+        binding.bggraph.gridLabelRenderer?.labelVerticalWidth = axisWidth
 
-        overviewMenus.setupChartMenu(overview_chartMenuButton)
+        overviewMenus.setupChartMenu(binding.overviewChartMenuButton)
         prepareGraphsIfNeeded(overviewMenus.setting.size)
         savedInstanceState?.let { bundle ->
             rangeToDisplay = bundle.getInt("rangeToDisplay", 0)
@@ -157,6 +161,12 @@ class HistoryBrowseActivity : NoSplashAppCompatActivity() {
         super.onPause()
         disposable.clear()
         iobCobCalculatorPluginHistory.stopCalculation("onPause")
+    }
+
+    @Synchronized
+    override fun onDestroy() {
+        destroyed = true
+        super.onDestroy()
     }
 
     public override fun onResume() {
@@ -184,7 +194,7 @@ class HistoryBrowseActivity : NoSplashAppCompatActivity() {
         disposable.add(rxBus
             .toObservable(EventIobCalculationProgress::class.java)
             .observeOn(AndroidSchedulers.mainThread())
-            .subscribe({ overview_iobcalculationprogess?.text = it.progress }, fabricPrivacy::logException)
+            .subscribe({ binding.overviewIobcalculationprogess.text = it.progress }, fabricPrivacy::logException)
         )
         disposable.add(rxBus
             .toObservable(EventRefreshOverview::class.java)
@@ -218,40 +228,40 @@ class HistoryBrowseActivity : NoSplashAppCompatActivity() {
     }
 
     private fun prepareGraphsIfNeeded(numOfGraphs: Int) {
+        synchronized(graphLock) {
+            if (numOfGraphs != secondaryGraphs.size - 1) {
+                //aapsLogger.debug("New secondary graph count ${numOfGraphs-1}")
+                // rebuild needed
+                secondaryGraphs.clear()
+                secondaryGraphsLabel.clear()
+                binding.iobGraph.removeAllViews()
+                for (i in 1 until numOfGraphs) {
+                    val relativeLayout = RelativeLayout(this)
+                    relativeLayout.layoutParams = RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT)
 
-        if (numOfGraphs != secondaryGraphs.size - 1) {
-            //aapsLogger.debug("New secondary graph count ${numOfGraphs-1}")
-            // rebuild needed
-            secondaryGraphs.clear()
-            secondaryGraphsLabel.clear()
-            history_iobgraph.removeAllViews()
-            for (i in 1 until numOfGraphs) {
-                val relativeLayout = RelativeLayout(this)
-                relativeLayout.layoutParams = RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT)
+                    val graph = GraphView(this)
+                    graph.layoutParams = LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, resourceHelper.dpToPx(100)).also { it.setMargins(0, resourceHelper.dpToPx(15), 0, resourceHelper.dpToPx(10)) }
+                    graph.gridLabelRenderer?.gridColor = resourceHelper.gc(R.color.graphgrid)
+                    graph.gridLabelRenderer?.reloadStyles()
+                    graph.gridLabelRenderer?.isHorizontalLabelsVisible = false
+                    graph.gridLabelRenderer?.labelVerticalWidth = axisWidth
+                    graph.gridLabelRenderer?.numVerticalLabels = 3
+                    graph.viewport.backgroundColor = Color.argb(20, 255, 255, 255) // 8% of gray
+                    relativeLayout.addView(graph)
 
-                val graph = GraphView(this)
-                graph.layoutParams = LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, resourceHelper.dpToPx(100)).also { it.setMargins(0, resourceHelper.dpToPx(15), 0, resourceHelper.dpToPx(10)) }
-                graph.gridLabelRenderer?.gridColor = resourceHelper.gc(R.color.graphgrid)
-                graph.gridLabelRenderer?.reloadStyles()
-                graph.gridLabelRenderer?.isHorizontalLabelsVisible = false
-                graph.gridLabelRenderer?.labelVerticalWidth = axisWidth
-                graph.gridLabelRenderer?.numVerticalLabels = 3
-                graph.viewport.backgroundColor = Color.argb(20, 255, 255, 255) // 8% of gray
-                relativeLayout.addView(graph)
+                    val label = TextView(this)
+                    val layoutParams = RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT).also { it.setMargins(resourceHelper.dpToPx(30), resourceHelper.dpToPx(25), 0, 0) }
+                    layoutParams.addRule(RelativeLayout.ALIGN_PARENT_TOP)
+                    layoutParams.addRule(RelativeLayout.ALIGN_PARENT_LEFT)
+                    label.layoutParams = layoutParams
+                    relativeLayout.addView(label)
+                    secondaryGraphsLabel.add(label)
 
-                val label = TextView(this)
-                val layoutParams = RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT).also { it.setMargins(resourceHelper.dpToPx(30), resourceHelper.dpToPx(25), 0, 0) }
-                layoutParams.addRule(RelativeLayout.ALIGN_PARENT_TOP)
-                layoutParams.addRule(RelativeLayout.ALIGN_PARENT_LEFT)
-                label.layoutParams = layoutParams
-                relativeLayout.addView(label)
-                secondaryGraphsLabel.add(label)
-
-                history_iobgraph.addView(relativeLayout)
-                secondaryGraphs.add(graph)
+                    binding.iobGraph.addView(relativeLayout)
+                    secondaryGraphs.add(graph)
+                }
             }
         }
-
     }
 
     private fun runCalculation(from: String) {
@@ -264,6 +274,7 @@ class HistoryBrowseActivity : NoSplashAppCompatActivity() {
         }
     }
 
+    @Synchronized
     fun updateGUI(from: String, bgOnly: Boolean) {
         val menuChartSettings = overviewMenus.setting
         prepareGraphsIfNeeded(menuChartSettings.size)
@@ -275,13 +286,13 @@ class HistoryBrowseActivity : NoSplashAppCompatActivity() {
         val highLine = defaultValueHelper.determineHighLine()
 
         lifecycleScope.launch(Dispatchers.Main) {
-            historybrowse_noprofile?.visibility = (profile == null).toVisibility()
+            binding.noprofile.visibility = (profile == null).toVisibility()
             profile ?: return@launch
 
-            historybrowse_bggraph ?: return@launch
-            historybrowse_date?.text = dateUtil.dateAndTimeString(start)
-            historybrowse_zoom?.text = rangeToDisplay.toString()
-            val graphData = GraphData(injector, historybrowse_bggraph, iobCobCalculatorPluginHistory, treatmentsPluginHistory)
+            if (destroyed) return@launch
+            binding.date.text = dateUtil.dateAndTimeString(start)
+            binding.zoom.text = rangeToDisplay.toString()
+            val graphData = GraphData(injector, binding.bggraph, iobCobCalculatorPluginHistory, treatmentsPluginHistory)
             val secondaryGraphsData: ArrayList<GraphData> = ArrayList()
 
             // do preparation in different thread
@@ -297,8 +308,6 @@ class HistoryBrowseActivity : NoSplashAppCompatActivity() {
                 // **** BG ****
                 graphData.addBgReadings(fromTime, toTime, lowLine, highLine, null)
 
-                // set manual x bounds to have nice steps
-                graphData.formatAxis(fromTime, toTime)
 
                 // add target line
                 graphData.addTargetLine(fromTime, toTime, profile, null)
@@ -317,55 +326,63 @@ class HistoryBrowseActivity : NoSplashAppCompatActivity() {
                         graphData.addBasals(fromTime, toTime, lowLine / graphData.maxY / 1.2)
                     }
                     // ------------------ 2nd graph
-                    for (g in 0 until secondaryGraphs.size) {
-                        val secondGraphData = GraphData(injector, secondaryGraphs[g], iobCobCalculatorPluginHistory, treatmentsPluginHistory)
-                        var useIobForScale = false
-                        var useCobForScale = false
-                        var useDevForScale = false
-                        var useRatioForScale = false
-                        var useDSForScale = false
-                        var useIAForScale = false
-                        var useABSForScale = false
-                        when {
-                            menuChartSettings[g + 1][OverviewMenus.CharType.IOB.ordinal]      -> useIobForScale = true
-                            menuChartSettings[g + 1][OverviewMenus.CharType.COB.ordinal]      -> useCobForScale = true
-                            menuChartSettings[g + 1][OverviewMenus.CharType.DEV.ordinal]      -> useDevForScale = true
-                            menuChartSettings[g + 1][OverviewMenus.CharType.SEN.ordinal]      -> useRatioForScale = true
-                            menuChartSettings[g + 1][OverviewMenus.CharType.ACT.ordinal]      -> useIAForScale = true
-                            menuChartSettings[g + 1][OverviewMenus.CharType.ABS.ordinal]      -> useABSForScale = true
-                            menuChartSettings[g + 1][OverviewMenus.CharType.DEVSLOPE.ordinal] -> useDSForScale = true
+                    synchronized(graphLock) {
+                        for (g in 0 until secondaryGraphs.size) {
+                            val secondGraphData = GraphData(injector, secondaryGraphs[g], iobCobCalculatorPluginHistory, treatmentsPluginHistory)
+                            var useIobForScale = false
+                            var useCobForScale = false
+                            var useDevForScale = false
+                            var useRatioForScale = false
+                            var useDSForScale = false
+                            var useIAForScale = false
+                            var useABSForScale = false
+                            when {
+                                menuChartSettings[g + 1][OverviewMenus.CharType.IOB.ordinal]      -> useIobForScale = true
+                                menuChartSettings[g + 1][OverviewMenus.CharType.COB.ordinal]      -> useCobForScale = true
+                                menuChartSettings[g + 1][OverviewMenus.CharType.DEV.ordinal]      -> useDevForScale = true
+                                menuChartSettings[g + 1][OverviewMenus.CharType.SEN.ordinal]      -> useRatioForScale = true
+                                menuChartSettings[g + 1][OverviewMenus.CharType.ACT.ordinal]      -> useIAForScale = true
+                                menuChartSettings[g + 1][OverviewMenus.CharType.ABS.ordinal]      -> useABSForScale = true
+                                menuChartSettings[g + 1][OverviewMenus.CharType.DEVSLOPE.ordinal] -> useDSForScale = true
+                            }
+
+                            if (menuChartSettings[g + 1][OverviewMenus.CharType.IOB.ordinal]) secondGraphData.addIob(fromTime, toTime, useIobForScale, 1.0, menuChartSettings[g + 1][OverviewMenus.CharType.PRE.ordinal])
+                            if (menuChartSettings[g + 1][OverviewMenus.CharType.COB.ordinal]) secondGraphData.addCob(fromTime, toTime, useCobForScale, if (useCobForScale) 1.0 else 0.5)
+                            if (menuChartSettings[g + 1][OverviewMenus.CharType.DEV.ordinal]) secondGraphData.addDeviations(fromTime, toTime, useDevForScale, 1.0)
+                            if (menuChartSettings[g + 1][OverviewMenus.CharType.SEN.ordinal]) secondGraphData.addRatio(fromTime, toTime, useRatioForScale, 1.0)
+                            if (menuChartSettings[g + 1][OverviewMenus.CharType.ACT.ordinal]) secondGraphData.addActivity(fromTime, toTime, useIAForScale, 0.8)
+                            if (menuChartSettings[g + 1][OverviewMenus.CharType.ABS.ordinal]) secondGraphData.addAbsIob(fromTime, toTime, useABSForScale, 1.0)
+                            if (menuChartSettings[g + 1][OverviewMenus.CharType.DEVSLOPE.ordinal] && buildHelper.isDev()) secondGraphData.addDeviationSlope(fromTime, toTime, useDSForScale, 1.0)
+
+                            // set manual x bounds to have nice steps
+                            secondGraphData.formatAxis(fromTime, toTime)
+                            secondGraphData.addNowLine(pointer)
+                            secondaryGraphsData.add(secondGraphData)
                         }
-
-                        if (menuChartSettings[g + 1][OverviewMenus.CharType.IOB.ordinal]) secondGraphData.addIob(fromTime, toTime, useIobForScale, 1.0, menuChartSettings[g + 1][OverviewMenus.CharType.PRE.ordinal])
-                        if (menuChartSettings[g + 1][OverviewMenus.CharType.COB.ordinal]) secondGraphData.addCob(fromTime, toTime, useCobForScale, if (useCobForScale) 1.0 else 0.5)
-                        if (menuChartSettings[g + 1][OverviewMenus.CharType.DEV.ordinal]) secondGraphData.addDeviations(fromTime, toTime, useDevForScale, 1.0)
-                        if (menuChartSettings[g + 1][OverviewMenus.CharType.SEN.ordinal]) secondGraphData.addRatio(fromTime, toTime, useRatioForScale, 1.0)
-                        if (menuChartSettings[g + 1][OverviewMenus.CharType.ACT.ordinal]) secondGraphData.addActivity(fromTime, toTime, useIAForScale, 0.8)
-                        if (menuChartSettings[g + 1][OverviewMenus.CharType.ABS.ordinal]) secondGraphData.addAbsIob(fromTime, toTime, useABSForScale, 1.0)
-                        if (menuChartSettings[g + 1][OverviewMenus.CharType.DEVSLOPE.ordinal] && buildHelper.isDev()) secondGraphData.addDeviationSlope(fromTime, toTime, useDSForScale, 1.0)
-
-                        // set manual x bounds to have nice steps
-                        secondGraphData.formatAxis(fromTime, toTime)
-                        secondGraphData.addNowLine(pointer)
-                        secondaryGraphsData.add(secondGraphData)
                     }
                 }
+
+                // set manual x bounds to have nice steps
+                graphData.setNumVerticalLables()
+                graphData.formatAxis(fromTime, toTime)
             }
             // finally enforce drawing of graphs in UI thread
             graphData.performUpdate()
             if (!bgOnly)
-                for (g in 0 until secondaryGraphs.size) {
-                    secondaryGraphsLabel[g].text = overviewMenus.enabledTypes(g + 1)
-                    secondaryGraphs[g].visibility = (!bgOnly && (
-                        menuChartSettings[g + 1][OverviewMenus.CharType.IOB.ordinal] ||
-                            menuChartSettings[g + 1][OverviewMenus.CharType.COB.ordinal] ||
-                            menuChartSettings[g + 1][OverviewMenus.CharType.DEV.ordinal] ||
-                            menuChartSettings[g + 1][OverviewMenus.CharType.SEN.ordinal] ||
-                            menuChartSettings[g + 1][OverviewMenus.CharType.ACT.ordinal] ||
-                            menuChartSettings[g + 1][OverviewMenus.CharType.ABS.ordinal] ||
-                            menuChartSettings[g + 1][OverviewMenus.CharType.DEVSLOPE.ordinal]
-                        )).toVisibility()
-                    secondaryGraphsData[g].performUpdate()
+                synchronized(graphLock) {
+                    for (g in 0 until secondaryGraphs.size) {
+                        secondaryGraphsLabel[g].text = overviewMenus.enabledTypes(g + 1)
+                        secondaryGraphs[g].visibility = (!bgOnly && (
+                            menuChartSettings[g + 1][OverviewMenus.CharType.IOB.ordinal] ||
+                                menuChartSettings[g + 1][OverviewMenus.CharType.COB.ordinal] ||
+                                menuChartSettings[g + 1][OverviewMenus.CharType.DEV.ordinal] ||
+                                menuChartSettings[g + 1][OverviewMenus.CharType.SEN.ordinal] ||
+                                menuChartSettings[g + 1][OverviewMenus.CharType.ACT.ordinal] ||
+                                menuChartSettings[g + 1][OverviewMenus.CharType.ABS.ordinal] ||
+                                menuChartSettings[g + 1][OverviewMenus.CharType.DEVSLOPE.ordinal]
+                            )).toVisibility()
+                        secondaryGraphsData[g].performUpdate()
+                    }
                 }
         }
     }

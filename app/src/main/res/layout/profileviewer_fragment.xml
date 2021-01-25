@@ -10,7 +10,7 @@
         android:orientation="vertical">
 
         <TextView
-            android:id="@+id/profileview_invalidprofile"
+            android:id="@+id/invalidprofile"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center_horizontal"
@@ -21,7 +21,7 @@
             android:visibility="gone" />
 
         <TextView
-            android:id="@+id/profileview_noprofile"
+            android:id="@+id/noprofile"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center_horizontal"
@@ -48,20 +48,20 @@
             <TextView
                 android:layout_width="5dp"
                 android:layout_height="wrap_content"
-                android:layout_weight="0"
-                android:gravity="center_horizontal"
                 android:layout_marginStart="2dp"
                 android:layout_marginEnd="2dp"
+                android:layout_weight="0"
+                android:gravity="center_horizontal"
                 android:text=":"
                 android:textSize="14sp" />
 
             <TextView
-                android:id="@+id/profileview_activeprofile"
+                android:id="@+id/activeprofile"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginStart="5dp"
                 android:layout_weight="1"
                 android:gravity="start"
-                android:layout_marginStart="5dp"
                 android:textColor="@android:color/white"
                 android:textSize="14sp" />
 
@@ -78,7 +78,7 @@
             android:visibility="gone" />
 
         <LinearLayout
-            android:id="@+id/profileview_datelayout"
+            android:id="@+id/datelayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
@@ -87,29 +87,29 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginEnd="5dp"
                 android:layout_weight="2"
                 android:gravity="end"
-                android:layout_marginEnd="5dp"
                 android:text="@string/date"
                 android:textSize="14sp" />
 
             <TextView
                 android:layout_width="5dp"
                 android:layout_height="wrap_content"
-                android:layout_weight="0"
-                android:gravity="center_horizontal"
                 android:layout_marginStart="2dp"
                 android:layout_marginEnd="2dp"
+                android:layout_weight="0"
+                android:gravity="center_horizontal"
                 android:text=":"
                 android:textSize="14sp" />
 
             <TextView
-                android:id="@+id/profileview_date"
+                android:id="@+id/date"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginStart="5dp"
                 android:layout_weight="1"
                 android:gravity="start"
-                android:layout_marginStart="5dp"
                 android:textColor="@android:color/white"
                 android:textSize="14sp" />
 
@@ -132,29 +132,29 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginEnd="5dp"
                 android:layout_weight="2"
                 android:gravity="end"
-                android:layout_marginEnd="5dp"
                 android:text="@string/units_label"
                 android:textSize="14sp" />
 
             <TextView
                 android:layout_width="5dp"
                 android:layout_height="wrap_content"
-                android:layout_weight="0"
-                android:gravity="center_horizontal"
                 android:layout_marginStart="2dp"
                 android:layout_marginEnd="2dp"
+                android:layout_weight="0"
+                android:gravity="center_horizontal"
                 android:text=":"
                 android:textSize="14sp" />
 
             <TextView
-                android:id="@+id/profileview_units"
+                android:id="@+id/units"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginStart="5dp"
                 android:layout_weight="1"
                 android:gravity="start"
-                android:layout_marginStart="5dp"
                 android:textColor="@android:color/white"
                 android:textSize="14sp" />
 
@@ -177,29 +177,29 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginEnd="5dp"
                 android:layout_weight="2"
                 android:gravity="end"
-                android:layout_marginEnd="5dp"
                 android:text="@string/dia_label"
                 android:textSize="14sp" />
 
             <TextView
                 android:layout_width="5dp"
                 android:layout_height="wrap_content"
-                android:layout_weight="0"
-                android:gravity="center_horizontal"
                 android:layout_marginStart="2dp"
                 android:layout_marginEnd="2dp"
+                android:layout_weight="0"
+                android:gravity="center_horizontal"
                 android:text=":"
                 android:textSize="14sp" />
 
             <TextView
-                android:id="@+id/profileview_dia"
+                android:id="@+id/dia"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginStart="5dp"
                 android:layout_weight="1"
                 android:gravity="start"
-                android:layout_marginStart="5dp"
                 android:textColor="@android:color/white"
                 android:textSize="14sp" />
 
@@ -222,29 +222,29 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginEnd="5dp"
                 android:layout_weight="2"
                 android:gravity="end"
-                android:layout_marginEnd="5dp"
                 android:text="@string/ic_label"
                 android:textSize="14sp" />
 
             <TextView
                 android:layout_width="5dp"
                 android:layout_height="wrap_content"
-                android:layout_weight="0"
-                android:gravity="center_horizontal"
                 android:layout_marginStart="2dp"
                 android:layout_marginEnd="2dp"
+                android:layout_weight="0"
+                android:gravity="center_horizontal"
                 android:text=":"
                 android:textSize="14sp" />
 
             <TextView
-                android:id="@+id/profileview_ic"
+                android:id="@+id/ic"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginStart="5dp"
                 android:layout_weight="1"
                 android:gravity="start"
-                android:layout_marginStart="5dp"
                 android:textColor="@android:color/white"
                 android:textSize="14sp" />
 
@@ -267,29 +267,29 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginEnd="5dp"
                 android:layout_weight="2"
                 android:gravity="end"
-                android:layout_marginEnd="5dp"
                 android:text="@string/isf_label"
                 android:textSize="14sp" />
 
             <TextView
                 android:layout_width="5dp"
                 android:layout_height="wrap_content"
-                android:layout_weight="0"
-                android:gravity="center_horizontal"
                 android:layout_marginStart="2dp"
                 android:layout_marginEnd="2dp"
+                android:layout_weight="0"
+                android:gravity="center_horizontal"
                 android:text=":"
                 android:textSize="14sp" />
 
             <TextView
-                android:id="@+id/profileview_isf"
+                android:id="@+id/isf"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginStart="5dp"
                 android:layout_weight="1"
                 android:gravity="start"
-                android:layout_marginStart="5dp"
                 android:textColor="@android:color/white"
                 android:textSize="14sp" />
 
@@ -312,29 +312,29 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginEnd="5dp"
                 android:layout_weight="2"
                 android:gravity="end"
-                android:layout_marginEnd="5dp"
                 android:text="@string/basal_label"
                 android:textSize="14sp" />
 
             <TextView
                 android:layout_width="5dp"
                 android:layout_height="wrap_content"
-                android:layout_weight="0"
-                android:gravity="center_horizontal"
                 android:layout_marginStart="2dp"
                 android:layout_marginEnd="2dp"
+                android:layout_weight="0"
+                android:gravity="center_horizontal"
                 android:text=":"
                 android:textSize="14sp" />
 
             <TextView
-                android:id="@+id/profileview_basal"
+                android:id="@+id/basal"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginStart="5dp"
                 android:layout_weight="1"
                 android:gravity="start"
-                android:layout_marginStart="5dp"
                 android:textColor="@android:color/white"
                 android:textSize="14sp" />
 
@@ -348,29 +348,29 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginEnd="5dp"
                 android:layout_weight="2"
                 android:gravity="end"
-                android:layout_marginEnd="5dp"
                 android:text=""
                 android:textSize="14sp" />
 
             <TextView
                 android:layout_width="5dp"
                 android:layout_height="wrap_content"
-                android:layout_weight="0"
-                android:gravity="center_horizontal"
                 android:layout_marginStart="2dp"
                 android:layout_marginEnd="2dp"
+                android:layout_weight="0"
+                android:gravity="center_horizontal"
                 android:text=""
                 android:textSize="14sp" />
 
             <TextView
-                android:id="@+id/profileview_basaltotal"
+                android:id="@+id/basaltotal"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginStart="17dp"
                 android:layout_weight="1"
                 android:gravity="start"
-                android:layout_marginStart="17dp"
                 android:textColor="@android:color/white"
                 android:textSize="14sp" />
 
@@ -399,29 +399,29 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginEnd="5dp"
                 android:layout_weight="2"
                 android:gravity="end"
-                android:layout_marginEnd="5dp"
                 android:text="@string/target_label"
                 android:textSize="14sp" />
 
             <TextView
                 android:layout_width="5dp"
                 android:layout_height="wrap_content"
-                android:layout_weight="0"
-                android:gravity="center_horizontal"
                 android:layout_marginStart="2dp"
                 android:layout_marginEnd="2dp"
+                android:layout_weight="0"
+                android:gravity="center_horizontal"
                 android:text=":"
                 android:textSize="14sp" />
 
             <TextView
-                android:id="@+id/profileview_target"
+                android:id="@+id/target"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginStart="5dp"
                 android:layout_weight="1"
                 android:gravity="start"
-                android:layout_marginStart="5dp"
                 android:textColor="@android:color/white"
                 android:textSize="14sp" />
 
@@ -437,14 +437,16 @@
             android:background="@color/listdelimiter" />
 
         <Button
-            android:id="@+id/profileview_reload"
+            android:id="@+id/reload"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
             android:text="@string/reloadprofile"
             android:visibility="gone" />
 
-        <include layout="@layout/close" />
+        <include
+            android:id="@+id/close_layout"
+            layout="@layout/close" />
 
     </LinearLayout>
 

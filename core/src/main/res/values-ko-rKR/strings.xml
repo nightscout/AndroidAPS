@@ -27,24 +27,16 @@
     <string name="pump_operation_not_yet_supported_by_pump">펌프에서 지원되지 않는 작동.</string>
     <!-- PumoCommon - Pump Status -->
     <!-- PumpCommon - History Group -->
-    <!--    <string name="medtronic_pump_status_never_contacted">Never contacted</string>-->
-    <!--    <string name="medtronic_pump_status_waking_up">Waking up</string>-->
-    <!--    <string name="medtronic_pump_status_error_comm">Error with communication</string>-->
-    <!--    <string name="medtronic_pump_status_timeout_comm">Timeout on communication</string>-->
-    <!--    <string name="medtronic_pump_status_pump_unreachable">Pump unreachable</string>-->
-    <!--    <string name="medtronic_pump_status_invalid_config">Invalid configuration</string>-->
-    <!--    <string name="medtronic_pump_status_active">Active</string>-->
-    <!--    <string name="medtronic_pump_status_sleeping">Sleeping</string>-->
-    <!--    <string name="danar_history_alarm">Alarms</string>-->
-    <!--    <string name="danar_history_glucose">Glucose</string>-->
-    <!--    All(R.string.medtronic_history_group_all), //-->
-    <!--    Bolus(R.string.danar_history_bolus), //-->
-    <!--    Basal(R.string.medtronic_history_group_basal), //-->
-    <!--    Prime(R.string.danar_history_prime), //-->
-    <!--    Configuration(R.string.medtronic_history_group_configuration), //-->
-    <!--    Alarm(R.string.danar_history_alarm), //-->
-    <!--    Glucose(R.string.danar_history_glucose), //-->
-    <!--    Notification(R.string.medtronic_history_group_notification), //-->
-    <!--    Statistic(R.string.medtronic_history_group_statistic),-->
-    <!--    Unknown(R.string.medtronic_history_group_unknown), //-->
+    <!-- Maintenance -->
+    <string name="preferences_import_list_title">가져올 파일을 선택하세요.</string>
+    <string name="metadata_warning_different_flavour">환경설정은 AAPS (%1$s) 와는 다르게 생성되기 때문에 불러오는 도중 일부 설정이 누락되거나 설정이 되지 않을 수 있습니다. - 가져오기를 수행한 후 설정을 확인하고 업데이트 해주시기 바랍니다.</string>
+    <string name="metadata_warning_different_device">환경설정은 다른 기기에서 설정되었습니다. 다른 혹은 전에 쓰던 기기에서 환경설정을 가져오는 건 괜찮지만 가져온 후 환경설정이 올바르게 설정되었는지 확인해주시기 바랍니다.</string>
+    <string name="metadata_warning_outdated_format">이전 버전의 AAPS에서 사용하는 구식 legacy 포멧은 안전하지 않습니다. 최근에 내보내기한 설정이 없는 경우에만 최후의 수단으로 JSONㅠ포멧을 사용해주시기 바랍니다.</string>
+    <string name="metadata_warning_old_export">가져온 환경설정은 이미 %1$s일이 지났습니다. 최신의 환경설정으로 업데이트된 파일이 있거나 잘못된 파일을 선택하셨을 수도 있습니다. 환경설정을 정기적으로 내보주시기 바랍니다.</string>
+    <string name="metadata_warning_date_format">잘못된 날짜 형식입니다.</string>
+    <!-- VersionChecker -->
+    <string name="signature_verifier">서명 확인</string>
+    <string name="running_invalid_version">유효하지 않은 버전을 이용 중입니다. Loop가 비활성화 되었습니다!</string>
+    <string name="versionavailable">%1$s 버전이 사용 가능합니다.</string>
+    <!-- Permissions -->
 </resources>

@@ -6,6 +6,7 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.FirebaseDatabase
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.data.defaultProfile.DefaultProfile
+import info.nightscout.androidaps.databinding.ActivitySurveyBinding
 import info.nightscout.androidaps.dialogs.ProfileViewerDialog
 import info.nightscout.androidaps.interfaces.ActivePluginProvider
 import info.nightscout.androidaps.interfaces.ProfileFunction
@@ -16,15 +17,13 @@ import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.InstanceId
 import info.nightscout.androidaps.utils.SafeParse
 import info.nightscout.androidaps.utils.ToastUtils
-import info.nightscout.androidaps.utils.resources.ResourceHelper
 import info.nightscout.androidaps.utils.stats.TddCalculator
 import info.nightscout.androidaps.utils.stats.TirCalculator
-import kotlinx.android.synthetic.main.activity_survey.*
 import javax.inject.Inject
 
 class SurveyActivity : NoSplashAppCompatActivity() {
+
     @Inject lateinit var aapsLogger: AAPSLogger
-    @Inject lateinit var resourceHelper: ResourceHelper
     @Inject lateinit var activePlugin: ActivePluginProvider
     @Inject lateinit var tddCalculator: TddCalculator
     @Inject lateinit var tirCalculator: TirCalculator
@@ -32,24 +31,27 @@ class SurveyActivity : NoSplashAppCompatActivity() {
     @Inject lateinit var activityMonitor: ActivityMonitor
     @Inject lateinit var defaultProfile: DefaultProfile
 
+    private lateinit var binding: ActivitySurveyBinding
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_survey)
+        binding = ActivitySurveyBinding.inflate(layoutInflater)
+        setContentView(binding.root)
 
-        survey_id.text = InstanceId.instanceId()
+        binding.id.text = InstanceId.instanceId()
 
         val profileStore = activePlugin.activeProfileInterface.profile
         val profileList = profileStore?.getProfileList() ?: return
-        survey_spinner.adapter = ArrayAdapter(this, R.layout.spinner_centered, profileList)
+        binding.spinner.adapter = ArrayAdapter(this, R.layout.spinner_centered, profileList)
 
-        survey_tdds.text = tddCalculator.stats()
-        survey_tir.text = tirCalculator.stats()
-        survey_activity.text = activityMonitor.stats()
+        binding.tdds.text = tddCalculator.stats()
+        binding.tir.text = tirCalculator.stats()
+        binding.activity.text = activityMonitor.stats()
 
-        survey_profile.setOnClickListener {
-            val age = SafeParse.stringToDouble(survey_age.text.toString())
-            val weight = SafeParse.stringToDouble(survey_weight.text.toString())
-            val tdd = SafeParse.stringToDouble(survey_tdd.text.toString())
+        binding.profile.setOnClickListener {
+            val age = SafeParse.stringToDouble(binding.age.text.toString())
+            val weight = SafeParse.stringToDouble(binding.weight.text.toString())
+            val tdd = SafeParse.stringToDouble(binding.tdd.text.toString())
             if (age < 1 || age > 120) {
                 ToastUtils.showToastInUiThread(this, R.string.invalidage)
                 return@setOnClickListener
@@ -78,11 +80,11 @@ class SurveyActivity : NoSplashAppCompatActivity() {
             }
         }
 
-        survey_submit.setOnClickListener {
+        binding.submit.setOnClickListener {
             val r = FirebaseRecord()
             r.id = InstanceId.instanceId()
-            r.age = SafeParse.stringToInt(survey_age.text.toString())
-            r.weight = SafeParse.stringToInt(survey_weight.text.toString())
+            r.age = SafeParse.stringToInt(binding.age.text.toString())
+            r.weight = SafeParse.stringToInt(binding.weight.text.toString())
             if (r.age < 1 || r.age > 120) {
                 ToastUtils.showToastInUiThread(this, R.string.invalidage)
                 return@setOnClickListener
@@ -92,9 +94,9 @@ class SurveyActivity : NoSplashAppCompatActivity() {
                 return@setOnClickListener
             }
 
-            if (survey_spinner.selectedItem == null)
+            if (binding.spinner.selectedItem == null)
                 return@setOnClickListener
-            val profileName = survey_spinner.selectedItem.toString()
+            val profileName = binding.spinner.selectedItem.toString()
             val specificProfile = profileStore.getSpecificProfile(profileName)
 
             r.profileJson = specificProfile.toString()
@@ -121,6 +123,7 @@ class SurveyActivity : NoSplashAppCompatActivity() {
     }
 
     inner class FirebaseRecord {
+
         var id = ""
         var age: Int = 0
         var weight: Int = 0

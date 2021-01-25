@@ -846,11 +846,14 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
                     graphData.addBgReadings(fromTime, toTime, lowLine, highLine, apsResult?.predictions)
                 else graphData.addBgReadings(fromTime, toTime, lowLine, highLine, null)
 
-                // set manual x bounds to have nice steps
-                graphData.formatAxis(fromTime, endTime)
-
                 // Treatments
                 graphData.addTreatments(fromTime, endTime)
+
+                // set manual x bounds to have nice steps
+                graphData.setNumVerticalLables()
+                graphData.formatAxis(fromTime, endTime)
+
+
                 if (menuChartSettings[0][OverviewMenus.CharType.ACT.ordinal])
                     graphData.addActivity(fromTime, endTime, false, 0.8)
 

@@ -23,14 +23,14 @@
             android:padding="5dp">
 
             <ImageView
-                android:id="@+id/actions_care_icon"
+                android:id="@+id/icon"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:contentDescription="@string/careportal_profileswitch"
                 app:srcCompat="@drawable/ic_actions_profileswitch" />
 
             <TextView
-                android:id="@+id/actions_care_title"
+                android:id="@+id/title"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_centerInParent="true"
@@ -50,7 +50,7 @@
             android:padding="5dp" />
 
         <RadioGroup
-            android:id="@+id/actions_care_bgsource"
+            android:id="@+id/bgsource"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
@@ -58,21 +58,21 @@
             android:orientation="horizontal">
 
             <RadioButton
-                android:id="@+id/actions_care_meter"
+                android:id="@+id/meter"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:checked="false"
                 android:text="@string/careportal_newnstreatment_meter" />
 
             <RadioButton
-                android:id="@+id/actions_care_sensor"
+                android:id="@+id/sensor"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:checked="true"
                 android:text="@string/careportal_newnstreatment_sensor" />
 
             <RadioButton
-                android:id="@+id/actions_care_other"
+                android:id="@+id/other"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/careportal_newnstreatment_other" />
@@ -80,7 +80,7 @@
         </RadioGroup>
 
         <LinearLayout
-            android:id="@+id/action_care_bg_layout"
+            android:id="@+id/bg_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal">
@@ -96,12 +96,12 @@
                 android:textStyle="bold" />
 
             <info.nightscout.androidaps.utils.ui.NumberPicker
-                android:id="@+id/actions_care_bg"
+                android:id="@+id/bg"
                 android:layout_width="130dp"
                 android:layout_height="40dp" />
 
             <TextView
-                android:id="@+id/actions_care_bgunits"
+                android:id="@+id/bgunits"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
@@ -115,7 +115,7 @@
         </LinearLayout>
 
         <LinearLayout
-            android:id="@+id/action_care_duration_layout"
+            android:id="@+id/duration_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal">
@@ -131,7 +131,7 @@
                 android:textStyle="bold" />
 
             <info.nightscout.androidaps.utils.ui.MinutesNumberPicker
-                android:id="@+id/actions_care_duration"
+                android:id="@+id/duration"
                 android:layout_width="130dp"
                 android:layout_height="40dp" />
 
@@ -148,11 +148,17 @@
 
         </LinearLayout>
 
-        <include layout="@layout/notes" />
+        <include
+            android:id="@+id/notes_layout"
+            layout="@layout/notes" />
 
-        <include layout="@layout/datetime" />
+        <include
+            android:id="@+id/datetime"
+            layout="@layout/datetime" />
 
-        <include layout="@layout/okcancel" />
+        <include
+            android:id="@+id/okcancel"
+            layout="@layout/okcancel" />
 
     </LinearLayout>
 

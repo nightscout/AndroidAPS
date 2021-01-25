@@ -215,24 +215,63 @@
     <string name="history_group_alarm">Alarmy</string>
     <string name="history_group_glucose">Glykémia</string>
     <string name="mute5min">Stíšiť na 5 minút</string>
-    <!--    <string name="medtronic_pump_status_never_contacted">Never contacted</string>-->
-    <!--    <string name="medtronic_pump_status_waking_up">Waking up</string>-->
-    <!--    <string name="medtronic_pump_status_error_comm">Error with communication</string>-->
-    <!--    <string name="medtronic_pump_status_timeout_comm">Timeout on communication</string>-->
-    <!--    <string name="medtronic_pump_status_pump_unreachable">Pump unreachable</string>-->
-    <!--    <string name="medtronic_pump_status_invalid_config">Invalid configuration</string>-->
-    <!--    <string name="medtronic_pump_status_active">Active</string>-->
-    <!--    <string name="medtronic_pump_status_sleeping">Sleeping</string>-->
-    <!--    <string name="danar_history_alarm">Alarms</string>-->
-    <!--    <string name="danar_history_glucose">Glucose</string>-->
-    <!--    All(R.string.medtronic_history_group_all), //-->
-    <!--    Bolus(R.string.danar_history_bolus), //-->
-    <!--    Basal(R.string.medtronic_history_group_basal), //-->
-    <!--    Prime(R.string.danar_history_prime), //-->
-    <!--    Configuration(R.string.medtronic_history_group_configuration), //-->
-    <!--    Alarm(R.string.danar_history_alarm), //-->
-    <!--    Glucose(R.string.danar_history_glucose), //-->
-    <!--    Notification(R.string.medtronic_history_group_notification), //-->
-    <!--    Statistic(R.string.medtronic_history_group_statistic),-->
-    <!--    Unknown(R.string.medtronic_history_group_unknown), //-->
+    <!-- Maintenance -->
+    <string name="metadata_label_format">Formát súboru</string>
+    <string name="metadata_label_created_at">Vytvorené</string>
+    <string name="metadata_label_aaps_version">Verzia AAPS</string>
+    <string name="metadata_label_aaps_flavour">Verzia zostavy</string>
+    <string name="metadata_label_device_name">Meno pacienta použité pri exporte</string>
+    <string name="metadata_label_device_model">Model zariadenia použitý pri exporte</string>
+    <string name="metadata_label_encryption">Šifrovanie súborov</string>
+    <string name="metadata_format_old">Zastaralý formát exportu</string>
+    <string name="metadata_format_new">Nový šifrovaný formát</string>
+    <string name="metadata_format_debug">Nový formát pre ladenie (nešifrovaný)</string>
+    <string name="metadata_format_other">Neznámy formát exportu</string>
+    <string name="exported_ago" comment="at placeholder we add pluralized number of hours/minutes">exportované pred %1$s</string>
+    <string name="exported_at" comment="at placeholder we add export date">exportované v %1$s</string>
+    <string name="exported_less_than_hour_ago">exportované pred menej ako hodinou</string>
+    <string name="in_directory" comment="placeholder is for exported file path">v adresári: %1$s</string>
+    <string name="preferences_import_list_title">Vyberte súbor, ktorý chcete importovať</string>
+    <string name="metadata_warning_different_flavour">Nastavenia boli vytvorené inou verziou AAPS (%1$s) pretože máte: %2$s.\n\nNiektoré nastavenia môžu chýbať, alebo byť poškodené - po importovaní prosím skontrolujte a upravte nastavenia.</string>
+    <string name="metadata_warning_different_device">Nastavenia boli vytvorené na inom zariadení. Je to v poriadku, keď importujete zo staršieho/iného telefónu, ale skontrolujte, že importované nastavenia sú správne!</string>
+    <string name="metadata_warning_outdated_format">Používate zastaralý formát zo staršej verzie AAPS, čo nie je bezpečné! Používajte len ako poslednú možnosť, ak nemáte export v aktuálnom, JSON formáte.</string>
+    <string name="metadata_warning_old_export">Importované nastavenia sú už %1$s dní staré! Možno máte viacero novších nastavení, alebo ste zvolili nesprávny súbor? Nezabúdajte pravidelne exportovať nastavenia!</string>
+    <string name="metadata_warning_date_format">Nesprávny formát dátumu a času!</string>
+    <string name="metadata_warning_different_version">Nastavenie z odlišnej, nižšej verzie aplikácie. Je to v poriadku, pokiaľ importujete po aktualizácii, po importe však skontrolujte, či sú nastavenia stále správne!</string>
+    <string name="metadata_urgent_different_version">Nastavenia z odlišnej hlavnej verzie aplikácie. Hlavná verzia sa výrazne líši a nemusia mať kompatibilné nastavenia. Po importe skontrolujte, či sú nastavenia stále správne!</string>
+    <string name="prefdecrypt_settings_tampered">Súbor s nastaveniami poškodený</string>
+    <string name="prefdecrypt_settings_secure">Súbor s nastaveniami je zabezpečený</string>
+    <string name="prefdecrypt_settings_unencrypted">Použitie nezabezpečeného, nešifrovaného formátu nastavení</string>
+    <string name="prefdecrypt_wrong_json">Chyba formátu JSON, chýba povinné pole (formát, obsah, metadáta, alebo zabezpečenie)</string>
+    <string name="prefdecrypt_wrong_password">Chyba dešifrovania, dané heslo nemôže dešifrovať súbor</string>
+    <string name="prefdecrypt_issue_missing_file_hash">Chýba kontrolný súčet súboru (hash), nedá sa overiť pravosť nastavení!</string>
+    <string name="prefdecrypt_issue_modified">Súbor bol po exporte zmenený!</string>
+    <string name="prefdecrypt_issue_parsing">Chyba dešifrovania, analýza nastavení zlyhala!</string>
+    <string name="prefdecrypt_issue_wrong_pass">Chyba dešifrovania, zadané heslo je neplatné, alebo bol súbor nastavení zmenený! Môže sa stať, že importovaný súbor bol exportovaný s iným hlavným heslom.</string>
+    <string name="prefdecrypt_issue_wrong_format">Chýba konfigurácia šifrovania, formát nastavení je neplatný!</string>
+    <string name="prefdecrypt_issue_wrong_algorithm">Nepodporovaný alebo neurčený šifrovací algoritmus!</string>
+    <!-- VersionChecker -->
+    <string name="signature_verifier">Overenie podpisu</string>
+    <string name="running_invalid_version">Zistili sme, že používate neplatnú verziu. Uzavretý okruh zakázaný!</string>
+    <string name="versionavailable">Verzia %1$s je k dispozícii</string>
+    <!-- Permissions -->
+    <string name="alert_dialog_storage_permission_text">Prosím reštartujte Váš telefón, alebo reštartujte AndroidAPS z nastavení \nv opačnom prípade AndroidAPS nebude mocť zaznamenávať logy (dôležité kvôli sledovaniu a overovaniu, že algoritmus pracuje správne)!</string>
+    <plurals name="days">
+        <item quantity="one">%1$d deň</item>
+        <item quantity="few">%1$d dní</item>
+        <item quantity="many">%1$d dní</item>
+        <item quantity="other">%1$d dní</item>
+    </plurals>
+    <plurals name="hours">
+        <item quantity="one">%1$d hodina</item>
+        <item quantity="few">%1$d hodín</item>
+        <item quantity="many">%1$d hodín</item>
+        <item quantity="other">%1$d hodín</item>
+    </plurals>
+    <plurals name="minutes">
+        <item quantity="one">%1$d minúta</item>
+        <item quantity="few">%1$d minút</item>
+        <item quantity="many">%1$d minút</item>
+        <item quantity="other">%1$d minút</item>
+    </plurals>
 </resources>

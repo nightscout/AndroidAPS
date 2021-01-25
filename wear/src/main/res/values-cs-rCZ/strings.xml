@@ -90,6 +90,9 @@
     <string name="action_confirm">POTVRDIT</string>
     <string name="action_timeshift">posun času</string>
     <string name="action_bolus">bolus</string>
+    <string name="bolus_progress">Průběh vydávání bolusu</string>
+    <string name="press_to_cancel">stisknutím tlačítka akci zrušíte</string>
+    <string name="cancel_bolus">ZRUŠIT BOLUS</string>
     <string name="status_pump">Pumpa</string>
     <string name="status_loop">Smyčka</string>
     <string name="status_cpp">CPP</string>
@@ -129,4 +132,8 @@
     <string name="digitalstyle_pref_your_color">Vaše barva:</string>
     <string name="digitalstyle_pref_your_color_saturation">Vaše nasycení barvy:</string>
     <string name="digitalstyle_pref_your_color_opacity">Průhlednost barvy:</string>
+    <string name="bolus_progress_channel_name">AAPS Průběh vydávání bolusu</string>
+    <string name="bolus_progress_silent_channel_name">AAPS Průběh vydávání bolusu tichý</string>
+    <string name="bolus_progress_channel_description">Průběh bolusu a zrušení</string>
+    <string name="bolus_progress_silent_channel_description">Průběh bolusu a zrušení s méně vibracemi</string>
 </resources>

@@ -53,16 +53,4 @@
     <string name="notconnected">Няма връзка с Интернет!</string>
     <string name="failedretrievetime">Не може да се вземе времето</string>
     <string name="requirementnotmet">Задачите не са изпълнени</string>
-    <plurals name="objective_days">
-        <item quantity="one">%1$d дни</item>
-        <item quantity="other">%1$d дни</item>
-    </plurals>
-    <plurals name="objective_hours">
-        <item quantity="one">%1$d часа</item>
-        <item quantity="other">%1$d часа</item>
-    </plurals>
-    <plurals name="objective_minutes">
-        <item quantity="one">%1$d минута</item>
-        <item quantity="other">%1$d минути</item>
-    </plurals>
 </resources>

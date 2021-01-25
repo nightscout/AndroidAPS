@@ -13,7 +13,6 @@
     <string name="reset_db_confirm">你真的想重置数据库吗?</string>
     <string name="nav_exit">退出</string>
     <string name="ns_sync_use_absolute_title">总是使用基础率的绝对值</string>
-    <string name="alert_dialog_storage_permission_text">请重启你的手机或者从系统设置里重启AndroidAPS软件 \n 否则 Android APS将不会记录日志 (这对于跟踪和检查算法是否正确很重要)!</string>
     <string name="description_actions">一些快速访问常用功能的按钮</string>
     <string name="description_config_builder">用于配置活动插件</string>
     <string name="description_objectives">学习计划</string>
@@ -380,7 +379,6 @@
     <string name="activity_target">运动临时目标</string>
     <string name="hypo_duration">持续时间短</string>
     <string name="hypo_target">低目标</string>
-    <string name="reuse">重复用</string>
     <string name="wearcontrol_title">从手表上控制</string>
     <string name="wearcontrol_summary">设置临时目标并从手表中进行治疗操作。</string>
     <string name="food">食物</string>
@@ -471,7 +469,6 @@
     <string name="enablesmbwithtemptarget_summary">当临时目标处于活动状态时启用 SMB (很快吃饭, 运动)</string>
     <string name="enablesmbwithhightemptarget">启用具有高临时目标的 SMB</string>
     <string name="overview_insulin_label">胰岛素</string>
-    <string name="overview_carbs_label">碳水</string>
     <string name="overview_buttons_selection">按钮</string>
     <string name="show_calibration_button_summary">向 xDrip + 发送校准请求或打开 G5 校准对话框</string>
     <string name="show_cgm_button_summary">打开 xDrip +, 后退按钮返回到 AAPS</string>
@@ -635,7 +632,6 @@
     <string name="nav_logsettings">日志设置</string>
     <string name="resettodefaults">重置为默认值</string>
     <string name="nsmalfunction">NSClient故障。 考虑Nightscout和NSClient重启。</string>
-    <string name="versionavailable">版本 %1$s 可用</string>
     <string name="time_offset">时区偏移</string>
     <string name="setupwizard_preferred_aps_mode">首选的APS模式</string>
     <string name="treatments_wizard_total_label">总计</string>

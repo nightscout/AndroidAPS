@@ -90,6 +90,9 @@
     <string name="action_confirm">CONFIRMER</string>
     <string name="action_timeshift">décalage</string>
     <string name="action_bolus">bolus</string>
+    <string name="bolus_progress">Bolus en cours</string>
+    <string name="press_to_cancel">Click pour annuler</string>
+    <string name="cancel_bolus">ANNULER BOLUS</string>
     <string name="status_pump">Pompe</string>
     <string name="status_loop">Boucle</string>
     <string name="status_cpp">Profil</string>

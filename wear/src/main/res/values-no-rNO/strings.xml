@@ -90,6 +90,9 @@
     <string name="action_confirm">BEKREFT</string>
     <string name="action_timeshift">tidsforskyving</string>
     <string name="action_bolus">bolus</string>
+    <string name="bolus_progress">Bolus fremdrift</string>
+    <string name="press_to_cancel">trykk for å avbryte</string>
+    <string name="cancel_bolus">AVBRYT BOLUS</string>
     <string name="status_pump">Pumpe</string>
     <string name="status_loop">Loop</string>
     <string name="status_cpp">CPP</string>

@@ -14,7 +14,6 @@
     <string name="reset_db_confirm">אתם בטוחים שאתם רוצים לאפס את מסדי הנתונים?</string>
     <string name="nav_exit">יציאה</string>
     <string name="ns_sync_use_absolute_title">השתמש תמיד בערכים בזאלים מוחלטים</string>
-    <string name="alert_dialog_storage_permission_text">נא לאתחל את הסמרטפון שלכם או הפעילו מחדש את אפלקציית AndroidAPS בהגדרות המערכת \nאחרת AndroidAPS לא יוכל לבצע רישום (חשוב לעקוב ולוודא כי האלגוריתמים פועלים כראוי)!</string>
     <string name="alert_dialog_permission_battery_optimization_failed">נראה שמכשיר זה אינו תומך ברשימת היתרים למיטוב הסוללה - ייתכן שתיתקל בבעיות ביצועים.</string>
     <string name="description_actions">לחצנים לגישה מהירה לפונקציות שימושיות</string>
     <string name="description_config_builder">משמש לקביעת תצורה של תוספים פעילים</string>
@@ -42,6 +41,7 @@
     <string name="description_source_glimp">קבלת ערכי סוכר בדם מ-Glimp.</string>
     <string name="description_source_mm640g">קבלת ערכי סוכר בדם מ-600SeriesAndroidUploader.</string>
     <string name="description_source_ns_client">הורדת ערכי סוכר בדם מ-Nightscout</string>
+    <string name="description_source_xdrip">קבלת ערכי סוכר מ-xDrip.</string>
     <string name="description_treatments">שמירת כל הטיפולים שנעשו</string>
     <string name="description_wear">ניטור ושליטה ב-AndroidAPS באמצעות שעון WearOS.</string>
     <string name="description_xdrip_status_line">הצג מידע אודות הלולאה במסך Xdrip בשעון החכם.</string>
@@ -118,6 +118,7 @@
     <string name="changeyourinput">שנה קלט!</string>
     <string name="configbuilder_bgsource">מקור ערכי הסוכר</string>
     <string name="configbuilder_bgsource_description">מהו מקור הנתונים של AndroidAPS?</string>
+    <string name="xdrip">xDrip+</string>
     <string name="apsmode_title">מצב APS</string>
     <string name="closedloop">לולאה סגורה</string>
     <string name="openloop">לולאה פתוחה</string>
@@ -166,7 +167,6 @@
     <string name="old_master_password">סיסמה ראשית ישנה</string>
     <string name="different_password_used">קובץ זה יוצא והוצפן באמצעות סיסמה ראשית שונה. אנא ספקו סיסמה ראשית זו כדי לפענח את הקובץ.</string>
     <string name="master_password_will_be_replaced">בעקבות ייבוא ההגדרות הסיסמה הראשית הקיימת תוחלף עם הסיסמה הראשית המיובאת!</string>
-    <string name="preferences_import_list_title">בחרו קובץ לייבוא</string>
     <string name="check_preferences_before_import">בדקו את ההעדפות לפני ביצוע הייבוא:</string>
     <string name="check_preferences_cannot_import">ההעדפות לא ניתנות לייבוא!</string>
     <string name="check_preferences_dangerous_import">אין לייבא העדפות אלה!</string>
@@ -174,39 +174,6 @@
     <string name="check_preferences_details_title">פרטי בעיות ייבוא</string>
     <string name="check_preferences_import_btn">ייבוא</string>
     <string name="check_preferences_import_anyway_btn">ייבא בכל מקרה (מסוכן!)</string>
-    <string name="metadata_warning_different_flavour">ההעדפות נוצרו בגרסה אחרת של AAPS (%1$s) בעוד לך יש גירסה %2$s. \n\n חלק מההגדרות עלולות להיות חסרות או בלתי תקינות - לאחר הייבוא נא לבדוק ולעדכן את ההעדפות.</string>
-    <string name="metadata_warning_different_device">ההעדפות נוצרו במכשיר אחר. זה בסדר אם ייבאתם אותן ממכשיר ישן או שונה, אך וודאו שההעדפות שהובאו נכונות!</string>
-    <string name="metadata_warning_outdated_format">אתם משתמשים פורמט מיושן מגרסאות ישנות של AAPS, שאינו מאובטח! השתמשו בו רק כמוצא אחרון, אם אין לכם קובץ הגדרות בפורמט העדכני, של JSON.</string>
-    <string name="metadata_warning_old_export">ההעדפות המיובאות הן כבר בנות %1$s ימים! אולי יש לכם עדפות עדכניות יותר או שבחרתם קובץ לא נכון? זכרו לייצא את ההעדפות באופן סדיר!</string>
-    <string name="metadata_warning_date_format">פורמט תאריך ושעה לא חוקי!</string>
-    <string name="metadata_warning_different_version">ההעדפות נוצרו בגרסה משנית ישנה של AAPS. זה בסדר אם ייבאתם אותן לאחר שדרוג גרסה, אך וודאו שההעדפות שהובאו נכונות!</string>
-    <string name="metadata_urgent_different_version">ההעדפות נוצרו בגרסה ראשית אחרת של AAPS. גרסאות ראשיות הן שונות מאוד והגדרותיהן עלולות להיות לא תואמות אחת לשניה. נא לוודא שההעדפות שהובאו נכונות!</string>
-    <string name="metadata_label_format">פורמט הקובץ</string>
-    <string name="metadata_label_created_at">נוצר ב-</string>
-    <string name="metadata_label_aaps_version">גרסת AAPS</string>
-    <string name="metadata_label_aaps_flavour">גרסת בנייה</string>
-    <string name="metadata_label_device_name">ייצא את שם מכשיר המטופל</string>
-    <string name="metadata_label_device_model">מייצא את דגם המכשיר</string>
-    <string name="metadata_label_encryption">· הצפנת קבצים</string>
-    <string name="metadata_format_old">פורמט ייצוא ישן</string>
-    <string name="metadata_format_new">פורמט הצפנה חדש</string>
-    <string name="metadata_format_debug">פורמט דיבאג חדש (בלתי מוצפן)</string>
-    <string name="metadata_format_other">פורמט ייצוא לא ידוע</string>
-    <string name="prefdecrypt_settings_tampered">קובץ ההגדרות פגום</string>
-    <string name="prefdecrypt_settings_secure">קובץ ההגדרות מאובטח</string>
-    <string name="prefdecrypt_settings_unencrypted">משתמש בפורמט הגדרות בלתי מאובטח ובלתי מוצפן</string>
-    <string name="prefdecrypt_wrong_json">שגיאה בפורמט JSON, חסר שדה חובה (פורמט, תוכן, מטא דאטה, בטיחות)</string>
-    <string name="prefdecrypt_wrong_password">שגיאת פענוח, הסיסמה שהתקבלה לא מפענחת את הקובץ</string>
-    <string name="prefdecrypt_issue_missing_file_hash">בקרת קבצים (hash) חסרה, לא ניתן לאמת את אותנטיות ההגדרות!</string>
-    <string name="prefdecrypt_issue_modified">הקובץ שונה לאחר הייצוא!</string>
-    <string name="prefdecrypt_issue_parsing">שגיאת פענוח, נתוח ההעדפות נכשל!</string>
-    <string name="prefdecrypt_issue_wrong_pass">שגיאת פענוח, הסיסמה שסופקה אינה חוקית או שקובץ ההגדרות שונה! יתכן שהקובץ המיובא יוצא עם סיסמה ראשית אחרת.</string>
-    <string name="prefdecrypt_issue_wrong_format">תצורת הצפנה חסרה, פורמט ההגדרות אינו חוקי!</string>
-    <string name="prefdecrypt_issue_wrong_algorithm">לא צוין או לא נתמך אלגוריתם ההצפנה!</string>
-    <string name="exported_ago" comment="at placeholder we add pluralized number of hours/minutes">יוצא לפני %1$s</string>
-    <string name="exported_at" comment="at placeholder we add export date">יוצא ב %1$s</string>
-    <string name="exported_less_than_hour_ago">יוצא לפני פחות משעה</string>
-    <string name="in_directory" comment="placeholder is for exported file path">בספרייה: %1$s</string>
     <string name="end_user_license_agreement">הסכם רישיון למשתמש</string>
     <string name="end_user_license_agreement_text">לא מיועד לשימוש למטרת קבלת החלטות רפואיות. בעלי הזכויות מספקים את התוכנית כפי שהיא - \"AS IS\", ללא אחריות מכל סוג שהוא. כל סיכון הנובע מאיכות ו\או ביצועי התוכנה הוא באחריותך בלבד. במידה ותימצא תקלה בתוכנית, אתם תשאו בכל עלויות שיגרמו לך בשל התקלה.</string>
     <string name="end_user_license_agreement_i_understand">אני מבין ומסכים</string>
@@ -283,6 +250,8 @@
     <string name="mealbolus">ארוחה</string>
     <string name="correctionbous">תיקון</string>
     <string name="actions">פעולות</string>
+    <string name="ns_upload_only">(מסוכן להשבית) העלאה בלבד לנייטסקאוט</string>
+    <string name="ns_upload_only_summary">העלאה בלבד של נתונים לנייטסקאוט. לא מתאים לשימוש אלא אם מקור נתוני הסוכר הוא מקומי כדוגמת xDrip. לא מתאים לשימוש בפרופילים מקוונים מנייטסקאוט.\n!!! אזהרה !!! ביטול אפשרות זו עלולה לגרום לתקלות ולמינון יתר של אינסולין אם אחד או יותר מרכיבי המערכת (AAPS, xDrip, נייטסקאוט) אינו מוגדר כהלכה. וודאו היטב שהנתונים המוצגים ב-AAPS תואמים את מצב המשאבה!</string>
     <string name="pumpNotInitialized">משאבה לא הופעלה!</string>
     <string name="primefill">תיחול\\מילוי</string>
     <string name="fillwarning">נא ודאו שהכמות מתאימה למפרט ערכת העירוי שלכם!</string>
@@ -337,6 +306,7 @@
     <string name="smscommunicator_shortname">SMS</string>
     <string name="short_tabtitles">קצר את כותרות הלשוניות</string>
     <string name="always_use_shortavg">התבסס על הפרש ממוצע קצר במקום הפרש פשוט\\רגיל</string>
+    <string name="always_use_shortavg_summary">לשימוש כאשר נתונים ממקור לא מפוקח כמו xDrip אינם יציבים.</string>
     <string name="profile">פרופיל</string>
     <string name="openapsama_max_daily_safety_multiplier_summary">ערך ברירת מחדל: 3 מנגנון הגנה עיקרי של OpenAPS. מגביל את המינון הבזאלי לעד פי 3 מהמינון הבזאלי הגבוה ביותר שהוגדר. ברוב המקרים אין צורך לשנות ערך זה, אך יש לזכור שזו המשמעות של “3x max daily; 4x current” בדיון על מנגנוני הגנה.</string>
     <string name="openapsama_current_basal_safety_multiplier_summary">ערך ברירת מחדל: 4 זהו החצי השני של מנגנון הגנה עיקרי של OpenAPS, והחצי השני של \"3x max daily; 4x current\" במנגנוני ההגנה. המשמעות היא שהמינון הבזאלי, ללא קשר למקסימום שנקבע במשאבה, אינו יכול להיות גבוה יותר ממספר זה כפול הקצב הבזאלי הנוכחי. מיועד למנוע כניסה לתחומים מסוכנים ע\"י קביעת קצב בזאלי גבוה לפני הבנה של פעולת האלגוריתם. שוב: ברירת המחדל היא x4, רוב המשתמשים לעולם אינם צריכים לשנות ערך זה ואם הם מרגישים שמנגנון הגנה זה מפריע להם, הפתרון הוא בשינוי של הגדרות אחרות.</string>
@@ -350,6 +320,9 @@
     <string name="smscommunicator_invalidphonennumber">מספר טלפון ל SMS לא תקין</string>
     <string name="overview_calibration">כיול</string>
     <string name="xdripnotinstalled">xDrip+ אינו מותקן</string>
+    <string name="calibrationsent">כיול נשלח ל-xDrip+</string>
+    <string name="smscommunicator_calibrationsent">הכיול נשלח. יש לאשר את קבלת כיולים ב-xDrip+.</string>
+    <string name="smscommunicator_calibrationfailed">xDrip אינו מקבל כיולים</string>
     <string name="pumpsuspended">משאבה מושהית</string>
     <string name="executing">מבצע</string>
     <string name="virtualpump_settings">הגדרות משאבה וירטואלית</string>
@@ -452,6 +425,8 @@
     <string name="nav_about">אודות</string>
     <string name="smscommunicator_missingsmspermission">הרשאות SMS חסרות</string>
     <string name="smscommunicator_missingphonestatepermission">הרשאת סטטוס הטלפון חסרה</string>
+    <string name="xdripstatus_settings">מצב xDrip (שעון)</string>
+    <string name="xdripstatus">שורת מצב xDrip (שעון)</string>
     <string name="xdripstatus_shortname">xDS</string>
     <string name="wear_showbgi_title">הצג השפעת רמת הסוכר</string>
     <string name="wear_showbgi_summary">הוסף השפעת הסוכר לשורת הסטטוס</string>
@@ -494,6 +469,7 @@
     <string name="mdtp_cancel">ביטול</string>
     <string name="notloadedplugins">לא כל הפרופילים נטענו!</string>
     <string name="valuesnotstored">הערכים לא נשמרו</string>
+    <string name="ns_localbroadcasts">אפשר הפצה לאפליקציות אחרות (כגון xDrip). אין להפעיל אם מותקן לכם יותר ממופע אחד של AAPS או NSClient!</string>
     <string name="ns_localbroadcasts_title">אפשר שידורים מקומיים.</string>
     <string name="careportal_newnstreatment_duration_min_label">משך [min]</string>
     <string name="openapssmb">OpenAPS SMB</string>
@@ -519,7 +495,7 @@
     <string name="activity_target">ערך מטרת פעילות</string>
     <string name="hypo_duration">משך היפו</string>
     <string name="hypo_target">ערך מטרת היפו</string>
-    <string name="reuse">שימוש חוזר</string>
+    <string name="reuse_profile_pct_hours">שימוש מחדש %1$d%% %2$d שעות</string>
     <string name="wearcontrol_title">שליטה מהשעון</string>
     <string name="wearcontrol_summary">הגדירו ערכי מטרה זמניים וציינו טיפולים מהשעון.</string>
     <string name="food">מזון</string>
@@ -618,7 +594,6 @@
     <string name="enablesmbwithhightemptarget">הפעלת SMB עם ערכי מטרה גבוהים</string>
     <string name="enablesmbwithhightemptarget_summary">הפעלת SMB כאשר יש ערך מטרה זמני גבוה פעיל (פעילות, מעל 100 mg/dl או 5.5 mmol/l)</string>
     <string name="overview_insulin_label">אינסולין</string>
-    <string name="overview_carbs_label">פחמימות</string>
     <string name="overview_buttons_selection">מקשים</string>
     <string name="show_calibration_button_summary">שולח כיול ל- xDrip או פותח את חלון הכיול של G5</string>
     <string name="show_cgm_button_summary">פותח xDrip, לחצני אחורה חוזר ל-AAPS</string>
@@ -802,7 +777,6 @@
     <string name="nav_logsettings">הגדרות יומן רישום</string>
     <string name="resettodefaults">אפס לברירת המחדל</string>
     <string name="nsmalfunction">תקלה ב-NSClient. שקלו להפעיל את Nightscout ו-NSClient מחדש.</string>
-    <string name="versionavailable">גרסה %1$s זמינה</string>
     <string name="time_offset">היסט זמן</string>
     <string name="setupwizard_preferred_aps_mode">מצב APS מועדף</string>
     <string name="treatments_wizard_total_label">סה\"כ</string>
@@ -959,8 +933,6 @@
     <string name="copy_short">העתקה</string>
     <string name="addnew">הוסף חדש</string>
     <string name="versionChecker">בודק גרסה</string>
-    <string name="signature_verifier">מאמת חתימה</string>
-    <string name="running_invalid_version">זיהינו שאתם משתמשים בגרסה לא תקפה. הלולאה מושבתת!</string>
     <string name="old_version">גרסה ישנה</string>
     <string name="very_old_version">גרסה ישנה מאוד</string>
     <string name="new_version_warning">גרסה חדשה זמינה כבר %1$d ימים! הגבלה להשהיה עקב סוכר נמוך תחל אחרי %2$d ימים, הלולאה תושבת אחרי %3$d ימים</string>
@@ -1164,6 +1136,7 @@
     <string name="donate_your_data_to_science">תרמו את נתוניכם למדע</string>
     <string name="open_humans_short">OH</string>
     <string name="you_have_been_signed_out_of_open_humans">התנתקתם מ-Open Humans</string>
+    <string name="click_here_to_sign_in_again_if_this_wasnt_on_purpose">לחצו כאן כדי להתחבר מחדש אם זה לא היה בכוונה.</string>
     <string name="only_upload_if_connected_to_wifi">אפשר העלאה רק אם מחובר ל-WiFi</string>
     <string name="only_upload_if_charging">אפשר העלאה רק בזמן טעינת הסוללה</string>
     <string name="worker_state">מצב עובד: %s</string>
@@ -1185,4 +1158,5 @@
     <string name="time_to_eat">זמן לאכול!\nהפעילו את אשף הבולוסים וחשבו בולוס חדש.</string>
     <string name="timetoeat">זמן לאכול</string>
     <string name="fabric_upload_disabled">העלאת רשומות קריסה מושבתת!</string>
+    <string name="graph_menu_divider_header">גרף</string>
 </resources>

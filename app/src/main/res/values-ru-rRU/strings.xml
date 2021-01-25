@@ -14,7 +14,6 @@
     <string name="reset_db_confirm">Вы действительно хотите обнулить базы данных?</string>
     <string name="nav_exit">Выход</string>
     <string name="ns_sync_use_absolute_title">Всегда пользуйтесь абсолютными величинами для базала</string>
-    <string name="alert_dialog_storage_permission_text">Пожалуйста перезагрузите телефон или перезапустите AndroidAPS из системных настроек, иначе AndroidAPS не будет вести лог (важно для отслеживания и проверки алгоритмов)!</string>
     <string name="alert_dialog_permission_battery_optimization_failed">Это устройство не поддерживает меню оптимизации батареи - могут быть проблемы с производительностью.</string>
     <string name="description_actions">Кнопки быстрого доступа к некоторым распространенным настройкам</string>
     <string name="description_config_builder">Применяется для настройки активных плагинов</string>
@@ -42,6 +41,7 @@
     <string name="description_source_glimp">Получать данные гликемии от Glimp.</string>
     <string name="description_source_mm640g">Получать данные гликемии от 600SeriesAndroidUploader.</string>
     <string name="description_source_ns_client">Получать данные гликемии с сайта Nightscout</string>
+    <string name="description_source_xdrip">Получать данные гликемии от xDrip+.</string>
     <string name="description_treatments">Сохраняет все выполненные назначения</string>
     <string name="description_wear">Мониторить и контролировать AndroidAPS при помощи часов WearOS.</string>
     <string name="description_xdrip_status_line">Показать информацию о работе алгоритма ИПЖ на экране смарт-часов xDrip+.</string>
@@ -118,6 +118,7 @@
     <string name="changeyourinput">измените введенные данные</string>
     <string name="configbuilder_bgsource">источник СК</string>
     <string name="configbuilder_bgsource_description">Откуда должен получать данные AndroidAPS?</string>
+    <string name="xdrip">xDrip +</string>
     <string name="apsmode_title">режим APS</string>
     <string name="closedloop">Замкнутый цикл</string>
     <string name="openloop">открытый цикл</string>
@@ -166,7 +167,6 @@
     <string name="old_master_password">Старый главный пароль</string>
     <string name="different_password_used">Этот файл был экспортирован и зашифрован с использованием другого главного пароля. Укажите старый главный пароль для расшифровки файла.</string>
     <string name="master_password_will_be_replaced">В результате успешного импорта текущий главный пароль БУДЕТ ЗАМЕНЁН на старый главный пароль!</string>
-    <string name="preferences_import_list_title">Выберите файл для импорта</string>
     <string name="check_preferences_before_import">Проверьте настройки перед импортом:</string>
     <string name="check_preferences_cannot_import">Не удается импортировать настройки!</string>
     <string name="check_preferences_dangerous_import">Не следует импортировать настройки!</string>
@@ -174,39 +174,6 @@
     <string name="check_preferences_details_title">Сведения о проблемах импорта</string>
     <string name="check_preferences_import_btn">Импортировать</string>
     <string name="check_preferences_import_anyway_btn">Импортировать в любом случае (ОПАСНО!)</string>
-    <string name="metadata_warning_different_flavour">Параметры были созданы с другим вариантом AAPS (%1$s) в то время как у вас: %2$s.\n\nНекоторые параметры могут отсутствать или быть недопустимы-после импорта проверьте и обновите параметры.</string>
-    <string name="metadata_warning_different_device">Параметры созданы на другом устройстве. Это нормально, если вы импортируете из старого/другого телефона, но убедитесь, что импортированные параметры - верные!</string>
-    <string name="metadata_warning_outdated_format">Вы используете устаревший формат из старых версий AAPS, который не безопасен! Используйте его только в крайнем случае, если у вас нет экспорта в текущем формате JSON.</string>
-    <string name="metadata_warning_old_export">Импортируемым параметрам уже %1$s дней! Может быть у вас есть более актуальные параметры или вы выбрали неправильный файл? Не забудьте регулярно экспортировать параметры!</string>
-    <string name="metadata_warning_date_format">Недопустимый формат даты и времени!</string>
-    <string name="metadata_warning_different_version">Параметры из другой вспомогательной версии приложения. Если импортируете после обновления, это нормально но после импорта проверьте, все ли предпочтения по-прежнему верны!</string>
-    <string name="metadata_urgent_different_version">Параметры из другой основной версии приложения. Основные версии существенно различаются и могут иметь несовместимые настройки! После импорта убедитесь, что параметры все еще верны!</string>
-    <string name="metadata_label_format">Формат файла</string>
-    <string name="metadata_label_created_at">Дата создания</string>
-    <string name="metadata_label_aaps_version">Версия AAPS</string>
-    <string name="metadata_label_aaps_flavour">Версия сборки</string>
-    <string name="metadata_label_device_name">Имя пациента экспортируемого устройства</string>
-    <string name="metadata_label_device_model">Модель экспортируемого устройства</string>
-    <string name="metadata_label_encryption">Шифрование файла</string>
-    <string name="metadata_format_old">Старый формат экспорта</string>
-    <string name="metadata_format_new">Новый зашифрованный формат</string>
-    <string name="metadata_format_debug">Новый формат отладки (незашифрованный)</string>
-    <string name="metadata_format_other">Неизвестный формат экспорта</string>
-    <string name="prefdecrypt_settings_tampered">Файл параметров несанкционированно изменен</string>
-    <string name="prefdecrypt_settings_secure">Файл настроек безопасен</string>
-    <string name="prefdecrypt_settings_unencrypted">Применяется незащищенный, незашифрованный формат параметров</string>
-    <string name="prefdecrypt_wrong_json">Ошибка формата JSON, отсутствует обязательное поле (формат, содержимое, метаданные или защита)</string>
-    <string name="prefdecrypt_wrong_password">Ошибка расшифровки, указанный пароль не может расшифровать файл</string>
-    <string name="prefdecrypt_issue_missing_file_hash">Отсутствует контрольная сумма файла (хэш), не удалось проверить подлинность параметров!</string>
-    <string name="prefdecrypt_issue_modified">Файл был изменен после экспорта!</string>
-    <string name="prefdecrypt_issue_parsing">Ошибка расшифровки, не удалось проанализировать настройки!</string>
-    <string name="prefdecrypt_issue_wrong_pass">Ошибка расшифровки, указан недопустимый пароль или файл параметров изменен! Возможно, импортированный файл был экспортирован с использованием другого главного пароля.</string>
-    <string name="prefdecrypt_issue_wrong_format">Отсутствует конфигурация шифрования, формат параметров недопустим!</string>
-    <string name="prefdecrypt_issue_wrong_algorithm">Неподдерживаемый или не прописанный алгоритм шифрования!</string>
-    <string name="exported_ago" comment="at placeholder we add pluralized number of hours/minutes">экспортировано %1$s назад</string>
-    <string name="exported_at" comment="at placeholder we add export date">экспортировано в %1$s</string>
-    <string name="exported_less_than_hour_ago">экспортировано менее часа назад</string>
-    <string name="in_directory" comment="placeholder is for exported file path">в каталоге: %1$s</string>
     <string name="end_user_license_agreement">лицензионное соглашение с пользователем</string>
     <string name="end_user_license_agreement_text">НЕ ДОЛЖНО ИСПОЛЬЗОВАТЬСЯ ДЛЯ ПРИНЯТИЯ МЕДИЦИНСКИХ РЕШЕНИЙ. ПРОГРАММА НЕ ДАЕТ ГАРАНТИЙ В РАМКАХ СУЩЕСТВУЮЩЕГО ЗАКОНОДАТЕЛЬСТВА. ПРЕДОСТАВЛЯЕТСЯ \"КАК ЕСТЬ\" БЕЗ ЯВНЫХ ИЛИ СКРЫТЫХ ГАРАНТИЙ ВКЛЮЧАЯ НО НЕ ОГРАНИЧИВАЯСЬ ВОЗМОЖНОСТЬЮ КОММЕРЧЕСКОГО ИСПОЛЬЗОВАНИ ИЛИ СООТВЕТСТВИЯ КАКИМ-ЛИБО ЦЕЛЯМ. ВСЕ РИСКИ ЛОЖАТСЯ НА ВАС. В СЛУЧАЕ НЕРАБОТОСПОСОБНОСТИ ПРОГРАММЫ ВЫ НЕСЕТЕ ВСЕ РАСХОДЫ СВЯЗАННЫЕ С ОБСЛУЖИВАНИЕМ РЕМОНТОМ ИЛИ КОРРЕКТИРОВКОЙ.  </string>
     <string name="end_user_license_agreement_i_understand">я понимаю и принимаю</string>
@@ -283,6 +250,8 @@
     <string name="mealbolus">болюс на еду</string>
     <string name="correctionbous">коррекция</string>
     <string name="actions">действия</string>
+    <string name="ns_upload_only">(ОТКЛЮЧЕНИЕ ОПАСНО) Только загрузка в NS</string>
+    <string name="ns_upload_only_summary">Только загрузка в NS (синхронизация отключена). Не влияет на данные мониторинга если не выбран локальный источник, такой как xDrip. Профили, иные чем профиль NS не действуют.\n!!! ПРЕДУПРЕЖДЕНИЕ !!! Отключение этой опции может привести к сбою и передозировке инсулина, если какой-либо из компонентов (AAPS, NS, xDrip) настроен неправильно. Внимательно следите за тем, чтобы данные соответствовали состоянию помпы!</string>
     <string name="pumpNotInitialized">помпа не инициализирована</string>
     <string name="primefill">прайм/заполнение</string>
     <string name="fillwarning">убедитесь что количество соответствует характеристикам вашей инфузионной системы</string>
@@ -337,6 +306,7 @@
     <string name="smscommunicator_shortname">SMS</string>
     <string name="short_tabtitles">сокращенные имена табул</string>
     <string name="always_use_shortavg">всегда используйте укороченное среднее приращение вместо простого</string>
+    <string name="always_use_shortavg_summary">Полезно когда данные из нефильтрованных источников вроде xDrip+ начинают \"шуметь\".</string>
     <string name="profile">профиль</string>
     <string name="openapsama_max_daily_safety_multiplier_summary">значение по умолчанию:3 Это ключевой ограничитель безопасности OpenAPS. Он ограничивает величину вашего базала максимум до 3x максимума. Вам вероятно не понадобится менять эту величину но вам следует понимать, что она входит в формулу дуэта \"максимум 3x ежедневное; 4x текущее\"</string>
     <string name="openapsama_current_basal_safety_multiplier_summary">значение по умолчанию: 4 . Это вторая половина обеспечения безопасности OpenAPS из дуэта \"максимум 3x ежедневное; 4x текущее\" Означает что ваша база независимо от установок помпы не может быть выше чем это число умноженное на текущее значение базала. Ограничение для того, чтобы предотвратить вторжение в опасную зону из-за высокого уровня установленных значений базы без понимания алгоритма работы приложения. Большинству людей никогда не потребуется изменять это значение, скорее всего нужно поменять другие настройки если вы чувствуете, что вам мешает это ограничение.</string>
@@ -350,6 +320,9 @@
     <string name="smscommunicator_invalidphonennumber">неверный номер телефона для смс</string>
     <string name="overview_calibration">калибровка</string>
     <string name="xdripnotinstalled">xdrip+ не установлен</string>
+    <string name="calibrationsent">Калибровка отправлена на xDrip+</string>
+    <string name="smscommunicator_calibrationsent">Калибровка отправлена. В xDrip+ должен быть включена возможность приема.</string>
+    <string name="smscommunicator_calibrationfailed">xDrip + не получает калибровки</string>
     <string name="pumpsuspended">Работа помпы остановлена</string>
     <string name="executing">выполнение</string>
     <string name="virtualpump_settings">настройки вирт помпы</string>
@@ -452,6 +425,8 @@
     <string name="nav_about">о приложении</string>
     <string name="smscommunicator_missingsmspermission">отсутствует смс подтверждение</string>
     <string name="smscommunicator_missingphonestatepermission">Отсутствует разрешение телефона</string>
+    <string name="xdripstatus_settings">Cтрока состояния xDrip (часы)</string>
+    <string name="xdripstatus">Cтрока состояния xDrip (часы)</string>
     <string name="xdripstatus_shortname">Статус xDrip</string>
     <string name="wear_showbgi_title">показать BGI</string>
     <string name="wear_showbgi_summary">добавить BGI в строку состояния</string>
@@ -494,6 +469,7 @@
     <string name="mdtp_cancel">отмена</string>
     <string name="notloadedplugins">не все профили загружены!</string>
     <string name="valuesnotstored">Данные не сохранены!</string>
+    <string name="ns_localbroadcasts">Включить трансляцию для других приложений (например, xDrip). Не включайте, если установлено несколько экземпляров приложений AAPS или NSClient!</string>
     <string name="ns_localbroadcasts_title">Активировать локальную передачу</string>
     <string name="careportal_newnstreatment_duration_min_label">Длительность (мин)</string>
     <string name="openapssmb">Супер микро болюс OpenAPS</string>
@@ -519,7 +495,6 @@
     <string name="activity_target">целевое значение СК при физической нагрузке</string>
     <string name="hypo_duration">длительность гипо</string>
     <string name="hypo_target">целевое значение СК при гипо</string>
-    <string name="reuse">повторное использование</string>
     <string name="wearcontrol_title">Контроль с часов</string>
     <string name="wearcontrol_summary">Ставить временные цели и вводить назначения с часов.</string>
     <string name="food">Еда</string>
@@ -618,7 +593,6 @@
     <string name="enablesmbwithhightemptarget">Включить супер микро болюс SMB с высокими значениями временных целей</string>
     <string name="enablesmbwithhightemptarget_summary">Включить микроболюс SMB, когда активна высока временная цель (нагрузка, выше 100 мг/дл или 5,5 ммоль/л)</string>
     <string name="overview_insulin_label">Инсулин</string>
-    <string name="overview_carbs_label">Кол-во углеводов</string>
     <string name="overview_buttons_selection">Кнопки</string>
     <string name="show_calibration_button_summary">Отправить калибровки на xDrip+ или открыть диалоговое окно калибровки G5</string>
     <string name="show_cgm_button_summary">Открывает xDrip +, кнопка назад возвращает в AAPS</string>
@@ -804,7 +778,6 @@ Context | Edit Context</string>
     <string name="nav_logsettings">Настройки журнала</string>
     <string name="resettodefaults">Восстановить значения по умолчанию</string>
     <string name="nsmalfunction">Некорректная работа NSClient. Возможно следует перезапустить NS и NSClient.</string>
-    <string name="versionavailable">Доступна версия %1$s</string>
     <string name="time_offset">Смещение по времени</string>
     <string name="setupwizard_preferred_aps_mode">Предпочитаемый режим APS</string>
     <string name="treatments_wizard_total_label">Итого</string>
@@ -961,8 +934,6 @@ Context | Edit Context</string>
     <string name="copy_short">КОПИРОВАТЬ</string>
     <string name="addnew">Добавить еще</string>
     <string name="versionChecker">Проверка версии</string>
-    <string name="signature_verifier">Верификатор подписи</string>
-    <string name="running_invalid_version">Мы обнаружили, что вы используете недопустимую версию. Цикл отключен!</string>
     <string name="old_version">старая версия</string>
     <string name="very_old_version">очень старая версия</string>
     <string name="new_version_warning">Новая версия доступна уже %1$d дней! По истечении %2$d дн алгоритм переходит в режим работы только с остановкой при низкой гликемии LGS, замкнутый цикл будет отключен через %3$d дн</string>
@@ -1188,4 +1159,5 @@ Context | Edit Context</string>
     <string name="time_to_eat">Пора есть!\nЗапустите помощник болюса снова для подсчета.</string>
     <string name="timetoeat">Пора есть</string>
     <string name="fabric_upload_disabled">Загрузка журналов сбоя на сервер отключена!</string>
+    <string name="graph_menu_divider_header">График</string>
 </resources>

@@ -24,14 +24,14 @@
     <string name="rileylink_title">RileyLink</string>
     <string name="rileylink_address">Adresse :</string>
     <string name="rileylink_name">Nom :</string>
-    <string name="rileylink_battery_level">Niveau pile :</string>
+    <string name="rileylink_battery_level">Niveau batterie :</string>
     <string name="rileylink_battery_level_value">%1$d%%</string>
     <string name="rileylink_connection_status">État de la connexion :</string>
     <string name="rileylink_connection_error">Erreur de Connexion :</string>
     <string name="rileylink_device">Appareil</string>
     <string name="rileylink_device_type">Type d\'appareil :</string>
-    <string name="rileylink_configured_device_model">Rileylink configuré :</string>
-    <string name="rileylink_connected_device_model">Rileylink connecté :</string>
+    <string name="rileylink_configured_device_model">Appareils configurés :</string>
+    <string name="rileylink_connected_device_model">Appareil connecté :</string>
     <string name="rileylink_last_used_frequency">Dernière fréquence utilisée :</string>
     <string name="rileylink_last_device_contact">Dernier contact appareil :</string>
     <string name="rileylink_firmware_version">Version du firmware :</string>
@@ -52,12 +52,12 @@
     <string name="rileylink_state_rl_ready">RileyLink prêt</string>
     <!-- RL Errors -->
     <string name="rileylink_error_not_rl">L\'appareil n\'est pas RileyLink</string>
-    <string name="rileylink_error_unreachable">RileyLink non accessible</string>
+    <string name="rileylink_error_unreachable">RileyLink hors de portée</string>
     <string name="rileylink_error_bt_disabled">Bluetooth est désactivé</string>
     <string name="rileylink_error_no_bt_adapter">Aucun adaptateur Bluetooth</string>
     <string name="rileylink_error_tuneup_failed">Échec du réglage</string>
     <string name="rileylink_error_pump_unreachable">Pompe hors de portée</string>
-    <string name="rileylink_error_pod_unreachable">Pod inaccessible</string>
+    <string name="rileylink_error_pod_unreachable">Pod hors de portée</string>
     <!-- RileyLink - Common -->
     <string name="rileylink_target_device_medtronic">Pompe Medtronic</string>
     <string name="rileylink_target_device_omnipod">Omnipod (Eros)</string>

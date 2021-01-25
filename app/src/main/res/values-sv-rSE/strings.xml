@@ -14,7 +14,6 @@
     <string name="reset_db_confirm">Vill du verkligen återställa databaserna?</string>
     <string name="nav_exit">Avsluta</string>
     <string name="ns_sync_use_absolute_title">Använd alltid absoluta värden i basal</string>
-    <string name="alert_dialog_storage_permission_text">Starta om telefonen eller AndroidAPS från systeminställningar,\nannars kommer AndroidAPS inte kunna logga fel (viktigt att kunna spåra och verifiera att algoritmerna fungerar korrekt)!</string>
     <string name="alert_dialog_permission_battery_optimization_failed">Denna enhet verkar inte ha stöd för vitlistning från batterioptimering. Du eventuellt råka ut för problem pga detta.</string>
     <string name="description_actions">Knappar för att snabbt komma åt vanliga funktioner</string>
     <string name="description_config_builder">Används för att konfigurera de aktiva insticksprogrammen</string>
@@ -43,9 +42,10 @@ Eversense-appen.</string>
     <string name="description_source_glimp">Ta emot BG-data från Glimp</string>
     <string name="description_source_mm640g">Ta emot BG-data från 600SeriesAndroidUploader</string>
     <string name="description_source_ns_client">Ladda ner BG-data från Nightscout</string>
+    <string name="description_source_xdrip">Ta emot BG-data från xDrip+.</string>
     <string name="description_treatments">Spara alla behandlingar som gjorts</string>
     <string name="description_wear">Följ och kontrollera AndroidAPS med din Wear OS-klocka</string>
-    <string name="description_xdrip_status_line">Visa AAPS-information på din xDrip-urtavla</string>
+    <string name="description_xdrip_status_line">Visa AAPS-information på din xDrip+ urtavla.</string>
     <string name="description_sms_communicator">Fjärrstyr AndroidAPS med SMS-kommandon.</string>
     <string name="treatments_insulin_label_string">Insulin:</string>
     <string name="treatments_carbs_label_string">KH:</string>
@@ -119,6 +119,7 @@ Eversense-appen.</string>
     <string name="changeyourinput">Ändra inmatning</string>
     <string name="configbuilder_bgsource">BG-källa</string>
     <string name="configbuilder_bgsource_description">Var ska AndroidAPS få sitt data ifrån?</string>
+    <string name="xdrip">xDrip+</string>
     <string name="apsmode_title">APS-läge</string>
     <string name="closedloop">Closed Loop</string>
     <string name="openloop">Open Loop</string>
@@ -167,7 +168,6 @@ Eversense-appen.</string>
     <string name="old_master_password">Gamla huvudlösenordet</string>
     <string name="different_password_used">Den här filen har exporterats och krypterats med ett annat lösenord. Ange det gamla lösenordet för att dekryptera filen.</string>
     <string name="master_password_will_be_replaced">OBS! Som ett resultat av en lyckad import, kommer det nuvarande huvudlösenordet att ersättas av det gamla huvudlösenordet!</string>
-    <string name="preferences_import_list_title">Välj fil att importera</string>
     <string name="check_preferences_before_import">Vänligen kontrollera inställningarna innan du importerar:</string>
     <string name="check_preferences_cannot_import">Inställningarna kan inte importeras!</string>
     <string name="check_preferences_dangerous_import">Inställningar bör inte importeras!</string>
@@ -175,39 +175,6 @@ Eversense-appen.</string>
     <string name="check_preferences_details_title">Detaljer kring importproblem</string>
     <string name="check_preferences_import_btn">Importera</string>
     <string name="check_preferences_import_anyway_btn">Importera ändå (FARLIGT!)</string>
-    <string name="metadata_warning_different_flavour">Inställningar skapades med en annan variant av AAPS (%1$s). Du kör nu: %2$s.\n\nVissa inställningar kan saknas eller är ogiltiga. Efter att du importerat bör du kontrollera och uppdatera inställningarna.</string>
-    <string name="metadata_warning_different_device">Inställningar skapades på en annan enhet. Det är OK om du importerar från en äldre eller en annan telefon, men se till att importerade inställningar är korrekta!</string>
-    <string name="metadata_warning_outdated_format">Du använder det gamla formatet (från äldre versioner av AAPS) som inte är säkert. Använd det bara som en sista utväg om du inte har någon export i aktuellt format, JSON.</string>
-    <string name="metadata_warning_old_export">Importerade inställningar är %1$s dagar gamla. Du kanske har mer aktuella inställningar eller väljer du fel fil? Kom ihåg att exportera dina inställningar regelbundet!</string>
-    <string name="metadata_warning_date_format">Ogiltigt datumformat!</string>
-    <string name="metadata_warning_different_version">Inställningarna är sparade i en annan delversion av appen. Det är OK om du importerar efter uppgradering, men kontrollera att inställningarna fortfarande är korrekta efter import!</string>
-    <string name="metadata_urgent_different_version">Inställningarna är sparade i en annan huvudversion av appen. Olika huvudversioner kan ha helt olika struktur vilket kan göra dem inkompatibla. Kontrollera inställningarna noggrant efter import!</string>
-    <string name="metadata_label_format">Filformat</string>
-    <string name="metadata_label_created_at">Skapad</string>
-    <string name="metadata_label_aaps_version">AAPS-version</string>
-    <string name="metadata_label_aaps_flavour">Build-variant</string>
-    <string name="metadata_label_device_name">Exporterar patientens namn</string>
-    <string name="metadata_label_device_model">Exporterar enhetsmodell</string>
-    <string name="metadata_label_encryption">· Filkryptering</string>
-    <string name="metadata_format_old">Gammalt exportformat</string>
-    <string name="metadata_format_new">Nytt krypterat format</string>
-    <string name="metadata_format_debug">Nytt debug-format (okrypterat)</string>
-    <string name="metadata_format_other">Okänt exportformat</string>
-    <string name="prefdecrypt_settings_tampered">Inställningsfil manipulerad</string>
-    <string name="prefdecrypt_settings_secure">Inställningsfilen är intakt</string>
-    <string name="prefdecrypt_settings_unencrypted">Använder icke säkrat, okrypterat format</string>
-    <string name="prefdecrypt_wrong_json">JSON-formatfel, saknar obligatoriskt fält (format, innehåll, metadata eller säkerhet)</string>
-    <string name="prefdecrypt_wrong_password">Dekrypteringsfel. Det angivna lösenordet kan inte dekryptera filen</string>
-    <string name="prefdecrypt_issue_missing_file_hash">Filen checksumma (hash) saknas. Det går inte att verifiera inställningarna!</string>
-    <string name="prefdecrypt_issue_modified">Filen har ändrats efter export!</string>
-    <string name="prefdecrypt_issue_parsing">Dekrypteringsfel. Det gick inte att tolka inställningarna.</string>
-    <string name="prefdecrypt_issue_wrong_pass">Dekrypteringsfel. Det angivna lösenordet är ogiltigt eller så har inställningsfilen ändrats. Filen verkar ha exporterats med ett annat lösenord.</string>
-    <string name="prefdecrypt_issue_wrong_format">Krypteringskonfigurationen saknas. Inställningsformatet är ogiltigt!</string>
-    <string name="prefdecrypt_issue_wrong_algorithm">Ej stödd eller ej angiven krypteringsalgoritm!</string>
-    <string name="exported_ago" comment="at placeholder we add pluralized number of hours/minutes">exporterades för %1$s sedan</string>
-    <string name="exported_at" comment="at placeholder we add export date">exporterades %1$s</string>
-    <string name="exported_less_than_hour_ago">exporterades för mindre än timme sedan</string>
-    <string name="in_directory" comment="placeholder is for exported file path">i mappen: %1$s</string>
     <string name="end_user_license_agreement">Licensavtal för slutanvändare</string>
     <string name="end_user_license_agreement_text">FÅR INTE ANVÄNDAS FÖR ATT FATTA MEDICINSKA BESLUT. DET FINNS INGEN GARANTI FÖR PROGRAMMET I DEN UTSTRÄCKNING SOM TILLÅTS AV GÄLLANDE LAG. FÖRUTOM NÄR ANNAT ANGES SKRIFTLIGEN LEVERERAS APPLIKATIONEN SOM DEN ÄR HELT UTAN GARANTIER I NÅGON SOM HELST FORM, VARKEN UTTRYCKTA ELLER UNDERFÖRSTÅDDA, INKLUSIVE MEN INTE BEGRÄNSAT TILL SÄLJBARHET OCH LÄMPLIGHET FÖR ETT VISST ÄNDAMÅL. HELA RISKEN VAD GÄLLER KVALITET OCH PRESTANDA AV PROGRAMMET ÅLIGGER ANVÄNDAREN. OM PROGRAMMET VISAR SIG VARA DEFEKT ANTAR ANVÄNDAREN DEN FULLA FÖR KOSTNADEN FÖR ALL NÖDVÄNDIG SERVICE, REPARATION ELLER KORRIGERING.</string>
     <string name="end_user_license_agreement_i_understand">JAG FÖRSTÅR OCH GODKÄNNER</string>
@@ -284,6 +251,8 @@ Eversense-appen.</string>
     <string name="mealbolus">Måltid</string>
     <string name="correctionbous">Korrektion</string>
     <string name="actions">Åtgärder</string>
+    <string name="ns_upload_only">(INAKTIVERAD KAN MEDFÖRA FARA) NS-Endast uppladdning</string>
+    <string name="ns_upload_only_summary">NS-endast uppladdning (inaktiverad synkronisering). Påverkar inte uppladdning av BG om inte en lokal källa som xDrip+ är vald. NS-profiler kan också användas.\nVARNING! Att inaktivera detta alternativ och därmed tillåta att NS påverkar AAPS kan orsaka fel och t. o. m. insulinöverdos om någon av dina komponenter (AAPS, NS, xDrip+) inte är helt rätt konfigurerade. Övervaka noga att data som visas av AAPS överensstämmer med verkligheten!</string>
     <string name="pumpNotInitialized">Pump inte initierad</string>
     <string name="primefill">Förfyllning</string>
     <string name="fillwarning">Försäkra dig om att mängden motsvarar det som är specificerat för just ditt infusionsset.</string>
@@ -338,6 +307,7 @@ Eversense-appen.</string>
     <string name="smscommunicator_shortname">SMS</string>
     <string name="short_tabtitles">Förkorta namnen på flikarna</string>
     <string name="always_use_shortavg">Använd alltid kort medeldelta istället för enkel delta</string>
+    <string name="always_use_shortavg_summary">Användbart när ofiltrerade källor ger brusiga värden.</string>
     <string name="profile">Profil</string>
     <string name="openapsama_max_daily_safety_multiplier_summary">Standardvärde: 3 Detta är en grundsten i OpenAPS säkerhet. Detta begränsar dina temp basaler till maximalt 3x din största basaldos. Du behöver oftast inte ändra detta värde. Läs på och förstå skillnaden mellan 3x nuvarande och 3x daglig max som säkerhetsinställningar.</string>
     <string name="openapsama_current_basal_safety_multiplier_summary">Standardvärde: 4 Detta är en grundsten i OpenAPS säkerhet. Detta begränsar dina tempbasaler till maximalt 4 gånger din nuvarande basaldos, oberoende av din maximala basaldos. Detta för att undvika att man av misstag gör farliga inställningar. Om man når taket i denna inställning så kanske ändringar i andra inställningar behövs. De flesta behöver inte ändra denna inställning.</string>
@@ -351,6 +321,9 @@ Eversense-appen.</string>
     <string name="smscommunicator_invalidphonennumber">Ogiltigt telefonnummer för SMS</string>
     <string name="overview_calibration">Kalibrering</string>
     <string name="xdripnotinstalled">xDrip+ inte installerat</string>
+    <string name="calibrationsent">Kalibrering skickad till xDrip+</string>
+    <string name="smscommunicator_calibrationsent">Kalibrering skickad. Observera att xDrip+ måste vara inställd att ta emot kalibreringar.</string>
+    <string name="smscommunicator_calibrationfailed">xDrip+ tar inte emot kalibreringar</string>
     <string name="pumpsuspended">Pump pausad</string>
     <string name="executing">Utför</string>
     <string name="virtualpump_settings">Inställningar för Virtuell pump</string>
@@ -453,6 +426,8 @@ Eversense-appen.</string>
     <string name="nav_about">Om</string>
     <string name="smscommunicator_missingsmspermission">Saknar behörighet att skicka SMS</string>
     <string name="smscommunicator_missingphonestatepermission">Behörighet saknas</string>
+    <string name="xdripstatus_settings">xDrip+ Status (klocka)</string>
+    <string name="xdripstatus">xDrip+ Statusrad (klocka)</string>
     <string name="xdripstatus_shortname">xds</string>
     <string name="wear_showbgi_title">Visa BGI</string>
     <string name="wear_showbgi_summary">Visa BGI i statusraden</string>
@@ -495,6 +470,7 @@ Eversense-appen.</string>
     <string name="mdtp_cancel">Avbryt</string>
     <string name="notloadedplugins">Alla profiler laddades inte!</string>
     <string name="valuesnotstored">Alla värden sparades inte!</string>
+    <string name="ns_localbroadcasts">Aktivera sändning till andra appar (som xDrip+) på denna telefon. Aktivera inte detta om du har fler än en förekomst av AAPS eller NSClient installerad!</string>
     <string name="ns_localbroadcasts_title">Aktivera lokala broadcasts</string>
     <string name="careportal_newnstreatment_duration_min_label">Duration [min]</string>
     <string name="openapssmb">OpenAPS SMB</string>
@@ -520,7 +496,6 @@ Eversense-appen.</string>
     <string name="activity_target">Mål vid träning</string>
     <string name="hypo_duration">Hypo [min]</string>
     <string name="hypo_target">Mål vid Hypo</string>
-    <string name="reuse">återanvänd</string>
     <string name="wearcontrol_title">Kontrollera från klockan</string>
     <string name="wearcontrol_summary">Sätt temp målvärde och ange behandlingar från klockan.</string>
     <string name="food">Matdatabas</string>
@@ -619,7 +594,6 @@ Eversense-appen.</string>
     <string name="enablesmbwithhightemptarget">Använd SMB vid högt målvärde</string>
     <string name="enablesmbwithhightemptarget_summary">Aktivera SMB när det finns högt temp mål aktivt (träning, över 100 mg/dl eller 5,5 mmol/l)</string>
     <string name="overview_insulin_label">Insulin</string>
-    <string name="overview_carbs_label">Kolhydrater</string>
     <string name="overview_buttons_selection">Knappar</string>
     <string name="show_calibration_button_summary">Skicka kalibrering till xDrip+ eller öppna kalibreringsrutan i G5-appen</string>
     <string name="show_cgm_button_summary">Öppnar xDrip+. Tillbaka-knappen återgår till AndroidAPS</string>
@@ -803,7 +777,6 @@ Eversense-appen.</string>
     <string name="nav_logsettings">Loggningsinställningar</string>
     <string name="resettodefaults">Återställ standardinställningar</string>
     <string name="nsmalfunction">Fel på NSClient. Överväg att starta om NSClient och Nightscout-webbplatsen.</string>
-    <string name="versionavailable">Version %1$s tillgänglig</string>
     <string name="time_offset">KH-tid</string>
     <string name="setupwizard_preferred_aps_mode">Föredraget APS-läge</string>
     <string name="treatments_wizard_total_label">Total</string>
@@ -960,8 +933,6 @@ Eversense-appen.</string>
     <string name="copy_short">KOPIERA</string>
     <string name="addnew">Lägg till</string>
     <string name="versionChecker">Versionskontroll</string>
-    <string name="signature_verifier">Signaturverifierare</string>
-    <string name="running_invalid_version">Du kör en ogiltig version. Loop avstängd!</string>
     <string name="old_version">gammal version</string>
     <string name="very_old_version">väldigt gammal version</string>
     <string name="new_version_warning">Ny version tillgänglig för %1$d dagar sedan. Systemet kommer att byta läge till \"stopp innan lågt\" efter %2$d dagar och sluta loopa helt efter %3$d dagar</string>
@@ -1165,6 +1136,7 @@ Eversense-appen.</string>
     <string name="donate_your_data_to_science">Donera dina data till vetenskapen</string>
     <string name="open_humans_short">OH</string>
     <string name="you_have_been_signed_out_of_open_humans">Du har loggats ut från Open Humans</string>
+    <string name="click_here_to_sign_in_again_if_this_wasnt_on_purpose">Klicka här om du vill logga in igen.</string>
     <string name="only_upload_if_connected_to_wifi">Ladda bara upp om ansluten till WiFi</string>
     <string name="only_upload_if_charging">Ladda bara upp vid laddning</string>
     <string name="worker_state">Jobbstatus: %s</string>
@@ -1176,6 +1148,7 @@ Eversense-appen.</string>
     <string name="cta_dont_kill_my_app_info">Döda inte min app?</string>
     <string name="alarm">Larm</string>
     <string name="smscommunicator_report_pump_ureachable_summary">Skicka SMS om pumpen inte kan nås</string>
+    <string name="smscommunicator_pump_ureachable">Rapportera om pump inte kan nås</string>
     <string name="advisoralarm">Larma när det är dags att äta</string>
     <string name="alarminxmin">Larma om %1$d min</string>
     <string name="bolusadvisor">Bolusguide</string>
@@ -1184,4 +1157,6 @@ Eversense-appen.</string>
     <string name="enablebolusadvisor_summary">Få en påminnelse om att börja äta senare (istället för kalkylatorns resultat) om du ligger högt i BG</string>
     <string name="time_to_eat">Dags att äta!\nKör bolusguiden igen för ny beräkning.</string>
     <string name="timetoeat">Dags att äta</string>
+    <string name="fabric_upload_disabled">Uppladdning av kraschloggar inaktiverad!</string>
+    <string name="graph_menu_divider_header">Graf</string>
 </resources>

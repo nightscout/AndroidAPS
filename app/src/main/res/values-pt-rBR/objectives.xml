@@ -46,16 +46,4 @@
     <string name="notconnected">Não está ligado à internet</string>
     <string name="failedretrievetime">Falha ao recuperar tempo</string>
     <string name="requirementnotmet">Requisitos de objetivo não cumpridos</string>
-    <plurals name="objective_days">
-        <item quantity="one">%1$d dia</item>
-        <item quantity="other">%1$d dias</item>
-    </plurals>
-    <plurals name="objective_hours">
-        <item quantity="one">%1$d hora</item>
-        <item quantity="other">%1$d horas</item>
-    </plurals>
-    <plurals name="objective_minutes">
-        <item quantity="one">%1$d minuto</item>
-        <item quantity="other">%1$d minutos</item>
-    </plurals>
 </resources>
