@@ -5,7 +5,6 @@ import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.content.ContextCompat
-import dagger.android.support.DaggerAppCompatActivity
 import info.nightscout.androidaps.core.R
 import info.nightscout.androidaps.plugins.general.themeselector.util.ThemeUtil
 import info.nightscout.androidaps.utils.locale.LocaleHelper
@@ -13,9 +12,8 @@ import info.nightscout.androidaps.utils.resources.ResourceHelper
 import info.nightscout.androidaps.utils.sharedPreferences.SP
 import javax.inject.Inject
 
-//@Suppress("registered")
-open class NoSplashAppCompatActivity : DaggerAppCompatActivity() {
-    @Inject lateinit var spSplash: SP
+open class NoSplashAppCompatActivity : DaggerAppCompatActivityWithResult() {
+ @Inject lateinit var spSplash: SP
     public override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         var themeToSet = spSplash.getInt("theme", ThemeUtil.THEME_DARKSIDE)

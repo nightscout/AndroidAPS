@@ -49,7 +49,7 @@ import info.nightscout.androidaps.utils.protection.PasswordCheck
 abstract class FragmentsModule {
 
     @ContributesAndroidInjector abstract fun contributesPreferencesFragment(): MyPreferenceFragment
-    @ContributesAndroidInjector abstract fun contributesTDDStatsActivity(): TDDStatsActivity
+
     @ContributesAndroidInjector abstract fun contributesActionsFragment(): ActionsFragment
     @ContributesAndroidInjector abstract fun contributesAutomationFragment(): AutomationFragment
     @ContributesAndroidInjector abstract fun contributesBGSourceFragment(): BGSourceFragment

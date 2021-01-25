@@ -21,17 +21,16 @@ import info.nightscout.androidaps.plugins.general.smsCommunicator.otp.OneTimePas
 import info.nightscout.androidaps.utils.FabricPrivacy
 import info.nightscout.androidaps.utils.ToastUtils
 import info.nightscout.androidaps.utils.alertDialogs.OKDialog
-import info.nightscout.androidaps.utils.resources.ResourceHelper
 import kotlinx.android.synthetic.main.activity_smscommunicator_otp.*
 import net.glxn.qrgen.android.QRCode
 import javax.inject.Inject
 
 class SmsCommunicatorOtpActivity : NoSplashAppCompatActivity() {
+
     @Inject lateinit var fabricPrivacy: FabricPrivacy
     @Inject lateinit var rxBus: RxBusWrapper
     @Inject lateinit var smsCommunicatorPlugin: SmsCommunicatorPlugin
     @Inject lateinit var otp: OneTimePassword
-    @Inject lateinit var resourceHelper: ResourceHelper
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

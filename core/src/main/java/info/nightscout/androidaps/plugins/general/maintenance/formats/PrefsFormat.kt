@@ -4,8 +4,8 @@ import android.content.Context
 import android.os.Parcelable
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
-import info.nightscout.androidaps.R
-import kotlinx.android.parcel.Parcelize
+import info.nightscout.androidaps.core.R
+import kotlinx.parcelize.Parcelize
 import java.io.File
 
 enum class PrefsMetadataKey(val key: String, @DrawableRes val icon: Int, @StringRes val label: Int) {
@@ -72,11 +72,6 @@ enum class PrefsStatus(@DrawableRes val icon: Int) {
     ERROR(R.drawable.ic_meta_error),
     UNKNOWN(R.drawable.ic_meta_error),
     DISABLED(R.drawable.ic_meta_error)
-}
-
-enum class PrefsFormatsHandler {
-    CLASSIC,
-    ENCRYPTED
 }
 
 class PrefFileNotFoundError(message: String) : Exception(message)

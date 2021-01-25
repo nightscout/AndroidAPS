@@ -24,20 +24,12 @@ import info.nightscout.androidaps.utils.sharedPreferences.SP
 import javax.inject.Inject
 
 
-class SingleFragmentActivity : DaggerAppCompatActivity() {
+class SingleFragmentActivity : DaggerAppCompatActivityWithResult() {
     @Inject lateinit var pluginStore: PluginStore
     @Inject lateinit var protectionCheck: ProtectionCheck
     @Inject lateinit var sp: SP
-    @Inject lateinit var resourceHelper: ResourceHelper
-    @Inject lateinit var importExportPrefs: ImportExportPrefs
 
     private var plugin: PluginBase? = null
-
-    val callForPrefFile = registerForActivityResult(PrefsFileContract()) {
-        it?.let {
-            importExportPrefs.importSharedPreferences(this, it)
-        }
-    }
 
     public override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

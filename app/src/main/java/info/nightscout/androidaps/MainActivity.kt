@@ -30,6 +30,7 @@ import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.FragmentManager
+import androidx.appcompat.widget.Toolbar
 import androidx.viewpager2.widget.ViewPager2
 import com.google.android.material.bottomappbar.BottomAppBar.FAB_ALIGNMENT_MODE_CENTER
 import com.google.android.material.bottomappbar.BottomAppBar.FAB_ALIGNMENT_MODE_END
@@ -56,7 +57,6 @@ import info.nightscout.androidaps.plugins.configBuilder.ConstraintChecker
 import info.nightscout.androidaps.plugins.constraints.signatureVerifier.SignatureVerifierPlugin
 import info.nightscout.androidaps.plugins.constraints.versionChecker.VersionCheckerUtils
 import info.nightscout.androidaps.plugins.general.maintenance.ImportExportPrefs
-import info.nightscout.androidaps.plugins.general.maintenance.PrefsFileContract
 import info.nightscout.androidaps.plugins.general.nsclient.data.NSSettingsStatus
 import info.nightscout.androidaps.plugins.general.overview.OverviewMenus
 import info.nightscout.androidaps.plugins.general.overview.StatusLightHandler
@@ -79,7 +79,6 @@ import info.nightscout.androidaps.utils.extensions.toVisibility
 import info.nightscout.androidaps.utils.locale.LocaleHelper
 import info.nightscout.androidaps.utils.protection.ProtectionCheck
 import info.nightscout.androidaps.utils.resources.IconsProvider
-import info.nightscout.androidaps.utils.resources.ResourceHelper
 import info.nightscout.androidaps.utils.sharedPreferences.SP
 import info.nightscout.androidaps.utils.tabs.TabPageAdapter
 import info.nightscout.androidaps.utils.ui.UIRunnable
@@ -114,7 +113,6 @@ open class MainActivity : NoSplashAppCompatActivity() {
     @Inject lateinit var rxBus: RxBusWrapper
     @Inject lateinit var androidPermission: AndroidPermission
     @Inject lateinit var sp: SP
-    @Inject lateinit var resourceHelper: ResourceHelper
     @Inject lateinit var versionCheckerUtils: VersionCheckerUtils
     @Inject lateinit var smsCommunicatorPlugin: SmsCommunicatorPlugin
     @Inject lateinit var loopPlugin: LoopPlugin
@@ -142,7 +140,6 @@ open class MainActivity : NoSplashAppCompatActivity() {
     @Inject lateinit var injector: HasAndroidInjector
     @Inject lateinit var statusLightHandler: StatusLightHandler
     @Inject lateinit var overviewMenus: OverviewMenus
-    @Inject lateinit var importExportPrefs: ImportExportPrefs
 
     private lateinit var actionBarDrawerToggle: ActionBarDrawerToggle
     private var pluginPreferencesMenuItem: MenuItem? = null
@@ -181,13 +178,6 @@ open class MainActivity : NoSplashAppCompatActivity() {
             .addNextIntent(this.intent)
             .startActivities()
         recreate()
-    }
-
-    @SuppressLint("ClickableViewAccessibility")
-    val callForPrefFile = registerForActivityResult(PrefsFileContract()) {
-        it?.let {
-            importExportPrefs.importSharedPreferences(this, it)
-        }
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -903,10 +893,9 @@ open class MainActivity : NoSplashAppCompatActivity() {
                     menuItem.setIcon(R.drawable.ic_settings)
                 }
                 menuItem.isCheckable = true
-                if(p.menuIcon != -1) {
+                if (p.menuIcon != -1) {
                     menuItem.setIcon(p.menuIcon)
-                } else
-                {
+                } else {
                     menuItem.setIcon(R.drawable.ic_settings)
                 }
                 menuItem.setOnMenuItemClickListener {
@@ -934,21 +923,6 @@ open class MainActivity : NoSplashAppCompatActivity() {
             TabLayoutMediator(tabs_normal, main_pager) { tab, position ->
                 tab.text = (main_pager.adapter as TabPageAdapter).getPluginAt(position).name
             }.attach()
-        }
-    }
-
-    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>, grantResults: IntArray) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
-        if (permissions.isNotEmpty()) {
-            if (ActivityCompat.checkSelfPermission(this, permissions[0]) == PackageManager.PERMISSION_GRANTED) {
-                when (requestCode) {
-                    AndroidPermission.CASE_STORAGE ->                         //show dialog after permission is granted
-                        OKDialog.show(this, "", resourceHelper.gs(R.string.alert_dialog_storage_permission_text), null, sp)
-
-                    AndroidPermission.CASE_LOCATION, AndroidPermission.CASE_SMS, AndroidPermission.CASE_BATTERY, AndroidPermission.CASE_PHONE_STATE, AndroidPermission.CASE_SYSTEM_WINDOW -> {
-                    }
-                }
-            }
         }
     }
 

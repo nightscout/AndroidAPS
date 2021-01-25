@@ -11,7 +11,7 @@
         android:orientation="vertical">
 
         <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/importlist_recyclerview"
+            android:id="@+id/recyclerview"
             android:layout_width="match_parent"
             android:scrollbars="vertical"
             android:fadeScrollbars="true"
