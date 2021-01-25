@@ -132,4 +132,8 @@
     <string name="digitalstyle_pref_your_color">Tu color:</string>
     <string name="digitalstyle_pref_your_color_saturation">Tu saturación de colores:</string>
     <string name="digitalstyle_pref_your_color_opacity">Tu opacidad de colores:</string>
+    <string name="bolus_progress_channel_name">Progreso del bolo AAPS</string>
+    <string name="bolus_progress_silent_channel_name">Progreso de bolo AAPS silencioso</string>
+    <string name="bolus_progress_channel_description">Progreso en bolo y cancelación</string>
+    <string name="bolus_progress_silent_channel_description">Progreso en bolo y cancelar con menos vibraciones</string>
 </resources>
