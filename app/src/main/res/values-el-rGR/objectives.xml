@@ -49,16 +49,4 @@
     <string name="notconnected">Δεν είστε συνδεδεμένοι στο internet</string>
     <string name="failedretrievetime">Απέτυχε η ανάκτηση ώρας</string>
     <string name="requirementnotmet">Αντικειμενικές προϋποθέσεις δεν πληρούνται</string>
-    <plurals name="objective_days">
-        <item quantity="one">%1$d ημέρα</item>
-        <item quantity="other">%1$d ημέρες</item>
-    </plurals>
-    <plurals name="objective_hours">
-        <item quantity="one">%1$d hour</item>
-        <item quantity="other">%1$d ώρες</item>
-    </plurals>
-    <plurals name="objective_minutes">
-        <item quantity="one">%1$d minute</item>
-        <item quantity="other">%1$d λεπτά</item>
-    </plurals>
 </resources>

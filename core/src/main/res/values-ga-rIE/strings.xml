@@ -2,48 +2,130 @@
 <resources>
     <!--    Keys-->
     <!--    General-->
+    <string name="error">Earráid</string>
+    <string name="waitingforpump">Ag fanacht do caidéil</string>
+    <string name="connectingfor">Ag nascadh le %1$d s</string>
+    <string name="bolusdelivering">Ag seachadadh %1$.2f A</string>
+    <string name="connecting">Ag nascadh</string>
+    <string name="connected">Nasctha</string>
+    <string name="disconnected">Dínasctha</string>
+    <string name="disconnecting">Dícheangal</string>
+    <string name="androidaps_start">AndroidAPS thosaigh</string>
+    <string name="formatinsulinunits1">%1$.1f A</string>
+    <string name="formatinsulinunits">%1$.2f A</string>
+    <string name="formatsignedinsulinunits">%1$+.2f A</string>
+    <string name="format_carbs">%1$d g</string>
+    <string name="reservoirvalue">%1$.0f / %2$d A</string>
     <string name="pump_basebasalrate">%1$.2f A/u</string>
+    <string name="format_hours">%1$.2f u</string>
+    <string name="format_mins">%1$d nóim</string>
+    <string name="close">Dún</string>
+    <string name="mute">Balbh</string>
+    <string name="reload">Athlódáil</string>
+    <string name="stop">Stad</string>
+    <string name="carbs">Carbí</string>
+    <string name="invalidprofile">Próifíl neamhbhailí !!!</string>
+    <string name="date">Dáta</string>
+    <string name="units_label">Aonaid</string>
+    <string name="dia_label">DIA</string>
+    <string name="ic_label">IC</string>
+    <string name="isf_label">ISF</string>
+    <string name="basal_label">Bunaidh</string>
+    <string name="target_label">Cuspóir</string>
+    <string name="initializing">Tosaithe ...</string>
+    <string name="serialnumber">Sraithuimhir</string>
+    <string name="battery_label">Ceallraí</string>
+    <string name="lastconnection_label">Nasc deiridh</string>
+    <string name="lastbolus_label">Bólas deiridh</string>
+    <string name="dailyunits">Aonaid lá</string>
+    <string name="basebasalrate_label">Bunaidh ráta bonn</string>
+    <string name="reservoir_label">Taiscumar</string>
+    <string name="pumphistory">Stair caidéil</string>
+    <string name="mgdl">mg/dL</string>
+    <string name="mmol">mmol/l</string>
+    <string name="bluetooth">Bluetooth</string>
     <string name="yes">Tá</string>
     <string name="no">Níl</string>
     <!--    Constraints-->
     <!--    Dialogs-->
+    <string name="confirmation">Deimhniú</string>
+    <string name="message">Teachtaireacht</string>
+    <string name="ok">Ceart go leor</string>
+    <string name="cancel">Cuir ar ceal</string>
     <!--    BlePreCheck-->
     <!--    DateUtil-->
+    <string name="minago">%1$d nóim ó shin</string>
+    <string name="hoursago">%1$.1f u ó shin</string>
+    <string name="shorthour">u</string>
+    <string name="days">lá</string>
+    <string name="hours">uair</string>
+    <string name="unit_second">soicind</string>
+    <string name="unit_minute">nóiméad</string>
+    <string name="unit_hour">uair</string>
+    <string name="unit_day">lá</string>
+    <string name="unit_week">seachtain</string>
+    <string name="unit_seconds">soicind</string>
+    <string name="unit_minutes">nóiméad</string>
+    <string name="unit_hours">uair</string>
+    <string name="unit_days">lá</string>
+    <string name="unit_weeks">seachtaine</string>
+    <string name="shortminute">n</string>
+    <string name="shortday">lá</string>
     <!--    Protection-->
     <!--    Profile-->
+    <string name="profile_per_unit">/A</string>
+    <string name="profile_ins_units_per_hour">A/u</string>
+    <string name="profile_carbs_per_unit">g/A</string>
     <!--    ProfileFunction-->
     <!--    PumpType-->
     <!--    APSResult-->
+    <string name="canceltemp">Cealú BRS</string>
+    <string name="rate">Ráta</string>
+    <string name="duration">Fad</string>
+    <string name="reason">Cúis</string>
     <!--    ProfileSwitch-->
+    <string name="zerovalueinprofile">Próifíl neamhbhailí: %1$s</string>
     <!--    Temptarget-->
+    <string name="mins">%1$d nóim</string>
     <!--    TDD-->
     <!--    Translator-->
+    <string name="careportal_announcement">Fógra</string>
+    <string name="careportal_note">Nóta</string>
+    <string name="careportal_question">Ceist</string>
+    <string name="careportal_exercise">Cleachtadh</string>
+    <string name="careportal_insulincartridgechange">Athrú Cartús Inslin</string>
+    <string name="glucosetype_finger">Méar</string>
+    <string name="glucosetype_sensor">Braiteoir</string>
     <!--    Command-->
     <!--    PumpEnactResult-->
+    <string name="comment">Tuairim</string>
+    <string name="success">Rathúlacht</string>
+    <string name="percent">Faoin gcéad</string>
+    <string name="absolute">Iomlán</string>
+    <string name="configbuilder_insulin">Inslin</string>
+    <string name="insulin_unit_shortname">A</string>
+    <string name="smb_shortname">SMB</string>
     <!--    CarbsReq-->
     <!--    TDDStatsActivity-->
+    <string name="basalrate">Bunaidh</string>
+    <string name="bolus">Bólas</string>
+    <string name="tdd">TDD</string>
+    <string name="ratio">Cóimheas</string>
+    <string name="amount_days"># Lá</string>
+    <string name="tbb2">TBB * 2</string>
     <!--    Ntp-->
+    <string name="format_hour_minute">%1$du %2$dn</string>
     <!-- PumoCommon - Pump Abstract -->
+    <string name="common_resultok">Ceart go leor</string>
     <!-- PumoCommon - Pump Status -->
+    <string name="pump_status_active">Gníomhach</string>
     <!-- PumpCommon - History Group -->
-    <!--    <string name="medtronic_pump_status_never_contacted">Never contacted</string>-->
-    <!--    <string name="medtronic_pump_status_waking_up">Waking up</string>-->
-    <!--    <string name="medtronic_pump_status_error_comm">Error with communication</string>-->
-    <!--    <string name="medtronic_pump_status_timeout_comm">Timeout on communication</string>-->
-    <!--    <string name="medtronic_pump_status_pump_unreachable">Pump unreachable</string>-->
-    <!--    <string name="medtronic_pump_status_invalid_config">Invalid configuration</string>-->
-    <!--    <string name="medtronic_pump_status_active">Active</string>-->
-    <!--    <string name="medtronic_pump_status_sleeping">Sleeping</string>-->
-    <!--    <string name="danar_history_alarm">Alarms</string>-->
-    <!--    <string name="danar_history_glucose">Glucose</string>-->
-    <!--    All(R.string.medtronic_history_group_all), //-->
-    <!--    Bolus(R.string.danar_history_bolus), //-->
-    <!--    Basal(R.string.medtronic_history_group_basal), //-->
-    <!--    Prime(R.string.danar_history_prime), //-->
-    <!--    Configuration(R.string.medtronic_history_group_configuration), //-->
-    <!--    Alarm(R.string.danar_history_alarm), //-->
-    <!--    Glucose(R.string.danar_history_glucose), //-->
-    <!--    Notification(R.string.medtronic_history_group_notification), //-->
-    <!--    Statistic(R.string.medtronic_history_group_statistic),-->
-    <!--    Unknown(R.string.medtronic_history_group_unknown), //-->
+    <string name="history_group_basal">Bunaidhi</string>
+    <string name="history_group_all">Ar fad</string>
+    <string name="history_group_bolus">Bólasi</string>
+    <string name="history_group_alarm">Aláraim</string>
+    <string name="history_group_glucose">Glúcóis</string>
+    <!-- Maintenance -->
+    <!-- VersionChecker -->
+    <!-- Permissions -->
 </resources>

@@ -55,7 +55,7 @@
             android:orientation="horizontal">
 
             <CheckBox
-                android:id="@+id/treatments_wizard_bgcheckbox"
+                android:id="@+id/bgcheckbox"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:width="32dp"
@@ -69,7 +69,7 @@
                 android:textAppearance="?android:attr/textAppearanceSmall" />
 
             <CheckBox
-                android:id="@+id/treatments_wizard_ttcheckbox"
+                android:id="@+id/ttcheckbox"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:width="32dp"
@@ -83,14 +83,14 @@
                 android:textAppearance="?android:attr/textAppearanceSmall" />
 
             <TextView
-                android:id="@+id/treatments_wizard_bg"
+                android:id="@+id/bg"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:width="94dp"
                 android:textAppearance="?android:attr/textAppearanceSmall" />
 
             <TextView
-                android:id="@+id/treatments_wizard_bginsulin"
+                android:id="@+id/bginsulin"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:width="50dp"
@@ -105,7 +105,7 @@
             android:orientation="horizontal">
 
             <CheckBox
-                android:id="@+id/treatments_wizard_bgtrendcheckbox"
+                android:id="@+id/bgtrendcheckbox"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:width="32dp"
@@ -119,14 +119,14 @@
                 android:textAppearance="?android:attr/textAppearanceSmall" />
 
             <TextView
-                android:id="@+id/treatments_wizard_bgtrend"
+                android:id="@+id/bgtrend"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:width="94dp"
                 android:textAppearance="?android:attr/textAppearanceSmall" />
 
             <TextView
-                android:id="@+id/treatments_wizard_bgtrendinsulin"
+                android:id="@+id/bgtrendinsulin"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:width="50dp"
@@ -141,7 +141,7 @@
             android:orientation="horizontal">
 
             <CheckBox
-                android:id="@+id/treatments_wizard_cobcheckbox"
+                android:id="@+id/cobcheckbox"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:width="32dp"
@@ -155,14 +155,14 @@
                 android:textAppearance="?android:attr/textAppearanceSmall" />
 
             <TextView
-                android:id="@+id/treatments_wizard_cob"
+                android:id="@+id/cob"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:width="94dp"
                 android:textAppearance="?android:attr/textAppearanceSmall" />
 
             <TextView
-                android:id="@+id/treatments_wizard_cobinsulin"
+                android:id="@+id/cobinsulin"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:width="50dp"
@@ -177,7 +177,7 @@
             android:orientation="horizontal">
 
             <CheckBox
-                android:id="@+id/treatments_wizard_bolusiobcheckbox"
+                android:id="@+id/bolusiobcheckbox"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:width="32dp"
@@ -197,7 +197,7 @@
                 android:textAppearance="?android:attr/textAppearanceSmall" />
 
             <TextView
-                android:id="@+id/treatments_wizard_bolusiobinsulin"
+                android:id="@+id/bolusiobinsulin"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:width="50dp"
@@ -212,7 +212,7 @@
             android:orientation="horizontal">
 
             <CheckBox
-                android:id="@+id/treatments_wizard_basaliobcheckbox"
+                android:id="@+id/basaliobcheckbox"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:width="32dp"
@@ -232,7 +232,7 @@
                 android:textAppearance="?android:attr/textAppearanceSmall" />
 
             <TextView
-                android:id="@+id/treatments_wizard_basaliobinsulin"
+                android:id="@+id/basaliobinsulin"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:width="50dp"
@@ -247,7 +247,7 @@
             android:orientation="horizontal">
 
             <CheckBox
-                android:id="@+id/treatments_wizard_sbcheckbox"
+                android:id="@+id/sbcheckbox"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:width="32dp"
@@ -261,14 +261,14 @@
                 android:textAppearance="?android:attr/textAppearanceSmall" />
 
             <TextView
-                android:id="@+id/treatments_wizard_sb"
+                android:id="@+id/sb"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:width="94dp"
                 android:textAppearance="?android:attr/textAppearanceSmall" />
 
             <TextView
-                android:id="@+id/treatments_wizard_sbinsulin"
+                android:id="@+id/sbinsulin"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:width="50dp"
@@ -295,14 +295,14 @@
                 android:textAppearance="?android:attr/textAppearanceSmall" />
 
             <TextView
-                android:id="@+id/treatments_wizard_carbs"
+                android:id="@+id/carbs"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:width="94dp"
                 android:textAppearance="?android:attr/textAppearanceSmall" />
 
             <TextView
-                android:id="@+id/treatments_wizard_carbsinsulin"
+                android:id="@+id/carbsinsulin"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:width="50dp"
@@ -335,7 +335,7 @@
                 android:textAppearance="?android:attr/textAppearanceSmall" />
 
             <TextView
-                android:id="@+id/treatments_wizard_correctioninsulin"
+                android:id="@+id/correctioninsulin"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:width="50dp"
@@ -362,7 +362,7 @@
                 android:textAppearance="?android:attr/textAppearanceSmall" />
 
             <TextView
-                android:id="@+id/treatments_wizard_profile"
+                android:id="@+id/profile"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:width="94dp"
@@ -395,7 +395,7 @@
                 android:textAppearance="?android:attr/textAppearanceSmall" />
 
             <TextView
-                android:id="@+id/treatments_wizard_notes"
+                android:id="@+id/notes"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:width="94dp"
@@ -435,7 +435,7 @@
                 android:textAppearance="?android:attr/textAppearanceSmall" />
 
             <TextView
-                android:id="@+id/treatments_wizard_percent_used"
+                android:id="@+id/percent_used"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:width="50dp"
@@ -470,7 +470,7 @@
                 android:textAppearance="?android:attr/textAppearanceSmall" />
 
             <TextView
-                android:id="@+id/treatments_wizard_totalinsulin"
+                android:id="@+id/totalinsulin"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:width="50dp"

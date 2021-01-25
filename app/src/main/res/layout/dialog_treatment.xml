@@ -54,7 +54,7 @@
             android:orientation="vertical">
 
             <CheckBox
-                android:id="@+id/overview_treatment_record_only"
+                android:id="@+id/record_only"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_marginBottom="5dp"
@@ -78,7 +78,7 @@
                 android:textStyle="bold" />
 
             <info.nightscout.androidaps.utils.ui.NumberPicker
-                android:id="@+id/overview_treatment_insulin"
+                android:id="@+id/insulin"
                 android:layout_width="130dp"
                 android:layout_height="40dp" />
 
@@ -106,12 +106,12 @@
                 android:layout_gravity="center_horizontal"
                 android:width="120dp"
                 android:padding="10dp"
-                android:text="@string/overview_carbs_label"
+                android:text="@string/treatments_wizard_carbs_label"
                 android:textAppearance="@style/TextAppearance.AppCompat.Small"
                 android:textStyle="bold" />
 
             <info.nightscout.androidaps.utils.ui.NumberPicker
-                android:id="@+id/overview_treatment_carbs"
+                android:id="@+id/carbs"
                 android:layout_width="130dp"
                 android:layout_height="40dp" />
 
@@ -128,7 +128,9 @@
 
         </LinearLayout>
 
-        <include layout="@layout/okcancel" />
+        <include
+            android:id="@+id/okcancel"
+            layout="@layout/okcancel" />
 
     </LinearLayout>
 

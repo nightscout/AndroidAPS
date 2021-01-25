@@ -1,6 +1,6 @@
 package info.nightscout.androidaps.interaction.utils;
 
-import info.nightscout.androidaps.aaps;
+import info.nightscout.androidaps.Aaps;
 import info.nightscout.androidaps.data.RawDisplayData;
 
 public class DisplayFormat {
@@ -16,15 +16,15 @@ public class DisplayFormat {
     public static final int MIN_FIELD_LEN_IOB = 3;   // IoB can range from like .1U to 99U
 
     public static String deltaSymbol() {
-        return aaps.areComplicationsUnicode() ? "\u0394" : "";
+        return Aaps.areComplicationsUnicode() ? "\u0394" : "";
     }
 
     public static String verticalSeparatorSymbol() {
-        return aaps.areComplicationsUnicode() ? "\u205E" : "|";
+        return Aaps.areComplicationsUnicode() ? "\u205E" : "|";
     }
 
     public static String basalRateSymbol() {
-        return aaps.areComplicationsUnicode() ? "\u238D\u2006" : "";
+        return Aaps.areComplicationsUnicode() ? "\u238D\u2006" : "";
     }
 
     public static String shortTimeSince(final long refTime) {

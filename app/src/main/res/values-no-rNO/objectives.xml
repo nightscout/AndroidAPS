@@ -53,16 +53,4 @@
     <string name="notconnected">Ikke koblet til Internett</string>
     <string name="failedretrievetime">Feil ved henting av tid</string>
     <string name="requirementnotmet">Læringmålets krav er ikke oppfylt</string>
-    <plurals name="objective_days">
-        <item quantity="one">%1$d dag</item>
-        <item quantity="other">%1$d dager</item>
-    </plurals>
-    <plurals name="objective_hours">
-        <item quantity="one">%1$d time</item>
-        <item quantity="other">%1$d timer</item>
-    </plurals>
-    <plurals name="objective_minutes">
-        <item quantity="one">%1$d minutt</item>
-        <item quantity="other">%1$d minutter</item>
-    </plurals>
 </resources>

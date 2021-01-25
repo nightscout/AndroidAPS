@@ -53,22 +53,4 @@
     <string name="notconnected">Nie ste pripojený k internetu</string>
     <string name="failedretrievetime">Vyčítanie času zlyhalo</string>
     <string name="requirementnotmet">Požiadavky cieľa nie sú splnené</string>
-    <plurals name="objective_days">
-        <item quantity="one">%1$d deň</item>
-        <item quantity="few">%1$d dní</item>
-        <item quantity="many">%1$d dní</item>
-        <item quantity="other">%1$d dní</item>
-    </plurals>
-    <plurals name="objective_hours">
-        <item quantity="one">%1$d hodina</item>
-        <item quantity="few">%1$d hodín</item>
-        <item quantity="many">%1$d hodín</item>
-        <item quantity="other">%1$d hodín</item>
-    </plurals>
-    <plurals name="objective_minutes">
-        <item quantity="one">%1$d minúta</item>
-        <item quantity="few">%1$d minút</item>
-        <item quantity="many">%1$d minút</item>
-        <item quantity="other">%1$d minút</item>
-    </plurals>
 </resources>

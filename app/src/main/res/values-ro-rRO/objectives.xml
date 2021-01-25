@@ -53,19 +53,4 @@
     <string name="notconnected">Nu există conexiune la internet</string>
     <string name="failedretrievetime">Nu s-a reușit preluarea timpului</string>
     <string name="requirementnotmet">Nu au fost îndeplinite cerințele obiectivului</string>
-    <plurals name="objective_days">
-        <item quantity="one">%1$d zi</item>
-        <item quantity="few">%1$d zile</item>
-        <item quantity="other">%1$d zile</item>
-    </plurals>
-    <plurals name="objective_hours">
-        <item quantity="one">%1$d oră</item>
-        <item quantity="few">%1$d ore</item>
-        <item quantity="other">%1$d ore</item>
-    </plurals>
-    <plurals name="objective_minutes">
-        <item quantity="one">%1$d minut</item>
-        <item quantity="few">%1$d minute</item>
-        <item quantity="other">%1$d minute</item>
-    </plurals>
 </resources>

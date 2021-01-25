@@ -5,6 +5,7 @@ import android.os.Handler
 import android.os.HandlerThread
 import android.os.SystemClock
 import dagger.android.HasAndroidInjector
+import info.nightscout.androidaps.Config
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.events.EventBTChange
 import info.nightscout.androidaps.events.EventChargingState
@@ -53,6 +54,7 @@ class AutomationPlugin @Inject constructor(
     private val rxBus: RxBusWrapper,
     private val constraintChecker: ConstraintChecker,
     aapsLogger: AAPSLogger,
+    private val config: Config,
     private val locationServiceHelper: LocationServiceHelper,
     private val dateUtil: DateUtil
 ) : PluginBase(PluginDescription()
@@ -61,6 +63,9 @@ class AutomationPlugin @Inject constructor(
     .pluginIcon(R.drawable.ic_automation)
     .pluginName(R.string.automation)
     .shortName(R.string.automation_short)
+    .showInList(config.APS)
+    .neverVisible(!config.APS)
+    .alwaysEnabled(!config.APS)
     .preferencesId(R.xml.pref_automation)
     .description(R.string.automation_description),
     aapsLogger, resourceHelper, injector
@@ -180,20 +185,22 @@ class AutomationPlugin @Inject constructor(
 
     @Synchronized
     private fun processActions() {
-        var userEventsEnabled = true
-        if (loopPlugin.isSuspended || !loopPlugin.isEnabled()) {
-            aapsLogger.debug(LTag.AUTOMATION, "Loop deactivated")
-            executionLog.add(resourceHelper.gs(R.string.smscommunicator_loopisdisabled))
-            userEventsEnabled = false
-        }
-        val enabled = constraintChecker.isAutomationEnabled()
-        if (!enabled.value()) {
-            executionLog.add(enabled.getMostLimitedReasons(aapsLogger))
-            userEventsEnabled = false
+        var userEventsEnabled = config.APS
+        if (config.APS) {
+            if (loopPlugin.isSuspended || !loopPlugin.isEnabled()) {
+                aapsLogger.debug(LTag.AUTOMATION, "Loop deactivated")
+                executionLog.add(resourceHelper.gs(R.string.smscommunicator_loopisdisabled))
+                userEventsEnabled = false
+            }
+            val enabled = constraintChecker.isAutomationEnabled()
+            if (!enabled.value()) {
+                executionLog.add(enabled.getMostLimitedReasons(aapsLogger))
+                userEventsEnabled = false
+            }
         }
 
         aapsLogger.debug(LTag.AUTOMATION, "processActions")
-        val iterator = automationEvents.iterator()
+        val iterator : MutableIterator<AutomationEvent> = automationEvents.iterator()
         while (iterator.hasNext()) {
             val event = iterator.next()
             if (event.isEnabled && event.shouldRun() && event.trigger.shouldRun() && event.getPreconditions().shouldRun()) {
@@ -233,11 +240,13 @@ class AutomationPlugin @Inject constructor(
         storeToSP() // save last run time
     }
 
+    @Synchronized
     fun add(event: AutomationEvent) {
         automationEvents.add(event)
         rxBus.send(EventAutomationDataChanged())
     }
 
+    @Synchronized
     fun addIfNotExists(event: AutomationEvent) {
         for (e in automationEvents) {
             if (event.title == e.title) return
@@ -246,20 +255,24 @@ class AutomationPlugin @Inject constructor(
         rxBus.send(EventAutomationDataChanged())
     }
 
+    @Synchronized
     fun set(event: AutomationEvent, index: Int) {
         automationEvents[index] = event
         rxBus.send(EventAutomationDataChanged())
     }
 
+    @Synchronized
     fun removeAt(index: Int) {
         automationEvents.removeAt(index)
         rxBus.send(EventAutomationDataChanged())
     }
 
+    @Synchronized
     fun at(index: Int) = automationEvents[index]
 
     fun size() = automationEvents.size
 
+    @Synchronized
     fun swap(fromPosition: Int, toPosition: Int) {
         Collections.swap(automationEvents, fromPosition, toPosition)
         rxBus.send(EventAutomationDataChanged())

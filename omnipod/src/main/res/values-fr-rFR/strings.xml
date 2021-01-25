@@ -212,7 +212,7 @@
     <string name="omnipod_overview_temp_basal_rate">Débit de Basal Temp.</string>
     <string name="omnipod_overview_base_basal_rate">Débit de Basal</string>
     <string name="omnipod_overview_reservoir">Réservoir</string>
-    <string name="omnipod_overview_pod_active_alerts">Alertes Pod actives</string>
+    <string name="omnipod_overview_pod_active_alerts">Alertes Pod actif</string>
     <string name="omnipod_overview_firmware_version">Version du firmware</string>
     <string name="omnipod_overview_time_on_pod">Heure du Pod</string>
     <string name="omnipod_overview_temp_basal_value">%1$.2fU/h @%2$s (%3$d/%4$d minutes)</string>
@@ -229,8 +229,8 @@
     <string name="omnipod_ok">OK</string>
     <string name="omnipod_cancel">Annuler</string>
     <!-- Omnipod - Times -->
-    <string name="omnipod_moments_ago">Il y a un moment</string>
-    <string name="omnipod_less_than_a_minute_ago">Il y a moins d\'une minute</string>
+    <string name="omnipod_moments_ago">À l\'instant</string>
+    <string name="omnipod_less_than_a_minute_ago">Moins d\'une minute</string>
     <string name="omnipod_composite_time">%1$s et %2$s</string>
     <string name="omnipod_time_ago">il y a %1$s</string>
     <plurals name="omnipod_minutes">

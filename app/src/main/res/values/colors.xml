@@ -64,10 +64,6 @@
 
     <color name="splashBackground">#2E2E2E</color>
 
-    <color name="metadataOk">#77dd77</color>
-    <color name="metadataTextWarning">#FF8C00</color>
-    <color name="metadataTextError">#FF5555</color>
-
     <color name="importListFileName">#FFFFFF</color>
     <color name="importListAdditionalInfo">#BBBBBB</color>
 

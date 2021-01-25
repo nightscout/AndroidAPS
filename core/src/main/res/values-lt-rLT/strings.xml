@@ -215,24 +215,43 @@
     <string name="history_group_alarm">Aliarmai</string>
     <string name="history_group_glucose">Gliukozė</string>
     <string name="mute5min">Nutildyti 5 minutėms</string>
-    <!--    <string name="medtronic_pump_status_never_contacted">Never contacted</string>-->
-    <!--    <string name="medtronic_pump_status_waking_up">Waking up</string>-->
-    <!--    <string name="medtronic_pump_status_error_comm">Error with communication</string>-->
-    <!--    <string name="medtronic_pump_status_timeout_comm">Timeout on communication</string>-->
-    <!--    <string name="medtronic_pump_status_pump_unreachable">Pump unreachable</string>-->
-    <!--    <string name="medtronic_pump_status_invalid_config">Invalid configuration</string>-->
-    <!--    <string name="medtronic_pump_status_active">Active</string>-->
-    <!--    <string name="medtronic_pump_status_sleeping">Sleeping</string>-->
-    <!--    <string name="danar_history_alarm">Alarms</string>-->
-    <!--    <string name="danar_history_glucose">Glucose</string>-->
-    <!--    All(R.string.medtronic_history_group_all), //-->
-    <!--    Bolus(R.string.danar_history_bolus), //-->
-    <!--    Basal(R.string.medtronic_history_group_basal), //-->
-    <!--    Prime(R.string.danar_history_prime), //-->
-    <!--    Configuration(R.string.medtronic_history_group_configuration), //-->
-    <!--    Alarm(R.string.danar_history_alarm), //-->
-    <!--    Glucose(R.string.danar_history_glucose), //-->
-    <!--    Notification(R.string.medtronic_history_group_notification), //-->
-    <!--    Statistic(R.string.medtronic_history_group_statistic),-->
-    <!--    Unknown(R.string.medtronic_history_group_unknown), //-->
+    <!-- Maintenance -->
+    <string name="metadata_label_created_at">Sukurta</string>
+    <string name="metadata_label_aaps_version">AAPS versija</string>
+    <string name="metadata_label_aaps_flavour">Versijos variantas</string>
+    <string name="metadata_label_device_name">Eksportuojamas paciento vardas</string>
+    <string name="metadata_label_device_model">Eksportuojamas prietaiso modelis</string>
+    <string name="metadata_label_encryption">Failo šifravimas</string>
+    <string name="metadata_format_old">Senas eksporto formatas</string>
+    <string name="metadata_format_new">Naujas šifruotas formatas</string>
+    <string name="metadata_format_debug">Naujas derinimo formatas (nešifruotas)</string>
+    <string name="metadata_format_other">Nežinomas eksporto formatas</string>
+    <string name="exported_ago" comment="at placeholder we add pluralized number of hours/minutes">eksportuota prieš %1$s</string>
+    <string name="exported_at" comment="at placeholder we add export date">eksportuota %1$s</string>
+    <string name="exported_less_than_hour_ago">eksportuota mažiau nei prieš valandą</string>
+    <string name="in_directory" comment="placeholder is for exported file path">kataloge: %1$s</string>
+    <string name="preferences_import_list_title">Pasirinkite failą importavimui</string>
+    <string name="metadata_warning_different_flavour">Nustatymai sukurti naudojant skirtingą AAPS versiją (%1$s), jūsų turima: %2$s.\n\nKai kurių nustatymų gali trūkti arba jie gali būti neteisingi - po importavimo patikrinkite ir atnaujinkite nustatymus.</string>
+    <string name="metadata_warning_different_device">Nustatymai buvo sukurti naudojant kitą prietaisą. Viskas gerai, jei importuojante iš senesnio/kito telefono, tačiau įsitikinkite, kad visi importuoti nustatymai yra teisingi!</string>
+    <string name="metadata_warning_outdated_format">Jūs naudojate pasenusį formatą iš senos AAPS versijos, kuris nėra saugus! Naudokite tik kraštutiniu atveju, jei neturite nustatymų failo dabartiniu, JSON formatu.</string>
+    <string name="metadata_warning_old_export">Importuoti nustatymai yra %1$s d. senumo! Patikrinkite, gal pasirinkote neteisingą failą ir turite naujesnius? Nepamirškite reguliariai eksportuoti nustatymų!</string>
+    <string name="metadata_warning_date_format">Neteisingas datos ir laiko formatas!</string>
+    <string name="metadata_warning_different_version">Parametrai iš kitos palaikomosios programos versijos. Jei importuojate po atnaujinimo, tai yra normalu, bet po importavimo patikrinkite, ar visos nuostatos vis dar teisingos!</string>
+    <string name="metadata_urgent_different_version">Parametrai iš kitos pagrindinės programos versijos. Pagrindinės versijos labai skiriasi ir gali turėti nesuderinamų parametrų! Po importavimo įsitikinkite, kad parametrai vis dar teisingi!</string>
+    <string name="prefdecrypt_settings_tampered">Nustatymų failas sugadintas</string>
+    <string name="prefdecrypt_settings_secure">Nustatymų failas yra saugus</string>
+    <string name="prefdecrypt_settings_unencrypted">Naudojamas nesaugus, nešifruotas nustatymų formatas</string>
+    <string name="prefdecrypt_wrong_json">JSON formato klaida, neužpildyti reikalingi laukai (formatas, turinys, metaduomenys arba saugumas)</string>
+    <string name="prefdecrypt_wrong_password">Iššifravimo klaida, netinkamas slaptažodis</string>
+    <string name="prefdecrypt_issue_missing_file_hash">Trūksta failo kontrolinės žymės, neįmanoma patikrinti autentiškumo!</string>
+    <string name="prefdecrypt_issue_modified">Failas pakeistas po eksportavimo!</string>
+    <string name="prefdecrypt_issue_parsing">Iššifravimo klaida, nustatymų analizė neįvyko!</string>
+    <string name="prefdecrypt_issue_wrong_pass">Iššifravimas klaida, slaptažodis yra neteisingas arba nustatymų failas buvo pakeistas! Taip nutinka, jei importuotas failas buvo eksportuotas su kitu slaptažodžiu.</string>
+    <string name="prefdecrypt_issue_wrong_format">Trūksta šifravimo sąrankos parametrų, nustatymų formatas yra neteisingas!</string>
+    <string name="prefdecrypt_issue_wrong_algorithm">Nepalaikomas arba nepatikslintas šifravimo algoritmas!</string>
+    <!-- VersionChecker -->
+    <string name="signature_verifier">Parašo tikrinimas</string>
+    <string name="running_invalid_version">Nustatyta, kad naudojate neteisingą versiją. Ciklas išjungtas!</string>
+    <string name="versionavailable">Versiją %1$s jau galima naudoti</string>
+    <!-- Permissions -->
 </resources>

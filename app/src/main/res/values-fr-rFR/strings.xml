@@ -14,7 +14,6 @@
     <string name="reset_db_confirm">Voulez-vous vraiment réinitialiser les bases de données ?</string>
     <string name="nav_exit">Quitter</string>
     <string name="ns_sync_use_absolute_title">Utiliser toujours les valeurs absolues du basal</string>
-    <string name="alert_dialog_storage_permission_text">Redémarrez votre smartphone ou redémarrez AndroidAPS depuis les paramètres système \nsinon AndroidAPS ne sera pas connecté aux journaux (il est important de suivre et vérifier que les algorithmes fonctionnent correctement)!</string>
     <string name="alert_dialog_permission_battery_optimization_failed">Ce périphérique ne semble pas permettre l\'optimisation de la batterie par une liste blanche - vous pourriez rencontrer des problèmes de performance.</string>
     <string name="description_actions">Quelques boutons pour accéder rapidement aux fonctions communes</string>
     <string name="description_config_builder">Utilisé pour configurer les plugins actifs</string>
@@ -168,7 +167,6 @@
     <string name="old_master_password">Ancien mot de passe principal</string>
     <string name="different_password_used">Ce fichier a été exporté et chiffré avec un mot de passe principal différent. Veuillez renseigner votre ancien mot de passe principal pour déchiffrer le fichier.</string>
     <string name="master_password_will_be_replaced">Suite à l\'importation réussie, le mot de place principal actuel SERA REMPLACÉ par cet ancien mot de passe!</string>
-    <string name="preferences_import_list_title">Sélectionner le fichier à importer</string>
     <string name="check_preferences_before_import">Vérifiez les préférences avant d\'importer :</string>
     <string name="check_preferences_cannot_import">Les préférences ne peuvent pas être importées !</string>
     <string name="check_preferences_dangerous_import">Les préférences ne doivent pas être importées !</string>
@@ -176,39 +174,6 @@
     <string name="check_preferences_details_title">Détails des problèmes d\'importation</string>
     <string name="check_preferences_import_btn">Import</string>
     <string name="check_preferences_import_anyway_btn">Importer quand même (DANGEREUX !)</string>
-    <string name="metadata_warning_different_flavour">Des préférences ont été créées avec des variantes différentes d\'AAPS (%1$s) quand vous avez : %2$s.\n\nCertains paramètres peuvent manquer ou ou ne pas être valides après l\'import, vérifiez et mettez à jour vos préférences.</string>
-    <string name="metadata_warning_different_device">Les préférences ont été créées sur un autre périphérique. C\'est OK si vous importez à partir d\'un téléphone ancien/différent, mais vérifiez les préférences importées sont correctes !</string>
-    <string name="metadata_warning_outdated_format">Vous utilisez le format obsolète des anciennes versions d\'APPS qui n\'est pas sécurisé ! Utilisez-le uniquement en dernier recours, si vous n\'avez pas d\'export au format JSON actuel.</string>
-    <string name="metadata_warning_old_export">Les préférences importées ont déjà %1$s jours ! Vous avez peut-être des préférences plus récentes ou vous avez sélectionné un mauvais fichier ? N\'oubliez pas d\'exporter vos préférences régulièrement !</string>
-    <string name="metadata_warning_date_format">Format de date invalide !</string>
-    <string name="metadata_warning_different_version">Préférences d\'une autre version mineure différente de l\'application. C\'est OK si vous importez après la mise à jour, mais vérifiez après l\'importation si les préférences sont toujours correctes !</string>
-    <string name="metadata_urgent_different_version">Préférences d\'une autre version majeure différente de l\'application. Les versions majeures diffèrent significativement et peuvent avoir des préférences incompatibles ! Vérifiez bien après l\'import que les préférences sont toujours correctes !</string>
-    <string name="metadata_label_format">Format de fichier</string>
-    <string name="metadata_label_created_at">Créé le</string>
-    <string name="metadata_label_aaps_version">Version d\'AAPS</string>
-    <string name="metadata_label_aaps_flavour">Variante de Build</string>
-    <string name="metadata_label_device_name">Export du nom du patient de l\'appareil</string>
-    <string name="metadata_label_device_model">Export du modèle de l\'appareil</string>
-    <string name="metadata_label_encryption">Cryptage du fichier</string>
-    <string name="metadata_format_old">Ancien format d\'export</string>
-    <string name="metadata_format_new">Nouveau format crypté</string>
-    <string name="metadata_format_debug">Nouveau format de débug (non crypté)</string>
-    <string name="metadata_format_other">Format d\'export inconnu</string>
-    <string name="prefdecrypt_settings_tampered">Fichier paramètres altérés</string>
-    <string name="prefdecrypt_settings_secure">Fichier paramètres sécurisé</string>
-    <string name="prefdecrypt_settings_unencrypted">Utilisation non sécurisée, fichier paramètres non crypté</string>
-    <string name="prefdecrypt_wrong_json">Erreur de format JSON, zone obligatoire manquante (format, contenu, métadonnées ou sécurité)</string>
-    <string name="prefdecrypt_wrong_password">Erreur de décryptage, le mot de passe indiqué ne permet pas le décryptage du fichier</string>
-    <string name="prefdecrypt_issue_missing_file_hash">Checksum du fichier manquant, vérification de l\'authenticité des pararamètres impossible !</string>
-    <string name="prefdecrypt_issue_modified">Le fichier a été modifié après l\'export !</string>
-    <string name="prefdecrypt_issue_parsing">Erreur de décryptage, échec de l\'import des préférences !</string>
-    <string name="prefdecrypt_issue_wrong_pass">Erreur de décryptage, le mot de passe fourni est invalide ou le fichier de paramètres à été modifié ! Cela peut arriver si le fichier a été exporté avec un mot de passe principal différent.</string>
-    <string name="prefdecrypt_issue_wrong_format">Configuration du cryptage manquant, format des paramètres invalide !</string>
-    <string name="prefdecrypt_issue_wrong_algorithm">Algorithme de cryptage non pris en charge ou non spécifié !</string>
-    <string name="exported_ago" comment="at placeholder we add pluralized number of hours/minutes">exporté il y a %1$s</string>
-    <string name="exported_at" comment="at placeholder we add export date">exporté à %1$s</string>
-    <string name="exported_less_than_hour_ago">exporté il y a moins d\'une heure</string>
-    <string name="in_directory" comment="placeholder is for exported file path">dans le dossier : %1$s</string>
     <string name="end_user_license_agreement">Contrat de Licence pour Utilisateur Final</string>
     <string name="end_user_license_agreement_text">NE DOIT PAS ÊTRE UTILISÉ POUR PRENDRE DES DÉCISIONS MÉDICALES. IL N\'Y A AUCUNE GARANTIE POUR LE PROGRAMME, DANS LA LIMITE PERMISE PAR LA LOI APPLICABLE. SAUF S\'IL EST INDIQUÉ LE CONTRAIRE PAR ÉCRIT. LES TITULAIRES DU DROIT D\'AUTEUR ET / OU D\'AUTRES PARTIES FOURNISSENT LE PROGRAMME «EN L\'ÉTAT» SANS GARANTIE D\'AUCUNE SORTE, EXPLICITE OU IMPLICITE, Y COMPRIS MAIS NON SEULEMENT AUX GARANTIES IMPLICITES DE QUALITÉ MARCHANDE ET D\'ADÉQUATION À UN USAGE PARTICULIER
 L\'ENSEMBLE DES RISQUES LIÉS À LA QUALITÉ ET À LA PERFORMANCE DU PROGRAMME SONT DE VOTRE RESPONSABILITÉ. SI LE PROGRAMME EST DÉFECTUEUX, VOUS ASSUMEZ LE COÛT DE TOUS LES SERVICES, RÉPARATIONS OU CORRECTIONS NÉCESSAIRES.</string>
@@ -531,7 +496,7 @@ L\'ENSEMBLE DES RISQUES LIÉS À LA QUALITÉ ET À LA PERFORMANCE DU PROGRAMME S
     <string name="activity_target">Cible Glycémie pour l\'activité</string>
     <string name="hypo_duration">durée hypo [min]</string>
     <string name="hypo_target">Cible Glycémie pendant l’hypo</string>
-    <string name="reuse">réutiliser</string>
+    <string name="reuse_profile_pct_hours">Réutiliser %1$d%% %2$dh</string>
     <string name="wearcontrol_title">Commandes depuis la montre</string>
     <string name="wearcontrol_summary">Définir les Cibles Temp et entrer les Traitements depuis la montre</string>
     <string name="food">Aliments</string>
@@ -630,7 +595,6 @@ L\'ENSEMBLE DES RISQUES LIÉS À LA QUALITÉ ET À LA PERFORMANCE DU PROGRAMME S
     <string name="enablesmbwithhightemptarget">Activer SMB avec cibles temp. hautes</string>
     <string name="enablesmbwithhightemptarget_summary">Activer les SMB quand il y a une cible temp haute active (exercise, au dessus de 100 mg/dl ou 5.5 mmol/l)</string>
     <string name="overview_insulin_label">Insuline</string>
-    <string name="overview_carbs_label">Glucides</string>
     <string name="overview_buttons_selection">Boutons</string>
     <string name="show_calibration_button_summary">Envoie un étalonnage à xDrip+ ou ouvre la boîte de dialogue de calibration du G5</string>
     <string name="show_cgm_button_summary">Ouvre xDrip+, le bouton de retour renverra vers AAPS</string>
@@ -814,7 +778,6 @@ L\'ENSEMBLE DES RISQUES LIÉS À LA QUALITÉ ET À LA PERFORMANCE DU PROGRAMME S
     <string name="nav_logsettings">Paramètres journal</string>
     <string name="resettodefaults">Réinitialiser les valeurs par défaut</string>
     <string name="nsmalfunction">Dysfonctionnement NSClient. Faites une réinitialisation de NS et de NSClient.</string>
-    <string name="versionavailable">Version %1$s disponible</string>
     <string name="time_offset">Décalage horaire</string>
     <string name="setupwizard_preferred_aps_mode">Mode APS préféré</string>
     <string name="treatments_wizard_total_label">Total</string>
@@ -971,8 +934,6 @@ L\'ENSEMBLE DES RISQUES LIÉS À LA QUALITÉ ET À LA PERFORMANCE DU PROGRAMME S
     <string name="copy_short">COPIE</string>
     <string name="addnew">Ajouter un nouveau</string>
     <string name="versionChecker">Vérificateur de version</string>
-    <string name="signature_verifier">Vérificateur de signature</string>
-    <string name="running_invalid_version">Nous avons détecté que vous utilisez une version invalide. Boucle désactivée !</string>
     <string name="old_version">ancienne version</string>
     <string name="very_old_version">très ancienne version</string>
     <string name="new_version_warning">Nouvelle version disponible depuis %1$d jours ! Retour à Arrêt Glycémie Basse (AGB) dans %2$d jours, la boucle sera désactivée dans %3$d jours</string>

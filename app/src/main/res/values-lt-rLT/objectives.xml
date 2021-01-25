@@ -54,22 +54,4 @@
     <string name="notconnected">Neprisijungta prie interneto</string>
     <string name="failedretrievetime">Nepavyko nuskaityti laiko</string>
     <string name="requirementnotmet">Tikslo reikalavimai neįvykdyti</string>
-    <plurals name="objective_days">
-        <item quantity="one">%1$d d.</item>
-        <item quantity="few">%1$d d.</item>
-        <item quantity="many">%1$d d.</item>
-        <item quantity="other">%1$d d.</item>
-    </plurals>
-    <plurals name="objective_hours">
-        <item quantity="one">%1$d val.</item>
-        <item quantity="few">%1$d val.</item>
-        <item quantity="many">%1$d val.</item>
-        <item quantity="other">%1$d val.</item>
-    </plurals>
-    <plurals name="objective_minutes">
-        <item quantity="one">%1$d min.</item>
-        <item quantity="few">%1$d min.</item>
-        <item quantity="many">%1$d min.</item>
-        <item quantity="other">%1$d min.</item>
-    </plurals>
 </resources>

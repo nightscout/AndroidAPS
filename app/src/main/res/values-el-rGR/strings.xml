@@ -13,7 +13,6 @@
     <string name="reset_db_confirm">Θέλετε πραγματικά να επαναφέρετε την βάση δεδομένων;</string>
     <string name="nav_exit">Έξοδος</string>
     <string name="ns_sync_use_absolute_title">Χρησιμοποιείτε πάντα απόλυτες τιμές βασικού</string>
-    <string name="alert_dialog_storage_permission_text">Παρακαλώ κάντε επανεκίνηση στο τηλέφώνο ή restart στο AndroidAPS από τις Ρυθμίσεις Συστήματος, \nαλλιώς το AndroidAPS δεν θα έχει καταγραφή (επαληθεύστε ότι οι αλγόριθμοι δουλεύουν σωστά)!</string>
     <string name="alert_dialog_permission_battery_optimization_failed">Αυτή η συσκευή δεν φαίνεται να υποστηρίζει τη λίστα κατάτμησης βελτιστοποίησης μπαταρίας - ενδέχεται να αντιμετωπίσετε προβλήματα απόδοσης.</string>
     <string name="description_actions">Ορισμένα πλήκτρα για γρήγορη πρόσβαση σε κοινά χαρακτηριστικά</string>
     <string name="description_config_builder">Χρησιμοποιείται για ρύθμιση ενεργών συνδέσεων</string>
@@ -385,7 +384,6 @@
     <string name="activity_target">στόχος άσκησης</string>
     <string name="hypo_duration">διάρκεια υπογλυκαιμίας</string>
     <string name="hypo_target">στόχος υπογλυκαιμίας</string>
-    <string name="reuse">επαναχρησιμοποίηση</string>
     <string name="wearcontrol_title">Έλεγχος από ρολόι</string>
     <string name="wearcontrol_summary">Ρυθμίστε Στόχους-Προσ Ρυθμού και βάλτε Θεραπείες από το ρολόι.</string>
     <string name="food">Γεύμα</string>
@@ -476,7 +474,6 @@
     <string name="enablesmbwithtemptarget_summary">Ενεργοποίηση του SMB όταν υπάρχει ενεργός προσωρινός στόχος (τρώω σύντομα, άσκηση)</string>
     <string name="enablesmbwithhightemptarget">Ενεργοποίηση SMB με υψηλούς προσωρινούς στόχους</string>
     <string name="overview_insulin_label">Ινσουλίνη</string>
-    <string name="overview_carbs_label">Υδατάνθρακες</string>
     <string name="overview_buttons_selection">Πλήκτρα</string>
     <string name="show_calibration_button_summary">Στέλνει καλιμπράρισμα στο xDrip + ή ανοίγει το παράθυρο διαλόγου καλιμπραρίσματος του G5</string>
     <string name="show_cgm_button_summary">Ανοίγει το xDrip +, το πλήκτρο πίσω επιστρέφει στο AndroidAPS</string>
@@ -641,7 +638,6 @@
     <string name="nav_logsettings">Ρυθμίσεις Αρχείου Καταγραφής</string>
     <string name="resettodefaults">Επαναφορά προεπιλογών</string>
     <string name="nsmalfunction">Δυσλειτουργία NSClient. Εξετάστε την επανεκκίνηση του NS και του NSClient.</string>
-    <string name="versionavailable">Έκδοση %1$s διαθέσιμη</string>
     <string name="time_offset">Χρονική μετατόπιση</string>
     <string name="setupwizard_preferred_aps_mode">Προτιμώμενη λειτουργία APS</string>
     <string name="treatments_wizard_total_label">Σύνολο</string>
@@ -789,8 +785,6 @@
     <string name="copy_short">Αντιγραφή</string>
     <string name="addnew">Προσθήκη νέου</string>
     <string name="versionChecker">Έλεγχος Έκδοσης</string>
-    <string name="signature_verifier">Έλεγχος υπογραφής</string>
-    <string name="running_invalid_version">Διαπιστώσαμε ότι εκτελείτε μη έγκυρη έκδοση. Κύκλωμα απενεργοποιήθηκε!</string>
     <string name="old_version">παλιά έκδοση</string>
     <string name="very_old_version">πολύ παλιά έκδοση</string>
     <string name="twohours">2ώρες</string>

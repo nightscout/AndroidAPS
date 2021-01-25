@@ -1,6 +1,6 @@
 package info.nightscout.androidaps.plugins.general.maintenance.formats
 
-import info.nightscout.androidaps.R
+import info.nightscout.androidaps.core.R
 import info.nightscout.androidaps.utils.CryptoUtil
 import info.nightscout.androidaps.utils.extensions.hexStringToByteArray
 import info.nightscout.androidaps.utils.extensions.toHex
@@ -23,6 +23,7 @@ class EncryptedPrefsFormat @Inject constructor(
 ) : PrefsFormat {
 
     companion object {
+
         val FORMAT_KEY_ENC = "aaps_encrypted"
         val FORMAT_KEY_NOENC = "aaps_structured"
 

@@ -12,14 +12,6 @@
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
-        <info.nightscout.androidaps.utils.ui.SingleClickButton
-            android:id="@+id/profilehelper_compareprofile"
-            style="?android:attr/buttonStyle"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:drawableStart="@drawable/ic_compare_profiles"
-            android:text="@string/comapareprofile" />
-
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -28,7 +20,7 @@
             android:orientation="horizontal">
 
             <TextView
-                android:id="@+id/profilehelper_menu1"
+                android:id="@+id/menu1"
                 android:layout_width="0dp"
                 android:layout_height="30dp"
                 android:layout_weight="1"
@@ -38,7 +30,7 @@
                 android:text="1" />
 
             <TextView
-                android:id="@+id/profilehelper_menu2"
+                android:id="@+id/menu2"
                 android:layout_width="0dp"
                 android:layout_height="30dp"
                 android:layout_weight="1"
@@ -50,7 +42,7 @@
         </LinearLayout>
 
         <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/profilehelper_profiletype_title"
+            android:id="@+id/profiletype_title"
             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -59,7 +51,7 @@
             app:boxStrokeColor="@color/tabBgColorSelected">
 
             <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/profilehelper_profiletype"
+                android:id="@+id/profiletype"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="10dp"
@@ -72,7 +64,7 @@
         </com.google.android.material.textfield.TextInputLayout>
 
         <LinearLayout
-            android:id="@+id/profilehelper_default_profile"
+            android:id="@+id/default_profile"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical">
@@ -87,82 +79,82 @@
                     android:gravity="center_vertical">
 
                     <TextView
-                        android:id="@+id/profilehelper_age_label"
+                        android:id="@+id/age_label"
                         android:layout_width="150dp"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="10dp"
-                        android:labelFor="@+id/profilehelper_age"
+                        android:labelFor="@+id/age"
                         android:text="@string/age"
                         android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
 
                     <info.nightscout.androidaps.utils.ui.NumberPicker
-                        android:id="@+id/profilehelper_age"
+                        android:id="@+id/age"
                         android:layout_width="130dp"
                         android:layout_height="40dp" />
 
                 </TableRow>
 
                 <TableRow
-                    android:id="@+id/profilehelper_tdd_row"
+                    android:id="@+id/tdd_row"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:gravity="center_vertical">
 
                     <TextView
-                        android:id="@+id/profilehelper_tdd_label"
+                        android:id="@+id/tdd_label"
                         android:layout_width="150dp"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="10dp"
-                        android:labelFor="@+id/profilehelper_weight"
+                        android:labelFor="@+id/weight"
                         android:text="@string/tdd_total"
                         android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
 
                     <info.nightscout.androidaps.utils.ui.NumberPicker
-                        android:id="@+id/profilehelper_tdd"
+                        android:id="@+id/tdd"
                         android:layout_width="130dp"
                         android:layout_height="40dp" />
 
                 </TableRow>
 
                 <TableRow
-                    android:id="@+id/profilehelper_weight_row"
+                    android:id="@+id/weight_row"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:gravity="center_vertical">
 
                     <TextView
-                        android:id="@+id/profilehelper_weigth_label"
+                        android:id="@+id/weigth_label"
                         android:layout_width="150dp"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="10dp"
-                        android:labelFor="@+id/profilehelper_weight"
+                        android:labelFor="@+id/weight"
                         android:text="@string/weight_label"
                         android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
 
                     <info.nightscout.androidaps.utils.ui.NumberPicker
-                        android:id="@+id/profilehelper_weight"
+                        android:id="@+id/weight"
                         android:layout_width="130dp"
                         android:layout_height="40dp" />
 
                 </TableRow>
 
                 <TableRow
-                    android:id="@+id/profilehelper_basalpctfromtdd_row"
+                    android:id="@+id/basalpctfromtdd_row"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:gravity="center_vertical">
 
                     <TextView
-                        android:id="@+id/profilehelper_basalpctfromtdd_label"
+                        android:id="@+id/basalpctfromtdd_label"
                         android:layout_width="150dp"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="10dp"
-                        android:labelFor="@+id/profilehelper_basalpctfromtdd"
+                        android:labelFor="@+id/basalpctfromtdd"
                         android:text="@string/basalpctfromtdd_label"
                         android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
 
                     <info.nightscout.androidaps.utils.ui.NumberPicker
-                        android:id="@+id/profilehelper_basalpctfromtdd"
+                        android:id="@+id/basalpctfromtdd"
                         android:layout_width="130dp"
                         android:layout_height="40dp" />
 
@@ -171,14 +163,14 @@
             </TableLayout>
 
             <TextView
-                android:id="@+id/profilehelper_tdds"
+                android:id="@+id/tdds"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="10dp"
                 android:textAppearance="@style/TextAppearance.AppCompat.Small" />
 
             <info.nightscout.androidaps.utils.ui.SingleClickButton
-                android:id="@+id/profilehelper_copytolocalprofile"
+                android:id="@+id/copytolocalprofile"
                 style="?android:attr/buttonStyle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -188,13 +180,13 @@
         </LinearLayout>
 
         <LinearLayout
-            android:id="@+id/profilehelper_current_profile"
+            android:id="@+id/current_profile"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
             <TextView
-                android:id="@+id/profilehelper_current_profile_text"
+                android:id="@+id/current_profile_text"
                 android:layout_width="150dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="10dp"
@@ -203,7 +195,7 @@
         </LinearLayout>
 
         <LinearLayout
-            android:id="@+id/profilehelper_available_profile"
+            android:id="@+id/available_profile"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical">
@@ -217,7 +209,7 @@
                 app:boxStrokeColor="@color/white">
 
                 <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/profilehelper_available_profile_list"
+                    android:id="@+id/available_profile_list"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="10dp"
@@ -232,7 +224,7 @@
         </LinearLayout>
 
         <LinearLayout
-            android:id="@+id/profilehelper_profile_switch"
+            android:id="@+id/profile_switch"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical">
@@ -246,7 +238,7 @@
                 app:boxStrokeColor="@color/white">
 
                 <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/profilehelper_profileswitch_list"
+                    android:id="@+id/profileswitch_list"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="10dp"
@@ -258,8 +250,15 @@
 
             </com.google.android.material.textfield.TextInputLayout>
 
-
         </LinearLayout>
+
+        <info.nightscout.androidaps.utils.ui.SingleClickButton
+            android:id="@+id/compareprofile"
+            style="?android:attr/buttonStyle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:drawableStart="@drawable/ic_compare_profiles"
+            android:text="@string/comapareprofile" />
 
     </LinearLayout>
 
