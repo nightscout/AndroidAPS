@@ -7,6 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import dagger.android.support.DaggerFragment
 import info.nightscout.androidaps.R
+import info.nightscout.androidaps.databinding.VirtualpumpFragmentBinding
 import info.nightscout.androidaps.events.EventExtendedBolusChange
 import info.nightscout.androidaps.events.EventTempBasalChange
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper
@@ -18,10 +19,10 @@ import info.nightscout.androidaps.utils.extensions.plusAssign
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
-import kotlinx.android.synthetic.main.virtualpump_fragment.*
 import javax.inject.Inject
 
 class VirtualPumpFragment : DaggerFragment() {
+
     @Inject lateinit var rxBus: RxBusWrapper
     @Inject lateinit var resourceHelper: ResourceHelper
     @Inject lateinit var fabricPrivacy: FabricPrivacy
@@ -40,8 +41,15 @@ class VirtualPumpFragment : DaggerFragment() {
         }
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        return inflater.inflate(R.layout.virtualpump_fragment, container, false)
+    private var _binding: VirtualpumpFragmentBinding? = null
+
+    // This property is only valid between onCreateView and
+    // onDestroyView.
+    private val binding get() = _binding!!
+
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
+        _binding = VirtualpumpFragmentBinding.inflate(inflater, container, false)
+        return binding.root
     }
 
     @Synchronized
@@ -71,19 +79,26 @@ class VirtualPumpFragment : DaggerFragment() {
     }
 
     @Synchronized
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
+    }
+
+    @Synchronized
     private fun updateGui() {
-        virtualpump_basabasalrate?.text = resourceHelper.gs(R.string.pump_basebasalrate, virtualPumpPlugin.baseBasalRate)
-        virtualpump_tempbasal?.text = treatmentsPlugin.getTempBasalFromHistory(System.currentTimeMillis())?.toStringFull()
+        if (_binding == null) return
+        binding.basabasalrate.text = resourceHelper.gs(R.string.pump_basebasalrate, virtualPumpPlugin.baseBasalRate)
+        binding.tempbasal.text = treatmentsPlugin.getTempBasalFromHistory(System.currentTimeMillis())?.toStringFull()
             ?: ""
-        virtualpump_extendedbolus?.text = treatmentsPlugin.getExtendedBolusFromHistory(System.currentTimeMillis())?.toString()
+        binding.extendedbolus.text = treatmentsPlugin.getExtendedBolusFromHistory(System.currentTimeMillis())?.toString()
             ?: ""
-        virtualpump_battery?.text = resourceHelper.gs(R.string.format_percent, virtualPumpPlugin.batteryPercent)
-        virtualpump_reservoir?.text = resourceHelper.gs(R.string.formatinsulinunits, virtualPumpPlugin.reservoirInUnits.toDouble())
+        binding.battery.text = resourceHelper.gs(R.string.format_percent, virtualPumpPlugin.batteryPercent)
+        binding.reservoir.text = resourceHelper.gs(R.string.formatinsulinunits, virtualPumpPlugin.reservoirInUnits.toDouble())
 
         virtualPumpPlugin.refreshConfiguration()
         val pumpType = virtualPumpPlugin.pumpType
 
-        virtualpump_type?.text = pumpType?.description
-        virtualpump_type_def?.text = pumpType?.getFullDescription(resourceHelper.gs(R.string.virtualpump_pump_def), pumpType.hasExtendedBasals(), resourceHelper)
+        binding.type.text = pumpType?.description
+        binding.typeDef.text = pumpType?.getFullDescription(resourceHelper.gs(R.string.virtualpump_pump_def), pumpType.hasExtendedBasals(), resourceHelper)
     }
 }
