@@ -1,7 +1,6 @@
 package info.nightscout.androidaps.interaction.actions;
 
 
-import android.app.Activity;
 import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.os.Bundle;
@@ -13,13 +12,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.TextView;
 
 import java.text.DecimalFormat;
 
-import info.nightscout.androidaps.aaps;
-import info.nightscout.androidaps.data.ListenerService;
 import info.nightscout.androidaps.R;
+import info.nightscout.androidaps.data.ListenerService;
 import info.nightscout.androidaps.interaction.utils.PlusMinusEditText;
 import info.nightscout.androidaps.interaction.utils.SafeParse;
 
@@ -47,7 +44,7 @@ public class WizardActivity extends ViewSelectorActivity {
         DotsPageIndicator dotsPageIndicator = findViewById(R.id.page_indicator);
         dotsPageIndicator.setPager(pager);
         SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(this);
-        hasPercentage =  sp.getBoolean("wizardpercentage", false);
+        hasPercentage = sp.getBoolean("wizardpercentage", false);
     }
 
 
@@ -61,7 +58,7 @@ public class WizardActivity extends ViewSelectorActivity {
     private class MyGridViewPagerAdapter extends GridPagerAdapter {
         @Override
         public int getColumnCount(int arg0) {
-            return hasPercentage?3:2;
+            return hasPercentage ? 3 : 2;
         }
 
         @Override
@@ -72,7 +69,7 @@ public class WizardActivity extends ViewSelectorActivity {
         @Override
         public Object instantiateItem(ViewGroup container, int row, int col) {
 
-            if(col == 0){
+            if (col == 0) {
                 final View view = getInflatedPlusMinusView(container);
                 if (editCarbs == null) {
                     editCarbs = new PlusMinusEditText(view, R.id.amountfield, R.id.plusbutton, R.id.minusbutton, 0d, 0d, 150d, 1d, new DecimalFormat("0"), false);
@@ -81,10 +78,10 @@ public class WizardActivity extends ViewSelectorActivity {
                     editCarbs = new PlusMinusEditText(view, R.id.amountfield, R.id.plusbutton, R.id.minusbutton, def, 0d, 150d, 1d, new DecimalFormat("0"), false);
 
                 }
-                setLabelToPlusMinusView(view, aaps.gs(R.string.action_carbs));
+                setLabelToPlusMinusView(view, getString(R.string.action_carbs));
                 container.addView(view);
                 return view;
-            } else if(col == 1 && hasPercentage){
+            } else if (col == 1 && hasPercentage) {
                 final View view = getInflatedPlusMinusView(container);
                 if (editPercentage == null) {
                     editPercentage = new PlusMinusEditText(view, R.id.amountfield, R.id.plusbutton, R.id.minusbutton, 100d, 50d, 150d, 1d, new DecimalFormat("0"), false);
@@ -92,7 +89,7 @@ public class WizardActivity extends ViewSelectorActivity {
                     double def = SafeParse.stringToDouble(editPercentage.editText.getText().toString());
                     editPercentage = new PlusMinusEditText(view, R.id.amountfield, R.id.plusbutton, R.id.minusbutton, def, 50d, 150d, 1d, new DecimalFormat("0"), false);
                 }
-                setLabelToPlusMinusView(view, aaps.gs(R.string.action_percentage));
+                setLabelToPlusMinusView(view, getString(R.string.action_percentage));
                 container.addView(view);
                 return view;
             } else {
@@ -108,7 +105,8 @@ public class WizardActivity extends ViewSelectorActivity {
 
                         int percentage = 100;
 
-                        if (editPercentage != null) percentage = SafeParse.stringToInt(editPercentage.editText.getText().toString());
+                        if (editPercentage != null)
+                            percentage = SafeParse.stringToInt(editPercentage.editText.getText().toString());
 
                         String actionstring = "wizard2 " + SafeParse.stringToInt(editCarbs.editText.getText().toString())
                                 + " " + percentage;
@@ -125,12 +123,12 @@ public class WizardActivity extends ViewSelectorActivity {
         public void destroyItem(ViewGroup container, int row, int col, Object view) {
             // Handle this to get the data before the view is destroyed?
             // Object should still be kept by this, just setup for reinit?
-            container.removeView((View)view);
+            container.removeView((View) view);
         }
 
         @Override
         public boolean isViewFromObject(View view, Object object) {
-            return view==object;
+            return view == object;
         }
 
 

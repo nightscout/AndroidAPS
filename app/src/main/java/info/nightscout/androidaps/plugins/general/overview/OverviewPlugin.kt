@@ -41,6 +41,7 @@ class OverviewPlugin @Inject constructor(
     .fragmentClass(OverviewFragment::class.qualifiedName)
     .alwaysVisible(true)
     .alwaysEnabled(true)
+    .pluginIcon(R.drawable.ic_home)
     .pluginName(R.string.overview)
     .shortName(R.string.overview_shortname)
     .preferencesId(R.xml.pref_overview)

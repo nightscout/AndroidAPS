@@ -12,7 +12,6 @@ import info.nightscout.androidaps.plugins.bus.RxBusWrapper
 import info.nightscout.androidaps.utils.FabricPrivacy
 import info.nightscout.androidaps.utils.alertDialogs.OKDialog
 import info.nightscout.androidaps.utils.extensions.hexStringToByteArray
-import info.nightscout.androidaps.utils.resources.ResourceHelper
 import info.nightscout.androidaps.utils.sharedPreferences.SP
 import info.nightscout.androidaps.utils.textValidator.DefaultEditTextValidator
 import info.nightscout.androidaps.utils.textValidator.EditTextValidator
@@ -25,7 +24,6 @@ class EnterPinActivity : NoSplashAppCompatActivity() {
 
     @Inject lateinit var rxBus: RxBusWrapper
     @Inject lateinit var fabricPrivacy: FabricPrivacy
-    @Inject lateinit var resourceHelper: ResourceHelper
     @Inject lateinit var danaRSPlugin: DanaRSPlugin
     @Inject lateinit var sp: SP
     @Inject lateinit var bleComm: BLEComm

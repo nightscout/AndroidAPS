@@ -16,7 +16,7 @@ import org.powermock.modules.junit4.PowerMockRunner;
 
 import java.util.ArrayList;
 
-import info.nightscout.androidaps.aaps;
+import info.nightscout.androidaps.Aaps;
 import info.nightscout.androidaps.interaction.utils.Constants;
 import info.nightscout.androidaps.interaction.utils.Persistence;
 import info.nightscout.androidaps.interaction.utils.WearUtil;
@@ -34,7 +34,7 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 
 @RunWith(PowerMockRunner.class)
-@PrepareForTest( { WearUtil.class, Log.class, SharedPreferences.class, Context.class, aaps.class, android.util.Base64.class, Intent.class } )
+@PrepareForTest( { WearUtil.class, Log.class, SharedPreferences.class, Context.class, Aaps.class, android.util.Base64.class, Intent.class } )
 public class RawDisplayDataBasalsTest {
 
     @Before

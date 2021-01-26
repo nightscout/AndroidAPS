@@ -25,6 +25,7 @@ class XdripPlugin @Inject constructor(
 ) : PluginBase(PluginDescription()
     .mainType(PluginType.BGSOURCE)
     .fragmentClass(BGSourceFragment::class.java.name)
+    .pluginIcon((R.drawable.ic_blooddrop_48))
     .pluginName(R.string.xdrip)
     .description(R.string.description_source_xdrip),
     aapsLogger, resourceHelper, injector

@@ -80,6 +80,7 @@ public class OpenAPSAMAPlugin extends PluginBase implements APSInterface {
         super(new PluginDescription()
                         .mainType(PluginType.APS)
                         .fragmentClass(OpenAPSAMAFragment.class.getName())
+                        .pluginIcon(R.drawable.ic_generic_icon)
                         .pluginName(R.string.openapsama)
                         .shortName(R.string.oaps_shortname)
                         .preferencesId(R.xml.pref_openapsama)

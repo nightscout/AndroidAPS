@@ -9,8 +9,7 @@ import info.nightscout.androidaps.plugins.pump.common.R;
 
 public enum RileyLinkTargetDevice {
     MedtronicPump(R.string.rileylink_target_device_medtronic, true), //
-    Omnipod(R.string.rileylink_target_device_omnipod, false), //
-    ;
+    Omnipod(R.string.rileylink_target_device_omnipod, false);
 
     private final int resourceId;
     private final boolean tuneUpEnabled;

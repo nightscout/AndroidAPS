@@ -13,7 +13,6 @@ import android.graphics.Rect;
 import android.os.PowerManager;
 import android.os.Vibrator;
 import android.preference.PreferenceManager;
-import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 import android.support.wearable.view.WatchViewStub;
 import android.text.format.DateFormat;
 import android.util.Log;
@@ -26,20 +25,21 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
+
 import com.google.android.gms.wearable.DataMap;
-import com.ustwo.clockwise.common.WatchMode;
-import com.ustwo.clockwise.wearable.WatchFace;
 import com.ustwo.clockwise.common.WatchFaceTime;
+import com.ustwo.clockwise.common.WatchMode;
 import com.ustwo.clockwise.common.WatchShape;
+import com.ustwo.clockwise.wearable.WatchFace;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-import info.nightscout.androidaps.aaps;
-import info.nightscout.androidaps.complications.BaseComplicationProviderService;
-import info.nightscout.androidaps.data.RawDisplayData;
-import info.nightscout.androidaps.data.ListenerService;
 import info.nightscout.androidaps.R;
+import info.nightscout.androidaps.complications.BaseComplicationProviderService;
+import info.nightscout.androidaps.data.ListenerService;
+import info.nightscout.androidaps.data.RawDisplayData;
 import lecho.lib.hellocharts.view.LineChartView;
 
 /**
@@ -48,10 +48,19 @@ import lecho.lib.hellocharts.view.LineChartView;
  * Refactored by dlvoy on 2019-11-2019
  */
 
-public  abstract class BaseWatchFace extends WatchFace implements SharedPreferences.OnSharedPreferenceChangeListener {
+public abstract class BaseWatchFace extends WatchFace implements SharedPreferences.OnSharedPreferenceChangeListener {
     public final static IntentFilter INTENT_FILTER;
-    public static final long[] vibratePattern = {0,400,300,400,300,400};
-    public TextView mTime, mHour, mMinute,mSgv, mDirection, mTimestamp, mUploaderBattery, mRigBattery, mDelta, mAvgDelta, mStatus, mBasalRate, mIOB1, mIOB2, mCOB1, mCOB2, mBgi, mLoop, mDay, mDayName, mMonth, isAAPSv2, mHighLight, mLowLight;
+    public static final long[] vibratePattern = {0, 400, 300, 400, 300, 400};
+
+    static {
+        INTENT_FILTER = new IntentFilter();
+        INTENT_FILTER.addAction(Intent.ACTION_TIME_TICK);
+        INTENT_FILTER.addAction(Intent.ACTION_TIMEZONE_CHANGED);
+        INTENT_FILTER.addAction(Intent.ACTION_TIME_CHANGED);
+    }
+
+    public final Point displaySize = new Point();
+    public TextView mTime, mHour, mMinute, mSgv, mDirection, mTimestamp, mUploaderBattery, mRigBattery, mDelta, mAvgDelta, mStatus, mBasalRate, mIOB1, mIOB2, mCOB1, mCOB2, mBgi, mLoop, mDay, mDayName, mMonth, isAAPSv2, mHighLight, mLowLight;
     public ImageView mGlucoseDial, mDeltaGauge, mHourHand, mMinuteHand;
     public RelativeLayout mRelativeLayout;
     public LinearLayout mLinearLayout, mLinearLayout2, mDate, mChartTap, mMainMenuTap;
@@ -71,23 +80,17 @@ public  abstract class BaseWatchFace extends WatchFace implements SharedPreferen
     public int pointSize = 2;
     public BgGraphBuilder bgGraphBuilder;
     public LineChartView chart;
-
-
     public RawDisplayData rawData = new RawDisplayData();
-
     public PowerManager.WakeLock wakeLock;
     // related endTime manual layout
     public View layoutView;
-    public final Point displaySize = new Point();
     public int specW, specH;
-    private LocalBroadcastManager localBroadcastManager;
-    private MessageReceiver messageReceiver;
-
-    protected SharedPreferences sharedPrefs;
-
     public boolean forceSquareCanvas = false;  //set to true by the Steampunk watch face.
     public String sMinute = "0";
     public String sHour = "0";
+    protected SharedPreferences sharedPrefs;
+    private LocalBroadcastManager localBroadcastManager;
+    private MessageReceiver messageReceiver;
 
     @Override
     public void onCreate() {
@@ -124,55 +127,55 @@ public  abstract class BaseWatchFace extends WatchFace implements SharedPreferen
         localBroadcastManager.registerReceiver(messageReceiver, messageFilter);
 
         stub.setOnLayoutInflatedListener(new WatchViewStub.OnLayoutInflatedListener() {
-            @Override
-            public void onLayoutInflated(WatchViewStub stub) {
-                mTime = stub.findViewById(R.id.watch_time);
-                mHour = stub.findViewById(R.id.hour);
-                mMinute = stub.findViewById(R.id.minute);
-                mDay = stub.findViewById(R.id.day);
-                mDayName= stub.findViewById(R.id.dayname);
-                mMonth = stub.findViewById(R.id.month);
-                mDate = stub.findViewById(R.id.date_time);
-                mLoop = stub.findViewById(R.id.loop);
-                mSgv = stub.findViewById(R.id.sgv);
-                mDirection = stub.findViewById(R.id.direction);
-                mTimestamp = stub.findViewById(R.id.timestamp);
-                mIOB1 = stub.findViewById(R.id.iob_text);
-                mIOB2 = stub.findViewById(R.id.iobView);
-                mCOB1 = stub.findViewById(R.id.cob_text);
-                mCOB2 = stub.findViewById(R.id.cobView);
-                mBgi = stub.findViewById(R.id.bgiView);
-                mStatus = stub.findViewById(R.id.externaltstatus);
-                mBasalRate = stub.findViewById(R.id.tmpBasal);
-                mUploaderBattery = stub.findViewById(R.id.uploader_battery);
-                mRigBattery = stub.findViewById(R.id.rig_battery);
-                mDelta = stub.findViewById(R.id.delta);
-                mAvgDelta = stub.findViewById(R.id.avgdelta);
-                isAAPSv2 = stub.findViewById(R.id.AAPSv2);
-                mHighLight = stub.findViewById(R.id.highLight);
-                mLowLight = stub.findViewById(R.id.lowLight);
-                mRelativeLayout = stub.findViewById(R.id.main_layout);
-                mLinearLayout = stub.findViewById(R.id.secondary_layout);
-                mLinearLayout2 = stub.findViewById(R.id.tertiary_layout);
-                mGlucoseDial = stub.findViewById(R.id.glucose_dial);
-                mDeltaGauge = stub.findViewById(R.id.delta_pointer);
-                mHourHand = stub.findViewById(R.id.hour_hand);
-                mMinuteHand = stub.findViewById(R.id.minute_hand);
-                mChartTap = stub.findViewById(R.id.chart_zoom_tap);
-                mMainMenuTap = stub.findViewById(R.id.main_menu_tap);
-                chart = stub.findViewById(R.id.chart);
-                layoutSet = true;
+                                             @Override
+                                             public void onLayoutInflated(WatchViewStub stub) {
+                                                 mTime = stub.findViewById(R.id.watch_time);
+                                                 mHour = stub.findViewById(R.id.hour);
+                                                 mMinute = stub.findViewById(R.id.minute);
+                                                 mDay = stub.findViewById(R.id.day);
+                                                 mDayName = stub.findViewById(R.id.dayname);
+                                                 mMonth = stub.findViewById(R.id.month);
+                                                 mDate = stub.findViewById(R.id.date_time);
+                                                 mLoop = stub.findViewById(R.id.loop);
+                                                 mSgv = stub.findViewById(R.id.sgv);
+                                                 mDirection = stub.findViewById(R.id.direction);
+                                                 mTimestamp = stub.findViewById(R.id.timestamp);
+                                                 mIOB1 = stub.findViewById(R.id.iob_text);
+                                                 mIOB2 = stub.findViewById(R.id.iobView);
+                                                 mCOB1 = stub.findViewById(R.id.cob_text);
+                                                 mCOB2 = stub.findViewById(R.id.cobView);
+                                                 mBgi = stub.findViewById(R.id.bgiView);
+                                                 mStatus = stub.findViewById(R.id.externaltstatus);
+                                                 mBasalRate = stub.findViewById(R.id.tmpBasal);
+                                                 mUploaderBattery = stub.findViewById(R.id.uploader_battery);
+                                                 mRigBattery = stub.findViewById(R.id.rig_battery);
+                                                 mDelta = stub.findViewById(R.id.delta);
+                                                 mAvgDelta = stub.findViewById(R.id.avgdelta);
+                                                 isAAPSv2 = stub.findViewById(R.id.AAPSv2);
+                                                 mHighLight = stub.findViewById(R.id.highLight);
+                                                 mLowLight = stub.findViewById(R.id.lowLight);
+                                                 mRelativeLayout = stub.findViewById(R.id.main_layout);
+                                                 mLinearLayout = stub.findViewById(R.id.secondary_layout);
+                                                 mLinearLayout2 = stub.findViewById(R.id.tertiary_layout);
+                                                 mGlucoseDial = stub.findViewById(R.id.glucose_dial);
+                                                 mDeltaGauge = stub.findViewById(R.id.delta_pointer);
+                                                 mHourHand = stub.findViewById(R.id.hour_hand);
+                                                 mMinuteHand = stub.findViewById(R.id.minute_hand);
+                                                 mChartTap = stub.findViewById(R.id.chart_zoom_tap);
+                                                 mMainMenuTap = stub.findViewById(R.id.main_menu_tap);
+                                                 chart = stub.findViewById(R.id.chart);
+                                                 layoutSet = true;
 
-                setDataFields();
-                setColor();
-                }
-            }
+                                                 setDataFields();
+                                                 setColor();
+                                             }
+                                         }
         );
         wakeLock.acquire(50);
     }
 
     public int ageLevel() {
-        if(timeSince() <= (1000 * 60 * 12)) {
+        if (timeSince() <= (1000 * 60 * 12)) {
             return 1;
         } else {
             return 0;
@@ -184,12 +187,14 @@ public  abstract class BaseWatchFace extends WatchFace implements SharedPreferen
     }
 
     public String readingAge(boolean shortString) {
-        if (rawData.datetime == 0) { return shortString?"--'":"-- Minute ago"; }
-        int minutesAgo = (int) Math.floor(timeSince()/(1000*60));
-        if (minutesAgo == 1) {
-            return minutesAgo + (shortString?"'":" Minute ago");
+        if (rawData.datetime == 0) {
+            return shortString ? "--'" : "-- Minute ago";
         }
-        return minutesAgo + (shortString?"'":" Minutes ago");
+        int minutesAgo = (int) Math.floor(timeSince() / (1000 * 60));
+        if (minutesAgo == 1) {
+            return minutesAgo + (shortString ? "'" : " Minute ago");
+        }
+        return minutesAgo + (shortString ? "'" : " Minutes ago");
     }
 
     @Override
@@ -201,13 +206,6 @@ public  abstract class BaseWatchFace extends WatchFace implements SharedPreferen
             sharedPrefs.unregisterOnSharedPreferenceChangeListener(this);
         }
         super.onDestroy();
-    }
-
-    static {
-        INTENT_FILTER = new IntentFilter();
-        INTENT_FILTER.addAction(Intent.ACTION_TIME_TICK);
-        INTENT_FILTER.addAction(Intent.ACTION_TIMEZONE_CHANGED);
-        INTENT_FILTER.addAction(Intent.ACTION_TIME_CHANGED);
     }
 
     @Override
@@ -234,7 +232,7 @@ public  abstract class BaseWatchFace extends WatchFace implements SharedPreferen
             setDataFields();
             setColor();
             missedReadingAlert();
-            checkVibrateHourly(oldTime,newTime);
+            checkVibrateHourly(oldTime, newTime);
 
             mRelativeLayout.measure(specW, specH);
             if (forceSquareCanvas) {
@@ -246,43 +244,13 @@ public  abstract class BaseWatchFace extends WatchFace implements SharedPreferen
         }
     }
 
-    private void checkVibrateHourly(WatchFaceTime oldTime, WatchFaceTime newTime){
+    private void checkVibrateHourly(WatchFaceTime oldTime, WatchFaceTime newTime) {
         Boolean hourlyVibratePref = sharedPrefs.getBoolean("vibrate_Hourly", false);
         if (hourlyVibratePref && layoutSet && newTime.hasHourChanged(oldTime)) {
             Log.i("hourlyVibratePref", "true --> " + newTime.toString());
             Vibrator vibrator = (Vibrator) getSystemService(VIBRATOR_SERVICE);
             long[] vibrationPattern = {0, 150, 125, 100};
             vibrator.vibrate(vibrationPattern, -1);
-        }
-    }
-
-    public class MessageReceiver extends BroadcastReceiver {
-        @Override
-        public void onReceive(Context context, Intent intent) {
-
-            if (layoutSet) {
-                final DataMap dataMap = rawData.updateDataFromMessage(intent, wakeLock);
-                if (chart != null && dataMap != null) {
-                    rawData.addToWatchSet(dataMap);
-                    setupCharts();
-                }
-                rawData.updateStatusFromMessage(intent, wakeLock);
-            }
-
-            setDataFields();
-            setColor();
-
-            if (layoutSet) {
-                rawData.updateBasalsFromMessage(intent, wakeLock);
-            }
-
-            mRelativeLayout.measure(specW, specH);
-            if (forceSquareCanvas) {
-                mRelativeLayout.layout(0, 0, displaySize.x, displaySize.x);  //force a square for Steampunk watch face.
-            } else {
-                mRelativeLayout.layout(0, 0, displaySize.x, displaySize.y);
-            }
-            invalidate();
         }
     }
 
@@ -339,7 +307,7 @@ public  abstract class BaseWatchFace extends WatchFace implements SharedPreferen
                 mCOB1.setVisibility(View.GONE);
                 mCOB2.setVisibility(View.GONE);
             }
-        //deal with cases where there is only the value shown for COB, and not the label
+            //deal with cases where there is only the value shown for COB, and not the label
         } else if (mCOB2 != null) {
             mCOB2.setText(rawData.sCOB2);
             if (sharedPrefs.getBoolean("show_cob", true)) {
@@ -357,14 +325,14 @@ public  abstract class BaseWatchFace extends WatchFace implements SharedPreferen
                     mIOB1.setText(rawData.sIOB1);
                     mIOB2.setText(rawData.sIOB2);
                 } else {
-                    mIOB1.setText(aaps.gs(R.string.activity_IOB));
+                    mIOB1.setText(getString(R.string.activity_IOB));
                     mIOB2.setText(rawData.sIOB1);
                 }
             } else {
                 mIOB1.setVisibility(View.GONE);
                 mIOB2.setVisibility(View.GONE);
             }
-        //deal with cases where there is only the value shown for IOB, and not the label
+            //deal with cases where there is only the value shown for IOB, and not the label
         } else if (mIOB2 != null) {
             if (sharedPrefs.getBoolean("show_iob", true)) {
                 mIOB2.setVisibility(View.VISIBLE);
@@ -398,8 +366,8 @@ public  abstract class BaseWatchFace extends WatchFace implements SharedPreferen
         if (mUploaderBattery != null) {
             if (sharedPrefs.getBoolean("show_uploader_battery", true)) {
                 if (isAAPSv2 != null) {
-                        mUploaderBattery.setText(rawData.sUploaderBattery + "%");
-                        mUploaderBattery.setVisibility(View.VISIBLE);
+                    mUploaderBattery.setText(rawData.sUploaderBattery + "%");
+                    mUploaderBattery.setVisibility(View.VISIBLE);
                 } else {
                     if (sharedPrefs.getBoolean("showExternalStatus", true)) {
                         mUploaderBattery.setText("U: " + rawData.sUploaderBattery + "%");
@@ -438,7 +406,7 @@ public  abstract class BaseWatchFace extends WatchFace implements SharedPreferen
                 mBgi.setVisibility(View.GONE);
             }
         }
-        
+
         if (mStatus != null) {
             if (sharedPrefs.getBoolean("showExternalStatus", true)) {
                 mStatus.setText(rawData.externalStatusString);
@@ -483,14 +451,14 @@ public  abstract class BaseWatchFace extends WatchFace implements SharedPreferen
         sHour = sdfHour.format(now);
         sMinute = sdfMinute.format(now);
 
-        if (mHour != null && mMinute != null ) {
+        if (mHour != null && mMinute != null) {
             mHour.setText(sHour);
             mMinute.setText(sMinute);
         }
 
         if (mDate != null && mDay != null && mMonth != null) {
             if (sharedPrefs.getBoolean("show_date", false)) {
-                if (mDayName != null ) {
+                if (mDayName != null) {
                     SimpleDateFormat sdfDayName = new SimpleDateFormat("E");
                     mDayName.setText(sdfDayName.format(now));
                 }
@@ -508,7 +476,7 @@ public  abstract class BaseWatchFace extends WatchFace implements SharedPreferen
 
     public void setColor() {
         dividerMatchesBg = sharedPrefs.getBoolean("match_divider", false);
-        if(lowResMode){
+        if (lowResMode) {
             setColorLowRes();
         } else if (sharedPrefs.getBoolean("dark", true)) {
             setColorDark();
@@ -518,7 +486,7 @@ public  abstract class BaseWatchFace extends WatchFace implements SharedPreferen
     }
 
     public void strikeThroughSgvIfNeeded() {
-        if (mSgv !=null) {
+        if (mSgv != null) {
             if (sharedPrefs.getBoolean("showBG", true)) {
                 if (ageLevel() <= 0) {
                     mSgv.setPaintFlags(mSgv.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
@@ -531,10 +499,10 @@ public  abstract class BaseWatchFace extends WatchFace implements SharedPreferen
 
     protected void onWatchModeChanged(WatchMode watchMode) {
 
-        if(lowResMode ^ isLowRes(watchMode)){ //if there was a change in lowResMode
+        if (lowResMode ^ isLowRes(watchMode)) { //if there was a change in lowResMode
             lowResMode = isLowRes(watchMode);
             setColor();
-        } else if (! sharedPrefs.getBoolean("dark", true)){
+        } else if (!sharedPrefs.getBoolean("dark", true)) {
             //in bright mode: different colours if active:
             setColor();
         }
@@ -545,13 +513,13 @@ public  abstract class BaseWatchFace extends WatchFace implements SharedPreferen
     }
 
     @Override
-    public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key){
+    public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
 
-        if("delta_granularity".equals(key)){
+        if ("delta_granularity".equals(key)) {
             ListenerService.requestData(this);
         }
-        
-        if(layoutSet){
+
+        if (layoutSet) {
             setDataFields();
             setColor();
         }
@@ -559,18 +527,20 @@ public  abstract class BaseWatchFace extends WatchFace implements SharedPreferen
     }
 
     protected abstract void setColorDark();
+
     protected abstract void setColorBright();
+
     protected abstract void setColorLowRes();
 
     public void missedReadingAlert() {
-        int minutes_since   = (int) Math.floor(timeSince()/(1000*60));
-        if(minutes_since >= 16 && ((minutes_since - 16) % 5) == 0) {
+        int minutes_since = (int) Math.floor(timeSince() / (1000 * 60));
+        if (minutes_since >= 16 && ((minutes_since - 16) % 5) == 0) {
             ListenerService.requestData(this); // attempt endTime recover missing data
         }
     }
 
     public void setupCharts() {
-        if(rawData.bgDataList.size() > 0) { //Dont crash things just because we dont have values, people dont like crashy things
+        if (rawData.bgDataList.size() > 0) { //Dont crash things just because we dont have values, people dont like crashy things
             int timeframe = Integer.parseInt(sharedPrefs.getString("chart_timeframe", "3"));
             if (lowResMode) {
                 bgGraphBuilder = new BgGraphBuilder(getApplicationContext(), rawData, pointSize, midColor, gridColor, basalBackgroundColor, basalCenterColor, bolusColor, Color.GREEN, timeframe);
@@ -581,6 +551,36 @@ public  abstract class BaseWatchFace extends WatchFace implements SharedPreferen
             chart.setLineChartData(bgGraphBuilder.lineData());
             chart.setViewportCalculationEnabled(true);
             chart.setMaximumViewport(chart.getMaximumViewport());
+        }
+    }
+
+    public class MessageReceiver extends BroadcastReceiver {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+
+            if (layoutSet) {
+                final DataMap dataMap = rawData.updateDataFromMessage(intent, wakeLock);
+                if (chart != null && dataMap != null) {
+                    rawData.addToWatchSet(dataMap);
+                    setupCharts();
+                }
+                rawData.updateStatusFromMessage(intent, wakeLock);
+            }
+
+            setDataFields();
+            setColor();
+
+            if (layoutSet) {
+                rawData.updateBasalsFromMessage(intent, wakeLock);
+            }
+
+            mRelativeLayout.measure(specW, specH);
+            if (forceSquareCanvas) {
+                mRelativeLayout.layout(0, 0, displaySize.x, displaySize.x);  //force a square for Steampunk watch face.
+            } else {
+                mRelativeLayout.layout(0, 0, displaySize.x, displaySize.y);
+            }
+            invalidate();
         }
     }
 

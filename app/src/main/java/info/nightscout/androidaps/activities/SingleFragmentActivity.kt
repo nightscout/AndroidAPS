@@ -5,28 +5,19 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
-import dagger.android.support.DaggerAppCompatActivity
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.interfaces.PluginBase
 import info.nightscout.androidaps.plugins.configBuilder.PluginStore
-import info.nightscout.androidaps.plugins.general.maintenance.ImportExportPrefs
-import info.nightscout.androidaps.plugins.general.maintenance.PrefsFileContract
 import info.nightscout.androidaps.utils.locale.LocaleHelper
 import info.nightscout.androidaps.utils.protection.ProtectionCheck
 import javax.inject.Inject
 
-class SingleFragmentActivity : DaggerAppCompatActivity() {
+class SingleFragmentActivity : DaggerAppCompatActivityWithResult() {
+
     @Inject lateinit var pluginStore: PluginStore
     @Inject lateinit var protectionCheck: ProtectionCheck
-    @Inject lateinit var importExportPrefs: ImportExportPrefs
 
     private var plugin: PluginBase? = null
-
-    val callForPrefFile = registerForActivityResult(PrefsFileContract()) {
-        it?.let {
-            importExportPrefs.importSharedPreferences(this, it)
-        }
-    }
 
     public override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

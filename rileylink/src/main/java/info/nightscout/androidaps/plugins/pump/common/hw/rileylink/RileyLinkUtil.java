@@ -18,7 +18,6 @@ import javax.inject.Singleton;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.ble.data.encoding.Encoding4b6b;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.ble.data.encoding.Encoding4b6bGeoff;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.ble.defs.RileyLinkEncodingType;
-import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.ble.defs.RileyLinkTargetFrequency;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.data.BleAdvertisedData;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.data.RLHistoryItem;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.service.data.ServiceResult;

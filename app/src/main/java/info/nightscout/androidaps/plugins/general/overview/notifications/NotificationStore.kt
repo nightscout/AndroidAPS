@@ -8,7 +8,6 @@ import android.content.Context
 import android.content.Intent
 import android.media.AudioManager
 import android.media.RingtoneManager
-import android.os.Build
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -16,7 +15,9 @@ import android.widget.Button
 import android.widget.TextView
 import androidx.cardview.widget.CardView
 import androidx.core.app.NotificationCompat
+import androidx.core.app.TaskStackBuilder
 import androidx.recyclerview.widget.RecyclerView
+import info.nightscout.androidaps.MainActivity
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.logging.LTag
@@ -24,6 +25,7 @@ import info.nightscout.androidaps.plugins.bus.RxBusWrapper
 import info.nightscout.androidaps.plugins.general.overview.events.EventDismissNotification
 import info.nightscout.androidaps.services.AlarmSoundServiceHelper
 import info.nightscout.androidaps.utils.DateUtil
+import info.nightscout.androidaps.utils.androidNotification.openAppIntent
 import info.nightscout.androidaps.utils.resources.IconsProvider
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 import info.nightscout.androidaps.utils.sharedPreferences.SP
@@ -69,7 +71,7 @@ class NotificationStore @Inject constructor(
             }
         }
         store.add(n)
-        if (sp.getBoolean(R.string.key_raise_notifications_as_android_notifications, false) && n !is NotificationWithAction) {
+        if (sp.getBoolean(R.string.key_raise_notifications_as_android_notifications, true) && n !is NotificationWithAction) {
             raiseSystemNotification(n)
             if (usesChannels && n.soundId != null && n.soundId != 0) alarmSoundServiceHelper.startAlarm(context, n.soundId)
         } else {
@@ -114,6 +116,7 @@ class NotificationStore @Inject constructor(
             .setStyle(NotificationCompat.BigTextStyle().bigText(n.text))
             .setPriority(NotificationCompat.PRIORITY_MAX)
             .setDeleteIntent(deleteIntent(n.id))
+            .setContentIntent(openAppIntent(context))
         if (n.level == Notification.URGENT) {
             notificationBuilder.setVibrate(longArrayOf(1000, 1000, 1000, 1000))
                 .setContentTitle(resourceHelper.gs(R.string.urgent_alarm))
@@ -132,14 +135,12 @@ class NotificationStore @Inject constructor(
     }
 
     fun createNotificationChannel() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            usesChannels = true
-            val mNotificationManager = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-            @SuppressLint("WrongConstant") val channel = NotificationChannel(CHANNEL_ID,
-                CHANNEL_ID,
-                NotificationManager.IMPORTANCE_HIGH)
-            mNotificationManager.createNotificationChannel(channel)
-        }
+        usesChannels = true
+        val mNotificationManager = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+        @SuppressLint("WrongConstant") val channel = NotificationChannel(CHANNEL_ID,
+            CHANNEL_ID,
+            NotificationManager.IMPORTANCE_HIGH)
+        mNotificationManager.createNotificationChannel(channel)
     }
 
     @Synchronized
@@ -162,16 +163,6 @@ class NotificationStore @Inject constructor(
         return clone
     }
 
-    /*
-        private fun unSnooze() {
-            if (sp.getBoolean(R.string.key_nsalarm_staledata, false)) {
-                val notification = Notification(Notification.NSALARM, resourceHelper.gs(R.string.nsalarm_staledata), Notification.URGENT)
-                sp.putLong(R.string.key_snoozedTo, System.currentTimeMillis())
-                add(notification)
-                aapsLogger.debug(LTag.NOTIFICATION, "Snoozed to current time and added back notification!")
-            }
-        }
-    */
     inner class NotificationRecyclerViewAdapter internal constructor(private val notificationsList: List<Notification>) : RecyclerView.Adapter<NotificationRecyclerViewAdapter.NotificationsViewHolder>() {
 
         override fun onCreateViewHolder(viewGroup: ViewGroup, viewType: Int): NotificationsViewHolder {

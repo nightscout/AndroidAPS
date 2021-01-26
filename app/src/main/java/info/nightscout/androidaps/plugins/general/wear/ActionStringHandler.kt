@@ -182,20 +182,20 @@ class ActionStringHandler @Inject constructor(
                 return
             }
             val bgReading = iobCobCalculatorPlugin.actualBg()
-            if (bgReading == null && useBG) {
+            if (bgReading == null) {
                 sendError("No recent BG to base calculation on!")
                 return
             }
             val cobInfo = iobCobCalculatorPlugin.getCobInfo(false, "Wizard wear")
-            if (useCOB && (cobInfo.displayCob == null)) {
+            if (cobInfo.displayCob == null) {
                 sendError("Unknown COB! BG reading missing or recent app restart?")
                 return
             }
             val format = DecimalFormat("0.00")
             val formatInt = DecimalFormat("0")
             val bolusWizard = BolusWizard(injector).doCalc(profile, profileName, activePlugin.activeTreatments.tempTargetFromHistory,
-                carbsAfterConstraints, cobInfo.displayCob!!, bgReading!!.valueToUnits(profileFunction.getUnits()),
-                0.0, percentage.toDouble(), useBG, useCOB, useBolusIOB, useBasalIOB, false, useTT, useTrend)
+                carbsAfterConstraints, cobInfo.displayCob, bgReading.valueToUnits(profileFunction.getUnits()),
+                0.0, percentage.toDouble(), useBG, useCOB, useBolusIOB, useBasalIOB, false, useTT, useTrend, false)
             if (Math.abs(bolusWizard.insulinAfterConstraints - bolusWizard.calculatedTotalInsulin) >= 0.01) {
                 sendError("Insulin constraint violation!" +
                     "\nCannot deliver " + format.format(bolusWizard.calculatedTotalInsulin) + "!")
@@ -215,7 +215,7 @@ class ActionStringHandler @Inject constructor(
             if (useCOB) rMessage += "\nFrom" + formatInt.format(cobInfo.displayCob) + "g COB : " + format.format(bolusWizard.insulinFromCOB) + "U"
             if (useBG) rMessage += "\nFrom BG: " + format.format(bolusWizard.insulinFromBG) + "U"
             if (useBolusIOB) rMessage += "\nBolus IOB: " + format.format(bolusWizard.insulinFromBolusIOB) + "U"
-            if (useBasalIOB) rMessage += "\nBasal IOB: " + format.format(bolusWizard.insulinFromBasalsIOB) + "U"
+            if (useBasalIOB) rMessage += "\nBasal IOB: " + format.format(bolusWizard.insulinFromBasalIOB) + "U"
             if (useTrend) rMessage += "\nFrom 15' trend: " + format.format(bolusWizard.insulinFromTrend) + "U"
             if (percentage != 100) {
                 rMessage += "\nPercentage: " + format.format(bolusWizard.totalBeforePercentageAdjustment) + "U * " + percentage + "% -> ~" + format.format(bolusWizard.calculatedTotalInsulin) + "U"

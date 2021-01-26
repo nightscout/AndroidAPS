@@ -568,10 +568,10 @@ public abstract class PodStateManager {
             podState.setPodProgressStatus(status.getPodProgressStatus());
             podState.setTimeActive(status.getTimeActive());
 
-            boolean isBasalCertain = podState.isBasalCertain() == null || podState.isBasalCertain();
-            boolean isTempBasalCertain = podState.isTempBasalCertain() == null || podState.isTempBasalCertain();
+            boolean wasBasalCertain = podState.isBasalCertain() == null || podState.isBasalCertain();
+            boolean wasTempBasalCertain = podState.isTempBasalCertain() == null || podState.isTempBasalCertain();
             if (!status.getDeliveryStatus().isTbrRunning() && hasTempBasal()) {
-                if (isTempBasalCertain) {
+                if (wasTempBasalCertain || requestMessage.isSuspendDeliveryMessage()) {
                     clearTempBasal(); // Triggers onTbrChanged when appropriate
                 } else {
                     // Don't trigger onTbrChanged as we will trigger onUncertainTbrRecovered below
@@ -580,14 +580,17 @@ public abstract class PodStateManager {
                     podState.setTempBasalDuration(null);
                 }
             }
-            if (!isTempBasalCertain) {
+
+            if (!wasTempBasalCertain) {
                 podState.setTempBasalCertain(true);
-                if (!requestMessage.isSetTempBasalMessage() // We always set TBR to uncertain before sending the set temp basal command, so this is not an actual recovery
-                        && !requestMessage.isCancelTempBasalMessage()) { // Delivery status changed, so we can't recover here
+
+                // We exclusively use get status messages to recover from uncertain TBRs
+                // DO NOT change this as the recovery mechanism will otherwise interfere with normal delivery commands
+                if (requestMessage.isGetStatusMessage()) {
                     onUncertainTbrRecovered();
                 }
             }
-            if (!isBasalCertain) {
+            if (!wasBasalCertain) {
                 podState.setBasalCertain(true);
             }
 

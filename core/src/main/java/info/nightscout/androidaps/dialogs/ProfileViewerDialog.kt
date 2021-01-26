@@ -11,21 +11,20 @@ import dagger.android.HasAndroidInjector
 import dagger.android.support.DaggerDialogFragment
 import info.nightscout.androidaps.Constants
 import info.nightscout.androidaps.core.R
+import info.nightscout.androidaps.core.databinding.DialogProfileviewerBinding
 import info.nightscout.androidaps.data.Profile
 import info.nightscout.androidaps.interfaces.ActivePluginProvider
 import info.nightscout.androidaps.interfaces.DatabaseHelperInterface
 import info.nightscout.androidaps.interfaces.ProfileFunction
 import info.nightscout.androidaps.utils.DateUtil
-import info.nightscout.androidaps.utils.DecimalFormatter
 import info.nightscout.androidaps.utils.HtmlHelper
 import info.nightscout.androidaps.utils.resources.ResourceHelper
-import kotlinx.android.synthetic.main.close.*
-import kotlinx.android.synthetic.main.dialog_profileviewer.*
 import org.json.JSONObject
 import java.text.DecimalFormat
 import javax.inject.Inject
 
 class ProfileViewerDialog : DaggerDialogFragment() {
+
     @Inject lateinit var injector: HasAndroidInjector
     @Inject lateinit var resourceHelper: ResourceHelper
     @Inject lateinit var activePlugin: ActivePluginProvider
@@ -48,8 +47,14 @@ class ProfileViewerDialog : DaggerDialogFragment() {
     private var customProfileName: String = ""
     private var customProfileUnits: String = Constants.MGDL
 
+    private var _binding: DialogProfileviewerBinding? = null
+
+    // This property is only valid between onCreateView and
+    // onDestroyView.
+    private val binding get() = _binding!!
+
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
-                              savedInstanceState: Bundle?): View? {
+                              savedInstanceState: Bundle?): View {
         // load data from bundle
         (savedInstanceState ?: arguments)?.let { bundle ->
             time = bundle.getLong("time", 0)
@@ -66,13 +71,14 @@ class ProfileViewerDialog : DaggerDialogFragment() {
         isCancelable = true
         dialog?.setCanceledOnTouchOutside(false)
 
-        return inflater.inflate(R.layout.dialog_profileviewer, container, false)
+        _binding = DialogProfileviewerBinding.inflate(inflater, container, false)
+        return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        close.setOnClickListener { dismiss() }
+        binding.closeLayout.close.setOnClickListener { dismiss() }
 
         val profile: Profile?
         val profile2: Profile?
@@ -85,7 +91,7 @@ class ProfileViewerDialog : DaggerDialogFragment() {
                 profileName = activePlugin.activeTreatments.getProfileSwitchFromHistory(time)?.customizedName
                 date = dateUtil.dateAndTimeString(activePlugin.activeTreatments.getProfileSwitchFromHistory(time)?.date
                     ?: 0)
-                profileview_datelayout.visibility = View.VISIBLE
+                binding.datelayout.visibility = View.VISIBLE
             }
 
             Mode.CUSTOM_PROFILE -> {
@@ -93,16 +99,16 @@ class ProfileViewerDialog : DaggerDialogFragment() {
                 profile2 = null
                 profileName = customProfileName
                 date = ""
-                profileview_datelayout.visibility = View.GONE
+                binding.datelayout.visibility = View.GONE
             }
 
             Mode.PROFILE_COMPARE -> {
                 profile = Profile(injector, JSONObject(customProfileJson), customProfileUnits)
                 profile2 = Profile(injector, JSONObject(customProfileJson2), customProfileUnits)
                 profileName = customProfileName
-                header_icon.setImageResource(R.drawable.ic_compare_profiles)
+                binding.headerIcon.setImageResource(R.drawable.ic_compare_profiles)
                 date = ""
-                profileview_datelayout.visibility = View.GONE
+                binding.datelayout.visibility = View.GONE
             }
 
             Mode.DB_PROFILE -> {
@@ -111,43 +117,43 @@ class ProfileViewerDialog : DaggerDialogFragment() {
                 profile2 = null
                 profileName = if (profileList.isNotEmpty()) profileList[0].customizedName else null
                 date = if (profileList.isNotEmpty()) dateUtil.dateAndTimeString(profileList[0].date) else null
-                profileview_datelayout.visibility = View.VISIBLE
+                binding.datelayout.visibility = View.VISIBLE
             }
         }
-        profileview_noprofile.visibility = View.VISIBLE
+        binding.noprofile.visibility = View.VISIBLE
 
         if (mode == Mode.PROFILE_COMPARE)
             profile?.let { profile1 ->
                 profile2?.let { profile2 ->
-                    profileview_units.text = profileFunction.getUnits()
-                    profileview_dia.text = HtmlHelper.fromHtml(formatColors("", profile1.dia, profile2.dia, DecimalFormat("0.00"), resourceHelper.gs(R.string.shorthour)))
-                    val profileNames =profileName!!.split("\n").toTypedArray()
-                    profileview_activeprofile.text = HtmlHelper.fromHtml(formatColors(profileNames[0], profileNames[1]))
-                    profileview_date.text = date
-                    profileview_ic.text = ics(profile1, profile2)
-                    profileview_isf.text = isfs(profile1, profile2)
-                    profileview_basal.text = basals(profile1, profile2)
-                    profileview_target.text = targets(profile1, profile2)
-                    basal_graph.show(profile1, profile2)
+                    binding.units.text = profileFunction.getUnits()
+                    binding.dia.text = HtmlHelper.fromHtml(formatColors("", profile1.dia, profile2.dia, DecimalFormat("0.00"), resourceHelper.gs(R.string.shorthour)))
+                    val profileNames = profileName!!.split("\n").toTypedArray()
+                    binding.activeprofile.text = HtmlHelper.fromHtml(formatColors(profileNames[0], profileNames[1]))
+                    binding.date.text = date
+                    binding.ic.text = ics(profile1, profile2)
+                    binding.isf.text = isfs(profile1, profile2)
+                    binding.basal.text = basals(profile1, profile2)
+                    binding.target.text = targets(profile1, profile2)
+                    binding.basalGraph.show(profile1, profile2)
                 }
 
-                profileview_noprofile.visibility = View.GONE
-                profileview_invalidprofile.visibility = if (profile1.isValid("ProfileViewDialog")) View.GONE else View.VISIBLE
+                binding.noprofile.visibility = View.GONE
+                binding.invalidprofile.visibility = if (profile1.isValid("ProfileViewDialog")) View.GONE else View.VISIBLE
             }
         else
             profile?.let {
-                profileview_units.text = it.units
-                profileview_dia.text = resourceHelper.gs(R.string.format_hours, it.dia)
-                profileview_activeprofile.text = profileName
-                profileview_date.text = date
-                profileview_ic.text = it.icList
-                profileview_isf.text = it.isfList
-                profileview_basal.text = it.basalList
-                profileview_target.text = it.targetList
-                basal_graph.show(it)
+                binding.units.text = it.units
+                binding.dia.text = resourceHelper.gs(R.string.format_hours, it.dia)
+                binding.activeprofile.text = profileName
+                binding.date.text = date
+                binding.ic.text = it.icList
+                binding.isf.text = it.isfList
+                binding.basal.text = it.basalList
+                binding.target.text = it.targetList
+                binding.basalGraph.show(it)
 
-                profileview_noprofile.visibility = View.GONE
-                profileview_invalidprofile.visibility = if (it.isValid("ProfileViewDialog")) View.GONE else View.VISIBLE
+                binding.noprofile.visibility = View.GONE
+                binding.invalidprofile.visibility = if (it.isValid("ProfileViewDialog")) View.GONE else View.VISIBLE
             }
     }
 
@@ -165,6 +171,11 @@ class ProfileViewerDialog : DaggerDialogFragment() {
         bundle.putString("customProfileUnits", customProfileUnits)
         if (mode == Mode.PROFILE_COMPARE)
             bundle.putString("customProfile2", customProfileJson2)
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 
     private fun formatColors(label: String, value1: Double, value2: Double, format: DecimalFormat, units: String): String {
@@ -190,8 +201,8 @@ class ProfileViewerDialog : DaggerDialogFragment() {
     }
 
     private fun basals(profile1: Profile, profile2: Profile): Spanned {
-        var prev1 = 0.0
-        var prev2 = 0.0
+        var prev1 = -1.0
+        var prev2 = -1.0
         val s = StringBuilder()
         for (hour in 0..23) {
             val val1 = profile1.getBasalTimeFromMidnight(hour * 60 * 60)
@@ -213,8 +224,8 @@ class ProfileViewerDialog : DaggerDialogFragment() {
     }
 
     private fun ics(profile1: Profile, profile2: Profile): Spanned {
-        var prev1 = 0.0
-        var prev2 = 0.0
+        var prev1 = -1.0
+        var prev2 = -1.0
         val s = StringBuilder()
         for (hour in 0..23) {
             val val1 = profile1.getIcTimeFromMidnight(hour * 60 * 60)
@@ -226,12 +237,12 @@ class ProfileViewerDialog : DaggerDialogFragment() {
             prev1 = val1
             prev2 = val2
         }
-        return HtmlHelper.fromHtml(s.delete(s.length-4, s.length).toString())
+        return HtmlHelper.fromHtml(s.delete(s.length - 4, s.length).toString())
     }
 
     private fun isfs(profile1: Profile, profile2: Profile): Spanned {
-        var prev1 = 0.0
-        var prev2 = 0.0
+        var prev1 = -1.0
+        var prev2 = -1.0
         val units = profileFunction.getUnits()
         val s = StringBuilder()
         for (hour in 0..23) {
@@ -244,14 +255,14 @@ class ProfileViewerDialog : DaggerDialogFragment() {
             prev1 = val1
             prev2 = val2
         }
-        return HtmlHelper.fromHtml(s.delete(s.length-4, s.length).toString())
+        return HtmlHelper.fromHtml(s.delete(s.length - 4, s.length).toString())
     }
 
-    private fun targets(profile1: Profile, profile2: Profile):Spanned {
-        var prev1l = 0.0
-        var prev1h = 0.0
-        var prev2l = 0.0
-        var prev2h = 0.0
+    private fun targets(profile1: Profile, profile2: Profile): Spanned {
+        var prev1l = -1.0
+        var prev1h = -1.0
+        var prev2l = -1.0
+        var prev2h = -1.0
         val units = profileFunction.getUnits()
         val s = StringBuilder()
         for (hour in 0..23) {
@@ -261,7 +272,7 @@ class ProfileViewerDialog : DaggerDialogFragment() {
             val val2h = profile2.getTargetHighMgdlTimeFromMidnight(hour * 60 * 60)
             val txt1 = Profile.format_HH_MM(hour * 60 * 60) + " " + Profile.toUnitsString(val1l, val1l * Constants.MGDL_TO_MMOLL, units) + " - " + Profile.toUnitsString(val1h, val1h * Constants.MGDL_TO_MMOLL, units) + " " + units
             val txt2 = Profile.format_HH_MM(hour * 60 * 60) + " " + Profile.toUnitsString(val2l, val2l * Constants.MGDL_TO_MMOLL, units) + " - " + Profile.toUnitsString(val2h, val2h * Constants.MGDL_TO_MMOLL, units) + " " + units
-            if (val1l != prev1l || val1h != prev1h || val2l != prev2l || val2h != prev2h ) {
+            if (val1l != prev1l || val1h != prev1h || val2l != prev2l || val2h != prev2h) {
                 s.append(formatColors(txt1, txt2))
                 s.append("<br>")
             }
@@ -270,6 +281,6 @@ class ProfileViewerDialog : DaggerDialogFragment() {
             prev2l = val2l
             prev2h = val2h
         }
-        return HtmlHelper.fromHtml(s.delete(s.length-4, s.length).toString())
+        return HtmlHelper.fromHtml(s.delete(s.length - 4, s.length).toString())
     }
 }

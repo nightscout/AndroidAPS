@@ -9,26 +9,26 @@ import android.view.ViewGroup
 import com.google.common.base.Joiner
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.activities.ErrorHelperActivity
+import info.nightscout.androidaps.databinding.DialogTempbasalBinding
 import info.nightscout.androidaps.interfaces.ActivePluginProvider
 import info.nightscout.androidaps.interfaces.CommandQueueProvider
 import info.nightscout.androidaps.interfaces.Constraint
+import info.nightscout.androidaps.interfaces.ProfileFunction
 import info.nightscout.androidaps.interfaces.PumpDescription
 import info.nightscout.androidaps.plugins.configBuilder.ConstraintChecker
-import info.nightscout.androidaps.interfaces.ProfileFunction
 import info.nightscout.androidaps.queue.Callback
 import info.nightscout.androidaps.utils.HtmlHelper
-import info.nightscout.androidaps.utils.alertDialogs.OKDialog
 import info.nightscout.androidaps.utils.SafeParse
+import info.nightscout.androidaps.utils.alertDialogs.OKDialog
 import info.nightscout.androidaps.utils.extensions.formatColor
 import info.nightscout.androidaps.utils.resources.ResourceHelper
-import kotlinx.android.synthetic.main.dialog_tempbasal.*
-import kotlinx.android.synthetic.main.okcancel.*
 import java.text.DecimalFormat
 import java.util.*
 import javax.inject.Inject
 import kotlin.math.abs
 
 class TempBasalDialog : DialogFragmentWithDate() {
+
     @Inject lateinit var constraintChecker: ConstraintChecker
     @Inject lateinit var resourceHelper: ResourceHelper
     @Inject lateinit var profileFunction: ProfileFunction
@@ -38,17 +38,24 @@ class TempBasalDialog : DialogFragmentWithDate() {
 
     private var isPercentPump = true
 
+    private var _binding: DialogTempbasalBinding? = null
+
+    // This property is only valid between onCreateView and
+    // onDestroyView.
+    private val binding get() = _binding!!
+
     override fun onSaveInstanceState(savedInstanceState: Bundle) {
         super.onSaveInstanceState(savedInstanceState)
-        savedInstanceState.putDouble("actions_tempbasal_duration", actions_tempbasal_duration.value)
-        savedInstanceState.putDouble("actions_tempbasal_basalpercentinput", actions_tempbasal_basalpercentinput.value)
-        savedInstanceState.putDouble("actions_tempbasal_basalabsoluteinput", actions_tempbasal_basalabsoluteinput.value)
+        savedInstanceState.putDouble("duration", binding.duration.value)
+        savedInstanceState.putDouble("basalpercentinput", binding.basalpercentinput.value)
+        savedInstanceState.putDouble("basalabsoluteinput", binding.basalabsoluteinput.value)
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
-                              savedInstanceState: Bundle?): View? {
+                              savedInstanceState: Bundle?): View {
         onCreateViewGeneral()
-        return inflater.inflate(R.layout.dialog_tempbasal, container, false)
+        _binding = DialogTempbasalBinding.inflate(inflater, container, false)
+        return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -60,41 +67,47 @@ class TempBasalDialog : DialogFragmentWithDate() {
         val maxTempPercent = pumpDescription.maxTempPercent.toDouble()
         val tempPercentStep = pumpDescription.tempPercentStep.toDouble()
 
-        actions_tempbasal_basalpercentinput.setParams(savedInstanceState?.getDouble("actions_tempbasal_basalpercentinput")
-            ?: 100.0, 0.0, maxTempPercent, tempPercentStep, DecimalFormat("0"), true, ok)
+        binding.basalpercentinput.setParams(savedInstanceState?.getDouble("basalpercentinput")
+            ?: 100.0, 0.0, maxTempPercent, tempPercentStep, DecimalFormat("0"), true, binding.okcancel.ok)
 
-        actions_tempbasal_basalabsoluteinput.setParams(savedInstanceState?.getDouble("actions_tempbasal_basalabsoluteinput")
-            ?: profile.basal, 0.0, pumpDescription.maxTempAbsolute, pumpDescription.tempAbsoluteStep, DecimalFormat("0.00"), true, ok)
+        binding.basalabsoluteinput.setParams(savedInstanceState?.getDouble("basalabsoluteinput")
+            ?: profile.basal, 0.0, pumpDescription.maxTempAbsolute, pumpDescription.tempAbsoluteStep, DecimalFormat("0.00"), true, binding.okcancel.ok)
 
         val tempDurationStep = pumpDescription.tempDurationStep.toDouble()
         val tempMaxDuration = pumpDescription.tempMaxDuration.toDouble()
-        actions_tempbasal_duration.setParams(savedInstanceState?.getDouble("actions_tempbasal_duration")
-            ?: tempDurationStep, tempDurationStep, tempMaxDuration, tempDurationStep, DecimalFormat("0"), false, ok)
+        binding.duration.setParams(savedInstanceState?.getDouble("duration")
+            ?: tempDurationStep, tempDurationStep, tempMaxDuration, tempDurationStep, DecimalFormat("0"), false, binding.okcancel.ok)
 
         isPercentPump = pumpDescription.tempBasalStyle and PumpDescription.PERCENT == PumpDescription.PERCENT
         if (isPercentPump) {
-            actions_tempbasal_percent_layout.visibility = View.VISIBLE
-            actions_tempbasal_absolute_layout.visibility = View.GONE
+            binding.percentLayout.visibility = View.VISIBLE
+            binding.absoluteLayout.visibility = View.GONE
         } else {
-            actions_tempbasal_percent_layout.visibility = View.GONE
-            actions_tempbasal_absolute_layout.visibility = View.VISIBLE
+            binding.percentLayout.visibility = View.GONE
+            binding.absoluteLayout.visibility = View.VISIBLE
         }
     }
 
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
+    }
+
     override fun submit(): Boolean {
+        if (_binding == null) return false
         var percent = 0
         var absolute = 0.0
-        val durationInMinutes = actions_tempbasal_duration?.value?.toInt() ?: return false
+        val durationInMinutes = binding.duration.value?.toInt() ?: return false
         val profile = profileFunction.getProfile() ?: return false
         val actions: LinkedList<String> = LinkedList()
         if (isPercentPump) {
-            val basalPercentInput = SafeParse.stringToInt(actions_tempbasal_basalpercentinput.text)
+            val basalPercentInput = SafeParse.stringToInt(binding.basalpercentinput.text)
             percent = constraintChecker.applyBasalPercentConstraints(Constraint(basalPercentInput), profile).value()
             actions.add(resourceHelper.gs(R.string.tempbasal_label) + ": $percent%")
             actions.add(resourceHelper.gs(R.string.duration) + ": " + resourceHelper.gs(R.string.format_mins, durationInMinutes))
             if (percent != basalPercentInput) actions.add(resourceHelper.gs(R.string.constraintapllied))
         } else {
-            val basalAbsoluteInput = SafeParse.stringToDouble(actions_tempbasal_basalabsoluteinput.text)
+            val basalAbsoluteInput = SafeParse.stringToDouble(binding.basalabsoluteinput.text)
             absolute = constraintChecker.applyBasalConstraints(Constraint(basalAbsoluteInput), profile).value()
             actions.add(resourceHelper.gs(R.string.tempbasal_label) + ": " + resourceHelper.gs(R.string.pump_basebasalrate, absolute))
             actions.add(resourceHelper.gs(R.string.duration) + ": " + resourceHelper.gs(R.string.format_mins, durationInMinutes))
@@ -102,7 +115,7 @@ class TempBasalDialog : DialogFragmentWithDate() {
                 actions.add(resourceHelper.gs(R.string.constraintapllied).formatColor(resourceHelper, R.color.warning))
         }
         activity?.let { activity ->
-            OKDialog.showConfirmation(activity, resourceHelper.gs(R.string.tempbasal_label), HtmlHelper.fromHtml(Joiner.on("<br/>").join(actions)), Runnable {
+            OKDialog.showConfirmation(activity, resourceHelper.gs(R.string.tempbasal_label), HtmlHelper.fromHtml(Joiner.on("<br/>").join(actions)), {
                 val callback: Callback = object : Callback() {
                     override fun run() {
                         if (!result.success) {

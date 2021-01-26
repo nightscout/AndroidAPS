@@ -69,6 +69,7 @@
     <string name="menu_ecarb">eCarbs</string>
     <string name="menu_settings">Nastavenia</string>
     <string name="menu_status">Stav</string>
+    <string name="menu_resync">Opätovne synchronizovať</string>
     <string name="menu_prime_fill">Plnenie/Doplňovanie</string>
     <string name="menu_none">Žiadny</string>
     <string name="menu_default">Štandardný</string>
@@ -89,6 +90,9 @@
     <string name="action_confirm">POTVRDIŤ</string>
     <string name="action_timeshift">časový posun</string>
     <string name="action_bolus">bolus</string>
+    <string name="bolus_progress">Priebeh podávania bolusu</string>
+    <string name="press_to_cancel">stlačením tlačidla zrušíte akciu</string>
+    <string name="cancel_bolus">ZRUŠIŤ BOLUS</string>
     <string name="status_pump">Pumpa</string>
     <string name="status_loop">Uzavretý okruh</string>
     <string name="status_cpp">PROFIL</string>

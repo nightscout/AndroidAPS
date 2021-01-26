@@ -14,7 +14,7 @@ import org.powermock.modules.junit4.PowerMockRunner;
 
 import java.util.Set;
 
-import info.nightscout.androidaps.aaps;
+import info.nightscout.androidaps.Aaps;
 import info.nightscout.androidaps.testing.mockers.AAPSMocker;
 import info.nightscout.androidaps.testing.mockers.AndroidMocker;
 import info.nightscout.androidaps.testing.mockers.LogMocker;
@@ -29,7 +29,7 @@ import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 
 @RunWith(PowerMockRunner.class)
-@PrepareForTest( { WearUtil.class, Log.class, SharedPreferences.class, Context.class, aaps.class, android.util.Base64.class} )
+@PrepareForTest( { WearUtil.class, Log.class, SharedPreferences.class, Context.class, Aaps.class, android.util.Base64.class} )
 public class PersistenceTest {
 
     @Before

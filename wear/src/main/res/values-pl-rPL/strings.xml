@@ -61,12 +61,15 @@
     <string name="pref_complication_tap_action">Akcja po kliknięciu komplikacji</string>
     <string name="pref_unicode_in_complications">Unicode w Komplikacjach</string>
     <string name="pref_version">Wersja:</string>
+    <string name="pref_moreWatchfaceSettings">więcej ustawień zegarka</string>
+    <string name="pref_lookInYourWatchfaceConfiguration">Proszę, zajrzyj do konfiguracji zegarka.</string>
     <string name="menu_tempt">CelTymcz.</string>
     <string name="menu_wizard">Kalkulator</string>
     <string name="menu_bolus">Bolus</string>
     <string name="menu_ecarb">eWęgle</string>
     <string name="menu_settings">Ustawienia</string>
     <string name="menu_status">Status</string>
+    <string name="menu_resync">Ponowna synchronizacja</string>
     <string name="menu_prime_fill">Wypełnianie</string>
     <string name="menu_none">Brak</string>
     <string name="menu_default">Domyślnie</string>

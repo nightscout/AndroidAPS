@@ -29,7 +29,7 @@ import info.nightscout.androidaps.utils.sharedPreferences.SP;
 public class InitializePumpManagerTask extends ServiceTask {
 
     @Inject AAPSLogger aapsLogger;
-    @Inject ActivePluginProvider activePlugin;
+    //@Inject ActivePluginProvider activePlugin;
     @Inject SP sp;
     @Inject RileyLinkServiceData rileyLinkServiceData;
     @Inject RileyLinkUtil rileyLinkUtil;
@@ -49,6 +49,10 @@ public class InitializePumpManagerTask extends ServiceTask {
     @Override
     public void run() {
 
+        if (!isRileyLinkDevice()) {
+            return;
+        }
+
         double lastGoodFrequency;
 
         if (rileyLinkServiceData.lastGoodFrequency == null) {
@@ -65,6 +69,11 @@ public class InitializePumpManagerTask extends ServiceTask {
             lastGoodFrequency = rileyLinkServiceData.lastGoodFrequency;
         }
 
+        /* FIXME this can apparently crash:
+            Fatal Exception: java.lang.ClassCastException
+            info.nightscout.androidaps.plugins.pump.virtual.VirtualPumpPlugin
+            cannot be cast to info.nightscout.androidaps.plugins.pump.common.hw.rileylink.defs.RileyLinkPumpDevice
+         */
         RileyLinkCommunicationManager<?> rileyLinkCommunicationManager = ((RileyLinkPumpDevice) activePlugin.getActivePump()).getRileyLinkService().getDeviceCommunicationManager();
 
         if (activePlugin.getActivePump().manufacturer() == ManufacturerType.Medtronic) {

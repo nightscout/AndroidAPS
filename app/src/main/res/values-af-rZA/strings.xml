@@ -13,7 +13,6 @@
     <string name="reset_db_confirm">Wil jy regtig die databasis herstel?</string>
     <string name="nav_exit">Gaan uit</string>
     <string name="ns_sync_use_absolute_title">Gebruik altyd absolute basale aardes</string>
-    <string name="alert_dialog_storage_permission_text">Herlaai jou foon of herlaai AndroidAPS met die stelsel instellings \nanders sal AndroidAPS nie geskiedenis hê nie! (Belangrik om te spoor en te verifieer dat die algoritmes korrek werk)!</string>
     <string name="description_actions">\'n Paar knoppies vir vinnige algemene nutsfunskies</string>
     <string name="description_config_builder">Gebruik vir die aktiewe plugins te konfigureer</string>
     <string name="description_objectives">Onderrig program</string>
@@ -38,7 +37,6 @@
     <string name="description_source_glimp">Ontvang BG waardes vanaf Glimp.</string>
     <string name="description_source_mm640g">Onvang BG waardes vanaf die 600SeriesAndroidUploader.</string>
     <string name="description_source_ns_client">Laai BG data af vanaf Nightscout</string>
-    <string name="description_source_xdrip">Ontvang BG waardes vana xDrip.</string>
     <string name="description_treatments">Stoor alle behandelings wat gedoen was</string>
     <string name="description_wear">Monitor en beheer AndroidAPS met jou WearOS horlosie.</string>
     <string name="description_xdrip_status_line">Wys informasie van jou loop op jou xDrip+ horlosie-gesig.</string>
@@ -114,7 +112,6 @@
     <string name="changeyourinput">Verander jou insette!</string>
     <string name="configbuilder_bgsource">BG bron</string>
     <string name="configbuilder_bgsource_description">Waarvandaan  moet AndroidAPS data kry?</string>
-    <string name="xdrip">xDrip</string>
     <string name="apsmode_title">APS modus</string>
     <string name="closedloop">Geslote lus</string>
     <string name="openloop">Oop lus</string>
@@ -197,8 +194,6 @@
     <string name="mealbolus">Maaltyd</string>
     <string name="correctionbous">Corr</string>
     <string name="actions">Aksies</string>
-    <string name="ns_upload_only">NS laai net op (opgeskorte sinkro)</string>
-    <string name="ns_upload_only_summary">NS oplaai net. Nie effektief op SGV tensy \'n plaaslike bron soos xDrip gekies is. Nie effektief op profiele terwyl NS-profiele gebruik word.</string>
     <string name="pumpNotInitialized">Pomp nie geïnisialiseer nie!</string>
     <string name="primefill">Prima/vul</string>
     <string name="fillwarning">Maak asseblief seker dat die hoeveelheid ooreenstem met die spesifikasies van jou infusie stel!</string>
@@ -248,7 +243,6 @@
     <string name="smscommunicator_shortname">SMS</string>
     <string name="short_tabtitles">Verkort oortjie titels</string>
     <string name="always_use_shortavg">Gebruik altyd kort gemiddelde delta in plaas van eenvoudige delta</string>
-    <string name="always_use_shortavg_summary">Nuttig wanneer data van ongefiltreerde bronne soos xDrip baie raas.</string>
     <string name="profile">Profiel</string>
     <string name="openapsama_max_daily_safety_multiplier_summary">Verstek waarde: 3 dit is \'n sleutel OpenAPS veiligheidsdrumpels. Wat dit doen is om jou basale te berk tot 3 x (in hierdie mense) jou grootste basale koers. Jy sal waarskynlik nooit dit hoef te verander, maar jy moet bewus wees wat bespreek is oor \"3 x max daaglikse; 4 x huidige\"vir veiligheidsdrumpels.</string>
     <string name="openapsama_current_basal_safety_multiplier_summary">Verstek waarde: 4 dit is die helfte van die sleutel OpenAPS veiligheid limiete, en die ander helfte van \"3 x maks daaglikse; 4 x huidige\"van die veiligheid limiet. Dit beteken jou basale, ongeag max basale stel op jou pomp, kan enige hoër wees as hierdie nommer tye die huidige vlak van jou basale. Dit is om te verhoed dat mense in gevaarlike gebied deur instelling buitensporig hoë max basals voor om te verstaan hoe die algoritme werk. Weer, die verstek is 4 x; die meeste mense sal nooit moet dit aanpas en is eerder meer geneig om te moet aanpas ander instellings as hulle voel hulle \"loop in\" hierdie veiligheid limiet.</string>
@@ -261,9 +255,6 @@
     <string name="smscommunicator_invalidphonennumber">Ongeldige SMS selfoon nommer</string>
     <string name="overview_calibration">Kalibrasie</string>
     <string name="xdripnotinstalled">xDrip + nie geïnstalleerd nie</string>
-    <string name="calibrationsent">Kalibrasie gestuur na xDrip</string>
-    <string name="smscommunicator_calibrationsent">Kalibrasie gestuur. Ontvang moet geaktiveer word in xDrip.</string>
-    <string name="smscommunicator_calibrationfailed">xDrip ontvang nie kalibrasies</string>
     <string name="pumpsuspended">Pomp opgeskort</string>
     <string name="executing">Besig met uitvoering</string>
     <string name="virtualpump_settings">Virtuele pomp instellings</string>
@@ -334,8 +325,6 @@
     <string name="nav_about">Omtrent</string>
     <string name="smscommunicator_missingsmspermission">Vermiste SMS toestemming</string>
     <string name="smscommunicator_missingphonestatepermission">Toestemming vir foon status nog nie gegee nie</string>
-    <string name="xdripstatus_settings">xDrip Status (horlosie)</string>
-    <string name="xdripstatus">xDrip Statusline (horlosie)</string>
     <string name="xdripstatus_shortname">xds</string>
     <string name="wear_showbgi_title">Wys BGI</string>
     <string name="wear_showbgi_summary">Voeg BGI by status lyn</string>
@@ -393,7 +382,6 @@
     <string name="activity_target">aktiwiteit doelwit</string>
     <string name="hypo_duration">hipo duur</string>
     <string name="hypo_target">hipo doelwit</string>
-    <string name="reuse">hergebruik</string>
     <string name="wearcontrol_title">Kontroles van horlosie</string>
     <string name="wearcontrol_summary">Stel tydeleike doelwitte en behandelings vanaf horlosie.</string>
     <string name="food">Kos</string>
@@ -428,8 +416,6 @@
     <string name="overview_editquickwizard_usebasaliob">Basale IAB berekening</string>
     <string name="overview_editquickwizard_usetrend">Tendens berekening</string>
     <string name="overview_editquickwizard_usesuperbolus">Superbolus berekening</string>
-    <string name="yes">Ja</string>
-    <string name="no">Nee</string>
     <string name="positiveonly">Slegs positiewe</string>
     <string name="negativeonly">Slegs negatiewe</string>
     <string name="overview_editquickwizard_usecob">COB berekening</string>
@@ -486,7 +472,6 @@
     <string name="enablesmbwithtemptarget_summary">Aktiveer SMB wanneer daar tydelike doelwitte aktief is (eetgou, oefen)</string>
     <string name="enablesmbwithhightemptarget">Aktiveer SMB met hoë tydelike doelwitte</string>
     <string name="overview_insulin_label">Insulien</string>
-    <string name="overview_carbs_label">Karbs</string>
     <string name="overview_buttons_selection">Knoppies</string>
     <string name="show_calibration_button_summary">Stuur \'n kalibrasie na xDrip+ of open G5 kalibrasie dialoog</string>
     <string name="show_cgm_button_summary">Open xDrip +, terug knoppies keer terug na AAPS</string>
@@ -633,7 +618,6 @@
     <string name="low_temptarget_lowers_sensitivity_title">Lae tydelike doelwitte verlaag sensitiwiteit</string>
     <string name="low_temptarget_lowers_sensitivity_summary"><![CDATA[Laer sensitiwiteit vir tydelike doelwitte < 100]]></string>
     <string name="combo_invalid_setup">Ongeldige pomp opstelling kontroleer die hulpdokumente en verifieer dat die vinnige inligting kieslys wel QUICK INFO benaam is met behulp van die 360 konfigurasie sagteware.</string>
-    <string name="custom">Gepasmaak</string>
     <string name="careportal_removestartedevents">Skoon AndroidAPS begin</string>
     <string name="storedsettingsfound">Gestoorde instellings gevind</string>
     <string name="allow_hardware_pump_text">Aandag: As jy aktiveer en koppel aan \'n hardeware pomp, AndroidAPS sal die basale instellings uit die profiel aan die pomp kopieer, die bestaande basale koers gestoor op die pomp sal oorskryf word. Maak seker jy het die korrekte basale instelling in AndroidAPS. As jy nie seker is of nie die basale instellings wil oorskryf op jou pomp, druk Kanselleer en herhaal oorskakel na die pomp op \'n later tyd.</string>
@@ -651,7 +635,6 @@
     <string name="nav_logsettings">Logboekinstellings</string>
     <string name="resettodefaults">Herstel na verstek</string>
     <string name="nsmalfunction">NSClient onklaar. Oorweeg om NS en NSClient te herlaai.</string>
-    <string name="versionavailable">Weergawe %1$s beskikbaar</string>
     <string name="time_offset">Tyd verskil</string>
     <string name="setupwizard_preferred_aps_mode">Verkose APS modus</string>
     <string name="treatments_wizard_total_label">Totaal</string>
@@ -799,8 +782,6 @@
     <string name="copy_short">Kopieer</string>
     <string name="addnew">Voeg nuwe by</string>
     <string name="versionChecker">Weergawe Navolger</string>
-    <string name="signature_verifier">Handtekening verifieerder</string>
-    <string name="running_invalid_version">Die weergawe is ongeldig. Lus afgeskakel!</string>
     <string name="old_version">ou weergawe</string>
     <string name="very_old_version">baie ou weergawe</string>
     <string name="twohours">2h</string>

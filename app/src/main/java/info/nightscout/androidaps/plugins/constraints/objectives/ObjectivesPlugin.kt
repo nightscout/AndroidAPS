@@ -32,6 +32,7 @@ class ObjectivesPlugin @Inject constructor(
     .fragmentClass(ObjectivesFragment::class.qualifiedName)
     .alwaysEnabled(config.APS)
     .showInList(config.APS)
+    .pluginIcon(R.drawable.ic_graduation)
     .pluginName(R.string.objectives)
     .shortName(R.string.objectives_shortname)
     .description(R.string.description_objectives),
@@ -159,6 +160,12 @@ class ObjectivesPlugin @Inject constructor(
     override fun isLoopInvocationAllowed(value: Constraint<Boolean>): Constraint<Boolean> {
         if (!objectives[FIRST_OBJECTIVE].isStarted)
             value.set(aapsLogger, false, String.format(resourceHelper.gs(R.string.objectivenotstarted), FIRST_OBJECTIVE + 1), this)
+        return value
+    }
+
+    fun isLgsAllowed(value: Constraint<Boolean>): Constraint<Boolean> {
+        if (!objectives[MAXBASAL_OBJECTIVE].isStarted)
+            value.set(aapsLogger, false, String.format(resourceHelper.gs(R.string.objectivenotstarted), MAXBASAL_OBJECTIVE + 1), this)
         return value
     }
 

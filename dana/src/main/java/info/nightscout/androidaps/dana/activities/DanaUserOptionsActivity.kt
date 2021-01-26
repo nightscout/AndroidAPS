@@ -19,7 +19,6 @@ import info.nightscout.androidaps.plugins.pump.common.defs.PumpType
 import info.nightscout.androidaps.queue.Callback
 import info.nightscout.androidaps.utils.FabricPrivacy
 import info.nightscout.androidaps.utils.extensions.plusAssign
-import info.nightscout.androidaps.utils.resources.ResourceHelper
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import java.text.DecimalFormat
@@ -32,7 +31,6 @@ class DanaUserOptionsActivity : NoSplashAppCompatActivity() {
     @Inject lateinit var aapsLogger: AAPSLogger
     @Inject lateinit var rxBus: RxBusWrapper
     @Inject lateinit var fabricPrivacy: FabricPrivacy
-    @Inject lateinit var resourceHelper: ResourceHelper
     @Inject lateinit var context: Context
     @Inject lateinit var danaPump: DanaPump
     @Inject lateinit var activePlugin: ActivePluginProvider

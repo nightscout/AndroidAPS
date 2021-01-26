@@ -97,7 +97,7 @@
     <string name="basal_step">Incremento Basal</string>
     <string name="bolus_step">Incremento Bólus</string>
     <string name="virtualpump_firmware_label">Firmware</string>
-    <string name="danar_pump_settings">Configurações da bomba Dana</string>
+    <string name="danar_pump_settings">Definições da bomba Dana</string>
     <string name="timeformat12h">12h</string>
     <string name="timeformat24h">24h</string>
     <string name="option_on">Ligado</string>

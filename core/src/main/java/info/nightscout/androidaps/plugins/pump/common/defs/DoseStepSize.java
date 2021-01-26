@@ -1,5 +1,7 @@
 package info.nightscout.androidaps.plugins.pump.common.defs;
 
+import java.util.Locale;
+
 /**
  * Created by andy on 02/05/2018.
  */
@@ -25,6 +27,13 @@ public enum DoseStepSize {
             new DoseStepSizeEntry(0f, 1f, 0.025f), //
             new DoseStepSizeEntry(1f, 10f, 0.05f), //
             new DoseStepSizeEntry(10f, Double.MAX_VALUE, 0.1f)), //
+
+    YpsopumpBasal( //
+            new DoseStepSizeEntry(0.0f, 1f, 0.01f), //
+            new DoseStepSizeEntry(1f, 2f, 0.02f), //
+            new DoseStepSizeEntry(2f, 15f, 0.1f), //
+            new DoseStepSizeEntry(15f, 40f, 0.5f)
+    )
     ;
 
 
@@ -49,19 +58,25 @@ public enum DoseStepSize {
 
     public String getDescription() {
         StringBuilder sb = new StringBuilder();
-
+        boolean first = true;
         for (DoseStepSizeEntry entry : entries) {
 
-            sb.append(entry.value);
+            if (first) {
+                first = false;
+            } else {
+                sb.append(", ");
+            }
+
+            sb.append(String.format(Locale.ENGLISH, "%.3f", entry.value));
             sb.append(" {");
-            sb.append(entry.from);
+            sb.append(String.format(Locale.ENGLISH,"%.3f", entry.from));
             sb.append("-");
 
             if (entry.to == Double.MAX_VALUE) {
                 sb.append("~}");
             } else {
-                sb.append(entry.to);
-                sb.append("}, ");
+                sb.append(String.format(Locale.ENGLISH, "%.3f", entry.to));
+                sb.append("}");
             }
         }
 
