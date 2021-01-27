@@ -20,7 +20,7 @@ import io.reactivex.disposables.CompositeDisposable
 import javax.inject.Inject
 import kotlin.experimental.xor
 
-class EnterPinActivity : NoSplashAppCompatActivity() {
+class EnterPinActivity : info.nightscout.androidaps.activities.NoSplashAppCompatActivity() {
 
     @Inject lateinit var rxBus: RxBusWrapper
     @Inject lateinit var fabricPrivacy: FabricPrivacy
@@ -56,7 +56,7 @@ class EnterPinActivity : NoSplashAppCompatActivity() {
                     bleComm.finishV3Pairing()
                     finish()
                 }
-                else OKDialog.show(this, resourceHelper.gs(R.string.error), resourceHelper.gs(R.string.invalidinput))
+                else OKDialog.show(this, resourceHelper.gs(R.string.error), resourceHelper.gs(R.string.invalidinput), null, sp)
             }
         }
         binding.okcancel.cancel.setOnClickListener { finish() }

@@ -78,9 +78,9 @@ class TempTargetDialog : DialogFragmentWithDate() {
         // temp target
         context?.let { context ->
             if (activePlugin.activeTreatments.tempTargetFromHistory != null)
-                binding.targetCancel.visibility = View.VISIBLE
+                binding.overviewTemptargetCancel.visibility = View.VISIBLE
             else
-                binding.targetCancel.visibility = View.GONE
+                binding.overviewTemptargetCancel.visibility = View.GONE
 
             reasonList = Lists.newArrayList(
                 resourceHelper.gs(R.string.manual),
@@ -91,20 +91,20 @@ class TempTargetDialog : DialogFragmentWithDate() {
             val adapterReason = ArrayAdapter(context, R.layout.spinner_centered, reasonList)
             binding.reason.adapter = adapterReason
 
-            binding.targetCancel.setOnClickListener { shortClick(it) }
-            binding.eatingSoon.setOnClickListener { shortClick(it) }
-            binding.activity.setOnClickListener { shortClick(it) }
-            binding.hypo.setOnClickListener { shortClick(it) }
+            binding.overviewTemptargetCancel.setOnClickListener { shortClick(it) }
+            binding.overviewTemptargetEatingSoon.setOnClickListener { shortClick(it) }
+            binding.overviewTemptargetActivity.setOnClickListener { shortClick(it) }
+            binding.overviewTemptargetHypo.setOnClickListener { shortClick(it) }
 
-            binding.eatingSoon.setOnLongClickListener {
+            binding.overviewTemptargetEatingSoon.setOnLongClickListener {
                 longClick(it)
                 return@setOnLongClickListener true
             }
-            binding.activity.setOnLongClickListener {
+            binding.overviewTemptargetActivity.setOnLongClickListener {
                 longClick(it)
                 return@setOnLongClickListener true
             }
-            binding.hypo.setOnLongClickListener {
+            binding.overviewTemptargetHypo.setOnLongClickListener {
                 longClick(it)
                 return@setOnLongClickListener true
             }
@@ -118,19 +118,19 @@ class TempTargetDialog : DialogFragmentWithDate() {
 
     private fun longClick(v: View) {
         when (v.id) {
-            R.id.eating_soon -> {
+            R.id.overview_temptarget_eating_soon -> {
                 binding.temptarget.value = defaultValueHelper.determineEatingSoonTT()
                 binding.duration.value = defaultValueHelper.determineEatingSoonTTDuration().toDouble()
                 binding.reason.setSelection(reasonList.indexOf(resourceHelper.gs(R.string.eatingsoon)))
             }
 
-            R.id.activity -> {
+            R.id.overview_temptarget_activity -> {
                 binding.temptarget.value = defaultValueHelper.determineActivityTT()
                 binding.duration.value = defaultValueHelper.determineActivityTTDuration().toDouble()
                 binding.reason.setSelection(reasonList.indexOf(resourceHelper.gs(R.string.activity)))
             }
 
-            R.id.hypo -> {
+            R.id.overview_temptarget_hypo -> {
                 binding.temptarget.value = defaultValueHelper.determineHypoTT()
                 binding.duration.value = defaultValueHelper.determineHypoTTDuration().toDouble()
                 binding.reason.setSelection(reasonList.indexOf(resourceHelper.gs(R.string.hypo)))
@@ -181,7 +181,7 @@ class TempTargetDialog : DialogFragmentWithDate() {
                     treatmentsPlugin.addToHistoryTempTarget(tempTarget)
                 }
                 if (duration == 10) sp.putBoolean(R.string.key_objectiveusetemptarget, true)
-            })
+            }, null, sp)
         }
         return true
     }

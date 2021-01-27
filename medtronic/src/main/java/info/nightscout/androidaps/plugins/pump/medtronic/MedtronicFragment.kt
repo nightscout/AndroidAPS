@@ -7,6 +7,7 @@ import android.os.Handler
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.content.res.ResourcesCompat
 import dagger.android.support.DaggerFragment
 import info.nightscout.androidaps.events.EventExtendedBolusChange
 import info.nightscout.androidaps.events.EventPumpStatusChanged
@@ -36,10 +37,12 @@ import info.nightscout.androidaps.queue.events.EventQueueChanged
 import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.FabricPrivacy
 import info.nightscout.androidaps.utils.T
+import info.nightscout.androidaps.utils.ViewAnimation
 import info.nightscout.androidaps.utils.WarnColors
 import info.nightscout.androidaps.utils.alertDialogs.OKDialog
 import info.nightscout.androidaps.utils.extensions.plusAssign
 import info.nightscout.androidaps.utils.resources.ResourceHelper
+import info.nightscout.androidaps.utils.sharedPreferences.SP
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import kotlinx.android.synthetic.main.medtronic_fragment.*
@@ -58,7 +61,10 @@ class MedtronicFragment : DaggerFragment() {
     @Inject lateinit var medtronicUtil: MedtronicUtil
     @Inject lateinit var medtronicPumpStatus: MedtronicPumpStatus
     @Inject lateinit var rileyLinkServiceData: RileyLinkServiceData
+    @Inject lateinit var sp: SP
 
+    private lateinit var mHandler: Handler
+    private lateinit var mRunnable:Runnable
     private var disposable: CompositeDisposable = CompositeDisposable()
 
     private val loopHandler = Handler()
@@ -78,41 +84,95 @@ class MedtronicFragment : DaggerFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        swipeRefresh_medtronic.setColorSchemeResources(R.color.orange, R.color.green, R.color.blue)
+        swipeRefresh_medtronic.setProgressBackgroundColorSchemeColor(ResourcesCompat.getColor(resources, R.color.swipe_background, null))
+        // Initialize the handler instance
+        mHandler = Handler()
+
+        swipeRefresh_medtronic.setOnRefreshListener {
+
+            mRunnable = Runnable {
+                // Hide swipe to refresh icon animation
+                swipeRefresh_medtronic.isRefreshing = false
+                readPumpStatus()
+            }
+
+            // Execute the task after specified time
+            mHandler.postDelayed(
+                mRunnable,
+                (3000).toLong() // Delay 1 to 5 seconds
+            )
+        }
+
         medtronic_pumpstatus.setBackgroundColor(resourceHelper.gc(R.color.colorInitializingBorder))
 
         medtronic_rl_status.text = resourceHelper.gs(RileyLinkServiceState.NotStarted.resourceId)
 
-        medtronic_pump_status.setTextColor(Color.WHITE)
+        medtronic_pump_status.setTextColor(Color.GRAY)
         medtronic_pump_status.text = "{fa-bed}"
 
-        medtronic_history.setOnClickListener {
-            if (medtronicPumpPlugin.rileyLinkService?.verifyConfiguration() == true) {
-                startActivity(Intent(context, MedtronicHistoryActivity::class.java))
-            } else {
-                displayNotConfiguredDialog()
+        medtronic_refresh.setOnClickListener(clickListener)
+        fabMedtronicMenu.setOnClickListener(clickListener)
+        medtronic_history.setOnClickListener(clickListener)
+        medtronic_stats.setOnClickListener(clickListener)
+
+        medtronic_refresh.visibility == View.GONE
+        medtronic_history.visibility == View.GONE
+        medtronic_stats.visibility == View.GONE
+
+        ViewAnimation.showOut(medtronic_refresh)
+        ViewAnimation.showOut(medtronic_history)
+        ViewAnimation.showOut(medtronic_stats)
+
+    }
+
+    private val clickListener: View.OnClickListener = View.OnClickListener { view ->
+        when ( view.id ){
+            R.id.fabMedtronicMenu -> {
+                if ( medtronic_refresh.visibility == View.GONE) {
+                    ViewAnimation.showIn(medtronic_refresh)
+                    ViewAnimation.showIn(medtronic_history)
+                    ViewAnimation.showIn(medtronic_stats)
+                } else if ( medtronic_refresh.visibility == View.VISIBLE) {
+                    ViewAnimation.showOut(medtronic_refresh)
+                    ViewAnimation.showOut(medtronic_history)
+                    ViewAnimation.showOut(medtronic_stats)
+                }
+            }
+            R.id.medtronic_refresh -> {
+                readPumpStatus()
+            }
+            R.id.medtronic_history -> {
+                if (medtronicPumpPlugin.rileyLinkService?.verifyConfiguration() == true)  {
+                    startActivity(Intent(context, MedtronicHistoryActivity::class.java))
+                } else {
+                    displayNotConfiguredDialog()
+                }
+
+            }
+            R.id.medtronic_stats -> {
+                if (medtronicPumpPlugin.rileyLinkService?.verifyConfiguration() == true) {
+                    startActivity(Intent(context, RileyLinkStatusActivity::class.java))
+                } else {
+                    displayNotConfiguredDialog()
+                }
             }
         }
 
-        medtronic_refresh.setOnClickListener {
-            if (medtronicPumpPlugin.rileyLinkService?.verifyConfiguration() != true) {
-                displayNotConfiguredDialog()
-            } else {
-                medtronic_refresh.isEnabled = false
-                medtronicPumpPlugin.resetStatusState()
-                commandQueue.readStatus("Clicked refresh", object : Callback() {
-                    override fun run() {
-                        activity?.runOnUiThread { medtronic_refresh?.isEnabled = true }
-                    }
-                })
-            }
-        }
+    }
 
-        medtronic_stats.setOnClickListener {
-            if (medtronicPumpPlugin.rileyLinkService?.verifyConfiguration() == true) {
-                startActivity(Intent(context, RileyLinkStatusActivity::class.java))
-            } else {
-                displayNotConfiguredDialog()
-            }
+
+    private fun readPumpStatus() {
+        if (medtronicPumpPlugin.rileyLinkService?.verifyConfiguration() != true) {
+            displayNotConfiguredDialog()
+        } else {
+            medtronic_refresh.isEnabled = false
+            medtronicPumpPlugin.resetStatusState()
+            commandQueue.readStatus("Clicked refresh", object : Callback() {
+                override fun run() {
+                    activity?.runOnUiThread { medtronic_refresh?.isEnabled = true }
+                }
+            })
         }
     }
 
@@ -233,7 +293,7 @@ class MedtronicFragment : DaggerFragment() {
     private fun displayNotConfiguredDialog() {
         context?.let {
             OKDialog.show(it, resourceHelper.gs(R.string.medtronic_warning),
-                resourceHelper.gs(R.string.medtronic_error_operation_not_possible_no_configuration), null)
+                resourceHelper.gs(R.string.medtronic_error_operation_not_possible_no_configuration), null, sp)
         }
     }
 
@@ -306,11 +366,15 @@ class MedtronicFragment : DaggerFragment() {
         } else {
             medtronic_pumpstate_battery.text = "{fa-battery-" + medtronicPumpStatus.batteryRemaining / 25 + "}  " + medtronicPumpStatus.batteryRemaining + "%" + String.format("  (%.2f V)", medtronicPumpStatus.batteryVoltage)
         }
-        warnColors.setColorInverse(medtronic_pumpstate_battery, medtronicPumpStatus.batteryRemaining.toDouble(), 25.0, 10.0)
+        warnColors.setColorInverse(medtronic_pumpstate_battery, medtronicPumpStatus.batteryRemaining.toDouble(), 25.0, 10.0, resourceHelper.getAttributeColor(context, R.attr.statuslight_normal),
+                resourceHelper.getAttributeColor(context, R.attr.statuslight_Warning),
+                resourceHelper.getAttributeColor(context, R.attr.statuslight_alarm))
 
         // reservoir
         medtronic_reservoir.text = resourceHelper.gs(R.string.reservoirvalue, medtronicPumpStatus.reservoirRemainingUnits, medtronicPumpStatus.reservoirFullUnits)
-        warnColors.setColorInverse(medtronic_reservoir, medtronicPumpStatus.reservoirRemainingUnits, 50.0, 20.0)
+        warnColors.setColorInverse(medtronic_reservoir, medtronicPumpStatus.reservoirRemainingUnits, 50.0, 20.0, resourceHelper.getAttributeColor(context, R.attr.statuslight_normal),
+                resourceHelper.getAttributeColor(context, R.attr.statuslight_Warning),
+                resourceHelper.getAttributeColor(context, R.attr.statuslight_alarm))
 
         medtronicPumpPlugin.rileyLinkService?.verifyConfiguration()
         medtronic_errors.text = medtronicPumpStatus.errorInfo

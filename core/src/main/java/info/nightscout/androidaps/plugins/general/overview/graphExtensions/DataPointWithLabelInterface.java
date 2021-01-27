@@ -34,7 +34,7 @@ import com.jjoe64.graphview.series.DataPointInterface;
  *
  * @author jjoe64
  */
-public interface DataPointWithLabelInterface extends DataPointInterface{
+public interface DataPointWithLabelInterface extends DataPointInterface {
     /**
      * @return the x value
      */

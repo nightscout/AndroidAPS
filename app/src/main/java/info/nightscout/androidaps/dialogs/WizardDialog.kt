@@ -1,5 +1,7 @@
 package info.nightscout.androidaps.dialogs
 
+import android.graphics.PorterDuff
+import android.graphics.drawable.Drawable
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
@@ -11,7 +13,12 @@ import android.view.WindowManager
 import android.widget.AdapterView
 import android.widget.AdapterView.OnItemSelectedListener
 import android.widget.ArrayAdapter
+import android.widget.AutoCompleteTextView
 import android.widget.CompoundButton
+import androidx.core.content.ContextCompat
+import com.ms_square.etsyblur.BlurConfig
+import com.ms_square.etsyblur.BlurDialogFragment
+import com.ms_square.etsyblur.SmartAsyncPolicy
 import androidx.fragment.app.FragmentManager
 import dagger.android.support.DaggerDialogFragment
 import info.nightscout.androidaps.Constants
@@ -45,7 +52,7 @@ import java.util.*
 import javax.inject.Inject
 import kotlin.math.abs
 
-class WizardDialog : DaggerDialogFragment() {
+class WizardDialog : BlurDialogFragment() {
 
     @Inject lateinit var aapsLogger: AAPSLogger
     @Inject lateinit var constraintChecker: ConstraintChecker
@@ -109,6 +116,29 @@ class WizardDialog : DaggerDialogFragment() {
         isCancelable = true
         dialog?.setCanceledOnTouchOutside(false)
 
+        if ( sp.getBoolean("daynight", true)) {
+            val drawable: Drawable? = context?.let { ContextCompat.getDrawable(it, R.drawable.dialog) }
+            if (drawable != null) {
+                drawable.setColorFilter(sp.getInt("darkBackgroundColor", info.nightscout.androidaps.core.R.color.background_dark), PorterDuff.Mode.SRC_IN)
+            }
+            dialog?.window?.setBackgroundDrawable(drawable)
+        } else {
+            val drawable: Drawable? = context?.let { ContextCompat.getDrawable(it, R.drawable.dialog) }
+            if (drawable != null) {
+                drawable.setColorFilter(sp.getInt("lightBackgroundColor", info.nightscout.androidaps.core.R.color.background_light), PorterDuff.Mode.SRC_IN)
+            }
+            dialog?.window?.setBackgroundDrawable(drawable)
+        }
+
+       context?.let { SmartAsyncPolicy(it) }?.let {
+            BlurConfig.Builder()
+                .overlayColor(resourceHelper.gc(R.color.white_alpha_40))  // semi-transparent white color
+                .debug(false)
+                .asyncPolicy(it)
+                .build()
+        }
+
+       // return inflater.inflate(R.layout.dialog_wizard, container, false)
         _binding = DialogWizardBinding.inflate(inflater, container, false)
         return binding.root
     }
@@ -241,6 +271,7 @@ class WizardDialog : DaggerDialogFragment() {
             dismiss()
             return
         }
+
 
         val profileList: ArrayList<CharSequence>
         profileList = profileStore.getProfileList()

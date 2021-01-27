@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!--    Keys-->
-    <string name="key_enable_fabric" translatable="false">enable_fabric</string>
+    <string name="key_enable_fabric" translatable="false">enable_fabric2</string>
     <string name="key_language" translatable="false">language</string>
     <string name="key_units" translatable="false">units</string>
     <string name="key_loop_openmode_min_change" translatable="false">loop_openmode_min_change</string>
@@ -230,7 +230,7 @@
     <string name="amount_days"># Days</string>
     <string name="weight">Weight</string>
     <string name="warning_Message">Possibly inaccurate if using boluses for priming/filling!</string>
-    <string name="olddata_Message">Old Data Please Press "RELOAD"</string>
+    <string name="olddata_Message">Old Data Please swipe to reload</string>
     <string name="tbb">Total Base Basal</string>
     <string name="tbb2">TBB * 2</string>
 

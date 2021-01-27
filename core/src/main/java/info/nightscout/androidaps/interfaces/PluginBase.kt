@@ -1,8 +1,17 @@
 package info.nightscout.androidaps.interfaces
 
+import android.app.Application
+import android.content.Context
+import android.content.res.Resources
+import android.graphics.drawable.Drawable
+import androidx.appcompat.content.res.AppCompatResources.getDrawable
+import androidx.core.content.ContextCompat
+import androidx.core.content.res.ResourcesCompat.getColor
+import androidx.core.content.res.ResourcesCompat.getDrawable
 import androidx.preference.Preference
 import androidx.preference.PreferenceFragmentCompat
 import dagger.android.HasAndroidInjector
+import info.nightscout.androidaps.core.R
 import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.logging.LTag
 import info.nightscout.androidaps.utils.resources.ResourceHelper

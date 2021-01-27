@@ -20,7 +20,6 @@
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="com.google.android.permission.PROVIDE_BACKGROUND" />
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
-    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
@@ -39,7 +38,7 @@
         android:label="@string/app_name"
         android:roundIcon="${appIconRound}"
         android:supportsRtl="true"
-        android:theme="@style/AppTheme.Launcher"
+        android:theme="@style/AppTheme"
         android:fullBackupOnly="false"
         android:backupAgent=".utils.SPBackupAgent"
         android:restoreAnyVersion="true">
@@ -52,14 +51,22 @@
             android:name="com.google.android.gms.car.application"
             android:resource="@xml/automotive_app_desc" />
 
-        <activity android:name=".MainActivity">
+        <!-- The below is for the splash screen and we need no action bar and the default theme -->
+        <activity android:name=".utils.SplashEasyActivity"
+            android:theme="@style/AppTheme.Launcher">
             <intent-filter>
-                <action android:name="android.intent.action.VIEW" />
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".activities.PreferencesActivity" />
+
+
+        <activity android:name=".MainActivity"
+            android:launchMode="standard">
+
+        </activity>
+        <activity android:name=".activities.PreferencesActivity"
+            android:theme="@style/AppTheme" />
         <activity android:name=".plugins.general.overview.activities.QuickWizardListActivity">
             <intent-filter>
                 <action android:name="info.nightscout.androidaps.plugins.general.overview.activities.QuickWizardListActivity" />
@@ -67,12 +74,18 @@
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
+        <activity android:name=".plugins.general.themeselector.ScrollingActivity" />
         <activity android:name=".plugins.general.maintenance.activities.PrefImportListActivity" />
-        <activity android:name=".historyBrowser.HistoryBrowseActivity" />
-        <activity android:name=".activities.SurveyActivity" />
-        <activity android:name=".activities.ProfileHelperActivity"
-            android:theme="@style/ProfileHelperAppTheme" />
-        <activity android:name=".activities.StatsActivity" />
+        <activity android:name=".historyBrowser.HistoryBrowseActivity"
+            android:theme="@style/AppTheme"  />
+        <activity android:name=".activities.SurveyActivity"
+            android:theme="@style/AppTheme" />
+        <activity android:name=".activities.ProfileHelperActivity" 
+           android:theme="@style/ProfileHelperAppTheme" />
+        <activity android:name=".activities.StatsActivity"
+            android:theme="@style/AppTheme" />
+        <activity android:name=".plugins.general.maintenance.activities.LogSettingActivity"
+            android:theme="@style/AppTheme" />
         <activity
             android:name="com.google.firebase.auth.internal.FederatedSignInActivity"
             tools:replace="android:launchMode"
@@ -235,7 +248,6 @@
         <activity
             android:name=".activities.SingleFragmentActivity"
             android:theme="@style/AppTheme" />
-        <activity android:name=".plugins.general.maintenance.activities.LogSettingActivity" />
         <activity
             android:name=".plugins.pump.insight.activities.InsightPairingActivity"
             android:label="@string/insight_pairing"

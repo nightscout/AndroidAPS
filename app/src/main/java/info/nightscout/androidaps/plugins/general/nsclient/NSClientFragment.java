@@ -3,7 +3,6 @@ package info.nightscout.androidaps.plugins.general.nsclient;
 
 import android.graphics.Paint;
 import android.os.Bundle;
-import android.text.Html;
 import android.text.Spanned;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,6 +11,11 @@ import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.ScrollView;
 import android.widget.TextView;
+
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatDelegate;
+import androidx.core.content.ContextCompat;
+import androidx.core.widget.NestedScrollView;
 
 import javax.inject.Inject;
 
@@ -48,7 +52,7 @@ public class NSClientFragment extends DaggerFragment implements View.OnClickList
     private TextView delivernow;
     private TextView clearqueue;
     private TextView showqueue;
-    private ScrollView logScrollview;
+    private NestedScrollView logScrollview;
     private CheckBox autoscrollCheckbox;
     private CheckBox pausedCheckbox;
 

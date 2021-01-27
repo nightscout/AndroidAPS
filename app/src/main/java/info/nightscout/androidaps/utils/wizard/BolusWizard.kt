@@ -55,13 +55,13 @@ class BolusWizard @Inject constructor(
     @Inject lateinit var aapsLogger: AAPSLogger
     @Inject lateinit var resourceHelper: ResourceHelper
     @Inject lateinit var rxBus: RxBusWrapper
-    @Inject lateinit var sp: SP
     @Inject lateinit var profileFunction: ProfileFunction
     @Inject lateinit var constraintChecker: ConstraintChecker
     @Inject lateinit var activePlugin: ActivePluginProvider
     @Inject lateinit var commandQueue: CommandQueueProvider
     @Inject lateinit var loopPlugin: LoopPlugin
     @Inject lateinit var iobCobCalculatorPlugin: IobCobCalculatorPlugin
+    @Inject lateinit var sp: SP
     @Inject lateinit var automationPlugin: AutomationPlugin
     @Inject lateinit var dateUtil: DateUtil
     @Inject lateinit var config: Config
@@ -450,7 +450,7 @@ class BolusWizard @Inject constructor(
                     scheduleReminder(dateUtil._now() + T.mins(carbTime.toLong()).msecs())
                 }
             }
-        })
+        },null,sp)
     }
 
     private fun scheduleEatReminder() {

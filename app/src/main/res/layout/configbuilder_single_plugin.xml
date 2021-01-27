@@ -32,29 +32,31 @@
             android:layout_width="36dp"
             android:layout_height="36dp"
             android:layout_marginEnd="8dp"
-            android:layout_gravity="center_vertical"/>
+            android:layout_gravity="center_vertical"
+            android:tintMode="multiply"
+            app:tint="?attr/iconColor" />
 
-        <LinearLayout
-            android:layout_width="match_parent"
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="12dp"
+        android:layout_marginTop="12dp"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/plugin_name"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:textSize="16sp"
+            tools:text="Plugin name" />
+
+        <TextView
+            android:id="@+id/plugin_description"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="12dp"
-            android:layout_marginTop="12dp"
-            android:orientation="vertical">
-
-            <TextView
-                android:id="@+id/plugin_name"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:textSize="16sp"
-                tools:text="Plugin name" />
-
-            <TextView
-                android:id="@+id/plugin_description"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textSize="12sp"
-                tools:text="A super exquisite plugin description" />
-        </LinearLayout>
+            android:textSize="12sp"
+            tools:text="A super exquisite plugin description" />
+    </LinearLayout>
 
     </LinearLayout>
 

@@ -5,7 +5,9 @@ import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.Menu
+import android.view.View
 import android.widget.PopupMenu
+import com.google.android.material.tabs.TabLayout
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.data.Profile
 import info.nightscout.androidaps.data.defaultProfile.DefaultProfile
@@ -71,13 +73,21 @@ class ProfileHelperActivity : NoSplashAppCompatActivity() {
 
         binding = ActivityProfilehelperBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        binding.tabLayout.addTab(binding.tabLayout.newTab().setText("1"))
+        binding.tabLayout.addTab(binding.tabLayout.newTab().setText("2"))
 
-        binding.menu1.setOnClickListener {
-            switchTab(0, typeSelected[0])
-        }
-        binding.menu2.setOnClickListener {
-            switchTab(1, typeSelected[1])
-        }
+        binding.tabLayout.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
+            override fun onTabSelected(tab: TabLayout.Tab) {
+                if ( tab.text == "1") {
+                     switchTab(0, typeSelected[0])
+                }
+                if ( tab.text == "2") {
+                     switchTab(1, typeSelected[1])
+                }
+            }
+            override fun onTabUnselected(tab: TabLayout.Tab) {}
+            override fun onTabReselected(tab: TabLayout.Tab) {}
+        })
 
         binding.profiletype.setOnClickListener {
             PopupMenu(this, binding.profiletype).apply {
@@ -253,7 +263,6 @@ class ProfileHelperActivity : NoSplashAppCompatActivity() {
     }
 
     private fun switchTab(tab: Int, newContent: ProfileType, storeOld: Boolean = true) {
-        setBackgroundColorOnSelected(tab)
         // Store values for selected tab. listBox values are stored on selection change
         if (storeOld) storeValues()
 
@@ -288,8 +297,4 @@ class ProfileHelperActivity : NoSplashAppCompatActivity() {
             binding.profileswitchList.setText(profileSwitch[profileSwitchUsed[tabSelected]].customizedName)
     }
 
-    private fun setBackgroundColorOnSelected(tab: Int) {
-        binding.menu1.setBackgroundColor(resourceHelper.gc(if (tab == 1) R.color.defaultbackground else R.color.tabBgColorSelected))
-        binding.menu2.setBackgroundColor(resourceHelper.gc(if (tab == 0) R.color.defaultbackground else R.color.examinedProfile))
-    }
 }

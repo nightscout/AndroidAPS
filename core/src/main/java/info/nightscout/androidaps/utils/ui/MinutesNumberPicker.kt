@@ -2,13 +2,13 @@ package info.nightscout.androidaps.utils.ui
 
 import android.content.Context
 import android.util.AttributeSet
-import android.widget.Button
+import com.google.android.material.button.MaterialButton
 import info.nightscout.androidaps.core.R
 import java.text.DecimalFormat
 
 class MinutesNumberPicker constructor(context: Context, attrs: AttributeSet? = null) : NumberPicker(context, attrs) {
 
-    fun setParams(initValue: Double, minValue: Double, maxValue: Double, step: Double, allowZero: Boolean, okButton: Button? = null) {
+    fun setParams(initValue: Double, minValue: Double, maxValue: Double, step: Double, allowZero: Boolean, okButton: MaterialButton? = null) {
         super.setParams(initValue, minValue, maxValue, step, null, allowZero, okButton)
     }
 

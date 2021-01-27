@@ -67,7 +67,7 @@ def generateDate = { ->
 }
 
 def isMaster = { ->
-    return !version.contains('-')
+    return !version.contains('-dev')
 }
 
 def gitAvailable = { ->
@@ -119,8 +119,10 @@ android {
         minSdkVersion 26
         targetSdkVersion 28
         multiDexEnabled true
+        renderscriptTargetApi 28 //must match target sdk and build tools
+        renderscriptSupportModeEnabled true
         versionCode 1500
-        version "2.8.2.1-dev"
+        version "2.8.3-dev"
         buildConfigField "String", "VERSION", '"' + version + '"'
         buildConfigField "String", "BUILDVERSION", '"' + generateGitBuild() + '-' + generateDate() + '"'
         buildConfigField "String", "REMOTE", '"' + generateGitRemote() + '"'
@@ -161,13 +163,13 @@ android {
         flavorDimensions "standard"
         full {
             applicationId "info.nightscout.androidaps"
-            dimension "standard"
             resValue "string", "app_name", "AndroidAPS"
             versionName version
             manifestPlaceholders = [
                     appIcon     : "@mipmap/ic_launcher",
                     appIconRound: "@mipmap/ic_launcher_round"
             ]
+            dimension 'standard'
         }
         pumpcontrol {
             applicationId "info.nightscout.aapspumpcontrol"
@@ -243,6 +245,7 @@ dependencies {
     implementation project(':medtronic')
     implementation project(':omnipod')
 
+
     implementation fileTree(include: ['*.jar'], dir: 'libs')
 
     testImplementation "junit:junit:$junit_version"
@@ -268,11 +271,13 @@ dependencies {
     /* Dagger2 - We are going to use dagger.android which includes
     * support for Activity and fragment injection so we need to include
     * the following dependencies */
+    implementation "com.google.dagger:dagger-android:$dagger_android_version"
+    implementation "com.google.dagger:dagger-android-support:$dagger_android_support_version"
 
 
     annotationProcessor "com.google.dagger:dagger-compiler:$dagger_version"
-    annotationProcessor "com.google.dagger:dagger-android-processor:$dagger_version"
-    kapt "com.google.dagger:dagger-android-processor:$dagger_version"
+    annotationProcessor "com.google.dagger:dagger-android-processor:$dagger_android_processor_version"
+    kapt "com.google.dagger:dagger-android-processor:$dagger_android_processor_version"
 
     /* Dagger2 - default dependency */
     kapt "com.google.dagger:dagger-compiler:$dagger_version"

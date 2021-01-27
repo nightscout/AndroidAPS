@@ -18,7 +18,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:background="@color/dialog_title_background"
+            android:background="?attr/colorPrimary"
             android:orientation="horizontal"
             android:padding="5dp">
 
@@ -26,7 +26,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:contentDescription="@string/carbs"
-                app:srcCompat="@drawable/ic_cp_bolus_carbs" />
+                app:srcCompat="?attr/iconCarbs"
+                app:tint="?attr/iconColorDialog" />
 
             <TextView
                 android:layout_width="match_parent"
@@ -37,7 +38,7 @@
                 android:layout_marginRight="10dp"
                 android:text="@string/carbs"
                 android:textAlignment="center"
-                android:textAppearance="?android:attr/textAppearanceLarge" />
+                style="@style/Text.Headline" />
 
         </RelativeLayout>
 
@@ -187,6 +188,8 @@
                 android:id="@+id/plus1"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:layout_marginStart="2dp"
+                android:layout_marginEnd="2dp"
                 android:layout_weight="1"
                 android:text="+5" />
 
@@ -194,6 +197,8 @@
                 android:id="@+id/plus2"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:layout_marginStart="2dp"
+                android:layout_marginEnd="2dp"
                 android:layout_weight="1"
                 android:text="+10" />
 
@@ -201,6 +206,8 @@
                 android:id="@+id/plus3"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:layout_marginStart="2dp"
+                android:layout_marginEnd="2dp"
                 android:layout_weight="1"
                 android:text="+20" />
 

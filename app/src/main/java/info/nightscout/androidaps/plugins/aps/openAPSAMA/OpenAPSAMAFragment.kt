@@ -1,10 +1,12 @@
 package info.nightscout.androidaps.plugins.aps.openAPSAMA
 
 import android.os.Bundle
+import android.os.Handler
 import android.text.TextUtils
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.content.res.ResourcesCompat
 import dagger.android.support.DaggerFragment
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.databinding.OpenapsamaFragmentBinding
@@ -25,7 +27,8 @@ import org.json.JSONException
 import javax.inject.Inject
 
 class OpenAPSAMAFragment : DaggerFragment() {
-
+    private lateinit var mRunnable:Runnable
+    private lateinit var mHandler: Handler
     private var disposable: CompositeDisposable = CompositeDisposable()
 
     @Inject lateinit var aapsLogger: AAPSLogger
@@ -50,8 +53,24 @@ class OpenAPSAMAFragment : DaggerFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        binding.run.setOnClickListener {
-            openAPSAMAPlugin.invoke("OpenAPSAMA button", false)
+        binding.swipeRefreshOpenapsAma.setColorSchemeResources(R.color.orange, R.color.green, R.color.blue)
+        binding.swipeRefreshOpenapsAma.setProgressBackgroundColorSchemeColor(ResourcesCompat.getColor(resources, R.color.swipe_background, null))
+        // Initialize the handler instance
+        mHandler = Handler()
+
+        binding.swipeRefreshOpenapsAma.setOnRefreshListener {
+
+            mRunnable = Runnable {
+                // Hide swipe to refresh icon animation
+                binding.swipeRefreshOpenapsAma.isRefreshing = false
+                openAPSAMAPlugin.invoke("OpenAPSAMA button", false)
+            }
+
+            // Execute the task after specified time
+            mHandler.postDelayed(
+                mRunnable,
+                (3000).toLong() // Delay 1 to 5 seconds
+            )
         }
     }
 
@@ -91,43 +110,43 @@ class OpenAPSAMAFragment : DaggerFragment() {
     private fun updateGUI() {
         if (_binding == null) return
         openAPSAMAPlugin.lastAPSResult?.let { lastAPSResult ->
-            binding.result.text = JSONFormatter.format(lastAPSResult.json)
-            binding.request.text = lastAPSResult.toSpanned()
+            binding.openapsmaResult.text = JSONFormatter.format(lastAPSResult.json)
+            binding.openapsmaRequest.text = lastAPSResult.toSpanned()
         }
         openAPSAMAPlugin.lastDetermineBasalAdapterAMAJS?.let { determineBasalAdapterAMAJS ->
-            binding.glucosestatus.text = JSONFormatter.format(determineBasalAdapterAMAJS.glucoseStatusParam)
-            binding.currenttemp.text = JSONFormatter.format(determineBasalAdapterAMAJS.currentTempParam)
+            binding.openapsmaGlucosestatus.text = JSONFormatter.format(determineBasalAdapterAMAJS.glucoseStatusParam)
+            binding.openapsmaCurrenttemp.text = JSONFormatter.format(determineBasalAdapterAMAJS.currentTempParam)
             try {
                 val iobArray = JSONArray(determineBasalAdapterAMAJS.iobDataParam)
-                binding.iobdata.text = TextUtils.concat(resourceHelper.gs(R.string.array_of_elements, iobArray.length()) + "\n", JSONFormatter.format(iobArray.getString(0)))
+                binding.openapsmaIobdata.text = TextUtils.concat(resourceHelper.gs(R.string.array_of_elements, iobArray.length()) + "\n", JSONFormatter.format(iobArray.getString(0)))
             } catch (e: JSONException) {
                 aapsLogger.error(LTag.APS, "Unhandled exception", e)
                 @Suppress("SetTextI18n")
-                binding.iobdata.text = "JSONException see log for details"
+                binding.openapsmaIobdata.text = "JSONException see log for details"
             }
 
-            binding.profile.text = JSONFormatter.format(determineBasalAdapterAMAJS.profileParam)
-            binding.mealdata.text = JSONFormatter.format(determineBasalAdapterAMAJS.mealDataParam)
-            binding.scriptdebugdata.text = determineBasalAdapterAMAJS.scriptDebug
+            binding.openapsmaProfile.text = JSONFormatter.format(determineBasalAdapterAMAJS.profileParam)
+            binding.openapsmaMealdata.text = JSONFormatter.format(determineBasalAdapterAMAJS.mealDataParam)
+            binding.openapsmaScriptdebugdata.text = determineBasalAdapterAMAJS.scriptDebug
         }
         if (openAPSAMAPlugin.lastAPSRun != 0L) {
-            binding.lastrun.text = dateUtil.dateAndTimeString(openAPSAMAPlugin.lastAPSRun)
+            binding.openapsmaLastrun.text = dateUtil.dateAndTimeString(openAPSAMAPlugin.lastAPSRun)
         }
         openAPSAMAPlugin.lastAutosensResult?.let {
-            binding.autosensdata.text = JSONFormatter.format(it.json())
+            binding.openapsmaAutosensdata.text = JSONFormatter.format(it.json())
         }
     }
 
     private fun updateResultGUI(text: String) {
-        binding.result.text = text
-        binding.glucosestatus.text = ""
-        binding.currenttemp.text = ""
-        binding.iobdata.text = ""
-        binding.profile.text = ""
-        binding.mealdata.text = ""
-        binding.autosensdata.text = ""
-        binding.scriptdebugdata.text = ""
-        binding.request.text = ""
-        binding.lastrun.text = ""
+        binding.openapsmaResult.text = text
+        binding.openapsmaGlucosestatus.text = ""
+        binding.openapsmaCurrenttemp.text = ""
+        binding.openapsmaIobdata.text = ""
+        binding.openapsmaProfile.text = ""
+        binding.openapsmaMealdata.text = ""
+        binding.openapsmaAutosensdata.text = ""
+        binding.openapsmaScriptdebugdata.text = ""
+        binding.openapsmaRequest.text = ""
+        binding.openapsmaLastrun.text = ""
     }
 }

@@ -5,7 +5,6 @@ import dagger.Module
 import dagger.Provides
 import dagger.multibindings.IntKey
 import dagger.multibindings.IntoMap
-import info.nightscout.androidaps.skins.SkinButtonsOn
 import info.nightscout.androidaps.skins.SkinClassic
 import info.nightscout.androidaps.skins.SkinInterface
 import info.nightscout.androidaps.skins.SkinLargeDisplay
@@ -24,14 +23,9 @@ open class SkinsModule {
     @Provides
     @Skin
     @IntoMap
-    @IntKey(10)
-    fun bindsSkinButtonsOn(skinButtonsOn: SkinButtonsOn): SkinInterface = skinButtonsOn
-
-    @Provides
-    @Skin
-    @IntoMap
     @IntKey(20)
     fun bindsSkinLargeDisplay(skinLargeDisplay: SkinLargeDisplay): SkinInterface = skinLargeDisplay
+
 
     @Provides
     @Skin

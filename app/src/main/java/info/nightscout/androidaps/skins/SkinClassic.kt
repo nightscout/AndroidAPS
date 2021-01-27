@@ -17,6 +17,5 @@ class SkinClassic @Inject constructor(private val config: Config): SkinInterface
 
     override fun preProcessLandscapeOverviewLayout(dm: DisplayMetrics, view: View, isLandscape: Boolean, isTablet: Boolean, isSmallHeight: Boolean) {
         super.preProcessLandscapeOverviewLayout(dm, view, isLandscape, isTablet, isSmallHeight)
-        if (!config.NSCLIENT && (isSmallHeight || isLandscape)) moveButtonsLayout(view as LinearLayout)
     }
 }

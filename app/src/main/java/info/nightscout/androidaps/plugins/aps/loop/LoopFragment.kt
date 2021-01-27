@@ -1,10 +1,13 @@
 package info.nightscout.androidaps.plugins.aps.loop
 
 import android.os.Bundle
+import android.os.Handler
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.content.res.ResourcesCompat
 import dagger.android.support.DaggerFragment
+import info.nightscout.androidaps.MainApp
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.databinding.LoopFragmentBinding
 import info.nightscout.androidaps.interfaces.Constraint
@@ -20,6 +23,7 @@ import info.nightscout.androidaps.utils.resources.ResourceHelper
 import info.nightscout.androidaps.utils.sharedPreferences.SP
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
+import java.util.*
 import javax.inject.Inject
 
 class LoopFragment : DaggerFragment() {
@@ -31,6 +35,9 @@ class LoopFragment : DaggerFragment() {
     @Inject lateinit var loopPlugin: LoopPlugin
     @Inject lateinit var dateUtil: DateUtil
 
+    private lateinit var mRandom: Random
+    private lateinit var mHandler: Handler
+    private lateinit var mRunnable:Runnable
     private var disposable: CompositeDisposable = CompositeDisposable()
 
     private var _binding: LoopFragmentBinding? = null
@@ -48,9 +55,28 @@ class LoopFragment : DaggerFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        binding.run.setOnClickListener {
-            binding.lastrun.text = resourceHelper.gs(R.string.executing)
-            Thread { loopPlugin.invoke("Loop button", true) }.start()
+        binding.swipeRefreshLoop.setColorSchemeResources(R.color.orange, R.color.green, R.color.blue)
+        binding.swipeRefreshLoop.setProgressBackgroundColorSchemeColor(ResourcesCompat.getColor(resources, R.color.swipe_background, null))
+
+        // Initialize a new Random instance
+        mRandom = Random()
+
+        // Initialize the handler instance
+        mHandler = Handler()
+
+        binding.swipeRefreshLoop.setOnRefreshListener {
+            mRunnable = Runnable {
+                binding.loopLastrun.text = resourceHelper.gs(R.string.executing)
+                Thread { loopPlugin.invoke("Loop button", true) }.start()
+                // Hide swipe to refresh icon animation
+                binding.swipeRefreshLoop.isRefreshing = false
+            }
+
+            // Execute the task after specified time
+            mHandler.postDelayed(
+                mRunnable,
+                (3000).toLong() // Delay 1 to 5 seconds
+            )
         }
     }
 
@@ -69,7 +95,7 @@ class LoopFragment : DaggerFragment() {
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe({
                 clearGUI()
-                binding.lastrun.text = it.text
+                binding.loopLastrun.text = it.text
             }, { fabricPrivacy.logException(it) })
 
         updateGUI()
@@ -92,19 +118,19 @@ class LoopFragment : DaggerFragment() {
     fun updateGUI() {
         if (_binding == null) return
         loopPlugin.lastRun?.let {
-            binding.request.text = it.request?.toSpanned() ?: ""
-            binding.constraintsprocessed.text = it.constraintsProcessed?.toSpanned() ?: ""
-            binding.source.text = it.source ?: ""
-            binding.lastrun.text = dateUtil.dateAndTimeString(it.lastAPSRun)
+            binding.loopRequest.text = it.request?.toSpanned() ?: ""
+            binding.loopConstraintsprocessed.text = it.constraintsProcessed?.toSpanned() ?: ""
+            binding.loopSource.text = it.source ?: ""
+            binding.loopLastrun.text = dateUtil.dateAndTimeString(it.lastAPSRun)
                 ?: ""
-            binding.smbrequestTime.text = dateUtil.dateAndTimeAndSecondsString(it.lastSMBRequest)
-            binding.smbexecutionTime.text = dateUtil.dateAndTimeAndSecondsString(it.lastSMBEnact)
-            binding.tbrrequestTime.text = dateUtil.dateAndTimeAndSecondsString(it.lastTBRRequest)
-            binding.tbrexecutionTime.text = dateUtil.dateAndTimeAndSecondsString(it.lastTBREnact)
+            binding.loopSmbrequestTime.text = dateUtil.dateAndTimeAndSecondsString(it.lastSMBRequest)
+            binding.loopSmbexecutionTime.text = dateUtil.dateAndTimeAndSecondsString(it.lastSMBEnact)
+            binding.loopTbrrequestTime.text = dateUtil.dateAndTimeAndSecondsString(it.lastTBRRequest)
+            binding.loopTbrexecutionTime.text = dateUtil.dateAndTimeAndSecondsString(it.lastTBREnact)
 
-            binding.tbrsetbypump.text = it.tbrSetByPump?.let { tbrSetByPump -> HtmlHelper.fromHtml(tbrSetByPump.toHtml()) }
+            binding.loopTbrsetbypump.text = it.tbrSetByPump?.let { tbrSetByPump -> HtmlHelper.fromHtml(tbrSetByPump.toHtml()) }
                 ?: ""
-            binding.smbsetbypump.text = it.smbSetByPump?.let { smbSetByPump -> HtmlHelper.fromHtml(smbSetByPump.toHtml()) }
+            binding.loopSmbsetbypump.text = it.smbSetByPump?.let { smbSetByPump -> HtmlHelper.fromHtml(smbSetByPump.toHtml()) }
                 ?: ""
 
             val constraints =
@@ -114,22 +140,22 @@ class LoopFragment : DaggerFragment() {
                     constraintsProcessed.smbConstraint?.let { smbConstraint -> allConstraints.copyReasons(smbConstraint) }
                     allConstraints.getMostLimitedReasons(aapsLogger)
                 } ?: ""
-            binding.constraints.text = constraints
+            binding.loopConstraints.text = constraints
         }
     }
 
     @Synchronized
     private fun clearGUI() {
-        binding.request.text = ""
-        binding.constraints.text = ""
-        binding.constraintsprocessed.text = ""
-        binding.source.text = ""
-        binding.lastrun.text = ""
-        binding.smbrequestTime.text = ""
-        binding.smbexecutionTime.text = ""
-        binding.tbrrequestTime.text = ""
-        binding.tbrexecutionTime.text = ""
-        binding.tbrsetbypump.text = ""
-        binding.smbsetbypump.text = ""
+        binding.loopRequest.text = ""
+        binding.loopConstraints.text = ""
+        binding.loopConstraintsprocessed.text = ""
+        binding.loopSource.text = ""
+        binding.loopLastrun.text = ""
+        binding.loopSmbrequestTime.text = ""
+        binding.loopSmbexecutionTime.text = ""
+        binding.loopTbrrequestTime.text = ""
+        binding.loopTbrexecutionTime.text = ""
+        binding.loopTbrsetbypump.text = ""
+        binding.loopSmbsetbypump.text = ""
     }
 }

@@ -28,10 +28,11 @@ class StatsActivity : NoSplashAppCompatActivity() {
 
         binding.ok.setOnClickListener { finish() }
         binding.reset.setOnClickListener {
-            OKDialog.showConfirmation(this, resourceHelper.gs(R.string.doyouwantresetstats)) {
+            OKDialog.showConfirmation(this,
+                resourceHelper.gs(R.string.doyouwantresetstats), Thread {
                 activityMonitor.reset()
                 recreate()
-            }
+            })
         }
     }
 }

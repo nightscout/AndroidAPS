@@ -132,11 +132,11 @@ class TidepoolUploader @Inject constructor(
             call?.enqueue(TidepoolCallback<AuthReplyMessage>(aapsLogger, rxBus, session, "Login", {
                 OKDialog.show(rootContext, resourceHelper.gs(R.string.tidepool), "Successfully logged into Tidepool.")
             }, {
-                OKDialog.show(rootContext, resourceHelper.gs(R.string.tidepool), "Failed to log into Tidepool.\nCheck that your user name and password are correct.")
+                OKDialog.show(rootContext, resourceHelper.gs(R.string.tidepool), "Failed to log into Tidepool.\nCheck that your user name and password are correct." ,null, sp)
             }))
 
         }
-            ?: OKDialog.show(rootContext, resourceHelper.gs(R.string.tidepool), "Cannot do login as user credentials have not been set correctly")
+            ?: OKDialog.show(rootContext, resourceHelper.gs(R.string.tidepool), "Cannot do login as user credentials have not been set correctly", null,sp)
 
     }
 

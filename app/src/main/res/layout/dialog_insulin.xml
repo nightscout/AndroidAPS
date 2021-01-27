@@ -17,27 +17,30 @@
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:background="?attr/colorPrimary"
             android:layout_gravity="center"
-            android:background="@color/dialog_title_background"
             android:orientation="horizontal"
             android:padding="5dp">
 
             <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:background="@color/transparent"
                 android:contentDescription="@string/overview_insulin_label"
-                app:srcCompat="@drawable/ic_bolus" />
+                app:tint="?attr/iconColorDialog"
+                app:srcCompat="?attr/iconInsulin" />
 
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:background="@color/transparent"
                 android:layout_centerInParent="true"
                 android:layout_gravity="center"
                 android:layout_marginLeft="10dp"
                 android:layout_marginRight="10dp"
                 android:text="@string/overview_insulin_label"
                 android:textAlignment="center"
-                android:textAppearance="?android:attr/textAppearanceLarge" />
+                style="@style/Text.Headline" />
 
         </RelativeLayout>
 
@@ -59,13 +62,15 @@
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_marginTop="5dp"
-                android:text="@string/start_eating_soon_tt" />
+                android:text="@string/start_eating_soon_tt"
+                app:useMaterialThemeColors="true"/>
 
             <CheckBox
                 android:id="@+id/record_only"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:text="@string/do_not_bolus_record_only" />
+                android:text="@string/do_not_bolus_record_only"
+                app:useMaterialThemeColors="true"/>
 
         </LinearLayout>
 
@@ -146,6 +151,8 @@
                 android:id="@+id/plus05"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:layout_marginStart="2dp"
+                android:layout_marginEnd="2dp"
                 android:layout_weight="1"
                 android:text="+0.5" />
 
@@ -153,6 +160,8 @@
                 android:id="@+id/plus10"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:layout_marginStart="2dp"
+                android:layout_marginEnd="2dp"
                 android:layout_weight="1"
                 android:text="+1.0" />
 
@@ -160,6 +169,8 @@
                 android:id="@+id/plus20"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:layout_marginStart="2dp"
+                android:layout_marginEnd="2dp"
                 android:layout_weight="1"
                 android:text="+2.0" />
 
@@ -174,5 +185,4 @@
             layout="@layout/okcancel" />
 
     </LinearLayout>
-
 </ScrollView>

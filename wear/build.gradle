@@ -112,7 +112,7 @@ dependencies {
     //implementation files("libs/hellocharts-library-1.5.5.jar")
     //compile "com.ustwo.android:clockwise-wearable:1.0.2"
 
-    implementation "androidx.appcompat:appcompat:$appcompat_verison"
+    implementation "androidx.appcompat:appcompat:$appcompatVersion"
     implementation 'androidx.legacy:legacy-support-v13:1.0.0'
 
     compileOnly "com.google.android.wearable:wearable:${wearableVersion}"

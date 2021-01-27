@@ -84,7 +84,7 @@ public class ComboPlugin extends PumpPluginBase implements PumpInterface, Constr
     private final ResourceHelper resourceHelper;
     private final ProfileFunction profileFunction;
     private final TreatmentsPlugin treatmentsPlugin;
-    private final info.nightscout.androidaps.utils.sharedPreferences.SP sp;
+    private final SP sp;
     private RxBusWrapper rxBus;
     private final CommandQueueProvider commandQueue;
     private final Context context;
@@ -250,7 +250,8 @@ public class ComboPlugin extends PumpPluginBase implements PumpInterface, Constr
         // we're not doing that
     }
 
-    @NonNull @Override
+    @NonNull
+    @Override
     public synchronized PumpEnactResult setNewBasalProfile(Profile profile) {
         if (!isInitialized()) {
             // note that this should not happen anymore since the queue is present, which
@@ -478,7 +479,8 @@ public class ComboPlugin extends PumpPluginBase implements PumpInterface, Constr
     /**
      * Updates Treatment records with carbs and boluses and delivers a bolus if needed
      */
-    @NonNull @Override
+    @NonNull
+    @Override
     public PumpEnactResult deliverTreatment(DetailedBolusInfo detailedBolusInfo) {
         try {
             if (detailedBolusInfo.insulin == 0 && detailedBolusInfo.carbs == 0) {
@@ -719,7 +721,8 @@ public class ComboPlugin extends PumpPluginBase implements PumpInterface, Constr
      *              might have other issues though (what happens if the tbr which wasn't re-set to
      *              the new value (and thus still has the old duration of e.g. 1 min) expires?)
      */
-    @NonNull @Override
+    @NonNull
+    @Override
     public PumpEnactResult setTempBasalAbsolute(Double absoluteRate, Integer durationInMinutes, Profile profile, boolean force) {
         getAapsLogger().debug(LTag.PUMP, "setTempBasalAbsolute called with a rate of " + absoluteRate + " for " + durationInMinutes + " min.");
         int unroundedPercentage = Double.valueOf(absoluteRate / getBaseBasalRate() * 100).intValue();
@@ -737,7 +740,8 @@ public class ComboPlugin extends PumpPluginBase implements PumpInterface, Constr
      * @param forceNew Driver always applies the requested TBR and simply overrides whatever TBR
      *                 is or isn't running at the moment
      */
-    @NonNull @Override
+    @NonNull
+    @Override
     public PumpEnactResult setTempBasalPercent(Integer percent, final Integer durationInMinutes, Profile profile, boolean forceNew) {
         return setTempBasalPercent(percent, durationInMinutes);
     }
@@ -793,7 +797,8 @@ public class ComboPlugin extends PumpPluginBase implements PumpInterface, Constr
                 .percent(state.tbrPercent).duration(state.tbrRemainingDuration);
     }
 
-    @NonNull @Override
+    @NonNull
+    @Override
     public PumpEnactResult setExtendedBolus(Double insulin, Integer durationInMinutes) {
         return OPERATION_NOT_SUPPORTED;
     }
@@ -806,7 +811,8 @@ public class ComboPlugin extends PumpPluginBase implements PumpInterface, Constr
      * make absolutely sure no TBR is running (such a request is also made when resuming the
      * loop, irregardless of whether a TBR is running or not).
      */
-    @NonNull @Override
+    @NonNull
+    @Override
     public PumpEnactResult cancelTempBasal(boolean enforceNew) {
         getAapsLogger().debug(LTag.PUMP, "cancelTempBasal called");
         final TemporaryBasal activeTemp = treatmentsPlugin.getTempBasalFromHistory(System.currentTimeMillis());
@@ -1252,12 +1258,14 @@ public class ComboPlugin extends PumpPluginBase implements PumpInterface, Constr
         return null;
     }
 
-    @NonNull @Override
+    @NonNull
+    @Override
     public PumpEnactResult cancelExtendedBolus() {
         return OPERATION_NOT_SUPPORTED;
     }
 
-    @NonNull @Override
+    @NonNull
+    @Override
     public JSONObject getJSONStatus(Profile profile, String profileName, String version) {
         if (!pump.initialized) {
             return null;
@@ -1308,27 +1316,32 @@ public class ComboPlugin extends PumpPluginBase implements PumpInterface, Constr
         return null;
     }
 
-    @NonNull @Override
+    @NonNull
+    @Override
     public ManufacturerType manufacturer() {
         return ManufacturerType.Roche;
     }
 
-    @NonNull @Override
+    @NonNull
+    @Override
     public PumpType model() {
         return PumpType.AccuChekCombo;
     }
 
-    @NonNull @Override
+    @NonNull
+    @Override
     public String serialNumber() {
         return InstanceId.INSTANCE.instanceId(); // TODO replace by real serial
     }
 
-    @NonNull @Override
+    @NonNull
+    @Override
     public PumpDescription getPumpDescription() {
         return pumpDescription;
     }
 
-    @NonNull @Override
+    @NonNull
+    @Override
     public String shortStatus(boolean veryShort) {
         return getStateSummary();
     }
@@ -1338,7 +1351,8 @@ public class ComboPlugin extends PumpPluginBase implements PumpInterface, Constr
         return false;
     }
 
-    @NonNull @Override
+    @NonNull
+    @Override
     public PumpEnactResult loadTDDs() {
         PumpEnactResult result = new PumpEnactResult(getInjector());
         result.success = readHistory(new PumpHistoryRequest().tddHistory(PumpHistoryRequest.FULL));
@@ -1374,14 +1388,16 @@ public class ComboPlugin extends PumpPluginBase implements PumpInterface, Constr
     private long violationWarningRaisedForBolusAt = 0;
     private boolean validBasalRateProfileSelectedOnPump = true;
 
-    @NonNull @Override
+    @NonNull
+    @Override
     public Constraint<Boolean> isLoopInvocationAllowed(@NonNull Constraint<Boolean> value) {
         if (!validBasalRateProfileSelectedOnPump)
             value.set(getAapsLogger(), false, getResourceHelper().gs(R.string.novalidbasalrate), this);
         return value;
     }
 
-    @NonNull @Override
+    @NonNull
+    @Override
     public Constraint<Double> applyMaxIOBConstraints(@NonNull Constraint<Double> maxIob) {
         if (lowSuspendOnlyLoopEnforcedUntil > System.currentTimeMillis())
             maxIob.setIfSmaller(getAapsLogger(), 0d, String.format(getResourceHelper().gs(R.string.limitingmaxiob), 0d, getResourceHelper().gs(R.string.unsafeusage)), this);

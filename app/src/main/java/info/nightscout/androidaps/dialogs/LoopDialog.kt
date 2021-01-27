@@ -228,7 +228,7 @@ class LoopDialog : DaggerDialogFragment() {
         activity?.let { activity ->
             OKDialog.showConfirmation(activity, resourceHelper.gs(R.string.confirm), description, Runnable {
                 onClick(v)
-            })
+            },null, sp)
         }
         return true
     }

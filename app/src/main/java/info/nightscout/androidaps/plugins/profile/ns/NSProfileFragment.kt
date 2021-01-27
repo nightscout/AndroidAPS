@@ -1,11 +1,13 @@
 package info.nightscout.androidaps.plugins.profile.ns
 
+import android.graphics.Color
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
+import android.widget.TextView
 import dagger.android.support.DaggerFragment
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.databinding.NsprofileFragmentBinding
@@ -86,6 +88,8 @@ class NSProfileFragment : DaggerFragment() {
                 val name = binding.spinner.getItemAtPosition(position).toString()
 
                 binding.profileswitch.visibility = View.GONE
+
+                (parent!!.getChildAt(0) as TextView).textSize = 18f
 
                 nsProfilePlugin.profile?.let { store ->
                     store.getSpecificProfile(name)?.let { profile ->

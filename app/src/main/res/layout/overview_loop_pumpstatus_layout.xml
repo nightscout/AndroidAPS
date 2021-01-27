@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
@@ -19,10 +20,14 @@
             android:layout_marginEnd="5dp"
             android:layout_weight="1"
             android:gravity="center_vertical|center_horizontal"
-            android:paddingTop="6dp"
-            android:paddingBottom="6dp"
-            android:text="Profile"
-            android:textAppearance="?android:attr/textAppearanceSmall" />
+            android:paddingStart="6dp"
+            android:paddingEnd="4dp"
+            android:paddingTop="4dp"
+            android:paddingBottom="4dp"
+            android:shape="rectangle"
+            android:background="@drawable/ic_concinnity_pille"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            app:drawableStartCompat="@drawable/ic_user_white" />
 
         <TextView
             android:id="@+id/overview_temptarget"
@@ -31,11 +36,13 @@
             android:layout_gravity="end"
             android:layout_weight="1"
             android:gravity="center_vertical|center_horizontal"
-            android:paddingTop="6dp"
-            android:paddingBottom="6dp"
-            android:text="TempTarget"
+            android:paddingStart="6dp"
+            android:paddingEnd="4dp"
+            android:paddingTop="4dp"
+            android:paddingBottom="4dp"
+            android:background="@drawable/ic_concinnity_pille"
             android:textAppearance="?android:attr/textAppearanceSmall"
-            android:textColor="@color/mdtp_white" />
+            app:drawableStartCompat="@drawable/ic_zielkreuz_white" />
 
     </LinearLayout>
 

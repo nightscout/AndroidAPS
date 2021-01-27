@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="?attr/fragmentbackground"
     tools:context="info.nightscout.androidaps.historyBrowser.HistoryBrowseActivity">
 
     <LinearLayout
@@ -37,6 +38,8 @@
                 android:id="@+id/date"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
+                android:layout_marginStart="2dp"
+                android:layout_marginEnd="2dp"
                 android:layout_weight="1"
                 android:text="@string/date" />
 
@@ -56,6 +59,8 @@
                 android:id="@+id/zoom"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
+                android:layout_marginStart="2dp"
+                android:layout_marginEnd="2dp"
                 android:layout_weight="1"
                 android:text="24" />
 
@@ -74,7 +79,8 @@
                 <com.jjoe64.graphview.GraphView
                     android:id="@+id/bggraph"
                     android:layout_width="wrap_content"
-                    android:layout_height="match_parent" />
+                    android:minHeight="200dp"
+                    android:layout_height="200dp" />
 
                 <ImageButton
                     android:id="@+id/overview_chartMenuButton"

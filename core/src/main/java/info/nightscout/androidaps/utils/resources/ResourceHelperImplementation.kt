@@ -3,10 +3,12 @@ package info.nightscout.androidaps.utils.resources
 import android.annotation.SuppressLint
 import android.content.Context
 import android.content.res.AssetFileDescriptor
+import android.content.res.Configuration
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.graphics.drawable.Drawable
 import android.util.DisplayMetrics
+import android.util.TypedValue
 import androidx.annotation.*
 import androidx.core.content.ContextCompat
 import info.nightscout.androidaps.core.R
@@ -52,4 +54,25 @@ class ResourceHelperImplementation @Inject constructor(private val context: Cont
     }
 
     override fun shortTextMode() : Boolean = !gb(R.bool.isTablet)
+
+    override fun getAttributeColor(
+        context: Context?,
+        attributeId: Int): Int {
+        val typedValue = TypedValue()
+        val theme = context?.theme
+        if (theme != null) {
+            theme.resolveAttribute(attributeId, typedValue, true)
+        }
+        return typedValue.data
+    }
+
+    override  fun isUsingNightMode(): Boolean {
+        return when (context.resources.configuration.uiMode and
+            Configuration.UI_MODE_NIGHT_MASK) {
+            Configuration.UI_MODE_NIGHT_YES       -> true
+            Configuration.UI_MODE_NIGHT_NO        -> false
+            Configuration.UI_MODE_NIGHT_UNDEFINED -> false
+            else                                  -> false
+        }
+    }
 }

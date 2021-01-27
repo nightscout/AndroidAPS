@@ -1,6 +1,5 @@
 package info.nightscout.androidaps.plugins.general.automation.actions
 
-import android.widget.LinearLayout
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.plugins.general.automation.elements.InputString
 import info.nightscout.androidaps.queue.Callback
@@ -10,7 +9,6 @@ import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.ArgumentMatchers.anyString
 import org.mockito.ArgumentMatchers.eq
-import org.mockito.Mockito
 import org.mockito.Mockito.`when`
 import org.powermock.modules.junit4.PowerMockRunner
 

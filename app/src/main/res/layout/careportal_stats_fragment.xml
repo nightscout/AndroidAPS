@@ -41,7 +41,6 @@
                 android:gravity="center_vertical"
                 android:paddingRight="2dp"
                 android:paddingLeft="2dp"
-                android:textColor="@android:color/white"
                 android:textSize="14sp" />
 
 
@@ -79,7 +78,7 @@
                 android:layout_marginTop="2dp"
                 android:layout_marginRight="20dp"
                 android:layout_marginBottom="2dp"
-                android:background="@color/listdelimiter" />
+                android:background="?android:attr/dividerHorizontal" />
 
         </TableRow>
 
@@ -115,7 +114,6 @@
                 android:gravity="center_vertical"
                 android:paddingRight="2dp"
                 android:paddingLeft="2dp"
-                android:textColor="@android:color/white"
                 android:textSize="14sp" />
 
 
@@ -153,7 +151,7 @@
                 android:layout_marginTop="2dp"
                 android:layout_marginRight="20dp"
                 android:layout_marginBottom="2dp"
-                android:background="@color/listdelimiter" />
+                android:background="?android:attr/dividerHorizontal" />
 
         </TableRow>
 
@@ -188,7 +186,6 @@
                 android:gravity="center_vertical"
                 android:paddingRight="2dp"
                 android:paddingLeft="2dp"
-                android:textColor="@android:color/white"
                 android:textSize="14sp" />
 
             <TextView
@@ -223,7 +220,7 @@
                 android:layout_marginTop="2dp"
                 android:layout_marginRight="20dp"
                 android:layout_marginBottom="2dp"
-                android:background="@color/listdelimiter" />
+                android:background="?android:attr/dividerHorizontal" />
 
         </TableRow>
 
@@ -280,7 +277,6 @@
                 android:gravity="center_vertical"
                 android:layout_marginRight="20dp"
                 android:paddingLeft="2dp"
-                android:textColor="@android:color/white"
                 android:textSize="14sp" />
 
         </TableRow>
@@ -297,7 +293,7 @@
                 android:layout_marginTop="2dp"
                 android:layout_marginRight="20dp"
                 android:layout_marginBottom="2dp"
-                android:background="@color/listdelimiter" />
+                android:background="?android:attr/dividerHorizontal" />
 
         </TableRow>
 

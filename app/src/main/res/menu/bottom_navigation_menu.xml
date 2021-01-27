@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="wrap_content"
+    android:layout_height="match_parent">
+
+    <item
+        android:id="@+id/insulinButton"
+        android:icon="?attr/iconInsulin"
+        app:showAsAction="ifRoom"
+        android:tint="?attr/iconColorbottomAppbar"
+        android:title="@string/overview_insulin_label" />
+
+    <item
+        android:id="@+id/carbsButton"
+        android:icon="?attr/iconCarbs"
+        app:showAsAction="ifRoom"
+        android:tint="?attr/iconColorbottomAppbar"
+        android:title="@string/treatments_carbs_label_string"/>
+
+    <item
+        android:id="@+id/placeholder"
+        android:icon="@drawable/ic_dummy"
+        app:showAsAction="always"
+        android:visibility="invisible"
+        android:tint="@android:color/transparent"
+        android:iconTint="@android:color/transparent"
+        android:title="            "
+        android:enabled="false"
+        app:layout_constraintBottom_toBottomOf="@+id/overview_insulinbutton"
+        app:layout_constraintEnd_toStartOf="@+id/overview_wizardbutton"
+        app:layout_constraintHorizontal_chainStyle="packed"
+        app:layout_constraintStart_toEndOf="@+id/overview_carbsbutton"
+        app:layout_constraintTop_toTopOf="@+id/overview_insulinbutton" />
+
+    <item
+        android:id="@+id/wizardButton"
+        android:icon="?attr/iconWizzard"
+        app:showAsAction="ifRoom"
+        android:tint="?attr/iconColorbottomAppbar"
+        android:title="@string/overview_calculator_label"/>
+
+
+    <item
+        android:id="@+id/cgmButton"
+        android:icon="?attr/iconCgm"
+        app:showAsAction="ifRoom"
+        android:tint="?attr/iconColorbottomAppbar"
+        android:title="@string/overview_cgm"/>
+
+</menu>

@@ -7,6 +7,7 @@ import android.os.Message;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -15,6 +16,9 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+
+import com.google.android.material.button.MaterialButton;
+import com.j256.ormlite.stmt.query.IsNotNull;
 
 import java.text.NumberFormat;
 import java.util.concurrent.Executors;
@@ -188,7 +192,7 @@ public class NumberPicker extends LinearLayout implements View.OnKeyListener,
         });
     }
 
-    public void setParams(Double initValue, Double minValue, Double maxValue, Double step, NumberFormat formater, boolean allowZero, Button okButton, TextWatcher textWatcher) {
+    public void setParams(Double initValue, Double minValue, Double maxValue, Double step, NumberFormat formater, boolean allowZero, MaterialButton okButton, TextWatcher textWatcher) {
         if (this.textWatcher != null) {
             editText.removeTextChangedListener(this.textWatcher);
         }
@@ -198,7 +202,7 @@ public class NumberPicker extends LinearLayout implements View.OnKeyListener,
             editText.addTextChangedListener(textWatcher);
     }
 
-    public void setParams(Double initValue, Double minValue, Double maxValue, Double step, NumberFormat formatter, boolean allowZero, Button okButton) {
+    public void setParams(Double initValue, Double minValue, Double maxValue, Double step, NumberFormat formatter, boolean allowZero, MaterialButton okButton) {
         this.value = initValue;
         this.minValue = minValue;
         this.maxValue = maxValue;
@@ -273,7 +277,7 @@ public class NumberPicker extends LinearLayout implements View.OnKeyListener,
         if (value == 0d && !allowZero)
             editText.setText("");
         else
-            editText.setText(formatter.format(value));
+         editText.setText(formatter.format(value));
     }
 
     private void callValueChangedListener() {

@@ -414,7 +414,7 @@
     <string name="key_adult" translatable="false">adult</string>
     <string name="key_resistantadult" translatable="false">resistantadult</string>
     <string name="key_pregnant" translatable="false">pregnant</string>
-    <string name="patientage_summary">Please select patient type to setup safety limits</string>
+    <string name="patientage_summary">Please select patient age to setup safety limits</string>
     <string name="patient_name">Patient name</string>
     <string name="patient_name_summary">Please provide patient name or nickname to differentiate among multiple setups</string>
     <string name="patient_name_default" comment="This is default patient display name, when user does not provide real one">User</string>
@@ -1330,6 +1330,13 @@
     <string name="formatwithweight">Age: %1$.0f Weight: %2$.0f kg</string>
     <string name="basalpctfromtdd_label">% of basal</string>
     <string name="dpvdefaultprofile">DPV Default profile</string>
+
+    <string name="nav_themeselector">Set Colors</string>
+    <string name="theme_save">Save</string>
+    <!--    LocalProfile-->
+    <string name="newProfile">New profile</string>
+    <string name="cloneProfile">Clone profile</string>
+    <string name="deleteProfile">Delete profile</string>
 
     <string name="open_humans">Open Humans</string>
     <string name="finishing_open_humans_setup">Finishing Open Humans setup…</string>

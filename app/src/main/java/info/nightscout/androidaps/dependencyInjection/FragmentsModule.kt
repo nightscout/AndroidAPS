@@ -3,6 +3,7 @@ package info.nightscout.androidaps.dependencyInjection
 import dagger.Module
 import dagger.android.ContributesAndroidInjector
 import info.nightscout.androidaps.activities.MyPreferenceFragment
+import info.nightscout.androidaps.activities.TDDStatsActivity
 import info.nightscout.androidaps.dialogs.*
 import info.nightscout.androidaps.plugins.aps.loop.LoopFragment
 import info.nightscout.androidaps.plugins.aps.openAPSAMA.OpenAPSAMAFragment

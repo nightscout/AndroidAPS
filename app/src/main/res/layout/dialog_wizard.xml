@@ -18,7 +18,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:background="@color/dialog_title_background"
+            android:background="?attr/colorPrimary"
             android:orientation="horizontal"
             android:padding="5dp">
 
@@ -26,18 +26,20 @@
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:contentDescription="@string/boluswizard"
-                app:srcCompat="@drawable/ic_calculator" />
+                app:srcCompat="?attr/iconWizzard"
+                app:tint="?attr/iconColorDialog" />
 
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_centerInParent="true"
+                android:background="@color/transparent"
                 android:layout_gravity="center"
                 android:layout_marginLeft="10dp"
                 android:layout_marginRight="10dp"
                 android:text="@string/boluswizard"
                 android:textAlignment="center"
-                android:textAppearance="?android:attr/textAppearanceLarge" />
+                style="@style/Text.Headline" />
 
         </RelativeLayout>
 
@@ -230,10 +232,12 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
+                android:gravity="center_vertical"
+                android:layout_weight="1"
                 android:layout_marginStart="10dp"
                 android:checked="false"
-                android:padding="5dp"
-                android:text="@string/superbolus" />
+                android:text="@string/superbolus"
+                app:useMaterialThemeColors="true"/>
 
         </LinearLayout>
 
@@ -247,9 +251,8 @@
                 android:id="@+id/total"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:background="@drawable/background_darkgray"
-                android:paddingLeft="10dp"
-                android:paddingRight="10dp"
+                android:paddingStart="10dp"
+                android:paddingEnd="10dp"
                 android:text="2.35U 28g"
                 android:textAppearance="?android:attr/textAppearanceLarge" />
 
@@ -259,8 +262,8 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="10dp"
                 android:background="@drawable/background_darkgray"
-                android:paddingLeft="10dp"
-                android:paddingRight="10dp"
+                android:paddingStart="10dp"
+                android:paddingEnd="10dp"
                 android:text="50%"
                 android:textAppearance="?android:attr/textAppearanceLarge"
                 android:textColor="@color/iob" />
@@ -273,26 +276,27 @@
             android:layout_height="wrap_content"
             android:orientation="horizontal">
 
-            <TextView
-                android:layout_width="wrap_content"
+            <com.google.android.material.textfield.TextInputLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
-                android:labelFor="@+id/notes"
-                android:padding="10dp"
-                android:text="@string/careportal_newnstreatment_notes_label"
-                android:textAppearance="@style/TextAppearance.AppCompat.Small"
-                android:textStyle="bold" />
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
+                android:hint="@string/careportal_newnstreatment_notes_label"
+                app:endIconMode="clear_text">
 
-            <EditText
-                android:id="@+id/notes"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
-                android:layout_weight="1"
-                android:autofillHints="@string/careportal_newnstreatment_notes_label"
-                android:gravity="start"
-                android:inputType="text|textCapSentences"
-                android:textAppearance="?android:attr/textAppearanceSmall" />
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/notes"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="10dp"
+                    android:layout_marginEnd="10dp"
+                    android:layout_gravity="center_vertical"
+                    android:layout_weight="1"
+                    android:autofillHints="@string/careportal_newnstreatment_notes_label"
+                    android:gravity="start"
+                    android:textStyle="bold"
+                    android:inputType="text|textCapSentences" />
+
+            </com.google.android.material.textfield.TextInputLayout>
 
         </LinearLayout>
 
@@ -316,10 +320,11 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
+                android:tint="?attr/iconColorToolbar"
                 android:contentDescription="@string/show_calculation"
                 app:srcCompat="@drawable/ic_visibility" />
 
-            <Button
+            <com.google.android.material.button.MaterialButton
                 android:id="@+id/cancel"
                 style="@style/mdtp_ActionButton.Text"
                 android:layout_width="0dp"
@@ -329,7 +334,7 @@
                 android:text="@string/mdtp_cancel"
                 android:textAlignment="textEnd" />
 
-            <Button
+            <com.google.android.material.button.MaterialButton
                 android:id="@+id/ok"
                 style="@style/mdtp_ActionButton.Text"
                 android:layout_width="wrap_content"
@@ -345,7 +350,7 @@
             android:layout_marginStart="20dp"
             android:layout_marginTop="-15dp"
             android:layout_marginBottom="5dp"
-            android:background="@color/listdelimiter" />
+            android:background="?android:attr/dividerHorizontal" />
 
         <TableLayout
             android:id="@+id/resulttable"

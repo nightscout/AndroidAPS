@@ -7,7 +7,7 @@ import android.os.Bundle
 import info.nightscout.androidaps.activities.NoSplashAppCompatActivity
 import info.nightscout.androidaps.danars.dialogs.PairingProgressDialog
 
-class PairingHelperActivity : NoSplashAppCompatActivity() {
+class PairingHelperActivity : info.nightscout.androidaps.activities.NoSplashAppCompatActivity() {
     var dialog: PairingProgressDialog? = null
 
     @SuppressLint("SourceLockedOrientationActivity")

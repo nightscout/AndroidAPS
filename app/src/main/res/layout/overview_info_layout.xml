@@ -6,215 +6,6 @@
     android:layout_height="wrap_content"
     android:orientation="horizontal" >
 
-    <TextView
-        android:id="@+id/overview_bg"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="00.0"
-        android:textSize="60sp"
-        android:textStyle="bold"
-        app:layout_constraintEnd_toStartOf="@+id/overview_delta_large"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-
-    <TextView
-        android:id="@+id/overview_delta_large"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="(+1.0)"
-        android:textSize="60sp"
-        android:textStyle="bold"
-        android:visibility="gone"
-        app:layout_constraintBottom_toBottomOf="@+id/overview_bg"
-        app:layout_constraintEnd_toStartOf="@+id/overview_arrows_llayout"
-        app:layout_constraintStart_toEndOf="@+id/overview_bg"
-        app:layout_constraintTop_toTopOf="@+id/overview_bg" />
-
-
-    <LinearLayout
-        android:id="@+id/overview_arrows_llayout"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        app:layout_constraintBottom_toBottomOf="@+id/overview_bg"
-        app:layout_constraintEnd_toStartOf="@+id/overview_deltas_llayout"
-        app:layout_constraintStart_toEndOf="@+id/overview_delta_large"
-        app:layout_constraintTop_toTopOf="parent">
-
-        <ImageView
-            android:id="@+id/overview_arrow"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            app:layout_constraintHorizontal_bias="0.0"
-            app:srcCompat="@drawable/ic_flat" />
-
-        <TextView
-            android:id="@+id/overview_timeago"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            app:layout_constraintTop_toTopOf="@+id/overview_long_avgdelta"
-            android:text="n/a"
-            android:textAppearance="@style/TextAppearance.AppCompat.Small" />
-
-    </LinearLayout>
-
-    <TableLayout
-        android:id="@+id/overview_deltas_llayout"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        app:layout_constraintEnd_toStartOf="@+id/overview_apsmode_llayout"
-        app:layout_constraintStart_toEndOf="@+id/overview_arrows_llayout"
-        app:layout_constraintBottom_toBottomOf="@+id/overview_arrows_llayout">
-
-        <TableRow
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="end"
-                android:textAlignment="textEnd"
-                android:text="Δ: "
-                android:textAppearance="@style/TextAppearance.AppCompat.Small" />
-
-            <TextView
-                android:id="@+id/overview_delta"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="end"
-                android:textAlignment="textEnd"
-                android:text="n/a"
-                android:textAppearance="@style/TextAppearance.AppCompat.Small" />
-
-        </TableRow>
-
-        <TableRow
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="end"
-                android:textAlignment="textEnd"
-                android:text="15m Δ: "
-                android:textAppearance="@style/TextAppearance.AppCompat.Small" />
-
-            <TextView
-                android:id="@+id/overview_avgdelta"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="end"
-                android:textAlignment="textEnd"
-                android:text="n/a"
-                android:textAppearance="@style/TextAppearance.AppCompat.Small" />
-
-        </TableRow>
-
-        <TableRow
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="end"
-                android:textAlignment="textEnd"
-                android:text="40m Δ: "
-                android:textAppearance="@style/TextAppearance.AppCompat.Small" />
-
-            <TextView
-                android:id="@+id/overview_long_avgdelta"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="end"
-                android:textAlignment="textEnd"
-                android:text="n/a"
-                android:textAppearance="@style/TextAppearance.AppCompat.Small" />
-
-        </TableRow>
-
-    </TableLayout>
-
-    <LinearLayout
-        android:id="@+id/overview_apsmode_llayout"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="5dp"
-        android:gravity="center_horizontal"
-        android:orientation="vertical"
-        app:layout_constraintBottom_toBottomOf="@+id/overview_bg"
-        app:layout_constraintEnd_toStartOf="@id/overview_time_llayout"
-        app:layout_constraintStart_toEndOf="@id/overview_deltas_llayout"
-        app:layout_constraintTop_toTopOf="parent">
-
-        <ImageView
-            android:id="@+id/overview_apsmode"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:layout_marginBottom="-4dp"
-            android:visibility="gone"
-            app:srcCompat="@drawable/ic_loop_closed" />
-
-        <TextView
-            android:id="@+id/overview_apsmode_text"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:gravity="center_horizontal"
-            android:paddingTop="3dp"
-            android:paddingBottom="3dp"
-            android:text="Open Loop"
-            android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-            android:textStyle="bold"
-            android:visibility="gone" />
-    </LinearLayout>
-
-    <LinearLayout
-        android:id="@+id/overview_time_llayout"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="5dp"
-        android:gravity="center_horizontal"
-        android:orientation="vertical"
-        android:visibility="gone"
-        app:layout_constraintBottom_toBottomOf="@+id/overview_bg"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@id/overview_apsmode_llayout"
-        app:layout_constraintTop_toTopOf="parent">
-
-        <TextView
-            android:id="@+id/overview_time"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:layout_marginTop="-10dp"
-            android:layout_marginBottom="-10dp"
-            android:text="8:00 PM"
-            android:textSize="40dp"
-            android:textStyle="bold" />
-
-        <TextView
-            android:id="@+id/overview_timeagoshort"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:layout_marginTop="-5dp"
-            android:layout_marginBottom="-5dp"
-            android:gravity="center_vertical"
-            android:text="(-5)"
-            android:textSize="30sp"
-            android:textStyle="bold" />
-
-    </LinearLayout>
 
     <LinearLayout
         android:id="@+id/overview_iob_llayout"
@@ -232,7 +23,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
-            app:srcCompat="@drawable/ic_bolus" />
+            app:srcCompat="@drawable/ic_bolus"
+            app:tint="?attr/iconColorToolbar" />
 
         <TextView
             android:id="@+id/overview_iob"
@@ -262,7 +54,9 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
-            android:background="@drawable/anim_carbs" />
+            android:backgroundTint="?attr/iconColorToolbar"
+            android:background="@drawable/anim_carbs"
+            app:tint="?attr/iconColorToolbar" />
 
         <TextView
             android:id="@+id/overview_cob"
@@ -292,7 +86,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
-            app:srcCompat="@drawable/ic_cp_basal_no_tbr" />
+            app:srcCompat="@drawable/ic_cp_basal_no_tbr"
+            app:tint="?attr/iconColorToolbar" />
 
         <TextView
             android:id="@+id/overview_basebasal"
@@ -321,7 +116,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
-            app:srcCompat="@drawable/ic_actions_startextbolus" />
+            app:srcCompat="@drawable/ic_actions_startextbolus"
+            app:tint="?attr/iconColorToolbar" />
 
         <TextView
             android:id="@+id/overview_extendedbolus"
@@ -351,7 +147,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
-            app:srcCompat="@drawable/ic_swap_vert_black_48dp_green" />
+            app:srcCompat="@drawable/ic_swap_vert_black_48dp_green"
+            app:tint="?attr/iconColorToolbar" />
 
         <TextView
             android:id="@+id/overview_sensitivity"

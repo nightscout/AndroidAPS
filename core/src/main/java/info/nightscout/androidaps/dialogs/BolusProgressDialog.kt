@@ -1,5 +1,10 @@
 package info.nightscout.androidaps.dialogs
 
+import android.app.Activity
+import android.content.SharedPreferences
+import android.content.res.Resources
+import android.graphics.PorterDuff
+import android.graphics.drawable.Drawable
 import android.os.Bundle
 import android.os.SystemClock
 import android.view.LayoutInflater
@@ -7,6 +12,12 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.Window
 import android.view.WindowManager
+import androidx.core.content.ContextCompat
+import com.ms_square.etsyblur.AlwaysAsyncPolicy
+import com.ms_square.etsyblur.BlurConfig
+import com.ms_square.etsyblur.BlurDialogFragment
+import com.ms_square.etsyblur.SimpleAsyncPolicy
+import com.ms_square.etsyblur.SmartAsyncPolicy
 import dagger.android.support.DaggerDialogFragment
 import info.nightscout.androidaps.activities.BolusProgressHelperActivity
 import info.nightscout.androidaps.core.R
@@ -18,19 +29,21 @@ import info.nightscout.androidaps.logging.LTag
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper
 import info.nightscout.androidaps.plugins.general.overview.events.EventDismissBolusProgressIfRunning
 import info.nightscout.androidaps.plugins.general.overview.events.EventOverviewBolusProgress
+import info.nightscout.androidaps.plugins.general.themeselector.util.ThemeUtil
 import info.nightscout.androidaps.utils.FabricPrivacy
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
+import info.nightscout.androidaps.utils.sharedPreferences.SP
 import javax.inject.Inject
 
-class BolusProgressDialog : DaggerDialogFragment() {
-
+class BolusProgressDialog : BlurDialogFragment() {
     @Inject lateinit var aapsLogger: AAPSLogger
     @Inject lateinit var rxBus: RxBusWrapper
     @Inject lateinit var resourceHelper: ResourceHelper
     @Inject lateinit var commandQueue: CommandQueueProvider
     @Inject lateinit var fabricPrivacy: FabricPrivacy
+    @Inject lateinit var sp: SP
 
     private val disposable = CompositeDisposable()
 
@@ -72,6 +85,34 @@ class BolusProgressDialog : DaggerDialogFragment() {
         isCancelable = false
         dialog?.setCanceledOnTouchOutside(false)
 
+        val themeToSet = sp.getInt("theme", ThemeUtil.THEME_DARKSIDE)
+        try {
+            val theme: Resources.Theme? = context?.theme
+            // https://stackoverflow.com/questions/11562051/change-activitys-theme-programmatically
+            theme?.applyStyle(ThemeUtil.getThemeId(themeToSet), true)
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+
+        val drawable: Drawable? = context?.let { ContextCompat.getDrawable(it, R.drawable.dialog) }
+        if ( sp.getBoolean("daynight", true)) {
+            if (drawable != null) {
+                drawable.setColorFilter(sp.getInt("darkBackgroundColor", R.color.background_dark), PorterDuff.Mode.SRC_IN)
+            }
+        } else {
+            if (drawable != null) {
+                drawable.setColorFilter(sp.getInt("lightBackgroundColor", R.color.background_light), PorterDuff.Mode.SRC_IN)
+            }
+        }
+        dialog?.window?.setBackgroundDrawable(drawable)
+
+        context?.let { SimpleAsyncPolicy () }?.let {
+            BlurConfig.Builder()
+                .overlayColor(ContextCompat.getColor(requireContext(), R.color.white_alpha_40))  // semi-transparent white color
+                .debug(false)
+                .asyncPolicy(it)
+                .build()
+        }
         _binding = DialogBolusprogressBinding.inflate(inflater, container, false)
         return binding.root
     }

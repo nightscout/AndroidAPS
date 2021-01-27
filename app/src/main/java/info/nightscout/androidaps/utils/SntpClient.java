@@ -17,8 +17,6 @@ package info.nightscout.androidaps.utils;
 
 import android.os.SystemClock;
 
-import org.slf4j.Logger;
-
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
@@ -27,8 +25,6 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 
 import info.nightscout.androidaps.logging.AAPSLogger;
-import info.nightscout.androidaps.logging.LTag;
-import info.nightscout.androidaps.logging.StacktraceLoggerWrapper;
 
 /**
  * {@hide}
@@ -183,15 +179,6 @@ public class SntpClient {
      */
     private long getNtpTimeReference() {
         return mNtpTimeReference;
-    }
-
-    /**
-     * Returns the round trip time of the NTP transaction
-     *
-     * @return round trip time in milliseconds.
-     */
-    public long getRoundTripTime() {
-        return mRoundTripTime;
     }
 
     /**

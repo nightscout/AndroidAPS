@@ -7,7 +7,10 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.StringRes
+import androidx.core.content.ContextCompat
 import com.google.common.base.Joiner
+import com.ms_square.etsyblur.BlurConfig
+import com.ms_square.etsyblur.SmartAsyncPolicy
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.Constants
 import info.nightscout.androidaps.MainApp
@@ -223,7 +226,7 @@ class CareDialog : DialogFragmentWithDate() {
                 aapsLogger.debug("USER ENTRY: CAREPORTAL ${careportalEvent.eventType} json: ${careportalEvent.json}")
                 MainApp.getDbHelper().createOrUpdate(careportalEvent)
                 nsUpload.uploadCareportalEntryToNS(json)
-            }, null)
+            }, null, sp)
         }
         return true
     }

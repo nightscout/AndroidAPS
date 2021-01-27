@@ -13,7 +13,6 @@
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
         android:layout_gravity="center"
-        android:background="@color/activity_title_background"
         android:orientation="horizontal"
         android:padding="5dp">
 
@@ -21,6 +20,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:contentDescription="@string/pumphistory"
+            android:tint="?attr/iconColorDialog"
             app:srcCompat="@drawable/ic_danarhistory" />
 
         <TextView
@@ -82,13 +82,18 @@
         android:layout_above="@id/reload"
         android:layout_below="@+id/status" />
 
-    <Button
+<com.google.android.material.button.MaterialButton
         android:id="@+id/reload"
-        style="@style/Widget.AppCompat.Button"
-        android:layout_width="match_parent"
+        style="@style/Widget.MaterialComponents.Button"
         android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        app:icon="@drawable/ic_actions_refill"
         android:layout_alignParentBottom="true"
-        android:drawableStart="@drawable/ic_actions_refill"
-        android:text="@string/reload" />
+        android:paddingStart="4dp"
+        android:paddingEnd="0dp"
+        android:text="@string/reload"
+        android:textSize="14sp"
+        app:cornerRadius="20dp"
+        app:layout_gravity="fill_horizontal" />
 
 </RelativeLayout>

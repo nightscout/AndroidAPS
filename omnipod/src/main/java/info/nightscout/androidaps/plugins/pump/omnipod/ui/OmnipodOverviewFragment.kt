@@ -9,12 +9,16 @@ import android.text.TextUtils
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.content.res.ResourcesCompat
 import dagger.android.support.DaggerFragment
 import info.nightscout.androidaps.Constants
 import info.nightscout.androidaps.activities.ErrorHelperActivity
+import info.nightscout.androidaps.activities.TDDStatsActivity
+import info.nightscout.androidaps.dialogs.ProfileViewerDialog
 import info.nightscout.androidaps.events.EventPreferenceChange
 import info.nightscout.androidaps.interfaces.ActivePluginProvider
 import info.nightscout.androidaps.interfaces.CommandQueueProvider
+import info.nightscout.androidaps.logging.LTag
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper
 import info.nightscout.androidaps.plugins.general.overview.events.EventDismissNotification
 import info.nightscout.androidaps.plugins.general.overview.notifications.Notification
@@ -42,6 +46,7 @@ import info.nightscout.androidaps.queue.Callback
 import info.nightscout.androidaps.queue.events.EventQueueChanged
 import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.FabricPrivacy
+import info.nightscout.androidaps.utils.ViewAnimation
 import info.nightscout.androidaps.utils.alertDialogs.OKDialog
 import info.nightscout.androidaps.utils.extensions.plusAssign
 import info.nightscout.androidaps.utils.protection.ProtectionCheck
@@ -82,6 +87,8 @@ class OmnipodOverviewFragment : DaggerFragment() {
 
     private var disposables: CompositeDisposable = CompositeDisposable()
 
+    private lateinit var mHandler: Handler
+    private lateinit var mRunnable:Runnable
     private val loopHandler = Handler(Looper.getMainLooper())
     private lateinit var refreshLoop: Runnable
 
@@ -99,7 +106,68 @@ class OmnipodOverviewFragment : DaggerFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        omnipod_overview_button_pod_management.setOnClickListener {
+
+        swipeRefresh_omnipod.setColorSchemeResources(R.color.orange, R.color.green, R.color.blue)
+        swipeRefresh_omnipod.setProgressBackgroundColorSchemeColor(ResourcesCompat.getColor(resources, R.color.swipe_background, null))
+        // Initialize the handler instance
+        mHandler = Handler()
+        swipeRefresh_omnipod.setOnRefreshListener {
+
+            mRunnable = Runnable {
+                // Hide swipe to refresh icon animation
+                swipeRefresh_omnipod.isRefreshing = false
+                commandQueue.readStatus("swipe to connect to pump", null)
+                disablePodActionButtons()
+                commandQueue.customCommand(CommandGetPodStatus(),
+                    DisplayResultDialogCallback(resourceHelper.gs(R.string.omnipod_error_failed_to_refresh_status), false))
+            }
+
+            // Execute the task after specified time
+            mHandler.postDelayed(
+                mRunnable,
+                (3000).toLong() // Delay 1 to 5 seconds
+            )
+        }
+
+        ViewAnimation.showOut(omnipod_overview_button_refresh_status)
+        ViewAnimation.showOut(omnipod_overview_button_pod_management)
+        ViewAnimation.showOut(omnipod_overview_button_acknowledge_active_alerts)
+        ViewAnimation.showOut(omnipod_overview_button_set_time)
+        ViewAnimation.showOut(omnipod_overview_button_resume_delivery)
+        ViewAnimation.showOut(omnipod_overview_button_suspend_delivery)
+
+        fabMenu.setOnClickListener(clickListener)
+        omnipod_overview_button_refresh_status.setOnClickListener(clickListener)
+        omnipod_overview_button_pod_management.setOnClickListener(clickListener)
+        omnipod_overview_button_acknowledge_active_alerts.setOnClickListener(clickListener)
+        omnipod_overview_button_set_time.setOnClickListener(clickListener)
+        omnipod_overview_button_resume_delivery.setOnClickListener(clickListener)
+        omnipod_overview_button_suspend_delivery.setOnClickListener(clickListener)
+    }
+
+    private val clickListener: View.OnClickListener = View.OnClickListener { view ->
+        when ( view.id ){
+            R.id.fabMenu -> {
+                if ( omnipod_overview_button_pod_management.visibility == View.GONE) {
+                    disablePodActionButtons();
+                    ViewAnimation.showIn( omnipod_overview_button_refresh_status)
+                    ViewAnimation.showIn(omnipod_overview_button_pod_management)
+                    ViewAnimation.showIn(omnipod_overview_button_acknowledge_active_alerts)
+                    ViewAnimation.showIn(omnipod_overview_button_set_time)
+                    ViewAnimation.showIn(omnipod_overview_button_resume_delivery)
+                    ViewAnimation.showIn(omnipod_overview_button_suspend_delivery)
+                } else  {
+                    showOut()
+                }
+            }
+            R.id.omnipod_overview_button_refresh_status -> {
+                showOut()
+                disablePodActionButtons()
+                commandQueue.customCommand(CommandGetPodStatus(),
+                    DisplayResultDialogCallback(resourceHelper.gs(R.string.omnipod_error_failed_to_refresh_status), false))
+            }
+            R.id.omnipod_overview_button_pod_management -> {
+                showOut()
             if (omnipodPumpPlugin.rileyLinkService?.verifyConfiguration() == true) {
                 activity?.let { activity ->
                     context?.let { context ->
@@ -112,42 +180,46 @@ class OmnipodOverviewFragment : DaggerFragment() {
             } else {
                 displayNotConfiguredDialog()
             }
-        }
-
-        omnipod_overview_button_resume_delivery.setOnClickListener {
-            disablePodActionButtons()
+            }
+            R.id.omnipod_overview_button_acknowledge_active_alerts -> {
+                showOut()
+                disablePodActionButtons()
+                commandQueue.customCommand(CommandAcknowledgeAlerts(),
+                    DisplayResultDialogCallback(resourceHelper.gs(R.string.omnipod_error_failed_to_acknowledge_alerts), false)
+                        .messageOnSuccess(resourceHelper.gs(R.string.omnipod_confirmation_acknowledged_alerts)))
+            }
+            R.id.omnipod_overview_button_set_time -> {
+                showOut()
+                disablePodActionButtons()
+                commandQueue.customCommand(CommandHandleTimeChange(true),
+                    DisplayResultDialogCallback(resourceHelper.gs(R.string.omnipod_error_failed_to_set_time), true)
+                        .messageOnSuccess(resourceHelper.gs(R.string.omnipod_confirmation_time_on_pod_updated)))
+            }
+            R.id.omnipod_overview_button_resume_delivery -> {
+                showOut()
+                    disablePodActionButtons()
             commandQueue.customCommand(CommandResumeDelivery(),
                 DisplayResultDialogCallback(resourceHelper.gs(R.string.omnipod_error_failed_to_resume_delivery), true).messageOnSuccess(resourceHelper.gs(R.string.omnipod_confirmation_delivery_resumed)))
-        }
-
-        omnipod_overview_button_refresh_status.setOnClickListener {
-            disablePodActionButtons()
-            commandQueue.customCommand(CommandGetPodStatus(),
-                DisplayResultDialogCallback(resourceHelper.gs(R.string.omnipod_error_failed_to_refresh_status), false))
-        }
-
-        omnipod_overview_button_acknowledge_active_alerts.setOnClickListener {
-            disablePodActionButtons()
-            commandQueue.customCommand(CommandAcknowledgeAlerts(),
-                DisplayResultDialogCallback(resourceHelper.gs(R.string.omnipod_error_failed_to_acknowledge_alerts), false)
-                    .messageOnSuccess(resourceHelper.gs(R.string.omnipod_confirmation_acknowledged_alerts))
-                    .actionOnSuccess { rxBus.send(EventDismissNotification(Notification.OMNIPOD_POD_ALERTS)) })
-        }
-
-        omnipod_overview_button_suspend_delivery.setOnClickListener {
-            disablePodActionButtons()
-            commandQueue.customCommand(CommandSuspendDelivery(),
-                DisplayResultDialogCallback(resourceHelper.gs(R.string.omnipod_error_failed_to_suspend_delivery), true)
-                    .messageOnSuccess(resourceHelper.gs(R.string.omnipod_confirmation_suspended_delivery)))
-        }
-
-        omnipod_overview_button_set_time.setOnClickListener {
-            disablePodActionButtons()
-            commandQueue.customCommand(CommandHandleTimeChange(true),
-                DisplayResultDialogCallback(resourceHelper.gs(R.string.omnipod_error_failed_to_set_time), true)
-                    .messageOnSuccess(resourceHelper.gs(R.string.omnipod_confirmation_time_on_pod_updated)))
+            }
+            R.id.omnipod_overview_button_suspend_delivery -> {
+                showOut()
+                disablePodActionButtons()
+                commandQueue.customCommand(CommandSuspendDelivery(),
+                    DisplayResultDialogCallback(resourceHelper.gs(R.string.omnipod_error_failed_to_suspend_delivery), true)
+                        .messageOnSuccess(resourceHelper.gs(R.string.omnipod_confirmation_suspended_delivery)))
+            }
         }
     }
+
+    private fun showOut() {
+        ViewAnimation.showOut(omnipod_overview_button_refresh_status)
+        ViewAnimation.showOut(omnipod_overview_button_pod_management)
+        ViewAnimation.showOut(omnipod_overview_button_acknowledge_active_alerts)
+        ViewAnimation.showOut(omnipod_overview_button_set_time)
+        ViewAnimation.showOut(omnipod_overview_button_resume_delivery)
+        ViewAnimation.showOut(omnipod_overview_button_suspend_delivery)
+    }
+
 
     override fun onResume() {
         super.onResume()
@@ -210,7 +282,7 @@ class OmnipodOverviewFragment : DaggerFragment() {
                 rileyLinkServiceState.isError && rileyLinkError != null   -> "{fa-bluetooth-b}   " + resourceHelper.gs(rileyLinkError.getResourceId(RileyLinkTargetDevice.Omnipod))
                 else                                                      -> "{fa-bluetooth-b}   " + resourceHelper.gs(resourceId)
             }
-        omnipod_overview_riley_link_status.setTextColor(if (rileyLinkServiceState.isError || rileyLinkError != null) Color.RED else Color.WHITE)
+        omnipod_overview_riley_link_status.setTextColor(if (rileyLinkServiceState.isError || rileyLinkError != null)  resourceHelper.getAttributeColor(context, R.attr.statuslight_alarm) else  resourceHelper.getAttributeColor(context, R.attr.statuslight_normal))
     }
 
     private fun updateOmnipodStatus() {
@@ -238,11 +310,11 @@ class OmnipodOverviewFragment : DaggerFragment() {
             omnipod_overview_firmware_version.text = PLACEHOLDER
             omnipod_overview_time_on_pod.text = PLACEHOLDER
             omnipod_overview_pod_expiry_date.text = PLACEHOLDER
-            omnipod_overview_pod_expiry_date.setTextColor(Color.WHITE)
+            omnipod_overview_pod_expiry_date.setTextColor( resourceHelper.getAttributeColor(context, R.attr.statuslight_normal))
             omnipod_overview_base_basal_rate.text = PLACEHOLDER
             omnipod_overview_total_delivered.text = PLACEHOLDER
             omnipod_overview_reservoir.text = PLACEHOLDER
-            omnipod_overview_reservoir.setTextColor(Color.WHITE)
+            omnipod_overview_reservoir.setTextColor( resourceHelper.getAttributeColor(context, R.attr.statuslight_normal))
             omnipod_overview_pod_active_alerts.text = PLACEHOLDER
         } else {
             omnipod_overview_pod_address.text = podStateManager.address.toString()
@@ -252,20 +324,20 @@ class OmnipodOverviewFragment : DaggerFragment() {
 
             omnipod_overview_time_on_pod.text = readableZonedTime(podStateManager.time)
             omnipod_overview_time_on_pod.setTextColor(if (podStateManager.timeDeviatesMoreThan(OmnipodConstants.TIME_DEVIATION_THRESHOLD)) {
-                Color.RED
+                resourceHelper.getAttributeColor(context, R.attr.statuslight_alarm)
             } else {
-                Color.WHITE
+                resourceHelper.getAttributeColor(context, R.attr.statuslight_normal)
             })
             val expiresAt = podStateManager.expiresAt
             if (expiresAt == null) {
                 omnipod_overview_pod_expiry_date.text = PLACEHOLDER
-                omnipod_overview_pod_expiry_date.setTextColor(Color.WHITE)
+                omnipod_overview_pod_expiry_date.setTextColor( resourceHelper.getAttributeColor(context, R.attr.statuslight_normal))
             } else {
                 omnipod_overview_pod_expiry_date.text = readableZonedTime(expiresAt)
                 omnipod_overview_pod_expiry_date.setTextColor(if (DateTime.now().isAfter(expiresAt)) {
-                    Color.RED
+                    resourceHelper.getAttributeColor(context, R.attr.statuslight_alarm)
                 } else {
-                    Color.WHITE
+                    resourceHelper.getAttributeColor(context, R.attr.statuslight_normal)
                 })
             }
 
@@ -291,16 +363,19 @@ class OmnipodOverviewFragment : DaggerFragment() {
             // reservoir
             if (podStateManager.reservoirLevel == null) {
                 omnipod_overview_reservoir.text = resourceHelper.gs(R.string.omnipod_overview_reservoir_value_over50)
-                omnipod_overview_reservoir.setTextColor(Color.WHITE)
+                omnipod_overview_reservoir.setTextColor( resourceHelper.getAttributeColor(context, R.attr.statuslight_normal))
             } else {
                 val lowReservoirThreshold = (omnipodAlertUtil.lowReservoirAlertUnits
                     ?: OmnipodConstants.DEFAULT_MAX_RESERVOIR_ALERT_THRESHOLD).toDouble()
 
-                omnipod_overview_reservoir.text = resourceHelper.gs(R.string.omnipod_overview_reservoir_value, podStateManager.reservoirLevel)
+               // omnipod_overview_reservoir.text = resourceHelper.gs(R.string.omnipod_overview_reservoir_value, podStateManager.reservoirLevel)
+               // warnColors.setColorInverse(omnipod_overview_reservoir, podStateManager.reservoirLevel, 50.0, 20.0, resourceHelper.getAttributeColor(context, R.attr.statuslight_normal),
+               // resourceHelper.getAttributeColor(context, R.attr.statuslight_Warning),
+               // resourceHelper.getAttributeColor(context, R.attr.statuslight_alarm))
                 omnipod_overview_reservoir.setTextColor(if (podStateManager.reservoirLevel < lowReservoirThreshold) {
-                    Color.RED
+                    resourceHelper.getAttributeColor(context, R.attr.statuslight_alarm)
                 } else {
-                    Color.WHITE
+                    resourceHelper.getAttributeColor(context, R.attr.statuslight_normal)
                 })
             }
 
@@ -313,10 +388,10 @@ class OmnipodOverviewFragment : DaggerFragment() {
 
         if (errors.size == 0) {
             omnipod_overview_errors.text = PLACEHOLDER
-            omnipod_overview_errors.setTextColor(Color.WHITE)
+            omnipod_overview_errors.setTextColor( resourceHelper.getAttributeColor(context, R.attr.statuslight_normal))
         } else {
             omnipod_overview_errors.text = StringUtils.join(errors, System.lineSeparator())
-            omnipod_overview_errors.setTextColor(Color.RED)
+            omnipod_overview_errors.setTextColor( resourceHelper.getAttributeColor(context, R.attr.statuslight_alarm))
         }
     }
 
@@ -325,13 +400,13 @@ class OmnipodOverviewFragment : DaggerFragment() {
             omnipod_overview_last_connection.text = readableDuration(podStateManager.lastSuccessfulCommunication)
             val lastConnectionColor =
                 if (omnipodPumpPlugin.isUnreachableAlertTimeoutExceeded(getPumpUnreachableTimeout().millis)) {
-                    Color.RED
+                    resourceHelper.getAttributeColor(context, R.attr.statuslight_alarm)
                 } else {
-                    Color.WHITE
+                    resourceHelper.getAttributeColor(context, R.attr.statuslight_normal)
                 }
             omnipod_overview_last_connection.setTextColor(lastConnectionColor)
         } else {
-            omnipod_overview_last_connection.setTextColor(Color.WHITE)
+            omnipod_overview_last_connection.setTextColor( resourceHelper.getAttributeColor(context, R.attr.statuslight_normal))
             omnipod_overview_last_connection.text = if (podStateManager.hasPodState() && podStateManager.lastSuccessfulCommunication != null) {
                 readableDuration(podStateManager.lastSuccessfulCommunication)
             } else {
@@ -376,9 +451,9 @@ class OmnipodOverviewFragment : DaggerFragment() {
         }
 
         val podStatusColor = if (!podStateManager.isPodActivationCompleted || podStateManager.isPodDead || podStateManager.isSuspended || (podStateManager.isPodRunning && !podStateManager.isBasalCertain)) {
-            Color.RED
+            resourceHelper.getAttributeColor(context, R.attr.statuslight_alarm)
         } else {
-            Color.WHITE
+            resourceHelper.getAttributeColor(context, R.attr.statuslight_normal)
         }
         omnipod_overview_pod_status.setTextColor(podStatusColor)
     }
@@ -389,9 +464,9 @@ class OmnipodOverviewFragment : DaggerFragment() {
             val textColor: Int
 
             if (podStateManager.isLastBolusCertain) {
-                textColor = Color.WHITE
+                textColor =  resourceHelper.getAttributeColor(context, R.attr.statuslight_normal)
             } else {
-                textColor = Color.RED
+                textColor =  resourceHelper.getAttributeColor(context, R.attr.statuslight_alarm)
                 text += " (" + resourceHelper.gs(R.string.omnipod_uncertain) + ")"
             }
 
@@ -400,7 +475,7 @@ class OmnipodOverviewFragment : DaggerFragment() {
 
         } else {
             omnipod_overview_last_bolus.text = PLACEHOLDER
-            omnipod_overview_last_bolus.setTextColor(Color.WHITE)
+            omnipod_overview_last_bolus.setTextColor( resourceHelper.getAttributeColor(context, R.attr.statuslight_normal))
         }
     }
 
@@ -408,7 +483,7 @@ class OmnipodOverviewFragment : DaggerFragment() {
         if (podStateManager.isPodActivationCompleted && podStateManager.isTempBasalRunning) {
             if (!podStateManager.hasTempBasal()) {
                 omnipod_overview_temp_basal.text = "???"
-                omnipod_overview_temp_basal.setTextColor(Color.RED)
+                omnipod_overview_temp_basal.setTextColor( resourceHelper.getAttributeColor(context, R.attr.statuslight_alarm))
             } else {
                 val now = DateTime.now()
 
@@ -422,9 +497,9 @@ class OmnipodOverviewFragment : DaggerFragment() {
                 val textColor: Int
                 text = resourceHelper.gs(R.string.omnipod_overview_temp_basal_value, amount, dateUtil.timeString(startTime.millis), minutesRunning, duration.standardMinutes)
                 if (podStateManager.isTempBasalCertain) {
-                    textColor = Color.WHITE
+                    textColor =  resourceHelper.getAttributeColor(context, R.attr.statuslight_normal)
                 } else {
-                    textColor = Color.RED
+                    textColor =  resourceHelper.getAttributeColor(context, R.attr.statuslight_alarm)
                     text += " (" + resourceHelper.gs(R.string.omnipod_uncertain) + ")"
                 }
 
@@ -436,9 +511,9 @@ class OmnipodOverviewFragment : DaggerFragment() {
             val textColor: Int
 
             if (!podStateManager.isPodActivationCompleted || podStateManager.isTempBasalCertain) {
-                textColor = Color.WHITE
+                textColor =  resourceHelper.getAttributeColor(context, R.attr.statuslight_normal)
             } else {
-                textColor = Color.RED
+                textColor =  resourceHelper.getAttributeColor(context, R.attr.statuslight_alarm)
                 text += " (" + resourceHelper.gs(R.string.omnipod_uncertain) + ")"
             }
 
@@ -518,13 +593,13 @@ class OmnipodOverviewFragment : DaggerFragment() {
         context?.let {
             UIRunnable {
                 OKDialog.show(it, resourceHelper.gs(R.string.omnipod_warning),
-                    resourceHelper.gs(R.string.omnipod_error_operation_not_possible_no_configuration), null)
+                    resourceHelper.gs(R.string.omnipod_error_operation_not_possible_no_configuration), null, sp)
             }.run()
         }
     }
 
     private fun displayErrorDialog(title: String, message: String, withSound: Boolean) {
-        context?.let {
+      context?.let {
             val i = Intent(it, ErrorHelperActivity::class.java)
             i.putExtra("soundid", if (withSound) R.raw.boluserror else 0)
             i.putExtra("status", message)
@@ -536,9 +611,9 @@ class OmnipodOverviewFragment : DaggerFragment() {
 
     private fun displayOkDialog(title: String, message: String) {
         context?.let {
-            UIRunnable {
-                OKDialog.show(it, title, message, null)
-            }.run()
+            UIRunnable(Runnable {
+                OKDialog.show(it, title, message, null,sp)
+            }).run()
         }
     }
 

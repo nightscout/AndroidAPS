@@ -26,7 +26,6 @@ package info.nightscout.androidaps.plugins.general.overview.graphExtensions;
  * Added by mike
  */
 
-import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.Path;
