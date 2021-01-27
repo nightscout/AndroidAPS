@@ -69,6 +69,7 @@
     <string name="menu_ecarb">eCarb</string>
     <string name="menu_settings">Definições</string>
     <string name="menu_status">Estado</string>
+    <string name="menu_resync">Re-Sincronizar</string>
     <string name="menu_prime_fill">Purgar/Preencher</string>
     <string name="menu_none">Nenhum</string>
     <string name="menu_default">Padrão</string>
@@ -89,6 +90,9 @@
     <string name="action_confirm">CONFIRMAR</string>
     <string name="action_timeshift">alteração turno</string>
     <string name="action_bolus">bólus</string>
+    <string name="bolus_progress">Progresso do Bólus</string>
+    <string name="press_to_cancel">pressione para cancelar</string>
+    <string name="cancel_bolus">CANCELAR BÓLUS</string>
     <string name="status_pump">Bomba</string>
     <string name="status_loop">Loop</string>
     <string name="status_cpp">CPP</string>
