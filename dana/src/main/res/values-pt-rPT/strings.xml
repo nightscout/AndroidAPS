@@ -68,7 +68,7 @@
     <string name="danar_useroptions">Opções do utilizador</string>
     <string name="danar_timedisplay">Formato hora</string>
     <string name="danar_buttonscroll">Botão rolamento</string>
-    <string name="danar_beep">Sinal ao pressionar botão</string>
+    <string name="danar_beep">Beep ao pressionar botão</string>
     <string name="danar_pumpalarm">Alarme</string>
     <string name="danar_pumpalarm_sound">Som</string>
     <string name="danar_pumpalarm_vibrate">Vibrar</string>
