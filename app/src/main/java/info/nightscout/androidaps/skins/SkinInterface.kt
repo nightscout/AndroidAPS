@@ -11,7 +11,6 @@ import androidx.constraintlayout.widget.ConstraintLayout
 import info.nightscout.androidaps.R
 import kotlinx.android.synthetic.main.overview_fragment.view.*
 import kotlinx.android.synthetic.main.overview_info_layout.view.*
-import kotlinx.android.synthetic.main.overview_statuslights_layout.view.*
 import kotlinx.android.synthetic.main.overview_statuslights_layout.view.careportal_batterylevel
 import kotlinx.android.synthetic.main.overview_statuslights_layout.view.careportal_canulaage
 import kotlinx.android.synthetic.main.overview_statuslights_layout.view.careportal_insulinage
@@ -54,8 +53,6 @@ interface SkinInterface {
             if (isTablet) {
                 for (v in listOf<TextView?>(
                     view.overview_bg,
-                   // view.overview_time,
-                   // view.overview_timeagoshort,
                     view.overview_iob,
                     view.overview_cob,
                     view.overview_basebasal,
@@ -76,8 +73,6 @@ interface SkinInterface {
                 )) if (v != null) {
                     v.setTextSize(COMPLEX_UNIT_PX, v.textSize * 1.3f)
                 }
-               // view.overview_time_llayout.orientation = LinearLayout.HORIZONTAL
-               // view.overview_timeagoshort.setTextSize(COMPLEX_UNIT_PX, view.overview_time.textSize)
             }
         }
     }
