@@ -18,10 +18,17 @@
     <string name="objectives2_label">Definições AndroidAPS</string>
     <string name="objectives_hint1">https://androidaps.readthedocs.io/en/latest/EN/Usage/ExportImportSettings.html</string>
     <string name="objectives_hint2">https://androidaps.readthedocs.io/en/latest/EN/Getting-Started/FAQ.html#what-emergency-equipment-is-recommended-to-take-with-me</string>
+    <string name="noisycgm_label">Leituras Irregulares CGM</string>
     <string name="noisycgm_whattodo">O que deve ser feito se os dados do CGM são irregulares?</string>
     <string name="noisycgm_hint1">https://androidaps.readthedocs.io/en/latest/EN/Usage/Smoothing-Blood-Glucose-Data-in-xDrip.html#smoothing-blood-glucose-data</string>
+    <string name="exerciseprofile_label">Exercício e Perfis</string>
+    <string name="exerciseprofile_switchprofileabove100">Faça troca de perfil para mais de 100%. </string>
+    <string name="exerciseprofile_leaveat100">Deixe o perfil definido para 100%.</string>
+    <string name="exerciseprofile_suspendloop">Suspender o loop.</string>
     <string name="exerciseprofile_hint1">https://androidaps.readthedocs.io/en/latest/EN/Usage/temptarget.html#activity-temp-target</string>
+    <string name="exercise_label">Exercício e Alvos Temporários</string>
     <string name="exercise_hint1">https://androidaps.readthedocs.io/en/latest/EN/Usage/temptarget.html#activity-temp-target</string>
+    <string name="suspendloop_label">Loop Desactivado/Suspenso</string>
     <string name="suspendloop_doigetinsulin">Eu recebo insulina quando o loop estiver desactivado/suspenso?</string>
     <string name="suspendloop_yes">Sim, a insulina basal continua a ser administrada.</string>
     <string name="suspendloop_no">Não, administração da insulina está parada.</string>
@@ -59,7 +66,10 @@
     <string name="sensitivity_label">Plugins de Sensibilidade</string>
     <string name="sensitivity_which">Marque todas as respostas correctas.</string>
     <string name="sensitivity_hint1">https://androidaps.readthedocs.io/en/latest/EN/Configuration/Sensitivity-detection-and-COB.html</string>
+    <string name="wrongcarbs_label">Erros de Entrada de Hidratos</string>
     <string name="wrongcarbs_whattodo">O que deve fazer se tiver feito uma entrada incorrecta de hidratos?</string>
+    <string name="iob_label">Insulina a Bordo (IOB)</string>
+    <string name="breadgrams_label">Entrada de hidratos e bólus</string>
     <string name="breadgrams_hint1">https://androidaps.readthedocs.io/en/latest/EN/Getting-Started/FAQ.html#insulin-to-carb-ratio-ic-g-u</string>
     <string name="extendedcarbs_label">hidratos-e</string>
     <string name="extendedcarbs_handling">Para que poderia usar os hidratos-e (hidratos estendidos)?</string>
@@ -67,18 +77,28 @@
     <string name="extendedcarbs_hint1">https://androidaps.readthedocs.io/en/latest/EN/Usage/Extended-Carbs.html</string>
     <string name="nsclient_label">Monitorização Remota</string>
     <string name="nsclient_hint1">https://androidaps.readthedocs.io/en/latest/EN/Children/Children.html</string>
+    <string name="isf_label_exam">Factor Sensibilidade à Insulina (FSI)</string>
     <string name="isf_profile">A alteração do valor do FSI no seu perfil é suficiente para aplicar a mudança.</string>
     <string name="isf_hint1">https://androidaps.readthedocs.io/en/latest/EN/Getting-Started/FAQ.html#insulin-sensitivity-factor-isf-mmol-l-u-or-mg-dl-u</string>
     <string name="isf_hint2">https://androidaps.readthedocs.io/en/latest/EN/Usage/Profiles.html</string>
     <string name="ic_noeffect">Se tiver 0 COB, alterar o rácio IC irá levar a uma quantidade diferente de insulina para corrigir um determinado valor da Glic.</string>
     <string name="ic_hint1">https://androidaps.readthedocs.io/en/latest/EN/Getting-Started/FAQ.html#carbohydrate-to-insulin-ratio-cr-g-u</string>
     <string name="profileswitch_label">Troca de Perfil</string>
+    <string name="profileswitch_basallower">Taxas de basal serão 10% inferiores.</string>
+    <string name="profileswitch_isfhigher">FSI será 10% superior.</string>
+    <string name="profileswitch_unchanged">Os rácios FSI e I:C ficarão inalterados.</string>
     <string name="profileswitch_hint1" formatted="false">https://androidaps.readthedocs.io/en/latest/EN/Usage/Profiles.html?highlight=profile%20switch#profile-switch</string>
+    <string name="profileswitch2_label">Troca de Perfil</string>
+    <string name="profileswitch2_bghigher">Alvo da glicose será 20% maior.</string>
+    <string name="profileswitch2_isfhigher">FSI será 20% maior.</string>
     <string name="profileswitchtime_label">Troca de Perfil</string>
     <string name="profileswitchtime_2">Iniciar uma mudança de perfil com uma alteração de turno de 2</string>
     <string name="profileswitchtime__2">Iniciar uma mudança de perfil com uma alteração de turno de -2</string>
     <string name="profileswitchtime_hint1">https://androidaps.readthedocs.io/en/latest/EN/Usage/Profiles.html?highlight=profile%20switch#timeshift</string>
+    <string name="profileswitch4_label">Alterações nos perfis</string>
+    <string name="profileswitch4_rates">Taxas de basal, FSI, rácios de I:C, etc., devem ser definidos nos perfis.</string>
     <string name="basalhelp_hint1">https://androidaps.readthedocs.io/en/latest/EN/Module/module.html#good-individual-dosage-algorithm-for-your-diabetes-therapy</string>
+    <string name="basalhelp_label">Ajuda com taxas basal</string>
     <string name="basalhelp_where">Onde ir para obter ajuda com rácios da basal, etc.</string>
     <string name="basalhelp_diabetesteam">A sua equipa da diabetes</string>
     <string name="basalhelp_google">Google</string>
