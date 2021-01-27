@@ -216,6 +216,7 @@
     <string name="history_group_glucose">Glucose</string>
     <string name="mute5min">Silenciar por 5 minutos</string>
     <!-- Maintenance -->
+    <string name="metadata_label_format">Formato do ficheiro</string>
     <string name="metadata_label_created_at">Criado em</string>
     <string name="metadata_label_aaps_version">Versão AAPS</string>
     <string name="metadata_label_aaps_flavour">Variante de Compilação</string>
@@ -254,4 +255,16 @@
     <string name="running_invalid_version">Detectamos que está a correr uma versão inválida. Loop desactivado!</string>
     <string name="versionavailable">Disponível %1$s disponível</string>
     <!-- Permissions -->
+    <plurals name="days">
+        <item quantity="one">%1$d dia</item>
+        <item quantity="other">%1$d dias</item>
+    </plurals>
+    <plurals name="hours">
+        <item quantity="one">%1$d hora</item>
+        <item quantity="other">%1$d horas</item>
+    </plurals>
+    <plurals name="minutes">
+        <item quantity="one">%1$d minuto</item>
+        <item quantity="other">%1$d minutos</item>
+    </plurals>
 </resources>
