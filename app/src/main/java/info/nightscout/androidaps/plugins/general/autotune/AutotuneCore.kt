@@ -3,13 +3,11 @@ package info.nightscout.androidaps.plugins.general.autotune
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.interfaces.ActivePluginProvider
-import info.nightscout.androidaps.interfaces.InsulinInterface
 import info.nightscout.androidaps.plugins.general.autotune.data.ATProfile
 import info.nightscout.androidaps.plugins.general.autotune.data.PreppedGlucose
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.IobCobCalculatorPlugin
 import info.nightscout.androidaps.utils.Round
 import info.nightscout.androidaps.utils.sharedPreferences.SP
-import java.time.LocalDateTime
 import java.util.*
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -184,13 +182,16 @@ class AutotuneCore(private val injector: HasAndroidInjector) {
         for (hour in 0..23) {
             var deviations = 0.0
             for (i in basalGlucose.indices) {
-                var BGTime: Date? = null
+                val BGTime = Calendar.getInstance()
+                //var BGTime: Date? = null
                 if (basalGlucose[i].date != 0L) {
-                    BGTime = Date(basalGlucose[i].date)
+                    BGTime.setTimeInMillis(basalGlucose[i].date)
+                    //BGTime = Date(basalGlucose[i].date)
                 } else {
                     log("Could not determine last BG time")
                 }
-                val myHour = BGTime!!.hours
+                val myHour = BGTime.get(Calendar.HOUR_OF_DAY)
+                //val myHour = BGTime!!.hours
                 if (hour == myHour) {
                     //log.debug(basalGlucose[i].deviation);
                     deviations += basalGlucose[i].deviation
