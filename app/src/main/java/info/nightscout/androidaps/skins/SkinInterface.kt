@@ -9,7 +9,7 @@ import androidx.annotation.LayoutRes
 import androidx.annotation.StringRes
 import androidx.constraintlayout.widget.ConstraintLayout
 import info.nightscout.androidaps.R
-import kotlinx.android.synthetic.main.overview_fragment_nsclient.view.*
+import kotlinx.android.synthetic.main.overview_fragment.view.*
 import kotlinx.android.synthetic.main.overview_info_layout.view.*
 import kotlinx.android.synthetic.main.overview_statuslights_layout.view.*
 import kotlinx.android.synthetic.main.overview_statuslights_layout.view.careportal_batterylevel
