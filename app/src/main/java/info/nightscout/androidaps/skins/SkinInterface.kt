@@ -28,12 +28,9 @@ interface SkinInterface {
     val secondaryGraphHeight: Int // in dp
 
     @LayoutRes
-    fun overviewLayout(isLandscape: Boolean, isTablet: Boolean, isSmallHeight: Boolean): Int
-
-    @LayoutRes
     fun actionsLayout(isLandscape: Boolean, isSmallWidth: Boolean): Int = R.layout.actions_fragment
 
-    fun preProcessLandscapeOverviewLayout(dm: DisplayMetrics, view: View, isTablet: Boolean) {
+    fun preProcessLandscapeOverviewLayout(dm: DisplayMetrics, view: View, isLandscape: Boolean, isTablet: Boolean, isSmallHeight: Boolean) {
         // pre-process landscape mode
         val screenWidth = dm.widthPixels
         val screenHeight = dm.heightPixels
@@ -43,13 +40,9 @@ interface SkinInterface {
             val iobLayout = view.findViewById<LinearLayout>(R.id.overview_iob_llayout)
             val iobLayoutParams = iobLayout.layoutParams as ConstraintLayout.LayoutParams
             iobLayoutParams.startToStart = ConstraintLayout.LayoutParams.UNSET
-           // iobLayoutParams.startToEnd = view.overview_time_llayout.id
             iobLayoutParams.topToBottom = ConstraintLayout.LayoutParams.UNSET
             iobLayoutParams.topToTop = ConstraintLayout.LayoutParams.PARENT_ID
-           // val timeLayoutParams = view.overview_time_llayout.layoutParams as ConstraintLayout.LayoutParams
-           // timeLayoutParams.endToEnd = ConstraintLayout.LayoutParams.UNSET
-           // timeLayoutParams.endToStart = view.overview_iob_llayout.id
-            val cobLayoutParams = view.overview_cob_llayout.layoutParams as ConstraintLayout.LayoutParams
+            val cobLayoutParams = view.findViewById<LinearLayout>(R.id.overview_cob_llayout).layoutParams as ConstraintLayout.LayoutParams
             cobLayoutParams.topToTop = ConstraintLayout.LayoutParams.PARENT_ID
             val basalLayoutParams = view.findViewById<LinearLayout>(R.id.overview_basal_llayout).layoutParams as ConstraintLayout.LayoutParams
             basalLayoutParams.topToTop = ConstraintLayout.LayoutParams.PARENT_ID
@@ -88,4 +81,5 @@ interface SkinInterface {
             }
         }
     }
+
 }

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!--    Keys-->
-    <string name="key_enable_fabric" translatable="false">enable_fabric</string>
+    <string name="key_enable_fabric" translatable="false">enable_fabric2</string>
     <string name="key_language" translatable="false">language</string>
     <string name="key_units" translatable="false">units</string>
     <string name="key_loop_openmode_min_change" translatable="false">loop_openmode_min_change</string>
