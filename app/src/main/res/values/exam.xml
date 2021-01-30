@@ -8,7 +8,7 @@
     <string name="dia_meaningisequaltodiapump">If you are satisfied that the value for DIA that you used in your pump prior to AndroidAPS worked well, there is no need to change this when you start looping.</string>
     <string name="dia_valuemustbedetermined">You should determine for yourself the appropriate value for DIA.</string>
     <string name="hypott_label">Hypo Temp-Target</string>
-    <string name="hypott_whenhypott">What is primary reason to set a hypo  temp target?</string>
+    <string name="hypott_whenhypott">What is primary reason to set a hypo temp target?</string>
     <string name="hypott_wrongbasal">To correct for hypos caused by incorrect basal rate settings.</string>
     <string name="hypott_preventoversmb">To prevent AndroidAPS from overcorrecting for a blood glucose rise caused by the fast acting carbs used to treat a hypo.</string>
     <string name="hypott_exercise">To correct for a hypo induced as a result of exercise.</string>
