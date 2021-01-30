@@ -1,18 +1,24 @@
 package info.nightscout.androidaps.plugins.general.smsCommunicator
 
-import android.content.Intent
+import android.content.Context
+import android.os.Bundle
 import android.telephony.SmsManager
 import android.telephony.SmsMessage
 import android.text.TextUtils
 import androidx.preference.EditTextPreference
 import androidx.preference.Preference
 import androidx.preference.PreferenceFragmentCompat
+import androidx.work.Worker
+import androidx.work.WorkerParameters
+import com.google.gson.Gson
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.Config
 import info.nightscout.androidaps.Constants
+import info.nightscout.androidaps.MainApp
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.data.DetailedBolusInfo
 import info.nightscout.androidaps.data.Profile
+import info.nightscout.androidaps.db.BgReading
 import info.nightscout.androidaps.db.Source
 import info.nightscout.androidaps.db.TempTarget
 import info.nightscout.androidaps.events.EventPreferenceChange
@@ -23,6 +29,7 @@ import info.nightscout.androidaps.logging.LTag
 import info.nightscout.androidaps.plugins.aps.loop.LoopPlugin
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper
 import info.nightscout.androidaps.plugins.configBuilder.ConstraintChecker
+import info.nightscout.androidaps.plugins.general.nsclient.NSUpload
 import info.nightscout.androidaps.plugins.general.nsclient.events.EventNSClientRestart
 import info.nightscout.androidaps.plugins.general.overview.events.EventNewNotification
 import info.nightscout.androidaps.plugins.general.overview.notifications.Notification
@@ -30,6 +37,7 @@ import info.nightscout.androidaps.plugins.general.smsCommunicator.events.EventSm
 import info.nightscout.androidaps.plugins.general.smsCommunicator.otp.OneTimePassword
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.GlucoseStatus
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.IobCobCalculatorPlugin
+import info.nightscout.androidaps.plugins.source.PoctechPlugin
 import info.nightscout.androidaps.plugins.treatments.TreatmentsPlugin
 import info.nightscout.androidaps.queue.Callback
 import info.nightscout.androidaps.utils.*
@@ -40,6 +48,8 @@ import info.nightscout.androidaps.utils.textValidator.ValidatingEditTextPreferen
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
 import org.apache.commons.lang3.StringUtils
+import org.json.JSONArray
+import org.json.JSONException
 import java.text.Normalizer
 import java.util.*
 import javax.inject.Inject
@@ -151,6 +161,30 @@ class SmsCommunicatorPlugin @Inject constructor(
         }
     }
 
+
+    // cannot be inner class because of needed injection
+    class SmsCommunicatorWorker(
+        context: Context,
+        params: WorkerParameters
+    ) : Worker(context, params) {
+
+        @Inject lateinit var smsCommunicatorPlugin: SmsCommunicatorPlugin
+
+        init {
+            (context.applicationContext as HasAndroidInjector).androidInjector().inject(this)
+        }
+
+        override fun doWork(): Result {
+            val bundle = Gson().fromJson(inputData.getString("data"), Bundle::class.java)
+            val format = bundle.getString("format") ?: return Result.failure()
+            val pdus = bundle["pdus"] as Array<*>
+            for (pdu in pdus) {
+                val message = SmsMessage.createFromPdu(pdu as ByteArray, format)
+                smsCommunicatorPlugin.processSms(Sms(message))
+            }
+            return Result.success()
+        }
+    }
     private fun processSettings(ev: EventPreferenceChange?) {
         if (ev == null || ev.isChanged(resourceHelper, R.string.key_smscommunicator_allowednumbers)) {
             val settings = sp.getString(R.string.key_smscommunicator_allowednumbers, "")
@@ -179,16 +213,6 @@ class SmsCommunicatorPlugin @Inject constructor(
         return false
     }
 
-    fun handleNewData(intent: Intent) {
-        val bundle = intent.extras ?: return
-        val format = bundle.getString("format") ?: return
-        val pdus = bundle["pdus"] as Array<*>
-        for (pdu in pdus) {
-            val message = SmsMessage.createFromPdu(pdu as ByteArray, format)
-            processSms(Sms(message))
-        }
-    }
-
     fun processSms(receivedSms: Sms) {
         if (!isEnabled(PluginType.GENERAL)) {
             aapsLogger.debug(LTag.SMS, "Ignoring SMS. Plugin disabled.")
@@ -214,58 +238,58 @@ class SmsCommunicatorPlugin @Inject constructor(
 
         if (splitted.isNotEmpty() && isCommand(splitted[0].toUpperCase(Locale.getDefault()), receivedSms.phoneNumber)) {
             when (splitted[0].toUpperCase(Locale.getDefault())) {
-                "BG"         ->
+                "BG" ->
                     if (splitted.size == 1) processBG(receivedSms)
                     else sendSMS(Sms(receivedSms.phoneNumber, resourceHelper.gs(R.string.wrongformat)))
-                "LOOP"       ->
+                "LOOP" ->
                     if (!remoteCommandsAllowed) sendSMS(Sms(receivedSms.phoneNumber, resourceHelper.gs(R.string.smscommunicator_remotecommandnotallowed)))
                     else if (splitted.size == 2 || splitted.size == 3) processLOOP(splitted, receivedSms)
                     else sendSMS(Sms(receivedSms.phoneNumber, resourceHelper.gs(R.string.wrongformat)))
                 "TREATMENTS" ->
                     if (splitted.size == 2) processTREATMENTS(splitted, receivedSms)
                     else sendSMS(Sms(receivedSms.phoneNumber, resourceHelper.gs(R.string.wrongformat)))
-                "NSCLIENT"   ->
+                "NSCLIENT" ->
                     if (splitted.size == 2) processNSCLIENT(splitted, receivedSms)
                     else sendSMS(Sms(receivedSms.phoneNumber, resourceHelper.gs(R.string.wrongformat)))
-                "PUMP"       ->
+                "PUMP" ->
                     if (!remoteCommandsAllowed && splitted.size > 1) sendSMS(Sms(receivedSms.phoneNumber, resourceHelper.gs(R.string.smscommunicator_remotecommandnotallowed)))
                     else if (splitted.size <= 3) processPUMP(splitted, receivedSms)
                     else sendSMS(Sms(receivedSms.phoneNumber, resourceHelper.gs(R.string.wrongformat)))
-                "PROFILE"    ->
+                "PROFILE" ->
                     if (!remoteCommandsAllowed) sendSMS(Sms(receivedSms.phoneNumber, resourceHelper.gs(R.string.smscommunicator_remotecommandnotallowed)))
                     else if (splitted.size == 2 || splitted.size == 3) processPROFILE(splitted, receivedSms)
                     else sendSMS(Sms(receivedSms.phoneNumber, resourceHelper.gs(R.string.wrongformat)))
-                "BASAL"      ->
+                "BASAL" ->
                     if (!remoteCommandsAllowed) sendSMS(Sms(receivedSms.phoneNumber, resourceHelper.gs(R.string.smscommunicator_remotecommandnotallowed)))
                     else if (splitted.size == 2 || splitted.size == 3) processBASAL(splitted, receivedSms)
                     else sendSMS(Sms(receivedSms.phoneNumber, resourceHelper.gs(R.string.wrongformat)))
-                "EXTENDED"   ->
+                "EXTENDED" ->
                     if (!remoteCommandsAllowed) sendSMS(Sms(receivedSms.phoneNumber, resourceHelper.gs(R.string.smscommunicator_remotecommandnotallowed)))
                     else if (splitted.size == 2 || splitted.size == 3) processEXTENDED(splitted, receivedSms)
                     else sendSMS(Sms(receivedSms.phoneNumber, resourceHelper.gs(R.string.wrongformat)))
-                "BOLUS"      ->
+                "BOLUS" ->
                     if (!remoteCommandsAllowed) sendSMS(Sms(receivedSms.phoneNumber, resourceHelper.gs(R.string.smscommunicator_remotecommandnotallowed)))
                     else if (splitted.size == 2 && DateUtil.now() - lastRemoteBolusTime < minDistance) sendSMS(Sms(receivedSms.phoneNumber, resourceHelper.gs(R.string.smscommunicator_remotebolusnotallowed)))
                     else if (splitted.size == 2 && pump.isSuspended) sendSMS(Sms(receivedSms.phoneNumber, resourceHelper.gs(R.string.pumpsuspended)))
                     else if (splitted.size == 2 || splitted.size == 3) processBOLUS(splitted, receivedSms)
                     else sendSMS(Sms(receivedSms.phoneNumber, resourceHelper.gs(R.string.wrongformat)))
-                "CARBS"      ->
+                "CARBS" ->
                     if (!remoteCommandsAllowed) sendSMS(Sms(receivedSms.phoneNumber, resourceHelper.gs(R.string.smscommunicator_remotecommandnotallowed)))
                     else if (splitted.size == 2 || splitted.size == 3) processCARBS(splitted, receivedSms)
                     else sendSMS(Sms(receivedSms.phoneNumber, resourceHelper.gs(R.string.wrongformat)))
-                "CAL"        ->
+                "CAL" ->
                     if (!remoteCommandsAllowed) sendSMS(Sms(receivedSms.phoneNumber, resourceHelper.gs(R.string.smscommunicator_remotecommandnotallowed)))
                     else if (splitted.size == 2) processCAL(splitted, receivedSms)
                     else sendSMS(Sms(receivedSms.phoneNumber, resourceHelper.gs(R.string.wrongformat)))
-                "TARGET"     ->
+                "TARGET" ->
                     if (!remoteCommandsAllowed) sendSMS(Sms(receivedSms.phoneNumber, resourceHelper.gs(R.string.smscommunicator_remotecommandnotallowed)))
                     else if (splitted.size == 2) processTARGET(splitted, receivedSms)
                     else sendSMS(Sms(receivedSms.phoneNumber, resourceHelper.gs(R.string.wrongformat)))
-                "SMS"        ->
+                "SMS" ->
                     if (!remoteCommandsAllowed) sendSMS(Sms(receivedSms.phoneNumber, resourceHelper.gs(R.string.smscommunicator_remotecommandnotallowed)))
                     else if (splitted.size == 2) processSMS(splitted, receivedSms)
                     else sendSMS(Sms(receivedSms.phoneNumber, resourceHelper.gs(R.string.wrongformat)))
-                "HELP"       ->
+                "HELP" ->
                     if (splitted.size == 1 || splitted.size == 2) processHELP(splitted, receivedSms)
                     else sendSMS(Sms(receivedSms.phoneNumber, resourceHelper.gs(R.string.wrongformat)))
                 else         ->
@@ -349,7 +373,7 @@ class SmsCommunicatorPlugin @Inject constructor(
                 receivedSms.processed = true
             }
 
-            "STATUS"          -> {
+            "STATUS" -> {
                 val reply = if (loopPlugin.isEnabled(PluginType.LOOP)) {
                     if (loopPlugin.isSuspended) String.format(resourceHelper.gs(R.string.loopsuspendedfor), loopPlugin.minutesToEndOfSuspend())
                     else resourceHelper.gs(R.string.smscommunicator_loopisenabled)
@@ -359,7 +383,7 @@ class SmsCommunicatorPlugin @Inject constructor(
                 receivedSms.processed = true
             }
 
-            "RESUME"          -> {
+            "RESUME" -> {
                 val passCode = generatePasscode()
                 val reply = String.format(resourceHelper.gs(R.string.smscommunicator_loopresumereplywithcode), passCode)
                 receivedSms.processed = true
@@ -383,7 +407,7 @@ class SmsCommunicatorPlugin @Inject constructor(
                 })
             }
 
-            "SUSPEND"         -> {
+            "SUSPEND" -> {
                 var duration = 0
                 if (splitted.size == 3) duration = SafeParse.stringToInt(splitted[2])
                 duration = Math.max(0, duration)

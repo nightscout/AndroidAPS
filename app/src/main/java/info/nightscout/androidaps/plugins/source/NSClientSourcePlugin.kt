@@ -1,6 +1,8 @@
 package info.nightscout.androidaps.plugins.source
 
-import android.content.Intent
+import android.content.Context
+import androidx.work.Worker
+import androidx.work.WorkerParameters
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.Config
 import info.nightscout.androidaps.MainApp
@@ -27,7 +29,6 @@ class NSClientSourcePlugin @Inject constructor(
     injector: HasAndroidInjector,
     resourceHelper: ResourceHelper,
     aapsLogger: AAPSLogger,
-    private val sp: SP,
     config: Config
 ) : PluginBase(PluginDescription()
     .mainType(PluginType.BGSOURCE)
@@ -53,32 +54,6 @@ class NSClientSourcePlugin @Inject constructor(
         return isAdvancedFilteringEnabled
     }
 
-    override fun handleNewData(intent: Intent) {
-        if (!isEnabled(PluginType.BGSOURCE) && !sp.getBoolean(R.string.key_ns_autobackfill, true)) return
-        val bundles = intent.extras ?: return
-        try {
-            if (bundles.containsKey("sgv")) {
-                val sgvString = bundles.getString("sgv")
-                aapsLogger.debug(LTag.BGSOURCE, "Received NS Data: $sgvString")
-                val sgvJson = JSONObject(sgvString)
-                storeSgv(sgvJson)
-            }
-            if (bundles.containsKey("sgvs")) {
-                val sgvString = bundles.getString("sgvs")
-                aapsLogger.debug(LTag.BGSOURCE, "Received NS Data: $sgvString")
-                val jsonArray = JSONArray(sgvString)
-                for (i in 0 until jsonArray.length()) {
-                    val sgvJson = jsonArray.getJSONObject(i)
-                    storeSgv(sgvJson)
-                }
-            }
-        } catch (e: Exception) {
-            aapsLogger.error("Unhandled exception", e)
-        }
-        // Objectives 0
-        sp.putBoolean(R.string.key_ObjectivesbgIsAvailableInNS, true)
-    }
-
     private fun storeSgv(sgvJson: JSONObject) {
         val nsSgv = NSSgv(sgvJson)
         val bgReading = BgReading(injector, nsSgv)
@@ -90,6 +65,46 @@ class NSClientSourcePlugin @Inject constructor(
         if (timeStamp > lastBGTimeStamp) {
             isAdvancedFilteringEnabled = source.contains("G5 Native") || source.contains("G6 Native") || source.contains("AndroidAPS-DexcomG5") || source.contains("AndroidAPS-DexcomG6")
             lastBGTimeStamp = timeStamp
+        }
+    }
+
+    // cannot be inner class because of needed injection
+    class NSClientSourceWorker(
+        context: Context,
+        params: WorkerParameters
+    ) : Worker(context, params) {
+
+        @Inject lateinit var nsClientSourcePlugin: NSClientSourcePlugin
+        @Inject lateinit var aapsLogger: AAPSLogger
+        @Inject lateinit var sp: SP
+
+        init {
+            (context.applicationContext as HasAndroidInjector).androidInjector().inject(this)
+        }
+
+        override fun doWork(): Result {
+            if (!nsClientSourcePlugin.isEnabled(PluginType.BGSOURCE) && !sp.getBoolean(R.string.key_ns_autobackfill, true)) return Result.failure()
+            try {
+                inputData.getString("sgv")?.let { sgvString ->
+                    aapsLogger.debug(LTag.BGSOURCE, "Received NS Data: $sgvString")
+                    val sgvJson = JSONObject(sgvString)
+                    nsClientSourcePlugin.storeSgv(sgvJson)
+                }
+                inputData.getString("sgvs")?.let { sgvString ->
+                    aapsLogger.debug(LTag.BGSOURCE, "Received NS Data: $sgvString")
+                    val jsonArray = JSONArray(sgvString)
+                    for (i in 0 until jsonArray.length()) {
+                        val sgvJson = jsonArray.getJSONObject(i)
+                        nsClientSourcePlugin.storeSgv(sgvJson)
+                    }
+                }
+            } catch (e: Exception) {
+                aapsLogger.error("Unhandled exception", e)
+                return Result.failure()
+            }
+            // Objectives 0
+            sp.putBoolean(R.string.key_ObjectivesbgIsAvailableInNS, true)
+            return Result.success()
         }
     }
 }
