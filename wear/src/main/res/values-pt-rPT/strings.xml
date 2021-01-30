@@ -134,4 +134,6 @@
     <string name="digitalstyle_pref_your_color_opacity">Sua opacidade de cor:</string>
     <string name="bolus_progress_channel_name">Progresso Bólus AAPS</string>
     <string name="bolus_progress_silent_channel_name">Progresso Bólus AAPS Silencioso</string>
+    <string name="bolus_progress_channel_description">Progresso Bólus e cancelar</string>
+    <string name="bolus_progress_silent_channel_description">Progresso Bólus e cancelar com menos vibrações</string>
 </resources>
