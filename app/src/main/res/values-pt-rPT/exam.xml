@@ -32,7 +32,7 @@
     <string name="suspendloop_doigetinsulin">Eu recebo insulina quando o loop estiver desactivado/suspenso?</string>
     <string name="suspendloop_yes">Sim, a insulina basal continua a ser administrada.</string>
     <string name="suspendloop_no">Não, administração da insulina está parada.</string>
-    <string name="basaltest_label">Testes de Basal, FSI e I:C</string>
+    <string name="basaltest_label">Testes de Basal, FSI e I:HC</string>
     <string name="basaltest_when">Quando esses valores devem ser validados?</string>
     <string name="basaltest_beforeloop">Antes de começar com o looping.</string>
     <string name="basaltest_weekly">Pelo menos uma vez por semana.</string>
@@ -86,7 +86,7 @@
     <string name="profileswitch_label">Troca de Perfil</string>
     <string name="profileswitch_basallower">Taxas de basal serão 10% inferiores.</string>
     <string name="profileswitch_isfhigher">FSI será 10% superior.</string>
-    <string name="profileswitch_unchanged">Os rácios FSI e I:C ficarão inalterados.</string>
+    <string name="profileswitch_unchanged">Os rácios FSI e I:HC ficarão inalterados.</string>
     <string name="profileswitch_hint1" formatted="false">https://androidaps.readthedocs.io/en/latest/EN/Usage/Profiles.html?highlight=profile%20switch#profile-switch</string>
     <string name="profileswitch2_label">Troca de Perfil</string>
     <string name="profileswitch2_bghigher">Alvo da glicose será 20% maior.</string>
@@ -96,7 +96,7 @@
     <string name="profileswitchtime__2">Iniciar uma mudança de perfil com uma alteração de turno de -2</string>
     <string name="profileswitchtime_hint1">https://androidaps.readthedocs.io/en/latest/EN/Usage/Profiles.html?highlight=profile%20switch#timeshift</string>
     <string name="profileswitch4_label">Alterações nos perfis</string>
-    <string name="profileswitch4_rates">Taxas de basal, FSI, rácios de I:C, etc., devem ser definidos nos perfis.</string>
+    <string name="profileswitch4_rates">Taxas de basal, FSI, rácios de I:HC, etc., devem ser definidos nos perfis.</string>
     <string name="basalhelp_hint1">https://androidaps.readthedocs.io/en/latest/EN/Module/module.html#good-individual-dosage-algorithm-for-your-diabetes-therapy</string>
     <string name="basalhelp_label">Ajuda com taxas basal</string>
     <string name="basalhelp_where">Onde ir para obter ajuda com rácios da basal, etc.</string>
