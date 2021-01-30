@@ -126,6 +126,7 @@
     <string name="omnipod_pod_activation_wizard_initialize_pod_title">Inicializar Pod</string>
     <string name="omnipod_pod_activation_wizard_attach_pod_title">Anexe Pod</string>
     <string name="omnipod_pod_activation_wizard_insert_cannula_title">Inserir Cânula</string>
+    <string name="omnipod_pod_activation_wizard_insert_cannula_text">A tentar definir o horário da basal inicial e inserir a cânula.\n\nQuando a cânula for inserida com sucesso, pode pressionar <b>Seguinte</b>.</string>
     <string name="omnipod_pod_activation_wizard_pod_activated_title">Pod Activado</string>
     <!-- Omnipod - Pod deactivation Wizard -->
     <string name="omnipod_pod_deactivation_wizard_deactivate_pod_title">Desactivar Pod</string>
