@@ -44,7 +44,7 @@
     <string name="description_source_xdrip">קבלת ערכי סוכר מ-xDrip.</string>
     <string name="description_treatments">שמירת כל הטיפולים שנעשו</string>
     <string name="description_wear">ניטור ושליטה ב-AndroidAPS באמצעות שעון WearOS.</string>
-    <string name="description_xdrip_status_line">הצג מידע אודות הלולאה במסך Xdrip בשעון החכם.</string>
+    <string name="description_xdrip_status_line">הצג מידע אודות הלולאה במסך xDrip בשעון החכם.</string>
     <string name="description_sms_communicator">שליטה מרחוק על AndroidAPS באמצעות SMS.</string>
     <string name="treatments_insulin_label_string">אינסולין:</string>
     <string name="treatments_carbs_label_string">פחמימות:</string>
@@ -530,7 +530,7 @@
     <string name="carbsReqThreshold">סף מינ\' הפחמימות הנדרשות להצעה</string>
     <string name="carbsReqThreshold_summary">כמות הפחמ\' המינימלית (גר\') הדרושה כדי שתוצג התראה על הצעת פחמימות. לא תוצגנה התראות על הצעות הנמוכות מכמות זו.</string>
     <string name="dexcomg5_xdripupload_title">שליחת נתוני סוכר אל xDrip</string>
-    <string name="dexcomg5_xdripupload_summary">ב-Xdrip בחרו 640g/Eversense כמקור נתונים</string>
+    <string name="dexcomg5_xdripupload_summary">ב-xDrip בחרו 640g/Eversense כמקור נתונים</string>
     <string name="nsclientbg">רמת סוכר מ-NSClient</string>
     <string name="overview_editquickwizard_usebg">חישוב רמת הסוכר</string>
     <string name="overview_editquickwizard_usebolusiob">חישוב IOB של בולוס</string>
