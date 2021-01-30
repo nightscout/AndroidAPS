@@ -80,7 +80,7 @@
     <string name="delta">Delta</string>
     <string name="sms_delta">Delta:</string>
     <string name="configbuilder">Configurador</string>
-    <string name="overview">Visão geral</string>
+    <string name="overview">Visão Geral</string>
     <string name="nsprofile">Perfil NS</string>
     <string name="treatments">Tratamentos</string>
     <string name="virtualpump">Bomba virtual</string>
@@ -476,7 +476,7 @@
     <string name="enableuam">Activar UAM</string>
     <string name="enablesmb">Activar SMB</string>
     <string name="enablesmb_summary">Use Super Micro Boluses em vez de basal temp para uma acção mais rápida</string>
-    <string name="enableuam_summary">Detecção de refeições não Introduzidas</string>
+    <string name="enableuam_summary">Detecção de Refeições Não Introduzidas</string>
     <string name="insulin_oref_peak">Tempo Pico da curva de IOB</string>
     <string name="insulin_peak_time">Tempo Pico [min]</string>
     <string name="free_peak_oref">Oref Pico-Livre</string>
