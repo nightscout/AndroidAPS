@@ -132,4 +132,6 @@
     <string name="digitalstyle_pref_your_color">Sua cor:</string>
     <string name="digitalstyle_pref_your_color_saturation">Sua saturação de cor:</string>
     <string name="digitalstyle_pref_your_color_opacity">Sua opacidade de cor:</string>
+    <string name="bolus_progress_channel_name">Progresso Bólus AAPS</string>
+    <string name="bolus_progress_silent_channel_name">Progresso Bólus AAPS Silencioso</string>
 </resources>
