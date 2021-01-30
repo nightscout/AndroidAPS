@@ -160,8 +160,8 @@
     <!-- Omnipod - Other -->
     <string name="omnipod_pump_description">Integração de bomba para Omnipod, requer dispositivo RileyLink (com pelo menos firmware 2.0).</string>
     <string name="omnipod_uncertain">incerto</string>
-    <string name="omnipod_pulse_log">Registo do Pulse</string>
-    <string name="omnipod_pulse_log_value">Registo Pulse (copiado para a área de transferência)</string>
+    <string name="omnipod_pulse_log">Pulse log</string>
+    <string name="omnipod_pulse_log_value">Pulse Log (copiado para a área de transferência)</string>
     <string name="omnipod_yes">Sim</string>
     <string name="omnipod_no">Não</string>
     <string name="omnipod_ok">OK</string>
