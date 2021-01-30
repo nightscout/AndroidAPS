@@ -10,6 +10,7 @@
     <string name="riley_link_ble_config_scan_finished">Procura terminada</string>
     <string name="riley_link_ble_config_scan_error">Erro de Procura: %1$d</string>
     <string name="riley_link_ble_config_connected_never">Nunca</string>
+    <string name="riley_link_ble_config_scan_currently_selected_riley_link">RileyLink Actualmente Seleccionado</string>
     <string name="riley_link_ble_config_remove_riley_link">Remover</string>
     <string name="riley_link_ble_config_remove_riley_link_confirmation_title">Remover RileyLink</string>
     <string name="riley_link_ble_config_no_riley_link_selected">Nenhum RileyLink seleccionado</string>
