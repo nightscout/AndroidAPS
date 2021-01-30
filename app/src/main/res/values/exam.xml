@@ -48,7 +48,7 @@
     <string name="exerciseprofile_label">Exercise and Profiles</string>
     <string name="exerciseprofile_whattodo">How can you use profiles to best help the system deal with aerobic exercise?</string>
     <string name="exerciseprofile_switchprofilebelow100">Do a profile switch to less than 100%.</string>
-    <string name="exerciseprofile_switchprofileabove100">Do a profile switch to more than 100%. </string>
+    <string name="exerciseprofile_switchprofileabove100">Do a profile switch to more than 100%.</string>
     <string name="exerciseprofile_leaveat100">Leave the profile set to 100%.</string>
     <string name="exerciseprofile_suspendloop">Suspend the loop.</string>
     <string name="exerciseprofile_hint1">https://androidaps.readthedocs.io/en/latest/EN/Usage/temptarget.html#activity-temp-target</string>
