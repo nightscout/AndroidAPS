@@ -41,7 +41,7 @@
     <string name="noisycgm_label">Noisy CGM Readings</string>
     <string name="noisycgm_whattodo">What should be done if CGM data is noisy?</string>
     <string name="noisycgm_nothing">Do nothing - AndroidAPS will deal with it.</string>
-    <string name="noisycgm_pause">Disable the closed loop to avoid possible over- or underdosing.</string>
+    <string name="noisycgm_pause">Disable the closed loop to avoid possible over or underdosing.</string>
     <string name="noisycgm_replacesensor">Replace consistently noisy or inaccurate sensors.</string>
     <string name="noisycgm_checksmoothing">Verify that your CGM app provides smoothed data.</string>
     <string name="noisycgm_hint1">https://androidaps.readthedocs.io/en/latest/EN/Usage/Smoothing-Blood-Glucose-Data-in-xDrip.html#smoothing-blood-glucose-data</string>
