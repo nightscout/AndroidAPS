@@ -288,7 +288,7 @@
     <string name="openapsama_useautosens">Usar função Autosens</string>
     <string name="refresheventsfromnightscout">Actualizar tratamentos do NS</string>
     <string name="deletefuturetreatments">Apagar tratamentos do futuro</string>
-    <string name="eatingsoon">Comer brevemente</string>
+    <string name="eatingsoon">Comer Brevemente</string>
     <string name="hypo">Hipo</string>
     <string name="activity">Actividade</string>
     <string name="removerecord">Remover registo</string>
@@ -590,7 +590,7 @@
     <string name="enablesmbwithcob">Activar SMB com COB</string>
     <string name="enablesmbwithcob_summary">Activar SMB quando tem COB activo.</string>
     <string name="enablesmbwithtemptarget">SMB activo com valores alvo temporários</string>
-    <string name="enablesmbwithtemptarget_summary">SMB activo quando há valor alvo temporário activo (exercício, etc)</string>
+    <string name="enablesmbwithtemptarget_summary">SMB activo quando há valor alvo temporário activo (comer brevemente, exercício)</string>
     <string name="enablesmbwithhightemptarget">SMB activo com alvos temporários elevados</string>
     <string name="enablesmbwithhightemptarget_summary">Activar SMB quando há alvo temporário elevado activo (exercício, acima de 100 mg/dl ou 5,5 mmol/l)</string>
     <string name="overview_insulin_label">Insulina</string>
