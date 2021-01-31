@@ -8,7 +8,6 @@
     <string name="dia_meaningisequaltodiapump">Jeśli jesteś zadowolony z wartości dla DIA, która była użyta w twojej pompie przed wykorzystaniem AndroidAPS, nie ma potrzeby jej zmiany, gdy zaczniesz używać pętli.</string>
     <string name="dia_valuemustbedetermined">Powinieneś określić dla siebie odpowiednią wartość DIA.</string>
     <string name="hypott_label">Cel tymczasowy dla Hipo</string>
-    <string name="hypott_whenhypott">Jaki jest główny powód do ustawienia celu tymczasowego Hipo?</string>
     <string name="hypott_wrongbasal">Aby skorygować hipoglikemię spowodowaną nieprawidłowymi ustawieniami dawki podstawowej.</string>
     <string name="hypott_preventoversmb">Aby zapobiec nadmiernemu korygowaniu przez AndroidAPS wzrostu poziomu glukozy we krwi spowodowanego przez szybko działające węglowodany stosowane w leczeniu hipoglikemii.</string>
     <string name="hypott_exercise">Korekta hipoglikemii wywołanej wysiłkiem fizycznym.</string>
@@ -41,14 +40,12 @@
     <string name="noisycgm_label">Szumy w odczytach z CGM</string>
     <string name="noisycgm_whattodo">Co powinno być wykonane gdy dane CGM są zaszumione?</string>
     <string name="noisycgm_nothing">Nic nie rób - AndroidAPS sobie z tym poradzi.</string>
-    <string name="noisycgm_pause">Wyłącz pętlę zamkniętą, aby uniknąć możliwego przedawkowania lub niedoszacowania.</string>
     <string name="noisycgm_replacesensor">Wymieniaj stale zaszumione lub niewłaściwie wskazujące sensory.</string>
     <string name="noisycgm_checksmoothing">Sprawdź, czy aplikacja CGM zapewnia wygładzone dane.</string>
     <string name="noisycgm_hint1">https://androidaps.readthedocs.io/en/latest/EN/Usage/Smoothing-Blood-Glucose-Data-in-xDrip.html#smoothing-blood-glucose-data</string>
     <string name="exerciseprofile_label">Ćwiczenia fizyczne i profile</string>
     <string name="exerciseprofile_whattodo">Jak wykorzystać profile, aby najlepiej pomóc systemowi radzić sobie z ćwiczeniami aerobowymi?</string>
     <string name="exerciseprofile_switchprofilebelow100">Wykonaj zmianę profilu na poniżej 100%.</string>
-    <string name="exerciseprofile_switchprofileabove100">Wykonaj zmianę profilu na powyżej 100%</string>
     <string name="exerciseprofile_leaveat100">Pozostaw profil ustawiony na 100%.</string>
     <string name="exerciseprofile_suspendloop">Wstrzymaj pętle.</string>
     <string name="exerciseprofile_hint1">https://androidaps.readthedocs.io/en/latest/EN/Usage/temptarget.html#activity-temp-target</string>
