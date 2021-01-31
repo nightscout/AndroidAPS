@@ -632,7 +632,7 @@
     <string name="overview_show_sensitivity">Sensibilidade</string>
     <string name="overview_show_deviations">Desvios</string>
     <string name="overview_show_cob">Hidratos a Bordo (COB)</string>
-    <string name="overview_show_iob">Insulina a Bordo</string>
+    <string name="overview_show_iob">Insulina a bordo</string>
     <string name="overview_show_basals">Basais</string>
     <string name="no_action_selected">Nenhuma acção seleccionada, nada irá acontecer</string>
     <string name="start_hypo_tt">Começar TT Hipo</string>
