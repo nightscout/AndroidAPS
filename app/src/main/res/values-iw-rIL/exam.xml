@@ -8,6 +8,7 @@
     <string name="dia_meaningisequaltodiapump">אם ערך ה- DIA אותו קבעתם במשאבה לפני המעבר ל- AndroidAPS עבד היטב, אפשר להמשיך להשתמש באותו ערך עם הלולאה.</string>
     <string name="dia_valuemustbedetermined">עליכם לקבוע לעצמכם את ערך ה- DIA הרצוי.</string>
     <string name="hypott_label">ערך מטרה זמני - היפו</string>
+    <string name="hypott_whenhypott">מהי הסיבה העיקרית לקביעת ערך מטרה זמני \"היפו\"?</string>
     <string name="hypott_wrongbasal">לתיקון מצבי היפו שנגרמו עקב הגדרות מינון בזאלי שגויות.</string>
     <string name="hypott_preventoversmb">כדי למנוע מ- AndroidAPS לבצע תיקון יתר של עליית רמת הסוכר שנגרמה ע\"י פחמימות בעלות קצב פירוק גבוה בהן נעשה שימוש לטיפול בהיפו.</string>
     <string name="hypott_exercise">לתיקון היפו שנגרם ע\"י פעילות גופנית.</string>
@@ -40,12 +41,14 @@
     <string name="noisycgm_label">נתוני הסנסור אינם יציבים.</string>
     <string name="noisycgm_whattodo">מה לעשות אם נתוני הסנסור לא יציבים?</string>
     <string name="noisycgm_nothing">אין צורך לעשות כלום - AndroidAPS יטפל בכך.</string>
+    <string name="noisycgm_pause">הפסקת הלולאה כדי למנוע מינון איסולין גבוה מדי\\נמוך מדי.</string>
     <string name="noisycgm_replacesensor">יש להחליף סנסור שבאופן קבוע מספק נתוני רועשים ו/או לא מדויקים.</string>
     <string name="noisycgm_checksmoothing">יש לוודא שיישום הסנסור מספק נתונים איכותיים ו- \"חלקים\".</string>
     <string name="noisycgm_hint1">https://androidaps.readthedocs.io/en/latest/EN/Usage/Smoothing-Blood-Glucose-Data-in-xDrip.html#smoothing-blood-glucose-data</string>
     <string name="exerciseprofile_label">פעילות גופנית ופרופילים</string>
     <string name="exerciseprofile_whattodo">איך השימוש בפרופילים יכול לסייע למערכת להתמודד בצורה הטובה ביותר עם פעילות גופנית?</string>
     <string name="exerciseprofile_switchprofilebelow100">יש לבצע שינוי פרופיל לפחות מ- 100%.</string>
+    <string name="exerciseprofile_switchprofileabove100">בצעו שינוי פרופיל ליותר מ-100%.</string>
     <string name="exerciseprofile_leaveat100">יש להשאיר את הפרופיל על 100%.</string>
     <string name="exerciseprofile_suspendloop">השהיית הלולאה.</string>
     <string name="exerciseprofile_hint1">https://androidaps.readthedocs.io/en/latest/EN/Usage/temptarget.html#activity-temp-target</string>
