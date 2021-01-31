@@ -8,7 +8,6 @@
     <string name="dia_meaningisequaltodiapump">Si está satisfecho con el valor para DIA que utilizó en su bomba antes de usar AndroidAPS y le funcionó bien, no hay necesidad de cambiar esto cuando empieces a cerrar el bucle.</string>
     <string name="dia_valuemustbedetermined">Deberías determinar por ti mismo el valor apropiado para DIA.</string>
     <string name="hypott_label">Objetivo temporal ante Hipoglucemia</string>
-    <string name="hypott_whenhypott">¿Cuál es la razón principal para establecer un objetivo temporal por hipoglucemia?</string>
     <string name="hypott_wrongbasal">Para corregir hipos causados por ajustes incorrectos de la tasa basal.</string>
     <string name="hypott_preventoversmb">Para evitar que AndroidAPS corriga excesivamente un aumento de la glucosa en la sangre causado por los glúcidos de acción rápida que se utilizaron para tratar una hípo.</string>
     <string name="hypott_exercise">Para corregir una hipo resultando de ejercicio.</string>
@@ -41,14 +40,12 @@
     <string name="noisycgm_label">Lecturas CGM ruidosas</string>
     <string name="noisycgm_whattodo">¿Qué se debe hacer si los datos de CGM tienen ruido?</string>
     <string name="noisycgm_nothing">No hacer nada - AndroidAPS se encargará de ello.</string>
-    <string name="noisycgm_pause">Deshabilita el bucle cerrado para evitar posibles sobredosis o subdosis.</string>
     <string name="noisycgm_replacesensor">Sustituya los sensores constantemente ruidosos o inexactos.</string>
     <string name="noisycgm_checksmoothing">Comprueba que tu aplicación CGM proporciona datos suavizados.</string>
     <string name="noisycgm_hint1">https://androidaps.readthedocs.io/en/latest/EN/Usage/Smoothing-Blood-Glucose-Data-in-xDrip.html#smoothing-blood-glucose-data</string>
     <string name="exerciseprofile_label">Ejercicio y perfiles</string>
     <string name="exerciseprofile_whattodo">¿Cómo puede usar perfiles para ayudar mejor al sistema a hacer frente al ejercicio aeróbico?</string>
     <string name="exerciseprofile_switchprofilebelow100">Haga un cambio de perfil a menos de 100%.</string>
-    <string name="exerciseprofile_switchprofileabove100">Haga un cambio de perfil a más de 100%. </string>
     <string name="exerciseprofile_leaveat100">Deja el perfil fijado a 100%.</string>
     <string name="exerciseprofile_suspendloop">Suspender el bucle.</string>
     <string name="exerciseprofile_hint1">https://androidaps.readthedocs.io/en/latest/EN/Usage/temptarget.html#activity-temp-target</string>
