@@ -400,18 +400,18 @@
     <string name="enablesuperbolus">Abilita superbolo nel calcolatore</string>
     <string name="enablesuperbolus_summary">Abilita la funzionalità superbolo nel calcolatore. Non abilitare fino a quando non impari ciò che realmente fa. PUÒ CAUSARE SOVRA-DOSAGGIO DI INSULINA SE USATO IMPROPRIAMENTE!</string>
     <string name="show_statuslights">Mostra indicatori di stato sulla home</string>
-    <string name="statuslights_cage_warning">Soglia di avviso età cannula [h]</string>
-    <string name="statuslights_cage_critical">Soglia età cannula critica [h]</string>
-    <string name="statuslights_iage_warning">Soglia di avviso età insulina [h]</string>
-    <string name="statuslights_iage_critical">Soglia età insulina critica [h]</string>
-    <string name="statuslights_sage_warning">Soglia di avviso età sensore [h]</string>
-    <string name="statuslights_sage_critical">Soglia età sensore critica [h]</string>
-    <string name="statuslights_sbat_warning">Soglia di avviso livello batteria sensore [%]</string>
-    <string name="statuslights_sbat_critical">Soglia livello batteria sensore critico [%]</string>
+    <string name="statuslights_cage_warning">Età cannula: soglia di avviso [h]</string>
+    <string name="statuslights_cage_critical">Età cannula: soglia critica [h]</string>
+    <string name="statuslights_iage_warning">Età insulina: soglia di avviso [h]</string>
+    <string name="statuslights_iage_critical">Età insulina: soglia critica [h]</string>
+    <string name="statuslights_sage_warning">Età sensore: soglia di avviso [h]</string>
+    <string name="statuslights_sage_critical">Età sensore: soglia critica [h]</string>
+    <string name="statuslights_sbat_warning">Livello batteria sensore: soglia di avviso [%]</string>
+    <string name="statuslights_sbat_critical">Livello batteria sensore: soglia critica [%]</string>
     <string name="statuslights_bage_warning">Età batteria micro: soglia di avviso [h]</string>
     <string name="statuslights_bage_critical">Età batteria micro: soglia critica [h]</string>
-    <string name="statuslights_res_warning">Soglia di avviso livello serbatoio [U]</string>
-    <string name="statuslights_res_critical">Soglia livello serbatoio critico [U]</string>
+    <string name="statuslights_res_warning">Livello serbatoio: soglia di avviso [U]</string>
+    <string name="statuslights_res_critical">Livello serbatoio: soglia critica [U]</string>
     <string name="statuslights_bat_warning">Livello batteria micro: soglia di avviso [%]</string>
     <string name="statuslights_bat_critical">Livello batteria micro: soglia critica [%]</string>
     <string name="prediction_shortname">PRED</string>
@@ -1160,5 +1160,5 @@
     <string name="fabric_upload_disabled">Caricamento log dei crash disabilitato!</string>
     <string name="graph_menu_divider_header">Grafico</string>
     <string name="chart_menu">Menu grafico</string>
-    <string name="clear_filter">Cancella filtro</string>
+    <string name="clear_filter" comment="clear_filter&#10;description of button which clears the input line with filter">Cancella filtro</string>
 </resources>
