@@ -8,7 +8,6 @@
     <string name="dia_meaningisequaltodiapump">Pokud jste spokojeni s tím, že hodnota DIA použitá v pumpě před AndroidAPS dobře fungovala, není třeba ji měnit, když začínáte se smyčkou.</string>
     <string name="dia_valuemustbedetermined">Měli byste si pro sebe určit příslušnou hodnotu DIA.</string>
     <string name="hypott_label">Dočasný cíl při hypoglykémii</string>
-    <string name="hypott_whenhypott">Co je primárním důvodem k nastavení dočasného cíle Hypoglykémie?</string>
     <string name="hypott_wrongbasal">Opravovat hypoglykémie způsobené nesprávným nastavením bazálu.</string>
     <string name="hypott_preventoversmb">Aby se zabránilo přehnané korekci, způsobené rychlými sacharidy použitými k léčbě hypoglykémie.</string>
     <string name="hypott_exercise">Napravit hypo jako důsledek fyzické aktivity.</string>
@@ -41,14 +40,12 @@
     <string name="noisycgm_label">Šum dat ze senzoru</string>
     <string name="noisycgm_whattodo">Co by mělo být provedeno v případě, že CGM data poskakují?</string>
     <string name="noisycgm_nothing">Nic, smyčka se s tím vypořádá.</string>
-    <string name="noisycgm_pause">Zakažte uzavřenou smyčku, aby nedošlo k předávkování nebo poddávkování.</string>
     <string name="noisycgm_replacesensor">Nahraďte trvale zašůměné nebo nepřesné senzory.</string>
     <string name="noisycgm_checksmoothing">Ověřte, že vaše aplikace CGM vyhlazuje gklykémie.</string>
     <string name="noisycgm_hint1">https://androidaps.readthedocs.io/en/latest/CROWDIN/cs/Usage/Smoothing-Blood-Glucose-Data-in-xDrip.html#vyhlazovani-zarusenych-dat-glykemii</string>
     <string name="exerciseprofile_label">Cvičení a profily</string>
     <string name="exerciseprofile_whattodo">Jak můžete použít profily, abyste mohli nejlépe pomoci systému řešit aerobní cvičení?</string>
     <string name="exerciseprofile_switchprofilebelow100">Přepnout na profil pod 100 %.</string>
-    <string name="exerciseprofile_switchprofileabove100">Přepnout profil na více než 100 %.</string>
     <string name="exerciseprofile_leaveat100">Ponechte profil nastavený na hodnotu 100%.</string>
     <string name="exerciseprofile_suspendloop">Pozastavte smyčku.</string>
     <string name="exerciseprofile_hint1">https://androidaps.readthedocs.io/en/latest/CROWDIN/cs/Usage/temptarget.html#docasny-cil-pri-pohybove-aktivite</string>
