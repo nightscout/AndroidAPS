@@ -175,11 +175,11 @@
     <string name="carbsreq">%1$d g Hidratos Adicionais Necessários Dentro de %2$d Minutos</string>
     <!--    TDDStatsActivity-->
     <string name="stats">Estatísticas</string>
-    <string name="cumulative_tdd">Dose diária acumulativa</string>
-    <string name="expweight">Dose diária exponencialmente ponderada</string>
+    <string name="cumulative_tdd">Cumulativo TDI</string>
+    <string name="expweight">TDI exponencialmente ponderada</string>
     <string name="basalrate">Basal</string>
     <string name="bolus">Bólus</string>
-    <string name="tdd">TDD</string>
+    <string name="tdd">TDI</string>
     <string name="ratio">Rácio</string>
     <string name="amount_days"># Dias</string>
     <string name="weight">Peso</string>
