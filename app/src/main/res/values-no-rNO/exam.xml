@@ -8,7 +8,6 @@
     <string name="dia_meaningisequaltodiapump">Hvis du føler at DIA verdien som du benyttet i pumpen fungerte godt før du tok i bruk AndroidAPS, da er det ikke nødvendig å endre dette når du starter å loope.</string>
     <string name="dia_valuemustbedetermined">Du må selv bestemme hvilken verdi som passer for DIA.</string>
     <string name="hypott_label">Hypo Temp-Target (TT)</string>
-    <string name="hypott_whenhypott">Hva er hovedgrunnen til å velge en hypo temp-target?</string>
     <string name="hypott_wrongbasal">For å korrigere følinger som er forårsaket av feil i dine basalinnstillinger.</string>
     <string name="hypott_preventoversmb">For å forhindre at AndroidAPS overkorrigerer for hurtigvirkende karbohydrater som er inntatt for å behandle en føling.</string>
     <string name="hypott_exercise">For å korrigere for en føling som er et resultat av trening.</string>
@@ -41,14 +40,12 @@
     <string name="noisycgm_label">Støy i CGM målinger</string>
     <string name="noisycgm_whattodo">Hva bør gjøres hvis CGM data har støy?</string>
     <string name="noisycgm_nothing">Gjør ingenting - AndroidAPS vil håndtere det.</string>
-    <string name="noisycgm_pause">Deaktiver lukket loop for å unngå mulig over- eller underdosering.</string>
     <string name="noisycgm_replacesensor">Bytt alltid ut støyete eller unøyaktige sensorer.</string>
     <string name="noisycgm_checksmoothing">Kontroller at din CGM app leverer glattede data.</string>
     <string name="noisycgm_hint1">https://androidaps.readthedocs.io/en/latest/EN/Usage/Smoothing-Blood-Glucose-Data-in-xDrip.html#smoothing-blood-glucose-data</string>
     <string name="exerciseprofile_label">Trening og profiler</string>
     <string name="exerciseprofile_whattodo">Hvordan kan du bruke profiler for å hjelpe systemet med å håndtere treninger?</string>
     <string name="exerciseprofile_switchprofilebelow100">Gjør et profilbytte til mindre enn 100%.</string>
-    <string name="exerciseprofile_switchprofileabove100">Gjør et profilbytte til mer enn 100%</string>
     <string name="exerciseprofile_leaveat100">La profilen være på 100%.</string>
     <string name="exerciseprofile_suspendloop">Pause loop.</string>
     <string name="exerciseprofile_hint1">https://androidaps.readthedocs.io/en/latest/EN/Usage/temptarget.html#active temp-target</string>
