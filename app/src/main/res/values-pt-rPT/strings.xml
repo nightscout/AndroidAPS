@@ -825,9 +825,9 @@
     <string name="stop_pump">Parar Bomba</string>
     <string name="operating_mode">Modo de funcionamento</string>
     <string name="insight_status">Estado</string>
-    <string name="tdd_bolus">DDT de Bolus</string>
-    <string name="tdd_basal">DDT Basal</string>
-    <string name="tdd_total">DDT Total</string>
+    <string name="tdd_bolus">TDI Bolus</string>
+    <string name="tdd_basal">TDI Basal</string>
+    <string name="tdd_total">TDI Total</string>
     <string name="recovering">A recuperar</string>
     <string name="not_paired">Não emparelhado</string>
     <string name="last_connected">Última ligação</string>
@@ -846,7 +846,7 @@
     <string name="short_status_tbr">DBT: %1$d%% para %2$d / %3$d minutos</string>
     <string name="short_status_extended">Prolongado: %1$.2f / %2$.2f U por %3$d min</string>
     <string name="short_status_multiwave">Multionda: %1$.2f / %2$.2f U por %3$d min</string>
-    <string name="short_status_tdd">TDD: %1$.2f</string>
+    <string name="short_status_tdd">TDI: %1$.2f</string>
     <string name="short_status_reservoir">Reser.: %1$.2f U</string>
     <string name="short_status_battery">Bat.: %1$d%%</string>
     <string name="max_recovery_duration">Duração máxima da recuperação [s]</string>
@@ -1107,8 +1107,8 @@
     <string name="currentprofile">Perfil Actual</string>
     <string name="availableprofile">Perfil Disponível</string>
     <string name="profiletype">Tipo de Perfil</string>
-    <string name="formatwithtdd">Idade: %1$.0f TDD: %2$.0f U</string>
-    <string name="formatwittddandpct">Idade: %1$.0f TDD: %2$.0f U %3$d%%</string>
+    <string name="formatwithtdd">Idade: %1$.0f TDI: %2$.0f U</string>
+    <string name="formatwittddandpct">Idade: %1$.0f TDI: %2$.0f U %3$d%%</string>
     <string name="formatwithweight">Idade: %1$.0f Peso: %2$.0f kg</string>
     <string name="basalpctfromtdd_label">% de basal</string>
     <string name="dpvdefaultprofile">Perfil Padrão DPV</string>
