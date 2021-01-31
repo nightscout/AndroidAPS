@@ -8,6 +8,7 @@
     <string name="dia_meaningisequaltodiapump">Wenn du mit dem DIA zufrieden warst, bevor du AndroidAPS verwendet hast, dann musst du ihn nicht ändern, wenn du anfängst zu loopen.</string>
     <string name="dia_valuemustbedetermined">Du solltest den für dich geeigneten DIA selbst festlegen.</string>
     <string name="hypott_label">Temporäres Ziel für Hypos</string>
+    <string name="hypott_whenhypott">Was ist der Hauptgrund, ein Temporäres Ziel für Hypos zu setzen?</string>
     <string name="hypott_wrongbasal">Zur Korrektur von Hypos, die durch falsche Basalrateneinstellungen verursacht wurden.</string>
     <string name="hypott_preventoversmb">Um zu verhindern, dass AndroidAPS einen Blutzuckeranstieg überkorrigiert, der durch die schnell wirkenden Kohlenhydrate verursacht wird, die zur Behandlung einer Hypo verwendet werden.</string>
     <string name="hypott_exercise">Um eine Hypo zu korrigieren, die durch Bewegung / Sport entstanden ist.</string>
@@ -40,12 +41,14 @@
     <string name="noisycgm_label">Verrauschte CGM Werte</string>
     <string name="noisycgm_whattodo">Was sollte getan werden, wenn CGM-Daten unzuverlässig werden?</string>
     <string name="noisycgm_nothing">Tue nichts - AndroidAPS kümmert sich darum.</string>
+    <string name="noisycgm_pause">Deaktiviere den Loop, um mögliche Über- oder Unterdosierungen zu verhindern.</string>
     <string name="noisycgm_replacesensor">Ersetze dauerhaft verrauschte oder ungenaue Sensoren.</string>
     <string name="noisycgm_checksmoothing">Vergewissere Dich, dass Deine CGM App geglättete Daten liefert.</string>
     <string name="noisycgm_hint1">https://androidaps.readthedocs.io/en/latest/CROWDIN/de/Usage/Smoothing-Blood-Glucose-Data-in-xDrip.html</string>
     <string name="exerciseprofile_label">Sport und Profile</string>
     <string name="exerciseprofile_whattodo">Wie kannst Du Profile verwenden, um das System am besten beim Umgang mit sportlichen Aktivitäten zu unterstützen?</string>
     <string name="exerciseprofile_switchprofilebelow100">Mache einen Profilwechsel auf unter 100%.</string>
+    <string name="exerciseprofile_switchprofileabove100">Mache einen Profilwechsel auf über 100%</string>
     <string name="exerciseprofile_leaveat100">Belasse das Profil auf 100%.</string>
     <string name="exerciseprofile_suspendloop">Stoppe den Loop.</string>
     <string name="exerciseprofile_hint1">https://androidaps.readthedocs.io/en/latest/CROWDIN/de/Usage/temptarget.html#aktivitaten-temp-target</string>
