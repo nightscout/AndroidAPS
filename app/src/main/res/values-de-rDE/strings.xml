@@ -1065,8 +1065,6 @@ Unerwartetes Verhalten.</string>
     <string name="insight_alert_notification_channel">Insight Pumpenalarme</string>
     <!-- SMS Communicator & OTP Authenticator -->
     <string name="smscommunicator_code_from_authenticator_for" comment="This is continuation of sentence: To [ACTION] reply with code">von der Authenticator App für: %1$s gefolgt von der PIN</string>
-    <string name="smscommunicator_otp_enabled">Authentifizierung einschalten</string>
-    <string name="smscommunicator_otp_enabled_summary">Authentifiziere Befehle mit Einmal-Passwörtern, die von Google Authenticator oder ähnlichen Apps zur 2-Faktor-Authentifizierung generiert wurden.</string>
     <string name="smscommunicator_otp_pin">Zusätzliche obligatorische PIN am Token-Ende</string>
     <string name="smscommunicator_otp_pin_summary">Zusätzliche Ziffern, die auswendig gelernt und am Ende jedes generierten Einmal-Passworts angehängt werden sollten.</string>
     <string name="smscomunicator_tab_otp_label">Konfiguration des Authentifikators</string>
