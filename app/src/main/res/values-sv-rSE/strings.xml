@@ -1064,8 +1064,6 @@ Eversense-appen.</string>
     <string name="insight_alert_notification_channel">Pumpvarningar Insight</string>
     <!-- SMS Communicator & OTP Authenticator -->
     <string name="smscommunicator_code_from_authenticator_for" comment="This is continuation of sentence: To [ACTION] reply with code">från autentiseringsapp för: %1$s följt av PIN-kod</string>
-    <string name="smscommunicator_otp_enabled">Aktivera autentiseraren</string>
-    <string name="smscommunicator_otp_enabled_summary">Autentisera kommandon med hjälp av engångslösenord som genererats av Google Authenticator eller liknande appar för tvåfaktorsautentisering.</string>
     <string name="smscommunicator_otp_pin">PIN-kod som läggs till på slutet</string>
     <string name="smscommunicator_otp_pin_summary">Ytterligare siffror som ska memoreras och läggas till i slutet av varje genererat engångslösenord</string>
     <string name="smscomunicator_tab_otp_label">Konfiguration av tvåfaktorsautentisering</string>
