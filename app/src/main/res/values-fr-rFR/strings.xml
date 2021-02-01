@@ -1065,8 +1065,6 @@ L\'ENSEMBLE DES RISQUES LIÉS À LA QUALITÉ ET À LA PERFORMANCE DU PROGRAMME S
     <string name="insight_alert_notification_channel">Alertes Pompe Insight</string>
     <!-- SMS Communicator & OTP Authenticator -->
     <string name="smscommunicator_code_from_authenticator_for" comment="This is continuation of sentence: To [ACTION] reply with code">depuis l\'application Authenticator pour : %1$s suivie du code PIN</string>
-    <string name="smscommunicator_otp_enabled">Activer l\'Authentificateur</string>
-    <string name="smscommunicator_otp_enabled_summary">Authentifier les commandes à l\'aide des mots de passe uniques (OTP) générés par Google Authenticator ou des applications 2FA similaires.</string>
     <string name="smscommunicator_otp_pin">Code PIN obligatoire à la fin de l\'OTP</string>
     <string name="smscommunicator_otp_pin_summary">Chiffres supplémentaires qui doivent être mémorisés et collés à la fin de chaque OTP généré</string>
     <string name="smscomunicator_tab_otp_label">Configuration de l\'Authentificateur</string>
