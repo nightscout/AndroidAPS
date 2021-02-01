@@ -1064,8 +1064,6 @@
     <string name="insight_alert_notification_channel">Upozornění pumpy Insight</string>
     <!-- SMS Communicator & OTP Authenticator -->
     <string name="smscommunicator_code_from_authenticator_for" comment="This is continuation of sentence: To [ACTION] reply with code">z aplikace Authenticator pro: %1$s následováno kódem PIN</string>
-    <string name="smscommunicator_otp_enabled">Povolit Autentikátor</string>
-    <string name="smscommunicator_otp_enabled_summary">Ověření příkazů pomocí jednočasových hesel generovaných Google Authenticator nebo podobných 2FA aplikací.</string>
     <string name="smscommunicator_otp_pin">Další povinný kód PIN na konci tokenu</string>
     <string name="smscommunicator_otp_pin_summary">Další číslice, které by měly být zapamatovány a přidány na konec každého vygenerovaného jednorázového hesla</string>
     <string name="smscomunicator_tab_otp_label">Nastavení Autentikátoru</string>
@@ -1160,5 +1158,5 @@
     <string name="fabric_upload_disabled">Nahrávání protokolů o pádech zakázáno!</string>
     <string name="graph_menu_divider_header">Graf</string>
     <string name="chart_menu">Možnosti grafu</string>
-    <string name="clear_filter" comment="clear_filter&#10;description of button which clears the input line with filter">Vymazat filtr</string>
+    <string name="clear_filter">Vymazat filtr</string>
 </resources>
