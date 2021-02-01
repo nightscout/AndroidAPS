@@ -1064,8 +1064,6 @@
     <string name="insight_alert_notification_channel">Insight pomp waarschuwingen</string>
     <!-- SMS Communicator & OTP Authenticator -->
     <string name="smscommunicator_code_from_authenticator_for" comment="This is continuation of sentence: To [ACTION] reply with code">van de Authenticator-app voor: %1$s gevolgd door PIN</string>
-    <string name="smscommunicator_otp_enabled">Authentificatie inschakelen</string>
-    <string name="smscommunicator_otp_enabled_summary">Authentificeer SMS commando\'s met behulp van One Time Passwords (OTPs, eenmalige wachtwoorden) gegenereerd door Google Authenticator of soortgelijke 2FA apps.</string>
     <string name="smscommunicator_otp_pin">Extra verplichte PIN aan einde van token</string>
     <string name="smscommunicator_otp_pin_summary">Extra cijfers die je moet onthouden, en aan het eind van elk gegenereerd eenmalig wachtwoord moet toevoegen.</string>
     <string name="smscomunicator_tab_otp_label">Authentificatie instellingen</string>
