@@ -1048,8 +1048,6 @@
     <string name="insight_alert_notification_channel">Insight pompos aliarmai</string>
     <!-- SMS Communicator & OTP Authenticator -->
     <string name="smscommunicator_code_from_authenticator_for" comment="This is continuation of sentence: To [ACTION] reply with code">iš Authenticator programėlės: %1$s, po to - PIN</string>
-    <string name="smscommunicator_otp_enabled">Įgalinti tapatybės nustatymo funkciją</string>
-    <string name="smscommunicator_otp_enabled_summary">Autentifikuokite komandas naudodami vienkartinius slaptažodžius, sugeneruotus Google Authenticator ar panašiose 2FA programose.</string>
     <string name="smscommunicator_otp_pin">Papildomas privalomas PIN kodas žymeklio gale</string>
     <string name="smscommunicator_otp_pin_summary">Papildomi skaitmenys, kuriuos reikia atsiminti ir pridėti kiekvieno sugeneruoto slaptažodžio pabaigoje</string>
     <string name="smscomunicator_tab_otp_label">Autentifikavimo sąrankos nustatymas</string>
