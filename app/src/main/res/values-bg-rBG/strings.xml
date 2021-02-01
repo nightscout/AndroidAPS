@@ -1063,8 +1063,6 @@
     <string name="insight_alert_notification_channel">Информация за Insight Pump</string>
     <!-- SMS Communicator & OTP Authenticator -->
     <string name="smscommunicator_code_from_authenticator_for" comment="This is continuation of sentence: To [ACTION] reply with code">от приложението AUTHENTICATOR за: %1$s , последвано от PIN</string>
-    <string name="smscommunicator_otp_enabled">Активиране на удостоверител</string>
-    <string name="smscommunicator_otp_enabled_summary">Удостоверяване чрез еднократна парола, генерирана с Google Authenticator или подобна програма за 2-факторна оторизация.</string>
     <string name="smscommunicator_otp_pin">Допълнителен PIN в края на токен</string>
     <string name="smscommunicator_otp_pin_summary">Допълнителни цифри, които следва да бъдат залепени в края на всяка генерирана еднократна парола</string>
     <string name="smscomunicator_tab_otp_label">Настройка на удостоверителя</string>
