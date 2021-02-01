@@ -5,6 +5,8 @@ import android.content.Context;
 import androidx.collection.LongSparseArray;
 
 import org.joda.time.DateTime;
+import org.joda.time.LocalDate;
+import org.joda.time.Period;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
 import org.joda.time.format.ISODateTimeFormat;
@@ -167,6 +169,46 @@ public class DateUtil {
             format = "dd/MM";
         }
         return new DateTime(mills).toString(DateTimeFormat.forPattern(format));
+    }
+
+    public  String dateStringRelative(Date date) {
+        LocalDate lDate = LocalDate.fromDateFields(date);
+        LocalDate nowDate = LocalDate.now();
+        String friendlyDate = dateString(date);
+
+        Period diffPeriod = new Period(nowDate.toDateTimeAtStartOfDay(), lDate.toDateTimeAtStartOfDay());
+
+        //When more than a week out, display the date
+        if (diffPeriod.getYears()  != 0 || diffPeriod.getMonths() != 0 || diffPeriod.getWeeks() != 0) {
+            return friendlyDate;
+        }
+
+        switch (diffPeriod.getDays()) {
+            case 0:
+                friendlyDate = resourceHelper.gs(R.string.today);
+                break;
+            case 1:
+                friendlyDate = resourceHelper.gs(R.string.tomorrow);
+                break;
+            case -1:
+                friendlyDate = resourceHelper.gs(R.string.yesterday);
+                break;
+            default: {
+                // When plus or minus a week, but not today, tomorrow or yesterday, display "Next <DayName> or Last <DayName>"
+                SimpleDateFormat format = new SimpleDateFormat("EE",  Locale.getDefault());
+                String dayName = format.format(date);
+               // String modifier = diffPeriod.getDays() > 0 ? resourceHelper.gs(R.string.next) : resourceHelper.gs(R.string.last);
+               // friendlyDate = modifier + " " + dayName;
+                friendlyDate = diffPeriod.getDays() > 0 ? resourceHelper.gs(R.string.next,dayName) : resourceHelper.gs(R.string.last,dayName);
+            }
+        }
+
+        return friendlyDate;
+
+    }
+
+    public  String dateAndTimeStringRelative(Date date) {
+        return dateStringRelative(date) + " " + timeString(date);
     }
 
     public String timeString(Date date) {
