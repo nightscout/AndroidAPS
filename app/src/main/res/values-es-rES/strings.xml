@@ -1064,8 +1064,6 @@
     <string name="insight_alert_notification_channel">Alertas de bomba Insight</string>
     <!-- SMS Communicator & OTP Authenticator -->
     <string name="smscommunicator_code_from_authenticator_for" comment="This is continuation of sentence: To [ACTION] reply with code">desde la aplicación de autenticación para: %1$s seguido de PIN</string>
-    <string name="smscommunicator_otp_enabled">Habilitar autentificador</string>
-    <string name="smscommunicator_otp_enabled_summary">Comandos de autentificación usando One Time Password de Google Autenticator o apps 2FA similar.</string>
     <string name="smscommunicator_otp_pin">PIN obligatorio adicional al final del token</string>
     <string name="smscommunicator_otp_pin_summary">Los dígitos adicionales se deben memorizar y pegar al final de cada una de las contraseñas generadas por One Time Password</string>
     <string name="smscomunicator_tab_otp_label">Configuración de autentificación</string>
@@ -1160,5 +1158,5 @@
     <string name="fabric_upload_disabled">¡Carga de registros de errores desactivada!</string>
     <string name="graph_menu_divider_header">Gráfico</string>
     <string name="chart_menu">Menú gráfico</string>
-    <string name="clear_filter" comment="clear_filter&#10;description of button which clears the input line with filter">Borrar filtro</string>
+    <string name="clear_filter">Borrar filtro</string>
 </resources>
