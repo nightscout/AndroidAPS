@@ -1064,8 +1064,6 @@
     <string name="insight_alert_notification_channel">התראות משאבת Insight</string>
     <!-- SMS Communicator & OTP Authenticator -->
     <string name="smscommunicator_code_from_authenticator_for" comment="This is continuation of sentence: To [ACTION] reply with code">מיישום מאמת עבור: %1$s ואחריו PIN</string>
-    <string name="smscommunicator_otp_enabled">אפשר מאמת</string>
-    <string name="smscommunicator_otp_enabled_summary">אמת פקודות באמצעות סיסמאות חד פעמיות שהופקו ע\"י מאמת Google או יישומי 2FA אחרים.</string>
     <string name="smscommunicator_otp_pin">תוספת PIN חובה בסוף האסימון</string>
     <string name="smscommunicator_otp_pin_summary">ספרות נוספות שיש לשנן ולהדביק בסוף כל אחת מהסיסמאות החד פעמיות</string>
     <string name="smscomunicator_tab_otp_label">הגדרת מאמת</string>
@@ -1160,5 +1158,5 @@
     <string name="fabric_upload_disabled">העלאת רשומות קריסה מושבתת!</string>
     <string name="graph_menu_divider_header">גרף</string>
     <string name="chart_menu">תפריט הגרף</string>
-    <string name="clear_filter" comment="clear_filter&#10;description of button which clears the input line with filter">נקה סינון</string>
+    <string name="clear_filter">נקה סינון</string>
 </resources>
