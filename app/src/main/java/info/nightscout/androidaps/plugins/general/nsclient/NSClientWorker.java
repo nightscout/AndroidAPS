@@ -7,13 +7,12 @@ import androidx.annotation.NonNull;
 import androidx.work.Worker;
 import androidx.work.WorkerParameters;
 
-import com.google.gson.Gson;
-
 import org.jetbrains.annotations.NotNull;
 
 import javax.inject.Inject;
 
 import dagger.android.HasAndroidInjector;
+import info.nightscout.androidaps.receivers.BundleStore;
 
 // cannot be inner class because of needed injection
 public class NSClientWorker extends Worker {
@@ -26,11 +25,13 @@ public class NSClientWorker extends Worker {
     }
 
     @Inject NSClientPlugin nsClientPlugin;
+    @Inject BundleStore bundleStore;
 
     @NotNull
     @Override
     public Result doWork() {
-        Bundle bundle = new Gson().fromJson(getInputData().getString("data"), Bundle.class);
+        Bundle bundle = bundleStore.pickup(getInputData().getLong("storeKey", -1));
+        if (bundle == null) Result.failure();
         String action = getInputData().getString("action");
         nsClientPlugin.handleNewDataFromNSClient(action, bundle);
         return Result.success();

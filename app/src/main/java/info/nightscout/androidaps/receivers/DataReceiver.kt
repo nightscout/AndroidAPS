@@ -7,7 +7,6 @@ import androidx.work.Data
 import androidx.work.ExistingWorkPolicy
 import androidx.work.OneTimeWorkRequest
 import androidx.work.WorkManager
-import com.google.gson.Gson
 import dagger.android.DaggerBroadcastReceiver
 import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.logging.BundleLogger
@@ -21,11 +20,13 @@ import info.nightscout.androidaps.utils.extensions.copyDouble
 import info.nightscout.androidaps.utils.extensions.copyInt
 import info.nightscout.androidaps.utils.extensions.copyLong
 import info.nightscout.androidaps.utils.extensions.copyString
+import org.json.JSONObject
 import javax.inject.Inject
 
 open class DataReceiver : DaggerBroadcastReceiver() {
 
     @Inject lateinit var aapsLogger: AAPSLogger
+    @Inject lateinit var bundleStore: BundleStore
 
     private val jobGroupName = "data"
 
@@ -84,19 +85,19 @@ open class DataReceiver : DaggerBroadcastReceiver() {
             Telephony.Sms.Intents.SMS_RECEIVED_ACTION ->
                 OneTimeWorkRequest.Builder(SmsCommunicatorPlugin.SmsCommunicatorWorker::class.java)
                     .setInputData(Data.Builder().also {
-                        it.putString("data", Gson().toJson(bundle))
+                        it.putLong("storeKey", bundleStore.store(bundle))
                         it.putString("action", intent.action)
                     }.build()).build()
             Intents.EVERSENSE_BG ->
                 OneTimeWorkRequest.Builder(EversensePlugin.EversenseWorker::class.java)
                     .setInputData(Data.Builder().also {
-                        it.putString("data", Gson().toJson(bundle))
+                        it.putLong("storeKey", bundleStore.store(bundle))
                         it.putString("action", intent.action)
                     }.build()).build()
             Intents.DEXCOM_BG ->
                 OneTimeWorkRequest.Builder(DexcomPlugin.DexcomWorker::class.java)
                     .setInputData(Data.Builder().also {
-                        it.putString("data", Gson().toJson(bundle))
+                        it.putLong("storeKey", bundleStore.store(bundle))
                         it.putString("action", intent.action)
                     }.build()).build()
             Intents.ACTION_NEW_TREATMENT,
@@ -106,7 +107,7 @@ open class DataReceiver : DaggerBroadcastReceiver() {
             Intents.ACTION_NEW_MBG ->
                 OneTimeWorkRequest.Builder(NSClientWorker::class.java)
                     .setInputData(Data.Builder().also {
-                        it.putString("data", Gson().toJson(bundle))
+                        it.putLong("storeKey", bundleStore.store(bundle))
                         it.putString("action", intent.action)
                     }.build()).build()
             else                                      -> null

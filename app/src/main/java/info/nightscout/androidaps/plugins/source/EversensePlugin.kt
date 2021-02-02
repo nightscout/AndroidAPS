@@ -1,10 +1,8 @@
 package info.nightscout.androidaps.plugins.source
 
 import android.content.Context
-import android.os.Bundle
 import androidx.work.Worker
 import androidx.work.WorkerParameters
-import com.google.gson.Gson
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.Constants
 import info.nightscout.androidaps.MainApp
@@ -18,6 +16,7 @@ import info.nightscout.androidaps.interfaces.PluginType
 import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.logging.LTag
 import info.nightscout.androidaps.plugins.general.nsclient.NSUpload
+import info.nightscout.androidaps.receivers.BundleStore
 import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 import info.nightscout.androidaps.utils.sharedPreferences.SP
@@ -56,6 +55,7 @@ class EversensePlugin @Inject constructor(
         @Inject lateinit var sp: SP
         @Inject lateinit var nsUpload: NSUpload
         @Inject lateinit var dateUtil: DateUtil
+        @Inject lateinit var bundleStore: BundleStore
 
         init {
             (context.applicationContext as HasAndroidInjector).androidInjector().inject(this)
@@ -63,7 +63,8 @@ class EversensePlugin @Inject constructor(
 
         override fun doWork(): Result {
             if (!eversensePlugin.isEnabled(PluginType.BGSOURCE)) return Result.failure()
-            val bundle = Gson().fromJson(inputData.getString("data"), Bundle::class.java)
+            val bundle = bundleStore.pickup(inputData.getLong("storeKey", -1))
+                ?: return Result.failure()
             if (bundle.containsKey("currentCalibrationPhase")) aapsLogger.debug(LTag.BGSOURCE, "currentCalibrationPhase: " + bundle.getString("currentCalibrationPhase"))
             if (bundle.containsKey("placementModeInProgress")) aapsLogger.debug(LTag.BGSOURCE, "placementModeInProgress: " + bundle.getBoolean("placementModeInProgress"))
             if (bundle.containsKey("glucoseLevel")) aapsLogger.debug(LTag.BGSOURCE, "glucoseLevel: " + bundle.getInt("glucoseLevel"))

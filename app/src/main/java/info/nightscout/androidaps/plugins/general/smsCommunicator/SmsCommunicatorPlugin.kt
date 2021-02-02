@@ -1,7 +1,6 @@
 package info.nightscout.androidaps.plugins.general.smsCommunicator
 
 import android.content.Context
-import android.os.Bundle
 import android.telephony.SmsManager
 import android.telephony.SmsMessage
 import android.text.TextUtils
@@ -10,15 +9,12 @@ import androidx.preference.Preference
 import androidx.preference.PreferenceFragmentCompat
 import androidx.work.Worker
 import androidx.work.WorkerParameters
-import com.google.gson.Gson
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.Config
 import info.nightscout.androidaps.Constants
-import info.nightscout.androidaps.MainApp
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.data.DetailedBolusInfo
 import info.nightscout.androidaps.data.Profile
-import info.nightscout.androidaps.db.BgReading
 import info.nightscout.androidaps.db.Source
 import info.nightscout.androidaps.db.TempTarget
 import info.nightscout.androidaps.events.EventPreferenceChange
@@ -29,7 +25,6 @@ import info.nightscout.androidaps.logging.LTag
 import info.nightscout.androidaps.plugins.aps.loop.LoopPlugin
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper
 import info.nightscout.androidaps.plugins.configBuilder.ConstraintChecker
-import info.nightscout.androidaps.plugins.general.nsclient.NSUpload
 import info.nightscout.androidaps.plugins.general.nsclient.events.EventNSClientRestart
 import info.nightscout.androidaps.plugins.general.overview.events.EventNewNotification
 import info.nightscout.androidaps.plugins.general.overview.notifications.Notification
@@ -37,9 +32,9 @@ import info.nightscout.androidaps.plugins.general.smsCommunicator.events.EventSm
 import info.nightscout.androidaps.plugins.general.smsCommunicator.otp.OneTimePassword
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.GlucoseStatus
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.IobCobCalculatorPlugin
-import info.nightscout.androidaps.plugins.source.PoctechPlugin
 import info.nightscout.androidaps.plugins.treatments.TreatmentsPlugin
 import info.nightscout.androidaps.queue.Callback
+import info.nightscout.androidaps.receivers.BundleStore
 import info.nightscout.androidaps.utils.*
 import info.nightscout.androidaps.utils.extensions.plusAssign
 import info.nightscout.androidaps.utils.resources.ResourceHelper
@@ -48,8 +43,6 @@ import info.nightscout.androidaps.utils.textValidator.ValidatingEditTextPreferen
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
 import org.apache.commons.lang3.StringUtils
-import org.json.JSONArray
-import org.json.JSONException
 import java.text.Normalizer
 import java.util.*
 import javax.inject.Inject
@@ -161,7 +154,6 @@ class SmsCommunicatorPlugin @Inject constructor(
         }
     }
 
-
     // cannot be inner class because of needed injection
     class SmsCommunicatorWorker(
         context: Context,
@@ -169,13 +161,15 @@ class SmsCommunicatorPlugin @Inject constructor(
     ) : Worker(context, params) {
 
         @Inject lateinit var smsCommunicatorPlugin: SmsCommunicatorPlugin
+        @Inject lateinit var bundleStore: BundleStore
 
         init {
             (context.applicationContext as HasAndroidInjector).androidInjector().inject(this)
         }
 
         override fun doWork(): Result {
-            val bundle = Gson().fromJson(inputData.getString("data"), Bundle::class.java)
+            val bundle = bundleStore.pickup(inputData.getLong("storeKey", -1))
+                ?: return Result.failure()
             val format = bundle.getString("format") ?: return Result.failure()
             val pdus = bundle["pdus"] as Array<*>
             for (pdu in pdus) {
@@ -185,6 +179,7 @@ class SmsCommunicatorPlugin @Inject constructor(
             return Result.success()
         }
     }
+
     private fun processSettings(ev: EventPreferenceChange?) {
         if (ev == null || ev.isChanged(resourceHelper, R.string.key_smscommunicator_allowednumbers)) {
             val settings = sp.getString(R.string.key_smscommunicator_allowednumbers, "")
