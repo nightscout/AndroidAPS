@@ -19,6 +19,7 @@ import info.nightscout.androidaps.interfaces.PumpDescription
 import info.nightscout.androidaps.plugins.aps.loop.LoopPlugin
 import info.nightscout.androidaps.plugins.configBuilder.ConstraintChecker
 import info.nightscout.androidaps.plugins.general.smsCommunicator.otp.OneTimePassword
+import info.nightscout.androidaps.plugins.general.smsCommunicator.otp.OneTimePasswordValidationResult
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.CobInfo
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.GlucoseStatus
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.IobCobCalculatorPlugin
@@ -39,6 +40,7 @@ import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.ArgumentMatchers
 import org.mockito.ArgumentMatchers.any
+import org.mockito.ArgumentMatchers.anyString
 import org.mockito.ArgumentMatchers.eq
 import org.mockito.Mock
 import org.mockito.Mockito
@@ -173,6 +175,9 @@ class SmsCommunicatorPluginTest : TestBaseWithProfile() {
 
         `when`(profileFunction.getUnits()).thenReturn(Constants.MGDL)
 
+        `when`(otp.name()).thenReturn("User")
+        `when`(otp.checkOTP(anyString())).thenReturn(OneTimePasswordValidationResult.OK)
+
         `when`(resourceHelper.gs(R.string.smscommunicator_remotecommandnotallowed)).thenReturn("Remote command is not allowed")
         `when`(resourceHelper.gs(R.string.sms_wrongcode)).thenReturn("Wrong code. Command cancelled.")
         `when`(resourceHelper.gs(R.string.sms_iob)).thenReturn("IOB:")
@@ -236,6 +241,8 @@ class SmsCommunicatorPluginTest : TestBaseWithProfile() {
         `when`(resourceHelper.gs(R.string.smscommunicator_reconnect)).thenReturn("Pump reconnected")
         `when`(resourceHelper.gs(R.string.smscommunicator_pumpconnectfail)).thenReturn("Connection to pump failed")
         `when`(resourceHelper.gs(R.string.smscommunicator_pumpdisconnected)).thenReturn("Pump disconnected")
+        `when`(resourceHelper.gs(R.string.smscommunicator_code_from_authenticator_for)).thenReturn("from Authenticator app for: %1\$s followed by PIN")
+        `when`(resourceHelper.gs(R.string.patient_name_default)).thenReturn("User")
 
     }
 
@@ -443,7 +450,9 @@ class SmsCommunicatorPluginTest : TestBaseWithProfile() {
         passCode = smsCommunicatorPlugin.messageToConfirm?.confirmCode!!
         // ignore from other number
         smsCommunicatorPlugin.processSms(Sms("5678", passCode))
+        `when`(otp.checkOTP(anyString())).thenReturn(OneTimePasswordValidationResult.ERROR_WRONG_OTP)
         smsCommunicatorPlugin.processSms(Sms("1234", "XXXX"))
+        `when`(otp.checkOTP(anyString())).thenReturn(OneTimePasswordValidationResult.OK)
         Assert.assertEquals("XXXX", smsCommunicatorPlugin.messages[3].text)
         Assert.assertEquals("Wrong code. Command cancelled.", smsCommunicatorPlugin.messages[4].text)
         //then correct code should not work

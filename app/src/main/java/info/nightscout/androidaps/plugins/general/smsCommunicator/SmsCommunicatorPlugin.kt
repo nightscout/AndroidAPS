@@ -1014,7 +1014,7 @@ class SmsCommunicatorPlugin @Inject constructor(
     }
 
     private fun generatePassCode(): String =
-        resourceHelper.gs(R.string.smscommunicator_code_from_authenticator_for, otp.name())
+        String.format(resourceHelper.gs(R.string.smscommunicator_code_from_authenticator_for), otp.name())
 
     private fun stripAccents(str: String): String {
         var s = str
