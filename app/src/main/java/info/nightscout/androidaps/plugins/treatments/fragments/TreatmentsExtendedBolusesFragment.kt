@@ -7,14 +7,14 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
-import androidx.cardview.widget.CardView
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import dagger.android.support.DaggerFragment
 import info.nightscout.androidaps.MainApp
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.data.Intervals
+import info.nightscout.androidaps.databinding.TreatmentsExtendedbolusFragmentBinding
+import info.nightscout.androidaps.databinding.TreatmentsExtendedbolusItemBinding
 import info.nightscout.androidaps.db.ExtendedBolus
 import info.nightscout.androidaps.db.Source
 import info.nightscout.androidaps.events.EventExtendedBolusChange
@@ -31,10 +31,10 @@ import info.nightscout.androidaps.utils.alertDialogs.OKDialog.showConfirmation
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
-import kotlinx.android.synthetic.main.treatments_extendedbolus_fragment.*
 import javax.inject.Inject
 
 class TreatmentsExtendedBolusesFragment : DaggerFragment() {
+
     private val disposable = CompositeDisposable()
 
     @Inject lateinit var activePlugin: ActivePluginProvider
@@ -46,18 +46,26 @@ class TreatmentsExtendedBolusesFragment : DaggerFragment() {
     @Inject lateinit var profileFunction: ProfileFunction
     @Inject lateinit var dateUtil: DateUtil
 
+    private var _binding: TreatmentsExtendedbolusFragmentBinding? = null
+
+    // This property is only valid between onCreateView and
+    // onDestroyView.
+    private val binding get() = _binding!!
+
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
-                              savedInstanceState: Bundle?): View? {
-        return inflater.inflate(R.layout.treatments_extendedbolus_fragment, container, false)
+                              savedInstanceState: Bundle?): View {
+        _binding = TreatmentsExtendedbolusFragmentBinding.inflate(inflater, container, false)
+        return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        extendedboluses_recyclerview.setHasFixedSize(true)
-        extendedboluses_recyclerview.layoutManager = LinearLayoutManager(view.context)
-        extendedboluses_recyclerview.adapter = RecyclerViewAdapter(activePlugin.activeTreatments.extendedBolusesFromHistory)
+        binding.recyclerview.setHasFixedSize(true)
+        binding.recyclerview.layoutManager = LinearLayoutManager(view.context)
+        binding.recyclerview.adapter = RecyclerViewAdapter(activePlugin.activeTreatments.extendedBolusesFromHistory)
     }
 
-    inner class RecyclerViewAdapter internal constructor(private var extendedBolusList: Intervals<ExtendedBolus>) : RecyclerView.Adapter<ExtendedBolusesViewHolder>() {
+    private inner class RecyclerViewAdapter(private var extendedBolusList: Intervals<ExtendedBolus>) : RecyclerView.Adapter<ExtendedBolusesViewHolder>() {
+
         override fun onCreateViewHolder(viewGroup: ViewGroup, viewType: Int): ExtendedBolusesViewHolder {
             val v = LayoutInflater.from(viewGroup.context).inflate(R.layout.treatments_extendedbolus_item, viewGroup, false)
             return ExtendedBolusesViewHolder(v)
@@ -65,32 +73,32 @@ class TreatmentsExtendedBolusesFragment : DaggerFragment() {
 
         override fun onBindViewHolder(holder: ExtendedBolusesViewHolder, position: Int) {
             val extendedBolus = extendedBolusList.getReversed(position)
-            holder.ph.visibility = if (extendedBolus.source == Source.PUMP) View.VISIBLE else View.GONE
-            holder.ns.visibility = if (NSUpload.isIdValid(extendedBolus._id)) View.VISIBLE else View.GONE
+            holder.binding.ph.visibility = if (extendedBolus.source == Source.PUMP) View.VISIBLE else View.GONE
+            holder.binding.ns.visibility = if (NSUpload.isIdValid(extendedBolus._id)) View.VISIBLE else View.GONE
             if (extendedBolus.isEndingEvent) {
-                holder.date.text = dateUtil.dateAndTimeString(extendedBolus.date)
-                holder.duration.text = resourceHelper.gs(R.string.cancel)
-                holder.insulin.text = ""
-                holder.realDuration.text = ""
-                holder.iob.text = ""
-                holder.insulinSoFar.text = ""
-                holder.ratio.text = ""
+                holder.binding.date.text = dateUtil.dateAndTimeString(extendedBolus.date)
+                holder.binding.duration.text = resourceHelper.gs(R.string.cancel)
+                holder.binding.insulin.text = ""
+                holder.binding.realDuration.text = ""
+                holder.binding.iob.text = ""
+                holder.binding.insulinSoFar.text = ""
+                holder.binding.ratio.text = ""
             } else {
                 @SuppressLint("SetTextI18n")
-                if (extendedBolus.isInProgress) holder.date.text = dateUtil.dateAndTimeString(extendedBolus.date)
-                else holder.date.text = dateUtil.dateAndTimeString(extendedBolus.date) + " - " + dateUtil.timeString(extendedBolus.end())
+                if (extendedBolus.isInProgress) holder.binding.date.text = dateUtil.dateAndTimeString(extendedBolus.date)
+                else holder.binding.date.text = dateUtil.dateAndTimeString(extendedBolus.date) + " - " + dateUtil.timeString(extendedBolus.end())
                 val profile = profileFunction.getProfile(extendedBolus.date)
-                holder.duration.text = resourceHelper.gs(R.string.format_mins, extendedBolus.durationInMinutes)
-                holder.insulin.text = resourceHelper.gs(R.string.formatinsulinunits, extendedBolus.insulin)
-                holder.realDuration.text = resourceHelper.gs(R.string.format_mins, extendedBolus.realDuration)
+                holder.binding.duration.text = resourceHelper.gs(R.string.format_mins, extendedBolus.durationInMinutes)
+                holder.binding.insulin.text = resourceHelper.gs(R.string.formatinsulinunits, extendedBolus.insulin)
+                holder.binding.realDuration.text = resourceHelper.gs(R.string.format_mins, extendedBolus.realDuration)
                 val iob = extendedBolus.iobCalc(System.currentTimeMillis(), profile)
-                holder.iob.text = resourceHelper.gs(R.string.formatinsulinunits, iob.iob)
-                holder.insulinSoFar.text = resourceHelper.gs(R.string.formatinsulinunits, extendedBolus.insulinSoFar())
-                holder.ratio.text = resourceHelper.gs(R.string.pump_basebasalrate, extendedBolus.absoluteRate())
-                if (extendedBolus.isInProgress) holder.date.setTextColor(resourceHelper.gc(R.color.colorActive)) else holder.date.setTextColor(holder.insulin.currentTextColor)
-                if (iob.iob != 0.0) holder.iob.setTextColor(resourceHelper.gc(R.color.colorActive)) else holder.iob.setTextColor(holder.insulin.currentTextColor)
+                holder.binding.iob.text = resourceHelper.gs(R.string.formatinsulinunits, iob.iob)
+                holder.binding.insulinSoFar.text = resourceHelper.gs(R.string.formatinsulinunits, extendedBolus.insulinSoFar())
+                holder.binding.ratio.text = resourceHelper.gs(R.string.pump_basebasalrate, extendedBolus.absoluteRate())
+                if (extendedBolus.isInProgress) holder.binding.date.setTextColor(resourceHelper.gc(R.color.colorActive)) else holder.binding.date.setTextColor(holder.binding.insulin.currentTextColor)
+                if (iob.iob != 0.0) holder.binding.iob.setTextColor(resourceHelper.gc(R.color.colorActive)) else holder.binding.iob.setTextColor(holder.binding.insulin.currentTextColor)
             }
-            holder.remove.tag = extendedBolus
+            holder.binding.remove.tag = extendedBolus
         }
 
         override fun getItemCount(): Int {
@@ -98,20 +106,11 @@ class TreatmentsExtendedBolusesFragment : DaggerFragment() {
         }
 
         inner class ExtendedBolusesViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-            var cv: CardView = itemView.findViewById(R.id.extendedboluses_cardview)
-            var date: TextView = itemView.findViewById(R.id.extendedboluses_date)
-            var duration: TextView = itemView.findViewById(R.id.extendedboluses_duration)
-            var insulin: TextView = itemView.findViewById(R.id.extendedboluses_insulin)
-            var realDuration: TextView = itemView.findViewById(R.id.extendedboluses_realduration)
-            var ratio: TextView = itemView.findViewById(R.id.extendedboluses_ratio)
-            var insulinSoFar: TextView = itemView.findViewById(R.id.extendedboluses_netinsulin)
-            var iob: TextView = itemView.findViewById(R.id.extendedboluses_iob)
-            var remove: TextView = itemView.findViewById(R.id.extendedboluses_remove)
-            var ph: TextView = itemView.findViewById(R.id.pump_sign)
-            var ns: TextView = itemView.findViewById(R.id.ns_sign)
+
+            val binding = TreatmentsExtendedbolusItemBinding.bind(itemView)
 
             init {
-                remove.setOnClickListener { v: View ->
+                binding.remove.setOnClickListener { v: View ->
                     val extendedBolus = v.tag as ExtendedBolus
                     context?.let {
                         showConfirmation(it, resourceHelper.gs(R.string.removerecord),
@@ -126,7 +125,7 @@ class TreatmentsExtendedBolusesFragment : DaggerFragment() {
                         }, null)
                     }
                 }
-                remove.paintFlags = remove.paintFlags or Paint.UNDERLINE_TEXT_FLAG
+                binding.remove.paintFlags = binding.remove.paintFlags or Paint.UNDERLINE_TEXT_FLAG
             }
         }
 
@@ -152,6 +151,14 @@ class TreatmentsExtendedBolusesFragment : DaggerFragment() {
         disposable.clear()
     }
 
-    private fun updateGui() =
-        extendedboluses_recyclerview.swapAdapter(RecyclerViewAdapter(activePlugin.activeTreatments.extendedBolusesFromHistory), false)
+    @Synchronized
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
+    }
+
+    private fun updateGui() {
+        if (_binding == null) return
+        binding.recyclerview.swapAdapter(RecyclerViewAdapter(activePlugin.activeTreatments.extendedBolusesFromHistory), false)
+    }
 }

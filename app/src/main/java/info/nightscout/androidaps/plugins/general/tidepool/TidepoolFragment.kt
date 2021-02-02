@@ -18,7 +18,6 @@ import info.nightscout.androidaps.utils.extensions.plusAssign
 import info.nightscout.androidaps.utils.sharedPreferences.SP
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
-import kotlinx.android.synthetic.main.tidepool_fragment.*
 import javax.inject.Inject
 
 class TidepoolFragment : DaggerFragment() {
