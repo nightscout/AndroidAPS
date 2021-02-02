@@ -21,8 +21,6 @@ import info.nightscout.androidaps.utils.extensions.setEnableForChildren
 import info.nightscout.androidaps.utils.extensions.setSelection
 import info.nightscout.androidaps.utils.wizard.QuickWizard
 import info.nightscout.androidaps.utils.wizard.QuickWizardEntry
-import kotlinx.android.synthetic.main.okcancel.*
-import kotlinx.android.synthetic.main.overview_editquickwizard_dialog.*
 import org.json.JSONException
 import javax.inject.Inject
 
@@ -59,7 +57,7 @@ class EditQuickWizardDialog : DaggerDialogFragment(), View.OnClickListener {
             position = bundle.getInt("position", -1)
         }
         val entry = if (position == -1) quickWizard.newEmptyItem() else quickWizard[position]
-        ok.setOnClickListener {
+        binding.okcancel.ok.setOnClickListener {
             try {
                 entry.storage.put("buttonText", binding.buttonEdit.text.toString())
                 entry.storage.put("carbs", SafeParse.stringToInt(binding.carbsEdit.text.toString()))
@@ -80,12 +78,12 @@ class EditQuickWizardDialog : DaggerDialogFragment(), View.OnClickListener {
             rxBus.send(EventQuickWizardChange())
             dismiss()
         }
-        cancel.setOnClickListener { dismiss() }
+        binding.okcancel.cancel.setOnClickListener { dismiss() }
 
         // create an OnTimeSetListener
         val fromTimeSetListener = TimePickerDialog.OnTimeSetListener { _, hour, minute ->
             fromSeconds = (T.hours(hour.toLong()).secs() + T.mins(minute.toLong()).secs()).toInt()
-            from.text = dateUtil.timeString(DateUtil.toDate(fromSeconds))
+            binding.from.text = dateUtil.timeString(DateUtil.toDate(fromSeconds))
         }
 
         binding.from.setOnClickListener {
@@ -98,7 +96,7 @@ class EditQuickWizardDialog : DaggerDialogFragment(), View.OnClickListener {
             }
         }
         fromSeconds = entry.validFrom()
-        from.text = dateUtil.timeString(DateUtil.toDate(fromSeconds))
+        binding.from.text = dateUtil.timeString(DateUtil.toDate(fromSeconds))
 
         val toTimeSetListener = TimePickerDialog.OnTimeSetListener { _, hour, minute ->
             toSeconds = (T.hours(hour.toLong()).secs() + T.mins(minute.toLong()).secs()).toInt()
@@ -128,8 +126,8 @@ class EditQuickWizardDialog : DaggerDialogFragment(), View.OnClickListener {
         binding.useSuperBolus.setSelection(entry.useSuperBolus())
         binding.useTempTarget.setSelection(entry.useTempTarget())
 
-        use_cob_yes.setOnClickListener(this)
-        use_cob_no.setOnClickListener(this)
+        binding.useCobYes.setOnClickListener(this)
+        binding.useCobNo.setOnClickListener(this)
         processCob()
     }
 

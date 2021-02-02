@@ -302,7 +302,9 @@
         </RadioGroup>
 
 
-        <include layout="@layout/okcancel" />
+        <include
+            android:id="@+id/okcancel"
+            layout="@layout/okcancel" />
 
     </LinearLayout>
 
