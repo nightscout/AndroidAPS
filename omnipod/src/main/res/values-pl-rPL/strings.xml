@@ -60,7 +60,7 @@
     <string name="omnipod_short_status_temp_basal">Tymcz.: %1$s</string>
     <string name="omnipod_short_status_extended_bolus">Rozsz.: %1$s</string>
     <string name="omnipod_short_status_reservoir">Zbior.: %1$sU</string>
-    <string name="omnipod_short_status_rl_battery">RLBatt: %1$d</string>
+    <string name="omnipod_short_status_rl_battery">RLBat: %1$d</string>
     <!-- Omnipod - Error -->
     <string name="omnipod_warning">Ostrzeżenie</string>
     <string name="omnipod_error_rileylink_address_invalid">Adres RileyLink niewłaściwy.</string>
