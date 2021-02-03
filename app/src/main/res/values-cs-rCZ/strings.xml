@@ -548,7 +548,6 @@
     <string name="maxiobset">Maximální IOB nastaveno správně</string>
     <string name="hasbgdata">Glykémie dostupné z vybraného zdroje</string>
     <string name="combo_programming_bolus">Programování pumpy pro bolus</string>
-    <string name="combo_refresh">Obnovit</string>
     <string name="combo_pump_state_label">Stav</string>
     <string name="combo_pump_activity_label">Aktivita</string>
     <string name="combo_no_pump_connection">Žádné spojení %1$d min</string>
@@ -839,7 +838,6 @@
     <string name="eb_formatter">%1$.2f / %2$.2f U %3$d min</string>
     <string name="enable_tbr_over_notification">Povolit oznamování konce dočasného bazálu\n(nastavení pumpy)</string>
     <string name="disable_tbr_over_notification">Zakázat oznamování konce dočasného bazálu\n(nastavení pumpy)</string>
-    <string name="refresh">Obnovit</string>
     <string name="description_pump_insight_local">Integrace pro pumpu Accu-Chek Insight</string>
     <string name="not_inserted">Není vloženo</string>
     <string name="short_status_last_connected">Poslední spoj: před %1$d min</string>
