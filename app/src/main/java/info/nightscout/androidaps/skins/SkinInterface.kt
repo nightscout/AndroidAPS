@@ -18,12 +18,9 @@ interface SkinInterface {
     val secondaryGraphHeight: Int // in dp
 
     @LayoutRes
-    fun overviewLayout(isLandscape: Boolean, isTablet: Boolean, isSmallHeight: Boolean): Int
-
-    @LayoutRes
     fun actionsLayout(isLandscape: Boolean, isSmallWidth: Boolean): Int = R.layout.actions_fragment
 
-    fun preProcessLandscapeOverviewLayout(dm: DisplayMetrics, view: View, isTablet: Boolean) {
+    fun preProcessLandscapeOverviewLayout(dm: DisplayMetrics, view: View, isLandscape: Boolean, isTablet: Boolean, isSmallHeight: Boolean) {
         // pre-process landscape mode
         val screenWidth = dm.widthPixels
         val screenHeight = dm.heightPixels
@@ -80,5 +77,12 @@ interface SkinInterface {
                 view.findViewById<TextView>(R.id.overview_delta_large)?.visibility = View.GONE
             }
         }
+    }
+
+    fun moveButtonsLayout(root: LinearLayout) {
+        val buttonsLayout = root.findViewById<LinearLayout>(R.id.buttons_layout)
+        root.removeView(buttonsLayout)
+        val innerLayout = root.findViewById<LinearLayout>(R.id.inner_layout)
+        innerLayout.addView(buttonsLayout)
     }
 }

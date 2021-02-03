@@ -22,7 +22,7 @@ class ActionLoopSuspend(injector: HasAndroidInjector) : Action(injector) {
     @Inject lateinit var loopPlugin: LoopPlugin
     @Inject lateinit var rxBus: RxBusWrapper
 
-    var minutes = InputDuration(injector, 0, InputDuration.TimeUnit.MINUTES)
+    var minutes = InputDuration(injector, 30, InputDuration.TimeUnit.MINUTES)
 
     override fun friendlyName(): Int = R.string.suspendloop
     override fun shortDescription(): String = resourceHelper.gs(R.string.suspendloopforXmin, minutes.getMinutes())
@@ -59,4 +59,6 @@ class ActionLoopSuspend(injector: HasAndroidInjector) : Action(injector) {
             .add(LabelWithElement(injector, resourceHelper.gs(R.string.careportal_newnstreatment_duration_min_label), "", minutes))
             .build(root)
     }
+
+    override fun isValid(): Boolean = minutes.value > 5
 }

@@ -9,7 +9,7 @@
         android:layout_height="fill_parent">
 
         <LinearLayout
-            android:id="@+id/smscommunicator_otp_layout"
+            android:id="@+id/otp_layout"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical">
@@ -32,7 +32,7 @@
                 android:text="@string/smscommunicator_otp_step2_provisioning_header" />
 
             <ImageView
-                android:id="@+id/smscommunicator_otp_provisioning"
+                android:id="@+id/otp_provisioning"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
@@ -68,7 +68,7 @@
                     android:text="@string/smscommunicator_code_verify_label" />
 
                 <EditText
-                    android:id="@+id/smscommunicator_otp_verify_edit"
+                    android:id="@+id/otp_verify_edit"
                     android:layout_width="140sp"
                     android:layout_height="wrap_content"
                     android:hint="@string/smscommunicator_code_verify_hint"
@@ -79,7 +79,7 @@
                     tools:ignore="HardcodedText" />
 
                 <TextView
-                    android:id="@+id/smscommunicator_otp_verify_label"
+                    android:id="@+id/otp_verify_label"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:paddingStart="15dp"
@@ -96,7 +96,7 @@
                 android:text="@string/smscommunicator_otp_reset_warning" />
 
             <info.nightscout.androidaps.utils.ui.SingleClickButton
-                android:id="@+id/actions_smscommunicator_otp_reset"
+                android:id="@+id/otp_reset"
                 style="?android:attr/buttonStyle"
                 android:layout_width="fill_parent"
                 android:layout_height="match_parent"

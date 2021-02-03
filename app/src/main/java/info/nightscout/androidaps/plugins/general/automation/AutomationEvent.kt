@@ -43,6 +43,12 @@ class AutomationEvent(private val injector: HasAndroidInjector) {
 
     fun addAction(action: Action) = actions.add(action)
 
+    fun areActionsValid() : Boolean {
+        var result = true
+        for (action in actions) result = result && action.isValid()
+        return result
+    }
+
     fun toJSON(): String {
         val array = JSONArray()
         for (a in actions) array.put(a.toJSON())

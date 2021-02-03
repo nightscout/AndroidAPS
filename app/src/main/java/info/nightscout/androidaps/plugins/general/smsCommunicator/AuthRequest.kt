@@ -21,7 +21,7 @@ class AuthRequest internal constructor(
     @Inject lateinit var aapsLogger: AAPSLogger
     @Inject lateinit var smsCommunicatorPlugin: SmsCommunicatorPlugin
     @Inject lateinit var resourceHelper: ResourceHelper
-    @Inject lateinit var otp : OneTimePassword
+    @Inject lateinit var otp: OneTimePassword
 
     private val date = DateUtil.now()
     private var processed = false
@@ -31,13 +31,8 @@ class AuthRequest internal constructor(
         smsCommunicatorPlugin.sendSMS(Sms(requester.phoneNumber, requestText))
     }
 
-    private fun codeIsValid(toValidate: String) : Boolean {
-        return if (otp.isEnabled()) {
-            otp.checkOTP(toValidate) == OneTimePasswordValidationResult.OK
-        } else {
-            confirmCode == toValidate
-        }
-    }
+    private fun codeIsValid(toValidate: String): Boolean =
+        otp.checkOTP(toValidate) == OneTimePasswordValidationResult.OK
 
     fun action(codeReceived: String) {
         if (processed) {

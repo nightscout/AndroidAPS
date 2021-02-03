@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import android.widget.ScrollView
 import dagger.android.support.DaggerFragment
 import info.nightscout.androidaps.R
+import info.nightscout.androidaps.databinding.TidepoolFragmentBinding
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper
 import info.nightscout.androidaps.plugins.general.tidepool.comm.TidepoolUploader
 import info.nightscout.androidaps.plugins.general.tidepool.events.EventTidepoolDoUpload
@@ -17,7 +18,6 @@ import info.nightscout.androidaps.utils.extensions.plusAssign
 import info.nightscout.androidaps.utils.sharedPreferences.SP
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
-import kotlinx.android.synthetic.main.tidepool_fragment.*
 import javax.inject.Inject
 
 class TidepoolFragment : DaggerFragment() {
@@ -29,16 +29,23 @@ class TidepoolFragment : DaggerFragment() {
 
     private var disposable: CompositeDisposable = CompositeDisposable()
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        return inflater.inflate(R.layout.tidepool_fragment, container, false)
+    private var _binding: TidepoolFragmentBinding? = null
+
+    // This property is only valid between onCreateView and
+    // onDestroyView.
+    private val binding get() = _binding!!
+
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
+        _binding = TidepoolFragmentBinding.inflate(inflater, container, false)
+        return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        tidepool_login.setOnClickListener { tidepoolUploader.doLogin(false) }
-        tidepool_uploadnow.setOnClickListener { rxBus.send(EventTidepoolDoUpload()) }
-        tidepool_removeall.setOnClickListener { rxBus.send(EventTidepoolResetData()) }
-        tidepool_resertstart.setOnClickListener { sp.putLong(R.string.key_tidepool_last_end, 0) }
+        binding.login.setOnClickListener { tidepoolUploader.doLogin(false) }
+        binding.uploadnow.setOnClickListener { rxBus.send(EventTidepoolDoUpload()) }
+        binding.removeall.setOnClickListener { rxBus.send(EventTidepoolResetData()) }
+        binding.resertstart.setOnClickListener { sp.putLong(R.string.key_tidepool_last_end, 0) }
     }
 
     @Synchronized
@@ -48,11 +55,12 @@ class TidepoolFragment : DaggerFragment() {
             .toObservable(EventTidepoolUpdateGUI::class.java)
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe({
+                if (_binding == null) return@subscribe
                 tidepoolPlugin.updateLog()
-                tidepool_log?.text = tidepoolPlugin.textLog
-                tidepool_status?.text = tidepoolUploader.connectionStatus.name
-                tidepool_log?.text = tidepoolPlugin.textLog
-                tidepool_logscrollview?.fullScroll(ScrollView.FOCUS_DOWN)
+                binding.log.text = tidepoolPlugin.textLog
+                binding.status.text = tidepoolUploader.connectionStatus.name
+                binding.log.text = tidepoolPlugin.textLog
+                binding.logscrollview.fullScroll(ScrollView.FOCUS_DOWN)
             }, { fabricPrivacy.logException(it) })
     }
 
@@ -61,4 +69,12 @@ class TidepoolFragment : DaggerFragment() {
         super.onPause()
         disposable.clear()
     }
+
+    @Synchronized
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
+    }
+
+
 }

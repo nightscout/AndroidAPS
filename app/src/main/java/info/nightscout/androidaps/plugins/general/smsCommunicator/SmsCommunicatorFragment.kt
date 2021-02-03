@@ -5,7 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import dagger.android.support.DaggerFragment
-import info.nightscout.androidaps.R
+import info.nightscout.androidaps.databinding.SmscommunicatorFragmentBinding
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper
 import info.nightscout.androidaps.plugins.general.smsCommunicator.events.EventSmsCommunicatorUpdateGui
 import info.nightscout.androidaps.utils.DateUtil
@@ -14,22 +14,30 @@ import info.nightscout.androidaps.utils.HtmlHelper
 import info.nightscout.androidaps.utils.extensions.plusAssign
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
-import kotlinx.android.synthetic.main.smscommunicator_fragment.*
 import java.util.*
 import javax.inject.Inject
 import kotlin.math.max
 
 class SmsCommunicatorFragment : DaggerFragment() {
-    @Inject lateinit var fabricPrivacy : FabricPrivacy
+
+    @Inject lateinit var fabricPrivacy: FabricPrivacy
     @Inject lateinit var rxBus: RxBusWrapper
     @Inject lateinit var smsCommunicatorPlugin: SmsCommunicatorPlugin
     @Inject lateinit var dateUtil: DateUtil
 
     private val disposable = CompositeDisposable()
 
+    private var _binding: SmscommunicatorFragmentBinding? = null
+
+    // This property is only valid between onCreateView and
+    // onDestroyView.
+    private val binding get() = _binding!!
+
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
-                              savedInstanceState: Bundle?): View? {
-        return inflater.inflate(R.layout.smscommunicator_fragment, container, false)
+                              savedInstanceState: Bundle?): View {
+        _binding = SmscommunicatorFragmentBinding.inflate(inflater, container, false)
+        return binding.root
+
     }
 
     @Synchronized
@@ -48,8 +56,15 @@ class SmsCommunicatorFragment : DaggerFragment() {
         disposable.clear()
     }
 
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
+    }
+
     fun updateGui() {
+        if (_binding == null) return
         class CustomComparator : Comparator<Sms> {
+
             override fun compare(object1: Sms, object2: Sms): Int {
                 return (object1.date - object2.date).toInt()
             }
@@ -74,6 +89,6 @@ class SmsCommunicatorFragment : DaggerFragment() {
                 }
             }
         }
-        smscommunicator_log?.text = HtmlHelper.fromHtml(logText)
+        binding.log.text = HtmlHelper.fromHtml(logText)
     }
 }

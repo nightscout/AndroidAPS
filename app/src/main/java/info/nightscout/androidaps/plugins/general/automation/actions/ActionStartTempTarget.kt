@@ -25,11 +25,12 @@ import org.json.JSONObject
 import javax.inject.Inject
 
 class ActionStartTempTarget(injector: HasAndroidInjector) : Action(injector) {
+
     @Inject lateinit var resourceHelper: ResourceHelper
     @Inject lateinit var activePlugin: ActivePluginProvider
 
     var value = InputTempTarget(injector)
-    var duration = InputDuration(injector, 0, InputDuration.TimeUnit.MINUTES)
+    var duration = InputDuration(injector, 30, InputDuration.TimeUnit.MINUTES)
 
     init {
         precondition = TriggerTempTarget(injector, ComparatorExists.Compare.NOT_EXISTS)
@@ -83,4 +84,15 @@ class ActionStartTempTarget(injector: HasAndroidInjector) : Action(injector) {
             .source(Source.USER)
             .low(Profile.toMgdl(value.value, value.units))
             .high(Profile.toMgdl(value.value, value.units))
+
+    override fun isValid(): Boolean =
+        if (value.units == Constants.MMOL) { // mmol
+            value.value >= Constants.MIN_TT_MMOL &&
+                value.value <= Constants.MAX_TT_MMOL &&
+                duration.value > 0
+        } else { // mg/dL
+            value.value >= Constants.MIN_TT_MGDL &&
+                value.value <= Constants.MAX_TT_MGDL &&
+                duration.value > 0
+        }
 }

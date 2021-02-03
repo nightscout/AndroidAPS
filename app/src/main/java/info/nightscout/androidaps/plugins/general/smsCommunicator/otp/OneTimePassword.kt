@@ -26,22 +26,7 @@ class OneTimePassword @Inject constructor(
     private val totp = HmacOneTimePasswordGenerator()
 
     init {
-        instance = this
         configure()
-    }
-
-    companion object {
-        private lateinit var instance: OneTimePassword
-
-        @JvmStatic
-        fun getInstance(): OneTimePassword = instance
-    }
-
-    /**
-     * If OTP Authenticator support is enabled by user
-     */
-    fun isEnabled(): Boolean {
-        return sp.getBoolean(R.string.key_smscommunicator_otp_enabled, true)
     }
 
     /**

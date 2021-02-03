@@ -65,8 +65,7 @@ import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.overview_buttons_layout.*
-import kotlinx.android.synthetic.main.overview_fragment.overview_notifications
-import kotlinx.android.synthetic.main.overview_fragment_nsclient.*
+import kotlinx.android.synthetic.main.overview_fragment.*
 import kotlinx.android.synthetic.main.overview_graphs_layout.*
 import kotlinx.android.synthetic.main.overview_info_layout.*
 import kotlinx.android.synthetic.main.overview_loop_pumpstatus_layout.*
@@ -138,20 +137,21 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
         dm = DisplayMetrics()
         activity?.windowManager?.defaultDisplay?.getMetrics(dm)
 
-        val screenWidth = dm.widthPixels
-        val screenHeight = dm.heightPixels
-        smallWidth = screenWidth <= Constants.SMALL_WIDTH
-        smallHeight = screenHeight <= Constants.SMALL_HEIGHT
-        val landscape = screenHeight < screenWidth
-
-        return inflater.inflate(skinProvider.activeSkin().overviewLayout(landscape, resourceHelper.gb(R.bool.isTablet), smallHeight), container, false)
+        return inflater.inflate(R.layout.overview_fragment, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
         // pre-process landscape mode
-        skinProvider.activeSkin().preProcessLandscapeOverviewLayout(dm, view, resourceHelper.gb(R.bool.isTablet))
+        val screenWidth = dm.widthPixels
+        val screenHeight = dm.heightPixels
+        smallWidth = screenWidth <= Constants.SMALL_WIDTH
+        smallHeight = screenHeight <= Constants.SMALL_HEIGHT
+        val landscape = screenHeight < screenWidth
+
+        skinProvider.activeSkin().preProcessLandscapeOverviewLayout(dm, view, landscape, resourceHelper.gb(R.bool.isTablet), smallHeight)
+        nsclient_layout?.visibility = config.NSCLIENT.toVisibility()
 
         overview_pumpstatus?.setBackgroundColor(resourceHelper.gc(R.color.colorInitializingBorder))
 
