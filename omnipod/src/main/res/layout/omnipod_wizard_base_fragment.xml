@@ -5,10 +5,12 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <include layout="@layout/omnipod_wizard_progress_indication" />
+    <include
+        android:id="@+id/progress_indication_layout"
+        layout="@layout/omnipod_wizard_progress_indication" />
 
     <TextView
-        android:id="@+id/omnipod_wizard_base_fragment_title"
+        android:id="@+id/fragment_title"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="10dp"
@@ -21,10 +23,12 @@
         android:layout_weight="1">
 
         <ViewStub
-            android:id="@+id/omnipod_wizard_base_fragment_content"
+            android:id="@+id/fragment_content"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
     </ScrollView>
 
-    <include layout="@layout/omnipod_wizard_nav_buttons" />
+    <include
+        android:id="@+id/nav_buttons_layout"
+        layout="@layout/omnipod_wizard_nav_buttons" />
 </LinearLayout>
