@@ -196,7 +196,6 @@
     <!-- Omnipod - Overview -->
     <string name="omnipod_overview_button_set_time">Setați ora</string>
     <string name="omnipod_overview_button_suspend_delivery">Suspendate</string>
-    <string name="omnipod_overview_button_refresh">Actualizează</string>
     <string name="omnipod_overview_button_resume_delivery">Reia Livrarea</string>
     <string name="omnipod_overview_button_pod_management">Mgmt Pod</string>
     <string name="omnipod_overview_button_acknowledge_active_alerts">Confirmare Alerte</string>
