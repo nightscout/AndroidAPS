@@ -198,7 +198,6 @@
     <!-- Omnipod - Overview -->
     <string name="omnipod_overview_button_set_time">Definir hora</string>
     <string name="omnipod_overview_button_suspend_delivery">Suspender</string>
-    <string name="omnipod_overview_button_refresh">Actualizar</string>
     <string name="omnipod_overview_button_resume_delivery">Retomar Administração</string>
     <string name="omnipod_overview_button_pod_management">Gestão Pod</string>
     <string name="omnipod_overview_button_acknowledge_active_alerts">Reco Alertas</string>
