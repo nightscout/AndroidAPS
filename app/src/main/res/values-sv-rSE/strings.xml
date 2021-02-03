@@ -548,7 +548,6 @@ Eversense-appen.</string>
     <string name="maxiobset">Max IOB är korrekt angivet</string>
     <string name="hasbgdata">BG tillgängligt från vald källa</string>
     <string name="combo_programming_bolus">Programmerar bolus i pump</string>
-    <string name="combo_refresh">Uppdatera</string>
     <string name="combo_pump_state_label">Läge</string>
     <string name="combo_pump_activity_label">Aktivitet</string>
     <string name="combo_no_pump_connection">Ingen anslutning på %1$d min</string>
@@ -839,7 +838,6 @@ Eversense-appen.</string>
     <string name="eb_formatter">%1$.2f / %2$.2f U i %3$d min</string>
     <string name="enable_tbr_over_notification">Aktivera meddelanden om avslutade tempbasaler\n(pumpinställning)</string>
     <string name="disable_tbr_over_notification">Inaktivera meddelanden om avslutade tempbasaler\n(pumpinställning)</string>
-    <string name="refresh">Uppdatera</string>
     <string name="description_pump_insight_local">Integration för Accu-Chek Insight pumpar</string>
     <string name="not_inserted">Inte isatt</string>
     <string name="short_status_last_connected">Senast anslutning: %1$d min sedan</string>
