@@ -29,7 +29,7 @@
                 android:text="{fa-clock-o}" />
 
             <TextView
-                android:id="@+id/careportal_date"
+                android:id="@+id/date"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:paddingEnd="10dp"
@@ -37,14 +37,14 @@
                 android:textAppearance="?android:attr/textAppearanceSmall" />
 
             <TextView
-                android:id="@+id/careportal_duration"
+                android:id="@+id/duration"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
                 android:paddingEnd="10dp"/>
 
             <TextView
-                android:id="@+id/careportal_type"
+                android:id="@+id/type"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
@@ -60,7 +60,7 @@
                 android:text="" />
 
             <TextView
-                android:id="@+id/ns_sign"
+                android:id="@+id/ns"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="10dp"
@@ -75,7 +75,7 @@
             android:orientation="horizontal">
 
             <TextView
-                android:id="@+id/careportal_note"
+                android:id="@+id/note"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
@@ -85,7 +85,7 @@
                 android:text="Activity" />
 
             <TextView
-                android:id="@+id/careportal_remove"
+                android:id="@+id/remove"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="10dp"
