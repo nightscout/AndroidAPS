@@ -23,11 +23,6 @@ class ActionRunAutotune(injector: HasAndroidInjector) : Action(injector) {
     @DrawableRes override fun icon(): Int = R.drawable.ic_actions_profileswitch
 
     override fun doAction(callback: Callback) {
-        if (profileFunction.getProfile() == null) {
-            aapsLogger.error(LTag.AUTOMATION, "ProfileFunctions not initialized")
-            callback.result(PumpEnactResult(injector).success(false).comment(R.string.noprofile))?.run()
-            return
-        }
         if(sp.getBoolean(R.string.key_autotune_auto, false)) {
             autotunePlugin.aapsAutotune()
             var message = R.string.autotune_run_with_autoswitch
@@ -51,4 +46,5 @@ class ActionRunAutotune(injector: HasAndroidInjector) : Action(injector) {
 
     override fun hasDialog(): Boolean = false
 
+    override fun isValid(): Boolean = profileFunction.getProfile() != null
 }
