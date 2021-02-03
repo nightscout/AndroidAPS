@@ -198,7 +198,6 @@
     <!-- Omnipod - Overview -->
     <string name="omnipod_overview_button_set_time">Ustaw czas</string>
     <string name="omnipod_overview_button_suspend_delivery">Wstrzymaj</string>
-    <string name="omnipod_overview_button_refresh">Odśwież</string>
     <string name="omnipod_overview_button_resume_delivery">Wznów podawanie</string>
     <string name="omnipod_overview_button_pod_management">Pod Mgmt</string>
     <string name="omnipod_overview_button_acknowledge_active_alerts">Alerty ack</string>
