@@ -548,7 +548,6 @@
     <string name="maxiobset">Maximales IOB richtig gesetzt</string>
     <string name="hasbgdata">BZ verfügbar von gewählter Quelle</string>
     <string name="combo_programming_bolus">Bolusabgabe wird vorbereitet</string>
-    <string name="combo_refresh">Aktualisieren</string>
     <string name="combo_pump_state_label">Status</string>
     <string name="combo_pump_activity_label">Aktivität</string>
     <string name="combo_no_pump_connection">Keine Verbindung seit %1$d min</string>
@@ -840,7 +839,6 @@ Unerwartetes Verhalten.</string>
     <string name="eb_formatter">%1$.2f / %2$.2f IE für %3$d min</string>
     <string name="enable_tbr_over_notification">TBR-Vorrüber-Benachrichtigung aktivieren\n(Pumpeneinstellung)</string>
     <string name="disable_tbr_over_notification">TBR-Vorrüber-Benachrichtigung deaktivieren\n(Pumpeneinstellung)</string>
-    <string name="refresh">Aktualisieren</string>
     <string name="description_pump_insight_local">Pumpen-Integration für Accu-Chek Insight Pumpen</string>
     <string name="not_inserted">Nicht eingesetzt</string>
     <string name="short_status_last_connected">Letzte Verb.: vor %1$d min</string>
