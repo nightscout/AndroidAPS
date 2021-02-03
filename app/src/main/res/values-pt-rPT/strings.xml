@@ -548,7 +548,6 @@
     <string name="maxiobset">IOB máxima definida correctamente</string>
     <string name="hasbgdata">Glicemia disponivel desde a fonte selecionada</string>
     <string name="combo_programming_bolus">A programar bomba para administrar bólus</string>
-    <string name="combo_refresh">Actualizar</string>
     <string name="combo_pump_state_label">Estado</string>
     <string name="combo_pump_activity_label">Actividade</string>
     <string name="combo_no_pump_connection">Sem conexão há %1$d min</string>
@@ -839,7 +838,6 @@
     <string name="eb_formatter">%1$.2f / %2$.2f U por %3$d min</string>
     <string name="enable_tbr_over_notification">Activar notificação do fim da basal temporária\n(configuração da bomba)</string>
     <string name="disable_tbr_over_notification">Desactivar notificação do fim da basal temporária\n(configuração da bomba)</string>
-    <string name="refresh">Actualizar</string>
     <string name="description_pump_insight_local">Integração de bomba para bombas Accu-Chek Insight</string>
     <string name="not_inserted">Não inserido</string>
     <string name="short_status_last_connected">Última ligação:%1$d minutos atrás</string>
