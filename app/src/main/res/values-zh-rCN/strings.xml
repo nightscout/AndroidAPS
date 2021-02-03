@@ -424,7 +424,6 @@
     <string name="maxiobset">合理地设置最大 IOB</string>
     <string name="hasbgdata">所选的血糖值来源的血糖是可用的</string>
     <string name="combo_programming_bolus">正在调用泵上的大剂量输注程序</string>
-    <string name="combo_refresh">刷新</string>
     <string name="combo_pump_state_label">状态</string>
     <string name="combo_pump_activity_label">活动</string>
     <string name="combo_no_pump_connection">%1$d分钟没有连接</string>
@@ -688,7 +687,6 @@
     <string name="eb_formatter">%1$.2f / %2$.2f U 为 %3$d 分钟</string>
     <string name="enable_tbr_over_notification">启用 TBR (临时基础率) 结束通知\n(泵设置)</string>
     <string name="disable_tbr_over_notification">禁用TBR (临时基础率) 结束通知\n(泵设置)</string>
-    <string name="refresh">刷新</string>
     <string name="description_pump_insight_local">集成Accu-Chek Insight泵</string>
     <string name="not_inserted">未插入</string>
     <string name="short_status_last_connected">最后一次连接: %1$d 分钟前</string>
