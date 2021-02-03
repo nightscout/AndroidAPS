@@ -198,7 +198,6 @@
     <!-- Omnipod - Overview -->
     <string name="omnipod_overview_button_set_time">Nastavenie času</string>
     <string name="omnipod_overview_button_suspend_delivery">Pozastaviť</string>
-    <string name="omnipod_overview_button_refresh">Obnoviť</string>
     <string name="omnipod_overview_button_resume_delivery">Pokračovať v dodávaní inzulínu</string>
     <string name="omnipod_overview_button_pod_management">Správa Podu</string>
     <string name="omnipod_overview_button_acknowledge_active_alerts">Potvrdiť výstrahu</string>
