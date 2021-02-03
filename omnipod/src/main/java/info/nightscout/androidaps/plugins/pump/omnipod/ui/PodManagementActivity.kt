@@ -15,6 +15,7 @@ import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.service.tasks
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.service.tasks.ServiceTaskExecutor
 import info.nightscout.androidaps.plugins.pump.omnipod.OmnipodPumpPlugin
 import info.nightscout.androidaps.plugins.pump.omnipod.R
+import info.nightscout.androidaps.plugins.pump.omnipod.databinding.OmnipodPodManagementBinding
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.definition.ActivationProgress
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.definition.BeepConfigType
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.manager.PodStateManager
@@ -33,7 +34,6 @@ import info.nightscout.androidaps.utils.extensions.toVisibility
 import info.nightscout.androidaps.utils.ui.UIRunnable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
-import kotlinx.android.synthetic.main.omnipod_pod_management.*
 import javax.inject.Inject
 
 /**
@@ -54,26 +54,29 @@ class PodManagementActivity : NoSplashAppCompatActivity() {
 
     private var disposables: CompositeDisposable = CompositeDisposable()
 
+    private lateinit var binding: OmnipodPodManagementBinding
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.omnipod_pod_management)
+        binding = OmnipodPodManagementBinding.inflate(layoutInflater)
+        setContentView(binding.root)
 
-        omnipod_pod_management_button_activate_pod.setOnClickListener {
+        binding.buttonActivatePod.setOnClickListener {
             startActivity(Intent(this, PodActivationWizardActivity::class.java))
         }
 
-        omnipod_pod_management_button_deactivate_pod.setOnClickListener {
+        binding.buttonDeactivatePod.setOnClickListener {
             startActivity(Intent(this, PodDeactivationWizardActivity::class.java))
         }
 
-        omnipod_pod_management_button_discard_pod.setOnClickListener {
+        binding.buttonDiscardPod.setOnClickListener {
             OKDialog.showConfirmation(this,
                 resourceHelper.gs(R.string.omnipod_pod_management_discard_pod_confirmation), Thread {
                 aapsOmnipodManager.discardPodState()
             })
         }
 
-        omnipod_pod_management_button_rileylink_stats.setOnClickListener {
+        binding.buttonRileylinkStats.setOnClickListener {
             if (omnipodPumpPlugin.rileyLinkService?.verifyConfiguration() == true) {
                 startActivity(Intent(context, RileyLinkStatusActivity::class.java))
             } else {
@@ -81,14 +84,14 @@ class PodManagementActivity : NoSplashAppCompatActivity() {
             }
         }
 
-        omnipod_pod_management_button_reset_rileylink_config.setOnClickListener {
+        binding.buttonResetRileylinkConfig.setOnClickListener {
             // TODO improvement: properly disable button until task is finished
             serviceTaskExecutor.startTask(ResetRileyLinkConfigurationTask(injector))
         }
 
-        omnipod_pod_management_button_play_test_beep.setOnClickListener {
-            omnipod_pod_management_button_play_test_beep.isEnabled = false
-            omnipod_pod_management_button_play_test_beep.setText(R.string.omnipod_pod_management_button_playing_test_beep)
+        binding.buttonPlayTestBeep.setOnClickListener {
+            binding.buttonPlayTestBeep.isEnabled = false
+            binding.buttonPlayTestBeep.setText(R.string.omnipod_pod_management_button_playing_test_beep)
 
             commandQueue.customCommand(CommandPlayTestBeep(BeepConfigType.BEEEP), object : Callback() {
                 override fun run() {
@@ -99,9 +102,9 @@ class PodManagementActivity : NoSplashAppCompatActivity() {
             })
         }
 
-        omnipod_pod_management_button_pulse_log.setOnClickListener {
-            omnipod_pod_management_button_pulse_log.isEnabled = false
-            omnipod_pod_management_button_pulse_log.setText(R.string.omnipod_pod_management_button_reading_pulse_log)
+        binding.buttonPulseLog.setOnClickListener {
+            binding.buttonPulseLog.isEnabled = false
+            binding.buttonPulseLog.setText(R.string.omnipod_pod_management_button_reading_pulse_log)
 
             commandQueue.customCommand(CommandReadPulseLog(), object : Callback() {
                 override fun run() {
@@ -112,7 +115,7 @@ class PodManagementActivity : NoSplashAppCompatActivity() {
             })
         }
 
-        omnipod_pod_management_button_pod_history.setOnClickListener {
+        binding.buttonPodHistory.setOnClickListener {
             startActivity(Intent(this, PodHistoryActivity::class.java))
         }
     }
@@ -145,65 +148,65 @@ class PodManagementActivity : NoSplashAppCompatActivity() {
         // Otherwise, users should use the Deactivate Pod Wizard. In case proper deactivation fails,
         // they will get an option to discard the Pod state there
         val discardButtonEnabled = podStateManager.hasPodState() && !podStateManager.isPodInitialized
-        omnipod_pod_management_button_discard_pod.visibility = discardButtonEnabled.toVisibility()
+        binding.buttonDiscardPod.visibility = discardButtonEnabled.toVisibility()
 
         val pulseLogButtonEnabled = aapsOmnipodManager.isPulseLogButtonEnabled
-        omnipod_pod_management_button_pulse_log.visibility = pulseLogButtonEnabled.toVisibility()
+        binding.buttonPulseLog.visibility = pulseLogButtonEnabled.toVisibility()
 
-        omnipod_pod_management_button_rileylink_stats.visibility = aapsOmnipodManager.isRileylinkStatsButtonEnabled.toVisibility()
-        omnipod_pod_management_waiting_for_rl_layout.visibility = (!rileyLinkServiceData.rileyLinkServiceState.isReady).toVisibility()
+        binding.buttonRileylinkStats.visibility = aapsOmnipodManager.isRileylinkStatsButtonEnabled.toVisibility()
+        binding.waitingForRlLayout.visibility = (!rileyLinkServiceData.rileyLinkServiceState.isReady).toVisibility()
 
         if (rileyLinkServiceData.rileyLinkServiceState.isReady) {
-            omnipod_pod_management_button_activate_pod.isEnabled = !podStateManager.isPodActivationCompleted
-            omnipod_pod_management_button_deactivate_pod.isEnabled = podStateManager.activationProgress.isAtLeast(ActivationProgress.PAIRING_COMPLETED)
+            binding.buttonActivatePod.isEnabled = !podStateManager.isPodActivationCompleted
+            binding.buttonDeactivatePod.isEnabled = podStateManager.activationProgress.isAtLeast(ActivationProgress.PAIRING_COMPLETED)
 
             if (podStateManager.isPodInitialized && podStateManager.activationProgress.isAtLeast(ActivationProgress.PAIRING_COMPLETED)) {
                 if (commandQueue.isCustomCommandInQueue(CommandPlayTestBeep::class.java)) {
-                    omnipod_pod_management_button_play_test_beep.isEnabled = false
-                    omnipod_pod_management_button_play_test_beep.setText(R.string.omnipod_pod_management_button_playing_test_beep)
+                    binding.buttonPlayTestBeep.isEnabled = false
+                    binding.buttonPlayTestBeep.setText(R.string.omnipod_pod_management_button_playing_test_beep)
                 } else {
-                    omnipod_pod_management_button_play_test_beep.isEnabled = true
-                    omnipod_pod_management_button_play_test_beep.setText(R.string.omnipod_pod_management_button_play_test_beep)
+                    binding.buttonPlayTestBeep.isEnabled = true
+                    binding.buttonPlayTestBeep.setText(R.string.omnipod_pod_management_button_play_test_beep)
                 }
             } else {
-                omnipod_pod_management_button_play_test_beep.isEnabled = false
-                omnipod_pod_management_button_play_test_beep.setText(R.string.omnipod_pod_management_button_play_test_beep)
+                binding.buttonPlayTestBeep.isEnabled = false
+                binding.buttonPlayTestBeep.setText(R.string.omnipod_pod_management_button_play_test_beep)
             }
 
             if (discardButtonEnabled) {
-                omnipod_pod_management_button_discard_pod.isEnabled = true
+                binding.buttonDiscardPod.isEnabled = true
             }
             if (pulseLogButtonEnabled) {
                 if (podStateManager.isPodActivationCompleted) {
                     if (commandQueue.isCustomCommandInQueue(CommandReadPulseLog::class.java)) {
-                        omnipod_pod_management_button_pulse_log.isEnabled = false
-                        omnipod_pod_management_button_pulse_log.setText(R.string.omnipod_pod_management_button_reading_pulse_log)
+                        binding.buttonPulseLog.isEnabled = false
+                        binding.buttonPulseLog.setText(R.string.omnipod_pod_management_button_reading_pulse_log)
                     } else {
-                        omnipod_pod_management_button_pulse_log.isEnabled = true
-                        omnipod_pod_management_button_pulse_log.setText(R.string.omnipod_pod_management_button_read_pulse_log)
+                        binding.buttonPulseLog.isEnabled = true
+                        binding.buttonPulseLog.setText(R.string.omnipod_pod_management_button_read_pulse_log)
                     }
                 } else {
-                    omnipod_pod_management_button_pulse_log.isEnabled = false
-                    omnipod_pod_management_button_pulse_log.setText(R.string.omnipod_pod_management_button_read_pulse_log)
+                    binding.buttonPulseLog.isEnabled = false
+                    binding.buttonPulseLog.setText(R.string.omnipod_pod_management_button_read_pulse_log)
                 }
             }
         } else {
-            omnipod_pod_management_button_play_test_beep.setText(R.string.omnipod_pod_management_button_play_test_beep)
-            omnipod_pod_management_button_activate_pod.isEnabled = false
-            omnipod_pod_management_button_deactivate_pod.isEnabled = false
-            omnipod_pod_management_button_play_test_beep.isEnabled = false
+            binding.buttonPlayTestBeep.setText(R.string.omnipod_pod_management_button_play_test_beep)
+            binding.buttonActivatePod.isEnabled = false
+            binding.buttonDeactivatePod.isEnabled = false
+            binding.buttonPlayTestBeep.isEnabled = false
 
             if (discardButtonEnabled) {
-                omnipod_pod_management_button_discard_pod.isEnabled = false
+                binding.buttonDiscardPod.isEnabled = false
             }
             if (pulseLogButtonEnabled) {
-                omnipod_pod_management_button_pulse_log.isEnabled = false
-                omnipod_pod_management_button_pulse_log.setText(R.string.omnipod_pod_management_button_read_pulse_log)
+                binding.buttonPulseLog.isEnabled = false
+                binding.buttonPulseLog.setText(R.string.omnipod_pod_management_button_read_pulse_log)
             }
         }
     }
 
-    private fun displayErrorDialog(title: String, message: String, withSound: Boolean) {
+    private fun displayErrorDialog(title: String, message: String, @Suppress("SameParameterValue") withSound: Boolean) {
         context.let {
             val i = Intent(it, ErrorHelperActivity::class.java)
             i.putExtra("soundid", if (withSound) R.raw.boluserror else 0)
@@ -216,10 +219,10 @@ class PodManagementActivity : NoSplashAppCompatActivity() {
 
     private fun displayNotConfiguredDialog() {
         context.let {
-            UIRunnable(Runnable {
+            UIRunnable {
                 OKDialog.show(it, resourceHelper.gs(R.string.omnipod_warning),
                     resourceHelper.gs(R.string.omnipod_error_operation_not_possible_no_configuration), null)
-            }).run()
+            }.run()
         }
     }
 }

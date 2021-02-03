@@ -19,7 +19,7 @@
         android:textStyle="bold" />
 
     <LinearLayout
-        android:id="@+id/omnipod_pod_management_waiting_for_rl_layout"
+        android:id="@+id/waiting_for_rl_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
@@ -62,7 +62,7 @@
         android:paddingEnd="10dp">
 
         <info.nightscout.androidaps.utils.ui.SingleClickButton
-            android:id="@+id/omnipod_pod_management_button_activate_pod"
+            android:id="@+id/button_activate_pod"
             style="?android:attr/buttonStyle"
             android:layout_width="match_parent"
             android:layout_height="fill_parent"
@@ -74,7 +74,7 @@
 
 
         <info.nightscout.androidaps.utils.ui.SingleClickButton
-            android:id="@+id/omnipod_pod_management_button_deactivate_pod"
+            android:id="@+id/button_deactivate_pod"
             style="?android:attr/buttonStyle"
             android:layout_width="match_parent"
             android:layout_height="fill_parent"
@@ -94,7 +94,7 @@
         android:paddingEnd="10dp">
 
         <Button
-            android:id="@+id/omnipod_pod_management_button_play_test_beep"
+            android:id="@+id/button_play_test_beep"
             style="?android:attr/buttonStyle"
             android:layout_width="match_parent"
             android:layout_height="fill_parent"
@@ -106,7 +106,7 @@
 
 
         <info.nightscout.androidaps.utils.ui.SingleClickButton
-            android:id="@+id/omnipod_pod_management_button_discard_pod"
+            android:id="@+id/button_discard_pod"
             style="?android:attr/buttonStyle"
             android:layout_width="match_parent"
             android:layout_height="fill_parent"
@@ -135,7 +135,7 @@
         android:paddingEnd="10dp">
 
         <info.nightscout.androidaps.utils.ui.SingleClickButton
-            android:id="@+id/omnipod_pod_management_button_pod_history"
+            android:id="@+id/button_pod_history"
             style="?android:attr/buttonStyle"
             android:layout_width="match_parent"
             android:layout_height="fill_parent"
@@ -146,7 +146,7 @@
             android:textAllCaps="false" />
 
         <info.nightscout.androidaps.utils.ui.SingleClickButton
-            android:id="@+id/omnipod_pod_management_button_rileylink_stats"
+            android:id="@+id/button_rileylink_stats"
             style="?android:attr/buttonStyle"
             android:layout_width="match_parent"
             android:layout_height="fill_parent"
@@ -167,7 +167,7 @@
         android:paddingEnd="10dp">
 
         <Button
-            android:id="@+id/omnipod_pod_management_button_pulse_log"
+            android:id="@+id/button_pulse_log"
             style="?android:attr/buttonStyle"
             android:layout_width="match_parent"
             android:layout_height="fill_parent"
@@ -179,7 +179,7 @@
             android:visibility="gone" />
 
         <info.nightscout.androidaps.utils.ui.SingleClickButton
-            android:id="@+id/omnipod_pod_management_button_reset_rileylink_config"
+            android:id="@+id/button_reset_rileylink_config"
             style="?android:attr/buttonStyle"
             android:layout_width="match_parent"
             android:layout_height="fill_parent"
