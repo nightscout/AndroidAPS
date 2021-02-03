@@ -548,7 +548,6 @@
     <string name="maxiobset">Maks. IOB ustawione poprawnie</string>
     <string name="hasbgdata">BG dostępne z wybranego źródła</string>
     <string name="combo_programming_bolus">Programowanie pompy do podawania bolusa</string>
-    <string name="combo_refresh">Odśwież</string>
     <string name="combo_pump_state_label">Stan</string>
     <string name="combo_pump_activity_label">Aktywność</string>
     <string name="combo_no_pump_connection">Brak połączenia przez %1$d min</string>
@@ -839,7 +838,6 @@
     <string name="eb_formatter">%1$.2f / %2$.2f U na %3$d min</string>
     <string name="enable_tbr_over_notification">Włącz powiadomienia o końcu TBR\n(ustawienia pompy)</string>
     <string name="disable_tbr_over_notification">Wyłącz powiadomienia o końcu TBR\n(ustawienia pompy)</string>
-    <string name="refresh">Odśwież</string>
     <string name="description_pump_insight_local">Integracja pompy dla pomp Accu-Check Insight</string>
     <string name="not_inserted">Nie wprowadzono</string>
     <string name="short_status_last_connected">Połączenie: %1$d min temu</string>
