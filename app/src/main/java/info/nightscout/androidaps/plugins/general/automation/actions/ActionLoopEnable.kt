@@ -14,6 +14,7 @@ import info.nightscout.androidaps.utils.resources.ResourceHelper
 import javax.inject.Inject
 
 class ActionLoopEnable(injector: HasAndroidInjector) : Action(injector) {
+
     @Inject lateinit var resourceHelper: ResourceHelper
     @Inject lateinit var loopPlugin: LoopPlugin
     @Inject lateinit var configBuilderPlugin: ConfigBuilderPlugin
@@ -34,4 +35,5 @@ class ActionLoopEnable(injector: HasAndroidInjector) : Action(injector) {
         }
     }
 
+    override fun isValid(): Boolean = true
 }

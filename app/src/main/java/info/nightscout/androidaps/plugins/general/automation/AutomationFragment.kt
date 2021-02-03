@@ -162,6 +162,7 @@ class AutomationFragment : DaggerFragment(), OnStartDragListener {
         @SuppressLint("ClickableViewAccessibility")
         override fun onBindViewHolder(holder: ViewHolder, position: Int) {
             val event = automationPlugin.at(position)
+            holder.binding.rootLayout.setBackgroundColor(resourceHelper.gc(if (event.areActionsValid()) R.color.ribbonDefault else R.color.errorAlertBackground))
             holder.binding.eventTitle.text = event.title
             holder.binding.enabled.isChecked = event.isEnabled
             holder.binding.enabled.isEnabled = !event.readOnly

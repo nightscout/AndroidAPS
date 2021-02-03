@@ -40,6 +40,8 @@ class ActionAlarm(injector: HasAndroidInjector) : Action(injector) {
     override fun shortDescription(): String = resourceHelper.gs(R.string.alarm_message, text.value)
     @DrawableRes override fun icon(): Int = R.drawable.ic_access_alarm_24dp
 
+    override fun isValid(): Boolean = text.value.isNotEmpty()
+
     override fun doAction(callback: Callback) {
         val i = Intent(context, ErrorHelperActivity::class.java)
         i.putExtra("soundid", R.raw.modern_alarm)

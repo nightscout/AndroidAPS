@@ -200,30 +200,36 @@ class AutomationPlugin @Inject constructor(
         }
 
         aapsLogger.debug(LTag.AUTOMATION, "processActions")
-        val iterator : MutableIterator<AutomationEvent> = automationEvents.iterator()
+        val iterator: MutableIterator<AutomationEvent> = automationEvents.iterator()
         while (iterator.hasNext()) {
             val event = iterator.next()
             if (event.isEnabled && event.shouldRun() && event.trigger.shouldRun() && event.getPreconditions().shouldRun()) {
                 if (event.systemAction || userEventsEnabled) {
                     val actions = event.actions
                     for (action in actions) {
-                        action.doAction(object : Callback() {
-                            override fun run() {
-                                val sb = StringBuilder()
-                                sb.append(dateUtil.timeString(DateUtil.now()))
-                                sb.append(" ")
-                                sb.append(if (result.success) "☺" else "▼")
-                                sb.append(" <b>")
-                                sb.append(event.title)
-                                sb.append(":</b> ")
-                                sb.append(action.shortDescription())
-                                sb.append(": ")
-                                sb.append(result.comment)
-                                executionLog.add(sb.toString())
-                                aapsLogger.debug(LTag.AUTOMATION, "Executed: $sb")
-                                rxBus.send(EventAutomationUpdateGui())
-                            }
-                        })
+                        if (action.isValid())
+                            action.doAction(object : Callback() {
+                                override fun run() {
+                                    val sb = StringBuilder()
+                                    sb.append(dateUtil.timeString(DateUtil.now()))
+                                    sb.append(" ")
+                                    sb.append(if (result.success) "☺" else "▼")
+                                    sb.append(" <b>")
+                                    sb.append(event.title)
+                                    sb.append(":</b> ")
+                                    sb.append(action.shortDescription())
+                                    sb.append(": ")
+                                    sb.append(result.comment)
+                                    executionLog.add(sb.toString())
+                                    aapsLogger.debug(LTag.AUTOMATION, "Executed: $sb")
+                                    rxBus.send(EventAutomationUpdateGui())
+                                }
+                            })
+                        else {
+                            executionLog.add("Invalid action: ${action.shortDescription()}")
+                            aapsLogger.debug(LTag.AUTOMATION, "Invalid action: ${action.shortDescription()}")
+                            rxBus.send(EventAutomationUpdateGui())
+                        }
                     }
                     SystemClock.sleep(1100)
                     event.lastRun = DateUtil.now()

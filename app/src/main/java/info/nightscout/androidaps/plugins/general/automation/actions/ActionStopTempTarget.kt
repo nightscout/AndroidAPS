@@ -12,6 +12,7 @@ import info.nightscout.androidaps.utils.resources.ResourceHelper
 import javax.inject.Inject
 
 class ActionStopTempTarget(injector: HasAndroidInjector) : Action(injector) {
+
     @Inject lateinit var resourceHelper: ResourceHelper
     @Inject lateinit var activePlugin: ActivePluginProvider
 
@@ -29,4 +30,6 @@ class ActionStopTempTarget(injector: HasAndroidInjector) : Action(injector) {
         activePlugin.activeTreatments.addToHistoryTempTarget(tempTarget)
         callback.result(PumpEnactResult(injector).success(true).comment(R.string.ok))?.run()
     }
+
+    override fun isValid(): Boolean = true
 }

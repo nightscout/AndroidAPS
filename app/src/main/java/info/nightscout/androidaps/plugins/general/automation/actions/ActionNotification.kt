@@ -59,4 +59,6 @@ class ActionNotification(injector: HasAndroidInjector) : Action(injector) {
             .add(LabelWithElement(injector, resourceHelper.gs(R.string.message_short), "", text))
             .build(root)
     }
+
+    override fun isValid(): Boolean = text.value.isNotEmpty()
 }
