@@ -5,14 +5,14 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
-import android.widget.TextView
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import dagger.android.support.DaggerFragment
 import info.nightscout.androidaps.MainApp
 import info.nightscout.androidaps.R
+import info.nightscout.androidaps.databinding.BgsourceFragmentBinding
+import info.nightscout.androidaps.databinding.BgsourceItemBinding
 import info.nightscout.androidaps.db.BgReading
 import info.nightscout.androidaps.events.EventNewBG
 import info.nightscout.androidaps.interfaces.DatabaseHelperInterface
@@ -31,7 +31,6 @@ import info.nightscout.androidaps.utils.extensions.toVisibility
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
-import kotlinx.android.synthetic.main.bgsource_fragment.*
 import javax.inject.Inject
 
 class BGSourceFragment : DaggerFragment() {
@@ -44,25 +43,24 @@ class BGSourceFragment : DaggerFragment() {
     @Inject lateinit var databaseHelper: DatabaseHelperInterface
 
     private val disposable = CompositeDisposable()
-    private val MILLS_TO_THE_PAST = T.hours(12).msecs()
+    private val millsToThePast = T.hours(12).msecs()
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
-                              savedInstanceState: Bundle?): View? {
-        return inflater.inflate(R.layout.bgsource_fragment, container, false)
-    }
+    private var _binding: BgsourceFragmentBinding? = null
+
+    // This property is only valid between onCreateView and
+    // onDestroyView.
+    private val binding get() = _binding!!
+
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View =
+        BgsourceFragmentBinding.inflate(inflater, container, false).also { _binding = it }.root
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        bgsource_recyclerview.setHasFixedSize(true)
-        bgsource_recyclerview.layoutManager = LinearLayoutManager(view.context)
+        binding.recyclerview.setHasFixedSize(true)
+        binding.recyclerview.layoutManager = LinearLayoutManager(view.context)
         val now = System.currentTimeMillis()
-        bgsource_recyclerview.adapter = RecyclerViewAdapter(getBgData(now))
-    }
-
-    override fun onDestroyView() {
-        super.onDestroyView()
-        bgsource_recyclerview?.adapter = null // avoid leaks
+        binding.recyclerview.adapter = RecyclerViewAdapter(getBgData(now))
     }
 
     @Synchronized
@@ -87,17 +85,25 @@ class BGSourceFragment : DaggerFragment() {
         super.onPause()
     }
 
+    @Synchronized
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
+        binding.recyclerview.adapter = null // avoid leaks
+    }
+
     private fun updateGUI() {
+        if (_binding == null) return
         val now = System.currentTimeMillis()
-        (bgsource_recyclerview?.adapter as? RecyclerViewAdapter)?.setData(getBgData(now))
+        (binding.recyclerview.adapter as? RecyclerViewAdapter)?.setData(getBgData(now))
     }
 
     private fun getBgData(now: Long) = MainApp.getDbHelper()
-        .getAllBgreadingsDataFromTime(now - MILLS_TO_THE_PAST, false)
+        .getAllBgreadingsDataFromTime(now - millsToThePast, false)
 
     inner class RecyclerViewAdapter internal constructor(bgReadings: List<BgReading>) : RecyclerView.Adapter<BgReadingsViewHolder>() {
 
-        private var callbackHelper = ListUpdateCallbackHelper(this) { bgsource_recyclerview?.smoothScrollToPosition(0) }
+        private var callbackHelper = ListUpdateCallbackHelper(this) { binding.recyclerview.smoothScrollToPosition(0) }
 
         private val currentData: MutableList<BgReading> = mutableListOf<BgReading>().also { it.addAll(bgReadings) }
 
@@ -130,30 +136,25 @@ class BGSourceFragment : DaggerFragment() {
 
         override fun onBindViewHolder(holder: BgReadingsViewHolder, position: Int) {
             val bgReading = currentData[position]
-            holder.ns.visibility = (NSUpload.isIdValid(bgReading._id)).toVisibility()
-            holder.invalid.visibility = bgReading.isValid.not().toVisibility()
-            holder.date.text = dateUtil.dateAndTimeString(bgReading.date)
-            holder.value.text = bgReading.valueToUnitsToString(profileFunction.getUnits())
-            holder.direction.setImageResource(bgReading.directionToIcon(databaseHelper))
-            holder.remove.tag = bgReading
-            holder.remove.visibility = bgReading.isValid.toVisibility()
+            holder.binding.ns.visibility = (NSUpload.isIdValid(bgReading._id)).toVisibility()
+            holder.binding.invalid.visibility = bgReading.isValid.not().toVisibility()
+            holder.binding.date.text = dateUtil.dateAndTimeString(bgReading.date)
+            holder.binding.value.text = bgReading.valueToUnitsToString(profileFunction.getUnits())
+            holder.binding.direction.setImageResource(bgReading.directionToIcon(databaseHelper))
+            holder.binding.remove.tag = bgReading
+            holder.binding.remove.visibility = bgReading.isValid.toVisibility()
         }
 
         override fun getItemCount(): Int {
             return currentData.size
         }
 
-        inner class BgReadingsViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+        inner class BgReadingsViewHolder(view: View) : RecyclerView.ViewHolder(view) {
 
-            var date: TextView = itemView.findViewById(R.id.bgsource_date)
-            var value: TextView = itemView.findViewById(R.id.bgsource_value)
-            var direction: ImageView = itemView.findViewById(R.id.bgsource_direction)
-            var invalid: TextView = itemView.findViewById(R.id.invalid_sign)
-            var ns: TextView = itemView.findViewById(R.id.ns_sign)
-            var remove: TextView = itemView.findViewById(R.id.bgsource_remove)
+            val binding = BgsourceItemBinding.bind(view)
 
             init {
-                remove.setOnClickListener { v: View ->
+                binding.remove.setOnClickListener { v: View ->
                     val bgReading = v.tag as BgReading
                     activity?.let { activity ->
                         val text = dateUtil.dateAndTimeString(bgReading.date) + "\n" + bgReading.valueToUnitsToString(profileFunction.getUnits())
@@ -163,7 +164,7 @@ class BGSourceFragment : DaggerFragment() {
                         })
                     }
                 }
-                remove.paintFlags = remove.paintFlags or Paint.UNDERLINE_TEXT_FLAG
+                binding.remove.paintFlags = binding.remove.paintFlags or Paint.UNDERLINE_TEXT_FLAG
             }
         }
     }
