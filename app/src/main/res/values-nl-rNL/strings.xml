@@ -548,7 +548,6 @@
     <string name="maxiobset">Maximum IOB juist ingesteld</string>
     <string name="hasbgdata">BG beschikbaar op gekozen bron</string>
     <string name="combo_programming_bolus">Bolus in pomp programmeren </string>
-    <string name="combo_refresh">Vernieuw</string>
     <string name="combo_pump_state_label">Status</string>
     <string name="combo_pump_activity_label">Activiteit</string>
     <string name="combo_no_pump_connection">Geen verbinding gedurende %1$d min</string>
@@ -839,7 +838,6 @@
     <string name="eb_formatter">%1$.2f / %2$.2f U gedurende %3$d min</string>
     <string name="enable_tbr_over_notification">Activeer melding van TBR eind\n(pomp instelling)</string>
     <string name="disable_tbr_over_notification">Deactiveer melding van TBR eind\n(pomp instelling)</string>
-    <string name="refresh">Vernieuwen</string>
     <string name="description_pump_insight_local">Pomp integratie voor Accu-Chek Insight pompen</string>
     <string name="not_inserted">Niet geplaatst</string>
     <string name="short_status_last_connected">Laatste conn: %1$d min geleden</string>
