@@ -28,7 +28,6 @@
     <!-- Omnipod - Pod deactivation Wizard -->
     <!-- Omnipod - Overview -->
     <string name="omnipod_overview_button_suspend_delivery">Fionraí</string>
-    <string name="omnipod_overview_button_refresh">Athnuachan</string>
     <string name="omnipod_overview_total_delivered_value">%1$.2f A</string>
     <string name="omnipod_overview_reservoir">Taiscumar</string>
     <string name="omnipod_overview_temp_basal_value">%1$.2fA/u @%2$s (%3$d/%4$d nóiméad)</string>
