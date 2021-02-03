@@ -176,7 +176,6 @@
     <string name="loopenabled">Lúb cumasaithe</string>
     <string name="apsselected">APS  roghnaithe</string>
     <string name="combo_programming_bolus">Cláir Caidéil bólas</string>
-    <string name="combo_refresh">Athnuachan</string>
     <string name="combo_pump_state_label">Stáit</string>
     <string name="combo_pump_activity_label">Gníomhaíocht</string>
     <string name="combo_no_pump_connection">Níl nasc le haghaidh %1$d nóim</string>
@@ -232,7 +231,6 @@
     <string name="tdd_basal">TDD Bunaidh</string>
     <string name="tdd_total">TDD Lomlán</string>
     <string name="started">Thosaigh</string>
-    <string name="refresh">Athnuachan</string>
     <string name="short_status_tdd">TDD: %1$.2f</string>
     <string name="short_status_battery">Ceal.: %1$d%%</string>
     <string name="resumeloop">Lúb Atosú</string>
