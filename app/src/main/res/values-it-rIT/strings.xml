@@ -548,7 +548,6 @@
     <string name="maxiobset">Max IOB impostata correttamente</string>
     <string name="hasbgdata">BG disponibile da sorgente selezionata</string>
     <string name="combo_programming_bolus">Programmazione micro per erogazione</string>
-    <string name="combo_refresh">Aggiorna</string>
     <string name="combo_pump_state_label">Stato</string>
     <string name="combo_pump_activity_label">Attività</string>
     <string name="combo_no_pump_connection">Nessuna connessione per %1$d min</string>
@@ -839,7 +838,6 @@
     <string name="eb_formatter">%1$.2f / %2$.2f U per %3$d min</string>
     <string name="enable_tbr_over_notification">Abilita notifica di fine TBR\n(impostazione micro)</string>
     <string name="disable_tbr_over_notification">Disabilita notifica di fine TBR\n(impostazione micro)</string>
-    <string name="refresh">Aggiorna</string>
     <string name="description_pump_insight_local">Integrazione del microinfusore Accu-Chek Insight</string>
     <string name="not_inserted">Non inserito</string>
     <string name="short_status_last_connected">Ultima conn: %1$d min fa</string>
