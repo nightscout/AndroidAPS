@@ -548,7 +548,6 @@
     <string name="maxiobset">Максимум активного инсулина IOB установлен правильно</string>
     <string name="hasbgdata">СК доступны из выбранного источника</string>
     <string name="combo_programming_bolus">Помпа программируется для болюса</string>
-    <string name="combo_refresh">Обновить</string>
     <string name="combo_pump_state_label">Состояние</string>
     <string name="combo_pump_activity_label">Нагрузка</string>
     <string name="combo_no_pump_connection">Нет связи в течение %1$d мин</string>
@@ -841,7 +840,6 @@ Context | Edit Context</string>
     <string name="eb_formatter">%1$.2f / %2$.2f U за %3$d мин</string>
     <string name="enable_tbr_over_notification">Включить уведомление об окончании временной скорости базала TBR\n(настройка помпы)</string>
     <string name="disable_tbr_over_notification">Отключить уведомление об окончании временной скорости базала TBR\n(настройка помпы)</string>
-    <string name="refresh">Обновить</string>
     <string name="description_pump_insight_local">Интеграция с помпой Accu-Chek Insight</string>
     <string name="not_inserted">Не вставлено</string>
     <string name="short_status_last_connected">Недавнее соединение: %1$d мин. назад</string>
