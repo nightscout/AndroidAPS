@@ -62,7 +62,7 @@ class TreatmentsBolusFragment : DaggerFragment() {
         binding.recyclerview.setHasFixedSize(true)
         binding.recyclerview.layoutManager = LinearLayoutManager(view.context)
         binding.recyclerview.adapter = RecyclerViewAdapter(treatmentsPlugin.treatmentsFromHistory)
-        binding.reshreshFromNightscout.setOnClickListener {
+        binding.refreshFromNightscout.setOnClickListener {
             activity?.let { activity ->
                 OKDialog.showConfirmation(activity, resourceHelper.gs(R.string.refresheventsfromnightscout) + "?") {
                     treatmentsPlugin.service.resetTreatments()
@@ -86,7 +86,7 @@ class TreatmentsBolusFragment : DaggerFragment() {
             }
         }
         val nsUploadOnly = sp.getBoolean(R.string.key_ns_upload_only, true) || !buildHelper.isEngineeringMode()
-        if (nsUploadOnly) binding.reshreshFromNightscout.visibility = View.GONE
+        if (nsUploadOnly) binding.refreshFromNightscout.visibility = View.GONE
     }
 
     @Synchronized

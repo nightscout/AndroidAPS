@@ -88,10 +88,8 @@ class TreatmentsTemporaryBasalsFragment : DaggerFragment() {
 
     inner class RecyclerViewAdapter internal constructor(private var tempBasalList: Intervals<TemporaryBasal>) : RecyclerView.Adapter<TempBasalsViewHolder>() {
 
-        override fun onCreateViewHolder(viewGroup: ViewGroup, viewType: Int): TempBasalsViewHolder {
-            val v = LayoutInflater.from(viewGroup.context).inflate(R.layout.treatments_tempbasals_item, viewGroup, false)
-            return TempBasalsViewHolder(v)
-        }
+        override fun onCreateViewHolder(viewGroup: ViewGroup, viewType: Int): TempBasalsViewHolder =
+            TempBasalsViewHolder(LayoutInflater.from(viewGroup.context).inflate(R.layout.treatments_tempbasals_item, viewGroup, false))
 
         override fun onBindViewHolder(holder: TempBasalsViewHolder, position: Int) {
             val tempBasal = tempBasalList.getReversed(position)

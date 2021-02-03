@@ -10,22 +10,24 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal">
 
-        <Button
+        <info.nightscout.androidaps.utils.ui.SingleClickButton
             android:id="@+id/refresh_from_nightscout"
             style="?android:attr/buttonStyle"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
+            android:layout_width="0px"
+            android:layout_height="fill_parent"
             android:layout_gravity="center_horizontal"
             android:layout_weight="1"
-            android:text="@string/refresheventsfromnightscout" />
+            android:drawableStart="@drawable/ic_refresh"
+            android:text="@string/nav_refreshtreatments" />
 
-        <Button
+        <info.nightscout.androidaps.utils.ui.SingleClickButton
             android:id="@+id/remove_androidaps_started_events"
             style="?android:attr/buttonStyle"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
+            android:layout_width="0px"
+            android:layout_height="fill_parent"
             android:layout_gravity="center_horizontal"
             android:layout_weight="1"
+            android:drawableStart="@drawable/ic_remove"
             android:text="@string/careportal_removestartedevents" />
 
     </LinearLayout>
@@ -33,8 +35,6 @@
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerview"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
-
-    </androidx.recyclerview.widget.RecyclerView>
+        android:layout_height="match_parent" />
 
 </LinearLayout>

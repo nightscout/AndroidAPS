@@ -1,4 +1,5 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -6,7 +7,7 @@
     tools:context=".plugins.treatments.TreatmentsFragment">
 
 
-    <com.google.android.flexbox.FlexboxLayout xmlns:app="http://schemas.android.com/apk/res-auto"
+    <com.google.android.flexbox.FlexboxLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/defaultbackground"
@@ -16,65 +17,77 @@
         app:flexWrap="wrap"
         app:justifyContent="center">
 
-        <TextView
+        <ImageView
             android:id="@+id/treatments"
             android:layout_width="wrap_content"
-            android:layout_height="30dp"
+            android:layout_height="wrap_content"
+            android:paddingStart="6dp"
+            android:paddingEnd="6dp"
             android:layout_weight="1"
-            android:gravity="center_vertical|center_horizontal"
-            android:paddingLeft="5dp"
-            android:paddingRight="5dp"
-            android:text="@string/bolus" />
+            android:contentDescription="@string/bolus"
+            android:scaleX="0.8"
+            android:scaleY="0.8"
+            app:srcCompat="@drawable/ic_cp_bolus_carbs" />
 
-        <TextView
-            android:id="@+id/extendedboluses"
+        <ImageView
+            android:id="@+id/extended_boluses"
             android:layout_width="wrap_content"
-            android:layout_height="30dp"
+            android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:gravity="center_vertical|center_horizontal"
-            android:paddingLeft="5dp"
-            android:paddingRight="5dp"
-            android:text="@string/extended_bolus" />
+            android:contentDescription="@string/extended_bolus"
+            android:paddingStart="6dp"
+            android:paddingEnd="6dp"
+            android:scaleX="0.7"
+            android:scaleY="0.7"
+            app:srcCompat="@drawable/ic_actions_startextbolus" />
 
-        <TextView
-            android:id="@+id/tempbasals"
+        <ImageView
+            android:id="@+id/temp_basals"
             android:layout_width="wrap_content"
-            android:layout_height="30dp"
+            android:layout_height="wrap_content"
+            android:paddingStart="6dp"
+            android:paddingEnd="6dp"
             android:layout_weight="1"
-            android:gravity="center_vertical|center_horizontal"
-            android:paddingLeft="5dp"
-            android:paddingRight="5dp"
-            android:text="@string/tempbasal_label" />
+            android:contentDescription="@string/tempbasal_label"
+            android:scaleX="0.7"
+            android:scaleY="0.7"
+            app:srcCompat="@drawable/ic_actions_starttempbasal" />
 
-        <TextView
-            android:id="@+id/temptargets"
+        <ImageView
+            android:id="@+id/temp_targets"
             android:layout_width="wrap_content"
-            android:layout_height="30dp"
+            android:layout_height="wrap_content"
+            android:paddingStart="6dp"
+            android:paddingEnd="6dp"
             android:layout_weight="1"
-            android:gravity="center_vertical|center_horizontal"
-            android:paddingLeft="5dp"
-            android:paddingRight="5dp"
-            android:text="@string/careportal_temporarytarget" />
+            android:contentDescription="@string/careportal_temporarytarget"
+            android:scaleX="0.7"
+            android:scaleY="0.7"
+            app:srcCompat="@drawable/ic_temptarget_high" />
 
-        <TextView
-            android:id="@+id/profileswitches"
+        <ImageView
+            android:id="@+id/profile_switches"
             android:layout_width="wrap_content"
-            android:layout_height="30dp"
+            android:layout_height="wrap_content"
+            android:paddingStart="6dp"
+            android:paddingEnd="6dp"
             android:layout_weight="1"
-            android:gravity="center_vertical|center_horizontal"
-            android:paddingLeft="5dp"
-            android:paddingRight="5dp"
-            android:text="@string/careportal_profileswitch" />
+            android:contentDescription="@string/careportal_profileswitch"
+            android:scaleX="0.7"
+            android:scaleY="0.7"
+            app:srcCompat="@drawable/ic_actions_profileswitch" />
 
-        <TextView
+        <ImageView
             android:id="@+id/careportal"
             android:layout_width="wrap_content"
-            android:layout_height="30dp"
+            android:layout_height="wrap_content"
+            android:paddingStart="6dp"
+            android:paddingEnd="6dp"
             android:layout_weight="1"
-            android:gravity="center_vertical|center_horizontal"
-            android:paddingLeft="5dp"
-            android:paddingRight="5dp"
-            android:text="@string/careportal" />
+            android:contentDescription="@string/careportal"
+            android:scaleX="0.7"
+            android:scaleY="0.7"
+            app:srcCompat="@drawable/ic_cp_note" />
 
     </com.google.android.flexbox.FlexboxLayout>
 

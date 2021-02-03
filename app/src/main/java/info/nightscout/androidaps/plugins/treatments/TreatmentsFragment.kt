@@ -47,19 +47,19 @@ class TreatmentsFragment : DaggerFragment() {
             setFragment(TreatmentsBolusFragment())
             setBackgroundColorOnSelected(it)
         }
-        binding.extendedboluses.setOnClickListener {
+        binding.extendedBoluses.setOnClickListener {
             setFragment(TreatmentsExtendedBolusesFragment())
             setBackgroundColorOnSelected(it)
         }
-        binding.tempbasals.setOnClickListener {
+        binding.tempBasals.setOnClickListener {
             setFragment(TreatmentsTemporaryBasalsFragment())
             setBackgroundColorOnSelected(it)
         }
-        binding.temptargets.setOnClickListener {
+        binding.tempTargets.setOnClickListener {
             setFragment(TreatmentsTempTargetFragment())
             setBackgroundColorOnSelected(it)
         }
-        binding.profileswitches.setOnClickListener {
+        binding.profileSwitches.setOnClickListener {
             setFragment(TreatmentsProfileSwitchFragment())
             setBackgroundColorOnSelected(it)
         }
@@ -103,16 +103,16 @@ class TreatmentsFragment : DaggerFragment() {
 
     private fun setBackgroundColorOnSelected(selected: View) {
         binding.treatments.setBackgroundColor(resourceHelper.gc(R.color.defaultbackground))
-        binding.extendedboluses.setBackgroundColor(resourceHelper.gc(R.color.defaultbackground))
-        binding.tempbasals.setBackgroundColor(resourceHelper.gc(R.color.defaultbackground))
-        binding.temptargets.setBackgroundColor(resourceHelper.gc(R.color.defaultbackground))
-        binding.profileswitches.setBackgroundColor(resourceHelper.gc(R.color.defaultbackground))
+        binding.extendedBoluses.setBackgroundColor(resourceHelper.gc(R.color.defaultbackground))
+        binding.tempBasals.setBackgroundColor(resourceHelper.gc(R.color.defaultbackground))
+        binding.tempTargets.setBackgroundColor(resourceHelper.gc(R.color.defaultbackground))
+        binding.profileSwitches.setBackgroundColor(resourceHelper.gc(R.color.defaultbackground))
         binding.careportal.setBackgroundColor(resourceHelper.gc(R.color.defaultbackground))
         selected.setBackgroundColor(resourceHelper.gc(R.color.tabBgColorSelected))
     }
 
     private fun updateGui() {
         if (_binding == null) return
-        binding.extendedboluses.visibility = (activePlugin.activePump.pumpDescription.isExtendedBolusCapable || treatmentsPlugin.extendedBolusesFromHistory.size() > 0).toVisibility()
+        binding.extendedBoluses.visibility = (activePlugin.activePump.pumpDescription.isExtendedBolusCapable || treatmentsPlugin.extendedBolusesFromHistory.size() > 0).toVisibility()
     }
 }

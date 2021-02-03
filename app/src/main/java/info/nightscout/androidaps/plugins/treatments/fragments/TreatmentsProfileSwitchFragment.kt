@@ -105,9 +105,8 @@ class TreatmentsProfileSwitchFragment : DaggerFragment() {
 
     inner class RecyclerProfileViewAdapter(private var profileSwitchList: List<ProfileSwitch>) : RecyclerView.Adapter<ProfileSwitchViewHolder>() {
 
-        override fun onCreateViewHolder(viewGroup: ViewGroup, viewType: Int): ProfileSwitchViewHolder {
-            return ProfileSwitchViewHolder(LayoutInflater.from(viewGroup.context).inflate(R.layout.treatments_profileswitch_item, viewGroup, false))
-        }
+        override fun onCreateViewHolder(viewGroup: ViewGroup, viewType: Int): ProfileSwitchViewHolder =
+            ProfileSwitchViewHolder(LayoutInflater.from(viewGroup.context).inflate(R.layout.treatments_profileswitch_item, viewGroup, false))
 
         override fun onBindViewHolder(holder: ProfileSwitchViewHolder, position: Int) {
             val profileSwitch = profileSwitchList[position]
@@ -132,7 +131,7 @@ class TreatmentsProfileSwitchFragment : DaggerFragment() {
             return profileSwitchList.size
         }
 
-        inner class ProfileSwitchViewHolder internal constructor(itemView: View) : RecyclerView.ViewHolder(itemView){
+        inner class ProfileSwitchViewHolder internal constructor(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
             val binding = TreatmentsProfileswitchItemBinding.bind(itemView)
 
