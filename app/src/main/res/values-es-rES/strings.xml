@@ -548,7 +548,6 @@
     <string name="maxiobset">Máximo IOB ajustado correctamente</string>
     <string name="hasbgdata">BG disponible desde la fuente seleccionada</string>
     <string name="combo_programming_bolus">Programando bomba para emitir bolo</string>
-    <string name="combo_refresh">Actualizar</string>
     <string name="combo_pump_state_label">Estado</string>
     <string name="combo_pump_activity_label">Actividad</string>
     <string name="combo_no_pump_connection">Ninguna conexión por %1$d min</string>
@@ -839,7 +838,6 @@
     <string name="eb_formatter">%1$.2f / %2$.2f U durante %3$d min</string>
     <string name="enable_tbr_over_notification">Activar notificación del final de TBR\n(configuración de bomba)</string>
     <string name="disable_tbr_over_notification">Desactivar notificación del final de TBR\n(configuración de bomba)</string>
-    <string name="refresh">Actualizar</string>
     <string name="description_pump_insight_local">Integración de bomba para bombas Insight de Accu-Chek</string>
     <string name="not_inserted">No insertado</string>
     <string name="short_status_last_connected">Última conn: hace %1$d minutos</string>
