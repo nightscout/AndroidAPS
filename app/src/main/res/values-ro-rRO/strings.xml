@@ -544,7 +544,6 @@
     <string name="maxiobset">IOB maxim configurat corect</string>
     <string name="hasbgdata">Glicemie disponibilă din sursa selectată</string>
     <string name="combo_programming_bolus">Se programează pompa pentru livrare bolus</string>
-    <string name="combo_refresh">Reîncarcă</string>
     <string name="combo_pump_state_label">Stare</string>
     <string name="combo_pump_activity_label">Activitate</string>
     <string name="combo_no_pump_connection">Fără conexiune de %1$d min</string>
@@ -834,7 +833,6 @@
     <string name="eb_formatter">%1$.2f / %2$.2f U pentru %3$d min</string>
     <string name="enable_tbr_over_notification">Permiteți notificarea de terminare RBT\n(setare a pompei)</string>
     <string name="disable_tbr_over_notification">Nu permiteți notificarea terminării RBT\n(setare a pompei)</string>
-    <string name="refresh">Actualizează</string>
     <string name="description_pump_insight_local">Integrare pentru pompele Accu-Chek Insight</string>
     <string name="not_inserted">Nu este introdus</string>
     <string name="short_status_last_connected">Ultima conexiune: acum %1$d min</string>
