@@ -548,7 +548,6 @@
     <string name="maxiobset">IOB מקסימלי הוגדר כראוי</string>
     <string name="hasbgdata">ערכי סוכר זמינים מהמקור הנבחר</string>
     <string name="combo_programming_bolus">מתכנת משאבה למתן בולוס</string>
-    <string name="combo_refresh">רענן</string>
     <string name="combo_pump_state_label">סטטוס</string>
     <string name="combo_pump_activity_label">פעילות</string>
     <string name="combo_no_pump_connection">אין חיבור כבר %1$d דקות</string>
@@ -839,7 +838,6 @@
     <string name="eb_formatter">%1$.2f / %2$.2f יח\' במשך %3$d דק\'</string>
     <string name="enable_tbr_over_notification">אפשר התראה על סיום בזאלי זמני\n(הגדרת משאבה)</string>
     <string name="disable_tbr_over_notification">השבת התראה על סיום בזאלי זמני\n(הגדרת משאבה)</string>
-    <string name="refresh">רענן</string>
     <string name="description_pump_insight_local">חיבור משאבת Accu-Chek Insight</string>
     <string name="not_inserted">לא הוכנס</string>
     <string name="short_status_last_connected">חיבור אחרון: לפני %1$d דק\'</string>
