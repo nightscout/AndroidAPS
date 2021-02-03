@@ -198,7 +198,6 @@
     <!-- Omnipod - Overview -->
     <string name="omnipod_overview_button_set_time">Tijd instellen</string>
     <string name="omnipod_overview_button_suspend_delivery">Onderbreken</string>
-    <string name="omnipod_overview_button_refresh">Vernieuwen</string>
     <string name="omnipod_overview_button_resume_delivery">Insulinetoediening hervatten</string>
     <string name="omnipod_overview_button_pod_management">Pod beheer</string>
     <string name="omnipod_overview_button_acknowledge_active_alerts">Alarmen bevestigen</string>
