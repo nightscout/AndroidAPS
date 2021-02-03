@@ -196,7 +196,6 @@
     <!-- Omnipod - Overview -->
     <string name="omnipod_overview_button_set_time">Nustatyti laiką</string>
     <string name="omnipod_overview_button_suspend_delivery">Sustabdyti</string>
-    <string name="omnipod_overview_button_refresh">Atnaujinti</string>
     <string name="omnipod_overview_button_resume_delivery">Atnaujinti suleidimą</string>
     <string name="omnipod_overview_button_pod_management">Pod valdymas</string>
     <string name="omnipod_overview_button_acknowledge_active_alerts">Priimti pranešimus</string>
