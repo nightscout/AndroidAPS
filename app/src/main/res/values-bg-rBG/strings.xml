@@ -547,7 +547,6 @@
     <string name="maxiobset">Максимален IOB е зададен правилно</string>
     <string name="hasbgdata">Има данни за КЗ от избрания източник</string>
     <string name="combo_programming_bolus">Програмиране на помпа за болус</string>
-    <string name="combo_refresh">Обнови</string>
     <string name="combo_pump_state_label">Състояние</string>
     <string name="combo_pump_activity_label">Активност</string>
     <string name="combo_no_pump_connection">Няма връзка от %1$d мин.</string>
@@ -838,7 +837,6 @@
     <string name="eb_formatter">%1$.2f / %2$.2f U за %3$d мин</string>
     <string name="enable_tbr_over_notification">Разреши съобщения за край на временни базали\n(настройки на помпата)</string>
     <string name="disable_tbr_over_notification">Забрани съобщения за край на временни базали\n(настройки на помпата)</string>
-    <string name="refresh">Обнови</string>
     <string name="description_pump_insight_local">Драйвер за Accu-Chek Insight помпи</string>
     <string name="not_inserted">Не е поставено</string>
     <string name="short_status_last_connected">Последно свързване: преди %1$d минути </string>
