@@ -549,7 +549,6 @@ L\'ENSEMBLE DES RISQUES LIÉS À LA QUALITÉ ET À LA PERFORMANCE DU PROGRAMME S
     <string name="maxiobset">Maximum IA réglé correctement</string>
     <string name="hasbgdata">Glycémie disponible depuis la source sélectionnée</string>
     <string name="combo_programming_bolus">Programmer la pompe pour injecter un bolus</string>
-    <string name="combo_refresh">Actualiser</string>
     <string name="combo_pump_state_label">État</string>
     <string name="combo_pump_activity_label">Activité</string>
     <string name="combo_no_pump_connection">Pas de connexion depuis %1$d min</string>
@@ -840,7 +839,6 @@ L\'ENSEMBLE DES RISQUES LIÉS À LA QUALITÉ ET À LA PERFORMANCE DU PROGRAMME S
     <string name="eb_formatter">%1$.2f / %2$.2f U pour %3$d min</string>
     <string name="enable_tbr_over_notification">Activer la notification de la fin DBT\n(réglage de pompe)</string>
     <string name="disable_tbr_over_notification">Désactiver la notification de la fin de DBT\n(réglage de pompe)</string>
-    <string name="refresh">Actualiser</string>
     <string name="description_pump_insight_local">Intégration des pompes Accu-Chek Insight</string>
     <string name="not_inserted">Non inséré</string>
     <string name="short_status_last_connected">Dernière conn : il y a %1$d min</string>
