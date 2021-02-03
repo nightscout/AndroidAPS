@@ -548,7 +548,6 @@
     <string name="maxiobset">Maks IOB er angitt riktig</string>
     <string name="hasbgdata">BS tilgjengelig fra valgt kilde</string>
     <string name="combo_programming_bolus">Programmerer bolus i pumpen</string>
-    <string name="combo_refresh">Oppdater</string>
     <string name="combo_pump_state_label">Status</string>
     <string name="combo_pump_activity_label">Aktivitet</string>
     <string name="combo_no_pump_connection">Ingen tilkobling i %1$d min</string>
@@ -839,7 +838,6 @@
     <string name="eb_formatter">%1$.2f / %2$.2f E i %3$d min</string>
     <string name="enable_tbr_over_notification">Aktiver varsel når slutt på temp basal\n(pumpeinnstilling)</string>
     <string name="disable_tbr_over_notification">Slå av varsel når slutt på temp basal\n(pumpeinnstilling)</string>
-    <string name="refresh">Oppdater</string>
     <string name="description_pump_insight_local">Integrasjon for Accu-Chek Insight pumper</string>
     <string name="not_inserted">Ikke innsatt</string>
     <string name="short_status_last_connected">Siste tilkobling: %1$d min siden</string>
