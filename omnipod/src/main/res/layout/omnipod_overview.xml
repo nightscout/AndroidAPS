@@ -789,7 +789,7 @@
                     android:layout_weight="1"
                     android:drawableTop="@drawable/ic_omnipod_overview_refresh_pod_status"
                     android:drawablePadding="@dimen/omnipod_icon_button_drawable_padding"
-                    android:text="@string/omnipod_overview_button_refresh" />
+                    android:text="@string/refresh" />
 
                 <Button
                     android:id="@+id/omnipod_overview_button_pod_management"

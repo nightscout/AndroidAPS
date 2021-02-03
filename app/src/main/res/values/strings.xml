@@ -649,7 +649,6 @@
     <string name="maxiobset">Maximal IOB set properly</string>
     <string name="hasbgdata">BG available from selected source</string>
     <string name="combo_programming_bolus">Programming pump for bolusing</string>
-    <string name="combo_refresh">Refresh</string>
     <string name="combo_pump_state_label">State</string>
     <string name="combo_pump_activity_label">Activity</string>
     <string name="combo_no_pump_connection">No connection for %1$d min</string>
@@ -1000,7 +999,6 @@
     <string name="eb_formatter">%1$.2f / %2$.2f U for %3$d min</string>
     <string name="enable_tbr_over_notification">Enable notification of TBR end\n(pump setting)</string>
     <string name="disable_tbr_over_notification">Disable notification of TBR end\n(pump setting)</string>
-    <string name="refresh">Refresh</string>
     <string name="description_pump_insight_local">Pump integration for Accu-Chek Insight pumps</string>
     <string name="not_inserted">Not inserted</string>
     <string name="short_status_last_connected">Last conn: %1$d min ago</string>

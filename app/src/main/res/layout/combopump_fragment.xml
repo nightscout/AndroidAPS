@@ -504,7 +504,7 @@
                 android:drawableTop="@drawable/ic_actions_refill"
                 android:paddingLeft="0dp"
                 android:paddingRight="0dp"
-                android:text="@string/combo_refresh" />
+                android:text="@string/refresh" />
         </LinearLayout>
 
     </LinearLayout>
