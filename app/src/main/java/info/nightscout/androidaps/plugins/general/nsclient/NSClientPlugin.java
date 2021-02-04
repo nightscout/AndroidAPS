@@ -59,9 +59,9 @@ import info.nightscout.androidaps.utils.JsonHelper;
 import info.nightscout.androidaps.utils.ToastUtils;
 import info.nightscout.androidaps.utils.buildHelper.BuildHelper;
 import info.nightscout.androidaps.utils.resources.ResourceHelper;
+import info.nightscout.androidaps.utils.rx.AapsSchedulers;
 import info.nightscout.androidaps.utils.sharedPreferences.SP;
 import io.reactivex.disposables.CompositeDisposable;
-import io.reactivex.schedulers.Schedulers;
 
 @Singleton
 public class NSClientPlugin extends PluginBase {
@@ -71,6 +71,7 @@ public class NSClientPlugin extends PluginBase {
     private final RxBusWrapper rxBus;
     private final ResourceHelper resourceHelper;
     private final Context context;
+    private final AapsSchedulers aapsSchedulers;
     private final FabricPrivacy fabricPrivacy;
     private final SP sp;
     private final Config config;
@@ -96,6 +97,7 @@ public class NSClientPlugin extends PluginBase {
     public NSClientPlugin(
             HasAndroidInjector injector,
             AAPSLogger aapsLogger,
+            AapsSchedulers aapsSchedulers,
             RxBusWrapper rxBus,
             ResourceHelper resourceHelper,
             Context context,
@@ -119,6 +121,7 @@ public class NSClientPlugin extends PluginBase {
         );
 
         this.aapsLogger = aapsLogger;
+        this.aapsSchedulers = aapsSchedulers;
         this.rxBus = rxBus;
         this.resourceHelper = resourceHelper;
         this.context = context;
@@ -158,7 +161,7 @@ public class NSClientPlugin extends PluginBase {
         nsClientReceiverDelegate.grabReceiversState();
         disposable.add(rxBus
                 .toObservable(EventNSClientStatus.class)
-                .observeOn(Schedulers.io())
+                .observeOn(aapsSchedulers.getIo())
                 .subscribe(event -> {
                     status = event.getStatus(resourceHelper);
                     rxBus.send(new EventNSClientUpdateGUI());
@@ -166,17 +169,17 @@ public class NSClientPlugin extends PluginBase {
         );
         disposable.add(rxBus
                 .toObservable(EventNetworkChange.class)
-                .observeOn(Schedulers.io())
+                .observeOn(aapsSchedulers.getIo())
                 .subscribe(event -> nsClientReceiverDelegate.onStatusEvent(event), fabricPrivacy::logException)
         );
         disposable.add(rxBus
                 .toObservable(EventPreferenceChange.class)
-                .observeOn(Schedulers.io())
+                .observeOn(aapsSchedulers.getIo())
                 .subscribe(event -> nsClientReceiverDelegate.onStatusEvent(event), fabricPrivacy::logException)
         );
         disposable.add(rxBus
                 .toObservable(EventAppExit.class)
-                .observeOn(Schedulers.io())
+                .observeOn(aapsSchedulers.getIo())
                 .subscribe(event -> {
                     if (nsClientService != null) {
                         context.unbindService(mConnection);
@@ -185,7 +188,7 @@ public class NSClientPlugin extends PluginBase {
         );
         disposable.add(rxBus
                 .toObservable(EventNSClientNewLog.class)
-                .observeOn(Schedulers.io())
+                .observeOn(aapsSchedulers.getIo())
                 .subscribe(event -> {
                     addToLog(event);
                     aapsLogger.debug(LTag.NSCLIENT, event.getAction() + " " + event.getLogText());
@@ -193,12 +196,12 @@ public class NSClientPlugin extends PluginBase {
         );
         disposable.add(rxBus
                 .toObservable(EventChargingState.class)
-                .observeOn(Schedulers.io())
+                .observeOn(aapsSchedulers.getIo())
                 .subscribe(event -> nsClientReceiverDelegate.onStatusEvent(event), fabricPrivacy::logException)
         );
         disposable.add(rxBus
                 .toObservable(EventNSClientResend.class)
-                .observeOn(Schedulers.io())
+                .observeOn(aapsSchedulers.getIo())
                 .subscribe(event -> resend(event.getReason()), fabricPrivacy::logException)
         );
     }

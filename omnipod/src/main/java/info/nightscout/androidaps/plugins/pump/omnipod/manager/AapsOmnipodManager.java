@@ -88,6 +88,7 @@ import info.nightscout.androidaps.plugins.pump.omnipod.util.AapsOmnipodUtil;
 import info.nightscout.androidaps.plugins.pump.omnipod.util.OmnipodAlertUtil;
 import info.nightscout.androidaps.utils.DateUtil;
 import info.nightscout.androidaps.utils.resources.ResourceHelper;
+import info.nightscout.androidaps.utils.rx.AapsSchedulers;
 import info.nightscout.androidaps.utils.sharedPreferences.SP;
 import io.reactivex.subjects.SingleSubject;
 
@@ -97,6 +98,7 @@ public class AapsOmnipodManager {
     private final PodStateManager podStateManager;
     private final AapsOmnipodUtil aapsOmnipodUtil;
     private final AAPSLogger aapsLogger;
+    private final AapsSchedulers aapsSchedulers;
     private final RxBusWrapper rxBus;
     private final ResourceHelper resourceHelper;
     private final HasAndroidInjector injector;
@@ -129,6 +131,7 @@ public class AapsOmnipodManager {
                               PodStateManager podStateManager,
                               AapsOmnipodUtil aapsOmnipodUtil,
                               AAPSLogger aapsLogger,
+                              AapsSchedulers aapsSchedulers,
                               RxBusWrapper rxBus,
                               SP sp,
                               ResourceHelper resourceHelper,
@@ -143,6 +146,7 @@ public class AapsOmnipodManager {
         this.podStateManager = podStateManager;
         this.aapsOmnipodUtil = aapsOmnipodUtil;
         this.aapsLogger = aapsLogger;
+        this.aapsSchedulers = aapsSchedulers;
         this.rxBus = rxBus;
         this.sp = sp;
         this.resourceHelper = resourceHelper;
@@ -154,7 +158,7 @@ public class AapsOmnipodManager {
         this.profileFunction = profileFunction;
         this.context = context;
 
-        delegate = new OmnipodManager(aapsLogger, communicationService, podStateManager);
+        delegate = new OmnipodManager(aapsLogger, aapsSchedulers, communicationService, podStateManager);
 
         reloadSettings();
     }

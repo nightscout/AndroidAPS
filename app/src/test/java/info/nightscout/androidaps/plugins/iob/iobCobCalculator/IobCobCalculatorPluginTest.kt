@@ -31,7 +31,7 @@ import java.util.*
 class IobCobCalculatorPluginTest : TestBase() {
 
     @Mock lateinit var sp: SP
-    private val rxBus: RxBusWrapper = RxBusWrapper()
+    private val rxBus = RxBusWrapper(aapsSchedulers)
     @Mock lateinit var resourceHelper: ResourceHelper
     @Mock lateinit var profileFunction: ProfileFunction
     @Mock lateinit var activePlugin: ActivePluginProvider
@@ -59,7 +59,7 @@ class IobCobCalculatorPluginTest : TestBase() {
 
     @Before
     fun mock() {
-        iobCobCalculatorPlugin = IobCobCalculatorPlugin(injector, aapsLogger, rxBus, sp, resourceHelper, profileFunction, activePlugin, treatmentsPlugin, sensitivityOref1Plugin, sensitivityAAPSPlugin, sensitivityWeightedAveragePlugin, fabricPrivacy, dateUtil)
+        iobCobCalculatorPlugin = IobCobCalculatorPlugin(injector, aapsLogger, aapsSchedulers, rxBus, sp, resourceHelper, profileFunction, activePlugin, treatmentsPlugin, sensitivityOref1Plugin, sensitivityAAPSPlugin, sensitivityWeightedAveragePlugin, fabricPrivacy, dateUtil)
     }
 
     @Test

@@ -46,7 +46,7 @@ class DanaRPluginTest : TestBaseWithProfile() {
         `when`(resourceHelper.gs(R.string.limitingbasalratio)).thenReturn("Limiting max basal rate to %1\$.2f U/h because of %2\$s")
         `when`(resourceHelper.gs(R.string.limitingpercentrate)).thenReturn("Limiting max percent rate to %1\$d%% because of %2\$s")
         danaPump = info.nightscout.androidaps.dana.DanaPump(aapsLogger, sp, injector)
-        danaRPlugin = DanaRPlugin(injector, aapsLogger, rxBus, context, resourceHelper, constraintChecker, activePluginProvider, sp, commandQueue, danaPump, dateUtil, fabricPrivacy)
+        danaRPlugin = DanaRPlugin(injector, aapsLogger, aapsSchedulers, rxBus, context, resourceHelper, constraintChecker, activePluginProvider, sp, commandQueue, danaPump, dateUtil, fabricPrivacy)
     }
 
     @Test @Throws(Exception::class)

@@ -16,7 +16,6 @@ class VersionChangeTransaction(
             || current.versionCode != versionCode
             || current.gitRemote != gitRemote
             || current.commitHash != commitHash) {
-            val currentTime = System.currentTimeMillis()
             database.versionChangeDao.insert(VersionChange(
                 timestamp = System.currentTimeMillis(),
                 versionCode = versionCode,

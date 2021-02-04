@@ -103,9 +103,9 @@ import info.nightscout.androidaps.utils.FabricPrivacy;
 import info.nightscout.androidaps.utils.Round;
 import info.nightscout.androidaps.utils.TimeChangeType;
 import info.nightscout.androidaps.utils.resources.ResourceHelper;
+import info.nightscout.androidaps.utils.rx.AapsSchedulers;
 import info.nightscout.androidaps.utils.sharedPreferences.SP;
 import io.reactivex.disposables.CompositeDisposable;
-import io.reactivex.schedulers.Schedulers;
 
 import static info.nightscout.androidaps.plugins.pump.omnipod.driver.definition.OmnipodConstants.BASAL_STEP_DURATION;
 
@@ -129,6 +129,7 @@ public class OmnipodPumpPlugin extends PumpPluginBase implements PumpInterface, 
     private final OmnipodAlertUtil omnipodAlertUtil;
     private final ProfileFunction profileFunction;
     private final AAPSLogger aapsLogger;
+    private final AapsSchedulers aapsSchedulers;
     private final RxBusWrapper rxBus;
     private final ActivePluginProvider activePlugin;
     private final Context context;
@@ -160,6 +161,7 @@ public class OmnipodPumpPlugin extends PumpPluginBase implements PumpInterface, 
     public OmnipodPumpPlugin(
             HasAndroidInjector injector,
             AAPSLogger aapsLogger,
+            AapsSchedulers aapsSchedulers,
             RxBusWrapper rxBus,
             Context context,
             ResourceHelper resourceHelper,
@@ -188,6 +190,7 @@ public class OmnipodPumpPlugin extends PumpPluginBase implements PumpInterface, 
                         .description(R.string.omnipod_pump_description), //
                 injector, aapsLogger, resourceHelper, commandQueue);
         this.aapsLogger = aapsLogger;
+        this.aapsSchedulers = aapsSchedulers;
         this.rxBus = rxBus;
         this.activePlugin = activePlugin;
         this.context = context;
@@ -284,32 +287,32 @@ public class OmnipodPumpPlugin extends PumpPluginBase implements PumpInterface, 
 
         disposables.add(rxBus
                 .toObservable(EventAppExit.class)
-                .observeOn(Schedulers.io())
+                .observeOn(aapsSchedulers.getIo())
                 .subscribe(event -> context.unbindService(serviceConnection), fabricPrivacy::logException)
         );
         disposables.add(rxBus
                 .toObservable(EventOmnipodTbrChanged.class)
-                .observeOn(Schedulers.io())
+                .observeOn(aapsSchedulers.getIo())
                 .subscribe(event -> handleCancelledTbr(), fabricPrivacy::logException)
         );
         disposables.add(rxBus
                 .toObservable(EventOmnipodUncertainTbrRecovered.class)
-                .observeOn(Schedulers.io())
+                .observeOn(aapsSchedulers.getIo())
                 .subscribe(event -> handleUncertainTbrRecovery(), fabricPrivacy::logException)
         );
         disposables.add(rxBus
                 .toObservable(EventOmnipodActiveAlertsChanged.class)
-                .observeOn(Schedulers.io())
+                .observeOn(aapsSchedulers.getIo())
                 .subscribe(event -> handleActivePodAlerts(), fabricPrivacy::logException)
         );
         disposables.add(rxBus
                 .toObservable(EventOmnipodFaultEventChanged.class)
-                .observeOn(Schedulers.io())
+                .observeOn(aapsSchedulers.getIo())
                 .subscribe(event -> handlePodFaultEvent(), fabricPrivacy::logException)
         );
         disposables.add(rxBus
                 .toObservable(EventPreferenceChange.class)
-                .observeOn(Schedulers.io())
+                .observeOn(aapsSchedulers.getIo())
                 .subscribe(event -> {
                     if (event.isChanged(getResourceHelper(), OmnipodStorageKeys.Preferences.BASAL_BEEPS_ENABLED) ||
                             event.isChanged(getResourceHelper(), OmnipodStorageKeys.Preferences.BOLUS_BEEPS_ENABLED) ||
@@ -338,7 +341,7 @@ public class OmnipodPumpPlugin extends PumpPluginBase implements PumpInterface, 
         );
         disposables.add(rxBus
                 .toObservable(EventAppInitialized.class)
-                .observeOn(Schedulers.io())
+                .observeOn(aapsSchedulers.getIo())
                 .subscribe(event -> {
                     // See if a bolus was active before the app previously exited
                     // If so, add it to history

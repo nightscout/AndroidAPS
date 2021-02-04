@@ -52,11 +52,11 @@ import info.nightscout.androidaps.plugins.pump.omnipod.driver.exception.PodFault
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.exception.PodProgressStatusVerificationFailedException;
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.exception.PrecedingCommandFailedUncertainlyException;
 import info.nightscout.androidaps.plugins.pump.omnipod.rileylink.manager.OmnipodRileyLinkCommunicationManager;
+import info.nightscout.androidaps.utils.rx.AapsSchedulers;
 import io.reactivex.Completable;
 import io.reactivex.Flowable;
 import io.reactivex.Single;
 import io.reactivex.disposables.CompositeDisposable;
-import io.reactivex.schedulers.Schedulers;
 import io.reactivex.subjects.SingleSubject;
 
 public class OmnipodManager {
@@ -71,8 +71,10 @@ public class OmnipodManager {
     private final Object bolusDataMutex = new Object();
 
     private final AAPSLogger aapsLogger;
+    private final AapsSchedulers aapsSchedulers;
 
     public OmnipodManager(AAPSLogger aapsLogger,
+                          AapsSchedulers aapsSchedulers,
                           OmnipodRileyLinkCommunicationManager communicationService,
                           PodStateManager podStateManager) {
         if (communicationService == null) {
@@ -82,6 +84,7 @@ public class OmnipodManager {
             throw new IllegalArgumentException("Pod State Manager can not be null");
         }
         this.aapsLogger = aapsLogger;
+        this.aapsSchedulers = aapsSchedulers;
         this.communicationService = communicationService;
 
         this.podStateManager = podStateManager;
@@ -111,7 +114,7 @@ public class OmnipodManager {
 
         return Single.timer(delayInMillis, TimeUnit.MILLISECONDS) //
                 .map(o -> verifyPodProgressStatus(PodProgressStatus.PRIMING_COMPLETED, ActivationProgress.PRIMING_COMPLETED)) //
-                .subscribeOn(Schedulers.io());
+                .subscribeOn(aapsSchedulers.getIo());
     }
 
     public synchronized Single<Boolean> insertCannula(
@@ -135,7 +138,7 @@ public class OmnipodManager {
 
         return Single.timer(delayInMillis, TimeUnit.MILLISECONDS) //
                 .map(o -> verifyPodProgressStatus(PodProgressStatus.ABOVE_FIFTY_UNITS, ActivationProgress.COMPLETED)) //
-                .subscribeOn(Schedulers.io());
+                .subscribeOn(aapsSchedulers.getIo());
     }
 
     public synchronized StatusResponse getPodStatus() {
@@ -366,7 +369,7 @@ public class OmnipodManager {
             long progressReportInterval = estimatedRemainingBolusDuration.getMillis() / numberOfProgressReports;
 
             disposables.add(Flowable.intervalRange(0, numberOfProgressReports + 1, 0, progressReportInterval, TimeUnit.MILLISECONDS) //
-                    .subscribeOn(Schedulers.io()) //
+                    .subscribeOn(aapsSchedulers.getIo()) //
                     .subscribe(count -> {
                         int percentage = (int) ((double) count / numberOfProgressReports * 100);
                         double estimatedUnitsDelivered = activeBolusData == null ? 0 : activeBolusData.estimateUnitsDelivered();
@@ -387,7 +390,7 @@ public class OmnipodManager {
 
         disposables.add(Completable.complete() //
                 .delay(estimatedRemainingBolusDuration.getMillis(), TimeUnit.MILLISECONDS) //
-                .subscribeOn(Schedulers.io()) //
+                .subscribeOn(aapsSchedulers.getIo()) //
                 .doOnComplete(() -> {
                     synchronized (bolusDataMutex) {
                         double bolusNotDelivered = 0.0d;

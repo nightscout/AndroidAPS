@@ -15,17 +15,19 @@ import info.nightscout.androidaps.plugins.general.tidepool.events.EventTidepoolR
 import info.nightscout.androidaps.plugins.general.tidepool.events.EventTidepoolUpdateGUI
 import info.nightscout.androidaps.utils.FabricPrivacy
 import info.nightscout.androidaps.utils.extensions.plusAssign
+import info.nightscout.androidaps.utils.rx.AapsSchedulers
 import info.nightscout.androidaps.utils.sharedPreferences.SP
-import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import javax.inject.Inject
 
 class TidepoolFragment : DaggerFragment() {
+
     @Inject lateinit var rxBus: RxBusWrapper
     @Inject lateinit var tidepoolPlugin: TidepoolPlugin
     @Inject lateinit var tidepoolUploader: TidepoolUploader
     @Inject lateinit var sp: SP
     @Inject lateinit var fabricPrivacy: FabricPrivacy
+    @Inject lateinit var aapsSchedulers: AapsSchedulers
 
     private var disposable: CompositeDisposable = CompositeDisposable()
 
@@ -53,7 +55,7 @@ class TidepoolFragment : DaggerFragment() {
         super.onResume()
         disposable += rxBus
             .toObservable(EventTidepoolUpdateGUI::class.java)
-            .observeOn(AndroidSchedulers.mainThread())
+            .observeOn(aapsSchedulers.main)
             .subscribe({
                 if (_binding == null) return@subscribe
                 tidepoolPlugin.updateLog()
@@ -61,7 +63,7 @@ class TidepoolFragment : DaggerFragment() {
                 binding.status.text = tidepoolUploader.connectionStatus.name
                 binding.log.text = tidepoolPlugin.textLog
                 binding.logscrollview.fullScroll(ScrollView.FOCUS_DOWN)
-            }, { fabricPrivacy.logException(it) })
+            }, fabricPrivacy::logException)
     }
 
     @Synchronized
@@ -75,6 +77,5 @@ class TidepoolFragment : DaggerFragment() {
         super.onDestroyView()
         _binding = null
     }
-
 
 }

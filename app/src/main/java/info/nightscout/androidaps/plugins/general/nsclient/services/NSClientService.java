@@ -68,9 +68,9 @@ import info.nightscout.androidaps.utils.JsonHelper;
 import info.nightscout.androidaps.utils.T;
 import info.nightscout.androidaps.utils.buildHelper.BuildHelper;
 import info.nightscout.androidaps.utils.resources.ResourceHelper;
+import info.nightscout.androidaps.utils.rx.AapsSchedulers;
 import info.nightscout.androidaps.utils.sharedPreferences.SP;
 import io.reactivex.disposables.CompositeDisposable;
-import io.reactivex.schedulers.Schedulers;
 import io.socket.client.IO;
 import io.socket.client.Socket;
 import io.socket.emitter.Emitter;
@@ -78,6 +78,7 @@ import io.socket.emitter.Emitter;
 public class NSClientService extends DaggerService {
     @Inject HasAndroidInjector injector;
     @Inject AAPSLogger aapsLogger;
+    @Inject AapsSchedulers aapsSchedulers;
     @Inject NSSettingsStatus nsSettingsStatus;
     @Inject NSDeviceStatus nsDeviceStatus;
     @Inject DatabaseHelperInterface databaseHelper;
@@ -147,7 +148,7 @@ public class NSClientService extends DaggerService {
 
         disposable.add(rxBus
                 .toObservable(EventConfigBuilderChange.class)
-                .observeOn(Schedulers.io())
+                .observeOn(aapsSchedulers.getIo())
                 .subscribe(event -> {
                     if (nsEnabled != nsClientPlugin.isEnabled(PluginType.GENERAL)) {
                         latestDateInReceivedData = 0;
@@ -158,7 +159,7 @@ public class NSClientService extends DaggerService {
         );
         disposable.add(rxBus
                 .toObservable(EventPreferenceChange.class)
-                .observeOn(Schedulers.io())
+                .observeOn(aapsSchedulers.getIo())
                 .subscribe(event -> {
                     if (event.isChanged(resourceHelper, R.string.key_nsclientinternal_url) ||
                             event.isChanged(resourceHelper, R.string.key_nsclientinternal_api_secret) ||
@@ -172,7 +173,7 @@ public class NSClientService extends DaggerService {
         );
         disposable.add(rxBus
                 .toObservable(EventAppExit.class)
-                .observeOn(Schedulers.io())
+                .observeOn(aapsSchedulers.getIo())
                 .subscribe(event -> {
                     aapsLogger.debug(LTag.NSCLIENT, "EventAppExit received");
                     destroy();
@@ -181,7 +182,7 @@ public class NSClientService extends DaggerService {
         );
         disposable.add(rxBus
                 .toObservable(EventNSClientRestart.class)
-                .observeOn(Schedulers.io())
+                .observeOn(aapsSchedulers.getIo())
                 .subscribe(event -> {
                     latestDateInReceivedData = 0;
                     restart();
@@ -189,17 +190,17 @@ public class NSClientService extends DaggerService {
         );
         disposable.add(rxBus
                 .toObservable(NSAuthAck.class)
-                .observeOn(Schedulers.io())
+                .observeOn(aapsSchedulers.getIo())
                 .subscribe(this::processAuthAck, fabricPrivacy::logException)
         );
         disposable.add(rxBus
                 .toObservable(NSUpdateAck.class)
-                .observeOn(Schedulers.io())
+                .observeOn(aapsSchedulers.getIo())
                 .subscribe(this::processUpdateAck, fabricPrivacy::logException)
         );
         disposable.add(rxBus
                 .toObservable(NSAddAck.class)
-                .observeOn(Schedulers.io())
+                .observeOn(aapsSchedulers.getIo())
                 .subscribe(this::processAddAck, fabricPrivacy::logException)
         );
     }
