@@ -435,7 +435,6 @@
     <string name="overview_extendedbolus_cancel_button">Avbryt forlenget bolus</string>
     <string name="doprofileswitch">Gjør profilbytte</string>
     <string name="careportal_sensor_label">Sensor</string>
-    <string name="careportal_canula_label">Kanyle</string>
     <string name="careportal_insulin_label">Insulin</string>
     <string name="careportal_pb_label">Pumpe batteri</string>
     <string name="careportal_age_label">alder:</string>
