@@ -435,7 +435,6 @@
     <string name="overview_extendedbolus_cancel_button">Cancelar Bólus Prolongado</string>
     <string name="doprofileswitch">Fazer Mudança De Perfil</string>
     <string name="careportal_sensor_label">Sensor</string>
-    <string name="careportal_canula_label">Cânula</string>
     <string name="careportal_insulin_label">Insulina</string>
     <string name="careportal_pb_label">Bateria da Bomba</string>
     <string name="careportal_age_label">idade:</string>
