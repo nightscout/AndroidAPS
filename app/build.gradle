@@ -156,8 +156,8 @@ android {
             ext.enableCrashlytics = false
         }
     }
+    flavorDimensions "standard"
     productFlavors {
-        flavorDimensions "standard"
         full {
             applicationId "info.nightscout.androidaps"
             dimension "standard"
