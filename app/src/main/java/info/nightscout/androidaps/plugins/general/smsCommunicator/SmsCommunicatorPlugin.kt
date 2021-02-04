@@ -1,12 +1,14 @@
 package info.nightscout.androidaps.plugins.general.smsCommunicator
 
-import android.content.Intent
+import android.content.Context
 import android.telephony.SmsManager
 import android.telephony.SmsMessage
 import android.text.TextUtils
 import androidx.preference.EditTextPreference
 import androidx.preference.Preference
 import androidx.preference.PreferenceFragmentCompat
+import androidx.work.Worker
+import androidx.work.WorkerParameters
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.Config
 import info.nightscout.androidaps.Constants
@@ -32,6 +34,7 @@ import info.nightscout.androidaps.plugins.iob.iobCobCalculator.GlucoseStatus
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.IobCobCalculatorPlugin
 import info.nightscout.androidaps.plugins.treatments.TreatmentsPlugin
 import info.nightscout.androidaps.queue.Callback
+import info.nightscout.androidaps.receivers.BundleStore
 import info.nightscout.androidaps.utils.*
 import info.nightscout.androidaps.utils.extensions.plusAssign
 import info.nightscout.androidaps.utils.resources.ResourceHelper
@@ -152,6 +155,32 @@ class SmsCommunicatorPlugin @Inject constructor(
         }
     }
 
+    // cannot be inner class because of needed injection
+    class SmsCommunicatorWorker(
+        context: Context,
+        params: WorkerParameters
+    ) : Worker(context, params) {
+
+        @Inject lateinit var smsCommunicatorPlugin: SmsCommunicatorPlugin
+        @Inject lateinit var bundleStore: BundleStore
+
+        init {
+            (context.applicationContext as HasAndroidInjector).androidInjector().inject(this)
+        }
+
+        override fun doWork(): Result {
+            val bundle = bundleStore.pickup(inputData.getLong("storeKey", -1))
+                ?: return Result.failure()
+            val format = bundle.getString("format") ?: return Result.failure()
+            val pdus = bundle["pdus"] as Array<*>
+            for (pdu in pdus) {
+                val message = SmsMessage.createFromPdu(pdu as ByteArray, format)
+                smsCommunicatorPlugin.processSms(Sms(message))
+            }
+            return Result.success()
+        }
+    }
+
     private fun processSettings(ev: EventPreferenceChange?) {
         if (ev == null || ev.isChanged(resourceHelper, R.string.key_smscommunicator_allowednumbers)) {
             val settings = sp.getString(R.string.key_smscommunicator_allowednumbers, "")
@@ -178,16 +207,6 @@ class SmsCommunicatorPlugin @Inject constructor(
             if (num == number) return true
         }
         return false
-    }
-
-    fun handleNewData(intent: Intent) {
-        val bundle = intent.extras ?: return
-        val format = bundle.getString("format") ?: return
-        val pdus = bundle["pdus"] as Array<*>
-        for (pdu in pdus) {
-            val message = SmsMessage.createFromPdu(pdu as ByteArray, format)
-            processSms(Sms(message))
-        }
     }
 
     fun processSms(receivedSms: Sms) {

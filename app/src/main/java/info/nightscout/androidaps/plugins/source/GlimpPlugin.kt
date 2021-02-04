@@ -1,6 +1,8 @@
 package info.nightscout.androidaps.plugins.source
 
-import android.content.Intent
+import android.content.Context
+import androidx.work.Worker
+import androidx.work.WorkerParameters
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.MainApp
 import info.nightscout.androidaps.R
@@ -10,7 +12,6 @@ import info.nightscout.androidaps.interfaces.PluginBase
 import info.nightscout.androidaps.interfaces.PluginDescription
 import info.nightscout.androidaps.interfaces.PluginType
 import info.nightscout.androidaps.logging.AAPSLogger
-import info.nightscout.androidaps.logging.BundleLogger
 import info.nightscout.androidaps.logging.LTag
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 import javax.inject.Inject
@@ -31,19 +32,29 @@ class GlimpPlugin @Inject constructor(
     aapsLogger, resourceHelper, injector
 ), BgSourceInterface {
 
-    override fun advancedFilteringSupported(): Boolean {
-        return false
-    }
+    // cannot be inner class because of needed injection
+    class GlimpWorker(
+        context: Context,
+        params: WorkerParameters
+    ) : Worker(context, params) {
 
-    override fun handleNewData(intent: Intent) {
-        if (!isEnabled(PluginType.BGSOURCE)) return
-        val bundle = intent.extras ?: return
-        aapsLogger.debug(LTag.BGSOURCE, "Received Glimp Data: ${BundleLogger.log(bundle)}")
-        val bgReading = BgReading()
-        bgReading.value = bundle.getDouble("mySGV")
-        bgReading.direction = bundle.getString("myTrend")
-        bgReading.date = bundle.getLong("myTimestamp")
-        bgReading.raw = 0.0
-        MainApp.getDbHelper().createIfNotExists(bgReading, "GLIMP")
+        @Inject lateinit var glimpPlugin: GlimpPlugin
+        @Inject lateinit var aapsLogger: AAPSLogger
+
+        init {
+            (context.applicationContext as HasAndroidInjector).androidInjector().inject(this)
+        }
+
+        override fun doWork(): Result {
+            if (!glimpPlugin.isEnabled(PluginType.BGSOURCE)) return Result.failure()
+            aapsLogger.debug(LTag.BGSOURCE, "Received Glimp Data: $inputData}")
+            val bgReading = BgReading()
+            bgReading.value = inputData.getDouble("mySGV", 0.0)
+            bgReading.direction = inputData.getString("myTrend")
+            bgReading.date = inputData.getLong("myTimestamp", 0)
+            bgReading.raw = 0.0
+            MainApp.getDbHelper().createIfNotExists(bgReading, "GLIMP")
+            return Result.success()
+        }
     }
 }

@@ -1,6 +1,5 @@
 package info.nightscout.androidaps.plugins.source
 
-import android.content.Intent
 import android.os.Handler
 import android.os.HandlerThread
 import dagger.android.HasAndroidInjector
@@ -13,7 +12,6 @@ import info.nightscout.androidaps.interfaces.PluginDescription
 import info.nightscout.androidaps.interfaces.PluginType
 import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.logging.LTag
-import info.nightscout.androidaps.plugins.general.automation.AutomationPlugin
 import info.nightscout.androidaps.plugins.general.nsclient.NSUpload
 import info.nightscout.androidaps.plugins.pump.virtual.VirtualPumpPlugin
 import info.nightscout.androidaps.utils.DateUtil
@@ -48,16 +46,17 @@ class RandomBgPlugin @Inject constructor(
     aapsLogger, resourceHelper, injector
 ), BgSourceInterface {
 
-    private val loopHandler : Handler = Handler(HandlerThread(RandomBgPlugin::class.java.simpleName + "Handler").also { it.start() }.looper)
+    private val loopHandler: Handler = Handler(HandlerThread(RandomBgPlugin::class.java.simpleName + "Handler").also { it.start() }.looper)
     private lateinit var refreshLoop: Runnable
 
     companion object {
+
         const val interval = 5L // minutes
     }
 
     init {
         refreshLoop = Runnable {
-            handleNewData(Intent())
+            handleNewData()
             loopHandler.postDelayed(refreshLoop, T.mins(interval).msecs())
         }
     }
@@ -80,14 +79,14 @@ class RandomBgPlugin @Inject constructor(
         return isRunningTest() || virtualPumpPlugin.isEnabled(PluginType.PUMP) && buildHelper.isEngineeringMode()
     }
 
-    override fun handleNewData(intent: Intent) {
+    private fun handleNewData() {
         if (!isEnabled(PluginType.BGSOURCE)) return
         val min = 70
         val max = 190
 
         val cal = GregorianCalendar()
         val currentMinute = cal.get(Calendar.MINUTE) + (cal.get(Calendar.HOUR_OF_DAY) % 2) * 60
-        val bgMgdl = min + ((max - min) + (max - min) * sin(currentMinute / 120.0 * 2 * PI))/2
+        val bgMgdl = min + ((max - min) + (max - min) * sin(currentMinute / 120.0 * 2 * PI)) / 2
 
         val bgReading = BgReading()
         bgReading.value = bgMgdl

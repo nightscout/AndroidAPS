@@ -1,15 +1,17 @@
 package info.nightscout.androidaps.plugins.profile.ns
 
-import android.content.Intent
+import android.content.Context
+import androidx.work.Worker
+import androidx.work.WorkerParameters
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.Config
 import info.nightscout.androidaps.R
-import info.nightscout.androidaps.interfaces.ProfileStore
 import info.nightscout.androidaps.events.EventProfileStoreChanged
 import info.nightscout.androidaps.interfaces.PluginBase
 import info.nightscout.androidaps.interfaces.PluginDescription
 import info.nightscout.androidaps.interfaces.PluginType
 import info.nightscout.androidaps.interfaces.ProfileInterface
+import info.nightscout.androidaps.interfaces.ProfileStore
 import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.logging.LTag
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper
@@ -49,21 +51,6 @@ class NSProfilePlugin @Inject constructor(
         loadNSProfile()
     }
 
-    fun handleNewData(intent: Intent) {
-        val bundles = intent.extras ?: return
-
-        @Suppress("SpellCheckingInspection")
-        val activeProfile = bundles.getString("activeprofile")
-        val profileString = bundles.getString("profile")
-        profile = ProfileStore(injector, JSONObject(profileString))
-        storeNSProfile()
-        if (isEnabled()) {
-            rxBus.send(EventProfileStoreChanged())
-            rxBus.send(EventNSProfileUpdateGUI())
-        }
-        aapsLogger.debug(LTag.PROFILE, "Received profileStore: $activeProfile $profile")
-    }
-
     private fun storeNSProfile() {
         sp.putString("profile", profile!!.data.toString())
         aapsLogger.debug(LTag.PROFILE, "Storing profile")
@@ -90,4 +77,33 @@ class NSProfilePlugin @Inject constructor(
         return profile!!.getDefaultProfileName()!!
     }
 
+    // cannot be inner class because of needed injection
+    class NSProfileWorker(
+        context: Context,
+        params: WorkerParameters
+    ) : Worker(context, params) {
+
+        @Inject lateinit var injector: HasAndroidInjector
+        @Inject lateinit var nsProfilePlugin: NSProfilePlugin
+        @Inject lateinit var aapsLogger: AAPSLogger
+        @Inject lateinit var rxBus: RxBusWrapper
+
+        init {
+            (context.applicationContext as HasAndroidInjector).androidInjector().inject(this)
+        }
+
+        override fun doWork(): Result {
+            inputData.getString("profile")?.let { profileString ->
+                nsProfilePlugin.profile = ProfileStore(injector, JSONObject(profileString))
+                nsProfilePlugin.storeNSProfile()
+                if (nsProfilePlugin.isEnabled()) {
+                    rxBus.send(EventProfileStoreChanged())
+                    rxBus.send(EventNSProfileUpdateGUI())
+                }
+                aapsLogger.debug(LTag.PROFILE, "Received profileStore: ${nsProfilePlugin.profile}")
+                return Result.success()
+            }
+            return Result.failure()
+        }
+    }
 }
