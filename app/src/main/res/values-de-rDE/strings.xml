@@ -870,7 +870,7 @@ Unerwartetes Verhalten.</string>
     <string name="alreadysuspended">Bereits angehalten</string>
     <string name="resumeloop">Loop fortsetzen</string>
     <string name="notsuspended">Nicht unterbrochen</string>
-    <string name="starttemptarget">Tempöräres Ziel (TT) starten</string>
+    <string name="starttemptarget">Temporäres Ziel (TT) starten</string>
     <string name="stoptemptarget">Temporäres Ziel (TT) stoppen</string>
     <string name="islesser">ist kleiner als</string>
     <string name="isequalorlesser">ist gleich oder kleiner als</string>
