@@ -1156,4 +1156,6 @@
     <string name="graph_menu_divider_header">Gráfico</string>
     <string name="chart_menu">Menu do Gráfico</string>
     <string name="clear_filter">Limpar filtros</string>
+    <string name="trend_arrow">Seta de tendência</string>
+    <string name="cannula">Cânula</string>
 </resources>
