@@ -35,13 +35,14 @@ import info.nightscout.androidaps.utils.alertDialogs.OKDialog.showConfirmation
 import info.nightscout.androidaps.utils.extensions.plusAssign
 import info.nightscout.androidaps.utils.extensions.toVisibility
 import info.nightscout.androidaps.utils.resources.ResourceHelper
-import io.reactivex.android.schedulers.AndroidSchedulers
+import info.nightscout.androidaps.utils.rx.AapsSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import java.util.*
 import javax.inject.Inject
 
 class AutomationFragment : DaggerFragment(), OnStartDragListener {
 
+    @Inject lateinit var aapsSchedulers: AapsSchedulers
     @Inject lateinit var resourceHelper: ResourceHelper
     @Inject lateinit var rxBus: RxBusWrapper
     @Inject lateinit var fabricPrivacy: FabricPrivacy
@@ -93,16 +94,16 @@ class AutomationFragment : DaggerFragment(), OnStartDragListener {
         super.onResume()
         disposable += rxBus
             .toObservable(EventAutomationUpdateGui::class.java)
-            .observeOn(AndroidSchedulers.mainThread())
+            .observeOn(aapsSchedulers.main)
             .subscribe({
                 updateGui()
-            }, { fabricPrivacy.logException(it) })
+            }, fabricPrivacy::logException)
         disposable += rxBus
             .toObservable(EventAutomationDataChanged::class.java)
-            .observeOn(AndroidSchedulers.mainThread())
+            .observeOn(aapsSchedulers.main)
             .subscribe({
                 eventListAdapter.notifyDataSetChanged()
-            }, { fabricPrivacy.logException(it) })
+            }, fabricPrivacy::logException)
         updateGui()
     }
 

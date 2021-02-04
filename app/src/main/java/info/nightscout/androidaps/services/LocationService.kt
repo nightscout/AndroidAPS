@@ -25,9 +25,9 @@ import info.nightscout.androidaps.plugins.bus.RxBusWrapper
 import info.nightscout.androidaps.utils.FabricPrivacy
 import info.nightscout.androidaps.utils.T
 import info.nightscout.androidaps.utils.androidNotification.NotificationHolder
+import info.nightscout.androidaps.utils.rx.AapsSchedulers
 import info.nightscout.androidaps.utils.sharedPreferences.SP
 import io.reactivex.disposables.CompositeDisposable
-import io.reactivex.schedulers.Schedulers
 import javax.inject.Inject
 
 class LocationService : DaggerService() {
@@ -35,6 +35,7 @@ class LocationService : DaggerService() {
     @Inject lateinit var aapsLogger: AAPSLogger
     @Inject lateinit var rxBus: RxBusWrapper
     @Inject lateinit var sp: SP
+    @Inject lateinit var aapsSchedulers: AapsSchedulers
     @Inject lateinit var fabricPrivacy: FabricPrivacy
     @Inject lateinit var notificationHolder: NotificationHolder
     @Inject lateinit var lastLocationDataContainer: LastLocationDataContainer
@@ -137,11 +138,11 @@ class LocationService : DaggerService() {
         }
         disposable.add(rxBus
             .toObservable(EventAppExit::class.java)
-            .observeOn(Schedulers.io())
+            .observeOn(aapsSchedulers.io)
             .subscribe({
                 aapsLogger.debug(LTag.LOCATION, "EventAppExit received")
                 stopSelf()
-            }) { fabricPrivacy.logException(it) }
+            }, fabricPrivacy::logException)
         )
     }
 

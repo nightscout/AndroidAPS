@@ -12,6 +12,7 @@ import info.nightscout.androidaps.plugins.sensitivity.SensitivityWeightedAverage
 import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.FabricPrivacy
 import info.nightscout.androidaps.utils.resources.ResourceHelper
+import info.nightscout.androidaps.utils.rx.AapsSchedulers
 import info.nightscout.androidaps.utils.sharedPreferences.SP
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -20,6 +21,7 @@ import javax.inject.Singleton
 class IobCobCalculatorPluginHistory @Inject constructor(
     injector: HasAndroidInjector,
     aapsLogger: AAPSLogger,
+    aapsSchedulers: AapsSchedulers,
     rxBus: RxBusWrapper,
     sp: SP,
     resourceHelper: ResourceHelper,
@@ -31,7 +33,7 @@ class IobCobCalculatorPluginHistory @Inject constructor(
     sensitivityWeightedAveragePlugin: SensitivityWeightedAveragePlugin,
     fabricPrivacy: FabricPrivacy,
     dateUtil: DateUtil
-) : IobCobCalculatorPlugin(injector, aapsLogger, rxBus, sp, resourceHelper, profileFunction,
+) : IobCobCalculatorPlugin(injector, aapsLogger, aapsSchedulers, rxBus, sp, resourceHelper, profileFunction,
     activePlugin, treatmentsPluginHistory, sensitivityOref1Plugin, sensitivityAAPSPlugin, sensitivityWeightedAveragePlugin, fabricPrivacy, dateUtil) {
 
     override fun onStart() { // do not attach to rxbus

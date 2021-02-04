@@ -41,6 +41,7 @@ import info.nightscout.androidaps.utils.DateUtil;
 import info.nightscout.androidaps.utils.DecimalFormatter;
 import info.nightscout.androidaps.utils.FabricPrivacy;
 import info.nightscout.androidaps.utils.resources.ResourceHelper;
+import info.nightscout.androidaps.utils.rx.AapsSchedulers;
 import info.nightscout.androidaps.utils.sharedPreferences.SP;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.schedulers.Schedulers;
@@ -70,6 +71,7 @@ public abstract class PumpPluginAbstract extends PumpPluginBase implements PumpI
     protected PumpDriverState pumpState = PumpDriverState.NotInitialized;
     protected boolean displayConnectionMessages = false;
     protected PumpType pumpType;
+    protected AapsSchedulers aapsSchedulers;
 
 
     protected PumpPluginAbstract(
@@ -84,7 +86,8 @@ public abstract class PumpPluginAbstract extends PumpPluginBase implements PumpI
             SP sp,
             Context context,
             FabricPrivacy fabricPrivacy,
-            DateUtil dateUtil
+            DateUtil dateUtil,
+            AapsSchedulers aapsSchedulers
     ) {
 
         super(pluginDescription, injector, aapsLogger, resourceHelper, commandQueue);
@@ -100,6 +103,7 @@ public abstract class PumpPluginAbstract extends PumpPluginBase implements PumpI
         pumpDescription.setPumpDescription(pumpType);
         this.pumpType = pumpType;
         this.dateUtil = dateUtil;
+        this.aapsSchedulers = aapsSchedulers;
     }
 
 
@@ -119,7 +123,7 @@ public abstract class PumpPluginAbstract extends PumpPluginBase implements PumpI
 
         disposable.add(rxBus
                 .toObservable(EventAppExit.class)
-                .observeOn(Schedulers.io())
+                .observeOn(aapsSchedulers.getIo())
                 .subscribe(event -> context.unbindService(serviceConnection), fabricPrivacy::logException)
         );
         onStartCustomActions();

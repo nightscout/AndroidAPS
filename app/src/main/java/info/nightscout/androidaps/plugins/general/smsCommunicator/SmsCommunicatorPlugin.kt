@@ -38,10 +38,10 @@ import info.nightscout.androidaps.receivers.BundleStore
 import info.nightscout.androidaps.utils.*
 import info.nightscout.androidaps.utils.extensions.plusAssign
 import info.nightscout.androidaps.utils.resources.ResourceHelper
+import info.nightscout.androidaps.utils.rx.AapsSchedulers
 import info.nightscout.androidaps.utils.sharedPreferences.SP
 import info.nightscout.androidaps.utils.textValidator.ValidatingEditTextPreference
 import io.reactivex.disposables.CompositeDisposable
-import io.reactivex.schedulers.Schedulers
 import org.apache.commons.lang3.StringUtils
 import java.text.Normalizer
 import java.util.*
@@ -55,6 +55,7 @@ class SmsCommunicatorPlugin @Inject constructor(
     injector: HasAndroidInjector,
     aapsLogger: AAPSLogger,
     resourceHelper: ResourceHelper,
+    private val aapsSchedulers: AapsSchedulers,
     private val sp: SP,
     private val constraintChecker: ConstraintChecker,
     private val rxBus: RxBusWrapper,
@@ -107,8 +108,8 @@ class SmsCommunicatorPlugin @Inject constructor(
         super.onStart()
         disposable += rxBus
             .toObservable(EventPreferenceChange::class.java)
-            .observeOn(Schedulers.io())
-            .subscribe({ event: EventPreferenceChange? -> processSettings(event) }) { fabricPrivacy.logException(it) }
+            .observeOn(aapsSchedulers.io)
+            .subscribe({ event: EventPreferenceChange? -> processSettings(event) }, fabricPrivacy::logException)
     }
 
     override fun onStop() {

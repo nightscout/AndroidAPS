@@ -46,7 +46,7 @@ class DanaRKoreanPluginTest : TestBaseWithProfile() {
         `when`(resourceHelper.gs(R.string.limitingbasalratio)).thenReturn("Limiting max basal rate to %1\$.2f U/h because of %2\$s")
         `when`(resourceHelper.gs(R.string.limitingpercentrate)).thenReturn("Limiting max percent rate to %1\$d%% because of %2\$s")
         danaPump = DanaPump(aapsLogger, sp, injector)
-        danaRPlugin = DanaRKoreanPlugin(injector, aapsLogger, rxBus, danaPump, context, resourceHelper, constraintChecker, activePluginProvider, sp, commandQueue, dateUtil, fabricPrivacy)
+        danaRPlugin = DanaRKoreanPlugin(injector, aapsLogger, aapsSchedulers, rxBus, danaPump, context, resourceHelper, constraintChecker, activePluginProvider, sp, commandQueue, dateUtil, fabricPrivacy)
     }
 
     @Test @Throws(Exception::class)

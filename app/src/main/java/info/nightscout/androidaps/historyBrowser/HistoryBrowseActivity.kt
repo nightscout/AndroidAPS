@@ -32,10 +32,9 @@ import info.nightscout.androidaps.utils.FabricPrivacy
 import info.nightscout.androidaps.utils.T
 import info.nightscout.androidaps.utils.buildHelper.BuildHelper
 import info.nightscout.androidaps.utils.extensions.toVisibility
+import info.nightscout.androidaps.utils.rx.AapsSchedulers
 import info.nightscout.androidaps.utils.sharedPreferences.SP
-import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
-import io.reactivex.schedulers.Schedulers
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -46,6 +45,7 @@ class HistoryBrowseActivity : NoSplashAppCompatActivity() {
 
     @Inject lateinit var injector: HasAndroidInjector
     @Inject lateinit var aapsLogger: AAPSLogger
+    @Inject lateinit var aapsSchedulers: AapsSchedulers
     @Inject lateinit var rxBus: RxBusWrapper
     @Inject lateinit var sp: SP
     @Inject lateinit var profileFunction: ProfileFunction
@@ -173,7 +173,7 @@ class HistoryBrowseActivity : NoSplashAppCompatActivity() {
         super.onResume()
         disposable.add(rxBus
             .toObservable(EventAutosensCalculationFinished::class.java)
-            .observeOn(Schedulers.io())
+            .observeOn(aapsSchedulers.io)
             .subscribe({
                 // catch only events from iobCobCalculatorPluginHistory
                 if (it.cause is EventCustomCalculationFinished) {
@@ -183,7 +183,7 @@ class HistoryBrowseActivity : NoSplashAppCompatActivity() {
         )
         disposable.add(rxBus
             .toObservable(EventAutosensBgLoaded::class.java)
-            .observeOn(Schedulers.io())
+            .observeOn(aapsSchedulers.io)
             .subscribe({
                 // catch only events from iobCobCalculatorPluginHistory
                 if (it.cause is EventCustomCalculationFinished) {
@@ -193,12 +193,12 @@ class HistoryBrowseActivity : NoSplashAppCompatActivity() {
         )
         disposable.add(rxBus
             .toObservable(EventIobCalculationProgress::class.java)
-            .observeOn(AndroidSchedulers.mainThread())
+            .observeOn(aapsSchedulers.main)
             .subscribe({ binding.overviewIobcalculationprogess.text = it.progress }, fabricPrivacy::logException)
         )
         disposable.add(rxBus
             .toObservable(EventRefreshOverview::class.java)
-            .observeOn(AndroidSchedulers.mainThread())
+            .observeOn(aapsSchedulers.main)
             .subscribe({
                 if (it.now) {
                     updateGUI("EventRefreshOverview", bgOnly = false)
@@ -307,7 +307,6 @@ class HistoryBrowseActivity : NoSplashAppCompatActivity() {
 
                 // **** BG ****
                 graphData.addBgReadings(fromTime, toTime, lowLine, highLine, null)
-
 
                 // add target line
                 graphData.addTargetLine(fromTime, toTime, profile, null)

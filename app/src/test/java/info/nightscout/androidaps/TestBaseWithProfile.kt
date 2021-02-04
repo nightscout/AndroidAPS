@@ -14,6 +14,8 @@ import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.DefaultValueHelper
 import info.nightscout.androidaps.utils.FabricPrivacy
 import info.nightscout.androidaps.utils.resources.ResourceHelper
+import info.nightscout.androidaps.utils.rx.AapsSchedulers
+import info.nightscout.androidaps.utils.rx.TestAapsSchedulers
 import org.json.JSONObject
 import org.junit.Before
 import org.mockito.Mock
@@ -29,7 +31,7 @@ open class TestBaseWithProfile : TestBase() {
     @Mock lateinit var defaultValueHelper: DefaultValueHelper
     @Mock lateinit var dateUtil: DateUtil
 
-    val rxBus = RxBusWrapper()
+    val rxBus = RxBusWrapper(aapsSchedulers)
 
     val profileInjector = HasAndroidInjector {
         AndroidInjector {
@@ -57,7 +59,7 @@ open class TestBaseWithProfile : TestBase() {
         }
     }
 
-    lateinit var validProfileJSON: String
+    private lateinit var validProfileJSON: String
     lateinit var validProfile: Profile
     val TESTPROFILENAME = "someProfile"
 

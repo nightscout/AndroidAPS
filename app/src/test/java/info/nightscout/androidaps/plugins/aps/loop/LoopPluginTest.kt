@@ -39,7 +39,7 @@ import org.powermock.modules.junit4.PowerMockRunner
 class LoopPluginTest : TestBase() {
 
     @Mock lateinit var sp: SP
-    private val rxBus: RxBusWrapper = RxBusWrapper()
+    private val rxBus: RxBusWrapper = RxBusWrapper(aapsSchedulers)
     @Mock lateinit var constraintChecker: ConstraintChecker
     @Mock lateinit var resourceHelper: ResourceHelper
     @Mock lateinit var profileFunction: ProfileFunction
@@ -62,7 +62,7 @@ class LoopPluginTest : TestBase() {
     @Before fun prepareMock() {
         hardLimits = HardLimits(aapsLogger, rxBus, sp, resourceHelper, context, nsUpload)
 
-        loopPlugin = LoopPlugin(injector, aapsLogger, rxBus, sp, Config(), constraintChecker, resourceHelper, profileFunction, context, commandQueue, activePlugin, treatmentsPlugin, virtualPumpPlugin, actionStringHandler, iobCobCalculatorPlugin, receiverStatusStore, fabricPrivacy, nsUpload, hardLimits)
+        loopPlugin = LoopPlugin(injector, aapsLogger, aapsSchedulers, rxBus, sp, Config(), constraintChecker, resourceHelper, profileFunction, context, commandQueue, activePlugin, treatmentsPlugin, virtualPumpPlugin, actionStringHandler, iobCobCalculatorPlugin, receiverStatusStore, fabricPrivacy, nsUpload, hardLimits)
         `when`(activePlugin.activePump).thenReturn(virtualPumpPlugin)
         `when`(context.getSystemService(Context.NOTIFICATION_SERVICE)).thenReturn(notificationManager)
     }

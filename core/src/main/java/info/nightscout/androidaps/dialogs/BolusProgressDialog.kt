@@ -20,7 +20,7 @@ import info.nightscout.androidaps.plugins.general.overview.events.EventDismissBo
 import info.nightscout.androidaps.plugins.general.overview.events.EventOverviewBolusProgress
 import info.nightscout.androidaps.utils.FabricPrivacy
 import info.nightscout.androidaps.utils.resources.ResourceHelper
-import io.reactivex.android.schedulers.AndroidSchedulers
+import info.nightscout.androidaps.utils.rx.AapsSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import javax.inject.Inject
 
@@ -31,6 +31,7 @@ class BolusProgressDialog : DaggerDialogFragment() {
     @Inject lateinit var resourceHelper: ResourceHelper
     @Inject lateinit var commandQueue: CommandQueueProvider
     @Inject lateinit var fabricPrivacy: FabricPrivacy
+    @Inject lateinit var aapsSchedulers: AapsSchedulers
 
     private val disposable = CompositeDisposable()
 
@@ -111,17 +112,17 @@ class BolusProgressDialog : DaggerDialogFragment() {
 
         disposable.add(rxBus
             .toObservable(EventPumpStatusChanged::class.java)
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribe({ binding.status.text = it.getStatus(resourceHelper) }) { fabricPrivacy.logException(it) }
+            .observeOn(aapsSchedulers.main)
+            .subscribe({ binding.status.text = it.getStatus(resourceHelper) }, fabricPrivacy::logException)
         )
         disposable.add(rxBus
             .toObservable(EventDismissBolusProgressIfRunning::class.java)
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribe({ if (running) dismiss() }) { fabricPrivacy.logException(it) }
+            .observeOn(aapsSchedulers.main)
+            .subscribe({ if (running) dismiss() }, fabricPrivacy::logException)
         )
         disposable.add(rxBus
             .toObservable(EventOverviewBolusProgress::class.java)
-            .observeOn(AndroidSchedulers.mainThread())
+            .observeOn(aapsSchedulers.main)
             .subscribe({
                 aapsLogger.debug(LTag.UI, "Status: ${it.status} Percent: ${it.percent}")
                 binding.status.text = it.status
@@ -131,7 +132,7 @@ class BolusProgressDialog : DaggerDialogFragment() {
                     scheduleDismiss()
                 }
                 state = it.status
-            }) { fabricPrivacy.logException(it) }
+            }, fabricPrivacy::logException)
         )
     }
 

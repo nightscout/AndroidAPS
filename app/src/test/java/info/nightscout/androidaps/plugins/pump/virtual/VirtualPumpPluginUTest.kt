@@ -1,13 +1,12 @@
 package info.nightscout.androidaps.plugins.pump.virtual
 
 import dagger.android.AndroidInjector
-import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.Config
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.TestBase
 import info.nightscout.androidaps.interfaces.CommandQueueProvider
-import info.nightscout.androidaps.plugins.bus.RxBusWrapper
 import info.nightscout.androidaps.interfaces.ProfileFunction
+import info.nightscout.androidaps.plugins.bus.RxBusWrapper
 import info.nightscout.androidaps.plugins.pump.common.defs.PumpType
 import info.nightscout.androidaps.plugins.treatments.TreatmentsPlugin
 import info.nightscout.androidaps.utils.DateUtil
@@ -27,7 +26,7 @@ import org.powermock.modules.junit4.PowerMockRunner
 @PrepareForTest(FabricPrivacy::class)
 class VirtualPumpPluginUTest : TestBase() {
 
-    val rxBus = RxBusWrapper()
+    private val rxBus = RxBusWrapper(aapsSchedulers)
     @Mock lateinit var fabricPrivacy: FabricPrivacy
     @Mock lateinit var resourceHelper: ResourceHelper
     @Mock lateinit var sp: SP
@@ -40,7 +39,7 @@ class VirtualPumpPluginUTest : TestBase() {
 
     @Before
     fun prepareMocks() {
-        virtualPumpPlugin = VirtualPumpPlugin(HasAndroidInjector { AndroidInjector { } }, aapsLogger, rxBus, fabricPrivacy, resourceHelper, sp, profileFunction, treatmentsPlugin, commandQueue, Config(), dateUtil)
+        virtualPumpPlugin = VirtualPumpPlugin({ AndroidInjector { } }, aapsLogger, rxBus, fabricPrivacy, resourceHelper, aapsSchedulers, sp, profileFunction, treatmentsPlugin, commandQueue, Config(), dateUtil)
     }
 
     @Test

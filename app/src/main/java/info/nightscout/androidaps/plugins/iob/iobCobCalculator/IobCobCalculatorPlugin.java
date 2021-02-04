@@ -23,6 +23,7 @@ import info.nightscout.androidaps.data.MealData;
 import info.nightscout.androidaps.data.Profile;
 import info.nightscout.androidaps.db.BgReading;
 import info.nightscout.androidaps.db.TemporaryBasal;
+import info.nightscout.androidaps.db.Treatment;
 import info.nightscout.androidaps.events.Event;
 import info.nightscout.androidaps.events.EventAppInitialized;
 import info.nightscout.androidaps.events.EventConfigBuilderChange;
@@ -34,32 +35,32 @@ import info.nightscout.androidaps.interfaces.IobCobCalculatorInterface;
 import info.nightscout.androidaps.interfaces.PluginBase;
 import info.nightscout.androidaps.interfaces.PluginDescription;
 import info.nightscout.androidaps.interfaces.PluginType;
+import info.nightscout.androidaps.interfaces.ProfileFunction;
 import info.nightscout.androidaps.logging.AAPSLogger;
 import info.nightscout.androidaps.logging.LTag;
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper;
-import info.nightscout.androidaps.interfaces.ProfileFunction;
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.data.AutosensData;
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.events.EventNewHistoryBgData;
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.events.EventNewHistoryData;
 import info.nightscout.androidaps.plugins.sensitivity.SensitivityAAPSPlugin;
 import info.nightscout.androidaps.plugins.sensitivity.SensitivityOref1Plugin;
 import info.nightscout.androidaps.plugins.sensitivity.SensitivityWeightedAveragePlugin;
-import info.nightscout.androidaps.db.Treatment;
 import info.nightscout.androidaps.plugins.treatments.TreatmentsPlugin;
 import info.nightscout.androidaps.utils.DateUtil;
 import info.nightscout.androidaps.utils.DecimalFormatter;
 import info.nightscout.androidaps.utils.FabricPrivacy;
 import info.nightscout.androidaps.utils.T;
 import info.nightscout.androidaps.utils.resources.ResourceHelper;
+import info.nightscout.androidaps.utils.rx.AapsSchedulers;
 import info.nightscout.androidaps.utils.sharedPreferences.SP;
 import io.reactivex.disposables.CompositeDisposable;
-import io.reactivex.schedulers.Schedulers;
 
 import static info.nightscout.androidaps.utils.DateUtil.now;
 
 @Singleton
 public class IobCobCalculatorPlugin extends PluginBase implements IobCobCalculatorInterface {
     private final HasAndroidInjector injector;
+    private final AapsSchedulers aapsSchedulers;
     private final SP sp;
     private final RxBusWrapper rxBus;
     private final ResourceHelper resourceHelper;
@@ -96,6 +97,7 @@ public class IobCobCalculatorPlugin extends PluginBase implements IobCobCalculat
     public IobCobCalculatorPlugin(
             HasAndroidInjector injector,
             AAPSLogger aapsLogger,
+            AapsSchedulers aapsSchedulers,
             RxBusWrapper rxBus,
             SP sp,
             ResourceHelper resourceHelper,
@@ -117,6 +119,7 @@ public class IobCobCalculatorPlugin extends PluginBase implements IobCobCalculat
                 aapsLogger, resourceHelper, injector
         );
         this.injector = injector;
+        this.aapsSchedulers = aapsSchedulers;
         this.sp = sp;
         this.rxBus = rxBus;
         this.resourceHelper = resourceHelper;
@@ -136,7 +139,7 @@ public class IobCobCalculatorPlugin extends PluginBase implements IobCobCalculat
         // EventConfigBuilderChange
         disposable.add(rxBus
                 .toObservable(EventConfigBuilderChange.class)
-                .observeOn(Schedulers.io())
+                .observeOn(aapsSchedulers.getIo())
                 .subscribe(event -> {
                     stopCalculation("onEventConfigBuilderChange");
                     synchronized (dataLock) {
@@ -149,7 +152,7 @@ public class IobCobCalculatorPlugin extends PluginBase implements IobCobCalculat
         // EventNewBasalProfile
         disposable.add(rxBus
                 .toObservable(EventNewBasalProfile.class)
-                .observeOn(Schedulers.io())
+                .observeOn(aapsSchedulers.getIo())
                 .subscribe(event -> {
                     if (event == null) { // on init no need of reset
                         return;
@@ -165,7 +168,7 @@ public class IobCobCalculatorPlugin extends PluginBase implements IobCobCalculat
         // EventNewBG .... cannot be used for invalidating because only event with last BG is fired
         disposable.add(rxBus
                 .toObservable(EventNewBG.class)
-                .observeOn(Schedulers.io())
+                .observeOn(aapsSchedulers.getIo())
                 .subscribe(event -> {
                     stopCalculation("onEventNewBG");
                     runCalculation("onEventNewBG", System.currentTimeMillis(), true, true, event);
@@ -174,7 +177,7 @@ public class IobCobCalculatorPlugin extends PluginBase implements IobCobCalculat
         // EventPreferenceChange
         disposable.add(rxBus
                 .toObservable(EventPreferenceChange.class)
-                .observeOn(Schedulers.io())
+                .observeOn(aapsSchedulers.getIo())
                 .subscribe(event -> {
                     if (event.isChanged(resourceHelper, R.string.key_openapsama_autosens_period) ||
                             event.isChanged(resourceHelper, R.string.key_age) ||
@@ -197,19 +200,19 @@ public class IobCobCalculatorPlugin extends PluginBase implements IobCobCalculat
         // EventAppInitialized
         disposable.add(rxBus
                 .toObservable(EventAppInitialized.class)
-                .observeOn(Schedulers.io())
+                .observeOn(aapsSchedulers.getIo())
                 .subscribe(event -> runCalculation("onEventAppInitialized", System.currentTimeMillis(), true, true, event), fabricPrivacy::logException)
         );
         // EventNewHistoryData
         disposable.add(rxBus
                 .toObservable(EventNewHistoryData.class)
-                .observeOn(Schedulers.io())
+                .observeOn(aapsSchedulers.getIo())
                 .subscribe(event -> newHistoryData(event, false), fabricPrivacy::logException)
         );
         // EventNewHistoryBgData
         disposable.add(rxBus
                 .toObservable(EventNewHistoryBgData.class)
-                .observeOn(Schedulers.io())
+                .observeOn(aapsSchedulers.getIo())
                 .subscribe(event -> newHistoryData(new EventNewHistoryData(event.getTimestamp()), true), fabricPrivacy::logException)
         );
     }

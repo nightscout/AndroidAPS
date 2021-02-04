@@ -72,15 +72,16 @@ import info.nightscout.androidaps.utils.FabricPrivacy;
 import info.nightscout.androidaps.utils.HardLimits;
 import info.nightscout.androidaps.utils.T;
 import info.nightscout.androidaps.utils.resources.ResourceHelper;
+import info.nightscout.androidaps.utils.rx.AapsSchedulers;
 import info.nightscout.androidaps.utils.sharedPreferences.SP;
 import io.reactivex.disposables.CompositeDisposable;
-import io.reactivex.schedulers.Schedulers;
 
 @Singleton
 public class LoopPlugin extends PluginBase implements LoopInterface {
     private final HasAndroidInjector injector;
     private final SP sp;
     private final RxBusWrapper rxBus;
+    private final AapsSchedulers aapsSchedulers;
     private final ConstraintChecker constraintChecker;
     private final ResourceHelper resourceHelper;
     private final ProfileFunction profileFunction;
@@ -123,6 +124,7 @@ public class LoopPlugin extends PluginBase implements LoopInterface {
     public LoopPlugin(
             HasAndroidInjector injector,
             AAPSLogger aapsLogger,
+            AapsSchedulers aapsSchedulers,
             RxBusWrapper rxBus,
             SP sp,
             Config config,
@@ -153,6 +155,7 @@ public class LoopPlugin extends PluginBase implements LoopInterface {
                 aapsLogger, resourceHelper, injector
         );
         this.injector = injector;
+        this.aapsSchedulers = aapsSchedulers;
         this.sp = sp;
         this.rxBus = rxBus;
         this.constraintChecker = constraintChecker;
@@ -181,7 +184,7 @@ public class LoopPlugin extends PluginBase implements LoopInterface {
         super.onStart();
         disposable.add(rxBus
                 .toObservable(EventTempTargetChange.class)
-                .observeOn(Schedulers.io())
+                .observeOn(aapsSchedulers.getIo())
                 .subscribe(event -> invoke("EventTempTargetChange", true), fabricPrivacy::logException)
         );
         /*
@@ -193,7 +196,7 @@ public class LoopPlugin extends PluginBase implements LoopInterface {
          */
         disposable.add(rxBus
                 .toObservable(EventAutosensCalculationFinished.class)
-                .observeOn(Schedulers.io())
+                .observeOn(aapsSchedulers.getIo())
                 .subscribe(event -> {
                     // Autosens calculation not triggered by a new BG
                     if (!(event.getCause() instanceof EventNewBG)) return;

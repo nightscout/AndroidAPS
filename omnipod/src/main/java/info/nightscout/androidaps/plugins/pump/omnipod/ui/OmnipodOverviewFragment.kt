@@ -47,6 +47,7 @@ import info.nightscout.androidaps.utils.alertDialogs.OKDialog
 import info.nightscout.androidaps.utils.extensions.plusAssign
 import info.nightscout.androidaps.utils.protection.ProtectionCheck
 import info.nightscout.androidaps.utils.resources.ResourceHelper
+import info.nightscout.androidaps.utils.rx.AapsSchedulers
 import info.nightscout.androidaps.utils.sharedPreferences.SP
 import info.nightscout.androidaps.utils.ui.UIRunnable
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -79,6 +80,7 @@ class OmnipodOverviewFragment : DaggerFragment() {
     @Inject lateinit var dateUtil: DateUtil
     @Inject lateinit var omnipodManager: AapsOmnipodManager
     @Inject lateinit var protectionCheck: ProtectionCheck
+    @Inject lateinit var aapsSchedulers: AapsSchedulers
 
     private var disposables: CompositeDisposable = CompositeDisposable()
 
@@ -159,31 +161,31 @@ class OmnipodOverviewFragment : DaggerFragment() {
         loopHandler.postDelayed(refreshLoop, REFRESH_INTERVAL_MILLIS)
         disposables += rxBus
             .toObservable(EventRileyLinkDeviceStatusChange::class.java)
-            .observeOn(AndroidSchedulers.mainThread())
+            .observeOn(aapsSchedulers.main)
             .subscribe({
                 updateRileyLinkStatus()
                 updatePodActionButtons()
-            }, { fabricPrivacy.logException(it) })
+            }, fabricPrivacy::logException)
         disposables += rxBus
             .toObservable(EventOmnipodPumpValuesChanged::class.java)
-            .observeOn(AndroidSchedulers.mainThread())
+            .observeOn(aapsSchedulers.main)
             .subscribe({
                 updateOmnipodStatus()
                 updatePodActionButtons()
-            }, { fabricPrivacy.logException(it) })
+            }, fabricPrivacy::logException)
         disposables += rxBus
             .toObservable(EventQueueChanged::class.java)
-            .observeOn(AndroidSchedulers.mainThread())
+            .observeOn(aapsSchedulers.main)
             .subscribe({
                 updateQueueStatus()
                 updatePodActionButtons()
-            }, { fabricPrivacy.logException(it) })
+            }, fabricPrivacy::logException)
         disposables += rxBus
             .toObservable(EventPreferenceChange::class.java)
-            .observeOn(AndroidSchedulers.mainThread())
+            .observeOn(aapsSchedulers.main)
             .subscribe({
                 updatePodActionButtons()
-            }, { fabricPrivacy.logException(it) })
+            }, fabricPrivacy::logException)
         updateUi()
     }
 

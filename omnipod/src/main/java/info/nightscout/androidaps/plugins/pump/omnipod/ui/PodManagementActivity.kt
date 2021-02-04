@@ -31,6 +31,7 @@ import info.nightscout.androidaps.utils.FabricPrivacy
 import info.nightscout.androidaps.utils.alertDialogs.OKDialog
 import info.nightscout.androidaps.utils.extensions.plusAssign
 import info.nightscout.androidaps.utils.extensions.toVisibility
+import info.nightscout.androidaps.utils.rx.AapsSchedulers
 import info.nightscout.androidaps.utils.ui.UIRunnable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
@@ -51,6 +52,7 @@ class PodManagementActivity : NoSplashAppCompatActivity() {
     @Inject lateinit var context: Context
     @Inject lateinit var omnipodPumpPlugin: OmnipodPumpPlugin
     @Inject lateinit var serviceTaskExecutor: ServiceTaskExecutor
+    @Inject lateinit var aapsSchedulers: AapsSchedulers
 
     private var disposables: CompositeDisposable = CompositeDisposable()
 
@@ -124,16 +126,16 @@ class PodManagementActivity : NoSplashAppCompatActivity() {
         super.onResume()
         disposables += rxBus
             .toObservable(EventRileyLinkDeviceStatusChange::class.java)
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribe({ refreshButtons() }, { fabricPrivacy.logException(it) })
+            .observeOn(aapsSchedulers.main)
+            .subscribe({ refreshButtons() }, fabricPrivacy::logException)
         disposables += rxBus
             .toObservable(EventOmnipodPumpValuesChanged::class.java)
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribe({ refreshButtons() }, { fabricPrivacy.logException(it) })
+            .observeOn(aapsSchedulers.main)
+            .subscribe({ refreshButtons() }, fabricPrivacy::logException)
         disposables += rxBus
             .toObservable(EventQueueChanged::class.java)
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribe({ refreshButtons() }, { fabricPrivacy.logException(it) })
+            .observeOn(aapsSchedulers.main)
+            .subscribe({ refreshButtons() }, fabricPrivacy::logException)
 
         refreshButtons()
     }
