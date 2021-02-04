@@ -8,6 +8,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.LinearLayout
+import android.widget.TextView
 import androidx.core.content.ContextCompat
 import dagger.android.support.DaggerFragment
 import info.nightscout.androidaps.Config
@@ -40,7 +41,6 @@ import info.nightscout.androidaps.utils.ui.SingleClickButton
 import info.nightscout.androidaps.utils.ui.UIRunnable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
-import kotlinx.android.synthetic.main.careportal_stats_fragment.*
 import java.util.*
 import javax.inject.Inject
 
@@ -81,6 +81,17 @@ class ActionsFragment : DaggerFragment() {
     private var tddStats: SingleClickButton? = null
     private var pumpBatteryChange: SingleClickButton? = null
 
+    private var cannulaAge: TextView? = null
+    private var insulinAge: TextView? = null
+    private var reservoirLevel: TextView? = null
+    private var sensorAge: TextView? = null
+    private var sensorLevel: TextView? = null
+    private var pbAge: TextView? = null
+    private var batteryLevel: TextView? = null
+    private var sensorLevelLabel: TextView? = null
+    private var insulinLevelLabel: TextView? = null
+    private var pbLevelLabel: TextView? = null
+
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
         //check screen width
@@ -110,6 +121,17 @@ class ActionsFragment : DaggerFragment() {
         historyBrowser = view.findViewById(R.id.actions_historybrowser)
         tddStats = view.findViewById(R.id.actions_tddstats)
         pumpBatteryChange = view.findViewById(R.id.actions_pumpbatterychange)
+
+        cannulaAge = view.findViewById(R.id.cannula_age)
+        insulinAge = view.findViewById(R.id.insulin_age)
+        reservoirLevel = view.findViewById(R.id.reservoir_level)
+        sensorAge = view.findViewById(R.id.sensor_age)
+        sensorLevel = view.findViewById(R.id.sensor_level)
+        pbAge = view.findViewById(R.id.pb_age)
+        batteryLevel = view.findViewById(R.id.battery_level)
+        sensorLevelLabel = view.findViewById(R.id.sensor_level_label)
+        insulinLevelLabel = view.findViewById(R.id.insulin_level_label)
+        pbLevelLabel = view.findViewById(R.id.pb_level_label)
 
         profileSwitch?.setOnClickListener {
             ProfileSwitchDialog().show(childFragmentManager, "Actions")
@@ -283,13 +305,13 @@ class ActionsFragment : DaggerFragment() {
         tddStats?.visibility = pump.pumpDescription.supportsTDDs.toVisibility()
 
         if (!config.NSCLIENT) {
-            statusLightHandler.updateStatusLights(careportal_canulaage, careportal_insulinage, careportal_reservoirlevel, careportal_sensorage, careportal_sensorlevel, careportal_pbage, careportal_batterylevel)
-            careportal_senslevellabel?.text = if (activeBgSource.sensorBatteryLevel == -1) "" else resourceHelper.gs(R.string.careportal_level_label)
+            statusLightHandler.updateStatusLights(cannulaAge, insulinAge, reservoirLevel, sensorAge, sensorLevel, pbAge, batteryLevel)
+            sensorLevelLabel?.text = if (activeBgSource.sensorBatteryLevel == -1) "" else resourceHelper.gs(R.string.careportal_level_label)
         } else {
-            statusLightHandler.updateStatusLights(careportal_canulaage, careportal_insulinage, null, careportal_sensorage, null, careportal_pbage, null)
-            careportal_senslevellabel?.text = ""
-            careportal_inslevellabel?.text = ""
-            careportal_pblevellabel?.text = ""
+            statusLightHandler.updateStatusLights(cannulaAge, insulinAge, null, sensorAge, null, pbAge, null)
+            sensorLevelLabel?.text = ""
+            insulinLevelLabel?.text = ""
+            pbLevelLabel?.text = ""
         }
         checkPumpCustomActions()
 
