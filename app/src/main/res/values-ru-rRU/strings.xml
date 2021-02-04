@@ -435,7 +435,6 @@
     <string name="overview_extendedbolus_cancel_button">Отмена удлиненного болюса</string>
     <string name="doprofileswitch">Переключить профиль</string>
     <string name="careportal_sensor_label">Сенсор</string>
-    <string name="careportal_canula_label">Канюля</string>
     <string name="careportal_insulin_label">Инсулин</string>
     <string name="careportal_pb_label">Батарея помпы</string>
     <string name="careportal_age_label">Возраст:</string>
