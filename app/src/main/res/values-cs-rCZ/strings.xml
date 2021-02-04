@@ -438,7 +438,7 @@
     <string name="careportal_canula_label">Kanyla</string>
     <string name="careportal_insulin_label">Inzulín</string>
     <string name="careportal_pb_label">Baterie pumpy</string>
-    <string name="careportal_age_label">věk:</string>
+    <string name="careportal_age_label">stáří:</string>
     <string name="careportal_level_label">úroveň:</string>
     <string name="ns_alarmoptions">Nastavení alarmů</string>
     <string name="ns_alarms">Vytvořit oznámení z alarmů NS</string>
