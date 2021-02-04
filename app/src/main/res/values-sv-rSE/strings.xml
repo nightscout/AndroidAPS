@@ -436,7 +436,6 @@ Eversense-appen.</string>
     <string name="overview_extendedbolus_cancel_button">Stoppa förlängd bolus</string>
     <string name="doprofileswitch">Genomför profilbyte</string>
     <string name="careportal_sensor_label">Sensor</string>
-    <string name="careportal_canula_label">Kanyl</string>
     <string name="careportal_insulin_label">Insulin</string>
     <string name="careportal_pb_label">Pumpbatteri</string>
     <string name="careportal_age_label">ålder:</string>
