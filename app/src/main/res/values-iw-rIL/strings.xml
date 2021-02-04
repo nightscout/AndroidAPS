@@ -435,7 +435,6 @@
     <string name="overview_extendedbolus_cancel_button">ביטול בולוס ממושך</string>
     <string name="doprofileswitch">החלפת פרופיל</string>
     <string name="careportal_sensor_label">סנסור</string>
-    <string name="careportal_canula_label">צינורית</string>
     <string name="careportal_insulin_label">אינסולין</string>
     <string name="careportal_pb_label">סוללת משאבה</string>
     <string name="careportal_age_label">גיל:</string>
