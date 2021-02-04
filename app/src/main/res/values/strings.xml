@@ -512,7 +512,6 @@
     <string name="overview_extendedbolus_cancel_button">Cancel Extended Bolus</string>
     <string name="doprofileswitch">Do Profile Switch</string>
     <string name="careportal_sensor_label">Sensor</string>
-    <string name="careportal_canula_label">Canula</string>
     <string name="careportal_insulin_label">Insulin</string>
     <string name="careportal_pb_label">Pump battery</string>
     <string name="careportal_age_label">age:</string>
@@ -1377,5 +1376,7 @@
     <string name="graph_menu_divider_header">Graph</string>
     <string name="chart_menu">Chart menu</string>
     <string name="clear_filter">Clear filter</string>
+    <string name="trend_arrow">Trend arrow</string>
+    <string name="cannula">Cannula</string>
 
 </resources>

@@ -27,7 +27,7 @@
 
     <!--    Treatment-->
     <color name="tempbasal">#C803A9F4</color>
-    <color name="listdelimiter">#505050</color>
+    <color name="list_delimiter">#505050</color>
 
     <!--    BgReading-->
     <color name="inrange">#00FF00</color>

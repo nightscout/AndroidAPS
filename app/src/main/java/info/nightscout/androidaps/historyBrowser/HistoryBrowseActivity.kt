@@ -148,7 +148,7 @@ class HistoryBrowseActivity : NoSplashAppCompatActivity() {
         binding.bggraph.gridLabelRenderer?.reloadStyles()
         binding.bggraph.gridLabelRenderer?.labelVerticalWidth = axisWidth
 
-        overviewMenus.setupChartMenu(binding.overviewChartMenuButton)
+        overviewMenus.setupChartMenu(binding.chartMenuButton)
         prepareGraphsIfNeeded(overviewMenus.setting.size)
         savedInstanceState?.let { bundle ->
             rangeToDisplay = bundle.getInt("rangeToDisplay", 0)
