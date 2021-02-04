@@ -435,7 +435,6 @@
     <string name="overview_extendedbolus_cancel_button">Verzögerten Bolus abbrechen</string>
     <string name="doprofileswitch">Profilwechsel durchführen</string>
     <string name="careportal_sensor_label">Sensor</string>
-    <string name="careportal_canula_label">Kanüle</string>
     <string name="careportal_insulin_label">Insulin</string>
     <string name="careportal_pb_label">Pumpenbatterie</string>
     <string name="careportal_age_label">Alter:</string>
