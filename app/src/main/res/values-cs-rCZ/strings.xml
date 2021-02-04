@@ -435,7 +435,6 @@
     <string name="overview_extendedbolus_cancel_button">Zrušit prodloužený bolus</string>
     <string name="doprofileswitch">Proveďte přepnutí profilu</string>
     <string name="careportal_sensor_label">Senzor</string>
-    <string name="careportal_canula_label">Kanyla</string>
     <string name="careportal_insulin_label">Inzulín</string>
     <string name="careportal_pb_label">Baterie pumpy</string>
     <string name="careportal_age_label">stáří:</string>
