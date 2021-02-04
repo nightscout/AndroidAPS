@@ -2,6 +2,7 @@
 <resources>
     <!--    Keys-->
     <!--    General-->
+    <string name="refresh">Обновить</string>
     <string name="error">Ошибка</string>
     <string name="not_set_short">Не выбрано</string>
     <string name="failedupdatebasalprofile">не удалось обновить базальный профиль</string>
