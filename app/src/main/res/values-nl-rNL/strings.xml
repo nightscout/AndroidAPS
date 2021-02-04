@@ -435,7 +435,6 @@
     <string name="overview_extendedbolus_cancel_button">Annuleer vertraagde bolus</string>
     <string name="doprofileswitch">Profiel wissel uitvoeren</string>
     <string name="careportal_sensor_label">Sensor</string>
-    <string name="careportal_canula_label">Canule</string>
     <string name="careportal_insulin_label">Insuline</string>
     <string name="careportal_pb_label">Pomp batterij</string>
     <string name="careportal_age_label">leeftijd:</string>
