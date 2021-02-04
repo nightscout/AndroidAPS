@@ -436,7 +436,6 @@
     <string name="overview_extendedbolus_cancel_button">Anuluj bolus przedłużony </string>
     <string name="doprofileswitch">Zmień profil</string>
     <string name="careportal_sensor_label">Sensor</string>
-    <string name="careportal_canula_label">Kaniula</string>
     <string name="careportal_insulin_label">Insulina</string>
     <string name="careportal_pb_label">Bateria pompy</string>
     <string name="careportal_age_label">czas:</string>
