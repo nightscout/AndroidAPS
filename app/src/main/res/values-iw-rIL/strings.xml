@@ -1156,4 +1156,6 @@
     <string name="graph_menu_divider_header">גרף</string>
     <string name="chart_menu">תפריט הגרף</string>
     <string name="clear_filter">נקה סינון</string>
+    <string name="trend_arrow">חץ מגמה</string>
+    <string name="cannula">צינורית</string>
 </resources>
