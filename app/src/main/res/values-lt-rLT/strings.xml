@@ -421,7 +421,6 @@
     <string name="overview_extendedbolus_cancel_button">Atšaukti ištęstą bolusą</string>
     <string name="doprofileswitch">Profilio keitimas</string>
     <string name="careportal_sensor_label">Sensorius</string>
-    <string name="careportal_canula_label">Kaniulė</string>
     <string name="careportal_insulin_label">Insulinas</string>
     <string name="careportal_pb_label">Pompos baterija</string>
     <string name="careportal_age_label">amžius:</string>
