@@ -1156,4 +1156,6 @@
     <string name="graph_menu_divider_header">Grafico</string>
     <string name="chart_menu">Menu grafico</string>
     <string name="clear_filter">Cancella filtro</string>
+    <string name="trend_arrow">Freccia trend</string>
+    <string name="cannula">Cannula</string>
 </resources>
