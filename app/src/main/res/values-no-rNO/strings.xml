@@ -1156,4 +1156,6 @@
     <string name="graph_menu_divider_header">Graf</string>
     <string name="chart_menu">Diagram meny</string>
     <string name="clear_filter">Nullstill filtre</string>
+    <string name="trend_arrow">Trend pil</string>
+    <string name="cannula">Kanyle</string>
 </resources>
