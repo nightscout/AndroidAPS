@@ -2,6 +2,7 @@
 <resources>
     <!--    Keys-->
     <!--    General-->
+    <string name="refresh">רענן</string>
     <string name="error">שגיאה</string>
     <string name="not_set_short">לא הוגדר</string>
     <string name="failedupdatebasalprofile">עדכון הפרופיל הבזאלי נכשל</string>
