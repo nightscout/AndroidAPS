@@ -3,7 +3,6 @@ package info.nightscout.androidaps;
 import android.bluetooth.BluetoothDevice;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.content.res.Resources;
 import android.net.ConnectivityManager;
 import android.net.wifi.WifiManager;
 
@@ -42,9 +41,6 @@ import info.nightscout.androidaps.utils.sharedPreferences.SP;
 
 public class MainApp extends DaggerApplication {
 
-    static MainApp sInstance;
-    private static Resources sResources;
-
     static DatabaseHelper sDatabaseHelper = null;
 
     @Inject PluginStore pluginStore;
@@ -66,10 +62,8 @@ public class MainApp extends DaggerApplication {
         super.onCreate();
 
         aapsLogger.debug("onCreate");
-        sInstance = this;
-        sResources = getResources();
         LocaleHelper.INSTANCE.update(this);
-        sDatabaseHelper = OpenHelperManager.getHelper(sInstance, DatabaseHelper.class);
+        sDatabaseHelper = OpenHelperManager.getHelper(this, DatabaseHelper.class);
 /*
         Thread.setDefaultUncaughtExceptionHandler((thread, ex) -> {
             if (ex instanceof InternalError) {
@@ -121,7 +115,6 @@ public class MainApp extends DaggerApplication {
                 .build();
     }
 
-    @SuppressWarnings("deprecation")
     private void registerLocalBroadcastReceiver() {
         IntentFilter filter = new IntentFilter();
         filter.addAction(Intents.ACTION_NEW_TREATMENT);
