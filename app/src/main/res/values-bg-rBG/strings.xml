@@ -435,7 +435,6 @@
     <string name="overview_extendedbolus_cancel_button">Спри удължен болус</string>
     <string name="doprofileswitch">Смени профил</string>
     <string name="careportal_sensor_label">Сензор</string>
-    <string name="careportal_canula_label">Канюла</string>
     <string name="careportal_insulin_label">Инсулин</string>
     <string name="careportal_pb_label">Батерия на помпата</string>
     <string name="careportal_age_label">възраст:</string>
