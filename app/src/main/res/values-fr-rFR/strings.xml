@@ -436,7 +436,6 @@ L\'ENSEMBLE DES RISQUES LIÉS À LA QUALITÉ ET À LA PERFORMANCE DU PROGRAMME S
     <string name="overview_extendedbolus_cancel_button">Annuler Bolus étendu</string>
     <string name="doprofileswitch">Changer de profil</string>
     <string name="careportal_sensor_label">Capteur</string>
-    <string name="careportal_canula_label">Canule</string>
     <string name="careportal_insulin_label">Insuline</string>
     <string name="careportal_pb_label">Pile pompe</string>
     <string name="careportal_age_label">âge:</string>
