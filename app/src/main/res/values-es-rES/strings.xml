@@ -435,7 +435,6 @@
     <string name="overview_extendedbolus_cancel_button">Cancelar bolo extendido</string>
     <string name="doprofileswitch">Cambio de perfil</string>
     <string name="careportal_sensor_label">Sensor</string>
-    <string name="careportal_canula_label">Cánula</string>
     <string name="careportal_insulin_label">Insulina</string>
     <string name="careportal_pb_label">Batería de la bomba</string>
     <string name="careportal_age_label">edad:</string>
