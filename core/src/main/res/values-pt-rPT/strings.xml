@@ -2,6 +2,7 @@
 <resources>
     <!--    Keys-->
     <!--    General-->
+    <string name="refresh">Actualizar</string>
     <string name="error">Erro</string>
     <string name="not_set_short">Não definido</string>
     <string name="failedupdatebasalprofile">Falha a actualizar perfil da basal</string>
