@@ -432,7 +432,6 @@
     <string name="overview_extendedbolus_cancel_button">Renunță la bolusul extins</string>
     <string name="doprofileswitch">Schimbă profilul</string>
     <string name="careportal_sensor_label">Senzor</string>
-    <string name="careportal_canula_label">Canulă</string>
     <string name="careportal_insulin_label">Insulină</string>
     <string name="careportal_pb_label">Baterie pompă</string>
     <string name="careportal_age_label">vârstă:</string>
