@@ -235,6 +235,7 @@ dependencies {
     wearApp project(':wear')
 
     implementation project(':core')
+    implementation project(':database')
     implementation project(':dana')
     implementation project(':danars')
     implementation project(':danar')
