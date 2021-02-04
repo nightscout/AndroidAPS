@@ -435,7 +435,6 @@
     <string name="overview_extendedbolus_cancel_button">Отмена удлиненного болюса</string>
     <string name="doprofileswitch">Переключить профиль</string>
     <string name="careportal_sensor_label">Сенсор</string>
-    <string name="careportal_canula_label">Канюля</string>
     <string name="careportal_insulin_label">Инсулин</string>
     <string name="careportal_pb_label">Батарея помпы</string>
     <string name="careportal_age_label">Возраст:</string>
@@ -495,6 +494,7 @@
     <string name="activity_target">целевое значение СК при физической нагрузке</string>
     <string name="hypo_duration">длительность гипо</string>
     <string name="hypo_target">целевое значение СК при гипо</string>
+    <string name="reuse_profile_pct_hours">Повторно использовать %1$d%% %2$dч</string>
     <string name="wearcontrol_title">Контроль с часов</string>
     <string name="wearcontrol_summary">Ставить временные цели и вводить назначения с часов.</string>
     <string name="food">Еда</string>
@@ -547,7 +547,6 @@
     <string name="maxiobset">Максимум активного инсулина IOB установлен правильно</string>
     <string name="hasbgdata">СК доступны из выбранного источника</string>
     <string name="combo_programming_bolus">Помпа программируется для болюса</string>
-    <string name="combo_refresh">Обновить</string>
     <string name="combo_pump_state_label">Состояние</string>
     <string name="combo_pump_activity_label">Нагрузка</string>
     <string name="combo_no_pump_connection">Нет связи в течение %1$d мин</string>
@@ -840,7 +839,6 @@ Context | Edit Context</string>
     <string name="eb_formatter">%1$.2f / %2$.2f U за %3$d мин</string>
     <string name="enable_tbr_over_notification">Включить уведомление об окончании временной скорости базала TBR\n(настройка помпы)</string>
     <string name="disable_tbr_over_notification">Отключить уведомление об окончании временной скорости базала TBR\n(настройка помпы)</string>
-    <string name="refresh">Обновить</string>
     <string name="description_pump_insight_local">Интеграция с помпой Accu-Chek Insight</string>
     <string name="not_inserted">Не вставлено</string>
     <string name="short_status_last_connected">Недавнее соединение: %1$d мин. назад</string>
@@ -1065,8 +1063,6 @@ Context | Edit Context</string>
     <string name="insight_alert_notification_channel">Оповещения помпы Insight</string>
     <!-- SMS Communicator & OTP Authenticator -->
     <string name="smscommunicator_code_from_authenticator_for" comment="This is continuation of sentence: To [ACTION] reply with code">из приложения Authenticator для %1$s и дополните пином в конце</string>
-    <string name="smscommunicator_otp_enabled">Включить аутентификатор</string>
-    <string name="smscommunicator_otp_enabled_summary">Аутентифицировать команды с помощью одноразовых паролей, сгенерированных Google Authenticator или похожими приложениями 2FA.</string>
     <string name="smscommunicator_otp_pin">Дополнительный обязательный пин-код в конце маркера</string>
     <string name="smscommunicator_otp_pin_summary">Дополнительные цифры, которые должны быть запомнены и добавлены в конце каждого сгенерированного одноразового пароля</string>
     <string name="smscomunicator_tab_otp_label">Настройка аутентификации</string>
@@ -1160,4 +1156,6 @@ Context | Edit Context</string>
     <string name="timetoeat">Пора есть</string>
     <string name="fabric_upload_disabled">Загрузка журналов сбоя на сервер отключена!</string>
     <string name="graph_menu_divider_header">График</string>
+    <string name="chart_menu">Меню графика</string>
+    <string name="clear_filter">Очистить фильтр</string>
 </resources>

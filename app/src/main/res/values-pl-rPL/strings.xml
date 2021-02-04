@@ -436,7 +436,6 @@
     <string name="overview_extendedbolus_cancel_button">Anuluj bolus przedłużony </string>
     <string name="doprofileswitch">Zmień profil</string>
     <string name="careportal_sensor_label">Sensor</string>
-    <string name="careportal_canula_label">Kaniula</string>
     <string name="careportal_insulin_label">Insulina</string>
     <string name="careportal_pb_label">Bateria pompy</string>
     <string name="careportal_age_label">czas:</string>
@@ -548,7 +547,6 @@
     <string name="maxiobset">Maks. IOB ustawione poprawnie</string>
     <string name="hasbgdata">BG dostępne z wybranego źródła</string>
     <string name="combo_programming_bolus">Programowanie pompy do podawania bolusa</string>
-    <string name="combo_refresh">Odśwież</string>
     <string name="combo_pump_state_label">Stan</string>
     <string name="combo_pump_activity_label">Aktywność</string>
     <string name="combo_no_pump_connection">Brak połączenia przez %1$d min</string>
@@ -839,7 +837,6 @@
     <string name="eb_formatter">%1$.2f / %2$.2f U na %3$d min</string>
     <string name="enable_tbr_over_notification">Włącz powiadomienia o końcu TBR\n(ustawienia pompy)</string>
     <string name="disable_tbr_over_notification">Wyłącz powiadomienia o końcu TBR\n(ustawienia pompy)</string>
-    <string name="refresh">Odśwież</string>
     <string name="description_pump_insight_local">Integracja pompy dla pomp Accu-Check Insight</string>
     <string name="not_inserted">Nie wprowadzono</string>
     <string name="short_status_last_connected">Połączenie: %1$d min temu</string>
@@ -1064,8 +1061,6 @@
     <string name="insight_alert_notification_channel">Alarmy pompy Insight</string>
     <!-- SMS Communicator & OTP Authenticator -->
     <string name="smscommunicator_code_from_authenticator_for" comment="This is continuation of sentence: To [ACTION] reply with code">z aplikacji Authenticator dla: %1$s, z doklejonym PIN-em</string>
-    <string name="smscommunicator_otp_enabled">Włącz uwierzytelnianie</string>
-    <string name="smscommunicator_otp_enabled_summary">Uwierzytelnianie komend za pomocą haseł jednorazowych generowanych przez aplikację Google Authenticator lub podobnych aplikacji 2FA.</string>
     <string name="smscommunicator_otp_pin">Dodatkowy obowiązkowy PIN na końcu tokenu</string>
     <string name="smscommunicator_otp_pin_summary">Dodatkowe cyfry, które powinny być zapamiętywane i przyklejone na końcu każdego wygenerowanego hasła jednorazowego</string>
     <string name="smscomunicator_tab_otp_label">Ustawienia uwierzytelnienia</string>

@@ -435,7 +435,6 @@
     <string name="overview_extendedbolus_cancel_button">Спри удължен болус</string>
     <string name="doprofileswitch">Смени профил</string>
     <string name="careportal_sensor_label">Сензор</string>
-    <string name="careportal_canula_label">Канюла</string>
     <string name="careportal_insulin_label">Инсулин</string>
     <string name="careportal_pb_label">Батерия на помпата</string>
     <string name="careportal_age_label">възраст:</string>
@@ -547,7 +546,6 @@
     <string name="maxiobset">Максимален IOB е зададен правилно</string>
     <string name="hasbgdata">Има данни за КЗ от избрания източник</string>
     <string name="combo_programming_bolus">Програмиране на помпа за болус</string>
-    <string name="combo_refresh">Обнови</string>
     <string name="combo_pump_state_label">Състояние</string>
     <string name="combo_pump_activity_label">Активност</string>
     <string name="combo_no_pump_connection">Няма връзка от %1$d мин.</string>
@@ -838,7 +836,6 @@
     <string name="eb_formatter">%1$.2f / %2$.2f U за %3$d мин</string>
     <string name="enable_tbr_over_notification">Разреши съобщения за край на временни базали\n(настройки на помпата)</string>
     <string name="disable_tbr_over_notification">Забрани съобщения за край на временни базали\n(настройки на помпата)</string>
-    <string name="refresh">Обнови</string>
     <string name="description_pump_insight_local">Драйвер за Accu-Chek Insight помпи</string>
     <string name="not_inserted">Не е поставено</string>
     <string name="short_status_last_connected">Последно свързване: преди %1$d минути </string>
@@ -1063,8 +1060,6 @@
     <string name="insight_alert_notification_channel">Информация за Insight Pump</string>
     <!-- SMS Communicator & OTP Authenticator -->
     <string name="smscommunicator_code_from_authenticator_for" comment="This is continuation of sentence: To [ACTION] reply with code">от приложението AUTHENTICATOR за: %1$s , последвано от PIN</string>
-    <string name="smscommunicator_otp_enabled">Активиране на удостоверител</string>
-    <string name="smscommunicator_otp_enabled_summary">Удостоверяване чрез еднократна парола, генерирана с Google Authenticator или подобна програма за 2-факторна оторизация.</string>
     <string name="smscommunicator_otp_pin">Допълнителен PIN в края на токен</string>
     <string name="smscommunicator_otp_pin_summary">Допълнителни цифри, които следва да бъдат залепени в края на всяка генерирана еднократна парола</string>
     <string name="smscomunicator_tab_otp_label">Настройка на удостоверителя</string>
@@ -1158,4 +1153,5 @@
     <string name="timetoeat">Време е за ядене</string>
     <string name="fabric_upload_disabled">Качването на данни за проблеми е забранено!(Fabric)</string>
     <string name="graph_menu_divider_header">Графика</string>
+    <string name="chart_menu">Меню на графиката</string>
 </resources>

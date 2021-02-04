@@ -216,6 +216,7 @@
     <string name="history_group_glucose">Glucose</string>
     <string name="mute5min">5 minuten dempen</string>
     <!-- Maintenance -->
+    <string name="metadata_label_format">Bestandsformaat</string>
     <string name="metadata_label_created_at">Gemaakt op</string>
     <string name="metadata_label_aaps_version">AAPS versie</string>
     <string name="metadata_label_aaps_flavour">Build variant</string>
@@ -254,4 +255,17 @@
     <string name="running_invalid_version">We hebben gedetecteerd dat je een ongeldige versie gebruikt. Loop is uitgeschakeld!</string>
     <string name="versionavailable">Versie %1$s is beschikbaar</string>
     <!-- Permissions -->
+    <string name="alert_dialog_storage_permission_text">Herstart je telefoon of herstart AndroidAPS vanuit de systeem instellingen. \nAnders zullen er voor AndroidAPS geen logs worden aangemaakt (dit is belangrijk voor de ontwikkelaars, zo kunnen zij controleren of de algoritmes correct werken)!</string>
+    <plurals name="days">
+        <item quantity="one">%1$d dag</item>
+        <item quantity="other">%1$d dagen</item>
+    </plurals>
+    <plurals name="hours">
+        <item quantity="one">%1$d uur</item>
+        <item quantity="other">%1$d uren</item>
+    </plurals>
+    <plurals name="minutes">
+        <item quantity="one">%1$d minuut</item>
+        <item quantity="other">%1$d minuten</item>
+    </plurals>
 </resources>

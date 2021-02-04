@@ -432,7 +432,6 @@
     <string name="overview_extendedbolus_cancel_button">Renunță la bolusul extins</string>
     <string name="doprofileswitch">Schimbă profilul</string>
     <string name="careportal_sensor_label">Senzor</string>
-    <string name="careportal_canula_label">Canulă</string>
     <string name="careportal_insulin_label">Insulină</string>
     <string name="careportal_pb_label">Baterie pompă</string>
     <string name="careportal_age_label">vârstă:</string>
@@ -544,7 +543,6 @@
     <string name="maxiobset">IOB maxim configurat corect</string>
     <string name="hasbgdata">Glicemie disponibilă din sursa selectată</string>
     <string name="combo_programming_bolus">Se programează pompa pentru livrare bolus</string>
-    <string name="combo_refresh">Reîncarcă</string>
     <string name="combo_pump_state_label">Stare</string>
     <string name="combo_pump_activity_label">Activitate</string>
     <string name="combo_no_pump_connection">Fără conexiune de %1$d min</string>
@@ -834,7 +832,6 @@
     <string name="eb_formatter">%1$.2f / %2$.2f U pentru %3$d min</string>
     <string name="enable_tbr_over_notification">Permiteți notificarea de terminare RBT\n(setare a pompei)</string>
     <string name="disable_tbr_over_notification">Nu permiteți notificarea terminării RBT\n(setare a pompei)</string>
-    <string name="refresh">Actualizează</string>
     <string name="description_pump_insight_local">Integrare pentru pompele Accu-Chek Insight</string>
     <string name="not_inserted">Nu este introdus</string>
     <string name="short_status_last_connected">Ultima conexiune: acum %1$d min</string>
@@ -1059,8 +1056,6 @@
     <string name="insight_alert_notification_channel">Alerte pompă Insight</string>
     <!-- SMS Communicator & OTP Authenticator -->
     <string name="smscommunicator_code_from_authenticator_for" comment="This is continuation of sentence: To [ACTION] reply with code">de la aplicația Authenticator pentru: %1$s urmat de PIN</string>
-    <string name="smscommunicator_otp_enabled">Activare Authenticator</string>
-    <string name="smscommunicator_otp_enabled_summary">Autentificați comenzile folosind o parolă unica generată de Google Authenticator sau alte aplicații 2FA similare.</string>
     <string name="smscommunicator_otp_pin">PIN obligatoriu suplimentar la sfârșitul token-ului</string>
     <string name="smscommunicator_otp_pin_summary">Cifre suplimentare care ar trebui să fie memorate și adăugate la sfârșitul fiecărei parole unice generate</string>
     <string name="smscomunicator_tab_otp_label">Setare Authenticator</string>

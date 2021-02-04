@@ -435,7 +435,6 @@
     <string name="overview_extendedbolus_cancel_button">Zrušiť predĺžený bolus</string>
     <string name="doprofileswitch">Vykonajte zmenu profilu</string>
     <string name="careportal_sensor_label">Senzor</string>
-    <string name="careportal_canula_label">Kanyla</string>
     <string name="careportal_insulin_label">Inzulín</string>
     <string name="careportal_pb_label">Batéria do pumpy</string>
     <string name="careportal_age_label">vek:</string>
@@ -548,7 +547,6 @@
     <string name="maxiobset">Maximálne IOB nastavené správne</string>
     <string name="hasbgdata">Glykémie dostupné z vybraného zdroja</string>
     <string name="combo_programming_bolus">Programovanie pumpy pre bolus</string>
-    <string name="combo_refresh">Obnoviť</string>
     <string name="combo_pump_state_label">Stav</string>
     <string name="combo_pump_activity_label">Aktivita</string>
     <string name="combo_no_pump_connection">Žiadne spojenie už %1$d min</string>
@@ -839,7 +837,6 @@
     <string name="eb_formatter">%1$.2f / %2$.2f JI pre %3$d min</string>
     <string name="enable_tbr_over_notification">Aktivuj notifikáciu ukončenia dočasného bazálu\n(Nastavenie pumpy)</string>
     <string name="disable_tbr_over_notification">Deaktivuj notifikáciu ukončenia dočasného bazálu\n(Nastavenie pumpy)</string>
-    <string name="refresh">Aktualizovať</string>
     <string name="description_pump_insight_local">Integrácia pre pumpu Accu-Chek Insight</string>
     <string name="not_inserted">Nieje vložené</string>
     <string name="short_status_last_connected">Posledné spoj: pred %1$d min</string>
@@ -1064,8 +1061,6 @@
     <string name="insight_alert_notification_channel">Výstrahy pumpy Insight</string>
     <!-- SMS Communicator & OTP Authenticator -->
     <string name="smscommunicator_code_from_authenticator_for" comment="This is continuation of sentence: To [ACTION] reply with code">z aplikácie Authenticator pre: %1$s nasledované kódom PIN</string>
-    <string name="smscommunicator_otp_enabled">Povoliť Autentifikátor</string>
-    <string name="smscommunicator_otp_enabled_summary">Autentifikačné príkazy používajú jednorázové heslá generované Google Authenticator, alebo podobnými 2FA aplikáciami.</string>
     <string name="smscommunicator_otp_pin">Ďalší povinný kód PIN na konci tokenu</string>
     <string name="smscommunicator_otp_pin_summary">Ďalšie číslice, ktoré by mali byť zapamätané a pridané na koniec každého vygenerovaného jednorázového hesla</string>
     <string name="smscomunicator_tab_otp_label">Nastavenie autentifikátora</string>

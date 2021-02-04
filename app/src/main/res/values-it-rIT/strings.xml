@@ -400,18 +400,18 @@
     <string name="enablesuperbolus">Abilita superbolo nel calcolatore</string>
     <string name="enablesuperbolus_summary">Abilita la funzionalità superbolo nel calcolatore. Non abilitare fino a quando non impari ciò che realmente fa. PUÒ CAUSARE SOVRA-DOSAGGIO DI INSULINA SE USATO IMPROPRIAMENTE!</string>
     <string name="show_statuslights">Mostra indicatori di stato sulla home</string>
-    <string name="statuslights_cage_warning">Soglia di avviso età cannula [h]</string>
-    <string name="statuslights_cage_critical">Soglia età cannula critica [h]</string>
-    <string name="statuslights_iage_warning">Soglia di avviso età insulina [h]</string>
-    <string name="statuslights_iage_critical">Soglia età insulina critica [h]</string>
-    <string name="statuslights_sage_warning">Soglia di avviso età sensore [h]</string>
-    <string name="statuslights_sage_critical">Soglia età sensore critica [h]</string>
-    <string name="statuslights_sbat_warning">Soglia di avviso livello batteria sensore [%]</string>
-    <string name="statuslights_sbat_critical">Soglia livello batteria sensore critico [%]</string>
+    <string name="statuslights_cage_warning">Età cannula: soglia di avviso [h]</string>
+    <string name="statuslights_cage_critical">Età cannula: soglia critica [h]</string>
+    <string name="statuslights_iage_warning">Età insulina: soglia di avviso [h]</string>
+    <string name="statuslights_iage_critical">Età insulina: soglia critica [h]</string>
+    <string name="statuslights_sage_warning">Età sensore: soglia di avviso [h]</string>
+    <string name="statuslights_sage_critical">Età sensore: soglia critica [h]</string>
+    <string name="statuslights_sbat_warning">Livello batteria sensore: soglia di avviso [%]</string>
+    <string name="statuslights_sbat_critical">Livello batteria sensore: soglia critica [%]</string>
     <string name="statuslights_bage_warning">Età batteria micro: soglia di avviso [h]</string>
     <string name="statuslights_bage_critical">Età batteria micro: soglia critica [h]</string>
-    <string name="statuslights_res_warning">Soglia di avviso livello serbatoio [U]</string>
-    <string name="statuslights_res_critical">Soglia livello serbatoio critico [U]</string>
+    <string name="statuslights_res_warning">Livello serbatoio: soglia di avviso [U]</string>
+    <string name="statuslights_res_critical">Livello serbatoio: soglia critica [U]</string>
     <string name="statuslights_bat_warning">Livello batteria micro: soglia di avviso [%]</string>
     <string name="statuslights_bat_critical">Livello batteria micro: soglia critica [%]</string>
     <string name="prediction_shortname">PRED</string>
@@ -435,7 +435,6 @@
     <string name="overview_extendedbolus_cancel_button">Cancella bolo esteso</string>
     <string name="doprofileswitch">Cambia profilo</string>
     <string name="careportal_sensor_label">Sensore</string>
-    <string name="careportal_canula_label">Cannula</string>
     <string name="careportal_insulin_label">Insulina</string>
     <string name="careportal_pb_label">Batteria micro</string>
     <string name="careportal_age_label">età:</string>
@@ -548,7 +547,6 @@
     <string name="maxiobset">Max IOB impostata correttamente</string>
     <string name="hasbgdata">BG disponibile da sorgente selezionata</string>
     <string name="combo_programming_bolus">Programmazione micro per erogazione</string>
-    <string name="combo_refresh">Aggiorna</string>
     <string name="combo_pump_state_label">Stato</string>
     <string name="combo_pump_activity_label">Attività</string>
     <string name="combo_no_pump_connection">Nessuna connessione per %1$d min</string>
@@ -839,7 +837,6 @@
     <string name="eb_formatter">%1$.2f / %2$.2f U per %3$d min</string>
     <string name="enable_tbr_over_notification">Abilita notifica di fine TBR\n(impostazione micro)</string>
     <string name="disable_tbr_over_notification">Disabilita notifica di fine TBR\n(impostazione micro)</string>
-    <string name="refresh">Aggiorna</string>
     <string name="description_pump_insight_local">Integrazione del microinfusore Accu-Chek Insight</string>
     <string name="not_inserted">Non inserito</string>
     <string name="short_status_last_connected">Ultima conn: %1$d min fa</string>
@@ -1064,8 +1061,6 @@
     <string name="insight_alert_notification_channel">Avvisi micro Insight</string>
     <!-- SMS Communicator & OTP Authenticator -->
     <string name="smscommunicator_code_from_authenticator_for" comment="This is continuation of sentence: To [ACTION] reply with code">da app autenticatore: %1$s seguito da PIN</string>
-    <string name="smscommunicator_otp_enabled">Abilita autenticatore</string>
-    <string name="smscommunicator_otp_enabled_summary">Autentica i comandi usando OTP (One Time Password) generate da Google Authenticator o app 2FA simili.</string>
     <string name="smscommunicator_otp_pin">PIN obbligatorio aggiuntivo a fine token</string>
     <string name="smscommunicator_otp_pin_summary">Cifre aggiuntive che devono essere memorizzate e incollate alla fine di ogni OTP generata</string>
     <string name="smscomunicator_tab_otp_label">Configurazione autenticatore</string>
@@ -1159,4 +1154,8 @@
     <string name="timetoeat">Tempo di mangiare</string>
     <string name="fabric_upload_disabled">Caricamento log dei crash disabilitato!</string>
     <string name="graph_menu_divider_header">Grafico</string>
+    <string name="chart_menu">Menu grafico</string>
+    <string name="clear_filter">Cancella filtro</string>
+    <string name="trend_arrow">Freccia trend</string>
+    <string name="cannula">Cannula</string>
 </resources>

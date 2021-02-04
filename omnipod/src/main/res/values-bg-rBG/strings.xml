@@ -11,6 +11,7 @@
     <string name="omnipod_config_suspend_delivery_button_enabled">Показвай спряна доставката в раздела Omnipod</string>
     <string name="omnipod_config_pulse_log_button_enabled">Показване на PULSE LOG в менюто на Pod Management</string>
     <string name="omnipod_config_rileylink_stats_button_enabled">Бутон Показване RileyLink Stats в меню Управление на Pod</string>
+    <string name="omnipod_config_battery_change_logging_enabled">Позволи на записване на смяна на батерията в Действия</string>
     <string name="omnipod_config_time_change_enabled">Разрешено е Лятно часово време</string>
     <string name="omnipod_config_expiration_reminder_enabled">Напомняне за срок</string>
     <string name="omnipod_config_expiration_reminder_hours_before_shutdown">Часове преди изключване</string>
@@ -197,7 +198,6 @@
     <!-- Omnipod - Overview -->
     <string name="omnipod_overview_button_set_time">Задаване на часа</string>
     <string name="omnipod_overview_button_suspend_delivery">Спиране</string>
-    <string name="omnipod_overview_button_refresh">Опресни</string>
     <string name="omnipod_overview_button_resume_delivery">Подновяване на доставката</string>
     <string name="omnipod_overview_button_pod_management">Управление на под</string>
     <string name="omnipod_overview_button_acknowledge_active_alerts">Потвърди аларми</string>

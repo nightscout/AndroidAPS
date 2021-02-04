@@ -2,6 +2,7 @@
 <resources>
     <!--    Keys-->
     <!--    General-->
+    <string name="refresh">Actualizar</string>
     <string name="error">Erro</string>
     <string name="not_set_short">Não definido</string>
     <string name="failedupdatebasalprofile">Falha a actualizar perfil da basal</string>
@@ -175,11 +176,11 @@
     <string name="carbsreq">%1$d g Hidratos Adicionais Necessários Dentro de %2$d Minutos</string>
     <!--    TDDStatsActivity-->
     <string name="stats">Estatísticas</string>
-    <string name="cumulative_tdd">Dose diária acumulativa</string>
-    <string name="expweight">Dose diária exponencialmente ponderada</string>
+    <string name="cumulative_tdd">Cumulativo TDI</string>
+    <string name="expweight">TDI exponencialmente ponderada</string>
     <string name="basalrate">Basal</string>
     <string name="bolus">Bólus</string>
-    <string name="tdd">TDD</string>
+    <string name="tdd">TDI</string>
     <string name="ratio">Rácio</string>
     <string name="amount_days"># Dias</string>
     <string name="weight">Peso</string>
@@ -216,6 +217,7 @@
     <string name="history_group_glucose">Glucose</string>
     <string name="mute5min">Silenciar por 5 minutos</string>
     <!-- Maintenance -->
+    <string name="metadata_label_format">Formato do ficheiro</string>
     <string name="metadata_label_created_at">Criado em</string>
     <string name="metadata_label_aaps_version">Versão AAPS</string>
     <string name="metadata_label_aaps_flavour">Variante de Compilação</string>
@@ -254,4 +256,17 @@
     <string name="running_invalid_version">Detectamos que está a correr uma versão inválida. Loop desactivado!</string>
     <string name="versionavailable">Disponível %1$s disponível</string>
     <!-- Permissions -->
+    <string name="alert_dialog_storage_permission_text">Por favor, reinicie o telefone ou reinicie o AndroidAPS a partir das Definições do Sistema \ncaso contrário, o AndroidAPS não terá registo (importante para controlar e verificar se os algoritmos estão a funcionar correctamente)!</string>
+    <plurals name="days">
+        <item quantity="one">%1$d dia</item>
+        <item quantity="other">%1$d dias</item>
+    </plurals>
+    <plurals name="hours">
+        <item quantity="one">%1$d hora</item>
+        <item quantity="other">%1$d horas</item>
+    </plurals>
+    <plurals name="minutes">
+        <item quantity="one">%1$d minuto</item>
+        <item quantity="other">%1$d minutos</item>
+    </plurals>
 </resources>

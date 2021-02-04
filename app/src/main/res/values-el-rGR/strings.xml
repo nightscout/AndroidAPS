@@ -429,7 +429,6 @@
     <string name="maxiobset">Το μέγιστο IOB έχει ρυθμιστεί σωστά</string>
     <string name="hasbgdata">BG διαθέσιμη από επιλεγμένη πηγή</string>
     <string name="combo_programming_bolus">Προγραμματισμός της αντλίας για bolus</string>
-    <string name="combo_refresh">Ανανέωση</string>
     <string name="combo_pump_state_label">Κατάσταση</string>
     <string name="combo_pump_activity_label">Άσκηση</string>
     <string name="combo_no_pump_connection">Δεν υπάρχει σύνδεση για %1$d λεπτά</string>
@@ -695,7 +694,6 @@
     <string name="eb_formatter">%1$.2f / %2$.2f U για %3$d λεπτά</string>
     <string name="enable_tbr_over_notification">Ενεργοποίηση ειδοποίησης TBR τέλος\n (ρύθμιση αντλίας)</string>
     <string name="disable_tbr_over_notification">Απενεργοποίηση ειδοποίησης TBR τέλος\n (ρύθμιση αντλίας)</string>
-    <string name="refresh">Ανανέωση</string>
     <string name="description_pump_insight_local">Ενσωμάτωση αντλίας για αντλίες Accu-Chek Insight</string>
     <string name="not_inserted">Δεν έχει εισαχθεί</string>
     <string name="short_status_last_connected">Τελευταία σύνδεση: %1$d λεπτά πριν</string>

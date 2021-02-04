@@ -199,7 +199,6 @@
     <!-- Omnipod - Overview -->
     <string name="omnipod_overview_button_set_time">הגדרת שעה</string>
     <string name="omnipod_overview_button_suspend_delivery">השהיה</string>
-    <string name="omnipod_overview_button_refresh">רענן</string>
     <string name="omnipod_overview_button_resume_delivery">חידוש הזרקה</string>
     <string name="omnipod_overview_button_pod_management">ניהול הפוד</string>
     <string name="omnipod_overview_button_acknowledge_active_alerts">אשר התראות</string>

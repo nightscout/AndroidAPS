@@ -54,13 +54,13 @@
     <string name="omnipod_history_bolus_value_with_carbs">%1$.2f U, Węgl.=%2$.1f g</string>
     <string name="omnipod_history_tbr_value">Dawka: %1$.2f U, Czas: %2$d min</string>
     <!-- Omnipod - Short status -->
-    <string name="omnipod_short_status_no_active_pod">Brak aktywnego Poda</string>
-    <string name="omnipod_short_status_last_connection">OstatniePołączenie: %1$d min temu</string>
-    <string name="omnipod_short_status_last_bolus">OstatniBolus: %1$s @ %2$s</string>
-    <string name="omnipod_short_status_temp_basal">Tymczas: %1$s</string>
-    <string name="omnipod_short_status_extended_bolus">Rozszerzony: %1$s</string>
-    <string name="omnipod_short_status_reservoir">Zbiornik: %1$sU</string>
-    <string name="omnipod_short_status_rl_battery">RLBatt: %1$d</string>
+    <string name="omnipod_short_status_no_active_pod">Brak akt. Poda</string>
+    <string name="omnipod_short_status_last_connection">Ost.Poł.: %1$d m. temu</string>
+    <string name="omnipod_short_status_last_bolus">Ost.Bolus: %1$s @ %2$s</string>
+    <string name="omnipod_short_status_temp_basal">Tymcz.: %1$s</string>
+    <string name="omnipod_short_status_extended_bolus">Rozsz.: %1$s</string>
+    <string name="omnipod_short_status_reservoir">Zbior.: %1$sU</string>
+    <string name="omnipod_short_status_rl_battery">RLBat: %1$d</string>
     <!-- Omnipod - Error -->
     <string name="omnipod_warning">Ostrzeżenie</string>
     <string name="omnipod_error_rileylink_address_invalid">Adres RileyLink niewłaściwy.</string>
@@ -198,7 +198,6 @@
     <!-- Omnipod - Overview -->
     <string name="omnipod_overview_button_set_time">Ustaw czas</string>
     <string name="omnipod_overview_button_suspend_delivery">Wstrzymaj</string>
-    <string name="omnipod_overview_button_refresh">Odśwież</string>
     <string name="omnipod_overview_button_resume_delivery">Wznów podawanie</string>
     <string name="omnipod_overview_button_pod_management">Pod Mgmt</string>
     <string name="omnipod_overview_button_acknowledge_active_alerts">Alerty ack</string>
