@@ -8,8 +8,11 @@ import android.view.ViewGroup
 import dagger.android.support.DaggerFragment
 import info.nightscout.androidaps.MainApp
 import info.nightscout.androidaps.R
+import info.nightscout.androidaps.database.AppRepository
 import info.nightscout.androidaps.databinding.MaintenanceFragmentBinding
+import info.nightscout.androidaps.events.EventNewBG
 import info.nightscout.androidaps.interfaces.ImportExportPrefsInterface
+import info.nightscout.androidaps.plugins.bus.RxBusWrapper
 import info.nightscout.androidaps.plugins.general.food.FoodPlugin
 import info.nightscout.androidaps.plugins.general.maintenance.activities.LogSettingActivity
 import info.nightscout.androidaps.plugins.treatments.TreatmentsPlugin
@@ -20,11 +23,12 @@ import javax.inject.Inject
 class MaintenanceFragment : DaggerFragment() {
 
     @Inject lateinit var maintenancePlugin: MaintenancePlugin
-    @Inject lateinit var mainApp: MainApp
+    @Inject lateinit var rxBus: RxBusWrapper
     @Inject lateinit var resourceHelper: ResourceHelper
     @Inject lateinit var treatmentsPlugin: TreatmentsPlugin
     @Inject lateinit var foodPlugin: FoodPlugin
     @Inject lateinit var importExportPrefs: ImportExportPrefsInterface
+    @Inject lateinit var repository: AppRepository
 
     private var _binding: MaintenanceFragmentBinding? = null
 
@@ -49,6 +53,8 @@ class MaintenanceFragment : DaggerFragment() {
                     // additional service interface and plugin registry
                     foodPlugin.service?.resetFood()
                     treatmentsPlugin.service.resetTreatments()
+                    Thread { repository.clearDatabases() } .start()
+                    rxBus.send(EventNewBG(null))
                 })
             }
         }

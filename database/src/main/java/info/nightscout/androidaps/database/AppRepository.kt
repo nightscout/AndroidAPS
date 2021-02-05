@@ -106,8 +106,8 @@ class AppRepository @Inject internal constructor(
         database.temporaryTargetDao.getLastHistoryRecord(lastId)
 
 }
-
-inline fun <reified T> Maybe<T>.toWrappedSingle(): Single<ValueWrapper<T>> =
+@Suppress("USELESS_CAST")
+inline fun <reified T : Any> Maybe<T>.toWrappedSingle(): Single<ValueWrapper<T>> =
     this.map { ValueWrapper.Existing(it) as ValueWrapper<T> }
         .switchIfEmpty(Maybe.just(ValueWrapper.Absent()))
         .toSingle()

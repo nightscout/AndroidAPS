@@ -4,9 +4,10 @@ import android.content.Context
 import androidx.work.Worker
 import androidx.work.WorkerParameters
 import dagger.android.HasAndroidInjector
-import info.nightscout.androidaps.MainApp
 import info.nightscout.androidaps.R
-import info.nightscout.androidaps.db.BgReading
+import info.nightscout.androidaps.database.AppRepository
+import info.nightscout.androidaps.database.entities.GlucoseValue
+import info.nightscout.androidaps.database.transactions.CgmSourceTransaction
 import info.nightscout.androidaps.interfaces.BgSourceInterface
 import info.nightscout.androidaps.interfaces.PluginBase
 import info.nightscout.androidaps.interfaces.PluginDescription
@@ -15,6 +16,8 @@ import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.logging.LTag
 import info.nightscout.androidaps.services.Intents
 import info.nightscout.androidaps.utils.resources.ResourceHelper
+import io.reactivex.disposables.CompositeDisposable
+import io.reactivex.rxkotlin.plusAssign
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -39,8 +42,21 @@ class XdripPlugin @Inject constructor(
         return advancedFiltering
     }
 
-    private fun setSource(source: String) {
-        advancedFiltering = source.contains("G5 Native") || source.contains("G6 Native")
+    private fun detectSource(glucoseValue: GlucoseValue) {
+        advancedFiltering = arrayOf(
+            GlucoseValue.SourceSensor.DEXCOM_NATIVE_UNKNOWN,
+            GlucoseValue.SourceSensor.DEXCOM_G6_NATIVE,
+            GlucoseValue.SourceSensor.DEXCOM_G5_NATIVE,
+            GlucoseValue.SourceSensor.DEXCOM_G6_NATIVE_XDRIP,
+            GlucoseValue.SourceSensor.DEXCOM_G5_NATIVE_XDRIP
+        ).any { it == glucoseValue.sourceSensor }
+    }
+
+    private val disposable = CompositeDisposable()
+
+    override fun onStop() {
+        disposable.clear()
+        super.onStop()
     }
 
     // cannot be inner class because of needed injection
@@ -50,6 +66,7 @@ class XdripPlugin @Inject constructor(
     ) : Worker(context, params) {
 
         @Inject lateinit var xdripPlugin: XdripPlugin
+        @Inject lateinit var repository: AppRepository
 
         init {
             (context.applicationContext as HasAndroidInjector).androidInjector().inject(this)
@@ -58,15 +75,24 @@ class XdripPlugin @Inject constructor(
         override fun doWork(): Result {
             if (!xdripPlugin.isEnabled(PluginType.BGSOURCE)) return Result.failure()
             xdripPlugin.aapsLogger.debug(LTag.BGSOURCE, "Received xDrip data: $inputData")
-            val bgReading = BgReading()
-            bgReading.value = inputData.getDouble(Intents.EXTRA_BG_ESTIMATE, 0.0)
-            bgReading.direction = inputData.getString(Intents.EXTRA_BG_SLOPE_NAME)
-            bgReading.date = inputData.getLong(Intents.EXTRA_TIMESTAMP, 0)
-            bgReading.raw = inputData.getDouble(Intents.EXTRA_RAW, 0.0)
+            val glucoseValues = mutableListOf<CgmSourceTransaction.TransactionGlucoseValue>()
+            glucoseValues += CgmSourceTransaction.TransactionGlucoseValue(
+                timestamp = inputData.getLong(Intents.EXTRA_TIMESTAMP, 0),
+                value = inputData.getDouble(Intents.EXTRA_BG_ESTIMATE, 0.0),
+                raw = inputData.getDouble(Intents.EXTRA_RAW, 0.0),
+                noise = null,
+                trendArrow = GlucoseValue.TrendArrow.fromString(inputData.getString(Intents.EXTRA_BG_SLOPE_NAME)),
+                sourceSensor = GlucoseValue.SourceSensor.fromString(inputData.getString(Intents.XDRIP_DATA_SOURCE_DESCRIPTION)
+                    ?: "")
+            )
+            xdripPlugin.disposable += repository.runTransactionForResult(CgmSourceTransaction(glucoseValues, emptyList(), null)).subscribe({ savedValues ->
+                savedValues.forEach {
+                    xdripPlugin.detectSource(it)
+                }
+            }, {
+                xdripPlugin.aapsLogger.error(LTag.BGSOURCE, "Error while saving values from Eversense App", it)
+            })
             xdripPlugin.sensorBatteryLevel = inputData.getInt(Intents.EXTRA_SENSOR_BATTERY, -1)
-            val source = inputData.getString(Intents.XDRIP_DATA_SOURCE_DESCRIPTION) ?: ""
-            xdripPlugin.setSource(source)
-            MainApp.getDbHelper().createIfNotExists(bgReading, "XDRIP")
             return Result.success()
         }
     }

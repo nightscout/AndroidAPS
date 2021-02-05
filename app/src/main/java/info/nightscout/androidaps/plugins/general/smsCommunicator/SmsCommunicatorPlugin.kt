@@ -305,11 +305,11 @@ class SmsCommunicatorPlugin @Inject constructor(
         var reply = ""
         val units = profileFunction.getUnits()
         if (actualBG != null) {
-            reply = resourceHelper.gs(R.string.sms_actualbg) + " " + actualBG.valueToUnitsToString(units) + ", "
+            reply = resourceHelper.gs(R.string.sms_actualbg) + " " + actualBG.valueToUnitsString(units) + ", "
         } else if (lastBG != null) {
-            val agoMsec = System.currentTimeMillis() - lastBG.date
+            val agoMsec = System.currentTimeMillis() - lastBG.timestamp
             val agoMin = (agoMsec / 60.0 / 1000.0).toInt()
-            reply = resourceHelper.gs(R.string.sms_lastbg) + " " + lastBG.valueToUnitsToString(units) + " " + String.format(resourceHelper.gs(R.string.sms_minago), agoMin) + ", "
+            reply = resourceHelper.gs(R.string.sms_lastbg) + " " + lastBG.valueToUnitsString(units) + " " + String.format(resourceHelper.gs(R.string.sms_minago), agoMin) + ", "
         }
         val glucoseStatus = GlucoseStatus(injector).glucoseStatusData
         if (glucoseStatus != null) reply += resourceHelper.gs(R.string.sms_delta) + " " + Profile.toUnitsString(glucoseStatus.delta, glucoseStatus.delta * Constants.MGDL_TO_MMOLL, units) + " " + units + ", "

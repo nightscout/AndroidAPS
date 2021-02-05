@@ -7,6 +7,9 @@ import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.Constants
 import info.nightscout.androidaps.MainApp
 import info.nightscout.androidaps.R
+import info.nightscout.androidaps.database.AppRepository
+import info.nightscout.androidaps.database.entities.GlucoseValue
+import info.nightscout.androidaps.database.transactions.CgmSourceTransaction
 import info.nightscout.androidaps.db.BgReading
 import info.nightscout.androidaps.db.CareportalEvent
 import info.nightscout.androidaps.interfaces.BgSourceInterface
@@ -18,8 +21,11 @@ import info.nightscout.androidaps.logging.LTag
 import info.nightscout.androidaps.plugins.general.nsclient.NSUpload
 import info.nightscout.androidaps.receivers.BundleStore
 import info.nightscout.androidaps.utils.DateUtil
+import info.nightscout.androidaps.utils.XDripBroadcast
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 import info.nightscout.androidaps.utils.sharedPreferences.SP
+import io.reactivex.disposables.CompositeDisposable
+import io.reactivex.rxkotlin.plusAssign
 import org.json.JSONException
 import org.json.JSONObject
 import java.util.*
@@ -44,18 +50,28 @@ class EversensePlugin @Inject constructor(
 
     override var sensorBatteryLevel = -1
 
+    private val disposable = CompositeDisposable()
+
+    override fun onStop() {
+        disposable.clear()
+        super.onStop()
+    }
+
     // cannot be inner class because of needed injection
     class EversenseWorker(
         context: Context,
         params: WorkerParameters
     ) : Worker(context, params) {
 
+        @Inject lateinit var injector: HasAndroidInjector
         @Inject lateinit var eversensePlugin: EversensePlugin
         @Inject lateinit var aapsLogger: AAPSLogger
         @Inject lateinit var sp: SP
         @Inject lateinit var nsUpload: NSUpload
         @Inject lateinit var dateUtil: DateUtil
         @Inject lateinit var bundleStore: BundleStore
+        @Inject lateinit var repository: AppRepository
+        @Inject lateinit var broadcastToXDrip: XDripBroadcast
 
         init {
             (context.applicationContext as HasAndroidInjector).androidInjector().inject(this)
@@ -73,7 +89,7 @@ class EversensePlugin @Inject constructor(
             if (bundle.containsKey("batteryLevel")) {
                 aapsLogger.debug(LTag.BGSOURCE, "batteryLevel: " + bundle.getString("batteryLevel"))
                 //sensorBatteryLevel = bundle.getString("batteryLevel").toInt()
-                // TODO: Philoul: Line to check I don't have eversense so I don't know what kind of information is sent...
+                // TODO: Line to check I don't have eversense so I don't know what kind of information is sent...
             }
             if (bundle.containsKey("signalStrength")) aapsLogger.debug(LTag.BGSOURCE, "signalStrength: " + bundle.getString("signalStrength"))
             if (bundle.containsKey("transmitterVersionNumber")) aapsLogger.debug(LTag.BGSOURCE, "transmitterVersionNumber: " + bundle.getString("transmitterVersionNumber"))
@@ -85,6 +101,7 @@ class EversensePlugin @Inject constructor(
             if (bundle.containsKey("transmitterVersionNumber")) aapsLogger.debug(LTag.BGSOURCE, "transmitterVersionNumber: " + bundle.getString("transmitterVersionNumber"))
             if (bundle.containsKey("transmitterConnectionState")) aapsLogger.debug(LTag.BGSOURCE, "transmitterConnectionState: " + bundle.getString("transmitterConnectionState"))
             if (bundle.containsKey("glucoseLevels")) {
+                val glucoseValues = mutableListOf<CgmSourceTransaction.TransactionGlucoseValue>()
                 val glucoseLevels = bundle.getIntArray("glucoseLevels")
                 val glucoseRecordNumbers = bundle.getIntArray("glucoseRecordNumbers")
                 val glucoseTimestamps = bundle.getLongArray("glucoseTimestamps")
@@ -92,19 +109,24 @@ class EversensePlugin @Inject constructor(
                     aapsLogger.debug(LTag.BGSOURCE, "glucoseLevels" + Arrays.toString(glucoseLevels))
                     aapsLogger.debug(LTag.BGSOURCE, "glucoseRecordNumbers" + Arrays.toString(glucoseRecordNumbers))
                     aapsLogger.debug(LTag.BGSOURCE, "glucoseTimestamps" + Arrays.toString(glucoseTimestamps))
-                    for (i in glucoseLevels.indices) {
-                        val bgReading = BgReading()
-                        bgReading.value = glucoseLevels[i].toDouble()
-                        bgReading.date = glucoseTimestamps[i]
-                        bgReading.raw = 0.0
-                        val isNew = MainApp.getDbHelper().createIfNotExists(bgReading, "Eversense")
-                        if (isNew && sp.getBoolean(R.string.key_dexcomg5_nsupload, false)) {
-                            nsUpload.uploadBg(bgReading, "AndroidAPS-Eversense")
+                    for (i in glucoseLevels.indices)
+                        glucoseValues += CgmSourceTransaction.TransactionGlucoseValue(
+                            timestamp = glucoseTimestamps[i],
+                            value = glucoseLevels[i].toDouble(),
+                            raw = glucoseLevels[i].toDouble(),
+                            noise = null,
+                            trendArrow = GlucoseValue.TrendArrow.NONE,
+                            sourceSensor = GlucoseValue.SourceSensor.EVERSENSE
+                        )
+                    eversensePlugin.disposable += repository.runTransactionForResult(CgmSourceTransaction(glucoseValues, emptyList(), null)).subscribe({ savedValues ->
+                        savedValues.forEach {
+                            broadcastToXDrip(it)
+                            if (sp.getBoolean(R.string.key_dexcomg5_nsupload, false))
+                                nsUpload.uploadBg(BgReading(injector, it), GlucoseValue.SourceSensor.EVERSENSE.text)
                         }
-                        if (isNew && sp.getBoolean(R.string.key_dexcomg5_xdripupload, false)) {
-                            nsUpload.sendToXdrip(bgReading)
-                        }
-                    }
+                    }, {
+                        aapsLogger.error(LTag.BGSOURCE, "Error while saving values from Eversense App", it)
+                    })
                 }
             }
             if (bundle.containsKey("calibrationGlucoseLevels")) {

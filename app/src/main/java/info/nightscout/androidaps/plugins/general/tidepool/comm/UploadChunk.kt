@@ -1,8 +1,10 @@
 package info.nightscout.androidaps.plugins.general.tidepool.comm
 
+import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.MainApp
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.data.Intervals
+import info.nightscout.androidaps.database.AppRepository
 import info.nightscout.androidaps.db.ProfileSwitch
 import info.nightscout.androidaps.db.TemporaryBasal
 import info.nightscout.androidaps.interfaces.ActivePluginProvider
@@ -16,6 +18,7 @@ import info.nightscout.androidaps.plugins.general.tidepool.utils.GsonInstance
 import info.nightscout.androidaps.plugins.treatments.TreatmentsPlugin
 import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.T
+import info.nightscout.androidaps.utils.convertToBGReadings
 import info.nightscout.androidaps.utils.sharedPreferences.SP
 import java.util.*
 import javax.inject.Inject
@@ -24,12 +27,14 @@ import kotlin.math.max
 
 @Singleton
 class UploadChunk @Inject constructor(
+    private val injector: HasAndroidInjector,
     private val sp: SP,
     private val rxBus: RxBusWrapper,
     private val aapsLogger: AAPSLogger,
     private val profileFunction: ProfileFunction,
     private val treatmentsPlugin: TreatmentsPlugin,
     private val activePlugin: ActivePluginProvider,
+    private val repository: AppRepository,
     private val dateUtil: DateUtil
 ) {
 
@@ -102,9 +107,11 @@ class UploadChunk @Inject constructor(
         val start: Long = 0
         val end = DateUtil.now()
 
-        val bgReadingList = MainApp.getDbHelper().getBgreadingsDataFromTime(start, end, true)
-        return if (bgReadingList.size > 0)
-            bgReadingList[0].date
+        val bgReadingList = repository.compatGetBgReadingsDataFromTime(start, end, true)
+            .blockingGet()
+            .convertToBGReadings(injector)
+        return if (bgReadingList.isNotEmpty())
+            bgReadingList[0].data.timestamp
         else -1
     }
 
@@ -131,7 +138,9 @@ class UploadChunk @Inject constructor(
     }
 
     private fun getBgReadings(start: Long, end: Long): List<SensorGlucoseElement> {
-        val readings = MainApp.getDbHelper().getBgreadingsDataFromTime(start, end, true)
+        val readings = repository.compatGetBgReadingsDataFromTime(start, end, true)
+            .blockingGet()
+            .convertToBGReadings(injector)
         val selection = SensorGlucoseElement.fromBgReadings(readings)
         if (selection.isNotEmpty())
             rxBus.send(EventTidepoolStatus("${selection.size} CGMs selected for upload"))

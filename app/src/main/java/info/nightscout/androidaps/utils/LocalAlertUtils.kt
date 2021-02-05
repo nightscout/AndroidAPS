@@ -3,7 +3,6 @@ package info.nightscout.androidaps.utils
 import info.nightscout.androidaps.Config
 import info.nightscout.androidaps.Constants
 import info.nightscout.androidaps.R
-import info.nightscout.androidaps.db.BgReading
 import info.nightscout.androidaps.interfaces.ActivePluginProvider
 import info.nightscout.androidaps.interfaces.ProfileFunction
 import info.nightscout.androidaps.logging.AAPSLogger
@@ -106,9 +105,9 @@ class LocalAlertUtils @Inject constructor(
     }
 
     fun checkStaleBGAlert() {
-        val bgReading: BgReading? = iobCobCalculatorPlugin.lastBg()
+        val bgReading = iobCobCalculatorPlugin.lastBg()
         if (sp.getBoolean(R.string.key_enable_missed_bg_readings_alert, false)
-            && bgReading != null && bgReading.date + missedReadingsThreshold() < System.currentTimeMillis() && sp.getLong("nextMissedReadingsAlarm", 0L) < System.currentTimeMillis()) {
+            && bgReading != null && bgReading.timestamp + missedReadingsThreshold() < System.currentTimeMillis() && sp.getLong("nextMissedReadingsAlarm", 0L) < System.currentTimeMillis()) {
             val n = Notification(Notification.BG_READINGS_MISSED, resourceHelper.gs(R.string.missed_bg_readings), Notification.URGENT)
             n.soundId = R.raw.alarm
             sp.putLong("nextMissedReadingsAlarm", System.currentTimeMillis() + missedReadingsThreshold())

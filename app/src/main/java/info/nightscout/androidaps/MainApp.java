@@ -18,6 +18,9 @@ import javax.inject.Inject;
 
 import dagger.android.AndroidInjector;
 import dagger.android.DaggerApplication;
+import info.nightscout.androidaps.database.AppRepository;
+import info.nightscout.androidaps.database.transactions.VersionChangeTransaction;
+import info.nightscout.androidaps.db.CompatDBHelper;
 import info.nightscout.androidaps.db.DatabaseHelper;
 import info.nightscout.androidaps.db.StaticInjector;
 import info.nightscout.androidaps.dependencyInjection.DaggerAppComponent;
@@ -38,10 +41,13 @@ import info.nightscout.androidaps.services.Intents;
 import info.nightscout.androidaps.utils.ActivityMonitor;
 import info.nightscout.androidaps.utils.locale.LocaleHelper;
 import info.nightscout.androidaps.utils.sharedPreferences.SP;
+import io.reactivex.disposables.CompositeDisposable;
 
 public class MainApp extends DaggerApplication {
 
     static DatabaseHelper sDatabaseHelper = null;
+
+    private final CompositeDisposable disposable = new CompositeDisposable();
 
     @Inject PluginStore pluginStore;
     @Inject AAPSLogger aapsLogger;
@@ -54,6 +60,8 @@ public class MainApp extends DaggerApplication {
     @Inject ConfigBuilderPlugin configBuilderPlugin;
     @Inject KeepAliveReceiver.KeepAliveManager keepAliveManager;
     @Inject List<PluginBase> plugins;
+    @Inject CompatDBHelper compatDBHelper;
+    @Inject AppRepository repository;
 
     @Inject StaticInjector staticInjector; // TODO avoid , here fake only to initialize
 
@@ -73,6 +81,15 @@ public class MainApp extends DaggerApplication {
             aapsLogger.error("Uncaught exception crashing app", ex);
         });
 */
+        String gitRemote = BuildConfig.REMOTE;
+        String commitHash = BuildConfig.HEAD;
+        if (gitRemote.contains("NoGitSystemAvailable")) {
+            gitRemote = null;
+            commitHash = null;
+        }
+        disposable.add(repository.runTransaction(new VersionChangeTransaction(BuildConfig.VERSION_NAME, BuildConfig.VERSION_CODE, gitRemote, commitHash)).subscribe());
+        disposable.add(compatDBHelper.dbChangeDisposable());
+
         registerActivityLifecycleCallbacks(activityMonitor);
 
         JodaTimeAndroid.init(this);
@@ -120,7 +137,7 @@ public class MainApp extends DaggerApplication {
         filter.addAction(Intents.ACTION_NEW_TREATMENT);
         filter.addAction(Intents.ACTION_CHANGED_TREATMENT);
         filter.addAction(Intents.ACTION_REMOVED_TREATMENT);
-        filter.addAction(Intents.ACTION_NEW_SGV);
+        //filter.addAction(Intents.ACTION_NEW_SGV);
         filter.addAction(Intents.ACTION_NEW_PROFILE);
         filter.addAction(Intents.ACTION_NEW_MBG);
         filter.addAction(Intents.ACTION_NEW_CAL);

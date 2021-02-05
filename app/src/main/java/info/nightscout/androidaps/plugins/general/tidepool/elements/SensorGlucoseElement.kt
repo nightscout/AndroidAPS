@@ -5,7 +5,7 @@ import info.nightscout.androidaps.db.BgReading
 import java.util.*
 
 class SensorGlucoseElement(bgReading: BgReading)
-    : BaseElement(bgReading.date, UUID.nameUUIDFromBytes(("AAPS-cgm" + bgReading.date).toByteArray()).toString()) {
+    : BaseElement(bgReading.data.timestamp, UUID.nameUUIDFromBytes(("AAPS-cgm" + bgReading.data.timestamp).toByteArray()).toString()) {
 
     @Expose
     internal var units: String = "mg/dL"
@@ -14,7 +14,7 @@ class SensorGlucoseElement(bgReading: BgReading)
 
     init {
         this.type = "cbg"
-        value = bgReading.value.toInt()
+        value = bgReading.data.value.toInt()
     }
 
     companion object {

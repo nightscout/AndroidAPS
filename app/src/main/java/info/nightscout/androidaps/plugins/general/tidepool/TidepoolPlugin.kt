@@ -93,11 +93,11 @@ class TidepoolPlugin @Inject constructor(
         disposable += rxBus
             .toObservable(EventNewBG::class.java)
             .observeOn(aapsSchedulers.io)
-            .filter { it.bgReading != null } // better would be optional in API level >24
-            .map { it.bgReading }
+            .filter { it.glucoseValue != null } // better would be optional in API level >24
+            .map { it.glucoseValue }
             .subscribe({ bgReading ->
-                if (bgReading!!.date < uploadChunk.getLastEnd())
-                    uploadChunk.setLastEnd(bgReading.date)
+                if (bgReading!!.timestamp  < uploadChunk.getLastEnd())
+                    uploadChunk.setLastEnd(bgReading.timestamp )
                 if (isEnabled(PluginType.GENERAL)
                     && (!sp.getBoolean(R.string.key_tidepool_only_while_charging, false) || receiverStatusStore.isCharging)
                     && (!sp.getBoolean(R.string.key_tidepool_only_while_unmetered, false) || receiverStatusStore.isWifiConnected)

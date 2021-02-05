@@ -42,4 +42,8 @@ android {
 }
 
 
+dependencies {
+    implementation project(':database')
+}
+
 apply from: 'core_dependencies.gradle'

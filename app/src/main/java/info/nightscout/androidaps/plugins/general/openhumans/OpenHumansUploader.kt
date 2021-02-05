@@ -16,6 +16,7 @@ import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.BuildConfig
 import info.nightscout.androidaps.MainApp
 import info.nightscout.androidaps.R
+import info.nightscout.androidaps.database.AppRepository
 import info.nightscout.androidaps.db.*
 import info.nightscout.androidaps.events.EventPreferenceChange
 import info.nightscout.androidaps.interfaces.PluginBase
@@ -56,7 +57,8 @@ class OpenHumansUploader @Inject constructor(
     private val sp: SP,
     private val rxBus: RxBusWrapper,
     private val context: Context,
-    private val treatmentsPlugin: TreatmentsPlugin
+    private val treatmentsPlugin: TreatmentsPlugin,
+    val repository: AppRepository
 ) : PluginBase(
     PluginDescription()
         .mainType(PluginType.GENERAL)
@@ -163,13 +165,13 @@ class OpenHumansUploader @Inject constructor(
 
     fun enqueueBGReading(bgReading: BgReading?) = bgReading?.let {
         insertQueueItem("BgReadings") {
-            put("date", bgReading.date)
-            put("isValid", bgReading.isValid)
-            put("value", bgReading.value)
-            put("direction", bgReading.direction)
-            put("raw", bgReading.raw)
-            put("source", bgReading.source)
-            put("nsId", bgReading._id)
+            put("date", bgReading.data.dateCreated)
+            put("isValid", bgReading.data.isValid)
+            put("value", bgReading.data.value)
+            put("direction", bgReading.data.trendArrow)
+            put("raw", bgReading.data.raw)
+            put("source", bgReading.data.sourceSensor)
+            put("nsId", bgReading.data.interfaceIDs.nightscoutId)
         }
     }
 
