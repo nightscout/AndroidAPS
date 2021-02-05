@@ -38,9 +38,9 @@
     <string name="description_sensitivity_oref1">A sensibilidade é calculada a partir de dados das últimas 8h ou 24h (usando qualquer um que é mais sensível). Hidratos são cortados (se não absorvidos) após o tempo especificado nas preferências. O Plugin também calcula o UAM.</string>
     <string name="description_sensitivity_weighted_average">A sensibilidade é calculada como uma média ponderada de desvios. Desvios mais recentes têm maior peso. A absorção mínima de hidratos de carbono é calculada a partir do tempo máximo de absorção de hidratos de carbono das preferências. Este algoritmo é o mais rápido em seguir as mudanças de sensibilidade.</string>
     <string name="description_source_eversense">Receber valores de Glicose da aplicação Eversense modificada.</string>
-    <string name="description_source_glimp">Receber valores Glucose do Glimp.</string>
-    <string name="description_source_mm640g">Receber valores de Glucose do 600SeriesAndroidUploader.</string>
-    <string name="description_source_ns_client">Descarrega dados de Glucose do Nightscout</string>
+    <string name="description_source_glimp">Receber valores Glicose do Glimp.</string>
+    <string name="description_source_mm640g">Receber valores de Glicose do 600SeriesAndroidUploader.</string>
+    <string name="description_source_ns_client">Descarrega dados da Glicose do Nightscout</string>
     <string name="description_source_xdrip">Receber valores de Glicose do xDrip+.</string>
     <string name="description_treatments">Guarda todos os tratamentos que foram feitos</string>
     <string name="description_wear">Monitorizar e controlar o AndroidAPS usando o seu relógio WearOS.</string>
