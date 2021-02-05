@@ -29,7 +29,7 @@
                 android:layout_marginEnd="6dp"
                 android:layout_marginBottom="1dp"
                 card_view:srcCompat="@drawable/ic_meta_format"
-                android:tint="@color/importListFileName" />
+                card_view:tint="@color/importListFileName" />
 
             <TextView
                 android:id="@+id/filelist_name"
@@ -42,7 +42,6 @@
                 android:scrollHorizontally="false"
                 android:text="File name here"
                 android:textAppearance="?android:attr/textAppearanceMedium"
-                android:textColor="@color/importListFileName"
                 tools:ignore="HardcodedText" />
 
 
@@ -67,7 +66,6 @@
                 android:scrollHorizontally="false"
                 android:text="File dir here"
                 android:textAppearance="?android:attr/textAppearanceSmall"
-                android:textColor="@color/importListFileName"
                 android:textSize="11sp"
                 tools:ignore="HardcodedText" />
 
@@ -90,7 +88,7 @@
                 android:layout_marginEnd="8dp"
                 android:layout_marginBottom="1dp"
                 card_view:srcCompat="@drawable/ic_meta_name"
-                android:tint="@color/importListAdditionalInfo" />
+                card_view:tint="@color/importListAdditionalInfo" />
 
             <TextView
                 android:id="@+id/meta_device_name"
@@ -122,7 +120,7 @@
                 android:layout_marginEnd="8dp"
                 android:layout_marginBottom="1dp"
                 card_view:srcCompat="@drawable/ic_meta_date"
-                android:tint="@color/importListAdditionalInfo" />
+                card_view:tint="@color/importListAdditionalInfo" />
 
             <TextView
                 android:id="@+id/meta_date_time"
@@ -162,7 +160,7 @@
             android:layout_marginTop="7dp"
             android:layout_marginEnd="5dp"
             android:layout_marginBottom="3dp"
-            android:background="@color/listdelimiter" />
+            android:background="?android:attr/dividerHorizontal" />
 
     </LinearLayout>
 

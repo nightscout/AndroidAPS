@@ -19,6 +19,7 @@
         android:scaleType="centerInside"
         android:scaleX="2"
         android:scaleY="2"
+        app:tint="?attr/iconColorToolbar"
         app:srcCompat="@drawable/ic_cp_age_canula" />
 
     <TextView
@@ -38,6 +39,7 @@
         android:scaleType="centerInside"
         android:scaleX="1.8"
         android:scaleY="1.8"
+        app:tint="?attr/iconColorToolbar"
         app:srcCompat="@drawable/ic_cp_age_insulin" />
 
     <TextView
@@ -64,6 +66,7 @@
         android:scaleType="centerInside"
         android:scaleX="2"
         android:scaleY="2"
+        app:tint="?attr/iconColorToolbar"
         app:srcCompat="@drawable/ic_cp_age_sensor" />
 
     <TextView
@@ -83,6 +86,7 @@
         android:scaleType="centerInside"
         android:scaleX="2"
         android:scaleY="2"
+        app:tint="?attr/iconColorToolbar"
         app:srcCompat="@drawable/ic_cp_age_battery" />
 
     <TextView

@@ -2,6 +2,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="?attr/fragmentbackground"
     tools:context="info.nightscout.androidaps.plugins.pump.medtronic.MedtronicFragment">
 
 
@@ -49,7 +50,7 @@
                     android:layout_marginLeft="20dp"
                     android:layout_marginRight="20dp"
                     android:layout_marginTop="5dp"
-                    android:background="@color/listdelimiter" />
+                    android:background="?android:attr/dividerHorizontal" />
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -61,7 +62,7 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1.5"
                         android:gravity="end"
-                        android:paddingRight="5dp"
+                        android:paddingEnd="5dp"
                         android:text="@string/rileylink_status"
                         android:textSize="14sp" />
 
@@ -81,9 +82,8 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:gravity="start"
-                        android:paddingLeft="5dp"
+                        android:paddingStart="5dp"
                         android:text="{fa-bluetooth-b}"
-                        android:textColor="@android:color/white"
                         android:textSize="14sp" />
 
 
@@ -97,7 +97,7 @@
                     android:layout_marginLeft="20dp"
                     android:layout_marginRight="20dp"
                     android:layout_marginTop="5dp"
-                    android:background="@color/listdelimiter" />
+                    android:background="?android:attr/dividerHorizontal" />
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -109,7 +109,7 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1.5"
                         android:gravity="end"
-                        android:paddingRight="5dp"
+                        android:paddingEnd="5dp"
                         android:text="@string/medtronic_pump_status"
                         android:textSize="14sp" />
 
@@ -129,9 +129,8 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:gravity="start"
-                        android:paddingLeft="5dp"
+                        android:paddingStart="5dp"
                         android:text="{fa-bluetooth-b}"
-                        android:textColor="@android:color/white"
                         android:textSize="14sp" />
 
 
@@ -151,7 +150,7 @@
                     android:layout_marginLeft="20dp"
                     android:layout_marginRight="20dp"
                     android:layout_marginTop="5dp"
-                    android:background="@color/listdelimiter" />
+                    android:background="?android:attr/dividerHorizontal" />
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -163,7 +162,7 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1.5"
                         android:gravity="end"
-                        android:paddingRight="5dp"
+                        android:paddingEnd="5dp"
                         android:text="@string/battery_label"
                         android:textSize="14sp" />
 
@@ -183,8 +182,7 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:gravity="start"
-                        android:paddingLeft="5dp"
-                        android:textColor="@android:color/white"
+                        android:paddingStart="5dp"
                         android:text=""
                         android:textSize="14sp" />
 
@@ -198,7 +196,7 @@
                     android:layout_marginLeft="20dp"
                     android:layout_marginRight="20dp"
                     android:layout_marginTop="5dp"
-                    android:background="@color/listdelimiter" />
+                    android:background="?android:attr/dividerHorizontal" />
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -210,7 +208,7 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1.5"
                         android:gravity="end"
-                        android:paddingRight="5dp"
+                        android:paddingEnd="5dp"
                         android:text="@string/lastconnection_label"
                         android:textSize="14sp" />
 
@@ -230,8 +228,7 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:gravity="start"
-                        android:paddingLeft="5dp"
-                        android:textColor="@android:color/white"
+                        android:paddingStart="5dp"
                         android:textSize="14sp" />
 
                 </LinearLayout>
@@ -243,7 +240,7 @@
                     android:layout_marginLeft="20dp"
                     android:layout_marginRight="20dp"
                     android:layout_marginTop="5dp"
-                    android:background="@color/listdelimiter" />
+                    android:background="?android:attr/dividerHorizontal" />
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -255,7 +252,7 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1.5"
                         android:gravity="end"
-                        android:paddingRight="5dp"
+                        android:paddingEnd="5dp"
                         android:text="@string/lastbolus_label"
                         android:textSize="14sp" />
 
@@ -275,8 +272,7 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:gravity="start"
-                        android:paddingLeft="5dp"
-                        android:textColor="@android:color/white"
+                        android:paddingStart="5dp"
                         android:textSize="14sp" />
 
                 </LinearLayout>
@@ -289,7 +285,7 @@
                     android:layout_marginLeft="20dp"
                     android:layout_marginRight="20dp"
                     android:layout_marginTop="5dp"
-                    android:background="@color/listdelimiter" />
+                    android:background="?android:attr/dividerHorizontal" />
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -301,7 +297,7 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1.5"
                         android:gravity="end"
-                        android:paddingRight="5dp"
+                        android:paddingEnd="5dp"
                         android:text="@string/basebasalrate_label"
                         android:textSize="14sp" />
 
@@ -321,8 +317,7 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:gravity="start"
-                        android:paddingLeft="5dp"
-                        android:textColor="@android:color/white"
+                        android:paddingStart="5dp"
                         android:textSize="14sp" />
 
                 </LinearLayout>
@@ -334,7 +329,7 @@
                     android:layout_marginLeft="20dp"
                     android:layout_marginRight="20dp"
                     android:layout_marginTop="5dp"
-                    android:background="@color/listdelimiter" />
+                    android:background="?android:attr/dividerHorizontal" />
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -346,7 +341,7 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1.5"
                         android:gravity="end"
-                        android:paddingRight="5dp"
+                        android:paddingEnd="5dp"
                         android:text="@string/tempbasal_label"
                         android:textSize="14sp" />
 
@@ -366,8 +361,7 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:gravity="start"
-                        android:paddingLeft="5dp"
-                        android:textColor="@android:color/white"
+                        android:paddingStart="5dp"
                         android:textSize="14sp" />
 
                 </LinearLayout>
@@ -379,7 +373,7 @@
                     android:layout_marginLeft="20dp"
                     android:layout_marginRight="20dp"
                     android:layout_marginTop="5dp"
-                    android:background="@color/listdelimiter" />
+                    android:background="?android:attr/dividerHorizontal" />
 
 
                 <LinearLayout
@@ -392,7 +386,7 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1.5"
                         android:gravity="end"
-                        android:paddingRight="5dp"
+                        android:paddingEnd="5dp"
                         android:text="@string/reservoir_label"
                         android:textSize="14sp" />
 
@@ -412,8 +406,7 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:gravity="start"
-                        android:paddingLeft="5dp"
-                        android:textColor="@android:color/white"
+                        android:paddingStart="5dp"
                         android:textSize="14sp" />
 
                 </LinearLayout>
@@ -426,7 +419,7 @@
                     android:layout_marginLeft="20dp"
                     android:layout_marginRight="20dp"
                     android:layout_marginTop="5dp"
-                    android:background="@color/listdelimiter" />
+                    android:background="?android:attr/dividerHorizontal" />
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -438,7 +431,7 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1.5"
                         android:gravity="end"
-                        android:paddingRight="5dp"
+                        android:paddingEnd="5dp"
                         android:text="@string/medtronic_errors"
                         android:textSize="14sp" />
 
@@ -458,8 +451,7 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:gravity="start"
-                        android:paddingLeft="5dp"
-                        android:textColor="@android:color/white"
+                        android:paddingStart="5dp"
                         android:textSize="14sp" />
 
                 </LinearLayout>
@@ -471,7 +463,7 @@
                     android:layout_marginLeft="20dp"
                     android:layout_marginRight="20dp"
                     android:layout_marginTop="5dp"
-                    android:background="@color/listdelimiter" />
+                    android:background="?android:attr/dividerHorizontal" />
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -504,8 +496,8 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:drawableTop="@drawable/ic_actions_refill"
-                    android:paddingLeft="0dp"
-                    android:paddingRight="0dp"
+                    android:paddingStart="0dp"
+                    android:paddingEnd="0dp"
                     android:text="@string/combo_refresh" />
 
 
@@ -516,8 +508,8 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:drawableTop="@drawable/ic_danarhistory"
-                    android:paddingLeft="0dp"
-                    android:paddingRight="0dp"
+                    android:paddingStart="0dp"
+                    android:paddingEnd="0dp"
                     android:text="@string/pumphistory" />
 
                 <Button
@@ -527,8 +519,8 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:drawableTop="@drawable/ic_danarstats"
-                    android:paddingLeft="0dp"
-                    android:paddingRight="0dp"
+                    android:paddingStart="0dp"
+                    android:paddingEnd="0dp"
                     android:text="RL Stats" />
 
             </LinearLayout>

@@ -3,6 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="?attr/fragmentbackground"
     tools:context=".plugins.profile.local.LocalProfileFragment">
 
     <LinearLayout
@@ -258,8 +259,8 @@
             android:layout_marginRight="10dp"
             android:layout_marginTop="3dp"
             android:layout_weight="1"
-            android:paddingLeft="10dp"
-            android:paddingRight="10dp"
+            android:paddingStart="10dp"
+            android:paddingEnd="10dp"
             android:text="@string/activate_profile"
             android:drawableStart="@drawable/ic_local_activate" />
 
@@ -281,8 +282,8 @@
                 android:layout_marginBottom="3dp"
                 android:layout_weight="1"
                 android:drawableStart="@drawable/ic_local_reset"
-                android:paddingLeft="10dp"
-                android:paddingRight="10dp"
+                android:paddingStart="10dp"
+                android:paddingEnd="10dp"
                 android:text="@string/reset" />
 
             <Button
@@ -297,8 +298,8 @@
                 android:layout_marginBottom="3dp"
                 android:layout_weight="1"
                 android:drawableStart="@drawable/ic_local_save"
-                android:paddingLeft="10dp"
-                android:paddingRight="10dp"
+                android:paddingStart="10dp"
+                android:paddingEnd="10dp"
                 android:text="@string/save" />
         </LinearLayout>
 

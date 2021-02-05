@@ -18,7 +18,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:background="@color/dialog_title_background"
+              android:background="?attr/colorPrimary"
             android:orientation="horizontal"
             android:padding="5dp">
 
@@ -159,8 +159,8 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:paddingLeft="10dp"
-                        android:paddingRight="2dp"
+                        android:paddingStart="10dp"
+                        android:paddingEnd="2dp"
                         android:text="@string/careportal_newnstreatment_carbtime_label"
                         android:gravity="center_vertical"
                         android:layout_weight="1"
@@ -248,8 +248,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:background="@drawable/background_darkgray"
-                android:paddingLeft="10dp"
-                android:paddingRight="10dp"
+                android:paddingStart="10dp"
+                android:paddingEnd="10dp"
                 android:text="2.35U 28g"
                 android:textAppearance="?android:attr/textAppearanceLarge" />
 
@@ -259,8 +259,8 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="10dp"
                 android:background="@drawable/background_darkgray"
-                android:paddingLeft="10dp"
-                android:paddingRight="10dp"
+                android:paddingStart="10dp"
+                android:paddingEnd="10dp"
                 android:text="50%"
                 android:textAppearance="?android:attr/textAppearanceLarge"
                 android:textColor="@color/iob" />
@@ -345,7 +345,7 @@
             android:layout_marginStart="20dp"
             android:layout_marginTop="-15dp"
             android:layout_marginBottom="5dp"
-            android:background="@color/listdelimiter" />
+            android:background="?android:attr/dividerHorizontal" />
 
         <TableLayout
             android:id="@+id/resulttable"

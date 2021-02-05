@@ -1382,5 +1382,6 @@
     <string name="graph_menu_divider_header">Graph</string>
     <string name="chart_menu">Chart menu</string>
     <string name="clear_filter">Clear filter</string>
+    <string name="nav_themeselector">Select Color</string>
 
 </resources>

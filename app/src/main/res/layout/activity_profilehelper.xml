@@ -25,8 +25,8 @@
                 android:layout_height="30dp"
                 android:layout_weight="1"
                 android:gravity="center"
-                android:paddingLeft="5dp"
-                android:paddingRight="5dp"
+                android:paddingStart="5dp"
+                android:paddingEnd="5dp"
                 android:text="1" />
 
             <TextView
@@ -35,8 +35,8 @@
                 android:layout_height="30dp"
                 android:layout_weight="1"
                 android:gravity="center"
-                android:paddingLeft="5dp"
-                android:paddingRight="5dp"
+                android:paddingStart="5dp"
+                android:paddingEnd="5dp"
                 android:text="2" />
 
         </LinearLayout>
@@ -204,9 +204,7 @@
                 style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="@string/selected_profile"
-                android:textColorHint="@color/white"
-                app:boxStrokeColor="@color/white">
+                android:hint="@string/selected_profile">
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/available_profile_list"
@@ -233,9 +231,7 @@
                 style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="@string/careportal_profileswitch"
-                android:textColorHint="@color/white"
-                app:boxStrokeColor="@color/white">
+                android:hint="@string/careportal_profileswitch">
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/profileswitch_list"

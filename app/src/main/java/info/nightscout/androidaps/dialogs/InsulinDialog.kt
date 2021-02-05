@@ -213,7 +213,7 @@ class InsulinDialog : DialogFragmentWithDate() {
                             })
                         }
                     }
-                })
+                },null,sp)
             }
         } else
             activity?.let { activity ->

@@ -18,7 +18,7 @@
                 android:layout_height="25dp"
                 android:drawableLeft="@drawable/ic_cp_age_sensor"
                 android:gravity="center_vertical"
-                android:paddingRight="2dp"
+                android:paddingEnd="2dp"
                 android:paddingStart="15dp"
                 android:text="@string/careportal_sensor_label"
                 android:textSize="14sp" />
@@ -29,9 +29,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:gravity="center_vertical"
-                android:paddingRight="2dp"
-                android:paddingLeft="2dp"
-                android:textColor="@android:color/white"
+                android:paddingEnd="2dp"
+                android:paddingStart="2dp"
                 android:textSize="14sp" />
 
 
@@ -41,8 +40,7 @@
                 android:layout_height="wrap_content"
                 android:gravity="center_vertical"
                 android:layout_marginRight="20dp"
-                android:paddingLeft="2dp"
-                android:textColor="@android:color/white"
+                android:paddingStart="2dp"
                 android:textSize="14sp" />
 
         </TableRow>
@@ -59,7 +57,7 @@
                 android:layout_marginTop="2dp"
                 android:layout_marginRight="20dp"
                 android:layout_marginBottom="2dp"
-                android:background="@color/listdelimiter" />
+                android:background="?android:attr/dividerHorizontal" />
 
         </TableRow>
 
@@ -73,7 +71,7 @@
                 android:drawableLeft="@drawable/ic_cp_age_insulin"
                 android:gravity="center_vertical"
                 android:paddingStart="15dp"
-                android:paddingRight="2dp"
+                android:paddingEnd="2dp"
                 android:text="@string/careportal_insulin_label"
                 android:textSize="14sp" />
 
@@ -83,9 +81,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:gravity="center_vertical"
-                android:paddingRight="2dp"
-                android:paddingLeft="2dp"
-                android:textColor="@android:color/white"
+                android:paddingEnd="2dp"
+                android:paddingStart="2dp"
                 android:textSize="14sp" />
 
 
@@ -95,8 +92,7 @@
                 android:layout_height="wrap_content"
                 android:gravity="center_vertical"
                 android:layout_marginRight="20dp"
-                android:paddingLeft="2dp"
-                android:textColor="@android:color/white"
+                android:paddingStart="2dp"
                 android:textSize="14sp" />
 
         </TableRow>
@@ -113,7 +109,7 @@
                 android:layout_marginTop="2dp"
                 android:layout_marginRight="20dp"
                 android:layout_marginBottom="2dp"
-                android:background="@color/listdelimiter" />
+                android:background="?android:attr/dividerHorizontal" />
 
         </TableRow>
 
@@ -127,7 +123,7 @@
                 android:drawableLeft="@drawable/ic_cp_age_canula"
                 android:gravity="center_vertical"
                 android:paddingStart="15dp"
-                android:paddingRight="2dp"
+                android:paddingEnd="2dp"
                 android:text="@string/careportal_canula_label"
                 android:textSize="14sp" />
 
@@ -136,9 +132,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:gravity="center_vertical"
-                android:paddingRight="2dp"
-                android:paddingLeft="2dp"
-                android:textColor="@android:color/white"
+                android:paddingEnd="2dp"
+                android:paddingStart="2dp"
                 android:textSize="14sp" />
 
             <TextView
@@ -147,8 +142,7 @@
                 android:gravity="center_vertical"
                 android:layout_marginRight="20dp"
                 android:text=""
-                android:paddingLeft="2dp"
-                android:textColor="@android:color/white"
+                android:paddingStart="2dp"
                 android:textSize="14sp" />
 
         </TableRow>
@@ -165,7 +159,7 @@
                 android:layout_marginTop="2dp"
                 android:layout_marginRight="20dp"
                 android:layout_marginBottom="2dp"
-                android:background="@color/listdelimiter" />
+                android:background="?android:attr/dividerHorizontal" />
 
         </TableRow>
 
@@ -179,7 +173,7 @@
                 android:layout_height="25dp"
                 android:drawableLeft="@drawable/ic_cp_age_battery"
                 android:gravity="center_vertical"
-                android:paddingRight="2dp"
+                android:paddingEnd="2dp"
                 android:paddingStart="15dp"
                 android:text="@string/pump"
                 android:textSize="14sp" />
@@ -190,9 +184,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:gravity="center_vertical"
-                android:paddingRight="2dp"
-                android:paddingLeft="2dp"
-                android:textColor="@android:color/white"
+                android:paddingEnd="2dp"
+                android:paddingStart="2dp"
                 android:textSize="14sp" />
 
             <TextView
@@ -201,8 +194,7 @@
                 android:layout_height="wrap_content"
                 android:gravity="center_vertical"
                 android:layout_marginRight="20dp"
-                android:paddingLeft="2dp"
-                android:textColor="@android:color/white"
+                android:paddingStart="2dp"
                 android:textSize="14sp" />
 
         </TableRow>
@@ -219,7 +211,7 @@
                 android:layout_marginTop="2dp"
                 android:layout_marginRight="20dp"
                 android:layout_marginBottom="2dp"
-                android:background="@color/listdelimiter" />
+                android:background="?android:attr/dividerHorizontal" />
 
         </TableRow>
 

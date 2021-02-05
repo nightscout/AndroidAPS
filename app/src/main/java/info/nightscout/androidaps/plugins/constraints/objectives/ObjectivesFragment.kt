@@ -312,7 +312,7 @@ class ObjectivesFragment : DaggerFragment() {
                         scrollToCurrentObjective()
                         rxBus.send(EventObjectivesUpdateGui())
                         rxBus.send(EventSWUpdate(false))
-                    })
+                    },null,sp)
                 }
             }
             holder.binding.unfinish.setOnClickListener {

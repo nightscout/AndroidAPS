@@ -1,5 +1,6 @@
 package info.nightscout.androidaps.utils.resources
 
+import android.content.Context
 import android.content.res.AssetFileDescriptor
 import android.graphics.Bitmap
 import android.graphics.drawable.Drawable
@@ -21,4 +22,6 @@ interface ResourceHelper {
     fun getDisplayMetrics(): DisplayMetrics
     fun dpToPx(dp: Int): Int
     fun shortTextMode(): Boolean
+    fun getAttributeColor(context: Context?,
+                          attributeId: Int): Int
 }

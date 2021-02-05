@@ -2,6 +2,9 @@ package info.nightscout.androidaps.dialogs
 
 import android.app.DatePickerDialog
 import android.app.TimePickerDialog
+import android.content.res.Resources
+import android.graphics.PorterDuff
+import android.graphics.drawable.Drawable
 import android.os.Bundle
 import android.text.format.DateFormat
 import android.view.View
@@ -10,11 +13,13 @@ import android.view.Window
 import android.view.WindowManager
 import android.widget.Button
 import android.widget.TextView
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.FragmentManager
 import dagger.android.support.DaggerDialogFragment
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.logging.LTag
+import info.nightscout.androidaps.plugins.general.themeselector.util.ThemeUtil
 import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.extensions.toVisibility
 import info.nightscout.androidaps.utils.sharedPreferences.SP
@@ -54,6 +59,29 @@ abstract class DialogFragmentWithDate : DaggerDialogFragment() {
         dialog?.window?.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN)
         isCancelable = true
         dialog?.setCanceledOnTouchOutside(false)
+
+        val themeToSet = sp.getInt("theme", ThemeUtil.THEME_DARKSIDE)
+        try {
+            val theme: Resources.Theme? = context?.getTheme()
+            // https://stackoverflow.com/questions/11562051/change-activitys-theme-programmatically
+            if (theme != null) {
+                theme.applyStyle(ThemeUtil.getThemeId(themeToSet), true)
+            }
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+
+        val drawable: Drawable? = context?.let { ContextCompat.getDrawable(it, R.drawable.dialog) }
+        if ( sp.getBoolean("daynight", true)) {
+            if (drawable != null) {
+                drawable.setColorFilter(sp.getInt("darkBackgroundColor", info.nightscout.androidaps.core.R.color.background_dark), PorterDuff.Mode.SRC_IN)
+            }
+        } else {
+            if (drawable != null) {
+                drawable.setColorFilter(sp.getInt("lightBackgroundColor", info.nightscout.androidaps.core.R.color.background_light), PorterDuff.Mode.SRC_IN)
+            }
+        }
+        dialog?.window?.setBackgroundDrawable(drawable)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {

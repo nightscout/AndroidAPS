@@ -1,14 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:card_view="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/overview_quickwizard_cardview"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:layout_gravity="center"
-    card_view:cardBackgroundColor="@color/cardColorBackground"
-    card_view:cardCornerRadius="6dp"
-    card_view:cardUseCompatPadding="true"
-    card_view:contentPadding="6dp">
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/overview_quickwizard_cardview"
+        style="@style/Widget.MaterialComponents.CardView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginLeft="16dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginRight="16dp"
+        app:strokeWidth="2dp"
+        app:cardCornerRadius="2dp"
+        app:cardUseCompatPadding="true"
+        app:contentPadding="16dp"
+        app:cardElevation="2dp">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -26,7 +31,7 @@
                 android:adjustViewBounds="false"
                 android:cropToPadding="false"
                 android:scaleType="fitStart"
-                card_view:srcCompat="@drawable/ic_quickwizard" />
+                app:srcCompat="@drawable/ic_quickwizard" />
 
             <LinearLayout
                 android:orientation="vertical"
@@ -44,7 +49,7 @@
                         android:id="@+id/overview_quickwizard_item_buttonText"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:paddingLeft="10dp"
+                        android:paddingStart="10dp"
                         android:text="Sample button text"
                         android:textAppearance="@style/TextAppearance.AppCompat.Medium"
                         android:textStyle="normal|bold"
@@ -54,7 +59,7 @@
                         android:id="@+id/overview_quickwizard_item_carbs"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:paddingLeft="10dp"
+                        android:paddingStart="10dp"
                         android:text="36g"
                         android:textAppearance="@style/TextAppearance.AppCompat.Medium"
                         android:textColor="@color/cardObjectiveText"
@@ -72,8 +77,8 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="top"
-                        android:paddingLeft="10dp"
-                        android:paddingRight="5dp"
+                        android:paddingStart="10dp"
+                        android:paddingEnd="5dp"
                         android:text="@string/overview_editquickwizard_valid"
                         android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
 
@@ -82,7 +87,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_vertical"
-                        android:paddingRight="10dp"
+                        android:paddingEnd="10dp"
                         android:text="07:45"
                         android:textAppearance="@style/TextAppearance.AppCompat.Medium"
                         android:textStyle="normal|bold" />
@@ -97,7 +102,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_vertical"
-                        android:paddingLeft="10dp"
+                        android:paddingStart="10dp"
                         android:text="11:45"
                         android:textAppearance="@style/TextAppearance.AppCompat.Medium"
                         android:textStyle="normal|bold" />
@@ -130,4 +135,4 @@
 
     </LinearLayout>
 
-</androidx.cardview.widget.CardView>
+</com.google.android.material.card.MaterialCardView>

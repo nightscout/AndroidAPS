@@ -7,33 +7,40 @@
     android:clipChildren="false"
     android:clipToPadding="false">
 
-    <androidx.appcompat.widget.Toolbar
+    <com.google.android.material.appbar.MaterialToolbar
         android:id="@+id/toolbar"
+        android:layout_height="wrap_content"
         android:layout_width="match_parent"
-        android:layout_height="?attr/actionBarSize"
-        android:background="@color/colorPrimary"
-        app:contentInsetEndWithActions="48dp"
-        app:contentInsetStartWithNavigation="48dp"
-        android:elevation="4dp">
+        android:paddingTop="2dp"
+        android:paddingBottom="2dp"
+        android:fitsSystemWindows="false"
+        app:layout_scrollFlags="scroll|enterAlways"
+        android:background="@color/transparent"
+        android:minHeight="?attr/actionBarSize"
+        app:layout_collapseMode="pin"
+        app:contentInsetStart="4dp"
+        app:contentInsetEnd="4dp">
 
         <com.google.android.material.tabs.TabLayout
             android:id="@+id/tabs_normal"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="@android:color/transparent"
-            app:tabIndicatorColor="#FFFFFF"
-            app:tabMode="scrollable" />
+            app:tabMode="scrollable"
+            app:tabGravity="center"
+            app:tabIndicatorAnimationDuration="1400"
+            app:tabIndicatorFullWidth="false"
+            app:tabUnboundedRipple="false"
+            android:layout_height="28dp"
+            android:layout_width="wrap_content" />
 
         <com.google.android.material.tabs.TabLayout
             android:id="@+id/tabs_compact"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="@android:color/transparent"
-            app:tabMinWidth="0dp"
-            app:tabPadding="0dp"
-            app:tabIndicatorColor="#FFFFFF"
-            app:tabMode="scrollable" />
-    </androidx.appcompat.widget.Toolbar>
+            app:tabMode="scrollable"
+            app:tabGravity="center"
+            app:tabIndicatorAnimationDuration="1400"
+            app:tabIndicatorFullWidth="false"
+            app:tabUnboundedRipple="false"
+            android:layout_height="24dp"
+            android:layout_width="wrap_content" />
+    </com.google.android.material.appbar.MaterialToolbar>
 
     <androidx.drawerlayout.widget.DrawerLayout
         android:id="@+id/main_drawer_layout"
@@ -52,9 +59,7 @@
             android:layout_height="match_parent"
             app:itemBackground="?attr/selectableItemBackground"
             android:fitsSystemWindows="true"
-            android:layout_gravity="start"
-            app:itemIconTint="@android:color/white"
-            app:itemTextColor="@android:color/white"/>
+            android:layout_gravity="start" />
     </androidx.drawerlayout.widget.DrawerLayout>
 
 </LinearLayout>

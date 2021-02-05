@@ -238,11 +238,11 @@ class OmnipodOverviewFragment : DaggerFragment() {
             omnipod_overview_firmware_version.text = PLACEHOLDER
             omnipod_overview_time_on_pod.text = PLACEHOLDER
             omnipod_overview_pod_expiry_date.text = PLACEHOLDER
-            omnipod_overview_pod_expiry_date.setTextColor(Color.WHITE)
+            omnipod_overview_pod_expiry_date.setTextColor(resourceHelper.getAttributeColor(context, R.attr.statuslight_normal))
             omnipod_overview_base_basal_rate.text = PLACEHOLDER
             omnipod_overview_total_delivered.text = PLACEHOLDER
             omnipod_overview_reservoir.text = PLACEHOLDER
-            omnipod_overview_reservoir.setTextColor(Color.WHITE)
+            omnipod_overview_reservoir.setTextColor(resourceHelper.getAttributeColor(context, R.attr.statuslight_normal))
             omnipod_overview_pod_active_alerts.text = PLACEHOLDER
         } else {
             omnipod_overview_pod_address.text = podStateManager.address.toString()
@@ -259,7 +259,7 @@ class OmnipodOverviewFragment : DaggerFragment() {
             val expiresAt = podStateManager.expiresAt
             if (expiresAt == null) {
                 omnipod_overview_pod_expiry_date.text = PLACEHOLDER
-                omnipod_overview_pod_expiry_date.setTextColor(Color.WHITE)
+                omnipod_overview_pod_expiry_date.setTextColor(resourceHelper.getAttributeColor(context, R.attr.statuslight_normal))
             } else {
                 omnipod_overview_pod_expiry_date.text = readableZonedTime(expiresAt)
                 omnipod_overview_pod_expiry_date.setTextColor(if (DateTime.now().isAfter(expiresAt)) {
@@ -331,7 +331,7 @@ class OmnipodOverviewFragment : DaggerFragment() {
                 }
             omnipod_overview_last_connection.setTextColor(lastConnectionColor)
         } else {
-            omnipod_overview_last_connection.setTextColor(Color.WHITE)
+            omnipod_overview_last_connection.setTextColor(resourceHelper.getAttributeColor(context, R.attr.statuslight_normal))
             omnipod_overview_last_connection.text = if (podStateManager.hasPodState() && podStateManager.lastSuccessfulCommunication != null) {
                 readableDuration(podStateManager.lastSuccessfulCommunication)
             } else {
@@ -389,7 +389,7 @@ class OmnipodOverviewFragment : DaggerFragment() {
             val textColor: Int
 
             if (podStateManager.isLastBolusCertain) {
-                textColor = Color.WHITE
+                textColor = resourceHelper.getAttributeColor(context, R.attr.statuslight_normal)
             } else {
                 textColor = Color.RED
                 text += " (" + resourceHelper.gs(R.string.omnipod_uncertain) + ")"
@@ -400,7 +400,7 @@ class OmnipodOverviewFragment : DaggerFragment() {
 
         } else {
             omnipod_overview_last_bolus.text = PLACEHOLDER
-            omnipod_overview_last_bolus.setTextColor(Color.WHITE)
+            omnipod_overview_last_bolus.setTextColor(resourceHelper.getAttributeColor(context, R.attr.statuslight_normal))
         }
     }
 

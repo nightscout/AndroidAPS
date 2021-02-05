@@ -7,6 +7,7 @@ import android.content.res.Resources;
 import android.net.ConnectivityManager;
 import android.net.wifi.WifiManager;
 
+import androidx.appcompat.app.AppCompatDelegate;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
 import com.j256.ormlite.android.apptools.OpenHelperManager;
@@ -46,6 +47,10 @@ public class MainApp extends DaggerApplication {
     private static Resources sResources;
 
     static DatabaseHelper sDatabaseHelper = null;
+
+    static {
+        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
+    }
 
     @Inject PluginStore pluginStore;
     @Inject AAPSLogger aapsLogger;

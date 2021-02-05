@@ -32,6 +32,11 @@
         app:showAsAction="never"
         android:title="@string/nav_profilehelper" />
     <item
+        android:id="@+id/nav_themeselector"
+        app:showAsAction="never"
+        android:icon="@drawable/ic_palette"
+        android:title="@string/nav_themeselector" />
+    <item
         android:id="@+id/nav_about"
         app:showAsAction="never"
         android:title="@string/nav_about" />

@@ -78,7 +78,7 @@ class MedtronicFragment : DaggerFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        medtronic_pumpstatus.setBackgroundColor(resourceHelper.gc(R.color.colorInitializingBorder))
+        medtronic_pumpstatus.setBackgroundColor(resourceHelper.gc(R.color.ColorInformationBackground))
 
         medtronic_rl_status.text = resourceHelper.gs(RileyLinkServiceState.NotStarted.resourceId)
 
@@ -306,11 +306,15 @@ class MedtronicFragment : DaggerFragment() {
         } else {
             medtronic_pumpstate_battery.text = "{fa-battery-" + medtronicPumpStatus.batteryRemaining / 25 + "}  " + medtronicPumpStatus.batteryRemaining + "%" + String.format("  (%.2f V)", medtronicPumpStatus.batteryVoltage)
         }
-        warnColors.setColorInverse(medtronic_pumpstate_battery, medtronicPumpStatus.batteryRemaining.toDouble(), 25.0, 10.0)
+        warnColors.setColorInverse(medtronic_pumpstate_battery, medtronicPumpStatus.batteryRemaining.toDouble(), 25.0, 10.0 , resourceHelper.getAttributeColor(context, R.attr.statuslight_normal),
+            resourceHelper.getAttributeColor(context, R.attr.statuslight_Warning),
+            resourceHelper.getAttributeColor(context, R.attr.statuslight_alarm))
 
         // reservoir
         medtronic_reservoir.text = resourceHelper.gs(R.string.reservoirvalue, medtronicPumpStatus.reservoirRemainingUnits, medtronicPumpStatus.reservoirFullUnits)
-        warnColors.setColorInverse(medtronic_reservoir, medtronicPumpStatus.reservoirRemainingUnits, 50.0, 20.0)
+        warnColors.setColorInverse(medtronic_reservoir, medtronicPumpStatus.reservoirRemainingUnits, 50.0, 20.0 , resourceHelper.getAttributeColor(context, R.attr.statuslight_normal),
+            resourceHelper.getAttributeColor(context, R.attr.statuslight_Warning),
+            resourceHelper.getAttributeColor(context, R.attr.statuslight_alarm))
 
         medtronicPumpPlugin.rileyLinkService?.verifyConfiguration()
         medtronic_errors.text = medtronicPumpStatus.errorInfo

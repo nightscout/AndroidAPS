@@ -153,13 +153,16 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
         skinProvider.activeSkin().preProcessLandscapeOverviewLayout(dm, view, landscape, resourceHelper.gb(R.bool.isTablet), smallHeight)
         nsclient_layout?.visibility = config.NSCLIENT.toVisibility()
 
-        overview_pumpstatus?.setBackgroundColor(resourceHelper.gc(R.color.colorInitializingBorder))
+        overview_pumpstatus?.setBackgroundColor(resourceHelper.getAttributeColor(context, R.attr.informationBackground))
 
         overview_notifications?.setHasFixedSize(false)
         overview_notifications?.layoutManager = LinearLayoutManager(view.context)
         axisWidth = if (dm.densityDpi <= 120) 3 else if (dm.densityDpi <= 160) 10 else if (dm.densityDpi <= 320) 35 else if (dm.densityDpi <= 420) 50 else if (dm.densityDpi <= 560) 70 else 80
         overview_bggraph?.gridLabelRenderer?.gridColor = resourceHelper.gc(R.color.graphgrid)
+        overview_bggraph?.setBackgroundColor(resourceHelper.getAttributeColor(context,R.attr.colorGraphBackground ))
         overview_bggraph?.gridLabelRenderer?.reloadStyles()
+        overview_bggraph?.gridLabelRenderer?.horizontalLabelsColor = resourceHelper.getAttributeColor(context,R.attr.graphHorizontalLabelText )
+        overview_bggraph?.gridLabelRenderer?.verticalLabelsColor = resourceHelper.getAttributeColor(context,R.attr.graphVerticalLabelText )
         overview_bggraph?.gridLabelRenderer?.labelVerticalWidth = axisWidth
         overview_bggraph?.layoutParams?.height = resourceHelper.dpToPx(skinProvider.activeSkin().mainGraphHeight)
 
@@ -489,11 +492,13 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
                     val graph = GraphView(context)
                     graph.layoutParams = LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, resourceHelper.dpToPx(skinProvider.activeSkin().secondaryGraphHeight)).also { it.setMargins(0, resourceHelper.dpToPx(15), 0, resourceHelper.dpToPx(10)) }
                     graph.gridLabelRenderer?.gridColor = resourceHelper.gc(R.color.graphgrid)
+                    graph.gridLabelRenderer?.horizontalLabelsColor = resourceHelper.getAttributeColor(context,R.attr.graphHorizontalLabelText )
+                    graph.gridLabelRenderer?.verticalLabelsColor = resourceHelper.getAttributeColor(context,R.attr.graphVerticalLabelText )
                     graph.gridLabelRenderer?.reloadStyles()
                     graph.gridLabelRenderer?.isHorizontalLabelsVisible = false
                     graph.gridLabelRenderer?.labelVerticalWidth = axisWidth
                     graph.gridLabelRenderer?.numVerticalLabels = 3
-                    graph.viewport.backgroundColor = Color.argb(20, 255, 255, 255) // 8% of gray
+                    graph.setBackgroundColor(resourceHelper.getAttributeColor(context,R.attr.colorGraphBackground ))
                     relativeLayout.addView(graph)
 
                     val label = TextView(context)
@@ -562,9 +567,9 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
         // **** BG value ****
         if (lastBG != null) {
             val color = when {
-                lastBG.valueToUnits(units) < lowLine  -> resourceHelper.gc(R.color.low)
-                lastBG.valueToUnits(units) > highLine -> resourceHelper.gc(R.color.high)
-                else                                  -> resourceHelper.gc(R.color.inrange)
+                lastBG.valueToUnits(units) < lowLine  -> resourceHelper.getAttributeColor(context, R.attr.bgLow)
+                lastBG.valueToUnits(units) > highLine -> resourceHelper.getAttributeColor(context, R.attr.bgHigh)
+                else                                  -> resourceHelper.getAttributeColor(context, R.attr.bgInRange)
             }
 
             overview_bg?.text = lastBG.valueToUnitsToString(units)
@@ -747,7 +752,9 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
 
         // Status lights
         overview_statuslights?.visibility = (sp.getBoolean(R.string.key_show_statuslights, true) || config.NSCLIENT).toVisibility()
-        statusLightHandler.updateStatusLights(careportal_canulaage, careportal_insulinage, careportal_reservoirlevel, careportal_sensorage, null, careportal_pbage, careportal_batterylevel)
+        statusLightHandler.updateStatusLights(careportal_canulaage, careportal_insulinage, careportal_reservoirlevel, careportal_sensorage, null, careportal_pbage, careportal_batterylevel , resourceHelper.getAttributeColor(context, R.attr.statuslight_normal),
+            resourceHelper.getAttributeColor(context, R.attr.statuslight_Warning),
+            resourceHelper.getAttributeColor(context, R.attr.statuslight_alarm))
 
         // cob
         var cobText: String = resourceHelper.gs(R.string.value_unavailable_short)

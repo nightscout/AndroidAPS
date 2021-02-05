@@ -18,7 +18,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:background="@color/dialog_title_background"
+              android:background="?attr/colorPrimary"
             android:orientation="horizontal"
             android:padding="5dp">
 
@@ -83,8 +83,8 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:width="120dp"
-                android:paddingLeft="10dp"
-                android:paddingRight="10dp"
+                android:paddingStart="10dp"
+                android:paddingEnd="10dp"
                 android:text=""
                 android:textAppearance="@style/TextAppearance.AppCompat.Small"
                 android:textStyle="bold" />
@@ -118,8 +118,8 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:width="120dp"
-                android:paddingLeft="10dp"
-                android:paddingRight="10dp"
+                android:paddingStart="10dp"
+                android:paddingEnd="10dp"
                 android:text="@string/careportal_newnstreatment_duration_label"
                 android:textAppearance="@style/TextAppearance.AppCompat.Small"
                 android:textStyle="bold" />
@@ -152,8 +152,8 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:width="120dp"
-                android:paddingLeft="10dp"
-                android:paddingRight="10dp"
+                android:paddingStart="10dp"
+                android:paddingEnd="10dp"
                 android:text="@string/careportal_newnstreatment_percentage_label"
                 android:textAppearance="@style/TextAppearance.AppCompat.Small"
                 android:textStyle="bold" />
@@ -186,8 +186,8 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:width="120dp"
-                android:paddingLeft="10dp"
-                android:paddingRight="10dp"
+                android:paddingStart="10dp"
+                android:paddingEnd="10dp"
                 android:text="@string/careportal_newnstreatment_timeshift_label"
                 android:textAppearance="@style/TextAppearance.AppCompat.Small"
                 android:textStyle="bold" />

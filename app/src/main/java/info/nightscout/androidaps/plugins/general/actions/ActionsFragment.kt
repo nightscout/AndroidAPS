@@ -100,7 +100,7 @@ class ActionsFragment : DaggerFragment() {
                     OKDialog.showConfirmation(activity, resourceHelper.gs(R.string.extended_bolus), resourceHelper.gs(R.string.ebstopsloop),
                         Runnable {
                             ExtendedBolusDialog().show(childFragmentManager, "Actions")
-                        }, null)
+                        }, null,sp)
                 })
             }
         }
@@ -260,10 +260,14 @@ class ActionsFragment : DaggerFragment() {
         actions_tddstats?.visibility = pump.pumpDescription.supportsTDDs.toVisibility()
 
         if (!config.NSCLIENT) {
-            statusLightHandler.updateStatusLights(careportal_canulaage, careportal_insulinage, careportal_reservoirlevel, careportal_sensorage, careportal_sensorlevel, careportal_pbage, careportal_batterylevel)
+            statusLightHandler.updateStatusLights(careportal_canulaage, careportal_insulinage, careportal_reservoirlevel, careportal_sensorage, careportal_sensorlevel, careportal_pbage, careportal_batterylevel , resourceHelper.getAttributeColor(context, R.attr.statuslight_normal),
+                resourceHelper.getAttributeColor(context, R.attr.statuslight_Warning),
+                resourceHelper.getAttributeColor(context, R.attr.statuslight_alarm))
             careportal_senslevellabel?.text = if (activeBgSource.sensorBatteryLevel == -1) "" else resourceHelper.gs(R.string.careportal_level_label)
         } else {
-            statusLightHandler.updateStatusLights(careportal_canulaage, careportal_insulinage, null, careportal_sensorage, null, careportal_pbage, null)
+            statusLightHandler.updateStatusLights(careportal_canulaage, careportal_insulinage, null, careportal_sensorage, null, careportal_pbage, null, resourceHelper.getAttributeColor(context, R.attr.statuslight_normal),
+            resourceHelper.getAttributeColor(context, R.attr.statuslight_Warning),
+            resourceHelper.getAttributeColor(context, R.attr.statuslight_alarm))
             careportal_senslevellabel?.text = ""
             careportal_inslevellabel?.text = ""
             careportal_pblevellabel?.text = ""

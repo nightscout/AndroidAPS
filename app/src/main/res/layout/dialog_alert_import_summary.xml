@@ -33,7 +33,6 @@
                 android:layout_marginEnd="10dp"
                 android:layout_marginBottom="3dp"
                 android:text="@string/check_preferences_details_btn"
-                android:textColor="@color/colorTreatmentButton"
                 android:visibility="gone" />
 
         </LinearLayout>

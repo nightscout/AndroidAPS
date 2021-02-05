@@ -34,8 +34,7 @@
             android:paddingTop="6dp"
             android:paddingBottom="6dp"
             android:text="TempTarget"
-            android:textAppearance="?android:attr/textAppearanceSmall"
-            android:textColor="@color/mdtp_white" />
+            android:textAppearance="?android:attr/textAppearanceSmall" />
 
     </LinearLayout>
 

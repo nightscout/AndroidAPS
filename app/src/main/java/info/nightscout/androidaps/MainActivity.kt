@@ -1,8 +1,10 @@
 package info.nightscout.androidaps
 
+import android.app.TaskStackBuilder
 import android.content.Context
 import android.content.Intent
 import android.graphics.Rect
+import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.os.PersistableBundle
 import android.text.SpannableString
@@ -20,13 +22,16 @@ import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AlertDialog
+import androidx.appcompat.app.AppCompatDelegate
 import androidx.appcompat.widget.Toolbar
+import androidx.core.content.ContextCompat
 import androidx.viewpager2.widget.ViewPager2
 import com.google.android.material.tabs.TabLayoutMediator
 import com.google.firebase.crashlytics.FirebaseCrashlytics
 import com.joanzapata.iconify.Iconify
 import com.joanzapata.iconify.fonts.FontAwesomeModule
 import dev.doubledot.doki.ui.DokiActivity
+import info.nightscout.androidaps.plugins.general.themeselector.ScrollingActivity
 import info.nightscout.androidaps.activities.NoSplashAppCompatActivity
 import info.nightscout.androidaps.activities.PreferencesActivity
 import info.nightscout.androidaps.activities.ProfileHelperActivity
@@ -48,6 +53,8 @@ import info.nightscout.androidaps.plugins.constraints.signatureVerifier.Signatur
 import info.nightscout.androidaps.plugins.constraints.versionChecker.VersionCheckerUtils
 import info.nightscout.androidaps.plugins.general.nsclient.data.NSSettingsStatus
 import info.nightscout.androidaps.plugins.general.smsCommunicator.SmsCommunicatorPlugin
+import info.nightscout.androidaps.plugins.general.themeselector.util.ThemeUtil
+import info.nightscout.androidaps.plugins.general.themeselector.util.ThemeUtil.THEME_DARKSIDE
 import info.nightscout.androidaps.setupwizard.SetupWizardActivity
 import info.nightscout.androidaps.utils.AndroidPermission
 import info.nightscout.androidaps.utils.FabricPrivacy
@@ -66,7 +73,7 @@ import java.util.*
 import javax.inject.Inject
 import kotlin.system.exitProcess
 
-class MainActivity : NoSplashAppCompatActivity() {
+open class MainActivity : NoSplashAppCompatActivity() {
 
     private val disposable = CompositeDisposable()
 
@@ -93,8 +100,60 @@ class MainActivity : NoSplashAppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
 
+    // change to selected theme in theme manager
+    open fun changeTheme(newTheme: Int) {
+        setNewTheme(newTheme)
+        refreshActivities()
+    }
+
+    // change to a new theme selected in theme manager
+    open fun setNewTheme(newTheme: Int) {
+        sp.putInt("theme", newTheme)
+        if ( sp.getBoolean("daynight", true)) {
+            if(AppCompatDelegate.getDefaultNightMode() == AppCompatDelegate.MODE_NIGHT_NO ) {
+                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
+                delegate.localNightMode = AppCompatDelegate.MODE_NIGHT_YES
+                val cd = ColorDrawable(sp.getInt("darkBackgroundColor", info.nightscout.androidaps.core.R.color.background_dark))
+                if ( !sp.getBoolean("backgroundcolor", true)) window.setBackgroundDrawable(cd)
+            }
+        } else {
+            if(AppCompatDelegate.getDefaultNightMode() == AppCompatDelegate.MODE_NIGHT_YES ) {
+                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
+                delegate.localNightMode = AppCompatDelegate.MODE_NIGHT_NO
+                val cd = ColorDrawable(sp.getInt("lightBackgroundColor", info.nightscout.androidaps.core.R.color.background_light))
+                if ( !sp.getBoolean("backgroundcolor", true)) window.setBackgroundDrawable(cd)
+            }
+        }
+
+        delegate.applyDayNight()
+        setTheme(newTheme)
+        ThemeUtil.setActualTheme(newTheme)
+    }
+
+    // restart activities if something like theme change happens
+    open fun refreshActivities() {
+        TaskStackBuilder.create(this)
+            .addNextIntent(Intent(this, MainActivity::class.java))
+            .addNextIntent(this.intent)
+            .startActivities()
+        recreate()
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        // sets the main theme and color
+        if ( sp.getBoolean("daynight", true)) {
+            val cd = ColorDrawable(sp.getInt("darkBackgroundColor", ContextCompat.getColor(this, info.nightscout.androidaps.core.R.color.background_dark)))
+            window.setBackgroundDrawable(cd)
+            delegate.localNightMode = AppCompatDelegate.MODE_NIGHT_YES
+        } else {
+            val cd = ColorDrawable(sp.getInt("lightBackgroundColor", ContextCompat.getColor(this, info.nightscout.androidaps.core.R.color.background_light)))
+            window.setBackgroundDrawable(cd)
+            delegate.localNightMode = AppCompatDelegate.MODE_NIGHT_NO
+        }
+        delegate.applyDayNight()
+        setTheme(ThemeUtil.getThemeId(sp.getInt("theme", THEME_DARKSIDE)))
+        ThemeUtil.setActualTheme(ThemeUtil.getThemeId(sp.getInt("theme", THEME_DARKSIDE)))
         Iconify.with(FontAwesomeModule())
         LocaleHelper.update(applicationContext)
         binding = ActivityMainBinding.inflate(layoutInflater)
@@ -285,6 +344,11 @@ class MainActivity : NoSplashAppCompatActivity() {
                 protectionCheck.queryProtection(this, ProtectionCheck.Protection.PREFERENCES, {
                     startActivity(Intent(this, SetupWizardActivity::class.java))
                 })
+                return true
+            }
+
+            R.id.nav_themeselector -> {
+                startActivity(Intent(this, ScrollingActivity::class.java))
                 return true
             }
 

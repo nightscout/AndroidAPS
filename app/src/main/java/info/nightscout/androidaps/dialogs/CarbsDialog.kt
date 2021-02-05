@@ -255,7 +255,7 @@ class CarbsDialog : DialogFragmentWithDate() {
                             nsUpload.uploadEvent(CareportalEvent.NOTE, DateUtil.now() - 2000, resourceHelper.gs(R.string.generated_ecarbs_note, carbsAfterConstraints, duration, timeOffset))
                         }
                     }
-                }, null)
+                }, null, sp)
             }
         } else
             activity?.let { activity ->

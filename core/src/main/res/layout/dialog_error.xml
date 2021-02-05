@@ -10,7 +10,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:background="@color/dialog_title_background"
+          android:background="?attr/colorPrimary"
         android:orientation="horizontal"
         android:padding="5dp">
 
@@ -46,8 +46,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
-        android:paddingLeft="10dp"
-        android:paddingRight="10dp"
+        android:paddingStart="10dp"
+        android:paddingEnd="10dp"
         android:textAppearance="@style/TextAppearance.AppCompat.Small" />
 
     <Button
