@@ -7,7 +7,7 @@
     <string name="treatmentssafety_title">בטיחות טיפולים</string>
     <string name="treatmentssafety_maxbolus_title">בולוס מקסימלי מותר [U]</string>
     <string name="treatmentssafety_maxcarbs_title">מקסימום פחמימות מותר [g]</string>
-    <string name="nav_preferences_plugin">%1$s העדפות</string>
+    <string name="nav_preferences_plugin">העדפות %1$s</string>
     <string name="nav_preferences">העדפות</string>
     <string name="nav_refreshtreatments">רענן טיפול מ-Nightscout</string>
     <string name="nav_resetdb">איפוס מסדי נתונים</string>
