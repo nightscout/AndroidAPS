@@ -64,7 +64,7 @@
         <activity android:name=".MainActivity"
             android:launchMode="standard">
         </activity>
-        <activity android:name=".plugins.general.themeselector.ScrollingActivity" />
+        <activity android:name=".plugins.general.themeselector.ThemeManagerActivity" />
         <activity android:name=".activities.PreferencesActivity"
             android:theme="@style/AppTheme" />
         <activity android:name=".plugins.general.overview.activities.QuickWizardListActivity">

@@ -7,7 +7,7 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import info.nightscout.androidaps.R
-import info.nightscout.androidaps.plugins.general.themeselector.ScrollingActivity
+import info.nightscout.androidaps.plugins.general.themeselector.ThemeManagerActivity
 import info.nightscout.androidaps.plugins.general.themeselector.adapter.ThemeAdapter.MyViewHolder
 import info.nightscout.androidaps.plugins.general.themeselector.model.Theme
 import info.nightscout.androidaps.plugins.general.themeselector.util.ThemeUtil.getThemeName
@@ -23,8 +23,8 @@ class ThemeAdapter(private val sp: SP, private val themeList: List<Theme>, priva
         var textView: TextView
         override fun onClick(view: View) {
             mListener.onClick(view, adapterPosition)
-            ScrollingActivity.selectedTheme = adapterPosition
-            val mTheme = ScrollingActivity.mThemeList[adapterPosition].id
+            ThemeManagerActivity.selectedTheme = adapterPosition
+            val mTheme = ThemeManagerActivity.mThemeList[adapterPosition].id
             Log.d("TAG", "theme id: $mTheme")
             themeView.isActivated = true
             notifyDataSetChanged()
@@ -47,7 +47,7 @@ class ThemeAdapter(private val sp: SP, private val themeList: List<Theme>, priva
         val theme = themeList[position]
         holder.textView.text = getThemeName(position, sp.getBoolean("daynight", true))
         holder.themeView.setTheme(theme, position)
-        holder.themeView.isActivated = ScrollingActivity.selectedTheme == position
+        holder.themeView.isActivated = ThemeManagerActivity.selectedTheme == position
     }
 
     override fun getItemCount(): Int {

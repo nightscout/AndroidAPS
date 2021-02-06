@@ -7,7 +7,7 @@
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
     android:background="?android:attr/windowBackground"
-    tools:context="info.nightscout.androidaps.plugins.general.themeselector.ScrollingActivity">
+    tools:context="info.nightscout.androidaps.plugins.general.themeselector.ThemeManagerActivity">
 
     <include layout="@layout/themeselector_text_fragment" />
 

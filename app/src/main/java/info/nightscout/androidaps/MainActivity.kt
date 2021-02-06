@@ -31,7 +31,7 @@ import com.google.firebase.crashlytics.FirebaseCrashlytics
 import com.joanzapata.iconify.Iconify
 import com.joanzapata.iconify.fonts.FontAwesomeModule
 import dev.doubledot.doki.ui.DokiActivity
-import info.nightscout.androidaps.plugins.general.themeselector.ScrollingActivity
+import info.nightscout.androidaps.plugins.general.themeselector.ThemeManagerActivity
 import info.nightscout.androidaps.activities.NoSplashAppCompatActivity
 import info.nightscout.androidaps.activities.PreferencesActivity
 import info.nightscout.androidaps.activities.ProfileHelperActivity
@@ -348,7 +348,7 @@ open class MainActivity : NoSplashAppCompatActivity() {
             }
 
             R.id.nav_themeselector -> {
-                startActivity(Intent(this, ScrollingActivity::class.java))
+                startActivity(Intent(this, ThemeManagerActivity::class.java))
                 return true
             }
 

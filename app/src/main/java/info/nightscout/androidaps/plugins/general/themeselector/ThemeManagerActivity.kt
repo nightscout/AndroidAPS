@@ -5,7 +5,6 @@ import android.graphics.Point
 import android.graphics.drawable.ColorDrawable
 import android.graphics.drawable.Drawable
 import android.os.Bundle
-import android.util.Log
 import android.util.TypedValue
 import android.view.View
 import android.widget.CompoundButton
@@ -30,11 +29,13 @@ import info.nightscout.androidaps.plugins.general.themeselector.util.ThemeUtil.T
 import info.nightscout.androidaps.plugins.general.themeselector.util.ThemeUtil.getThemeId
 import info.nightscout.androidaps.plugins.general.themeselector.util.ThemeUtil.themeList
 import info.nightscout.androidaps.plugins.general.themeselector.view.ThemeView
+import info.nightscout.androidaps.utils.sharedPreferences.SP
 import kotlinx.android.synthetic.main.themeselector_bottom_sheet.*
 import kotlinx.android.synthetic.main.themeselector_scrolling_fragment.*
 import java.util.*
 
-class ScrollingActivity : MainActivity(), View.OnClickListener {
+class ThemeManagerActivity : MainActivity(), View.OnClickListener {
+
     companion object {
         var mThemeList: MutableList<Theme> = ArrayList()
         var selectedTheme = 0
@@ -52,7 +53,7 @@ class ScrollingActivity : MainActivity(), View.OnClickListener {
         setContentView(R.layout.themeselector_scrolling_fragment)
         initBottomSheet()
         prepareThemeData()
-        actualTheme = sp.getInt("theme", THEME_DARKSIDE)
+        actualTheme = spSplash.getInt("theme", THEME_DARKSIDE)
         val themeView = findViewById<ThemeView>(R.id.theme_selected)
         themeView.setTheme(mThemeList[actualTheme], actualTheme)
         setBackground()
@@ -72,16 +73,16 @@ class ScrollingActivity : MainActivity(), View.OnClickListener {
         }
 
 
-        if ( sp.getBoolean("daynight", true)) {
-            val cd = ColorDrawable(sp.getInt("darkBackgroundColor", info.nightscout.androidaps.core.R.color.background_dark))
-            if ( !sp.getBoolean("backgroundcolor", true)) {
+        if ( spSplash.getBoolean("daynight", true)) {
+            val cd = ColorDrawable(spSplash.getInt("darkBackgroundColor", info.nightscout.androidaps.core.R.color.background_dark))
+            if ( !spSplash.getBoolean("backgroundcolor", true)) {
                 scrollingactivity.background =  cd
             } else {
                 scrollingactivity.background =  drawable
             }
         } else {
-            val cd = ColorDrawable(sp.getInt("lightBackgroundColor", info.nightscout.androidaps.core.R.color.background_light))
-            if ( !sp.getBoolean("backgroundcolor", true)) {
+            val cd = ColorDrawable(spSplash.getInt("lightBackgroundColor", info.nightscout.androidaps.core.R.color.background_light))
+            if ( !spSplash.getBoolean("backgroundcolor", true)) {
                 scrollingactivity.background =  cd
             } else {
                 scrollingactivity.background =  drawable
@@ -91,21 +92,21 @@ class ScrollingActivity : MainActivity(), View.OnClickListener {
 
 
     private fun initBottomSheet() {
-        val nightMode = sp.getBoolean("daynight", true)
+        val nightMode = spSplash.getBoolean("daynight", true)
         // init the bottom sheet behavior
         mBottomSheetBehavior = BottomSheetBehavior.from(bottom_sheet)
-        val backGround = sp.getBoolean("backgroundcolor", true)
+        val backGround = spSplash.getBoolean("backgroundcolor", true)
         val switchCompatBackground = findViewById<SwitchCompat>(R.id.switch_backgroundimage)
         switchCompatBackground.isChecked = backGround
         switchCompatBackground.setOnCheckedChangeListener { compoundButton: CompoundButton, b: Boolean ->
-            sp.putBoolean("backgroundcolor", b)
+            spSplash.putBoolean("backgroundcolor", b)
             val delayTime = 200
-            compoundButton.postDelayed(Runnable { changeTheme(sp.getInt("theme", THEME_DARKSIDE)) }, delayTime.toLong())
+            compoundButton.postDelayed(Runnable { changeTheme(spSplash.getInt("theme", THEME_DARKSIDE)) }, delayTime.toLong())
         }
         val switchCompat = findViewById<SwitchCompat>(R.id.switch_dark_mode)
         switchCompat.isChecked = nightMode
         switchCompat.setOnCheckedChangeListener { compoundButton: CompoundButton, b: Boolean ->
-            sp.putBoolean("daynight", b)
+            spSplash.putBoolean("daynight", b)
             var delayTime = 200
             if ((mBottomSheetBehavior as BottomSheetBehavior<*>).getState() == BottomSheetBehavior.STATE_EXPANDED) {
                 delayTime = 400
@@ -118,30 +119,30 @@ class ScrollingActivity : MainActivity(), View.OnClickListener {
                     } else {
                         delegate.localNightMode = AppCompatDelegate.MODE_NIGHT_NO
                     }
-                    changeTheme(sp.getInt("theme", THEME_DARKSIDE))
+                    changeTheme(spSplash.getInt("theme", THEME_DARKSIDE))
                 }
             }, delayTime.toLong())
         }
-        select_backgroundcolordark.setBackgroundColor(sp.getInt("darkBackgroundColor", ContextCompat.getColor(this, info.nightscout.androidaps.core.R.color.background_dark)))
-        select_backgroundcolorlight.setBackgroundColor(sp.getInt("lightBackgroundColor", ContextCompat.getColor(this, info.nightscout.androidaps.core.R.color.background_light)))
+        select_backgroundcolordark.setBackgroundColor(spSplash.getInt("darkBackgroundColor", ContextCompat.getColor(this, info.nightscout.androidaps.core.R.color.background_dark)))
+        select_backgroundcolorlight.setBackgroundColor(spSplash.getInt("lightBackgroundColor", ContextCompat.getColor(this, info.nightscout.androidaps.core.R.color.background_light)))
         select_backgroundcolordark.setOnClickListener(View.OnClickListener { selectColor("dark") })
         select_backgroundcolorlight.setOnClickListener(View.OnClickListener { selectColor("light") })
 
         setDefaultColorDark?.setOnClickListener(View.OnClickListener {
-            sp.putInt("darkBackgroundColor", ContextCompat.getColor(this, R.color.background_dark))
+            spSplash.putInt("darkBackgroundColor", ContextCompat.getColor(this, R.color.background_dark))
             select_backgroundcolordark!!.setBackgroundColor(getColor((R.color.background_dark)))
             val delayTime = 200
-            select_backgroundcolordark!!.postDelayed({ changeTheme(sp.getInt("theme", THEME_DARKSIDE)) }, delayTime.toLong())
+            select_backgroundcolordark!!.postDelayed({ changeTheme(spSplash.getInt("theme", THEME_DARKSIDE)) }, delayTime.toLong())
         })
 
         setDefaultColorLight?.setOnClickListener(View.OnClickListener {
-            sp.putInt("lightBackgroundColor", ContextCompat.getColor(this, R.color.background_light))
+            spSplash.putInt("lightBackgroundColor", ContextCompat.getColor(this, R.color.background_light))
             select_backgroundcolorlight!!.setBackgroundColor(getColor((R.color.background_light)))
             val delayTime = 200
-            select_backgroundcolorlight!!.postDelayed({ changeTheme(sp.getInt("theme", THEME_DARKSIDE)) }, delayTime.toLong())
+            select_backgroundcolorlight!!.postDelayed({ changeTheme(spSplash.getInt("theme", THEME_DARKSIDE)) }, delayTime.toLong())
         })
 
-        mAdapter = ThemeAdapter(sp, mThemeList, object : RecyclerViewClickListener {
+        mAdapter = ThemeAdapter(spSplash, mThemeList, object : RecyclerViewClickListener {
             override fun onClick(view: View?, position: Int) {
                 (mBottomSheetBehavior as BottomSheetBehavior<*>).setState(BottomSheetBehavior.STATE_EXPANDED)
                 view!!.postDelayed({
@@ -180,15 +181,15 @@ class ScrollingActivity : MainActivity(), View.OnClickListener {
             .setPositiveButton(getString(R.string.confirm),
                 ColorEnvelopeListener { envelope, _ -> //setLayoutColor(envelope);
                     if (lightOrDark === "light") {
-                        sp.putInt("lightBackgroundColor", envelope.color)
+                        spSplash.putInt("lightBackgroundColor", envelope.color)
                         select_backgroundcolorlight!!.setBackgroundColor(envelope.color)
                         val delayTime = 200
-                        select_backgroundcolorlight!!.postDelayed({ changeTheme(sp.getInt("theme", THEME_DARKSIDE)) }, delayTime.toLong())
+                        select_backgroundcolorlight!!.postDelayed({ changeTheme(spSplash.getInt("theme", THEME_DARKSIDE)) }, delayTime.toLong())
                     } else if (lightOrDark === "dark") {
-                        sp.putInt("darkBackgroundColor", envelope.color)
+                        spSplash.putInt("darkBackgroundColor", envelope.color)
                         select_backgroundcolordark!!.setBackgroundColor(envelope.color)
                         val delayTime = 200
-                        select_backgroundcolordark!!.postDelayed({ changeTheme(sp.getInt("theme", THEME_DARKSIDE)) }, delayTime.toLong())
+                        select_backgroundcolordark!!.postDelayed({ changeTheme(spSplash.getInt("theme", THEME_DARKSIDE)) }, delayTime.toLong())
                     }
                 })
             .setNegativeButton(getString(R.string.cancel)
@@ -204,9 +205,9 @@ class ScrollingActivity : MainActivity(), View.OnClickListener {
 
         val manager = ColorPickerPreferenceManager.getInstance(this)
         if (lightOrDark === "light") {
-            manager.setColor("AAPS-ColorPicker", sp.getInt("lightBackgroundColor", ContextCompat.getColor(this, info.nightscout.androidaps.core.R.color.background_light)))
+            manager.setColor("AAPS-ColorPicker", spSplash.getInt("lightBackgroundColor", ContextCompat.getColor(this, info.nightscout.androidaps.core.R.color.background_light)))
         } else if (lightOrDark === "dark") {
-            manager.setColor("AAPS-ColorPicker", sp.getInt("darkBackgroundColor", ContextCompat.getColor(this, info.nightscout.androidaps.core.R.color.background_dark)))
+            manager.setColor("AAPS-ColorPicker", spSplash.getInt("darkBackgroundColor", ContextCompat.getColor(this, info.nightscout.androidaps.core.R.color.background_dark)))
         }
         var point = Point(0,0)
         manager.getSelectorPosition("AAPS-ColorPicker",point)
