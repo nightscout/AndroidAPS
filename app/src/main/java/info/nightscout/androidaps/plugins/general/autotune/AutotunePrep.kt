@@ -2,7 +2,8 @@ package info.nightscout.androidaps.plugins.general.autotune
 
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.R
-import info.nightscout.androidaps.db.BgReading
+import info.nightscout.androidaps.database.AppRepository
+import info.nightscout.androidaps.database.entities.GlucoseValue
 import info.nightscout.androidaps.db.Treatment
 import info.nightscout.androidaps.interfaces.ProfileFunction
 import info.nightscout.androidaps.plugins.general.autotune.data.ATProfile
@@ -31,6 +32,7 @@ class AutotunePrep @Inject constructor(private val injector: HasAndroidInjector)
     @Inject lateinit var iobCobCalculatorPlugin: IobCobCalculatorPlugin
     @Inject lateinit var treatmentsPlugin: TreatmentsPlugin
     @Inject lateinit var dateUtil: DateUtil
+    @Inject lateinit var repository: AppRepository
 
     fun categorizeBGDatums(autotuneIob: AutotuneIob, tunedprofile: ATProfile, pumpprofile: ATProfile): PreppedGlucose? {
         //lib/meals is called before to get only meals data (in AAPS it's done in AutotuneIob)
@@ -39,13 +41,13 @@ class AutotunePrep @Inject constructor(private val injector: HasAndroidInjector)
 
         // Bloc between #21 and # 54 replaced by bloc below (just remove BG value below 39, Collections.sort probably not necessary because BG values already sorted...)
         val glucose = autotuneIob.glucose
-        val glucoseData: MutableList<BgReading> = ArrayList()
+        val glucoseData: MutableList<GlucoseValue> = ArrayList()
         for (i in glucose.indices) {
             if (glucose[i].value > 39) {
                 glucoseData.add(glucose[i])
             }
         }
-        glucoseData.sortWith(object: Comparator<BgReading>{ override fun compare(o1: BgReading, o2: BgReading): Int = (o2.date - o1.date).toInt() })
+        glucoseData.sortWith(object: Comparator<GlucoseValue>{ override fun compare(o1: GlucoseValue, o2: GlucoseValue): Int = (o2.timestamp - o1.timestamp).toInt() })
 
         // Bloc below replace bloc between #55 and #71
         // boluses and maxCarbs not used here ?,
@@ -75,8 +77,8 @@ class AutotunePrep @Inject constructor(private val injector: HasAndroidInjector)
         var k = 0 // index of first value used by bucket
         //for loop to validate and bucket the data
         for (i in 1 until glucoseData.size) {
-            val BGTime = glucoseData[i].date
-            val lastBGTime = glucoseData[k].date
+            val BGTime = glucoseData[i].timestamp
+            val lastBGTime = glucoseData[k].timestamp
             val elapsedMinutes = (BGTime - lastBGTime) / (60 * 1000)
             if (Math.abs(elapsedMinutes) >= 2) {
                 //j++; // move to next bucket

@@ -6,6 +6,8 @@ import info.nightscout.androidaps.Constants
 import info.nightscout.androidaps.MainApp
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.data.*
+import info.nightscout.androidaps.database.AppRepository
+import info.nightscout.androidaps.database.entities.GlucoseValue
 import info.nightscout.androidaps.db.*
 import info.nightscout.androidaps.historyBrowser.IobCobCalculatorPluginHistory
 import info.nightscout.androidaps.historyBrowser.TreatmentsPluginHistory
@@ -45,12 +47,14 @@ class AutotuneIob(
     @Inject lateinit var iobCobCalculatorPluginHistory: IobCobCalculatorPluginHistory
     @Inject lateinit var treatmentsPluginHistory: TreatmentsPluginHistory
     @Inject lateinit var nsUpload: NSUpload
+    @Inject lateinit var repository: AppRepository
 
     private val disposable = CompositeDisposable()
     private val nsTreatments = ArrayList<NsTreatment>()
     var treatments: MutableList<Treatment> = ArrayList()
     var meals = ArrayList<Treatment>()
-    var glucose: MutableList<BgReading> = ArrayList()
+    lateinit var glucose: List<GlucoseValue> // newest at index 0
+    //var glucose: MutableList<GlucoseValue> = ArrayList()
     private val tempBasals: Intervals<TemporaryBasal> = NonOverlappingIntervals()
     private val tempBasals2: Intervals<TemporaryBasal> = NonOverlappingIntervals()
     private val extendedBoluses: Intervals<ExtendedBolus> = NonOverlappingIntervals()
@@ -82,13 +86,13 @@ class AutotuneIob(
     }
 
     private fun initializeBgreadings(from: Long, to: Long) {
-        glucose.clear()
-        glucose = MainApp.getDbHelper().getBgreadingsDataFromTime(from, to, false)
+        //glucose.clear()
+        glucose = repository.compatGetBgReadingsDataFromTime(from, to, false).blockingGet();
     }
 
     //nsTreatment is used only for export data, meals is used in AutotunePrep
     private fun initializeTreatmentData(from: Long, to: Long) {
-        val oldestBgDate = if (glucose.size > 0) glucose[glucose.size - 1].date else from
+        val oldestBgDate = if (glucose.size > 0) glucose[glucose.size - 1].timestamp else from
         log.debug("AutotunePlugin Check BG date: BG Size: " + glucose.size + " OldestBG: " + dateUtil.dateAndTimeAndSecondsString(oldestBgDate) + " to: " + dateUtil.dateAndTimeAndSecondsString(to))
         val temp = treatmentsPluginHistory.service.getTreatmentDataFromTime(from, to, false)
         log.debug("AutotunePlugin Nb treatments after query: " + temp.size)
@@ -285,14 +289,14 @@ class AutotuneIob(
         try {
             for (bgreading in glucose) {
                 val bgjson = JSONObject()
-                bgjson.put("_id", bgreading._id)
+                bgjson.put("_id", bgreading.id)
                 bgjson.put("device", "AndroidAPS")
-                bgjson.put("date", bgreading.date)
-                bgjson.put("dateString", DateUtil.toISOString(bgreading.date))
+                bgjson.put("date", bgreading.timestamp)
+                bgjson.put("dateString", DateUtil.toISOString(bgreading.timestamp))
                 bgjson.put("sgv", bgreading.value)
-                bgjson.put("direction", bgreading.direction)
+                bgjson.put("direction", bgreading.trendArrow)
                 bgjson.put("type", "sgv")
-                bgjson.put("systime", DateUtil.toISOString(bgreading.date))
+                bgjson.put("systime", DateUtil.toISOString(bgreading.timestamp))
                 bgjson.put("utcOffset", utcOffset)
                 glucoseJson.put(bgjson)
             }
