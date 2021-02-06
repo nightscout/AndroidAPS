@@ -76,7 +76,8 @@
         <!-- colors for splash background    -->
         <item name="splashBackground" >@color/splashBackground</item>
         <!-- colors for information background  -->
-        <item name="informationBackground" >@color/ColorInformationBackground</item>
+        <item name="informationBackground" >?attr/colorPrimary</item>
+        <item name="informationText" >?attr/colorOnPrimary</item>
     </style>
 
     <!-- The launcher theme. It sets the main window background to the launch_screen drawable -->

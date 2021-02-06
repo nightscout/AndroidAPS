@@ -154,6 +154,8 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
         nsclient_layout?.visibility = config.NSCLIENT.toVisibility()
 
         overview_pumpstatus?.setBackgroundColor(resourceHelper.getAttributeColor(context, R.attr.informationBackground))
+        overview_pumpstatus?.setTextColor(resourceHelper.getAttributeColor(context, R.attr.informationText))
+
 
         overview_notifications?.setHasFixedSize(false)
         overview_notifications?.layoutManager = LinearLayoutManager(view.context)

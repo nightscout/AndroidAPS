@@ -85,7 +85,8 @@
         <!-- colors for splash background    -->
         <item name="splashBackground" >@color/splashBackground</item>
         <!-- colors for information background  -->
-        <item name="informationBackground" >@color/ColorInformationBackground</item>
+        <item name="informationBackground" >?attr/colorPrimary</item>
+        <item name="informationText" >?attr/colorOnPrimary</item>
     </style>
 
     <style name="Theme.MaterialComponents.DayNight.DarkActionBar" parent="Theme.MaterialComponents.DayNight.Bridge"/>

@@ -78,7 +78,8 @@ class MedtronicFragment : DaggerFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        medtronic_pumpstatus.setBackgroundColor(resourceHelper.gc(R.color.ColorInformationBackground))
+        medtronic_pumpstatus.setBackgroundColor(resourceHelper.getAttributeColor(context, R.attr.informationBackground))
+        medtronic_pumpstatus.setTextColor(resourceHelper.getAttributeColor(context, R.attr.informationText))
 
         medtronic_rl_status.text = resourceHelper.gs(RileyLinkServiceState.NotStarted.resourceId)
 

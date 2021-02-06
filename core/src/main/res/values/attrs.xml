@@ -58,6 +58,7 @@
 <attr name="splashBackground" format="reference|color" />
 <!-- colors for information background  -->
 <attr name="informationBackground" format="reference|color" />
+<attr name="informationText" format="reference|color" />
 <!-- For bluring effect -->
 <declare-styleable name="BlurringView">
     <attr name="radius" format="integer"/>

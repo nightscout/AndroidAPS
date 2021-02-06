@@ -83,7 +83,8 @@
         <!-- colors for splash background    -->
         <item name="splashBackground" >@color/splashBackground</item>
         <!-- colors for information background  -->
-        <item name="informationBackground" >@color/ColorInformationBackground</item>
+        <item name="informationBackground" >?attr/colorPrimary</item>
+        <item name="informationText" >?attr/colorOnPrimary</item>
     </style>
 
     <style name="Theme.MaterialComponents.DayNight.DarkActionBar" parent="Theme.MaterialComponents.DayNight.Bridge"/>
@@ -420,6 +421,8 @@
         <!-- Graph specific colors  -->
         <item name="graphHorizontalLabelText">@color/ios_blue_default</item>
         <item name="graphVerticalLabelText">@color/ios_blue_default</item>
+        <!-- colors for information background  -->
+        <item name="informationBackground">@color/ios_blue_default</item>
     </style>
 
     <style name="BottomAppbar" parent="Widget.MaterialComponents.BottomAppBar.Colored" >

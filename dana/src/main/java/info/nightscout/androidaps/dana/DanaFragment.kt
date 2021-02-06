@@ -75,7 +75,8 @@ class DanaFragment : DaggerFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        binding.danaPumpstatus.setBackgroundColor(resourceHelper.gc(R.color.ColorInformationBackground))
+        binding.danaPumpstatus.setBackgroundColor(resourceHelper.getAttributeColor(context, R.attr.informationBackground))
+        binding.danaPumpstatus.setTextColor(resourceHelper.getAttributeColor(context, R.attr.informationText))
 
         binding.history.setOnClickListener { startActivity(Intent(context, info.nightscout.androidaps.dana.activities.DanaHistoryActivity::class.java)) }
         binding.viewprofile.setOnClickListener {
