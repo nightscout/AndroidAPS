@@ -37,7 +37,7 @@
             android:layout_weight="5"
             android:paddingStart="4dp"
             android:paddingEnd="4dp"
-            android:text="Dark Mode"
+            android:text="@string/darkmode"
             />
         <View
             android:layout_width="1dp"
@@ -65,13 +65,13 @@
             android:layout_weight="3"
             android:paddingStart="6dp"
             android:paddingEnd="4dp"
-            android:text="Selected"/>
+            android:text="@string/color_selected"/>
         <info.nightscout.androidaps.plugins.general.themeselector.view.ThemeView
             android:id="@+id/theme_selected"
             android:layout_width="56dp"
             android:layout_height="56dp"
             android:layout_marginEnd="4dp"
-            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true"
             android:onClick="onClick"/>
 
     </LinearLayout>
@@ -96,7 +96,7 @@
                 android:layout_height="wrap_content"
                 android:paddingStart="10dp"
                 android:paddingEnd="4dp"
-                android:text="Background Color "/>
+                android:text="@string/background_color"/>
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -116,7 +116,7 @@
                     android:layout_weight="2"
                     android:paddingStart="6dp"
                     android:paddingEnd="4dp"
-                    android:text="Color dark"/>
+                    android:text="@string/color_dark"/>
 
                 <LinearLayout
                     android:layout_width="0dp"
@@ -144,7 +144,7 @@
                         android:layout_weight="4"
                         android:layout_marginEnd="4dp"
                         style="@style/Widget.MaterialComponents.Button.UnelevatedButton"
-                        android:text="Default" />
+                        android:text="@string/color_default" />
 
                 </LinearLayout>
 
@@ -161,7 +161,7 @@
                     android:layout_weight="2"
                     android:paddingStart="6dp"
                     android:paddingEnd="4dp"
-                    android:text="Color light"/>
+                    android:text="@string/color_light"/>
 
             <LinearLayout
                 android:layout_width="0dp"
@@ -189,7 +189,7 @@
                     android:layout_weight="4"
                     android:layout_marginEnd="4dp"
                     style="@style/Widget.MaterialComponents.Button.UnelevatedButton"
-                    android:text="Default" />
+                    android:text="@string/color_default" />
 
             </LinearLayout>
 
