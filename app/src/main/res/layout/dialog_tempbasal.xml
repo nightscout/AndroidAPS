@@ -48,7 +48,7 @@
             android:padding="5dp" />
 
         <LinearLayout
-            android:id="@+id/actions_tempbasal_percent_layout"
+            android:id="@+id/percent_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal">
@@ -64,7 +64,7 @@
                 android:textStyle="bold" />
 
             <info.nightscout.androidaps.utils.ui.NumberPicker
-                android:id="@+id/actions_tempbasal_basalpercentinput"
+                android:id="@+id/basalpercentinput"
                 android:layout_width="130dp"
                 android:layout_height="40dp" />
 
@@ -82,7 +82,7 @@
         </LinearLayout>
 
         <LinearLayout
-            android:id="@+id/actions_tempbasal_absolute_layout"
+            android:id="@+id/absolute_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal">
@@ -98,7 +98,7 @@
                 android:textStyle="bold" />
 
             <info.nightscout.androidaps.utils.ui.NumberPicker
-                android:id="@+id/actions_tempbasal_basalabsoluteinput"
+                android:id="@+id/basalabsoluteinput"
                 android:layout_width="130dp"
                 android:layout_height="40dp" />
 
@@ -131,7 +131,7 @@
                 android:textStyle="bold" />
 
             <info.nightscout.androidaps.utils.ui.MinutesNumberPicker
-                android:id="@+id/actions_tempbasal_duration"
+                android:id="@+id/duration"
                 android:layout_width="130dp"
                 android:layout_height="40dp" />
 
@@ -148,7 +148,9 @@
 
         </LinearLayout>
 
-        <include layout="@layout/okcancel" />
+        <include
+            android:id="@+id/okcancel"
+            layout="@layout/okcancel" />
 
     </LinearLayout>
 

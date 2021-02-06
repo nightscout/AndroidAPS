@@ -13,6 +13,7 @@ import info.nightscout.androidaps.Config
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.activities.ErrorHelperActivity
 import info.nightscout.androidaps.data.DetailedBolusInfo
+import info.nightscout.androidaps.databinding.DialogTreatmentBinding
 import info.nightscout.androidaps.db.CareportalEvent
 import info.nightscout.androidaps.db.Source
 import info.nightscout.androidaps.interfaces.ActivePluginProvider
@@ -22,20 +23,18 @@ import info.nightscout.androidaps.plugins.configBuilder.ConstraintChecker
 import info.nightscout.androidaps.queue.Callback
 import info.nightscout.androidaps.utils.DecimalFormatter
 import info.nightscout.androidaps.utils.HtmlHelper
-import info.nightscout.androidaps.utils.alertDialogs.OKDialog
 import info.nightscout.androidaps.utils.SafeParse
 import info.nightscout.androidaps.utils.ToastUtils
+import info.nightscout.androidaps.utils.alertDialogs.OKDialog
 import info.nightscout.androidaps.utils.extensions.formatColor
 import info.nightscout.androidaps.utils.resources.ResourceHelper
-import kotlinx.android.synthetic.main.dialog_insulin.*
-import kotlinx.android.synthetic.main.dialog_treatment.*
-import kotlinx.android.synthetic.main.okcancel.*
 import java.text.DecimalFormat
 import java.util.*
 import javax.inject.Inject
 import kotlin.math.abs
 
 class TreatmentDialog : DialogFragmentWithDate() {
+
     @Inject lateinit var constraintChecker: ConstraintChecker
     @Inject lateinit var resourceHelper: ResourceHelper
     @Inject lateinit var activePlugin: ActivePluginProvider
@@ -54,49 +53,62 @@ class TreatmentDialog : DialogFragmentWithDate() {
     private fun validateInputs() {
         val maxCarbs = constraintChecker.getMaxCarbsAllowed().value().toDouble()
         val maxInsulin = constraintChecker.getMaxBolusAllowed().value()
-        if (SafeParse.stringToInt(overview_treatment_carbs.text) > maxCarbs) {
-            overview_treatment_carbs.value = 0.0
+        if (SafeParse.stringToInt(binding.carbs.text) > maxCarbs) {
+            binding.carbs.value = 0.0
             ToastUtils.showToastInUiThread(context, resourceHelper.gs(R.string.carbsconstraintapplied))
         }
-        if (SafeParse.stringToDouble(overview_treatment_insulin.text) > maxInsulin) {
-            overview_treatment_insulin.value = 0.0
+        if (SafeParse.stringToDouble(binding.insulin.text) > maxInsulin) {
+            binding.insulin.value = 0.0
             ToastUtils.showToastInUiThread(context, resourceHelper.gs(R.string.bolusconstraintapplied))
         }
     }
 
+    private var _binding: DialogTreatmentBinding? = null
+
+    // This property is only valid between onCreateView and
+    // onDestroyView.
+    private val binding get() = _binding!!
+
     override fun onSaveInstanceState(savedInstanceState: Bundle) {
         super.onSaveInstanceState(savedInstanceState)
-        savedInstanceState.putDouble("overview_treatment_carbs", overview_treatment_carbs.value)
-        savedInstanceState.putDouble("overview_treatment_insulin", overview_treatment_insulin.value)
+        savedInstanceState.putDouble("carbs", binding.carbs.value)
+        savedInstanceState.putDouble("insulin", binding.insulin.value)
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
-                              savedInstanceState: Bundle?): View? {
+                              savedInstanceState: Bundle?): View {
         onCreateViewGeneral()
-        return inflater.inflate(R.layout.dialog_treatment, container, false)
+        _binding = DialogTreatmentBinding.inflate(inflater, container, false)
+        return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
         if (config.NSCLIENT) {
-            overview_treatment_record_only.isChecked = true
-            overview_treatment_record_only.isEnabled = false
+            binding.recordOnly.isChecked = true
+            binding.recordOnly.isEnabled = false
         }
         val maxCarbs = constraintChecker.getMaxCarbsAllowed().value().toDouble()
         val maxInsulin = constraintChecker.getMaxBolusAllowed().value()
         val pumpDescription = activePlugin.activePump.pumpDescription
-        overview_treatment_carbs.setParams(savedInstanceState?.getDouble("overview_treatment_carbs")
-            ?: 0.0, 0.0, maxCarbs, 1.0, DecimalFormat("0"), false, ok, textWatcher)
-        overview_treatment_insulin.setParams(savedInstanceState?.getDouble("overview_treatment_insulin")
-            ?: 0.0, 0.0, maxInsulin, pumpDescription.bolusStep, DecimalFormatter.pumpSupportedBolusFormat(activePlugin.activePump), false, ok, textWatcher)
+        binding.carbs.setParams(savedInstanceState?.getDouble("carbs")
+            ?: 0.0, 0.0, maxCarbs, 1.0, DecimalFormat("0"), false, binding.okcancel.ok, textWatcher)
+        binding.insulin.setParams(savedInstanceState?.getDouble("insulin")
+            ?: 0.0, 0.0, maxInsulin, pumpDescription.bolusStep, DecimalFormatter.pumpSupportedBolusFormat(activePlugin.activePump), false, binding.okcancel.ok, textWatcher)
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 
     override fun submit(): Boolean {
+        if (_binding == null) return false
         val pumpDescription = activePlugin.activePump.pumpDescription
-        val insulin = SafeParse.stringToDouble(overview_treatment_insulin?.text ?: return false)
-        val carbs = SafeParse.stringToInt(overview_treatment_carbs.text)
-        val recordOnlyChecked = overview_treatment_record_only.isChecked
+        val insulin = SafeParse.stringToDouble(binding.insulin.text ?: return false)
+        val carbs = SafeParse.stringToInt(binding.carbs.text)
+        val recordOnlyChecked = binding.recordOnly.isChecked
         val actions: LinkedList<String?> = LinkedList()
         val insulinAfterConstraints = constraintChecker.applyBolusConstraints(Constraint(insulin)).value()
         val carbsAfterConstraints = constraintChecker.applyCarbsConstraints(Constraint(carbs)).value()
@@ -115,7 +127,7 @@ class TreatmentDialog : DialogFragmentWithDate() {
         }
         if (insulinAfterConstraints > 0 || carbsAfterConstraints > 0) {
             activity?.let { activity ->
-                OKDialog.showConfirmation(activity, resourceHelper.gs(R.string.overview_treatment_label), HtmlHelper.fromHtml(Joiner.on("<br/>").join(actions)), Runnable {
+                OKDialog.showConfirmation(activity, resourceHelper.gs(R.string.overview_treatment_label), HtmlHelper.fromHtml(Joiner.on("<br/>").join(actions)), {
                     aapsLogger.debug("USER ENTRY: BOLUS insulin $insulin carbs: $carbs")
                     val detailedBolusInfo = DetailedBolusInfo()
                     if (insulinAfterConstraints == 0.0) detailedBolusInfo.eventType = CareportalEvent.CARBCORRECTION

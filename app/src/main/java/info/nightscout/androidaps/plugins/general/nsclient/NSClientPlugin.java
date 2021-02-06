@@ -44,6 +44,7 @@ import info.nightscout.androidaps.plugins.general.nsclient.services.NSClientServ
 import info.nightscout.androidaps.utils.FabricPrivacy;
 import info.nightscout.androidaps.utils.HtmlHelper;
 import info.nightscout.androidaps.utils.ToastUtils;
+import info.nightscout.androidaps.utils.buildHelper.BuildHelper;
 import info.nightscout.androidaps.utils.resources.ResourceHelper;
 import info.nightscout.androidaps.utils.sharedPreferences.SP;
 import io.reactivex.disposables.CompositeDisposable;
@@ -60,6 +61,7 @@ public class NSClientPlugin extends PluginBase {
     private final FabricPrivacy fabricPrivacy;
     private final SP sp;
     private final Config config;
+    private final BuildHelper buildHelper;
 
     public Handler handler;
 
@@ -85,7 +87,8 @@ public class NSClientPlugin extends PluginBase {
             FabricPrivacy fabricPrivacy,
             SP sp,
             NsClientReceiverDelegate nsClientReceiverDelegate,
-            Config config
+            Config config,
+            BuildHelper buildHelper
     ) {
         super(new PluginDescription()
                         .mainType(PluginType.GENERAL)
@@ -106,6 +109,7 @@ public class NSClientPlugin extends PluginBase {
         this.sp = sp;
         this.nsClientReceiverDelegate = nsClientReceiverDelegate;
         this.config = config;
+        this.buildHelper = buildHelper;
 
         if (config.getNSCLIENT()) {
             getPluginDescription().alwaysEnabled(true).visibleByDefault(true);
@@ -197,9 +201,11 @@ public class NSClientPlugin extends PluginBase {
             SwitchPreference key_ns_autobackfill = preferenceFragment.findPreference(resourceHelper.gs(R.string.key_ns_autobackfill));
             if (key_ns_autobackfill != null) key_ns_autobackfill.setVisible(false);
             SwitchPreference key_ns_create_announcements_from_errors = preferenceFragment.findPreference(resourceHelper.gs(R.string.key_ns_create_announcements_from_errors));
-            if (key_ns_create_announcements_from_errors != null) key_ns_create_announcements_from_errors.setVisible(false);
+            if (key_ns_create_announcements_from_errors != null)
+                key_ns_create_announcements_from_errors.setVisible(false);
             SwitchPreference key_ns_create_announcements_from_carbs_req = preferenceFragment.findPreference(resourceHelper.gs(R.string.key_ns_create_announcements_from_carbs_req));
-            if (key_ns_create_announcements_from_carbs_req != null) key_ns_create_announcements_from_carbs_req.setVisible(false);
+            if (key_ns_create_announcements_from_carbs_req != null)
+                key_ns_create_announcements_from_carbs_req.setVisible(false);
             SwitchPreference key_ns_upload_only = preferenceFragment.findPreference(resourceHelper.gs(R.string.key_ns_upload_only));
             if (key_ns_upload_only != null) {
                 key_ns_upload_only.setVisible(false);
@@ -207,6 +213,11 @@ public class NSClientPlugin extends PluginBase {
             }
             SwitchPreference key_ns_sync_use_absolute = preferenceFragment.findPreference(resourceHelper.gs(R.string.key_ns_sync_use_absolute));
             if (key_ns_sync_use_absolute != null) key_ns_sync_use_absolute.setVisible(false);
+        } else {
+            // APS or pumpcontrol mode
+            SwitchPreference key_ns_upload_only = preferenceFragment.findPreference(resourceHelper.gs(R.string.key_ns_upload_only));
+            if (key_ns_upload_only != null)
+                key_ns_upload_only.setVisible(buildHelper.isEngineeringMode());
         }
     }
 

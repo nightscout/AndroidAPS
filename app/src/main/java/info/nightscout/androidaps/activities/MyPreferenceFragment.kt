@@ -420,6 +420,6 @@ class MyPreferenceFragment : PreferenceFragmentCompat(), OnSharedPreferenceChang
 
     fun setFilter(filter: String) {
         this.filter = filter
-        updateFilterVisibility(filter, preferenceScreen)
+        preferenceManager?.preferenceScreen?.let { updateFilterVisibility(filter, it) }
     }
 }

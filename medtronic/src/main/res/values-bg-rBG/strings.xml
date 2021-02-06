@@ -81,4 +81,6 @@
     <string name="common_on">Вкл</string>
     <string name="common_off">Изкл</string>
     <string name="pump_time_updated">Актуализирано време на помпата</string>
+    <string name="set_neutral_temps_title">Прилагане на неутрални временни базали</string>
+    <string name="set_neutral_temps_summary">Ако е вкл, то ще анулира временен базал на всеки час. Това може да помогне за спиране на  звук/вибрация от някой помпи на всеки час.</string>
 </resources>

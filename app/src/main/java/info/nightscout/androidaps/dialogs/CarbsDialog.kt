@@ -11,6 +11,7 @@ import info.nightscout.androidaps.Constants
 import info.nightscout.androidaps.MainApp
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.data.Profile
+import info.nightscout.androidaps.databinding.DialogCarbsBinding
 import info.nightscout.androidaps.db.CareportalEvent
 import info.nightscout.androidaps.db.Source
 import info.nightscout.androidaps.db.TempTarget
@@ -29,15 +30,13 @@ import info.nightscout.androidaps.utils.ToastUtils
 import info.nightscout.androidaps.utils.alertDialogs.OKDialog
 import info.nightscout.androidaps.utils.extensions.formatColor
 import info.nightscout.androidaps.utils.resources.ResourceHelper
-import kotlinx.android.synthetic.main.dialog_carbs.*
-import kotlinx.android.synthetic.main.notes.*
-import kotlinx.android.synthetic.main.okcancel.*
 import java.text.DecimalFormat
 import java.util.*
 import javax.inject.Inject
 import kotlin.math.max
 
 class CarbsDialog : DialogFragmentWithDate() {
+
     @Inject lateinit var mainApp: MainApp
     @Inject lateinit var resourceHelper: ResourceHelper
     @Inject lateinit var constraintChecker: ConstraintChecker
@@ -49,6 +48,7 @@ class CarbsDialog : DialogFragmentWithDate() {
     @Inject lateinit var carbsGenerator: CarbsGenerator
 
     companion object {
+
         private const val FAV1_DEFAULT = 5
         private const val FAV2_DEFAULT = 10
         private const val FAV3_DEFAULT = 20
@@ -65,84 +65,96 @@ class CarbsDialog : DialogFragmentWithDate() {
 
     private fun validateInputs() {
         val maxCarbs = constraintChecker.getMaxCarbsAllowed().value().toDouble()
-        val time = overview_carbs_time.value.toInt()
+        val time = binding.time.value.toInt()
         if (time > 12 * 60 || time < -12 * 60) {
-            overview_carbs_time.value = 0.0
+            binding.time.value = 0.0
             ToastUtils.showToastInUiThread(mainApp, resourceHelper.gs(R.string.constraintapllied))
         }
-        if (overview_carbs_duration.value > 10) {
-            overview_carbs_duration.value = 0.0
+        if (binding.duration.value > 10) {
+            binding.duration.value = 0.0
             ToastUtils.showToastInUiThread(mainApp, resourceHelper.gs(R.string.constraintapllied))
         }
-        if (overview_carbs_carbs.value.toInt() > maxCarbs) {
-            overview_carbs_carbs.value = 0.0
+        if (binding.carbs.value.toInt() > maxCarbs) {
+            binding.carbs.value = 0.0
             ToastUtils.showToastInUiThread(mainApp, resourceHelper.gs(R.string.carbsconstraintapplied))
         }
     }
 
+    private var _binding: DialogCarbsBinding? = null
+
+    // This property is only valid between onCreateView and
+    // onDestroyView.
+    private val binding get() = _binding!!
+
     override fun onSaveInstanceState(savedInstanceState: Bundle) {
         super.onSaveInstanceState(savedInstanceState)
-        savedInstanceState.putDouble("overview_carbs_time", overview_carbs_time.value)
-        savedInstanceState.putDouble("overview_carbs_duration", overview_carbs_duration.value)
-        savedInstanceState.putDouble("overview_carbs_carbs", overview_carbs_carbs.value)
+        savedInstanceState.putDouble("time", binding.time.value)
+        savedInstanceState.putDouble("duration", binding.duration.value)
+        savedInstanceState.putDouble("carbs", binding.carbs.value)
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
-                              savedInstanceState: Bundle?): View? {
+                              savedInstanceState: Bundle?): View {
         onCreateViewGeneral()
-        return inflater.inflate(R.layout.dialog_carbs, container, false)
+        _binding = DialogCarbsBinding.inflate(inflater, container, false)
+        return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
         val maxCarbs = constraintChecker.getMaxCarbsAllowed().value().toDouble()
-        overview_carbs_time.setParams(savedInstanceState?.getDouble("overview_carbs_time")
-            ?: 0.0, -12 * 60.0, 12 * 60.0, 5.0, DecimalFormat("0"), false, ok, textWatcher)
+        binding.time.setParams(savedInstanceState?.getDouble("time")
+            ?: 0.0, -12 * 60.0, 12 * 60.0, 5.0, DecimalFormat("0"), false, binding.okcancel.ok, textWatcher)
 
-        overview_carbs_duration.setParams(savedInstanceState?.getDouble("overview_carbs_duration")
-            ?: 0.0, 0.0, 10.0, 1.0, DecimalFormat("0"), false, ok, textWatcher)
+        binding.duration.setParams(savedInstanceState?.getDouble("duration")
+            ?: 0.0, 0.0, 10.0, 1.0, DecimalFormat("0"), false, binding.okcancel.ok, textWatcher)
 
-        overview_carbs_carbs.setParams(savedInstanceState?.getDouble("overview_carbs_carbs")
-            ?: 0.0, 0.0, maxCarbs, 1.0, DecimalFormat("0"), false, ok, textWatcher)
+        binding.carbs.setParams(savedInstanceState?.getDouble("carbs")
+            ?: 0.0, 0.0, maxCarbs, 1.0, DecimalFormat("0"), false, binding.okcancel.ok, textWatcher)
 
-        overview_carbs_plus1.text = toSignedString(sp.getInt(R.string.key_carbs_button_increment_1, FAV1_DEFAULT))
-        overview_carbs_plus1.setOnClickListener {
-            overview_carbs_carbs.value = max(0.0, overview_carbs_carbs.value
+        binding.plus1.text = toSignedString(sp.getInt(R.string.key_carbs_button_increment_1, FAV1_DEFAULT))
+        binding.plus1.setOnClickListener {
+            binding.carbs.value = max(0.0, binding.carbs.value
                 + sp.getInt(R.string.key_carbs_button_increment_1, FAV1_DEFAULT))
             validateInputs()
         }
 
-        overview_carbs_plus2.text = toSignedString(sp.getInt(R.string.key_carbs_button_increment_2, FAV2_DEFAULT))
-        overview_carbs_plus2.setOnClickListener {
-            overview_carbs_carbs.value = max(0.0, overview_carbs_carbs.value
+        binding.plus2.text = toSignedString(sp.getInt(R.string.key_carbs_button_increment_2, FAV2_DEFAULT))
+        binding.plus2.setOnClickListener {
+            binding.carbs.value = max(0.0, binding.carbs.value
                 + sp.getInt(R.string.key_carbs_button_increment_2, FAV2_DEFAULT))
             validateInputs()
         }
 
-        overview_carbs_plus3.text = toSignedString(sp.getInt(R.string.key_carbs_button_increment_3, FAV3_DEFAULT))
-        overview_carbs_plus3.setOnClickListener {
-            overview_carbs_carbs.value = max(0.0, overview_carbs_carbs.value
+        binding.plus3.text = toSignedString(sp.getInt(R.string.key_carbs_button_increment_3, FAV3_DEFAULT))
+        binding.plus3.setOnClickListener {
+            binding.carbs.value = max(0.0, binding.carbs.value
                 + sp.getInt(R.string.key_carbs_button_increment_3, FAV3_DEFAULT))
             validateInputs()
         }
 
         iobCobCalculatorPlugin.actualBg()?.let { bgReading ->
             if (bgReading.value < 72)
-                overview_carbs_hypo_tt.isChecked = true
+                binding.hypoTt.isChecked = true
         }
-        overview_carbs_hypo_tt.setOnClickListener {
-            overview_carbs_activity_tt.isChecked = false
-            overview_carbs_eating_soon_tt.isChecked = false
+        binding.hypoTt.setOnClickListener {
+            binding.activityTt.isChecked = false
+            binding.eatingSoonTt.isChecked = false
         }
-        overview_carbs_activity_tt.setOnClickListener {
-            overview_carbs_hypo_tt.isChecked = false
-            overview_carbs_eating_soon_tt.isChecked = false
+        binding.activityTt.setOnClickListener {
+            binding.hypoTt.isChecked = false
+            binding.eatingSoonTt.isChecked = false
         }
-        overview_carbs_eating_soon_tt.setOnClickListener {
-            overview_carbs_hypo_tt.isChecked = false
-            overview_carbs_activity_tt.isChecked = false
+        binding.eatingSoonTt.setOnClickListener {
+            binding.hypoTt.isChecked = false
+            binding.activityTt.isChecked = false
         }
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 
     private fun toSignedString(value: Int): String {
@@ -150,7 +162,8 @@ class CarbsDialog : DialogFragmentWithDate() {
     }
 
     override fun submit(): Boolean {
-        val carbs = overview_carbs_carbs?.value?.toInt() ?: return false
+        if (_binding == null) return false
+        val carbs = binding.carbs.value?.toInt() ?: return false
         val carbsAfterConstraints = constraintChecker.applyCarbsConstraints(Constraint(carbs)).value()
         val units = profileFunction.getUnits()
         val activityTTDuration = defaultValueHelper.determineActivityTTDuration()
@@ -162,22 +175,22 @@ class CarbsDialog : DialogFragmentWithDate() {
         val actions: LinkedList<String?> = LinkedList()
         val unitLabel = if (units == Constants.MMOL) resourceHelper.gs(R.string.mmol) else resourceHelper.gs(R.string.mgdl)
 
-        val activitySelected = overview_carbs_activity_tt.isChecked
+        val activitySelected = binding.activityTt.isChecked
         if (activitySelected)
             actions.add(resourceHelper.gs(R.string.temptargetshort) + ": " + (DecimalFormatter.to1Decimal(activityTT) + " " + unitLabel + " (" + resourceHelper.gs(R.string.format_mins, activityTTDuration) + ")").formatColor(resourceHelper, R.color.tempTargetConfirmation))
-        val eatingSoonSelected = overview_carbs_eating_soon_tt.isChecked
+        val eatingSoonSelected = binding.eatingSoonTt.isChecked
         if (eatingSoonSelected)
             actions.add(resourceHelper.gs(R.string.temptargetshort) + ": " + (DecimalFormatter.to1Decimal(eatingSoonTT) + " " + unitLabel + " (" + resourceHelper.gs(R.string.format_mins, eatingSoonTTDuration) + ")").formatColor(resourceHelper, R.color.tempTargetConfirmation))
-        val hypoSelected = overview_carbs_hypo_tt.isChecked
+        val hypoSelected = binding.hypoTt.isChecked
         if (hypoSelected)
             actions.add(resourceHelper.gs(R.string.temptargetshort) + ": " + (DecimalFormatter.to1Decimal(hypoTT) + " " + unitLabel + " (" + resourceHelper.gs(R.string.format_mins, hypoTTDuration) + ")").formatColor(resourceHelper, R.color.tempTargetConfirmation))
 
-        val timeOffset = overview_carbs_time.value.toInt()
+        val timeOffset = binding.time.value.toInt()
         eventTime -= eventTime % 1000
         val time = eventTime + timeOffset * 1000 * 60
         if (timeOffset != 0)
             actions.add(resourceHelper.gs(R.string.time) + ": " + dateUtil.dateAndTimeString(time))
-        val duration = overview_carbs_duration.value.toInt()
+        val duration = binding.duration.value.toInt()
         if (duration > 0)
             actions.add(resourceHelper.gs(R.string.duration) + ": " + duration + resourceHelper.gs(R.string.shorthour))
         if (carbsAfterConstraints > 0) {
@@ -185,7 +198,7 @@ class CarbsDialog : DialogFragmentWithDate() {
             if (carbsAfterConstraints != carbs)
                 actions.add("<font color='" + resourceHelper.gc(R.color.warning) + "'>" + resourceHelper.gs(R.string.carbsconstraintapplied) + "</font>")
         }
-        val notes = notes.text.toString()
+        val notes = binding.notesLayout.notes.text.toString()
         if (notes.isNotEmpty())
             actions.add(resourceHelper.gs(R.string.careportal_newnstreatment_notes_label) + ": " + notes)
 
@@ -194,7 +207,7 @@ class CarbsDialog : DialogFragmentWithDate() {
 
         if (carbsAfterConstraints > 0 || activitySelected || eatingSoonSelected || hypoSelected) {
             activity?.let { activity ->
-                OKDialog.showConfirmation(activity, resourceHelper.gs(R.string.carbs), HtmlHelper.fromHtml(Joiner.on("<br/>").join(actions)), Runnable {
+                OKDialog.showConfirmation(activity, resourceHelper.gs(R.string.carbs), HtmlHelper.fromHtml(Joiner.on("<br/>").join(actions)), {
                     when {
                         activitySelected   -> {
                             aapsLogger.debug("USER ENTRY: TEMPTARGET ACTIVITY $activityTT duration: $activityTTDuration")

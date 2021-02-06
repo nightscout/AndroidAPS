@@ -85,6 +85,7 @@ class OpenHumansUploader @Inject constructor(
     }
 
     private val openHumansAPI = OpenHumansAPI(OPEN_HUMANS_URL, CLIENT_ID, CLIENT_SECRET, REDIRECT_URL)
+    @Suppress("PrivatePropertyName")
     private val FILE_NAME_DATE_FORMAT = SimpleDateFormat("yyyyMMdd'T'HHmmss", Locale.US).apply { timeZone = TimeZone.getTimeZone("UTC") }
 
     private var isSetup
@@ -126,12 +127,12 @@ class OpenHumansUploader @Inject constructor(
     private val appId: UUID
         get() {
             val id = sp.getStringOrNull("openhumans_appid", null)
-            if (id == null) {
+            return if (id == null) {
                 val generated = UUID.randomUUID()
                 sp.putString("openhumans_appid", generated.toString())
-                return generated
+                generated
             } else {
-                return UUID.fromString(id)
+                UUID.fromString(id)
             }
         }
 
@@ -140,7 +141,7 @@ class OpenHumansUploader @Inject constructor(
     private val wakeLock = (context.getSystemService(Context.POWER_SERVICE) as PowerManager)
         .newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, "AndroidAPS::OpenHumans")
 
-    val preferenceChangeDisposable = CompositeDisposable()
+    private val preferenceChangeDisposable = CompositeDisposable()
 
     override fun onStart() {
         super.onStart()
@@ -453,7 +454,8 @@ class OpenHumansUploader @Inject constructor(
                 aapsLogger.error(LTag.OHUPLOADER, "Segmental upload exceptional", it)
             }
 
-    fun uploadData(maxEntries: Long?): Completable = gatherData(maxEntries)
+    @Suppress("SameParameterValue")
+    private fun uploadData(maxEntries: Long?): Completable = gatherData(maxEntries)
         .flatMap { data -> refreshAccessTokensIfNeeded().map { accessToken -> accessToken to data } }
         .flatMap { uploadFile(it.first, it.second).andThen(Single.just(it.second)) }
         .flatMapCompletable {
@@ -616,14 +618,12 @@ class OpenHumansUploader @Inject constructor(
     }
 
     private fun setupNotificationChannel() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            val notificationManagerCompat = NotificationManagerCompat.from(context)
-            notificationManagerCompat.createNotificationChannel(NotificationChannel(
-                NOTIFICATION_CHANNEL,
-                resourceHelper.gs(R.string.open_humans),
-                NotificationManager.IMPORTANCE_DEFAULT
-            ))
-        }
+        val notificationManagerCompat = NotificationManagerCompat.from(context)
+        notificationManagerCompat.createNotificationChannel(NotificationChannel(
+            NOTIFICATION_CHANNEL,
+            resourceHelper.gs(R.string.open_humans),
+            NotificationManager.IMPORTANCE_DEFAULT
+        ))
     }
 
     private class UploadData(
@@ -633,6 +633,7 @@ class OpenHumansUploader @Inject constructor(
         val highestQueueId: Long?
     )
 
+    @Suppress("PrivatePropertyName")
     private val HEX_DIGITS = "0123456789ABCDEF".toCharArray()
 
     private fun ByteArray.toHexString(): String {

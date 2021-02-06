@@ -24,6 +24,11 @@ public class ResetRileyLinkConfigurationTask extends PumpTask {
 
     @Override
     public void run() {
+
+        if (!isRileyLinkDevice()) {
+            return;
+        }
+
         RileyLinkPumpDevice rileyLinkPumpDevice = (RileyLinkPumpDevice) activePlugin.getActivePump();
 
         rxBus.send(new EventRefreshButtonState(false));

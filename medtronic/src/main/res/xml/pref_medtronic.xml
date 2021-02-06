@@ -99,6 +99,12 @@
         </Preference>
 
         <SwitchPreference
+            android:defaultValue="false"
+            android:key="@string/key_riley_link_show_battery_level"
+            android:summary="@string/riley_link_show_battery_level_summary"
+            android:title="@string/riley_link_show_battery_level" />
+
+        <SwitchPreference
             android:defaultValue="true"
             android:key="@string/key_set_neutral_temps"
             android:summary="@string/set_neutral_temps_summary"

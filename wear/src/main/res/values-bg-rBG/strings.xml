@@ -89,6 +89,9 @@
     <string name="action_confirm">ПОТВЪРДИ</string>
     <string name="action_timeshift">отместване</string>
     <string name="action_bolus">болус</string>
+    <string name="bolus_progress">Болус прогрес</string>
+    <string name="press_to_cancel">натиснете за отмяна</string>
+    <string name="cancel_bolus">СПРИ БОЛУС</string>
     <string name="status_pump">Помпа</string>
     <string name="status_loop">Режим на APS - Loop</string>
     <string name="status_cpp">CPP</string>

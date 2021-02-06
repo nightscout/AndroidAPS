@@ -22,7 +22,7 @@
             android:orientation="horizontal"
             android:padding="5dp">
 
-        <ImageView
+            <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:contentDescription="@string/carbs"
@@ -55,20 +55,20 @@
             android:padding="5dp">
 
             <CheckBox
-                android:id="@+id/overview_carbs_activity_tt"
+                android:id="@+id/activity_tt"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_marginTop="5dp"
                 android:text="@string/start_activity_tt" />
 
             <CheckBox
-                android:id="@+id/overview_carbs_eating_soon_tt"
+                android:id="@+id/eating_soon_tt"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:text="@string/start_eating_soon_tt" />
 
             <CheckBox
-                android:id="@+id/overview_carbs_hypo_tt"
+                android:id="@+id/hypo_tt"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:text="@string/start_hypo_tt" />
@@ -92,7 +92,7 @@
                 android:textStyle="bold" />
 
             <info.nightscout.androidaps.utils.ui.MinutesNumberPicker
-                android:id="@+id/overview_carbs_time"
+                android:id="@+id/time"
                 android:layout_width="130dp"
                 android:layout_height="40dp" />
 
@@ -126,7 +126,7 @@
                 android:textStyle="bold" />
 
             <info.nightscout.androidaps.utils.ui.NumberPicker
-                android:id="@+id/overview_carbs_duration"
+                android:id="@+id/duration"
                 android:layout_width="130dp"
                 android:layout_height="40dp" />
 
@@ -155,12 +155,12 @@
                 android:width="120dp"
                 android:paddingLeft="10dp"
                 android:paddingRight="10dp"
-                android:text="@string/overview_carbs_label"
+                android:text="@string/treatments_wizard_carbs_label"
                 android:textAppearance="@style/TextAppearance.AppCompat.Small"
                 android:textStyle="bold" />
 
             <info.nightscout.androidaps.utils.ui.NumberPicker
-                android:id="@+id/overview_carbs_carbs"
+                android:id="@+id/carbs"
                 android:layout_width="130dp"
                 android:layout_height="40dp" />
 
@@ -184,21 +184,21 @@
             android:padding="5dp">
 
             <Button
-                android:id="@+id/overview_carbs_plus1"
+                android:id="@+id/plus1"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:text="+5" />
 
             <Button
-                android:id="@+id/overview_carbs_plus2"
+                android:id="@+id/plus2"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:text="+10" />
 
             <Button
-                android:id="@+id/overview_carbs_plus3"
+                android:id="@+id/plus3"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
@@ -206,11 +206,17 @@
 
         </LinearLayout>
 
-        <include layout="@layout/notes" />
+        <include
+            android:id="@+id/notes_layout"
+            layout="@layout/notes" />
 
-        <include layout="@layout/datetime" />
+        <include
+            android:id="@+id/datetime"
+            layout="@layout/datetime" />
 
-        <include layout="@layout/okcancel" />
+        <include
+            android:id="@+id/okcancel"
+            layout="@layout/okcancel" />
 
     </LinearLayout>
 

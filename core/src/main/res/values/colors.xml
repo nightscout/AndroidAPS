@@ -4,8 +4,7 @@
     <color name="colorPrimaryDark">#000000</color>
     <color name="colorAccent">#40bbaa</color>
     <color name="mdtp_button_selected">#33969696</color>
-    <color name="mdtp_accent_color">#009688</color>
-    <color name="mdtp_button_color">@color/mdtp_accent_color</color>
+    <color name="mdtp_button_color">@color/colorAccent</color>
     <color name="mdtp_white">#ffffff</color>
     <color name="mdtp_line_dark">#808080</color>
     <color name="colorLightGray">#d8d8d8</color>
@@ -76,6 +75,11 @@
     <color name="white_alpha_70">#B3FFFFFF</color>
     <color name="white_alpha_80">#CCFFFFFF</color>
     <color name="white_alpha_90">#E6FFFFFF</color>
+
+    <!-- Maintenance -->
+    <color name="metadataOk">#77dd77</color>
+    <color name="metadataTextWarning">#FF8C00</color>
+    <color name="metadataTextError">#FF5555</color>
 
 
 </resources>

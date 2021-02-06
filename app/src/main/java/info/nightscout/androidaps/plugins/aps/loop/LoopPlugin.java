@@ -7,7 +7,6 @@ import android.app.PendingIntent;
 import android.app.TaskStackBuilder;
 import android.content.Context;
 import android.content.Intent;
-import android.os.Build;
 import android.os.SystemClock;
 
 import androidx.core.app.NotificationCompat;
@@ -185,12 +184,12 @@ public class LoopPlugin extends PluginBase implements LoopInterface {
                 .observeOn(Schedulers.io())
                 .subscribe(event -> invoke("EventTempTargetChange", true), fabricPrivacy::logException)
         );
-        /**
-         * This method is triggered once autosens calculation has completed, so the LoopPlugin
-         * has current data to work with. However, autosens calculation can be triggered by multiple
-         * sources and currently only a new BG should trigger a loop run. Hence we return early if
-         * the event causing the calculation is not EventNewBg.
-         * <p>
+        /*
+          This method is triggered once autosens calculation has completed, so the LoopPlugin
+          has current data to work with. However, autosens calculation can be triggered by multiple
+          sources and currently only a new BG should trigger a loop run. Hence we return early if
+          the event causing the calculation is not EventNewBg.
+          <p>
          */
         disposable.add(rxBus
                 .toObservable(EventAutosensCalculationFinished.class)
@@ -212,15 +211,12 @@ public class LoopPlugin extends PluginBase implements LoopInterface {
     }
 
     private void createNotificationChannel() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-
-            NotificationManager mNotificationManager =
-                    (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
-            @SuppressLint("WrongConstant") NotificationChannel channel = new NotificationChannel(CHANNEL_ID,
-                    CHANNEL_ID,
-                    NotificationManager.IMPORTANCE_HIGH);
-            mNotificationManager.createNotificationChannel(channel);
-        }
+        NotificationManager mNotificationManager =
+                (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
+        @SuppressLint("WrongConstant") NotificationChannel channel = new NotificationChannel(CHANNEL_ID,
+                CHANNEL_ID,
+                NotificationManager.IMPORTANCE_HIGH);
+        mNotificationManager.createNotificationChannel(channel);
     }
 
     @Override
@@ -238,10 +234,6 @@ public class LoopPlugin extends PluginBase implements LoopInterface {
             // may fail during initialization
             return true;
         }
-    }
-
-    public long suspendedTo() {
-        return loopSuspendedTill;
     }
 
     public void suspendTo(long endTime) {
@@ -341,8 +333,9 @@ public class LoopPlugin extends PluginBase implements LoopInterface {
         }
         return isDisconnected;
     }
+
     public boolean treatmentTimethreshold(int duartionMinutes) {
-        long threshold = System.currentTimeMillis() + (duartionMinutes*60*1000);
+        long threshold = System.currentTimeMillis() + (duartionMinutes * 60 * 1000);
         boolean bool = false;
         if (treatmentsPlugin.getLastBolusTime() > threshold || treatmentsPlugin.getLastCarbTime() > threshold)
             bool = true;
@@ -414,7 +407,7 @@ public class LoopPlugin extends PluginBase implements LoopInterface {
             // safety check for multiple SMBs
             long lastBolusTime = treatmentsPlugin.getLastBolusTime();
             if (lastBolusTime != 0 && lastBolusTime + T.mins(3).msecs() > System.currentTimeMillis()) {
-                getAapsLogger().debug(LTag.APS, "SMB requsted but still in 3 min interval");
+                getAapsLogger().debug(LTag.APS, "SMB requested but still in 3 min interval");
                 resultAfterConstraints.smb = 0;
             }
 
@@ -456,31 +449,31 @@ public class LoopPlugin extends PluginBase implements LoopInterface {
                             && resultAfterConstraints.carbsReq >= sp.getInt(R.string.key_smb_enable_carbs_suggestions_threshold, 0)
                             && carbsSuggestionsSuspendedUntil < System.currentTimeMillis() && !treatmentTimethreshold(-15)) {
 
-                        if (sp.getBoolean(R.string.key_enable_carbs_required_alert_local,true) && !sp.getBoolean(R.string.key_raise_notifications_as_android_notifications, false)) {
+                        if (sp.getBoolean(R.string.key_enable_carbs_required_alert_local, true) && !sp.getBoolean(R.string.key_raise_notifications_as_android_notifications, false)) {
                             Notification carbreqlocal = new Notification(Notification.CARBS_REQUIRED, resultAfterConstraints.getCarbsRequiredText(), Notification.NORMAL);
                             rxBus.send(new EventNewNotification(carbreqlocal));
                         }
                         if (sp.getBoolean(R.string.key_ns_create_announcements_from_carbs_req, false)) {
                             nsUpload.uploadError(resultAfterConstraints.getCarbsRequiredText());
                         }
-                        if (sp.getBoolean(R.string.key_enable_carbs_required_alert_local,true) && sp.getBoolean(R.string.key_raise_notifications_as_android_notifications, false)){
+                        if (sp.getBoolean(R.string.key_enable_carbs_required_alert_local, true) && sp.getBoolean(R.string.key_raise_notifications_as_android_notifications, false)) {
                             Intent intentAction5m = new Intent(context, CarbSuggestionReceiver.class);
                             intentAction5m.putExtra("ignoreDuration", 5);
                             PendingIntent pendingIntent5m = PendingIntent.getBroadcast(context, 1, intentAction5m, PendingIntent.FLAG_UPDATE_CURRENT);
                             NotificationCompat.Action actionIgnore5m = new
-                                    NotificationCompat.Action(R.drawable.ic_notif_aaps, resourceHelper.gs(R.string.ignore5m,"Ignore 5m"), pendingIntent5m);
+                                    NotificationCompat.Action(R.drawable.ic_notif_aaps, resourceHelper.gs(R.string.ignore5m, "Ignore 5m"), pendingIntent5m);
 
                             Intent intentAction15m = new Intent(context, CarbSuggestionReceiver.class);
                             intentAction15m.putExtra("ignoreDuration", 15);
                             PendingIntent pendingIntent15m = PendingIntent.getBroadcast(context, 1, intentAction15m, PendingIntent.FLAG_UPDATE_CURRENT);
                             NotificationCompat.Action actionIgnore15m = new
-                                    NotificationCompat.Action(R.drawable.ic_notif_aaps, resourceHelper.gs(R.string.ignore15m,"Ignore 15m"), pendingIntent15m);
+                                    NotificationCompat.Action(R.drawable.ic_notif_aaps, resourceHelper.gs(R.string.ignore15m, "Ignore 15m"), pendingIntent15m);
 
                             Intent intentAction30m = new Intent(context, CarbSuggestionReceiver.class);
                             intentAction30m.putExtra("ignoreDuration", 30);
                             PendingIntent pendingIntent30m = PendingIntent.getBroadcast(context, 1, intentAction30m, PendingIntent.FLAG_UPDATE_CURRENT);
                             NotificationCompat.Action actionIgnore30m = new
-                                    NotificationCompat.Action(R.drawable.ic_notif_aaps,  resourceHelper.gs(R.string.ignore30m,"Ignore 30m"), pendingIntent30m);
+                                    NotificationCompat.Action(R.drawable.ic_notif_aaps, resourceHelper.gs(R.string.ignore30m, "Ignore 30m"), pendingIntent30m);
 
                             NotificationCompat.Builder builder = new NotificationCompat.Builder(context, CHANNEL_ID);
                             builder.setSmallIcon(R.drawable.notif_icon)
@@ -511,7 +504,7 @@ public class LoopPlugin extends PluginBase implements LoopInterface {
 
                     } else {
                         //If carbs were required previously, but are no longer needed, dismiss notifications
-                        if ( prevCarbsreq > 0 ) {
+                        if (prevCarbsreq > 0) {
                             dismissSuggestion();
                             rxBus.send(new EventDismissNotification(Notification.CARBS_REQUIRED));
                         }
@@ -591,8 +584,8 @@ public class LoopPlugin extends PluginBase implements LoopInterface {
         }
     }
 
-    public void disableCarbSuggestions(int duartionMinutes) {
-        carbsSuggestionsSuspendedUntil = System.currentTimeMillis() + (duartionMinutes*60*1000);
+    public void disableCarbSuggestions(int durationMinutes) {
+        carbsSuggestionsSuspendedUntil = System.currentTimeMillis() + (durationMinutes * 60 * 1000);
         dismissSuggestion();
     }
 
