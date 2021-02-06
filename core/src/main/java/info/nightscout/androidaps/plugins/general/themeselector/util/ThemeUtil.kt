@@ -76,7 +76,7 @@ object ThemeUtil {
     @JvmStatic  fun getThemeName(theme: Int, mIsNightMode: Boolean): String {
         var themeName = ""
         when (theme) {
-            THEME_RED        -> themeName =  if ( mIsNightMode) "RED light" else "RED light"
+            THEME_RED        -> themeName =  if ( mIsNightMode) "Red light" else "Red light"
             THEME_PINK       -> themeName = if ( mIsNightMode) "Pink" else "Pink"
             THEME_PURPLE     -> themeName = if ( mIsNightMode) "Purple" else "Purple"
             THEME_DEEPPURPLE -> themeName = if ( mIsNightMode) "Deep Purple" else "Deep Purple"
