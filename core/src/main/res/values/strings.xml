@@ -339,6 +339,9 @@
     <string name="color_theme_default_dark">AAPS default dark</string>
     <string name="color_theme_default_light">AAPS default light</string>
 
+    <string name="key_use_darkmode" translatable="false">use_darkmode</string>
+
+
     <plurals name="days">
         <item quantity="one">%1$d day</item>
         <item quantity="other">%1$d days</item>

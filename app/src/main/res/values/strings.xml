@@ -1389,6 +1389,6 @@
     <string name="color_light">Color light</string>
     <string name="color_default">Default</string>
     <string name="color_selected">Selected</string>
-
-
+    <string name="theme_switcher_summary">In order to take effect please restart the app.</string>
+    <string name="use_dark_mode">Use dark mode</string>
 </resources>

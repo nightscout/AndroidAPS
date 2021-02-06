@@ -29,6 +29,7 @@ import info.nightscout.androidaps.plugins.general.openhumans.OpenHumansUploader
 import info.nightscout.androidaps.plugins.general.overview.OverviewPlugin
 import info.nightscout.androidaps.plugins.general.persistentNotification.PersistentNotificationPlugin
 import info.nightscout.androidaps.plugins.general.smsCommunicator.SmsCommunicatorPlugin
+import info.nightscout.androidaps.plugins.general.themes.ThemeSwitcherPlugin
 import info.nightscout.androidaps.plugins.general.wear.WearPlugin
 import info.nightscout.androidaps.plugins.general.xdripStatusline.StatusLinePlugin
 import info.nightscout.androidaps.plugins.insulin.InsulinLyumjevPlugin
@@ -359,6 +360,12 @@ abstract class PluginsModule {
     @IntoMap
     @IntKey(490)
     abstract fun bindConfigBuilderPlugin(plugin: ConfigBuilderPlugin): PluginBase
+
+    @Binds
+    @AllConfigs
+    @IntoMap
+    @IntKey(500)
+    abstract fun bindThemeSwitcherPlugin(plugin: ThemeSwitcherPlugin): PluginBase
 
     @Qualifier
     annotation class AllConfigs

@@ -22,6 +22,5 @@ interface ResourceHelper {
     fun getDisplayMetrics(): DisplayMetrics
     fun dpToPx(dp: Int): Int
     fun shortTextMode(): Boolean
-    fun getAttributeColor(context: Context?,
-                          attributeId: Int): Int
+    fun getAttributeColor(context: Context?, attributeId: Int): Int
 }
