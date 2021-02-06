@@ -354,7 +354,7 @@ class GraphData(
         }
         addSeries(FixedLineGraphSeries(Array(bgiArrayHist.size) { i -> bgiArrayHist[i] }).also {
             it.isDrawBackground = false
-            it.color = resourceHelper.gc(R.color.activity)
+            it.color = resourceHelper.gc(R.color.bgi)
             it.thickness = 3
         })
         addSeries(FixedLineGraphSeries(Array(bgiArrayPred.size) { i -> bgiArrayPred[i] }).also {
@@ -362,7 +362,7 @@ class GraphData(
                 paint.style = Paint.Style.STROKE
                 paint.strokeWidth = 3f
                 paint.pathEffect = DashPathEffect(floatArrayOf(4f, 4f), 0f)
-                paint.color = resourceHelper.gc(R.color.activity)
+                paint.color = resourceHelper.gc(R.color.bgi)
             })
         })
         if (useForScale) {

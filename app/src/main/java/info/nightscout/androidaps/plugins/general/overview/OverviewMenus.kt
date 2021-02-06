@@ -41,7 +41,7 @@ class OverviewMenus @Inject constructor(
         DEV(R.string.overview_show_deviations, R.color.deviations, primary = false, secondary = true,shortnameId = R.string.deviation_shortname),
         SEN(R.string.overview_show_sensitivity, R.color.ratio, primary = false, secondary = true,shortnameId = R.string.sensitivity_shortname),
         ACT(R.string.overview_show_activity, R.color.activity, primary = true, secondary = false,shortnameId = R.string.activity_shortname),
-        BGI(R.string.overview_show_bgi, R.color.activity, primary = false, secondary = true,shortnameId = R.string.bgi_shortname),
+        BGI(R.string.overview_show_bgi, R.color.bgi, primary = false, secondary = true,shortnameId = R.string.bgi_shortname),
         DEVSLOPE(R.string.overview_show_deviationslope, R.color.devslopepos, primary = false, secondary = true,shortnameId = R.string.devslope_shortname)
     }
 
