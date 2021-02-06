@@ -37,9 +37,9 @@ import info.nightscout.androidaps.utils.DateUtil;
 import info.nightscout.androidaps.utils.FabricPrivacy;
 import info.nightscout.androidaps.utils.Round;
 import info.nightscout.androidaps.utils.resources.ResourceHelper;
+import info.nightscout.androidaps.utils.rx.AapsSchedulers;
 import info.nightscout.androidaps.utils.sharedPreferences.SP;
 import io.reactivex.disposables.CompositeDisposable;
-import io.reactivex.schedulers.Schedulers;
 
 @Singleton
 public class DanaRKoreanPlugin extends AbstractDanaRPlugin {
@@ -55,6 +55,7 @@ public class DanaRKoreanPlugin extends AbstractDanaRPlugin {
     public DanaRKoreanPlugin(
             HasAndroidInjector injector,
             AAPSLogger aapsLogger,
+            AapsSchedulers aapsSchedulers,
             RxBusWrapper rxBus,
             DanaPump danaPump,
             Context context,
@@ -66,7 +67,7 @@ public class DanaRKoreanPlugin extends AbstractDanaRPlugin {
             DateUtil dateUtil,
             FabricPrivacy fabricPrivacy
     ) {
-        super(injector, danaPump, resourceHelper, constraintChecker, aapsLogger, commandQueue, rxBus, activePlugin, sp, dateUtil);
+        super(injector, danaPump, resourceHelper, constraintChecker, aapsLogger, aapsSchedulers, commandQueue, rxBus, activePlugin, sp, dateUtil);
         this.aapsLogger = aapsLogger;
         this.context = context;
         this.resourceHelper = resourceHelper;
@@ -84,7 +85,7 @@ public class DanaRKoreanPlugin extends AbstractDanaRPlugin {
         context.bindService(intent, mConnection, Context.BIND_AUTO_CREATE);
         disposable.add(rxBus
                 .toObservable(EventPreferenceChange.class)
-                .observeOn(Schedulers.io())
+                .observeOn(aapsSchedulers.getIo())
                 .subscribe(event -> {
                     if (isEnabled(PluginType.PUMP)) {
                         boolean previousValue = useExtendedBoluses;
@@ -98,7 +99,7 @@ public class DanaRKoreanPlugin extends AbstractDanaRPlugin {
         );
         disposable.add(rxBus
                 .toObservable(EventAppExit.class)
-                .observeOn(Schedulers.io())
+                .observeOn(aapsSchedulers.getIo())
                 .subscribe(event -> context.unbindService(mConnection), fabricPrivacy::logException)
         );
         super.onStart();

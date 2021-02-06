@@ -198,7 +198,6 @@
     <!-- Omnipod - Overview -->
     <string name="omnipod_overview_button_set_time">Angi tid</string>
     <string name="omnipod_overview_button_suspend_delivery">Pause</string>
-    <string name="omnipod_overview_button_refresh">Oppdater</string>
     <string name="omnipod_overview_button_resume_delivery">Gjenoppta levering</string>
     <string name="omnipod_overview_button_pod_management">Pod administrasjon</string>
     <string name="omnipod_overview_button_acknowledge_active_alerts">Godkjenn varsler</string>

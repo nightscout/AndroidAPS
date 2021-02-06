@@ -13,6 +13,7 @@ import android.widget.AdapterView.OnItemSelectedListener
 import android.widget.ArrayAdapter
 import android.widget.CompoundButton
 import androidx.fragment.app.FragmentManager
+import dagger.android.HasAndroidInjector
 import dagger.android.support.DaggerDialogFragment
 import info.nightscout.androidaps.Constants
 import info.nightscout.androidaps.MainApp
@@ -36,9 +37,10 @@ import info.nightscout.androidaps.utils.SafeParse
 import info.nightscout.androidaps.utils.ToastUtils
 import info.nightscout.androidaps.utils.extensions.toVisibility
 import info.nightscout.androidaps.utils.resources.ResourceHelper
+import info.nightscout.androidaps.utils.rx.AapsSchedulers
 import info.nightscout.androidaps.utils.sharedPreferences.SP
+import info.nightscout.androidaps.utils.valueToUnits
 import info.nightscout.androidaps.utils.wizard.BolusWizard
-import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import java.text.DecimalFormat
 import java.util.*
@@ -47,7 +49,9 @@ import kotlin.math.abs
 
 class WizardDialog : DaggerDialogFragment() {
 
+    @Inject lateinit var injector: HasAndroidInjector
     @Inject lateinit var aapsLogger: AAPSLogger
+    @Inject lateinit var aapsSchedulers: AapsSchedulers
     @Inject lateinit var constraintChecker: ConstraintChecker
     @Inject lateinit var mainApp: MainApp
     @Inject lateinit var sp: SP
@@ -188,10 +192,10 @@ class WizardDialog : DaggerDialogFragment() {
         // bus
         disposable.add(rxBus
             .toObservable(EventAutosensCalculationFinished::class.java)
-            .observeOn(AndroidSchedulers.mainThread())
+            .observeOn(aapsSchedulers.main)
             .subscribe({
                 activity?.runOnUiThread { calculateInsulin() }
-            }, { fabricPrivacy.logException(it) })
+            }, fabricPrivacy::logException)
         )
 
     }
@@ -331,7 +335,7 @@ class WizardDialog : DaggerDialogFragment() {
             binding.notes.text.toString(), carbTime)
 
         wizard?.let { wizard ->
-            binding.bg.text = String.format(resourceHelper.gs(R.string.format_bg_isf), BgReading().value(Profile.toMgdl(bg, profileFunction.getUnits())).valueToUnitsToString(profileFunction.getUnits()), wizard.sens)
+            binding.bg.text = String.format(resourceHelper.gs(R.string.format_bg_isf), BgReading(injector).value(Profile.toMgdl(bg, profileFunction.getUnits())).valueToUnitsToString(profileFunction.getUnits()), wizard.sens)
             binding.bginsulin.text = resourceHelper.gs(R.string.formatinsulinunits, wizard.insulinFromBG)
 
             binding.carbs.text = String.format(resourceHelper.gs(R.string.format_carbs_ic), carbs.toDouble(), wizard.ic)

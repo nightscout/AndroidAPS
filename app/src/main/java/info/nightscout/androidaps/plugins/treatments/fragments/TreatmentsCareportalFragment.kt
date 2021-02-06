@@ -25,8 +25,8 @@ import info.nightscout.androidaps.utils.Translator
 import info.nightscout.androidaps.utils.alertDialogs.OKDialog
 import info.nightscout.androidaps.utils.buildHelper.BuildHelper
 import info.nightscout.androidaps.utils.resources.ResourceHelper
+import info.nightscout.androidaps.utils.rx.AapsSchedulers
 import info.nightscout.androidaps.utils.sharedPreferences.SP
-import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import javax.inject.Inject
 
@@ -43,6 +43,7 @@ class TreatmentsCareportalFragment : DaggerFragment() {
     @Inject lateinit var uploadQueue: UploadQueue
     @Inject lateinit var dateUtil: DateUtil
     @Inject lateinit var buildHelper: BuildHelper
+    @Inject lateinit var aapsSchedulers: AapsSchedulers
 
     private var _binding: TreatmentsCareportalFragmentBinding? = null
 
@@ -93,7 +94,7 @@ class TreatmentsCareportalFragment : DaggerFragment() {
         super.onResume()
         disposable.add(rxBus
             .toObservable(EventCareportalEventChange::class.java)
-            .observeOn(AndroidSchedulers.mainThread())
+            .observeOn(aapsSchedulers.main)
             .subscribe({ updateGui() }, fabricPrivacy::logException)
         )
         updateGui()

@@ -2,17 +2,17 @@ package info.nightscout.androidaps.plugins.pump.omnipod.ui.wizard.common.fragmen
 
 import android.os.Bundle
 import android.view.View
+import android.widget.TextView
 import androidx.annotation.LayoutRes
 import androidx.annotation.StringRes
 import info.nightscout.androidaps.plugins.pump.omnipod.R
-import kotlinx.android.synthetic.main.omnipod_wizard_info_page_fragment.*
 
 abstract class InfoFragmentBase : WizardFragmentBase() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        omnipod_wizard_info_page_text.setText(getTextId())
+        view.findViewById<TextView>(R.id.omnipod_wizard_info_page_text).setText(getTextId())
     }
 
     @StringRes
@@ -22,5 +22,4 @@ abstract class InfoFragmentBase : WizardFragmentBase() {
     override fun getLayoutId(): Int {
         return R.layout.omnipod_wizard_info_page_fragment
     }
-
 }

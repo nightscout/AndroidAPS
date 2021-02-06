@@ -35,8 +35,8 @@ import info.nightscout.androidaps.utils.SntpClient
 import info.nightscout.androidaps.utils.alertDialogs.OKDialog
 import info.nightscout.androidaps.utils.extensions.plusAssign
 import info.nightscout.androidaps.utils.resources.ResourceHelper
+import info.nightscout.androidaps.utils.rx.AapsSchedulers
 import info.nightscout.androidaps.utils.sharedPreferences.SP
-import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import javax.inject.Inject
 
@@ -44,6 +44,7 @@ class ObjectivesFragment : DaggerFragment() {
 
     @Inject lateinit var rxBus: RxBusWrapper
     @Inject lateinit var aapsLogger: AAPSLogger
+    @Inject lateinit var aapsSchedulers: AapsSchedulers
     @Inject lateinit var sp: SP
     @Inject lateinit var resourceHelper: ResourceHelper
     @Inject lateinit var fabricPrivacy: FabricPrivacy
@@ -92,11 +93,10 @@ class ObjectivesFragment : DaggerFragment() {
         super.onResume()
         disposable += rxBus
             .toObservable(EventObjectivesUpdateGui::class.java)
-            .observeOn(AndroidSchedulers.mainThread())
+            .observeOn(aapsSchedulers.main)
             .subscribe({
                 binding.recyclerview.adapter?.notifyDataSetChanged()
-            }, { fabricPrivacy.logException(it) }
-            )
+            }, fabricPrivacy::logException)
     }
 
     @Synchronized

@@ -12,7 +12,7 @@ import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.FabricPrivacy
 import info.nightscout.androidaps.utils.HtmlHelper
 import info.nightscout.androidaps.utils.extensions.plusAssign
-import io.reactivex.android.schedulers.AndroidSchedulers
+import info.nightscout.androidaps.utils.rx.AapsSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import java.util.*
 import javax.inject.Inject
@@ -20,6 +20,7 @@ import kotlin.math.max
 
 class SmsCommunicatorFragment : DaggerFragment() {
 
+    @Inject lateinit var aapsSchedulers: AapsSchedulers
     @Inject lateinit var fabricPrivacy: FabricPrivacy
     @Inject lateinit var rxBus: RxBusWrapper
     @Inject lateinit var smsCommunicatorPlugin: SmsCommunicatorPlugin
@@ -45,8 +46,8 @@ class SmsCommunicatorFragment : DaggerFragment() {
         super.onResume()
         disposable += rxBus
             .toObservable(EventSmsCommunicatorUpdateGui::class.java)
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribe({ updateGui() }) { fabricPrivacy.logException(it) }
+            .observeOn(aapsSchedulers.main)
+            .subscribe({ updateGui() }, fabricPrivacy::logException)
         updateGui()
     }
 

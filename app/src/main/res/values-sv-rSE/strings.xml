@@ -436,7 +436,6 @@ Eversense-appen.</string>
     <string name="overview_extendedbolus_cancel_button">Stoppa förlängd bolus</string>
     <string name="doprofileswitch">Genomför profilbyte</string>
     <string name="careportal_sensor_label">Sensor</string>
-    <string name="careportal_canula_label">Kanyl</string>
     <string name="careportal_insulin_label">Insulin</string>
     <string name="careportal_pb_label">Pumpbatteri</string>
     <string name="careportal_age_label">ålder:</string>
@@ -548,7 +547,6 @@ Eversense-appen.</string>
     <string name="maxiobset">Max IOB är korrekt angivet</string>
     <string name="hasbgdata">BG tillgängligt från vald källa</string>
     <string name="combo_programming_bolus">Programmerar bolus i pump</string>
-    <string name="combo_refresh">Uppdatera</string>
     <string name="combo_pump_state_label">Läge</string>
     <string name="combo_pump_activity_label">Aktivitet</string>
     <string name="combo_no_pump_connection">Ingen anslutning på %1$d min</string>
@@ -839,7 +837,6 @@ Eversense-appen.</string>
     <string name="eb_formatter">%1$.2f / %2$.2f U i %3$d min</string>
     <string name="enable_tbr_over_notification">Aktivera meddelanden om avslutade tempbasaler\n(pumpinställning)</string>
     <string name="disable_tbr_over_notification">Inaktivera meddelanden om avslutade tempbasaler\n(pumpinställning)</string>
-    <string name="refresh">Uppdatera</string>
     <string name="description_pump_insight_local">Integration för Accu-Chek Insight pumpar</string>
     <string name="not_inserted">Inte isatt</string>
     <string name="short_status_last_connected">Senast anslutning: %1$d min sedan</string>
@@ -1064,8 +1061,6 @@ Eversense-appen.</string>
     <string name="insight_alert_notification_channel">Pumpvarningar Insight</string>
     <!-- SMS Communicator & OTP Authenticator -->
     <string name="smscommunicator_code_from_authenticator_for" comment="This is continuation of sentence: To [ACTION] reply with code">från autentiseringsapp för: %1$s följt av PIN-kod</string>
-    <string name="smscommunicator_otp_enabled">Aktivera autentiseraren</string>
-    <string name="smscommunicator_otp_enabled_summary">Autentisera kommandon med hjälp av engångslösenord som genererats av Google Authenticator eller liknande appar för tvåfaktorsautentisering.</string>
     <string name="smscommunicator_otp_pin">PIN-kod som läggs till på slutet</string>
     <string name="smscommunicator_otp_pin_summary">Ytterligare siffror som ska memoreras och läggas till i slutet av varje genererat engångslösenord</string>
     <string name="smscomunicator_tab_otp_label">Konfiguration av tvåfaktorsautentisering</string>

@@ -51,7 +51,7 @@ class ComboPluginTest : TestBase() {
     @Before
     fun prepareMocks() {
         `when`(resourceHelper.gs(R.string.novalidbasalrate)).thenReturn("No valid basal rate read from pump")
-        comboPlugin = ComboPlugin(injector, aapsLogger, RxBusWrapper(), resourceHelper, profileFunction, treatmentsPlugin, sp, commandQueue, context)
+        comboPlugin = ComboPlugin(injector, aapsLogger, RxBusWrapper(aapsSchedulers), resourceHelper, profileFunction, treatmentsPlugin, sp, commandQueue, context)
     }
 
     @Test

@@ -30,8 +30,8 @@ import info.nightscout.androidaps.utils.FabricPrivacy
 import info.nightscout.androidaps.utils.alertDialogs.OKDialog.showConfirmation
 import info.nightscout.androidaps.utils.buildHelper.BuildHelper
 import info.nightscout.androidaps.utils.resources.ResourceHelper
+import info.nightscout.androidaps.utils.rx.AapsSchedulers
 import info.nightscout.androidaps.utils.sharedPreferences.SP
-import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import javax.inject.Inject
 
@@ -47,6 +47,7 @@ class TreatmentsTempTargetFragment : DaggerFragment() {
     @Inject lateinit var fabricPrivacy: FabricPrivacy
     @Inject lateinit var dateUtil: DateUtil
     @Inject lateinit var buildHelper: BuildHelper
+    @Inject lateinit var aapsSchedulers: AapsSchedulers
 
     private val disposable = CompositeDisposable()
 
@@ -80,7 +81,7 @@ class TreatmentsTempTargetFragment : DaggerFragment() {
         super.onResume()
         disposable.add(rxBus
             .toObservable(EventTempTargetChange::class.java)
-            .observeOn(AndroidSchedulers.mainThread())
+            .observeOn(aapsSchedulers.main)
             .subscribe({ updateGui() }, fabricPrivacy::logException)
         )
         updateGui()

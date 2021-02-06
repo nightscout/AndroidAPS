@@ -16,18 +16,19 @@ import javax.inject.Inject;
 
 import dagger.android.support.DaggerDialogFragment;
 import info.nightscout.androidaps.danars.R;
-import info.nightscout.androidaps.danars.databinding.DanarsPairingProgressDialogBinding;
-import info.nightscout.androidaps.plugins.bus.RxBusWrapper;
 import info.nightscout.androidaps.danars.activities.PairingHelperActivity;
+import info.nightscout.androidaps.danars.databinding.DanarsPairingProgressDialogBinding;
 import info.nightscout.androidaps.danars.events.EventDanaRSPairingSuccess;
+import info.nightscout.androidaps.plugins.bus.RxBusWrapper;
 import info.nightscout.androidaps.utils.FabricPrivacy;
 import info.nightscout.androidaps.utils.resources.ResourceHelper;
+import info.nightscout.androidaps.utils.rx.AapsSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
-import io.reactivex.schedulers.Schedulers;
 
 
 public class PairingProgressDialog extends DaggerDialogFragment {
 
+    @Inject AapsSchedulers aapsSchedulers;
     @Inject ResourceHelper resourceHelper;
     @Inject RxBusWrapper rxBus;
     @Inject FabricPrivacy fabricPrivacy;
@@ -114,7 +115,7 @@ public class PairingProgressDialog extends DaggerDialogFragment {
         super.onResume();
         disposable.add(rxBus
                 .toObservable(EventDanaRSPairingSuccess.class)
-                .observeOn(Schedulers.io())
+                .observeOn(aapsSchedulers.getIo())
                 .subscribe(event -> pairingEnded = true, fabricPrivacy::logException)
         );
         if (pairingEnded) dismiss();

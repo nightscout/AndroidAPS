@@ -62,14 +62,15 @@ import info.nightscout.androidaps.utils.DateUtil;
 import info.nightscout.androidaps.utils.FabricPrivacy;
 import info.nightscout.androidaps.utils.T;
 import info.nightscout.androidaps.utils.resources.ResourceHelper;
+import info.nightscout.androidaps.utils.rx.AapsSchedulers;
 import info.nightscout.androidaps.utils.sharedPreferences.SP;
 import io.reactivex.disposables.CompositeDisposable;
-import io.reactivex.schedulers.Schedulers;
 
 @Singleton
 public class TreatmentsPlugin extends PluginBase implements TreatmentsInterface {
 
     private final Context context;
+    private final AapsSchedulers aapsSchedulers;
     private final SP sp;
     private final RxBusWrapper rxBus;
     private final ResourceHelper resourceHelper;
@@ -98,6 +99,7 @@ public class TreatmentsPlugin extends PluginBase implements TreatmentsInterface 
             HasAndroidInjector injector,
             AAPSLogger aapsLogger,
             RxBusWrapper rxBus,
+            AapsSchedulers aapsSchedulers,
             ResourceHelper resourceHelper,
             Context context,
             SP sp,
@@ -122,6 +124,7 @@ public class TreatmentsPlugin extends PluginBase implements TreatmentsInterface 
         this.resourceHelper = resourceHelper;
         this.context = context;
         this.rxBus = rxBus;
+        this.aapsSchedulers = aapsSchedulers;
         this.sp = sp;
         this.profileFunction = profileFunction;
         this.activePlugin = activePlugin;
@@ -138,7 +141,7 @@ public class TreatmentsPlugin extends PluginBase implements TreatmentsInterface 
         super.onStart();
         disposable.add(rxBus
                 .toObservable(EventReloadTreatmentData.class)
-                .observeOn(Schedulers.io())
+                .observeOn(aapsSchedulers.getIo())
                 .subscribe(event -> {
                             getAapsLogger().debug(LTag.DATATREATMENTS, "EventReloadTreatmentData");
                             initializeTreatmentData(range());
@@ -150,19 +153,19 @@ public class TreatmentsPlugin extends PluginBase implements TreatmentsInterface 
                 ));
         disposable.add(rxBus
                 .toObservable(EventReloadProfileSwitchData.class)
-                .observeOn(Schedulers.io())
+                .observeOn(aapsSchedulers.getIo())
                 .subscribe(event -> initializeProfileSwitchData(range()),
                         fabricPrivacy::logException
                 ));
         disposable.add(rxBus
                 .toObservable(EventTempTargetChange.class)
-                .observeOn(Schedulers.io())
+                .observeOn(aapsSchedulers.getIo())
                 .subscribe(event -> initializeTempTargetData(range()),
                         fabricPrivacy::logException
                 ));
         disposable.add(rxBus
                 .toObservable(EventReloadTempBasalData.class)
-                .observeOn(Schedulers.io())
+                .observeOn(aapsSchedulers.getIo())
                 .subscribe(event -> {
                             getAapsLogger().debug(LTag.DATATREATMENTS, "EventReloadTempBasalData");
                             initializeTempBasalData(range());

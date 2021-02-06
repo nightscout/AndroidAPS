@@ -31,6 +31,7 @@
     <string name="key_quickwizard" translatable="false">QuickWizard</string>
 
     <!--    General-->
+    <string name="refresh">Refresh</string>
     <string name="error">Error</string>
     <string name="not_set_short">Not set</string>
     <string name="failedupdatebasalprofile">Failed to update basal profile</string>

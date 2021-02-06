@@ -244,7 +244,6 @@
     <!-- Omnipod - Overview -->
     <string name="omnipod_overview_button_set_time">Set time</string>
     <string name="omnipod_overview_button_suspend_delivery">Suspend</string>
-    <string name="omnipod_overview_button_refresh">Refresh</string>
     <string name="omnipod_overview_button_resume_delivery">Resume Delivery</string>
     <string name="omnipod_overview_button_pod_management">Pod Mgmt</string>
     <string name="omnipod_overview_button_acknowledge_active_alerts">Ack Alerts</string>

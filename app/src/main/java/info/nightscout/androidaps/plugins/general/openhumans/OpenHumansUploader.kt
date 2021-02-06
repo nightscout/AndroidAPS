@@ -16,6 +16,7 @@ import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.BuildConfig
 import info.nightscout.androidaps.MainApp
 import info.nightscout.androidaps.R
+import info.nightscout.androidaps.database.AppRepository
 import info.nightscout.androidaps.db.*
 import info.nightscout.androidaps.events.EventPreferenceChange
 import info.nightscout.androidaps.interfaces.PluginBase
@@ -27,13 +28,13 @@ import info.nightscout.androidaps.plugins.bus.RxBusWrapper
 import info.nightscout.androidaps.plugins.treatments.TreatmentsPlugin
 import info.nightscout.androidaps.utils.extensions.plusAssign
 import info.nightscout.androidaps.utils.resources.ResourceHelper
+import info.nightscout.androidaps.utils.rx.AapsSchedulers
 import info.nightscout.androidaps.utils.sharedPreferences.SP
 import io.reactivex.Completable
 import io.reactivex.Observable
 import io.reactivex.Single
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.disposables.Disposable
-import io.reactivex.schedulers.Schedulers
 import org.json.JSONArray
 import org.json.JSONException
 import org.json.JSONObject
@@ -52,10 +53,12 @@ class OpenHumansUploader @Inject constructor(
     injector: HasAndroidInjector,
     resourceHelper: ResourceHelper,
     aapsLogger: AAPSLogger,
-    val sp: SP,
-    val rxBus: RxBusWrapper,
-    val context: Context,
-    val treatmentsPlugin: TreatmentsPlugin
+    private val aapsSchedulers: AapsSchedulers,
+    private val sp: SP,
+    private val rxBus: RxBusWrapper,
+    private val context: Context,
+    private val treatmentsPlugin: TreatmentsPlugin,
+    val repository: AppRepository
 ) : PluginBase(
     PluginDescription()
         .mainType(PluginType.GENERAL)
@@ -85,6 +88,7 @@ class OpenHumansUploader @Inject constructor(
     }
 
     private val openHumansAPI = OpenHumansAPI(OPEN_HUMANS_URL, CLIENT_ID, CLIENT_SECRET, REDIRECT_URL)
+
     @Suppress("PrivatePropertyName")
     private val FILE_NAME_DATE_FORMAT = SimpleDateFormat("yyyyMMdd'T'HHmmss", Locale.US).apply { timeZone = TimeZone.getTimeZone("UTC") }
 
@@ -161,13 +165,13 @@ class OpenHumansUploader @Inject constructor(
 
     fun enqueueBGReading(bgReading: BgReading?) = bgReading?.let {
         insertQueueItem("BgReadings") {
-            put("date", bgReading.date)
-            put("isValid", bgReading.isValid)
-            put("value", bgReading.value)
-            put("direction", bgReading.direction)
-            put("raw", bgReading.raw)
-            put("source", bgReading.source)
-            put("nsId", bgReading._id)
+            put("date", bgReading.data.dateCreated)
+            put("isValid", bgReading.data.isValid)
+            put("value", bgReading.data.value)
+            put("direction", bgReading.data.trendArrow)
+            put("raw", bgReading.data.raw)
+            put("source", bgReading.data.sourceSensor)
+            put("nsId", bgReading.data.interfaceIDs.nightscoutId)
         }
     }
 
@@ -401,7 +405,7 @@ class OpenHumansUploader @Inject constructor(
                 wakeLock.release()
             }
             .onErrorComplete()
-            .subscribeOn(Schedulers.io())
+            .subscribeOn(aapsSchedulers.io)
             .subscribe()
     }
 

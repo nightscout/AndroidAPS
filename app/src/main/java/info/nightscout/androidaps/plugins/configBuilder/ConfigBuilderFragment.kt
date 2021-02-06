@@ -22,13 +22,14 @@ import info.nightscout.androidaps.utils.extensions.plusAssign
 import info.nightscout.androidaps.utils.extensions.toVisibility
 import info.nightscout.androidaps.utils.protection.ProtectionCheck
 import info.nightscout.androidaps.utils.resources.ResourceHelper
-import io.reactivex.android.schedulers.AndroidSchedulers
+import info.nightscout.androidaps.utils.rx.AapsSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import java.util.*
 import javax.inject.Inject
 
 class ConfigBuilderFragment : DaggerFragment() {
 
+    @Inject lateinit var aapsSchedulers: AapsSchedulers
     @Inject lateinit var rxBus: RxBusWrapper
     @Inject lateinit var resourceHelper: ResourceHelper
     @Inject lateinit var configBuilderPlugin: ConfigBuilderPlugin
@@ -77,10 +78,10 @@ class ConfigBuilderFragment : DaggerFragment() {
         super.onResume()
         disposable += rxBus
             .toObservable(EventConfigBuilderUpdateGui::class.java)
-            .observeOn(AndroidSchedulers.mainThread())
+            .observeOn(aapsSchedulers.main)
             .subscribe({
                 for (pluginViewHolder in pluginViewHolders) pluginViewHolder.update()
-            }, { fabricPrivacy.logException(it) })
+            }, fabricPrivacy::logException)
         updateGUI()
     }
 

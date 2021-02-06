@@ -18,13 +18,14 @@ import info.nightscout.androidaps.plugins.general.overview.events.EventQuickWiza
 import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.FabricPrivacy
 import info.nightscout.androidaps.utils.extensions.plusAssign
+import info.nightscout.androidaps.utils.rx.AapsSchedulers
 import info.nightscout.androidaps.utils.wizard.QuickWizard
-import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import javax.inject.Inject
 
 class QuickWizardListActivity : NoSplashAppCompatActivity() {
 
+    @Inject lateinit var aapsSchedulers: AapsSchedulers
     @Inject lateinit var rxBus: RxBusWrapper
     @Inject lateinit var fabricPrivacy: FabricPrivacy
     @Inject lateinit var quickWizard: QuickWizard
@@ -95,11 +96,11 @@ class QuickWizardListActivity : NoSplashAppCompatActivity() {
         super.onResume()
         disposable += rxBus
             .toObservable(EventQuickWizardChange::class.java)
-            .observeOn(AndroidSchedulers.mainThread())
+            .observeOn(aapsSchedulers.main)
             .subscribe({
                 val adapter = RecyclerViewAdapter(supportFragmentManager)
                 binding.recyclerview.swapAdapter(adapter, false)
-            }, { fabricPrivacy.logException(it) })
+            }, fabricPrivacy::logException)
     }
 
     override fun onPause() {

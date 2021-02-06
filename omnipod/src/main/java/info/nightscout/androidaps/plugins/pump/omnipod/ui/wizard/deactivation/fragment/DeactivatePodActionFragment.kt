@@ -2,6 +2,7 @@ package info.nightscout.androidaps.plugins.pump.omnipod.ui.wizard.deactivation.f
 
 import android.os.Bundle
 import android.view.View
+import android.widget.Button
 import androidx.annotation.IdRes
 import androidx.annotation.StringRes
 import androidx.appcompat.app.AlertDialog
@@ -14,7 +15,6 @@ import info.nightscout.androidaps.plugins.pump.omnipod.manager.AapsOmnipodManage
 import info.nightscout.androidaps.plugins.pump.omnipod.ui.wizard.common.fragment.ActionFragmentBase
 import info.nightscout.androidaps.plugins.pump.omnipod.ui.wizard.deactivation.viewmodel.DeactivatePodActionViewModel
 import info.nightscout.androidaps.utils.extensions.toVisibility
-import kotlinx.android.synthetic.main.omnipod_wizard_action_page_fragment.*
 import javax.inject.Inject
 
 class DeactivatePodActionFragment : ActionFragmentBase() {
@@ -26,6 +26,8 @@ class DeactivatePodActionFragment : ActionFragmentBase() {
     @Inject
     lateinit var aapsOmnipodManager: AapsOmnipodManager
 
+    private lateinit var buttonDiscardPod: Button
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -35,7 +37,8 @@ class DeactivatePodActionFragment : ActionFragmentBase() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        omnipod_wizard_button_discard_pod.setOnClickListener {
+        buttonDiscardPod = view.findViewById(R.id.button_discard_pod)
+        buttonDiscardPod.setOnClickListener {
             context?.let {
                 AlertDialog.Builder(it)
                     .setIcon(android.R.drawable.ic_dialog_alert)
@@ -52,7 +55,7 @@ class DeactivatePodActionFragment : ActionFragmentBase() {
     }
 
     override fun onActionFailure() {
-        omnipod_wizard_button_discard_pod.visibility = (!isActionExecuting()).toVisibility()
+        buttonDiscardPod.visibility = (!isActionExecuting()).toVisibility()
     }
 
     @StringRes

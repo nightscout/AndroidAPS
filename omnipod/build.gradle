@@ -1,6 +1,5 @@
 apply plugin: 'com.android.library'
 apply plugin: 'kotlin-android'
-apply plugin: 'kotlin-android-extensions'
 apply plugin: 'kotlin-kapt'
 
 android {
@@ -18,6 +17,9 @@ android {
 
     kotlinOptions {
         jvmTarget = '1.8'
+    }
+    buildFeatures {
+        viewBinding true
     }
 
     buildTypes {
@@ -62,7 +64,7 @@ dependencies {
     testImplementation "org.mockito:mockito-core:${mockitoVersion}"
     testImplementation "org.powermock:powermock-api-mockito2:$powermockVersion"
     testImplementation "org.powermock:powermock-module-junit4:${powermockVersion}"
-    testImplementation 'joda-time:joda-time:2.10.6'
+    testImplementation 'joda-time:joda-time:2.10.9'
     androidTestImplementation "androidx.test.ext:junit:$androidx_junit"
     androidTestImplementation "androidx.test:rules:$androidx_rules"
 }

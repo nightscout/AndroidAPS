@@ -2,6 +2,8 @@ package info.nightscout.androidaps.plugins.aps.loop;
 
 import android.text.Spanned;
 
+import androidx.annotation.NonNull;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -107,7 +109,7 @@ public class APSResult {
         return String.format(resourceHelper.gs(R.string.carbsreq), carbsReq, carbsReqWithin);
     }
 
-    @Override
+    @NonNull @Override
     public String toString() {
         final PumpInterface pump = activePlugin.getActivePump();
         if (isChangeRequested()) {
@@ -131,7 +133,7 @@ public class APSResult {
                 ret += ("SMB: " + DecimalFormatter.toPumpSupportedBolus(smb, activePlugin.getActivePump(), resourceHelper) + "\n");
 
             if (isCarbsRequired()) {
-                ret += getCarbsRequiredText()+"\n";
+                ret += getCarbsRequiredText() + "\n";
             }
 
             // reason
@@ -169,7 +171,7 @@ public class APSResult {
                 ret += ("<b>" + "SMB" + "</b>: " + DecimalFormatter.toPumpSupportedBolus(smb, activePlugin.getActivePump(), resourceHelper) + "<br>");
 
             if (isCarbsRequired()) {
-                ret += getCarbsRequiredText()+"<br>";
+                ret += getCarbsRequiredText() + "<br>";
             }
 
             // reason
@@ -239,50 +241,50 @@ public class APSResult {
                 if (predBGs.has("IOB")) {
                     JSONArray iob = predBGs.getJSONArray("IOB");
                     for (int i = 1; i < iob.length(); i++) {
-                        BgReading bg = new BgReading();
-                        bg.value = iob.getInt(i);
-                        bg.date = startTime + i * 5 * 60 * 1000L;
-                        bg.isIOBPrediction = true;
+                        BgReading bg = new BgReading(injector);
+                        bg.setValue(iob.getInt(i));
+                        bg.setDate(startTime + i * 5 * 60 * 1000L);
+                        bg.setIOBPrediction(true);
                         array.add(bg);
                     }
                 }
                 if (predBGs.has("aCOB")) {
                     JSONArray iob = predBGs.getJSONArray("aCOB");
                     for (int i = 1; i < iob.length(); i++) {
-                        BgReading bg = new BgReading();
-                        bg.value = iob.getInt(i);
-                        bg.date = startTime + i * 5 * 60 * 1000L;
-                        bg.isaCOBPrediction = true;
+                        BgReading bg = new BgReading(injector);
+                        bg.setValue(iob.getInt(i));
+                        bg.setDate(startTime + i * 5 * 60 * 1000L);
+                        bg.setIsaCOBPrediction(true);
                         array.add(bg);
                     }
                 }
                 if (predBGs.has("COB")) {
                     JSONArray iob = predBGs.getJSONArray("COB");
                     for (int i = 1; i < iob.length(); i++) {
-                        BgReading bg = new BgReading();
-                        bg.value = iob.getInt(i);
-                        bg.date = startTime + i * 5 * 60 * 1000L;
-                        bg.isCOBPrediction = true;
+                        BgReading bg = new BgReading(injector);
+                        bg.setValue(iob.getInt(i));
+                        bg.setDate(startTime + i * 5 * 60 * 1000L);
+                        bg.setCOBPrediction(true);
                         array.add(bg);
                     }
                 }
                 if (predBGs.has("UAM")) {
                     JSONArray iob = predBGs.getJSONArray("UAM");
                     for (int i = 1; i < iob.length(); i++) {
-                        BgReading bg = new BgReading();
-                        bg.value = iob.getInt(i);
-                        bg.date = startTime + i * 5 * 60 * 1000L;
-                        bg.isUAMPrediction = true;
+                        BgReading bg = new BgReading(injector);
+                        bg.setValue(iob.getInt(i));
+                        bg.setDate(startTime + i * 5 * 60 * 1000L);
+                        bg.setUAMPrediction(true);
                         array.add(bg);
                     }
                 }
                 if (predBGs.has("ZT")) {
                     JSONArray iob = predBGs.getJSONArray("ZT");
                     for (int i = 1; i < iob.length(); i++) {
-                        BgReading bg = new BgReading();
-                        bg.value = iob.getInt(i);
-                        bg.date = startTime + i * 5 * 60 * 1000L;
-                        bg.isZTPrediction = true;
+                        BgReading bg = new BgReading(injector);
+                        bg.setValue(iob.getInt(i));
+                        bg.setDate(startTime + i * 5 * 60 * 1000L);
+                        bg.setZTPrediction(true);
                         array.add(bg);
                     }
                 }

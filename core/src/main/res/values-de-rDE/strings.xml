@@ -216,6 +216,7 @@
     <string name="history_group_glucose">Glukose</string>
     <string name="mute5min">Stumm schalten für 5 Minuten</string>
     <!-- Maintenance -->
+    <string name="metadata_label_format">Dateiformat</string>
     <string name="metadata_label_created_at">Erstellt am</string>
     <string name="metadata_label_aaps_version">AAPS-Version</string>
     <string name="metadata_label_aaps_flavour">Build-Variante</string>
@@ -254,4 +255,17 @@
     <string name="running_invalid_version">Wir haben festgestellt, dass Du eine ungültige Version verwendest. Loop deaktiviert!</string>
     <string name="versionavailable">Version %1$s ist verfügbar.</string>
     <!-- Permissions -->
+    <string name="alert_dialog_storage_permission_text">Bitte starte dein Telefon neu oder starte AndroidAPS in den System-Einstellungen neu.\nAndernfalls wird AndroidAPS nichts protokollieren (wichtig zum Nachverfolgen und Verifizieren, dass der Algorithmus korrekt funktioniert)!</string>
+    <plurals name="days">
+        <item quantity="one">%1$d Tag</item>
+        <item quantity="other">%1$d Tage</item>
+    </plurals>
+    <plurals name="hours">
+        <item quantity="one">%1$d Stunde</item>
+        <item quantity="other">%1$d Stunden</item>
+    </plurals>
+    <plurals name="minutes">
+        <item quantity="one">%1$d Minute</item>
+        <item quantity="other">%1$d Minuten</item>
+    </plurals>
 </resources>

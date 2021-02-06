@@ -44,7 +44,7 @@
     <string name="description_source_xdrip">קבלת ערכי סוכר מ-xDrip.</string>
     <string name="description_treatments">שמירת כל הטיפולים שנעשו</string>
     <string name="description_wear">ניטור ושליטה ב-AndroidAPS באמצעות שעון WearOS.</string>
-    <string name="description_xdrip_status_line">הצג מידע אודות הלולאה במסך Xdrip בשעון החכם.</string>
+    <string name="description_xdrip_status_line">הצג מידע אודות הלולאה במסך xDrip בשעון החכם.</string>
     <string name="description_sms_communicator">שליטה מרחוק על AndroidAPS באמצעות SMS.</string>
     <string name="treatments_insulin_label_string">אינסולין:</string>
     <string name="treatments_carbs_label_string">פחמימות:</string>
@@ -175,7 +175,7 @@
     <string name="check_preferences_import_btn">ייבוא</string>
     <string name="check_preferences_import_anyway_btn">ייבא בכל מקרה (מסוכן!)</string>
     <string name="end_user_license_agreement">הסכם רישיון למשתמש</string>
-    <string name="end_user_license_agreement_text">לא מיועד לשימוש למטרת קבלת החלטות רפואיות. בעלי הזכויות מספקים את התוכנית כפי שהיא - \"AS IS\", ללא אחריות מכל סוג שהוא. כל סיכון הנובע מאיכות ו\או ביצועי התוכנה הוא באחריותך בלבד. במידה ותימצא תקלה בתוכנית, אתם תשאו בכל עלויות שיגרמו לך בשל התקלה.</string>
+    <string name="end_user_license_agreement_text">לא מיועד לשימוש למטרת קבלת החלטות רפואיות. בעלי הזכויות מספקים את התוכנית כפי שהיא - \"AS IS\", ללא אחריות מכל סוג שהוא. כל סיכון הנובע מאיכות ו\\או ביצועי התוכנה הוא באחריותך בלבד. במידה ותימצא תקלה בתוכנית, אתם תשאו בכל עלויות שיגרמו לך בשל התקלה.</string>
     <string name="end_user_license_agreement_i_understand">אני מבין ומסכים</string>
     <string name="save">שמור</string>
     <string name="reloadprofile">טעינה מחדש של הפרופיל</string>
@@ -225,7 +225,7 @@
     <string name="smscommunicator_loopresumereplywithcode">להפעלת הלולאה מחדש יש להשיב עם הקוד %1$s</string>
     <string name="smscommunicator_loopenablereplywithcode">כדי לאפשר הלולאה יש להשיב עם הקוד %1$s</string>
     <string name="smscommunicator_loopdisablereplywithcode">להשבתת הלולאה יש להשיב עם הקוד %1$s</string>
-    <string name="smscommunicator_tempbasalset">בזאלי זמני %1$.2f יחידות/שעה למשך %2$d דקות הופעל בהצלחה</string>
+    <string name="smscommunicator_tempbasalset">בזאלי זמני %1$.2f יחידות\\שעה למשך %2$d דקות הופעל בהצלחה</string>
     <string name="smscommunicator_extendedset">בולוס ממושך %1$.2f יחידות למשך %2$d דקות הופעל בהצלחה</string>
     <string name="smscommunicator_carbsset">%1$d גר\' פחמימות נקלטו בהצלחה</string>
     <string name="smscommunicator_carbsfailed">קליטת %1$d גר\' פחמימות נכשלה</string>
@@ -352,14 +352,14 @@
     <string name="nosuccess">נכשל - נא לבדוק את הטלפון</string>
     <string name="notavailable">לא זמין</string>
     <string name="patientage">סוג המטופל\\ת</string>
-    <string name="child">ילד/ה</string>
+    <string name="child">ילד\\ה</string>
     <string name="teenage">מתבגר\\ת</string>
     <string name="adult">מבוגר\\ת</string>
     <string name="resistantadult">מבוגר\\ת עם תנגודת אינסולין גבוהה</string>
     <string name="pregnant">הריון</string>
     <string name="patientage_summary">נא לבחור את גיל המטופל\\ת להתאמת מגבלות בטיחות</string>
-    <string name="patient_name">שם מטופל</string>
-    <string name="patient_name_summary">נא לציין שם המטופל או כינוי, להבחנה בין מספר הגדרות</string>
+    <string name="patient_name">שם מטופל\\ת</string>
+    <string name="patient_name_summary">נא לציין שם המטופל\\ת או כינוי, להבחנה בין מספר הגדרות</string>
     <string name="patient_name_default" comment="This is default patient display name, when user does not provide real one">משתמש</string>
     <string name="Glimp">Glimp</string>
     <string name="needwhitelisting">%1$s צריך ביטול אופטימיזציית סוללה בשביל תפקוד תקין</string>
@@ -435,7 +435,6 @@
     <string name="overview_extendedbolus_cancel_button">ביטול בולוס ממושך</string>
     <string name="doprofileswitch">החלפת פרופיל</string>
     <string name="careportal_sensor_label">סנסור</string>
-    <string name="careportal_canula_label">צינורית</string>
     <string name="careportal_insulin_label">אינסולין</string>
     <string name="careportal_pb_label">סוללת משאבה</string>
     <string name="careportal_age_label">גיל:</string>
@@ -530,7 +529,7 @@
     <string name="carbsReqThreshold">סף מינ\' הפחמימות הנדרשות להצעה</string>
     <string name="carbsReqThreshold_summary">כמות הפחמ\' המינימלית (גר\') הדרושה כדי שתוצג התראה על הצעת פחמימות. לא תוצגנה התראות על הצעות הנמוכות מכמות זו.</string>
     <string name="dexcomg5_xdripupload_title">שליחת נתוני סוכר אל xDrip</string>
-    <string name="dexcomg5_xdripupload_summary">ב-Xdrip בחרו 640g/Eversense כמקור נתונים</string>
+    <string name="dexcomg5_xdripupload_summary">ב-xDrip בחרו 640g/Eversense כמקור נתונים</string>
     <string name="nsclientbg">רמת סוכר מ-NSClient</string>
     <string name="overview_editquickwizard_usebg">חישוב רמת הסוכר</string>
     <string name="overview_editquickwizard_usebolusiob">חישוב IOB של בולוס</string>
@@ -548,7 +547,6 @@
     <string name="maxiobset">IOB מקסימלי הוגדר כראוי</string>
     <string name="hasbgdata">ערכי סוכר זמינים מהמקור הנבחר</string>
     <string name="combo_programming_bolus">מתכנת משאבה למתן בולוס</string>
-    <string name="combo_refresh">רענן</string>
     <string name="combo_pump_state_label">סטטוס</string>
     <string name="combo_pump_activity_label">פעילות</string>
     <string name="combo_no_pump_connection">אין חיבור כבר %1$d דקות</string>
@@ -839,7 +837,6 @@
     <string name="eb_formatter">%1$.2f / %2$.2f יח\' במשך %3$d דק\'</string>
     <string name="enable_tbr_over_notification">אפשר התראה על סיום בזאלי זמני\n(הגדרת משאבה)</string>
     <string name="disable_tbr_over_notification">השבת התראה על סיום בזאלי זמני\n(הגדרת משאבה)</string>
-    <string name="refresh">רענן</string>
     <string name="description_pump_insight_local">חיבור משאבת Accu-Chek Insight</string>
     <string name="not_inserted">לא הוכנס</string>
     <string name="short_status_last_connected">חיבור אחרון: לפני %1$d דק\'</string>
@@ -1064,8 +1061,6 @@
     <string name="insight_alert_notification_channel">התראות משאבת Insight</string>
     <!-- SMS Communicator & OTP Authenticator -->
     <string name="smscommunicator_code_from_authenticator_for" comment="This is continuation of sentence: To [ACTION] reply with code">מיישום מאמת עבור: %1$s ואחריו PIN</string>
-    <string name="smscommunicator_otp_enabled">אפשר מאמת</string>
-    <string name="smscommunicator_otp_enabled_summary">אמת פקודות באמצעות סיסמאות חד פעמיות שהופקו ע\"י מאמת Google או יישומי 2FA אחרים.</string>
     <string name="smscommunicator_otp_pin">תוספת PIN חובה בסוף האסימון</string>
     <string name="smscommunicator_otp_pin_summary">ספרות נוספות שיש לשנן ולהדביק בסוף כל אחת מהסיסמאות החד פעמיות</string>
     <string name="smscomunicator_tab_otp_label">הגדרת מאמת</string>
@@ -1121,14 +1116,14 @@
     <string name="setup_failed">ההתקנה נכשלה</string>
     <string name="there_was_an_error">חלה שגיאה. בבקשה נסו להתחבר שוב כדי להמשיך. סליחה ותודה!</string>
     <string name="open_humans_terms">זהו כלי קוד פתוח שיעתיק את הנתונים שלכם ל-Open Humans. אין לנו זכויות לחלוק את הנתונים שלך עם צדדים שלישיים ללא אישורכם המפורש. הנתונים שהפרויקט והיישום מקבלים מזוהים באמצעות מספר זיהוי משתמש אקראי ויעברו באופן מאובטח לחשבון Open Humans באישורכם. תוכלו להפסיק לשלוח ולמחוק את נתוניכם בכל עת דרך www.openhumans.org.</string>
-    <string name="i_understand_and_agree">אני מבינ/ה ומסכימ/ה.</string>
+    <string name="i_understand_and_agree">אני מבינ\\ה ומסכימ\\ה.</string>
     <string name="login">התחברות</string>
     <string name="logout">התנתקות</string>
     <string name="oh_logout_confirmation">אתם בטוחים שברצונכם להתנתק ולהפסיק לתרום מידע למדע?</string>
     <string name="project_member_id">זיהוי משתתף פרויקט: %s</string>
     <string name="queue_size">גודל התור: %d</string>
     <string name="terms_of_use">תנאי השימוש</string>
-    <string name="not_logged_in">לא מחובר/ת</string>
+    <string name="not_logged_in">לא מחובר\\ת</string>
     <string name="you_need_to_accept_the_of_use_first">עליכם להסכים לתנאי השימוש.</string>
     <string name="successfully_logged_in">ההתחברות הצליחה</string>
     <string name="setup_will_continue_in_background">ההתקנה תושלם כעת ברקע. תודה על שליחת הנתונים שלכם.\n\nאנא השאירו את תוסף זה ואת מכשיר הטלפון שלכם מופעל לזמן קצר כדי להשלים את ההתקנה.</string>
@@ -1159,4 +1154,8 @@
     <string name="timetoeat">זמן לאכול</string>
     <string name="fabric_upload_disabled">העלאת רשומות קריסה מושבתת!</string>
     <string name="graph_menu_divider_header">גרף</string>
+    <string name="chart_menu">תפריט הגרף</string>
+    <string name="clear_filter">נקה סינון</string>
+    <string name="trend_arrow">חץ מגמה</string>
+    <string name="cannula">צינורית</string>
 </resources>

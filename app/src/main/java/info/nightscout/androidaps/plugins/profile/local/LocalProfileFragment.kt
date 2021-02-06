@@ -22,7 +22,7 @@ import info.nightscout.androidaps.utils.*
 import info.nightscout.androidaps.utils.alertDialogs.OKDialog
 import info.nightscout.androidaps.utils.extensions.plusAssign
 import info.nightscout.androidaps.utils.resources.ResourceHelper
-import io.reactivex.android.schedulers.AndroidSchedulers
+import info.nightscout.androidaps.utils.rx.AapsSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import java.text.DecimalFormat
 import javax.inject.Inject
@@ -37,6 +37,7 @@ class LocalProfileFragment : DaggerFragment() {
     @Inject lateinit var localProfilePlugin: LocalProfilePlugin
     @Inject lateinit var hardLimits: HardLimits
     @Inject lateinit var dateUtil: DateUtil
+    @Inject lateinit var aapsSchedulers: AapsSchedulers
 
     private var disposable: CompositeDisposable = CompositeDisposable()
 
@@ -213,9 +214,8 @@ class LocalProfileFragment : DaggerFragment() {
         super.onResume()
         disposable += rxBus
             .toObservable(EventLocalProfileChanged::class.java)
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribe({ build() }, { fabricPrivacy.logException(it) }
-            )
+            .observeOn(aapsSchedulers.main)
+            .subscribe({ build() },fabricPrivacy::logException)
         build()
     }
 

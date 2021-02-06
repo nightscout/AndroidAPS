@@ -435,7 +435,6 @@
     <string name="overview_extendedbolus_cancel_button">Verzögerten Bolus abbrechen</string>
     <string name="doprofileswitch">Profilwechsel durchführen</string>
     <string name="careportal_sensor_label">Sensor</string>
-    <string name="careportal_canula_label">Kanüle</string>
     <string name="careportal_insulin_label">Insulin</string>
     <string name="careportal_pb_label">Pumpenbatterie</string>
     <string name="careportal_age_label">Alter:</string>
@@ -548,7 +547,6 @@
     <string name="maxiobset">Maximales IOB richtig gesetzt</string>
     <string name="hasbgdata">BZ verfügbar von gewählter Quelle</string>
     <string name="combo_programming_bolus">Bolusabgabe wird vorbereitet</string>
-    <string name="combo_refresh">Aktualisieren</string>
     <string name="combo_pump_state_label">Status</string>
     <string name="combo_pump_activity_label">Aktivität</string>
     <string name="combo_no_pump_connection">Keine Verbindung seit %1$d min</string>
@@ -840,7 +838,6 @@ Unerwartetes Verhalten.</string>
     <string name="eb_formatter">%1$.2f / %2$.2f IE für %3$d min</string>
     <string name="enable_tbr_over_notification">TBR-Vorrüber-Benachrichtigung aktivieren\n(Pumpeneinstellung)</string>
     <string name="disable_tbr_over_notification">TBR-Vorrüber-Benachrichtigung deaktivieren\n(Pumpeneinstellung)</string>
-    <string name="refresh">Aktualisieren</string>
     <string name="description_pump_insight_local">Pumpen-Integration für Accu-Chek Insight Pumpen</string>
     <string name="not_inserted">Nicht eingesetzt</string>
     <string name="short_status_last_connected">Letzte Verb.: vor %1$d min</string>
@@ -1065,8 +1062,6 @@ Unerwartetes Verhalten.</string>
     <string name="insight_alert_notification_channel">Insight Pumpenalarme</string>
     <!-- SMS Communicator & OTP Authenticator -->
     <string name="smscommunicator_code_from_authenticator_for" comment="This is continuation of sentence: To [ACTION] reply with code">von der Authenticator App für: %1$s gefolgt von der PIN</string>
-    <string name="smscommunicator_otp_enabled">Authentifizierung einschalten</string>
-    <string name="smscommunicator_otp_enabled_summary">Authentifiziere Befehle mit Einmal-Passwörtern, die von Google Authenticator oder ähnlichen Apps zur 2-Faktor-Authentifizierung generiert wurden.</string>
     <string name="smscommunicator_otp_pin">Zusätzliche obligatorische PIN am Token-Ende</string>
     <string name="smscommunicator_otp_pin_summary">Zusätzliche Ziffern, die auswendig gelernt und am Ende jedes generierten Einmal-Passworts angehängt werden sollten.</string>
     <string name="smscomunicator_tab_otp_label">Konfiguration des Authentifikators</string>
@@ -1160,4 +1155,6 @@ Unerwartetes Verhalten.</string>
     <string name="timetoeat">Zeit zum Essen</string>
     <string name="fabric_upload_disabled">Hochladen von Crash-Protokollen deaktiviert!</string>
     <string name="graph_menu_divider_header">Diagramm</string>
+    <string name="chart_menu">Diagrammmenü</string>
+    <string name="clear_filter">Filter löschen</string>
 </resources>

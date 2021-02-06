@@ -9,6 +9,7 @@ import info.nightscout.androidaps.core.di.CoreModule
 import info.nightscout.androidaps.dana.di.DanaModule
 import info.nightscout.androidaps.danar.di.DanaRModule
 import info.nightscout.androidaps.danars.di.DanaRSModule
+import info.nightscout.androidaps.database.DatabaseModule
 import info.nightscout.androidaps.plugins.pump.common.dagger.RileyLinkModule
 import info.nightscout.androidaps.plugins.pump.omnipod.dagger.OmnipodModule
 import javax.inject.Singleton
@@ -17,6 +18,7 @@ import javax.inject.Singleton
 @Component(
     modules = [
         AndroidInjectionModule::class,
+        DatabaseModule::class,
         PluginsModule::class,
         SkinsModule::class,
         ActivitiesModule::class,
@@ -42,6 +44,7 @@ import javax.inject.Singleton
         DanaModule::class,
         DanaRModule::class,
         DanaRSModule::class,
+        WorkersModule::class,
         OHUploaderModule::class
     ]
 )

@@ -42,7 +42,9 @@ dependencies {
     api 'com.google.firebase:firebase-database-ktx'
 
     //RxBus
-    api "io.reactivex.rxjava2:rxandroid:${rxandroid_version}"
+    api "io.reactivex.rxjava2:rxjava:$rxjava_version"
+    api "io.reactivex.rxjava2:rxkotlin:$rxkotlin_version"
+    api "io.reactivex.rxjava2:rxandroid:$rxandroid_version"
     api "org.apache.commons:commons-lang3:$commonslang3_version"
 
     //CryptoUtil
