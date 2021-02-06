@@ -18,7 +18,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-              android:background="?attr/colorPrimary"
+            android:background="?attr/colorPrimary"
             android:orientation="horizontal"
             android:padding="5dp">
 
@@ -26,7 +26,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:contentDescription="@string/overview_insulin_label"
-                app:srcCompat="@drawable/ic_bolus" />
+                app:srcCompat="@drawable/ic_bolus"
+                app:tint="?attr/colorOnPrimary"/>
 
             <TextView
                 android:layout_width="match_parent"

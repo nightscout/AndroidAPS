@@ -27,7 +27,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:contentDescription="@string/overview_calibration"
-                app:srcCompat="@drawable/ic_calibration" />
+                app:srcCompat="@drawable/ic_calibration"
+                app:tint="?attr/colorOnPrimary"/>
 
             <TextView
                 android:id="@+id/title"

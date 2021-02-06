@@ -27,7 +27,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:contentDescription="@string/boluswizard"
-                app:srcCompat="@drawable/ic_loop_closed" />
+                app:srcCompat="@drawable/ic_loop_closed"
+                app:tint="?attr/colorOnPrimary"/>
 
             <TextView
                 android:layout_width="match_parent"
