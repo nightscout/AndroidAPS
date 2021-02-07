@@ -88,9 +88,9 @@ class BGSourceFragment : DaggerFragment() {
 
     @Synchronized
     override fun onDestroyView() {
-        super.onDestroyView()
         _binding = null
         binding.recyclerview.adapter = null // avoid leaks
+        super.onDestroyView()
     }
 
     private fun updateGUI() {
