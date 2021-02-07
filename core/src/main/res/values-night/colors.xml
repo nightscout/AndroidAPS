@@ -165,4 +165,7 @@
     <color name="red">#ff0400</color>
     <color name="cyan">#00d2d2</color>
 
+    <!-- Blue Colors -->>
+    <color name="ios_blue_default">#007AFF</color>
+
 </resources>

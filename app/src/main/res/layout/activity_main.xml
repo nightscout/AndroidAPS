@@ -9,13 +9,13 @@
 
     <com.google.android.material.appbar.MaterialToolbar
         android:id="@+id/toolbar"
+        style="@style/Widget.MaterialComponents.Toolbar.Primary"
         android:layout_height="wrap_content"
         android:layout_width="match_parent"
         android:paddingTop="2dp"
         android:paddingBottom="2dp"
         android:fitsSystemWindows="false"
         app:layout_scrollFlags="scroll|enterAlways"
-        android:background="@color/transparent"
         android:minHeight="?attr/actionBarSize"
         app:layout_collapseMode="pin"
         app:contentInsetStart="4dp"
@@ -23,23 +23,23 @@
 
         <com.google.android.material.tabs.TabLayout
             android:id="@+id/tabs_normal"
+            style="@style/Widget.MaterialComponents.TabLayout.Colored"
             app:tabMode="scrollable"
             app:tabGravity="center"
             app:tabIndicatorAnimationDuration="500"
             app:tabIndicatorFullWidth="false"
             app:tabUnboundedRipple="false"
-            android:background="@color/transparent"
             android:layout_height="28dp"
             android:layout_width="wrap_content" />
 
         <com.google.android.material.tabs.TabLayout
             android:id="@+id/tabs_compact"
+            style="@style/Widget.MaterialComponents.TabLayout.Colored"
             app:tabMode="scrollable"
             app:tabGravity="center"
             app:tabIndicatorAnimationDuration="500"
             app:tabIndicatorFullWidth="false"
             app:tabUnboundedRipple="false"
-            android:background="@color/transparent"
             android:layout_height="24dp"
             android:layout_width="wrap_content" />
     </com.google.android.material.appbar.MaterialToolbar>
