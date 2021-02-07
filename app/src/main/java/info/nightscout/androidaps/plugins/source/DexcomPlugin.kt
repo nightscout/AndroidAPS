@@ -136,8 +136,12 @@ class DexcomPlugin @Inject constructor(
                 dexcomPlugin.disposable += repository.runTransactionForResult(CgmSourceTransaction(glucoseValues, calibrations, sensorStartTime)).subscribe({ savedValues ->
                     savedValues.forEach {
                         broadcastToXDrip(it)
-                        if (sp.getBoolean(R.string.key_dexcomg5_nsupload, false))
-                            nsUpload.uploadBg(BgReading(injector, it), sourceSensor.text)
+                        if (sp.getBoolean(R.string.key_dexcomg5_nsupload, false)) {
+                            if (it.interfaceIDs.nightscoutId != null)
+                                nsUpload.updateBg(BgReading(injector, it), sourceSensor.text)
+                            else
+                                nsUpload.uploadBg(BgReading(injector, it), sourceSensor.text)
+                        }
                     }
                 }, {
                     aapsLogger.error(LTag.BGSOURCE, "Error while saving values from Dexcom App", it)

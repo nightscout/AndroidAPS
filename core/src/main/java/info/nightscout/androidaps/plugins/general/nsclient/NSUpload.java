@@ -417,6 +417,24 @@ public class NSUpload {
         uploadQueue.add(new DbRequest("dbAdd", "entries", data));
     }
 
+    public void updateBg(BgReading reading, String source) {
+        JSONObject data = new JSONObject();
+        try {
+            data.put("device", source);
+            data.put("date", reading.getDate());
+            data.put("dateString", DateUtil.toISOString(reading.getDate()));
+            data.put("sgv", reading.getValue());
+            data.put("direction", reading.getData().getTrendArrow().getText());
+            data.put("type", "sgv");
+            if (reading.getData().getInterfaceIDs_backing() != null)
+                if (reading.getData().getInterfaceIDs_backing().getNightscoutId() != null) {
+                    uploadQueue.add(new DbRequest("dbUpdate", "entries", reading.getData().getInterfaceIDs_backing().getNightscoutId(), data));
+                }
+        } catch (JSONException e) {
+            aapsLogger.error("Unhandled exception", e);
+        }
+    }
+
     public void uploadAppStart() {
         if (sp.getBoolean(R.string.key_ns_logappstartedevent, true)) {
             JSONObject data = new JSONObject();
