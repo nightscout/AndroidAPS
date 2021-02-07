@@ -28,6 +28,7 @@
             app:tabIndicatorAnimationDuration="500"
             app:tabIndicatorFullWidth="false"
             app:tabUnboundedRipple="false"
+            android:background="@color/transparent"
             android:layout_height="28dp"
             android:layout_width="wrap_content" />
 
@@ -38,6 +39,7 @@
             app:tabIndicatorAnimationDuration="500"
             app:tabIndicatorFullWidth="false"
             app:tabUnboundedRipple="false"
+            android:background="@color/transparent"
             android:layout_height="24dp"
             android:layout_width="wrap_content" />
     </com.google.android.material.appbar.MaterialToolbar>

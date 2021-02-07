@@ -8,13 +8,13 @@
         <item name="colorSecondary">@color/secondaryColorDefault</item>
         <item name="colorPrimaryVariant">@color/primaryLightColorDefault</item>
         <item name="colorSecondaryVariant">@color/secondaryLightColorDefault</item>
-        <item name="colorSurface">@color/plastic</item>
+        <item name="colorSurface">@color/white</item>
         <item name="colorOnPrimary">@color/primaryTextColorDefault</item>
         <item name="colorOnSecondary">@color/colorOnSecondary</item>
         <item name="colorOnBackground">@color/color_on_background</item>
         <item name="colorOnError">@color/color_on_error</item>
-        <item name="colorOnSurface">@color/sphere_plastic_grey</item>
-        <item name="scrimBackground">@color/mtrl_scrim_color</item>
+        <item name="colorOnSurface">@color/plastic_grey</item>
+        <item name="scrimBackground">@color/white</item>
         <!-- Misc. colors -->
         <item name="android:navigationBarColor">?attr/colorPrimary</item>
         <item name="android:actionBarTheme">@android:style/Theme.Material.Light</item>
@@ -87,7 +87,7 @@
     </style>
 
     <!-- The launcher theme. It sets the main window background to the launch_screen drawable -->
-    <style name="AppTheme.Launcher"  parent="Theme.AppCompat.NoActionBar">
+    <style name="AppTheme.Launcher"  parent="Theme.MaterialComponents.NoActionBar">
         <item name="android:windowBackground">@drawable/launch_screen</item>
         <!-- Optional, on Android 5+ you can modify the colorPrimaryDark color to match the windowBackground color for further branding-->
         <!-- <item name="colorPrimaryDark">@android:color/white</item> -->
