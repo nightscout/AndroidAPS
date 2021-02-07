@@ -146,7 +146,7 @@ class ActionsFragment : DaggerFragment() {
                     OKDialog.showConfirmation(activity, resourceHelper.gs(R.string.extended_bolus), resourceHelper.gs(R.string.ebstopsloop),
                         Runnable {
                             ExtendedBolusDialog().show(childFragmentManager, "Actions")
-                        }, null,sp)
+                        }, null)
                 })
             }
         }

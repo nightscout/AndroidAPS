@@ -3,18 +3,11 @@ package info.nightscout.androidaps.utils.alertDialogs
 import android.annotation.SuppressLint
 import android.content.Context
 import android.content.DialogInterface
-import android.graphics.PorterDuff
-import android.graphics.drawable.Drawable
 import android.os.SystemClock
 import android.text.Spanned
-import android.view.ContextThemeWrapper
-import androidx.appcompat.app.AlertDialog
-import androidx.core.content.ContextCompat
 import androidx.fragment.app.FragmentActivity
 import info.nightscout.androidaps.core.R
-import info.nightscout.androidaps.plugins.general.themeselector.util.ThemeUtil
 import info.nightscout.androidaps.utils.extensions.runOnUiThread
-import info.nightscout.androidaps.utils.sharedPreferences.SP
 
 object OKDialog {
 
@@ -40,30 +33,13 @@ object OKDialog {
             .setCanceledOnTouchOutside(false)
     }
 
-    fun setdrawableBackground(context: Context, alertdialog: AlertDialog, sp: SP? = null) {
-        val drawable: Drawable? = context.let { ContextCompat.getDrawable(it, R.drawable.dialog) }
-        if (sp != null) {
-            if ( sp.getBoolean("daynight", true)) {
-                if (drawable != null) {
-                    drawable.setColorFilter(sp.getInt("darkBackgroundColor", R.color.background_dark), PorterDuff.Mode.SRC_IN)
-                }
-            } else {
-                if (drawable != null) {
-                    drawable.setColorFilter(sp.getInt("lightBackgroundColor", R.color.background_light), PorterDuff.Mode.SRC_IN)
-                }
-            }
-        }
-        alertdialog.window?.setBackgroundDrawable(drawable)
-    }
-
     @SuppressLint("InflateParams")
-    fun show(activity: FragmentActivity, title: String, message: Spanned, runnable: Runnable? = null, sp: SP? = null) {
+    fun show(activity: FragmentActivity, title: String, message: Spanned, runnable: Runnable? = null) {
         var okClicked = false
         var notEmptytitle = title
         if (notEmptytitle.isEmpty()) notEmptytitle = activity.getString(R.string.message)
 
-        val adb: AlertDialog.Builder =  AlertDialog.Builder(ContextThemeWrapper(activity, ThemeUtil.getActualTheme()))
-        adb
+        AlertDialogHelper.Builder(activity)
             .setCustomTitle(AlertDialogHelper.buildCustomTitle(activity, notEmptytitle))
             .setMessage(message)
             .setPositiveButton(activity.getString(R.string.ok)) { dialog: DialogInterface, _: Int ->
@@ -75,10 +51,8 @@ object OKDialog {
                     runnable?.let { activity.runOnUiThread(it) }
                 }
             }
-        val alertdialog = adb.create()
-        alertdialog.setCanceledOnTouchOutside(false)
-        alertdialog.setOnShowListener { setdrawableBackground(activity.baseContext, alertdialog, sp) }
-        alertdialog.show()
+            .show()
+            .setCanceledOnTouchOutside(false)
     }
 
     @JvmStatic
@@ -92,13 +66,11 @@ object OKDialog {
     }
 
     @SuppressLint("InflateParams")
-    fun showConfirmation(activity: FragmentActivity, title: String, message: Spanned, ok: Runnable?, cancel: Runnable? = null, sp: SP? = null) {
+    fun showConfirmation(activity: FragmentActivity, title: String, message: Spanned, ok: Runnable?, cancel: Runnable? = null) {
         var okClicked = false
-        val adb: AlertDialog.Builder =  AlertDialogHelper.Builder(activity)
-        adb
+        AlertDialogHelper.Builder(activity)
             .setMessage(message)
-            // .setCustomTitle(AlertDialogHelper.buildCustomTitle(activity, title))
-            .setTitle(title)
+            .setCustomTitle(AlertDialogHelper.buildCustomTitle(activity, title))
             .setPositiveButton(android.R.string.ok) { dialog: DialogInterface, _: Int ->
                 if (okClicked) return@setPositiveButton
                 else {
@@ -117,20 +89,16 @@ object OKDialog {
                     cancel?.let { activity.runOnUiThread(it) }
                 }
             }
-        val alertdialog = adb.create()
-        alertdialog.setCanceledOnTouchOutside(false)
-        alertdialog.setOnShowListener { setdrawableBackground(activity.baseContext, alertdialog, sp) }
-        alertdialog.show()
+            .show()
+            .setCanceledOnTouchOutside(false)
     }
 
     @SuppressLint("InflateParams")
-    fun showConfirmation(activity: FragmentActivity, title: String, message: String, ok: Runnable?, cancel: Runnable? = null, sp: SP? = null) {
+    fun showConfirmation(activity: FragmentActivity, title: String, message: String, ok: Runnable?, cancel: Runnable? = null) {
         var okClicked = false
-        val adb: AlertDialog.Builder =  AlertDialogHelper.Builder(activity)
-        adb
+        AlertDialogHelper.Builder(activity)
             .setMessage(message)
             .setCustomTitle(AlertDialogHelper.buildCustomTitle(activity, title))
-            .setTitle(title)
             .setPositiveButton(android.R.string.ok) { dialog: DialogInterface, _: Int ->
                 if (okClicked) return@setPositiveButton
                 else {
@@ -149,10 +117,8 @@ object OKDialog {
                     cancel?.let { activity.runOnUiThread(it) }
                 }
             }
-        val alertdialog = adb.create()
-        alertdialog.setCanceledOnTouchOutside(false)
-        alertdialog.setOnShowListener { setdrawableBackground(activity.baseContext, alertdialog, sp) }
-        alertdialog.show()
+            .show()
+            .setCanceledOnTouchOutside(false)
     }
 
     fun showConfirmation(context: Context, message: Spanned, ok: Runnable?, cancel: Runnable? = null) {
@@ -160,10 +126,9 @@ object OKDialog {
     }
 
     @SuppressLint("InflateParams")
-    fun showConfirmation(context: Context, title: String, message: Spanned, ok: Runnable?, cancel: Runnable? = null, sp: SP? = null) {
+    fun showConfirmation(context: Context, title: String, message: Spanned, ok: Runnable?, cancel: Runnable? = null) {
         var okClicked = false
-        val adb: AlertDialog.Builder =  AlertDialogHelper.Builder(context)
-        adb
+        AlertDialogHelper.Builder(context)
             .setMessage(message)
             .setCustomTitle(AlertDialogHelper.buildCustomTitle(context, title))
             .setPositiveButton(android.R.string.ok) { dialog: DialogInterface, _: Int ->
@@ -184,10 +149,8 @@ object OKDialog {
                     runOnUiThread(cancel)
                 }
             }
-        val alertdialog = adb.create()
-        alertdialog.setCanceledOnTouchOutside(false)
-        alertdialog.setOnShowListener { setdrawableBackground(context, alertdialog, sp) }
-        alertdialog.show()
+            .show()
+            .setCanceledOnTouchOutside(false)
     }
 
     @JvmStatic
@@ -229,9 +192,8 @@ object OKDialog {
     @SuppressLint("InflateParams")
     @JvmStatic
     @JvmOverloads
-    fun showConfirmation(context: Context, title: String, message: String, ok: DialogInterface.OnClickListener?, cancel: DialogInterface.OnClickListener? = null, sp: SP? = null) {
+    fun showConfirmation(context: Context, title: String, message: String, ok: DialogInterface.OnClickListener?, cancel: DialogInterface.OnClickListener? = null) {
         var okClicked = false
-        val adb: AlertDialog.Builder =  AlertDialogHelper.Builder(context)
         AlertDialogHelper.Builder(context)
             .setMessage(message)
             .setCustomTitle(AlertDialogHelper.buildCustomTitle(context, title))
@@ -253,10 +215,8 @@ object OKDialog {
                     cancel?.onClick(dialog, which)
                 }
             }
-        val alertdialog = adb.create()
-        alertdialog.setCanceledOnTouchOutside(false)
-        alertdialog.setOnShowListener { setdrawableBackground(context, alertdialog, sp) }
-        alertdialog.show()
+            .show()
+            .setCanceledOnTouchOutside(false)
     }
 
     @SuppressLint("InflateParams")
