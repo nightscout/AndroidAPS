@@ -22,6 +22,6 @@ class SingleClickButton @JvmOverloads constructor(context: Context, attrs: Attri
     private val log: Logger = StacktraceLoggerWrapper.getLogger(SingleClickButton::class.java)
 
     companion object {
-        const val BUTTON_REFRACTION_PERIOD = 1500L
+        const val BUTTON_REFRACTION_PERIOD = 3000L
     }
 }

@@ -51,7 +51,6 @@
             android:name="com.google.android.gms.car.application"
             android:resource="@xml/automotive_app_desc" />
 
-        <!-- The below is for the splash screen and we need no action bar and the default theme -->
         <activity android:name=".MainActivity" android:theme="@style/AppTheme" >
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />

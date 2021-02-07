@@ -315,31 +315,6 @@
     <!-- Permissions -->
     <string name="alert_dialog_storage_permission_text">Please reboot your phone or restart AndroidAPS from the System Settings \notherwise Android APS will not have logging (important to track and verify that the algorithms are working correctly)!</string>
 
-    <!-- Color theme names -->
-    <string name="color_theme_lightred">Red light</string>
-    <string name="color_theme_pink">Pink</string>
-    <string name="color_theme_purple">Purple</string>
-    <string name="color_theme_deeppurple">Deep Purple</string>
-    <string name="color_theme_indigo">Indigo</string>
-    <string name="color_theme_blue">Blue</string>
-    <string name="color_theme_lightblue">Light Blue</string>
-    <string name="color_theme_cyan">Cyan</string>
-    <string name="color_theme_teal">Teal</string>
-    <string name="color_theme_green">Green</string>
-    <string name="color_theme_lightgreen">Light Green</string>
-    <string name="color_theme_lime">Lime</string>
-    <string name="color_theme_yellow">Yellow</string>
-    <string name="color_theme_amber">Amber</string>
-    <string name="color_theme_orange">Orange</string>
-    <string name="color_theme_deeporange">Deep Orange</string>
-    <string name="color_theme_brown">Brown</string>
-    <string name="color_theme_gray">Gray</string>
-    <string name="color_theme_bluegray">Blue Gray</string>
-    <string name="color_theme_darkside">Darkside</string>
-    <string name="color_theme_lightside">Lightside</string>
-    <string name="color_theme_default_dark">AAPS default dark</string>
-    <string name="color_theme_default_light">AAPS default light</string>
-
     <string name="key_use_darkmode" translatable="false">use_darkmode</string>
 
 

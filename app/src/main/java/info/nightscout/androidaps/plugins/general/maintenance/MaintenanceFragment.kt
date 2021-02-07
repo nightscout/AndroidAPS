@@ -15,7 +15,6 @@ import info.nightscout.androidaps.plugins.general.maintenance.activities.LogSett
 import info.nightscout.androidaps.plugins.treatments.TreatmentsPlugin
 import info.nightscout.androidaps.utils.alertDialogs.OKDialog
 import info.nightscout.androidaps.utils.resources.ResourceHelper
-import info.nightscout.androidaps.utils.sharedPreferences.SP
 import javax.inject.Inject
 
 class MaintenanceFragment : DaggerFragment() {
@@ -26,7 +25,6 @@ class MaintenanceFragment : DaggerFragment() {
     @Inject lateinit var treatmentsPlugin: TreatmentsPlugin
     @Inject lateinit var foodPlugin: FoodPlugin
     @Inject lateinit var importExportPrefs: ImportExportPrefsInterface
-    @Inject lateinit var sp: SP
 
     private var _binding: MaintenanceFragmentBinding? = null
 
