@@ -174,8 +174,8 @@ class DanaFragment : DaggerFragment() {
 
     @Synchronized
     override fun onDestroyView() {
-        super.onDestroyView()
         _binding = null
+        super.onDestroyView()
     }
 
     @SuppressLint("SetTextI18n")

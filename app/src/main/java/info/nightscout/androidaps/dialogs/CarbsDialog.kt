@@ -153,8 +153,8 @@ class CarbsDialog : DialogFragmentWithDate() {
     }
 
     override fun onDestroyView() {
-        super.onDestroyView()
         _binding = null
+        super.onDestroyView()
     }
 
     private fun toSignedString(value: Int): String {

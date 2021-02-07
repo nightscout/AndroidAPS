@@ -227,8 +227,8 @@ class LocalProfileFragment : DaggerFragment() {
 
     @Synchronized
     override fun onDestroyView() {
-        super.onDestroyView()
         _binding = null
+        super.onDestroyView()
     }
 
     fun doEdit() {

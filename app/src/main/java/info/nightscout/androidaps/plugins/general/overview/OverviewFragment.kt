@@ -281,8 +281,8 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
 
     @Synchronized
     override fun onDestroyView() {
-        super.onDestroyView()
         _binding = null
+        super.onDestroyView()
     }
 
     override fun onClick(v: View) {

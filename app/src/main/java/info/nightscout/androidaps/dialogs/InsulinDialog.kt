@@ -135,8 +135,8 @@ class InsulinDialog : DialogFragmentWithDate() {
     }
 
     override fun onDestroyView() {
-        super.onDestroyView()
         _binding = null
+        super.onDestroyView()
     }
 
     override fun submit(): Boolean {

@@ -58,8 +58,8 @@ class SmsCommunicatorFragment : DaggerFragment() {
     }
 
     override fun onDestroyView() {
-        super.onDestroyView()
         _binding = null
+        super.onDestroyView()
     }
 
     fun updateGui() {

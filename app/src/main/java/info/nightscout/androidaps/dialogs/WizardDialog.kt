@@ -198,9 +198,9 @@ class WizardDialog : DaggerDialogFragment() {
     }
 
     override fun onDestroyView() {
-        super.onDestroyView()
         disposable.clear()
         _binding = null
+        super.onDestroyView()
     }
 
     private fun onCheckedChanged(buttonView: CompoundButton, @Suppress("UNUSED_PARAMETER") state: Boolean) {

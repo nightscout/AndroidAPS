@@ -121,8 +121,8 @@ class FoodFragment : DaggerFragment() {
 
     @Synchronized
     override fun onDestroyView() {
-        super.onDestroyView()
         _binding = null
+        super.onDestroyView()
     }
 
     private fun loadData() {

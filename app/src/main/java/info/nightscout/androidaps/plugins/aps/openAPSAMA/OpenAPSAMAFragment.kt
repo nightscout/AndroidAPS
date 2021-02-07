@@ -84,8 +84,8 @@ class OpenAPSAMAFragment : DaggerFragment() {
 
     @Synchronized
     override fun onDestroyView() {
-        super.onDestroyView()
         _binding = null
+        super.onDestroyView()
     }
 
     @Synchronized
