@@ -151,7 +151,7 @@ class TriggerConnector(injector: HasAndroidInjector) : Trigger(injector) {
         spinnerArrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
         spinner.adapter = spinnerArrayAdapter
         spinner.setSelection(initialPosition)
-        spinner.setBackgroundColor(resourceHelper.gc(R.color.black_overlay))
+        spinner.setBackgroundColor(resourceHelper.gc(R.color.black_alpha_40))
         val params = LinearLayout.LayoutParams(
             LinearLayout.LayoutParams.WRAP_CONTENT,
             LinearLayout.LayoutParams.WRAP_CONTENT

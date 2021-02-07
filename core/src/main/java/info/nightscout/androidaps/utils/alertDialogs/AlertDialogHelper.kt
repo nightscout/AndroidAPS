@@ -11,7 +11,6 @@ import androidx.annotation.StyleRes
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.view.ContextThemeWrapper
 import info.nightscout.androidaps.core.R
-import info.nightscout.androidaps.plugins.general.themeselector.util.ThemeUtil
 
 object AlertDialogHelper {
 
@@ -21,7 +20,7 @@ object AlertDialogHelper {
 
     fun buildCustomTitle(context: Context, title: String,
                          @DrawableRes iconResource: Int = R.drawable.ic_check_while_48dp,
-                         @StyleRes themeResId: Int = ThemeUtil.getActualTheme(),
+                         @StyleRes themeResId: Int = R.style.AppTheme,
                          @LayoutRes layoutResource: Int = R.layout.dialog_alert_custom): View? {
         val titleLayout = LayoutInflater.from(ContextThemeWrapper(context, themeResId)).inflate(layoutResource, null)
         (titleLayout.findViewById<View>(R.id.alertdialog_title) as TextView).text = title

@@ -1,7 +1,6 @@
 package info.nightscout.androidaps.plugins.treatments.fragments
 
 import android.content.Context
-import android.graphics.Color
 import android.util.AttributeSet
 import com.jjoe64.graphview.GraphView
 import com.jjoe64.graphview.series.DataPoint
@@ -63,8 +62,8 @@ class ProfileGraph : GraphView {
         addSeries(basalSeries2)
         basalSeries2.thickness = 8
         basalSeries2.isDrawBackground = false
-        basalSeries2.color = context.getColor(R.color.examinedProfile)
-        basalSeries2.backgroundColor = context.getColor(R.color.examinedProfile)
+        basalSeries2.color = context.getColor(R.color.colorRed)
+        basalSeries2.backgroundColor = context.getColor(R.color.colorRed)
 
         viewport.isXAxisBoundsManual = true
         viewport.setMinX(0.0)

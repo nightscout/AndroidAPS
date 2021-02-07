@@ -5,7 +5,6 @@ import android.app.NotificationManager
 import android.content.ActivityNotFoundException
 import android.content.Context
 import android.content.Intent
-import android.graphics.Color
 import android.graphics.Paint
 import android.graphics.drawable.AnimationDrawable
 import android.os.Bundle
@@ -691,7 +690,7 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
                 binding.loopPumpStatusLayout.tempTarget.setTextColor(resourceHelper.gc(R.color.ribbonTextWarning))
                 binding.loopPumpStatusLayout.tempTarget.setBackgroundColor(resourceHelper.gc(R.color.tempTargetBackground))
             } else {
-                binding.loopPumpStatusLayout.tempTarget.setTextColor(resourceHelper.gc(R.color.ribbonTextDefault))
+                binding.loopPumpStatusLayout.tempTarget.setTextColor(resourceHelper.gc(R.color.white))
                 binding.loopPumpStatusLayout.tempTarget.setBackgroundColor(resourceHelper.gc(R.color.ribbonDefault))
                 binding.loopPumpStatusLayout.tempTarget.text = Profile.toTargetRangeString(profile.targetLowMgdl, profile.targetHighMgdl, Constants.MGDL, units)
             }
@@ -738,7 +737,7 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
             binding.loopPumpStatusLayout.activeProfile.setTextColor(resourceHelper.gc(R.color.ribbonTextWarning))
         } else {
             binding.loopPumpStatusLayout.activeProfile.setBackgroundColor(resourceHelper.gc(R.color.ribbonDefault))
-            binding.loopPumpStatusLayout.activeProfile.setTextColor(resourceHelper.gc(R.color.ribbonTextDefault))
+            binding.loopPumpStatusLayout.activeProfile.setTextColor(resourceHelper.gc(R.color.white))
         }
 
         processButtonsVisibility()

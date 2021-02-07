@@ -259,7 +259,7 @@ class ProfileHelperActivity : NoSplashAppCompatActivity() {
 
         tabSelected = tab
         typeSelected[tabSelected] = newContent
-        binding.profiletypeTitle.defaultHintTextColor = ColorStateList.valueOf(resourceHelper.gc(if (tab == 0) R.color.tabBgColorSelected else R.color.examinedProfile))
+        binding.profiletypeTitle.defaultHintTextColor = ColorStateList.valueOf(resourceHelper.gc(if (tab == 0) R.color.tabBgColorSelected else R.color.colorRed))
 
         // show new content
         binding.profiletype.setText(
@@ -290,6 +290,6 @@ class ProfileHelperActivity : NoSplashAppCompatActivity() {
 
     private fun setBackgroundColorOnSelected(tab: Int) {
         binding.menu1.setBackgroundColor(resourceHelper.gc(if (tab == 1) R.color.defaultbackground else R.color.tabBgColorSelected))
-        binding.menu2.setBackgroundColor(resourceHelper.gc(if (tab == 0) R.color.defaultbackground else R.color.examinedProfile))
+        binding.menu2.setBackgroundColor(resourceHelper.gc(if (tab == 0) R.color.defaultbackground else R.color.colorRed))
     }
 }
