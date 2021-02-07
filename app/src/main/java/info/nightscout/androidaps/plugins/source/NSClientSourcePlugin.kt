@@ -107,6 +107,7 @@ class NSClientSourcePlugin @Inject constructor(
                 noise = null,
                 raw = if (sgv.filtered != null) sgv.filtered.toDouble() else sgv.mgdl.toDouble(),
                 trendArrow = GlucoseValue.TrendArrow.fromString(sgv.direction),
+                nightscoutId = sgv.id,
                 sourceSensor = GlucoseValue.SourceSensor.fromString(sgv.device)
             )
         }

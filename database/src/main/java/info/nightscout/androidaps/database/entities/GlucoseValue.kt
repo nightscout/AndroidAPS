@@ -34,13 +34,14 @@ data class GlucoseValue(
 
     fun contentEqualsTo(other: GlucoseValue): Boolean =
         timestamp == other.timestamp &&
-        utcOffset == other.utcOffset &&
-        raw == other.raw &&
-        value == other.value &&
-        trendArrow == other.trendArrow &&
-        noise == other.noise &&
-        sourceSensor == other.sourceSensor &&
-        isValid == other.isValid
+            utcOffset == other.utcOffset &&
+            raw == other.raw &&
+            value == other.value &&
+            trendArrow == other.trendArrow &&
+            noise == other.noise &&
+            sourceSensor == other.sourceSensor &&
+            isValid == other.isValid &&
+            interfaceIDs?.nightscoutId == other.interfaceIDs?.nightscoutId
 
     fun isRecordDeleted(other: GlucoseValue): Boolean =
         isValid && !other.isValid
@@ -94,7 +95,8 @@ data class GlucoseValue(
         ;
 
         companion object {
-            fun fromString(source : String?) = values().firstOrNull {it.text == source} ?: UNKNOWN
+
+            fun fromString(source: String?) = values().firstOrNull { it.text == source } ?: UNKNOWN
         }
     }
 }
