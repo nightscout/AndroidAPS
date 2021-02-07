@@ -106,7 +106,7 @@ class FillDialog : DialogFragmentWithDate() {
             actions.add("")
             actions.add(resourceHelper.gs(R.string.bolus) + ": " + DecimalFormatter.toPumpSupportedBolus(insulinAfterConstraints, activePlugin.activePump, resourceHelper).formatColor(resourceHelper, R.color.colorInsulinButton))
             if (abs(insulinAfterConstraints - insulin) > 0.01)
-                actions.add(resourceHelper.gs(R.string.bolusconstraintappliedwarn, insulin, insulinAfterConstraints).formatColor(resourceHelper, R.color.warning))
+                actions.add(resourceHelper.gs(R.string.bolusconstraintappliedwarn, insulin, insulinAfterConstraints).formatColor(resourceHelper, R.color.red))
         }
         val siteChange = binding.fillCatheterChange.isChecked
         if (siteChange)

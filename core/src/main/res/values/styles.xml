@@ -12,7 +12,7 @@
         <item name="colorOnPrimary">@color/primaryTextColorDefault</item>
         <item name="colorOnSecondary">@color/colorOnSecondary</item>
         <item name="colorOnBackground">@color/color_on_background</item>
-        <item name="colorOnError">@color/color_on_error</item>
+        <item name="colorOnError">@color/black</item>
         <item name="colorOnSurface">@color/plastic_grey</item>
         <item name="scrimBackground">@color/white</item>
         <!-- Misc. colors -->

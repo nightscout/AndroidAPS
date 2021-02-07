@@ -95,7 +95,6 @@ public class TimeListEdit {
         LinearLayout.LayoutParams llp = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
         llp.setMargins(0, 5, 0, 5);
         textlabel.setLayoutParams(llp);
-        //textlabel.setBackgroundColor(ContextCompat.getColor(MainApp.instance(), R.color.linearBlockBackground));
         TextViewCompat.setTextAppearance(textlabel, android.R.style.TextAppearance_Medium);
         layout.addView(textlabel);
 

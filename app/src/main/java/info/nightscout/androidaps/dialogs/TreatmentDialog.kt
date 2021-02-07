@@ -116,14 +116,14 @@ class TreatmentDialog : DialogFragmentWithDate() {
         if (insulinAfterConstraints > 0) {
             actions.add(resourceHelper.gs(R.string.bolus) + ": " + DecimalFormatter.toPumpSupportedBolus(insulinAfterConstraints, activePlugin.activePump, resourceHelper).formatColor(resourceHelper, R.color.bolus))
             if (recordOnlyChecked)
-                actions.add(resourceHelper.gs(R.string.bolusrecordedonly).formatColor(resourceHelper, R.color.warning))
+                actions.add(resourceHelper.gs(R.string.bolusrecordedonly).formatColor(resourceHelper, R.color.red))
             if (abs(insulinAfterConstraints - insulin) > pumpDescription.pumpType.determineCorrectBolusStepSize(insulinAfterConstraints))
-                actions.add(resourceHelper.gs(R.string.bolusconstraintappliedwarn, insulin, insulinAfterConstraints).formatColor(resourceHelper, R.color.warning))
+                actions.add(resourceHelper.gs(R.string.bolusconstraintappliedwarn, insulin, insulinAfterConstraints).formatColor(resourceHelper, R.color.red))
         }
         if (carbsAfterConstraints > 0) {
             actions.add(resourceHelper.gs(R.string.carbs) + ": " + resourceHelper.gs(R.string.format_carbs, carbsAfterConstraints).formatColor(resourceHelper, R.color.carbs))
             if (carbsAfterConstraints != carbs)
-                actions.add(resourceHelper.gs(R.string.carbsconstraintapplied).formatColor(resourceHelper, R.color.warning))
+                actions.add(resourceHelper.gs(R.string.carbsconstraintapplied).formatColor(resourceHelper, R.color.red))
         }
         if (insulinAfterConstraints > 0 || carbsAfterConstraints > 0) {
             activity?.let { activity ->

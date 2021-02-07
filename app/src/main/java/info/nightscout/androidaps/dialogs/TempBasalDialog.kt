@@ -112,7 +112,7 @@ class TempBasalDialog : DialogFragmentWithDate() {
             actions.add(resourceHelper.gs(R.string.tempbasal_label) + ": " + resourceHelper.gs(R.string.pump_basebasalrate, absolute))
             actions.add(resourceHelper.gs(R.string.duration) + ": " + resourceHelper.gs(R.string.format_mins, durationInMinutes))
             if (abs(absolute - basalAbsoluteInput) > 0.01)
-                actions.add(resourceHelper.gs(R.string.constraintapllied).formatColor(resourceHelper, R.color.warning))
+                actions.add(resourceHelper.gs(R.string.constraintapllied).formatColor(resourceHelper, R.color.red))
         }
         activity?.let { activity ->
             OKDialog.showConfirmation(activity, resourceHelper.gs(R.string.tempbasal_label), HtmlHelper.fromHtml(Joiner.on("<br/>").join(actions)), {

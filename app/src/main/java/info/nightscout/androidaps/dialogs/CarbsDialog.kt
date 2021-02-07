@@ -196,7 +196,7 @@ class CarbsDialog : DialogFragmentWithDate() {
         if (carbsAfterConstraints > 0) {
             actions.add(resourceHelper.gs(R.string.carbs) + ": " + "<font color='" + resourceHelper.gc(R.color.carbs) + "'>" + resourceHelper.gs(R.string.format_carbs, carbsAfterConstraints) + "</font>")
             if (carbsAfterConstraints != carbs)
-                actions.add("<font color='" + resourceHelper.gc(R.color.warning) + "'>" + resourceHelper.gs(R.string.carbsconstraintapplied) + "</font>")
+                actions.add("<font color='" + resourceHelper.gc(R.color.red) + "'>" + resourceHelper.gs(R.string.carbsconstraintapplied) + "</font>")
         }
         val notes = binding.notesLayout.notes.text.toString()
         if (notes.isNotEmpty())

@@ -15,9 +15,7 @@ import android.widget.Button
 import android.widget.TextView
 import androidx.cardview.widget.CardView
 import androidx.core.app.NotificationCompat
-import androidx.core.app.TaskStackBuilder
 import androidx.recyclerview.widget.RecyclerView
-import info.nightscout.androidaps.MainActivity
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.logging.LTag
@@ -178,7 +176,7 @@ class NotificationStore @Inject constructor(
             @Suppress("SetTextI18n")
             holder.text.text = dateUtil.timeString(notification.date) + " " + notification.text
             when (notification.level) {
-                Notification.URGENT -> holder.cv.setBackgroundColor(resourceHelper.gc(R.color.notificationUrgent))
+                Notification.URGENT -> holder.cv.setBackgroundColor(resourceHelper.gc(R.color.red))
                 Notification.NORMAL -> holder.cv.setBackgroundColor(resourceHelper.gc(R.color.notificationNormal))
                 Notification.LOW -> holder.cv.setBackgroundColor(resourceHelper.gc(R.color.notificationLow))
                 Notification.INFO -> holder.cv.setBackgroundColor(resourceHelper.gc(R.color.notificationInfo))
