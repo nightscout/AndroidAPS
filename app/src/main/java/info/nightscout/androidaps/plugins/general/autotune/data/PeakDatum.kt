@@ -1,42 +1,44 @@
-package info.nightscout.androidaps.plugins.general.autotune.data;
+package info.nightscout.androidaps.plugins.general.autotune.data
 
-import org.json.JSONException;
-import org.json.JSONObject;
+import org.json.JSONException
+import org.json.JSONObject
 
-public class PeakDatum {
-    double peak=0d;
-    double meanDeviation=0d;
-    double smrDeviation=0d;
-    double rmsDeviation=0d;
+class PeakDatum {
 
-    public PeakDatum() {}
+    var peak = 0.0
+    var meanDeviation = 0.0
+    var smrDeviation = 0.0
+    var rmsDeviation = 0.0
 
-    public PeakDatum(JSONObject json) {
+    constructor() {}
+    constructor(json: JSONObject) {
         try {
-            if (json.has("peak")) peak = json.getDouble("peak");
-            if (json.has("meanDeviation")) meanDeviation = json.getDouble("meanDeviation");
-            if (json.has("SMRDeviation")) smrDeviation = json.getDouble("SMRDeviation");
-            if (json.has("RMSDeviation")) rmsDeviation = json.getDouble("RMSDeviation");
-        } catch (JSONException e) {}
+            if (json.has("peak")) peak = json.getDouble("peak")
+            if (json.has("meanDeviation")) meanDeviation = json.getDouble("meanDeviation")
+            if (json.has("SMRDeviation")) smrDeviation = json.getDouble("SMRDeviation")
+            if (json.has("RMSDeviation")) rmsDeviation = json.getDouble("RMSDeviation")
+        } catch (e: JSONException) {
+        }
     }
 
-    public JSONObject toJSON() {
-        JSONObject crjson = new JSONObject();
+    fun toJSON(): JSONObject {
+        val crjson = JSONObject()
         try {
-            crjson.put("peak", peak);
-            crjson.put("meanDeviation", (int) meanDeviation);
-            crjson.put("SMRDeviation", smrDeviation);
-            crjson.put("RMSDeviation", (int) rmsDeviation);
-        } catch (JSONException e) {}
-        return crjson;
+            crjson.put("peak", peak)
+            crjson.put("meanDeviation", meanDeviation.toInt())
+            crjson.put("SMRDeviation", smrDeviation)
+            crjson.put("RMSDeviation", rmsDeviation.toInt())
+        } catch (e: JSONException) {
+        }
+        return crjson
     }
 
-    public Boolean equals(PeakDatum obj) {
-        Boolean isEqual = true;
-        if (peak != obj.peak) isEqual = false;
-        if (meanDeviation != obj.meanDeviation) isEqual = false;
-        if (smrDeviation != obj.smrDeviation) isEqual = false;
-        if (rmsDeviation != obj.rmsDeviation) isEqual = false;
-        return isEqual;
+    fun equals(obj: PeakDatum): Boolean {
+        var isEqual = true
+        if (peak != obj.peak) isEqual = false
+        if (meanDeviation != obj.meanDeviation) isEqual = false
+        if (smrDeviation != obj.smrDeviation) isEqual = false
+        if (rmsDeviation != obj.rmsDeviation) isEqual = false
+        return isEqual
     }
 }

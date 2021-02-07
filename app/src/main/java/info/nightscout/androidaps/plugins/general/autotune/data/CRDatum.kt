@@ -1,65 +1,65 @@
-package info.nightscout.androidaps.plugins.general.autotune.data;
+package info.nightscout.androidaps.plugins.general.autotune.data
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import info.nightscout.androidaps.utils.DateUtil;
+import info.nightscout.androidaps.utils.DateUtil
+import org.json.JSONException
+import org.json.JSONObject
 
 /**
  * Created by Rumen Georgiev on 2/26/2018.
  */
+class CRDatum {
 
-public class CRDatum {
-    public double crInitialIOB = 0d;
-    public double crInitialBG = 0d;
-    public long crInitialCarbTime = 0l;
-    public double crEndIOB = 0d;
-    public double crEndBG = 0d;
-    public long crEndTime = 0l;
-    public double crCarbs = 0d;
-    public double crInsulin = 0d;
-    public double crInsulinTotal = 0d;
+    var crInitialIOB = 0.0
+    var crInitialBG = 0.0
+    var crInitialCarbTime = 0L
+    var crEndIOB = 0.0
+    var crEndBG = 0.0
+    var crEndTime = 0L
+    var crCarbs = 0.0
+    var crInsulin = 0.0
+    var crInsulinTotal = 0.0
 
-    public CRDatum() {}
-
-    public CRDatum(JSONObject json) {
+    constructor() {}
+    constructor(json: JSONObject) {
         try {
-            if (json.has("CRInitialIOB")) crInitialIOB = json.getDouble("CRInitialIOB");
-            if (json.has("CRInitialBG")) crInitialBG = json.getDouble("CRInitialBG");
-            if (json.has("CRInitialCarbTime")) crInitialCarbTime = DateUtil.fromISODateString(json.getString("CRInitialCarbTime")).getTime();
-            if (json.has("CREndIOB")) crEndIOB = json.getDouble("CREndIOB");
-            if (json.has("CREndBG")) crEndBG = json.getDouble("CREndBG");
-            if (json.has("CREndTime")) crEndTime = DateUtil.fromISODateString(json.getString("CREndTime")).getTime();
-            if (json.has("CRCarbs")) crCarbs = json.getDouble("CRCarbs");
-            if (json.has("CRInsulin")) crInsulin = json.getDouble("CRInsulin");
-        } catch (JSONException e) {}
+            if (json.has("CRInitialIOB")) crInitialIOB = json.getDouble("CRInitialIOB")
+            if (json.has("CRInitialBG")) crInitialBG = json.getDouble("CRInitialBG")
+            if (json.has("CRInitialCarbTime")) crInitialCarbTime = DateUtil.fromISODateString(json.getString("CRInitialCarbTime")).time
+            if (json.has("CREndIOB")) crEndIOB = json.getDouble("CREndIOB")
+            if (json.has("CREndBG")) crEndBG = json.getDouble("CREndBG")
+            if (json.has("CREndTime")) crEndTime = DateUtil.fromISODateString(json.getString("CREndTime")).time
+            if (json.has("CRCarbs")) crCarbs = json.getDouble("CRCarbs")
+            if (json.has("CRInsulin")) crInsulin = json.getDouble("CRInsulin")
+        } catch (e: JSONException) {
+        }
     }
 
-    public JSONObject toJSON() {
-        JSONObject crjson = new JSONObject();
+    fun toJSON(): JSONObject {
+        val crjson = JSONObject()
         try {
-            crjson.put("CRInitialIOB", crInitialIOB);
-            crjson.put("CRInitialBG", (int) crInitialBG);
-            crjson.put("CRInitialCarbTime",DateUtil.toISOString(crInitialCarbTime));
-            crjson.put("CREndIOB", crEndIOB);
-            crjson.put("CREndBG", (int) crEndBG);
-            crjson.put("CREndTime", DateUtil.toISOString(crEndTime));
-            crjson.put("CRCarbs", (int) crCarbs);
-            crjson.put("CRInsulin", crInsulin);
-        } catch (JSONException e) {}
-        return crjson;
+            crjson.put("CRInitialIOB", crInitialIOB)
+            crjson.put("CRInitialBG", crInitialBG.toInt())
+            crjson.put("CRInitialCarbTime", DateUtil.toISOString(crInitialCarbTime))
+            crjson.put("CREndIOB", crEndIOB)
+            crjson.put("CREndBG", crEndBG.toInt())
+            crjson.put("CREndTime", DateUtil.toISOString(crEndTime))
+            crjson.put("CRCarbs", crCarbs.toInt())
+            crjson.put("CRInsulin", crInsulin)
+        } catch (e: JSONException) {
+        }
+        return crjson
     }
 
-    public Boolean equals(CRDatum obj) {
-        Boolean isEqual = true;
-        if (crInitialIOB != obj.crInitialIOB) isEqual = false;
-        if (crInitialBG != obj.crInitialBG) isEqual = false;
-        if (crInitialCarbTime/1000 != obj.crInitialCarbTime/1000) isEqual = false;
-        if (crEndIOB != obj.crEndIOB) isEqual = false;
-        if (crEndBG != obj.crEndBG) isEqual = false;
-        if (crEndTime/1000 != obj.crEndTime/1000) isEqual = false;
-        if (crCarbs != obj.crCarbs) isEqual = false;
-        if (crInsulin != obj.crInsulin) isEqual = false;
-        return isEqual;
+    fun equals(obj: CRDatum): Boolean {
+        var isEqual = true
+        if (crInitialIOB != obj.crInitialIOB) isEqual = false
+        if (crInitialBG != obj.crInitialBG) isEqual = false
+        if (crInitialCarbTime / 1000 != obj.crInitialCarbTime / 1000) isEqual = false
+        if (crEndIOB != obj.crEndIOB) isEqual = false
+        if (crEndBG != obj.crEndBG) isEqual = false
+        if (crEndTime / 1000 != obj.crEndTime / 1000) isEqual = false
+        if (crCarbs != obj.crCarbs) isEqual = false
+        if (crInsulin != obj.crInsulin) isEqual = false
+        return isEqual
     }
 }
