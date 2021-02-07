@@ -3,6 +3,7 @@ package info.nightscout.androidaps.plugins.general.autotune
 import android.content.Context
 import android.view.View
 import dagger.android.HasAndroidInjector
+import info.nightscout.androidaps.Constants
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.data.Profile
 import info.nightscout.androidaps.interfaces.*
@@ -190,8 +191,8 @@ class AutotunePlugin @Inject constructor(
     }
 
     private fun showResults(tunedProfile: ATProfile, pumpProfile: ATProfile): String {
-        var toMgDl = 1
-        if (profileFunction.getUnits() == "mmol") toMgDl = 18
+        var toMgDl = 1.0
+        if (profileFunction.getUnits() == Constants.MMOL) toMgDl = Constants.MMOLL_TO_MGDL
         var strResult = ""
         val line = resourceHelper.gs(R.string.format_autotune_separator)
         strResult = line
