@@ -6,14 +6,14 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
-import androidx.cardview.widget.CardView
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import dagger.android.support.DaggerFragment
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.data.Intervals
 import info.nightscout.androidaps.data.IobTotal
+import info.nightscout.androidaps.databinding.TreatmentsTempbasalsFragmentBinding
+import info.nightscout.androidaps.databinding.TreatmentsTempbasalsItemBinding
 import info.nightscout.androidaps.db.Source
 import info.nightscout.androidaps.db.TemporaryBasal
 import info.nightscout.androidaps.events.EventTempBasalChange
@@ -27,9 +27,8 @@ import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.FabricPrivacy
 import info.nightscout.androidaps.utils.alertDialogs.OKDialog.showConfirmation
 import info.nightscout.androidaps.utils.resources.ResourceHelper
-import io.reactivex.android.schedulers.AndroidSchedulers
+import info.nightscout.androidaps.utils.rx.AapsSchedulers
 import io.reactivex.disposables.CompositeDisposable
-import kotlinx.android.synthetic.main.treatments_tempbasals_fragment.*
 import javax.inject.Inject
 
 class TreatmentsTemporaryBasalsFragment : DaggerFragment() {
@@ -42,95 +41,106 @@ class TreatmentsTemporaryBasalsFragment : DaggerFragment() {
     @Inject lateinit var activePlugin: ActivePluginProvider
     @Inject lateinit var profileFunction: ProfileFunction
     @Inject lateinit var dateUtil: DateUtil
+    @Inject lateinit var aapsSchedulers: AapsSchedulers
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
-                              savedInstanceState: Bundle?): View? {
-        return inflater.inflate(R.layout.treatments_tempbasals_fragment, container, false)
-    }
+    private var _binding: TreatmentsTempbasalsFragmentBinding? = null
+
+    // This property is only valid between onCreateView and
+    // onDestroyView.
+    private val binding get() = _binding!!
+
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View =
+        TreatmentsTempbasalsFragmentBinding.inflate(inflater, container, false).also { _binding = it }.root
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        tempbasals_recyclerview.setHasFixedSize(true)
-        tempbasals_recyclerview.layoutManager = LinearLayoutManager(view.context)
-        tempbasals_recyclerview.adapter = RecyclerViewAdapter(activePlugin.activeTreatments.temporaryBasalsFromHistory)
+        binding.recyclerview.setHasFixedSize(true)
+        binding.recyclerview.layoutManager = LinearLayoutManager(view.context)
+        binding.recyclerview.adapter = RecyclerViewAdapter(activePlugin.activeTreatments.temporaryBasalsFromHistory)
     }
 
-    @Synchronized override fun onResume() {
+    @Synchronized
+    override fun onResume() {
         super.onResume()
         disposable.add(rxBus
             .toObservable(EventTempBasalChange::class.java)
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribe({ updateGui() }) { fabricPrivacy.logException(it) }
+            .observeOn(aapsSchedulers.main)
+            .subscribe({ updateGui() }, fabricPrivacy::logException)
         )
         disposable.add(rxBus
             .toObservable(EventAutosensCalculationFinished::class.java)
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribe({ updateGui() }) { fabricPrivacy.logException(it) }
+            .observeOn(aapsSchedulers.main)
+            .subscribe({ updateGui() }, fabricPrivacy::logException)
         )
         updateGui()
     }
 
-    @Synchronized override fun onPause() {
+    @Synchronized
+    override fun onPause() {
         super.onPause()
         disposable.clear()
     }
 
+    @Synchronized
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
+    }
+
     inner class RecyclerViewAdapter internal constructor(private var tempBasalList: Intervals<TemporaryBasal>) : RecyclerView.Adapter<TempBasalsViewHolder>() {
 
-        override fun onCreateViewHolder(viewGroup: ViewGroup, viewType: Int): TempBasalsViewHolder {
-            val v = LayoutInflater.from(viewGroup.context).inflate(R.layout.treatments_tempbasals_item, viewGroup, false)
-            return TempBasalsViewHolder(v)
-        }
+        override fun onCreateViewHolder(viewGroup: ViewGroup, viewType: Int): TempBasalsViewHolder =
+            TempBasalsViewHolder(LayoutInflater.from(viewGroup.context).inflate(R.layout.treatments_tempbasals_item, viewGroup, false))
 
         override fun onBindViewHolder(holder: TempBasalsViewHolder, position: Int) {
             val tempBasal = tempBasalList.getReversed(position)
-            holder.ph.visibility = if (tempBasal.source == Source.PUMP) View.VISIBLE else View.GONE
-            holder.ns.visibility = if (NSUpload.isIdValid(tempBasal._id)) View.VISIBLE else View.GONE
+            holder.binding.ph.visibility = if (tempBasal.source == Source.PUMP) View.VISIBLE else View.GONE
+            holder.binding.ns.visibility = if (NSUpload.isIdValid(tempBasal._id)) View.VISIBLE else View.GONE
             if (tempBasal.isEndingEvent) {
-                holder.date.text = dateUtil.dateAndTimeString(tempBasal.date)
-                holder.duration.text = resourceHelper.gs(R.string.cancel)
-                holder.absolute.text = ""
-                holder.percent.text = ""
-                holder.realDuration.text = ""
-                holder.iob.text = ""
-                holder.netInsulin.text = ""
-                holder.netRatio.text = ""
-                holder.extendedFlag.visibility = View.GONE
-                holder.iob.setTextColor(holder.netRatio.currentTextColor)
+                holder.binding.date.text = dateUtil.dateAndTimeString(tempBasal.date)
+                holder.binding.duration.text = resourceHelper.gs(R.string.cancel)
+                holder.binding.absolute.text = ""
+                holder.binding.percent.text = ""
+                holder.binding.realDuration.text = ""
+                holder.binding.iob.text = ""
+                holder.binding.netInsulin.text = ""
+                holder.binding.netRatio.text = ""
+                holder.binding.extendedFlag.visibility = View.GONE
+                holder.binding.iob.setTextColor(holder.binding.netRatio.currentTextColor)
             } else {
                 if (tempBasal.isInProgress) {
-                    holder.date.text = dateUtil.dateAndTimeString(tempBasal.date)
-                    holder.date.setTextColor(resourceHelper.gc(R.color.colorActive))
+                    holder.binding.date.text = dateUtil.dateAndTimeString(tempBasal.date)
+                    holder.binding.date.setTextColor(resourceHelper.gc(R.color.colorActive))
                 } else {
-                    holder.date.text = dateUtil.dateAndTimeRangeString(tempBasal.date, tempBasal.end())
-                    holder.date.setTextColor(holder.netRatio.currentTextColor)
+                    holder.binding.date.text = dateUtil.dateAndTimeRangeString(tempBasal.date, tempBasal.end())
+                    holder.binding.date.setTextColor(holder.binding.netRatio.currentTextColor)
                 }
-                holder.duration.text = resourceHelper.gs(R.string.format_mins, tempBasal.durationInMinutes)
+                holder.binding.duration.text = resourceHelper.gs(R.string.format_mins, tempBasal.durationInMinutes)
                 if (tempBasal.isAbsolute) {
                     val profile = profileFunction.getProfile(tempBasal.date)
                     if (profile != null) {
-                        holder.absolute.text = resourceHelper.gs(R.string.pump_basebasalrate, tempBasal.tempBasalConvertedToAbsolute(tempBasal.date, profile))
-                        holder.percent.text = ""
+                        holder.binding.absolute.text = resourceHelper.gs(R.string.pump_basebasalrate, tempBasal.tempBasalConvertedToAbsolute(tempBasal.date, profile))
+                        holder.binding.percent.text = ""
                     } else {
-                        holder.absolute.text = resourceHelper.gs(R.string.noprofile)
-                        holder.percent.text = ""
+                        holder.binding.absolute.text = resourceHelper.gs(R.string.noprofile)
+                        holder.binding.percent.text = ""
                     }
                 } else {
-                    holder.absolute.text = ""
-                    holder.percent.text = resourceHelper.gs(R.string.format_percent, tempBasal.percentRate)
+                    holder.binding.absolute.text = ""
+                    holder.binding.percent.text = resourceHelper.gs(R.string.format_percent, tempBasal.percentRate)
                 }
-                holder.realDuration.text = resourceHelper.gs(R.string.format_mins, tempBasal.realDuration)
+                holder.binding.realDuration.text = resourceHelper.gs(R.string.format_mins, tempBasal.realDuration)
                 val now = DateUtil.now()
                 var iob = IobTotal(now)
                 val profile = profileFunction.getProfile(now)
                 if (profile != null) iob = tempBasal.iobCalc(now, profile)
-                holder.iob.text = resourceHelper.gs(R.string.formatinsulinunits, iob.basaliob)
-                holder.netInsulin.text = resourceHelper.gs(R.string.formatinsulinunits, iob.netInsulin)
-                holder.netRatio.text = resourceHelper.gs(R.string.pump_basebasalrate, iob.netRatio)
-                holder.extendedFlag.visibility = View.GONE
-                if (iob.basaliob != 0.0) holder.iob.setTextColor(resourceHelper.gc(R.color.colorActive)) else holder.iob.setTextColor(holder.netRatio.currentTextColor)
+                holder.binding.iob.text = resourceHelper.gs(R.string.formatinsulinunits, iob.basaliob)
+                holder.binding.netInsulin.text = resourceHelper.gs(R.string.formatinsulinunits, iob.netInsulin)
+                holder.binding.netRatio.text = resourceHelper.gs(R.string.pump_basebasalrate, iob.netRatio)
+                holder.binding.extendedFlag.visibility = View.GONE
+                if (iob.basaliob != 0.0) holder.binding.iob.setTextColor(resourceHelper.gc(R.color.colorActive)) else holder.binding.iob.setTextColor(holder.binding.netRatio.currentTextColor)
             }
-            holder.remove.tag = tempBasal
+            holder.binding.remove.tag = tempBasal
         }
 
         override fun getItemCount(): Int {
@@ -139,22 +149,10 @@ class TreatmentsTemporaryBasalsFragment : DaggerFragment() {
 
         inner class TempBasalsViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
-            var cv: CardView = itemView.findViewById(R.id.tempbasals_cardview)
-            var date: TextView = itemView.findViewById(R.id.tempbasals_date)
-            var duration: TextView = itemView.findViewById(R.id.tempbasals_duration)
-            var absolute: TextView = itemView.findViewById(R.id.tempbasals_absolute)
-            var percent: TextView = itemView.findViewById(R.id.tempbasals_percent)
-            var realDuration: TextView = itemView.findViewById(R.id.tempbasals_realduration)
-            var netRatio: TextView = itemView.findViewById(R.id.tempbasals_netratio)
-            var netInsulin: TextView = itemView.findViewById(R.id.tempbasals_netinsulin)
-            var iob: TextView = itemView.findViewById(R.id.tempbasals_iob)
-            var extendedFlag: TextView = itemView.findViewById(R.id.tempbasals_extendedflag)
-            var remove: TextView = itemView.findViewById(R.id.tempbasals_remove)
-            var ph: TextView = itemView.findViewById(R.id.pump_sign)
-            var ns: TextView = itemView.findViewById(R.id.ns_sign)
+            val binding = TreatmentsTempbasalsItemBinding.bind(itemView)
 
             init {
-                remove.setOnClickListener { v: View ->
+                binding.remove.setOnClickListener { v: View ->
                     val tempBasal = v.tag as TemporaryBasal
                     context?.let {
                         showConfirmation(it, resourceHelper.gs(R.string.removerecord),
@@ -167,15 +165,16 @@ class TreatmentsTemporaryBasalsFragment : DaggerFragment() {
                             }, null)
                     }
                 }
-                remove.paintFlags = remove.paintFlags or Paint.UNDERLINE_TEXT_FLAG
+                binding.remove.paintFlags = binding.remove.paintFlags or Paint.UNDERLINE_TEXT_FLAG
             }
         }
 
     }
 
     private fun updateGui() {
-        tempbasals_recyclerview?.swapAdapter(RecyclerViewAdapter(activePlugin.activeTreatments.temporaryBasalsFromHistory), false)
+        if (_binding == null) return
+        binding.recyclerview.swapAdapter(RecyclerViewAdapter(activePlugin.activeTreatments.temporaryBasalsFromHistory), false)
         val tempBasalsCalculation = activePlugin.activeTreatments.lastCalculationTempBasals
-        if (tempBasalsCalculation != null) tempbasals_totaltempiob?.text = resourceHelper.gs(R.string.formatinsulinunits, tempBasalsCalculation.basaliob)
+        if (tempBasalsCalculation != null) binding.totalTempIob.text = resourceHelper.gs(R.string.formatinsulinunits, tempBasalsCalculation.basaliob)
     }
 }

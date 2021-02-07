@@ -1,6 +1,8 @@
 package info.nightscout.androidaps.plugins.source
 
-import android.content.Intent
+import android.content.Context
+import androidx.work.Worker
+import androidx.work.WorkerParameters
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.MainApp
 import info.nightscout.androidaps.R
@@ -31,39 +33,49 @@ class MM640gPlugin @Inject constructor(
     aapsLogger, resourceHelper, injector
 ), BgSourceInterface {
 
-    override fun advancedFilteringSupported(): Boolean {
-        return false
-    }
+    // cannot be inner class because of needed injection
+    class MM640gWorker(
+        context: Context,
+        params: WorkerParameters
+    ) : Worker(context, params) {
 
-    override fun handleNewData(intent: Intent) {
-        if (!isEnabled(PluginType.BGSOURCE)) return
-        val bundle = intent.extras ?: return
-        val collection = bundle.getString("collection") ?: return
-        if (collection == "entries") {
-            val data = bundle.getString("data")
-            aapsLogger.debug(LTag.BGSOURCE, "Received MM640g Data: $data")
-            if (data != null && data.isNotEmpty()) {
-                try {
-                    val jsonArray = JSONArray(data)
-                    for (i in 0 until jsonArray.length()) {
-                        val jsonObject = jsonArray.getJSONObject(i)
-                        when (val type = jsonObject.getString("type")) {
-                            "sgv" -> {
-                                val bgReading = BgReading()
-                                bgReading.value = jsonObject.getDouble("sgv")
-                                bgReading.direction = jsonObject.getString("direction")
-                                bgReading.date = jsonObject.getLong("date")
-                                bgReading.raw = jsonObject.getDouble("sgv")
-                                MainApp.getDbHelper().createIfNotExists(bgReading, "MM640g")
+        @Inject lateinit var mM640gPlugin: MM640gPlugin
+        @Inject lateinit var aapsLogger: AAPSLogger
+
+        init {
+            (context.applicationContext as HasAndroidInjector).androidInjector().inject(this)
+        }
+
+        override fun doWork(): Result {
+            if (!mM640gPlugin.isEnabled(PluginType.BGSOURCE)) return Result.failure()
+            val collection = inputData.getString("collection") ?: return Result.failure()
+            if (collection == "entries") {
+                val data = inputData.getString("data")
+                aapsLogger.debug(LTag.BGSOURCE, "Received MM640g Data: $data")
+                if (data != null && data.isNotEmpty()) {
+                    try {
+                        val jsonArray = JSONArray(data)
+                        for (i in 0 until jsonArray.length()) {
+                            val jsonObject = jsonArray.getJSONObject(i)
+                            when (val type = jsonObject.getString("type")) {
+                                "sgv" -> {
+                                    val bgReading = BgReading()
+                                    bgReading.value = jsonObject.getDouble("sgv")
+                                    bgReading.direction = jsonObject.getString("direction")
+                                    bgReading.date = jsonObject.getLong("date")
+                                    bgReading.raw = jsonObject.getDouble("sgv")
+                                    MainApp.getDbHelper().createIfNotExists(bgReading, "MM640g")
+                                }
+
+                                else  -> aapsLogger.debug(LTag.BGSOURCE, "Unknown entries type: $type")
                             }
-
-                            else  -> aapsLogger.debug(LTag.BGSOURCE, "Unknown entries type: $type")
                         }
+                    } catch (e: JSONException) {
+                        aapsLogger.error("Exception: ", e)
                     }
-                } catch (e: JSONException) {
-                    aapsLogger.error("Exception: ", e)
                 }
             }
+            return Result.success()
         }
     }
 }

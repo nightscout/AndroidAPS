@@ -32,51 +32,57 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
-                android:gravity="center_vertical|right"
+                android:gravity="center"
                 android:paddingStart="10dp"
                 android:paddingEnd="5dp"
-                android:text="{fa-clock-o}" />
+                android:text="{fa-clock-o}"
+                tools:ignore="HardcodedText" />
 
             <TextView
-                android:id="@+id/tempbasals_date"
+                android:id="@+id/date"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="1.1.2000 18:00"
-                android:textAppearance="?android:attr/textAppearanceSmall" />
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                tools:ignore="HardcodedText" />
 
             <TextView
-                android:id="@+id/tempbasals_absolute"
+                android:id="@+id/absolute"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:paddingStart="10dp"
                 android:text="0.25 U"
-                android:textAppearance="?android:attr/textAppearanceSmall" />
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                tools:ignore="HardcodedText,RtlSymmetry" />
 
             <TextView
-                android:id="@+id/tempbasals_percent"
+                android:id="@+id/percent"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:paddingStart="10dp"
                 android:text="150%"
-                android:textAppearance="?android:attr/textAppearanceSmall" />
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                tools:ignore="HardcodedText,RtlSymmetry" />
 
             <TextView
-                android:id="@+id/tempbasals_duration"
+                android:id="@+id/duration"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:paddingStart="10dp"
                 android:text="30 min"
-                android:textAppearance="?android:attr/textAppearanceSmall" />
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                tools:ignore="HardcodedText,RtlSymmetry" />
 
             <TextView
-                android:id="@+id/tempbasals_extendedflag"
-                android:layout_width="wrap_content"
+                android:id="@+id/extended_flag"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:gravity="right"
+                android:gravity="end"
                 android:paddingEnd="5dp"
                 android:text="E"
-                android:textColor="@color/colorSetExtendedButton" />
+                android:textColor="@color/colorSetExtendedButton"
+                tools:ignore="HardcodedText,RtlSymmetry" />
 
 
         </LinearLayout>
@@ -96,13 +102,14 @@
                 android:textAppearance="?android:attr/textAppearanceSmall" />
 
             <TextView
-                android:id="@+id/tempbasals_realduration"
+                android:id="@+id/real_duration"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
                 android:paddingEnd="10dp"
                 android:text="10 min"
-                android:textStyle="bold" />
+                android:textStyle="bold"
+                tools:ignore="HardcodedText,RtlSymmetry" />
 
             <TextView
                 android:layout_width="wrap_content"
@@ -110,16 +117,18 @@
                 android:layout_gravity="top"
                 android:paddingEnd="5dp"
                 android:text="@string/tempbasals_netratio_label_string"
-                android:textAppearance="?android:attr/textAppearanceSmall" />
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                tools:ignore="RtlSymmetry" />
 
             <TextView
-                android:id="@+id/tempbasals_netratio"
+                android:id="@+id/net_ratio"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
                 android:paddingEnd="10dp"
                 android:text="0.05 U/h"
-                android:textStyle="bold" />
+                android:textStyle="bold"
+                tools:ignore="HardcodedText,RtlSymmetry" />
 
             <TextView
                 android:layout_width="wrap_content"
@@ -127,39 +136,43 @@
                 android:layout_gravity="top"
                 android:paddingEnd="5dp"
                 android:text="@string/tempbasals_netinsulin_label_string"
-                android:textAppearance="?android:attr/textAppearanceSmall" />
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                tools:ignore="RtlSymmetry" />
 
             <TextView
-                android:id="@+id/tempbasals_netinsulin"
+                android:id="@+id/net_insulin"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
                 android:paddingEnd="10dp"
                 android:text="0.05 U"
-                android:textStyle="bold" />
+                android:textStyle="bold"
+                tools:ignore="HardcodedText,RtlSymmetry" />
 
             <TextView
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginRight="10dp"
+                android:layout_marginEnd="10dp"
                 android:layout_weight="1"
                 android:text="" />
 
             <TextView
-                android:id="@+id/pump_sign"
+                android:id="@+id/ph"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginRight="10dp"
+                android:layout_marginEnd="10dp"
                 android:text="PH"
-                android:textColor="@color/colorSetTempButton" />
+                android:textColor="@color/colorSetTempButton"
+                tools:ignore="HardcodedText" />
 
             <TextView
-                android:id="@+id/ns_sign"
+                android:id="@+id/ns"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginRight="10dp"
+                android:layout_marginEnd="10dp"
                 android:text="NS"
-                android:textColor="@color/colorSetTempButton" />
+                android:textColor="@color/colorSetTempButton"
+                tools:ignore="HardcodedText" />
 
         </LinearLayout>
 
@@ -178,19 +191,20 @@
                 android:textAppearance="?android:attr/textAppearanceSmall" />
 
             <TextView
-                android:id="@+id/tempbasals_iob"
+                android:id="@+id/iob"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
-                android:layout_marginRight="30dp"
+                android:layout_marginEnd="30dp"
                 android:text="0.12 U"
-                android:textStyle="bold" />
+                android:textStyle="bold"
+                tools:ignore="HardcodedText" />
 
             <TextView
-                android:id="@+id/tempbasals_remove"
-                android:layout_width="wrap_content"
+                android:id="@+id/remove"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginRight="10dp"
+                android:layout_marginEnd="10dp"
                 android:layout_weight="1"
                 android:text="@string/overview_quickwizard_item_remove_button"
                 android:textAlignment="viewEnd"

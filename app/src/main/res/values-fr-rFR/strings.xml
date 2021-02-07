@@ -436,7 +436,6 @@ L\'ENSEMBLE DES RISQUES LIÉS À LA QUALITÉ ET À LA PERFORMANCE DU PROGRAMME S
     <string name="overview_extendedbolus_cancel_button">Annuler Bolus étendu</string>
     <string name="doprofileswitch">Changer de profil</string>
     <string name="careportal_sensor_label">Capteur</string>
-    <string name="careportal_canula_label">Canule</string>
     <string name="careportal_insulin_label">Insuline</string>
     <string name="careportal_pb_label">Pile pompe</string>
     <string name="careportal_age_label">âge:</string>
@@ -549,7 +548,6 @@ L\'ENSEMBLE DES RISQUES LIÉS À LA QUALITÉ ET À LA PERFORMANCE DU PROGRAMME S
     <string name="maxiobset">Maximum IA réglé correctement</string>
     <string name="hasbgdata">Glycémie disponible depuis la source sélectionnée</string>
     <string name="combo_programming_bolus">Programmer la pompe pour injecter un bolus</string>
-    <string name="combo_refresh">Actualiser</string>
     <string name="combo_pump_state_label">État</string>
     <string name="combo_pump_activity_label">Activité</string>
     <string name="combo_no_pump_connection">Pas de connexion depuis %1$d min</string>
@@ -648,7 +646,7 @@ L\'ENSEMBLE DES RISQUES LIÉS À LA QUALITÉ ET À LA PERFORMANCE DU PROGRAMME S
     <string name="combo_error_failure_reading_changed_basal_rate">Le pourcentage de basal a changé dans la pompe mais sa lecture a échoué</string>
     <string name="combo_activity_checking_for_history_changes">Vérification des modifications de l\'historique</string>
     <string name="combo_error_multiple_boluses_with_identical_timestamp">De multiples bolus similaires viennent d\'être importés dans la même minute. Un seul enregistrement a pu être ajouté aux traitements. Merci de vérifier la pompe et d\'ajouter manuellement un enregistrement de bolus en utilisant l\'onglet Careportal. Assurez vous de créer ce bolus avec un temps différent de tous les autres Bolus.</string>
-    <string name="about_link_urls">\n\ndocumentation :\nhttps://androidaps.readthedocs.io/en/latest/CROWDIN/fr\n\nfacebook :\nhttps://www.facebook.com/groups/AndroidAPSUsers</string>
+    <string name="about_link_urls">\n\ndocumentation :\nhttps://androidaps.readthedocs.io/fr/latest/\n\nfacebook :\nhttps://www.facebook.com/groups/AndroidAPSUsers</string>
     <string name="combo_check_date">Le dernier bolus enregistré date d\'il y a plus de 24h ou est dans le futur. Vérifiez que la date dans la pompe est correctement définie.</string>
     <string name="combo_suspious_bolus_time">L\'heure/date sur la pompe du dernier bolus administré semble erroné. L\'IA est probablement incorrecte. Vérifiez l\'heure/date de la pompe.</string>
     <string name="profileswitch_ismissing">ProfileSwitch manquant. S’il vous plaît faire un changement de profil ou appuyez sur « Activer le profil » dans le LocalProfile.</string>
@@ -840,7 +838,6 @@ L\'ENSEMBLE DES RISQUES LIÉS À LA QUALITÉ ET À LA PERFORMANCE DU PROGRAMME S
     <string name="eb_formatter">%1$.2f / %2$.2f U pour %3$d min</string>
     <string name="enable_tbr_over_notification">Activer la notification de la fin DBT\n(réglage de pompe)</string>
     <string name="disable_tbr_over_notification">Désactiver la notification de la fin de DBT\n(réglage de pompe)</string>
-    <string name="refresh">Actualiser</string>
     <string name="description_pump_insight_local">Intégration des pompes Accu-Chek Insight</string>
     <string name="not_inserted">Non inséré</string>
     <string name="short_status_last_connected">Dernière conn : il y a %1$d min</string>
@@ -1065,8 +1062,6 @@ L\'ENSEMBLE DES RISQUES LIÉS À LA QUALITÉ ET À LA PERFORMANCE DU PROGRAMME S
     <string name="insight_alert_notification_channel">Alertes Pompe Insight</string>
     <!-- SMS Communicator & OTP Authenticator -->
     <string name="smscommunicator_code_from_authenticator_for" comment="This is continuation of sentence: To [ACTION] reply with code">depuis l\'application Authenticator pour : %1$s suivie du code PIN</string>
-    <string name="smscommunicator_otp_enabled">Activer l\'Authentificateur</string>
-    <string name="smscommunicator_otp_enabled_summary">Authentifier les commandes à l\'aide des mots de passe uniques (OTP) générés par Google Authenticator ou des applications 2FA similaires.</string>
     <string name="smscommunicator_otp_pin">Code PIN obligatoire à la fin de l\'OTP</string>
     <string name="smscommunicator_otp_pin_summary">Chiffres supplémentaires qui doivent être mémorisés et collés à la fin de chaque OTP généré</string>
     <string name="smscomunicator_tab_otp_label">Configuration de l\'Authentificateur</string>
@@ -1160,4 +1155,6 @@ L\'ENSEMBLE DES RISQUES LIÉS À LA QUALITÉ ET À LA PERFORMANCE DU PROGRAMME S
     <string name="timetoeat">Il est temps de manger</string>
     <string name="fabric_upload_disabled">Téléchargement logs crashs désactivé!</string>
     <string name="graph_menu_divider_header">Graph</string>
+    <string name="chart_menu">Menu graphique</string>
+    <string name="clear_filter">Effacer le filtre</string>
 </resources>

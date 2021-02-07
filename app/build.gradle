@@ -11,7 +11,6 @@ buildscript {
 }
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
-apply plugin: 'kotlin-android-extensions'
 apply plugin: 'kotlin-kapt'
 apply plugin: 'com.google.gms.google-services'
 //apply plugin: 'jacoco-android'
@@ -157,8 +156,8 @@ android {
             ext.enableCrashlytics = false
         }
     }
+    flavorDimensions "standard"
     productFlavors {
-        flavorDimensions "standard"
         full {
             applicationId "info.nightscout.androidaps"
             dimension "standard"
@@ -236,6 +235,7 @@ dependencies {
     wearApp project(':wear')
 
     implementation project(':core')
+    implementation project(':database')
     implementation project(':dana')
     implementation project(':danars')
     implementation project(':danar')
@@ -246,14 +246,14 @@ dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
 
     testImplementation "junit:junit:$junit_version"
-    testImplementation 'org.json:json:20200518'
+    testImplementation 'org.json:json:20201115'
     testImplementation "org.mockito:mockito-core:${mockitoVersion}"
     testImplementation "org.powermock:powermock-api-mockito2:${powermockVersion}"
     testImplementation "org.powermock:powermock-module-junit4-rule-agent:${powermockVersion}"
     testImplementation "org.powermock:powermock-module-junit4-rule:${powermockVersion}"
     testImplementation "org.powermock:powermock-module-junit4:${powermockVersion}"
-    testImplementation 'joda-time:joda-time:2.10.6'
-    testImplementation('com.google.truth:truth:1.0.1') {
+    testImplementation 'joda-time:joda-time:2.10.9'
+    testImplementation('com.google.truth:truth:1.1.2') {
         exclude group: "com.google.guava", module: "guava"
         exclude group: "com.google.code.findbugs", module: "jsr305"
     }

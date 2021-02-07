@@ -1,6 +1,8 @@
 package info.nightscout.androidaps.plugins.source
 
-import android.content.Intent
+import android.content.Context
+import androidx.work.Worker
+import androidx.work.WorkerParameters
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.Constants
 import info.nightscout.androidaps.MainApp
@@ -25,9 +27,7 @@ import javax.inject.Singleton
 class PoctechPlugin @Inject constructor(
     injector: HasAndroidInjector,
     resourceHelper: ResourceHelper,
-    aapsLogger: AAPSLogger,
-    private val sp: SP,
-    private val nsUpload: NSUpload
+    aapsLogger: AAPSLogger
 ) : PluginBase(PluginDescription()
     .mainType(PluginType.BGSOURCE)
     .fragmentClass(BGSourceFragment::class.java.name)
@@ -38,36 +38,48 @@ class PoctechPlugin @Inject constructor(
     aapsLogger, resourceHelper, injector
 ), BgSourceInterface {
 
-    override fun advancedFilteringSupported(): Boolean {
-        return false
-    }
+    // cannot be inner class because of needed injection
+    class PoctechWorker(
+        context: Context,
+        params: WorkerParameters
+    ) : Worker(context, params) {
 
-    override fun handleNewData(intent: Intent) {
-        if (!isEnabled(PluginType.BGSOURCE)) return
-        val bundle = intent.extras ?: return
-        val bgReading = BgReading()
-        val data = bundle.getString("data")
-        aapsLogger.debug(LTag.BGSOURCE, "Received Poctech Data $data")
-        try {
-            val jsonArray = JSONArray(data)
-            aapsLogger.debug(LTag.BGSOURCE, "Received Poctech Data size:" + jsonArray.length())
-            for (i in 0 until jsonArray.length()) {
-                val json = jsonArray.getJSONObject(i)
-                bgReading.value = json.getDouble("current")
-                bgReading.direction = json.getString("direction")
-                bgReading.date = json.getLong("date")
-                bgReading.raw = json.getDouble("raw")
-                if (safeGetString(json, "units", Constants.MGDL) == "mmol/L") bgReading.value = bgReading.value * Constants.MMOLL_TO_MGDL
-                val isNew = MainApp.getDbHelper().createIfNotExists(bgReading, "Poctech")
-                if (isNew && sp.getBoolean(R.string.key_dexcomg5_nsupload, false)) {
-                    nsUpload.uploadBg(bgReading, "AndroidAPS-Poctech")
+        @Inject lateinit var poctechPlugin: PoctechPlugin
+        @Inject lateinit var aapsLogger: AAPSLogger
+        @Inject lateinit var sp: SP
+        @Inject lateinit var nsUpload: NSUpload
+
+        init {
+            (context.applicationContext as HasAndroidInjector).androidInjector().inject(this)
+        }
+
+        override fun doWork(): Result {
+            if (!poctechPlugin.isEnabled(PluginType.BGSOURCE)) return Result.failure()
+            aapsLogger.debug(LTag.BGSOURCE, "Received Poctech Data $inputData")
+            try {
+                val jsonArray = JSONArray(inputData.getString("data"))
+                aapsLogger.debug(LTag.BGSOURCE, "Received Poctech Data size:" + jsonArray.length())
+                for (i in 0 until jsonArray.length()) {
+                    val json = jsonArray.getJSONObject(i)
+                    val bgReading = BgReading()
+                    bgReading.value = json.getDouble("current")
+                    bgReading.direction = json.getString("direction")
+                    bgReading.date = json.getLong("date")
+                    bgReading.raw = json.getDouble("raw")
+                    if (safeGetString(json, "units", Constants.MGDL) == "mmol/L") bgReading.value = bgReading.value * Constants.MMOLL_TO_MGDL
+                    val isNew = MainApp.getDbHelper().createIfNotExists(bgReading, "Poctech")
+                    if (isNew && sp.getBoolean(R.string.key_dexcomg5_nsupload, false)) {
+                        nsUpload.uploadBg(bgReading, "AndroidAPS-Poctech")
+                    }
+                    if (isNew && sp.getBoolean(R.string.key_dexcomg5_xdripupload, false)) {
+                        nsUpload.sendToXdrip(bgReading)
+                    }
                 }
-                if (isNew && sp.getBoolean(R.string.key_dexcomg5_xdripupload, false)) {
-                    nsUpload.sendToXdrip(bgReading)
-                }
+            } catch (e: JSONException) {
+                aapsLogger.error("Exception: ", e)
+                return Result.failure()
             }
-        } catch (e: JSONException) {
-            aapsLogger.error("Exception: ", e)
+            return Result.success()
         }
     }
 }

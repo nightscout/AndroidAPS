@@ -31,7 +31,7 @@
                 android:adjustViewBounds="false"
                 android:cropToPadding="false"
                 android:scaleType="fitStart"
-                app:srcCompat="@drawable/ic_quickwizard" />
+                app:srcCompat="@drawable/ic_quick_wizard" />
 
             <LinearLayout
                 android:orientation="vertical"

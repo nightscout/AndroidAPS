@@ -1,6 +1,8 @@
 package info.nightscout.androidaps.plugins.source
 
-import android.content.Intent
+import android.content.Context
+import androidx.work.Worker
+import androidx.work.WorkerParameters
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.MainApp
 import info.nightscout.androidaps.R
@@ -21,9 +23,7 @@ import javax.inject.Singleton
 class TomatoPlugin @Inject constructor(
     injector: HasAndroidInjector,
     resourceHelper: ResourceHelper,
-    aapsLogger: AAPSLogger,
-    private val sp: SP,
-    private val nsUpload: NSUpload
+    aapsLogger: AAPSLogger
 ) : PluginBase(PluginDescription()
     .mainType(PluginType.BGSOURCE)
     .fragmentClass(BGSourceFragment::class.java.name)
@@ -35,23 +35,35 @@ class TomatoPlugin @Inject constructor(
     aapsLogger, resourceHelper, injector
 ), BgSourceInterface {
 
-    override fun advancedFilteringSupported(): Boolean {
-        return false
-    }
+    // cannot be inner class because of needed injection
+    class TomatoWorker(
+        context: Context,
+        params: WorkerParameters
+    ) : Worker(context, params) {
 
-    override fun handleNewData(intent: Intent) {
-        if (!isEnabled(PluginType.BGSOURCE)) return
-        val bundle = intent.extras ?: return
-        val bgReading = BgReading()
-        aapsLogger.debug(LTag.BGSOURCE, "Received Tomato Data")
-        bgReading.value = bundle.getDouble("com.fanqies.tomatofn.Extras.BgEstimate")
-        bgReading.date = bundle.getLong("com.fanqies.tomatofn.Extras.Time")
-        val isNew = MainApp.getDbHelper().createIfNotExists(bgReading, "Tomato")
-        if (isNew && sp.getBoolean(R.string.key_dexcomg5_nsupload, false)) {
-            nsUpload.uploadBg(bgReading, "AndroidAPS-Tomato")
+        @Inject lateinit var tomatoPlugin: TomatoPlugin
+        @Inject lateinit var aapsLogger: AAPSLogger
+        @Inject lateinit var sp: SP
+        @Inject lateinit var nsUpload: NSUpload
+
+        init {
+            (context.applicationContext as HasAndroidInjector).androidInjector().inject(this)
         }
-        if (isNew && sp.getBoolean(R.string.key_dexcomg5_xdripupload, false)) {
-            nsUpload.sendToXdrip(bgReading)
+
+        override fun doWork(): Result {
+            if (!tomatoPlugin.isEnabled(PluginType.BGSOURCE)) return Result.failure()
+            val bgReading = BgReading()
+            aapsLogger.debug(LTag.BGSOURCE, "Received Tomato Data")
+            bgReading.value = inputData.getDouble("com.fanqies.tomatofn.Extras.BgEstimate", 0.0)
+            bgReading.date = inputData.getLong("com.fanqies.tomatofn.Extras.Time", 0)
+            val isNew = MainApp.getDbHelper().createIfNotExists(bgReading, "Tomato")
+            if (isNew && sp.getBoolean(R.string.key_dexcomg5_nsupload, false)) {
+                nsUpload.uploadBg(bgReading, "AndroidAPS-Tomato")
+            }
+            if (isNew && sp.getBoolean(R.string.key_dexcomg5_xdripupload, false)) {
+                nsUpload.sendToXdrip(bgReading)
+            }
+            return Result.success()
         }
     }
 }

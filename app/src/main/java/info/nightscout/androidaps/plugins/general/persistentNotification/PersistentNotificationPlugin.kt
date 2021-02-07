@@ -7,10 +7,8 @@ import android.content.Context
 import android.content.Intent
 import androidx.core.app.NotificationCompat
 import androidx.core.app.RemoteInput
-import androidx.core.app.TaskStackBuilder
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.Constants
-import info.nightscout.androidaps.MainActivity
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.data.Profile
 import info.nightscout.androidaps.events.*
@@ -26,8 +24,8 @@ import info.nightscout.androidaps.utils.androidNotification.NotificationHolder
 import info.nightscout.androidaps.utils.androidNotification.openAppIntent
 import info.nightscout.androidaps.utils.resources.IconsProvider
 import info.nightscout.androidaps.utils.resources.ResourceHelper
+import info.nightscout.androidaps.utils.rx.AapsSchedulers
 import io.reactivex.disposables.CompositeDisposable
-import io.reactivex.schedulers.Schedulers
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -37,6 +35,7 @@ class PersistentNotificationPlugin @Inject constructor(
     injector: HasAndroidInjector,
     aapsLogger: AAPSLogger,
     resourceHelper: ResourceHelper,
+    private val aapsSchedulers: AapsSchedulers,
     private val profileFunction: ProfileFunction,
     private val fabricPrivacy: FabricPrivacy,
     private val activePlugins: ActivePluginProvider,
@@ -74,36 +73,36 @@ class PersistentNotificationPlugin @Inject constructor(
         createNotificationChannel() // make sure channels exist before triggering updates through the bus
         disposable.add(rxBus
             .toObservable(EventRefreshOverview::class.java)
-            .observeOn(Schedulers.io())
-            .subscribe({ triggerNotificationUpdate() }) { fabricPrivacy.logException(it) })
+            .observeOn(aapsSchedulers.io)
+            .subscribe({ triggerNotificationUpdate() }, fabricPrivacy::logException))
         disposable.add(rxBus
             .toObservable(EventExtendedBolusChange::class.java)
-            .observeOn(Schedulers.io())
-            .subscribe({ triggerNotificationUpdate() }) { fabricPrivacy.logException(it) })
+            .observeOn(aapsSchedulers.io)
+            .subscribe({ triggerNotificationUpdate() }, fabricPrivacy::logException))
         disposable.add(rxBus
             .toObservable(EventTempBasalChange::class.java)
-            .observeOn(Schedulers.io())
-            .subscribe({ triggerNotificationUpdate() }) { fabricPrivacy.logException(it) })
+            .observeOn(aapsSchedulers.io)
+            .subscribe({ triggerNotificationUpdate() }, fabricPrivacy::logException))
         disposable.add(rxBus
             .toObservable(EventTreatmentChange::class.java)
-            .observeOn(Schedulers.io())
-            .subscribe({ triggerNotificationUpdate() }) { fabricPrivacy.logException(it) })
+            .observeOn(aapsSchedulers.io)
+            .subscribe({ triggerNotificationUpdate() }, fabricPrivacy::logException))
         disposable.add(rxBus
             .toObservable(EventInitializationChanged::class.java)
-            .observeOn(Schedulers.io())
-            .subscribe({ triggerNotificationUpdate() }) { fabricPrivacy.logException(it) })
+            .observeOn(aapsSchedulers.io)
+            .subscribe({ triggerNotificationUpdate() }, fabricPrivacy::logException))
         disposable.add(rxBus
             .toObservable(EventNewBasalProfile::class.java)
-            .observeOn(Schedulers.io())
-            .subscribe({ triggerNotificationUpdate() }) { fabricPrivacy.logException(it) })
+            .observeOn(aapsSchedulers.io)
+            .subscribe({ triggerNotificationUpdate() }, fabricPrivacy::logException))
         disposable.add(rxBus
             .toObservable(EventAutosensCalculationFinished::class.java)
-            .observeOn(Schedulers.io())
-            .subscribe({ triggerNotificationUpdate() }) { fabricPrivacy.logException(it) })
+            .observeOn(aapsSchedulers.io)
+            .subscribe({ triggerNotificationUpdate() }, fabricPrivacy::logException))
         disposable.add(rxBus
             .toObservable(EventPreferenceChange::class.java)
-            .observeOn(Schedulers.io())
-            .subscribe({ triggerNotificationUpdate() }) { fabricPrivacy.logException(it) })
+            .observeOn(aapsSchedulers.io)
+            .subscribe({ triggerNotificationUpdate() }, fabricPrivacy::logException))
         triggerNotificationUpdate()
     }
 

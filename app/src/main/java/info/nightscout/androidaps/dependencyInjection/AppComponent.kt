@@ -41,6 +41,7 @@ import javax.inject.Singleton
         DanaModule::class,
         DanaRModule::class,
         DanaRSModule::class,
+        WorkersModule::class,
         OHUploaderModule::class
     ]
 )

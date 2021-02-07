@@ -448,7 +448,6 @@
     <string name="maxiobset">최대 IOB가 바르게 설정됨</string>
     <string name="hasbgdata">선택한 소스에서 혈당이 들어옵니다.</string>
     <string name="combo_programming_bolus">Bolus 주입을 위한 펌프 프로그래밍</string>
-    <string name="combo_refresh">새로고침</string>
     <string name="combo_pump_state_label">상태</string>
     <string name="combo_pump_activity_label">활동</string>
     <string name="combo_no_pump_connection">%1$d분 동안 연결되지 않음</string>
@@ -715,7 +714,6 @@
     <string name="eb_formatter">%3$d분 동안 %1$.2f / %2$.2f U</string>
     <string name="enable_tbr_over_notification">임시Basal 종료 알림 활성\n(펌프설정)</string>
     <string name="disable_tbr_over_notification">임시Basal 종료 알림 비활성\n(펌프설정)</string>
-    <string name="refresh">새로고침</string>
     <string name="description_pump_insight_local">아큐-첵 Insight 펌프 연동</string>
     <string name="not_inserted">삽입되지 않음</string>
     <string name="short_status_last_connected">최신연결: %1$d 분전</string>

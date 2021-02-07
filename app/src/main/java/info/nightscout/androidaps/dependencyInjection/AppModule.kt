@@ -17,6 +17,8 @@ import info.nightscout.androidaps.plugins.general.nsclient.UploadQueue
 import info.nightscout.androidaps.plugins.treatments.TreatmentsPlugin
 import info.nightscout.androidaps.queue.CommandQueue
 import info.nightscout.androidaps.utils.androidNotification.NotificationHolder
+import info.nightscout.androidaps.utils.rx.AapsSchedulers
+import info.nightscout.androidaps.utils.rx.DefaultAapsSchedulers
 import info.nightscout.androidaps.utils.storage.FileStorage
 import info.nightscout.androidaps.utils.storage.Storage
 import javax.inject.Singleton
@@ -45,6 +47,10 @@ open class AppModule {
     fun provideStorage(): Storage {
         return FileStorage()
     }
+
+    @Provides
+    @Singleton
+    internal fun provideSchedulers(): AapsSchedulers = DefaultAapsSchedulers()
 
     @Module
     interface AppBindings {

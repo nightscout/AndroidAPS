@@ -5,50 +5,49 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.view.ViewStub
 import androidx.annotation.IdRes
 import androidx.annotation.LayoutRes
 import androidx.annotation.StringRes
 import androidx.navigation.fragment.findNavController
 import dagger.android.support.DaggerFragment
 import info.nightscout.androidaps.plugins.pump.omnipod.R
+import info.nightscout.androidaps.plugins.pump.omnipod.databinding.OmnipodWizardBaseFragmentBinding
 import info.nightscout.androidaps.plugins.pump.omnipod.ui.wizard.common.activity.OmnipodWizardActivityBase
-import kotlinx.android.synthetic.main.omnipod_wizard_base_fragment.*
-import kotlinx.android.synthetic.main.omnipod_wizard_nav_buttons.*
-import kotlinx.android.synthetic.main.omnipod_wizard_progress_indication.*
 import kotlin.math.roundToInt
 
 abstract class WizardFragmentBase : DaggerFragment() {
 
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View {
-        val baseView = inflater.inflate(R.layout.omnipod_wizard_base_fragment, container, false)
-        val contentView = baseView.findViewById<ViewStub>(R.id.omnipod_wizard_base_fragment_content)
-        contentView?.let {
+    var _binding: OmnipodWizardBaseFragmentBinding? = null
+
+    // This property is only valid between onCreateView and
+    // onDestroyView.
+    val binding get() = _binding!!
+
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
+        _binding = OmnipodWizardBaseFragmentBinding.inflate(inflater, container, false)
+
+        binding.fragmentContent.let {
             it.layoutResource = getLayoutId()
             it.inflate()
         }
-        return baseView
+        return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        omnipod_wizard_base_fragment_title.setText(getTitleId())
+        binding.fragmentTitle.setText(getTitleId())
 
         val nextPage = getNextPageActionId()
 
         if (nextPage == null) {
-            omnipod_wizard_button_next.text = getString(R.string.omnipod_wizard_button_finish)
-            omnipod_wizard_button_next.backgroundTintList = ColorStateList.valueOf(resources.getColor(R.color.omnipod_wizard_finish_button, context?.theme))
+            binding.navButtonsLayout.buttonNext.text = getString(R.string.omnipod_wizard_button_finish)
+            binding.navButtonsLayout.buttonNext.backgroundTintList = ColorStateList.valueOf(resources.getColor(R.color.omnipod_wizard_finish_button, context?.theme))
         }
 
         updateProgressIndication()
 
-        omnipod_wizard_button_next.setOnClickListener {
+        binding.navButtonsLayout.buttonNext.setOnClickListener {
             if (nextPage == null) {
                 activity?.finish()
             } else {
@@ -56,9 +55,15 @@ abstract class WizardFragmentBase : DaggerFragment() {
             }
         }
 
-        omnipod_wizard_button_cancel.setOnClickListener {
+        binding.navButtonsLayout.buttonCancel.setOnClickListener {
             (activity as? OmnipodWizardActivityBase)?.exitActivityAfterConfirmation()
         }
+    }
+
+    @Synchronized
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 
     private fun updateProgressIndication() {
@@ -68,7 +73,7 @@ abstract class WizardFragmentBase : DaggerFragment() {
             val currentFragment = getIndex() - (it.getTotalDefinedNumberOfSteps() - numberOfSteps)
             val progressPercentage = (currentFragment / numberOfSteps.toDouble() * 100).roundToInt()
 
-            omnipod_wizard_progress_indication.progress = progressPercentage
+            binding.progressIndicationLayout.progressIndication.progress = progressPercentage
         }
     }
 

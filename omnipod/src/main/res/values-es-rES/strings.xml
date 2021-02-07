@@ -11,6 +11,7 @@
     <string name="omnipod_config_suspend_delivery_button_enabled">Mostrar el botón Suspender entrega en la pestaña Omnipod</string>
     <string name="omnipod_config_pulse_log_button_enabled">Mostrar botón de registro de pulso en el menú de gestión del pod</string>
     <string name="omnipod_config_rileylink_stats_button_enabled">Mostrar botón de estadísticas de RileyLink en el menú de gestión del pod</string>
+    <string name="omnipod_config_battery_change_logging_enabled">Activar el registro de cambios de batería en Acciones</string>
     <string name="omnipod_config_time_change_enabled">Detección de zona DST/hora activada</string>
     <string name="omnipod_config_expiration_reminder_enabled">Recordatorio de expiración activado</string>
     <string name="omnipod_config_expiration_reminder_hours_before_shutdown">Horas antes del apagado</string>
@@ -65,6 +66,7 @@
     <string name="omnipod_error_rileylink_address_invalid">Dirección de RileyLink no válida.</string>
     <string name="omnipod_error_operation_not_possible_no_configuration">La operación no es posible.\n\nDebe configurar Omnipod primero, antes de poder usar esta operación.</string>
     <string name="omnipod_error_pod_not_attached">Ningún pod activo</string>
+    <string name="omnipod_error_time_out_of_sync">El tiempo en el Pod está desincronizado. Actualice la hora en la pestaña Omnipod.</string>
     <string name="omnipod_error_unexpected_exception">Error inesperado. Por favor, informe! (tipo: %1$s:%2$s).</string>
     <string name="omnipod_error_crc_mismatch">Comunicación fallida: falló la verificación de integridad del mensaje</string>
     <string name="omnipod_error_invalid_packet_type">La comunicación ha fallado: se ha recibido una respuesta no válida del Pod</string>
@@ -196,7 +198,6 @@
     <!-- Omnipod - Overview -->
     <string name="omnipod_overview_button_set_time">Ajustar la hora</string>
     <string name="omnipod_overview_button_suspend_delivery">Suspender</string>
-    <string name="omnipod_overview_button_refresh">Actualizar</string>
     <string name="omnipod_overview_button_resume_delivery">Reanudar la entrega</string>
     <string name="omnipod_overview_button_pod_management">Pod Mgmt</string>
     <string name="omnipod_overview_button_acknowledge_active_alerts">Alertas Ack</string>

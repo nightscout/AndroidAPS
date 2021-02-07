@@ -2,13 +2,13 @@ package info.nightscout.androidaps.plugins.pump.omnipod.ui.wizard.activation.fra
 
 import android.os.Bundle
 import android.view.View
+import android.widget.Button
 import androidx.annotation.IdRes
 import androidx.annotation.StringRes
 import androidx.appcompat.app.AlertDialog
 import androidx.navigation.fragment.findNavController
 import info.nightscout.androidaps.plugins.pump.omnipod.R
 import info.nightscout.androidaps.plugins.pump.omnipod.ui.wizard.common.fragment.InfoFragmentBase
-import kotlinx.android.synthetic.main.omnipod_wizard_nav_buttons.*
 
 class AttachPodInfoFragment : InfoFragmentBase() {
 
@@ -26,7 +26,7 @@ class AttachPodInfoFragment : InfoFragmentBase() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        omnipod_wizard_button_next.setOnClickListener {
+        view.findViewById<Button>(R.id.button_next).setOnClickListener {
             context?.let {
                 AlertDialog.Builder(it)
                     .setIcon(android.R.drawable.ic_dialog_alert)

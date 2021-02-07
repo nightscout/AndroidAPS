@@ -69,6 +69,7 @@
     <string name="menu_ecarb">eCarb</string>
     <string name="menu_settings">Definições</string>
     <string name="menu_status">Estado</string>
+    <string name="menu_resync">Re-Sincronizar</string>
     <string name="menu_prime_fill">Purgar/Preencher</string>
     <string name="menu_none">Nenhum</string>
     <string name="menu_default">Padrão</string>
@@ -89,10 +90,13 @@
     <string name="action_confirm">CONFIRMAR</string>
     <string name="action_timeshift">alteração turno</string>
     <string name="action_bolus">bólus</string>
+    <string name="bolus_progress">Progresso do Bólus</string>
+    <string name="press_to_cancel">pressione para cancelar</string>
+    <string name="cancel_bolus">CANCELAR BÓLUS</string>
     <string name="status_pump">Bomba</string>
     <string name="status_loop">Loop</string>
     <string name="status_cpp">CPP</string>
-    <string name="status_tdd">TDD</string>
+    <string name="status_tdd">TDI</string>
     <string name="activity_carb">Hidratos</string>
     <string name="activity_IOB">IOB</string>
     <string name="activity_no_status">sem estado</string>
@@ -128,4 +132,8 @@
     <string name="digitalstyle_pref_your_color">Sua cor:</string>
     <string name="digitalstyle_pref_your_color_saturation">Sua saturação de cor:</string>
     <string name="digitalstyle_pref_your_color_opacity">Sua opacidade de cor:</string>
+    <string name="bolus_progress_channel_name">Progresso Bólus AAPS</string>
+    <string name="bolus_progress_silent_channel_name">Progresso Bólus AAPS Silencioso</string>
+    <string name="bolus_progress_channel_description">Progresso Bólus e cancelar</string>
+    <string name="bolus_progress_silent_channel_description">Progresso Bólus e cancelar com menos vibrações</string>
 </resources>

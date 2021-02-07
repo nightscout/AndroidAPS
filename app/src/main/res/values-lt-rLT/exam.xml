@@ -8,7 +8,6 @@
     <string name="dia_meaningisequaltodiapump">Jei IVT reikšmė, kurią naudojote pompoje prieš pradedant naudotis AndroidAPS, tiko - jos nereikia keisti.</string>
     <string name="dia_valuemustbedetermined">Jūs turite nustatyti sau tinkamą IVT reikšmę.</string>
     <string name="hypott_label">Hipo laikinas tikslas</string>
-    <string name="hypott_whenhypott">Kokia yra pagrindinė priežastis nustatyti hipo laikiną tikslą?</string>
     <string name="hypott_wrongbasal">Hipoglikemijų dėl neteisingai nustatytos bazės korekcija.</string>
     <string name="hypott_preventoversmb">Kad būtų išvengta per didelių AndroidAPS korekcijų, kai glikemija pradeda staigiai kilti suvalgius greitai veikiančių angliavandenių hipoglikemijos metu.</string>
     <string name="hypott_exercise">Hipoglikemijos dėl fizinio aktyvumo korekcija.</string>
@@ -41,14 +40,12 @@
     <string name="noisycgm_label">Triukšmingi NGJ Rodmenys</string>
     <string name="noisycgm_whattodo">Ką reikėtų daryti, jei sensoriaus duomenys yra triukšmingi - besiblaškantys?</string>
     <string name="noisycgm_nothing">Nieko - AndroidAPS savaime susitvarkys.</string>
-    <string name="noisycgm_pause">Išjungti uždarą ciklą, kad išvengtumėte per didelio ar per mažo dozavimo.</string>
     <string name="noisycgm_replacesensor">Pakeisti sensorių, jei jo duomenys pastoviai triukšmingi ar netikslūs.</string>
     <string name="noisycgm_checksmoothing">Patikrinti, ar jūsų NGJ programa išlygina duomenis.</string>
     <string name="noisycgm_hint1">https://androidaps.readthedocs.io/en/latest/EN/Usage/Smoothing-Blood-Glucose-Data-in-xDrip.html#smoothing-blood-glucose-data</string>
     <string name="exerciseprofile_label">Aktyvumas ir Profiliai</string>
     <string name="exerciseprofile_whattodo">Kaip naudoti profilius, kad sistema geriausiai susitvarkytų su aerobiniais pratimais?</string>
     <string name="exerciseprofile_switchprofilebelow100">Perjungti profilį į žemesnį nei 100%.</string>
-    <string name="exerciseprofile_switchprofileabove100">Perjungti profilį į aukštesnį nei 100%. </string>
     <string name="exerciseprofile_leaveat100">Palikti 100% profilį.</string>
     <string name="exerciseprofile_suspendloop">Sustabdyti ciklą.</string>
     <string name="exerciseprofile_hint1">https://androidaps.readthedocs.io/en/latest/EN/Usage/temptarget.html#activity-temp-target</string>

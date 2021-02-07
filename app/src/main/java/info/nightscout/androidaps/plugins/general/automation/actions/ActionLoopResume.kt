@@ -33,4 +33,6 @@ class ActionLoopResume(injector: HasAndroidInjector) : Action(injector) {
             callback.result(PumpEnactResult(injector).success(true).comment(R.string.notsuspended))?.run()
         }
     }
+
+    override fun isValid(): Boolean = true
 }

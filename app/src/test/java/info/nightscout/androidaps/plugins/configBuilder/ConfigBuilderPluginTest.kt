@@ -28,7 +28,7 @@ class ConfigBuilderPluginTest : TestBase() {
     @Mock lateinit var commandQueue: CommandQueueProvider
     @Mock lateinit var activePlugin: ActivePluginProvider
 
-    lateinit var configBuilderPlugin: ConfigBuilderPlugin
+    private lateinit var configBuilderPlugin: ConfigBuilderPlugin
 
     val injector = HasAndroidInjector {
         AndroidInjector {
@@ -43,6 +43,6 @@ class ConfigBuilderPluginTest : TestBase() {
 
     @Before
     fun prepareMock() {
-        configBuilderPlugin = ConfigBuilderPlugin(injector, aapsLogger, resourceHelper, sp, RxBusWrapper(), activePlugin)
+        configBuilderPlugin = ConfigBuilderPlugin(injector, aapsLogger, resourceHelper, sp, RxBusWrapper(aapsSchedulers), activePlugin)
     }
 }

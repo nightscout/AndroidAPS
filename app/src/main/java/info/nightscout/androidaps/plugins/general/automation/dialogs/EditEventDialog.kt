@@ -9,7 +9,7 @@ import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import info.nightscout.androidaps.MainApp
+import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.databinding.AutomationDialogEventBinding
 import info.nightscout.androidaps.dialogs.DialogFragmentWithDate
@@ -27,14 +27,15 @@ import info.nightscout.androidaps.utils.FabricPrivacy
 import info.nightscout.androidaps.utils.ToastUtils
 import info.nightscout.androidaps.utils.extensions.plusAssign
 import info.nightscout.androidaps.utils.extensions.toVisibility
-import io.reactivex.android.schedulers.AndroidSchedulers
+import info.nightscout.androidaps.utils.rx.AapsSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import javax.inject.Inject
 
 class EditEventDialog : DialogFragmentWithDate() {
 
+    @Inject lateinit var aapsSchedulers: AapsSchedulers
     @Inject lateinit var rxBus: RxBusWrapper
-    @Inject lateinit var mainApp: MainApp
+    @Inject lateinit var injector: HasAndroidInjector
     @Inject lateinit var fabricPrivacy: FabricPrivacy
     @Inject lateinit var automationPlugin: AutomationPlugin
 
@@ -52,11 +53,11 @@ class EditEventDialog : DialogFragmentWithDate() {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View {
-        event = AutomationEvent(mainApp)
+        event = AutomationEvent(injector)
         // load data from bundle
         (savedInstanceState ?: arguments)?.let { bundle ->
             position = bundle.getInt("position", -1)
-            bundle.getString("event")?.let { event = AutomationEvent(mainApp).fromJSON(it) }
+            bundle.getString("event")?.let { event = AutomationEvent(injector).fromJSON(it) }
         }
 
         onCreateViewGeneral()
@@ -94,28 +95,28 @@ class EditEventDialog : DialogFragmentWithDate() {
 
         disposable += rxBus
             .toObservable(EventAutomationUpdateGui::class.java)
-            .observeOn(AndroidSchedulers.mainThread())
+            .observeOn(aapsSchedulers.main)
             .subscribe({
                 actionListAdapter?.notifyDataSetChanged()
                 showPreconditions()
             }, fabricPrivacy::logException)
         disposable += rxBus
             .toObservable(EventAutomationAddAction::class.java)
-            .observeOn(AndroidSchedulers.mainThread())
+            .observeOn(aapsSchedulers.main)
             .subscribe({
                 event.addAction(it.action)
                 actionListAdapter?.notifyDataSetChanged()
             }, fabricPrivacy::logException)
         disposable += rxBus
             .toObservable(EventAutomationUpdateTrigger::class.java)
-            .observeOn(AndroidSchedulers.mainThread())
+            .observeOn(aapsSchedulers.main)
             .subscribe({
                 event.trigger = it.trigger
                 binding.triggerDescription.text = event.trigger.friendlyDescription()
             }, fabricPrivacy::logException)
         disposable += rxBus
             .toObservable(EventAutomationUpdateAction::class.java)
-            .observeOn(AndroidSchedulers.mainThread())
+            .observeOn(aapsSchedulers.main)
             .subscribe({
                 event.actions[it.position] = it.action
                 actionListAdapter?.notifyDataSetChanged()

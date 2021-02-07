@@ -4,13 +4,13 @@
     <!--   <string name="he_lang" translatable="false">Hebrew</string> -->
     <!--    <string name="ga_lang" translatable="false">Irish</string> -->
     <!--    <string name="ja_lang" translatable="false">Japanese</string> -->
-    <string name="treatmentssafety_title">Segurança de tratamentos</string>
+    <string name="treatmentssafety_title">Segurança de Tratamentos</string>
     <string name="treatmentssafety_maxbolus_title">Max bolus permitido [U]</string>
     <string name="treatmentssafety_maxcarbs_title">Max hidratos permitidos [g]</string>
     <string name="nav_preferences_plugin">%1$s Preferências</string>
     <string name="nav_preferences">Preferências</string>
     <string name="nav_refreshtreatments">Actualizar tratamentos do NS</string>
-    <string name="nav_resetdb">Reinicializar base de dados</string>
+    <string name="nav_resetdb">Reinicializar Base de Dados</string>
     <string name="reset_db_confirm">Quer realmente reiniciar a base de dados?</string>
     <string name="nav_exit">Sair</string>
     <string name="ns_sync_use_absolute_title">Usar sempre valores absolutos de basal</string>
@@ -80,7 +80,7 @@
     <string name="delta">Delta</string>
     <string name="sms_delta">Delta:</string>
     <string name="configbuilder">Configurador</string>
-    <string name="overview">Visão geral</string>
+    <string name="overview">Visão Geral</string>
     <string name="nsprofile">Perfil NS</string>
     <string name="treatments">Tratamentos</string>
     <string name="virtualpump">Bomba virtual</string>
@@ -269,7 +269,7 @@
     <string name="wear">Wear</string>
     <string name="resend_all_data">Reenviar Todos os Dados</string>
     <string name="open_settings_on_wear">Abrir Definições em Wear</string>
-    <string name="basal_rate">Valor da Basal:</string>
+    <string name="basal_rate">Taxa da Basal:</string>
     <string name="basalvaluebelowminimum">Valor da basal abaixo do mínimo. Perfil não definido!</string>
     <string name="sms_actualbg">GLIC:</string>
     <string name="sms_lastbg">Ultima Gli:</string>
@@ -288,7 +288,7 @@
     <string name="openapsama_useautosens">Usar função Autosens</string>
     <string name="refresheventsfromnightscout">Actualizar tratamentos do NS</string>
     <string name="deletefuturetreatments">Apagar tratamentos do futuro</string>
-    <string name="eatingsoon">Comer brevemente</string>
+    <string name="eatingsoon">Comer Brevemente</string>
     <string name="hypo">Hipo</string>
     <string name="activity">Actividade</string>
     <string name="removerecord">Remover registo</string>
@@ -310,10 +310,10 @@
     <string name="profile">Perfil</string>
     <string name="openapsama_max_daily_safety_multiplier_summary">Valor padrão: 3 Por segurança é o valor limite estabelecido por OpenAPS. O que faz é limitar a basal a x3 a basal mázima. Se necessário modificar este valor, por favor ter em conta que os dados apontam para que os limites de segurança sejam - 3 x max diario ou 4x valor actual (qual seja menor) como valores máximos.</string>
     <string name="openapsama_current_basal_safety_multiplier_summary">Valor padrão: 4 Esta é a outra parte dos valores limites de segurança - 3 x max diário ou 4x valor actual - do OpenAPS. Isto define que não importa o valor da basal máxima definido na bomba, o valor máximo da basal temporária não pode ser maior que 4 x o valor da basal definida na bomba. O objectivo é evitar que sejam determinadas basais temporárias demasiado elevadas antes que se perceba como o algoritmo funciona. 4x é um valor que a maior parte das pessoas nunca necessitará de alterar pois o mais provável é necessitar de alterar outras definições para não necessitar de \"ultrapassar\" este limite de segurança.</string>
-    <string name="openapsama_autosens_max_summary">Valor predefinido: 1.2\n Este é um multiplicador para autosens (e em breve autotune) que coloca um limite máximo de 20%% aos rácios superiores e inferiores de autosens, o que por sua vez calcula o quão alto autosens pode ajustar a basal, quão pode baixar o Factor de Sensibilidade (FSI) e baixar o valor alvo de glicose no sangue.</string>
-    <string name="openapsama_autosens_min_summary">Valor padrão: 0.7\nO outro lado dos limites de segurança do autosens. Coloca um tecto no quão baixo autosens pode ajustar as basais, e quão alto pode ajustar os valores de ISF e valor alvo de glucose no sangue (BG).</string>
+    <string name="openapsama_autosens_max_summary">Valor predefinido: 1.2\n Este é um multiplicador para autosens (e em breve autotune) que coloca um limite máximo de 20%% aos rácios superiores e inferiores de autosens, o que por sua vez calcula o quão alto autosens pode ajustar a basal, quão pode baixar o Factor Sensibilidade à Insulina (FSI) e baixar o valor alvo de glicose no sangue.</string>
+    <string name="openapsama_autosens_min_summary">Valor padrão: 0.7\nO outro lado dos limites de segurança do autosens. Coloca um tecto no quão baixo autosens pode ajustar as basais, e quão alto pode ajustar os valores de FSI e valor alvo de glucose no sangue (BG).</string>
     <string name="openapsama_autosens_adjusttargets">Autosens ajusta os alvos, também</string>
-    <string name="openapsama_autosens_adjusttargets_summary">Valor padrão: true\nÉ usado para permitir que autosens possa ajustar os valores alvo de glucose no sangue (BG), além de ISF e basais.</string>
+    <string name="openapsama_autosens_adjusttargets_summary">Valor padrão: true\nÉ usado para permitir que autosens possa ajustar os valores alvo de glucose no sangue (BG), além de FSI e basais.</string>
     <string name="openapsama_bolussnooze_dia_divisor_summary">Valor padrão: 2\nBolus Snooze (pausa após bolus) é executado depois de realizar um bolus por refeição Desta maneira o algoritmo não irá contrariar com temporárias baixas logo depois da refeição. O valor padrão é 2; Então uma duração de acção da insulina (DIA) de 5h significa que o Bolus Snooze irá ser gradualmente reduzido ao longo de 2,5 horas = 5/2 = DIA/Valor padrão.</string>
     <string name="openapsama_min_5m_carbimpact_summary">Valor padrão: 3.0 para detecção avançada de refeições (AMA) ou 8.0 para super micro bolus (SMB). Esta é a configuração padrão para o calculo de quanto varia a cada 5 min a glucose no sangue (BG)  devido à absorção de hidratos de carbono. O padrão é  3mg/ dl / 5min. Isso afeta a rapidez com que decaem as calorias no corpo (COB), e quantos hidratos de carbono terão de ser considerados no cálculo da previsão de BG, quando é que a BG está baixando mais do que espectável ou não subindo como espectável.</string>
     <string name="openapsama_link_to_preferncejson_doc_txt">Atenção!\n Normalmente não é necessário modificar os valores abaixo. Por favor PRESSIONE AQUI e LEIA o texto para garantir que ENTENDE as consequenciais antes de alterar algum destes valores.</string>
@@ -435,7 +435,6 @@
     <string name="overview_extendedbolus_cancel_button">Cancelar Bólus Prolongado</string>
     <string name="doprofileswitch">Fazer Mudança De Perfil</string>
     <string name="careportal_sensor_label">Sensor</string>
-    <string name="careportal_canula_label">Cânula</string>
     <string name="careportal_insulin_label">Insulina</string>
     <string name="careportal_pb_label">Bateria da Bomba</string>
     <string name="careportal_age_label">idade:</string>
@@ -476,7 +475,7 @@
     <string name="enableuam">Activar UAM</string>
     <string name="enablesmb">Activar SMB</string>
     <string name="enablesmb_summary">Use Super Micro Boluses em vez de basal temp para uma acção mais rápida</string>
-    <string name="enableuam_summary">Detecção de refeições não Introduzidas</string>
+    <string name="enableuam_summary">Detecção de Refeições Não Introduzidas</string>
     <string name="insulin_oref_peak">Tempo Pico da curva de IOB</string>
     <string name="insulin_peak_time">Tempo Pico [min]</string>
     <string name="free_peak_oref">Oref Pico-Livre</string>
@@ -548,7 +547,6 @@
     <string name="maxiobset">IOB máxima definida correctamente</string>
     <string name="hasbgdata">Glicemia disponivel desde a fonte selecionada</string>
     <string name="combo_programming_bolus">A programar bomba para administrar bólus</string>
-    <string name="combo_refresh">Actualizar</string>
     <string name="combo_pump_state_label">Estado</string>
     <string name="combo_pump_activity_label">Actividade</string>
     <string name="combo_no_pump_connection">Sem conexão há %1$d min</string>
@@ -590,7 +588,7 @@
     <string name="enablesmbwithcob">Activar SMB com COB</string>
     <string name="enablesmbwithcob_summary">Activar SMB quando tem COB activo.</string>
     <string name="enablesmbwithtemptarget">SMB activo com valores alvo temporários</string>
-    <string name="enablesmbwithtemptarget_summary">SMB activo quando há valor alvo temporário activo (exercício, etc)</string>
+    <string name="enablesmbwithtemptarget_summary">SMB activo quando há valor alvo temporário activo (comer brevemente, exercício)</string>
     <string name="enablesmbwithhightemptarget">SMB activo com alvos temporários elevados</string>
     <string name="enablesmbwithhightemptarget_summary">Activar SMB quando há alvo temporário elevado activo (exercício, acima de 100 mg/dl ou 5,5 mmol/l)</string>
     <string name="overview_insulin_label">Insulina</string>
@@ -825,9 +823,9 @@
     <string name="stop_pump">Parar Bomba</string>
     <string name="operating_mode">Modo de funcionamento</string>
     <string name="insight_status">Estado</string>
-    <string name="tdd_bolus">DDT de Bolus</string>
-    <string name="tdd_basal">DDT Basal</string>
-    <string name="tdd_total">DDT Total</string>
+    <string name="tdd_bolus">TDI Bolus</string>
+    <string name="tdd_basal">TDI Basal</string>
+    <string name="tdd_total">TDI Total</string>
     <string name="recovering">A recuperar</string>
     <string name="not_paired">Não emparelhado</string>
     <string name="last_connected">Última ligação</string>
@@ -839,14 +837,13 @@
     <string name="eb_formatter">%1$.2f / %2$.2f U por %3$d min</string>
     <string name="enable_tbr_over_notification">Activar notificação do fim da basal temporária\n(configuração da bomba)</string>
     <string name="disable_tbr_over_notification">Desactivar notificação do fim da basal temporária\n(configuração da bomba)</string>
-    <string name="refresh">Actualizar</string>
     <string name="description_pump_insight_local">Integração de bomba para bombas Accu-Chek Insight</string>
     <string name="not_inserted">Não inserido</string>
     <string name="short_status_last_connected">Última ligação:%1$d minutos atrás</string>
     <string name="short_status_tbr">DBT: %1$d%% para %2$d / %3$d minutos</string>
     <string name="short_status_extended">Prolongado: %1$.2f / %2$.2f U por %3$d min</string>
     <string name="short_status_multiwave">Multionda: %1$.2f / %2$.2f U por %3$d min</string>
-    <string name="short_status_tdd">TDD: %1$.2f</string>
+    <string name="short_status_tdd">TDI: %1$.2f</string>
     <string name="short_status_reservoir">Reser.: %1$.2f U</string>
     <string name="short_status_battery">Bat.: %1$d%%</string>
     <string name="max_recovery_duration">Duração máxima da recuperação [s]</string>
@@ -1064,8 +1061,6 @@
     <string name="insight_alert_notification_channel">Alertas Bomba Insight</string>
     <!-- SMS Communicator & OTP Authenticator -->
     <string name="smscommunicator_code_from_authenticator_for" comment="This is continuation of sentence: To [ACTION] reply with code">da app Authenticator para: %1$s seguido pelo PIN</string>
-    <string name="smscommunicator_otp_enabled">Activar Autenticador</string>
-    <string name="smscommunicator_otp_enabled_summary">Autenticar comandos usando Uma-Senha-Única (OTP) que sejam geradas pelo Google Authenticator ou app 2FA similar.</string>
     <string name="smscommunicator_otp_pin">PIN obrigatório adicional no token final</string>
     <string name="smscommunicator_otp_pin_summary">Dígitos adicionais que devem ser memorizados e colados no final de cada Uma-Senha-Única que seja gerada</string>
     <string name="smscomunicator_tab_otp_label">Configuração do Autenticador</string>
@@ -1107,8 +1102,8 @@
     <string name="currentprofile">Perfil Actual</string>
     <string name="availableprofile">Perfil Disponível</string>
     <string name="profiletype">Tipo de Perfil</string>
-    <string name="formatwithtdd">Idade: %1$.0f TDD: %2$.0f U</string>
-    <string name="formatwittddandpct">Idade: %1$.0f TDD: %2$.0f U %3$d%%</string>
+    <string name="formatwithtdd">Idade: %1$.0f TDI: %2$.0f U</string>
+    <string name="formatwittddandpct">Idade: %1$.0f TDI: %2$.0f U %3$d%%</string>
     <string name="formatwithweight">Idade: %1$.0f Peso: %2$.0f kg</string>
     <string name="basalpctfromtdd_label">% de basal</string>
     <string name="dpvdefaultprofile">Perfil Padrão DPV</string>
@@ -1159,4 +1154,8 @@
     <string name="timetoeat">Hora de comer</string>
     <string name="fabric_upload_disabled">Envio de logs de erro desabilitado!</string>
     <string name="graph_menu_divider_header">Gráfico</string>
+    <string name="chart_menu">Menu do Gráfico</string>
+    <string name="clear_filter">Limpar filtros</string>
+    <string name="trend_arrow">Seta de tendência</string>
+    <string name="cannula">Cânula</string>
 </resources>

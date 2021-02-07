@@ -45,6 +45,7 @@ import info.nightscout.androidaps.queue.Callback;
 import info.nightscout.androidaps.utils.FabricPrivacy;
 import info.nightscout.androidaps.utils.SafeParse;
 import info.nightscout.androidaps.utils.resources.ResourceHelper;
+import info.nightscout.androidaps.utils.rx.AapsSchedulers;
 import info.nightscout.androidaps.utils.sharedPreferences.SP;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
@@ -59,6 +60,7 @@ public class TDDStatsActivity extends NoSplashAppCompatActivity {
     @Inject CommandQueueProvider commandQueue;
     @Inject DatabaseHelperInterface databaseHelper;
     @Inject FabricPrivacy fabricPrivacy;
+    @Inject AapsSchedulers aapsSchedulers;
 
     private final CompositeDisposable disposable = new CompositeDisposable();
 
@@ -83,12 +85,12 @@ public class TDDStatsActivity extends NoSplashAppCompatActivity {
         super.onResume();
         disposable.add(rxBus
                 .toObservable(EventPumpStatusChanged.class)
-                .observeOn(AndroidSchedulers.mainThread())
+                .observeOn(aapsSchedulers.getMain())
                 .subscribe(event -> statusView.setText(event.getStatus(resourceHelper)), exception -> fabricPrivacy.logException(exception))
         );
         disposable.add(rxBus
                 .toObservable(EventDanaRSyncStatus.class)
-                .observeOn(AndroidSchedulers.mainThread())
+                .observeOn(aapsSchedulers.getMain())
                 .subscribe(event -> {
                     aapsLogger.debug("EventDanaRSyncStatus: " + event.getMessage());
                     statusView.setText(event.getMessage());

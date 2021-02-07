@@ -3,7 +3,6 @@ package info.nightscout.androidaps.plugins.general.nsclient;
 
 import android.graphics.Paint;
 import android.os.Bundle;
-import android.text.Html;
 import android.text.Spanned;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -25,8 +24,8 @@ import info.nightscout.androidaps.utils.FabricPrivacy;
 import info.nightscout.androidaps.utils.HtmlHelper;
 import info.nightscout.androidaps.utils.alertDialogs.OKDialog;
 import info.nightscout.androidaps.utils.resources.ResourceHelper;
+import info.nightscout.androidaps.utils.rx.AapsSchedulers;
 import info.nightscout.androidaps.utils.sharedPreferences.SP;
-import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
 
 public class NSClientFragment extends DaggerFragment implements View.OnClickListener, CompoundButton.OnCheckedChangeListener {
@@ -36,6 +35,7 @@ public class NSClientFragment extends DaggerFragment implements View.OnClickList
     @Inject RxBusWrapper rxBus;
     @Inject UploadQueue uploadQueue;
     @Inject FabricPrivacy fabricPrivacy;
+    @Inject AapsSchedulers aapsSchedulers;
 
     private final CompositeDisposable disposable = new CompositeDisposable();
 
@@ -93,7 +93,7 @@ public class NSClientFragment extends DaggerFragment implements View.OnClickList
         super.onResume();
         disposable.add(rxBus
                 .toObservable(EventNSClientUpdateGUI.class)
-                .observeOn(AndroidSchedulers.mainThread())
+                .observeOn(aapsSchedulers.getMain())
                 .subscribe(event -> updateGui(), fabricPrivacy::logException)
         );
         updateGui();
