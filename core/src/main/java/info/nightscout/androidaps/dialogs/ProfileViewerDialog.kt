@@ -187,7 +187,7 @@ class ProfileViewerDialog : DaggerDialogFragment() {
         s += "    "
         s += "<font color='${resourceHelper.gc(R.color.tempbasal)}'>$text1</font>"
         s += "    "
-        s += "<font color='${resourceHelper.gc(R.color.colorRed)}'>$text2</font>"
+        s += "<font color='${resourceHelper.gc(R.color.red)}'>$text2</font>"
         s += "    "
         s += "<font color='${resourceHelper.gc(R.color.white)}'>$units</font>"
         return s
@@ -196,7 +196,7 @@ class ProfileViewerDialog : DaggerDialogFragment() {
     private fun formatColors(text1: String, text2: String): String {
         var s = "<font color='${resourceHelper.gc(R.color.tempbasal)}'>$text1</font>"
         s += "<BR/>"
-        s += "<font color='${resourceHelper.gc(R.color.colorRed)}'>$text2</font>"
+        s += "<font color='${resourceHelper.gc(R.color.red)}'>$text2</font>"
         return s
     }
 

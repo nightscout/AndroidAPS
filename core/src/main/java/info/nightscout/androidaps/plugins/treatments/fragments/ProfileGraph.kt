@@ -62,8 +62,8 @@ class ProfileGraph : GraphView {
         addSeries(basalSeries2)
         basalSeries2.thickness = 8
         basalSeries2.isDrawBackground = false
-        basalSeries2.color = context.getColor(R.color.colorRed)
-        basalSeries2.backgroundColor = context.getColor(R.color.colorRed)
+        basalSeries2.color = context.getColor(R.color.red)
+        basalSeries2.backgroundColor = context.getColor(R.color.red)
 
         viewport.isXAxisBoundsManual = true
         viewport.setMinX(0.0)

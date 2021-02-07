@@ -153,11 +153,11 @@
     </style>
 
     <style name="TextViewStyleDark" parent="android:Widget.TextView">
-        <item name="android:textColor">@color/textcolor_dark</item>
+        <item name="android:textColor">@color/black</item>
     </style>
 
     <style name="TextViewStyleBright" parent="android:Widget.TextView">
-        <item name="android:textColor">@color/textcolor_bright</item>
+        <item name="android:textColor">@color/white</item>
     </style>
 
     <style name="section_header_label">
@@ -223,14 +223,14 @@
 
     <style name="AppThemeErrorDialog" parent="AppTheme">
         <item name="alertDialogTheme">@style/AppThemeErrorDialogTheme</item>
-        <item name="dialogTitleBackground">@color/colorRed</item>
+        <item name="dialogTitleBackground">@color/red</item>
         <item name="dialogTitleColor">@color/errorAlertHeaderText</item>
         <item name="dialogTitleIconTint">@color/errorAlertHeaderText</item>
     </style>
 
     <style name="AppThemeErrorDialogTheme" parent="Theme.AppCompat.Dialog.MinWidth">
         <item name="android:windowBackground">@drawable/alert_border_error</item>
-        <item name="colorAccent">@color/colorRed</item>
+        <item name="colorAccent">@color/red</item>
     </style>
 
     <style name="ButtonMediumFontStyle">

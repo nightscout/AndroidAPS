@@ -75,8 +75,6 @@
     <color name="dialog_title_background">#303030</color>
     <color name="activity_title_background">#121212</color>
 
-    <color name="toolbar_background">#303030</color>
-
     <color name="cardColorBackground">#121212</color>
     <color name="cardObjectiveText">#779ECB</color>
 
@@ -120,12 +118,10 @@
     <color name="ribbonCritical">#ff0400</color>
     <color name="ribbonTextWarning">#303030</color>
 
-    <color name="textcolor_bright">#FFFFFF</color>
-    <color name="textcolor_dark">#000000</color>
-
     <color name="transparent">#00000000</color>
 
     <!-- Black and White transparent - glass effect-->
+    <color name="black">#000000</color>
     <color name="white">#FFFFFF</color>
     <color name="black_alpha_10">#1A000000</color>
     <color name="black_alpha_20">#33000000</color>
@@ -169,7 +165,6 @@
     <!-- colors for statuslight handler    -->
     <color name="statuslight_normal" >#000000</color>
     <color name="statuslight_Warning" >#FFFF00</color>
-    <color name="statuslight_alarm" >#ff0400</color>
 
     <!---Default theme material colors-->
     <color name="colorOnPrimary">#000000</color>
@@ -204,8 +199,6 @@
     <color name="plastic_grey">#666666</color>
     <color name="sphere_plastic_grey">#8c8c8c</color>
 
-    <color name="colorButton">#00000000</color>
-
     <color name="mdtp_button_selected">#33969696</color>
     <color name="mdtp_accent_color">#009688</color>
     <color name="mdtp_button_color">@color/mdtp_accent_color</color>
@@ -215,13 +208,12 @@
     <color name="warningAlertBackground">#FFFB8C00</color>
     <color name="warningAlertHeaderText">#FF000000</color>
     <color name="warningAccentText">#FFFB8C00</color>
-    <color name="colorRed">#FFFF5555</color>
     <color name="errorAlertHeaderText">#FF000000</color>>
 
     <!--    Toasts-->
     <color name="toastBorder">#666666</color>
     <color name="toastOk">#77dd77</color>
-    <color name="toastError">#ff0400</color>
+    <color name="red">#ff0400</color>
     <color name="toastWarn">#FF8C00</color>
     <color name="toastInfo">#03A9F4</color>
 

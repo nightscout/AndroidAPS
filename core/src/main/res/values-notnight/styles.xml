@@ -76,7 +76,7 @@
         <!-- colors for statuslight handler    -->
         <item name="statuslight_normal" >@color/statuslight_normal</item>
         <item name="statuslight_Warning" >@color/statuslight_Warning</item>
-        <item name="statuslight_alarm" >@color/statuslight_alarm</item>
+        <item name="statuslight_alarm" >@color/red</item>
         <!-- back arrow actionbar    -->
         <!--  <item name="android:homeAsUpIndicator">@drawable/ic_arrowleft</item>    -->
         <!-- colors for splash background    -->
@@ -160,11 +160,11 @@
     </style>
 
     <style name="TextViewStyleDark" parent="android:Widget.TextView">
-        <item name="android:textColor">@color/textcolor_dark</item>
+        <item name="android:textColor">@color/black</item>
     </style>
 
     <style name="TextViewStyleBright" parent="android:Widget.TextView">
-        <item name="android:textColor">@color/textcolor_bright</item>
+        <item name="android:textColor">@color/white</item>
     </style>
 </resources>
 
