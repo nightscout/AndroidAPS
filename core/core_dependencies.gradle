@@ -118,7 +118,4 @@ dependencies {
     testImplementation "junit:junit:$junit_version"
     androidTestImplementation "androidx.test.ext:junit:$androidx_junit"
     androidTestImplementation "androidx.test:rules:$androidx_rules"
-
-    //Color Picker
-    api "com.github.skydoves:colorpickerview:2.1.7"
 }
