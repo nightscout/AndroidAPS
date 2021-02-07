@@ -195,7 +195,7 @@ public class AutosensData implements DataPointWithLabelInterface {
 
     @Override
     public int getColor() {
-        return resourceHelper.gc(R.color.cob);
+        return resourceHelper.getAttributeColor(null, R.attr.cobColor);
     }
 
 }

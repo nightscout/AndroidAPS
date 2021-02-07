@@ -14,14 +14,13 @@
     <color name="iobBorder">#36FFFFFF</color>
     <color name="iobPred">#00d2d2</color>
     <!-- COB  -->
-    <color name="cob">#e6faae00</color>
+    <color name="cob">#f0a30a</color>
     <color name="cobBorder">#B3000000</color>
 
     <color name="bolus">#1ea3e5</color>
     <color name="iobPredAS">#1ea3e5</color>
     <color name="carbs">#F2A370</color>
     <color name="uam">#c9bd60</color>
-    <color name="zt">#00d2d2</color>
     <color name="ratio">#FFFFFF</color>
     <color name="activity">#d3f166</color>
     <color name="devslopepos">#FFFFFF00</color>
@@ -30,7 +29,7 @@
     <!-- BG colors  -->
     <color name="inrange">#1ba1e2</color>
     <color name="inrange_bg">#1ba1e2</color>
-    <color name="low">#f0a30a</color>
+    <color name="low">#FF0000</color>
     <color name="high">#f0a30a</color>
 
     <color name="actionsConfirm">#FFFF00</color>
@@ -201,8 +200,10 @@
     <!--    Toasts-->
     <color name="toastBorder">#666666</color>
     <color name="toastOk">#77dd77</color>
-    <color name="red">#ff0400</color>
     <color name="toastWarn">#FF8C00</color>
     <color name="toastInfo">#03A9F4</color>
+
+    <color name="red">#ff0400</color>
+    <color name="cyan">#00d2d2</color>
 
 </resources>

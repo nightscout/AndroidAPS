@@ -20,7 +20,6 @@
     <color name="iobPredAS">#1ea3e5</color>
     <color name="carbs">#F2A370</color>
     <color name="uam">#c9bd60</color>
-    <color name="zt">#00d2d2</color>
     <color name="ratio">#FFFFFF</color>
     <color name="devslopepos">#FFFFFF00</color>
     <color name="devslopeneg">#FFFF00FF</color>
@@ -160,8 +159,10 @@
     <!--    Toasts-->
     <color name="toastBorder">#666666</color>
     <color name="toastOk">#77dd77</color>
-    <color name="red">#ff0400</color>
     <color name="toastWarn">#FF8C00</color>
     <color name="toastInfo">#03A9F4</color>
+
+    <color name="red">#ff0400</color>
+    <color name="cyan">#00d2d2</color>
 
 </resources>

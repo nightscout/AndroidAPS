@@ -260,24 +260,24 @@ public class BgReading implements DataPointWithLabelInterface {
         if (isPrediction())
             return getPredectionColor();
         else if (valueToUnits(units) < lowLine)
-            color = resourceHelper.gc(R.color.low);
+            color = resourceHelper.getAttributeColor(null, R.attr.bgLow);
         else if (valueToUnits(units) > highLine)
-            color = resourceHelper.gc(R.color.high);
+            color = resourceHelper.getAttributeColor(null, R.attr.bgHigh);
         return color;
     }
 
     public int getPredectionColor() {
         if (isIOBPrediction)
-            return resourceHelper.gc(R.color.iob);
+            return resourceHelper.getAttributeColor(null, R.attr.iobColor);
         if (isCOBPrediction)
-            return resourceHelper.gc(R.color.cob);
+            return resourceHelper.getAttributeColor(null, R.attr.cobColor);
         if (isaCOBPrediction)
-            return 0x80FFFFFF & resourceHelper.gc(R.color.cob);
+            return 0x80FFFFFF & resourceHelper.getAttributeColor(null, R.attr.cobColor);
         if (isUAMPrediction)
-            return resourceHelper.gc(R.color.uam);
+            return resourceHelper.getAttributeColor(null, R.attr.uamColor);
         if (isZTPrediction)
-            return resourceHelper.gc(R.color.zt);
-        return R.color.white;
+            return resourceHelper.getAttributeColor(null, R.attr.ztColor);
+        return resourceHelper.getAttributeColor(null, R.attr.defaultColor);
     }
 
     private boolean isPrediction() {

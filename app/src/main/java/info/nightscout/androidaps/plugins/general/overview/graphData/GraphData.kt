@@ -447,8 +447,8 @@ class GraphData(
         // COB
         addSeries(FixedLineGraphSeries(Array(cobArray.size) { i -> cobArray[i] }).also {
             it.isDrawBackground = true
-            it.backgroundColor = -0x7f000001 and resourceHelper.gc(R.color.cob) //50%
-            it.color = resourceHelper.gc(R.color.cob)
+            it.backgroundColor = -0x7f000001 and resourceHelper.getAttributeColor(null, R.attr.cobColor) //50%
+            it.color = resourceHelper.getAttributeColor(null, R.attr.cobColor)
             it.thickness = 3
         })
         if (useForScale) {
@@ -475,7 +475,7 @@ class GraphData(
                     if (autosensData.pastSensitivity == "+") color = resourceHelper.gc(R.color.deviationgreen)
                     if (autosensData.pastSensitivity == "-") color = resourceHelper.gc(R.color.deviationred)
                 } else if (autosensData.type == "uam") {
-                    color = resourceHelper.gc(R.color.uam)
+                    color = resourceHelper.getAttributeColor(null, R.attr.uamColor)
                 } else if (autosensData.type == "csf") {
                     color = resourceHelper.gc(R.color.deviationgrey)
                 }

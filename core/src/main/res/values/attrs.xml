@@ -18,6 +18,10 @@
 <attr name="bgInRange" format="reference|color" />
 <attr name="bgLow" format="reference|color" />
 <attr name="bgHigh" format="reference|color" />
+<attr name="iobColor" format="reference|color" />
+<attr name="cobColor" format="reference|color" />
+<attr name="uamColor" format="reference|color" />
+<attr name="ztColor" format="reference|color" />
 <attr name="matButtonBackground" format="reference|color" />
 <attr name="color_val" format="reference|color" />
 <attr name="colorPrimaryDialog" format="reference|color" />
@@ -59,6 +63,8 @@
 <!-- colors for information background  -->
 <attr name="informationBackground" format="reference|color" />
 <attr name="informationText" format="reference|color" />
+<!-- colors for default cases ( near white ) -->
+<attr name="defaultColor" format="reference|color" />
 <!-- For bluring effect -->
 <declare-styleable name="BlurringView">
     <attr name="radius" format="integer"/>

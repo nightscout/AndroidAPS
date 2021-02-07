@@ -25,6 +25,10 @@
         <item name="fabmenubackground">@color/fabmenubackground</item>
         <item name="iobBorder">@color/iobBorder</item>
         <item name="cobBorder">@color/cobBorder</item>
+        <item name="iobColor">@color/iob</item>
+        <item name="cobColor">@color/cob</item>
+        <item name="uamColor">@color/uam</item>
+        <item name="ztColor">@color/cyan</item>
         <item name="matButtonBackground">@color/materialButtonBackground</item>
         <item name="android:textColorPrimary">@color/black_alpha_80</item>
         <item name="android:textColor">@color/black_alpha_80</item>
@@ -84,6 +88,8 @@
         <!-- colors for information background  -->
         <item name="informationBackground" >?attr/colorPrimary</item>
         <item name="informationText" >?attr/colorOnPrimary</item>
+        <!-- colors for default cases ( near white ) -->
+        <item name="defaultColor" >@color/gray</item>
     </style>
 
     <!-- The launcher theme. It sets the main window background to the launch_screen drawable -->
