@@ -41,7 +41,6 @@ import javax.inject.Singleton
  *      use html table for results presentation
  * TODO: futur version: add profile selector in AutotuneFragment to allow running autotune plugin with other profiles than current
  * TODO: futur version (once first version validated): add DIA and Peak tune for insulin
- *      Check in oref0-autotune if Tune insulin works with exponential curve (aaps doesn't use bilinear curves anymore...)
  */
 
 @Singleton
