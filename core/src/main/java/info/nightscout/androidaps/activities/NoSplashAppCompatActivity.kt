@@ -25,8 +25,8 @@ open class NoSplashAppCompatActivity : DaggerAppCompatActivityWithResult() {
     }
 
     override fun onDestroy() {
-        super.onDestroy()
         compositeDisposable.clear()
+        super.onDestroy()
     }
 
     public override fun attachBaseContext(newBase: Context) {

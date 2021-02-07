@@ -128,7 +128,7 @@ public class ComboFragment extends DaggerFragment implements View.OnClickListene
 
     public void updateGui() {
 
-        if( this.defaultStateTextColors == null ) {
+        if (this.defaultStateTextColors == null) {
             this.defaultStateTextColors = stateView.getTextColors();
         }
         // state
@@ -147,21 +147,21 @@ public class ComboFragment extends DaggerFragment implements View.OnClickListene
             stateView.setTypeface(null, Typeface.NORMAL);
         }
 
-        if( this.defaultActivityColors == null ) {
+        if (this.defaultActivityColors == null) {
             this.defaultActivityColors = activityView.getTextColors();
         }
         // activity
         String activity = comboPlugin.getPump().activity;
         if (activity != null) {
-            activityView.setTextColor( this.defaultActivityColors);
+            activityView.setTextColor(this.defaultActivityColors);
             activityView.setTextSize(14);
             activityView.setText(activity);
         } else if (commandQueue.size() > 0) {
-            activityView.setTextColor( this.defaultActivityColors);
+            activityView.setTextColor(this.defaultActivityColors);
             activityView.setTextSize(14);
             activityView.setText("");
         } else if (comboPlugin.isInitialized()) {
-            activityView.setTextColor( this.defaultActivityColors);
+            activityView.setTextColor(this.defaultActivityColors);
             activityView.setTextSize(20);
             activityView.setText("{fa-bed}");
         } else {
@@ -171,7 +171,7 @@ public class ComboFragment extends DaggerFragment implements View.OnClickListene
         }
 
         if (comboPlugin.isInitialized()) {
-            if( this.defaultBatteryColors == null ) {
+            if (this.defaultBatteryColors == null) {
                 this.defaultBatteryColors = batteryView.getTextColors();
             }
             // battery
@@ -199,7 +199,7 @@ public class ComboFragment extends DaggerFragment implements View.OnClickListene
                 reservoirView.setText(resourceHelper.gs(R.string.combo_reservoir_normal));
             }
 
-            if( this.defaultReservoirColors == null ) {
+            if (this.defaultReservoirColors == null) {
                 this.defaultReservoirColors = reservoirView.getTextColors();
             }
             if (ps.insulinState == PumpState.UNKNOWN) {
@@ -216,7 +216,7 @@ public class ComboFragment extends DaggerFragment implements View.OnClickListene
                 reservoirView.setTypeface(null, Typeface.NORMAL);
             }
 
-            if( this.defaultConnectionColors == null ) {
+            if (this.defaultConnectionColors == null) {
                 this.defaultConnectionColors = lastConnectionView.getTextColors();
             }
             // last connection
