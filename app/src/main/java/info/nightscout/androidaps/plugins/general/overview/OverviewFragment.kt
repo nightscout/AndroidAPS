@@ -505,7 +505,6 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
                     graph.gridLabelRenderer?.isHorizontalLabelsVisible = false
                     graph.gridLabelRenderer?.labelVerticalWidth = axisWidth
                     graph.gridLabelRenderer?.numVerticalLabels = 3
-                    // TODO: not graph.viewport. ... ?
                     graph.setBackgroundColor(resourceHelper.getAttributeColor(context,R.attr.colorGraphBackground ))
                     relativeLayout.addView(graph)
 
