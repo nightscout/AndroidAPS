@@ -5,14 +5,6 @@
 
     <color name="ratio">#FFFFFF</color>
 
-    <!-- BG colors  -->
-    <color name="inrange">#1ba1e2</color>
-    <color name="inrange_bg">#1ba1e2</color>
-    <color name="high">#f0a30a</color>
-
-    <!-- Profil switch Text   -->
-    <color name="profilswitch">#B2B2B2</color>
-
     <color name="defaultbackground">#424242</color>
     <color name="defaulttextcolor">#B3FFFFFF</color>
 
@@ -58,9 +50,7 @@
 
     <!---Theme based colors-->
     <color name="colorAccent">#FFFFFF</color>
-    <color name="iconColor">#000000</color>
     <color name="iconColorbottomAppbar">#999999</color>
-    <color name="iconColorToolbar">#000000</color>
     <color name="actionBarColor">#FFFFFF</color>
 
     <!-- TDD Stats   -->
@@ -107,6 +97,7 @@
     <color name="error_background">#66FC0000</color>
 
     <!-- Yellow Colors -->
+    <color name="lightyellow">#FFFF00</color>
     <color name="actionsConfirm">#FFFF00</color>
     <color name="devslopepos">#FFFFFF00</color>
     <color name="ribbonWarning">#f4d700</color>
@@ -121,6 +112,7 @@
     <color name="metadataTextWarning">#FF8C00</color>
     <color name="cob">#f0a30a</color>
     <color name="carbs">#F2A370</color>
+    <color name="midorange">#f0a30a</color>
 
     <!-- Green Colors -->
     <color name="deviationgreen">#7200FF00</color>
@@ -133,16 +125,17 @@
     <color name="notificationInfo">#009705</color>
     <color name="uam">#c9bd60</color>
     <color name="colorCalculatorButton">#67e86a</color>
+    <color name="lightgreen">#00FF00</color>
 
     <!-- Blue Colors -->
     <color name="blue_default">#007AFF</color>
+    <color name="lightblue">#1ba1e2</color>
     <color name="cyan">#00d2d2</color>
     <color name="iobPred">#00d2d2</color>
     <color name="exercise">#67DFE8</color>
     <color name="bolus">#1ea3e5</color>
     <color name="iobPredAS">#1ea3e5</color>
     <color name="basebasal">#3D15FF</color>
-    <color name="tempbasal">#1ba1e2</color>
     <color name="iob">#1ba1e2</color>
     <color name="tempTargetDisabledBackground">#303F9F</color>
     <color name="mdtp_button_color">@color/mdtp_accent_color</color>

@@ -256,7 +256,7 @@ public class BgReading implements DataPointWithLabelInterface {
         String units = profileFunction.getUnits();
         Double lowLine = defaultValueHelper.determineLowLine();
         Double highLine = defaultValueHelper.determineHighLine();
-        int color = resourceHelper.gc(R.color.inrange);
+        int color = resourceHelper.getAttributeColor(null, R.attr.bgInRange);
         if (isPrediction())
             return getPredectionColor();
         else if (valueToUnits(units) < lowLine)

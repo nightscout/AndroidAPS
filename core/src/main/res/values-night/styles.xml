@@ -21,10 +21,10 @@
         <!-- Misc. colors -->
         <item name="android:navigationBarColor">?attr/colorPrimary</item>
         <item name="android:actionBarTheme">@android:style/Theme.Material</item>
-        <item name="iconColor">@color/iconColor</item>
-        <item name="iconColorDialog">@color/iconColor</item>
+        <item name="iconColor">@color/white</item>
+        <item name="iconColorDialog">@color/white</item>
         <item name="iconColorbottomAppbar">@color/iconColorbottomAppbar</item>
-        <item name="iconColorToolbar">@color/iconColorbottomAppbar</item>
+        <item name="iconColorToolbar">@color/white</item>
         <item name="fabmenubackground">@color/fabmenubackground</item>
         <item name="iobBorder">@color/white</item>
         <item name="cobBorder">@color/cobBorder</item>
@@ -49,9 +49,9 @@
         <item name="popupMenuStyle">@style/Widget.MaterialComponents.PopupMenu</item>
         <item name="actionOverflowMenuStyle">@style/Widget.MaterialComponents.PopupMenu.Overflow</item>
         <!-- Color of bg value -->
-        <item name="bgInRange">@color/inrange_bg</item>
+        <item name="bgInRange">@color/lightgreen</item>
         <item name="bgLow">@color/low</item>
-        <item name="bgHigh">@color/high</item>
+        <item name="bgHigh">@color/lightyellow</item>
         <!-- Color of dialog -->
         <item name="colorPrimaryDialog">?attr/colorPrimary</item>
         <item name="colorPrimaryDarkDialog">?attr/colorPrimaryDark</item>
@@ -100,7 +100,7 @@
     <style name="Theme.MaterialComponents.DayNight.DarkActionBar" parent="Theme.MaterialComponents.DayNight.Bridge"/>
 
     <style name="AppTheme.preference" parent="Theme.AppCompat.DayNight.NoActionBar">
-        <item name="iconColor">@color/iconColor</item>
+        <item name="iconColor">@color/white</item>
         <item name="android:maxLines">1</item>
         <item name="android:singleLine">true</item>
     </style>
