@@ -96,8 +96,8 @@ class TreatmentsExtendedBolusesFragment : DaggerFragment() {
                 holder.binding.iob.text = resourceHelper.gs(R.string.formatinsulinunits, iob.iob)
                 holder.binding.insulinSoFar.text = resourceHelper.gs(R.string.formatinsulinunits, extendedBolus.insulinSoFar())
                 holder.binding.ratio.text = resourceHelper.gs(R.string.pump_basebasalrate, extendedBolus.absoluteRate())
-                if (extendedBolus.isInProgress) holder.binding.date.setTextColor(resourceHelper.gc(R.color.colorActive)) else holder.binding.date.setTextColor(holder.binding.insulin.currentTextColor)
-                if (iob.iob != 0.0) holder.binding.iob.setTextColor(resourceHelper.gc(R.color.colorActive)) else holder.binding.iob.setTextColor(holder.binding.insulin.currentTextColor)
+                if (extendedBolus.isInProgress) holder.binding.date.setTextColor(resourceHelper.getAttributeColor(context, R.attr.treatmentActive)) else holder.binding.date.setTextColor(holder.binding.insulin.currentTextColor)
+                if (iob.iob != 0.0) holder.binding.iob.setTextColor(resourceHelper.getAttributeColor(context, R.attr.treatmentActive)) else holder.binding.iob.setTextColor(holder.binding.insulin.currentTextColor)
             }
             holder.binding.remove.tag = extendedBolus
         }
@@ -154,8 +154,8 @@ class TreatmentsExtendedBolusesFragment : DaggerFragment() {
 
     @Synchronized
     override fun onDestroyView() {
-        super.onDestroyView()
         _binding = null
+        super.onDestroyView()
     }
 
     private fun updateGui() {

@@ -110,7 +110,7 @@ class TreatmentsTemporaryBasalsFragment : DaggerFragment() {
             } else {
                 if (tempBasal.isInProgress) {
                     holder.binding.date.text = dateUtil.dateAndTimeString(tempBasal.date)
-                    holder.binding.date.setTextColor(resourceHelper.gc(R.color.colorActive))
+                    holder.binding.date.setTextColor(resourceHelper.getAttributeColor(context, R.attr.treatmentActive))
                 } else {
                     holder.binding.date.text = dateUtil.dateAndTimeRangeString(tempBasal.date, tempBasal.end())
                     holder.binding.date.setTextColor(holder.binding.netRatio.currentTextColor)
@@ -138,7 +138,7 @@ class TreatmentsTemporaryBasalsFragment : DaggerFragment() {
                 holder.binding.netInsulin.text = resourceHelper.gs(R.string.formatinsulinunits, iob.netInsulin)
                 holder.binding.netRatio.text = resourceHelper.gs(R.string.pump_basebasalrate, iob.netRatio)
                 holder.binding.extendedFlag.visibility = View.GONE
-                if (iob.basaliob != 0.0) holder.binding.iob.setTextColor(resourceHelper.gc(R.color.colorActive)) else holder.binding.iob.setTextColor(holder.binding.netRatio.currentTextColor)
+                if (iob.basaliob != 0.0) holder.binding.iob.setTextColor(resourceHelper.getAttributeColor(context, R.attr.treatmentActive)) else holder.binding.iob.setTextColor(holder.binding.netRatio.currentTextColor)
             }
             holder.binding.remove.tag = tempBasal
         }

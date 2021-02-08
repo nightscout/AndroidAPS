@@ -95,8 +95,8 @@ class TreatmentsTempTargetFragment : DaggerFragment() {
 
     @Synchronized
     override fun onDestroyView() {
-        super.onDestroyView()
         _binding = null
+        super.onDestroyView()
     }
 
     private fun updateGui() {
@@ -133,9 +133,9 @@ class TreatmentsTempTargetFragment : DaggerFragment() {
                 holder.binding.reasonColon.text = ""
             }
             if (tempTarget.isInProgress && tempTarget === currentlyActiveTarget) {
-                holder.binding.date.setTextColor(resourceHelper.gc(R.color.colorActive))
+                holder.binding.date.setTextColor(resourceHelper.getAttributeColor(context, R.attr.treatmentActive))
             } else if (tempTarget.date > DateUtil.now()) {
-                holder.binding.date.setTextColor(resourceHelper.gc(R.color.colorScheduled))
+                holder.binding.date.setTextColor(resourceHelper.getAttributeColor(context, R.attr.treatmentSheduled))
             } else {
                 holder.binding.date.setTextColor(holder.binding.reasonColon.currentTextColor)
             }

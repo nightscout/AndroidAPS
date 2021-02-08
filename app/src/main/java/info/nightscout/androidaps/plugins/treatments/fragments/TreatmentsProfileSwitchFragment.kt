@@ -120,7 +120,7 @@ class TreatmentsProfileSwitchFragment : DaggerFragment() {
                 holder.binding.duration.text = ""
             }
             holder.binding.name.text = profileSwitch.customizedName
-            if (profileSwitch.isInProgress) holder.binding.date.setTextColor(resourceHelper.gc(R.color.colorActive)) else holder.binding.date.setTextColor(holder.binding.duration.currentTextColor)
+            if (profileSwitch.isInProgress) holder.binding.date.setTextColor(resourceHelper.getAttributeColor(context, R.attr.treatmentActive)) else holder.binding.date.setTextColor(holder.binding.duration.currentTextColor)
             holder.binding.remove.tag = profileSwitch
             holder.binding.clone.tag = profileSwitch
             holder.binding.name.tag = profileSwitch

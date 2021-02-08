@@ -65,12 +65,7 @@
 <attr name="informationText" format="reference|color" />
 <!-- colors for default cases ( near white ) -->
 <attr name="defaultColor" format="reference|color" />
-<!-- For bluring effect -->
-<declare-styleable name="BlurringView">
-    <attr name="radius" format="integer"/>
-    <attr name="downScaleFactor" format="integer"/>
-    <attr name="overlayColor" format="color"/>
-    <attr name="allowFallback" format="boolean"/>
-    <attr name="debug" format="boolean"/>
-</declare-styleable>
+<!-- treatment -->
+<attr name="treatmentSheduled" format="reference|color" />
+<attr name="treatmentActive" format="reference|color" />
 </resources>

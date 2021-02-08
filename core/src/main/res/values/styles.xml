@@ -91,6 +91,9 @@
         <item name="informationText" >?attr/colorOnPrimary</item>
         <!-- colors for default cases ( near white ) -->
         <item name="defaultColor" >@color/gray</item>
+        <!-- treatment -->
+        <item name="treatmentSheduled" >@color/squash</item>
+        <item name="treatmentActive" >@color/emerald</item>
     </style>
 
     <!-- The launcher theme. It sets the main window background to the launch_screen drawable -->

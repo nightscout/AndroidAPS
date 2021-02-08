@@ -83,9 +83,6 @@
     <color name="colorSetExtendedButton">#FFDD7792</color>
     <color name="materialButtonBackground">#e64A4E55</color>
 
-    <color name="colorScheduled">#de7550</color>
-    <color name="colorActive">#25912e</color>
-
     <!--  Informationenline -->
     <color name="notificationAnnouncement">#FF8C00</color>
     <color name="notificationNormal">#ff5e55</color>
@@ -206,7 +203,13 @@
     <color name="red">#ff0400</color>
     <color name="cyan">#00d2d2</color>
 
-    <!-- Blue Colors -->>
+    <!-- Orange Colors -->
+    <color name="squash">#de7550</color>
+
+    <!-- Green Colors -->
+    <color name="emerald">#25912e</color>
+
+    <!-- Blue Colors -->
     <color name="ios_blue_default">#007AFF</color>
 
 </resources>

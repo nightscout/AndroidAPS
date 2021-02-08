@@ -91,6 +91,9 @@
         <item name="informationText" >?attr/colorOnPrimary</item>
         <!-- colors for default cases ( near white ) -->
         <item name="defaultColor" >@color/white</item>
+        <!-- treatment -->
+        <item name="treatmentSheduled" >@color/squash</item>
+        <item name="treatmentActive" >@color/emerald</item>
     </style>
 
     <style name="Theme.MaterialComponents.DayNight.DarkActionBar" parent="Theme.MaterialComponents.DayNight.Bridge"/>

@@ -114,8 +114,8 @@ class TreatmentsBolusFragment : DaggerFragment() {
 
     @Synchronized
     override fun onDestroyView() {
-        super.onDestroyView()
         _binding = null
+        super.onDestroyView()
     }
 
     inner class RecyclerViewAdapter internal constructor(var treatments: List<Treatment>) : RecyclerView.Adapter<TreatmentsViewHolder>() {
@@ -137,8 +137,8 @@ class TreatmentsBolusFragment : DaggerFragment() {
             holder.binding.pump.visibility = if (t.source == Source.PUMP) View.VISIBLE else View.GONE
             holder.binding.ns.visibility = if (NSUpload.isIdValid(t._id)) View.VISIBLE else View.GONE
             holder.binding.invalid.visibility = if (t.isValid) View.GONE else View.VISIBLE
-            if (iob.iobContrib != 0.0) holder.binding.iob.setTextColor(resourceHelper.gc(R.color.colorActive)) else holder.binding.iob.setTextColor(holder.binding.carbs.currentTextColor)
-            if (t.date > DateUtil.now()) holder.binding.date.setTextColor(resourceHelper.gc(R.color.colorScheduled)) else holder.binding.date.setTextColor(holder.binding.carbs.currentTextColor)
+            if (iob.iobContrib != 0.0) holder.binding.iob.setTextColor(resourceHelper.getAttributeColor(context, R.attr.treatmentActive)) else holder.binding.iob.setTextColor(holder.binding.carbs.currentTextColor)
+            if (t.date > DateUtil.now()) holder.binding.date.setTextColor(resourceHelper.getAttributeColor(context, R.attr.treatmentSheduled)) else holder.binding.date.setTextColor(holder.binding.carbs.currentTextColor)
             holder.binding.remove.tag = t
             holder.binding.calculation.tag = t
             holder.binding.calculation.visibility = if (t.getBoluscalc() == null) View.INVISIBLE else View.VISIBLE
