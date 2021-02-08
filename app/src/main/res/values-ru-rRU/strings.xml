@@ -1158,4 +1158,6 @@ Context | Edit Context</string>
     <string name="graph_menu_divider_header">График</string>
     <string name="chart_menu">Меню графика</string>
     <string name="clear_filter">Очистить фильтр</string>
+    <string name="trend_arrow">Стрелка тренда</string>
+    <string name="cannula">Катетер помпы</string>
 </resources>

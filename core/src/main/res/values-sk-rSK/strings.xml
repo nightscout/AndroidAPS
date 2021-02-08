@@ -2,6 +2,7 @@
 <resources>
     <!--    Keys-->
     <!--    General-->
+    <string name="refresh">Obnoviť</string>
     <string name="error">Chyba</string>
     <string name="not_set_short">Nenastavené</string>
     <string name="failedupdatebasalprofile">Chyba pri aktualizovaní bazálneho profilu</string>

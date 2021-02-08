@@ -32,11 +32,11 @@ import dagger.android.HasAndroidInjector;
 import info.nightscout.androidaps.Config;
 import info.nightscout.androidaps.Constants;
 import info.nightscout.androidaps.R;
+import info.nightscout.androidaps.data.GlucoseValueDataPoint;
 import info.nightscout.androidaps.data.IobTotal;
 import info.nightscout.androidaps.data.Profile;
 import info.nightscout.androidaps.database.AppRepository;
 import info.nightscout.androidaps.database.entities.GlucoseValue;
-import info.nightscout.androidaps.db.BgReading;
 import info.nightscout.androidaps.db.TemporaryBasal;
 import info.nightscout.androidaps.db.Treatment;
 import info.nightscout.androidaps.interfaces.ActivePluginProvider;
@@ -537,14 +537,14 @@ public class WatchUpdaterService extends WearableListenerService implements Goog
         }
 
         final LoopPlugin.LastRun finalLastRun = loopPlugin.getLastRun();
-        if (sp.getBoolean("wear_predictions", true) && finalLastRun != null && finalLastRun.getRequest().hasPredictions && finalLastRun.getConstraintsProcessed() != null) {
-            List<BgReading> predArray = finalLastRun.getConstraintsProcessed().getPredictions();
+        if (sp.getBoolean("wear_predictions", true) && finalLastRun != null && finalLastRun.getRequest().getHasPredictions() && finalLastRun.getConstraintsProcessed() != null) {
+            List<GlucoseValueDataPoint> predArray = finalLastRun.getConstraintsProcessed().getPredictions();
 
             if (!predArray.isEmpty()) {
                 final String units = profileFunction.getUnits();
-                for (BgReading bg : predArray) {
-                    if (bg.getValue() < 40) continue;
-                    predictions.add(predictionMap(bg.getDate(), bg.getValue(), bg.getPredictionColor()));
+                for (GlucoseValueDataPoint bg : predArray) {
+                    if (bg.getData().getValue() < 40) continue;
+                    predictions.add(predictionMap(bg.getData().getTimestamp(), bg.getData().getValue(), bg.getPredictionColor()));
                 }
             }
         }

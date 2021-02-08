@@ -8,7 +8,6 @@ import info.nightscout.androidaps.R
 import info.nightscout.androidaps.database.AppRepository
 import info.nightscout.androidaps.database.entities.GlucoseValue
 import info.nightscout.androidaps.database.transactions.CgmSourceTransaction
-import info.nightscout.androidaps.db.BgReading
 import info.nightscout.androidaps.interfaces.BgSourceInterface
 import info.nightscout.androidaps.interfaces.PluginBase
 import info.nightscout.androidaps.interfaces.PluginDescription
@@ -77,10 +76,10 @@ class TomatoPlugin @Inject constructor(
                 sourceSensor = GlucoseValue.SourceSensor.LIBRE_1_TOMATO
             )
             tomatoPlugin.disposable += repository.runTransactionForResult(CgmSourceTransaction(glucoseValues, emptyList(), null)).subscribe({ savedValues ->
-                savedValues.forEach {
+                savedValues.inserted.forEach {
                     broadcastToXDrip(it)
                     if (sp.getBoolean(R.string.key_dexcomg5_nsupload, false))
-                        nsUpload.uploadBg(BgReading(injector, it), GlucoseValue.SourceSensor.LIBRE_1_TOMATO.text)
+                        nsUpload.uploadBg(it, GlucoseValue.SourceSensor.LIBRE_1_TOMATO.text)
                 }
             }, {
                 aapsLogger.error(LTag.BGSOURCE, "Error while saving values from Tomato App", it)

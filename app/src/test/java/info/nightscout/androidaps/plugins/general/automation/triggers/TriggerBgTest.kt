@@ -3,10 +3,9 @@ package info.nightscout.androidaps.plugins.general.automation.triggers
 import com.google.common.base.Optional
 import info.nightscout.androidaps.Constants
 import info.nightscout.androidaps.R
-import info.nightscout.androidaps.db.BgReading
+import info.nightscout.androidaps.database.entities.GlucoseValue
 import info.nightscout.androidaps.interfaces.ProfileFunction
 import info.nightscout.androidaps.plugins.general.automation.elements.Comparator
-import info.nightscout.androidaps.plugins.general.nsclient.data.NSSgv
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.IobCobCalculatorPlugin
 import info.nightscout.androidaps.utils.DateUtil
 import org.json.JSONObject
@@ -93,9 +92,16 @@ class TriggerBgTest : TriggerTestBase() {
         Assert.assertEquals(Optional.of(R.drawable.ic_cp_bgcheck), TriggerBg(injector).icon())
     }
 
-    private fun generateOneCurrentRecordBgData(): List<BgReading> {
-        val list: MutableList<BgReading> = ArrayList()
-        list.add(BgReading(injector, NSSgv(JSONObject("{\"mgdl\":214,\"mills\":" + (now - 1) + ",\"direction\":\"Flat\"}"))))
+    private fun generateOneCurrentRecordBgData(): List<GlucoseValue> {
+        val list: MutableList<GlucoseValue> = ArrayList()
+        list.add(GlucoseValue(
+            raw = 0.0,
+            noise = 0.0,
+            value = 214.0,
+            timestamp = now - 1,
+            sourceSensor = GlucoseValue.SourceSensor.UNKNOWN,
+            trendArrow = GlucoseValue.TrendArrow.FLAT
+        ))
         return list
     }
 }

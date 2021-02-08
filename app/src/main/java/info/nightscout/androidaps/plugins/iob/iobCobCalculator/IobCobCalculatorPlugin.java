@@ -17,14 +17,12 @@ import javax.inject.Singleton;
 
 import dagger.android.HasAndroidInjector;
 import info.nightscout.androidaps.Constants;
-import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.data.IobTotal;
 import info.nightscout.androidaps.data.MealData;
 import info.nightscout.androidaps.data.Profile;
 import info.nightscout.androidaps.database.AppRepository;
 import info.nightscout.androidaps.database.entities.GlucoseValue;
-import info.nightscout.androidaps.db.BgReading;
 import info.nightscout.androidaps.db.TemporaryBasal;
 import info.nightscout.androidaps.db.Treatment;
 import info.nightscout.androidaps.events.Event;
@@ -385,7 +383,7 @@ public class IobCobCalculatorPlugin extends PluginBase implements IobCobCalculat
             if (older.getTimestamp() == newer.getTimestamp()) { // direct hit
                 bucketed_data.add(new InMemoryGlucoseValue(newer));
             } else {
-                double bgDelta = newer.getTimestamp() - older.getTimestamp();
+                double bgDelta = newer.getValue() - older.getValue();
                 long timeDiffToNew = newer.getTimestamp() - currentTime;
 
                 double currentBg = newer.getValue() - (double) timeDiffToNew / (newer.getTimestamp() - older.getTimestamp()) * bgDelta;

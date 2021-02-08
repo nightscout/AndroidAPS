@@ -1154,4 +1154,8 @@
     <string name="timetoeat">Čas na jedlo</string>
     <string name="fabric_upload_disabled">Odosielanie protokolov o zlyhaní je zakázané!</string>
     <string name="graph_menu_divider_header">Graf</string>
+    <string name="chart_menu">Grafové menu</string>
+    <string name="clear_filter">Vyčistiť filter</string>
+    <string name="trend_arrow">Trendová šípka</string>
+    <string name="cannula">Kanyla</string>
 </resources>

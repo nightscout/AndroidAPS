@@ -217,7 +217,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
             TableUtils.dropTable(connectionSource, TDD.class, true);
             TableUtils.dropTable(connectionSource, OmnipodHistoryRecord.class, true);
             TableUtils.createTableIfNotExists(connectionSource, TempTarget.class);
-            TableUtils.createTableIfNotExists(connectionSource, BgReading.class);
+            //TableUtils.createTableIfNotExists(connectionSource, BgReading.class);
             TableUtils.createTableIfNotExists(connectionSource, DanaRHistoryRecord.class);
             TableUtils.createTableIfNotExists(connectionSource, DbRequest.class);
             TableUtils.createTableIfNotExists(connectionSource, TemporaryBasal.class);
@@ -315,10 +315,6 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
         return getDao(TempTarget.class);
     }
 
-    private Dao<BgReading, Long> getDaoBgReadings() throws SQLException {
-        return getDao(BgReading.class);
-    }
-
     private Dao<DanaRHistoryRecord, String> getDaoDanaRHistory() throws SQLException {
         return getDao(DanaRHistoryRecord.class);
     }
@@ -372,14 +368,6 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
         if (rounded != date)
             aapsLogger.debug(LTag.DATABASE, "Rounding " + date + " to " + rounded);
         return rounded;
-    }
-    public List<BgReading> getAllBgReadings() {
-        try {
-            return getDaoBgReadings().queryForAll();
-        } catch (SQLException e) {
-            aapsLogger.error("Unhandled exception", e);
-        }
-        return Collections.emptyList();
     }
 
     // -------------------  TDD handling -----------------------
@@ -1531,6 +1519,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
         }
         return Collections.emptyList();
     }
+
     @Nullable
     private ProfileSwitch getLastProfileSwitchWithoutDuration() {
         try {
@@ -1969,8 +1958,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 
     public long getCountOfAllRows() {
         try {
-            return getDaoBgReadings().countOf()
-                    + getDaoCareportalEvents().countOf()
+            return getDaoCareportalEvents().countOf()
                     + getDaoExtendedBolus().countOf()
                     + getDaoCareportalEvents().countOf()
                     + getDaoProfileSwitch().countOf()

@@ -20,7 +20,6 @@ import info.nightscout.androidaps.MainApp
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.data.Profile
 import info.nightscout.androidaps.databinding.DialogWizardBinding
-import info.nightscout.androidaps.db.BgReading
 import info.nightscout.androidaps.interfaces.ActivePluginProvider
 import info.nightscout.androidaps.interfaces.Constraint
 import info.nightscout.androidaps.interfaces.ProfileFunction
@@ -236,6 +235,10 @@ class WizardDialog : DaggerDialogFragment() {
         binding.cobcheckbox.isChecked = sp.getBoolean(R.string.key_wizard_include_cob, false)
     }
 
+    private fun valueToUnitsToString(value: Double, units: String): String =
+        if (units == Constants.MGDL) DecimalFormatter.to0Decimal(value)
+        else DecimalFormatter.to1Decimal(value * Constants.MGDL_TO_MMOLL)
+
     private fun initDialog() {
         val profile = profileFunction.getProfile()
         val profileStore = activePlugin.activeProfileInterface.profile
@@ -246,8 +249,7 @@ class WizardDialog : DaggerDialogFragment() {
             return
         }
 
-        val profileList: ArrayList<CharSequence>
-        profileList = profileStore.getProfileList()
+        val profileList: ArrayList<CharSequence> = profileStore.getProfileList()
         profileList.add(0, resourceHelper.gs(R.string.active))
         context?.let { context ->
             val adapter = ArrayAdapter(context, R.layout.spinner_centered, profileList)
@@ -335,7 +337,7 @@ class WizardDialog : DaggerDialogFragment() {
             binding.notes.text.toString(), carbTime)
 
         wizard?.let { wizard ->
-            binding.bg.text = String.format(resourceHelper.gs(R.string.format_bg_isf), BgReading(injector).value(Profile.toMgdl(bg, profileFunction.getUnits())).valueToUnitsToString(profileFunction.getUnits()), wizard.sens)
+            binding.bg.text = String.format(resourceHelper.gs(R.string.format_bg_isf), valueToUnitsToString(Profile.toMgdl(bg, profileFunction.getUnits()), profileFunction.getUnits()), wizard.sens)
             binding.bginsulin.text = resourceHelper.gs(R.string.formatinsulinunits, wizard.insulinFromBG)
 
             binding.carbs.text = String.format(resourceHelper.gs(R.string.format_carbs_ic), carbs.toDouble(), wizard.ic)
