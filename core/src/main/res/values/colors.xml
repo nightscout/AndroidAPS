@@ -61,9 +61,6 @@
     <color name="background_light">#FFFFFF</color>
     <color name="splashBackground">#000000</color>
 
-    <!-- colors for statuslight handler    -->
-    <color name="statuslight_normal" >#000000</color>
-
     <!-- Default theme color -->
     <!-- This section describes the main theme colors -->
     <color name="primaryColorDefault">#8c8c8c</color>
