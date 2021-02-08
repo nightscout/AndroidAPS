@@ -97,6 +97,9 @@
     <color name="warningAlertHeaderText">#FF000000</color>
     <color name="errorAlertHeaderText">#FF000000</color>>
 
+    <!--    Toasts-->
+    <color name="toastBorder">#666666</color>
+
     <!-- Pink Colors -->
     <color name="prediction">#ff00ff</color>
     <color name="devslopeneg">#FFFF00FF</color>
