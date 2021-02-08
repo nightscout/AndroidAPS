@@ -27,7 +27,7 @@
         <item name="iconColorToolbar">@color/black</item>
         <item name="fabmenubackground">@color/fabmenubackground</item>
         <item name="iobBorder">@color/white</item>
-        <item name="cobBorder">@color/cobBorder</item>
+        <item name="cobBorder">@color/white</item>
         <item name="iobColor">@color/iob</item>
         <item name="cobColor">@color/cob</item>
         <item name="uamColor">@color/uam</item>

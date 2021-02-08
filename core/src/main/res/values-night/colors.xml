@@ -1,8 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!-- COB  -->
-    <color name="cobBorder">#F0F0F0</color>
-
     <color name="ratio">#FFFFFF</color>
 
     <color name="defaultbackground">#BBBBBB</color>
