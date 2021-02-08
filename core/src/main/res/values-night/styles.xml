@@ -10,7 +10,7 @@
         <item name="colorSecondaryVariant">@color/secondaryLightColorDefault</item>
         <item name="colorOnPrimary">@color/primaryTextColorDefault</item>
         <item name="colorSurface">@color/black_alpha_90</item>
-        <item name="colorOnSurface">@color/white</item>
+        <item name="colorOnSurface">@color/gray</item>
         <item name="colorOnSecondary">@color/white</item>
         <item name="colorOnBackground">@color/white</item>
         <item name="colorOnError">@color/black</item>
@@ -32,7 +32,6 @@
         <item name="cobColor">@color/cob</item>
         <item name="uamColor">@color/uam</item>
         <item name="ztColor">@color/cyan</item>
-        <item name="matButtonBackground">@color/materialButtonBackground</item>
         <item name="textAppearanceHeadline1">@style/TextAppearance.MaterialComponents.Headline1</item>
         <item name="textAppearanceHeadline2">@style/TextAppearance.MaterialComponents.Headline2</item>
         <item name="textAppearanceHeadline3">@style/TextAppearance.MaterialComponents.Headline3</item>
