@@ -1,104 +1,40 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!-- Import  -->
-    <color name="metadataOk">#77dd77</color>
-    <color name="metadataTextWarning">#FF8C00</color>
-    <color name="metadataTextError">#FF5555</color>
-
-    <color name="importListAdditionalInfo">#BBBBBB</color>
-
-    <color name="prediction">#ff00ff</color>
-    <color name="basal">#6B85FF</color>
-    <!-- IOB  -->
-    <color name="iob">#1ba1e2</color>
-    <color name="iobBorder">#FFFFFF</color>
     <!-- COB  -->
-    <color name="cob">#f0a30a</color>
     <color name="cobBorder">#F0F0F0</color>
 
-    <color name="bolus">#1ea3e5</color>
-    <color name="iobPredAS">#1ea3e5</color>
-    <color name="carbs">#F2A370</color>
-    <color name="uam">#c9bd60</color>
     <color name="ratio">#FFFFFF</color>
-    <color name="devslopepos">#FFFFFF00</color>
-    <color name="devslopeneg">#FFFF00FF</color>
 
     <!-- BG colors  -->
     <color name="inrange">#00FF00</color>
     <color name="inrange_bg">#00FF00</color>
-    <color name="low">#FF0000</color>
     <color name="high">#FFFF00</color>
-
-    <color name="actionsConfirm">#FFFF00</color>
-    <color name="tabBgColor">#f0003f59</color>
-    <color name="tabBgColorSelected">#5F7BA6</color>
-    <color name="deviations">#FF0000</color>
 
     <!-- in range Area  -->
     <color name="inrangebackground">#10FFFFFF</color>
     <color name="inrangebackgroundBorder">#4dB1B1B1</color>
 
-    <!-- Basal   -->
-    <color name="basebasal">#3D15FF</color>
-    <color name="tempbasal">#1ba1e2</color>
-
-    <!-- Treatment Text   -->
-    <color name="treatment">#B2B2B2</color>
-
     <!-- Profil switch Text   -->
     <color name="profilswitch">#5F7BA6</color>
 
-    <color name="graphgrid">#757575</color>
-    <color name="colorLightGray">#d8d8d8</color>
-    <color name="info">#77dd77</color>
     <color name="defaultbackground">#BBBBBB</color>
-    <color name="defaulttext">#BBBBBB</color>
 
     <color name="fabmenubackground">#73141428</color>
-
-    <!-- Target line  -->
-    <color name="tempTargetBackground">#FAFAE1</color>
-
-    <color name="tempTargetConfirmation">#77dd77</color>
-    <color name="tempTargetDisabledBackground">#303F9F</color>
 
     <color name="dialog_title_background">#303030</color>
     <color name="activity_title_background">#121212</color>
 
-    <color name="cardObjectiveText">#779ECB</color>
-
     <!-- Buttons   -->
-    <color name="colorInsulinButton">#8EC1FF</color>
-    <color name="colorCalculatorButton">#67e86a</color>
-    <color name="colorSetTempButton">#FF478EFF</color>
-    <color name="colorSetExtendedButton">#FFDD7792</color>
     <color name="materialButtonBackground">#804A4E55</color>
-
-    <color name="notificationAnnouncement">#FF8C00</color>
-    <color name="notificationNormal">#ff5e55</color>
-    <color name="notificationLow">#ff827c</color>
-    <color name="notificationInfo">#009705</color>
-
-    <!---Graph Color for deviation-->
-    <color name="deviationgrey">#c8666666</color>
-    <color name="deviationgreen">#7200FF00</color>
-    <color name="deviationred">#72FF0000</color>
-    <color name="deviationblack">#72000000</color>
 
     <!---Graph Color for horizontal and vertical label text-->
     <color name="graphHorizontalLabelText">#FFFFFF</color>
     <color name="graphVerticalLabelText">#FFFFFF</color>
 
-    <color name="ribbonDefault">#5a595b</color>
-    <color name="ribbonWarning">#f4d700</color>
-    <color name="ribbonTextWarning">#303030</color>
-
     <!---Theme based colors-->
     <color name="colorPrimary">#707991</color>
     <color name="colorPrimaryDark">#5a6275</color>
     <color name="colorAccent">#FFFFFF</color>
-    <color name="mdtp_accent_color">#3A7EFF</color>
     <color name="iconColor">#FFFFFF</color>
     <color name="iconColorbottomAppbar">#FFFFFF</color>
     <color name="iconColorToolbar">#FFFFFF</color>
@@ -110,19 +46,13 @@
     <!---Android Dark ans Light Theme Base colors-->
     <color name="background_dark">#121212</color>
     <color name="background_light">#FFFFFF</color>
+    <color name="splashBackground">#000000</color>
 
     <!-- colors for statuslight handler    -->
     <color name="statuslight_normal" >#FFFFFF</color>
-    <color name="statuslight_Warning" >#FFFF00</color>
-
-    <!---Default material colors-->
-    <color name="colorOnPrimary">#FFFFFF</color>
-    <color name="colorOnSecondary">#FFFFFF</color>
-    <color name="colorOnSurface">#FFFFFF</color>
-    <color name="color_on_background">#FFFFFF</color>
-    <color name="surface_color">#363640</color>
 
     <!-- Default theme color -->
+    <!-- This section describes the main theme colors -->
     <color name="primaryColorDefault">#222222</color>
     <color name="primaryLightColorDefault">#bbb9bb</color>
     <color name="primaryDarkColorDefault">#222222</color>
@@ -133,42 +63,98 @@
     <color name="secondaryTextColorDefault">#000000</color>
     <color name="overviewPillColorDefault">#1c171c</color>
     <color name="colorOnPrimaryDefault">#FFFFFF</color>
-    <color name="bottomBarBackgroundDefault">#1c171c</color>
-    <color name="fabmenubackgroundDefault">#83141428</color>
-
-    <color name="splashBackground">#000000</color>
-    <!-- Misc. grey colors -->
-    <color name="gray">#BBBBBB</color>
-    <color name="darkgray">#4e4e4e</color>
-    <color name="plastic">#EBEBEA</color>
-    <color name="plastic_grey">#666666</color>
-    <color name="sphere_plastic_grey">#8c8c8c</color>
-
-    <color name="mdtp_button_selected">#33969696</color>
-    <color name="mdtp_button_color">@color/mdtp_accent_color</color>
-    <color name="mdtp_line_dark">#808080</color>
 
     <!--    Dialogs-->
-    <color name="warningAlertBackground">#FFFB8C00</color>
     <color name="warningAlertHeaderText">#FF000000</color>
     <color name="errorAlertHeaderText">#FF000000</color>
 
     <!--    Toasts-->
     <color name="toastBorder">#666666</color>
-    <color name="toastOk">#77dd77</color>
-    <color name="toastWarn">#FF8C00</color>
-    <color name="toastInfo">#03A9F4</color>
 
+    <!-- Pink Colors -->
+    <color name="prediction">#ff00ff</color>
+    <color name="devslopeneg">#FFFF00FF</color>
+    <color name="colorSetExtendedButton">#FFDD7792</color>
+
+    <!-- Red Colors -->
     <color name="red">#ff0400</color>
-    <color name="cyan">#00d2d2</color>
+    <color name="deviations">#FF0000</color>
+    <color name="low">#FF0000</color>
+    <color name="deviationred">#72FF0000</color>
+    <color name="notificationNormal">#ff5e55</color>
+    <color name="notificationLow">#ff827c</color>
+    <color name="metadataTextError">#FF5555</color>
+    <color name="error_background">#66FC0000</color>
+
+    <!-- Yellow Colors -->
+    <color name="actionsConfirm">#FFFF00</color>
+    <color name="devslopepos">#FFFFFF00</color>
+    <color name="ribbonWarning">#f4d700</color>
 
     <!-- Orange Colors -->
     <color name="squash">#de7550</color>
+    <color name="warningAccentText">#FFFB8C00</color>
+    <color name="toastWarn">#FF8C00</color>
+    <color name="warningAlertBackground">#FFFB8C00</color>
+    <color name="statuslight_Warning" >#FF9900</color>
+    <color name="notificationAnnouncement">#FF8C00</color>
+    <color name="metadataTextWarning">#FF8C00</color>
+    <color name="cob">#f0a30a</color>
+    <color name="carbs">#F2A370</color>
 
     <!-- Green Colors -->
+    <color name="deviationgreen">#7200FF00</color>
+    <color name="activity">#d3f166</color>
+    <color name="toastOk">#77dd77</color>
+    <color name="tempTargetConfirmation">#77dd77</color>
+    <color name="metadataOk">#77dd77</color>
+    <color name="info">#77dd77</color>
     <color name="emerald">#25912e</color>
+    <color name="notificationInfo">#009705</color>
+    <color name="uam">#c9bd60</color>
+    <color name="colorCalculatorButton">#67e86a</color>
 
     <!-- Blue Colors -->
-    <color name="ios_blue_default">#007AFF</color>
+    <color name="blue_default">#007AFF</color>
+    <color name="cyan">#00d2d2</color>
+    <color name="iobPred">#00d2d2</color>
+    <color name="bolus">#1ea3e5</color>
+    <color name="iobPredAS">#1ea3e5</color>
+    <color name="basebasal">#3D15FF</color>
+    <color name="tempbasal">#1ba1e2</color>
+    <color name="iob">#1ba1e2</color>
+    <color name="tempTargetDisabledBackground">#303F9F</color>
+    <color name="mdtp_button_color">@color/mdtp_accent_color</color>
+    <color name="toastInfo">#03A9F4</color>
+    <color name="mdtp_accent_color">#3A7EFF</color>
+    <color name="basal">#6B85FF</color>
+    <color name="tabBgColor">#f0003f59</color>
+    <color name="tabBgColorSelected">#5F7BA6</color>
+    <color name="cobAlert">#7484E2</color>
+    <color name="cardObjectiveText">#779ECB</color>
+    <color name="colorInsulinButton">#8EC1FF</color>
+    <color name="colorSetTempButton">#FF478EFF</color>
+
+    <!-- Gray colors -->
+    <color name="gray">#BBBBBB</color>
+    <color name="darkgray">#4e4e4e</color>
+    <color name="plastic">#EBEBEA</color>
+    <color name="plastic_grey">#666666</color>
+    <color name="sphere_plastic_grey">#8c8c8c</color>
+    <color name="mdtp_button_selected">#33969696</color>
+    <color name="mdtp_line_dark">#808080</color>
+    <color name="importListAdditionalInfo">#BBBBBB</color>
+    <color name="treatment">#B2B2B2</color>
+    <color name="graphgrid">#757575</color>
+    <color name="colorLightGray">#d8d8d8</color>
+    <color name="ok_background">#323232</color>
+    <color name="defaulttext">#BBBBBB</color>
+    <color name="deviationgrey">#c8666666</color>
+    <color name="deviationblack">#72000000</color>
+    <color name="ribbonDefault">#5a595b</color>
+    <color name="ribbonTextWarning">#303030</color>
+
+    <!-- White colors -->
+    <color name="tempTargetBackground">#FAFAE1</color>
 
 </resources>
