@@ -53,10 +53,14 @@ class MaintenanceFragment : DaggerFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding.logSend.setOnClickListener { maintenancePlugin.sendLogs() }
-        binding.logDelete.setOnClickListener { maintenancePlugin.deleteLogs() }
+        binding.logDelete.setOnClickListener {
+            aapsLogger.debug("USER ENTRY: DELETE LOGS")
+            maintenancePlugin.deleteLogs()
+        }
         binding.navResetdb.setOnClickListener {
             activity?.let { activity ->
                 OKDialog.showConfirmation(activity, resourceHelper.gs(R.string.maintenance), resourceHelper.gs(R.string.reset_db_confirm), Runnable {
+                    aapsLogger.debug("USER ENTRY: RESET DATABASES")
                     compositeDisposable.add(
                         fromAction {
                             MainApp.getDbHelper().resetDatabases()
@@ -77,12 +81,14 @@ class MaintenanceFragment : DaggerFragment() {
             }
         }
         binding.navExport.setOnClickListener {
+            aapsLogger.debug("USER ENTRY: EXPORT SETTINGS")
             // start activity for checking permissions...
             importExportPrefs.verifyStoragePermissions(this) {
                 importExportPrefs.exportSharedPreferences(this)
             }
         }
         binding.navImport.setOnClickListener {
+            aapsLogger.debug("USER ENTRY: IMPORT SETTINGS")
             // start activity for checking permissions...
             importExportPrefs.verifyStoragePermissions(this) {
                 importExportPrefs.importSharedPreferences(this)
