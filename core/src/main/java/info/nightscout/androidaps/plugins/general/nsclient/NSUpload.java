@@ -1,22 +1,15 @@
 package info.nightscout.androidaps.plugins.general.nsclient;
 
 import android.content.Context;
-import android.content.Intent;
-import android.content.pm.ResolveInfo;
 import android.os.Build;
-import android.os.Bundle;
 
 import androidx.annotation.Nullable;
 
 import org.apache.commons.lang3.StringUtils;
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.List;
-import java.util.Locale;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -26,7 +19,7 @@ import info.nightscout.androidaps.core.R;
 import info.nightscout.androidaps.data.DetailedBolusInfo;
 import info.nightscout.androidaps.data.IobTotal;
 import info.nightscout.androidaps.data.Profile;
-import info.nightscout.androidaps.db.BgReading;
+import info.nightscout.androidaps.database.entities.GlucoseValue;
 import info.nightscout.androidaps.db.CareportalEvent;
 import info.nightscout.androidaps.db.DbRequest;
 import info.nightscout.androidaps.db.ExtendedBolus;
@@ -211,7 +204,7 @@ public class NSUpload {
                 apsResult.json().put("timestamp", DateUtil.toISOString(lastRun.getLastAPSRun()));
                 deviceStatus.suggested = apsResult.json();
 
-                deviceStatus.iob = lastRun.getRequest().iob.json();
+                deviceStatus.iob = lastRun.getRequest().getIob().json();
                 deviceStatus.iob.put("time", DateUtil.toISOString(lastRun.getLastAPSRun()));
 
                 JSONObject requested = new JSONObject();
@@ -221,8 +214,8 @@ public class NSUpload {
                     deviceStatus.enacted.put("rate", lastRun.getTbrSetByPump().json(profile).get("rate"));
                     deviceStatus.enacted.put("duration", lastRun.getTbrSetByPump().json(profile).get("duration"));
                     deviceStatus.enacted.put("recieved", true);
-                    requested.put("duration", lastRun.getRequest().duration);
-                    requested.put("rate", lastRun.getRequest().rate);
+                    requested.put("duration", lastRun.getRequest().getDuration());
+                    requested.put("rate", lastRun.getRequest().getRate());
                     requested.put("temp", "absolute");
                     deviceStatus.enacted.put("requested", requested);
                 }
@@ -231,7 +224,7 @@ public class NSUpload {
                         deviceStatus.enacted = lastRun.getRequest().json();
                     }
                     deviceStatus.enacted.put("smb", lastRun.getTbrSetByPump().bolusDelivered);
-                    requested.put("smb", lastRun.getRequest().smb);
+                    requested.put("smb", lastRun.getRequest().getSmb());
                     deviceStatus.enacted.put("requested", requested);
                 }
             } else {
@@ -402,19 +395,37 @@ public class NSUpload {
         uploadQueue.add(new DbRequest("dbAdd", "treatments", data));
     }
 
-    public void uploadBg(BgReading reading, String source) {
+    public void uploadBg(GlucoseValue reading, String source) {
         JSONObject data = new JSONObject();
         try {
             data.put("device", source);
-            data.put("date", reading.date);
-            data.put("dateString", DateUtil.toISOString(reading.date));
-            data.put("sgv", reading.value);
-            data.put("direction", reading.direction);
+            data.put("date", reading.getTimestamp());
+            data.put("dateString", DateUtil.toISOString(reading.getTimestamp()));
+            data.put("sgv", reading.getValue());
+            data.put("direction", reading.getTrendArrow().getText());
             data.put("type", "sgv");
         } catch (JSONException e) {
             aapsLogger.error("Unhandled exception", e);
         }
         uploadQueue.add(new DbRequest("dbAdd", "entries", data));
+    }
+
+    public void updateBg(GlucoseValue reading, String source) {
+        JSONObject data = new JSONObject();
+        try {
+            data.put("device", source);
+            data.put("date", reading.getTimestamp());
+            data.put("dateString", DateUtil.toISOString(reading.getTimestamp()));
+            data.put("sgv", reading.getValue());
+            data.put("direction", reading.getTrendArrow().getText());
+            data.put("type", "sgv");
+            if (reading.getInterfaceIDs() != null)
+                if (reading.getInterfaceIDs().getNightscoutId() != null) {
+                    uploadQueue.add(new DbRequest("dbUpdate", "entries", reading.getInterfaceIDs().getNightscoutId(), data));
+                }
+        } catch (JSONException e) {
+            aapsLogger.error("Unhandled exception", e);
+        }
     }
 
     public void uploadAppStart() {
@@ -456,46 +467,6 @@ public class NSUpload {
         try {
             uploadQueue.add(new DbRequest("dbRemove", "food", _id));
         } catch (Exception e) {
-            aapsLogger.error("Unhandled exception", e);
-        }
-
-    }
-
-    public void sendToXdrip(BgReading bgReading) {
-        final String XDRIP_PLUS_NS_EMULATOR = "com.eveningoutpost.dexdrip.NS_EMULATOR";
-        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ", Locale.US);
-
-        try {
-            final JSONArray entriesBody = new JSONArray();
-            JSONObject json = new JSONObject();
-            json.put("sgv", bgReading.value);
-            if (bgReading.direction == null) {
-                json.put("direction", "NONE");
-            } else {
-                json.put("direction", bgReading.direction);
-            }
-            json.put("device", "G5");
-            json.put("type", "sgv");
-            json.put("date", bgReading.date);
-            json.put("dateString", format.format(bgReading.date));
-            entriesBody.put(json);
-
-            final Bundle bundle = new Bundle();
-            bundle.putString("action", "add");
-            bundle.putString("collection", "entries");
-            bundle.putString("data", entriesBody.toString());
-            final Intent intent = new Intent(XDRIP_PLUS_NS_EMULATOR);
-            intent.putExtras(bundle).addFlags(Intent.FLAG_INCLUDE_STOPPED_PACKAGES);
-            context.sendBroadcast(intent);
-            List<ResolveInfo> receivers = context.getPackageManager().queryBroadcastReceivers(intent, 0);
-            if (receivers.size() < 1) {
-                aapsLogger.debug("No xDrip receivers found. ");
-            } else {
-                aapsLogger.debug(receivers.size() + " xDrip receivers");
-            }
-
-
-        } catch (JSONException e) {
             aapsLogger.error("Unhandled exception", e);
         }
 

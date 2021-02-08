@@ -8,7 +8,6 @@ import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.Config
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.data.IobTotal
-import info.nightscout.androidaps.db.BgReading
 import info.nightscout.androidaps.events.Event
 import info.nightscout.androidaps.events.EventExtendedBolusChange
 import info.nightscout.androidaps.events.EventNewBasalProfile
@@ -123,13 +122,13 @@ class DataBroadcastPlugin @Inject constructor(
     }
 
     private fun bgStatus(bundle: Bundle) {
-        val lastBG: BgReading = iobCobCalculatorPlugin.lastBg() ?: return
+        val lastBG = iobCobCalculatorPlugin.lastBg() ?: return
         val glucoseStatus = GlucoseStatus(injector).glucoseStatusData ?: return
 
         bundle.putDouble("glucoseMgdl", lastBG.value)   // last BG in mgdl
-        bundle.putLong("glucoseTimeStamp", lastBG.date) // timestamp
+        bundle.putLong("glucoseTimeStamp", lastBG.timestamp) // timestamp
         bundle.putString("units", profileFunction.getUnits()) // units used in AAPS "mg/dl" or "mmol"
-        bundle.putString("slopeArrow", lastBG.directionToSymbol(databaseHelper)) // direction arrow as string
+        bundle.putString("slopeArrow", lastBG.trendArrow.text) // direction arrow as string
         bundle.putDouble("deltaMgdl", glucoseStatus.delta) // bg delta in mgdl
         bundle.putDouble("avgDeltaMgdl", glucoseStatus.avgdelta) // average bg delta
         bundle.putDouble("high", defaultValueHelper.determineHighLine()) // predefined top value of in range (green area)

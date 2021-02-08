@@ -1,6 +1,7 @@
 package info.nightscout.androidaps.historyBrowser
 
 import dagger.android.HasAndroidInjector
+import info.nightscout.androidaps.database.AppRepository
 import info.nightscout.androidaps.interfaces.ActivePluginProvider
 import info.nightscout.androidaps.interfaces.ProfileFunction
 import info.nightscout.androidaps.logging.AAPSLogger
@@ -32,9 +33,10 @@ class IobCobCalculatorPluginHistory @Inject constructor(
     sensitivityAAPSPlugin: SensitivityAAPSPlugin,
     sensitivityWeightedAveragePlugin: SensitivityWeightedAveragePlugin,
     fabricPrivacy: FabricPrivacy,
-    dateUtil: DateUtil
+    dateUtil: DateUtil,
+    repository: AppRepository
 ) : IobCobCalculatorPlugin(injector, aapsLogger, aapsSchedulers, rxBus, sp, resourceHelper, profileFunction,
-    activePlugin, treatmentsPluginHistory, sensitivityOref1Plugin, sensitivityAAPSPlugin, sensitivityWeightedAveragePlugin, fabricPrivacy, dateUtil) {
+    activePlugin, treatmentsPluginHistory, sensitivityOref1Plugin, sensitivityAAPSPlugin, sensitivityWeightedAveragePlugin, fabricPrivacy, dateUtil, repository) {
 
     override fun onStart() { // do not attach to rxbus
     }

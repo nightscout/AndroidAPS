@@ -56,6 +56,7 @@ import info.nightscout.androidaps.skins.SkinProvider
 import info.nightscout.androidaps.utils.*
 import info.nightscout.androidaps.utils.alertDialogs.OKDialog
 import info.nightscout.androidaps.utils.buildHelper.BuildHelper
+import info.nightscout.androidaps.utils.extensions.directionToIcon
 import info.nightscout.androidaps.utils.extensions.toVisibility
 import info.nightscout.androidaps.utils.protection.ProtectionCheck
 import info.nightscout.androidaps.utils.resources.ResourceHelper
@@ -94,6 +95,7 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
     @Inject lateinit var treatmentsPlugin: TreatmentsPlugin
     @Inject lateinit var iobCobCalculatorPlugin: IobCobCalculatorPlugin
     @Inject lateinit var dexcomPlugin: DexcomPlugin
+    @Inject lateinit var dexcomMediator: DexcomPlugin.DexcomMediator
     @Inject lateinit var xdripPlugin: XdripPlugin
     @Inject lateinit var notificationStore: NotificationStore
     @Inject lateinit var actionStringHandler: ActionStringHandler
@@ -308,7 +310,7 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
                     if (xdripPlugin.isEnabled(PluginType.BGSOURCE))
                         openCgmApp("com.eveningoutpost.dexdrip")
                     else if (dexcomPlugin.isEnabled(PluginType.BGSOURCE)) {
-                        dexcomPlugin.findDexcomPackageName()?.let {
+                        dexcomMediator.findDexcomPackageName()?.let {
                             openCgmApp(it)
                         }
                             ?: ToastUtils.showToastInUiThread(activity, resourceHelper.gs(R.string.dexcom_app_not_installed))
@@ -320,7 +322,7 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
                         CalibrationDialog().show(childFragmentManager, "CalibrationDialog")
                     } else if (dexcomPlugin.isEnabled(PluginType.BGSOURCE)) {
                         try {
-                            dexcomPlugin.findDexcomPackageName()?.let {
+                            dexcomMediator.findDexcomPackageName()?.let {
                                 startActivity(Intent("com.dexcom.cgm.activities.MeterEntryActivity").setPackage(it))
                             }
                                 ?: ToastUtils.showToastInUiThread(activity, resourceHelper.gs(R.string.dexcom_app_not_installed))
@@ -575,9 +577,9 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
                 else                                  -> resourceHelper.gc(R.color.inrange)
             }
 
-            binding.infoLayout.bg.text = lastBG.valueToUnitsToString(units)
+            binding.infoLayout.bg.text = lastBG.valueToUnitsString(units)
             binding.infoLayout.bg.setTextColor(color)
-            binding.infoLayout.arrow.setImageResource(lastBG.directionToIcon(databaseHelper))
+            binding.infoLayout.arrow.setImageResource(lastBG.trendArrow.directionToIcon())
             binding.infoLayout.arrow.setColorFilter(color)
 
             val glucoseStatus = GlucoseStatus(injector).glucoseStatusData
@@ -601,8 +603,8 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
                 } else flag and Paint.STRIKE_THRU_TEXT_FLAG.inv()
                 overview_bg.paintFlags = flag
             }
-            binding.infoLayout.timeAgo.text = DateUtil.minAgo(resourceHelper, lastBG.date)
-            binding.infoLayout.timeAgoShort.text = "(" + DateUtil.minAgoShort(lastBG.date) + ")"
+            binding.infoLayout.timeAgo.text = DateUtil.minAgo(resourceHelper, lastBG.timestamp)
+            binding.infoLayout.timeAgoShort.text = "(" + DateUtil.minAgoShort(lastBG.timestamp) + ")"
 
         }
         val closedLoopEnabled = constraintChecker.isClosedLoopAllowed()

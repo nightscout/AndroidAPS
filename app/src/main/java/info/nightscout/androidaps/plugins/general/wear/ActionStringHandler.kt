@@ -31,11 +31,7 @@ import info.nightscout.androidaps.danaRv2.DanaRv2Plugin
 import info.nightscout.androidaps.plugins.pump.insight.LocalInsightPlugin
 import info.nightscout.androidaps.plugins.treatments.CarbsGenerator
 import info.nightscout.androidaps.queue.Callback
-import info.nightscout.androidaps.utils.DateUtil
-import info.nightscout.androidaps.utils.DecimalFormatter
-import info.nightscout.androidaps.utils.HardLimits
-import info.nightscout.androidaps.utils.SafeParse
-import info.nightscout.androidaps.utils.ToastUtils
+import info.nightscout.androidaps.utils.*
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 import info.nightscout.androidaps.utils.sharedPreferences.SP
 import info.nightscout.androidaps.utils.wizard.BolusWizard

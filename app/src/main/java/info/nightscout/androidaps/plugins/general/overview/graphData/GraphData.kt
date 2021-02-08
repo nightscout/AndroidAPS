@@ -12,9 +12,10 @@ import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.Constants
 import info.nightscout.androidaps.MainApp
 import info.nightscout.androidaps.R
+import info.nightscout.androidaps.data.GlucoseValueDataPoint
 import info.nightscout.androidaps.data.IobTotal
 import info.nightscout.androidaps.data.Profile
-import info.nightscout.androidaps.db.BgReading
+import info.nightscout.androidaps.database.entities.GlucoseValue
 import info.nightscout.androidaps.interfaces.ActivePluginProvider
 import info.nightscout.androidaps.interfaces.LoopInterface
 import info.nightscout.androidaps.interfaces.ProfileFunction
@@ -35,7 +36,7 @@ import kotlin.math.max
 import kotlin.math.min
 
 class GraphData(
-    injector: HasAndroidInjector,
+    private val injector: HasAndroidInjector,
     private val graph: GraphView,
     private val iobCobCalculatorPlugin: IobCobCalculatorPlugin,
     private val treatmentsPlugin: TreatmentsInterface
@@ -50,7 +51,7 @@ class GraphData(
 
     var maxY = Double.MIN_VALUE
     private var minY = Double.MAX_VALUE
-    private var bgReadingsArray: List<BgReading>? = null
+    private var bgReadingsArray: List<GlucoseValue>? = null
     private val units: String
     private val series: MutableList<Series<*>> = ArrayList()
 
@@ -60,7 +61,7 @@ class GraphData(
     }
 
     @Suppress("UNUSED_PARAMETER")
-    fun addBgReadings(fromTime: Long, toTime: Long, lowLine: Double, highLine: Double, predictions: MutableList<BgReading>?) {
+    fun addBgReadings(fromTime: Long, toTime: Long, lowLine: Double, highLine: Double, predictions: MutableList<GlucoseValueDataPoint>?) {
         var maxBgValue = Double.MIN_VALUE
         bgReadingsArray = iobCobCalculatorPlugin.bgReadings
         if (bgReadingsArray?.isEmpty() != false) {
@@ -71,13 +72,13 @@ class GraphData(
         }
         val bgListArray: MutableList<DataPointWithLabelInterface> = ArrayList()
         for (bg in bgReadingsArray!!) {
-            if (bg.date < fromTime || bg.date > toTime) continue
+            if (bg.timestamp < fromTime || bg.timestamp > toTime) continue
             if (bg.value > maxBgValue) maxBgValue = bg.value
-            bgListArray.add(bg)
+            bgListArray.add(GlucoseValueDataPoint(injector, bg))
         }
         if (predictions != null) {
-            predictions.sortWith(Comparator { o1: BgReading, o2: BgReading -> o1.x.compareTo(o2.x) })
-            for (prediction in predictions) if (prediction.value >= 40) bgListArray.add(prediction)
+            predictions.sortWith(Comparator { o1: GlucoseValueDataPoint, o2: GlucoseValueDataPoint -> o1.x.compareTo(o2.x) })
+            for (prediction in predictions) if (prediction.data.value >= 40) bgListArray.add(prediction)
         }
         maxBgValue = Profile.fromMgdlToUnits(maxBgValue, units)
         maxBgValue = addUpperChartMargin(maxBgValue)
@@ -212,8 +213,7 @@ class GraphData(
         var time = fromTime
         while (time < toTime) {
             val tt = treatmentsPlugin.getTempTargetFromHistory(time)
-            var value: Double
-            value = if (tt == null) {
+            val value: Double = if (tt == null) {
                 Profile.fromMgdlToUnits((profile.getTargetLowMgdl(time) + profile.getTargetHighMgdl(time)) / 2, units)
             } else {
                 Profile.fromMgdlToUnits(tt.target(), units)
@@ -282,7 +282,7 @@ class GraphData(
         bgReadingsArray?.let { bgReadingsArray ->
             for (r in bgReadingsArray.indices) {
                 val reading = bgReadingsArray[r]
-                if (reading.date > date) continue
+                if (reading.timestamp > date) continue
                 return Profile.fromMgdlToUnits(reading.value, units)
             }
             return if (bgReadingsArray.isNotEmpty()) Profile.fromMgdlToUnits(bgReadingsArray[0].value, units) else Profile.fromMgdlToUnits(100.0, units)

@@ -18,7 +18,7 @@ import info.nightscout.androidaps.plugins.bus.RxBusWrapper
 import info.nightscout.androidaps.plugins.pump.common.defs.PumpType
 import info.nightscout.androidaps.queue.Callback
 import info.nightscout.androidaps.utils.FabricPrivacy
-import info.nightscout.androidaps.utils.extensions.plusAssign
+import io.reactivex.rxkotlin.plusAssign
 import info.nightscout.androidaps.utils.rx.AapsSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import java.text.DecimalFormat

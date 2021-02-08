@@ -16,6 +16,8 @@ import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.BuildConfig
 import info.nightscout.androidaps.MainApp
 import info.nightscout.androidaps.R
+import info.nightscout.androidaps.database.AppRepository
+import info.nightscout.androidaps.database.entities.GlucoseValue
 import info.nightscout.androidaps.db.*
 import info.nightscout.androidaps.events.EventPreferenceChange
 import info.nightscout.androidaps.interfaces.PluginBase
@@ -56,7 +58,8 @@ class OpenHumansUploader @Inject constructor(
     private val sp: SP,
     private val rxBus: RxBusWrapper,
     private val context: Context,
-    private val treatmentsPlugin: TreatmentsPlugin
+    private val treatmentsPlugin: TreatmentsPlugin,
+    val repository: AppRepository
 ) : PluginBase(
     PluginDescription()
         .mainType(PluginType.GENERAL)
@@ -161,15 +164,15 @@ class OpenHumansUploader @Inject constructor(
         super.onStop()
     }
 
-    fun enqueueBGReading(bgReading: BgReading?) = bgReading?.let {
+    fun enqueueBGReading(glucoseValue: GlucoseValue?) = glucoseValue?.let {
         insertQueueItem("BgReadings") {
-            put("date", bgReading.date)
-            put("isValid", bgReading.isValid)
-            put("value", bgReading.value)
-            put("direction", bgReading.direction)
-            put("raw", bgReading.raw)
-            put("source", bgReading.source)
-            put("nsId", bgReading._id)
+            put("date", glucoseValue.timestamp)
+            put("isValid", glucoseValue.isValid)
+            put("value", glucoseValue.value)
+            put("direction", glucoseValue.trendArrow)
+            put("raw", glucoseValue.raw)
+            put("source", glucoseValue.sourceSensor)
+            put("nsId", glucoseValue.interfaceIDs.nightscoutId)
         }
     }
 
@@ -363,7 +366,7 @@ class OpenHumansUploader @Inject constructor(
             .flatMapObservable { Observable.defer { Observable.fromIterable(treatmentsPlugin.service.treatmentData) } }
             .map { enqueueTreatment(it); increaseCounter() }
             .ignoreElements()
-            .andThen(Observable.defer { Observable.fromIterable(MainApp.getDbHelper().allBgReadings) })
+            .andThen(Observable.defer { Observable.fromIterable(repository.compatGetBgReadingsDataFromTime(0, true).blockingGet()) })
             .map { enqueueBGReading(it); increaseCounter() }
             .ignoreElements()
             .andThen(Observable.defer { Observable.fromIterable(MainApp.getDbHelper().allCareportalEvents) })
