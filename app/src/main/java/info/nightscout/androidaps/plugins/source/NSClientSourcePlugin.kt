@@ -94,12 +94,13 @@ class NSClientSourcePlugin @Inject constructor(
         @Inject lateinit var bundleStore: BundleStore
         @Inject lateinit var repository: AppRepository
         @Inject lateinit var broadcastToXDrip: XDripBroadcast
+        @Inject lateinit var dexcomPlugin: DexcomPlugin
 
         init {
             (context.applicationContext as HasAndroidInjector).androidInjector().inject(this)
         }
 
-        fun toGv(jsonObject: JSONObject): CgmSourceTransaction.TransactionGlucoseValue {
+        private fun toGv(jsonObject: JSONObject): CgmSourceTransaction.TransactionGlucoseValue {
             val sgv = NSSgv(jsonObject)
             return CgmSourceTransaction.TransactionGlucoseValue(
                 timestamp = sgv.mills,
@@ -113,7 +114,7 @@ class NSClientSourcePlugin @Inject constructor(
         }
 
         override fun doWork(): Result {
-            if (!nsClientSourcePlugin.isEnabled(PluginType.BGSOURCE) && !sp.getBoolean(R.string.key_ns_autobackfill, true)) return Result.failure()
+            if (!nsClientSourcePlugin.isEnabled() && !sp.getBoolean(R.string.key_ns_autobackfill, true) && !dexcomPlugin.isEnabled()) return Result.failure()
             try {
                 val glucoseValues = mutableListOf<CgmSourceTransaction.TransactionGlucoseValue>()
                 inputData.getString("sgv")?.let { sgvString ->

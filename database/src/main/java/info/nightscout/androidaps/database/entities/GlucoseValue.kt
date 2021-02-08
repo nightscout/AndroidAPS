@@ -41,7 +41,7 @@ data class GlucoseValue(
             noise == other.noise &&
             sourceSensor == other.sourceSensor &&
             isValid == other.isValid &&
-            interfaceIDs?.nightscoutId == other.interfaceIDs?.nightscoutId
+            interfaceIDs.nightscoutId == other.interfaceIDs.nightscoutId
 
     fun isRecordDeleted(other: GlucoseValue): Boolean =
         isValid && !other.isValid
@@ -91,7 +91,13 @@ data class GlucoseValue(
         @SerializedName("MM600Series") MM_600_SERIES("MM600Series"),
         @SerializedName("Eversense") EVERSENSE("Eversense"),
         @SerializedName("Random") RANDOM("Random"),
-        @SerializedName("Unknown") UNKNOWN("Unknown")
+        @SerializedName("Unknown") UNKNOWN("Unknown"),
+
+        @SerializedName("IOBPrediction") IOB_PREDICTION("IOBPrediction"),
+        @SerializedName("aCOBPrediction") aCOB_PREDICTION("aCOBPrediction"),
+        @SerializedName("COBPrediction") COB_PREDICTION("COBPrediction"),
+        @SerializedName("UAMPrediction") UAM_PREDICTION("UAMPrediction"),
+        @SerializedName("ZTPrediction") ZT_PREDICTION("ZTPrediction")
         ;
 
         companion object {

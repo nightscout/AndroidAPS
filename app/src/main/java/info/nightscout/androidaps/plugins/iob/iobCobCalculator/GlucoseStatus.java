@@ -9,7 +9,6 @@ import javax.inject.Inject;
 
 import dagger.android.HasAndroidInjector;
 import info.nightscout.androidaps.database.entities.GlucoseValue;
-import info.nightscout.androidaps.db.BgReading;
 import info.nightscout.androidaps.logging.AAPSLogger;
 import info.nightscout.androidaps.logging.LTag;
 import info.nightscout.androidaps.utils.DateUtil;
