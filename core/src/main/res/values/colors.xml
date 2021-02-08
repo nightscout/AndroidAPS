@@ -22,8 +22,6 @@
 
     <color name="fabmenubackground">#B3FFFFFF</color>
 
-    <color name="exercise">#67DFE8</color>
-
     <color name="dialog_title_background">#EEEEEE</color>
     <color name="activity_title_background">#EEEEEE</color>
 
@@ -97,9 +95,6 @@
     <color name="warningAlertHeaderText">#FF000000</color>
     <color name="errorAlertHeaderText">#FF000000</color>>
 
-    <!--    Toasts-->
-    <color name="toastBorder">#666666</color>
-
     <!-- Pink Colors -->
     <color name="prediction">#ff00ff</color>
     <color name="devslopeneg">#FFFF00FF</color>
@@ -147,6 +142,7 @@
     <color name="blue_default">#007AFF</color>
     <color name="cyan">#00d2d2</color>
     <color name="iobPred">#00d2d2</color>
+    <color name="exercise">#67DFE8</color>
     <color name="bolus">#1ea3e5</color>
     <color name="iobPredAS">#1ea3e5</color>
     <color name="basebasal">#3D15FF</color>
