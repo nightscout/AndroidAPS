@@ -1157,4 +1157,6 @@ L\'ENSEMBLE DES RISQUES LIÉS À LA QUALITÉ ET À LA PERFORMANCE DU PROGRAMME S
     <string name="graph_menu_divider_header">Graph</string>
     <string name="chart_menu">Menu graphique</string>
     <string name="clear_filter">Effacer le filtre</string>
+    <string name="trend_arrow">Flèche de tendance</string>
+    <string name="cannula">Canule</string>
 </resources>

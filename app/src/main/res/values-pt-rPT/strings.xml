@@ -37,11 +37,11 @@
     <string name="description_sensitivity_aaps">A sensibilidade é calculada da mesma forma que Oref0, mas pode especificar o período de tempo para o passado. A absorção mínima de hidratos de carbono é calculada a partir do tempo máximo de absorção de hidratos de carbono das preferências.</string>
     <string name="description_sensitivity_oref1">A sensibilidade é calculada a partir de dados das últimas 8h ou 24h (usando qualquer um que é mais sensível). Hidratos são cortados (se não absorvidos) após o tempo especificado nas preferências. O Plugin também calcula o UAM.</string>
     <string name="description_sensitivity_weighted_average">A sensibilidade é calculada como uma média ponderada de desvios. Desvios mais recentes têm maior peso. A absorção mínima de hidratos de carbono é calculada a partir do tempo máximo de absorção de hidratos de carbono das preferências. Este algoritmo é o mais rápido em seguir as mudanças de sensibilidade.</string>
-    <string name="description_source_eversense">Receber valores de Glicose da aplicação Eversense modificada.</string>
-    <string name="description_source_glimp">Receber valores Glucose do Glimp.</string>
-    <string name="description_source_mm640g">Receber valores de Glucose do 600SeriesAndroidUploader.</string>
-    <string name="description_source_ns_client">Descarrega dados de Glucose do Nightscout</string>
-    <string name="description_source_xdrip">Receber valores de Glicose do xDrip+.</string>
+    <string name="description_source_eversense">Receber valores Glicose da aplicação Eversense modificada.</string>
+    <string name="description_source_glimp">Receber valores Glicose do Glimp.</string>
+    <string name="description_source_mm640g">Receber valores Glicose do 600SeriesAndroidUploader.</string>
+    <string name="description_source_ns_client">Descarrega dados Glicose do Nightscout</string>
+    <string name="description_source_xdrip">Receber valores Glicose do xDrip+.</string>
     <string name="description_treatments">Guarda todos os tratamentos que foram feitos</string>
     <string name="description_wear">Monitorizar e controlar o AndroidAPS usando o seu relógio WearOS.</string>
     <string name="description_xdrip_status_line">Mostrar informações sobre o loop no mostrador do xDrip+.</string>
@@ -57,7 +57,7 @@
     <string name="tempbasals_netinsulin_label_string">Ins:</string>
     <string name="tempbasals_iob_label_string">IOB:</string>
     <string name="tempbasals_iobtotal_label_string">IOB Total:</string>
-    <string name="treatments_wizard_bg_label">GLIC</string>
+    <string name="treatments_wizard_bg_label">Glicose</string>
     <string name="treatments_wizard_tt_label">TT</string>
     <string name="treatments_wizard_carbs_label">Hidratos</string>
     <string name="treatments_wizard_correction_label">Corr</string>
@@ -67,7 +67,7 @@
     <string name="virtualpump_resultok">OK</string>
     <string name="openapsma_lastrun_label">Última execução</string>
     <string name="openapsma_inputparameters_label">Parâmetros de entrada</string>
-    <string name="openapsma_glucosestatus_label">Status de Glicose</string>
+    <string name="openapsma_glucosestatus_label">Estado Glicose</string>
     <string name="openapsma_currenttemp_label">Temp actual</string>
     <string name="openapsma_iobdata_label">Dados de IOB</string>
     <string name="openapsma_profile_label">Perfil</string>
@@ -116,13 +116,13 @@
     <string name="basal">Basal</string>
     <string name="sms_basal">Basal:</string>
     <string name="changeyourinput">Altere o seu input!</string>
-    <string name="configbuilder_bgsource">Origem dos valores de Glucose</string>
+    <string name="configbuilder_bgsource">Fonte da Glicose</string>
     <string name="configbuilder_bgsource_description">De onde deve o AndroidAPS obter os dados?</string>
     <string name="xdrip">xDrip+</string>
     <string name="apsmode_title">Modo APS</string>
     <string name="closedloop">Closed Loop</string>
     <string name="openloop">Open Loop</string>
-    <string name="lowglucosesuspend">Suspensão de Glicémia Baixa</string>
+    <string name="lowglucosesuspend">Suspensão Glicose Baixa</string>
     <string name="disabledloop">Loop Desactivado</string>
     <string name="disableloop">Desactivar Loop</string>
     <string name="enableloop">Activar Loop</string>
@@ -141,7 +141,7 @@
     <string name="careportal_newnstreatment_notes_label">Notas</string>
     <string name="event_time_label">Hora do Evento</string>
     <string name="careportal_newnstreatment_profile_label">Perfil</string>
-    <string name="careportal_newnstreatment_glucosetype">Tipo de glicose</string>
+    <string name="careportal_newnstreatment_glucosetype">Tipo de Glicose</string>
     <string name="noprofile">Sem perfil carregado do NS</string>
     <string name="overview_tempbasal_button">BasalTemp</string>
     <string name="overview_extendedbolus_button">Bólus Prolongado</string>
@@ -271,7 +271,7 @@
     <string name="open_settings_on_wear">Abrir Definições em Wear</string>
     <string name="basal_rate">Taxa da Basal:</string>
     <string name="basalvaluebelowminimum">Valor da basal abaixo do mínimo. Perfil não definido!</string>
-    <string name="sms_actualbg">GLIC:</string>
+    <string name="sms_actualbg">Glicose:</string>
     <string name="sms_lastbg">Ultima Gli:</string>
     <string name="mdi">MDI</string>
     <string name="MM640g">MM640g</string>
@@ -507,19 +507,19 @@
     <string name="active"><![CDATA[<Activo>]]></string>
     <string name="executingrightnow">Comando será executado agora</string>
     <string name="pump_unreachable">Bomba inacessível</string>
-    <string name="missed_bg_readings">Leituras Glic. perdidas</string>
+    <string name="missed_bg_readings">Leituras Glicose perdidas</string>
     <string name="raise_notifications_as_android_notifications">Usar as notificações do sistema para alertas e notificações</string>
     <string name="gradually_increase_notification_volume">Aumentar gradualmente o volume de alertas e notificações</string>
     <string name="localalertsettings_title">Alertas local</string>
-    <string name="enable_missed_bg_readings_alert">Alerta caso nenhuma glicemia seja recebida</string>
+    <string name="enable_missed_bg_readings_alert">Alerta caso nenhuma Glicose seja recebida</string>
     <string name="enable_pump_unreachable_alert">Alerta caso não seja possivel alcançar a bomba</string>
     <string name="pump_unreachable_threshold">Limite para bomba inacessível [min]</string>
     <string name="enable_carbs_req_alert">Alertar se forem necessários Hidratos</string>
     <string name="urgent_alarm">Alarme Urgente</string>
     <string name="info">INFO</string>
     <string name="eversense">Aplicação Eversense (com patch)</string>
-    <string name="dexcomg5_nsupload_title">Enviar dados Glic. para NS</string>
-    <string name="bgsource_upload">Definições de envio da Glic</string>
+    <string name="dexcomg5_nsupload_title">Enviar dados Glicose para NS</string>
+    <string name="bgsource_upload">Definições de Envio da Glicose</string>
     <string name="wear_detailed_delta_title">Mostrar Delta detalho</string>
     <string name="wear_detailed_delta_summary">Mostrar delta com mais um ponto decimal</string>
     <string name="smbinterval_summary">Com que frequência em min os SMBs serão dados</string>
@@ -528,10 +528,10 @@
     <string name="uamsmbmaxminutes_summary">Max minutos de basal para limitar SMB para UAM</string>
     <string name="carbsReqThreshold">Mínimo De Hidratos Necessários Para Sugestão</string>
     <string name="carbsReqThreshold_summary">Mínimo de gramas de hidratos de carbono ara exibir um alerta de sugestão de hidratos. As sugestões de hidratos abaixo deste número não activarão uma notificação.</string>
-    <string name="dexcomg5_xdripupload_title">Enviar dados Glic. para xDrip+</string>
+    <string name="dexcomg5_xdripupload_title">Enviar dados Glicose para xDrip+</string>
     <string name="dexcomg5_xdripupload_summary">Seleccionar 640g/Eversense como fonte no xDrip+</string>
-    <string name="nsclientbg">Glic ClienteNS</string>
-    <string name="overview_editquickwizard_usebg">Cálculos Glic</string>
+    <string name="nsclientbg">Glicose ClienteNS</string>
+    <string name="overview_editquickwizard_usebg">Cálculos Glicose</string>
     <string name="overview_editquickwizard_usebolusiob">Cálculo de Bólus IOB</string>
     <string name="overview_editquickwizard_usebasaliob">Cálculo de Basal IOB</string>
     <string name="overview_editquickwizard_usetrend">Cálculo tendência</string>
@@ -545,7 +545,7 @@
     <string name="nsclienthaswritepermission">ClienteNS tem permissão de escrita</string>
     <string name="closedmodeenabled">Modo fechado ativado</string>
     <string name="maxiobset">IOB máxima definida correctamente</string>
-    <string name="hasbgdata">Glicemia disponivel desde a fonte selecionada</string>
+    <string name="hasbgdata">Glicose disponível da fonte seleccionada</string>
     <string name="combo_programming_bolus">A programar bomba para administrar bólus</string>
     <string name="combo_pump_state_label">Estado</string>
     <string name="combo_pump_activity_label">Actividade</string>
@@ -624,7 +624,7 @@
     <string name="category">Categoria</string>
     <string name="subcategory">Subcategoria</string>
     <string name="bolusrecordedonly">Bólus será registado apenas (não administrado pela bomba)</string>
-    <string name="ns_autobackfill_summary">Preencher glicemias em falta com NS</string>
+    <string name="ns_autobackfill_summary">Preencher Glicose em falta com NS</string>
     <string name="loop_smbsetbypump_label">SMB definido pela bomba</string>
     <string name="overview_show_activity">Actividade</string>
     <string name="overview_show_sensitivity">Sensibilidade</string>
@@ -672,7 +672,7 @@
     <string name="readstatusfailed">Erro na leitura de estado</string>
     <string name="record_pump_site_change">Registar mudança local bomba</string>
     <string name="record_insulin_cartridge_change">Registar mudança cartucho</string>
-    <string name="smbalwaysdisabled">SMB sempre e depois dos hidratos desactivado por fonte da Glicemia activa não suportar filtro avançado</string>
+    <string name="smbalwaysdisabled">SMB sempre e depois dos hidratos desactivado por fonte da Glicose activa não suportar filtro avançado</string>
     <string name="smbnotallowedinopenloopmode">SMB não permitido no modo open loop</string>
     <string name="food_short">Alimentos</string>
     <string name="reset">repor</string>
@@ -711,7 +711,7 @@
     <string name="virtualpump_type">Tipo da Bomba Virtual</string>
     <string name="virtualpump_definition">Definição da Bomba</string>
     <string name="virtualpump_pump_def">Bólus: Passo=%1$s\nBólus Prolongado: [Passo=%2$s, Duração=%3$smin -%4$sh] \nBasal: Passo=%5$s\ nDBT: %6$s (por %7$s), Duração=%8$smin-%9$sh\n%10$s</string>
-    <string name="ns_autobackfill_title">Preenchimentoauto Glicemia</string>
+    <string name="ns_autobackfill_title">Auto-preenchimento Glicose</string>
     <string name="wear_wizard_settings">Definições do Assistente Rápido</string>
     <string name="wear_wizard_settings_summary">Resultado cálculos incluídos no Assistente:</string>
     <string name="wear_display_settings">Definições Ecrã</string>
@@ -746,7 +746,7 @@
     <string name="time_elapsed">Tempo decorrido</string>
     <string name="poctech">Poctech</string>
     <string name="description_source_poctech">Receber valores Glucose da app Poctech</string>
-    <string name="description_source_tomato">Receber valores de Glicose da aplicação Tomato (dispositivo MiaoMiao)</string>
+    <string name="description_source_tomato">Receber valores de Glicose da app Tomato (dispositivo MiaoMiao)</string>
     <string name="high_temptarget_raises_sensitivity_title">Alto alvotempo aumenta sensibilidade</string>
     <string name="high_temptarget_raises_sensitivity_summary"><![CDATA[Aumentar sensibilidade para alvostemp >= 100]]></string>
     <string name="low_temptarget_lowers_sensitivity_title">Baixo alvotemp baixa sensibilidade</string>
@@ -908,7 +908,7 @@
     <string name="tidepool_upload_bolus">Enviar tratamentos (insulina, hidratos)</string>
     <string name="tidepool_upload_tbr">Enviar basais temporárias</string>
     <string name="tidepool_upload_profile">Enviar trocas de perfil, alvos temporários</string>
-    <string name="tidepool_upload_bg">Enviar testes Glicemia</string>
+    <string name="tidepool_upload_bg">Enviar testes Glicose</string>
     <string name="dst_in_24h_warning">Horário de Verão em 24h ou menos</string>
     <string name="dst_loop_disabled_warning">Horário de Verão a menos de 3 horas - Closed Loop desligado</string>
     <string name="storage">restrição de armazenamento interno</string>
@@ -936,7 +936,7 @@
     <string name="twohours">2h</string>
     <string name="dexcom_app_patched">App Dexcom (com patch)</string>
     <string name="dexcom_short">DXCM</string>
-    <string name="description_source_dexcom">Receber valores da Glicemia da app Dexcom (com patch).</string>
+    <string name="description_source_dexcom">Receber valores da Glicose da app Dexcom com patch.</string>
     <string name="notification">Notificação</string>
     <string name="notification_message">Notificação: %1$s</string>
     <string name="alarm_message">Alarme: %1$s</string>
@@ -955,8 +955,8 @@
     <string name="autosenscompared">Autosens %1$s %2$s %%</string>
     <string name="autosenslabel">Autosens %</string>
     <string name="deltacompared">%3$s %1$s %2$s</string>
-    <string name="deltalabel">Diferença de Glic.</string>
-    <string name="deltalabel_u">Diferença Glic. [%1$s]</string>
+    <string name="deltalabel">Diferença de Glicose</string>
+    <string name="deltalabel_u">Diferença Glicose [%1$s]</string>
     <string name="currentlocation">Localização actual</string>
     <string name="location">Localização</string>
     <string name="latitude_short">Lat.:</string>
@@ -1042,9 +1042,9 @@
     <string name="activitymonitor">Monitor de actividade</string>
     <string name="doyouwantresetstats">Quer reiniciar as estatísticas de actividade?</string>
     <string name="statistics">Estatísticas</string>
-    <string name="randombg">Glic. Aleatória</string>
+    <string name="randombg">Glicose Aleatória</string>
     <string name="description_source_randombg">Gerar dados de Glic. aleatórios (Somente modo de Demonstração)</string>
-    <string name="randombg_short">GLIC</string>
+    <string name="randombg_short">Glicose</string>
     <string name="tools">Ferramentas</string>
     <string name="show_calculation">Mostrar Localização</string>
     <string name="automation_event">Evento de automação</string>
@@ -1136,7 +1136,7 @@
     <string name="only_upload_if_charging">Apenas enviar se estiver a carregar</string>
     <string name="worker_state">Estado Trabalhador: %s</string>
     <string name="uploaded_data">Dados Enviados</string>
-    <string name="the_following_data_will_be_uploaded_to_your_open_humans_account">Os seguintes dados serão enviados para sua conta Open Humans: valores de Gliccose, bólus, hidratos, eventos do careportal (excepto notas), bólus estendidos, mudanças de perfil, doses diárias totais, basais temporárias, alvos temp, preferências, versão da aplicação, modelo de dispositivo e dimensões da tela. Informações secretas ou privadas como sua URL de Nightscout ou senha de API não serão enviadas.</string>
+    <string name="the_following_data_will_be_uploaded_to_your_open_humans_account">Os seguintes dados serão enviados para sua conta Open Humans: valores de Glicose, bólus, hidratos, eventos do careportal (excepto notas), bólus estendidos, mudanças de perfil, doses diárias totais, basais temporárias, alvos temp, preferências, versão da aplicação, modelo de dispositivo e dimensões da tela. Informações secretas ou privadas como sua URL de Nightscout ou senha de API não serão enviadas.</string>
     <string name="setupwizard_pump_riley_link_status">Estado RileyLink:</string>
     <string name="filter">Filtro</string>
     <string name="copytolocalprofile_invalid">Não é possível criar perfil local. Perfil é inválido.</string>
