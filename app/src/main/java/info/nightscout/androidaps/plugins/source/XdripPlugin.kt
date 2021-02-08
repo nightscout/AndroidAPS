@@ -86,7 +86,7 @@ class XdripPlugin @Inject constructor(
                     ?: "")
             )
             xdripPlugin.disposable += repository.runTransactionForResult(CgmSourceTransaction(glucoseValues, emptyList(), null)).subscribe({ savedValues ->
-                savedValues.forEach {
+                savedValues.all().forEach {
                     xdripPlugin.detectSource(it)
                 }
             }, {

@@ -87,7 +87,7 @@ class PoctechPlugin @Inject constructor(
                     )
                 }
                 poctechPlugin.disposable += repository.runTransactionForResult(CgmSourceTransaction(glucoseValues, emptyList(), null)).subscribe({ savedValues ->
-                    savedValues.forEach {
+                    savedValues.inserted.forEach {
                         broadcastToXDrip(it)
                         if (sp.getBoolean(R.string.key_dexcomg5_nsupload, false))
                             nsUpload.uploadBg(it, GlucoseValue.SourceSensor.POCTECH_NATIVE.text)

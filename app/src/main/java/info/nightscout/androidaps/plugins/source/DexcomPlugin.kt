@@ -132,14 +132,19 @@ class DexcomPlugin @Inject constructor(
                 } else {
                     null
                 }
-                dexcomPlugin.disposable += repository.runTransactionForResult(CgmSourceTransaction(glucoseValues, calibrations, sensorStartTime)).subscribe({ savedValues ->
-                    savedValues.forEach {
+               dexcomPlugin.disposable += repository.runTransactionForResult(CgmSourceTransaction(glucoseValues, calibrations, sensorStartTime)).subscribe({ result ->
+                    result.inserted.forEach {
                         broadcastToXDrip(it)
                         if (sp.getBoolean(R.string.key_dexcomg5_nsupload, false)) {
-                            if (it.interfaceIDs.nightscoutId != null)
-                                nsUpload.updateBg(it, sourceSensor.text)
-                            else
-                                nsUpload.uploadBg(it, sourceSensor.text)
+                            nsUpload.uploadBg(it, sourceSensor.text)
+                            //aapsLogger.debug("XXXXX: dbAdd $it")
+                        }
+                    }
+                    result.updated.forEach {
+                        broadcastToXDrip(it)
+                        if (sp.getBoolean(R.string.key_dexcomg5_nsupload, false)) {
+                            nsUpload.updateBg(it, sourceSensor.text)
+                            //aapsLogger.debug("XXXXX: dpUpdate $it")
                         }
                     }
                 }, {

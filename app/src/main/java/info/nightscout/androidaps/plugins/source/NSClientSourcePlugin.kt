@@ -127,13 +127,19 @@ class NSClientSourcePlugin @Inject constructor(
                     for (i in 0 until jsonArray.length())
                         glucoseValues += toGv(jsonArray.getJSONObject(i))
                 }
-                nsClientSourcePlugin.disposable += repository.runTransactionForResult(CgmSourceTransaction(glucoseValues, emptyList(), null)).subscribe({ savedValues ->
-                    savedValues.forEach {
+                nsClientSourcePlugin.disposable += repository.runTransactionForResult(CgmSourceTransaction(glucoseValues, emptyList(), null, !nsClientSourcePlugin.isEnabled())).subscribe({ result ->
+                    result.updated.forEach {
+                        //aapsLogger.debug("XXXXX: Updated $it")
+                        broadcastToXDrip(it)
+                        nsClientSourcePlugin.detectSource(it)
+                    }
+                    result.inserted.forEach {
+                        //aapsLogger.debug("XXXXX: Inserted $it")
                         broadcastToXDrip(it)
                         nsClientSourcePlugin.detectSource(it)
                     }
                 }, {
-                    aapsLogger.error(LTag.BGSOURCE, "Error while saving values from Eversense App", it)
+                    aapsLogger.error(LTag.BGSOURCE, "Error while saving values from NSClient App", it)
                 })
             } catch (e: Exception) {
                 aapsLogger.error("Unhandled exception", e)

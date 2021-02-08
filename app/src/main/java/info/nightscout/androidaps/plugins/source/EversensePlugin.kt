@@ -118,7 +118,7 @@ class EversensePlugin @Inject constructor(
                             sourceSensor = GlucoseValue.SourceSensor.EVERSENSE
                         )
                     eversensePlugin.disposable += repository.runTransactionForResult(CgmSourceTransaction(glucoseValues, emptyList(), null)).subscribe({ savedValues ->
-                        savedValues.forEach {
+                        savedValues.inserted.forEach {
                             broadcastToXDrip(it)
                             if (sp.getBoolean(R.string.key_dexcomg5_nsupload, false))
                                 nsUpload.uploadBg(it, GlucoseValue.SourceSensor.EVERSENSE.text)

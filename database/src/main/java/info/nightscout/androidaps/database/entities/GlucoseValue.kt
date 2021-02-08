@@ -40,8 +40,7 @@ data class GlucoseValue(
             trendArrow == other.trendArrow &&
             noise == other.noise &&
             sourceSensor == other.sourceSensor &&
-            isValid == other.isValid &&
-            interfaceIDs.nightscoutId == other.interfaceIDs.nightscoutId
+            isValid == other.isValid
 
     fun isRecordDeleted(other: GlucoseValue): Boolean =
         isValid && !other.isValid

@@ -108,7 +108,7 @@ class RandomBgPlugin @Inject constructor(
             sourceSensor = GlucoseValue.SourceSensor.RANDOM
         )
         disposable += repository.runTransactionForResult(CgmSourceTransaction(glucoseValues, emptyList(), null)).subscribe({ savedValues ->
-            savedValues.forEach {
+            savedValues.inserted.forEach {
                 xDripBroadcast(it)
                 if (sp.getBoolean(R.string.key_dexcomg5_nsupload, false))
                     nsUpload.uploadBg(it, GlucoseValue.SourceSensor.RANDOM.text)
