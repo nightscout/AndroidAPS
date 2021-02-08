@@ -112,9 +112,9 @@ class LoopDialog : DaggerDialogFragment() {
 
     @Synchronized
     override fun onDestroyView() {
+        super.onDestroyView()
         _binding = null
         loopHandler.removeCallbacksAndMessages(null)
-        super.onDestroyView()
     }
 
     var task: Runnable? = null

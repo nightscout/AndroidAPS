@@ -331,7 +331,7 @@ class ActionsFragment : DaggerFragment() {
         for (customAction in customActions) {
             if (!customAction.isEnabled) continue
 
-            val btn = SingleClickButton(currentContext, null, R.attr.materialButtonStyle)
+            val btn = SingleClickButton(currentContext, null, android.R.attr.buttonStyle)
             btn.text = resourceHelper.gs(customAction.name)
 
             val layoutParams = LinearLayout.LayoutParams(

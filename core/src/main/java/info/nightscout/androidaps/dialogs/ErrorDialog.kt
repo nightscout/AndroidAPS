@@ -89,8 +89,8 @@ class ErrorDialog : DaggerDialogFragment() {
     }
 
     override fun onDestroyView() {
-        _binding = null
         super.onDestroyView()
+        _binding = null
     }
 
     override fun dismiss() {

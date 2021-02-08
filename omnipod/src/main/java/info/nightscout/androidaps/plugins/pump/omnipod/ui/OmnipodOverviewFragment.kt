@@ -197,8 +197,8 @@ class OmnipodOverviewFragment : DaggerFragment() {
 
     @Synchronized
     override fun onDestroyView() {
-        _binding = null
         super.onDestroyView()
+        _binding = null
     }
 
     private fun updateUi() {

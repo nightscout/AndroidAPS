@@ -114,8 +114,8 @@ class TreatmentsBolusFragment : DaggerFragment() {
 
     @Synchronized
     override fun onDestroyView() {
-        _binding = null
         super.onDestroyView()
+        _binding = null
     }
 
     inner class RecyclerViewAdapter internal constructor(var treatments: List<Treatment>) : RecyclerView.Adapter<TreatmentsViewHolder>() {

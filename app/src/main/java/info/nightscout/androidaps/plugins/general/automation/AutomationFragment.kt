@@ -115,8 +115,8 @@ class AutomationFragment : DaggerFragment(), OnStartDragListener {
 
     @Synchronized
     override fun onDestroyView() {
-        _binding = null
         super.onDestroyView()
+        _binding = null
     }
 
     @Synchronized

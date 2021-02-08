@@ -89,8 +89,8 @@ class TempBasalDialog : DialogFragmentWithDate() {
     }
 
     override fun onDestroyView() {
-        _binding = null
         super.onDestroyView()
+        _binding = null
     }
 
     override fun submit(): Boolean {

@@ -90,8 +90,8 @@ class TreatmentsFragment : DaggerFragment() {
 
     @Synchronized
     override fun onDestroyView() {
-        _binding = null
         super.onDestroyView()
+        _binding = null
     }
 
     private fun setFragment(selectedFragment: Fragment) {

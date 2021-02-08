@@ -146,8 +146,8 @@ class EditQuickWizardDialog : DaggerDialogFragment(), View.OnClickListener {
     }
 
     override fun onDestroyView() {
-        _binding = null
         super.onDestroyView()
+        _binding = null
     }
 
     private fun processCob() {

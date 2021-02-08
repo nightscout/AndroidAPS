@@ -163,9 +163,9 @@ class BolusProgressDialog : DaggerDialogFragment() {
     }
 
     override fun onDestroyView() {
+        super.onDestroyView()
         disposable.clear()
         _binding = null
-        super.onDestroyView()
     }
 
     private fun scheduleDismiss() {

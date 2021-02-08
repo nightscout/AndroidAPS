@@ -83,8 +83,8 @@ class TreatmentsTemporaryBasalsFragment : DaggerFragment() {
 
     @Synchronized
     override fun onDestroyView() {
-        _binding = null
         super.onDestroyView()
+        _binding = null
     }
 
     inner class RecyclerViewAdapter internal constructor(private var tempBasalList: Intervals<TemporaryBasal>) : RecyclerView.Adapter<TempBasalsViewHolder>() {
