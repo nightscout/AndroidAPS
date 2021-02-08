@@ -49,12 +49,14 @@ class MaintenanceFragment : DaggerFragment() {
             activity?.let { activity ->
                 OKDialog.showConfirmation(activity, resourceHelper.gs(R.string.maintenance), resourceHelper.gs(R.string.reset_db_confirm), Runnable {
                     MainApp.getDbHelper().resetDatabases()
-                    // should be handled by Plugin-Interface and
-                    // additional service interface and plugin registry
-                    foodPlugin.service?.resetFood()
-                    treatmentsPlugin.service.resetTreatments()
-                    Thread { repository.clearDatabases() } .start()
-                    rxBus.send(EventNewBG(null))
+                    Thread {
+                        // should be handled by Plugin-Interface and
+                        // additional service interface and plugin registry
+                        foodPlugin.service?.resetFood()
+                        treatmentsPlugin.service.resetTreatments()
+                        repository.clearDatabases()
+                        rxBus.send(EventNewBG(null))
+                    } .start()
                 })
             }
         }
