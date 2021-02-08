@@ -9,7 +9,9 @@ import javax.inject.Inject
 class DismissNotificationService : DaggerIntentService(DismissNotificationService::class.simpleName) {
     @Inject lateinit var rxBus: RxBusWrapper
 
-    override fun onHandleIntent(intent: Intent) {
-        rxBus.send(EventDismissNotification(intent.getIntExtra("alertID", -1)))
+    override fun onHandleIntent(intent: Intent?) {
+        intent?.let {
+            rxBus.send(EventDismissNotification(intent.getIntExtra("alertID", -1)))
+        }
     }
 }
