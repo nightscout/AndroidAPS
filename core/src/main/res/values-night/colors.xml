@@ -10,10 +10,6 @@
     <color name="inrange_bg">#00FF00</color>
     <color name="high">#FFFF00</color>
 
-    <!-- in range Area  -->
-    <color name="inrangebackground">#10FFFFFF</color>
-    <color name="inrangebackgroundBorder">#4dB1B1B1</color>
-
     <!-- Profil switch Text   -->
     <color name="profilswitch">#5F7BA6</color>
 

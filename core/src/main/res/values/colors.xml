@@ -10,10 +10,6 @@
     <color name="inrange_bg">#1ba1e2</color>
     <color name="high">#f0a30a</color>
 
-    <!-- in range Area  -->
-    <color name="inrangebackground">#4dB1B1B1</color>
-    <color name="inrangebackgroundBorder">#4dB1B1B1</color>
-
     <!-- Profil switch Text   -->
     <color name="profilswitch">#B2B2B2</color>
 
@@ -179,6 +175,7 @@
     <color name="ribbonDefault">#5a595b</color>
     <color name="ribbonTextWarning">#303030</color>
     <color name="toastBorder">#666666</color>
+    <color name="lightgray">#4dB1B1B1</color>
 
     <!-- White colors -->
     <color name="tempTargetBackground">#FAFAE1</color>

@@ -58,6 +58,7 @@
         <item name="colorAccentDialog">?attr/colorAccent</item>
         <!-- Color of graph background -->
         <item name="colorGraphBackground">@color/transparent</item>
+        <item name="inrangeBackground">@color/lightgray</item>
         <!-- Top bar icons -->
         <item name="iconSensor">@drawable/ic_dexcom_g6</item>
         <!-- Icons of bottom naviagtion bar -->

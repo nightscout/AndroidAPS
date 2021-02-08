@@ -103,7 +103,7 @@ class GraphData(
         inRangeAreaSeries = AreaGraphSeries(inRangeAreaDataPoints)
         inRangeAreaSeries.color = 0
         inRangeAreaSeries.isDrawBackground = true
-        inRangeAreaSeries.backgroundColor = resourceHelper.gc(R.color.inrangebackground)
+        inRangeAreaSeries.backgroundColor = resourceHelper.getAttributeColor(null, R.attr.inrangeBackground)
         addSeries(inRangeAreaSeries)
     }
 
