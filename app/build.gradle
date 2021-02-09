@@ -242,6 +242,7 @@ dependencies {
     implementation project(':rileylink')
     implementation project(':medtronic')
     implementation project(':omnipod-eros')
+    implementation project(':omnipod-dash')
 
     implementation fileTree(include: ['*.jar'], dir: 'libs')
 
