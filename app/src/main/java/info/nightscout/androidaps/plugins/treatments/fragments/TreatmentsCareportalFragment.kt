@@ -14,6 +14,7 @@ import info.nightscout.androidaps.databinding.TreatmentsCareportalFragmentBindin
 import info.nightscout.androidaps.databinding.TreatmentsCareportalItemBinding
 import info.nightscout.androidaps.db.CareportalEvent
 import info.nightscout.androidaps.events.EventCareportalEventChange
+import info.nightscout.androidaps.logging.UserEntryLogger
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper
 import info.nightscout.androidaps.plugins.general.nsclient.NSUpload
 import info.nightscout.androidaps.plugins.general.nsclient.UploadQueue
@@ -44,6 +45,7 @@ class TreatmentsCareportalFragment : DaggerFragment() {
     @Inject lateinit var dateUtil: DateUtil
     @Inject lateinit var buildHelper: BuildHelper
     @Inject lateinit var aapsSchedulers: AapsSchedulers
+    @Inject lateinit var uel: UserEntryLogger
 
     private var _binding: TreatmentsCareportalFragmentBinding? = null
 
@@ -62,6 +64,7 @@ class TreatmentsCareportalFragment : DaggerFragment() {
         binding.refreshFromNightscout.setOnClickListener {
             activity?.let { activity ->
                 OKDialog.showConfirmation(activity, resourceHelper.gs(R.string.careportal), resourceHelper.gs(R.string.refresheventsfromnightscout) + " ?", Runnable {
+                    uel.log("CAREPORTAL NS REFRESH")
                     MainApp.getDbHelper().resetCareportalEvents()
                     rxBus.send(EventNSClientRestart())
                 })
@@ -70,6 +73,7 @@ class TreatmentsCareportalFragment : DaggerFragment() {
         binding.removeAndroidapsStartedEvents.setOnClickListener {
             activity?.let { activity ->
                 OKDialog.showConfirmation(activity, resourceHelper.gs(R.string.careportal), resourceHelper.gs(R.string.careportal_removestartedevents), Runnable {
+                    uel.log("REMOVED RESTART EVENTS")
                     val events = MainApp.getDbHelper().getCareportalEvents(false)
                     for (i in events.indices) {
                         val careportalEvent = events[i]
@@ -150,6 +154,7 @@ class TreatmentsCareportalFragment : DaggerFragment() {
                             resourceHelper.gs(R.string.careportal_newnstreatment_notes_label) + ": " + careportalEvent.notes + "\n" +
                             resourceHelper.gs(R.string.date) + ": " + dateUtil.dateAndTimeString(careportalEvent.date)
                         OKDialog.showConfirmation(activity, resourceHelper.gs(R.string.removerecord), text, Runnable {
+                            uel.log("REMOVED CAREP", text)
                             if (NSUpload.isIdValid(careportalEvent._id))
                                 nsUpload.removeCareportalEntryFromNS(careportalEvent._id)
                             else

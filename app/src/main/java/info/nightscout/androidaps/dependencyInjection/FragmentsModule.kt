@@ -77,18 +77,13 @@ abstract class FragmentsModule {
 
     @ContributesAndroidInjector abstract fun contributesTidepoolFragment(): TidepoolFragment
     @ContributesAndroidInjector abstract fun contributesTreatmentsFragment(): TreatmentsFragment
-    @ContributesAndroidInjector
-    abstract fun contributesTreatmentsBolusFragment(): TreatmentsBolusFragment
-    @ContributesAndroidInjector
-    abstract fun contributesTreatmentsTemporaryBasalsFragment(): TreatmentsTemporaryBasalsFragment
-    @ContributesAndroidInjector
-    abstract fun contributesTreatmentsTempTargetFragment(): TreatmentsTempTargetFragment
-    @ContributesAndroidInjector
-    abstract fun contributesTreatmentsExtendedBolusesFragment(): TreatmentsExtendedBolusesFragment
-    @ContributesAndroidInjector
-    abstract fun contributesTreatmentsCareportalFragment(): TreatmentsCareportalFragment
-    @ContributesAndroidInjector
-    abstract fun contributesTreatmentsProfileSwitchFragment(): TreatmentsProfileSwitchFragment
+    @ContributesAndroidInjector abstract fun contributesTreatmentsBolusFragment(): TreatmentsBolusFragment
+    @ContributesAndroidInjector abstract fun contributesTreatmentsTemporaryBasalsFragment(): TreatmentsTemporaryBasalsFragment
+    @ContributesAndroidInjector abstract fun contributesTreatmentsTempTargetFragment(): TreatmentsTempTargetFragment
+    @ContributesAndroidInjector abstract fun contributesTreatmentsExtendedBolusesFragment(): TreatmentsExtendedBolusesFragment
+    @ContributesAndroidInjector abstract fun contributesTreatmentsCareportalFragment(): TreatmentsCareportalFragment
+    @ContributesAndroidInjector abstract fun contributesTreatmentsProfileSwitchFragment(): TreatmentsProfileSwitchFragment
+    @ContributesAndroidInjector abstract fun contributesTreatmentsUserEntryFragment(): TreatmentsUserEntryFragment
 
     @ContributesAndroidInjector abstract fun contributesVirtualPumpFragment(): VirtualPumpFragment
 

@@ -17,6 +17,7 @@ import info.nightscout.androidaps.databinding.BgsourceItemBinding
 import info.nightscout.androidaps.events.EventNewBG
 import info.nightscout.androidaps.interfaces.DatabaseHelperInterface
 import info.nightscout.androidaps.interfaces.ProfileFunction
+import info.nightscout.androidaps.logging.UserEntryLogger
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper
 import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.FabricPrivacy
@@ -42,6 +43,7 @@ class BGSourceFragment : DaggerFragment() {
     @Inject lateinit var databaseHelper: DatabaseHelperInterface
     @Inject lateinit var repository: AppRepository
     @Inject lateinit var aapsSchedulers: AapsSchedulers
+    @Inject lateinit var uel: UserEntryLogger
 
     private val disposable = CompositeDisposable()
     private val millsToThePast = T.hours(12).msecs()
@@ -126,6 +128,7 @@ class BGSourceFragment : DaggerFragment() {
                     activity?.let { activity ->
                         val text = dateUtil.dateAndTimeString(glucoseValue.timestamp) + "\n" + glucoseValue.valueToUnitsString(profileFunction.getUnits())
                         OKDialog.showConfirmation(activity, resourceHelper.gs(R.string.removerecord), text, Runnable {
+                            uel.log("BG REMOVED", dateUtil.dateAndTimeString(glucoseValue.timestamp))
                             disposable += repository.runTransaction(InvalidateGlucoseValueTransaction(glucoseValue.id)).subscribe()
                         })
                     }

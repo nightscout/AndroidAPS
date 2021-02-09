@@ -68,6 +68,10 @@ class TreatmentsFragment : DaggerFragment() {
             setFragment(TreatmentsCareportalFragment())
             setBackgroundColorOnSelected(it)
         }
+        binding.userentry.setOnClickListener {
+            setFragment(TreatmentsUserEntryFragment())
+            setBackgroundColorOnSelected(it)
+        }
         setFragment(TreatmentsBolusFragment())
         setBackgroundColorOnSelected(binding.treatments)
     }
@@ -109,6 +113,7 @@ class TreatmentsFragment : DaggerFragment() {
         binding.tempTargets.setBackgroundColor(resourceHelper.gc(R.color.defaultbackground))
         binding.profileSwitches.setBackgroundColor(resourceHelper.gc(R.color.defaultbackground))
         binding.careportal.setBackgroundColor(resourceHelper.gc(R.color.defaultbackground))
+        binding.userentry.setBackgroundColor(resourceHelper.gc(R.color.defaultbackground))
         selected.setBackgroundColor(resourceHelper.gc(R.color.tabBgColorSelected))
     }
 

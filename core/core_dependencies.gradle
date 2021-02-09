@@ -12,7 +12,7 @@ dependencies {
     api "androidx.preference:preference-ktx:$preferencektx_version"
     api 'androidx.biometric:biometric:1.0.1'
     api "androidx.activity:activity-ktx:${activityVersion}"
-    api "androidx.lifecycle:lifecycle-runtime-ktx:2.2.0"
+    api "androidx.lifecycle:lifecycle-runtime-ktx:$lifecycle_version"
     api 'androidx.cardview:cardview:1.0.0'
     api 'androidx.recyclerview:recyclerview:1.1.0'
     api 'androidx.gridlayout:gridlayout:1.0.0'

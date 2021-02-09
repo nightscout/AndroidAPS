@@ -20,6 +20,7 @@ import info.nightscout.androidaps.db.TempTarget
 import info.nightscout.androidaps.events.EventTempTargetChange
 import info.nightscout.androidaps.interfaces.ActivePluginProvider
 import info.nightscout.androidaps.interfaces.ProfileFunction
+import info.nightscout.androidaps.logging.UserEntryLogger
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper
 import info.nightscout.androidaps.plugins.general.nsclient.NSUpload
 import info.nightscout.androidaps.plugins.general.nsclient.UploadQueue
@@ -27,7 +28,7 @@ import info.nightscout.androidaps.plugins.general.nsclient.events.EventNSClientR
 import info.nightscout.androidaps.plugins.treatments.fragments.TreatmentsTempTargetFragment.RecyclerViewAdapter.TempTargetsViewHolder
 import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.FabricPrivacy
-import info.nightscout.androidaps.utils.alertDialogs.OKDialog.showConfirmation
+import info.nightscout.androidaps.utils.alertDialogs.OKDialog
 import info.nightscout.androidaps.utils.buildHelper.BuildHelper
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 import info.nightscout.androidaps.utils.rx.AapsSchedulers
@@ -48,6 +49,7 @@ class TreatmentsTempTargetFragment : DaggerFragment() {
     @Inject lateinit var dateUtil: DateUtil
     @Inject lateinit var buildHelper: BuildHelper
     @Inject lateinit var aapsSchedulers: AapsSchedulers
+    @Inject lateinit var uel: UserEntryLogger
 
     private val disposable = CompositeDisposable()
 
@@ -66,7 +68,8 @@ class TreatmentsTempTargetFragment : DaggerFragment() {
         binding.recyclerview.adapter = RecyclerViewAdapter(activePlugin.activeTreatments.tempTargetsFromHistory)
         binding.refreshFromNightscout.setOnClickListener {
             context?.let { context ->
-                showConfirmation(context, resourceHelper.gs(R.string.refresheventsfromnightscout) + " ?", {
+                OKDialog.showConfirmation(context, resourceHelper.gs(R.string.refresheventsfromnightscout) + " ?", {
+                    uel.log("TT NS REFRESH")
                     MainApp.getDbHelper().resetTempTargets()
                     rxBus.send(EventNSClientRestart())
                 })
@@ -152,12 +155,13 @@ class TreatmentsTempTargetFragment : DaggerFragment() {
                 binding.remove.setOnClickListener { v: View ->
                     val tempTarget = v.tag as TempTarget
                     context?.let { context ->
-                        showConfirmation(context, resourceHelper.gs(R.string.removerecord),
+                        OKDialog.showConfirmation(context, resourceHelper.gs(R.string.removerecord),
                             """
                         ${resourceHelper.gs(R.string.careportal_temporarytarget)}: ${tempTarget.friendlyDescription(profileFunction.getUnits(), resourceHelper)}
                         ${dateUtil.dateAndTimeString(tempTarget.date)}
                         """.trimIndent(),
                             { _: DialogInterface?, _: Int ->
+                                uel.log("TT REMOVE", tempTarget.friendlyDescription(profileFunction.getUnits(), resourceHelper))
                                 val id = tempTarget._id
                                 if (NSUpload.isIdValid(id)) nsUpload.removeCareportalEntryFromNS(id)
                                 else uploadQueue.removeID("dbAdd", id)

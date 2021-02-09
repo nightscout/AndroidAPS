@@ -22,6 +22,7 @@ import info.nightscout.androidaps.databinding.ObjectivesItemBinding
 import info.nightscout.androidaps.dialogs.NtpProgressDialog
 import info.nightscout.androidaps.events.EventNtpStatus
 import info.nightscout.androidaps.logging.AAPSLogger
+import info.nightscout.androidaps.logging.UserEntryLogger
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper
 import info.nightscout.androidaps.plugins.constraints.objectives.activities.ObjectivesExamDialog
 import info.nightscout.androidaps.plugins.constraints.objectives.events.EventObjectivesUpdateGui
@@ -52,6 +53,7 @@ class ObjectivesFragment : DaggerFragment() {
     @Inject lateinit var receiverStatusStore: ReceiverStatusStore
     @Inject lateinit var dateUtil: DateUtil
     @Inject lateinit var sntpClient: SntpClient
+    @Inject lateinit var uel: UserEntryLogger
 
     private val objectivesAdapter = ObjectivesAdapter()
     private val handler = Handler(Looper.getMainLooper())
@@ -305,6 +307,7 @@ class ObjectivesFragment : DaggerFragment() {
             holder.binding.unstart.setOnClickListener {
                 activity?.let { activity ->
                     OKDialog.showConfirmation(activity, resourceHelper.gs(R.string.objectives), resourceHelper.gs(R.string.doyouwantresetstart), Runnable {
+                        uel.log("OBJECTVE UNSTARTED", i1 = position + 1)
                         objective.startedOn = 0
                         scrollToCurrentObjective()
                         rxBus.send(EventObjectivesUpdateGui())

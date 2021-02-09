@@ -20,6 +20,7 @@ import info.nightscout.androidaps.interfaces.CommandQueueProvider
 import info.nightscout.androidaps.interfaces.PumpInterface
 import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.logging.LTag
+import info.nightscout.androidaps.logging.UserEntryLogger
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper
 import info.nightscout.androidaps.plugins.pump.common.defs.PumpType
 import info.nightscout.androidaps.queue.events.EventQueueChanged
@@ -49,6 +50,7 @@ class DanaFragment : DaggerFragment() {
     @Inject lateinit var warnColors: WarnColors
     @Inject lateinit var dateUtil: DateUtil
     @Inject lateinit var aapsSchedulers: AapsSchedulers
+    @Inject lateinit var uel: UserEntryLogger
 
     private var disposable: CompositeDisposable = CompositeDisposable()
 
@@ -106,7 +108,7 @@ class DanaFragment : DaggerFragment() {
             binding.btconnection.setOnLongClickListener {
                 activity?.let {
                     OKDialog.showConfirmation(it, resourceHelper.gs(R.string.resetpairing)) {
-                        aapsLogger.error("USER ENTRY: Clearing pairing keys !!!")
+                        uel.log("CLEAR PAIRING KEYS")
                         (activePlugin.activePump as DanaPumpInterface).clearPairing()
                     }
                 }
