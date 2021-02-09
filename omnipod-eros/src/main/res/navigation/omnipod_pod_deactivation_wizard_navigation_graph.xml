@@ -4,7 +4,7 @@
     app:startDestination="@id/deactivatePodInfoFragment">
     <fragment
         android:id="@+id/deactivatePodInfoFragment"
-        android:name="info.nightscout.androidaps.plugins.pump.omnipod.ui.wizard.deactivation.fragment.DeactivatePodInfoFragment"
+        android:name="info.nightscout.androidaps.plugins.pump.omnipod.eros.ui.wizard.deactivation.fragment.DeactivatePodInfoFragment"
         android:label="DeactivatePodInfoFragment">
         <action
             android:id="@+id/action_deactivatePodInfoFragment_to_deactivatePodActionFragment"
@@ -12,7 +12,7 @@
     </fragment>
     <fragment
         android:id="@+id/deactivatePodActionFragment"
-        android:name="info.nightscout.androidaps.plugins.pump.omnipod.ui.wizard.deactivation.fragment.DeactivatePodActionFragment"
+        android:name="info.nightscout.androidaps.plugins.pump.omnipod.eros.ui.wizard.deactivation.fragment.DeactivatePodActionFragment"
         android:label="DeactivatePodActionFragment">
         <action
             android:id="@+id/action_deactivatePodActionFragment_to_podDeactivatedInfoFragment"
@@ -23,10 +23,10 @@
     </fragment>
     <fragment
         android:id="@+id/podDeactivatedInfoFragment"
-        android:name="info.nightscout.androidaps.plugins.pump.omnipod.ui.wizard.deactivation.fragment.PodDeactivatedInfoFragment"
+        android:name="info.nightscout.androidaps.plugins.pump.omnipod.eros.ui.wizard.deactivation.fragment.PodDeactivatedInfoFragment"
         android:label="PodDeactivatedInfoFragment" />
     <fragment
         android:id="@+id/podDiscardedInfoFragment"
-        android:name="info.nightscout.androidaps.plugins.pump.omnipod.ui.wizard.deactivation.fragment.PodDiscardedInfoFragment"
+        android:name="info.nightscout.androidaps.plugins.pump.omnipod.eros.ui.wizard.deactivation.fragment.PodDiscardedInfoFragment"
         android:label="PodDiscardedInfoFragment" />
 </navigation>

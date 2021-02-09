@@ -9,8 +9,8 @@ import info.nightscout.androidaps.R
 import info.nightscout.androidaps.db.CareportalEvent
 import info.nightscout.androidaps.interfaces.ActivePluginProvider
 import info.nightscout.androidaps.plugins.pump.common.defs.PumpType
-import info.nightscout.androidaps.plugins.pump.omnipod.OmnipodPumpPlugin
-import info.nightscout.androidaps.plugins.pump.omnipod.driver.definition.OmnipodConstants
+import info.nightscout.androidaps.plugins.pump.omnipod.eros.OmnipodPumpPlugin
+import info.nightscout.androidaps.plugins.pump.omnipod.eros.driver.definition.OmnipodConstants
 import info.nightscout.androidaps.utils.DecimalFormatter
 import info.nightscout.androidaps.utils.WarnColors
 import info.nightscout.androidaps.utils.resources.ResourceHelper
