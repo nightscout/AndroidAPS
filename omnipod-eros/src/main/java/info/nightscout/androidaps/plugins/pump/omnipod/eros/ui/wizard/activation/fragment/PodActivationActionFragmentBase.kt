@@ -4,7 +4,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import android.widget.Button
-import info.nightscout.androidaps.plugins.pump.omnipod.R
+import info.nightscout.androidaps.plugins.pump.omnipod.eros.R
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.driver.definition.ActivationProgress
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.driver.manager.PodStateManager
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.ui.wizard.common.fragment.ActionFragmentBase

@@ -14,8 +14,8 @@ import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.service.Riley
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.service.tasks.ResetRileyLinkConfigurationTask
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.service.tasks.ServiceTaskExecutor
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.OmnipodPumpPlugin
-import info.nightscout.androidaps.plugins.pump.omnipod.R
-import info.nightscout.androidaps.plugins.pump.omnipod.databinding.OmnipodPodManagementBinding
+import info.nightscout.androidaps.plugins.pump.omnipod.eros.R
+import info.nightscout.androidaps.plugins.pump.omnipod.eros.databinding.OmnipodPodManagementBinding
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.driver.definition.ActivationProgress
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.driver.definition.BeepConfigType
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.driver.manager.PodStateManager

@@ -5,7 +5,7 @@ import android.view.View
 import android.widget.TextView
 import androidx.annotation.LayoutRes
 import androidx.annotation.StringRes
-import info.nightscout.androidaps.plugins.pump.omnipod.R
+import info.nightscout.androidaps.plugins.pump.omnipod.eros.R
 
 abstract class InfoFragmentBase : WizardFragmentBase() {
 

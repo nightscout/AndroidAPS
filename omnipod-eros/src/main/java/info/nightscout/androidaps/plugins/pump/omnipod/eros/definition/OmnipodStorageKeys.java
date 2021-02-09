@@ -1,6 +1,6 @@
 package info.nightscout.androidaps.plugins.pump.omnipod.eros.definition;
 
-import info.nightscout.androidaps.plugins.pump.omnipod.R;
+import info.nightscout.androidaps.plugins.pump.omnipod.eros.R;
 
 public class OmnipodStorageKeys {
     public static class Preferences {

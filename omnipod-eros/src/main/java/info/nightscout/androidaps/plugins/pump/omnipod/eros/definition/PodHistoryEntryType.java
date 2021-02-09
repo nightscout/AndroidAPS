@@ -6,7 +6,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import info.nightscout.androidaps.plugins.pump.common.defs.PumpHistoryEntryGroup;
-import info.nightscout.androidaps.plugins.pump.omnipod.R;
+import info.nightscout.androidaps.plugins.pump.omnipod.eros.R;
 
 /**
  * Created by andy on 24.11.2019

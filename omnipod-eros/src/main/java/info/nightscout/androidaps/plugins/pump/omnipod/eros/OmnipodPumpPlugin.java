@@ -66,7 +66,7 @@ import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.defs.RileyLin
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.defs.RileyLinkPumpInfo;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.service.RileyLinkServiceData;
 import info.nightscout.androidaps.plugins.pump.common.utils.DateTimeUtil;
-import info.nightscout.androidaps.plugins.pump.omnipod.R;
+import info.nightscout.androidaps.plugins.pump.omnipod.eros.R;
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.data.ActiveBolus;
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.data.RLHistoryItemOmnipod;
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.definition.OmnipodCommandType;

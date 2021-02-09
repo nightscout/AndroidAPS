@@ -5,7 +5,7 @@ import androidx.annotation.IdRes
 import androidx.annotation.StringRes
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
-import info.nightscout.androidaps.plugins.pump.omnipod.R
+import info.nightscout.androidaps.plugins.pump.omnipod.eros.R
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.dagger.OmnipodPluginQualifier
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.ui.wizard.activation.viewmodel.InitializePodActionViewModel
 import javax.inject.Inject

@@ -16,7 +16,7 @@ import java.util.List;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
-import info.nightscout.androidaps.plugins.pump.omnipod.R;
+import info.nightscout.androidaps.plugins.pump.omnipod.eros.R;
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.driver.definition.AlertSet;
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.driver.definition.AlertSlot;
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.driver.definition.AlertType;

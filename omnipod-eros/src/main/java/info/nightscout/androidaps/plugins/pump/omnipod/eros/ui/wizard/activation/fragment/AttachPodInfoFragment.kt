@@ -7,7 +7,7 @@ import androidx.annotation.IdRes
 import androidx.annotation.StringRes
 import androidx.appcompat.app.AlertDialog
 import androidx.navigation.fragment.findNavController
-import info.nightscout.androidaps.plugins.pump.omnipod.R
+import info.nightscout.androidaps.plugins.pump.omnipod.eros.R
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.ui.wizard.common.fragment.InfoFragmentBase
 
 class AttachPodInfoFragment : InfoFragmentBase() {

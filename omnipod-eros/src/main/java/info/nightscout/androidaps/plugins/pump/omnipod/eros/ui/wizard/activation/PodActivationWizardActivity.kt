@@ -2,7 +2,7 @@ package info.nightscout.androidaps.plugins.pump.omnipod.eros.ui.wizard.activatio
 
 import android.os.Bundle
 import androidx.annotation.IdRes
-import info.nightscout.androidaps.plugins.pump.omnipod.R
+import info.nightscout.androidaps.plugins.pump.omnipod.eros.R
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.driver.definition.ActivationProgress
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.driver.manager.PodStateManager
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.ui.wizard.common.activity.OmnipodWizardActivityBase

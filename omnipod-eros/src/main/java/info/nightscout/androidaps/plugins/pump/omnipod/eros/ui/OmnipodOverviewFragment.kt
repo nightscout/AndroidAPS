@@ -23,8 +23,8 @@ import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.defs.RileyLin
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.defs.RileyLinkTargetDevice
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.service.RileyLinkServiceData
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.OmnipodPumpPlugin
-import info.nightscout.androidaps.plugins.pump.omnipod.R
-import info.nightscout.androidaps.plugins.pump.omnipod.databinding.OmnipodOverviewBinding
+import info.nightscout.androidaps.plugins.pump.omnipod.eros.R
+import info.nightscout.androidaps.plugins.pump.omnipod.eros.databinding.OmnipodOverviewBinding
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.driver.definition.ActivationProgress
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.driver.definition.OmnipodConstants
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.driver.definition.PodProgressStatus

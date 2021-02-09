@@ -6,7 +6,7 @@ import android.view.View
 import android.widget.Button
 import androidx.annotation.LayoutRes
 import androidx.annotation.StringRes
-import info.nightscout.androidaps.plugins.pump.omnipod.R
+import info.nightscout.androidaps.plugins.pump.omnipod.eros.R
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.ui.wizard.common.viewmodel.ActionViewModelBase
 import info.nightscout.androidaps.utils.extensions.toVisibility
 

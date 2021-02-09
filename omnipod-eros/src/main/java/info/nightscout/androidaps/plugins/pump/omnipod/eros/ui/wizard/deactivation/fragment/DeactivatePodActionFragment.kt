@@ -9,7 +9,7 @@ import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
-import info.nightscout.androidaps.plugins.pump.omnipod.R
+import info.nightscout.androidaps.plugins.pump.omnipod.eros.R
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.dagger.OmnipodPluginQualifier
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.manager.AapsOmnipodManager
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.ui.wizard.common.fragment.ActionFragmentBase

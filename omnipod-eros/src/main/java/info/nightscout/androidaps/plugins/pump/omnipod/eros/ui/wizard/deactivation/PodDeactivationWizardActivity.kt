@@ -1,7 +1,7 @@
 package info.nightscout.androidaps.plugins.pump.omnipod.eros.ui.wizard.deactivation
 
 import android.os.Bundle
-import info.nightscout.androidaps.plugins.pump.omnipod.R
+import info.nightscout.androidaps.plugins.pump.omnipod.eros.R
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.ui.wizard.common.activity.OmnipodWizardActivityBase
 
 class PodDeactivationWizardActivity : OmnipodWizardActivityBase() {

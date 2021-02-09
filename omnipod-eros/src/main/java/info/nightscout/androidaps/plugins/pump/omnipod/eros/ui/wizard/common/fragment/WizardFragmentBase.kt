@@ -10,8 +10,8 @@ import androidx.annotation.LayoutRes
 import androidx.annotation.StringRes
 import androidx.navigation.fragment.findNavController
 import dagger.android.support.DaggerFragment
-import info.nightscout.androidaps.plugins.pump.omnipod.R
-import info.nightscout.androidaps.plugins.pump.omnipod.databinding.OmnipodWizardBaseFragmentBinding
+import info.nightscout.androidaps.plugins.pump.omnipod.eros.R
+import info.nightscout.androidaps.plugins.pump.omnipod.eros.databinding.OmnipodWizardBaseFragmentBinding
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.ui.wizard.common.activity.OmnipodWizardActivityBase
 import kotlin.math.roundToInt
 

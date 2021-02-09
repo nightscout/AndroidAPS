@@ -19,7 +19,7 @@ import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.ble.defs.Rile
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.defs.RileyLinkTargetDevice;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.service.RileyLinkService;
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.OmnipodPumpPlugin;
-import info.nightscout.androidaps.plugins.pump.omnipod.R;
+import info.nightscout.androidaps.plugins.pump.omnipod.eros.R;
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.driver.manager.PodStateManager;
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.manager.AapsOmnipodManager;
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.rileylink.manager.OmnipodRileyLinkCommunicationManager;
