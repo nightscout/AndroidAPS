@@ -13,6 +13,7 @@ import javax.inject.Inject;
 
 import dagger.android.HasAndroidInjector;
 import info.nightscout.androidaps.receivers.BundleStore;
+import info.nightscout.androidaps.receivers.DataReceiver;
 
 // cannot be inner class because of needed injection
 public class NSClientWorker extends Worker {
@@ -30,9 +31,9 @@ public class NSClientWorker extends Worker {
     @NotNull
     @Override
     public Result doWork() {
-        Bundle bundle = bundleStore.pickup(getInputData().getLong("storeKey", -1));
-        if (bundle == null) Result.failure();
-        String action = getInputData().getString("action");
+        Bundle bundle = bundleStore.pickup(getInputData().getLong(DataReceiver.STORE_KEY, -1));
+        if (bundle == null) return Result.failure();
+        String action = getInputData().getString(DataReceiver.ACTION_KEY);
         nsClientPlugin.handleNewDataFromNSClient(action, bundle);
         return Result.success();
     }

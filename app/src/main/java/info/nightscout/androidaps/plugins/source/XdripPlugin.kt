@@ -14,6 +14,8 @@ import info.nightscout.androidaps.interfaces.PluginDescription
 import info.nightscout.androidaps.interfaces.PluginType
 import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.logging.LTag
+import info.nightscout.androidaps.receivers.BundleStore
+import info.nightscout.androidaps.receivers.DataReceiver
 import info.nightscout.androidaps.services.Intents
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 import io.reactivex.disposables.CompositeDisposable
@@ -67,6 +69,7 @@ class XdripPlugin @Inject constructor(
 
         @Inject lateinit var xdripPlugin: XdripPlugin
         @Inject lateinit var repository: AppRepository
+        @Inject lateinit var bundleStore: BundleStore
 
         init {
             (context.applicationContext as HasAndroidInjector).androidInjector().inject(this)
@@ -74,15 +77,18 @@ class XdripPlugin @Inject constructor(
 
         override fun doWork(): Result {
             if (!xdripPlugin.isEnabled(PluginType.BGSOURCE)) return Result.failure()
-            xdripPlugin.aapsLogger.debug(LTag.BGSOURCE, "Received xDrip data: $inputData")
+            val bundle = bundleStore.pickup(inputData.getLong(DataReceiver.STORE_KEY, -1))
+                ?: return Result.failure()
+            
+            xdripPlugin.aapsLogger.debug(LTag.BGSOURCE, "Received xDrip data: $bundle")
             val glucoseValues = mutableListOf<CgmSourceTransaction.TransactionGlucoseValue>()
             glucoseValues += CgmSourceTransaction.TransactionGlucoseValue(
-                timestamp = inputData.getLong(Intents.EXTRA_TIMESTAMP, 0),
-                value = inputData.getDouble(Intents.EXTRA_BG_ESTIMATE, 0.0),
-                raw = inputData.getDouble(Intents.EXTRA_RAW, 0.0),
+                timestamp = bundle.getLong(Intents.EXTRA_TIMESTAMP, 0),
+                value = bundle.getDouble(Intents.EXTRA_BG_ESTIMATE, 0.0),
+                raw = bundle.getDouble(Intents.EXTRA_RAW, 0.0),
                 noise = null,
-                trendArrow = GlucoseValue.TrendArrow.fromString(inputData.getString(Intents.EXTRA_BG_SLOPE_NAME)),
-                sourceSensor = GlucoseValue.SourceSensor.fromString(inputData.getString(Intents.XDRIP_DATA_SOURCE_DESCRIPTION)
+                trendArrow = GlucoseValue.TrendArrow.fromString(bundle.getString(Intents.EXTRA_BG_SLOPE_NAME)),
+                sourceSensor = GlucoseValue.SourceSensor.fromString(bundle.getString(Intents.XDRIP_DATA_SOURCE_DESCRIPTION)
                     ?: "")
             )
             xdripPlugin.disposable += repository.runTransactionForResult(CgmSourceTransaction(glucoseValues, emptyList(), null)).subscribe({ savedValues ->
@@ -92,7 +98,7 @@ class XdripPlugin @Inject constructor(
             }, {
                 xdripPlugin.aapsLogger.error(LTag.BGSOURCE, "Error while saving values from Eversense App", it)
             })
-            xdripPlugin.sensorBatteryLevel = inputData.getInt(Intents.EXTRA_SENSOR_BATTERY, -1)
+            xdripPlugin.sensorBatteryLevel = bundle.getInt(Intents.EXTRA_SENSOR_BATTERY, -1)
             return Result.success()
         }
     }

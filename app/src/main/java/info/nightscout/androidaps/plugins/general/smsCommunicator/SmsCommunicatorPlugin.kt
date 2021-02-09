@@ -36,6 +36,7 @@ import info.nightscout.androidaps.plugins.iob.iobCobCalculator.IobCobCalculatorP
 import info.nightscout.androidaps.plugins.treatments.TreatmentsPlugin
 import info.nightscout.androidaps.queue.Callback
 import info.nightscout.androidaps.receivers.BundleStore
+import info.nightscout.androidaps.receivers.DataReceiver
 import info.nightscout.androidaps.utils.*
 import io.reactivex.rxkotlin.plusAssign
 import info.nightscout.androidaps.utils.resources.ResourceHelper
@@ -172,7 +173,7 @@ class SmsCommunicatorPlugin @Inject constructor(
         }
 
         override fun doWork(): Result {
-            val bundle = bundleStore.pickup(inputData.getLong("storeKey", -1))
+            val bundle = bundleStore.pickup(inputData.getLong(DataReceiver.STORE_KEY, -1))
                 ?: return Result.failure()
             val format = bundle.getString("format") ?: return Result.failure()
             val pdus = bundle["pdus"] as Array<*>
