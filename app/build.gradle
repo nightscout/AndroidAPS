@@ -241,7 +241,7 @@ dependencies {
     implementation project(':danar')
     implementation project(':rileylink')
     implementation project(':medtronic')
-    implementation project(':omnipod')
+    implementation project(':omnipod-eros')
 
     implementation fileTree(include: ['*.jar'], dir: 'libs')
 
