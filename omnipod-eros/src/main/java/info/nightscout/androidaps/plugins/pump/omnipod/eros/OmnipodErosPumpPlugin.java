@@ -66,7 +66,6 @@ import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.defs.RileyLin
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.defs.RileyLinkPumpInfo;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.service.RileyLinkServiceData;
 import info.nightscout.androidaps.plugins.pump.common.utils.DateTimeUtil;
-import info.nightscout.androidaps.plugins.pump.omnipod.eros.R;
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.data.ActiveBolus;
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.data.RLHistoryItemOmnipod;
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.definition.OmnipodCommandType;
@@ -116,7 +115,7 @@ import static info.nightscout.androidaps.plugins.pump.omnipod.eros.driver.defini
  * @author Andy Rozman (andy.rozman@gmail.com)
  */
 @Singleton
-public class OmnipodPumpPlugin extends PumpPluginBase implements PumpInterface, RileyLinkPumpDevice {
+public class OmnipodErosPumpPlugin extends PumpPluginBase implements PumpInterface, RileyLinkPumpDevice {
     private static final long RILEY_LINK_CONNECT_TIMEOUT_MILLIS = 3 * 60 * 1_000L; // 3 minutes
     private static final long STATUS_CHECK_INTERVAL_MILLIS = 60 * 1_000L; // 1 minute
     public static final int STARTUP_STATUS_REQUEST_TRIES = 2;
@@ -159,7 +158,7 @@ public class OmnipodPumpPlugin extends PumpPluginBase implements PumpInterface, 
     private final Runnable statusChecker;
 
     @Inject
-    public OmnipodPumpPlugin(
+    public OmnipodErosPumpPlugin(
             HasAndroidInjector injector,
             AAPSLogger aapsLogger,
             AapsSchedulers aapsSchedulers,
@@ -248,10 +247,10 @@ public class OmnipodPumpPlugin extends PumpPluginBase implements PumpInterface, 
                         aapsOmnipodManager.createSuspendedFakeTbrIfNotExists();
                     }
 
-                    if (OmnipodPumpPlugin.this.hasTimeDateOrTimeZoneChanged) {
+                    if (OmnipodErosPumpPlugin.this.hasTimeDateOrTimeZoneChanged) {
                         getCommandQueue().customCommand(new CommandHandleTimeChange(false), null);
                     }
-                    if (!OmnipodPumpPlugin.this.verifyPodAlertConfiguration()) {
+                    if (!OmnipodErosPumpPlugin.this.verifyPodAlertConfiguration()) {
                         getCommandQueue().customCommand(new CommandUpdateAlertConfiguration(), null);
                     }
 

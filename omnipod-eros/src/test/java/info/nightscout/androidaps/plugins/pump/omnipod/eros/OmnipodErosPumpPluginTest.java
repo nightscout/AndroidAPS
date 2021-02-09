@@ -38,7 +38,7 @@ import static org.mockito.Mockito.when;
 
 
 @RunWith(PowerMockRunner.class)
-public class OmnipodPumpPluginTest {
+public class OmnipodErosPumpPluginTest {
 
     @Mock HasAndroidInjector injector;
     AAPSLogger aapsLogger = new AAPSLoggerTest();
@@ -58,7 +58,7 @@ public class OmnipodPumpPluginTest {
 
         // mock all the things
         PowerMockito.mockStatic(Looper.class);
-        OmnipodPumpPlugin plugin = new OmnipodPumpPlugin(injector, aapsLogger, new TestAapsSchedulers(), rxBusWrapper, null,
+        OmnipodErosPumpPlugin plugin = new OmnipodErosPumpPlugin(injector, aapsLogger, new TestAapsSchedulers(), rxBusWrapper, null,
                 resourceHelper, activePluginProvider, null, null, aapsOmnipodManager, commandQueueProvider,
                 null, null, null, null,
                 rileyLinkUtil, null, null, null, null

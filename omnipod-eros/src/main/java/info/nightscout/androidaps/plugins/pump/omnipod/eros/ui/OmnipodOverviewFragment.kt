@@ -22,7 +22,7 @@ import info.nightscout.androidaps.plugins.pump.common.events.EventRileyLinkDevic
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.defs.RileyLinkServiceState
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.defs.RileyLinkTargetDevice
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.service.RileyLinkServiceData
-import info.nightscout.androidaps.plugins.pump.omnipod.eros.OmnipodPumpPlugin
+import info.nightscout.androidaps.plugins.pump.omnipod.eros.OmnipodErosPumpPlugin
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.R
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.databinding.OmnipodOverviewBinding
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.driver.definition.ActivationProgress
@@ -70,7 +70,7 @@ class OmnipodOverviewFragment : DaggerFragment() {
     @Inject lateinit var rxBus: RxBusWrapper
     @Inject lateinit var commandQueue: CommandQueueProvider
     @Inject lateinit var activePlugin: ActivePluginProvider
-    @Inject lateinit var omnipodPumpPlugin: OmnipodPumpPlugin
+    @Inject lateinit var omnipodErosPumpPlugin: OmnipodErosPumpPlugin
     @Inject lateinit var podStateManager: PodStateManager
     @Inject lateinit var sp: SP
     @Inject lateinit var omnipodUtil: AapsOmnipodUtil
@@ -106,7 +106,7 @@ class OmnipodOverviewFragment : DaggerFragment() {
         super.onViewCreated(view, savedInstanceState)
 
         binding.buttonPodManagement.setOnClickListener {
-            if (omnipodPumpPlugin.rileyLinkService?.verifyConfiguration() == true) {
+            if (omnipodErosPumpPlugin.rileyLinkService?.verifyConfiguration() == true) {
                 activity?.let { activity ->
                     context?.let { context ->
                         protectionCheck.queryProtection(
@@ -232,8 +232,8 @@ class OmnipodOverviewFragment : DaggerFragment() {
         updatePodStatus()
 
         val errors = ArrayList<String>()
-        if (omnipodPumpPlugin.rileyLinkService != null) {
-            val rileyLinkErrorDescription = omnipodPumpPlugin.rileyLinkService.errorDescription
+        if (omnipodErosPumpPlugin.rileyLinkService != null) {
+            val rileyLinkErrorDescription = omnipodErosPumpPlugin.rileyLinkService.errorDescription
             if (StringUtils.isNotEmpty(rileyLinkErrorDescription)) {
                 errors.add(rileyLinkErrorDescription)
             }
@@ -288,7 +288,7 @@ class OmnipodOverviewFragment : DaggerFragment() {
 
             // base basal rate
             binding.baseBasalRate.text = if (podStateManager.isPodActivationCompleted) {
-                resourceHelper.gs(R.string.pump_basebasalrate, omnipodPumpPlugin.model().determineCorrectBasalSize(podStateManager.basalSchedule.rateAt(TimeUtil.toDuration(DateTime.now()))))
+                resourceHelper.gs(R.string.pump_basebasalrate, omnipodErosPumpPlugin.model().determineCorrectBasalSize(podStateManager.basalSchedule.rateAt(TimeUtil.toDuration(DateTime.now()))))
             } else {
                 PLACEHOLDER
             }
@@ -336,7 +336,7 @@ class OmnipodOverviewFragment : DaggerFragment() {
         if (podStateManager.isPodInitialized && podStateManager.lastSuccessfulCommunication != null) {
             binding.lastConnection.text = readableDuration(podStateManager.lastSuccessfulCommunication)
             val lastConnectionColor =
-                if (omnipodPumpPlugin.isUnreachableAlertTimeoutExceeded(getPumpUnreachableTimeout().millis)) {
+                if (omnipodErosPumpPlugin.isUnreachableAlertTimeoutExceeded(getPumpUnreachableTimeout().millis)) {
                     Color.RED
                 } else {
                     Color.WHITE
@@ -397,7 +397,7 @@ class OmnipodOverviewFragment : DaggerFragment() {
 
     private fun updateLastBolus() {
         if (podStateManager.isPodActivationCompleted && podStateManager.hasLastBolus()) {
-            var text = resourceHelper.gs(R.string.omnipod_overview_last_bolus_value, omnipodPumpPlugin.model().determineCorrectBolusSize(podStateManager.lastBolusAmount), resourceHelper.gs(R.string.insulin_unit_shortname), readableDuration(podStateManager.lastBolusStartTime))
+            var text = resourceHelper.gs(R.string.omnipod_overview_last_bolus_value, omnipodErosPumpPlugin.model().determineCorrectBolusSize(podStateManager.lastBolusAmount), resourceHelper.gs(R.string.insulin_unit_shortname), readableDuration(podStateManager.lastBolusStartTime))
             val textColor: Int
 
             if (podStateManager.isLastBolusCertain) {

@@ -18,7 +18,7 @@ import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.ble.defs.Rile
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.ble.defs.RileyLinkTargetFrequency;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.defs.RileyLinkTargetDevice;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.service.RileyLinkService;
-import info.nightscout.androidaps.plugins.pump.omnipod.eros.OmnipodPumpPlugin;
+import info.nightscout.androidaps.plugins.pump.omnipod.eros.OmnipodErosPumpPlugin;
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.R;
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.driver.manager.PodStateManager;
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.manager.AapsOmnipodManager;
@@ -34,7 +34,7 @@ public class RileyLinkOmnipodService extends RileyLinkService {
 
     private static final String REGEX_MAC = "([\\da-fA-F]{1,2}(?:\\:|$)){6}";
 
-    @Inject OmnipodPumpPlugin omnipodPumpPlugin;
+    @Inject OmnipodErosPumpPlugin omnipodErosPumpPlugin;
     @Inject AapsOmnipodUtil aapsOmnipodUtil;
     @Inject PodStateManager podStateManager;
     @Inject DatabaseHelperInterface databaseHelper;
