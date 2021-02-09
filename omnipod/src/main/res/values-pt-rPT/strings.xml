@@ -64,7 +64,7 @@
     <!-- Omnipod - Error -->
     <string name="omnipod_warning">Aviso</string>
     <string name="omnipod_error_rileylink_address_invalid">Endereço RileyLink inválido.</string>
-    <string name="omnipod_error_operation_not_possible_no_configuration">A operação não é possível.\n\nPrecisa configurar o Omnipod primeiro, antes de pode usar esta operação.</string>
+    <string name="omnipod_error_operation_not_possible_no_configuration">A operação não é possível.\n\nPrecisa configurar o Omnipod primeiro, antes de pode utilizar esta operação.</string>
     <string name="omnipod_error_pod_not_attached">Nenhum Pod Activo</string>
     <string name="omnipod_error_time_out_of_sync">A hora no Pod não está sincronizada. Por favor, actualize a hora no separador Omnipod.</string>
     <string name="omnipod_error_unexpected_exception">Ocorreu um erro inesperado. Por favor, reporte! (%1$s: %2$s).</string>
