@@ -10,6 +10,12 @@ android {
         targetSdkVersion 28
         versionCode 1
         versionName "1.0"
+        kapt {
+            arguments {
+                arg("room.incremental", "true")
+                arg("room.schemaLocation", "$projectDir/schemas")
+            }
+        }
     }
 
     buildTypes {
@@ -45,6 +51,8 @@ dependencies {
 
     api "androidx.room:room-runtime:$room_version"
     kapt "androidx.room:room-compiler:$room_version"
+    /* Database schema export */
+    kapt "android.arch.persistence.room:compiler:$room_version"
     implementation "androidx.room:room-ktx:$room_version"
     implementation "androidx.room:room-rxjava2:$room_version"
 
