@@ -427,8 +427,8 @@
             android:layout_marginBottom="5dp"
             android:background="?android:attr/dividerHorizontal" />
 
-        <Button
-            android:id="@+id/reload"
+        <info.nightscout.androidaps.utils.ui.SingleClickButton
+            android:id="@+id/reloadprofileviewer"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"

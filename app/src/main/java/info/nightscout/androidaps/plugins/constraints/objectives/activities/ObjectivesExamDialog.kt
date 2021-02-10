@@ -112,7 +112,7 @@ class ObjectivesExamDialog : DaggerDialogFragment() {
                 updateGui()
                 rxBus.send(EventObjectivesUpdateGui())
             }
-            binding.close.setOnClickListener { dismiss() }
+            binding.closeobjectives.setOnClickListener { dismiss() }
             binding.examReset.setOnClickListener {
                 task.answered = false
                 //task.disabledTo = 0

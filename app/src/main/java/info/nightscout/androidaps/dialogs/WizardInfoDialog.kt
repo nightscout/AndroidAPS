@@ -47,7 +47,7 @@ class WizardInfoDialog : DaggerDialogFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        binding.close.setOnClickListener { dismiss() }
+        binding.closewizardinfo.setOnClickListener { dismiss() }
         val units = profileFunction.getUnits()
         val bgString =
             if (units == Constants.MGDL) DecimalFormatter.to0Decimal(JsonHelper.safeGetDouble(json, "bg"))

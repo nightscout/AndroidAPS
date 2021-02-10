@@ -188,7 +188,7 @@ class LocalProfileFragment : DaggerFragment() {
         @Suppress("SetTextI18n")
         binding.units.text = resourceHelper.gs(R.string.units_colon) + " " + (if (currentProfile.mgdl) resourceHelper.gs(R.string.mgdl) else resourceHelper.gs(R.string.mmol))
 
-        binding.profileswitch.setOnClickListener {
+        binding.profileswitchlocal.setOnClickListener {
             ProfileSwitchDialog()
                 .also { it.arguments = Bundle().also { bundle -> bundle.putInt("profileIndex", localProfilePlugin.currentProfileIndex) } }
                 .show(childFragmentManager, "NewNSTreatmentDialog")
@@ -245,15 +245,15 @@ class LocalProfileFragment : DaggerFragment() {
 
             if (isEdited) {
                 //edited profile -> save first
-                binding.profileswitch.visibility = View.GONE
+                binding.profileswitchlocal.visibility = View.GONE
                 binding.save.visibility = View.VISIBLE
             } else {
-                binding.profileswitch.visibility = View.VISIBLE
+                binding.profileswitchlocal.visibility = View.VISIBLE
                 binding.save.visibility = View.GONE
             }
         } else {
             this.view?.setBackgroundColor(resourceHelper.getAttributeColor(context,R.attr.errorBackground))
-            binding.profileswitch.visibility = View.GONE
+            binding.profileswitchlocal.visibility = View.GONE
             binding.save.visibility = View.GONE //don't save an invalid profile
         }
 

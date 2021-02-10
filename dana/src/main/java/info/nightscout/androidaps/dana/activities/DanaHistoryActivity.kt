@@ -112,11 +112,11 @@ class DanaHistoryActivity : NoSplashAppCompatActivity() {
         }
         binding.spinner.adapter = ArrayAdapter(this, R.layout.spinner_centered, typeList)
 
-        binding.reload.setOnClickListener {
+        binding.reloadhistory.setOnClickListener {
             val selected = binding.spinner.selectedItem as TypeList?
                 ?: return@setOnClickListener
             runOnUiThread {
-                binding.reload.visibility = View.GONE
+                binding.reloadhistory.visibility = View.GONE
                 binding.status.visibility = View.VISIBLE
             }
             clearCardView()
@@ -124,7 +124,7 @@ class DanaHistoryActivity : NoSplashAppCompatActivity() {
                 override fun run() {
                     loadDataFromDB(selected.type)
                     runOnUiThread {
-                        binding.reload.visibility = View.VISIBLE
+                        binding.reloadhistory.visibility = View.VISIBLE
                         binding.status.visibility = View.GONE
                     }
                 }

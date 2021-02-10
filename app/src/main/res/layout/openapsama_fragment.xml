@@ -17,7 +17,7 @@
             android:orientation="horizontal">
 
             <Button
-                android:id="@+id/run"
+                android:id="@+id/runama"
                 style="?android:attr/buttonStyle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

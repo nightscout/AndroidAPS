@@ -78,7 +78,7 @@ class ProfileViewerDialog : DaggerDialogFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        binding.closeLayout.close.setOnClickListener { dismiss() }
+        binding.closeLayoutProfileviewer.closebutton.setOnClickListener { dismiss() }
 
         val profile: Profile?
         val profile2: Profile?

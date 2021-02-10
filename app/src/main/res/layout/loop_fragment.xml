@@ -11,8 +11,8 @@
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
-        <Button
-            android:id="@+id/run"
+        <info.nightscout.androidaps.utils.ui.SingleClickButton
+            android:id="@+id/runloop"
             style="?android:attr/buttonStyle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

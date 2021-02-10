@@ -79,11 +79,11 @@
         android:id="@+id/recyclerview"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_above="@id/reload"
+        android:layout_above="@id/reloadhistory"
         android:layout_below="@+id/status" />
 
-    <Button
-        android:id="@+id/reload"
+    <info.nightscout.androidaps.utils.ui.SingleClickButton
+        android:id="@+id/reloadhistory"
         style="@style/Widget.AppCompat.Button"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

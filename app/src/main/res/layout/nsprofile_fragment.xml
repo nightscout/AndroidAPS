@@ -10,8 +10,8 @@
         android:layout_gravity="center_horizontal"
         android:layout_marginBottom="5dp" />
 
-    <Button
-        android:id="@+id/profileswitch"
+    <info.nightscout.androidaps.utils.ui.SingleClickButton
+        android:id="@+id/profileswitchnsprofile"
         style="?android:attr/buttonStyle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
