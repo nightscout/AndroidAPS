@@ -23,7 +23,6 @@ public class AlertConfiguration {
         this.beepRepetition = beepRepetition;
     }
 
-    /* renamed from: d */
     public byte[] getEncoded() {
         byte firstByte = (byte) (slot.getValue() << 4);
         if (enabled) {
