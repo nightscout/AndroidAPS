@@ -96,6 +96,12 @@
         <item name="treatmentActive" >@color/emerald</item>
         <!-- filling dialog -->
         <item name="actionsConfirm" >@color/lightyellow</item>
+        <!-- local profil dialog -->
+        <item name="errorBackground" >@color/lightPastelRed</item>
+        <item name="okBackground" >@color/darkgray</item>
+        <item name="defaultBackground" >@color/darkgrayVariant</item>
+        <!-- Custom tabs background -->
+        <item name="tabBgColorSelected" >@color/kobaltblue</item>
     </style>
 
     <style name="Theme.MaterialComponents.DayNight.DarkActionBar" parent="Theme.MaterialComponents.DayNight.Bridge"/>

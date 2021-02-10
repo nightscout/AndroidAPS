@@ -71,5 +71,11 @@
 <attr name="treatmentActive" format="reference|color" />
 <!-- filling dialog -->
 <attr name="actionsConfirm" format="reference|color" />
-
+<!-- local profil dialog -->
+<attr name="errorBackground" format="reference|color" />
+<attr name="okBackground" format="reference|color" />
+<attr name="defaultBackground" format="reference|color" />
+<!-- Custom tabs background -->
+<attr name="tabBgColorSelected" format="reference|color" />
+<attr name="tabBgColor" format="reference|color" />
 </resources>

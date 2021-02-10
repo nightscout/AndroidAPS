@@ -241,7 +241,7 @@ class LocalProfileFragment : DaggerFragment() {
         val isValid = localProfilePlugin.isValidEditState()
         val isEdited = localProfilePlugin.isEdited
         if (isValid) {
-            this.view?.setBackgroundColor(resourceHelper.gc(R.color.ok_background))
+            this.view?.setBackgroundColor(resourceHelper.getAttributeColor(context,R.attr.okBackground))
 
             if (isEdited) {
                 //edited profile -> save first
@@ -252,7 +252,7 @@ class LocalProfileFragment : DaggerFragment() {
                 binding.save.visibility = View.GONE
             }
         } else {
-            this.view?.setBackgroundColor(resourceHelper.gc(R.color.error_background))
+            this.view?.setBackgroundColor(resourceHelper.getAttributeColor(context,R.attr.errorBackground))
             binding.profileswitch.visibility = View.GONE
             binding.save.visibility = View.GONE //don't save an invalid profile
         }
@@ -266,12 +266,12 @@ class LocalProfileFragment : DaggerFragment() {
     }
 
     private fun processVisibilityOnClick(selected: View) {
-        binding.diaTab.setBackgroundColor(resourceHelper.gc(R.color.defaultbackground))
-        binding.icTab.setBackgroundColor(resourceHelper.gc(R.color.defaultbackground))
-        binding.isfTab.setBackgroundColor(resourceHelper.gc(R.color.defaultbackground))
-        binding.basalTab.setBackgroundColor(resourceHelper.gc(R.color.defaultbackground))
-        binding.targetTab.setBackgroundColor(resourceHelper.gc(R.color.defaultbackground))
-        selected.setBackgroundColor(resourceHelper.gc(R.color.tabBgColorSelected))
+        binding.diaTab.setBackgroundColor(resourceHelper.getAttributeColor(context,R.attr.defaultBackground))
+        binding.icTab.setBackgroundColor(resourceHelper.getAttributeColor(context,R.attr.defaultBackground))
+        binding.isfTab.setBackgroundColor(resourceHelper.getAttributeColor(context,R.attr.defaultBackground))
+        binding.basalTab.setBackgroundColor(resourceHelper.getAttributeColor(context,R.attr.defaultBackground))
+        binding.targetTab.setBackgroundColor(resourceHelper.getAttributeColor(context,R.attr.defaultBackground))
+        selected.setBackgroundColor(resourceHelper.getAttributeColor(context, R.attr.tabBgColorSelected))
         binding.diaPlaceholder.visibility = View.GONE
         binding.ic.visibility = View.GONE
         binding.isf.visibility = View.GONE

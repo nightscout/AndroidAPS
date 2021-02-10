@@ -103,13 +103,13 @@ class TreatmentsFragment : DaggerFragment() {
     }
 
     private fun setBackgroundColorOnSelected(selected: View) {
-        binding.treatments.setBackgroundColor(resourceHelper.gc(R.color.defaultbackground))
-        binding.extendedBoluses.setBackgroundColor(resourceHelper.gc(R.color.defaultbackground))
-        binding.tempBasals.setBackgroundColor(resourceHelper.gc(R.color.defaultbackground))
-        binding.tempTargets.setBackgroundColor(resourceHelper.gc(R.color.defaultbackground))
-        binding.profileSwitches.setBackgroundColor(resourceHelper.gc(R.color.defaultbackground))
-        binding.careportal.setBackgroundColor(resourceHelper.gc(R.color.defaultbackground))
-        selected.setBackgroundColor(resourceHelper.gc(R.color.tabBgColorSelected))
+        binding.treatments.setBackgroundColor(resourceHelper.getAttributeColor(context, R.attr.defaultBackground))
+        binding.extendedBoluses.setBackgroundColor(resourceHelper.getAttributeColor(context, R.attr.defaultBackground))
+        binding.tempBasals.setBackgroundColor(resourceHelper.getAttributeColor(context, R.attr.defaultBackground))
+        binding.tempTargets.setBackgroundColor(resourceHelper.getAttributeColor(context, R.attr.defaultBackground))
+        binding.profileSwitches.setBackgroundColor(resourceHelper.getAttributeColor(context, R.attr.defaultBackground))
+        binding.careportal.setBackgroundColor(resourceHelper.getAttributeColor(context, R.attr.defaultBackground))
+        selected.setBackgroundColor(resourceHelper.getAttributeColor(context, R.attr.tabBgColorSelected))
     }
 
     private fun updateGui() {

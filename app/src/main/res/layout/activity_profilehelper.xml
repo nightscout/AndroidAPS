@@ -16,7 +16,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="10dp"
-            android:background="@color/defaultbackground"
+            android:background="?attr/defaultBackground"
             android:orientation="horizontal">
 
             <TextView
@@ -47,8 +47,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="@string/profiletype"
-            android:textColorHint="@color/tabBgColorSelected"
-            app:boxStrokeColor="@color/tabBgColorSelected">
+            android:textColorHint="?attr/tabBgColorSelected"
+            app:boxStrokeColor="?attr/tabBgColorSelected">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/profiletype"
