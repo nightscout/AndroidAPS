@@ -101,6 +101,8 @@
         <item name="defaultBackground" >@color/darkgrayVariant</item>
         <!-- Custom tabs background -->
         <item name="tabBgColorSelected" >@color/kobaltblue</item>
+        <!-- Predictions -->
+        <item name="iobPred" >@color/cyan</item>
     </style>
 
     <style name="Theme.MaterialComponents.DayNight.DarkActionBar" parent="Theme.MaterialComponents.DayNight.Bridge"/>

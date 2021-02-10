@@ -78,4 +78,6 @@
 <!-- Custom tabs background -->
 <attr name="tabBgColorSelected" format="reference|color" />
 <attr name="tabBgColor" format="reference|color" />
+<!-- Predictions -->
+<attr name="iobPred" format="reference|color" />
 </resources>
