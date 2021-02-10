@@ -14,7 +14,7 @@ import info.nightscout.androidaps.plugins.pump.omnipod.eros.ui.wizard.deactivati
 
 @Module
 @Suppress("unused")
-abstract class OmnipodModule {
+abstract class OmnipodErosModule {
 
     // Activities
     @ContributesAndroidInjector

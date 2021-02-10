@@ -1,9 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/omnipod_pod_management"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    tools:context=".ui.PodManagementActivity">
 
     <TextView
         android:layout_width="match_parent"
@@ -54,7 +56,6 @@
         android:text="@string/omnipod_pod_management_heading_actions" />
 
     <LinearLayout
-        android:id="@+id/action_buttons_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
@@ -115,7 +116,7 @@
             android:drawableTop="@drawable/ic_pod_management_discard_pod"
             android:text="@string/omnipod_pod_management_button_discard_pod"
             android:textAllCaps="false"
-            android:visibility="gone"/>
+            android:visibility="gone" />
 
     </LinearLayout>
 
@@ -155,7 +156,7 @@
             android:drawableTop="@drawable/ic_pod_management_rl_stats"
             android:text="@string/omnipod_pod_management_button_riley_link_stats"
             android:textAllCaps="false"
-            android:visibility="gone"/>
+            android:visibility="gone" />
 
     </LinearLayout>
 

@@ -7,9 +7,9 @@
             android:enabled="true"
             android:exported="true" />
 
-        <activity android:name="info.nightscout.androidaps.plugins.pump.omnipod.eros.ui.PodManagementActivity" />
-        <activity android:name="info.nightscout.androidaps.plugins.pump.omnipod.eros.ui.PodHistoryActivity" />
-        <activity android:name="info.nightscout.androidaps.plugins.pump.omnipod.eros.ui.wizard.activation.PodActivationWizardActivity" />
-        <activity android:name="info.nightscout.androidaps.plugins.pump.omnipod.eros.ui.wizard.deactivation.PodDeactivationWizardActivity" />
+        <activity android:name=".ui.PodManagementActivity" />
+        <activity android:name=".ui.PodHistoryActivity" />
+        <activity android:name=".ui.wizard.activation.PodActivationWizardActivity" />
+        <activity android:name=".ui.wizard.deactivation.PodDeactivationWizardActivity" />
     </application>
 </manifest>
