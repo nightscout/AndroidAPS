@@ -9,9 +9,6 @@
     <color name="dialog_title_background">#EEEEEE</color>
     <color name="activity_title_background">#EEEEEE</color>
 
-    <!-- Buttons   -->
-    <color name="materialButtonBackground">#e64A4E55</color>
-
     <!---Graph Color for horizontal and vertical label text-->
     <color name="graphHorizontalLabelText">#8c8c8c</color>
     <color name="graphVerticalLabelText">#8c8c8c</color>
