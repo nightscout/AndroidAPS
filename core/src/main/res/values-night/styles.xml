@@ -25,7 +25,6 @@
         <item name="iconColorDialog">@color/white</item>
         <item name="iconColorbottomAppbar">@color/iconColorbottomAppbar</item>
         <item name="iconColorToolbar">@color/white</item>
-        <item name="fabmenubackground">@color/fabmenubackground</item>
         <item name="iobBorder">@color/white</item>
         <item name="cobBorder">@color/white</item>
         <item name="iobColor">@color/iob</item>

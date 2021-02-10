@@ -2,8 +2,6 @@
 <resources>
     <color name="ratio">#FFFFFF</color>
 
-    <color name="fabmenubackground">#73141428</color>
-
     <color name="dialog_title_background">#303030</color>
     <color name="activity_title_background">#121212</color>
 
