@@ -14,6 +14,7 @@ import info.nightscout.androidaps.logging.AAPSLogger;
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper;
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.definition.FirmwareVersion;
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.definition.PodProgressStatus;
+import info.nightscout.androidaps.utils.rx.TestAapsSchedulers;
 import info.nightscout.androidaps.utils.sharedPreferences.SP;
 
 import static org.junit.Assert.assertEquals;
@@ -23,7 +24,7 @@ public class AapsPodStateManagerTest {
     @Mock AAPSLogger aapsLogger;
     @Mock SP sp;
 
-    private RxBusWrapper rxBus = new RxBusWrapper();
+    private RxBusWrapper rxBus = new RxBusWrapper(new TestAapsSchedulers());
 
     @Test
     public void times() {

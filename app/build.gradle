@@ -1,6 +1,5 @@
 buildscript {
     repositories {
-        jcenter()
         maven { url "https://plugins.gradle.org/m2/" } // jacoco 0.2
     }
 
@@ -22,7 +21,6 @@ jacoco {
 }
 
 repositories {
-    jcenter { url "https://jcenter.bintray.com/" }
     mavenCentral()
     google()
 }
@@ -244,6 +242,9 @@ dependencies {
     implementation project(':omnipod')
 
     implementation fileTree(include: ['*.jar'], dir: 'libs')
+
+    // https://github.com/DavidProdinger/Weekdays-Selector (used outdated 'com.amulyakhare:com.amulyakhare.textdrawable:1.0.1')
+    implementation(name: 'weekdaysselector-1.1.1', ext: 'aar')
 
     testImplementation "junit:junit:$junit_version"
     testImplementation 'org.json:json:20201115'

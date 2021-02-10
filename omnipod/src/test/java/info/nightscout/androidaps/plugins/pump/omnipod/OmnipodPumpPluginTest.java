@@ -28,6 +28,8 @@ import info.nightscout.androidaps.plugins.pump.common.defs.PumpType;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.RileyLinkUtil;
 import info.nightscout.androidaps.plugins.pump.omnipod.manager.AapsOmnipodManager;
 import info.nightscout.androidaps.utils.resources.ResourceHelper;
+import info.nightscout.androidaps.utils.rx.AapsSchedulers;
+import info.nightscout.androidaps.utils.rx.TestAapsSchedulers;
 
 import static org.junit.Assert.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
@@ -41,7 +43,7 @@ public class OmnipodPumpPluginTest {
 
     @Mock HasAndroidInjector injector;
     AAPSLogger aapsLogger = new AAPSLoggerTest();
-    RxBusWrapper rxBusWrapper = new RxBusWrapper();
+    RxBusWrapper rxBusWrapper = new RxBusWrapper(new TestAapsSchedulers());
     @Mock ResourceHelper resourceHelper;
     @Mock(answer = Answers.RETURNS_DEEP_STUBS) ActivePluginProvider activePluginProvider;
     @Mock AapsOmnipodManager aapsOmnipodManager;
@@ -57,7 +59,7 @@ public class OmnipodPumpPluginTest {
 
         // mock all the things
         PowerMockito.mockStatic(Looper.class);
-        OmnipodPumpPlugin plugin = new OmnipodPumpPlugin(injector, aapsLogger, rxBusWrapper, null,
+        OmnipodPumpPlugin plugin = new OmnipodPumpPlugin(injector, aapsLogger, new TestAapsSchedulers(), rxBusWrapper, null,
                 resourceHelper, activePluginProvider, null, null, aapsOmnipodManager, commandQueueProvider,
                 null, null, null, null,
                 rileyLinkUtil, null, null, null, null

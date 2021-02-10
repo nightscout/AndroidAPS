@@ -1,6 +1,7 @@
 buildscript {
     repositories {
-        jcenter()
+        google()
+        mavenCentral()
         maven { url "https://plugins.gradle.org/m2/" } // jacoco 0.2
     }
 
@@ -99,7 +100,8 @@ android {
 
 allprojects {
     repositories {
-        jcenter()
+        google()
+        mavenCentral()
         flatDir {
             dirs 'libs'
         }
@@ -119,10 +121,10 @@ dependencies {
     implementation "com.google.android.support:wearable:${wearableVersion}"
     implementation "com.google.android.gms:play-services-wearable:${playServicesWearable}"
     implementation(name: 'ustwo-clockwise-debug', ext: 'aar')
+    implementation(name: 'wearpreferenceactivity-0.5.0', ext: 'aar')
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
     implementation 'androidx.percentlayout:percentlayout:1.0.0'
     implementation 'androidx.wear:wear:1.1.0'
-    implementation('me.denley.wearpreferenceactivity:wearpreferenceactivity:0.5.0')
     implementation('com.github.lecho:hellocharts-library:1.5.8@aar')
 
     testImplementation "junit:junit:$junit_version"
