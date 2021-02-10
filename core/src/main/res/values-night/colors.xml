@@ -47,10 +47,8 @@
     <color name="colorSetExtendedButton">#FFDD7792</color>
 
     <!-- Red Colors -->
-    <color name="red">#ff0400</color>
+    <color name="red">#FF0000</color>
     <color name="lightPastelRed">#66FC0000</color>
-    <color name="deviations">#FF0000</color>
-    <color name="low">#FF0000</color>
     <color name="deviationred">#72FF0000</color>
     <color name="notificationNormal">#ff5e55</color>
     <color name="notificationLow">#ff827c</color>

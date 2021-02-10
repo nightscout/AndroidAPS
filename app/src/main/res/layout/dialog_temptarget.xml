@@ -205,7 +205,7 @@
                 android:paddingEnd="5dp"
                 android:text="@string/hypo"
                 android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-                android:textColor="@color/low"
+                android:textColor="@color/red"
                 android:textSize="11sp" />
 
         </LinearLayout>

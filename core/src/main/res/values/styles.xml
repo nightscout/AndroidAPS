@@ -49,7 +49,7 @@
         <item name="actionOverflowMenuStyle">@style/Widget.MaterialComponents.PopupMenu.Overflow</item>
         <!-- Color of bg value -->
         <item name="bgInRange">@color/lightblue</item>
-        <item name="bgLow">@color/low</item>
+        <item name="bgLow">@color/red</item>
         <item name="bgHigh">@color/midorange</item>
         <!-- Color of dialog -->
         <item name="colorPrimaryDialog">?attr/colorPrimary</item>
