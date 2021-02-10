@@ -23,4 +23,13 @@ public class GetVersionCommand extends CommandBase {
                 .putInt(address) //
                 .array());
     }
+
+    @Override public String toString() {
+        return "GetVersionCommand{" +
+                "commandType=" + commandType +
+                ", address=" + address +
+                ", sequenceNumber=" + sequenceNumber +
+                ", unknown=" + unknown +
+                '}';
+    }
 }

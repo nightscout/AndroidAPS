@@ -18,4 +18,13 @@ public class DeactivateCommand extends CommandBase {
                 .putInt(1229869870) // FIXME ?? was: byte array of int 777211465 converted to little endian
                 .array());
     }
+
+    @Override public String toString() {
+        return "DeactivateCommand{" +
+                "commandType=" + commandType +
+                ", address=" + address +
+                ", sequenceNumber=" + sequenceNumber +
+                ", unknown=" + unknown +
+                '}';
+    }
 }

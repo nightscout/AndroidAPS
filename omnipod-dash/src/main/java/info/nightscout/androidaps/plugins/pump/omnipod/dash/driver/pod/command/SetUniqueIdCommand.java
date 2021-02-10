@@ -47,4 +47,16 @@ public class SetUniqueIdCommand extends CommandBase {
                 (byte) instance.get(Calendar.MINUTE) //
         };
     }
+
+    @Override public String toString() {
+        return "SetUniqueIdCommand{" +
+                "lotNumber=" + lotNumber +
+                ", podSequenceNumber=" + podSequenceNumber +
+                ", initializationTime=" + initializationTime +
+                ", commandType=" + commandType +
+                ", address=" + address +
+                ", sequenceNumber=" + sequenceNumber +
+                ", unknown=" + unknown +
+                '}';
+    }
 }

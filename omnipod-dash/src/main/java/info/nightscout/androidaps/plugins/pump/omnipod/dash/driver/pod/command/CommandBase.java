@@ -78,7 +78,7 @@ abstract class CommandBase implements Command {
     static byte[] encodeHeader(int address, short sequenceNumber, short length, boolean unknown) {
         return ByteBuffer.allocate(6) //
                 .putInt(address) //
-                .putShort((short) (((sequenceNumber & 15) << 10) | length | (((unknown ? 1 : 0) & 1) << 15))) //
+                .putShort((short) (((sequenceNumber & 0x0f) << 10) | length | ((unknown ? 1 : 0) << 15))) //
                 .array();
     }
 }
