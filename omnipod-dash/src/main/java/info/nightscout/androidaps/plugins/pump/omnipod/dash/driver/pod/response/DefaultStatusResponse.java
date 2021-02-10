@@ -26,25 +26,25 @@ public class DefaultStatusResponse extends ResponseBase {
     public DefaultStatusResponse(byte[] encoded) {
         super(ResponseType.DEFAULT_STATUS_RESPONSE, encoded);
 
-        this.messageType = encoded[0];
-        this.deliveryStatus = DeliveryStatus.byValue((byte) ((encoded[1] >> 4) & 0x0f));
-        this.podStatus = PodStatus.byValue((byte) (encoded[1] & 0x0f));
-        this.totalPulsesDelivered = (short) (((encoded[2] & 0x0f) << 12) | ((encoded[3] & 0xff) << 1) | ((encoded[4] & 0xff) >>> 7));
-        this.sequenceNumberOfLastProgrammingCommand = (byte) ((encoded[4] >>> 3) & 0x0f);
-        this.bolusPulsesRemaining = (short) (((encoded[4] & 0x07) << 10) | (encoded[5] & 0xff));
+        messageType = encoded[0];
+        deliveryStatus = DeliveryStatus.byValue((byte) ((encoded[1] >> 4) & 0x0f));
+        podStatus = PodStatus.byValue((byte) (encoded[1] & 0x0f));
+        totalPulsesDelivered = (short) (((encoded[2] & 0x0f) << 12) | ((encoded[3] & 0xff) << 1) | ((encoded[4] & 0xff) >>> 7));
+        sequenceNumberOfLastProgrammingCommand = (byte) ((encoded[4] >>> 3) & 0x0f);
+        bolusPulsesRemaining = (short) ((((encoded[4] & 0x07) << 10) | (encoded[5] & 0xff)) & 2047);
 
         short activeAlerts = (short) (((encoded[6] & 0xff) << 1) | (encoded[7] >>> 7));
-        this.occlusionAlertActive = (activeAlerts & 1) == 1;
-        this.alert1Active = ((activeAlerts >> 1) & 1) == 1;
-        this.alert2Active = ((activeAlerts >> 2) & 1) == 1;
-        this.alert3Active = ((activeAlerts >> 3) & 1) == 1;
-        this.alert4Active = ((activeAlerts >> 4) & 1) == 1;
-        this.alert5Active = ((activeAlerts >> 5) & 1) == 1;
-        this.alert6Active = ((activeAlerts >> 6) & 1) == 1;
-        this.alert7Active = ((activeAlerts >> 7) & 1) == 1;
+        occlusionAlertActive = (activeAlerts & 1) == 1;
+        alert1Active = ((activeAlerts >> 1) & 1) == 1;
+        alert2Active = ((activeAlerts >> 2) & 1) == 1;
+        alert3Active = ((activeAlerts >> 3) & 1) == 1;
+        alert4Active = ((activeAlerts >> 4) & 1) == 1;
+        alert5Active = ((activeAlerts >> 5) & 1) == 1;
+        alert6Active = ((activeAlerts >> 6) & 1) == 1;
+        alert7Active = ((activeAlerts >> 7) & 1) == 1;
 
-        this.minutesSinceActivation = (short) (((encoded[7] & 0x7f) << 6) | (((encoded[8] & 0xff) >>> 2) & 0x3f));
-        this.reservoirPulsesRemaining = (short) (((encoded[8] << 8) | encoded[9]) & 0x3ff);
+        minutesSinceActivation = (short) (((encoded[7] & 0x7f) << 6) | (((encoded[8] & 0xff) >>> 2) & 0x3f));
+        reservoirPulsesRemaining = (short) (((encoded[8] << 8) | encoded[9]) & 0x3ff);
     }
 
     public byte getMessageType() {

@@ -28,7 +28,7 @@ public enum ResponseType {
 
     enum AdditionalStatusResponseType {
         STATUS_RESPONSE_PAGE_1((byte) 0x01),
-        STATUS_RESPONSE_PAGE_2((byte) 0x02),
+        ALARM_STATUS((byte) 0x02),
         STATUS_RESPONSE_PAGE_3((byte) 0x03),
         STATUS_RESPONSE_PAGE_5((byte) 0x05),
         STATUS_RESPONSE_PAGE_6((byte) 0x06),
@@ -50,6 +50,10 @@ public enum ResponseType {
                 }
             }
             return UNKNOWN;
+        }
+
+        public byte getValue() {
+            return value;
         }
     }
 

@@ -29,25 +29,25 @@ public final class SetUniqueIdResponse extends ActivationResponseBase {
     public SetUniqueIdResponse(byte[] encoded) {
         super(ResponseType.ActivationResponseType.SET_UNIQUE_ID_RESPONSE, encoded);
 
-        this.messageType = encoded[0];
-        this.messageLength = (short) (encoded[1] & 0xff);
-        this.pulseVolumeInTenThousandthMicroLiter = ByteBuffer.wrap(new byte[]{encoded[2], encoded[3]}).getShort();
-        this.pumpRate = (short) (encoded[4] & 0xff);
-        this.primePumpRate = (short) (encoded[5] & 0xff);
-        this.numberOfEngagingClutchDrivePulses = (short) (encoded[6] & 0xff);
-        this.numberOfPrimePulses = (short) (encoded[7] & 0xff);
-        this.podExpirationTimeInHours = (short) (encoded[8] & 0xff);
-        this.firmwareVersionMajor = (short) (encoded[9] & 0xff);
-        this.firmwareVersionMinor = (short) (encoded[10] & 0xff);
-        this.firmwareVersionInterim = (short) (encoded[11] & 0xff);
-        this.bleVersionMajor = (short) (encoded[12] & 0xff);
-        this.bleVersionMinor = (short) (encoded[13] & 0xff);
-        this.bleVersionInterim = (short) (encoded[14] & 0xff);
-        this.productId = (short) (encoded[15] & 0xff);
-        this.podStatus = PodStatus.byValue(encoded[16]);
-        this.lotNumber = ByteBuffer.wrap(new byte[]{0, 0, 0, 0, encoded[17], encoded[18], encoded[19], encoded[20]}).getLong();
-        this.podSequenceNumber = ByteBuffer.wrap(new byte[]{0, 0, 0, 0, encoded[21], encoded[22], encoded[23], encoded[24]}).getLong();
-        this.uniqueIdReceivedInCommand = ByteBuffer.wrap(new byte[]{0, 0, 0, 0, encoded[25], encoded[26], encoded[27], encoded[28]}).getLong();
+        messageType = encoded[0];
+        messageLength = (short) (encoded[1] & 0xff);
+        pulseVolumeInTenThousandthMicroLiter = ByteBuffer.wrap(new byte[]{encoded[2], encoded[3]}).getShort();
+        pumpRate = (short) (encoded[4] & 0xff);
+        primePumpRate = (short) (encoded[5] & 0xff);
+        numberOfEngagingClutchDrivePulses = (short) (encoded[6] & 0xff);
+        numberOfPrimePulses = (short) (encoded[7] & 0xff);
+        podExpirationTimeInHours = (short) (encoded[8] & 0xff);
+        firmwareVersionMajor = (short) (encoded[9] & 0xff);
+        firmwareVersionMinor = (short) (encoded[10] & 0xff);
+        firmwareVersionInterim = (short) (encoded[11] & 0xff);
+        bleVersionMajor = (short) (encoded[12] & 0xff);
+        bleVersionMinor = (short) (encoded[13] & 0xff);
+        bleVersionInterim = (short) (encoded[14] & 0xff);
+        productId = (short) (encoded[15] & 0xff);
+        podStatus = PodStatus.byValue(encoded[16]);
+        lotNumber = ByteBuffer.wrap(new byte[]{0, 0, 0, 0, encoded[17], encoded[18], encoded[19], encoded[20]}).getLong();
+        podSequenceNumber = ByteBuffer.wrap(new byte[]{0, 0, 0, 0, encoded[21], encoded[22], encoded[23], encoded[24]}).getLong();
+        uniqueIdReceivedInCommand = ByteBuffer.wrap(new byte[]{0, 0, 0, 0, encoded[25], encoded[26], encoded[27], encoded[28]}).getLong();
     }
 
     public byte getMessageType() {
