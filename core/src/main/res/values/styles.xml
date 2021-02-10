@@ -8,7 +8,7 @@
         <item name="colorSecondary">@color/secondaryColorDefault</item>
         <item name="colorPrimaryVariant">@color/primaryLightColorDefault</item>
         <item name="colorSecondaryVariant">@color/secondaryLightColorDefault</item>
-        <item name="colorSurface">@color/white</item>
+        <item name="colorSurface">@color/plastic</item>
         <item name="colorOnPrimary">@color/black</item>
         <item name="colorOnSecondary">@color/black</item>
         <item name="colorOnBackground">@color/white</item>
@@ -94,6 +94,8 @@
         <!-- treatment -->
         <item name="treatmentSheduled" >@color/squash</item>
         <item name="treatmentActive" >@color/emerald</item>
+        <!-- filling dialog -->
+        <item name="actionsConfirm" >@color/lightyellow</item>
     </style>
 
     <!-- The launcher theme. It sets the main window background to the launch_screen drawable -->

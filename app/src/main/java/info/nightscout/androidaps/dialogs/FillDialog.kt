@@ -110,10 +110,10 @@ class FillDialog : DialogFragmentWithDate() {
         }
         val siteChange = binding.fillCatheterChange.isChecked
         if (siteChange)
-            actions.add(resourceHelper.gs(R.string.record_pump_site_change).formatColor(resourceHelper, R.color.actionsConfirm))
+            actions.add(resourceHelper.gs(R.string.record_pump_site_change).formatColor(resourceHelper, resourceHelper.getAttributeColor(context, R.attr.actionsConfirm)))
         val insulinChange = binding.fillCartridgeChange.isChecked
         if (insulinChange)
-            actions.add(resourceHelper.gs(R.string.record_insulin_cartridge_change).formatColor(resourceHelper, R.color.actionsConfirm))
+            actions.add(resourceHelper.gs(R.string.record_insulin_cartridge_change).formatColor(resourceHelper, resourceHelper.getAttributeColor(context, R.attr.actionsConfirm)))
         val notes = binding.notesLayout.notes.text.toString()
         if (notes.isNotEmpty())
             actions.add(resourceHelper.gs(R.string.careportal_newnstreatment_notes_label) + ": " + notes)

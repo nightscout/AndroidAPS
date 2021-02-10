@@ -69,4 +69,7 @@
 <!-- treatment -->
 <attr name="treatmentSheduled" format="reference|color" />
 <attr name="treatmentActive" format="reference|color" />
+<!-- filling dialog -->
+<attr name="actionsConfirm" format="reference|color" />
+
 </resources>

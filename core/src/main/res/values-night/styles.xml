@@ -94,6 +94,8 @@
         <!-- treatment -->
         <item name="treatmentSheduled" >@color/squash</item>
         <item name="treatmentActive" >@color/emerald</item>
+        <!-- filling dialog -->
+        <item name="actionsConfirm" >@color/lightyellow</item>
     </style>
 
     <style name="Theme.MaterialComponents.DayNight.DarkActionBar" parent="Theme.MaterialComponents.DayNight.Bridge"/>
