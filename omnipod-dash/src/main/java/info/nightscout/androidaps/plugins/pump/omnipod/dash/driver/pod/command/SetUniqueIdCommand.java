@@ -32,7 +32,6 @@ public class SetUniqueIdCommand extends CommandBase {
                 .putInt(lotNumber) //
                 .putInt(podSequenceNumber) //
                 .array());
-
     }
 
     private static byte[] encodeInitializationTime(Date date) {
