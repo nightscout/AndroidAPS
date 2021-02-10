@@ -8,20 +8,34 @@ import java.util.List;
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.util.CrcUtil;
 
 abstract class CommandBase implements Command {
-    final CommandType commandType;
-    final short sequenceNumber;
+    static final short HEADER_LENGTH = 6;
 
-    CommandBase(CommandType commandType, short sequenceNumber) {
+    final CommandType commandType;
+    final int address;
+    final short sequenceNumber;
+    final boolean unknown;
+
+    CommandBase(CommandType commandType, int address, short sequenceNumber, boolean unknown) {
         this.commandType = commandType;
+        this.address = address;
         this.sequenceNumber = sequenceNumber;
+        this.unknown = unknown;
     }
 
     @Override public CommandType getCommandType() {
         return commandType;
     }
 
+    public int getAddress() {
+        return address;
+    }
+
     public short getSequenceNumber() {
         return sequenceNumber;
+    }
+
+    public boolean isUnknown() {
+        return unknown;
     }
 
     static byte[] formatCommand(byte[] command) {

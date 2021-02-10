@@ -2,17 +2,12 @@ package info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.command;
 
 import java.nio.ByteBuffer;
 
-public class GetVersionCommand extends CommandBase {
-    private static final int DEFAULT_ADDRESS = -1;
+public class DeactivateCommand extends CommandBase {
     private static final short LENGTH = 6;
     private static final byte BODY_LENGTH = 4;
 
-    public GetVersionCommand(short sequenceNumber, boolean unknown) {
-        this(DEFAULT_ADDRESS, sequenceNumber, unknown);
-    }
-
-    public GetVersionCommand(int address, short sequenceNumber, boolean unknown) {
-        super(CommandType.GET_VERSION, address, sequenceNumber, unknown);
+    DeactivateCommand(int address, short sequenceNumber, boolean unknown) {
+        super(CommandType.DEACTIVATE, address, sequenceNumber, unknown);
     }
 
     @Override public byte[] getEncoded() {
@@ -20,7 +15,7 @@ public class GetVersionCommand extends CommandBase {
                 .put(encodeHeader(address, sequenceNumber, LENGTH, unknown)) //
                 .put(commandType.getValue()) //
                 .put(BODY_LENGTH) //
-                .putInt(address) //
+                .putInt(1229869870) // FIXME ?? was: byte array of int 777211465 converted to little endian
                 .array());
     }
 }
