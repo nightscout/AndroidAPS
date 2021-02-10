@@ -19,8 +19,8 @@ public class ProgramAlertsCommandTest {
     @Test
     public void testExpirationAlerts() throws DecoderException {
         List<AlertConfiguration> configurations = new ArrayList<>();
-        configurations.add(new AlertConfiguration(AlertSlot.EXPIRATION, true, (short) 420, false, AlertTriggerType.TIME_TRIGGER, (short) 4305, BeepType.XXX, BeepRepetitionType.XXX3));
-        configurations.add(new AlertConfiguration(AlertSlot.EXPIRATION_IMMINENT, true, (short) 0, false, AlertTriggerType.TIME_TRIGGER, (short) 4725, BeepType.XXX, BeepRepetitionType.XXX4));
+        configurations.add(new AlertConfiguration(AlertSlot.EXPIRATION, true, (short) 420, false, AlertTriggerType.TIME_TRIGGER, (short) 4305, BeepType.FOUR_TIMES_BIP_BEEP, BeepRepetitionType.XXX3));
+        configurations.add(new AlertConfiguration(AlertSlot.EXPIRATION_IMMINENT, true, (short) 0, false, AlertTriggerType.TIME_TRIGGER, (short) 4725, BeepType.FOUR_TIMES_BIP_BEEP, BeepRepetitionType.XXX4));
 
         byte[] encoded = new ProgramAlertsCommand(37879811, (short) 3, true, configurations).getEncoded();
 
@@ -30,7 +30,7 @@ public class ProgramAlertsCommandTest {
     @Test
     public void testLowReservoirAlert() throws DecoderException {
         List<AlertConfiguration> configurations = new ArrayList<>();
-        configurations.add(new AlertConfiguration(AlertSlot.LOW_RESERVOIR, true, (short) 0, false, AlertTriggerType.RESERVOIR_VOLUME_TRIGGER, (short) 200, BeepType.XXX, BeepRepetitionType.XXX));
+        configurations.add(new AlertConfiguration(AlertSlot.LOW_RESERVOIR, true, (short) 0, false, AlertTriggerType.RESERVOIR_VOLUME_TRIGGER, (short) 200, BeepType.FOUR_TIMES_BIP_BEEP, BeepRepetitionType.XXX));
 
         byte[] encoded = new ProgramAlertsCommand(37879811, (short) 8, false, configurations).getEncoded();
 
@@ -40,7 +40,7 @@ public class ProgramAlertsCommandTest {
     @Test
     public void testUserExpirationAlert() throws DecoderException {
         List<AlertConfiguration> configurations = new ArrayList<>();
-        configurations.add(new AlertConfiguration(AlertSlot.USER_SET_EXPIRATION, true, (short) 0, false, AlertTriggerType.TIME_TRIGGER, (short) 4079, BeepType.XXX, BeepRepetitionType.XXX2));
+        configurations.add(new AlertConfiguration(AlertSlot.USER_SET_EXPIRATION, true, (short) 0, false, AlertTriggerType.TIME_TRIGGER, (short) 4079, BeepType.FOUR_TIMES_BIP_BEEP, BeepRepetitionType.XXX2));
 
         byte[] encoded = new ProgramAlertsCommand(37879811, (short) 15, false, configurations).getEncoded();
 
@@ -51,7 +51,7 @@ public class ProgramAlertsCommandTest {
     @Test
     public void testLumpOfCoalAlert() throws DecoderException {
         List<AlertConfiguration> configurations = new ArrayList<>();
-        configurations.add(new AlertConfiguration(AlertSlot.EXPIRATION, true, (short) 55, false, AlertTriggerType.TIME_TRIGGER, (short) 5, BeepType.XXX, BeepRepetitionType.XXX5));
+        configurations.add(new AlertConfiguration(AlertSlot.EXPIRATION, true, (short) 55, false, AlertTriggerType.TIME_TRIGGER, (short) 5, BeepType.FOUR_TIMES_BIP_BEEP, BeepRepetitionType.XXX5));
 
         byte[] encoded = new ProgramAlertsCommand(37879811, (short) 10, false, configurations).getEncoded();
 
