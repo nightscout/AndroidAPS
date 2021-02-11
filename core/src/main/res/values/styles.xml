@@ -47,7 +47,7 @@
         <item name="popupMenuStyle">@style/Widget.MaterialComponents.PopupMenu</item>
         <item name="actionOverflowMenuStyle">@style/Widget.MaterialComponents.PopupMenu.Overflow</item>
         <!-- Color of bg value -->
-        <item name="bgInRange">@color/lightblue</item>
+        <item name="bgInRange">@color/lightgreen</item>
         <item name="bgLow">@color/red</item>
         <item name="bgHigh">@color/midorange</item>
         <!-- Color of dialog -->
