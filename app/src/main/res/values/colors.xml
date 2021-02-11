@@ -6,6 +6,7 @@
     <color name="bolus">#1ea3e5</color>
     <color name="ratio">#FFFFFF</color>
     <color name="activity">#d3f166</color>
+    <color name="bgi">#00EEEE</color>
     <color name="devslopepos">#FFFFFF00</color>
     <color name="devslopeneg">#FFFF00FF</color>
     <color name="actionsConfirm">#FFFF00</color>
