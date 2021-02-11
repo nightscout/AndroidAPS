@@ -5,15 +5,15 @@
         <item name="colorPrimaryDark">@color/primaryDarkColorDefault</item>
         <item name="colorAccent">@color/secondaryColorDefault</item>
         <!-- New MaterialComponents attributes. -->
-        <item name="colorSecondary">@color/secondaryColorDefault</item>
+        <item name="colorSecondary">@color/white</item>
         <item name="colorPrimaryVariant">@color/primaryLightColorDefault</item>
         <item name="colorSecondaryVariant">@color/secondaryLightColorDefault</item>
         <item name="colorSurface">@color/plastic</item>
         <item name="colorOnPrimary">@color/black</item>
         <item name="colorOnSecondary">@color/black</item>
-        <item name="colorOnBackground">@color/white</item>
+        <item name="colorOnBackground">@color/black</item>
         <item name="colorOnError">@color/black</item>
-        <item name="colorOnSurface">@color/plastic_grey</item>
+        <item name="colorOnSurface">@color/black</item>
         <item name="scrimBackground">@color/white</item>
         <item name="android:textColorSecondary">@color/black</item>
         <item name="android:textColorPrimary">@color/black</item>
@@ -21,7 +21,7 @@
         <!-- Misc. colors -->
         <item name="android:navigationBarColor">?attr/colorPrimary</item>
         <item name="android:actionBarTheme">@android:style/Theme.Material.Light</item>
-        <item name="iconColor">@color/black</item>
+        <item name="iconColor">@color/sphere_plastic_grey</item>
         <item name="iconColorbottomAppbar">@color/iconColorbottomAppbar</item>
         <item name="iconColorDialog">@color/white</item>
         <item name="iconColorToolbar">@color/black</item>
@@ -29,7 +29,7 @@
         <item name="cobBorder">@color/white</item>
         <item name="iobColor">@color/iob</item>
         <item name="cobColor">@color/cob</item>
-        <item name="uamColor">@color/uam</item>
+        <item name="uamColor">@color/swampGreen</item>
         <item name="ztColor">@color/cyan</item>
         <item name="textAppearanceHeadline1">@style/TextAppearance.MaterialComponents.Headline1</item>
         <item name="textAppearanceHeadline2">@style/TextAppearance.MaterialComponents.Headline2</item>
@@ -103,7 +103,14 @@
         <item name="tabBgColorSelected" >@color/kobaltblue</item>
         <!-- Predictions -->
         <item name="iobPred" >@color/cyan</item>
+        <!---Deviation in Graph -->
+        <item name="deviationCsf" >@color/sandGray</item>
+        <item name="deviationPlus" >@color/lightGreen</item>
+        <item name="deviationMinus" >@color/lightPastelRed</item>
+        <item name="deviationEqual" >@color/lightSandGray</item>
     </style>
+
+    <style name="Theme.MaterialComponents.DayNight.DarkActionBar" parent="Theme.MaterialComponents.DayNight.Bridge"/>
 
     <!-- The launcher theme. It sets the main window background to the launch_screen drawable -->
     <style name="AppTheme.Launcher"  parent="Theme.MaterialComponents.NoActionBar">

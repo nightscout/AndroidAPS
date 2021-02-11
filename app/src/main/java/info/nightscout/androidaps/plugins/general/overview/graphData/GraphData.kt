@@ -469,15 +469,15 @@ class GraphData(
         var time = fromTime
         while (time <= toTime) {
             iobCobCalculatorPlugin.getAutosensData(time)?.let { autosensData ->
-                var color = resourceHelper.gc(R.color.deviationblack) // "="
+                var color = resourceHelper.getAttributeColor(null, R.attr.deviationEqual) // "="
                 if (autosensData.type == "" || autosensData.type == "non-meal") {
-                    if (autosensData.pastSensitivity == "C") color = resourceHelper.gc(R.color.deviationgrey)
-                    if (autosensData.pastSensitivity == "+") color = resourceHelper.gc(R.color.deviationgreen)
-                    if (autosensData.pastSensitivity == "-") color = resourceHelper.gc(R.color.deviationred)
+                    if (autosensData.pastSensitivity == "C") color = resourceHelper.getAttributeColor(null, R.attr.deviationCsf)
+                    if (autosensData.pastSensitivity == "+") color = resourceHelper.getAttributeColor(null, R.attr.deviationPlus)
+                    if (autosensData.pastSensitivity == "-") color = resourceHelper.getAttributeColor(null, R.attr.deviationMinus)
                 } else if (autosensData.type == "uam") {
                     color = resourceHelper.getAttributeColor(null, R.attr.uamColor)
                 } else if (autosensData.type == "csf") {
-                    color = resourceHelper.gc(R.color.deviationgrey)
+                    color = resourceHelper.getAttributeColor(null, R.attr.deviationCsf)
                 }
                 devArray.add(DeviationDataPoint(time.toDouble(), autosensData.deviation, color, devScale))
                 maxDevValueFound = max(maxDevValueFound, abs(autosensData.deviation))

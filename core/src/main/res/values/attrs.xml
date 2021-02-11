@@ -80,4 +80,10 @@
 <attr name="tabBgColor" format="reference|color" />
 <!-- Predictions -->
 <attr name="iobPred" format="reference|color" />
+<!---Deviation in Graph -->
+<attr name="deviationCsf" format="reference|color" />
+<attr name="deviationPlus" format="reference|color" />
+<attr name="deviationMinus" format="reference|color" />
+<attr name="deviationEqual" format="reference|color" />
+
 </resources>
