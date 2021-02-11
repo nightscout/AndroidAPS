@@ -12,7 +12,7 @@
         android:orientation="vertical">
 
         <info.nightscout.androidaps.utils.ui.SingleClickButton
-            android:id="@+id/runloop"
+            android:id="@+id/Runloop"
             style="?android:attr/buttonStyle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

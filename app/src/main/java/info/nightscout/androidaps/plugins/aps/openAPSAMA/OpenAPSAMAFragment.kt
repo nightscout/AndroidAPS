@@ -51,7 +51,7 @@ class OpenAPSAMAFragment : DaggerFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        binding.runama.setOnClickListener {
+        binding.runAma.setOnClickListener {
             openAPSAMAPlugin.invoke("OpenAPSAMA button", false)
         }
     }

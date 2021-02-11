@@ -416,7 +416,7 @@
         </LinearLayout>
 
         <include
-            android:id="@+id/close_layout_profileviewer"
+            android:id="@+id/closeLayoutProfileviewer"
             layout="@layout/close" />
 
     </LinearLayout>

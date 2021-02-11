@@ -50,7 +50,7 @@ class LoopFragment : DaggerFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        binding.runloop.setOnClickListener {
+        binding.Runloop.setOnClickListener {
             binding.lastrun.text = resourceHelper.gs(R.string.executing)
             Thread { loopPlugin.invoke("Loop button", true) }.start()
         }

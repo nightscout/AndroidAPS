@@ -56,7 +56,7 @@
                 android:text="" />
 
             <Button
-                android:id="@+id/closeobjectives"
+                android:id="@+id/closeObjectives"
                 style="@style/Widget.AppCompat.Button.Borderless.Colored"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
