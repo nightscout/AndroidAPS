@@ -28,6 +28,7 @@ class EncryptedPrefsFormatTest : TestBase() {
 
     @Mock lateinit var resourceHelper: ResourceHelper
     @Mock lateinit var sp: SP
+    @Mock lateinit var file: MockedFile
 
     private var cryptoUtil: CryptoUtil = CryptoUtil(aapsLogger)
 
@@ -228,8 +229,9 @@ class EncryptedPrefsFormatTest : TestBase() {
         encryptedFormat.loadPreferences(getMockedFile(), "sikret")
     }
 
+    class MockedFile(s: String) : File(s)
+
     private fun getMockedFile(): File {
-        val file = Mockito.mock(File::class.java)
         Mockito.`when`(file.exists()).thenReturn(true)
         Mockito.`when`(file.canRead()).thenReturn(true)
         Mockito.`when`(file.canWrite()).thenReturn(true)
