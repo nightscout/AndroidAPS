@@ -18,7 +18,6 @@ import org.mockito.ArgumentMatchers
 import org.mockito.Mock
 import org.mockito.Mockito
 import org.mockito.Mockito.`when`
-import org.powermock.api.mockito.PowerMockito
 import org.powermock.core.classloader.annotations.PrepareForTest
 import org.powermock.modules.junit4.PowerMockRunner
 
@@ -47,7 +46,6 @@ class ActionNotificationTest : TestBase() {
 
     @Before
     fun setup() {
-        PowerMockito.mockStatic(NSUpload::class.java)
         `when`(resourceHelper.gs(R.string.ok)).thenReturn("OK")
         `when`(resourceHelper.gs(R.string.notification)).thenReturn("Notification")
         `when`(resourceHelper.gs(ArgumentMatchers.eq(R.string.notification_message), ArgumentMatchers.anyString())).thenReturn("Notification: %s")
@@ -75,7 +73,7 @@ class ActionNotificationTest : TestBase() {
             }
         })
         Mockito.verify(rxBus, Mockito.times(2)).send(anyObject())
-        PowerMockito.verifyStatic(NSUpload::class.java, Mockito.times(1))
+        Mockito.verify(nsUpload, Mockito.times(1)).uploadError(anyObject())
     }
 
     @Test fun hasDialogTest() {
