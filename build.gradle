@@ -9,7 +9,7 @@ buildscript {
         rxkotlin_version = '2.4.0'
         room_version = '2.2.6'
         lifecycle_version = '2.2.0'
-        dagger_version = '2.31.2'
+        dagger_version = '2.32'
         coroutinesVersion = '1.3.7'
         activityVersion = '1.2.0-rc01'
         fragmentktx_version = '1.3.0-rc01'
