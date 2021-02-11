@@ -42,12 +42,10 @@ import info.nightscout.androidaps.utils.resources.ResourceHelper;
 @Singleton
 public class DateUtil {
     private final Context context;
-    private final ResourceHelper resourceHelper;
 
     @Inject
-    public DateUtil(Context context, ResourceHelper resourceHelper) {
+    public DateUtil(Context context) {
         this.context = context;
-        this.resourceHelper = resourceHelper;
     }
 
     /**
@@ -193,10 +191,6 @@ public class DateUtil {
         return new DateTime(mills).toString(DateTimeFormat.forPattern(format));
     }
 
-    public static String timeFullString(long mills) {
-        return new DateTime(mills).toString(DateTimeFormat.fullTime());
-    }
-
     public String dateAndTimeString(Date date) {
         return dateString(date) + " " + timeString(date);
     }
@@ -277,10 +271,6 @@ public class DateUtil {
     public static boolean isOlderThan(long date, long minutes) {
         long diff = now() - date;
         return diff > T.mins(minutes).msecs();
-    }
-
-    public static GregorianCalendar gregorianCalendar() {
-        return new GregorianCalendar();
     }
 
     public static long getTimeZoneOffsetMs() {

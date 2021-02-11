@@ -1,5 +1,7 @@
 package info.nightscout.androidaps.plugins.aps.openAPSSMB;
 
+import androidx.annotation.Nullable;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -16,7 +18,6 @@ import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.nio.charset.StandardCharsets;
 
-import javax.annotation.Nullable;
 import javax.inject.Inject;
 
 import dagger.android.HasAndroidInjector;
