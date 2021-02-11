@@ -10,7 +10,7 @@ dependencies {
     api 'androidx.legacy:legacy-support-v4:1.0.0'
     api "androidx.appcompat:appcompat:$appcompat_verison"
     api "androidx.preference:preference-ktx:$preferencektx_version"
-    api 'androidx.biometric:biometric:1.0.1'
+    api 'androidx.biometric:biometric:1.1.0'
     api "androidx.browser:browser:1.3.0"
     api "androidx.activity:activity-ktx:${activityVersion}"
     api "androidx.lifecycle:lifecycle-runtime-ktx:2.2.0"
