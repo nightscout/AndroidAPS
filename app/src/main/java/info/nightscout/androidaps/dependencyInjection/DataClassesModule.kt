@@ -2,11 +2,9 @@ package info.nightscout.androidaps.dependencyInjection
 
 import dagger.Module
 import dagger.android.ContributesAndroidInjector
-import info.nightscout.androidaps.data.Profile
-import info.nightscout.androidaps.db.*
-import info.nightscout.androidaps.interfaces.ProfileStore
-import info.nightscout.androidaps.plugins.iob.iobCobCalculator.GlucoseStatus
+import info.nightscout.androidaps.db.DatabaseHelper
 import info.nightscout.androidaps.plugins.general.food.FoodService
+import info.nightscout.androidaps.plugins.iob.iobCobCalculator.GlucoseStatus
 import info.nightscout.androidaps.plugins.treatments.TreatmentService
 import info.nightscout.androidaps.utils.wizard.BolusWizard
 import info.nightscout.androidaps.utils.wizard.QuickWizardEntry

@@ -30,7 +30,7 @@ import info.nightscout.androidaps.activities.ErrorHelperActivity;
 import info.nightscout.androidaps.data.DetailedBolusInfo;
 import info.nightscout.androidaps.data.Profile;
 import info.nightscout.androidaps.data.PumpEnactResult;
-import info.nightscout.androidaps.db.BgReading;
+import info.nightscout.androidaps.database.entities.GlucoseValue;
 import info.nightscout.androidaps.db.CareportalEvent;
 import info.nightscout.androidaps.db.Source;
 import info.nightscout.androidaps.db.TemporaryBasal;
@@ -72,15 +72,16 @@ import info.nightscout.androidaps.utils.FabricPrivacy;
 import info.nightscout.androidaps.utils.HardLimits;
 import info.nightscout.androidaps.utils.T;
 import info.nightscout.androidaps.utils.resources.ResourceHelper;
+import info.nightscout.androidaps.utils.rx.AapsSchedulers;
 import info.nightscout.androidaps.utils.sharedPreferences.SP;
 import io.reactivex.disposables.CompositeDisposable;
-import io.reactivex.schedulers.Schedulers;
 
 @Singleton
 public class LoopPlugin extends PluginBase implements LoopInterface {
     private final HasAndroidInjector injector;
     private final SP sp;
     private final RxBusWrapper rxBus;
+    private final AapsSchedulers aapsSchedulers;
     private final ConstraintChecker constraintChecker;
     private final ResourceHelper resourceHelper;
     private final ProfileFunction profileFunction;
@@ -123,6 +124,7 @@ public class LoopPlugin extends PluginBase implements LoopInterface {
     public LoopPlugin(
             HasAndroidInjector injector,
             AAPSLogger aapsLogger,
+            AapsSchedulers aapsSchedulers,
             RxBusWrapper rxBus,
             SP sp,
             Config config,
@@ -153,6 +155,7 @@ public class LoopPlugin extends PluginBase implements LoopInterface {
                 aapsLogger, resourceHelper, injector
         );
         this.injector = injector;
+        this.aapsSchedulers = aapsSchedulers;
         this.sp = sp;
         this.rxBus = rxBus;
         this.constraintChecker = constraintChecker;
@@ -181,7 +184,7 @@ public class LoopPlugin extends PluginBase implements LoopInterface {
         super.onStart();
         disposable.add(rxBus
                 .toObservable(EventTempTargetChange.class)
-                .observeOn(Schedulers.io())
+                .observeOn(aapsSchedulers.getIo())
                 .subscribe(event -> invoke("EventTempTargetChange", true), fabricPrivacy::logException)
         );
         /*
@@ -193,19 +196,19 @@ public class LoopPlugin extends PluginBase implements LoopInterface {
          */
         disposable.add(rxBus
                 .toObservable(EventAutosensCalculationFinished.class)
-                .observeOn(Schedulers.io())
+                .observeOn(aapsSchedulers.getIo())
                 .subscribe(event -> {
                     // Autosens calculation not triggered by a new BG
                     if (!(event.getCause() instanceof EventNewBG)) return;
 
-                    BgReading bgReading = iobCobCalculatorPlugin.actualBg();
+                    GlucoseValue glucoseValue = iobCobCalculatorPlugin.actualBg();
                     // BG outdated
-                    if (bgReading == null) return;
+                    if (glucoseValue == null) return;
                     // already looped with that value
-                    if (bgReading.date <= lastBgTriggeredRun) return;
+                    if (glucoseValue.getTimestamp() <= lastBgTriggeredRun) return;
 
-                    lastBgTriggeredRun = bgReading.date;
-                    invoke("AutosenseCalculation for " + bgReading, true);
+                    lastBgTriggeredRun = glucoseValue.getTimestamp();
+                    invoke("AutosenseCalculation for " + glucoseValue, true);
                 }, fabricPrivacy::logException)
         );
     }
@@ -389,30 +392,30 @@ public class LoopPlugin extends PluginBase implements LoopInterface {
 
             // Prepare for pumps using % basals
             if (pump.getPumpDescription().tempBasalStyle == PumpDescription.PERCENT && allowPercentage()) {
-                result.usePercent = true;
+                result.setUsePercent(true);
             }
-            result.percent = (int) (result.rate / profile.getBasal() * 100);
+            result.setPercent((int) (result.getRate() / profile.getBasal() * 100));
 
             // check rate for constraints
             final APSResult resultAfterConstraints = result.newAndClone(injector);
-            resultAfterConstraints.rateConstraint = new Constraint<>(resultAfterConstraints.rate);
-            resultAfterConstraints.rate = constraintChecker.applyBasalConstraints(resultAfterConstraints.rateConstraint, profile).value();
+            resultAfterConstraints.setRateConstraint(new Constraint<>(resultAfterConstraints.getRate()));
+            resultAfterConstraints.setRate(constraintChecker.applyBasalConstraints(resultAfterConstraints.getRateConstraint(), profile).value());
 
-            resultAfterConstraints.percentConstraint = new Constraint<>(resultAfterConstraints.percent);
-            resultAfterConstraints.percent = constraintChecker.applyBasalPercentConstraints(resultAfterConstraints.percentConstraint, profile).value();
+            resultAfterConstraints.setPercentConstraint(new Constraint<>(resultAfterConstraints.getPercent()));
+            resultAfterConstraints.setPercent(constraintChecker.applyBasalPercentConstraints(resultAfterConstraints.getPercentConstraint(), profile).value());
 
-            resultAfterConstraints.smbConstraint = new Constraint<>(resultAfterConstraints.smb);
-            resultAfterConstraints.smb = constraintChecker.applyBolusConstraints(resultAfterConstraints.smbConstraint).value();
+            resultAfterConstraints.setSmbConstraint(new Constraint<>(resultAfterConstraints.getSmb()));
+            resultAfterConstraints.setSmb(constraintChecker.applyBolusConstraints(resultAfterConstraints.getSmbConstraint()).value());
 
             // safety check for multiple SMBs
             long lastBolusTime = treatmentsPlugin.getLastBolusTime();
             if (lastBolusTime != 0 && lastBolusTime + T.mins(3).msecs() > System.currentTimeMillis()) {
                 getAapsLogger().debug(LTag.APS, "SMB requested but still in 3 min interval");
-                resultAfterConstraints.smb = 0;
+                resultAfterConstraints.setSmb(0);
             }
 
             if (lastRun != null && lastRun.getConstraintsProcessed() != null) {
-                prevCarbsreq = lastRun.getConstraintsProcessed().carbsReq;
+                prevCarbsreq = lastRun.getConstraintsProcessed().getCarbsReq();
             }
 
             if (lastRun == null) lastRun = new LastRun();
@@ -446,7 +449,7 @@ public class LoopPlugin extends PluginBase implements LoopInterface {
             if (closedLoopEnabled.value()) {
                 if (allowNotification) {
                     if (resultAfterConstraints.isCarbsRequired()
-                            && resultAfterConstraints.carbsReq >= sp.getInt(R.string.key_smb_enable_carbs_suggestions_threshold, 0)
+                            && resultAfterConstraints.getCarbsReq() >= sp.getInt(R.string.key_smb_enable_carbs_suggestions_threshold, 0)
                             && carbsSuggestionsSuspendedUntil < System.currentTimeMillis() && !treatmentTimethreshold(-15)) {
 
                         if (sp.getBoolean(R.string.key_enable_carbs_required_alert_local, true) && !sp.getBoolean(R.string.key_raise_notifications_as_android_notifications, true)) {
@@ -516,9 +519,9 @@ public class LoopPlugin extends PluginBase implements LoopInterface {
                         && !commandQueue.isRunning(Command.CommandType.BOLUS)) {
                     final PumpEnactResult waiting = new PumpEnactResult(getInjector());
                     waiting.queued = true;
-                    if (resultAfterConstraints.tempBasalRequested)
+                    if (resultAfterConstraints.getTempBasalRequested())
                         lastRun.setTbrSetByPump(waiting);
-                    if (resultAfterConstraints.bolusRequested)
+                    if (resultAfterConstraints.getBolusRequested())
                         lastRun.setSmbSetByPump(waiting);
                     rxBus.send(new EventLoopUpdateGui());
                     fabricPrivacy.logCustom("APSRequest");
@@ -650,7 +653,7 @@ public class LoopPlugin extends PluginBase implements LoopInterface {
 
     private void applyTBRRequest(APSResult request, Profile profile, Callback callback) {
 
-        if (!request.tempBasalRequested) {
+        if (!request.getTempBasalRequested()) {
             if (callback != null) {
                 callback.result(new PumpEnactResult(getInjector()).enacted(false).success(true).comment(resourceHelper.gs(R.string.nochangerequested))).run();
             }
@@ -679,48 +682,48 @@ public class LoopPlugin extends PluginBase implements LoopInterface {
 
         long now = System.currentTimeMillis();
         TemporaryBasal activeTemp = treatmentsPlugin.getTempBasalFromHistory(now);
-        if (request.usePercent && allowPercentage()) {
-            if (request.percent == 100 && request.duration == 0) {
+        if (request.getUsePercent() && allowPercentage()) {
+            if (request.getPercent() == 100 && request.getDuration() == 0) {
                 if (activeTemp != null) {
                     getAapsLogger().debug(LTag.APS, "applyAPSRequest: cancelTempBasal()");
                     commandQueue.cancelTempBasal(false, callback);
                 } else {
                     getAapsLogger().debug(LTag.APS, "applyAPSRequest: Basal set correctly");
                     if (callback != null) {
-                        callback.result(new PumpEnactResult(getInjector()).percent(request.percent).duration(0)
+                        callback.result(new PumpEnactResult(getInjector()).percent(request.getPercent()).duration(0)
                                 .enacted(false).success(true).comment(resourceHelper.gs(R.string.basal_set_correctly))).run();
                     }
                 }
             } else if (activeTemp != null
                     && activeTemp.getPlannedRemainingMinutes() > 5
-                    && request.duration - activeTemp.getPlannedRemainingMinutes() < 30
-                    && request.percent == activeTemp.percentRate) {
+                    && request.getDuration() - activeTemp.getPlannedRemainingMinutes() < 30
+                    && request.getPercent() == activeTemp.percentRate) {
                 getAapsLogger().debug(LTag.APS, "applyAPSRequest: Temp basal set correctly");
                 if (callback != null) {
-                    callback.result(new PumpEnactResult(getInjector()).percent(request.percent)
+                    callback.result(new PumpEnactResult(getInjector()).percent(request.getPercent())
                             .enacted(false).success(true).duration(activeTemp.getPlannedRemainingMinutes())
                             .comment(resourceHelper.gs(R.string.let_temp_basal_run))).run();
                 }
             } else {
                 getAapsLogger().debug(LTag.APS, "applyAPSRequest: tempBasalPercent()");
-                commandQueue.tempBasalPercent(request.percent, request.duration, false, profile, callback);
+                commandQueue.tempBasalPercent(request.getPercent(), request.getDuration(), false, profile, callback);
             }
         } else {
-            if ((request.rate == 0 && request.duration == 0) || Math.abs(request.rate - pump.getBaseBasalRate()) < pump.getPumpDescription().basalStep) {
+            if ((request.getRate() == 0 && request.getDuration() == 0) || Math.abs(request.getRate() - pump.getBaseBasalRate()) < pump.getPumpDescription().basalStep) {
                 if (activeTemp != null) {
                     getAapsLogger().debug(LTag.APS, "applyAPSRequest: cancelTempBasal()");
                     commandQueue.cancelTempBasal(false, callback);
                 } else {
                     getAapsLogger().debug(LTag.APS, "applyAPSRequest: Basal set correctly");
                     if (callback != null) {
-                        callback.result(new PumpEnactResult(getInjector()).absolute(request.rate).duration(0)
+                        callback.result(new PumpEnactResult(getInjector()).absolute(request.getRate()).duration(0)
                                 .enacted(false).success(true).comment(resourceHelper.gs(R.string.basal_set_correctly))).run();
                     }
                 }
             } else if (activeTemp != null
                     && activeTemp.getPlannedRemainingMinutes() > 5
-                    && request.duration - activeTemp.getPlannedRemainingMinutes() < 30
-                    && Math.abs(request.rate - activeTemp.tempBasalConvertedToAbsolute(now, profile)) < pump.getPumpDescription().basalStep) {
+                    && request.getDuration() - activeTemp.getPlannedRemainingMinutes() < 30
+                    && Math.abs(request.getRate() - activeTemp.tempBasalConvertedToAbsolute(now, profile)) < pump.getPumpDescription().basalStep) {
                 getAapsLogger().debug(LTag.APS, "applyAPSRequest: Temp basal set correctly");
                 if (callback != null) {
                     callback.result(new PumpEnactResult(getInjector()).absolute(activeTemp.tempBasalConvertedToAbsolute(now, profile))
@@ -729,13 +732,13 @@ public class LoopPlugin extends PluginBase implements LoopInterface {
                 }
             } else {
                 getAapsLogger().debug(LTag.APS, "applyAPSRequest: setTempBasalAbsolute()");
-                commandQueue.tempBasalAbsolute(request.rate, request.duration, false, profile, callback);
+                commandQueue.tempBasalAbsolute(request.getRate(), request.getDuration(), false, profile, callback);
             }
         }
     }
 
     private void applySMBRequest(APSResult request, Callback callback) {
-        if (!request.bolusRequested) {
+        if (!request.getBolusRequested()) {
             return;
         }
 
@@ -774,10 +777,10 @@ public class LoopPlugin extends PluginBase implements LoopInterface {
         DetailedBolusInfo detailedBolusInfo = new DetailedBolusInfo();
         detailedBolusInfo.lastKnownBolusTime = treatmentsPlugin.getLastBolusTime();
         detailedBolusInfo.eventType = CareportalEvent.CORRECTIONBOLUS;
-        detailedBolusInfo.insulin = request.smb;
+        detailedBolusInfo.insulin = request.getSmb();
         detailedBolusInfo.isSMB = true;
         detailedBolusInfo.source = Source.USER;
-        detailedBolusInfo.deliverAt = request.deliverAt;
+        detailedBolusInfo.deliverAt = request.getDeliverAt();
         getAapsLogger().debug(LTag.APS, "applyAPSRequest: bolus()");
         commandQueue.bolus(detailedBolusInfo, callback);
     }

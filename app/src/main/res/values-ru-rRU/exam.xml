@@ -8,7 +8,7 @@
     <string name="dia_meaningisequaltodiapump">Если вы удовлетворены значением DIA в помпе до AndroidAPS, то при запуске цикла изменять это значение не требуется.</string>
     <string name="dia_valuemustbedetermined">Следует самостоятельно определить DIA подходящее для вас.</string>
     <string name="hypott_label">Временная цель Гипо </string>
-    <string name="hypott_whenhypott">Какова основная причина установки временной цели гипо?</string>
+    <string name="hypott_whenhypott">Какова основная причина для установки временной цели гипо?</string>
     <string name="hypott_wrongbasal">Для коррекции гипо, вызванных неверными настройками базальной скорости.</string>
     <string name="hypott_preventoversmb">Чтобы не допустить чрезмерной коррекции ГК, вызванной быстрыми углеводами принятыми для устранения гипо.</string>
     <string name="hypott_exercise">Чтобы исправить гипо вызванное нагрузкой.</string>
@@ -41,14 +41,14 @@
     <string name="noisycgm_label">Зашумленные данные мониторинга</string>
     <string name="noisycgm_whattodo">Что следует делать, если данные мониторинга зашумлены?</string>
     <string name="noisycgm_nothing">Ничего не делайте - AndroidAPS сам справится.</string>
-    <string name="noisycgm_pause">Отключите замкнутый цикл, чтоб избежать неверной дозировки.</string>
+    <string name="noisycgm_pause">Отключить замкнутый цикл, чтобы избежать возможной передозировки или уменьшения дозы.</string>
     <string name="noisycgm_replacesensor">Заменить постоянно шумящий или неточный сенсор.</string>
     <string name="noisycgm_checksmoothing">Убедитесь, что приложение мониторинга сглаживает данные ГК.</string>
     <string name="noisycgm_hint1">https://androidaps.readthedocs.io/en/latest/EN/Usage/Smoothing-Blood-Glucose-Data-in-xDrip.html#smoothing-blood-glucose-data</string>
     <string name="exerciseprofile_label">Нагрузка и Профили</string>
     <string name="exerciseprofile_whattodo">Как использовать профили, чтоб помочь системе справиться с аэробными упражнениями?</string>
     <string name="exerciseprofile_switchprofilebelow100">Задать профиль ниже 100%.</string>
-    <string name="exerciseprofile_switchprofileabove100">Задать профиль выше 100%.</string>
+    <string name="exerciseprofile_switchprofileabove100">Переключить на профиль выше 100%.</string>
     <string name="exerciseprofile_leaveat100">Оставить профиль на 100%.</string>
     <string name="exerciseprofile_suspendloop">Приостановить цикл.</string>
     <string name="exerciseprofile_hint1">https://androidaps.readthedocs.io/en/latest/EN/Usage/temptarget.html#activity-temp-target</string>

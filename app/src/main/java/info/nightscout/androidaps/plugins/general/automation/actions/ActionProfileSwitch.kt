@@ -78,4 +78,6 @@ class ActionProfileSwitch(injector: HasAndroidInjector) : Action(injector) {
         inputProfileName.value = JsonHelper.safeGetString(o, "profileToSwitchTo", "")
         return this
     }
+
+    override fun isValid(): Boolean = activePlugin.activeProfileInterface.profile?.getSpecificProfile(inputProfileName.value) != null
 }

@@ -26,17 +26,17 @@ import info.nightscout.androidaps.plugins.common.ManufacturerType
 import info.nightscout.androidaps.plugins.configBuilder.ConstraintChecker
 import info.nightscout.androidaps.plugins.general.actions.defs.CustomAction
 import info.nightscout.androidaps.plugins.general.actions.defs.CustomActionType
-import info.nightscout.androidaps.queue.commands.CustomCommand
 import info.nightscout.androidaps.plugins.general.overview.events.EventDismissNotification
 import info.nightscout.androidaps.plugins.general.overview.events.EventNewNotification
 import info.nightscout.androidaps.plugins.general.overview.notifications.Notification
 import info.nightscout.androidaps.plugins.pump.common.bolusInfo.DetailedBolusInfoStorage
 import info.nightscout.androidaps.plugins.pump.common.defs.PumpType
+import info.nightscout.androidaps.queue.commands.CustomCommand
 import info.nightscout.androidaps.utils.*
 import info.nightscout.androidaps.utils.resources.ResourceHelper
+import info.nightscout.androidaps.utils.rx.AapsSchedulers
 import info.nightscout.androidaps.utils.sharedPreferences.SP
 import io.reactivex.disposables.CompositeDisposable
-import io.reactivex.schedulers.Schedulers
 import org.json.JSONException
 import org.json.JSONObject
 import javax.inject.Inject
@@ -48,6 +48,7 @@ import kotlin.math.max
 class DanaRSPlugin @Inject constructor(
     injector: HasAndroidInjector,
     aapsLogger: AAPSLogger,
+    private val aapsSchedulers: AapsSchedulers,
     private val rxBus: RxBusWrapper,
     private val context: Context,
     resourceHelper: ResourceHelper,
@@ -93,18 +94,18 @@ class DanaRSPlugin @Inject constructor(
         context.bindService(intent, mConnection, Context.BIND_AUTO_CREATE)
         disposable.add(rxBus
             .toObservable(EventAppExit::class.java)
-            .observeOn(Schedulers.io())
-            .subscribe({ context.unbindService(mConnection) }) { fabricPrivacy.logException(it) }
+            .observeOn(aapsSchedulers.io)
+            .subscribe({ context.unbindService(mConnection) }, fabricPrivacy::logException)
         )
         disposable.add(rxBus
             .toObservable(EventConfigBuilderChange::class.java)
-            .observeOn(Schedulers.io())
+            .observeOn(aapsSchedulers.io)
             .subscribe { danaPump.reset() }
         )
         disposable.add(rxBus
             .toObservable(EventDanaRSDeviceChange::class.java)
-            .observeOn(Schedulers.io())
-            .subscribe({ changePump() }) { fabricPrivacy.logException(it) }
+            .observeOn(aapsSchedulers.io)
+            .subscribe({ changePump() }, fabricPrivacy::logException)
         )
         changePump() // load device name
     }

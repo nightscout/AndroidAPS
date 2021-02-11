@@ -15,6 +15,7 @@ import org.json.JSONObject
 import javax.inject.Inject
 
 class ActionSendSMS(injector: HasAndroidInjector) : Action(injector) {
+
     @Inject lateinit var resourceHelper: ResourceHelper
     @Inject lateinit var smsCommunicatorPlugin: SmsCommunicatorPlugin
 
@@ -28,6 +29,8 @@ class ActionSendSMS(injector: HasAndroidInjector) : Action(injector) {
         val result = smsCommunicatorPlugin.sendNotificationToAllNumbers(text.value)
         callback.result(PumpEnactResult(injector).success(result).comment(if (result) R.string.ok else R.string.error))?.run()
     }
+
+    override fun isValid(): Boolean = text.value.isNotEmpty()
 
     override fun toJSON(): String {
         val data = JSONObject().put("text", text.value)

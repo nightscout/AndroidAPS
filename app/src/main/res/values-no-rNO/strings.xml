@@ -4,7 +4,7 @@
     <!--   <string name="he_lang" translatable="false">Hebrew</string> -->
     <!--    <string name="ga_lang" translatable="false">Irish</string> -->
     <!--    <string name="ja_lang" translatable="false">Japanese</string> -->
-    <string name="treatmentssafety_title">Sikkerhetsbegrensninger for behandlinger</string>
+    <string name="treatmentssafety_title">Sikkerhet ved behandlinger</string>
     <string name="treatmentssafety_maxbolus_title">Maks tillat bolus [U]</string>
     <string name="treatmentssafety_maxcarbs_title">Maks tillat karbo [g]</string>
     <string name="nav_preferences_plugin">%1$s innstillinger</string>
@@ -435,7 +435,6 @@
     <string name="overview_extendedbolus_cancel_button">Avbryt forlenget bolus</string>
     <string name="doprofileswitch">Gjør profilbytte</string>
     <string name="careportal_sensor_label">Sensor</string>
-    <string name="careportal_canula_label">Kanyle</string>
     <string name="careportal_insulin_label">Insulin</string>
     <string name="careportal_pb_label">Pumpe batteri</string>
     <string name="careportal_age_label">alder:</string>
@@ -548,7 +547,6 @@
     <string name="maxiobset">Maks IOB er angitt riktig</string>
     <string name="hasbgdata">BS tilgjengelig fra valgt kilde</string>
     <string name="combo_programming_bolus">Programmerer bolus i pumpen</string>
-    <string name="combo_refresh">Oppdater</string>
     <string name="combo_pump_state_label">Status</string>
     <string name="combo_pump_activity_label">Aktivitet</string>
     <string name="combo_no_pump_connection">Ingen tilkobling i %1$d min</string>
@@ -839,7 +837,6 @@
     <string name="eb_formatter">%1$.2f / %2$.2f E i %3$d min</string>
     <string name="enable_tbr_over_notification">Aktiver varsel når slutt på temp basal\n(pumpeinnstilling)</string>
     <string name="disable_tbr_over_notification">Slå av varsel når slutt på temp basal\n(pumpeinnstilling)</string>
-    <string name="refresh">Oppdater</string>
     <string name="description_pump_insight_local">Integrasjon for Accu-Chek Insight pumper</string>
     <string name="not_inserted">Ikke innsatt</string>
     <string name="short_status_last_connected">Siste tilkobling: %1$d min siden</string>
@@ -1064,8 +1061,6 @@
     <string name="insight_alert_notification_channel">Insight pumpe varsler</string>
     <!-- SMS Communicator & OTP Authenticator -->
     <string name="smscommunicator_code_from_authenticator_for" comment="This is continuation of sentence: To [ACTION] reply with code">fra Authenticator appen for: %1$s etterfulgt av PIN</string>
-    <string name="smscommunicator_otp_enabled">Aktiver Authenticator</string>
-    <string name="smscommunicator_otp_enabled_summary">Godkjenn kommandoer ved å bruke engangs passord generert av Google Authenticator eller tilsvarende 2 factor autentiseringsapper (2FA).</string>
     <string name="smscommunicator_otp_pin">PIN kode som legges til på slutten av token</string>
     <string name="smscommunicator_otp_pin_summary">Ytterligere sifre som MÅ memoreres og legges til på slutten av hvert generert engangspassord</string>
     <string name="smscomunicator_tab_otp_label">Oppsett for 2 faktor autentisering</string>
@@ -1159,4 +1154,8 @@
     <string name="timetoeat">Nå må du spise</string>
     <string name="fabric_upload_disabled">Opplast av krasj logger er deaktivert!</string>
     <string name="graph_menu_divider_header">Graf</string>
+    <string name="chart_menu">Diagram meny</string>
+    <string name="clear_filter">Nullstill filtre</string>
+    <string name="trend_arrow">Trend pil</string>
+    <string name="cannula">Kanyle</string>
 </resources>

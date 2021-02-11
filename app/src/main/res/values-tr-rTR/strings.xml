@@ -405,7 +405,6 @@ Aktif Karbonhidratın ne kadar hızlı sindirildiğine ve KŞ\'nin beklenenden d
     <string name="maxiobset">Maksimal IOB doğru şekilde ayarlandı</string>
     <string name="hasbgdata">Seçili kaynaktan KŞ kullanılabilir</string>
     <string name="combo_programming_bolus">Pompa bolus vermek için hazırlanıyor</string>
-    <string name="combo_refresh">Yenile</string>
     <string name="combo_pump_state_label">Durum</string>
     <string name="combo_pump_activity_label">Aktivite</string>
     <string name="combo_no_pump_connection">%1$d dk için bağlantı yok</string>

@@ -421,7 +421,6 @@
     <string name="overview_extendedbolus_cancel_button">Atšaukti ištęstą bolusą</string>
     <string name="doprofileswitch">Profilio keitimas</string>
     <string name="careportal_sensor_label">Sensorius</string>
-    <string name="careportal_canula_label">Kaniulė</string>
     <string name="careportal_insulin_label">Insulinas</string>
     <string name="careportal_pb_label">Pompos baterija</string>
     <string name="careportal_age_label">amžius:</string>
@@ -532,7 +531,6 @@
     <string name="maxiobset">Maksimalus AIO nustatytas tinkamai</string>
     <string name="hasbgdata">KG šaltinis pasirinktas teisingai</string>
     <string name="combo_programming_bolus">Programuojamas bolusas</string>
-    <string name="combo_refresh">Atnaujinti</string>
     <string name="combo_pump_state_label">Būsena</string>
     <string name="combo_pump_activity_label">Aktyvumas</string>
     <string name="combo_no_pump_connection">Nėra ryšio su pompa %1$d min</string>
@@ -823,7 +821,6 @@
     <string name="eb_formatter">%1$.2f / %2$.2f vv per %3$d min</string>
     <string name="enable_tbr_over_notification">Įjungti pranešimus apie LBD pabaigą\n(pompos nustatymai)</string>
     <string name="disable_tbr_over_notification">Išjungti pranešimus apie LBD pabaigą\n(pompos nustatymai)</string>
-    <string name="refresh">Atnaujinti</string>
     <string name="description_pump_insight_local">Accu-Chek Insight pompos integracija</string>
     <string name="not_inserted">Neįvestas</string>
     <string name="short_status_last_connected">Paskutinis prisijungimas: prieš %1$d min</string>
@@ -1048,8 +1045,6 @@
     <string name="insight_alert_notification_channel">Insight pompos aliarmai</string>
     <!-- SMS Communicator & OTP Authenticator -->
     <string name="smscommunicator_code_from_authenticator_for" comment="This is continuation of sentence: To [ACTION] reply with code">iš Authenticator programėlės: %1$s, po to - PIN</string>
-    <string name="smscommunicator_otp_enabled">Įgalinti tapatybės nustatymo funkciją</string>
-    <string name="smscommunicator_otp_enabled_summary">Autentifikuokite komandas naudodami vienkartinius slaptažodžius, sugeneruotus Google Authenticator ar panašiose 2FA programose.</string>
     <string name="smscommunicator_otp_pin">Papildomas privalomas PIN kodas žymeklio gale</string>
     <string name="smscommunicator_otp_pin_summary">Papildomi skaitmenys, kuriuos reikia atsiminti ir pridėti kiekvieno sugeneruoto slaptažodžio pabaigoje</string>
     <string name="smscomunicator_tab_otp_label">Autentifikavimo sąrankos nustatymas</string>

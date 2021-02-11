@@ -16,7 +16,7 @@ import info.nightscout.androidaps.utils.JsonHelper.safeGetString
 import org.json.JSONObject
 
 class TriggerBolusAgo(injector: HasAndroidInjector) : Trigger(injector) {
-    var minutesAgo: InputDuration = InputDuration(injector, 0, InputDuration.TimeUnit.MINUTES)
+    var minutesAgo: InputDuration = InputDuration(injector, 30, InputDuration.TimeUnit.MINUTES)
     var comparator: Comparator = Comparator(injector)
 
     private constructor(injector: HasAndroidInjector, triggerBolusAgo: TriggerBolusAgo) : this(injector) {

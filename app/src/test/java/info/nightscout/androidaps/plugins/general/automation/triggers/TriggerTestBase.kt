@@ -4,9 +4,7 @@ import android.content.Context
 import dagger.android.AndroidInjector
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.TestBaseWithProfile
-import info.nightscout.androidaps.db.BgReading
 import info.nightscout.androidaps.interfaces.ActivePluginProvider
-import info.nightscout.androidaps.interfaces.ProfileFunction
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper
 import info.nightscout.androidaps.plugins.general.automation.AutomationPlugin
 import info.nightscout.androidaps.plugins.general.automation.elements.InputBg
@@ -42,7 +40,7 @@ open class TriggerTestBase : TestBaseWithProfile() {
         AndroidInjector {
             if (it is Trigger) {
                 it.aapsLogger = aapsLogger
-                it.rxBus = RxBusWrapper()
+                it.rxBus = RxBusWrapper(aapsSchedulers)
                 it.resourceHelper = resourceHelper
                 it.profileFunction = profileFunction
                 it.sp = sp
@@ -73,7 +71,7 @@ open class TriggerTestBase : TestBaseWithProfile() {
             if (it is InputBg) {
                 it.profileFunction = profileFunction
             }
-           if (it is InputTempTarget) {
+            if (it is InputTempTarget) {
                 it.profileFunction = profileFunction
             }
             if (it is GlucoseStatus) {
@@ -82,9 +80,6 @@ open class TriggerTestBase : TestBaseWithProfile() {
             }
             if (it is StaticLabel) {
                 it.resourceHelper = resourceHelper
-            }
-            if (it is BgReading) {
-                it.dateUtil = dateUtil
             }
         }
     }

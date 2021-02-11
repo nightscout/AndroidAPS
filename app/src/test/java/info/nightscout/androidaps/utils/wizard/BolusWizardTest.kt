@@ -52,7 +52,7 @@ class BolusWizardTest : TestBase() {
             if (it is BolusWizard) {
                 it.aapsLogger = aapsLogger
                 it.resourceHelper = resourceHelper
-                it.rxBus = RxBusWrapper()
+                it.rxBus = RxBusWrapper(aapsSchedulers)
                 it.profileFunction = profileFunction
                 it.constraintChecker = constraintChecker
                 it.activePlugin = activePlugin

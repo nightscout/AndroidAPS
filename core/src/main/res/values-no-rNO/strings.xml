@@ -2,6 +2,7 @@
 <resources>
     <!--    Keys-->
     <!--    General-->
+    <string name="refresh">Oppdater</string>
     <string name="error">Feil</string>
     <string name="not_set_short">Ikke angitt</string>
     <string name="failedupdatebasalprofile">Kunne ikke oppdatere basal profil</string>

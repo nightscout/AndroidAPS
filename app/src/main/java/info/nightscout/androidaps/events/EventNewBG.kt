@@ -1,5 +1,5 @@
 package info.nightscout.androidaps.events
 
-import info.nightscout.androidaps.db.BgReading
+import info.nightscout.androidaps.database.entities.GlucoseValue
 
-class EventNewBG(val bgReading: BgReading?) : EventLoop()
+class EventNewBG(val glucoseValue: GlucoseValue?) : EventLoop()

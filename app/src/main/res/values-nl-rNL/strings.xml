@@ -435,7 +435,6 @@
     <string name="overview_extendedbolus_cancel_button">Annuleer vertraagde bolus</string>
     <string name="doprofileswitch">Profiel wissel uitvoeren</string>
     <string name="careportal_sensor_label">Sensor</string>
-    <string name="careportal_canula_label">Canule</string>
     <string name="careportal_insulin_label">Insuline</string>
     <string name="careportal_pb_label">Pomp batterij</string>
     <string name="careportal_age_label">leeftijd:</string>
@@ -495,6 +494,7 @@
     <string name="activity_target">Activiteit streefdoel</string>
     <string name="hypo_duration">Hypo tijdsduur</string>
     <string name="hypo_target">Hypo streefdoel</string>
+    <string name="reuse_profile_pct_hours">Hergebruik %1$d%% %2$dh</string>
     <string name="wearcontrol_title">Bedieningen via horloge</string>
     <string name="wearcontrol_summary">Stel tijdelijke doelen en bolussen in vanop je horloge.</string>
     <string name="food">Voeding</string>
@@ -547,7 +547,6 @@
     <string name="maxiobset">Maximum IOB juist ingesteld</string>
     <string name="hasbgdata">BG beschikbaar op gekozen bron</string>
     <string name="combo_programming_bolus">Bolus in pomp programmeren </string>
-    <string name="combo_refresh">Vernieuw</string>
     <string name="combo_pump_state_label">Status</string>
     <string name="combo_pump_activity_label">Activiteit</string>
     <string name="combo_no_pump_connection">Geen verbinding gedurende %1$d min</string>
@@ -838,7 +837,6 @@
     <string name="eb_formatter">%1$.2f / %2$.2f U gedurende %3$d min</string>
     <string name="enable_tbr_over_notification">Activeer melding van TBR eind\n(pomp instelling)</string>
     <string name="disable_tbr_over_notification">Deactiveer melding van TBR eind\n(pomp instelling)</string>
-    <string name="refresh">Vernieuwen</string>
     <string name="description_pump_insight_local">Pomp integratie voor Accu-Chek Insight pompen</string>
     <string name="not_inserted">Niet geplaatst</string>
     <string name="short_status_last_connected">Laatste conn: %1$d min geleden</string>
@@ -1063,8 +1061,6 @@
     <string name="insight_alert_notification_channel">Insight pomp waarschuwingen</string>
     <!-- SMS Communicator & OTP Authenticator -->
     <string name="smscommunicator_code_from_authenticator_for" comment="This is continuation of sentence: To [ACTION] reply with code">van de Authenticator-app voor: %1$s gevolgd door PIN</string>
-    <string name="smscommunicator_otp_enabled">Authentificatie inschakelen</string>
-    <string name="smscommunicator_otp_enabled_summary">Authentificeer SMS commando\'s met behulp van One Time Passwords (OTPs, eenmalige wachtwoorden) gegenereerd door Google Authenticator of soortgelijke 2FA apps.</string>
     <string name="smscommunicator_otp_pin">Extra verplichte PIN aan einde van token</string>
     <string name="smscommunicator_otp_pin_summary">Extra cijfers die je moet onthouden, en aan het eind van elk gegenereerd eenmalig wachtwoord moet toevoegen.</string>
     <string name="smscomunicator_tab_otp_label">Authentificatie instellingen</string>
@@ -1158,4 +1154,5 @@
     <string name="timetoeat">Tijd om te eten</string>
     <string name="fabric_upload_disabled">Upload van crashrapporten is uitgeschakeld!</string>
     <string name="graph_menu_divider_header">Grafiek</string>
+    <string name="chart_menu">Grafiek menu</string>
 </resources>

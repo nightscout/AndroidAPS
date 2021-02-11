@@ -25,7 +25,6 @@ import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.logging.LTag
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper
 import info.nightscout.androidaps.plugins.configBuilder.ConstraintChecker
-import info.nightscout.androidaps.queue.commands.CustomCommand
 import info.nightscout.androidaps.plugins.general.overview.events.EventDismissBolusProgressIfRunning
 import info.nightscout.androidaps.plugins.general.overview.events.EventDismissNotification
 import info.nightscout.androidaps.plugins.general.overview.events.EventNewNotification
@@ -36,9 +35,9 @@ import info.nightscout.androidaps.utils.FabricPrivacy
 import info.nightscout.androidaps.utils.HtmlHelper
 import info.nightscout.androidaps.utils.buildHelper.BuildHelper
 import info.nightscout.androidaps.utils.resources.ResourceHelper
+import info.nightscout.androidaps.utils.rx.AapsSchedulers
 import info.nightscout.androidaps.utils.sharedPreferences.SP
 import io.reactivex.disposables.CompositeDisposable
-import io.reactivex.schedulers.Schedulers
 import java.util.*
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -87,16 +86,17 @@ import javax.inject.Singleton
 @Singleton
 class CommandQueue @Inject constructor(
     private val injector: HasAndroidInjector,
-    val aapsLogger: AAPSLogger,
-    val rxBus: RxBusWrapper,
-    val resourceHelper: ResourceHelper,
-    val constraintChecker: ConstraintChecker,
-    val profileFunction: ProfileFunction,
-    val activePlugin: Lazy<ActivePluginProvider>,
-    val context: Context,
-    val sp: SP,
+    private val aapsLogger: AAPSLogger,
+    private val rxBus: RxBusWrapper,
+    private val aapsSchedulers: AapsSchedulers,
+    private val resourceHelper: ResourceHelper,
+    private val constraintChecker: ConstraintChecker,
+    private val profileFunction: ProfileFunction,
+    private val activePlugin: Lazy<ActivePluginProvider>,
+    private val context: Context,
+    private val sp: SP,
     private val buildHelper: BuildHelper,
-    val fabricPrivacy: FabricPrivacy
+    private val fabricPrivacy: FabricPrivacy
 ) : CommandQueueProvider {
 
     private val disposable = CompositeDisposable()
@@ -109,7 +109,7 @@ class CommandQueue @Inject constructor(
     init {
         disposable.add(rxBus
             .toObservable(EventProfileNeedsUpdate::class.java)
-            .observeOn(Schedulers.io())
+            .observeOn(aapsSchedulers.io)
             .subscribe({
                 aapsLogger.debug(LTag.PROFILE, "onProfileSwitch")
                 profileFunction.getProfile()?.let {
@@ -127,7 +127,7 @@ class CommandQueue @Inject constructor(
                         }
                     })
                 }
-            }) { exception: Throwable -> fabricPrivacy.logException(exception) }
+            }, fabricPrivacy::logException)
         )
 
     }
@@ -208,7 +208,7 @@ class CommandQueue @Inject constructor(
 
     override fun independentConnect(reason: String, callback: Callback?) {
         aapsLogger.debug(LTag.PUMPQUEUE, "Starting new queue")
-        val tempCommandQueue = CommandQueue(injector, aapsLogger, rxBus, resourceHelper, constraintChecker, profileFunction, activePlugin, context, sp, buildHelper, fabricPrivacy)
+        val tempCommandQueue = CommandQueue(injector, aapsLogger, rxBus, aapsSchedulers, resourceHelper, constraintChecker, profileFunction, activePlugin, context, sp, buildHelper, fabricPrivacy)
         tempCommandQueue.readStatus(reason, callback)
     }
 
@@ -292,7 +292,7 @@ class CommandQueue @Inject constructor(
         }
         removeAll(CommandType.BOLUS)
         removeAll(CommandType.SMB_BOLUS)
-        Thread(Runnable { activePlugin.get().activePump.stopBolusDelivering() }).run()
+        Thread { activePlugin.get().activePump.stopBolusDelivering() }.run()
     }
 
     // returns true if command is queued
@@ -500,7 +500,7 @@ class CommandQueue @Inject constructor(
 
     @Synchronized
     override fun isCustomCommandInQueue(customCommandType: Class<out CustomCommand>): Boolean {
-        if(isCustomCommandRunning(customCommandType)) {
+        if (isCustomCommandRunning(customCommandType)) {
             return true
         }
         synchronized(queue) {

@@ -48,7 +48,7 @@
     <string name="exerciseprofile_label">Cvičení a profily</string>
     <string name="exerciseprofile_whattodo">Jak můžete použít profily, abyste mohli nejlépe pomoci systému řešit aerobní cvičení?</string>
     <string name="exerciseprofile_switchprofilebelow100">Přepnout na profil pod 100 %.</string>
-    <string name="exerciseprofile_switchprofileabove100">Přepnout profil na více než 100 %.</string>
+    <string name="exerciseprofile_switchprofileabove100">Přepněte profil na více než 100 %.</string>
     <string name="exerciseprofile_leaveat100">Ponechte profil nastavený na hodnotu 100%.</string>
     <string name="exerciseprofile_suspendloop">Pozastavte smyčku.</string>
     <string name="exerciseprofile_hint1">https://androidaps.readthedocs.io/en/latest/CROWDIN/cs/Usage/temptarget.html#docasny-cil-pri-pohybove-aktivite</string>

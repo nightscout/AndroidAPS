@@ -20,10 +20,6 @@ public class DatabaseHelperProvider implements DatabaseHelperInterface {
     @Inject DatabaseHelperProvider() {
     }
 
-    @NotNull @Override public List<BgReading> getAllBgreadingsDataFromTime(long mills, boolean ascending) {
-        return MainApp.getDbHelper().getAllBgreadingsDataFromTime(mills, ascending);
-    }
-
     @Override public void createOrUpdate(@NotNull CareportalEvent careportalEvent) {
         MainApp.getDbHelper().createOrUpdate(careportalEvent);
     }

@@ -11,19 +11,19 @@ import info.nightscout.androidaps.interfaces.ActivePluginProvider
 import info.nightscout.androidaps.interfaces.PluginBase
 import info.nightscout.androidaps.interfaces.PluginDescription
 import info.nightscout.androidaps.interfaces.PluginType
+import info.nightscout.androidaps.interfaces.ProfileFunction
 import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.plugins.aps.loop.LoopPlugin
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper
-import info.nightscout.androidaps.interfaces.ProfileFunction
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.IobCobCalculatorPlugin
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.events.EventAutosensCalculationFinished
 import info.nightscout.androidaps.utils.DecimalFormatter
 import info.nightscout.androidaps.utils.FabricPrivacy
 import info.nightscout.androidaps.utils.extensions.plusAssign
 import info.nightscout.androidaps.utils.resources.ResourceHelper
+import info.nightscout.androidaps.utils.rx.AapsSchedulers
 import info.nightscout.androidaps.utils.sharedPreferences.SP
 import io.reactivex.disposables.CompositeDisposable
-import io.reactivex.schedulers.Schedulers
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -33,6 +33,7 @@ class StatusLinePlugin @Inject constructor(
     private val sp: SP,
     private val profileFunction: ProfileFunction,
     resourceHelper: ResourceHelper,
+    private val aapsSchedulers: AapsSchedulers,
     private val context: Context,
     private val fabricPrivacy: FabricPrivacy,
     private val activePlugin: ActivePluginProvider,
@@ -56,6 +57,7 @@ class StatusLinePlugin @Inject constructor(
     private var lastLoopStatus = false
 
     companion object {
+
         //broadcast related constants
         @Suppress("SpellCheckingInspection")
         private const val EXTRA_STATUSLINE = "com.eveningoutpost.dexdrip.Extras.Statusline"
@@ -70,29 +72,29 @@ class StatusLinePlugin @Inject constructor(
     override fun onStart() {
         super.onStart()
         disposable += rxBus.toObservable(EventRefreshOverview::class.java)
-            .observeOn(Schedulers.io())
-            .subscribe({ if (lastLoopStatus != loopPlugin.isEnabled(PluginType.LOOP)) sendStatus() }) { fabricPrivacy.logException(it) }
+            .observeOn(aapsSchedulers.io)
+            .subscribe({ if (lastLoopStatus != loopPlugin.isEnabled(PluginType.LOOP)) sendStatus() }, fabricPrivacy::logException)
         disposable += rxBus.toObservable(EventExtendedBolusChange::class.java)
-            .observeOn(Schedulers.io())
-            .subscribe({ sendStatus() }) { fabricPrivacy.logException(it) }
+            .observeOn(aapsSchedulers.io)
+            .subscribe({ sendStatus() }, fabricPrivacy::logException)
         disposable += rxBus.toObservable(EventTempBasalChange::class.java)
-            .observeOn(Schedulers.io())
-            .subscribe({ sendStatus() }) { fabricPrivacy.logException(it) }
+            .observeOn(aapsSchedulers.io)
+            .subscribe({ sendStatus() }, fabricPrivacy::logException)
         disposable += rxBus.toObservable(EventTreatmentChange::class.java)
-            .observeOn(Schedulers.io())
-            .subscribe({ sendStatus() }) { fabricPrivacy.logException(it) }
+            .observeOn(aapsSchedulers.io)
+            .subscribe({ sendStatus() }, fabricPrivacy::logException)
         disposable += rxBus.toObservable(EventConfigBuilderChange::class.java)
-            .observeOn(Schedulers.io())
-            .subscribe({ sendStatus() }) { fabricPrivacy.logException(it) }
+            .observeOn(aapsSchedulers.io)
+            .subscribe({ sendStatus() }, fabricPrivacy::logException)
         disposable += rxBus.toObservable(EventAutosensCalculationFinished::class.java)
-            .observeOn(Schedulers.io())
-            .subscribe({ sendStatus() }) { fabricPrivacy.logException(it) }
+            .observeOn(aapsSchedulers.io)
+            .subscribe({ sendStatus() }, fabricPrivacy::logException)
         disposable += rxBus.toObservable(EventPreferenceChange::class.java)
-            .observeOn(Schedulers.io())
-            .subscribe({ sendStatus() }) { fabricPrivacy.logException(it) }
+            .observeOn(aapsSchedulers.io)
+            .subscribe({ sendStatus() }, fabricPrivacy::logException)
         disposable += rxBus.toObservable(EventAppInitialized::class.java)
-            .observeOn(Schedulers.io())
-            .subscribe({ sendStatus() }) { fabricPrivacy.logException(it) }
+            .observeOn(aapsSchedulers.io)
+            .subscribe({ sendStatus() }, fabricPrivacy::logException)
     }
 
     override fun onStop() {

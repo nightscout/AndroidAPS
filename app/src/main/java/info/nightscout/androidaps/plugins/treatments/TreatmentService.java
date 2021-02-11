@@ -49,8 +49,8 @@ import info.nightscout.androidaps.plugins.pump.medtronic.data.MedtronicHistoryDa
 import info.nightscout.androidaps.utils.DateUtil;
 import info.nightscout.androidaps.utils.FabricPrivacy;
 import info.nightscout.androidaps.utils.JsonHelper;
+import info.nightscout.androidaps.utils.rx.AapsSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
-import io.reactivex.schedulers.Schedulers;
 
 
 /**
@@ -65,6 +65,7 @@ public class TreatmentService extends OrmLiteBaseService<DatabaseHelper> {
     @Inject MedtronicPumpPlugin medtronicPumpPlugin;
     @Inject DatabaseHelperInterface databaseHelper;
     @Inject OpenHumansUploader openHumansUploader;
+    @Inject AapsSchedulers aapsSchedulers;
 
     private final CompositeDisposable disposable = new CompositeDisposable();
 
@@ -77,7 +78,7 @@ public class TreatmentService extends OrmLiteBaseService<DatabaseHelper> {
         dbInitialize();
         disposable.add(rxBus
                 .toObservable(EventNsTreatment.class)
-                .observeOn(Schedulers.io())
+                .observeOn(aapsSchedulers.getIo())
                 .subscribe(event -> {
                     int mode = event.getMode();
                     JSONObject payload = event.getPayload();

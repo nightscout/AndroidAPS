@@ -24,20 +24,20 @@ import info.nightscout.androidaps.interfaces.ConstraintsInterface;
 import info.nightscout.androidaps.interfaces.PluginBase;
 import info.nightscout.androidaps.interfaces.PluginDescription;
 import info.nightscout.androidaps.interfaces.PluginType;
+import info.nightscout.androidaps.interfaces.ProfileFunction;
 import info.nightscout.androidaps.interfaces.PumpInterface;
 import info.nightscout.androidaps.logging.AAPSLogger;
 import info.nightscout.androidaps.logging.LTag;
-import info.nightscout.androidaps.plugins.aps.loop.APSResult;
-import info.nightscout.androidaps.plugins.aps.loop.ScriptReader;
 import info.nightscout.androidaps.plugins.aps.events.EventOpenAPSUpdateGui;
 import info.nightscout.androidaps.plugins.aps.events.EventOpenAPSUpdateResultGui;
+import info.nightscout.androidaps.plugins.aps.loop.APSResult;
+import info.nightscout.androidaps.plugins.aps.loop.ScriptReader;
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper;
 import info.nightscout.androidaps.plugins.configBuilder.ConstraintChecker;
-import info.nightscout.androidaps.interfaces.ProfileFunction;
-import info.nightscout.androidaps.plugins.iob.iobCobCalculator.data.AutosensData;
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.AutosensResult;
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.GlucoseStatus;
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.IobCobCalculatorPlugin;
+import info.nightscout.androidaps.plugins.iob.iobCobCalculator.data.AutosensData;
 import info.nightscout.androidaps.plugins.treatments.TreatmentsPlugin;
 import info.nightscout.androidaps.utils.DateUtil;
 import info.nightscout.androidaps.utils.FabricPrivacy;
@@ -291,18 +291,18 @@ public class OpenAPSSMBPlugin extends PluginBase implements APSInterface, Constr
         } else {
             // TODO still needed with oref1?
             // Fix bug determine basal
-            if (determineBasalResultSMB.rate == 0d && determineBasalResultSMB.duration == 0 && !treatmentsPlugin.isTempBasalInProgress())
-                determineBasalResultSMB.tempBasalRequested = false;
+            if (determineBasalResultSMB.getRate() == 0d && determineBasalResultSMB.getDuration() == 0 && !treatmentsPlugin.isTempBasalInProgress())
+                determineBasalResultSMB.setTempBasalRequested(false);
 
-            determineBasalResultSMB.iob = iobArray[0];
+            determineBasalResultSMB.setIob(iobArray[0]);
 
             try {
-                determineBasalResultSMB.json.put("timestamp", DateUtil.toISOString(now));
+                determineBasalResultSMB.getJson().put("timestamp", DateUtil.toISOString(now));
             } catch (JSONException e) {
                 getAapsLogger().error(LTag.APS, "Unhandled exception", e);
             }
 
-            determineBasalResultSMB.inputConstraints = inputConstraints;
+            determineBasalResultSMB.setInputConstraints(inputConstraints);
 
             lastDetermineBasalAdapterSMBJS = determineBasalAdapterSMBJS;
             lastAPSResult = determineBasalResultSMB;

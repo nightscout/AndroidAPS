@@ -14,8 +14,8 @@ import androidx.fragment.app.FragmentActivity
 import dagger.android.support.DaggerDialogFragment
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.activities.NoSplashAppCompatActivity
+import info.nightscout.androidaps.utils.rx.AapsSchedulers
 import io.reactivex.disposables.Disposable
-import io.reactivex.schedulers.Schedulers
 import javax.inject.Inject
 
 class OpenHumansLoginActivity : NoSplashAppCompatActivity() {
@@ -45,8 +45,8 @@ class OpenHumansLoginActivity : NoSplashAppCompatActivity() {
 
     class ExchangeAuthTokenDialog : DaggerDialogFragment() {
 
-        @Inject
-        lateinit var openHumansUploader: OpenHumansUploader
+        @Inject lateinit var openHumansUploader: OpenHumansUploader
+        @Inject lateinit var aapsSchedulers: AapsSchedulers
 
         private var disposable: Disposable? = null
 
@@ -63,7 +63,7 @@ class OpenHumansLoginActivity : NoSplashAppCompatActivity() {
 
         override fun onCreate(savedInstanceState: Bundle?) {
             super.onCreate(savedInstanceState)
-            disposable = openHumansUploader.login(arguments?.getString("authToken")!!).subscribeOn(Schedulers.io()).subscribe({
+            disposable = openHumansUploader.login(arguments?.getString("authToken")!!).subscribeOn(aapsSchedulers.io).subscribe({
                 dismiss()
                 SetupDoneDialog().show(parentFragmentManager, "SetupDoneDialog")
             }, {

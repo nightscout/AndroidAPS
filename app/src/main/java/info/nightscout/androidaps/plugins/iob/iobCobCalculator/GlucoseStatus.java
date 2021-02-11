@@ -8,7 +8,7 @@ import java.util.List;
 import javax.inject.Inject;
 
 import dagger.android.HasAndroidInjector;
-import info.nightscout.androidaps.db.BgReading;
+import info.nightscout.androidaps.database.entities.GlucoseValue;
 import info.nightscout.androidaps.logging.AAPSLogger;
 import info.nightscout.androidaps.logging.LTag;
 import info.nightscout.androidaps.utils.DateUtil;
@@ -71,7 +71,7 @@ public class GlucoseStatus {
 
         synchronized (iobCobCalculatorPlugin.getDataLock()) {
 
-            List<BgReading> data = iobCobCalculatorPlugin.getBgReadings();
+            List<GlucoseValue> data = iobCobCalculatorPlugin.getBgReadings();
 
             if (data == null) {
                 aapsLogger.debug(LTag.GLUCOSE, "data=null");
@@ -84,18 +84,18 @@ public class GlucoseStatus {
                 return null;
             }
 
-            if (data.get(0).date < DateUtil.now() - 7 * 60 * 1000L && !allowOldData) {
+            if (data.get(0).getTimestamp() < DateUtil.now() - 7 * 60 * 1000L && !allowOldData) {
                 aapsLogger.debug(LTag.GLUCOSE, "olddata");
                 return null;
             }
 
-            BgReading now = data.get(0);
-            long now_date = now.date;
+            GlucoseValue now = data.get(0);
+            long now_date = now.getTimestamp();
             double change;
 
             if (sizeRecords == 1) {
                 GlucoseStatus status = new GlucoseStatus(injector);
-                status.glucose = now.value;
+                status.glucose = now.getValue();
                 status.noise = 0d;
                 status.short_avgdelta = 0d;
                 status.delta = 0d;
@@ -112,18 +112,18 @@ public class GlucoseStatus {
             ArrayList<Double> long_deltas = new ArrayList<>();
 
             // Use the latest sgv value in the now calculations
-            now_value_list.add(now.value);
+            now_value_list.add(now.getValue());
 
             for (int i = 1; i < sizeRecords; i++) {
-                if (data.get(i).value > 38) {
-                    BgReading then = data.get(i);
-                    long then_date = then.date;
+                if (data.get(i).getValue() > 38) {
+                    GlucoseValue then = data.get(i);
+                    long then_date = then.getTimestamp();
                     double avgdelta;
                     long minutesago;
 
                     minutesago = Math.round((now_date - then_date) / (1000d * 60));
                     // multiply by 5 to get the same units as delta, i.e. mg/dL/5m
-                    change = now.value - then.value;
+                    change = now.getValue() - then.getValue();
                     avgdelta = change / minutesago * 5;
 
                     aapsLogger.debug(LTag.GLUCOSE, then.toString() + " minutesago=" + minutesago + " avgdelta=" + avgdelta);
@@ -131,8 +131,8 @@ public class GlucoseStatus {
                     // use the average of all data points in the last 2.5m for all further "now" calculations
                     if (0 < minutesago && minutesago < 2.5) {
                         // Keep and average all values within the last 2.5 minutes
-                        now_value_list.add(then.value);
-                        now.value = average(now_value_list);
+                        now_value_list.add(then.getValue());
+                        now.setValue(average(now_value_list));
                         // short_deltas are calculated from everything ~5-15 minutes ago
                     } else if (2.5 < minutesago && minutesago < 17.5) {
                         //console.error(minutesago, avgdelta);
@@ -152,7 +152,7 @@ public class GlucoseStatus {
             }
 
             GlucoseStatus status = new GlucoseStatus(injector);
-            status.glucose = now.value;
+            status.glucose = now.getValue();
             status.date = now_date;
             status.noise = 0d; //for now set to nothing as not all CGMs report noise
 

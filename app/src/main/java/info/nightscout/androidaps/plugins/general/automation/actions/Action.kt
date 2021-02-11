@@ -12,6 +12,7 @@ import javax.inject.Inject
 import kotlin.reflect.full.primaryConstructor
 
 abstract class Action(val injector: HasAndroidInjector) {
+
     @Inject lateinit var aapsLogger: AAPSLogger
 
     var precondition: Trigger? = null
@@ -19,6 +20,7 @@ abstract class Action(val injector: HasAndroidInjector) {
     abstract fun friendlyName(): Int
     abstract fun shortDescription(): String
     abstract fun doAction(callback: Callback)
+    abstract fun isValid(): Boolean
     @DrawableRes abstract fun icon(): Int
 
     init {

@@ -32,9 +32,9 @@ import info.nightscout.androidaps.utils.FabricPrivacy
 import info.nightscout.androidaps.utils.T
 import info.nightscout.androidaps.utils.extensions.plusAssign
 import info.nightscout.androidaps.utils.resources.ResourceHelper
+import info.nightscout.androidaps.utils.rx.AapsSchedulers
 import info.nightscout.androidaps.utils.sharedPreferences.SP
 import io.reactivex.disposables.CompositeDisposable
-import io.reactivex.schedulers.Schedulers
 import org.json.JSONArray
 import org.json.JSONException
 import org.json.JSONObject
@@ -54,6 +54,7 @@ class AutomationPlugin @Inject constructor(
     private val rxBus: RxBusWrapper,
     private val constraintChecker: ConstraintChecker,
     aapsLogger: AAPSLogger,
+    private val aapsSchedulers: AapsSchedulers,
     private val config: Config,
     private val locationServiceHelper: LocationServiceHelper,
     private val dateUtil: DateUtil
@@ -103,7 +104,7 @@ class AutomationPlugin @Inject constructor(
 
         disposable += rxBus
             .toObservable(EventPreferenceChange::class.java)
-            .observeOn(Schedulers.io())
+            .observeOn(aapsSchedulers.io)
             .subscribe({ e ->
                 if (e.isChanged(resourceHelper, R.string.key_location)) {
                     locationServiceHelper.stopService(context)
@@ -112,11 +113,11 @@ class AutomationPlugin @Inject constructor(
             }, fabricPrivacy::logException)
         disposable += rxBus
             .toObservable(EventAutomationDataChanged::class.java)
-            .observeOn(Schedulers.io())
+            .observeOn(aapsSchedulers.io)
             .subscribe({ storeToSP() }, fabricPrivacy::logException)
         disposable += rxBus
             .toObservable(EventLocationChange::class.java)
-            .observeOn(Schedulers.io())
+            .observeOn(aapsSchedulers.io)
             .subscribe({ e ->
                 e?.let {
                     aapsLogger.debug(LTag.AUTOMATION, "Grabbed location: $it.location.latitude $it.location.longitude Provider: $it.location.provider")
@@ -125,19 +126,19 @@ class AutomationPlugin @Inject constructor(
             }, fabricPrivacy::logException)
         disposable += rxBus
             .toObservable(EventChargingState::class.java)
-            .observeOn(Schedulers.io())
+            .observeOn(aapsSchedulers.io)
             .subscribe({ processActions() }, fabricPrivacy::logException)
         disposable += rxBus
             .toObservable(EventNetworkChange::class.java)
-            .observeOn(Schedulers.io())
+            .observeOn(aapsSchedulers.io)
             .subscribe({ processActions() }, fabricPrivacy::logException)
         disposable += rxBus
             .toObservable(EventAutosensCalculationFinished::class.java)
-            .observeOn(Schedulers.io())
+            .observeOn(aapsSchedulers.io)
             .subscribe({ processActions() }, fabricPrivacy::logException)
         disposable += rxBus
             .toObservable(EventBTChange::class.java)
-            .observeOn(Schedulers.io())
+            .observeOn(aapsSchedulers.io)
             .subscribe({
                 aapsLogger.debug(LTag.AUTOMATION, "Grabbed new BT event: $it")
                 btConnects.add(it)
@@ -200,30 +201,36 @@ class AutomationPlugin @Inject constructor(
         }
 
         aapsLogger.debug(LTag.AUTOMATION, "processActions")
-        val iterator : MutableIterator<AutomationEvent> = automationEvents.iterator()
+        val iterator: MutableIterator<AutomationEvent> = automationEvents.iterator()
         while (iterator.hasNext()) {
             val event = iterator.next()
             if (event.isEnabled && event.shouldRun() && event.trigger.shouldRun() && event.getPreconditions().shouldRun()) {
                 if (event.systemAction || userEventsEnabled) {
                     val actions = event.actions
                     for (action in actions) {
-                        action.doAction(object : Callback() {
-                            override fun run() {
-                                val sb = StringBuilder()
-                                sb.append(dateUtil.timeString(DateUtil.now()))
-                                sb.append(" ")
-                                sb.append(if (result.success) "☺" else "▼")
-                                sb.append(" <b>")
-                                sb.append(event.title)
-                                sb.append(":</b> ")
-                                sb.append(action.shortDescription())
-                                sb.append(": ")
-                                sb.append(result.comment)
-                                executionLog.add(sb.toString())
-                                aapsLogger.debug(LTag.AUTOMATION, "Executed: $sb")
-                                rxBus.send(EventAutomationUpdateGui())
-                            }
-                        })
+                        if (action.isValid())
+                            action.doAction(object : Callback() {
+                                override fun run() {
+                                    val sb = StringBuilder()
+                                    sb.append(dateUtil.timeString(DateUtil.now()))
+                                    sb.append(" ")
+                                    sb.append(if (result.success) "☺" else "▼")
+                                    sb.append(" <b>")
+                                    sb.append(event.title)
+                                    sb.append(":</b> ")
+                                    sb.append(action.shortDescription())
+                                    sb.append(": ")
+                                    sb.append(result.comment)
+                                    executionLog.add(sb.toString())
+                                    aapsLogger.debug(LTag.AUTOMATION, "Executed: $sb")
+                                    rxBus.send(EventAutomationUpdateGui())
+                                }
+                            })
+                        else {
+                            executionLog.add("Invalid action: ${action.shortDescription()}")
+                            aapsLogger.debug(LTag.AUTOMATION, "Invalid action: ${action.shortDescription()}")
+                            rxBus.send(EventAutomationUpdateGui())
+                        }
                     }
                     SystemClock.sleep(1100)
                     event.lastRun = DateUtil.now()
