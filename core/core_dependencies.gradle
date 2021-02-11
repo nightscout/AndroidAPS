@@ -8,7 +8,7 @@ dependencies {
     api "androidx.core:core-ktx:$coreVersion"
     api 'androidx.legacy:legacy-support-v13:1.0.0'
     api 'androidx.legacy:legacy-support-v4:1.0.0'
-    api "androidx.appcompat:appcompat:$appcompat_verison"
+    api "androidx.appcompat:appcompat:$appcompat_version"
     api "androidx.preference:preference-ktx:$preferencektx_version"
     api 'androidx.biometric:biometric:1.0.1'
     api "androidx.activity:activity-ktx:${activityVersion}"
