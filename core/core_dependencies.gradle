@@ -98,10 +98,7 @@ dependencies {
         exclude group: "org.json", module: "json"
     }
 
-    api('com.google.guava:guava:30.0-jre') {
-        exclude group: "com.google.code.findbugs", module: "jsr305"
-    }
-    api 'com.google.code.findbugs:jsr305:3.0.2'
+    api 'com.google.guava:guava:30.0-jre'
 
     api 'org.mozilla:rhino:1.7.13'
 
