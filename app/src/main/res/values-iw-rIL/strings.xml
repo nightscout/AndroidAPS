@@ -217,7 +217,7 @@
     <string name="smscommunicator_remotecommandnotallowed">פקודה מרוחקת אינה מותרת</string>
     <string name="smscommunicator_remotebolusnotallowed">בולוס מרחוק אינו זמין. נסו שוב מאוחר יותר.</string>
     <string name="smscommunicator_basalreplywithcode">להפעלת בזאלי %1$.2f יח\' לשעה למשך %2$d דקות יש להשיב עם הקוד %3$s</string>
-    <string name="smscommunicator_profilereplywithcode">להחלפת פרופיל ל- %1$s %2$d % הקש קוד %3$s</string>
+    <string name="smscommunicator_profilereplywithcode">להחלפת פרופיל ל- %1$s %2$d %% הקש את הקוד %3$s</string>
     <string name="smscommunicator_extendedreplywithcode">למתן בולוס ממושך %1$.2f יח\' למשך %2$d דקות יש להשיב עם הקוד %3$s</string>
     <string name="smscommunicator_carbsreplywithcode">למתן %1$d גר\' ב-%2$s יש להשיב עם הקוד %3$s</string>
     <string name="smscommunicator_basalpctreplywithcode">להפעלת בזאלי %1$d%% למשך %2$d דקות הקש קוד %3$s</string>
@@ -420,6 +420,7 @@
     <string name="basal_shortname">בזאל\'</string>
     <string name="deviation_shortname">סטייה</string>
     <string name="activity_shortname">פעילות</string>
+    <string name="bgi_shortname">השפעה</string>
     <string name="abs_insulin_shortname">אבס\'</string>
     <string name="devslope_shortname">שיפוע</string>
     <string name="nav_about">אודות</string>
@@ -627,6 +628,7 @@
     <string name="ns_autobackfill_summary">לטעינת הנתונים האוטומטית חסרים נתוני סוכר מ-Nightscout</string>
     <string name="loop_smbsetbypump_label">SMB מוגדר באמצעות משאבה</string>
     <string name="overview_show_activity">פעילות</string>
+    <string name="overview_show_bgi">השפעת הסוכר בדם</string>
     <string name="overview_show_sensitivity">רגישות</string>
     <string name="overview_show_deviations">חריגות</string>
     <string name="overview_show_cob">פחמימות פעילות</string>
