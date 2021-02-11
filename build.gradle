@@ -34,7 +34,12 @@ buildscript {
     }
     repositories {
         google()
-        jcenter()
+        mavenCentral()
+        jcenter() {
+            content {
+                includeModule("org.jetbrains.trove4j", "trove4j")
+            }
+        }
     }
     dependencies {
         classpath 'com.android.tools.build:gradle:4.0.1'
@@ -51,8 +56,7 @@ buildscript {
 allprojects {
     repositories {
         google()
-        jcenter()
-
+        mavenCentral()
         maven {
             url "https://maven.google.com"
         }
@@ -63,6 +67,12 @@ allprojects {
             }
         }
         maven { url 'https://jitpack.io' }
+        jcenter() {
+            content {
+                includeModule("com.google.android", "flexbox")
+                includeModule("org.jetbrains.trove4j", "trove4j")
+            }
+        }
     }
     //Support @JvmDefault
     tasks.withType(org.jetbrains.kotlin.gradle.tasks.KotlinCompile).all {
