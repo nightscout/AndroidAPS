@@ -54,7 +54,7 @@ dependencies {
     testImplementation "org.mockito:mockito-core:${mockitoVersion}"
     testImplementation "org.powermock:powermock-api-mockito2:$powermockVersion"
     testImplementation "org.powermock:powermock-module-junit4:${powermockVersion}"
-    testImplementation 'joda-time:joda-time:2.10.9'
+    testImplementation "joda-time:joda-time:$jodatime_version"
     androidTestImplementation "androidx.test.ext:junit:$androidx_junit"
     androidTestImplementation "androidx.test:rules:$androidx_rules"
 }
