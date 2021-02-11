@@ -48,22 +48,22 @@ class DateUtilTest : TestBase() {
     }
 
     @Test fun timeStringTest() {
-        Assert.assertTrue(DateUtil(context, resourceHelper).timeString(Date(1513902750000L)).contains("32"))
-        Assert.assertTrue(DateUtil(context, resourceHelper).timeString(1513902750000L).contains("32"))
+        Assert.assertTrue(DateUtil(context).timeString(Date(1513902750000L)).contains("32"))
+        Assert.assertTrue(DateUtil(context).timeString(1513902750000L).contains("32"))
     }
 
     @Test fun dateAndTimeStringTest() {
-        Assert.assertTrue(DateUtil(context, resourceHelper).dateAndTimeString(1513902750000L).contains("22"))
-        Assert.assertTrue(DateUtil(context, resourceHelper).dateAndTimeString(1513902750000L).contains("32"))
-        Assert.assertTrue(DateUtil(context, resourceHelper).dateAndTimeString(Date(1513902750000L)).contains("22"))
-        Assert.assertTrue(DateUtil(context, resourceHelper).dateAndTimeString(Date(1513902750000L)).contains("32"))
+        Assert.assertTrue(DateUtil(context).dateAndTimeString(1513902750000L).contains("22"))
+        Assert.assertTrue(DateUtil(context).dateAndTimeString(1513902750000L).contains("32"))
+        Assert.assertTrue(DateUtil(context).dateAndTimeString(Date(1513902750000L)).contains("22"))
+        Assert.assertTrue(DateUtil(context).dateAndTimeString(Date(1513902750000L)).contains("32"))
     }
 
     @Test fun dateAndTimeRangeStringTest() {
-        Assert.assertTrue(DateUtil(context, resourceHelper).dateAndTimeRangeString(1513902750000L, 1513902750000L).contains("22"))
-        Assert.assertTrue(DateUtil(context, resourceHelper).dateAndTimeRangeString(1513902750000L, 1513902750000L).contains("32"))
-        Assert.assertTrue(DateUtil(context, resourceHelper).dateAndTimeRangeString(1513902750000L, 1513902750000L).contains("22"))
-        Assert.assertTrue(DateUtil(context, resourceHelper).dateAndTimeRangeString(1513902750000L, 1513902750000L).contains("32"))
+        Assert.assertTrue(DateUtil(context).dateAndTimeRangeString(1513902750000L, 1513902750000L).contains("22"))
+        Assert.assertTrue(DateUtil(context).dateAndTimeRangeString(1513902750000L, 1513902750000L).contains("32"))
+        Assert.assertTrue(DateUtil(context).dateAndTimeRangeString(1513902750000L, 1513902750000L).contains("22"))
+        Assert.assertTrue(DateUtil(context).dateAndTimeRangeString(1513902750000L, 1513902750000L).contains("32"))
     }
 
     /*

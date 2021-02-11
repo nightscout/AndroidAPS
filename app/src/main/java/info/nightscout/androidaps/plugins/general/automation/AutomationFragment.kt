@@ -20,6 +20,7 @@ import dagger.android.support.DaggerFragment
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.databinding.AutomationEventItemBinding
 import info.nightscout.androidaps.databinding.AutomationFragmentBinding
+import info.nightscout.androidaps.logging.UserEntryLogger
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper
 import info.nightscout.androidaps.plugins.general.automation.dialogs.EditEventDialog
 import info.nightscout.androidaps.plugins.general.automation.dragHelpers.ItemTouchHelperAdapter
@@ -31,8 +32,8 @@ import info.nightscout.androidaps.plugins.general.automation.events.EventAutomat
 import info.nightscout.androidaps.plugins.general.automation.triggers.TriggerConnector
 import info.nightscout.androidaps.utils.FabricPrivacy
 import info.nightscout.androidaps.utils.HtmlHelper
-import info.nightscout.androidaps.utils.alertDialogs.OKDialog.showConfirmation
-import info.nightscout.androidaps.utils.extensions.plusAssign
+import info.nightscout.androidaps.utils.alertDialogs.OKDialog
+import io.reactivex.rxkotlin.plusAssign
 import info.nightscout.androidaps.utils.extensions.toVisibility
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 import info.nightscout.androidaps.utils.rx.AapsSchedulers
@@ -48,6 +49,7 @@ class AutomationFragment : DaggerFragment(), OnStartDragListener {
     @Inject lateinit var fabricPrivacy: FabricPrivacy
     @Inject lateinit var automationPlugin: AutomationPlugin
     @Inject lateinit var injector: HasAndroidInjector
+    @Inject lateinit var uel: UserEntryLogger
 
     private var disposable: CompositeDisposable = CompositeDisposable()
     private lateinit var eventListAdapter: EventListAdapter
@@ -212,11 +214,12 @@ class AutomationFragment : DaggerFragment(), OnStartDragListener {
             }
             // remove event
             holder.binding.iconTrash.setOnClickListener {
-                showConfirmation(requireContext(), resourceHelper.gs(R.string.removerecord) + " " + automationPlugin.at(position).title,
-                    Runnable {
+                OKDialog.showConfirmation(requireContext(), resourceHelper.gs(R.string.removerecord) + " " + automationPlugin.at(position).title,
+                    {
+                        uel.log("AUTOM REMOVED", automationPlugin.at(position).title)
                         automationPlugin.removeAt(position)
                         notifyItemRemoved(position)
-                    }, Runnable {
+                    }, {
                     rxBus.send(EventAutomationUpdateGui())
                 })
             }
@@ -234,8 +237,9 @@ class AutomationFragment : DaggerFragment(), OnStartDragListener {
 
         override fun onItemDismiss(position: Int) {
             activity?.let { activity ->
-                showConfirmation(activity, resourceHelper.gs(R.string.removerecord) + " " + automationPlugin.at(position).title,
+                OKDialog.showConfirmation(activity, resourceHelper.gs(R.string.removerecord) + " " + automationPlugin.at(position).title,
                     Runnable {
+                        uel.log("AUTOM REMOVED", automationPlugin.at(position).title)
                         automationPlugin.removeAt(position)
                         notifyItemRemoved(position)
                         rxBus.send(EventAutomationDataChanged())

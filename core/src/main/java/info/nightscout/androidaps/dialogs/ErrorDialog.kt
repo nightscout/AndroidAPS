@@ -12,6 +12,7 @@ import info.nightscout.androidaps.activities.ErrorHelperActivity
 import info.nightscout.androidaps.core.R
 import info.nightscout.androidaps.core.databinding.DialogErrorBinding
 import info.nightscout.androidaps.logging.AAPSLogger
+import info.nightscout.androidaps.logging.UserEntryLogger
 import info.nightscout.androidaps.services.AlarmSoundServiceHelper
 import info.nightscout.androidaps.utils.T
 import javax.inject.Inject
@@ -20,6 +21,7 @@ class ErrorDialog : DaggerDialogFragment() {
 
     @Inject lateinit var alarmSoundServiceHelper: AlarmSoundServiceHelper
     @Inject lateinit var aapsLogger: AAPSLogger
+    @Inject lateinit var uel: UserEntryLogger
 
     var helperActivity: ErrorHelperActivity? = null
     var status: String = ""
@@ -56,15 +58,15 @@ class ErrorDialog : DaggerDialogFragment() {
 
         binding.title.text = title
         binding.ok.setOnClickListener {
-            aapsLogger.debug("USER ENTRY: Error dialog ok button pressed")
+            uel.log("Error dialog ok button pressed")
             dismiss()
         }
         binding.mute.setOnClickListener {
-            aapsLogger.debug("USER ENTRY: Error dialog mute button pressed")
+            uel.log("Error dialog mute button pressed")
             stopAlarm()
         }
         binding.mute5min.setOnClickListener {
-            aapsLogger.debug("USER ENTRY: Error dialog mute 5 min button pressed")
+            uel.log("Error dialog mute 5 min button pressed")
             stopAlarm()
             loopHandler.postDelayed(this::startAlarm, T.mins(5).msecs())
         }

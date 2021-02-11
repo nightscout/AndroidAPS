@@ -11,6 +11,7 @@ import info.nightscout.androidaps.R
 import info.nightscout.androidaps.data.Profile
 import info.nightscout.androidaps.databinding.DialogCalibrationBinding
 import info.nightscout.androidaps.interfaces.ProfileFunction
+import info.nightscout.androidaps.logging.UserEntryLogger
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.GlucoseStatus
 import info.nightscout.androidaps.utils.HtmlHelper
 import info.nightscout.androidaps.utils.XdripCalibrations
@@ -26,6 +27,7 @@ class CalibrationDialog : DialogFragmentWithDate() {
     @Inject lateinit var resourceHelper: ResourceHelper
     @Inject lateinit var profileFunction: ProfileFunction
     @Inject lateinit var xdripCalibrations: XdripCalibrations
+    @Inject lateinit var uel: UserEntryLogger
 
     private var _binding: DialogCalibrationBinding? = null
 
@@ -75,7 +77,7 @@ class CalibrationDialog : DialogFragmentWithDate() {
         if (bg > 0) {
             activity?.let { activity ->
                 OKDialog.showConfirmation(activity, resourceHelper.gs(R.string.overview_calibration), HtmlHelper.fromHtml(Joiner.on("<br/>").join(actions)), {
-                    aapsLogger.debug("USER ENTRY: CALIBRATION $bg")
+                    uel.log("CALIBRATION", d1 = bg)
                     xdripCalibrations.sendIntent(bg)
                 })
             }

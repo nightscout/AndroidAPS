@@ -16,6 +16,7 @@ import info.nightscout.androidaps.db.Source
 import info.nightscout.androidaps.interfaces.ActivePluginProvider
 import info.nightscout.androidaps.interfaces.CommandQueueProvider
 import info.nightscout.androidaps.interfaces.Constraint
+import info.nightscout.androidaps.logging.UserEntryLogger
 import info.nightscout.androidaps.plugins.configBuilder.ConstraintChecker
 import info.nightscout.androidaps.plugins.general.nsclient.NSUpload
 import info.nightscout.androidaps.queue.Callback
@@ -37,6 +38,7 @@ class FillDialog : DialogFragmentWithDate() {
     @Inject lateinit var nsUpload: NSUpload
     @Inject lateinit var commandQueue: CommandQueueProvider
     @Inject lateinit var activePlugin: ActivePluginProvider
+    @Inject lateinit var uel: UserEntryLogger
 
     private var _binding: DialogFillBinding? = null
 
@@ -126,16 +128,16 @@ class FillDialog : DialogFragmentWithDate() {
             activity?.let { activity ->
                 OKDialog.showConfirmation(activity, resourceHelper.gs(R.string.primefill), HtmlHelper.fromHtml(Joiner.on("<br/>").join(actions)), {
                     if (insulinAfterConstraints > 0) {
-                        aapsLogger.debug("USER ENTRY: PRIME BOLUS $insulinAfterConstraints")
+                        uel.log("PRIME BOLUS", d1 = insulinAfterConstraints)
                         requestPrimeBolus(insulinAfterConstraints, notes)
                     }
                     if (siteChange) {
-                        aapsLogger.debug("USER ENTRY: SITE CHANGE")
+                        uel.log("SITE CHANGE")
                         nsUpload.generateCareportalEvent(CareportalEvent.SITECHANGE, eventTime, notes)
                     }
                     if (insulinChange) {
                         // add a second for case of both checked
-                        aapsLogger.debug("USER ENTRY: INSULIN CHANGE")
+                        uel.log("INSULIN CHANGE")
                         nsUpload.generateCareportalEvent(CareportalEvent.INSULINCHANGE, eventTime + 1000, notes)
                     }
                 }, null)

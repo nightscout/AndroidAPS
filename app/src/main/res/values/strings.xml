@@ -1380,5 +1380,6 @@
     <string name="clear_filter">Clear filter</string>
     <string name="trend_arrow">Trend arrow</string>
     <string name="cannula">Cannula</string>
+    <string name="userentry">User entry</string>
 
 </resources>

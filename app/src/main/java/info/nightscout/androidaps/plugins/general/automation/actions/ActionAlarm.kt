@@ -7,19 +7,13 @@ import androidx.annotation.DrawableRes
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.activities.ErrorHelperActivity
-import info.nightscout.androidaps.activities.PreferencesActivity
 import info.nightscout.androidaps.data.PumpEnactResult
-import info.nightscout.androidaps.events.EventRefreshOverview
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper
 import info.nightscout.androidaps.plugins.general.automation.elements.InputString
 import info.nightscout.androidaps.plugins.general.automation.elements.LabelWithElement
 import info.nightscout.androidaps.plugins.general.automation.elements.LayoutBuilder
-import info.nightscout.androidaps.plugins.general.nsclient.NSUpload
-import info.nightscout.androidaps.plugins.general.overview.events.EventNewNotification
-import info.nightscout.androidaps.plugins.general.overview.notifications.NotificationUserMessage
 import info.nightscout.androidaps.queue.Callback
 import info.nightscout.androidaps.utils.JsonHelper
-import info.nightscout.androidaps.utils.alertDialogs.WarningDialog
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 import org.json.JSONObject
 import javax.inject.Inject
@@ -28,7 +22,6 @@ class ActionAlarm(injector: HasAndroidInjector) : Action(injector) {
 
     @Inject lateinit var resourceHelper: ResourceHelper
     @Inject lateinit var rxBus: RxBusWrapper
-    @Inject lateinit var nsUpload: NSUpload
     @Inject lateinit var context: Context
 
     var text = InputString(injector)

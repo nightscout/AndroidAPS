@@ -2,6 +2,7 @@ package info.nightscout.androidaps.database
 
 import info.nightscout.androidaps.database.entities.GlucoseValue
 import info.nightscout.androidaps.database.entities.TemporaryTarget
+import info.nightscout.androidaps.database.entities.UserEntry
 import info.nightscout.androidaps.database.interfaces.DBEntry
 import info.nightscout.androidaps.database.transactions.Transaction
 import io.reactivex.Completable
@@ -105,7 +106,17 @@ class AppRepository @Inject internal constructor(
     fun getTemporaryTargetsCorrespondingLastHistoryRecord(lastId: Long): TemporaryTarget? =
         database.temporaryTargetDao.getLastHistoryRecord(lastId)
 
+    // USER ENTRY
+    fun getAllUserEntries(): Single<List<UserEntry>> =
+        database.userEntryDao.getAll()
+            .subscribeOn(Schedulers.io())
+
+    fun insert(word: UserEntry) {
+        database.userEntryDao.insert(word)
+    }
+
 }
+
 @Suppress("USELESS_CAST")
 inline fun <reified T : Any> Maybe<T>.toWrappedSingle(): Single<ValueWrapper<T>> =
     this.map { ValueWrapper.Existing(it) as ValueWrapper<T> }
