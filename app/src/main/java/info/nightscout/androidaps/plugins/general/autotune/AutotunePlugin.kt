@@ -75,10 +75,6 @@ class AutotunePlugin @Inject constructor(
     val fragmentClass: String
         get() = AutotuneFragment::class.java.name
 
-    operator fun invoke(initiator: String?, allowNotification: Boolean) {
-        // invoke
-    }
-
     //Launch Autotune with default settings
     fun aapsAutotune() {
         val daysBack = sp.getInt(R.string.key_autotune_default_tune_days, 5)
@@ -193,9 +189,8 @@ class AutotunePlugin @Inject constructor(
     private fun showResults(tunedProfile: ATProfile, pumpProfile: ATProfile): String {
         var toMgDl = 1.0
         if (profileFunction.getUnits() == Constants.MMOL) toMgDl = Constants.MMOLL_TO_MGDL
-        var strResult = ""
         val line = resourceHelper.gs(R.string.format_autotune_separator)
-        strResult = line
+        var strResult = line
         strResult += resourceHelper.gs(R.string.format_autotune_title)
         strResult += line
         var totalBasal = 0.0

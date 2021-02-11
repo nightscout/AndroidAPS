@@ -13,7 +13,6 @@ import info.nightscout.androidaps.historyBrowser.IobCobCalculatorPluginHistory
 import info.nightscout.androidaps.historyBrowser.TreatmentsPluginHistory
 import info.nightscout.androidaps.interfaces.ActivePluginProvider
 import info.nightscout.androidaps.interfaces.ProfileFunction
-import info.nightscout.androidaps.plugins.general.autotune.AutotunePlugin
 import info.nightscout.androidaps.plugins.general.nsclient.NSUpload
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.IobCobCalculatorPlugin
 import info.nightscout.androidaps.plugins.treatments.TreatmentsPlugin
