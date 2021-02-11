@@ -18,6 +18,7 @@ import info.nightscout.androidaps.events.EventRefreshOverview
 import info.nightscout.androidaps.interfaces.*
 import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.logging.LTag
+import info.nightscout.androidaps.logging.UserEntryLogger
 import info.nightscout.androidaps.plugins.aps.loop.LoopPlugin
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper
 import info.nightscout.androidaps.plugins.configBuilder.ConstraintChecker
@@ -65,6 +66,7 @@ class BolusWizard @Inject constructor(
     @Inject lateinit var automationPlugin: AutomationPlugin
     @Inject lateinit var dateUtil: DateUtil
     @Inject lateinit var config: Config
+    @Inject lateinit var uel: UserEntryLogger
 
     init {
         injector.androidInjector().inject(this)
@@ -354,7 +356,7 @@ class BolusWizard @Inject constructor(
                 boluscalc = nsJSON()
                 source = Source.USER
                 notes = this@BolusWizard.notes
-                aapsLogger.debug("USER ENTRY: BOLUS ADVISOR insulin $insulinAfterConstraints")
+                uel.log("BOLUS ADVISOR", d1 = insulinAfterConstraints)
                 if (insulin > 0) {
                     commandQueue.bolus(this, object : Callback() {
                         override fun run() {
@@ -382,7 +384,7 @@ class BolusWizard @Inject constructor(
         OKDialog.showConfirmation(ctx, resourceHelper.gs(R.string.boluswizard), confirmMessage, {
             if (insulinAfterConstraints > 0 || carbs > 0) {
                 if (useSuperBolus) {
-                    aapsLogger.debug("USER ENTRY: SUPERBOLUS TBR")
+                    uel.log("SUPERBOLUS TBR")
                     if (loopPlugin.isEnabled(PluginType.LOOP)) {
                         loopPlugin.superBolusTo(System.currentTimeMillis() + 2 * 60L * 60 * 1000)
                         rxBus.send(EventRefreshOverview("WizardDialog"))
@@ -428,7 +430,7 @@ class BolusWizard @Inject constructor(
                     boluscalc = nsJSON()
                     source = Source.USER
                     notes = this@BolusWizard.notes
-                    aapsLogger.debug("USER ENTRY: BOLUS WIZARD insulin $insulinAfterConstraints carbs: $carbs")
+                    uel.log("BOLUS WIZARD", "", insulinAfterConstraints, carbs)
                     if (insulin > 0 || pump.pumpDescription.storesCarbInfo) {
                         commandQueue.bolus(this, object : Callback() {
                             override fun run() {

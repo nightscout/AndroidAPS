@@ -32,6 +32,7 @@ import info.nightscout.androidaps.dialogs.*
 import info.nightscout.androidaps.events.*
 import info.nightscout.androidaps.interfaces.*
 import info.nightscout.androidaps.logging.AAPSLogger
+import info.nightscout.androidaps.logging.UserEntryLogger
 import info.nightscout.androidaps.plugins.aps.loop.LoopPlugin
 import info.nightscout.androidaps.plugins.aps.loop.events.EventNewOpenLoopNotification
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper
@@ -108,6 +109,7 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
     @Inject lateinit var config: Config
     @Inject lateinit var dateUtil: DateUtil
     @Inject lateinit var databaseHelper: DatabaseHelperInterface
+    @Inject lateinit var uel: UserEntryLogger
 
     private val disposable = CompositeDisposable()
 
@@ -344,7 +346,7 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
                             protectionCheck.queryProtection(activity, ProtectionCheck.Protection.BOLUS, UIRunnable {
                                 OKDialog.showConfirmation(activity, resourceHelper.gs(R.string.tempbasal_label), lastRun.constraintsProcessed?.toSpanned()
                                     ?: "".toSpanned(), {
-                                    aapsLogger.debug("USER ENTRY: ACCEPT TEMP BASAL")
+                                    uel.log("ACCEPT TEMP BASAL")
                                     binding.buttonsLayout.acceptTempButton.visibility = View.GONE
                                     (context?.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager).cancel(Constants.notificationID)
                                     actionStringHandler.handleInitiate("cancelChangeRequest")

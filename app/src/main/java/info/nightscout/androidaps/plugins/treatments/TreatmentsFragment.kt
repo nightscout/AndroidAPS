@@ -14,7 +14,7 @@ import info.nightscout.androidaps.interfaces.ActivePluginProvider
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper
 import info.nightscout.androidaps.plugins.treatments.fragments.*
 import info.nightscout.androidaps.utils.FabricPrivacy
-import info.nightscout.androidaps.utils.extensions.plusAssign
+import io.reactivex.rxkotlin.plusAssign
 import info.nightscout.androidaps.utils.extensions.toVisibility
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 import info.nightscout.androidaps.utils.rx.AapsSchedulers
@@ -66,6 +66,10 @@ class TreatmentsFragment : DaggerFragment() {
         }
         binding.careportal.setOnClickListener {
             setFragment(TreatmentsCareportalFragment())
+            setBackgroundColorOnSelected(it)
+        }
+        binding.userentry.setOnClickListener {
+            setFragment(TreatmentsUserEntryFragment())
             setBackgroundColorOnSelected(it)
         }
         setFragment(TreatmentsBolusFragment())

@@ -1380,6 +1380,7 @@
     <string name="clear_filter">Clear filter</string>
     <string name="trend_arrow">Trend arrow</string>
     <string name="cannula">Cannula</string>
+    <string name="userentry">User entry</string>
 
     <string name="nav_themeselector">Select Color</string>
     <string name="darkmode">Dark mode</string>

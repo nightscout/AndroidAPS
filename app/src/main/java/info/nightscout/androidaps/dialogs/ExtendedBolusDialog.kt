@@ -13,6 +13,7 @@ import info.nightscout.androidaps.databinding.DialogExtendedbolusBinding
 import info.nightscout.androidaps.interfaces.ActivePluginProvider
 import info.nightscout.androidaps.interfaces.CommandQueueProvider
 import info.nightscout.androidaps.interfaces.Constraint
+import info.nightscout.androidaps.logging.UserEntryLogger
 import info.nightscout.androidaps.plugins.configBuilder.ConstraintChecker
 import info.nightscout.androidaps.queue.Callback
 import info.nightscout.androidaps.utils.HtmlHelper
@@ -32,6 +33,7 @@ class ExtendedBolusDialog : DialogFragmentWithDate() {
     @Inject lateinit var constraintChecker: ConstraintChecker
     @Inject lateinit var commandQueue: CommandQueueProvider
     @Inject lateinit var activePlugin: ActivePluginProvider
+    @Inject lateinit var uel: UserEntryLogger
 
     private var _binding: DialogExtendedbolusBinding? = null
 
@@ -86,7 +88,7 @@ class ExtendedBolusDialog : DialogFragmentWithDate() {
 
         activity?.let { activity ->
             OKDialog.showConfirmation(activity, resourceHelper.gs(R.string.extended_bolus), HtmlHelper.fromHtml(Joiner.on("<br/>").join(actions)), {
-                aapsLogger.debug("USER ENTRY: EXTENDED BOLUS $insulinAfterConstraint duration: $durationInMinutes")
+                uel.log("EXTENDED BOLUS", d1 = insulinAfterConstraint, i1 = durationInMinutes)
                 commandQueue.extendedBolus(insulinAfterConstraint, durationInMinutes, object : Callback() {
                     override fun run() {
                         if (!result.success) {
