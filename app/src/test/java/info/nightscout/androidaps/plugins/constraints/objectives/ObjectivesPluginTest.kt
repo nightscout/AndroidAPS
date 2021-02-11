@@ -7,6 +7,7 @@ import info.nightscout.androidaps.R
 import info.nightscout.androidaps.TestBase
 import info.nightscout.androidaps.interfaces.ActivePluginProvider
 import info.nightscout.androidaps.interfaces.Constraint
+import info.nightscout.androidaps.logging.UserEntryLogger
 import info.nightscout.androidaps.plugins.constraints.objectives.objectives.Objective
 import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.resources.ResourceHelper
@@ -25,6 +26,7 @@ class ObjectivesPluginTest : TestBase() {
     @Mock lateinit var resourceHelper: ResourceHelper
     @Mock lateinit var activePlugin: ActivePluginProvider
     @Mock lateinit var sp: SP
+    @Mock lateinit var uel: UserEntryLogger
 
     private lateinit var objectivesPlugin: ObjectivesPlugin
 
@@ -38,7 +40,7 @@ class ObjectivesPluginTest : TestBase() {
     }
 
     @Before fun prepareMock() {
-        objectivesPlugin = ObjectivesPlugin(injector, aapsLogger, resourceHelper, activePlugin, sp, Config())
+        objectivesPlugin = ObjectivesPlugin(injector, aapsLogger, resourceHelper, activePlugin, sp, Config(), uel)
         objectivesPlugin.onStart()
         `when`(resourceHelper.gs(R.string.objectivenotstarted)).thenReturn("Objective %1\$d not started")
     }
