@@ -35,6 +35,7 @@ import info.nightscout.androidaps.plugins.iob.iobCobCalculator.IobCobCalculatorP
 import info.nightscout.androidaps.plugins.treatments.TreatmentsPlugin
 import info.nightscout.androidaps.queue.Callback
 import info.nightscout.androidaps.receivers.BundleStore
+import info.nightscout.androidaps.receivers.DataReceiver
 import info.nightscout.androidaps.utils.*
 import info.nightscout.androidaps.utils.extensions.plusAssign
 import info.nightscout.androidaps.utils.resources.ResourceHelper
@@ -170,7 +171,7 @@ class SmsCommunicatorPlugin @Inject constructor(
         }
 
         override fun doWork(): Result {
-            val bundle = bundleStore.pickup(inputData.getLong("storeKey", -1))
+            val bundle = bundleStore.pickup(inputData.getLong(DataReceiver.STORE_KEY, -1))
                 ?: return Result.failure()
             val format = bundle.getString("format") ?: return Result.failure()
             val pdus = bundle["pdus"] as Array<*>
@@ -305,11 +306,11 @@ class SmsCommunicatorPlugin @Inject constructor(
         var reply = ""
         val units = profileFunction.getUnits()
         if (actualBG != null) {
-            reply = resourceHelper.gs(R.string.sms_actualbg) + " " + actualBG.valueToUnitsToString(units) + ", "
+            reply = resourceHelper.gs(R.string.sms_actualbg) + " " + actualBG.valueToUnitsString(units) + ", "
         } else if (lastBG != null) {
-            val agoMsec = System.currentTimeMillis() - lastBG.date
+            val agoMsec = System.currentTimeMillis() - lastBG.timestamp
             val agoMin = (agoMsec / 60.0 / 1000.0).toInt()
-            reply = resourceHelper.gs(R.string.sms_lastbg) + " " + lastBG.valueToUnitsToString(units) + " " + String.format(resourceHelper.gs(R.string.sms_minago), agoMin) + ", "
+            reply = resourceHelper.gs(R.string.sms_lastbg) + " " + lastBG.valueToUnitsString(units) + " " + String.format(resourceHelper.gs(R.string.sms_minago), agoMin) + ", "
         }
         val glucoseStatus = GlucoseStatus(injector).glucoseStatusData
         if (glucoseStatus != null) reply += resourceHelper.gs(R.string.sms_delta) + " " + Profile.toUnitsString(glucoseStatus.delta, glucoseStatus.delta * Constants.MGDL_TO_MMOLL, units) + " " + units + ", "

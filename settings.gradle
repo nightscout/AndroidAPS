@@ -1,3 +1,2 @@
-include ':database'
-include ':app', ':wear', ':core', ':dana', ':danar', ':danars', ':rileylink', ':medtronic', ':omnipod'
+include ':app', ':database', ':wear', ':core', ':dana', ':danar', ':danars', ':rileylink', ':medtronic', ':omnipod-eros', ':omnipod-dash'
 

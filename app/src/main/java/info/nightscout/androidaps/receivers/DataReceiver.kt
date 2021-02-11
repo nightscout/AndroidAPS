@@ -2,6 +2,7 @@ package info.nightscout.androidaps.receivers
 
 import android.content.Context
 import android.content.Intent
+import android.os.Bundle
 import android.provider.Telephony
 import androidx.work.Data
 import androidx.work.ExistingWorkPolicy
@@ -39,10 +40,7 @@ open class DataReceiver : DaggerBroadcastReceiver() {
         when (intent.action) {
             Intents.ACTION_NEW_BG_ESTIMATE ->
                 OneTimeWorkRequest.Builder(XdripPlugin.XdripWorker::class.java)
-                    .setInputData(Data.Builder().also {
-                        it.copyString("collection", bundle, null)
-                        it.copyString("data", bundle)
-                    }.build()).build()
+                    .setInputData(bundleInputData(bundle, intent)).build()
             Intents.POCTECH_BG ->
                 OneTimeWorkRequest.Builder(PoctechPlugin.PoctechWorker::class.java)
                     .setInputData(Data.Builder().also {
@@ -84,36 +82,32 @@ open class DataReceiver : DaggerBroadcastReceiver() {
                     }.build()).build()
             Telephony.Sms.Intents.SMS_RECEIVED_ACTION ->
                 OneTimeWorkRequest.Builder(SmsCommunicatorPlugin.SmsCommunicatorWorker::class.java)
-                    .setInputData(Data.Builder().also {
-                        it.putLong("storeKey", bundleStore.store(bundle))
-                        it.putString("action", intent.action)
-                    }.build()).build()
+                    .setInputData(bundleInputData(bundle, intent)).build()
             Intents.EVERSENSE_BG ->
                 OneTimeWorkRequest.Builder(EversensePlugin.EversenseWorker::class.java)
-                    .setInputData(Data.Builder().also {
-                        it.putLong("storeKey", bundleStore.store(bundle))
-                        it.putString("action", intent.action)
-                    }.build()).build()
+                    .setInputData(bundleInputData(bundle, intent)).build()
             Intents.DEXCOM_BG ->
                 OneTimeWorkRequest.Builder(DexcomPlugin.DexcomWorker::class.java)
-                    .setInputData(Data.Builder().also {
-                        it.putLong("storeKey", bundleStore.store(bundle))
-                        it.putString("action", intent.action)
-                    }.build()).build()
+                    .setInputData(bundleInputData(bundle, intent)).build()
             Intents.ACTION_NEW_TREATMENT,
             Intents.ACTION_CHANGED_TREATMENT,
             Intents.ACTION_REMOVED_TREATMENT,
             Intents.ACTION_NEW_CAL,
             Intents.ACTION_NEW_MBG ->
                 OneTimeWorkRequest.Builder(NSClientWorker::class.java)
-                    .setInputData(Data.Builder().also {
-                        it.putLong("storeKey", bundleStore.store(bundle))
-                        it.putString("action", intent.action)
-                    }.build()).build()
+                    .setInputData(bundleInputData(bundle, intent)).build()
             else                                      -> null
         }?.let { request ->
             WorkManager.getInstance(context)
                 .enqueueUniqueWork(jobGroupName, ExistingWorkPolicy.APPEND_OR_REPLACE , request)
         }
+    }
+
+    private fun bundleInputData(bundle: Bundle, intent: Intent) =
+        Data.Builder().putLong(STORE_KEY, bundleStore.store(bundle)).putString(ACTION_KEY, intent.action).build()
+
+    companion object {
+        const val STORE_KEY = "storeKey"
+        const val ACTION_KEY = "action"
     }
 }

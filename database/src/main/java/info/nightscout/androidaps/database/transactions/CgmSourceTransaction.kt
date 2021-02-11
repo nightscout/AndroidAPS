@@ -9,11 +9,14 @@ import info.nightscout.androidaps.database.entities.TherapyEvent
 class CgmSourceTransaction(
     private val glucoseValues: List<TransactionGlucoseValue>,
     private val calibrations: List<Calibration>,
-    private val sensorInsertionTime: Long?
-) : Transaction<List<GlucoseValue>>() {
+    private val sensorInsertionTime: Long?,
+    private val syncer: Boolean = false // caller is not native source ie. NS
+    // syncer is allowed create records
+    // update synchronization ID
+) : Transaction<CgmSourceTransaction.TransactionResult>() {
 
-    override fun run(): List<GlucoseValue> {
-        val insertedGlucoseValues = mutableListOf<GlucoseValue>()
+    override fun run(): TransactionResult {
+        val result = TransactionResult()
         glucoseValues.forEach {
             val current = database.glucoseValueDao.findByTimestampAndSensor(it.timestamp, it.sourceSensor)
             val glucoseValue = GlucoseValue(
@@ -25,15 +28,26 @@ class CgmSourceTransaction(
                 sourceSensor = it.sourceSensor
             )
             glucoseValue.interfaceIDs.nightscoutId = it.nightscoutId
+            // if nsId is not provided in new record, copy from current if exists
+            if (glucoseValue.interfaceIDs.nightscoutId == null)
+                current?.let { existing -> glucoseValue.interfaceIDs.nightscoutId = existing.interfaceIDs.nightscoutId }
             when {
-                current == null                        -> {
+                // new record, create new
+                current == null                                                                -> {
                     database.glucoseValueDao.insertNewEntry(glucoseValue)
-                    insertedGlucoseValues.add(glucoseValue)
+                    result.inserted.add(glucoseValue)
                 }
-
-                !current.contentEqualsTo(glucoseValue) -> {
+                // different record, update
+                !current.contentEqualsTo(glucoseValue) && !syncer                              -> {
                     glucoseValue.id = current.id
                     database.glucoseValueDao.updateExistingEntry(glucoseValue)
+                    result.updated.add(glucoseValue)
+                }
+                // update NS id if didn't exist and now provided
+                current.interfaceIDs.nightscoutId == null && it.nightscoutId != null && syncer -> {
+                    glucoseValue.id = current.id
+                    database.glucoseValueDao.updateExistingEntry(glucoseValue)
+                    result.updated.add(glucoseValue)
                 }
             }
         }
@@ -54,7 +68,7 @@ class CgmSourceTransaction(
                 ))
             }
         }
-        return insertedGlucoseValues
+        return result
     }
 
     data class TransactionGlucoseValue(
@@ -71,4 +85,16 @@ class CgmSourceTransaction(
         val timestamp: Long,
         val value: Double
     )
+
+    class TransactionResult {
+
+        val inserted = mutableListOf<GlucoseValue>()
+        val updated = mutableListOf<GlucoseValue>()
+
+        fun all(): MutableList<GlucoseValue> =
+            mutableListOf<GlucoseValue>().also { result ->
+                result.addAll(inserted)
+                result.addAll(updated)
+            }
+    }
 }

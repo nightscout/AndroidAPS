@@ -22,7 +22,7 @@
     <string name="objectives_auto_objective">A activar a automação</string>
     <string name="objectives_smb_gate">Deverá ler a wiki e aumentar a IOB máx para que os SMBs funcionem devidamente! Inicialmente poderá considerar maxIOB=média dos bólus + 3 x a basal máxima</string>
     <string name="objectives_auto_gate">Leia a documentação de como a automação funciona. Configure primeiro regras simples. Em vez de acção, deixe AAPS apresentar apenas a notificação. Quando tem certeza de automação é accionada no momento certo substitua a notificação por acção real. (https://androidaps.readthedocs.io/en/latest/EN/Usage/Automation.html)</string>
-    <string name="objectives_bgavailableinns">Glic disponível no NS</string>
+    <string name="objectives_bgavailableinns">Glicose disponível no NS</string>
     <string name="objectives_pumpstatusavailableinns">Estado da Bomba disponível no NS</string>
     <string name="objectives_manualenacts">Execução manual</string>
     <string name="accomplished">Concluído: %1$s</string>
@@ -34,7 +34,7 @@
     <string name="objectives_usetemptarget">Crie um alvo temporário personalizado com 10 min de duração (pressione longo no seu alvo actual)</string>
     <string name="objectives_useactions">No Configurador active o plugiin de Acções, torne-o visível e exiba o seu conteúdo no menu superior</string>
     <string name="objectives_useloop">Mostrar conteúdo do plugin Loop</string>
-    <string name="objectives_usescale">Utilizar a função de escala premindo longamente gráfico Glic</string>
+    <string name="objectives_usescale">Utilizar a função de escala premindo longamente gráfico Glicose</string>
     <string name="objectives_button_enter">Inserir</string>
     <string name="enter_code_obtained_from_developers_to_bypass_the_rest_of_objectives">Se tiver pelo menos 3 meses de experiência com Closed Loop com outros sistemas, pode-se qualificar para um código para ignorar objectivos. Ver https://androidaps.readthedocs.io/en/latest/EN/Usage/Objectives.html#skip-objectives para mais detalhes.</string>
     <string name="codeaccepted">Código aceite</string>

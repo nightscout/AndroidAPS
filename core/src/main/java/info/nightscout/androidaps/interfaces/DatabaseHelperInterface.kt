@@ -5,7 +5,6 @@ import info.nightscout.androidaps.db.*
 
 interface DatabaseHelperInterface {
 
-    fun getAllBgreadingsDataFromTime(mills: Long, ascending: Boolean): List<BgReading>
     fun createOrUpdate(careportalEvent: CareportalEvent)
     fun createOrUpdate(record: DanaRHistoryRecord)
     fun createOrUpdate(record: OmnipodHistoryRecord)

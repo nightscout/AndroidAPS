@@ -188,7 +188,7 @@ class APSResultTest : TestBaseWithProfile() {
         apsResult.rate(20.0).tempBasalRequested(true)
         Assert.assertEquals(20.0, safeGetDouble(apsResult.json(), "rate"), 0.0)
         apsResult.rate(20.0).tempBasalRequested(false)
-        Assert.assertEquals(false, apsResult.json().has("rate"))
+        Assert.assertEquals(false, apsResult.json()?.has("rate"))
     }
 
     @Before

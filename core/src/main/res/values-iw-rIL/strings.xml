@@ -122,7 +122,7 @@
     <!--    APSResult-->
     <string name="canceltemp">ביטול בזאלי זמני</string>
     <string name="let_temp_basal_run">אפשר לבזאלי זמני לרוץ</string>
-    <string name="rate">דרג</string>
+    <string name="rate">מינון</string>
     <string name="duration">משך</string>
     <string name="reason">סיבה</string>
     <string name="nochangerequested">אין בקשות החלפה</string>

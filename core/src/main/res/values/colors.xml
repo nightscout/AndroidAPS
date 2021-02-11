@@ -115,6 +115,7 @@
     <color name="blue_default">#007AFF</color>
     <color name="kobaltblue">#5F7BA6</color>
     <color name="lightblue">#1ba1e2</color>
+    <color name="bgi">#00EEEE</color>
     <color name="cyan">#00d2d2</color>
     <color name="exercise">#67DFE8</color>
     <color name="bolus">#1ea3e5</color>
@@ -154,7 +155,5 @@
 
     <!-- White colors -->
     <color name="tempTargetBackground">#FAFAE1</color>
-
-    uam -> uam // gar keine deviations-farbe
 
 </resources>

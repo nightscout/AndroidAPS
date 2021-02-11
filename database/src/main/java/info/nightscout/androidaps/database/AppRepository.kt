@@ -60,12 +60,12 @@ class AppRepository @Inject internal constructor(
     fun clearDatabases() = database.clearAllTables()
 
     //BG READINGS -- only valid records
-    fun compatGetBgReadingsDataFromTime(timestamp: Long, ascending: Boolean) =
+    fun compatGetBgReadingsDataFromTime(timestamp: Long, ascending: Boolean): Single<List<GlucoseValue>> =
         database.glucoseValueDao.compatGetBgReadingsDataFromTime(timestamp)
             .map { if (!ascending) it.reversed() else it }
             .subscribeOn(Schedulers.io())
 
-    fun compatGetBgReadingsDataFromTime(start: Long, end: Long, ascending: Boolean) =
+    fun compatGetBgReadingsDataFromTime(start: Long, end: Long, ascending: Boolean): Single<List<GlucoseValue>> =
         database.glucoseValueDao.compatGetBgReadingsDataFromTime(start, end)
             .map { if (!ascending) it.reversed() else it }
             .subscribeOn(Schedulers.io())
@@ -74,23 +74,23 @@ class AppRepository @Inject internal constructor(
     fun findBgReadingByNSIdSingle(nsId: String): Single<ValueWrapper<GlucoseValue>> =
         database.glucoseValueDao.findByNSIdMaybe(nsId).toWrappedSingle()
 
-    fun getModifiedBgReadingsDataFromId(lastId: Long) =
+    fun getModifiedBgReadingsDataFromId(lastId: Long): Single<List<GlucoseValue>> =
         database.glucoseValueDao.getModifiedFrom(lastId)
             .subscribeOn(Schedulers.io())
 
-    fun getBgReadingsCorrespondingLastHistoryRecord(lastId: Long) =
+    fun getBgReadingsCorrespondingLastHistoryRecord(lastId: Long): GlucoseValue? =
         database.glucoseValueDao.getLastHistoryRecord(lastId)
 
     @Suppress("unused") // debug purpose only
-    fun getAllBgReadingsStartingFrom(lastId: Long) =
+    fun getAllBgReadingsStartingFrom(lastId: Long): Single<List<GlucoseValue>> =
         database.glucoseValueDao.getAllStartingFrom(lastId)
             .subscribeOn(Schedulers.io())
 
     // TEMP TARGETS
-    fun compatGetTemporaryTargetData() =
+    fun compatGetTemporaryTargetData(): List<TemporaryTarget> =
         database.temporaryTargetDao.compatGetTemporaryTargetData()
 
-    fun compatGetTemporaryTargetDataFromTime(timestamp: Long, ascending: Boolean) =
+    fun compatGetTemporaryTargetDataFromTime(timestamp: Long, ascending: Boolean): Single<List<TemporaryTarget>> =
         database.temporaryTargetDao.compatGetTemporaryTargetDataFromTime(timestamp)
             .map { if (!ascending) it.reversed() else it }
             .subscribeOn(Schedulers.io())
@@ -98,16 +98,16 @@ class AppRepository @Inject internal constructor(
     fun findTemporaryTargetByNSIdSingle(nsId: String): Single<ValueWrapper<TemporaryTarget>> =
         database.temporaryTargetDao.findByNSIdMaybe(nsId).toWrappedSingle()
 
-    fun getModifiedTemporaryTargetsDataFromId(lastId: Long) =
+    fun getModifiedTemporaryTargetsDataFromId(lastId: Long): Single<List<TemporaryTarget>> =
         database.temporaryTargetDao.getModifiedFrom(lastId)
             .subscribeOn(Schedulers.io())
 
-    fun getTemporaryTargetsCorrespondingLastHistoryRecord(lastId: Long) =
+    fun getTemporaryTargetsCorrespondingLastHistoryRecord(lastId: Long): TemporaryTarget? =
         database.temporaryTargetDao.getLastHistoryRecord(lastId)
 
 }
-
-inline fun <reified T> Maybe<T>.toWrappedSingle(): Single<ValueWrapper<T>> =
+@Suppress("USELESS_CAST")
+inline fun <reified T : Any> Maybe<T>.toWrappedSingle(): Single<ValueWrapper<T>> =
     this.map { ValueWrapper.Existing(it) as ValueWrapper<T> }
         .switchIfEmpty(Maybe.just(ValueWrapper.Absent()))
         .toSingle()
