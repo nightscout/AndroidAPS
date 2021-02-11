@@ -41,19 +41,9 @@ android {
     }
 }
 
-allprojects {
-    repositories {
-        flatDir {
-            dirs 'libs'
-        }
-    }
-}
-
 dependencies {
     implementation project(':core')
     implementation project(':rileylink')
-
-    implementation fileTree(dir: 'libs', include: ['*.jar'])
 
     annotationProcessor "com.google.dagger:dagger-compiler:$dagger_version"
     annotationProcessor "com.google.dagger:dagger-android-processor:$dagger_version"
