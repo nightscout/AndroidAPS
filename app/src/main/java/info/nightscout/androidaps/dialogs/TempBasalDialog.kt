@@ -15,6 +15,7 @@ import info.nightscout.androidaps.interfaces.CommandQueueProvider
 import info.nightscout.androidaps.interfaces.Constraint
 import info.nightscout.androidaps.interfaces.ProfileFunction
 import info.nightscout.androidaps.interfaces.PumpDescription
+import info.nightscout.androidaps.logging.UserEntryLogger
 import info.nightscout.androidaps.plugins.configBuilder.ConstraintChecker
 import info.nightscout.androidaps.queue.Callback
 import info.nightscout.androidaps.utils.HtmlHelper
@@ -35,6 +36,7 @@ class TempBasalDialog : DialogFragmentWithDate() {
     @Inject lateinit var activePlugin: ActivePluginProvider
     @Inject lateinit var commandQueue: CommandQueueProvider
     @Inject lateinit var ctx: Context
+    @Inject lateinit var uel: UserEntryLogger
 
     private var isPercentPump = true
 
@@ -129,10 +131,10 @@ class TempBasalDialog : DialogFragmentWithDate() {
                     }
                 }
                 if (isPercentPump) {
-                    aapsLogger.debug("USER ENTRY: TEMP BASAL $percent% duration: $durationInMinutes")
+                    uel.log("TEMP BASAL", d1 = percent.toDouble(), i1 = durationInMinutes)
                     commandQueue.tempBasalPercent(percent, durationInMinutes, true, profile, callback)
                 } else {
-                    aapsLogger.debug("USER ENTRY: TEMP BASAL $absolute duration: $durationInMinutes")
+                    uel.log("TEMP BASAL", d1 = absolute, i1 = durationInMinutes)
                     commandQueue.tempBasalAbsolute(absolute, durationInMinutes, true, profile, callback)
                 }
             })

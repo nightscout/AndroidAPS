@@ -13,6 +13,7 @@ import info.nightscout.androidaps.databinding.MaintenanceFragmentBinding
 import info.nightscout.androidaps.events.EventNewBG
 import info.nightscout.androidaps.interfaces.ImportExportPrefsInterface
 import info.nightscout.androidaps.logging.AAPSLogger
+import info.nightscout.androidaps.logging.UserEntryLogger
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper
 import info.nightscout.androidaps.plugins.general.food.FoodPlugin
 import info.nightscout.androidaps.plugins.general.maintenance.activities.LogSettingActivity
@@ -36,6 +37,7 @@ class MaintenanceFragment : DaggerFragment() {
     @Inject lateinit var importExportPrefs: ImportExportPrefsInterface
     @Inject lateinit var aapsSchedulers: AapsSchedulers
     @Inject lateinit var repository: AppRepository
+    @Inject lateinit var uel: UserEntryLogger
 
     private val compositeDisposable = CompositeDisposable()
 
@@ -54,13 +56,13 @@ class MaintenanceFragment : DaggerFragment() {
         super.onViewCreated(view, savedInstanceState)
         binding.logSend.setOnClickListener { maintenancePlugin.sendLogs() }
         binding.logDelete.setOnClickListener {
-            aapsLogger.debug("USER ENTRY: DELETE LOGS")
+            uel.log("DELETE LOGS")
             maintenancePlugin.deleteLogs()
         }
         binding.navResetdb.setOnClickListener {
             activity?.let { activity ->
                 OKDialog.showConfirmation(activity, resourceHelper.gs(R.string.maintenance), resourceHelper.gs(R.string.reset_db_confirm), Runnable {
-                    aapsLogger.debug("USER ENTRY: RESET DATABASES")
+                    uel.log("RESET DATABASES")
                     compositeDisposable.add(
                         fromAction {
                             MainApp.getDbHelper().resetDatabases()
@@ -81,14 +83,14 @@ class MaintenanceFragment : DaggerFragment() {
             }
         }
         binding.navExport.setOnClickListener {
-            aapsLogger.debug("USER ENTRY: EXPORT SETTINGS")
+            uel.log("EXPORT SETTINGS")
             // start activity for checking permissions...
             importExportPrefs.verifyStoragePermissions(this) {
                 importExportPrefs.exportSharedPreferences(this)
             }
         }
         binding.navImport.setOnClickListener {
-            aapsLogger.debug("USER ENTRY: IMPORT SETTINGS")
+            uel.log("IMPORT SETTINGS")
             // start activity for checking permissions...
             importExportPrefs.verifyStoragePermissions(this) {
                 importExportPrefs.importSharedPreferences(this)

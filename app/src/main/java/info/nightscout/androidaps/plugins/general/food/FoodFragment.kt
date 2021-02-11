@@ -18,11 +18,12 @@ import info.nightscout.androidaps.R
 import info.nightscout.androidaps.databinding.FoodFragmentBinding
 import info.nightscout.androidaps.databinding.FoodItemBinding
 import info.nightscout.androidaps.events.EventFoodDatabaseChanged
+import info.nightscout.androidaps.logging.UserEntryLogger
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper
 import info.nightscout.androidaps.plugins.general.food.FoodFragment.RecyclerViewAdapter.FoodsViewHolder
 import info.nightscout.androidaps.plugins.general.nsclient.NSUpload
 import info.nightscout.androidaps.utils.FabricPrivacy
-import info.nightscout.androidaps.utils.alertDialogs.OKDialog.showConfirmation
+import info.nightscout.androidaps.utils.alertDialogs.OKDialog
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 import info.nightscout.androidaps.utils.rx.AapsSchedulers
 import io.reactivex.disposables.CompositeDisposable
@@ -38,6 +39,7 @@ class FoodFragment : DaggerFragment() {
     @Inject lateinit var fabricPrivacy: FabricPrivacy
     @Inject lateinit var foodPlugin: FoodPlugin
     @Inject lateinit var nsUpload: NSUpload
+    @Inject lateinit var uel: UserEntryLogger
 
     private val disposable = CompositeDisposable()
     private lateinit var unfiltered: List<Food>
@@ -213,7 +215,8 @@ class FoodFragment : DaggerFragment() {
                 binding.remove.setOnClickListener { v: View ->
                     val food = v.tag as Food
                     activity?.let { activity ->
-                        showConfirmation(activity, resourceHelper.gs(R.string.confirmation), resourceHelper.gs(R.string.removerecord) + "\n" + food.name, DialogInterface.OnClickListener { _: DialogInterface?, _: Int ->
+                        OKDialog.showConfirmation(activity, resourceHelper.gs(R.string.confirmation), resourceHelper.gs(R.string.removerecord) + "\n" + food.name, DialogInterface.OnClickListener { _: DialogInterface?, _: Int ->
+                            uel.log("FOOD REMOVED", food.name)
                             if (food._id != null && food._id != "") {
                                 nsUpload.removeFoodFromNS(food._id)
                             }

@@ -17,7 +17,7 @@ import info.nightscout.androidaps.plugins.general.overview.dialogs.EditQuickWiza
 import info.nightscout.androidaps.plugins.general.overview.events.EventQuickWizardChange
 import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.FabricPrivacy
-import info.nightscout.androidaps.utils.extensions.plusAssign
+import io.reactivex.rxkotlin.plusAssign
 import info.nightscout.androidaps.utils.rx.AapsSchedulers
 import info.nightscout.androidaps.utils.wizard.QuickWizard
 import io.reactivex.disposables.CompositeDisposable
