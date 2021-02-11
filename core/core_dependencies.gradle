@@ -54,9 +54,6 @@ dependencies {
     // Graphview cannot be upgraded
     api "com.jjoe64:graphview:4.0.1"
 
-    //DateUtil
-    api 'net.danlew:android.joda:2.10.6'
-
     //db
     api "com.j256.ormlite:ormlite-core:${ormLiteVersion}"
     api "com.j256.ormlite:ormlite-android:${ormLiteVersion}"
