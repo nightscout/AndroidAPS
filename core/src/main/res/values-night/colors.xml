@@ -27,7 +27,7 @@
     <color name="primaryColorDefault">#222222</color>
     <color name="primaryLightColorDefault">#bbb9bb</color>
     <color name="primaryDarkColorDefault">#222222</color>
-    <color name="secondaryColorDefault">#a0a0a0</color>
+    <color name="secondaryColorDefault">@color/blue_default</color>
     <color name="secondaryLightColorDefault">#e3e3e3</color>
     <color name="secondaryDarkColorDefault">#848484</color>
     <color name="primaryTextColorDefault">#ffffff</color>
@@ -47,7 +47,6 @@
     <!-- Red Colors -->
     <color name="red">#FF0000</color>
     <color name="lightPastelRed">#66FC0000</color>
-    <color name="deviationred">#72FF0000</color>
     <color name="notificationNormal">#ff5e55</color>
     <color name="notificationLow">#ff827c</color>
     <color name="metadataTextError">#FF5555</color>
