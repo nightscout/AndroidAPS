@@ -10,7 +10,7 @@
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
-        <Button
+        <info.nightscout.androidaps.utils.ui.SingleClickButton
             android:id="@+id/nav_logsettings"
             style="?android:attr/buttonStyle"
             android:layout_width="fill_parent"
@@ -22,7 +22,7 @@
             android:layout_weight="0.5"
             android:text="@string/nav_logsettings" />
 
-       <Button
+        <info.nightscout.androidaps.utils.ui.SingleClickButton
             android:id="@+id/log_send"
             style="?android:attr/buttonStyle"
             android:layout_width="fill_parent"
@@ -34,7 +34,7 @@
             android:layout_weight="0.5"
             android:text="@string/send_all_logs" />
 
-        <Button
+        <info.nightscout.androidaps.utils.ui.SingleClickButton
             android:id="@+id/log_delete"
             style="?android:attr/buttonStyle"
             android:layout_width="fill_parent"
@@ -46,7 +46,7 @@
             android:layout_weight="0.5"
             android:text="@string/delete_logs" />
 
-        <Button
+        <info.nightscout.androidaps.utils.ui.SingleClickButton
             android:id="@+id/nav_export"
             style="?android:attr/buttonStyle"
             android:layout_width="fill_parent"
@@ -58,7 +58,7 @@
             android:layout_weight="0.5"
             android:text="@string/nav_export" />
 
-        <Button
+        <info.nightscout.androidaps.utils.ui.SingleClickButton
             android:id="@+id/nav_import"
             style="?android:attr/buttonStyle"
             android:layout_width="fill_parent"
@@ -70,7 +70,7 @@
             android:layout_weight="0.5"
             android:text="@string/nav_import" />
 
-        <Button
+        <info.nightscout.androidaps.utils.ui.SingleClickButton
             android:id="@+id/nav_resetdb"
             style="?android:attr/buttonStyle"
             android:layout_width="fill_parent"
