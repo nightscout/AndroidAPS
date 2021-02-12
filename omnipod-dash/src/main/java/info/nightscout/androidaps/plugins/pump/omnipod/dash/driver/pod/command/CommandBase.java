@@ -13,13 +13,13 @@ abstract class CommandBase implements Command {
     final CommandType commandType;
     final int address;
     final short sequenceNumber;
-    final boolean unknown;
+    final boolean multiCommandFlag;
 
-    CommandBase(CommandType commandType, int address, short sequenceNumber, boolean unknown) {
+    CommandBase(CommandType commandType, int address, short sequenceNumber, boolean multiCommandFlag) {
         this.commandType = commandType;
         this.address = address;
         this.sequenceNumber = sequenceNumber;
-        this.unknown = unknown;
+        this.multiCommandFlag = multiCommandFlag;
     }
 
     @Override public CommandType getCommandType() {
@@ -34,8 +34,8 @@ abstract class CommandBase implements Command {
         return sequenceNumber;
     }
 
-    public boolean isUnknown() {
-        return unknown;
+    public boolean isMultiCommandFlag() {
+        return multiCommandFlag;
     }
 
     static byte[] formatCommand(byte[] command) {
@@ -75,10 +75,43 @@ abstract class CommandBase implements Command {
                 .array();
     }
 
-    static byte[] encodeHeader(int address, short sequenceNumber, short length, boolean unknown) {
+    static byte[] encodeHeader(int address, short sequenceNumber, short length, boolean multiCommandFlag) {
         return ByteBuffer.allocate(6) //
                 .putInt(address) //
-                .putShort((short) (((sequenceNumber & 0x0f) << 10) | length | ((unknown ? 1 : 0) << 15))) //
+                .putShort((short) (((sequenceNumber & 0x0f) << 10) | length | ((multiCommandFlag ? 1 : 0) << 15))) //
                 .array();
+    }
+
+    static abstract class Builder<T extends Builder<T, R>, R extends Command> {
+        Integer address;
+        Short sequenceNumber;
+        boolean multiCommandFlag = false;
+
+        public final R build() {
+            if (address == null) {
+                throw new IllegalArgumentException("address can not be null");
+            }
+            if (sequenceNumber == null) {
+                throw new IllegalArgumentException("sequenceNumber can not be null");
+            }
+            return buildCommand();
+        }
+
+        public final T setAddress(int address) {
+            this.address = address;
+            return (T) this;
+        }
+
+        public final T setSequenceNumber(short sequenceNumber) {
+            this.sequenceNumber = sequenceNumber;
+            return (T) this;
+        }
+
+        public final T setMultiCommandFlag(boolean multiCommandFlag) {
+            this.multiCommandFlag = multiCommandFlag;
+            return (T) this;
+        }
+
+        abstract R buildCommand();
     }
 }

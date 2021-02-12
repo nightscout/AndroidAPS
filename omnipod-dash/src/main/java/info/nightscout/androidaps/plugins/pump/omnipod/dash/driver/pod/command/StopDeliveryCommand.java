@@ -5,27 +5,38 @@ import java.util.BitSet;
 
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.definition.BeepType;
 
-public class StopDeliveryCommand extends CommandBase {
+public final class StopDeliveryCommand extends CommandBase {
     private static final short LENGTH = 7;
     private static final byte BODY_LENGTH = 5;
 
     private final DeliveryType deliveryType;
     private final BeepType beepType;
 
-    public StopDeliveryCommand(int address, short sequenceNumber, boolean unknown, DeliveryType deliveryType, BeepType beepType) {
-        super(CommandType.STOP_DELIVERY, address, sequenceNumber, unknown);
+    private StopDeliveryCommand(int address, short sequenceNumber, boolean multiCommandFlag, DeliveryType deliveryType, BeepType beepType) {
+        super(CommandType.STOP_DELIVERY, address, sequenceNumber, multiCommandFlag);
         this.deliveryType = deliveryType;
         this.beepType = beepType;
     }
 
     @Override public byte[] getEncoded() {
         return appendCrc(ByteBuffer.allocate(LENGTH + HEADER_LENGTH) //
-                .put(encodeHeader(address, sequenceNumber, LENGTH, unknown)) //
+                .put(encodeHeader(address, sequenceNumber, LENGTH, multiCommandFlag)) //
                 .put(commandType.getValue()) //
                 .put(BODY_LENGTH) //
                 .putInt(1229869870) // FIXME ?? was: byte array of int 777211465 converted to little endian
                 .put((byte) ((beepType.getValue() << 4) | deliveryType.getEncoded())) //
                 .array());
+    }
+
+    @Override public String toString() {
+        return "StopDeliveryCommand{" +
+                "deliveryType=" + deliveryType +
+                ", beepType=" + beepType +
+                ", commandType=" + commandType +
+                ", address=" + address +
+                ", sequenceNumber=" + sequenceNumber +
+                ", multiCommandFlag=" + multiCommandFlag +
+                '}';
     }
 
     public enum DeliveryType {
@@ -52,4 +63,30 @@ public class StopDeliveryCommand extends CommandBase {
             return bitSet.toByteArray()[0];
         }
     }
+
+    public static final class Builder extends CommandBase.Builder<Builder, StopDeliveryCommand> {
+        private DeliveryType deliveryType;
+        private BeepType beepType = BeepType.LONG_SINGLE_BEEP;
+
+        public Builder setDeliveryType(DeliveryType deliveryType) {
+            this.deliveryType = deliveryType;
+            return this;
+        }
+
+        public Builder setBeepType(BeepType beepType) {
+            this.beepType = beepType;
+            return this;
+        }
+
+        @Override final StopDeliveryCommand buildCommand() {
+            if (this.deliveryType == null) {
+                throw new IllegalArgumentException("deliveryType can not be null");
+            }
+            if (this.deliveryType == null) {
+                throw new IllegalArgumentException("beepType can not be null");
+            }
+            return new StopDeliveryCommand(address, sequenceNumber, multiCommandFlag, deliveryType, beepType);
+        }
+    }
+
 }

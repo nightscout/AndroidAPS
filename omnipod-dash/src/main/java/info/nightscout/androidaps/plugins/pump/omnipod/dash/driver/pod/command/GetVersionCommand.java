@@ -2,22 +2,19 @@ package info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.command;
 
 import java.nio.ByteBuffer;
 
-public class GetVersionCommand extends CommandBase {
-    private static final int DEFAULT_ADDRESS = -1;
+public final class GetVersionCommand extends CommandBase {
+    public static final int DEFAULT_ADDRESS = -1; // FIXME move
+
     private static final short LENGTH = 6;
     private static final byte BODY_LENGTH = 4;
 
-    public GetVersionCommand(short sequenceNumber, boolean unknown) {
-        this(DEFAULT_ADDRESS, sequenceNumber, unknown);
-    }
-
-    public GetVersionCommand(int address, short sequenceNumber, boolean unknown) {
-        super(CommandType.GET_VERSION, address, sequenceNumber, unknown);
+    private GetVersionCommand(int address, short sequenceNumber, boolean multiCommandFlag) {
+        super(CommandType.GET_VERSION, address, sequenceNumber, multiCommandFlag);
     }
 
     @Override public byte[] getEncoded() {
         return appendCrc(ByteBuffer.allocate(LENGTH + HEADER_LENGTH) //
-                .put(encodeHeader(address, sequenceNumber, LENGTH, unknown)) //
+                .put(encodeHeader(address, sequenceNumber, LENGTH, multiCommandFlag)) //
                 .put(commandType.getValue()) //
                 .put(BODY_LENGTH) //
                 .putInt(address) //
@@ -29,7 +26,13 @@ public class GetVersionCommand extends CommandBase {
                 "commandType=" + commandType +
                 ", address=" + address +
                 ", sequenceNumber=" + sequenceNumber +
-                ", unknown=" + unknown +
+                ", multiCommandFlag=" + multiCommandFlag +
                 '}';
+    }
+
+    public static final class Builder extends CommandBase.Builder<Builder, GetVersionCommand> {
+        @Override final GetVersionCommand buildCommand() {
+            return new GetVersionCommand(address, sequenceNumber, multiCommandFlag);
+        }
     }
 }

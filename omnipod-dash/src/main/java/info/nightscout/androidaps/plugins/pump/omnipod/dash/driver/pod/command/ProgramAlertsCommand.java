@@ -6,17 +6,17 @@ import java.util.List;
 
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.definition.AlertConfiguration;
 
-public class ProgramAlertsCommand extends CommandBase {
+public final class ProgramAlertsCommand extends CommandBase {
     private final List<AlertConfiguration> alertConfigurations;
 
-    ProgramAlertsCommand(int address, short sequenceNumber, boolean unknown, List<AlertConfiguration> alertConfigurations) {
-        super(CommandType.PROGRAM_ALERTS, address, sequenceNumber, unknown);
+    private ProgramAlertsCommand(int address, short sequenceNumber, boolean multiCommandFlag, List<AlertConfiguration> alertConfigurations) {
+        super(CommandType.PROGRAM_ALERTS, address, sequenceNumber, multiCommandFlag);
         this.alertConfigurations = new ArrayList<>(alertConfigurations);
     }
 
     @Override public byte[] getEncoded() {
         ByteBuffer byteBuffer = ByteBuffer.allocate(getLength() + HEADER_LENGTH) //
-                .put(encodeHeader(address, sequenceNumber, getLength(), unknown)) //
+                .put(encodeHeader(address, sequenceNumber, getLength(), multiCommandFlag)) //
                 .put(commandType.getValue()) //
                 .put(getBodyLength()) //
                 .putInt(1229869870); // FIXME ?? was: byte array of int 777211465 converted to little endian
@@ -40,7 +40,23 @@ public class ProgramAlertsCommand extends CommandBase {
                 ", commandType=" + commandType +
                 ", address=" + address +
                 ", sequenceNumber=" + sequenceNumber +
-                ", unknown=" + unknown +
+                ", multiCommandFlag=" + multiCommandFlag +
                 '}';
+    }
+
+    public static final class Builder extends CommandBase.Builder<Builder, ProgramAlertsCommand> {
+        private List<AlertConfiguration> alertConfigurations;
+
+        public Builder setAlertConfigurations(List<AlertConfiguration> alertConfigurations) {
+            this.alertConfigurations = alertConfigurations;
+            return this;
+        }
+
+        @Override final ProgramAlertsCommand buildCommand() {
+            if (this.alertConfigurations == null) {
+                throw new IllegalArgumentException("alertConfigurations can not be null");
+            }
+            return new ProgramAlertsCommand(address, sequenceNumber, multiCommandFlag, alertConfigurations);
+        }
     }
 }

@@ -4,7 +4,7 @@ import java.nio.ByteBuffer;
 import java.util.Calendar;
 import java.util.Date;
 
-public class SetUniqueIdCommand extends CommandBase {
+public final class SetUniqueIdCommand extends CommandBase {
     private static final int DEFAULT_ADDRESS = -1;
     private static final short LENGTH = 21;
     private static final byte BODY_LENGTH = 19;
@@ -13,8 +13,8 @@ public class SetUniqueIdCommand extends CommandBase {
     private final int podSequenceNumber;
     private final Date initializationTime;
 
-    SetUniqueIdCommand(int address, short sequenceNumber, int lotNumber, int podSequenceNumber, Date initializationTime, boolean unknown) {
-        super(CommandType.SET_UNIQUE_ID, address, sequenceNumber, unknown);
+    private SetUniqueIdCommand(int address, short sequenceNumber, boolean multiCommandFlag, int lotNumber, int podSequenceNumber, Date initializationTime) {
+        super(CommandType.SET_UNIQUE_ID, address, sequenceNumber, multiCommandFlag);
         this.lotNumber = lotNumber;
         this.podSequenceNumber = podSequenceNumber;
         this.initializationTime = initializationTime;
@@ -22,7 +22,7 @@ public class SetUniqueIdCommand extends CommandBase {
 
     @Override public byte[] getEncoded() {
         return appendCrc(ByteBuffer.allocate(LENGTH + HEADER_LENGTH) //
-                .put(encodeHeader(DEFAULT_ADDRESS, sequenceNumber, LENGTH, unknown)) //
+                .put(encodeHeader(DEFAULT_ADDRESS, sequenceNumber, LENGTH, multiCommandFlag)) //
                 .put(commandType.getValue()) //
                 .put(BODY_LENGTH) //
                 .putInt(address) //
@@ -55,7 +55,41 @@ public class SetUniqueIdCommand extends CommandBase {
                 ", commandType=" + commandType +
                 ", address=" + address +
                 ", sequenceNumber=" + sequenceNumber +
-                ", unknown=" + unknown +
+                ", multiCommandFlag=" + multiCommandFlag +
                 '}';
+    }
+
+    public static final class Builder extends CommandBase.Builder<Builder, SetUniqueIdCommand> {
+        private Integer lotNumber;
+        private Integer podSequenceNumber;
+        private Date initializationTime;
+
+        public Builder setLotNumber(int lotNumber) {
+            this.lotNumber = lotNumber;
+            return this;
+        }
+
+        public Builder setPodSequenceNumber(int podSequenceNumber) {
+            this.podSequenceNumber = podSequenceNumber;
+            return this;
+        }
+
+        public Builder setInitializationTime(Date initializationTime) {
+            this.initializationTime = initializationTime;
+            return this;
+        }
+
+        @Override final SetUniqueIdCommand buildCommand() {
+            if (lotNumber == null) {
+                throw new IllegalArgumentException("lotNumber can not be null");
+            }
+            if (podSequenceNumber == null) {
+                throw new IllegalArgumentException("podSequenceNumber can not be null");
+            }
+            if (initializationTime == null) {
+                throw new IllegalArgumentException("initializationTime can not be null");
+            }
+            return new SetUniqueIdCommand(address, sequenceNumber, multiCommandFlag, lotNumber, podSequenceNumber, initializationTime);
+        }
     }
 }
