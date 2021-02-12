@@ -79,10 +79,10 @@ public final class StopDeliveryCommand extends CommandBase {
         }
 
         @Override final StopDeliveryCommand buildCommand() {
-            if (this.deliveryType == null) {
+            if (deliveryType == null) {
                 throw new IllegalArgumentException("deliveryType can not be null");
             }
-            if (this.deliveryType == null) {
+            if (beepType == null) {
                 throw new IllegalArgumentException("beepType can not be null");
             }
             return new StopDeliveryCommand(address, sequenceNumber, multiCommandFlag, deliveryType, beepType);
