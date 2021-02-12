@@ -2,7 +2,9 @@ package info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.definiti
 
 import java.nio.ByteBuffer;
 
-public class InsulinProgramElement {
+import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.definition.Encodable;
+
+public class InsulinProgramElement implements Encodable {
     private final byte numberOfHalfOurEntries; // 4 bits
     private final short numberOfPulsesPerHalfOurEntry; // 10 bits
     private final boolean extraAlternatePulse;
@@ -13,7 +15,7 @@ public class InsulinProgramElement {
         this.extraAlternatePulse = extraAlternatePulse;
     }
 
-    public byte[] getEncoded() {
+    @Override public byte[] getEncoded() {
         byte firstByte = (byte) ((((numberOfHalfOurEntries - 1) & 0x0f) << 4)
                 | ((extraAlternatePulse ? 1 : 0) << 3)
                 | ((numberOfPulsesPerHalfOurEntry >>> 8) & 0x03));

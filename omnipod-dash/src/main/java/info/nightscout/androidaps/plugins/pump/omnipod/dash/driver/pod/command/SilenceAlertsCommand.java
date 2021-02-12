@@ -3,6 +3,8 @@ package info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.command;
 import java.nio.ByteBuffer;
 import java.util.BitSet;
 
+import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.definition.Encodable;
+
 public final class SilenceAlertsCommand extends CommandBase {
     private static final short LENGTH = (short) 7;
     private static final byte BODY_LENGTH = (byte) 5;
@@ -34,7 +36,7 @@ public final class SilenceAlertsCommand extends CommandBase {
                 '}';
     }
 
-    private static final class SilenceAlertCommandParameters {
+    private static final class SilenceAlertCommandParameters implements Encodable {
         private final boolean silenceAutoOffAlert;
         private final boolean silenceMultiCommandAlert;
         private final boolean silenceExpirationImminentAlert;
@@ -55,7 +57,8 @@ public final class SilenceAlertsCommand extends CommandBase {
             this.silencePodExpirationAlert = silencePodExpirationAlert;
         }
 
-        private byte[] getEncoded() {
+        @Override
+        public byte[] getEncoded() {
             BitSet bitSet = new BitSet(8);
             bitSet.set(0, this.silenceAutoOffAlert);
             bitSet.set(1, this.silenceMultiCommandAlert);

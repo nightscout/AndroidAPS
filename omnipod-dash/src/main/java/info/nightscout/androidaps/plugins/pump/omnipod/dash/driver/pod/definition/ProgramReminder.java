@@ -1,6 +1,6 @@
 package info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.definition;
 
-public class ProgramReminder {
+public class ProgramReminder implements Encodable {
     private final boolean atStart;
     private final boolean atEnd;
     private final byte atInterval;
@@ -11,9 +11,9 @@ public class ProgramReminder {
         this.atInterval = atIntervalInMinutes;
     }
 
-    public byte getEncoded() {
-        return (byte) (((this.atStart ? 0 : 1) << 7)
+    @Override public byte[] getEncoded() {
+        return new byte[]{(byte) (((this.atStart ? 0 : 1) << 7)
                 | ((this.atEnd ? 0 : 1) << 6)
-                | (this.atInterval & 0x3f));
+                | (this.atInterval & 0x3f))};
     }
 }

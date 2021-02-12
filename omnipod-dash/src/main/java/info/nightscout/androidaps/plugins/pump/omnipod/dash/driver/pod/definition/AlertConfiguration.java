@@ -2,7 +2,7 @@ package info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.definiti
 
 import java.nio.ByteBuffer;
 
-public class AlertConfiguration {
+public class AlertConfiguration implements Encodable {
     private AlertSlot slot;
     private boolean enabled;
     private short durationInMinutes;
@@ -23,7 +23,7 @@ public class AlertConfiguration {
         this.beepRepetition = beepRepetition;
     }
 
-    public byte[] getEncoded() {
+    @Override public byte[] getEncoded() {
         byte firstByte = (byte) (slot.getValue() << 4);
         if (enabled) {
             firstByte |= 1 << 3;

@@ -4,6 +4,7 @@ import java.nio.ByteBuffer;
 import java.util.BitSet;
 
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.definition.BeepType;
+import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.definition.Encodable;
 
 public final class StopDeliveryCommand extends CommandBase {
     private static final short LENGTH = 7;
@@ -24,7 +25,7 @@ public final class StopDeliveryCommand extends CommandBase {
                 .put(commandType.getValue()) //
                 .put(BODY_LENGTH) //
                 .putInt(1229869870) // FIXME ?? was: byte array of int 777211465 converted to little endian
-                .put((byte) ((beepType.getValue() << 4) | deliveryType.getEncoded())) //
+                .put((byte) ((beepType.getValue() << 4) | deliveryType.getEncoded()[0])) //
                 .array());
     }
 
@@ -39,7 +40,7 @@ public final class StopDeliveryCommand extends CommandBase {
                 '}';
     }
 
-    public enum DeliveryType {
+    public enum DeliveryType implements Encodable {
         BASAL(true, false, false),
         TEMP_BASAL(false, true, false),
         BOLUS(false, false, true),
@@ -55,12 +56,12 @@ public final class StopDeliveryCommand extends CommandBase {
             this.bolus = bolus;
         }
 
-        public byte getEncoded() {
+        @Override public byte[] getEncoded() {
             BitSet bitSet = new BitSet(8);
             bitSet.set(0, this.basal);
             bitSet.set(1, this.tempBasal);
             bitSet.set(2, this.bolus);
-            return bitSet.toByteArray()[0];
+            return bitSet.toByteArray();
         }
     }
 

@@ -1,7 +1,7 @@
 package info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.command;
 
-public interface Command {
-    CommandType getCommandType();
+import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.definition.Encodable;
 
-    byte[] getEncoded();
+public interface Command extends Encodable {
+    CommandType getCommandType();
 }
