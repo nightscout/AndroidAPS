@@ -1161,4 +1161,5 @@ Unerwartetes Verhalten.</string>
     <string name="clear_filter">Filter löschen</string>
     <string name="trend_arrow">Trendpfeil</string>
     <string name="cannula">Kanüle</string>
+    <string name="userentry">Benutzereingabe</string>
 </resources>
