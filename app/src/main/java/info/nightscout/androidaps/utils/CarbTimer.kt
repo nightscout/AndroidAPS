@@ -14,45 +14,26 @@ import info.nightscout.androidaps.plugins.general.automation.elements.InputDelta
 import info.nightscout.androidaps.plugins.general.automation.triggers.TriggerBg
 import info.nightscout.androidaps.plugins.general.automation.triggers.TriggerConnector
 import info.nightscout.androidaps.plugins.general.automation.triggers.TriggerDelta
-import info.nightscout.androidaps.plugins.general.automation.triggers.TriggerTime
 import info.nightscout.androidaps.utils.resources.ResourceHelper
-import info.nightscout.androidaps.utils.sharedPreferences.SP
 import java.text.DecimalFormat
 import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
 class CarbTimer @Inject constructor(
-    private val sp: SP,
     private val context: Context,
     private val injector: HasAndroidInjector,
     private val resourceHelper: ResourceHelper,
     private val automationPlugin: AutomationPlugin
 ) {
 
-    fun scheduleReminder(time: Long) {
-        if (sp.getBoolean(R.string.key_raise_notifications_as_android_notifications, true)) {
-            Intent(AlarmClock.ACTION_SET_TIMER).apply {
-                val length: Int = ((time - DateUtil.now()) / 1000).toInt()
-                flags = flags or Intent.FLAG_ACTIVITY_NEW_TASK
-                putExtra(AlarmClock.EXTRA_LENGTH, length)
-                putExtra(AlarmClock.EXTRA_SKIP_UI, true)
-                putExtra(AlarmClock.EXTRA_MESSAGE, resourceHelper.gs(R.string.timetoeat))
-                context.startActivity(this)
-            }
-        } else {
-            AutomationEvent(injector).apply {
-                title = resourceHelper.gs(R.string.timetoeat)
-                readOnly = true
-                systemAction = true
-                autoRemove = true
-                trigger = TriggerConnector(injector, TriggerConnector.Type.AND).apply {
-                    list.add(TriggerTime(injector, time))
-                }
-                actions.add(ActionAlarm(injector, resourceHelper.gs(R.string.timetoeat)))
-                automationPlugin.addIfNotExists(this)
-            }
-        }
+    fun scheduleReminder(time: Long) = Intent(AlarmClock.ACTION_SET_TIMER).apply {
+        val length: Int = ((time - DateUtil.now()) / 1000).toInt()
+        flags = flags or Intent.FLAG_ACTIVITY_NEW_TASK
+        putExtra(AlarmClock.EXTRA_LENGTH, length)
+        putExtra(AlarmClock.EXTRA_SKIP_UI, true)
+        putExtra(AlarmClock.EXTRA_MESSAGE, resourceHelper.gs(R.string.timetoeat))
+        context.startActivity(this)
     }
 
     fun scheduleEatReminder() {
