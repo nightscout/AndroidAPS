@@ -20,7 +20,6 @@ class InputWeekDay(injector: HasAndroidInjector) : Element(injector) {
             get() = shortNames[ordinal]
 
         companion object {
-
             private val calendarInts = intArrayOf(
                 Calendar.MONDAY,
                 Calendar.TUESDAY,
@@ -82,6 +81,5 @@ class InputWeekDay(injector: HasAndroidInjector) : Element(injector) {
             setOnWeekdaysChangeListener { i: Int, selected: Boolean -> set(DayOfWeek.fromCalendarInt(i), selected) }
             root.addView(this)
         }
-        // TODO: remove library and dependency statement
     }
 }

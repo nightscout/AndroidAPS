@@ -4,7 +4,6 @@ import android.content.Context
 import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.widget.Checkable
-import android.widget.LinearLayout
 import androidx.appcompat.widget.AppCompatCheckedTextView
 import androidx.constraintlayout.widget.ConstraintLayout
 import info.nightscout.androidaps.core.databinding.WeekdayPickerBinding
@@ -33,33 +32,33 @@ class WeekdayPicker @JvmOverloads constructor(
         }
     }
 
-    fun setSelectedDays(list: List<Int>) {
-        binding.weekdayPickerSundayStart.isChecked = list.contains(Calendar.SUNDAY)
-        binding.weekdayPickerSundayEnd.isChecked = list.contains(Calendar.SUNDAY)
-        binding.weekdayPickerMonday.isChecked = list.contains(Calendar.MONDAY)
-        binding.weekdayPickerTuesday.isChecked = list.contains(Calendar.TUESDAY)
-        binding.weekdayPickerWednesday.isChecked = list.contains(Calendar.WEDNESDAY)
-        binding.weekdayPickerThursday.isChecked = list.contains(Calendar.THURSDAY)
-        binding.weekdayPickerFriday.isChecked = list.contains(Calendar.FRIDAY)
-        binding.weekdayPickerSaturday.isChecked = list.contains(Calendar.SATURDAY)
+    fun setSelectedDays(list: List<Int>) = with(binding) {
+        weekdayPickerSundayStart.isChecked = list.contains(Calendar.SUNDAY)
+        weekdayPickerSundayEnd.isChecked = list.contains(Calendar.SUNDAY)
+        weekdayPickerMonday.isChecked = list.contains(Calendar.MONDAY)
+        weekdayPickerTuesday.isChecked = list.contains(Calendar.TUESDAY)
+        weekdayPickerWednesday.isChecked = list.contains(Calendar.WEDNESDAY)
+        weekdayPickerThursday.isChecked = list.contains(Calendar.THURSDAY)
+        weekdayPickerFriday.isChecked = list.contains(Calendar.FRIDAY)
+        weekdayPickerSaturday.isChecked = list.contains(Calendar.SATURDAY)
     }
 
-   private fun setupClickListeners() {
-        binding.weekdayPickerSundayStart.setupCallbackFor(Calendar.SUNDAY)
-        binding.weekdayPickerSundayEnd.setupCallbackFor(Calendar.SUNDAY)
-        binding.weekdayPickerMonday.setupCallbackFor(Calendar.MONDAY)
-        binding.weekdayPickerTuesday.setupCallbackFor(Calendar.TUESDAY)
-        binding.weekdayPickerWednesday.setupCallbackFor(Calendar.WEDNESDAY)
-        binding.weekdayPickerThursday.setupCallbackFor(Calendar.THURSDAY)
-        binding.weekdayPickerFriday.setupCallbackFor(Calendar.FRIDAY)
-        binding.weekdayPickerSaturday.setupCallbackFor(Calendar.SATURDAY)
+    private fun setupClickListeners() = with(binding) {
+        weekdayPickerSundayStart.setupCallbackFor(Calendar.SUNDAY)
+        weekdayPickerSundayEnd.setupCallbackFor(Calendar.SUNDAY)
+        weekdayPickerMonday.setupCallbackFor(Calendar.MONDAY)
+        weekdayPickerTuesday.setupCallbackFor(Calendar.TUESDAY)
+        weekdayPickerWednesday.setupCallbackFor(Calendar.WEDNESDAY)
+        weekdayPickerThursday.setupCallbackFor(Calendar.THURSDAY)
+        weekdayPickerFriday.setupCallbackFor(Calendar.FRIDAY)
+        weekdayPickerSaturday.setupCallbackFor(Calendar.SATURDAY)
     }
 
     fun setOnWeekdaysChangeListener(changeListener: (Int, Boolean) -> Unit) {
         this.changeListener = changeListener
     }
 
-    private fun AppCompatCheckedTextView.setupCallbackFor(day: Int) = setOnClickListener{
+    private fun AppCompatCheckedTextView.setupCallbackFor(day: Int) = setOnClickListener {
         val checkable = it as Checkable
         val checked = checkable.isChecked
         checkable.isChecked = !checked
