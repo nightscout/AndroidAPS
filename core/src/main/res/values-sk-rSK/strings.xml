@@ -257,6 +257,7 @@
     <string name="versionavailable">Verzia %1$s je k dispozícii</string>
     <!-- Permissions -->
     <string name="alert_dialog_storage_permission_text">Prosím reštartujte Váš telefón, alebo reštartujte AndroidAPS z nastavení \nv opačnom prípade AndroidAPS nebude mocť zaznamenávať logy (dôležité kvôli sledovaniu a overovaniu, že algoritmus pracuje správne)!</string>
+    <!-- WeekdayPicker -->
     <plurals name="days">
         <item quantity="one">%1$d deň</item>
         <item quantity="few">%1$d dní</item>
