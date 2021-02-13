@@ -72,7 +72,7 @@ class AutotunePrep @Inject constructor(private val injector: HasAndroidInjector)
         //Bloc below replace bloc between #72 and #93
         // I keep it because BG lines in log are consistent between AAPS and Oref0
         val bucketedData: MutableList<BGDatum> = ArrayList()
-        bucketedData.add(BGDatum(glucoseData[0]))
+        if(glucoseData.size > 0) bucketedData.add(BGDatum(glucoseData[0]))
         //int j=0;
         var k = 0 // index of first value used by bucket
         //for loop to validate and bucket the data

@@ -18,13 +18,12 @@ class BGDatum {
     var value = 0.0
     var direction: TrendArrow? = null
     var deviation = 0.0
-    var raw = null
     var bgi = 0.0
     var mealAbsorption = ""
     var mealCarbs = 0
     var uamAbsorption = ""
     var avgDelta = 0.0
-    var bgReading: GlucoseValue? = null
+    var glucoseValue: GlucoseValue? = null
         private set
 
     constructor() {}
@@ -47,10 +46,9 @@ class BGDatum {
         // Used like from NS sgv
         date = glucoseValue.timestamp
         value = glucoseValue.value
-        raw = glucoseValue.raw as Nothing?
         direction = glucoseValue.trendArrow
         id = glucoseValue.id
-        this.bgReading = glucoseValue
+        this.glucoseValue = glucoseValue
     }
 
     fun toJSON(mealData: Boolean): JSONObject {

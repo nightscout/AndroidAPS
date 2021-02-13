@@ -87,6 +87,7 @@ class AutotuneIob(
     private fun initializeBgreadings(from: Long, to: Long) {
         //glucose.clear()
         glucose = repository.compatGetBgReadingsDataFromTime(from, to, false).blockingGet();
+        log.debug("Glucose Size " + glucose.size);
     }
 
     //nsTreatment is used only for export data, meals is used in AutotunePrep
