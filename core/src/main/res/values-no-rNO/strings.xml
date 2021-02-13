@@ -257,6 +257,7 @@
     <string name="versionavailable">Versjon %1$s er tilgjengelig</string>
     <!-- Permissions -->
     <string name="alert_dialog_storage_permission_text">Vennligst start mobilen på nytt eller restart AndroidAPS fra Innstillinger \nellers vil ikke AndroidAPS ha aktivert loggføring (viktig for å spore og kontrollere at algoritmene fungerer riktig!)</string>
+    <!-- WeekdayPicker -->
     <plurals name="days">
         <item quantity="one">%1$d dag</item>
         <item quantity="other">%1$d dager</item>
