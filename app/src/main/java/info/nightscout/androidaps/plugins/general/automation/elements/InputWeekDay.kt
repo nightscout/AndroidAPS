@@ -1,12 +1,10 @@
 package info.nightscout.androidaps.plugins.general.automation.elements
 
-import android.view.View
-import android.view.ViewGroup
 import android.widget.LinearLayout
 import androidx.annotation.StringRes
-import com.dpro.widgets.WeekdaysPicker
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.R
+import info.nightscout.androidaps.utils.ui.WeekdayPicker
 import java.util.*
 
 class InputWeekDay(injector: HasAndroidInjector) : Element(injector) {
@@ -22,6 +20,7 @@ class InputWeekDay(injector: HasAndroidInjector) : Element(injector) {
             get() = shortNames[ordinal]
 
         companion object {
+
             private val calendarInts = intArrayOf(
                 Calendar.MONDAY,
                 Calendar.TUESDAY,
@@ -56,7 +55,7 @@ class InputWeekDay(injector: HasAndroidInjector) : Element(injector) {
         for (day in DayOfWeek.values()) set(day, false)
     }
 
-    fun setAll(value:Boolean) {
+    fun setAll(value: Boolean) {
         for (day in DayOfWeek.values()) set(day, value)
     }
 
@@ -78,13 +77,11 @@ class InputWeekDay(injector: HasAndroidInjector) : Element(injector) {
     }
 
     override fun addToLayout(root: LinearLayout) {
-        val weekdaysPicker = WeekdaysPicker(root.context)
-        weekdaysPicker.setEditable(true)
-        weekdaysPicker.selectedDays = getSelectedDays()
-        weekdaysPicker.setOnWeekdaysChangeListener { _: View?, i: Int, list: List<Int?> -> set(DayOfWeek.fromCalendarInt(i), list.contains(i)) }
-        weekdaysPicker.layoutParams = LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT)
-        weekdaysPicker.sundayFirstDay = Calendar.getInstance().firstDayOfWeek == Calendar.SUNDAY
-        weekdaysPicker.redrawDays()
-        root.addView(weekdaysPicker)
+        WeekdayPicker(root.context).apply {
+            setSelectedDays(getSelectedDays())
+            setOnWeekdaysChangeListener { i: Int, selected: Boolean -> set(DayOfWeek.fromCalendarInt(i), selected) }
+            root.addView(this)
+        }
+        // TODO: remove library and dependency statement
     }
 }
