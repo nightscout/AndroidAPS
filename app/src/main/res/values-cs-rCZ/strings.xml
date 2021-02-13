@@ -1160,4 +1160,5 @@
     <string name="clear_filter">Vymazat filtr</string>
     <string name="trend_arrow">Šipka trendu</string>
     <string name="cannula">Kanyla</string>
+    <string name="userentry">Vstup uživatele</string>
 </resources>
