@@ -254,4 +254,5 @@
     <string name="running_invalid_version">Nustatyta, kad naudojate neteisingą versiją. Ciklas išjungtas!</string>
     <string name="versionavailable">Versiją %1$s jau galima naudoti</string>
     <!-- Permissions -->
+    <!-- WeekdayPicker -->
 </resources>
