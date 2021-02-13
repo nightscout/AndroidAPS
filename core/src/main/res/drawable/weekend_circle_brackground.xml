@@ -3,5 +3,5 @@
     <solid android:color="@color/day_selection_background"/>
     <stroke
         android:width="4dp"
-        android:color="@color/weekdayOutline"/>
+        android:color="@color/weekendOutline"/>
 </shape>

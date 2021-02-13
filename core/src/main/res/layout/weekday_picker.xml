@@ -1,74 +1,138 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/linearLayout"
+    android:padding="2dp"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:orientation="horizontal">
+    android:layout_height="wrap_content">
 
     <androidx.appcompat.widget.AppCompatCheckedTextView
         android:id="@+id/weekdayPickerSundayStart"
         android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_weight="1"
+        android:layout_height="0dp"
+        android:background="@drawable/weekend_circle_brackground"
+        android:gravity="center"
+        android:textAlignment="gravity"
+        android:padding="8dp"
+        android:layout_margin="2dp"
+        app:layout_constraintDimensionRatio="H,1:1"
+        app:autoSizeTextType="uniform"
         android:text="@string/sunday_short"
-        app:autoSizeTextType="uniform" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/weekdayPickerMonday"
+        app:layout_constraintStart_toStartOf="parent" />
 
     <androidx.appcompat.widget.AppCompatCheckedTextView
         android:id="@+id/weekdayPickerMonday"
         android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_weight="1"
-        android:text="@string/monday_short"
-        android:gravity="center"
+        android:layout_height="0dp"
         android:background="@drawable/weekday_circle_brackground"
-        app:autoSizeTextType="uniform" />
+        android:gravity="center"
+        android:textAlignment="gravity"
+        android:padding="8dp"
+        android:layout_margin="2dp"
+        app:layout_constraintDimensionRatio="H,1:1"
+        app:autoSizeTextType="uniform"
+        android:text="@string/monday_short"
+        app:layout_constraintEnd_toStartOf="@+id/weekdayPickerTuesday"
+        app:layout_constraintStart_toEndOf="@+id/weekdayPickerSundayStart"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <androidx.appcompat.widget.AppCompatCheckedTextView
         android:id="@+id/weekdayPickerTuesday"
         android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_weight="1"
+        android:layout_height="0dp"
+        android:background="@drawable/weekday_circle_brackground"
+        android:gravity="center"
+        android:textAlignment="gravity"
+        android:padding="8dp"
+        android:layout_margin="2dp"
+        app:layout_constraintDimensionRatio="H,1:1"
+        app:autoSizeTextType="uniform"
         android:text="@string/tuesday_short"
-        app:autoSizeTextType="uniform" />
+        app:layout_constraintBaseline_toBaselineOf="@+id/weekdayPickerWednesday"
+        app:layout_constraintEnd_toStartOf="@+id/weekdayPickerWednesday"
+        app:layout_constraintStart_toEndOf="@+id/weekdayPickerMonday" />
 
     <androidx.appcompat.widget.AppCompatCheckedTextView
         android:id="@+id/weekdayPickerWednesday"
         android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_weight="1"
+        android:layout_height="0dp"
+        android:background="@drawable/weekday_circle_brackground"
+        android:gravity="center"
+        android:textAlignment="gravity"
+        android:padding="8dp"
+        android:layout_margin="2dp"
+        app:layout_constraintDimensionRatio="H,1:1"
+        app:autoSizeTextType="uniform"
         android:text="@string/wednesday_short"
-        app:autoSizeTextType="uniform" />
+        app:layout_constraintEnd_toStartOf="@+id/weekdayPickerThursday"
+        app:layout_constraintStart_toEndOf="@+id/weekdayPickerTuesday"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <androidx.appcompat.widget.AppCompatCheckedTextView
         android:id="@+id/weekdayPickerThursday"
         android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_weight="1"
+        android:layout_height="0dp"
+        android:background="@drawable/weekday_circle_brackground"
+        android:gravity="center"
+        android:textAlignment="gravity"
+        android:padding="8dp"
+        android:layout_margin="2dp"
+        app:layout_constraintDimensionRatio="H,1:1"
+        app:autoSizeTextType="uniform"
         android:text="@string/thursday_short"
-        app:autoSizeTextType="uniform" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/weekdayPickerFriday"
+        app:layout_constraintStart_toEndOf="@+id/weekdayPickerWednesday" />
 
     <androidx.appcompat.widget.AppCompatCheckedTextView
         android:id="@+id/weekdayPickerFriday"
         android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_weight="1"
+        android:layout_height="0dp"
+        android:background="@drawable/weekday_circle_brackground"
+        android:gravity="center"
+        android:textAlignment="gravity"
+        android:padding="8dp"
+        android:layout_margin="2dp"
+        app:layout_constraintDimensionRatio="H,1:1"
+        app:autoSizeTextType="uniform"
         android:text="@string/friday_short"
-        app:autoSizeTextType="uniform" />
+        app:layout_constraintEnd_toStartOf="@+id/weekdayPickerSaturday"
+        app:layout_constraintStart_toEndOf="@+id/weekdayPickerThursday"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <androidx.appcompat.widget.AppCompatCheckedTextView
         android:id="@+id/weekdayPickerSaturday"
         android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_weight="1"
+        android:layout_height="0dp"
+        android:background="@drawable/weekend_circle_brackground"
+        android:gravity="center"
+        android:textAlignment="gravity"
+        android:padding="8dp"
+        android:layout_margin="2dp"
+        app:layout_constraintDimensionRatio="H,1:1"
+        app:autoSizeTextType="uniform"
         android:text="@string/saturday_short"
-        app:autoSizeTextType="uniform" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/weekdayPickerSundayEnd"
+        app:layout_constraintStart_toEndOf="@+id/weekdayPickerFriday" />
 
     <androidx.appcompat.widget.AppCompatCheckedTextView
         android:id="@+id/weekdayPickerSundayEnd"
         android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_weight="1"
+        android:layout_height="0dp"
+        android:background="@drawable/weekend_circle_brackground"
+        android:gravity="center"
+        android:textAlignment="gravity"
+        android:padding="8dp"
+        android:layout_margin="2dp"
+        app:layout_constraintDimensionRatio="H,1:1"
+        app:autoSizeTextType="uniform"
         android:text="@string/sunday_short"
-        app:autoSizeTextType="uniform" />
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/weekdayPickerSaturday"
+        app:layout_constraintTop_toTopOf="parent" />
 
-</LinearLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

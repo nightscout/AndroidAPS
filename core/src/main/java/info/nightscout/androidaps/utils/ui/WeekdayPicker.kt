@@ -6,13 +6,14 @@ import android.view.LayoutInflater
 import android.widget.Checkable
 import android.widget.LinearLayout
 import androidx.appcompat.widget.AppCompatCheckedTextView
+import androidx.constraintlayout.widget.ConstraintLayout
 import info.nightscout.androidaps.core.databinding.WeekdayPickerBinding
 import info.nightscout.androidaps.utils.extensions.toVisibility
 import java.util.*
 
 class WeekdayPicker @JvmOverloads constructor(
     context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
-) : LinearLayout(context, attrs, defStyleAttr) {
+) : ConstraintLayout(context, attrs, defStyleAttr) {
 
     private var changeListener: ((Int, Boolean) -> Unit)? = null
 
