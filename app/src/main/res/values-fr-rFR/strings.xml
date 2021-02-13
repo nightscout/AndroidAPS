@@ -1161,4 +1161,5 @@ L\'ENSEMBLE DES RISQUES LIÉS À LA QUALITÉ ET À LA PERFORMANCE DU PROGRAMME S
     <string name="clear_filter">Effacer le filtre</string>
     <string name="trend_arrow">Flèche de tendance</string>
     <string name="cannula">Canule</string>
+    <string name="userentry">Entrées utilisateur</string>
 </resources>
