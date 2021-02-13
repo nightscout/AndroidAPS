@@ -66,7 +66,7 @@ class GraphData(
         bgReadingsArray = iobCobCalculatorPlugin.bgReadings
         if (bgReadingsArray?.isEmpty() != false) {
             aapsLogger.debug("No BG data.")
-            maxY = 10.0
+            maxY = if (units == Constants.MGDL) 180.0 else 10.0
             minY = 0.0
             return
         }
