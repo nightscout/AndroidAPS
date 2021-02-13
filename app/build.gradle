@@ -241,9 +241,6 @@ dependencies {
 
     implementation fileTree(include: ['*.jar'], dir: 'libs')
 
-    // https://github.com/DavidProdinger/Weekdays-Selector (used outdated 'com.amulyakhare:com.amulyakhare.textdrawable:1.0.1')
-    implementation(name: 'weekdaysselector-1.1.1', ext: 'aar')
-
     testImplementation "junit:junit:$junit_version"
     testImplementation 'org.json:json:20201115'
     testImplementation "org.mockito:mockito-core:${mockitoVersion}"
