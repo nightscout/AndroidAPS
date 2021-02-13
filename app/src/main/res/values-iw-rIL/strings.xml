@@ -156,7 +156,7 @@
     <string name="nav_import">יבא הגדרות</string>
     <string name="openapsma_maxbasal_title">מינון בזאלי זמני מקסימלי (יח\'\\שעה)</string>
     <string name="openapsma_maxbasal_summary">ערך זה נקרא בזאלי מרבי ב-OpenAPS</string>
-    <string name="openapsma_maxiob_title">בזאלי פעיל מרבי ש-OpenAPS יכול לספק [U]</string>
+    <string name="openapsma_maxiob_title">בזאלי פעיל מרבי ש-OpenAPS יכול לספק (יחידות) </string>
     <string name="openapsma_maxiob_summary">ערך זה נקרא אינסולין פעיל מקסימלי (Max IOB) ב-OpenAPS. זהו מקסימום האינסולין הפעיל ב-[U] ש-APS מאפשר.</string>
     <string name="password_preferences_encrypt_prompt">אתם תתבקשו למלא סיסמה ראשית שתשמש להצפנת ההעדפות המיוצאות.</string>
     <string name="password_preferences_decrypt_prompt">אתם תתבקשו למלא סיסמה ראשית שתשמש לפיענוח ההעדפות המיובאות.</string>
@@ -678,7 +678,7 @@
     <string name="smbnotallowedinopenloopmode">SMB אינו פעיל במצב לולאה פתוחה</string>
     <string name="food_short">מזון</string>
     <string name="reset">איפוס</string>
-    <string name="openapssmb_maxiob_title">מינון אינסולין פעיל מרבי ממנו OpenAPS לא יחרוג [U]</string>
+    <string name="openapssmb_maxiob_title">מינון אינסולין פעיל מרבי ממנו OpenAPS לא יחרוג (יחידות) </string>
     <string name="openapssmb_maxiob_summary">ב-OpenAPS ערך זה נקרא מקסימום אינסולין פעיל (maxIOB). \nלא יוזרק עוד אינסולין אם כמות האינסולין הפעיל הנוכחי גדול מערך זה</string>
     <string name="pump_stopped">המשאבה נעצרה</string>
     <string name="pump_started">המשאבה הופעלה</string>
