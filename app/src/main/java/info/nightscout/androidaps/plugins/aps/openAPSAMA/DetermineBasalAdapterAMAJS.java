@@ -129,7 +129,7 @@ public class DetermineBasalAdapterAMAJS {
                         setTempBasalFunctionsObj};
 
                 NativeObject jsResult = (NativeObject) determineBasalJS.call(rhino, scope, scope, params);
-                scriptDebug = LoggerCallback.getScriptDebug();
+                scriptDebug = LoggerCallback.Companion.getScriptDebug();
 
                 // Parse the jsResult object to a JSON-String
                 String result = NativeJSON.stringify(rhino, scope, jsResult, null, null).toString();

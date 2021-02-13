@@ -41,6 +41,10 @@
     <color name="zt">#00d2d2</color>
     <color name="white">#ffffff</color>
 
+    <color name="daySelected">#D000FF00</color>
+    <color name="weekdayOutline">#1ea3e5</color>
+    <color name="weekendOutline">#1e88e5</color>
+
     <!--    CareportalEvent-->
     <color name="notificationAnnouncement">#FF8C00</color>
 
