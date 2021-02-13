@@ -5,16 +5,16 @@ import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
 import info.nightscout.androidaps.database.daos.*
 import info.nightscout.androidaps.database.entities.*
-import info.nightscout.androidaps.database.entities.APSResultLink
-import info.nightscout.androidaps.database.entities.MealLink
-import info.nightscout.androidaps.database.entities.MultiwaveBolusLink
 
-const val DATABASE_VERSION = 1
+const val DATABASE_VERSION = 2
 
-@Database(version = DATABASE_VERSION, entities = arrayOf(APSResult::class, Bolus::class, BolusCalculatorResult::class, Carbs::class,
+@Database(version = DATABASE_VERSION,
+    entities = arrayOf(APSResult::class, Bolus::class, BolusCalculatorResult::class, Carbs::class,
         EffectiveProfileSwitch::class, ExtendedBolus::class, GlucoseValue::class, ProfileSwitch::class,
         TemporaryBasal::class, TemporaryTarget::class, TherapyEvent::class, TotalDailyDose::class,
-        APSResultLink::class, MealLink::class, MultiwaveBolusLink::class, PreferenceChange::class, VersionChange::class))
+        APSResultLink::class, MealLink::class, MultiwaveBolusLink::class, PreferenceChange::class,
+        VersionChange::class, UserEntry::class),
+    exportSchema = true)
 @TypeConverters(Converters::class)
 internal abstract class AppDatabase : RoomDatabase() {
 
@@ -49,6 +49,8 @@ internal abstract class AppDatabase : RoomDatabase() {
     abstract val apsResultDao: APSResultDao
 
     abstract val versionChangeDao: VersionChangeDao
+
+    abstract val userEntryDao: UserEntryDao
 
     abstract val preferenceChangeDao: PreferenceChangeDao
 

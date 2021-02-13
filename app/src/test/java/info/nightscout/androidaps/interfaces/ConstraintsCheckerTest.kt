@@ -8,6 +8,9 @@ import info.nightscout.androidaps.MainApp
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.TestBaseWithProfile
 import info.nightscout.androidaps.dana.DanaPump
+import info.nightscout.androidaps.danar.DanaRPlugin
+import info.nightscout.androidaps.danars.DanaRSPlugin
+import info.nightscout.androidaps.logging.UserEntryLogger
 import info.nightscout.androidaps.plugins.aps.openAPSAMA.OpenAPSAMAPlugin
 import info.nightscout.androidaps.plugins.aps.openAPSSMB.OpenAPSSMBPlugin
 import info.nightscout.androidaps.plugins.configBuilder.ConfigBuilderPlugin
@@ -20,8 +23,6 @@ import info.nightscout.androidaps.plugins.general.nsclient.UploadQueue
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.IobCobCalculatorPlugin
 import info.nightscout.androidaps.plugins.pump.combo.ComboPlugin
 import info.nightscout.androidaps.plugins.pump.common.bolusInfo.DetailedBolusInfoStorage
-import info.nightscout.androidaps.danar.DanaRPlugin
-import info.nightscout.androidaps.danars.DanaRSPlugin
 import info.nightscout.androidaps.plugins.pump.insight.LocalInsightPlugin
 import info.nightscout.androidaps.plugins.pump.virtual.VirtualPumpPlugin
 import info.nightscout.androidaps.plugins.sensitivity.SensitivityOref1Plugin
@@ -46,7 +47,7 @@ import java.util.*
  * Created by mike on 18.03.2018.
  */
 @RunWith(PowerMockRunner::class)
-@PrepareForTest(MainApp::class, ConfigBuilderPlugin::class, ConstraintChecker::class, SP::class, Context::class, OpenAPSAMAPlugin::class, OpenAPSSMBPlugin::class, TreatmentsPlugin::class, TreatmentService::class, VirtualPumpPlugin::class, DetailedBolusInfoStorage::class, GlimpPlugin::class, Profiler::class)
+@PrepareForTest(MainApp::class, ConfigBuilderPlugin::class, ConstraintChecker::class, SP::class, Context::class, OpenAPSAMAPlugin::class, OpenAPSSMBPlugin::class, TreatmentsPlugin::class, TreatmentService::class, VirtualPumpPlugin::class, DetailedBolusInfoStorage::class, GlimpPlugin::class, Profiler::class, UserEntryLogger::class)
 class ConstraintsCheckerTest : TestBaseWithProfile() {
 
     @Mock lateinit var activePlugin: ActivePluginProvider
@@ -61,6 +62,7 @@ class ConstraintsCheckerTest : TestBaseWithProfile() {
     @Mock lateinit var profiler: Profiler
     @Mock lateinit var nsUpload: NSUpload
     @Mock lateinit var uploadQueue: UploadQueue
+    @Mock lateinit var uel: UserEntryLogger
 
     private var buildHelper = BuildHelper(Config())
     lateinit var danaPump: DanaPump
@@ -115,7 +117,7 @@ class ConstraintsCheckerTest : TestBaseWithProfile() {
 
         danaPump = DanaPump(aapsLogger, sp, injector)
         hardLimits = HardLimits(aapsLogger, rxBus, sp, resourceHelper, context, nsUpload)
-        objectivesPlugin = ObjectivesPlugin(injector, aapsLogger, resourceHelper, activePlugin, sp, Config())
+        objectivesPlugin = ObjectivesPlugin(injector, aapsLogger, resourceHelper, activePlugin, sp, Config(), uel)
         comboPlugin = ComboPlugin(injector, aapsLogger, rxBus, resourceHelper, profileFunction, treatmentsPlugin, sp, commandQueue, context)
         danaRPlugin = DanaRPlugin(injector, aapsLogger, aapsSchedulers, rxBus, context, resourceHelper, constraintChecker, activePlugin, sp, commandQueue, danaPump, dateUtil, fabricPrivacy)
         danaRSPlugin = DanaRSPlugin(injector, aapsLogger, aapsSchedulers, rxBus, context, resourceHelper, constraintChecker, profileFunction, activePluginProvider, sp, commandQueue, danaPump, detailedBolusInfoStorage, fabricPrivacy, dateUtil)

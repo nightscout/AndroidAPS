@@ -11,6 +11,7 @@ import info.nightscout.androidaps.R
 import info.nightscout.androidaps.databinding.DialogProfileswitchBinding
 import info.nightscout.androidaps.interfaces.ActivePluginProvider
 import info.nightscout.androidaps.interfaces.ProfileFunction
+import info.nightscout.androidaps.logging.UserEntryLogger
 import info.nightscout.androidaps.plugins.treatments.TreatmentsPlugin
 import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.HtmlHelper
@@ -26,6 +27,7 @@ class ProfileSwitchDialog : DialogFragmentWithDate() {
     @Inject lateinit var profileFunction: ProfileFunction
     @Inject lateinit var treatmentsPlugin: TreatmentsPlugin
     @Inject lateinit var activePlugin: ActivePluginProvider
+    @Inject lateinit var uel: UserEntryLogger
 
     private var profileIndex: Int? = null
 
@@ -122,7 +124,7 @@ class ProfileSwitchDialog : DialogFragmentWithDate() {
 
         activity?.let { activity ->
             OKDialog.showConfirmation(activity, resourceHelper.gs(R.string.careportal_profileswitch), HtmlHelper.fromHtml(Joiner.on("<br/>").join(actions)), {
-                aapsLogger.debug("USER ENTRY: PROFILE SWITCH $profile percent: $percent timeshift: $timeShift duration: $duration")
+                uel.log("PROFILE SWITCH", d1 = percent.toDouble(), i1 = timeShift, i2 = duration)
                 treatmentsPlugin.doProfileSwitch(profileStore, profile, duration, percent, timeShift, eventTime)
             })
         }
