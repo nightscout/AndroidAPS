@@ -107,6 +107,21 @@
                 android:text="@string/unit_minute_short"
                 android:textAppearance="?android:attr/textAppearanceSmall" />
 
+            <CheckBox
+                android:id="@+id/alarmCheckBox"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:checked="false"
+                android:padding="2dp" />
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:src="@drawable/ic_access_alarm_24dp" />
+
+
         </LinearLayout>
 
         <LinearLayout
