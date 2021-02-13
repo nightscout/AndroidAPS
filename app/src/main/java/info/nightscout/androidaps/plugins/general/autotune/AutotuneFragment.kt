@@ -23,7 +23,6 @@ import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.FabricPrivacy
 import info.nightscout.androidaps.utils.MidnightTime
 import info.nightscout.androidaps.utils.alertDialogs.OKDialog.showConfirmation
-import info.nightscout.androidaps.utils.extensions.plusAssign
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 import info.nightscout.androidaps.utils.sharedPreferences.SP
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -91,7 +90,7 @@ class AutotuneFragment : DaggerFragment() {
                     rxBus.send(EventLocalProfileChanged())
                     AutotunePlugin.copyButtonVisibility = View.GONE
                     updateGui()
-            })
+                })
         }
 
         binding.autotuneCompare.setOnClickListener {
@@ -145,19 +144,21 @@ class AutotuneFragment : DaggerFragment() {
     @Synchronized
     override fun onResume() {
         super.onResume()
-        disposable += rxBus
+        disposable.add(rxBus
             .toObservable(EventAutotuneUpdateGui::class.java)
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe({
                 updateGui()
             }, { fabricPrivacy.logException(it) })
-        disposable += rxBus
+        )
+        disposable.add(rxBus
             .toObservable(EventAutotuneUpdateResult::class.java)
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe({
-                tempResult=it.result
+                tempResult = it.result
                 updateGui()
             }, { fabricPrivacy.logException(it) })
+        )
         updateGui()
     }
 
