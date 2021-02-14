@@ -1,6 +1,5 @@
 package info.nightscout.androidaps.plugins.general.autotune
 
-import android.content.Context
 import android.view.View
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.Constants
@@ -48,7 +47,6 @@ import javax.inject.Singleton
 class AutotunePlugin @Inject constructor(
     injector: HasAndroidInjector,
     resourceHelper: ResourceHelper,
-    private val context: Context,
     private val sp: SP,
     private val rxBus: RxBusWrapper,
     private val profileFunction: ProfileFunction,
@@ -153,7 +151,7 @@ class AutotunePlugin @Inject constructor(
                     return result
                 }
                 autotuneFS!!.exportPreppedGlucose(preppedGlucose!!)
-                tunedProfile = autotuneCore!!.tuneAllTheThings(preppedGlucose!!, tunedProfile!!, pumpprofile)
+                if (preppedGlucose!!.bgCategorized()) tunedProfile = autotuneCore!!.tuneAllTheThings(preppedGlucose!!, tunedProfile!!, pumpprofile)
                 //<=> newprofile.yyyymmdd.json files exported for results compare with oref0 autotune on virtual machine
                 autotuneFS!!.exportTunedProfile(tunedProfile!!)
                 if (i < daysBack - 1) {

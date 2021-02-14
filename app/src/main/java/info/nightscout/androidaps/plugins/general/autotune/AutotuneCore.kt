@@ -144,7 +144,7 @@ class AutotuneCore(private val injector: HasAndroidInjector) {
         //autotune-core (lib/autotune/index.js) #149-#165
         var crTotalCarbs = 0.0
         var crTotalInsulin = 0.0
-        for (i in crData!!.indices) {
+        for (i in crData.indices) {
             val crDatum = crData[i]
             val crBGChange = crDatum.crEndBG - crDatum.crInitialBG
             val crInsulinReq = crBGChange / isf
@@ -181,7 +181,7 @@ class AutotuneCore(private val injector: HasAndroidInjector) {
         // look at net deviations for each hour
         for (hour in 0..23) {
             var deviations = 0.0
-            for (i in basalGlucose!!.indices) {
+            for (i in basalGlucose.indices) {
                 val BGTime = Calendar.getInstance()
                 //var BGTime: Date? = null
                 if (basalGlucose[i].date != 0L) {
@@ -302,7 +302,7 @@ class AutotuneCore(private val injector: HasAndroidInjector) {
         //log.debug(CSFGlucose[0].mealAbsorption);
         //log.debug(CSFGlucose[0]);
         //autotune-core (lib/autotune/index.js) #346-#365
-        for (i in csfGlucose!!.indices) {
+        for (i in csfGlucose.indices) {
             //log.debug(CSFGlucose[i].mealAbsorption, i);
             if (csfGlucose[i].mealAbsorption === "start") {
                 deviations = 0.0
@@ -414,7 +414,7 @@ class AutotuneCore(private val injector: HasAndroidInjector) {
         val avgDeltas: MutableList<Double> = ArrayList()
         val ratios: MutableList<Double> = ArrayList()
         var count = 0
-        for (i in isfGlucose!!.indices) {
+        for (i in isfGlucose.indices) {
             val deviation = isfGlucose[i].deviation
             isfDeviations.add(deviation)
             val BGI = isfGlucose[i].bgi

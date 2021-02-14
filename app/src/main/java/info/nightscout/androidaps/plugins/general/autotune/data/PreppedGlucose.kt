@@ -7,10 +7,10 @@ import java.util.*
 
 class PreppedGlucose {
 
-    var crData: List<CRDatum>? = ArrayList()
-    var csfGlucoseData: List<BGDatum>? = ArrayList()
-    var isfGlucoseData: List<BGDatum>? = ArrayList()
-    var basalGlucoseData: List<BGDatum>? = ArrayList()
+    var crData: List<CRDatum> = ArrayList()
+    var csfGlucoseData: List<BGDatum> = ArrayList()
+    var isfGlucoseData: List<BGDatum> = ArrayList()
+    var basalGlucoseData: List<BGDatum> = ArrayList()
     var diaDeviations: List<DiaDatum> = ArrayList()
     var peakDeviations: List<PeakDatum> = ArrayList()
     var from: Long = 0
@@ -20,7 +20,7 @@ class PreppedGlucose {
         return toString(0)
     }
 
-    constructor(from: Long, crData: List<CRDatum>?, csfGlucoseData: List<BGDatum>?, isfGlucoseData: List<BGDatum>?, basalGlucoseData: List<BGDatum>?) {
+    constructor(from: Long, crData: List<CRDatum>, csfGlucoseData: List<BGDatum>, isfGlucoseData: List<BGDatum>, basalGlucoseData: List<BGDatum>) {
         this.from = from
         this.crData = crData
         this.csfGlucoseData = csfGlucoseData
@@ -30,10 +30,10 @@ class PreppedGlucose {
 
     constructor(json: JSONObject?) {
         if (json == null) return
-        crData = null
-        csfGlucoseData = null
-        isfGlucoseData = null
-        basalGlucoseData = null
+        crData = ArrayList()
+        csfGlucoseData  = ArrayList()
+        isfGlucoseData = ArrayList()
+        basalGlucoseData = ArrayList()
         try {
             crData = JsonCRDataToList(json.getJSONArray("CRData"))
             csfGlucoseData = JsonGlucoseDataToList(json.getJSONArray("CSFGlucoseData"))
@@ -41,6 +41,10 @@ class PreppedGlucose {
             basalGlucoseData = JsonGlucoseDataToList(json.getJSONArray("basalGlucoseData"))
         } catch (e: JSONException) {
         }
+    }
+
+    fun bgCategorized(): Boolean {
+        return csfGlucoseData.size > 0 || isfGlucoseData.size > 0 || basalGlucoseData.size > 0
     }
 
     private fun JsonGlucoseDataToList(array: JSONArray): List<BGDatum> {
@@ -72,19 +76,19 @@ class PreppedGlucose {
         val json = JSONObject()
         try {
             val crjson = JSONArray()
-            for (crd in crData!!) {
+            for (crd in crData) {
                 crjson.put(crd.toJSON())
             }
             val csfjson = JSONArray()
-            for (bgd in csfGlucoseData!!) {
+            for (bgd in csfGlucoseData) {
                 csfjson.put(bgd.toJSON(true))
             }
             val isfjson = JSONArray()
-            for (bgd in isfGlucoseData!!) {
+            for (bgd in isfGlucoseData) {
                 isfjson.put(bgd.toJSON(false))
             }
             val basaljson = JSONArray()
-            for (bgd in basalGlucoseData!!) {
+            for (bgd in basalGlucoseData) {
                 basaljson.put(bgd.toJSON(false))
             }
             val diajson = JSONArray()
@@ -113,17 +117,17 @@ class PreppedGlucose {
 
     fun equals(obj: PreppedGlucose): Boolean {
         var isEqual = true
-        if (crData!!.size == obj.crData!!.size) {
-            for (index in crData!!.indices) if (!crData!![index].equals(obj.crData!![index])) isEqual = false
+        if (crData.size == obj.crData.size) {
+            for (index in crData.indices) if (!crData[index].equals(obj.crData[index])) isEqual = false
         } else isEqual = false
-        if (csfGlucoseData!!.size == obj.csfGlucoseData!!.size) {
-            for (index in csfGlucoseData!!.indices) if (!csfGlucoseData!![index].equals(obj.csfGlucoseData!![index])) isEqual = false
+        if (csfGlucoseData.size == obj.csfGlucoseData.size) {
+            for (index in csfGlucoseData.indices) if (!csfGlucoseData[index].equals(obj.csfGlucoseData[index])) isEqual = false
         } else isEqual = false
-        if (isfGlucoseData!!.size == obj.isfGlucoseData!!.size) {
-            for (index in isfGlucoseData!!.indices) if (!isfGlucoseData!![index].equals(obj.isfGlucoseData!![index])) isEqual = false
+        if (isfGlucoseData.size == obj.isfGlucoseData.size) {
+            for (index in isfGlucoseData.indices) if (!isfGlucoseData[index].equals(obj.isfGlucoseData[index])) isEqual = false
         } else isEqual = false
-        if (basalGlucoseData!!.size == obj.basalGlucoseData!!.size) {
-            for (index in basalGlucoseData!!.indices) if (!basalGlucoseData!![index].equals(obj.basalGlucoseData!![index])) isEqual = false
+        if (basalGlucoseData.size == obj.basalGlucoseData.size) {
+            for (index in basalGlucoseData.indices) if (!basalGlucoseData[index].equals(obj.basalGlucoseData[index])) isEqual = false
         } else isEqual = false
         if (diaDeviations.size == obj.diaDeviations.size) {
             for (index in diaDeviations.indices) if (!diaDeviations[index].equals(obj.diaDeviations[index])) isEqual = false
