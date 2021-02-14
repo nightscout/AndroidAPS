@@ -12,6 +12,7 @@ public class DeactivateCommandTest {
         byte[] encoded = new DeactivateCommand.Builder() //
                 .setAddress(37879809) //
                 .setSequenceNumber((short) 5) //
+                .setNonce(1229869870) //
                 .build() //
                 .getEncoded();
 

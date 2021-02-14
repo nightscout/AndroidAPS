@@ -4,13 +4,15 @@ import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.List;
 
+import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.command.base.CommandType;
+import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.command.base.NonceEnabledCommand;
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.definition.AlertConfiguration;
 
-public final class ProgramAlertsCommand extends CommandBase {
+public final class ProgramAlertsCommand extends NonceEnabledCommand {
     private final List<AlertConfiguration> alertConfigurations;
 
-    private ProgramAlertsCommand(int address, short sequenceNumber, boolean multiCommandFlag, List<AlertConfiguration> alertConfigurations) {
-        super(CommandType.PROGRAM_ALERTS, address, sequenceNumber, multiCommandFlag);
+    private ProgramAlertsCommand(int address, short sequenceNumber, boolean multiCommandFlag, List<AlertConfiguration> alertConfigurations, int nonce) {
+        super(CommandType.PROGRAM_ALERTS, address, sequenceNumber, multiCommandFlag, nonce);
         this.alertConfigurations = new ArrayList<>(alertConfigurations);
     }
 
@@ -19,7 +21,7 @@ public final class ProgramAlertsCommand extends CommandBase {
                 .put(encodeHeader(address, sequenceNumber, getLength(), multiCommandFlag)) //
                 .put(commandType.getValue()) //
                 .put(getBodyLength()) //
-                .putInt(1229869870); // FIXME ?? was: byte array of int 777211465 converted to little endian
+                .putInt(nonce);
         for (AlertConfiguration configuration : alertConfigurations) {
             byteBuffer.put(configuration.getEncoded());
         }
@@ -44,7 +46,7 @@ public final class ProgramAlertsCommand extends CommandBase {
                 '}';
     }
 
-    public static final class Builder extends CommandBase.Builder<Builder, ProgramAlertsCommand> {
+    public static final class Builder extends NonceEnabledBuilder<Builder, ProgramAlertsCommand> {
         private List<AlertConfiguration> alertConfigurations;
 
         public Builder setAlertConfigurations(List<AlertConfiguration> alertConfigurations) {
@@ -52,11 +54,11 @@ public final class ProgramAlertsCommand extends CommandBase {
             return this;
         }
 
-        @Override final ProgramAlertsCommand buildCommand() {
+        @Override protected final ProgramAlertsCommand buildCommand() {
             if (this.alertConfigurations == null) {
                 throw new IllegalArgumentException("alertConfigurations can not be null");
             }
-            return new ProgramAlertsCommand(address, sequenceNumber, multiCommandFlag, alertConfigurations);
+            return new ProgramAlertsCommand(address, sequenceNumber, multiCommandFlag, alertConfigurations, nonce);
         }
     }
 }

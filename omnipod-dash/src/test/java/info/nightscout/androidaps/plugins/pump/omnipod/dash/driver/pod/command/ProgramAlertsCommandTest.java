@@ -26,6 +26,7 @@ public class ProgramAlertsCommandTest {
                 .setAddress(37879811) //
                 .setSequenceNumber((short) 3) //
                 .setMultiCommandFlag(true) //
+                .setNonce(1229869870) //
                 .setAlertConfigurations(configurations) //
                 .build() //
                 .getEncoded();
@@ -41,6 +42,7 @@ public class ProgramAlertsCommandTest {
         byte[] encoded = new ProgramAlertsCommand.Builder() //
                 .setAddress(37879811) //
                 .setSequenceNumber((short) 8) //
+                .setNonce(1229869870) //
                 .setAlertConfigurations(configurations) //
                 .build() //
                 .getEncoded();
@@ -56,6 +58,7 @@ public class ProgramAlertsCommandTest {
         byte[] encoded = new ProgramAlertsCommand.Builder() //
                 .setAddress(37879811) //
                 .setSequenceNumber((short) 15) //
+                .setNonce(1229869870) //
                 .setAlertConfigurations(configurations) //
                 .build() //
                 .getEncoded();
@@ -73,6 +76,7 @@ public class ProgramAlertsCommandTest {
                 .setAddress(37879811) //
                 .setSequenceNumber((short) 10) //
                 .setMultiCommandFlag(false) //
+                .setNonce(1229869870) //
                 .setAlertConfigurations(configurations) //
                 .build() //
                 .getEncoded();

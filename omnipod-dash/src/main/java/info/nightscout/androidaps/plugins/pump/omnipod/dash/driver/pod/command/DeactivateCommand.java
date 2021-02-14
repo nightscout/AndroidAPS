@@ -2,12 +2,15 @@ package info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.command;
 
 import java.nio.ByteBuffer;
 
-public final class DeactivateCommand extends CommandBase {
+import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.command.base.CommandType;
+import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.command.base.NonceEnabledCommand;
+
+public final class DeactivateCommand extends NonceEnabledCommand {
     private static final short LENGTH = 6;
     private static final byte BODY_LENGTH = 4;
 
-    private DeactivateCommand(int address, short sequenceNumber, boolean multiCommandFlag) {
-        super(CommandType.DEACTIVATE, address, sequenceNumber, multiCommandFlag);
+    private DeactivateCommand(int address, short sequenceNumber, boolean multiCommandFlag, int nonce) {
+        super(CommandType.DEACTIVATE, address, sequenceNumber, multiCommandFlag, nonce);
     }
 
     @Override public byte[] getEncoded() {
@@ -15,7 +18,7 @@ public final class DeactivateCommand extends CommandBase {
                 .put(encodeHeader(address, sequenceNumber, LENGTH, multiCommandFlag)) //
                 .put(commandType.getValue()) //
                 .put(BODY_LENGTH) //
-                .putInt(1229869870) // FIXME ?? was: byte array of int 777211465 converted to little endian
+                .putInt(nonce) //
                 .array());
     }
 
@@ -28,9 +31,9 @@ public final class DeactivateCommand extends CommandBase {
                 '}';
     }
 
-    public static final class Builder extends CommandBase.Builder<Builder, DeactivateCommand> {
-        @Override final DeactivateCommand buildCommand() {
-            return new DeactivateCommand(address, sequenceNumber, multiCommandFlag);
+    public static final class Builder extends NonceEnabledBuilder<Builder, DeactivateCommand> {
+        @Override protected final DeactivateCommand buildCommand() {
+            return new DeactivateCommand(Builder.this.address, sequenceNumber, multiCommandFlag, nonce);
         }
     }
 }

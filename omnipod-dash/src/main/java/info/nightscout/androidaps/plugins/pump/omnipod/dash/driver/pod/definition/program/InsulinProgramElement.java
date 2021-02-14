@@ -16,12 +16,12 @@ public class InsulinProgramElement implements Encodable {
     }
 
     @Override public byte[] getEncoded() {
-        byte firstByte = (byte) ((((numberOfHalfOurEntries - 1) & 0x0f) << 4)
-                | ((extraAlternatePulse ? 1 : 0) << 3)
+        byte firstByte = (byte) ((((numberOfHalfOurEntries - 1) & 0x0f) << 4) //
+                | ((extraAlternatePulse ? 1 : 0) << 3) //
                 | ((numberOfPulsesPerHalfOurEntry >>> 8) & 0x03));
 
         return ByteBuffer.allocate(2) //
-                .put(firstByte)
+                .put(firstByte) //
                 .put((byte) (numberOfPulsesPerHalfOurEntry & 0xff)) //
                 .array();
     }

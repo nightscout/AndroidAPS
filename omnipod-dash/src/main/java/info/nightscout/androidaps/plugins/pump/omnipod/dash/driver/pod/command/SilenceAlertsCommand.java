@@ -3,16 +3,18 @@ package info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.command;
 import java.nio.ByteBuffer;
 import java.util.BitSet;
 
+import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.command.base.CommandType;
+import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.command.base.NonceEnabledCommand;
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.definition.Encodable;
 
-public final class SilenceAlertsCommand extends CommandBase {
+public final class SilenceAlertsCommand extends NonceEnabledCommand {
     private static final short LENGTH = (short) 7;
     private static final byte BODY_LENGTH = (byte) 5;
 
     private final SilenceAlertCommandParameters parameters;
 
-    private SilenceAlertsCommand(int address, short sequenceNumber, boolean multiCommandFlag, SilenceAlertCommandParameters parameters) {
-        super(CommandType.SILENCE_ALERTS, address, sequenceNumber, multiCommandFlag);
+    private SilenceAlertsCommand(int address, short sequenceNumber, boolean multiCommandFlag, SilenceAlertCommandParameters parameters, int nonce) {
+        super(CommandType.SILENCE_ALERTS, address, sequenceNumber, multiCommandFlag, nonce);
         this.parameters = parameters;
     }
 
@@ -21,7 +23,7 @@ public final class SilenceAlertsCommand extends CommandBase {
                 .put(encodeHeader(address, sequenceNumber, LENGTH, multiCommandFlag)) //
                 .put(commandType.getValue()) //
                 .put(BODY_LENGTH) //
-                .putInt(1229869870) // FIXME ?? was: byte array of int 777211465 converted to little endian
+                .putInt(nonce) //
                 .put(parameters.getEncoded()) //
                 .array());
     }
@@ -72,7 +74,7 @@ public final class SilenceAlertsCommand extends CommandBase {
         }
     }
 
-    public static class Builder extends CommandBase.Builder<Builder, SilenceAlertsCommand> {
+    public static class Builder extends NonceEnabledBuilder<Builder, SilenceAlertsCommand> {
         private boolean silenceAutoOffAlert;
         private boolean silenceMultiCommandAlert;
         private boolean silenceExpirationImminentAlert;
@@ -122,8 +124,8 @@ public final class SilenceAlertsCommand extends CommandBase {
             return this;
         }
 
-        @Override SilenceAlertsCommand buildCommand() {
-            return new SilenceAlertsCommand(address, sequenceNumber, multiCommandFlag, new SilenceAlertCommandParameters(silenceAutoOffAlert, silenceMultiCommandAlert, silenceExpirationImminentAlert, silenceUserSetExpirationAlert, silenceLowReservoirAlert, silenceSuspendInProgressAlert, silenceSuspendEndedAlert, silencePodExpirationAlert));
+        @Override protected final SilenceAlertsCommand buildCommand() {
+            return new SilenceAlertsCommand(address, sequenceNumber, multiCommandFlag, new SilenceAlertCommandParameters(silenceAutoOffAlert, silenceMultiCommandAlert, silenceExpirationImminentAlert, silenceUserSetExpirationAlert, silenceLowReservoirAlert, silenceSuspendInProgressAlert, silenceSuspendEndedAlert, silencePodExpirationAlert), nonce);
         }
     }
 }

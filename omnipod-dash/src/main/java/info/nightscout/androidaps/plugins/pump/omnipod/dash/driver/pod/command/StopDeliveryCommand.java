@@ -3,18 +3,21 @@ package info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.command;
 import java.nio.ByteBuffer;
 import java.util.BitSet;
 
+import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.command.base.CommandType;
+import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.command.base.HeaderEnabledCommand;
+import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.command.base.NonceEnabledCommand;
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.definition.BeepType;
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.definition.Encodable;
 
-public final class StopDeliveryCommand extends CommandBase {
+public final class StopDeliveryCommand extends NonceEnabledCommand {
     private static final short LENGTH = 7;
     private static final byte BODY_LENGTH = 5;
 
     private final DeliveryType deliveryType;
     private final BeepType beepType;
 
-    private StopDeliveryCommand(int address, short sequenceNumber, boolean multiCommandFlag, DeliveryType deliveryType, BeepType beepType) {
-        super(CommandType.STOP_DELIVERY, address, sequenceNumber, multiCommandFlag);
+    private StopDeliveryCommand(int address, short sequenceNumber, boolean multiCommandFlag, DeliveryType deliveryType, BeepType beepType, int nonce) {
+        super(CommandType.STOP_DELIVERY, address, sequenceNumber, multiCommandFlag, nonce);
         this.deliveryType = deliveryType;
         this.beepType = beepType;
     }
@@ -24,7 +27,7 @@ public final class StopDeliveryCommand extends CommandBase {
                 .put(encodeHeader(address, sequenceNumber, LENGTH, multiCommandFlag)) //
                 .put(commandType.getValue()) //
                 .put(BODY_LENGTH) //
-                .putInt(1229869870) // FIXME ?? was: byte array of int 777211465 converted to little endian
+                .putInt(nonce) //
                 .put((byte) ((beepType.getValue() << 4) | deliveryType.getEncoded()[0])) //
                 .array());
     }
@@ -65,7 +68,7 @@ public final class StopDeliveryCommand extends CommandBase {
         }
     }
 
-    public static final class Builder extends CommandBase.Builder<Builder, StopDeliveryCommand> {
+    public static final class Builder extends NonceEnabledBuilder<Builder, StopDeliveryCommand> {
         private DeliveryType deliveryType;
         private BeepType beepType = BeepType.LONG_SINGLE_BEEP;
 
@@ -79,14 +82,14 @@ public final class StopDeliveryCommand extends CommandBase {
             return this;
         }
 
-        @Override final StopDeliveryCommand buildCommand() {
+        @Override protected final StopDeliveryCommand buildCommand() {
             if (deliveryType == null) {
                 throw new IllegalArgumentException("deliveryType can not be null");
             }
             if (beepType == null) {
                 throw new IllegalArgumentException("beepType can not be null");
             }
-            return new StopDeliveryCommand(address, sequenceNumber, multiCommandFlag, deliveryType, beepType);
+            return new StopDeliveryCommand(address, sequenceNumber, multiCommandFlag, deliveryType, beepType, nonce);
         }
     }
 

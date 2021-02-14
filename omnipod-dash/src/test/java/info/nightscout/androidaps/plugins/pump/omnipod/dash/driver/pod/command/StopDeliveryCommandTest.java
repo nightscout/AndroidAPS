@@ -14,6 +14,7 @@ public class StopDeliveryCommandTest {
         byte[] encoded = new StopDeliveryCommand.Builder() //
                 .setAddress(37879811) //
                 .setSequenceNumber((short) 0) //
+                .setNonce(1229869870) //
                 .setDeliveryType(StopDeliveryCommand.DeliveryType.TEMP_BASAL) //
                 .setBeepType(BeepType.LONG_SINGLE_BEEP) //
                 .build() //
@@ -27,6 +28,7 @@ public class StopDeliveryCommandTest {
         byte[] encoded = new StopDeliveryCommand.Builder() //
                 .setAddress(37879811) //
                 .setSequenceNumber((short) 2) //
+                .setNonce(1229869870) //
                 .setDeliveryType(StopDeliveryCommand.DeliveryType.ALL) //
                 .setBeepType(BeepType.SILENT) //
                 .build() //

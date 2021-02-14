@@ -4,7 +4,10 @@ import java.nio.ByteBuffer;
 import java.util.Calendar;
 import java.util.Date;
 
-public final class SetUniqueIdCommand extends CommandBase {
+import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.command.base.CommandType;
+import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.command.base.HeaderEnabledCommand;
+
+public final class SetUniqueIdCommand extends HeaderEnabledCommand {
     private static final int DEFAULT_ADDRESS = -1;
     private static final short LENGTH = 21;
     private static final byte BODY_LENGTH = 19;
@@ -59,7 +62,7 @@ public final class SetUniqueIdCommand extends CommandBase {
                 '}';
     }
 
-    public static final class Builder extends CommandBase.Builder<Builder, SetUniqueIdCommand> {
+    public static final class Builder extends HeaderEnabledBuilder<Builder, SetUniqueIdCommand> {
         private Integer lotNumber;
         private Integer podSequenceNumber;
         private Date initializationTime;
@@ -79,7 +82,7 @@ public final class SetUniqueIdCommand extends CommandBase {
             return this;
         }
 
-        @Override final SetUniqueIdCommand buildCommand() {
+        @Override protected final SetUniqueIdCommand buildCommand() {
             if (lotNumber == null) {
                 throw new IllegalArgumentException("lotNumber can not be null");
             }

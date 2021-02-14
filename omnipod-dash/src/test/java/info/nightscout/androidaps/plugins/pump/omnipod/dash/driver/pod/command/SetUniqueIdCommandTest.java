@@ -13,7 +13,7 @@ public class SetUniqueIdCommandTest {
     public void testEncoding() throws DecoderException {
         byte[] encoded = new SetUniqueIdCommand.Builder() //
                 .setAddress(37879811) //
-                .setSequenceNumber((short) 6)
+                .setSequenceNumber((short) 6) //
                 .setLotNumber(135556289) //
                 .setPodSequenceNumber(681767) //
                 .setInitializationTime(new Date(2021, 1, 10, 14, 41)) //

@@ -2,7 +2,10 @@ package info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.command;
 
 import java.nio.ByteBuffer;
 
-public final class GetVersionCommand extends CommandBase {
+import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.command.base.CommandType;
+import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.command.base.HeaderEnabledCommand;
+
+public final class GetVersionCommand extends HeaderEnabledCommand {
     public static final int DEFAULT_ADDRESS = -1; // FIXME move
 
     private static final short LENGTH = 6;
@@ -30,8 +33,8 @@ public final class GetVersionCommand extends CommandBase {
                 '}';
     }
 
-    public static final class Builder extends CommandBase.Builder<Builder, GetVersionCommand> {
-        @Override final GetVersionCommand buildCommand() {
+    public static final class Builder extends HeaderEnabledBuilder<Builder, GetVersionCommand> {
+        @Override protected final GetVersionCommand buildCommand() {
             return new GetVersionCommand(address, sequenceNumber, multiCommandFlag);
         }
     }
