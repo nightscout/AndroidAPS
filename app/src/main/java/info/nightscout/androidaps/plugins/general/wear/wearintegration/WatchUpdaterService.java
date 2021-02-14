@@ -743,12 +743,12 @@ public class WatchUpdaterService extends WearableListenerService implements Goog
     private void sendPreferences() {
         if (googleApiClient != null && googleApiClient.isConnected()) {
 
-            boolean wearcontrol = sp.getBoolean("wearcontrol", false);
+            boolean wearcontrol = sp.getBoolean(R.string.key_wear_control, false);
 
             PutDataMapRequest dataMapRequest = PutDataMapRequest.create(NEW_PREFERENCES_PATH);
             //unique content
             dataMapRequest.getDataMap().putLong("timestamp", System.currentTimeMillis());
-            dataMapRequest.getDataMap().putBoolean("wearcontrol", wearcontrol);
+            dataMapRequest.getDataMap().putBoolean(resourceHelper.gs(R.string.key_wear_control), wearcontrol);
             PutDataRequest putDataRequest = dataMapRequest.asPutDataRequest();
             Wearable.DataApi.putDataItem(googleApiClient, putDataRequest);
         } else {

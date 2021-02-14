@@ -76,7 +76,7 @@ class ActionStringHandler @Inject constructor(
     // TODO Adrian use RxBus instead of Lazy + cross dependency
     @Synchronized
     fun handleInitiate(actionString: String) {
-        if (!sp.getBoolean("wearcontrol", false)) return
+        if (!sp.getBoolean(R.string.key_wear_control, false)) return
         lastBolusWizard = null
         var rTitle = "CONFIRM" //TODO: i18n
         var rMessage = ""
@@ -459,7 +459,7 @@ class ActionStringHandler @Inject constructor(
 
     @Synchronized
     fun handleConfirmation(actionString: String) {
-        if (!sp.getBoolean("wearcontrol", false)) return
+        if (!sp.getBoolean(R.string.key_wear_control, false)) return
         //Guard from old or duplicate confirmations
         if (lastConfirmActionString == null) return
         if (lastConfirmActionString != actionString) return

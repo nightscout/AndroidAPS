@@ -103,9 +103,6 @@ public class LoopPlugin extends PluginBase implements LoopInterface {
 
     private long lastBgTriggeredRun = 0;
 
-    private long loopSuspendedTill; // end of manual loop suspend
-    private boolean isSuperBolus;
-    private boolean isDisconnected;
 
     private long carbsSuggestionsSuspendedUntil = 0;
     private int prevCarbsreq = 0;
@@ -173,9 +170,6 @@ public class LoopPlugin extends PluginBase implements LoopInterface {
         this.nsUpload = nsUpload;
         this.hardLimits = hardLimits;
 
-        loopSuspendedTill = sp.getLong("loopSuspendedTill", 0L);
-        isSuperBolus = sp.getBoolean("isSuperBolus", false);
-        isDisconnected = sp.getBoolean("isDisconnected", false);
     }
 
     @Override
@@ -240,33 +234,25 @@ public class LoopPlugin extends PluginBase implements LoopInterface {
     }
 
     public void suspendTo(long endTime) {
-        loopSuspendedTill = endTime;
-        isSuperBolus = false;
-        isDisconnected = false;
-        sp.putLong("loopSuspendedTill", loopSuspendedTill);
-        sp.putBoolean("isSuperBolus", isSuperBolus);
-        sp.putBoolean("isDisconnected", isDisconnected);
+        sp.putLong("loopSuspendedTill", endTime);
+        sp.putBoolean("isSuperBolus", false);
+        sp.putBoolean("isDisconnected", false);
     }
 
     public void superBolusTo(long endTime) {
-        loopSuspendedTill = endTime;
-        isSuperBolus = true;
-        isDisconnected = false;
-        sp.putLong("loopSuspendedTill", loopSuspendedTill);
-        sp.putBoolean("isSuperBolus", isSuperBolus);
-        sp.putBoolean("isDisconnected", isDisconnected);
+        sp.putLong("loopSuspendedTill", endTime);
+        sp.putBoolean("isSuperBolus", true);
+        sp.putBoolean("isDisconnected", false);
     }
 
     private void disconnectTo(long endTime) {
-        loopSuspendedTill = endTime;
-        isSuperBolus = false;
-        isDisconnected = true;
-        sp.putLong("loopSuspendedTill", loopSuspendedTill);
-        sp.putBoolean("isSuperBolus", isSuperBolus);
-        sp.putBoolean("isDisconnected", isDisconnected);
+        sp.putLong("loopSuspendedTill", endTime);
+        sp.putBoolean("isSuperBolus", false);
+        sp.putBoolean("isDisconnected", true);
     }
 
     public int minutesToEndOfSuspend() {
+        long loopSuspendedTill = sp.getLong("loopSuspendedTill", 0L);
         if (loopSuspendedTill == 0)
             return 0;
 
@@ -282,6 +268,7 @@ public class LoopPlugin extends PluginBase implements LoopInterface {
     }
 
     public boolean isSuspended() {
+        long loopSuspendedTill = sp.getLong("loopSuspendedTill", 0L);
         if (loopSuspendedTill == 0)
             return false;
 
@@ -311,6 +298,7 @@ public class LoopPlugin extends PluginBase implements LoopInterface {
     }
 
     public boolean isSuperBolus() {
+        long loopSuspendedTill = sp.getLong("loopSuspendedTill", 0L);
         if (loopSuspendedTill == 0)
             return false;
 
@@ -321,10 +309,11 @@ public class LoopPlugin extends PluginBase implements LoopInterface {
             return false;
         }
 
-        return isSuperBolus;
+        return sp.getBoolean("isSuperBolus", false);
     }
 
     public boolean isDisconnected() {
+        long loopSuspendedTill = sp.getLong("loopSuspendedTill", 0L);
         if (loopSuspendedTill == 0)
             return false;
 
@@ -334,7 +323,7 @@ public class LoopPlugin extends PluginBase implements LoopInterface {
             suspendTo(0L);
             return false;
         }
-        return isDisconnected;
+        return sp.getBoolean("isDisconnected", false);
     }
 
     public boolean treatmentTimethreshold(int duartionMinutes) {
@@ -362,7 +351,7 @@ public class LoopPlugin extends PluginBase implements LoopInterface {
                 return;
             }
             final PumpInterface pump = activePlugin.getActivePump();
-            APSResult result = null;
+            APSResult apsResult = null;
 
             if (!isEnabled(PluginType.LOOP))
                 return;
@@ -381,23 +370,23 @@ public class LoopPlugin extends PluginBase implements LoopInterface {
             APSInterface usedAPS = activePlugin.getActiveAPS();
             if (((PluginBase) usedAPS).isEnabled(PluginType.APS)) {
                 usedAPS.invoke(initiator, tempBasalFallback);
-                result = usedAPS.getLastAPSResult();
+                apsResult = usedAPS.getLastAPSResult();
             }
 
             // Check if we have any result
-            if (result == null) {
+            if (apsResult == null) {
                 rxBus.send(new EventLoopSetLastRunGui(resourceHelper.gs(R.string.noapsselected)));
                 return;
             }
 
             // Prepare for pumps using % basals
             if (pump.getPumpDescription().tempBasalStyle == PumpDescription.PERCENT && allowPercentage()) {
-                result.setUsePercent(true);
+                apsResult.setUsePercent(true);
             }
-            result.setPercent((int) (result.getRate() / profile.getBasal() * 100));
+            apsResult.setPercent((int) (apsResult.getRate() / profile.getBasal() * 100));
 
             // check rate for constraints
-            final APSResult resultAfterConstraints = result.newAndClone(injector);
+            final APSResult resultAfterConstraints = apsResult.newAndClone(injector);
             resultAfterConstraints.setRateConstraint(new Constraint<>(resultAfterConstraints.getRate()));
             resultAfterConstraints.setRate(constraintChecker.applyBasalConstraints(resultAfterConstraints.getRateConstraint(), profile).value());
 
@@ -419,7 +408,7 @@ public class LoopPlugin extends PluginBase implements LoopInterface {
             }
 
             if (lastRun == null) lastRun = new LastRun();
-            lastRun.setRequest(result);
+            lastRun.setRequest(apsResult);
             lastRun.setConstraintsProcessed(resultAfterConstraints);
             lastRun.setLastAPSRun(DateUtil.now());
             lastRun.setSource(((PluginBase) usedAPS).getName());
@@ -572,7 +561,7 @@ public class LoopPlugin extends PluginBase implements LoopInterface {
                             .setPriority(Notification.IMPORTANCE_HIGH)
                             .setCategory(Notification.CATEGORY_ALARM)
                             .setVisibility(NotificationCompat.VISIBILITY_PUBLIC);
-                    if (sp.getBoolean("wearcontrol", false)) {
+                    if (sp.getBoolean(R.string.key_wear_control, false)) {
                         builder.setLocalOnly(true);
                     }
                     presentSuggestion(builder);
