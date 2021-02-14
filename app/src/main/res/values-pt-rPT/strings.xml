@@ -420,6 +420,7 @@
     <string name="basal_shortname">BAS</string>
     <string name="deviation_shortname">DESV</string>
     <string name="activity_shortname">ACT</string>
+    <string name="bgi_shortname">-IG</string>
     <string name="abs_insulin_shortname">ABS</string>
     <string name="devslope_shortname">DESVINCLI</string>
     <string name="nav_about">Acerca</string>
@@ -627,6 +628,7 @@
     <string name="ns_autobackfill_summary">Preencher Glicose em falta com NS</string>
     <string name="loop_smbsetbypump_label">SMB definido pela bomba</string>
     <string name="overview_show_activity">Actividade</string>
+    <string name="overview_show_bgi">Impacto Glicose</string>
     <string name="overview_show_sensitivity">Sensibilidade</string>
     <string name="overview_show_deviations">Desvios</string>
     <string name="overview_show_cob">Hidratos a Bordo (COB)</string>
@@ -1158,4 +1160,5 @@
     <string name="clear_filter">Limpar filtros</string>
     <string name="trend_arrow">Seta de tendência</string>
     <string name="cannula">Cânula</string>
+    <string name="userentry">Entrada de Utilizador</string>
 </resources>
