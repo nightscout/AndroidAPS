@@ -1,7 +1,6 @@
 package info.nightscout.androidaps.plugins.pump.omnipod.eros.manager;
 
 import android.content.Context;
-import android.content.Intent;
 
 import org.joda.time.DateTime;
 import org.joda.time.Duration;
@@ -957,12 +956,7 @@ public class AapsOmnipodManager {
     }
 
     private void showErrorDialog(String message, Integer sound) {
-        Intent intent = new Intent(context, ErrorHelperActivity.class);
-        intent.putExtra("soundid", sound);
-        intent.putExtra("status", message);
-        intent.putExtra("title", resourceHelper.gs(R.string.error));
-        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        context.startActivity(intent);
+        ErrorHelperActivity.Companion.runAlarm(context, message, resourceHelper.gs(R.string.error), sound);
     }
 
     private void showPodFaultNotification(FaultEventCode faultEventCode) {

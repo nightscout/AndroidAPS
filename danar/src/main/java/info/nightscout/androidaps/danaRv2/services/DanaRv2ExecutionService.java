@@ -1,7 +1,6 @@
 package info.nightscout.androidaps.danaRv2.services;
 
 import android.content.Context;
-import android.content.Intent;
 import android.os.Binder;
 import android.os.SystemClock;
 
@@ -205,12 +204,7 @@ public class DanaRv2ExecutionService extends AbstractDanaRExecutionService {
                 if (Math.abs(timeDiff) > 60 * 60 * 1.5) {
                     aapsLogger.debug(LTag.PUMP, "Pump time difference: " + timeDiff + " seconds - large difference");
                     //If time-diff is very large, warn user until we can synchronize history readings properly
-                    Intent i = new Intent(context, ErrorHelperActivity.class);
-                    i.putExtra("soundid", R.raw.error);
-                    i.putExtra("status", resourceHelper.gs(R.string.largetimediff));
-                    i.putExtra("title", resourceHelper.gs(R.string.largetimedifftitle));
-                    i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                    context.startActivity(i);
+                    ErrorHelperActivity.Companion.runAlarm(context, resourceHelper.gs(R.string.largetimediff), resourceHelper.gs(R.string.largetimedifftitle), R.raw.error);
 
                     //deinitialize pump
                     danaPump.reset();

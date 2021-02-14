@@ -878,9 +878,9 @@ public class OmnipodErosPumpPlugin extends PumpPluginBase implements PumpInterfa
         }
 
         Intent i = new Intent(context, ErrorHelperActivity.class);
-        i.putExtra("soundid", 0);
-        i.putExtra("status", resourceHelper.gs(R.string.omnipod_pulse_log_value) + ":\n" + result.toString());
-        i.putExtra("title", resourceHelper.gs(R.string.omnipod_pulse_log));
+        i.putExtra(ErrorHelperActivity.SOUND_ID, 0);
+        i.putExtra(ErrorHelperActivity.STATUS, resourceHelper.gs(R.string.omnipod_pulse_log_value) + ":\n" + result.toString());
+        i.putExtra(ErrorHelperActivity.TITLE, resourceHelper.gs(R.string.omnipod_pulse_log));
         i.putExtra("clipboardContent", result.toString());
         i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         context.startActivity(i);

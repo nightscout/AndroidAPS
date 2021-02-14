@@ -19,7 +19,7 @@ jacoco {
 }
 
 ext {
-    wearableVersion = "2.4.0"
+    wearableVersion = "2.8.1"
     playServicesWearable = "17.0.0"
 }
 

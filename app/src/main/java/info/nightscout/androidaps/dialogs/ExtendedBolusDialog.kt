@@ -1,7 +1,6 @@
 package info.nightscout.androidaps.dialogs
 
 import android.content.Context
-import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -92,12 +91,7 @@ class ExtendedBolusDialog : DialogFragmentWithDate() {
                 commandQueue.extendedBolus(insulinAfterConstraint, durationInMinutes, object : Callback() {
                     override fun run() {
                         if (!result.success) {
-                            val i = Intent(ctx, ErrorHelperActivity::class.java)
-                            i.putExtra("soundid", R.raw.boluserror)
-                            i.putExtra("status", result.comment)
-                            i.putExtra("title", resourceHelper.gs(R.string.treatmentdeliveryerror))
-                            i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-                            ctx.startActivity(i)
+                            ErrorHelperActivity.runAlarm(ctx, result.comment, resourceHelper.gs(R.string.treatmentdeliveryerror), info.nightscout.androidaps.dana.R.raw.boluserror)
                         }
                     }
                 })
