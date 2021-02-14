@@ -1,6 +1,6 @@
 package info.nightscout.androidaps.plugins.aps.logger
 
-import info.nightscout.androidaps.db.StaticInjector.Companion.getInstance
+import info.nightscout.androidaps.db.StaticInjector
 import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.logging.LTag
 import org.mozilla.javascript.ScriptableObject
@@ -55,6 +55,7 @@ class LoggerCallback : ScriptableObject() {
         //empty constructor needed for Rhino
         errorBuffer = StringBuffer()
         logBuffer = StringBuffer()
-        getInstance().androidInjector().inject(this)
+        @Suppress("DEPRECATION")
+        StaticInjector.Companion.getInstance().androidInjector().inject(this)
     }
 }
