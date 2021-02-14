@@ -8,19 +8,4 @@ public abstract class NonceEnabledCommand extends HeaderEnabledCommand {
         this.nonce = nonce;
     }
 
-    protected static abstract class NonceEnabledBuilder<T extends NonceEnabledBuilder<T, R>, R extends Command> extends HeaderEnabledBuilder<T, R> {
-        protected Integer nonce;
-
-        public final R build() {
-            if (nonce == null) {
-                throw new IllegalArgumentException("nonce can not be null");
-            }
-            return super.build();
-        }
-
-        public final T setNonce(int nonce) {
-            this.nonce = nonce;
-            return (T) this;
-        }
-    }
 }

@@ -6,6 +6,7 @@ import java.util.List;
 
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.command.base.CommandType;
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.command.base.NonceEnabledCommand;
+import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.command.base.builder.NonceEnabledCommandBuilder;
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.definition.AlertConfiguration;
 
 public final class ProgramAlertsCommand extends NonceEnabledCommand {
@@ -46,7 +47,7 @@ public final class ProgramAlertsCommand extends NonceEnabledCommand {
                 '}';
     }
 
-    public static final class Builder extends NonceEnabledBuilder<Builder, ProgramAlertsCommand> {
+    public static final class Builder extends NonceEnabledCommandBuilder<Builder, ProgramAlertsCommand> {
         private List<AlertConfiguration> alertConfigurations;
 
         public Builder setAlertConfigurations(List<AlertConfiguration> alertConfigurations) {

@@ -6,6 +6,7 @@ import java.util.Date;
 
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.command.base.CommandType;
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.command.base.HeaderEnabledCommand;
+import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.command.base.builder.HeaderEnabledCommandBuilder;
 
 public final class SetUniqueIdCommand extends HeaderEnabledCommand {
     private static final int DEFAULT_ADDRESS = -1;
@@ -62,7 +63,7 @@ public final class SetUniqueIdCommand extends HeaderEnabledCommand {
                 '}';
     }
 
-    public static final class Builder extends HeaderEnabledBuilder<Builder, SetUniqueIdCommand> {
+    public static final class Builder extends HeaderEnabledCommandBuilder<Builder, SetUniqueIdCommand> {
         private Integer lotNumber;
         private Integer podSequenceNumber;
         private Date initializationTime;

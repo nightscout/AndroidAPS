@@ -5,6 +5,7 @@ import java.util.BitSet;
 
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.command.base.CommandType;
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.command.base.NonceEnabledCommand;
+import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.command.base.builder.NonceEnabledCommandBuilder;
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.definition.Encodable;
 
 public final class SilenceAlertsCommand extends NonceEnabledCommand {
@@ -74,7 +75,7 @@ public final class SilenceAlertsCommand extends NonceEnabledCommand {
         }
     }
 
-    public static class Builder extends NonceEnabledBuilder<Builder, SilenceAlertsCommand> {
+    public static class Builder extends NonceEnabledCommandBuilder<Builder, SilenceAlertsCommand> {
         private boolean silenceAutoOffAlert;
         private boolean silenceMultiCommandAlert;
         private boolean silenceExpirationImminentAlert;

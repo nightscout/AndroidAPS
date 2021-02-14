@@ -4,6 +4,7 @@ import java.nio.ByteBuffer;
 
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.command.base.CommandType;
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.command.base.HeaderEnabledCommand;
+import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.command.base.builder.HeaderEnabledCommandBuilder;
 
 public final class GetVersionCommand extends HeaderEnabledCommand {
     public static final int DEFAULT_ADDRESS = -1; // FIXME move
@@ -33,7 +34,7 @@ public final class GetVersionCommand extends HeaderEnabledCommand {
                 '}';
     }
 
-    public static final class Builder extends HeaderEnabledBuilder<Builder, GetVersionCommand> {
+    public static final class Builder extends HeaderEnabledCommandBuilder<Builder, GetVersionCommand> {
         @Override protected final GetVersionCommand buildCommand() {
             return new GetVersionCommand(address, sequenceNumber, multiCommandFlag);
         }

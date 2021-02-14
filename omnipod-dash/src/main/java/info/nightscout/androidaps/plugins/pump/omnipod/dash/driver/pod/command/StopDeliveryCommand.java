@@ -4,8 +4,8 @@ import java.nio.ByteBuffer;
 import java.util.BitSet;
 
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.command.base.CommandType;
-import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.command.base.HeaderEnabledCommand;
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.command.base.NonceEnabledCommand;
+import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.command.base.builder.NonceEnabledCommandBuilder;
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.definition.BeepType;
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.definition.Encodable;
 
@@ -68,7 +68,7 @@ public final class StopDeliveryCommand extends NonceEnabledCommand {
         }
     }
 
-    public static final class Builder extends NonceEnabledBuilder<Builder, StopDeliveryCommand> {
+    public static final class Builder extends NonceEnabledCommandBuilder<Builder, StopDeliveryCommand> {
         private DeliveryType deliveryType;
         private BeepType beepType = BeepType.LONG_SINGLE_BEEP;
 
