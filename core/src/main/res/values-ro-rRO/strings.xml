@@ -255,4 +255,20 @@
     <string name="running_invalid_version">S-a detectat rularea unei versiuni invalide. Buclă dezactivată!</string>
     <string name="versionavailable">Versiunea %1$s este disponibilă</string>
     <!-- Permissions -->
+    <!-- WeekdayPicker -->
+    <plurals name="days">
+        <item quantity="one">%1$d zi</item>
+        <item quantity="few">%1$d zile</item>
+        <item quantity="other">%1$d zile</item>
+    </plurals>
+    <plurals name="hours">
+        <item quantity="one">%1$d oră</item>
+        <item quantity="few">%1$d ore</item>
+        <item quantity="other">%1$d ore</item>
+    </plurals>
+    <plurals name="minutes">
+        <item quantity="one">%1$d minut</item>
+        <item quantity="few">%1$d minute</item>
+        <item quantity="other">%1$d minute</item>
+    </plurals>
 </resources>

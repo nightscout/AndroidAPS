@@ -39,4 +39,5 @@
     <string name="running_invalid_version">유효하지 않은 버전을 이용 중입니다. Loop가 비활성화 되었습니다!</string>
     <string name="versionavailable">%1$s 버전이 사용 가능합니다.</string>
     <!-- Permissions -->
+    <!-- WeekdayPicker -->
 </resources>

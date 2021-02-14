@@ -421,6 +421,7 @@ L\'ENSEMBLE DES RISQUES LIÉS À LA QUALITÉ ET À LA PERFORMANCE DU PROGRAMME S
     <string name="basal_shortname">BAS</string>
     <string name="deviation_shortname">DEV</string>
     <string name="activity_shortname">ACT</string>
+    <string name="bgi_shortname">-IGly</string>
     <string name="abs_insulin_shortname">ABS</string>
     <string name="devslope_shortname">PENTEDEV</string>
     <string name="nav_about">À propos</string>
@@ -628,6 +629,7 @@ L\'ENSEMBLE DES RISQUES LIÉS À LA QUALITÉ ET À LA PERFORMANCE DU PROGRAMME S
     <string name="ns_autobackfill_summary">Remplissage automatique des glycémies manquantes en utilisant NS</string>
     <string name="loop_smbsetbypump_label">SMB défini par la pompe</string>
     <string name="overview_show_activity">Activité</string>
+    <string name="overview_show_bgi">Impact glycémique</string>
     <string name="overview_show_sensitivity">Sensibilité</string>
     <string name="overview_show_deviations">Déviations</string>
     <string name="overview_show_cob">Glucides actifs</string>
@@ -1159,4 +1161,5 @@ L\'ENSEMBLE DES RISQUES LIÉS À LA QUALITÉ ET À LA PERFORMANCE DU PROGRAMME S
     <string name="clear_filter">Effacer le filtre</string>
     <string name="trend_arrow">Flèche de tendance</string>
     <string name="cannula">Canule</string>
+    <string name="userentry">Entrées utilisateur</string>
 </resources>
