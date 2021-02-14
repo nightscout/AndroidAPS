@@ -44,6 +44,7 @@ dependencies {
     kapt "com.google.dagger:dagger-android-processor:$dagger_version"
     kapt "com.google.dagger:dagger-compiler:$dagger_version"
 
+    implementation "org.apache.commons:commons-lang3:$commonslang3_version"
     implementation "commons-codec:commons-codec:$commonscodec_version"
     implementation "androidx.appcompat:appcompat:$appcompat_version"
     implementation "com.google.android.material:material:$material_version"

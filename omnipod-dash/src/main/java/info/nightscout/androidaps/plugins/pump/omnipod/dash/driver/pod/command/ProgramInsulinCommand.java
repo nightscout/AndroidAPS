@@ -7,17 +7,16 @@ import java.util.List;
 
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.command.base.Command;
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.command.base.CommandType;
-import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.command.base.HeaderEnabledCommand;
-import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.definition.ProgramReminder;
+import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.command.base.NonceEnabledCommand;
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.definition.program.InsulinProgramElement;
 
 // Always followed by one of: 0x13, 0x16, 0x17
-public final class ProgramInsulinCommand extends HeaderEnabledCommand {
-    private final List<InsulinProgramElement> insulinProgramElements;
-    private final ProgramReminder programReminder;
-    private final byte currentHalfOurEntryIndex;
+public final class ProgramInsulinCommand extends NonceEnabledCommand {
+    private final List<InsulinProgramElement> max8HourInsulinProgramElements;
+    private final byte currentHalfHourEntryIndex;
+    private final short remainingEighthSecondsInCurrentHalfHourEntry;
     private final short remainingPulsesInCurrentHalfHourEntry;
-    private final int delayUntilNextTenthPulseInUsec;
+    private final DeliveryType deliveryType;
     private final Command interlockCommand;
 
     private static final List<CommandType> ALLOWED_INTERLOCK_COMMANDS = Arrays.asList(
@@ -26,34 +25,36 @@ public final class ProgramInsulinCommand extends HeaderEnabledCommand {
             CommandType.PROGRAM_BOLUS
     );
 
-    private ProgramInsulinCommand(int address, short sequenceNumber, boolean multiCommandFlag, ProgramReminder programReminder, List<InsulinProgramElement> insulinProgramElements, byte currentHalfOurEntryIndex, short remainingPulsesInCurrentHalfHourEntry, int delayUntilNextTenthPulseInUsec, Command interlockCommand) {
-        super(CommandType.PROGRAM_INSULIN, address, sequenceNumber, multiCommandFlag);
-        this.insulinProgramElements = new ArrayList<>(insulinProgramElements);
-        this.programReminder = programReminder;
-        this.currentHalfOurEntryIndex = currentHalfOurEntryIndex;
+    private ProgramInsulinCommand(int address, short sequenceNumber, boolean multiCommandFlag, int nonce, List<InsulinProgramElement> max8HourInsulinProgramElements, byte currentHalfHourEntryIndex, short remainingEighthSecondsInCurrentHalfHourEntry, short remainingPulsesInCurrentHalfHourEntry, DeliveryType deliveryType, Command interlockCommand) {
+        super(CommandType.PROGRAM_INSULIN, address, sequenceNumber, multiCommandFlag, nonce);
+        this.max8HourInsulinProgramElements = new ArrayList<>(max8HourInsulinProgramElements);
+        this.currentHalfHourEntryIndex = currentHalfHourEntryIndex;
+        this.remainingEighthSecondsInCurrentHalfHourEntry = remainingEighthSecondsInCurrentHalfHourEntry;
         this.remainingPulsesInCurrentHalfHourEntry = remainingPulsesInCurrentHalfHourEntry;
-        this.delayUntilNextTenthPulseInUsec = delayUntilNextTenthPulseInUsec;
+        this.deliveryType = deliveryType;
         this.interlockCommand = interlockCommand;
     }
 
     public short getLength() {
-        return (short) (insulinProgramElements.size() * 6 + 10);
+        return (short) (max8HourInsulinProgramElements.size() * 6 + 10);
     }
 
     public byte getBodyLength() {
-        return (byte) (insulinProgramElements.size() * 6 + 8);
+        return (byte) (max8HourInsulinProgramElements.size() * 6 + 8);
     }
 
     @Override public byte[] getEncoded() {
         ByteBuffer commandBuffer = ByteBuffer.allocate(this.getLength()) //
                 .put(commandType.getValue()) //
                 .put(getBodyLength()) //
-                .put(programReminder.getEncoded()) //
-                .put(currentHalfOurEntryIndex) //
-                .putShort(remainingPulsesInCurrentHalfHourEntry) //
-                .putInt(delayUntilNextTenthPulseInUsec);
+                .putInt(nonce) //
+                .put(deliveryType.getValue()) //
+                .putShort(createChecksum()) //
+                .put(currentHalfHourEntryIndex) //
+                .putShort(remainingEighthSecondsInCurrentHalfHourEntry) //
+                .putShort(remainingPulsesInCurrentHalfHourEntry);
 
-        for (InsulinProgramElement element : insulinProgramElements) {
+        for (InsulinProgramElement element : max8HourInsulinProgramElements) {
             commandBuffer.put(element.getEncoded());
         }
 
@@ -64,43 +65,47 @@ public final class ProgramInsulinCommand extends HeaderEnabledCommand {
         return command;
     }
 
-    public static final class ProgramBasalBuilder extends HeaderEnabledBuilder<ProgramBasalBuilder, ProgramInsulinCommand> {
-        private List<InsulinProgramElement> insulinProgramElements;
-        private ProgramReminder programReminder;
+    private short createChecksum() {
+        return 0; // TODO
+    }
+
+    public static final class Builder extends NonceEnabledBuilder<Builder, ProgramInsulinCommand> {
+        private List<InsulinProgramElement> max8HourInsulinProgramElements;
         private Byte currentHalfOurEntryIndex;
+        private Short remainingEighthSecondsInCurrentHalfHourEntry;
         private Short remainingPulsesInCurrentHalfHourEntry;
-        private Integer delayUntilNextTenthPulseInUsec;
+        private DeliveryType deliveryType;
         private Command interlockCommand;
 
-        public ProgramBasalBuilder setInsulinProgramElements(List<InsulinProgramElement> insulinProgramElements) {
-            if (insulinProgramElements == null) {
-                throw new IllegalArgumentException("insulinProgramElements can not be null");
+        public Builder setMax8HourInsulinProgramElements(List<InsulinProgramElement> max8HourInsulinProgramElements) {
+            if (max8HourInsulinProgramElements == null) {
+                throw new IllegalArgumentException("max8HourInsulinProgramElements can not be null");
             }
-            this.insulinProgramElements = new ArrayList<>(insulinProgramElements);
+            this.max8HourInsulinProgramElements = new ArrayList<>(max8HourInsulinProgramElements);
             return this;
         }
 
-        public ProgramBasalBuilder setProgramReminder(ProgramReminder programReminder) {
-            this.programReminder = programReminder;
-            return this;
-        }
-
-        public ProgramBasalBuilder setCurrentHalfOurEntryIndex(byte currentHalfOurEntryIndex) {
+        public Builder setCurrentHalfOurEntryIndex(byte currentHalfOurEntryIndex) {
             this.currentHalfOurEntryIndex = currentHalfOurEntryIndex;
             return this;
         }
 
-        public ProgramBasalBuilder setRemainingPulsesInCurrentHalfHourEntry(short remainingPulsesInCurrentHalfHourEntry) {
+        public Builder setRemainingEighthSecondsInCurrentHalfHourEntryIndex(short remainingEighthSecondsInCurrentHalfHourEntry) {
+            this.remainingEighthSecondsInCurrentHalfHourEntry = remainingEighthSecondsInCurrentHalfHourEntry;
+            return this;
+        }
+
+        public Builder setRemainingPulsesInCurrentHalfHourEntry(short remainingPulsesInCurrentHalfHourEntry) {
             this.remainingPulsesInCurrentHalfHourEntry = remainingPulsesInCurrentHalfHourEntry;
             return this;
         }
 
-        public ProgramBasalBuilder setDelayUntilNextTenthPulseInUsec(Integer delayUntilNextTenthPulseInUsec) {
-            this.delayUntilNextTenthPulseInUsec = delayUntilNextTenthPulseInUsec;
+        public Builder setDeliveryType(DeliveryType deliveryType) {
+            this.deliveryType = deliveryType;
             return this;
         }
 
-        public ProgramBasalBuilder setInterlockCommand(Command interlockCommand) {
+        public Builder setInterlockCommand(Command interlockCommand) {
             if (!ALLOWED_INTERLOCK_COMMANDS.contains(interlockCommand.getCommandType())) {
                 throw new IllegalArgumentException("Illegal interlock command type");
             }
@@ -109,39 +114,42 @@ public final class ProgramInsulinCommand extends HeaderEnabledCommand {
         }
 
         @Override protected final ProgramInsulinCommand buildCommand() {
-            if (insulinProgramElements == null) {
+            if (max8HourInsulinProgramElements == null) {
                 throw new IllegalArgumentException("insulinProgramElements can not be null");
-            }
-            if (programReminder == null) {
-                throw new IllegalArgumentException("programReminder can not be null");
             }
             if (currentHalfOurEntryIndex == null) {
                 throw new IllegalArgumentException("currentHalfOurEntryIndex can not be null");
             }
+            if (remainingEighthSecondsInCurrentHalfHourEntry == null) {
+                throw new IllegalArgumentException("remainingEighthSecondsInCurrentHalfHourEntry can not be null");
+            }
             if (remainingPulsesInCurrentHalfHourEntry == null) {
                 throw new IllegalArgumentException("remainingPulsesInCurrentHalfHourEntry can not be null");
             }
-            if (delayUntilNextTenthPulseInUsec == null) {
-                throw new IllegalArgumentException("durationUntilNextTenthPulseInUsec can not be null");
+            if (deliveryType == null) {
+                throw new IllegalArgumentException("deliveryType can not be null");
             }
             if (interlockCommand == null) {
                 throw new IllegalArgumentException("interlockCommand can not be null");
             }
-            return new ProgramInsulinCommand(address, sequenceNumber, multiCommandFlag, programReminder, insulinProgramElements, currentHalfOurEntryIndex, remainingPulsesInCurrentHalfHourEntry, delayUntilNextTenthPulseInUsec, interlockCommand);
+            return new ProgramInsulinCommand(address, sequenceNumber, multiCommandFlag, nonce, max8HourInsulinProgramElements, currentHalfOurEntryIndex, remainingEighthSecondsInCurrentHalfHourEntry, remainingPulsesInCurrentHalfHourEntry, deliveryType, interlockCommand);
         }
     }
 
-    @Override public String toString() {
-        return "ProgramInsulinCommand{" +
-                "insulinProgramElements=" + insulinProgramElements +
-                ", programReminder=" + programReminder +
-                ", currentHalfOurEntryIndex=" + currentHalfOurEntryIndex +
-                ", remainingPulsesInCurrentHalfHourEntry=" + remainingPulsesInCurrentHalfHourEntry +
-                ", delayUntilNextTenthPulseInUsec=" + delayUntilNextTenthPulseInUsec +
-                ", commandType=" + commandType +
-                ", address=" + address +
-                ", sequenceNumber=" + sequenceNumber +
-                ", multiCommandFlag=" + multiCommandFlag +
-                '}';
+    public enum DeliveryType {
+        BASAL((byte) 0x00),
+        TEMP_BASAL((byte) 0x01),
+        BOLUS((byte) 0x02);
+
+        private final byte value;
+
+        DeliveryType(byte value) {
+            this.value = value;
+        }
+
+        public byte getValue() {
+            return value;
+        }
     }
+
 }
