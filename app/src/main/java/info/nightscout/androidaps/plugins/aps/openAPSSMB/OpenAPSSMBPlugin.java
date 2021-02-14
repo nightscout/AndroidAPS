@@ -265,19 +265,14 @@ public class OpenAPSSMBPlugin extends PluginBase implements APSInterface, Constr
         profiler.log(LTag.APS, "SMB data gathering", start);
 
         start = System.currentTimeMillis();
-        try {
-            determineBasalAdapterSMBJS.setData(profile, maxIob, maxBasal, minBg, maxBg, targetBg, activePlugin.getActivePump().getBaseBasalRate(), iobArray, glucoseStatus, mealData,
-                    lastAutosensResult.ratio, //autosensDataRatio
-                    isTempTarget,
-                    smbAllowed.value(),
-                    uam.value(),
-                    advancedFiltering.value(),
-                    activePlugin.getActiveBgSource().getClass().getSimpleName().equals("DexcomPlugin")
-            );
-        } catch (JSONException e) {
-            fabricPrivacy.logException(e);
-            return;
-        }
+        determineBasalAdapterSMBJS.setData(profile, maxIob, maxBasal, minBg, maxBg, targetBg, activePlugin.getActivePump().getBaseBasalRate(), iobArray, glucoseStatus, mealData,
+                lastAutosensResult.ratio, //autosensDataRatio
+                isTempTarget,
+                smbAllowed.value(),
+                uam.value(),
+                advancedFiltering.value(),
+                activePlugin.getActiveBgSource().getClass().getSimpleName().equals("DexcomPlugin")
+        );
 
         long now = System.currentTimeMillis();
 
