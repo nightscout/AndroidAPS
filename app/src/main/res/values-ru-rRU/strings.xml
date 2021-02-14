@@ -1162,4 +1162,5 @@ Context | Edit Context</string>
     <string name="clear_filter">Очистить фильтр</string>
     <string name="trend_arrow">Стрелка тренда</string>
     <string name="cannula">Катетер помпы</string>
+    <string name="userentry">Запись пользователя</string>
 </resources>
