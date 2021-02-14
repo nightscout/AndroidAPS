@@ -10,7 +10,7 @@
     <string name="omnipod_config_tbr_beeps_enabled">Bips DBT activés</string>
     <string name="omnipod_config_suspend_delivery_button_enabled">Montrer le bouton Suspendre l\'injection dans l\'onglet Omnipod</string>
     <string name="omnipod_config_pulse_log_button_enabled">Afficher le bouton Journal d\'impulsions dans le menu de gestion des pods</string>
-    <string name="omnipod_config_rileylink_stats_button_enabled">Afficher le bouton Stats RileyLink dans le menu de gestion des pods</string>
+    <string name="omnipod_config_rileylink_stats_button_enabled">Afficher le bouton Stats RileyLink dans le menu de gestion du pod</string>
     <string name="omnipod_config_battery_change_logging_enabled">Activer l\'enregistrement des changements de pile dans Actions</string>
     <string name="omnipod_config_time_change_enabled">Changement de Zone/Heure Activé</string>
     <string name="omnipod_config_expiration_reminder_enabled">Rappel d\'expiration activé</string>
