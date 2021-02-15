@@ -11,6 +11,7 @@ import androidx.annotation.StringRes
 import com.google.common.base.Optional
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.R
+
 import info.nightscout.androidaps.logging.LTag
 import info.nightscout.androidaps.utils.JsonHelper.safeGetString
 import info.nightscout.androidaps.utils.resources.ResourceHelper
@@ -135,7 +136,7 @@ class TriggerConnector(injector: HasAndroidInjector) : Trigger(injector) {
         // Child triggers
         val listLayout = LinearLayout(root.context)
         listLayout.orientation = LinearLayout.VERTICAL
-        listLayout.setBackgroundColor(resourceHelper.gc(R.color.mdtp_line_dark))
+        listLayout.setBackgroundColor(resourceHelper.getAttributeColor(null, R.attr.triggerConnectorBackground))
         //listLayout.setPadding(resourceHelper.dpToPx(5), resourceHelper.dpToPx(5), resourceHelper.dpToPx(5), 0)
         val params = LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT)
         params.setMargins(resourceHelper.dpToPx(15), 0, resourceHelper.dpToPx(5), resourceHelper.dpToPx(4))
@@ -151,7 +152,7 @@ class TriggerConnector(injector: HasAndroidInjector) : Trigger(injector) {
         spinnerArrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
         spinner.adapter = spinnerArrayAdapter
         spinner.setSelection(initialPosition)
-        spinner.setBackgroundColor(resourceHelper.gc(R.color.black_alpha_40))
+        spinner.setBackgroundColor(resourceHelper.getAttributeColor(context, R.attr.spinnerBackground))
         val params = LinearLayout.LayoutParams(
             LinearLayout.LayoutParams.WRAP_CONTENT,
             LinearLayout.LayoutParams.WRAP_CONTENT

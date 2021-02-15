@@ -30,6 +30,7 @@
         <item name="iobColor">@color/iob</item>
         <item name="cobColor">@color/cob</item>
         <item name="uamColor">@color/swampGreen</item>
+        <item name="smbColor">@color/cyan</item>
         <item name="ztColor">@color/cyan</item>
         <item name="textAppearanceHeadline1">@style/TextAppearance.MaterialComponents.Headline1</item>
         <item name="textAppearanceHeadline2">@style/TextAppearance.MaterialComponents.Headline2</item>
@@ -142,6 +143,9 @@
         <item name="iobPredAS" >@color/iobPredAS</item>
         <item name="labelBackground" >@color/black</item>
         <item name="examinedProfile" >@color/red</item>
+        <item name="spinnerBackground" >@color/black_alpha_40</item>
+        <item name="triggerConnectorBackground" >@color/mdtp_line_dark</item>
+        <item name="treatmentsRed" >@color/red</item>
     </style>
 
     <style name="Theme.MaterialComponents.DayNight.DarkActionBar" parent="Theme.MaterialComponents.DayNight.Bridge"/>

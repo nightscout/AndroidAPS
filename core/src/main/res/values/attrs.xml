@@ -86,6 +86,7 @@
 <attr name="notificationAnnouncement" format="reference|color" />
 <!---Misc -->
 <attr name="carbsColor" format="reference|color" />
+<attr name="smbColor" format="reference|color" />
 <attr name="tempTargetConfirmation" format="reference|color" />
 <attr name="lightGreen" format="reference|color" />
 <attr name="prediction" format="reference|color" />
@@ -111,4 +112,7 @@
 <attr name="iobPredAS" format="reference|color" />
 <attr name="labelBackground" format="reference|color" />
 <attr name="examinedProfile" format="reference|color" />
+<attr name="spinnerBackground" format="reference|color" />
+<attr name="triggerConnectorBackground" format="reference|color" />
+<attr name="treatmentsRed" format="reference|color" />
 </resources>
