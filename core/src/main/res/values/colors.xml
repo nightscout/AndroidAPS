@@ -61,7 +61,7 @@
 
     <!-- Default theme color -->
     <!-- This section describes the main theme colors -->
-    <color name="primaryColorDefault">@color/lightgray</color>
+    <color name="primaryColorDefault">@color/sphere_plastic_grey</color>
     <color name="primaryLightColorDefault">#bbb9bb</color>
     <color name="primaryDarkColorDefault">#666666</color>
     <color name="secondaryColorDefault">#a0a0a0</color>
