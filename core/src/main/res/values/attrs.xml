@@ -97,4 +97,11 @@
 <attr name="carbsColor" format="reference|color" />
 <attr name="tempTargetConfirmation" format="reference|color" />
 <attr name="lightGreen" format="reference|color" />
+<attr name="prediction" format="reference|color" />
+<attr name="basal" format="reference|color" />
+<attr name="overviewShowDeviations" format="reference|color" />
+<attr name="overviewShowSensitivity" format="reference|color" />
+<attr name="activity" format="reference|color" />
+<attr name="bgi" format="reference|color" />
+<attr name="devslopepos" format="reference|color" />
 </resources>
