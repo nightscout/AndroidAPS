@@ -12,16 +12,17 @@ import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.Constants
 import info.nightscout.androidaps.MainApp
 import info.nightscout.androidaps.R
+import info.nightscout.androidaps.data.GlucoseValueDataPoint
 import info.nightscout.androidaps.data.IobTotal
 import info.nightscout.androidaps.data.Profile
-import info.nightscout.androidaps.db.BgReading
+import info.nightscout.androidaps.database.entities.GlucoseValue
 import info.nightscout.androidaps.interfaces.ActivePluginProvider
 import info.nightscout.androidaps.interfaces.LoopInterface
+import info.nightscout.androidaps.interfaces.ProfileFunction
 import info.nightscout.androidaps.interfaces.TreatmentsInterface
 import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.logging.LTag
 import info.nightscout.androidaps.plugins.aps.openAPSSMB.SMBDefaults
-import info.nightscout.androidaps.interfaces.ProfileFunction
 import info.nightscout.androidaps.plugins.general.overview.graphExtensions.*
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.AutosensResult
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.IobCobCalculatorPlugin
@@ -35,7 +36,7 @@ import kotlin.math.max
 import kotlin.math.min
 
 class GraphData(
-    injector: HasAndroidInjector,
+    private val injector: HasAndroidInjector,
     private val graph: GraphView,
     private val iobCobCalculatorPlugin: IobCobCalculatorPlugin,
     private val treatmentsPlugin: TreatmentsInterface
@@ -50,7 +51,7 @@ class GraphData(
 
     var maxY = Double.MIN_VALUE
     private var minY = Double.MAX_VALUE
-    private var bgReadingsArray: List<BgReading>? = null
+    private var bgReadingsArray: List<GlucoseValue>? = null
     private val units: String
     private val series: MutableList<Series<*>> = ArrayList()
 
@@ -60,35 +61,39 @@ class GraphData(
     }
 
     @Suppress("UNUSED_PARAMETER")
-    fun addBgReadings(fromTime: Long, toTime: Long, lowLine: Double, highLine: Double, predictions: MutableList<BgReading>?) {
+    fun addBgReadings(fromTime: Long, toTime: Long, lowLine: Double, highLine: Double, predictions: MutableList<GlucoseValueDataPoint>?) {
         var maxBgValue = Double.MIN_VALUE
         bgReadingsArray = iobCobCalculatorPlugin.bgReadings
         if (bgReadingsArray?.isEmpty() != false) {
             aapsLogger.debug("No BG data.")
-            maxY = 10.0
+            maxY = if (units == Constants.MGDL) 180.0 else 10.0
             minY = 0.0
             return
         }
         val bgListArray: MutableList<DataPointWithLabelInterface> = ArrayList()
         for (bg in bgReadingsArray!!) {
-            if (bg.date < fromTime || bg.date > toTime) continue
+            if (bg.timestamp < fromTime || bg.timestamp > toTime) continue
             if (bg.value > maxBgValue) maxBgValue = bg.value
-            bgListArray.add(bg)
+            bgListArray.add(GlucoseValueDataPoint(injector, bg))
         }
         if (predictions != null) {
-            predictions.sortWith(Comparator { o1: BgReading, o2: BgReading -> o1.x.compareTo(o2.x) })
-            for (prediction in predictions) if (prediction.value >= 40) bgListArray.add(prediction)
+            predictions.sortWith(Comparator { o1: GlucoseValueDataPoint, o2: GlucoseValueDataPoint -> o1.x.compareTo(o2.x) })
+            for (prediction in predictions) if (prediction.data.value >= 40) bgListArray.add(prediction)
         }
         maxBgValue = Profile.fromMgdlToUnits(maxBgValue, units)
-        maxBgValue = if (units == Constants.MGDL) Round.roundTo(maxBgValue, 40.0) + 80 else Round.roundTo(maxBgValue, 2.0) + 4
+        maxBgValue = addUpperChartMargin(maxBgValue)
         if (highLine > maxBgValue) maxBgValue = highLine
-        val numOfVerticalLines = if (units == Constants.MGDL) (maxBgValue / 40 + 1).toInt() else (maxBgValue / 2 + 1).toInt()
         maxY = maxBgValue
         minY = 0.0
-        // set manual y bounds to have nice steps
-        graph.gridLabelRenderer.numVerticalLabels = numOfVerticalLines
         addSeries(PointsWithLabelGraphSeries(Array(bgListArray.size) { i -> bgListArray[i] }))
     }
+
+    internal fun setNumVerticalLables() {
+        graph.gridLabelRenderer.numVerticalLabels = if (units == Constants.MGDL) (maxY / 40 + 1).toInt() else (maxY / 2 + 1).toInt()
+    }
+
+    private fun addUpperChartMargin(maxBgValue: Double) =
+        if (units == Constants.MGDL) Round.roundTo(maxBgValue, 40.0) + 80 else Round.roundTo(maxBgValue, 2.0) + 4
 
     fun addInRangeArea(fromTime: Long, toTime: Long, lowLine: Double, highLine: Double) {
         val inRangeAreaSeries: AreaGraphSeries<DoubleDataPoint>
@@ -208,8 +213,7 @@ class GraphData(
         var time = fromTime
         while (time < toTime) {
             val tt = treatmentsPlugin.getTempTargetFromHistory(time)
-            var value: Double
-            value = if (tt == null) {
+            val value: Double = if (tt == null) {
                 Profile.fromMgdlToUnits((profile.getTargetLowMgdl(time) + profile.getTargetHighMgdl(time)) / 2, units)
             } else {
                 Profile.fromMgdlToUnits(tt.target(), units)
@@ -233,51 +237,52 @@ class GraphData(
 
     fun addTreatments(fromTime: Long, endTime: Long) {
         val filteredTreatments: MutableList<DataPointWithLabelInterface> = ArrayList()
-        val treatments = treatmentsPlugin.treatmentsFromHistory
-        for (tx in treatments.indices) {
-            val t = treatments[tx]
-            if (t.x < fromTime || t.x > endTime) continue
-            if (t.isSMB && !t.isValid) continue
-            t.y = getNearestBg(t.x.toLong())
-            filteredTreatments.add(t)
-        }
+        treatmentsPlugin.treatmentsFromHistory
+            .filterTimeframe(fromTime, endTime)
+            .filter { !it.isSMB || it.isValid }
+            .forEach {
+                it.y = getNearestBg(it.x.toLong())
+                filteredTreatments.add(it)
+            }
 
         // ProfileSwitch
-        val profileSwitches = treatmentsPlugin.profileSwitchesFromHistory.list
-        for (tx in profileSwitches.indices) {
-            val t: DataPointWithLabelInterface = profileSwitches[tx]
-            if (t.x < fromTime || t.x > endTime) continue
-            filteredTreatments.add(t)
-        }
+        treatmentsPlugin.profileSwitchesFromHistory.list
+            .filterTimeframe(fromTime, endTime)
+            .forEach(filteredTreatments::add)
 
         // Extended bolus
         if (!activePlugin.activePump.isFakingTempsByExtendedBoluses) {
-            val extendedBoluses = treatmentsPlugin.extendedBolusesFromHistory.list
-            for (tx in extendedBoluses.indices) {
-                val t: DataPointWithLabelInterface = extendedBoluses[tx]
-                if (t.x + t.duration < fromTime || t.x > endTime) continue
-                if (t.duration == 0L) continue
-                t.y = getNearestBg(t.x.toLong())
-                filteredTreatments.add(t)
-            }
+            treatmentsPlugin.extendedBolusesFromHistory.list
+                .filterTimeframe(fromTime, endTime)
+                .filter { it.duration != 0L }
+                .forEach {
+                    it.y = getNearestBg(it.x.toLong())
+                    filteredTreatments.add(it)
+                }
         }
 
         // Careportal
-        val careportalEvents = MainApp.getDbHelper().getCareportalEventsFromTime(fromTime - 6 * 60 * 60 * 1000, true)
-        for (tx in careportalEvents.indices) {
-            val t: DataPointWithLabelInterface = careportalEvents[tx]
-            if (t.x + t.duration < fromTime || t.x > endTime) continue
-            t.y = getNearestBg(t.x.toLong())
-            filteredTreatments.add(t)
-        }
-        addSeries(PointsWithLabelGraphSeries(Array(filteredTreatments.size) { i -> filteredTreatments[i] }))
+        MainApp.getDbHelper().getCareportalEventsFromTime(fromTime - 6 * 60 * 60 * 1000, true)
+            .filterTimeframe(fromTime, endTime)
+            .forEach {
+                it.y = getNearestBg(it.x.toLong())
+                filteredTreatments.add(it)
+            }
+
+        // increase maxY if a treatment forces it's own height that's higher than a BG value
+        filteredTreatments.map { it.y }
+            .maxOrNull()
+            ?.let(::addUpperChartMargin)
+            ?.let { maxY = maxOf(maxY, it) }
+
+        addSeries(PointsWithLabelGraphSeries(filteredTreatments.toTypedArray()))
     }
 
     private fun getNearestBg(date: Long): Double {
         bgReadingsArray?.let { bgReadingsArray ->
             for (r in bgReadingsArray.indices) {
                 val reading = bgReadingsArray[r]
-                if (reading.date > date) continue
+                if (reading.timestamp > date) continue
                 return Profile.fromMgdlToUnits(reading.value, units)
             }
             return if (bgReadingsArray.isNotEmpty()) Profile.fromMgdlToUnits(bgReadingsArray[0].value, units) else Profile.fromMgdlToUnits(100.0, units)
@@ -324,8 +329,51 @@ class GraphData(
         actScale.setMultiplier(maxY * scale / maxIAValue)
     }
 
+    //Function below show -BGI to be able to compare curves with deviations
+    fun addMinusBGI(fromTime: Long, toTime: Long, useForScale: Boolean, scale: Double, devBgiScale: Boolean) {
+        val bgiArrayHist: MutableList<ScaledDataPoint> = ArrayList()
+        val bgiArrayPred: MutableList<ScaledDataPoint> = ArrayList()
+        val now = System.currentTimeMillis().toDouble()
+        val bgiScale = Scale()
+        var total: IobTotal
+        var maxBGIValue = 0.0
+        var time = fromTime
+        while (time <= toTime) {
+            val profile = profileFunction.getProfile(time)
+            if (profile == null) {
+                time += 5 * 60 * 1000L
+                continue
+            }
+            val deviation = if (devBgiScale) iobCobCalculatorPlugin.getAutosensData(time)?.deviation ?:0.0 else 0.0
+
+            total = iobCobCalculatorPlugin.calculateFromTreatmentsAndTempsSynchronized(time, profile)
+            val bgi: Double = total.activity * profile.getIsfMgdl(time) * 5.0
+            if (time <= now) bgiArrayHist.add(ScaledDataPoint(time, bgi, bgiScale)) else bgiArrayPred.add(ScaledDataPoint(time, bgi, bgiScale))
+            maxBGIValue = max(maxBGIValue, max(abs(bgi), deviation))
+            time += 5 * 60 * 1000L
+        }
+        addSeries(FixedLineGraphSeries(Array(bgiArrayHist.size) { i -> bgiArrayHist[i] }).also {
+            it.isDrawBackground = false
+            it.color = resourceHelper.gc(R.color.bgi)
+            it.thickness = 3
+        })
+        addSeries(FixedLineGraphSeries(Array(bgiArrayPred.size) { i -> bgiArrayPred[i] }).also {
+            it.setCustomPaint(Paint().also { paint ->
+                paint.style = Paint.Style.STROKE
+                paint.strokeWidth = 3f
+                paint.pathEffect = DashPathEffect(floatArrayOf(4f, 4f), 0f)
+                paint.color = resourceHelper.gc(R.color.bgi)
+            })
+        })
+        if (useForScale) {
+            maxY = maxBGIValue
+            minY = -maxBGIValue
+        }
+        bgiScale.setMultiplier(maxY * scale / maxBGIValue)
+    }
+
     // scale in % of vertical size (like 0.3)
-    fun addIob(fromTime: Long, toTime: Long, useForScale: Boolean, scale: Double, showPrediction: Boolean) {
+    fun addIob(fromTime: Long, toTime: Long, useForScale: Boolean, scale: Double, showPrediction: Boolean, absScale: Boolean) {
         val iobSeries: FixedLineGraphSeries<ScaledDataPoint?>
         val iobArray: MutableList<ScaledDataPoint> = ArrayList()
         var maxIobValueFound = Double.MIN_VALUE
@@ -335,11 +383,15 @@ class GraphData(
         while (time <= toTime) {
             val profile = profileFunction.getProfile(time)
             var iob = 0.0
-            if (profile != null) iob = iobCobCalculatorPlugin.calculateFromTreatmentsAndTempsSynchronized(time, profile).iob
+            var absIob = 0.0
+            if (profile != null) {
+                iob = iobCobCalculatorPlugin.calculateFromTreatmentsAndTempsSynchronized(time, profile).iob
+                if (absScale) absIob = iobCobCalculatorPlugin.calculateAbsInsulinFromTreatmentsAndTempsSynchronized(time, profile).iob
+            }
             if (abs(lastIob - iob) > 0.02) {
                 if (abs(lastIob - iob) > 0.2) iobArray.add(ScaledDataPoint(time, lastIob, iobScale))
                 iobArray.add(ScaledDataPoint(time, iob, iobScale))
-                maxIobValueFound = max(maxIobValueFound, abs(iob))
+                maxIobValueFound = if (absScale) max(maxIobValueFound, abs(absIob)) else max(maxIobValueFound, abs(iob))
                 lastIob = iob
             }
             time += 5 * 60 * 1000L
@@ -455,14 +507,23 @@ class GraphData(
     }
 
     // scale in % of vertical size (like 0.3)
-    fun addDeviations(fromTime: Long, toTime: Long, useForScale: Boolean, scale: Double) {
+    fun addDeviations(fromTime: Long, toTime: Long, useForScale: Boolean, scale: Double, devBgiScale: Boolean) {
         class DeviationDataPoint(x: Double, y: Double, var color: Int, scale: Scale) : ScaledDataPoint(x, y, scale)
 
         val devArray: MutableList<DeviationDataPoint> = ArrayList()
         var maxDevValueFound = 0.0
         val devScale = Scale()
         var time = fromTime
+        var total: IobTotal
+
         while (time <= toTime) {
+            // if align Dev Scale with BGI scale, then calculate BGI value, else bgi = 0.0
+            val bgi: Double = if (devBgiScale) {
+                    val profile = profileFunction.getProfile(time)
+                    total = iobCobCalculatorPlugin.calculateFromTreatmentsAndTempsSynchronized(time, profile)
+                    total.activity * (profile?.getIsfMgdl(time) ?: 0.0) * 5.0
+                } else 0.0
+
             iobCobCalculatorPlugin.getAutosensData(time)?.let { autosensData ->
                 var color = resourceHelper.gc(R.color.deviationblack) // "="
                 if (autosensData.type == "" || autosensData.type == "non-meal") {
@@ -475,7 +536,7 @@ class GraphData(
                     color = resourceHelper.gc(R.color.deviationgrey)
                 }
                 devArray.add(DeviationDataPoint(time.toDouble(), autosensData.deviation, color, devScale))
-                maxDevValueFound = max(maxDevValueFound, abs(autosensData.deviation))
+                maxDevValueFound = max(maxDevValueFound, max(abs(autosensData.deviation), abs(bgi)))
             }
             time += 5 * 60 * 1000L
         }
@@ -604,3 +665,6 @@ class GraphData(
         graph.onDataChanged(false, false)
     }
 }
+
+private fun <E : DataPointWithLabelInterface> List<E>.filterTimeframe(fromTime: Long, endTime: Long): List<E> =
+    filter { it.x + it.duration >= fromTime && it.x <= endTime }

@@ -16,6 +16,8 @@ import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.BuildConfig
 import info.nightscout.androidaps.MainApp
 import info.nightscout.androidaps.R
+import info.nightscout.androidaps.database.AppRepository
+import info.nightscout.androidaps.database.entities.GlucoseValue
 import info.nightscout.androidaps.db.*
 import info.nightscout.androidaps.events.EventPreferenceChange
 import info.nightscout.androidaps.interfaces.PluginBase
@@ -25,15 +27,15 @@ import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.logging.LTag
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper
 import info.nightscout.androidaps.plugins.treatments.TreatmentsPlugin
-import info.nightscout.androidaps.utils.extensions.plusAssign
+import io.reactivex.rxkotlin.plusAssign
 import info.nightscout.androidaps.utils.resources.ResourceHelper
+import info.nightscout.androidaps.utils.rx.AapsSchedulers
 import info.nightscout.androidaps.utils.sharedPreferences.SP
 import io.reactivex.Completable
 import io.reactivex.Observable
 import io.reactivex.Single
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.disposables.Disposable
-import io.reactivex.schedulers.Schedulers
 import org.json.JSONArray
 import org.json.JSONException
 import org.json.JSONObject
@@ -52,10 +54,12 @@ class OpenHumansUploader @Inject constructor(
     injector: HasAndroidInjector,
     resourceHelper: ResourceHelper,
     aapsLogger: AAPSLogger,
-    val sp: SP,
-    val rxBus: RxBusWrapper,
-    val context: Context,
-    val treatmentsPlugin: TreatmentsPlugin
+    private val aapsSchedulers: AapsSchedulers,
+    private val sp: SP,
+    private val rxBus: RxBusWrapper,
+    private val context: Context,
+    private val treatmentsPlugin: TreatmentsPlugin,
+    val repository: AppRepository
 ) : PluginBase(
     PluginDescription()
         .mainType(PluginType.GENERAL)
@@ -85,6 +89,8 @@ class OpenHumansUploader @Inject constructor(
     }
 
     private val openHumansAPI = OpenHumansAPI(OPEN_HUMANS_URL, CLIENT_ID, CLIENT_SECRET, REDIRECT_URL)
+
+    @Suppress("PrivatePropertyName")
     private val FILE_NAME_DATE_FORMAT = SimpleDateFormat("yyyyMMdd'T'HHmmss", Locale.US).apply { timeZone = TimeZone.getTimeZone("UTC") }
 
     private var isSetup
@@ -126,12 +132,12 @@ class OpenHumansUploader @Inject constructor(
     private val appId: UUID
         get() {
             val id = sp.getStringOrNull("openhumans_appid", null)
-            if (id == null) {
+            return if (id == null) {
                 val generated = UUID.randomUUID()
                 sp.putString("openhumans_appid", generated.toString())
-                return generated
+                generated
             } else {
-                return UUID.fromString(id)
+                UUID.fromString(id)
             }
         }
 
@@ -140,7 +146,7 @@ class OpenHumansUploader @Inject constructor(
     private val wakeLock = (context.getSystemService(Context.POWER_SERVICE) as PowerManager)
         .newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, "AndroidAPS::OpenHumans")
 
-    val preferenceChangeDisposable = CompositeDisposable()
+    private val preferenceChangeDisposable = CompositeDisposable()
 
     override fun onStart() {
         super.onStart()
@@ -158,15 +164,15 @@ class OpenHumansUploader @Inject constructor(
         super.onStop()
     }
 
-    fun enqueueBGReading(bgReading: BgReading?) = bgReading?.let {
+    fun enqueueBGReading(glucoseValue: GlucoseValue?) = glucoseValue?.let {
         insertQueueItem("BgReadings") {
-            put("date", bgReading.date)
-            put("isValid", bgReading.isValid)
-            put("value", bgReading.value)
-            put("direction", bgReading.direction)
-            put("raw", bgReading.raw)
-            put("source", bgReading.source)
-            put("nsId", bgReading._id)
+            put("date", glucoseValue.timestamp)
+            put("isValid", glucoseValue.isValid)
+            put("value", glucoseValue.value)
+            put("direction", glucoseValue.trendArrow)
+            put("raw", glucoseValue.raw)
+            put("source", glucoseValue.sourceSensor)
+            put("nsId", glucoseValue.interfaceIDs.nightscoutId)
         }
     }
 
@@ -360,7 +366,7 @@ class OpenHumansUploader @Inject constructor(
             .flatMapObservable { Observable.defer { Observable.fromIterable(treatmentsPlugin.service.treatmentData) } }
             .map { enqueueTreatment(it); increaseCounter() }
             .ignoreElements()
-            .andThen(Observable.defer { Observable.fromIterable(MainApp.getDbHelper().allBgReadings) })
+            .andThen(Observable.defer { Observable.fromIterable(repository.compatGetBgReadingsDataFromTime(0, true).blockingGet()) })
             .map { enqueueBGReading(it); increaseCounter() }
             .ignoreElements()
             .andThen(Observable.defer { Observable.fromIterable(MainApp.getDbHelper().allCareportalEvents) })
@@ -400,7 +406,7 @@ class OpenHumansUploader @Inject constructor(
                 wakeLock.release()
             }
             .onErrorComplete()
-            .subscribeOn(Schedulers.io())
+            .subscribeOn(aapsSchedulers.io)
             .subscribe()
     }
 
@@ -453,7 +459,8 @@ class OpenHumansUploader @Inject constructor(
                 aapsLogger.error(LTag.OHUPLOADER, "Segmental upload exceptional", it)
             }
 
-    fun uploadData(maxEntries: Long?): Completable = gatherData(maxEntries)
+    @Suppress("SameParameterValue")
+    private fun uploadData(maxEntries: Long?): Completable = gatherData(maxEntries)
         .flatMap { data -> refreshAccessTokensIfNeeded().map { accessToken -> accessToken to data } }
         .flatMap { uploadFile(it.first, it.second).andThen(Single.just(it.second)) }
         .flatMapCompletable {
@@ -616,14 +623,12 @@ class OpenHumansUploader @Inject constructor(
     }
 
     private fun setupNotificationChannel() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            val notificationManagerCompat = NotificationManagerCompat.from(context)
-            notificationManagerCompat.createNotificationChannel(NotificationChannel(
-                NOTIFICATION_CHANNEL,
-                resourceHelper.gs(R.string.open_humans),
-                NotificationManager.IMPORTANCE_DEFAULT
-            ))
-        }
+        val notificationManagerCompat = NotificationManagerCompat.from(context)
+        notificationManagerCompat.createNotificationChannel(NotificationChannel(
+            NOTIFICATION_CHANNEL,
+            resourceHelper.gs(R.string.open_humans),
+            NotificationManager.IMPORTANCE_DEFAULT
+        ))
     }
 
     private class UploadData(
@@ -633,6 +638,7 @@ class OpenHumansUploader @Inject constructor(
         val highestQueueId: Long?
     )
 
+    @Suppress("PrivatePropertyName")
     private val HEX_DIGITS = "0123456789ABCDEF".toCharArray()
 
     private fun ByteArray.toHexString(): String {

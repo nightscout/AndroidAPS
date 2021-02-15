@@ -13,7 +13,6 @@
     <string name="reset_db_confirm">Você realmente quer redefinir os bancos de dados?</string>
     <string name="nav_exit">Sair</string>
     <string name="ns_sync_use_absolute_title">Sempre usar valores absolutos basais</string>
-    <string name="alert_dialog_storage_permission_text">Por favor, reinicie seu telefone ou reinicie o AndroidAPS nas Configurações do Sistema \nCaso contrário o Android APS não terá registro (importante para rastrear e verificar que os algoritmos estão funcionando corretamente)!</string>
     <string name="alert_dialog_permission_battery_optimization_failed">Este dispositivo não parece suportar a optimização de bateria na lista de permissões - pode ter problemas de desempenho.</string>
     <string name="description_actions">Alguns botões para acessar rapidamente a funções comuns</string>
     <string name="description_config_builder">Usado para configurar os plugins ativos</string>
@@ -40,7 +39,6 @@
     <string name="description_source_glimp">Receber valores BG do Glimp.</string>
     <string name="description_source_mm640g">Receber valores de Glucose do 600SeriesAndroidUploader.</string>
     <string name="description_source_ns_client">Downloads de dados de Glicose do Nightscout</string>
-    <string name="description_source_xdrip">Receber valores BG de xDrip.</string>
     <string name="description_treatments">Salva todos os tratamentos que foram feitos</string>
     <string name="description_wear">Monitore e controle AndroidAPS usando seu relógio WearOS.</string>
     <string name="description_xdrip_status_line">Mostrar informações sobre o loop no watchface do xDrip+.</string>
@@ -117,7 +115,6 @@
     <string name="changeyourinput">Altere sua entrada!</string>
     <string name="configbuilder_bgsource">Fonte de BG</string>
     <string name="configbuilder_bgsource_description">De onde o AndroidAPS deve obter os dados?</string>
-    <string name="xdrip">xDrip</string>
     <string name="apsmode_title">Modo APS</string>
     <string name="closedloop">Loop Fechado</string>
     <string name="openloop">Loop Aberto</string>
@@ -160,7 +157,6 @@
     <string name="password_preferences_decrypt_prompt">Será perguntado pela senha mestre, que será necessária para desencriptar preferências importadas.</string>
     <string name="preferences_export_canceled">Exportação cancelada! Preferências NÃO foram exportadas!</string>
     <string name="preferences_import_canceled">Importação cancelada! Preferências NÃO foram importadas!</string>
-    <string name="preferences_import_list_title">Selecionar arquivo para importar</string>
     <string name="check_preferences_before_import">Por favor, verifique as preferências antes da importação:</string>
     <string name="check_preferences_cannot_import">Preferências não podem ser importadas!</string>
     <string name="check_preferences_dangerous_import">As preferências não devem ser importadas!</string>
@@ -168,35 +164,6 @@
     <string name="check_preferences_details_title">Detalhes de problemas de importação</string>
     <string name="check_preferences_import_btn">Importar</string>
     <string name="check_preferences_import_anyway_btn">Importar mesmo assim (PERIGOSO!)</string>
-    <string name="metadata_warning_different_flavour">As preferências foram criadas com uma variante diferente do AAPS (%1$s) enquanto tem: %2$s.\n\nAlgumas configurações podem estar ausentes ou inválidas - após a importação, por favor verifique e atualize suas preferências.</string>
-    <string name="metadata_warning_different_device">Preferências foram criadas num dispositivo diferente. Não há problema se estiver a importar de telefone diferente/antigo, mas se certifique que as preferências importadas estão corretas!</string>
-    <string name="metadata_warning_outdated_format">Você está usando o formato de legado desatualizado a partir de versões antigas da AAPS, que não é seguro! Use apenas como último recurso, se você não tiver uma exportação em formato atual, JSON.</string>
-    <string name="metadata_warning_old_export">As preferências importadas já têm %1$s dias de idade! Talvez você tenha preferências mais atualizadas ou escolha o arquivo errado? Lembre-se de exportar preferências regularmente!</string>
-    <string name="metadata_warning_date_format">Formato de data-hora inválido!</string>
-    <string name="metadata_label_format">Formato do arquivo</string>
-    <string name="metadata_label_created_at">Criado em</string>
-    <string name="metadata_label_aaps_version">Versão AAPS</string>
-    <string name="metadata_label_aaps_flavour">Variante de Compilação</string>
-    <string name="metadata_label_device_name">Exportando nome do paciente do dispositivo</string>
-    <string name="metadata_label_device_model">Exportando modelo do dispositivo</string>
-    <string name="metadata_label_encryption">Criptografia do arquivo</string>
-    <string name="metadata_format_old">Antigo Formato de Exportação</string>
-    <string name="metadata_format_new">Novo formato de encriptação</string>
-    <string name="metadata_format_debug">Novo formato de depuração (não encriptado)</string>
-    <string name="metadata_format_other">Formato de exportação desconhecido</string>
-    <string name="prefdecrypt_settings_tampered">Arquivo de configurações adulterado</string>
-    <string name="prefdecrypt_settings_secure">Arquivo de configurações é seguro</string>
-    <string name="prefdecrypt_settings_unencrypted">A usar um formato de configurações não seguro e não encriptado</string>
-    <string name="prefdecrypt_wrong_json">Erro de formato JSON, campo necessário ausente (formato, conteúdo, metadados ou segurança)</string>
-    <string name="prefdecrypt_wrong_password">Erro ao desencriptar, a senha inserida não pode desencriptar o arquivo</string>
-    <string name="prefdecrypt_issue_missing_file_hash">Arquivo de verificação (hash) em falta, não é possível verificar a autenticidade de configurações!</string>
-    <string name="prefdecrypt_issue_modified">Arquivo foi modificado após exportação!</string>
-    <string name="prefdecrypt_issue_parsing">Erro desencriptação, a análise de preferências falhou!</string>
-    <string name="prefdecrypt_issue_wrong_pass">Erro de desencriptação, a senha é inválida ou configurações de arquivo foram modificadas! Pode acontecer que o arquivo importado foi exportado com uma senha mestre diferente.</string>
-    <string name="prefdecrypt_issue_wrong_format">Configuração de encriptação ausente, formato de configurações é inválido!</string>
-    <string name="prefdecrypt_issue_wrong_algorithm">Algoritmo de encriptação não suportado ou não especificado!</string>
-    <string name="exported_ago" comment="at placeholder we add pluralized number of hours/minutes">exportado %1$s atrás</string>
-    <string name="exported_less_than_hour_ago">exportado há menos de uma hora</string>
     <string name="end_user_license_agreement">Condições de Utilização</string>
     <string name="end_user_license_agreement_text">NÃO DEVE SER USADO PARA FAZER DECISÕES MÉDICAS. NÃO HÁ NENHUMA GARANTIA PARA O PROGRAMA, NA EXTENSÃO PERMITIDA PELA LEGISLAÇÃO APLICÁVEL. EXCETO QUANDO DE OUTRA FORMA, POR ESCRITO, OS TITULARES DOS DIREITOS DE AUTOR E / OU OUTRAS PARTES FORNECEM O PROGRAMA “TAL COMO ESTÁ”, SEM GARANTIA DE QUALQUER TIPO, EXPRESSA OU IMPLÍCITA, INCLUINDO, MAS NÃO SE LIMITANDO, ÀS GARANTIAS IMPLÍCITAS DE COMERCIALIZAÇÃO E ADEQUAÇÃO A UMA FINALIDADE ESPECÍFICA. TODO O RISCO QUANTO À QUALIDADE E DESEMPENHO DO PROGRAMA É COM VOCÊ. CASO O PROGRAMA SEJA DEFEITUOSO, VOCÊ ASSUME O CUSTO DE TODOS OS SERVIÇOS, REPAROS OU CORREÇÕES NECESSÁRIOS.</string>
     <string name="end_user_license_agreement_i_understand">EU ENTENDO E CONCORDO</string>
@@ -260,8 +227,6 @@
     <string name="mealbolus">Refeição</string>
     <string name="correctionbous">Correção</string>
     <string name="actions">Ações</string>
-    <string name="ns_upload_only">Envio do NS apenas (sincronização desativada)</string>
-    <string name="ns_upload_only_summary">Apenas upload para NS. Não é eficaz em SGV a menos que uma fonte local como xDrip esteja selecionada. Não é eficaz em perfis enquanto NS-Profiles é usado.</string>
     <string name="pumpNotInitialized">Bomba não inicializada!</string>
     <string name="primefill">Purgar/Preencher</string>
     <string name="fillwarning">Por favor certifique-se que o valor corresponde ao especificado para o seu conjunto de infusão!</string>
@@ -316,7 +281,6 @@
     <string name="smscommunicator_shortname">SMS</string>
     <string name="short_tabtitles">Abreviar títulos dos separadores</string>
     <string name="always_use_shortavg">Usar sempre delta médio curto em vez de delta simples</string>
-    <string name="always_use_shortavg_summary">Útil quando há ruído nos dados de fontes sem filtro como o xDrip.</string>
     <string name="profile">Perfil</string>
     <string name="openapsama_max_daily_safety_multiplier_summary">Valor padrão: 3 Por segurança é o valor limite estabelecido por OpenAPS. O que faz é limitar a basal a x3 a basal mázima. Se necessário modificar este valor, por favor ter em conta que os dados apontam para que os limites de segurança sejam - 3 x max diario ou 4x valor atual (qual seja menor) como valores máximos.</string>
     <string name="openapsama_current_basal_safety_multiplier_summary">Valor padrão: 4 Esta é a outra parte dos valores limites de segurança - 3 x max diário ou 4x valor actual - do OpenAPS. Isto define que não importa o valor da basal máxima definido na bomba, o valor máximo da basal temporária não pode ser maior que 4 x o valor da basal definida na bomba. O objetivo é evitar que sejam determinadas basais temporárias muito elevadas antes que se perceba como o algoritmo funciona. 4x é um valor que a maior parte das pessoas nunca necessitará de alterar pois o mais provável é necessitar de alterar outras definições para não necessitar de \"ultrapassar\" este limite de segurança.</string>
@@ -330,9 +294,6 @@
     <string name="smscommunicator_invalidphonennumber">SMS número de telefone inválido</string>
     <string name="overview_calibration">Calibração</string>
     <string name="xdripnotinstalled">xDrip+ não está instalado</string>
-    <string name="calibrationsent">Calibração enviada para o xDrip</string>
-    <string name="smscommunicator_calibrationsent">Calibração enviada. Recepção têm de estar activada no xDrip.</string>
-    <string name="smscommunicator_calibrationfailed">O xDrip não esta a receber as calibrações</string>
     <string name="pumpsuspended">Bomba suspensa</string>
     <string name="executing">Executando</string>
     <string name="virtualpump_settings">Definições da bomba virtual</string>
@@ -402,16 +363,12 @@
     <string name="show_statuslights">Mostrar luzes de estado no ecrã principal</string>
     <string name="statuslights_res_warning">Limite de aviso de nível de reservatório [U]</string>
     <string name="statuslights_res_critical">Limite crítico de nível de reservatório [U]</string>
-    <string name="statuslights_bat_warning">Limite de aviso de nível de bateria [%]</string>
-    <string name="statuslights_bat_critical">Limite de crítico de nível de bateria [%]</string>
     <string name="iob">IOB</string>
     <string name="cob">COB</string>
     <string name="activity_shortname">ACT</string>
     <string name="nav_about">Sobre</string>
     <string name="smscommunicator_missingsmspermission">Falta de permissão SMS</string>
     <string name="smscommunicator_missingphonestatepermission">Falta permissão do estado do telefone</string>
-    <string name="xdripstatus_settings">Estado xDrip (relógio)</string>
-    <string name="xdripstatus">Linha estado xDrip (relógio)</string>
     <string name="xdripstatus_shortname">xds</string>
     <string name="wear_showbgi_title">Mostrar BGI</string>
     <string name="wear_showbgi_summary">Adicionar BGI à linha de status</string>
@@ -446,7 +403,6 @@
     <string name="mdtp_cancel">Cancelar</string>
     <string name="notloadedplugins">Nem todos perfis foram carregados!</string>
     <string name="valuesnotstored">Valores não guardados!</string>
-    <string name="ns_localbroadcasts">Ative as transmissões para outros apps (como xDrip). Não ative se você tiver mais de uma instância de AAPS ou NSClient instalada!</string>
     <string name="ns_localbroadcasts_title">Ativar partilha local.</string>
     <string name="careportal_newnstreatment_duration_min_label">Duração [min]</string>
     <string name="openapssmb">SMB OpenAPS</string>
@@ -471,7 +427,6 @@
     <string name="activity_target">alvo da atividade</string>
     <string name="hypo_duration">duração hipo</string>
     <string name="hypo_target">alvo hipo</string>
-    <string name="reuse">reutilizar</string>
     <string name="wearcontrol_title">Controles do Relógio</string>
     <string name="wearcontrol_summary">Definir Alvo-Temp and inserir Tratamentos do relógio.</string>
     <string name="food">Alimentos</string>
@@ -509,8 +464,6 @@
     <string name="overview_editquickwizard_usebasaliob">Cálculo de Basal IOB</string>
     <string name="overview_editquickwizard_usetrend">Cálculo tendência</string>
     <string name="overview_editquickwizard_usesuperbolus">Cálculo de superbolus</string>
-    <string name="yes">Sim</string>
-    <string name="no">Não</string>
     <string name="positiveonly">Positivo apenas</string>
     <string name="negativeonly">Negativo apenas</string>
     <string name="overview_editquickwizard_usecob">Cálculo COB</string>
@@ -522,7 +475,6 @@
     <string name="maxiobset">IOB máxima definida correctamente</string>
     <string name="hasbgdata">Glicemia disponivel desde a fonte selecionada</string>
     <string name="combo_programming_bolus">A programar a bomba para injectar o bolus</string>
-    <string name="combo_refresh">Atualizar</string>
     <string name="combo_pump_state_label">Estado</string>
     <string name="combo_pump_activity_label">Atividades</string>
     <string name="combo_no_pump_connection">Sem conexão há %1$d min</string>
@@ -567,7 +519,6 @@
     <string name="enablesmbwithtemptarget_summary">SMB activo quando há valor alvo temporário activo (exercício, etc)</string>
     <string name="enablesmbwithhightemptarget">SMB activo com alvos temporários elevados</string>
     <string name="overview_insulin_label">Insulina</string>
-    <string name="overview_carbs_label">Carbos</string>
     <string name="overview_buttons_selection">Botões</string>
     <string name="show_calibration_button_summary">Enviar calibrações para o xDrip+ ou abrir sistema de calibração do G5</string>
     <string name="show_cgm_button_summary">Abre xDrip+, botão retorcer volta ao AAPS</string>
@@ -723,7 +674,6 @@
     <string name="sensitivity_raises_target_title">Sensibilidade aumenta o alvo</string>
     <string name="sensitivity_raises_target_summary">Quando a sensibilidade é detectada, aumenta o alvo glicose</string>
     <string name="combo_invalid_setup">Configuração da bomba inválida, verifique a documentação e se o menu de informações rápidas está nomeado de QUICK INFO utilizando o programa de configuração 360.</string>
-    <string name="custom">Personalizado</string>
     <string name="careportal_removestartedevents">Limpar AndroidAPS iniciado</string>
     <string name="storedsettingsfound">Configurações encontradas</string>
     <string name="allow_hardware_pump_text">Atenção: Se conectar à sua bomba física e ativar o perfil, o AndroidAPS irá copiar as definições desse perfil para as definições da bomba, apagando o memorizado na bomba. Por favor verifique que o que preencheu no perfil do app tem os mesmos valores que estão na bomba. Em caso contrário pressione imediatamente cancelar e corrija antes de voltar a ligar à bomba.</string>
@@ -743,7 +693,6 @@
     <string name="nav_logsettings">Definições de registo</string>
     <string name="resettodefaults">Repor definições por defeito</string>
     <string name="nsmalfunction">Erro de funcionamento do NSCliente. Pondere reiniciar o NS e NSCliente.</string>
-    <string name="versionavailable">Disponível %1$s disponível</string>
     <string name="time_offset">Fuso horário</string>
     <string name="setupwizard_preferred_aps_mode">Modo APS preferido</string>
     <string name="treatments_wizard_total_label">Total</string>
@@ -801,7 +750,6 @@
     <string name="eb_formatter">%1$.2f / %2$.2f U por %3$d min</string>
     <string name="enable_tbr_over_notification">Desativar notificação do fim da basal temporária\n(configuração da bomba)</string>
     <string name="disable_tbr_over_notification">Desativar notificação do fim da basal temporária\n(configuração da bomba)</string>
-    <string name="refresh">Actualizar</string>
     <string name="description_pump_insight_local">Integração de bomba para bombas Accu-Chek Insight</string>
     <string name="not_inserted">Não inserido</string>
     <string name="short_status_last_connected">Última ligação:%1$d minutos atrás</string>
@@ -893,8 +841,6 @@
     <string name="copy_short">COPIAR</string>
     <string name="addnew">Adicionar novo</string>
     <string name="versionChecker">Verificador de Versão</string>
-    <string name="signature_verifier">Verificador de assinatura</string>
-    <string name="running_invalid_version">Detectamos que está  a correr uma versão inválida. Loop desactivado!</string>
     <string name="old_version">versão antiga</string>
     <string name="very_old_version">versão muito antiga</string>
     <string name="new_version_warning">Nova versão para pelo menos %1$d dias disponíveis! Retorno a LGS após %2$d dias, o loop será desativado após %3$d dias</string>
@@ -1011,8 +957,6 @@
     <string name="loop_tbrexecution_time_label">Hora de execução Basal Temp</string>
     <string name="insight_alert_notification_channel">Alertas Bomba Insight</string>
     <!-- SMS Communicator & OTP Authenticator -->
-    <string name="smscommunicator_otp_enabled">Ativar Autenticador</string>
-    <string name="smscommunicator_otp_enabled_summary">Autenticar comandos usando Uma-Password-Única que sejam geradas pelo Google Authenticator ou app 2FA similar.</string>
     <string name="smscommunicator_otp_pin_summary">Dígitos adicionais que devem ser memorizados e colados no final de cada Uma-Password-Única que seja gerada</string>
     <string name="smscomunicator_tab_otp_label">Configuração do Autenticador</string>
     <string name="smscommunicator_otp_reset_btn">Repor Autenticadores</string>

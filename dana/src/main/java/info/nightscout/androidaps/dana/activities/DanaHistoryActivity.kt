@@ -30,10 +30,9 @@ import info.nightscout.androidaps.queue.Callback
 import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.DecimalFormatter
 import info.nightscout.androidaps.utils.FabricPrivacy
-import info.nightscout.androidaps.utils.extensions.plusAssign
-import info.nightscout.androidaps.utils.resources.ResourceHelper
-import io.reactivex.android.schedulers.AndroidSchedulers
+import info.nightscout.androidaps.utils.rx.AapsSchedulers
 import io.reactivex.disposables.CompositeDisposable
+import io.reactivex.rxkotlin.plusAssign
 import java.util.*
 import javax.inject.Inject
 
@@ -41,13 +40,13 @@ class DanaHistoryActivity : NoSplashAppCompatActivity() {
 
     @Inject lateinit var rxBus: RxBusWrapper
     @Inject lateinit var aapsLogger: AAPSLogger
-    @Inject lateinit var resourceHelper: ResourceHelper
     @Inject lateinit var profileFunction: ProfileFunction
     @Inject lateinit var fabricPrivacy: FabricPrivacy
     @Inject lateinit var activePlugin: ActivePluginProvider
     @Inject lateinit var commandQueue: CommandQueueProvider
     @Inject lateinit var databaseHelper: DatabaseHelperInterface
     @Inject lateinit var dateUtil: DateUtil
+    @Inject lateinit var aapsSchedulers: AapsSchedulers
 
     private val disposable = CompositeDisposable()
 
@@ -65,15 +64,15 @@ class DanaHistoryActivity : NoSplashAppCompatActivity() {
         super.onResume()
         disposable += rxBus
             .toObservable(EventPumpStatusChanged::class.java)
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribe({ binding.status.text = it.getStatus(resourceHelper) }) { fabricPrivacy.logException(it) }
+            .observeOn(aapsSchedulers.main)
+            .subscribe({ binding.status.text = it.getStatus(resourceHelper) }, fabricPrivacy::logException)
         disposable += rxBus
             .toObservable(EventDanaRSyncStatus::class.java)
-            .observeOn(AndroidSchedulers.mainThread())
+            .observeOn(aapsSchedulers.main)
             .subscribe({
                 aapsLogger.debug(LTag.PUMP, "EventDanaRSyncStatus: " + it.message)
                 binding.status.text = it.message
-            }) { fabricPrivacy.logException(it) }
+            }, fabricPrivacy::logException)
     }
 
     override fun onPause() {

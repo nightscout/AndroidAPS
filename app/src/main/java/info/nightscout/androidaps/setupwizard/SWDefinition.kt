@@ -11,6 +11,7 @@ import info.nightscout.androidaps.dialogs.ProfileSwitchDialog
 import info.nightscout.androidaps.events.EventPumpStatusChanged
 import info.nightscout.androidaps.interfaces.ActivePluginProvider
 import info.nightscout.androidaps.interfaces.CommandQueueProvider
+import info.nightscout.androidaps.interfaces.ImportExportPrefsInterface
 import info.nightscout.androidaps.interfaces.PluginType
 import info.nightscout.androidaps.interfaces.ProfileFunction
 import info.nightscout.androidaps.plugins.aps.loop.LoopPlugin
@@ -18,7 +19,6 @@ import info.nightscout.androidaps.plugins.bus.RxBusWrapper
 import info.nightscout.androidaps.plugins.configBuilder.ConfigBuilderPlugin
 import info.nightscout.androidaps.plugins.constraints.objectives.ObjectivesFragment
 import info.nightscout.androidaps.plugins.constraints.objectives.ObjectivesPlugin
-import info.nightscout.androidaps.plugins.general.maintenance.ImportExportPrefs
 import info.nightscout.androidaps.plugins.general.nsclient.NSClientPlugin
 import info.nightscout.androidaps.plugins.general.nsclient.events.EventNSClientStatus
 import info.nightscout.androidaps.plugins.general.nsclient.services.NSClientService
@@ -27,7 +27,7 @@ import info.nightscout.androidaps.plugins.profile.local.LocalProfilePlugin
 import info.nightscout.androidaps.plugins.profile.ns.NSProfileFragment
 import info.nightscout.androidaps.plugins.profile.ns.NSProfilePlugin
 import info.nightscout.androidaps.plugins.pump.common.events.EventRileyLinkDeviceStatusChange
-import info.nightscout.androidaps.plugins.pump.omnipod.OmnipodPumpPlugin
+import info.nightscout.androidaps.plugins.pump.omnipod.eros.OmnipodErosPumpPlugin
 import info.nightscout.androidaps.setupwizard.elements.*
 import info.nightscout.androidaps.setupwizard.events.EventSWUpdate
 import info.nightscout.androidaps.utils.AndroidPermission
@@ -55,7 +55,7 @@ class SWDefinition @Inject constructor(
     private val loopPlugin: LoopPlugin,
     private val nsClientPlugin: NSClientPlugin,
     private val nsProfilePlugin: NSProfilePlugin,
-    private val importExportPrefs: ImportExportPrefs,
+    private val importExportPrefs: ImportExportPrefsInterface,
     private val androidPermission: AndroidPermission,
     private val cryptoUtil: CryptoUtil,
     private val config: Config
@@ -118,7 +118,7 @@ class SWDefinition @Inject constructor(
         .add(SWButton(injector)
             .text(R.string.askforpermission)
             .visibility { androidPermission.permissionNotGranted(context, Manifest.permission.REQUEST_IGNORE_BATTERY_OPTIMIZATIONS) }
-            .action { androidPermission.askForPermission(activity, Manifest.permission.REQUEST_IGNORE_BATTERY_OPTIMIZATIONS, AndroidPermission.CASE_BATTERY) })
+            .action { androidPermission.askForPermission(activity, Manifest.permission.REQUEST_IGNORE_BATTERY_OPTIMIZATIONS) })
         .visibility { androidPermission.permissionNotGranted(activity, Manifest.permission.REQUEST_IGNORE_BATTERY_OPTIMIZATIONS) }
         .validator { !androidPermission.permissionNotGranted(activity, Manifest.permission.REQUEST_IGNORE_BATTERY_OPTIMIZATIONS) }
     private val screenPermissionBt = SWScreen(injector, R.string.permission)
@@ -129,7 +129,7 @@ class SWDefinition @Inject constructor(
         .add(SWButton(injector)
             .text(R.string.askforpermission)
             .visibility { androidPermission.permissionNotGranted(activity, Manifest.permission.ACCESS_FINE_LOCATION) }
-            .action { androidPermission.askForPermission(activity, Manifest.permission.ACCESS_FINE_LOCATION, AndroidPermission.CASE_LOCATION) })
+            .action { androidPermission.askForPermission(activity, Manifest.permission.ACCESS_FINE_LOCATION) })
         .visibility { androidPermission.permissionNotGranted(activity, Manifest.permission.ACCESS_FINE_LOCATION) }
         .validator { !androidPermission.permissionNotGranted(activity, Manifest.permission.ACCESS_FINE_LOCATION) }
     private val screenPermissionStore = SWScreen(injector, R.string.permission)
@@ -140,7 +140,7 @@ class SWDefinition @Inject constructor(
         .add(SWButton(injector)
             .text(R.string.askforpermission)
             .visibility { androidPermission.permissionNotGranted(activity, Manifest.permission.WRITE_EXTERNAL_STORAGE) }
-            .action { androidPermission.askForPermission(activity, Manifest.permission.WRITE_EXTERNAL_STORAGE, AndroidPermission.CASE_STORAGE) })
+            .action { androidPermission.askForPermission(activity, Manifest.permission.WRITE_EXTERNAL_STORAGE) })
         .visibility { androidPermission.permissionNotGranted(activity, Manifest.permission.WRITE_EXTERNAL_STORAGE) }
         .validator { !androidPermission.permissionNotGranted(activity, Manifest.permission.WRITE_EXTERNAL_STORAGE) }
     private val screenImport = SWScreen(injector, R.string.nav_import)
@@ -267,22 +267,22 @@ class SWDefinition @Inject constructor(
                 .label(R.string.setupwizard_pump_waiting_for_riley_link_connection)
                 .visibility {
                     val activePump = activePlugin.activePump
-                    activePump is OmnipodPumpPlugin && !activePump.isRileyLinkReady
+                    activePump is OmnipodErosPumpPlugin && !activePump.isRileyLinkReady
                 })
         .add( // Omnipod only
             SWEventListener(injector, EventRileyLinkDeviceStatusChange::class.java)
                 .label(R.string.setupwizard_pump_riley_link_status)
-                .visibility { activePlugin.activePump is OmnipodPumpPlugin })
+                .visibility { activePlugin.activePump is OmnipodErosPumpPlugin })
         .add(SWButton(injector)
             .text(R.string.readstatus)
             .action { commandQueue.readStatus("Clicked connect to pump", null) }
             .visibility {
                 // Hide for Omnipod, because as we don't require a Pod to be paired in the setup wizard,
                 // Getting the status might not be possible
-                activePlugin.activePump !is OmnipodPumpPlugin
+                activePlugin.activePump !is OmnipodErosPumpPlugin
             })
         .add(SWEventListener(injector, EventPumpStatusChanged::class.java)
-            .visibility { activePlugin.activePump !is OmnipodPumpPlugin })
+            .visibility { activePlugin.activePump !is OmnipodErosPumpPlugin })
         .validator { isPumpInitialized() }
 
     private fun isPumpInitialized(): Boolean {
@@ -290,7 +290,7 @@ class SWDefinition @Inject constructor(
 
         // For Omnipod, consider the pump initialized when a RL has been configured successfully
         // Users will be prompted to activate a Pod after completing the setup wizard.
-        return activePump.isInitialized || (activePump is OmnipodPumpPlugin && activePump.isRileyLinkReady)
+        return activePump.isInitialized || (activePump is OmnipodErosPumpPlugin && activePump.isRileyLinkReady)
     }
 
     private val screenAps = SWScreen(injector, R.string.configbuilder_aps)

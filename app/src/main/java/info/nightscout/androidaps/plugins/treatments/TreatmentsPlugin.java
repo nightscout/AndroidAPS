@@ -1,7 +1,6 @@
 package info.nightscout.androidaps.plugins.treatments;
 
 import android.content.Context;
-import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -62,14 +61,15 @@ import info.nightscout.androidaps.utils.DateUtil;
 import info.nightscout.androidaps.utils.FabricPrivacy;
 import info.nightscout.androidaps.utils.T;
 import info.nightscout.androidaps.utils.resources.ResourceHelper;
+import info.nightscout.androidaps.utils.rx.AapsSchedulers;
 import info.nightscout.androidaps.utils.sharedPreferences.SP;
 import io.reactivex.disposables.CompositeDisposable;
-import io.reactivex.schedulers.Schedulers;
 
 @Singleton
 public class TreatmentsPlugin extends PluginBase implements TreatmentsInterface {
 
     private final Context context;
+    private final AapsSchedulers aapsSchedulers;
     private final SP sp;
     private final RxBusWrapper rxBus;
     private final ResourceHelper resourceHelper;
@@ -98,6 +98,7 @@ public class TreatmentsPlugin extends PluginBase implements TreatmentsInterface 
             HasAndroidInjector injector,
             AAPSLogger aapsLogger,
             RxBusWrapper rxBus,
+            AapsSchedulers aapsSchedulers,
             ResourceHelper resourceHelper,
             Context context,
             SP sp,
@@ -122,6 +123,7 @@ public class TreatmentsPlugin extends PluginBase implements TreatmentsInterface 
         this.resourceHelper = resourceHelper;
         this.context = context;
         this.rxBus = rxBus;
+        this.aapsSchedulers = aapsSchedulers;
         this.sp = sp;
         this.profileFunction = profileFunction;
         this.activePlugin = activePlugin;
@@ -138,7 +140,7 @@ public class TreatmentsPlugin extends PluginBase implements TreatmentsInterface 
         super.onStart();
         disposable.add(rxBus
                 .toObservable(EventReloadTreatmentData.class)
-                .observeOn(Schedulers.io())
+                .observeOn(aapsSchedulers.getIo())
                 .subscribe(event -> {
                             getAapsLogger().debug(LTag.DATATREATMENTS, "EventReloadTreatmentData");
                             initializeTreatmentData(range());
@@ -150,19 +152,19 @@ public class TreatmentsPlugin extends PluginBase implements TreatmentsInterface 
                 ));
         disposable.add(rxBus
                 .toObservable(EventReloadProfileSwitchData.class)
-                .observeOn(Schedulers.io())
+                .observeOn(aapsSchedulers.getIo())
                 .subscribe(event -> initializeProfileSwitchData(range()),
                         fabricPrivacy::logException
                 ));
         disposable.add(rxBus
                 .toObservable(EventTempTargetChange.class)
-                .observeOn(Schedulers.io())
+                .observeOn(aapsSchedulers.getIo())
                 .subscribe(event -> initializeTempTargetData(range()),
                         fabricPrivacy::logException
                 ));
         disposable.add(rxBus
                 .toObservable(EventReloadTempBasalData.class)
-                .observeOn(Schedulers.io())
+                .observeOn(aapsSchedulers.getIo())
                 .subscribe(event -> {
                             getAapsLogger().debug(LTag.DATATREATMENTS, "EventReloadTempBasalData");
                             initializeTempBasalData(range());
@@ -473,6 +475,7 @@ public class TreatmentsPlugin extends PluginBase implements TreatmentsInterface 
 
         for (long i = time - range(); i < time; i += T.mins(5).msecs()) {
             Profile profile = profileFunction.getProfile(i);
+            if (profile == null) continue;
             double basal = profile.getBasal(i);
             TemporaryBasal runningTBR = getTempBasalFromHistory(i);
             double running = basal;
@@ -675,12 +678,7 @@ public class TreatmentsPlugin extends PluginBase implements TreatmentsInterface 
 
             String status = String.format(resourceHelper.gs(R.string.error_adding_treatment_message), treatment.insulin, (int) treatment.carbs, dateUtil.dateAndTimeString(treatment.date));
 
-            Intent i = new Intent(context, ErrorHelperActivity.class);
-            i.putExtra("soundid", R.raw.error);
-            i.putExtra("title", resourceHelper.gs(R.string.error_adding_treatment_title));
-            i.putExtra("status", status);
-            i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-            context.startActivity(i);
+            ErrorHelperActivity.Companion.runAlarm(context, status, resourceHelper.gs(R.string.error_adding_treatment_title), R.raw.error);
 
             Bundle bundle = new Bundle();
             bundle.putString(FirebaseAnalytics.Param.ITEM_LIST_ID, "TreatmentClash");

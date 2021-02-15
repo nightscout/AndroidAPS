@@ -1,7 +1,6 @@
 package info.nightscout.androidaps.dana.activities
 
 import android.content.Context
-import android.content.Intent
 import android.os.Bundle
 import info.nightscout.androidaps.Constants
 import info.nightscout.androidaps.activities.ErrorHelperActivity
@@ -18,10 +17,9 @@ import info.nightscout.androidaps.plugins.bus.RxBusWrapper
 import info.nightscout.androidaps.plugins.pump.common.defs.PumpType
 import info.nightscout.androidaps.queue.Callback
 import info.nightscout.androidaps.utils.FabricPrivacy
-import info.nightscout.androidaps.utils.extensions.plusAssign
-import info.nightscout.androidaps.utils.resources.ResourceHelper
-import io.reactivex.android.schedulers.AndroidSchedulers
+import info.nightscout.androidaps.utils.rx.AapsSchedulers
 import io.reactivex.disposables.CompositeDisposable
+import io.reactivex.rxkotlin.plusAssign
 import java.text.DecimalFormat
 import javax.inject.Inject
 import kotlin.math.max
@@ -32,11 +30,11 @@ class DanaUserOptionsActivity : NoSplashAppCompatActivity() {
     @Inject lateinit var aapsLogger: AAPSLogger
     @Inject lateinit var rxBus: RxBusWrapper
     @Inject lateinit var fabricPrivacy: FabricPrivacy
-    @Inject lateinit var resourceHelper: ResourceHelper
     @Inject lateinit var context: Context
     @Inject lateinit var danaPump: DanaPump
     @Inject lateinit var activePlugin: ActivePluginProvider
     @Inject lateinit var commandQueue: CommandQueueProvider
+    @Inject lateinit var aapsSchedulers: AapsSchedulers
 
     private val disposable = CompositeDisposable()
 
@@ -54,8 +52,8 @@ class DanaUserOptionsActivity : NoSplashAppCompatActivity() {
         super.onResume()
         disposable += rxBus
             .toObservable(EventInitializationChanged::class.java)
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribe({ setData() }) { fabricPrivacy.logException(it) }
+            .observeOn(aapsSchedulers.main)
+            .subscribe({ setData() }, fabricPrivacy::logException)
     }
 
     @Synchronized
@@ -155,12 +153,7 @@ class DanaUserOptionsActivity : NoSplashAppCompatActivity() {
         commandQueue.setUserOptions(object : Callback() {
             override fun run() {
                 if (!result.success) {
-                    val i = Intent(context, ErrorHelperActivity::class.java)
-                    i.putExtra("soundid", R.raw.boluserror)
-                    i.putExtra("status", result.comment)
-                    i.putExtra("title", resourceHelper.gs(R.string.pumperror))
-                    i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-                    context.startActivity(i)
+                    ErrorHelperActivity.runAlarm(context, result.comment, resourceHelper.gs(R.string.pumperror), R.raw.boluserror)
                 }
             }
         })

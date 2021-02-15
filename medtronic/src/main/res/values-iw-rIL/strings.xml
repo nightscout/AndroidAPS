@@ -16,7 +16,7 @@
     <string name="medtronic_pump_encoding_4b6b_rileylink">קידוד חומרה 4B6b</string>
     <string name="medtronic_custom_action_wake_and_tune">התעוררות וכוונון</string>
     <string name="medtronic_custom_action_clear_bolus_block">ביטול חסימת בולוס</string>
-    <string name="medtronic_custom_action_reset_rileylink">איפוס תצורת RileyLink</string>
+    <string name="medtronic_custom_action_reset_rileylink">איפוס תצורת ריילילינק</string>
     <string name="medtronic_pump_battery_select">סוג סוללה (תצוגת חשמל)</string>
     <string name="medtronic_pump_battery_no">לא נבחר (תצוגה פשוטה)</string>
     <string name="medtronic_pump_battery_alkaline">אלקליין (תצוגה מורחבת)</string>
@@ -81,4 +81,6 @@
     <string name="common_on">מופעל</string>
     <string name="common_off">כבוי</string>
     <string name="pump_time_updated">שעון המשאבה עודכן</string>
+    <string name="set_neutral_temps_title">הגדרת מינון בזאלי ניטרלי</string>
+    <string name="set_neutral_temps_summary">אם תופעל, היא תבטל בזאלי זמני לפני תום כל שעה. שיטה זו יכולה לעזור לבטל ציפצופים ורטט רבים בחלק מהמשאבות.</string>
 </resources>

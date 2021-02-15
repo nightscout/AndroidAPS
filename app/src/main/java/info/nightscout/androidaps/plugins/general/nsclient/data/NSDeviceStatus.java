@@ -1,6 +1,5 @@
 package info.nightscout.androidaps.plugins.general.nsclient.data;
 
-import android.text.Html;
 import android.text.Spanned;
 
 import org.json.JSONArray;
@@ -15,7 +14,6 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 
 import dagger.android.HasAndroidInjector;
-import info.nightscout.androidaps.Config;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.interfaces.ConfigInterface;
 import info.nightscout.androidaps.logging.AAPSLogger;
@@ -475,8 +473,8 @@ public class NSDeviceStatus {
 
     public static APSResult getAPSResult(HasAndroidInjector injector) {
         APSResult result = new APSResult(injector);
-        result.json = deviceStatusOpenAPSData.suggested;
-        result.date = deviceStatusOpenAPSData.clockSuggested;
+        result.setJson(deviceStatusOpenAPSData.suggested);
+        result.setDate(deviceStatusOpenAPSData.clockSuggested);
         return result;
     }
 

@@ -17,7 +17,6 @@ import android.widget.TextView;
 import java.text.DecimalFormat;
 
 import info.nightscout.androidaps.R;
-import info.nightscout.androidaps.aaps;
 import info.nightscout.androidaps.data.ListenerService;
 import info.nightscout.androidaps.interaction.utils.PlusMinusEditText;
 import info.nightscout.androidaps.interaction.utils.SafeParse;
@@ -48,7 +47,7 @@ public class TempTargetActivity extends ViewSelectorActivity {
 
         SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(this);
         isMGDL = sp.getBoolean("units_mgdl", true);
-        isSingleTarget =  sp.getBoolean("singletarget", true);
+        isSingleTarget = sp.getBoolean("singletarget", true);
     }
 
 
@@ -62,7 +61,7 @@ public class TempTargetActivity extends ViewSelectorActivity {
     private class MyGridViewPagerAdapter extends GridPagerAdapter {
         @Override
         public int getColumnCount(int arg0) {
-            return isSingleTarget?3:4;
+            return isSingleTarget ? 3 : 4;
         }
 
         @Override
@@ -73,7 +72,7 @@ public class TempTargetActivity extends ViewSelectorActivity {
         @Override
         public Object instantiateItem(ViewGroup container, int row, int col) {
 
-             if(col == 0){
+            if (col == 0) {
                 final View view = getInflatedPlusMinusView(container);
                 final TextView textView = view.findViewById(R.id.label);
                 textView.setText("duration");
@@ -83,51 +82,51 @@ public class TempTargetActivity extends ViewSelectorActivity {
                     double def = SafeParse.stringToDouble(time.editText.getText().toString());
                     time = new PlusMinusEditText(view, R.id.amountfield, R.id.plusbutton, R.id.minusbutton, def, 0d, 24 * 60d, 5d, new DecimalFormat("0"), false);
                 }
-                 setLabelToPlusMinusView(view, aaps.gs(R.string.action_duration));
-                 container.addView(view);
+                setLabelToPlusMinusView(view, getString(R.string.action_duration));
+                container.addView(view);
                 return view;
 
-            } else if(col == 1){
-                 final View view = getInflatedPlusMinusView(container);
-                 if (isMGDL){
-                     double def = 100;
-                     if (lowRange != null){
-                         def = SafeParse.stringToDouble(lowRange.editText.getText().toString());
-                     }
-                     lowRange = new PlusMinusEditText(view, R.id.amountfield, R.id.plusbutton, R.id.minusbutton, def, 72d, 180d, 1d, new DecimalFormat("0"), false);
-                 } else {
-                     double def = 5.5;
-                     if (lowRange != null){
-                         def = SafeParse.stringToDouble(lowRange.editText.getText().toString());
-                     }
-                     lowRange = new PlusMinusEditText(view, R.id.amountfield, R.id.plusbutton, R.id.minusbutton, def, 4d, 10d, 0.1d, new DecimalFormat("#0.0"), false);
-                 }
-                 if(isSingleTarget){
-                     setLabelToPlusMinusView(view, aaps.gs(R.string.action_target));
-                 } else {
-                     setLabelToPlusMinusView(view, aaps.gs(R.string.action_low));
-                 }
-                 container.addView(view);
-                 return view;
-             } else if(col == 2 && ! isSingleTarget){
-                 final View view = getInflatedPlusMinusView(container);
-                 if (isMGDL){
-                     double def = 100;
-                     if (highRange != null){
-                         def = SafeParse.stringToDouble(highRange.editText.getText().toString());
-                     }
-                     highRange = new PlusMinusEditText(view, R.id.amountfield, R.id.plusbutton, R.id.minusbutton, def, 72d, 180d, 1d, new DecimalFormat("0"), false);
-                 } else {
-                     double def = 5.5;
-                     if (highRange != null){
-                         def = SafeParse.stringToDouble(highRange.editText.getText().toString());
-                     }
-                     highRange = new PlusMinusEditText(view, R.id.amountfield, R.id.plusbutton, R.id.minusbutton, def, 4d, 10d, 0.1d, new DecimalFormat("#0.0"), false);
-                 }
-                 setLabelToPlusMinusView(view, aaps.gs(R.string.action_high));
-                 container.addView(view);
-                 return view;
-             }else {
+            } else if (col == 1) {
+                final View view = getInflatedPlusMinusView(container);
+                if (isMGDL) {
+                    double def = 100;
+                    if (lowRange != null) {
+                        def = SafeParse.stringToDouble(lowRange.editText.getText().toString());
+                    }
+                    lowRange = new PlusMinusEditText(view, R.id.amountfield, R.id.plusbutton, R.id.minusbutton, def, 72d, 180d, 1d, new DecimalFormat("0"), false);
+                } else {
+                    double def = 5.5;
+                    if (lowRange != null) {
+                        def = SafeParse.stringToDouble(lowRange.editText.getText().toString());
+                    }
+                    lowRange = new PlusMinusEditText(view, R.id.amountfield, R.id.plusbutton, R.id.minusbutton, def, 4d, 10d, 0.1d, new DecimalFormat("#0.0"), false);
+                }
+                if (isSingleTarget) {
+                    setLabelToPlusMinusView(view, getString(R.string.action_target));
+                } else {
+                    setLabelToPlusMinusView(view, getString(R.string.action_low));
+                }
+                container.addView(view);
+                return view;
+            } else if (col == 2 && !isSingleTarget) {
+                final View view = getInflatedPlusMinusView(container);
+                if (isMGDL) {
+                    double def = 100;
+                    if (highRange != null) {
+                        def = SafeParse.stringToDouble(highRange.editText.getText().toString());
+                    }
+                    highRange = new PlusMinusEditText(view, R.id.amountfield, R.id.plusbutton, R.id.minusbutton, def, 72d, 180d, 1d, new DecimalFormat("0"), false);
+                } else {
+                    double def = 5.5;
+                    if (highRange != null) {
+                        def = SafeParse.stringToDouble(highRange.editText.getText().toString());
+                    }
+                    highRange = new PlusMinusEditText(view, R.id.amountfield, R.id.plusbutton, R.id.minusbutton, def, 4d, 10d, 0.1d, new DecimalFormat("#0.0"), false);
+                }
+                setLabelToPlusMinusView(view, getString(R.string.action_high));
+                container.addView(view);
+                return view;
+            } else {
 
                 final View view = LayoutInflater.from(getApplicationContext()).inflate(R.layout.action_send_item, container, false);
                 final ImageView confirmbutton = view.findViewById(R.id.confirmbutton);
@@ -142,8 +141,7 @@ public class TempTargetActivity extends ViewSelectorActivity {
                                 + " " + isMGDL
                                 + " " + SafeParse.stringToInt(time.editText.getText().toString())
                                 + " " + SafeParse.stringToDouble(lowRange.editText.getText().toString())
-                                + " " + (isSingleTarget?SafeParse.stringToDouble(lowRange.editText.getText().toString()):SafeParse.stringToDouble(highRange.editText.getText().toString()))
-                                ;
+                                + " " + (isSingleTarget ? SafeParse.stringToDouble(lowRange.editText.getText().toString()) : SafeParse.stringToDouble(highRange.editText.getText().toString()));
 
                         ListenerService.initiateAction(TempTargetActivity.this, actionstring);
                         finish();
@@ -158,12 +156,12 @@ public class TempTargetActivity extends ViewSelectorActivity {
         public void destroyItem(ViewGroup container, int row, int col, Object view) {
             // Handle this to get the data before the view is destroyed?
             // Object should still be kept by this, just setup for reinit?
-            container.removeView((View)view);
+            container.removeView((View) view);
         }
 
         @Override
         public boolean isViewFromObject(View view, Object object) {
-            return view==object;
+            return view == object;
         }
 
 

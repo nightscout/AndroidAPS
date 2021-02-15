@@ -81,4 +81,6 @@
     <string name="common_on">Ein</string>
     <string name="common_off">Aus</string>
     <string name="pump_time_updated">Pumpenzeit aktualisiert</string>
+    <string name="set_neutral_temps_title">Neutrale TBR setzen</string>
+    <string name="set_neutral_temps_summary">Wenn diese Option aktiviert ist, wird die TBR vor Ende jeder Stunde abgebrochen. Dies kann dazu beitragen, einige Pumpen davon abzuhalten, zur vollen Stunde zu vibrieren / zu piepsen.</string>
 </resources>

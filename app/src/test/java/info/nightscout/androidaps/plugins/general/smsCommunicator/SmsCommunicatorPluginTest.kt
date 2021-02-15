@@ -10,15 +10,17 @@ import info.nightscout.androidaps.R
 import info.nightscout.androidaps.TestBaseWithProfile
 import info.nightscout.androidaps.data.IobTotal
 import info.nightscout.androidaps.data.PumpEnactResult
-import info.nightscout.androidaps.db.BgReading
+import info.nightscout.androidaps.database.entities.GlucoseValue
 import info.nightscout.androidaps.interfaces.ActivePluginProvider
 import info.nightscout.androidaps.interfaces.CommandQueueProvider
 import info.nightscout.androidaps.interfaces.Constraint
 import info.nightscout.androidaps.interfaces.PluginType
 import info.nightscout.androidaps.interfaces.PumpDescription
+import info.nightscout.androidaps.logging.UserEntryLogger
 import info.nightscout.androidaps.plugins.aps.loop.LoopPlugin
 import info.nightscout.androidaps.plugins.configBuilder.ConstraintChecker
 import info.nightscout.androidaps.plugins.general.smsCommunicator.otp.OneTimePassword
+import info.nightscout.androidaps.plugins.general.smsCommunicator.otp.OneTimePasswordValidationResult
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.CobInfo
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.GlucoseStatus
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.IobCobCalculatorPlugin
@@ -38,8 +40,6 @@ import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.ArgumentMatchers
-import org.mockito.ArgumentMatchers.any
-import org.mockito.ArgumentMatchers.eq
 import org.mockito.Mock
 import org.mockito.Mockito
 import org.mockito.Mockito.`when`
@@ -51,7 +51,7 @@ import org.powermock.modules.junit4.PowerMockRunner
 import java.util.*
 
 @RunWith(PowerMockRunner::class)
-@PrepareForTest(ConstraintChecker::class, FabricPrivacy::class, VirtualPumpPlugin::class, XdripCalibrations::class, SmsManager::class, CommandQueue::class, LocalProfilePlugin::class, DateUtil::class, IobCobCalculatorPlugin::class, OneTimePassword::class)
+@PrepareForTest(ConstraintChecker::class, FabricPrivacy::class, VirtualPumpPlugin::class, XdripCalibrations::class, SmsManager::class, CommandQueue::class, LocalProfilePlugin::class, DateUtil::class, IobCobCalculatorPlugin::class, OneTimePassword::class, UserEntryLogger::class, LoopPlugin::class)
 class SmsCommunicatorPluginTest : TestBaseWithProfile() {
 
     @Mock lateinit var context: Context
@@ -66,18 +66,13 @@ class SmsCommunicatorPluginTest : TestBaseWithProfile() {
     @Mock lateinit var treatmentService: TreatmentService
     @Mock lateinit var otp: OneTimePassword
     @Mock lateinit var xdripCalibrations: XdripCalibrations
+    @Mock lateinit var uel: UserEntryLogger
 
     var injector: HasAndroidInjector = HasAndroidInjector {
         AndroidInjector {
             if (it is PumpEnactResult) {
                 it.aapsLogger = aapsLogger
                 it.resourceHelper = resourceHelper
-            }
-            if (it is BgReading) {
-                it.aapsLogger = aapsLogger
-                it.defaultValueHelper = defaultValueHelper
-                it.resourceHelper = resourceHelper
-                it.profileFunction = profileFunction
             }
             if (it is AuthRequest) {
                 it.aapsLogger = aapsLogger
@@ -96,9 +91,8 @@ class SmsCommunicatorPluginTest : TestBaseWithProfile() {
     private var hasBeenRun = false
 
     @Before fun prepareTests() {
-        val reading = BgReading(injector)
-        reading.value = 100.0
-        val bgList: MutableList<BgReading> = ArrayList()
+        val reading = GlucoseValue(raw = 0.0, noise = 0.0, value = 100.0, timestamp = 1514766900000, sourceSensor = GlucoseValue.SourceSensor.UNKNOWN, trendArrow = GlucoseValue.TrendArrow.FLAT)
+        val bgList: MutableList<GlucoseValue> = ArrayList()
         bgList.add(reading)
 
         `when`(iobCobCalculatorPlugin.dataLock).thenReturn(Unit)
@@ -112,7 +106,7 @@ class SmsCommunicatorPluginTest : TestBaseWithProfile() {
         `when`(SmsManager.getDefault()).thenReturn(smsManager)
         `when`(sp.getString(R.string.key_smscommunicator_allowednumbers, "")).thenReturn("1234;5678")
 
-        smsCommunicatorPlugin = SmsCommunicatorPlugin(injector, aapsLogger, resourceHelper, sp, constraintChecker, rxBus, profileFunction, fabricPrivacy, activePlugin, commandQueue, loopPlugin, iobCobCalculatorPlugin, xdripCalibrations, otp, Config(), DateUtil(context, resourceHelper))
+        smsCommunicatorPlugin = SmsCommunicatorPlugin(injector, aapsLogger, resourceHelper, aapsSchedulers, sp, constraintChecker, rxBus, profileFunction, fabricPrivacy, activePlugin, commandQueue, loopPlugin, iobCobCalculatorPlugin, xdripCalibrations, otp, Config(), DateUtil(context), uel)
         smsCommunicatorPlugin.setPluginEnabled(PluginType.GENERAL, true)
         Mockito.doAnswer { invocation: InvocationOnMock ->
             val callback = invocation.getArgument<Callback>(1)
@@ -173,6 +167,9 @@ class SmsCommunicatorPluginTest : TestBaseWithProfile() {
 
         `when`(profileFunction.getUnits()).thenReturn(Constants.MGDL)
 
+        `when`(otp.name()).thenReturn("User")
+        `when`(otp.checkOTP(ArgumentMatchers.anyString())).thenReturn(OneTimePasswordValidationResult.OK)
+
         `when`(resourceHelper.gs(R.string.smscommunicator_remotecommandnotallowed)).thenReturn("Remote command is not allowed")
         `when`(resourceHelper.gs(R.string.sms_wrongcode)).thenReturn("Wrong code. Command cancelled.")
         `when`(resourceHelper.gs(R.string.sms_iob)).thenReturn("IOB:")
@@ -190,7 +187,7 @@ class SmsCommunicatorPluginTest : TestBaseWithProfile() {
         `when`(resourceHelper.gs(R.string.smscommunicator_loopisdisabled)).thenReturn("Loop is disabled")
         `when`(resourceHelper.gs(R.string.smscommunicator_loopisenabled)).thenReturn("Loop is enabled")
         `when`(resourceHelper.gs(R.string.wrongformat)).thenReturn("Wrong format")
-        `when`(resourceHelper.gs(eq(R.string.wrongTbrDuration), any())).thenAnswer({ i: InvocationOnMock -> "TBR duration must be a multiple of " + i.getArguments()[1] + " minutes and greater than 0."})
+        `when`(resourceHelper.gs(ArgumentMatchers.eq(R.string.wrongTbrDuration), ArgumentMatchers.any())).thenAnswer({ i: InvocationOnMock -> "TBR duration must be a multiple of " + i.getArguments()[1] + " minutes and greater than 0." })
         `when`(resourceHelper.gs(R.string.smscommunicator_loophasbeendisabled)).thenReturn("Loop has been disabled")
         `when`(resourceHelper.gs(R.string.smscommunicator_loophasbeenenabled)).thenReturn("Loop has been enabled")
         `when`(resourceHelper.gs(R.string.smscommunicator_tempbasalcanceled)).thenReturn("Temp basal canceled")
@@ -236,6 +233,8 @@ class SmsCommunicatorPluginTest : TestBaseWithProfile() {
         `when`(resourceHelper.gs(R.string.smscommunicator_reconnect)).thenReturn("Pump reconnected")
         `when`(resourceHelper.gs(R.string.smscommunicator_pumpconnectfail)).thenReturn("Connection to pump failed")
         `when`(resourceHelper.gs(R.string.smscommunicator_pumpdisconnected)).thenReturn("Pump disconnected")
+        `when`(resourceHelper.gs(R.string.smscommunicator_code_from_authenticator_for)).thenReturn("from Authenticator app for: %1\$s followed by PIN")
+        `when`(resourceHelper.gs(R.string.patient_name_default)).thenReturn("User")
 
     }
 
@@ -443,7 +442,9 @@ class SmsCommunicatorPluginTest : TestBaseWithProfile() {
         passCode = smsCommunicatorPlugin.messageToConfirm?.confirmCode!!
         // ignore from other number
         smsCommunicatorPlugin.processSms(Sms("5678", passCode))
+        `when`(otp.checkOTP(ArgumentMatchers.anyString())).thenReturn(OneTimePasswordValidationResult.ERROR_WRONG_OTP)
         smsCommunicatorPlugin.processSms(Sms("1234", "XXXX"))
+        `when`(otp.checkOTP(ArgumentMatchers.anyString())).thenReturn(OneTimePasswordValidationResult.OK)
         Assert.assertEquals("XXXX", smsCommunicatorPlugin.messages[3].text)
         Assert.assertEquals("Wrong code. Command cancelled.", smsCommunicatorPlugin.messages[4].text)
         //then correct code should not work

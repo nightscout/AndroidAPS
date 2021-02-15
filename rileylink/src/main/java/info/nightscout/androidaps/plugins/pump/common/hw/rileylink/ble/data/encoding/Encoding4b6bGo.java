@@ -1,9 +1,9 @@
 package info.nightscout.androidaps.plugins.pump.common.hw.rileylink.ble.data.encoding;
 
+import org.slf4j.Logger;
+
 import java.util.HashMap;
 import java.util.Map;
-
-import org.slf4j.Logger;
 
 import info.nightscout.androidaps.logging.StacktraceLoggerWrapper;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.ble.RileyLinkCommunicationException;

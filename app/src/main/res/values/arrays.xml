@@ -87,18 +87,6 @@
         <item>@string/key_pregnant</item>
     </string-array>
 
-    <string-array name="quickWizardYesNo">
-        <item>@string/yes</item>
-        <item>@string/no</item>
-    </string-array>
-
-    <string-array name="quickWizardYesNoPosNeg">
-        <item>@string/yes</item>
-        <item>@string/no</item>
-        <item>@string/positiveonly</item>
-        <item>@string/negativeonly</item>
-    </string-array>
-
     <string-array name="location">
         <item>@string/use_passive_location</item>
         <item>@string/use_network_location</item>
@@ -134,6 +122,7 @@
         <item>Tandem t:flex</item>
         <item>Tandem t:slim G4</item>
         <item>Tandem t:slim X2</item>
+        <item>YpsoPump</item>
     </string-array>
 
     <string-array name="medtronicPumpTypeArray">

@@ -1,3 +1,5 @@
+@file:Suppress("PrivatePropertyName")
+
 package info.nightscout.androidaps.services
 
 import android.Manifest
@@ -8,6 +10,7 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import android.location.Location
 import android.location.LocationManager
+import android.os.Binder
 import android.os.Bundle
 import android.os.IBinder
 import androidx.core.app.ActivityCompat
@@ -22,9 +25,9 @@ import info.nightscout.androidaps.plugins.bus.RxBusWrapper
 import info.nightscout.androidaps.utils.FabricPrivacy
 import info.nightscout.androidaps.utils.T
 import info.nightscout.androidaps.utils.androidNotification.NotificationHolder
+import info.nightscout.androidaps.utils.rx.AapsSchedulers
 import info.nightscout.androidaps.utils.sharedPreferences.SP
 import io.reactivex.disposables.CompositeDisposable
-import io.reactivex.schedulers.Schedulers
 import javax.inject.Inject
 
 class LocationService : DaggerService() {
@@ -32,6 +35,7 @@ class LocationService : DaggerService() {
     @Inject lateinit var aapsLogger: AAPSLogger
     @Inject lateinit var rxBus: RxBusWrapper
     @Inject lateinit var sp: SP
+    @Inject lateinit var aapsSchedulers: AapsSchedulers
     @Inject lateinit var fabricPrivacy: FabricPrivacy
     @Inject lateinit var notificationHolder: NotificationHolder
     @Inject lateinit var lastLocationDataContainer: LastLocationDataContainer
@@ -44,8 +48,17 @@ class LocationService : DaggerService() {
     private val LOCATION_INTERVAL_PASSIVE = T.mins(1).msecs() // this doesn't cost more power
 
     companion object {
+
         private const val LOCATION_DISTANCE = 10f
     }
+
+    inner class LocalBinder : Binder() {
+
+        fun getService(): LocationService = this@LocationService
+    }
+
+    private val binder = LocalBinder()
+    override fun onBind(intent: Intent): IBinder = binder
 
     inner class LocationListener internal constructor(val provider: String) : android.location.LocationListener {
 
@@ -125,11 +138,11 @@ class LocationService : DaggerService() {
         }
         disposable.add(rxBus
             .toObservable(EventAppExit::class.java)
-            .observeOn(Schedulers.io())
+            .observeOn(aapsSchedulers.io)
             .subscribe({
                 aapsLogger.debug(LTag.LOCATION, "EventAppExit received")
                 stopSelf()
-            }) { fabricPrivacy.logException(it) }
+            }, fabricPrivacy::logException)
         )
     }
 
@@ -147,8 +160,6 @@ class LocationService : DaggerService() {
         }
         disposable.clear()
     }
-
-    override fun onBind(intent: Intent?): IBinder? = null
 
     private fun initializeLocationManager() {
         aapsLogger.debug(LTag.LOCATION, "initializeLocationManager - Provider: " + sp.getString(R.string.key_location, "NONE"))

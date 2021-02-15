@@ -4,7 +4,6 @@ import android.content.Context
 import dagger.android.AndroidInjector
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.TestBase
-import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 import info.nightscout.androidaps.utils.sharedPreferences.SP
@@ -13,10 +12,11 @@ import org.junit.Test
 import org.mockito.Mock
 
 class SignatureVerifierPluginTest : TestBase() {
+
     @Mock lateinit var resourceHelper: ResourceHelper
     @Mock lateinit var sp: SP
     @Mock lateinit var context: Context
-    private val rxBus = RxBusWrapper()
+    private val rxBus = RxBusWrapper(aapsSchedulers)
 
     val injector = HasAndroidInjector { AndroidInjector { } }
 

@@ -1,0 +1,15 @@
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="info.nightscout.androidaps.plugins.pump.omnipod.eros">
+
+    <application>
+        <service
+            android:name=".rileylink.service.RileyLinkOmnipodService"
+            android:enabled="true"
+            android:exported="true" />
+
+        <activity android:name=".ui.PodManagementActivity" />
+        <activity android:name=".ui.PodHistoryActivity" />
+        <activity android:name=".ui.wizard.activation.PodActivationWizardActivity" />
+        <activity android:name=".ui.wizard.deactivation.PodDeactivationWizardActivity" />
+    </application>
+</manifest>

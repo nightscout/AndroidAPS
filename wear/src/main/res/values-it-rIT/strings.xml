@@ -69,6 +69,7 @@
     <string name="menu_ecarb">eCarb</string>
     <string name="menu_settings">Impostazioni</string>
     <string name="menu_status">Stato</string>
+    <string name="menu_resync">Re-Sincronizza</string>
     <string name="menu_prime_fill">Carica/Riempi</string>
     <string name="menu_none">Nessuno</string>
     <string name="menu_default">Default</string>
@@ -89,6 +90,9 @@
     <string name="action_confirm">CONFERMA</string>
     <string name="action_timeshift">timeshift</string>
     <string name="action_bolus">bolo</string>
+    <string name="bolus_progress">Progresso bolo</string>
+    <string name="press_to_cancel">premi per cancellare</string>
+    <string name="cancel_bolus">CANCELLA BOLO</string>
     <string name="status_pump">Micro</string>
     <string name="status_loop">Loop</string>
     <string name="status_cpp">CPP</string>
@@ -128,4 +132,8 @@
     <string name="digitalstyle_pref_your_color">Il tuo colore:</string>
     <string name="digitalstyle_pref_your_color_saturation">Saturazione del tuo colore:</string>
     <string name="digitalstyle_pref_your_color_opacity">Opacità del tuo colore:</string>
+    <string name="bolus_progress_channel_name">Progresso bolo AAPS</string>
+    <string name="bolus_progress_silent_channel_name">Progresso bolo AAPS silenzioso</string>
+    <string name="bolus_progress_channel_description">Progresso e cancellazione bolo</string>
+    <string name="bolus_progress_silent_channel_description">Progresso e cancellazione bolo con meno vibrazioni</string>
 </resources>

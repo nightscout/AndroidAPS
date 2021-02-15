@@ -1,6 +1,5 @@
 buildscript {
     repositories {
-        jcenter()
         maven { url "https://plugins.gradle.org/m2/" } // jacoco 0.2
     }
 
@@ -11,7 +10,6 @@ buildscript {
 }
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
-apply plugin: 'kotlin-android-extensions'
 apply plugin: 'kotlin-kapt'
 apply plugin: 'com.google.gms.google-services'
 //apply plugin: 'jacoco-android'
@@ -23,7 +21,6 @@ jacoco {
 }
 
 repositories {
-    jcenter { url "https://jcenter.bintray.com/" }
     mavenCentral()
     google()
 }
@@ -87,7 +84,7 @@ def gitAvailable = { ->
 
 }
 
-def allCommited = { ->
+def allCommitted = { ->
     StringBuilder stringBuilder = new StringBuilder()
     try {
         def stdout = new ByteArrayOutputStream()
@@ -116,15 +113,16 @@ android {
     ndkVersion "21.1.6352462"
 
     defaultConfig {
-        minSdkVersion 24
+        minSdkVersion 26
         targetSdkVersion 28
         multiDexEnabled true
         versionCode 1500
-        version "2.7.2-dev"
+        version "2.8.2.1-dev-a"
         buildConfigField "String", "VERSION", '"' + version + '"'
         buildConfigField "String", "BUILDVERSION", '"' + generateGitBuild() + '-' + generateDate() + '"'
         buildConfigField "String", "REMOTE", '"' + generateGitRemote() + '"'
         buildConfigField "String", "HEAD", '"' + generateGitBuild() + '"'
+        buildConfigField "String", "COMMITTED", '"' + allCommitted() + '"'
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         // if you change minSdkVersion to less than 11, you need to change executeTask for wear
 
@@ -156,8 +154,8 @@ android {
             ext.enableCrashlytics = false
         }
     }
+    flavorDimensions "standard"
     productFlavors {
-        flavorDimensions "standard"
         full {
             applicationId "info.nightscout.androidaps"
             dimension "standard"
@@ -218,9 +216,6 @@ android {
 
     useLibrary "org.apache.http.legacy"
 
-    configurations.all {
-        resolutionStrategy.force 'com.google.code.findbugs:jsr305:1.3.9'
-    }
 }
 
 allprojects {
@@ -235,34 +230,34 @@ dependencies {
     wearApp project(':wear')
 
     implementation project(':core')
+    implementation project(':database')
     implementation project(':dana')
     implementation project(':danars')
     implementation project(':danar')
     implementation project(':rileylink')
     implementation project(':medtronic')
-    implementation project(':omnipod')
+    implementation project(':omnipod-eros')
+    implementation project(':omnipod-dash')
 
     implementation fileTree(include: ['*.jar'], dir: 'libs')
 
     testImplementation "junit:junit:$junit_version"
-    testImplementation 'org.json:json:20200518'
+    testImplementation 'org.json:json:20201115'
     testImplementation "org.mockito:mockito-core:${mockitoVersion}"
     testImplementation "org.powermock:powermock-api-mockito2:${powermockVersion}"
     testImplementation "org.powermock:powermock-module-junit4-rule-agent:${powermockVersion}"
     testImplementation "org.powermock:powermock-module-junit4-rule:${powermockVersion}"
     testImplementation "org.powermock:powermock-module-junit4:${powermockVersion}"
-    testImplementation 'joda-time:joda-time:2.10.6'
-    testImplementation('com.google.truth:truth:1.0.1') {
+    testImplementation "joda-time:joda-time:$jodatime_version"
+    testImplementation('com.google.truth:truth:1.1.2') {
         exclude group: "com.google.guava", module: "guava"
-        exclude group: "com.google.code.findbugs", module: "jsr305"
     }
     testImplementation "org.skyscreamer:jsonassert:1.5.0"
     testImplementation "org.hamcrest:hamcrest-all:1.3"
 
-    androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0-alpha03'
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.4.0-alpha04'
     androidTestImplementation "androidx.test.ext:junit:$androidx_junit"
     androidTestImplementation "androidx.test:rules:$androidx_rules"
-    androidTestImplementation 'com.google.code.findbugs:jsr305:3.0.2'
 
     /* Dagger2 - We are going to use dagger.android which includes
     * support for Activity and fragment injection so we need to include
@@ -314,12 +309,12 @@ tasks.whenTaskAdded { task ->
 printf('--------------\n')
 printf('isMaster: %s\n', isMaster().toString())
 printf('gitAvailable: %s\n', gitAvailable().toString())
-printf('allCommited: %s\n', allCommited().toString())
+printf('allCommitted: %s\n', allCommitted().toString())
 printf('--------------\n')
 if (isMaster() && !gitAvailable()) {
     throw new GradleException('GIT system is not available. On Windows try to run Android Studio as an Administrator. Check if GIT is installed and Studio have permissions to use it')
 }
-if (isMaster() && !allCommited()) {
+if (isMaster() && !allCommitted()) {
     throw new GradleException('There are uncommitted changes. Clone sources again as described in wiki and do not allow gradle update')
 }
 

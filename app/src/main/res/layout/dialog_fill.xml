@@ -126,11 +126,17 @@
 
         </LinearLayout>
 
-        <include layout="@layout/notes" />
+        <include
+            android:id="@+id/notes_layout"
+            layout="@layout/notes" />
 
-        <include layout="@layout/datetime" />
+        <include
+            android:id="@+id/datetime"
+            layout="@layout/datetime" />
 
-        <include layout="@layout/okcancel" />
+        <include
+            android:id="@+id/okcancel"
+            layout="@layout/okcancel" />
 
     </LinearLayout>
 

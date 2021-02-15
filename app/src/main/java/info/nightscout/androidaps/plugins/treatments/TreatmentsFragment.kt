@@ -8,61 +8,72 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentTransaction
 import dagger.android.support.DaggerFragment
 import info.nightscout.androidaps.R
+import info.nightscout.androidaps.databinding.TreatmentsFragmentBinding
 import info.nightscout.androidaps.events.EventExtendedBolusChange
 import info.nightscout.androidaps.interfaces.ActivePluginProvider
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper
 import info.nightscout.androidaps.plugins.treatments.fragments.*
 import info.nightscout.androidaps.utils.FabricPrivacy
-import info.nightscout.androidaps.utils.extensions.plusAssign
+import io.reactivex.rxkotlin.plusAssign
+import info.nightscout.androidaps.utils.extensions.toVisibility
 import info.nightscout.androidaps.utils.resources.ResourceHelper
-import io.reactivex.android.schedulers.AndroidSchedulers
+import info.nightscout.androidaps.utils.rx.AapsSchedulers
 import io.reactivex.disposables.CompositeDisposable
-import kotlinx.android.synthetic.main.treatments_fragment.*
 import javax.inject.Inject
 
 class TreatmentsFragment : DaggerFragment() {
+
     @Inject lateinit var rxBus: RxBusWrapper
     @Inject lateinit var resourceHelper: ResourceHelper
     @Inject lateinit var fabricPrivacy: FabricPrivacy
     @Inject lateinit var activePlugin: ActivePluginProvider
     @Inject lateinit var treatmentsPlugin: TreatmentsPlugin
+    @Inject lateinit var aapsSchedulers: AapsSchedulers
 
     private val disposable = CompositeDisposable()
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
-                              savedInstanceState: Bundle?): View? {
-        return inflater.inflate(R.layout.treatments_fragment, container, false)
-    }
+    private var _binding: TreatmentsFragmentBinding? = null
+
+    // This property is only valid between onCreateView and
+    // onDestroyView.
+    private val binding get() = _binding!!
+
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View =
+        TreatmentsFragmentBinding.inflate(inflater, container, false).also { _binding = it }.root
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        treatments_treatments.setOnClickListener {
+        binding.treatments.setOnClickListener {
             setFragment(TreatmentsBolusFragment())
             setBackgroundColorOnSelected(it)
         }
-        treatments_extendedboluses.setOnClickListener {
+        binding.extendedBoluses.setOnClickListener {
             setFragment(TreatmentsExtendedBolusesFragment())
             setBackgroundColorOnSelected(it)
         }
-        treatments_tempbasals.setOnClickListener {
+        binding.tempBasals.setOnClickListener {
             setFragment(TreatmentsTemporaryBasalsFragment())
             setBackgroundColorOnSelected(it)
         }
-        treatments_temptargets.setOnClickListener {
+        binding.tempTargets.setOnClickListener {
             setFragment(TreatmentsTempTargetFragment())
             setBackgroundColorOnSelected(it)
         }
-        treatments_profileswitches.setOnClickListener {
+        binding.profileSwitches.setOnClickListener {
             setFragment(TreatmentsProfileSwitchFragment())
             setBackgroundColorOnSelected(it)
         }
-        treatments_careportal.setOnClickListener {
+        binding.careportal.setOnClickListener {
             setFragment(TreatmentsCareportalFragment())
             setBackgroundColorOnSelected(it)
         }
+        binding.userentry.setOnClickListener {
+            setFragment(TreatmentsUserEntryFragment())
+            setBackgroundColorOnSelected(it)
+        }
         setFragment(TreatmentsBolusFragment())
-        setBackgroundColorOnSelected(treatments_treatments)
+        setBackgroundColorOnSelected(binding.treatments)
     }
 
     @Synchronized
@@ -70,8 +81,8 @@ class TreatmentsFragment : DaggerFragment() {
         super.onResume()
         disposable += rxBus
             .toObservable(EventExtendedBolusChange::class.java)
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribe({ updateGui() }) { fabricPrivacy.logException(it) }
+            .observeOn(aapsSchedulers.main)
+            .subscribe({ updateGui() }, fabricPrivacy::logException)
         updateGui()
     }
 
@@ -81,28 +92,33 @@ class TreatmentsFragment : DaggerFragment() {
         disposable.clear()
     }
 
+    @Synchronized
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
+    }
+
     private fun setFragment(selectedFragment: Fragment) {
-        val ft = childFragmentManager.beginTransaction()
-        ft.replace(R.id.treatments_fragment_container, selectedFragment) // f2_container is your FrameLayout container
-        ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
-        ft.addToBackStack(null)
-        ft.commit()
+        childFragmentManager.beginTransaction()
+            .replace(R.id.fragment_container, selectedFragment) // f2_container is your FrameLayout container
+            .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
+            .addToBackStack(null)
+            .commit()
     }
 
     private fun setBackgroundColorOnSelected(selected: View) {
-        treatments_treatments.setBackgroundColor(resourceHelper.gc(R.color.defaultbackground))
-        treatments_extendedboluses.setBackgroundColor(resourceHelper.gc(R.color.defaultbackground))
-        treatments_tempbasals.setBackgroundColor(resourceHelper.gc(R.color.defaultbackground))
-        treatments_temptargets.setBackgroundColor(resourceHelper.gc(R.color.defaultbackground))
-        treatments_profileswitches.setBackgroundColor(resourceHelper.gc(R.color.defaultbackground))
-        treatments_careportal.setBackgroundColor(resourceHelper.gc(R.color.defaultbackground))
+        binding.treatments.setBackgroundColor(resourceHelper.gc(R.color.defaultbackground))
+        binding.extendedBoluses.setBackgroundColor(resourceHelper.gc(R.color.defaultbackground))
+        binding.tempBasals.setBackgroundColor(resourceHelper.gc(R.color.defaultbackground))
+        binding.tempTargets.setBackgroundColor(resourceHelper.gc(R.color.defaultbackground))
+        binding.profileSwitches.setBackgroundColor(resourceHelper.gc(R.color.defaultbackground))
+        binding.careportal.setBackgroundColor(resourceHelper.gc(R.color.defaultbackground))
+        binding.userentry.setBackgroundColor(resourceHelper.gc(R.color.defaultbackground))
         selected.setBackgroundColor(resourceHelper.gc(R.color.tabBgColorSelected))
     }
 
     private fun updateGui() {
-        if (activePlugin.activePump.pumpDescription.isExtendedBolusCapable || treatmentsPlugin.extendedBolusesFromHistory.size() > 0)
-            treatments_extendedboluses?.visibility = View.VISIBLE
-        else
-            treatments_extendedboluses?.visibility = View.GONE
+        if (_binding == null) return
+        binding.extendedBoluses.visibility = (activePlugin.activePump.pumpDescription.isExtendedBolusCapable || treatmentsPlugin.extendedBolusesFromHistory.size() > 0).toVisibility()
     }
 }

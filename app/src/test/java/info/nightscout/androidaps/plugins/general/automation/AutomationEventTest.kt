@@ -3,7 +3,6 @@ package info.nightscout.androidaps.plugins.general.automation
 import dagger.android.AndroidInjector
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.TestBase
-import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.plugins.aps.loop.LoopPlugin
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper
 import info.nightscout.androidaps.plugins.configBuilder.ConfigBuilderPlugin
@@ -36,7 +35,7 @@ class AutomationEventTest : TestBase() {
                 it.loopPlugin = loopPlugin
                 it.resourceHelper = resourceHelper
                 it.configBuilderPlugin = configBuilderPlugin
-                it.rxBus = RxBusWrapper()
+                it.rxBus = RxBusWrapper(aapsSchedulers)
             }
         }
     }

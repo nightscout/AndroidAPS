@@ -11,10 +11,10 @@ import info.nightscout.androidaps.interfaces.ActivePluginProvider
 import info.nightscout.androidaps.interfaces.Constraint
 import info.nightscout.androidaps.interfaces.PumpDescription
 import info.nightscout.androidaps.plugins.configBuilder.ConstraintChecker
-import info.nightscout.androidaps.queue.commands.CustomCommand
 import info.nightscout.androidaps.plugins.pump.virtual.VirtualPumpPlugin
 import info.nightscout.androidaps.plugins.treatments.TreatmentsPlugin
 import info.nightscout.androidaps.queue.commands.Command
+import info.nightscout.androidaps.queue.commands.CustomCommand
 import info.nightscout.androidaps.utils.FabricPrivacy
 import info.nightscout.androidaps.utils.ToastUtils
 import info.nightscout.androidaps.utils.buildHelper.BuildHelper
@@ -55,7 +55,7 @@ class CommandQueueTest : TestBaseWithProfile() {
 
     @Before
     fun prepare() {
-        commandQueue = CommandQueue(injector, aapsLogger, rxBus, resourceHelper, constraintChecker, profileFunction, lazyActivePlugin, context, sp, buildHelper, fabricPrivacy)
+        commandQueue = CommandQueue(injector, aapsLogger, rxBus, aapsSchedulers, resourceHelper, constraintChecker, profileFunction, lazyActivePlugin, context, sp, buildHelper, fabricPrivacy)
 
         val pumpDescription = PumpDescription()
         pumpDescription.basalMinimumRate = 0.1
@@ -268,16 +268,19 @@ class CommandQueueTest : TestBaseWithProfile() {
     }
 
     private class CustomCommand1 : CustomCommand {
+
         override val statusDescription: String
             get() = "CUSTOM COMMAND 1"
     }
 
     private class CustomCommand2 : CustomCommand {
+
         override val statusDescription: String
             get() = "CUSTOM COMMAND 2"
     }
 
     private class CustomCommand3 : CustomCommand {
+
         override val statusDescription: String
             get() = "CUSTOM COMMAND 3"
     }

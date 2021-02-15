@@ -23,7 +23,7 @@ class ActionProfileSwitchPercent(injector: HasAndroidInjector) : Action(injector
     @Inject lateinit var activePlugin: ActivePluginProvider
 
     var pct = InputPercent(injector)
-    var duration = InputDuration(injector, 0, InputDuration.TimeUnit.MINUTES)
+    var duration = InputDuration(injector, 30, InputDuration.TimeUnit.MINUTES)
 
     override fun friendlyName(): Int = R.string.profilepercentage
     override fun shortDescription(): String =
@@ -66,4 +66,9 @@ class ActionProfileSwitchPercent(injector: HasAndroidInjector) : Action(injector
         duration.value = JsonHelper.safeGetInt(o, "durationInMinutes")
         return this
     }
+
+    override fun isValid(): Boolean =
+        pct.value >= InputPercent.MIN &&
+            pct.value <= InputPercent.MAX &&
+            duration.value > 0
 }

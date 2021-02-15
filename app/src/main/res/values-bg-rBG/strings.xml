@@ -7,13 +7,13 @@
     <string name="treatmentssafety_title">Настройки на сигурността</string>
     <string name="treatmentssafety_maxbolus_title">Максимален инсулин при болус [единици]</string>
     <string name="treatmentssafety_maxcarbs_title">Максимални въглехидрати [гр]</string>
+    <string name="nav_preferences_plugin">Настройки на %1$s</string>
     <string name="nav_preferences">Опции</string>
     <string name="nav_refreshtreatments">Обнови леченията от NS</string>
     <string name="nav_resetdb">Нулирай базата данни</string>
     <string name="reset_db_confirm">Сигурни ли сте че искате да изтриете всички данни?</string>
     <string name="nav_exit">Изход</string>
     <string name="ns_sync_use_absolute_title">Използване на абсолютни стойности за базал</string>
-    <string name="alert_dialog_storage_permission_text">Рестартирайте телефона или AndroidAPS от системните настройки или Android APS няма да записва проблемите (което е важно за работата на алгоритъма)!</string>
     <string name="alert_dialog_permission_battery_optimization_failed">Вашият телефон не поддържа оптимизация на батерията - може да се появят проблеми!</string>
     <string name="description_actions">Бутони за бърз достъп до основни функции</string>
     <string name="description_config_builder">За конфигурация на активните плъгини</string>
@@ -41,7 +41,7 @@
     <string name="description_source_glimp">Получава данни за КЗ от Glimp.</string>
     <string name="description_source_mm640g">Получават стойности на КЗ от 600SeriesAndroidUploader.</string>
     <string name="description_source_ns_client">Изтегля стойности на КЗ от Nightscout</string>
-    <string name="description_source_xdrip">Получава данни за КЗ от xDrip.</string>
+    <string name="description_source_xdrip">Получаване на данни за КЗ от xDrip+.</string>
     <string name="description_treatments">Записва всички процедури, които са били направени</string>
     <string name="description_wear">Наблюдавайте и контролирайте AndroidAPS, от вашия WearOS часовник.</string>
     <string name="description_xdrip_status_line">Покажи информация за вашия APS на xDrip + циферблат на часовник.</string>
@@ -118,7 +118,7 @@
     <string name="changeyourinput">Променете данните!</string>
     <string name="configbuilder_bgsource">Източник на данни за КЗ</string>
     <string name="configbuilder_bgsource_description">От къде трябва да AndroidAPS да си взима данни?</string>
-    <string name="xdrip">xDrip</string>
+    <string name="xdrip">xDrip+</string>
     <string name="apsmode_title">APS режим</string>
     <string name="closedloop">Затворен кръг</string>
     <string name="openloop">Отворен кръг</string>
@@ -167,7 +167,6 @@
     <string name="old_master_password">Стара главна парола</string>
     <string name="different_password_used">Този файл е експортиран и шифрован с различна главна парола. Използвайте старата главна парола за декриптиране на файла.</string>
     <string name="master_password_will_be_replaced">Вашата главна парола ЩЕ БЪДЕ ПОДМЕНЕНА с друга от импортирания файл!</string>
-    <string name="preferences_import_list_title">Изберете файл</string>
     <string name="check_preferences_before_import">Моля, проверете насстройките преди импортирането:</string>
     <string name="check_preferences_cannot_import">Настройите не могат да бъдат импортирани!</string>
     <string name="check_preferences_dangerous_import">Настройите не трябва да бъдат импортирани! (опасни)</string>
@@ -175,39 +174,6 @@
     <string name="check_preferences_details_title">Подробности за проблеми с импорта</string>
     <string name="check_preferences_import_btn">Импорт</string>
     <string name="check_preferences_import_anyway_btn">Импортирай все пак (ОПАСНО!)</string>
-    <string name="metadata_warning_different_flavour">Настройките са създадени с различен вариант на AAPS (%1$s) докато Вие сте с: %2$s.\n\nНякои настройки може да липсват или са невалидни!След импортиране, моля, проверете и актуализирайте своите настройки.</string>
-    <string name="metadata_warning_different_device">Настройките са създадени на друго устройство. Това е ОК, ако импортирате от по-стар/различен телефон, но се уверете, че тези настройки са правилни!</string>
-    <string name="metadata_warning_outdated_format">Използвате остарял формат от старите версии на AAPS, който не е защитен! Използвайте го само като крайна мярка, или експортирайте в JSON формат.</string>
-    <string name="metadata_warning_old_export">Импортираните настройки са стари %1$s дни! Може би имате по-актуални настройки или сте избрали грешен файл? Не забравяйте да експортирате настройки редовно!</string>
-    <string name="metadata_warning_date_format">Невалиден формат на датата!</string>
-    <string name="metadata_warning_different_version">Настройки от различна под-версия на приложението. Това е ОК, ако импортирате след надстройка, но проверете след вноса, ако настройки са все още правилни!</string>
-    <string name="metadata_urgent_different_version">Настройки от различна главна версия на приложението. Основните версии се различават значително и могат да имат несъвместими настройки! Уверете се, че след импорт, че преференциите са все още правилни!</string>
-    <string name="metadata_label_format">Формат на файла</string>
-    <string name="metadata_label_created_at">Създаден на</string>
-    <string name="metadata_label_aaps_version">Версия на AAPS</string>
-    <string name="metadata_label_aaps_flavour">вариант</string>
-    <string name="metadata_label_device_name">Име на пациента</string>
-    <string name="metadata_label_device_model">Модел на телефона:</string>
-    <string name="metadata_label_encryption">Криптиране</string>
-    <string name="metadata_format_old">Стар формат</string>
-    <string name="metadata_format_new">Нов формат</string>
-    <string name="metadata_format_debug">Нов формат (незащитен)</string>
-    <string name="metadata_format_other">Непознат формат</string>
-    <string name="prefdecrypt_settings_tampered">Файлът с настройки е преправян</string>
-    <string name="prefdecrypt_settings_secure">Файлът с настройки е сигурен</string>
-    <string name="prefdecrypt_settings_unencrypted">Използване на нешифровани настройки е рисково</string>
-    <string name="prefdecrypt_wrong_json">Грешка във формат JSON, липсва поле (формат, съдържание, метаданни или сигурност)</string>
-    <string name="prefdecrypt_wrong_password">Грешка при декриптиране, грешна парола</string>
-    <string name="prefdecrypt_issue_missing_file_hash">Контролна сума (hash) липсва, не може да се провери автентичността на настройките!</string>
-    <string name="prefdecrypt_issue_modified">Файлът е бил модифициран след експорт!</string>
-    <string name="prefdecrypt_issue_parsing">Грешка при декриптиране, възстановяването неуспешно!</string>
-    <string name="prefdecrypt_issue_wrong_pass">Грешка при декриптиране, грешна парола или файлът с настройки е модифициран! Възможно е импортираният файл да е експортиран с различна парола.</string>
-    <string name="prefdecrypt_issue_wrong_format">Липсва конфигурация на шифроване, форматът на настройките е невалиден!</string>
-    <string name="prefdecrypt_issue_wrong_algorithm">Неподдържан или непотвърден алгоритъм за криптиране!</string>
-    <string name="exported_ago" comment="at placeholder we add pluralized number of hours/minutes">от преди %1$s</string>
-    <string name="exported_at" comment="at placeholder we add export date">от %1$s</string>
-    <string name="exported_less_than_hour_ago">от преди по-малко от час</string>
-    <string name="in_directory" comment="placeholder is for exported file path">в директория: %1$s</string>
     <string name="end_user_license_agreement">Лицензионно споразумение с краен потребител</string>
     <string name="end_user_license_agreement_text">НЕ ТРЯБВА ДА СЕ ИЗПОЛЗВА ЗА ВЗЕМАНЕ НА МЕДИЦИНСКИ РЕШЕНИЯ. НЯМА ГАРАНЦИЯ ЗА ПРОГРАМАТА, ДО СТЕПЕНТА, ПОЗВОЛЕНА ОТ ПРИЛОЖИМОТО ПРАВО. ОСВЕН КОГАТО Е ПОСОЧЕНО ДРУГО В ПИСМЕН ВИД, ПРИТЕЖАТЕЛИТЕ НА АВТОРСКОТО ПРАВО И/ИЛИ ДРУГИ СТРАНИ ПРЕДОСТАВЯТ ПРОГРАМАТА \"КАКТО Е\", БЕЗ ГАРАНЦИИ ОТ ВСЯКАКЪВ ВИД,  ИЗРАЗЕНИ ИЛИ ПОДРАЗБИРАЩИ СЕ, ВКЛЮЧИТЕЛНО, НО НЕ САМО, ПОДРАЗБИРАЩИ СЕ ГАРАНЦИИ ЗА ПРОДАВАЕМОСТ И ПРИГОДНОСТ ЗА  КОНКРЕТНА ЦЕЛ. ЦЕЛИЯ РИСК ПО ОТНОШЕНИЕ НА КАЧЕСТВОТО И ЕФЕКТИВНОСТТА НА ПРОГРАМАТА Е САМО ВАШ. АКО ПРОГРАМАТА НЕ СРАБОТИ, ВИЕ ПОЕМАТЕ  ВСИЧКИ НЕОБХОДИМИ РАЗХОДИ ЗА ОБСЛУЖВАНЕ, РЕМОНТ ИЛИ КОРЕКЦИЯ.</string>
     <string name="end_user_license_agreement_i_understand">Разбирам и приемам</string>
@@ -284,8 +250,8 @@
     <string name="mealbolus">Хранене</string>
     <string name="correctionbous">Корекция</string>
     <string name="actions">Действия</string>
-    <string name="ns_upload_only">Само качва данни в NS (изключва синхронизацията)</string>
-    <string name="ns_upload_only_summary">Само качване на данните в NS. Няма ефект върху данните за КЗ ако локален източник като xDrip е избран. Няма ефект върху профила освен ако не е избран  NS-профил.</string>
+    <string name="ns_upload_only">(ОПАСНО ЗА ДЕАКТИВИРАНЕ) Само качвай данни в NS</string>
+    <string name="ns_upload_only_summary">Само каване в NS (изключи синхронизиране). Може да спре данните за КЗ, освен ако не е избран локален източник като xDrip +. Не е ефективно за профила, освен ако не ползвате NS профил.\n!!! ВНИМАНИЕ !!! Деактивирането на тази опция може да причини проблеми и предозиране на инсулин, ако някой от Вашите компоненти (AAPS, NS, xDrip +) е неправилно конфигуриран. Внимателно гледайте, ако данните, показани от AAPS съответстват на състоянието на помпата!</string>
     <string name="pumpNotInitialized">Помпата не е инициализирана!</string>
     <string name="primefill">Пълнене на сет</string>
     <string name="fillwarning">Моля, уверете се, че стойността съответсва на вашият сет! Този инсулин не се включва в IOB!</string>
@@ -340,7 +306,7 @@
     <string name="smscommunicator_shortname">SMS</string>
     <string name="short_tabtitles">Използвай къси имена</string>
     <string name="always_use_shortavg">Използвай краткоср. Δ вместо разлика от последната КЗ</string>
-    <string name="always_use_shortavg_summary">Полезно при данни за КЗ с много шум</string>
+    <string name="always_use_shortavg_summary">Полезно при данни за КЗ с много шум.</string>
     <string name="profile">Профил</string>
     <string name="openapsama_max_daily_safety_multiplier_summary">По подразбиране: 3 Това е основен параметър в сигурността на OpenAPS. Той ограничава максималният базал да бъде 3 пъти най-голямата стойност от дневните базали. Не би трябвало да има нужа от промяна, защото от опит сме проверили, че максимумите са “3x от най-високия дневен; 4x от текущия”.</string>
     <string name="openapsama_current_basal_safety_multiplier_summary">По подразбиране: 4\nТова е другият основен параметър в сигурността на OpenAPS, и другата половина от \"3x от най-високия дневен; 4x от текущия\". Това означава, че независимо от макс базал настроен в помпата, стойността на базала не може да е по-висока от тази стойност умножена по стойността на базала за текущият час от денонощието. Това е с цел да предпази от прекалено високи стойности на максималния базал преди да разбират как работи алгоритъма. Повечето от Вас няма да имат нужда от смяна на тази стойност и могат да се справят с настойки на другите параметри.</string>
@@ -354,9 +320,9 @@
     <string name="smscommunicator_invalidphonennumber">Грешен тел номер за SMS</string>
     <string name="overview_calibration">Калибрация</string>
     <string name="xdripnotinstalled">xDrip+ не е инсталиран</string>
-    <string name="calibrationsent">Калибрацията е изпратена към xDrip</string>
-    <string name="smscommunicator_calibrationsent">Неуспешно. Получаването трябва да е разрешено в xDrip.</string>
-    <string name="smscommunicator_calibrationfailed">xDrip не получава калибрации</string>
+    <string name="calibrationsent">Калибрацията е изпратена към xDrip+</string>
+    <string name="smscommunicator_calibrationsent">Калибрацията е изпратена. Получаването трябва да бъде разрешено в xDrip +.</string>
+    <string name="smscommunicator_calibrationfailed">xDrip+ не получава калибрации</string>
     <string name="pumpsuspended">Помпата е спряна</string>
     <string name="executing">Изпълнява</string>
     <string name="virtualpump_settings">Настойки Виртуална Помпа</string>
@@ -405,11 +371,18 @@
     <string name="suspendloopfor3h">Изключи APS за 3ч</string>
     <string name="suspendloopfor10h">Изключи APS за 10 ч</string>
     <string name="suspendloopforXmin">Изключи APS за %1$d мин</string>
+    <string name="disconnectpump">Изключване на помпата</string>
     <string name="disconnectpumpfor15m">Изключи помпата за 15 мин.</string>
     <string name="disconnectpumpfor30m">Изключи помпата за 30 мин.</string>
     <string name="disconnectpumpfor1h">Изключи помпата за 1 ч</string>
     <string name="disconnectpumpfor2h">Изключи помпата за 2 ч</string>
     <string name="disconnectpumpfor3h">Изключи помпата за 3 ч</string>
+    <string name="duration15m">15 мин</string>
+    <string name="duration30m">30 мин</string>
+    <string name="duration1h">1 час</string>
+    <string name="duration2h">2 часа</string>
+    <string name="duration3h">3 часа</string>
+    <string name="duration10h">10 часа</string>
     <string name="resume">Възстанови</string>
     <string name="reconnect">Свържи помпа</string>
     <string name="smscommunicator_wrongduration">Грешна продължителност</string>
@@ -435,11 +408,11 @@
     <string name="statuslights_sage_critical">Праг за критична възраст на сензор [часа]</string>
     <string name="statuslights_sbat_warning">Аларма при заряд на батерия под [%]</string>
     <string name="statuslights_sbat_critical">Критично ниво на сензорната батерия под [%]</string>
-    <string name="statuslights_bage_warning">Аларма при възраст на батерия над [часа]</string>
-    <string name="statuslights_bage_critical">Праг за критична възраст на батерията над [часа]</string>
+    <string name="statuslights_bage_warning">Висока възраст на батерия над [часа]</string>
+    <string name="statuslights_bage_critical">Критична възраст на батерията над [часа]</string>
     <string name="statuslights_res_warning">Ниво за аларма за останал инсулин в резервоара [Е]</string>
     <string name="statuslights_res_critical">Предупреждение за критично ниво на останал инсулин в резервоар [Е]</string>
-    <string name="statuslights_bat_warning">Аларма при заряд на батерия под [%]</string>
+    <string name="statuslights_bat_warning">Нисък заряд на батерия под [%]</string>
     <string name="statuslights_bat_critical">Критично ниво на батерията под [%]</string>
     <string name="prediction_shortname">Предв</string>
     <string name="iob">IOB</string>
@@ -452,8 +425,8 @@
     <string name="nav_about">За приложението</string>
     <string name="smscommunicator_missingsmspermission">SMS команда забранена</string>
     <string name="smscommunicator_missingphonestatepermission">Липсва разрешение до данни от телефона</string>
-    <string name="xdripstatus_settings">xDrip статус (часовник)</string>
-    <string name="xdripstatus">xDrip статус (часовник)</string>
+    <string name="xdripstatus_settings">xDrip+ статус (часовник)</string>
+    <string name="xdripstatus">xDrip+ линия със статута (часовник)</string>
     <string name="xdripstatus_shortname">xds</string>
     <string name="wear_showbgi_title">Показвай BGI</string>
     <string name="wear_showbgi_summary">Добави BGI към статуса</string>
@@ -462,7 +435,6 @@
     <string name="overview_extendedbolus_cancel_button">Спри удължен болус</string>
     <string name="doprofileswitch">Смени профил</string>
     <string name="careportal_sensor_label">Сензор</string>
-    <string name="careportal_canula_label">Канюла</string>
     <string name="careportal_insulin_label">Инсулин</string>
     <string name="careportal_pb_label">Батерия на помпата</string>
     <string name="careportal_age_label">възраст:</string>
@@ -496,7 +468,7 @@
     <string name="mdtp_cancel">Откажи</string>
     <string name="notloadedplugins">Не всички профили са заредени!</string>
     <string name="valuesnotstored">Стойностите не са запазени!</string>
-    <string name="ns_localbroadcasts">Активирайте предаване на данни към други приложения (като xDrip). Не активирайте, ако имате повече от един AAPS или имате инсталиран NSClient!</string>
+    <string name="ns_localbroadcasts">Активира предаване на данни към други приложения (като xDrip+). Не активирайте, ако имате повече от един AAPS или имате инсталиран NSClient!</string>
     <string name="ns_localbroadcasts_title">Разреши локално предаване на данни</string>
     <string name="careportal_newnstreatment_duration_min_label">Продължителност [мин.]</string>
     <string name="openapssmb">OpenAPS SMB</string>
@@ -522,7 +494,7 @@
     <string name="activity_target">Целева КЗ при физ. активност</string>
     <string name="hypo_duration">Продължителност на вр. цел при хипоглекимия</string>
     <string name="hypo_target">Временна цел при хипоглекимия</string>
-    <string name="reuse">отново</string>
+    <string name="reuse_profile_pct_hours">Приложи отново %1$d%% %2$dч</string>
     <string name="wearcontrol_title">Контролиране от часовник</string>
     <string name="wearcontrol_summary">Задаване временни цели и въвеждане Лечения от часовник Android wear</string>
     <string name="food">Храна</string>
@@ -564,8 +536,6 @@
     <string name="overview_editquickwizard_usebasaliob">Калкулиране на базален IOB</string>
     <string name="overview_editquickwizard_usetrend">Калкулиране на тенденция КЗ</string>
     <string name="overview_editquickwizard_usesuperbolus">Калкулиране суперболус</string>
-    <string name="yes">Да</string>
-    <string name="no">Не</string>
     <string name="positiveonly">Само положителни</string>
     <string name="negativeonly">Само отрицателни</string>
     <string name="overview_editquickwizard_usecob">Калкулиране на COB</string>
@@ -577,7 +547,6 @@
     <string name="maxiobset">Максимален IOB е зададен правилно</string>
     <string name="hasbgdata">Има данни за КЗ от избрания източник</string>
     <string name="combo_programming_bolus">Програмиране на помпа за болус</string>
-    <string name="combo_refresh">Обнови</string>
     <string name="combo_pump_state_label">Състояние</string>
     <string name="combo_pump_activity_label">Активност</string>
     <string name="combo_no_pump_connection">Няма връзка от %1$d мин.</string>
@@ -612,8 +581,6 @@
     <string name="combo_reservoir_level_insufficient_for_bolus">Няма достатъчно инсулин в резервоара</string>
     <string name="extendedbolusdeliveryerror">Грешка при доставяне на удължен болус</string>
     <string name="insightpump_shortname">Sight</string>
-    <string name="set_neutral_temps_title">Прилагане на неутрални временни базали</string>
-    <string name="set_neutral_temps_summary">Ако е вкл, то ще анулира временен базал на всеки час. Това може да помогне за спиране на  звук/вибрация от някой помпи на всеки час.</string>
     <string name="enablesmbalways">Разреши SMB постоянно</string>
     <string name="enablesmbalways_summary">Разрешава SMB постоянно и независимо от болусите. Възможно само с източник на КЗ с добра филтрация като G5  </string>
     <string name="enablesmbaftercarbs">Разреши SMB след въглехидрати</string>
@@ -625,7 +592,6 @@
     <string name="enablesmbwithhightemptarget">Разреши SMB с по-високи временни цели на КЗ</string>
     <string name="enablesmbwithhightemptarget_summary">Активирайте SMB, когато има висока временна цел (опитайте с над 100 мг/дл или 5,5 ммол/л)</string>
     <string name="overview_insulin_label">Инсулин</string>
-    <string name="overview_carbs_label">Въглехидрати</string>
     <string name="overview_buttons_selection">Бутони</string>
     <string name="show_calibration_button_summary">Изпраща калибрация към xDrip+ или отваря G5 диалог за калибрация</string>
     <string name="show_cgm_button_summary">Отваря xDrip+, бутонът назад връща към AAPS</string>
@@ -762,7 +728,7 @@
     <string name="diawarning">Моля, не забравяйте: нови инсулин профили изискват време на действие на инсулиина - DIA от поне 5ч. DIA 5-6ч на нов профил е равно на DIA 3ч при стари инсулин профили.</string>
     <string name="setupwizard_profile_description">Моля изберете вид профил. Ако пациентът е дете, трябва да използвате NS профил. Ако никой освен Вас не ви проследява в Nightscout вероятно ще предпочетете Локален профил. Моля, не забравяйте, че тук само избирате източника на профил. За да го използвате трябва да го активирате с натискане на \"Смяна на профила\"</string>
     <string name="setupwizard_aps_description">Изберете един от наличните алгоритми. Те са подредени от най-стария до най-новия. По-новите алгоритми са обикновено по-мощни и по-агресивни. Така ако сте новак в APS системите може да започнете с AMA. Не забравяйте да прочетете документацията на OpenAPS и да го конфигурирате преди употреба.</string>
-    <string name="setupwizard_pump_waiting_for_riley_link_connection">Изчакване на RileyLink връзка…\n</string>
+    <string name="setupwizard_pump_waiting_for_riley_link_connection">Конфигурация на RileyLink. След избиране на RileyLink, ще е възможно неговото конфигуриране, след като статуса му е \"Свързан\". Може да отнеме време \n</string>
     <string name="setupwizard_pump_pump_not_initialized"><b>Заб:</b> Можете да продължите след като помпата се инициализира.\n</string>
     <string name="startobjective">Започнете първа цел</string>
     <string name="permission">Разрешение</string>
@@ -790,7 +756,6 @@
     <string name="sensitivity_raises_target_title">Чувствителността увеличава целта</string>
     <string name="sensitivity_raises_target_summary">Когато се установи чувствителност, повишаване на целевата глюкоза</string>
     <string name="combo_invalid_setup">Невалидни настройки на помпата, проверете wiki и се уверете че меню Quick Info се казва QUICK INFO, с помощта на 360 софтуера.</string>
-    <string name="custom">По избор</string>
     <string name="careportal_removestartedevents"> AndroidAPS стартира</string>
     <string name="storedsettingsfound">Открити са предишни настройки</string>
     <string name="allow_hardware_pump_text">Внимание: Ако активирате и свържете с хардуерна помпа, AndroidAPS ще копира основните настройки от профила в помпата, като презапише съществуващата базова скорост, съхранявана на помпата. Уверете се, че имате правилните основни настройки в AndroidAPS. Ако не сте сигурни или не искате да презапишете основните настройки на помпата, натиснете Cancel и повторете превключването към помпата по-късно.</string>
@@ -810,7 +775,6 @@
     <string name="nav_logsettings">Настройки на логовете</string>
     <string name="resettodefaults">Възстанови настройките по подразбиране</string>
     <string name="nsmalfunction">Грешка в NSClient. Рестартирайте Nightscout и NSClient</string>
-    <string name="versionavailable">Има налично обновяване до версия %1$s </string>
     <string name="time_offset">времево отместване</string>
     <string name="setupwizard_preferred_aps_mode">Предпочитаният режим на APS</string>
     <string name="treatments_wizard_total_label">Общо</string>
@@ -873,7 +837,6 @@
     <string name="eb_formatter">%1$.2f / %2$.2f U за %3$d мин</string>
     <string name="enable_tbr_over_notification">Разреши съобщения за край на временни базали\n(настройки на помпата)</string>
     <string name="disable_tbr_over_notification">Забрани съобщения за край на временни базали\n(настройки на помпата)</string>
-    <string name="refresh">Обнови</string>
     <string name="description_pump_insight_local">Драйвер за Accu-Chek Insight помпи</string>
     <string name="not_inserted">Не е поставено</string>
     <string name="short_status_last_connected">Последно свързване: преди %1$d минути </string>
@@ -967,8 +930,6 @@
     <string name="copy_short">КОП</string>
     <string name="addnew">Добави нов</string>
     <string name="versionChecker">Проверка на версията</string>
-    <string name="signature_verifier">Проверка на подпис</string>
-    <string name="running_invalid_version">Използвате грешна версия. APS е изключен!</string>
     <string name="old_version">стара версия</string>
     <string name="very_old_version">много стара версия</string>
     <string name="new_version_warning">Има нова версия от най-малко %1$d дни! Ще спре подаването на инсулин след %2$d дни, цикълът ще бъде изключен след %3$d дни</string>
@@ -978,7 +939,9 @@
     <string name="description_source_dexcom">Да получава данни за КЗ от модифицираното приложение на Dexcom.</string>
     <string name="notification">Известие</string>
     <string name="notification_message">Известие: %1$s</string>
+    <string name="alarm_message">Аларма: %1$s</string>
     <string name="message_short">Съоб:</string>
+    <string name="alarm_short">Алармa:</string>
     <string name="profilepercentage">Профил процент</string>
     <string name="percent_u">Процент [%]:</string>
     <string name="startprofile">Стартирай профил %1$d%% за %2$d мин</string>
@@ -1098,8 +1061,6 @@
     <string name="insight_alert_notification_channel">Информация за Insight Pump</string>
     <!-- SMS Communicator & OTP Authenticator -->
     <string name="smscommunicator_code_from_authenticator_for" comment="This is continuation of sentence: To [ACTION] reply with code">от приложението AUTHENTICATOR за: %1$s , последвано от PIN</string>
-    <string name="smscommunicator_otp_enabled">Активиране на удостоверител</string>
-    <string name="smscommunicator_otp_enabled_summary">Удостоверяване чрез еднократна парола, генерирана с Google Authenticator или подобна програма за 2-факторна оторизация.</string>
     <string name="smscommunicator_otp_pin">Допълнителен PIN в края на токен</string>
     <string name="smscommunicator_otp_pin_summary">Допълнителни цифри, които следва да бъдат залепени в края на всяка генерирана еднократна парола</string>
     <string name="smscomunicator_tab_otp_label">Настройка на удостоверителя</string>
@@ -1180,4 +1141,21 @@
     <string name="filter">Филтър</string>
     <string name="copytolocalprofile_invalid">Не може да се създаде локален профил. Профилът е невалиден.</string>
     <string name="cta_dont_kill_my_app_info">Не убивай приложението?</string>
+    <string name="alarm">Аларма</string>
+    <string name="smscommunicator_report_pump_ureachable_summary">Изпращане на SMS, ако помпата е недостъпна</string>
+    <string name="smscommunicator_pump_ureachable">Докладвай недостъпна помпа</string>
+    <string name="advisoralarm">Алармата, когато е време за хранене.</string>
+    <string name="alarminxmin">Сларма след %1$d мин</string>
+    <string name="bolusadvisor">Съветник на болус</string>
+    <string name="bolusadvisormessage">Имаш висока захар. Вместо да се яде сега, се препоръчва да се изчака за по-добра захар. Искате ли да направите корекция сега и да ви напомня кога е време за ядене? В този случай няма да бъдат записвани въглехидрати и трябва да използвате съветника отново, когато ви напомня.</string>
+    <string name="enablebolusadvisor">Активиране на болус съветник</string>
+    <string name="enablebolusadvisor_summary">Използвай напомняне за старт на хранене вместо съветника по време на висока гликемия (\"пре-болус\")</string>
+    <string name="time_to_eat">Време за ядене!\nИзпълнете болус съветника и направете изчисления отново.</string>
+    <string name="timetoeat">Време е за ядене</string>
+    <string name="fabric_upload_disabled">Качването на данни за проблеми е забранено!(Fabric)</string>
+    <string name="graph_menu_divider_header">Графика</string>
+    <string name="chart_menu">Меню на графиката</string>
+    <string name="clear_filter">Премахни филтъра</string>
+    <string name="trend_arrow">Стрелка тенденция</string>
+    <string name="cannula">Канюла</string>
 </resources>

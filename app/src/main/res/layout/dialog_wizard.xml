@@ -49,9 +49,9 @@
             android:padding="5dp" />
 
         <TableLayout
-            android:paddingEnd="5dp"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="match_parent"
+            android:paddingEnd="5dp">
 
             <TableRow
                 android:layout_width="match_parent"
@@ -67,12 +67,12 @@
                     android:textStyle="bold" />
 
                 <info.nightscout.androidaps.utils.ui.NumberPicker
-                    android:id="@+id/treatments_wizard_bg_input"
+                    android:id="@+id/bg_input"
                     android:layout_width="130dp"
                     android:layout_height="40dp" />
 
                 <TextView
-                    android:id="@+id/treatments_wizard_bgunits"
+                    android:id="@+id/bgunits"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
@@ -97,7 +97,7 @@
                     android:textStyle="bold" />
 
                 <info.nightscout.androidaps.utils.ui.NumberPicker
-                    android:id="@+id/treatments_wizard_carbs_input"
+                    android:id="@+id/carbs_input"
                     android:layout_width="130dp"
                     android:layout_height="40dp"
                     android:layout_gravity="center_horizontal" />
@@ -128,7 +128,7 @@
                     android:textStyle="bold" />
 
                 <info.nightscout.androidaps.utils.ui.NumberPicker
-                    android:id="@+id/treatments_wizard_correction_input"
+                    android:id="@+id/correction_input"
                     android:layout_width="130dp"
                     android:layout_height="40dp"
                     android:layout_gravity="center_horizontal" />
@@ -146,22 +146,49 @@
 
             <TableRow
                 android:layout_width="match_parent"
+                android:gravity="center_vertical"
                 android:layout_height="match_parent">
 
-                <TextView
+                <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:gravity="center_vertical"
                     android:layout_weight="1"
-                    android:padding="10dp"
-                    android:text="@string/careportal_newnstreatment_carbtime_label"
-                    android:textAppearance="@style/TextAppearance.AppCompat.Small"
-                    android:textStyle="bold" />
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:paddingLeft="10dp"
+                        android:paddingRight="2dp"
+                        android:text="@string/careportal_newnstreatment_carbtime_label"
+                        android:gravity="center_vertical"
+                        android:layout_weight="1"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Small"
+                        android:textStyle="bold" />
+
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:src="@drawable/ic_access_alarm_24dp" />
+
+                    <CheckBox
+                        android:id="@+id/alarm"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:checked="false"
+                        android:padding="2dp" />
+
+                </LinearLayout>
 
                 <info.nightscout.androidaps.utils.ui.NumberPicker
-                    android:id="@+id/treatments_wizard_carb_time_input"
+                    android:id="@+id/carb_time_input"
                     android:layout_width="130dp"
                     android:layout_height="40dp"
-                    android:layout_gravity="center_horizontal" />
+                    android:layout_gravity="center" />
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -191,7 +218,7 @@
                 android:textStyle="bold" />
 
             <Spinner
-                android:id="@+id/treatments_wizard_profile"
+                android:id="@+id/profile"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical|center_horizontal"
@@ -199,13 +226,13 @@
 
 
             <CheckBox
-                android:id="@+id/treatments_wizard_sbcheckbox"
+                android:id="@+id/sbcheckbox"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
                 android:layout_marginStart="10dp"
-                android:padding="5dp"
                 android:checked="false"
+                android:padding="5dp"
                 android:text="@string/superbolus" />
 
         </LinearLayout>
@@ -217,7 +244,7 @@
             android:orientation="horizontal">
 
             <TextView
-                android:id="@+id/treatments_wizard_total"
+                android:id="@+id/total"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:background="@drawable/background_darkgray"
@@ -227,7 +254,7 @@
                 android:textAppearance="?android:attr/textAppearanceLarge" />
 
             <TextView
-                android:id="@+id/treatments_wizard_percent_used"
+                android:id="@+id/percent_used"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="10dp"
@@ -241,7 +268,7 @@
         </LinearLayout>
 
         <LinearLayout
-            android:id="@+id/treatments_wizard_notes_layout"
+            android:id="@+id/notes_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal">
@@ -250,14 +277,14 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
-                android:labelFor="@+id/treatment_wizard_notes"
+                android:labelFor="@+id/notes"
                 android:padding="10dp"
                 android:text="@string/careportal_newnstreatment_notes_label"
                 android:textAppearance="@style/TextAppearance.AppCompat.Small"
                 android:textStyle="bold" />
 
             <EditText
-                android:id="@+id/treatment_wizard_notes"
+                android:id="@+id/notes"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
@@ -279,7 +306,7 @@
             android:padding="5dp">
 
             <CheckBox
-                android:id="@+id/treatments_wizard_calculationcheckbox"
+                android:id="@+id/calculationcheckbox"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
@@ -288,8 +315,8 @@
             <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:contentDescription="@string/show_calculation"
                 android:layout_gravity="center_vertical"
+                android:contentDescription="@string/show_calculation"
                 app:srcCompat="@drawable/ic_visibility" />
 
             <Button
@@ -312,16 +339,16 @@
         </LinearLayout>
 
         <View
-            android:id="@+id/treatments_wizard_delimiter"
+            android:id="@+id/delimiter"
             android:layout_width="fill_parent"
             android:layout_height="2dip"
             android:layout_marginStart="20dp"
             android:layout_marginTop="-15dp"
             android:layout_marginBottom="5dp"
-            android:background="@color/listdelimiter" />
+            android:background="@color/list_delimiter" />
 
         <TableLayout
-            android:id="@+id/treatments_wizard_resulttable"
+            android:id="@+id/resulttable"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:padding="5dp">
@@ -331,7 +358,7 @@
                 android:layout_height="match_parent">
 
                 <CheckBox
-                    android:id="@+id/treatments_wizard_bgcheckbox"
+                    android:id="@+id/bgcheckbox"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:width="32dp"
@@ -350,7 +377,7 @@
                         android:textAppearance="?android:attr/textAppearanceSmall" />
 
                     <CheckBox
-                        android:id="@+id/treatments_wizard_ttcheckbox"
+                        android:id="@+id/ttcheckbox"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:width="32dp"
@@ -366,7 +393,7 @@
                 </LinearLayout>
 
                 <TextView
-                    android:id="@+id/treatments_wizard_bg"
+                    android:id="@+id/bg"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
@@ -374,7 +401,7 @@
                     android:textAppearance="?android:attr/textAppearanceSmall" />
 
                 <TextView
-                    android:id="@+id/treatments_wizard_bginsulin"
+                    android:id="@+id/bginsulin"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:width="50dp"
@@ -388,7 +415,7 @@
                 android:layout_height="match_parent">
 
                 <CheckBox
-                    android:id="@+id/treatments_wizard_bgtrendcheckbox"
+                    android:id="@+id/bgtrendcheckbox"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:width="32dp"
@@ -402,7 +429,7 @@
                     android:textAppearance="?android:attr/textAppearanceSmall" />
 
                 <TextView
-                    android:id="@+id/treatments_wizard_bgtrend"
+                    android:id="@+id/bgtrend"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
@@ -410,7 +437,7 @@
                     android:textAppearance="?android:attr/textAppearanceSmall" />
 
                 <TextView
-                    android:id="@+id/treatments_wizard_bgtrendinsulin"
+                    android:id="@+id/bgtrendinsulin"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:width="50dp"
@@ -424,7 +451,7 @@
                 android:layout_height="match_parent">
 
                 <CheckBox
-                    android:id="@+id/treatments_wizard_cobcheckbox"
+                    android:id="@+id/cobcheckbox"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:width="32dp"
@@ -438,7 +465,7 @@
                     android:textAppearance="?android:attr/textAppearanceSmall" />
 
                 <TextView
-                    android:id="@+id/treatments_wizard_cob"
+                    android:id="@+id/cob"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
@@ -446,7 +473,7 @@
                     android:textAppearance="?android:attr/textAppearanceSmall" />
 
                 <TextView
-                    android:id="@+id/treatments_wizard_cobinsulin"
+                    android:id="@+id/cobinsulin"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:width="50dp"
@@ -460,7 +487,7 @@
                 android:layout_height="match_parent">
 
                 <CheckBox
-                    android:id="@+id/treatments_wizard_bolusiobcheckbox"
+                    android:id="@+id/bolusiobcheckbox"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:width="32dp"
@@ -481,7 +508,7 @@
                     android:textAppearance="?android:attr/textAppearanceSmall" />
 
                 <TextView
-                    android:id="@+id/treatments_wizard_bolusiobinsulin"
+                    android:id="@+id/bolusiobinsulin"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:width="50dp"
@@ -495,7 +522,7 @@
                 android:layout_height="match_parent">
 
                 <CheckBox
-                    android:id="@+id/treatments_wizard_basaliobcheckbox"
+                    android:id="@+id/basaliobcheckbox"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:width="32dp"
@@ -516,7 +543,7 @@
                     android:textAppearance="?android:attr/textAppearanceSmall" />
 
                 <TextView
-                    android:id="@+id/treatments_wizard_basaliobinsulin"
+                    android:id="@+id/basaliobinsulin"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:width="50dp"
@@ -542,7 +569,7 @@
                     android:textAppearance="?android:attr/textAppearanceSmall" />
 
                 <TextView
-                    android:id="@+id/treatments_wizard_carbs"
+                    android:id="@+id/carbs"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
@@ -550,7 +577,7 @@
                     android:textAppearance="?android:attr/textAppearanceSmall" />
 
                 <TextView
-                    android:id="@+id/treatments_wizard_carbsinsulin"
+                    android:id="@+id/carbsinsulin"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:width="50dp"
@@ -576,7 +603,7 @@
                     android:textAppearance="?android:attr/textAppearanceSmall" />
 
                 <TextView
-                    android:id="@+id/treatments_wizard_sb"
+                    android:id="@+id/sb"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
@@ -584,7 +611,7 @@
                     android:textAppearance="?android:attr/textAppearanceSmall" />
 
                 <TextView
-                    android:id="@+id/treatments_wizard_sbinsulin"
+                    android:id="@+id/sbinsulin"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:width="50dp"
@@ -617,7 +644,7 @@
                     android:textAppearance="?android:attr/textAppearanceSmall" />
 
                 <TextView
-                    android:id="@+id/treatments_wizard_correctioninsulin"
+                    android:id="@+id/correctioninsulin"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:width="50dp"

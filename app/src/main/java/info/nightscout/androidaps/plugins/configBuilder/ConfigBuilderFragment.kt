@@ -12,22 +12,24 @@ import dagger.android.support.DaggerFragment
 import info.nightscout.androidaps.Config
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.activities.PreferencesActivity
+import info.nightscout.androidaps.databinding.ConfigbuilderFragmentBinding
 import info.nightscout.androidaps.events.EventRebuildTabs
 import info.nightscout.androidaps.interfaces.*
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper
 import info.nightscout.androidaps.plugins.configBuilder.events.EventConfigBuilderUpdateGui
 import info.nightscout.androidaps.utils.FabricPrivacy
-import info.nightscout.androidaps.utils.extensions.plusAssign
+import io.reactivex.rxkotlin.plusAssign
 import info.nightscout.androidaps.utils.extensions.toVisibility
 import info.nightscout.androidaps.utils.protection.ProtectionCheck
 import info.nightscout.androidaps.utils.resources.ResourceHelper
-import io.reactivex.android.schedulers.AndroidSchedulers
+import info.nightscout.androidaps.utils.rx.AapsSchedulers
 import io.reactivex.disposables.CompositeDisposable
-import kotlinx.android.synthetic.main.configbuilder_fragment.*
 import java.util.*
 import javax.inject.Inject
 
 class ConfigBuilderFragment : DaggerFragment() {
+
+    @Inject lateinit var aapsSchedulers: AapsSchedulers
     @Inject lateinit var rxBus: RxBusWrapper
     @Inject lateinit var resourceHelper: ResourceHelper
     @Inject lateinit var configBuilderPlugin: ConfigBuilderPlugin
@@ -39,25 +41,32 @@ class ConfigBuilderFragment : DaggerFragment() {
     private var disposable: CompositeDisposable = CompositeDisposable()
     private val pluginViewHolders = ArrayList<PluginViewHolder>()
 
+    private var _binding: ConfigbuilderFragmentBinding? = null
+
+    // This property is only valid between onCreateView and
+    // onDestroyView.
+    private val binding get() = _binding!!
+
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
-                              savedInstanceState: Bundle?): View? {
-        return inflater.inflate(R.layout.configbuilder_fragment, container, false)
+                              savedInstanceState: Bundle?): View {
+        _binding = ConfigbuilderFragmentBinding.inflate(inflater, container, false)
+        return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
         if (protectionCheck.isLocked(ProtectionCheck.Protection.PREFERENCES))
-            configbuilder_main_layout.visibility = View.GONE
+            binding.mainLayout.visibility = View.GONE
         else
-            unlock.visibility = View.GONE
+            binding.unlock.visibility = View.GONE
 
-        unlock.setOnClickListener {
+        binding.unlock.setOnClickListener {
             activity?.let { activity ->
-                protectionCheck.queryProtection(activity, ProtectionCheck.Protection.PREFERENCES, Runnable {
+                protectionCheck.queryProtection(activity, ProtectionCheck.Protection.PREFERENCES, {
                     activity.runOnUiThread {
-                        configbuilder_main_layout.visibility = View.VISIBLE
-                        unlock.visibility = View.GONE
+                        binding.mainLayout.visibility = View.VISIBLE
+                        binding.unlock.visibility = View.GONE
                     }
                 })
             }
@@ -69,10 +78,10 @@ class ConfigBuilderFragment : DaggerFragment() {
         super.onResume()
         disposable += rxBus
             .toObservable(EventConfigBuilderUpdateGui::class.java)
-            .observeOn(AndroidSchedulers.mainThread())
+            .observeOn(aapsSchedulers.main)
             .subscribe({
                 for (pluginViewHolder in pluginViewHolders) pluginViewHolder.update()
-            }, { fabricPrivacy.logException(it) })
+            }, fabricPrivacy::logException)
         updateGUI()
     }
 
@@ -83,8 +92,14 @@ class ConfigBuilderFragment : DaggerFragment() {
     }
 
     @Synchronized
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
+    }
+
+    @Synchronized
     private fun updateGUI() {
-        configbuilder_categories.removeAllViews()
+        binding.categories.removeAllViews()
         if (!config.NSCLIENT) {
             createViewsForPlugins(R.string.configbuilder_profile, R.string.configbuilder_profile_description, PluginType.PROFILE, activePlugin.getSpecificPluginsVisibleInListByInterface(ProfileInterface::class.java, PluginType.PROFILE))
         }
@@ -115,7 +130,7 @@ class ConfigBuilderFragment : DaggerFragment() {
             pluginContainer.addView(pluginViewHolder.baseView)
             pluginViewHolders.add(pluginViewHolder)
         }
-        configbuilder_categories.addView(parent)
+        binding.categories.addView(parent)
     }
 
     inner class PluginViewHolder internal constructor(private val fragment: ConfigBuilderFragment,
@@ -157,7 +172,7 @@ class ConfigBuilderFragment : DaggerFragment() {
 
             pluginPreferences.setOnClickListener {
                 fragment.activity?.let { activity ->
-                    protectionCheck.queryProtection(activity, ProtectionCheck.Protection.PREFERENCES, Runnable {
+                    protectionCheck.queryProtection(activity, ProtectionCheck.Protection.PREFERENCES, {
                         val i = Intent(fragment.context, PreferencesActivity::class.java)
                         i.putExtra("id", plugin.preferencesId)
                         fragment.startActivity(i)
@@ -174,7 +189,7 @@ class ConfigBuilderFragment : DaggerFragment() {
             enabledInclusive.isChecked = plugin.isEnabled(pluginType)
             enabledInclusive.isEnabled = !plugin.pluginDescription.alwaysEnabled
             enabledExclusive.isEnabled = !plugin.pluginDescription.alwaysEnabled
-            if(plugin.menuIcon != -1) {
+            if (plugin.menuIcon != -1) {
                 pluginIcon.visibility = View.VISIBLE
                 pluginIcon.setImageDrawable(context?.let { ContextCompat.getDrawable(it, plugin.menuIcon) })
             } else {
@@ -196,7 +211,5 @@ class ConfigBuilderFragment : DaggerFragment() {
         private fun areMultipleSelectionsAllowed(type: PluginType): Boolean {
             return type == PluginType.GENERAL || type == PluginType.CONSTRAINTS || type == PluginType.LOOP
         }
-
     }
-
 }

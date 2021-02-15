@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.preference.PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:validate="http://schemas.android.com/apk/res-auto">
+
+    <PreferenceCategory android:title="@string/omnipod_preference_category_rileylink">
+
+        <Preference
+            android:enabled="true"
+            android:key="@string/key_rileylink_mac_address"
+            android:title="@string/omnipod_config_riley_link_configuration">
+            <intent android:action="info.nightscout.androidaps.plugins.PumpCommon.dialog.RileyLinkBLEConfigActivity" />
+        </Preference>
+
+        <SwitchPreference
+            android:defaultValue="false"
+            android:key="@string/key_riley_link_show_battery_level"
+            android:summary="@string/riley_link_show_battery_level_summary"
+            android:title="@string/riley_link_show_battery_level" />
+
+        <SwitchPreference
+            android:defaultValue="false"
+            android:dependency="@string/key_riley_link_show_battery_level"
+            android:key="@string/key_omnipod_battery_change_logging_enabled"
+            android:title="@string/omnipod_config_battery_change_logging_enabled" />
+
+    </PreferenceCategory>
+
+    <PreferenceCategory android:title="@string/omnipod_preference_category_confirmation_beeps">
+
+        <SwitchPreference
+            android:defaultValue="true"
+            android:key="@string/key_omnipod_bolus_beeps_enabled"
+            android:title="@string/omnipod_config_bolus_beeps_enabled" />
+
+        <SwitchPreference
+            android:defaultValue="true"
+            android:key="@string/key_omnipod_basal_beeps_enabled"
+            android:title="@string/omnipod_config_basal_beeps_enabled" />
+
+        <SwitchPreference
+            android:defaultValue="true"
+            android:key="@string/key_omnipod_smb_beeps_enabled"
+            android:title="@string/omnipod_config_smb_beeps_enabled" />
+
+        <SwitchPreference
+            android:defaultValue="false"
+            android:key="@string/key_omnipod_tbr_beeps_enabled"
+            android:title="@string/omnipod_config_tbr_beeps_enabled" />
+
+    </PreferenceCategory>
+
+    <PreferenceCategory android:title="@string/omnipod_preference_category_alerts">
+
+        <SwitchPreference
+            android:defaultValue="true"
+            android:key="@string/key_omnipod_expiration_reminder_enabled"
+            android:title="@string/omnipod_config_expiration_reminder_enabled" />
+
+        <info.nightscout.androidaps.utils.textValidator.ValidatingEditTextPreference
+            android:defaultValue="9"
+            android:dependency="@string/key_omnipod_expiration_reminder_enabled"
+            android:digits="0123456789"
+            android:inputType="number"
+            android:key="@string/key_omnipod_expiration_reminder_hours_before_shutdown"
+            android:title="@string/omnipod_config_expiration_reminder_hours_before_shutdown"
+            validate:maxNumber="24"
+            validate:minNumber="2"
+            validate:testType="numericRange" />
+
+        <SwitchPreference
+            android:defaultValue="true"
+            android:key="@string/key_omnipod_low_reservoir_alert_enabled"
+            android:title="@string/omnipod_config_low_reservoir_alert_enabled" />
+
+        <info.nightscout.androidaps.utils.textValidator.ValidatingEditTextPreference
+            android:defaultValue="20"
+            android:dependency="@string/key_omnipod_low_reservoir_alert_enabled"
+            android:digits="0123456789"
+            android:inputType="number"
+            android:key="@string/key_omnipod_low_reservoir_alert_units"
+            android:title="@string/omnipod_config_low_reservoir_alert_units"
+            validate:maxNumber="50"
+            validate:minNumber="5"
+            validate:testType="numericRange" />
+
+        <SwitchPreference
+            android:defaultValue="false"
+            android:key="@string/key_omnipod_automatically_acknowledge_alerts_enabled"
+            android:title="@string/omnipod_config_automatically_acknowledge_alerts" />
+
+    </PreferenceCategory>
+
+    <PreferenceCategory android:title="@string/omnipod_preference_category_notifications">
+
+        <SwitchPreference
+            android:defaultValue="false"
+            android:key="@string/key_omnipod_notification_uncertain_tbr_sound_enabled"
+            android:title="@string/omnipod_config_notification_uncertain_tbr_sound_enabled" />
+
+        <SwitchPreference
+            android:defaultValue="true"
+            android:key="@string/key_omnipod_notification_uncertain_smb_sound_enabled"
+            android:title="@string/omnipod_config_notification_uncertain_smb_sound_enabled" />
+
+        <SwitchPreference
+            android:defaultValue="true"
+            android:key="@string/key_omnipod_notification_uncertain_bolus_sound_enabled"
+            android:title="@string/omnipod_config_notification_uncertain_bolus_sound_enabled" />
+
+    </PreferenceCategory>
+
+    <PreferenceCategory android:title="@string/omnipod_preference_category_other">
+
+        <SwitchPreference
+            android:defaultValue="false"
+            android:key="@string/key_omnipod_suspend_delivery_button_enabled"
+            android:title="@string/omnipod_config_suspend_delivery_button_enabled" />
+
+        <SwitchPreference
+            android:defaultValue="false"
+            android:key="@string/key_omnipod_pulse_log_button_enabled"
+            android:title="@string/omnipod_config_pulse_log_button_enabled" />
+
+        <SwitchPreference
+            android:defaultValue="false"
+            android:key="@string/key_omnipod_riley_link_stats_button_enabled"
+            android:title="@string/omnipod_config_rileylink_stats_button_enabled" />
+
+        <SwitchPreference
+            android:defaultValue="true"
+            android:key="@string/key_omnipod_time_change_event_enabled"
+            android:title="@string/omnipod_config_time_change_enabled" />
+
+    </PreferenceCategory>
+
+</androidx.preference.PreferenceScreen>

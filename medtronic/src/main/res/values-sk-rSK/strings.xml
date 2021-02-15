@@ -81,4 +81,6 @@
     <string name="common_on">ZAP</string>
     <string name="common_off">VYP</string>
     <string name="pump_time_updated">Čas v pumpe bol aktualizovaný</string>
+    <string name="set_neutral_temps_title">Nastaviť neutrálny dočasný bazál</string>
+    <string name="set_neutral_temps_summary">Ak je povolená táto možnosť, zastaví sa dočasný bazál pred koncom každej hodiny. To môže u niektorých púmp pomôcť zastaviť pípanie/vibrácie na celú hodinu.</string>
 </resources>

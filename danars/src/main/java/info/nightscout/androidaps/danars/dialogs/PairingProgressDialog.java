@@ -16,18 +16,19 @@ import javax.inject.Inject;
 
 import dagger.android.support.DaggerDialogFragment;
 import info.nightscout.androidaps.danars.R;
-import info.nightscout.androidaps.danars.databinding.DanarsPairingProgressDialogBinding;
-import info.nightscout.androidaps.plugins.bus.RxBusWrapper;
 import info.nightscout.androidaps.danars.activities.PairingHelperActivity;
+import info.nightscout.androidaps.danars.databinding.DanarsPairingProgressDialogBinding;
 import info.nightscout.androidaps.danars.events.EventDanaRSPairingSuccess;
+import info.nightscout.androidaps.plugins.bus.RxBusWrapper;
 import info.nightscout.androidaps.utils.FabricPrivacy;
 import info.nightscout.androidaps.utils.resources.ResourceHelper;
+import info.nightscout.androidaps.utils.rx.AapsSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
-import io.reactivex.schedulers.Schedulers;
 
 
 public class PairingProgressDialog extends DaggerDialogFragment {
 
+    @Inject AapsSchedulers aapsSchedulers;
     @Inject ResourceHelper resourceHelper;
     @Inject RxBusWrapper rxBus;
     @Inject FabricPrivacy fabricPrivacy;
@@ -60,8 +61,10 @@ public class PairingProgressDialog extends DaggerDialogFragment {
                     FragmentActivity activity = getActivity();
                     if (activity != null) {
                         activity.runOnUiThread(() -> {
-                            binding.danarsPairingprogressProgressbar.setProgress(100);
-                            binding.danarsPairingprogressStatus.setText(R.string.danars_pairingok);
+                            if (binding != null) {
+                                binding.danarsPairingprogressProgressbar.setProgress(100);
+                                binding.danarsPairingprogressStatus.setText(R.string.danars_pairingok);
+                            }
                             try {
                                 Thread.sleep(1000);
                             } catch (InterruptedException ignored) {
@@ -72,7 +75,7 @@ public class PairingProgressDialog extends DaggerDialogFragment {
                         dismiss();
                     return;
                 }
-                binding.danarsPairingprogressProgressbar.setProgress(i * 5);
+                if (binding != null) binding.danarsPairingprogressProgressbar.setProgress(i * 5);
                 try {
                     Thread.sleep(1000);
                 } catch (InterruptedException ignored) {
@@ -81,9 +84,11 @@ public class PairingProgressDialog extends DaggerDialogFragment {
             FragmentActivity activity = getActivity();
             if (activity != null) {
                 activity.runOnUiThread(() -> {
-                    binding.danarsPairingprogressProgressbar.setProgress(100);
-                    binding.danarsPairingprogressStatus.setText(R.string.danars_pairingtimedout);
-                    binding.ok.setVisibility(View.VISIBLE);
+                    if (binding != null) {
+                        binding.danarsPairingprogressProgressbar.setProgress(100);
+                        binding.danarsPairingprogressStatus.setText(R.string.danars_pairingtimedout);
+                        binding.ok.setVisibility(View.VISIBLE);
+                    }
                 });
             }
         };
@@ -110,7 +115,7 @@ public class PairingProgressDialog extends DaggerDialogFragment {
         super.onResume();
         disposable.add(rxBus
                 .toObservable(EventDanaRSPairingSuccess.class)
-                .observeOn(Schedulers.io())
+                .observeOn(aapsSchedulers.getIo())
                 .subscribe(event -> pairingEnded = true, fabricPrivacy::logException)
         );
         if (pairingEnded) dismiss();
@@ -131,12 +136,20 @@ public class PairingProgressDialog extends DaggerDialogFragment {
         disposable.clear();
     }
 
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        binding = null;
+    }
+
     private void setViews() {
-        binding.danarsPairingprogressProgressbar.setMax(100);
-        binding.danarsPairingprogressProgressbar.setProgress(0);
-        binding.danarsPairingprogressStatus.setText(resourceHelper.gs(R.string.danars_waitingforpairing));
-        binding.ok.setVisibility(View.GONE);
-        binding.ok.setOnClickListener(v -> dismiss());
+        if (binding != null) {
+            binding.danarsPairingprogressProgressbar.setMax(100);
+            binding.danarsPairingprogressProgressbar.setProgress(0);
+            binding.danarsPairingprogressStatus.setText(resourceHelper.gs(R.string.danars_waitingforpairing));
+            binding.ok.setVisibility(View.GONE);
+            binding.ok.setOnClickListener(v -> dismiss());
+        }
         handler.post(runnable);
     }
 

@@ -6,6 +6,8 @@ import android.content.Intent
 import android.content.ServiceConnection
 import android.os.Build
 import android.os.IBinder
+import androidx.annotation.RequiresApi
+import info.nightscout.androidaps.activities.ErrorHelperActivity
 import info.nightscout.androidaps.interfaces.NotificationHolderInterface
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -20,6 +22,7 @@ import javax.inject.Singleton
     Context.startForegroundService() did not then call Service.startForeground(): ServiceRecord{e317f7e u0 info.nightscout.nsclient/info.nightscout.androidaps.services.AlarmSoundService}
 
  */
+@RequiresApi(Build.VERSION_CODES.O)
 @Singleton
 class AlarmSoundServiceHelper @Inject constructor(
     private val notificationHolder: NotificationHolderInterface
@@ -33,10 +36,7 @@ class AlarmSoundServiceHelper @Inject constructor(
 
                 val alarmSoundService: AlarmSoundService = binder.getService()
 
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)
-                    context.startForegroundService(getServiceIntent(context, sound))
-                else
-                    context.startService(getServiceIntent(context, sound))
+                context.startForegroundService(getServiceIntent(context, sound))
 
                 // This is the key: Without waiting Android Framework to call this method
                 // inside Service.onCreate(), immediately call here to post the notification.
@@ -47,7 +47,6 @@ class AlarmSoundServiceHelper @Inject constructor(
             }
 
             override fun onServiceDisconnected(name: ComponentName?) {
-                TODO("Not yet implemented")
             }
         }
 
@@ -58,10 +57,7 @@ class AlarmSoundServiceHelper @Inject constructor(
             // Just call startForegroundService instead since we cannot bind a service to a
             // broadcast receiver context. The service also have to call startForeground in
             // this case.
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)
-                context.startForegroundService(getServiceIntent(context, sound))
-            else
-                context.startService(getServiceIntent(context, sound))
+            context.startForegroundService(getServiceIntent(context, sound))
         }
     }
 
@@ -72,7 +68,7 @@ class AlarmSoundServiceHelper @Inject constructor(
 
     private fun getServiceIntent(context: Context, sound: Int): Intent {
         val alarm = Intent(context, AlarmSoundService::class.java)
-        alarm.putExtra("soundid", sound)
+        alarm.putExtra(ErrorHelperActivity.SOUND_ID, sound)
         return alarm
     }
 }

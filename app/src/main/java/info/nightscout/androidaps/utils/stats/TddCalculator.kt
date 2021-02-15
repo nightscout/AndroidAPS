@@ -1,9 +1,9 @@
 package info.nightscout.androidaps.utils.stats
 
+import android.content.Context
 import android.text.Spanned
 import android.util.LongSparseArray
 import dagger.android.HasAndroidInjector
-import info.nightscout.androidaps.MainApp
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.db.TDD
 import info.nightscout.androidaps.interfaces.ActivePluginProvider
@@ -21,6 +21,7 @@ import info.nightscout.androidaps.utils.HtmlHelper
 import info.nightscout.androidaps.utils.MidnightTime
 import info.nightscout.androidaps.utils.T
 import info.nightscout.androidaps.utils.resources.ResourceHelper
+import info.nightscout.androidaps.utils.rx.AapsSchedulers
 import info.nightscout.androidaps.utils.sharedPreferences.SP
 import javax.inject.Inject
 
@@ -29,15 +30,16 @@ class TddCalculator @Inject constructor(
     aapsLogger: AAPSLogger,
     rxBus: RxBusWrapper,
     resourceHelper: ResourceHelper,
-    val mainApp: MainApp,
-    val sp: SP,
-    val activePlugin: ActivePluginProvider,
-    val profileFunction: ProfileFunction,
+    context: Context,
+    private val aapsSchedulers: AapsSchedulers,
+    private val sp: SP,
+    private val activePlugin: ActivePluginProvider,
+    private val profileFunction: ProfileFunction,
     fabricPrivacy: FabricPrivacy,
     nsUpload: NSUpload,
     private val dateUtil: DateUtil,
     uploadQueue: UploadQueue
-) : TreatmentsPlugin(injector, aapsLogger, rxBus, resourceHelper, mainApp, sp, profileFunction, activePlugin, nsUpload, fabricPrivacy, dateUtil, uploadQueue) {
+) : TreatmentsPlugin(injector, aapsLogger, rxBus, aapsSchedulers, resourceHelper, context, sp, profileFunction, activePlugin, nsUpload, fabricPrivacy, dateUtil, uploadQueue) {
 
     init {
         service = TreatmentService(injector) // plugin is not started

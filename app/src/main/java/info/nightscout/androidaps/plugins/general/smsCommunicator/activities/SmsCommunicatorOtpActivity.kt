@@ -14,6 +14,8 @@ import com.google.common.primitives.Ints.min
 import com.google.zxing.qrcode.decoder.ErrorCorrectionLevel
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.activities.NoSplashAppCompatActivity
+import info.nightscout.androidaps.databinding.ActivitySmscommunicatorOtpBinding
+import info.nightscout.androidaps.logging.UserEntryLogger
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper
 import info.nightscout.androidaps.plugins.general.smsCommunicator.SmsCommunicatorPlugin
 import info.nightscout.androidaps.plugins.general.smsCommunicator.otp.OneTimePassword
@@ -21,35 +23,38 @@ import info.nightscout.androidaps.plugins.general.smsCommunicator.otp.OneTimePas
 import info.nightscout.androidaps.utils.FabricPrivacy
 import info.nightscout.androidaps.utils.ToastUtils
 import info.nightscout.androidaps.utils.alertDialogs.OKDialog
-import info.nightscout.androidaps.utils.resources.ResourceHelper
-import kotlinx.android.synthetic.main.activity_smscommunicator_otp.*
 import net.glxn.qrgen.android.QRCode
 import javax.inject.Inject
 
 class SmsCommunicatorOtpActivity : NoSplashAppCompatActivity() {
+
     @Inject lateinit var fabricPrivacy: FabricPrivacy
     @Inject lateinit var rxBus: RxBusWrapper
     @Inject lateinit var smsCommunicatorPlugin: SmsCommunicatorPlugin
     @Inject lateinit var otp: OneTimePassword
-    @Inject lateinit var resourceHelper: ResourceHelper
+    @Inject lateinit var uel: UserEntryLogger
+
+    private lateinit var binding: ActivitySmscommunicatorOtpBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         window.setFlags(WindowManager.LayoutParams.FLAG_SECURE, WindowManager.LayoutParams.FLAG_SECURE)
-        setContentView(R.layout.activity_smscommunicator_otp)
 
-        smscommunicator_otp_verify_edit.addTextChangedListener(object : TextWatcher {
+        binding = ActivitySmscommunicatorOtpBinding.inflate(layoutInflater)
+        setContentView(binding.root)
+
+        binding.otpVerifyEdit.addTextChangedListener(object : TextWatcher {
             override fun afterTextChanged(s: Editable) {
                 val checkResult = otp.checkOTP(s.toString())
 
-                smscommunicator_otp_verify_label.text = when (checkResult) {
+                binding.otpVerifyLabel.text = when (checkResult) {
                     OneTimePasswordValidationResult.OK                 -> "OK"
                     OneTimePasswordValidationResult.ERROR_WRONG_LENGTH -> "INVALID SIZE!"
                     OneTimePasswordValidationResult.ERROR_WRONG_PIN    -> "WRONG PIN"
                     OneTimePasswordValidationResult.ERROR_WRONG_OTP    -> "WRONG OTP"
                 }
 
-                smscommunicator_otp_verify_label.setTextColor(when (checkResult) {
+                binding.otpVerifyLabel.setTextColor(when (checkResult) {
                     OneTimePasswordValidationResult.OK                 -> Color.GREEN
                     OneTimePasswordValidationResult.ERROR_WRONG_LENGTH -> Color.YELLOW
                     OneTimePasswordValidationResult.ERROR_WRONG_PIN    -> Color.RED
@@ -62,18 +67,19 @@ class SmsCommunicatorOtpActivity : NoSplashAppCompatActivity() {
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
         })
 
-        actions_smscommunicator_otp_reset.setOnClickListener {
+        binding.otpReset.setOnClickListener {
             OKDialog.showConfirmation(this,
                 resourceHelper.gs(R.string.smscommunicator_otp_reset_title),
                 resourceHelper.gs(R.string.smscommunicator_otp_reset_prompt),
                 Runnable {
+                    uel.log("OTP RESET")
                     otp.ensureKey(true)
                     updateGui()
                     ToastUtils.Long.infoToast(this, resourceHelper.gs(R.string.smscommunicator_otp_reset_successful))
                 })
         }
 
-        smscommunicator_otp_provisioning.setOnLongClickListener {
+        binding.otpProvisioning.setOnLongClickListener {
             OKDialog.showConfirmation(this,
                 resourceHelper.gs(R.string.smscommunicator_otp_export_title),
                 resourceHelper.gs(R.string.smscommunicator_otp_export_prompt),
@@ -82,6 +88,7 @@ class SmsCommunicatorOtpActivity : NoSplashAppCompatActivity() {
                     val clip = ClipData.newPlainText("OTP Secret", otp.provisioningSecret())
                     clipboard.primaryClip = clip
                     ToastUtils.Long.infoToast(this, resourceHelper.gs(R.string.smscommunicator_otp_export_successful))
+                    uel.log("OTP EXPORT")
                 })
 
             true
@@ -105,12 +112,12 @@ class SmsCommunicatorOtpActivity : NoSplashAppCompatActivity() {
 
         if (provURI != null) {
             val myBitmap = QRCode.from(provURI).withErrorCorrection(ErrorCorrectionLevel.H).withSize(dim, dim).bitmap()
-            smscommunicator_otp_provisioning.setImageBitmap(myBitmap)
-            smscommunicator_otp_provisioning.visibility = View.VISIBLE
+            binding.otpProvisioning.setImageBitmap(myBitmap)
+            binding.otpProvisioning.visibility = View.VISIBLE
         } else {
-            smscommunicator_otp_provisioning.visibility = View.GONE
+            binding.otpProvisioning.visibility = View.GONE
         }
 
-        smscommunicator_otp_verify_edit.text = smscommunicator_otp_verify_edit.text
+        binding.otpVerifyEdit.text = binding.otpVerifyEdit.text
     }
 }

@@ -16,12 +16,12 @@ import info.nightscout.androidaps.plugins.general.overview.events.EventDismissNo
 import info.nightscout.androidaps.plugins.general.overview.events.EventNewNotification
 import info.nightscout.androidaps.plugins.general.overview.notifications.NotificationStore
 import info.nightscout.androidaps.utils.FabricPrivacy
-import info.nightscout.androidaps.utils.extensions.plusAssign
 import info.nightscout.androidaps.utils.extensions.*
 import info.nightscout.androidaps.utils.resources.ResourceHelper
+import info.nightscout.androidaps.utils.rx.AapsSchedulers
 import info.nightscout.androidaps.utils.sharedPreferences.SP
 import io.reactivex.disposables.CompositeDisposable
-import io.reactivex.schedulers.Schedulers
+import io.reactivex.rxkotlin.plusAssign
 import org.json.JSONObject
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -34,6 +34,7 @@ class OverviewPlugin @Inject constructor(
     private val rxBus: RxBusWrapper,
     private val sp: SP,
     aapsLogger: AAPSLogger,
+    private val aapsSchedulers: AapsSchedulers,
     resourceHelper: ResourceHelper,
     private val config: Config
 ) : PluginBase(PluginDescription()
@@ -56,18 +57,18 @@ class OverviewPlugin @Inject constructor(
         notificationStore.createNotificationChannel()
         disposable += rxBus
             .toObservable(EventNewNotification::class.java)
-            .observeOn(Schedulers.io())
+            .observeOn(aapsSchedulers.io)
             .subscribe({ n ->
                 if (notificationStore.add(n.notification))
                     rxBus.send(EventRefreshOverview("EventNewNotification"))
-            }, { fabricPrivacy.logException(it) })
+            }, fabricPrivacy::logException)
         disposable += rxBus
             .toObservable(EventDismissNotification::class.java)
-            .observeOn(Schedulers.io())
+            .observeOn(aapsSchedulers.io)
             .subscribe({ n ->
                 if (notificationStore.remove(n.id))
                     rxBus.send(EventRefreshOverview("EventDismissNotification"))
-            }, { fabricPrivacy.logException(it) })
+            }, fabricPrivacy::logException)
     }
 
     override fun onStop() {

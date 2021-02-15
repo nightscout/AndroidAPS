@@ -69,6 +69,7 @@
     <string name="menu_ecarb">eKarbo</string>
     <string name="menu_settings">Innstillinger</string>
     <string name="menu_status">Status</string>
+    <string name="menu_resync">Re-synk</string>
     <string name="menu_prime_fill">Prime/fylling</string>
     <string name="menu_none">Ingen</string>
     <string name="menu_default">Standard</string>
@@ -89,6 +90,9 @@
     <string name="action_confirm">BEKREFT</string>
     <string name="action_timeshift">tidsforskyving</string>
     <string name="action_bolus">bolus</string>
+    <string name="bolus_progress">Bolus fremdrift</string>
+    <string name="press_to_cancel">trykk for å avbryte</string>
+    <string name="cancel_bolus">AVBRYT BOLUS</string>
     <string name="status_pump">Pumpe</string>
     <string name="status_loop">Loop</string>
     <string name="status_cpp">CPP</string>
@@ -128,4 +132,8 @@
     <string name="digitalstyle_pref_your_color">Dine farger:</string>
     <string name="digitalstyle_pref_your_color_saturation">Din fargemetning:</string>
     <string name="digitalstyle_pref_your_color_opacity">Din farge gjennomsiktighet:</string>
+    <string name="bolus_progress_channel_name">AAPS bolus framdrift</string>
+    <string name="bolus_progress_silent_channel_name">AAPS stille bolus framdrift</string>
+    <string name="bolus_progress_channel_description">Bolus framdrift og avbryt</string>
+    <string name="bolus_progress_silent_channel_description">Bolus framdrift og avbryt med mindre vibrasjoner</string>
 </resources>

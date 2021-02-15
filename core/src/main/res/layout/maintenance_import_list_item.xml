@@ -1,0 +1,169 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:card_view="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/careportal_cardview"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_gravity="center"
+    card_view:cardBackgroundColor="?android:colorBackground">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="1dp"
+        android:layout_marginBottom="3dp"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:baselineAligned="true"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:layout_width="18dp"
+                android:layout_height="18dp"
+                android:layout_marginStart="5dp"
+                android:layout_marginTop="4dp"
+                android:layout_marginEnd="6dp"
+                android:layout_marginBottom="1dp"
+                card_view:srcCompat="@drawable/ic_meta_format"
+                android:tint="@color/importListFileName" />
+
+            <TextView
+                android:id="@+id/filelist_name"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:ellipsize="none"
+                android:maxLines="2"
+                android:paddingEnd="10dp"
+                android:scrollHorizontally="false"
+                android:text="File name here"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:textColor="@color/importListFileName"
+                tools:ignore="HardcodedText" />
+
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:baselineAligned="true"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/filelist_dir"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="29dp"
+                android:layout_weight="1"
+                android:ellipsize="none"
+                android:maxLines="2"
+
+                android:paddingEnd="10dp"
+                android:scrollHorizontally="false"
+                android:text="File dir here"
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:textColor="@color/importListFileName"
+                android:textSize="11sp"
+                tools:ignore="HardcodedText" />
+
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/metaline_name"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginTop="6dp"
+            android:orientation="horizontal">
+
+            <ImageView
+
+                android:layout_width="16dp"
+                android:layout_height="16dp"
+                android:layout_marginStart="30dp"
+                android:layout_marginTop="1dp"
+                android:layout_marginEnd="8dp"
+                android:layout_marginBottom="1dp"
+                card_view:srcCompat="@drawable/ic_meta_name"
+                android:tint="@color/importListAdditionalInfo" />
+
+            <TextView
+                android:id="@+id/meta_device_name"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="exported on this Patient phone"
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:textColor="@color/importListAdditionalInfo"
+                tools:ignore="HardcodedText" />
+
+
+        </LinearLayout>
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginTop="3dp"
+            android:orientation="horizontal">
+
+
+            <ImageView
+                android:id="@+id/meta_date_time_icon"
+                android:layout_width="16dp"
+                android:layout_height="16dp"
+                android:layout_marginStart="30dp"
+                android:layout_marginTop="1dp"
+                android:layout_marginEnd="8dp"
+                android:layout_marginBottom="1dp"
+                card_view:srcCompat="@drawable/ic_meta_date"
+                android:tint="@color/importListAdditionalInfo" />
+
+            <TextView
+                android:id="@+id/meta_date_time"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="exported how long ago"
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:textColor="@color/importListAdditionalInfo"
+                tools:ignore="HardcodedText" />
+
+            <TextView
+                android:id="@+id/meta_app_version"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="10dp"
+                android:text="v10.10.10.10"
+                android:textColor="@color/metadataTextWarning"
+                tools:ignore="HardcodedText" />
+
+            <TextView
+                android:id="@+id/meta_variant_format"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="10dp"
+                android:text="FLAVOUR"
+                android:textColor="@color/metadataOk"
+                tools:ignore="HardcodedText" />
+
+        </LinearLayout>
+
+
+        <View
+            android:layout_width="fill_parent"
+            android:layout_height="2dip"
+            android:layout_marginStart="5dp"
+            android:layout_marginTop="7dp"
+            android:layout_marginEnd="5dp"
+            android:layout_marginBottom="3dp"
+            android:background="@color/list_delimiter" />
+
+    </LinearLayout>
+
+</androidx.cardview.widget.CardView>

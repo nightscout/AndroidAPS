@@ -7,33 +7,93 @@
     tools:context=".plugins.general.overview.OverviewFragment">
 
     <ScrollView
-        android:id="@+id/overview_toppart_scrollbar"
-        android:layout_weight="1"
+        android:id="@+id/top_part_scrollbar"
         android:layout_width="wrap_content"
-        android:layout_height="0dp">
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        tools:ignore="UselessParent">
 
         <LinearLayout
+            android:id="@+id/inner_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
             <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/overview_notifications"
+                android:id="@+id/notifications"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" />
 
-            <include layout="@layout/overview_loop_pumpstatus_layout" />
+            <include
+                android:id="@+id/loop_pump_status_layout"
+                layout="@layout/overview_loop_pumpstatus_layout" />
 
-            <include layout="@layout/overview_info_layout" />
+            <include
+                android:id="@+id/info_layout"
+                layout="@layout/overview_info_layout" />
 
-            <include layout="@layout/overview_statuslights_layout" />
+            <include
+                android:id="@+id/status_lights_layout"
+                layout="@layout/overview_statuslights_layout" />
 
-            <include layout="@layout/overview_graphs_layout" />
+            <com.google.android.flexbox.FlexboxLayout xmlns:app="http://schemas.android.com/apk/res-auto"
+                android:id="@+id/nsclient_layout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="?attr/colorControlHighlight"
+                app:alignContent="stretch"
+                app:alignItems="stretch"
+                app:flexDirection="row"
+                app:flexWrap="wrap"
+                app:justifyContent="center">
+
+                <TextView
+                    android:id="@+id/pump"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingStart="4sp"
+                    android:paddingEnd="4sp"
+                    android:text="Pump: running"
+                    android:textColor="@android:color/white"
+                    android:textSize="16sp"
+                    tools:ignore="HardcodedText" />
+
+                <TextView
+                    android:id="@+id/openaps"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:paddingStart="4sp"
+                    android:paddingEnd="4sp"
+                    android:text="OpenAPS: 3 min ago"
+                    android:textColor="@android:color/white"
+                    android:textSize="16sp"
+                    tools:ignore="HardcodedText" />
+
+                <TextView
+                    android:id="@+id/uploader"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:paddingStart="4sp"
+                    android:paddingEnd="4sp"
+                    android:text="Uploader: 84%"
+                    android:textColor="@android:color/white"
+                    android:textSize="16sp"
+                    tools:ignore="HardcodedText" />
+
+            </com.google.android.flexbox.FlexboxLayout>
+
+            <include
+                android:id="@+id/graphs_layout"
+                layout="@layout/overview_graphs_layout" />
 
         </LinearLayout>
 
     </ScrollView>
 
-    <include layout="@layout/overview_buttons_layout" />
+    <include
+        android:id="@+id/buttons_layout"
+        layout="@layout/overview_buttons_layout" />
 
 </LinearLayout>

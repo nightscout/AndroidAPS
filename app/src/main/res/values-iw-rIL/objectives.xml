@@ -16,7 +16,7 @@
     <string name="objectives_maxiob_objective">כוונון הלולאה הסגורה, תוך העלאה של ערך ה- IOB מעל 0 ובסופו של דבר הורדת ערכי המטרה של רמת הסוכר</string>
     <string name="objectives_maxiob_gate">לפני הורדת ערך רמת הסוכר, הפעל במשך מס\' ימים, עם לפחות לילה אחד ללא התרעת רמת סוכר נמוכה</string>
     <string name="objectives_autosens_objective">במידת הצורך, בצעו התאמת בזאלי ויחסים, ולאחר מכן הפעילו את Autosens</string>
-    <string name="objectives_autosens_gate">שבוע של הפעלה מוצלחת של הלולאה במשך היום, עם הוספת ערכי פחמימות רגילים</string>
+    <string name="objectives_autosens_gate">שבוע של הפעלה מוצלחת של הלולאה במשך שעות היום, עם הוספת ערכי פחמימות רגילים</string>
     <string name="objectives_ama_objective">הפעלת פונקציות נוספות לשימוש במשך היום, לדוגמה AMA (סיוע ארוחות מתקדם)</string>
     <string name="objectives_smb_objective">הפעלת פונקציות נוספות לשימוש במשך היום, כגון סופר מיקרו בולוסים (SMB)</string>
     <string name="objectives_auto_objective">הפעלת אוטומציה</string>
@@ -40,7 +40,7 @@
     <string name="codeaccepted">קוד אושר</string>
     <string name="codeinvalid">קוד בלתי חוקי</string>
     <string name="objectives_exam_objective">הוכח את הידע שלך</string>
-    <string name="objectives_exam_gate">למדו וענו נכונה על שאלות</string>
+    <string name="objectives_exam_gate">למדו את השאלות.  ניתנות לכם ארבע תשובות אפשריות לכל שאלה. ייתכן שיש יותר מתשובה נכונה אחת. בחרו את כל התשובות הנכונות ובחרו אישור.</string>
     <string name="answerdisabledto">השבת תשובה מושבתת עד: %1$s</string>
     <string name="wronganswer">תשובה שגויה!</string>
     <string name="unfinshed_button">הבא שלא נעשה</string>
@@ -53,22 +53,4 @@
     <string name="notconnected">אין חיבור לאינטרנט</string>
     <string name="failedretrievetime">אחזור השעה נכשל</string>
     <string name="requirementnotmet">דרישות המשימה לא נענו</string>
-    <plurals name="objective_days">
-        <item quantity="one">%1$d יום</item>
-        <item quantity="two">%1$d ימים</item>
-        <item quantity="many">%1$d ימים</item>
-        <item quantity="other">%1$d ימים</item>
-    </plurals>
-    <plurals name="objective_hours">
-        <item quantity="one">%1$d שעה</item>
-        <item quantity="two">%1$d שעות</item>
-        <item quantity="many">%1$d שעות</item>
-        <item quantity="other">%1$d שעות</item>
-    </plurals>
-    <plurals name="objective_minutes">
-        <item quantity="one">%1$d דקה</item>
-        <item quantity="two">%1$d דקות</item>
-        <item quantity="many">%1$d דקות</item>
-        <item quantity="other">%1$d דקות</item>
-    </plurals>
 </resources>

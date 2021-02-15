@@ -2,42 +2,49 @@
 
 buildscript {
     ext {
-        kotlin_version = '1.4.20'
+        kotlin_version = '1.4.30'
         coreVersion = '1.3.2'
-        rxjava_version = '2.2.19'
+        rxjava_version = '2.2.21'
         rxandroid_version = '2.1.1'
         rxkotlin_version = '2.4.0'
-        room_version = '2.2.5'
-        lifecycle_version = '2.2.0'
-        dagger_version = '2.29.1'
-        coroutinesVersion = '1.3.7'
-        activityVersion = '1.2.0-beta01'
-        fragmentktx_version = '1.3.0-beta01'
+        room_version = '2.2.6'
+        lifecycle_version = '2.3.0'
+        dagger_version = '2.32'
+        coroutinesVersion = '1.4.1'
+        activityVersion = '1.2.0'
+        fragmentktx_version = '1.3.0-rc02'
         ormLiteVersion = '4.46'
-        nav_version = '2.3.1'
-        appcompat_verison = '1.2.0'
-        material_version = '1.2.1'
+        nav_version = '2.3.3'
+        appcompat_version = '1.2.0'
+        material_version = '1.3.0'
         constraintlayout_version = '2.0.4'
         preferencektx_version = '1.1.1'
         commonslang3_version = '3.11'
-        work_version = '2.4.0'
+        commonscodec_version = '1.15'
+        jodatime_version = '2.10.10'
+        work_version = '2.5.0'
 
         junit_version = '4.13.1'
-        mockitoVersion = '2.8.47'
-        powermockVersion = "1.7.3"
+        mockitoVersion = '3.7.7'
+        powermockVersion = '2.0.9'
         dexmakerVersion = "1.2"
         retrofit2Version = '2.9.0'
         okhttp3Version = '4.9.0'
 
         androidx_junit = '1.1.2'
-        androidx_rules = '1.3.1-alpha02'
+        androidx_rules = '1.4.0-alpha04'
     }
     repositories {
         google()
-        jcenter()
+        mavenCentral()
+        jcenter() {
+            content {
+                includeModule("org.jetbrains.trove4j", "trove4j")
+            }
+        }
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:4.1.1'
+        classpath 'com.android.tools.build:gradle:4.0.1'
         classpath 'com.google.gms:google-services:4.3.4'
         classpath 'com.google.firebase:firebase-crashlytics-gradle:2.4.1'
 
@@ -51,8 +58,7 @@ buildscript {
 allprojects {
     repositories {
         google()
-        jcenter()
-
+        mavenCentral()
         maven {
             url "https://maven.google.com"
         }
@@ -63,6 +69,12 @@ allprojects {
             }
         }
         maven { url 'https://jitpack.io' }
+        jcenter() {
+            content {
+                includeModule("com.google.android", "flexbox")
+                includeModule("org.jetbrains.trove4j", "trove4j")
+            }
+        }
     }
     //Support @JvmDefault
     tasks.withType(org.jetbrains.kotlin.gradle.tasks.KotlinCompile).all {

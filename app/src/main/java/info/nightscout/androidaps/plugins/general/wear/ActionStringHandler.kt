@@ -8,6 +8,10 @@ import info.nightscout.androidaps.Constants
 import info.nightscout.androidaps.MainApp
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.dana.DanaPump
+import info.nightscout.androidaps.danaRKorean.DanaRKoreanPlugin
+import info.nightscout.androidaps.danaRv2.DanaRv2Plugin
+import info.nightscout.androidaps.danar.DanaRPlugin
+import info.nightscout.androidaps.danars.DanaRSPlugin
 import info.nightscout.androidaps.data.DetailedBolusInfo
 import info.nightscout.androidaps.data.Profile
 import info.nightscout.androidaps.db.CareportalEvent
@@ -18,27 +22,23 @@ import info.nightscout.androidaps.interfaces.ActivePluginProvider
 import info.nightscout.androidaps.interfaces.CommandQueueProvider
 import info.nightscout.androidaps.interfaces.Constraint
 import info.nightscout.androidaps.interfaces.PluginBase
+import info.nightscout.androidaps.interfaces.ProfileFunction
 import info.nightscout.androidaps.plugins.aps.loop.LoopPlugin
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper
 import info.nightscout.androidaps.plugins.configBuilder.ConstraintChecker
-import info.nightscout.androidaps.interfaces.ProfileFunction
 import info.nightscout.androidaps.plugins.general.overview.events.EventDismissNotification
+import info.nightscout.androidaps.plugins.general.wear.events.EventWearDoAction
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.IobCobCalculatorPlugin
-import info.nightscout.androidaps.danar.DanaRPlugin
-import info.nightscout.androidaps.danaRKorean.DanaRKoreanPlugin
-import info.nightscout.androidaps.danars.DanaRSPlugin
-import info.nightscout.androidaps.danaRv2.DanaRv2Plugin
 import info.nightscout.androidaps.plugins.pump.insight.LocalInsightPlugin
 import info.nightscout.androidaps.plugins.treatments.CarbsGenerator
 import info.nightscout.androidaps.queue.Callback
-import info.nightscout.androidaps.utils.DateUtil
-import info.nightscout.androidaps.utils.DecimalFormatter
-import info.nightscout.androidaps.utils.HardLimits
-import info.nightscout.androidaps.utils.SafeParse
-import info.nightscout.androidaps.utils.ToastUtils
+import info.nightscout.androidaps.utils.*
 import info.nightscout.androidaps.utils.resources.ResourceHelper
+import info.nightscout.androidaps.utils.rx.AapsSchedulers
 import info.nightscout.androidaps.utils.sharedPreferences.SP
 import info.nightscout.androidaps.utils.wizard.BolusWizard
+import io.reactivex.disposables.CompositeDisposable
+import io.reactivex.rxkotlin.plusAssign
 import java.text.DateFormat
 import java.text.DecimalFormat
 import java.text.SimpleDateFormat
@@ -50,6 +50,7 @@ import javax.inject.Singleton
 class ActionStringHandler @Inject constructor(
     private val sp: SP,
     private val rxBus: RxBusWrapper,
+    private val aapsSchedulers: AapsSchedulers,
     private val resourceHelper: ResourceHelper,
     private val injector: HasAndroidInjector,
     private val context: Context,
@@ -57,6 +58,7 @@ class ActionStringHandler @Inject constructor(
     private val profileFunction: ProfileFunction,
     private val loopPlugin: LoopPlugin,
     private val wearPlugin: WearPlugin,
+    private val fabricPrivacy: FabricPrivacy,
     private val commandQueue: CommandQueueProvider,
     private val activePlugin: ActivePluginProvider,
     private val iobCobCalculatorPlugin: IobCobCalculatorPlugin,
@@ -77,10 +79,18 @@ class ActionStringHandler @Inject constructor(
     private var lastConfirmActionString: String? = null
     private var lastBolusWizard: BolusWizard? = null
 
-    // TODO Adrian use RxBus instead of Lazy + cross dependency
+    private val disposable = CompositeDisposable()
+
+    init {
+        disposable += rxBus
+            .toObservable(EventWearDoAction::class.java)
+            .observeOn(aapsSchedulers.main)
+            .subscribe({ handleInitiate(it.action) }, fabricPrivacy::logException)
+    }
+
     @Synchronized
-    fun handleInitiate(actionString: String) {
-        if (!sp.getBoolean("wearcontrol", false)) return
+    private fun handleInitiate(actionString: String) {
+        if (!sp.getBoolean(R.string.key_wear_control, false)) return
         lastBolusWizard = null
         var rTitle = "CONFIRM" //TODO: i18n
         var rMessage = ""
@@ -182,20 +192,20 @@ class ActionStringHandler @Inject constructor(
                 return
             }
             val bgReading = iobCobCalculatorPlugin.actualBg()
-            if (bgReading == null && useBG) {
+            if (bgReading == null) {
                 sendError("No recent BG to base calculation on!")
                 return
             }
             val cobInfo = iobCobCalculatorPlugin.getCobInfo(false, "Wizard wear")
-            if (useCOB && (cobInfo.displayCob == null)) {
+            if (cobInfo.displayCob == null) {
                 sendError("Unknown COB! BG reading missing or recent app restart?")
                 return
             }
             val format = DecimalFormat("0.00")
             val formatInt = DecimalFormat("0")
             val bolusWizard = BolusWizard(injector).doCalc(profile, profileName, activePlugin.activeTreatments.tempTargetFromHistory,
-                carbsAfterConstraints, cobInfo.displayCob!!, bgReading!!.valueToUnits(profileFunction.getUnits()),
-                0.0, percentage.toDouble(), useBG, useCOB, useBolusIOB, useBasalIOB, false, useTT, useTrend)
+                carbsAfterConstraints, cobInfo.displayCob, bgReading.valueToUnits(profileFunction.getUnits()),
+                0.0, percentage.toDouble(), useBG, useCOB, useBolusIOB, useBasalIOB, false, useTT, useTrend, false)
             if (Math.abs(bolusWizard.insulinAfterConstraints - bolusWizard.calculatedTotalInsulin) >= 0.01) {
                 sendError("Insulin constraint violation!" +
                     "\nCannot deliver " + format.format(bolusWizard.calculatedTotalInsulin) + "!")
@@ -215,7 +225,7 @@ class ActionStringHandler @Inject constructor(
             if (useCOB) rMessage += "\nFrom" + formatInt.format(cobInfo.displayCob) + "g COB : " + format.format(bolusWizard.insulinFromCOB) + "U"
             if (useBG) rMessage += "\nFrom BG: " + format.format(bolusWizard.insulinFromBG) + "U"
             if (useBolusIOB) rMessage += "\nBolus IOB: " + format.format(bolusWizard.insulinFromBolusIOB) + "U"
-            if (useBasalIOB) rMessage += "\nBasal IOB: " + format.format(bolusWizard.insulinFromBasalsIOB) + "U"
+            if (useBasalIOB) rMessage += "\nBasal IOB: " + format.format(bolusWizard.insulinFromBasalIOB) + "U"
             if (useTrend) rMessage += "\nFrom 15' trend: " + format.format(bolusWizard.insulinFromTrend) + "U"
             if (percentage != 100) {
                 rMessage += "\nPercentage: " + format.format(bolusWizard.totalBeforePercentageAdjustment) + "U * " + percentage + "% -> ~" + format.format(bolusWizard.calculatedTotalInsulin) + "U"
@@ -463,7 +473,7 @@ class ActionStringHandler @Inject constructor(
 
     @Synchronized
     fun handleConfirmation(actionString: String) {
-        if (!sp.getBoolean("wearcontrol", false)) return
+        if (!sp.getBoolean(R.string.key_wear_control, false)) return
         //Guard from old or duplicate confirmations
         if (lastConfirmActionString == null) return
         if (lastConfirmActionString != actionString) return
@@ -618,13 +628,5 @@ class ActionStringHandler @Inject constructor(
         lastSentTimestamp = System.currentTimeMillis()
         lastConfirmActionString = null
         lastBolusWizard = null
-    } /*
-    public synchronized static void expectNotificationAction(String message, int id) {
-        String actionstring = "dismissoverviewnotification " + id;
-        WearPlugin.getPlugin().requestActionConfirmation("DISMISS", message, actionstring);
-        lastSentTimestamp = System.currentTimeMillis();
-        lastConfirmActionString = actionstring;
-        lastBolusWizard = null;
     }
-*/
 }
