@@ -1,8 +1,5 @@
 package info.nightscout.androidaps.utils
 
-import android.content.Context
-import android.content.Intent
-import android.provider.AlarmClock
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.Constants
 import info.nightscout.androidaps.R
@@ -21,20 +18,14 @@ import javax.inject.Singleton
 
 @Singleton
 class CarbTimer @Inject constructor(
-    private val context: Context,
     private val injector: HasAndroidInjector,
     private val resourceHelper: ResourceHelper,
-    private val automationPlugin: AutomationPlugin
+    private val automationPlugin: AutomationPlugin,
+    private val timerUtil: TimerUtil
 ) {
 
-    fun scheduleReminder(time: Long) = Intent(AlarmClock.ACTION_SET_TIMER).apply {
-        val length: Int = ((time - DateUtil.now()) / 1000).toInt()
-        flags = flags or Intent.FLAG_ACTIVITY_NEW_TASK
-        putExtra(AlarmClock.EXTRA_LENGTH, length)
-        putExtra(AlarmClock.EXTRA_SKIP_UI, true)
-        putExtra(AlarmClock.EXTRA_MESSAGE, resourceHelper.gs(R.string.timetoeat))
-        context.startActivity(this)
-    }
+    fun scheduleReminder(time: Long, text: String? = null) =
+        timerUtil.scheduleReminder(time, text ?: resourceHelper.gs(R.string.timetoeat))
 
     fun scheduleEatReminder() {
         val event = AutomationEvent(injector).apply {
