@@ -7,6 +7,7 @@ import android.content.ServiceConnection
 import android.os.Build
 import android.os.IBinder
 import androidx.annotation.RequiresApi
+import info.nightscout.androidaps.activities.ErrorHelperActivity
 import info.nightscout.androidaps.interfaces.NotificationHolderInterface
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -67,7 +68,7 @@ class AlarmSoundServiceHelper @Inject constructor(
 
     private fun getServiceIntent(context: Context, sound: Int): Intent {
         val alarm = Intent(context, AlarmSoundService::class.java)
-        alarm.putExtra("soundid", sound)
+        alarm.putExtra(ErrorHelperActivity.SOUND_ID, sound)
         return alarm
     }
 }

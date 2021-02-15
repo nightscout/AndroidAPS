@@ -114,7 +114,7 @@ class OpenAPSAMAFragment : DaggerFragment() {
         if (openAPSAMAPlugin.lastAPSRun != 0L) {
             binding.lastrun.text = dateUtil.dateAndTimeString(openAPSAMAPlugin.lastAPSRun)
         }
-        openAPSAMAPlugin.lastAutosensResult?.let {
+        openAPSAMAPlugin.lastAutosensResult.let {
             binding.autosensdata.text = JSONFormatter.format(it.json())
         }
     }

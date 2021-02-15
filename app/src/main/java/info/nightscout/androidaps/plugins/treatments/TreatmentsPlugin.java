@@ -1,7 +1,6 @@
 package info.nightscout.androidaps.plugins.treatments;
 
 import android.content.Context;
-import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -679,12 +678,7 @@ public class TreatmentsPlugin extends PluginBase implements TreatmentsInterface 
 
             String status = String.format(resourceHelper.gs(R.string.error_adding_treatment_message), treatment.insulin, (int) treatment.carbs, dateUtil.dateAndTimeString(treatment.date));
 
-            Intent i = new Intent(context, ErrorHelperActivity.class);
-            i.putExtra("soundid", R.raw.error);
-            i.putExtra("title", resourceHelper.gs(R.string.error_adding_treatment_title));
-            i.putExtra("status", status);
-            i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-            context.startActivity(i);
+            ErrorHelperActivity.Companion.runAlarm(context, status, resourceHelper.gs(R.string.error_adding_treatment_title), R.raw.error);
 
             Bundle bundle = new Bundle();
             bundle.putString(FirebaseAnalytics.Param.ITEM_LIST_ID, "TreatmentClash");

@@ -16,7 +16,7 @@
     <string name="objectives_maxiob_objective">כוונון הלולאה הסגורה, תוך העלאה של ערך ה- IOB מעל 0 ובסופו של דבר הורדת ערכי המטרה של רמת הסוכר</string>
     <string name="objectives_maxiob_gate">לפני הורדת ערך רמת הסוכר, הפעל במשך מס\' ימים, עם לפחות לילה אחד ללא התרעת רמת סוכר נמוכה</string>
     <string name="objectives_autosens_objective">במידת הצורך, בצעו התאמת בזאלי ויחסים, ולאחר מכן הפעילו את Autosens</string>
-    <string name="objectives_autosens_gate">שבוע של הפעלה מוצלחת של הלולאה במשך היום, עם הוספת ערכי פחמימות רגילים</string>
+    <string name="objectives_autosens_gate">שבוע של הפעלה מוצלחת של הלולאה במשך שעות היום, עם הוספת ערכי פחמימות רגילים</string>
     <string name="objectives_ama_objective">הפעלת פונקציות נוספות לשימוש במשך היום, לדוגמה AMA (סיוע ארוחות מתקדם)</string>
     <string name="objectives_smb_objective">הפעלת פונקציות נוספות לשימוש במשך היום, כגון סופר מיקרו בולוסים (SMB)</string>
     <string name="objectives_auto_objective">הפעלת אוטומציה</string>

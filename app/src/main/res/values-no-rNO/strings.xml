@@ -420,6 +420,7 @@
     <string name="basal_shortname">BAS</string>
     <string name="deviation_shortname">DEV</string>
     <string name="activity_shortname">AKT</string>
+    <string name="bgi_shortname">-BGI</string>
     <string name="abs_insulin_shortname">ABS</string>
     <string name="devslope_shortname">DEVSLOPE</string>
     <string name="nav_about">Om</string>
@@ -627,6 +628,7 @@
     <string name="ns_autobackfill_summary">Hente manglende BS data fra NS</string>
     <string name="loop_smbsetbypump_label">SMB satt med pumpe</string>
     <string name="overview_show_activity">Aktivitet</string>
+    <string name="overview_show_bgi">Blodsukkerpåvirkning</string>
     <string name="overview_show_sensitivity">Sensitivitet</string>
     <string name="overview_show_deviations">Avvik</string>
     <string name="overview_show_cob">Aktive KH (COB)</string>
@@ -1158,4 +1160,5 @@
     <string name="clear_filter">Nullstill filtre</string>
     <string name="trend_arrow">Trend pil</string>
     <string name="cannula">Kanyle</string>
+    <string name="userentry">Bruker registrering</string>
 </resources>

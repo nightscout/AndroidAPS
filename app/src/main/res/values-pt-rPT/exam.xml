@@ -96,7 +96,7 @@
     <string name="whatistrue">Seleccione todas as respostas correctas.</string>
     <string name="update_git">Precisa ter Git instalado e configurado no computador.</string>
     <string name="update_asap">Quando as versões actualizadas do AndroidAPS são lançadas, as versões anteriores podem ser remotamente limitadas após um tempo específico.</string>
-    <string name="update_keys">Deve guardar e anotar a localização da sua keystore e usar a mesma chave de assinatura para actualizações como para a instalação anterior.</string>
+    <string name="update_keys">Deve guardar e anotar a localização da sua keystore e utilizar a mesma chave de assinatura para actualizações como para a instalação anterior.</string>
     <string name="update_neverupdate">Nunca actualize se o sistema estiver a funcionar bem.</string>
     <string name="update_askfriend">Se tiver dificuldade em construir o apk, pode instalar um apk que foi construído por um amigo.</string>
     <string name="update_hint1">https://androidaps.readthedocs.io/en/latest/EN/Installing-AndroidAPS/Update-to-new-version.html#update-to-a-new-version-or-branch</string>
@@ -110,7 +110,7 @@
     <string name="troubleshooting_hint2">https://www.facebook.com/groups/AndroidAPSUsers/</string>
     <string name="troubleshooting_hint3">https://gitter.im/MilosKozak/AndroidAPS</string>
     <string name="insulin_label">Plugins de Insulina</string>
-    <string name="insulin_ultrarapid">Qual insulina deve usar com o plugin Ultra-Rapid Oref?</string>
+    <string name="insulin_ultrarapid">Qual insulina deve utilizar com o plugin Ultra-Rapid Oref?</string>
     <string name="insulin_fiasp">Fiasp®</string>
     <string name="insulin_novorapid">NovoRapid®/Novolog®</string>
     <string name="insulin_humalog">Humalog ®</string>
@@ -148,7 +148,7 @@
     <string name="breadgrams_calc">Se os níveis de glicose no sangue estiverem fora dos valores aceitáveis (muito baixos ou muito altos) a calculadora de bólus pode ser usada para fornecer sugestões para correções de hidratos ou insulina.</string>
     <string name="breadgrams_hint1">https://androidaps.readthedocs.io/en/latest/EN/Getting-Started/FAQ.html#insulin-to-carb-ratio-ic-g-u</string>
     <string name="extendedcarbs_label">hidratos-e</string>
-    <string name="extendedcarbs_handling">Para que poderia usar os hidratos-e (hidratos estendidos)?</string>
+    <string name="extendedcarbs_handling">Para que poderia utilizar os hidratos-e (hidratos estendidos)?</string>
     <string name="extendedcarbs_future">Para agendar hidratos no futuro, possivelmente distribuídos num intervalo (semelhante a um bólus estendido que distribui insulina por um intervalo).</string>
     <string name="extendedcarbs_free">Para registar hidratos \'livres\' ingeridos em exercícios que deseja esconder do AndroidAPS.</string>
     <string name="extendedcarbs_fat">Os hidratos-e (distribuídos no futuro) podem ajudar o AndroidAPS a lidar com comidas gorduras/proteínas elevadas.</string>
@@ -169,7 +169,7 @@
     <string name="isf_profile">A alteração do valor do FSI no seu perfil é suficiente para aplicar a mudança.</string>
     <string name="isf_hint1">https://androidaps.readthedocs.io/en/latest/EN/Getting-Started/FAQ.html#insulin-sensitivity-factor-isf-mmol-l-u-or-mg-dl-u</string>
     <string name="isf_hint2">https://androidaps.readthedocs.io/en/latest/EN/Usage/Profiles.html</string>
-    <string name="ic_multiple">Pode usar mais de um valor para o rácio I:HC no seu perfil.</string>
+    <string name="ic_multiple">Pode utilizar mais de um valor para o rácio I:HC no seu perfil.</string>
     <string name="ic_isf">Se alterar o seu FSI no perfil, também deve mudar a taxa de I:HC.</string>
     <string name="ic_label_exam">Rácio Insulina por Hidratos de Carbono (Rácio I:HC)</string>
     <string name="ic_increasingvalue">Rácios I:HC mais altos levam a menos insulina administrada para uma dada quantidade de hidratos.</string>
@@ -211,5 +211,5 @@
     <string name="basalhelp_facebook">Facebook</string>
     <string name="other_medication_label">Outra Medicação. Por favor, leia declaração abaixo e marque a caixa para aceitá-la.</string>
     <string name="other_medication_text">AndroidAPS reduz as taxas de basal ou suspende a administração de insulina para aumentar a quantidade de açúcar no sangue. Os medicamentos da classe inibidores SGLT2 (gliflozins) podem evitar aumentos da glicose no sangue e, por conseguinte, podem produzir uma perigosa deficiência de insulina que leva à DKA.
-\nOs nomes comuns são: Invokana®, Forxiga®, Jardiance®, Steglatro®, Suglat®, Apleway®, Deberza®, Synjardy®, Vokanamet®, Xigduo®,\n\nPrometo pelo presente que não tomarei tal medicação ao usar o AndroidAPS ou que desactivarei o loop antes de usar tais medicamentos.</string>
+\nOs nomes comuns são: Invokana®, Forxiga®, Jardiance®, Steglatro®, Suglat®, Apleway®, Deberza®, Synjardy®, Vokanamet®, Xigduo®,\n\nPrometo pelo presente que não tomarei tal medicação ao U«ytilizar o AndroidAPS ou que desactivarei o loop antes de usar tais medicamentos.</string>
 </resources>

@@ -420,6 +420,7 @@
     <string name="basal_shortname">БАЗ</string>
     <string name="deviation_shortname">ОТКЛН</string>
     <string name="activity_shortname">НАГР</string>
+    <string name="bgi_shortname">-BGI</string>
     <string name="abs_insulin_shortname">НАДО</string>
     <string name="devslope_shortname">ЛИНОТКЛН</string>
     <string name="nav_about">о приложении</string>
@@ -627,6 +628,7 @@
     <string name="ns_autobackfill_summary">Заполнять пропущенные данные из NS</string>
     <string name="loop_smbsetbypump_label">Супер микро болюс SMB задан помпой</string>
     <string name="overview_show_activity">Нагрузка</string>
+    <string name="overview_show_bgi">Влияние глюкозы</string>
     <string name="overview_show_sensitivity">Чувствительность</string>
     <string name="overview_show_deviations">Отклонение</string>
     <string name="overview_show_cob">Активные углеводы COB</string>
@@ -1160,4 +1162,5 @@ Context | Edit Context</string>
     <string name="clear_filter">Очистить фильтр</string>
     <string name="trend_arrow">Стрелка тренда</string>
     <string name="cannula">Катетер помпы</string>
+    <string name="userentry">Запись пользователя</string>
 </resources>

@@ -420,6 +420,7 @@
     <string name="basal_shortname">BAZ</string>
     <string name="deviation_shortname">ODCH</string>
     <string name="activity_shortname">AKT</string>
+    <string name="bgi_shortname">-BGI</string>
     <string name="abs_insulin_shortname">ABS</string>
     <string name="devslope_shortname">DEVSLOPE</string>
     <string name="nav_about">O aplikaci</string>
@@ -627,6 +628,7 @@
     <string name="ns_autobackfill_summary">Automaticky doplňovat chybějící glykémie z NS</string>
     <string name="loop_smbsetbypump_label">SMB provedené pumpou</string>
     <string name="overview_show_activity">Aktivita</string>
+    <string name="overview_show_bgi">Vliv na hladinu glukózy</string>
     <string name="overview_show_sensitivity">Citlivost</string>
     <string name="overview_show_deviations">Odchylky</string>
     <string name="overview_show_cob">Zbývající sacharidy</string>
@@ -1156,4 +1158,7 @@
     <string name="graph_menu_divider_header">Graf</string>
     <string name="chart_menu">Možnosti grafu</string>
     <string name="clear_filter">Vymazat filtr</string>
+    <string name="trend_arrow">Šipka trendu</string>
+    <string name="cannula">Kanyla</string>
+    <string name="userentry">Vstup uživatele</string>
 </resources>

@@ -351,12 +351,7 @@ class BolusWizard @Inject constructor(
                     commandQueue.bolus(this, object : Callback() {
                         override fun run() {
                             if (!result.success) {
-                                val i = Intent(ctx, ErrorHelperActivity::class.java)
-                                i.putExtra("soundid", R.raw.boluserror)
-                                i.putExtra("status", result.comment)
-                                i.putExtra("title", resourceHelper.gs(R.string.treatmentdeliveryerror))
-                                i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-                                ctx.startActivity(i)
+                                ErrorHelperActivity.runAlarm(ctx, result.comment, resourceHelper.gs(R.string.treatmentdeliveryerror), R.raw.boluserror)
                             } else
                                 carbTimer.scheduleEatReminder()
                         }
@@ -384,12 +379,7 @@ class BolusWizard @Inject constructor(
                         commandQueue.tempBasalAbsolute(0.0, 120, true, profile, object : Callback() {
                             override fun run() {
                                 if (!result.success) {
-                                    val i = Intent(ctx, ErrorHelperActivity::class.java)
-                                    i.putExtra("soundid", R.raw.boluserror)
-                                    i.putExtra("status", result.comment)
-                                    i.putExtra("title", resourceHelper.gs(R.string.tempbasaldeliveryerror))
-                                    i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-                                    ctx.startActivity(i)
+                                    ErrorHelperActivity.runAlarm(ctx, result.comment, resourceHelper.gs(R.string.tempbasaldeliveryerror), R.raw.boluserror)
                                 }
                             }
                         })
@@ -399,9 +389,9 @@ class BolusWizard @Inject constructor(
                             override fun run() {
                                 if (!result.success) {
                                     val i = Intent(ctx, ErrorHelperActivity::class.java)
-                                    i.putExtra("soundid", R.raw.boluserror)
-                                    i.putExtra("status", result.comment)
-                                    i.putExtra("title", resourceHelper.gs(R.string.tempbasaldeliveryerror))
+                                    i.putExtra(ErrorHelperActivity.SOUND_ID, R.raw.boluserror)
+                                    i.putExtra(ErrorHelperActivity.STATUS, result.comment)
+                                    i.putExtra(ErrorHelperActivity.TITLE, resourceHelper.gs(R.string.tempbasaldeliveryerror))
                                     i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
                                     ctx.startActivity(i)
                                 }
@@ -425,12 +415,7 @@ class BolusWizard @Inject constructor(
                         commandQueue.bolus(this, object : Callback() {
                             override fun run() {
                                 if (!result.success) {
-                                    val i = Intent(ctx, ErrorHelperActivity::class.java)
-                                    i.putExtra("soundid", R.raw.boluserror)
-                                    i.putExtra("status", result.comment)
-                                    i.putExtra("title", resourceHelper.gs(R.string.treatmentdeliveryerror))
-                                    i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-                                    ctx.startActivity(i)
+                                    ErrorHelperActivity.runAlarm(ctx, result.comment, resourceHelper.gs(R.string.treatmentdeliveryerror), R.raw.boluserror)
                                 }
                             }
                         })
