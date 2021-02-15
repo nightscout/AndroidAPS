@@ -16,7 +16,7 @@
             android:layout_height="match_parent"
             android:orientation="horizontal">
 
-            <Button
+            <info.nightscout.androidaps.utils.ui.SingleClickButton
                 android:id="@+id/runAma"
                 style="?android:attr/buttonStyle"
                 android:layout_width="match_parent"
