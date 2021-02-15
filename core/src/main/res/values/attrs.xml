@@ -95,4 +95,8 @@
 <attr name="activity" format="reference|color" />
 <attr name="bgi" format="reference|color" />
 <attr name="devslopepos" format="reference|color" />
+<attr name="bolus" format="reference|color" />
+<attr name="colorInsulinButton" format="reference|color" />
+<attr name="cobAlert" format="reference|color" />
+<attr name="info" format="reference|color" />
 </resources>

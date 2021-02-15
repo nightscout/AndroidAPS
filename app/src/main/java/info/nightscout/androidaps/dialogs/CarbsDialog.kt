@@ -29,7 +29,7 @@ import info.nightscout.androidaps.utils.DefaultValueHelper
 import info.nightscout.androidaps.utils.HtmlHelper
 import info.nightscout.androidaps.utils.ToastUtils
 import info.nightscout.androidaps.utils.alertDialogs.OKDialog
-import info.nightscout.androidaps.utils.extensions.formatColor
+import info.nightscout.androidaps.utils.extensions.formatColorFromAttrubute
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 import java.text.DecimalFormat
 import java.util.*
@@ -179,13 +179,13 @@ class CarbsDialog : DialogFragmentWithDate() {
 
         val activitySelected = binding.activityTt.isChecked
         if (activitySelected)
-            actions.add(resourceHelper.gs(R.string.temptargetshort) + ": " + (DecimalFormatter.to1Decimal(activityTT) + " " + unitLabel + " (" + resourceHelper.gs(R.string.format_mins, activityTTDuration) + ")").formatColor(resourceHelper,resourceHelper.getAttributeColor(context,R.attr.tempTargetConfirmation )))
+            actions.add(resourceHelper.gs(R.string.temptargetshort) + ": " + (DecimalFormatter.to1Decimal(activityTT) + " " + unitLabel + " (" + resourceHelper.gs(R.string.format_mins, activityTTDuration) + ")").formatColorFromAttrubute(resourceHelper.getAttributeColor(context,R.attr.tempTargetConfirmation )))
         val eatingSoonSelected = binding.eatingSoonTt.isChecked
         if (eatingSoonSelected)
-            actions.add(resourceHelper.gs(R.string.temptargetshort) + ": " + (DecimalFormatter.to1Decimal(eatingSoonTT) + " " + unitLabel + " (" + resourceHelper.gs(R.string.format_mins, eatingSoonTTDuration) + ")").formatColor(resourceHelper, resourceHelper.getAttributeColor(context,R.attr.tempTargetConfirmation )))
+            actions.add(resourceHelper.gs(R.string.temptargetshort) + ": " + (DecimalFormatter.to1Decimal(eatingSoonTT) + " " + unitLabel + " (" + resourceHelper.gs(R.string.format_mins, eatingSoonTTDuration) + ")").formatColorFromAttrubute(resourceHelper.getAttributeColor(context,R.attr.tempTargetConfirmation )))
         val hypoSelected = binding.hypoTt.isChecked
         if (hypoSelected)
-            actions.add(resourceHelper.gs(R.string.temptargetshort) + ": " + (DecimalFormatter.to1Decimal(hypoTT) + " " + unitLabel + " (" + resourceHelper.gs(R.string.format_mins, hypoTTDuration) + ")").formatColor(resourceHelper, resourceHelper.getAttributeColor(context,R.attr.tempTargetConfirmation )))
+            actions.add(resourceHelper.gs(R.string.temptargetshort) + ": " + (DecimalFormatter.to1Decimal(hypoTT) + " " + unitLabel + " (" + resourceHelper.gs(R.string.format_mins, hypoTTDuration) + ")").formatColorFromAttrubute(resourceHelper.getAttributeColor(context,R.attr.tempTargetConfirmation )))
         val timeOffset = binding.time.value.toInt()
         eventTime -= eventTime % 1000
         val time = eventTime + timeOffset * 1000 * 60

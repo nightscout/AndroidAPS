@@ -127,6 +127,10 @@
         <item name="activity" >@color/activity</item>
         <item name="bgi" >@color/bgi</item>
         <item name="devslopepos" >@color/devslopepos</item>
+        <item name="bolus" >@color/bolus</item>
+        <item name="colorInsulinButton" >@color/colorInsulinButton</item>
+        <item name="cobAlert" >@color/cobAlert</item>
+        <item name="info" >@color/cobAlert</item>
     </style>
 
     <style name="Theme.MaterialComponents.DayNight.DarkActionBar" parent="Theme.MaterialComponents.DayNight.Bridge"/>

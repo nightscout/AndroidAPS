@@ -39,7 +39,7 @@ import info.nightscout.androidaps.utils.HtmlHelper
 import info.nightscout.androidaps.utils.Round
 import info.nightscout.androidaps.utils.T
 import info.nightscout.androidaps.utils.alertDialogs.OKDialog
-import info.nightscout.androidaps.utils.extensions.formatColor
+import info.nightscout.androidaps.utils.extensions.formatColorFromAttrubute
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 import info.nightscout.androidaps.utils.sharedPreferences.SP
 import org.json.JSONException
@@ -295,7 +295,7 @@ class BolusWizard @Inject constructor(
         val actions: LinkedList<String> = LinkedList()
         if (insulinAfterConstraints > 0) {
             val pct = if (percentageCorrection != 100.0) " (" + percentageCorrection.toInt() + "%)" else ""
-            actions.add(resourceHelper.gs(R.string.bolus) + ": " + resourceHelper.gs(R.string.formatinsulinunits, insulinAfterConstraints).formatColor(resourceHelper, R.color.bolus) + pct)
+            actions.add(resourceHelper.gs(R.string.bolus) + ": " + resourceHelper.gs(R.string.formatinsulinunits, insulinAfterConstraints).formatColorFromAttrubute( resourceHelper.getAttributeColor(null,R.attr.bolus )) + pct)
         }
         if (carbs > 0 && !advisor) {
             var timeShift = ""
@@ -304,22 +304,21 @@ class BolusWizard @Inject constructor(
             } else if (carbTime < 0) {
                 timeShift += " (" + resourceHelper.gs(R.string.mins, carbTime) + ")"
             }
-            actions.add(resourceHelper.gs(R.string.carbs) + ": " + resourceHelper.gs(R.string.format_carbs, carbs).formatColor(resourceHelper, R.color.carbs) + timeShift)
+            actions.add(resourceHelper.gs(R.string.carbs) + ": " + resourceHelper.gs(R.string.format_carbs, carbs).formatColorFromAttrubute(resourceHelper.getAttributeColor(null,R.attr.carbsColor ))  + timeShift)
         }
         if (insulinFromCOB > 0) {
-            actions.add(resourceHelper.gs(R.string.cobvsiob) + ": " + resourceHelper.gs(R.string.formatsignedinsulinunits, insulinFromBolusIOB + insulinFromBasalIOB + insulinFromCOB + insulinFromBG).formatColor(resourceHelper, R.color.cobAlert))
+            actions.add(resourceHelper.gs(R.string.cobvsiob) + ": " + resourceHelper.gs(R.string.formatsignedinsulinunits, insulinFromBolusIOB + insulinFromBasalIOB + insulinFromCOB + insulinFromBG).formatColorFromAttrubute( resourceHelper.getAttributeColor(null, R.attr.cobAlert )))
             val absorptionRate = iobCobCalculatorPlugin.slowAbsorptionPercentage(60)
             if (absorptionRate > .25)
                 actions.add(resourceHelper.gs(R.string.slowabsorptiondetected, resourceHelper.gc(R.color.cobAlert), (absorptionRate * 100).toInt()))
         }
         if (abs(insulinAfterConstraints - calculatedTotalInsulin) > activePlugin.activePump.pumpDescription.pumpType.determineCorrectBolusStepSize(insulinAfterConstraints))
-            actions.add(resourceHelper.gs(R.string.bolusconstraintappliedwarn, calculatedTotalInsulin, insulinAfterConstraints).formatColor(resourceHelper, R.color.red))
+            actions.add(resourceHelper.gs(R.string.bolusconstraintappliedwarn, calculatedTotalInsulin, insulinAfterConstraints).formatColorFromAttrubute( resourceHelper.getAttributeColor(null, R.attr.dialogUrgent )))
         if (config.NSCLIENT && insulinAfterConstraints > 0)
-            actions.add(resourceHelper.gs(R.string.bolusrecordedonly).formatColor(resourceHelper, R.color.red))
+            actions.add(resourceHelper.gs(R.string.bolusrecordedonly).formatColorFromAttrubute( resourceHelper.getAttributeColor(null, R.attr.dialogUrgent )))
         if (useAlarm && !advisor && carbs > 0 && carbTime > 0)
-            actions.add(resourceHelper.gs(R.string.alarminxmin, carbTime).formatColor(resourceHelper, R.color.info))
-        if (advisor)
-            actions.add(resourceHelper.gs(R.string.advisoralarm).formatColor(resourceHelper, R.color.info))
+            actions.add(resourceHelper.gs(R.string.alarminxmin, carbTime).formatColorFromAttrubute(resourceHelper.getAttributeColor(null, R.attr.info)))
+            actions.add(resourceHelper.gs(R.string.advisoralarm).formatColorFromAttrubute(resourceHelper.getAttributeColor(null, R.attr.info)))
 
         return HtmlHelper.fromHtml(Joiner.on("<br/>").join(actions))
     }
