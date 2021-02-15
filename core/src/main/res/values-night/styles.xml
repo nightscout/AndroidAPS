@@ -138,6 +138,7 @@
         <item name="ribbonTextWarning" >@color/ribbonTextWarning</item>
         <item name="ribbonWarning" >@color/ribbonWarning</item>
         <item name="ribbonDefault" >@color/ribbonDefault</item>
+        <item name="defaultTextColor" >@color/defaulttextcolor</item>
         <item name="tempTargetBackground" >@color/tempTargetBackground</item>
         <item name="automationBgUrgent" >@color/red</item>
         <item name="iobPredAS" >@color/iobPredAS</item>
