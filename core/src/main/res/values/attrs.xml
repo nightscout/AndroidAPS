@@ -1,13 +1,4 @@
 <resources>
-<!---The 2 pills in overview page-->
-<attr name="overviewPillColor" format="reference|color" />
-<!---The 2 pills in overview page with gradient color-->
-<attr name="PillColorStart" format="reference|color" />
-<attr name="PillColorEnd" format="reference|color" />
-<attr name="PillColorWarningStart" format="reference|color" />
-<attr name="PillColorWarningEnd" format="reference|color" />
-<attr name="PillColortempTargetStart" format="reference|color" />
-<attr name="PillColortempTargetEnd" format="reference|color" />
 <attr name="fabmenubackground" format="reference|color" />
 <attr name="iconColor" format="reference|color" />
 <attr name="iconColorbottomAppbar" format="reference|color" />
