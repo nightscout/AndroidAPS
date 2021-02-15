@@ -84,11 +84,15 @@
 
     <info.nightscout.androidaps.utils.ui.SingleClickButton
         android:id="@+id/reloadHistory"
-        style="@style/Widget.AppCompat.Button"
+        style="@style/Widget.MaterialComponents.Button.UnelevatedButton"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:drawableStart="@drawable/ic_actions_refill"
+        android:layout_marginStart="2dp"
+        android:layout_marginEnd="2dp"
+        app:icon="@drawable/ic_actions_refill"
+        app:iconGravity="start"
+        android:textAlignment="center"
         android:text="@string/reload" />
 
 </RelativeLayout>

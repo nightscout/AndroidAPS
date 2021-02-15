@@ -316,12 +316,15 @@
 
         </LinearLayout>
 
-        <Button
+        <info.nightscout.androidaps.utils.ui.SingleClickButton
             android:id="@+id/save_user_options"
-            style="@style/Widget.AppCompat.Button"
+            style="@style/ButtonSmallFontStyle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginStart="2dp"
+            android:layout_marginEnd="2dp"
             android:drawableStart="@drawable/ic_local_save"
+            android:textAlignment="center"
             android:text="@string/danar_saveuseroptions" />
 
     </LinearLayout>

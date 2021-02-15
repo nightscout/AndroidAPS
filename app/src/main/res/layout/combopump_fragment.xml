@@ -494,6 +494,7 @@
                 android:drawableTop="@drawable/ic_actions_refill"
                 android:paddingStart="0dp"
                 android:paddingEnd="0dp"
+                android:textAlignment="center"
                 android:text="@string/refresh" />
         </LinearLayout>
 

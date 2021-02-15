@@ -692,49 +692,61 @@
                 android:layout_height="wrap_content"
                 android:orientation="horizontal">
 
-                <Button
+                <info.nightscout.androidaps.utils.ui.SingleClickButton
                     android:id="@+id/viewprofile"
                     style="@style/ButtonSmallFontStyle"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
+                    android:layout_marginStart="2dp"
+                    android:layout_marginEnd="2dp"
                     android:drawableTop="@drawable/ic_danarprofile"
                     android:paddingStart="0dp"
                     android:paddingEnd="0dp"
+                    android:textAlignment="center"
                     android:text="@string/viewprofile" />
 
 
-                <Button
+                <info.nightscout.androidaps.utils.ui.SingleClickButton
                     android:id="@+id/history"
                     style="@style/ButtonSmallFontStyle"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
+                    android:layout_marginStart="2dp"
+                    android:layout_marginEnd="2dp"
                     android:drawableTop="@drawable/ic_danarhistory"
                     android:paddingStart="0dp"
                     android:paddingEnd="0dp"
+                    android:textAlignment="center"
                     android:text="@string/pumphistory" />
 
-                <Button
+                <info.nightscout.androidaps.utils.ui.SingleClickButton
                     android:id="@+id/stats"
                     style="@style/ButtonSmallFontStyle"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
+                    android:layout_marginStart="2dp"
+                    android:layout_marginEnd="2dp"
                     android:drawableTop="@drawable/ic_danarstats"
                     android:paddingStart="0dp"
                     android:paddingEnd="0dp"
+                    android:textAlignment="center"
                     android:text="@string/stats" />
 
-                <Button
+                <info.nightscout.androidaps.utils.ui.SingleClickButton
                     android:id="@+id/user_options"
                     style="@style/ButtonSmallFontStyle"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
+                    android:layout_marginStart="2dp"
+                    android:layout_marginEnd="2dp"
                     android:drawableTop="@drawable/ic_danar_useropt"
                     android:paddingStart="0dp"
                     android:paddingEnd="0dp"
+                    android:textAlignment="center"
                     android:text="@string/danar_useroptions" />
 
             </LinearLayout>
