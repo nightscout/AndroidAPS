@@ -119,6 +119,7 @@
         <!---Misc -->
         <item name="carbsColor" >@color/carbs</item>
         <item name="tempTargetConfirmation" >@color/tempTargetConfirmation</item>
+        <item name="lightGreen" >@color/lightGreen</item>
     </style>
 
     <style name="Theme.MaterialComponents.DayNight.DarkActionBar" parent="Theme.MaterialComponents.DayNight.Bridge"/>

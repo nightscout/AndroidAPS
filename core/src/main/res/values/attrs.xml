@@ -96,4 +96,5 @@
 <!---Misc -->
 <attr name="carbsColor" format="reference|color" />
 <attr name="tempTargetConfirmation" format="reference|color" />
+<attr name="lightGreen" format="reference|color" />
 </resources>
