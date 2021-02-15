@@ -266,7 +266,7 @@ public class CareportalEvent implements DataPointWithLabelInterface, Interval {
     @Override
     public int getColor() {
         if (eventType.equals(ANNOUNCEMENT))
-            return resourceHelper.gc(R.color.notificationAnnouncement);
+            return resourceHelper.getAttributeColor(null, R.attr.notificationAnnouncement);
         if (eventType.equals(MBG))
             return Color.RED;
         if (eventType.equals(BGCHECK))
