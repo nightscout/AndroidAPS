@@ -20,7 +20,7 @@ import org.mockito.Mock
 import org.mockito.Mockito.`when`
 import org.powermock.core.classloader.annotations.PrepareForTest
 
-@PrepareForTest(VirtualPumpPlugin::class, RxBusWrapper::class, LocalProfilePlugin::class, SmsCommunicatorPlugin::class, ConfigBuilderPlugin::class)
+@PrepareForTest(VirtualPumpPlugin::class, RxBusWrapper::class, LocalProfilePlugin::class, SmsCommunicatorPlugin::class, ConfigBuilderPlugin::class, LoopPlugin::class)
 open class ActionsTestBase : TestBaseWithProfile() {
 
     @Mock lateinit var sp: SP

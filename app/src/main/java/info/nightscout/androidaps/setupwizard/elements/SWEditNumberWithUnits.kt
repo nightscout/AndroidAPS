@@ -16,11 +16,11 @@ import info.nightscout.androidaps.utils.SafeParse
 import java.text.DecimalFormat
 import javax.inject.Inject
 
-class SWEditNumberWithUnits(injector: HasAndroidInjector, private val init: Double, private val min: Double, private val max: Double) : SWItem(injector, Type.UNITNUMBER) {
+class SWEditNumberWithUnits(injector: HasAndroidInjector, private val init: Double, private val min: Double, private val max: Double) : SWItem(injector, Type.UNIT_NUMBER) {
 
     @Inject lateinit var profileFunction: ProfileFunction
 
-    private val validator: SWNumberValidator? = SWNumberValidator { value -> value >= min && value <= max }
+    private val validator: SWNumberValidator = SWNumberValidator { value -> value in min..max }
     private var updateDelay = 0
 
     override fun generateDialog(layout: LinearLayout) {
@@ -28,7 +28,7 @@ class SWEditNumberWithUnits(injector: HasAndroidInjector, private val init: Doub
         val watcher: TextWatcher = object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {}
             override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
-                if (validator != null && validator.isValid(SafeParse.stringToDouble(s.toString())))
+                if (validator.isValid(SafeParse.stringToDouble(s.toString())))
                     save(s.toString(), updateDelay.toLong())
             }
 

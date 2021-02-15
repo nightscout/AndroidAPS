@@ -2,7 +2,6 @@ package info.nightscout.androidaps.plugins.pump.medtronic;
 
 import android.content.ComponentName;
 import android.content.Context;
-import android.content.Intent;
 import android.content.ServiceConnection;
 import android.os.IBinder;
 import android.os.SystemClock;
@@ -876,13 +875,7 @@ public class MedtronicPumpPlugin extends PumpPluginAbstract implements PumpInter
                         // LOG.debug("MedtronicPumpPlugin::deliverBolus - Show dialog. Context: "
                         // + MainApp.instance().getApplicationContext());
 
-                        Intent i = new Intent(context, ErrorHelperActivity.class);
-                        i.putExtra("soundid", R.raw.boluserror);
-                        i.putExtra("status", getResourceHelper().gs(R.string.medtronic_cmd_cancel_bolus_not_supported));
-                        i.putExtra("title", getResourceHelper().gs(R.string.medtronic_warning));
-                        i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                        context.startActivity(i);
-
+                        ErrorHelperActivity.Companion.runAlarm(context,getResourceHelper().gs(R.string.medtronic_cmd_cancel_bolus_not_supported), getResourceHelper().gs(R.string.medtronic_warning), R.raw.boluserror);
                     }).start();
                 }
 
@@ -1563,12 +1556,7 @@ public class MedtronicPumpPlugin extends PumpPluginAbstract implements PumpInter
                 if (rileyLinkMedtronicService.verifyConfiguration()) {
                     serviceTaskExecutor.startTask(new WakeAndTuneTask(getInjector()));
                 } else {
-                    Intent i = new Intent(context, ErrorHelperActivity.class);
-                    i.putExtra("soundid", R.raw.boluserror);
-                    i.putExtra("status", getResourceHelper().gs(R.string.medtronic_error_operation_not_possible_no_configuration));
-                    i.putExtra("title", getResourceHelper().gs(R.string.medtronic_warning));
-                    i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                    context.startActivity(i);
+                    ErrorHelperActivity.Companion.runAlarm(context, getResourceHelper().gs(R.string.medtronic_error_operation_not_possible_no_configuration), getResourceHelper().gs(R.string.medtronic_warning), R.raw.boluserror);
                 }
             }
             break;

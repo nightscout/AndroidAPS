@@ -6,22 +6,22 @@ import android.widget.TextView
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.setupwizard.SWValidator
 
-class SWInfotext(injector: HasAndroidInjector) : SWItem(injector, Type.TEXT) {
+class SWInfoText(injector: HasAndroidInjector) : SWItem(injector, Type.TEXT) {
     private var textLabel: String? = null
     private var l: TextView? = null
     private var visibilityValidator: SWValidator? = null
 
-    override fun label(label: Int): SWInfotext {
+    override fun label(label: Int): SWInfoText {
         this.label = label
         return this
     }
 
-    fun label(newLabel: String): SWInfotext {
+    fun label(newLabel: String): SWInfoText {
         textLabel = newLabel
         return this
     }
 
-    fun visibility(visibilityValidator: SWValidator): SWInfotext {
+    fun visibility(visibilityValidator: SWValidator): SWInfoText {
         this.visibilityValidator = visibilityValidator
         return this
     }

@@ -81,7 +81,7 @@ public class ListenerService extends WearableListenerService implements GoogleAp
 
 
     private static final String ACTION_RESEND_BULK = "com.dexdrip.stephenblack.nightwatch.RESEND_BULK_DATA";
-    private static final String AAPS_NOTIFY_CHANNEL_ID_OPENLOOP = "AndroidAPS-Openloop";
+    private static final String AAPS_NOTIFY_CHANNEL_ID_OPENLOOP = "AndroidAPS-OpenLoop";
     private static final String AAPS_NOTIFY_CHANNEL_ID_BOLUSPROGRESS = "bolus progress vibration";
     private static final String AAPS_NOTIFY_CHANNEL_ID_BOLUSPROGRESS_SILENT = "bolus progress  silent";
 

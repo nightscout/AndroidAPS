@@ -11,7 +11,6 @@ import org.junit.Assert
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.Mock
-import org.mockito.Mockito
 import org.mockito.Mockito.`when`
 import org.powermock.core.classloader.annotations.PrepareForTest
 import org.powermock.modules.junit4.PowerMockRunner
@@ -24,6 +23,7 @@ class ClassicPrefsFormatTest : TestBase() {
 
     @Mock lateinit var resourceHelper: ResourceHelper
     @Mock lateinit var sp: SP
+    @Mock lateinit var file: MockedFile
 
     @Test
     fun preferenceLoadingTest() {
@@ -53,8 +53,9 @@ class ClassicPrefsFormatTest : TestBase() {
         classicFormat.savePreferences(getMockedFile(), prefs)
     }
 
+    class MockedFile(s: String) : File(s)
+
     private fun getMockedFile(): File {
-        val file = Mockito.mock(File::class.java)
         `when`(file.exists()).thenReturn(true)
         `when`(file.canRead()).thenReturn(true)
         `when`(file.canWrite()).thenReturn(true)

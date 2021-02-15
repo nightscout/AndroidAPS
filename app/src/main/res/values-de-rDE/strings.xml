@@ -420,6 +420,7 @@
     <string name="basal_shortname">BAS</string>
     <string name="deviation_shortname">DEV</string>
     <string name="activity_shortname">ACT</string>
+    <string name="bgi_shortname">-BGI</string>
     <string name="abs_insulin_shortname">ABS</string>
     <string name="devslope_shortname">DEVSLOPE</string>
     <string name="nav_about">Über</string>
@@ -627,6 +628,7 @@
     <string name="ns_autobackfill_summary">Lade fehlende Blutzuckerwerte automatisch aus Nightscout nach.</string>
     <string name="loop_smbsetbypump_label">SMB von der Pumpe abgegeben</string>
     <string name="overview_show_activity">Aktivität</string>
+    <string name="overview_show_bgi">Blutzuckerwirkung</string>
     <string name="overview_show_sensitivity">Sensitivität</string>
     <string name="overview_show_deviations">Abweichungen</string>
     <string name="overview_show_cob">Aktive Kohlenhydrate</string>
@@ -1157,4 +1159,7 @@ Unerwartetes Verhalten.</string>
     <string name="graph_menu_divider_header">Diagramm</string>
     <string name="chart_menu">Diagrammmenü</string>
     <string name="clear_filter">Filter löschen</string>
+    <string name="trend_arrow">Trendpfeil</string>
+    <string name="cannula">Kanüle</string>
+    <string name="userentry">Benutzereingabe</string>
 </resources>

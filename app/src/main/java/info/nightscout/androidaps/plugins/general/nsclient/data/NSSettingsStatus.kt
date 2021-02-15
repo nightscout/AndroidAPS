@@ -129,7 +129,7 @@ class NSSettingsStatus @Inject constructor(
     fun handleNewData(nightscoutVersionName: String, nightscoutVersionCode: Int, status: JSONObject) {
         this.nightscoutVersionName = nightscoutVersionName
         aapsLogger.debug(LTag.NSCLIENT, "Got versions: Nightscout: $nightscoutVersionName")
-        if (nightscoutVersionCode < config.SUPPORTEDNSVERSION) {
+        if (nightscoutVersionCode != 0 && nightscoutVersionCode < config.SUPPORTEDNSVERSION) {
             val notification = Notification(Notification.OLD_NS, resourceHelper.gs(R.string.unsupportednsversion), Notification.NORMAL)
             rxBus.send(EventNewNotification(notification))
         } else {
