@@ -1381,5 +1381,6 @@
     <string name="trend_arrow">Trend arrow</string>
     <string name="cannula">Cannula</string>
     <string name="userentry">User entry</string>
+    <string name="common_values">Use values of your largest food you usually eat\n</string>
 
 </resources>
