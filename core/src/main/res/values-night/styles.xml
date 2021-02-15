@@ -146,6 +146,7 @@
         <item name="spinnerBackground" >@color/black_alpha_40</item>
         <item name="triggerConnectorBackground" >@color/mdtp_line_dark</item>
         <item name="treatmentsRed" >@color/red</item>
+        <item name="profilViewerLabel" >@color/white</item>
     </style>
 
     <style name="Theme.MaterialComponents.DayNight.DarkActionBar" parent="Theme.MaterialComponents.DayNight.Bridge"/>

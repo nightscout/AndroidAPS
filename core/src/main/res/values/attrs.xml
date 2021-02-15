@@ -115,4 +115,5 @@
 <attr name="spinnerBackground" format="reference|color" />
 <attr name="triggerConnectorBackground" format="reference|color" />
 <attr name="treatmentsRed" format="reference|color" />
+<attr name="profilViewerLabel" format="reference|color" />
 </resources>

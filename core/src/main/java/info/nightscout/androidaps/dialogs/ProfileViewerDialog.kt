@@ -183,20 +183,20 @@ class ProfileViewerDialog : DaggerDialogFragment() {
     }
 
     private fun formatColors(label: String, text1: String, text2: String, units: String): String {
-        var s = "<font color='${resourceHelper.gc(R.color.white)}'>$label</font>"
+        var s = "<font color='${resourceHelper.getAttributeColor(context, R.attr.profilViewerLabel)}'>$label</font>"
         s += "    "
-        s += "<font color='${resourceHelper.gc(R.color.lightblue)}'>$text1</font>"
+        s += "<font color='${resourceHelper.getAttributeColor(context, R.attr.lightblue)}'>$text1</font>"
         s += "    "
-        s += "<font color='${resourceHelper.gc(R.color.red)}'>$text2</font>"
+        s += "<font color='${resourceHelper.getAttributeColor(context, R.attr.dialogUrgent)}'>$text2</font>"
         s += "    "
-        s += "<font color='${resourceHelper.gc(R.color.white)}'>$units</font>"
+        s += "<font color='${resourceHelper.getAttributeColor(context, R.attr.profilViewerLabel)}'>$units</font>"
         return s
     }
 
     private fun formatColors(text1: String, text2: String): String {
-        var s = "<font color='${resourceHelper.gc(R.color.lightblue)}'>$text1</font>"
+        var s = "<font color='${resourceHelper.getAttributeColor(context, R.attr.lightblue)}'>$text1</font>"
         s += "<BR/>"
-        s += "<font color='${resourceHelper.gc(R.color.red)}'>$text2</font>"
+        s += "<font color='${resourceHelper.getAttributeColor(context, R.attr.dialogUrgent)}'>$text2</font>"
         return s
     }
 
