@@ -61,9 +61,7 @@ open class DataReceiver : DaggerBroadcastReceiver() {
                     }.build()).build()
             Intents.ACTION_NEW_PROFILE ->
                 OneTimeWorkRequest.Builder(NSProfilePlugin.NSProfileWorker::class.java)
-                    .setInputData(Data.Builder().also {
-                        it.copyString("profile", bundle, null)
-                    }.build()).build()
+                    .setInputData(bundleInputData(bundle, intent)).build()
             Intents.ACTION_NEW_SGV ->
                 OneTimeWorkRequest.Builder(NSClientSourcePlugin.NSClientSourceWorker::class.java)
                     .setInputData(Data.Builder().also {

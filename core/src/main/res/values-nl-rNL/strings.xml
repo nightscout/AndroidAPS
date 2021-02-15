@@ -256,6 +256,7 @@
     <string name="versionavailable">Versie %1$s is beschikbaar</string>
     <!-- Permissions -->
     <string name="alert_dialog_storage_permission_text">Herstart je telefoon of herstart AndroidAPS vanuit de systeem instellingen. \nAnders zullen er voor AndroidAPS geen logs worden aangemaakt (dit is belangrijk voor de ontwikkelaars, zo kunnen zij controleren of de algoritmes correct werken)!</string>
+    <!-- WeekdayPicker -->
     <plurals name="days">
         <item quantity="one">%1$d dag</item>
         <item quantity="other">%1$d dagen</item>

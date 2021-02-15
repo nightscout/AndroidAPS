@@ -156,7 +156,7 @@
     <string name="nav_import">יבא הגדרות</string>
     <string name="openapsma_maxbasal_title">מינון בזאלי זמני מקסימלי (יח\'\\שעה)</string>
     <string name="openapsma_maxbasal_summary">ערך זה נקרא בזאלי מרבי ב-OpenAPS</string>
-    <string name="openapsma_maxiob_title">בזאלי פעיל מרבי ש-OpenAPS יכול לספק [U]</string>
+    <string name="openapsma_maxiob_title">בזאלי פעיל מרבי ש-OpenAPS יכול לספק (יחידות) </string>
     <string name="openapsma_maxiob_summary">ערך זה נקרא אינסולין פעיל מקסימלי (Max IOB) ב-OpenAPS. זהו מקסימום האינסולין הפעיל ב-[U] ש-APS מאפשר.</string>
     <string name="password_preferences_encrypt_prompt">אתם תתבקשו למלא סיסמה ראשית שתשמש להצפנת ההעדפות המיוצאות.</string>
     <string name="password_preferences_decrypt_prompt">אתם תתבקשו למלא סיסמה ראשית שתשמש לפיענוח ההעדפות המיובאות.</string>
@@ -217,7 +217,7 @@
     <string name="smscommunicator_remotecommandnotallowed">פקודה מרוחקת אינה מותרת</string>
     <string name="smscommunicator_remotebolusnotallowed">בולוס מרחוק אינו זמין. נסו שוב מאוחר יותר.</string>
     <string name="smscommunicator_basalreplywithcode">להפעלת בזאלי %1$.2f יח\' לשעה למשך %2$d דקות יש להשיב עם הקוד %3$s</string>
-    <string name="smscommunicator_profilereplywithcode">להחלפת פרופיל ל- %1$s %2$d % הקש קוד %3$s</string>
+    <string name="smscommunicator_profilereplywithcode">להחלפת פרופיל ל- %1$s %2$d %% הקש את הקוד %3$s</string>
     <string name="smscommunicator_extendedreplywithcode">למתן בולוס ממושך %1$.2f יח\' למשך %2$d דקות יש להשיב עם הקוד %3$s</string>
     <string name="smscommunicator_carbsreplywithcode">למתן %1$d גר\' ב-%2$s יש להשיב עם הקוד %3$s</string>
     <string name="smscommunicator_basalpctreplywithcode">להפעלת בזאלי %1$d%% למשך %2$d דקות הקש קוד %3$s</string>
@@ -312,7 +312,7 @@
     <string name="openapsama_current_basal_safety_multiplier_summary">ערך ברירת מחדל: 4 זהו החצי השני של מנגנון הגנה עיקרי של OpenAPS, והחצי השני של \"3x max daily; 4x current\" במנגנוני ההגנה. המשמעות היא שהמינון הבזאלי, ללא קשר למקסימום שנקבע במשאבה, אינו יכול להיות גבוה יותר ממספר זה כפול הקצב הבזאלי הנוכחי. מיועד למנוע כניסה לתחומים מסוכנים ע\"י קביעת קצב בזאלי גבוה לפני הבנה של פעולת האלגוריתם. שוב: ברירת המחדל היא x4, רוב המשתמשים לעולם אינם צריכים לשנות ערך זה ואם הם מרגישים שמנגנון הגנה זה מפריע להם, הפתרון הוא בשינוי של הגדרות אחרות.</string>
     <string name="openapsama_autosens_max_summary">ערך ברירת מחדל: 1.2\nזוהי מגבלת המכפיל של autosens (ובקרוב autotune) שמגדירה 20%% כיחס מקסימלי של autosens, אשר קובע בתורו את גובה הבזאלי המקסימלי, גובהו המינימלי של יחס התיקון, ואת המינימום של ערכי המטרה האפשריים.</string>
     <string name="openapsama_autosens_min_summary">ערך ברירת מחדל: 0.7\nבצד השני של מגבלות הבטיחות של autosens, ערך זה מגביל את יכולתו של autosens להוריד את הערכים הבזאליים ועד כמה יכול להעלות את יחס התיקון ואת ערכי מטרת הסוכר בדם.</string>
-    <string name="openapsama_autosens_adjusttargets">Autosens מווסת גם את ערכי המטרה</string>
+    <string name="openapsama_autosens_adjusttargets">וויסות ערכי מטרה ע\"י Autosens</string>
     <string name="openapsama_autosens_adjusttargets_summary">ערך ברירת מחדל: התאמה מדויקת\n נועד לאפשר ל-Autosens לשנות את המטרה של ערכי הסוכר, בנוסף ליחס התיקון והבזאלים.</string>
     <string name="openapsama_bolussnooze_dia_divisor_summary">ערך ברירת מחדל: 2\n מעכב בולוס מופעל אחרי שאתם מזריקים בולוס ארוחה, כך שהלולאה לא תפצה ע\"י בזאלי זמני נמוך אחרי הארוחה. הדוגמה כאן וברירת המחדל היא 2; כך שהגדרה של משך פעילות אינסולין של 3 שעות משמעה שהעיכוב יחלוף בהדרגה בתוך 1.5 שעות (3 ש\' לחלק ל-2).</string>
     <string name="openapsama_min_5m_carbimpact_summary">ערך ברירת מחדל: 3.0 (AMA) או 8.0 (SMB). זוהי הגדרת ברירת מחדל לספיגת פחמימות ב-5 דקות. ברירת המחדל היא 3mg/dL/5min. פעולה זו משפיעה על קצב הדעיכה של פחמ\' פעילות, ועל הנחת קצב ספיגת הפחמ\' בחישוב רמות סוכר עתידיות כשהן בירידה מהירה מהצפוי או עליה איטית מהצפוי.</string>
@@ -420,6 +420,7 @@
     <string name="basal_shortname">בזאל\'</string>
     <string name="deviation_shortname">סטייה</string>
     <string name="activity_shortname">פעילות</string>
+    <string name="bgi_shortname">השפעה</string>
     <string name="abs_insulin_shortname">אבס\'</string>
     <string name="devslope_shortname">שיפוע</string>
     <string name="nav_about">אודות</string>
@@ -627,6 +628,7 @@
     <string name="ns_autobackfill_summary">לטעינת הנתונים האוטומטית חסרים נתוני סוכר מ-Nightscout</string>
     <string name="loop_smbsetbypump_label">SMB מוגדר באמצעות משאבה</string>
     <string name="overview_show_activity">פעילות</string>
+    <string name="overview_show_bgi">השפעת הסוכר בדם</string>
     <string name="overview_show_sensitivity">רגישות</string>
     <string name="overview_show_deviations">חריגות</string>
     <string name="overview_show_cob">פחמימות פעילות</string>
@@ -676,7 +678,7 @@
     <string name="smbnotallowedinopenloopmode">SMB אינו פעיל במצב לולאה פתוחה</string>
     <string name="food_short">מזון</string>
     <string name="reset">איפוס</string>
-    <string name="openapssmb_maxiob_title">מינון אינסולין פעיל מרבי ממנו OpenAPS לא יחרוג [U]</string>
+    <string name="openapssmb_maxiob_title">מינון אינסולין פעיל מרבי ממנו OpenAPS לא יחרוג (יחידות) </string>
     <string name="openapssmb_maxiob_summary">ב-OpenAPS ערך זה נקרא מקסימום אינסולין פעיל (maxIOB). \nלא יוזרק עוד אינסולין אם כמות האינסולין הפעיל הנוכחי גדול מערך זה</string>
     <string name="pump_stopped">המשאבה נעצרה</string>
     <string name="pump_started">המשאבה הופעלה</string>
@@ -702,8 +704,8 @@
     <string name="connectionsettings_title">הגדרות חיבור</string>
     <string name="ns_wifi_allowedssids">SSID מורשים (מופרדים בנקודה-פסיק)</string>
     <string name="ns_allowroaming">אפשר חיבור בנדידה</string>
-    <string name="openapsama_autosens_max">יחס autosens מקסימלי</string>
-    <string name="openapsama_autosens_min">יחס autosens מינימלי</string>
+    <string name="openapsama_autosens_max">יחס Autosens מקסימלי</string>
+    <string name="openapsama_autosens_min">יחס Autosens מינימלי</string>
     <string name="openapsama_bolussnooze_dia_divisor">נמנום בולוס - מחלק משך פעילות אינסולין</string>
     <string name="openapsama_max_daily_safety_multiplier">מכפלת בטיחות בזאלי יומי מירבי</string>
     <string name="openapsama_current_basal_safety_multiplier">מכפלת בטיחות בזאלי נוכחי</string>
@@ -771,7 +773,7 @@
     <string name="delete_logs">מחק רישומים</string>
     <string name="error_adding_treatment_message">לא ניתן להוסיף טיפול (אינסולין: %1$.2f, פחמ\': %2$d, בשעה: %3$s) לטיפולים. נא לבדוק ולהוסיף רשומה באופן ידני כנדרש.</string>
     <string name="generated_ecarbs_note">פחמימות ממושכות: %1$d גר\' (%2$d ש\'), עיכוב %3$d דק\'</string>
-    <string name="openaps_noasdata">אין נתוני autosens זמינים</string>
+    <string name="openaps_noasdata">אין נתוני Autosens זמינים</string>
     <string name="nav_logsettings">הגדרות יומן רישום</string>
     <string name="resettodefaults">אפס לברירת המחדל</string>
     <string name="nsmalfunction">תקלה ב-NSClient. שקלו להפעיל את Nightscout ו-NSClient מחדש.</string>
@@ -1158,4 +1160,5 @@
     <string name="clear_filter">נקה סינון</string>
     <string name="trend_arrow">חץ מגמה</string>
     <string name="cannula">צינורית</string>
+    <string name="userentry">קלט המשתמש</string>
 </resources>

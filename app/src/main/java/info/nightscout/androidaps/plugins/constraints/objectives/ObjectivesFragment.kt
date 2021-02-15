@@ -196,19 +196,19 @@ class ObjectivesFragment : DaggerFragment() {
                     if (task.shouldBeIgnored()) continue
                     // name
                     val name = TextView(holder.binding.progress.context)
-                    name.text = resourceHelper.gs(task.task) + ":"
+                    name.text = "${resourceHelper.gs(task.task)}:"
                     name.setTextColor(-0x1)
                     holder.binding.progress.addView(name, LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT)
                     // hint
                     task.hints.forEach { h ->
-                        if (!task.isCompleted)
-                            holder.binding.progress.addView(h.generate(context))
+                        if (!task.isCompleted())
+                            context?.let { holder.binding.progress.addView(h.generate(it)) }
                     }
                     // state
                     val state = TextView(holder.binding.progress.context)
                     state.setTextColor(-0x1)
                     val basicHTML = "<font color=\"%1\$s\"><b>%2\$s</b></font>"
-                    val formattedHTML = String.format(basicHTML, if (task.isCompleted) "#4CAF50" else "#FF9800", task.progress)
+                    val formattedHTML = String.format(basicHTML, if (task.isCompleted()) "#4CAF50" else "#FF9800", task.progress)
                     state.text = HtmlHelper.fromHtml(formattedHTML)
                     state.gravity = Gravity.END
                     holder.binding.progress.addView(state, LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT)
@@ -307,7 +307,7 @@ class ObjectivesFragment : DaggerFragment() {
             holder.binding.unstart.setOnClickListener {
                 activity?.let { activity ->
                     OKDialog.showConfirmation(activity, resourceHelper.gs(R.string.objectives), resourceHelper.gs(R.string.doyouwantresetstart), Runnable {
-                        uel.log("OBJECTVE UNSTARTED", i1 = position + 1)
+                        uel.log("OBJECTIVE UNSTARTED", i1 = position + 1)
                         objective.startedOn = 0
                         scrollToCurrentObjective()
                         rxBus.send(EventObjectivesUpdateGui())
@@ -332,7 +332,7 @@ class ObjectivesFragment : DaggerFragment() {
                 holder.binding.inputhint.visibility = View.VISIBLE
                 holder.binding.enterbutton.setOnClickListener {
                     val input = holder.binding.input.text.toString()
-                    objective.specialAction(activity, input)
+                    activity?.let { activity -> objective.specialAction(activity, input) }
                     rxBus.send(EventObjectivesUpdateGui())
                 }
             } else {

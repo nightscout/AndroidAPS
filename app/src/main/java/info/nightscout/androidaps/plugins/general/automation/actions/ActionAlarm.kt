@@ -1,7 +1,6 @@
 package info.nightscout.androidaps.plugins.general.automation.actions
 
 import android.content.Context
-import android.content.Intent
 import android.widget.LinearLayout
 import androidx.annotation.DrawableRes
 import dagger.android.HasAndroidInjector
@@ -29,6 +28,7 @@ class ActionAlarm(injector: HasAndroidInjector) : Action(injector) {
     constructor(injector: HasAndroidInjector, text: String) : this(injector) {
         this.text = InputString(injector, text)
     }
+
     override fun friendlyName(): Int = R.string.alarm
     override fun shortDescription(): String = resourceHelper.gs(R.string.alarm_message, text.value)
     @DrawableRes override fun icon(): Int = R.drawable.ic_access_alarm_24dp
@@ -36,13 +36,7 @@ class ActionAlarm(injector: HasAndroidInjector) : Action(injector) {
     override fun isValid(): Boolean = text.value.isNotEmpty()
 
     override fun doAction(callback: Callback) {
-        val i = Intent(context, ErrorHelperActivity::class.java)
-        i.putExtra("soundid", R.raw.modern_alarm)
-        i.putExtra("status", text.value)
-        i.putExtra("title", resourceHelper.gs(R.string.alarm))
-        i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-        context.startActivity(i)
-
+        ErrorHelperActivity.runAlarm(context, text.value, resourceHelper.gs(R.string.alarm), R.raw.modern_alarm)
         callback.result(PumpEnactResult(injector).success(true).comment(R.string.ok))?.run()
     }
 

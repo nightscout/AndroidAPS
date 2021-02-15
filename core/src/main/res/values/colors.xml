@@ -10,6 +10,13 @@
     <!---Graph Color for horizontal and vertical label text-->
     <color name="graphHorizontalLabelText">#8c8c8c</color>
     <color name="graphVerticalLabelText">#8c8c8c</color>
+    <color name="daySelected">#D000FF00</color>
+    <color name="weekdayOutline">#1ea3e5</color>
+    <color name="weekendOutline">#1e88e5</color>
+
+    <!--    Toasts-->
+    <color name="toastBase">#ffffff</color>
+    <color name="toastError">#ff0400</color>
 
     <!-- Black and White transparent - glass effect-->
     <color name="black">#000000</color>

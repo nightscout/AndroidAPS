@@ -80,28 +80,30 @@ class ObjectivesExamDialog : DaggerDialogFragment() {
             // Options
             binding.examOptions.removeAllViews()
             task.options.forEach {
-                val cb = it.generate(context)
-                if (task.answered) {
-                    cb.isEnabled = false
-                    if (it.isCorrect)
-                        cb.isChecked = true
+                context?.let { context ->
+                    val cb = it.generate(context)
+                    if (task.answered) {
+                        cb.isEnabled = false
+                        if (it.isCorrect)
+                            cb.isChecked = true
+                    }
+                    binding.examOptions.addView(cb)
                 }
-                binding.examOptions.addView(cb)
             }
             // Hints
             binding.examHints.removeAllViews()
             for (h in task.hints) {
-                binding.examHints.addView(h.generate(context))
+                context?.let { binding.examHints.addView(h.generate(it)) }
             }
             // Disabled to
             binding.examDisabledto.text = resourceHelper.gs(R.string.answerdisabledto, dateUtil.timeString(task.disabledTo))
-            binding.examDisabledto.visibility = if (task.isEnabledAnswer) View.GONE else View.VISIBLE
+            binding.examDisabledto.visibility = if (task.isEnabledAnswer()) View.GONE else View.VISIBLE
             // Buttons
-            binding.examVerify.isEnabled = !task.answered && task.isEnabledAnswer
+            binding.examVerify.isEnabled = !task.answered && task.isEnabledAnswer()
             binding.examVerify.setOnClickListener {
                 var result = true
                 for (o in task.options) {
-                    val option: Option = o as Option
+                    val option: Option = o
                     result = result && option.evaluate()
                 }
                 task.answered = result
@@ -133,14 +135,14 @@ class ObjectivesExamDialog : DaggerDialogFragment() {
             binding.nextUnansweredButton.isEnabled = !objective.isCompleted
             binding.nextUnansweredButton.setOnClickListener {
                 for (i in (currentTask + 1) until objective.tasks.size) {
-                    if (!objective.tasks[i].isCompleted) {
+                    if (!objective.tasks[i].isCompleted()) {
                         currentTask = i
                         updateGui()
                         return@setOnClickListener
                     }
                 }
                 for (i in 0..currentTask) {
-                    if (!objective.tasks[i].isCompleted) {
+                    if (!objective.tasks[i].isCompleted()) {
                         currentTask = i
                         updateGui()
                         return@setOnClickListener

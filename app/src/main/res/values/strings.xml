@@ -1383,4 +1383,6 @@
     <string name="userentry">User entry</string>
     <string name="theme_switcher_summary">In order to take effect please restart the app.</string>
     <string name="use_dark_mode">Use dark mode</string>
+    <string name="common_values">Use values of your largest food you usually eat\n</string>
+
 </resources>

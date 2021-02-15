@@ -117,7 +117,7 @@ class OpenAPSSMBFragment : DaggerFragment() {
         if (openAPSSMBPlugin.lastAPSRun != 0L) {
             binding.lastrun.text = dateUtil.dateAndTimeString(openAPSSMBPlugin.lastAPSRun)
         }
-        openAPSSMBPlugin.lastAutosensResult?.let {
+        openAPSSMBPlugin.lastAutosensResult.let {
             binding.autosensdata.text = JSONFormatter.format(it.json())
         }
     }

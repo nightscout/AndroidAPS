@@ -1,7 +1,6 @@
 package info.nightscout.androidaps.plugins.treatments
 
 import android.content.Context
-import android.content.Intent
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.activities.ErrorHelperActivity
 import info.nightscout.androidaps.data.DetailedBolusInfo
@@ -47,12 +46,7 @@ class CarbsGenerator @Inject constructor(
             commandQueue.bolus(carbInfo, object : Callback() {
                 override fun run() {
                     if (!result.success) {
-                        val i = Intent(context, ErrorHelperActivity::class.java)
-                        i.putExtra("soundid", R.raw.boluserror)
-                        i.putExtra("status", result.comment)
-                        i.putExtra("title", resourceHelper.gs(R.string.treatmentdeliveryerror))
-                        i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-                        context.startActivity(i)
+                        ErrorHelperActivity.runAlarm(context, result.comment, resourceHelper.gs(R.string.treatmentdeliveryerror), R.raw.boluserror)
                     }
                 }
             })

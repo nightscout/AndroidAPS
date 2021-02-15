@@ -33,4 +33,5 @@
     <string name="running_invalid_version">Διαπιστώσαμε ότι εκτελείτε μη έγκυρη έκδοση. Κύκλωμα απενεργοποιήθηκε!</string>
     <string name="versionavailable">Έκδοση %1$s διαθέσιμη</string>
     <!-- Permissions -->
+    <!-- WeekdayPicker -->
 </resources>

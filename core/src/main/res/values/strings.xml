@@ -29,6 +29,7 @@
     <string name="key_ns_sync_use_absolute" translatable="false">ns_sync_use_absolute</string>
     <string name="key_virtualpump_type" translatable="false">virtualpump_type</string>
     <string name="key_quickwizard" translatable="false">QuickWizard</string>
+    <string name="key_wear_control" translatable="false">wearcontrol</string>
 
     <!--    General-->
     <string name="refresh">Refresh</string>
@@ -317,6 +318,14 @@
 
     <string name="key_use_darkmode" translatable="false">use_darkmode</string>
 
+    <!-- WeekdayPicker -->
+    <string name="monday_short">M</string>
+    <string name="tuesday_short">T</string>
+    <string name="wednesday_short">W</string>
+    <string name="thursday_short">T</string>
+    <string name="friday_short">F</string>
+    <string name="saturday_short">S</string>
+    <string name="sunday_short">S</string>
 
     <plurals name="days">
         <item quantity="one">%1$d day</item>
