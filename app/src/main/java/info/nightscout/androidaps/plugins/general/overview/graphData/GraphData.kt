@@ -179,7 +179,7 @@ class GraphData(
         // create series
         addSeries(LineGraphSeries(Array(baseBasalArray.size) { i -> baseBasalArray[i] }).also {
             it.isDrawBackground = true
-            it.backgroundColor = resourceHelper.gc(R.color.basebasal)
+            it.backgroundColor = resourceHelper.getAttributeColor(null, R.attr.basebasal)
             it.thickness = 0
         })
         addSeries(LineGraphSeries(Array(tempBasalArray.size) { i -> tempBasalArray[i] }).also {
@@ -192,14 +192,14 @@ class GraphData(
                 paint.style = Paint.Style.STROKE
                 paint.strokeWidth = resourceHelper.getDisplayMetrics().scaledDensity * 2
                 paint.pathEffect = DashPathEffect(floatArrayOf(2f, 4f), 0f)
-                paint.color = resourceHelper.gc(R.color.basal)
+                paint.color = resourceHelper.getAttributeColor(null, R.attr.basal)
             })
         })
         addSeries(LineGraphSeries(Array(absoluteBasalLineArray.size) { i -> absoluteBasalLineArray[i] }).also {
             it.setCustomPaint(Paint().also { absolutePaint ->
                 absolutePaint.style = Paint.Style.STROKE
                 absolutePaint.strokeWidth = resourceHelper.getDisplayMetrics().scaledDensity * 2
-                absolutePaint.color = resourceHelper.gc(R.color.basal)
+                absolutePaint.color = resourceHelper.getAttributeColor(null, R.attr.basal)
             })
         })
         basalScale.setMultiplier(maxY * scale / maxBasalValueFound)
@@ -311,7 +311,7 @@ class GraphData(
         }
         addSeries(FixedLineGraphSeries(Array(actArrayHist.size) { i -> actArrayHist[i] }).also {
             it.isDrawBackground = false
-            it.color = resourceHelper.gc(R.color.activity)
+            it.color = resourceHelper.getAttributeColor(null, R.attr.activity)
             it.thickness = 3
         })
         addSeries(FixedLineGraphSeries(Array(actArrayPred.size) { i -> actArrayPred[i] }).also {
@@ -319,7 +319,7 @@ class GraphData(
                 paint.style = Paint.Style.STROKE
                 paint.strokeWidth = 3f
                 paint.pathEffect = DashPathEffect(floatArrayOf(4f, 4f), 0f)
-                paint.color = resourceHelper.gc(R.color.activity)
+                paint.color = resourceHelper.getAttributeColor(null, R.attr.activity)
             })
         })
         if (useForScale) {
@@ -354,7 +354,7 @@ class GraphData(
         }
         addSeries(FixedLineGraphSeries(Array(bgiArrayHist.size) { i -> bgiArrayHist[i] }).also {
             it.isDrawBackground = false
-            it.color = resourceHelper.gc(R.color.bgi)
+            it.color = resourceHelper.getAttributeColor(null, R.attr.bgi)
             it.thickness = 3
         })
         addSeries(FixedLineGraphSeries(Array(bgiArrayPred.size) { i -> bgiArrayPred[i] }).also {
@@ -362,7 +362,7 @@ class GraphData(
                 paint.style = Paint.Style.STROKE
                 paint.strokeWidth = 3f
                 paint.pathEffect = DashPathEffect(floatArrayOf(4f, 4f), 0f)
-                paint.color = resourceHelper.gc(R.color.bgi)
+                paint.color = resourceHelper.getAttributeColor(null, R.attr.bgi)
             })
         })
         if (useForScale) {
@@ -398,8 +398,8 @@ class GraphData(
         }
         iobSeries = FixedLineGraphSeries(Array(iobArray.size) { i -> iobArray[i] }).also {
             it.isDrawBackground = true
-            it.backgroundColor = -0x7f000001 and resourceHelper.gc(R.color.iob) //50%
-            it.color = resourceHelper.gc(R.color.iob)
+            it.backgroundColor = -0x7f000001 and resourceHelper.getAttributeColor(null, R.attr.iobColor) //50%
+            it.color = resourceHelper.getAttributeColor(null, R.attr.iobColor)
             it.thickness = 3
         }
         if (showPrediction) {
@@ -453,8 +453,8 @@ class GraphData(
         }
         iobSeries = FixedLineGraphSeries(Array(iobArray.size) { i -> iobArray[i] }).also {
             it.isDrawBackground = true
-            it.backgroundColor = -0x7f000001 and resourceHelper.gc(R.color.iob) //50%
-            it.color = resourceHelper.gc(R.color.iob)
+            it.backgroundColor = -0x7f000001 and resourceHelper.getAttributeColor(null, R.attr.iobColor) //50%
+            it.color = resourceHelper.getAttributeColor(null, R.attr.iobColor)
             it.thickness = 3
         }
         if (useForScale) {
@@ -570,7 +570,7 @@ class GraphData(
 
         // RATIOS
         addSeries(LineGraphSeries(Array(ratioArray.size) { i -> ratioArray[i] }).also {
-            it.color = resourceHelper.gc(R.color.ratio)
+            it.color = resourceHelper.getAttributeColor(null, R.attr.overviewShowSensitivity)
             it.thickness = 3
         })
         if (useForScale) {
@@ -601,11 +601,11 @@ class GraphData(
 
         // Slopes
         addSeries(LineGraphSeries(Array(dsMaxArray.size) { i -> dsMaxArray[i] }).also {
-            it.color = resourceHelper.gc(R.color.devslopepos)
+            it.color = resourceHelper.getAttributeColor(null, R.attr.devslopepos)
             it.thickness = 3
         })
         addSeries(LineGraphSeries(Array(dsMinArray.size) { i -> dsMinArray[i] }).also {
-            it.color = resourceHelper.gc(R.color.devslopeneg)
+            it.color = resourceHelper.getAttributeColor(null, R.attr.devslopeneg)
             it.thickness = 3
         })
         if (useForScale) {
