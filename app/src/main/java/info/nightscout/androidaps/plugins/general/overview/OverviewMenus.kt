@@ -33,7 +33,7 @@ class OverviewMenus @Inject constructor(
     private val config: Config
 ) {
 
-    enum class CharType(@StringRes val nameId: Int, @AttrRes val AttrId: Int, val primary: Boolean, val secondary: Boolean, @StringRes val shortnameId: Int) {
+    enum class CharType(@StringRes val nameId: Int, @AttrRes val attrId: Int, val primary: Boolean, val secondary: Boolean, @StringRes val shortnameId: Int) {
         PRE(R.string.overview_show_predictions, R.attr.prediction, primary = true, secondary = false, shortnameId = R.string.prediction_shortname),
         BAS(R.string.overview_show_basals, R.attr.basal, primary = true, secondary = false,shortnameId = R.string.basal_shortname),
         ABS(R.string.overview_show_absinsulin, R.attr.iobColor, primary = false, secondary = true,shortnameId = R.string.abs_insulin_shortname),
@@ -118,7 +118,7 @@ class OverviewMenus @Inject constructor(
                         val item = popup.menu.add(Menu.NONE, m.ordinal + 100 * (g + 1), Menu.NONE, resourceHelper.gs(m.nameId))
                         val title = item.title
                         val s = SpannableString(title)
-                        s.setSpan(ForegroundColorSpan(resourceHelper.getAttributeColor(null,m.AttrId)), 0, s.length, 0)
+                        s.setSpan(ForegroundColorSpan(resourceHelper.getAttributeColor(null,m.attrId)), 0, s.length, 0)
                         item.title = s
                         item.isCheckable = true
                         item.isChecked = settingsCopy[g][m.ordinal]
