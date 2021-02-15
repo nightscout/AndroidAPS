@@ -108,4 +108,7 @@
 <attr name="tempTargetBackground" format="reference|color" />
 <attr name="defaultTextColor" format="reference|color" />
 <attr name="automationBgUrgent" format="reference|color" />
+<attr name="iobPredAS" format="reference|color" />
+<attr name="labelBackground" format="reference|color" />
+<attr name="examinedProfile" format="reference|color" />
 </resources>

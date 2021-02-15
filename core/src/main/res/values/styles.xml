@@ -139,6 +139,9 @@
         <item name="tempTargetBackground" >@color/tempTargetBackground</item>
         <item name="defaultTextColor" >@color/defaulttextcolor</item>
         <item name="automationBgUrgent" >@color/red</item>
+        <item name="iobPredAS" >@color/iobPredAS</item>
+        <item name="labelBackground" >@color/black</item>
+        <item name="examinedProfile" >@color/red</item>
     </style>
 
     <style name="Theme.MaterialComponents.DayNight.DarkActionBar" parent="Theme.MaterialComponents.DayNight.Bridge"/>

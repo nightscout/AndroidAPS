@@ -409,7 +409,7 @@ class GraphData(
             val iobPred: MutableList<DataPointWithLabelInterface> = ArrayList()
             val iobPredArray = iobCobCalculatorPlugin.calculateIobArrayForSMB(lastAutosensResult, SMBDefaults.exercise_mode, SMBDefaults.half_basal_exercise_target, isTempTarget)
             for (i in iobPredArray) {
-                iobPred.add(i.setColor(resourceHelper.gc(R.color.iobPredAS)))
+                iobPred.add(i.setColor(resourceHelper.getAttributeColor(null, R.attr.iobPredAS)))
                 maxIobValueFound = max(maxIobValueFound, abs(i.iob))
             }
             addSeries(PointsWithLabelGraphSeries(Array(iobPred.size) { i -> iobPred[i] }))

@@ -693,7 +693,7 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
                 binding.loopPumpStatusLayout.tempTarget.setTextColor(resourceHelper.getAttributeColor(context, R.attr.ribbonTextWarning))
                 binding.loopPumpStatusLayout.tempTarget.setBackgroundColor(resourceHelper.getAttributeColor(context, R.attr.tempTargetBackground))
             } else {
-                binding.loopPumpStatusLayout.tempTarget.setTextColor(resourceHelper.gc(R.color.white))
+                binding.loopPumpStatusLayout.tempTarget.setTextColor(resourceHelper.getAttributeColor(context, R.attr.defaultTextColor))
                 binding.loopPumpStatusLayout.tempTarget.setBackgroundColor(resourceHelper.getAttributeColor(context, R.attr.ribbonDefault))
                 binding.loopPumpStatusLayout.tempTarget.text = Profile.toTargetRangeString(profile.targetLowMgdl, profile.targetHighMgdl, Constants.MGDL, units)
             }
@@ -740,7 +740,7 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
             binding.loopPumpStatusLayout.activeProfile.setTextColor(resourceHelper.getAttributeColor(context, R.attr.ribbonTextWarning))
         } else {
             binding.loopPumpStatusLayout.activeProfile.setBackgroundColor(resourceHelper.getAttributeColor(context, R.attr.ribbonDefault))
-            binding.loopPumpStatusLayout.activeProfile.setTextColor(resourceHelper.gc(R.color.white))
+            binding.loopPumpStatusLayout.activeProfile.setTextColor(resourceHelper.getAttributeColor(context, R.attr.defaultTextColor))
         }
 
         processButtonsVisibility()

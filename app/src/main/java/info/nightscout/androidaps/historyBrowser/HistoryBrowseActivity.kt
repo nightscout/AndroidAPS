@@ -241,7 +241,7 @@ class HistoryBrowseActivity : NoSplashAppCompatActivity() {
 
                     val graph = GraphView(this)
                     graph.layoutParams = LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, resourceHelper.dpToPx(100)).also { it.setMargins(0, resourceHelper.dpToPx(15), 0, resourceHelper.dpToPx(10)) }
-                    graph.gridLabelRenderer?.gridColor = resourceHelper.gc(R.color.graphgrid)
+                    graph.gridLabelRenderer?.gridColor = resourceHelper.getAttributeColor(null, R.attr.graphGrid)
                     graph.gridLabelRenderer?.reloadStyles()
                     graph.gridLabelRenderer?.isHorizontalLabelsVisible = false
                     graph.gridLabelRenderer?.labelVerticalWidth = axisWidth

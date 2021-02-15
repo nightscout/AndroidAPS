@@ -5,6 +5,7 @@ import android.view.ViewGroup
 import android.widget.LinearLayout
 import android.widget.TextView
 import dagger.android.HasAndroidInjector
+import info.nightscout.androidaps.R
 import info.nightscout.androidaps.plugins.general.automation.triggers.Trigger
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 import javax.inject.Inject
@@ -29,7 +30,7 @@ class StaticLabel(injector: HasAndroidInjector) : Element(injector) {
         val headerLayout = LinearLayout(root.context)
         headerLayout.orientation = LinearLayout.HORIZONTAL
         headerLayout.layoutParams = LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT)
-        headerLayout.setBackgroundColor(resourceHelper.gc(android.R.color.black))
+        headerLayout.setBackgroundColor(resourceHelper.getAttributeColor(null, R.attr.labelBackground))
         // text
         val px = resourceHelper.dpToPx(10)
         val textView = TextView(root.context)

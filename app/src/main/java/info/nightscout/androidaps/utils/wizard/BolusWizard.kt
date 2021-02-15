@@ -310,7 +310,7 @@ class BolusWizard @Inject constructor(
             actions.add(resourceHelper.gs(R.string.cobvsiob) + ": " + resourceHelper.gs(R.string.formatsignedinsulinunits, insulinFromBolusIOB + insulinFromBasalIOB + insulinFromCOB + insulinFromBG).formatColorFromAttrubute( resourceHelper.getAttributeColor(null, R.attr.cobAlert )))
             val absorptionRate = iobCobCalculatorPlugin.slowAbsorptionPercentage(60)
             if (absorptionRate > .25)
-                actions.add(resourceHelper.gs(R.string.slowabsorptiondetected, resourceHelper.gc(R.color.cobAlert), (absorptionRate * 100).toInt()))
+                actions.add(resourceHelper.gs(R.string.slowabsorptiondetected, resourceHelper.getAttributeColor(null, R.attr.cobAlert), (absorptionRate * 100).toInt()))
         }
         if (abs(insulinAfterConstraints - calculatedTotalInsulin) > activePlugin.activePump.pumpDescription.pumpType.determineCorrectBolusStepSize(insulinAfterConstraints))
             actions.add(resourceHelper.gs(R.string.bolusconstraintappliedwarn, calculatedTotalInsulin, insulinAfterConstraints).formatColorFromAttrubute( resourceHelper.getAttributeColor(null, R.attr.dialogUrgent )))
