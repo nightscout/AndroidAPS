@@ -14,7 +14,7 @@ class BuildHelper @Inject constructor(private val config: Config) {
     private var engineeringMode = false
 
     init {
-        val extFilesDir = LoggerUtils.getLogDirectory()
+        val extFilesDir = LoggerUtils.logDirectory
         val engineeringModeSemaphore = File(extFilesDir, "engineering__mode")
 
         engineeringMode = engineeringModeSemaphore.exists() && engineeringModeSemaphore.isFile
