@@ -86,5 +86,11 @@
 <attr name="deviationPlus" format="reference|color" />
 <attr name="deviationMinus" format="reference|color" />
 <attr name="deviationEqual" format="reference|color" />
+<!---Notification -->
+<attr name="notificationUrgent" format="reference|color" />
+<attr name="notificationNormal" format="reference|color" />
+<attr name="notificationLow" format="reference|color" />
+<attr name="notificationInfo" format="reference|color" />
+<attr name="notificationAnnouncement" format="reference|color" />
 
 </resources>
