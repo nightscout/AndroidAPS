@@ -62,8 +62,9 @@
             android:id="@+id/main_navigation_view"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            app:itemIconTint="@drawable/navigation_drawer"
-            app:itemTextColor="@drawable/navigation_drawer"
+            app:itemIconTint="?attr/colorOnSecondary"
+            app:itemTextColor="?attr/colorOnSecondary"
+            app:itemBackground="@color/transparent"
             android:fitsSystemWindows="true"
             android:layout_gravity="start" />
     </androidx.drawerlayout.widget.DrawerLayout>
