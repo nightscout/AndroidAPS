@@ -45,6 +45,7 @@
 <attr name="graphHorizontalLabelText" format="reference|color" />
 <attr name="graphVerticalLabelText" format="reference|color" />
 <attr name="inrangeBackground" format="reference|color" />
+<attr name="graphGrid" format="reference|color" />
 <!-- Dialog specific (cutom alert dialog) -->
 <attr name="dialogTitleBackground" format="reference" />
 <attr name="dialogTitleColor" format="reference" />
