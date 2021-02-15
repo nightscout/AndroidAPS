@@ -138,6 +138,7 @@
         <item name="ribbonWarning" >@color/ribbonWarning</item>
         <item name="ribbonDefault" >@color/ribbonDefault</item>
         <item name="tempTargetBackground" >@color/tempTargetBackground</item>
+        <item name="automationBgUrgent" >@color/red</item>
     </style>
 
     <style name="Theme.MaterialComponents.DayNight.DarkActionBar" parent="Theme.MaterialComponents.DayNight.Bridge"/>

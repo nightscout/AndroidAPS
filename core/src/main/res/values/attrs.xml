@@ -107,4 +107,5 @@
 <attr name="ribbonDefault" format="reference|color" />
 <attr name="tempTargetBackground" format="reference|color" />
 <attr name="defaultTextColor" format="reference|color" />
+<attr name="automationBgUrgent" format="reference|color" />
 </resources>
