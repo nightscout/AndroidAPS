@@ -72,6 +72,7 @@
         <item name="dialogTitleBackground">@color/dialog_title_background</item>
         <item name="dialogTitleColor">@color/white</item>
         <item name="dialogTitleIconTint">@color/white</item>
+        <item name="dialogUrgent" >@color/red</item>
         <!-- TDD Stats   -->
         <item name="backgroundStatsColor">@color/background_stats_color</item>
         <!---Android Dark and Light Theme Base colors-->
@@ -79,9 +80,9 @@
         <item name="backgroundBaseColorLight" >@color/background_light</item>
         <item name="backgroundBaseColor" >@color/background_dark</item>
         <!-- colors for statuslight handler    -->
-        <item name="statuslight_normal" >@color/white</item>
-        <item name="statuslight_Warning" >@color/statuslight_Warning</item>
-        <item name="statuslight_alarm" >@color/red</item>
+        <item name="statuslightNormal" >@color/white</item>
+        <item name="statuslightWarning" >@color/statuslight_Warning</item>
+        <item name="statuslightAlarm" >@color/red</item>
         <!-- back arrow actionbar    -->
         <!-- <item name="android:homeAsUpIndicator">@drawable/ic_arrowleft</item>    -->
         <!-- colors for splash background    -->
@@ -115,6 +116,9 @@
         <item name="notificationLow" >@color/notificationLow</item>
         <item name="notificationInfo" >@color/notificationInfo</item>
         <item name="notificationAnnouncement" >@color/notificationAnnouncement</item>
+        <!---Misc -->
+        <item name="carbsColor" >@color/carbs</item>
+        <item name="tempTargetConfirmation" >@color/tempTargetConfirmation</item>
     </style>
 
     <style name="Theme.MaterialComponents.DayNight.DarkActionBar" parent="Theme.MaterialComponents.DayNight.Bridge"/>

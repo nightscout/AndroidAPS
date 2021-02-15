@@ -50,6 +50,7 @@
 <attr name="dialogTitleBackground" format="reference" />
 <attr name="dialogTitleColor" format="reference" />
 <attr name="dialogTitleIconTint" format="reference" />
+<attr name="dialogUrgent" format="reference" />
 <!-- TDD Stats   -->
 <attr name="backgroundStatsColor" format="reference" />
 <!---Android Dark ans Light Theme Base colors-->
@@ -57,9 +58,9 @@
 <attr name="backgroundBaseColorLight" format="reference" />
 <attr name="backgroundBaseColor" format="reference" />
 <!-- colors for statuslight handler    -->
-<attr name="statuslight_normal" format="reference|color" />
-<attr name="statuslight_Warning" format="reference|color" />
-<attr name="statuslight_alarm" format="reference|color" />
+<attr name="statuslightNormal" format="reference|color" />
+<attr name="statuslightWarning" format="reference|color" />
+<attr name="statuslightAlarm" format="reference|color" />
 <!-- colors for statuslight handler    -->
 <attr name="splashBackground" format="reference|color" />
 <!-- colors for information background  -->
@@ -92,5 +93,7 @@
 <attr name="notificationLow" format="reference|color" />
 <attr name="notificationInfo" format="reference|color" />
 <attr name="notificationAnnouncement" format="reference|color" />
-
+<!---Misc -->
+<attr name="carbsColor" format="reference|color" />
+<attr name="tempTargetConfirmation" format="reference|color" />
 </resources>

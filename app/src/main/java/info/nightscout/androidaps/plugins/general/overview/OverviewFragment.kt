@@ -764,9 +764,9 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
 
         // Status lights
         binding.statusLightsLayout.statusLights.visibility = (sp.getBoolean(R.string.key_show_statuslights, true) || config.NSCLIENT).toVisibility()
-        statusLightHandler.updateStatusLights(binding.statusLightsLayout.cannulaAge, binding.statusLightsLayout.insulinAge, binding.statusLightsLayout.reservoirLevel, binding.statusLightsLayout.sensorAge, null, binding.statusLightsLayout.pbAge, binding.statusLightsLayout.batteryLevel , resourceHelper.getAttributeColor(context, R.attr.statuslight_normal),
-            resourceHelper.getAttributeColor(context, R.attr.statuslight_Warning),
-            resourceHelper.getAttributeColor(context, R.attr.statuslight_alarm))
+        statusLightHandler.updateStatusLights(binding.statusLightsLayout.cannulaAge, binding.statusLightsLayout.insulinAge, binding.statusLightsLayout.reservoirLevel, binding.statusLightsLayout.sensorAge, null, binding.statusLightsLayout.pbAge, binding.statusLightsLayout.batteryLevel , resourceHelper.getAttributeColor(context, R.attr.statuslightNormal),
+            resourceHelper.getAttributeColor(context, R.attr.statuslightWarning),
+            resourceHelper.getAttributeColor(context, R.attr.statuslightAlarm))
 
         // cob
         var cobText: String = resourceHelper.gs(R.string.value_unavailable_short)
