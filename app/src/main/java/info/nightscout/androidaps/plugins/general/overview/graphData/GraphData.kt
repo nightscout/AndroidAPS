@@ -184,7 +184,7 @@ class GraphData(
         })
         addSeries(LineGraphSeries(Array(tempBasalArray.size) { i -> tempBasalArray[i] }).also {
             it.isDrawBackground = true
-            it.backgroundColor = resourceHelper.gc(R.color.lightblue)
+            it.backgroundColor =resourceHelper.getAttributeColor(null, R.attr.lightblue)
             it.thickness = 0
         })
         addSeries(LineGraphSeries(Array(basalLineArray.size) { i -> basalLineArray[i] }).also {
@@ -230,7 +230,7 @@ class GraphData(
         // create series
         addSeries(LineGraphSeries(Array(targetsSeriesArray.size) { i -> targetsSeriesArray[i] }).also {
             it.isDrawBackground = false
-            it.color = resourceHelper.gc(R.color.tempTargetBackground)
+            it.color = resourceHelper.getAttributeColor(null, R.attr.tempTargetBackground)
             it.thickness = 2
         })
     }

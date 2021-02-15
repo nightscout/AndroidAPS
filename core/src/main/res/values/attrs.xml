@@ -101,4 +101,10 @@
 <attr name="cobAlert" format="reference|color" />
 <attr name="info" format="reference|color" />
 <attr name="basebasal" format="reference|color" />
+<attr name="lightblue" format="reference|color" />
+<attr name="ribbonWarning" format="reference|color" />
+<attr name="ribbonTextWarning" format="reference|color" />
+<attr name="ribbonDefault" format="reference|color" />
+<attr name="tempTargetBackground" format="reference|color" />
+<attr name="defaultTextColor" format="reference|color" />
 </resources>

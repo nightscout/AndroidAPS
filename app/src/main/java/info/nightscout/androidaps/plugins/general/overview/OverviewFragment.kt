@@ -502,7 +502,7 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
 
                     val graph = GraphView(context)
                     graph.layoutParams = LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, resourceHelper.dpToPx(skinProvider.activeSkin().secondaryGraphHeight)).also { it.setMargins(0, resourceHelper.dpToPx(15), 0, resourceHelper.dpToPx(10)) }
-                    graph.gridLabelRenderer?.gridColor = resourceHelper.gc(R.color.graphgrid)
+                    graph.gridLabelRenderer?.gridColor = resourceHelper.getAttributeColor(context,R.attr.graphGrid )
                     graph.gridLabelRenderer?.horizontalLabelsColor = resourceHelper.getAttributeColor(context,R.attr.graphHorizontalLabelText )
                     graph.gridLabelRenderer?.verticalLabelsColor = resourceHelper.getAttributeColor(context,R.attr.graphVerticalLabelText )
                     graph.gridLabelRenderer?.reloadStyles()
@@ -680,8 +680,8 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
         // temp target
         val tempTarget = treatmentsPlugin.tempTargetFromHistory
         if (tempTarget != null) {
-            binding.loopPumpStatusLayout.tempTarget.setTextColor(resourceHelper.gc(R.color.ribbonTextWarning))
-            binding.loopPumpStatusLayout.tempTarget.setBackgroundColor(resourceHelper.gc(R.color.ribbonWarning))
+            binding.loopPumpStatusLayout.tempTarget.setTextColor(resourceHelper.getAttributeColor(context, R.attr.ribbonTextWarning))
+            binding.loopPumpStatusLayout.tempTarget.setBackgroundColor(resourceHelper.getAttributeColor(context, R.attr.ribbonWarning))
             binding.loopPumpStatusLayout.tempTarget.text = Profile.toTargetRangeString(tempTarget.low, tempTarget.high, Constants.MGDL, units) + " " + DateUtil.untilString(tempTarget.end(), resourceHelper)
         } else {
             // If the target is not the same as set in the profile then oref has overridden it
@@ -690,11 +690,11 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
             if (targetUsed != 0.0 && abs(profile.targetMgdl - targetUsed) > 0.01) {
                 aapsLogger.debug("Adjusted target. Profile: ${profile.targetMgdl} APS: $targetUsed")
                 binding.loopPumpStatusLayout.tempTarget.text = Profile.toTargetRangeString(targetUsed, targetUsed, Constants.MGDL, units)
-                binding.loopPumpStatusLayout.tempTarget.setTextColor(resourceHelper.gc(R.color.ribbonTextWarning))
-                binding.loopPumpStatusLayout.tempTarget.setBackgroundColor(resourceHelper.gc(R.color.tempTargetBackground))
+                binding.loopPumpStatusLayout.tempTarget.setTextColor(resourceHelper.getAttributeColor(context, R.attr.ribbonTextWarning))
+                binding.loopPumpStatusLayout.tempTarget.setBackgroundColor(resourceHelper.getAttributeColor(context, R.attr.tempTargetBackground))
             } else {
                 binding.loopPumpStatusLayout.tempTarget.setTextColor(resourceHelper.gc(R.color.white))
-                binding.loopPumpStatusLayout.tempTarget.setBackgroundColor(resourceHelper.gc(R.color.ribbonDefault))
+                binding.loopPumpStatusLayout.tempTarget.setBackgroundColor(resourceHelper.getAttributeColor(context, R.attr.ribbonDefault))
                 binding.loopPumpStatusLayout.tempTarget.text = Profile.toTargetRangeString(profile.targetLowMgdl, profile.targetHighMgdl, Constants.MGDL, units)
             }
         }
@@ -711,8 +711,8 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
                 OKDialog.show(it, resourceHelper.gs(R.string.basal), fullText)
             }
         }
-        binding.infoLayout.baseBasal.setTextColor(activeTemp?.let { resourceHelper.gc(R.color.basal) }
-            ?: resourceHelper.gc(R.color.defaulttextcolor))
+        binding.infoLayout.baseBasal.setTextColor(activeTemp?.let { resourceHelper.getAttributeColor(context, R.attr.basal) }
+            ?: resourceHelper.getAttributeColor(context, R.attr.defaultTextColor))
 
         binding.infoLayout.baseBasalIcon.setImageResource(R.drawable.ic_cp_basal_no_tbr)
         val percentRate = activeTemp?.tempBasalConvertedToPercent(System.currentTimeMillis(), profile)
@@ -736,10 +736,10 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
         // Active profile
         binding.loopPumpStatusLayout.activeProfile.text = profileFunction.getProfileNameWithDuration()
         if (profile.percentage != 100 || profile.timeshift != 0) {
-            binding.loopPumpStatusLayout.activeProfile.setBackgroundColor(resourceHelper.gc(R.color.ribbonWarning))
-            binding.loopPumpStatusLayout.activeProfile.setTextColor(resourceHelper.gc(R.color.ribbonTextWarning))
+            binding.loopPumpStatusLayout.activeProfile.setBackgroundColor(resourceHelper.getAttributeColor(context, R.attr.ribbonWarning))
+            binding.loopPumpStatusLayout.activeProfile.setTextColor(resourceHelper.getAttributeColor(context, R.attr.ribbonTextWarning))
         } else {
-            binding.loopPumpStatusLayout.activeProfile.setBackgroundColor(resourceHelper.gc(R.color.ribbonDefault))
+            binding.loopPumpStatusLayout.activeProfile.setBackgroundColor(resourceHelper.getAttributeColor(context, R.attr.ribbonDefault))
             binding.loopPumpStatusLayout.activeProfile.setTextColor(resourceHelper.gc(R.color.white))
         }
 

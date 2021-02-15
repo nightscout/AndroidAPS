@@ -133,6 +133,11 @@
         <item name="cobAlert" >@color/cobAlert</item>
         <item name="info" >@color/info</item>
         <item name="basebasal" >@color/basebasal</item>
+        <item name="lightblue" >@color/lightblue</item>
+        <item name="ribbonWarning" >@color/ribbonWarning</item>
+        <item name="ribbonDefault" >@color/ribbonDefault</item>
+        <item name="tempTargetBackground" >@color/tempTargetBackground</item>
+        <item name="defaultTextColor" >@color/defaulttextcolor</item>
     </style>
 
     <style name="Theme.MaterialComponents.DayNight.DarkActionBar" parent="Theme.MaterialComponents.DayNight.Bridge"/>
