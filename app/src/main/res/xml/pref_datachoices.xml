@@ -3,6 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <PreferenceCategory
+        android:key="@string/data_choices"
         android:title="@string/data_choices"
         app:initialExpandedChildrenCount="0">
 

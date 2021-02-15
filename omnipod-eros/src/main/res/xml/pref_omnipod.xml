@@ -2,7 +2,9 @@
 <androidx.preference.PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:validate="http://schemas.android.com/apk/res-auto">
 
-    <PreferenceCategory android:title="@string/omnipod_preference_category_rileylink">
+    <PreferenceCategory
+        android:key="@string/key_omnipod_preference_category_rileylink"
+        android:title="@string/omnipod_preference_category_rileylink">
 
         <Preference
             android:enabled="true"
