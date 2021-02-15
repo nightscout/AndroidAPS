@@ -24,7 +24,7 @@ buildscript {
         jodatime_version = '2.10.10'
         work_version = '2.5.0'
 
-        junit_version = '4.13.1'
+        junit_version = '4.13.2'
         mockitoVersion = '3.7.7'
         powermockVersion = '2.0.9'
         dexmakerVersion = "1.2"
