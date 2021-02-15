@@ -30,33 +30,6 @@
     <string name="key_virtualpump_type" translatable="false">virtualpump_type</string>
     <string name="key_quickwizard" translatable="false">QuickWizard</string>
     <string name="key_wear_control" translatable="false">wearcontrol</string>
-    <string name="key_bgsource_upload" translatable="false">bgsource_upload</string>
-    <string name="key_omnipod_preference_category_rileylink" translatable="false">omnipod_preference_category_rileylink</string>
-    <string name="key_localalertsettings" translatable="false">localalertsettings</string>
-    <string name="key_wear_settings" translatable="false">wear_settings</string>
-    <string name="key_absorptionsettings" translatable="false">absorptionsettings</string>
-    <string name="key_configbuilder_general" translatable="false">configbuilder_general</string>
-    <string name="key_maintenance_settings" translatable="false">maintenance_settings</string>
-    <string name="key_smscommunicator" translatable="false">smscommunicator</string>
-    <string name="key_openapssmb" translatable="false">openapssmb</string>
-    <string name="key_tidepool" translatable="false">tidepool</string>
-    <string name="key_treatmentssafety" translatable="false">treatmentssafety</string>
-    <string name="key_insight_local" translatable="false">insight_local</string>
-    <string name="key_insulin_oref_peak" translatable="false">insulin_oref_peak</string>
-    <string name="key_loop_settings" translatable="false">loop_settings</string>
-    <string name="key_virtualpump_settings" translatable="false">virtualpump_settings</string>
-    <string name="key_pump_settings" translatable="false">pump_settings</string>
-    <string name="key_tidepool_settings" translatable="false">tidepool_settings</string>
-    <string name="key_absorption_settings" translatable="false">absorption_settings</string>
-    <string name="key_overview_settings" translatable="false">overview_settings</string>
-    <string name="key_openapsma_settings" translatable="false">openapsma_settings</string>
-    <string name="key_medtronic_settings" translatable="false">medtronic_settings</string>
-    <string name="key_danars_settings" translatable="false">danars_settings</string>
-    <string name="key_xdripstatus_settings" translatable="false">xdripstatus_settings</string>
-    <string name="key_nsclientinternal_settings" translatable="false">nsclientinternal_settings</string>
-    <string name="key_insight_local_settings" translatable="false">insight_local_settings</string>
-    <string name="key_data_choices_settings" translatable="false">data_choices_settings</string>
-    <string name="key_dexcom_settings" translatable="false">dexcom_settings</string>
 
     <!--    General-->
     <string name="refresh">Refresh</string>

@@ -4,7 +4,6 @@
     xmlns:validate="http://schemas.android.com/apk/res-auto">
 
     <PreferenceCategory
-        android:key="@string/tidepool"
         android:title="@string/tidepool"
         app:initialExpandedChildrenCount="0">
 
