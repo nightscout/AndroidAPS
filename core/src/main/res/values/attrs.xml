@@ -116,4 +116,6 @@
 <attr name="triggerConnectorBackground" format="reference|color" />
 <attr name="treatmentsRed" format="reference|color" />
 <attr name="profilViewerLabel" format="reference|color" />
+<attr name="metadataOk" format="reference|color" />
+<attr name="metadataTextWarning" format="reference|color" />
 </resources>
