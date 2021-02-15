@@ -259,7 +259,7 @@ class ProfileHelperActivity : NoSplashAppCompatActivity() {
 
         tabSelected = tab
         typeSelected[tabSelected] = newContent
-        binding.profiletypeTitle.defaultHintTextColor = ColorStateList.valueOf(resourceHelper.gc(if (tab == 0)  resourceHelper.getAttributeColor(null, R.attr.tabBgColorSelected)  else R.color.red))
+        binding.profiletypeTitle.defaultHintTextColor = ColorStateList.valueOf(if (tab == 0)  resourceHelper.getAttributeColor(null, R.attr.tabBgColorSelected)  else resourceHelper.getAttributeColor(null, R.attr.examinedProfile))
 
         // show new content
         binding.profiletype.setText(
@@ -289,7 +289,7 @@ class ProfileHelperActivity : NoSplashAppCompatActivity() {
     }
 
     private fun setBackgroundColorOnSelected(tab: Int) {
-        binding.menu1.setBackgroundColor(resourceHelper.gc(if (tab == 1)  resourceHelper.getAttributeColor(null, R.attr.defaultBackground) else  resourceHelper.getAttributeColor(null, R.attr.tabBgColorSelected)))
-        binding.menu2.setBackgroundColor(resourceHelper.gc(if (tab == 0) resourceHelper.getAttributeColor(null, R.attr.defaultBackground) else R.color.red))
+        binding.menu1.setBackgroundColor(if (tab == 1)  resourceHelper.getAttributeColor(null, R.attr.defaultBackground) else  resourceHelper.getAttributeColor(null, R.attr.tabBgColorSelected))
+        binding.menu2.setBackgroundColor(if (tab == 0) resourceHelper.getAttributeColor(null, R.attr.defaultBackground) else resourceHelper.getAttributeColor(null, R.attr.dialogUrgent))
     }
 }

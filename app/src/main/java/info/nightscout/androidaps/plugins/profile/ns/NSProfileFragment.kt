@@ -52,7 +52,7 @@ class NSProfileFragment : DaggerFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        binding.profileviewer.closeLayout.closeAppbutton.visibility = View.GONE // not needed for fragment
+        binding.profileviewer.closeLayout.closeButton.visibility = View.GONE // not needed for fragment
 
         binding.profileswitchNsprofile.setOnClickListener {
             val name = binding.spinner.selectedItem?.toString() ?: ""
