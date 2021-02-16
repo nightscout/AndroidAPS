@@ -311,7 +311,6 @@ class TDDStatsActivity : NoSplashAppCompatActivity() {
                         tr.addView(TextView(this@TDDStatsActivity).also { labelRATIO ->
                             labelRATIO.id = 600 + i
                             labelRATIO.text = (100 * tdd / magicNumber).roundToInt().toString() + "%"
-                            labelRATIO.setTextColor(Color.WHITE)
                         })
                     }, TableLayout.LayoutParams(TableLayout.LayoutParams.MATCH_PARENT, TableLayout.LayoutParams.WRAP_CONTENT))
                 i++
@@ -389,7 +388,6 @@ class TDDStatsActivity : NoSplashAppCompatActivity() {
                     etr.addView(TextView(this@TDDStatsActivity).also { labelWEIGHT ->
                         labelWEIGHT.id = 1200 + i
                         labelWEIGHT.text = "0.3\n0.5\n0.7"
-                        labelWEIGHT.setTextColor(Color.WHITE)
                     })
                     etr.addView(TextView(this@TDDStatsActivity).also { labelEXPTDD ->
                         labelEXPTDD.id = 1300 + i
@@ -398,7 +396,6 @@ class TDDStatsActivity : NoSplashAppCompatActivity() {
                 ${resourceHelper.gs(R.string.formatinsulinunits, weighted05)}
                 ${resourceHelper.gs(R.string.formatinsulinunits, weighted07)}
                 """.trimIndent()
-                        labelEXPTDD.setTextColor(Color.WHITE)
                     })
                     etr.addView(TextView(this@TDDStatsActivity).also { labelEXPRATIO ->
                         labelEXPRATIO.id = 1400 + i
@@ -407,7 +404,6 @@ class TDDStatsActivity : NoSplashAppCompatActivity() {
                 ${(100 * weighted05 / magicNumber).roundToInt()}%
                 ${(100 * weighted07 / magicNumber).roundToInt()}%
                 """.trimIndent()
-                        labelEXPRATIO.setTextColor(Color.WHITE)
                     })
                 }, TableLayout.LayoutParams(TableLayout.LayoutParams.MATCH_PARENT, TableLayout.LayoutParams.WRAP_CONTENT)
             )
