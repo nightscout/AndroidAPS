@@ -34,7 +34,8 @@ class MaintenancePlugin @Inject constructor(
     private val nsSettingsStatus: NSSettingsStatus,
     aapsLogger: AAPSLogger,
     private val buildHelper: BuildHelper,
-    private val config: Config
+    private val config: Config,
+    private val loggerUtils: LoggerUtils
 ) : PluginBase(PluginDescription()
     .mainType(PluginType.GENERAL)
     .fragmentClass(MaintenanceFragment::class.java.name)
@@ -51,8 +52,7 @@ class MaintenancePlugin @Inject constructor(
     fun sendLogs() {
         val recipient = sp.getString(R.string.key_maintenance_logs_email, "logs@androidaps.org")
         val amount = sp.getInt(R.string.key_maintenance_logs_amount, 2)
-        val logDirectory = LoggerUtils.logDirectory
-        val logs = getLogFiles(logDirectory, amount)
+        val logs = getLogFiles(amount)
         val zipDir = context.getExternalFilesDir("exports")
         val zipFile = File(zipDir, constructName())
         aapsLogger.debug("zipFile: ${zipFile.absolutePath}")
@@ -66,7 +66,7 @@ class MaintenancePlugin @Inject constructor(
     //todo replace this with a call on startup of the application, specifically to remove
     // unnecessary garbage from the log exports
     fun deleteLogs() {
-        val logDir = File(LoggerUtils.logDirectory)
+        val logDir = File(loggerUtils.logDirectory)
         val files = logDir.listFiles { _: File?, name: String ->
             (name.startsWith("AndroidAPS") && name.endsWith(".zip"))
         }
@@ -80,7 +80,7 @@ class MaintenancePlugin @Inject constructor(
                 file.delete()
             }
         }
-        val exportDir = File(LoggerUtils.logDirectory, "exports")
+        val exportDir = File(loggerUtils.logDirectory, "exports")
         if (exportDir.exists()) {
             val expFiles = exportDir.listFiles()
             for (file in expFiles) {
@@ -96,17 +96,16 @@ class MaintenancePlugin @Inject constructor(
      *
      * The log files are sorted by the name descending.
      *
-     * @param directory
      * @param amount
      * @return
      */
-    fun getLogFiles(directory: String, amount: Int): List<File> {
-        aapsLogger.debug("getting $amount logs from directory $directory")
-        val logDir = File(directory)
+    fun getLogFiles(amount: Int): List<File> {
+        aapsLogger.debug("getting $amount logs from directory ${loggerUtils.logDirectory}")
+        val logDir = File(loggerUtils.logDirectory)
         val files = logDir.listFiles { _: File?, name: String ->
             (name.startsWith("AndroidAPS")
                 && (name.endsWith(".log")
-                || name.endsWith(".zip") && !name.endsWith(LoggerUtils.SUFFIX)))
+                || name.endsWith(".zip") && !name.endsWith(loggerUtils.suffix)))
         }
         Arrays.sort(files) { f1: File, f2: File -> f2.name.compareTo(f1.name) }
         val result = listOf(*files)
@@ -137,7 +136,7 @@ class MaintenancePlugin @Inject constructor(
      * @return
      */
     private fun constructName(): String {
-        return "AndroidAPS_LOG_" + Date().time + LoggerUtils.SUFFIX
+        return "AndroidAPS_LOG_" + Date().time + loggerUtils.suffix
     }
 
     private fun zip(zipFile: File?, files: List<File>) {

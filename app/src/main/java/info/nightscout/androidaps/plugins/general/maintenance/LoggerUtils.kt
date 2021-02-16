@@ -2,13 +2,16 @@ package info.nightscout.androidaps.plugins.general.maintenance
 
 import ch.qos.logback.classic.LoggerContext
 import org.slf4j.LoggerFactory
+import javax.inject.Inject
+import javax.inject.Singleton
 
 /**
  * This class provides several methods for log-handling (eg. sending logs as emails).
  */
-object LoggerUtils {
+@Singleton
+class LoggerUtils @Inject constructor() {
 
-    var SUFFIX = ".log.zip"
+    var suffix = ".log.zip"
 
     /**
      * Returns the directory, in which the logs are stored on the system. This is configured in the

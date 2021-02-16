@@ -125,7 +125,7 @@ public class IobCobOref1Thread extends Thread {
                     return;
                 }
 
-                long prevDataTime = IobCobCalculatorPlugin.roundUpTime(bucketed_data.get(bucketed_data.size() - 3).getTimestamp());
+                long prevDataTime = IobCobCalculatorPlugin.Companion.roundUpTime(bucketed_data.get(bucketed_data.size() - 3).getTimestamp());
                 aapsLogger.debug(LTag.AUTOSENS, "Prev data time: " + dateUtil.dateAndTimeString(prevDataTime));
                 AutosensData previous = autosensDataTable.get(prevDataTime);
                 // start from oldest to be able sub cob
@@ -133,15 +133,15 @@ public class IobCobOref1Thread extends Thread {
                     String progress = i + (buildHelper.isDev() ? " (" + from + ")" : "");
                     rxBus.send(new EventIobCalculationProgress(progress));
 
-                    if (iobCobCalculatorPlugin.stopCalculationTrigger) {
-                        iobCobCalculatorPlugin.stopCalculationTrigger = false;
+                    if (iobCobCalculatorPlugin.getStopCalculationTrigger()) {
+                        iobCobCalculatorPlugin.setStopCalculationTrigger(false);
                         aapsLogger.debug(LTag.AUTOSENS, "Aborting calculation thread (trigger): " + from);
                         return;
                     }
                     // check if data already exists
                     long bgTime = bucketed_data.get(i).getTimestamp();
-                    bgTime = IobCobCalculatorPlugin.roundUpTime(bgTime);
-                    if (bgTime > IobCobCalculatorPlugin.roundUpTime(now()))
+                    bgTime = IobCobCalculatorPlugin.Companion.roundUpTime(bgTime);
+                    if (bgTime > IobCobCalculatorPlugin.Companion.roundUpTime(now()))
                         continue;
 
                     AutosensData existing;

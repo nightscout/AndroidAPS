@@ -122,7 +122,7 @@ public class IobCobThread extends Thread {
                     return;
                 }
 
-                long prevDataTime = IobCobCalculatorPlugin.roundUpTime(bucketed_data.get(bucketed_data.size() - 3).getTimestamp());
+                long prevDataTime = IobCobCalculatorPlugin.Companion.roundUpTime(bucketed_data.get(bucketed_data.size() - 3).getTimestamp());
                 aapsLogger.debug(LTag.AUTOSENS, "Prev data time: " + dateUtil.dateAndTimeString(prevDataTime));
                 AutosensData previous = autosensDataTable.get(prevDataTime);
                 // start from oldest to be able sub cob
@@ -130,15 +130,15 @@ public class IobCobThread extends Thread {
                     String progress = i + (buildHelper.isDev() ? " (" + from + ")" : "");
                     rxBus.send(new EventIobCalculationProgress(progress));
 
-                    if (iobCobCalculatorPlugin.stopCalculationTrigger) {
-                        iobCobCalculatorPlugin.stopCalculationTrigger = false;
+                    if (iobCobCalculatorPlugin.getStopCalculationTrigger()) {
+                        iobCobCalculatorPlugin.setStopCalculationTrigger(false);
                         aapsLogger.debug(LTag.AUTOSENS, "Aborting calculation thread (trigger): " + from);
                         return;
                     }
                     // check if data already exists
                     long bgTime = bucketed_data.get(i).getTimestamp();
-                    bgTime = IobCobCalculatorPlugin.roundUpTime(bgTime);
-                    if (bgTime > IobCobCalculatorPlugin.roundUpTime(now()))
+                    bgTime = IobCobCalculatorPlugin.Companion.roundUpTime(bgTime);
+                    if (bgTime > IobCobCalculatorPlugin.Companion.roundUpTime(now()))
                         continue;
 
                     AutosensData existing;
@@ -190,8 +190,8 @@ public class IobCobThread extends Thread {
 
                     // https://github.com/openaps/oref0/blob/master/lib/determine-basal/cob-autosens.js#L169
                     if (i < bucketed_data.size() - 16) { // we need 1h of data to calculate minDeviationSlope
-                        long hourago = bgTime + 10 * 1000 - 60 * 60 * 1000L;
-                        AutosensData hourAgoData = iobCobCalculatorPlugin.getAutosensData(hourago);
+                        long hourAgo = bgTime + 10 * 1000 - 60 * 60 * 1000L;
+                        AutosensData hourAgoData = iobCobCalculatorPlugin.getAutosensData(hourAgo);
                         if (hourAgoData != null) {
                             int initialIndex = autosensDataTable.indexOfKey(hourAgoData.time);
                             aapsLogger.debug(LTag.AUTOSENS, ">>>>> bucketed_data.size()=" + bucketed_data.size() + " i=" + i + " hourAgoData=" + hourAgoData.toString());
@@ -219,9 +219,6 @@ public class IobCobThread extends Thread {
                                         slopeFromMinDeviation = Math.max(0, deviationSlope);
                                         minDeviation = ad.avgDeviation;
                                     }
-
-                                    //if (Config.isEnabled(L.AUTOSENS))
-                                    //    log.debug("Deviations: " + new Date(bgTime) + new Date(ad.time) + " avgDeviation=" + avgDeviation + " deviationSlope=" + deviationSlope + " slopeFromMaxDeviation=" + slopeFromMaxDeviation + " slopeFromMinDeviation=" + slopeFromMinDeviation);
                                 }
                             } catch (Exception e) {
                                 aapsLogger.error("Unhandled exception", e);
@@ -301,7 +298,6 @@ public class IobCobThread extends Thread {
                     } else {
                         autosensData.pastSensitivity += "C";
                     }
-                    //log.debug("TIME: " + new Date(bgTime).toString() + " BG: " + bg + " SENS: " + sens + " DELTA: " + delta + " AVGDELTA: " + avgDelta + " IOB: " + iob.iob + " ACTIVITY: " + iob.activity + " BGI: " + bgi + " DEVIATION: " + deviation);
 
                     previous = autosensData;
                     if (bgTime < now())

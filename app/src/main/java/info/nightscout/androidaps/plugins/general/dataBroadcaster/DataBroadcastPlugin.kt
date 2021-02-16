@@ -130,7 +130,7 @@ class DataBroadcastPlugin @Inject constructor(
         bundle.putString("units", profileFunction.getUnits()) // units used in AAPS "mg/dl" or "mmol"
         bundle.putString("slopeArrow", lastBG.trendArrow.text) // direction arrow as string
         bundle.putDouble("deltaMgdl", glucoseStatus.delta) // bg delta in mgdl
-        bundle.putDouble("avgDeltaMgdl", glucoseStatus.avgdelta) // average bg delta
+        bundle.putDouble("avgDeltaMgdl", glucoseStatus.avgDelta) // average bg delta
         bundle.putDouble("high", defaultValueHelper.determineHighLine()) // predefined top value of in range (green area)
         bundle.putDouble("low", defaultValueHelper.determineLowLine()) // predefined bottom  value of in range
     }
