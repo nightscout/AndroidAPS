@@ -4,7 +4,6 @@
     xmlns:validate="http://schemas.android.com/apk/res-auto">
 
     <PreferenceCategory
-        android:key="@string/key_loop_settings"
         app:initialExpandedChildrenCount="0"
         android:title="@string/loop">
 

@@ -4,7 +4,6 @@
     xmlns:validate="http://schemas.android.com/apk/res-auto">
 
     <PreferenceCategory
-        android:key="@string/key_openapssmb"
         android:title="@string/openapssmb"
         app:initialExpandedChildrenCount="0">
 

@@ -4,7 +4,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <PreferenceCategory
-        android:key="@string/key_maintenance_settings"
+        android:key="maintenance"
         android:title="@string/maintenance_settings"
         app:initialExpandedChildrenCount="0">
 
