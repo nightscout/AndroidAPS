@@ -73,8 +73,8 @@ class TriggerDelta(injector: HasAndroidInjector) : Trigger(injector) {
                 false
             }
         val calculatedDelta = when (delta.deltaType) {
-            DeltaType.SHORT_AVERAGE -> glucoseStatus.short_avgdelta
-            DeltaType.LONG_AVERAGE  -> glucoseStatus.long_avgdelta
+            DeltaType.SHORT_AVERAGE -> glucoseStatus.shortAvgDelta
+            DeltaType.LONG_AVERAGE  -> glucoseStatus.longAvgDelta
             else                    -> glucoseStatus.delta
         }
         if (comparator.value.check(calculatedDelta, Profile.toMgdl(delta.value, units))) {

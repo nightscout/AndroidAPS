@@ -112,9 +112,9 @@ class QuickWizardEntry @Inject constructor(private val injector: HasAndroidInjec
         var trend = false
         if (useTrend() == YES) {
             trend = true
-        } else if (useTrend() == POSITIVE_ONLY && glucoseStatus != null && glucoseStatus.short_avgdelta > 0) {
+        } else if (useTrend() == POSITIVE_ONLY && glucoseStatus != null && glucoseStatus.shortAvgDelta > 0) {
             trend = true
-        } else if (useTrend() == NEGATIVE_ONLY && glucoseStatus != null && glucoseStatus.short_avgdelta < 0) {
+        } else if (useTrend() == NEGATIVE_ONLY && glucoseStatus != null && glucoseStatus.shortAvgDelta < 0) {
             trend = true
         }
         val percentage = sp.getDouble(R.string.key_boluswizard_percentage, 100.0)

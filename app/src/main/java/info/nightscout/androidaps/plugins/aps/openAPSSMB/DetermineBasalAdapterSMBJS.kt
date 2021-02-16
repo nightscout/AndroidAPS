@@ -241,12 +241,12 @@ class DetermineBasalAdapterSMBJS internal constructor(private val scriptReader: 
         mGlucoseStatus.put("glucose", glucoseStatus.glucose)
         mGlucoseStatus.put("noise", glucoseStatus.noise)
         if (sp.getBoolean(R.string.key_always_use_shortavg, false)) {
-            mGlucoseStatus.put("delta", glucoseStatus.short_avgdelta)
+            mGlucoseStatus.put("delta", glucoseStatus.shortAvgDelta)
         } else {
             mGlucoseStatus.put("delta", glucoseStatus.delta)
         }
-        mGlucoseStatus.put("short_avgdelta", glucoseStatus.short_avgdelta)
-        mGlucoseStatus.put("long_avgdelta", glucoseStatus.long_avgdelta)
+        mGlucoseStatus.put("short_avgdelta", glucoseStatus.shortAvgDelta)
+        mGlucoseStatus.put("long_avgdelta", glucoseStatus.longAvgDelta)
         mGlucoseStatus.put("date", glucoseStatus.date)
         this.mealData.put("carbs", mealData.carbs)
         this.mealData.put("boluses", mealData.boluses)

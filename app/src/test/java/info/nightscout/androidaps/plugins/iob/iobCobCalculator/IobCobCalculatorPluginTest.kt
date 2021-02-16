@@ -13,7 +13,6 @@ import info.nightscout.androidaps.plugins.sensitivity.SensitivityOref1Plugin
 import info.nightscout.androidaps.plugins.sensitivity.SensitivityWeightedAveragePlugin
 import info.nightscout.androidaps.plugins.treatments.TreatmentsPlugin
 import info.nightscout.androidaps.utils.DateUtil
-import info.nightscout.androidaps.utils.DefaultValueHelper
 import info.nightscout.androidaps.utils.FabricPrivacy
 import info.nightscout.androidaps.utils.T
 import info.nightscout.androidaps.utils.resources.ResourceHelper
@@ -40,7 +39,6 @@ class IobCobCalculatorPluginTest : TestBase() {
     @Mock lateinit var sensitivityOref1Plugin: SensitivityOref1Plugin
     @Mock lateinit var sensitivityAAPSPlugin: SensitivityAAPSPlugin
     @Mock lateinit var sensitivityWeightedAveragePlugin: SensitivityWeightedAveragePlugin
-    @Mock lateinit var defaultValueHelper: DefaultValueHelper
     @Mock lateinit var fabricPrivacy: FabricPrivacy
     @Mock lateinit var dateUtil: DateUtil
     @Mock lateinit var repository: AppRepository
@@ -137,9 +135,9 @@ class IobCobCalculatorPluginTest : TestBase() {
         iobCobCalculatorPlugin.bgReadings = bgReadingList
         Assert.assertEquals(true, iobCobCalculatorPlugin.isAbout5minData)
         iobCobCalculatorPlugin.createBucketedData()
-        Assert.assertEquals(bgReadingList[0].timestamp, iobCobCalculatorPlugin.bucketedData[0].timestamp)
-        Assert.assertEquals(bgReadingList[3].timestamp, iobCobCalculatorPlugin.bucketedData[3].timestamp)
-        Assert.assertEquals(bgReadingList.size.toLong(), iobCobCalculatorPlugin.bucketedData.size.toLong())
+        Assert.assertEquals(bgReadingList[0].timestamp, iobCobCalculatorPlugin.bucketedData!![0].timestamp)
+        Assert.assertEquals(bgReadingList[3].timestamp, iobCobCalculatorPlugin.bucketedData!![3].timestamp)
+        Assert.assertEquals(bgReadingList.size.toLong(), iobCobCalculatorPlugin.bucketedData!!.size.toLong())
 
         // Missing value should be replaced
         bgReadingList.clear()
@@ -149,9 +147,9 @@ class IobCobCalculatorPluginTest : TestBase() {
         iobCobCalculatorPlugin.bgReadings = bgReadingList
         Assert.assertEquals(true, iobCobCalculatorPlugin.isAbout5minData)
         iobCobCalculatorPlugin.createBucketedData()
-        Assert.assertEquals(bgReadingList[0].timestamp, iobCobCalculatorPlugin.bucketedData[0].timestamp)
-        Assert.assertEquals(bgReadingList[2].timestamp, iobCobCalculatorPlugin.bucketedData[3].timestamp)
-        Assert.assertEquals(bgReadingList.size + 1.toLong(), iobCobCalculatorPlugin.bucketedData.size.toLong())
+        Assert.assertEquals(bgReadingList[0].timestamp, iobCobCalculatorPlugin.bucketedData!![0].timestamp)
+        Assert.assertEquals(bgReadingList[2].timestamp, iobCobCalculatorPlugin.bucketedData!![3].timestamp)
+        Assert.assertEquals(bgReadingList.size + 1.toLong(), iobCobCalculatorPlugin.bucketedData!!.size.toLong())
 
         // drift should be cleared
         bgReadingList.clear()
@@ -163,11 +161,11 @@ class IobCobCalculatorPluginTest : TestBase() {
         iobCobCalculatorPlugin.bgReadings = bgReadingList
         Assert.assertEquals(true, iobCobCalculatorPlugin.isAbout5minData)
         iobCobCalculatorPlugin.createBucketedData()
-        Assert.assertEquals(T.mins(20).msecs(), iobCobCalculatorPlugin.bucketedData[0].timestamp)
-        Assert.assertEquals(T.mins(15).msecs(), iobCobCalculatorPlugin.bucketedData[1].timestamp)
-        Assert.assertEquals(T.mins(10).msecs(), iobCobCalculatorPlugin.bucketedData[2].timestamp)
-        Assert.assertEquals(T.mins(5).msecs(), iobCobCalculatorPlugin.bucketedData[3].timestamp)
-        Assert.assertEquals(bgReadingList.size.toLong(), iobCobCalculatorPlugin.bucketedData.size.toLong())
+        Assert.assertEquals(T.mins(20).msecs(), iobCobCalculatorPlugin.bucketedData!![0].timestamp)
+        Assert.assertEquals(T.mins(15).msecs(), iobCobCalculatorPlugin.bucketedData!![1].timestamp)
+        Assert.assertEquals(T.mins(10).msecs(), iobCobCalculatorPlugin.bucketedData!![2].timestamp)
+        Assert.assertEquals(T.mins(5).msecs(), iobCobCalculatorPlugin.bucketedData!![3].timestamp)
+        Assert.assertEquals(bgReadingList.size.toLong(), iobCobCalculatorPlugin.bucketedData!!.size.toLong())
 
         // bucketed data should return null if not enough bg data
         bgReadingList.clear()
@@ -186,13 +184,13 @@ class IobCobCalculatorPluginTest : TestBase() {
         iobCobCalculatorPlugin.bgReadings = bgReadingList
         Assert.assertEquals(true, iobCobCalculatorPlugin.isAbout5minData)
         iobCobCalculatorPlugin.createBucketedData()
-        Assert.assertEquals(T.mins(50).msecs(), iobCobCalculatorPlugin.bucketedData[0].timestamp)
-        Assert.assertEquals(T.mins(20).msecs(), iobCobCalculatorPlugin.bucketedData[6].timestamp)
-        Assert.assertEquals(7, iobCobCalculatorPlugin.bucketedData.size.toLong())
-        Assert.assertEquals(100.0, iobCobCalculatorPlugin.bucketedData[0].value, 1.0)
-        Assert.assertEquals(90.0, iobCobCalculatorPlugin.bucketedData[1].value, 1.0)
-        Assert.assertEquals(50.0, iobCobCalculatorPlugin.bucketedData[5].value, 1.0)
-        Assert.assertEquals(40.0, iobCobCalculatorPlugin.bucketedData[6].value, 1.0)
+        Assert.assertEquals(T.mins(50).msecs(), iobCobCalculatorPlugin.bucketedData!![0].timestamp)
+        Assert.assertEquals(T.mins(20).msecs(), iobCobCalculatorPlugin.bucketedData!![6].timestamp)
+        Assert.assertEquals(7, iobCobCalculatorPlugin.bucketedData!!.size.toLong())
+        Assert.assertEquals(100.0, iobCobCalculatorPlugin.bucketedData!![0].value, 1.0)
+        Assert.assertEquals(90.0, iobCobCalculatorPlugin.bucketedData!![1].value, 1.0)
+        Assert.assertEquals(50.0, iobCobCalculatorPlugin.bucketedData!![5].value, 1.0)
+        Assert.assertEquals(40.0, iobCobCalculatorPlugin.bucketedData!![6].value, 1.0)
 
         // non 5min data should be reconstructed
         bgReadingList.clear()
@@ -202,16 +200,16 @@ class IobCobCalculatorPluginTest : TestBase() {
         iobCobCalculatorPlugin.bgReadings = bgReadingList
         Assert.assertEquals(false, iobCobCalculatorPlugin.isAbout5minData)
         iobCobCalculatorPlugin.createBucketedData()
-        Assert.assertEquals(T.mins(50).msecs(), iobCobCalculatorPlugin.bucketedData[0].timestamp)
-        Assert.assertEquals(T.mins(20).msecs(), iobCobCalculatorPlugin.bucketedData[6].timestamp)
-        Assert.assertEquals(7, iobCobCalculatorPlugin.bucketedData.size.toLong())
-        Assert.assertEquals(100.0, iobCobCalculatorPlugin.bucketedData[0].value, 1.0)
-        Assert.assertEquals(90.0, iobCobCalculatorPlugin.bucketedData[1].value, 1.0)
-        Assert.assertEquals(50.0, iobCobCalculatorPlugin.bucketedData[5].value, 1.0)
-        Assert.assertEquals(40.0, iobCobCalculatorPlugin.bucketedData[6].value, 1.0)
+        Assert.assertEquals(T.mins(50).msecs(), iobCobCalculatorPlugin.bucketedData!![0].timestamp)
+        Assert.assertEquals(T.mins(20).msecs(), iobCobCalculatorPlugin.bucketedData!![6].timestamp)
+        Assert.assertEquals(7, iobCobCalculatorPlugin.bucketedData!!.size.toLong())
+        Assert.assertEquals(100.0, iobCobCalculatorPlugin.bucketedData!![0].value, 1.0)
+        Assert.assertEquals(90.0, iobCobCalculatorPlugin.bucketedData!![1].value, 1.0)
+        Assert.assertEquals(50.0, iobCobCalculatorPlugin.bucketedData!![5].value, 1.0)
+        Assert.assertEquals(40.0, iobCobCalculatorPlugin.bucketedData!![6].value, 1.0)
 
         //bucketed data should be null if no bg data available
-        iobCobCalculatorPlugin.bgReadings = null
+        iobCobCalculatorPlugin.bgReadings = ArrayList()
         iobCobCalculatorPlugin.createBucketedData()
         Assert.assertEquals(null, iobCobCalculatorPlugin.bucketedData)
 
@@ -246,11 +244,11 @@ class IobCobCalculatorPluginTest : TestBase() {
         bgReadingList.add(GlucoseValue(raw = 0.0, noise = 0.0, value = 100.0, timestamp = DateUtil.fromISODateString("2018-09-05T03:50:03Z").time, sourceSensor = GlucoseValue.SourceSensor.UNKNOWN, trendArrow = GlucoseValue.TrendArrow.FLAT))
         bgReadingList.add(GlucoseValue(raw = 0.0, noise = 0.0, value = 100.0, timestamp = DateUtil.fromISODateString("2018-09-05T03:44:57Z").time, sourceSensor = GlucoseValue.SourceSensor.UNKNOWN, trendArrow = GlucoseValue.TrendArrow.FLAT))
         iobCobCalculatorPlugin.bgReadings = bgReadingList
-        iobCobCalculatorPlugin.referenceTime = null
+        iobCobCalculatorPlugin.referenceTime = -1
         Assert.assertEquals(true, iobCobCalculatorPlugin.isAbout5minData)
         iobCobCalculatorPlugin.createBucketedData()
-        Assert.assertEquals(DateUtil.fromISODateString("2018-09-05T13:34:57Z").time, iobCobCalculatorPlugin.bucketedData[0].timestamp)
-        Assert.assertEquals(DateUtil.fromISODateString("2018-09-05T03:44:57Z").time, iobCobCalculatorPlugin.bucketedData[iobCobCalculatorPlugin.bucketedData.size - 1].timestamp)
+        Assert.assertEquals(DateUtil.fromISODateString("2018-09-05T13:34:57Z").time, iobCobCalculatorPlugin.bucketedData!![0].timestamp)
+        Assert.assertEquals(DateUtil.fromISODateString("2018-09-05T03:44:57Z").time, iobCobCalculatorPlugin.bucketedData!![iobCobCalculatorPlugin.bucketedData!!.size - 1].timestamp)
 
         // 5min 4sec data
         bgReadingList.clear()

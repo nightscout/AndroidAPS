@@ -88,7 +88,7 @@ class GraphData(
         addSeries(PointsWithLabelGraphSeries(Array(bgListArray.size) { i -> bgListArray[i] }))
     }
 
-    internal fun setNumVerticalLables() {
+    internal fun setNumVerticalLabels() {
         graph.gridLabelRenderer.numVerticalLabels = if (units == Constants.MGDL) (maxY / 40 + 1).toInt() else (maxY / 2 + 1).toInt()
     }
 
@@ -291,7 +291,7 @@ class GraphData(
 
     fun addActivity(fromTime: Long, toTime: Long, useForScale: Boolean, scale: Double) {
         val actArrayHist: MutableList<ScaledDataPoint> = ArrayList()
-        val actArrayPred: MutableList<ScaledDataPoint> = ArrayList()
+        val actArrayPrediction: MutableList<ScaledDataPoint> = ArrayList()
         val now = System.currentTimeMillis().toDouble()
         val actScale = Scale()
         var total: IobTotal
@@ -305,7 +305,7 @@ class GraphData(
             }
             total = iobCobCalculatorPlugin.calculateFromTreatmentsAndTempsSynchronized(time, profile)
             val act: Double = total.activity
-            if (time <= now) actArrayHist.add(ScaledDataPoint(time, act, actScale)) else actArrayPred.add(ScaledDataPoint(time, act, actScale))
+            if (time <= now) actArrayHist.add(ScaledDataPoint(time, act, actScale)) else actArrayPrediction.add(ScaledDataPoint(time, act, actScale))
             maxIAValue = max(maxIAValue, abs(act))
             time += 5 * 60 * 1000L
         }
@@ -314,7 +314,7 @@ class GraphData(
             it.color = resourceHelper.getAttributeColor(null, R.attr.activity)
             it.thickness = 3
         })
-        addSeries(FixedLineGraphSeries(Array(actArrayPred.size) { i -> actArrayPred[i] }).also {
+        addSeries(FixedLineGraphSeries(Array(actArrayPrediction.size) { i -> actArrayPrediction[i] }).also {
             it.setCustomPaint(Paint().also { paint ->
                 paint.style = Paint.Style.STROKE
                 paint.strokeWidth = 3f
@@ -332,7 +332,7 @@ class GraphData(
     //Function below show -BGI to be able to compare curves with deviations
     fun addMinusBGI(fromTime: Long, toTime: Long, useForScale: Boolean, scale: Double, devBgiScale: Boolean) {
         val bgiArrayHist: MutableList<ScaledDataPoint> = ArrayList()
-        val bgiArrayPred: MutableList<ScaledDataPoint> = ArrayList()
+        val bgiArrayPrediction: MutableList<ScaledDataPoint> = ArrayList()
         val now = System.currentTimeMillis().toDouble()
         val bgiScale = Scale()
         var total: IobTotal
@@ -348,7 +348,7 @@ class GraphData(
 
             total = iobCobCalculatorPlugin.calculateFromTreatmentsAndTempsSynchronized(time, profile)
             val bgi: Double = total.activity * profile.getIsfMgdl(time) * 5.0
-            if (time <= now) bgiArrayHist.add(ScaledDataPoint(time, bgi, bgiScale)) else bgiArrayPred.add(ScaledDataPoint(time, bgi, bgiScale))
+            if (time <= now) bgiArrayHist.add(ScaledDataPoint(time, bgi, bgiScale)) else bgiArrayPrediction.add(ScaledDataPoint(time, bgi, bgiScale))
             maxBGIValue = max(maxBGIValue, max(abs(bgi), deviation))
             time += 5 * 60 * 1000L
         }
@@ -357,7 +357,7 @@ class GraphData(
             it.color = resourceHelper.getAttributeColor(null, R.attr.bgi)
             it.thickness = 3
         })
-        addSeries(FixedLineGraphSeries(Array(bgiArrayPred.size) { i -> bgiArrayPred[i] }).also {
+        addSeries(FixedLineGraphSeries(Array(bgiArrayPrediction.size) { i -> bgiArrayPrediction[i] }).also {
             it.setCustomPaint(Paint().also { paint ->
                 paint.style = Paint.Style.STROKE
                 paint.strokeWidth = 3f
@@ -386,7 +386,7 @@ class GraphData(
             var absIob = 0.0
             if (profile != null) {
                 iob = iobCobCalculatorPlugin.calculateFromTreatmentsAndTempsSynchronized(time, profile).iob
-                if (absScale) absIob = iobCobCalculatorPlugin.calculateAbsInsulinFromTreatmentsAndTempsSynchronized(time, profile).iob
+                if (absScale) absIob = iobCobCalculatorPlugin.calculateAbsInsulinFromTreatmentsAndTempsSynchronized(time).iob
             }
             if (abs(lastIob - iob) > 0.02) {
                 if (abs(lastIob - iob) > 0.2) iobArray.add(ScaledDataPoint(time, lastIob, iobScale))
@@ -406,22 +406,22 @@ class GraphData(
             val autosensData = iobCobCalculatorPlugin.getLastAutosensDataSynchronized("GraphData")
             val lastAutosensResult = autosensData?.autosensResult ?: AutosensResult()
             val isTempTarget = treatmentsPlugin.getTempTargetFromHistory(System.currentTimeMillis()) != null
-            val iobPred: MutableList<DataPointWithLabelInterface> = ArrayList()
-            val iobPredArray = iobCobCalculatorPlugin.calculateIobArrayForSMB(lastAutosensResult, SMBDefaults.exercise_mode, SMBDefaults.half_basal_exercise_target, isTempTarget)
-            for (i in iobPredArray) {
-                iobPred.add(i.setColor(resourceHelper.getAttributeColor(null, R.attr.iobPredAS)))
+            val iobPrediction: MutableList<DataPointWithLabelInterface> = ArrayList()
+            val iobPredictionArray = iobCobCalculatorPlugin.calculateIobArrayForSMB(lastAutosensResult, SMBDefaults.exercise_mode, SMBDefaults.half_basal_exercise_target, isTempTarget)
+            for (i in iobPredictionArray) {
+                iobPrediction.add(i.resourceHelper.getAttributeColor(null, R.attr.iobPredAS)))
                 maxIobValueFound = max(maxIobValueFound, abs(i.iob))
             }
-            addSeries(PointsWithLabelGraphSeries(Array(iobPred.size) { i -> iobPred[i] }))
-            val iobPred2: MutableList<DataPointWithLabelInterface> = ArrayList()
-            val iobPredArray2 = iobCobCalculatorPlugin.calculateIobArrayForSMB(AutosensResult(), SMBDefaults.exercise_mode, SMBDefaults.half_basal_exercise_target, isTempTarget)
-            for (i in iobPredArray2) {
-                iobPred2.add(i.setColor(resourceHelper.getAttributeColor(null,R.attr.iobPred)))
+            addSeries(PointsWithLabelGraphSeries(Array(iobPrediction.size) { i -> iobPrediction[i] }))
+            val iobPrediction2: MutableList<DataPointWithLabelInterface> = ArrayList()
+            val iobPredictionArray2 = iobCobCalculatorPlugin.calculateIobArrayForSMB(AutosensResult(), SMBDefaults.exercise_mode, SMBDefaults.half_basal_exercise_target, isTempTarget)
+            for (i in iobPredictionArray2) {
+                iobPrediction2.add(i.setColor(resourceHelper.getAttributeColor(null,R.attr.iobPred)))
                 maxIobValueFound = max(maxIobValueFound, abs(i.iob))
             }
-            addSeries(PointsWithLabelGraphSeries(Array(iobPred2.size) { i -> iobPred2[i] }))
-            aapsLogger.debug(LTag.AUTOSENS, "IOB pred for AS=" + DecimalFormatter.to2Decimal(lastAutosensResult.ratio) + ": " + iobCobCalculatorPlugin.iobArrayToString(iobPredArray))
-            aapsLogger.debug(LTag.AUTOSENS, "IOB pred for AS=" + DecimalFormatter.to2Decimal(1.0) + ": " + iobCobCalculatorPlugin.iobArrayToString(iobPredArray2))
+            addSeries(PointsWithLabelGraphSeries(Array(iobPrediction2.size) { i -> iobPrediction2[i] }))
+            aapsLogger.debug(LTag.AUTOSENS, "IOB prediction for AS=" + DecimalFormatter.to2Decimal(lastAutosensResult.ratio) + ": " + iobCobCalculatorPlugin.iobArrayToString(iobPredictionArray))
+            aapsLogger.debug(LTag.AUTOSENS, "IOB prediction for AS=" + DecimalFormatter.to2Decimal(1.0) + ": " + iobCobCalculatorPlugin.iobArrayToString(iobPredictionArray2))
         }
         if (useForScale) {
             maxY = maxIobValueFound
@@ -442,7 +442,7 @@ class GraphData(
         while (time <= toTime) {
             val profile = profileFunction.getProfile(time)
             var iob = 0.0
-            if (profile != null) iob = iobCobCalculatorPlugin.calculateAbsInsulinFromTreatmentsAndTempsSynchronized(time, profile).iob
+            if (profile != null) iob = iobCobCalculatorPlugin.calculateAbsInsulinFromTreatmentsAndTempsSynchronized(time).iob
             if (abs(lastIob - iob) > 0.02) {
                 if (abs(lastIob - iob) > 0.2) iobArray.add(ScaledDataPoint(time, lastIob, iobScale))
                 iobArray.add(ScaledDataPoint(time, iob, iobScale))
