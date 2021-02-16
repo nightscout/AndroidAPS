@@ -320,9 +320,9 @@ public class WatchUpdaterService extends WearableListenerService implements Goog
             dataMap.putString("delta", "--");
             dataMap.putString("avgDelta", "--");
         } else {
-            dataMap.putString("slopeArrow", slopeArrow(glucoseStatus.delta));
-            dataMap.putString("delta", deltastring(glucoseStatus.delta, glucoseStatus.delta * Constants.MGDL_TO_MMOLL, units));
-            dataMap.putString("avgDelta", deltastring(glucoseStatus.avgDelta, glucoseStatus.avgDelta * Constants.MGDL_TO_MMOLL, units));
+            dataMap.putString("slopeArrow", slopeArrow(glucoseStatus.getDelta()));
+            dataMap.putString("delta", deltastring(glucoseStatus.getDelta(), glucoseStatus.getDelta() * Constants.MGDL_TO_MMOLL, units));
+            dataMap.putString("avgDelta", deltastring(glucoseStatus.getAvgDelta(), glucoseStatus.getAvgDelta() * Constants.MGDL_TO_MMOLL, units));
         }
         dataMap.putLong("sgvLevel", sgvLevel);
         dataMap.putDouble("sgvDouble", lastBG.getValue());
