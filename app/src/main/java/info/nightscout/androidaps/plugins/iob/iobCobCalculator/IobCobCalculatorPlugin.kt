@@ -32,11 +32,9 @@ import info.nightscout.androidaps.utils.rx.AapsSchedulers
 import info.nightscout.androidaps.utils.sharedPreferences.SP
 import io.reactivex.disposables.CompositeDisposable
 import org.json.JSONArray
-import java.util.*
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 import javax.inject.Singleton
-import kotlin.collections.ArrayList
 import kotlin.math.abs
 import kotlin.math.floor
 import kotlin.math.max
@@ -90,7 +88,7 @@ open class IobCobCalculatorPlugin @Inject constructor(
         disposable.add(rxBus
             .toObservable(EventConfigBuilderChange::class.java)
             .observeOn(aapsSchedulers.io)
-            .subscribe({ event: EventConfigBuilderChange? ->
+            .subscribe({ event ->
                 stopCalculation("onEventConfigBuilderChange")
                 synchronized(dataLock) {
                     aapsLogger.debug(LTag.AUTOSENS, "Invalidating cached data because of configuration change.")
@@ -103,10 +101,7 @@ open class IobCobCalculatorPlugin @Inject constructor(
         disposable.add(rxBus
             .toObservable(EventNewBasalProfile::class.java)
             .observeOn(aapsSchedulers.io)
-            .subscribe({ event: EventNewBasalProfile? ->
-                if (event == null) { // on init no need of reset
-                    return@subscribe
-                }
+            .subscribe({ event ->
                 stopCalculation("onNewProfile")
                 synchronized(dataLock) {
                     aapsLogger.debug(LTag.AUTOSENS, "Invalidating cached data because of new profile.")
@@ -120,7 +115,7 @@ open class IobCobCalculatorPlugin @Inject constructor(
             .toObservable(EventNewBG::class.java)
             .observeOn(aapsSchedulers.io)
             .debounce(1L, TimeUnit.SECONDS)
-            .subscribe({ event: EventNewBG? ->
+            .subscribe({ event ->
                 stopCalculation("onEventNewBG")
                 runCalculation("onEventNewBG", System.currentTimeMillis(), bgDataReload = true, limitDataToOldestAvailable = true, cause = event)
             }, fabricPrivacy::logException)
@@ -129,7 +124,7 @@ open class IobCobCalculatorPlugin @Inject constructor(
         disposable.add(rxBus
             .toObservable(EventPreferenceChange::class.java)
             .observeOn(aapsSchedulers.io)
-            .subscribe({ event: EventPreferenceChange ->
+            .subscribe({ event ->
                 if (event.isChanged(resourceHelper, R.string.key_openapsama_autosens_period) ||
                     event.isChanged(resourceHelper, R.string.key_age) ||
                     event.isChanged(resourceHelper, R.string.key_absorption_maxtime) ||
@@ -151,19 +146,19 @@ open class IobCobCalculatorPlugin @Inject constructor(
         disposable.add(rxBus
             .toObservable(EventAppInitialized::class.java)
             .observeOn(aapsSchedulers.io)
-            .subscribe({ event: EventAppInitialized? -> runCalculation("onEventAppInitialized", System.currentTimeMillis(), bgDataReload = true, limitDataToOldestAvailable = true, cause = event) }, fabricPrivacy::logException)
+            .subscribe({ event -> runCalculation("onEventAppInitialized", System.currentTimeMillis(), bgDataReload = true, limitDataToOldestAvailable = true, cause = event) }, fabricPrivacy::logException)
         )
         // EventNewHistoryData
         disposable.add(rxBus
             .toObservable(EventNewHistoryData::class.java)
             .observeOn(aapsSchedulers.io)
-            .subscribe({ event: EventNewHistoryData -> newHistoryData(event, false) }, fabricPrivacy::logException)
+            .subscribe({ event -> newHistoryData(event, false) }, fabricPrivacy::logException)
         )
         // EventNewHistoryBgData
         disposable.add(rxBus
             .toObservable(EventNewHistoryBgData::class.java)
             .observeOn(aapsSchedulers.io)
-            .subscribe({ event: EventNewHistoryBgData -> newHistoryData(EventNewHistoryData(event.timestamp), true) }, fabricPrivacy::logException)
+            .subscribe({ event -> newHistoryData(EventNewHistoryData(event.timestamp), true) }, fabricPrivacy::logException)
         )
     }
 
@@ -691,7 +686,7 @@ open class IobCobCalculatorPlugin @Inject constructor(
         }
     }
 
-    fun runCalculation(from: String, end: Long, bgDataReload: Boolean, limitDataToOldestAvailable: Boolean, cause: Event?) {
+    fun runCalculation(from: String, end: Long, bgDataReload: Boolean, limitDataToOldestAvailable: Boolean, cause: Event) {
         aapsLogger.debug(LTag.AUTOSENS, "Starting calculation thread: " + from + " to " + dateUtil.dateAndTimeAndSecondsString(end))
         if (thread == null || thread?.state == Thread.State.TERMINATED) {
             thread = if (sensitivityOref1Plugin.isEnabled()) IobCobOref1Thread(injector, this, treatmentsPlugin, from, end, bgDataReload, limitDataToOldestAvailable, cause) else IobCobThread(injector, this, treatmentsPlugin, from, end, bgDataReload, limitDataToOldestAvailable, cause)
