@@ -1,13 +1,11 @@
 package info.nightscout.androidaps.danar;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.Date;
-import java.util.List;
 
 import dagger.android.HasAndroidInjector;
 import info.nightscout.androidaps.dana.DanaFragment;
@@ -36,16 +34,12 @@ import info.nightscout.androidaps.logging.LTag;
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper;
 import info.nightscout.androidaps.plugins.common.ManufacturerType;
 import info.nightscout.androidaps.plugins.configBuilder.ConstraintChecker;
-import info.nightscout.androidaps.plugins.general.actions.defs.CustomAction;
-import info.nightscout.androidaps.plugins.general.actions.defs.CustomActionType;
 import info.nightscout.androidaps.plugins.general.overview.events.EventDismissNotification;
 import info.nightscout.androidaps.plugins.general.overview.events.EventNewNotification;
 import info.nightscout.androidaps.plugins.general.overview.notifications.Notification;
-import info.nightscout.androidaps.queue.commands.CustomCommand;
 import info.nightscout.androidaps.utils.DateUtil;
 import info.nightscout.androidaps.utils.DecimalFormatter;
 import info.nightscout.androidaps.utils.Round;
-import info.nightscout.androidaps.utils.TimeChangeType;
 import info.nightscout.androidaps.utils.resources.ResourceHelper;
 import info.nightscout.androidaps.utils.rx.AapsSchedulers;
 import info.nightscout.androidaps.utils.sharedPreferences.SP;
@@ -223,7 +217,7 @@ public abstract class AbstractDanaRPlugin extends PumpPluginBase implements Pump
     }
 
     @NonNull @Override
-    public PumpEnactResult setTempBasalPercent(Integer percent, Integer durationInMinutes, Profile profile, boolean enforceNew) {
+    public PumpEnactResult setTempBasalPercent(int percent, int durationInMinutes, Profile profile, boolean enforceNew) {
         DanaPump pump = danaPump;
         PumpEnactResult result = new PumpEnactResult(getInjector());
         percent = constraintChecker.applyBasalPercentConstraints(new Constraint<>(percent), profile).value();
@@ -271,7 +265,7 @@ public abstract class AbstractDanaRPlugin extends PumpPluginBase implements Pump
     }
 
     @NonNull @Override
-    public PumpEnactResult setExtendedBolus(Double insulin, Integer durationInMinutes) {
+    public PumpEnactResult setExtendedBolus(double insulin, int durationInMinutes) {
         DanaPump pump = danaPump;
         insulin = constraintChecker.applyExtendedBolusConstraints(new Constraint<>(insulin)).value();
         // needs to be rounded
@@ -335,7 +329,7 @@ public abstract class AbstractDanaRPlugin extends PumpPluginBase implements Pump
     }
 
     @Override
-    public void connect(String from) {
+    public void connect(@NonNull String from) {
         if (sExecutionService != null) {
             sExecutionService.connect();
             pumpDescription.basalStep = danaPump.getBasalStep();
@@ -354,7 +348,7 @@ public abstract class AbstractDanaRPlugin extends PumpPluginBase implements Pump
     }
 
     @Override
-    public void disconnect(String from) {
+    public void disconnect(@NonNull String from) {
         if (sExecutionService != null) sExecutionService.disconnect(from);
     }
 
@@ -364,7 +358,7 @@ public abstract class AbstractDanaRPlugin extends PumpPluginBase implements Pump
     }
 
     @Override
-    public void getPumpStatus(String reason) {
+    public void getPumpStatus(@NonNull String reason) {
         if (sExecutionService != null) {
             sExecutionService.getPumpStatus();
             pumpDescription.basalStep = danaPump.getBasalStep();
@@ -373,7 +367,7 @@ public abstract class AbstractDanaRPlugin extends PumpPluginBase implements Pump
     }
 
     @NonNull @Override
-    public JSONObject getJSONStatus(Profile profile, String profilename, String version) {
+    public JSONObject getJSONStatus(@NonNull Profile profile, @NonNull String profilename, @NonNull String version) {
         DanaPump pump = danaPump;
         long now = System.currentTimeMillis();
         if (pump.getLastConnection() + 60 * 60 * 1000L < System.currentTimeMillis()) {
@@ -508,28 +502,9 @@ public abstract class AbstractDanaRPlugin extends PumpPluginBase implements Pump
     }
     // TODO: daily total constraint
 
-
-    @Override
-    public List<CustomAction> getCustomActions() {
-        return null;
-    }
-
-
-    @Override
-    public void executeCustomAction(CustomActionType customActionType) {
-    }
-
-    @Nullable @Override public PumpEnactResult executeCustomCommand(CustomCommand customCommand) {
-        return null;
-    }
-
     @Override
     public boolean canHandleDST() {
         return false;
-    }
-
-    @Override
-    public void timezoneOrDSTChanged(TimeChangeType timeChangeType) {
     }
 
     @Override public void clearPairing() {

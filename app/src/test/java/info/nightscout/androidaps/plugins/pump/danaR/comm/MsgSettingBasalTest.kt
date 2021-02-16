@@ -14,7 +14,7 @@ import org.powermock.modules.junit4.PowerMockRunner
 class MsgSettingBasalTest : DanaRTestBase() {
 
     @Test fun runTest() {
-        `when`(danaRPlugin.getPumpDescription()).thenReturn(PumpDescription())
+        `when`(danaRPlugin.pumpDescription).thenReturn(PumpDescription())
         val packet = MsgSettingBasal(injector)
 
         // test message decoding

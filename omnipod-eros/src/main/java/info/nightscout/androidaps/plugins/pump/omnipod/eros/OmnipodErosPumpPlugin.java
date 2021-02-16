@@ -17,7 +17,6 @@ import org.joda.time.Duration;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.Objects;
@@ -51,7 +50,6 @@ import info.nightscout.androidaps.logging.AAPSLogger;
 import info.nightscout.androidaps.logging.LTag;
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper;
 import info.nightscout.androidaps.plugins.common.ManufacturerType;
-import info.nightscout.androidaps.plugins.general.actions.defs.CustomAction;
 import info.nightscout.androidaps.plugins.general.actions.defs.CustomActionType;
 import info.nightscout.androidaps.plugins.general.nsclient.NSUpload;
 import info.nightscout.androidaps.plugins.general.overview.events.EventDismissNotification;
@@ -663,8 +661,7 @@ public class OmnipodErosPumpPlugin extends PumpPluginBase implements PumpInterfa
     // if false and the same rate is requested enacted=false and success=true is returned and TBR is not changed
     @Override
     @NonNull
-    public PumpEnactResult setTempBasalAbsolute(Double absoluteRate, Integer
-            durationInMinutes, Profile profile, boolean enforceNew) {
+    public PumpEnactResult setTempBasalAbsolute(double absoluteRate, int durationInMinutes, Profile profile, boolean enforceNew) {
         aapsLogger.info(LTag.PUMP, "setTempBasalAbsolute: rate: {}, duration={}", absoluteRate, durationInMinutes);
 
         if (durationInMinutes <= 0 || durationInMinutes % BASAL_STEP_DURATION.getStandardMinutes() != 0) {
@@ -821,11 +818,6 @@ public class OmnipodErosPumpPlugin extends PumpPluginBase implements PumpInterfa
             ret += resourceHelper.gs(R.string.omnipod_short_status_rl_battery, getBatteryLevel()) + "\n";
         }
         return ret.trim();
-    }
-
-    @Override
-    public List<CustomAction> getCustomActions() {
-        return Collections.emptyList();
     }
 
     @Override
@@ -1033,8 +1025,7 @@ public class OmnipodErosPumpPlugin extends PumpPluginBase implements PumpInterfa
             aapsLogger.debug(LTag.PUMP, "stopConnecting [PumpPluginAbstract] - default (empty) implementation.");
     }
 
-    @NonNull @Override public PumpEnactResult setTempBasalPercent(Integer percent, Integer
-            durationInMinutes, Profile profile, boolean enforceNew) {
+    @NonNull @Override public PumpEnactResult setTempBasalPercent(int percent, int durationInMinutes, @NonNull Profile profile, boolean enforceNew) {
         if (percent == 0) {
             return setTempBasalAbsolute(0.0d, durationInMinutes, profile, enforceNew);
         } else {
@@ -1045,8 +1036,7 @@ public class OmnipodErosPumpPlugin extends PumpPluginBase implements PumpInterfa
         }
     }
 
-    @NonNull @Override public PumpEnactResult setExtendedBolus(Double insulin, Integer
-            durationInMinutes) {
+    @NonNull @Override public PumpEnactResult setExtendedBolus(double insulin, int durationInMinutes) {
         aapsLogger.debug(LTag.PUMP, "setExtendedBolus [OmnipodPumpPlugin] - Not implemented.");
         return getOperationNotSupportedWithCustomText(info.nightscout.androidaps.core.R.string.pump_operation_not_supported_by_pump_driver);
     }
