@@ -61,6 +61,7 @@ class DetermineBasalAdapterAMAJS internal constructor(scriptReader: ScriptReader
     var scriptDebug = ""
         private set
 
+    @Suppress("SpellCheckingInspection")
     operator fun invoke(): DetermineBasalResultAMA? {
         aapsLogger.debug(LTag.APS, ">>> Invoking determine_basal <<<")
         aapsLogger.debug(LTag.APS, "Glucose status: " + glucoseStatus.toString().also { glucoseStatusParam = it })
@@ -142,6 +143,7 @@ class DetermineBasalAdapterAMAJS internal constructor(scriptReader: ScriptReader
         return determineBasalResultAMA
     }
 
+    @Suppress("SpellCheckingInspection")
     @Throws(JSONException::class) fun setData(profile: Profile,
                                               maxIob: Double,
                                               maxBasal: Double,
@@ -149,7 +151,7 @@ class DetermineBasalAdapterAMAJS internal constructor(scriptReader: ScriptReader
                                               maxBg: Double,
                                               targetBg: Double,
                                               basalRate: Double,
-                                              iobArray: Array<IobTotal?>?,
+                                              iobArray: Array<IobTotal>,
                                               glucoseStatus: GlucoseStatus,
                                               mealData: MealData,
                                               autosensDataRatio: Double,
@@ -196,12 +198,12 @@ class DetermineBasalAdapterAMAJS internal constructor(scriptReader: ScriptReader
         this.glucoseStatus = JSONObject()
         this.glucoseStatus.put("glucose", glucoseStatus.glucose)
         if (sp.getBoolean(R.string.key_always_use_shortavg, false)) {
-            this.glucoseStatus.put("delta", glucoseStatus.short_avgdelta)
+            this.glucoseStatus.put("delta", glucoseStatus.shortAvgDelta)
         } else {
             this.glucoseStatus.put("delta", glucoseStatus.delta)
         }
-        this.glucoseStatus.put("short_avgdelta", glucoseStatus.short_avgdelta)
-        this.glucoseStatus.put("long_avgdelta", glucoseStatus.long_avgdelta)
+        this.glucoseStatus.put("short_avgdelta", glucoseStatus.shortAvgDelta)
+        this.glucoseStatus.put("long_avgdelta", glucoseStatus.longAvgDelta)
         this.mealData = JSONObject()
         this.mealData.put("carbs", mealData.carbs)
         this.mealData.put("boluses", mealData.boluses)

@@ -194,7 +194,7 @@ class BolusWizard @Inject constructor(
         glucoseStatus = GlucoseStatus(injector).glucoseStatusData
         glucoseStatus?.let {
             if (useTrend) {
-                trend = it.short_avgdelta
+                trend = it.shortAvgDelta
                 insulinFromTrend = Profile.fromMgdlToUnits(trend, profileFunction.getUnits()) * 3 / sens
             }
         }

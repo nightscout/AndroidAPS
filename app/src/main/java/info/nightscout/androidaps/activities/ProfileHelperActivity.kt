@@ -131,6 +131,7 @@ class ProfileHelperActivity : NoSplashAppCompatActivity() {
 
         // Default profile
         binding.copytolocalprofile.setOnClickListener {
+            storeValues()
             val age = ageUsed[tabSelected]
             val weight = weightUsed[tabSelected]
             val tdd = tddUsed[tabSelected]
