@@ -643,7 +643,7 @@ open class IobCobCalculatorPlugin @Inject constructor(
         var time = System.currentTimeMillis()
         time = roundUpTime(time)
         val len = ((profile.dia * 60 + 30) / 5).toInt()
-        val array = arrayOf<IobTotal>()
+        val array = Array(len) { IobTotal(0) }
         for ((pos, i) in (0 until len).withIndex()) {
             val t = time + i * 5 * 60000
             val iob = calculateFromTreatmentsAndTempsSynchronized(t, profile)
