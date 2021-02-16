@@ -211,4 +211,5 @@
     <string name="running_invalid_version">Detectamos que está  a correr uma versão inválida. Loop desactivado!</string>
     <string name="versionavailable">Disponível %1$s disponível</string>
     <!-- Permissions -->
+    <!-- WeekdayPicker -->
 </resources>

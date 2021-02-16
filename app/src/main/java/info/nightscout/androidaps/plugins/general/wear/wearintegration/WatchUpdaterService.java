@@ -45,9 +45,10 @@ import info.nightscout.androidaps.interfaces.ProfileFunction;
 import info.nightscout.androidaps.logging.AAPSLogger;
 import info.nightscout.androidaps.logging.LTag;
 import info.nightscout.androidaps.plugins.aps.loop.LoopPlugin;
+import info.nightscout.androidaps.plugins.bus.RxBusWrapper;
 import info.nightscout.androidaps.plugins.general.nsclient.data.NSDeviceStatus;
-import info.nightscout.androidaps.plugins.general.wear.ActionStringHandler;
 import info.nightscout.androidaps.plugins.general.wear.WearPlugin;
+import info.nightscout.androidaps.plugins.general.wear.events.EventWearDoAction;
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.GlucoseStatus;
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.IobCobCalculatorPlugin;
 import info.nightscout.androidaps.plugins.treatments.TreatmentsPlugin;
@@ -65,6 +66,7 @@ public class WatchUpdaterService extends WearableListenerService implements Goog
     @Inject public WearPlugin wearPlugin;
     @Inject public ResourceHelper resourceHelper;
     @Inject public SP sp;
+    @Inject public RxBusWrapper rxBus;
     @Inject public ProfileFunction profileFunction;
     @Inject public DefaultValueHelper defaultValueHelper;
     @Inject public NSDeviceStatus nsDeviceStatus;
@@ -72,7 +74,6 @@ public class WatchUpdaterService extends WearableListenerService implements Goog
     @Inject public LoopPlugin loopPlugin;
     @Inject public IobCobCalculatorPlugin iobCobCalculatorPlugin;
     @Inject public TreatmentsPlugin treatmentsPlugin;
-    @Inject public ActionStringHandler actionStringHandler;
     @Inject public AppRepository repository;
     @Inject ReceiverStatusStore receiverStatusStore;
     @Inject Config config;
@@ -260,13 +261,13 @@ public class WatchUpdaterService extends WearableListenerService implements Goog
             if (event != null && event.getPath().equals(WEARABLE_INITIATE_ACTIONSTRING_PATH)) {
                 String actionstring = new String(event.getData());
                 aapsLogger.debug(LTag.WEAR, "Wear: " + actionstring);
-                actionStringHandler.handleInitiate(actionstring);
+                rxBus.send(new EventWearDoAction(actionstring));
             }
 
             if (event != null && event.getPath().equals(WEARABLE_CONFIRM_ACTIONSTRING_PATH)) {
                 String actionstring = new String(event.getData());
                 aapsLogger.debug(LTag.WEAR, "Wear Confirm: " + actionstring);
-                actionStringHandler.handleConfirmation(actionstring);
+                rxBus.send(new EventWearDoAction(actionstring));
             }
         }
     }
@@ -288,10 +289,6 @@ public class WatchUpdaterService extends WearableListenerService implements Goog
             if (wearIntegration()) {
 
                 final DataMap dataMap = dataMapSingleBG(lastBG, glucoseStatus);
-                if (dataMap == null) {
-                    ToastUtils.showToastInUiThread(this, resourceHelper.gs(R.string.noprofile));
-                    return;
-                }
 
                 (new SendToDataLayerThread(WEARABLE_DATA_PATH, googleApiClient)).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, dataMap);
             }
@@ -323,9 +320,9 @@ public class WatchUpdaterService extends WearableListenerService implements Goog
             dataMap.putString("delta", "--");
             dataMap.putString("avgDelta", "--");
         } else {
-            dataMap.putString("slopeArrow", slopeArrow(glucoseStatus.delta));
-            dataMap.putString("delta", deltastring(glucoseStatus.delta, glucoseStatus.delta * Constants.MGDL_TO_MMOLL, units));
-            dataMap.putString("avgDelta", deltastring(glucoseStatus.avgdelta, glucoseStatus.avgdelta * Constants.MGDL_TO_MMOLL, units));
+            dataMap.putString("slopeArrow", slopeArrow(glucoseStatus.getDelta()));
+            dataMap.putString("delta", deltastring(glucoseStatus.getDelta(), glucoseStatus.getDelta() * Constants.MGDL_TO_MMOLL, units));
+            dataMap.putString("avgDelta", deltastring(glucoseStatus.getAvgDelta(), glucoseStatus.getAvgDelta() * Constants.MGDL_TO_MMOLL, units));
         }
         dataMap.putLong("sgvLevel", sgvLevel);
         dataMap.putDouble("sgvDouble", lastBG.getValue());
@@ -743,12 +740,12 @@ public class WatchUpdaterService extends WearableListenerService implements Goog
     private void sendPreferences() {
         if (googleApiClient != null && googleApiClient.isConnected()) {
 
-            boolean wearcontrol = sp.getBoolean("wearcontrol", false);
+            boolean wearcontrol = sp.getBoolean(R.string.key_wear_control, false);
 
             PutDataMapRequest dataMapRequest = PutDataMapRequest.create(NEW_PREFERENCES_PATH);
             //unique content
             dataMapRequest.getDataMap().putLong("timestamp", System.currentTimeMillis());
-            dataMapRequest.getDataMap().putBoolean("wearcontrol", wearcontrol);
+            dataMapRequest.getDataMap().putBoolean(resourceHelper.gs(R.string.key_wear_control), wearcontrol);
             PutDataRequest putDataRequest = dataMapRequest.asPutDataRequest();
             Wearable.DataApi.putDataItem(googleApiClient, putDataRequest);
         } else {

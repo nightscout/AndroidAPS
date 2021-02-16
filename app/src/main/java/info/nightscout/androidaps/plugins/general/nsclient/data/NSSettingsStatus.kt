@@ -5,6 +5,7 @@ import info.nightscout.androidaps.Config
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.logging.LTag
+import info.nightscout.androidaps.logging.UserEntryLogger
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper
 import info.nightscout.androidaps.plugins.general.overview.events.EventDismissNotification
 import info.nightscout.androidaps.plugins.general.overview.events.EventNewNotification
@@ -116,7 +117,8 @@ class NSSettingsStatus @Inject constructor(
     private val rxBus: RxBusWrapper,
     private val defaultValueHelper: DefaultValueHelper,
     private val sp: SP,
-    private val config: Config
+    private val config: Config,
+    private val uel: UserEntryLogger
 ) {
 
     var nightscoutVersionName = ""
@@ -127,7 +129,7 @@ class NSSettingsStatus @Inject constructor(
     fun handleNewData(nightscoutVersionName: String, nightscoutVersionCode: Int, status: JSONObject) {
         this.nightscoutVersionName = nightscoutVersionName
         aapsLogger.debug(LTag.NSCLIENT, "Got versions: Nightscout: $nightscoutVersionName")
-        if (nightscoutVersionCode < config.SUPPORTEDNSVERSION) {
+        if (nightscoutVersionCode != 0 && nightscoutVersionCode < config.SUPPORTEDNSVERSION) {
             val notification = Notification(Notification.OLD_NS, resourceHelper.gs(R.string.unsupportednsversion), Notification.NORMAL)
             rxBus.send(EventNewNotification(notification))
         } else {
@@ -233,6 +235,7 @@ class NSSettingsStatus @Inject constructor(
             getExtendedWarnValue("sage", "urgent")?.let { sp.putDouble(R.string.key_statuslights_sage_critical, it) }
             getExtendedWarnValue("bage", "warn")?.let { sp.putDouble(R.string.key_statuslights_bage_warning, it) }
             getExtendedWarnValue("bage", "urgent")?.let { sp.putDouble(R.string.key_statuslights_bage_critical, it) }
+            uel.log("NS SETTINGS COPIED")
         }
 
         if (context != null) OKDialog.showConfirmation(context, resourceHelper.gs(R.string.statuslights), resourceHelper.gs(R.string.copyexistingvalues), action)

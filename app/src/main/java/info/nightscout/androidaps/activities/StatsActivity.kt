@@ -3,6 +3,7 @@ package info.nightscout.androidaps.activities
 import android.os.Bundle
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.databinding.ActivityStatsBinding
+import info.nightscout.androidaps.logging.UserEntryLogger
 import info.nightscout.androidaps.utils.ActivityMonitor
 import info.nightscout.androidaps.utils.alertDialogs.OKDialog
 import info.nightscout.androidaps.utils.stats.TddCalculator
@@ -14,6 +15,7 @@ class StatsActivity : NoSplashAppCompatActivity() {
     @Inject lateinit var tddCalculator: TddCalculator
     @Inject lateinit var tirCalculator: TirCalculator
     @Inject lateinit var activityMonitor: ActivityMonitor
+    @Inject lateinit var uel: UserEntryLogger
 
     private lateinit var binding: ActivityStatsBinding
 
@@ -29,6 +31,7 @@ class StatsActivity : NoSplashAppCompatActivity() {
         binding.ok.setOnClickListener { finish() }
         binding.reset.setOnClickListener {
             OKDialog.showConfirmation(this, resourceHelper.gs(R.string.doyouwantresetstats)) {
+                uel.log("STATS RESET")
                 activityMonitor.reset()
                 recreate()
             }

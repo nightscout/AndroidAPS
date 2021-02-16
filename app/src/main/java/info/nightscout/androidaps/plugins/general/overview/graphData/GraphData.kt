@@ -66,7 +66,7 @@ class GraphData(
         bgReadingsArray = iobCobCalculatorPlugin.bgReadings
         if (bgReadingsArray?.isEmpty() != false) {
             aapsLogger.debug("No BG data.")
-            maxY = 10.0
+            maxY = if (units == Constants.MGDL) 180.0 else 10.0
             minY = 0.0
             return
         }
@@ -88,7 +88,7 @@ class GraphData(
         addSeries(PointsWithLabelGraphSeries(Array(bgListArray.size) { i -> bgListArray[i] }))
     }
 
-    internal fun setNumVerticalLables() {
+    internal fun setNumVerticalLabels() {
         graph.gridLabelRenderer.numVerticalLabels = if (units == Constants.MGDL) (maxY / 40 + 1).toInt() else (maxY / 2 + 1).toInt()
     }
 
@@ -291,7 +291,7 @@ class GraphData(
 
     fun addActivity(fromTime: Long, toTime: Long, useForScale: Boolean, scale: Double) {
         val actArrayHist: MutableList<ScaledDataPoint> = ArrayList()
-        val actArrayPred: MutableList<ScaledDataPoint> = ArrayList()
+        val actArrayPrediction: MutableList<ScaledDataPoint> = ArrayList()
         val now = System.currentTimeMillis().toDouble()
         val actScale = Scale()
         var total: IobTotal
@@ -305,7 +305,7 @@ class GraphData(
             }
             total = iobCobCalculatorPlugin.calculateFromTreatmentsAndTempsSynchronized(time, profile)
             val act: Double = total.activity
-            if (time <= now) actArrayHist.add(ScaledDataPoint(time, act, actScale)) else actArrayPred.add(ScaledDataPoint(time, act, actScale))
+            if (time <= now) actArrayHist.add(ScaledDataPoint(time, act, actScale)) else actArrayPrediction.add(ScaledDataPoint(time, act, actScale))
             maxIAValue = max(maxIAValue, abs(act))
             time += 5 * 60 * 1000L
         }
@@ -314,7 +314,7 @@ class GraphData(
             it.color = resourceHelper.gc(R.color.activity)
             it.thickness = 3
         })
-        addSeries(FixedLineGraphSeries(Array(actArrayPred.size) { i -> actArrayPred[i] }).also {
+        addSeries(FixedLineGraphSeries(Array(actArrayPrediction.size) { i -> actArrayPrediction[i] }).also {
             it.setCustomPaint(Paint().also { paint ->
                 paint.style = Paint.Style.STROKE
                 paint.strokeWidth = 3f
@@ -329,8 +329,51 @@ class GraphData(
         actScale.setMultiplier(maxY * scale / maxIAValue)
     }
 
+    //Function below show -BGI to be able to compare curves with deviations
+    fun addMinusBGI(fromTime: Long, toTime: Long, useForScale: Boolean, scale: Double, devBgiScale: Boolean) {
+        val bgiArrayHist: MutableList<ScaledDataPoint> = ArrayList()
+        val bgiArrayPrediction: MutableList<ScaledDataPoint> = ArrayList()
+        val now = System.currentTimeMillis().toDouble()
+        val bgiScale = Scale()
+        var total: IobTotal
+        var maxBGIValue = 0.0
+        var time = fromTime
+        while (time <= toTime) {
+            val profile = profileFunction.getProfile(time)
+            if (profile == null) {
+                time += 5 * 60 * 1000L
+                continue
+            }
+            val deviation = if (devBgiScale) iobCobCalculatorPlugin.getAutosensData(time)?.deviation ?:0.0 else 0.0
+
+            total = iobCobCalculatorPlugin.calculateFromTreatmentsAndTempsSynchronized(time, profile)
+            val bgi: Double = total.activity * profile.getIsfMgdl(time) * 5.0
+            if (time <= now) bgiArrayHist.add(ScaledDataPoint(time, bgi, bgiScale)) else bgiArrayPrediction.add(ScaledDataPoint(time, bgi, bgiScale))
+            maxBGIValue = max(maxBGIValue, max(abs(bgi), deviation))
+            time += 5 * 60 * 1000L
+        }
+        addSeries(FixedLineGraphSeries(Array(bgiArrayHist.size) { i -> bgiArrayHist[i] }).also {
+            it.isDrawBackground = false
+            it.color = resourceHelper.gc(R.color.bgi)
+            it.thickness = 3
+        })
+        addSeries(FixedLineGraphSeries(Array(bgiArrayPrediction.size) { i -> bgiArrayPrediction[i] }).also {
+            it.setCustomPaint(Paint().also { paint ->
+                paint.style = Paint.Style.STROKE
+                paint.strokeWidth = 3f
+                paint.pathEffect = DashPathEffect(floatArrayOf(4f, 4f), 0f)
+                paint.color = resourceHelper.gc(R.color.bgi)
+            })
+        })
+        if (useForScale) {
+            maxY = maxBGIValue
+            minY = -maxBGIValue
+        }
+        bgiScale.setMultiplier(maxY * scale / maxBGIValue)
+    }
+
     // scale in % of vertical size (like 0.3)
-    fun addIob(fromTime: Long, toTime: Long, useForScale: Boolean, scale: Double, showPrediction: Boolean) {
+    fun addIob(fromTime: Long, toTime: Long, useForScale: Boolean, scale: Double, showPrediction: Boolean, absScale: Boolean) {
         val iobSeries: FixedLineGraphSeries<ScaledDataPoint?>
         val iobArray: MutableList<ScaledDataPoint> = ArrayList()
         var maxIobValueFound = Double.MIN_VALUE
@@ -340,11 +383,15 @@ class GraphData(
         while (time <= toTime) {
             val profile = profileFunction.getProfile(time)
             var iob = 0.0
-            if (profile != null) iob = iobCobCalculatorPlugin.calculateFromTreatmentsAndTempsSynchronized(time, profile).iob
+            var absIob = 0.0
+            if (profile != null) {
+                iob = iobCobCalculatorPlugin.calculateFromTreatmentsAndTempsSynchronized(time, profile).iob
+                if (absScale) absIob = iobCobCalculatorPlugin.calculateAbsInsulinFromTreatmentsAndTempsSynchronized(time).iob
+            }
             if (abs(lastIob - iob) > 0.02) {
                 if (abs(lastIob - iob) > 0.2) iobArray.add(ScaledDataPoint(time, lastIob, iobScale))
                 iobArray.add(ScaledDataPoint(time, iob, iobScale))
-                maxIobValueFound = max(maxIobValueFound, abs(iob))
+                maxIobValueFound = if (absScale) max(maxIobValueFound, abs(absIob)) else max(maxIobValueFound, abs(iob))
                 lastIob = iob
             }
             time += 5 * 60 * 1000L
@@ -359,22 +406,22 @@ class GraphData(
             val autosensData = iobCobCalculatorPlugin.getLastAutosensDataSynchronized("GraphData")
             val lastAutosensResult = autosensData?.autosensResult ?: AutosensResult()
             val isTempTarget = treatmentsPlugin.getTempTargetFromHistory(System.currentTimeMillis()) != null
-            val iobPred: MutableList<DataPointWithLabelInterface> = ArrayList()
-            val iobPredArray = iobCobCalculatorPlugin.calculateIobArrayForSMB(lastAutosensResult, SMBDefaults.exercise_mode, SMBDefaults.half_basal_exercise_target, isTempTarget)
-            for (i in iobPredArray) {
-                iobPred.add(i.setColor(resourceHelper.gc(R.color.iobPredAS)))
+            val iobPrediction: MutableList<DataPointWithLabelInterface> = ArrayList()
+            val iobPredictionArray = iobCobCalculatorPlugin.calculateIobArrayForSMB(lastAutosensResult, SMBDefaults.exercise_mode, SMBDefaults.half_basal_exercise_target, isTempTarget)
+            for (i in iobPredictionArray) {
+                iobPrediction.add(i.setColor(resourceHelper.gc(R.color.iobPredAS)))
                 maxIobValueFound = max(maxIobValueFound, abs(i.iob))
             }
-            addSeries(PointsWithLabelGraphSeries(Array(iobPred.size) { i -> iobPred[i] }))
-            val iobPred2: MutableList<DataPointWithLabelInterface> = ArrayList()
-            val iobPredArray2 = iobCobCalculatorPlugin.calculateIobArrayForSMB(AutosensResult(), SMBDefaults.exercise_mode, SMBDefaults.half_basal_exercise_target, isTempTarget)
-            for (i in iobPredArray2) {
-                iobPred2.add(i.setColor(resourceHelper.gc(R.color.iobPred)))
+            addSeries(PointsWithLabelGraphSeries(Array(iobPrediction.size) { i -> iobPrediction[i] }))
+            val iobPrediction2: MutableList<DataPointWithLabelInterface> = ArrayList()
+            val iobPredictionArray2 = iobCobCalculatorPlugin.calculateIobArrayForSMB(AutosensResult(), SMBDefaults.exercise_mode, SMBDefaults.half_basal_exercise_target, isTempTarget)
+            for (i in iobPredictionArray2) {
+                iobPrediction2.add(i.setColor(resourceHelper.gc(R.color.iobPred)))
                 maxIobValueFound = max(maxIobValueFound, abs(i.iob))
             }
-            addSeries(PointsWithLabelGraphSeries(Array(iobPred2.size) { i -> iobPred2[i] }))
-            aapsLogger.debug(LTag.AUTOSENS, "IOB pred for AS=" + DecimalFormatter.to2Decimal(lastAutosensResult.ratio) + ": " + iobCobCalculatorPlugin.iobArrayToString(iobPredArray))
-            aapsLogger.debug(LTag.AUTOSENS, "IOB pred for AS=" + DecimalFormatter.to2Decimal(1.0) + ": " + iobCobCalculatorPlugin.iobArrayToString(iobPredArray2))
+            addSeries(PointsWithLabelGraphSeries(Array(iobPrediction2.size) { i -> iobPrediction2[i] }))
+            aapsLogger.debug(LTag.AUTOSENS, "IOB prediction for AS=" + DecimalFormatter.to2Decimal(lastAutosensResult.ratio) + ": " + iobCobCalculatorPlugin.iobArrayToString(iobPredictionArray))
+            aapsLogger.debug(LTag.AUTOSENS, "IOB prediction for AS=" + DecimalFormatter.to2Decimal(1.0) + ": " + iobCobCalculatorPlugin.iobArrayToString(iobPredictionArray2))
         }
         if (useForScale) {
             maxY = maxIobValueFound
@@ -395,7 +442,7 @@ class GraphData(
         while (time <= toTime) {
             val profile = profileFunction.getProfile(time)
             var iob = 0.0
-            if (profile != null) iob = iobCobCalculatorPlugin.calculateAbsInsulinFromTreatmentsAndTempsSynchronized(time, profile).iob
+            if (profile != null) iob = iobCobCalculatorPlugin.calculateAbsInsulinFromTreatmentsAndTempsSynchronized(time).iob
             if (abs(lastIob - iob) > 0.02) {
                 if (abs(lastIob - iob) > 0.2) iobArray.add(ScaledDataPoint(time, lastIob, iobScale))
                 iobArray.add(ScaledDataPoint(time, iob, iobScale))
@@ -460,14 +507,23 @@ class GraphData(
     }
 
     // scale in % of vertical size (like 0.3)
-    fun addDeviations(fromTime: Long, toTime: Long, useForScale: Boolean, scale: Double) {
+    fun addDeviations(fromTime: Long, toTime: Long, useForScale: Boolean, scale: Double, devBgiScale: Boolean) {
         class DeviationDataPoint(x: Double, y: Double, var color: Int, scale: Scale) : ScaledDataPoint(x, y, scale)
 
         val devArray: MutableList<DeviationDataPoint> = ArrayList()
         var maxDevValueFound = 0.0
         val devScale = Scale()
         var time = fromTime
+        var total: IobTotal
+
         while (time <= toTime) {
+            // if align Dev Scale with BGI scale, then calculate BGI value, else bgi = 0.0
+            val bgi: Double = if (devBgiScale) {
+                    val profile = profileFunction.getProfile(time)
+                    total = iobCobCalculatorPlugin.calculateFromTreatmentsAndTempsSynchronized(time, profile)
+                    total.activity * (profile?.getIsfMgdl(time) ?: 0.0) * 5.0
+                } else 0.0
+
             iobCobCalculatorPlugin.getAutosensData(time)?.let { autosensData ->
                 var color = resourceHelper.gc(R.color.deviationblack) // "="
                 if (autosensData.type == "" || autosensData.type == "non-meal") {
@@ -480,7 +536,7 @@ class GraphData(
                     color = resourceHelper.gc(R.color.deviationgrey)
                 }
                 devArray.add(DeviationDataPoint(time.toDouble(), autosensData.deviation, color, devScale))
-                maxDevValueFound = max(maxDevValueFound, abs(autosensData.deviation))
+                maxDevValueFound = max(maxDevValueFound, max(abs(autosensData.deviation), abs(bgi)))
             }
             time += 5 * 60 * 1000L
         }

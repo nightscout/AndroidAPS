@@ -11,6 +11,7 @@ import info.nightscout.androidaps.interfaces.ActivePluginProvider
 import info.nightscout.androidaps.interfaces.Constraint
 import info.nightscout.androidaps.interfaces.PumpDescription
 import info.nightscout.androidaps.plugins.configBuilder.ConstraintChecker
+import info.nightscout.androidaps.plugins.general.maintenance.LoggerUtils
 import info.nightscout.androidaps.plugins.pump.virtual.VirtualPumpPlugin
 import info.nightscout.androidaps.plugins.treatments.TreatmentsPlugin
 import info.nightscout.androidaps.queue.commands.Command
@@ -30,7 +31,9 @@ import org.powermock.modules.junit4.PowerMockRunner
 import java.util.*
 
 @RunWith(PowerMockRunner::class)
-@PrepareForTest(ConstraintChecker::class, VirtualPumpPlugin::class, ToastUtils::class, Context::class, TreatmentsPlugin::class, FabricPrivacy::class)
+@PrepareForTest(
+    ConstraintChecker::class, VirtualPumpPlugin::class, ToastUtils::class, Context::class,
+    TreatmentsPlugin::class, FabricPrivacy::class, LoggerUtils::class)
 class CommandQueueTest : TestBaseWithProfile() {
 
     @Mock lateinit var constraintChecker: ConstraintChecker
@@ -39,8 +42,7 @@ class CommandQueueTest : TestBaseWithProfile() {
     @Mock lateinit var context: Context
     @Mock lateinit var virtualPumpPlugin: VirtualPumpPlugin
     @Mock lateinit var sp: SP
-
-    private val buildHelper = BuildHelper(Config())
+    @Mock lateinit var loggerUtils: LoggerUtils
 
     val injector = HasAndroidInjector {
         AndroidInjector {
@@ -55,7 +57,7 @@ class CommandQueueTest : TestBaseWithProfile() {
 
     @Before
     fun prepare() {
-        commandQueue = CommandQueue(injector, aapsLogger, rxBus, aapsSchedulers, resourceHelper, constraintChecker, profileFunction, lazyActivePlugin, context, sp, buildHelper, fabricPrivacy)
+        commandQueue = CommandQueue(injector, aapsLogger, rxBus, aapsSchedulers, resourceHelper, constraintChecker, profileFunction, lazyActivePlugin, context, sp, BuildHelper(Config(), loggerUtils), fabricPrivacy)
 
         val pumpDescription = PumpDescription()
         pumpDescription.basalMinimumRate = 0.1
@@ -65,7 +67,7 @@ class CommandQueueTest : TestBaseWithProfile() {
         `when`(virtualPumpPlugin.pumpDescription).thenReturn(pumpDescription)
         `when`(virtualPumpPlugin.isThisProfileSet(anyObject())).thenReturn(false)
         `when`(activePlugin.activeTreatments).thenReturn(treatmentsPlugin)
-        `when`(treatmentsPlugin.lastBolusTime).thenReturn(Date(100, 0, 1).time)
+        `when`(treatmentsPlugin.lastBolusTime).thenReturn(Calendar.getInstance().also { it.set(2000, 0, 1) }.timeInMillis)
         `when`(profileFunction.getProfile()).thenReturn(validProfile)
 
         val bolusConstraint = Constraint(0.0)

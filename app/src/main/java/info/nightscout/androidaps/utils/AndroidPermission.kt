@@ -22,7 +22,7 @@ import info.nightscout.androidaps.plugins.general.overview.events.EventNewNotifi
 import info.nightscout.androidaps.plugins.general.overview.notifications.Notification
 import info.nightscout.androidaps.plugins.general.overview.notifications.NotificationWithAction
 import info.nightscout.androidaps.plugins.general.smsCommunicator.SmsCommunicatorPlugin
-import info.nightscout.androidaps.utils.alertDialogs.OKDialog.show
+import info.nightscout.androidaps.utils.alertDialogs.OKDialog
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -58,7 +58,7 @@ class AndroidPermission @Inject constructor(
                     activity.callForBatteryOptimization.launch(null)
             } catch (e: ActivityNotFoundException) {
                 permissionBatteryOptimizationFailed = true
-                show(activity, resourceHelper.gs(R.string.permission), resourceHelper.gs(R.string.alert_dialog_permission_battery_optimization_failed), Runnable { activity.recreate() })
+                OKDialog.show(activity, resourceHelper.gs(R.string.permission), resourceHelper.gs(R.string.alert_dialog_permission_battery_optimization_failed), Runnable { activity.recreate() })
             }
         }
     }

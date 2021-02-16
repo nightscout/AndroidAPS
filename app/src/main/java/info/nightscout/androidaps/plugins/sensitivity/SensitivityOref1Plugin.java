@@ -207,8 +207,8 @@ public class SensitivityOref1Plugin extends AbstractSensitivityPlugin {
             getAapsLogger().debug(LTag.AUTOSENS, "Records: " + index + "   " + pastSensitivity);
 
             Arrays.sort(deviations);
-            double pSensitive = IobCobCalculatorPlugin.percentile(deviations, 0.50);
-            double pResistant = IobCobCalculatorPlugin.percentile(deviations, 0.50);
+            double pSensitive = IobCobCalculatorPlugin.Companion.percentile(deviations, 0.50);
+            double pResistant = IobCobCalculatorPlugin.Companion.percentile(deviations, 0.50);
 
             double basalOff = 0;
 

@@ -1,6 +1,7 @@
 buildscript {
     repositories {
-        jcenter()
+        google()
+        mavenCentral()
         maven { url "https://plugins.gradle.org/m2/" } // jacoco 0.2
     }
 
@@ -18,7 +19,7 @@ jacoco {
 }
 
 ext {
-    wearableVersion = "2.4.0"
+    wearableVersion = "2.8.1"
     playServicesWearable = "17.0.0"
 }
 
@@ -99,7 +100,8 @@ android {
 
 allprojects {
     repositories {
-        jcenter()
+        google()
+        mavenCentral()
         flatDir {
             dirs 'libs'
         }
@@ -112,17 +114,17 @@ dependencies {
     //implementation files("libs/hellocharts-library-1.5.5.jar")
     //compile "com.ustwo.android:clockwise-wearable:1.0.2"
 
-    implementation "androidx.appcompat:appcompat:$appcompat_verison"
+    implementation "androidx.appcompat:appcompat:$appcompat_version"
     implementation 'androidx.legacy:legacy-support-v13:1.0.0'
 
     compileOnly "com.google.android.wearable:wearable:${wearableVersion}"
     implementation "com.google.android.support:wearable:${wearableVersion}"
     implementation "com.google.android.gms:play-services-wearable:${playServicesWearable}"
     implementation(name: 'ustwo-clockwise-debug', ext: 'aar')
+    implementation(name: 'wearpreferenceactivity-0.5.0', ext: 'aar')
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
     implementation 'androidx.percentlayout:percentlayout:1.0.0'
     implementation 'androidx.wear:wear:1.1.0'
-    implementation('me.denley.wearpreferenceactivity:wearpreferenceactivity:0.5.0')
     implementation('com.github.lecho:hellocharts-library:1.5.8@aar')
 
     testImplementation "junit:junit:$junit_version"
@@ -141,7 +143,7 @@ dependencies {
     testImplementation "org.powermock:powermock-module-junit4-rule-agent:${powermockVersion}"
     testImplementation "org.powermock:powermock-module-junit4-rule:${powermockVersion}"
     testImplementation "org.powermock:powermock-module-junit4:${powermockVersion}"
-    testImplementation 'joda-time:joda-time:2.10.9'
+    testImplementation "joda-time:joda-time:$jodatime_version"
     testImplementation('com.google.truth:truth:1.1.2') {
         exclude group: "com.google.guava", module: "guava"
     }

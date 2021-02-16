@@ -12,6 +12,7 @@ import info.nightscout.androidaps.databinding.ActivitySetupwizardBinding
 import info.nightscout.androidaps.events.EventProfileNeedsUpdate
 import info.nightscout.androidaps.events.EventProfileStoreChanged
 import info.nightscout.androidaps.events.EventPumpStatusChanged
+import info.nightscout.androidaps.logging.UserEntryLogger
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper
 import info.nightscout.androidaps.plugins.general.nsclient.events.EventNSClientStatus
 import info.nightscout.androidaps.plugins.profile.local.LocalProfilePlugin
@@ -19,7 +20,7 @@ import info.nightscout.androidaps.plugins.pump.common.events.EventRileyLinkDevic
 import info.nightscout.androidaps.setupwizard.elements.SWItem
 import info.nightscout.androidaps.setupwizard.events.EventSWUpdate
 import info.nightscout.androidaps.utils.FabricPrivacy
-import info.nightscout.androidaps.utils.alertDialogs.OKDialog.showConfirmation
+import info.nightscout.androidaps.utils.alertDialogs.OKDialog
 import info.nightscout.androidaps.utils.locale.LocaleHelper.update
 import info.nightscout.androidaps.utils.rx.AapsSchedulers
 import info.nightscout.androidaps.utils.sharedPreferences.SP
@@ -37,6 +38,7 @@ class SetupWizardActivity : NoSplashAppCompatActivity() {
     @Inject lateinit var sp: SP
     @Inject lateinit var fabricPrivacy: FabricPrivacy
     @Inject lateinit var aapsSchedulers: AapsSchedulers
+    @Inject lateinit var uel: UserEntryLogger
 
     private val disposable = CompositeDisposable()
     private lateinit var screens: List<SWScreen>
@@ -143,13 +145,13 @@ class SetupWizardActivity : NoSplashAppCompatActivity() {
     }
 
     override fun onBackPressed() {
-        if (currentWizardPage == 0) showConfirmation(this, resourceHelper.gs(R.string.exitwizard), Runnable { finish() }) else showPreviousPage(null)
+        if (currentWizardPage == 0) OKDialog.showConfirmation(this, resourceHelper.gs(R.string.exitwizard)) { finish() } else showPreviousPage(null)
     }
 
     @Suppress("UNUSED_PARAMETER")
     fun exitPressed(view: View?) {
         sp.putBoolean(R.string.key_setupwizard_processed, true)
-        showConfirmation(this, resourceHelper.gs(R.string.exitwizard), Runnable { finish() })
+        OKDialog.showConfirmation(this, resourceHelper.gs(R.string.exitwizard)) { finish() }
     }
 
     @Suppress("UNUSED_PARAMETER")

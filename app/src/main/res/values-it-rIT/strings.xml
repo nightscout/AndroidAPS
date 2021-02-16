@@ -420,6 +420,7 @@
     <string name="basal_shortname">BAS</string>
     <string name="deviation_shortname">DEV</string>
     <string name="activity_shortname">ATT</string>
+    <string name="bgi_shortname">-BGI</string>
     <string name="abs_insulin_shortname">ASS</string>
     <string name="devslope_shortname">PENDEV</string>
     <string name="nav_about">Informazioni su</string>
@@ -627,6 +628,7 @@
     <string name="ns_autobackfill_summary">Riempimento automatico glicemie mancanti da NS</string>
     <string name="loop_smbsetbypump_label">SMB impostato dal micro</string>
     <string name="overview_show_activity">Attività</string>
+    <string name="overview_show_bgi">Impatto glicemia (BGI)</string>
     <string name="overview_show_sensitivity">Sensibilità</string>
     <string name="overview_show_deviations">Deviazioni</string>
     <string name="overview_show_cob">CHO attivi</string>
@@ -1158,4 +1160,5 @@
     <string name="clear_filter">Cancella filtro</string>
     <string name="trend_arrow">Freccia trend</string>
     <string name="cannula">Cannula</string>
+    <string name="userentry">Inserimento utente</string>
 </resources>

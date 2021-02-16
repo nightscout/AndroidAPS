@@ -13,7 +13,7 @@
     <string name="nav_resetdb">Reinicializar Base de Dados</string>
     <string name="reset_db_confirm">Quer realmente reiniciar a base de dados?</string>
     <string name="nav_exit">Sair</string>
-    <string name="ns_sync_use_absolute_title">Usar sempre valores absolutos de basal</string>
+    <string name="ns_sync_use_absolute_title">Utilizar sempre valores absolutos de basal</string>
     <string name="alert_dialog_permission_battery_optimization_failed">Este dispositivo não parece suportar a optimização de bateria na lista de permissões - pode ter problemas de desempenho.</string>
     <string name="description_actions">Alguns botões para aceder rapidamente a funções comuns</string>
     <string name="description_config_builder">Usado para configurar os plugins ativos</string>
@@ -86,7 +86,7 @@
     <string name="virtualpump">Bomba virtual</string>
     <string name="careportal">Careportal</string>
     <string name="configbuilder_pump">Bomba</string>
-    <string name="configbuilder_pump_description">Qual a bomba que gostaria de usar com AndroidAPS?</string>
+    <string name="configbuilder_pump_description">Qual a bomba que gostaria de utilizar com AndroidAPS?</string>
     <string name="configbuilder_treatments">Tratamentos</string>
     <string name="configbuilder_treatments_description">Qual o plugin que deve ser usado para os tratamentos?</string>
     <string name="configbuilder_profile">Perfil</string>
@@ -285,7 +285,7 @@
     <string name="array_of_elements">Array de %1$d elementos.\nValor actual:</string>
     <string name="openapsma_autosensdata_label">Dados Autosens</string>
     <string name="openapsma_scriptdebugdata_label">Script debug</string>
-    <string name="openapsama_useautosens">Usar função Autosens</string>
+    <string name="openapsama_useautosens">Utilizar função Autosens</string>
     <string name="refresheventsfromnightscout">Actualizar tratamentos do NS</string>
     <string name="deletefuturetreatments">Apagar tratamentos do futuro</string>
     <string name="eatingsoon">Comer Brevemente</string>
@@ -305,7 +305,7 @@
     <string name="wear_shortname">WEAR</string>
     <string name="smscommunicator_shortname">SMS</string>
     <string name="short_tabtitles">Abreviar títulos dos separadores</string>
-    <string name="always_use_shortavg">Usar sempre delta médio curto em vez de delta simples</string>
+    <string name="always_use_shortavg">Utilizar sempre delta médio curto em vez de delta simples</string>
     <string name="always_use_shortavg_summary">Útil quando há ruído nos dados de fontes sem filtro como xDrip+.</string>
     <string name="profile">Perfil</string>
     <string name="openapsama_max_daily_safety_multiplier_summary">Valor padrão: 3 Por segurança é o valor limite estabelecido por OpenAPS. O que faz é limitar a basal a x3 a basal mázima. Se necessário modificar este valor, por favor ter em conta que os dados apontam para que os limites de segurança sejam - 3 x max diario ou 4x valor actual (qual seja menor) como valores máximos.</string>
@@ -398,7 +398,7 @@
     <string name="ultrafastactinginsulincomment">Fiasp</string>
     <string name="insulin_shortname">INS</string>
     <string name="enablesuperbolus">Activar superbólus no assistente</string>
-    <string name="enablesuperbolus_summary">Habilite a funcionalidade de superbolus no assistente. Não habilite até que aprenda o funcionamento. PODE CAUSAR OVERDOSE DE INSULINA SE USAR INDISCRIMINADAMENTE!</string>
+    <string name="enablesuperbolus_summary">Active a funcionalidade de superbolus no assistente. Não active até que aprenda o funcionamento. PODE CAUSAR OVERDOSE DE INSULINA SE UTILIZAR INDISCRIMINADAMENTE!</string>
     <string name="show_statuslights">Mostrar luzes de estado no ecrã principal</string>
     <string name="statuslights_cage_warning">Limite aviso idade canula [h]</string>
     <string name="statuslights_cage_critical">Limite Crítico Idade Canula [h]</string>
@@ -420,6 +420,7 @@
     <string name="basal_shortname">BAS</string>
     <string name="deviation_shortname">DESV</string>
     <string name="activity_shortname">ACT</string>
+    <string name="bgi_shortname">-IG</string>
     <string name="abs_insulin_shortname">ABS</string>
     <string name="devslope_shortname">DESVINCLI</string>
     <string name="nav_about">Acerca</string>
@@ -508,7 +509,7 @@
     <string name="executingrightnow">Comando será executado agora</string>
     <string name="pump_unreachable">Bomba inacessível</string>
     <string name="missed_bg_readings">Leituras Glicose perdidas</string>
-    <string name="raise_notifications_as_android_notifications">Usar as notificações do sistema para alertas e notificações</string>
+    <string name="raise_notifications_as_android_notifications">Utilizar as notificações do sistema para alertas e notificações</string>
     <string name="gradually_increase_notification_volume">Aumentar gradualmente o volume de alertas e notificações</string>
     <string name="localalertsettings_title">Alertas local</string>
     <string name="enable_missed_bg_readings_alert">Alerta caso nenhuma Glicose seja recebida</string>
@@ -627,6 +628,7 @@
     <string name="ns_autobackfill_summary">Preencher Glicose em falta com NS</string>
     <string name="loop_smbsetbypump_label">SMB definido pela bomba</string>
     <string name="overview_show_activity">Actividade</string>
+    <string name="overview_show_bgi">Impacto Glicose</string>
     <string name="overview_show_sensitivity">Sensibilidade</string>
     <string name="overview_show_deviations">Desvios</string>
     <string name="overview_show_cob">Hidratos a Bordo (COB)</string>
@@ -727,7 +729,7 @@
     <string name="nsclientinfotext">ClienteNS gere a ligação ao Nightscout. Pode saltar esta parte mas não será possível passar os objectivos até que o configure.</string>
     <string name="diawarning">Lembre-se: novos perfis de insulina requerem diâmetro de pelo menos 5h. DIA 5–6h no novo perfil é igual ao diâmetro 3h nos antigos perfis de insulina.</string>
     <string name="setupwizard_profile_description">Por favor seleccione a fonte do perfil. Se o paciente é uma criança deverá utilizar perfil NS. Se ninguém o está a seguir no Nightscout provavelmente preferirá um perfil Local. Lembre-se que apenas está a escolher a fonte de perfil. Para o utilizar terá que o activar executando \"Troca Perfil\"</string>
-    <string name="setupwizard_aps_description">Seleccione um dos algoritmos disponíveis. Eles são classificados do mais antigo para o mais recente. Algoritmo mais recente é geralmente mais forte e mais agressivo. Assim, se é novo looper, poderá provavelmente começar com AMA e não com a versão mais recente. Não se esqueça de ler a documentação de OpenAPS e configurá-lo antes de usar.</string>
+    <string name="setupwizard_aps_description">Seleccione um dos algoritmos disponíveis. Eles são classificados do mais antigo para o mais recente. Algoritmo mais recente é geralmente mais forte e mais agressivo. Assim, se é novo looper, poderá provavelmente começar com AMA e não com a versão mais recente. Não se esqueça de ler a documentação de OpenAPS e configurá-lo antes de utilizar.</string>
     <string name="setupwizard_pump_waiting_for_riley_link_connection">Por favor, configure o seu RileyLink abaixo. Depois de seleccionar um RileyLink, será possível continuar a configuração quando o estado do RileyLink estiver \"Conectado\". Isso pode levar um minuto.\n</string>
     <string name="setupwizard_pump_pump_not_initialized"><b>Nota:</b> Pode continuar confguração uma vez que a bomba foi configurada.\n</string>
     <string name="startobjective">Iniciar primeiro objectivo</string>
@@ -801,7 +803,7 @@
     <string name="log_operating_mode_changes">Alterações do modo de funcionamento de registo</string>
     <string name="log_alerts">Alertas de registo</string>
     <string name="enable_tbr_emulation">Activar a emulação DBT</string>
-    <string name="enable_tbr_emulation_summary">Usar bólus prolongados em vez de basais temporárias para contornar o limite de 250%%</string>
+    <string name="enable_tbr_emulation_summary">Utilizar bólus prolongados em vez de basais temporárias para contornar o limite de 250%%</string>
     <string name="disable_vibration">Desactivar vibrações na entrega manual de bólus</string>
     <string name="disable_vibration_summary">Para bólus e bólus estendidos (só disponível com o firmware Insight 3.x)</string>
     <string name="disable_vibration_auto">Desactivar vibrações na entrega automática de bólus</string>
@@ -883,9 +885,9 @@
     <string name="or">Ou</string>
     <string name="xor">Exclusivo ou</string>
     <string name="atspecifiedtime">Às %1$s</string>
-    <string name="use_network_location">Usar localização da rede</string>
-    <string name="use_gps_location">Usar localização GPS</string>
-    <string name="use_passive_location">Usar localização passiva</string>
+    <string name="use_network_location">Utilizar localização da rede</string>
+    <string name="use_gps_location">Utilizar localização GPS</string>
+    <string name="use_passive_location">Utilizar localização passiva</string>
     <string name="locationservice">Serviço de localização</string>
     <string name="automation_short">Auto</string>
     <string name="automation">Automatização</string>
@@ -900,7 +902,7 @@
     <string name="title_tidepool_password">Senha Login</string>
     <string name="title_tidepool_test_login">Teste de Conta Tidepool</string>
     <string name="summary_tidepool_dev_servers">Se activado, envio será para https://int-app.tidepool.org em vez do habitual https://app.tidepool.org/</string>
-    <string name="title_tidepool_dev_servers">Usar servidores de integração (teste)</string>
+    <string name="title_tidepool_dev_servers">Utilizar servidores de integração (teste)</string>
     <string name="tidepool">Tidepool</string>
     <string name="tidepool_shortname">TDP</string>
     <string name="description_tidepool">Enviar dados para Tidepool</string>
@@ -1147,7 +1149,7 @@
     <string name="advisoralarm">Executar alarme quando for tempo de comer</string>
     <string name="alarminxmin">Executar alarme em %1$d min</string>
     <string name="bolusadvisor">Guia de Bólus</string>
-    <string name="bolusadvisormessage">Tem glicemia alta. Em vez de comer agora é recomendado esperar por uma melhor glicemia. Quer fazer um bólus de correção agora e lembrá-lo quando fôr hora de comer? Neste caso nenhum hidrato será registado e deve usar o assistente novamente quando for lembrado.</string>
+    <string name="bolusadvisormessage">Tem glicemia alta. Em vez de comer agora é recomendado esperar por uma melhor glicemia. Quer fazer um bólus de correção agora e lembrá-lo quando fôr hora de comer? Neste caso nenhum hidrato será registado e deve utilizar o assistente novamente quando for lembrado.</string>
     <string name="enablebolusadvisor">Activar Guia de Bólus</string>
     <string name="enablebolusadvisor_summary">Use lembrete para começar a comer mais tarde em vez di resultado do assistente durante a glicemia alta (\"pré-bolus\")</string>
     <string name="time_to_eat">Hora de comer!\nExecutar assistente de Bólus e fazer cálculo novamente.</string>
@@ -1158,4 +1160,5 @@
     <string name="clear_filter">Limpar filtros</string>
     <string name="trend_arrow">Seta de tendência</string>
     <string name="cannula">Cânula</string>
+    <string name="userentry">Entrada de Utilizador</string>
 </resources>

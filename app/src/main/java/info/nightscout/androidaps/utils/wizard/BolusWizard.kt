@@ -18,6 +18,7 @@ import info.nightscout.androidaps.events.EventRefreshOverview
 import info.nightscout.androidaps.interfaces.*
 import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.logging.LTag
+import info.nightscout.androidaps.logging.UserEntryLogger
 import info.nightscout.androidaps.plugins.aps.loop.LoopPlugin
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper
 import info.nightscout.androidaps.plugins.configBuilder.ConstraintChecker
@@ -65,6 +66,7 @@ class BolusWizard @Inject constructor(
     @Inject lateinit var automationPlugin: AutomationPlugin
     @Inject lateinit var dateUtil: DateUtil
     @Inject lateinit var config: Config
+    @Inject lateinit var uel: UserEntryLogger
 
     init {
         injector.androidInjector().inject(this)
@@ -192,7 +194,7 @@ class BolusWizard @Inject constructor(
         glucoseStatus = GlucoseStatus(injector).glucoseStatusData
         glucoseStatus?.let {
             if (useTrend) {
-                trend = it.short_avgdelta
+                trend = it.shortAvgDelta
                 insulinFromTrend = Profile.fromMgdlToUnits(trend, profileFunction.getUnits()) * 3 / sens
             }
         }
@@ -354,17 +356,12 @@ class BolusWizard @Inject constructor(
                 boluscalc = nsJSON()
                 source = Source.USER
                 notes = this@BolusWizard.notes
-                aapsLogger.debug("USER ENTRY: BOLUS ADVISOR insulin $insulinAfterConstraints")
+                uel.log("BOLUS ADVISOR", d1 = insulinAfterConstraints)
                 if (insulin > 0) {
                     commandQueue.bolus(this, object : Callback() {
                         override fun run() {
                             if (!result.success) {
-                                val i = Intent(ctx, ErrorHelperActivity::class.java)
-                                i.putExtra("soundid", R.raw.boluserror)
-                                i.putExtra("status", result.comment)
-                                i.putExtra("title", resourceHelper.gs(R.string.treatmentdeliveryerror))
-                                i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-                                ctx.startActivity(i)
+                                ErrorHelperActivity.runAlarm(ctx, result.comment, resourceHelper.gs(R.string.treatmentdeliveryerror), R.raw.boluserror)
                             } else
                                 scheduleEatReminder()
                         }
@@ -382,7 +379,7 @@ class BolusWizard @Inject constructor(
         OKDialog.showConfirmation(ctx, resourceHelper.gs(R.string.boluswizard), confirmMessage, {
             if (insulinAfterConstraints > 0 || carbs > 0) {
                 if (useSuperBolus) {
-                    aapsLogger.debug("USER ENTRY: SUPERBOLUS TBR")
+                    uel.log("SUPERBOLUS TBR")
                     if (loopPlugin.isEnabled(PluginType.LOOP)) {
                         loopPlugin.superBolusTo(System.currentTimeMillis() + 2 * 60L * 60 * 1000)
                         rxBus.send(EventRefreshOverview("WizardDialog"))
@@ -392,12 +389,7 @@ class BolusWizard @Inject constructor(
                         commandQueue.tempBasalAbsolute(0.0, 120, true, profile, object : Callback() {
                             override fun run() {
                                 if (!result.success) {
-                                    val i = Intent(ctx, ErrorHelperActivity::class.java)
-                                    i.putExtra("soundid", R.raw.boluserror)
-                                    i.putExtra("status", result.comment)
-                                    i.putExtra("title", resourceHelper.gs(R.string.tempbasaldeliveryerror))
-                                    i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-                                    ctx.startActivity(i)
+                                    ErrorHelperActivity.runAlarm(ctx, result.comment, resourceHelper.gs(R.string.tempbasaldeliveryerror), R.raw.boluserror)
                                 }
                             }
                         })
@@ -407,9 +399,9 @@ class BolusWizard @Inject constructor(
                             override fun run() {
                                 if (!result.success) {
                                     val i = Intent(ctx, ErrorHelperActivity::class.java)
-                                    i.putExtra("soundid", R.raw.boluserror)
-                                    i.putExtra("status", result.comment)
-                                    i.putExtra("title", resourceHelper.gs(R.string.tempbasaldeliveryerror))
+                                    i.putExtra(ErrorHelperActivity.SOUND_ID, R.raw.boluserror)
+                                    i.putExtra(ErrorHelperActivity.STATUS, result.comment)
+                                    i.putExtra(ErrorHelperActivity.TITLE, resourceHelper.gs(R.string.tempbasaldeliveryerror))
                                     i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
                                     ctx.startActivity(i)
                                 }
@@ -428,17 +420,12 @@ class BolusWizard @Inject constructor(
                     boluscalc = nsJSON()
                     source = Source.USER
                     notes = this@BolusWizard.notes
-                    aapsLogger.debug("USER ENTRY: BOLUS WIZARD insulin $insulinAfterConstraints carbs: $carbs")
+                    uel.log("BOLUS WIZARD", "", insulinAfterConstraints, carbs)
                     if (insulin > 0 || pump.pumpDescription.storesCarbInfo) {
                         commandQueue.bolus(this, object : Callback() {
                             override fun run() {
                                 if (!result.success) {
-                                    val i = Intent(ctx, ErrorHelperActivity::class.java)
-                                    i.putExtra("soundid", R.raw.boluserror)
-                                    i.putExtra("status", result.comment)
-                                    i.putExtra("title", resourceHelper.gs(R.string.treatmentdeliveryerror))
-                                    i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-                                    ctx.startActivity(i)
+                                    ErrorHelperActivity.runAlarm(ctx, result.comment, resourceHelper.gs(R.string.treatmentdeliveryerror), R.raw.boluserror)
                                 }
                             }
                         })

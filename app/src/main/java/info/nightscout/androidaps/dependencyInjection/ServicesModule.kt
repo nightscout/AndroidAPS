@@ -10,7 +10,7 @@ import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.service.Riley
 import info.nightscout.androidaps.plugins.pump.insight.InsightAlertService
 import info.nightscout.androidaps.plugins.pump.insight.connection_service.InsightConnectionService
 import info.nightscout.androidaps.plugins.pump.medtronic.service.RileyLinkMedtronicService
-import info.nightscout.androidaps.plugins.pump.omnipod.rileylink.service.RileyLinkOmnipodService
+import info.nightscout.androidaps.plugins.pump.omnipod.eros.rileylink.service.RileyLinkOmnipodService
 import info.nightscout.androidaps.services.AlarmSoundService
 import info.nightscout.androidaps.services.LocationService
 

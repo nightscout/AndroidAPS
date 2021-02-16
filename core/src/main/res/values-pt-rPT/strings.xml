@@ -235,14 +235,14 @@
     <string name="preferences_import_list_title">Seleccione o ficheiro para importação</string>
     <string name="metadata_warning_different_flavour">As preferências foram criadas com uma variante diferente do AAPS (%1$s) enquanto tem: %2$s.\n\nAlgumas definições podem estar ausentes ou inválidas - após a importação, por favor verifique e actualize suas preferências.</string>
     <string name="metadata_warning_different_device">Preferências foram criadas num dispositivo diferente. Não há problema se estiver a importar de telefone diferente/antigo, mas se certifique que as preferências importadas estão corretas!</string>
-    <string name="metadata_warning_outdated_format">Está a usar formato ultrapassado herdado a partir de versões antigas do AAPS, o que não é seguro! Use-o apenas como um último recurso, se não tiver uma exportação no actual no formato JSON.</string>
+    <string name="metadata_warning_outdated_format">Está a utilizar formato ultrapassado herdado a partir de versões antigas do AAPS, o que não é seguro! Utilize-o apenas como um último recurso, se não tiver uma exportação no actual no formato JSON.</string>
     <string name="metadata_warning_old_export">Preferências importadas já são %1$s dias antigas! Talvez tenha preferências mais actualizadas ou escolheu o ficheiro errado? Lembre-se de exportar preferências regularmente!</string>
     <string name="metadata_warning_date_format">Formato de data-hora inválido!</string>
     <string name="metadata_warning_different_version">Preferências de uma versão menor diferente de aplicação. Está OK se está a importar após o upgrade, mas verifique após a importação se as preferências ainda estão correctas!</string>
     <string name="metadata_urgent_different_version">Preferências de uma versão principal diferente de aplicação. As principais versões diferem significativamente e podem ter preferências incompatíveis! Certifique-se depois de importar que as preferências ainda estão corretas!</string>
     <string name="prefdecrypt_settings_tampered">Ficheiro de definições adulterado</string>
     <string name="prefdecrypt_settings_secure">Ficheiro de definições é seguro</string>
-    <string name="prefdecrypt_settings_unencrypted">A usar um formato de definições não seguro e não encriptado</string>
+    <string name="prefdecrypt_settings_unencrypted">A utilizar um formato de definições não seguro e não encriptado</string>
     <string name="prefdecrypt_wrong_json">Erro de formato JSON, campo necessário ausente (formato, conteúdo, metadados ou segurança)</string>
     <string name="prefdecrypt_wrong_password">Erro ao desencriptar, a senha inserida não pode desencriptar o ficheiro</string>
     <string name="prefdecrypt_issue_missing_file_hash">Ficheiro de verificação (hash) em falta, não é possível verificar a autenticidade das definições!</string>
@@ -257,6 +257,14 @@
     <string name="versionavailable">Disponível %1$s disponível</string>
     <!-- Permissions -->
     <string name="alert_dialog_storage_permission_text">Por favor, reinicie o telefone ou reinicie o AndroidAPS a partir das Definições do Sistema \ncaso contrário, o AndroidAPS não terá registo (importante para controlar e verificar se os algoritmos estão a funcionar correctamente)!</string>
+    <!-- WeekdayPicker -->
+    <string name="monday_short">S</string>
+    <string name="tuesday_short">T</string>
+    <string name="wednesday_short">Qa</string>
+    <string name="thursday_short">Qi</string>
+    <string name="friday_short">Se</string>
+    <string name="saturday_short">Sa</string>
+    <string name="sunday_short">D</string>
     <plurals name="days">
         <item quantity="one">%1$d dia</item>
         <item quantity="other">%1$d dias</item>

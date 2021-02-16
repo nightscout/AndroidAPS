@@ -59,4 +59,5 @@
     <string name="prefdecrypt_issue_wrong_algorithm">Ikke-understøttet eller ikke angivet krypteringsalgoritme!</string>
     <!-- VersionChecker -->
     <!-- Permissions -->
+    <!-- WeekdayPicker -->
 </resources>

@@ -13,7 +13,7 @@ class StaticInjector @Inject constructor(
     companion object {
         private var instance : StaticInjector? = null
 
-        @Deprecated("Only until DB is refactored")
+        @Deprecated("Use only for classes instantiated by 3rd party")
         fun getInstance() : StaticInjector {
             if (instance == null) throw IllegalStateException("StaticInjector not initialized")
             return instance!!

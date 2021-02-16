@@ -22,6 +22,7 @@ internal class DelegatedAppDatabase(val changes: MutableList<DBEntry>, val datab
     val profileSwitchDao: ProfileSwitchDao = DelegatedProfileSwitchDao(changes, database.profileSwitchDao)
     val apsResultDao: APSResultDao = DelegatedAPSResultDao(changes, database.apsResultDao)
     val versionChangeDao: VersionChangeDao = DelegatedVersionChangeDao(changes, database.versionChangeDao)
+    val userEntryDao: UserEntryDao = DelegatedUserEntryDao(changes, database.userEntryDao)
     val preferenceChangeDao: PreferenceChangeDao = DelegatedPreferenceChangeDao(changes, database.preferenceChangeDao)
     fun clearAllTables() = database.clearAllTables()
 }
