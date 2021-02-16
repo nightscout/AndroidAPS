@@ -180,7 +180,7 @@
     <string name="save">שמור</string>
     <string name="reloadprofile">טעינה מחדש של הפרופיל</string>
     <string name="smscommunicator">תקשורת SMS</string>
-    <string name="smscommunicator_allowednumbers">מספרי טלפון מותרים</string>
+    <string name="smscommunicator_allowednumbers">מספרי טלפון מורשים</string>
     <string name="smscommunicator_allowednumbers_summary">+ XXXXXXXXXX; + YYYYYYYYYY</string>
     <string name="smscommunicator_bolusreplywithcode">לאישור מתן בולוס %1$.2f יחידות יש להשיב עם הקוד %2$s</string>
     <string name="smscommunicator_mealbolusreplywithcode">למתן %1$.2f יחידות בולוס ארוחה יש להשיב עם הקוד %2$s</string>
