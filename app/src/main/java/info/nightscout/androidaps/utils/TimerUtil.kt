@@ -14,12 +14,14 @@ class TimerUtil @Inject constructor(
     private val resourceHelper: ResourceHelper,
 ) {
 
-    fun scheduleReminder(time: Long, text: String? = null) = Intent(AlarmClock.ACTION_SET_TIMER).apply {
-        val length: Int = ((time - DateUtil.now()) / 1000).toInt()
-        flags = flags or Intent.FLAG_ACTIVITY_NEW_TASK
-        putExtra(AlarmClock.EXTRA_LENGTH, length)
-        putExtra(AlarmClock.EXTRA_SKIP_UI, true)
-        putExtra(AlarmClock.EXTRA_MESSAGE, text ?: resourceHelper.gs(R.string.app_name))
-        context.startActivity(this)
+    fun scheduleReminder(time: Long, text: String? = null) {
+        Intent(AlarmClock.ACTION_SET_TIMER).apply {
+            val length: Int = ((time - DateUtil.now()) / 1000).toInt()
+            flags = flags or Intent.FLAG_ACTIVITY_NEW_TASK
+            putExtra(AlarmClock.EXTRA_LENGTH, length)
+            putExtra(AlarmClock.EXTRA_SKIP_UI, true)
+            putExtra(AlarmClock.EXTRA_MESSAGE, text ?: resourceHelper.gs(R.string.app_name))
+            context.startActivity(this)
+        }
     }
 }
