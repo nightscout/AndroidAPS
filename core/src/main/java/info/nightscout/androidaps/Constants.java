@@ -46,9 +46,9 @@ public class Constants {
     public static final int defaultEatingSoonTTDuration = 45; // min
     public static final double defaultEatingSoonTTmgdl = 90d;
     public static final double defaultEatingSoonTTmmol = 5d;
-    public static final int defaultHypoTTDuration = 30; // min
-    public static final double defaultHypoTTmgdl = 120d;
-    public static final double defaultHypoTTmmol = 6.5d;
+    public static final int defaultHypoTTDuration = 60; // min
+    public static final double defaultHypoTTmgdl = 160d;
+    public static final double defaultHypoTTmmol = 8d;
 
     public static final double MIN_TT_MGDL = 72d;
     public static final double MAX_TT_MGDL = 180d;
