@@ -22,7 +22,6 @@ import info.nightscout.androidaps.plugins.aps.loop.LoopPlugin
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper
 import info.nightscout.androidaps.plugins.configBuilder.ConfigBuilderPlugin
 import info.nightscout.androidaps.plugins.configBuilder.ConstraintChecker
-import info.nightscout.androidaps.plugins.constraints.objectives.ObjectivesPlugin
 import info.nightscout.androidaps.queue.Callback
 import info.nightscout.androidaps.utils.FabricPrivacy
 import info.nightscout.androidaps.utils.ToastUtils
@@ -42,7 +41,6 @@ class LoopDialog : DaggerDialogFragment() {
     @Inject lateinit var resourceHelper: ResourceHelper
     @Inject lateinit var profileFunction: ProfileFunction
     @Inject lateinit var loopPlugin: LoopPlugin
-    @Inject lateinit var objectivesPlugin: ObjectivesPlugin
     @Inject lateinit var activePlugin: ActivePluginProvider
     @Inject lateinit var constraintChecker: ConstraintChecker
     @Inject lateinit var commandQueue: CommandQueueProvider
@@ -107,7 +105,7 @@ class LoopDialog : DaggerDialogFragment() {
         binding.cancel.setOnClickListener { dismiss() }
 
         refreshDialog = Runnable {
-            scheduleUpdateGUI("refreshDialog")
+            scheduleUpdateGUI()
             loopHandler.postDelayed(refreshDialog, 15 * 1000L)
         }
         loopHandler.postDelayed(refreshDialog, 15 * 1000L)
@@ -122,11 +120,11 @@ class LoopDialog : DaggerDialogFragment() {
 
     var task: Runnable? = null
 
-    private fun scheduleUpdateGUI(from: String) {
+    private fun scheduleUpdateGUI() {
         class UpdateRunnable : Runnable {
 
             override fun run() {
-                updateGUI(from)
+                updateGUI("refreshDialog")
                 task = null
             }
         }
@@ -140,8 +138,8 @@ class LoopDialog : DaggerDialogFragment() {
         if (_binding == null) return
         aapsLogger.debug("UpdateGUI from $from")
         val pumpDescription: PumpDescription = activePlugin.activePump.pumpDescription
-        val closedLoopAllowed = objectivesPlugin.isClosedLoopAllowed(Constraint(true))
-        val lgsEnabled = objectivesPlugin.isLgsAllowed(Constraint(true))
+        val closedLoopAllowed = constraintChecker.isClosedLoopAllowed(Constraint(true))
+        val lgsEnabled = constraintChecker.isLgsAllowed(Constraint(true))
         val apsMode = sp.getString(R.string.key_aps_mode, "open")
         if (profileFunction.isProfileValid("LoopDialogUpdateGUI")) {
             if (loopPlugin.isEnabled(PluginType.LOOP)) {
