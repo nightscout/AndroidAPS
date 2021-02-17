@@ -846,6 +846,10 @@ public class ComboPlugin extends PumpPluginBase implements PumpInterface, Constr
         }
     }
 
+    @Override public int waitForDisconnectionInSeconds() {
+        return 0;
+    }
+
     private interface CommandExecution {
         CommandResult execute();
     }

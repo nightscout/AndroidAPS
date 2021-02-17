@@ -21,7 +21,6 @@ import info.nightscout.androidaps.interfaces.PumpInterface;
 import info.nightscout.androidaps.interfaces.PumpPluginBase;
 import info.nightscout.androidaps.logging.AAPSLogger;
 import info.nightscout.androidaps.logging.LTag;
-import info.nightscout.androidaps.plugins.bus.RxBusWrapper;
 import info.nightscout.androidaps.plugins.common.ManufacturerType;
 import info.nightscout.androidaps.plugins.pump.common.defs.PumpType;
 import info.nightscout.androidaps.plugins.treatments.TreatmentsPlugin;
@@ -44,7 +43,6 @@ public class MDIPlugin extends PumpPluginBase implements PumpInterface {
     public MDIPlugin(
             HasAndroidInjector injector,
             AAPSLogger aapsLogger,
-            RxBusWrapper rxBus,
             ResourceHelper resourceHelper,
             CommandQueueProvider commandQueue,
             TreatmentsPlugin treatmentsPlugin
@@ -76,8 +74,7 @@ public class MDIPlugin extends PumpPluginBase implements PumpInterface {
     @NonNull @Override
     public PumpEnactResult loadTDDs() {
         //no result, could read DB in the future?
-        PumpEnactResult result = new PumpEnactResult(getInjector());
-        return result;
+        return new PumpEnactResult(getInjector());
     }
 
     @Override
@@ -111,11 +108,15 @@ public class MDIPlugin extends PumpPluginBase implements PumpInterface {
     }
 
     @Override
-    public void connect(String reason) {
+    public void connect(@NonNull String reason) {
     }
 
     @Override
-    public void disconnect(String reason) {
+    public void disconnect(@NonNull String reason) {
+    }
+
+    @Override public int waitForDisconnectionInSeconds() {
+        return 0;
     }
 
     @Override
@@ -123,11 +124,11 @@ public class MDIPlugin extends PumpPluginBase implements PumpInterface {
     }
 
     @Override
-    public void getPumpStatus(String reason) {
+    public void getPumpStatus(@NonNull String reason) {
     }
 
     @NonNull @Override
-    public PumpEnactResult setNewBasalProfile(Profile profile) {
+    public PumpEnactResult setNewBasalProfile(@NonNull Profile profile) {
         // Do nothing here. we are using ConfigBuilderPlugin.getPlugin().getActiveProfile().getProfile();
         PumpEnactResult result = new PumpEnactResult(getInjector());
         result.success = true;
@@ -135,7 +136,7 @@ public class MDIPlugin extends PumpPluginBase implements PumpInterface {
     }
 
     @Override
-    public boolean isThisProfileSet(Profile profile) {
+    public boolean isThisProfileSet(@NonNull Profile profile) {
         return false;
     }
 
@@ -228,16 +229,14 @@ public class MDIPlugin extends PumpPluginBase implements PumpInterface {
         try {
             status.put("status", "normal");
             extended.put("Version", version);
-            try {
-                extended.put("ActiveProfile", profileName);
-            } catch (Exception e) {
-            }
+            extended.put("ActiveProfile", profileName);
             status.put("timestamp", DateUtil.toISOString(now));
 
             pump.put("status", status);
             pump.put("extended", extended);
             pump.put("clock", DateUtil.toISOString(now));
         } catch (JSONException e) {
+            getAapsLogger().error("Exception: ", e);
         }
         return pump;
     }

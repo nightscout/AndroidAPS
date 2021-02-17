@@ -25,6 +25,7 @@ interface PumpInterface {
     @JvmDefault fun finishHandshaking() {}  // set initial handshake completed
     fun connect(reason: String)
     fun disconnect(reason: String)
+    @JvmDefault fun waitForDisconnectionInSeconds(): Int = 5 // wait [x] second after last command before sending disconnect
     fun stopConnecting()
     fun getPumpStatus(reason: String)
 
@@ -65,7 +66,7 @@ interface PumpInterface {
 
     /**
      * Provides a list of custom actions to be displayed in the Actions tab.
-     * Plese note that these actions will not be queued upon execution
+     * Please note that these actions will not be queued upon execution
      *
      * @return list of custom actions
      */

@@ -127,7 +127,7 @@ class QueueThread internal constructor(
                 }
                 if (queue.size() == 0 && queue.performing() == null) {
                     val secondsFromLastCommand = (System.currentTimeMillis() - lastCommandTime) / 1000
-                    if (secondsFromLastCommand >= 5) {
+                    if (secondsFromLastCommand >= pump.waitForDisconnectionInSeconds()) {
                         waitingForDisconnect = true
                         aapsLogger.debug(LTag.PUMPQUEUE, "queue empty. disconnect")
                         rxBus.send(EventPumpStatusChanged(EventPumpStatusChanged.Status.DISCONNECTING))

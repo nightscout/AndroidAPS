@@ -145,6 +145,7 @@ class VirtualPumpPlugin @Inject constructor(
         lastDataTime = System.currentTimeMillis()
     }
 
+    override fun waitForDisconnectionInSeconds(): Int = 0
     override fun disconnect(reason: String) {}
     override fun stopConnecting() {}
     override fun getPumpStatus(reason: String) {

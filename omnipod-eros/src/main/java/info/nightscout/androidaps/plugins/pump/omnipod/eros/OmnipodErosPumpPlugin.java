@@ -88,7 +88,6 @@ import info.nightscout.androidaps.plugins.pump.omnipod.eros.queue.command.Comman
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.queue.command.CommandUpdateAlertConfiguration;
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.queue.command.OmnipodCustomCommand;
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.queue.command.OmnipodCustomCommandType;
-import info.nightscout.androidaps.plugins.pump.omnipod.eros.rileylink.manager.OmnipodRileyLinkCommunicationManager;
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.rileylink.service.RileyLinkOmnipodService;
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.ui.OmnipodOverviewFragment;
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.util.AapsOmnipodUtil;
@@ -137,7 +136,6 @@ public class OmnipodErosPumpPlugin extends PumpPluginBase implements PumpInterfa
     private final DateUtil dateUtil;
     private final PumpDescription pumpDescription;
     private final ServiceConnection serviceConnection;
-    private final OmnipodRileyLinkCommunicationManager omnipodRileyLinkCommunicationManager;
     private final PumpType pumpType = PumpType.Insulet_Omnipod;
     private final CompositeDisposable disposables = new CompositeDisposable();
     private final NSUpload nsUpload;
@@ -175,8 +173,7 @@ public class OmnipodErosPumpPlugin extends PumpPluginBase implements PumpInterfa
             RileyLinkUtil rileyLinkUtil,
             OmnipodAlertUtil omnipodAlertUtil,
             ProfileFunction profileFunction,
-            NSUpload nsUpload,
-            OmnipodRileyLinkCommunicationManager omnipodRileyLinkCommunicationManager
+            NSUpload nsUpload
     ) {
         super(new PluginDescription() //
                         .mainType(PluginType.PUMP) //
@@ -204,7 +201,6 @@ public class OmnipodErosPumpPlugin extends PumpPluginBase implements PumpInterfa
         this.omnipodAlertUtil = omnipodAlertUtil;
         this.profileFunction = profileFunction;
         this.nsUpload = nsUpload;
-        this.omnipodRileyLinkCommunicationManager = omnipodRileyLinkCommunicationManager;
 
         pumpDescription = new PumpDescription(pumpType);
 
@@ -560,7 +556,7 @@ public class OmnipodErosPumpPlugin extends PumpPluginBase implements PumpInterfa
      * When the user explicitly requested it by clicking the Refresh button on the Omnipod tab (which is executed through {@link #executeCustomCommand(CustomCommand)})
      */
     @Override
-    public void getPumpStatus(String reason) {
+    public void getPumpStatus(@NonNull String reason) {
         if (firstRun) {
             initializeAfterRileyLinkConnection();
             firstRun = false;
@@ -581,7 +577,7 @@ public class OmnipodErosPumpPlugin extends PumpPluginBase implements PumpInterfa
 
     @NonNull
     @Override
-    public PumpEnactResult setNewBasalProfile(Profile profile) {
+    public PumpEnactResult setNewBasalProfile(@NonNull Profile profile) {
         PumpEnactResult result = executeCommand(OmnipodCommandType.SET_BASAL_PROFILE, () -> aapsOmnipodManager.setBasalProfile(profile, true));
 
         aapsLogger.info(LTag.PUMP, "Basal Profile was set: " + result.success);
@@ -590,7 +586,7 @@ public class OmnipodErosPumpPlugin extends PumpPluginBase implements PumpInterfa
     }
 
     @Override
-    public boolean isThisProfileSet(Profile profile) {
+    public boolean isThisProfileSet(@NonNull Profile profile) {
         if (!podStateManager.isPodActivationCompleted()) {
             // When no Pod is active, return true here in order to prevent AAPS from setting a profile
             // When we activate a new Pod, we just use ProfileFunction to set the currently active profile
@@ -661,7 +657,7 @@ public class OmnipodErosPumpPlugin extends PumpPluginBase implements PumpInterfa
     // if false and the same rate is requested enacted=false and success=true is returned and TBR is not changed
     @Override
     @NonNull
-    public PumpEnactResult setTempBasalAbsolute(double absoluteRate, int durationInMinutes, Profile profile, boolean enforceNew) {
+    public PumpEnactResult setTempBasalAbsolute(double absoluteRate, int durationInMinutes, @NonNull Profile profile, boolean enforceNew) {
         aapsLogger.info(LTag.PUMP, "setTempBasalAbsolute: rate: {}, duration={}", absoluteRate, durationInMinutes);
 
         if (durationInMinutes <= 0 || durationInMinutes % BASAL_STEP_DURATION.getStandardMinutes() != 0) {
@@ -709,7 +705,7 @@ public class OmnipodErosPumpPlugin extends PumpPluginBase implements PumpInterfa
 
     // TODO improve (i8n and more)
     @NonNull @Override
-    public JSONObject getJSONStatus(Profile profile, String profileName, String version) {
+    public JSONObject getJSONStatus(@NonNull Profile profile, @NonNull String profileName, @NonNull String version) {
 
         if (!podStateManager.isPodActivationCompleted() || lastConnectionTimeMillis + 60 * 60 * 1000L < System.currentTimeMillis()) {
             return new JSONObject();
@@ -821,12 +817,12 @@ public class OmnipodErosPumpPlugin extends PumpPluginBase implements PumpInterfa
     }
 
     @Override
-    public void executeCustomAction(CustomActionType customActionType) {
+    public void executeCustomAction(@NonNull CustomActionType customActionType) {
         aapsLogger.warn(LTag.PUMP, "Unknown custom action: " + customActionType);
     }
 
     @Override
-    public PumpEnactResult executeCustomCommand(CustomCommand command) {
+    public PumpEnactResult executeCustomCommand(@NonNull CustomCommand command) {
         if (!(command instanceof OmnipodCustomCommand)) {
             aapsLogger.warn(LTag.PUMP, "Unknown custom command: " + command.getClass().getName());
             return new PumpEnactResult(getInjector()).success(false).enacted(false).comment(resourceHelper.gs(R.string.omnipod_error_unknown_custom_command, command.getClass().getName()));
@@ -1010,12 +1006,16 @@ public class OmnipodErosPumpPlugin extends PumpPluginBase implements PumpInterfa
             aapsLogger.debug(LTag.PUMP, "finishHandshaking [OmnipodPumpPlugin] - default (empty) implementation.");
     }
 
-    @Override public void connect(String reason) {
+    @Override public void connect(@NonNull String reason) {
         if (displayConnectionMessages)
             aapsLogger.debug(LTag.PUMP, "connect (reason={}) [PumpPluginAbstract] - default (empty) implementation." + reason);
     }
 
-    @Override public void disconnect(String reason) {
+    @Override public int waitForDisconnectionInSeconds() {
+        return 0;
+    }
+
+    @Override public void disconnect(@NonNull String reason) {
         if (displayConnectionMessages)
             aapsLogger.debug(LTag.PUMP, "disconnect (reason={}) [PumpPluginAbstract] - default (empty) implementation." + reason);
     }
