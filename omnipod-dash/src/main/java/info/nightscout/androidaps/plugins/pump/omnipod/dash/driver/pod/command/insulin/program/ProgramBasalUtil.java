@@ -1,5 +1,6 @@
 package info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.command.insulin.program;
 
+import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -9,19 +10,39 @@ import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.definitio
 
 public final class ProgramBasalUtil {
     private static final byte NUMBER_OF_BASAL_SLOTS = 48;
-    private static final byte MAX_NUMBER_OF_SLOTS_IN_SHORT_INSULIN_PROGRAM_ELEMENT = 16;
+    private static final byte MAX_NUMBER_OF_SLOTS_IN_INSULIN_PROGRAM_ELEMENT = 16;
+    private static final int NUMBER_OF_USEC_IN_SLOT = 1_800_000_000;
 
     private ProgramBasalUtil() {
     }
 
-    public static List<LongInsulinProgramElement> mapPulsesPerSlotToLongInsulinProgramElements(short[] pulsesPerSlot) {
-        if (pulsesPerSlot.length != NUMBER_OF_BASAL_SLOTS) {
+    public static List<LongInsulinProgramElement> mapPulsesPerSlotToLongInsulinProgramElements(short[] tenthPulsesPerSlot) {
+        if (tenthPulsesPerSlot.length != NUMBER_OF_BASAL_SLOTS) {
             throw new IllegalArgumentException("Basal program must contain 48 slots");
         }
 
-        // TODO
+        List<LongInsulinProgramElement> elements = new ArrayList<>();
+        long previousTenthPulsesPerSlot = 0;
+        byte numberOfSlotsInCurrentElement = 0;
+        byte startSlotIndex = 0;
 
-        return new ArrayList<>();
+        for (int i = 0; i < NUMBER_OF_BASAL_SLOTS; i++) {
+            if (i == 0) {
+                previousTenthPulsesPerSlot = tenthPulsesPerSlot[i];
+                numberOfSlotsInCurrentElement = 1;
+            } else if (previousTenthPulsesPerSlot != tenthPulsesPerSlot[i] || numberOfSlotsInCurrentElement >= MAX_NUMBER_OF_SLOTS_IN_INSULIN_PROGRAM_ELEMENT) {
+                elements.add(new LongInsulinProgramElement(startSlotIndex, numberOfSlotsInCurrentElement, (short) (previousTenthPulsesPerSlot * numberOfSlotsInCurrentElement), (int) ((NUMBER_OF_USEC_IN_SLOT * numberOfSlotsInCurrentElement) / (previousTenthPulsesPerSlot * numberOfSlotsInCurrentElement))));
+
+                previousTenthPulsesPerSlot = tenthPulsesPerSlot[i];
+                numberOfSlotsInCurrentElement = 1;
+                startSlotIndex += numberOfSlotsInCurrentElement;
+            } else {
+                numberOfSlotsInCurrentElement++;
+            }
+        }
+        elements.add(new LongInsulinProgramElement(startSlotIndex, numberOfSlotsInCurrentElement, (short) (previousTenthPulsesPerSlot * numberOfSlotsInCurrentElement), (int) ((NUMBER_OF_USEC_IN_SLOT * numberOfSlotsInCurrentElement) / (previousTenthPulsesPerSlot * numberOfSlotsInCurrentElement))));
+
+        return elements;
     }
 
     public static List<ShortInsulinProgramElement> mapPulsesPerSlotToShortInsulinProgramElements(short[] pulsesPerSlot) {
@@ -45,7 +66,7 @@ public final class ProgramBasalUtil {
             } else if (pulsesPerSlot[currentTotalNumberOfSlots] == previousPulsesPerSlot) {
                 // Subsequent slot in element (same pulses per slot as previous slot)
 
-                if (numberOfSlotsInCurrentElement < MAX_NUMBER_OF_SLOTS_IN_SHORT_INSULIN_PROGRAM_ELEMENT) {
+                if (numberOfSlotsInCurrentElement < MAX_NUMBER_OF_SLOTS_IN_INSULIN_PROGRAM_ELEMENT) {
                     numberOfSlotsInCurrentElement++;
                 } else {
                     elements.add(new ShortInsulinProgramElement(numberOfSlotsInCurrentElement, previousPulsesPerSlot, false));
@@ -70,7 +91,7 @@ public final class ProgramBasalUtil {
                         currentTotalNumberOfSlots++;
                         expectAlternatePulseForNextSegment = !expectAlternatePulseForNextSegment;
 
-                        if (numberOfSlotsInCurrentElement < MAX_NUMBER_OF_SLOTS_IN_SHORT_INSULIN_PROGRAM_ELEMENT) {
+                        if (numberOfSlotsInCurrentElement < MAX_NUMBER_OF_SLOTS_IN_INSULIN_PROGRAM_ELEMENT) {
                             numberOfSlotsInCurrentElement++;
                         } else {
                             // End of alternate pulse segment (no slots left in element)
@@ -110,6 +131,21 @@ public final class ProgramBasalUtil {
         return elements;
     }
 
+    public static short[] mapBasalProgramToTenthPulsesPerSlot(BasalProgram basalProgram) {
+        short[] tenthPulsesPerSlot = new short[NUMBER_OF_BASAL_SLOTS];
+        for (BasalProgram.Segment segment : basalProgram.getSegments()) {
+            for (int i = segment.getStartSlotIndex(); i < segment.getEndSlotIndex(); i++) {
+                tenthPulsesPerSlot[i] = (short) (roundToHalf(segment.getPulsesPerHour() / 2.0d) * 10);
+            }
+        }
+
+        return tenthPulsesPerSlot;
+    }
+
+    private static double roundToHalf(double d) {
+        return (double) (short) ((short) (int) (d * 10.0d) / 5 * 5) / 10.0d;
+    }
+
     public static short[] mapBasalProgramToPulsesPerSlot(BasalProgram basalProgram) {
         short[] pulsesPerSlot = new short[NUMBER_OF_BASAL_SLOTS];
         for (BasalProgram.Segment segment : basalProgram.getSegments()) {
@@ -137,14 +173,75 @@ public final class ProgramBasalUtil {
         int secondOfMinute = instance.get(Calendar.SECOND);
 
         byte index = (byte) ((hourOfDay * 60 + minuteOfHour) / 30);
-        short secondsRemaining = (short) ((index + 1) * 1800 - (secondOfMinute + hourOfDay * 3600 + minuteOfHour * 60));
-        short pulsesRemaining = (short) ((double) pulsesPerSlot[index] * secondsRemaining / 1800);
+        int secondOfDay = secondOfMinute + hourOfDay * 3_600 + minuteOfHour * 60;
 
-        return new CurrentSlot(index, secondsRemaining, pulsesRemaining);
+        short secondsRemaining = (short) ((index + 1) * 1_800 - secondOfDay);
+        short pulsesRemaining = (short) ((double) pulsesPerSlot[index] * secondsRemaining / 1_800);
+
+        return new CurrentSlot(index, (short) (secondsRemaining * 8), pulsesRemaining);
     }
 
-    public static short createChecksum() {
-        // TODO
-        return 0;
+    public static CurrentLongInsulinProgramElement calculateCurrentLongInsulinProgramElement(List<LongInsulinProgramElement> elements, Date currentTime) {
+        Calendar instance = Calendar.getInstance();
+        instance.setTime(currentTime);
+
+        int hourOfDay = instance.get(Calendar.HOUR_OF_DAY);
+        int minuteOfHour = instance.get(Calendar.MINUTE);
+        int secondOfMinute = instance.get(Calendar.SECOND);
+
+        int secondOfDay = secondOfMinute + hourOfDay * 3_600 + minuteOfHour * 60;
+        int startSlotIndex = 0;
+
+        byte index = 0;
+        for (LongInsulinProgramElement element : elements) {
+            int startTimeInSeconds = startSlotIndex * 1_800;
+            int endTimeInSeconds = startTimeInSeconds + element.getNumberOfSlots() * 1_800;
+
+            if (secondOfDay >= startTimeInSeconds && secondOfDay < endTimeInSeconds) {
+                long totalNumberOfTenThousandthPulsesInSlot = element.getTotalTenthPulses() * 1_000;
+                if (totalNumberOfTenThousandthPulsesInSlot == 0) {
+                    totalNumberOfTenThousandthPulsesInSlot = element.getNumberOfSlots() * 1_000;
+                }
+
+                int durationInSeconds = endTimeInSeconds - startTimeInSeconds;
+                int secondsPassedInCurrentSlot = secondOfDay - startTimeInSeconds;
+                long remainingTenThousandthPulses = (durationInSeconds - secondsPassedInCurrentSlot) * (long) totalNumberOfTenThousandthPulsesInSlot;
+                int delayBetweenTenthPulsesInUsec = (int) (durationInSeconds * 1_000_000L * 1_000 / totalNumberOfTenThousandthPulsesInSlot);
+                int secondsRemaining = secondsPassedInCurrentSlot % 1_800;
+                int delayUntilNextTenthPulseInUsec = delayBetweenTenthPulsesInUsec;
+                for (int i = 0; i < secondsRemaining; i++) {
+                    delayUntilNextTenthPulseInUsec = delayUntilNextTenthPulseInUsec - 1_000_000;
+                    while (delayUntilNextTenthPulseInUsec <= 0) {
+                        delayUntilNextTenthPulseInUsec += delayBetweenTenthPulsesInUsec;
+                    }
+                }
+                short remainingTenthPulses = (short) ((0 != remainingTenThousandthPulses % 1_000 ? 1 : 0) + remainingTenThousandthPulses / 1_000);
+
+                return new CurrentLongInsulinProgramElement(index, delayUntilNextTenthPulseInUsec, remainingTenthPulses);
+            }
+
+            index++;
+            startSlotIndex += element.getNumberOfSlots();
+        }
+        throw new IllegalStateException("Could not determine current long insulin program element");
+    }
+
+    public static short createChecksum(short[] pulsesPerSlot, CurrentSlot currentSlot) {
+        ByteBuffer buffer = ByteBuffer.allocate(1 + 2 + 2 + NUMBER_OF_BASAL_SLOTS * 2) //
+                .put(currentSlot.getIndex()) //
+                .putShort(currentSlot.getPulsesRemaining()) //
+                .putShort(currentSlot.getEighthSecondsRemaining());
+
+        for (short pulses : pulsesPerSlot) {
+            buffer.putShort(pulses);
+        }
+
+        byte[] bytes = buffer.array();
+
+        short sum = 0;
+        for (byte b : bytes) {
+            sum += (short) (b & 0xff);
+        }
+        return sum;
     }
 }

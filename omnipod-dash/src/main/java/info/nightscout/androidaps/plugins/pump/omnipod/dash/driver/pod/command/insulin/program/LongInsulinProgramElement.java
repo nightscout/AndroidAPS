@@ -5,25 +5,47 @@ import java.nio.ByteBuffer;
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.definition.Encodable;
 
 public class LongInsulinProgramElement implements Encodable {
+    private final byte startSlotIndex;
+    private final byte numberOfSlots;
     private final short totalTenthPulses;
-    private final int delayBetweenTenthPulses;
+    private final int delayBetweenTenthPulsesInUsec;
 
-    public LongInsulinProgramElement(byte totalTenthPulses, short delayBetweenTenthPulses) {
+    public LongInsulinProgramElement(byte startSlotIndex, byte numberOfSlots, short totalTenthPulses, int delayBetweenTenthPulsesInUsec) {
+        this.startSlotIndex = startSlotIndex;
+        this.numberOfSlots = numberOfSlots;
         this.totalTenthPulses = totalTenthPulses;
-        this.delayBetweenTenthPulses = delayBetweenTenthPulses;
+        this.delayBetweenTenthPulsesInUsec = delayBetweenTenthPulsesInUsec;
     }
 
     @Override public byte[] getEncoded() {
         return ByteBuffer.allocate(6) //
                 .putShort(totalTenthPulses) //
-                .putInt(delayBetweenTenthPulses) //
+                .putInt(delayBetweenTenthPulsesInUsec) //
                 .array();
+    }
+
+    public byte getStartSlotIndex() {
+        return startSlotIndex;
+    }
+
+    public byte getNumberOfSlots() {
+        return numberOfSlots;
+    }
+
+    public short getTotalTenthPulses() {
+        return totalTenthPulses;
+    }
+
+    public int getDelayBetweenTenthPulsesInUsec() {
+        return delayBetweenTenthPulsesInUsec;
     }
 
     @Override public String toString() {
         return "LongInsulinProgramElement{" +
-                "totalTenthPulses=" + totalTenthPulses +
-                ", delayBetweenTenthPulses=" + delayBetweenTenthPulses +
+                "startSlotIndex=" + startSlotIndex +
+                ", numberOfSlots=" + numberOfSlots +
+                ", totalTenthPulses=" + totalTenthPulses +
+                ", delayBetweenTenthPulsesInUsec=" + delayBetweenTenthPulsesInUsec +
                 '}';
     }
 }

@@ -1,13 +1,13 @@
 package info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.command.insulin.program;
 
 public class CurrentSlot {
-    private byte index;
-    private short secondsRemaining;
-    private short pulsesRemaining;
+    private final byte index;
+    private final short eighthSecondsRemaining;
+    private final short pulsesRemaining;
 
-    public CurrentSlot(byte index, short secondsRemaining, short pulsesRemaining) {
+    public CurrentSlot(byte index, short eighthSecondsRemaining, short pulsesRemaining) {
         this.index = index;
-        this.secondsRemaining = secondsRemaining;
+        this.eighthSecondsRemaining = eighthSecondsRemaining;
         this.pulsesRemaining = pulsesRemaining;
     }
 
@@ -15,8 +15,8 @@ public class CurrentSlot {
         return index;
     }
 
-    public short getSecondsRemaining() {
-        return secondsRemaining;
+    public short getEighthSecondsRemaining() {
+        return eighthSecondsRemaining;
     }
 
     public short getPulsesRemaining() {
@@ -26,7 +26,7 @@ public class CurrentSlot {
     @Override public String toString() {
         return "CurrentSlot{" +
                 "index=" + index +
-                ", secondsRemaining=" + secondsRemaining +
+                ", eighthSecondsRemaining=" + eighthSecondsRemaining +
                 ", pulsesRemaining=" + pulsesRemaining +
                 '}';
     }

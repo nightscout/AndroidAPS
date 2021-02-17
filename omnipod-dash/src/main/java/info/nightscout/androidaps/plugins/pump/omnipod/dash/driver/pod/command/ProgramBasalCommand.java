@@ -8,6 +8,7 @@ import java.util.List;
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.command.base.CommandType;
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.command.base.HeaderEnabledCommand;
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.command.base.builder.NonceEnabledCommandBuilder;
+import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.command.insulin.program.CurrentLongInsulinProgramElement;
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.command.insulin.program.CurrentSlot;
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.command.insulin.program.LongInsulinProgramElement;
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.command.insulin.program.ProgramBasalUtil;
@@ -87,9 +88,6 @@ public final class ProgramBasalCommand extends HeaderEnabledCommand {
         private Date currentTime;
 
         public Builder setBasalProgram(BasalProgram basalProgram) {
-            if (basalProgram == null) {
-                throw new IllegalArgumentException("basalProgram can not be null");
-            }
             this.basalProgram = basalProgram;
             return this;
         }
@@ -120,15 +118,15 @@ public final class ProgramBasalCommand extends HeaderEnabledCommand {
             List<LongInsulinProgramElement> longInsulinProgramElements = ProgramBasalUtil.mapPulsesPerSlotToLongInsulinProgramElements(pulsesPerSlot);
             List<ShortInsulinProgramElement> shortInsulinProgramElements = ProgramBasalUtil.mapPulsesPerSlotToShortInsulinProgramElements(pulsesPerSlot);
             short checksum = ProgramBasalUtil.createChecksum();
-            byte currentInsulinProgramElementIndex = 0; // TODO
-            short remainingTenthPulsesInCurrentInsulinProgramElement = 0; // TODO
-            int delayUntilNextPulseInUsec = 0; // TODO
+            CurrentLongInsulinProgramElement currentLongInsulinProgramElement = ProgramBasalUtil.calculateCurrentLongInsulinProgramElement(longInsulinProgramElements, currentTime);
 
             ProgramInsulinCommand interlockCommand = new ProgramInsulinCommand(address, sequenceNumber, multiCommandFlag, nonce,
-                    shortInsulinProgramElements, currentSlot.getIndex(), checksum, (short) (currentSlot.getSecondsRemaining() * 8),
+                    shortInsulinProgramElements, currentSlot.getIndex(), checksum, (short) (currentSlot.getEighthSecondsRemaining() * 8),
                     currentSlot.getPulsesRemaining(), ProgramInsulinCommand.DeliveryType.BASAL);
 
-            return new ProgramBasalCommand(interlockCommand, address, sequenceNumber, multiCommandFlag, longInsulinProgramElements, programReminder, currentInsulinProgramElementIndex, remainingTenthPulsesInCurrentInsulinProgramElement, delayUntilNextPulseInUsec);
+            return new ProgramBasalCommand(interlockCommand, address, sequenceNumber, multiCommandFlag,
+                    longInsulinProgramElements, programReminder, currentLongInsulinProgramElement.getIndex(),
+                    currentLongInsulinProgramElement.getRemainingTenthPulses(), currentLongInsulinProgramElement.getDelayUntilNextTenthPulseInUsec());
         }
     }
 }
