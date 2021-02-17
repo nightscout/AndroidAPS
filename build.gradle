@@ -52,6 +52,8 @@ buildscript {
         // in the individual module build.gradle files
 
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
+
+        classpath 'org.jacoco:org.jacoco.core:0.8.6' //Use latest version
     }
 }
 

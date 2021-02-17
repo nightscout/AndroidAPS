@@ -21,6 +21,15 @@ android {
     buildFeatures {
         viewBinding true
     }
+
+    flavorDimensions "standard"
+
+    productFlavors {
+        full {
+            dimension "standard"
+        }
+    }
+
     buildTypes {
         release {
             minifyEnabled false

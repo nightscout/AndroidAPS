@@ -61,7 +61,7 @@ public class OmnipodErosPumpPluginTest {
         OmnipodErosPumpPlugin plugin = new OmnipodErosPumpPlugin(injector, aapsLogger, new TestAapsSchedulers(), rxBusWrapper, null,
                 resourceHelper, activePluginProvider, null, null, aapsOmnipodManager, commandQueueProvider,
                 null, null, null, null,
-                rileyLinkUtil, null, null, null, null
+                rileyLinkUtil, null, null, null
         );
         when(activePluginProvider.getActiveTreatments().getTempBasalFromHistory(anyLong())).thenReturn(null);
         when(rileyLinkUtil.getRileyLinkHistory()).thenReturn(new ArrayList<>());

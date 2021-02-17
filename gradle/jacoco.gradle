@@ -1,0 +1,94 @@
+// Android Gradle Plugin out of the box only supports code coverage for instrumentation espresso) tests.
+// This add support for unit tests as well.
+
+def fileFilter = [
+        '**/R.class',
+        '**/R$*.class',
+        '**/BuildConfig.*',
+        '**/Manifest*.*',
+        '**/*Test*.*',
+        'android/**/*.*',
+
+        //Butterknife hack for multi-modules poroject
+        '**/R2.class',
+        '**/R2$*.class',
+        '**/*_ViewBinding*.*',
+
+        //Dagger 2
+        '**/*Dagger*Component*.*',
+        '**/*Module.*',
+        '**/*Module$*.*',
+        '**/*MembersInjector*.*',
+        '**/*_Factory*.*',
+        '**/*Provide*Factory*.*',
+
+        //Autofactory
+        '**/*Factory.*',
+
+        //Classes I intentionally don't want to test
+        '**/*Activity.*',
+        '**/App.class',
+        '**/*Adapter.*',
+        '**/*ViewHolder*.*',
+        '**/api/response/*.*',
+        '**/data/model/*.*',
+]
+
+task jacocoDebugUnitTest(type: JacocoReport) {
+    group = 'Reporting'
+    description = "Generate Jacoco coverage reports for the debug build. Only unit tests."
+
+    //Make sure that tests from all modules are run before coverage report
+    dependsOn ":app:testFullDebugUnitTest"
+    dependsOn ":core:testFullDebugUnitTest"
+    dependsOn ":dana:testFullDebugUnitTest"
+    dependsOn ":danar:testFullDebugUnitTest"
+    dependsOn ":danars:testFullDebugUnitTest"
+    dependsOn ":medtronic:testFullDebugUnitTest"
+    dependsOn ":rileylink:testFullDebugUnitTest"
+    dependsOn ":omnipod-eros:testFullDebugUnitTest"
+    dependsOn ":omnipod-dash:testFullDebugUnitTest"
+    dependsOn ":database:testFullDebugUnitTest"
+    dependsOn ":wear:testFullDebugUnitTest"
+
+    classDirectories.from = files([
+            fileTree(dir: "$project.rootDir/app/build/intermediates/javac/debug", excludes: fileFilter),
+            fileTree(dir: "$project.rootDir/core/build/intermediates/javac/debug", excludes: fileFilter),
+            fileTree(dir: "$project.rootDir/dana/build/intermediates/javac/debug", excludes: fileFilter),
+            fileTree(dir: "$project.rootDir/danar/build/intermediates/javac/debug", excludes: fileFilter),
+            fileTree(dir: "$project.rootDir/danars/build/intermediates/javac/debug", excludes: fileFilter),
+            fileTree(dir: "$project.rootDir/medtronic/build/intermediates/javac/debug", excludes: fileFilter),
+            fileTree(dir: "$project.rootDir/rileylink/build/intermediates/javac/debug", excludes: fileFilter),
+            fileTree(dir: "$project.rootDir/omnipod-eros/build/intermediates/javac/debug", excludes: fileFilter),
+            fileTree(dir: "$project.rootDir/omnipod-dash/build/intermediates/javac/debug", excludes: fileFilter),
+            fileTree(dir: "$project.rootDir/database/build/intermediates/javac/debug", excludes: fileFilter),
+            fileTree(dir: "$project.rootDir/wear/build/intermediates/javac/debug", excludes: fileFilter),
+    ])
+    def coverageSourceDirs = [
+            "$project.rootDir/app/src/main/java",
+            "$project.rootDir/core/src/main/java",
+            "$project.rootDir/dana/src/main/java",
+            "$project.rootDir/danar/src/main/java",
+            "$project.rootDir/danars/src/main/java",
+            "$project.rootDir/medtronic/src/main/java",
+            "$project.rootDir/rileylink/src/main/java",
+            "$project.rootDir/omnipod-eros/src/main/java",
+            "$project.rootDir/omnipod-dash/src/main/java",
+            "$project.rootDir/database/src/main/java",
+            "$project.rootDir/wear/src/main/java",
+    ]
+    additionalSourceDirs.from = files(coverageSourceDirs)
+    sourceDirectories.from = files(coverageSourceDirs)
+    executionData.from = fileTree(dir: project.rootDir, includes: [
+            'app/build/jacoco/testDebugUnitTest.exec',
+            'core/build/jacoco/testDebugUnitTest.exec',
+            'dana/build/jacoco/testDebugUnitTest.exec',
+            'danar/build/jacoco/testDebugUnitTest.exec',
+            'danars/build/jacoco/testDebugUnitTest.exec',
+    ])
+
+    reports {
+        xml.enabled = true
+        html.enabled = true
+    }
+}

@@ -2,6 +2,7 @@ apply plugin: 'com.android.library'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-kapt'
 apply plugin: 'kotlin-parcelize'
+apply plugin: 'jacoco'
 
 android {
     compileSdkVersion 28
@@ -22,6 +23,15 @@ android {
     buildFeatures {
         viewBinding true
     }
+
+    flavorDimensions "standard"
+
+    productFlavors {
+        full {
+            dimension "standard"
+        }
+    }
+
     buildTypes {
         release {
             minifyEnabled false
@@ -44,6 +54,34 @@ android {
 
 dependencies {
     implementation project(':database')
+}
+
+task jacocoUnitTestReport(type: JacocoReport, dependsOn: ['testFullDebugUnitTest']) {
+    def coverageSourceDirs = [
+            "src/main/java"
+    ]
+    def fileFilter = [
+            '**/R.class',
+            '**/R$*.class',
+            '**/*$ViewInjector*.*',
+            '**/*$ViewBinder*.*',
+            '**/BuildConfig.*',
+            '**/Manifest*.*'
+    ]
+    def javaClasses = fileTree(
+            dir: "$buildDir/intermediates/classes/debug",
+            excludes: fileFilter
+    )
+    classDirectories.from = files([javaClasses])
+    additionalSourceDirs.from = files(coverageSourceDirs)
+    sourceDirectories.from = files(coverageSourceDirs)
+    executionData.from = fileTree(dir: "$buildDir", includes: [
+            "jacoco/testDebugUnitTest.exec"
+    ])
+    reports {
+        xml.enabled = true
+        html.enabled = true
+    }
 }
 
 apply from: 'core_dependencies.gradle'

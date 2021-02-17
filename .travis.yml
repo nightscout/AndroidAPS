@@ -19,7 +19,7 @@ before_install:
 
 script:
   # Unit Test
-  - ./gradlew -Pcoverage -PfirebaseDisable testFullDebugUnitTest jacocoTestFullDebugUnitTestReport
+  - ./gradlew -Pcoverage -PfirebaseDisable testFullDebugUnitTest jacocoDebugUnitTest
 
 after_success:
   - bash <(curl -s https://codecov.io/bash)

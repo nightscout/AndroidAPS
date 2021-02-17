@@ -1,6 +1,7 @@
 apply plugin: 'com.android.library'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-kapt'
+apply plugin: 'jacoco'
 
 android {
     compileSdkVersion 28
@@ -21,6 +22,15 @@ android {
     buildFeatures {
         viewBinding true
     }
+
+    flavorDimensions "standard"
+
+    productFlavors {
+        full {
+            dimension "standard"
+        }
+    }
+
     buildTypes {
         release {
             minifyEnabled false
