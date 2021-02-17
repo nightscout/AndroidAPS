@@ -32,7 +32,6 @@ public class ProgramBasalCommandTest {
                 .build() //
                 .getEncoded();
 
-        System.out.println(Hex.encodeHexString(encoded));
         assertArrayEquals(Hex.decodeHex("0242000128241A12494E532E0005E81D1708000CF01EF01EF01E130E40001593004C4B403840005B8D80827C"), encoded);
     }
 
