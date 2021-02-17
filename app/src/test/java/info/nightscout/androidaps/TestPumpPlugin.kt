@@ -15,6 +15,7 @@ import org.json.JSONObject
 class TestPumpPlugin(val injector: HasAndroidInjector) : PumpInterface {
 
     var connected = false
+    var isProfileSet = true
 
     override fun isConnected() = connected
     override fun isConnecting() = false
@@ -42,7 +43,7 @@ class TestPumpPlugin(val injector: HasAndroidInjector) : PumpInterface {
     override fun waitForDisconnectionInSeconds(): Int = 0
     override fun getPumpStatus(reason: String) {}
     override fun setNewBasalProfile(profile: Profile): PumpEnactResult = PumpEnactResult(injector)
-    override fun isThisProfileSet(profile: Profile): Boolean = true
+    override fun isThisProfileSet(profile: Profile): Boolean = isProfileSet
     override fun lastDataTime(): Long = lastData
     override val baseBasalRate: Double = baseBasal
     override val reservoirLevel: Double = 0.0

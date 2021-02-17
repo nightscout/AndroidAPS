@@ -345,6 +345,42 @@ class CommandQueueTest : TestBaseWithProfile() {
     }
 
     @Test
+    fun isProfileSetCommandInQueue() {
+        // given
+        Assert.assertEquals(0, commandQueue.size())
+
+        // when
+        testPumpPlugin.isProfileSet = true
+        commandQueue.setProfile(validProfile, object : Callback() {
+            override fun run() {
+                Assert.assertTrue(result.success)
+                Assert.assertFalse(result.enacted)
+            }
+        })
+
+        // then
+        // the same profile -> ignore
+        Assert.assertEquals(0, commandQueue.size())
+        // different should be added
+        testPumpPlugin.isProfileSet = false
+        commandQueue.setProfile(validProfile, object : Callback() {
+            override fun run() {
+                Assert.assertTrue(result.success)
+                Assert.assertTrue(result.enacted)
+            }
+        })
+        Assert.assertEquals(1, commandQueue.size())
+        // next should be ignored
+        commandQueue.setProfile(validProfile, object : Callback() {
+            override fun run() {
+                Assert.assertTrue(result.success)
+            }
+        })
+        Assert.assertEquals(1, commandQueue.size())
+        testPumpPlugin.isProfileSet = true
+    }
+
+    @Test
     fun isStopCommandInQueue() {
         // given
         Assert.assertEquals(0, commandQueue.size())
