@@ -12,7 +12,7 @@ import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.definitio
 public final class ProgramAlertsCommand extends NonceEnabledCommand {
     private final List<AlertConfiguration> alertConfigurations;
 
-    private ProgramAlertsCommand(int address, short sequenceNumber, boolean multiCommandFlag, List<AlertConfiguration> alertConfigurations, int nonce) {
+    ProgramAlertsCommand(int address, short sequenceNumber, boolean multiCommandFlag, List<AlertConfiguration> alertConfigurations, int nonce) {
         super(CommandType.PROGRAM_ALERTS, address, sequenceNumber, multiCommandFlag, nonce);
         this.alertConfigurations = new ArrayList<>(alertConfigurations);
     }

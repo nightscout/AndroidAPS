@@ -16,7 +16,7 @@ public final class StopDeliveryCommand extends NonceEnabledCommand {
     private final DeliveryType deliveryType;
     private final BeepType beepType;
 
-    private StopDeliveryCommand(int address, short sequenceNumber, boolean multiCommandFlag, DeliveryType deliveryType, BeepType beepType, int nonce) {
+    StopDeliveryCommand(int address, short sequenceNumber, boolean multiCommandFlag, DeliveryType deliveryType, BeepType beepType, int nonce) {
         super(CommandType.STOP_DELIVERY, address, sequenceNumber, multiCommandFlag, nonce);
         this.deliveryType = deliveryType;
         this.beepType = beepType;

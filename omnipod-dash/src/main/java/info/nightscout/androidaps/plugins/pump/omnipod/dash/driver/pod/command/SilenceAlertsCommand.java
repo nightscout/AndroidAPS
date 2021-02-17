@@ -14,7 +14,7 @@ public final class SilenceAlertsCommand extends NonceEnabledCommand {
 
     private final SilenceAlertCommandParameters parameters;
 
-    private SilenceAlertsCommand(int address, short sequenceNumber, boolean multiCommandFlag, SilenceAlertCommandParameters parameters, int nonce) {
+    SilenceAlertsCommand(int address, short sequenceNumber, boolean multiCommandFlag, SilenceAlertCommandParameters parameters, int nonce) {
         super(CommandType.SILENCE_ALERTS, address, sequenceNumber, multiCommandFlag, nonce);
         this.parameters = parameters;
     }

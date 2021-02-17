@@ -10,7 +10,7 @@ public final class DeactivateCommand extends NonceEnabledCommand {
     private static final short LENGTH = 6;
     private static final byte BODY_LENGTH = 4;
 
-    private DeactivateCommand(int address, short sequenceNumber, boolean multiCommandFlag, int nonce) {
+    DeactivateCommand(int address, short sequenceNumber, boolean multiCommandFlag, int nonce) {
         super(CommandType.DEACTIVATE, address, sequenceNumber, multiCommandFlag, nonce);
     }
 

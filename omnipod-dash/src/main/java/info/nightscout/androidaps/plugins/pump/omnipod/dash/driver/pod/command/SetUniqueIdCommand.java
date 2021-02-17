@@ -17,7 +17,7 @@ public final class SetUniqueIdCommand extends HeaderEnabledCommand {
     private final int podSequenceNumber;
     private final Date initializationTime;
 
-    private SetUniqueIdCommand(int address, short sequenceNumber, boolean multiCommandFlag, int lotNumber, int podSequenceNumber, Date initializationTime) {
+    SetUniqueIdCommand(int address, short sequenceNumber, boolean multiCommandFlag, int lotNumber, int podSequenceNumber, Date initializationTime) {
         super(CommandType.SET_UNIQUE_ID, address, sequenceNumber, multiCommandFlag);
         this.lotNumber = lotNumber;
         this.podSequenceNumber = podSequenceNumber;

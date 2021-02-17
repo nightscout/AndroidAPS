@@ -2,23 +2,32 @@ package info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.command;
 
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
-import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.command.base.Command;
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.command.base.CommandType;
-import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.command.base.builder.CommandBuilder;
-import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.definition.Encodable;
+import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.command.base.HeaderEnabledCommand;
+import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.command.base.builder.NonceEnabledCommandBuilder;
+import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.command.insulin.program.CurrentSlot;
+import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.command.insulin.program.LongInsulinProgramElement;
+import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.command.insulin.program.ProgramBasalUtil;
+import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.command.insulin.program.ShortInsulinProgramElement;
+import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.definition.BasalProgram;
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.definition.ProgramReminder;
 
 // Always preceded by 0x1a ProgramInsulinCommand
-public final class ProgramBasalCommand implements Command {
-    private final List<InsulinProgramElement> insulinProgramElements;
+public final class ProgramBasalCommand extends HeaderEnabledCommand {
+    private final ProgramInsulinCommand interlockCommand;
+    private final List<LongInsulinProgramElement> insulinProgramElements;
     private final ProgramReminder programReminder;
     private final byte currentInsulinProgramElementIndex;
     private final short remainingTenthPulsesInCurrentInsulinProgramElement;
     private final int delayUntilNextTenthPulseInUsec;
 
-    private ProgramBasalCommand(List<InsulinProgramElement> insulinProgramElements, ProgramReminder programReminder, byte currentInsulinProgramElementIndex, short remainingTenthPulsesInCurrentInsulinProgramElement, int delayUntilNextTenthPulseInUsec) {
+    ProgramBasalCommand(ProgramInsulinCommand interlockCommand, int address, short sequenceNumber, boolean multiCommandFlag, List<LongInsulinProgramElement> insulinProgramElements, ProgramReminder programReminder, byte currentInsulinProgramElementIndex, short remainingTenthPulsesInCurrentInsulinProgramElement, int delayUntilNextTenthPulseInUsec) {
+        super(CommandType.PROGRAM_BASAL, address, sequenceNumber, multiCommandFlag);
+
+        this.interlockCommand = interlockCommand;
         this.insulinProgramElements = new ArrayList<>(insulinProgramElements);
         this.programReminder = programReminder;
         this.currentInsulinProgramElementIndex = currentInsulinProgramElementIndex;
@@ -42,55 +51,46 @@ public final class ProgramBasalCommand implements Command {
                 .put(currentInsulinProgramElementIndex) //
                 .putShort(remainingTenthPulsesInCurrentInsulinProgramElement) //
                 .putInt(delayUntilNextTenthPulseInUsec);
-        for (InsulinProgramElement insulinProgramElement : insulinProgramElements) {
+        for (LongInsulinProgramElement insulinProgramElement : insulinProgramElements) {
             buffer.put(insulinProgramElement.getEncoded());
         }
-        return buffer.array();
-    }
 
-    @Override public CommandType getCommandType() {
-        return CommandType.PROGRAM_BASAL;
+        byte[] bolusCommand = buffer.array();
+        byte[] interlockCommand = this.interlockCommand.getEncoded();
+        byte[] header = encodeHeader(address, sequenceNumber, (short) (bolusCommand.length + interlockCommand.length), multiCommandFlag);
+
+        return ByteBuffer.allocate(bolusCommand.length + interlockCommand.length + header.length) //
+                .put(header) //
+                .put(interlockCommand) //
+                .put(bolusCommand) //
+                .array();
     }
 
     @Override public String toString() {
         return "ProgramBasalCommand{" +
-                "uniqueInsulinProgramElements=" + insulinProgramElements +
+                "interlockCommand=" + interlockCommand +
+                ", insulinProgramElements=" + insulinProgramElements +
                 ", programReminder=" + programReminder +
                 ", currentInsulinProgramElementIndex=" + currentInsulinProgramElementIndex +
                 ", remainingTenthPulsesInCurrentInsulinProgramElement=" + remainingTenthPulsesInCurrentInsulinProgramElement +
                 ", delayUntilNextTenthPulseInUsec=" + delayUntilNextTenthPulseInUsec +
+                ", commandType=" + commandType +
+                ", address=" + address +
+                ", sequenceNumber=" + sequenceNumber +
+                ", multiCommandFlag=" + multiCommandFlag +
                 '}';
     }
 
-    public static class InsulinProgramElement implements Encodable {
-        private final short totalTenthPulses;
-        private final int delayBetweenTenthPulses;
-
-        public InsulinProgramElement(byte totalTenthPulses, short delayBetweenTenthPulses) {
-            this.totalTenthPulses = totalTenthPulses;
-            this.delayBetweenTenthPulses = delayBetweenTenthPulses;
-        }
-
-        @Override public byte[] getEncoded() {
-            return ByteBuffer.allocate(6) //
-                    .putShort(totalTenthPulses) //
-                    .putInt(delayBetweenTenthPulses) //
-                    .array();
-        }
-    }
-
-    public static final class Builder implements CommandBuilder<ProgramBasalCommand> {
-        private List<InsulinProgramElement> insulinProgramElements;
+    public static final class Builder extends NonceEnabledCommandBuilder<Builder, ProgramBasalCommand> {
+        private BasalProgram basalProgram;
         private ProgramReminder programReminder;
-        private Byte currentInsulinProgramElementIndex;
-        private Short remainingTenthPulsesInCurrentInsulinProgramElement;
-        private Integer delayUntilNextTenthPulseInUsec;
+        private Date currentTime;
 
-        public Builder setInsulinProgramElements(List<InsulinProgramElement> insulinProgramElements) {
-            if (insulinProgramElements == null) {
-                throw new IllegalArgumentException("insulinProgramElements can not be null");
+        public Builder setBasalProgram(BasalProgram basalProgram) {
+            if (basalProgram == null) {
+                throw new IllegalArgumentException("basalProgram can not be null");
             }
-            this.insulinProgramElements = new ArrayList<>(insulinProgramElements);
+            this.basalProgram = basalProgram;
             return this;
         }
 
@@ -99,38 +99,36 @@ public final class ProgramBasalCommand implements Command {
             return this;
         }
 
-        public Builder setCurrentInsulinProgramElementIndex(Byte currentInsulinProgramElementIndex) {
-            this.currentInsulinProgramElementIndex = currentInsulinProgramElementIndex;
+        public Builder setCurrentTime(Date currentTime) {
+            this.currentTime = currentTime;
             return this;
         }
 
-        public Builder setRemainingTenthPulsesInCurrentInsulinProgramElement(Short remainingTenthPulsesInCurrentInsulinProgramElement) {
-            this.remainingTenthPulsesInCurrentInsulinProgramElement = remainingTenthPulsesInCurrentInsulinProgramElement;
-            return this;
-        }
-
-        public Builder setDelayUntilNextTenthPulseInUsec(Integer delayUntilNextTenthPulseInUsec) {
-            this.delayUntilNextTenthPulseInUsec = delayUntilNextTenthPulseInUsec;
-            return this;
-        }
-
-        @Override public ProgramBasalCommand build() {
-            if (insulinProgramElements == null) {
-                throw new IllegalArgumentException("insulinProgramElements can not be null");
+        @Override protected ProgramBasalCommand buildCommand() {
+            if (basalProgram == null) {
+                throw new IllegalArgumentException("basalProgram can not be null");
             }
             if (programReminder == null) {
                 throw new IllegalArgumentException("programReminder can not be null");
             }
-            if (currentInsulinProgramElementIndex == null) {
-                throw new IllegalArgumentException("currentInsulinProgramElementIndex can not be null");
+            if (currentTime == null) {
+                throw new IllegalArgumentException("currentTime can not be null");
             }
-            if (remainingTenthPulsesInCurrentInsulinProgramElement == null) {
-                throw new IllegalArgumentException("remainingTenthPulsesInCurrentInsulinProgramElement can not be null");
-            }
-            if (delayUntilNextTenthPulseInUsec == null) {
-                throw new IllegalArgumentException("delayUntilNextTenthPulseInUsec can not be null");
-            }
-            return new ProgramBasalCommand(insulinProgramElements, programReminder, currentInsulinProgramElementIndex, remainingTenthPulsesInCurrentInsulinProgramElement, delayUntilNextTenthPulseInUsec);
+
+            short[] pulsesPerSlot = ProgramBasalUtil.mapBasalProgramToPulsesPerSlot(basalProgram);
+            CurrentSlot currentSlot = ProgramBasalUtil.calculateCurrentSlot(pulsesPerSlot, currentTime);
+            List<LongInsulinProgramElement> longInsulinProgramElements = ProgramBasalUtil.mapPulsesPerSlotToLongInsulinProgramElements(pulsesPerSlot);
+            List<ShortInsulinProgramElement> shortInsulinProgramElements = ProgramBasalUtil.mapPulsesPerSlotToShortInsulinProgramElements(pulsesPerSlot);
+            short checksum = ProgramBasalUtil.createChecksum();
+            byte currentInsulinProgramElementIndex = 0; // TODO
+            short remainingTenthPulsesInCurrentInsulinProgramElement = 0; // TODO
+            int delayUntilNextPulseInUsec = 0; // TODO
+
+            ProgramInsulinCommand interlockCommand = new ProgramInsulinCommand(address, sequenceNumber, multiCommandFlag, nonce,
+                    shortInsulinProgramElements, currentSlot.getIndex(), checksum, (short) (currentSlot.getSecondsRemaining() * 8),
+                    currentSlot.getPulsesRemaining(), ProgramInsulinCommand.DeliveryType.BASAL);
+
+            return new ProgramBasalCommand(interlockCommand, address, sequenceNumber, multiCommandFlag, longInsulinProgramElements, programReminder, currentInsulinProgramElementIndex, remainingTenthPulsesInCurrentInsulinProgramElement, delayUntilNextPulseInUsec);
         }
     }
 }

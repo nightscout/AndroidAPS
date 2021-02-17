@@ -12,7 +12,7 @@ public final class GetVersionCommand extends HeaderEnabledCommand {
     private static final short LENGTH = 6;
     private static final byte BODY_LENGTH = 4;
 
-    private GetVersionCommand(int address, short sequenceNumber, boolean multiCommandFlag) {
+    GetVersionCommand(int address, short sequenceNumber, boolean multiCommandFlag) {
         super(CommandType.GET_VERSION, address, sequenceNumber, multiCommandFlag);
     }
 
