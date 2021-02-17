@@ -4,13 +4,13 @@ import java.nio.ByteBuffer;
 
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.definition.Encodable;
 
-public class LongInsulinProgramElement implements Encodable {
+public class BasalInsulinProgramElement implements Encodable {
     private final byte startSlotIndex;
     private final byte numberOfSlots;
     private final short totalTenthPulses;
     private final int delayBetweenTenthPulsesInUsec;
 
-    public LongInsulinProgramElement(byte startSlotIndex, byte numberOfSlots, short totalTenthPulses, int delayBetweenTenthPulsesInUsec) {
+    public BasalInsulinProgramElement(byte startSlotIndex, byte numberOfSlots, short totalTenthPulses, int delayBetweenTenthPulsesInUsec) {
         this.startSlotIndex = startSlotIndex;
         this.numberOfSlots = numberOfSlots;
         this.totalTenthPulses = totalTenthPulses;

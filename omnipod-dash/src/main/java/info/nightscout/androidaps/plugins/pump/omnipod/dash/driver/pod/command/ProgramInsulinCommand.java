@@ -11,19 +11,19 @@ import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.command.i
 // Always followed by one of: 0x13, 0x16, 0x17
 final class ProgramInsulinCommand extends NonceEnabledCommand {
     private final List<ShortInsulinProgramElement> insulinProgramElements;
-    private final byte currentSlot;
     private final short checksum;
-    private final short remainingEighthSecondsInCurrentSlot;
-    private final short remainingPulsesInCurrentSlot;
+    private final byte byte9;
+    private final short byte10And11;
+    private final short byte12And13;
     private final DeliveryType deliveryType;
 
-    ProgramInsulinCommand(int uniqueId, short sequenceNumber, boolean multiCommandFlag, int nonce, List<ShortInsulinProgramElement> insulinProgramElements, byte currentSlot, short checksum, short remainingEighthSecondsInCurrentSlot, short remainingPulsesInCurrentSlot, DeliveryType deliveryType) {
+    ProgramInsulinCommand(int uniqueId, short sequenceNumber, boolean multiCommandFlag, int nonce, List<ShortInsulinProgramElement> insulinProgramElements, short checksum, byte byte9, short byte10And11, short byte12And13, DeliveryType deliveryType) {
         super(CommandType.PROGRAM_INSULIN, uniqueId, sequenceNumber, multiCommandFlag, nonce);
         this.insulinProgramElements = new ArrayList<>(insulinProgramElements);
-        this.currentSlot = currentSlot;
         this.checksum = checksum;
-        this.remainingEighthSecondsInCurrentSlot = remainingEighthSecondsInCurrentSlot;
-        this.remainingPulsesInCurrentSlot = remainingPulsesInCurrentSlot;
+        this.byte9 = byte9;
+        this.byte10And11 = byte10And11;
+        this.byte12And13 = byte12And13;
         this.deliveryType = deliveryType;
     }
 
@@ -42,9 +42,9 @@ final class ProgramInsulinCommand extends NonceEnabledCommand {
                 .putInt(nonce) //
                 .put(deliveryType.getValue()) //
                 .putShort(checksum) //
-                .put(currentSlot) //
-                .putShort(remainingEighthSecondsInCurrentSlot) //
-                .putShort(remainingPulsesInCurrentSlot);
+                .put(byte9) // BASAL: currentSlot // BOLUS: number of ShortInsulinProgramElements
+                .putShort(byte10And11) // BASAL: remainingEighthSecondsInCurrentSlot // BOLUS: immediate pulses multiplied by delay between pulses in eighth seconds
+                .putShort(byte12And13); // BASAL: remainingPulsesInCurrentSlot // BOLUS: immediate pulses
 
         for (ShortInsulinProgramElement element : insulinProgramElements) {
             buffer.put(element.getEncoded());
@@ -69,13 +69,21 @@ final class ProgramInsulinCommand extends NonceEnabledCommand {
         }
     }
 
+    public short createChecksum(byte[] bytes) {
+        short sum = 0;
+        for (byte b : bytes) {
+            sum += (short) (b & 0xff);
+        }
+        return sum;
+    }
+
     @Override public String toString() {
         return "ProgramInsulinCommand{" +
                 "insulinProgramElements=" + insulinProgramElements +
-                ", currentSlot=" + currentSlot +
                 ", checksum=" + checksum +
-                ", remainingEighthSecondsInCurrentSlot=" + remainingEighthSecondsInCurrentSlot +
-                ", remainingPulsesInCurrentSlot=" + remainingPulsesInCurrentSlot +
+                ", byte9=" + byte9 +
+                ", byte10And11=" + byte10And11 +
+                ", byte12And13=" + byte12And13 +
                 ", deliveryType=" + deliveryType +
                 ", nonce=" + nonce +
                 ", commandType=" + commandType +

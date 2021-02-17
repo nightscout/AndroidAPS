@@ -8,9 +8,9 @@ import java.util.List;
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.command.base.CommandType;
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.command.base.HeaderEnabledCommand;
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.command.base.builder.NonceEnabledCommandBuilder;
+import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.command.insulin.program.BasalInsulinProgramElement;
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.command.insulin.program.CurrentLongInsulinProgramElement;
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.command.insulin.program.CurrentSlot;
-import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.command.insulin.program.LongInsulinProgramElement;
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.command.insulin.program.ProgramBasalUtil;
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.command.insulin.program.ShortInsulinProgramElement;
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.definition.BasalProgram;
@@ -19,13 +19,13 @@ import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.definitio
 // Always preceded by 0x1a ProgramInsulinCommand
 public final class ProgramBasalCommand extends HeaderEnabledCommand {
     private final ProgramInsulinCommand interlockCommand;
-    private final List<LongInsulinProgramElement> insulinProgramElements;
+    private final List<BasalInsulinProgramElement> insulinProgramElements;
     private final ProgramReminder programReminder;
     private final byte currentInsulinProgramElementIndex;
     private final short remainingTenthPulsesInCurrentInsulinProgramElement;
     private final int delayUntilNextTenthPulseInUsec;
 
-    ProgramBasalCommand(ProgramInsulinCommand interlockCommand, int uniqueId, short sequenceNumber, boolean multiCommandFlag, List<LongInsulinProgramElement> insulinProgramElements, ProgramReminder programReminder, byte currentInsulinProgramElementIndex, short remainingTenthPulsesInCurrentInsulinProgramElement, int delayUntilNextTenthPulseInUsec) {
+    ProgramBasalCommand(ProgramInsulinCommand interlockCommand, int uniqueId, short sequenceNumber, boolean multiCommandFlag, List<BasalInsulinProgramElement> insulinProgramElements, ProgramReminder programReminder, byte currentInsulinProgramElementIndex, short remainingTenthPulsesInCurrentInsulinProgramElement, int delayUntilNextTenthPulseInUsec) {
         super(CommandType.PROGRAM_BASAL, uniqueId, sequenceNumber, multiCommandFlag);
 
         this.interlockCommand = interlockCommand;
@@ -52,18 +52,18 @@ public final class ProgramBasalCommand extends HeaderEnabledCommand {
                 .put(currentInsulinProgramElementIndex) //
                 .putShort(remainingTenthPulsesInCurrentInsulinProgramElement) //
                 .putInt(delayUntilNextTenthPulseInUsec);
-        for (LongInsulinProgramElement insulinProgramElement : insulinProgramElements) {
+        for (BasalInsulinProgramElement insulinProgramElement : insulinProgramElements) {
             buffer.put(insulinProgramElement.getEncoded());
         }
 
-        byte[] bolusCommand = buffer.array();
+        byte[] basalCommand = buffer.array();
         byte[] interlockCommand = this.interlockCommand.getEncoded();
-        byte[] header = encodeHeader(uniqueId, sequenceNumber, (short) (bolusCommand.length + interlockCommand.length), multiCommandFlag);
+        byte[] header = encodeHeader(uniqueId, sequenceNumber, (short) (basalCommand.length + interlockCommand.length), multiCommandFlag);
 
-        return appendCrc(ByteBuffer.allocate(bolusCommand.length + interlockCommand.length + header.length) //
+        return appendCrc(ByteBuffer.allocate(basalCommand.length + interlockCommand.length + header.length) //
                 .put(header) //
                 .put(interlockCommand) //
-                .put(bolusCommand) //
+                .put(basalCommand) //
                 .array());
     }
 
@@ -116,12 +116,12 @@ public final class ProgramBasalCommand extends HeaderEnabledCommand {
             short[] pulsesPerSlot = ProgramBasalUtil.mapBasalProgramToPulsesPerSlot(basalProgram);
             CurrentSlot currentSlot = ProgramBasalUtil.calculateCurrentSlot(pulsesPerSlot, currentTime);
             short checksum = ProgramBasalUtil.createChecksum(pulsesPerSlot, currentSlot);
-            List<LongInsulinProgramElement> longInsulinProgramElements = ProgramBasalUtil.mapPulsesPerSlotToLongInsulinProgramElements(ProgramBasalUtil.mapBasalProgramToTenthPulsesPerSlot(basalProgram));
+            List<BasalInsulinProgramElement> longInsulinProgramElements = ProgramBasalUtil.mapPulsesPerSlotToLongInsulinProgramElements(ProgramBasalUtil.mapBasalProgramToTenthPulsesPerSlot(basalProgram));
             List<ShortInsulinProgramElement> shortInsulinProgramElements = ProgramBasalUtil.mapPulsesPerSlotToShortInsulinProgramElements(pulsesPerSlot);
             CurrentLongInsulinProgramElement currentLongInsulinProgramElement = ProgramBasalUtil.calculateCurrentLongInsulinProgramElement(longInsulinProgramElements, currentTime);
 
             ProgramInsulinCommand interlockCommand = new ProgramInsulinCommand(uniqueId, sequenceNumber, multiCommandFlag, nonce,
-                    shortInsulinProgramElements, currentSlot.getIndex(), checksum, currentSlot.getEighthSecondsRemaining(),
+                    shortInsulinProgramElements, checksum, currentSlot.getIndex(), currentSlot.getEighthSecondsRemaining(),
                     currentSlot.getPulsesRemaining(), ProgramInsulinCommand.DeliveryType.BASAL);
 
             return new ProgramBasalCommand(interlockCommand, uniqueId, sequenceNumber, multiCommandFlag,

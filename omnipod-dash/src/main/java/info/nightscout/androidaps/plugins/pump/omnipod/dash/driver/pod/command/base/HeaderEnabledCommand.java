@@ -2,7 +2,7 @@ package info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.command.
 
 import java.nio.ByteBuffer;
 
-import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.util.CrcUtil;
+import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.util.MessageUtil;
 
 public abstract class HeaderEnabledCommand implements Command {
     protected static final short HEADER_LENGTH = 6;
@@ -26,7 +26,7 @@ public abstract class HeaderEnabledCommand implements Command {
     protected static byte[] appendCrc(byte[] command) {
         return ByteBuffer.allocate(command.length + 2) //
                 .put(command) //
-                .putShort(CrcUtil.createCrc(command)) //
+                .putShort(MessageUtil.createCrc(command)) //
                 .array();
     }
 
