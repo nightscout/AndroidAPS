@@ -27,12 +27,12 @@ final class ProgramInsulinCommand extends NonceEnabledCommand {
         this.deliveryType = deliveryType;
     }
 
-    short getLength() {
-        return (short) (insulinProgramElements.size() * 6 + 10);
+    public short getLength() {
+        return (short) (insulinProgramElements.size() * 2 + 14);
     }
 
-    byte getBodyLength() {
-        return (byte) (insulinProgramElements.size() * 6 + 8);
+    public byte getBodyLength() {
+        return (byte) (insulinProgramElements.size() * 2 + 12);
     }
 
     @Override public byte[] getEncoded() {

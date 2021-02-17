@@ -12,8 +12,8 @@ public class ProgramReminder implements Encodable {
     }
 
     @Override public byte[] getEncoded() {
-        return new byte[]{(byte) (((this.atStart ? 0 : 1) << 7)
-                | ((this.atEnd ? 0 : 1) << 6)
+        return new byte[]{(byte) (((this.atStart ? 1 : 0) << 7)
+                | ((this.atEnd ? 1 : 0) << 6)
                 | (this.atInterval & 0x3f))};
     }
 }

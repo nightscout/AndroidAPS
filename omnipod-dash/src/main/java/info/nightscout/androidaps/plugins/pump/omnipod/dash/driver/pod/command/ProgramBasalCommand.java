@@ -36,12 +36,12 @@ public final class ProgramBasalCommand extends HeaderEnabledCommand {
         this.delayUntilNextTenthPulseInUsec = delayUntilNextTenthPulseInUsec;
     }
 
-    public short getLength() {
-        return (short) (insulinProgramElements.size() * 2 + 14);
+    short getLength() {
+        return (short) (insulinProgramElements.size() * 6 + 10);
     }
 
-    public byte getBodyLength() {
-        return (byte) (insulinProgramElements.size() * 2 + 12);
+    byte getBodyLength() {
+        return (byte) (insulinProgramElements.size() * 6 + 8);
     }
 
     @Override public byte[] getEncoded() {
@@ -60,11 +60,11 @@ public final class ProgramBasalCommand extends HeaderEnabledCommand {
         byte[] interlockCommand = this.interlockCommand.getEncoded();
         byte[] header = encodeHeader(uniqueId, sequenceNumber, (short) (bolusCommand.length + interlockCommand.length), multiCommandFlag);
 
-        return ByteBuffer.allocate(bolusCommand.length + interlockCommand.length + header.length) //
+        return appendCrc(ByteBuffer.allocate(bolusCommand.length + interlockCommand.length + header.length) //
                 .put(header) //
                 .put(interlockCommand) //
                 .put(bolusCommand) //
-                .array();
+                .array());
     }
 
     @Override public String toString() {
@@ -116,12 +116,12 @@ public final class ProgramBasalCommand extends HeaderEnabledCommand {
             short[] pulsesPerSlot = ProgramBasalUtil.mapBasalProgramToPulsesPerSlot(basalProgram);
             CurrentSlot currentSlot = ProgramBasalUtil.calculateCurrentSlot(pulsesPerSlot, currentTime);
             short checksum = ProgramBasalUtil.createChecksum(pulsesPerSlot, currentSlot);
-            List<LongInsulinProgramElement> longInsulinProgramElements = ProgramBasalUtil.mapPulsesPerSlotToLongInsulinProgramElements(pulsesPerSlot);
+            List<LongInsulinProgramElement> longInsulinProgramElements = ProgramBasalUtil.mapPulsesPerSlotToLongInsulinProgramElements(ProgramBasalUtil.mapBasalProgramToTenthPulsesPerSlot(basalProgram));
             List<ShortInsulinProgramElement> shortInsulinProgramElements = ProgramBasalUtil.mapPulsesPerSlotToShortInsulinProgramElements(pulsesPerSlot);
             CurrentLongInsulinProgramElement currentLongInsulinProgramElement = ProgramBasalUtil.calculateCurrentLongInsulinProgramElement(longInsulinProgramElements, currentTime);
 
             ProgramInsulinCommand interlockCommand = new ProgramInsulinCommand(uniqueId, sequenceNumber, multiCommandFlag, nonce,
-                    shortInsulinProgramElements, currentSlot.getIndex(), checksum, (short) (currentSlot.getEighthSecondsRemaining() * 8),
+                    shortInsulinProgramElements, currentSlot.getIndex(), checksum, currentSlot.getEighthSecondsRemaining(),
                     currentSlot.getPulsesRemaining(), ProgramInsulinCommand.DeliveryType.BASAL);
 
             return new ProgramBasalCommand(interlockCommand, uniqueId, sequenceNumber, multiCommandFlag,

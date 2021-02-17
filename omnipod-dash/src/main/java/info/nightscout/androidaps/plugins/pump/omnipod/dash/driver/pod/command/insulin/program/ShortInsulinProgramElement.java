@@ -5,18 +5,18 @@ import java.nio.ByteBuffer;
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.definition.Encodable;
 
 public class ShortInsulinProgramElement implements Encodable {
-    private final byte numberOfSlotsMinusOne; // 4 bits
+    private final byte numberOfSlots; // 4 bits
     private final short pulsesPerSlot; // 10 bits
     private final boolean extraAlternatePulse;
 
-    public ShortInsulinProgramElement(byte numberOfSlotsMinusOne, short pulsesPerSlot, boolean extraAlternatePulse) {
-        this.numberOfSlotsMinusOne = numberOfSlotsMinusOne;
+    public ShortInsulinProgramElement(byte numberOfSlots, short pulsesPerSlot, boolean extraAlternatePulse) {
+        this.numberOfSlots = numberOfSlots;
         this.pulsesPerSlot = pulsesPerSlot;
         this.extraAlternatePulse = extraAlternatePulse;
     }
 
     @Override public byte[] getEncoded() {
-        byte firstByte = (byte) ((((numberOfSlotsMinusOne - 1) & 0x0f) << 4) //
+        byte firstByte = (byte) ((((numberOfSlots - 1) & 0x0f) << 4) //
                 | ((extraAlternatePulse ? 1 : 0) << 3) //
                 | ((pulsesPerSlot >>> 8) & 0x03));
 
@@ -28,7 +28,7 @@ public class ShortInsulinProgramElement implements Encodable {
 
     @Override public String toString() {
         return "ShortInsulinProgramElement{" +
-                "numberOfSlotsMinusOne=" + numberOfSlotsMinusOne +
+                "numberOfSlotsMinusOne=" + numberOfSlots +
                 ", pulsesPerSlot=" + pulsesPerSlot +
                 ", extraAlternatePulse=" + extraAlternatePulse +
                 '}';

@@ -1,8 +1,6 @@
 package info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.command.insulin.program;
 
-import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.definition.Encodable;
-
-public class CurrentLongInsulinProgramElement implements Encodable {
+public class CurrentLongInsulinProgramElement {
     private final byte index;
     private final int delayUntilNextTenthPulseInUsec;
     private final short remainingTenthPulses;
@@ -31,9 +29,5 @@ public class CurrentLongInsulinProgramElement implements Encodable {
                 ", delayUntilNextTenthPulseInUsec=" + delayUntilNextTenthPulseInUsec +
                 ", remainingTenthPulses=" + remainingTenthPulses +
                 '}';
-    }
-
-    @Override public byte[] getEncoded() {
-        return new byte[0];
     }
 }

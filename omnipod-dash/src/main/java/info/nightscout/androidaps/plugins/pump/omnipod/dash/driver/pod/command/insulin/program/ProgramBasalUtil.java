@@ -30,8 +30,8 @@ public final class ProgramBasalUtil {
             if (i == 0) {
                 previousTenthPulsesPerSlot = tenthPulsesPerSlot[i];
                 numberOfSlotsInCurrentElement = 1;
-            } else if (previousTenthPulsesPerSlot != tenthPulsesPerSlot[i] || numberOfSlotsInCurrentElement >= MAX_NUMBER_OF_SLOTS_IN_INSULIN_PROGRAM_ELEMENT) {
-                elements.add(new LongInsulinProgramElement(startSlotIndex, numberOfSlotsInCurrentElement, (short) (previousTenthPulsesPerSlot * numberOfSlotsInCurrentElement), (int) ((NUMBER_OF_USEC_IN_SLOT * numberOfSlotsInCurrentElement) / (previousTenthPulsesPerSlot * numberOfSlotsInCurrentElement))));
+            } else if (previousTenthPulsesPerSlot != tenthPulsesPerSlot[i] || (numberOfSlotsInCurrentElement + 1) * previousTenthPulsesPerSlot > 65_534) {
+                elements.add(new LongInsulinProgramElement(startSlotIndex, numberOfSlotsInCurrentElement, (short) (previousTenthPulsesPerSlot * numberOfSlotsInCurrentElement), (int) (((long) NUMBER_OF_USEC_IN_SLOT * numberOfSlotsInCurrentElement) / (previousTenthPulsesPerSlot * numberOfSlotsInCurrentElement))));
 
                 previousTenthPulsesPerSlot = tenthPulsesPerSlot[i];
                 numberOfSlotsInCurrentElement = 1;
@@ -40,7 +40,7 @@ public final class ProgramBasalUtil {
                 numberOfSlotsInCurrentElement++;
             }
         }
-        elements.add(new LongInsulinProgramElement(startSlotIndex, numberOfSlotsInCurrentElement, (short) (previousTenthPulsesPerSlot * numberOfSlotsInCurrentElement), (int) ((NUMBER_OF_USEC_IN_SLOT * numberOfSlotsInCurrentElement) / (previousTenthPulsesPerSlot * numberOfSlotsInCurrentElement))));
+        elements.add(new LongInsulinProgramElement(startSlotIndex, numberOfSlotsInCurrentElement, (short) (previousTenthPulsesPerSlot * numberOfSlotsInCurrentElement), (int) (((long) NUMBER_OF_USEC_IN_SLOT * numberOfSlotsInCurrentElement) / (previousTenthPulsesPerSlot * numberOfSlotsInCurrentElement))));
 
         return elements;
     }
@@ -205,7 +205,7 @@ public final class ProgramBasalUtil {
 
                 int durationInSeconds = endTimeInSeconds - startTimeInSeconds;
                 int secondsPassedInCurrentSlot = secondOfDay - startTimeInSeconds;
-                long remainingTenThousandthPulses = (durationInSeconds - secondsPassedInCurrentSlot) * (long) totalNumberOfTenThousandthPulsesInSlot;
+                long remainingTenThousandthPulses = (long) ((durationInSeconds - secondsPassedInCurrentSlot) / (double) durationInSeconds * totalNumberOfTenThousandthPulsesInSlot);
                 int delayBetweenTenthPulsesInUsec = (int) (durationInSeconds * 1_000_000L * 1_000 / totalNumberOfTenThousandthPulsesInSlot);
                 int secondsRemaining = secondsPassedInCurrentSlot % 1_800;
                 int delayUntilNextTenthPulseInUsec = delayBetweenTenthPulsesInUsec;
@@ -215,7 +215,7 @@ public final class ProgramBasalUtil {
                         delayUntilNextTenthPulseInUsec += delayBetweenTenthPulsesInUsec;
                     }
                 }
-                short remainingTenthPulses = (short) ((0 != remainingTenThousandthPulses % 1_000 ? 1 : 0) + remainingTenThousandthPulses / 1_000);
+                short remainingTenthPulses = (short) ((remainingTenThousandthPulses % 1_000 != 0 ? 1 : 0) + remainingTenThousandthPulses / 1_000);
 
                 return new CurrentLongInsulinProgramElement(index, delayUntilNextTenthPulseInUsec, remainingTenthPulses);
             }
