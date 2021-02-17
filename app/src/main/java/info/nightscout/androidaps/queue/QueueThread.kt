@@ -31,7 +31,6 @@ class QueueThread internal constructor(
     var waitingForDisconnect = false
     private var mWakeLock: PowerManager.WakeLock? = null
 
-
     init {
         mWakeLock = (context.getSystemService(Context.POWER_SERVICE) as PowerManager).newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, resourceHelper.gs(R.string.app_name) + ":QueueThread")
     }
@@ -46,7 +45,7 @@ class QueueThread internal constructor(
             while (true) {
                 val secondsElapsed = (System.currentTimeMillis() - connectionStartTime) / 1000
                 val pump = activePlugin.activePump
-                if (!pump.isConnected && secondsElapsed > Constants.PUMP_MAX_CONNECTION_TIME_IN_SECONDS) {
+                if (!pump.isConnected() && secondsElapsed > Constants.PUMP_MAX_CONNECTION_TIME_IN_SECONDS) {
                     rxBus.send(EventDismissBolusProgressIfRunning(null))
                     rxBus.send(EventPumpStatusChanged(resourceHelper.gs(R.string.connectiontimedout)))
                     aapsLogger.debug(LTag.PUMPQUEUE, "timed out")
@@ -86,19 +85,19 @@ class QueueThread internal constructor(
                         return
                     }
                 }
-                if (pump.isHandshakeInProgress) {
+                if (pump.isHandshakeInProgress()) {
                     aapsLogger.debug(LTag.PUMPQUEUE, "handshaking $secondsElapsed")
                     rxBus.send(EventPumpStatusChanged(EventPumpStatusChanged.Status.HANDSHAKING, secondsElapsed.toInt()))
                     SystemClock.sleep(100)
                     continue
                 }
-                if (pump.isConnecting) {
+                if (pump.isConnecting()) {
                     aapsLogger.debug(LTag.PUMPQUEUE, "connecting $secondsElapsed")
                     rxBus.send(EventPumpStatusChanged(EventPumpStatusChanged.Status.CONNECTING, secondsElapsed.toInt()))
                     SystemClock.sleep(1000)
                     continue
                 }
-                if (!pump.isConnected) {
+                if (!pump.isConnected()) {
                     aapsLogger.debug(LTag.PUMPQUEUE, "connect")
                     rxBus.send(EventPumpStatusChanged(EventPumpStatusChanged.Status.CONNECTING, secondsElapsed.toInt()))
                     pump.connect("Connection needed")

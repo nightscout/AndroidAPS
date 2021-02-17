@@ -49,12 +49,12 @@ class MDIPlugin @Inject constructor(
     override val isFakingTempsByExtendedBoluses: Boolean = false
 
     override fun loadTDDs(): PumpEnactResult = PumpEnactResult(injector)
-    override val isInitialized: Boolean = true
-    override val isSuspended: Boolean = false
-    override val isBusy: Boolean = false
-    override val isConnected: Boolean = true
-    override val isConnecting: Boolean = false
-    override val isHandshakeInProgress: Boolean = false
+    override fun isInitialized(): Boolean = true
+    override fun isSuspended(): Boolean = false
+    override fun isBusy(): Boolean = false
+    override fun isConnected(): Boolean = true
+    override fun isConnecting(): Boolean = false
+    override fun isHandshakeInProgress(): Boolean = false
     override fun connect(reason: String) {}
     override fun disconnect(reason: String) {}
     override fun waitForDisconnectionInSeconds(): Int = 0
@@ -63,7 +63,7 @@ class MDIPlugin @Inject constructor(
     override fun setNewBasalProfile(profile: Profile): PumpEnactResult = PumpEnactResult(injector).success(true)
     override fun isThisProfileSet(profile: Profile): Boolean = false
     override fun lastDataTime(): Long = System.currentTimeMillis()
-    override val baseBasalRate: Double  = 0.0
+    override val baseBasalRate: Double = 0.0
     override val reservoirLevel: Double = -1.0
     override val batteryLevel: Int = -1
 
@@ -140,6 +140,6 @@ class MDIPlugin @Inject constructor(
     override fun manufacturer(): ManufacturerType = ManufacturerType.AndroidAPS
     override fun model(): PumpType = PumpType.MDI
     override fun serialNumber(): String = instanceId()
-    override fun shortStatus(veryShort: Boolean): String =model().model
+    override fun shortStatus(veryShort: Boolean): String = model().model
     override fun canHandleDST(): Boolean = true
 }

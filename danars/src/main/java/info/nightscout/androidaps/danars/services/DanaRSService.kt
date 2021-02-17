@@ -176,14 +176,18 @@ class DanaRSService : DaggerService() {
                     rxBus.send(EventInitializationChanged())
                     return
                 } else {
-                    if (danaPump.usingUTC) {
-                        sendMessage(DanaRS_Packet_Option_Set_Pump_UTC_And_TimeZone(injector, DateUtil.now(), offset))
-                    } else if (danaPump.protocol >= 6) { // can set seconds
-                        sendMessage(DanaRS_Packet_Option_Set_Pump_Time(injector, DateUtil.now()))
-                    } else {
-                        waitForWholeMinute() // Dana can set only whole minute
-                        // add 10sec to be sure we are over minute (will be cut off anyway)
-                        sendMessage(DanaRS_Packet_Option_Set_Pump_Time(injector, DateUtil.now() + T.secs(10).msecs()))
+                    when {
+                        danaPump.usingUTC      -> {
+                            sendMessage(DanaRS_Packet_Option_Set_Pump_UTC_And_TimeZone(injector, DateUtil.now(), offset))
+                        }
+                        danaPump.protocol >= 6 -> { // can set seconds
+                            sendMessage(DanaRS_Packet_Option_Set_Pump_Time(injector, DateUtil.now()))
+                        }
+                        else                   -> {
+                            waitForWholeMinute() // Dana can set only whole minute
+                            // add 10sec to be sure we are over minute (will be cut off anyway)
+                            sendMessage(DanaRS_Packet_Option_Set_Pump_Time(injector, DateUtil.now() + T.secs(10).msecs()))
+                        }
                     }
                     if (danaPump.usingUTC) sendMessage(DanaRS_Packet_Option_Get_Pump_UTC_And_TimeZone(injector))
                     else sendMessage(DanaRS_Packet_Option_Get_Pump_Time(injector))
@@ -211,7 +215,7 @@ class DanaRSService : DaggerService() {
     }
 
     fun loadEvents(): PumpEnactResult {
-        if (!danaRSPlugin.isInitialized) {
+        if (!danaRSPlugin.isInitialized()) {
             val result = PumpEnactResult(injector).success(false)
             result.comment = "pump not initialized"
             return result

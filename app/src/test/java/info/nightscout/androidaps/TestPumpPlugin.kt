@@ -14,27 +14,29 @@ import org.json.JSONObject
 @Suppress("MemberVisibilityCanBePrivate")
 class TestPumpPlugin(val injector: HasAndroidInjector) : PumpInterface {
 
-    override var isConnected = false
-    override var isConnecting = false
-    override var isHandshakeInProgress = false
+    var connected = false
+
+    override fun isConnected() = connected
+    override fun isConnecting() = false
+    override fun isHandshakeInProgress() = false
     val lastData = 0L
 
     val baseBasal = 0.0
     override val pumpDescription = PumpDescription()
 
-    override val isInitialized: Boolean = true
-    override val isSuspended: Boolean = false
-    override val isBusy: Boolean = false
+    override fun isInitialized(): Boolean = true
+    override fun isSuspended(): Boolean = false
+    override fun isBusy(): Boolean = false
     override fun connect(reason: String) {
-        isConnected = true
+        connected = true
     }
 
     override fun disconnect(reason: String) {
-        isConnected = false
+        connected = false
     }
 
     override fun stopConnecting() {
-        isConnected = false
+        connected = false
     }
 
     override fun waitForDisconnectionInSeconds(): Int = 0

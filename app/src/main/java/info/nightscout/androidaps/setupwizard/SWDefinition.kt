@@ -217,9 +217,11 @@ class SWDefinition @Inject constructor(
             .updateDelay(5)
             .label(R.string.treatmentssafety_maxcarbs_title)
             .comment(R.string.common_values))
-        .validator { sp.contains(R.string.key_age)
-            && sp.getDouble(R.string.key_treatmentssafety_maxbolus, 0.0)  > 0
-            && sp.getDouble(R.string.key_treatmentssafety_maxcarbs, 0.0)  > 0 }
+        .validator {
+            sp.contains(R.string.key_age)
+                && sp.getDouble(R.string.key_treatmentssafety_maxbolus, 0.0) > 0
+                && sp.getDouble(R.string.key_treatmentssafety_maxcarbs, 0.0) > 0
+        }
     private val screenInsulin = SWScreen(injector, R.string.configbuilder_insulin)
         .skippable(false)
         .add(SWPlugin(injector, this)
@@ -303,7 +305,7 @@ class SWDefinition @Inject constructor(
 
         // For Omnipod, consider the pump initialized when a RL has been configured successfully
         // Users will be prompted to activate a Pod after completing the setup wizard.
-        return activePump.isInitialized || (activePump is OmnipodErosPumpPlugin && activePump.isRileyLinkReady)
+        return activePump.isInitialized() || (activePump is OmnipodErosPumpPlugin && activePump.isRileyLinkReady)
     }
 
     private val screenAps = SWScreen(injector, R.string.configbuilder_aps)

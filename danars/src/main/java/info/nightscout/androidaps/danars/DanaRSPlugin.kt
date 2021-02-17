@@ -141,9 +141,9 @@ class DanaRSPlugin @Inject constructor(
         }
     }
 
-    override val isConnected: Boolean = danaRSService?.isConnected ?: false
-    override val isConnecting: Boolean = danaRSService?.isConnecting ?: false
-    override val isHandshakeInProgress: Boolean = false
+    override fun isConnected(): Boolean = danaRSService?.isConnected ?: false
+    override fun isConnecting(): Boolean = danaRSService?.isConnecting ?: false
+    override fun isHandshakeInProgress(): Boolean = false
 
     override fun disconnect(reason: String) {
         aapsLogger.debug(LTag.PUMP, "RS disconnect from: $reason")
@@ -195,18 +195,18 @@ class DanaRSPlugin @Inject constructor(
     }
 
     // Pump interface
-    override val isInitialized: Boolean =
+    override fun isInitialized(): Boolean =
         danaPump.lastConnection > 0 && danaPump.maxBasal > 0 && danaPump.isRSPasswordOK
 
-    override val isSuspended: Boolean =
+    override fun isSuspended(): Boolean =
         danaPump.pumpSuspended || danaPump.errorState != DanaPump.ErrorState.NONE
 
-    override val isBusy: Boolean =
+    override fun isBusy(): Boolean =
         danaRSService?.isConnected ?: false || danaRSService?.isConnecting ?: false
 
     override fun setNewBasalProfile(profile: Profile): PumpEnactResult {
         val result = PumpEnactResult(injector)
-        if (!isInitialized) {
+        if (!isInitialized()) {
             aapsLogger.error("setNewBasalProfile not initialized")
             val notification = Notification(Notification.PROFILE_NOT_SET_NOT_INITIALIZED, resourceHelper.gs(R.string.pumpNotInitializedProfileNotSet), Notification.URGENT)
             rxBus.send(EventNewNotification(notification))
@@ -233,7 +233,7 @@ class DanaRSPlugin @Inject constructor(
     }
 
     override fun isThisProfileSet(profile: Profile): Boolean {
-        if (!isInitialized) return true // TODO: not sure what's better. so far TRUE to prevent too many SMS
+        if (!isInitialized()) return true // TODO: not sure what's better. so far TRUE to prevent too many SMS
         if (danaPump.pumpProfiles == null) return true // TODO: not sure what's better. so far TRUE to prevent too many SMS
         val basalValues = if (danaPump.basal48Enable) 48 else 24
         val basalIncrement = if (danaPump.basal48Enable) 30 * 60 else 60 * 60
@@ -410,8 +410,7 @@ class DanaRSPlugin @Inject constructor(
             aapsLogger.debug(LTag.PUMP, "setTempBasalPercent: Correct value already set")
             return result
         }
-        val connectionOK: Boolean
-        connectionOK = if (durationInMinutes == 15 || durationInMinutes == 30) {
+        val connectionOK: Boolean = if (durationInMinutes == 15 || durationInMinutes == 30) {
             danaRSService?.tempBasalShortDuration(percentAfterConstraint, durationInMinutes)
                 ?: false
         } else {
