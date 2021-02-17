@@ -3,13 +3,13 @@ package info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.command.
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.command.base.Command;
 
 public abstract class HeaderEnabledCommandBuilder<T extends HeaderEnabledCommandBuilder<T, R>, R extends Command> implements CommandBuilder<R> {
-    protected Integer address;
+    protected Integer uniqueId;
     protected Short sequenceNumber;
     protected boolean multiCommandFlag = false;
 
     public R build() {
-        if (address == null) {
-            throw new IllegalArgumentException("address can not be null");
+        if (uniqueId == null) {
+            throw new IllegalArgumentException("uniqueId can not be null");
         }
         if (sequenceNumber == null) {
             throw new IllegalArgumentException("sequenceNumber can not be null");
@@ -17,8 +17,8 @@ public abstract class HeaderEnabledCommandBuilder<T extends HeaderEnabledCommand
         return buildCommand();
     }
 
-    public final T setAddress(int address) {
-        this.address = address;
+    public final T setUniqueId(int uniqueId) {
+        this.uniqueId = uniqueId;
         return (T) this;
     }
 

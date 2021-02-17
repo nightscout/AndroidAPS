@@ -12,14 +12,14 @@ import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.definitio
 public final class ProgramAlertsCommand extends NonceEnabledCommand {
     private final List<AlertConfiguration> alertConfigurations;
 
-    ProgramAlertsCommand(int address, short sequenceNumber, boolean multiCommandFlag, List<AlertConfiguration> alertConfigurations, int nonce) {
-        super(CommandType.PROGRAM_ALERTS, address, sequenceNumber, multiCommandFlag, nonce);
+    ProgramAlertsCommand(int uniqueId, short sequenceNumber, boolean multiCommandFlag, List<AlertConfiguration> alertConfigurations, int nonce) {
+        super(CommandType.PROGRAM_ALERTS, uniqueId, sequenceNumber, multiCommandFlag, nonce);
         this.alertConfigurations = new ArrayList<>(alertConfigurations);
     }
 
     @Override public byte[] getEncoded() {
         ByteBuffer byteBuffer = ByteBuffer.allocate(getLength() + HEADER_LENGTH) //
-                .put(encodeHeader(address, sequenceNumber, getLength(), multiCommandFlag)) //
+                .put(encodeHeader(uniqueId, sequenceNumber, getLength(), multiCommandFlag)) //
                 .put(commandType.getValue()) //
                 .put(getBodyLength()) //
                 .putInt(nonce);
@@ -40,8 +40,9 @@ public final class ProgramAlertsCommand extends NonceEnabledCommand {
     @Override public String toString() {
         return "ProgramAlertsCommand{" +
                 "alertConfigurations=" + alertConfigurations +
+                ", nonce=" + nonce +
                 ", commandType=" + commandType +
-                ", address=" + address +
+                ", uniqueId=" + uniqueId +
                 ", sequenceNumber=" + sequenceNumber +
                 ", multiCommandFlag=" + multiCommandFlag +
                 '}';
@@ -59,7 +60,7 @@ public final class ProgramAlertsCommand extends NonceEnabledCommand {
             if (this.alertConfigurations == null) {
                 throw new IllegalArgumentException("alertConfigurations can not be null");
             }
-            return new ProgramAlertsCommand(address, sequenceNumber, multiCommandFlag, alertConfigurations, nonce);
+            return new ProgramAlertsCommand(uniqueId, sequenceNumber, multiCommandFlag, alertConfigurations, nonce);
         }
     }
 }

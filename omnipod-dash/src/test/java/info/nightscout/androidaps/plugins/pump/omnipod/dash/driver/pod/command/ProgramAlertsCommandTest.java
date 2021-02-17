@@ -23,7 +23,7 @@ public class ProgramAlertsCommandTest {
         configurations.add(new AlertConfiguration(AlertSlot.EXPIRATION_IMMINENT, true, (short) 0, false, AlertTriggerType.TIME_TRIGGER, (short) 4725, BeepType.FOUR_TIMES_BIP_BEEP, BeepRepetitionType.XXX4));
 
         byte[] encoded = new ProgramAlertsCommand.Builder() //
-                .setAddress(37879811) //
+                .setUniqueId(37879811) //
                 .setSequenceNumber((short) 3) //
                 .setMultiCommandFlag(true) //
                 .setNonce(1229869870) //
@@ -40,7 +40,7 @@ public class ProgramAlertsCommandTest {
         configurations.add(new AlertConfiguration(AlertSlot.LOW_RESERVOIR, true, (short) 0, false, AlertTriggerType.RESERVOIR_VOLUME_TRIGGER, (short) 200, BeepType.FOUR_TIMES_BIP_BEEP, BeepRepetitionType.XXX));
 
         byte[] encoded = new ProgramAlertsCommand.Builder() //
-                .setAddress(37879811) //
+                .setUniqueId(37879811) //
                 .setSequenceNumber((short) 8) //
                 .setNonce(1229869870) //
                 .setAlertConfigurations(configurations) //
@@ -56,7 +56,7 @@ public class ProgramAlertsCommandTest {
         configurations.add(new AlertConfiguration(AlertSlot.USER_SET_EXPIRATION, true, (short) 0, false, AlertTriggerType.TIME_TRIGGER, (short) 4079, BeepType.FOUR_TIMES_BIP_BEEP, BeepRepetitionType.XXX2));
 
         byte[] encoded = new ProgramAlertsCommand.Builder() //
-                .setAddress(37879811) //
+                .setUniqueId(37879811) //
                 .setSequenceNumber((short) 15) //
                 .setNonce(1229869870) //
                 .setAlertConfigurations(configurations) //
@@ -73,7 +73,7 @@ public class ProgramAlertsCommandTest {
         configurations.add(new AlertConfiguration(AlertSlot.EXPIRATION, true, (short) 55, false, AlertTriggerType.TIME_TRIGGER, (short) 5, BeepType.FOUR_TIMES_BIP_BEEP, BeepRepetitionType.XXX5));
 
         byte[] encoded = new ProgramAlertsCommand.Builder() //
-                .setAddress(37879811) //
+                .setUniqueId(37879811) //
                 .setSequenceNumber((short) 10) //
                 .setMultiCommandFlag(false) //
                 .setNonce(1229869870) //

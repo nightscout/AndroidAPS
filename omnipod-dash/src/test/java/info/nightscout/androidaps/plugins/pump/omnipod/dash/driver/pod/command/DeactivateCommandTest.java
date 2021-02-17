@@ -10,7 +10,7 @@ public class DeactivateCommandTest {
     @Test
     public void testEncoding() throws DecoderException {
         byte[] encoded = new DeactivateCommand.Builder() //
-                .setAddress(37879809) //
+                .setUniqueId(37879809) //
                 .setSequenceNumber((short) 5) //
                 .setNonce(1229869870) //
                 .build() //

@@ -9,7 +9,7 @@ import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.command.b
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.command.base.builder.HeaderEnabledCommandBuilder;
 
 public final class SetUniqueIdCommand extends HeaderEnabledCommand {
-    private static final int DEFAULT_ADDRESS = -1;
+    private static final int DEFAULT_UNIQUE_ID = -1;
     private static final short LENGTH = 21;
     private static final byte BODY_LENGTH = 19;
 
@@ -17,8 +17,8 @@ public final class SetUniqueIdCommand extends HeaderEnabledCommand {
     private final int podSequenceNumber;
     private final Date initializationTime;
 
-    SetUniqueIdCommand(int address, short sequenceNumber, boolean multiCommandFlag, int lotNumber, int podSequenceNumber, Date initializationTime) {
-        super(CommandType.SET_UNIQUE_ID, address, sequenceNumber, multiCommandFlag);
+    SetUniqueIdCommand(int uniqueId, short sequenceNumber, boolean multiCommandFlag, int lotNumber, int podSequenceNumber, Date initializationTime) {
+        super(CommandType.SET_UNIQUE_ID, uniqueId, sequenceNumber, multiCommandFlag);
         this.lotNumber = lotNumber;
         this.podSequenceNumber = podSequenceNumber;
         this.initializationTime = initializationTime;
@@ -26,10 +26,10 @@ public final class SetUniqueIdCommand extends HeaderEnabledCommand {
 
     @Override public byte[] getEncoded() {
         return appendCrc(ByteBuffer.allocate(LENGTH + HEADER_LENGTH) //
-                .put(encodeHeader(DEFAULT_ADDRESS, sequenceNumber, LENGTH, multiCommandFlag)) //
+                .put(encodeHeader(DEFAULT_UNIQUE_ID, sequenceNumber, LENGTH, multiCommandFlag)) //
                 .put(commandType.getValue()) //
                 .put(BODY_LENGTH) //
-                .putInt(address) //
+                .putInt(uniqueId) //
                 .put((byte) 0x14) // FIXME ??
                 .put((byte) 0x04) // FIXME ??
                 .put(encodeInitializationTime(initializationTime)) //
@@ -57,7 +57,7 @@ public final class SetUniqueIdCommand extends HeaderEnabledCommand {
                 ", podSequenceNumber=" + podSequenceNumber +
                 ", initializationTime=" + initializationTime +
                 ", commandType=" + commandType +
-                ", address=" + address +
+                ", uniqueId=" + uniqueId +
                 ", sequenceNumber=" + sequenceNumber +
                 ", multiCommandFlag=" + multiCommandFlag +
                 '}';
@@ -93,7 +93,7 @@ public final class SetUniqueIdCommand extends HeaderEnabledCommand {
             if (initializationTime == null) {
                 throw new IllegalArgumentException("initializationTime can not be null");
             }
-            return new SetUniqueIdCommand(address, sequenceNumber, multiCommandFlag, lotNumber, podSequenceNumber, initializationTime);
+            return new SetUniqueIdCommand(uniqueId, sequenceNumber, multiCommandFlag, lotNumber, podSequenceNumber, initializationTime);
         }
     }
 }

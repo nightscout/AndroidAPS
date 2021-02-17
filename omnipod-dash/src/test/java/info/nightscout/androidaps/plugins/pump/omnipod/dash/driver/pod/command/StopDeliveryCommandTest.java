@@ -12,7 +12,7 @@ public class StopDeliveryCommandTest {
     @Test
     public void testStopTempBasal() throws DecoderException {
         byte[] encoded = new StopDeliveryCommand.Builder() //
-                .setAddress(37879811) //
+                .setUniqueId(37879811) //
                 .setSequenceNumber((short) 0) //
                 .setNonce(1229869870) //
                 .setDeliveryType(StopDeliveryCommand.DeliveryType.TEMP_BASAL) //
@@ -26,7 +26,7 @@ public class StopDeliveryCommandTest {
     @Test
     public void testSuspendDelivery() throws DecoderException {
         byte[] encoded = new StopDeliveryCommand.Builder() //
-                .setAddress(37879811) //
+                .setUniqueId(37879811) //
                 .setSequenceNumber((short) 2) //
                 .setNonce(1229869870) //
                 .setDeliveryType(StopDeliveryCommand.DeliveryType.ALL) //

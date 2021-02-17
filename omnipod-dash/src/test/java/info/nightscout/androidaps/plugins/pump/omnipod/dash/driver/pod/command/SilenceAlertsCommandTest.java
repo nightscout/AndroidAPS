@@ -10,7 +10,7 @@ public class SilenceAlertsCommandTest {
     @Test
     public void testSilenceLowReservoirAlert() throws DecoderException {
         byte[] encoded = new SilenceAlertsCommand.Builder() //
-                .setAddress(37879811) //
+                .setUniqueId(37879811) //
                 .setSequenceNumber((short) 1) //
                 .setNonce(1229869870) //
                 .setSilenceLowReservoirAlert(true) //

@@ -17,8 +17,8 @@ final class ProgramInsulinCommand extends NonceEnabledCommand {
     private final short remainingPulsesInCurrentSlot;
     private final DeliveryType deliveryType;
 
-    ProgramInsulinCommand(int address, short sequenceNumber, boolean multiCommandFlag, int nonce, List<ShortInsulinProgramElement> insulinProgramElements, byte currentSlot, short checksum, short remainingEighthSecondsInCurrentSlot, short remainingPulsesInCurrentSlot, DeliveryType deliveryType) {
-        super(CommandType.PROGRAM_INSULIN, address, sequenceNumber, multiCommandFlag, nonce);
+    ProgramInsulinCommand(int uniqueId, short sequenceNumber, boolean multiCommandFlag, int nonce, List<ShortInsulinProgramElement> insulinProgramElements, byte currentSlot, short checksum, short remainingEighthSecondsInCurrentSlot, short remainingPulsesInCurrentSlot, DeliveryType deliveryType) {
+        super(CommandType.PROGRAM_INSULIN, uniqueId, sequenceNumber, multiCommandFlag, nonce);
         this.insulinProgramElements = new ArrayList<>(insulinProgramElements);
         this.currentSlot = currentSlot;
         this.checksum = checksum;
@@ -79,7 +79,7 @@ final class ProgramInsulinCommand extends NonceEnabledCommand {
                 ", deliveryType=" + deliveryType +
                 ", nonce=" + nonce +
                 ", commandType=" + commandType +
-                ", address=" + address +
+                ", uniqueId=" + uniqueId +
                 ", sequenceNumber=" + sequenceNumber +
                 ", multiCommandFlag=" + multiCommandFlag +
                 '}';

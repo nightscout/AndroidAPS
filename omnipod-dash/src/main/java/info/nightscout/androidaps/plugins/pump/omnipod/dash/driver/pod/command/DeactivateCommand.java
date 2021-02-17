@@ -10,13 +10,13 @@ public final class DeactivateCommand extends NonceEnabledCommand {
     private static final short LENGTH = 6;
     private static final byte BODY_LENGTH = 4;
 
-    DeactivateCommand(int address, short sequenceNumber, boolean multiCommandFlag, int nonce) {
-        super(CommandType.DEACTIVATE, address, sequenceNumber, multiCommandFlag, nonce);
+    DeactivateCommand(int uniqueId, short sequenceNumber, boolean multiCommandFlag, int nonce) {
+        super(CommandType.DEACTIVATE, uniqueId, sequenceNumber, multiCommandFlag, nonce);
     }
 
     @Override public byte[] getEncoded() {
         return appendCrc(ByteBuffer.allocate(LENGTH + HEADER_LENGTH) //
-                .put(encodeHeader(address, sequenceNumber, LENGTH, multiCommandFlag)) //
+                .put(encodeHeader(uniqueId, sequenceNumber, LENGTH, multiCommandFlag)) //
                 .put(commandType.getValue()) //
                 .put(BODY_LENGTH) //
                 .putInt(nonce) //
@@ -25,8 +25,9 @@ public final class DeactivateCommand extends NonceEnabledCommand {
 
     @Override public String toString() {
         return "DeactivateCommand{" +
-                "commandType=" + commandType +
-                ", address=" + address +
+                "nonce=" + nonce +
+                ", commandType=" + commandType +
+                ", uniqueId=" + uniqueId +
                 ", sequenceNumber=" + sequenceNumber +
                 ", multiCommandFlag=" + multiCommandFlag +
                 '}';
@@ -34,7 +35,7 @@ public final class DeactivateCommand extends NonceEnabledCommand {
 
     public static final class Builder extends NonceEnabledCommandBuilder<Builder, DeactivateCommand> {
         @Override protected final DeactivateCommand buildCommand() {
-            return new DeactivateCommand(Builder.this.address, sequenceNumber, multiCommandFlag, nonce);
+            return new DeactivateCommand(uniqueId, sequenceNumber, multiCommandFlag, nonce);
         }
     }
 }

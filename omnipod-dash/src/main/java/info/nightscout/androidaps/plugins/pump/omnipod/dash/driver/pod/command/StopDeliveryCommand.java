@@ -16,15 +16,15 @@ public final class StopDeliveryCommand extends NonceEnabledCommand {
     private final DeliveryType deliveryType;
     private final BeepType beepType;
 
-    StopDeliveryCommand(int address, short sequenceNumber, boolean multiCommandFlag, DeliveryType deliveryType, BeepType beepType, int nonce) {
-        super(CommandType.STOP_DELIVERY, address, sequenceNumber, multiCommandFlag, nonce);
+    StopDeliveryCommand(int uniqueId, short sequenceNumber, boolean multiCommandFlag, DeliveryType deliveryType, BeepType beepType, int nonce) {
+        super(CommandType.STOP_DELIVERY, uniqueId, sequenceNumber, multiCommandFlag, nonce);
         this.deliveryType = deliveryType;
         this.beepType = beepType;
     }
 
     @Override public byte[] getEncoded() {
         return appendCrc(ByteBuffer.allocate(LENGTH + HEADER_LENGTH) //
-                .put(encodeHeader(address, sequenceNumber, LENGTH, multiCommandFlag)) //
+                .put(encodeHeader(uniqueId, sequenceNumber, LENGTH, multiCommandFlag)) //
                 .put(commandType.getValue()) //
                 .put(BODY_LENGTH) //
                 .putInt(nonce) //
@@ -36,8 +36,9 @@ public final class StopDeliveryCommand extends NonceEnabledCommand {
         return "StopDeliveryCommand{" +
                 "deliveryType=" + deliveryType +
                 ", beepType=" + beepType +
+                ", nonce=" + nonce +
                 ", commandType=" + commandType +
-                ", address=" + address +
+                ", uniqueId=" + uniqueId +
                 ", sequenceNumber=" + sequenceNumber +
                 ", multiCommandFlag=" + multiCommandFlag +
                 '}';
@@ -89,7 +90,7 @@ public final class StopDeliveryCommand extends NonceEnabledCommand {
             if (beepType == null) {
                 throw new IllegalArgumentException("beepType can not be null");
             }
-            return new StopDeliveryCommand(address, sequenceNumber, multiCommandFlag, deliveryType, beepType, nonce);
+            return new StopDeliveryCommand(uniqueId, sequenceNumber, multiCommandFlag, deliveryType, beepType, nonce);
         }
     }
 

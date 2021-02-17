@@ -7,28 +7,28 @@ import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.command.b
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.command.base.builder.HeaderEnabledCommandBuilder;
 
 public final class GetVersionCommand extends HeaderEnabledCommand {
-    public static final int DEFAULT_ADDRESS = -1; // FIXME move
+    public static final int DEFAULT_UNIQUE_ID = -1; // FIXME move
 
     private static final short LENGTH = 6;
     private static final byte BODY_LENGTH = 4;
 
-    GetVersionCommand(int address, short sequenceNumber, boolean multiCommandFlag) {
-        super(CommandType.GET_VERSION, address, sequenceNumber, multiCommandFlag);
+    GetVersionCommand(int uniqueId, short sequenceNumber, boolean multiCommandFlag) {
+        super(CommandType.GET_VERSION, uniqueId, sequenceNumber, multiCommandFlag);
     }
 
     @Override public byte[] getEncoded() {
         return appendCrc(ByteBuffer.allocate(LENGTH + HEADER_LENGTH) //
-                .put(encodeHeader(address, sequenceNumber, LENGTH, multiCommandFlag)) //
+                .put(encodeHeader(uniqueId, sequenceNumber, LENGTH, multiCommandFlag)) //
                 .put(commandType.getValue()) //
                 .put(BODY_LENGTH) //
-                .putInt(address) //
+                .putInt(uniqueId) //
                 .array());
     }
 
     @Override public String toString() {
         return "GetVersionCommand{" +
                 "commandType=" + commandType +
-                ", address=" + address +
+                ", uniqueId=" + uniqueId +
                 ", sequenceNumber=" + sequenceNumber +
                 ", multiCommandFlag=" + multiCommandFlag +
                 '}';
@@ -36,7 +36,7 @@ public final class GetVersionCommand extends HeaderEnabledCommand {
 
     public static final class Builder extends HeaderEnabledCommandBuilder<Builder, GetVersionCommand> {
         @Override protected final GetVersionCommand buildCommand() {
-            return new GetVersionCommand(address, sequenceNumber, multiCommandFlag);
+            return new GetVersionCommand(uniqueId, sequenceNumber, multiCommandFlag);
         }
     }
 }

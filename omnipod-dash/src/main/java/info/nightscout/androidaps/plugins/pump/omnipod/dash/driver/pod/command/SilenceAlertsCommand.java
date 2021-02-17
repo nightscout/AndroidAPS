@@ -14,14 +14,14 @@ public final class SilenceAlertsCommand extends NonceEnabledCommand {
 
     private final SilenceAlertCommandParameters parameters;
 
-    SilenceAlertsCommand(int address, short sequenceNumber, boolean multiCommandFlag, SilenceAlertCommandParameters parameters, int nonce) {
-        super(CommandType.SILENCE_ALERTS, address, sequenceNumber, multiCommandFlag, nonce);
+    SilenceAlertsCommand(int uniqueId, short sequenceNumber, boolean multiCommandFlag, SilenceAlertCommandParameters parameters, int nonce) {
+        super(CommandType.SILENCE_ALERTS, uniqueId, sequenceNumber, multiCommandFlag, nonce);
         this.parameters = parameters;
     }
 
     @Override public byte[] getEncoded() {
         return appendCrc(ByteBuffer.allocate(LENGTH + HEADER_LENGTH) //
-                .put(encodeHeader(address, sequenceNumber, LENGTH, multiCommandFlag)) //
+                .put(encodeHeader(uniqueId, sequenceNumber, LENGTH, multiCommandFlag)) //
                 .put(commandType.getValue()) //
                 .put(BODY_LENGTH) //
                 .putInt(nonce) //
@@ -32,8 +32,9 @@ public final class SilenceAlertsCommand extends NonceEnabledCommand {
     @Override public String toString() {
         return "SilenceAlertsCommand{" +
                 "parameters=" + parameters +
+                ", nonce=" + nonce +
                 ", commandType=" + commandType +
-                ", address=" + address +
+                ", uniqueId=" + uniqueId +
                 ", sequenceNumber=" + sequenceNumber +
                 ", multiCommandFlag=" + multiCommandFlag +
                 '}';
@@ -126,7 +127,7 @@ public final class SilenceAlertsCommand extends NonceEnabledCommand {
         }
 
         @Override protected final SilenceAlertsCommand buildCommand() {
-            return new SilenceAlertsCommand(address, sequenceNumber, multiCommandFlag, new SilenceAlertCommandParameters(silenceAutoOffAlert, silenceMultiCommandAlert, silenceExpirationImminentAlert, silenceUserSetExpirationAlert, silenceLowReservoirAlert, silenceSuspendInProgressAlert, silenceSuspendEndedAlert, silencePodExpirationAlert), nonce);
+            return new SilenceAlertsCommand(uniqueId, sequenceNumber, multiCommandFlag, new SilenceAlertCommandParameters(silenceAutoOffAlert, silenceMultiCommandAlert, silenceExpirationImminentAlert, silenceUserSetExpirationAlert, silenceLowReservoirAlert, silenceSuspendInProgressAlert, silenceSuspendEndedAlert, silencePodExpirationAlert), nonce);
         }
     }
 }

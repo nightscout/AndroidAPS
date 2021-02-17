@@ -25,8 +25,8 @@ public final class ProgramBasalCommand extends HeaderEnabledCommand {
     private final short remainingTenthPulsesInCurrentInsulinProgramElement;
     private final int delayUntilNextTenthPulseInUsec;
 
-    ProgramBasalCommand(ProgramInsulinCommand interlockCommand, int address, short sequenceNumber, boolean multiCommandFlag, List<LongInsulinProgramElement> insulinProgramElements, ProgramReminder programReminder, byte currentInsulinProgramElementIndex, short remainingTenthPulsesInCurrentInsulinProgramElement, int delayUntilNextTenthPulseInUsec) {
-        super(CommandType.PROGRAM_BASAL, address, sequenceNumber, multiCommandFlag);
+    ProgramBasalCommand(ProgramInsulinCommand interlockCommand, int uniqueId, short sequenceNumber, boolean multiCommandFlag, List<LongInsulinProgramElement> insulinProgramElements, ProgramReminder programReminder, byte currentInsulinProgramElementIndex, short remainingTenthPulsesInCurrentInsulinProgramElement, int delayUntilNextTenthPulseInUsec) {
+        super(CommandType.PROGRAM_BASAL, uniqueId, sequenceNumber, multiCommandFlag);
 
         this.interlockCommand = interlockCommand;
         this.insulinProgramElements = new ArrayList<>(insulinProgramElements);
@@ -58,7 +58,7 @@ public final class ProgramBasalCommand extends HeaderEnabledCommand {
 
         byte[] bolusCommand = buffer.array();
         byte[] interlockCommand = this.interlockCommand.getEncoded();
-        byte[] header = encodeHeader(address, sequenceNumber, (short) (bolusCommand.length + interlockCommand.length), multiCommandFlag);
+        byte[] header = encodeHeader(uniqueId, sequenceNumber, (short) (bolusCommand.length + interlockCommand.length), multiCommandFlag);
 
         return ByteBuffer.allocate(bolusCommand.length + interlockCommand.length + header.length) //
                 .put(header) //
@@ -76,7 +76,7 @@ public final class ProgramBasalCommand extends HeaderEnabledCommand {
                 ", remainingTenthPulsesInCurrentInsulinProgramElement=" + remainingTenthPulsesInCurrentInsulinProgramElement +
                 ", delayUntilNextTenthPulseInUsec=" + delayUntilNextTenthPulseInUsec +
                 ", commandType=" + commandType +
-                ", address=" + address +
+                ", uniqueId=" + uniqueId +
                 ", sequenceNumber=" + sequenceNumber +
                 ", multiCommandFlag=" + multiCommandFlag +
                 '}';
@@ -115,16 +115,16 @@ public final class ProgramBasalCommand extends HeaderEnabledCommand {
 
             short[] pulsesPerSlot = ProgramBasalUtil.mapBasalProgramToPulsesPerSlot(basalProgram);
             CurrentSlot currentSlot = ProgramBasalUtil.calculateCurrentSlot(pulsesPerSlot, currentTime);
+            short checksum = ProgramBasalUtil.createChecksum(pulsesPerSlot, currentSlot);
             List<LongInsulinProgramElement> longInsulinProgramElements = ProgramBasalUtil.mapPulsesPerSlotToLongInsulinProgramElements(pulsesPerSlot);
             List<ShortInsulinProgramElement> shortInsulinProgramElements = ProgramBasalUtil.mapPulsesPerSlotToShortInsulinProgramElements(pulsesPerSlot);
-            short checksum = ProgramBasalUtil.createChecksum();
             CurrentLongInsulinProgramElement currentLongInsulinProgramElement = ProgramBasalUtil.calculateCurrentLongInsulinProgramElement(longInsulinProgramElements, currentTime);
 
-            ProgramInsulinCommand interlockCommand = new ProgramInsulinCommand(address, sequenceNumber, multiCommandFlag, nonce,
+            ProgramInsulinCommand interlockCommand = new ProgramInsulinCommand(uniqueId, sequenceNumber, multiCommandFlag, nonce,
                     shortInsulinProgramElements, currentSlot.getIndex(), checksum, (short) (currentSlot.getEighthSecondsRemaining() * 8),
                     currentSlot.getPulsesRemaining(), ProgramInsulinCommand.DeliveryType.BASAL);
 
-            return new ProgramBasalCommand(interlockCommand, address, sequenceNumber, multiCommandFlag,
+            return new ProgramBasalCommand(interlockCommand, uniqueId, sequenceNumber, multiCommandFlag,
                     longInsulinProgramElements, programReminder, currentLongInsulinProgramElement.getIndex(),
                     currentLongInsulinProgramElement.getRemainingTenthPulses(), currentLongInsulinProgramElement.getDelayUntilNextTenthPulseInUsec());
         }

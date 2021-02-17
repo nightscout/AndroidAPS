@@ -8,13 +8,13 @@ public abstract class HeaderEnabledCommand implements Command {
     protected static final short HEADER_LENGTH = 6;
 
     protected final CommandType commandType;
-    protected final int address;
+    protected final int uniqueId;
     protected final short sequenceNumber;
     protected final boolean multiCommandFlag;
 
-    protected HeaderEnabledCommand(CommandType commandType, int address, short sequenceNumber, boolean multiCommandFlag) {
+    protected HeaderEnabledCommand(CommandType commandType, int uniqueId, short sequenceNumber, boolean multiCommandFlag) {
         this.commandType = commandType;
-        this.address = address;
+        this.uniqueId = uniqueId;
         this.sequenceNumber = sequenceNumber;
         this.multiCommandFlag = multiCommandFlag;
     }
@@ -30,9 +30,9 @@ public abstract class HeaderEnabledCommand implements Command {
                 .array();
     }
 
-    protected static byte[] encodeHeader(int address, short sequenceNumber, short length, boolean multiCommandFlag) {
+    protected static byte[] encodeHeader(int uniqueId, short sequenceNumber, short length, boolean multiCommandFlag) {
         return ByteBuffer.allocate(6) //
-                .putInt(address) //
+                .putInt(uniqueId) //
                 .putShort((short) (((sequenceNumber & 0x0f) << 10) | length | ((multiCommandFlag ? 1 : 0) << 15))) //
                 .array();
     }

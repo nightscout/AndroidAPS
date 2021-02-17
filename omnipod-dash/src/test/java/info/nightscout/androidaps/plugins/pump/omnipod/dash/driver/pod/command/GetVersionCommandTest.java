@@ -11,7 +11,7 @@ public class GetVersionCommandTest {
     public void testEncoding() throws DecoderException {
         byte[] encoded = new GetVersionCommand.Builder() //
                 .setSequenceNumber((short) 0) //
-                .setAddress(GetVersionCommand.DEFAULT_ADDRESS) //
+                .setUniqueId(GetVersionCommand.DEFAULT_UNIQUE_ID) //
                 .build() //
                 .getEncoded();
 

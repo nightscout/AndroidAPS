@@ -3,8 +3,8 @@ package info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.command.
 public abstract class NonceEnabledCommand extends HeaderEnabledCommand {
     protected final int nonce;
 
-    protected NonceEnabledCommand(CommandType commandType, int address, short sequenceNumber, boolean multiCommandFlag, int nonce) {
-        super(commandType, address, sequenceNumber, multiCommandFlag);
+    protected NonceEnabledCommand(CommandType commandType, int uniqueId, short sequenceNumber, boolean multiCommandFlag, int nonce) {
+        super(commandType, uniqueId, sequenceNumber, multiCommandFlag);
         this.nonce = nonce;
     }
 
