@@ -11,7 +11,6 @@ import android.os.IBinder;
 import android.os.Looper;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -54,8 +53,6 @@ import info.nightscout.androidaps.logging.AAPSLogger;
 import info.nightscout.androidaps.logging.LTag;
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper;
 import info.nightscout.androidaps.plugins.common.ManufacturerType;
-import info.nightscout.androidaps.plugins.general.actions.defs.CustomAction;
-import info.nightscout.androidaps.plugins.general.actions.defs.CustomActionType;
 import info.nightscout.androidaps.plugins.general.nsclient.NSUpload;
 import info.nightscout.androidaps.plugins.general.nsclient.UploadQueue;
 import info.nightscout.androidaps.plugins.general.overview.events.EventDismissNotification;
@@ -133,7 +130,6 @@ import info.nightscout.androidaps.plugins.pump.insight.exceptions.app_layer_erro
 import info.nightscout.androidaps.plugins.pump.insight.utils.ExceptionTranslator;
 import info.nightscout.androidaps.plugins.pump.insight.utils.ParameterBlockUtil;
 import info.nightscout.androidaps.plugins.treatments.TreatmentsPlugin;
-import info.nightscout.androidaps.queue.commands.CustomCommand;
 import info.nightscout.androidaps.utils.DateUtil;
 import info.nightscout.androidaps.utils.TimeChangeType;
 import info.nightscout.androidaps.utils.resources.ResourceHelper;
@@ -341,11 +337,6 @@ public class LocalInsightPlugin extends PumpPluginBase implements PumpInterface,
     @Override
     public boolean isHandshakeInProgress() {
         return false;
-    }
-
-    @Override
-    public void finishHandshaking() {
-
     }
 
     @Override
@@ -709,7 +700,7 @@ public class LocalInsightPlugin extends PumpPluginBase implements PumpInterface,
     }
 
     @NonNull @Override
-    public PumpEnactResult setTempBasalAbsolute(Double absoluteRate, Integer durationInMinutes, Profile profile, boolean enforceNew) {
+    public PumpEnactResult setTempBasalAbsolute(double absoluteRate, int durationInMinutes, @NonNull Profile profile, boolean enforceNew) {
         PumpEnactResult result = new PumpEnactResult(getInjector());
         if (activeBasalRate == null) return result;
         if (activeBasalRate.getActiveBasalRate() == 0) return result;
@@ -759,7 +750,7 @@ public class LocalInsightPlugin extends PumpPluginBase implements PumpInterface,
     }
 
     @NonNull @Override
-    public PumpEnactResult setTempBasalPercent(Integer percent, Integer durationInMinutes, Profile profile, boolean enforceNew) {
+    public PumpEnactResult setTempBasalPercent(int percent, int durationInMinutes, @NonNull Profile profile, boolean enforceNew) {
         PumpEnactResult result = new PumpEnactResult(getInjector());
         percent = (int) Math.round(((double) percent) / 10d) * 10;
         if (percent == 100) return cancelTempBasal(true);
@@ -798,7 +789,7 @@ public class LocalInsightPlugin extends PumpPluginBase implements PumpInterface,
     }
 
     @NonNull @Override
-    public PumpEnactResult setExtendedBolus(Double insulin, Integer durationInMinutes) {
+    public PumpEnactResult setExtendedBolus(double insulin, int durationInMinutes) {
         PumpEnactResult result = cancelExtendedBolusOnly();
         if (result.success)
             result = setExtendedBolusOnly(insulin, durationInMinutes, sp.getBoolean(R.string.key_disable_vibration, false));
@@ -987,11 +978,11 @@ public class LocalInsightPlugin extends PumpPluginBase implements PumpInterface,
     }
 
     @NonNull @Override
-    public JSONObject getJSONStatus(Profile profile, String profileName, String version) {
+    public JSONObject getJSONStatus(@NonNull Profile profile, @NonNull String profileName, @NonNull String version) {
         long now = System.currentTimeMillis();
-        if (connectionService == null) return null;
+        if (connectionService == null) return new JSONObject();
         if (System.currentTimeMillis() - connectionService.getLastConnected() > (60 * 60 * 1000)) {
-            return null;
+            return new JSONObject();
         }
 
         final JSONObject pump = new JSONObject();
@@ -1163,19 +1154,6 @@ public class LocalInsightPlugin extends PumpPluginBase implements PumpInterface,
     @NonNull @Override
     public PumpEnactResult loadTDDs() {
         return new PumpEnactResult(getInjector()).success(true);
-    }
-
-    @Override
-    public List<CustomAction> getCustomActions() {
-        return null;
-    }
-
-    @Override
-    public void executeCustomAction(CustomActionType customActionType) {
-    }
-
-    @Nullable @Override public PumpEnactResult executeCustomCommand(CustomCommand customCommand) {
-        return null;
     }
 
     private void readHistory() {

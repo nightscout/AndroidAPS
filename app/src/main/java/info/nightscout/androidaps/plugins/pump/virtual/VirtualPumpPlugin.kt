@@ -18,24 +18,21 @@ import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.logging.LTag
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper
 import info.nightscout.androidaps.plugins.common.ManufacturerType
-import info.nightscout.androidaps.plugins.general.actions.defs.CustomAction
-import info.nightscout.androidaps.plugins.general.actions.defs.CustomActionType
 import info.nightscout.androidaps.plugins.general.overview.events.EventNewNotification
 import info.nightscout.androidaps.plugins.general.overview.events.EventOverviewBolusProgress
 import info.nightscout.androidaps.plugins.general.overview.notifications.Notification
 import info.nightscout.androidaps.plugins.pump.common.defs.PumpType
 import info.nightscout.androidaps.plugins.pump.virtual.events.EventVirtualPumpUpdateGui
 import info.nightscout.androidaps.plugins.treatments.TreatmentsPlugin
-import info.nightscout.androidaps.queue.commands.CustomCommand
 import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.FabricPrivacy
 import info.nightscout.androidaps.utils.InstanceId.instanceId
 import info.nightscout.androidaps.utils.TimeChangeType
-import io.reactivex.rxkotlin.plusAssign
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 import info.nightscout.androidaps.utils.rx.AapsSchedulers
 import info.nightscout.androidaps.utils.sharedPreferences.SP
 import io.reactivex.disposables.CompositeDisposable
+import io.reactivex.rxkotlin.plusAssign
 import org.json.JSONException
 import org.json.JSONObject
 import javax.inject.Inject
@@ -75,7 +72,7 @@ class VirtualPumpPlugin @Inject constructor(
     var pumpType: PumpType? = null
         private set
     private var lastDataTime: Long = 0
-    private val pumpDescription = PumpDescription()
+    override val pumpDescription = PumpDescription()
 
     init {
         pumpDescription.isBolusCapable = true
@@ -129,57 +126,29 @@ class VirtualPumpPlugin @Inject constructor(
         uploadStatus.isVisible = !config.NSCLIENT
     }
 
-    override fun isFakingTempsByExtendedBoluses(): Boolean {
-        return config.NSCLIENT && getFakingStatus()
-    }
+    override val isFakingTempsByExtendedBoluses: Boolean
+        get() = config.NSCLIENT && getFakingStatus()
 
     override fun loadTDDs(): PumpEnactResult { //no result, could read DB in the future?
         return PumpEnactResult(injector)
     }
 
-    override fun getCustomActions(): List<CustomAction>? {
-        return null
-    }
+    override val isInitialized: Boolean = true
+    override val isSuspended: Boolean = false
+    override val isBusy: Boolean = false
+    override val isConnected: Boolean = true
+    override val isConnecting: Boolean = false
+    override val isHandshakeInProgress: Boolean = false
 
-    override fun executeCustomAction(customActionType: CustomActionType) {}
-
-    override fun executeCustomCommand(customCommand: CustomCommand?): PumpEnactResult? {
-        return null
-    }
-
-    override fun isInitialized(): Boolean {
-        return true
-    }
-
-    override fun isSuspended(): Boolean {
-        return false
-    }
-
-    override fun isBusy(): Boolean {
-        return false
-    }
-
-    override fun isConnected(): Boolean {
-        return true
-    }
-
-    override fun isConnecting(): Boolean {
-        return false
-    }
-
-    override fun isHandshakeInProgress(): Boolean {
-        return false
-    }
-
-    override fun finishHandshaking() {}
     override fun connect(reason: String) {
         //if (!Config.NSCLIENT) NSUpload.uploadDeviceStatus()
         lastDataTime = System.currentTimeMillis()
     }
 
+    override fun waitForDisconnectionInSeconds(): Int = 0
     override fun disconnect(reason: String) {}
     override fun stopConnecting() {}
-    override fun getPumpStatus(reason: String?) {
+    override fun getPumpStatus(reason: String) {
         lastDataTime = System.currentTimeMillis()
     }
 
@@ -201,17 +170,14 @@ class VirtualPumpPlugin @Inject constructor(
         return lastDataTime
     }
 
-    override fun getBaseBasalRate(): Double {
-        return profileFunction.getProfile()?.basal ?: 0.0
-    }
+    override val baseBasalRate: Double
+        get() = profileFunction.getProfile()?.basal ?: 0.0
 
-    override fun getReservoirLevel(): Double {
-        return reservoirInUnits.toDouble()
-    }
+    override val reservoirLevel: Double
+        get() = reservoirInUnits.toDouble()
 
-    override fun getBatteryLevel(): Int {
-        return batteryPercent
-    }
+    override val batteryLevel: Int
+        get() = batteryPercent
 
     override fun deliverTreatment(detailedBolusInfo: DetailedBolusInfo): PumpEnactResult {
         val result = PumpEnactResult(injector)
@@ -305,7 +271,7 @@ class VirtualPumpPlugin @Inject constructor(
         return result
     }
 
-    override fun cancelTempBasal(force: Boolean): PumpEnactResult {
+    override fun cancelTempBasal(enforceNew: Boolean): PumpEnactResult {
         val result = PumpEnactResult(injector)
         result.success = true
         result.isTempCancel = true
@@ -392,10 +358,6 @@ class VirtualPumpPlugin @Inject constructor(
         return instanceId()
     }
 
-    override fun getPumpDescription(): PumpDescription {
-        return pumpDescription
-    }
-
     override fun shortStatus(veryShort: Boolean): String {
         return "Virtual Pump"
     }
@@ -405,15 +367,15 @@ class VirtualPumpPlugin @Inject constructor(
     }
 
     fun refreshConfiguration() {
-        val pumptype = sp.getString(R.string.key_virtualpump_type, PumpType.GenericAAPS.description)
-        val pumpTypeNew = PumpType.getByDescription(pumptype)
-        aapsLogger.debug(LTag.PUMP, "Pump in configuration: $pumptype, PumpType object: $pumpTypeNew")
-        if (pumpType == pumpTypeNew) return
-        aapsLogger.debug(LTag.PUMP, "New pump configuration found ($pumpTypeNew), changing from previous ($pumpType)")
+        val pumpType = sp.getString(R.string.key_virtualpump_type, PumpType.GenericAAPS.description)
+        val pumpTypeNew = PumpType.getByDescription(pumpType)
+        aapsLogger.debug(LTag.PUMP, "Pump in configuration: $pumpType, PumpType object: $pumpTypeNew")
+        if (this.pumpType == pumpTypeNew) return
+        aapsLogger.debug(LTag.PUMP, "New pump configuration found ($pumpTypeNew), changing from previous (${this.pumpType})")
         pumpDescription.setPumpDescription(pumpTypeNew)
-        pumpType = pumpTypeNew
+        this.pumpType = pumpTypeNew
     }
 
-    override fun timezoneOrDSTChanged(timeChangeType: TimeChangeType?) {}
+    override fun timezoneOrDSTChanged(timeChangeType: TimeChangeType) {}
 
 }

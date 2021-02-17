@@ -1,12 +1,9 @@
 package info.nightscout.androidaps.plugins.pump.mdi;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 
 import org.json.JSONException;
 import org.json.JSONObject;
-
-import java.util.List;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -24,11 +21,7 @@ import info.nightscout.androidaps.interfaces.PumpInterface;
 import info.nightscout.androidaps.interfaces.PumpPluginBase;
 import info.nightscout.androidaps.logging.AAPSLogger;
 import info.nightscout.androidaps.logging.LTag;
-import info.nightscout.androidaps.plugins.bus.RxBusWrapper;
 import info.nightscout.androidaps.plugins.common.ManufacturerType;
-import info.nightscout.androidaps.plugins.general.actions.defs.CustomAction;
-import info.nightscout.androidaps.plugins.general.actions.defs.CustomActionType;
-import info.nightscout.androidaps.queue.commands.CustomCommand;
 import info.nightscout.androidaps.plugins.pump.common.defs.PumpType;
 import info.nightscout.androidaps.plugins.treatments.TreatmentsPlugin;
 import info.nightscout.androidaps.utils.DateUtil;
@@ -50,7 +43,6 @@ public class MDIPlugin extends PumpPluginBase implements PumpInterface {
     public MDIPlugin(
             HasAndroidInjector injector,
             AAPSLogger aapsLogger,
-            RxBusWrapper rxBus,
             ResourceHelper resourceHelper,
             CommandQueueProvider commandQueue,
             TreatmentsPlugin treatmentsPlugin
@@ -82,8 +74,7 @@ public class MDIPlugin extends PumpPluginBase implements PumpInterface {
     @NonNull @Override
     public PumpEnactResult loadTDDs() {
         //no result, could read DB in the future?
-        PumpEnactResult result = new PumpEnactResult(getInjector());
-        return result;
+        return new PumpEnactResult(getInjector());
     }
 
     @Override
@@ -117,15 +108,15 @@ public class MDIPlugin extends PumpPluginBase implements PumpInterface {
     }
 
     @Override
-    public void finishHandshaking() {
+    public void connect(@NonNull String reason) {
     }
 
     @Override
-    public void connect(String reason) {
+    public void disconnect(@NonNull String reason) {
     }
 
-    @Override
-    public void disconnect(String reason) {
+    @Override public int waitForDisconnectionInSeconds() {
+        return 0;
     }
 
     @Override
@@ -133,11 +124,11 @@ public class MDIPlugin extends PumpPluginBase implements PumpInterface {
     }
 
     @Override
-    public void getPumpStatus(String reason) {
+    public void getPumpStatus(@NonNull String reason) {
     }
 
     @NonNull @Override
-    public PumpEnactResult setNewBasalProfile(Profile profile) {
+    public PumpEnactResult setNewBasalProfile(@NonNull Profile profile) {
         // Do nothing here. we are using ConfigBuilderPlugin.getPlugin().getActiveProfile().getProfile();
         PumpEnactResult result = new PumpEnactResult(getInjector());
         result.success = true;
@@ -145,7 +136,7 @@ public class MDIPlugin extends PumpPluginBase implements PumpInterface {
     }
 
     @Override
-    public boolean isThisProfileSet(Profile profile) {
+    public boolean isThisProfileSet(@NonNull Profile profile) {
         return false;
     }
 
@@ -185,7 +176,7 @@ public class MDIPlugin extends PumpPluginBase implements PumpInterface {
     }
 
     @NonNull @Override
-    public PumpEnactResult setTempBasalAbsolute(Double absoluteRate, Integer durationInMinutes, Profile profile, boolean enforceNew) {
+    public PumpEnactResult setTempBasalAbsolute(double absoluteRate, int durationInMinutes, @NonNull Profile profile, boolean enforceNew) {
         PumpEnactResult result = new PumpEnactResult(getInjector());
         result.success = false;
         result.comment = getResourceHelper().gs(R.string.pumperror);
@@ -194,7 +185,7 @@ public class MDIPlugin extends PumpPluginBase implements PumpInterface {
     }
 
     @NonNull @Override
-    public PumpEnactResult setTempBasalPercent(Integer percent, Integer durationInMinutes, Profile profile, boolean enforceNew) {
+    public PumpEnactResult setTempBasalPercent(int percent, int durationInMinutes, @NonNull Profile profile, boolean enforceNew) {
         PumpEnactResult result = new PumpEnactResult(getInjector());
         result.success = false;
         result.comment = getResourceHelper().gs(R.string.pumperror);
@@ -203,7 +194,7 @@ public class MDIPlugin extends PumpPluginBase implements PumpInterface {
     }
 
     @NonNull @Override
-    public PumpEnactResult setExtendedBolus(Double insulin, Integer durationInMinutes) {
+    public PumpEnactResult setExtendedBolus(double insulin, int durationInMinutes) {
         PumpEnactResult result = new PumpEnactResult(getInjector());
         result.success = false;
         result.comment = getResourceHelper().gs(R.string.pumperror);
@@ -230,7 +221,7 @@ public class MDIPlugin extends PumpPluginBase implements PumpInterface {
     }
 
     @NonNull @Override
-    public JSONObject getJSONStatus(Profile profile, String profileName, String version) {
+    public JSONObject getJSONStatus(@NonNull Profile profile, @NonNull String profileName, @NonNull String version) {
         long now = System.currentTimeMillis();
         JSONObject pump = new JSONObject();
         JSONObject status = new JSONObject();
@@ -238,16 +229,14 @@ public class MDIPlugin extends PumpPluginBase implements PumpInterface {
         try {
             status.put("status", "normal");
             extended.put("Version", version);
-            try {
-                extended.put("ActiveProfile", profileName);
-            } catch (Exception e) {
-            }
+            extended.put("ActiveProfile", profileName);
             status.put("timestamp", DateUtil.toISOString(now));
 
             pump.put("status", status);
             pump.put("extended", extended);
             pump.put("clock", DateUtil.toISOString(now));
         } catch (JSONException e) {
+            getAapsLogger().error("Exception: ", e);
         }
         return pump;
     }
@@ -278,25 +267,12 @@ public class MDIPlugin extends PumpPluginBase implements PumpInterface {
     }
 
     @Override
-    public List<CustomAction> getCustomActions() {
-        return null;
-    }
-
-    @Override
-    public void executeCustomAction(CustomActionType customActionType) {
-    }
-
-    @Nullable @Override public PumpEnactResult executeCustomCommand(CustomCommand customCommand) {
-        return null;
-    }
-
-    @Override
     public boolean canHandleDST() {
         return true;
     }
 
     @Override
-    public void timezoneOrDSTChanged(TimeChangeType changeType) {
+    public void timezoneOrDSTChanged(@NonNull TimeChangeType changeType) {
 
     }
 
