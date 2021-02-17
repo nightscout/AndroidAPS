@@ -32,6 +32,10 @@ public class BasalInsulinProgramElement implements Encodable {
         return numberOfSlots;
     }
 
+    public short getDurationInSeconds() {
+        return (short) (numberOfSlots * 1_800);
+    }
+
     public short getTotalTenthPulses() {
         return totalTenthPulses;
     }

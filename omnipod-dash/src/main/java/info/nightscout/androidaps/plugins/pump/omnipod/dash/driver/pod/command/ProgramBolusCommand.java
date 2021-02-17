@@ -103,7 +103,7 @@ public final class ProgramBolusCommand extends HeaderEnabledCommand {
             short byte10And11 = (short) (numberOfPulses * delayBetweenPulsesInEighthSeconds);
 
             ProgramInsulinCommand interlockCommand = new ProgramInsulinCommand(uniqueId, sequenceNumber, multiCommandFlag, nonce,
-                    Collections.singletonList(new BolusShortInsulinProgramElement(numberOfPulses)), createChecksum((byte) 0x01, byte10And11, numberOfPulses),
+                    Collections.singletonList(new BolusShortInsulinProgramElement(numberOfPulses)), calculateChecksum((byte) 0x01, byte10And11, numberOfPulses),
                     (byte) 0x01, byte10And11, (short) numberOfPulses, ProgramInsulinCommand.DeliveryType.BOLUS);
 
             int delayUntilFirstTenthPulseInUsec = delayBetweenPulsesInEighthSeconds / 8 * 100_000;
@@ -112,8 +112,8 @@ public final class ProgramBolusCommand extends HeaderEnabledCommand {
         }
     }
 
-    private static short createChecksum(byte numberOfSlots, short byte10And11, short numberOfPulses) {
-        return MessageUtil.createCheckSum(ByteBuffer.allocate(7) //
+    private static short calculateChecksum(byte numberOfSlots, short byte10And11, short numberOfPulses) {
+        return MessageUtil.calculateChecksum(ByteBuffer.allocate(7) //
                 .put(numberOfSlots) //
                 .putShort(byte10And11) //
                 .putShort(numberOfPulses) //

@@ -1,4 +1,4 @@
-package info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.command.insulin.program;
+package info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.command.insulin.program.util;
 
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
@@ -6,20 +6,33 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
+import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.command.insulin.program.BasalInsulinProgramElement;
+import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.command.insulin.program.BasalShortInsulinProgramElement;
+import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.command.insulin.program.CurrentBasalInsulinProgramElement;
+import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.command.insulin.program.CurrentSlot;
+import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.command.insulin.program.ShortInsulinProgramElement;
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.definition.BasalProgram;
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.util.MessageUtil;
 
 public final class ProgramBasalUtil {
-    private static final byte NUMBER_OF_BASAL_SLOTS = 48;
-    private static final byte MAX_NUMBER_OF_SLOTS_IN_INSULIN_PROGRAM_ELEMENT = 16;
-    private static final int NUMBER_OF_USEC_IN_SLOT = 1_800_000_000;
+    public static final int NUMBER_OF_USEC_IN_SLOT = 1_800_000_000;
+    public static final byte NUMBER_OF_BASAL_SLOTS = 48;
+    public static final byte MAX_NUMBER_OF_SLOTS_IN_INSULIN_PROGRAM_ELEMENT = 16;
 
     private ProgramBasalUtil() {
     }
 
-    public static List<BasalInsulinProgramElement> mapPulsesPerSlotToLongInsulinProgramElements(short[] tenthPulsesPerSlot) {
-        if (tenthPulsesPerSlot.length != NUMBER_OF_BASAL_SLOTS) {
-            throw new IllegalArgumentException("Basal program must contain 48 slots");
+    public interface BasalInsulinProgramElementFactory<T extends BasalInsulinProgramElement> {
+        T create(byte startSlotIndex, byte numberOfSlots, short totalTenthPulses, int delayBetweenTenthPulsesInUsec);
+    }
+
+    public static List<BasalInsulinProgramElement> mapTenthPulsesPerSlotToLongInsulinProgramElements(short[] tenthPulsesPerSlot) {
+        return mapTenthPulsesPerSlotToLongInsulinProgramElements(tenthPulsesPerSlot, BasalInsulinProgramElement::new);
+    }
+
+    public static <T extends BasalInsulinProgramElement> List<BasalInsulinProgramElement> mapTenthPulsesPerSlotToLongInsulinProgramElements(short[] tenthPulsesPerSlot, BasalInsulinProgramElementFactory<T> insulinProgramElementFactory) {
+        if (tenthPulsesPerSlot.length > NUMBER_OF_BASAL_SLOTS) {
+            throw new IllegalArgumentException("Basal program must contain at most 48 slots");
         }
 
         List<BasalInsulinProgramElement> elements = new ArrayList<>();
@@ -27,12 +40,12 @@ public final class ProgramBasalUtil {
         byte numberOfSlotsInCurrentElement = 0;
         byte startSlotIndex = 0;
 
-        for (int i = 0; i < NUMBER_OF_BASAL_SLOTS; i++) {
+        for (int i = 0; i < tenthPulsesPerSlot.length; i++) {
             if (i == 0) {
                 previousTenthPulsesPerSlot = tenthPulsesPerSlot[i];
                 numberOfSlotsInCurrentElement = 1;
             } else if (previousTenthPulsesPerSlot != tenthPulsesPerSlot[i] || (numberOfSlotsInCurrentElement + 1) * previousTenthPulsesPerSlot > 65_534) {
-                elements.add(new BasalInsulinProgramElement(startSlotIndex, numberOfSlotsInCurrentElement, (short) (previousTenthPulsesPerSlot * numberOfSlotsInCurrentElement), (int) (((long) NUMBER_OF_USEC_IN_SLOT * numberOfSlotsInCurrentElement) / (previousTenthPulsesPerSlot * numberOfSlotsInCurrentElement))));
+                elements.add(insulinProgramElementFactory.create(startSlotIndex, numberOfSlotsInCurrentElement, (short) (previousTenthPulsesPerSlot * numberOfSlotsInCurrentElement), (int) (((long) NUMBER_OF_USEC_IN_SLOT * numberOfSlotsInCurrentElement) / (previousTenthPulsesPerSlot * numberOfSlotsInCurrentElement))));
 
                 previousTenthPulsesPerSlot = tenthPulsesPerSlot[i];
                 numberOfSlotsInCurrentElement = 1;
@@ -41,14 +54,14 @@ public final class ProgramBasalUtil {
                 numberOfSlotsInCurrentElement++;
             }
         }
-        elements.add(new BasalInsulinProgramElement(startSlotIndex, numberOfSlotsInCurrentElement, (short) (previousTenthPulsesPerSlot * numberOfSlotsInCurrentElement), (int) (((long) NUMBER_OF_USEC_IN_SLOT * numberOfSlotsInCurrentElement) / (previousTenthPulsesPerSlot * numberOfSlotsInCurrentElement))));
+        elements.add(insulinProgramElementFactory.create(startSlotIndex, numberOfSlotsInCurrentElement, (short) (previousTenthPulsesPerSlot * numberOfSlotsInCurrentElement), (int) (((long) NUMBER_OF_USEC_IN_SLOT * numberOfSlotsInCurrentElement) / (previousTenthPulsesPerSlot * numberOfSlotsInCurrentElement))));
 
         return elements;
     }
 
     public static List<ShortInsulinProgramElement> mapPulsesPerSlotToShortInsulinProgramElements(short[] pulsesPerSlot) {
-        if (pulsesPerSlot.length != NUMBER_OF_BASAL_SLOTS) {
-            throw new IllegalArgumentException("Basal program must contain 48 slots");
+        if (pulsesPerSlot.length > NUMBER_OF_BASAL_SLOTS) {
+            throw new IllegalArgumentException("Basal program must contain at most 48 slots");
         }
 
         List<ShortInsulinProgramElement> elements = new ArrayList<>();
@@ -57,7 +70,7 @@ public final class ProgramBasalUtil {
         byte numberOfSlotsInCurrentElement = 0;
         byte currentTotalNumberOfSlots = 0;
 
-        while (currentTotalNumberOfSlots < NUMBER_OF_BASAL_SLOTS) {
+        while (currentTotalNumberOfSlots < pulsesPerSlot.length) {
             if (currentTotalNumberOfSlots == 0) {
                 // First slot
 
@@ -83,7 +96,7 @@ public final class ProgramBasalUtil {
                 boolean expectAlternatePulseForNextSegment = false;
                 currentTotalNumberOfSlots++;
                 extraAlternatePulse = true;
-                while (currentTotalNumberOfSlots < NUMBER_OF_BASAL_SLOTS) {
+                while (currentTotalNumberOfSlots < pulsesPerSlot.length) {
                     // Loop rest alternate pulse segment
 
                     if (pulsesPerSlot[currentTotalNumberOfSlots] == previousPulsesPerSlot + (expectAlternatePulseForNextSegment ? 1 : 0)) {
@@ -182,7 +195,7 @@ public final class ProgramBasalUtil {
         return new CurrentSlot(index, (short) (secondsRemaining * 8), pulsesRemaining);
     }
 
-    public static CurrentLongInsulinProgramElement calculateCurrentLongInsulinProgramElement(List<BasalInsulinProgramElement> elements, Date currentTime) {
+    public static CurrentBasalInsulinProgramElement calculateCurrentLongInsulinProgramElement(List<BasalInsulinProgramElement> elements, Date currentTime) {
         Calendar instance = Calendar.getInstance();
         instance.setTime(currentTime);
 
@@ -218,7 +231,7 @@ public final class ProgramBasalUtil {
                 }
                 short remainingTenthPulses = (short) ((remainingTenThousandthPulses % 1_000 != 0 ? 1 : 0) + remainingTenThousandthPulses / 1_000);
 
-                return new CurrentLongInsulinProgramElement(index, delayUntilNextTenthPulseInUsec, remainingTenthPulses);
+                return new CurrentBasalInsulinProgramElement(index, delayUntilNextTenthPulseInUsec, remainingTenthPulses);
             }
 
             index++;
@@ -227,7 +240,7 @@ public final class ProgramBasalUtil {
         throw new IllegalStateException("Could not determine current long insulin program element");
     }
 
-    public static short createChecksum(short[] pulsesPerSlot, CurrentSlot currentSlot) {
+    public static short calculateChecksum(short[] pulsesPerSlot, CurrentSlot currentSlot) {
         ByteBuffer buffer = ByteBuffer.allocate(1 + 2 + 2 + NUMBER_OF_BASAL_SLOTS * 2) //
                 .put(currentSlot.getIndex()) //
                 .putShort(currentSlot.getPulsesRemaining()) //
@@ -237,6 +250,6 @@ public final class ProgramBasalUtil {
             buffer.putShort(pulses);
         }
 
-        return MessageUtil.createCheckSum(buffer.array());
+        return MessageUtil.calculateChecksum(buffer.array());
     }
 }

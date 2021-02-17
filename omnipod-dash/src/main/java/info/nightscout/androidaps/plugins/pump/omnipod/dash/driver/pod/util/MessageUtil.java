@@ -30,7 +30,7 @@ public class MessageUtil {
         return s;
     }
 
-    public static short createCheckSum(byte[] bytes) {
+    public static short calculateChecksum(byte[] bytes) {
         short sum = 0;
         for (byte b : bytes) {
             sum += (short) (b & 0xff);

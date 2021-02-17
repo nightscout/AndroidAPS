@@ -69,7 +69,7 @@ final class ProgramInsulinCommand extends NonceEnabledCommand {
         }
     }
 
-    public short createChecksum(byte[] bytes) {
+    public short calculateChecksum(byte[] bytes) {
         short sum = 0;
         for (byte b : bytes) {
             sum += (short) (b & 0xff);

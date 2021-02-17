@@ -1,11 +1,11 @@
 package info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.command.insulin.program;
 
-public class CurrentLongInsulinProgramElement {
+public class CurrentBasalInsulinProgramElement {
     private final byte index;
     private final int delayUntilNextTenthPulseInUsec;
     private final short remainingTenthPulses;
 
-    public CurrentLongInsulinProgramElement(byte index, int delayUntilNextTenthPulseInUsec, short remainingTenthPulses) {
+    public CurrentBasalInsulinProgramElement(byte index, int delayUntilNextTenthPulseInUsec, short remainingTenthPulses) {
         this.index = index;
         this.delayUntilNextTenthPulseInUsec = delayUntilNextTenthPulseInUsec;
         this.remainingTenthPulses = remainingTenthPulses;
