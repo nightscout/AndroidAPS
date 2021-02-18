@@ -6,6 +6,8 @@ apply plugin: 'com.google.gms.google-services'
 apply plugin: 'com.hiya.jacoco-android'
 apply plugin: 'com.google.firebase.crashlytics'
 
+apply from: "${project.rootDir}/gradle/android_dependencies.gradle"
+
 jacoco {
     toolVersion = "0.8.6"
 }
@@ -103,12 +105,9 @@ tasks.matching { it instanceof Test }.all {
 }
 
 android {
-    compileSdkVersion 28
     ndkVersion "21.1.6352462"
 
     defaultConfig {
-        minSdkVersion 26
-        targetSdkVersion 28
         multiDexEnabled true
         versionCode 1500
         version "2.8.2.1-dev-b"
@@ -117,37 +116,12 @@ android {
         buildConfigField "String", "REMOTE", '"' + generateGitRemote() + '"'
         buildConfigField "String", "HEAD", '"' + generateGitBuild() + '"'
         buildConfigField "String", "COMMITTED", '"' + allCommitted() + '"'
-        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
-        // if you change minSdkVersion to less than 11, you need to change executeTask for wear
 
         ndk {
             moduleName "BleCommandUtil"
         }
     }
-    kotlinOptions {
-        jvmTarget = '1.8'
-    }
-    buildFeatures {
-        viewBinding true
-    }
-    lintOptions {
-        checkReleaseBuilds false
-        disable 'MissingTranslation'
-        disable 'ExtraTranslation'
-    }
-    buildTypes {
-        release {
-            minifyEnabled false
-            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
-        }
-        debug {
-            testCoverageEnabled(project.hasProperty('coverage'))
-        }
-        firebaseDisable {
-            System.setProperty("disableFirebase", "true")
-            ext.enableCrashlytics = false
-        }
-    }
+
     flavorDimensions "standard"
     productFlavors {
         full {
@@ -191,13 +165,8 @@ android {
             ]
         }
     }
-    compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_8
-        targetCompatibility JavaVersion.VERSION_1_8
-    }
 
     useLibrary "org.apache.http.legacy"
-
 }
 
 allprojects {

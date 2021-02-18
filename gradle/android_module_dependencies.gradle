@@ -1,0 +1,9 @@
+android {
+
+    flavorDimensions "standard"
+    productFlavors {
+        full {
+            dimension "standard"
+        }
+    }
+}
