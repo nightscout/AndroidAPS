@@ -196,18 +196,6 @@ android {
         targetCompatibility JavaVersion.VERSION_1_8
     }
 
-    testOptions {
-        unitTests {
-            returnDefaultValues = true
-            includeAndroidResources = true
-
-            all {
-                maxParallelForks = 10
-                forkEvery = 20
-            }
-        }
-    }
-
     useLibrary "org.apache.http.legacy"
 
 }
@@ -235,27 +223,9 @@ dependencies {
 
     implementation fileTree(include: ['*.jar'], dir: 'libs')
 
-    testImplementation "junit:junit:$junit_version"
-    testImplementation 'org.json:json:20201115'
-    testImplementation "org.mockito:mockito-core:${mockitoVersion}"
-    testImplementation "org.powermock:powermock-api-mockito2:${powermockVersion}"
-    testImplementation "org.powermock:powermock-module-junit4-rule-agent:${powermockVersion}"
-    testImplementation "org.powermock:powermock-module-junit4-rule:${powermockVersion}"
-    testImplementation "org.powermock:powermock-module-junit4:${powermockVersion}"
-    testImplementation "joda-time:joda-time:$jodatime_version"
-    testImplementation('com.google.truth:truth:1.1.2') {
-        exclude group: "com.google.guava", module: "guava"
-    }
-    testImplementation "org.skyscreamer:jsonassert:1.5.0"
-    testImplementation "org.hamcrest:hamcrest-all:1.3"
-
-    androidTestImplementation 'androidx.test.espresso:espresso-core:3.4.0-alpha04'
-    androidTestImplementation "androidx.test.ext:junit:$androidx_junit"
-    androidTestImplementation "androidx.test:rules:$androidx_rules"
-
     /* Dagger2 - We are going to use dagger.android which includes
-    * support for Activity and fragment injection so we need to include
-    * the following dependencies */
+     * support for Activity and fragment injection so we need to include
+     * the following dependencies */
 
 
     annotationProcessor "com.google.dagger:dagger-compiler:$dagger_version"
@@ -264,9 +234,10 @@ dependencies {
 
     /* Dagger2 - default dependency */
     kapt "com.google.dagger:dagger-compiler:$dagger_version"
-
-    androidTestImplementation 'androidx.test.uiautomator:uiautomator:2.2.0'
 }
+
+apply from: "${project.rootDir}/gradle/test_dependencies.gradle"
+
 
 /*
 // Run 'adb' shell command to clear application data of main app for 'debug' variant
