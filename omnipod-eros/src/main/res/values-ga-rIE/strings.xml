@@ -22,8 +22,8 @@
     <!-- Omnipod - Pod Management -->
     <string name="omnipod_pod_management_heading_actions">Gníomhartha</string>
     <!-- Omnipod - Wizard common -->
-    <string name="omnipod_wizard_button_next">Ar Aghaidh</string>
-    <string name="omnipod_wizard_exit_confirmation_title">Scoir</string>
+    <string name="omnipod_common_wizard_button_next">Ar Aghaidh</string>
+    <string name="omnipod_common_wizard_exit_confirmation_title">Scoir</string>
     <!-- Omnipod - Pod activation Wizard -->
     <!-- Omnipod - Pod deactivation Wizard -->
     <!-- Omnipod - Overview -->

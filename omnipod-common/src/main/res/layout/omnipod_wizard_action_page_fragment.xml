@@ -56,7 +56,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="10dp"
-            android:text="@string/omnipod_wizard_button_deactivate_pod"
+            android:text="@string/omnipod_common_wizard_button_deactivate_pod"
             android:visibility="gone" />
 
         <Button
@@ -64,7 +64,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="10dp"
-            android:text="@string/omnipod_wizard_button_discard_pod"
+            android:text="@string/omnipod_common_wizard_button_discard_pod"
             android:visibility="gone" />
 
         <Button
@@ -72,7 +72,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="10dp"
-            android:text="@string/omnipod_wizard_button_retry"
+            android:text="@string/omnipod_common_wizard_button_retry"
             android:visibility="gone" />
     </LinearLayout>
 </LinearLayout>

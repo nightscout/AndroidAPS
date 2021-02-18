@@ -164,14 +164,14 @@
     <string name="omnipod_pod_management_button_play_test_beep">Tester bips</string>
     <string name="omnipod_pod_management_button_playing_test_beep">Test des bips…</string>
     <!-- Omnipod - Wizard common -->
-    <string name="omnipod_wizard_button_cancel">Annuler</string>
-    <string name="omnipod_wizard_button_finish">Terminer</string>
-    <string name="omnipod_wizard_button_next">Suivant</string>
-    <string name="omnipod_wizard_button_retry">Réessayer</string>
-    <string name="omnipod_wizard_button_deactivate_pod">Désactiver Pod</string>
-    <string name="omnipod_wizard_button_discard_pod">Supprimer Pod</string>
-    <string name="omnipod_wizard_exit_confirmation_text">Vous n\'avez pas encore terminé toutes les étapes. Êtes-vous sûr de vouloir quitter ?</string>
-    <string name="omnipod_wizard_exit_confirmation_title">Quitter</string>
+    <string name="omnipod_common_wizard_button_cancel">Annuler</string>
+    <string name="omnipod_common_wizard_button_finish">Terminer</string>
+    <string name="omnipod_common_wizard_button_next">Suivant</string>
+    <string name="omnipod_common_wizard_button_retry">Réessayer</string>
+    <string name="omnipod_common_wizard_button_deactivate_pod">Désactiver Pod</string>
+    <string name="omnipod_common_wizard_button_discard_pod">Supprimer Pod</string>
+    <string name="omnipod_common_wizard_exit_confirmation_text">Vous n\'avez pas encore terminé toutes les étapes. Êtes-vous sûr de vouloir quitter ?</string>
+    <string name="omnipod_common_wizard_exit_confirmation_title">Quitter</string>
     <!-- Omnipod - Pod activation Wizard -->
     <string name="omnipod_pod_activation_wizard_fill_pod_title">Remplir Pod</string>
     <string name="omnipod_pod_activation_wizard_fill_pod_text">Remplir le nouveau Pod avec suffisamment d\'insuline pendant 3 jours.\n\nÉcoutez les deux bips du Pod pendant le processus de remplissage. Ils indiquent que la quantité minimale de 85U a été ajouté. Assurez-vous de vider complètement la seringue de remplissage, même après avoir entendu les deux bips.\n\nAprès avoir rempli le Pod, veuillez appuyer sur <b>Suivant</b>.\n\n<b>Remarque :</b> Ne retirez pas la protection de l\'aiguille du Pod pour le moment.\n<b>Remarque :</b>Veuillez placer le RileyLink en position verticale et placez le Pod quelques centimètres à côté.</string>

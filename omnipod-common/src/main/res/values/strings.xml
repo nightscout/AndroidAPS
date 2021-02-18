@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Omnipod - Wizard common -->
+    <string name="omnipod_common_wizard_button_cancel">Cancel</string>
+    <string name="omnipod_common_wizard_button_finish">Finish</string>
+    <string name="omnipod_common_wizard_button_next">Next</string>
+    <string name="omnipod_common_wizard_button_retry">Retry</string>
+    <string name="omnipod_common_wizard_button_deactivate_pod">Deactivate Pod</string>
+    <string name="omnipod_common_wizard_button_discard_pod">Discard Pod</string>
+    <string name="omnipod_common_wizard_exit_confirmation_text">You haven\'t completed all steps yet. Are you sure you want to exit?</string>
+    <string name="omnipod_common_wizard_exit_confirmation_title">Exit</string>
+</resources>
