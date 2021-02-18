@@ -10,7 +10,7 @@ import static org.junit.Assert.assertArrayEquals;
 
 public class ProgramTempBasalCommandTest {
     @Test
-    public void testAlternateSegmentTempBasal() throws DecoderException {
+    public void testExtraAlternateSegmentPulseTempBasal() throws DecoderException {
         ProgramTempBasalCommand command = new ProgramTempBasalCommand.Builder() //
                 .setUniqueId(37879809) //
                 .setNonce(1229869870) //
