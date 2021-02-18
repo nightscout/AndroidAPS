@@ -36,6 +36,12 @@ android {
             ext.enableCrashlytics = false
         }
     }
+    flavorDimensions "standard"
+    productFlavors {
+        full {
+            dimension "standard"
+        }
+    }
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
