@@ -17,7 +17,6 @@ import info.nightscout.androidaps.plugins.configBuilder.ConstraintChecker
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.AutosensResult
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.GlucoseStatus
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.IobCobCalculatorPlugin
-import info.nightscout.androidaps.plugins.treatments.TreatmentsPlugin
 import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.HardLimits
 import info.nightscout.androidaps.utils.Profiler
@@ -37,7 +36,7 @@ open class OpenAPSSMBPlugin @Inject constructor(
     private val profileFunction: ProfileFunction,
     private val context: Context,
     private val activePlugin: ActivePluginProvider,
-    private val treatmentsPlugin: TreatmentsPlugin,
+    private val treatmentsPlugin: TreatmentsInterface,
     private val iobCobCalculatorPlugin: IobCobCalculatorPlugin,
     private val hardLimits: HardLimits,
     private val profiler: Profiler,

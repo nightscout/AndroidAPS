@@ -20,12 +20,13 @@ import org.junit.Before
 import org.mockito.Mock
 import org.powermock.core.classloader.annotations.PrepareForTest
 
+@Suppress("SpellCheckingInspection")
 @PrepareForTest(FabricPrivacy::class)
 open class TestBaseWithProfile : TestBase() {
 
     @Mock lateinit var activePluginProvider: ActivePluginProvider
     @Mock lateinit var resourceHelper: ResourceHelper
-    @Mock lateinit var treatmentsPlugin: TreatmentsInterface
+    @Mock lateinit var treatmentsInterface: TreatmentsInterface
     @Mock lateinit var fabricPrivacy: FabricPrivacy
     @Mock lateinit var profileFunction: ProfileFunction
     @Mock lateinit var defaultValueHelper: DefaultValueHelper
@@ -45,7 +46,7 @@ open class TestBaseWithProfile : TestBase() {
                 it.configInterface = configInterface
             }
             if (it is ProfileSwitch) {
-                it.treatmentsPlugin = treatmentsPlugin
+                it.treatmentsPlugin = treatmentsInterface
                 it.aapsLogger = aapsLogger
                 it.rxBus = rxBus
                 it.resourceHelper = resourceHelper

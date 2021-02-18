@@ -2,6 +2,7 @@ package info.nightscout.androidaps.danars.comm
 
 import dagger.android.AndroidInjector
 import dagger.android.HasAndroidInjector
+import info.nightscout.androidaps.dana.comm.RecordTypes
 import info.nightscout.androidaps.danars.DanaRSTestBase
 import info.nightscout.androidaps.interfaces.DatabaseHelperInterface
 import info.nightscout.androidaps.plugins.general.nsclient.NSUpload
@@ -48,8 +49,11 @@ class DanaRSPacketHistoryAlarmTest : DanaRSTestBase() {
         putByteToArray(array, 9, 100) // value
 
         packet.handleMessage(array)
-        Assert.assertEquals(info.nightscout.androidaps.dana.comm.RecordTypes.RECORD_TYPE_ALARM, packet.danaRHistoryRecord.recordCode)
-        val date = Calendar.getInstance().also { it.set(2019, 2, 4, 20, 11, 35) }
+        Assert.assertEquals(RecordTypes.RECORD_TYPE_ALARM, packet.danaRHistoryRecord.recordCode)
+        val date = GregorianCalendar().also {
+            it.clear()
+            it.set(2019, 1, 4, 20, 11, 35)
+        }
         Assert.assertEquals(date.timeInMillis, packet.danaRHistoryRecord.recordDate)
         Assert.assertEquals("Occlusion", packet.danaRHistoryRecord.recordAlarm)
         Assert.assertEquals(3.56, packet.danaRHistoryRecord.recordValue, 0.01)

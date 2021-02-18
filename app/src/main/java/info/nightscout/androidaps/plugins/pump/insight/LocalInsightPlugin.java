@@ -49,6 +49,7 @@ import info.nightscout.androidaps.interfaces.ProfileFunction;
 import info.nightscout.androidaps.interfaces.PumpDescription;
 import info.nightscout.androidaps.interfaces.PumpInterface;
 import info.nightscout.androidaps.interfaces.PumpPluginBase;
+import info.nightscout.androidaps.interfaces.TreatmentsInterface;
 import info.nightscout.androidaps.logging.AAPSLogger;
 import info.nightscout.androidaps.logging.LTag;
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper;
@@ -129,7 +130,6 @@ import info.nightscout.androidaps.plugins.pump.insight.exceptions.app_layer_erro
 import info.nightscout.androidaps.plugins.pump.insight.exceptions.app_layer_errors.NoActiveTBRToCanceLException;
 import info.nightscout.androidaps.plugins.pump.insight.utils.ExceptionTranslator;
 import info.nightscout.androidaps.plugins.pump.insight.utils.ParameterBlockUtil;
-import info.nightscout.androidaps.plugins.treatments.TreatmentsPlugin;
 import info.nightscout.androidaps.utils.DateUtil;
 import info.nightscout.androidaps.utils.TimeChangeType;
 import info.nightscout.androidaps.utils.resources.ResourceHelper;
@@ -141,7 +141,7 @@ public class LocalInsightPlugin extends PumpPluginBase implements PumpInterface,
     private final AAPSLogger aapsLogger;
     private final RxBusWrapper rxBus;
     private final ResourceHelper resourceHelper;
-    private final TreatmentsPlugin treatmentsPlugin;
+    private final TreatmentsInterface treatmentsPlugin;
     private final SP sp;
     private final CommandQueueProvider commandQueue;
     private final ProfileFunction profileFunction;
@@ -203,7 +203,7 @@ public class LocalInsightPlugin extends PumpPluginBase implements PumpInterface,
             AAPSLogger aapsLogger,
             RxBusWrapper rxBus,
             ResourceHelper resourceHelper,
-            TreatmentsPlugin treatmentsPlugin,
+            TreatmentsInterface treatmentsPlugin,
             SP sp,
             CommandQueueProvider commandQueue,
             ProfileFunction profileFunction,

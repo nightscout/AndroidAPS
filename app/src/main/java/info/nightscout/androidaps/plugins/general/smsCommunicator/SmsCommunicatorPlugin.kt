@@ -450,7 +450,7 @@ class SmsCommunicatorPlugin @Inject constructor(
 
     private fun processTREATMENTS(divided: Array<String>, receivedSms: Sms) {
         if (divided[1].toUpperCase(Locale.getDefault()) == "REFRESH") {
-            (activePlugin.activeTreatments as TreatmentsPlugin).service.resetTreatments()
+            activePlugin.activeTreatments.service.resetTreatments()
             rxBus.send(EventNSClientRestart())
             sendSMS(Sms(receivedSms.phoneNumber, "TREATMENTS REFRESH SENT"))
             receivedSms.processed = true

@@ -154,16 +154,16 @@ class SmsCommunicatorPluginTest : TestBaseWithProfile() {
         }.`when`(commandQueue).extendedBolus(ArgumentMatchers.anyDouble(), ArgumentMatchers.anyInt(), ArgumentMatchers.any(Callback::class.java))
 
         `when`(activePlugin.activePump).thenReturn(virtualPumpPlugin)
-        `when`(activePlugin.activeTreatments).thenReturn(treatmentsPlugin)
+        `when`(activePlugin.activeTreatments).thenReturn(treatmentsInterface)
 
         `when`(virtualPumpPlugin.shortStatus(ArgumentMatchers.anyBoolean())).thenReturn("Virtual Pump")
         `when`(virtualPumpPlugin.isSuspended()).thenReturn(false)
         `when`(virtualPumpPlugin.pumpDescription).thenReturn(PumpDescription())
         `when`(virtualPumpPlugin.model()).thenReturn(PumpType.GenericAAPS)
 
-        `when`(treatmentsPlugin.lastCalculationTreatments).thenReturn(IobTotal(0))
-        `when`(treatmentsPlugin.lastCalculationTempBasals).thenReturn(IobTotal(0))
-        `when`(treatmentsPlugin.service).thenReturn(treatmentService)
+        `when`(treatmentsInterface.lastCalculationTreatments).thenReturn(IobTotal(0))
+        `when`(treatmentsInterface.lastCalculationTempBasals).thenReturn(IobTotal(0))
+        `when`(treatmentsInterface.service).thenReturn(treatmentService)
 
         `when`(activePlugin.activeProfileInterface).thenReturn(localProfilePlugin)
 
