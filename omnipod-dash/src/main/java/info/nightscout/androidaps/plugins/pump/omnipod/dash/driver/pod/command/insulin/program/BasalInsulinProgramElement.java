@@ -4,23 +4,23 @@ import java.nio.ByteBuffer;
 
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.definition.Encodable;
 
+import static info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.command.insulin.program.util.ProgramBasalUtil.MAX_DELAY_BETWEEN_TENTH_PULSES_IN_USEC_AND_USECS_IN_BASAL_SLOT;
+
 public class BasalInsulinProgramElement implements Encodable {
     private final byte startSlotIndex;
     private final byte numberOfSlots;
     private final short totalTenthPulses;
-    private final int delayBetweenTenthPulsesInUsec;
 
-    public BasalInsulinProgramElement(byte startSlotIndex, byte numberOfSlots, short totalTenthPulses, int delayBetweenTenthPulsesInUsec) {
+    public BasalInsulinProgramElement(byte startSlotIndex, byte numberOfSlots, short totalTenthPulses) {
         this.startSlotIndex = startSlotIndex;
         this.numberOfSlots = numberOfSlots;
         this.totalTenthPulses = totalTenthPulses;
-        this.delayBetweenTenthPulsesInUsec = delayBetweenTenthPulsesInUsec;
     }
 
     @Override public byte[] getEncoded() {
         return ByteBuffer.allocate(6) //
                 .putShort(totalTenthPulses) //
-                .putInt(delayBetweenTenthPulsesInUsec) //
+                .putInt(totalTenthPulses == 0 ? Integer.MIN_VALUE | getDelayBetweenTenthPulsesInUsec() : getDelayBetweenTenthPulsesInUsec()) //
                 .array();
     }
 
@@ -41,7 +41,10 @@ public class BasalInsulinProgramElement implements Encodable {
     }
 
     public int getDelayBetweenTenthPulsesInUsec() {
-        return delayBetweenTenthPulsesInUsec;
+        if (totalTenthPulses == 0) {
+            return MAX_DELAY_BETWEEN_TENTH_PULSES_IN_USEC_AND_USECS_IN_BASAL_SLOT;
+        }
+        return (int) (((long) MAX_DELAY_BETWEEN_TENTH_PULSES_IN_USEC_AND_USECS_IN_BASAL_SLOT * numberOfSlots) / (double) totalTenthPulses);
     }
 
     @Override public String toString() {
@@ -49,7 +52,7 @@ public class BasalInsulinProgramElement implements Encodable {
                 "startSlotIndex=" + startSlotIndex +
                 ", numberOfSlots=" + numberOfSlots +
                 ", totalTenthPulses=" + totalTenthPulses +
-                ", delayBetweenTenthPulsesInUsec=" + delayBetweenTenthPulsesInUsec +
+                ", delayBetweenTenthPulsesInUsec=" + getDelayBetweenTenthPulsesInUsec() +
                 '}';
     }
 }

@@ -2,29 +2,17 @@ package info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.command.
 
 import java.nio.ByteBuffer;
 
-import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.command.ProgramTempBasalCommand;
-
 public class TempBasalInsulinProgramElement extends BasalInsulinProgramElement {
-    private final ProgramTempBasalCommand.TempBasalMethod tempBasalMethod;
-
-    public TempBasalInsulinProgramElement(byte startSlotIndex, byte numberOfSlots, short totalTenthPulses, int delayBetweenTenthPulsesInUsec, ProgramTempBasalCommand.TempBasalMethod tempBasalMethod) {
-        super(startSlotIndex, numberOfSlots, totalTenthPulses, delayBetweenTenthPulsesInUsec);
-        this.tempBasalMethod = tempBasalMethod;
+    public TempBasalInsulinProgramElement(byte startSlotIndex, byte numberOfSlots, short totalTenthPulses) {
+        super(startSlotIndex, numberOfSlots, totalTenthPulses);
     }
 
     @Override public byte[] getEncoded() {
         ByteBuffer buffer = ByteBuffer.allocate(6);
         if (getTotalTenthPulses() == 0) {
-            if (tempBasalMethod == ProgramTempBasalCommand.TempBasalMethod.FIRST_METHOD) {
-                for (int i = 0; i < getNumberOfSlots(); i++) {
-                    buffer.putShort((short) 0) //
-                            .putInt((int) ((long) getDurationInSeconds() * 1_000_000d / getNumberOfSlots()));
-                }
-            } else {
-                // Zero basal and temp basal second method
-                buffer.putShort(getNumberOfSlots()) //
-                        .putInt((int) ((long) getDurationInSeconds() * 1_000_000d / getNumberOfSlots()));
-            }
+            int i = ((int) ((((double) getDurationInSeconds()) * 1_000_000.0d) / ((double) getNumberOfSlots()))) | Integer.MIN_VALUE;
+            buffer.putShort(getNumberOfSlots()) //
+                    .putInt(i);
         } else {
             buffer.putShort(getTotalTenthPulses()) //
                     .putInt(getDelayBetweenTenthPulsesInUsec());

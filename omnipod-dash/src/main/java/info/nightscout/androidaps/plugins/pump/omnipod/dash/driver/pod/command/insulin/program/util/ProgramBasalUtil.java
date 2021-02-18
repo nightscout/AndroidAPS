@@ -15,7 +15,8 @@ import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.definitio
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.util.MessageUtil;
 
 public final class ProgramBasalUtil {
-    public static final int NUMBER_OF_USEC_IN_SLOT = 1_800_000_000;
+    public static final int MAX_DELAY_BETWEEN_TENTH_PULSES_IN_USEC_AND_USECS_IN_BASAL_SLOT = 1_800_000_000;
+
     public static final byte NUMBER_OF_BASAL_SLOTS = 48;
     public static final byte MAX_NUMBER_OF_SLOTS_IN_INSULIN_PROGRAM_ELEMENT = 16;
 
@@ -23,7 +24,7 @@ public final class ProgramBasalUtil {
     }
 
     public interface BasalInsulinProgramElementFactory<T extends BasalInsulinProgramElement> {
-        T create(byte startSlotIndex, byte numberOfSlots, short totalTenthPulses, int delayBetweenTenthPulsesInUsec);
+        T create(byte startSlotIndex, byte numberOfSlots, short totalTenthPulses);
     }
 
     public static List<BasalInsulinProgramElement> mapTenthPulsesPerSlotToLongInsulinProgramElements(short[] tenthPulsesPerSlot) {
@@ -45,7 +46,7 @@ public final class ProgramBasalUtil {
                 previousTenthPulsesPerSlot = tenthPulsesPerSlot[i];
                 numberOfSlotsInCurrentElement = 1;
             } else if (previousTenthPulsesPerSlot != tenthPulsesPerSlot[i] || (numberOfSlotsInCurrentElement + 1) * previousTenthPulsesPerSlot > 65_534) {
-                elements.add(insulinProgramElementFactory.create(startSlotIndex, numberOfSlotsInCurrentElement, (short) (previousTenthPulsesPerSlot * numberOfSlotsInCurrentElement), (int) (((long) NUMBER_OF_USEC_IN_SLOT * numberOfSlotsInCurrentElement) / (previousTenthPulsesPerSlot * numberOfSlotsInCurrentElement))));
+                elements.add(insulinProgramElementFactory.create(startSlotIndex, numberOfSlotsInCurrentElement, (short) (previousTenthPulsesPerSlot * numberOfSlotsInCurrentElement)));
 
                 previousTenthPulsesPerSlot = tenthPulsesPerSlot[i];
                 numberOfSlotsInCurrentElement = 1;
@@ -54,7 +55,7 @@ public final class ProgramBasalUtil {
                 numberOfSlotsInCurrentElement++;
             }
         }
-        elements.add(insulinProgramElementFactory.create(startSlotIndex, numberOfSlotsInCurrentElement, (short) (previousTenthPulsesPerSlot * numberOfSlotsInCurrentElement), (int) (((long) NUMBER_OF_USEC_IN_SLOT * numberOfSlotsInCurrentElement) / (previousTenthPulsesPerSlot * numberOfSlotsInCurrentElement))));
+        elements.add(insulinProgramElementFactory.create(startSlotIndex, numberOfSlotsInCurrentElement, (short) (previousTenthPulsesPerSlot * numberOfSlotsInCurrentElement)));
 
         return elements;
     }
@@ -83,7 +84,7 @@ public final class ProgramBasalUtil {
                 if (numberOfSlotsInCurrentElement < MAX_NUMBER_OF_SLOTS_IN_INSULIN_PROGRAM_ELEMENT) {
                     numberOfSlotsInCurrentElement++;
                 } else {
-                    elements.add(new BasalShortInsulinProgramElement(numberOfSlotsInCurrentElement, previousPulsesPerSlot, false));
+                    elements.add(new BasalShortInsulinProgramElement(numberOfSlotsInCurrentElement, previousPulsesPerSlot, extraAlternatePulse));
                     previousPulsesPerSlot = pulsesPerSlot[currentTotalNumberOfSlots];
                     numberOfSlotsInCurrentElement = 1;
                     extraAlternatePulse = false;
@@ -95,6 +96,7 @@ public final class ProgramBasalUtil {
 
                 boolean expectAlternatePulseForNextSegment = false;
                 currentTotalNumberOfSlots++;
+                numberOfSlotsInCurrentElement++;
                 extraAlternatePulse = true;
                 while (currentTotalNumberOfSlots < pulsesPerSlot.length) {
                     // Loop rest alternate pulse segment
@@ -110,7 +112,7 @@ public final class ProgramBasalUtil {
                         } else {
                             // End of alternate pulse segment (no slots left in element)
 
-                            elements.add(new BasalShortInsulinProgramElement(numberOfSlotsInCurrentElement, previousPulsesPerSlot, true));
+                            elements.add(new BasalShortInsulinProgramElement(numberOfSlotsInCurrentElement, previousPulsesPerSlot, extraAlternatePulse));
                             previousPulsesPerSlot = pulsesPerSlot[currentTotalNumberOfSlots];
                             numberOfSlotsInCurrentElement = 1;
                             extraAlternatePulse = false;
@@ -119,7 +121,7 @@ public final class ProgramBasalUtil {
                     } else {
                         // End of alternate pulse segment (new number of pulses per slot)
 
-                        elements.add(new BasalShortInsulinProgramElement(numberOfSlotsInCurrentElement, previousPulsesPerSlot, true));
+                        elements.add(new BasalShortInsulinProgramElement(numberOfSlotsInCurrentElement, previousPulsesPerSlot, extraAlternatePulse));
                         previousPulsesPerSlot = pulsesPerSlot[currentTotalNumberOfSlots];
                         numberOfSlotsInCurrentElement = 1;
                         extraAlternatePulse = false;
@@ -129,7 +131,7 @@ public final class ProgramBasalUtil {
                 }
             } else if (previousPulsesPerSlot != pulsesPerSlot[currentTotalNumberOfSlots]) {
                 // End of segment (new number of pulses per slot)
-                elements.add(new BasalShortInsulinProgramElement(numberOfSlotsInCurrentElement, previousPulsesPerSlot, false));
+                elements.add(new BasalShortInsulinProgramElement(numberOfSlotsInCurrentElement, previousPulsesPerSlot, extraAlternatePulse));
 
                 previousPulsesPerSlot = pulsesPerSlot[currentTotalNumberOfSlots];
                 currentTotalNumberOfSlots++;

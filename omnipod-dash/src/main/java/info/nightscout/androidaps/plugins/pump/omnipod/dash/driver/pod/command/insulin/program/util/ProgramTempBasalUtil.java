@@ -3,7 +3,6 @@ package info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.command.
 import java.nio.ByteBuffer;
 import java.util.List;
 
-import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.command.ProgramTempBasalCommand;
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.command.insulin.program.BasalInsulinProgramElement;
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.command.insulin.program.ShortInsulinProgramElement;
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.command.insulin.program.TempBasalInsulinProgramElement;
@@ -13,10 +12,8 @@ public final class ProgramTempBasalUtil {
     private ProgramTempBasalUtil() {
     }
 
-    public static List<BasalInsulinProgramElement> mapTenthPulsesPerSlotToLongInsulinProgramElements(short[] tenthPulsesPerSlot, ProgramTempBasalCommand.TempBasalMethod tempBasalMethod) {
-        return ProgramBasalUtil.mapTenthPulsesPerSlotToLongInsulinProgramElements(tenthPulsesPerSlot,
-                (startSlotIndex, numberOfSlots, totalTenthPulses, delayBetweenTenthPulsesInUsec) ->
-                        new TempBasalInsulinProgramElement(startSlotIndex, numberOfSlots, totalTenthPulses, delayBetweenTenthPulsesInUsec, tempBasalMethod));
+    public static List<BasalInsulinProgramElement> mapTenthPulsesPerSlotToLongInsulinProgramElements(short[] tenthPulsesPerSlot) {
+        return ProgramBasalUtil.mapTenthPulsesPerSlotToLongInsulinProgramElements(tenthPulsesPerSlot, TempBasalInsulinProgramElement::new);
     }
 
     public static short[] mapTempBasalToTenthPulsesPerSlot(int durationInSlots, double rateInUnitsPerHour) {

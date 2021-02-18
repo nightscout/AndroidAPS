@@ -18,36 +18,17 @@ public final class ProgramTempBasalCommand extends HeaderEnabledCommand {
     private final ProgramInsulinCommand interlockCommand;
     private final ProgramReminder programReminder;
     private final List<BasalInsulinProgramElement> insulinProgramElements;
-    private final TempBasalMethod tempBasalMethod;
 
-    protected ProgramTempBasalCommand(ProgramInsulinCommand interlockCommand, int uniqueId, short sequenceNumber, boolean multiCommandFlag, ProgramReminder programReminder,
-                                      List<BasalInsulinProgramElement> insulinProgramElements, TempBasalMethod tempBasalMethod) {
+    protected ProgramTempBasalCommand(ProgramInsulinCommand interlockCommand, int uniqueId, short sequenceNumber, boolean multiCommandFlag,
+                                      ProgramReminder programReminder, List<BasalInsulinProgramElement> insulinProgramElements) {
         super(CommandType.PROGRAM_TEMP_BASAL, uniqueId, sequenceNumber, multiCommandFlag);
         this.interlockCommand = interlockCommand;
         this.programReminder = programReminder;
         this.insulinProgramElements = new ArrayList<>(insulinProgramElements);
-        this.tempBasalMethod = tempBasalMethod;
-    }
-
-    public TempBasalMethod getTempBasalMethod() {
-        return tempBasalMethod;
     }
 
     public byte getBodyLength() {
-        byte bodyLength = (byte) (insulinProgramElements.size() * 6 + 8);
-
-        if (tempBasalMethod == TempBasalMethod.SECOND_METHOD) {
-            return bodyLength;
-        }
-
-        // TempBasalMethod.FIRST_METHOD
-        for (BasalInsulinProgramElement element : insulinProgramElements) {
-            if (element.getTotalTenthPulses() == 0 && element.getNumberOfSlots() > 1) {
-                bodyLength = (byte) ((element.getNumberOfSlots() - 1) * 6 + bodyLength);
-            }
-        }
-
-        return bodyLength;
+        return (byte) (insulinProgramElements.size() * 6 + 8);
     }
 
     public short getLength() {
@@ -61,15 +42,11 @@ public final class ProgramTempBasalCommand extends HeaderEnabledCommand {
         int delayUntilNextTenthPulseInUsec;
 
         if (firstProgramElement.getTotalTenthPulses() == 0) {
-            if (tempBasalMethod == TempBasalMethod.FIRST_METHOD) {
-                remainingTenthPulsesInFirstElement = 0;
-            } else {
-                remainingTenthPulsesInFirstElement = firstProgramElement.getNumberOfSlots();
-            }
-            delayUntilNextTenthPulseInUsec = ProgramBasalUtil.NUMBER_OF_USEC_IN_SLOT;
+            remainingTenthPulsesInFirstElement = firstProgramElement.getNumberOfSlots();
+            delayUntilNextTenthPulseInUsec = ProgramBasalUtil.MAX_DELAY_BETWEEN_TENTH_PULSES_IN_USEC_AND_USECS_IN_BASAL_SLOT;
         } else {
             remainingTenthPulsesInFirstElement = firstProgramElement.getTotalTenthPulses();
-            delayUntilNextTenthPulseInUsec = (int) (firstProgramElement.getNumberOfSlots() * 1_800.0d / remainingTenthPulsesInFirstElement * 1_000_000);
+            delayUntilNextTenthPulseInUsec = (int) ((long) firstProgramElement.getNumberOfSlots() * 1_800.0d / remainingTenthPulsesInFirstElement * 1_000_000);
         }
 
         ByteBuffer buffer = ByteBuffer.allocate(getLength()) //
@@ -129,24 +106,18 @@ public final class ProgramTempBasalCommand extends HeaderEnabledCommand {
                 throw new IllegalArgumentException("durationInMinutes can not be null");
             }
 
-            byte durationInSlots = (byte) (durationInMinutes % 30);
+            byte durationInSlots = (byte) (durationInMinutes / 30);
             short[] pulsesPerSlot = ProgramTempBasalUtil.mapTempBasalToPulsesPerSlot(durationInSlots, rateInUnitsPerHour);
             short[] tenthPulsesPerSlot = ProgramTempBasalUtil.mapTempBasalToTenthPulsesPerSlot(durationInSlots, rateInUnitsPerHour);
-            TempBasalMethod tempBasalMethod = tenthPulsesPerSlot[0] == 0 ? TempBasalMethod.SECOND_METHOD : TempBasalMethod.FIRST_METHOD;
 
             List<ShortInsulinProgramElement> shortInsulinProgramElements = ProgramTempBasalUtil.mapPulsesPerSlotToShortInsulinProgramElements(pulsesPerSlot);
-            List<BasalInsulinProgramElement> insulinProgramElements = ProgramTempBasalUtil.mapTenthPulsesPerSlotToLongInsulinProgramElements(tenthPulsesPerSlot, tempBasalMethod);
+            List<BasalInsulinProgramElement> insulinProgramElements = ProgramTempBasalUtil.mapTenthPulsesPerSlotToLongInsulinProgramElements(tenthPulsesPerSlot);
 
             ProgramInsulinCommand interlockCommand = new ProgramInsulinCommand(uniqueId, sequenceNumber, multiCommandFlag, nonce, shortInsulinProgramElements,
                     ProgramTempBasalUtil.calculateChecksum(durationInSlots, pulsesPerSlot[0], pulsesPerSlot), durationInSlots,
                     (short) 0x3840, pulsesPerSlot[0], ProgramInsulinCommand.DeliveryType.TEMP_BASAL);
 
-            return new ProgramTempBasalCommand(interlockCommand, uniqueId, sequenceNumber, multiCommandFlag, programReminder, insulinProgramElements, tempBasalMethod);
+            return new ProgramTempBasalCommand(interlockCommand, uniqueId, sequenceNumber, multiCommandFlag, programReminder, insulinProgramElements);
         }
-    }
-
-    public enum TempBasalMethod {
-        FIRST_METHOD,
-        SECOND_METHOD
     }
 }
