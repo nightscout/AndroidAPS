@@ -1162,4 +1162,5 @@ L\'ENSEMBLE DES RISQUES LIÉS À LA QUALITÉ ET À LA PERFORMANCE DU PROGRAMME S
     <string name="trend_arrow">Flèche de tendance</string>
     <string name="cannula">Canule</string>
     <string name="userentry">Entrées utilisateur</string>
+    <string name="common_values">Utilisez les valeurs qui correspondent à vos plus gros repas\n</string>
 </resources>
