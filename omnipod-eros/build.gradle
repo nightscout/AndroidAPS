@@ -43,6 +43,7 @@ android {
 
 dependencies {
     implementation project(':core')
+    implementation project(':omnipod-common')
     implementation project(':rileylink')
 
     annotationProcessor "com.google.dagger:dagger-compiler:$dagger_version"
