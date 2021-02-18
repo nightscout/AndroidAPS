@@ -7,7 +7,7 @@ android {
     compileSdkVersion 28
 
     defaultConfig {
-        minSdkVersion 24
+        minSdkVersion 26
         targetSdkVersion 28
         versionCode 1
         versionName "1.0"
@@ -33,6 +33,12 @@ android {
         firebaseDisable {
             System.setProperty("disableFirebase", "true")
             ext.enableCrashlytics = false
+        }
+    }
+    flavorDimensions "standard"
+    productFlavors {
+        full {
+            dimension "standard"
         }
     }
     compileOptions {

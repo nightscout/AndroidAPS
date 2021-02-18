@@ -34,7 +34,7 @@ open class TestBaseWithProfile : TestBase() {
 
     val rxBus = RxBusWrapper(aapsSchedulers)
 
-    val profileInjector = HasAndroidInjector {
+    private val profileInjector = HasAndroidInjector {
         AndroidInjector {
             if (it is Profile) {
                 it.aapsLogger = aapsLogger
@@ -62,10 +62,11 @@ open class TestBaseWithProfile : TestBase() {
 
     private lateinit var validProfileJSON: String
     lateinit var validProfile: Profile
-    @Suppress("PropertyName") val TESTPROFILENAME = "someProfile"
+    private val testProfileName = "someProfile"
 
     @Before
     fun prepareMock() {
+        @Suppress("SpellCheckingInspection")
         validProfileJSON = "{\"dia\":\"3\",\"carbratio\":[{\"time\":\"00:00\",\"value\":\"30\"}],\"carbs_hr\":\"20\",\"delay\":\"20\",\"sens\":[{\"time\":\"00:00\",\"value\":\"100\"},{\"time\":\"2:00\",\"value\":\"110\"}],\"timezone\":\"UTC\",\"basal\":[{\"time\":\"00:00\",\"value\":\"1\"}],\"target_low\":[{\"time\":\"00:00\",\"value\":\"4\"}],\"target_high\":[{\"time\":\"00:00\",\"value\":\"5\"}],\"startDate\":\"1970-01-01T00:00:00.000Z\",\"units\":\"mmol\"}"
         validProfile = Profile(profileInjector, JSONObject(validProfileJSON), Constants.MGDL)
     }
@@ -73,8 +74,8 @@ open class TestBaseWithProfile : TestBase() {
     fun getValidProfileStore(): ProfileStore {
         val json = JSONObject()
         val store = JSONObject()
-        store.put(TESTPROFILENAME, JSONObject(validProfileJSON))
-        json.put("defaultProfile", TESTPROFILENAME)
+        store.put(testProfileName, JSONObject(validProfileJSON))
+        json.put("defaultProfile", testProfileName)
         json.put("store", store)
         return ProfileStore(profileInjector, json)
     }
