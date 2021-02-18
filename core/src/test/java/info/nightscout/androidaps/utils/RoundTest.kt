@@ -32,4 +32,9 @@ class RoundTest {
         Assert.assertEquals(2.0, Round.ceilTo(1.49999, 1.0), 0.00000001)
         Assert.assertEquals(0.0, Round.ceilTo(0.0, 1.0), 0.00000001)
     }
+
+    @Test
+    fun isSameTest() {
+        Assert.assertTrue(Round.isSame(0.54, 0.54))
+    }
 }

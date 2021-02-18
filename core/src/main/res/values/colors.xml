@@ -85,5 +85,9 @@
     <color name="metadataTextWarning">#FF8C00</color>
     <color name="metadataTextError">#FF5555</color>
 
+    <!-- Import/Export -->
+    <color name="importListAdditionalInfo">#BBBBBB</color>
+    <color name="importListFileName">#FFFFFF</color>
+
 
 </resources>

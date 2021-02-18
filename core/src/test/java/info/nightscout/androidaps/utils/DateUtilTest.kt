@@ -2,7 +2,7 @@ package info.nightscout.androidaps.utils
 
 import android.content.Context
 import info.nightscout.androidaps.TestBase
-import info.nightscout.androidaps.R
+import info.nightscout.androidaps.core.R
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 import org.junit.Assert
 import org.junit.Test
