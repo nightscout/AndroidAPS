@@ -64,11 +64,11 @@ class TreatmentsUserEntryFragment : DaggerFragment() {
             val current = entries[position]
             holder.binding.date.text = dateUtil.dateAndTimeAndSecondsString(current.timestamp)
             holder.binding.action.text = current.action
-            holder.binding.s.text = current.s
-            holder.binding.d1.text = if (current.d1 != 0.0) current.d1.toString() else ""
-            holder.binding.d2.text = if (current.d2 != 0.0) current.d2.toString() else ""
-            holder.binding.i1.text = if (current.i1 != 0) current.i1.toString() else ""
-            holder.binding.i1.text = if (current.i2 != 0) current.i2.toString() else ""
+            if (current.s != "") holder.binding.s.text = current.s else holder.binding.s.visibility = View.GONE
+            if (current.d1 != 0.0) holder.binding.d1.text = current.d1.toString() else holder.binding.d1.visibility = View.GONE
+            if (current.d2 != 0.0) holder.binding.d2.text = current.d2.toString() else holder.binding.d2.visibility = View.GONE
+            if (current.i1 != 0) holder.binding.i1.text = current.i1.toString() else holder.binding.i1.visibility = View.GONE
+            if (current.i2 != 0) holder.binding.i2.text = current.i2.toString() else holder.binding.i2.visibility = View.GONE
         }
 
         inner class UserEntryViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
