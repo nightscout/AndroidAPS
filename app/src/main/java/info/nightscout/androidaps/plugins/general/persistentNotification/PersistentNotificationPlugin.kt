@@ -30,7 +30,7 @@ import io.reactivex.disposables.CompositeDisposable
 import javax.inject.Inject
 import javax.inject.Singleton
 
-@Suppress("PrivatePropertyName")
+@Suppress("PrivatePropertyName", "DEPRECATION")
 @Singleton
 class PersistentNotificationPlugin @Inject constructor(
     injector: HasAndroidInjector,
@@ -45,8 +45,7 @@ class PersistentNotificationPlugin @Inject constructor(
     private val context: Context,
     private val notificationHolder: NotificationHolder,
     private val dummyServiceHelper: DummyServiceHelper,
-    private val iconsProvider: IconsProvider,
-    private val databaseHelper: DatabaseHelperInterface
+    private val iconsProvider: IconsProvider
 ) : PluginBase(PluginDescription()
     .mainType(PluginType.GENERAL)
     .neverVisible(true)
