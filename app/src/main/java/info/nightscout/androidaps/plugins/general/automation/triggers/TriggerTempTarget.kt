@@ -28,7 +28,7 @@ class TriggerTempTarget(injector: HasAndroidInjector) : Trigger(injector) {
     }
 
     override fun shouldRun(): Boolean {
-        val tt = treatmentsPlugin.tempTargetFromHistory
+        val tt = treatmentsInterface.tempTargetFromHistory
         if (tt == null && comparator.value == ComparatorExists.Compare.NOT_EXISTS) {
             aapsLogger.debug(LTag.AUTOMATION, "Ready for execution: " + friendlyDescription())
             return true

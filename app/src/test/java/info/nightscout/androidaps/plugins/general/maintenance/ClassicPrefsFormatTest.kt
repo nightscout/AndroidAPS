@@ -6,7 +6,6 @@ import info.nightscout.androidaps.plugins.general.maintenance.formats.Prefs
 import info.nightscout.androidaps.testing.utils.SingleStringStorage
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 import info.nightscout.androidaps.utils.sharedPreferences.SP
-import org.hamcrest.CoreMatchers
 import org.junit.Assert
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -32,9 +31,9 @@ class ClassicPrefsFormatTest : TestBase() {
         val classicFormat = ClassicPrefsFormat(resourceHelper, SingleStringStorage(test))
         val prefs = classicFormat.loadPreferences(getMockedFile(), "")
 
-        Assert.assertThat(prefs.values.size, CoreMatchers.`is`(2))
-        Assert.assertThat(prefs.values["key1"], CoreMatchers.`is`("val1"))
-        Assert.assertThat(prefs.values["keyB"], CoreMatchers.`is`("valB"))
+        Assert.assertEquals(prefs.values.size, 2)
+        Assert.assertEquals(prefs.values["key1"], "val1")
+        Assert.assertEquals(prefs.values["keyB"], "valB")
         Assert.assertNull(prefs.values["key3"])
     }
 

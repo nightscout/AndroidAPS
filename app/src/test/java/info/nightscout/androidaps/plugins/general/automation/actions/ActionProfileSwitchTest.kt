@@ -26,7 +26,7 @@ class ActionProfileSwitchTest : ActionsTestBase() {
     private val stringJson = "{\"data\":{\"profileToSwitchTo\":\"Test\"},\"type\":\"info.nightscout.androidaps.plugins.general.automation.actions.ActionProfileSwitch\"}"
 
     @Before fun setUp() {
-        `when`(activePlugin.activeTreatments).thenReturn(treatmentsPlugin)
+        `when`(activePlugin.activeTreatments).thenReturn(treatmentsInterface)
         `when`(resourceHelper.gs(R.string.profilename)).thenReturn("Change profile to")
         `when`(resourceHelper.gs(ArgumentMatchers.eq(R.string.changengetoprofilename), ArgumentMatchers.anyString())).thenReturn("Change profile to %s")
         `when`(resourceHelper.gs(R.string.alreadyset)).thenReturn("Already set")
@@ -97,7 +97,7 @@ class ActionProfileSwitchTest : ActionsTestBase() {
                 Assert.assertEquals("OK", result.comment)
             }
         })
-        Mockito.verify(treatmentsPlugin, Mockito.times(1)).doProfileSwitch(anyObject(), anyString(), anyInt(), anyInt(), anyInt(), anyLong())
+        Mockito.verify(treatmentsInterface, Mockito.times(1)).doProfileSwitch(anyObject(), anyString(), anyInt(), anyInt(), anyInt(), anyLong())
     }
 
     @Test fun hasDialogTest() {

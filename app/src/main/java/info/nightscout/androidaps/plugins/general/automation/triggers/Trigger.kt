@@ -11,15 +11,15 @@ import com.google.common.base.Optional
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.interfaces.ActivePluginProvider
+import info.nightscout.androidaps.interfaces.ProfileFunction
+import info.nightscout.androidaps.interfaces.TreatmentsInterface
 import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper
-import info.nightscout.androidaps.interfaces.ProfileFunction
 import info.nightscout.androidaps.plugins.general.automation.dialogs.ChooseTriggerDialog
 import info.nightscout.androidaps.plugins.general.automation.events.EventTriggerChanged
 import info.nightscout.androidaps.plugins.general.automation.events.EventTriggerClone
 import info.nightscout.androidaps.plugins.general.automation.events.EventTriggerRemove
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.IobCobCalculatorPlugin
-import info.nightscout.androidaps.plugins.treatments.TreatmentsPlugin
 import info.nightscout.androidaps.services.LastLocationDataContainer
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 import info.nightscout.androidaps.utils.sharedPreferences.SP
@@ -29,13 +29,14 @@ import javax.inject.Inject
 import kotlin.reflect.full.primaryConstructor
 
 abstract class Trigger(val injector: HasAndroidInjector) {
+
     @Inject lateinit var aapsLogger: AAPSLogger
     @Inject lateinit var rxBus: RxBusWrapper
     @Inject lateinit var resourceHelper: ResourceHelper
     @Inject lateinit var profileFunction: ProfileFunction
     @Inject lateinit var sp: SP
     @Inject lateinit var locationDataContainer: LastLocationDataContainer
-    @Inject lateinit var treatmentsPlugin: TreatmentsPlugin
+    @Inject lateinit var treatmentsInterface: TreatmentsInterface
     @Inject lateinit var activePlugin: ActivePluginProvider
     @Inject lateinit var iobCobCalculatorPlugin: IobCobCalculatorPlugin
 
@@ -53,12 +54,13 @@ abstract class Trigger(val injector: HasAndroidInjector) {
     abstract fun duplicate(): Trigger
 
     companion object {
+
         @JvmStatic
         fun scanForActivity(cont: Context?): AppCompatActivity? {
             when (cont) {
-                null                 -> return null
+                null -> return null
                 is AppCompatActivity -> return cont
-                is ContextWrapper    -> return scanForActivity(cont.baseContext)
+                is ContextWrapper -> return scanForActivity(cont.baseContext)
                 else                 -> return null
             }
         }

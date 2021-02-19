@@ -363,7 +363,7 @@ class OpenHumansUploader @Inject constructor(
         copyDisposable = Completable.fromCallable { MainApp.getDbHelper().clearOpenHumansQueue() }
             .andThen(Single.defer { Single.just(MainApp.getDbHelper().countOfAllRows + treatmentsPlugin.service.count()) })
             .doOnSuccess { maxProgress = it }
-            .flatMapObservable { Observable.defer { Observable.fromIterable(treatmentsPlugin.service.treatmentData) } }
+            .flatMapObservable { Observable.defer { Observable.fromIterable(treatmentsPlugin.service.getTreatmentData()) } }
             .map { enqueueTreatment(it); increaseCounter() }
             .ignoreElements()
             .andThen(Observable.defer { Observable.fromIterable(repository.compatGetBgReadingsDataFromTime(0, true).blockingGet()) })
