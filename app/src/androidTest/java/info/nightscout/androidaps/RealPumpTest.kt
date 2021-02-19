@@ -34,7 +34,7 @@ import javax.inject.Inject
 @LargeTest
 @RunWith(AndroidJUnit4::class)
 class RealPumpTest {
-
+/*
     companion object {
         const val R_PASSWORD = 1234
         const val R_SERIAL = "PBB00013LR_P"
@@ -125,4 +125,5 @@ class RealPumpTest {
             SystemClock.sleep(1000)
         }
     }
+ */
 }
