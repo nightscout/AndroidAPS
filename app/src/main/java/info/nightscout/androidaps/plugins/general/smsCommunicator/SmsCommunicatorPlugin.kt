@@ -33,7 +33,6 @@ import info.nightscout.androidaps.plugins.general.smsCommunicator.events.EventSm
 import info.nightscout.androidaps.plugins.general.smsCommunicator.otp.OneTimePassword
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.GlucoseStatus
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.IobCobCalculatorPlugin
-import info.nightscout.androidaps.plugins.treatments.TreatmentsPlugin
 import info.nightscout.androidaps.queue.Callback
 import info.nightscout.androidaps.receivers.BundleStore
 import info.nightscout.androidaps.receivers.DataReceiver
@@ -589,9 +588,10 @@ class SmsCommunicatorPlugin @Inject constructor(
                     val finalPercentage = percentage
                     messageToConfirm = AuthRequest(injector, receivedSms, reply, passCode, object : SmsAction(list[pindex - 1] as String, finalPercentage) {
                         override fun run() {
-                            uel.log("SMS PROFILE", reply)
                             activePlugin.activeTreatments.doProfileSwitch(store, list[pindex - 1] as String, 0, finalPercentage, 0, DateUtil.now())
-                            sendSMS(Sms(receivedSms.phoneNumber, resourceHelper.gs(R.string.profileswitchcreated)))
+                            val replyText = resourceHelper.gs(R.string.profileswitchcreated)
+                            sendSMS(Sms(receivedSms.phoneNumber, replyText))
+                            uel.log("SMS PROFILE", replyText)
                         }
                     })
                 }
@@ -607,17 +607,18 @@ class SmsCommunicatorPlugin @Inject constructor(
             receivedSms.processed = true
             messageToConfirm = AuthRequest(injector, receivedSms, reply, passCode, object : SmsAction() {
                 override fun run() {
-                    uel.log("SMS BASAL", reply)
                     commandQueue.cancelTempBasal(true, object : Callback() {
                         override fun run() {
                             if (result.success) {
                                 var replyText = resourceHelper.gs(R.string.smscommunicator_tempbasalcanceled)
                                 replyText += "\n" + activePlugin.activePump.shortStatus(true)
                                 sendSMSToAllNumbers(Sms(receivedSms.phoneNumber, replyText))
+                                uel.log("SMS BASAL", replyText)
                             } else {
                                 var replyText = resourceHelper.gs(R.string.smscommunicator_tempbasalcancelfailed)
                                 replyText += "\n" + activePlugin.activePump.shortStatus(true)
                                 sendSMS(Sms(receivedSms.phoneNumber, replyText))
+                                uel.log("SMS BASAL", replyText)
                             }
                         }
                     })
@@ -639,17 +640,18 @@ class SmsCommunicatorPlugin @Inject constructor(
                 receivedSms.processed = true
                 messageToConfirm = AuthRequest(injector, receivedSms, reply, passCode, object : SmsAction(tempBasalPct, duration) {
                     override fun run() {
-                        uel.log("SMS BASAL", reply)
                         commandQueue.tempBasalPercent(anInteger(), secondInteger(), true, profile, object : Callback() {
                             override fun run() {
                                 if (result.success) {
                                     var replyText = if (result.isPercent) String.format(resourceHelper.gs(R.string.smscommunicator_tempbasalset_percent), result.percent, result.duration) else String.format(resourceHelper.gs(R.string.smscommunicator_tempbasalset), result.absolute, result.duration)
                                     replyText += "\n" + activePlugin.activePump.shortStatus(true)
                                     sendSMSToAllNumbers(Sms(receivedSms.phoneNumber, replyText))
+                                    uel.log("SMS BASAL", replyText)
                                 } else {
                                     var replyText = resourceHelper.gs(R.string.smscommunicator_tempbasalfailed)
                                     replyText += "\n" + activePlugin.activePump.shortStatus(true)
                                     sendSMS(Sms(receivedSms.phoneNumber, replyText))
+                                    uel.log("SMS BASAL", replyText)
                                 }
                             }
                         })
@@ -672,7 +674,6 @@ class SmsCommunicatorPlugin @Inject constructor(
                 receivedSms.processed = true
                 messageToConfirm = AuthRequest(injector, receivedSms, reply, passCode, object : SmsAction(tempBasal, duration) {
                     override fun run() {
-                        uel.log("SMS BASAL", reply)
                         commandQueue.tempBasalAbsolute(aDouble(), secondInteger(), true, profile, object : Callback() {
                             override fun run() {
                                 if (result.success) {
@@ -680,10 +681,12 @@ class SmsCommunicatorPlugin @Inject constructor(
                                     else String.format(resourceHelper.gs(R.string.smscommunicator_tempbasalset), result.absolute, result.duration)
                                     replyText += "\n" + activePlugin.activePump.shortStatus(true)
                                     sendSMSToAllNumbers(Sms(receivedSms.phoneNumber, replyText))
+                                    uel.log("SMS BASAL", replyText)
                                 } else {
                                     var replyText = resourceHelper.gs(R.string.smscommunicator_tempbasalfailed)
                                     replyText += "\n" + activePlugin.activePump.shortStatus(true)
                                     sendSMS(Sms(receivedSms.phoneNumber, replyText))
+                                    uel.log("SMS BASAL", replyText)
                                 }
                             }
                         })
@@ -700,7 +703,6 @@ class SmsCommunicatorPlugin @Inject constructor(
             receivedSms.processed = true
             messageToConfirm = AuthRequest(injector, receivedSms, reply, passCode, object : SmsAction() {
                 override fun run() {
-                    uel.log("SMS EXTENDED", reply)
                     commandQueue.cancelExtended(object : Callback() {
                         override fun run() {
                             if (result.success) {
@@ -711,6 +713,7 @@ class SmsCommunicatorPlugin @Inject constructor(
                                 var replyText = resourceHelper.gs(R.string.smscommunicator_extendedcancelfailed)
                                 replyText += "\n" + activePlugin.activePump.shortStatus(true)
                                 sendSMS(Sms(receivedSms.phoneNumber, replyText))
+                                uel.log("SMS EXTENDED", replyText)
                             }
                         }
                     })
@@ -729,7 +732,6 @@ class SmsCommunicatorPlugin @Inject constructor(
                 receivedSms.processed = true
                 messageToConfirm = AuthRequest(injector, receivedSms, reply, passCode, object : SmsAction(extended, duration) {
                     override fun run() {
-                        uel.log("SMS EXTENDED", reply)
                         commandQueue.extendedBolus(aDouble(), secondInteger(), object : Callback() {
                             override fun run() {
                                 if (result.success) {
@@ -737,10 +739,12 @@ class SmsCommunicatorPlugin @Inject constructor(
                                     if (config.APS) replyText += "\n" + resourceHelper.gs(R.string.loopsuspended)
                                     replyText += "\n" + activePlugin.activePump.shortStatus(true)
                                     sendSMSToAllNumbers(Sms(receivedSms.phoneNumber, replyText))
+                                    uel.log("SMS EXTENDED", replyText)
                                 } else {
                                     var replyText = resourceHelper.gs(R.string.smscommunicator_extendedfailed)
                                     replyText += "\n" + activePlugin.activePump.shortStatus(true)
                                     sendSMS(Sms(receivedSms.phoneNumber, replyText))
+                                    uel.log("SMS EXTENDED", replyText)
                                 }
                             }
                         })
@@ -765,7 +769,6 @@ class SmsCommunicatorPlugin @Inject constructor(
             receivedSms.processed = true
             messageToConfirm = AuthRequest(injector, receivedSms, reply, passCode, object : SmsAction(bolus) {
                 override fun run() {
-                    uel.log("SMS BOLUS", reply)
                     val detailedBolusInfo = DetailedBolusInfo()
                     detailedBolusInfo.insulin = aDouble()
                     detailedBolusInfo.source = Source.USER
@@ -810,10 +813,12 @@ class SmsCommunicatorPlugin @Inject constructor(
                                             }
                                         }
                                         sendSMSToAllNumbers(Sms(receivedSms.phoneNumber, replyText))
+                                        uel.log("SMS BOLUS", replyText)
                                     } else {
                                         var replyText = resourceHelper.gs(R.string.smscommunicator_bolusfailed)
                                         replyText += "\n" + activePlugin.activePump.shortStatus(true)
                                         sendSMS(Sms(receivedSms.phoneNumber, replyText))
+                                        uel.log("SMS BOLUS", replyText)
                                     }
                                 }
                             })
@@ -842,7 +847,6 @@ class SmsCommunicatorPlugin @Inject constructor(
             receivedSms.processed = true
             messageToConfirm = AuthRequest(injector, receivedSms, reply, passCode, object : SmsAction(grams, time) {
                 override fun run() {
-                    uel.log("SMS CARBS", reply)
                     val detailedBolusInfo = DetailedBolusInfo()
                     detailedBolusInfo.carbs = anInteger().toDouble()
                     detailedBolusInfo.source = Source.USER
@@ -854,10 +858,12 @@ class SmsCommunicatorPlugin @Inject constructor(
                                     var replyText = String.format(resourceHelper.gs(R.string.smscommunicator_carbsset), anInteger)
                                     replyText += "\n" + activePlugin.activePump.shortStatus(true)
                                     sendSMSToAllNumbers(Sms(receivedSms.phoneNumber, replyText))
+                                    uel.log("SMS CARBS", replyText)
                                 } else {
                                     var replyText = resourceHelper.gs(R.string.smscommunicator_carbsfailed)
                                     replyText += "\n" + activePlugin.activePump.shortStatus(true)
                                     sendSMS(Sms(receivedSms.phoneNumber, replyText))
+                                    uel.log("SMS CARBS", replyText)
                                 }
                             }
                         })
@@ -866,6 +872,7 @@ class SmsCommunicatorPlugin @Inject constructor(
                         var replyText = String.format(resourceHelper.gs(R.string.smscommunicator_carbsset), anInteger)
                         replyText += "\n" + activePlugin.activePump.shortStatus(true)
                         sendSMSToAllNumbers(Sms(receivedSms.phoneNumber, replyText))
+                        uel.log("SMS CARBS", replyText)
                     }
                 }
             })
@@ -883,7 +890,6 @@ class SmsCommunicatorPlugin @Inject constructor(
             receivedSms.processed = true
             messageToConfirm = AuthRequest(injector, receivedSms, reply, passCode, object : SmsAction() {
                 override fun run() {
-                    uel.log("SMS TARGET", reply)
                     val units = profileFunction.getUnits()
                     var keyDuration = 0
                     var defaultTargetDuration = 0
@@ -931,6 +937,7 @@ class SmsCommunicatorPlugin @Inject constructor(
                     val ttString = if (units == Constants.MMOL) DecimalFormatter.to1Decimal(tt) else DecimalFormatter.to0Decimal(tt)
                     val replyText = String.format(resourceHelper.gs(R.string.smscommunicator_tt_set), ttString, ttDuration)
                     sendSMSToAllNumbers(Sms(receivedSms.phoneNumber, replyText))
+                    uel.log("SMS TARGET", replyText)
                 }
             })
         } else if (isStop) {
@@ -939,7 +946,6 @@ class SmsCommunicatorPlugin @Inject constructor(
             receivedSms.processed = true
             messageToConfirm = AuthRequest(injector, receivedSms, reply, passCode, object : SmsAction() {
                 override fun run() {
-                    uel.log("SMS TARGET", reply)
                     val tempTarget = TempTarget()
                         .source(Source.USER)
                         .date(DateUtil.now())
@@ -949,6 +955,7 @@ class SmsCommunicatorPlugin @Inject constructor(
                     activePlugin.activeTreatments.addToHistoryTempTarget(tempTarget)
                     val replyText = String.format(resourceHelper.gs(R.string.smscommunicator_tt_canceled))
                     sendSMSToAllNumbers(Sms(receivedSms.phoneNumber, replyText))
+                    uel.log("SMS TARGET", reply)
                 }
             })
         } else
@@ -964,10 +971,10 @@ class SmsCommunicatorPlugin @Inject constructor(
             receivedSms.processed = true
             messageToConfirm = AuthRequest(injector, receivedSms, reply, passCode, object : SmsAction() {
                 override fun run() {
-                    uel.log("SMS SMS", reply)
                     sp.putBoolean(R.string.key_smscommunicator_remotecommandsallowed, false)
                     val replyText = String.format(resourceHelper.gs(R.string.smscommunicator_stoppedsms))
                     sendSMSToAllNumbers(Sms(receivedSms.phoneNumber, replyText))
+                    uel.log("SMS SMS", replyText)
                 }
             })
         } else sendSMS(Sms(receivedSms.phoneNumber, resourceHelper.gs(R.string.wrongformat)))
@@ -981,9 +988,11 @@ class SmsCommunicatorPlugin @Inject constructor(
             receivedSms.processed = true
             messageToConfirm = AuthRequest(injector, receivedSms, reply, passCode, object : SmsAction(cal) {
                 override fun run() {
-                    uel.log("SMS CAL", reply)
                     val result = xdripCalibrations.sendIntent(aDouble!!)
-                    if (result) sendSMSToAllNumbers(Sms(receivedSms.phoneNumber, resourceHelper.gs(R.string.smscommunicator_calibrationsent))) else sendSMS(Sms(receivedSms.phoneNumber, resourceHelper.gs(R.string.smscommunicator_calibrationfailed)))
+                    val replyText =
+                        if (result) resourceHelper.gs(R.string.smscommunicator_calibrationsent) else resourceHelper.gs(R.string.smscommunicator_calibrationfailed)
+                    sendSMSToAllNumbers(Sms(receivedSms.phoneNumber, replyText))
+                    uel.log("SMS CAL", replyText)
                 }
             })
         } else sendSMS(Sms(receivedSms.phoneNumber, resourceHelper.gs(R.string.wrongformat)))
