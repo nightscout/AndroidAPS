@@ -1,5 +1,7 @@
 package info.nightscout.androidaps.plugins.pump.omnipod.eros.driver.communication.message.command;
 
+import androidx.annotation.NonNull;
+
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.driver.communication.message.MessageBlock;
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.driver.definition.MessageBlockType;
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.driver.definition.PodInfoType;
@@ -21,7 +23,7 @@ public class GetStatusCommand extends MessageBlock {
         return MessageBlockType.GET_STATUS;
     }
 
-    @Override
+    @Override @NonNull
     public String toString() {
         return "GetStatusCommand{" +
                 "podInfoType=" + podInfoType +

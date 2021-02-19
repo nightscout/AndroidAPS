@@ -220,7 +220,7 @@ public class DanaRv2Plugin extends AbstractDanaRPlugin {
 
     // This is called from APS
     @NonNull @Override
-    public PumpEnactResult setTempBasalAbsolute(double absoluteRate, int durationInMinutes, Profile profile, boolean enforceNew) {
+    public PumpEnactResult setTempBasalAbsolute(double absoluteRate, int durationInMinutes, @NonNull Profile profile, boolean enforceNew) {
         // Recheck pump status if older than 30 min
         //This should not be needed while using queue because connection should be done before calling this
         //if (pump.lastConnection.getTime() + 30 * 60 * 1000L < System.currentTimeMillis()) {
@@ -298,7 +298,7 @@ public class DanaRv2Plugin extends AbstractDanaRPlugin {
     }
 
     @NonNull @Override
-    public PumpEnactResult setTempBasalPercent(int percent, int durationInMinutes, Profile profile, boolean enforceNew) {
+    public PumpEnactResult setTempBasalPercent(int percent, int durationInMinutes, @NonNull Profile profile, boolean enforceNew) {
         DanaPump pump = danaPump;
         PumpEnactResult result = new PumpEnactResult(getInjector());
         percent = constraintChecker.applyBasalPercentConstraints(new Constraint<>(percent), profile).value();
@@ -386,14 +386,13 @@ public class DanaRv2Plugin extends AbstractDanaRPlugin {
             result.isTempCancel = true;
             result.comment = resourceHelper.gs(R.string.ok);
             aapsLogger.debug(LTag.PUMP, "cancelRealTempBasal: OK");
-            return result;
         } else {
             result.success = false;
             result.comment = resourceHelper.gs(R.string.danar_valuenotsetproperly);
             result.isTempCancel = true;
             aapsLogger.error("cancelRealTempBasal: Failed to cancel temp basal");
-            return result;
         }
+        return result;
     }
 
     @NonNull @Override

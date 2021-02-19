@@ -13,7 +13,7 @@ import android.widget.TextView;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import org.jetbrains.annotations.NotNull;
+import androidx.annotation.NonNull;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -198,7 +198,7 @@ public class ErosPodHistoryActivity extends NoSplashAppCompatActivity {
             this.name = entryGroup.getTranslated();
         }
 
-        @NotNull
+        @NonNull
         @Override
         public String toString() {
             return name;
@@ -220,7 +220,7 @@ public class ErosPodHistoryActivity extends NoSplashAppCompatActivity {
         }
 
 
-        @NotNull
+        @NonNull
         @Override
         public HistoryViewHolder onCreateViewHolder(ViewGroup viewGroup, int viewType) {
             View v = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.omnipod_eros_pod_history_item, //
@@ -230,7 +230,7 @@ public class ErosPodHistoryActivity extends NoSplashAppCompatActivity {
 
 
         @Override
-        public void onBindViewHolder(@NotNull HistoryViewHolder holder, int position) {
+        public void onBindViewHolder(@NonNull HistoryViewHolder holder, int position) {
             OmnipodHistoryRecord record = historyList.get(position);
 
             if (record != null) {

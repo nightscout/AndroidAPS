@@ -1255,9 +1255,9 @@ public class ComboPlugin extends PumpPluginBase implements PumpInterface, Constr
     }
 
     @NonNull @Override
-    public JSONObject getJSONStatus(@NotNull Profile profile, @NotNull String profileName, @NotNull String version) {
+    public JSONObject getJSONStatus(@NonNull Profile profile, @NonNull String profileName, @NonNull String version) {
         if (!pump.initialized) {
-            return null;
+            return new JSONObject();
         }
 
         try {
@@ -1302,7 +1302,7 @@ public class ComboPlugin extends PumpPluginBase implements PumpInterface, Constr
             getAapsLogger().warn(LTag.PUMP, "Failed to gather device status for upload " + e);
         }
 
-        return null;
+        return new JSONObject();
     }
 
     @NonNull @Override

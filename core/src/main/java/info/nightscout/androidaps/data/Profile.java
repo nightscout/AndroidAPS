@@ -2,6 +2,7 @@ package info.nightscout.androidaps.data;
 
 import androidx.collection.LongSparseArray;
 
+import androidx.annotation.NonNull;
 import org.joda.time.DateTime;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -66,7 +67,7 @@ public class Profile {
         this.injector = injector;
     }
 
-    @Override
+    @NonNull @Override
     public String toString() {
         if (json != null)
             return json.toString();

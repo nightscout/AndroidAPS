@@ -1,5 +1,7 @@
 package info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.definition;
 
+import androidx.annotation.NonNull;
+
 import java.nio.ByteBuffer;
 
 public class AlertConfiguration implements Encodable {
@@ -45,7 +47,7 @@ public class AlertConfiguration implements Encodable {
                 .array();
     }
 
-    @Override public String toString() {
+    @NonNull @Override public String toString() {
         return "AlertConfiguration{" +
                 "slot=" + slot +
                 ", enabled=" + enabled +

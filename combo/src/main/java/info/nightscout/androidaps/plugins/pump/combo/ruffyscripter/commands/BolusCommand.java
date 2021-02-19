@@ -2,10 +2,11 @@ package info.nightscout.androidaps.plugins.pump.combo.ruffyscripter.commands;
 
 import android.os.SystemClock;
 
+import androidx.annotation.NonNull;
+
 import org.monkey.d.ruffy.ruffy.driver.display.MenuAttribute;
 import org.monkey.d.ruffy.ruffy.driver.display.MenuType;
 import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -14,8 +15,8 @@ import java.util.Objects;
 import info.nightscout.androidaps.logging.StacktraceLoggerWrapper;
 import info.nightscout.androidaps.plugins.pump.combo.ruffyscripter.BolusProgressReporter;
 import info.nightscout.androidaps.plugins.pump.combo.ruffyscripter.PumpWarningCodes;
-import info.nightscout.androidaps.plugins.pump.combo.ruffyscripter.WarningOrErrorCode;
 import info.nightscout.androidaps.plugins.pump.combo.ruffyscripter.RuffyScripter;
+import info.nightscout.androidaps.plugins.pump.combo.ruffyscripter.WarningOrErrorCode;
 
 import static info.nightscout.androidaps.plugins.pump.combo.ruffyscripter.BolusProgressReporter.State.DELIVERED;
 import static info.nightscout.androidaps.plugins.pump.combo.ruffyscripter.BolusProgressReporter.State.DELIVERING;
@@ -244,7 +245,7 @@ public class BolusCommand extends BaseCommand {
         bolusProgressReporter.report(STOPPING, 0, 0);
     }
 
-    @Override
+    @Override @NonNull
     public String toString() {
         return "BolusCommand{" +
                 "bolus=" + bolus +

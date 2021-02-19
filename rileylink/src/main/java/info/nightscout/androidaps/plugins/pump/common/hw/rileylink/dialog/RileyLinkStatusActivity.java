@@ -10,6 +10,8 @@ import androidx.viewpager.widget.ViewPager;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.tabs.TabLayout;
 
+import androidx.annotation.NonNull;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -78,7 +80,7 @@ public class RileyLinkStatusActivity extends NoSplashAppCompatActivity {
             super(fm);
         }
 
-        @Override
+        @NonNull @Override
         public Fragment getItem(int position) {
             this.lastSelectedPosition = position;
             return fragmentList.get(position);

@@ -2,7 +2,7 @@ package info.nightscout.androidaps.plugins.sensitivity;
 
 import androidx.collection.LongSparseArray;
 
-import org.jetbrains.annotations.NotNull;
+import androidx.annotation.NonNull;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -68,7 +68,7 @@ public class SensitivityOref1Plugin extends AbstractSensitivityPlugin {
         this.dateUtil = dateUtil;
     }
 
-    @NotNull @Override
+    @NonNull @Override
     public AutosensResult detectSensitivity(IobCobCalculatorInterface iobCobCalculatorPlugin, long fromTime, long toTime) {
         // todo this method is called from the IobCobCalculatorPlugin, which leads to a circular
         // dependency, this should be avoided
@@ -252,7 +252,7 @@ public class SensitivityOref1Plugin extends AbstractSensitivityPlugin {
         return output;
     }
 
-    @NotNull @Override public JSONObject configuration() {
+    @NonNull @Override public JSONObject configuration() {
         JSONObject c = new JSONObject();
         try {
             c.put(getResourceHelper().gs(R.string.key_openapsama_min_5m_carbimpact), getSp().getDouble(R.string.key_openapsama_min_5m_carbimpact, SMBDefaults.min_5m_carbimpact));
@@ -265,7 +265,7 @@ public class SensitivityOref1Plugin extends AbstractSensitivityPlugin {
         return c;
     }
 
-    @Override public void applyConfiguration(@NotNull JSONObject configuration) {
+    @Override public void applyConfiguration(@NonNull JSONObject configuration) {
         try {
             if (configuration.has(getResourceHelper().gs(R.string.key_openapsama_min_5m_carbimpact)))
                 getSp().putDouble(R.string.key_openapsama_min_5m_carbimpact, configuration.getDouble(getResourceHelper().gs(R.string.key_openapsama_min_5m_carbimpact)));
@@ -280,7 +280,7 @@ public class SensitivityOref1Plugin extends AbstractSensitivityPlugin {
         }
     }
 
-    @NotNull @Override public SensitivityType getId() {
+    @NonNull @Override public SensitivityType getId() {
         return SensitivityType.SENSITIVITY_OREF1;
     }
 }

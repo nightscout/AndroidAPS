@@ -1,5 +1,7 @@
 package info.nightscout.androidaps.plugins.pump.omnipod.eros.driver.definition;
 
+import androidx.annotation.NonNull;
+
 import java.util.Locale;
 
 public class FirmwareVersion {
@@ -13,7 +15,7 @@ public class FirmwareVersion {
         this.patch = patch;
     }
 
-    @Override
+    @Override @NonNull
     public String toString() {
         return String.format(Locale.getDefault(), "%d.%d.%d", major, minor, patch);
     }
