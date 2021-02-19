@@ -73,7 +73,7 @@ class DanaRSPlugin @Inject constructor(
     private var danaRSService: DanaRSService? = null
     private var mDeviceAddress = ""
     var mDeviceName = ""
-    private var pumpDesc = PumpDescription(PumpType.DanaRS)
+    override val pumpDescription = PumpDescription(PumpType.DanaRS)
 
     override fun updatePreferenceSummary(pref: Preference) {
         super.updatePreferenceSummary(pref)
@@ -156,8 +156,8 @@ class DanaRSPlugin @Inject constructor(
 
     override fun getPumpStatus(reason: String) {
         danaRSService?.readPumpStatus()
-        pumpDesc.basalStep = danaPump.basalStep
-        pumpDesc.bolusStep = danaPump.bolusStep
+        pumpDescription.basalStep = danaPump.basalStep
+        pumpDescription.bolusStep = danaPump.bolusStep
     }
 
     // DanaR interface
@@ -249,9 +249,12 @@ class DanaRSPlugin @Inject constructor(
     }
 
     override fun lastDataTime(): Long = danaPump.lastConnection
-    override val baseBasalRate: Double = danaPump.currentBasal
-    override val reservoirLevel: Double = danaPump.reservoirRemainingUnits
-    override val batteryLevel: Int = danaPump.batteryRemaining
+    override val baseBasalRate: Double
+        get() = danaPump.currentBasal
+    override val reservoirLevel: Double
+        get() = danaPump.reservoirRemainingUnits
+    override val batteryLevel: Int
+        get() = danaPump.batteryRemaining
 
     @Synchronized
     override fun deliverTreatment(detailedBolusInfo: DetailedBolusInfo): PumpEnactResult {
@@ -281,7 +284,7 @@ class DanaRSPlugin @Inject constructor(
             if (detailedBolusInfo.insulin > 0 || carbs > 0) connectionOK = danaRSService?.bolus(detailedBolusInfo.insulin, carbs.toInt(), DateUtil.now() + T.mins(carbTime.toLong()).msecs(), t)
                 ?: false
             val result = PumpEnactResult(injector)
-            result.success = connectionOK && abs(detailedBolusInfo.insulin - t.insulin) < pumpDesc.bolusStep
+            result.success = connectionOK && abs(detailedBolusInfo.insulin - t.insulin) < pumpDescription.bolusStep
             result.bolusDelivered = t.insulin
             result.carbsDelivered = detailedBolusInfo.carbs
             if (!result.success) {
@@ -599,8 +602,6 @@ class DanaRSPlugin @Inject constructor(
     override fun serialNumber(): String {
         return danaPump.serialNumber
     }
-
-    override val pumpDescription: PumpDescription = pumpDesc
 
     @Suppress("SpellCheckingInspection")
     override fun shortStatus(veryShort: Boolean): String {
