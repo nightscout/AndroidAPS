@@ -19,7 +19,5 @@ abstract class InfoFragmentBase : WizardFragmentBase() {
     abstract fun getTextId(): Int
 
     @LayoutRes
-    override fun getLayoutId(): Int {
-        return R.layout.omnipod_common_wizard_info_page_fragment
-    }
+    override fun getLayoutId(): Int = R.layout.omnipod_common_wizard_info_page_fragment
 }

@@ -5,24 +5,16 @@ import android.os.Bundle
 import android.view.View
 import android.widget.Button
 import info.nightscout.androidaps.plugins.pump.omnipod.common.R
+import info.nightscout.androidaps.plugins.pump.omnipod.common.ui.wizard.activation.viewmodel.PodActivationActionViewModelBase
 import info.nightscout.androidaps.plugins.pump.omnipod.common.ui.wizard.common.fragment.ActionFragmentBase
 import info.nightscout.androidaps.plugins.pump.omnipod.common.ui.wizard.deactivation.PodDeactivationWizardActivity
-import javax.inject.Inject
 
 abstract class PodActivationActionFragmentBase : ActionFragmentBase() {
-
-    @Inject protected lateinit var podStateManager: PodStateManager
-
-    private lateinit var buttonDeactivatePod: Button
-    private lateinit var buttonRetry: Button
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        buttonDeactivatePod = view.findViewById(R.id.omnipod_wizard_button_deactivate_pod)
-        buttonRetry = view.findViewById(R.id.omnipod_wizard_button_retry)
-
-        buttonDeactivatePod.setOnClickListener {
+        view.findViewById<Button>(R.id.omnipod_wizard_button_deactivate_pod).setOnClickListener {
             activity?.let {
                 startActivity(Intent(it, PodDeactivationWizardActivity::class.java))
                 it.finish()
@@ -30,10 +22,14 @@ abstract class PodActivationActionFragmentBase : ActionFragmentBase() {
         }
     }
 
-    override fun onActionFailure() {
-        if ((podStateManager.isPodActivationTimeExceeded && podStateManager.activationProgress.isAtLeast(ActivationProgress.PAIRING_COMPLETED)) || podStateManager.isPodFaulted) {
-            buttonRetry.visibility = View.GONE
-            buttonDeactivatePod.visibility = View.VISIBLE
+    override fun onFailure() {
+        (viewModel as? PodActivationActionViewModelBase)?.let { viewModel ->
+            if (viewModel.isPodDeactivatable() and (viewModel.isPodInAlarm() or viewModel.isPodActivationTimeExceeded())) {
+                view?.let {
+                    it.findViewById<Button>(R.id.omnipod_wizard_button_retry)?.visibility = View.GONE
+                    it.findViewById<Button>(R.id.omnipod_wizard_button_deactivate_pod)?.visibility = View.VISIBLE
+                }
+            }
         }
     }
 }

@@ -58,6 +58,7 @@ class ErosPodManagementActivity : NoSplashAppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
         binding = OmnipodPodManagementBinding.inflate(layoutInflater)
         setContentView(binding.root)
 

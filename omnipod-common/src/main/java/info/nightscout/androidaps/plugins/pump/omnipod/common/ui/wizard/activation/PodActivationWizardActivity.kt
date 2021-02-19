@@ -4,16 +4,18 @@ import android.os.Bundle
 import androidx.annotation.IdRes
 import info.nightscout.androidaps.plugins.pump.omnipod.common.R
 import info.nightscout.androidaps.plugins.pump.omnipod.common.ui.wizard.common.activity.OmnipodWizardActivityBase
-import javax.inject.Inject
 
 class PodActivationWizardActivity : OmnipodWizardActivityBase() {
     companion object {
 
+        const val KEY_TYPE = "wizardType"
         const val KEY_START_DESTINATION = "startDestination"
     }
 
-    @Inject
-    lateinit var podStateManager: PodStateManager
+    enum class Type {
+        SHORT,
+        LONG
+    }
 
     @IdRes
     private var startDestination: Int = R.id.fillPodInfoFragment
@@ -24,7 +26,7 @@ class PodActivationWizardActivity : OmnipodWizardActivityBase() {
         setContentView(R.layout.omnipod_common_pod_activation_wizard_activity)
 
         startDestination = savedInstanceState?.getInt(KEY_START_DESTINATION, R.id.fillPodInfoFragment)
-            ?: if (podStateManager.activationProgress.isBefore(ActivationProgress.PRIMING_COMPLETED)) {
+            ?: if (intent.getSerializableExtra(KEY_TYPE) as Type == Type.LONG) {
                 R.id.fillPodInfoFragment
             } else {
                 R.id.attachPodInfoFragment

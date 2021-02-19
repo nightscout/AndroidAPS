@@ -9,7 +9,7 @@ import io.reactivex.subjects.SingleSubject
 
 abstract class ActionViewModelBase : ViewModel() {
 
-    private val _isActionExecutingLiveData = MutableLiveData<Boolean>(false)
+    private val _isActionExecutingLiveData = MutableLiveData(false)
     val isActionExecutingLiveData: LiveData<Boolean> = _isActionExecutingLiveData
 
     private val _actionResultLiveData = MutableLiveData<PumpEnactResult?>(null)

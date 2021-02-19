@@ -62,7 +62,7 @@ class OmnipodErosOverviewFragment : DaggerFragment() {
     companion object {
 
         private const val REFRESH_INTERVAL_MILLIS = 15 * 1000L // 15 seconds
-        private const val PLACEHOLDER = "-" // 15 seconds
+        private const val PLACEHOLDER = "-"
     }
 
     @Inject lateinit var fabricPrivacy: FabricPrivacy
@@ -93,11 +93,11 @@ class OmnipodErosOverviewFragment : DaggerFragment() {
         }
     }
 
-    private var _binding: OmnipodErosOverviewBinding? = null
+    var _binding: OmnipodErosOverviewBinding? = null
 
     // This property is only valid between onCreateView and
     // onDestroyView.
-    private val binding get() = _binding!!
+    val binding get() = _binding!!
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View =
         OmnipodErosOverviewBinding.inflate(inflater, container!!).also {

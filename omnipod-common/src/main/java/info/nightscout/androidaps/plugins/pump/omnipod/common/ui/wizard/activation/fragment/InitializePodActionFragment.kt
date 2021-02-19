@@ -27,7 +27,7 @@ class InitializePodActionFragment : PodActivationActionFragmentBase() {
     override fun getTitleId(): Int = R.string.omnipod_common_pod_activation_wizard_initialize_pod_title
 
     @StringRes
-    override fun getTextId(): Int = R.string.omnipod_pod_activation_wizard_initialize_pod_text
+    override fun getTextId(): Int = (viewModel as InitializePodActionViewModel).getTextId()
 
     @IdRes
     override fun getNextPageActionId(): Int = R.id.action_initializePodActionFragment_to_attachPodInfoFragment

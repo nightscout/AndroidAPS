@@ -11,19 +11,20 @@ import androidx.annotation.StringRes
 import androidx.navigation.fragment.findNavController
 import dagger.android.support.DaggerFragment
 import info.nightscout.androidaps.plugins.pump.omnipod.common.R
+import info.nightscout.androidaps.plugins.pump.omnipod.common.databinding.OmnipodCommonWizardBaseFragmentBinding
 import info.nightscout.androidaps.plugins.pump.omnipod.common.ui.wizard.common.activity.OmnipodWizardActivityBase
 import kotlin.math.roundToInt
 
 abstract class WizardFragmentBase : DaggerFragment() {
 
-    var _binding: OmnipodWizardBaseFragmentBinding? = null
+    var _binding: OmnipodCommonWizardBaseFragmentBinding? = null
 
     // This property is only valid between onCreateView and
     // onDestroyView.
     val binding get() = _binding!!
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
-        _binding = OmnipodWizardBaseFragmentBinding.inflate(inflater, container, false)
+        _binding = OmnipodCommonWizardBaseFragmentBinding.inflate(inflater, container, false)
 
         binding.fragmentContent.let {
             it.layoutResource = getLayoutId()

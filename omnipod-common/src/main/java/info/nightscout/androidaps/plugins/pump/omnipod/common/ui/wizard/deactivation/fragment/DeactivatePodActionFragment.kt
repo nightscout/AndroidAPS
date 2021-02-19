@@ -13,7 +13,6 @@ import info.nightscout.androidaps.plugins.pump.omnipod.common.R
 import info.nightscout.androidaps.plugins.pump.omnipod.common.dagger.OmnipodPluginQualifier
 import info.nightscout.androidaps.plugins.pump.omnipod.common.ui.wizard.common.fragment.ActionFragmentBase
 import info.nightscout.androidaps.plugins.pump.omnipod.common.ui.wizard.deactivation.viewmodel.DeactivatePodActionViewModel
-import info.nightscout.androidaps.utils.extensions.toVisibility
 import javax.inject.Inject
 
 class DeactivatePodActionFragment : ActionFragmentBase() {
@@ -21,9 +20,6 @@ class DeactivatePodActionFragment : ActionFragmentBase() {
     @Inject
     @OmnipodPluginQualifier
     lateinit var viewModelFactory: ViewModelProvider.Factory
-
-    @Inject
-    lateinit var aapsOmnipodManager: AapsOmnipodManager
 
     private lateinit var buttonDiscardPod: Button
 
@@ -36,15 +32,14 @@ class DeactivatePodActionFragment : ActionFragmentBase() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        buttonDiscardPod = view.findViewById(R.id.omnipod_wizard_button_discard_pod)
-        buttonDiscardPod.setOnClickListener {
+        view.findViewById<Button>(R.id.omnipod_wizard_button_discard_pod)?.setOnClickListener {
             context?.let {
                 AlertDialog.Builder(it)
                     .setIcon(android.R.drawable.ic_dialog_alert)
                     .setTitle(getString(R.string.omnipod_common_pod_deactivation_wizard_discard_pod))
                     .setMessage(getString(R.string.omnipod_common_pod_deactivation_wizard_discard_pod_confirmation))
                     .setPositiveButton(getString(R.string.omnipod_common_yes)) { _, _ ->
-                        aapsOmnipodManager.discardPodState()
+                        (viewModel as DeactivatePodActionViewModel).discardPod()
                         findNavController().navigate(R.id.action_deactivatePodActionFragment_to_podDiscardedInfoFragment)
                     }
                     .setNegativeButton(getString(R.string.omnipod_common_no), null)
@@ -53,8 +48,8 @@ class DeactivatePodActionFragment : ActionFragmentBase() {
         }
     }
 
-    override fun onActionFailure() {
-        buttonDiscardPod.visibility = (!isActionExecuting()).toVisibility()
+    override fun onFailure() {
+        buttonDiscardPod.visibility = View.VISIBLE
     }
 
     @StringRes

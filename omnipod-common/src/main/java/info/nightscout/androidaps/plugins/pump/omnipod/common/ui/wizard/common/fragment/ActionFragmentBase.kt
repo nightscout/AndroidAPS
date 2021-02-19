@@ -43,11 +43,9 @@ abstract class ActionFragmentBase : WizardFragmentBase() {
                 view.findViewById<Button>(R.id.omnipod_wizard_action_error).visibility = (!isExecuting && !result.success).toVisibility()
                 view.findViewById<Button>(R.id.omnipod_wizard_button_retry).visibility = (!isExecuting && !result.success).toVisibility()
 
-                if (result.success) {
-                    onActionSuccess()
-                } else {
+                if (!result.success) {
                     view.findViewById<Button>(R.id.omnipod_wizard_action_error).text = result.comment
-                    onActionFailure()
+                    onFailure()
                 }
             }
         })
@@ -66,15 +64,11 @@ abstract class ActionFragmentBase : WizardFragmentBase() {
         viewModel.actionResultLiveData.removeObservers(viewLifecycleOwner)
     }
 
-    fun onActionSuccess() {}
-
-    open fun onActionFailure() {}
+    abstract fun onFailure()
 
     @StringRes
     abstract fun getTextId(): Int
 
     @LayoutRes
-    override fun getLayoutId(): Int {
-        return R.layout.omnipod_common_wizard_action_page_fragment
-    }
+    override fun getLayoutId(): Int = R.layout.omnipod_common_wizard_action_page_fragment
 }

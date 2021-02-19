@@ -2,9 +2,9 @@ package info.nightscout.androidaps.plugins.pump.omnipod.common.ui.wizard.deactiv
 
 import info.nightscout.androidaps.data.PumpEnactResult
 import info.nightscout.androidaps.interfaces.CommandQueueProvider
+import info.nightscout.androidaps.plugins.pump.omnipod.common.queue.command.CommandDeactivatePod
 import info.nightscout.androidaps.plugins.pump.omnipod.common.ui.wizard.common.viewmodel.ActionViewModelBase
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.manager.AapsOmnipodManager
-import info.nightscout.androidaps.plugins.pump.omnipod.eros.queue.command.CommandDeactivatePod
 import info.nightscout.androidaps.queue.Callback
 import io.reactivex.subjects.SingleSubject
 import javax.inject.Inject
@@ -19,5 +19,9 @@ class DeactivatePodActionViewModel @Inject constructor(private val aapsOmnipodMa
             }
         })
         return singleSubject.blockingGet()
+    }
+
+    fun discardPod() {
+        aapsOmnipodManager.discardPodState()
     }
 }
