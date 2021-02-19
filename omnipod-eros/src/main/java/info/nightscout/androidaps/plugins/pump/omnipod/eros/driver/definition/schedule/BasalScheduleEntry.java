@@ -1,5 +1,6 @@
 package info.nightscout.androidaps.plugins.pump.omnipod.eros.driver.definition.schedule;
 
+import androidx.annotation.NonNull;
 import org.joda.time.Duration;
 
 import java.util.Objects;
@@ -32,7 +33,7 @@ public class BasalScheduleEntry {
         return startTime;
     }
 
-    @Override
+    @NonNull @Override
     public String toString() {
         return "BasalScheduleEntry{" +
                 "rate=" + rate +

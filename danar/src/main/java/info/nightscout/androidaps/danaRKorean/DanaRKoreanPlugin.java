@@ -194,7 +194,7 @@ public class DanaRKoreanPlugin extends AbstractDanaRPlugin {
 
     // This is called from APS
     @NonNull @Override
-    public PumpEnactResult setTempBasalAbsolute(double absoluteRate, int durationInMinutes, Profile profile, boolean enforceNew) {
+    public PumpEnactResult setTempBasalAbsolute(double absoluteRate, int durationInMinutes, @NonNull Profile profile, boolean enforceNew) {
         // Recheck pump status if older than 30 min
         //This should not be needed while using queue because connection should be done before calling this
         //if (pump.lastConnection.getTime() + 30 * 60 * 1000L < System.currentTimeMillis()) {
@@ -234,7 +234,7 @@ public class DanaRKoreanPlugin extends AbstractDanaRPlugin {
         }
 
         if (doLowTemp || doHighTemp) {
-            Integer percentRate = Double.valueOf(absoluteRate / getBaseBasalRate() * 100).intValue();
+            int percentRate = Double.valueOf(absoluteRate / getBaseBasalRate() * 100).intValue();
             // Any basal less than 0.10u/h will be dumped once per hour, not every 4 mins. So if it's less than .10u/h, set a zero temp.
             if (absoluteRate < 0.10d) percentRate = 0;
             if (percentRate < 100) percentRate = Round.ceilTo((double) percentRate, 10d).intValue();
@@ -314,7 +314,7 @@ public class DanaRKoreanPlugin extends AbstractDanaRPlugin {
             }
 
             // Now set new extended, no need to to stop previous (if running) because it's replaced
-            Double extendedAmount = extendedRateToSet / 2 * durationInHalfHours;
+            double extendedAmount = extendedRateToSet / 2 * durationInHalfHours;
             aapsLogger.debug(LTag.PUMP, "setTempBasalAbsolute: Setting extended: " + extendedAmount + "U  halfhours: " + durationInHalfHours);
             result = setExtendedBolus(extendedAmount, durationInMinutes);
             if (!result.success) {
@@ -365,14 +365,13 @@ public class DanaRKoreanPlugin extends AbstractDanaRPlugin {
             result.isTempCancel = true;
             result.comment = resourceHelper.gs(R.string.ok);
             aapsLogger.debug(LTag.PUMP, "cancelRealTempBasal: OK");
-            return result;
         } else {
             result.success = false;
             result.comment = resourceHelper.gs(R.string.danar_valuenotsetproperly);
             result.isTempCancel = true;
             aapsLogger.error("cancelRealTempBasal: Failed to cancel temp basal");
-            return result;
         }
+        return result;
     }
 
     @Override

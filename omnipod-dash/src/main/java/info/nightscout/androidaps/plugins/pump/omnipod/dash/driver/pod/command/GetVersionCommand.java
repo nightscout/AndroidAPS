@@ -1,5 +1,7 @@
 package info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.command;
 
+import androidx.annotation.NonNull;
+
 import java.nio.ByteBuffer;
 
 public class GetVersionCommand extends CommandBase {
@@ -24,7 +26,7 @@ public class GetVersionCommand extends CommandBase {
                 .array());
     }
 
-    @Override public String toString() {
+    @Override @NonNull public String toString() {
         return "GetVersionCommand{" +
                 "commandType=" + commandType +
                 ", address=" + address +

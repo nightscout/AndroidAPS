@@ -1,5 +1,7 @@
 package info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.command;
 
+import androidx.annotation.NonNull;
+
 import java.nio.ByteBuffer;
 
 public class DeactivateCommand extends CommandBase {
@@ -19,7 +21,7 @@ public class DeactivateCommand extends CommandBase {
                 .array());
     }
 
-    @Override public String toString() {
+    @Override @NonNull public String toString() {
         return "DeactivateCommand{" +
                 "commandType=" + commandType +
                 ", address=" + address +

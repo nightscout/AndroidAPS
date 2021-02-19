@@ -7,7 +7,7 @@ import androidx.annotation.NonNull;
 import androidx.work.Worker;
 import androidx.work.WorkerParameters;
 
-import org.jetbrains.annotations.NotNull;
+import androidx.annotation.NonNull;
 
 import javax.inject.Inject;
 
@@ -28,7 +28,7 @@ public class NSClientWorker extends Worker {
     @Inject NSClientPlugin nsClientPlugin;
     @Inject BundleStore bundleStore;
 
-    @NotNull
+    @NonNull
     @Override
     public Result doWork() {
         Bundle bundle = bundleStore.pickup(getInputData().getLong(DataReceiver.STORE_KEY, -1));

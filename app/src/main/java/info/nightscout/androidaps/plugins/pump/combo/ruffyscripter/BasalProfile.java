@@ -1,5 +1,7 @@
 package info.nightscout.androidaps.plugins.pump.combo.ruffyscripter;
 
+import androidx.annotation.NonNull;
+
 import java.util.Arrays;
 
 public class BasalProfile {
@@ -29,7 +31,7 @@ public class BasalProfile {
         return Arrays.hashCode(hourlyRates);
     }
 
-    @Override
+    @NonNull @Override
     public String toString() {
         double total = 0d;
         for(int i = 0; i < 24; i++) {

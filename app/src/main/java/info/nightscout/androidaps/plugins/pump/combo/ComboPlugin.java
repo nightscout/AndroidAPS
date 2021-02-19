@@ -78,7 +78,6 @@ public class ComboPlugin extends PumpPluginBase implements PumpInterface, Constr
     static final String COMBO_TBRS_SET = "combo_tbrs_set";
     static final String COMBO_BOLUSES_DELIVERED = "combo_boluses_delivered";
 
-    private final ResourceHelper resourceHelper;
     private final ProfileFunction profileFunction;
     private final TreatmentsPlugin treatmentsPlugin;
     private final info.nightscout.androidaps.utils.sharedPreferences.SP sp;
@@ -151,7 +150,6 @@ public class ComboPlugin extends PumpPluginBase implements PumpInterface, Constr
                 injector, aapsLogger, resourceHelper, commandQueue
         );
         this.rxBus = rxBus;
-        this.resourceHelper = resourceHelper;
         this.profileFunction = profileFunction;
         this.treatmentsPlugin = treatmentsPlugin;
         this.sp = sp;
@@ -751,9 +749,9 @@ public class ComboPlugin extends PumpPluginBase implements PumpInterface, Constr
         }
 
         if (adjustedPercent % 10 != 0) {
-            Long rounded = Math.round(adjustedPercent / 10d) * 10;
+            long rounded = Math.round(adjustedPercent / 10d) * 10;
             getAapsLogger().debug(LTag.PUMP, "Rounded requested percentage:" + adjustedPercent + " -> " + rounded);
-            adjustedPercent = rounded.intValue();
+            adjustedPercent = (int) rounded;
         }
 
         // do a soft TBR-cancel when requested rate was rounded to 100% (>94% && <104%)
@@ -1255,9 +1253,9 @@ public class ComboPlugin extends PumpPluginBase implements PumpInterface, Constr
     }
 
     @NonNull @Override
-    public JSONObject getJSONStatus(Profile profile, String profileName, String version) {
+    public JSONObject getJSONStatus(@NonNull Profile profile, @NonNull String profileName, @NonNull String version) {
         if (!pump.initialized) {
-            return null;
+            return new JSONObject();
         }
 
         try {
@@ -1302,7 +1300,7 @@ public class ComboPlugin extends PumpPluginBase implements PumpInterface, Constr
             getAapsLogger().warn(LTag.PUMP, "Failed to gather device status for upload " + e);
         }
 
-        return null;
+        return new JSONObject();
     }
 
     @NonNull @Override
@@ -1391,7 +1389,7 @@ public class ComboPlugin extends PumpPluginBase implements PumpInterface, Constr
     }
 
     @Override
-    public void timezoneOrDSTChanged(TimeChangeType changeType) {
+    public void timezoneOrDSTChanged(@NonNull TimeChangeType changeType) {
     }
 
 

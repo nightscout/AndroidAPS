@@ -2,7 +2,7 @@ package info.nightscout.androidaps.plugins.sensitivity;
 
 import androidx.collection.LongSparseArray;
 
-import org.jetbrains.annotations.NotNull;
+import androidx.annotation.NonNull;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -206,11 +206,11 @@ public class SensitivityWeightedAveragePlugin extends AbstractSensitivityPlugin 
         return output;
     }
 
-    @NotNull @Override public SensitivityType getId() {
+    @NonNull @Override public SensitivityType getId() {
         return SensitivityType.SENSITIVITY_WEIGHTED;
     }
 
-    @NotNull @Override public JSONObject configuration() {
+    @NonNull @Override public JSONObject configuration() {
         JSONObject c = new JSONObject();
         try {
             c.put(getResourceHelper().gs(R.string.key_absorption_maxtime), getSp().getDouble(R.string.key_absorption_maxtime, Constants.DEFAULT_MAX_ABSORPTION_TIME));
@@ -223,7 +223,7 @@ public class SensitivityWeightedAveragePlugin extends AbstractSensitivityPlugin 
         return c;
     }
 
-    @Override public void applyConfiguration(@NotNull JSONObject configuration) {
+    @Override public void applyConfiguration(@NonNull JSONObject configuration) {
         try {
             if (configuration.has(getResourceHelper().gs(R.string.key_absorption_maxtime)))
                 getSp().putDouble(R.string.key_absorption_maxtime, configuration.getDouble(getResourceHelper().gs(R.string.key_absorption_maxtime)));
