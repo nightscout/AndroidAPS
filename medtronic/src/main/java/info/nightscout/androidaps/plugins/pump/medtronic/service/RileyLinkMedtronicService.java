@@ -184,7 +184,7 @@ public class RileyLinkMedtronicService extends RileyLinkService {
     public boolean verifyConfiguration(boolean forceRileyLinkAddressRenewal) {
         try {
             String regexSN = "[0-9]{6}";
-            String regexMac = "([\\da-fA-F]{1,2}(?:\\:|$)){6}";
+            String regexMac = "([\\da-fA-F]{1,2}(?::|$)){6}";
 
             medtronicPumpStatus.errorDescription = "-";
 
