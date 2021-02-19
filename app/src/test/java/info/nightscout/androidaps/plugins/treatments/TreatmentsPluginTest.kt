@@ -25,6 +25,7 @@ import org.powermock.api.mockito.PowerMockito
 import org.powermock.core.classloader.annotations.PrepareForTest
 import org.powermock.modules.junit4.PowerMockRunner
 
+@Suppress("SpellCheckingInspection")
 @RunWith(PowerMockRunner::class)
 @PrepareForTest(FabricPrivacy::class, MainApp::class, DatabaseHelper::class)
 class TreatmentsPluginTest : TestBaseWithProfile() {
@@ -47,8 +48,8 @@ class TreatmentsPluginTest : TestBaseWithProfile() {
         }
     }
 
-    lateinit var insulinOrefRapidActingPlugin: InsulinOrefRapidActingPlugin
-    lateinit var sot: TreatmentsPlugin
+    private lateinit var insulinOrefRapidActingPlugin: InsulinOrefRapidActingPlugin
+    private lateinit var sot: TreatmentsPlugin
 
     @Before
     fun prepare() {
@@ -77,7 +78,7 @@ class TreatmentsPluginTest : TestBaseWithProfile() {
     }
 
     @Test
-    fun `90% TBR and should produce less absolute insulin`() {
+    fun `90pct TBR and should produce less absolute insulin`() {
         val now = DateUtil.now()
         val tbrs: MutableList<TemporaryBasal> = ArrayList()
         `when`(databaseHelper.getTemporaryBasalsDataFromTime(ArgumentMatchers.anyLong(), ArgumentMatchers.anyBoolean())).thenReturn(tbrs)
@@ -91,7 +92,7 @@ class TreatmentsPluginTest : TestBaseWithProfile() {
     }
 
     @Test
-    fun `110% TBR and should produce 10% more absolute insulin`() {
+    fun `110pct TBR and should produce 10pct more absolute insulin`() {
         val now = DateUtil.now()
         val tbrs: MutableList<TemporaryBasal> = ArrayList()
         `when`(databaseHelper.getTemporaryBasalsDataFromTime(ArgumentMatchers.anyLong(), ArgumentMatchers.anyBoolean())).thenReturn(tbrs)
