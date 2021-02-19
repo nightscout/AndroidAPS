@@ -68,21 +68,21 @@ public class AapsOmnipodUtil {
 
     private String translateAlertType(AlertType alertType) {
         if (alertType == null) {
-            return resourceHelper.gs(R.string.omnipod_alert_unknown_alert);
+            return resourceHelper.gs(R.string.omnipod_common_alert_unknown_alert);
         }
         switch (alertType) {
             case FINISH_PAIRING_REMINDER:
-                return resourceHelper.gs(R.string.omnipod_alert_finish_pairing_reminder);
+                return resourceHelper.gs(R.string.omnipod_common_alert_finish_pairing_reminder);
             case FINISH_SETUP_REMINDER:
-                return resourceHelper.gs(R.string.omnipod_alert_finish_setup_reminder_reminder);
+                return resourceHelper.gs(R.string.omnipod_common_alert_finish_setup_reminder_reminder);
             case EXPIRATION_ALERT:
-                return resourceHelper.gs(R.string.omnipod_alert_expiration);
+                return resourceHelper.gs(R.string.omnipod_common_alert_expiration);
             case EXPIRATION_ADVISORY_ALERT:
-                return resourceHelper.gs(R.string.omnipod_alert_expiration_advisory);
+                return resourceHelper.gs(R.string.omnipod_common_alert_expiration_advisory);
             case SHUTDOWN_IMMINENT_ALARM:
-                return resourceHelper.gs(R.string.omnipod_alert_shutdown_imminent);
+                return resourceHelper.gs(R.string.omnipod_common_alert_shutdown_imminent);
             case LOW_RESERVOIR_ALERT:
-                return resourceHelper.gs(R.string.omnipod_alert_low_reservoir);
+                return resourceHelper.gs(R.string.omnipod_common_alert_low_reservoir);
             default:
                 return alertType.name();
         }

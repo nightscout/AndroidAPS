@@ -1,0 +1,20 @@
+package info.nightscout.androidaps.plugins.pump.omnipod.common.ui.wizard.deactivation.fragment
+
+import androidx.annotation.IdRes
+import androidx.annotation.StringRes
+import info.nightscout.androidaps.plugins.pump.omnipod.common.R
+import info.nightscout.androidaps.plugins.pump.omnipod.common.ui.wizard.common.fragment.InfoFragmentBase
+
+class PodDiscardedInfoFragment : InfoFragmentBase() {
+
+    @StringRes
+    override fun getTitleId(): Int = R.string.omnipod_common_pod_deactivation_wizard_pod_discarded_title
+
+    @StringRes
+    override fun getTextId(): Int = R.string.omnipod_common_pod_deactivation_wizard_pod_discarded_text
+
+    @IdRes
+    override fun getNextPageActionId(): Int? = null
+
+    override fun getIndex(): Int = 3
+}

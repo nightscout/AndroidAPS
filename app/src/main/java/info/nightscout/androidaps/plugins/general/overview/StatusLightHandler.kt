@@ -40,7 +40,7 @@ class StatusLightHandler @Inject constructor(
             handleAge(careportal_pb_age, CareportalEvent.PUMPBATTERYCHANGE, R.string.key_statuslights_bage_warning, 216.0, R.string.key_statuslights_bage_critical, 240.0)
         }
         if (!config.NSCLIENT) {
-            if (pump.model() == PumpType.Insulet_Omnipod) {
+            if (pump.model() == PumpType.Omnipod_Eros) {
                 handleOmnipodReservoirLevel(careportal_reservoir_level, R.string.key_statuslights_res_critical, 10.0, R.string.key_statuslights_res_warning, 80.0, pump.reservoirLevel, "U")
             } else {
                 handleLevel(careportal_reservoir_level, R.string.key_statuslights_res_critical, 10.0, R.string.key_statuslights_res_warning, 80.0, pump.reservoirLevel, "U")
@@ -52,7 +52,7 @@ class StatusLightHandler @Inject constructor(
         }
 
         if (!config.NSCLIENT) {
-            if (pump.model() == PumpType.Insulet_Omnipod && pump is OmnipodErosPumpPlugin) { // instance of check is needed because at startup, pump can still be VirtualPumpPlugin and that will cause a crash because of the class cast below
+            if (pump.model() == PumpType.Omnipod_Eros && pump is OmnipodErosPumpPlugin) { // instance of check is needed because at startup, pump can still be VirtualPumpPlugin and that will cause a crash because of the class cast below
                 handleOmnipodBatteryLevel(careportal_battery_level, R.string.key_statuslights_bat_critical, 26.0, R.string.key_statuslights_bat_warning, 51.0, pump.batteryLevel.toDouble(), "%", pump.isUseRileyLinkBatteryLevel)
             } else if (pump.model() != PumpType.AccuChekCombo) {
                 handleLevel(careportal_battery_level, R.string.key_statuslights_bat_critical, 26.0, R.string.key_statuslights_bat_warning, 51.0, pump.batteryLevel.toDouble(), "%")

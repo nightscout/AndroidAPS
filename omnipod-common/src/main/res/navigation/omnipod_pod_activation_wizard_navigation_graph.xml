@@ -4,7 +4,7 @@
     app:startDestination="@id/fillPodInfoFragment">
     <fragment
         android:id="@+id/fillPodInfoFragment"
-        android:name="info.nightscout.androidaps.plugins.pump.omnipod.eros.ui.wizard.activation.fragment.FillPodInfoFragment"
+        android:name="info.nightscout.androidaps.plugins.pump.omnipod.common.ui.wizard.activation.fragment.FillPodInfoFragment"
         android:label="FillPodInfoFragment">
         <action
             android:id="@+id/action_fillPodInfoFragment_to_initializePodActionFragment"
@@ -12,7 +12,7 @@
     </fragment>
     <fragment
         android:id="@+id/initializePodActionFragment"
-        android:name="info.nightscout.androidaps.plugins.pump.omnipod.eros.ui.wizard.activation.fragment.InitializePodActionFragment"
+        android:name="info.nightscout.androidaps.plugins.pump.omnipod.common.ui.wizard.activation.fragment.InitializePodActionFragment"
         android:label="initializePodActionFragment">
         <action
             android:id="@+id/action_initializePodActionFragment_to_attachPodInfoFragment"
@@ -20,7 +20,7 @@
     </fragment>
     <fragment
         android:id="@+id/attachPodInfoFragment"
-        android:name="info.nightscout.androidaps.plugins.pump.omnipod.eros.ui.wizard.activation.fragment.AttachPodInfoFragment"
+        android:name="info.nightscout.androidaps.plugins.pump.omnipod.common.ui.wizard.activation.fragment.AttachPodInfoFragment"
         android:label="AttachPodInfoFragment">
         <action
             android:id="@+id/action_attachPodInfoFragment_to_insertCannulaActionFragment"
@@ -28,7 +28,7 @@
     </fragment>
     <fragment
         android:id="@+id/insertCannulaActionFragment"
-        android:name="info.nightscout.androidaps.plugins.pump.omnipod.eros.ui.wizard.activation.fragment.InsertCannulaActionFragment"
+        android:name="info.nightscout.androidaps.plugins.pump.omnipod.common.ui.wizard.activation.fragment.InsertCannulaActionFragment"
         android:label="InsertCannulaActionFragment">
         <action
             android:id="@+id/action_insertCannulaActionFragment_to_PodActivatedInfoFragment"
@@ -36,6 +36,6 @@
     </fragment>
     <fragment
         android:id="@+id/PodActivatedInfoFragment"
-        android:name="info.nightscout.androidaps.plugins.pump.omnipod.eros.ui.wizard.activation.fragment.PodActivatedInfoFragment"
+        android:name="info.nightscout.androidaps.plugins.pump.omnipod.common.ui.wizard.activation.fragment.PodActivatedInfoFragment"
         android:label="PodActivatedInfoFragment" />
 </navigation>

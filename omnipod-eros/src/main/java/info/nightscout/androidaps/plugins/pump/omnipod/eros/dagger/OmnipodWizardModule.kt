@@ -7,18 +7,18 @@ import dagger.Module
 import dagger.Provides
 import dagger.android.ContributesAndroidInjector
 import dagger.multibindings.IntoMap
-import info.nightscout.androidaps.plugins.pump.omnipod.eros.ui.wizard.activation.fragment.AttachPodInfoFragment
-import info.nightscout.androidaps.plugins.pump.omnipod.eros.ui.wizard.activation.fragment.FillPodInfoFragment
-import info.nightscout.androidaps.plugins.pump.omnipod.eros.ui.wizard.activation.fragment.InitializePodActionFragment
-import info.nightscout.androidaps.plugins.pump.omnipod.eros.ui.wizard.activation.fragment.InsertCannulaActionFragment
-import info.nightscout.androidaps.plugins.pump.omnipod.eros.ui.wizard.activation.fragment.PodActivatedInfoFragment
-import info.nightscout.androidaps.plugins.pump.omnipod.eros.ui.wizard.activation.viewmodel.InitializePodActionViewModel
-import info.nightscout.androidaps.plugins.pump.omnipod.eros.ui.wizard.activation.viewmodel.InsertCannulaActionViewModel
-import info.nightscout.androidaps.plugins.pump.omnipod.eros.ui.wizard.deactivation.fragment.DeactivatePodActionFragment
-import info.nightscout.androidaps.plugins.pump.omnipod.eros.ui.wizard.deactivation.fragment.DeactivatePodInfoFragment
-import info.nightscout.androidaps.plugins.pump.omnipod.eros.ui.wizard.deactivation.fragment.PodDeactivatedInfoFragment
-import info.nightscout.androidaps.plugins.pump.omnipod.eros.ui.wizard.deactivation.fragment.PodDiscardedInfoFragment
-import info.nightscout.androidaps.plugins.pump.omnipod.eros.ui.wizard.deactivation.viewmodel.DeactivatePodActionViewModel
+import info.nightscout.androidaps.plugins.pump.omnipod.common.ui.wizard.activation.fragment.AttachPodInfoFragment
+import info.nightscout.androidaps.plugins.pump.omnipod.common.ui.wizard.activation.fragment.FillPodInfoFragment
+import info.nightscout.androidaps.plugins.pump.omnipod.common.ui.wizard.activation.fragment.InitializePodActionFragment
+import info.nightscout.androidaps.plugins.pump.omnipod.common.ui.wizard.activation.fragment.InsertCannulaActionFragment
+import info.nightscout.androidaps.plugins.pump.omnipod.common.ui.wizard.activation.fragment.PodActivatedInfoFragment
+import info.nightscout.androidaps.plugins.pump.omnipod.common.ui.wizard.activation.viewmodel.InitializePodActionViewModel
+import info.nightscout.androidaps.plugins.pump.omnipod.common.ui.wizard.activation.viewmodel.InsertCannulaActionViewModel
+import info.nightscout.androidaps.plugins.pump.omnipod.common.ui.wizard.deactivation.fragment.DeactivatePodActionFragment
+import info.nightscout.androidaps.plugins.pump.omnipod.common.ui.wizard.deactivation.fragment.DeactivatePodInfoFragment
+import info.nightscout.androidaps.plugins.pump.omnipod.common.ui.wizard.deactivation.fragment.PodDeactivatedInfoFragment
+import info.nightscout.androidaps.plugins.pump.omnipod.common.ui.wizard.deactivation.fragment.PodDiscardedInfoFragment
+import info.nightscout.androidaps.plugins.pump.omnipod.common.ui.wizard.deactivation.viewmodel.DeactivatePodActionViewModel
 import javax.inject.Provider
 
 @Module

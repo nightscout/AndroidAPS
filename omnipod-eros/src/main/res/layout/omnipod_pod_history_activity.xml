@@ -17,7 +17,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="5dp"
             android:layout_marginEnd="20dp"
-            android:text="@string/omnipod_history_type"
+            android:text="@string/omnipod_eros_history_type"
             android:textAppearance="?android:attr/textAppearanceSmall" />
 
         <Spinner
@@ -34,7 +34,7 @@
             android:layout_weight="1"
             android:background="@drawable/pillborder"
             android:gravity="center_horizontal"
-            android:text="@string/omnipod_history_title" />
+            android:text="@string/omnipod_eros_history_title" />
 
     </LinearLayout>
 

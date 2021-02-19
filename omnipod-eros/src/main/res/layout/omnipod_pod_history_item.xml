@@ -11,21 +11,21 @@
         android:id="@+id/omnipod_history_time"
         android:layout_width="88dp"
         android:layout_height="match_parent"
-        android:text="@string/omnipod_history_item_date"
+        android:text="@string/omnipod_eros_history_item_date"
         android:textSize="12sp" />
 
     <TextView
         android:id="@+id/omnipod_history_source"
         android:layout_width="132dp"
         android:layout_height="match_parent"
-        android:text="@string/omnipod_history_item_source"
+        android:text="@string/omnipod_eros_history_item_source"
         android:textSize="12sp" />
 
     <TextView
         android:id="@+id/omnipod_history_description"
         android:layout_width="fill_parent"
         android:layout_height="match_parent"
-        android:text="@string/omnipod_history_item_description"
+        android:text="@string/omnipod_eros_history_item_description"
         android:textSize="12sp" />
 
 </LinearLayout>

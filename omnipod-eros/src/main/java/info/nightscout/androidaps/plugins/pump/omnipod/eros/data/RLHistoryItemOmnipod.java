@@ -7,15 +7,15 @@ import javax.inject.Inject;
 import dagger.android.HasAndroidInjector;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.data.RLHistoryItem;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.defs.RileyLinkTargetDevice;
-import info.nightscout.androidaps.plugins.pump.omnipod.eros.definition.OmnipodCommandType;
+import info.nightscout.androidaps.plugins.pump.omnipod.eros.definition.OmnipodErosCommandType;
 import info.nightscout.androidaps.utils.resources.ResourceHelper;
 
 public class RLHistoryItemOmnipod extends RLHistoryItem {
 
     @Inject ResourceHelper resourceHelper;
-    private final OmnipodCommandType omnipodCommandType;
+    private final OmnipodErosCommandType omnipodCommandType;
 
-    public RLHistoryItemOmnipod(HasAndroidInjector injector, OmnipodCommandType omnipodCommandType) {
+    public RLHistoryItemOmnipod(HasAndroidInjector injector, OmnipodErosCommandType omnipodCommandType) {
         super(new LocalDateTime(), RLHistoryItemSource.OmnipodCommand, RileyLinkTargetDevice.Omnipod);
         injector.androidInjector().inject(this);
         this.omnipodCommandType = omnipodCommandType;
