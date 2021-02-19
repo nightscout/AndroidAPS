@@ -36,7 +36,7 @@ public class BgWatchDataTest {
         // GIVEN
         BgWatchData inserted = new BgWatchData(
                 88.0, 160.0, 90.0,
-                WearUtilMocker.REF_NOW - Constants.MINUTE_IN_MS*4*1, 1
+                WearUtilMocker.REF_NOW - Constants.MINUTE_IN_MS * 4, 1
         );
         Set<BgWatchData> set = new HashSet<>();
 
@@ -76,7 +76,7 @@ public class BgWatchDataTest {
         assertNotEquals(item1, item3sameTimeSameDiffColor);
         assertNotEquals(item1, item4differentTime);
 
-        assertFalse(item1.equals("aa bbb"));
+        assertNotEquals("aa bbb", item1);
     }
 
     /**

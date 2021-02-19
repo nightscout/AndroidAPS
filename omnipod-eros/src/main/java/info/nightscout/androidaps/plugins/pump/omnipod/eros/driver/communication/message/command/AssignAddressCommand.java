@@ -1,5 +1,7 @@
 package info.nightscout.androidaps.plugins.pump.omnipod.eros.driver.communication.message.command;
 
+import androidx.annotation.NonNull;
+
 import java.nio.ByteBuffer;
 
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.driver.communication.message.MessageBlock;
@@ -22,7 +24,7 @@ public class AssignAddressCommand extends MessageBlock {
         return MessageBlockType.ASSIGN_ADDRESS;
     }
 
-    @Override
+    @NonNull @Override
     public String toString() {
         return "AssignAddressCommand{" +
                 "address=" + address +

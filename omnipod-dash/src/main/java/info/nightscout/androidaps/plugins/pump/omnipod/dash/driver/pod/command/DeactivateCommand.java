@@ -1,5 +1,7 @@
 package info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.command;
 
+import androidx.annotation.NonNull;
+
 import java.nio.ByteBuffer;
 
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.command.base.CommandType;
@@ -23,7 +25,7 @@ public final class DeactivateCommand extends NonceEnabledCommand {
                 .array());
     }
 
-    @Override public String toString() {
+    @Override @NonNull public String toString() {
         return "DeactivateCommand{" +
                 "nonce=" + nonce +
                 ", commandType=" + commandType +
