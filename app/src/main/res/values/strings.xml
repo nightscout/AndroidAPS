@@ -1251,7 +1251,6 @@
     <string name="key_snoozedTo" translatable="false">snoozedTo</string>
     <string name="key_snooze_dst_in24h" translatable="false">snooze_dst_in24h</string>
     <string name="key_snooze_loopdisabled" translatable="false">snooze_loopdisabled</string>
-    <string name="sixdigitnumber" translatable="false">^\\d{6}</string>
     <string name="ebstopsloop">Use of Extended bolus feature will stop closed loop mode for the time of running extended bolus. Do you really want it?</string>
     <string name="closed_loop_disabled_with_eb">Closed loop disabled because of running Extended bolus</string>
     <string name="phonechecker">\"PhoneChecker\"</string>

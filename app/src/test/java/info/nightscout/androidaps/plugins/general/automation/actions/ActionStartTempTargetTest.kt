@@ -12,7 +12,6 @@ import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.Mockito
 import org.mockito.Mockito.`when`
-import org.powermock.api.mockito.PowerMockito
 import org.powermock.core.classloader.annotations.PrepareForTest
 import org.powermock.modules.junit4.PowerMockRunner
 
@@ -45,13 +44,13 @@ class ActionStartTempTargetTest : ActionsTestBase() {
     }
 
     @Test fun doActionTest() {
-        `when`(activePlugin.activeTreatments).thenReturn(treatmentsPlugin)
+        `when`(activePlugin.activeTreatments).thenReturn(treatmentsInterface)
         sut.doAction(object : Callback() {
             override fun run() {
                 Assert.assertTrue(result.success)
             }
         })
-        Mockito.verify(treatmentsPlugin, Mockito.times(1)).addToHistoryTempTarget(anyObject())
+        Mockito.verify(treatmentsInterface, Mockito.times(1)).addToHistoryTempTarget(anyObject())
     }
 
     @Test fun hasDialogTest() {

@@ -107,8 +107,8 @@ class CommandQueueTest : TestBaseWithProfile() {
         `when`(context.getSystemService(Context.POWER_SERVICE)).thenReturn(powerManager)
         `when`(lazyActivePlugin.get()).thenReturn(activePlugin)
         `when`(activePlugin.activePump).thenReturn(testPumpPlugin)
-        `when`(activePlugin.activeTreatments).thenReturn(treatmentsPlugin)
-        `when`(treatmentsPlugin.lastBolusTime).thenReturn(Calendar.getInstance().also { it.set(2000, 0, 1) }.timeInMillis)
+        `when`(activePlugin.activeTreatments).thenReturn(treatmentsInterface)
+        `when`(treatmentsInterface.lastBolusTime).thenReturn(Calendar.getInstance().also { it.set(2000, 0, 1) }.timeInMillis)
         `when`(profileFunction.getProfile()).thenReturn(validProfile)
 
         val bolusConstraint = Constraint(0.0)

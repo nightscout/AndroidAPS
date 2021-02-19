@@ -1162,4 +1162,5 @@ Unerwartetes Verhalten.</string>
     <string name="trend_arrow">Trendpfeil</string>
     <string name="cannula">Kanüle</string>
     <string name="userentry">Benutzereingabe</string>
+    <string name="common_values">Verwende die Werte der größten Mahlzeit, die Du normalerweise zu Dir nimmst\n</string>
 </resources>
