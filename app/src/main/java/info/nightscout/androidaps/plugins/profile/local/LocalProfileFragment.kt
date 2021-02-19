@@ -82,7 +82,7 @@ class LocalProfileFragment : DaggerFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         // activate DIA tab
-        processVisibilityOnClick(binding.diaPlaceholder)
+        processVisibilityOnClick(binding.diaTab)
         binding.diaPlaceholder.visibility = View.VISIBLE
         // setup listeners
         binding.diaTab.setOnClickListener {
