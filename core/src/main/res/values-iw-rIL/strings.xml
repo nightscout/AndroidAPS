@@ -104,7 +104,7 @@
     <string name="unit_days">ימים</string>
     <string name="unit_weeks">שבועות</string>
     <string name="shortminute">דק\'</string>
-    <string name="shortday">י\'</string>
+    <string name="shortday">י\' </string>
     <!--    Protection-->
     <string name="wrongpassword">סיסמה שגויה</string>
     <string name="passwords_dont_match">הסיסמאות אינן תואמות</string>

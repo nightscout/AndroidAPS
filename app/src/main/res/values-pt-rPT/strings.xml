@@ -1161,4 +1161,5 @@
     <string name="trend_arrow">Seta de tendência</string>
     <string name="cannula">Cânula</string>
     <string name="userentry">Entrada de Utilizador</string>
+    <string name="common_values">Utilize valores da sua maior refeição que normalmente come\n</string>
 </resources>

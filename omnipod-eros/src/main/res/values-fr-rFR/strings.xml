@@ -3,7 +3,7 @@
     <!-- Omnipod - Keys -->
     <!-- Omnipod - Non translatable -->
     <!-- Omnipod - Preferences -->
-    <string name="omnipod_config_riley_link_configuration">Configuration du RileyLink</string>
+    <string name="omnipod_config_riley_link_configuration">Configuration RileyLink</string>
     <string name="omnipod_config_bolus_beeps_enabled">Bips bolus activés</string>
     <string name="omnipod_config_basal_beeps_enabled">Bips basal activés</string>
     <string name="omnipod_config_smb_beeps_enabled">Bips SMB activés</string>

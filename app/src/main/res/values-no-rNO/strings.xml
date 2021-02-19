@@ -1161,4 +1161,5 @@
     <string name="trend_arrow">Trend pil</string>
     <string name="cannula">Kanyle</string>
     <string name="userentry">Bruker registrering</string>
+    <string name="common_values">Bruk verdiene for det største måltidet du normalt spiser\n</string>
 </resources>
