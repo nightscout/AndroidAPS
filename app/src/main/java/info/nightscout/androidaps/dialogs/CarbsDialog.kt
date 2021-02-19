@@ -23,11 +23,7 @@ import info.nightscout.androidaps.plugins.general.nsclient.NSUpload
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.IobCobCalculatorPlugin
 import info.nightscout.androidaps.plugins.treatments.CarbsGenerator
 import info.nightscout.androidaps.plugins.treatments.TreatmentsPlugin
-import info.nightscout.androidaps.utils.DateUtil
-import info.nightscout.androidaps.utils.DecimalFormatter
-import info.nightscout.androidaps.utils.DefaultValueHelper
-import info.nightscout.androidaps.utils.HtmlHelper
-import info.nightscout.androidaps.utils.ToastUtils
+import info.nightscout.androidaps.utils.*
 import info.nightscout.androidaps.utils.alertDialogs.OKDialog
 import info.nightscout.androidaps.utils.extensions.formatColor
 import info.nightscout.androidaps.utils.resources.ResourceHelper
@@ -48,6 +44,7 @@ class CarbsDialog : DialogFragmentWithDate() {
     @Inject lateinit var nsUpload: NSUpload
     @Inject lateinit var carbsGenerator: CarbsGenerator
     @Inject lateinit var uel: UserEntryLogger
+    @Inject lateinit var carbTimer: CarbTimer
 
     companion object {
 
@@ -176,6 +173,7 @@ class CarbsDialog : DialogFragmentWithDate() {
         val hypoTT = defaultValueHelper.determineHypoTT()
         val actions: LinkedList<String?> = LinkedList()
         val unitLabel = if (units == Constants.MMOL) resourceHelper.gs(R.string.mmol) else resourceHelper.gs(R.string.mgdl)
+        val useAlarm = binding.alarmCheckBox.isChecked
 
         val activitySelected = binding.activityTt.isChecked
         if (activitySelected)
@@ -192,6 +190,8 @@ class CarbsDialog : DialogFragmentWithDate() {
         val time = eventTime + timeOffset * 1000 * 60
         if (timeOffset != 0)
             actions.add(resourceHelper.gs(R.string.time) + ": " + dateUtil.dateAndTimeString(time))
+        if (useAlarm && carbs > 0 && timeOffset > 0)
+            actions.add(resourceHelper.gs(R.string.alarminxmin, timeOffset).formatColor(resourceHelper, R.color.info))
         val duration = binding.duration.value.toInt()
         if (duration > 0)
             actions.add(resourceHelper.gs(R.string.duration) + ": " + duration + resourceHelper.gs(R.string.shorthour))
@@ -256,6 +256,9 @@ class CarbsDialog : DialogFragmentWithDate() {
                             carbsGenerator.generateCarbs(carbsAfterConstraints, time, duration, notes)
                             nsUpload.uploadEvent(CareportalEvent.NOTE, DateUtil.now() - 2000, resourceHelper.gs(R.string.generated_ecarbs_note, carbsAfterConstraints, duration, timeOffset))
                         }
+                    }
+                    if (useAlarm && carbs > 0 && timeOffset > 0) {
+                        carbTimer.scheduleReminder(dateUtil._now() + T.mins(timeOffset.toLong()).msecs())
                     }
                 }, null)
             }
