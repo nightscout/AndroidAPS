@@ -21,7 +21,7 @@ class PodActivationWizardActivity : OmnipodWizardActivityBase() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        setContentView(R.layout.omnipod_pod_activation_wizard_activity)
+        setContentView(R.layout.omnipod_common_pod_activation_wizard_activity)
 
         startDestination = savedInstanceState?.getInt(KEY_START_DESTINATION, R.id.fillPodInfoFragment)
             ?: if (podStateManager.activationProgress.isBefore(ActivationProgress.PRIMING_COMPLETED)) {
@@ -37,7 +37,7 @@ class PodActivationWizardActivity : OmnipodWizardActivityBase() {
         this.startDestination = startDestination
         val navController = getNavController()
         val navInflater = navController.navInflater
-        val graph = navInflater.inflate(R.navigation.omnipod_pod_activation_wizard_navigation_graph)
+        val graph = navInflater.inflate(R.navigation.omnipod_common_pod_activation_wizard_navigation_graph)
         graph.startDestination = startDestination
         navController.graph = graph
     }

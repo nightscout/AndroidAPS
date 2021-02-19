@@ -66,6 +66,7 @@ import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.defs.RileyLin
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.defs.RileyLinkPumpInfo;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.service.RileyLinkServiceData;
 import info.nightscout.androidaps.plugins.pump.common.utils.DateTimeUtil;
+import info.nightscout.androidaps.plugins.pump.omnipod.common.definition.OmnipodCommandType;
 import info.nightscout.androidaps.plugins.pump.omnipod.common.queue.command.CommandAcknowledgeAlerts;
 import info.nightscout.androidaps.plugins.pump.omnipod.common.queue.command.CommandDeactivatePod;
 import info.nightscout.androidaps.plugins.pump.omnipod.common.queue.command.CommandHandleTimeChange;
@@ -75,21 +76,21 @@ import info.nightscout.androidaps.plugins.pump.omnipod.common.queue.command.Comm
 import info.nightscout.androidaps.plugins.pump.omnipod.common.queue.command.CommandUpdateAlertConfiguration;
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.data.ActiveBolus;
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.data.RLHistoryItemOmnipod;
-import info.nightscout.androidaps.plugins.pump.omnipod.eros.definition.OmnipodErosCommandType;
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.definition.OmnipodErosStorageKeys;
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.driver.communication.action.service.ExpirationReminderBuilder;
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.driver.communication.message.response.podinfo.PodInfoRecentPulseLog;
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.driver.definition.ActivationProgress;
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.driver.definition.AlertConfiguration;
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.driver.definition.AlertSet;
+import info.nightscout.androidaps.plugins.pump.omnipod.eros.driver.definition.BeepConfigType;
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.driver.definition.OmnipodConstants;
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.driver.manager.PodStateManager;
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.driver.util.TimeUtil;
-import info.nightscout.androidaps.plugins.pump.omnipod.eros.event.EventOmnipodActiveAlertsChanged;
-import info.nightscout.androidaps.plugins.pump.omnipod.eros.event.EventOmnipodFaultEventChanged;
-import info.nightscout.androidaps.plugins.pump.omnipod.eros.event.EventOmnipodPumpValuesChanged;
-import info.nightscout.androidaps.plugins.pump.omnipod.eros.event.EventOmnipodTbrChanged;
-import info.nightscout.androidaps.plugins.pump.omnipod.eros.event.EventOmnipodUncertainTbrRecovered;
+import info.nightscout.androidaps.plugins.pump.omnipod.eros.event.EventOmnipodErosActiveAlertsChanged;
+import info.nightscout.androidaps.plugins.pump.omnipod.eros.event.EventOmnipodErosFaultEventChanged;
+import info.nightscout.androidaps.plugins.pump.omnipod.eros.event.EventOmnipodErosPumpValuesChanged;
+import info.nightscout.androidaps.plugins.pump.omnipod.eros.event.EventOmnipodErosTbrChanged;
+import info.nightscout.androidaps.plugins.pump.omnipod.eros.event.EventOmnipodErosUncertainTbrRecovered;
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.manager.AapsOmnipodErosManager;
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.queue.command.CommandGetPodStatus;
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.queue.command.CommandReadPulseLog;
@@ -294,22 +295,22 @@ public class OmnipodErosPumpPlugin extends PumpPluginBase implements PumpInterfa
                 .subscribe(event -> context.unbindService(serviceConnection), fabricPrivacy::logException)
         );
         disposables.add(rxBus
-                .toObservable(EventOmnipodTbrChanged.class)
+                .toObservable(EventOmnipodErosTbrChanged.class)
                 .observeOn(aapsSchedulers.getIo())
                 .subscribe(event -> handleCancelledTbr(), fabricPrivacy::logException)
         );
         disposables.add(rxBus
-                .toObservable(EventOmnipodUncertainTbrRecovered.class)
+                .toObservable(EventOmnipodErosUncertainTbrRecovered.class)
                 .observeOn(aapsSchedulers.getIo())
                 .subscribe(event -> handleUncertainTbrRecovery(), fabricPrivacy::logException)
         );
         disposables.add(rxBus
-                .toObservable(EventOmnipodActiveAlertsChanged.class)
+                .toObservable(EventOmnipodErosActiveAlertsChanged.class)
                 .observeOn(aapsSchedulers.getIo())
                 .subscribe(event -> handleActivePodAlerts(), fabricPrivacy::logException)
         );
         disposables.add(rxBus
-                .toObservable(EventOmnipodFaultEventChanged.class)
+                .toObservable(EventOmnipodErosFaultEventChanged.class)
                 .observeOn(aapsSchedulers.getIo())
                 .subscribe(event -> handlePodFaultEvent(), fabricPrivacy::logException)
         );
@@ -581,13 +582,13 @@ public class OmnipodErosPumpPlugin extends PumpPluginBase implements PumpInterfa
     }
 
     private PumpEnactResult getPodStatus() {
-        return executeCommand(OmnipodErosCommandType.GET_POD_STATUS, aapsOmnipodErosManager::getPodStatus);
+        return executeCommand(OmnipodCommandType.GET_POD_STATUS, aapsOmnipodErosManager::getPodStatus);
     }
 
     @NonNull
     @Override
     public PumpEnactResult setNewBasalProfile(Profile profile) {
-        PumpEnactResult result = executeCommand(OmnipodErosCommandType.SET_BASAL_PROFILE, () -> aapsOmnipodErosManager.setBasalProfile(profile, true));
+        PumpEnactResult result = executeCommand(OmnipodCommandType.SET_BASAL_PROFILE, () -> aapsOmnipodErosManager.setBasalProfile(profile, true));
 
         aapsLogger.info(LTag.PUMP, "Basal Profile was set: " + result.success);
 
@@ -659,7 +660,7 @@ public class OmnipodErosPumpPlugin extends PumpPluginBase implements PumpInterfa
 
     @Override
     public void stopBolusDelivering() {
-        executeCommand(OmnipodErosCommandType.CANCEL_BOLUS, aapsOmnipodErosManager::cancelBolus);
+        executeCommand(OmnipodCommandType.CANCEL_BOLUS, aapsOmnipodErosManager::cancelBolus);
     }
 
     // if enforceNew is true, current temp basal is cancelled and new TBR set (duration is prolonged),
@@ -689,7 +690,7 @@ public class OmnipodErosPumpPlugin extends PumpPluginBase implements PumpInterfa
             }
         }
 
-        PumpEnactResult result = executeCommand(OmnipodErosCommandType.SET_TEMPORARY_BASAL, () -> aapsOmnipodErosManager.setTemporaryBasal(new TempBasalPair(absoluteRate, false, durationInMinutes)));
+        PumpEnactResult result = executeCommand(OmnipodCommandType.SET_TEMPORARY_BASAL, () -> aapsOmnipodErosManager.setTemporaryBasal(new TempBasalPair(absoluteRate, false, durationInMinutes)));
 
         aapsLogger.info(LTag.PUMP, "setTempBasalAbsolute - setTBR. Response: " + result.success);
 
@@ -710,7 +711,7 @@ public class OmnipodErosPumpPlugin extends PumpPluginBase implements PumpInterfa
             return new PumpEnactResult(getInjector()).success(true).enacted(false);
         }
 
-        return executeCommand(OmnipodErosCommandType.CANCEL_TEMPORARY_BASAL, aapsOmnipodErosManager::cancelTemporaryBasal);
+        return executeCommand(OmnipodCommandType.CANCEL_TEMPORARY_BASAL, aapsOmnipodErosManager::cancelTemporaryBasal);
     }
 
     // TODO improve (i8n and more)
@@ -839,7 +840,7 @@ public class OmnipodErosPumpPlugin extends PumpPluginBase implements PumpInterfa
     @Override
     public PumpEnactResult executeCustomCommand(CustomCommand command) {
         if (command instanceof CommandAcknowledgeAlerts) {
-            return executeCommand(OmnipodErosCommandType.ACKNOWLEDGE_ALERTS, aapsOmnipodErosManager::acknowledgeAlerts);
+            return executeCommand(OmnipodCommandType.ACKNOWLEDGE_ALERTS, aapsOmnipodErosManager::acknowledgeAlerts);
         }
         if (command instanceof CommandGetPodStatus) {
             return getPodStatus();
@@ -848,13 +849,13 @@ public class OmnipodErosPumpPlugin extends PumpPluginBase implements PumpInterfa
             return retrievePulseLog();
         }
         if (command instanceof CommandSuspendDelivery) {
-            return executeCommand(OmnipodErosCommandType.SUSPEND_DELIVERY, aapsOmnipodErosManager::suspendDelivery);
+            return executeCommand(OmnipodCommandType.SUSPEND_DELIVERY, aapsOmnipodErosManager::suspendDelivery);
         }
         if (command instanceof CommandResumeDelivery) {
-            return executeCommand(OmnipodErosCommandType.RESUME_DELIVERY, () -> aapsOmnipodErosManager.setBasalProfile(profileFunction.getProfile(), false));
+            return executeCommand(OmnipodCommandType.RESUME_DELIVERY, () -> aapsOmnipodErosManager.setBasalProfile(profileFunction.getProfile(), false));
         }
         if (command instanceof CommandDeactivatePod) {
-            return executeCommand(OmnipodErosCommandType.DEACTIVATE_POD, aapsOmnipodErosManager::deactivatePod);
+            return executeCommand(OmnipodCommandType.DEACTIVATE_POD, aapsOmnipodErosManager::deactivatePod);
         }
         if (command instanceof CommandHandleTimeChange) {
             return handleTimeChange(((CommandHandleTimeChange) command).isRequestedByUser());
@@ -863,7 +864,7 @@ public class OmnipodErosPumpPlugin extends PumpPluginBase implements PumpInterfa
             return updateAlertConfiguration();
         }
         if (command instanceof CommandPlayTestBeep) {
-            return executeCommand(OmnipodErosCommandType.PLAY_TEST_BEEP, () -> aapsOmnipodErosManager.playTestBeep(((CommandPlayTestBeep) command).getBeepType()));
+            return executeCommand(OmnipodCommandType.PLAY_TEST_BEEP, () -> aapsOmnipodErosManager.playTestBeep(BeepConfigType.BEEEP));
         }
 
         aapsLogger.warn(LTag.PUMP, "Unsupported custom command: " + command.getClass().getName());
@@ -873,7 +874,7 @@ public class OmnipodErosPumpPlugin extends PumpPluginBase implements PumpInterfa
     private PumpEnactResult retrievePulseLog() {
         PodInfoRecentPulseLog result;
         try {
-            result = executeCommand(OmnipodErosCommandType.READ_POD_PULSE_LOG, aapsOmnipodErosManager::readPulseLog);
+            result = executeCommand(OmnipodCommandType.READ_POD_PULSE_LOG, aapsOmnipodErosManager::readPulseLog);
         } catch (Exception ex) {
             return new PumpEnactResult(getInjector()).success(false).enacted(false).comment(aapsOmnipodErosManager.translateException(ex));
         }
@@ -898,7 +899,7 @@ public class OmnipodErosPumpPlugin extends PumpPluginBase implements PumpInterfa
                 .lowReservoir(lowReservoirAlertUnits != null, Optional.ofNullable(lowReservoirAlertUnits).orElse(0)) //
                 .build();
 
-        PumpEnactResult result = executeCommand(OmnipodErosCommandType.CONFIGURE_ALERTS, () -> aapsOmnipodErosManager.configureAlerts(alertConfigurations));
+        PumpEnactResult result = executeCommand(OmnipodCommandType.CONFIGURE_ALERTS, () -> aapsOmnipodErosManager.configureAlerts(alertConfigurations));
 
         if (result.success) {
             aapsLogger.info(LTag.PUMP, "Successfully configured alerts in Pod");
@@ -923,7 +924,7 @@ public class OmnipodErosPumpPlugin extends PumpPluginBase implements PumpInterfa
 
         PumpEnactResult result;
         if (requestedByUser || aapsOmnipodErosManager.isTimeChangeEventEnabled()) {
-            result = executeCommand(OmnipodErosCommandType.SET_TIME, () -> aapsOmnipodErosManager.setTime(!requestedByUser));
+            result = executeCommand(OmnipodCommandType.SET_TIME, () -> aapsOmnipodErosManager.setTime(!requestedByUser));
         } else {
             // Even if automatically changing the time is disabled, we still want to at least do a GetStatus request,
             // in order to update the Pod's activation time, which we need for calculating the time on the Pod
@@ -1093,7 +1094,7 @@ public class OmnipodErosPumpPlugin extends PumpPluginBase implements PumpInterfa
     }
 
     @NonNull private PumpEnactResult deliverBolus(final DetailedBolusInfo detailedBolusInfo) {
-        PumpEnactResult result = executeCommand(OmnipodErosCommandType.SET_BOLUS, () -> aapsOmnipodErosManager.bolus(detailedBolusInfo));
+        PumpEnactResult result = executeCommand(OmnipodCommandType.SET_BOLUS, () -> aapsOmnipodErosManager.bolus(detailedBolusInfo));
 
         if (result.success) {
             incrementStatistics(detailedBolusInfo.isSMB ? OmnipodErosStorageKeys.Statistics.SMB_BOLUSES_DELIVERED
@@ -1105,7 +1106,7 @@ public class OmnipodErosPumpPlugin extends PumpPluginBase implements PumpInterfa
         return result;
     }
 
-    private <T> T executeCommand(OmnipodErosCommandType commandType, Supplier<T> supplier) {
+    private <T> T executeCommand(OmnipodCommandType commandType, Supplier<T> supplier) {
         try {
             aapsLogger.debug(LTag.PUMP, "Executing command: {}", commandType);
 
@@ -1114,7 +1115,7 @@ public class OmnipodErosPumpPlugin extends PumpPluginBase implements PumpInterfa
             return supplier.get();
         } finally {
             rxBus.send(new EventRefreshOverview("Omnipod command: " + commandType.name(), false));
-            rxBus.send(new EventOmnipodPumpValuesChanged());
+            rxBus.send(new EventOmnipodErosPumpValuesChanged());
         }
     }
 

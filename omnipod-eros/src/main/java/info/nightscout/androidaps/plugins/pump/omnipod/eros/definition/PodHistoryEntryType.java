@@ -35,7 +35,7 @@ public enum PodHistoryEntryType {
     CANCEL_BOLUS(41, R.string.omnipod_common_cmd_cancel_bolus, PumpHistoryEntryGroup.Bolus),
 
     CONFIGURE_ALERTS(50, R.string.omnipod_common_cmd_configure_alerts, PumpHistoryEntryGroup.Alarm),
-    ACKNOWLEDGE_ALERTS(51, R.string.omnipod_common_cmd_acknowledge_alerts, PumpHistoryEntryGroup.Alarm),
+    ACKNOWLEDGE_ALERTS(51, R.string.omnipod_common_cmd_silence_alerts, PumpHistoryEntryGroup.Alarm),
     PLAY_TEST_BEEP(52, R.string.omnipod_common_cmd_play_test_beep, PumpHistoryEntryGroup.Alarm),
 
     SUSPEND_DELIVERY(60, R.string.omnipod_common_cmd_suspend_delivery, PumpHistoryEntryGroup.Basal),

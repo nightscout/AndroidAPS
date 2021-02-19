@@ -1,0 +1,53 @@
+<merge xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <LinearLayout
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:orientation="horizontal">
+
+        <TextView
+            android:gravity="end"
+            android:layout_height="wrap_content"
+            android:layout_weight="1.5"
+            android:layout_width="match_parent"
+            android:paddingEnd="5dp"
+            android:paddingStart="5dp"
+            android:text="@string/rileylink_status"
+            android:textSize="14sp" />
+
+        <TextView
+            android:gravity="center_horizontal"
+            android:layout_height="wrap_content"
+            android:layout_weight="0"
+            android:layout_width="5dp"
+            android:paddingEnd="2dp"
+            android:paddingStart="2dp"
+            android:text=":"
+            android:textSize="14sp"
+            tools:ignore="HardcodedText" />
+
+        <com.joanzapata.iconify.widget.IconTextView
+            android:gravity="start"
+            android:id="@+id/riley_link_status"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_width="match_parent"
+            android:paddingEnd="5dp"
+            android:paddingStart="5dp"
+            android:text="{fa-bluetooth-b}"
+            android:textColor="@android:color/white"
+            android:textSize="14sp"
+            tools:ignore="HardcodedText" />
+
+    </LinearLayout>
+
+    <View
+        android:background="@color/list_delimiter"
+        android:layout_height="2dip"
+        android:layout_marginBottom="5dp"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:layout_marginTop="5dp"
+        android:layout_width="fill_parent" />
+</merge>

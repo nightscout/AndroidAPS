@@ -41,9 +41,9 @@ import info.nightscout.androidaps.plugins.general.overview.notifications.Notific
 import info.nightscout.androidaps.plugins.pump.common.data.TempBasalPair;
 import info.nightscout.androidaps.plugins.pump.common.defs.PumpType;
 import info.nightscout.androidaps.plugins.pump.common.utils.ByteUtil;
+import info.nightscout.androidaps.plugins.pump.omnipod.common.definition.OmnipodCommandType;
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.R;
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.data.ActiveBolus;
-import info.nightscout.androidaps.plugins.pump.omnipod.eros.definition.OmnipodErosCommandType;
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.definition.OmnipodErosStorageKeys;
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.definition.PodHistoryEntryType;
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.driver.communication.message.response.StatusResponse;
@@ -82,7 +82,7 @@ import info.nightscout.androidaps.plugins.pump.omnipod.eros.driver.exception.Ril
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.driver.exception.RileyLinkUnreachableException;
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.driver.manager.OmnipodManager;
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.driver.manager.PodStateManager;
-import info.nightscout.androidaps.plugins.pump.omnipod.eros.event.EventOmnipodPumpValuesChanged;
+import info.nightscout.androidaps.plugins.pump.omnipod.eros.event.EventOmnipodErosPumpValuesChanged;
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.rileylink.manager.OmnipodRileyLinkCommunicationManager;
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.util.AapsOmnipodUtil;
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.util.OmnipodAlertUtil;
@@ -366,8 +366,8 @@ public class AapsOmnipodErosManager {
         createSuspendedFakeTbrIfNotExists();
 
         dismissNotification(Notification.OMNIPOD_POD_FAULT);
-        sendEvent(new EventOmnipodPumpValuesChanged());
-        sendEvent(new EventRefreshOverview("Omnipod command: " + OmnipodErosCommandType.DISCARD_POD, false));
+        sendEvent(new EventOmnipodErosPumpValuesChanged());
+        sendEvent(new EventRefreshOverview("Omnipod command: " + OmnipodCommandType.DISCARD_POD, false));
 
         return new PumpEnactResult(injector).success(true).enacted(true);
     }
@@ -434,7 +434,7 @@ public class AapsOmnipodErosManager {
         // Bolus is already updated in Pod state. If this was an SMB, it could be that
         // the user is looking at the Pod tab right now, so send an extra event
         // (this is normally done in OmnipodPumpPlugin)
-        sendEvent(new EventOmnipodPumpValuesChanged());
+        sendEvent(new EventOmnipodErosPumpValuesChanged());
 
         // Wait for the bolus to finish
         OmnipodManager.BolusDeliveryResult bolusDeliveryResult =

@@ -20,9 +20,8 @@ import info.nightscout.androidaps.plugins.pump.omnipod.eros.OmnipodErosPumpPlugi
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.R
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.databinding.OmnipodPodManagementBinding
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.driver.definition.ActivationProgress
-import info.nightscout.androidaps.plugins.pump.omnipod.eros.driver.definition.BeepConfigType
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.driver.manager.PodStateManager
-import info.nightscout.androidaps.plugins.pump.omnipod.eros.event.EventOmnipodPumpValuesChanged
+import info.nightscout.androidaps.plugins.pump.omnipod.eros.event.EventOmnipodErosPumpValuesChanged
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.manager.AapsOmnipodErosManager
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.queue.command.CommandReadPulseLog
 import info.nightscout.androidaps.queue.Callback
@@ -94,7 +93,7 @@ class ErosPodManagementActivity : NoSplashAppCompatActivity() {
             binding.buttonPlayTestBeep.isEnabled = false
             binding.buttonPlayTestBeep.setText(R.string.omnipod_common_pod_management_button_playing_test_beep)
 
-            commandQueue.customCommand(CommandPlayTestBeep(BeepConfigType.BEEEP), object : Callback() {
+            commandQueue.customCommand(CommandPlayTestBeep(), object : Callback() {
                 override fun run() {
                     if (!result.success) {
                         displayErrorDialog(resourceHelper.gs(R.string.omnipod_common_warning), resourceHelper.gs(R.string.omnipod_common_two_strings_concatenated_by_colon, resourceHelper.gs(R.string.omnipod_common_error_failed_to_play_test_beep), result.comment), false)
@@ -128,7 +127,7 @@ class ErosPodManagementActivity : NoSplashAppCompatActivity() {
             .observeOn(aapsSchedulers.main)
             .subscribe({ refreshButtons() }, fabricPrivacy::logException)
         disposables += rxBus
-            .toObservable(EventOmnipodPumpValuesChanged::class.java)
+            .toObservable(EventOmnipodErosPumpValuesChanged::class.java)
             .observeOn(aapsSchedulers.main)
             .subscribe({ refreshButtons() }, fabricPrivacy::logException)
         disposables += rxBus

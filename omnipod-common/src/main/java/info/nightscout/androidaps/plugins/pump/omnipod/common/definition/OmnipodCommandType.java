@@ -1,11 +1,11 @@
-package info.nightscout.androidaps.plugins.pump.omnipod.eros.definition;
+package info.nightscout.androidaps.plugins.pump.omnipod.common.definition;
 
-import info.nightscout.androidaps.plugins.pump.omnipod.eros.R;
+import info.nightscout.androidaps.plugins.pump.omnipod.common.R;
 
 /**
  * Created by andy on 4.8.2019
  */
-public enum OmnipodErosCommandType {
+public enum OmnipodCommandType {
     INITIALIZE_POD(R.string.omnipod_common_cmd_initialize_pod), // First step of Pod activation
     INSERT_CANNULA(R.string.omnipod_common_cmd_insert_cannula), // Second step of Pod activation
     DEACTIVATE_POD(R.string.omnipod_common_cmd_deactivate_pod), //
@@ -18,7 +18,7 @@ public enum OmnipodErosCommandType {
     GET_POD_STATUS(R.string.omnipod_common_cmd_get_pod_status), //
     SET_TIME(R.string.omnipod_common_cmd_set_time), //
     CONFIGURE_ALERTS(R.string.omnipod_common_cmd_configure_alerts), //
-    ACKNOWLEDGE_ALERTS(R.string.omnipod_common_cmd_acknowledge_alerts), //
+    ACKNOWLEDGE_ALERTS(R.string.omnipod_common_cmd_silence_alerts), //
     READ_POD_PULSE_LOG(R.string.omnipod_common_cmd_read_pulse_log), //
     SUSPEND_DELIVERY(R.string.omnipod_common_cmd_suspend_delivery),
     RESUME_DELIVERY(R.string.omnipod_common_cmd_resume_delivery),
@@ -26,7 +26,7 @@ public enum OmnipodErosCommandType {
 
     private final int resourceId;
 
-    OmnipodErosCommandType(int resourceId) {
+    OmnipodCommandType(int resourceId) {
         this.resourceId = resourceId;
     }
 

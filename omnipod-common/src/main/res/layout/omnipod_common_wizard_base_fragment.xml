@@ -7,7 +7,7 @@
 
     <include
         android:id="@+id/progress_indication_layout"
-        layout="@layout/omnipod_wizard_progress_indication" />
+        layout="@layout/omnipod_common_wizard_progress_indication" />
 
     <TextView
         android:id="@+id/fragment_title"
@@ -30,5 +30,5 @@
 
     <include
         android:id="@+id/nav_buttons_layout"
-        layout="@layout/omnipod_wizard_nav_buttons" />
+        layout="@layout/omnipod_common_wizard_nav_buttons" />
 </LinearLayout>

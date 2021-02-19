@@ -9,10 +9,10 @@ import info.nightscout.androidaps.plugins.general.overview.events.EventDismissNo
 import info.nightscout.androidaps.plugins.general.overview.notifications.Notification;
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.definition.OmnipodErosStorageKeys;
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.driver.manager.PodStateManager;
-import info.nightscout.androidaps.plugins.pump.omnipod.eros.event.EventOmnipodActiveAlertsChanged;
-import info.nightscout.androidaps.plugins.pump.omnipod.eros.event.EventOmnipodFaultEventChanged;
-import info.nightscout.androidaps.plugins.pump.omnipod.eros.event.EventOmnipodTbrChanged;
-import info.nightscout.androidaps.plugins.pump.omnipod.eros.event.EventOmnipodUncertainTbrRecovered;
+import info.nightscout.androidaps.plugins.pump.omnipod.eros.event.EventOmnipodErosActiveAlertsChanged;
+import info.nightscout.androidaps.plugins.pump.omnipod.eros.event.EventOmnipodErosFaultEventChanged;
+import info.nightscout.androidaps.plugins.pump.omnipod.eros.event.EventOmnipodErosTbrChanged;
+import info.nightscout.androidaps.plugins.pump.omnipod.eros.event.EventOmnipodErosUncertainTbrRecovered;
 import info.nightscout.androidaps.utils.sharedPreferences.SP;
 
 @Singleton
@@ -38,19 +38,19 @@ public class AapsErosPodStateManager extends PodStateManager {
     }
 
     @Override protected void onUncertainTbrRecovered() {
-        rxBus.send(new EventOmnipodUncertainTbrRecovered());
+        rxBus.send(new EventOmnipodErosUncertainTbrRecovered());
     }
 
     @Override protected void onTbrChanged() {
-        rxBus.send(new EventOmnipodTbrChanged());
+        rxBus.send(new EventOmnipodErosTbrChanged());
     }
 
     @Override protected void onActiveAlertsChanged() {
-        rxBus.send(new EventOmnipodActiveAlertsChanged());
+        rxBus.send(new EventOmnipodErosActiveAlertsChanged());
     }
 
     @Override protected void onFaultEventChanged() {
-        rxBus.send(new EventOmnipodFaultEventChanged());
+        rxBus.send(new EventOmnipodErosFaultEventChanged());
     }
 
     @Override protected void onUpdatedFromResponse() {

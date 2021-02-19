@@ -9,7 +9,7 @@ class PodDeactivationWizardActivity : OmnipodWizardActivityBase() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        setContentView(R.layout.omnipod_pod_deactivation_wizard_activity)
+        setContentView(R.layout.omnipod_common_pod_deactivation_wizard_activity)
     }
 
     override fun getTotalDefinedNumberOfSteps(): Int = 3
