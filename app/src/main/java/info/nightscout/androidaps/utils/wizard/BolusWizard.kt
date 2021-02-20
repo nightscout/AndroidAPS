@@ -410,7 +410,7 @@ class BolusWizard @Inject constructor(
                     boluscalc = nsJSON()
                     source = Source.USER
                     notes = this@BolusWizard.notes
-                    uel.log("BOLUS WIZARD", "", insulinAfterConstraints, carbs)
+                    uel.log(resourceHelper.gs(R.string.key_uel_bolus_wizard), "", insulinAfterConstraints, carbs)
                     if (insulin > 0 || pump.pumpDescription.storesCarbInfo) {
                         commandQueue.bolus(this, object : Callback() {
                             override fun run() {

@@ -162,7 +162,7 @@ class LocalProfileFragment : DaggerFragment() {
             if (localProfilePlugin.isEdited) {
                 activity?.let { OKDialog.show(it, "", resourceHelper.gs(R.string.saveorresetchangesfirst)) }
             } else {
-                uel.log(resourceHelper.gs(R.string.key_new_profile))
+                uel.log(resourceHelper.gs(R.string.key_uel_new_profile))
                 localProfilePlugin.addNewProfile()
                 build()
             }

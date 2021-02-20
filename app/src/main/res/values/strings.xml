@@ -1427,7 +1427,7 @@
     <string name="key_uel_accepts_temp_basal" translatable="false">ACCEPT TEMP BASAL</string>
     <string name="key_uel_otp_reset" translatable="false">OTP RESET</string>
     <string name="key_uel_otp_export" translatable="false">OTP EXPORT</string>
-    <string name="key_new_profile" translatable="false">NEW PROFILE</string>
+    <string name="key_uel_new_profile" translatable="false">NEW PROFILE</string>
     <string name="key_uel_clone_profile" translatable="false">CLONE PROFILE</string>
     <string name="key_uel_remove_profile" translatable="false">REMOVE PROFILE</string>
     <string name="key_uel_bg_removed" translatable="false">BG REMOVED</string>
@@ -1446,6 +1446,7 @@
     <string name="key_uel_tt_remove" translatable="false">TT REMOVE</string>
     <string name="key_uel_bolus_advisor" translatable="false">BOLUS ADVISOR</string>
     <string name="key_uel_superbolus_tbr" translatable="false">SUPERBOLUS TBR</string>
+    <string name="key_uel_bolus_wizard" translatable="false">BOLUS WIZARD</string>
     <string name="key_uel_ns_queue_cleared" translatable="false">NS QUEUE CLEARED</string>
     <string name="key_uel_ns_paused" translatable="false">NS PAUSED</string>
     <string name="key_uel_hw_pump_allowed" translatable="false">HW PUMP ALLOWED</string>
