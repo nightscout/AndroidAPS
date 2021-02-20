@@ -7,4 +7,8 @@
 
     <!-- Omnipod Dash - Keys -->
     <string name="key_omnipod_dash_pod_state" translatable="false">AAPS.OmnipodDash.pod_state</string>
+
+    <!-- Omnipod Dash - Overview -->
+    <string name="omnipod_dash_bluetooth_status">Bluetooth Status</string>
+    <string name="omnipod_dash_bluetooth_address">Bluetooth Address</string>
 </resources>
