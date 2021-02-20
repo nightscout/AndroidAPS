@@ -45,7 +45,7 @@ open class TriggerTestBase : TestBaseWithProfile() {
                 it.profileFunction = profileFunction
                 it.sp = sp
                 it.locationDataContainer = locationDataContainer
-                it.treatmentsPlugin = treatmentsPlugin
+                it.treatmentsInterface = treatmentsInterface
                 it.activePlugin = activePlugin
                 it.iobCobCalculatorPlugin = iobCobCalculatorPlugin
             }

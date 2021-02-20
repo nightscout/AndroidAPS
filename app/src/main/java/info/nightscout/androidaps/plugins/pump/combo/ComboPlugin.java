@@ -41,6 +41,7 @@ import info.nightscout.androidaps.interfaces.ProfileFunction;
 import info.nightscout.androidaps.interfaces.PumpDescription;
 import info.nightscout.androidaps.interfaces.PumpInterface;
 import info.nightscout.androidaps.interfaces.PumpPluginBase;
+import info.nightscout.androidaps.interfaces.TreatmentsInterface;
 import info.nightscout.androidaps.logging.AAPSLogger;
 import info.nightscout.androidaps.logging.LTag;
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper;
@@ -80,7 +81,7 @@ public class ComboPlugin extends PumpPluginBase implements PumpInterface, Constr
 
     private final ResourceHelper resourceHelper;
     private final ProfileFunction profileFunction;
-    private final TreatmentsPlugin treatmentsPlugin;
+    private final TreatmentsInterface treatmentsPlugin;
     private final info.nightscout.androidaps.utils.sharedPreferences.SP sp;
     private RxBusWrapper rxBus;
     private final CommandQueueProvider commandQueue;
@@ -136,7 +137,7 @@ public class ComboPlugin extends PumpPluginBase implements PumpInterface, Constr
             RxBusWrapper rxBus,
             ResourceHelper resourceHelper,
             ProfileFunction profileFunction,
-            TreatmentsPlugin treatmentsPlugin,
+            TreatmentsInterface treatmentsPlugin,
             SP sp,
             CommandQueueProvider commandQueue,
             Context context

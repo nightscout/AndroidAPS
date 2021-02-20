@@ -256,10 +256,10 @@ class ActionsFragment : DaggerFragment() {
         profileSwitch?.visibility = (
             activePlugin.activeProfileInterface.profile != null &&
                 pump.pumpDescription.isSetBasalProfileCapable &&
-                pump.isInitialized &&
-                !pump.isSuspended).toVisibility()
+                pump.isInitialized() &&
+                !pump.isSuspended()).toVisibility()
 
-        if (!pump.pumpDescription.isExtendedBolusCapable || !pump.isInitialized || pump.isSuspended || pump.isFakingTempsByExtendedBoluses) {
+        if (!pump.pumpDescription.isExtendedBolusCapable || !pump.isInitialized() || pump.isSuspended() || pump.isFakingTempsByExtendedBoluses) {
             extendedBolus?.visibility = View.GONE
             extendedBolusCancel?.visibility = View.GONE
         } else {
@@ -275,7 +275,7 @@ class ActionsFragment : DaggerFragment() {
             }
         }
 
-        if (!pump.pumpDescription.isTempBasalCapable || !pump.isInitialized || pump.isSuspended) {
+        if (!pump.pumpDescription.isTempBasalCapable || !pump.isInitialized() || pump.isSuspended()) {
             setTempBasal?.visibility = View.GONE
             cancelTempBasal?.visibility = View.GONE
         } else {
@@ -292,7 +292,7 @@ class ActionsFragment : DaggerFragment() {
         }
         val activeBgSource = activePlugin.activeBgSource
         historyBrowser?.visibility = (profile != null).toVisibility()
-        fill?.visibility = (pump.pumpDescription.isRefillingCapable && pump.isInitialized && !pump.isSuspended).toVisibility()
+        fill?.visibility = (pump.pumpDescription.isRefillingCapable && pump.isInitialized() && !pump.isSuspended()).toVisibility()
         pumpBatteryChange?.visibility = (pump.pumpDescription.isBatteryReplaceable || (pump is OmnipodErosPumpPlugin && pump.isUseRileyLinkBatteryLevel && pump.isBatteryChangeLoggingEnabled)).toVisibility()
         tempTarget?.visibility = (profile != null && config.APS).toVisibility()
         tddStats?.visibility = pump.pumpDescription.supportsTDDs.toVisibility()

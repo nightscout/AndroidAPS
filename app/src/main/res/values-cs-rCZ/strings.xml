@@ -1161,4 +1161,5 @@
     <string name="trend_arrow">Šipka trendu</string>
     <string name="cannula">Kanyla</string>
     <string name="userentry">Vstup uživatele</string>
+    <string name="common_values">Použijte hodnoty pro největší jídlo, jaké obvykle jíte\n</string>
 </resources>

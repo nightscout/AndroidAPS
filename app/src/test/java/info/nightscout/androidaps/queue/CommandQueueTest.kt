@@ -107,8 +107,8 @@ class CommandQueueTest : TestBaseWithProfile() {
         `when`(context.getSystemService(Context.POWER_SERVICE)).thenReturn(powerManager)
         `when`(lazyActivePlugin.get()).thenReturn(activePlugin)
         `when`(activePlugin.activePump).thenReturn(testPumpPlugin)
-        `when`(activePlugin.activeTreatments).thenReturn(treatmentsPlugin)
-        `when`(treatmentsPlugin.lastBolusTime).thenReturn(Calendar.getInstance().also { it.set(2000, 0, 1) }.timeInMillis)
+        `when`(activePlugin.activeTreatments).thenReturn(treatmentsInterface)
+        `when`(treatmentsInterface.lastBolusTime).thenReturn(Calendar.getInstance().also { it.set(2000, 0, 1) }.timeInMillis)
         `when`(profileFunction.getProfile()).thenReturn(validProfile)
 
         val bolusConstraint = Constraint(0.0)
@@ -342,6 +342,42 @@ class CommandQueueTest : TestBaseWithProfile() {
         // next should be ignored
         commandQueue.loadHistory(0, null)
         Assert.assertEquals(1, commandQueue.size())
+    }
+
+    @Test
+    fun isProfileSetCommandInQueue() {
+        // given
+        Assert.assertEquals(0, commandQueue.size())
+
+        // when
+        testPumpPlugin.isProfileSet = true
+        commandQueue.setProfile(validProfile, object : Callback() {
+            override fun run() {
+                Assert.assertTrue(result.success)
+                Assert.assertFalse(result.enacted)
+            }
+        })
+
+        // then
+        // the same profile -> ignore
+        Assert.assertEquals(0, commandQueue.size())
+        // different should be added
+        testPumpPlugin.isProfileSet = false
+        commandQueue.setProfile(validProfile, object : Callback() {
+            override fun run() {
+                Assert.assertTrue(result.success)
+                Assert.assertTrue(result.enacted)
+            }
+        })
+        Assert.assertEquals(1, commandQueue.size())
+        // next should be ignored
+        commandQueue.setProfile(validProfile, object : Callback() {
+            override fun run() {
+                Assert.assertTrue(result.success)
+            }
+        })
+        Assert.assertEquals(1, commandQueue.size())
+        testPumpPlugin.isProfileSet = true
     }
 
     @Test

@@ -196,7 +196,7 @@ open class LoopPlugin @Inject constructor(
             val apsMode = sp.getString(R.string.key_aps_mode, "open")
             val pump = activePlugin.activePump
             var isLGS = false
-            if (!isSuspended && !pump.isSuspended) if (closedLoopEnabled.value()) if (maxIobAllowed == hardLimits.MAXIOB_LGS || apsMode == "lgs") isLGS = true
+            if (!isSuspended && !pump.isSuspended()) if (closedLoopEnabled.value()) if (maxIobAllowed == hardLimits.MAXIOB_LGS || apsMode == "lgs") isLGS = true
             return isLGS
         }
 
@@ -317,7 +317,7 @@ open class LoopPlugin @Inject constructor(
                 rxBus.send(EventLoopSetLastRunGui(resourceHelper.gs(R.string.loopsuspended)))
                 return
             }
-            if (pump.isSuspended) {
+            if (pump.isSuspended()) {
                 aapsLogger.debug(LTag.APS, resourceHelper.gs(R.string.pumpsuspended))
                 rxBus.send(EventLoopSetLastRunGui(resourceHelper.gs(R.string.pumpsuspended)))
                 return
@@ -511,12 +511,12 @@ open class LoopPlugin @Inject constructor(
             return
         }
         val pump = activePlugin.activePump
-        if (!pump.isInitialized) {
+        if (!pump.isInitialized()) {
             aapsLogger.debug(LTag.APS, "applyAPSRequest: " + resourceHelper.gs(R.string.pumpNotInitialized))
             callback?.result(PumpEnactResult(injector).comment(resourceHelper.gs(R.string.pumpNotInitialized)).enacted(false).success(false))?.run()
             return
         }
-        if (pump.isSuspended) {
+        if (pump.isSuspended()) {
             aapsLogger.debug(LTag.APS, "applyAPSRequest: " + resourceHelper.gs(R.string.pumpsuspended))
             callback?.result(PumpEnactResult(injector).comment(resourceHelper.gs(R.string.pumpsuspended)).enacted(false).success(false))?.run()
             return
@@ -578,12 +578,12 @@ open class LoopPlugin @Inject constructor(
                 .enacted(false).success(false))?.run()
             return
         }
-        if (!pump.isInitialized) {
+        if (!pump.isInitialized()) {
             aapsLogger.debug(LTag.APS, "applySMBRequest: " + resourceHelper.gs(R.string.pumpNotInitialized))
             callback?.result(PumpEnactResult(injector).comment(resourceHelper.gs(R.string.pumpNotInitialized)).enacted(false).success(false))?.run()
             return
         }
-        if (pump.isSuspended) {
+        if (pump.isSuspended()) {
             aapsLogger.debug(LTag.APS, "applySMBRequest: " + resourceHelper.gs(R.string.pumpsuspended))
             callback?.result(PumpEnactResult(injector).comment(resourceHelper.gs(R.string.pumpsuspended)).enacted(false).success(false))?.run()
             return

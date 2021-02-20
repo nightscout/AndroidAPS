@@ -9,19 +9,21 @@ import org.junit.Test
 import org.junit.runner.RunWith
 import org.powermock.modules.junit4.PowerMockRunner
 
+@Suppress("SpellCheckingInspection")
 @RunWith(PowerMockRunner::class)
 class TriggerBTDeviceTest : TriggerTestBase() {
 
     var now = 1514766900000L
-    var someName = "Headset"
-    var btJson = "{\"data\":{\"comparator\":\"ON_CONNECT\",\"name\":\"Headset\"},\"type\":\"info.nightscout.androidaps.plugins.general.automation.triggers.TriggerBTDevice\"}"
+    private var someName = "Headset"
+    private var btJson = "{\"data\":{\"comparator\":\"ON_CONNECT\",\"name\":\"Headset\"},\"type\":\"info.nightscout.androidaps.plugins.general.automation.triggers.TriggerBTDevice\"}"
 
     @Test fun shouldRun() {
-        val t: TriggerBTDevice = TriggerBTDevice(injector)
+        @Suppress("UNUSED_VARIABLE")
+        val t = TriggerBTDevice(injector)
     }
 
     @Test fun toJSON() {
-        val t: TriggerBTDevice = TriggerBTDevice(injector)
+        val t = TriggerBTDevice(injector)
         t.btDevice.value = someName
         Assert.assertEquals(btJson, t.toJSON())
     }

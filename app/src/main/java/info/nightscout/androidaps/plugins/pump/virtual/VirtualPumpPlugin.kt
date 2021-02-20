@@ -133,12 +133,12 @@ class VirtualPumpPlugin @Inject constructor(
         return PumpEnactResult(injector)
     }
 
-    override val isInitialized: Boolean = true
-    override val isSuspended: Boolean = false
-    override val isBusy: Boolean = false
-    override val isConnected: Boolean = true
-    override val isConnecting: Boolean = false
-    override val isHandshakeInProgress: Boolean = false
+    override fun isInitialized(): Boolean = true
+    override fun isSuspended(): Boolean = false
+    override fun isBusy(): Boolean = false
+    override fun isConnected(): Boolean = true
+    override fun isConnecting(): Boolean = false
+    override fun isHandshakeInProgress(): Boolean = false
 
     override fun connect(reason: String) {
         //if (!Config.NSCLIENT) NSUpload.uploadDeviceStatus()
