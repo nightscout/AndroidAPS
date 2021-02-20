@@ -164,14 +164,14 @@
     <string name="omnipod_pod_management_button_play_test_beep">Възпроизвеждане на тестов звук</string>
     <string name="omnipod_pod_management_button_playing_test_beep">Пускам тестов звук…</string>
     <!-- Omnipod - Wizard common -->
-    <string name="omnipod_common_wizard_button_cancel">Откажи</string>
-    <string name="omnipod_common_wizard_button_finish">Край</string>
-    <string name="omnipod_common_wizard_button_next">Следващ</string>
-    <string name="omnipod_common_wizard_button_retry">Повтори</string>
-    <string name="omnipod_common_wizard_button_deactivate_pod">Деактивирай Pod</string>
-    <string name="omnipod_common_wizard_button_discard_pod">Премахни Pod</string>
-    <string name="omnipod_common_wizard_exit_confirmation_text">Все още не сте изпълнили всички стъпки. Сигурни ли сте, че искате да излезете?</string>
-    <string name="omnipod_common_wizard_exit_confirmation_title">Изход</string>
+    <string name="omnipod_wizard_button_cancel">Откажи</string>
+    <string name="omnipod_wizard_button_finish">Край</string>
+    <string name="omnipod_wizard_button_next">Следващ</string>
+    <string name="omnipod_wizard_button_retry">Повтори</string>
+    <string name="omnipod_wizard_button_deactivate_pod">Деактивирай Pod</string>
+    <string name="omnipod_wizard_button_discard_pod">Премахни Pod</string>
+    <string name="omnipod_wizard_exit_confirmation_text">Все още не сте изпълнили всички стъпки. Сигурни ли сте, че искате да излезете?</string>
+    <string name="omnipod_wizard_exit_confirmation_title">Изход</string>
     <!-- Omnipod - Pod activation Wizard -->
     <string name="omnipod_pod_activation_wizard_fill_pod_title">Напълнете Pod</string>
     <string name="omnipod_pod_activation_wizard_fill_pod_text">\nНапълнете с достатъчно инсулин за 3 дни.\n\nИзчакайте два сигнала от Pod по време на процеса на зареждане. Те показват, че е вмъкнат минималният размер от 85U. Уверете се, че сте изпразнил напълно спринцовката, дори след като сте чули двата сигнала.\n\nСлед пълнене на Pod, моля натиснете <b>Следващ</b>.\n\n<b>Забележка:</b> не вадете капачката на капсулата на Podв този момент.</string>

@@ -33,7 +33,7 @@
             tools:layout_editor_absoluteX="3dp" />
 
         <LinearLayout
-            android:id="@+id/buttons_layout"
+            android:id="@+id/buttons"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
@@ -120,7 +120,7 @@
             android:orientation="horizontal"
             android:padding="4dp"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/buttons_layout">
+            app:layout_constraintTop_toBottomOf="@+id/buttons">
 
             <Button
                 android:id="@+id/back_button"

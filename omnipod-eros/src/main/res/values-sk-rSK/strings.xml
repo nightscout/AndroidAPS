@@ -164,14 +164,14 @@
     <string name="omnipod_pod_management_button_play_test_beep">Prehrať testovacie pípnutie</string>
     <string name="omnipod_pod_management_button_playing_test_beep">Prehrávanie testovacieho pípnutia…</string>
     <!-- Omnipod - Wizard common -->
-    <string name="omnipod_common_wizard_button_cancel">Zrušiť</string>
-    <string name="omnipod_common_wizard_button_finish">Dokončiť</string>
-    <string name="omnipod_common_wizard_button_next">Ďalšia</string>
-    <string name="omnipod_common_wizard_button_retry">Opakovať</string>
-    <string name="omnipod_common_wizard_button_deactivate_pod">Deaktivovať Pod</string>
-    <string name="omnipod_common_wizard_button_discard_pod">Vyradiť Pod</string>
-    <string name="omnipod_common_wizard_exit_confirmation_text">Doposiaľ ste nedokončili všetky kroky. Ste si istý, že chcete ukončiť prácu?</string>
-    <string name="omnipod_common_wizard_exit_confirmation_title">Koniec</string>
+    <string name="omnipod_wizard_button_cancel">Zrušiť</string>
+    <string name="omnipod_wizard_button_finish">Dokončiť</string>
+    <string name="omnipod_wizard_button_next">Ďalšia</string>
+    <string name="omnipod_wizard_button_retry">Opakovať</string>
+    <string name="omnipod_wizard_button_deactivate_pod">Deaktivovať Pod</string>
+    <string name="omnipod_wizard_button_discard_pod">Vyradiť Pod</string>
+    <string name="omnipod_wizard_exit_confirmation_text">Doposiaľ ste nedokončili všetky kroky. Ste si istý, že chcete ukončiť prácu?</string>
+    <string name="omnipod_wizard_exit_confirmation_title">Koniec</string>
     <!-- Omnipod - Pod activation Wizard -->
     <string name="omnipod_pod_activation_wizard_fill_pod_title">Naplniť Pod</string>
     <string name="omnipod_pod_activation_wizard_fill_pod_text">Naplňte nový Pod dostatkom inzulínu na 3 dni.\n\nSledujte dve pípnutia z Podu v priebehu procesu plnenia. Tieto ukazujú, že minimálne množstvo 85U bolo naplnené. Uistite sa, že striekačka je úplne vyprázdnená a to aj po vypočutí dvoch pípnutí.\n\nPo naplnení Podu, prosím, stlačte <b>Ďalšia</b>.\n\n<b>Poznámka:</b> zatiaľ nesnímajte kryt z ihly.\n<b>Poznámka:</b>prosím umiestnite RileyLink vo zvislej polohe blízko Podu.</string>
