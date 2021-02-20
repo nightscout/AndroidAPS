@@ -63,7 +63,16 @@ class ErosPodManagementActivity : NoSplashAppCompatActivity() {
         setContentView(binding.root)
 
         binding.buttonActivatePod.setOnClickListener {
-            startActivity(Intent(this, PodActivationWizardActivity::class.java))
+            val type: PodActivationWizardActivity.Type = if (podStateManager.isPodInitialized
+                and podStateManager.activationProgress.isAtLeast(ActivationProgress.PRIMING_COMPLETED)) {
+                PodActivationWizardActivity.Type.SHORT
+            } else {
+                PodActivationWizardActivity.Type.LONG
+            }
+
+            val intent = Intent(this, PodActivationWizardActivity::class.java)
+            intent.putExtra(PodActivationWizardActivity.KEY_TYPE, type)
+            startActivity(intent)
         }
 
         binding.buttonDeactivatePod.setOnClickListener {
