@@ -16,12 +16,12 @@ import org.json.JSONObject
  */
 interface PumpInterface {
 
-    val isInitialized: Boolean      // true if pump status has been read and is ready to accept commands
-    val isSuspended: Boolean        // true if suspended (not delivering insulin)
-    val isBusy: Boolean             // if true pump is not ready to accept commands right now
-    val isConnected: Boolean        // true if BT connection is established
-    val isConnecting: Boolean       // true if BT connection is in progress
-    val isHandshakeInProgress: Boolean      // true if BT is connected but initial handshake is still in progress
+    fun isInitialized(): Boolean      // true if pump status has been read and is ready to accept commands
+    fun isSuspended(): Boolean        // true if suspended (not delivering insulin)
+    fun isBusy(): Boolean             // if true pump is not ready to accept commands right now
+    fun isConnected(): Boolean        // true if BT connection is established
+    fun isConnecting(): Boolean       // true if BT connection is in progress
+    fun isHandshakeInProgress(): Boolean      // true if BT is connected but initial handshake is still in progress
     @JvmDefault fun finishHandshaking() {}  // set initial handshake completed
     fun connect(reason: String)
     fun disconnect(reason: String)

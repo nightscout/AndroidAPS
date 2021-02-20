@@ -1163,4 +1163,5 @@ Context | Edit Context</string>
     <string name="trend_arrow">Стрелка тренда</string>
     <string name="cannula">Катетер помпы</string>
     <string name="userentry">Запись пользователя</string>
+    <string name="common_values">Введите максимальные значения вашего приема пищи \n</string>
 </resources>

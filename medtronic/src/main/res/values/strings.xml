@@ -116,4 +116,6 @@
     <string name="set_neutral_temps_title">Set neutral temp basals</string>
     <string name="set_neutral_temps_summary">If enabled, it will cancel a temporary basal before the end of each hour. This method can help stop some pumps beeping/vibrating on the hour.</string>
 
+    <string name="sixdigitnumber" translatable="false">^\\d{6}</string>
+
 </resources>

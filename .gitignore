@@ -2,7 +2,7 @@
 .gradle
 /local.properties
 .DS_Store
-app/jacoco.exec
+*/jacoco.exec
 /build
 /captures
 *.apk

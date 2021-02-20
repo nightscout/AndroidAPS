@@ -1161,4 +1161,5 @@
     <string name="trend_arrow">Freccia trend</string>
     <string name="cannula">Cannula</string>
     <string name="userentry">Inserimento utente</string>
+    <string name="common_values">Usa i valori del cibo più abbondante che mangi di solito\n</string>
 </resources>
