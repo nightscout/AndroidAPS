@@ -1,7 +1,6 @@
 package info.nightscout.androidaps.plugins.treatments;
 
 import android.content.Context;
-import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -47,7 +46,9 @@ import info.nightscout.androidaps.interfaces.PluginType;
 import info.nightscout.androidaps.interfaces.ProfileFunction;
 import info.nightscout.androidaps.interfaces.ProfileStore;
 import info.nightscout.androidaps.interfaces.PumpInterface;
+import info.nightscout.androidaps.interfaces.TreatmentServiceInterface;
 import info.nightscout.androidaps.interfaces.TreatmentsInterface;
+import info.nightscout.androidaps.interfaces.UpdateReturn;
 import info.nightscout.androidaps.logging.AAPSLogger;
 import info.nightscout.androidaps.logging.LTag;
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper;
@@ -83,7 +84,7 @@ public class TreatmentsPlugin extends PluginBase implements TreatmentsInterface 
 
     private final CompositeDisposable disposable = new CompositeDisposable();
 
-    protected TreatmentService service;
+    protected TreatmentServiceInterface service;
 
     private IobTotal lastTreatmentCalculation;
     private IobTotal lastTempBasalsCalculation;
@@ -181,7 +182,8 @@ public class TreatmentsPlugin extends PluginBase implements TreatmentsInterface 
         super.onStop();
     }
 
-    public TreatmentService getService() {
+    @Override
+    public TreatmentServiceInterface getService() {
         return this.service;
     }
 
@@ -621,9 +623,9 @@ public class TreatmentsPlugin extends PluginBase implements TreatmentsInterface 
     }
 
     public TreatmentUpdateReturn createOrUpdateMedtronic(Treatment treatment, boolean fromNightScout) {
-        TreatmentService.UpdateReturn resultRecord = getService().createOrUpdateMedtronic(treatment, fromNightScout);
+        UpdateReturn resultRecord = getService().createOrUpdateMedtronic(treatment, fromNightScout);
 
-        return new TreatmentUpdateReturn(resultRecord.success, resultRecord.newRecord);
+        return new TreatmentUpdateReturn(resultRecord.getSuccess(), resultRecord.getNewRecord());
     }
 
     // return true if new record is created
@@ -644,7 +646,7 @@ public class TreatmentsPlugin extends PluginBase implements TreatmentsInterface 
             treatment.carbs = detailedBolusInfo.carbs;
         treatment.mealBolus = treatment.carbs > 0;
         treatment.boluscalc = detailedBolusInfo.boluscalc != null ? detailedBolusInfo.boluscalc.toString() : null;
-        TreatmentService.UpdateReturn creatOrUpdateResult;
+        UpdateReturn creatOrUpdateResult;
 
         getAapsLogger().debug(medtronicPump && MedtronicHistoryData.doubleBolusDebug, LTag.DATATREATMENTS, "DoubleBolusDebug: addToHistoryTreatment::treatment={} " + treatment);
 
@@ -653,7 +655,7 @@ public class TreatmentsPlugin extends PluginBase implements TreatmentsInterface 
         else
             creatOrUpdateResult = getService().createOrUpdateMedtronic(treatment, false);
 
-        boolean newRecordCreated = creatOrUpdateResult.newRecord;
+        boolean newRecordCreated = creatOrUpdateResult.getNewRecord();
         //log.debug("Adding new Treatment record" + treatment.toString());
         if (detailedBolusInfo.carbTime != 0) {
 
@@ -674,17 +676,12 @@ public class TreatmentsPlugin extends PluginBase implements TreatmentsInterface 
         if (newRecordCreated && detailedBolusInfo.isValid)
             nsUpload.uploadTreatmentRecord(detailedBolusInfo);
 
-        if (!allowUpdate && !creatOrUpdateResult.success) {
+        if (!allowUpdate && !creatOrUpdateResult.getSuccess()) {
             getAapsLogger().error("Treatment could not be added to DB", new Exception());
 
             String status = String.format(resourceHelper.gs(R.string.error_adding_treatment_message), treatment.insulin, (int) treatment.carbs, dateUtil.dateAndTimeString(treatment.date));
 
-            Intent i = new Intent(context, ErrorHelperActivity.class);
-            i.putExtra("soundid", R.raw.error);
-            i.putExtra("title", resourceHelper.gs(R.string.error_adding_treatment_title));
-            i.putExtra("status", status);
-            i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-            context.startActivity(i);
+            ErrorHelperActivity.Companion.runAlarm(context, status, resourceHelper.gs(R.string.error_adding_treatment_title), R.raw.error);
 
             Bundle bundle = new Bundle();
             bundle.putString(FirebaseAnalytics.Param.ITEM_LIST_ID, "TreatmentClash");

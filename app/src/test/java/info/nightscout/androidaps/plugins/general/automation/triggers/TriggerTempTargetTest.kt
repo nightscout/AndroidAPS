@@ -28,12 +28,12 @@ class TriggerTempTargetTest : TriggerTestBase() {
     }
 
     @Test fun shouldRunTest() {
-        `when`(treatmentsPlugin.tempTargetFromHistory).thenReturn(null)
+        `when`(treatmentsInterface.tempTargetFromHistory).thenReturn(null)
         var t: TriggerTempTarget = TriggerTempTarget(injector).comparator(ComparatorExists.Compare.EXISTS)
         Assert.assertFalse(t.shouldRun())
         t = TriggerTempTarget(injector).comparator(ComparatorExists.Compare.NOT_EXISTS)
         Assert.assertTrue(t.shouldRun())
-        PowerMockito.`when`(treatmentsPlugin.tempTargetFromHistory).thenReturn(TempTarget())
+        PowerMockito.`when`(treatmentsInterface.tempTargetFromHistory).thenReturn(TempTarget())
         t = TriggerTempTarget(injector).comparator(ComparatorExists.Compare.NOT_EXISTS)
         Assert.assertFalse(t.shouldRun())
         t = TriggerTempTarget(injector).comparator(ComparatorExists.Compare.EXISTS)

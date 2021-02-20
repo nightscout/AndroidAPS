@@ -6,12 +6,10 @@ import info.nightscout.androidaps.plugins.general.maintenance.formats.Prefs
 import info.nightscout.androidaps.testing.utils.SingleStringStorage
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 import info.nightscout.androidaps.utils.sharedPreferences.SP
-import org.hamcrest.CoreMatchers
 import org.junit.Assert
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.Mock
-import org.mockito.Mockito
 import org.mockito.Mockito.`when`
 import org.powermock.core.classloader.annotations.PrepareForTest
 import org.powermock.modules.junit4.PowerMockRunner
@@ -24,6 +22,7 @@ class ClassicPrefsFormatTest : TestBase() {
 
     @Mock lateinit var resourceHelper: ResourceHelper
     @Mock lateinit var sp: SP
+    @Mock lateinit var file: MockedFile
 
     @Test
     fun preferenceLoadingTest() {
@@ -32,9 +31,9 @@ class ClassicPrefsFormatTest : TestBase() {
         val classicFormat = ClassicPrefsFormat(resourceHelper, SingleStringStorage(test))
         val prefs = classicFormat.loadPreferences(getMockedFile(), "")
 
-        Assert.assertThat(prefs.values.size, CoreMatchers.`is`(2))
-        Assert.assertThat(prefs.values["key1"], CoreMatchers.`is`("val1"))
-        Assert.assertThat(prefs.values["keyB"], CoreMatchers.`is`("valB"))
+        Assert.assertEquals(prefs.values.size, 2)
+        Assert.assertEquals(prefs.values["key1"], "val1")
+        Assert.assertEquals(prefs.values["keyB"], "valB")
         Assert.assertNull(prefs.values["key3"])
     }
 
@@ -53,8 +52,9 @@ class ClassicPrefsFormatTest : TestBase() {
         classicFormat.savePreferences(getMockedFile(), prefs)
     }
 
+    class MockedFile(s: String) : File(s)
+
     private fun getMockedFile(): File {
-        val file = Mockito.mock(File::class.java)
         `when`(file.exists()).thenReturn(true)
         `when`(file.canRead()).thenReturn(true)
         `when`(file.canWrite()).thenReturn(true)

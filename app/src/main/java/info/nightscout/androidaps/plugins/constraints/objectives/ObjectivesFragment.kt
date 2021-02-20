@@ -22,6 +22,7 @@ import info.nightscout.androidaps.databinding.ObjectivesItemBinding
 import info.nightscout.androidaps.dialogs.NtpProgressDialog
 import info.nightscout.androidaps.events.EventNtpStatus
 import info.nightscout.androidaps.logging.AAPSLogger
+import info.nightscout.androidaps.logging.UserEntryLogger
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper
 import info.nightscout.androidaps.plugins.constraints.objectives.activities.ObjectivesExamDialog
 import info.nightscout.androidaps.plugins.constraints.objectives.events.EventObjectivesUpdateGui
@@ -33,7 +34,7 @@ import info.nightscout.androidaps.utils.FabricPrivacy
 import info.nightscout.androidaps.utils.HtmlHelper
 import info.nightscout.androidaps.utils.SntpClient
 import info.nightscout.androidaps.utils.alertDialogs.OKDialog
-import info.nightscout.androidaps.utils.extensions.plusAssign
+import io.reactivex.rxkotlin.plusAssign
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 import info.nightscout.androidaps.utils.rx.AapsSchedulers
 import info.nightscout.androidaps.utils.sharedPreferences.SP
@@ -52,6 +53,7 @@ class ObjectivesFragment : DaggerFragment() {
     @Inject lateinit var receiverStatusStore: ReceiverStatusStore
     @Inject lateinit var dateUtil: DateUtil
     @Inject lateinit var sntpClient: SntpClient
+    @Inject lateinit var uel: UserEntryLogger
 
     private val objectivesAdapter = ObjectivesAdapter()
     private val handler = Handler(Looper.getMainLooper())
@@ -194,19 +196,19 @@ class ObjectivesFragment : DaggerFragment() {
                     if (task.shouldBeIgnored()) continue
                     // name
                     val name = TextView(holder.binding.progress.context)
-                    name.text = resourceHelper.gs(task.task) + ":"
+                    name.text = "${resourceHelper.gs(task.task)}:"
                     name.setTextColor(-0x1)
                     holder.binding.progress.addView(name, LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT)
                     // hint
                     task.hints.forEach { h ->
-                        if (!task.isCompleted)
-                            holder.binding.progress.addView(h.generate(context))
+                        if (!task.isCompleted())
+                            context?.let { holder.binding.progress.addView(h.generate(it)) }
                     }
                     // state
                     val state = TextView(holder.binding.progress.context)
                     state.setTextColor(-0x1)
                     val basicHTML = "<font color=\"%1\$s\"><b>%2\$s</b></font>"
-                    val formattedHTML = String.format(basicHTML, if (task.isCompleted) "#4CAF50" else "#FF9800", task.progress)
+                    val formattedHTML = String.format(basicHTML, if (task.isCompleted()) "#4CAF50" else "#FF9800", task.progress)
                     state.text = HtmlHelper.fromHtml(formattedHTML)
                     state.gravity = Gravity.END
                     holder.binding.progress.addView(state, LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT)
@@ -305,6 +307,7 @@ class ObjectivesFragment : DaggerFragment() {
             holder.binding.unstart.setOnClickListener {
                 activity?.let { activity ->
                     OKDialog.showConfirmation(activity, resourceHelper.gs(R.string.objectives), resourceHelper.gs(R.string.doyouwantresetstart), Runnable {
+                        uel.log("OBJECTIVE UNSTARTED", i1 = position + 1)
                         objective.startedOn = 0
                         scrollToCurrentObjective()
                         rxBus.send(EventObjectivesUpdateGui())
@@ -329,7 +332,7 @@ class ObjectivesFragment : DaggerFragment() {
                 holder.binding.inputhint.visibility = View.VISIBLE
                 holder.binding.enterbutton.setOnClickListener {
                     val input = holder.binding.input.text.toString()
-                    objective.specialAction(activity, input)
+                    activity?.let { activity -> objective.specialAction(activity, input) }
                     rxBus.send(EventObjectivesUpdateGui())
                 }
             } else {

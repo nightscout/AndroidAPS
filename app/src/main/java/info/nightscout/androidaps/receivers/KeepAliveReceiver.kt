@@ -29,6 +29,7 @@ import javax.inject.Inject
 import kotlin.math.abs
 
 class KeepAliveReceiver : DaggerBroadcastReceiver() {
+
     @Inject lateinit var aapsLogger: AAPSLogger
     @Inject lateinit var rxBus: RxBusWrapper
     @Inject lateinit var activePlugin: ActivePluginProvider
@@ -44,6 +45,7 @@ class KeepAliveReceiver : DaggerBroadcastReceiver() {
     @Inject lateinit var dateUtil: DateUtil
 
     companion object {
+
         private val KEEP_ALIVE_MILLISECONDS = T.mins(5).msecs()
         private val STATUS_UPDATE_FREQUENCY = T.mins(15).msecs()
         private val IOB_UPDATE_FREQUENCY_IN_MINS = 5L
@@ -128,10 +130,10 @@ class KeepAliveReceiver : DaggerBroadcastReceiver() {
         }
         if (!pump.isThisProfileSet(profile) && !commandQueue.isRunning(Command.CommandType.BASAL_PROFILE)) {
             rxBus.send(EventProfileNeedsUpdate())
-        } else if (isStatusOutdated && !pump.isBusy) {
+        } else if (isStatusOutdated && !pump.isBusy()) {
             lastReadStatus = System.currentTimeMillis()
             commandQueue.readStatus("KeepAlive. Status outdated.", null)
-        } else if (isBasalOutdated && !pump.isBusy) {
+        } else if (isBasalOutdated && !pump.isBusy()) {
             lastReadStatus = System.currentTimeMillis()
             commandQueue.readStatus("KeepAlive. Basal outdated.", null)
         }

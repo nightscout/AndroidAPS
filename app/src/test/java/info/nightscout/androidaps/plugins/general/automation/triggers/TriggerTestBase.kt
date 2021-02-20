@@ -19,7 +19,7 @@ import org.junit.Before
 import org.mockito.Mock
 import org.powermock.core.classloader.annotations.PrepareForTest
 
-@PrepareForTest(LastLocationDataContainer::class, AutomationPlugin::class)
+@PrepareForTest(LastLocationDataContainer::class, AutomationPlugin::class, IobCobCalculatorPlugin::class)
 open class TriggerTestBase : TestBaseWithProfile() {
 
     @Mock lateinit var sp: SP
@@ -45,7 +45,7 @@ open class TriggerTestBase : TestBaseWithProfile() {
                 it.profileFunction = profileFunction
                 it.sp = sp
                 it.locationDataContainer = locationDataContainer
-                it.treatmentsPlugin = treatmentsPlugin
+                it.treatmentsInterface = treatmentsInterface
                 it.activePlugin = activePlugin
                 it.iobCobCalculatorPlugin = iobCobCalculatorPlugin
             }

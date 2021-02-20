@@ -9,6 +9,7 @@ import info.nightscout.androidaps.events.EventProfileStoreChanged
 import info.nightscout.androidaps.interfaces.*
 import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.logging.LTag
+import info.nightscout.androidaps.logging.UserEntryLogger
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper
 import info.nightscout.androidaps.plugins.general.nsclient.NSUpload
 import info.nightscout.androidaps.utils.DateUtil
@@ -32,7 +33,8 @@ class LocalProfilePlugin @Inject constructor(
     resourceHelper: ResourceHelper,
     private val sp: SP,
     private val profileFunction: ProfileFunction,
-    private val nsUpload: NSUpload
+    private val nsUpload: NSUpload,
+    private val uel: UserEntryLogger
 ) : PluginBase(PluginDescription()
     .mainType(PluginType.PROFILE)
     .fragmentClass(LocalProfileFragment::class.java.name)
@@ -113,6 +115,7 @@ class LocalProfilePlugin @Inject constructor(
         createAndStoreConvertedProfile()
         isEdited = false
         aapsLogger.debug(LTag.PROFILE, "Storing settings: " + rawProfile?.data.toString())
+        uel.log("STORE PROFILE")
         rxBus.send(EventProfileStoreChanged())
         var namesOK = true
         profiles.forEach {

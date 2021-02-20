@@ -9,7 +9,7 @@ import javax.inject.Inject
 class CommandLoadTDDs(
     injector: HasAndroidInjector,
     callback: Callback?
-) : Command(injector, CommandType.LOAD_HISTORY, callback) {
+) : Command(injector, CommandType.LOAD_TDD, callback) {
 
     @Inject lateinit var activePlugin: ActivePluginProvider
 

@@ -17,7 +17,6 @@ import org.joda.time.Duration;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.Objects;
@@ -51,7 +50,6 @@ import info.nightscout.androidaps.logging.AAPSLogger;
 import info.nightscout.androidaps.logging.LTag;
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper;
 import info.nightscout.androidaps.plugins.common.ManufacturerType;
-import info.nightscout.androidaps.plugins.general.actions.defs.CustomAction;
 import info.nightscout.androidaps.plugins.general.actions.defs.CustomActionType;
 import info.nightscout.androidaps.plugins.general.nsclient.NSUpload;
 import info.nightscout.androidaps.plugins.general.overview.events.EventDismissNotification;
@@ -94,7 +92,6 @@ import info.nightscout.androidaps.plugins.pump.omnipod.eros.event.EventOmnipodEr
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.manager.AapsOmnipodErosManager;
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.queue.command.CommandGetPodStatus;
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.queue.command.CommandReadPulseLog;
-import info.nightscout.androidaps.plugins.pump.omnipod.eros.rileylink.manager.OmnipodRileyLinkCommunicationManager;
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.rileylink.service.RileyLinkOmnipodService;
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.ui.OmnipodErosOverviewFragment;
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.util.AapsOmnipodUtil;
@@ -143,7 +140,6 @@ public class OmnipodErosPumpPlugin extends PumpPluginBase implements PumpInterfa
     private final DateUtil dateUtil;
     private final PumpDescription pumpDescription;
     private final ServiceConnection serviceConnection;
-    private final OmnipodRileyLinkCommunicationManager omnipodRileyLinkCommunicationManager;
     private final PumpType pumpType = PumpType.Omnipod_Eros;
     private final CompositeDisposable disposables = new CompositeDisposable();
     private final NSUpload nsUpload;
@@ -181,8 +177,7 @@ public class OmnipodErosPumpPlugin extends PumpPluginBase implements PumpInterfa
             RileyLinkUtil rileyLinkUtil,
             OmnipodAlertUtil omnipodAlertUtil,
             ProfileFunction profileFunction,
-            NSUpload nsUpload,
-            OmnipodRileyLinkCommunicationManager omnipodRileyLinkCommunicationManager
+            NSUpload nsUpload
     ) {
         super(new PluginDescription() //
                         .mainType(PluginType.PUMP) //
@@ -210,7 +205,6 @@ public class OmnipodErosPumpPlugin extends PumpPluginBase implements PumpInterfa
         this.omnipodAlertUtil = omnipodAlertUtil;
         this.profileFunction = profileFunction;
         this.nsUpload = nsUpload;
-        this.omnipodRileyLinkCommunicationManager = omnipodRileyLinkCommunicationManager;
 
         pumpDescription = new PumpDescription(pumpType);
 
@@ -566,7 +560,7 @@ public class OmnipodErosPumpPlugin extends PumpPluginBase implements PumpInterfa
      * When the user explicitly requested it by clicking the Refresh button on the Omnipod tab (which is executed through {@link #executeCustomCommand(CustomCommand)})
      */
     @Override
-    public void getPumpStatus(String reason) {
+    public void getPumpStatus(@NonNull String reason) {
         if (firstRun) {
             initializeAfterRileyLinkConnection();
             firstRun = false;
@@ -587,7 +581,7 @@ public class OmnipodErosPumpPlugin extends PumpPluginBase implements PumpInterfa
 
     @NonNull
     @Override
-    public PumpEnactResult setNewBasalProfile(Profile profile) {
+    public PumpEnactResult setNewBasalProfile(@NonNull Profile profile) {
         PumpEnactResult result = executeCommand(OmnipodCommandType.SET_BASAL_PROFILE, () -> aapsOmnipodErosManager.setBasalProfile(profile, true));
 
         aapsLogger.info(LTag.PUMP, "Basal Profile was set: " + result.success);
@@ -596,7 +590,7 @@ public class OmnipodErosPumpPlugin extends PumpPluginBase implements PumpInterfa
     }
 
     @Override
-    public boolean isThisProfileSet(Profile profile) {
+    public boolean isThisProfileSet(@NonNull Profile profile) {
         if (!podStateManager.isPodActivationCompleted()) {
             // When no Pod is active, return true here in order to prevent AAPS from setting a profile
             // When we activate a new Pod, we just use ProfileFunction to set the currently active profile
@@ -667,8 +661,7 @@ public class OmnipodErosPumpPlugin extends PumpPluginBase implements PumpInterfa
     // if false and the same rate is requested enacted=false and success=true is returned and TBR is not changed
     @Override
     @NonNull
-    public PumpEnactResult setTempBasalAbsolute(Double absoluteRate, Integer
-            durationInMinutes, Profile profile, boolean enforceNew) {
+    public PumpEnactResult setTempBasalAbsolute(double absoluteRate, int durationInMinutes, @NonNull Profile profile, boolean enforceNew) {
         aapsLogger.info(LTag.PUMP, "setTempBasalAbsolute: rate: {}, duration={}", absoluteRate, durationInMinutes);
 
         if (durationInMinutes <= 0 || durationInMinutes % BASAL_STEP_DURATION.getStandardMinutes() != 0) {
@@ -716,7 +709,7 @@ public class OmnipodErosPumpPlugin extends PumpPluginBase implements PumpInterfa
 
     // TODO improve (i8n and more)
     @NonNull @Override
-    public JSONObject getJSONStatus(Profile profile, String profileName, String version) {
+    public JSONObject getJSONStatus(@NonNull Profile profile, @NonNull String profileName, @NonNull String version) {
 
         if (!podStateManager.isPodActivationCompleted() || lastConnectionTimeMillis + 60 * 60 * 1000L < System.currentTimeMillis()) {
             return new JSONObject();
@@ -828,17 +821,12 @@ public class OmnipodErosPumpPlugin extends PumpPluginBase implements PumpInterfa
     }
 
     @Override
-    public List<CustomAction> getCustomActions() {
-        return Collections.emptyList();
-    }
-
-    @Override
-    public void executeCustomAction(CustomActionType customActionType) {
+    public void executeCustomAction(@NonNull CustomActionType customActionType) {
         aapsLogger.warn(LTag.PUMP, "Unknown custom action: " + customActionType);
     }
 
     @Override
-    public PumpEnactResult executeCustomCommand(CustomCommand command) {
+    public PumpEnactResult executeCustomCommand(@NonNull CustomCommand command) {
         if (command instanceof CommandAcknowledgeAlerts) {
             return executeCommand(OmnipodCommandType.ACKNOWLEDGE_ALERTS, aapsOmnipodErosManager::acknowledgeAlerts);
         }
@@ -880,9 +868,9 @@ public class OmnipodErosPumpPlugin extends PumpPluginBase implements PumpInterfa
         }
 
         Intent i = new Intent(context, ErrorHelperActivity.class);
-        i.putExtra("soundid", 0);
-        i.putExtra("status", resourceHelper.gs(R.string.omnipod_eros_pod_management_pulse_log_value) + ":\n" + result.toString());
-        i.putExtra("title", resourceHelper.gs(R.string.omnipod_eros_pod_management_pulse_log));
+        i.putExtra(ErrorHelperActivity.SOUND_ID, 0);
+        i.putExtra(ErrorHelperActivity.STATUS, resourceHelper.gs(R.string.omnipod_eros_pod_management_pulse_log_value) + ":\n" + result.toString());
+        i.putExtra(ErrorHelperActivity.TITLE, resourceHelper.gs(R.string.omnipod_eros_pod_management_pulse_log));
         i.putExtra("clipboardContent", result.toString());
         i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         context.startActivity(i);
@@ -1020,12 +1008,16 @@ public class OmnipodErosPumpPlugin extends PumpPluginBase implements PumpInterfa
             aapsLogger.debug(LTag.PUMP, "finishHandshaking [OmnipodPumpPlugin] - default (empty) implementation.");
     }
 
-    @Override public void connect(String reason) {
+    @Override public void connect(@NonNull String reason) {
         if (displayConnectionMessages)
             aapsLogger.debug(LTag.PUMP, "connect (reason={}) [PumpPluginAbstract] - default (empty) implementation." + reason);
     }
 
-    @Override public void disconnect(String reason) {
+    @Override public int waitForDisconnectionInSeconds() {
+        return 0;
+    }
+
+    @Override public void disconnect(@NonNull String reason) {
         if (displayConnectionMessages)
             aapsLogger.debug(LTag.PUMP, "disconnect (reason={}) [PumpPluginAbstract] - default (empty) implementation." + reason);
     }
@@ -1035,8 +1027,7 @@ public class OmnipodErosPumpPlugin extends PumpPluginBase implements PumpInterfa
             aapsLogger.debug(LTag.PUMP, "stopConnecting [PumpPluginAbstract] - default (empty) implementation.");
     }
 
-    @NonNull @Override public PumpEnactResult setTempBasalPercent(Integer percent, Integer
-            durationInMinutes, Profile profile, boolean enforceNew) {
+    @NonNull @Override public PumpEnactResult setTempBasalPercent(int percent, int durationInMinutes, @NonNull Profile profile, boolean enforceNew) {
         if (percent == 0) {
             return setTempBasalAbsolute(0.0d, durationInMinutes, profile, enforceNew);
         } else {
@@ -1047,8 +1038,7 @@ public class OmnipodErosPumpPlugin extends PumpPluginBase implements PumpInterfa
         }
     }
 
-    @NonNull @Override public PumpEnactResult setExtendedBolus(Double insulin, Integer
-            durationInMinutes) {
+    @NonNull @Override public PumpEnactResult setExtendedBolus(double insulin, int durationInMinutes) {
         aapsLogger.debug(LTag.PUMP, "setExtendedBolus [OmnipodPumpPlugin] - Not implemented.");
         return getOperationNotSupportedWithCustomText(info.nightscout.androidaps.core.R.string.pump_operation_not_supported_by_pump_driver);
     }

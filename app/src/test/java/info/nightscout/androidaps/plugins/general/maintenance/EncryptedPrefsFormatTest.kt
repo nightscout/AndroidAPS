@@ -4,11 +4,11 @@ import info.nightscout.androidaps.TestBase
 import info.nightscout.androidaps.plugins.general.maintenance.formats.*
 import info.nightscout.androidaps.testing.utils.SingleStringStorage
 import info.nightscout.androidaps.utils.CryptoUtil
-import info.nightscout.androidaps.utils.assumeAES256isSupported
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 import info.nightscout.androidaps.utils.sharedPreferences.SP
 import org.hamcrest.CoreMatchers
 import org.junit.Assert
+import org.junit.Assume
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -20,6 +20,7 @@ import org.powermock.core.classloader.annotations.PrepareForTest
 import org.powermock.modules.junit4.PowerMockRunner
 import java.io.File
 
+@Suppress("SpellCheckingInspection")
 @PowerMockIgnore("javax.crypto.*")
 @RunWith(PowerMockRunner::class)
 @PrepareForTest(File::class)
@@ -28,8 +29,19 @@ class EncryptedPrefsFormatTest : TestBase() {
 
     @Mock lateinit var resourceHelper: ResourceHelper
     @Mock lateinit var sp: SP
+    @Mock lateinit var file: MockedFile
 
     private var cryptoUtil: CryptoUtil = CryptoUtil(aapsLogger)
+
+    // https://stackoverflow.com/questions/52344522/joseexception-couldnt-create-aes-gcm-nopadding-cipher-illegal-key-size
+    // https://stackoverflow.com/questions/47708951/can-aes-256-work-on-android-devices-with-api-level-26
+    // Java prior to Oracle Java 8u161 does not have policy for 256 bit AES - but Android support it
+    // when test is run in Vanilla JVM without policy - Invalid key size exception is thrown
+    private fun assumeAES256isSupported(cryptoUtil: CryptoUtil) {
+        cryptoUtil.lastException?.message?.let { exceptionMessage ->
+            Assume.assumeThat("Upgrade your testing environment Java (OpenJDK or Java 8u161) and JAVA_HOME - AES 256 is supported by Android so this exception should not happen!", exceptionMessage, CoreMatchers.not(CoreMatchers.containsString("key size")))
+        }
+    }
 
     @Before
     fun mock() {
@@ -56,13 +68,13 @@ class EncryptedPrefsFormatTest : TestBase() {
 
         assumeAES256isSupported(cryptoUtil)
 
-        Assert.assertThat(prefs.values.size, CoreMatchers.`is`(2))
-        Assert.assertThat(prefs.values["key1"], CoreMatchers.`is`("A"))
-        Assert.assertThat(prefs.values["keyB"], CoreMatchers.`is`("2"))
+        Assert.assertEquals(prefs.values.size, 2)
+        Assert.assertEquals(prefs.values["key1"], "A")
+        Assert.assertEquals(prefs.values["keyB"], "2")
 
-        Assert.assertThat(prefs.metadata[PrefsMetadataKey.FILE_FORMAT]?.status, CoreMatchers.`is`(PrefsStatus.OK))
-        Assert.assertThat(prefs.metadata[PrefsMetadataKey.FILE_FORMAT]?.value, CoreMatchers.`is`(EncryptedPrefsFormat.FORMAT_KEY_ENC))
-        Assert.assertThat(prefs.metadata[PrefsMetadataKey.ENCRYPTION]?.status, CoreMatchers.`is`(PrefsStatus.OK))
+        Assert.assertEquals(prefs.metadata[PrefsMetadataKey.FILE_FORMAT]?.status, PrefsStatus.OK)
+        Assert.assertEquals(prefs.metadata[PrefsMetadataKey.FILE_FORMAT]?.value, EncryptedPrefsFormat.FORMAT_KEY_ENC)
+        Assert.assertEquals(prefs.metadata[PrefsMetadataKey.ENCRYPTION]?.status, PrefsStatus.OK)
     }
 
     @Test
@@ -100,13 +112,13 @@ class EncryptedPrefsFormatTest : TestBase() {
 
         assumeAES256isSupported(cryptoUtil)
 
-        Assert.assertThat(prefsOut.values.size, CoreMatchers.`is`(2))
-        Assert.assertThat(prefsOut.values["testpref1"], CoreMatchers.`is`("--1--"))
-        Assert.assertThat(prefsOut.values["testpref2"], CoreMatchers.`is`("another"))
+        Assert.assertEquals(prefsOut.values.size, 2)
+        Assert.assertEquals(prefsOut.values["testpref1"], "--1--")
+        Assert.assertEquals(prefsOut.values["testpref2"], "another")
 
-        Assert.assertThat(prefsOut.metadata[PrefsMetadataKey.FILE_FORMAT]?.status, CoreMatchers.`is`(PrefsStatus.OK))
-        Assert.assertThat(prefsOut.metadata[PrefsMetadataKey.FILE_FORMAT]?.value, CoreMatchers.`is`(EncryptedPrefsFormat.FORMAT_KEY_ENC))
-        Assert.assertThat(prefsOut.metadata[PrefsMetadataKey.ENCRYPTION]?.status, CoreMatchers.`is`(PrefsStatus.OK))
+        Assert.assertEquals(prefsOut.metadata[PrefsMetadataKey.FILE_FORMAT]?.status, PrefsStatus.OK)
+        Assert.assertEquals(prefsOut.metadata[PrefsMetadataKey.FILE_FORMAT]?.value, EncryptedPrefsFormat.FORMAT_KEY_ENC)
+        Assert.assertEquals(prefsOut.metadata[PrefsMetadataKey.ENCRYPTION]?.status, PrefsStatus.OK)
     }
 
     @Test
@@ -127,11 +139,11 @@ class EncryptedPrefsFormatTest : TestBase() {
         val encryptedFormat = EncryptedPrefsFormat(resourceHelper, cryptoUtil, storage)
         val prefs = encryptedFormat.loadPreferences(getMockedFile(), "it-is-NOT-right-secret")
 
-        Assert.assertThat(prefs.values.size, CoreMatchers.`is`(0))
+        Assert.assertEquals(prefs.values.size, 0)
 
-        Assert.assertThat(prefs.metadata[PrefsMetadataKey.FILE_FORMAT]?.status, CoreMatchers.`is`(PrefsStatus.OK))
-        Assert.assertThat(prefs.metadata[PrefsMetadataKey.FILE_FORMAT]?.value, CoreMatchers.`is`(EncryptedPrefsFormat.FORMAT_KEY_ENC))
-        Assert.assertThat(prefs.metadata[PrefsMetadataKey.ENCRYPTION]?.status, CoreMatchers.`is`(PrefsStatus.ERROR))
+        Assert.assertEquals(prefs.metadata[PrefsMetadataKey.FILE_FORMAT]?.status, PrefsStatus.OK)
+        Assert.assertEquals(prefs.metadata[PrefsMetadataKey.FILE_FORMAT]?.value, EncryptedPrefsFormat.FORMAT_KEY_ENC)
+        Assert.assertEquals(prefs.metadata[PrefsMetadataKey.ENCRYPTION]?.status, PrefsStatus.ERROR)
     }
 
     @Test
@@ -157,10 +169,10 @@ class EncryptedPrefsFormatTest : TestBase() {
         assumeAES256isSupported(cryptoUtil)
 
         // contents were not tampered and we can decrypt them
-        Assert.assertThat(prefs.values.size, CoreMatchers.`is`(2))
+        Assert.assertEquals(prefs.values.size, 2)
 
         // but checksum fails on metadata, so overall security fails
-        Assert.assertThat(prefs.metadata[PrefsMetadataKey.ENCRYPTION]?.status, CoreMatchers.`is`(PrefsStatus.ERROR))
+        Assert.assertEquals(prefs.metadata[PrefsMetadataKey.ENCRYPTION]?.status, PrefsStatus.ERROR)
     }
 
     @Test
@@ -181,8 +193,8 @@ class EncryptedPrefsFormatTest : TestBase() {
         val encryptedFormat = EncryptedPrefsFormat(resourceHelper, cryptoUtil, storage)
         val prefs = encryptedFormat.loadPreferences(getMockedFile(), "sikret")
 
-        Assert.assertThat(prefs.values.size, CoreMatchers.`is`(0))
-        Assert.assertThat(prefs.metadata[PrefsMetadataKey.ENCRYPTION]?.status, CoreMatchers.`is`(PrefsStatus.ERROR))
+        Assert.assertEquals(prefs.values.size, 0)
+        Assert.assertEquals(prefs.metadata[PrefsMetadataKey.ENCRYPTION]?.status, PrefsStatus.ERROR)
     }
 
     @Test
@@ -196,8 +208,8 @@ class EncryptedPrefsFormatTest : TestBase() {
         val encryptedFormat = EncryptedPrefsFormat(resourceHelper, cryptoUtil, storage)
         val prefs = encryptedFormat.loadPreferences(getMockedFile(), "sikret")
 
-        Assert.assertThat(prefs.values.size, CoreMatchers.`is`(0))
-        Assert.assertThat(prefs.metadata[PrefsMetadataKey.FILE_FORMAT]?.status, CoreMatchers.`is`(PrefsStatus.ERROR))
+        Assert.assertEquals(prefs.values.size, 0)
+        Assert.assertEquals(prefs.metadata[PrefsMetadataKey.FILE_FORMAT]?.status, PrefsStatus.ERROR)
     }
 
     @Test(expected = PrefFormatError::class)
@@ -228,8 +240,9 @@ class EncryptedPrefsFormatTest : TestBase() {
         encryptedFormat.loadPreferences(getMockedFile(), "sikret")
     }
 
+    class MockedFile(s: String) : File(s)
+
     private fun getMockedFile(): File {
-        val file = Mockito.mock(File::class.java)
         Mockito.`when`(file.exists()).thenReturn(true)
         Mockito.`when`(file.canRead()).thenReturn(true)
         Mockito.`when`(file.canWrite()).thenReturn(true)

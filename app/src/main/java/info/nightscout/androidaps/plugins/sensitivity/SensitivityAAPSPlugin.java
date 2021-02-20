@@ -24,13 +24,12 @@ import info.nightscout.androidaps.db.ProfileSwitch;
 import info.nightscout.androidaps.interfaces.IobCobCalculatorInterface;
 import info.nightscout.androidaps.interfaces.PluginDescription;
 import info.nightscout.androidaps.interfaces.PluginType;
+import info.nightscout.androidaps.interfaces.ProfileFunction;
 import info.nightscout.androidaps.logging.AAPSLogger;
 import info.nightscout.androidaps.logging.LTag;
-import info.nightscout.androidaps.interfaces.ProfileFunction;
-import info.nightscout.androidaps.plugins.aps.openAPSSMB.SMBDefaults;
-import info.nightscout.androidaps.plugins.iob.iobCobCalculator.data.AutosensData;
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.AutosensResult;
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.IobCobCalculatorPlugin;
+import info.nightscout.androidaps.plugins.iob.iobCobCalculator.data.AutosensData;
 import info.nightscout.androidaps.utils.DateUtil;
 import info.nightscout.androidaps.utils.resources.ResourceHelper;
 import info.nightscout.androidaps.utils.sharedPreferences.SP;
@@ -161,7 +160,7 @@ public class SensitivityAAPSPlugin extends AbstractSensitivityPlugin {
 
         Arrays.sort(deviations);
 
-        double percentile = IobCobCalculatorPlugin.percentile(deviations, 0.50);
+        double percentile = IobCobCalculatorPlugin.Companion.percentile(deviations, 0.50);
         double basalOff = percentile * (60.0 / 5.0) / sens;
         double ratio = 1 + (basalOff / profile.getMaxDailyBasal());
 

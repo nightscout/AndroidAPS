@@ -1,7 +1,6 @@
 package info.nightscout.androidaps.dialogs
 
 import android.content.Context
-import android.content.Intent
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
@@ -19,6 +18,7 @@ import info.nightscout.androidaps.db.Source
 import info.nightscout.androidaps.interfaces.ActivePluginProvider
 import info.nightscout.androidaps.interfaces.CommandQueueProvider
 import info.nightscout.androidaps.interfaces.Constraint
+import info.nightscout.androidaps.logging.UserEntryLogger
 import info.nightscout.androidaps.plugins.configBuilder.ConstraintChecker
 import info.nightscout.androidaps.queue.Callback
 import info.nightscout.androidaps.utils.DecimalFormatter
@@ -41,6 +41,7 @@ class TreatmentDialog : DialogFragmentWithDate() {
     @Inject lateinit var commandQueue: CommandQueueProvider
     @Inject lateinit var ctx: Context
     @Inject lateinit var config: Config
+    @Inject lateinit var uel: UserEntryLogger
 
     private val textWatcher: TextWatcher = object : TextWatcher {
         override fun afterTextChanged(s: Editable) {}
@@ -128,7 +129,7 @@ class TreatmentDialog : DialogFragmentWithDate() {
         if (insulinAfterConstraints > 0 || carbsAfterConstraints > 0) {
             activity?.let { activity ->
                 OKDialog.showConfirmation(activity, resourceHelper.gs(R.string.overview_treatment_label), HtmlHelper.fromHtml(Joiner.on("<br/>").join(actions)), {
-                    aapsLogger.debug("USER ENTRY: BOLUS insulin $insulin carbs: $carbs")
+                    uel.log("TREATMENT", d1 = insulin, i1 = carbs)
                     val detailedBolusInfo = DetailedBolusInfo()
                     if (insulinAfterConstraints == 0.0) detailedBolusInfo.eventType = CareportalEvent.CARBCORRECTION
                     if (carbsAfterConstraints == 0) detailedBolusInfo.eventType = CareportalEvent.CORRECTIONBOLUS
@@ -140,12 +141,7 @@ class TreatmentDialog : DialogFragmentWithDate() {
                         commandQueue.bolus(detailedBolusInfo, object : Callback() {
                             override fun run() {
                                 if (!result.success) {
-                                    val i = Intent(ctx, ErrorHelperActivity::class.java)
-                                    i.putExtra("soundid", R.raw.boluserror)
-                                    i.putExtra("status", result.comment)
-                                    i.putExtra("title", resourceHelper.gs(R.string.treatmentdeliveryerror))
-                                    i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-                                    ctx.startActivity(i)
+                                    ErrorHelperActivity.runAlarm(ctx, result.comment, resourceHelper.gs(R.string.treatmentdeliveryerror), info.nightscout.androidaps.dana.R.raw.boluserror)
                                 }
                             }
                         })

@@ -52,9 +52,9 @@ class GlucoseStatusTest : TestBase() {
         val glucoseStatus = GlucoseStatus(injector).glucoseStatusData!!
         Assert.assertEquals(214.0, glucoseStatus.glucose, 0.001)
         Assert.assertEquals(-2.0, glucoseStatus.delta, 0.001)
-        Assert.assertEquals(-2.5, glucoseStatus.short_avgdelta, 0.001) // -2 -2.5 -3 deltas are relative to current value
-        Assert.assertEquals(-2.5, glucoseStatus.avgdelta, 0.001) // the same as short_avgdelta
-        Assert.assertEquals(-2.0, glucoseStatus.long_avgdelta, 0.001) // -2 -2 -2 -2
+        Assert.assertEquals(-2.5, glucoseStatus.shortAvgDelta, 0.001) // -2 -2.5 -3 deltas are relative to current value
+        Assert.assertEquals(-2.5, glucoseStatus.avgDelta, 0.001) // the same as short_avgdelta
+        Assert.assertEquals(-2.0, glucoseStatus.longAvgDelta, 0.001) // -2 -2 -2 -2
         Assert.assertEquals(1514766900000L, glucoseStatus.date) // latest date
     }
 
@@ -63,9 +63,9 @@ class GlucoseStatusTest : TestBase() {
         val glucoseStatus: GlucoseStatus = GlucoseStatus(injector).glucoseStatusData!!
         Assert.assertEquals(215.0, glucoseStatus.glucose, 0.001) // (214+216) / 2
         Assert.assertEquals(-1.0, glucoseStatus.delta, 0.001)
-        Assert.assertEquals(-1.0, glucoseStatus.short_avgdelta, 0.001)
-        Assert.assertEquals(-1.0, glucoseStatus.avgdelta, 0.001)
-        Assert.assertEquals(0.0, glucoseStatus.long_avgdelta, 0.001)
+        Assert.assertEquals(-1.0, glucoseStatus.shortAvgDelta, 0.001)
+        Assert.assertEquals(-1.0, glucoseStatus.avgDelta, 0.001)
+        Assert.assertEquals(0.0, glucoseStatus.longAvgDelta, 0.001)
         Assert.assertEquals(1514766900000L, glucoseStatus.date) // latest date, even when averaging
     }
 
@@ -74,9 +74,9 @@ class GlucoseStatusTest : TestBase() {
         val glucoseStatus: GlucoseStatus = GlucoseStatus(injector).glucoseStatusData!!
         Assert.assertEquals(214.0, glucoseStatus.glucose, 0.001)
         Assert.assertEquals(0.0, glucoseStatus.delta, 0.001)
-        Assert.assertEquals(0.0, glucoseStatus.short_avgdelta, 0.001) // -2 -2.5 -3 deltas are relative to current value
-        Assert.assertEquals(0.0, glucoseStatus.avgdelta, 0.001) // the same as short_avgdelta
-        Assert.assertEquals(0.0, glucoseStatus.long_avgdelta, 0.001) // -2 -2 -2 -2
+        Assert.assertEquals(0.0, glucoseStatus.shortAvgDelta, 0.001) // -2 -2.5 -3 deltas are relative to current value
+        Assert.assertEquals(0.0, glucoseStatus.avgDelta, 0.001) // the same as short_avgdelta
+        Assert.assertEquals(0.0, glucoseStatus.longAvgDelta, 0.001) // -2 -2 -2 -2
         Assert.assertEquals(1514766900000L, glucoseStatus.date) // latest date
     }
 
@@ -107,9 +107,9 @@ class GlucoseStatusTest : TestBase() {
         val glucoseStatus: GlucoseStatus = GlucoseStatus(injector).glucoseStatusData!!
         Assert.assertEquals(100.0, glucoseStatus.glucose, 0.001) //
         Assert.assertEquals(-10.0, glucoseStatus.delta, 0.001)
-        Assert.assertEquals(-10.0, glucoseStatus.short_avgdelta, 0.001)
-        Assert.assertEquals(-10.0, glucoseStatus.avgdelta, 0.001)
-        Assert.assertEquals(-10.0, glucoseStatus.long_avgdelta, 0.001)
+        Assert.assertEquals(-10.0, glucoseStatus.shortAvgDelta, 0.001)
+        Assert.assertEquals(-10.0, glucoseStatus.avgDelta, 0.001)
+        Assert.assertEquals(-10.0, glucoseStatus.longAvgDelta, 0.001)
         Assert.assertEquals(1514766900000L, glucoseStatus.date) // latest date
     }
 

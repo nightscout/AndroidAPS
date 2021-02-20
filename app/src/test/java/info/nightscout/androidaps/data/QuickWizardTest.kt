@@ -23,7 +23,7 @@ import org.powermock.core.classloader.annotations.PrepareForTest
 import org.powermock.modules.junit4.PowerMockRunner
 
 @RunWith(PowerMockRunner::class)
-@PrepareForTest(Profile::class)
+@PrepareForTest(Profile::class, IobCobCalculatorPlugin::class)
 class QuickWizardTest : TestBase() {
 
     @Mock lateinit var sp: SP
@@ -68,7 +68,7 @@ class QuickWizardTest : TestBase() {
 
     @Test fun test() {
         quickWizard.setData(array)
-        Assert.assertEquals("Lunch", quickWizard.get(1).buttonText())
+        Assert.assertEquals("Lunch", quickWizard[1].buttonText())
     }
 
     @Test fun active() {

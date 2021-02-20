@@ -21,6 +21,8 @@ import info.nightscout.androidaps.plugins.treatments.TreatmentUpdateReturn;
  */
 public interface TreatmentsInterface {
 
+    TreatmentServiceInterface getService();
+
     void updateTotalIOBTreatments();
 
     void updateTotalIOBTempBasals();
@@ -40,6 +42,7 @@ public interface TreatmentsInterface {
     List<Treatment> getTreatmentsFromHistoryAfterTimestamp(long timestamp);
 
     long getLastBolusTime();
+    long getLastBolusTime(boolean excludeSMB);
 
     // real basals (not faked by extended bolus)
     boolean isInHistoryRealTempBasalInProgress();

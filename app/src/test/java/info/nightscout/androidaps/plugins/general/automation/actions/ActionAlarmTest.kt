@@ -10,6 +10,7 @@ import info.nightscout.androidaps.plugins.bus.RxBusWrapper
 import info.nightscout.androidaps.plugins.general.automation.elements.InputString
 import info.nightscout.androidaps.plugins.general.nsclient.NSUpload
 import info.nightscout.androidaps.queue.Callback
+import info.nightscout.androidaps.utils.TimerUtil
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 import org.junit.Assert
 import org.junit.Before
@@ -17,20 +18,18 @@ import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.ArgumentMatchers
 import org.mockito.Mock
-import org.mockito.Mockito
 import org.mockito.Mockito.`when`
-import org.powermock.api.mockito.PowerMockito
 import org.powermock.core.classloader.annotations.PrepareForTest
 import org.powermock.modules.junit4.PowerMockRunner
 
 @RunWith(PowerMockRunner::class)
-@PrepareForTest(NSUpload::class, RxBusWrapper::class)
+@PrepareForTest(NSUpload::class, RxBusWrapper::class, TimerUtil::class)
 class ActionAlarmTest : TestBase() {
 
     @Mock lateinit var resourceHelper: ResourceHelper
     @Mock lateinit var rxBus: RxBusWrapper
-    @Mock lateinit var nsUpload: NSUpload
     @Mock lateinit var context: Context
+    @Mock lateinit var timerUtil: TimerUtil
 
     private lateinit var sut: ActionAlarm
     var injector: HasAndroidInjector = HasAndroidInjector {
@@ -38,8 +37,8 @@ class ActionAlarmTest : TestBase() {
             if (it is ActionAlarm) {
                 it.resourceHelper = resourceHelper
                 it.rxBus = rxBus
-                it.nsUpload = nsUpload
                 it.context = context
+                it.timerUtil = timerUtil
             }
             if (it is PumpEnactResult) {
                 it.aapsLogger = aapsLogger
@@ -50,7 +49,6 @@ class ActionAlarmTest : TestBase() {
 
     @Before
     fun setup() {
-        PowerMockito.mockStatic(NSUpload::class.java)
         `when`(resourceHelper.gs(R.string.ok)).thenReturn("OK")
         `when`(resourceHelper.gs(R.string.alarm)).thenReturn("Alarm")
         `when`(resourceHelper.gs(ArgumentMatchers.eq(R.string.alarm_message), ArgumentMatchers.anyString())).thenReturn("Alarm: %s")
@@ -77,7 +75,6 @@ class ActionAlarmTest : TestBase() {
                 Assert.assertTrue(result.success)
             }
         })
-        PowerMockito.verifyStatic(NSUpload::class.java, Mockito.times(1))
     }
 
     @Test fun hasDialogTest() {

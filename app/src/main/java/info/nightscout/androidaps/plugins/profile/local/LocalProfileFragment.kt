@@ -16,11 +16,12 @@ import info.nightscout.androidaps.databinding.LocalprofileFragmentBinding
 import info.nightscout.androidaps.dialogs.ProfileSwitchDialog
 import info.nightscout.androidaps.interfaces.ActivePluginProvider
 import info.nightscout.androidaps.logging.AAPSLogger
+import info.nightscout.androidaps.logging.UserEntryLogger
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper
 import info.nightscout.androidaps.plugins.profile.local.events.EventLocalProfileChanged
 import info.nightscout.androidaps.utils.*
 import info.nightscout.androidaps.utils.alertDialogs.OKDialog
-import info.nightscout.androidaps.utils.extensions.plusAssign
+import io.reactivex.rxkotlin.plusAssign
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 import info.nightscout.androidaps.utils.rx.AapsSchedulers
 import io.reactivex.disposables.CompositeDisposable
@@ -38,6 +39,7 @@ class LocalProfileFragment : DaggerFragment() {
     @Inject lateinit var hardLimits: HardLimits
     @Inject lateinit var dateUtil: DateUtil
     @Inject lateinit var aapsSchedulers: AapsSchedulers
+    @Inject lateinit var uel: UserEntryLogger
 
     private var disposable: CompositeDisposable = CompositeDisposable()
 
@@ -80,6 +82,7 @@ class LocalProfileFragment : DaggerFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         // activate DIA tab
+        processVisibilityOnClick(binding.diaTab)
         binding.diaPlaceholder.visibility = View.VISIBLE
         // setup listeners
         binding.diaTab.setOnClickListener {
@@ -159,6 +162,7 @@ class LocalProfileFragment : DaggerFragment() {
             if (localProfilePlugin.isEdited) {
                 activity?.let { OKDialog.show(it, "", resourceHelper.gs(R.string.saveorresetchangesfirst)) }
             } else {
+                uel.log("NEW PROFILE")
                 localProfilePlugin.addNewProfile()
                 build()
             }
@@ -168,6 +172,7 @@ class LocalProfileFragment : DaggerFragment() {
             if (localProfilePlugin.isEdited) {
                 activity?.let { OKDialog.show(it, "", resourceHelper.gs(R.string.saveorresetchangesfirst)) }
             } else {
+                uel.log("CLONE PROFILE", localProfilePlugin.currentProfile()?.name ?: "")
                 localProfilePlugin.cloneProfile()
                 build()
             }
@@ -176,6 +181,7 @@ class LocalProfileFragment : DaggerFragment() {
         binding.profileRemove.setOnClickListener {
             activity?.let { activity ->
                 OKDialog.showConfirmation(activity, resourceHelper.gs(R.string.deletecurrentprofile), {
+                    uel.log("REMOVE PROFILE", localProfilePlugin.currentProfile()?.name ?: "")
                     localProfilePlugin.removeCurrentProfile()
                     build()
                 }, null)

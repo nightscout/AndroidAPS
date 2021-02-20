@@ -39,7 +39,7 @@
     <string name="medtronic_error_pump_wrong_tbr_type_set">Tipo de DBT errado definido na bomba (deve ser Absoluto).</string>
     <string name="medtronic_error_pump_wrong_max_bolus_set">Máx. Basal definida na Bomba está incorreta (deve ser %1$.2f).</string>
     <string name="medtronic_error_pump_wrong_max_basal_set">Máx. Basal definido errado na Bomba (deve ser %1$.2f).</string>
-    <string name="medtronic_error_operation_not_possible_no_configuration">Operação não é possível.\n\n Você precisa configurar a Bomba Medtronic antes de poder usar esta operação.</string>
+    <string name="medtronic_error_operation_not_possible_no_configuration">Operação não é possível.\n\n Precisa configurar a Bomba Medtronic antes de poder utilizar esta operação.</string>
     <string name="medtronic_error_pump_24h_time_change_requested">Solicitada uma alteração de tempo de mais de 24h.</string>
     <!-- MDT History -->
     <!--    <string name="medtronic_history_group_basal">Basals</string>-->

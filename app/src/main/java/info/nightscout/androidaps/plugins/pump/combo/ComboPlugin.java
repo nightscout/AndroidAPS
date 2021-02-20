@@ -41,13 +41,11 @@ import info.nightscout.androidaps.interfaces.ProfileFunction;
 import info.nightscout.androidaps.interfaces.PumpDescription;
 import info.nightscout.androidaps.interfaces.PumpInterface;
 import info.nightscout.androidaps.interfaces.PumpPluginBase;
+import info.nightscout.androidaps.interfaces.TreatmentsInterface;
 import info.nightscout.androidaps.logging.AAPSLogger;
 import info.nightscout.androidaps.logging.LTag;
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper;
 import info.nightscout.androidaps.plugins.common.ManufacturerType;
-import info.nightscout.androidaps.plugins.general.actions.defs.CustomAction;
-import info.nightscout.androidaps.plugins.general.actions.defs.CustomActionType;
-import info.nightscout.androidaps.queue.commands.CustomCommand;
 import info.nightscout.androidaps.plugins.general.overview.events.EventDismissNotification;
 import info.nightscout.androidaps.plugins.general.overview.events.EventNewNotification;
 import info.nightscout.androidaps.plugins.general.overview.events.EventOverviewBolusProgress;
@@ -83,7 +81,7 @@ public class ComboPlugin extends PumpPluginBase implements PumpInterface, Constr
 
     private final ResourceHelper resourceHelper;
     private final ProfileFunction profileFunction;
-    private final TreatmentsPlugin treatmentsPlugin;
+    private final TreatmentsInterface treatmentsPlugin;
     private final info.nightscout.androidaps.utils.sharedPreferences.SP sp;
     private RxBusWrapper rxBus;
     private final CommandQueueProvider commandQueue;
@@ -139,7 +137,7 @@ public class ComboPlugin extends PumpPluginBase implements PumpInterface, Constr
             RxBusWrapper rxBus,
             ResourceHelper resourceHelper,
             ProfileFunction profileFunction,
-            TreatmentsPlugin treatmentsPlugin,
+            TreatmentsInterface treatmentsPlugin,
             SP sp,
             CommandQueueProvider commandQueue,
             Context context
@@ -224,11 +222,7 @@ public class ComboPlugin extends PumpPluginBase implements PumpInterface, Constr
     }
 
     @Override
-    public void finishHandshaking() {
-    }
-
-    @Override
-    public void connect(String reason) {
+    public void connect(@NonNull String reason) {
         // ruffyscripter establishes a connection as needed.
         // ComboPlugin.runCommand performs on connect checks if needed, thus needs info on
         // whether a connection is there.
@@ -240,7 +234,7 @@ public class ComboPlugin extends PumpPluginBase implements PumpInterface, Constr
     }
 
     @Override
-    public void disconnect(String reason) {
+    public void disconnect(@NonNull String reason) {
         getAapsLogger().debug(LTag.PUMP, "Disconnect called with reason: " + reason);
         ruffyScripter.disconnect();
     }
@@ -251,7 +245,7 @@ public class ComboPlugin extends PumpPluginBase implements PumpInterface, Constr
     }
 
     @NonNull @Override
-    public synchronized PumpEnactResult setNewBasalProfile(Profile profile) {
+    public synchronized PumpEnactResult setNewBasalProfile(@NonNull Profile profile) {
         if (!isInitialized()) {
             // note that this should not happen anymore since the queue is present, which
             // issues a READSTATE when starting to issue commands which initializes the pump
@@ -294,7 +288,7 @@ public class ComboPlugin extends PumpPluginBase implements PumpInterface, Constr
     }
 
     @Override
-    public boolean isThisProfileSet(Profile profile) {
+    public boolean isThisProfileSet(@NonNull Profile profile) {
         if (!isInitialized()) {
             /* This might be called too soon during boot. Return true to prevent a request
                to update the profile. KeepAlive is called every Constants.keepalivems
@@ -338,7 +332,7 @@ public class ComboPlugin extends PumpPluginBase implements PumpInterface, Constr
      * Runs pump initialization if needed and reads the pump state from the main screen.
      */
     @Override
-    public synchronized void getPumpStatus(String reason) {
+    public synchronized void getPumpStatus(@NonNull String reason) {
         getAapsLogger().debug(LTag.PUMP, "getPumpStatus called");
         if (!pump.initialized) {
             initializePump();
@@ -720,7 +714,7 @@ public class ComboPlugin extends PumpPluginBase implements PumpInterface, Constr
      *              the new value (and thus still has the old duration of e.g. 1 min) expires?)
      */
     @NonNull @Override
-    public PumpEnactResult setTempBasalAbsolute(Double absoluteRate, Integer durationInMinutes, Profile profile, boolean force) {
+    public PumpEnactResult setTempBasalAbsolute(double absoluteRate, int durationInMinutes, @NonNull Profile profile, boolean force) {
         getAapsLogger().debug(LTag.PUMP, "setTempBasalAbsolute called with a rate of " + absoluteRate + " for " + durationInMinutes + " min.");
         int unroundedPercentage = Double.valueOf(absoluteRate / getBaseBasalRate() * 100).intValue();
         int roundedPercentage = (int) (Math.round(absoluteRate / getBaseBasalRate() * 10) * 10);
@@ -738,7 +732,7 @@ public class ComboPlugin extends PumpPluginBase implements PumpInterface, Constr
      *                 is or isn't running at the moment
      */
     @NonNull @Override
-    public PumpEnactResult setTempBasalPercent(Integer percent, final Integer durationInMinutes, Profile profile, boolean forceNew) {
+    public PumpEnactResult setTempBasalPercent(int percent, int durationInMinutes, @NonNull Profile profile, boolean forceNew) {
         return setTempBasalPercent(percent, durationInMinutes);
     }
 
@@ -794,7 +788,7 @@ public class ComboPlugin extends PumpPluginBase implements PumpInterface, Constr
     }
 
     @NonNull @Override
-    public PumpEnactResult setExtendedBolus(Double insulin, Integer durationInMinutes) {
+    public PumpEnactResult setExtendedBolus(double insulin, int durationInMinutes) {
         return OPERATION_NOT_SUPPORTED;
     }
 
@@ -851,6 +845,10 @@ public class ComboPlugin extends PumpPluginBase implements PumpInterface, Constr
             getAapsLogger().debug(LTag.PUMP, "cancelTempBasal: changing TBR to " + percentage + "% for 15 mins.");
             return setTempBasalPercent(percentage, 15);
         }
+    }
+
+    @Override public int waitForDisconnectionInSeconds() {
+        return 0;
     }
 
     private interface CommandExecution {
@@ -1386,19 +1384,6 @@ public class ComboPlugin extends PumpPluginBase implements PumpInterface, Constr
         if (lowSuspendOnlyLoopEnforcedUntil > System.currentTimeMillis())
             maxIob.setIfSmaller(getAapsLogger(), 0d, String.format(getResourceHelper().gs(R.string.limitingmaxiob), 0d, getResourceHelper().gs(R.string.unsafeusage)), this);
         return maxIob;
-    }
-
-    @Override
-    public List<CustomAction> getCustomActions() {
-        return null;
-    }
-
-    @Override
-    public void executeCustomAction(CustomActionType customActionType) {
-    }
-
-    @Nullable @Override public PumpEnactResult executeCustomCommand(CustomCommand customCommand) {
-        return null;
     }
 
     @Override

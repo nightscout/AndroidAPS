@@ -89,7 +89,7 @@ class SWPlugin(injector: HasAndroidInjector, val definition: SWDefinition) : SWI
         super.generateDialog(layout)
     }
 
-    fun addConfiguration(layout: LinearLayout, plugin: PluginBase) {
+    private fun addConfiguration(layout: LinearLayout, plugin: PluginBase) {
         if (plugin.preferencesId != -1) {
             fragment = MyPreferenceFragment()
             fragment?.arguments = Bundle().also { it.putInt("id", plugin.preferencesId) }

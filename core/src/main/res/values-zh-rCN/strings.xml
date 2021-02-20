@@ -63,4 +63,5 @@
     <string name="running_invalid_version">我们检测到您运行的版本无效。 已禁用循环!</string>
     <string name="versionavailable">版本 %1$s 可用</string>
     <!-- Permissions -->
+    <!-- WeekdayPicker -->
 </resources>

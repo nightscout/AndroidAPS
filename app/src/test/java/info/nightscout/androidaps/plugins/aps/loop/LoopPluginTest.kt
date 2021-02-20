@@ -2,7 +2,6 @@ package info.nightscout.androidaps.plugins.aps.loop
 
 import android.app.NotificationManager
 import android.content.Context
-import dagger.Lazy
 import dagger.android.AndroidInjector
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.Config
@@ -16,7 +15,6 @@ import info.nightscout.androidaps.interfaces.PumpDescription
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper
 import info.nightscout.androidaps.plugins.configBuilder.ConstraintChecker
 import info.nightscout.androidaps.plugins.general.nsclient.NSUpload
-import info.nightscout.androidaps.plugins.general.wear.ActionStringHandler
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.IobCobCalculatorPlugin
 import info.nightscout.androidaps.plugins.pump.virtual.VirtualPumpPlugin
 import info.nightscout.androidaps.plugins.treatments.TreatmentsPlugin
@@ -35,7 +33,9 @@ import org.powermock.core.classloader.annotations.PrepareForTest
 import org.powermock.modules.junit4.PowerMockRunner
 
 @RunWith(PowerMockRunner::class)
-@PrepareForTest(ConstraintChecker::class, VirtualPumpPlugin::class, FabricPrivacy::class, ReceiverStatusStore::class)
+@PrepareForTest(
+    ConstraintChecker::class, VirtualPumpPlugin::class, FabricPrivacy::class, ReceiverStatusStore::class,
+    IobCobCalculatorPlugin::class)
 class LoopPluginTest : TestBase() {
 
     @Mock lateinit var sp: SP
@@ -48,7 +48,6 @@ class LoopPluginTest : TestBase() {
     @Mock lateinit var activePlugin: ActivePluginProvider
     @Mock lateinit var treatmentsPlugin: TreatmentsPlugin
     @Mock lateinit var virtualPumpPlugin: VirtualPumpPlugin
-    @Mock lateinit var actionStringHandler: Lazy<ActionStringHandler>
     @Mock lateinit var iobCobCalculatorPlugin: IobCobCalculatorPlugin
     @Mock lateinit var fabricPrivacy: FabricPrivacy
     @Mock lateinit var receiverStatusStore: ReceiverStatusStore
@@ -62,7 +61,7 @@ class LoopPluginTest : TestBase() {
     @Before fun prepareMock() {
         hardLimits = HardLimits(aapsLogger, rxBus, sp, resourceHelper, context, nsUpload)
 
-        loopPlugin = LoopPlugin(injector, aapsLogger, aapsSchedulers, rxBus, sp, Config(), constraintChecker, resourceHelper, profileFunction, context, commandQueue, activePlugin, treatmentsPlugin, virtualPumpPlugin, actionStringHandler, iobCobCalculatorPlugin, receiverStatusStore, fabricPrivacy, nsUpload, hardLimits)
+        loopPlugin = LoopPlugin(injector, aapsLogger, aapsSchedulers, rxBus, sp, Config(), constraintChecker, resourceHelper, profileFunction, context, commandQueue, activePlugin, treatmentsPlugin, virtualPumpPlugin, iobCobCalculatorPlugin, receiverStatusStore, fabricPrivacy, nsUpload, hardLimits)
         `when`(activePlugin.activePump).thenReturn(virtualPumpPlugin)
         `when`(context.getSystemService(Context.NOTIFICATION_SERVICE)).thenReturn(notificationManager)
     }

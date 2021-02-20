@@ -140,7 +140,7 @@ class PersistentNotificationPlugin @Inject constructor(
                 line1 = line1aa
                 if (glucoseStatus != null) {
                     line1 += ("  Δ" + Profile.toSignedUnitsString(glucoseStatus.delta, glucoseStatus.delta * Constants.MGDL_TO_MMOLL, units)
-                        + " avgΔ" + Profile.toSignedUnitsString(glucoseStatus.avgdelta, glucoseStatus.avgdelta * Constants.MGDL_TO_MMOLL, units))
+                        + " avgΔ" + Profile.toSignedUnitsString(glucoseStatus.avgDelta, glucoseStatus.avgDelta * Constants.MGDL_TO_MMOLL, units))
                     line1aa += "  " + lastBG.trendArrow.symbol
                 } else {
                     line1 += " " +
@@ -207,7 +207,7 @@ class PersistentNotificationPlugin @Inject constructor(
         builder.setCategory(NotificationCompat.CATEGORY_STATUS)
         builder.setSmallIcon(iconsProvider.getNotificationIcon())
         builder.setLargeIcon(resourceHelper.decodeResource(iconsProvider.getIcon()))
-        if (line1 != null) builder.setContentTitle(line1)
+        builder.setContentTitle(line1)
         if (line2 != null) builder.setContentText(line2)
         if (line3 != null) builder.setSubText(line3)
         /// Android Auto

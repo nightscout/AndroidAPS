@@ -44,13 +44,13 @@ import info.nightscout.androidaps.queue.events.EventQueueChanged
 import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.FabricPrivacy
 import info.nightscout.androidaps.utils.alertDialogs.OKDialog
-import info.nightscout.androidaps.utils.extensions.plusAssign
 import info.nightscout.androidaps.utils.protection.ProtectionCheck
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 import info.nightscout.androidaps.utils.rx.AapsSchedulers
 import info.nightscout.androidaps.utils.sharedPreferences.SP
 import info.nightscout.androidaps.utils.ui.UIRunnable
 import io.reactivex.disposables.CompositeDisposable
+import io.reactivex.rxkotlin.plusAssign
 import org.apache.commons.lang3.StringUtils
 import org.joda.time.DateTime
 import org.joda.time.Duration
@@ -539,12 +539,7 @@ class OmnipodErosOverviewFragment : DaggerFragment() {
 
     private fun displayErrorDialog(title: String, message: String, withSound: Boolean) {
         context?.let {
-            val i = Intent(it, ErrorHelperActivity::class.java)
-            i.putExtra("soundid", if (withSound) R.raw.boluserror else 0)
-            i.putExtra("status", message)
-            i.putExtra("title", title)
-            i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-            it.startActivity(i)
+            ErrorHelperActivity.runAlarm(it, message, title, if (withSound) R.raw.boluserror else 0)
         }
     }
 

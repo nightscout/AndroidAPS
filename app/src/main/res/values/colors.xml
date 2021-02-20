@@ -6,10 +6,11 @@
     <color name="bolus">#1ea3e5</color>
     <color name="ratio">#FFFFFF</color>
     <color name="activity">#d3f166</color>
+    <color name="bgi">#00EEEE</color>
     <color name="devslopepos">#FFFFFF00</color>
     <color name="devslopeneg">#FFFF00FF</color>
     <color name="actionsConfirm">#FFFF00</color>
-    <color name="tabBgColorSelected">#FF33B5E5</color>
+    <color name="tabBgColorSelected">#FF666666</color>
     <color name="deviations">#FF0000</color>
     <color name="cobAlert">#7484E2</color>
     <color name="inrangebackground">#2800FF00</color>
@@ -63,8 +64,5 @@
     <color name="ribbonTextWarning">#303030</color>
 
     <color name="splashBackground">#2E2E2E</color>
-
-    <color name="importListFileName">#FFFFFF</color>
-    <color name="importListAdditionalInfo">#BBBBBB</color>
 
 </resources>

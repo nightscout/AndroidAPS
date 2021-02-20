@@ -168,12 +168,7 @@ class DanaRSService : DaggerService() {
                 if (abs(timeDiff) > 60 * 60 * 1.5) {
                     aapsLogger.debug(LTag.PUMPCOMM, "Pump time difference: $timeDiff seconds - large difference")
                     //If time-diff is very large, warn user until we can synchronize history readings properly
-                    val i = Intent(context, ErrorHelperActivity::class.java)
-                    i.putExtra("soundid", R.raw.error)
-                    i.putExtra("status", resourceHelper.gs(R.string.largetimediff))
-                    i.putExtra("title", resourceHelper.gs(R.string.largetimedifftitle))
-                    i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-                    context.startActivity(i)
+                    ErrorHelperActivity.runAlarm(context, resourceHelper.gs(R.string.largetimediff), resourceHelper.gs(R.string.largetimedifftitle), R.raw.error)
 
                     //de-initialize pump
                     danaPump.reset()
@@ -181,14 +176,18 @@ class DanaRSService : DaggerService() {
                     rxBus.send(EventInitializationChanged())
                     return
                 } else {
-                    if (danaPump.usingUTC) {
-                        sendMessage(DanaRS_Packet_Option_Set_Pump_UTC_And_TimeZone(injector, DateUtil.now(), offset))
-                    } else if (danaPump.protocol >= 6) { // can set seconds
-                        sendMessage(DanaRS_Packet_Option_Set_Pump_Time(injector, DateUtil.now()))
-                    } else {
-                        waitForWholeMinute() // Dana can set only whole minute
-                        // add 10sec to be sure we are over minute (will be cut off anyway)
-                        sendMessage(DanaRS_Packet_Option_Set_Pump_Time(injector, DateUtil.now() + T.secs(10).msecs()))
+                    when {
+                        danaPump.usingUTC      -> {
+                            sendMessage(DanaRS_Packet_Option_Set_Pump_UTC_And_TimeZone(injector, DateUtil.now(), offset))
+                        }
+                        danaPump.protocol >= 6 -> { // can set seconds
+                            sendMessage(DanaRS_Packet_Option_Set_Pump_Time(injector, DateUtil.now()))
+                        }
+                        else                   -> {
+                            waitForWholeMinute() // Dana can set only whole minute
+                            // add 10sec to be sure we are over minute (will be cut off anyway)
+                            sendMessage(DanaRS_Packet_Option_Set_Pump_Time(injector, DateUtil.now() + T.secs(10).msecs()))
+                        }
                     }
                     if (danaPump.usingUTC) sendMessage(DanaRS_Packet_Option_Get_Pump_UTC_And_TimeZone(injector))
                     else sendMessage(DanaRS_Packet_Option_Get_Pump_Time(injector))
@@ -216,7 +215,7 @@ class DanaRSService : DaggerService() {
     }
 
     fun loadEvents(): PumpEnactResult {
-        if (!danaRSPlugin.isInitialized) {
+        if (!danaRSPlugin.isInitialized()) {
             val result = PumpEnactResult(injector).success(false)
             result.comment = "pump not initialized"
             return result

@@ -9,9 +9,10 @@ import info.nightscout.androidaps.events.EventRebuildTabs
 import info.nightscout.androidaps.interfaces.*
 import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.logging.LTag
+import info.nightscout.androidaps.logging.UserEntryLogger
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper
 import info.nightscout.androidaps.plugins.configBuilder.events.EventConfigBuilderUpdateGui
-import info.nightscout.androidaps.utils.alertDialogs.OKDialog.showConfirmation
+import info.nightscout.androidaps.utils.alertDialogs.OKDialog
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 import info.nightscout.androidaps.utils.sharedPreferences.SP
 import java.util.*
@@ -25,7 +26,8 @@ class ConfigBuilderPlugin @Inject constructor(
     resourceHelper: ResourceHelper,
     private val sp: SP,
     private val rxBus: RxBusWrapper,
-    private val activePlugin: ActivePluginProvider
+    private val activePlugin: ActivePluginProvider,
+    private val uel: UserEntryLogger
 ) : PluginBase(PluginDescription()
     .mainType(PluginType.GENERAL)
     .fragmentClass(ConfigBuilderFragment::class.java.name)
@@ -137,9 +139,10 @@ class ConfigBuilderPlugin @Inject constructor(
         if (allowHardwarePump || activity == null) {
             performPluginSwitch(changedPlugin, newState, type)
         } else {
-            showConfirmation(activity, resourceHelper.gs(R.string.allow_hardware_pump_text), Runnable {
+            OKDialog.showConfirmation(activity, resourceHelper.gs(R.string.allow_hardware_pump_text), Runnable {
                 performPluginSwitch(changedPlugin, newState, type)
                 sp.putBoolean("allow_hardware_pump", true)
+                uel.log("HW PUMP ALLOWED")
                 aapsLogger.debug(LTag.PUMP, "First time HW pump allowed!")
             }, Runnable {
                 rxBus.send(EventConfigBuilderUpdateGui())

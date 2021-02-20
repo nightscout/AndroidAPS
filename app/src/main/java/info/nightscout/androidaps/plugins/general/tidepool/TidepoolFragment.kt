@@ -14,7 +14,7 @@ import info.nightscout.androidaps.plugins.general.tidepool.events.EventTidepoolD
 import info.nightscout.androidaps.plugins.general.tidepool.events.EventTidepoolResetData
 import info.nightscout.androidaps.plugins.general.tidepool.events.EventTidepoolUpdateGUI
 import info.nightscout.androidaps.utils.FabricPrivacy
-import info.nightscout.androidaps.utils.extensions.plusAssign
+import io.reactivex.rxkotlin.plusAssign
 import info.nightscout.androidaps.utils.rx.AapsSchedulers
 import info.nightscout.androidaps.utils.sharedPreferences.SP
 import io.reactivex.disposables.CompositeDisposable

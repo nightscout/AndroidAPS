@@ -254,4 +254,5 @@
     <string name="running_invalid_version">Wykryliśmy, że używasz nieprawidlowej wersji. Pętla wyłączona!</string>
     <string name="versionavailable">Wersja %1$s dostępna</string>
     <!-- Permissions -->
+    <!-- WeekdayPicker -->
 </resources>

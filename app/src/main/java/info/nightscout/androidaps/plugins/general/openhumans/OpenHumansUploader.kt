@@ -27,7 +27,7 @@ import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.logging.LTag
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper
 import info.nightscout.androidaps.plugins.treatments.TreatmentsPlugin
-import info.nightscout.androidaps.utils.extensions.plusAssign
+import io.reactivex.rxkotlin.plusAssign
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 import info.nightscout.androidaps.utils.rx.AapsSchedulers
 import info.nightscout.androidaps.utils.sharedPreferences.SP
@@ -363,7 +363,7 @@ class OpenHumansUploader @Inject constructor(
         copyDisposable = Completable.fromCallable { MainApp.getDbHelper().clearOpenHumansQueue() }
             .andThen(Single.defer { Single.just(MainApp.getDbHelper().countOfAllRows + treatmentsPlugin.service.count()) })
             .doOnSuccess { maxProgress = it }
-            .flatMapObservable { Observable.defer { Observable.fromIterable(treatmentsPlugin.service.treatmentData) } }
+            .flatMapObservable { Observable.defer { Observable.fromIterable(treatmentsPlugin.service.getTreatmentData()) } }
             .map { enqueueTreatment(it); increaseCounter() }
             .ignoreElements()
             .andThen(Observable.defer { Observable.fromIterable(repository.compatGetBgReadingsDataFromTime(0, true).blockingGet()) })

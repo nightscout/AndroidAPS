@@ -11,6 +11,7 @@ import static org.junit.Assert.assertArrayEquals;
 public class SetUniqueIdCommandTest {
     @Test
     public void testEncoding() throws DecoderException {
+        @SuppressWarnings("deprecation")
         byte[] encoded = new SetUniqueIdCommand.Builder() //
                 .setUniqueId(37879811) //
                 .setSequenceNumber((short) 6) //

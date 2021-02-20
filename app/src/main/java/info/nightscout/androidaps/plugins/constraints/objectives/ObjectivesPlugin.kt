@@ -9,6 +9,7 @@ import info.nightscout.androidaps.Config
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.interfaces.*
 import info.nightscout.androidaps.logging.AAPSLogger
+import info.nightscout.androidaps.logging.UserEntryLogger
 import info.nightscout.androidaps.plugins.constraints.objectives.objectives.*
 import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.alertDialogs.OKDialog
@@ -25,8 +26,8 @@ class ObjectivesPlugin @Inject constructor(
     resourceHelper: ResourceHelper,
     private val activePlugin: ActivePluginProvider,
     private val sp: SP,
-    private val config: Config
-
+    config: Config,
+    private val uel: UserEntryLogger
 ) : PluginBase(PluginDescription()
     .mainType(PluginType.CONSTRAINTS)
     .fragmentClass(ObjectivesFragment::class.qualifiedName)
@@ -141,6 +142,7 @@ class ObjectivesPlugin @Inject constructor(
             sp.putLong("Objectives_" + "auto" + "_accomplished", DateUtil.now())
             setupObjectives()
             OKDialog.show(activity, resourceHelper.gs(R.string.objectives), resourceHelper.gs(R.string.codeaccepted))
+            uel.log("OBJECTIVES SKIPPED")
         } else {
             OKDialog.show(activity, resourceHelper.gs(R.string.objectives), resourceHelper.gs(R.string.codeinvalid))
         }
@@ -163,7 +165,7 @@ class ObjectivesPlugin @Inject constructor(
         return value
     }
 
-    fun isLgsAllowed(value: Constraint<Boolean>): Constraint<Boolean> {
+    override fun isLgsAllowed(value: Constraint<Boolean>): Constraint<Boolean> {
         if (!objectives[MAXBASAL_OBJECTIVE].isStarted)
             value.set(aapsLogger, false, String.format(resourceHelper.gs(R.string.objectivenotstarted), MAXBASAL_OBJECTIVE + 1), this)
         return value

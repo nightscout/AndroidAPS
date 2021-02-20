@@ -11,15 +11,14 @@ buildscript {
     }
 }
 apply plugin: 'com.android.application'
-//apply plugin: 'jacoco-android'
 apply plugin: 'com.hiya.jacoco-android'
 
 jacoco {
-    toolVersion = "0.8.3"
+    toolVersion = "0.8.6"
 }
 
 ext {
-    wearableVersion = "2.4.0"
+    wearableVersion = "2.8.1"
     playServicesWearable = "17.0.0"
 }
 

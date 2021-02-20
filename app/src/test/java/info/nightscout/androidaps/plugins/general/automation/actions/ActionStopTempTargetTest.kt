@@ -38,13 +38,13 @@ class ActionStopTempTargetTest : ActionsTestBase() {
     }
 
     @Test fun doActionTest() {
-        `when`(activePlugin.activeTreatments).thenReturn(treatmentsPlugin)
+        `when`(activePlugin.activeTreatments).thenReturn(treatmentsInterface)
         sut.doAction(object : Callback() {
             override fun run() {
                 Assert.assertTrue(result.success)
             }
         })
-        Mockito.verify(treatmentsPlugin, Mockito.times(1)).addToHistoryTempTarget(anyObject())
+        Mockito.verify(treatmentsInterface, Mockito.times(1)).addToHistoryTempTarget(anyObject())
     }
 
     @Test fun hasDialogTest() {

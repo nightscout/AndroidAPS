@@ -2,6 +2,7 @@
 <resources>
     <!--    Keys-->
     <!--    General-->
+    <string name="refresh">Atnaujinti</string>
     <string name="error">Klaida</string>
     <string name="not_set_short">Nenustatyta</string>
     <string name="failedupdatebasalprofile">Nepavyko atnaujinti bazės profilio</string>
@@ -254,4 +255,30 @@
     <string name="running_invalid_version">Nustatyta, kad naudojate neteisingą versiją. Ciklas išjungtas!</string>
     <string name="versionavailable">Versiją %1$s jau galima naudoti</string>
     <!-- Permissions -->
+    <!-- WeekdayPicker -->
+    <string name="monday_short">P</string>
+    <string name="tuesday_short">A</string>
+    <string name="wednesday_short">T</string>
+    <string name="thursday_short">K</string>
+    <string name="friday_short">Pn</string>
+    <string name="saturday_short">Š</string>
+    <string name="sunday_short">S</string>
+    <plurals name="days">
+        <item quantity="one">%1$d d.</item>
+        <item quantity="few">%1$d d.</item>
+        <item quantity="many">%1$d d.</item>
+        <item quantity="other">%1$d d.</item>
+    </plurals>
+    <plurals name="hours">
+        <item quantity="one">%1$d val.</item>
+        <item quantity="few">%1$d val.</item>
+        <item quantity="many">%1$d val.</item>
+        <item quantity="other">%1$d val.</item>
+    </plurals>
+    <plurals name="minutes">
+        <item quantity="one">%1$d min.</item>
+        <item quantity="few">%1$d min.</item>
+        <item quantity="many">%1$d min.</item>
+        <item quantity="other">%1$d min.</item>
+    </plurals>
 </resources>

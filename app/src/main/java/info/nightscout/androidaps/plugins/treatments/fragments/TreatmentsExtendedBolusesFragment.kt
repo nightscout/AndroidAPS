@@ -20,6 +20,7 @@ import info.nightscout.androidaps.db.Source
 import info.nightscout.androidaps.events.EventExtendedBolusChange
 import info.nightscout.androidaps.interfaces.ActivePluginProvider
 import info.nightscout.androidaps.interfaces.ProfileFunction
+import info.nightscout.androidaps.logging.UserEntryLogger
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper
 import info.nightscout.androidaps.plugins.general.nsclient.NSUpload
 import info.nightscout.androidaps.plugins.general.nsclient.UploadQueue
@@ -27,7 +28,7 @@ import info.nightscout.androidaps.plugins.iob.iobCobCalculator.events.EventAutos
 import info.nightscout.androidaps.plugins.treatments.fragments.TreatmentsExtendedBolusesFragment.RecyclerViewAdapter.ExtendedBolusesViewHolder
 import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.FabricPrivacy
-import info.nightscout.androidaps.utils.alertDialogs.OKDialog.showConfirmation
+import info.nightscout.androidaps.utils.alertDialogs.OKDialog
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 import info.nightscout.androidaps.utils.rx.AapsSchedulers
 import io.reactivex.disposables.CompositeDisposable
@@ -46,6 +47,7 @@ class TreatmentsExtendedBolusesFragment : DaggerFragment() {
     @Inject lateinit var profileFunction: ProfileFunction
     @Inject lateinit var dateUtil: DateUtil
     @Inject lateinit var aapsSchedulers: AapsSchedulers
+    @Inject lateinit var uel: UserEntryLogger
 
     private var _binding: TreatmentsExtendedbolusFragmentBinding? = null
 
@@ -114,16 +116,17 @@ class TreatmentsExtendedBolusesFragment : DaggerFragment() {
                 binding.remove.setOnClickListener { v: View ->
                     val extendedBolus = v.tag as ExtendedBolus
                     context?.let {
-                        showConfirmation(it, resourceHelper.gs(R.string.removerecord),
+                        OKDialog.showConfirmation(it, resourceHelper.gs(R.string.removerecord),
                             """
                 ${resourceHelper.gs(R.string.extended_bolus)}
                 ${resourceHelper.gs(R.string.date)}: ${dateUtil.dateAndTimeString(extendedBolus.date)}
-                """.trimIndent(), DialogInterface.OnClickListener { _: DialogInterface, _: Int ->
+                """.trimIndent(), { _: DialogInterface, _: Int ->
+                            uel.log("REMOVED EB")
                             val id = extendedBolus._id
-                            if (NSUpload.isIdValid(id)) nsUpload.removeCareportalEntryFromNS(id)
-                            else uploadQueue.removeID("dbAdd", id)
-                            MainApp.getDbHelper().delete(extendedBolus)
-                        }, null)
+                                            if (NSUpload.isIdValid(id)) nsUpload.removeCareportalEntryFromNS(id)
+                                            else uploadQueue.removeID("dbAdd", id)
+                                            MainApp.getDbHelper().delete(extendedBolus)
+                                        }, null)
                     }
                 }
                 binding.remove.paintFlags = binding.remove.paintFlags or Paint.UNDERLINE_TEXT_FLAG
