@@ -77,7 +77,7 @@ class CalibrationDialog : DialogFragmentWithDate() {
         if (bg > 0) {
             activity?.let { activity ->
                 OKDialog.showConfirmation(activity, resourceHelper.gs(R.string.overview_calibration), HtmlHelper.fromHtml(Joiner.on("<br/>").join(actions)), {
-                    uel.log("CALIBRATION", d1 = bg)
+                    uel.log(resourceHelper.gs(R.string.key_uel_calibration), d1 = bg)
                     xdripCalibrations.sendIntent(bg)
                 })
             }

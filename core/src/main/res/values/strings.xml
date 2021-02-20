@@ -30,8 +30,14 @@
     <string name="key_virtualpump_type" translatable="false">virtualpump_type</string>
     <string name="key_quickwizard" translatable="false">QuickWizard</string>
     <string name="key_wear_control" translatable="false">wearcontrol</string>
+    <string name="key_uel_error_dialog_ok" translatable="false">ERROR DIALOG OK</string>
+    <string name="key_uel_error_dialog_mute" translatable="false">ERROR DIALOG MUTE</string>
+    <string name="key_uel_error_dialog_mute_5min" translatable="false">ERROR DIALOG MUTE 5MIN</string>
 
     <!--    General-->
+    <string name="uel_Error_dialog_ok">Error dialog ok pressed</string>
+    <string name="uel_Error_dialog_mute">Error dialog mute pressed</string>
+    <string name="uel_Error_dialog_mute_5min">Error dialog mute 5 min pressed</string>
     <string name="refresh">Refresh</string>
     <string name="error">Error</string>
     <string name="not_set_short">Not set</string>

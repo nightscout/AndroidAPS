@@ -163,7 +163,7 @@ class TreatmentsTemporaryBasalsFragment : DaggerFragment() {
                 ${resourceHelper.gs(R.string.date)}: ${dateUtil.dateAndTimeString(tempBasal.date)}
                 """.trimIndent(),
                             { _: DialogInterface?, _: Int ->
-                                uel.log("REMOVED TT", dateUtil.dateAndTimeString(tempBasal.date))
+                                uel.log(resourceHelper.gs(R.string.key_uel_removed_tt), dateUtil.dateAndTimeString(tempBasal.date))
                                 activePlugin.activeTreatments.removeTempBasal(tempBasal)
                             }, null)
                     }

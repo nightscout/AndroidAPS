@@ -69,7 +69,7 @@ class TreatmentsTempTargetFragment : DaggerFragment() {
         binding.refreshFromNightscout.setOnClickListener {
             context?.let { context ->
                 OKDialog.showConfirmation(context, resourceHelper.gs(R.string.refresheventsfromnightscout) + " ?", {
-                    uel.log("TT NS REFRESH")
+                    uel.log(resourceHelper.gs(R.string.key_uel_tt_ns_refresh))
                     MainApp.getDbHelper().resetTempTargets()
                     rxBus.send(EventNSClientRestart())
                 })
@@ -161,7 +161,7 @@ class TreatmentsTempTargetFragment : DaggerFragment() {
                         ${dateUtil.dateAndTimeString(tempTarget.date)}
                         """.trimIndent(),
                             { _: DialogInterface?, _: Int ->
-                                uel.log("TT REMOVE", tempTarget.friendlyDescription(profileFunction.getUnits(), resourceHelper))
+                                uel.log(resourceHelper.gs(R.string.key_uel_tt_remove), tempTarget.friendlyDescription(profileFunction.getUnits(), resourceHelper))
                                 val id = tempTarget._id
                                 if (NSUpload.isIdValid(id)) nsUpload.removeCareportalEntryFromNS(id)
                                 else uploadQueue.removeID("dbAdd", id)

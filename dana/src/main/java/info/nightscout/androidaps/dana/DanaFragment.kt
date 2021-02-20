@@ -108,7 +108,7 @@ class DanaFragment : DaggerFragment() {
             binding.btconnection.setOnLongClickListener {
                 activity?.let {
                     OKDialog.showConfirmation(it, resourceHelper.gs(R.string.resetpairing)) {
-                        uel.log("CLEAR PAIRING KEYS")
+                        uel.log(resourceHelper.gs(R.string.key_uel_clear_pairing_keys))
                         (activePlugin.activePump as DanaPumpInterface).clearPairing()
                     }
                 }

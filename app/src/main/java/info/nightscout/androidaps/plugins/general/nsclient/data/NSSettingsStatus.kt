@@ -235,7 +235,7 @@ class NSSettingsStatus @Inject constructor(
             getExtendedWarnValue("sage", "urgent")?.let { sp.putDouble(R.string.key_statuslights_sage_critical, it) }
             getExtendedWarnValue("bage", "warn")?.let { sp.putDouble(R.string.key_statuslights_bage_warning, it) }
             getExtendedWarnValue("bage", "urgent")?.let { sp.putDouble(R.string.key_statuslights_bage_critical, it) }
-            uel.log("NS SETTINGS COPIED")
+            uel.log(resourceHelper.gs(R.string.key_uel_ns_settings_copied))
         }
 
         if (context != null) OKDialog.showConfirmation(context, resourceHelper.gs(R.string.statuslights), resourceHelper.gs(R.string.copyexistingvalues), action)

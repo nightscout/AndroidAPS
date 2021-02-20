@@ -31,7 +31,7 @@ class StatsActivity : NoSplashAppCompatActivity() {
         binding.ok.setOnClickListener { finish() }
         binding.reset.setOnClickListener {
             OKDialog.showConfirmation(this, resourceHelper.gs(R.string.doyouwantresetstats)) {
-                uel.log("STATS RESET")
+                uel.log(resourceHelper.gs(R.string.key_uel_stat_reset))
                 activityMonitor.reset()
                 recreate()
             }

@@ -121,7 +121,7 @@ class TreatmentsExtendedBolusesFragment : DaggerFragment() {
                 ${resourceHelper.gs(R.string.extended_bolus)}
                 ${resourceHelper.gs(R.string.date)}: ${dateUtil.dateAndTimeString(extendedBolus.date)}
                 """.trimIndent(), { _: DialogInterface, _: Int ->
-                            uel.log("REMOVED EB")
+                            uel.log(resourceHelper.gs(R.string.key_uel_removed_eb))
                             val id = extendedBolus._id
                                             if (NSUpload.isIdValid(id)) nsUpload.removeCareportalEntryFromNS(id)
                                             else uploadQueue.removeID("dbAdd", id)

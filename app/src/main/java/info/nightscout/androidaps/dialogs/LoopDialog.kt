@@ -238,28 +238,28 @@ class LoopDialog : DaggerDialogFragment() {
         val profile = profileFunction.getProfile() ?: return true
         when (v.id) {
             R.id.overview_closeloop -> {
-                uel.log("CLOSED LOOP MODE")
+                uel.log(resourceHelper.gs(R.string.key_uel_closed_loop_mode))
                 sp.putString(R.string.key_aps_mode, "closed")
                 rxBus.send(EventPreferenceChange(resourceHelper.gs(R.string.closedloop)))
                 return true
             }
 
             R.id.overview_lgsloop -> {
-                uel.log("LGS LOOP MODE")
+                uel.log(resourceHelper.gs(R.string.key_uel_lgs_loop_mode))
                 sp.putString(R.string.key_aps_mode, "lgs")
                 rxBus.send(EventPreferenceChange(resourceHelper.gs(R.string.lowglucosesuspend)))
                 return true
             }
 
             R.id.overview_openloop -> {
-                uel.log("OPEN LOOP MODE")
+                uel.log(resourceHelper.gs(R.string.key_uel_open_loop_mode))
                 sp.putString(R.string.key_aps_mode, "open")
                 rxBus.send(EventPreferenceChange(resourceHelper.gs(R.string.lowglucosesuspend)))
                 return true
             }
 
             R.id.overview_disable -> {
-                uel.log("LOOP DISABLED")
+                uel.log(resourceHelper.gs(R.string.key_uel_loop_disabled))
                 loopPlugin.setPluginEnabled(PluginType.LOOP, false)
                 loopPlugin.setFragmentVisible(PluginType.LOOP, false)
                 configBuilderPlugin.storeSettings("DisablingLoop")
@@ -276,7 +276,7 @@ class LoopDialog : DaggerDialogFragment() {
             }
 
             R.id.overview_enable -> {
-                uel.log("LOOP ENABLED")
+                uel.log(resourceHelper.gs(R.string.key_uel_loop_enabled))
                 loopPlugin.setPluginEnabled(PluginType.LOOP, true)
                 loopPlugin.setFragmentVisible(PluginType.LOOP, true)
                 configBuilderPlugin.storeSettings("EnablingLoop")
@@ -286,7 +286,7 @@ class LoopDialog : DaggerDialogFragment() {
             }
 
             R.id.overview_resume, R.id.overview_reconnect -> {
-                uel.log("RESUME")
+                uel.log(resourceHelper.gs(R.string.key_uel_resume))
                 loopPlugin.suspendTo(0L)
                 rxBus.send(EventRefreshOverview("suspendmenu"))
                 commandQueue.cancelTempBasal(true, object : Callback() {
@@ -302,49 +302,49 @@ class LoopDialog : DaggerDialogFragment() {
             }
 
             R.id.overview_suspend_1h -> {
-                uel.log("SUSPEND 1h")
+                uel.log(resourceHelper.gs(R.string.key_uel_suspend_1h))
                 loopPlugin.suspendLoop(60)
                 rxBus.send(EventRefreshOverview("suspendmenu"))
                 return true
             }
 
             R.id.overview_suspend_2h -> {
-                uel.log("SUSPEND 2h")
+                uel.log(resourceHelper.gs(R.string.key_uel_suspend_2h))
                 loopPlugin.suspendLoop(120)
                 rxBus.send(EventRefreshOverview("suspendmenu"))
                 return true
             }
 
             R.id.overview_suspend_3h -> {
-                uel.log("SUSPEND 3h")
+                uel.log(resourceHelper.gs(R.string.key_uel_suspend_3h))
                 loopPlugin.suspendLoop(180)
                 rxBus.send(EventRefreshOverview("suspendmenu"))
                 return true
             }
 
             R.id.overview_suspend_10h -> {
-                uel.log("SUSPEND 10h")
+                uel.log(resourceHelper.gs(R.string.key_uel_suspend_10h))
                 loopPlugin.suspendLoop(600)
                 rxBus.send(EventRefreshOverview("suspendmenu"))
                 return true
             }
 
             R.id.overview_disconnect_15m -> {
-                uel.log("DISCONNECT 15m")
+                uel.log(resourceHelper.gs(R.string.key_uel_disconnect_15m))
                 loopPlugin.disconnectPump(15, profile)
                 rxBus.send(EventRefreshOverview("suspendmenu"))
                 return true
             }
 
             R.id.overview_disconnect_30m -> {
-                uel.log("DISCONNECT 30m")
+                uel.log(resourceHelper.gs(R.string.key_uel_disconnect_30m))
                 loopPlugin.disconnectPump(30, profile)
                 rxBus.send(EventRefreshOverview("suspendmenu"))
                 return true
             }
 
             R.id.overview_disconnect_1h -> {
-                uel.log("DISCONNECT 1h")
+                uel.log(resourceHelper.gs(R.string.key_uel_disconnect_1h))
                 loopPlugin.disconnectPump(60, profile)
                 sp.putBoolean(R.string.key_objectiveusedisconnect, true)
                 rxBus.send(EventRefreshOverview("suspendmenu"))
@@ -352,14 +352,14 @@ class LoopDialog : DaggerDialogFragment() {
             }
 
             R.id.overview_disconnect_2h -> {
-                uel.log("DISCONNECT 2h")
+                uel.log(resourceHelper.gs(R.string.key_uel_disconnect_2h))
                 loopPlugin.disconnectPump(120, profile)
                 rxBus.send(EventRefreshOverview("suspendmenu"))
                 return true
             }
 
             R.id.overview_disconnect_3h -> {
-                uel.log("DISCONNECT 3h")
+                uel.log(resourceHelper.gs(R.string.key_uel_disconnect_3h))
                 loopPlugin.disconnectPump(180, profile)
                 rxBus.send(EventRefreshOverview("suspendmenu"))
                 return true

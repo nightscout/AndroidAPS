@@ -1382,4 +1382,90 @@
     <string name="userentry">User entry</string>
     <string name="common_values">Use values of your largest food you usually eat\n</string>
 
+    <string name="key_uel_stat_reset" translatable="false">STATS RESET</string>
+    <string name="key_uel_calibration" translatable="false">CALIBRATION</string>
+    <string name="key_uel_tt_activity" translatable="false">TT ACTIVITY</string>
+    <string name="key_uel_tt_eating_soon" translatable="false">TT EATING SOON</string>
+    <string name="key_uel_tt_hypo" translatable="false">TT HYPO</string>
+    <string name="key_uel_carb" translatable="false">CARBS</string>
+    <string name="key_uel_careportal" translatable="false">CAREPORTAL</string>
+    <string name="key_uel_extended_bolus" translatable="false">EXTENDED BOLUS</string>
+    <string name="key_uel_prime_bolus" translatable="false">PRIME BOLUS</string>
+    <string name="key_uel_site_change" translatable="false">SITE CHANGE</string>
+    <string name="key_uel_insulin_change" translatable="false">INSULIN CHANGE</string>
+    <string name="key_uel_bolus_record" translatable="false">BOLUS RECORD</string>
+    <string name="key_uel_bolus" translatable="false">BOLUS</string>
+    <string name="key_uel_closed_loop_mode" translatable="false">CLOSED LOOP MODE</string>
+    <string name="key_uel_lgs_loop_mode" translatable="false">LGS LOOP MODE</string>
+    <string name="key_uel_open_loop_mode" translatable="false">OPEN LOOP MODE</string>
+    <string name="key_uel_loop_disabled" translatable="false">LOOP DISABLED</string>
+    <string name="key_uel_loop_enabled" translatable="false">LOOP ENABLED</string>
+    <string name="key_uel_resume" translatable="false">RESUME</string>
+    <string name="key_uel_reconnect" translatable="false">RECONNECT</string>
+    <string name="key_uel_suspend_1h" translatable="false">SUSPEND 1h</string>
+    <string name="key_uel_suspend_2h" translatable="false">SUSPEND 2h</string>
+    <string name="key_uel_suspend_3h" translatable="false">SUSPEND 3h</string>
+    <string name="key_uel_suspend_10h" translatable="false">SUSPEND 10h</string>
+    <string name="key_uel_disconnect_15m" translatable="false">DISCONNECT 15m</string>
+    <string name="key_uel_disconnect_30m" translatable="false">DISCONNECT 30m</string>
+    <string name="key_uel_disconnect_1h" translatable="false">DISCONNECT 1h</string>
+    <string name="key_uel_disconnect_2h" translatable="false">DISCONNECT 2h</string>
+    <string name="key_uel_disconnect_3h" translatable="false">DISCONNECT 3h</string>
+    <string name="key_uel_profile_switch" translatable="false">PROFILE SWITCH</string>
+    <string name="key_uel_temp_basal" translatable="false">TEMP BASAL</string>
+    <string name="key_uel_tt" translatable="false">TT</string>
+    <string name="key_uel_treatment" translatable="false">TREATMENT</string>
+    <string name="key_uel_objective_unstarted" translatable="false">OBJECTIVE UNSTARTED</string>
+    <string name="key_uel_cancel_extended_bolus" translatable="false">CANCEL EXTENDED BOLUS</string>
+    <string name="key_uel_cancel_temp_basal" translatable="false">CANCEL TEMP BASAL</string>
+    <string name="key_uel_autom_removed" translatable="false">AUTOM REMOVED</string>
+    <string name="key_uel_food_removed" translatable="false">FOOD REMOVED</string>
+    <string name="key_uel_delete_logs" translatable="false">DELETE LOGS</string>
+    <string name="key_uel_reset_databases" translatable="false">RESET DATABASES</string>
+    <string name="key_uel_export_settings" translatable="false">EXPORT SETTINGS</string>
+    <string name="key_uel_import_settings" translatable="false">IMPORT SETTINGS</string>
+    <string name="key_uel_accepts_temp_basal" translatable="false">ACCEPT TEMP BASAL</string>
+    <string name="key_uel_otp_reset" translatable="false">OTP RESET</string>
+    <string name="key_uel_otp_export" translatable="false">OTP EXPORT</string>
+    <string name="key_new_profile" translatable="false">NEW PROFILE</string>
+    <string name="key_uel_clone_profile" translatable="false">CLONE PROFILE</string>
+    <string name="key_uel_remove_profile" translatable="false">REMOVE PROFILE</string>
+    <string name="key_uel_bg_removed" translatable="false">BG REMOVED</string>
+    <string name="key_uel_treat_ns_refresh" translatable="false">TREAT NS REFRESH</string>
+    <string name="key_uel_delete_future_treatments" translatable="false">DELETE FUTURE TREATMENTS</string>
+    <string name="key_uel_removed_treatment" translatable="false">REMOVED TREATMENT</string>
+    <string name="key_uel_careportal_ns_refresh" translatable="false">CAREPORTAL NS REFRESH</string>
+    <string name="key_uel_removed_restart_events" translatable="false">REMOVED RESTART EVENTS</string>
+    <string name="key_uel_removed_carep" translatable="false">REMOVED CAREP</string>
+    <string name="key_uel_removed_eb" translatable="false">REMOVED EB</string>
+    <string name="key_uel_profile_switch_ns_refresh" translatable="false">PROFILE SWITCH NS REFRESH</string>
+    <string name="key_uel_removed_profile_switch" translatable="false">REMOVED PROFILE SWITCH</string>
+    <string name="key_uel_profile_switch_clone" translatable="false">PROFILE SWITCH CLONE</string>
+    <string name="key_uel_removed_tt" translatable="false">REMOVED TT</string>
+    <string name="key_uel_tt_ns_refresh" translatable="false">TT NS REFRESH</string>
+    <string name="key_uel_tt_remove" translatable="false">TT REMOVE</string>
+    <string name="key_uel_bolus_advisor" translatable="false">BOLUS ADVISOR</string>
+    <string name="key_uel_superbolus_tbr" translatable="false">SUPERBOLUS TBR</string>
+    <string name="key_uel_ns_queue_cleared" translatable="false">NS QUEUE CLEARED</string>
+    <string name="key_uel_ns_paused" translatable="false">NS PAUSED</string>
+    <string name="key_uel_hw_pump_allowed" translatable="false">HW PUMP ALLOWED</string>
+    <string name="key_uel_objectives_skipped" translatable="false">OBJECTIVES SKIPPED</string>
+    <string name="key_uel_import" translatable="false">IMPORT</string>
+    <string name="key_uel_ns_settings_copied" translatable="false">NS SETTINGS COPIED</string>
+    <string name="key_uel_sms_loop_disable" translatable="false">SMS LOOP DISABLE</string>
+    <string name="key_uel_sms_loop_enable" translatable="false">SMS LOOP ENABLE</string>
+    <string name="key_uel_sms_loop_resume" translatable="false">SMS LOOP RESUME</string>
+    <string name="key_uel_sms_loop_suspend" translatable="false">SMS LOOP SUSPEND</string>
+    <string name="key_uel_sms_pump_connect" translatable="false">SMS PUMP CONNECT</string>
+    <string name="key_uel_sms_pump_disconnect" translatable="false">SMS PUMP DISCONNECT</string>
+    <string name="key_uel_sms_profile" translatable="false">SMS PROFILE</string>
+    <string name="key_uel_sms_basal" translatable="false">SMS BASAL</string>
+    <string name="key_uel_sms_extended" translatable="false">SMS EXTENDED</string>
+    <string name="key_uel_sms_bolus" translatable="false">SMS BOLUS</string>
+    <string name="key_uel_sms_carbs" translatable="false">SMS CARBS</string>
+    <string name="key_uel_sms_target" translatable="false">SMS TARGET</string>
+    <string name="key_uel_sms_sms" translatable="false">SMS SMS</string>
+    <string name="key_uel_sms_cal" translatable="false">SMS CAL</string>
+    <string name="key_uel_store_profile" translatable="false">STORE PROFILE</string>
+
 </resources>

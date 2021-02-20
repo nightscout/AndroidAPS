@@ -344,7 +344,7 @@ class ImportExportPrefs @Inject constructor(
     private fun restartAppAfterImport(context: Context) {
         sp.putBoolean(R.string.key_setupwizard_processed, true)
         OKDialog.show(context, resourceHelper.gs(R.string.setting_imported), resourceHelper.gs(R.string.restartingapp), Runnable {
-            uel.log("IMPORT")
+            uel.log(resourceHelper.gs(R.string.key_uel_import))
             log.debug(LTag.CORE, "Exiting")
             rxBus.send(EventAppExit())
             if (context is AppCompatActivity) {

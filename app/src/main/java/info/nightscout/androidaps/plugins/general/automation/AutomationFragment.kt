@@ -216,7 +216,7 @@ class AutomationFragment : DaggerFragment(), OnStartDragListener {
             holder.binding.iconTrash.setOnClickListener {
                 OKDialog.showConfirmation(requireContext(), resourceHelper.gs(R.string.removerecord) + " " + automationPlugin.at(position).title,
                     {
-                        uel.log("AUTOM REMOVED", automationPlugin.at(position).title)
+                        uel.log(resourceHelper.gs(R.string.key_uel_autom_removed), automationPlugin.at(position).title)
                         automationPlugin.removeAt(position)
                         notifyItemRemoved(position)
                     }, {
@@ -239,7 +239,7 @@ class AutomationFragment : DaggerFragment(), OnStartDragListener {
             activity?.let { activity ->
                 OKDialog.showConfirmation(activity, resourceHelper.gs(R.string.removerecord) + " " + automationPlugin.at(position).title,
                     Runnable {
-                        uel.log("AUTOM REMOVED", automationPlugin.at(position).title)
+                        uel.log(resourceHelper.gs(R.string.key_uel_autom_removed), automationPlugin.at(position).title)
                         automationPlugin.removeAt(position)
                         notifyItemRemoved(position)
                         rxBus.send(EventAutomationDataChanged())

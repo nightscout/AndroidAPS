@@ -13,6 +13,7 @@
     <string name="key_rs_loginsulinchange" translatable="false">rs_loginsulinchange</string>
     <string name="key_rs_last_clear_key_request" translatable="false">rs_last_clear_key_request</string>
     <string name="key_danar_bt_name" translatable="false">danar_bt_name</string>
+    <string name="key_uel_clear_pairing_keys" translatable="false">CLEAR PAIRING KEYS</string>
 
     <string name="danars_pairing">Pairing</string>
     <string name="danars_nodeviceavailable">No device found so far</string>

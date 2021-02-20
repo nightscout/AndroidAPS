@@ -142,7 +142,7 @@ class ConfigBuilderPlugin @Inject constructor(
             OKDialog.showConfirmation(activity, resourceHelper.gs(R.string.allow_hardware_pump_text), Runnable {
                 performPluginSwitch(changedPlugin, newState, type)
                 sp.putBoolean("allow_hardware_pump", true)
-                uel.log("HW PUMP ALLOWED")
+                uel.log(resourceHelper.gs(R.string.key_uel_hw_pump_allowed))
                 aapsLogger.debug(LTag.PUMP, "First time HW pump allowed!")
             }, Runnable {
                 rxBus.send(EventConfigBuilderUpdateGui())

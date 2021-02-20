@@ -56,13 +56,13 @@ class MaintenanceFragment : DaggerFragment() {
         super.onViewCreated(view, savedInstanceState)
         binding.logSend.setOnClickListener { maintenancePlugin.sendLogs() }
         binding.logDelete.setOnClickListener {
-            uel.log("DELETE LOGS")
+            uel.log(resourceHelper.gs(R.string.key_uel_delete_logs))
             maintenancePlugin.deleteLogs()
         }
         binding.navResetdb.setOnClickListener {
             activity?.let { activity ->
                 OKDialog.showConfirmation(activity, resourceHelper.gs(R.string.maintenance), resourceHelper.gs(R.string.reset_db_confirm), Runnable {
-                    uel.log("RESET DATABASES")
+                    uel.log(resourceHelper.gs(R.string.key_uel_reset_databases))
                     compositeDisposable.add(
                         fromAction {
                             MainApp.getDbHelper().resetDatabases()
@@ -83,14 +83,14 @@ class MaintenanceFragment : DaggerFragment() {
             }
         }
         binding.navExport.setOnClickListener {
-            uel.log("EXPORT SETTINGS")
+            uel.log(resourceHelper.gs(R.string.key_uel_export_settings))
             // start activity for checking permissions...
             importExportPrefs.verifyStoragePermissions(this) {
                 importExportPrefs.exportSharedPreferences(this)
             }
         }
         binding.navImport.setOnClickListener {
-            uel.log("IMPORT SETTINGS")
+            uel.log(resourceHelper.gs(R.string.key_uel_import_settings))
             // start activity for checking permissions...
             importExportPrefs.verifyStoragePermissions(this) {
                 importExportPrefs.importSharedPreferences(this)

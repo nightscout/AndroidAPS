@@ -154,7 +154,7 @@ class ActionsFragment : DaggerFragment() {
         }
         extendedBolusCancel?.setOnClickListener {
             if (activePlugin.activeTreatments.isInHistoryExtendedBoluslInProgress) {
-                uel.log("CANCEL EXTENDED BOLUS")
+                uel.log(resourceHelper.gs(R.string.key_uel_cancel_extended_bolus))
                 commandQueue.cancelExtended(object : Callback() {
                     override fun run() {
                         if (!result.success) {
@@ -169,7 +169,7 @@ class ActionsFragment : DaggerFragment() {
         }
         cancelTempBasal?.setOnClickListener {
             if (activePlugin.activeTreatments.isTempBasalInProgress) {
-                uel.log("CANCEL TEMP BASAL")
+                uel.log(resourceHelper.gs(R.string.key_uel_cancel_temp_basal))
                 commandQueue.cancelTempBasal(true, object : Callback() {
                     override fun run() {
                         if (!result.success) {

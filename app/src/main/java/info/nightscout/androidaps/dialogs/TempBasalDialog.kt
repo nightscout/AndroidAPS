@@ -125,10 +125,10 @@ class TempBasalDialog : DialogFragmentWithDate() {
                     }
                 }
                 if (isPercentPump) {
-                    uel.log("TEMP BASAL", d1 = percent.toDouble(), i1 = durationInMinutes)
+                    uel.log(resourceHelper.gs(R.string.key_uel_temp_basal), d1 = percent.toDouble(), i1 = durationInMinutes)
                     commandQueue.tempBasalPercent(percent, durationInMinutes, true, profile, callback)
                 } else {
-                    uel.log("TEMP BASAL", d1 = absolute, i1 = durationInMinutes)
+                    uel.log(resourceHelper.gs(R.string.key_uel_temp_basal), d1 = absolute, i1 = durationInMinutes)
                     commandQueue.tempBasalAbsolute(absolute, durationInMinutes, true, profile, callback)
                 }
             })

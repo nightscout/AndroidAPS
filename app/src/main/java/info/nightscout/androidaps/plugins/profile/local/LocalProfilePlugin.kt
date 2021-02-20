@@ -115,7 +115,7 @@ class LocalProfilePlugin @Inject constructor(
         createAndStoreConvertedProfile()
         isEdited = false
         aapsLogger.debug(LTag.PROFILE, "Storing settings: " + rawProfile?.data.toString())
-        uel.log("STORE PROFILE")
+        uel.log(resourceHelper.gs(R.string.key_uel_store_profile))
         rxBus.send(EventProfileStoreChanged())
         var namesOK = true
         profiles.forEach {

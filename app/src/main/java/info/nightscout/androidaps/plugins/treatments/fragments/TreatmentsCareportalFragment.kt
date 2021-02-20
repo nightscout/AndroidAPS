@@ -64,7 +64,7 @@ class TreatmentsCareportalFragment : DaggerFragment() {
         binding.refreshFromNightscout.setOnClickListener {
             activity?.let { activity ->
                 OKDialog.showConfirmation(activity, resourceHelper.gs(R.string.careportal), resourceHelper.gs(R.string.refresheventsfromnightscout) + " ?", Runnable {
-                    uel.log("CAREPORTAL NS REFRESH")
+                    uel.log(resourceHelper.gs(R.string.key_uel_careportal_ns_refresh))
                     MainApp.getDbHelper().resetCareportalEvents()
                     rxBus.send(EventNSClientRestart())
                 })
@@ -73,7 +73,7 @@ class TreatmentsCareportalFragment : DaggerFragment() {
         binding.removeAndroidapsStartedEvents.setOnClickListener {
             activity?.let { activity ->
                 OKDialog.showConfirmation(activity, resourceHelper.gs(R.string.careportal), resourceHelper.gs(R.string.careportal_removestartedevents), Runnable {
-                    uel.log("REMOVED RESTART EVENTS")
+                    uel.log(resourceHelper.gs(R.string.key_uel_removed_restart_events))
                     val events = MainApp.getDbHelper().getCareportalEvents(false)
                     for (i in events.indices) {
                         val careportalEvent = events[i]
@@ -154,7 +154,7 @@ class TreatmentsCareportalFragment : DaggerFragment() {
                             resourceHelper.gs(R.string.careportal_newnstreatment_notes_label) + ": " + careportalEvent.notes + "\n" +
                             resourceHelper.gs(R.string.date) + ": " + dateUtil.dateAndTimeString(careportalEvent.date)
                         OKDialog.showConfirmation(activity, resourceHelper.gs(R.string.removerecord), text, Runnable {
-                            uel.log("REMOVED CAREP", text)
+                            uel.log(resourceHelper.gs(R.string.key_uel_removed_carep), text)
                             if (NSUpload.isIdValid(careportalEvent._id))
                                 nsUpload.removeCareportalEntryFromNS(careportalEvent._id)
                             else

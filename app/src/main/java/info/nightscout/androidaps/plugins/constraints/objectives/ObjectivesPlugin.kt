@@ -142,7 +142,7 @@ class ObjectivesPlugin @Inject constructor(
             sp.putLong("Objectives_" + "auto" + "_accomplished", DateUtil.now())
             setupObjectives()
             OKDialog.show(activity, resourceHelper.gs(R.string.objectives), resourceHelper.gs(R.string.codeaccepted))
-            uel.log("OBJECTIVES SKIPPED")
+            uel.log(resourceHelper.gs(R.string.key_uel_objectives_skipped))
         } else {
             OKDialog.show(activity, resourceHelper.gs(R.string.objectives), resourceHelper.gs(R.string.codeinvalid))
         }

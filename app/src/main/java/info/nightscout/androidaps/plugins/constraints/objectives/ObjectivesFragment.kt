@@ -307,7 +307,7 @@ class ObjectivesFragment : DaggerFragment() {
             holder.binding.unstart.setOnClickListener {
                 activity?.let { activity ->
                     OKDialog.showConfirmation(activity, resourceHelper.gs(R.string.objectives), resourceHelper.gs(R.string.doyouwantresetstart), Runnable {
-                        uel.log("OBJECTIVE UNSTARTED", i1 = position + 1)
+                        uel.log(resourceHelper.gs(R.string.key_uel_objective_unstarted), i1 = position + 1)
                         objective.startedOn = 0
                         scrollToCurrentObjective()
                         rxBus.send(EventObjectivesUpdateGui())

@@ -212,7 +212,7 @@ class CarbsDialog : DialogFragmentWithDate() {
                 OKDialog.showConfirmation(activity, resourceHelper.gs(R.string.carbs), HtmlHelper.fromHtml(Joiner.on("<br/>").join(actions)), {
                     when {
                         activitySelected   -> {
-                            uel.log("TT ACTIVITY", d1 = activityTT, i1 = activityTTDuration)
+                            uel.log(resourceHelper.gs(R.string.key_uel_tt_activity), d1 = activityTT, i1 = activityTTDuration)
                             val tempTarget = TempTarget()
                                 .date(System.currentTimeMillis())
                                 .duration(activityTTDuration)
@@ -224,7 +224,7 @@ class CarbsDialog : DialogFragmentWithDate() {
                         }
 
                         eatingSoonSelected -> {
-                            uel.log("TT EATING SOON", d1 = eatingSoonTT, i1 = eatingSoonTTDuration)
+                            uel.log(resourceHelper.gs(R.string.key_uel_tt_eating_soon), d1 = eatingSoonTT, i1 = eatingSoonTTDuration)
                             val tempTarget = TempTarget()
                                 .date(System.currentTimeMillis())
                                 .duration(eatingSoonTTDuration)
@@ -236,7 +236,7 @@ class CarbsDialog : DialogFragmentWithDate() {
                         }
 
                         hypoSelected       -> {
-                            uel.log("TT HYPO", d1 = hypoTT, i1 = hypoTTDuration)
+                            uel.log(resourceHelper.gs(R.string.key_uel_tt_hypo), d1 = hypoTT, i1 = hypoTTDuration)
                             val tempTarget = TempTarget()
                                 .date(System.currentTimeMillis())
                                 .duration(hypoTTDuration)
@@ -249,10 +249,10 @@ class CarbsDialog : DialogFragmentWithDate() {
                     }
                     if (carbsAfterConstraints > 0) {
                         if (duration == 0) {
-                            uel.log("CARBS", d1 = carbsAfterConstraints.toDouble(), i1 = timeOffset)
+                            uel.log(resourceHelper.gs(R.string.key_uel_carb), d1 = carbsAfterConstraints.toDouble(), i1 = timeOffset)
                             carbsGenerator.createCarb(carbsAfterConstraints, time, CareportalEvent.CARBCORRECTION, notes)
                         } else {
-                            uel.log("CARBS", d1 = carbsAfterConstraints.toDouble(), i1 = timeOffset, i2 = duration)
+                            uel.log(resourceHelper.gs(R.string.key_uel_carb), d1 = carbsAfterConstraints.toDouble(), i1 = timeOffset, i2 = duration)
                             carbsGenerator.generateCarbs(carbsAfterConstraints, time, duration, notes)
                             nsUpload.uploadEvent(CareportalEvent.NOTE, DateUtil.now() - 2000, resourceHelper.gs(R.string.generated_ecarbs_note, carbsAfterConstraints, duration, timeOffset))
                         }

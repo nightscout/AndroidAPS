@@ -164,7 +164,7 @@ class TempTargetDialog : DialogFragmentWithDate() {
 
         activity?.let { activity ->
             OKDialog.showConfirmation(activity, resourceHelper.gs(R.string.careportal_temporarytarget), HtmlHelper.fromHtml(Joiner.on("<br/>").join(actions)), {
-                uel.log("TT", d1 = target, i1 = duration)
+                uel.log(resourceHelper.gs(R.string.key_uel_tt), d1 = target, i1 = duration)
                 if (target == 0.0 || duration == 0) {
                     val tempTarget = TempTarget()
                         .date(eventTime)

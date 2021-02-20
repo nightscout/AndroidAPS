@@ -216,7 +216,7 @@ class FoodFragment : DaggerFragment() {
                     val food = v.tag as Food
                     activity?.let { activity ->
                         OKDialog.showConfirmation(activity, resourceHelper.gs(R.string.confirmation), resourceHelper.gs(R.string.removerecord) + "\n" + food.name, DialogInterface.OnClickListener { _: DialogInterface?, _: Int ->
-                            uel.log("FOOD REMOVED", food.name)
+                            uel.log(resourceHelper.gs(R.string.key_uel_food_removed), food.name)
                             if (food._id != null && food._id != "") {
                                 nsUpload.removeFoodFromNS(food._id)
                             }

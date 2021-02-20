@@ -342,7 +342,7 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
                             protectionCheck.queryProtection(activity, ProtectionCheck.Protection.BOLUS, UIRunnable {
                                 OKDialog.showConfirmation(activity, resourceHelper.gs(R.string.tempbasal_label), lastRun.constraintsProcessed?.toSpanned()
                                     ?: "".toSpanned(), {
-                                    uel.log("ACCEPT TEMP BASAL")
+                                    uel.log(resourceHelper.gs(R.string.key_uel_accepts_temp_basal))
                                     binding.buttonsLayout.acceptTempButton.visibility = View.GONE
                                     (context?.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager).cancel(Constants.notificationID)
                                     rxBus.send(EventWearDoAction("cancelChangeRequest"))
