@@ -15,6 +15,7 @@ import info.nightscout.androidaps.activities.ErrorHelperActivity
 import info.nightscout.androidaps.data.DetailedBolusInfo
 import info.nightscout.androidaps.data.Profile
 import info.nightscout.androidaps.database.AppRepository
+import info.nightscout.androidaps.database.entities.UserEntry
 import info.nightscout.androidaps.databinding.DialogInsulinBinding
 import info.nightscout.androidaps.db.CareportalEvent
 import info.nightscout.androidaps.db.Source
@@ -178,7 +179,7 @@ class InsulinDialog : DialogFragmentWithDate() {
             activity?.let { activity ->
                 OKDialog.showConfirmation(activity, resourceHelper.gs(R.string.bolus), HtmlHelper.fromHtml(Joiner.on("<br/>").join(actions)), {
                     if (eatingSoonChecked) {
-                        uel.log(resourceHelper.gs(R.string.key_uel_tt_eating_soon), d1 = eatingSoonTT, i1 = eatingSoonTTDuration)
+                        uel.log(UserEntry.Action.TT_EATING_SOON, d1 = eatingSoonTT, i1 = eatingSoonTTDuration)
                         val tempTarget = TempTarget()
                             .date(System.currentTimeMillis())
                             .duration(eatingSoonTTDuration)
@@ -196,11 +197,11 @@ class InsulinDialog : DialogFragmentWithDate() {
                         detailedBolusInfo.source = Source.USER
                         detailedBolusInfo.notes = notes
                         if (recordOnlyChecked) {
-                            uel.log(resourceHelper.gs(R.string.key_uel_bolus_record), d1 = insulinAfterConstraints, i1 = timeOffset)
+                            uel.log(UserEntry.Action.BOLUS_RECORD, d1 = insulinAfterConstraints, i1 = timeOffset)
                             detailedBolusInfo.date = time
                             activePlugin.activeTreatments.addToHistoryTreatment(detailedBolusInfo, false)
                         } else {
-                            uel.log(resourceHelper.gs(R.string.key_uel_bolus), d1 = insulinAfterConstraints)
+                            uel.log(UserEntry.Action.BOLUS, d1 = insulinAfterConstraints)
                             detailedBolusInfo.date = DateUtil.now()
                             commandQueue.bolus(detailedBolusInfo, object : Callback() {
                                 override fun run() {

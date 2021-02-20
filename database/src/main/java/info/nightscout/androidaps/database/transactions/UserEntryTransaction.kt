@@ -3,7 +3,7 @@ package info.nightscout.androidaps.database.transactions
 import info.nightscout.androidaps.database.entities.UserEntry
 
 class UserEntryTransaction(
-    val action: String,
+    val action: UserEntry.Action,
     val s: String = "",
     val d1: Double = 0.0,
     val d2: Double = 0.0,

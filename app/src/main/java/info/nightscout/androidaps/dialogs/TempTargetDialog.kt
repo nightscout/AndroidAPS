@@ -10,6 +10,7 @@ import com.google.common.collect.Lists
 import info.nightscout.androidaps.Constants
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.data.Profile
+import info.nightscout.androidaps.database.entities.UserEntry
 import info.nightscout.androidaps.databinding.DialogTemptargetBinding
 import info.nightscout.androidaps.db.Source
 import info.nightscout.androidaps.db.TempTarget
@@ -164,7 +165,7 @@ class TempTargetDialog : DialogFragmentWithDate() {
 
         activity?.let { activity ->
             OKDialog.showConfirmation(activity, resourceHelper.gs(R.string.careportal_temporarytarget), HtmlHelper.fromHtml(Joiner.on("<br/>").join(actions)), {
-                uel.log(resourceHelper.gs(R.string.key_uel_tt), d1 = target, i1 = duration)
+                uel.log(UserEntry.Action.TT, d1 = target, i1 = duration)
                 if (target == 0.0 || duration == 0) {
                     val tempTarget = TempTarget()
                         .date(eventTime)

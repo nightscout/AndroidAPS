@@ -13,14 +13,14 @@ data class UserEntry(
     override var id: Long = 0L,
     override var timestamp: Long,
     override var utcOffset: Long = TimeZone.getDefault().getOffset(timestamp).toLong(),
-    var action: String,
+    var action: Action,
     var s: String,
     var d1: Double,
     var d2: Double,
     var i1: Int,
     var i2: Int
 ) : DBEntry, DBEntryWithTime {
-    enum class Type {
+    enum class Action {
         BOLUS,
         BOLUS_WIZARD,
         BOLUS_ADVISOR,
@@ -40,7 +40,7 @@ data class UserEntry(
         CLONE_PROFILE,
         STORE_PROFILE,
         PROFILE_SWITCH,
-        PROFILE_SWITCH_CLONE,
+        PROFILE_SWITCH_CLONED,
 
         CLOSED_LOOP_MODE,
         LGS_LOOP_MODE,
@@ -118,14 +118,14 @@ data class UserEntry(
         SMS_CAL,
         SMS_CARBS,
         SMS_EXTENDED_BOLUS,
-        SMS_LOOP_DISABLE,
-        SMS_LOOP_ENABLE,
+        SMS_LOOP_DISABLED,
+        SMS_LOOP_ENABLED,
         SMS_LOOP_RESUME,
         SMS_LOOP_SUSPEND,
         SMS_PROFILE,
         SMS_PUMP_CONNECT,
         SMS_PUMP_DISCONNECT,
         SMS_SMS,
-        SMS_TARGET
+        SMS_TT
     }
 }

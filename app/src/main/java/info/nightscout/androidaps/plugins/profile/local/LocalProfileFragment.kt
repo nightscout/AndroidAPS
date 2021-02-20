@@ -12,6 +12,7 @@ import dagger.android.support.DaggerFragment
 import info.nightscout.androidaps.Constants
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.data.Profile
+import info.nightscout.androidaps.database.entities.UserEntry
 import info.nightscout.androidaps.databinding.LocalprofileFragmentBinding
 import info.nightscout.androidaps.dialogs.ProfileSwitchDialog
 import info.nightscout.androidaps.interfaces.ActivePluginProvider
@@ -162,7 +163,7 @@ class LocalProfileFragment : DaggerFragment() {
             if (localProfilePlugin.isEdited) {
                 activity?.let { OKDialog.show(it, "", resourceHelper.gs(R.string.saveorresetchangesfirst)) }
             } else {
-                uel.log(resourceHelper.gs(R.string.key_uel_new_profile))
+                uel.log(UserEntry.Action.NEW_PROFILE)
                 localProfilePlugin.addNewProfile()
                 build()
             }
@@ -172,7 +173,7 @@ class LocalProfileFragment : DaggerFragment() {
             if (localProfilePlugin.isEdited) {
                 activity?.let { OKDialog.show(it, "", resourceHelper.gs(R.string.saveorresetchangesfirst)) }
             } else {
-                uel.log(resourceHelper.gs(R.string.key_uel_clone_profile), localProfilePlugin.currentProfile()?.name ?: "")
+                uel.log(UserEntry.Action.CLONE_PROFILE, localProfilePlugin.currentProfile()?.name ?: "")
                 localProfilePlugin.cloneProfile()
                 build()
             }
@@ -181,7 +182,7 @@ class LocalProfileFragment : DaggerFragment() {
         binding.profileRemove.setOnClickListener {
             activity?.let { activity ->
                 OKDialog.showConfirmation(activity, resourceHelper.gs(R.string.deletecurrentprofile), {
-                    uel.log(resourceHelper.gs(R.string.key_uel_remove_profile), localProfilePlugin.currentProfile()?.name ?: "")
+                    uel.log(UserEntry.Action.PROFILE_REMOVED, localProfilePlugin.currentProfile()?.name ?: "")
                     localProfilePlugin.removeCurrentProfile()
                     build()
                 }, null)

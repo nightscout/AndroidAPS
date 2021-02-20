@@ -18,6 +18,7 @@ import androidx.recyclerview.widget.RecyclerView
 import dagger.android.HasAndroidInjector
 import dagger.android.support.DaggerFragment
 import info.nightscout.androidaps.R
+import info.nightscout.androidaps.database.entities.UserEntry
 import info.nightscout.androidaps.databinding.AutomationEventItemBinding
 import info.nightscout.androidaps.databinding.AutomationFragmentBinding
 import info.nightscout.androidaps.logging.UserEntryLogger
@@ -216,7 +217,7 @@ class AutomationFragment : DaggerFragment(), OnStartDragListener {
             holder.binding.iconTrash.setOnClickListener {
                 OKDialog.showConfirmation(requireContext(), resourceHelper.gs(R.string.removerecord) + " " + automationPlugin.at(position).title,
                     {
-                        uel.log(resourceHelper.gs(R.string.key_uel_autom_removed), automationPlugin.at(position).title)
+                        uel.log(UserEntry.Action.AUTOMATION_REMOVED, automationPlugin.at(position).title)
                         automationPlugin.removeAt(position)
                         notifyItemRemoved(position)
                     }, {
@@ -239,7 +240,7 @@ class AutomationFragment : DaggerFragment(), OnStartDragListener {
             activity?.let { activity ->
                 OKDialog.showConfirmation(activity, resourceHelper.gs(R.string.removerecord) + " " + automationPlugin.at(position).title,
                     Runnable {
-                        uel.log(resourceHelper.gs(R.string.key_uel_autom_removed), automationPlugin.at(position).title)
+                        uel.log(UserEntry.Action.AUTOMATION_REMOVED, automationPlugin.at(position).title)
                         automationPlugin.removeAt(position)
                         notifyItemRemoved(position)
                         rxBus.send(EventAutomationDataChanged())

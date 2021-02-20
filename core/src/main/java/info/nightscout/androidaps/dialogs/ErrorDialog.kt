@@ -11,18 +11,17 @@ import dagger.android.support.DaggerDialogFragment
 import info.nightscout.androidaps.activities.ErrorHelperActivity
 import info.nightscout.androidaps.core.R
 import info.nightscout.androidaps.core.databinding.DialogErrorBinding
+import info.nightscout.androidaps.database.entities.UserEntry
 import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.logging.UserEntryLogger
 import info.nightscout.androidaps.services.AlarmSoundServiceHelper
 import info.nightscout.androidaps.utils.T
-import info.nightscout.androidaps.utils.resources.ResourceHelper
 import javax.inject.Inject
 
 class ErrorDialog : DaggerDialogFragment() {
 
     @Inject lateinit var alarmSoundServiceHelper: AlarmSoundServiceHelper
     @Inject lateinit var aapsLogger: AAPSLogger
-    @Inject lateinit var resourceHelper: ResourceHelper
     @Inject lateinit var uel: UserEntryLogger
 
     var helperActivity: ErrorHelperActivity? = null
@@ -60,15 +59,15 @@ class ErrorDialog : DaggerDialogFragment() {
 
         binding.title.text = title
         binding.ok.setOnClickListener {
-            uel.log(resourceHelper.gs(R.string.key_uel_error_dialog_ok))
+            uel.log(UserEntry.Action.ERROR_DIALOG_OK)
             dismiss()
         }
         binding.mute.setOnClickListener {
-            uel.log(resourceHelper.gs(R.string.key_uel_error_dialog_mute))
+            uel.log(UserEntry.Action.ERROR_DIALOG_MUTE)
             stopAlarm()
         }
         binding.mute5min.setOnClickListener {
-            uel.log(resourceHelper.gs(R.string.key_uel_error_dialog_mute_5min))
+            uel.log(UserEntry.Action.ERROR_DIALOG_MUTE_5MIN)
             stopAlarm()
             loopHandler.postDelayed(this::startAlarm, T.mins(5).msecs())
         }

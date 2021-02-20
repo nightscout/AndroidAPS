@@ -10,6 +10,7 @@ import info.nightscout.androidaps.R
 import info.nightscout.androidaps.activities.ErrorHelperActivity
 import info.nightscout.androidaps.data.DetailedBolusInfo
 import info.nightscout.androidaps.data.Profile
+import info.nightscout.androidaps.database.entities.UserEntry
 import info.nightscout.androidaps.db.CareportalEvent
 import info.nightscout.androidaps.db.Source
 import info.nightscout.androidaps.db.TempTarget
@@ -346,7 +347,7 @@ class BolusWizard @Inject constructor(
                 boluscalc = nsJSON()
                 source = Source.USER
                 notes = this@BolusWizard.notes
-                uel.log(resourceHelper.gs(R.string.key_uel_bolus_advisor), d1 = insulinAfterConstraints)
+                uel.log(UserEntry.Action.BOLUS_ADVISOR, d1 = insulinAfterConstraints)
                 if (insulin > 0) {
                     commandQueue.bolus(this, object : Callback() {
                         override fun run() {
@@ -369,7 +370,7 @@ class BolusWizard @Inject constructor(
         OKDialog.showConfirmation(ctx, resourceHelper.gs(R.string.boluswizard), confirmMessage, {
             if (insulinAfterConstraints > 0 || carbs > 0) {
                 if (useSuperBolus) {
-                    uel.log(resourceHelper.gs(R.string.key_uel_superbolus_tbr))
+                    uel.log(UserEntry.Action.SUPERBOLUS_TBR)
                     if (loopPlugin.isEnabled(PluginType.LOOP)) {
                         loopPlugin.superBolusTo(System.currentTimeMillis() + 2 * 60L * 60 * 1000)
                         rxBus.send(EventRefreshOverview("WizardDialog"))
@@ -410,7 +411,7 @@ class BolusWizard @Inject constructor(
                     boluscalc = nsJSON()
                     source = Source.USER
                     notes = this@BolusWizard.notes
-                    uel.log(resourceHelper.gs(R.string.key_uel_bolus_wizard), "", insulinAfterConstraints, carbs)
+                    uel.log(UserEntry.Action.BOLUS_WIZARD, "", insulinAfterConstraints, carbs)
                     if (insulin > 0 || pump.pumpDescription.storesCarbInfo) {
                         commandQueue.bolus(this, object : Callback() {
                             override fun run() {

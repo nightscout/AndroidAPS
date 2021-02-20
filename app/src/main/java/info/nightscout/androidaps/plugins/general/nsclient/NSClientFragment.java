@@ -16,6 +16,7 @@ import javax.inject.Inject;
 
 import dagger.android.support.DaggerFragment;
 import info.nightscout.androidaps.R;
+import info.nightscout.androidaps.database.entities.UserEntry;
 import info.nightscout.androidaps.logging.UserEntryLogger;
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper;
 import info.nightscout.androidaps.plugins.general.nsclient.events.EventNSClientNewLog;
@@ -123,7 +124,7 @@ public class NSClientFragment extends DaggerFragment implements View.OnClickList
                 break;
             case R.id.nsclientinternal_clearqueue:
                 OKDialog.showConfirmation(getContext(), resourceHelper.gs(R.string.nsclientinternal), resourceHelper.gs(R.string.clearqueueconfirm), () -> {
-                    uel.log(resourceHelper.gs(R.string.key_uel_ns_queue_cleared), "", 0.0, 0.0, 0, 0);
+                    uel.log(UserEntry.Action.NS_QUEUE_CLEARED, "", 0.0, 0.0, 0, 0);
                     uploadQueue.clearQueue();
                     updateGui();
                     fabricPrivacy.logCustom("NSClientClearQueue");
@@ -139,7 +140,7 @@ public class NSClientFragment extends DaggerFragment implements View.OnClickList
     public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
         switch (buttonView.getId()) {
             case R.id.nsclientinternal_paused:
-                uel.log(resourceHelper.gs(R.string.key_uel_ns_paused), "", 0.0, 0.0, isChecked ? 1 : 0, 0);
+                uel.log(UserEntry.Action.NS_PAUSED, "", 0.0, 0.0, isChecked ? 1 : 0, 0);
                 nsClientPlugin.pause(isChecked);
                 updateGui();
                 fabricPrivacy.logCustom("NSClientPause");
