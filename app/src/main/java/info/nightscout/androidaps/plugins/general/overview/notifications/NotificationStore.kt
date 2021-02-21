@@ -77,8 +77,8 @@ class NotificationStore @Inject constructor(
         for (i in store.indices) {
             if (store[i].id == id) {
                 if (store[i].soundId != null) alarmSoundServiceHelper.stopService(context)
-                store.removeAt(i)
                 aapsLogger.debug(LTag.NOTIFICATION, "Notification removed: " + store[i].text)
+                store.removeAt(i)
                 return true
             }
         }
@@ -92,8 +92,8 @@ class NotificationStore @Inject constructor(
             val n = store[i]
             if (n.validTo != 0L && n.validTo < System.currentTimeMillis()) {
                 if (store[i].soundId != null) alarmSoundServiceHelper.stopService(context)
-                store.removeAt(i)
                 aapsLogger.debug(LTag.NOTIFICATION, "Notification expired: " + store[i].text)
+                store.removeAt(i)
                 i--
             }
             i++
