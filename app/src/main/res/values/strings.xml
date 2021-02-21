@@ -1381,5 +1381,10 @@
     <string name="cannula">Cannula</string>
     <string name="userentry">User entry</string>
     <string name="common_values">Use values of your largest food you usually eat\n</string>
+    <string name="key_email_for_crash_report">email_for_crash_report</string>
+    <string name="summary_email_for_crash_report">This email address will attached to crash reports so we can contact you in urgent cases. It\'s optional.</string>
+    <string name="email_address">Email address</string>
+    <string name="privacy_settings">Privacy setting</string>
+    <string name="privacy_summary">You can provide optional email address if you want to be notified about app crashes. This is not an automated service. You will be contacted by developers in dangerous situations.</string>
 
 </resources>
