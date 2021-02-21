@@ -1029,4 +1029,8 @@
     <string name="cannula">צינורית</string>
     <string name="userentry">קלט המשתמש</string>
     <string name="common_values">השתמשו בערכים הגבוהים ביותר של מזונות שאתם אוכלים בדרך כלל\n</string>
+    <string name="summary_email_for_crash_report">כתובת דוא\"ל זו תצורף לדוחות קריסה כדי שנוכל ליצור קשר במקרים דחופים. לא חובה.</string>
+    <string name="email_address">כתובת דוא\"ל</string>
+    <string name="privacy_settings">הגדרות פרטיות</string>
+    <string name="privacy_summary">אם תרצו, תוכלו לספק כתובת דוא\"ל כדי לקבל דיווח על קריסות יישום. שירות זה אינו אוטומטי. המפתחים יצרו איתכם קשר במצבים מסוכנים.</string>
 </resources>
