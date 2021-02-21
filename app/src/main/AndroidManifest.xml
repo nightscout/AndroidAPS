@@ -219,8 +219,6 @@
             android:exported="false" />
 
         <service android:name=".plugins.general.persistentNotification.DummyService" />
-        <service android:name=".plugins.pump.insight.connection_service.InsightConnectionService" />
-        <service android:name=".plugins.pump.insight.InsightAlertService" />
 
         <meta-data
             android:name="io.fabric.ApiKey"
@@ -236,20 +234,6 @@
             android:name=".activities.SingleFragmentActivity"
             android:theme="@style/AppTheme" />
         <activity android:name=".plugins.general.maintenance.activities.LogSettingActivity" />
-        <activity
-            android:name=".plugins.pump.insight.activities.InsightPairingActivity"
-            android:label="@string/insight_pairing"
-            android:theme="@style/AppTheme" />
-        <activity
-            android:name=".plugins.pump.insight.activities.InsightAlertActivity"
-            android:label="@string/pump_alert"
-            android:excludeFromRecents="true"
-            android:launchMode="singleInstance"
-            android:theme="@style/InsightAlertDialog" />
-        <activity
-            android:name=".plugins.pump.insight.activities.InsightPairingInformationActivity"
-            android:label="@string/pairing_information"
-            android:theme="@style/AppTheme" />
         <activity android:name=".activities.RequestDexcomPermissionActivity" />
         <activity android:name=".plugins.general.smsCommunicator.activities.SmsCommunicatorOtpActivity">
             <intent-filter>

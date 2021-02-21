@@ -17,7 +17,7 @@ import androidx.core.content.ContextCompat;
 import javax.inject.Inject;
 
 import dagger.android.support.DaggerAppCompatActivity;
-import info.nightscout.androidaps.R;
+import info.nightscout.androidaps.insight.R;
 import info.nightscout.androidaps.plugins.pump.insight.InsightAlertService;
 import info.nightscout.androidaps.plugins.pump.insight.descriptors.Alert;
 import info.nightscout.androidaps.plugins.pump.insight.descriptors.AlertStatus;

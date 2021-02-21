@@ -106,6 +106,10 @@
     <string name="limitingmaxiob">Limiting max IOB to %1$.1f U because of %2$s</string>
     <string name="unsafeusage">unsafe usage</string>
     <string name="pump_unreachable">Pump unreachable</string>
+    <string name="extended_bolus">Extended bolus</string>
+    <string name="pump_time_updated">Pump time updated</string>
+    <string name="exit">Exit</string>
+    <string name="serial_number">Serial number</string>
 
     <!--    Constraints-->
     <string name="limitingbasalratio">Limiting max basal rate to %1$.2f U/h because of %2$s</string>

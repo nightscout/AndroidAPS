@@ -127,7 +127,7 @@ class ConstraintsCheckerTest : TestBaseWithProfile() {
         comboPlugin = ComboPlugin(injector, aapsLogger, rxBus, resourceHelper, profileFunction, treatmentsInterface, sp, commandQueue, context, databaseHelper)
         danaRPlugin = DanaRPlugin(injector, aapsLogger, aapsSchedulers, rxBus, context, resourceHelper, constraintChecker, activePlugin, sp, commandQueue, danaPump, dateUtil, fabricPrivacy)
         danaRSPlugin = DanaRSPlugin(injector, aapsLogger, aapsSchedulers, rxBus, context, resourceHelper, constraintChecker, profileFunction, activePluginProvider, sp, commandQueue, danaPump, detailedBolusInfoStorage, fabricPrivacy, dateUtil)
-        insightPlugin = LocalInsightPlugin(injector, aapsLogger, rxBus, resourceHelper, treatmentsInterface, sp, commandQueue, profileFunction, nsUpload, context, uploadQueue, Config(), dateUtil)
+        insightPlugin = LocalInsightPlugin(injector, aapsLogger, rxBus, resourceHelper, treatmentsInterface, sp, commandQueue, profileFunction, nsUpload, context, uploadQueue, Config(), dateUtil, databaseHelper)
         openAPSSMBPlugin = OpenAPSSMBPlugin(injector, aapsLogger, rxBus, constraintChecker, resourceHelper, profileFunction, context, activePlugin, treatmentsInterface, iobCobCalculatorPlugin, hardLimits, profiler, sp)
         openAPSAMAPlugin = OpenAPSAMAPlugin(injector, aapsLogger, rxBus, constraintChecker, resourceHelper, profileFunction, context, activePlugin, treatmentsInterface, iobCobCalculatorPlugin, hardLimits, profiler, fabricPrivacy)
         safetyPlugin = SafetyPlugin(injector, aapsLogger, resourceHelper, sp, rxBus, constraintChecker, openAPSAMAPlugin, openAPSSMBPlugin, sensitivityOref1Plugin, activePlugin, hardLimits, BuildHelper(Config(), loggerUtils), treatmentsInterface, Config())

@@ -25,8 +25,8 @@ import androidx.recyclerview.widget.RecyclerView;
 import java.util.ArrayList;
 import java.util.List;
 
-import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.activities.NoSplashAppCompatActivity;
+import info.nightscout.androidaps.insight.R;
 import info.nightscout.androidaps.plugins.pump.insight.connection_service.InsightConnectionService;
 import info.nightscout.androidaps.plugins.pump.insight.descriptors.InsightState;
 import info.nightscout.androidaps.plugins.pump.insight.utils.ExceptionTranslator;

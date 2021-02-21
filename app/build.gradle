@@ -182,6 +182,7 @@ dependencies {
     implementation project(':dana')
     implementation project(':danars')
     implementation project(':danar')
+    implementation project(':insight')
     implementation project(':rileylink')
     implementation project(':medtronic')
     implementation project(':omnipod-eros')

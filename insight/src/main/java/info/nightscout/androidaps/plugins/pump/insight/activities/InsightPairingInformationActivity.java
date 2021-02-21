@@ -10,8 +10,8 @@ import android.widget.TextView;
 
 import androidx.annotation.Nullable;
 
-import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.activities.NoSplashAppCompatActivity;
+import info.nightscout.androidaps.insight.R;
 import info.nightscout.androidaps.plugins.pump.insight.connection_service.InsightConnectionService;
 
 public class InsightPairingInformationActivity extends NoSplashAppCompatActivity {

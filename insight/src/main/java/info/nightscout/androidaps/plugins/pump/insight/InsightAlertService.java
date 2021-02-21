@@ -17,7 +17,7 @@ import androidx.lifecycle.MutableLiveData;
 import javax.inject.Inject;
 
 import dagger.android.DaggerService;
-import info.nightscout.androidaps.R;
+import info.nightscout.androidaps.insight.R;
 import info.nightscout.androidaps.logging.AAPSLogger;
 import info.nightscout.androidaps.logging.LTag;
 import info.nightscout.androidaps.plugins.pump.insight.activities.InsightAlertActivity;

@@ -26,9 +26,6 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 
 import dagger.android.HasAndroidInjector;
-import info.nightscout.androidaps.Config;
-import info.nightscout.androidaps.MainApp;
-import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.data.DetailedBolusInfo;
 import info.nightscout.androidaps.data.Profile;
 import info.nightscout.androidaps.data.PumpEnactResult;
@@ -40,9 +37,12 @@ import info.nightscout.androidaps.db.TemporaryBasal;
 import info.nightscout.androidaps.db.Treatment;
 import info.nightscout.androidaps.events.EventInitializationChanged;
 import info.nightscout.androidaps.events.EventRefreshOverview;
+import info.nightscout.androidaps.insight.R;
 import info.nightscout.androidaps.interfaces.CommandQueueProvider;
+import info.nightscout.androidaps.interfaces.ConfigInterface;
 import info.nightscout.androidaps.interfaces.Constraint;
 import info.nightscout.androidaps.interfaces.ConstraintsInterface;
+import info.nightscout.androidaps.interfaces.DatabaseHelperInterface;
 import info.nightscout.androidaps.interfaces.PluginDescription;
 import info.nightscout.androidaps.interfaces.PluginType;
 import info.nightscout.androidaps.interfaces.ProfileFunction;
@@ -50,12 +50,12 @@ import info.nightscout.androidaps.interfaces.PumpDescription;
 import info.nightscout.androidaps.interfaces.PumpInterface;
 import info.nightscout.androidaps.interfaces.PumpPluginBase;
 import info.nightscout.androidaps.interfaces.TreatmentsInterface;
+import info.nightscout.androidaps.interfaces.UploadQueueInterface;
 import info.nightscout.androidaps.logging.AAPSLogger;
 import info.nightscout.androidaps.logging.LTag;
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper;
 import info.nightscout.androidaps.plugins.common.ManufacturerType;
 import info.nightscout.androidaps.plugins.general.nsclient.NSUpload;
-import info.nightscout.androidaps.plugins.general.nsclient.UploadQueue;
 import info.nightscout.androidaps.plugins.general.overview.events.EventDismissNotification;
 import info.nightscout.androidaps.plugins.general.overview.events.EventNewNotification;
 import info.nightscout.androidaps.plugins.general.overview.events.EventOverviewBolusProgress;
@@ -108,9 +108,9 @@ import info.nightscout.androidaps.plugins.pump.insight.app_layer.status.GetPumpS
 import info.nightscout.androidaps.plugins.pump.insight.app_layer.status.GetTotalDailyDoseMessage;
 import info.nightscout.androidaps.plugins.pump.insight.app_layer.status.ResetPumpStatusRegisterMessage;
 import info.nightscout.androidaps.plugins.pump.insight.connection_service.InsightConnectionService;
-import info.nightscout.androidaps.plugins.pump.insight.database.InsightBolusID;
-import info.nightscout.androidaps.plugins.pump.insight.database.InsightHistoryOffset;
-import info.nightscout.androidaps.plugins.pump.insight.database.InsightPumpID;
+import info.nightscout.androidaps.db.InsightBolusID;
+import info.nightscout.androidaps.db.InsightHistoryOffset;
+import info.nightscout.androidaps.db.InsightPumpID;
 import info.nightscout.androidaps.plugins.pump.insight.descriptors.ActiveBasalRate;
 import info.nightscout.androidaps.plugins.pump.insight.descriptors.ActiveBolus;
 import info.nightscout.androidaps.plugins.pump.insight.descriptors.ActiveTBR;
@@ -147,8 +147,9 @@ public class LocalInsightPlugin extends PumpPluginBase implements PumpInterface,
     private final ProfileFunction profileFunction;
     private final NSUpload nsUpload;
     private final Context context;
-    private final UploadQueue uploadQueue;
+    private final UploadQueueInterface uploadQueue;
     private final DateUtil dateUtil;
+    private final DatabaseHelperInterface databaseHelper;
 
     public static final String ALERT_CHANNEL_ID = "AndroidAPS-InsightAlert";
 
@@ -209,9 +210,10 @@ public class LocalInsightPlugin extends PumpPluginBase implements PumpInterface,
             ProfileFunction profileFunction,
             NSUpload nsUpload,
             Context context,
-            UploadQueue uploadQueue,
-            Config config,
-            DateUtil dateUtil
+            UploadQueueInterface uploadQueue,
+            ConfigInterface config,
+            DateUtil dateUtil,
+            DatabaseHelperInterface databaseHelper
     ) {
         super(new PluginDescription()
                         .pluginIcon(R.drawable.ic_insight_128)
@@ -235,6 +237,7 @@ public class LocalInsightPlugin extends PumpPluginBase implements PumpInterface,
         this.context = context;
         this.uploadQueue = uploadQueue;
         this.dateUtil = dateUtil;
+        this.databaseHelper = databaseHelper;
 
         pumpDescription = new PumpDescription();
         pumpDescription.setPumpDescription(PumpType.AccuChekInsightBluetooth);
@@ -606,7 +609,7 @@ public class LocalInsightPlugin extends PumpPluginBase implements PumpInterface,
                 insightBolusID.bolusID = bolusID;
                 insightBolusID.timestamp = System.currentTimeMillis();
                 insightBolusID.pumpSerial = connectionService.getPumpSystemIdentification().getSerialNumber();
-                MainApp.getDbHelper().createOrUpdate(insightBolusID);
+                databaseHelper.createOrUpdate(insightBolusID);
                 detailedBolusInfo.date = insightBolusID.timestamp;
                 detailedBolusInfo.source = Source.PUMP;
                 detailedBolusInfo.pumpId = insightBolusID.id;
@@ -820,7 +823,7 @@ public class LocalInsightPlugin extends PumpPluginBase implements PumpInterface,
             insightBolusID.bolusID = bolusID;
             insightBolusID.timestamp = System.currentTimeMillis();
             insightBolusID.pumpSerial = connectionService.getPumpSystemIdentification().getSerialNumber();
-            MainApp.getDbHelper().createOrUpdate(insightBolusID);
+            databaseHelper.createOrUpdate(insightBolusID);
             ExtendedBolus extendedBolus = new ExtendedBolus(getInjector());
             extendedBolus.date = insightBolusID.timestamp;
             extendedBolus.source = Source.PUMP;
@@ -920,10 +923,10 @@ public class LocalInsightPlugin extends PumpPluginBase implements PumpInterface,
                     connectionService.requestMessage(cancelBolusMessage).await();
                     confirmAlert(AlertType.WARNING_38);
                     alertService.ignore(null);
-                    InsightBolusID insightBolusID = MainApp.getDbHelper().getInsightBolusID(connectionService.getPumpSystemIdentification().getSerialNumber(),
+                    InsightBolusID insightBolusID = databaseHelper.getInsightBolusID(connectionService.getPumpSystemIdentification().getSerialNumber(),
                             activeBolus.getBolusID(), System.currentTimeMillis());
                     if (insightBolusID != null) {
-                        ExtendedBolus extendedBolus = MainApp.getDbHelper().getExtendedBolusByPumpId(insightBolusID.id);
+                        ExtendedBolus extendedBolus = databaseHelper.getExtendedBolusByPumpId(insightBolusID.id);
                         if (extendedBolus != null) {
                             extendedBolus.durationInMinutes = (int) ((System.currentTimeMillis() - extendedBolus.date) / 60000);
                             if (extendedBolus.durationInMinutes <= 0) {
@@ -931,7 +934,7 @@ public class LocalInsightPlugin extends PumpPluginBase implements PumpInterface,
                                 if (NSUpload.isIdValid(_id))
                                     nsUpload.removeCareportalEntryFromNS(_id);
                                 else uploadQueue.removeID("dbAdd", _id);
-                                MainApp.getDbHelper().delete(extendedBolus);
+                                databaseHelper.delete(extendedBolus);
                             } else
                                 treatmentsPlugin.addToHistoryExtendedBolus(extendedBolus);
                         }
@@ -1162,7 +1165,7 @@ public class LocalInsightPlugin extends PumpPluginBase implements PumpInterface,
             String pumpSerial = connectionService.getPumpSystemIdentification().getSerialNumber();
             timeOffset = Calendar.getInstance(TimeZone.getTimeZone("UTC")).getTimeInMillis() - parseDate(pumpTime.getYear(),
                     pumpTime.getMonth(), pumpTime.getDay(), pumpTime.getHour(), pumpTime.getMinute(), pumpTime.getSecond());
-            InsightHistoryOffset historyOffset = MainApp.getDbHelper().getInsightHistoryOffset(pumpSerial);
+            InsightHistoryOffset historyOffset = databaseHelper.getInsightHistoryOffset(pumpSerial);
             try {
                 List<HistoryEvent> historyEvents = new ArrayList<>();
                 if (historyOffset == null) {
@@ -1189,7 +1192,7 @@ public class LocalInsightPlugin extends PumpPluginBase implements PumpInterface,
                     historyOffset = new InsightHistoryOffset();
                     historyOffset.pumpSerial = pumpSerial;
                     historyOffset.offset = historyEvents.get(0).getEventPosition();
-                    MainApp.getDbHelper().createOrUpdate(historyOffset);
+                    databaseHelper.createOrUpdate(historyOffset);
                 }
             } catch (AppLayerErrorException e) {
                 aapsLogger.info(LTag.PUMP, "Exception while reading history: " + e.getClass().getCanonicalName() + " (" + e.getErrorCode() + ")");
@@ -1221,7 +1224,7 @@ public class LocalInsightPlugin extends PumpPluginBase implements PumpInterface,
                 break;
         Collections.reverse(temporaryBasals);
         for (InsightPumpID pumpID : pumpStartedEvents) {
-            InsightPumpID stoppedEvent = MainApp.getDbHelper().getPumpStoppedEvent(pumpID.pumpSerial, pumpID.timestamp);
+            InsightPumpID stoppedEvent = databaseHelper.getPumpStoppedEvent(pumpID.pumpSerial, pumpID.timestamp);
             if (stoppedEvent == null || stoppedEvent.eventType.equals("PumpPaused")) continue;
             long tbrStart = stoppedEvent.timestamp + 10000;
             TemporaryBasal temporaryBasal = new TemporaryBasal(getInjector());
@@ -1289,7 +1292,7 @@ public class LocalInsightPlugin extends PumpPluginBase implements PumpInterface,
         tdd.bolus = event.getBolusTotal();
         tdd.total = tdd.basal + tdd.bolus;
         tdd.date = calendar.getTimeInMillis();
-        MainApp.getDbHelper().createOrUpdateTDD(tdd);
+        databaseHelper.createOrUpdateTDD(tdd);
     }
 
     private void processTubeFilledEvent(TubeFilledEvent event) {
@@ -1338,7 +1341,7 @@ public class LocalInsightPlugin extends PumpPluginBase implements PumpInterface,
                     logNote(timestamp, resourceHelper.gs(R.string.pump_paused));
                 break;
         }
-        MainApp.getDbHelper().createOrUpdate(pumpID);
+        databaseHelper.createOrUpdate(pumpID);
     }
 
     private void processStartOfTBREvent(String serial, List<TemporaryBasal> temporaryBasals, StartOfTBREvent event) {
@@ -1349,7 +1352,7 @@ public class LocalInsightPlugin extends PumpPluginBase implements PumpInterface,
         pumpID.pumpSerial = serial;
         pumpID.timestamp = timestamp;
         pumpID.eventType = "StartOfTBR";
-        MainApp.getDbHelper().createOrUpdate(pumpID);
+        databaseHelper.createOrUpdate(pumpID);
         TemporaryBasal temporaryBasal = new TemporaryBasal(getInjector());
         temporaryBasal.durationInMinutes = event.getDuration();
         temporaryBasal.source = Source.PUMP;
@@ -1368,7 +1371,7 @@ public class LocalInsightPlugin extends PumpPluginBase implements PumpInterface,
         pumpID.pumpSerial = serial;
         pumpID.eventType = "EndOfTBR";
         pumpID.timestamp = timestamp;
-        MainApp.getDbHelper().createOrUpdate(pumpID);
+        databaseHelper.createOrUpdate(pumpID);
         TemporaryBasal temporaryBasal = new TemporaryBasal(getInjector());
         temporaryBasal.durationInMinutes = 0;
         temporaryBasal.source = Source.PUMP;
@@ -1380,10 +1383,10 @@ public class LocalInsightPlugin extends PumpPluginBase implements PumpInterface,
     private void processBolusProgrammedEvent(String serial, BolusProgrammedEvent event) {
         long timestamp = parseDate(event.getEventYear(), event.getEventMonth(), event.getEventDay(),
                 event.getEventHour(), event.getEventMinute(), event.getEventSecond()) + timeOffset;
-        InsightBolusID bolusID = MainApp.getDbHelper().getInsightBolusID(serial, event.getBolusID(), timestamp);
+        InsightBolusID bolusID = databaseHelper.getInsightBolusID(serial, event.getBolusID(), timestamp);
         if (bolusID != null && bolusID.endID != null) {
             bolusID.startID = event.getEventPosition();
-            MainApp.getDbHelper().createOrUpdate(bolusID);
+            databaseHelper.createOrUpdate(bolusID);
             return;
         }
         if (bolusID == null || bolusID.startID != null) {
@@ -1393,7 +1396,7 @@ public class LocalInsightPlugin extends PumpPluginBase implements PumpInterface,
             bolusID.pumpSerial = serial;
         }
         bolusID.startID = event.getEventPosition();
-        MainApp.getDbHelper().createOrUpdate(bolusID);
+        databaseHelper.createOrUpdate(bolusID);
         if (event.getBolusType() == BolusType.STANDARD || event.getBolusType() == BolusType.MULTIWAVE) {
             DetailedBolusInfo detailedBolusInfo = new DetailedBolusInfo();
             detailedBolusInfo.date = bolusID.timestamp;
@@ -1419,7 +1422,7 @@ public class LocalInsightPlugin extends PumpPluginBase implements PumpInterface,
                 event.getEventHour(), event.getEventMinute(), event.getEventSecond()) + timeOffset;
         long startTimestamp = parseRelativeDate(event.getEventYear(), event.getEventMonth(), event.getEventDay(), event.getEventHour(),
                 event.getEventMinute(), event.getEventSecond(), event.getStartHour(), event.getStartMinute(), event.getStartSecond()) + timeOffset;
-        InsightBolusID bolusID = MainApp.getDbHelper().getInsightBolusID(serial, event.getBolusID(), timestamp);
+        InsightBolusID bolusID = databaseHelper.getInsightBolusID(serial, event.getBolusID(), timestamp);
         if (bolusID == null || bolusID.endID != null) {
             bolusID = new InsightBolusID();
             bolusID.timestamp = startTimestamp;
@@ -1427,7 +1430,7 @@ public class LocalInsightPlugin extends PumpPluginBase implements PumpInterface,
             bolusID.pumpSerial = serial;
         }
         bolusID.endID = event.getEventPosition();
-        MainApp.getDbHelper().createOrUpdate(bolusID);
+        databaseHelper.createOrUpdate(bolusID);
         if (event.getBolusType() == BolusType.STANDARD || event.getBolusType() == BolusType.MULTIWAVE) {
             DetailedBolusInfo detailedBolusInfo = new DetailedBolusInfo();
             detailedBolusInfo.date = bolusID.timestamp;
@@ -1438,12 +1441,12 @@ public class LocalInsightPlugin extends PumpPluginBase implements PumpInterface,
         }
         if (event.getBolusType() == BolusType.EXTENDED || event.getBolusType() == BolusType.MULTIWAVE) {
             if (event.getDuration() == 0) {
-                ExtendedBolus extendedBolus = MainApp.getDbHelper().getExtendedBolusByPumpId(bolusID.id);
+                ExtendedBolus extendedBolus = databaseHelper.getExtendedBolusByPumpId(bolusID.id);
                 if (extendedBolus != null) {
                     final String _id = extendedBolus._id;
                     if (NSUpload.isIdValid(_id)) nsUpload.removeCareportalEntryFromNS(_id);
                     else uploadQueue.removeID("dbAdd", _id);
-                    MainApp.getDbHelper().delete(extendedBolus);
+                    databaseHelper.delete(extendedBolus);
                 }
             } else {
                 ExtendedBolus extendedBolus = new ExtendedBolus(getInjector());
@@ -1559,7 +1562,7 @@ public class LocalInsightPlugin extends PumpPluginBase implements PumpInterface,
 
     private void logNote(long date, String note) {
         try {
-            if (MainApp.getDbHelper().getCareportalEventFromTimestamp(date) != null)
+            if (databaseHelper.getCareportalEventFromTimestamp(date) != null)
                 return;
             JSONObject data = new JSONObject();
             String enteredBy = sp.getString("careportal_enteredby", "");
@@ -1572,7 +1575,7 @@ public class LocalInsightPlugin extends PumpPluginBase implements PumpInterface,
             careportalEvent.source = Source.USER;
             careportalEvent.eventType = CareportalEvent.NOTE;
             careportalEvent.json = data.toString();
-            MainApp.getDbHelper().createOrUpdate(careportalEvent);
+            databaseHelper.createOrUpdate(careportalEvent);
             nsUpload.uploadCareportalEntryToNS(data);
         } catch (JSONException e) {
             aapsLogger.error("Unhandled exception", e);
@@ -1593,7 +1596,7 @@ public class LocalInsightPlugin extends PumpPluginBase implements PumpInterface,
     }
 
     private void uploadCareportalEvent(long date, String event) {
-        if (MainApp.getDbHelper().getCareportalEventFromTimestamp(date) != null)
+        if (databaseHelper.getCareportalEventFromTimestamp(date) != null)
             return;
         try {
             JSONObject data = new JSONObject();
@@ -1606,7 +1609,7 @@ public class LocalInsightPlugin extends PumpPluginBase implements PumpInterface,
             careportalEvent.source = Source.USER;
             careportalEvent.eventType = event;
             careportalEvent.json = data.toString();
-            MainApp.getDbHelper().createOrUpdate(careportalEvent);
+            databaseHelper.createOrUpdate(careportalEvent);
             nsUpload.uploadCareportalEntryToNS(data);
         } catch (JSONException e) {
             aapsLogger.error("Unhandled exception", e);

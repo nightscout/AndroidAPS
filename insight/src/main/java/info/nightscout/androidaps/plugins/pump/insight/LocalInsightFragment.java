@@ -1,5 +1,6 @@
 package info.nightscout.androidaps.plugins.pump.insight;
 
+import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -19,7 +20,8 @@ import java.util.List;
 import javax.inject.Inject;
 
 import dagger.android.support.DaggerFragment;
-import info.nightscout.androidaps.R;
+import info.nightscout.androidaps.insight.R;
+import info.nightscout.androidaps.interfaces.CommandQueueProvider;
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper;
 import info.nightscout.androidaps.plugins.pump.insight.app_layer.parameter_blocks.TBROverNotificationBlock;
 import info.nightscout.androidaps.plugins.pump.insight.descriptors.ActiveBasalRate;
@@ -30,7 +32,6 @@ import info.nightscout.androidaps.plugins.pump.insight.descriptors.InsightState;
 import info.nightscout.androidaps.plugins.pump.insight.descriptors.TotalDailyDose;
 import info.nightscout.androidaps.plugins.pump.insight.events.EventLocalInsightUpdateGUI;
 import info.nightscout.androidaps.queue.Callback;
-import info.nightscout.androidaps.queue.CommandQueue;
 import info.nightscout.androidaps.utils.DateUtil;
 import info.nightscout.androidaps.utils.DecimalFormatter;
 import info.nightscout.androidaps.utils.FabricPrivacy;
@@ -40,7 +41,7 @@ import io.reactivex.disposables.CompositeDisposable;
 
 public class LocalInsightFragment extends DaggerFragment implements View.OnClickListener {
     @Inject LocalInsightPlugin localInsightPlugin;
-    @Inject CommandQueue commandQueue;
+    @Inject CommandQueueProvider commandQueue;
     @Inject RxBusWrapper rxBus;
     @Inject ResourceHelper resourceHelper;
     @Inject FabricPrivacy fabricPrivacy;
@@ -186,7 +187,7 @@ public class LocalInsightFragment extends DaggerFragment implements View.OnClick
     }
 
     private View getStatusItem(String label, String value) {
-        View statusItem = getLayoutInflater().inflate(R.layout.local_insight_status_item, null);
+        @SuppressLint("InflateParams") View statusItem = getLayoutInflater().inflate(R.layout.local_insight_status_item, null);
         ((TextView) statusItem.findViewById(R.id.label)).setText(label);
         ((TextView) statusItem.findViewById(R.id.value)).setText(value);
         return statusItem;
@@ -238,7 +239,6 @@ public class LocalInsightFragment extends DaggerFragment implements View.OnClick
             default:
                 long lastConnection = localInsightPlugin.getConnectionService().getLastConnected();
                 if (lastConnection == 0) return;
-                int min = (int) ((System.currentTimeMillis() - lastConnection) / 60000);
                 statusItems.add(getStatusItem(resourceHelper.gs(R.string.last_connected), dateUtil.timeString(lastConnection)));
         }
     }

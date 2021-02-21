@@ -1,3 +1,4 @@
+include ':insight'
 include ':app'
 include ':wear'
 include ':database'

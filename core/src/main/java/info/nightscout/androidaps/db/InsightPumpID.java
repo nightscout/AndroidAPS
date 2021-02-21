@@ -1,11 +1,9 @@
-package info.nightscout.androidaps.plugins.pump.insight.database;
+package info.nightscout.androidaps.db;
 
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
 
-import info.nightscout.androidaps.db.DatabaseHelper;
-
-@DatabaseTable(tableName = DatabaseHelper.DATABASE_INSIGHT_PUMP_IDS)
+@DatabaseTable(tableName = "InsightPumpIDs")
 public class InsightPumpID {
 
     @DatabaseField(generatedId = true)

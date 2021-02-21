@@ -30,10 +30,8 @@ import info.nightscout.androidaps.plugins.general.wear.WearFragment
 import info.nightscout.androidaps.plugins.insulin.InsulinFragment
 import info.nightscout.androidaps.plugins.profile.local.LocalProfileFragment
 import info.nightscout.androidaps.plugins.profile.ns.NSProfileFragment
-import info.nightscout.androidaps.plugins.pump.combo.ComboFragment
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.dialog.RileyLinkStatusGeneralFragment
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.dialog.RileyLinkStatusHistoryFragment
-import info.nightscout.androidaps.plugins.pump.insight.LocalInsightFragment
 import info.nightscout.androidaps.plugins.pump.medtronic.MedtronicFragment
 import info.nightscout.androidaps.plugins.pump.medtronic.dialog.RileyLinkStatusDeviceMedtronic
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.ui.OmnipodOverviewFragment
@@ -52,7 +50,6 @@ abstract class FragmentsModule {
     @ContributesAndroidInjector abstract fun contributesActionsFragment(): ActionsFragment
     @ContributesAndroidInjector abstract fun contributesAutomationFragment(): AutomationFragment
     @ContributesAndroidInjector abstract fun contributesBGSourceFragment(): BGSourceFragment
-    @ContributesAndroidInjector abstract fun contributesComboFragment(): ComboFragment
 
     @ContributesAndroidInjector
     abstract fun contributesConfigBuilderFragment(): ConfigBuilderFragment
@@ -64,7 +61,6 @@ abstract class FragmentsModule {
     @ContributesAndroidInjector abstract fun contributesOpenAPSAMAFragment(): OpenAPSAMAFragment
     @ContributesAndroidInjector abstract fun contributesOpenAPSSMBFragment(): OpenAPSSMBFragment
     @ContributesAndroidInjector abstract fun contributesOverviewFragment(): OverviewFragment
-    @ContributesAndroidInjector abstract fun contributesLocalInsightFragment(): LocalInsightFragment
     @ContributesAndroidInjector abstract fun contributesLoopFragment(): LoopFragment
     @ContributesAndroidInjector abstract fun contributesMaintenanceFragment(): MaintenanceFragment
     @ContributesAndroidInjector abstract fun contributesMedtronicFragment(): MedtronicFragment

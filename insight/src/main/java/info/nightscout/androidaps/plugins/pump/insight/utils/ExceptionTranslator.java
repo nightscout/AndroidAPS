@@ -8,7 +8,7 @@ import android.widget.Toast;
 import java.util.HashMap;
 import java.util.Map;
 
-import info.nightscout.androidaps.R;
+import info.nightscout.androidaps.insight.R;
 import info.nightscout.androidaps.plugins.pump.insight.exceptions.ConnectionFailedException;
 import info.nightscout.androidaps.plugins.pump.insight.exceptions.ConnectionLostException;
 import info.nightscout.androidaps.plugins.pump.insight.exceptions.DisconnectedException;
