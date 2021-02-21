@@ -98,7 +98,6 @@ fun UserEntry.Action.stringId(): Int {
         this == UserEntry.Action.SMS_PUMP_DISCONNECT        -> R.string.uel_sms_pump_disconnect
         this == UserEntry.Action.SMS_SMS                    -> R.string.uel_sms_sms
         this == UserEntry.Action.SMS_TT                     -> R.string.uel_sms_tt
-        else                                                -> R.string.uel_sms_tt
-
+        else                                                -> R.string.uel_unknown
     }
 }

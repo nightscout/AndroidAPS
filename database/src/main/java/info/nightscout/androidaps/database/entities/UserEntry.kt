@@ -115,6 +115,12 @@ data class UserEntry(
         @SerializedName("SMS_PUMP_CONNECT") SMS_PUMP_CONNECT,
         @SerializedName("SMS_PUMP_DISCONNECT") SMS_PUMP_DISCONNECT,
         @SerializedName("SMS_SMS") SMS_SMS,
-        @SerializedName("SMS_TT") SMS_TT
+        @SerializedName("SMS_TT") SMS_TT,
+        @SerializedName("UNKNOWN") UNKNOWN
+        ;
+
+        companion object {
+            fun fromString(source: String?) = UserEntry.Action.values().firstOrNull { it.name == source } ?: UserEntry.Action.UNKNOWN
+        }
     }
 }
