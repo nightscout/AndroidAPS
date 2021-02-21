@@ -39,7 +39,7 @@
     <string name="stop">Arrêt</string>
     <string name="carbs">Glucides</string>
     <string name="invalidprofile">Profil incorrect !!!</string>
-    <string name="noprofileset">PAS DE PROFIL DÉFINI</string>
+    <string name="noprofileset">PAS DE PROFIL SELECTIONNÉ</string>
     <string name="date"> Date</string>
     <string name="units_label">Unités</string>
     <string name="dia_label">DAI</string>
