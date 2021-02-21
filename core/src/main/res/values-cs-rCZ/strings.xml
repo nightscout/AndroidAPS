@@ -69,6 +69,13 @@
     <string name="pairing">Párování</string>
     <string name="yes">Ano</string>
     <string name="no">Ne</string>
+    <string name="loopdisabled">SMYČKA ZAKÁZÁNA OMEZENÍM</string>
+    <string name="bolusdelivered">Bolus %1$.2f U aplikován úspěšně</string>
+    <string name="virtualpump_resultok">OK</string>
+    <string name="novalidbasalrate">Z pumpy nepřečten žádný platný bazál</string>
+    <string name="limitingmaxiob">Max IOB omezeno na %1$.1f U: %2$s</string>
+    <string name="unsafeusage">nebezpečné použití</string>
+    <string name="pump_unreachable">Pumpa nedostupná</string>
     <!--    Constraints-->
     <string name="limitingbasalratio">Max bazál omezen na %1$.2f U/h: %2$s</string>
     <string name="pumplimit">limit pumpy</string>
