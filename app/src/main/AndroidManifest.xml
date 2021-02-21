@@ -243,13 +243,6 @@
             </intent-filter>
         </activity>
 
-        <!-- Medtronic service and activities -->
-        <service
-            android:name=".plugins.pump.medtronic.service.RileyLinkMedtronicService"
-            android:enabled="true"
-            android:exported="true" />
-
-        <activity android:name=".plugins.pump.medtronic.dialog.MedtronicHistoryActivity" />
         <activity android:name=".plugins.general.openhumans.OpenHumansLoginActivity"
             android:launchMode="singleTop">
             <intent-filter>

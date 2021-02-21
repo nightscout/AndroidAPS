@@ -6,9 +6,6 @@ import info.nightscout.androidaps.plugins.general.nsclient.services.NSClientServ
 import info.nightscout.androidaps.plugins.general.overview.notifications.DismissNotificationService
 import info.nightscout.androidaps.plugins.general.persistentNotification.DummyService
 import info.nightscout.androidaps.plugins.general.wear.wearintegration.WatchUpdaterService
-import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.service.RileyLinkService
-import info.nightscout.androidaps.plugins.pump.medtronic.service.RileyLinkMedtronicService
-import info.nightscout.androidaps.plugins.pump.omnipod.eros.rileylink.service.RileyLinkOmnipodService
 import info.nightscout.androidaps.services.AlarmSoundService
 import info.nightscout.androidaps.services.LocationService
 
@@ -22,7 +19,4 @@ abstract class ServicesModule {
     @ContributesAndroidInjector abstract fun contributesLocationService(): LocationService
     @ContributesAndroidInjector abstract fun contributesNSClientService(): NSClientService
     @ContributesAndroidInjector abstract fun contributesWatchUpdaterService(): WatchUpdaterService
-    @ContributesAndroidInjector abstract fun contributesRileyLinkService(): RileyLinkService
-    @ContributesAndroidInjector abstract fun contributesRileyLinkMedtronicService(): RileyLinkMedtronicService
-    @ContributesAndroidInjector abstract fun contributesRileyLinkOmnipodService(): RileyLinkOmnipodService
 }

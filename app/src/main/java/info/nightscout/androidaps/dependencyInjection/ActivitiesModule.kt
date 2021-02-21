@@ -9,9 +9,6 @@ import info.nightscout.androidaps.plugins.general.maintenance.activities.LogSett
 import info.nightscout.androidaps.plugins.general.openhumans.OpenHumansLoginActivity
 import info.nightscout.androidaps.plugins.general.overview.activities.QuickWizardListActivity
 import info.nightscout.androidaps.plugins.general.smsCommunicator.activities.SmsCommunicatorOtpActivity
-import info.nightscout.androidaps.plugins.pump.common.dialog.RileyLinkBLEConfigActivity
-import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.dialog.RileyLinkStatusActivity
-import info.nightscout.androidaps.plugins.pump.medtronic.dialog.MedtronicHistoryActivity
 import info.nightscout.androidaps.setupwizard.SetupWizardActivity
 
 @Module
@@ -21,12 +18,9 @@ abstract class ActivitiesModule {
     @ContributesAndroidInjector abstract fun contributesHistoryBrowseActivity(): HistoryBrowseActivity
     @ContributesAndroidInjector abstract fun contributesLogSettingActivity(): LogSettingActivity
     @ContributesAndroidInjector abstract fun contributeMainActivity(): MainActivity
-    @ContributesAndroidInjector abstract fun contributesMedtronicHistoryActivity(): MedtronicHistoryActivity
     @ContributesAndroidInjector abstract fun contributesPreferencesActivity(): PreferencesActivity
     @ContributesAndroidInjector abstract fun contributesQuickWizardListActivity(): QuickWizardListActivity
     @ContributesAndroidInjector abstract fun contributesRequestDexcomPermissionActivity(): RequestDexcomPermissionActivity
-    @ContributesAndroidInjector abstract fun contributesRileyLinkStatusActivity(): RileyLinkStatusActivity
-    @ContributesAndroidInjector abstract fun contributesRileyLinkBLEConfigActivity(): RileyLinkBLEConfigActivity
     @ContributesAndroidInjector abstract fun contributesSetupWizardActivity(): SetupWizardActivity
     @ContributesAndroidInjector abstract fun contributesSingleFragmentActivity(): SingleFragmentActivity
     @ContributesAndroidInjector abstract fun contributesSmsCommunicatorOtpActivity(): SmsCommunicatorOtpActivity

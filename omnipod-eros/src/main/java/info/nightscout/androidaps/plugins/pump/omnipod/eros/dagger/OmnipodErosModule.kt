@@ -7,6 +7,8 @@ import info.nightscout.androidaps.plugins.pump.omnipod.eros.data.RLHistoryItemOm
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.driver.manager.PodStateManager
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.manager.AapsPodStateManager
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.rileylink.manager.OmnipodRileyLinkCommunicationManager
+import info.nightscout.androidaps.plugins.pump.omnipod.eros.rileylink.service.RileyLinkOmnipodService
+import info.nightscout.androidaps.plugins.pump.omnipod.eros.ui.OmnipodOverviewFragment
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.ui.PodHistoryActivity
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.ui.PodManagementActivity
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.ui.wizard.activation.PodActivationWizardActivity
@@ -17,9 +19,10 @@ import info.nightscout.androidaps.plugins.pump.omnipod.eros.ui.wizard.deactivati
 abstract class OmnipodErosModule {
 
     // Activities
-    @ContributesAndroidInjector
-    abstract fun contributesPodManagementActivity(): PodManagementActivity
+    @ContributesAndroidInjector abstract fun contributesPodManagementActivity(): PodManagementActivity
     @ContributesAndroidInjector abstract fun contributesPodHistoryActivity(): PodHistoryActivity
+
+    @ContributesAndroidInjector abstract fun contributesOmnipodFragment(): OmnipodOverviewFragment
 
     @ActivityScope
     @ContributesAndroidInjector(modules = [OmnipodWizardModule::class])
@@ -30,8 +33,9 @@ abstract class OmnipodErosModule {
     abstract fun contributesDeactivationWizardActivity(): PodDeactivationWizardActivity
 
     // Service
-    @ContributesAndroidInjector
-    abstract fun omnipodCommunicationManagerProvider(): OmnipodRileyLinkCommunicationManager
+    @ContributesAndroidInjector abstract fun omnipodCommunicationManagerProvider(): OmnipodRileyLinkCommunicationManager
+    @ContributesAndroidInjector abstract fun contributesRileyLinkOmnipodService(): RileyLinkOmnipodService
+
 
     // Data
     @ContributesAndroidInjector abstract fun rlHistoryItemOmnipod(): RLHistoryItemOmnipod
