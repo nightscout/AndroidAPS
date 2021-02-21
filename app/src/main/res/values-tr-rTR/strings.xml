@@ -255,7 +255,6 @@ Aktif Karbonhidratın ne kadar hızlı sindirildiğine ve KŞ\'nin beklenenden d
     <string name="show_queue">Sıra göster</string>
     <string name="queue">Kuyruk:</string>
     <string name="status">Durum:</string>
-    <string name="paused">Durduruldu</string>
     <string name="clearlog">Log Kayıtlarını Sil</string>
     <string name="nowritepermission">NSCLIENT yazma izni yok. Yanlış API Key ?</string>
     <string name="wear_settings">Wear ayarları</string>
@@ -468,9 +467,6 @@ Aktif Karbonhidratın ne kadar hızlı sindirildiğine ve KŞ\'nin beklenenden d
     <string name="reset">sıfırla</string>
     <string name="openapssmb_maxiob_title">OpenAPS tarafından aşılmayacak, maksimum toplam IOB(Aktif İnsülin)[U]</string>
     <string name="openapssmb_maxiob_summary">Bu değer OpenAPS bağlamında Max IOB (Aktif İnsülin) olarak adlandırılır\nOpenAPS, mevcut IOB bu değerden daha büyükse daha fazla insülin eklemez</string>
-    <string name="pump_stopped">Pompa durduruldu</string>
-    <string name="pump_started">Pompa başlatıldı</string>
-    <string name="pump_paused">Pompa duraklatıldı</string>
     <string name="absorption_cutoff_title">Besinin maksimum emilim süresi [h]</string>
     <string name="absorption_cutoff_summary">Herhangi bir öğünün emildiği kabul edilen zaman. Kalan karbonhidratlar kesilecek.</string>
     <string name="time">Zaman</string>
@@ -521,7 +517,6 @@ Aktif Karbonhidratın ne kadar hızlı sindirildiğine ve KŞ\'nin beklenenden d
     <string name="permission">Yetki</string>
     <string name="askforpermission">İzin için sorunuz</string>
     <string name="request">İstek</string>
-    <string name="exit">Çıkış</string>
     <string name="open_navigation">Navigasyonu aç</string>
     <string name="close_navigation">Navigasyonu kapat</string>
     <string name="nav_plugin_preferences">Eklenti tercihleri</string>
