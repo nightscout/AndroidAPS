@@ -297,6 +297,7 @@ class AutomationPlugin @Inject constructor(
             ActionAlarm(injector),
             ActionProfileSwitchPercent(injector),
             ActionProfileSwitch(injector),
+            ActionRunAutotune(injector),
             ActionSendSMS(injector)
         )
     }

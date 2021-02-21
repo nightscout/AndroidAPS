@@ -263,6 +263,42 @@ public class ExtendedBolus implements Interval, DataPointWithLabelInterface {
         return result;
     }
 
+    // Add specific calculation for Autotune (reference basal is not profile basal but 4 hours average basal rate from pumpprofile)
+    public IobTotal iobCalc(long time, Profile profile, double currentBasal) {
+        IobTotal result = new IobTotal(time);
+        InsulinInterface insulinInterface = activePlugin.getActiveInsulin();
+
+        double realDuration = getDurationToTime(time);
+
+        if (realDuration > 0) {
+            double dia_ago = time - dia * 60 * 60 * 1000;
+            int aboutFiveMinIntervals = (int) Math.ceil(realDuration / 5d);
+            double spacing = realDuration / aboutFiveMinIntervals;
+
+            for (long j = 0L; j < aboutFiveMinIntervals; j++) {
+                // find middle of the interval
+                long calcdate = (long) (date + j * spacing * 60 * 1000 + 0.5d * spacing * 60 * 1000);
+                double basalRate = profile.getBasal(calcdate);
+
+                if (calcdate > dia_ago && calcdate <= time) {
+                    double tempBolusSize = (absoluteRate() + basalRate - currentBasal) * spacing / 60d;
+
+                    Treatment tempBolusPart = new Treatment();
+                    tempBolusPart.insulin = tempBolusSize;
+                    tempBolusPart.date = calcdate;
+
+                    Iob aIOB = insulinInterface.iobCalcForTreatment(tempBolusPart, time, dia);
+                    result.iob += aIOB.iobContrib;
+                    result.activity += aIOB.activityContrib;
+                    result.extendedBolusInsulin += tempBolusPart.insulin;
+                }
+            }
+        }
+        return result;
+    }
+
+
+
     public IobTotal iobCalc(long time, Profile profile, AutosensResult lastAutosensResult, boolean exercise_mode, int half_basal_exercise_target, boolean isTempTarget) {
         IobTotal result = new IobTotal(time);
         InsulinInterface insulinInterface = activePlugin.getActiveInsulin();

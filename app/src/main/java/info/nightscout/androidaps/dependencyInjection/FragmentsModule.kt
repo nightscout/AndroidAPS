@@ -17,6 +17,7 @@ import info.nightscout.androidaps.plugins.general.automation.dialogs.ChooseTrigg
 import info.nightscout.androidaps.plugins.general.automation.dialogs.EditActionDialog
 import info.nightscout.androidaps.plugins.general.automation.dialogs.EditEventDialog
 import info.nightscout.androidaps.plugins.general.automation.dialogs.EditTriggerDialog
+import info.nightscout.androidaps.plugins.general.autotune.AutotuneFragment
 import info.nightscout.androidaps.plugins.general.food.FoodFragment
 import info.nightscout.androidaps.plugins.general.maintenance.MaintenanceFragment
 import info.nightscout.androidaps.plugins.general.nsclient.NSClientFragment
@@ -44,6 +45,7 @@ abstract class FragmentsModule {
 
     @ContributesAndroidInjector abstract fun contributesActionsFragment(): ActionsFragment
     @ContributesAndroidInjector abstract fun contributesAutomationFragment(): AutomationFragment
+    @ContributesAndroidInjector abstract fun contributesAutotuneFragment(): AutotuneFragment
     @ContributesAndroidInjector abstract fun contributesBGSourceFragment(): BGSourceFragment
 
     @ContributesAndroidInjector
