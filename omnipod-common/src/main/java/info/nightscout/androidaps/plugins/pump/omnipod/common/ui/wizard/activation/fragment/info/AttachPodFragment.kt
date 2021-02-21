@@ -1,25 +1,34 @@
-package info.nightscout.androidaps.plugins.pump.omnipod.common.ui.wizard.activation.fragment
+package info.nightscout.androidaps.plugins.pump.omnipod.common.ui.wizard.activation.fragment.info
 
 import android.os.Bundle
 import android.view.View
 import android.widget.Button
 import androidx.annotation.IdRes
-import androidx.annotation.StringRes
 import androidx.appcompat.app.AlertDialog
+import androidx.fragment.app.viewModels
+import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import info.nightscout.androidaps.plugins.pump.omnipod.common.R
+import info.nightscout.androidaps.plugins.pump.omnipod.common.dagger.OmnipodPluginQualifier
+import info.nightscout.androidaps.plugins.pump.omnipod.common.ui.wizard.activation.viewmodel.info.AttachPodViewModel
 import info.nightscout.androidaps.plugins.pump.omnipod.common.ui.wizard.common.fragment.InfoFragmentBase
+import javax.inject.Inject
 
-class AttachPodInfoFragment : InfoFragmentBase() {
+class AttachPodFragment : InfoFragmentBase() {
 
-    @StringRes
-    override fun getTitleId(): Int = R.string.omnipod_common_pod_activation_wizard_attach_pod_title
+    @Inject
+    @OmnipodPluginQualifier
+    lateinit var viewModelFactory: ViewModelProvider.Factory
 
-    @StringRes
-    override fun getTextId(): Int = R.string.omnipod_common_pod_activation_wizard_attach_pod_text
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+
+        val vm: AttachPodViewModel by viewModels { viewModelFactory }
+        this.viewModel = vm
+    }
 
     @IdRes
-    override fun getNextPageActionId(): Int = R.id.action_attachPodInfoFragment_to_insertCannulaActionFragment
+    override fun getNextPageActionId(): Int = R.id.action_attachPodFragment_to_insertCannulaFragment
 
     override fun getIndex(): Int = 3
 

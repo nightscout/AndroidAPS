@@ -2,12 +2,11 @@ package info.nightscout.androidaps.plugins.pump.omnipod.common.ui.wizard.common.
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
 import info.nightscout.androidaps.data.PumpEnactResult
 import io.reactivex.schedulers.Schedulers
 import io.reactivex.subjects.SingleSubject
 
-abstract class ActionViewModelBase : ViewModel() {
+abstract class ActionViewModelBase : ViewModelBase() {
 
     private val _isActionExecutingLiveData = MutableLiveData(false)
     val isActionExecutingLiveData: LiveData<Boolean> = _isActionExecutingLiveData

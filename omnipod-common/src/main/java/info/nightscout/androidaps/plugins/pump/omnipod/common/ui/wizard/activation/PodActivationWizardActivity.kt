@@ -5,7 +5,7 @@ import androidx.annotation.IdRes
 import info.nightscout.androidaps.plugins.pump.omnipod.common.R
 import info.nightscout.androidaps.plugins.pump.omnipod.common.ui.wizard.common.activity.OmnipodWizardActivityBase
 
-class PodActivationWizardActivity : OmnipodWizardActivityBase() {
+abstract class PodActivationWizardActivity : OmnipodWizardActivityBase() {
     companion object {
 
         const val KEY_TYPE = "wizardType"
@@ -18,18 +18,18 @@ class PodActivationWizardActivity : OmnipodWizardActivityBase() {
     }
 
     @IdRes
-    private var startDestination: Int = R.id.fillPodInfoFragment
+    private var startDestination: Int = R.id.startPodActivationFragment
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         setContentView(R.layout.omnipod_common_pod_activation_wizard_activity)
 
-        startDestination = savedInstanceState?.getInt(KEY_START_DESTINATION, R.id.fillPodInfoFragment)
+        startDestination = savedInstanceState?.getInt(KEY_START_DESTINATION, R.id.startPodActivationFragment)
             ?: if (intent.getSerializableExtra(KEY_TYPE) as Type == Type.LONG) {
-                R.id.fillPodInfoFragment
+                R.id.startPodActivationFragment
             } else {
-                R.id.attachPodInfoFragment
+                R.id.attachPodFragment
             }
 
         setStartDestination(startDestination)
@@ -52,7 +52,7 @@ class PodActivationWizardActivity : OmnipodWizardActivityBase() {
     override fun getTotalDefinedNumberOfSteps(): Int = 5
 
     override fun getActualNumberOfSteps(): Int {
-        if (startDestination == R.id.attachPodInfoFragment) {
+        if (startDestination == R.id.attachPodFragment) {
             return 3
         }
         return 5

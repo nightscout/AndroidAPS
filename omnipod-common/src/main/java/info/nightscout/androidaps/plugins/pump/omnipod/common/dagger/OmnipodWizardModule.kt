@@ -2,23 +2,18 @@ package info.nightscout.androidaps.plugins.pump.omnipod.common.dagger
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import dagger.Binds
 import dagger.Module
 import dagger.Provides
 import dagger.android.ContributesAndroidInjector
-import dagger.multibindings.IntoMap
-import info.nightscout.androidaps.plugins.pump.omnipod.common.ui.wizard.activation.fragment.AttachPodInfoFragment
-import info.nightscout.androidaps.plugins.pump.omnipod.common.ui.wizard.activation.fragment.FillPodInfoFragment
-import info.nightscout.androidaps.plugins.pump.omnipod.common.ui.wizard.activation.fragment.InitializePodActionFragment
-import info.nightscout.androidaps.plugins.pump.omnipod.common.ui.wizard.activation.fragment.InsertCannulaActionFragment
-import info.nightscout.androidaps.plugins.pump.omnipod.common.ui.wizard.activation.fragment.PodActivatedInfoFragment
-import info.nightscout.androidaps.plugins.pump.omnipod.common.ui.wizard.activation.viewmodel.InitializePodActionViewModel
-import info.nightscout.androidaps.plugins.pump.omnipod.common.ui.wizard.activation.viewmodel.InsertCannulaActionViewModel
-import info.nightscout.androidaps.plugins.pump.omnipod.common.ui.wizard.deactivation.fragment.DeactivatePodActionFragment
-import info.nightscout.androidaps.plugins.pump.omnipod.common.ui.wizard.deactivation.fragment.DeactivatePodInfoFragment
-import info.nightscout.androidaps.plugins.pump.omnipod.common.ui.wizard.deactivation.fragment.PodDeactivatedInfoFragment
-import info.nightscout.androidaps.plugins.pump.omnipod.common.ui.wizard.deactivation.fragment.PodDiscardedInfoFragment
-import info.nightscout.androidaps.plugins.pump.omnipod.common.ui.wizard.deactivation.viewmodel.DeactivatePodActionViewModel
+import info.nightscout.androidaps.plugins.pump.omnipod.common.ui.wizard.activation.fragment.action.InitializePodFragment
+import info.nightscout.androidaps.plugins.pump.omnipod.common.ui.wizard.activation.fragment.action.InsertCannulaFragment
+import info.nightscout.androidaps.plugins.pump.omnipod.common.ui.wizard.activation.fragment.info.AttachPodFragment
+import info.nightscout.androidaps.plugins.pump.omnipod.common.ui.wizard.activation.fragment.info.PodActivatedFragment
+import info.nightscout.androidaps.plugins.pump.omnipod.common.ui.wizard.activation.fragment.info.StartPodActivationFragment
+import info.nightscout.androidaps.plugins.pump.omnipod.common.ui.wizard.deactivation.fragment.action.DeactivatePodFragment
+import info.nightscout.androidaps.plugins.pump.omnipod.common.ui.wizard.deactivation.fragment.info.PodDeactivatedFragment
+import info.nightscout.androidaps.plugins.pump.omnipod.common.ui.wizard.deactivation.fragment.info.PodDiscardedFragment
+import info.nightscout.androidaps.plugins.pump.omnipod.common.ui.wizard.deactivation.fragment.info.StartPodDeactivationFragment
 import javax.inject.Provider
 
 @Module
@@ -33,61 +28,48 @@ abstract class OmnipodWizardModule {
         }
     }
 
-    // #### VIEW MODELS ############################################################################
-    @Binds
-    @IntoMap
-    @OmnipodPluginQualifier
-    @ViewModelKey(InitializePodActionViewModel::class)
-    internal abstract fun initializePodActionViewModel(viewModel: InitializePodActionViewModel): ViewModel
-
-    @Binds
-    @IntoMap
-    @OmnipodPluginQualifier
-    @ViewModelKey(InsertCannulaActionViewModel::class)
-    internal abstract fun insertCannulaActionViewModel(viewModel: InsertCannulaActionViewModel): ViewModel
-
-    @Binds
-    @IntoMap
-    @OmnipodPluginQualifier
-    @ViewModelKey(DeactivatePodActionViewModel::class)
-    internal abstract fun deactivatePodActionViewModel(viewModel: DeactivatePodActionViewModel): ViewModel
-
     // #### FRAGMENTS ##############################################################################
-    @FragmentScope
-    @ContributesAndroidInjector
-    internal abstract fun contributesDeactivatePodActionFragment(): DeactivatePodActionFragment
+
+    // POD ACTIVATION
 
     @FragmentScope
     @ContributesAndroidInjector
-    internal abstract fun contributesInsertCannulaActionFragment(): InsertCannulaActionFragment
+    internal abstract fun contributesStartPodActivationFragment(): StartPodActivationFragment
 
     @FragmentScope
     @ContributesAndroidInjector
-    internal abstract fun contributesInitializePodActionFragment(): InitializePodActionFragment
+    internal abstract fun contributesInitializeActionFragment(): InitializePodFragment
 
     @FragmentScope
     @ContributesAndroidInjector
-    internal abstract fun contributesAttachPodInfoFragment(): AttachPodInfoFragment
+    internal abstract fun contributesAttachPodFragment(): AttachPodFragment
 
     @FragmentScope
     @ContributesAndroidInjector
-    internal abstract fun contributesDeactivatePodInfoFragment(): DeactivatePodInfoFragment
+    internal abstract fun contributesInsertCannulaFragment(): InsertCannulaFragment
 
     @FragmentScope
     @ContributesAndroidInjector
-    internal abstract fun contributesFillPodInfoFragment(): FillPodInfoFragment
+    internal abstract fun contributesPodActivatedFragment(): PodActivatedFragment
+
+    // POD DEACTIVATION
 
     @FragmentScope
     @ContributesAndroidInjector
-    internal abstract fun contributesPodDeactivatedInfoFragment(): PodDeactivatedInfoFragment
+    internal abstract fun contributesStartPodDeactivationFragment(): StartPodDeactivationFragment
 
     @FragmentScope
     @ContributesAndroidInjector
-    internal abstract fun contributesPodDiscardedInfoFragment(): PodDiscardedInfoFragment
+    internal abstract fun contributesDeactivatePodFragment(): DeactivatePodFragment
 
     @FragmentScope
     @ContributesAndroidInjector
-    internal abstract fun contributesPodActivatedInfoFragment(): PodActivatedInfoFragment
+    internal abstract fun contributesPodDeactivatedFragment(): PodDeactivatedFragment
+
+    @FragmentScope
+    @ContributesAndroidInjector
+    internal abstract fun contributesPodDiscardedFragment(): PodDiscardedFragment
+
 }
 
 

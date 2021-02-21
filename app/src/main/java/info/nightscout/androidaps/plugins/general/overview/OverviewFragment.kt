@@ -634,7 +634,7 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
                 }
 
                 pump.isSuspended()                                                      -> {
-                    binding.infoLayout.apsMode.setImageResource(if (pump.pumpDescription.pumpType == PumpType.Omnipod_Eros) {
+                    binding.infoLayout.apsMode.setImageResource(if (pump.model() == PumpType.Omnipod_Eros || pump.model() == PumpType.Omnipod_Dash) {
                         // For Omnipod, indicate the pump as disconnected when it's suspended.
                         // The only way to 'reconnect' it, is through the Omnipod tab
                         R.drawable.ic_loop_disconnected

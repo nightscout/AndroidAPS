@@ -38,44 +38,44 @@
             android:paddingEnd="5dp"
             android:textSize="14sp" />
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal">
-
-        <TextView
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="1.5"
-            android:gravity="end"
-            android:paddingStart="5dp"
-            android:paddingEnd="5dp"
-            android:text="@string/omnipod_dash_bluetooth_status"
-            android:textSize="14sp" />
+            android:orientation="horizontal">
 
-        <TextView
-            android:layout_width="5dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="0"
-            android:gravity="center_horizontal"
-            android:paddingStart="2dp"
-            android:paddingEnd="2dp"
-            android:text=":"
-            android:textSize="14sp"
-            tools:ignore="HardcodedText" />
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1.5"
+                android:gravity="end"
+                android:paddingStart="5dp"
+                android:paddingEnd="5dp"
+                android:text="@string/omnipod_dash_bluetooth_status"
+                android:textSize="14sp" />
 
-        <com.joanzapata.iconify.widget.IconTextView
-            android:id="@+id/omnipod_dash_bluetooth_address"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:gravity="start"
-            android:paddingStart="5dp"
-            android:paddingEnd="5dp"
-            android:text="{fa-bluetooth-b} "
-            android:textSize="14sp"
-            tools:ignore="HardcodedText" />
-    </LinearLayout>
+            <TextView
+                android:layout_width="5dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="0"
+                android:gravity="center_horizontal"
+                android:paddingStart="2dp"
+                android:paddingEnd="2dp"
+                android:text=":"
+                android:textSize="14sp"
+                tools:ignore="HardcodedText" />
+
+            <com.joanzapata.iconify.widget.IconTextView
+                android:id="@+id/omnipod_dash_bluetooth_address"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="start"
+                android:paddingStart="5dp"
+                android:paddingEnd="5dp"
+                android:text="{fa-bluetooth-b} "
+                android:textSize="14sp"
+                tools:ignore="HardcodedText" />
+        </LinearLayout>
 
 
     </LinearLayout>

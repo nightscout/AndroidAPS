@@ -15,15 +15,16 @@ import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.service.tasks
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.service.tasks.ServiceTaskExecutor
 import info.nightscout.androidaps.plugins.pump.omnipod.common.queue.command.CommandPlayTestBeep
 import info.nightscout.androidaps.plugins.pump.omnipod.common.ui.wizard.activation.PodActivationWizardActivity
-import info.nightscout.androidaps.plugins.pump.omnipod.common.ui.wizard.deactivation.PodDeactivationWizardActivity
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.OmnipodErosPumpPlugin
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.R
-import info.nightscout.androidaps.plugins.pump.omnipod.eros.databinding.OmnipodPodManagementBinding
+import info.nightscout.androidaps.plugins.pump.omnipod.eros.databinding.OmnipodErosPodManagementBinding
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.driver.definition.ActivationProgress
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.driver.manager.PodStateManager
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.event.EventOmnipodErosPumpValuesChanged
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.manager.AapsOmnipodErosManager
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.queue.command.CommandReadPulseLog
+import info.nightscout.androidaps.plugins.pump.omnipod.eros.ui.wizard.activation.ErosPodActivationWizardActivity
+import info.nightscout.androidaps.plugins.pump.omnipod.eros.ui.wizard.deactivation.ErosPodDeactivationWizardActivity
 import info.nightscout.androidaps.queue.Callback
 import info.nightscout.androidaps.queue.events.EventQueueChanged
 import info.nightscout.androidaps.utils.FabricPrivacy
@@ -54,12 +55,12 @@ class ErosPodManagementActivity : NoSplashAppCompatActivity() {
 
     private var disposables: CompositeDisposable = CompositeDisposable()
 
-    private lateinit var binding: OmnipodPodManagementBinding
+    private lateinit var binding: OmnipodErosPodManagementBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        binding = OmnipodPodManagementBinding.inflate(layoutInflater)
+        binding = OmnipodErosPodManagementBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
         binding.buttonActivatePod.setOnClickListener {
@@ -70,13 +71,13 @@ class ErosPodManagementActivity : NoSplashAppCompatActivity() {
                 PodActivationWizardActivity.Type.LONG
             }
 
-            val intent = Intent(this, PodActivationWizardActivity::class.java)
+            val intent = Intent(this, ErosPodActivationWizardActivity::class.java)
             intent.putExtra(PodActivationWizardActivity.KEY_TYPE, type)
             startActivity(intent)
         }
 
         binding.buttonDeactivatePod.setOnClickListener {
-            startActivity(Intent(this, PodDeactivationWizardActivity::class.java))
+            startActivity(Intent(this, ErosPodDeactivationWizardActivity::class.java))
         }
 
         binding.buttonDiscardPod.setOnClickListener {

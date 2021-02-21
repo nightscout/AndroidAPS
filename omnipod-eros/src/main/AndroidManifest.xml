@@ -7,6 +7,8 @@
             android:enabled="true"
             android:exported="true" />
 
+        <activity android:name=".ui.wizard.activation.ErosPodActivationWizardActivity" />
+        <activity android:name=".ui.wizard.deactivation.ErosPodDeactivationWizardActivity" />
         <activity android:name=".ui.ErosPodManagementActivity" />
         <activity android:name=".ui.ErosPodHistoryActivity" />
     </application>

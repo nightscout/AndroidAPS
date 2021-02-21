@@ -4,7 +4,6 @@ import android.os.Bundle
 import android.view.View
 import android.widget.TextView
 import androidx.annotation.LayoutRes
-import androidx.annotation.StringRes
 import info.nightscout.androidaps.plugins.pump.omnipod.common.R
 
 abstract class InfoFragmentBase : WizardFragmentBase() {
@@ -14,9 +13,6 @@ abstract class InfoFragmentBase : WizardFragmentBase() {
 
         view.findViewById<TextView>(R.id.omnipod_wizard_info_page_text).setText(getTextId())
     }
-
-    @StringRes
-    abstract fun getTextId(): Int
 
     @LayoutRes
     override fun getLayoutId(): Int = R.layout.omnipod_common_wizard_info_page_fragment

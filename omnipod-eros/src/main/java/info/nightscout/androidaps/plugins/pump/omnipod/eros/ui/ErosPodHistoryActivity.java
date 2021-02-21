@@ -132,7 +132,7 @@ public class ErosPodHistoryActivity extends NoSplashAppCompatActivity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.omnipod_pod_history_activity);
+        setContentView(R.layout.omnipod_eros_pod_history_activity);
 
         historyTypeSpinner = findViewById(R.id.omnipod_historytype);
         statusView = findViewById(R.id.omnipod_historystatus);
@@ -223,7 +223,7 @@ public class ErosPodHistoryActivity extends NoSplashAppCompatActivity {
         @NotNull
         @Override
         public HistoryViewHolder onCreateViewHolder(ViewGroup viewGroup, int viewType) {
-            View v = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.omnipod_pod_history_item, //
+            View v = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.omnipod_eros_pod_history_item, //
                     viewGroup, false);
             return new HistoryViewHolder(v);
         }

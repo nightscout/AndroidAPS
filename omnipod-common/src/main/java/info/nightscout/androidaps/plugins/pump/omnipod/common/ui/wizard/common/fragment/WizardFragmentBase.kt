@@ -13,9 +13,12 @@ import dagger.android.support.DaggerFragment
 import info.nightscout.androidaps.plugins.pump.omnipod.common.R
 import info.nightscout.androidaps.plugins.pump.omnipod.common.databinding.OmnipodCommonWizardBaseFragmentBinding
 import info.nightscout.androidaps.plugins.pump.omnipod.common.ui.wizard.common.activity.OmnipodWizardActivityBase
+import info.nightscout.androidaps.plugins.pump.omnipod.common.ui.wizard.common.viewmodel.ViewModelBase
 import kotlin.math.roundToInt
 
 abstract class WizardFragmentBase : DaggerFragment() {
+
+    protected lateinit var viewModel: ViewModelBase
 
     var _binding: OmnipodCommonWizardBaseFragmentBinding? = null
 
@@ -84,7 +87,9 @@ abstract class WizardFragmentBase : DaggerFragment() {
     protected abstract fun getNextPageActionId(): Int?
 
     @StringRes
-    protected abstract fun getTitleId(): Int
+    protected fun getTitleId(): Int = viewModel.getTitleId()
+
+    @StringRes protected fun getTextId(): Int = viewModel.getTextId()
 
     protected abstract fun getIndex(): Int
 }

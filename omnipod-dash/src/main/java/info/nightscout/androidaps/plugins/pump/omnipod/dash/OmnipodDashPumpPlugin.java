@@ -2,6 +2,7 @@ package info.nightscout.androidaps.plugins.pump.omnipod.dash;
 
 import androidx.annotation.Nullable;
 
+import org.jetbrains.annotations.NotNull;
 import org.json.JSONObject;
 
 import java.util.Collections;
@@ -82,11 +83,11 @@ public class OmnipodDashPumpPlugin extends PumpPluginBase implements PumpInterfa
 
     }
 
-    @Override public void connect(String reason) {
+    @Override public void connect(@NotNull String reason) {
 
     }
 
-    @Override public void disconnect(String reason) {
+    @Override public void disconnect(@NotNull String reason) {
 
     }
 
@@ -94,15 +95,15 @@ public class OmnipodDashPumpPlugin extends PumpPluginBase implements PumpInterfa
 
     }
 
-    @Override public void getPumpStatus(String reason) {
+    @Override public void getPumpStatus(@NotNull String reason) {
 
     }
 
-    @Override public PumpEnactResult setNewBasalProfile(Profile profile) {
+    @NotNull @Override public PumpEnactResult setNewBasalProfile(@NotNull Profile profile) {
         return null;
     }
 
-    @Override public boolean isThisProfileSet(Profile profile) {
+    @Override public boolean isThisProfileSet(@NotNull Profile profile) {
         return false;
     }
 
@@ -122,7 +123,7 @@ public class OmnipodDashPumpPlugin extends PumpPluginBase implements PumpInterfa
         return 0;
     }
 
-    @Override public PumpEnactResult deliverTreatment(DetailedBolusInfo detailedBolusInfo) {
+    @NotNull @Override public PumpEnactResult deliverTreatment(@NotNull DetailedBolusInfo detailedBolusInfo) {
         return null;
     }
 
@@ -130,47 +131,47 @@ public class OmnipodDashPumpPlugin extends PumpPluginBase implements PumpInterfa
 
     }
 
-    @Override public PumpEnactResult setTempBasalAbsolute(Double absoluteRate, Integer durationInMinutes, Profile profile, boolean enforceNew) {
+    @NotNull @Override public PumpEnactResult setTempBasalAbsolute(double absoluteRate, int durationInMinutes, @NotNull Profile profile, boolean enforceNew) {
         return null;
     }
 
-    @Override public PumpEnactResult setTempBasalPercent(Integer percent, Integer durationInMinutes, Profile profile, boolean enforceNew) {
+    @NotNull @Override public PumpEnactResult setTempBasalPercent(int percent, int durationInMinutes, @NotNull Profile profile, boolean enforceNew) {
         return null;
     }
 
-    @Override public PumpEnactResult setExtendedBolus(Double insulin, Integer durationInMinutes) {
+    @NotNull @Override public PumpEnactResult setExtendedBolus(double insulin, int durationInMinutes) {
         return null;
     }
 
-    @Override public PumpEnactResult cancelTempBasal(boolean enforceNew) {
+    @NotNull @Override public PumpEnactResult cancelTempBasal(boolean enforceNew) {
         return null;
     }
 
-    @Override public PumpEnactResult cancelExtendedBolus() {
+    @NotNull @Override public PumpEnactResult cancelExtendedBolus() {
         return null;
     }
 
-    @Override public JSONObject getJSONStatus(Profile profile, String profileName, String version) {
+    @NotNull @Override public JSONObject getJSONStatus(@NotNull Profile profile, @NotNull String profileName, @NotNull String version) {
         return null;
     }
 
-    @Override public ManufacturerType manufacturer() {
+    @NotNull @Override public ManufacturerType manufacturer() {
         return getPumpDescription().pumpType.getManufacturer();
     }
 
-    @Override public PumpType model() {
+    @NotNull @Override public PumpType model() {
         return getPumpDescription().pumpType;
     }
 
-    @Override public String serialNumber() {
+    @NotNull @Override public String serialNumber() {
         return null;
     }
 
-    @Override public PumpDescription getPumpDescription() {
+    @NotNull @Override public PumpDescription getPumpDescription() {
         return PUMP_DESCRIPTION;
     }
 
-    @Override public String shortStatus(boolean veryShort) {
+    @NotNull @Override public String shortStatus(boolean veryShort) {
         return null;
     }
 
@@ -178,7 +179,7 @@ public class OmnipodDashPumpPlugin extends PumpPluginBase implements PumpInterfa
         return false;
     }
 
-    @Override public PumpEnactResult loadTDDs() {
+    @NotNull @Override public PumpEnactResult loadTDDs() {
         return null;
     }
 
@@ -192,15 +193,15 @@ public class OmnipodDashPumpPlugin extends PumpPluginBase implements PumpInterfa
     }
 
     @Override
-    public void executeCustomAction(CustomActionType customActionType) {
-        aapsLogger.warn(LTag.PUMP, "Unknown custom action: " + customActionType);
+    public void executeCustomAction(@NotNull CustomActionType customActionType) {
+        aapsLogger.warn(LTag.PUMP, "Unsupported custom action: " + customActionType);
     }
 
-    @Nullable @Override public PumpEnactResult executeCustomCommand(CustomCommand customCommand) {
+    @Nullable @Override public PumpEnactResult executeCustomCommand(@NotNull CustomCommand customCommand) {
         return null;
     }
 
-    @Override public void timezoneOrDSTChanged(TimeChangeType timeChangeType) {
+    @Override public void timezoneOrDSTChanged(@NotNull TimeChangeType timeChangeType) {
 
     }
 }
