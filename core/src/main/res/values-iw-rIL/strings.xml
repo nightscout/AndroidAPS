@@ -69,6 +69,8 @@
     <string name="pairing">מצמד</string>
     <string name="yes">כן</string>
     <string name="no">לא</string>
+    <string name="unsafeusage">שימוש לא בטוח</string>
+    <string name="pump_unreachable">המשאבה אינה זמינה</string>
     <!--    Constraints-->
     <string name="limitingbasalratio">מגביל את הקצב הבזאלי המרבי ל-%1$.2f יח\' לשעה בגלל %2$s</string>
     <string name="pumplimit">מגבלת משאבה</string>
