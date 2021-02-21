@@ -13,6 +13,7 @@ import info.nightscout.androidaps.database.entities.UserEntry
 import info.nightscout.androidaps.databinding.TreatmentsUserEntryFragmentBinding
 import info.nightscout.androidaps.databinding.TreatmentsUserEntryItemBinding
 import info.nightscout.androidaps.utils.DateUtil
+import info.nightscout.androidaps.utils.extensions.stringId
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 import info.nightscout.androidaps.utils.rx.AapsSchedulers
 import io.reactivex.disposables.CompositeDisposable
@@ -65,7 +66,7 @@ class TreatmentsUserEntryFragment : DaggerFragment() {
         override fun onBindViewHolder(holder: UserEntryViewHolder, position: Int) {
             val current = entries[position]
             holder.binding.date.text = dateUtil.dateAndTimeAndSecondsString(current.timestamp)
-            holder.binding.action.text = resourceHelper.gs(current.action.stringId)
+            holder.binding.action.text = resourceHelper.gs(current.action.stringId())
             if (current.s != "") holder.binding.s.text = current.s else holder.binding.s.visibility = View.GONE
             if (current.d1 != 0.0) holder.binding.d1.text = current.d1.toString() else holder.binding.d1.visibility = View.GONE
             if (current.d2 != 0.0) holder.binding.d2.text = current.d2.toString() else holder.binding.d2.visibility = View.GONE
