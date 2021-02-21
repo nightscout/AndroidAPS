@@ -16,13 +16,13 @@ import androidx.fragment.app.FragmentActivity;
 import javax.inject.Inject;
 
 import dagger.android.support.DaggerFragment;
-import info.nightscout.androidaps.R;
+import info.nightscout.androidaps.combo.R;
+import info.nightscout.androidaps.interfaces.CommandQueueProvider;
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper;
 import info.nightscout.androidaps.plugins.pump.combo.events.EventComboPumpUpdateGUI;
 import info.nightscout.androidaps.plugins.pump.combo.ruffyscripter.PumpState;
 import info.nightscout.androidaps.plugins.pump.combo.ruffyscripter.history.Bolus;
 import info.nightscout.androidaps.queue.Callback;
-import info.nightscout.androidaps.queue.CommandQueue;
 import info.nightscout.androidaps.queue.events.EventQueueChanged;
 import info.nightscout.androidaps.utils.DateUtil;
 import info.nightscout.androidaps.utils.FabricPrivacy;
@@ -31,9 +31,9 @@ import info.nightscout.androidaps.utils.rx.AapsSchedulers;
 import info.nightscout.androidaps.utils.sharedPreferences.SP;
 import io.reactivex.disposables.CompositeDisposable;
 
-public class ComboFragment extends DaggerFragment implements View.OnClickListener {
+public class ComboFragment extends DaggerFragment {
     @Inject ComboPlugin comboPlugin;
-    @Inject CommandQueue commandQueue;
+    @Inject CommandQueueProvider commandQueue;
     @Inject ResourceHelper resourceHelper;
     @Inject RxBusWrapper rxBus;
     @Inject SP sp;
@@ -71,7 +71,15 @@ public class ComboFragment extends DaggerFragment implements View.OnClickListene
         tbrCount = view.findViewById(R.id.combo_tbr_count);
 
         refreshButton = view.findViewById(R.id.combo_refresh_button);
-        refreshButton.setOnClickListener(this);
+        refreshButton.setOnClickListener(v -> {
+            refreshButton.setEnabled(false);
+            commandQueue.readStatus("User request", new Callback() {
+                @Override
+                public void run() {
+                    runOnUiThread(() -> refreshButton.setEnabled(true));
+                }
+            });
+        });
 
         return view;
     }
@@ -102,21 +110,6 @@ public class ComboFragment extends DaggerFragment implements View.OnClickListene
         FragmentActivity activity = getActivity();
         if (activity != null) {
             activity.runOnUiThread(action);
-        }
-    }
-
-    @Override
-    public void onClick(View view) {
-        switch (view.getId()) {
-            case R.id.combo_refresh_button:
-                refreshButton.setEnabled(false);
-                commandQueue.readStatus("User request", new Callback() {
-                    @Override
-                    public void run() {
-                        runOnUiThread(() -> refreshButton.setEnabled(true));
-                    }
-                });
-                break;
         }
     }
 
