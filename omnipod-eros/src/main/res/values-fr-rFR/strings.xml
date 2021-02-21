@@ -74,7 +74,7 @@
     <string name="omnipod_error_invalid_response">Échec de communication : réponse invalide reçue du Pod</string>
     <string name="omnipod_error_invalid_message_sequence_number">Échec de communication : message reçu du Pod avec un numéro de séquence invalide</string>
     <string name="omnipod_error_invalid_message_address">Échec de communication : message reçu du Pod avec une adresse invalide</string>
-    <string name="omnipod_error_message_decoding_failed">Échec de communication : échec du décodage du message reçu du Pod</string>
+    <string name="omnipod_error_message_decoding_failed">Échec de communication : le décodage du message reçu du Pod a échoué</string>
     <string name="omnipod_error_nonce_resync_failed">Échec de communication : resynchro numéro unique échouée</string>
     <string name="omnipod_error_nonce_out_of_sync">Échec de communication : numéro unique non synchro</string>
     <string name="omnipod_error_not_enough_data">Échec de communication : pas assez de données reçues du Pod</string>
@@ -89,11 +89,11 @@
     <string name="omnipod_error_set_basal_failed">Echec Paramétrage Profil Basal.</string>
     <string name="omnipod_error_cancel_temp_basal_failed_uncertain">L\'annulation de la basale temporaire peut avoir échouée. Veuillez actualiser manuellement l\'état du Pod depuis l\'onglet Omnipod.</string>
     <string name="omnipod_error_set_temp_basal_failed_old_tbr_might_be_cancelled">Le paramétrage de la basale temp a échoué. Si une basale temp était en cours d\'exécution, elle a peut-être été annulée. Veuillez actualiser manuellement l\'état du Pod à partir de l\'onglet Omnipod.</string>
-    <string name="omnipod_error_set_temp_basal_failed_old_tbr_cancelled_new_might_have_failed">Le paramétrage de la basale temp a peut-être échoué. Si une basale temp était en cours d\'exécution, elle a été annulée. Veuillez actualiser manuellement l\'état du Pod à partir de l\'onglet Omnipod.</string>
+    <string name="omnipod_error_set_temp_basal_failed_old_tbr_cancelled_new_might_have_failed">Le paramétrage du basal temp a peut-être échoué. Si un basal temp était en cours d\'exécution, il a été annulé. Veuillez actualiser manuellement l\'état du Pod à partir de l\'onglet Omnipod.</string>
     <string name="omnipod_error_set_temp_basal_failed_validation">La durée du DBT doit être supérieure à zéro et un multiple de %1$s minutes.</string>
     <string name="omnipod_error_set_time_failed_delivery_might_be_suspended">Le paramétrage de l\'heure a peut-être échoué. L\'injection peut être suspendue ! Actualisez manuellement l\'état du Pod à partir de l\'onglet Omnipod et reprenez l\'injection si nécessaire.</string>
     <string name="omnipod_error_set_time_failed_delivery_suspended">Le paramétrage de l\'heure a échoué. L\'injection est suspendue ! Veuillez poursuivre manuellement l\'injection à partir de l\'onglet Omnipod.</string>
-    <string name="omnipod_error_failed_to_set_profile_empty_profile">Impossible de définir le profil Basal : profil vide reçu. Vérifiez que votre profil de basal est activé.</string>
+    <string name="omnipod_error_failed_to_set_profile_empty_profile">Échec pour définir le profil Basal : profil vide reçu. Vérifiez que votre profil de basal est activé.</string>
     <string name="omnipod_error_set_initial_basal_schedule_no_profile">Aucun profil de basal n\'est actif. Assurez-vous d\'activer votre profil de basal.</string>
     <string name="omnipod_error_unknown_custom_command">Commande personnalisée inconnue : %1$s</string>
     <string name="omnipod_error_failed_to_read_pulse_log">Échec lecture Journal d\'impulsions</string>
@@ -102,13 +102,13 @@
     <string name="omnipod_error_failed_to_acknowledge_alerts">Échec pour confirmer les alertes</string>
     <string name="omnipod_error_failed_to_suspend_delivery">Échec pour suspendre l\'injection</string>
     <string name="omnipod_error_failed_to_set_time">Échec pour définir l\'heure</string>
-    <string name="omnipod_error_failed_to_resume_delivery">Échec pour reprendre l\'injection</string>
+    <string name="omnipod_error_failed_to_resume_delivery">Échec de la reprise de l\'injection</string>
     <string name="omnipod_error_automatic_time_or_timezone_change_failed">Échec pour changer automatiquement l\'heure sur le Pod. Vous devez synchroniser manuellement l\'heure dans l\'onglet Omnipod.</string>
-    <string name="omnipod_error_bolus_failed_uncertain">Impossible de vérifier si le bolus a réussi. Veuillez vérifier manuellement que votre Pod est en train de délivrer un bolus en écoutant des clics. <b>Si vous êtes sûr que le bolus n\'a pas réussi, vous devez supprimer manuellement l\'entrée bolus des traitements, même si vous cliquez sur \'Annuler bolus\' maintenant !</b></string>
+    <string name="omnipod_error_bolus_failed_uncertain">Impossible de vérifier si le bolus a réussi. Veuillez vérifier que votre Pod est en train de délivrer un bolus en écoutant des clics. <b>Si vous êtes sûr que le bolus n\'a pas réussi, vous devez supprimer manuellement l\'entrée bolus des traitements, même si vous cliquez sur \'Annuler bolus\' maintenant !</b></string>
     <string name="omnipod_error_bolus_failed_uncertain_smb">Impossible de vérifier si le bolus SMB (%1$.2f U) a réussi. <b>Si vous êtes certain que le bolus n\'a pas réussi, vous devez supprimer manuellement l\'entrée SMB des traitements.</b></string>
-    <string name="omnipod_error_bolus_did_not_succeed">Le bolus n\'a pas réussi.</string>
-    <string name="omnipod_error_failed_to_initialize_pod">Impossible d’initialiser le Pod</string>
-    <string name="omnipod_error_failed_to_insert_cannula">Impossible d\'insérer la canule</string>
+    <string name="omnipod_error_bolus_did_not_succeed">Le bolus a échoué.</string>
+    <string name="omnipod_error_failed_to_initialize_pod">Échec pour initialiser le Pod</string>
+    <string name="omnipod_error_failed_to_insert_cannula">Échec pour insérer la canule</string>
     <string name="omnipod_error_pod_fault_activation_time_exceeded">La durée d\'activation du Pod a été dépassée. Ce Pod ne peut plus être activé.</string>
     <string name="omnipod_error_failed_to_verify_activation_progress">Échec de la vérification de l\'activation. Veuillez réessayer.</string>
     <string name="omnipod_error_pod_suspended">Pod suspendu</string>
@@ -128,8 +128,8 @@
     <string name="omnipod_cmd_set_bolus">Définir bolus</string>
     <string name="omnipod_cmd_cancel_bolus">Annuler bolus</string>
     <string name="omnipod_cmd_set_tbr">Définir le basal temp.</string>
-    <string name="omnipod_cmd_cancel_tbr_by_driver">Annuler basal temp. (en interne par le pilote)</string>
-    <string name="omnipod_cmd_cancel_tbr">Annuler basale temporaire</string>
+    <string name="omnipod_cmd_cancel_tbr_by_driver">Annulation basal temp. (en interne par le pilote)</string>
+    <string name="omnipod_cmd_cancel_tbr">Annuler basal temporaire</string>
     <string name="omnipod_cmd_set_basal_schedule">Définir le profil de basale</string>
     <string name="omnipod_cmd_get_pod_status">État du Pod</string>
     <string name="omnipod_cmd_get_pod_info">Obtenir infos Pod</string>
@@ -144,7 +144,7 @@
     <string name="omnipod_cmd_read_pulse_log">Lire journal d\'impulsion</string>
     <string name="omnipod_cmd_set_fake_suspended_tbr">Définir un faux débit de basal temporaire car le Pod est suspendu</string>
     <string name="omnipod_cmd_cancel_fake_suspended_tbr">Annuler le faux débit de basal temporaire créé à cause du Pod suspendu</string>
-    <string name="omnipod_cmd_split_tbr">Fractionner la Basale temporaire en raison d\'un échec incertain dans l\'annulation</string>
+    <string name="omnipod_cmd_split_tbr">Fractionner la basale temporaire en raison de l\'incertitude de l\'annulation</string>
     <string name="omnipod_cmd_beep_config">Configuration bips</string>
     <string name="omnipod_cmd_play_test_beep">Tester bips</string>
     <!-- Omnipod - Pod Management -->
@@ -174,7 +174,7 @@
     <string name="omnipod_wizard_exit_confirmation_title">Quitter</string>
     <!-- Omnipod - Pod activation Wizard -->
     <string name="omnipod_pod_activation_wizard_fill_pod_title">Remplir Pod</string>
-    <string name="omnipod_pod_activation_wizard_fill_pod_text">Remplir le nouveau Pod avec suffisamment d\'insuline pendant 3 jours.\n\nÉcoutez les deux bips du Pod pendant le processus de remplissage. Ils indiquent que la quantité minimale de 85U a été ajouté. Assurez-vous de vider complètement la seringue de remplissage, même après avoir entendu les deux bips.\n\nAprès avoir rempli le Pod, veuillez appuyer sur <b>Suivant</b>.\n\n<b>Remarque :</b> Ne retirez pas la protection de l\'aiguille du Pod pour le moment.\n<b>Remarque :</b>Veuillez placer le RileyLink en position verticale et placez le Pod quelques centimètres à côté.</string>
+    <string name="omnipod_pod_activation_wizard_fill_pod_text">Remplir le nouveau Pod avec suffisamment d\'insuline pour 3 jours.\n\nÉcoutez les deux bips du Pod pendant le processus de remplissage. Ils indiquent que la quantité minimale de 85U a été ajouté. Assurez-vous de vider complètement la seringue de remplissage, même après avoir entendu les deux bips.\n\nAprès avoir rempli le Pod, veuillez appuyer sur <b>Suivant</b>.\n\n<b>Remarque :</b> Ne retirez pas la protection de l\'aiguille du Pod pour le moment.\n<b>Remarque :</b>Veuillez placer le RileyLink en position verticale et placez le Pod quelques centimètres à côté.</string>
     <string name="omnipod_pod_activation_wizard_initialize_pod_title">Initialiser Pod</string>
     <string name="omnipod_pod_activation_wizard_initialize_pod_text">Tentative d\'appairage et d\'amorçage du nouveau Pod.\n\nUne fois le processus d\'initialisation terminé, appuyez sur <b>Suivant</b>.\n\n<b>Remarque :</b> Veuillez placer le RileyLink en position verticale et placez le Pod à quelques centimètres de lui.</string>
     <string name="omnipod_pod_activation_wizard_attach_pod_title">Collez Pod</string>
