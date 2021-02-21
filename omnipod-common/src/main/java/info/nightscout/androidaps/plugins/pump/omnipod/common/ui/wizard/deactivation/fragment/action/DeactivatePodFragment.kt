@@ -38,7 +38,7 @@ class DeactivatePodFragment : ActionFragmentBase() {
                     .setTitle(getString(R.string.omnipod_common_pod_deactivation_wizard_discard_pod))
                     .setMessage(getString(R.string.omnipod_common_pod_deactivation_wizard_discard_pod_confirmation))
                     .setPositiveButton(getString(R.string.omnipod_common_yes)) { _, _ ->
-                        (actionViewModel as DeactivatePodViewModel).discardPod()
+                        (viewModel as DeactivatePodViewModel).discardPod()
                         findNavController().navigate(R.id.action_deactivatePodFragment_to_podDiscardedFragment)
                     }
                     .setNegativeButton(getString(R.string.omnipod_common_no), null)

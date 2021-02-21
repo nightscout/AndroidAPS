@@ -23,7 +23,7 @@ abstract class PodActivationActionFragmentBase : ActionFragmentBase() {
     }
 
     override fun onFailure() {
-        (actionViewModel as? PodActivationActionViewModelBase)?.let { viewModel ->
+        (viewModel as? PodActivationActionViewModelBase)?.let { viewModel ->
             if (viewModel.isPodDeactivatable() and (viewModel.isPodInAlarm() or viewModel.isPodActivationTimeExceeded())) {
                 view?.let {
                     it.findViewById<Button>(R.id.omnipod_wizard_button_retry)?.visibility = View.GONE

@@ -8,13 +8,13 @@ import android.widget.ProgressBar
 import android.widget.TextView
 import androidx.annotation.LayoutRes
 import info.nightscout.androidaps.plugins.pump.omnipod.common.R
-import info.nightscout.androidaps.plugins.pump.omnipod.common.ui.wizard.activation.viewmodel.action.PodActivationActionViewModelBase
+import info.nightscout.androidaps.plugins.pump.omnipod.common.ui.wizard.common.viewmodel.ActionViewModelBase
 import info.nightscout.androidaps.utils.extensions.toVisibility
 
 abstract class ActionFragmentBase : WizardFragmentBase() {
 
-    val actionViewModel: PodActivationActionViewModelBase
-        get() = viewModel as PodActivationActionViewModelBase
+    val actionViewModel: ActionViewModelBase
+        get() = viewModel as ActionViewModelBase
 
     @SuppressLint("CutPasteId")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
