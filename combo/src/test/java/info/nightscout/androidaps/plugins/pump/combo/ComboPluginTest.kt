@@ -4,19 +4,10 @@ import android.content.Context
 import dagger.android.AndroidInjector
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.TestBase
-import info.nightscout.androidaps.MainApp
-import info.nightscout.androidaps.R
-import info.nightscout.androidaps.interfaces.ActivePluginProvider
-import info.nightscout.androidaps.interfaces.CommandQueueProvider
-import info.nightscout.androidaps.interfaces.Constraint
-import info.nightscout.androidaps.interfaces.PluginType
+import info.nightscout.androidaps.combo.R
+import info.nightscout.androidaps.interfaces.*
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper
-import info.nightscout.androidaps.plugins.configBuilder.ConfigBuilderPlugin
-import info.nightscout.androidaps.plugins.configBuilder.ConstraintChecker
-import info.nightscout.androidaps.interfaces.ProfileFunction
 import info.nightscout.androidaps.plugins.pump.combo.ruffyscripter.history.Bolus
-import info.nightscout.androidaps.plugins.treatments.TreatmentsPlugin
-import info.nightscout.androidaps.queue.CommandQueue
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 import info.nightscout.androidaps.utils.sharedPreferences.SP
 import org.junit.Assert
@@ -29,17 +20,17 @@ import org.powermock.core.classloader.annotations.PrepareForTest
 import org.powermock.modules.junit4.PowerMockRunner
 
 @RunWith(PowerMockRunner::class)
-@PrepareForTest(MainApp::class, ConfigBuilderPlugin::class, ConstraintChecker::class, Context::class, CommandQueue::class)
+@PrepareForTest(Context::class)
 class ComboPluginTest : TestBase() {
 
     @Mock lateinit var resourceHelper: ResourceHelper
     @Mock lateinit var profileFunction: ProfileFunction
-    @Mock lateinit var constraintChecker: ConstraintChecker
     @Mock lateinit var activePlugin: ActivePluginProvider
     @Mock lateinit var commandQueue: CommandQueueProvider
-    @Mock lateinit var treatmentsPlugin: TreatmentsPlugin
+    @Mock lateinit var treatmentsPlugin: TreatmentsInterface
     @Mock lateinit var sp: SP
     @Mock lateinit var context: Context
+    @Mock lateinit var databaseHelper: DatabaseHelperInterface
 
     val injector = HasAndroidInjector {
         AndroidInjector {
@@ -51,7 +42,7 @@ class ComboPluginTest : TestBase() {
     @Before
     fun prepareMocks() {
         `when`(resourceHelper.gs(R.string.novalidbasalrate)).thenReturn("No valid basal rate read from pump")
-        comboPlugin = ComboPlugin(injector, aapsLogger, RxBusWrapper(aapsSchedulers), resourceHelper, profileFunction, treatmentsPlugin, sp, commandQueue, context)
+        comboPlugin = ComboPlugin(injector, aapsLogger, RxBusWrapper(aapsSchedulers), resourceHelper, profileFunction, treatmentsPlugin, sp, commandQueue, context, databaseHelper)
     }
 
     @Test
