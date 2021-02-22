@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.os.Bundle
 import android.view.View
 import android.widget.Button
+import android.widget.ImageView
 import android.widget.ProgressBar
 import android.widget.TextView
 import androidx.annotation.LayoutRes
@@ -41,7 +42,7 @@ abstract class ActionFragmentBase : WizardFragmentBase() {
                 val isExecuting = isActionExecuting()
 
                 view.findViewById<Button>(R.id.button_next).isEnabled = result.success
-                view.findViewById<TextView>(R.id.omnipod_wizard_action_success).visibility = result.success.toVisibility()
+                view.findViewById<ImageView>(R.id.omnipod_wizard_action_success).visibility = result.success.toVisibility()
                 view.findViewById<TextView>(R.id.omnipod_wizard_action_error).visibility = (!isExecuting && !result.success).toVisibility()
                 view.findViewById<Button>(R.id.omnipod_wizard_button_retry).visibility = (!isExecuting && !result.success).toVisibility()
 
