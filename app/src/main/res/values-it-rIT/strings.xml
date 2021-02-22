@@ -705,7 +705,7 @@
     <string name="maintenance">Manutenzione</string>
     <string name="maintenance_shortname">MANUT</string>
     <string name="description_maintenance">Fornisce numerose funzioni per la manutenzione (es. invio log, eliminazione log).</string>
-    <string name="send_all_logs">Invia log via Email</string>
+    <string name="send_all_logs">Invia log via email</string>
     <string name="delete_logs">Elimina log</string>
     <string name="error_adding_treatment_message">Un trattamento (insulina: %1$.2f, carboidrati: %2$d, a: %3$s) non può essere aggiunto ai trattamenti. Controlla e aggiungi il record necessario.</string>
     <string name="generated_ecarbs_note">eCarbs: %1$d g (%2$d h), ritardo: %3$d m</string>
