@@ -98,11 +98,18 @@ public enum PumpType {
 
 
     // Insulet
-    Insulet_Omnipod("Insulet Omnipod", ManufacturerType.Insulet, "Omnipod (Eros)", 0.05d, null, //
+    Omnipod_Eros("Omnipod", ManufacturerType.Insulet, "Eros", 0.05d, null, //
             new DoseSettings(0.05d, 30, 8 * 60, 0.05d), //
             PumpTempBasalType.Absolute, //
             new DoseSettings(0.05d, 30, 12 * 60, 0d, 30.0d), PumpCapability.BasalRate_Duration30minAllowed, //
             0.05d, null, 0.05d, null, PumpCapability.OmnipodCapabilities, true),
+
+    Omnipod_Dash("Omnipod", ManufacturerType.Insulet, "Dash", 0.05d, null, //
+            new DoseSettings(0.05d, 30, 8 * 60, 0.05d), //
+            PumpTempBasalType.Absolute, //
+            new DoseSettings(0.05d, 30, 12 * 60, 0d, 30.0d), PumpCapability.BasalRate_Duration30minAllowed, //
+            0.05d, null, 0.05d, null, PumpCapability.OmnipodCapabilities, false),
+
 
     // Medtronic
     Medtronic_512_712("Medtronic 512/712", ManufacturerType.Medtronic, "512/712", 0.1d, null, //

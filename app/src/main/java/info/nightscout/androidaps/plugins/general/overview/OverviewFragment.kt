@@ -633,8 +633,8 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
                     binding.infoLayout.apsModeText.visibility = View.VISIBLE
                 }
 
-                pump.isSuspended()                                                        -> {
-                    binding.infoLayout.apsMode.setImageResource(if (pump.pumpDescription.pumpType == PumpType.Insulet_Omnipod) {
+                pump.isSuspended()                                                      -> {
+                    binding.infoLayout.apsMode.setImageResource(if (pump.model() == PumpType.Omnipod_Eros || pump.model() == PumpType.Omnipod_Dash) {
                         // For Omnipod, indicate the pump as disconnected when it's suspended.
                         // The only way to 'reconnect' it, is through the Omnipod tab
                         R.drawable.ic_loop_disconnected
@@ -906,7 +906,7 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
                         if (menuChartSettings[g + 1][OverviewMenus.CharType.COB.ordinal]) secondGraphData.addCob(fromTime, now, useCobForScale, if (useCobForScale) 1.0 else 0.5)
                         if (menuChartSettings[g + 1][OverviewMenus.CharType.DEV.ordinal]) secondGraphData.addDeviations(fromTime, now, useDevForScale, 1.0, alignDevBgiScale)
                         if (menuChartSettings[g + 1][OverviewMenus.CharType.SEN.ordinal]) secondGraphData.addRatio(fromTime, now, useRatioForScale, 1.0)
-                        if (menuChartSettings[g + 1][OverviewMenus.CharType.BGI.ordinal]) secondGraphData.addMinusBGI(fromTime, endTime, useBGIForScale, if(alignDevBgiScale) 1.0 else 0.8, alignDevBgiScale)
+                        if (menuChartSettings[g + 1][OverviewMenus.CharType.BGI.ordinal]) secondGraphData.addMinusBGI(fromTime, endTime, useBGIForScale, if (alignDevBgiScale) 1.0 else 0.8, alignDevBgiScale)
                         if (menuChartSettings[g + 1][OverviewMenus.CharType.DEVSLOPE.ordinal] && buildHelper.isDev()) secondGraphData.addDeviationSlope(fromTime, now, useDSForScale, 1.0)
 
                         // set manual x bounds to have nice steps
