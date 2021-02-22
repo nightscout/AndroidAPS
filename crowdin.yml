@@ -27,7 +27,7 @@ files:
     translation: /rileylink/src/main/res/values-%android_code%/strings.xml
   - source: /insight/src/main/res/values/strings.xml
     translation: /insight/src/main/res/values-%android_code%/strings.xml
-  - source: /insigt/src/main/res/values/insight_*.xml
-    translation: /insigt/src/main/res/values-%android_code%/%original_file_name%
+  - source: /insight/src/main/res/values/insight_*.xml
+    translation: /insight/src/main/res/values-%android_code%/%original_file_name%
   - source: /automation/src/main/res/values/strings.xml
     translation: /automation/src/main/res/values-%android_code%/strings.xml
