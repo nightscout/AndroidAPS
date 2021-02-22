@@ -10,6 +10,7 @@ import info.nightscout.androidaps.plugins.pump.omnipod.common.ui.wizard.activati
 import info.nightscout.androidaps.plugins.pump.omnipod.common.ui.wizard.activation.viewmodel.action.InsertCannulaViewModel
 import info.nightscout.androidaps.plugins.pump.omnipod.common.ui.wizard.activation.viewmodel.info.AttachPodViewModel
 import info.nightscout.androidaps.plugins.pump.omnipod.common.ui.wizard.activation.viewmodel.info.PodActivatedViewModel
+import info.nightscout.androidaps.plugins.pump.omnipod.common.ui.wizard.activation.viewmodel.info.StartPodActivationViewModel
 import info.nightscout.androidaps.plugins.pump.omnipod.common.ui.wizard.deactivation.viewmodel.action.DeactivatePodViewModel
 import info.nightscout.androidaps.plugins.pump.omnipod.common.ui.wizard.deactivation.viewmodel.info.PodDeactivatedViewModel
 import info.nightscout.androidaps.plugins.pump.omnipod.common.ui.wizard.deactivation.viewmodel.info.PodDiscardedViewModel
@@ -34,7 +35,7 @@ abstract class OmnipodErosWizardViewModelsModule {
     @Binds
     @IntoMap
     @OmnipodPluginQualifier
-    @ViewModelKey(ErosStartPodActivationViewModel::class)
+    @ViewModelKey(StartPodActivationViewModel::class)
     internal abstract fun startPodActivationViewModel(viewModel: ErosStartPodActivationViewModel): ViewModel
 
     @Binds
