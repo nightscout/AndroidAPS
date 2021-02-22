@@ -80,7 +80,7 @@ class SmsCommunicatorPlugin @Inject constructor(
     .preferencesId(R.xml.pref_smscommunicator)
     .description(R.string.description_sms_communicator),
     aapsLogger, resourceHelper, injector
-) {
+), SmsCommunicatorInterface {
 
     private val disposable = CompositeDisposable()
     var allowedNumbers: MutableList<String> = ArrayList()
@@ -998,7 +998,7 @@ class SmsCommunicatorPlugin @Inject constructor(
         } else sendSMS(Sms(receivedSms.phoneNumber, resourceHelper.gs(R.string.wrongformat)))
     }
 
-    fun sendNotificationToAllNumbers(text: String): Boolean {
+    override fun sendNotificationToAllNumbers(text: String): Boolean {
         var result = true
         for (i in allowedNumbers.indices) {
             val sms = Sms(allowedNumbers[i], text)

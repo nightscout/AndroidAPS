@@ -1,3 +1,4 @@
+include ':automation'
 include ':insight'
 include ':app'
 include ':wear'

@@ -141,9 +141,6 @@
         </provider>
 
         <service
-            android:name=".services.LocationService"
-            android:exported="false" />
-        <service
             android:name=".plugins.general.wear.wearintegration.WatchUpdaterService"
             android:exported="true">
             <intent-filter>

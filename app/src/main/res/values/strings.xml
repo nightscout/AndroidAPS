@@ -102,7 +102,6 @@
     <string name="result_insulin_carbs">Result: %1$s %2$s</string>
     <string name="openapsma_noglucosedata">No glucose data available</string>
     <string name="openapsma_request_label">Request</string>
-    <string name="glucose">Glucose</string>
     <string name="delta">Delta</string>
     <string name="sms_delta">Delta:</string>
 
@@ -155,8 +154,6 @@
     <string name="openloop">Open Loop</string>
     <string name="lowglucosesuspend">Low Glucose Suspend</string>
     <string name="disabledloop">Loop Disabled</string>
-    <string name="disableloop">Disable loop</string>
-    <string name="enableloop">Enable loop</string>
 
     <string name="openloop_newsuggestion">New suggestion available</string>
     <string name="carbssuggestion">Carbs Suggestion</string>
@@ -170,11 +167,8 @@
     <string name="careportal_newnstreatment_sensor">Sensor</string>
     <string name="careportal_newnstreatment_carbtime_label">Carb time</string>
     <string name="careportal_newnstreatment_duration_label">Duration</string>
-    <string name="careportal_newnstreatment_notes_label">Notes</string>
-    <string name="event_time_label">Event time</string>
     <string name="careportal_newnstreatment_profile_label">Profile</string>
     <string name="careportal_newnstreatment_glucosetype">Glucose type</string>
-    <string name="noprofile">No profile loaded from NS yet</string>
     <string name="overview_tempbasal_button">TempBasal</string>
     <string name="overview_extendedbolus_button">Extended Bolus</string>
     <string name="configbuilder_nightscoutversion_label">Nightscout version:</string>
@@ -239,7 +233,6 @@
     <string name="smscommunicator_remotecommandsallowed">Allow remote commands via SMS</string>
     <string name="smscommunicator_loophasbeendisabled">Loop has been disabled</string>
     <string name="smscommunicator_loophasbeenenabled">Loop has been enabled</string>
-    <string name="smscommunicator_loopisdisabled">Loop is disabled</string>
     <string name="smscommunicator_loopisenabled">Loop is enabled</string>
     <string name="valuelimitedto">%1$.2f limited to %2$.2f</string>
     <string name="valueoutofrange">Value %1$s is out of hard limits</string>
@@ -281,7 +274,6 @@
     <string name="overview_editquickwizard_valid">Valid:</string>
     <string name="overview_editquickwizardlistactivity_add">Add</string>
     <string name="overview_quickwizard_item_edit_button">Edit</string>
-    <string name="overview_quickwizard_item_remove_button">Remove</string>
     <string name="mealbolus">Meal</string>
     <string name="correctionbous">Corr</string>
     <string name="actions">Actions</string>
@@ -315,8 +307,6 @@
     <string name="sms_minago">%1$dmin ago</string>
     <string name="localprofile">Local Profile</string>
     <string name="openapsama">OpenAPS AMA</string>
-    <string name="short_avgdelta">Short avg. delta</string>
-    <string name="long_avgdelta">Long avg. delta</string>
     <string name="array_of_elements">Array of %1$d elements.\nActual value:</string>
     <string name="openapsma_autosensdata_label">Autosens data</string>
     <string name="openapsma_scriptdebugdata_label">Script debug</string>
@@ -326,7 +316,6 @@
     <string name="eatingsoon">Eating Soon</string>
     <string name="hypo">Hypo</string>
     <string name="activity">Activity</string>
-    <string name="removerecord">Remove record</string>
     <string name="actions_shortname">ACT</string>
     <string name="configbuilder_shortname">CONF</string>
     <string name="loop_shortname">LOOP</string>
@@ -345,9 +334,7 @@
     <string name="profile">Profile</string>
     <string name="openapsama_max_daily_safety_multiplier_summary">Default value: 3 This is a key OpenAPS safety cap. What this does is limit your basals to be 3x (in this people) your biggest basal rate. You likely will not need to change this, but you should be aware that’s what is discussed about “3x max daily; 4x current” for safety caps.</string>
     <string name="openapsama_current_basal_safety_multiplier_summary">Default value: 4 This is the other half of the key OpenAPS safety caps, and the other half of “3x max daily; 4x current” of the safety caps. This means your basal, regardless of max basal set on your pump, cannot be any higher than this number times the current level of your basal. This is to prevent people from getting into dangerous territory by setting excessively high max basals before understanding how the algorithm works. Again, the default is 4x; most people will never need to adjust this and are instead more likely to need to adjust other settings if they feel like they are “running into” this safety cap.</string>
-    <string name="key_openapsama_autosens_max" translatable="false">autosens_max</string>
     <string name="openapsama_autosens_max_summary">Default value: 1.2\nThis is a multiplier cap for autosens (and soon autotune) to set a 20%% max limit on how high the autosens ratio can be, which in turn determines how high autosens can adjust basals, how low it can adjust ISF, and how low it can set the BG target.</string>
-    <string name="key_openapsama_autosens_min" translatable="false">autosens_min</string>
     <string name="openapsama_autosens_min_summary">Default value: 0.7\nThe other side of the autosens safety limits, putting a cap on how low autosens can adjust basals, and how high it can adjust ISF and BG targets.</string>
     <string name="key_openapsama_autosens_adjusttargets" translatable="false">autosens_adjust_targets</string>
     <string name="openapsama_autosens_adjusttargets">Autosens adjust targets, too</string>
@@ -419,12 +406,10 @@
     <string name="needwhitelisting">%1$s needs battery optimalization whitelisting for proper performance</string>
     <string name="loopsuspended">Loop suspended</string>
     <string name="loopsuspendedfor">Suspended (%1$d m)</string>
-    <string name="suspendloop">Suspend loop</string>
     <string name="suspendloopfor1h">Suspend loop for 1h</string>
     <string name="suspendloopfor2h">Suspend loop for 2h</string>
     <string name="suspendloopfor3h">Suspend loop for 3h</string>
     <string name="suspendloopfor10h">Suspend loop for 10 h</string>
-    <string name="suspendloopforXmin">Suspend loop for %1$d min</string>
     <string name="disconnectpump">Disconnect pump</string>
     <string name="disconnectpumpfor15m">Disconnect pump for 15 min</string>
     <string name="disconnectpumpfor30m">Disconnect pump for 30 min</string>
@@ -485,8 +470,6 @@
     <string name="key_statuslights_bat_critical" translatable="false">statuslights_bat_critical</string>
     <string name="statuslights_bat_critical">Threshold critical pump battery level [%]</string>
     <string name="prediction_shortname">PRED</string>
-    <string name="iob">IOB</string>
-    <string name="cob">COB</string>
     <string name="basal_shortname">BAS</string>
     <string name="deviation_shortname">DEV</string>
     <string name="activity_shortname">ACT</string>
@@ -551,7 +534,6 @@
     <string name="valuesnotstored">Values not stored!</string>
     <string name="ns_localbroadcasts">Enable broadcasts to other apps (like xDrip+). Do not enable if you have more than one instance of AAPS or NSClient installed!</string>
     <string name="ns_localbroadcasts_title">Enable local Broadcasts.</string>
-    <string name="careportal_newnstreatment_duration_min_label">Duration [min]</string>
     <string name="openapssmb">OpenAPS SMB</string>
     <string name="key_use_smb" translatable="false">use_smb</string>
     <string name="key_use_uam" translatable="false">use_uam</string>
@@ -739,7 +721,6 @@
     <string name="limitingiob">Limiting IOB to %1$.1f U because of %2$s</string>
     <string name="maxvalueinpreferences">max value in preferences</string>
     <string name="hardlimit">hard limit</string>
-    <string name="key_treatmentssafety_maxcarbs" translatable="false">treatmentssafety_maxcarbs</string>
     <string name="key_openapsama_useautosens" translatable="false">openapsama_useautosens</string>
     <string name="readstatusfailed">Read status failed</string>
     <string name="record_pump_site_change">Record pump site change</string>
@@ -754,8 +735,6 @@
     <string name="openapssmb_maxiob_summary">This value is called Max IOB in OpenAPS context\nOpenAPS will not add more insulin if current IOB is greater than this value</string>
     <string name="absorption_cutoff_title">Meal max absorption time [h]</string>
     <string name="absorption_cutoff_summary">Time at which any meal is considered absorbed. Remaining carbs will be cut off.</string>
-    <string name="time">Time</string>
-    <string name="key_show_notes_entry_dialogs" translatable="false">show_notes_entry_dialogs</string>
     <string name="overview_show_notes_field_in_dialogs_title">Show notes field in treatment dialogs</string>
     <string name="title_activity_setup_wizard" translatable="false">SetupWizardActivity</string>
     <string name="next_button">Next</string>
@@ -878,46 +857,6 @@
     <string name="loop_openmode_min_change">Minimal request change [%]</string>
     <string name="loop_openmode_min_change_summary" formatted="false">Open Loop will popup new change request only if change is bigger than this value in %. Default value is 20%</string>
     <string name="key_short_tabtitles" translatable="false">short_tabtitles</string>
-    <string name="weekday_sunday_short">Sun</string>
-    <string name="weekday_saturday_short">Sat</string>
-    <string name="weekday_friday_short">Fri</string>
-    <string name="weekday_thursday_short">Thu</string>
-    <string name="weekday_wednesday_short">Wed</string>
-    <string name="weekday_tuesday_short">Tue</string>
-    <string name="weekday_monday_short">Mon</string>
-    <string name="automation_description">User defined automation tasks</string>
-    <string name="automation_missing_task_name">Please enter a task name.</string>
-    <string name="automation_missing_trigger">Please specify at least one trigger.</string>
-    <string name="automation_missing_action">Please specify at least one action.</string>
-    <string name="alreadyenabled">Already enabled</string>
-    <string name="alreadydisabled">Already disabled</string>
-    <string name="alreadysuspended">Already suspended</string>
-    <string name="resumeloop">Resume loop</string>
-    <string name="notsuspended">Not suspended</string>
-    <string name="starttemptarget">Start temp target</string>
-    <string name="stoptemptarget">Stop temp target</string>
-    <string name="islesser">is lesser than</string>
-    <string name="isequalorlesser">is equal or lesser than</string>
-    <string name="isequal">is equal to</string>
-    <string name="isequalorgreater">is equal or greater than</string>
-    <string name="isgreater">is greater than</string>
-    <string name="isnotavailable">is not available</string>
-    <string name="glucoseisnotavailable">Glucose is not available</string>
-    <string name="glucosecomparedmgdl">Glucose %1$s %2$.0f %3$s</string>
-    <string name="glucosecomparedmmol">Glucose %1$s %2$.1f %3$s</string>
-    <string name="percentagecompared">Profile pct %1$s %2$d</string>
-    <string name="iobcompared">IOB %1$s %2$.1f</string>
-    <string name="and">And</string>
-    <string name="or">Or</string>
-    <string name="xor">Exclusive or</string>
-    <string name="atspecifiedtime">At %1$s</string>
-    <string name="use_network_location">Use network location</string>
-    <string name="use_gps_location">Use GPS location</string>
-    <string name="use_passive_location">Use passive location</string>
-    <string name="locationservice">Location service</string>
-    <string name="key_location" translatable="false">location</string>
-    <string name="automation_short">Auto</string>
-    <string name="automation">Automation</string>
 
     <string name="profile_total">== ∑  %1$s U</string>
     <string name="key_dexcom_lognssensorchange" translatable="false">dexcom_lognssensorchange</string>
@@ -966,17 +905,6 @@
     <string name="sms_wrongcode">Wrong code. Command cancelled.</string>
     <string name="notconfigured">Not configured</string>
     <string name="profileswitchcreated">Profile switch created</string>
-    <string name="recurringTime">Recurring time</string>
-    <string name="every">Every</string>
-    <string name="never">Never</string>
-    <string name="condition">Condition:</string>
-    <string name="action">Action:</string>
-    <string name="iob_u">IOB [U]:</string>
-    <string name="glucose_u">Glucose [%1$s]:</string>
-    <string name="delete_short">DEL</string>
-    <string name="add_short">ADD</string>
-    <string name="copy_short">COPY</string>
-    <string name="addnew">Add new</string>
     <string name="versionChecker">Version Checker</string>
 
     <string name="old_version">old version</string>
@@ -988,71 +916,13 @@
     <string name="dexcom_short">DXCM</string>
     <string name="description_source_dexcom">Receive BG values from the patched Dexcom app.</string>
 
-    <string name="notification">Notification</string>
-    <string name="notification_message">Notification: %1$s</string>
-    <string name="alarm_message">Alarm: %1$s</string>
-    <string name="message_short">Msg:</string>
-    <string name="alarm_short">Alarm:</string>
-    <string name="profilepercentage">Profile percentage</string>
-    <string name="percent_u">Percent [%]:</string>
-    <string name="startprofile">Start profile %1$d%% for %2$d min</string>
-    <string name="startprofileforever">Start profile %1$d%%</string>
-    <string name="exists">exists</string>
-    <string name="notexists">not exists</string>
-    <string name="temptargetcompared">Temp target %1$s</string>
-    <string name="btdevicecompared">Bluetooth connection to device %1$s %2$s</string>
-    <string name="btdevice">Connection to Bluetooth device </string>
-    <string name="wifissidcompared">WiFi SSID %1$s %2$s</string>
-    <string name="autosenscompared">Autosens %1$s %2$s %%</string>
-    <string name="autosenslabel">Autosens %</string>
-    <string name="deltacompared">%3$s %1$s %2$s</string>
-    <string name="deltalabel">BG difference</string>
-    <string name="deltalabel_u">BG difference [%1$s]</string>
-    <string name="currentlocation">Current Location</string>
-    <string name="location">Location</string>
-    <string name="latitude_short">Lat:</string>
-    <string name="longitude_short">Lon:</string>
-    <string name="distance_short">Dist [m]:</string>
-    <string name="name_short">Name:</string>
-    <string name="locationis">%1$s %2$s</string>
-    <string name="location_mode">When </string>
-    <string name="location_inside">When you are inside the area</string>
-    <string name="location_outside">When you are outside the area</string>
-    <string name="location_going_in">When you enter the area named</string>
-    <string name="location_going_out">When you leave the area named</string>
-    <string name="lastboluslabel">Last bolus ago</string>
-    <string name="lastboluscompared">Last bolus time %1$s %2$s min ago</string>
-    <string name="triggercoblabel">COB</string>
-    <string name="cobcompared">COB %1$s %2$.0f</string>
-    <string name="taskname">Task name</string>
-    <string name="edit_short">EDIT</string>
-    <string name="please_choose_an_action_type">Choose an action type</string>
-    <string name="please_choose_a_trigger_type">Choose a trigger type</string>
-    <string name="triggers">Triggers:</string>
-    <string name="remove_label">REMOVE</string>
-    <string name="preconditions">Preconditions:</string>
-
-    <string name="profilename">Change profile to</string>
-    <string name="changengetoprofilename">Change profile to %1$s</string>
-    <string name="automation_trigger_pump_last_connection_label">Last connection to pump</string>
-    <string name="automation_trigger_pump_last_connection_description">Last connection to pump [minutes ago]</string>
-    <string name="automation_trigger_pump_last_connection_compared">Last connection to pump %1$s %2$s min ago</string>
-    <string name="sendsmsactionlabel">Send SMS: %1$s</string>
-    <string name="sendsmsactiondescription">Send SMS to all numbers</string>
-    <string name="sendsmsactiontext">Send SMS with text</string>
-
-
     <string name="cobvsiob">COB vs IOB</string>
     <string name="bolusconstraintappliedwarn">Bolus constraint applied: %1$.2f U to %2$.2f U</string>
     <string name="slowabsorptiondetected"><![CDATA[<font color=\'%1$s\'>!!!!! Slow carbs absorption detected: %2$d%% of time. Double check your calculation. COB can be overestimated thus more insulin could be given !!!!!</font>]]></string>
     <string name="key_boluswizard_percentage" translatable="false">boluswizard_percentage</string>
     <string name="partialboluswizard">Deliver this part of bolus wizard result [%]</string>
     <string name="deliverpartofboluswizard">Bolus wizard performs calculation but only this part of calculated insulin is delivered. Useful with SMB algorithm.</string>
-    <string name="loading">Loading ...</string>
     <string name="snooze">Snooze</string>
-    <string name="time_range">Time range</string>
-    <string name="timerange_value">Time is between %1$s and %2$s</string>
-    <string name="between">Between </string>
 
     <string name="increasingmaxbasal">Increasing max basal value because setting is lower than your max basal in profile</string>
     <string name="smscommunicator_messagebody">Invalid message body</string>
@@ -1085,7 +955,6 @@
     <string name="profilenamecontainsdot">Profile name contains dots.\nThis is not supported by NS.\nProfile is not uploaded to NS.</string>
     <string name="low_mark_comment">Lower value of in range area (display only)</string>
     <string name="high_mark_comment">Higher value of in range area (display only)</string>
-    <string name="reorder_label">Reorder</string>
 
     <string name="age">Age:</string>
     <string name="weight_label">Weight:</string>
@@ -1107,8 +976,6 @@
     <string name="randombg_short">BG</string>
     <string name="tools">Tools</string>
     <string name="show_calculation">Show calcuation</string>
-    <string name="automation_event">Automation event</string>
-    <string name="alreadyset">Already set</string>
     <string name="clearqueueconfirm">Clear queue? All data in queue will be lost!</string>
     <string name="key_xdripstatus_detailediob" translatable="false">xdripstatus_detailediob</string>
     <string name="key_xdripstatus_showbgi" translatable="false">xdripstatus_showbgi</string>
@@ -1157,8 +1024,6 @@
 
     <string name="smscommunicator_otp_install_info">On each follower phone install Authenticator app that support RFC 6238 TOTP tokens. Popular free apps are:\n • Authy\n • Google Authenticator\n • LastPass Authenticator\n • FreeOTP Authenticator</string>
     <string name="smscommunicator_otp_reset_warning">By reseting authenticator you make all already provisioned authenticators invalid. You will need to set up them again!</string>
-    <string name="onconnect">On connect</string>
-    <string name="ondisconnect">On disconnect</string>
     <string name="overview_show_predictions">Predictions</string>
     <string name="overview_show_deviationslope">Deviation slope</string>
     <string name="key_graphconfig" translatable="false">graphconfig</string>
@@ -1224,7 +1089,6 @@
     <string name="filter">Filter</string>
     <string name="copytolocalprofile_invalid">Unable to create local profile. Profile is invalid.</string>
     <string name="cta_dont_kill_my_app_info">Don\'t kill my app?</string>
-    <string name="alarm">Alarm</string>
     <string name="key_smscommunicator_report_pump_ureachable" translatable="false">smscommunicator_report_pump_ureachable</string>
     <string name="smscommunicator_report_pump_ureachable_summary">Send SMS if unreachable pump event is triggered</string>
     <string name="smscommunicator_pump_ureachable">Report pump unreachable</string>

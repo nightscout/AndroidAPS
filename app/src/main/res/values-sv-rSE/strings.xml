@@ -78,7 +78,6 @@ Eversense-appen.</string>
     <string name="openapsma_noglucosedata">Ingen BG-data tillänglig</string>
     <string name="openapsma_request_label">Beräknat behov</string>
     <string name="glucose">Glukos</string>
-    <string name="delta">Delta</string>
     <string name="sms_delta">Delta:</string>
     <string name="configbuilder">Konfigurationsverktyg</string>
     <string name="overview">Översikt</string>

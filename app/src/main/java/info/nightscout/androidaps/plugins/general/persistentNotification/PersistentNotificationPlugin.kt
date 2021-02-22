@@ -17,11 +17,8 @@ import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.GlucoseStatus
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.IobCobCalculatorPlugin
-import info.nightscout.androidaps.plugins.iob.iobCobCalculator.events.EventAutosensCalculationFinished
 import info.nightscout.androidaps.utils.DecimalFormatter
 import info.nightscout.androidaps.utils.FabricPrivacy
-import info.nightscout.androidaps.utils.androidNotification.NotificationHolder
-import info.nightscout.androidaps.utils.androidNotification.openAppIntent
 import info.nightscout.androidaps.utils.resources.IconsProvider
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 import info.nightscout.androidaps.utils.rx.AapsSchedulers
@@ -43,10 +40,9 @@ class PersistentNotificationPlugin @Inject constructor(
     private val iobCobCalculatorPlugin: IobCobCalculatorPlugin,
     private val rxBus: RxBusWrapper,
     private val context: Context,
-    private val notificationHolder: NotificationHolder,
+    private val notificationHolder: NotificationHolderInterface,
     private val dummyServiceHelper: DummyServiceHelper,
-    private val iconsProvider: IconsProvider,
-    private val databaseHelper: DatabaseHelperInterface
+    private val iconsProvider: IconsProvider
 ) : PluginBase(PluginDescription()
     .mainType(PluginType.GENERAL)
     .neverVisible(true)
@@ -216,7 +212,7 @@ class PersistentNotificationPlugin @Inject constructor(
                 .setUnreadConversation(unreadConversationBuilder.build()))
         }
         /// End Android Auto
-        builder.setContentIntent(openAppIntent(context))
+        builder.setContentIntent(notificationHolder.openAppIntent(context))
         val mNotificationManager = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
         val notification = builder.build()
         mNotificationManager.notify(notificationHolder.notificationID, notification)

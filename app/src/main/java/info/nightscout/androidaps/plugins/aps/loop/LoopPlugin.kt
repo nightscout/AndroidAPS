@@ -35,7 +35,7 @@ import info.nightscout.androidaps.plugins.general.overview.events.EventNewNotifi
 import info.nightscout.androidaps.plugins.general.overview.notifications.Notification
 import info.nightscout.androidaps.plugins.general.wear.events.EventWearDoAction
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.IobCobCalculatorPlugin
-import info.nightscout.androidaps.plugins.iob.iobCobCalculator.events.EventAutosensCalculationFinished
+import info.nightscout.androidaps.events.EventAutosensCalculationFinished
 import info.nightscout.androidaps.plugins.pump.virtual.VirtualPumpPlugin
 import info.nightscout.androidaps.plugins.treatments.TreatmentsPlugin
 import info.nightscout.androidaps.queue.Callback
@@ -58,7 +58,7 @@ import kotlin.math.abs
 @Singleton
 open class LoopPlugin @Inject constructor(
     injector: HasAndroidInjector,
-    aapsLogger: AAPSLogger?,
+    aapsLogger: AAPSLogger,
     private val aapsSchedulers: AapsSchedulers,
     private val rxBus: RxBusWrapper,
     private val sp: SP,
@@ -85,7 +85,7 @@ open class LoopPlugin @Inject constructor(
     .preferencesId(R.xml.pref_loop)
     .enableByDefault(config.APS)
     .description(R.string.description_loop),
-    aapsLogger!!, resourceHelper, injector
+    aapsLogger, resourceHelper, injector
 ), LoopInterface {
 
     private val disposable = CompositeDisposable()
@@ -147,7 +147,7 @@ open class LoopPlugin @Inject constructor(
         }
     }
 
-    fun suspendTo(endTime: Long) {
+    override fun suspendTo(endTime: Long) {
         sp.putLong("loopSuspendedTill", endTime)
         sp.putBoolean("isSuperBolus", false)
         sp.putBoolean("isDisconnected", false)
@@ -178,7 +178,7 @@ open class LoopPlugin @Inject constructor(
     }
 
     // time exceeded
-    val isSuspended: Boolean
+    override val isSuspended: Boolean
         get() {
             val loopSuspendedTill = sp.getLong("loopSuspendedTill", 0L)
             if (loopSuspendedTill == 0L) return false
@@ -638,7 +638,7 @@ open class LoopPlugin @Inject constructor(
         createOfflineEvent(durationInMinutes)
     }
 
-    fun suspendLoop(durationInMinutes: Int) {
+    override fun suspendLoop(durationInMinutes: Int) {
         suspendTo(System.currentTimeMillis() + durationInMinutes * 60 * 1000)
         commandQueue.cancelTempBasal(true, object : Callback() {
             override fun run() {
@@ -650,7 +650,7 @@ open class LoopPlugin @Inject constructor(
         createOfflineEvent(durationInMinutes)
     }
 
-    fun createOfflineEvent(durationInMinutes: Int) {
+    override fun createOfflineEvent(durationInMinutes: Int) {
         val data = JSONObject()
         try {
             data.put("eventType", CareportalEvent.OPENAPSOFFLINE)

@@ -5,6 +5,7 @@ import dagger.Component
 import dagger.android.AndroidInjectionModule
 import dagger.android.AndroidInjector
 import info.nightscout.androidaps.MainApp
+import info.nightscout.androidaps.automation.di.AutomationModule
 import info.nightscout.androidaps.combo.di.ComboModule
 import info.nightscout.androidaps.core.di.CoreModule
 import info.nightscout.androidaps.dana.di.DanaModule

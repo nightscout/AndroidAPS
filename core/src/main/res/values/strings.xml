@@ -30,6 +30,10 @@
     <string name="key_virtualpump_type" translatable="false">virtualpump_type</string>
     <string name="key_quickwizard" translatable="false">QuickWizard</string>
     <string name="key_wear_control" translatable="false">wearcontrol</string>
+    <string name="key_show_notes_entry_dialogs" translatable="false">show_notes_entry_dialogs</string>
+    <string name="key_openapsama_autosens_max" translatable="false">autosens_max</string>
+    <string name="key_openapsama_autosens_min" translatable="false">autosens_min</string>
+    <string name="key_treatmentssafety_maxcarbs" translatable="false">treatmentssafety_maxcarbs</string>
 
     <!--    General-->
     <string name="refresh">Refresh</string>
@@ -110,6 +114,29 @@
     <string name="pump_time_updated">Pump time updated</string>
     <string name="exit">Exit</string>
     <string name="serial_number">Serial number</string>
+    <string name="removerecord">Remove record</string>
+    <string name="smscommunicator_loopisdisabled">Loop is disabled</string>
+    <string name="alarm">Alarm</string>
+    <string name="disableloop">Disable loop</string>
+    <string name="enableloop">Enable loop</string>
+    <string name="resumeloop">Resume loop</string>
+    <string name="suspendloop">Suspend loop</string>
+    <string name="careportal_newnstreatment_duration_min_label">Duration [min]</string>
+    <string name="notification">Notification</string>
+    <string name="noprofile">No profile loaded from NS yet</string>
+    <string name="exists">exists</string>
+    <string name="notexists">not exists</string>
+    <string name="glucose">Glucose</string>
+    <string name="iob">IOB</string>
+    <string name="cob">COB</string>
+    <string name="name_short">Name:</string>
+    <string name="time">Time</string>
+    <string name="ns_wifi_ssids">WiFi SSID</string>
+    <string name="loading">Loading …</string>
+    <string name="event_time_label">Event time</string>
+    <string name="careportal_newnstreatment_notes_label">Notes</string>
+    <string name="overview_quickwizard_item_remove_button">Remove</string>
+    <string name="addnew">Add new</string>
 
     <!--    Constraints-->
     <string name="limitingbasalratio">Limiting max basal rate to %1$.2f U/h because of %2$s</string>

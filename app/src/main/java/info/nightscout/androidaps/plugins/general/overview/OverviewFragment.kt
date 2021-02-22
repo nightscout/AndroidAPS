@@ -46,7 +46,7 @@ import info.nightscout.androidaps.plugins.general.overview.notifications.Notific
 import info.nightscout.androidaps.plugins.general.wear.events.EventWearDoAction
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.GlucoseStatus
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.IobCobCalculatorPlugin
-import info.nightscout.androidaps.plugins.iob.iobCobCalculator.events.EventAutosensCalculationFinished
+import info.nightscout.androidaps.events.EventAutosensCalculationFinished
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.events.EventIobCalculationProgress
 import info.nightscout.androidaps.plugins.pump.common.defs.PumpType
 import info.nightscout.androidaps.plugins.source.DexcomPlugin
@@ -764,7 +764,7 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
         var cobText: String = resourceHelper.gs(R.string.value_unavailable_short)
         val cobInfo = iobCobCalculatorPlugin.getCobInfo(false, "Overview COB")
         if (cobInfo.displayCob != null) {
-            cobText = resourceHelper.gs(R.string.format_carbs, cobInfo.displayCob.toInt())
+            cobText = resourceHelper.gs(R.string.format_carbs, cobInfo.displayCob!!.toInt())
             if (cobInfo.futureCarbs > 0) cobText += "(" + DecimalFormatter.to0Decimal(cobInfo.futureCarbs) + ")"
         }
 

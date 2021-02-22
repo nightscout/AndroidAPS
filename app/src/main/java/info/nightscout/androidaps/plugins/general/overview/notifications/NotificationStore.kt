@@ -14,13 +14,13 @@ import androidx.core.app.NotificationCompat
 import androidx.recyclerview.widget.RecyclerView
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.databinding.OverviewNotificationItemBinding
+import info.nightscout.androidaps.interfaces.NotificationHolderInterface
 import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.logging.LTag
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper
 import info.nightscout.androidaps.plugins.general.overview.events.EventDismissNotification
 import info.nightscout.androidaps.services.AlarmSoundServiceHelper
 import info.nightscout.androidaps.utils.DateUtil
-import info.nightscout.androidaps.utils.androidNotification.openAppIntent
 import info.nightscout.androidaps.utils.resources.IconsProvider
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 import info.nightscout.androidaps.utils.sharedPreferences.SP
@@ -37,7 +37,8 @@ class NotificationStore @Inject constructor(
     private val context: Context,
     private val iconsProvider: IconsProvider,
     private val alarmSoundServiceHelper: AlarmSoundServiceHelper,
-    private val dateUtil: DateUtil
+    private val dateUtil: DateUtil,
+    private val notificationHolder: NotificationHolderInterface
 ) {
 
     private var store: MutableList<Notification> = ArrayList()
@@ -112,7 +113,7 @@ class NotificationStore @Inject constructor(
             .setStyle(NotificationCompat.BigTextStyle().bigText(n.text))
             .setPriority(NotificationCompat.PRIORITY_MAX)
             .setDeleteIntent(deleteIntent(n.id))
-            .setContentIntent(openAppIntent(context))
+            .setContentIntent(notificationHolder.openAppIntent(context))
         if (n.level == Notification.URGENT) {
             notificationBuilder.setVibrate(longArrayOf(1000, 1000, 1000, 1000))
                 .setContentTitle(resourceHelper.gs(R.string.urgent_alarm))
