@@ -7,6 +7,7 @@
     <string name="automation_missing_trigger">נא לציין טריגר אחד לפחות.</string>
     <string name="automation_missing_action">נא לציין פעולה אחת לפחות.</string>
     <string name="alarm_message">התראה: %1$s</string>
+    <string name="alarm_short">התראה:</string>
     <string name="message_short">הודעה:</string>
     <string name="alreadyenabled">כבר מאופשר</string>
     <string name="alreadydisabled">כבר מושבת</string>
@@ -88,6 +89,7 @@
     <string name="glucose_u">גלוקוז [%1$s]:</string>
     <string name="lastboluslabel">בולוס אחרון</string>
     <string name="lastboluscompared">הבולוס האחרון היה לפני %1$s %2$s דק\'</string>
+    <string name="triggercoblabel">פחמ\' פעילות</string>
     <string name="cobcompared">פחמ\' פעילות %1$s %2$.0f</string>
     <string name="iob_u">אינסולין פעיל [U]:</string>
     <string name="distance_short">מרחק [m]:</string>
