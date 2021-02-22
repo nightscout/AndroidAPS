@@ -5,9 +5,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <include
-        android:id="@+id/progress_indication_layout"
-        layout="@layout/omnipod_common_wizard_progress_indication" />
+    <include layout="@layout/omnipod_common_wizard_progress_indication" />
 
     <TextView
         android:id="@+id/fragment_title"

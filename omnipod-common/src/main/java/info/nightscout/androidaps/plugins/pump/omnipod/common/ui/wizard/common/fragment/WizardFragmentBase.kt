@@ -12,6 +12,7 @@ import androidx.navigation.fragment.findNavController
 import dagger.android.support.DaggerFragment
 import info.nightscout.androidaps.plugins.pump.omnipod.common.R
 import info.nightscout.androidaps.plugins.pump.omnipod.common.databinding.OmnipodCommonWizardBaseFragmentBinding
+import info.nightscout.androidaps.plugins.pump.omnipod.common.databinding.OmnipodCommonWizardProgressIndicationBinding
 import info.nightscout.androidaps.plugins.pump.omnipod.common.ui.wizard.common.activity.OmnipodWizardActivityBase
 import info.nightscout.androidaps.plugins.pump.omnipod.common.ui.wizard.common.viewmodel.ViewModelBase
 import kotlin.math.roundToInt
@@ -21,20 +22,21 @@ abstract class WizardFragmentBase : DaggerFragment() {
     protected lateinit var viewModel: ViewModelBase
 
     var _binding: OmnipodCommonWizardBaseFragmentBinding? = null
+    var _progressIndicationBinding: OmnipodCommonWizardProgressIndicationBinding? = null
 
-    // This property is only valid between onCreateView and
+    // These properties are only valid between onCreateView and
     // onDestroyView.
     val binding get() = _binding!!
+    val progressIndicationBinding get() = _progressIndicationBinding!!
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
-        _binding = OmnipodCommonWizardBaseFragmentBinding.inflate(inflater, container, false)
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View =
+        OmnipodCommonWizardBaseFragmentBinding.inflate(inflater, container, false).also {
+            _binding = it
+            _progressIndicationBinding = OmnipodCommonWizardProgressIndicationBinding.bind(it.root)
 
-        binding.fragmentContent.let {
-            it.layoutResource = getLayoutId()
-            it.inflate()
-        }
-        return binding.root
-    }
+            it.fragmentContent.layoutResource = getLayoutId()
+            it.fragmentContent.inflate()
+        }.root
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -76,7 +78,7 @@ abstract class WizardFragmentBase : DaggerFragment() {
             val currentFragment = getIndex() - (it.getTotalDefinedNumberOfSteps() - numberOfSteps)
             val progressPercentage = (currentFragment / numberOfSteps.toDouble() * 100).roundToInt()
 
-            binding.progressIndicationLayout.progressIndication.progress = progressPercentage
+            progressIndicationBinding.progressIndication.progress = progressPercentage
         }
     }
 
