@@ -341,7 +341,7 @@
     <string name="pregnant">הריון</string>
     <string name="patientage_summary">נא לבחור את גיל המטופל\\ת להתאמת מגבלות בטיחות</string>
     <string name="patient_name">שם מטופל\\ת</string>
-    <string name="patient_name_summary">נא לציין שם המטופל\\ת או כינוי, להבחנה בין מספר הגדרות</string>
+    <string name="patient_name_summary">נא לציין את שם המטופל\\ת או כינוי, להבחנה בין מספר הגדרות</string>
     <string name="patient_name_default" comment="This is default patient display name, when user does not provide real one">משתמש</string>
     <string name="Glimp">Glimp</string>
     <string name="needwhitelisting">%1$s צריך ביטול אופטימיזציית סוללה בשביל תפקוד תקין</string>
