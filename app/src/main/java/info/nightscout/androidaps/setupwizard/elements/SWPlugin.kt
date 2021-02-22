@@ -18,7 +18,7 @@ import info.nightscout.androidaps.setupwizard.SWDefinition
 import info.nightscout.androidaps.setupwizard.events.EventSWUpdate
 import javax.inject.Inject
 
-class SWPlugin(injector: HasAndroidInjector, val definition: SWDefinition) : SWItem(injector, Type.PLUGIN) {
+class SWPlugin(injector: HasAndroidInjector, private val definition: SWDefinition) : SWItem(injector, Type.PLUGIN) {
 
     @Inject lateinit var pluginStore: PluginStore
     @Inject lateinit var configBuilderPlugin: ConfigBuilderPlugin

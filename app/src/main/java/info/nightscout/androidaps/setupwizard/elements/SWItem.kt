@@ -31,8 +31,9 @@ open class SWItem(val injector: HasAndroidInjector, var type: Type) {
         injector.androidInjector().inject(this)
     }
 
+    @Suppress("unused")
     enum class Type {
-        NONE, TEXT, HTML_LINK, BREAK, LISTENER, URL, STRING, NUMBER, DECIMAL_NUMBER, RADIOBUTTON, PLUGIN, BUTTON, FRAGMENT, UNIT_NUMBER
+        NONE, TEXT, HTML_LINK, BREAK, LISTENER, URL, STRING, NUMBER, DECIMAL_NUMBER, RADIOBUTTON, PLUGIN, BUTTON, FRAGMENT, UNIT_NUMBER, PREFERENCE
     }
 
     var label: Int? = null
