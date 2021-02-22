@@ -149,7 +149,7 @@ class TempTargetDialog : DialogFragmentWithDate() {
     override fun submit(): Boolean {
         if (_binding == null) return false
         val actions: LinkedList<String> = LinkedList()
-        val reason = binding.reason.selectedItem?.toString() ?: return false
+        var reason = binding.reason.selectedItem?.toString() ?: return false
         val unitResId = if (profileFunction.getUnits() == Constants.MGDL) R.string.mgdl else R.string.mmol
         val target = binding.temptarget.value
         val duration = binding.duration.value.toInt()
@@ -159,13 +159,20 @@ class TempTargetDialog : DialogFragmentWithDate() {
             actions.add(resourceHelper.gs(R.string.duration) + ": " + resourceHelper.gs(R.string.format_mins, duration))
         } else {
             actions.add(resourceHelper.gs(R.string.stoptemptarget))
+            reason = resourceHelper.gs(R.string.stoptemptarget)
         }
         if (eventTimeChanged)
             actions.add(resourceHelper.gs(R.string.time) + ": " + dateUtil.dateAndTimeString(eventTime))
 
         activity?.let { activity ->
             OKDialog.showConfirmation(activity, resourceHelper.gs(R.string.careportal_temporarytarget), HtmlHelper.fromHtml(Joiner.on("<br/>").join(actions)), {
-                uel.log(UserEntry.Action.TT, d1 = target, i1 = duration)
+                when(reason) {
+                    resourceHelper.gs(R.string.eatingsoon) -> uel.log(UserEntry.Action.TT_EATING_SOON, d1 = target, i1 = duration)
+                    resourceHelper.gs(R.string.activity) -> uel.log(UserEntry.Action.TT_ACTIVITY, d1 = target, i1 = duration)
+                    resourceHelper.gs(R.string.hypo) -> uel.log(UserEntry.Action.TT_HYPO, d1 = target, i1 = duration)
+                    resourceHelper.gs(R.string.manual) -> uel.log(UserEntry.Action.TT, d1 = target, i1 = duration)
+                    resourceHelper.gs(R.string.stoptemptarget) -> uel.log(UserEntry.Action.CANCEL_TT)
+                }
                 if (target == 0.0 || duration == 0) {
                     val tempTarget = TempTarget()
                         .date(eventTime)
