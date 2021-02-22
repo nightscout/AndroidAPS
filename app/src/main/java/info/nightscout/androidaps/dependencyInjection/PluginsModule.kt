@@ -160,7 +160,7 @@ abstract class PluginsModule {
     @PumpDriver
     @IntoMap
     @IntKey(155)
-    abstract fun bindOmnipodPumpPlugin(plugin: OmnipodErosPumpPlugin): PluginBase
+    abstract fun bindOmnipodErosPumpPlugin(plugin: OmnipodErosPumpPlugin): PluginBase
 
     @Binds
     @NotNSClient
