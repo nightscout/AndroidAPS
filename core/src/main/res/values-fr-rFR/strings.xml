@@ -39,7 +39,7 @@
     <string name="stop">Arrêt</string>
     <string name="carbs">Glucides</string>
     <string name="invalidprofile">Profil incorrect !!!</string>
-    <string name="noprofileset">PAS DE PROFIL DÉFINI</string>
+    <string name="noprofileset">PAS DE PROFIL SELECTIONNÉ</string>
     <string name="date"> Date</string>
     <string name="units_label">Unités</string>
     <string name="dia_label">DAI</string>
@@ -69,6 +69,17 @@
     <string name="pairing">Appairage</string>
     <string name="yes">Oui</string>
     <string name="no">Non</string>
+    <string name="loopdisabled">BOUCLE DÉSACTIVÉE PAR RESTRICTIONS</string>
+    <string name="bolusdelivered">Bolus de %1$.2f U délivré avec succès</string>
+    <string name="virtualpump_resultok">OK</string>
+    <string name="novalidbasalrate">Aucun débit basal valide lu depuis la pompe</string>
+    <string name="limitingmaxiob">Limiter l’IA max %1$.1f U en raison de %2$s</string>
+    <string name="unsafeusage">utilisation dangereuse</string>
+    <string name="pump_unreachable">Pompe hors de portée</string>
+    <string name="extended_bolus">Bolus étendu</string>
+    <string name="pump_time_updated">Mise à jour de l\'heure de la pompe</string>
+    <string name="exit">Quitter</string>
+    <string name="serial_number">Numéro de série</string>
     <!--    Constraints-->
     <string name="limitingbasalratio">Limiter le débit de basal max à %1$.2f U/h à cause de %2$s</string>
     <string name="pumplimit">Limite de la pompe</string>
