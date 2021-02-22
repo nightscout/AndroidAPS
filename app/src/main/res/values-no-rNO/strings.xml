@@ -1029,4 +1029,8 @@
     <string name="cannula">Kanyle</string>
     <string name="userentry">Bruker registrering</string>
     <string name="common_values">Bruk verdiene for det største måltidet du normalt spiser\n</string>
+    <string name="summary_email_for_crash_report">Denne e-postadressen vedlegges krasjrapporter slik at vi kan kontakte deg i akutte tilfeller. Det er valgfritt.</string>
+    <string name="email_address">E-postadresse</string>
+    <string name="privacy_settings">Personverninnstillinger</string>
+    <string name="privacy_summary">Du kan oppgi valgfri e-postadresse hvis du ønsker å bli varslet om krasj. Dette er ikke en automatisert tjeneste. Du vil bli kontaktet av utviklere ved farlige hendelser.</string>
 </resources>
