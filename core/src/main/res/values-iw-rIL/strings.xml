@@ -69,6 +69,17 @@
     <string name="pairing">מצמד</string>
     <string name="yes">כן</string>
     <string name="no">לא</string>
+    <string name="loopdisabled">הלולאה הופסקה עקב המגבלות שבתוקף</string>
+    <string name="bolusdelivered">בולוס %1$.2f יח\' ניתן בהצלחה</string>
+    <string name="virtualpump_resultok">אישור</string>
+    <string name="novalidbasalrate">לא התקבל מינון בזאלי תקף מהמשאבה</string>
+    <string name="limitingmaxiob">הגבלת מקסימום אינסולין פעיל ל-%1$.1f יח\' בגלל %2$s</string>
+    <string name="unsafeusage">שימוש לא בטוח</string>
+    <string name="pump_unreachable">המשאבה אינה זמינה</string>
+    <string name="extended_bolus">בולוס ממושך</string>
+    <string name="pump_time_updated">שעון המשאבה עודכן</string>
+    <string name="exit">יציאה</string>
+    <string name="serial_number">מספר סידורי</string>
     <!--    Constraints-->
     <string name="limitingbasalratio">מגביל את הקצב הבזאלי המרבי ל-%1$.2f יח\' לשעה בגלל %2$s</string>
     <string name="pumplimit">מגבלת משאבה</string>
