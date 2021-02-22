@@ -14,7 +14,7 @@ class Converters {
     fun fromAction(action: UserEntry.Action?) = action?.name
 
     @TypeConverter
-    fun toAction(action: String?) = action?.let { UserEntry.Action.valueOf(it) }
+    fun toAction(action: String?) = action?.let { UserEntry.Action.fromString(it) }
 
     @TypeConverter
     fun fromBolusType(bolusType: Bolus.Type?) = bolusType?.name
