@@ -69,6 +69,17 @@
     <string name="pairing">Kobler sammen</string>
     <string name="yes">Ja</string>
     <string name="no">Nei</string>
+    <string name="loopdisabled">LOOP DEAKTIVERT PGA BEGRENSNINGER</string>
+    <string name="bolusdelivered">Bolus %1$.2f E er levert vellykket</string>
+    <string name="virtualpump_resultok">OK</string>
+    <string name="novalidbasalrate">Ingen gyldige basal doser ble lest fra pumpen</string>
+    <string name="limitingmaxiob">Begrenser maks IOB til %1$.1f E på grunn av %2$s</string>
+    <string name="unsafeusage">usikker bruk</string>
+    <string name="pump_unreachable">Pumpe er utilgjengelig</string>
+    <string name="extended_bolus">Forlenget bolus</string>
+    <string name="pump_time_updated">Pumpens tid er oppdatert</string>
+    <string name="exit">Avslutt</string>
+    <string name="serial_number">Serienummer</string>
     <!--    Constraints-->
     <string name="limitingbasalratio">Begrenser maks basal dose til %1$.2f E/t på grunn av %2$s</string>
     <string name="pumplimit">pumpebegrensning</string>
