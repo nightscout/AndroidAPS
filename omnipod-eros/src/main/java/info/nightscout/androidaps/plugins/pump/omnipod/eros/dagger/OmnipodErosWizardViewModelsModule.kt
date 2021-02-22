@@ -26,7 +26,7 @@ import info.nightscout.androidaps.plugins.pump.omnipod.eros.ui.wizard.deactivati
 
 @Module
 @Suppress("unused")
-abstract class OmnipodErosWizardModule {
+abstract class OmnipodErosWizardViewModelsModule {
     // #### VIEW MODELS ############################################################################
 
     // POD ACTIVATION

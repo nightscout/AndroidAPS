@@ -3,8 +3,9 @@ package info.nightscout.androidaps.plugins.pump.omnipod.eros.ui.wizard.deactivat
 import androidx.annotation.StringRes
 import info.nightscout.androidaps.plugins.pump.omnipod.common.ui.wizard.deactivation.viewmodel.info.PodDiscardedViewModel
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.R
+import javax.inject.Inject
 
-class ErosPodDiscardedViewModel : PodDiscardedViewModel() {
+class ErosPodDiscardedViewModel @Inject constructor() : PodDiscardedViewModel() {
 
     @StringRes
     override fun getTitleId(): Int = R.string.omnipod_common_pod_deactivation_wizard_pod_discarded_title

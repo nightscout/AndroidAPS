@@ -3,8 +3,9 @@ package info.nightscout.androidaps.plugins.pump.omnipod.eros.ui.wizard.activatio
 import androidx.annotation.StringRes
 import info.nightscout.androidaps.plugins.pump.omnipod.common.ui.wizard.activation.viewmodel.info.StartPodActivationViewModel
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.R
+import javax.inject.Inject
 
-class ErosStartPodActivationViewModel : StartPodActivationViewModel() {
+class ErosStartPodActivationViewModel @Inject constructor() : StartPodActivationViewModel() {
 
     @StringRes
     override fun getTitleId(): Int = R.string.omnipod_common_pod_activation_wizard_start_pod_activation_title

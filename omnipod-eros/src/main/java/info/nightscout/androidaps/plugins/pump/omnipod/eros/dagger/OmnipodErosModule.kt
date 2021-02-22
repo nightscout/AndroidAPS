@@ -4,6 +4,7 @@ import dagger.Module
 import dagger.Provides
 import dagger.android.ContributesAndroidInjector
 import info.nightscout.androidaps.plugins.pump.omnipod.common.dagger.ActivityScope
+import info.nightscout.androidaps.plugins.pump.omnipod.common.dagger.OmnipodWizardModule
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.data.RLHistoryItemOmnipod
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.driver.manager.PodStateManager
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.manager.AapsErosPodStateManager
@@ -19,11 +20,11 @@ abstract class OmnipodErosModule {
 
     // ACTIVITIES
     @ActivityScope
-    @ContributesAndroidInjector(modules = [OmnipodErosWizardModule::class])
+    @ContributesAndroidInjector(modules = [OmnipodWizardModule::class, OmnipodErosWizardViewModelsModule::class])
     abstract fun contributesActivationWizardActivity(): ErosPodActivationWizardActivity
 
     @ActivityScope
-    @ContributesAndroidInjector(modules = [OmnipodErosWizardModule::class])
+    @ContributesAndroidInjector(modules = [OmnipodWizardModule::class, OmnipodErosWizardViewModelsModule::class])
     abstract fun contributesDeactivationWizardActivity(): ErosPodDeactivationWizardActivity
 
     @ContributesAndroidInjector
