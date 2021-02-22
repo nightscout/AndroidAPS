@@ -49,7 +49,7 @@ class ActionStartTempTarget(injector: HasAndroidInjector) : Action(injector) {
         val unitResId = if (value.units == Constants.MGDL) R.string.mgdl else R.string.mmol
         LayoutBuilder()
             .add(LabelWithElement(injector, resourceHelper.gs(R.string.careportal_temporarytarget) + "\n[" + resourceHelper.gs(unitResId) + "]", "", value))
-            .add(LabelWithElement(injector, resourceHelper.gs(R.string.careportal_newnstreatment_duration_min_label), "", duration))
+            .add(LabelWithElement(injector, resourceHelper.gs(R.string.duration_min_label), "", duration))
             .build(root)
     }
 

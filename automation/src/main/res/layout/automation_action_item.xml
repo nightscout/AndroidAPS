@@ -19,7 +19,7 @@
         android:layout_alignParentEnd="true"
         android:layout_alignParentTop="true"
         android:layout_alignParentBottom="true"
-        android:contentDescription="@string/overview_quickwizard_item_remove_button" />
+        android:contentDescription="@string/remove_button" />
 
     <LinearLayout
         android:id="@+id/automation_layoutText"

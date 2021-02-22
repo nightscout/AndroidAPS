@@ -44,7 +44,7 @@ class ActionProfileSwitchPercent(injector: HasAndroidInjector) : Action(injector
     override fun generateDialog(root: LinearLayout) {
         LayoutBuilder()
             .add(LabelWithElement(injector, resourceHelper.gs(R.string.percent_u), "", pct))
-            .add(LabelWithElement(injector, resourceHelper.gs(R.string.careportal_newnstreatment_duration_min_label), "", duration))
+            .add(LabelWithElement(injector, resourceHelper.gs(R.string.duration_min_label), "", duration))
             .build(root)
     }
 

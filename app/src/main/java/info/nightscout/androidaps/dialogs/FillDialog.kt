@@ -117,7 +117,7 @@ class FillDialog : DialogFragmentWithDate() {
             actions.add(resourceHelper.gs(R.string.record_insulin_cartridge_change).formatColor(resourceHelper, R.color.actionsConfirm))
         val notes = binding.notesLayout.notes.text.toString()
         if (notes.isNotEmpty())
-            actions.add(resourceHelper.gs(R.string.careportal_newnstreatment_notes_label) + ": " + notes)
+            actions.add(resourceHelper.gs(R.string.notes_label) + ": " + notes)
         eventTime -= eventTime % 1000
 
         if (eventTimeChanged)

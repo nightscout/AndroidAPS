@@ -115,13 +115,13 @@
     <string name="exit">Exit</string>
     <string name="serial_number">Serial number</string>
     <string name="removerecord">Remove record</string>
-    <string name="smscommunicator_loopisdisabled">Loop is disabled</string>
+    <string name="loopisdisabled">Loop is disabled</string>
     <string name="alarm">Alarm</string>
     <string name="disableloop">Disable loop</string>
     <string name="enableloop">Enable loop</string>
     <string name="resumeloop">Resume loop</string>
     <string name="suspendloop">Suspend loop</string>
-    <string name="careportal_newnstreatment_duration_min_label">Duration [min]</string>
+    <string name="duration_min_label">Duration [min]</string>
     <string name="notification">Notification</string>
     <string name="noprofile">No profile loaded from NS yet</string>
     <string name="exists">exists</string>
@@ -134,8 +134,8 @@
     <string name="ns_wifi_ssids">WiFi SSID</string>
     <string name="loading">Loading …</string>
     <string name="event_time_label">Event time</string>
-    <string name="careportal_newnstreatment_notes_label">Notes</string>
-    <string name="overview_quickwizard_item_remove_button">Remove</string>
+    <string name="notes_label">Notes</string>
+    <string name="remove_button">Remove</string>
     <string name="addnew">Add new</string>
 
     <!--    Constraints-->

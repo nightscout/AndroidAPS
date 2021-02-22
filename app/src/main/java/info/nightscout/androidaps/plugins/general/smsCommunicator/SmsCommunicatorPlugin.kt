@@ -350,7 +350,7 @@ class SmsCommunicatorPlugin @Inject constructor(
                         }
                     })
                 } else
-                    sendSMS(Sms(receivedSms.phoneNumber, resourceHelper.gs(R.string.smscommunicator_loopisdisabled)))
+                    sendSMS(Sms(receivedSms.phoneNumber, resourceHelper.gs(R.string.loopisdisabled)))
                 receivedSms.processed = true
             }
 
@@ -377,7 +377,7 @@ class SmsCommunicatorPlugin @Inject constructor(
                     if (loopPlugin.isSuspended) String.format(resourceHelper.gs(R.string.loopsuspendedfor), loopPlugin.minutesToEndOfSuspend())
                     else resourceHelper.gs(R.string.smscommunicator_loopisenabled)
                 } else
-                    resourceHelper.gs(R.string.smscommunicator_loopisdisabled)
+                    resourceHelper.gs(R.string.loopisdisabled)
                 sendSMS(Sms(receivedSms.phoneNumber, reply))
                 receivedSms.processed = true
             }
