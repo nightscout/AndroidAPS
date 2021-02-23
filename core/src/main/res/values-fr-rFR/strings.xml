@@ -82,6 +82,7 @@
     <string name="serial_number">Numéro de série</string>
     <string name="removerecord">Supprimer l\'enregistrement</string>
     <string name="loopisdisabled">La Boucle est désactivée</string>
+    <string name="alarm">Alarme</string>
     <string name="disableloop">Désactiver la Boucle</string>
     <string name="enableloop">Activer la Boucle</string>
     <string name="resumeloop">Reprendre la boucle</string>
