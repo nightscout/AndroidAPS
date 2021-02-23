@@ -126,17 +126,18 @@ class TempTargetDialog : DialogFragmentWithDate() {
                 binding.duration.value = defaultValueHelper.determineEatingSoonTTDuration().toDouble()
                 binding.reason.setSelection(reasonList.indexOf(resourceHelper.gs(R.string.eatingsoon)))
             }
-
             R.id.activity -> {
                 binding.temptarget.value = defaultValueHelper.determineActivityTT()
                 binding.duration.value = defaultValueHelper.determineActivityTTDuration().toDouble()
                 binding.reason.setSelection(reasonList.indexOf(resourceHelper.gs(R.string.activity)))
             }
-
             R.id.hypo -> {
                 binding.temptarget.value = defaultValueHelper.determineHypoTT()
                 binding.duration.value = defaultValueHelper.determineHypoTTDuration().toDouble()
                 binding.reason.setSelection(reasonList.indexOf(resourceHelper.gs(R.string.hypo)))
+            }
+            R.id.cancel -> {
+                binding.duration.value = 0.0
             }
         }
     }
