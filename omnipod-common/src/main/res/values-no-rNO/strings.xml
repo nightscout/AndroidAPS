@@ -22,6 +22,16 @@
     <string name="omnipod_common_error_failed_to_refresh_status">Feilet i å oppdatere status</string>
     <string name="omnipod_common_error_failed_to_refresh_status_on_startup">Feilet i å oppdatere status ved oppstart</string>
     <string name="omnipod_common_error_failed_to_silence_alerts">Feilet i å bekrefte varsler</string>
+    <string name="omnipod_common_error_failed_to_suspend_delivery">Feilet i å stoppe insulinleveranser</string>
+    <string name="omnipod_common_error_failed_to_set_time">Feilet i å angi tid</string>
+    <string name="omnipod_common_error_failed_to_resume_delivery">Feilet i å gjenoppta leveransen</string>
+    <string name="omnipod_common_error_failed_to_initialize_pod">Feilet i å initialisere Pod</string>
+    <string name="omnipod_common_error_failed_to_insert_cannula">Feilet ved innsetting av kanyle</string>
+    <string name="omnipod_common_error_pod_fault_activation_time_exceeded">Pod\'ens aktiveringstid er overskredet. Denne Pod kan ikke lenger aktiveres.</string>
+    <string name="omnipod_common_error_failed_to_verify_activation_progress">Klarte ikke å verifisere fremdrift i aktiveringen. Prøv på nytt.</string>
+    <string name="omnipod_common_error_pod_suspended">Pod er pauset</string>
+    <string name="omnipod_common_error_failed_to_play_test_beep">Feilet i avspilling av test lyd</string>
+    <string name="omnipod_common_error_time_out_of_sync">Tid på Pod er ikke synkronisert. Vennligst oppdater tiden i Omnipod fanen.</string>
     <!-- Omnipod - Confirmation -->
     <!-- Omnipod - Overview -->
     <!-- Omnipod - Wizard Base -->
