@@ -32,16 +32,82 @@
     <string name="omnipod_common_error_pod_suspended">Pod er pauset</string>
     <string name="omnipod_common_error_failed_to_play_test_beep">Feilet i avspilling av test lyd</string>
     <string name="omnipod_common_error_time_out_of_sync">Tid på Pod er ikke synkronisert. Vennligst oppdater tiden i Omnipod fanen.</string>
+    <string name="omnipod_common_error_unexpected_exception">En uventet feil oppstod. Vennligst rapporter! (%1$s: %2$s).</string>
     <!-- Omnipod - Confirmation -->
+    <string name="omnipod_common_confirmation">Bekreftelse</string>
+    <string name="omnipod_common_confirmation_time_or_timezone_change">Tid og/eller tidssone endret på Pod.</string>
+    <string name="omnipod_common_confirmation_expiration_alerts_updated">Varselinnstillinger har blitt oppdatert på Pod.</string>
+    <string name="omnipod_common_confirmation_time_on_pod_updated">Tiden på Pod har blitt oppdatert.</string>
+    <string name="omnipod_common_confirmation_suspended_delivery">All insulintilførsel har blitt pauset.</string>
+    <string name="omnipod_common_confirmation_silenced_alerts">Aktive varsler har blitt bekreftet.</string>
+    <string name="omnipod_common_confirmation_delivery_resumed">Insulintilførselen er gjenopptatt.</string>
     <!-- Omnipod - Overview -->
+    <string name="omnipod_common_overview_button_set_time">Angi tid</string>
+    <string name="omnipod_common_overview_button_resume_delivery">Gjenoppta levering</string>
+    <string name="omnipod_common_overview_button_pod_management">Pod administrasjon</string>
+    <string name="omnipod_common_overview_button_silence_alerts">Demp varsler</string>
+    <string name="omnipod_common_overview_pod_status">Pod status</string>
+    <string name="omnipod_common_overview_total_delivered">Totalt levert</string>
+    <string name="omnipod_common_overview_total_delivered_value">%1$.2f E</string>
+    <string name="omnipod_common_overview_pod_unique_id">Unik ID</string>
     <!-- Omnipod - Wizard Base -->
     <!-- Omnipod - Pod Activation Wizard -->
     <!-- Omnipod - Pod Deactivation Wizard -->
     <!-- Omnipod - Preferences -->
+    <string name="omnipod_common_preferences_expiration_reminder_hours_before_shutdown">Timer før nedstenging</string>
+    <string name="omnipod_common_preferences_low_reservoir_alert_enabled">Varsel om lavt reservoar aktivert</string>
+    <string name="omnipod_common_preferences_low_reservoir_alert_units">Antall enheter</string>
+    <string name="omnipod_common_preferences_automatically_silence_alerts">Automatisk demp Pod varsler</string>
+    <string name="omnipod_common_preferences_category_other">Annet</string>
+    <string name="omnipod_common_preferences_category_alerts">Varsler</string>
+    <string name="omnipod_common_preferences_category_confirmation_beeps">Bekreftelse lyd</string>
     <!-- Omnipod - Pod Status -->
+    <string name="omnipod_common_pod_status_no_active_pod">Ingen aktiv Pod</string>
+    <string name="omnipod_common_pod_status_waiting_for_activation">Oppsett pågår (venter på Pod aktivering)</string>
+    <string name="omnipod_common_pod_status_waiting_for_cannula_insertion">Oppsett pågår (venter på innsetting av kanyle)</string>
+    <string name="omnipod_common_pod_status_running">Kjører</string>
+    <string name="omnipod_common_pod_status_suspended">Pauset</string>
+    <string name="omnipod_common_pod_status_pod_fault">Pod feil</string>
+    <string name="omnipod_common_pod_status_activation_time_exceeded">Aktiveringstiden er overskredet</string>
+    <string name="omnipod_common_pod_status_inactive">Inaktiv</string>
+    <string name="omnipod_common_pod_status_pod_fault_description">Pod feil: %1$03d %2$s</string>
     <!-- Omnipod - Commands -->
+    <string name="omnipod_common_cmd_deactivate_pod">Deaktiver Pod</string>
+    <string name="omnipod_common_cmd_discard_pod">Forkast Pod</string>
+    <string name="omnipod_common_cmd_set_bolus">Angi Bolus</string>
+    <string name="omnipod_common_cmd_cancel_bolus">Avbryt bolus</string>
+    <string name="omnipod_common_cmd_set_tbr">Angi Temp Basal</string>
+    <string name="omnipod_common_cmd_cancel_tbr_by_driver">Avbryt temp basal (internt av driver)</string>
+    <string name="omnipod_common_cmd_cancel_tbr">Avbryt temp basal</string>
+    <string name="omnipod_common_cmd_set_basal_schedule">Angi basal program</string>
+    <string name="omnipod_common_cmd_get_pod_status">Les Pod status</string>
+    <string name="omnipod_common_cmd_get_pod_info">Les Pod info</string>
+    <string name="omnipod_common_cmd_set_time">Angi tid</string>
+    <string name="omnipod_common_cmd_configure_alerts">Konfigurer varsler</string>
+    <string name="omnipod_common_cmd_silence_alerts">Demp varsler</string>
+    <string name="omnipod_common_cmd_suspend_delivery">Pause levering</string>
+    <string name="omnipod_common_cmd_resume_delivery">Gjenoppta levering</string>
+    <string name="omnipod_common_cmd_unknown_entry">Ukjent inntasting</string>
+    <string name="omnipod_common_cmd_initialize_pod">Initialiser Pod</string>
+    <string name="omnipod_common_cmd_insert_cannula">Sett inn kanyle</string>
+    <string name="omnipod_common_cmd_read_pulse_log">Les Pulslogg</string>
+    <string name="omnipod_common_cmd_set_fake_suspended_tbr">Angi vilkårlig midlertidig basal fordi Pod er pauset</string>
+    <string name="omnipod_common_cmd_cancel_fake_suspended_tbr">Avbryt vilkårlig midlertidig basal som er opprettet fordi Pod var pauset</string>
+    <string name="omnipod_common_cmd_split_tbr">Del midlertidig basal fordi en uavklart feil ble oppdaget ved kanselleringen</string>
+    <string name="omnipod_common_cmd_beep_config">Oppsett lyd</string>
+    <string name="omnipod_common_cmd_play_test_beep">Avspill testlyd</string>
     <!-- Omnipod - Alerts -->
+    <string name="omnipod_common_alert_finish_pairing_reminder">Fullfør parringspåminnelse</string>
+    <string name="omnipod_common_alert_finish_setup_reminder_reminder">Påminnelse om å fullføre oppsett</string>
+    <string name="omnipod_common_alert_expiration">Pod utløper snart</string>
+    <string name="omnipod_common_alert_expiration_advisory">Pod utløper snart</string>
+    <string name="omnipod_common_alert_shutdown_imminent">Pod vil straks bli avsluttet</string>
+    <string name="omnipod_common_alert_low_reservoir">Lavt reservoar</string>
+    <string name="omnipod_common_alert_unknown_alert">Ukjent varsel</string>
     <!-- Omnipod - Short status -->
+    <string name="omnipod_common_short_status_no_active_pod">Ingen aktiv Pod</string>
+    <string name="omnipod_common_short_status_last_connection">Siste tilkobling: %1$d min siden</string>
+    <string name="omnipod_common_short_status_last_bolus">Siste bolus: %1$s @ %2$s</string>
     <!-- Omnipod - Other -->
     <!-- Omnipod - Times -->
 </resources>
