@@ -1,15 +1,21 @@
 package info.nightscout.androidaps.plugins.pump.omnipod.dash.ui.wizard.activation.viewmodel.action
 
+import android.os.AsyncTask
 import androidx.annotation.StringRes
+import androidx.lifecycle.viewModelScope
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.data.PumpEnactResult
 import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.logging.LTag
 import info.nightscout.androidaps.plugins.pump.omnipod.common.ui.wizard.activation.viewmodel.action.InitializePodViewModel
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.R
+import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.BleManager
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
-class DashInitializePodViewModel @Inject constructor(private val aapsLogger: AAPSLogger, private val injector: HasAndroidInjector) : InitializePodViewModel() {
+class DashInitializePodViewModel @Inject constructor(private val aapsLogger: AAPSLogger,
+                                                     private val injector: HasAndroidInjector,
+                                                     private val bleManager: BleManager) : InitializePodViewModel() {
 
     override fun isPodInAlarm(): Boolean = false // TODO
 
@@ -19,7 +25,14 @@ class DashInitializePodViewModel @Inject constructor(private val aapsLogger: AAP
 
     override fun doExecuteAction(): PumpEnactResult {
         // TODO FIRST STEP OF ACTIVATION
-        aapsLogger.debug(LTag.PUMP, "started activation part 1")
+        AsyncTask.execute {
+            try {
+                bleManager.activateNewPod()
+            } catch (e: Exception) {
+                aapsLogger.error(LTag.PUMP, "TEST ACTIVATE Exception" + e.toString())
+            }
+        }
+
         return PumpEnactResult(injector).success(false).comment("not implemented")
     }
 

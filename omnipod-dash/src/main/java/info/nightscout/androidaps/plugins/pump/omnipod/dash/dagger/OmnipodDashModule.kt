@@ -4,6 +4,7 @@ import dagger.Module
 import dagger.android.ContributesAndroidInjector
 import info.nightscout.androidaps.plugins.pump.omnipod.common.dagger.ActivityScope
 import info.nightscout.androidaps.plugins.pump.omnipod.common.dagger.OmnipodWizardModule
+import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.BleManager
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.ui.DashPodManagementActivity
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.ui.OmnipodDashOverviewFragment
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.ui.wizard.activation.DashPodActivationWizardActivity
@@ -30,4 +31,6 @@ abstract class OmnipodDashModule {
     @ContributesAndroidInjector
     abstract fun contributesOmnipodDashOverviewFragment(): OmnipodDashOverviewFragment
 
+    @ContributesAndroidInjector
+    abstract fun contributesBleManager(): BleManager
 }
