@@ -82,7 +82,7 @@ import info.nightscout.androidaps.plugins.pump.omnipod.eros.driver.definition.Al
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.driver.definition.AlertSet;
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.driver.definition.BeepConfigType;
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.driver.definition.OmnipodConstants;
-import info.nightscout.androidaps.plugins.pump.omnipod.eros.driver.manager.PodStateManager;
+import info.nightscout.androidaps.plugins.pump.omnipod.eros.driver.manager.ErosPodStateManager;
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.driver.util.TimeUtil;
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.event.EventOmnipodErosActiveAlertsChanged;
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.event.EventOmnipodErosFaultEventChanged;
@@ -122,7 +122,7 @@ public class OmnipodErosPumpPlugin extends PumpPluginBase implements PumpInterfa
     public static final int STARTUP_STATUS_REQUEST_TRIES = 2;
     public static final double RESERVOIR_OVER_50_UNITS_DEFAULT = 75.0;
 
-    private final PodStateManager podStateManager;
+    private final ErosPodStateManager podStateManager;
     private final RileyLinkServiceData rileyLinkServiceData;
     private final AapsOmnipodErosManager aapsOmnipodErosManager;
     private final AapsOmnipodUtil aapsOmnipodUtil;
@@ -167,7 +167,7 @@ public class OmnipodErosPumpPlugin extends PumpPluginBase implements PumpInterfa
             ResourceHelper resourceHelper,
             ActivePluginProvider activePlugin,
             SP sp,
-            PodStateManager podStateManager,
+            ErosPodStateManager podStateManager,
             AapsOmnipodErosManager aapsOmnipodErosManager,
             CommandQueueProvider commandQueue,
             FabricPrivacy fabricPrivacy,

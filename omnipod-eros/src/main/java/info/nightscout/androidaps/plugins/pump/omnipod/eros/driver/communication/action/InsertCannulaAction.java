@@ -11,17 +11,17 @@ import info.nightscout.androidaps.plugins.pump.omnipod.eros.driver.definition.Al
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.driver.definition.OmnipodConstants;
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.driver.definition.schedule.BasalSchedule;
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.driver.exception.IllegalActivationProgressException;
-import info.nightscout.androidaps.plugins.pump.omnipod.eros.driver.manager.PodStateManager;
+import info.nightscout.androidaps.plugins.pump.omnipod.eros.driver.manager.ErosPodStateManager;
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.rileylink.manager.OmnipodRileyLinkCommunicationManager;
 
 public class InsertCannulaAction implements OmnipodAction<Void> {
 
-    private final PodStateManager podStateManager;
+    private final ErosPodStateManager podStateManager;
     private final BasalSchedule initialBasalSchedule;
     private final Duration expirationReminderTimeBeforeShutdown;
     private final Integer lowReservoirAlertUnits;
 
-    public InsertCannulaAction(PodStateManager podStateManager, BasalSchedule initialBasalSchedule,
+    public InsertCannulaAction(ErosPodStateManager podStateManager, BasalSchedule initialBasalSchedule,
                                Duration expirationReminderTimeBeforeShutdown, Integer lowReservoirAlertUnits) {
         if (podStateManager == null) {
             throw new IllegalArgumentException("Pod state manager cannot be null");

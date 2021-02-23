@@ -1,5 +1,6 @@
 package info.nightscout.androidaps.plugins.pump.omnipod.dash.ui
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -31,4 +32,12 @@ class OmnipodDashOverviewFragment : DaggerFragment() {
             _bluetoothStatusBinding = OmnipodDashOverviewBluetoothStatusBinding.bind(it.root)
             _binding = it
         }.root
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        buttonBinding.buttonPodManagement.setOnClickListener {
+            startActivity(Intent(context, DashPodManagementActivity::class.java))
+        }
+    }
 }

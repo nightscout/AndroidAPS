@@ -38,13 +38,13 @@ import info.nightscout.androidaps.plugins.pump.omnipod.eros.driver.definition.sc
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.driver.util.TimeUtil;
 
 // TODO add nullchecks on some setters
-public abstract class PodStateManager {
+public abstract class ErosPodStateManager {
 
     private final AAPSLogger aapsLogger;
     private final Gson gsonInstance;
     private PodState podState;
 
-    protected PodStateManager(AAPSLogger aapsLogger) {
+    protected ErosPodStateManager(AAPSLogger aapsLogger) {
         this.aapsLogger = aapsLogger;
         this.gsonInstance = createGson();
     }

@@ -35,7 +35,7 @@ import info.nightscout.androidaps.plugins.pump.omnipod.eros.databinding.OmnipodE
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.driver.definition.ActivationProgress
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.driver.definition.OmnipodConstants
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.driver.definition.PodProgressStatus
-import info.nightscout.androidaps.plugins.pump.omnipod.eros.driver.manager.PodStateManager
+import info.nightscout.androidaps.plugins.pump.omnipod.eros.driver.manager.ErosPodStateManager
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.driver.util.TimeUtil
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.event.EventOmnipodErosPumpValuesChanged
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.manager.AapsOmnipodErosManager
@@ -74,7 +74,7 @@ class OmnipodErosOverviewFragment : DaggerFragment() {
     @Inject lateinit var commandQueue: CommandQueueProvider
     @Inject lateinit var activePlugin: ActivePluginProvider
     @Inject lateinit var omnipodErosPumpPlugin: OmnipodErosPumpPlugin
-    @Inject lateinit var podStateManager: PodStateManager
+    @Inject lateinit var podStateManager: ErosPodStateManager
     @Inject lateinit var sp: SP
     @Inject lateinit var omnipodUtil: AapsOmnipodUtil
     @Inject lateinit var omnipodAlertUtil: OmnipodAlertUtil

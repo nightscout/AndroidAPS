@@ -2,6 +2,8 @@ package info.nightscout.androidaps.plugins.pump.omnipod.dash;
 
 import androidx.annotation.Nullable;
 
+import com.google.gson.JsonObject;
+
 import org.jetbrains.annotations.NotNull;
 import org.json.JSONObject;
 
@@ -56,7 +58,7 @@ public class OmnipodDashPumpPlugin extends PumpPluginBase implements PumpInterfa
     }
 
     @Override public boolean isInitialized() {
-        return false;
+        return true;
     }
 
     @Override public boolean isSuspended() {
@@ -64,7 +66,8 @@ public class OmnipodDashPumpPlugin extends PumpPluginBase implements PumpInterfa
     }
 
     @Override public boolean isBusy() {
-        return false;
+        // prevents the queue from executing
+        return true;
     }
 
     @Override public boolean isConnected() {
@@ -100,15 +103,18 @@ public class OmnipodDashPumpPlugin extends PumpPluginBase implements PumpInterfa
     }
 
     @NotNull @Override public PumpEnactResult setNewBasalProfile(@NotNull Profile profile) {
-        return null;
+        // TODO
+        return new PumpEnactResult(getInjector()).success(true).enacted(true);
     }
 
     @Override public boolean isThisProfileSet(@NotNull Profile profile) {
-        return false;
+        // TODO
+        return true;
     }
 
     @Override public long lastDataTime() {
-        return 0;
+        // TODO
+        return System.currentTimeMillis();
     }
 
     @Override public double getBaseBasalRate() {
@@ -152,7 +158,7 @@ public class OmnipodDashPumpPlugin extends PumpPluginBase implements PumpInterfa
     }
 
     @NotNull @Override public JSONObject getJSONStatus(@NotNull Profile profile, @NotNull String profileName, @NotNull String version) {
-        return null;
+        return new JSONObject();
     }
 
     @NotNull @Override public ManufacturerType manufacturer() {
