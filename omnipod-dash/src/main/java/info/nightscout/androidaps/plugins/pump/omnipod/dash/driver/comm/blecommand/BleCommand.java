@@ -2,7 +2,7 @@ package info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.blecomm
 
 import org.jetbrains.annotations.NotNull;
 
-public class BleCommand {
+public abstract class BleCommand {
     private final byte[] data;
 
     public BleCommand(@NotNull BleCommandType type) {
