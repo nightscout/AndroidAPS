@@ -2,7 +2,26 @@
 <resources>
     <!-- Omnipod - Keys -->
     <!-- Omnipod - Pod Management -->
+    <string name="omnipod_common_pod_management_title">Pod administrasjon</string>
+    <string name="omnipod_common_pod_management_heading_actions">Handlinger</string>
+    <string name="omnipod_common_pod_management_heading_tools">Verktøy</string>
+    <string name="omnipod_common_pod_management_button_activate_pod">Aktiver Pod</string>
+    <string name="omnipod_common_pod_management_button_deactivate_pod">Deaktiver Pod</string>
+    <string name="omnipod_common_pod_management_button_discard_pod">Forkast Pod</string>
+    <string name="omnipod_common_pod_management_discard_pod_confirmation">Dersom du forkaster Pod, vil du ikke kunne kommunisere med den lenger. Du skal bare gjøre dette når all kommunikasjon med Pod vedvarende mislykkes. Hvis du fortsatt kan kommunisere med Pod, bruk alternativet <b>Deaktiver Pod</b>.\n\nHvis du ønsker å fortsette, må du huske på å fjerne Pod fra kroppen din!</string>
+    <string name="omnipod_common_pod_management_button_play_test_beep">Avspill testlyd</string>
+    <string name="omnipod_common_pod_management_button_playing_test_beep">Avspiller testlyd…</string>
+    <string name="omnipod_common_pod_management_button_pod_history">Pod historikk</string>
     <!-- Omnipod - Error -->
+    <string name="omnipod_common_error_pod_not_attached">Ingen aktiv Pod</string>
+    <string name="omnipod_common_error_set_basal_failed">Feilet i å lagre basalprofilen.</string>
+    <string name="omnipod_common_error_bolus_did_not_succeed">Bolus var mislykket.</string>
+    <string name="omnipod_common_error_failed_to_set_profile_empty_profile">Feilet i å lagre basal profil: mottok en tom profil. Kontroller at du har aktivert profilen.</string>
+    <string name="omnipod_common_error_set_initial_basal_schedule_no_profile">Ingen basal profil er aktiv. Sørg for å aktivere din basal profil.</string>
+    <string name="omnipod_common_error_unsupported_custom_command">Ukjent kommando: %1$s</string>
+    <string name="omnipod_common_error_failed_to_refresh_status">Feilet i å oppdatere status</string>
+    <string name="omnipod_common_error_failed_to_refresh_status_on_startup">Feilet i å oppdatere status ved oppstart</string>
+    <string name="omnipod_common_error_failed_to_silence_alerts">Feilet i å bekrefte varsler</string>
     <!-- Omnipod - Confirmation -->
     <!-- Omnipod - Overview -->
     <!-- Omnipod - Wizard Base -->
