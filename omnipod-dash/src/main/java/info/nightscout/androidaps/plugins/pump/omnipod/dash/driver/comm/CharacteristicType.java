@@ -4,8 +4,8 @@ import java.math.BigInteger;
 import java.util.UUID;
 
 public enum CharacteristicType {
-    CMD("1a7e-2441-e3ed-4464-8b7e-751e03d0dc5f"),
-    DATA("1a7e-2442-e3ed-4464-8b7e-751e03d0dc5f");
+    CMD("1a7e2441-e3ed-4464-8b7e-751e03d0dc5f"),
+    DATA("1a7e2442-e3ed-4464-8b7e-751e03d0dc5f");
 
     public final String value;
 
@@ -13,7 +13,7 @@ public enum CharacteristicType {
         this.value = value;
     }
 
-    public static CharacteristicType byValue(byte value) {
+    public static CharacteristicType byValue(String value) {
         for (CharacteristicType type : values()) {
             if (type.value.equals(value)) {
                 return type;

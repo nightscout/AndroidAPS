@@ -12,6 +12,7 @@ import java.util.UUID;
 
 import info.nightscout.androidaps.logging.AAPSLogger;
 import info.nightscout.androidaps.logging.LTag;
+import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.callbacks.BleCommCallbacks;
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.exceptions.CharacteristicNotFoundException;
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.exceptions.ServiceNotFoundException;
 
