@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- Omnipod Eros - Description -->
+    <string name="omnipod_eros_pump_description">Integrazione del microinfusore Omnipod Eros (il modello più vecchio con la protezione ago di colore trasparente). Richiede un dispositivo RileyLink con almeno la versione firmware 2.0.</string>
     <!-- Omnipod Eros - Keys -->
     <!-- Omnipod Eros - Overview -->
     <!-- Omnipod Eros - Preferences -->
