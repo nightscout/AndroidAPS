@@ -3,6 +3,7 @@
     <string name="description_pump_combo">Интеграция с помпой Accu-Chek Combo, требует наличия утилиты Ruffy</string>
     <string name="combo_programming_bolus">Помпа программируется для болюса</string>
     <string name="combo_pump_state_label">Состояние</string>
+    <string name="combo_pump_activity_label">Нагрузка</string>
     <string name="combo_no_pump_connection">Нет связи в течение %1$d мин</string>
     <string name="combo_tbr_remaining">%1$d%% (%2$d мин осталось)</string>
     <string name="combo_pump_state_initializing">Инициализация</string>
