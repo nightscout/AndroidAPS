@@ -51,6 +51,8 @@
     <string name="omnipod_common_overview_total_delivered">Totale erogato</string>
     <string name="omnipod_common_overview_total_delivered_value">%1$.2f U</string>
     <string name="omnipod_common_overview_pod_unique_id">ID univoco</string>
+    <string name="omnipod_common_overview_lot_number">Numero LOT</string>
+    <string name="omnipod_common_overview_pod_sequence_number">Numero sequenza</string>
     <string name="omnipod_common_overview_pod_expiry_date">Scadenza pod</string>
     <string name="omnipod_common_overview_last_connection">Ultima connessione</string>
     <string name="omnipod_common_overview_last_bolus">Ultimo bolo</string>
@@ -105,6 +107,7 @@
     <string name="omnipod_common_preferences_expiration_reminder_hours_before_shutdown">Ore prima dell\'arresto</string>
     <string name="omnipod_common_preferences_low_reservoir_alert_enabled">Avviso livello serbatoio basso abilitato</string>
     <string name="omnipod_common_preferences_low_reservoir_alert_units">Numero di unità</string>
+    <string name="omnipod_common_preferences_automatically_silence_alerts">Silenzia automaticamente avvisi pod</string>
     <string name="omnipod_common_preferences_category_other">Altro</string>
     <string name="omnipod_common_preferences_category_alerts">Avvisi</string>
     <string name="omnipod_common_preferences_category_confirmation_beeps">BIP di conferma</string>
