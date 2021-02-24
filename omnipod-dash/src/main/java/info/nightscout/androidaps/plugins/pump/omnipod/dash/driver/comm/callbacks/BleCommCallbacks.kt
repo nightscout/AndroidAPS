@@ -11,21 +11,19 @@ import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.Characte
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.CharacteristicType.Companion.byValue
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.exceptions.CouldNotConfirmDescriptorWriteException
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.exceptions.CouldNotConfirmWrite
-import java.util.*
 import java.util.concurrent.BlockingQueue
 import java.util.concurrent.CountDownLatch
 import java.util.concurrent.LinkedBlockingQueue
 import java.util.concurrent.TimeUnit
 import java.util.concurrent.TimeoutException
 
-class BleCommCallbacks(aapsLogger: AAPSLogger, incomingPackets: Map<CharacteristicType, BlockingQueue<ByteArray>>) : BluetoothGattCallback() {
+class BleCommCallbacks(private val aapsLogger: AAPSLogger, private val incomingPackets: Map<CharacteristicType, BlockingQueue<ByteArray>>) : BluetoothGattCallback() {
 
-    private val serviceDiscoveryComplete: CountDownLatch
-    private val connected: CountDownLatch
-    private val aapsLogger: AAPSLogger
-    private val incomingPackets: Map<CharacteristicType, BlockingQueue<ByteArray>>
-    private val writeQueue: BlockingQueue<CharacteristicWriteConfirmation>
-    private val descriptorWriteQueue: BlockingQueue<DescriptorWriteConfirmation>
+    private val serviceDiscoveryComplete: CountDownLatch = CountDownLatch(1)
+    private val connected: CountDownLatch = CountDownLatch(1)
+    private val writeQueue: BlockingQueue<CharacteristicWriteConfirmation> = LinkedBlockingQueue(1)
+    private val descriptorWriteQueue: BlockingQueue<DescriptorWriteConfirmation> = LinkedBlockingQueue(1)
+
     override fun onConnectionStateChange(gatt: BluetoothGatt, status: Int, newState: Int) {
         super.onConnectionStateChange(gatt, status, newState)
         aapsLogger.debug(LTag.PUMPBTCOMM, "OnConnectionStateChange discovered with status/state$status/$newState")
@@ -42,42 +40,53 @@ class BleCommCallbacks(aapsLogger: AAPSLogger, incomingPackets: Map<Characterist
         }
     }
 
-    @Throws(InterruptedException::class) fun waitForConnection(timeout_ms: Int) {
+    @Throws(InterruptedException::class)
+    fun waitForConnection(timeout_ms: Int) {
         connected.await(timeout_ms.toLong(), TimeUnit.MILLISECONDS)
     }
 
-    @Throws(InterruptedException::class) fun waitForServiceDiscovery(timeout_ms: Int) {
+    @Throws(InterruptedException::class)
+    fun waitForServiceDiscovery(timeout_ms: Int) {
         serviceDiscoveryComplete.await(timeout_ms.toLong(), TimeUnit.MILLISECONDS)
     }
 
     @Throws(InterruptedException::class, TimeoutException::class, CouldNotConfirmWrite::class)
     fun confirmWrite(expectedPayload: ByteArray, timeout_ms: Int) {
-        val received = writeQueue.poll(timeout_ms.toLong(), TimeUnit.MILLISECONDS)
+        val received: CharacteristicWriteConfirmation = writeQueue.poll(timeout_ms.toLong(), TimeUnit.MILLISECONDS)
             ?: throw TimeoutException()
-        if (!Arrays.equals(expectedPayload, received.payload)) {
+
+        when (received) {
+            is CharacteristicWriteConfirmationPayload -> confirmWritePayload(expectedPayload, received)
+            is CharacteristicWriteConfirmationError ->
+                aapsLogger.debug(LTag.PUMPBTCOMM, "Could not confirm write: status was ${received.status}")
+        }
+
+    }
+
+    private fun confirmWritePayload(expectedPayload: ByteArray, received: CharacteristicWriteConfirmationPayload) {
+        if (!expectedPayload.contentEquals(received.payload)) {
             aapsLogger.warn(LTag.PUMPBTCOMM, "Could not confirm write. Got " + received.payload + ".Excepted: " + expectedPayload + ". Status: " + received.status)
-            throw CouldNotConfirmWrite(expectedPayload, received.payload!!)
+            throw CouldNotConfirmWrite(expectedPayload, received.payload)
         }
         aapsLogger.debug(LTag.PUMPBTCOMM, "Confirmed write with value: " + received.payload)
     }
 
     override fun onCharacteristicWrite(gatt: BluetoothGatt, characteristic: BluetoothGattCharacteristic, status: Int) {
         super.onCharacteristicWrite(gatt, characteristic, status)
-        var received: ByteArray? = null
-        if (status == BluetoothGatt.GATT_SUCCESS) {
-            received = characteristic.value
+        val writeConfirmation = if (status == BluetoothGatt.GATT_SUCCESS) {
             aapsLogger.debug(LTag.PUMPBTCOMM, "OnCharacteristicWrite value " + characteristic.getStringValue(0))
+            CharacteristicWriteConfirmationPayload(characteristic.value, status)
+        } else {
+            CharacteristicWriteConfirmationError(status)
         }
         aapsLogger.debug(LTag.PUMPBTCOMM, "OnCharacteristicWrite with status/char/value " +
-            status + "/" +
-            byValue(characteristic.uuid.toString()) + "/" +
-            received)
+            status + "/" + byValue(characteristic.uuid.toString()) + "/" + characteristic.value)
         try {
             if (writeQueue.size > 0) {
                 aapsLogger.warn(LTag.PUMPBTCOMM, "Write confirm queue should be empty. found: " + writeQueue.size)
                 writeQueue.clear()
             }
-            val offered = writeQueue.offer(CharacteristicWriteConfirmation(received, status), WRITE_CONFIRM_TIMEOUT_MS.toLong(), TimeUnit.MILLISECONDS)
+            val offered = writeQueue.offer(writeConfirmation, WRITE_CONFIRM_TIMEOUT_MS.toLong(), TimeUnit.MILLISECONDS)
             if (!offered) {
                 aapsLogger.warn(LTag.PUMPBTCOMM, "Received delayed write confirmation")
             }
@@ -129,14 +138,5 @@ class BleCommCallbacks(aapsLogger: AAPSLogger, incomingPackets: Map<Characterist
     companion object {
 
         private const val WRITE_CONFIRM_TIMEOUT_MS = 10 // the other thread should be waiting for the exchange
-    }
-
-    init {
-        serviceDiscoveryComplete = CountDownLatch(1)
-        connected = CountDownLatch(1)
-        this.aapsLogger = aapsLogger
-        this.incomingPackets = incomingPackets
-        writeQueue = LinkedBlockingQueue(1)
-        descriptorWriteQueue = LinkedBlockingQueue(1)
     }
 }

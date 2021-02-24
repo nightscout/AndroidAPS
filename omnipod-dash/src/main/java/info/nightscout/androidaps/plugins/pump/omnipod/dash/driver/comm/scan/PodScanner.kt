@@ -31,7 +31,7 @@ class PodScanner(private val logger: AAPSLogger, private val bluetoothAdapter: B
         scanner.flushPendingScanResults(scanCollector)
         scanner.stopScan(scanCollector)
         val collected = scanCollector.collect()
-        if (collected.size == 0) {
+        if (collected.isEmpty()) {
             throw ScanFailNotFoundException()
         } else if (collected.size > 1) {
             throw ScanFailFoundTooManyException(collected)

@@ -14,7 +14,7 @@ import java.util.concurrent.TimeoutException
 
 class BleIO(private val aapsLogger: AAPSLogger, private val chars: Map<CharacteristicType, BluetoothGattCharacteristic>, private val incomingPackets: Map<CharacteristicType, BlockingQueue<ByteArray>>, private val gatt: BluetoothGatt, private val bleCommCallbacks: BleCommCallbacks) {
 
-    private var state: IOState
+    private var state: IOState = IOState.IDLE
 
     /***
      *
@@ -29,7 +29,7 @@ class BleIO(private val aapsLogger: AAPSLogger, private val chars: Map<Character
             }
             state = IOState.READING
         }
-        val ret = incomingPackets[characteristic]!!.poll(DEFAULT_IO_TIMEOUT_MS.toLong(), TimeUnit.MILLISECONDS)
+        val ret = incomingPackets[characteristic]?.poll(DEFAULT_IO_TIMEOUT_MS.toLong(), TimeUnit.MILLISECONDS)
             ?: throw TimeoutException()
         synchronized(state) { state = IOState.IDLE }
         return ret
@@ -96,9 +96,5 @@ class BleIO(private val aapsLogger: AAPSLogger, private val chars: Map<Character
     companion object {
 
         private const val DEFAULT_IO_TIMEOUT_MS = 1000
-    }
-
-    init {
-        state = IOState.IDLE
     }
 }

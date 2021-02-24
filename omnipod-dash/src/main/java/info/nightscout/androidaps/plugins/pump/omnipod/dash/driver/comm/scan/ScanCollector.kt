@@ -12,7 +12,7 @@ import java.util.concurrent.ConcurrentHashMap
 class ScanCollector(private val logger: AAPSLogger, private val podID: Long) : ScanCallback() {
 
     // there could be different threads calling the onScanResult callback
-    private val found: ConcurrentHashMap<String, ScanResult>
+    private val found: ConcurrentHashMap<String, ScanResult> = ConcurrentHashMap()
     private var scanFailed = 0
     override fun onScanResult(callbackType: Int, result: ScanResult) {
         // callbackType will be ALL
@@ -31,7 +31,7 @@ class ScanCollector(private val logger: AAPSLogger, private val podID: Long) : S
         if (scanFailed != 0) {
             throw ScanFailException(scanFailed)
         }
-        logger.debug(LTag.PUMPBTCOMM, "ScanCollector looking for podID: " + podID)
+        logger.debug(LTag.PUMPBTCOMM, "ScanCollector looking for podID: $podID")
         for (result in found.values) {
             try {
                 val device = BleDiscoveredDevice(result, podID)
@@ -45,7 +45,4 @@ class ScanCollector(private val logger: AAPSLogger, private val podID: Long) : S
         return Collections.unmodifiableList(ret)
     }
 
-    init {
-        found = ConcurrentHashMap()
-    }
 }

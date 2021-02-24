@@ -22,26 +22,25 @@ class ServiceDiscoverer(private val logger: AAPSLogger, private val gatt: Blueto
         gatt.discoverServices()
         bleCallbacks.waitForServiceDiscovery(DISCOVER_SERVICES_TIMEOUT_MS)
         logger.debug(LTag.PUMPBTCOMM, "Services discovered")
-        val service = gatt.getService(
-            uuidFromString(SERVICE_UUID))
+        val service = gatt.getService(SERVICE_UUID.toUuid())
             ?: throw ServiceNotFoundException(SERVICE_UUID)
         val cmdChar = service.getCharacteristic(CharacteristicType.CMD.uUID)
             ?: throw CharacteristicNotFoundException(CharacteristicType.CMD.value)
-        val dataChar = service.getCharacteristic(CharacteristicType.DATA.uUID)
+        val dataChar = service.getCharacteristic(CharacteristicType.DATA.uUID) // TODO: this is never used
             ?: throw CharacteristicNotFoundException(CharacteristicType.DATA.value)
         var chars = mapOf(CharacteristicType.CMD to cmdChar,
                 CharacteristicType.DATA to dataChar)
         return chars
     }
 
+
+    private fun String.toUuid(): UUID = UUID(
+        BigInteger(replace("-", "").substring(0, 16), 16).toLong(),
+        BigInteger(replace("-", "").substring(16), 16).toLong()
+    )
+
     companion object {
         private const val SERVICE_UUID = "1a7e-4024-e3ed-4464-8b7e-751e03d0dc5f"
         private const val DISCOVER_SERVICES_TIMEOUT_MS = 5000
-        private fun uuidFromString(s: String): UUID {
-            return UUID(
-                BigInteger(s.replace("-", "").substring(0, 16), 16).toLong(),
-                BigInteger(s.replace("-", "").substring(16), 16).toLong()
-            )
-        }
     }
 }

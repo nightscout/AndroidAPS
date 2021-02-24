@@ -5,13 +5,8 @@ enum class BleCommandType(val value: Byte) {
 
     companion object {
 
-        fun byValue(value: Byte): BleCommandType {
-            for (type in values()) {
-                if (type.value == value) {
-                    return type
-                }
-            }
-            throw IllegalArgumentException("Unknown BleCommandType: $value")
-        }
+        fun byValue(value: Byte): BleCommandType =
+            BleCommandType.values().firstOrNull { it.value == value }
+                ?: throw IllegalArgumentException("Unknown BleCommandType: $value")
     }
 }
