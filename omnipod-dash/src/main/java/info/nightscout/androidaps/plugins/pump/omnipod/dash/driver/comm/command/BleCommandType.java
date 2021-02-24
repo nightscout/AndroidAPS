@@ -1,4 +1,4 @@
-package info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.blecommand;
+package info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.command;
 
 public enum BleCommandType {
     RTS((byte) 0x00),
