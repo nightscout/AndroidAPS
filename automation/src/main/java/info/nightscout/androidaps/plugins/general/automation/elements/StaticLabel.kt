@@ -4,8 +4,8 @@ import android.graphics.Typeface
 import android.view.ViewGroup
 import android.widget.LinearLayout
 import android.widget.TextView
+import info.nightscout.androidaps.core.R
 import dagger.android.HasAndroidInjector
-import info.nightscout.androidaps.R
 import info.nightscout.androidaps.plugins.general.automation.triggers.Trigger
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 import javax.inject.Inject

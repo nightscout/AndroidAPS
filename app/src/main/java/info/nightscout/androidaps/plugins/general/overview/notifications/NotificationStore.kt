@@ -163,11 +163,11 @@ class NotificationStore @Inject constructor(
             @Suppress("SetTextI18n")
             holder.binding.text.text = dateUtil.timeString(notification.date) + " " + notification.text
             when (notification.level) {
-                Notification.URGENT -> holder.cv.setBackgroundColor(resourceHelper.getAttributeColor(null,R.attr.notificationUrgent ))
-                Notification.NORMAL -> holder.cv.setBackgroundColor(resourceHelper.getAttributeColor(null,R.attr.notificationNormal ))
-                Notification.LOW -> holder.cv.setBackgroundColor(resourceHelper.getAttributeColor(null,R.attr.notificationLow ))
-                Notification.INFO -> holder.cv.setBackgroundColor(resourceHelper.getAttributeColor(null,R.attr.notificationInfo ))
-                Notification.ANNOUNCEMENT -> holder.cv.setBackgroundColor(resourceHelper.getAttributeColor(null,R.attr.notificationAnnouncement ))
+                Notification.URGENT -> holder.binding.cv.setBackgroundColor(resourceHelper.getAttributeColor(null,R.attr.notificationUrgent ))
+                Notification.NORMAL -> holder.binding.cv.setBackgroundColor(resourceHelper.getAttributeColor(null,R.attr.notificationNormal ))
+                Notification.LOW -> holder.binding.cv.setBackgroundColor(resourceHelper.getAttributeColor(null,R.attr.notificationLow ))
+                Notification.INFO -> holder.binding.cv.setBackgroundColor(resourceHelper.getAttributeColor(null,R.attr.notificationInfo ))
+                Notification.ANNOUNCEMENT -> holder.binding.cv.setBackgroundColor(resourceHelper.getAttributeColor(null,R.attr.notificationAnnouncement ))
             }
         }
 

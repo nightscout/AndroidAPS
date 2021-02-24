@@ -259,17 +259,17 @@ class OmnipodErosOverviewFragment : DaggerFragment() {
             } else {
                 PLACEHOLDER
             }
-            binding.podLot.text = PLACEHOLDER
-            binding.podTid.text = PLACEHOLDER
-            binding.firmwareVersion.text = PLACEHOLDER
-            binding.timeOnPod.text = PLACEHOLDER
-            binding.podExpiryDate.text = PLACEHOLDER
-            binding.podExpiryDate.setTextColor(resourceHelper.getAttributeColor(context, R.attr.statuslightNormal))
-            binding.baseBasalRate.text = PLACEHOLDER
-            binding.totalDelivered.text = PLACEHOLDER
-            binding.reservoir.text = PLACEHOLDER
-            binding.reservoir.setTextColor(resourceHelper.getAttributeColor(context, R.attr.statuslightNormal))
-            binding.podActiveAlerts.text = PLACEHOLDER
+            podInfoBinding.podLot.text = PLACEHOLDER
+            podInfoBinding.podTid.text = PLACEHOLDER
+            podInfoBinding.firmwareVersion.text = PLACEHOLDER
+            podInfoBinding.timeOnPod.text = PLACEHOLDER
+            podInfoBinding.podExpiryDate.text = PLACEHOLDER
+            podInfoBinding.podExpiryDate.setTextColor(resourceHelper.getAttributeColor(context, R.attr.statuslightNormal))
+            podInfoBinding.baseBasalRate.text = PLACEHOLDER
+            podInfoBinding.totalDelivered.text = PLACEHOLDER
+            podInfoBinding.reservoir.text = PLACEHOLDER
+            podInfoBinding.reservoir.setTextColor(resourceHelper.getAttributeColor(context, R.attr.statuslightNormal))
+            podInfoBinding.podActiveAlerts.text = PLACEHOLDER
         } else {
             podInfoBinding.podAddress.text = podStateManager.address.toString()
             podInfoBinding.podLot.text = podStateManager.lot.toString()
@@ -284,8 +284,8 @@ class OmnipodErosOverviewFragment : DaggerFragment() {
             })
             val expiresAt = podStateManager.expiresAt
             if (expiresAt == null) {
-                binding.podExpiryDate.text = PLACEHOLDER
-                binding.podExpiryDate.setTextColor(resourceHelper.getAttributeColor(context, R.attr.statuslightNormal))
+                podInfoBinding.podExpiryDate.text = PLACEHOLDER
+                podInfoBinding.podExpiryDate.setTextColor(resourceHelper.getAttributeColor(context, R.attr.statuslightNormal))
             } else {
                 podInfoBinding.podExpiryDate.text = readableZonedTime(expiresAt)
                 podInfoBinding.podExpiryDate.setTextColor(if (DateTime.now().isAfter(expiresAt)) {
@@ -357,8 +357,8 @@ class OmnipodErosOverviewFragment : DaggerFragment() {
                 }
             podInfoBinding.lastConnection.setTextColor(lastConnectionColor)
         } else {
-            binding.lastConnection.setTextColor(resourceHelper.getAttributeColor(context, R.attr.statuslightNormal))
-            binding.lastConnection.text = if (podStateManager.hasPodState() && podStateManager.lastSuccessfulCommunication != null) {
+            podInfoBinding.lastConnection.setTextColor(resourceHelper.getAttributeColor(context, R.attr.statuslightNormal))
+            podInfoBinding.lastConnection.text = if (podStateManager.hasPodState() && podStateManager.lastSuccessfulCommunication != null) {
                 readableDuration(podStateManager.lastSuccessfulCommunication)
             } else {
                 PLACEHOLDER
@@ -425,8 +425,8 @@ class OmnipodErosOverviewFragment : DaggerFragment() {
             podInfoBinding.lastBolus.setTextColor(textColor)
 
         } else {
-            binding.lastBolus.text = PLACEHOLDER
-            binding.lastBolus.setTextColor(resourceHelper.getAttributeColor(context, R.attr.statuslightNormal))
+            podInfoBinding.lastBolus.text = PLACEHOLDER
+            podInfoBinding.lastBolus.setTextColor(resourceHelper.getAttributeColor(context, R.attr.statuslightNormal))
         }
     }
 
