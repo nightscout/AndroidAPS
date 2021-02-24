@@ -1,2 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources></resources>
+<resources>
+    <string name="error_ip_not_valid">Indirizzo IP non valido</string>
+    <string name="error_url_not_valid">L\'URL non è valido</string>
+    <string name="error_notvalid_personname">Nome o Cognome non valido.</string>
+    <string name="error_notvalid_personfullname">Nome completo non valido.</string>
+    <string name="error_date_not_valid">Formato non valido</string>
+</resources>
