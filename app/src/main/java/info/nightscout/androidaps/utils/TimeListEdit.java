@@ -265,7 +265,7 @@ public class TimeListEdit {
 
     }
 
-    class SpinnerAdapter extends ArrayAdapter<CharSequence> {
+    static class SpinnerAdapter extends ArrayAdapter<CharSequence> {
         List<Integer> values;
 
         SpinnerAdapter(@NonNull Context context, int resource, final @NonNull List<CharSequence> objects, final @NonNull List<Integer> values) {
@@ -370,6 +370,7 @@ public class TimeListEdit {
 
     }
 
+    @SuppressWarnings("SameParameterValue")
     private void addItem(int index, int timeAsSeconds, double value1, double value2) {
         if (itemsCount() >= 24) return;
         if (itemsCount() > inflatedUntil) {

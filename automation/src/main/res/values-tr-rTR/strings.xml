@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="alreadydisabled">Hali hazır iptal edilmiş</string>
+    <string name="suspendloopforXmin">%1$d dak döngüyü duraklat</string>
+    <string name="glucoseisnotavailable">Glikoz verileri mevcut değil</string>
+    <string name="and">Ve</string>
+    <string name="or">Veya</string>
+    <string name="short_avgdelta">Kısa ortalama delta</string>
+    <string name="long_avgdelta">Uzun ortalama delta</string>
+    <string name="delta">Delta</string>
+    <string name="weekday_sunday_short">Pzr</string>
+    <string name="weekday_saturday_short">Cts</string>
+    <string name="weekday_friday_short">Cum</string>
+    <string name="weekday_thursday_short">Prş</string>
+    <string name="weekday_wednesday_short">Çrş</string>
+    <string name="weekday_tuesday_short">Salı</string>
+    <string name="weekday_monday_short">Pzt</string>
+    <string name="add_short">EKLE</string>
+</resources>

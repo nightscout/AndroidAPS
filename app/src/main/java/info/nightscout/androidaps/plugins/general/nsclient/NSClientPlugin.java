@@ -13,7 +13,7 @@ import android.text.Spanned;
 import androidx.preference.PreferenceFragmentCompat;
 import androidx.preference.SwitchPreference;
 
-import org.jetbrains.annotations.NotNull;
+import androidx.annotation.NonNull;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -214,7 +214,7 @@ public class NSClientPlugin extends PluginBase {
     }
 
     @Override
-    public void preprocessPreferences(@NotNull PreferenceFragmentCompat preferenceFragment) {
+    public void preprocessPreferences(@NonNull PreferenceFragmentCompat preferenceFragment) {
         super.preprocessPreferences(preferenceFragment);
 
         if (config.getNSCLIENT()) {

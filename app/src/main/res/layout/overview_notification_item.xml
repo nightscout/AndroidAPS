@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     style="@style/Widget.MaterialComponents.CardView"
-    android:id="@+id/notification_cardview"
+    android:id="@+id/cv"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_margin="1dp"
@@ -19,16 +20,17 @@
         android:orientation="horizontal">
 
         <TextView
-            android:id="@+id/notification_text"
-            android:layout_width="wrap_content"
+            android:id="@+id/text"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="5dp"
             android:layout_weight="1"
             android:maxLines="4"
-            android:text="Notification text. Notification text. Notification text. Notification text. Notification text. Notification text. " />
+            android:text="Notification text. Notification text. Notification text. Notification text. Notification text. Notification text. "
+            tools:ignore="HardcodedText" />
 
         <Button
-            android:id="@+id/notification_dismiss"
+            android:id="@+id/dismiss"
             android:layout_width="wrap_content"
             android:layout_height="35dp"
             android:text="@string/dismiss" />

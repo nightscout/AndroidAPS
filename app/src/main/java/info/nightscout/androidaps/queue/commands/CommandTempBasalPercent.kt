@@ -14,7 +14,7 @@ class CommandTempBasalPercent(
     private val enforceNew: Boolean,
     private val profile: Profile,
     callback: Callback?
-) : Command(injector, CommandType.BASAL_PROFILE, callback) {
+) : Command(injector, CommandType.TEMPBASAL, callback) {
 
     @Inject lateinit var activePlugin: ActivePluginProvider
 

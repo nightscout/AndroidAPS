@@ -43,7 +43,7 @@ class APSResultTest : TestBaseWithProfile() {
                 it.constraintChecker = constraintChecker
                 it.sp = sp
                 it.activePlugin = activePluginProvider
-                it.treatmentsPlugin = treatmentsPlugin
+                it.treatmentsPlugin = treatmentsInterface
                 it.profileFunction = profileFunction
                 it.resourceHelper = resourceHelper
             }
@@ -56,7 +56,7 @@ class APSResultTest : TestBaseWithProfile() {
 
         // closed loop mode return original request
         closedLoopEnabled.set(aapsLogger, true)
-        `when`(treatmentsPlugin.getTempBasalFromHistory(ArgumentMatchers.anyLong())).thenReturn(null)
+        `when`(treatmentsInterface.getTempBasalFromHistory(ArgumentMatchers.anyLong())).thenReturn(null)
         apsResult.tempBasalRequested(false)
         Assert.assertEquals(false, apsResult.isChangeRequested)
         apsResult.tempBasalRequested(true).percent(200).duration(30)
@@ -65,46 +65,46 @@ class APSResultTest : TestBaseWithProfile() {
         // open loop
         closedLoopEnabled.set(aapsLogger, false)
         // no change requested
-        `when`(treatmentsPlugin.getTempBasalFromHistory(ArgumentMatchers.anyLong())).thenReturn(null)
+        `when`(treatmentsInterface.getTempBasalFromHistory(ArgumentMatchers.anyLong())).thenReturn(null)
         apsResult.tempBasalRequested(false)
         Assert.assertEquals(false, apsResult.isChangeRequested)
 
         // request 100% when no temp is running
-        `when`(treatmentsPlugin.getTempBasalFromHistory(ArgumentMatchers.anyLong())).thenReturn(null)
+        `when`(treatmentsInterface.getTempBasalFromHistory(ArgumentMatchers.anyLong())).thenReturn(null)
         apsResult.tempBasalRequested(true).percent(100).duration(30)
         Assert.assertEquals(false, apsResult.isChangeRequested)
 
         // request equal temp
-        `when`(treatmentsPlugin.getTempBasalFromHistory(ArgumentMatchers.anyLong())).thenReturn(TemporaryBasal(injector).percent(70).duration(30))
+        `when`(treatmentsInterface.getTempBasalFromHistory(ArgumentMatchers.anyLong())).thenReturn(TemporaryBasal(injector).percent(70).duration(30))
         apsResult.tempBasalRequested(true).percent(70).duration(30)
         Assert.assertEquals(false, apsResult.isChangeRequested)
 
         // request zero temp
-        `when`(treatmentsPlugin.getTempBasalFromHistory(ArgumentMatchers.anyLong())).thenReturn(TemporaryBasal(injector).percent(10).duration(30))
+        `when`(treatmentsInterface.getTempBasalFromHistory(ArgumentMatchers.anyLong())).thenReturn(TemporaryBasal(injector).percent(10).duration(30))
         apsResult.tempBasalRequested(true).percent(0).duration(30)
         Assert.assertEquals(true, apsResult.isChangeRequested)
 
         // request high temp
-        `when`(treatmentsPlugin.getTempBasalFromHistory(ArgumentMatchers.anyLong())).thenReturn(TemporaryBasal(injector).percent(190).duration(30))
+        `when`(treatmentsInterface.getTempBasalFromHistory(ArgumentMatchers.anyLong())).thenReturn(TemporaryBasal(injector).percent(190).duration(30))
         apsResult.tempBasalRequested(true).percent(200).duration(30)
         Assert.assertEquals(true, apsResult.isChangeRequested)
 
         // request slightly different temp
-        `when`(treatmentsPlugin.getTempBasalFromHistory(ArgumentMatchers.anyLong())).thenReturn(TemporaryBasal(injector).percent(70).duration(30))
+        `when`(treatmentsInterface.getTempBasalFromHistory(ArgumentMatchers.anyLong())).thenReturn(TemporaryBasal(injector).percent(70).duration(30))
         apsResult.tempBasalRequested(true).percent(80).duration(30)
         Assert.assertEquals(false, apsResult.isChangeRequested)
 
         // request different temp
-        `when`(treatmentsPlugin.getTempBasalFromHistory(ArgumentMatchers.anyLong())).thenReturn(TemporaryBasal(injector).percent(70).duration(30))
+        `when`(treatmentsInterface.getTempBasalFromHistory(ArgumentMatchers.anyLong())).thenReturn(TemporaryBasal(injector).percent(70).duration(30))
         apsResult.tempBasalRequested(true).percent(120).duration(30)
         Assert.assertEquals(true, apsResult.isChangeRequested)
 
         // it should work with absolute temps too
         // request different temp
-        `when`(treatmentsPlugin.getTempBasalFromHistory(ArgumentMatchers.anyLong())).thenReturn(TemporaryBasal(injector).absolute(1.0).duration(30))
+        `when`(treatmentsInterface.getTempBasalFromHistory(ArgumentMatchers.anyLong())).thenReturn(TemporaryBasal(injector).absolute(1.0).duration(30))
         apsResult.tempBasalRequested(true).percent(100).duration(30)
         Assert.assertEquals(false, apsResult.isChangeRequested)
-        `when`(treatmentsPlugin.getTempBasalFromHistory(ArgumentMatchers.anyLong())).thenReturn(TemporaryBasal(injector).absolute(2.0).duration(30))
+        `when`(treatmentsInterface.getTempBasalFromHistory(ArgumentMatchers.anyLong())).thenReturn(TemporaryBasal(injector).absolute(2.0).duration(30))
         apsResult.tempBasalRequested(true).percent(50).duration(30)
         Assert.assertEquals(true, apsResult.isChangeRequested)
 
@@ -115,44 +115,44 @@ class APSResultTest : TestBaseWithProfile() {
         // open loop
         closedLoopEnabled.set(aapsLogger, false)
         // request 100% when no temp is running
-        `when`(treatmentsPlugin.getTempBasalFromHistory(ArgumentMatchers.anyLong())).thenReturn(null)
+        `when`(treatmentsInterface.getTempBasalFromHistory(ArgumentMatchers.anyLong())).thenReturn(null)
         apsResult.tempBasalRequested(true).rate(1.0).duration(30)
         Assert.assertEquals(false, apsResult.isChangeRequested)
 
         // request equal temp
-        `when`(treatmentsPlugin.getTempBasalFromHistory(ArgumentMatchers.anyLong())).thenReturn(TemporaryBasal(injector).absolute(2.0).duration(30))
+        `when`(treatmentsInterface.getTempBasalFromHistory(ArgumentMatchers.anyLong())).thenReturn(TemporaryBasal(injector).absolute(2.0).duration(30))
         apsResult.tempBasalRequested(true).rate(2.0).duration(30)
         Assert.assertEquals(false, apsResult.isChangeRequested)
-        `when`(treatmentsPlugin.getTempBasalFromHistory(ArgumentMatchers.anyLong())).thenReturn(TemporaryBasal(injector).percent(200).duration(30))
+        `when`(treatmentsInterface.getTempBasalFromHistory(ArgumentMatchers.anyLong())).thenReturn(TemporaryBasal(injector).percent(200).duration(30))
         apsResult.tempBasalRequested(true).rate(2.0).duration(30)
         Assert.assertEquals(false, apsResult.isChangeRequested)
 
         // request zero temp
-        `when`(treatmentsPlugin.getTempBasalFromHistory(ArgumentMatchers.anyLong())).thenReturn(TemporaryBasal(injector).absolute(0.1).duration(30))
+        `when`(treatmentsInterface.getTempBasalFromHistory(ArgumentMatchers.anyLong())).thenReturn(TemporaryBasal(injector).absolute(0.1).duration(30))
         apsResult.tempBasalRequested(true).rate(0.0).duration(30)
         Assert.assertEquals(true, apsResult.isChangeRequested)
 
         // request high temp
-        `when`(treatmentsPlugin.getTempBasalFromHistory(ArgumentMatchers.anyLong())).thenReturn(TemporaryBasal(injector).absolute(34.9).duration(30))
+        `when`(treatmentsInterface.getTempBasalFromHistory(ArgumentMatchers.anyLong())).thenReturn(TemporaryBasal(injector).absolute(34.9).duration(30))
         apsResult.tempBasalRequested(true).rate(35.0).duration(30)
         Assert.assertEquals(true, apsResult.isChangeRequested)
 
         // request slightly different temp
-        `when`(treatmentsPlugin.getTempBasalFromHistory(ArgumentMatchers.anyLong())).thenReturn(TemporaryBasal(injector).absolute(1.1).duration(30))
+        `when`(treatmentsInterface.getTempBasalFromHistory(ArgumentMatchers.anyLong())).thenReturn(TemporaryBasal(injector).absolute(1.1).duration(30))
         apsResult.tempBasalRequested(true).rate(1.2).duration(30)
         Assert.assertEquals(false, apsResult.isChangeRequested)
 
         // request different temp
-        `when`(treatmentsPlugin.getTempBasalFromHistory(ArgumentMatchers.anyLong())).thenReturn(TemporaryBasal(injector).absolute(1.1).duration(30))
+        `when`(treatmentsInterface.getTempBasalFromHistory(ArgumentMatchers.anyLong())).thenReturn(TemporaryBasal(injector).absolute(1.1).duration(30))
         apsResult.tempBasalRequested(true).rate(1.5).duration(30)
         Assert.assertEquals(true, apsResult.isChangeRequested)
 
         // it should work with percent temps too
         // request different temp
-        `when`(treatmentsPlugin.getTempBasalFromHistory(ArgumentMatchers.anyLong())).thenReturn(TemporaryBasal(injector).percent(110).duration(30))
+        `when`(treatmentsInterface.getTempBasalFromHistory(ArgumentMatchers.anyLong())).thenReturn(TemporaryBasal(injector).percent(110).duration(30))
         apsResult.tempBasalRequested(true).rate(1.1).duration(30)
         Assert.assertEquals(false, apsResult.isChangeRequested)
-        `when`(treatmentsPlugin.getTempBasalFromHistory(ArgumentMatchers.anyLong())).thenReturn(TemporaryBasal(injector).percent(200).duration(30))
+        `when`(treatmentsInterface.getTempBasalFromHistory(ArgumentMatchers.anyLong())).thenReturn(TemporaryBasal(injector).percent(200).duration(30))
         apsResult.tempBasalRequested(true).rate(0.5).duration(30)
         Assert.assertEquals(true, apsResult.isChangeRequested)
     }
@@ -164,7 +164,7 @@ class APSResultTest : TestBaseWithProfile() {
                 it.constraintChecker = constraintChecker
                 it.sp = sp
                 it.activePlugin = activePluginProvider
-                it.treatmentsPlugin = treatmentsPlugin
+                it.treatmentsPlugin = treatmentsInterface
                 it.profileFunction = profileFunction
                 it.resourceHelper = resourceHelper
             }
@@ -181,7 +181,7 @@ class APSResultTest : TestBaseWithProfile() {
                 it.constraintChecker = constraintChecker
                 it.sp = sp
                 it.activePlugin = activePluginProvider
-                it.treatmentsPlugin = treatmentsPlugin
+                it.treatmentsPlugin = treatmentsInterface
                 it.profileFunction = profileFunction
                 it.resourceHelper = resourceHelper
             }

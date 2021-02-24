@@ -27,6 +27,7 @@ import info.nightscout.androidaps.plugins.profile.local.LocalProfilePlugin
 import info.nightscout.androidaps.plugins.profile.ns.NSProfileFragment
 import info.nightscout.androidaps.plugins.profile.ns.NSProfilePlugin
 import info.nightscout.androidaps.plugins.pump.common.events.EventRileyLinkDeviceStatusChange
+import info.nightscout.androidaps.plugins.pump.omnipod.dash.OmnipodDashPumpPlugin
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.OmnipodErosPumpPlugin
 import info.nightscout.androidaps.setupwizard.elements.*
 import info.nightscout.androidaps.setupwizard.events.EventSWUpdate
@@ -188,6 +189,13 @@ class SWDefinition @Inject constructor(
         .add(SWEditString(injector)
             .validator(SWTextValidator(String::isNotEmpty))
             .preferenceId(R.string.key_patient_name))
+    private val privacy = SWScreen(injector, R.string.privacy_settings)
+        .skippable(true)
+        .add(SWInfoText(injector)
+            .label(R.string.privacy_summary))
+        .add(SWPreference(injector, this)
+            .option(R.xml.pref_datachoices)
+        )
     private val screenMasterPassword = SWScreen(injector, R.string.master_password)
         .skippable(false)
         .add(SWInfoText(injector)
@@ -217,9 +225,11 @@ class SWDefinition @Inject constructor(
             .updateDelay(5)
             .label(R.string.treatmentssafety_maxcarbs_title)
             .comment(R.string.common_values))
-        .validator { sp.contains(R.string.key_age)
-            && sp.getDouble(R.string.key_treatmentssafety_maxbolus, 0.0)  > 0
-            && sp.getDouble(R.string.key_treatmentssafety_maxcarbs, 0.0)  > 0 }
+        .validator {
+            sp.contains(R.string.key_age)
+                && sp.getDouble(R.string.key_treatmentssafety_maxbolus, 0.0) > 0
+                && sp.getDouble(R.string.key_treatmentssafety_maxcarbs, 0.0) > 0
+        }
     private val screenInsulin = SWScreen(injector, R.string.configbuilder_insulin)
         .skippable(false)
         .add(SWPlugin(injector, this)
@@ -275,14 +285,14 @@ class SWDefinition @Inject constructor(
         .add(SWInfoText(injector)
             .label(R.string.setupwizard_pump_pump_not_initialized)
             .visibility { !isPumpInitialized() })
-        .add( // Omnipod only
+        .add( // Omnipod Eros only
             SWInfoText(injector)
                 .label(R.string.setupwizard_pump_waiting_for_riley_link_connection)
                 .visibility {
                     val activePump = activePlugin.activePump
                     activePump is OmnipodErosPumpPlugin && !activePump.isRileyLinkReady
                 })
-        .add( // Omnipod only
+        .add( // Omnipod Eros only
             SWEventListener(injector, EventRileyLinkDeviceStatusChange::class.java)
                 .label(R.string.setupwizard_pump_riley_link_status)
                 .visibility { activePlugin.activePump is OmnipodErosPumpPlugin })
@@ -292,18 +302,21 @@ class SWDefinition @Inject constructor(
             .visibility {
                 // Hide for Omnipod, because as we don't require a Pod to be paired in the setup wizard,
                 // Getting the status might not be possible
-                activePlugin.activePump !is OmnipodErosPumpPlugin
+                activePlugin.activePump !is OmnipodErosPumpPlugin && activePlugin.activePump !is OmnipodDashPumpPlugin
             })
         .add(SWEventListener(injector, EventPumpStatusChanged::class.java)
-            .visibility { activePlugin.activePump !is OmnipodErosPumpPlugin })
+            .visibility { activePlugin.activePump !is OmnipodErosPumpPlugin && activePlugin.activePump !is OmnipodDashPumpPlugin })
         .validator { isPumpInitialized() }
 
     private fun isPumpInitialized(): Boolean {
         val activePump = activePlugin.activePump
 
-        // For Omnipod, consider the pump initialized when a RL has been configured successfully
-        // Users will be prompted to activate a Pod after completing the setup wizard.
-        return activePump.isInitialized || (activePump is OmnipodErosPumpPlugin && activePump.isRileyLinkReady)
+        // For Omnipod, activating a Pod can be done after setup through the Omnipod fragment
+        // For the Eros model, consider the pump initialized when a RL has been configured successfully
+        // For Dash model, consider the pump setup without any extra conditions
+        return activePump.isInitialized()
+            || (activePump is OmnipodErosPumpPlugin && activePump.isRileyLinkReady)
+            || activePump is OmnipodDashPumpPlugin
     }
 
     private val screenAps = SWScreen(injector, R.string.configbuilder_aps)
@@ -368,6 +381,7 @@ class SWDefinition @Inject constructor(
             .add(screenPermissionStore)
             .add(screenMasterPassword)
             .add(screenImport)
+            .add(privacy)
             .add(screenUnits)
             .add(displaySettings)
             .add(screenNsClient)

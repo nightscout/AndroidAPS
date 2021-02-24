@@ -28,6 +28,7 @@ abstract class Command(
         READSTATUS,
         LOAD_HISTORY,  // TDDs and so far only Dana specific
         LOAD_EVENTS,  // so far only Dana specific
+        LOAD_TDD,
         SET_USER_SETTINGS,  // so far only Dana specific,
         START_PUMP,
         STOP_PUMP,
@@ -36,6 +37,7 @@ abstract class Command(
     }
 
     init {
+        @Suppress("LeakingThis")
         injector.androidInjector().inject(this)
     }
 

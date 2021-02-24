@@ -51,8 +51,14 @@ class StatusLightHandler @Inject constructor(
         }
 
         if (!config.NSCLIENT) {
-            if (pump.model() == PumpType.Insulet_Omnipod && pump is OmnipodErosPumpPlugin) { // instance of check is needed because at startup, pump can still be VirtualPumpPlugin and that will cause a crash because of the class cast below
-                handleOmnipodBatteryLevel(careportal_battery_level, R.string.key_statuslights_bat_critical, 26.0, R.string.key_statuslights_bat_warning, 51.0, pump.batteryLevel.toDouble(), "%", pump.isUseRileyLinkBatteryLevel , colorNormal, colorWarning, colorAlarm)
+            if (pump.model() == PumpType.Omnipod_Dash) {
+                // Omnipod Dash does not report its battery level
+                careportal_battery_level?.text = resourceHelper.gs(R.string.notavailable)
+                careportal_battery_level?.setTextColor(Color.WHITE)
+            } else if (pump.model() == PumpType.Omnipod_Eros && pump is OmnipodErosPumpPlugin) { // instance of check is needed because at startup, pump can still be VirtualPumpPlugin and that will cause a crash because of the class cast below
+                // The Omnipod Eros does not report its battery level. However, some RileyLink alternatives do.
+                // Depending on the user's configuration, we will either show the battery level reported by the RileyLink or "n/a"
+                handleOmnipodErosBatteryLevel(careportal_battery_level, R.string.key_statuslights_bat_critical, 26.0, R.string.key_statuslights_bat_warning, 51.0, pump.batteryLevel.toDouble(), "%", pump.isUseRileyLinkBatteryLevel, colorNormal, colorWarning, colorAlarm)
             } else if (pump.model() != PumpType.AccuChekCombo) {
                 handleLevel(careportal_battery_level, R.string.key_statuslights_bat_critical, 26.0, R.string.key_statuslights_bat_warning, 51.0, pump.batteryLevel.toDouble(), "%" , colorNormal, colorWarning, colorAlarm)
             }
@@ -92,7 +98,7 @@ class StatusLightHandler @Inject constructor(
     }
 
     @Suppress("SameParameterValue")
-    private fun handleOmnipodBatteryLevel(view: TextView?, criticalSetting: Int, criticalDefaultValue: Double, warnSetting: Int, warnDefaultValue: Double, level: Double, units: String, useRileyLinkBatteryLevel: Boolean,  colorNormal: Int, colorWarning: Int, colorAlarm: Int) {
+    private fun handleOmnipodErosBatteryLevel(view: TextView?, criticalSetting: Int, criticalDefaultValue: Double, warnSetting: Int, warnDefaultValue: Double, level: Double, units: String, useRileyLinkBatteryLevel: Boolean,,  colorNormal: Int, colorWarning: Int, colorAlarm: Int) {
         if (useRileyLinkBatteryLevel) {
             handleLevel(view, criticalSetting, criticalDefaultValue, warnSetting, warnDefaultValue, level, units , colorNormal, colorWarning, colorAlarm)
         } else {

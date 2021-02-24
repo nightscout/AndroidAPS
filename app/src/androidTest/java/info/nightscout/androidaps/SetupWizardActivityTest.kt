@@ -42,7 +42,7 @@ import org.junit.runner.RunWith
 @LargeTest
 @RunWith(AndroidJUnit4::class)
 class SetupWizardActivityTest {
-
+/*
     @Rule
     @JvmField
     var mActivityTestRule = ActivityTestRule(SetupWizardActivity::class.java)
@@ -226,4 +226,5 @@ adb shell settings put global animator_duration_scale 0 &
             }
         }
     }
+ */
 }

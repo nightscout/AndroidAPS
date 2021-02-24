@@ -2,6 +2,7 @@ package info.nightscout.androidaps.data;
 
 import androidx.collection.LongSparseArray;
 
+import androidx.annotation.NonNull;
 import org.joda.time.DateTime;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -66,7 +67,7 @@ public class Profile {
         this.injector = injector;
     }
 
-    @Override
+    @NonNull @Override
     public String toString() {
         if (json != null)
             return json.toString();
@@ -137,7 +138,7 @@ public class Profile {
 
     public String log() {
         String ret = "\n";
-        for (Integer hour = 0; hour < 24; hour++) {
+        for (int hour = 0; hour < 24; hour++) {
             double value = getBasalTimeFromMidnight(hour * 60 * 60);
             ret += "NS basal value for " + hour + ":00 is " + value + "\n";
         }
@@ -184,7 +185,7 @@ public class Profile {
         for (int index = 0; index < array.length(); index++) {
             try {
                 final JSONObject o = array.getJSONObject(index);
-                long tas = 0;
+                long tas;
                 try {
                     String time = o.getString("time");
                     tas = getShitfTimeSecs(DateUtil.toSeconds(time));
@@ -318,7 +319,7 @@ public class Profile {
     */
 
     Integer getShitfTimeSecs(Integer originalTime) {
-        Integer shiftedTime = originalTime + timeshift * 60 * 60;
+        int shiftedTime = originalTime + timeshift * 60 * 60;
         shiftedTime = (shiftedTime + 24 * 60 * 60) % (24 * 60 * 60);
         return shiftedTime;
     }
@@ -358,7 +359,7 @@ public class Profile {
     private double getValueToTime(LongSparseArray<Double> array, Integer timeAsSeconds) {
         Double lastValue = null;
 
-        for (Integer index = 0; index < array.size(); index++) {
+        for (int index = 0; index < array.size(); index++) {
             long tas = array.keyAt(index);
             double value = array.valueAt(index);
             if (lastValue == null) lastValue = value;
@@ -459,8 +460,8 @@ public class Profile {
             ic_v = convertToSparseArray(ic);
         ProfileValue[] ret = new ProfileValue[ic_v.size()];
 
-        for (Integer index = 0; index < ic_v.size(); index++) {
-            Integer tas = (int) ic_v.keyAt(index);
+        for (int index = 0; index < ic_v.size(); index++) {
+            int tas = (int) ic_v.keyAt(index);
             double value = ic_v.valueAt(index);
             ret[index] = new ProfileValue(tas, value);
         }
@@ -488,7 +489,7 @@ public class Profile {
         return getValuesList(basal_v, null, new DecimalFormat("0.00"), resourceHelper.gs(R.string.profile_ins_units_per_hour));
     }
 
-    public class ProfileValue {
+    public static class ProfileValue {
         public ProfileValue(int timeAsSeconds, double value) {
             this.timeAsSeconds = timeAsSeconds;
             this.value = value;
@@ -515,8 +516,8 @@ public class Profile {
             basal_v = convertToSparseArray(basal);
         ProfileValue[] ret = new ProfileValue[basal_v.size()];
 
-        for (Integer index = 0; index < basal_v.size(); index++) {
-            Integer tas = (int) basal_v.keyAt(index);
+        for (int index = 0; index < basal_v.size(); index++) {
+            int tas = (int) basal_v.keyAt(index);
             double value = basal_v.valueAt(index);
             ret[index] = new ProfileValue(tas, value);
         }
@@ -566,7 +567,7 @@ public class Profile {
         return toMgdl(getTargetHighTimeFromMidnight(timeAsSeconds), units);
     }
 
-    public class TargetValue {
+    public static class TargetValue {
         TargetValue(int timeAsSeconds, double low, double high) {
             this.timeAsSeconds = timeAsSeconds;
             this.low = low;
@@ -585,8 +586,8 @@ public class Profile {
             targetHigh_v = convertToSparseArray(targetHigh);
         TargetValue[] ret = new TargetValue[targetLow_v.size()];
 
-        for (Integer index = 0; index < targetLow_v.size(); index++) {
-            Integer tas = (int) targetLow_v.keyAt(index);
+        for (int index = 0; index < targetLow_v.size(); index++) {
+            int tas = (int) targetLow_v.keyAt(index);
             double low = targetLow_v.valueAt(index);
             double high = targetHigh_v.valueAt(index);
             ret[index] = new TargetValue(tas, low, high);

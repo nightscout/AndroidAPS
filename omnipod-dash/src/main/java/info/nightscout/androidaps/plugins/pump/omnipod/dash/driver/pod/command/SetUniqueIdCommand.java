@@ -4,8 +4,12 @@ import java.nio.ByteBuffer;
 import java.util.Calendar;
 import java.util.Date;
 
-public class SetUniqueIdCommand extends CommandBase {
-    private static final int DEFAULT_ADDRESS = -1;
+import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.command.base.CommandType;
+import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.command.base.HeaderEnabledCommand;
+import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.command.base.builder.HeaderEnabledCommandBuilder;
+
+public final class SetUniqueIdCommand extends HeaderEnabledCommand {
+    private static final int DEFAULT_UNIQUE_ID = -1;
     private static final short LENGTH = 21;
     private static final byte BODY_LENGTH = 19;
 
@@ -13,8 +17,8 @@ public class SetUniqueIdCommand extends CommandBase {
     private final int podSequenceNumber;
     private final Date initializationTime;
 
-    SetUniqueIdCommand(int address, short sequenceNumber, int lotNumber, int podSequenceNumber, Date initializationTime, boolean unknown) {
-        super(CommandType.SET_UNIQUE_ID, address, sequenceNumber, unknown);
+    SetUniqueIdCommand(int uniqueId, short sequenceNumber, boolean multiCommandFlag, int lotNumber, int podSequenceNumber, Date initializationTime) {
+        super(CommandType.SET_UNIQUE_ID, uniqueId, sequenceNumber, multiCommandFlag);
         this.lotNumber = lotNumber;
         this.podSequenceNumber = podSequenceNumber;
         this.initializationTime = initializationTime;
@@ -22,10 +26,10 @@ public class SetUniqueIdCommand extends CommandBase {
 
     @Override public byte[] getEncoded() {
         return appendCrc(ByteBuffer.allocate(LENGTH + HEADER_LENGTH) //
-                .put(encodeHeader(DEFAULT_ADDRESS, sequenceNumber, LENGTH, unknown)) //
+                .put(encodeHeader(DEFAULT_UNIQUE_ID, sequenceNumber, LENGTH, multiCommandFlag)) //
                 .put(commandType.getValue()) //
                 .put(BODY_LENGTH) //
-                .putInt(address) //
+                .putInt(uniqueId) //
                 .put((byte) 0x14) // FIXME ??
                 .put((byte) 0x04) // FIXME ??
                 .put(encodeInitializationTime(initializationTime)) //
@@ -53,9 +57,43 @@ public class SetUniqueIdCommand extends CommandBase {
                 ", podSequenceNumber=" + podSequenceNumber +
                 ", initializationTime=" + initializationTime +
                 ", commandType=" + commandType +
-                ", address=" + address +
+                ", uniqueId=" + uniqueId +
                 ", sequenceNumber=" + sequenceNumber +
-                ", unknown=" + unknown +
+                ", multiCommandFlag=" + multiCommandFlag +
                 '}';
+    }
+
+    public static final class Builder extends HeaderEnabledCommandBuilder<Builder, SetUniqueIdCommand> {
+        private Integer lotNumber;
+        private Integer podSequenceNumber;
+        private Date initializationTime;
+
+        public Builder setLotNumber(int lotNumber) {
+            this.lotNumber = lotNumber;
+            return this;
+        }
+
+        public Builder setPodSequenceNumber(int podSequenceNumber) {
+            this.podSequenceNumber = podSequenceNumber;
+            return this;
+        }
+
+        public Builder setInitializationTime(Date initializationTime) {
+            this.initializationTime = initializationTime;
+            return this;
+        }
+
+        @Override protected final SetUniqueIdCommand buildCommand() {
+            if (lotNumber == null) {
+                throw new IllegalArgumentException("lotNumber can not be null");
+            }
+            if (podSequenceNumber == null) {
+                throw new IllegalArgumentException("podSequenceNumber can not be null");
+            }
+            if (initializationTime == null) {
+                throw new IllegalArgumentException("initializationTime can not be null");
+            }
+            return new SetUniqueIdCommand(uniqueId, sequenceNumber, multiCommandFlag, lotNumber, podSequenceNumber, initializationTime);
+        }
     }
 }

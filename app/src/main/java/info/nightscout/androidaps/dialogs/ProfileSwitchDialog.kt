@@ -118,7 +118,7 @@ class ProfileSwitchDialog : DialogFragmentWithDate() {
             actions.add(resourceHelper.gs(R.string.careportal_newnstreatment_timeshift_label) + ": " + resourceHelper.gs(R.string.format_hours, timeShift.toDouble()))
         val notes = binding.notesLayout.notes.text.toString()
         if (notes.isNotEmpty())
-            actions.add(resourceHelper.gs(R.string.careportal_newnstreatment_notes_label) + ": " + notes)
+            actions.add(resourceHelper.gs(R.string.notes_label) + ": " + notes)
         if (eventTimeChanged)
             actions.add(resourceHelper.gs(R.string.time) + ": " + dateUtil.dateAndTimeString(eventTime))
 

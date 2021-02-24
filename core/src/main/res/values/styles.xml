@@ -285,6 +285,7 @@
         <item name="android:divider">@android:color/black</item>
         <item name="android:dividerHeight">1dp</item>
     </style>
+    <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
 
     <style name="AppThemeWarningDialog" parent="AppTheme">
         <item name="alertDialogTheme">@style/AppThemeWarningDialogTheme</item>

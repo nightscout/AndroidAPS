@@ -13,7 +13,6 @@ import info.nightscout.androidaps.plugins.configBuilder.ConstraintChecker
 import info.nightscout.androidaps.plugins.general.overview.events.EventNewNotification
 import info.nightscout.androidaps.plugins.general.overview.notifications.Notification
 import info.nightscout.androidaps.plugins.sensitivity.SensitivityOref1Plugin
-import info.nightscout.androidaps.plugins.treatments.TreatmentsPlugin
 import info.nightscout.androidaps.utils.DecimalFormatter
 import info.nightscout.androidaps.utils.HardLimits
 import info.nightscout.androidaps.utils.Round
@@ -38,7 +37,7 @@ class SafetyPlugin @Inject constructor(
     private val activePlugin: ActivePluginProvider,
     private val hardLimits: HardLimits,
     private val buildHelper: BuildHelper,
-    private val treatmentsPlugin: TreatmentsPlugin,
+    private val treatmentsPlugin: TreatmentsInterface,
     private val config: Config
 ) : PluginBase(PluginDescription()
     .mainType(PluginType.CONSTRAINTS)

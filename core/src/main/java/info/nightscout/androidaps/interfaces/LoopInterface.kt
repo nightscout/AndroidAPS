@@ -21,4 +21,9 @@ interface LoopInterface {
     }
 
     var lastRun: LastRun?
+    val isSuspended: Boolean
+
+    fun suspendTo(endTime: Long)
+    fun createOfflineEvent(durationInMinutes: Int)
+    fun suspendLoop(durationInMinutes: Int)
 }

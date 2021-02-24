@@ -5,6 +5,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <PreferenceCategory
+        android:key="@string/key_absorption_category_settings"
         android:title="@string/absorptionsettings_title"
         app:initialExpandedChildrenCount="0">
 

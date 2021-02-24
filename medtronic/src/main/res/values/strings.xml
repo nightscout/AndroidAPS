@@ -24,6 +24,7 @@
     <string name="key_medtronic_pump_battery_lithium" translatable="false">medtronic_pump_battery_lithium</string>
     <string name="key_medtronic_pump_battery_nizn" translatable="false">medtronic_pump_battery_nizn</string>
     <string name="key_medtronic_pump_battery_nimh" translatable="false">medtronic_pump_battery_nimh</string>
+    <string name="key_medtronic_name_settings" translatable="false">medtronic_name_settings</string>
 
     <string name="medtronic_serial_number">Pump Serial Number</string>
     <string name="medtronic_pump_type">Pump Type</string>
@@ -115,5 +116,7 @@
     <string name="key_set_neutral_temps" translatable="false">set_neutral_temps</string>
     <string name="set_neutral_temps_title">Set neutral temp basals</string>
     <string name="set_neutral_temps_summary">If enabled, it will cancel a temporary basal before the end of each hour. This method can help stop some pumps beeping/vibrating on the hour.</string>
+
+    <string name="sixdigitnumber" translatable="false">^\\d{6}</string>
 
 </resources>

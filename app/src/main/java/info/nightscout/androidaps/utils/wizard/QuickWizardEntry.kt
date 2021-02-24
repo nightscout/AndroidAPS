@@ -83,7 +83,7 @@ class QuickWizardEntry @Inject constructor(private val injector: HasAndroidInjec
         var cob = 0.0
         if (useCOB() == YES) {
             val cobInfo = iobCobCalculatorPlugin.getCobInfo(_synchronized, "QuickWizard COB")
-            if (cobInfo.displayCob != null) cob = cobInfo.displayCob
+            if (cobInfo.displayCob != null) cob = cobInfo.displayCob!!
         }
         // Bolus IOB
         var bolusIOB = false

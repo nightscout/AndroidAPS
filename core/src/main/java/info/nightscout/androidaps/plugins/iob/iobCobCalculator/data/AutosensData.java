@@ -1,5 +1,7 @@
 package info.nightscout.androidaps.plugins.iob.iobCobCalculator.data;
 
+import androidx.annotation.NonNull;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
@@ -40,10 +42,10 @@ public class AutosensData implements DataPointWithLabelInterface {
     }
 
     public class CarbsInPast {
-        long time = 0L;
-        double carbs = 0d;
-        public double min5minCarbImpact = 0d;
-        double remaining = 0d;
+        long time;
+        double carbs;
+        public double min5minCarbImpact;
+        double remaining;
 
         public CarbsInPast(Treatment t, boolean isAAPSOrWeighted) {
             time = t.date;
@@ -68,7 +70,7 @@ public class AutosensData implements DataPointWithLabelInterface {
             this.remaining = other.remaining;
         }
 
-        @Override
+        @NonNull @Override
         public String toString() {
             return String.format(Locale.ENGLISH, "CarbsInPast: time: %s carbs: %.02f min5minCI: %.02f remaining: %.2f", dateUtil.dateAndTimeString(time), carbs, min5minCarbImpact, remaining);
         }
@@ -103,7 +105,7 @@ public class AutosensData implements DataPointWithLabelInterface {
     public boolean uam = false;
     public List<Double> extraDeviation = new ArrayList<>();
 
-    @Override
+    @NonNull @Override
     public String toString() {
         return String.format(Locale.ENGLISH, "AutosensData: %s pastSensitivity=%s  delta=%.02f  avgDelta=%.02f bgi=%.02f deviation=%.02f avgDeviation=%.02f absorbed=%.02f carbsFromBolus=%.02f cob=%.02f autosensRatio=%.02f slopeFromMaxDeviation=%.02f slopeFromMinDeviation=%.02f activeCarbsList=%s",
                 dateUtil.dateAndTimeString(time), pastSensitivity, delta, avgDelta, bgi, deviation, avgDeviation, absorbed, carbsFromBolus, cob, autosensResult.ratio, slopeFromMaxDeviation, slopeFromMinDeviation, activeCarbsList.toString());
@@ -121,7 +123,7 @@ public class AutosensData implements DataPointWithLabelInterface {
 
     // remove carbs older than timeframe
     public void removeOldCarbs(long toTime, boolean isAAPSOrWeighted) {
-        double maxAbsorptionHours = Constants.DEFAULT_MAX_ABSORPTION_TIME;
+        double maxAbsorptionHours;
         if (isAAPSOrWeighted) {
             maxAbsorptionHours = sp.getDouble(R.string.key_absorption_maxtime, Constants.DEFAULT_MAX_ABSORPTION_TIME);
         } else {
