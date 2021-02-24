@@ -10,7 +10,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.preference.Preference;
 
-import org.jetbrains.annotations.NotNull;
+import androidx.annotation.NonNull;
 import org.joda.time.LocalDateTime;
 
 import java.util.ArrayList;
@@ -84,7 +84,6 @@ import info.nightscout.androidaps.plugins.pump.medtronic.events.EventMedtronicPu
 import info.nightscout.androidaps.plugins.pump.medtronic.service.RileyLinkMedtronicService;
 import info.nightscout.androidaps.plugins.pump.medtronic.util.MedtronicConst;
 import info.nightscout.androidaps.plugins.pump.medtronic.util.MedtronicUtil;
-import info.nightscout.androidaps.queue.commands.CustomCommand;
 import info.nightscout.androidaps.utils.DateUtil;
 import info.nightscout.androidaps.utils.FabricPrivacy;
 import info.nightscout.androidaps.utils.TimeChangeType;
@@ -203,7 +202,7 @@ public class MedtronicPumpPlugin extends PumpPluginAbstract implements PumpInter
     }
 
     @Override
-    public void updatePreferenceSummary(@NotNull Preference pref) {
+    public void updatePreferenceSummary(@NonNull Preference pref) {
         super.updatePreferenceSummary(pref);
 
         if (pref.getKey().equals(getResourceHelper().gs(R.string.key_rileylink_mac_address))) {
@@ -648,7 +647,7 @@ public class MedtronicPumpPlugin extends PumpPluginAbstract implements PumpInter
 
 
     @Override
-    public boolean isThisProfileSet(Profile profile) {
+    public boolean isThisProfileSet(@NonNull Profile profile) {
         aapsLogger.debug(LTag.PUMP, "isThisProfileSet: basalInitalized=" + medtronicPumpStatus.basalProfileStatus);
 
         if (!isInitialized)
@@ -875,7 +874,7 @@ public class MedtronicPumpPlugin extends PumpPluginAbstract implements PumpInter
                         // LOG.debug("MedtronicPumpPlugin::deliverBolus - Show dialog. Context: "
                         // + MainApp.instance().getApplicationContext());
 
-                        ErrorHelperActivity.Companion.runAlarm(context,getResourceHelper().gs(R.string.medtronic_cmd_cancel_bolus_not_supported), getResourceHelper().gs(R.string.medtronic_warning), R.raw.boluserror);
+                        ErrorHelperActivity.Companion.runAlarm(context, getResourceHelper().gs(R.string.medtronic_cmd_cancel_bolus_not_supported), getResourceHelper().gs(R.string.medtronic_warning), R.raw.boluserror);
                     }).start();
                 }
 
@@ -958,7 +957,7 @@ public class MedtronicPumpPlugin extends PumpPluginAbstract implements PumpInter
     // if enforceNew===true current temp basal is canceled and new TBR set (duration is prolonged),
     // if false and the same rate is requested enacted=false and success=true is returned and TBR is not changed
     @NonNull @Override
-    public PumpEnactResult setTempBasalAbsolute(Double absoluteRate, Integer durationInMinutes, Profile profile,
+    public PumpEnactResult setTempBasalAbsolute(double absoluteRate, int durationInMinutes, Profile profile,
                                                 boolean enforceNew) {
 
         setRefreshButtonEnabled(false);
@@ -1070,8 +1069,7 @@ public class MedtronicPumpPlugin extends PumpPluginAbstract implements PumpInter
 
 
     @NonNull @Override
-    public PumpEnactResult setTempBasalPercent(Integer percent, Integer durationInMinutes, Profile profile,
-                                               boolean enforceNew) {
+    public PumpEnactResult setTempBasalPercent(int percent, int durationInMinutes, @NonNull Profile profile,                                               boolean enforceNew) {
         if (percent == 0) {
             return setTempBasalAbsolute(0.0d, durationInMinutes, profile, enforceNew);
         } else {
@@ -1426,7 +1424,7 @@ public class MedtronicPumpPlugin extends PumpPluginAbstract implements PumpInter
     }
 
     @NonNull @Override
-    public PumpEnactResult setNewBasalProfile(Profile profile) {
+    public PumpEnactResult setNewBasalProfile(@NonNull Profile profile) {
         aapsLogger.info(LTag.PUMP, getLogPrefix() + "setNewBasalProfile");
 
         // this shouldn't be needed, but let's do check if profile setting we are setting is same as current one
@@ -1577,10 +1575,6 @@ public class MedtronicPumpPlugin extends PumpPluginAbstract implements PumpInter
                 break;
         }
 
-    }
-
-    @Nullable @Override public PumpEnactResult executeCustomCommand(CustomCommand customCommand) {
-        return null;
     }
 
     @Override

@@ -25,6 +25,7 @@
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
     <uses-permission android:name="com.dexcom.cgm.EXTERNAL_PERMISSION" />
     <uses-permission android:name="android.permission.USE_FULL_SCREEN_INTENT" />
+    <uses-permission android:name="com.android.alarm.permission.SET_ALARM" />
 
     <uses-permission-sdk-23 android:name="android.permission.REQUEST_IGNORE_BATTERY_OPTIMIZATIONS" />
 
@@ -74,8 +75,12 @@
         <activity android:name=".activities.StatsActivity" />
         <activity
             android:name="com.google.firebase.auth.internal.FederatedSignInActivity"
-            tools:replace="android:launchMode"
-            android:launchMode="standard" />
+            android:excludeFromRecents="true"
+            android:exported="true"
+            android:launchMode="singleInstance"
+            android:permission="com.google.firebase.auth.api.gms.permission.LAUNCH_FEDERATED_SIGN_IN"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar"
+            tools:replace="android:launchMode" />
 
         <!-- Receive new BG readings from other local apps -->
         <receiver
@@ -135,9 +140,6 @@
                 android:resource="@xml/filepaths" />
         </provider>
 
-        <service
-            android:name=".services.LocationService"
-            android:exported="false" />
         <service
             android:name=".plugins.general.wear.wearintegration.WatchUpdaterService"
             android:exported="true">
@@ -214,8 +216,6 @@
             android:exported="false" />
 
         <service android:name=".plugins.general.persistentNotification.DummyService" />
-        <service android:name=".plugins.pump.insight.connection_service.InsightConnectionService" />
-        <service android:name=".plugins.pump.insight.InsightAlertService" />
 
         <meta-data
             android:name="io.fabric.ApiKey"
@@ -231,20 +231,6 @@
             android:name=".activities.SingleFragmentActivity"
             android:theme="@style/AppTheme" />
         <activity android:name=".plugins.general.maintenance.activities.LogSettingActivity" />
-        <activity
-            android:name=".plugins.pump.insight.activities.InsightPairingActivity"
-            android:label="@string/insight_pairing"
-            android:theme="@style/AppTheme" />
-        <activity
-            android:name=".plugins.pump.insight.activities.InsightAlertActivity"
-            android:label="@string/pump_alert"
-            android:excludeFromRecents="true"
-            android:launchMode="singleInstance"
-            android:theme="@style/InsightAlertDialog" />
-        <activity
-            android:name=".plugins.pump.insight.activities.InsightPairingInformationActivity"
-            android:label="@string/pairing_information"
-            android:theme="@style/AppTheme" />
         <activity android:name=".activities.RequestDexcomPermissionActivity" />
         <activity android:name=".plugins.general.smsCommunicator.activities.SmsCommunicatorOtpActivity">
             <intent-filter>
@@ -254,13 +240,6 @@
             </intent-filter>
         </activity>
 
-        <!-- Medtronic service and activities -->
-        <service
-            android:name=".plugins.pump.medtronic.service.RileyLinkMedtronicService"
-            android:enabled="true"
-            android:exported="true" />
-
-        <activity android:name=".plugins.pump.medtronic.dialog.MedtronicHistoryActivity" />
         <activity android:name=".plugins.general.openhumans.OpenHumansLoginActivity"
             android:launchMode="singleTop">
             <intent-filter>

@@ -69,6 +69,17 @@
     <string name="pairing">Associazione</string>
     <string name="yes">Sì</string>
     <string name="no">No</string>
+    <string name="loopdisabled">LOOP DISABILITATO DAI VINCOLI</string>
+    <string name="bolusdelivered">Bolo di %1$.2f U erogato con successo</string>
+    <string name="virtualpump_resultok">OK</string>
+    <string name="novalidbasalrate">Nessuna velocità basale valida letta dal micro</string>
+    <string name="limitingmaxiob">Limitazione max IOB a %1$.1f U a causa di: %2$s</string>
+    <string name="unsafeusage">uso non sicuro</string>
+    <string name="pump_unreachable">Micro irraggiungibile</string>
+    <string name="extended_bolus">Bolo esteso</string>
+    <string name="pump_time_updated">Ora del micro aggiornata</string>
+    <string name="exit">Esci</string>
+    <string name="serial_number">Numero seriale</string>
     <!--    Constraints-->
     <string name="limitingbasalratio">Limitazione max velocità basale a %1$.2f U/h a causa di: %2$s</string>
     <string name="pumplimit">limite micro</string>

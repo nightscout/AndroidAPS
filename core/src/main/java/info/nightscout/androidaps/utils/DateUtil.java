@@ -139,12 +139,12 @@ public class DateUtil {
                 hours -= 12;
             if ((m.group(3).equals(" p.m.") || m.group(3).equals(" PM") || m.group(3).equals("PM")) && !(m.group(1).equals("12")))
                 hours += 12;
-            Calendar c = Calendar.getInstance();
-            c.set(Calendar.HOUR_OF_DAY, hours);
-            c.set(Calendar.MINUTE, minutes);
-            c.set(Calendar.SECOND, 0);
-            c.set(Calendar.MILLISECOND, 0);
-            retval = c.getTimeInMillis();
+            DateTime t = new DateTime()
+                    .withHourOfDay(hours)
+                    .withMinuteOfHour(minutes)
+                    .withSecondOfMinute(0)
+                    .withMillisOfSecond(0);
+            retval = t.getMillis();
         }
         return retval;
     }

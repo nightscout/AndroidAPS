@@ -50,7 +50,7 @@ import javax.inject.Singleton
 class ActionStringHandler @Inject constructor(
     private val sp: SP,
     private val rxBus: RxBusWrapper,
-    private val aapsSchedulers: AapsSchedulers,
+    aapsSchedulers: AapsSchedulers,
     private val resourceHelper: ResourceHelper,
     private val injector: HasAndroidInjector,
     private val context: Context,
@@ -204,7 +204,7 @@ class ActionStringHandler @Inject constructor(
             val format = DecimalFormat("0.00")
             val formatInt = DecimalFormat("0")
             val bolusWizard = BolusWizard(injector).doCalc(profile, profileName, activePlugin.activeTreatments.tempTargetFromHistory,
-                carbsAfterConstraints, cobInfo.displayCob, bgReading.valueToUnits(profileFunction.getUnits()),
+                carbsAfterConstraints, if (cobInfo.displayCob != null) cobInfo.displayCob!! else 0.0, bgReading.valueToUnits(profileFunction.getUnits()),
                 0.0, percentage.toDouble(), useBG, useCOB, useBolusIOB, useBasalIOB, false, useTT, useTrend, false)
             if (Math.abs(bolusWizard.insulinAfterConstraints - bolusWizard.calculatedTotalInsulin) >= 0.01) {
                 sendError("Insulin constraint violation!" +
@@ -262,7 +262,7 @@ class ActionStringHandler @Inject constructor(
                 rAction = "statusmessage"
                 rMessage = "OLD DATA - "
                 //if pump is not busy: try to fetch data
-                if (activePump.isBusy) {
+                if (activePump.isBusy()) {
                     rMessage += resourceHelper.gs(R.string.pumpbusy)
                 } else {
                     rMessage += "trying to fetch data from pump."

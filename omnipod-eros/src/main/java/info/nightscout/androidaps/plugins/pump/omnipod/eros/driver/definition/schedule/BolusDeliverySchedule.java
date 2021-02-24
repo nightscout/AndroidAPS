@@ -1,5 +1,7 @@
 package info.nightscout.androidaps.plugins.pump.omnipod.eros.driver.definition.schedule;
 
+import androidx.annotation.NonNull;
+
 import org.joda.time.Duration;
 
 import info.nightscout.androidaps.plugins.pump.common.utils.ByteUtil;
@@ -50,7 +52,7 @@ public class BolusDeliverySchedule extends DeliverySchedule implements IRawRepre
         return checksum;
     }
 
-    @Override
+    @Override @NonNull
     public String toString() {
         return "BolusDeliverySchedule{" +
                 "units=" + units +

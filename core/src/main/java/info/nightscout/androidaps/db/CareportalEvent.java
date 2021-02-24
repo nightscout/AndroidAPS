@@ -2,6 +2,8 @@ package info.nightscout.androidaps.db;
 
 import android.graphics.Color;
 
+import androidx.annotation.NonNull;
+
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
 
@@ -132,7 +134,7 @@ public class CareportalEvent implements DataPointWithLabelInterface, Interval {
         return getHoursFromStart() > hours;
     }
 
-    @Override
+    @Override @NonNull
     public String toString() {
         return "CareportalEvent{" +
                 "date= " + date +

@@ -151,7 +151,7 @@ class TreatmentsCareportalFragment : DaggerFragment() {
                     val careportalEvent = v.tag as CareportalEvent
                     activity?.let { activity ->
                         val text = resourceHelper.gs(R.string.eventtype) + ": " + translator.translate(careportalEvent.eventType) + "\n" +
-                            resourceHelper.gs(R.string.careportal_newnstreatment_notes_label) + ": " + careportalEvent.notes + "\n" +
+                            resourceHelper.gs(R.string.notes_label) + ": " + careportalEvent.notes + "\n" +
                             resourceHelper.gs(R.string.date) + ": " + dateUtil.dateAndTimeString(careportalEvent.date)
                         OKDialog.showConfirmation(activity, resourceHelper.gs(R.string.removerecord), text, Runnable {
                             uel.log("REMOVED CAREP", text)

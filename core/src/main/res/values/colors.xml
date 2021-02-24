@@ -9,6 +9,7 @@
     <color name="mdtp_line_dark">#808080</color>
     <color name="colorLightGray">#d8d8d8</color>
     <color name="cardColorBackground">#121212</color>
+    <color name="black_overlay">#66000000</color>
 
     <!--    Fragments-->
     <color name="colorInitializingBorder">#00695c</color>
@@ -41,6 +42,7 @@
     <color name="zt">#00d2d2</color>
     <color name="white">#ffffff</color>
 
+    <color name="ribbonDefault">#5a595b</color>
     <color name="daySelected">#D000FF00</color>
     <color name="weekdayOutline">#1ea3e5</color>
     <color name="weekendOutline">#1e88e5</color>
@@ -85,5 +87,14 @@
     <color name="metadataTextWarning">#FF8C00</color>
     <color name="metadataTextError">#FF5555</color>
 
+    <!-- Import/Export -->
+    <color name="importListAdditionalInfo">#BBBBBB</color>
+    <color name="importListFileName">#FFFFFF</color>
+
+    <color name="ribbonWarning">#f4d700</color>
+    <color name="ribbonCritical">#ff0400</color>
+    <color name="ribbonTextDefault">#FFFFFF</color>
+    <color name="ribbonTextWarning">#303030</color>
+    <color name="tempTargetConfirmation">#77dd77</color>
 
 </resources>
