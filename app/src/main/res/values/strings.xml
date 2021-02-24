@@ -28,6 +28,11 @@
     <string name="tr_lang" translatable="false">Turkish</string>
 
     <string name="key_email_for_crash_report" translatable="false">email_for_crash_report</string>
+    <string name="key_smscommunicator_settings" translatable="false">smscommunicator</string>
+    <string name="key_open_humans_settings" translatable="false">open_humans</string>
+    <string name="key_protection_settings" translatable="false">protection</string>
+    <string name="key_absorption_category_settings" translatable="false">absorption_category_settings</string>
+    <string name="key_insulin_oref_peak_settings" translatable="false">insulin_oref_peak_settings</string>
 
     <string name="treatmentssafety_title">Treatments safety</string>
     <string name="treatmentssafety_maxbolus_title">Max allowed bolus [U]</string>

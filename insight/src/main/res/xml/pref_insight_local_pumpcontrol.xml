@@ -3,6 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <PreferenceCategory
+        android:key="@string/key_insight_local_settings"
         android:title="@string/insight_local"
         app:initialExpandedChildrenCount="0">
 

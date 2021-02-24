@@ -4,6 +4,7 @@
     xmlns:validate="http://schemas.android.com/apk/res-auto">
 
     <PreferenceCategory
+        android:key="@string/key_data_choices_settings"
         android:title="@string/data_choices"
         app:initialExpandedChildrenCount="0">
 
