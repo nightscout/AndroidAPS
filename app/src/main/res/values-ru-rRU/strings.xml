@@ -2,7 +2,6 @@
 <resources>
     <!--    <string name="fi_lang" translatable="false">Finnish</string> -->
     <!--   <string name="he_lang" translatable="false">Hebrew</string> -->
-    <!--    <string name="ga_lang" translatable="false">Irish</string> -->
     <!--    <string name="ja_lang" translatable="false">Japanese</string> -->
     <string name="treatmentssafety_title">Безопасность терапии</string>
     <string name="treatmentssafety_maxbolus_title">Макс разрешенный болюс [U] ед.</string>
@@ -903,4 +902,8 @@ Context | Edit Context</string>
     <string name="cannula">Катетер помпы</string>
     <string name="userentry">Запись пользователя</string>
     <string name="common_values">Введите максимальные значения вашего приема пищи \n</string>
+    <string name="summary_email_for_crash_report">Этот адрес электронной почты будет привязан к отчетам о сбоях, чтобы мы могли связаться с вами в экстренных случаях. Это опция.</string>
+    <string name="email_address">Адрес электронной почты</string>
+    <string name="privacy_settings">Настройки конфиденцальности</string>
+    <string name="privacy_summary">Вы можете указать дополнительно адрес электронной почты, если хотите получать уведомления о сбоях приложения; что является не автоматизированной рассылкой, а способом связи с разработчиками в опасных ситуациях.</string>
 </resources>
