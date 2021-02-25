@@ -3,6 +3,7 @@
     <string name="alert_r1_title">Lever bolus</string>
     <string name="alert_r2_title">Tapt bolus</string>
     <string name="alert_r3_title">Alarmklokke</string>
+    <string name="alert_r4_title">Bytt infusjonssett</string>
     <string name="alert_r7_title">Midlertidig basaldose fullført</string>
     <string name="alert_w31_title">Lavt ampulleinnhold</string>
     <string name="alert_w32_title">Lavt batteri</string>
