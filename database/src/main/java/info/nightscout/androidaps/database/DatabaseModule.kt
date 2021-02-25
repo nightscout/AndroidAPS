@@ -33,4 +33,10 @@ open class DatabaseModule {
             database.execSQL("CREATE TABLE IF NOT EXISTS userEntry (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `timestamp` INTEGER NOT NULL, `utcOffset` INTEGER NOT NULL, `action` TEXT NOT NULL, `s` TEXT NOT NULL, `d1` REAL NOT NULL, `d2` REAL NOT NULL, `i1` INTEGER NOT NULL, `i2` INTEGER NOT NULL)")
         }
     }
+
+    private val migration3to4 = object : Migration(3, 4) {
+        override fun migrate(database: SupportSQLiteDatabase) {
+            database.execSQL("CREATE TABLE IF NOT EXISTS userEntry (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `timestamp` INTEGER NOT NULL, `utcOffset` INTEGER NOT NULL, `action` TEXT NOT NULL, `s` TEXT NOT NULL, `d1` TEXT NOT NULL, `d2` TEXT NOT NULL, `i1` TEXT NOT NULL, `i2` TEXT NOT NULL)")
+        }
+    }
 }

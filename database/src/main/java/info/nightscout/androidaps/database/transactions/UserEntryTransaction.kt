@@ -1,14 +1,15 @@
 package info.nightscout.androidaps.database.transactions
 
 import info.nightscout.androidaps.database.entities.UserEntry
+import info.nightscout.androidaps.database.entities.UserEntry.*
 
 class UserEntryTransaction(
-    val action: UserEntry.Action,
+    val action: Action,
     val s: String = "",
-    val d1: Double = 0.0,
-    val d2: Double = 0.0,
-    val i1: Int = 0,
-    val i2: Int = 0,
+    val d1: ValueWithUnit = ValueWithUnit(0.0, Units.None),
+    val d2: ValueWithUnit = ValueWithUnit(0.0, Units.None),
+    val i1: ValueWithUnit = ValueWithUnit(0, Units.None),
+    val i2: ValueWithUnit = ValueWithUnit(0, Units.None)
 ) : Transaction<Unit>() {
 
     override fun run() {

@@ -17,10 +17,10 @@ data class UserEntry(
     override var utcOffset: Long = TimeZone.getDefault().getOffset(timestamp).toLong(),
     var action: Action,
     var s: String,
-    var d1: Double,
-    var d2: Double,
-    var i1: Int,
-    var i2: Int
+    var d1: ValueWithUnit,
+    var d2: ValueWithUnit,
+    var i1: ValueWithUnit,
+    var i2: ValueWithUnit
 ) : DBEntry, DBEntryWithTime {
     enum class Action () {
         @SerializedName("BOLUS") BOLUS,
@@ -121,6 +121,28 @@ data class UserEntry(
 
         companion object {
             fun fromString(source: String?) = UserEntry.Action.values().firstOrNull { it.name == source } ?: UserEntry.Action.UNKNOWN
+        }
+    }
+    data class ValueWithUnit (val dValue: Double, val iValue: Int, val unit: Units) {
+        constructor(value:Int, unit:Units) : this(0.0, value, unit)
+        constructor(value:Double, unit:Units) : this(value,0, unit)
+
+
+    }
+    enum class Units {
+        @SerializedName("None") None,
+        @SerializedName("Mg_Dl") Mg_Dl,
+        @SerializedName("Mmol_L") Mmol_L,
+        @SerializedName("U") U,
+        @SerializedName("U_H") U_H,
+        @SerializedName("G") G,
+        @SerializedName("M") M,
+        @SerializedName("H") H,
+        @SerializedName("Percent") Percent
+        ;
+
+        companion object {
+            fun fromString(unit: String?) = UserEntry.Units.values().firstOrNull { it.name == unit } ?: UserEntry.Units.None
         }
     }
 }

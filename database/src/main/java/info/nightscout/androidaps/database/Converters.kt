@@ -17,6 +17,23 @@ class Converters {
     fun toAction(action: String?) = action?.let { UserEntry.Action.fromString(it) }
 
     @TypeConverter
+    fun fromValueWithUnit(valueWithUnit: UserEntry.ValueWithUnit?): String? {
+        if (valueWithUnit == null) return null
+        val jsonObject = JSONObject()
+        jsonObject.put("dValue", valueWithUnit.dValue)
+        jsonObject.put("iValue", valueWithUnit.iValue)
+        jsonObject.put("unit", valueWithUnit.unit.name)
+        return jsonObject.toString()
+    }
+
+    @TypeConverter
+    fun toValueWithUnit(jsonString: String?): UserEntry.ValueWithUnit? {
+        if (jsonString == null) return null
+        val jsonObject = JSONObject(jsonString)
+        return UserEntry.ValueWithUnit(jsonObject.getDouble("dValue"), jsonObject.getInt("iValue"),UserEntry.Units.fromString(jsonObject.getString("unit")) )
+    }
+
+    @TypeConverter
     fun fromBolusType(bolusType: Bolus.Type?) = bolusType?.name
 
     @TypeConverter

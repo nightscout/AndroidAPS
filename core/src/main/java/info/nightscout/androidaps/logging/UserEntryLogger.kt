@@ -2,6 +2,7 @@ package info.nightscout.androidaps.logging
 
 import info.nightscout.androidaps.database.AppRepository
 import info.nightscout.androidaps.database.entities.UserEntry
+import info.nightscout.androidaps.database.entities.UserEntry.*
 import info.nightscout.androidaps.database.transactions.UserEntryTransaction
 import info.nightscout.androidaps.utils.rx.AapsSchedulers
 import io.reactivex.disposables.CompositeDisposable
@@ -19,7 +20,7 @@ class UserEntryLogger @Inject constructor(
 
     private val compositeDisposable = CompositeDisposable()
 
-    fun log(action: UserEntry.Action, s: String = "", d1: Double = 0.0, d2: Double = 0.0, i1: Int = 0, i2: Int = 0) {
+    fun log(action: UserEntry.Action, s: String = "", d1: ValueWithUnit = ValueWithUnit(0.0,Units.None), d2: ValueWithUnit = ValueWithUnit(0.0,Units.None), i1: ValueWithUnit = ValueWithUnit(0,Units.None), i2: ValueWithUnit = ValueWithUnit(0,Units.None)) {
         compositeDisposable += repository.runTransaction(UserEntryTransaction(
             action = action,
             s = s,
@@ -31,8 +32,8 @@ class UserEntryLogger @Inject constructor(
             .subscribeOn(aapsSchedulers.io)
             .observeOn(aapsSchedulers.io)
             .subscribeBy(
-                onError = { aapsLogger.debug("ERRORED USER ENTRY: $action $s ${if (d1 == 0.0) d1 else ""} ${if (d2 == 0.0) d2 else ""} ${if (i1 == 0) i1 else ""} ${if (i2 == 0) i2 else ""}") },
-                onComplete = { aapsLogger.debug("USER ENTRY: $action $s ${if (d1 == 0.0) d1 else ""} ${if (d2 == 0.0) d2 else ""} ${if (i1 == 0) i1 else ""} ${if (i2 == 0) i2 else ""}") }
+                onError = { aapsLogger.debug("ERRORED USER ENTRY: $action $s ${if (d1.dValue != 0.0) d1 else ""} ${if (d2.dValue != 0.0) d2 else ""} ${if (i1.iValue != 0) i1 else ""} ${if (i2.iValue != 0) i2 else ""}") },
+                onComplete = { aapsLogger.debug("USER ENTRY: $action $s ${if (d1.dValue != 0.0) d1 else ""} ${if (d2.dValue != 0.0) d2 else ""} ${if (i1.iValue != 0) i1 else ""} ${if (i2.iValue != 0) i2 else ""}") }
             )
     }
 }

@@ -10,10 +10,12 @@ import info.nightscout.androidaps.Constants
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.data.Profile
 import info.nightscout.androidaps.database.entities.UserEntry
+import info.nightscout.androidaps.database.entities.UserEntry.*
 import info.nightscout.androidaps.databinding.DialogCalibrationBinding
 import info.nightscout.androidaps.interfaces.ProfileFunction
 import info.nightscout.androidaps.logging.UserEntryLogger
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.GlucoseStatus
+import info.nightscout.androidaps.utils.extensions.fromStringKey
 import info.nightscout.androidaps.utils.HtmlHelper
 import info.nightscout.androidaps.utils.XdripCalibrations
 import info.nightscout.androidaps.utils.alertDialogs.OKDialog
@@ -78,7 +80,7 @@ class CalibrationDialog : DialogFragmentWithDate() {
         if (bg > 0) {
             activity?.let { activity ->
                 OKDialog.showConfirmation(activity, resourceHelper.gs(R.string.overview_calibration), HtmlHelper.fromHtml(Joiner.on("<br/>").join(actions)), {
-                    uel.log(UserEntry.Action.CALIBRATION, d1 = bg)
+                    uel.log(Action.CALIBRATION, d1 = ValueWithUnit(bg, if (units == Constants.MMOL) Units.Mg_Dl else Units.Mmol_L))
                     xdripCalibrations.sendIntent(bg)
                 })
             }
