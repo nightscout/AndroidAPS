@@ -10,12 +10,12 @@ abstract class Message(
     val ackNumber: Byte = 0.toByte(),
     val eqos: Short = 0.toShort(), // TODO: understand
     val priority: Boolean = false,
-    val lastMessage: Boolean= false,
-    val gateway: Boolean =  false,
+    val lastMessage: Boolean = false,
+    val gateway: Boolean = false,
     val sas: Boolean = false, // TODO: understand
     val tfs: Boolean = false, // TODO: understand
     val version: Short = 0.toShort(),
-    ) {
+) {
 
     fun asByteArray(): ByteArray {
         return payload; // TODO implement

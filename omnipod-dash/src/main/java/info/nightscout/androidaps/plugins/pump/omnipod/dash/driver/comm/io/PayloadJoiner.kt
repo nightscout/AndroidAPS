@@ -7,7 +7,6 @@ class PayloadJoiner() {
     private val payload = ByteArrayOutputStream()
 
     fun accumulate(packet: BlePacket) {
-
     }
 
     fun bytes(): ByteArray {

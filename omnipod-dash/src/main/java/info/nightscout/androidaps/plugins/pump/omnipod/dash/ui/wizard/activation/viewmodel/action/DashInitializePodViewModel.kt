@@ -9,6 +9,7 @@ import info.nightscout.androidaps.logging.LTag
 import info.nightscout.androidaps.plugins.pump.omnipod.common.ui.wizard.activation.viewmodel.action.InitializePodViewModel
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.R
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.OmnipodDashBleManager
+import org.apache.commons.lang3.exception.ExceptionUtils
 import javax.inject.Inject
 
 class DashInitializePodViewModel @Inject constructor(private val aapsLogger: AAPSLogger,
@@ -27,7 +28,8 @@ class DashInitializePodViewModel @Inject constructor(private val aapsLogger: AAP
             try {
                 bleManager.activateNewPod()
             } catch (e: Exception) {
-                aapsLogger.error(LTag.PUMP, "TEST ACTIVATE Exception" + e.toString())
+                aapsLogger.error(LTag.PUMP, "TEST ACTIVATE Exception" + e.toString() + ExceptionUtils.getStackTrace(e))
+
             }
         }
 

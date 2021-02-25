@@ -62,7 +62,7 @@ internal class PayloadSplitter(private val payload: ByteArray) {
     }
 }
 
-internal fun ByteArray.crc32(): Long {
+private fun ByteArray.crc32(): Long {
     val crc = CRC32()
     crc.update(this)
     return crc.value
