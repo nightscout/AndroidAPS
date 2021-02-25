@@ -4,7 +4,7 @@ import android.bluetooth.le.ScanResult
 import android.os.ParcelUuid
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.exceptions.DiscoveredInvalidPodException
 
-class BleDiscoveredDevice(val scanResult: ScanResult, private val podID: Long) {
+class BleDiscoveredDevice(val scanResult: ScanResult, private val podId: Long) {
 
     private val sequenceNo: Int
     private val lotNo: Long
@@ -12,29 +12,29 @@ class BleDiscoveredDevice(val scanResult: ScanResult, private val podID: Long) {
     private fun validateServiceUUIDs() {
         val scanRecord = scanResult.scanRecord
             ?: throw DiscoveredInvalidPodException("Scan record is null");
-        val serviceUUIDs = scanRecord.serviceUuids
-        if (serviceUUIDs.size != 9) {
-            throw DiscoveredInvalidPodException("Expected 9 service UUIDs, got" + serviceUUIDs.size, serviceUUIDs)
+        val serviceUuids = scanRecord.serviceUuids
+        if (serviceUuids.size != 9) {
+            throw DiscoveredInvalidPodException("Expected 9 service UUIDs, got" + serviceUuids.size, serviceUuids)
         }
-        if (extractUUID16(serviceUUIDs[0]) != "4024") {
+        if (extractUUID16(serviceUuids[0]) != MAIN_SERVICE_UUID) {
             // this is the service that we filtered for
-            throw DiscoveredInvalidPodException("The first exposed service UUID should be 4024, got " + extractUUID16(serviceUUIDs[0]), serviceUUIDs)
+            throw DiscoveredInvalidPodException("The first exposed service UUID should be 4024, got " + extractUUID16(serviceUuids[0]), serviceUuids)
         }
         // TODO understand what is serviceUUIDs[1]. 0x2470. Alarms?
-        if (extractUUID16(serviceUUIDs[2]) != "000a") {
+        if (extractUUID16(serviceUuids[2]) != "000a") {
             // constant?
-            throw DiscoveredInvalidPodException("The third exposed service UUID should be 000a, got " + serviceUUIDs[2], serviceUUIDs)
+            throw DiscoveredInvalidPodException("The third exposed service UUID should be 000a, got " + serviceUuids[2], serviceUuids)
         }
     }
 
     @Throws(DiscoveredInvalidPodException::class)
-    private fun validatePodID() {
+    private fun validatePodId() {
         val scanRecord = scanResult.scanRecord
         val serviceUUIDs = scanRecord.serviceUuids
-        val hexPodID = extractUUID16(serviceUUIDs[3]) + extractUUID16(serviceUUIDs[4])
-        val podID = hexPodID.toLong(16)
-        if (this.podID != podID) {
-            throw DiscoveredInvalidPodException("This is not the POD we are looking for. " + this.podID + " found: " + podID, serviceUUIDs)
+        val hexPodId = extractUUID16(serviceUUIDs[3]) + extractUUID16(serviceUUIDs[4])
+        val podId = hexPodId.toLong(16)
+        if (this.podId != podId) {
+            throw DiscoveredInvalidPodException("This is not the POD we are looking for. " + this.podId + " found: " + this.podId, serviceUUIDs)
         }
     }
 
@@ -58,14 +58,14 @@ class BleDiscoveredDevice(val scanResult: ScanResult, private val podID: Long) {
     override fun toString(): String {
         return "BleDiscoveredDevice{" +
             "scanResult=" + scanResult +
-            ", podID=" + podID +
+            ", podID=" + podId +
             ", sequenceNo=" + sequenceNo +
             ", lotNo=" + lotNo +
             '}'
     }
 
     companion object {
-
+        const val MAIN_SERVICE_UUID = "4024";
         private fun extractUUID16(uuid: ParcelUuid): String {
             return uuid.toString().substring(4, 8)
         }
@@ -73,7 +73,7 @@ class BleDiscoveredDevice(val scanResult: ScanResult, private val podID: Long) {
 
     init {
         validateServiceUUIDs()
-        validatePodID()
+        validatePodId()
         lotNo = parseLotNo()
         sequenceNo = parseSeqNo()
     }

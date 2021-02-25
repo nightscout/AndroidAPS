@@ -21,7 +21,6 @@ class ScanCollector(private val logger: AAPSLogger, private val podID: Long) : S
     }
 
     override fun onScanFailed(errorCode: Int) {
-        scanFailed = errorCode
         logger.warn(LTag.PUMPBTCOMM, "Scan failed with errorCode: $errorCode")
         super.onScanFailed(errorCode)
     }
