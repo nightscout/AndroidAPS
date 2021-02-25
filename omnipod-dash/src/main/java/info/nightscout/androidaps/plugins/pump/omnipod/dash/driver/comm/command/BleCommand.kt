@@ -2,7 +2,7 @@ package info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.command
 
 abstract class BleCommand {
 
-    private val data: ByteArray
+    val data: ByteArray
 
     constructor(type: BleCommandType) {
         data = byteArrayOf(type.value)
@@ -13,9 +13,5 @@ abstract class BleCommand {
         data = ByteArray(n)
         data[0] = type.value
         System.arraycopy(payload, 0, data, 1, payload.size)
-    }
-
-    fun asByteArray(): ByteArray {
-        return data
     }
 }

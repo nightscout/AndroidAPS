@@ -41,7 +41,7 @@ class BleIO(private val aapsLogger: AAPSLogger, private val chars: Map<Character
      * @param payload the data to send
      * @throws CouldNotSendBleException
      */
-    @Throws(CouldNotSendBleException::class, BleIOBusyException::class, InterruptedException::class, CouldNotConfirmWrite::class, TimeoutException::class)
+    @Throws(CouldNotSendBleException::class, BleIOBusyException::class, InterruptedException::class, CouldNotConfirmWriteException::class, TimeoutException::class)
     fun sendAndConfirmPacket(characteristic: CharacteristicType, payload: ByteArray) {
         synchronized(state) {
             if (state != IOState.IDLE) {

@@ -2,6 +2,6 @@ package info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.callbac
 
 sealed class CharacteristicWriteConfirmation
 
-class CharacteristicWriteConfirmationPayload(val payload: ByteArray, val status: Int) : CharacteristicWriteConfirmation()
+data class CharacteristicWriteConfirmationPayload(val payload: ByteArray) : CharacteristicWriteConfirmation()
 
-class CharacteristicWriteConfirmationError(val status: Int) : CharacteristicWriteConfirmation()
+data class CharacteristicWriteConfirmationError(val status: Int) : CharacteristicWriteConfirmation()

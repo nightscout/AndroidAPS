@@ -13,7 +13,6 @@ import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.command.
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.exceptions.*
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.io.BleIO
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.scan.PodScanner
-import java.util.*
 import java.util.concurrent.BlockingQueue
 import java.util.concurrent.LinkedBlockingDeque
 import java.util.concurrent.TimeoutException
@@ -26,7 +25,7 @@ class BleManager @Inject constructor(private val context: Context, private val a
     private val bluetoothManager: BluetoothManager = context.getSystemService(Context.BLUETOOTH_SERVICE) as BluetoothManager
     private val bluetoothAdapter: BluetoothAdapter = bluetoothManager.adapter
 
-    @Throws(InterruptedException::class, ScanFailException::class, FailedToConnectException::class, CouldNotSendBleException::class, BleIOBusyException::class, TimeoutException::class, CouldNotConfirmWrite::class, CouldNotEnableNotifications::class, DescriptorNotFoundException::class, CouldNotConfirmDescriptorWriteException::class)
+    @Throws(InterruptedException::class, ScanFailException::class, FailedToConnectException::class, CouldNotSendBleException::class, BleIOBusyException::class, TimeoutException::class, CouldNotConfirmWriteException::class, CouldNotEnableNotifications::class, DescriptorNotFoundException::class, CouldNotConfirmDescriptorWriteException::class)
     fun activateNewPod() {
         aapsLogger.info(LTag.PUMPBTCOMM, "starting new pod activation")
         val podScanner = PodScanner(aapsLogger, bluetoothAdapter)
@@ -35,7 +34,7 @@ class BleManager @Inject constructor(private val context: Context, private val a
         connect(podAddress)
     }
 
-    @Throws(FailedToConnectException::class, CouldNotSendBleException::class, InterruptedException::class, BleIOBusyException::class, TimeoutException::class, CouldNotConfirmWrite::class, CouldNotEnableNotifications::class, DescriptorNotFoundException::class, CouldNotConfirmDescriptorWriteException::class)
+    @Throws(FailedToConnectException::class, CouldNotSendBleException::class, InterruptedException::class, BleIOBusyException::class, TimeoutException::class, CouldNotConfirmWriteException::class, CouldNotEnableNotifications::class, DescriptorNotFoundException::class, CouldNotConfirmDescriptorWriteException::class)
     private fun connect(podAddress: String) {
         // TODO: locking?
         val podDevice = bluetoothAdapter.getRemoteDevice(podAddress)
@@ -61,7 +60,7 @@ class BleManager @Inject constructor(private val context: Context, private val a
         val chars = discoverer.discoverServices()
         val bleIO = BleIO(aapsLogger, chars, incomingPackets, gatt, bleCommCallbacks)
         aapsLogger.debug(LTag.PUMPBTCOMM, "Saying hello to the pod")
-        bleIO.sendAndConfirmPacket(CharacteristicType.CMD, BleCommandHello(CONTROLLER_ID).asByteArray())
+        bleIO.sendAndConfirmPacket(CharacteristicType.CMD, BleCommandHello(CONTROLLER_ID).data)
         bleIO.readyToRead()
     }
 

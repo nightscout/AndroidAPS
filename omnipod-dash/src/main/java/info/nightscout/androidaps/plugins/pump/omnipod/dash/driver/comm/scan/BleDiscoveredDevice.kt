@@ -8,9 +8,10 @@ class BleDiscoveredDevice(val scanResult: ScanResult, private val podID: Long) {
 
     private val sequenceNo: Int
     private val lotNo: Long
-    @Throws(DiscoveredInvalidPodException::class) private fun validateServiceUUIDs() {
+    @Throws(DiscoveredInvalidPodException::class)
+    private fun validateServiceUUIDs() {
         val scanRecord = scanResult.scanRecord
-            ?: throw DiscoveredInvalidPodException("Scan record is null")
+            ?: throw DiscoveredInvalidPodException("Scan record is null");
         val serviceUUIDs = scanRecord.serviceUuids
         if (serviceUUIDs.size != 9) {
             throw DiscoveredInvalidPodException("Expected 9 service UUIDs, got" + serviceUUIDs.size, serviceUUIDs)
@@ -26,7 +27,8 @@ class BleDiscoveredDevice(val scanResult: ScanResult, private val podID: Long) {
         }
     }
 
-    @Throws(DiscoveredInvalidPodException::class) private fun validatePodID() {
+    @Throws(DiscoveredInvalidPodException::class)
+    private fun validatePodID() {
         val scanRecord = scanResult.scanRecord
         val serviceUUIDs = scanRecord.serviceUuids
         val hexPodID = extractUUID16(serviceUUIDs[3]) + extractUUID16(serviceUUIDs[4])
