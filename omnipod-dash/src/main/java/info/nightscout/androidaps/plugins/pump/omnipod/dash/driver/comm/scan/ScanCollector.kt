@@ -33,9 +33,11 @@ class ScanCollector(private val logger: AAPSLogger, private val podID: Long) : S
         logger.debug(LTag.PUMPBTCOMM, "ScanCollector looking for podID: $podID")
         for (result in found.values) {
             try {
-                val device = BleDiscoveredDevice(result, podID)
-                ret.add(device)
-                logger.debug(LTag.PUMPBTCOMM, "ScanCollector found: " + result.toString() + "Pod ID: " + podID)
+                result.scanRecord?.let {
+                    val device = BleDiscoveredDevice(result, result.scanRecord, podID)
+                    ret.add(device)
+                    logger.debug(LTag.PUMPBTCOMM, "ScanCollector found: " + result.toString() + "Pod ID: " + podID)
+                }
             } catch (e: DiscoveredInvalidPodException) {
                 logger.debug(LTag.PUMPBTCOMM, "ScanCollector: pod not matching$e")
                 // this is not the POD we are looking for

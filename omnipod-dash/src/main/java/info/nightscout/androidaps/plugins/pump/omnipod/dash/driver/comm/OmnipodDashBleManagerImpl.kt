@@ -12,6 +12,9 @@ import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.callback
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.command.BleCommandHello
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.exceptions.*
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.io.BleIO
+import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.io.CharacteristicType
+import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.ltk.LTKExchanger
+import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.message.MessageIO
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.scan.PodScanner
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.status.ConnectionStatus
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.command.base.Command
@@ -34,16 +37,21 @@ class OmnipodDashBleManagerImpl @Inject constructor(private val context: Context
         val podScanner = PodScanner(aapsLogger, bluetoothAdapter)
         val podAddress = podScanner.scanForPod(PodScanner.SCAN_FOR_SERVICE_UUID, PodScanner.POD_ID_NOT_ACTIVATED).scanResult.device.address
         // For tests: this.podAddress = "B8:27:EB:1D:7E:BB";
-        connect(podAddress)
+        val bleIO = connect(podAddress)
+        val msgIO = MessageIO(aapsLogger, bleIO)
+        val ltkExchanger = LTKExchanger(aapsLogger, msgIO)
+        val ltk = ltkExchanger.negociateLTKAndNonce()
+
+        aapsLogger.info(LTag.PUMPCOMM, "Got LTK and Nonce Prefix: ${ltk}")
     }
 
     @Throws(FailedToConnectException::class, CouldNotSendBleException::class, InterruptedException::class, BleIOBusyException::class, TimeoutException::class, CouldNotConfirmWriteException::class, CouldNotEnableNotifications::class, DescriptorNotFoundException::class, CouldNotConfirmDescriptorWriteException::class)
-    private fun connect(podAddress: String) {
+    private fun connect(podAddress: String): BleIO {
         // TODO: locking?
         val podDevice = bluetoothAdapter.getRemoteDevice(podAddress)
         val incomingPackets: Map<CharacteristicType, BlockingQueue<ByteArray>> =
             mapOf(CharacteristicType.CMD to LinkedBlockingDeque(),
-                CharacteristicType.DATA to LinkedBlockingDeque());
+                CharacteristicType.DATA to LinkedBlockingDeque())
         val bleCommCallbacks = BleCommCallbacks(aapsLogger, incomingPackets)
         aapsLogger.debug(LTag.PUMPBTCOMM, "Connecting to $podAddress")
         var autoConnect = true
@@ -65,6 +73,7 @@ class OmnipodDashBleManagerImpl @Inject constructor(private val context: Context
         aapsLogger.debug(LTag.PUMPBTCOMM, "Saying hello to the pod")
         bleIO.sendAndConfirmPacket(CharacteristicType.CMD, BleCommandHello(CONTROLLER_ID).data)
         bleIO.readyToRead()
+        return bleIO
     }
 
     override fun sendCommand(cmd: Command): Response {
@@ -84,6 +93,7 @@ class OmnipodDashBleManagerImpl @Inject constructor(private val context: Context
     }
 
     companion object {
+
         private const val CONNECT_TIMEOUT_MS = 5000
         private const val CONTROLLER_ID = 4242 // TODO read from preferences or somewhere else.
     }
