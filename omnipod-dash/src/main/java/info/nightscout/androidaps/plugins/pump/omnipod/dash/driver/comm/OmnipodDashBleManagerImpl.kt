@@ -20,7 +20,7 @@ import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-class BleManager @Inject constructor(private val context: Context, private val aapsLogger: AAPSLogger) : OmnipodDashBleManager {
+class OmnipodDashBleManagerImpl @Inject constructor(private val context: Context, private val aapsLogger: AAPSLogger) : OmnipodDashBleManager {
 
     private val bluetoothManager: BluetoothManager = context.getSystemService(Context.BLUETOOTH_SERVICE) as BluetoothManager
     private val bluetoothAdapter: BluetoothAdapter = bluetoothManager.adapter

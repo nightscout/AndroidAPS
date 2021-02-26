@@ -1,14 +1,14 @@
 package info.nightscout.androidaps.plugins.pump.omnipod.dash.dagger
 
+import dagger.Binds
 import dagger.Module
-import dagger.Provides
 import dagger.android.ContributesAndroidInjector
 import info.nightscout.androidaps.plugins.pump.omnipod.common.dagger.ActivityScope
 import info.nightscout.androidaps.plugins.pump.omnipod.common.dagger.OmnipodWizardModule
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.OmnipodDashManager
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.OmnipodDashManagerImpl
-import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.BleManager
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.OmnipodDashBleManager
+import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.OmnipodDashBleManagerImpl
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.state.OmnipodDashPodStateManager
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.state.OmnipodDashPodStateManagerImpl
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.ui.DashPodManagementActivity
@@ -37,15 +37,14 @@ abstract class OmnipodDashModule {
     @ContributesAndroidInjector
     abstract fun contributesOmnipodDashOverviewFragment(): OmnipodDashOverviewFragment
 
-    companion object {
+    // MANAGERS
 
-        @Provides
-        fun providesBleManager(bleManager: BleManager): OmnipodDashBleManager = bleManager
+    @Binds
+    abstract fun bindsOmnipodDashBleManagerImpl(bleManager: OmnipodDashBleManagerImpl): OmnipodDashBleManager
 
-        @Provides
-        fun providesPodStateManager(podStateManager: OmnipodDashPodStateManagerImpl): OmnipodDashPodStateManager = podStateManager
+    @Binds
+    abstract fun bindsOmnipodDashPodStateManagerImpl(podStateManager: OmnipodDashPodStateManagerImpl): OmnipodDashPodStateManager
 
-        @Provides
-        fun providesOmnipodManager(omnipodManager: OmnipodDashManagerImpl): OmnipodDashManager = omnipodManager
-    }
+    @Binds
+    abstract fun bindsOmnipodDashManagerImpl(omnipodManager: OmnipodDashManagerImpl): OmnipodDashManager
 }
