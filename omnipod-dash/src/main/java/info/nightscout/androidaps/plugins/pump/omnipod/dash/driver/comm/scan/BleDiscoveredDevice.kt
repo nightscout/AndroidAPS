@@ -31,7 +31,6 @@ class BleDiscoveredDevice(val scanResult: ScanResult, private val scanRecord: Sc
     @Throws(DiscoveredInvalidPodException::class)
 
     private fun validatePodId() {
-        val scanRecord = scanResult.scanRecord
         val serviceUUIDs = scanRecord.serviceUuids
         val hexPodId = extractUUID16(serviceUUIDs[3]) + extractUUID16(serviceUUIDs[4])
         val podId = hexPodId.toLong(16)

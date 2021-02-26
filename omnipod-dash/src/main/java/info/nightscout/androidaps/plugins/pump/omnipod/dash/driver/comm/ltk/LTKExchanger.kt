@@ -1,31 +1,41 @@
 package info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.ltk
 
+import com.google.crypto.tink.subtle.X25519
 import info.nightscout.androidaps.logging.AAPSLogger
+import info.nightscout.androidaps.logging.LTag
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.OmnipodDashBleManagerImpl
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.Id
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.message.MessageIO
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.message.StringLengthPrefixEncoding
 import info.nightscout.androidaps.utils.extensions.hexStringToByteArray
+import java.security.SecureRandom
 
 internal class LTKExchanger(private val aapsLogger: AAPSLogger, private val msgIO: MessageIO) {
+    private val privateKey = X25519.generatePrivateKey()
+    private val nonce = ByteArray(16)
+    private val controllerId = Id.fromInt(OmnipodDashBleManagerImpl.CONTROLLER_ID)
+    val nodeId = controllerId.increment()
+    private var seq: Byte = 1
+
+    init{
+        val random = SecureRandom()
+        random.nextBytes(nonce)
+    }
 
     fun negotiateLTKAndNonce(): LTK? {
         // send SP1, SP2
-        // TODO: get this from somewhere(preferences?)
-        var seq: Byte = 1
-        val controllerId = Id.fromInt(OmnipodDashBleManagerImpl.CONTROLLER_ID)
-        val nodeId = controllerId.increment()
-
-        var sp1sp2 = sp1sp2(nodeId.address, sp2(), seq, controllerId, nodeId)
+        var sp1sp2 = sp1sp2(nodeId.address, sp2())
         msgIO.sendMesssage(sp1sp2.messagePacket)
 
-/*
-        var sps1 =
+        seq++
+        var sps1 = sps1()
         msgIO.sendMesssage(sps1.messagePacket)
         // send SPS1
+
         // read SPS1
         val podSps1 = msgIO.receiveMessage()
-
+        aapsLogger.info(LTag.PUMPBTCOMM, "Received message: %s", podSps1)
+/*
         // send SPS2
         var sps2 = PairMessage()
         msgIO.sendMesssage(sps2.messagePacket)
@@ -46,10 +56,24 @@ internal class LTKExchanger(private val aapsLogger: AAPSLogger, private val msgI
         return GET_POD_STATUS_HEX_COMMAND.hexStringToByteArray()
     }
 
-    fun sp1sp2(sp1: ByteArray, sp2: ByteArray, seq: Byte, controllerId: Id, nodeId: Id): PairMessage {
+    fun sp1sp2(sp1: ByteArray, sp2: ByteArray): PairMessage {
         val payload = StringLengthPrefixEncoding.formatKeys(
             arrayOf("SP1=", ",SP2="),
             arrayOf(sp1, sp2),
+        )
+        return PairMessage(
+            sequenceNumber = seq,
+            source = controllerId,
+            destination = nodeId,
+            payload = payload,
+        )
+    }
+
+    fun sps1(): PairMessage {
+        val publicKey = X25519.publicFromPrivate(privateKey)
+        val payload = StringLengthPrefixEncoding.formatKeys(
+            arrayOf("SPS1="),
+            arrayOf(publicKey+nonce),
         )
         return PairMessage(
             sequenceNumber = seq,

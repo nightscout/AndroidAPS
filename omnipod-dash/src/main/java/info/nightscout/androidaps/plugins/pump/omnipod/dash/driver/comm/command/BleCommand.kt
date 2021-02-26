@@ -1,5 +1,7 @@
 package info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.command
 
+import info.nightscout.androidaps.utils.extensions.toHex
+
 open class BleCommand(val data: ByteArray) {
 
     constructor(type: BleCommandType) : this(byteArrayOf(type.value))
@@ -15,6 +17,10 @@ open class BleCommand(val data: ByteArray) {
         if (!data.contentEquals(other.data)) return false
 
         return true
+    }
+
+    override fun toString(): String {
+        return "Raw command: [${data.toHex()}]";
     }
 
     override fun hashCode(): Int {

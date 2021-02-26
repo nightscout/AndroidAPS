@@ -38,7 +38,7 @@ class MessageIO(private val aapsLogger: AAPSLogger, private val bleIO: BleIO) {
 
     fun receiveMessage(): MessagePacket {
         val expectRTS = bleIO.receivePacket(CharacteristicType.CMD)
-        if (BleCommand(expectRTS) != BleCommandCTS()) {
+        if (BleCommand(expectRTS) != BleCommandRTS()) {
             throw UnexpectedCommandException(BleCommand(expectRTS))
         }
         bleIO.sendAndConfirmPacket(CharacteristicType.CMD, BleCommandCTS().data)
@@ -53,7 +53,7 @@ class MessageIO(private val aapsLogger: AAPSLogger, private val bleIO: BleIO) {
             }
         }
         if (joiner.oneExtra) {
-            var data = bleIO.receivePacket(CharacteristicType.DATA)
+            data = bleIO.receivePacket(CharacteristicType.DATA)
             val accumulateAction = joiner.accumulate(data)
             if (accumulateAction is PayloadJoinerActionReject) {
                 bleIO.sendAndConfirmPacket(CharacteristicType.CMD, BleCommandNack(accumulateAction.idx).data)
