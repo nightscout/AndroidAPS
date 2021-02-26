@@ -14,5 +14,9 @@ enum class ActivationProgress {
     PROGRAMMED_CANCEL_LOC_ETC_ALERT,
     INSERTING_CANNULA,
     CANNULA_INSERTED,
-    COMPLETED
+    COMPLETED;
+
+    fun isBefore(other: ActivationProgress): Boolean = ordinal < other.ordinal
+
+    fun isAtLeast(other: ActivationProgress): Boolean = ordinal >= other.ordinal
 }
