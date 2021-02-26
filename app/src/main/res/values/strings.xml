@@ -11,7 +11,7 @@
     <string name="el_lang" translatable="false">Greek</string>
     <!--   <string name="he_lang" translatable="false">Hebrew</string> -->
     <string name="zh_lang" translatable="false">Chinese</string>
-    <!--    <string name="ga_lang" translatable="false">Irish</string> -->
+    <string name="ga_lang" translatable="false">Irish</string>
     <string name="it_lang" translatable="false">Italian</string>
     <!--    <string name="ja_lang" translatable="false">Japanese</string> -->
     <string name="ko_lang" translatable="false">Korean</string>

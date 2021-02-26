@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="alert_r7_description"><![CDATA[Množství: <b>%1$d%%</b>\nTrvání: <b>%2$s h</b>]]></string>
+    <string name="alert_w31_description"><![CDATA[Zásobník obsahuje: <b>%1$s U</b>]]></string>
+    <string name="alert_w32_description">Vyměňte baterii.</string>
+    <string name="alert_w33_description">Nastavte čas/datum.</string>
+    <string name="alert_w34_description">Obraťte se na podporu Accu-Chek.</string>
+    <string name="alert_w36_description"><![CDATA[Množství: <b>%1$d%%</b><br/>Trvání: <b>%2$s h</b>]]></string>
+    <string name="alert_w38_description"><![CDATA[Nastaveno: <b>%1$s U</b><br/>Vydáno: <b>%2$s U</b>]]></string>
+    <string name="alert_m20_description">Vložte zásobník.</string>
+    <string name="alert_m21_description">Vyměňte zásobník.</string>
+    <string name="alert_m22_description">Vyměňte baterii.</string>
+    <string name="alert_m23_description">Zkontrolujte stav pumpy.</string>
+    <string name="alert_m24_description">Vyměňte infuzní set.</string>
+    <string name="alert_m25_description">Obraťte se na podporu Accu-Chek.</string>
+    <string name="alert_m26_description">Vyměňte zásobník.</string>
+    <string name="alert_m27_description">Restartovat stahování dat.</string>
+    <string name="alert_m28_description">Zkontrolujte stav pumpy.</string>
+    <string name="alert_m29_description">Nastavte typ baterie.</string>
+    <string name="alert_m30_description">Nastavte typ zásobníku.</string>
+    <string name="alert_e6_description">Vyměňte baterii a zásobník.</string>
+    <string name="alert_e10_description">Vyměňte zásobník.</string>
+    <string name="alert_e13_description">Změnit jazyk.</string>
+</resources>

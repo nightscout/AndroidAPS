@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="alert_r1_title">Gönderilen Bolus</string>
+    <string name="alert_r2_title">Başarısız Bolus</string>
+    <string name="alert_r3_title">Çalar saat</string>
+    <string name="alert_r7_title">Geçici Bazal Oranı tamamlandı</string>
+    <string name="alert_w31_title">Rezervuar düşük</string>
+    <string name="alert_w32_title">Pil düşük</string>
+    <string name="alert_w33_title">Geçersiz tarih/saat</string>
+    <string name="alert_w34_title">Garanti sonu</string>
+    <string name="alert_w36_title">Geçici Bazal Oranı iptal edildi</string>
+    <string name="alert_w38_title">Bolus iptal edildi</string>
+    <string name="alert_w39_title">Loantime uyarısı</string>
+    <string name="alert_m20_title">Rezervuar yerleştirilmemiş</string>
+    <string name="alert_m21_title">Rezervuar bitti</string>
+    <string name="alert_m22_title">Pil bitti</string>
+    <string name="alert_m23_title">Otomatik kapatma - pompa durdu</string>
+    <string name="alert_m24_title">Tıkanma</string>
+    <string name="alert_m25_title">Kiralama süresi doldu - kullanım sonu</string>
+    <string name="alert_m26_title">Rezervuar değişimi tamamlanmadı</string>
+    <string name="alert_m27_title">Veri yükleme başarısız oldu</string>
+    <string name="alert_m28_title">Duraklat modunda zaman aşımı</string>
+    <string name="alert_m29_title">Pil türü ayarlı değil</string>
+    <string name="alert_m30_title">Rezervuar türü ayarlı değil</string>
+    <string name="alert_e6_title">Mekanik hata</string>
+    <string name="alert_e10_title">Geri sarma hatası</string>
+    <string name="alert_e13_title">Dil hatası</string>
+</resources>
