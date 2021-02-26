@@ -26,7 +26,7 @@ class MessageIO(private val aapsLogger: AAPSLogger, private val bleIO: BleIO) {
         }
         // TODO: peek for NACKs
         val expectSuccess = bleIO.receivePacket(CharacteristicType.CMD)
-        if (BleCommand(expectSuccess) != BleCommandCTS()) {
+        if (BleCommand(expectSuccess) != BleCommandSuccess()) {
             throw UnexpectedCommandException(BleCommand(expectSuccess))
         }
         // TODO: handle NACKS/FAILS/etc

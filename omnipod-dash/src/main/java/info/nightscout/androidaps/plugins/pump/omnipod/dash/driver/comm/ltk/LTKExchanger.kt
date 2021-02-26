@@ -1,13 +1,11 @@
 package info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.ltk
 
 import info.nightscout.androidaps.logging.AAPSLogger
-import info.nightscout.androidaps.logging.LTag
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.OmnipodDashBleManagerImpl
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.message.Id
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.message.MessageIO
+import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.message.StringLengthPrefixEncoding
 import info.nightscout.androidaps.utils.extensions.hexStringToByteArray
-import info.nightscout.androidaps.utils.extensions.toHex
-import java.nio.ByteBuffer
 
 internal class LTKExchanger(private val aapsLogger: AAPSLogger, private val msgIO: MessageIO) {
 
@@ -48,8 +46,10 @@ internal class LTKExchanger(private val aapsLogger: AAPSLogger, private val msgI
     }
 
     fun sp1sp2(sp1: ByteArray, sp2: ByteArray, seq: Byte, controllerId: Id, nodeId: Id): PairMessage {
-        val payload = "SP1=".toByteArray() + sp1
-        ",SP2=".toByteArray() + sp2
+        val payload = StringLengthPrefixEncoding.formatKeys(
+            arrayOf("SP1=", ",SP2="),
+            arrayOf(sp1, sp2),
+        )
         return PairMessage(
             sequenceNumber = seq,
             source = controllerId,

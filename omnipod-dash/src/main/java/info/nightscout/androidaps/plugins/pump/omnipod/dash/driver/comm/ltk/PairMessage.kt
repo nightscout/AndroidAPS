@@ -13,7 +13,6 @@ data class PairMessage(
         type=MessageType.PAIRING,
         source=source,
         destination = destination,
-        encryptedPayload=false,
         payload=payload,
         sequenceNumber=sequenceNumber,
         sas=true, // TODO: understand why this is true for PairMessages
