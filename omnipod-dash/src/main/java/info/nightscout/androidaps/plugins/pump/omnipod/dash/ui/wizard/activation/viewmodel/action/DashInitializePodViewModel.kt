@@ -2,20 +2,18 @@ package info.nightscout.androidaps.plugins.pump.omnipod.dash.ui.wizard.activatio
 
 import android.os.AsyncTask
 import androidx.annotation.StringRes
-import androidx.lifecycle.viewModelScope
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.data.PumpEnactResult
 import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.logging.LTag
 import info.nightscout.androidaps.plugins.pump.omnipod.common.ui.wizard.activation.viewmodel.action.InitializePodViewModel
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.R
-import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.BleManager
-import kotlinx.coroutines.launch
+import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.OmnipodDashBleManager
 import javax.inject.Inject
 
 class DashInitializePodViewModel @Inject constructor(private val aapsLogger: AAPSLogger,
                                                      private val injector: HasAndroidInjector,
-                                                     private val bleManager: BleManager) : InitializePodViewModel() {
+                                                     private val bleManager: OmnipodDashBleManager) : InitializePodViewModel() {
 
     override fun isPodInAlarm(): Boolean = false // TODO
 

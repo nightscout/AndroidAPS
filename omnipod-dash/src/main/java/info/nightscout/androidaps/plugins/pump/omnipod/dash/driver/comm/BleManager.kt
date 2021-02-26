@@ -20,13 +20,13 @@ import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-class BleManager @Inject constructor(private val context: Context, private val aapsLogger: AAPSLogger) : OmnipodDashCommunicationManager {
+class BleManager @Inject constructor(private val context: Context, private val aapsLogger: AAPSLogger) : OmnipodDashBleManager {
 
     private val bluetoothManager: BluetoothManager = context.getSystemService(Context.BLUETOOTH_SERVICE) as BluetoothManager
     private val bluetoothAdapter: BluetoothAdapter = bluetoothManager.adapter
 
     @Throws(InterruptedException::class, ScanFailException::class, FailedToConnectException::class, CouldNotSendBleException::class, BleIOBusyException::class, TimeoutException::class, CouldNotConfirmWriteException::class, CouldNotEnableNotifications::class, DescriptorNotFoundException::class, CouldNotConfirmDescriptorWriteException::class)
-    fun activateNewPod() {
+    override fun activateNewPod() {
         aapsLogger.info(LTag.PUMPBTCOMM, "starting new pod activation")
         val podScanner = PodScanner(aapsLogger, bluetoothAdapter)
         val podAddress = podScanner.scanForPod(PodScanner.SCAN_FOR_SERVICE_UUID, PodScanner.POD_ID_NOT_ACTIVATED).scanResult.device.address
