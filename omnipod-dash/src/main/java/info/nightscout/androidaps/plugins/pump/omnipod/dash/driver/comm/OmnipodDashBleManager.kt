@@ -6,9 +6,9 @@ import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.response.
 
 interface OmnipodDashBleManager {
 
-    fun sendCommand(cmd: Command): Response;
+    fun sendCommand(cmd: Command): Response
 
-    fun getStatus(): ConnectionStatus;
+    fun getStatus(): ConnectionStatus
 
     fun connect()
 
