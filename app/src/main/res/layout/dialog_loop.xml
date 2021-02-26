@@ -20,7 +20,7 @@
             android:layout_gravity="center"
               android:background="?attr/colorPrimary"
             android:orientation="horizontal"
-            android:padding="5dp">
+            android:padding="4dp">
 
             <ImageView
                 android:id="@+id/loop_icon"
@@ -143,7 +143,7 @@
                     android:layout_width="0dp"
                     android:layout_height="fill_parent"
                     android:layout_gravity="center"
-                    android:layout_marginEnd="-4dp"
+                    android:layout_marginEnd="0dp"
                     android:layout_weight="0.5"
                     android:paddingStart="10dp"
                     android:paddingEnd="10dp"
@@ -253,7 +253,7 @@
                     style="?android:attr/buttonStyle"
                     android:layout_width="0px"
                     android:layout_height="fill_parent"
-                    android:layout_marginEnd="-4dp"
+                    android:layout_marginEnd="0dp"
                     android:layout_weight="0.5"
                     android:paddingStart="5dp"
                     android:paddingEnd="5dp"
@@ -373,7 +373,7 @@
                     style="?android:attr/buttonStyle"
                     android:layout_width="0px"
                     android:layout_height="fill_parent"
-                    android:layout_marginEnd="-4dp"
+                    android:layout_marginEnd="0dp"
                     android:layout_weight="0.5"
                     android:paddingStart="5dp"
                     android:paddingEnd="5dp"
