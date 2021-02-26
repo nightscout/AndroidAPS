@@ -15,6 +15,6 @@ data class PairMessage(
         destination = destination,
         payload = payload,
         sequenceNumber = sequenceNumber,
-        sas = true, // TODO: understand why this is true for PairMessages
+        sas = true // TODO: understand why this is true for PairMessages
     ),
 )

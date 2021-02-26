@@ -2,6 +2,6 @@ package info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.callbac
 
 sealed class DescriptorWriteConfirmation
 
-data class DescriptorWriteConfirmationUUID(val uuid: String): DescriptorWriteConfirmation()
+data class DescriptorWriteConfirmationUUID(val uuid: String) : DescriptorWriteConfirmation()
 
-data class DescriptorWriteConfirmationError(val status: Int): DescriptorWriteConfirmation()
+data class DescriptorWriteConfirmationError(val status: Int) : DescriptorWriteConfirmation()
