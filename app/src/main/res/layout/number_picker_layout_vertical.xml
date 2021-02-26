@@ -2,7 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="60dp"
     android:layout_height="100dp"
-    android:background="@drawable/background_darkgray"
+    android:background="@drawable/background_total"
     android:orientation="vertical">
 
     <Button

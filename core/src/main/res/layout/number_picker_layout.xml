@@ -4,7 +4,7 @@
     android:layout_height="40dp"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="horizontal"
-    android:background="@drawable/background_darkgray">
+    android:background="@drawable/background_total">
 
     <Button
         android:id="@+id/decrement"

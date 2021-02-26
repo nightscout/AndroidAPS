@@ -74,6 +74,8 @@
         <item name="dialogTitleColor">@color/white</item>
         <item name="dialogTitleIconTint">@color/white</item>
         <item name="dialogUrgent" >@color/red</item>
+        <!-- wizard dialog -->
+        <item name="totalBackground" >@color/darkgray</item>
         <!-- TDD Stats   -->
         <item name="backgroundStatsColor">@color/background_stats_color</item>
         <!---Android Dark and Light Theme Base colors-->
