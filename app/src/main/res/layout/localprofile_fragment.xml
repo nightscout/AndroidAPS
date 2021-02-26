@@ -243,21 +243,23 @@
 
         </LinearLayout>
 
-        <Button
+        <info.nightscout.androidaps.utils.ui.SingleClickButton
             android:id="@+id/profileSwitchlocal"
-            style="?android:attr/buttonStyle"
+            style="@style/Widget.MaterialComponents.Button.UnelevatedButton"
             android:layout_width="wrap_content"
             android:layout_height="0dp"
             android:layout_gravity="center_horizontal"
             android:layout_marginBottom="3dp"
-            android:layout_marginLeft="10dp"
-            android:layout_marginRight="10dp"
+            android:layout_marginStart="2dp"
+            android:layout_marginEnd="2dp"
             android:layout_marginTop="3dp"
             android:layout_weight="1"
             android:paddingStart="10dp"
             android:paddingEnd="10dp"
             android:text="@string/activate_profile"
-            android:drawableStart="@drawable/ic_local_activate" />
+            android:textAlignment="center"
+            app:icon="@drawable/ic_local_activate"
+            app:iconGravity="textStart"/>
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -265,37 +267,41 @@
             android:layout_gravity="center_horizontal"
             android:orientation="horizontal">
 
-            <Button
+            <info.nightscout.androidaps.utils.ui.SingleClickButton
                 android:id="@+id/reset"
-                style="?android:attr/buttonStyle"
+                style="@style/Widget.MaterialComponents.Button.UnelevatedButton"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
-                android:layout_marginLeft="10dp"
+                android:layout_marginStart="2dp"
+                android:layout_marginEnd="2dp"
                 android:layout_marginTop="3dp"
-                android:layout_marginRight="10dp"
                 android:layout_marginBottom="3dp"
                 android:layout_weight="1"
-                android:drawableStart="@drawable/ic_local_reset"
                 android:paddingStart="10dp"
                 android:paddingEnd="10dp"
-                android:text="@string/reset" />
+                android:textAlignment="center"
+                android:text="@string/reset"
+                app:icon="@drawable/ic_local_reset"
+                app:iconGravity="textStart"/>
 
-            <Button
+            <info.nightscout.androidaps.utils.ui.SingleClickButton
                 android:id="@+id/save"
-                style="?android:attr/buttonStyle"
+                style="@style/Widget.MaterialComponents.Button.UnelevatedButton"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
-                android:layout_marginLeft="10dp"
+                android:layout_marginStart="2dp"
+                android:layout_marginEnd="2dp"
                 android:layout_marginTop="3dp"
-                android:layout_marginRight="10dp"
                 android:layout_marginBottom="3dp"
                 android:layout_weight="1"
-                android:drawableStart="@drawable/ic_local_save"
                 android:paddingStart="10dp"
                 android:paddingEnd="10dp"
-                android:text="@string/save" />
+                android:textAlignment="center"
+                android:text="@string/save"
+                app:icon="@drawable/ic_local_save"
+                app:iconGravity="textStart"/>
         </LinearLayout>
 
     </LinearLayout>
