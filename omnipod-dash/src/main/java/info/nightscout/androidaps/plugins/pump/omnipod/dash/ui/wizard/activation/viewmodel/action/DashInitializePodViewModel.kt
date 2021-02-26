@@ -26,7 +26,7 @@ class DashInitializePodViewModel @Inject constructor(private val aapsLogger: AAP
         // TODO FIRST STEP OF ACTIVATION
         AsyncTask.execute {
             try {
-                bleManager.activateNewPod()
+                bleManager.connect()
             } catch (e: Exception) {
                 aapsLogger.error(LTag.PUMP, "TEST ACTIVATE Exception" + e.toString() + ExceptionUtils.getStackTrace(e))
 
