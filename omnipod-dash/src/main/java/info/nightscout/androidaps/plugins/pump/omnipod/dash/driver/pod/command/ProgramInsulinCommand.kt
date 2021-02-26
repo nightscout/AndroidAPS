@@ -7,7 +7,18 @@ import java.nio.ByteBuffer
 import java.util.*
 
 // Always followed by one of: 0x13, 0x16, 0x17
-class ProgramInsulinCommand(uniqueId: Int, sequenceNumber: Short, multiCommandFlag: Boolean, nonce: Int, insulinProgramElements: List<ShortInsulinProgramElement>, private val checksum: Short, private val byte9: Byte, private val byte10And11: Short, private val byte12And13: Short, private val deliveryType: DeliveryType) : NonceEnabledCommand(CommandType.PROGRAM_INSULIN, uniqueId, sequenceNumber, multiCommandFlag, nonce) {
+class ProgramInsulinCommand(
+    uniqueId: Int,
+    sequenceNumber: Short,
+    multiCommandFlag: Boolean,
+    nonce: Int, insulinProgramElements:
+    List<ShortInsulinProgramElement>,
+    private val checksum: Short,
+    private val byte9: Byte,
+    private val byte10And11: Short,
+    private val byte12And13: Short,
+    private val deliveryType: DeliveryType
+) : NonceEnabledCommand(CommandType.PROGRAM_INSULIN, uniqueId, sequenceNumber, multiCommandFlag, nonce) {
 
     private val insulinProgramElements: List<ShortInsulinProgramElement> = ArrayList(insulinProgramElements)
 

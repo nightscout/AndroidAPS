@@ -5,13 +5,12 @@ import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.command.b
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.command.base.builder.HeaderEnabledCommandBuilder
 import java.nio.ByteBuffer
 
-class GetVersionCommand internal constructor(uniqueId: Int, sequenceNumber: Short, multiCommandFlag: Boolean) : HeaderEnabledCommand(CommandType.GET_VERSION, uniqueId, sequenceNumber, multiCommandFlag) {
+class GetVersionCommand internal constructor(
+    uniqueId: Int,
+    sequenceNumber: Short,
+    multiCommandFlag: Boolean
+) : HeaderEnabledCommand(CommandType.GET_VERSION, uniqueId, sequenceNumber, multiCommandFlag) {
 
-    //
-    //
-    //
-    //
-    //
     override val encoded: ByteArray
         get() = appendCrc(ByteBuffer.allocate(LENGTH + HEADER_LENGTH) //
             .put(encodeHeader(uniqueId, sequenceNumber, LENGTH, multiCommandFlag)) //

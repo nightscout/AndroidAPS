@@ -9,20 +9,16 @@ import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.util.Mess
 import java.nio.ByteBuffer
 
 // NOT SUPPORTED: extended bolus
-class ProgramBolusCommand internal constructor(private val interlockCommand: ProgramInsulinCommand, uniqueId: Int, sequenceNumber: Short, multiCommandFlag: Boolean, private val programReminder: ProgramReminder, private val numberOfTenthPulses: Short, //
-                                               private val delayUntilFirstTenthPulseInUsec: Int) : HeaderEnabledCommand(CommandType.PROGRAM_BOLUS, uniqueId, sequenceNumber, multiCommandFlag) {
+class ProgramBolusCommand internal constructor(
+    private val interlockCommand: ProgramInsulinCommand,
+    uniqueId: Int,
+    sequenceNumber: Short,
+    multiCommandFlag: Boolean,
+    private val programReminder: ProgramReminder,
+    private val numberOfTenthPulses: Short,
+    private val delayUntilFirstTenthPulseInUsec: Int
+) : HeaderEnabledCommand(CommandType.PROGRAM_BOLUS, uniqueId, sequenceNumber, multiCommandFlag) {
 
-    //
-    //
-    //
-    //
-    //
-    //
-    //
-    //
-    //
-    // Extended bolus pulses
-    // Delay between tenth extended pulses in usec
     override val encoded: ByteArray
         get() {
             val bolusCommand = ByteBuffer.allocate(LENGTH.toInt()) //
@@ -35,7 +31,7 @@ class ProgramBolusCommand internal constructor(private val interlockCommand: Pro
                 .putInt(0) // Delay between tenth extended pulses in usec
                 .array()
             val interlockCommand = interlockCommand.encoded
-            val header: ByteArray = encodeHeader(uniqueId, sequenceNumber, (bolusCommand.size + interlockCommand!!.size).toShort(), multiCommandFlag)
+            val header: ByteArray = encodeHeader(uniqueId, sequenceNumber, (bolusCommand.size + interlockCommand.size).toShort(), multiCommandFlag)
             return appendCrc(ByteBuffer.allocate(header.size + interlockCommand.size + bolusCommand.size) //
                 .put(header) //
                 .put(interlockCommand) //

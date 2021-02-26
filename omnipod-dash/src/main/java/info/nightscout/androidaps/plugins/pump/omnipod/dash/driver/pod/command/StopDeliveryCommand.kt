@@ -1,7 +1,6 @@
 package info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.command
 
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.command.base.CommandType
-import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.command.base.HeaderEnabledCommand
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.command.base.NonceEnabledCommand
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.command.base.builder.NonceEnabledCommandBuilder
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.definition.BeepType
@@ -9,7 +8,14 @@ import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.definitio
 import java.nio.ByteBuffer
 import java.util.*
 
-class StopDeliveryCommand internal constructor(uniqueId: Int, sequenceNumber: Short, multiCommandFlag: Boolean, private val deliveryType: DeliveryType, private val beepType: BeepType, nonce: Int) : NonceEnabledCommand(CommandType.STOP_DELIVERY, uniqueId, sequenceNumber, multiCommandFlag, nonce) {
+class StopDeliveryCommand internal constructor(
+    uniqueId: Int,
+    sequenceNumber: Short,
+    multiCommandFlag: Boolean,
+    private val deliveryType: DeliveryType,
+    private val beepType: BeepType,
+    nonce: Int
+) : NonceEnabledCommand(CommandType.STOP_DELIVERY, uniqueId, sequenceNumber, multiCommandFlag, nonce) {
 
     override val encoded: ByteArray
         get() {

@@ -3,9 +3,10 @@ package info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.response
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.definition.AlarmType
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.definition.NakErrorType
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.definition.PodStatus
-import java.util.*
 
-class NakResponse(encoded: ByteArray) : ResponseBase(ResponseType.NAK_RESPONSE, encoded) {
+class NakResponse(
+    encoded: ByteArray
+) : ResponseBase(ResponseType.NAK_RESPONSE, encoded) {
 
     private val messageType: Byte // TODO directly assign here
     private val messageLength: Short

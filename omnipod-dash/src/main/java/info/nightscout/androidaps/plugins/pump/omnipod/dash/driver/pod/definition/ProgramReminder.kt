@@ -1,8 +1,13 @@
 package info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.definition
 
+import java.io.Serializable
 import kotlin.experimental.and
 
-class ProgramReminder(private val atStart: Boolean, private val atEnd: Boolean, private val atInterval: Byte) : Encodable {
+class ProgramReminder(
+    private val atStart: Boolean,
+    private val atEnd: Boolean,
+    private val atInterval: Byte
+) : Encodable, Serializable {
 
     override val encoded: ByteArray
         get() = byteArrayOf(((if (atStart) 1 else 0) shl 7

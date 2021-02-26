@@ -7,7 +7,13 @@ import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.definitio
 import java.nio.ByteBuffer
 import java.util.*
 
-class ProgramAlertsCommand internal constructor(uniqueId: Int, sequenceNumber: Short, multiCommandFlag: Boolean, alertConfigurations: List<AlertConfiguration>?, nonce: Int) : NonceEnabledCommand(CommandType.PROGRAM_ALERTS, uniqueId, sequenceNumber, multiCommandFlag, nonce) {
+class ProgramAlertsCommand internal constructor(
+    uniqueId: Int,
+    sequenceNumber: Short,
+    multiCommandFlag: Boolean,
+    alertConfigurations: List<AlertConfiguration>?,
+    nonce: Int
+) : NonceEnabledCommand(CommandType.PROGRAM_ALERTS, uniqueId, sequenceNumber, multiCommandFlag, nonce) {
 
     private val alertConfigurations: List<AlertConfiguration>
 

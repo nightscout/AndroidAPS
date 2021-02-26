@@ -2,7 +2,9 @@ package info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.definiti
 
 import java.util.*
 
-class BasalProgram(segments: List<Segment>) {
+class BasalProgram(
+    segments: List<Segment>
+) {
 
     val segments: MutableList<Segment> = segments.toMutableList()
         get() = Collections.unmodifiableList(field) // TODO Adrian: moved method here

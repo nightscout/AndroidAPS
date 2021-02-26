@@ -1,6 +1,9 @@
 package info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.definition
 
-enum class PodStatus(private val value: Byte) {
+enum class PodStatus(
+    private val value: Byte
+) {
+
     UNINITIALIZED(0x00.toByte()),
     MFG_TEST(0x01.toByte()),
     FILLED(0x02.toByte()),

@@ -8,7 +8,9 @@ import java.nio.ByteBuffer
 import java.util.*
 import kotlin.experimental.and
 
-class AlarmStatusResponse(encoded: ByteArray) : AdditionalStatusResponseBase(AdditionalStatusResponseType.ALARM_STATUS, encoded) {
+class AlarmStatusResponse(
+    encoded: ByteArray
+) : AdditionalStatusResponseBase(AdditionalStatusResponseType.ALARM_STATUS, encoded) {
 
     private val messageType: Byte
     private val messageLength: Short

@@ -2,13 +2,15 @@ package info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.command.
 
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.command.insulin.program.util.ProgramBasalUtil
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.definition.Encodable
+import java.io.Serializable
 import java.nio.ByteBuffer
 
-open class BasalInsulinProgramElement(val startSlotIndex: Byte, val numberOfSlots: Byte, val totalTenthPulses: Short) : Encodable {
+open class BasalInsulinProgramElement(
+    val startSlotIndex: Byte,
+    val numberOfSlots: Byte,
+    val totalTenthPulses: Short
+) : Encodable, Serializable {
 
-    //
-    //
-    //
     override val encoded: ByteArray
         get() = ByteBuffer.allocate(6) //
             .putShort(totalTenthPulses) //

@@ -4,7 +4,9 @@ import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.definitio
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.definition.PodStatus
 import kotlin.experimental.and
 
-class DefaultStatusResponse(encoded: ByteArray) : ResponseBase(ResponseType.DEFAULT_STATUS_RESPONSE, encoded) {
+class DefaultStatusResponse(
+    encoded: ByteArray
+) : ResponseBase(ResponseType.DEFAULT_STATUS_RESPONSE, encoded) {
 
     // TODO: Here is a lot of bitshifting that had to be changed. we should go over it.
     private val messageType: Byte = encoded[0]

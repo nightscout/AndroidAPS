@@ -1,6 +1,9 @@
 package info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.definition
 
-enum class AlarmType(private val value: Byte) {
+enum class AlarmType(
+    private val value: Byte
+) {
+
     NONE(0x00.toByte()),
     ALARM_PW_FLASH_ERASE(0x01.toByte()),
     ALARM_PW_FLASH_WRITE(0x02.toByte()),

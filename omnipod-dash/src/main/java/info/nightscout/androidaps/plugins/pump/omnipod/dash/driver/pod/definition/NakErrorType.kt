@@ -1,6 +1,9 @@
 package info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.definition
 
-enum class NakErrorType(private val value: Byte) {
+enum class NakErrorType(
+    private val value: Byte
+) {
+
     FLASH_WRITE(0x01.toByte()),
     FLASH_ERASE(0x02.toByte()),
     FLASH_OPERATION(0x03.toByte()),

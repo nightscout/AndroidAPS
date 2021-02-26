@@ -1,6 +1,12 @@
 package info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.command.insulin.program
 
-class CurrentSlot(val index: Byte, val eighthSecondsRemaining: Short, val pulsesRemaining: Short) {
+import java.io.Serializable
+
+class CurrentSlot(
+    val index: Byte,
+    val eighthSecondsRemaining: Short,
+    val pulsesRemaining: Short
+) : Serializable {
 
     override fun toString(): String = "CurrentSlot{" +
         "index=" + index +

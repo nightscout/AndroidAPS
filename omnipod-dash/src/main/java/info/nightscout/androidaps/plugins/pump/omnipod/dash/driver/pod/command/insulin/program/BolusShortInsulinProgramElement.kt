@@ -2,7 +2,9 @@ package info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.command.
 
 import java.nio.ByteBuffer
 
-class BolusShortInsulinProgramElement(private val numberOfPulses: Short) : ShortInsulinProgramElement {
+class BolusShortInsulinProgramElement(
+    private val numberOfPulses: Short
+) : ShortInsulinProgramElement {
 
     override val encoded: ByteArray
         get() = ByteBuffer.allocate(2).putShort(numberOfPulses).array()

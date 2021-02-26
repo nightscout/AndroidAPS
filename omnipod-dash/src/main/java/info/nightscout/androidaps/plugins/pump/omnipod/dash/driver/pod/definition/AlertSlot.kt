@@ -1,6 +1,9 @@
 package info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.definition
 
-enum class AlertSlot(val value: Byte) {
+enum class AlertSlot(
+    val value: Byte
+) {
+
     AUTO_OFF(0x00.toByte()),
     MULTI_COMMAND(0x01.toByte()),
     EXPIRATION_IMMINENT(0x02.toByte()),

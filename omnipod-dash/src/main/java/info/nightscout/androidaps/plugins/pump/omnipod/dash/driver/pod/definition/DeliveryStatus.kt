@@ -1,6 +1,9 @@
 package info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.definition
 
-enum class DeliveryStatus(private val value: Byte) {
+enum class DeliveryStatus(
+    private val value: Byte
+) {
+
     SUSPENDED(0x00.toByte()),
     BASAL_ACTIVE(0x01.toByte()),
     TEMP_BASAL_ACTIVE(0x02.toByte()),

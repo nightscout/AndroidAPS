@@ -3,15 +3,12 @@ package info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.command.
 import java.nio.ByteBuffer
 import kotlin.experimental.and
 
-class BasalShortInsulinProgramElement(// 4 bits
-    private val numberOfSlots: Byte, // 10 bits
-    private val pulsesPerSlot: Short, //
-    private val extraAlternatePulse: Boolean) : ShortInsulinProgramElement {
+class BasalShortInsulinProgramElement(
+    private val numberOfSlots: Byte, // 4 bits
+    private val pulsesPerSlot: Short, //10 bits
+    private val extraAlternatePulse: Boolean
+) : ShortInsulinProgramElement {
 
-    //
-    //
-    //
-    //
     override val encoded: ByteArray
         get() {
             val firstByte = (numberOfSlots - 1 and 0x0f shl 4 //
