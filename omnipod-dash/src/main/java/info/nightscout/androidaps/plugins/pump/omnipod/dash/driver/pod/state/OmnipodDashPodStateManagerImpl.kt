@@ -34,6 +34,15 @@ class OmnipodDashPodStateManagerImpl @Inject constructor(
             store()
         }
 
+    override val isUniqueIdSet: Boolean = activationProgress.isAtLeast(ActivationProgress.SET_UNIQUE_ID)
+
+    override val isActivationCompleted: Boolean = activationProgress == ActivationProgress.COMPLETED
+
+    override val isSuspended: Boolean = podState.deliveryStatus?.equals(DeliveryStatus.SUSPENDED)
+        ?: true
+
+    override val isPodRunning: Boolean = podState.podStatus?.isRunning() ?: false
+
     override var lastConnection: Long
         get() = podState.lastConnection
         set(value) {

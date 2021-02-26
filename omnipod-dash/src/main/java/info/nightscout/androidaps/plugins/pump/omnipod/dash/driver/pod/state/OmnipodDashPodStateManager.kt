@@ -11,6 +11,10 @@ import java.util.*
 interface OmnipodDashPodStateManager {
 
     var activationProgress: ActivationProgress
+    val isUniqueIdSet: Boolean
+    val isActivationCompleted: Boolean
+    val isSuspended: Boolean
+    val isPodRunning: Boolean
     var lastConnection: Long
     val lastUpdated: Long
 

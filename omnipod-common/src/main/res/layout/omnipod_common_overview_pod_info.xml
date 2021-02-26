@@ -32,7 +32,7 @@
             tools:ignore="HardcodedText" />
 
         <TextView
-            android:id="@+id/pod_address"
+            android:id="@+id/unique_id"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
@@ -110,7 +110,7 @@
             tools:ignore="HardcodedText" />
 
         <TextView
-            android:id="@+id/pod_tid"
+            android:id="@+id/pod_sequence_number"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"

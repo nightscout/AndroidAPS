@@ -1,7 +1,7 @@
 package info.nightscout.androidaps.plugins.pump.omnipod.dash.driver
 
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.definition.BasalProgram
-import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.event.PodEvent
+import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.event.PodEvent
 import io.reactivex.Observable
 
 interface OmnipodDashManager {

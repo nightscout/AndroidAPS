@@ -13,7 +13,7 @@
             android:gravity="end"
             android:paddingStart="5dp"
             android:paddingEnd="5dp"
-            android:text="@string/omnipod_dash_bluetooth_address"
+            android:text="@string/omnipod_dash_overview_bluetooth_address"
             android:textSize="14sp" />
 
         <TextView
@@ -51,7 +51,7 @@
             android:gravity="end"
             android:paddingStart="5dp"
             android:paddingEnd="5dp"
-            android:text="@string/omnipod_dash_bluetooth_status"
+            android:text="@string/omnipod_dash_overview_bluetooth_status"
             android:textSize="14sp" />
 
         <TextView

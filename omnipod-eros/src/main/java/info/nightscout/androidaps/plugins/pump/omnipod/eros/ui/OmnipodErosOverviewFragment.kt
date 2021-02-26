@@ -254,13 +254,13 @@ class OmnipodErosOverviewFragment : DaggerFragment() {
         }
 
         if (!podStateManager.hasPodState() || !podStateManager.isPodInitialized) {
-            podInfoBinding.podAddress.text = if (podStateManager.hasPodState()) {
+            podInfoBinding.uniqueId.text = if (podStateManager.hasPodState()) {
                 podStateManager.address.toString()
             } else {
                 PLACEHOLDER
             }
             podInfoBinding.podLot.text = PLACEHOLDER
-            podInfoBinding.podTid.text = PLACEHOLDER
+            podInfoBinding.podSequenceNumber.text = PLACEHOLDER
             podInfoBinding.firmwareVersion.text = PLACEHOLDER
             podInfoBinding.timeOnPod.text = PLACEHOLDER
             podInfoBinding.podExpiryDate.text = PLACEHOLDER
@@ -271,9 +271,9 @@ class OmnipodErosOverviewFragment : DaggerFragment() {
             podInfoBinding.reservoir.setTextColor(Color.WHITE)
             podInfoBinding.podActiveAlerts.text = PLACEHOLDER
         } else {
-            podInfoBinding.podAddress.text = podStateManager.address.toString()
+            podInfoBinding.uniqueId.text = podStateManager.address.toString()
             podInfoBinding.podLot.text = podStateManager.lot.toString()
-            podInfoBinding.podTid.text = podStateManager.tid.toString()
+            podInfoBinding.podSequenceNumber.text = podStateManager.tid.toString()
             podInfoBinding.firmwareVersion.text = resourceHelper.gs(R.string.omnipod_eros_overview_firmware_version_value, podStateManager.pmVersion.toString(), podStateManager.piVersion.toString())
 
             podInfoBinding.timeOnPod.text = readableZonedTime(podStateManager.time)

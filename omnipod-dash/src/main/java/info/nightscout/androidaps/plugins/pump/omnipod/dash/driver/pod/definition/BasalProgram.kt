@@ -15,6 +15,8 @@ class BasalProgram(segments: List<Segment>) {
 
     fun isZeroBasal() = segments.sumBy(Segment::basalRateInHundredthUnitsPerHour) == 0
 
+    fun rateAt(date: Date): Double = 0.0 // TODO
+
     class Segment(val startSlotIndex: Short, val endSlotIndex: Short, val basalRateInHundredthUnitsPerHour: Int) {
 
         fun getPulsesPerHour(): Short {
