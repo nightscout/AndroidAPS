@@ -2,6 +2,7 @@ package info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.command.
 
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.command.base.Command
 
+@Suppress("UNCHECKED_CAST")
 abstract class NonceEnabledCommandBuilder<T : NonceEnabledCommandBuilder<T, R>, R : Command> : HeaderEnabledCommandBuilder<T, R>() {
 
     protected var nonce: Int? = null

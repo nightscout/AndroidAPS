@@ -5,7 +5,7 @@ import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.command.b
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.command.base.builder.NonceEnabledCommandBuilder
 import java.nio.ByteBuffer
 
-class DeactivateCommand internal constructor(
+class DeactivateCommand private constructor(
     uniqueId: Int,
     sequenceNumber: Short,
     multiCommandFlag: Boolean,

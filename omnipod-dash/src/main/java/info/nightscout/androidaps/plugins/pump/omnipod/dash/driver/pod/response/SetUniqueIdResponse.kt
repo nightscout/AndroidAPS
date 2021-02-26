@@ -2,6 +2,7 @@ package info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.response
 
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.definition.PodStatus
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.response.ResponseType.ActivationResponseType
+import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.util.byValue
 import java.nio.ByteBuffer
 
 class SetUniqueIdResponse(
@@ -147,7 +148,7 @@ class SetUniqueIdResponse(
         bleVersionMinor = (encoded[13].toInt() and 0xff).toShort()
         bleVersionInterim = (encoded[14].toInt() and 0xff).toShort()
         productId = (encoded[15].toInt() and 0xff).toShort()
-        podStatus = PodStatus.byValue(encoded[16])
+        podStatus = byValue(encoded[16], PodStatus.UNKNOWN)
         lotNumber = ByteBuffer.wrap(byteArrayOf(0, 0, 0, 0, encoded[17], encoded[18], encoded[19], encoded[20])).long
         podSequenceNumber = ByteBuffer.wrap(byteArrayOf(0, 0, 0, 0, encoded[21], encoded[22], encoded[23], encoded[24])).long
         uniqueIdReceivedInCommand = ByteBuffer.wrap(byteArrayOf(0, 0, 0, 0, encoded[25], encoded[26], encoded[27], encoded[28])).long

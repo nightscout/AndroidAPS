@@ -8,7 +8,7 @@ import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.definitio
 import java.nio.ByteBuffer
 import java.util.*
 
-class StopDeliveryCommand internal constructor(
+class StopDeliveryCommand private constructor(
     uniqueId: Int,
     sequenceNumber: Short,
     multiCommandFlag: Boolean,
@@ -24,7 +24,7 @@ class StopDeliveryCommand internal constructor(
                 .put(commandType.value) //
                 .put(BODY_LENGTH) //
                 .putInt(nonce) //
-                .put((beepType.value.toInt() shl 4 or deliveryType.encoded[0].toInt()).toByte()) // TODO bitstuff
+                .put((beepType.value.toInt() shl 4 or deliveryType.encoded[0].toInt()).toByte()) //
                 .array())
         }
 

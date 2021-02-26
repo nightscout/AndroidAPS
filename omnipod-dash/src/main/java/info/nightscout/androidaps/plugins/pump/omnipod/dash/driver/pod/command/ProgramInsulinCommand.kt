@@ -7,7 +7,7 @@ import java.nio.ByteBuffer
 import java.util.*
 
 // Always followed by one of: 0x13, 0x16, 0x17
-class ProgramInsulinCommand(
+class ProgramInsulinCommand internal constructor(
     uniqueId: Int,
     sequenceNumber: Short,
     multiCommandFlag: Boolean,
@@ -37,7 +37,7 @@ class ProgramInsulinCommand(
     fun calculateChecksum(bytes: ByteArray): Short {
         var sum: Short = 0
         for (b in bytes) {
-            sum = ((b.toInt() and 0xff) + sum).toShort() // TODO Adrian: int conversion ok?
+            sum = ((b.toInt() and 0xff) + sum).toShort()
         }
         return sum
     }

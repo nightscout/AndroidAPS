@@ -1,8 +1,8 @@
 package info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.definition
 
-enum class PodStatus(
-    private val value: Byte
-) {
+import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.util.HasValue
+
+enum class PodStatus(override val value: Byte) : HasValue {
 
     UNINITIALIZED(0x00.toByte()),
     MFG_TEST(0x01.toByte()),
@@ -21,18 +21,6 @@ enum class PodStatus(
     LUMP_OF_COAL(0x0e.toByte()),
     DEACTIVATED(0x0f.toByte()),
     UNKNOWN(0xff.toByte());
-
-    companion object {
-
-        fun byValue(value: Byte): PodStatus {
-            for (status in values()) {
-                if (status.value == value) {
-                    return status
-                }
-            }
-            return UNKNOWN
-        }
-    }
 
     fun isRunning(): Boolean = this == RUNNING_ABOVE_MIN_VOLUME || this == RUNNING_BELOW_MIN_VOLUME
 }

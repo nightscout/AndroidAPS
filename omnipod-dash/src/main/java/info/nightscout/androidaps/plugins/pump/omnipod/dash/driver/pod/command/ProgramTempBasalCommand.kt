@@ -11,7 +11,7 @@ import java.nio.ByteBuffer
 import java.util.*
 
 // NOT SUPPORTED: percentage temp basal
-class ProgramTempBasalCommand protected constructor(
+class ProgramTempBasalCommand private constructor(
     private val interlockCommand: ProgramInsulinCommand,
     uniqueId: Int,
     sequenceNumber: Short,
@@ -20,10 +20,11 @@ class ProgramTempBasalCommand protected constructor(
     insulinProgramElements: List<BasalInsulinProgramElement>
 ) : HeaderEnabledCommand(CommandType.PROGRAM_TEMP_BASAL, uniqueId, sequenceNumber, multiCommandFlag) {
 
-    private val insulinProgramElements: List<BasalInsulinProgramElement>
-    fun getBodyLength(): Byte = (insulinProgramElements.size * 6 + 8).toByte()
+    private val insulinProgramElements: List<BasalInsulinProgramElement> = ArrayList(insulinProgramElements)
 
-    fun getLength(): Short = (getBodyLength() + 2).toShort()
+    private fun getBodyLength(): Byte = (insulinProgramElements.size * 6 + 8).toByte()
+
+    private fun getLength(): Short = (getBodyLength() + 2).toShort()
 
     class Builder : NonceEnabledCommandBuilder<Builder, ProgramTempBasalCommand>() {
 
@@ -56,14 +57,10 @@ class ProgramTempBasalCommand protected constructor(
             val shortInsulinProgramElements = ProgramTempBasalUtil.mapPulsesPerSlotToShortInsulinProgramElements(pulsesPerSlot)
             val insulinProgramElements = ProgramTempBasalUtil.mapTenthPulsesPerSlotToLongInsulinProgramElements(tenthPulsesPerSlot)
             val interlockCommand = ProgramInsulinCommand(uniqueId!!, sequenceNumber!!, multiCommandFlag, nonce!!, shortInsulinProgramElements,
-                ProgramTempBasalUtil.calculateChecksum(durationInSlots, pulsesPerSlot!![0], pulsesPerSlot), durationInSlots,
+                ProgramTempBasalUtil.calculateChecksum(durationInSlots, pulsesPerSlot[0], pulsesPerSlot), durationInSlots,
                 0x3840.toShort(), pulsesPerSlot[0], ProgramInsulinCommand.DeliveryType.TEMP_BASAL)
             return ProgramTempBasalCommand(interlockCommand, uniqueId!!, sequenceNumber!!, multiCommandFlag, programReminder!!, insulinProgramElements)
         }
-    }
-
-    init {
-        this.insulinProgramElements = ArrayList(insulinProgramElements)
     }
 
     override val encoded: ByteArray
@@ -90,7 +87,7 @@ class ProgramTempBasalCommand protected constructor(
             }
             val tempBasalCommand = buffer.array()
             val interlockCommand = interlockCommand.encoded
-            val header: ByteArray = encodeHeader(uniqueId, sequenceNumber, (tempBasalCommand.size + interlockCommand!!.size).toShort(), multiCommandFlag)
+            val header: ByteArray = encodeHeader(uniqueId, sequenceNumber, (tempBasalCommand.size + interlockCommand.size).toShort(), multiCommandFlag)
             return appendCrc(ByteBuffer.allocate(header.size + interlockCommand.size + tempBasalCommand.size) //
                 .put(header) //
                 .put(interlockCommand) //

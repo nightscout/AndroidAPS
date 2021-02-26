@@ -7,7 +7,7 @@ import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.definitio
 import java.nio.ByteBuffer
 import java.util.*
 
-class ProgramAlertsCommand internal constructor(
+class ProgramAlertsCommand private constructor(
     uniqueId: Int,
     sequenceNumber: Short,
     multiCommandFlag: Boolean,

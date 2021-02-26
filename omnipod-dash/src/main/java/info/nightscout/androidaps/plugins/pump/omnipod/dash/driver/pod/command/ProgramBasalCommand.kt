@@ -12,7 +12,7 @@ import java.nio.ByteBuffer
 import java.util.*
 
 // Always preceded by 0x1a ProgramInsulinCommand
-class ProgramBasalCommand internal constructor(
+class ProgramBasalCommand private constructor(
     private val interlockCommand: ProgramInsulinCommand,
     uniqueId: Int,
     sequenceNumber: Short,

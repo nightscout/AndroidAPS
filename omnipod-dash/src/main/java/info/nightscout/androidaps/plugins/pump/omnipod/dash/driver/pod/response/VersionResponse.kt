@@ -2,6 +2,7 @@ package info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.response
 
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.definition.PodStatus
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.response.ResponseType.ActivationResponseType
+import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.util.byValue
 import java.nio.ByteBuffer
 import java.util.*
 import kotlin.experimental.and
@@ -19,7 +20,7 @@ class VersionResponse(
     private val bleVersionMinor: Short = (encoded[6].toInt() and 0xff).toShort()
     private val bleVersionInterim: Short = (encoded[7].toInt() and 0xff).toShort()
     private val productId: Short = (encoded[8].toInt() and 0xff).toShort()
-    private val podStatus: PodStatus = PodStatus.byValue((encoded[9] and 0xf))
+    private val podStatus: PodStatus = byValue((encoded[9] and 0xf), PodStatus.UNKNOWN)
     private val lotNumber: Long = ByteBuffer.wrap(byteArrayOf(0, 0, 0, 0, encoded[10], encoded[11], encoded[12], encoded[13])).long
     private val podSequenceNumber: Long = ByteBuffer.wrap(byteArrayOf(0, 0, 0, 0, encoded[14], encoded[15], encoded[16], encoded[17])).long
     private val rssi: Byte = (encoded[18] and 0x3f)

@@ -17,10 +17,10 @@ object ProgramBasalUtil {
     private const val MAX_NUMBER_OF_SLOTS_IN_INSULIN_PROGRAM_ELEMENT: Byte = 16
 
     fun mapTenthPulsesPerSlotToLongInsulinProgramElements(
-        tenthPulsesPerSlot: ShortArray?,
+        tenthPulsesPerSlot: ShortArray,
         insulinProgramElementFactory: (Byte, Byte, Short) -> BasalInsulinProgramElement = ::BasalInsulinProgramElement
     ): List<BasalInsulinProgramElement> {
-        require(tenthPulsesPerSlot!!.size <= NUMBER_OF_BASAL_SLOTS) { "Basal program must contain at most 48 slots" }
+        require(tenthPulsesPerSlot.size <= NUMBER_OF_BASAL_SLOTS) { "Basal program must contain at most 48 slots" }
         val elements: MutableList<BasalInsulinProgramElement> = ArrayList()
         var previousTenthPulsesPerSlot: Short = 0
         var numberOfSlotsInCurrentElement: Byte = 0

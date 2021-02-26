@@ -34,6 +34,8 @@ class OmnipodDashPodStateManagerImpl @Inject constructor(
             store()
         }
 
+    // TODO: dynamic get() fun instead of assignment
+
     override val isUniqueIdSet: Boolean = activationProgress.isAtLeast(ActivationProgress.SET_UNIQUE_ID)
 
     override val isActivationCompleted: Boolean = activationProgress == ActivationProgress.COMPLETED
@@ -105,17 +107,17 @@ class OmnipodDashPodStateManagerImpl @Inject constructor(
     }
 
     override fun updateFromDefaultStatusResponse(response: DefaultStatusResponse) {
-        podState.deliveryStatus = response.getDeliveryStatus()
-        podState.podStatus = response.getPodStatus()
-        podState.pulsesDelivered = response.getTotalPulsesDelivered()
-        podState.pulsesRemaining = response.getReservoirPulsesRemaining()
-        podState.sequenceNumberOfLastProgrammingCommand = response.getSequenceNumberOfLastProgrammingCommand()
-        podState.minutesSinceActivation = response.getMinutesSinceActivation()
+        podState.deliveryStatus = response.deliveryStatus
+        podState.podStatus = response.podStatus
+        podState.pulsesDelivered = response.totalPulsesDelivered
+        podState.pulsesRemaining = response.reservoirPulsesRemaining
+        podState.sequenceNumberOfLastProgrammingCommand = response.sequenceNumberOfLastProgrammingCommand
+        podState.minutesSinceActivation = response.minutesSinceActivation
 
         // TODO active alerts
 
         podState.lastUpdated = System.currentTimeMillis()
-        store();
+        store()
     }
 
     override fun updateFromVersionResponse(response: VersionResponse) {

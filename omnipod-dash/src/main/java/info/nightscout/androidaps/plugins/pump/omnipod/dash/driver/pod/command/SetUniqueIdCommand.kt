@@ -6,7 +6,7 @@ import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.command.b
 import java.nio.ByteBuffer
 import java.util.*
 
-class SetUniqueIdCommand internal constructor(
+class SetUniqueIdCommand private constructor(
     uniqueId: Int,
     sequenceNumber: Short,
     multiCommandFlag: Boolean,

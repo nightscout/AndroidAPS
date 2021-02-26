@@ -9,7 +9,7 @@ import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.util.Mess
 import java.nio.ByteBuffer
 
 // NOT SUPPORTED: extended bolus
-class ProgramBolusCommand internal constructor(
+class ProgramBolusCommand private constructor(
     private val interlockCommand: ProgramInsulinCommand,
     uniqueId: Int,
     sequenceNumber: Short,
