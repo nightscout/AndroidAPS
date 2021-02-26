@@ -1,6 +1,7 @@
 package info.nightscout.androidaps.plugins.general.overview
 
 import android.text.SpannableString
+import android.text.style.BackgroundColorSpan
 import android.text.style.ForegroundColorSpan
 import android.view.Menu
 import android.view.View
@@ -118,7 +119,8 @@ class OverviewMenus @Inject constructor(
                         val item = popup.menu.add(Menu.NONE, m.ordinal + 100 * (g + 1), Menu.NONE, resourceHelper.gs(m.nameId))
                         val title = item.title
                         val s = SpannableString(title)
-                        s.setSpan(ForegroundColorSpan(resourceHelper.getAttributeColor(null,m.attrId)), 0, s.length, 0)
+                        s.setSpan(ForegroundColorSpan(resourceHelper.gc(R.color.black)), 0, s.length, 0)
+                        s.setSpan(BackgroundColorSpan(resourceHelper.getAttributeColor(null,m.attrId)), 0, s.length, 0)
                         item.title = s
                         item.isCheckable = true
                         item.isChecked = settingsCopy[g][m.ordinal]
