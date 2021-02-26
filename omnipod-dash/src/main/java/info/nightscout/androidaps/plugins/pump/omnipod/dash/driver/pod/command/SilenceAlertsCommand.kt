@@ -63,6 +63,7 @@ class SilenceAlertsCommand private constructor(
         private var silenceSuspendInProgressAlert = false
         private var silenceSuspendEndedAlert = false
         private var silencePodExpirationAlert = false
+
         fun setSilenceAutoOffAlert(silenceAutoOffAlert: Boolean): Builder {
             this.silenceAutoOffAlert = silenceAutoOffAlert
             return this

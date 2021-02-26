@@ -7,7 +7,7 @@ class BasalProgram(
 ) {
 
     val segments: MutableList<Segment> = segments.toMutableList()
-        get() = Collections.unmodifiableList(field) // TODO Adrian: moved method here
+        get() = Collections.unmodifiableList(field)
 
     fun addSegment(segment: Segment) {
         segments.add(segment)

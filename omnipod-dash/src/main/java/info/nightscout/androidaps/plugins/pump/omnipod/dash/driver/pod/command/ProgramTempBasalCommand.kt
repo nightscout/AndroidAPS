@@ -31,6 +31,7 @@ class ProgramTempBasalCommand private constructor(
         private var programReminder: ProgramReminder? = null
         private var rateInUnitsPerHour: Double? = null
         private var durationInMinutes: Short? = null
+
         fun setProgramReminder(programReminder: ProgramReminder?): Builder {
             this.programReminder = programReminder
             return this
@@ -43,6 +44,7 @@ class ProgramTempBasalCommand private constructor(
 
         fun setDurationInMinutes(durationInMinutes: Short): Builder {
             require(durationInMinutes % 30 == 0) { "durationInMinutes must be dividable by 30" }
+
             this.durationInMinutes = durationInMinutes
             return this
         }
@@ -51,6 +53,7 @@ class ProgramTempBasalCommand private constructor(
             requireNotNull(programReminder) { "programReminder can not be null" }
             requireNotNull(rateInUnitsPerHour) { "rateInUnitsPerHour can not be null" }
             requireNotNull(durationInMinutes) { "durationInMinutes can not be null" }
+
             val durationInSlots = (durationInMinutes!! / 30).toByte()
             val pulsesPerSlot = ProgramTempBasalUtil.mapTempBasalToPulsesPerSlot(durationInSlots, rateInUnitsPerHour!!)
             val tenthPulsesPerSlot = ProgramTempBasalUtil.mapTempBasalToTenthPulsesPerSlot(durationInSlots.toInt(), rateInUnitsPerHour!!)

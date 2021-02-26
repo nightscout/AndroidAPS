@@ -76,6 +76,7 @@ class ProgramBasalCommand private constructor(
         private var basalProgram: BasalProgram? = null
         private var programReminder: ProgramReminder? = null
         private var currentTime: Date? = null
+
         fun setBasalProgram(basalProgram: BasalProgram?): Builder {
             this.basalProgram = basalProgram
             return this

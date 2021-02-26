@@ -34,14 +34,6 @@ class ProgramInsulinCommand internal constructor(
         }
     }
 
-    fun calculateChecksum(bytes: ByteArray): Short {
-        var sum: Short = 0
-        for (b in bytes) {
-            sum = ((b.toInt() and 0xff) + sum).toShort()
-        }
-        return sum
-    }
-
     override val encoded: ByteArray
         get() {
             val buffer = ByteBuffer.allocate(getLength().toInt()) //

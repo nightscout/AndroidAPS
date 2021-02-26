@@ -45,6 +45,7 @@ class SetUniqueIdCommand private constructor(
         private var lotNumber: Int? = null
         private var podSequenceNumber: Int? = null
         private var initializationTime: Date? = null
+
         fun setLotNumber(lotNumber: Int): Builder {
             this.lotNumber = lotNumber
             return this

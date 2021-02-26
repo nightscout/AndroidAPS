@@ -8,6 +8,7 @@ abstract class HeaderEnabledCommandBuilder<T : HeaderEnabledCommandBuilder<T, R>
     protected var uniqueId: Int? = null
     protected var sequenceNumber: Short? = null
     protected var multiCommandFlag = false
+
     override fun build(): R {
         requireNotNull(uniqueId) { "uniqueId can not be null" }
         requireNotNull(sequenceNumber) { "sequenceNumber can not be null" }

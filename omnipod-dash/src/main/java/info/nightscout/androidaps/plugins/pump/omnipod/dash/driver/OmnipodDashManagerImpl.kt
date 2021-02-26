@@ -3,7 +3,6 @@ package info.nightscout.androidaps.plugins.pump.omnipod.dash.driver
 import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.OmnipodDashBleManager
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.event.PodEvent
-import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.event.PodEventType
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.command.GetVersionCommand
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.command.GetVersionCommand.Companion.DEFAULT_UNIQUE_ID
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.definition.ActivationProgress
@@ -31,25 +30,26 @@ class OmnipodDashManagerImpl @Inject constructor(
             return Observable.error(IllegalStateException("Pod is in an incorrect state"))
         }
 
-    private val observeConnectToPod: Observable<PodEvent> = Observable.defer {
-        // TODO
-        // send CONNECTING event here
-        bleManager.connect()
-        Observable.just(PodEvent(PodEventType.CONNECTED, null))
-    }
+    private val observeConnectToPod: Observable<PodEvent>
+        get() {
+            return Observable.defer {
+                bleManager.connect()
+                Observable.just(PodEvent.Connected(0)) // TODO should be returned in BleManager
+            }
+        }
 
     override fun activatePodPart1(): Observable<PodEvent> {
-        // TODO
+        val command = GetVersionCommand.Builder() //
+            .setSequenceNumber(podStateManager.messageSequenceNumber) //
+            .setUniqueId(DEFAULT_UNIQUE_ID) //
+            .build()
+
         return Observable.concat(
             observePodReadyForActivationPart1,
             observeConnectToPod,
             Observable.defer {
-                bleManager.sendCommand(GetVersionCommand.Builder() //
-                    .setSequenceNumber(podStateManager.messageSequenceNumber) //
-                    .setUniqueId(DEFAULT_UNIQUE_ID) //
-                    .build()
-                )
-                Observable.just(PodEvent(PodEventType.COMMAND_SENT, null))
+                bleManager.sendCommand(command)
+                Observable.just(PodEvent.CommandSent(command)) // TODO should be returned in BleManager
             }
             // ... Send more commands
         )

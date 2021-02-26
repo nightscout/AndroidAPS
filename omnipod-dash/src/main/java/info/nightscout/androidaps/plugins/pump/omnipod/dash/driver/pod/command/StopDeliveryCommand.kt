@@ -57,6 +57,7 @@ class StopDeliveryCommand private constructor(
 
         private var deliveryType: DeliveryType? = null
         private var beepType: BeepType? = BeepType.LONG_SINGLE_BEEP
+
         fun setDeliveryType(deliveryType: DeliveryType?): Builder {
             this.deliveryType = deliveryType
             return this
@@ -70,6 +71,7 @@ class StopDeliveryCommand private constructor(
         override fun buildCommand(): StopDeliveryCommand {
             requireNotNull(deliveryType) { "deliveryType can not be null" }
             requireNotNull(beepType) { "beepType can not be null" }
+
             return StopDeliveryCommand(uniqueId!!, sequenceNumber!!, multiCommandFlag, deliveryType!!, beepType!!, nonce!!)
         }
     }

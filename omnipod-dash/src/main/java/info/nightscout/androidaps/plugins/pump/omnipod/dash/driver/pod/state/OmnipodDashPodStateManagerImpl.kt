@@ -36,14 +36,18 @@ class OmnipodDashPodStateManagerImpl @Inject constructor(
 
     // TODO: dynamic get() fun instead of assignment
 
-    override val isUniqueIdSet: Boolean = activationProgress.isAtLeast(ActivationProgress.SET_UNIQUE_ID)
+    override val isUniqueIdSet: Boolean
+        get() = activationProgress.isAtLeast(ActivationProgress.SET_UNIQUE_ID)
 
-    override val isActivationCompleted: Boolean = activationProgress == ActivationProgress.COMPLETED
+    override val isActivationCompleted: Boolean
+        get() = activationProgress == ActivationProgress.COMPLETED
 
-    override val isSuspended: Boolean = podState.deliveryStatus?.equals(DeliveryStatus.SUSPENDED)
-        ?: true
+    override val isSuspended: Boolean
+        get() = podState.deliveryStatus?.equals(DeliveryStatus.SUSPENDED)
+            ?: true
 
-    override val isPodRunning: Boolean = podState.podStatus?.isRunning() ?: false
+    override val isPodRunning: Boolean
+        get() = podState.podStatus?.isRunning() ?: false
 
     override var lastConnection: Long
         get() = podState.lastConnection
@@ -52,54 +56,77 @@ class OmnipodDashPodStateManagerImpl @Inject constructor(
             store()
         }
 
-    override val lastUpdated: Long = podState.lastUpdated
+    override val lastUpdated: Long
+        get() = podState.lastUpdated
 
-    override val messageSequenceNumber: Short = podState.messageSequenceNumber
+    override val messageSequenceNumber: Short
+        get() = podState.messageSequenceNumber
 
-    override val sequenceNumberOfLastProgrammingCommand: Short? = podState.sequenceNumberOfLastProgrammingCommand
+    override val sequenceNumberOfLastProgrammingCommand: Short?
+        get() = podState.sequenceNumberOfLastProgrammingCommand
 
-    override val activationTime: Long? = podState.activationTime
+    override val activationTime: Long?
+        get() = podState.activationTime
 
-    override val uniqueId: Long? = podState.uniqueId
+    override val uniqueId: Long?
+        get() = podState.uniqueId
 
-    override val bluetoothAddress: String? = podState.bluetoothAddress
+    override val bluetoothAddress: String?
+        get() = podState.bluetoothAddress
 
-    override val bluetoothVersion: SoftwareVersion? = podState.bleVersion
+    override val bluetoothVersion: SoftwareVersion?
+        get() = podState.bleVersion
 
-    override val firmwareVersion: SoftwareVersion? = podState.firmwareVersion
+    override val firmwareVersion: SoftwareVersion?
+        get() = podState.firmwareVersion
 
-    override val lotNumber: Long? = podState.lotNumber
+    override val lotNumber: Long?
+        get() = podState.lotNumber
 
-    override val podSequenceNumber: Long? = podState.podSequenceNumber
+    override val podSequenceNumber: Long?
+        get() = podState.podSequenceNumber
 
-    override val pulseRate: Short? = podState.pulseRate
+    override val pulseRate: Short?
+        get() = podState.pulseRate
 
-    override val primePulseRate: Short? = podState.primePulseRate
+    override val primePulseRate: Short?
+        get() = podState.primePulseRate
 
-    override val podLifeInHours: Short? = podState.podLifeInHours
+    override val podLifeInHours: Short?
+        get() = podState.podLifeInHours
 
-    override val firstPrimeBolusVolume: Short? = podState.firstPrimeBolusVolume
+    override val firstPrimeBolusVolume: Short?
+        get() = podState.firstPrimeBolusVolume
 
-    override val secondPrimeBolusVolume: Short? = podState.secondPrimeBolusVolume
+    override val secondPrimeBolusVolume: Short?
+        get() = podState.secondPrimeBolusVolume
 
-    override val pulsesDelivered: Short? = podState.pulsesDelivered
+    override val pulsesDelivered: Short?
+        get() = podState.pulsesDelivered
 
-    override val pulsesRemaining: Short? = podState.pulsesRemaining
+    override val pulsesRemaining: Short?
+        get() = podState.pulsesRemaining
 
-    override val podStatus: PodStatus? = podState.podStatus
+    override val podStatus: PodStatus?
+        get() = podState.podStatus
 
-    override val deliveryStatus: DeliveryStatus? = podState.deliveryStatus
+    override val deliveryStatus: DeliveryStatus?
+        get() = podState.deliveryStatus
 
-    override val minutesSinceActivation: Short? = podState.minutesSinceActivation
+    override val minutesSinceActivation: Short?
+        get() = podState.minutesSinceActivation
 
-    override val activeAlerts: EnumSet<AlertSlot>? = podState.activeAlerts
+    override val activeAlerts: EnumSet<AlertSlot>?
+        get() = podState.activeAlerts
 
-    override val tempBasal: OmnipodDashPodStateManager.TempBasal? = podState.tempBasal
+    override val tempBasal: OmnipodDashPodStateManager.TempBasal?
+        get() = podState.tempBasal
 
     override val tempBasalActive: Boolean
-        get() = tempBasal != null && tempBasal.startTime + tempBasal.durationInMinutes * 60 * 1000 > System.currentTimeMillis()
+        get() = tempBasal != null && tempBasal!!.startTime + tempBasal!!.durationInMinutes * 60 * 1000 > System.currentTimeMillis()
 
-    override val basalProgram: BasalProgram? = podState.basalProgram
+    override val basalProgram: BasalProgram?
+        get() = podState.basalProgram
 
     override fun increaseMessageSequenceNumber() {
         podState.messageSequenceNumber = ((podState.messageSequenceNumber.toInt() + 1) and 0x0f).toShort()
@@ -121,28 +148,28 @@ class OmnipodDashPodStateManagerImpl @Inject constructor(
     }
 
     override fun updateFromVersionResponse(response: VersionResponse) {
-        podState.bleVersion = SoftwareVersion(response.getBleVersionMajor(), response.getBleVersionMinor(), response.getBleVersionInterim())
-        podState.firmwareVersion = SoftwareVersion(response.getFirmwareVersionMajor(), response.getFirmwareVersionMinor(), response.getFirmwareVersionInterim())
-        podState.podStatus = response.getPodStatus()
-        podState.lotNumber = response.getLotNumber()
-        podState.podSequenceNumber = response.getPodSequenceNumber()
+        podState.bleVersion = SoftwareVersion(response.bleVersionMajor, response.bleVersionMinor, response.bleVersionInterim)
+        podState.firmwareVersion = SoftwareVersion(response.firmwareVersionMajor, response.firmwareVersionMinor, response.firmwareVersionInterim)
+        podState.podStatus = response.podStatus
+        podState.lotNumber = response.lotNumber
+        podState.podSequenceNumber = response.podSequenceNumber
 
         podState.lastUpdated = System.currentTimeMillis()
         store()
     }
 
     override fun updateFromSetUniqueIdResponse(response: SetUniqueIdResponse) {
-        podState.pulseRate = response.getDeliveryRate()
-        podState.primePulseRate = response.getPrimeRate()
-        podState.firstPrimeBolusVolume = response.getNumberOfPrimePulses()
-        podState.secondPrimeBolusVolume = response.getNumberOfEngagingClutchDrivePulses()
-        podState.podLifeInHours = response.getPodExpirationTimeInHours()
-        podState.bleVersion = SoftwareVersion(response.getBleVersionMajor(), response.getBleVersionMinor(), response.getBleVersionInterim())
-        podState.firmwareVersion = SoftwareVersion(response.getFirmwareVersionMajor(), response.getFirmwareVersionMinor(), response.getFirmwareVersionInterim())
-        podState.podStatus = response.getPodStatus()
-        podState.lotNumber = response.getLotNumber()
-        podState.podSequenceNumber = response.getPodSequenceNumber()
-        podState.uniqueId = response.getUniqueIdReceivedInCommand()
+        podState.pulseRate = response.pumpRate
+        podState.primePulseRate = response.primePumpRate
+        podState.firstPrimeBolusVolume = response.numberOfPrimePulses
+        podState.secondPrimeBolusVolume = response.numberOfEngagingClutchDrivePulses
+        podState.podLifeInHours = response.podExpirationTimeInHours
+        podState.bleVersion = SoftwareVersion(response.bleVersionMajor, response.bleVersionMinor, response.bleVersionInterim)
+        podState.firmwareVersion = SoftwareVersion(response.firmwareVersionMajor, response.firmwareVersionMinor, response.firmwareVersionInterim)
+        podState.podStatus = response.podStatus
+        podState.lotNumber = response.lotNumber
+        podState.podSequenceNumber = response.podSequenceNumber
+        podState.uniqueId = response.uniqueIdReceivedInCommand
 
         podState.lastUpdated = System.currentTimeMillis()
         store()
