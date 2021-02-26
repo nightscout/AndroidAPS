@@ -17,7 +17,7 @@ class SetUniqueIdResponseTest {
         Assert.assertNotSame(encoded, response.encoded)
         Assert.assertEquals(ResponseType.ACTIVATION_RESPONSE, response.responseType)
         Assert.assertEquals(ResponseType.ActivationResponseType.SET_UNIQUE_ID_RESPONSE, response.activationResponseType)
-        Assert.assertEquals(ResponseType.ACTIVATION_RESPONSE.getValue(), response.getMessageType())
+        Assert.assertEquals(ResponseType.ACTIVATION_RESPONSE.value, response.getMessageType())
         Assert.assertEquals(27.toShort(), response.getMessageLength())
         Assert.assertEquals(5000.toShort(), response.getPulseVolumeInTenThousandthMicroLiter())
         Assert.assertEquals(16.toShort(), response.getDeliveryRate())

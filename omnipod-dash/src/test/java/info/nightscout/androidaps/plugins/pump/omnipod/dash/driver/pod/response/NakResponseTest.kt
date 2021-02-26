@@ -18,7 +18,7 @@ class NakResponseTest {
         Assert.assertArrayEquals(encoded, response.encoded)
         Assert.assertNotSame(encoded, response.encoded)
         Assert.assertEquals(ResponseType.NAK_RESPONSE, response.responseType)
-        Assert.assertEquals(ResponseType.NAK_RESPONSE.getValue(), response.getMessageType())
+        Assert.assertEquals(ResponseType.NAK_RESPONSE.value, response.getMessageType())
         Assert.assertEquals(NakErrorType.ILLEGAL_PARAM, response.getNakErrorType())
         Assert.assertEquals(AlarmType.NONE, response.getAlarmType())
         Assert.assertEquals(PodStatus.RUNNING_BELOW_MIN_VOLUME, response.getPodStatus())

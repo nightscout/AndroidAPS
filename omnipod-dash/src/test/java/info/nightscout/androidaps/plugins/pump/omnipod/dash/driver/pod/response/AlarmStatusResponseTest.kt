@@ -3,7 +3,6 @@ package info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.response
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.definition.AlarmType
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.definition.DeliveryStatus
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.definition.PodStatus
-import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.response.ResponseType
 import org.apache.commons.codec.DecoderException
 import org.apache.commons.codec.binary.Hex
 import org.junit.Assert
@@ -18,9 +17,9 @@ class AlarmStatusResponseTest {
         Assert.assertArrayEquals(encoded, response.encoded)
         Assert.assertNotSame(encoded, response.encoded)
         Assert.assertEquals(ResponseType.ADDITIONAL_STATUS_RESPONSE, response.responseType)
-        Assert.assertEquals(ResponseType.ADDITIONAL_STATUS_RESPONSE.getValue(), response.getMessageType())
-        Assert.assertEquals(ResponseType.AdditionalStatusResponseType.ALARM_STATUS, response.statusResponseType)
-        Assert.assertEquals(ResponseType.AdditionalStatusResponseType.ALARM_STATUS.getValue(), response.getAdditionalStatusResponseType())
+        Assert.assertEquals(ResponseType.ADDITIONAL_STATUS_RESPONSE.value, response.getMessageType())
+        Assert.assertEquals(ResponseType.StatusResponseType.ALARM_STATUS, response.statusResponseType)
+        Assert.assertEquals(ResponseType.StatusResponseType.ALARM_STATUS.value, response.getAdditionalStatusResponseType())
         Assert.assertEquals(PodStatus.RUNNING_ABOVE_MIN_VOLUME, response.getPodStatus())
         Assert.assertEquals(DeliveryStatus.BASAL_ACTIVE, response.getDeliveryStatus())
         Assert.assertEquals(0.toShort(), response.getBolusPulsesRemaining())

@@ -16,7 +16,7 @@ class DefaultStatusResponseTest {
         Assert.assertArrayEquals(encoded, response.encoded)
         Assert.assertNotSame(encoded, response.encoded)
         Assert.assertEquals(ResponseType.DEFAULT_STATUS_RESPONSE, response.responseType)
-        Assert.assertEquals(ResponseType.DEFAULT_STATUS_RESPONSE.getValue(), response.getMessageType())
+        Assert.assertEquals(ResponseType.DEFAULT_STATUS_RESPONSE.value, response.getMessageType())
         Assert.assertEquals(DeliveryStatus.BASAL_ACTIVE, response.getDeliveryStatus())
         Assert.assertEquals(PodStatus.RUNNING_ABOVE_MIN_VOLUME, response.getPodStatus())
         Assert.assertEquals(320.toShort(), response.getTotalPulsesDelivered())

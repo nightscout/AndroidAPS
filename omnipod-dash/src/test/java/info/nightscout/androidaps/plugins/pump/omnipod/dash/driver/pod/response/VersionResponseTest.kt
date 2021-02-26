@@ -17,7 +17,7 @@ class VersionResponseTest {
         Assert.assertNotSame(encoded, response.encoded)
         Assert.assertEquals(ResponseType.ACTIVATION_RESPONSE, response.responseType)
         Assert.assertEquals(ResponseType.ActivationResponseType.GET_VERSION_RESPONSE, response.activationResponseType)
-        Assert.assertEquals(ResponseType.ACTIVATION_RESPONSE.getValue(), response.getMessageType())
+        Assert.assertEquals(ResponseType.ACTIVATION_RESPONSE.value, response.getMessageType())
         Assert.assertEquals(21.toShort(), response.getMessageLength())
         Assert.assertEquals(4.toShort(), response.getFirmwareVersionMajor())
         Assert.assertEquals(10.toShort(), response.getFirmwareVersionMinor())
