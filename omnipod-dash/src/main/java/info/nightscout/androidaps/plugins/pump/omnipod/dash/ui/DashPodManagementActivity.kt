@@ -12,6 +12,8 @@ import info.nightscout.androidaps.plugins.pump.omnipod.common.queue.command.Comm
 import info.nightscout.androidaps.plugins.pump.omnipod.common.ui.wizard.activation.PodActivationWizardActivity
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.R
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.databinding.OmnipodDashPodManagementBinding
+import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.definition.ActivationProgress
+import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.state.OmnipodDashPodStateManager
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.ui.wizard.activation.DashPodActivationWizardActivity
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.ui.wizard.deactivation.DashPodDeactivationWizardActivity
 import info.nightscout.androidaps.queue.Callback
@@ -34,6 +36,7 @@ class DashPodManagementActivity : NoSplashAppCompatActivity() {
     @Inject lateinit var injector: HasAndroidInjector
     @Inject lateinit var context: Context
     @Inject lateinit var aapsSchedulers: AapsSchedulers
+    @Inject lateinit var podStateManager: OmnipodDashPodStateManager
 
     private var disposables: CompositeDisposable = CompositeDisposable()
 
@@ -46,17 +49,15 @@ class DashPodManagementActivity : NoSplashAppCompatActivity() {
         setContentView(binding.root)
 
         binding.buttonActivatePod.setOnClickListener {
-            /* TODO determine type
-            val type: PodActivationWizardActivity.Type = if (podStateManager.isPodInitialized
-                and podStateManager.activationProgress.isAtLeast(ActivationProgress.PRIMING_COMPLETED)) {
-                PodActivationWizardActivity.Type.SHORT
-            } else {
-                PodActivationWizardActivity.Type.LONG
-            }
-             */
+            val type: PodActivationWizardActivity.Type =
+                if (podStateManager.activationProgress.isAtLeast(ActivationProgress.PRIME_COMPLETED)) {
+                    PodActivationWizardActivity.Type.SHORT
+                } else {
+                    PodActivationWizardActivity.Type.LONG
+                }
 
             val intent = Intent(this, DashPodActivationWizardActivity::class.java)
-            intent.putExtra(PodActivationWizardActivity.KEY_TYPE, PodActivationWizardActivity.Type.LONG)
+            intent.putExtra(PodActivationWizardActivity.KEY_TYPE, type)
             startActivity(intent)
         }
 

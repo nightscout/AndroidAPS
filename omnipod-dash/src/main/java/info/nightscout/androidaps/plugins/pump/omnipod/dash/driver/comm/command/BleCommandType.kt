@@ -7,7 +7,7 @@ enum class BleCommandType(val value: Byte) {
 
         @JvmStatic
         fun byValue(value: Byte): BleCommandType =
-            BleCommandType.values().firstOrNull { it.value == value }
+            values().firstOrNull { it.value == value }
                 ?: throw IllegalArgumentException("Unknown BleCommandType: $value")
     }
 }
