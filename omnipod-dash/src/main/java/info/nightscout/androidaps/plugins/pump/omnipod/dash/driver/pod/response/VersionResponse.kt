@@ -6,17 +6,19 @@ import java.nio.ByteBuffer
 import java.util.*
 import kotlin.experimental.and
 
-class VersionResponse(encoded: ByteArray) : ActivationResponseBase(ActivationResponseType.GET_VERSION_RESPONSE, encoded) {
+class VersionResponse(
+    encoded: ByteArray
+) : ActivationResponseBase(ActivationResponseType.GET_VERSION_RESPONSE, encoded) {
 
     private val messageType: Byte = encoded[0]
-    private val messageLength: Short = (encoded[1].toInt() and 0xff) .toShort()
-    private val firmwareVersionMajor: Short = (encoded[2].toInt() and 0xff) .toShort()
-    private val firmwareVersionMinor: Short = (encoded[3].toInt() and 0xff) .toShort()
-    private val firmwareVersionInterim: Short = (encoded[4].toInt() and 0xff) .toShort()
-    private val bleVersionMajor: Short = (encoded[5].toInt() and 0xff) .toShort()
-    private val bleVersionMinor: Short = (encoded[6].toInt() and 0xff) .toShort()
-    private val bleVersionInterim: Short = (encoded[7].toInt() and 0xff) .toShort()
-    private val productId: Short = (encoded[8].toInt() and 0xff) .toShort()
+    private val messageLength: Short = (encoded[1].toInt() and 0xff).toShort()
+    private val firmwareVersionMajor: Short = (encoded[2].toInt() and 0xff).toShort()
+    private val firmwareVersionMinor: Short = (encoded[3].toInt() and 0xff).toShort()
+    private val firmwareVersionInterim: Short = (encoded[4].toInt() and 0xff).toShort()
+    private val bleVersionMajor: Short = (encoded[5].toInt() and 0xff).toShort()
+    private val bleVersionMinor: Short = (encoded[6].toInt() and 0xff).toShort()
+    private val bleVersionInterim: Short = (encoded[7].toInt() and 0xff).toShort()
+    private val productId: Short = (encoded[8].toInt() and 0xff).toShort()
     private val podStatus: PodStatus = PodStatus.byValue((encoded[9] and 0xf))
     private val lotNumber: Long = ByteBuffer.wrap(byteArrayOf(0, 0, 0, 0, encoded[10], encoded[11], encoded[12], encoded[13])).long
     private val podSequenceNumber: Long = ByteBuffer.wrap(byteArrayOf(0, 0, 0, 0, encoded[14], encoded[15], encoded[16], encoded[17])).long

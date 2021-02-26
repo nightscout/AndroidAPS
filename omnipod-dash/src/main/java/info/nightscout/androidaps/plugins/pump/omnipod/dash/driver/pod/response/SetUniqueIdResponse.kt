@@ -27,6 +27,7 @@ class SetUniqueIdResponse(encoded: ByteArray) : ActivationResponseBase(Activatio
     private val lotNumber: Long
     private val podSequenceNumber: Long
     private val uniqueIdReceivedInCommand: Long
+
     fun getMessageType(): Byte {
         return messageType
     }

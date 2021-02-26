@@ -2,7 +2,8 @@ package info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.definiti
 
 // FIXME names
 enum class BeepRepetitionType(  // Used in lump of coal alert
-    val value: Byte) {
+    val value: Byte
+) {
 
     XXX(0x01.toByte()),  // Used in low reservoir alert
     XXX2(0x03.toByte()),  // Used in user pod expiration alert

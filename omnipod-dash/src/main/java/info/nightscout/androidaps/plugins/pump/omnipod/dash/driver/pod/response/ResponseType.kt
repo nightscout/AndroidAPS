@@ -1,7 +1,14 @@
 package info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.response
 
-enum class ResponseType(private val value: Byte) {
-    ACTIVATION_RESPONSE(0x01.toByte()), DEFAULT_STATUS_RESPONSE(0x1d.toByte()), ADDITIONAL_STATUS_RESPONSE(0x02.toByte()), NAK_RESPONSE(0x06.toByte()), UNKNOWN(0xff.toByte());
+enum class ResponseType(
+    private val value: Byte
+) {
+
+    ACTIVATION_RESPONSE(0x01.toByte()),
+    DEFAULT_STATUS_RESPONSE(0x1d.toByte()),
+    ADDITIONAL_STATUS_RESPONSE(0x02.toByte()),
+    NAK_RESPONSE(0x06.toByte()),
+    UNKNOWN(0xff.toByte());
 
     fun getValue(): Byte {
         return value

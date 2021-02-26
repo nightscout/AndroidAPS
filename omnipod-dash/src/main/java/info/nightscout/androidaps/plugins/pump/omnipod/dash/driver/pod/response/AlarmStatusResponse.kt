@@ -1,6 +1,8 @@
 package info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.response
 
-import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.definition.*
+import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.definition.AlarmType
+import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.definition.DeliveryStatus
+import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.definition.PodStatus
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.response.ResponseType.AdditionalStatusResponseType
 import java.nio.ByteBuffer
 import java.util.*
@@ -38,6 +40,7 @@ class AlarmStatusResponse(encoded: ByteArray) : AdditionalStatusResponseBase(Add
     private val receiverLowerGain: Short
     private val podStatusWhenAlarmOccurred2: PodStatus
     private val returnAddressOfPodAlarmHandlerCaller: Short
+
     fun getMessageType(): Byte {
         return messageType
     }

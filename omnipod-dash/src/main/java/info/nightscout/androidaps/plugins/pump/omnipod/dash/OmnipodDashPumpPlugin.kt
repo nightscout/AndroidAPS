@@ -28,8 +28,8 @@ class OmnipodDashPumpPlugin @Inject constructor(
     injector: HasAndroidInjector,
     aapsLogger: AAPSLogger,
     resourceHelper: ResourceHelper,
-    commandQueue: CommandQueueProvider)
-    : PumpPluginBase(pluginDescription, injector, aapsLogger, resourceHelper, commandQueue), PumpInterface {
+    commandQueue: CommandQueueProvider
+) : PumpPluginBase(pluginDescription, injector, aapsLogger, resourceHelper, commandQueue), PumpInterface {
 
     companion object {
 

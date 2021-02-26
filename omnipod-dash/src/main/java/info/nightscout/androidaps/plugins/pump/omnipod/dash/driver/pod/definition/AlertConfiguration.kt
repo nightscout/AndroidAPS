@@ -3,8 +3,16 @@ package info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.definiti
 import java.nio.ByteBuffer
 import kotlin.experimental.or
 
-class AlertConfiguration(private val slot: AlertSlot, private val enabled: Boolean, private val durationInMinutes: Short, private val autoOff: Boolean, private val triggerType: AlertTriggerType, private val offsetInMinutesOrThresholdInMicroLiters: Short, private val beepType: BeepType, private val beepRepetition: BeepRepetitionType) : Encodable {
-
+class AlertConfiguration(
+    private val slot: AlertSlot,
+    private val enabled: Boolean,
+    private val durationInMinutes: Short,
+    private val autoOff: Boolean,
+    private val triggerType: AlertTriggerType,
+    private val offsetInMinutesOrThresholdInMicroLiters: Short,
+    private val beepType: BeepType,
+    private val beepRepetition: BeepRepetitionType
+) : Encodable {
 
     override val encoded: ByteArray
         get() {
