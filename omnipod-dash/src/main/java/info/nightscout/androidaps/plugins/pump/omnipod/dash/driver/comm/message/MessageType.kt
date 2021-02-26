@@ -7,8 +7,9 @@ enum class MessageType(val value: Byte) {
     PAIRING(3);
 
     companion object {
+
         fun byValue(value: Byte): MessageType =
-            MessageType.values().firstOrNull() {it.value == value}
+            MessageType.values().firstOrNull { it.value == value }
                 ?: throw IllegalArgumentException("Unknown MessageType: $value")
     }
 }

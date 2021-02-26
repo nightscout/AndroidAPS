@@ -95,7 +95,7 @@ class OmnipodDashBleManagerImpl @Inject constructor(private val context: Context
     companion object {
 
         private const val CONNECT_TIMEOUT_MS = 5000
-        public const val CONTROLLER_ID = 4242 // TODO read from preferences or somewhere else.
+        const val CONTROLLER_ID = 4242 // TODO read from preferences or somewhere else.
     }
 
 }

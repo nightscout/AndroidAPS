@@ -10,11 +10,11 @@ data class PairMessage(
     val destination: Id,
     val payload: ByteArray,
     val messagePacket: MessagePacket = MessagePacket(
-        type=MessageType.PAIRING,
-        source=source,
+        type = MessageType.PAIRING,
+        source = source,
         destination = destination,
-        payload=payload,
-        sequenceNumber=sequenceNumber,
-        sas=true, // TODO: understand why this is true for PairMessages
+        payload = payload,
+        sequenceNumber = sequenceNumber,
+        sas = true, // TODO: understand why this is true for PairMessages
     ),
-) {}
+)

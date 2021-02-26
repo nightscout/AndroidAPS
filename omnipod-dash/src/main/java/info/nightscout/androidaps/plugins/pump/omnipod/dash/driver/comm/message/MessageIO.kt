@@ -4,8 +4,11 @@ import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.logging.LTag
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.command.*
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.exceptions.UnexpectedCommandException
-import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.io.*
-import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.io.PayloadSplitter
+import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.io.BleIO
+import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.io.CharacteristicType
+import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.io.PayloadJoiner
+import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.io.PayloadJoinerActionAccept
+import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.io.PayloadJoinerActionReject
 import info.nightscout.androidaps.utils.extensions.toHex
 
 class MessageIO(private val aapsLogger: AAPSLogger, private val bleIO: BleIO) {
@@ -57,7 +60,7 @@ class MessageIO(private val aapsLogger: AAPSLogger, private val bleIO: BleIO) {
             }
         }
         val finalCmd = when (joiner.finalize()) {
-            is PayloadJoinerActionAccept ->  BleCommandSuccess()
+            is PayloadJoinerActionAccept -> BleCommandSuccess()
             is PayloadJoinerActionReject -> BleCommandFail()
         }
         bleIO.sendAndConfirmPacket(CharacteristicType.CMD, finalCmd.data)

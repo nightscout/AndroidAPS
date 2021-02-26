@@ -9,6 +9,7 @@ class BleDiscoveredDevice(val scanResult: ScanResult, private val scanRecord: Sc
 
     private val sequenceNo: Int
     private val lotNo: Long
+
     @Throws(DiscoveredInvalidPodException::class)
     private fun validateServiceUUIDs() {
         val serviceUuids = scanRecord.serviceUuids
@@ -65,7 +66,8 @@ class BleDiscoveredDevice(val scanResult: ScanResult, private val scanRecord: Sc
     }
 
     companion object {
-        const val MAIN_SERVICE_UUID = "4024";
+
+        const val MAIN_SERVICE_UUID = "4024"
         const val UNKNOWN_THIRD_SERVICE_UUID = "000a" // FIXME: why is this 000a?
         private fun extractUUID16(uuid: ParcelUuid): String {
             return uuid.toString().substring(4, 8)

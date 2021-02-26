@@ -75,7 +75,7 @@ data class MessagePacket(
     }
 }
 
-private class Flag(var value: Int=0) {
+private class Flag(var value: Int = 0) {
 
     fun set(idx: Byte, set: Boolean) {
         val mask = 1 shl (7 - idx)
