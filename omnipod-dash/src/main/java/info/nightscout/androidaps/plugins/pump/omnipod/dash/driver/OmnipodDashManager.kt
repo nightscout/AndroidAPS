@@ -25,4 +25,8 @@ interface OmnipodDashManager {
     fun bolus(amount: Double): Observable<PodEvent>
 
     fun cancelBolus(): Observable<PodEvent>
+
+    fun silenceAlerts(): Observable<PodEvent>
+
+    fun deactivatePod(): Observable<PodEvent>
 }

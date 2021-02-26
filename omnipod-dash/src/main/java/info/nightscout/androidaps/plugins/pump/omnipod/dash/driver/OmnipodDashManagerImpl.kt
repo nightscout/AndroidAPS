@@ -65,4 +65,14 @@ class OmnipodDashManagerImpl @Inject constructor(
         // TODO
         return Observable.empty()
     }
+
+    override fun silenceAlerts(): Observable<PodEvent> {
+        // TODO
+        return Observable.empty()
+    }
+
+    override fun deactivatePod(): Observable<PodEvent> {
+        // TODO
+        return Observable.empty()
+    }
 }
