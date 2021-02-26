@@ -4,12 +4,14 @@ import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.definitio
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.definition.PodStatus
 import kotlin.experimental.and
 
-class DefaultStatusResponse(encoded: ByteArray) : ResponseBase(ResponseType.DEFAULT_STATUS_RESPONSE, encoded) {
+class DefaultStatusResponse(
+    encoded: ByteArray
+) : ResponseBase(ResponseType.DEFAULT_STATUS_RESPONSE, encoded) {
 
     // TODO: Here is a lot of bitshifting that had to be changed. we should go over it.
     private val messageType: Byte = encoded[0]
     private val deliveryStatus: DeliveryStatus = DeliveryStatus.byValue((encoded[1].toInt() shr 4 and 0x0f).toByte())
-    private val podStatus: PodStatus = PodStatus.Companion.byValue((encoded[1] and 0x0f) as Byte)
+    private val podStatus: PodStatus = PodStatus.byValue((encoded[1] and 0x0f) as Byte)
     private val totalPulsesDelivered: Short = ((encoded[2] and 0x0f shl 12 or (encoded[3].toInt() and 0xff shl 1) or (encoded[4].toInt() and 0xff ushr 7)).toShort())
     private val sequenceNumberOfLastProgrammingCommand: Short = (encoded[4] ushr 3 and 0x0f).toShort()
     private val bolusPulsesRemaining: Short = ((encoded[4] and 0x07 shl 10 or (encoded[5].toInt() and 0xff) and 2047).toShort())

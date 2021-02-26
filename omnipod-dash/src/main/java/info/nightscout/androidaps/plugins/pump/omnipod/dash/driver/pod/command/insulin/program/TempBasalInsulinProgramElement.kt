@@ -2,10 +2,12 @@ package info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.command.
 
 import java.nio.ByteBuffer
 
-class TempBasalInsulinProgramElement(startSlotIndex: Byte, numberOfSlots: Byte, totalTenthPulses: Short) : BasalInsulinProgramElement(startSlotIndex, numberOfSlots, totalTenthPulses) {
+class TempBasalInsulinProgramElement(
+    startSlotIndex: Byte,
+    numberOfSlots: Byte,
+    totalTenthPulses: Short
+) : BasalInsulinProgramElement(startSlotIndex, numberOfSlots, totalTenthPulses) {
 
-    //
-    //
     override val encoded: ByteArray
         get() {
             val buffer = ByteBuffer.allocate(6)

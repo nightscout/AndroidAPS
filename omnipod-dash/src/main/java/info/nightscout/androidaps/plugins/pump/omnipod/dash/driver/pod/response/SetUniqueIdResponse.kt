@@ -3,10 +3,10 @@ package info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.response
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.definition.PodStatus
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.response.ResponseType.ActivationResponseType
 import java.nio.ByteBuffer
-import java.util.*
-import kotlin.experimental.and
 
-class SetUniqueIdResponse(encoded: ByteArray) : ActivationResponseBase(ActivationResponseType.SET_UNIQUE_ID_RESPONSE, encoded) {
+class SetUniqueIdResponse(
+    encoded: ByteArray
+) : ActivationResponseBase(ActivationResponseType.SET_UNIQUE_ID_RESPONSE, encoded) {
 
     private val messageType: Byte // TODO directly assign here
     private val messageLength: Short
@@ -27,6 +27,7 @@ class SetUniqueIdResponse(encoded: ByteArray) : ActivationResponseBase(Activatio
     private val lotNumber: Long
     private val podSequenceNumber: Long
     private val uniqueIdReceivedInCommand: Long
+
     fun getMessageType(): Byte {
         return messageType
     }
@@ -132,20 +133,20 @@ class SetUniqueIdResponse(encoded: ByteArray) : ActivationResponseBase(Activatio
 
     init {
         messageType = encoded[0]
-        messageLength = (encoded[1].toInt() and 0xff) .toShort()
+        messageLength = (encoded[1].toInt() and 0xff).toShort()
         pulseVolumeInTenThousandthMicroLiter = ByteBuffer.wrap(byteArrayOf(encoded[2], encoded[3])).short
-        pumpRate = (encoded[4].toInt() and 0xff) .toShort()
-        primePumpRate = (encoded[5].toInt() and 0xff) .toShort()
-        numberOfEngagingClutchDrivePulses = (encoded[6].toInt() and 0xff) .toShort()
-        numberOfPrimePulses = (encoded[7].toInt() and 0xff) .toShort()
-        podExpirationTimeInHours = (encoded[8].toInt() and 0xff) .toShort()
-        firmwareVersionMajor = (encoded[9].toInt() and 0xff) .toShort()
-        firmwareVersionMinor = (encoded[10].toInt() and 0xff) .toShort()
-        firmwareVersionInterim = (encoded[11].toInt() and 0xff) .toShort()
-        bleVersionMajor = (encoded[12].toInt() and 0xff) .toShort()
-        bleVersionMinor = (encoded[13].toInt() and 0xff) .toShort()
-        bleVersionInterim = (encoded[14].toInt() and 0xff) .toShort()
-        productId = (encoded[15].toInt() and 0xff) .toShort()
+        pumpRate = (encoded[4].toInt() and 0xff).toShort()
+        primePumpRate = (encoded[5].toInt() and 0xff).toShort()
+        numberOfEngagingClutchDrivePulses = (encoded[6].toInt() and 0xff).toShort()
+        numberOfPrimePulses = (encoded[7].toInt() and 0xff).toShort()
+        podExpirationTimeInHours = (encoded[8].toInt() and 0xff).toShort()
+        firmwareVersionMajor = (encoded[9].toInt() and 0xff).toShort()
+        firmwareVersionMinor = (encoded[10].toInt() and 0xff).toShort()
+        firmwareVersionInterim = (encoded[11].toInt() and 0xff).toShort()
+        bleVersionMajor = (encoded[12].toInt() and 0xff).toShort()
+        bleVersionMinor = (encoded[13].toInt() and 0xff).toShort()
+        bleVersionInterim = (encoded[14].toInt() and 0xff).toShort()
+        productId = (encoded[15].toInt() and 0xff).toShort()
         podStatus = PodStatus.byValue(encoded[16])
         lotNumber = ByteBuffer.wrap(byteArrayOf(0, 0, 0, 0, encoded[17], encoded[18], encoded[19], encoded[20])).long
         podSequenceNumber = ByteBuffer.wrap(byteArrayOf(0, 0, 0, 0, encoded[21], encoded[22], encoded[23], encoded[24])).long

@@ -1,19 +1,24 @@
 package info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.command
 
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.command.base.CommandType
-import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.command.base.HeaderEnabledCommand
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.command.base.NonceEnabledCommand
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.command.base.builder.NonceEnabledCommandBuilder
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.definition.Encodable
 import java.nio.ByteBuffer
 import java.util.*
 
-class SilenceAlertsCommand internal constructor(uniqueId: Int, sequenceNumber: Short, multiCommandFlag: Boolean, private val parameters: SilenceAlertCommandParameters, nonce: Int) : NonceEnabledCommand(CommandType.SILENCE_ALERTS, uniqueId, sequenceNumber, multiCommandFlag, nonce) {
+class SilenceAlertsCommand internal constructor(
+    uniqueId: Int,
+    sequenceNumber: Short,
+    multiCommandFlag: Boolean,
+    private val parameters: SilenceAlertCommandParameters,
+    nonce: Int
+) : NonceEnabledCommand(CommandType.SILENCE_ALERTS, uniqueId, sequenceNumber, multiCommandFlag, nonce) {
 
     override val encoded: ByteArray
         get() =
-            HeaderEnabledCommand.Companion.appendCrc(ByteBuffer.allocate(LENGTH + HeaderEnabledCommand.Companion.HEADER_LENGTH) //
-                .put(HeaderEnabledCommand.Companion.encodeHeader(uniqueId, sequenceNumber, LENGTH, multiCommandFlag)) //
+            appendCrc(ByteBuffer.allocate(LENGTH + HEADER_LENGTH) //
+                .put(encodeHeader(uniqueId, sequenceNumber, LENGTH, multiCommandFlag)) //
                 .put(commandType.value) //
                 .put(BODY_LENGTH) //
                 .putInt(nonce) //

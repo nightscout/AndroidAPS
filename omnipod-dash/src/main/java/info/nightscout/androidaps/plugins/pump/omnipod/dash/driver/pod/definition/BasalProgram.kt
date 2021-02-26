@@ -2,7 +2,9 @@ package info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.definiti
 
 import java.util.*
 
-class BasalProgram(segments: List<Segment>) {
+class BasalProgram(
+    segments: List<Segment>
+) {
 
     val segments: MutableList<Segment> = segments.toMutableList()
         get() = Collections.unmodifiableList(field) // TODO Adrian: moved method here
@@ -14,6 +16,8 @@ class BasalProgram(segments: List<Segment>) {
     fun hasZeroUnitSegments() = segments.any { it.basalRateInHundredthUnitsPerHour == 0 }
 
     fun isZeroBasal() = segments.sumBy(Segment::basalRateInHundredthUnitsPerHour) == 0
+
+    fun rateAt(date: Date): Double = 0.0 // TODO
 
     class Segment(val startSlotIndex: Short, val endSlotIndex: Short, val basalRateInHundredthUnitsPerHour: Int) {
 

@@ -11,8 +11,14 @@ import java.nio.ByteBuffer
 import java.util.*
 
 // NOT SUPPORTED: percentage temp basal
-class ProgramTempBasalCommand protected constructor(private val interlockCommand: ProgramInsulinCommand, uniqueId: Int, sequenceNumber: Short, multiCommandFlag: Boolean,
-                                                    private val programReminder: ProgramReminder, insulinProgramElements: List<BasalInsulinProgramElement>) : HeaderEnabledCommand(CommandType.PROGRAM_TEMP_BASAL, uniqueId, sequenceNumber, multiCommandFlag) {
+class ProgramTempBasalCommand protected constructor(
+    private val interlockCommand: ProgramInsulinCommand,
+    uniqueId: Int,
+    sequenceNumber: Short,
+    multiCommandFlag: Boolean,
+    private val programReminder: ProgramReminder,
+    insulinProgramElements: List<BasalInsulinProgramElement>
+) : HeaderEnabledCommand(CommandType.PROGRAM_TEMP_BASAL, uniqueId, sequenceNumber, multiCommandFlag) {
 
     private val insulinProgramElements: List<BasalInsulinProgramElement>
     fun getBodyLength(): Byte = (insulinProgramElements.size * 6 + 8).toByte()
@@ -84,8 +90,8 @@ class ProgramTempBasalCommand protected constructor(private val interlockCommand
             }
             val tempBasalCommand = buffer.array()
             val interlockCommand = interlockCommand.encoded
-            val header: ByteArray = HeaderEnabledCommand.Companion.encodeHeader(uniqueId, sequenceNumber, (tempBasalCommand.size + interlockCommand!!.size).toShort(), multiCommandFlag)
-            return HeaderEnabledCommand.Companion.appendCrc(ByteBuffer.allocate(header.size + interlockCommand.size + tempBasalCommand.size) //
+            val header: ByteArray = encodeHeader(uniqueId, sequenceNumber, (tempBasalCommand.size + interlockCommand!!.size).toShort(), multiCommandFlag)
+            return appendCrc(ByteBuffer.allocate(header.size + interlockCommand.size + tempBasalCommand.size) //
                 .put(header) //
                 .put(interlockCommand) //
                 .put(tempBasalCommand) //

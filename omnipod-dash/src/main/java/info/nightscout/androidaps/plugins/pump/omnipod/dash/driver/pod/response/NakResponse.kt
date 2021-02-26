@@ -3,9 +3,10 @@ package info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.response
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.definition.AlarmType
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.definition.NakErrorType
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.definition.PodStatus
-import java.util.*
 
-class NakResponse(encoded: ByteArray) : ResponseBase(ResponseType.NAK_RESPONSE, encoded) {
+class NakResponse(
+    encoded: ByteArray
+) : ResponseBase(ResponseType.NAK_RESPONSE, encoded) {
 
     private val messageType: Byte // TODO directly assign here
     private val messageLength: Short
@@ -53,7 +54,7 @@ class NakResponse(encoded: ByteArray) : ResponseBase(ResponseType.NAK_RESPONSE, 
     init {
         messageType = encoded[0]
         messageLength = encoded[1].toShort()
-        nakErrorType = NakErrorType.Companion.byValue(encoded[2])
+        nakErrorType = NakErrorType.byValue(encoded[2])
         val byte3 = encoded[3]
         val byte4 = encoded[4]
         if (nakErrorType == NakErrorType.ILLEGAL_SECURITY_CODE) {

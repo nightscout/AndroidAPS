@@ -12,7 +12,17 @@ import java.nio.ByteBuffer
 import java.util.*
 
 // Always preceded by 0x1a ProgramInsulinCommand
-class ProgramBasalCommand internal constructor(private val interlockCommand: ProgramInsulinCommand, uniqueId: Int, sequenceNumber: Short, multiCommandFlag: Boolean, insulinProgramElements: List<BasalInsulinProgramElement>?, programReminder: ProgramReminder, currentInsulinProgramElementIndex: Byte, remainingTenthPulsesInCurrentInsulinProgramElement: Short, delayUntilNextTenthPulseInUsec: Int) : HeaderEnabledCommand(CommandType.PROGRAM_BASAL, uniqueId, sequenceNumber, multiCommandFlag) {
+class ProgramBasalCommand internal constructor(
+    private val interlockCommand: ProgramInsulinCommand,
+    uniqueId: Int,
+    sequenceNumber: Short,
+    multiCommandFlag: Boolean,
+    insulinProgramElements: List<BasalInsulinProgramElement>,
+    programReminder: ProgramReminder,
+    currentInsulinProgramElementIndex: Byte,
+    remainingTenthPulsesInCurrentInsulinProgramElement: Short,
+    delayUntilNextTenthPulseInUsec: Int
+) : HeaderEnabledCommand(CommandType.PROGRAM_BASAL, uniqueId, sequenceNumber, multiCommandFlag) {
 
     private val insulinProgramElements: List<BasalInsulinProgramElement>
     private val programReminder: ProgramReminder
@@ -22,17 +32,8 @@ class ProgramBasalCommand internal constructor(private val interlockCommand: Pro
     val length: Short
         get() = (insulinProgramElements.size * 6 + 10).toShort()
     val bodyLength: Byte
-        get() = (insulinProgramElements.size * 6 + 8).toByte()//
+        get() = (insulinProgramElements.size * 6 + 8).toByte()
 
-    //
-    //
-    //
-    //
-    //
-    //
-    //
-    //
-    //
     override val encoded: ByteArray
         get() {
             val buffer = ByteBuffer.allocate(length.toInt()) //
@@ -47,8 +48,8 @@ class ProgramBasalCommand internal constructor(private val interlockCommand: Pro
             }
             val basalCommand = buffer.array()
             val interlockCommand = interlockCommand.encoded
-            val header: ByteArray = HeaderEnabledCommand.Companion.encodeHeader(uniqueId, sequenceNumber, (basalCommand.size + interlockCommand!!.size).toShort(), multiCommandFlag)
-            return HeaderEnabledCommand.appendCrc(ByteBuffer.allocate(basalCommand.size + interlockCommand.size + header.size) //
+            val header: ByteArray = encodeHeader(uniqueId, sequenceNumber, (basalCommand.size + interlockCommand.size).toShort(), multiCommandFlag)
+            return appendCrc(ByteBuffer.allocate(basalCommand.size + interlockCommand.size + header.size) //
                 .put(header) //
                 .put(interlockCommand) //
                 .put(basalCommand) //

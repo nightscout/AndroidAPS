@@ -6,21 +6,18 @@ import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.command.b
 import java.nio.ByteBuffer
 import java.util.*
 
-class SetUniqueIdCommand internal constructor(uniqueId: Int, sequenceNumber: Short, multiCommandFlag: Boolean, private val lotNumber: Int, private val podSequenceNumber: Int, private val initializationTime: Date) : HeaderEnabledCommand(CommandType.SET_UNIQUE_ID, uniqueId, sequenceNumber, multiCommandFlag) {
+class SetUniqueIdCommand internal constructor(
+    uniqueId: Int,
+    sequenceNumber: Short,
+    multiCommandFlag: Boolean,
+    private val lotNumber: Int,
+    private val podSequenceNumber: Int,
+    private val initializationTime: Date
+) : HeaderEnabledCommand(CommandType.SET_UNIQUE_ID, uniqueId, sequenceNumber, multiCommandFlag) {
 
-    //
-    //
-    //
-    //
-    //
-    // FIXME ??
-    // FIXME ??
-    //
-    //
-    //
     override val encoded: ByteArray
-        get() = HeaderEnabledCommand.Companion.appendCrc(ByteBuffer.allocate(LENGTH + HeaderEnabledCommand.Companion.HEADER_LENGTH) //
-            .put(HeaderEnabledCommand.Companion.encodeHeader(DEFAULT_UNIQUE_ID, sequenceNumber, LENGTH, multiCommandFlag)) //
+        get() = appendCrc(ByteBuffer.allocate(LENGTH + HEADER_LENGTH) //
+            .put(encodeHeader(DEFAULT_UNIQUE_ID, sequenceNumber, LENGTH, multiCommandFlag)) //
             .put(commandType.value) //
             .put(BODY_LENGTH) //
             .putInt(uniqueId) //

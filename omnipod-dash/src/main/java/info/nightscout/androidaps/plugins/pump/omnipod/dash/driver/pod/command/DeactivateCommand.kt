@@ -5,13 +5,13 @@ import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.command.b
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.command.base.builder.NonceEnabledCommandBuilder
 import java.nio.ByteBuffer
 
-class DeactivateCommand internal constructor(uniqueId: Int, sequenceNumber: Short, multiCommandFlag: Boolean, nonce: Int) : NonceEnabledCommand(CommandType.DEACTIVATE, uniqueId, sequenceNumber, multiCommandFlag, nonce) {
+class DeactivateCommand internal constructor(
+    uniqueId: Int,
+    sequenceNumber: Short,
+    multiCommandFlag: Boolean,
+    nonce: Int
+) : NonceEnabledCommand(CommandType.DEACTIVATE, uniqueId, sequenceNumber, multiCommandFlag, nonce) {
 
-    //
-    //
-    //
-    //
-    //
     override val encoded: ByteArray
         get() = appendCrc(ByteBuffer.allocate(LENGTH + HEADER_LENGTH) //
             .put(encodeHeader(uniqueId, sequenceNumber, LENGTH, multiCommandFlag)) //
