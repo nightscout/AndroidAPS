@@ -13,9 +13,6 @@ import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.command.
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.exceptions.*
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.io.BleIO
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.scan.PodScanner
-import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.status.ConnectionStatus
-import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.command.base.Command
-import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.response.Response
 import java.util.concurrent.BlockingQueue
 import java.util.concurrent.LinkedBlockingDeque
 import java.util.concurrent.TimeoutException
@@ -29,7 +26,7 @@ class OmnipodDashBleManagerImpl @Inject constructor(private val context: Context
     private val bluetoothAdapter: BluetoothAdapter = bluetoothManager.adapter
 
     @Throws(InterruptedException::class, ScanFailException::class, FailedToConnectException::class, CouldNotSendBleException::class, BleIOBusyException::class, TimeoutException::class, CouldNotConfirmWriteException::class, CouldNotEnableNotifications::class, DescriptorNotFoundException::class, CouldNotConfirmDescriptorWriteException::class)
-    fun activateNewPod() {
+    override fun activateNewPod() {
         aapsLogger.info(LTag.PUMPBTCOMM, "starting new pod activation")
         val podScanner = PodScanner(aapsLogger, bluetoothAdapter)
         val podAddress = podScanner.scanForPod(PodScanner.SCAN_FOR_SERVICE_UUID, PodScanner.POD_ID_NOT_ACTIVATED).scanResult.device.address
@@ -67,23 +64,8 @@ class OmnipodDashBleManagerImpl @Inject constructor(private val context: Context
         bleIO.readyToRead()
     }
 
-    override fun sendCommand(cmd: Command): Response {
-        TODO("not implemented")
-    }
-
-    override fun getStatus(): ConnectionStatus {
-        TODO("not implemented")
-    }
-
-    override fun connect() {
-        TODO("not implemented")
-    }
-
-    override fun disconnect() {
-        TODO("not implemented")
-    }
-
     companion object {
+
         private const val CONNECT_TIMEOUT_MS = 5000
         private const val CONTROLLER_ID = 4242 // TODO read from preferences or somewhere else.
     }
