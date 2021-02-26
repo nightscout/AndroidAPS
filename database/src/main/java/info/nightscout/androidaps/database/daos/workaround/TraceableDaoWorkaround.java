@@ -6,6 +6,7 @@ import info.nightscout.androidaps.database.daos.TraceableDao;
 import info.nightscout.androidaps.database.daos.TraceableDaoKt;
 import info.nightscout.androidaps.database.interfaces.TraceableDBEntry;
 
+// keep in java, it's easier
 public interface TraceableDaoWorkaround<T extends TraceableDBEntry> {
 
     /**

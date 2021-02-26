@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="danars_pairing">מצומד</string>
+    <string name="danars_pairing">מצמד</string>
     <string name="danars_nodeviceavailable">לא נמצאו מכשירים עד כה</string>
     <string name="danars_pairingok">הצימוד הצליח</string>
     <string name="danars_pairingtimedout">הצימוד חרג ממגבלת הזמן</string>
