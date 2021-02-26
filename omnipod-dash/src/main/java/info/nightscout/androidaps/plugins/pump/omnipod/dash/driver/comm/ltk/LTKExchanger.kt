@@ -10,6 +10,16 @@ import info.nightscout.androidaps.utils.extensions.hexStringToByteArray
 internal class LTKExchanger(private val aapsLogger: AAPSLogger,private val msgIO: MessageIO) {
 
     fun negociateLTKAndNonce(): LTK? {
+        // send SP1, SP2
+        // send SPS1
+        // read SPS1
+
+        // send SPS2
+        // read SPS2
+
+        // send SP0GP0
+        // read P0
+
         val msg = MessagePacket(
             destination = Address(byteArrayOf(1,2,3,4)),
             source = Address(byteArrayOf(5,6,7,8)),
