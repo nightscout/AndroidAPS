@@ -1,2 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources></resources>
+<resources>
+    <string name="error_only_numeric_digits_allowed">Alleen cijfers zijn toegestaan.</string>
+    <string name="error_only_numeric_digits_range_allowed">Alleen cijfers binnen het bereik %1$s - %2$s zijn toegestaan.</string>
+</resources>
