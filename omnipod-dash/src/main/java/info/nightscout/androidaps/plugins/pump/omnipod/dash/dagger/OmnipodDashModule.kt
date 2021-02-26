@@ -5,6 +5,8 @@ import dagger.Provides
 import dagger.android.ContributesAndroidInjector
 import info.nightscout.androidaps.plugins.pump.omnipod.common.dagger.ActivityScope
 import info.nightscout.androidaps.plugins.pump.omnipod.common.dagger.OmnipodWizardModule
+import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.OmnipodDashManager
+import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.OmnipodDashManagerImpl
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.BleManager
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.OmnipodDashBleManager
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.state.OmnipodDashPodStateManager
@@ -42,5 +44,8 @@ abstract class OmnipodDashModule {
 
         @Provides
         fun providesPodStateManager(podStateManager: OmnipodDashPodStateManagerImpl): OmnipodDashPodStateManager = podStateManager
+
+        @Provides
+        fun providesOmnipodManager(omnipodManager: OmnipodDashManagerImpl): OmnipodDashManager = omnipodManager
     }
 }
