@@ -1,40 +1,41 @@
 package info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.state
 
-import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.definition.ActivationProgress
-import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.definition.BasalProgram
-import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.definition.DeliveryStatus
-import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.definition.PodStatus
-import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.definition.SoftwareVersion
+import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.definition.*
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.response.AlarmStatusResponse
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.response.DefaultStatusResponse
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.response.SetUniqueIdResponse
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.response.VersionResponse
 import java.io.Serializable
+import java.util.*
 
 interface OmnipodDashPodStateManager {
 
     var activationProgress: ActivationProgress
-    var lastConnectionTime: Long
+    var lastConnection: Long
+    val lastUpdated: Long
 
     val messageSequenceNumber: Short
+    val sequenceNumberOfLastProgrammingCommand: Short?
     val activationTime: Long?
-    val uniqueId: Int?
+    val uniqueId: Long?
     val bluetoothAddress: String?
 
     val bluetoothVersion: SoftwareVersion?
     val firmwareVersion: SoftwareVersion?
-    val lotNumber: Int?
-    val podSequenceNumber: Int?
-    val pulseRate: Int?
-    val primePulseRate: Int?
-    val podLifeInHours: Int?
-    val firstPrimeBolusVolume: Int?
-    val secondPrimeBolusVolume: Int?
+    val lotNumber: Long?
+    val podSequenceNumber: Long?
+    val pulseRate: Short?
+    val primePulseRate: Short?
+    val podLifeInHours: Short?
+    val firstPrimeBolusVolume: Short?
+    val secondPrimeBolusVolume: Short?
 
-    val pulsesDelivered: Int?
-    val pulsesRemaining: Int?
+    val pulsesDelivered: Short?
+    val pulsesRemaining: Short?
     val podStatus: PodStatus?
     val deliveryStatus: DeliveryStatus?
+    val minutesSinceActivation: Short?
+    val activeAlerts: EnumSet<AlertSlot>?
 
     val tempBasal: TempBasal?
     val tempBasalActive: Boolean
@@ -47,5 +48,5 @@ interface OmnipodDashPodStateManager {
     fun updateFromAlarmStatusResponse(response: AlarmStatusResponse)
     fun reset()
 
-    data class TempBasal(val startTime: Long, val rate: Double, val durationInMinutes: Int) : Serializable
+    data class TempBasal(val startTime: Long, val rate: Double, val durationInMinutes: Short) : Serializable
 }

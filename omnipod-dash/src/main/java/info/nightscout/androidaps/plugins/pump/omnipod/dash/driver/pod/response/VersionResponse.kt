@@ -23,6 +23,7 @@ class VersionResponse(encoded: ByteArray) : ActivationResponseBase(ActivationRes
     private val rssi: Byte = (encoded[18] and 0x3f)
     private val receiverLowerGain: Byte = ((encoded[18].toInt() shr 6 and 0x03).toByte())
     private val uniqueIdReceivedInCommand: Long = ByteBuffer.wrap(byteArrayOf(0, 0, 0, 0, encoded[19], encoded[20], encoded[21], encoded[22])).long
+
     fun getMessageType(): Byte {
         return messageType
     }

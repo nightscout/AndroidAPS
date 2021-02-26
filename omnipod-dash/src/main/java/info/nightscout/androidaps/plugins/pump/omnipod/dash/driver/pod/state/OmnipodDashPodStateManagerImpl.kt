@@ -4,24 +4,19 @@ import com.google.gson.Gson
 import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.logging.LTag
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.R
-import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.definition.ActivationProgress
-import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.definition.BasalProgram
-import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.definition.DeliveryStatus
-import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.definition.PodStatus
-import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.definition.SoftwareVersion
+import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.definition.*
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.response.AlarmStatusResponse
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.response.DefaultStatusResponse
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.response.SetUniqueIdResponse
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.response.VersionResponse
-import info.nightscout.androidaps.utils.resources.ResourceHelper
 import info.nightscout.androidaps.utils.sharedPreferences.SP
 import java.io.Serializable
+import java.util.*
 import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
 class OmnipodDashPodStateManagerImpl @Inject constructor(
-    private val resourceHelper: ResourceHelper,
     private val logger: AAPSLogger,
     private val sharedPreferences: SP
 ) : OmnipodDashPodStateManager {
@@ -39,46 +34,54 @@ class OmnipodDashPodStateManagerImpl @Inject constructor(
             store()
         }
 
-    override var lastConnectionTime: Long
-        get() = podState.lastConnectionTime
+    override var lastConnection: Long
+        get() = podState.lastConnection
         set(value) {
-            podState.lastConnectionTime = value
+            podState.lastConnection = value
             store()
         }
 
+    override val lastUpdated: Long = podState.lastUpdated
+
     override val messageSequenceNumber: Short = podState.messageSequenceNumber
+
+    override val sequenceNumberOfLastProgrammingCommand: Short? = podState.sequenceNumberOfLastProgrammingCommand
 
     override val activationTime: Long? = podState.activationTime
 
-    override val uniqueId: Int? = podState.uniqueId
+    override val uniqueId: Long? = podState.uniqueId
 
     override val bluetoothAddress: String? = podState.bluetoothAddress
 
-    override val bluetoothVersion: SoftwareVersion? = podState.bluetoothVersion
+    override val bluetoothVersion: SoftwareVersion? = podState.bleVersion
 
     override val firmwareVersion: SoftwareVersion? = podState.firmwareVersion
 
-    override val lotNumber: Int? = podState.lotNumber
+    override val lotNumber: Long? = podState.lotNumber
 
-    override val podSequenceNumber: Int? = podState.podSequenceNumber
+    override val podSequenceNumber: Long? = podState.podSequenceNumber
 
-    override val pulseRate: Int? = podState.pulseRate
+    override val pulseRate: Short? = podState.pulseRate
 
-    override val primePulseRate: Int? = podState.primePulseRate
+    override val primePulseRate: Short? = podState.primePulseRate
 
-    override val podLifeInHours: Int? = podState.podLifeInHours
+    override val podLifeInHours: Short? = podState.podLifeInHours
 
-    override val firstPrimeBolusVolume: Int? = podState.firstPrimeBolusVolume
+    override val firstPrimeBolusVolume: Short? = podState.firstPrimeBolusVolume
 
-    override val secondPrimeBolusVolume: Int? = podState.secondPrimeBolusVolume
+    override val secondPrimeBolusVolume: Short? = podState.secondPrimeBolusVolume
 
-    override val pulsesDelivered: Int? = podState.pulsesDelivered
+    override val pulsesDelivered: Short? = podState.pulsesDelivered
 
-    override val pulsesRemaining: Int? = podState.pulsesRemaining
+    override val pulsesRemaining: Short? = podState.pulsesRemaining
 
     override val podStatus: PodStatus? = podState.podStatus
 
     override val deliveryStatus: DeliveryStatus? = podState.deliveryStatus
+
+    override val minutesSinceActivation: Short? = podState.minutesSinceActivation
+
+    override val activeAlerts: EnumSet<AlertSlot>? = podState.activeAlerts
 
     override val tempBasal: OmnipodDashPodStateManager.TempBasal? = podState.tempBasal
 
@@ -93,15 +96,45 @@ class OmnipodDashPodStateManagerImpl @Inject constructor(
     }
 
     override fun updateFromDefaultStatusResponse(response: DefaultStatusResponse) {
-        TODO("Not yet implemented")
+        podState.deliveryStatus = response.getDeliveryStatus()
+        podState.podStatus = response.getPodStatus()
+        podState.pulsesDelivered = response.getTotalPulsesDelivered()
+        podState.pulsesRemaining = response.getReservoirPulsesRemaining()
+        podState.sequenceNumberOfLastProgrammingCommand = response.getSequenceNumberOfLastProgrammingCommand()
+        podState.minutesSinceActivation = response.getMinutesSinceActivation()
+
+        // TODO active alerts
+
+        podState.lastUpdated = System.currentTimeMillis()
+        store();
     }
 
     override fun updateFromVersionResponse(response: VersionResponse) {
-        TODO("Not yet implemented")
+        podState.bleVersion = SoftwareVersion(response.getBleVersionMajor(), response.getBleVersionMinor(), response.getBleVersionInterim())
+        podState.firmwareVersion = SoftwareVersion(response.getFirmwareVersionMajor(), response.getFirmwareVersionMinor(), response.getFirmwareVersionInterim())
+        podState.podStatus = response.getPodStatus()
+        podState.lotNumber = response.getLotNumber()
+        podState.podSequenceNumber = response.getPodSequenceNumber()
+
+        podState.lastUpdated = System.currentTimeMillis()
+        store()
     }
 
     override fun updateFromSetUniqueIdResponse(response: SetUniqueIdResponse) {
-        response.getBleVersionInterim()
+        podState.pulseRate = response.getDeliveryRate()
+        podState.primePulseRate = response.getPrimeRate()
+        podState.firstPrimeBolusVolume = response.getNumberOfPrimePulses()
+        podState.secondPrimeBolusVolume = response.getNumberOfEngagingClutchDrivePulses()
+        podState.podLifeInHours = response.getPodExpirationTimeInHours()
+        podState.bleVersion = SoftwareVersion(response.getBleVersionMajor(), response.getBleVersionMinor(), response.getBleVersionInterim())
+        podState.firmwareVersion = SoftwareVersion(response.getFirmwareVersionMajor(), response.getFirmwareVersionMinor(), response.getFirmwareVersionInterim())
+        podState.podStatus = response.getPodStatus()
+        podState.lotNumber = response.getLotNumber()
+        podState.podSequenceNumber = response.getPodSequenceNumber()
+        podState.uniqueId = response.getUniqueIdReceivedInCommand()
+
+        podState.lastUpdated = System.currentTimeMillis()
+        store()
     }
 
     override fun updateFromAlarmStatusResponse(response: AlarmStatusResponse) {
@@ -138,27 +171,31 @@ class OmnipodDashPodStateManagerImpl @Inject constructor(
     class PodState : Serializable {
 
         var activationProgress: ActivationProgress = ActivationProgress.NOT_STARTED
-        var lastConnectionTime: Long = 0
+        var lastConnection: Long = 0
+        var lastUpdated: Long = 0
 
         var messageSequenceNumber: Short = 0
+        var sequenceNumberOfLastProgrammingCommand: Short? = null
         var activationTime: Long? = null
-        var uniqueId: Int? = null
+        var uniqueId: Long? = null
         var bluetoothAddress: String? = null
 
-        var bluetoothVersion: SoftwareVersion? = null
+        var bleVersion: SoftwareVersion? = null
         var firmwareVersion: SoftwareVersion? = null
-        var lotNumber: Int? = null
-        var podSequenceNumber: Int? = null
-        var pulseRate: Int? = null
-        var primePulseRate: Int? = null
-        var podLifeInHours: Int? = null
-        var firstPrimeBolusVolume: Int? = null
-        var secondPrimeBolusVolume: Int? = null
+        var lotNumber: Long? = null
+        var podSequenceNumber: Long? = null
+        var pulseRate: Short? = null
+        var primePulseRate: Short? = null
+        var podLifeInHours: Short? = null
+        var firstPrimeBolusVolume: Short? = null
+        var secondPrimeBolusVolume: Short? = null
 
-        var pulsesDelivered: Int? = null
-        var pulsesRemaining: Int? = null
+        var pulsesDelivered: Short? = null
+        var pulsesRemaining: Short? = null
         var podStatus: PodStatus? = null
         var deliveryStatus: DeliveryStatus? = null
+        var minutesSinceActivation: Short? = null
+        var activeAlerts: EnumSet<AlertSlot>? = null
 
         var basalProgram: BasalProgram? = null
         var tempBasal: OmnipodDashPodStateManager.TempBasal? = null
