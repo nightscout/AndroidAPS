@@ -7,7 +7,6 @@ sealed class BlePacket {
     abstract fun asByteArray(): ByteArray
 
     companion object {
-
         const val MAX_BLE_PACKET_LEN = 30 // we use this as the size allocated for the ByteBuffer
     }
 }
@@ -62,3 +61,4 @@ data class LastOptionalPlusOneBlePacket(val index: Byte, val payload: ByteArray)
         return byteArrayOf(index) + payload
     }
 }
+

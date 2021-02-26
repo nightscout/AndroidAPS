@@ -1,6 +1,6 @@
 package info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.message
 
-abstract class Message(
+data class MessagePacket(
     val type: MessageType,
     val source: Address,
     val destination: Address,
@@ -14,10 +14,16 @@ abstract class Message(
     val gateway: Boolean = false,
     val sas: Boolean = false, // TODO: understand
     val tfs: Boolean = false, // TODO: understand
-    val version: Short = 0.toShort(),
-) {
+    val version: Short = 0.toShort()) {
 
     fun asByteArray(): ByteArray {
-        return payload; // TODO implement
+        // TODO: implement proper serialization
+        return this.payload
+    }
+
+    companion object {
+        fun parse(payload: ByteArray): MessagePacket {
+            TODO("implement message header parsing")
+        }
     }
 }
