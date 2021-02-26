@@ -204,11 +204,11 @@ class AlarmStatusResponse(encoded: ByteArray) : AdditionalStatusResponseBase(Add
         messageLength = (encoded[1].toInt() and 0xff).toShort()
         additionalStatusResponseType = encoded[2]
         podStatus = PodStatus.byValue((encoded[3] and 0x0f))
-        deliveryStatus = DeliveryStatus.Companion.byValue((encoded[4] and 0x0f))
+        deliveryStatus = DeliveryStatus.byValue((encoded[4] and 0x0f))
         bolusPulsesRemaining = (ByteBuffer.wrap(byteArrayOf(encoded[5], encoded[6])).short and 2047)
         sequenceNumberOfLastProgrammingCommand = (encoded[7] and 0x0f).toShort()
         totalPulsesDelivered = ByteBuffer.wrap(byteArrayOf(encoded[8], encoded[9])).short
-        alarmType = AlarmType.Companion.byValue(encoded[10])
+        alarmType = AlarmType.byValue(encoded[10])
         alarmTime = ByteBuffer.wrap(byteArrayOf(encoded[11], encoded[12])).short
         reservoirPulsesRemaining = ByteBuffer.wrap(byteArrayOf(encoded[13], encoded[14])).short
         minutesSinceActivation = ByteBuffer.wrap(byteArrayOf(encoded[15], encoded[16])).short

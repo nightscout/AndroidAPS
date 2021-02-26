@@ -13,8 +13,8 @@ class StopDeliveryCommand internal constructor(uniqueId: Int, sequenceNumber: Sh
 
     override val encoded: ByteArray
         get() {
-            return HeaderEnabledCommand.Companion.appendCrc(ByteBuffer.allocate(LENGTH + HeaderEnabledCommand.Companion.HEADER_LENGTH) //
-                .put(HeaderEnabledCommand.Companion.encodeHeader(uniqueId, sequenceNumber, LENGTH, multiCommandFlag)) //
+            return appendCrc(ByteBuffer.allocate(LENGTH + HEADER_LENGTH) //
+                .put(encodeHeader(uniqueId, sequenceNumber, LENGTH, multiCommandFlag)) //
                 .put(commandType.value) //
                 .put(BODY_LENGTH) //
                 .putInt(nonce) //

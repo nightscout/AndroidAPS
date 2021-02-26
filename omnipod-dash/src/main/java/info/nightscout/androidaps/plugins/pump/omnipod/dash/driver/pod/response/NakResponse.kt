@@ -53,7 +53,7 @@ class NakResponse(encoded: ByteArray) : ResponseBase(ResponseType.NAK_RESPONSE, 
     init {
         messageType = encoded[0]
         messageLength = encoded[1].toShort()
-        nakErrorType = NakErrorType.Companion.byValue(encoded[2])
+        nakErrorType = NakErrorType.byValue(encoded[2])
         val byte3 = encoded[3]
         val byte4 = encoded[4]
         if (nakErrorType == NakErrorType.ILLEGAL_SECURITY_CODE) {

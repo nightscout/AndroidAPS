@@ -47,8 +47,8 @@ class ProgramBasalCommand internal constructor(private val interlockCommand: Pro
             }
             val basalCommand = buffer.array()
             val interlockCommand = interlockCommand.encoded
-            val header: ByteArray = HeaderEnabledCommand.Companion.encodeHeader(uniqueId, sequenceNumber, (basalCommand.size + interlockCommand!!.size).toShort(), multiCommandFlag)
-            return HeaderEnabledCommand.appendCrc(ByteBuffer.allocate(basalCommand.size + interlockCommand.size + header.size) //
+            val header: ByteArray = encodeHeader(uniqueId, sequenceNumber, (basalCommand.size + interlockCommand!!.size).toShort(), multiCommandFlag)
+            return appendCrc(ByteBuffer.allocate(basalCommand.size + interlockCommand.size + header.size) //
                 .put(header) //
                 .put(interlockCommand) //
                 .put(basalCommand) //

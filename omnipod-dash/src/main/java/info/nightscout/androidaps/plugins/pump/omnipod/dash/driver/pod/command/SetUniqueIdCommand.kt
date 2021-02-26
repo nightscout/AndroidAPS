@@ -19,8 +19,8 @@ class SetUniqueIdCommand internal constructor(uniqueId: Int, sequenceNumber: Sho
     //
     //
     override val encoded: ByteArray
-        get() = HeaderEnabledCommand.Companion.appendCrc(ByteBuffer.allocate(LENGTH + HeaderEnabledCommand.Companion.HEADER_LENGTH) //
-            .put(HeaderEnabledCommand.Companion.encodeHeader(DEFAULT_UNIQUE_ID, sequenceNumber, LENGTH, multiCommandFlag)) //
+        get() = appendCrc(ByteBuffer.allocate(LENGTH + HEADER_LENGTH) //
+            .put(encodeHeader(DEFAULT_UNIQUE_ID, sequenceNumber, LENGTH, multiCommandFlag)) //
             .put(commandType.value) //
             .put(BODY_LENGTH) //
             .putInt(uniqueId) //

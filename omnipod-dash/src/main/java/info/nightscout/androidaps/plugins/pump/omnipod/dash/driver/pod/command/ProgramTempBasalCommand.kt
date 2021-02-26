@@ -84,8 +84,8 @@ class ProgramTempBasalCommand protected constructor(private val interlockCommand
             }
             val tempBasalCommand = buffer.array()
             val interlockCommand = interlockCommand.encoded
-            val header: ByteArray = HeaderEnabledCommand.Companion.encodeHeader(uniqueId, sequenceNumber, (tempBasalCommand.size + interlockCommand!!.size).toShort(), multiCommandFlag)
-            return HeaderEnabledCommand.Companion.appendCrc(ByteBuffer.allocate(header.size + interlockCommand.size + tempBasalCommand.size) //
+            val header: ByteArray = encodeHeader(uniqueId, sequenceNumber, (tempBasalCommand.size + interlockCommand!!.size).toShort(), multiCommandFlag)
+            return appendCrc(ByteBuffer.allocate(header.size + interlockCommand.size + tempBasalCommand.size) //
                 .put(header) //
                 .put(interlockCommand) //
                 .put(tempBasalCommand) //

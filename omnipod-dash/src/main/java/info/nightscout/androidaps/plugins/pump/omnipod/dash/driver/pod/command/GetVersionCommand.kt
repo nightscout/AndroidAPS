@@ -13,8 +13,8 @@ class GetVersionCommand internal constructor(uniqueId: Int, sequenceNumber: Shor
     //
     //
     override val encoded: ByteArray
-        get() = HeaderEnabledCommand.Companion.appendCrc(ByteBuffer.allocate(LENGTH + HeaderEnabledCommand.Companion.HEADER_LENGTH) //
-            .put(HeaderEnabledCommand.Companion.encodeHeader(uniqueId, sequenceNumber, LENGTH, multiCommandFlag)) //
+        get() = appendCrc(ByteBuffer.allocate(LENGTH + HEADER_LENGTH) //
+            .put(encodeHeader(uniqueId, sequenceNumber, LENGTH, multiCommandFlag)) //
             .put(commandType.value) //
             .put(BODY_LENGTH) //
             .putInt(uniqueId) //

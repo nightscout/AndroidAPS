@@ -35,8 +35,8 @@ class ProgramBolusCommand internal constructor(private val interlockCommand: Pro
                 .putInt(0) // Delay between tenth extended pulses in usec
                 .array()
             val interlockCommand = interlockCommand.encoded
-            val header: ByteArray = HeaderEnabledCommand.Companion.encodeHeader(uniqueId, sequenceNumber, (bolusCommand.size + interlockCommand!!.size).toShort(), multiCommandFlag)
-            return HeaderEnabledCommand.Companion.appendCrc(ByteBuffer.allocate(header.size + interlockCommand.size + bolusCommand.size) //
+            val header: ByteArray = encodeHeader(uniqueId, sequenceNumber, (bolusCommand.size + interlockCommand!!.size).toShort(), multiCommandFlag)
+            return appendCrc(ByteBuffer.allocate(header.size + interlockCommand.size + bolusCommand.size) //
                 .put(header) //
                 .put(interlockCommand) //
                 .put(bolusCommand) //

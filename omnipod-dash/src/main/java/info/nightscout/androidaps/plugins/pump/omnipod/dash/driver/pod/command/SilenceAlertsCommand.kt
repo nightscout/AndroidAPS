@@ -12,8 +12,8 @@ class SilenceAlertsCommand internal constructor(uniqueId: Int, sequenceNumber: S
 
     override val encoded: ByteArray
         get() =
-            HeaderEnabledCommand.Companion.appendCrc(ByteBuffer.allocate(LENGTH + HeaderEnabledCommand.Companion.HEADER_LENGTH) //
-                .put(HeaderEnabledCommand.Companion.encodeHeader(uniqueId, sequenceNumber, LENGTH, multiCommandFlag)) //
+            appendCrc(ByteBuffer.allocate(LENGTH + HEADER_LENGTH) //
+                .put(encodeHeader(uniqueId, sequenceNumber, LENGTH, multiCommandFlag)) //
                 .put(commandType.value) //
                 .put(BODY_LENGTH) //
                 .putInt(nonce) //
