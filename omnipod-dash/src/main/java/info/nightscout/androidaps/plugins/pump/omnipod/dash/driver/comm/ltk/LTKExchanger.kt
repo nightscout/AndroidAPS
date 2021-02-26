@@ -2,7 +2,7 @@ package info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.ltk
 
 import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.OmnipodDashBleManagerImpl
-import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.message.Id
+import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.Id
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.message.MessageIO
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.message.StringLengthPrefixEncoding
 import info.nightscout.androidaps.utils.extensions.hexStringToByteArray
@@ -18,6 +18,7 @@ internal class LTKExchanger(private val aapsLogger: AAPSLogger, private val msgI
 
         var sp1sp2 = sp1sp2(nodeId.address, sp2(), seq, controllerId, nodeId)
         msgIO.sendMesssage(sp1sp2.messagePacket)
+
 /*
         var sps1 =
         msgIO.sendMesssage(sps1.messagePacket)

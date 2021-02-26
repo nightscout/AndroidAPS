@@ -13,15 +13,15 @@ internal class PayloadSplitter(private val payload: ByteArray) {
     fun splitInPackets(): List<BlePacket> {
         val ret = ArrayList<BlePacket>()
         val crc32 = payload.crc32()
-        if (payload.size <= 18) {
-            val end = min(14, payload.size)
+        if (payload.size <= FirstBlePacket.CAPACITY_WITH_THE_OPTIONAL_PLUS_ONE_PACKET) {
+            val end = min(FirstBlePacket.CAPACITY_WITHOUT_MIDDLE_PACKETS, payload.size)
             ret.add(FirstBlePacket(
                 totalFragments = 0,
                 payload = payload.copyOfRange(0, end),
                 size = payload.size.toByte(),
                 crc32 = crc32,
             ))
-            if (payload.size > 14) {
+            if (payload.size > FirstBlePacket.CAPACITY_WITHOUT_MIDDLE_PACKETS) {
                 ret.add(LastOptionalPlusOneBlePacket(
                     index = 1,
                     payload = payload.copyOfRange(end, payload.size),
@@ -29,34 +29,34 @@ internal class PayloadSplitter(private val payload: ByteArray) {
             }
             return ret
         }
-        val middleFragments = (payload.size - 18) / 19
-        val rest = ((payload.size - middleFragments.toInt() * 19) - 18).toByte()
+        val middleFragments = (payload.size - FirstBlePacket.CAPACITY_WITH_MIDDLE_PACKETS) / MiddleBlePacket.CAPACITY
+        val rest = ((payload.size - middleFragments * MiddleBlePacket.CAPACITY) - FirstBlePacket.CAPACITY_WITH_MIDDLE_PACKETS).toByte()
         ret.add(FirstBlePacket(
             totalFragments = (middleFragments + 1).toByte(),
-            payload = payload.copyOfRange(0, 18),
+            payload = payload.copyOfRange(0, FirstBlePacket.CAPACITY_WITH_MIDDLE_PACKETS),
         ))
         for (i in 1..middleFragments) {
             val p = if (i == 1) {
-                payload.copyOfRange(18, 37)
+                payload.copyOfRange(FirstBlePacket.CAPACITY_WITH_MIDDLE_PACKETS, FirstBlePacket.CAPACITY_WITH_MIDDLE_PACKETS + MiddleBlePacket.CAPACITY)
             } else {
-                payload.copyOfRange((i - 1) * 19 + 18, (i - 1) * 19 + 18 + 19)
+                payload.copyOfRange(FirstBlePacket.CAPACITY_WITH_MIDDLE_PACKETS + (i - 1) * MiddleBlePacket.CAPACITY, FirstBlePacket.CAPACITY_WITH_MIDDLE_PACKETS + i * MiddleBlePacket.CAPACITY)
             }
             ret.add(MiddleBlePacket(
                 index = i.toByte(),
                 payload = p,
             ))
         }
-        val end = min(14, rest.toInt())
+        val end = min(LastBlePacket.CAPACITY, rest.toInt())
         ret.add(LastBlePacket(
             index = (middleFragments + 1).toByte(),
             size = rest,
-            payload = payload.copyOfRange(middleFragments * 19 + 18, middleFragments * 19 + 18 + end),
+            payload = payload.copyOfRange(middleFragments * MiddleBlePacket.CAPACITY + FirstBlePacket.CAPACITY_WITH_MIDDLE_PACKETS, middleFragments * MiddleBlePacket.CAPACITY + FirstBlePacket.CAPACITY_WITH_MIDDLE_PACKETS + end),
             crc32 = crc32,
         ))
         if (rest > 14) {
             ret.add(LastOptionalPlusOneBlePacket(
                 index = (middleFragments + 2).toByte(),
-                payload = payload.copyOfRange(middleFragments * 19 + 18 + 14, payload.size),
+                payload = payload.copyOfRange(middleFragments * MiddleBlePacket.CAPACITY + FirstBlePacket.CAPACITY_WITH_MIDDLE_PACKETS + LastBlePacket.CAPACITY, payload.size),
             ))
         }
         return ret

@@ -89,6 +89,12 @@ class OmnipodDashBleManagerImpl @Inject constructor(private val context: Context
         TODO("not implemented")
     }
 
+
+    override fun getPodId(): Id {
+        // TODO: return something meaningful here
+        return Id.fromInt(4243);
+    }
+
     companion object {
 
         private const val CONNECT_TIMEOUT_MS = 5000

@@ -1,4 +1,4 @@
-package info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.message
+package info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm
 
 import info.nightscout.androidaps.utils.extensions.toHex
 import java.nio.ByteBuffer
@@ -10,6 +10,8 @@ data class Id(val address: ByteArray) {
 
     /**
      * Used to obtain podId from controllerId
+     * The original PDM seems to rotate over 3 Ids:
+     * controllerID+1, controllerID+2 and controllerID+3
      */
     fun increment(): Id {
         val nodeId = address.copyOf()

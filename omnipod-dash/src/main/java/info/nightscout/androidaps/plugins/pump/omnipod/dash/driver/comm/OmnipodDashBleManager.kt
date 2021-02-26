@@ -13,4 +13,6 @@ interface OmnipodDashBleManager {
     fun connect()
 
     fun disconnect()
+
+    fun getPodId(): Id
 }

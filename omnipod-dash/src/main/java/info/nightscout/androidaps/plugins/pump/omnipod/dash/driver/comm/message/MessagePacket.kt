@@ -1,5 +1,6 @@
 package info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.message
 
+import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.Id
 import java.nio.ByteBuffer
 
 /***
