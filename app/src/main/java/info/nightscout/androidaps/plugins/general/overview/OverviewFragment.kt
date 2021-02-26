@@ -7,6 +7,7 @@ import android.content.Context
 import android.content.Intent
 import android.graphics.Paint
 import android.graphics.drawable.AnimationDrawable
+import android.graphics.drawable.Drawable
 import android.os.Bundle
 import android.os.Handler
 import android.util.DisplayMetrics
@@ -682,6 +683,8 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
             binding.loopPumpStatusLayout.tempTarget.setTextColor(resourceHelper.getAttributeColor(context, R.attr.ribbonTextWarning))
             binding.loopPumpStatusLayout.tempTarget.setBackgroundColor(resourceHelper.getAttributeColor(context, R.attr.ribbonWarning))
             binding.loopPumpStatusLayout.tempTarget.text = Profile.toTargetRangeString(tempTarget.low, tempTarget.high, Constants.MGDL, units) + " " + DateUtil.untilString(tempTarget.end(), resourceHelper)
+            val drawableLeft: Array<Drawable?> = binding.loopPumpStatusLayout.tempTarget.compoundDrawables
+            if (drawableLeft[0] != null) resourceHelper.getAttributeColor(context, R.attr.ribbonTextWarning).let { drawableLeft[0]!!.setTint(it) }
         } else {
             // If the target is not the same as set in the profile then oref has overridden it
             val targetUsed = lastRun?.constraintsProcessed?.targetBG ?: 0.0
@@ -691,10 +694,14 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
                 binding.loopPumpStatusLayout.tempTarget.text = Profile.toTargetRangeString(targetUsed, targetUsed, Constants.MGDL, units)
                 binding.loopPumpStatusLayout.tempTarget.setTextColor(resourceHelper.getAttributeColor(context, R.attr.ribbonTextWarning))
                 binding.loopPumpStatusLayout.tempTarget.setBackgroundColor(resourceHelper.getAttributeColor(context, R.attr.tempTargetBackground))
+                val drawableLeft: Array<Drawable?> = binding.loopPumpStatusLayout.tempTarget.compoundDrawables
+                if (drawableLeft[0] != null) resourceHelper.getAttributeColor(context, R.attr.ribbonTextWarning).let { drawableLeft[0]!!.setTint(it) }
             } else {
                 binding.loopPumpStatusLayout.tempTarget.setTextColor(resourceHelper.getAttributeColor(context, R.attr.defaultTextColor))
                 binding.loopPumpStatusLayout.tempTarget.setBackgroundColor(resourceHelper.getAttributeColor(context, R.attr.ribbonDefault))
                 binding.loopPumpStatusLayout.tempTarget.text = Profile.toTargetRangeString(profile.targetLowMgdl, profile.targetHighMgdl, Constants.MGDL, units)
+                val drawableLeft: Array<Drawable?> = binding.loopPumpStatusLayout.tempTarget.compoundDrawables
+                if (drawableLeft[0] != null) resourceHelper.getAttributeColor(context, R.attr.defaultTextColor).let { drawableLeft[0]!!.setTint(it) }
             }
         }
 
@@ -737,9 +744,13 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
         if (profile.percentage != 100 || profile.timeshift != 0) {
             binding.loopPumpStatusLayout.activeProfile.setBackgroundColor(resourceHelper.getAttributeColor(context, R.attr.ribbonWarning))
             binding.loopPumpStatusLayout.activeProfile.setTextColor(resourceHelper.getAttributeColor(context, R.attr.ribbonTextWarning))
+            val drawableLeft: Array<Drawable?> = binding.loopPumpStatusLayout.activeProfile.compoundDrawables
+            if (drawableLeft[0] != null) resourceHelper.getAttributeColor(context, R.attr.ribbonTextWarning).let { drawableLeft[0]!!.setTint(it) }
         } else {
             binding.loopPumpStatusLayout.activeProfile.setBackgroundColor(resourceHelper.getAttributeColor(context, R.attr.ribbonDefault))
             binding.loopPumpStatusLayout.activeProfile.setTextColor(resourceHelper.getAttributeColor(context, R.attr.defaultTextColor))
+            val drawableLeft: Array<Drawable?> = binding.loopPumpStatusLayout.activeProfile.compoundDrawables
+            if (drawableLeft[0] != null) resourceHelper.getAttributeColor(context, R.attr.defaultTextColor).let { drawableLeft[0]!!.setTint(it) }
         }
 
         processButtonsVisibility()
