@@ -20,8 +20,10 @@ class Converters {
     fun fromValueWithUnit(valueWithUnit: UserEntry.ValueWithUnit?): String? {
         if (valueWithUnit == null) return null
         val jsonObject = JSONObject()
+        jsonObject.put("sValue", valueWithUnit.sValue)
         jsonObject.put("dValue", valueWithUnit.dValue)
         jsonObject.put("iValue", valueWithUnit.iValue)
+        jsonObject.put("lValue", valueWithUnit.lValue)
         jsonObject.put("unit", valueWithUnit.unit.name)
         return jsonObject.toString()
     }
@@ -30,7 +32,34 @@ class Converters {
     fun toValueWithUnit(jsonString: String?): UserEntry.ValueWithUnit? {
         if (jsonString == null) return null
         val jsonObject = JSONObject(jsonString)
-        return UserEntry.ValueWithUnit(jsonObject.getDouble("dValue"), jsonObject.getInt("iValue"),UserEntry.Units.fromString(jsonObject.getString("unit")) )
+        return UserEntry.ValueWithUnit(jsonObject.getString("sValue"), jsonObject.getDouble("dValue"), jsonObject.getInt("iValue"), jsonObject.getLong("lValue"), UserEntry.Units.fromString(jsonObject.getString("unit")) )
+    }
+
+    @TypeConverter
+    fun fromMutableListOfValueWithUnit(values: MutableList<UserEntry.ValueWithUnit>?): String? {
+        if (values == null) return null
+        val jsonArray = JSONArray()
+        values.forEach {
+            val jsonObject = JSONObject()
+            jsonObject.put("dValue", it.dValue)
+            jsonObject.put("iValue", it.iValue)
+            jsonObject.put("lValue", it.lValue)
+            jsonObject.put("unit", it.unit.name)
+            jsonArray.put(jsonObject)
+        }
+        return jsonArray.toString()
+    }
+
+    @TypeConverter
+    fun toMutableListOfValueWithUnit(jsonString: String?): List<Block>? {
+        if (jsonString == null) return null
+        val jsonArray = JSONArray(jsonString)
+        val list = mutableListOf<Block>()
+        for (i in 0 until jsonArray.length()) {
+            val jsonObject = jsonArray.getJSONObject(i)
+            list.add(Block(jsonObject.getLong("duration"), jsonObject.getDouble("amount")))
+        }
+        return list
     }
 
     @TypeConverter

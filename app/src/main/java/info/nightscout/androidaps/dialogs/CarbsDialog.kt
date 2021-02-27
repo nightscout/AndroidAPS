@@ -11,7 +11,7 @@ import info.nightscout.androidaps.Constants
 import info.nightscout.androidaps.MainApp
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.data.Profile
-import info.nightscout.androidaps.database.entities.UserEntry
+import info.nightscout.androidaps.database.entities.UserEntry.*
 import info.nightscout.androidaps.databinding.DialogCarbsBinding
 import info.nightscout.androidaps.db.CareportalEvent
 import info.nightscout.androidaps.db.Source
@@ -213,7 +213,7 @@ class CarbsDialog : DialogFragmentWithDate() {
                 OKDialog.showConfirmation(activity, resourceHelper.gs(R.string.carbs), HtmlHelper.fromHtml(Joiner.on("<br/>").join(actions)), {
                     when {
                         activitySelected   -> {
-                            uel.log(UserEntry.Action.TT_ACTIVITY, d1 = activityTT, i1 = activityTTDuration)
+                            uel.log(Action.TT_ACTIVITY, ValueWithUnit(activityTT, if (units == Constants.MMOL) Units.Mmol_L else Units.Mg_Dl) , ValueWithUnit(activityTTDuration, Units.M))
                             val tempTarget = TempTarget()
                                 .date(System.currentTimeMillis())
                                 .duration(activityTTDuration)
@@ -225,7 +225,7 @@ class CarbsDialog : DialogFragmentWithDate() {
                         }
 
                         eatingSoonSelected -> {
-                            uel.log(UserEntry.Action.TT_EATING_SOON, d1 = eatingSoonTT, i1 = eatingSoonTTDuration)
+                            uel.log(Action.TT_EATING_SOON, ValueWithUnit(eatingSoonTT, if (units == Constants.MMOL) Units.Mmol_L else Units.Mg_Dl) , ValueWithUnit(eatingSoonTTDuration, Units.M))
                             val tempTarget = TempTarget()
                                 .date(System.currentTimeMillis())
                                 .duration(eatingSoonTTDuration)
@@ -237,7 +237,7 @@ class CarbsDialog : DialogFragmentWithDate() {
                         }
 
                         hypoSelected       -> {
-                            uel.log(UserEntry.Action.TT_HYPO, d1 = hypoTT, i1 = hypoTTDuration)
+                            uel.log(Action.TT_HYPO, ValueWithUnit(hypoTT, if (units == Constants.MMOL) Units.Mmol_L else Units.Mg_Dl) , ValueWithUnit(hypoTTDuration, Units.M))
                             val tempTarget = TempTarget()
                                 .date(System.currentTimeMillis())
                                 .duration(hypoTTDuration)
@@ -250,10 +250,10 @@ class CarbsDialog : DialogFragmentWithDate() {
                     }
                     if (carbsAfterConstraints > 0) {
                         if (duration == 0) {
-                            uel.log(UserEntry.Action.CARBS, d1 = carbsAfterConstraints.toDouble(), i1 = timeOffset)
+                            uel.log(Action.CARBS, ValueWithUnit(carbsAfterConstraints.toDouble(), Units.G), ValueWithUnit(timeOffset, Units.M))
                             carbsGenerator.createCarb(carbsAfterConstraints, time, CareportalEvent.CARBCORRECTION, notes)
                         } else {
-                            uel.log(UserEntry.Action.CARBS, d1 = carbsAfterConstraints.toDouble(), i1 = timeOffset, i2 = duration)
+                            uel.log(Action.CARBS, ValueWithUnit(carbsAfterConstraints.toDouble(), Units.G), ValueWithUnit(timeOffset,Units.M), ValueWithUnit(duration, Units.H))
                             carbsGenerator.generateCarbs(carbsAfterConstraints, time, duration, notes)
                             nsUpload.uploadEvent(CareportalEvent.NOTE, DateUtil.now() - 2000, resourceHelper.gs(R.string.generated_ecarbs_note, carbsAfterConstraints, duration, timeOffset))
                         }
