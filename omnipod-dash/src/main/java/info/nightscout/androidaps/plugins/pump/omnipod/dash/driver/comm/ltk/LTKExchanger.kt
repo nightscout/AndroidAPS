@@ -1,9 +1,6 @@
 package info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.ltk
 
-import com.google.crypto.tink.mac.AesCmacKeyManager
-import com.google.crypto.tink.proto.AesCmac
 import com.google.crypto.tink.subtle.X25519
-
 import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.logging.LTag
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.Id
@@ -15,6 +12,8 @@ import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.message.
 import info.nightscout.androidaps.utils.extensions.hexStringToByteArray
 import info.nightscout.androidaps.utils.extensions.toHex
 import org.spongycastle.crypto.engines.AESEngine
+import org.spongycastle.crypto.macs.CMac
+import org.spongycastle.crypto.params.KeyParameter
 import java.security.SecureRandom
 
 internal class LTKExchanger(private val aapsLogger: AAPSLogger, private val msgIO: MessageIO) {
@@ -30,7 +29,7 @@ internal class LTKExchanger(private val aapsLogger: AAPSLogger, private val msgI
     private val controllerId = Id.fromInt(OmnipodDashBleManagerImpl.CONTROLLER_ID)
     val nodeId = controllerId.increment()
     private var seq: Byte = 1
-    private var ltk = ByteArray(0)
+    private var ltk = ByteArray(CMAC_SIZE)
     private var noncePrefix = ByteArray(0)
 
     init {
@@ -98,7 +97,7 @@ internal class LTKExchanger(private val aapsLogger: AAPSLogger, private val msgI
         val publicKey = X25519.publicFromPrivate(pdmPrivate)
         val payload = StringLengthPrefixEncoding.formatKeys(
             arrayOf("SPS1="),
-            arrayOf(publicKey + nonce),
+            arrayOf(publicKey + pdmNonce),
         )
         return PairMessage(
             sequenceNumber = seq,
@@ -111,10 +110,10 @@ internal class LTKExchanger(private val aapsLogger: AAPSLogger, private val msgI
     private fun processSps1FromPod(msg: MessagePacket) {
         aapsLogger.debug(LTag.PUMPBTCOMM, "Received SPS1 from pod: ${msg.payload.toHex()}")
         if (msg.payload.size != 48) {
-            throw MessageIOException()
+            throw MessageIOException("Invalid payload size")
         }
         podPublic = msg.payload.copyOfRange(0, PUBLIC_KEY_SIZE)
-        podNonce = msg.payload.copyOfRange(PUBLIC_KEY_SIZE, PUBLIC_KEY_SIZE+ NONCE_SIZE)
+        podNonce = msg.payload.copyOfRange(PUBLIC_KEY_SIZE, PUBLIC_KEY_SIZE + NONCE_SIZE)
     }
 
     private fun sps2(): PairMessage {
@@ -144,19 +143,36 @@ internal class LTKExchanger(private val aapsLogger: AAPSLogger, private val msgI
     fun generateKeys() {
         val curveLTK = X25519.computeSharedSecret(pdmPrivate, podPublic)
         aapsLogger.debug(LTag.PUMPBTCOMM, "LTK, donna key: ${curveLTK.toHex()}")
-        //first_key = data.pod_public[-4:] + data.pdm_public[-4:] + data.pod_nonce[-4:] + data.pdm_nonce[-4:]
 
-        val firstKey = podPublic.copyOfRange(podPublic.size-4, podPublic.size)
-            + pdmPublic.copyOfRange(pdmPublic.size-4, pdmPublic.size)
-            + podNonce.copyOfRange(podNonce.size-4, podNonce.size)
-            + pdmNonce.copyOfRange(pdmNonce.size-4, pdmNonce.size)
+        //first_key = data.pod_public[-4:] + data.pdm_public[-4:] + data.pod_nonce[-4:] + data.pdm_nonce[-4:]
+        val firstKey = podPublic.copyOfRange(podPublic.size - 4, podPublic.size) +
+            pdmPublic.copyOfRange(pdmPublic.size - 4, pdmPublic.size)+
+            podNonce.copyOfRange(podNonce.size - 4, podNonce.size)+
+            pdmNonce.copyOfRange(pdmNonce.size - 4, pdmNonce.size)
         aapsLogger.debug(LTag.PUMPBTCOMM, "LTK, first key: ${firstKey.toHex()}")
+
+        val aesEngine = AESEngine()
+        val intermediateMac = CMac(aesEngine)
+        intermediateMac.init(KeyParameter(firstKey))
+        intermediateMac.update(curveLTK, 0, curveLTK.size)
+        val intermediateKey = ByteArray(CMAC_SIZE)
+        intermediateMac.doFinal(intermediateKey, 0)
+        aapsLogger.debug(LTag.PUMPBTCOMM, "Intermediate key: ${intermediateKey.toHex()}")
+
+        val ltkMac = CMac(aesEngine)
+        ltkMac.init(KeyParameter(firstKey))
+        ltkMac.update(curveLTK, 0, curveLTK.size)
+        intermediateMac.doFinal(ltk, 0)
+        aapsLogger.debug(LTag.PUMPBTCOMM, "LTK: ${ltk.toHex()}")
+
     }
 
     companion object {
+
         private val PUBLIC_KEY_SIZE = 32
         private val NONCE_SIZE = 16
         private val CONF_SIZE = 16
+        private val CMAC_SIZE = 16
         private val GET_POD_STATUS_HEX_COMMAND = "ffc32dbd08030e0100008a" // TODO for now we are assuming this command is build out of constant parameters, use a proper command builder for that.
     }
 }

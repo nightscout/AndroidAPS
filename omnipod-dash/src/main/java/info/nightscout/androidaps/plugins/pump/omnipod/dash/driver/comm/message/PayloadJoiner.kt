@@ -11,7 +11,6 @@ import java.lang.Integer.min
 import java.nio.ByteBuffer
 import java.util.*
 
-@ExperimentalUnsignedTypes
 class PayloadJoiner(private val firstPacket: ByteArray) {
 
     var oneExtra: Boolean = false
@@ -30,8 +29,8 @@ class PayloadJoiner(private val firstPacket: ByteArray) {
             firstPacket.size < FirstBlePacket.HEADER_SIZE_WITHOUT_MIDDLE_PACKETS ->
                 throw IncorrectPacketException(0, firstPacket)
 
-            fullFragments == 0                   -> {
-                crc = ByteBuffer.wrap(firstPacket.copyOfRange(2, 6)).int.toUInt().toLong()
+            fullFragments == 0                                                   -> {
+                crc = ByteBuffer.wrap(firstPacket.copyOfRange(2, 6)).int.toUnsignedLong()
                 val rest = firstPacket[6]
                 val end = min(rest + 7, BlePacket.MAX_LEN)
                 oneExtra = rest + 7 > end
@@ -42,10 +41,10 @@ class PayloadJoiner(private val firstPacket: ByteArray) {
             }
 
             // With middle packets
-            firstPacket.size < BlePacket.MAX_LEN ->
+            firstPacket.size < BlePacket.MAX_LEN                                 ->
                 throw IncorrectPacketException(0, firstPacket)
 
-            else                                 -> {
+            else                                                                 -> {
                 fragments.add(firstPacket.copyOfRange(FirstBlePacket.HEADER_SIZE_WITH_MIDDLE_PACKETS, BlePacket.MAX_LEN))
             }
         }
@@ -72,7 +71,7 @@ class PayloadJoiner(private val firstPacket: ByteArray) {
                 if (packet.size < LastBlePacket.HEADER_SIZE) {
                     throw IncorrectPacketException(idx.toByte(), packet)
                 }
-                crc = ByteBuffer.wrap(packet.copyOfRange(2, 6)).int.toUInt().toLong()
+                crc = ByteBuffer.wrap(packet.copyOfRange(2, 6)).int.toUnsignedLong()
                 val rest = packet[1].toInt()
                 val end = min(rest, BlePacket.MAX_LEN)
                 if (packet.size < end) {
@@ -106,3 +105,5 @@ class PayloadJoiner(private val firstPacket: ByteArray) {
     }
 
 }
+
+private fun Int.toUnsignedLong() = this.toLong() and 0xffffffffL

@@ -1,6 +1,7 @@
 package info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.message
 
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.Id
+import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.exceptions.CouldNotParseMessageException
 import java.nio.ByteBuffer
 
 /***
@@ -69,9 +70,56 @@ data class MessagePacket(
     companion object {
 
         private val MAGIC_PATTERN = "TW" // all messages start with this string
+        private val HEADER_SIZE = 16
 
         fun parse(payload: ByteArray): MessagePacket {
-            TODO("implement message header parsing")
+            if (payload.size < HEADER_SIZE) {
+                throw CouldNotParseMessageException(payload)
+            }
+            if (payload.copyOfRange(0, 2).toString() != "TW") {
+                throw info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.exceptions.CouldNotParseMessageException(payload)
+            }
+            val f1 = Flag(payload[2].toInt())
+            val sas = f1.get(3) != 0
+            val tfs = f1.get(4) != 0
+            val version = ((f1.get(0) shl 2) or (f1.get(1) shl 1) or (f1.get(2) shl 0)).toShort()
+            val eqos = (f1.get(7) or (f1.get(6) shl 1) or (f1.get(5) shl 2)).toShort()
+
+            val f2 = Flag(payload[3].toInt())
+            val ack = f2.get(0) != 0
+            val priority = f2.get(1) != 0
+            val lastMessage = f2.get(2) != 0
+            val gateway = f2.get(3) != 0
+            val type = MessageType.byValue((f1.get(7) or (f1.get(6) shl 1) or (f1.get(5) shl 2) or (f1.get(4) shl 3)).toByte())
+            if (version.toInt() != 0) {
+                throw CouldNotParseMessageException(payload)
+            }
+            val sequenceNumber = payload[4]
+            val ackNumber = payload[5]
+            val size = (payload[6].toInt() shl 3) or (payload[7].toInt() ushr 5)
+            if (size + HEADER_SIZE > payload.size) {
+                throw CouldNotParseMessageException(payload)
+            }
+            val payloadEnd = 16 + size +
+                if (type == MessageType.ENCRYPTED) 8
+                else 0
+
+            return MessagePacket(
+                type = type,
+                ack = ack,
+                eqos = eqos,
+                priority = priority,
+                lastMessage = lastMessage,
+                gateway = gateway,
+                sas = sas,
+                tfs = tfs,
+                version = version,
+                sequenceNumber = payload[4],
+                ackNumber = payload[5],
+                source = Id(payload.copyOfRange(8, 12)),
+                destination = Id(payload.copyOfRange(12, 16)),
+                payload = payload.copyOfRange(16, payloadEnd),
+            )
         }
     }
 }
@@ -85,8 +133,12 @@ private class Flag(var value: Int = 0) {
         value = value or mask
     }
 
-    fun get(idx: Byte): Boolean {
+    fun get(idx: Byte): Int {
         val mask = 1 shl (7 - idx)
-        return value and mask != 0
+        if (value and mask == 0) {
+            return 0
+        }
+        return 1
+
     }
 }

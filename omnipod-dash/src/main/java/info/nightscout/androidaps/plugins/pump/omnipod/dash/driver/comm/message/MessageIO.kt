@@ -36,7 +36,6 @@ class MessageIO(private val aapsLogger: AAPSLogger, private val bleIO: BleIO) {
         bleIO.flushIncomingQueues()
     }
 
-    @kotlin.ExperimentalUnsignedTypes
     fun receiveMessage(): MessagePacket {
         val expectRTS = bleIO.receivePacket(CharacteristicType.CMD)
         if (BleCommand(expectRTS) != BleCommandRTS()) {
