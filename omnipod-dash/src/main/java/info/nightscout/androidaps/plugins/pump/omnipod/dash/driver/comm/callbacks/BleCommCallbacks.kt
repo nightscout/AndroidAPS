@@ -110,7 +110,7 @@ class BleCommCallbacks(private val aapsLogger: AAPSLogger, private val incomingP
         when (confirmed) {
             is DescriptorWriteConfirmationError -> throw CouldNotConfirmWriteException(confirmed.status)
             is DescriptorWriteConfirmationUUID -> if (confirmed.uuid != descriptorUUID) {
-                aapsLogger.warn(LTag.PUMPBTCOMM, "Could not confirm descriptor write. Got ${confirmed.uuid}. Expected: ${descriptorUUID}")
+                aapsLogger.warn(LTag.PUMPBTCOMM, "Could not confirm descriptor write. Got ${confirmed.uuid}. Expected: $descriptorUUID")
                 throw CouldNotConfirmDescriptorWriteException(descriptorUUID, confirmed.uuid)
             } else {
                 aapsLogger.debug(LTag.PUMPBTCOMM, "Confirmed descriptor write : " + confirmed.uuid)
@@ -128,7 +128,7 @@ class BleCommCallbacks(private val aapsLogger: AAPSLogger, private val incomingP
         }
         try {
             if (descriptorWriteQueue.size > 0) {
-                aapsLogger.warn(LTag.PUMPBTCOMM, "Descriptor write queue should be empty, found: " + descriptorWriteQueue.size)
+                aapsLogger.warn(LTag.PUMPBTCOMM, "Descriptor write queue should be empty, found: ${descriptorWriteQueue.size}")
                 descriptorWriteQueue.clear()
             }
             val offered = descriptorWriteQueue.offer(writeConfirmation, WRITE_CONFIRM_TIMEOUT_MS.toLong(), TimeUnit.MILLISECONDS)

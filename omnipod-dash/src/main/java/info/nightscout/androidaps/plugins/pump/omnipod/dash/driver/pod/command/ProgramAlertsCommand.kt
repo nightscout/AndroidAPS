@@ -7,11 +7,11 @@ import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.definitio
 import java.nio.ByteBuffer
 import java.util.*
 
-class ProgramAlertsCommand internal constructor(
+class ProgramAlertsCommand private constructor(
     uniqueId: Int,
     sequenceNumber: Short,
     multiCommandFlag: Boolean,
-    alertConfigurations: List<AlertConfiguration>?,
+    alertConfigurations: List<AlertConfiguration>,
     nonce: Int
 ) : NonceEnabledCommand(CommandType.PROGRAM_ALERTS, uniqueId, sequenceNumber, multiCommandFlag, nonce) {
 
@@ -52,6 +52,7 @@ class ProgramAlertsCommand internal constructor(
     class Builder : NonceEnabledCommandBuilder<Builder, ProgramAlertsCommand>() {
 
         private var alertConfigurations: List<AlertConfiguration>? = null
+
         fun setAlertConfigurations(alertConfigurations: List<AlertConfiguration>?): Builder {
             this.alertConfigurations = alertConfigurations
             return this
@@ -59,7 +60,7 @@ class ProgramAlertsCommand internal constructor(
 
         override fun buildCommand(): ProgramAlertsCommand {
             requireNotNull(alertConfigurations) { "alertConfigurations can not be null" } // !!?
-            return ProgramAlertsCommand(uniqueId!!, sequenceNumber!!, multiCommandFlag, alertConfigurations, nonce!!) // TODO this might crash if not all are set
+            return ProgramAlertsCommand(uniqueId!!, sequenceNumber!!, multiCommandFlag, alertConfigurations!!, nonce!!) // TODO this might crash if not all are set
         }
     }
 

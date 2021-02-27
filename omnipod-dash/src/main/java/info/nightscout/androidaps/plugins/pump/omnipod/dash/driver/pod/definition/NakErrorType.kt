@@ -1,8 +1,8 @@
 package info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.definition
 
-enum class NakErrorType(
-    private val value: Byte
-) {
+import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.util.HasValue
+
+enum class NakErrorType(override val value: Byte) : HasValue {
 
     FLASH_WRITE(0x01.toByte()),
     FLASH_ERASE(0x02.toByte()),
@@ -34,16 +34,4 @@ enum class NakErrorType(
     IGNORE_COMMAND(0x1c.toByte()),
     INVALID_CRC(0x1d.toByte()),
     UNKNOWN(0xff.toByte());
-
-    companion object {
-
-        fun byValue(value: Byte): NakErrorType {
-            for (type in values()) {
-                if (type.value == value) {
-                    return type
-                }
-            }
-            return UNKNOWN
-        }
-    }
 }
