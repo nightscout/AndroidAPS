@@ -37,10 +37,12 @@ class OmnipodDashManagerImpl @Inject constructor(
         return Observable.concat(
             observePodReadyForActivationPart1,
             bleManager.connect(),
-            bleManager.sendCommand(GetVersionCommand.Builder() //
-                .setSequenceNumber(podStateManager.messageSequenceNumber) //
-                .setUniqueId(DEFAULT_UNIQUE_ID) //
-                .build()) //
+            Observable.defer {
+                bleManager.sendCommand(GetVersionCommand.Builder() //
+                    .setSequenceNumber(podStateManager.messageSequenceNumber) //
+                    .setUniqueId(DEFAULT_UNIQUE_ID) //
+                    .build()) //
+            }
             // ... Send more commands
         ).subscribeOn(Schedulers.io()) //
             .observeOn(AndroidSchedulers.mainThread())
