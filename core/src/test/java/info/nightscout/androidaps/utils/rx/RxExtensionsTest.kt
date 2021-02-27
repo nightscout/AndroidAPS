@@ -14,7 +14,7 @@ class RxExtensionsTest {
     private val testScheduler = TestScheduler()
 
     @get:Rule
-    val schedulerRule = TestSchedulerRule(testScheduler)
+    val schedulerRule = RxSchedulerRule(testScheduler)
 
     @Test
     fun `fail after 4 retries`() {
