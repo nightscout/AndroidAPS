@@ -16,7 +16,7 @@ import info.nightscout.androidaps.plugins.pump.omnipod.dash.ui.OmnipodDashOvervi
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.ui.wizard.activation.DashPodActivationWizardActivity
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.ui.wizard.deactivation.DashPodDeactivationWizardActivity
 
-@Module
+@Module(includes = [OmnipodDashHistoryModule::class])
 @Suppress("unused")
 abstract class OmnipodDashModule {
     // ACTIVITIES
