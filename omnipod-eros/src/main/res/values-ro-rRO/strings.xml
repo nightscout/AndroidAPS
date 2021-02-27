@@ -1,13 +1,36 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- Omnipod Eros - Description -->
+    <string name="omnipod_eros_pump_description">Integrarea pompei pentru Omnipod Eros (modelul mai vechi cu un capac transparent de ac). Necesită un dispozitiv RileyLink cu versiunea de firmware cel puțin 2.0.</string>
     <!-- Omnipod Eros - Keys -->
     <!-- Omnipod Eros - Overview -->
     <!-- Omnipod Eros - Preferences -->
+    <string name="omnipod_eros_preferences_riley_link_configuration">Configurare RileyLink</string>
+    <string name="omnipod_eros_preferences_category_notifications">Notificări</string>
+    <string name="omnipod_eros_preferences_riley_link_stats_button_enabled">Afişare buton Stare RileyLink în meniul Gestionare Pod-uri</string>
+    <string name="omnipod_eros_preferences_category_riley_link">RileyLink</string>
+    <string name="omnipod_eros_preferences_notification_uncertain_tbr_sound_enabled">Sunet pentru notificări TBR incerte activat</string>
+    <string name="omnipod_eros_preferences_notification_uncertain_smb_sound_enabled">Sunet pentru notificări SMB incerte activat</string>
+    <string name="omnipod_eros_preferences_notification_uncertain_bolus_sound_enabled">Sunet pentru notificări bolus incerte activat</string>
     <!-- Omnipod Eros - History -->
+    <string name="omnipod_eros_history_title">Istoric Pod</string>
+    <string name="omnipod_eros_history_item_source">Sursă</string>
+    <string name="omnipod_eros_history_item_date">Dată</string>
+    <string name="omnipod_eros_history_type">Tip:</string>
+    <string name="omnipod_eros_history_bolus_value">%1$.2f U</string>
+    <string name="omnipod_eros_history_bolus_value_with_carbs">%1$.2f U, CH=%2$.1f g</string>
+    <string name="omnipod_eros_history_tbr_value">Rata: %1$.2f U, durata: %2$d min</string>
     <!-- Omnipod Eros - Short Status -->
+    <string name="omnipod_eros_short_status_riley_link_battery">BaterieRL: %1$d</string>
     <!-- Omnipod Eros - Error -->
+    <string name="omnipod_eros_error_riley_link_address_invalid">Adresa RileyLink invalidă.</string>
+    <string name="omnipod_eros_error_communication_failed_riley_link_interrupted">RiluyLink întrerupt</string>
+    <string name="omnipod_eros_error_communication_failed_no_response_from_pod">Nu s-a primit răspuns de la Pod</string>
     <!-- Omnipod Eros - Pod Management -->
+    <string name="omnipod_eros_pod_management_button_riley_link_stats">Stare RileyLink</string>
+    <string name="omnipod_eros_pod_management_waiting_for_riley_link_connection">Se așteaptă conexiunea la RileyLink…</string>
+    <string name="omnipod_eros_pod_management_button_reset_riley_link_config">Resetează configurația RileyLink</string>
     <!-- Omnipod Eros - Pod Activation Wizard -->
     <!-- Omnipod Eros - Other -->
+    <string name="omnipod_eros_uncertain">incert</string>
 </resources>
