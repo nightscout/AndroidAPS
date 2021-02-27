@@ -118,7 +118,8 @@ class OverviewMenus @Inject constructor(
                     if (insert) {
                         val item = popup.menu.add(Menu.NONE, m.ordinal + 100 * (g + 1), Menu.NONE, resourceHelper.gs(m.nameId))
                         val title = item.title
-                        val s = SpannableString(title)
+                        // we need a liitle bit space left and right of the string for better visualization
+                        val s = SpannableString(" " + title + " ")
                         s.setSpan(ForegroundColorSpan(resourceHelper.gc(R.color.black)), 0, s.length, 0)
                         s.setSpan(BackgroundColorSpan(resourceHelper.getAttributeColor(null,m.attrId)), 0, s.length, 0)
                         item.title = s
