@@ -21,8 +21,8 @@ interface OmnipodDashPodStateManager {
     val messageSequenceNumber: Short
     val sequenceNumberOfLastProgrammingCommand: Short?
     val activationTime: Long?
-    val uniqueId: Long?
-    val bluetoothAddress: String?
+    var uniqueId: Long?
+    var bluetoothAddress: String?
 
     val bluetoothVersion: SoftwareVersion?
     val firmwareVersion: SoftwareVersion?

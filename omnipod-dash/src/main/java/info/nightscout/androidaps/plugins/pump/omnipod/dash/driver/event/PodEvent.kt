@@ -6,7 +6,7 @@ import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.response.
 sealed class PodEvent {
 
     /* BT connection events */
-    class AlreadyConnected(val uniqueId: Long) : PodEvent()
+    class AlreadyConnected(val bluetoothAddress: String, val uniqueId: Long) : PodEvent()
     object Scanning : PodEvent()
     object BluetoothConnecting : PodEvent()
     class BluetoothConnected(val address: String) : PodEvent()

@@ -1,6 +1,7 @@
 package info.nightscout.androidaps.plugins.pump.omnipod.dash.driver
 
 import info.nightscout.androidaps.logging.AAPSLogger
+import info.nightscout.androidaps.logging.LTag
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.OmnipodDashBleManager
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.event.PodEvent
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.command.GetVersionCommand
@@ -9,9 +10,14 @@ import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.definitio
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.definition.AlertConfiguration
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.definition.AlertSlot
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.definition.BasalProgram
+import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.response.AlarmStatusResponse
+import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.response.DefaultStatusResponse
+import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.response.SetUniqueIdResponse
+import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.response.VersionResponse
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.state.OmnipodDashPodStateManager
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.functions.Consumer
 import io.reactivex.schedulers.Schedulers
 import java.util.*
 import javax.inject.Inject
@@ -19,7 +25,7 @@ import javax.inject.Singleton
 
 @Singleton
 class OmnipodDashManagerImpl @Inject constructor(
-    private val aapsLogger: AAPSLogger,
+    private val logger: AAPSLogger,
     private val podStateManager: OmnipodDashPodStateManager,
     private val bleManager: OmnipodDashBleManager
 ) : OmnipodDashManager {
@@ -33,10 +39,13 @@ class OmnipodDashManagerImpl @Inject constructor(
             }
         }
 
+    private val connectToPod: Observable<PodEvent>
+        get() = Observable.defer { bleManager.connect() }
+
     override fun activatePodPart1(): Observable<PodEvent> {
         return Observable.concat(
             observePodReadyForActivationPart1,
-            bleManager.connect(),
+            connectToPod,
             Observable.defer {
                 bleManager.sendCommand(GetVersionCommand.Builder() //
                     .setSequenceNumber(podStateManager.messageSequenceNumber) //
@@ -44,7 +53,11 @@ class OmnipodDashManagerImpl @Inject constructor(
                     .build()) //
             }
             // ... Send more commands
-        ).subscribeOn(Schedulers.io()) //
+        ) //
+            // TODO these would be common for any observable returned in a public function in this class
+            .doOnNext(PodEventInterceptor()) //
+            .doOnError(ErrorInterceptor())
+            .subscribeOn(Schedulers.io()) //
             .observeOn(AndroidSchedulers.mainThread())
     }
 
@@ -111,5 +124,61 @@ class OmnipodDashManagerImpl @Inject constructor(
     override fun deactivatePod(): Observable<PodEvent> {
         // TODO
         return Observable.empty()
+    }
+
+    inner class PodEventInterceptor : Consumer<PodEvent> {
+
+        // TODO split into separate methods
+        override fun accept(event: PodEvent) {
+            logger.debug(LTag.PUMP, "Intercepted PodEvent in OmnipodDashManagerImpl: ${event.javaClass.simpleName}")
+            when (event) {
+                is PodEvent.AlreadyConnected -> {
+                    podStateManager.bluetoothAddress = event.bluetoothAddress
+                    podStateManager.uniqueId = event.uniqueId
+                }
+
+                is PodEvent.BluetoothConnected -> {
+                    podStateManager.bluetoothAddress = event.address
+                }
+
+                is PodEvent.Connected -> {
+                    podStateManager.uniqueId = event.uniqueId
+                }
+
+                is PodEvent.ResponseReceived -> {
+                    podStateManager.increaseMessageSequenceNumber()
+                    when (event.response) {
+                        is VersionResponse       -> {
+                            podStateManager.updateFromVersionResponse(event.response)
+                        }
+
+                        is SetUniqueIdResponse   -> {
+                            podStateManager.updateFromSetUniqueIdResponse(event.response)
+                        }
+
+                        is DefaultStatusResponse -> {
+                            podStateManager.updateFromDefaultStatusResponse(event.response)
+                        }
+
+                        is AlarmStatusResponse   -> {
+                            podStateManager.updateFromAlarmStatusResponse(event.response)
+                        }
+                    }
+                }
+
+                else                           -> {
+                    // Do nothing
+                }
+            }
+        }
+
+    }
+
+    inner class ErrorInterceptor : Consumer<Throwable> {
+
+        override fun accept(throwable: Throwable) {
+            logger.debug(LTag.PUMP, "Intercepted error in OmnipodDashManagerImpl: ${throwable.javaClass.simpleName}")
+        }
+
     }
 }
