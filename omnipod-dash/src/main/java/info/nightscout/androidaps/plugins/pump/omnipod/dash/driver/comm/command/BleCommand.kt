@@ -1,17 +1,33 @@
 package info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.command
 
-abstract class BleCommand {
+open class BleCommand(val data: ByteArray) {
 
-    val data: ByteArray
+    constructor(type: BleCommandType) : this(byteArrayOf(type.value))
 
-    constructor(type: BleCommandType) {
-        data = byteArrayOf(type.value)
+    constructor(type: BleCommandType, payload: ByteArray) : this(
+        byteArrayOf(type.value) + payload
+    )
+
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (other !is BleCommand) return false
+
+        if (!data.contentEquals(other.data)) return false
+
+        return true
     }
 
-    constructor(type: BleCommandType, payload: ByteArray) {
-        val n = payload.size + 1
-        data = ByteArray(n)
-        data[0] = type.value
-        System.arraycopy(payload, 0, data, 1, payload.size)
+    override fun hashCode(): Int {
+        return data.contentHashCode()
     }
 }
+
+class BleCommandRTS : BleCommand(BleCommandType.RTS)
+
+class BleCommandCTS : BleCommand(BleCommandType.CTS)
+
+class BleCommandAbort : BleCommand(BleCommandType.ABORT)
+
+class BleCommandSuccess : BleCommand(BleCommandType.SUCCESS)
+
+class BleCommandFail : BleCommand(BleCommandType.FAIL)

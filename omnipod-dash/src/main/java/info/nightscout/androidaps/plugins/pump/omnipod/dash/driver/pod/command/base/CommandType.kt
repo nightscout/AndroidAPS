@@ -1,8 +1,6 @@
 package info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.command.base
 
-enum class CommandType(
-    val value: Byte
-) {
+enum class CommandType(val value: Byte) {
 
     SET_UNIQUE_ID(0x03.toByte()),
     GET_VERSION(0x07.toByte()),

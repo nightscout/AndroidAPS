@@ -1,4 +1,4 @@
-package info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm
+package info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.io
 
 import java.math.BigInteger
 import java.util.*

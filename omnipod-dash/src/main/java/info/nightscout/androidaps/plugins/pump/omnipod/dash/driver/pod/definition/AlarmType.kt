@@ -1,8 +1,8 @@
 package info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.definition
 
-enum class AlarmType(
-    private val value: Byte
-) {
+import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.util.HasValue
+
+enum class AlarmType(override val value: Byte) : HasValue {
 
     NONE(0x00.toByte()),
     ALARM_PW_FLASH_ERASE(0x01.toByte()),
@@ -160,15 +160,4 @@ enum class AlarmType(
     ALARM_BLE_QN_CRIT_VAR_FAIL(0xc2.toByte()),
     UNKNOWN(0xff.toByte());
 
-    companion object {
-
-        fun byValue(value: Byte): AlarmType {
-            for (type in values()) {
-                if (type.value == value) {
-                    return type
-                }
-            }
-            return UNKNOWN
-        }
-    }
 }

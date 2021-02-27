@@ -14,7 +14,7 @@ object MessageUtil {
             val b = sArr[s.toInt()].toByte()
             var s2 = b.toShort()
             if (b < 0) {
-                s2 = ((b and Byte.MAX_VALUE) as Byte + 128).toShort()
+                s2 = ((b and Byte.MAX_VALUE) + 128).toShort()
             }
             i += s2.toInt()
             s = (s + 1).toShort()
@@ -28,7 +28,7 @@ object MessageUtil {
             val b2 = (b xor (s and 255).toByte()) // TODO byte conversion ok?
             var s2 = b2.toShort()
             if (b2 < 0) {
-                s2 = ((b2 and Byte.MAX_VALUE) as Byte + 128).toShort()
+                s2 = ((b2 and Byte.MAX_VALUE) + 128).toShort()
             }
             s = (((s.toInt() shr 8).toShort() and 255) xor crc16table[s2.toInt()])
         }

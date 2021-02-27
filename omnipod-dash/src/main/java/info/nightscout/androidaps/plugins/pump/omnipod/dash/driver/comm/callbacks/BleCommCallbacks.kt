@@ -7,10 +7,11 @@ import android.bluetooth.BluetoothGattDescriptor
 import android.bluetooth.BluetoothProfile
 import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.logging.LTag
-import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.CharacteristicType
-import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.CharacteristicType.Companion.byValue
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.exceptions.CouldNotConfirmDescriptorWriteException
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.exceptions.CouldNotConfirmWriteException
+import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.io.CharacteristicType
+import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.io.CharacteristicType.Companion.byValue
+import info.nightscout.androidaps.utils.extensions.toHex
 import java.util.concurrent.BlockingQueue
 import java.util.concurrent.CountDownLatch
 import java.util.concurrent.LinkedBlockingQueue
@@ -63,10 +64,10 @@ class BleCommCallbacks(private val aapsLogger: AAPSLogger, private val incomingP
 
     private fun confirmWritePayload(expectedPayload: ByteArray, received: CharacteristicWriteConfirmationPayload) {
         if (!expectedPayload.contentEquals(received.payload)) {
-            aapsLogger.warn(LTag.PUMPBTCOMM, "Could not confirm write. Got " + received.payload + ".Excepted: " + expectedPayload)
+            aapsLogger.warn(LTag.PUMPBTCOMM, "Could not confirm write. Got " + received.payload.toHex() + ".Excepted: " + expectedPayload.toHex())
             throw CouldNotConfirmWriteException(expectedPayload, received.payload)
         }
-        aapsLogger.debug(LTag.PUMPBTCOMM, "Confirmed write with value: " + received.payload)
+        aapsLogger.debug(LTag.PUMPBTCOMM, "Confirmed write with value: " + received.payload.toHex())
     }
 
     override fun onCharacteristicWrite(gatt: BluetoothGatt, characteristic: BluetoothGattCharacteristic, status: Int) {
@@ -77,7 +78,7 @@ class BleCommCallbacks(private val aapsLogger: AAPSLogger, private val incomingP
             CharacteristicWriteConfirmationError(status)
         }
         aapsLogger.debug(LTag.PUMPBTCOMM, "OnCharacteristicWrite with status/char/value " +
-            status + "/" + byValue(characteristic.uuid.toString()) + "/" + characteristic.value)
+            status + "/" + byValue(characteristic.uuid.toString()) + "/" + characteristic.value.toHex())
         try {
             if (writeQueue.size > 0) {
                 aapsLogger.warn(LTag.PUMPBTCOMM, "Write confirm queue should be empty. found: " + writeQueue.size)
@@ -98,7 +99,7 @@ class BleCommCallbacks(private val aapsLogger: AAPSLogger, private val incomingP
         val characteristicType = byValue(characteristic.uuid.toString())
         aapsLogger.debug(LTag.PUMPBTCOMM, "OnCharacteristicChanged with char/value " +
             characteristicType + "/" +
-            payload)
+            payload.toHex())
         incomingPackets[characteristicType]!!.add(payload)
     }
 
@@ -109,7 +110,7 @@ class BleCommCallbacks(private val aapsLogger: AAPSLogger, private val incomingP
         when (confirmed) {
             is DescriptorWriteConfirmationError -> throw CouldNotConfirmWriteException(confirmed.status)
             is DescriptorWriteConfirmationUUID -> if (confirmed.uuid != descriptorUUID) {
-                aapsLogger.warn(LTag.PUMPBTCOMM, "Could not confirm descriptor write. Got ${confirmed.uuid}. Expected: ${descriptorUUID}")
+                aapsLogger.warn(LTag.PUMPBTCOMM, "Could not confirm descriptor write. Got ${confirmed.uuid}. Expected: $descriptorUUID")
                 throw CouldNotConfirmDescriptorWriteException(descriptorUUID, confirmed.uuid)
             } else {
                 aapsLogger.debug(LTag.PUMPBTCOMM, "Confirmed descriptor write : " + confirmed.uuid)
@@ -120,14 +121,14 @@ class BleCommCallbacks(private val aapsLogger: AAPSLogger, private val incomingP
     override fun onDescriptorWrite(gatt: BluetoothGatt, descriptor: BluetoothGattDescriptor, status: Int) {
         super.onDescriptorWrite(gatt, descriptor, status)
         val writeConfirmation = if (status == BluetoothGatt.GATT_SUCCESS) {
-            aapsLogger.debug(LTag.PUMPBTCOMM, "OnDescriptor value " + descriptor.value)
+            aapsLogger.debug(LTag.PUMPBTCOMM, "OnDescriptor value " + descriptor.value.toHex())
             DescriptorWriteConfirmationUUID(descriptor.uuid.toString())
         } else {
             DescriptorWriteConfirmationError(status)
         }
         try {
             if (descriptorWriteQueue.size > 0) {
-                aapsLogger.warn(LTag.PUMPBTCOMM, "Descriptor write queue should be empty, found: " + descriptorWriteQueue.size)
+                aapsLogger.warn(LTag.PUMPBTCOMM, "Descriptor write queue should be empty, found: ${descriptorWriteQueue.size}")
                 descriptorWriteQueue.clear()
             }
             val offered = descriptorWriteQueue.offer(writeConfirmation, WRITE_CONFIRM_TIMEOUT_MS.toLong(), TimeUnit.MILLISECONDS)
@@ -140,6 +141,7 @@ class BleCommCallbacks(private val aapsLogger: AAPSLogger, private val incomingP
     }
 
     companion object {
+
         private const val WRITE_CONFIRM_TIMEOUT_MS = 10 // the confirmation queue should be empty anyway
     }
 }

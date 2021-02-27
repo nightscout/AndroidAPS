@@ -5,9 +5,9 @@ import android.bluetooth.BluetoothGattCharacteristic
 import android.bluetooth.BluetoothGattDescriptor
 import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.logging.LTag
-import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.CharacteristicType
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.callbacks.BleCommCallbacks
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.exceptions.*
+import info.nightscout.androidaps.utils.extensions.toHex
 import java.util.concurrent.BlockingQueue
 import java.util.concurrent.TimeUnit
 import java.util.concurrent.TimeoutException
@@ -49,7 +49,8 @@ class BleIO(private val aapsLogger: AAPSLogger, private val chars: Map<Character
             }
             state = IOState.WRITING
         }
-        aapsLogger.debug(LTag.PUMPBTCOMM, "BleIO: Sending data on" + characteristic.name + "/" + payload.toString())
+        aapsLogger.debug(LTag.PUMPBTCOMM, "BleIO: Sending data on " + characteristic.name + "/" + payload.toHex())
+        aapsLogger.debug(LTag.PUMPBTCOMM, "BleIO: Sending data on " + characteristic.name + "/" + payload.toHex())
         val ch = chars[characteristic]
         val set = ch!!.setValue(payload)
         if (!set) {

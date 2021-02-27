@@ -26,7 +26,7 @@ class AlertConfiguration(
             if (autoOff) {
                 firstByte = firstByte or (1 shl 1)
             }
-            firstByte = firstByte or ((durationInMinutes.toInt() shr 8 and 0x01).toByte()) //Todo bitstuff
+            firstByte = firstByte or ((durationInMinutes.toInt() shr 8 and 0x01).toByte())
             return ByteBuffer.allocate(6) //
                 .put(firstByte)
                 .put(durationInMinutes.toByte()) //

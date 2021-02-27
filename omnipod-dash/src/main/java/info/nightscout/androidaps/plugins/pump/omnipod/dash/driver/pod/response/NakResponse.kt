@@ -3,39 +3,35 @@ package info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.response
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.definition.AlarmType
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.definition.NakErrorType
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.definition.PodStatus
+import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.util.byValue
 
 class NakResponse(
     encoded: ByteArray
 ) : ResponseBase(ResponseType.NAK_RESPONSE, encoded) {
 
-    private val messageType: Byte // TODO directly assign here
-    private val messageLength: Short
-    private val nakErrorType: NakErrorType
-    private var alarmType: AlarmType? = null
-    private var podStatus: PodStatus? = null
-    private var securityNakSyncCount: Short = 0
-    fun getMessageType(): Byte {
-        return messageType
-    }
+    val messageType: Byte = encoded[0]
+    val messageLength: Short = encoded[1].toShort()
+    val nakErrorType: NakErrorType = byValue(encoded[2], NakErrorType.UNKNOWN)
+    var alarmType: AlarmType? = null
+        private set
+    var podStatus: PodStatus? = null
+        private set
 
-    fun getMessageLength(): Short {
-        return messageLength
-    }
+    var securityNakSyncCount: Short = 0
+        private set
 
-    fun getNakErrorType(): NakErrorType { // TODO make public, a val cannot be reassigned, same for other Responses
-        return nakErrorType
-    }
-
-    fun getAlarmType(): AlarmType? {
-        return alarmType
-    }
-
-    fun getPodStatus(): PodStatus? {
-        return podStatus
-    }
-
-    fun getSecurityNakSyncCount(): Short {
-        return securityNakSyncCount
+    init {
+        val byte3 = encoded[3]
+        val byte4 = encoded[4]
+        if (nakErrorType == NakErrorType.ILLEGAL_SECURITY_CODE) {
+            securityNakSyncCount = ((byte3.toInt() shl 8 or byte4.toInt()).toShort())
+            alarmType = null
+            podStatus = null
+        } else {
+            securityNakSyncCount = 0
+            alarmType = byValue(byte3, AlarmType.UNKNOWN)
+            podStatus = byValue(byte4, PodStatus.UNKNOWN)
+        }
     }
 
     override fun toString(): String {
@@ -49,22 +45,5 @@ class NakResponse(
             ", responseType=" + responseType +
             ", encoded=" + encoded.contentToString() +
             '}'
-    }
-
-    init {
-        messageType = encoded[0]
-        messageLength = encoded[1].toShort()
-        nakErrorType = NakErrorType.byValue(encoded[2])
-        val byte3 = encoded[3]
-        val byte4 = encoded[4]
-        if (nakErrorType == NakErrorType.ILLEGAL_SECURITY_CODE) {
-            securityNakSyncCount = ((byte3.toInt() shl 8 or byte4.toInt()).toShort()) // TODO: toInt()
-            alarmType = null
-            podStatus = null
-        } else {
-            securityNakSyncCount = 0
-            alarmType = AlarmType.byValue(byte3)
-            podStatus = PodStatus.byValue(byte4)
-        }
     }
 }

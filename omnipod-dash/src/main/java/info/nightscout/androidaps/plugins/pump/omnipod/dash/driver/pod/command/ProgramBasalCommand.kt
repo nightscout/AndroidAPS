@@ -12,7 +12,7 @@ import java.nio.ByteBuffer
 import java.util.*
 
 // Always preceded by 0x1a ProgramInsulinCommand
-class ProgramBasalCommand internal constructor(
+class ProgramBasalCommand private constructor(
     private val interlockCommand: ProgramInsulinCommand,
     uniqueId: Int,
     sequenceNumber: Short,
@@ -76,6 +76,7 @@ class ProgramBasalCommand internal constructor(
         private var basalProgram: BasalProgram? = null
         private var programReminder: ProgramReminder? = null
         private var currentTime: Date? = null
+
         fun setBasalProgram(basalProgram: BasalProgram?): Builder {
             this.basalProgram = basalProgram
             return this

@@ -9,7 +9,7 @@ import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.util.Mess
 import java.nio.ByteBuffer
 
 // NOT SUPPORTED: extended bolus
-class ProgramBolusCommand internal constructor(
+class ProgramBolusCommand private constructor(
     private val interlockCommand: ProgramInsulinCommand,
     uniqueId: Int,
     sequenceNumber: Short,
@@ -57,6 +57,7 @@ class ProgramBolusCommand internal constructor(
         private var numberOfUnits: Double? = null
         private var delayBetweenPulsesInEighthSeconds: Byte? = null
         private var programReminder: ProgramReminder? = null
+
         fun setNumberOfUnits(numberOfUnits: Double): Builder {
             require(numberOfUnits > 0.0) { "Number of units should be greater than zero" }
             require((numberOfUnits * 1000).toInt() % 50 == 0) { "Number of units must be dividable by 0.05" }
@@ -78,6 +79,7 @@ class ProgramBolusCommand internal constructor(
             requireNotNull(numberOfUnits) { "numberOfUnits can not be null" }
             requireNotNull(delayBetweenPulsesInEighthSeconds) { "delayBetweenPulsesInEighthSeconds can not be null" }
             requireNotNull(programReminder) { "programReminder can not be null" }
+
             val numberOfPulses = Math.round(numberOfUnits!! * 20).toShort()
             val byte10And11 = (numberOfPulses * delayBetweenPulsesInEighthSeconds!!).toShort()
             val interlockCommand = ProgramInsulinCommand(uniqueId!!, sequenceNumber!!, multiCommandFlag, nonce!!, listOf(BolusShortInsulinProgramElement(numberOfPulses)), calculateChecksum(0x01.toByte(), byte10And11, numberOfPulses),

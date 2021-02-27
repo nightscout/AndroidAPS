@@ -1,8 +1,8 @@
 package info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.definition
 
-enum class DeliveryStatus(
-    private val value: Byte
-) {
+import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.util.HasValue
+
+enum class DeliveryStatus(override val value: Byte) : HasValue {
 
     SUSPENDED(0x00.toByte()),
     BASAL_ACTIVE(0x01.toByte()),
@@ -11,16 +11,4 @@ enum class DeliveryStatus(
     BOLUS_AND_BASAL_ACTIVE(0x05.toByte()),
     BOLUS_AND_TEMP_BASAL_ACTIVE(0x06.toByte()),
     UNKNOWN(0xff.toByte());
-
-    companion object {
-
-        fun byValue(value: Byte): DeliveryStatus {
-            for (status in values()) {
-                if (status.value == value) {
-                    return status
-                }
-            }
-            return UNKNOWN
-        }
-    }
 }
