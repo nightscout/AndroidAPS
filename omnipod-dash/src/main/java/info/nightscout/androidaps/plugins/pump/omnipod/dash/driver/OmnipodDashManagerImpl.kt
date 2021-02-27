@@ -25,11 +25,12 @@ class OmnipodDashManagerImpl @Inject constructor(
 ) : OmnipodDashManager {
 
     private val observePodReadyForActivationPart1: Observable<PodEvent>
-        get() {
+        get() = Observable.defer {
             if (podStateManager.activationProgress.isBefore(ActivationProgress.PHASE_1_COMPLETED)) {
-                return Observable.empty()
+                Observable.empty()
+            } else {
+                Observable.error(IllegalStateException("Pod is in an incorrect state"))
             }
-            return Observable.error(IllegalStateException("Pod is in an incorrect state"))
         }
 
     override fun activatePodPart1(): Observable<PodEvent> {
