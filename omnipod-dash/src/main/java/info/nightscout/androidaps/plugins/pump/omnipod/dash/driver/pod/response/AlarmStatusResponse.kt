@@ -3,14 +3,14 @@ package info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.response
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.definition.AlarmType
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.definition.DeliveryStatus
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.definition.PodStatus
-import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.response.ResponseType.AdditionalStatusResponseType
+import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.response.ResponseType.StatusResponseType
 import java.nio.ByteBuffer
 import java.util.*
 import kotlin.experimental.and
 
 class AlarmStatusResponse(
     encoded: ByteArray
-) : AdditionalStatusResponseBase(AdditionalStatusResponseType.ALARM_STATUS, encoded) {
+) : AdditionalStatusResponseBase(StatusResponseType.ALARM_STATUS, encoded) {
 
     private val messageType: Byte
     private val messageLength: Short

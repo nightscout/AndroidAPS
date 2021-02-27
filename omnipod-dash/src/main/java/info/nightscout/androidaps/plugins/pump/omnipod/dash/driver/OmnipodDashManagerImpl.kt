@@ -2,10 +2,13 @@ package info.nightscout.androidaps.plugins.pump.omnipod.dash.driver
 
 import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.OmnipodDashBleManager
-import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.definition.BasalProgram
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.event.PodEvent
+import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.definition.AlertConfiguration
+import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.definition.AlertSlot
+import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.definition.BasalProgram
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.state.OmnipodDashPodStateManager
 import io.reactivex.Observable
+import java.util.*
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -66,7 +69,17 @@ class OmnipodDashManagerImpl @Inject constructor(
         return Observable.empty()
     }
 
-    override fun silenceAlerts(): Observable<PodEvent> {
+    override fun programBeeps(): Observable<PodEvent> {
+        // TODO
+        return Observable.empty()
+    }
+
+    override fun programAlerts(alertConfigurations: List<AlertConfiguration>): Observable<PodEvent> {
+        // TODO
+        return Observable.empty()
+    }
+
+    override fun silenceAlerts(alerts: EnumSet<AlertSlot>): Observable<PodEvent> {
         // TODO
         return Observable.empty()
     }
