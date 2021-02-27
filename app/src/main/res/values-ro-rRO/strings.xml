@@ -236,6 +236,7 @@
     <string name="correctionbous">Corecție</string>
     <string name="actions">Acțiuni</string>
     <string name="ns_upload_only">(E PERICULOS SĂ DEZACTIVEZI) Doar încărcare în NS</string>
+    <string name="ns_upload_only_summary">Numai încărcare NS (sincronizare dezactivata). Nu este eficient pe SGV (rom. valori de glicemie din senzor) dacă nu este selectată o sursă locală ca xDrip. Nu este eficient pe Profiluri dacă sunt utilizate cele din NS.\n!!! ATENȚIE !!! Dezactivarea acestei opțiuni poate determina disfuncționalități și supradozaj cu insulină dacă oricare dintre componentele dumneavoastră (AAPS, NS, xDrip) este configurată greșit. Urmăriți cu atenție dacă datele afișate de AAPS se potrivesc cu starea pompei!</string>
     <string name="pumpNotInitialized">Pompa nu este inițializată!</string>
     <string name="primefill">Pregătire/umplere</string>
     <string name="fillwarning">Asigurați-vă că aveți cantitatea specificată de instrucțiunile setului de infuzie!</string>
@@ -694,6 +695,7 @@
     <string name="nav_logsettings">Setări loguri</string>
     <string name="resettodefaults">Resetare la setările implicite</string>
     <string name="nsmalfunction">Funcționare incorectă a NSClient. Aveți în vedere un restart al NS și al NSClient.</string>
+    <string name="time_offset">Decalaj</string>
     <string name="setupwizard_preferred_aps_mode">Modul APS preferat</string>
     <string name="treatments_wizard_total_label">Total</string>
     <string name="calculation_short">Calc</string>
@@ -887,6 +889,7 @@
     <string name="bolusadvisor">Consilier bolus</string>
     <string name="bolusadvisormessage">Glicemia ta e mare. In loc sa mănânci acum, este recomandat sa mai aștepți un pic. Vrei sa faci un bolus de corecție acum si sa setezi o alarma pentru a manca mai târziu? In acest caz, nu vor fi înregistrați carbohidrați si va trebui sa folosești calculatorul de bolus din nou când îți vom reaminti.</string>
     <string name="enablebolusadvisor">Activare consilier bolus</string>
+    <string name="enablebolusadvisor_summary">Folosește o alarma de reamintire pentru a începe sa mănânci mai târziu în loc de alerta de la calculatorul de bolus din timpul hiperglicemiei (\"pre-bolus\")</string>
     <string name="time_to_eat">Timpul sa mănânci!\nRuleaza Calculatorul de Bolus pentru a face calculele din nou.</string>
     <string name="timetoeat">Timpul sa mănânci</string>
     <string name="fabric_upload_disabled">Încărcarea jurnalelor de erori este dezactivata!</string>
