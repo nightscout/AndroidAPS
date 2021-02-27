@@ -3,21 +3,22 @@ package info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.ltk
 import com.google.crypto.tink.subtle.X25519
 import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.logging.LTag
-import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.OmnipodDashBleManagerImpl
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.Id
+import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.OmnipodDashBleManagerImpl
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.message.MessageIO
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.message.StringLengthPrefixEncoding
 import info.nightscout.androidaps.utils.extensions.hexStringToByteArray
 import java.security.SecureRandom
 
 internal class LTKExchanger(private val aapsLogger: AAPSLogger, private val msgIO: MessageIO) {
+
     private val privateKey = X25519.generatePrivateKey()
     private val nonce = ByteArray(16)
     private val controllerId = Id.fromInt(OmnipodDashBleManagerImpl.CONTROLLER_ID)
     val nodeId = controllerId.increment()
     private var seq: Byte = 1
 
-    init{
+    init {
         val random = SecureRandom()
         random.nextBytes(nonce)
     }
@@ -73,7 +74,7 @@ internal class LTKExchanger(private val aapsLogger: AAPSLogger, private val msgI
         val publicKey = X25519.publicFromPrivate(privateKey)
         val payload = StringLengthPrefixEncoding.formatKeys(
             arrayOf("SPS1="),
-            arrayOf(publicKey+nonce),
+            arrayOf(publicKey + nonce),
         )
         return PairMessage(
             sequenceNumber = seq,

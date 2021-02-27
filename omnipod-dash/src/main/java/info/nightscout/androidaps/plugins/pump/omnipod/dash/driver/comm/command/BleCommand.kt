@@ -20,7 +20,7 @@ open class BleCommand(val data: ByteArray) {
     }
 
     override fun toString(): String {
-        return "Raw command: [${data.toHex()}]";
+        return "Raw command: [${data.toHex()}]"
     }
 
     override fun hashCode(): Int {

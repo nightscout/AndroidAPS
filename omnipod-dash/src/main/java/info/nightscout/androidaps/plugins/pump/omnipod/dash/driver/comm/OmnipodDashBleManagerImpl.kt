@@ -5,7 +5,6 @@ import android.bluetooth.BluetoothDevice
 import android.bluetooth.BluetoothManager
 import android.bluetooth.BluetoothProfile
 import android.content.Context
-import com.google.crypto.tink.subtle.X25519
 import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.logging.LTag
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.BuildConfig
@@ -25,7 +24,6 @@ import org.apache.commons.lang3.NotImplementedException
 import java.util.concurrent.BlockingQueue
 import java.util.concurrent.LinkedBlockingDeque
 import java.util.concurrent.TimeoutException
-import javax.crypto.KeyAgreement
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -110,6 +108,11 @@ class OmnipodDashBleManagerImpl @Inject constructor(private val context: Context
 
     override fun disconnect() {
         TODO("not implemented")
+    }
+
+    override fun getPodId(): Id {
+        // TODO: return something meaningful here
+        return Id.fromInt(4243)
     }
 
     companion object {

@@ -8,8 +8,8 @@ sealed class BlePacket {
 
     companion object {
 
-        const val MAX_BLE_PACKET_LEN = 20
-        const val MAX_BLE_BUFFER_LEN = MAX_BLE_PACKET_LEN + 1 // we use this as the size allocated for the ByteBuffer
+        const val MAX_LEN = 20
+        const val MAX_BLE_BUFFER_LEN = MAX_LEN + 1 // we use this as the size allocated for the ByteBuffer
     }
 }
 
@@ -35,8 +35,11 @@ data class FirstBlePacket(val totalFragments: Byte, val payload: ByteArray, val 
 
     companion object {
 
-        internal const val CAPACITY_WITHOUT_MIDDLE_PACKETS = 13 // we are using all fields
-        internal const val CAPACITY_WITH_MIDDLE_PACKETS = 18 // we are not using crc32 or size
+        internal const val HEADER_SIZE_WITHOUT_MIDDLE_PACKETS = 7 // we are using all fields
+        internal const val HEADER_SIZE_WITH_MIDDLE_PACKETS = 2
+
+        internal const val CAPACITY_WITHOUT_MIDDLE_PACKETS = MAX_LEN - HEADER_SIZE_WITHOUT_MIDDLE_PACKETS // we are using all fields
+        internal const val CAPACITY_WITH_MIDDLE_PACKETS = MAX_LEN - HEADER_SIZE_WITH_MIDDLE_PACKETS // we are not using crc32 or size
         internal const val CAPACITY_WITH_THE_OPTIONAL_PLUS_ONE_PACKET = 18
     }
 }
@@ -70,7 +73,8 @@ data class LastBlePacket(val index: Byte, val size: Byte, val payload: ByteArray
 
     companion object {
 
-        internal const val CAPACITY = 14
+        internal const val HEADER_SIZE = 6
+        internal const val CAPACITY = MAX_LEN - HEADER_SIZE
     }
 }
 
@@ -78,6 +82,12 @@ data class LastOptionalPlusOneBlePacket(val index: Byte, val payload: ByteArray,
 
     override fun asByteArray(): ByteArray {
         return byteArrayOf(index, size) + payload
+    }
+
+    companion object {
+
+        internal const val HEADER_SIZE = 2
+        internal const val CAPACITY = MAX_LEN - HEADER_SIZE
     }
 }
 

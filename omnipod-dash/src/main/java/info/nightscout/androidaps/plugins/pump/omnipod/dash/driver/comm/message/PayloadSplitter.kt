@@ -25,7 +25,7 @@ internal class PayloadSplitter(private val payload: ByteArray) {
                 ret.add(LastOptionalPlusOneBlePacket(
                     index = 1,
                     payload = payload.copyOfRange(end, payload.size),
-                    size = (payload.size-end).toByte(),
+                    size = (payload.size - end).toByte(),
                 ))
             }
             return ret
@@ -57,7 +57,7 @@ internal class PayloadSplitter(private val payload: ByteArray) {
         if (rest > LastBlePacket.CAPACITY) {
             ret.add(LastOptionalPlusOneBlePacket(
                 index = (middleFragments + 2).toByte(),
-                size = (rest-LastBlePacket.CAPACITY).toByte(),
+                size = (rest - LastBlePacket.CAPACITY).toByte(),
                 payload = payload.copyOfRange(middleFragments * MiddleBlePacket.CAPACITY + FirstBlePacket.CAPACITY_WITH_MIDDLE_PACKETS + LastBlePacket.CAPACITY, payload.size),
             ))
         }
@@ -65,7 +65,7 @@ internal class PayloadSplitter(private val payload: ByteArray) {
     }
 }
 
-private fun ByteArray.crc32(): Long {
+internal fun ByteArray.crc32(): Long {
     val crc = CRC32()
     crc.update(this)
     return crc.value
