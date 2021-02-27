@@ -11,6 +11,8 @@ import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.definitio
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.definition.BasalProgram
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.state.OmnipodDashPodStateManager
 import io.reactivex.Observable
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.schedulers.Schedulers
 import java.util.*
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -30,29 +32,17 @@ class OmnipodDashManagerImpl @Inject constructor(
             return Observable.error(IllegalStateException("Pod is in an incorrect state"))
         }
 
-    private val observeConnectToPod: Observable<PodEvent>
-        get() {
-            return Observable.defer {
-                bleManager.connect()
-                Observable.just(PodEvent.Connected(0)) // TODO should be returned in BleManager
-            }
-        }
-
     override fun activatePodPart1(): Observable<PodEvent> {
-        val command = GetVersionCommand.Builder() //
-            .setSequenceNumber(podStateManager.messageSequenceNumber) //
-            .setUniqueId(DEFAULT_UNIQUE_ID) //
-            .build()
-
         return Observable.concat(
             observePodReadyForActivationPart1,
-            observeConnectToPod,
-            Observable.defer {
-                bleManager.sendCommand(command)
-                Observable.just(PodEvent.CommandSent(command)) // TODO should be returned in BleManager
-            }
+            bleManager.connect(),
+            bleManager.sendCommand(GetVersionCommand.Builder() //
+                .setSequenceNumber(podStateManager.messageSequenceNumber) //
+                .setUniqueId(DEFAULT_UNIQUE_ID) //
+                .build()) //
             // ... Send more commands
-        )
+        ).subscribeOn(Schedulers.io()) //
+            .observeOn(AndroidSchedulers.mainThread())
     }
 
     override fun activatePodPart2(): Observable<PodEvent> {
