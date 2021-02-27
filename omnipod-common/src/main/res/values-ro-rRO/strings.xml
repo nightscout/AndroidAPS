@@ -8,6 +8,7 @@
     <string name="omnipod_common_pod_management_button_activate_pod">Activează Pod</string>
     <string name="omnipod_common_pod_management_button_deactivate_pod">Dezactivează Pod</string>
     <string name="omnipod_common_pod_management_button_discard_pod">Renunţă la Pod</string>
+    <string name="omnipod_common_pod_management_discard_pod_confirmation">Dacă renunțați la Pod, nu veți mai putea să comunicați cu el. Ar trebui să faceți acest lucru doar atunci când toate comunicațiile cu Pod-ul eșuează în mod persistent. Daca mai puteți comunica cu Pod-ul, va rugam sa folosiți opțiunea <b>Dezactivare Pod</b>.\n\nDacă doriți să continuați, vă rugăm să vă asigurați că îndepărtați Pod-ul de pe corpul dvs!</string>
     <string name="omnipod_common_pod_management_button_play_test_beep">Redă beep-uri de test</string>
     <string name="omnipod_common_pod_management_button_playing_test_beep">Se redă beep-ul de test…</string>
     <string name="omnipod_common_pod_management_button_pod_history">Istoric Pod</string>
@@ -18,6 +19,7 @@
     <string name="omnipod_common_error_unsupported_custom_command">Comandă personalizată nesuportată: %1$s</string>
     <string name="omnipod_common_error_failed_to_refresh_status">Eroare la actualizarea stării</string>
     <string name="omnipod_common_error_failed_to_refresh_status_on_startup">Eșec la reîmprospătarea stării la pornire</string>
+    <string name="omnipod_common_error_failed_to_silence_alerts">A eșuat oprirea alertelor</string>
     <string name="omnipod_common_error_failed_to_suspend_delivery">Suspendarea livrării a eșuat</string>
     <string name="omnipod_common_error_failed_to_set_time">Setarea timpului a eșuat</string>
     <string name="omnipod_common_error_failed_to_resume_delivery">Nu s-a reușit reluarea livrării</string>
