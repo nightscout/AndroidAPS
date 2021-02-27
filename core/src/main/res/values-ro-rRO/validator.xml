@@ -19,5 +19,6 @@
     <string name="error_mustbe12hexadidits">Trebuie să conțină 12 caractere din șirul ABCDEF0123456789</string>
     <string name="error_mustbe8hexadidits">Trebuie să conțină 8 caractere din șirul ABCDEF0123456789</string>
     <string name="error_mustbe4hexadidits">Trebuie să conțină 4 caractere din șirul ABCDEF0123456789</string>
+    <string name="error_not_a_minimum_length">Nu respecta lungimea minimă</string>
     <string name="error_pin_not_valid">Pinul trebuie să fie format din 3 până la 6 cifre neconsecutive și care nu se repeta</string>
 </resources>
