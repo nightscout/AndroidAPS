@@ -323,7 +323,8 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="2dp"
             android:layout_marginEnd="2dp"
-            android:drawableStart="@drawable/ic_local_save"
+            app:icon="@drawable/ic_local_save"
+            app:iconGravity="start"
             android:textAlignment="center"
             android:text="@string/danar_saveuseroptions" />
 
