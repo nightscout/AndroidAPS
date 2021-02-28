@@ -28,7 +28,7 @@ class SilenceAlertsCommand private constructor(
 
     override fun toString(): String {
         return "SilenceAlertsCommand{" +
-            "alterTypes=" + alertTypes +
+            "alertTypes=" + alertTypes +
             ", nonce=" + nonce +
             ", commandType=" + commandType +
             ", uniqueId=" + uniqueId +
