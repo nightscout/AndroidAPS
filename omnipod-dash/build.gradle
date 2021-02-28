@@ -22,5 +22,4 @@ dependencies {
     implementation "androidx.room:room-rxjava2:$room_version"
     kapt "androidx.room:room-compiler:$room_version"
     implementation 'com.github.guepardoapps:kulid:1.1.2.0'
-    implementation 'com.google.crypto.tink:tink-android:1.5.0'
 }

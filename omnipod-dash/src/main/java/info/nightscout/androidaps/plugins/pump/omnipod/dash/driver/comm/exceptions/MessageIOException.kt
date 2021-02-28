@@ -2,5 +2,5 @@ package info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.excepti
 
 class MessageIOException : Exception {
     constructor(msg: String) : super(msg)
-    constructor(cause: Throwable) : super(cause)
+    constructor(cause: Throwable) : super("Caught Exception during Message I/O", cause)
 }
