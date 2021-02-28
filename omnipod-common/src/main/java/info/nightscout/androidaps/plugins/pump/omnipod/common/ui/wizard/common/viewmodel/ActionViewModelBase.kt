@@ -7,12 +7,11 @@ import info.nightscout.androidaps.data.PumpEnactResult
 import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.logging.LTag
 import io.reactivex.Single
-import javax.inject.Inject
 
-abstract class ActionViewModelBase : ViewModelBase() {
-
-    @Inject lateinit var injector: HasAndroidInjector
-    @Inject lateinit var logger: AAPSLogger
+abstract class ActionViewModelBase(
+    protected val injector: HasAndroidInjector,
+    protected val logger: AAPSLogger
+) : ViewModelBase() {
 
     private val _isActionExecutingLiveData = MutableLiveData(false)
     val isActionExecutingLiveData: LiveData<Boolean> = _isActionExecutingLiveData

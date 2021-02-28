@@ -12,13 +12,13 @@ import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.definitio
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.definition.BasalProgram
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.response.AlarmStatusResponse
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.response.DefaultStatusResponse
+import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.response.Response
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.response.SetUniqueIdResponse
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.response.VersionResponse
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.state.OmnipodDashPodStateManager
+import info.nightscout.androidaps.utils.rx.AapsSchedulers
 import io.reactivex.Observable
-import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.functions.Consumer
-import io.reactivex.schedulers.Schedulers
 import java.util.*
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -27,7 +27,8 @@ import javax.inject.Singleton
 class OmnipodDashManagerImpl @Inject constructor(
     private val logger: AAPSLogger,
     private val podStateManager: OmnipodDashPodStateManager,
-    private val bleManager: OmnipodDashBleManager
+    private val bleManager: OmnipodDashBleManager,
+    private val aapsSchedulers: AapsSchedulers
 ) : OmnipodDashManager {
 
     private val observePodReadyForActivationPart1: Observable<PodEvent>
@@ -39,26 +40,28 @@ class OmnipodDashManagerImpl @Inject constructor(
             }
         }
 
-    private val connectToPod: Observable<PodEvent>
+    private val observeConnectToPod: Observable<PodEvent>
         get() = Observable.defer { bleManager.connect() }
+
+    private val observeSendGetVersionCommand: Observable<PodEvent>
+        get() = Observable.defer {
+            bleManager.sendCommand(GetVersionCommand.Builder() //
+                .setSequenceNumber(podStateManager.messageSequenceNumber) //
+                .setUniqueId(DEFAULT_UNIQUE_ID) //
+                .build()) //
+        }
 
     override fun activatePodPart1(): Observable<PodEvent> {
         return Observable.concat(
             observePodReadyForActivationPart1,
-            connectToPod,
-            Observable.defer {
-                bleManager.sendCommand(GetVersionCommand.Builder() //
-                    .setSequenceNumber(podStateManager.messageSequenceNumber) //
-                    .setUniqueId(DEFAULT_UNIQUE_ID) //
-                    .build()) //
-            }
+            observeConnectToPod,
+            observeSendGetVersionCommand
             // ... Send more commands
         ) //
             // TODO these would be common for any observable returned in a public function in this class
             .doOnNext(PodEventInterceptor()) //
             .doOnError(ErrorInterceptor())
-            .subscribeOn(Schedulers.io()) //
-            .observeOn(AndroidSchedulers.mainThread())
+            .subscribeOn(aapsSchedulers.io)
     }
 
     override fun activatePodPart2(): Observable<PodEvent> {
@@ -128,7 +131,6 @@ class OmnipodDashManagerImpl @Inject constructor(
 
     inner class PodEventInterceptor : Consumer<PodEvent> {
 
-        // TODO split into separate methods
         override fun accept(event: PodEvent) {
             logger.debug(LTag.PUMP, "Intercepted PodEvent in OmnipodDashManagerImpl: ${event.javaClass.simpleName}")
             when (event) {
@@ -147,27 +149,31 @@ class OmnipodDashManagerImpl @Inject constructor(
 
                 is PodEvent.ResponseReceived -> {
                     podStateManager.increaseMessageSequenceNumber()
-                    when (event.response) {
-                        is VersionResponse       -> {
-                            podStateManager.updateFromVersionResponse(event.response)
-                        }
-
-                        is SetUniqueIdResponse   -> {
-                            podStateManager.updateFromSetUniqueIdResponse(event.response)
-                        }
-
-                        is DefaultStatusResponse -> {
-                            podStateManager.updateFromDefaultStatusResponse(event.response)
-                        }
-
-                        is AlarmStatusResponse   -> {
-                            podStateManager.updateFromAlarmStatusResponse(event.response)
-                        }
-                    }
+                    handleResponse(event.response)
                 }
 
                 else                           -> {
                     // Do nothing
+                }
+            }
+        }
+
+        private fun handleResponse(response: Response) {
+            when (response) {
+                is VersionResponse -> {
+                    podStateManager.updateFromVersionResponse(response)
+                }
+
+                is SetUniqueIdResponse -> {
+                    podStateManager.updateFromSetUniqueIdResponse(response)
+                }
+
+                is DefaultStatusResponse -> {
+                    podStateManager.updateFromDefaultStatusResponse(response)
+                }
+
+                is AlarmStatusResponse -> {
+                    podStateManager.updateFromAlarmStatusResponse(response)
                 }
             }
         }

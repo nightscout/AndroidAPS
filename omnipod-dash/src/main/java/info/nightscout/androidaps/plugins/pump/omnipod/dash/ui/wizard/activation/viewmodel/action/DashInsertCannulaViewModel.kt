@@ -1,14 +1,20 @@
 package info.nightscout.androidaps.plugins.pump.omnipod.dash.ui.wizard.activation.viewmodel.action
 
 import androidx.annotation.StringRes
+import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.data.PumpEnactResult
 import info.nightscout.androidaps.interfaces.ProfileFunction
+import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.plugins.pump.omnipod.common.ui.wizard.activation.viewmodel.action.InsertCannulaViewModel
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.R
 import io.reactivex.Single
 import javax.inject.Inject
 
-class DashInsertCannulaViewModel @Inject constructor(private val profileFunction: ProfileFunction) : InsertCannulaViewModel() {
+class DashInsertCannulaViewModel @Inject constructor(
+    private val profileFunction: ProfileFunction,
+    injector: HasAndroidInjector,
+    logger: AAPSLogger
+) : InsertCannulaViewModel(injector, logger) {
 
     override fun isPodInAlarm(): Boolean = false // TODO
 

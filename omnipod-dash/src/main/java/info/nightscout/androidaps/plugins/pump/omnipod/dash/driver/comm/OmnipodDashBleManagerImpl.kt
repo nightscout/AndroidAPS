@@ -94,7 +94,7 @@ class OmnipodDashBleManagerImpl @Inject constructor(private val context: Context
 
             val msgIO = MessageIO(aapsLogger, bleIO)
             val ltkExchanger = LTKExchanger(aapsLogger, msgIO)
-            emitter.onNext(PodEvent.NegotiatingLtkAndNoncePrefix)
+            emitter.onNext(PodEvent.Pairing)
 
             val ltk = ltkExchanger.negotiateLTKAndNonce()
             aapsLogger.info(LTag.PUMPCOMM, "Got LTK and Nonce Prefix: ${ltk}")
@@ -102,7 +102,7 @@ class OmnipodDashBleManagerImpl @Inject constructor(private val context: Context
 
             emitter.onComplete()
         } catch (ex: Exception) {
-            emitter.onError(ex) // TODO is this necessary?
+            emitter.tryOnError(ex) // TODO is this necessary?
         }
     }
 

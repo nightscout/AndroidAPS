@@ -34,8 +34,6 @@ class OmnipodDashPodStateManagerImpl @Inject constructor(
             store()
         }
 
-    // TODO: dynamic get() fun instead of assignment
-
     override val isUniqueIdSet: Boolean
         get() = activationProgress.isAtLeast(ActivationProgress.SET_UNIQUE_ID)
 

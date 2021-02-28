@@ -1,8 +1,10 @@
 package info.nightscout.androidaps.plugins.pump.omnipod.eros.ui.wizard.activation.viewmodel.action
 
 import androidx.annotation.StringRes
+import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.data.PumpEnactResult
 import info.nightscout.androidaps.interfaces.ProfileFunction
+import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.plugins.pump.omnipod.common.ui.wizard.activation.viewmodel.action.InsertCannulaViewModel
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.R
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.driver.definition.ActivationProgress
@@ -14,8 +16,10 @@ import javax.inject.Inject
 class ErosInsertCannulaViewModel @Inject constructor(
     private val aapsOmnipodManager: AapsOmnipodErosManager,
     private val podStateManager: AapsErosPodStateManager,
-    private val profileFunction: ProfileFunction
-) : InsertCannulaViewModel() {
+    private val profileFunction: ProfileFunction,
+    injector: HasAndroidInjector,
+    logger: AAPSLogger
+) : InsertCannulaViewModel(injector, logger) {
 
     override fun isPodInAlarm(): Boolean = podStateManager.isPodFaulted
 

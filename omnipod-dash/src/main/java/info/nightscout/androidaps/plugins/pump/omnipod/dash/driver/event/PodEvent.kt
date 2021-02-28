@@ -10,7 +10,9 @@ sealed class PodEvent {
     object Scanning : PodEvent()
     object BluetoothConnecting : PodEvent()
     class BluetoothConnected(val address: String) : PodEvent()
-    object NegotiatingLtkAndNoncePrefix : PodEvent()
+    object Pairing : PodEvent()
+    object Paired : PodEvent()
+    object EstablishingSession : PodEvent()
     class Connected(val uniqueId: Long) : PodEvent()
 
     /* Message exchange events */
