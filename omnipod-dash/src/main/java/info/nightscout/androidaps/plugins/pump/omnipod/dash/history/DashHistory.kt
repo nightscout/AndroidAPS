@@ -39,25 +39,21 @@ class DashHistory @Inject constructor(
 
         when {
             commandType == SET_BOLUS && bolusRecord == null               ->
-                Single.error(IllegalArgumentException("bolusRecord missing on SET_BOLUS"))
+                return Single.error(IllegalArgumentException("bolusRecord missing on SET_BOLUS"))
             commandType == SET_TEMPORARY_BASAL && tempBasalRecord == null ->
-                Single.error<String>(IllegalArgumentException("tempBasalRecord missing on SET_TEMPORARY_BASAL"))
-            else                                                          -> null
-        }?.let { return it }
+                return Single.error(IllegalArgumentException("tempBasalRecord missing on SET_TEMPORARY_BASAL"))
+        }
 
-
-        return dao.save(
-            HistoryRecordEntity(
-                id = id,
-                date = date,
-                createdAt = currentTimeMillis(),
-                commandType = commandType,
-                tempBasalRecord = tempBasalRecord,
-                bolusRecord = bolusRecord,
-                initialResult = initialResult,
-                resolvedResult = resolveResult,
-                resolvedAt = resolvedAt,
-            )
+        return dao.save(HistoryRecordEntity(
+            id = id,
+            date = date,
+            createdAt = currentTimeMillis(),
+            commandType = commandType,
+            tempBasalRecord = tempBasalRecord,
+            bolusRecord = bolusRecord,
+            initialResult = initialResult,
+            resolvedResult = resolveResult,
+            resolvedAt = resolvedAt)
         ).toSingle { id }
     }
 
