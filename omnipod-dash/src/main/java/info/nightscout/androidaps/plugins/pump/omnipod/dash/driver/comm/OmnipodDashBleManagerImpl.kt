@@ -102,7 +102,7 @@ class OmnipodDashBleManagerImpl @Inject constructor(private val context: Context
 
             emitter.onComplete()
         } catch (ex: Exception) {
-            emitter.tryOnError(ex) // TODO is this necessary?
+            emitter.tryOnError(ex)
         }
     }
 
