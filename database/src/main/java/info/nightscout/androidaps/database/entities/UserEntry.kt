@@ -124,26 +124,33 @@ data class UserEntry(
         constructor(ivalue:Int?, unit:Units) : this(0.0, ivalue ?:0, 0, "", unit)
         constructor(lvalue:Long?, unit:Units) : this(0.0,0, lvalue ?:0, "", unit)
         constructor(svalue:String?, unit:Units) : this(0.0,0, 0, svalue ?:"", unit)
-        constructor(dvalue:Double?, unit:String) : this(dvalue ?:0.0,0, 0, "", Units.fromString(unit))
+        constructor(dvalue:Double?, unit:String) : this(dvalue ?:0.0,0, 0, "", Units.fromText(unit))
+        fun value() : Any {
+            if (!dValue.equals(0.0)) return dValue
+            if (!iValue.equals(0)) return iValue
+            if (!lValue.equals(0)) return lValue
+            return sValue
+        }
     }
-    enum class Units {
-        @SerializedName("None") None,
-        @SerializedName("mg/dl") Mg_Dl,
-        @SerializedName("mmol") Mmol_L,
-        @SerializedName("Timestamp") Timestamp,
-        @SerializedName("U") U,
-        @SerializedName("U/h") U_H,
-        @SerializedName("g") G,
-        @SerializedName("m") M,
-        @SerializedName("h") H,
-        @SerializedName("Percent") Percent,
-        @SerializedName("CPEvent") CPEvent,
-        @SerializedName("TT_Reason") TT_Reason,
-        @SerializedName("R_String") R_String
+    enum class Units(val text: String) {
+        @SerializedName("None") None (""),
+        @SerializedName("Mg_Dl") Mg_Dl ("mg/dl"),
+        @SerializedName("Mmol_L") Mmol_L ("mmol"),
+        @SerializedName("Timestamp") Timestamp("Timestamp"),
+        @SerializedName("U") U ("U"),
+        @SerializedName("U_H") U_H ("U/h"),
+        @SerializedName("G") G ("g"),
+        @SerializedName("M") M ("m"),
+        @SerializedName("H") H ("h"),
+        @SerializedName("Percent") Percent ("%"),
+        @SerializedName("CPEvent") CPEvent ("CPEvent"),
+        @SerializedName("TT_Reason") TT_Reason ("TTReason"),
+        @SerializedName("R_String") R_String ("R.string")
         ;
 
         companion object {
             fun fromString(unit: String?) = values().firstOrNull { it.name == unit } ?: None
+            fun fromText(unit: String?) = values().firstOrNull { it.text == unit } ?: None
         }
     }
 }
