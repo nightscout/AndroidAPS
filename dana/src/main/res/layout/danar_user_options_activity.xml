@@ -318,7 +318,7 @@
 
         <info.nightscout.androidaps.utils.ui.SingleClickButton
             android:id="@+id/save_user_options"
-            style="@style/ButtonSmallFontStyle"
+            style="@style/Widget.MaterialComponents.Button.UnelevatedButton"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginStart="2dp"
