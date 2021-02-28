@@ -48,6 +48,7 @@ import info.nightscout.androidaps.plugins.aps.loop.LoopPlugin;
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper;
 import info.nightscout.androidaps.plugins.general.nsclient.data.NSDeviceStatus;
 import info.nightscout.androidaps.plugins.general.wear.WearPlugin;
+import info.nightscout.androidaps.plugins.general.wear.events.EventWearConfirmAction;
 import info.nightscout.androidaps.plugins.general.wear.events.EventWearInitiateAction;
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.GlucoseStatus;
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.IobCobCalculatorPlugin;
