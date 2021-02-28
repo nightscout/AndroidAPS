@@ -21,10 +21,10 @@ class Converters {
     fun fromInitialResult(initialResult: InitialResult) = initialResult.name
 
     @TypeConverter
-    fun toResolvedResult(s: String) = enumValueOf<ResolvedResult>(s)
+    fun toResolvedResult(s: String?) = s?.let { enumValueOf<ResolvedResult>(it) }
 
     @TypeConverter
-    fun fromResolvedResult(resolvedResult: ResolvedResult) = resolvedResult.name
+    fun fromResolvedResult(resolvedResult: ResolvedResult?) = resolvedResult?.name
 
     @TypeConverter
     fun toOmnipodCommandType(s: String) = enumValueOf<OmnipodCommandType>(s)

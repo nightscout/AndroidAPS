@@ -20,9 +20,9 @@ class DashHistory @Inject constructor(
     private val historyMapper: HistoryMapper
 ) {
 
-    fun markSuccess(id: String): Completable = dao.markResolved(id, ResolvedResult.SUCCESS, currentTimeMillis())
+    fun markSuccess(id: String): Completable = dao.markResolved(id, ResolvedResult.SUCCESS, currentTimeMillis()) // TODO pass time
 
-    fun markFailure(id: String): Completable = dao.markResolved(id, ResolvedResult.FAILURE, currentTimeMillis())
+    fun markFailure(id: String): Completable = dao.markResolved(id, ResolvedResult.FAILURE, currentTimeMillis()) // TODO pass time
 
     fun createRecord(
         commandType: OmnipodCommandType,
@@ -33,10 +33,14 @@ class DashHistory @Inject constructor(
         resolvedAt: Long? = null
     ): Single<String> {
         val id = ULID.random()
+
+        // TODO: verify that on OmnipodCommandType.SET_BOLUS bolusRecord is not null?
+        // TODO: verify that on SET_TEMPORARY_BASAL tempBasalRecord is not null
+
         return dao.save(
             HistoryRecordEntity(
                 id = id,
-                createdAt = currentTimeMillis(),
+                createdAt = currentTimeMillis(), // TODO pass time (as date, keep createdAt)
                 commandType = commandType,
                 tempBasalRecord = tempBasalRecord,
                 bolusRecord = bolusRecord,

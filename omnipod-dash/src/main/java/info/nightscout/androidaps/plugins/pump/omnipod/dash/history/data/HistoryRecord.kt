@@ -4,6 +4,7 @@ import info.nightscout.androidaps.plugins.pump.omnipod.common.definition.Omnipod
 
 data class HistoryRecord(
     val id: String, // ULID
+    // TODO add date
     val createdAt: Long,
     val commandType: OmnipodCommandType,
     val initialResult: InitialResult,
