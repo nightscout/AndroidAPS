@@ -36,11 +36,11 @@ class StatusLightHandler @Inject constructor(
         handleAge(careportal_cannula_age, CareportalEvent.SITECHANGE, R.string.key_statuslights_cage_warning, 48.0, R.string.key_statuslights_cage_critical, 72.0)
         handleAge(careportal_insulin_age, CareportalEvent.INSULINCHANGE, R.string.key_statuslights_iage_warning, 72.0, R.string.key_statuslights_iage_critical, 144.0)
         handleAge(careportal_sensor_age, CareportalEvent.SENSORCHANGE, R.string.key_statuslights_sage_warning, 216.0, R.string.key_statuslights_sage_critical, 240.0)
-        if (pump.pumpDescription.isBatteryReplaceable) {
+        if (pump.pumpDescription.isBatteryReplaceable || (pump is OmnipodErosPumpPlugin && pump.isUseRileyLinkBatteryLevel && pump.isBatteryChangeLoggingEnabled)) {
             handleAge(careportal_pb_age, CareportalEvent.PUMPBATTERYCHANGE, R.string.key_statuslights_bage_warning, 216.0, R.string.key_statuslights_bage_critical, 240.0)
         }
         if (!config.NSCLIENT) {
-            if (pump.model() == PumpType.Insulet_Omnipod) {
+            if (pump.model() == PumpType.Omnipod_Eros || pump.model() == PumpType.Omnipod_Dash) {
                 handleOmnipodReservoirLevel(careportal_reservoir_level, R.string.key_statuslights_res_critical, 10.0, R.string.key_statuslights_res_warning, 80.0, pump.reservoirLevel, "U")
             } else {
                 handleLevel(careportal_reservoir_level, R.string.key_statuslights_res_critical, 10.0, R.string.key_statuslights_res_warning, 80.0, pump.reservoirLevel, "U")
@@ -52,8 +52,14 @@ class StatusLightHandler @Inject constructor(
         }
 
         if (!config.NSCLIENT) {
-            if (pump.model() == PumpType.Insulet_Omnipod && pump is OmnipodErosPumpPlugin) { // instance of check is needed because at startup, pump can still be VirtualPumpPlugin and that will cause a crash because of the class cast below
-                handleOmnipodBatteryLevel(careportal_battery_level, R.string.key_statuslights_bat_critical, 26.0, R.string.key_statuslights_bat_warning, 51.0, pump.batteryLevel.toDouble(), "%", pump.isUseRileyLinkBatteryLevel)
+            if (pump.model() == PumpType.Omnipod_Dash) {
+                // Omnipod Dash does not report its battery level
+                careportal_battery_level?.text = resourceHelper.gs(R.string.notavailable)
+                careportal_battery_level?.setTextColor(Color.WHITE)
+            } else if (pump.model() == PumpType.Omnipod_Eros && pump is OmnipodErosPumpPlugin) { // instance of check is needed because at startup, pump can still be VirtualPumpPlugin and that will cause a crash because of the class cast below
+                // The Omnipod Eros does not report its battery level. However, some RileyLink alternatives do.
+                // Depending on the user's configuration, we will either show the battery level reported by the RileyLink or "n/a"
+                handleOmnipodErosBatteryLevel(careportal_battery_level, R.string.key_statuslights_bat_critical, 26.0, R.string.key_statuslights_bat_warning, 51.0, pump.batteryLevel.toDouble(), "%", pump.isUseRileyLinkBatteryLevel)
             } else if (pump.model() != PumpType.AccuChekCombo) {
                 handleLevel(careportal_battery_level, R.string.key_statuslights_bat_critical, 26.0, R.string.key_statuslights_bat_warning, 51.0, pump.batteryLevel.toDouble(), "%")
             }
@@ -93,7 +99,7 @@ class StatusLightHandler @Inject constructor(
     }
 
     @Suppress("SameParameterValue")
-    private fun handleOmnipodBatteryLevel(view: TextView?, criticalSetting: Int, criticalDefaultValue: Double, warnSetting: Int, warnDefaultValue: Double, level: Double, units: String, useRileyLinkBatteryLevel: Boolean) {
+    private fun handleOmnipodErosBatteryLevel(view: TextView?, criticalSetting: Int, criticalDefaultValue: Double, warnSetting: Int, warnDefaultValue: Double, level: Double, units: String, useRileyLinkBatteryLevel: Boolean) {
         if (useRileyLinkBatteryLevel) {
             handleLevel(view, criticalSetting, criticalDefaultValue, warnSetting, warnDefaultValue, level, units)
         } else {

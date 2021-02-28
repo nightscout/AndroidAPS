@@ -6,7 +6,6 @@ import android.content.ServiceConnection;
 
 import androidx.annotation.NonNull;
 
-import org.jetbrains.annotations.NotNull;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -445,7 +444,7 @@ public abstract class PumpPluginAbstract extends PumpPluginBase implements PumpI
         return pumpType.getManufacturer();
     }
 
-    @NotNull
+    @NonNull
     public PumpType model() {
         return pumpType;
     }

@@ -12,6 +12,7 @@ import info.nightscout.androidaps.utils.resources.ResourceHelper
 import info.nightscout.androidaps.utils.sharedPreferences.SP
 import javax.inject.Inject
 
+@Suppress("SpellCheckingInspection")
 class NotificationWithAction constructor(
     injector: HasAndroidInjector
 ) : Notification() {

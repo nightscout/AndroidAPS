@@ -16,12 +16,6 @@
         <item name="dialogTitleIconTint">@color/dialog_title_icon_tint</item>
     </style>
 
-    <style name="InsightAlertDialog" parent="Theme.AppCompat.Dialog.MinWidth">
-        <item name="colorPrimary">@color/colorPrimary</item>
-        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
-        <item name="colorAccent">@color/colorAccent</item>
-    </style>
-
     <style name="section_header_label">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>

@@ -47,7 +47,7 @@ import info.nightscout.androidaps.plugins.general.overview.notifications.Notific
 import info.nightscout.androidaps.plugins.general.wear.events.EventWearDoAction
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.GlucoseStatus
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.IobCobCalculatorPlugin
-import info.nightscout.androidaps.plugins.iob.iobCobCalculator.events.EventAutosensCalculationFinished
+import info.nightscout.androidaps.events.EventAutosensCalculationFinished
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.events.EventIobCalculationProgress
 import info.nightscout.androidaps.plugins.pump.common.defs.PumpType
 import info.nightscout.androidaps.plugins.source.DexcomPlugin
@@ -634,8 +634,8 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
                     binding.infoLayout.apsModeText.visibility = View.VISIBLE
                 }
 
-                pump.isSuspended()                                                        -> {
-                    binding.infoLayout.apsMode.setImageResource(if (pump.pumpDescription.pumpType == PumpType.Insulet_Omnipod) {
+                pump.isSuspended()                                                      -> {
+                    binding.infoLayout.apsMode.setImageResource(if (pump.model() == PumpType.Omnipod_Eros || pump.model() == PumpType.Omnipod_Dash) {
                         // For Omnipod, indicate the pump as disconnected when it's suspended.
                         // The only way to 'reconnect' it, is through the Omnipod tab
                         R.drawable.ic_loop_disconnected
@@ -765,7 +765,7 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
         var cobText: String = resourceHelper.gs(R.string.value_unavailable_short)
         val cobInfo = iobCobCalculatorPlugin.getCobInfo(false, "Overview COB")
         if (cobInfo.displayCob != null) {
-            cobText = resourceHelper.gs(R.string.format_carbs, cobInfo.displayCob.toInt())
+            cobText = resourceHelper.gs(R.string.format_carbs, cobInfo.displayCob!!.toInt())
             if (cobInfo.futureCarbs > 0) cobText += "(" + DecimalFormatter.to0Decimal(cobInfo.futureCarbs) + ")"
         }
 
@@ -907,7 +907,7 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
                         if (menuChartSettings[g + 1][OverviewMenus.CharType.COB.ordinal]) secondGraphData.addCob(fromTime, now, useCobForScale, if (useCobForScale) 1.0 else 0.5)
                         if (menuChartSettings[g + 1][OverviewMenus.CharType.DEV.ordinal]) secondGraphData.addDeviations(fromTime, now, useDevForScale, 1.0, alignDevBgiScale)
                         if (menuChartSettings[g + 1][OverviewMenus.CharType.SEN.ordinal]) secondGraphData.addRatio(fromTime, now, useRatioForScale, 1.0)
-                        if (menuChartSettings[g + 1][OverviewMenus.CharType.BGI.ordinal]) secondGraphData.addMinusBGI(fromTime, endTime, useBGIForScale, if(alignDevBgiScale) 1.0 else 0.8, alignDevBgiScale)
+                        if (menuChartSettings[g + 1][OverviewMenus.CharType.BGI.ordinal]) secondGraphData.addMinusBGI(fromTime, endTime, useBGIForScale, if (alignDevBgiScale) 1.0 else 0.8, alignDevBgiScale)
                         if (menuChartSettings[g + 1][OverviewMenus.CharType.DEVSLOPE.ordinal] && buildHelper.isDev()) secondGraphData.addDeviationSlope(fromTime, now, useDSForScale, 1.0)
 
                         // set manual x bounds to have nice steps

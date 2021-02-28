@@ -10,7 +10,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.preference.Preference;
 
-import org.jetbrains.annotations.NotNull;
+import androidx.annotation.NonNull;
 import org.joda.time.LocalDateTime;
 
 import java.util.ArrayList;
@@ -202,7 +202,7 @@ public class MedtronicPumpPlugin extends PumpPluginAbstract implements PumpInter
     }
 
     @Override
-    public void updatePreferenceSummary(@NotNull Preference pref) {
+    public void updatePreferenceSummary(@NonNull Preference pref) {
         super.updatePreferenceSummary(pref);
 
         if (pref.getKey().equals(getResourceHelper().gs(R.string.key_rileylink_mac_address))) {

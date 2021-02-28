@@ -1,5 +1,7 @@
 package info.nightscout.androidaps.plugins.pump.medtronic.data.dto;
 
+import androidx.annotation.NonNull;
+
 import com.google.gson.annotations.Expose;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
@@ -205,7 +207,7 @@ public class DailyTotalsDTO {
         //LOG.debug("523: {}", toString());
     }
 
-    @Override
+    @Override @NonNull
     public String toString() {
         return new ToStringBuilder(this)
                 .append("bgAvg", bgAvg)

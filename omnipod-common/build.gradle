@@ -1,0 +1,20 @@
+
+apply plugin: 'com.android.library'
+apply plugin: 'kotlin-android'
+apply plugin: 'kotlin-kapt'
+apply plugin: 'com.hiya.jacoco-android'
+
+apply from: "${project.rootDir}/gradle/android_dependencies.gradle"
+apply from: "${project.rootDir}/gradle/android_module_dependencies.gradle"
+apply from: "${project.rootDir}/gradle/test_dependencies.gradle"
+
+android {
+    defaultConfig {
+        versionCode 1
+        versionName "1.0"
+    }
+}
+
+dependencies {
+    implementation project(':core')
+}

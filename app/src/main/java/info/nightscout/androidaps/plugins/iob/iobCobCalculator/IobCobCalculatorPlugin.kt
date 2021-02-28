@@ -71,14 +71,14 @@ open class IobCobCalculatorPlugin @Inject constructor(
     private var absIobTable = LongSparseArray<IobTotal?>() // oldest at index 0, absolute insulin in the body
     private var autosensDataTable = LongSparseArray<AutosensData>() // oldest at index 0
     private var basalDataTable = LongSparseArray<BasalData>() // oldest at index 0
-    @Volatile var bgReadings: List<GlucoseValue> = listOf() // newest at index 0
+    @Volatile override var bgReadings: List<GlucoseValue> = listOf() // newest at index 0
     @Volatile var bucketedData: MutableList<InMemoryGlucoseValue>? = null
 
     // we need to make sure that bucketed_data will always have the same timestamp for correct use of cached values
     // once referenceTime != null all bucketed data should be (x * 5min) from referenceTime
     var referenceTime: Long = -1
     private var lastUsed5minCalculation: Boolean? = null // true if used 5min bucketed data
-    val dataLock = Any()
+    override val dataLock = Any()
     var stopCalculationTrigger = false
     private var thread: Thread? = null
 
@@ -388,7 +388,7 @@ open class IobCobCalculatorPlugin @Inject constructor(
         return getBGDataFrom
     }
 
-    fun calculateFromTreatmentsAndTempsSynchronized(time: Long, profile: Profile?): IobTotal {
+    override fun calculateFromTreatmentsAndTempsSynchronized(time: Long, profile: Profile?): IobTotal {
         synchronized(dataLock) { return calculateFromTreatmentsAndTemps(time, profile) }
     }
 
@@ -524,7 +524,7 @@ open class IobCobCalculatorPlugin @Inject constructor(
         synchronized(dataLock) { return getLastAutosensData(reason) }
     }
 
-    fun getCobInfo(_synchronized: Boolean, reason: String): CobInfo {
+    override fun getCobInfo(_synchronized: Boolean, reason: String): CobInfo {
         val autosensData = if (_synchronized) getLastAutosensDataSynchronized(reason) else getLastAutosensData(reason)
         var displayCob: Double? = null
         var futureCarbs = 0.0
@@ -563,7 +563,7 @@ open class IobCobCalculatorPlugin @Inject constructor(
         return sum / count
     }
 
-    fun getLastAutosensData(reason: String): AutosensData? {
+    override fun getLastAutosensData(reason: String): AutosensData? {
         if (autosensDataTable.size() < 1) {
             aapsLogger.debug(LTag.AUTOSENS, "AUTOSENSDATA null: autosensDataTable empty ($reason)")
             return null

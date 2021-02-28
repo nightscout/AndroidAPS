@@ -1,6 +1,6 @@
 package info.nightscout.androidaps.plugins.pump.medtronic.data.dto;
 
-import org.jetbrains.annotations.NotNull;
+import androidx.annotation.NonNull;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -120,7 +120,7 @@ public class TempBasalPair extends info.nightscout.androidaps.plugins.pump.commo
     }
 
 
-    @NotNull @Override
+    @NonNull @Override
     public String toString() {
         return "TempBasalPair [" + "Rate=" + insulinRate + ", DurationMinutes=" + durationMinutes + ", IsPercent="
                 + isPercent + "]";

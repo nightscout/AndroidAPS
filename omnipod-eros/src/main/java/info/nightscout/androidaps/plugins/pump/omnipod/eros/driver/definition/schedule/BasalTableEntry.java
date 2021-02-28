@@ -1,5 +1,7 @@
 package info.nightscout.androidaps.plugins.pump.omnipod.eros.driver.definition.schedule;
 
+import androidx.annotation.NonNull;
+
 import info.nightscout.androidaps.plugins.pump.common.utils.ByteUtil;
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.driver.communication.message.IRawRepresentable;
 
@@ -42,7 +44,7 @@ public class BasalTableEntry implements IRawRepresentable {
         return alternateSegmentPulse;
     }
 
-    @Override
+    @NonNull @Override
     public String toString() {
         return "BasalTableEntry{" +
                 "segments=" + segments +

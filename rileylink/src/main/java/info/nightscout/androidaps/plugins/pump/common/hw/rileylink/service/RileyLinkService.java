@@ -4,7 +4,7 @@ import android.bluetooth.BluetoothAdapter;
 import android.content.Context;
 import android.content.Intent;
 
-import org.jetbrains.annotations.NotNull;
+import androidx.annotation.NonNull;
 
 import javax.inject.Inject;
 
@@ -236,7 +236,7 @@ public abstract class RileyLinkService extends DaggerService {
         rileyLinkServiceData.setRileyLinkServiceState(RileyLinkServiceState.BluetoothReady);
     }
 
-    @NotNull public RileyLinkBLE getRileyLinkBLE() {
+    @NonNull public RileyLinkBLE getRileyLinkBLE() {
         return rileyLinkBLE;
     }
 

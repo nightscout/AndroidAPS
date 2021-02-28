@@ -1,7 +1,11 @@
 package info.nightscout.androidaps.plugins.pump.omnipod.eros.queue.command;
 
-public final class CommandReadPulseLog extends OmnipodCustomCommand {
-    public CommandReadPulseLog() {
-        super(OmnipodCustomCommandType.READ_PULSE_LOG);
+import org.jetbrains.annotations.NotNull;
+
+import info.nightscout.androidaps.queue.commands.CustomCommand;
+
+public final class CommandReadPulseLog implements CustomCommand {
+    @NotNull @Override public String getStatusDescription() {
+        return "READ PULSE LOG";
     }
 }

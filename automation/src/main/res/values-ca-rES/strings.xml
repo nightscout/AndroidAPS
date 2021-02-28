@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="automation_description">Tasques d\'automatització definides per l\'usuari</string>
+    <string name="automation_missing_task_name">Introduïu un nom de tasca.</string>
+    <string name="automation_missing_trigger">Especifiqueu almenys un activador.</string>
+    <string name="automation_missing_action">Especifiqueu almenys una acció.</string>
+    <string name="alreadysuspended">Ja aturat</string>
+    <string name="notsuspended">No aturat</string>
+    <string name="suspendloopforXmin">Aturar el llaç durant %1$d min</string>
+    <string name="notification_message">Avís: %1$s</string>
+    <string name="short_avgdelta">Delta mitjana curta</string>
+    <string name="long_avgdelta">Delta mitjana llarga</string>
+    <string name="delta">Delta</string>
+    <string name="weekday_sunday_short">Dg</string>
+    <string name="weekday_saturday_short">Ds</string>
+    <string name="weekday_friday_short">Dv</string>
+    <string name="weekday_thursday_short">Dj</string>
+    <string name="weekday_wednesday_short">Dc</string>
+    <string name="weekday_tuesday_short">Dt</string>
+    <string name="weekday_monday_short">Dl</string>
+    <string name="cobcompared">COB %1$s %2$.0f</string>
+</resources>

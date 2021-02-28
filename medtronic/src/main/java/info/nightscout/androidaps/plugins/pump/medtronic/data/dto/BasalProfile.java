@@ -2,6 +2,7 @@ package info.nightscout.androidaps.plugins.pump.medtronic.data.dto;
 
 import com.google.gson.annotations.Expose;
 
+import androidx.annotation.NonNull;
 import org.joda.time.Instant;
 
 import java.util.ArrayList;
@@ -219,7 +220,6 @@ public class BasalProfile {
             aapsLogger.warn(LTag.PUMPCOMM,"Raw Data is empty.");
             return entries; // an empty list
         }
-        boolean done = false;
         int r, st;
 
         for (int i = 0; i < mRawData.length - 2; i += 3) {
@@ -312,7 +312,7 @@ public class BasalProfile {
 
             currentTime = (currentTime * 30) / 60;
 
-            int lastHour = 0;
+            int lastHour;
             if ((i + 1) == entries.size()) {
                 lastHour = 24;
             } else {
@@ -357,7 +357,7 @@ public class BasalProfile {
     }
 
 
-    public String toString() {
+    @NonNull public String toString() {
         return basalProfileToString();
     }
 

@@ -46,6 +46,7 @@ import info.nightscout.androidaps.events.EventReloadTreatmentData;
 import info.nightscout.androidaps.events.EventTempBasalChange;
 import info.nightscout.androidaps.events.EventTempTargetChange;
 import info.nightscout.androidaps.interfaces.ActivePluginProvider;
+import info.nightscout.androidaps.interfaces.DatabaseHelperInterface;
 import info.nightscout.androidaps.interfaces.ProfileInterface;
 import info.nightscout.androidaps.interfaces.ProfileStore;
 import info.nightscout.androidaps.logging.AAPSLogger;
@@ -54,9 +55,6 @@ import info.nightscout.androidaps.plugins.bus.RxBusWrapper;
 import info.nightscout.androidaps.plugins.general.nsclient.NSUpload;
 import info.nightscout.androidaps.plugins.general.openhumans.OpenHumansUploader;
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.events.EventNewHistoryData;
-import info.nightscout.androidaps.plugins.pump.insight.database.InsightBolusID;
-import info.nightscout.androidaps.plugins.pump.insight.database.InsightHistoryOffset;
-import info.nightscout.androidaps.plugins.pump.insight.database.InsightPumpID;
 import info.nightscout.androidaps.plugins.pump.virtual.VirtualPumpPlugin;
 import info.nightscout.androidaps.utils.JsonHelper;
 import info.nightscout.androidaps.utils.PercentageSplitter;
@@ -83,9 +81,6 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
     public static final String DATABASE_DBREQUESTS = "DBRequests";
     public static final String DATABASE_CAREPORTALEVENTS = "CareportalEvents";
     public static final String DATABASE_TDDS = "TDDs";
-    public static final String DATABASE_INSIGHT_HISTORY_OFFSETS = "InsightHistoryOffsets";
-    public static final String DATABASE_INSIGHT_BOLUS_IDS = "InsightBolusIDs";
-    public static final String DATABASE_INSIGHT_PUMP_IDS = "InsightPumpIDs";
     public static final String DATABASE_OPEN_HUMANS_QUEUE = "OpenHumansQueue";
 
     private static final int DATABASE_VERSION = 13;
@@ -138,10 +133,10 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
             TableUtils.createTableIfNotExists(connectionSource, InsightPumpID.class);
             TableUtils.createTableIfNotExists(connectionSource, OmnipodHistoryRecord.class);
             TableUtils.createTableIfNotExists(connectionSource, OHQueueItem.class);
-            database.execSQL("INSERT INTO sqlite_sequence (name, seq) SELECT \"" + DATABASE_INSIGHT_BOLUS_IDS + "\", " + System.currentTimeMillis() + " " +
-                    "WHERE NOT EXISTS (SELECT 1 FROM sqlite_sequence WHERE name = \"" + DATABASE_INSIGHT_BOLUS_IDS + "\")");
-            database.execSQL("INSERT INTO sqlite_sequence (name, seq) SELECT \"" + DATABASE_INSIGHT_PUMP_IDS + "\", " + System.currentTimeMillis() + " " +
-                    "WHERE NOT EXISTS (SELECT 1 FROM sqlite_sequence WHERE name = \"" + DATABASE_INSIGHT_PUMP_IDS + "\")");
+            database.execSQL("INSERT INTO sqlite_sequence (name, seq) SELECT \"" + DatabaseHelperInterface.Companion.DATABASE_INSIGHT_BOLUS_IDS + "\", " + System.currentTimeMillis() + " " +
+                    "WHERE NOT EXISTS (SELECT 1 FROM sqlite_sequence WHERE name = \"" + DatabaseHelperInterface.Companion.DATABASE_INSIGHT_BOLUS_IDS + "\")");
+            database.execSQL("INSERT INTO sqlite_sequence (name, seq) SELECT \"" + DatabaseHelperInterface.Companion.DATABASE_INSIGHT_PUMP_IDS + "\", " + System.currentTimeMillis() + " " +
+                    "WHERE NOT EXISTS (SELECT 1 FROM sqlite_sequence WHERE name = \"" + DatabaseHelperInterface.Companion.DATABASE_INSIGHT_PUMP_IDS + "\")");
         } catch (SQLException e) {
             aapsLogger.error("Can't create database", e);
             throw new RuntimeException(e);
@@ -169,13 +164,13 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
                 TableUtils.createTableIfNotExists(connectionSource, InsightHistoryOffset.class);
                 TableUtils.createTableIfNotExists(connectionSource, InsightBolusID.class);
                 TableUtils.createTableIfNotExists(connectionSource, InsightPumpID.class);
-                database.execSQL("INSERT INTO sqlite_sequence (name, seq) SELECT \"" + DATABASE_INSIGHT_BOLUS_IDS + "\", " + System.currentTimeMillis() + " " +
-                        "WHERE NOT EXISTS (SELECT 1 FROM sqlite_sequence WHERE name = \"" + DATABASE_INSIGHT_BOLUS_IDS + "\")");
-                database.execSQL("INSERT INTO sqlite_sequence (name, seq) SELECT \"" + DATABASE_INSIGHT_PUMP_IDS + "\", " + System.currentTimeMillis() + " " +
-                        "WHERE NOT EXISTS (SELECT 1 FROM sqlite_sequence WHERE name = \"" + DATABASE_INSIGHT_PUMP_IDS + "\")");
+                database.execSQL("INSERT INTO sqlite_sequence (name, seq) SELECT \"" + DatabaseHelperInterface.Companion.DATABASE_INSIGHT_BOLUS_IDS + "\", " + System.currentTimeMillis() + " " +
+                        "WHERE NOT EXISTS (SELECT 1 FROM sqlite_sequence WHERE name = \"" + DatabaseHelperInterface.Companion.DATABASE_INSIGHT_BOLUS_IDS + "\")");
+                database.execSQL("INSERT INTO sqlite_sequence (name, seq) SELECT \"" + DatabaseHelperInterface.Companion.DATABASE_INSIGHT_PUMP_IDS + "\", " + System.currentTimeMillis() + " " +
+                        "WHERE NOT EXISTS (SELECT 1 FROM sqlite_sequence WHERE name = \"" + DatabaseHelperInterface.Companion.DATABASE_INSIGHT_PUMP_IDS + "\")");
             } else if (oldVersion < 11) {
-                database.execSQL("UPDATE sqlite_sequence SET seq = " + System.currentTimeMillis() + " WHERE name = \"" + DATABASE_INSIGHT_BOLUS_IDS + "\"");
-                database.execSQL("UPDATE sqlite_sequence SET seq = " + System.currentTimeMillis() + " WHERE name = \"" + DATABASE_INSIGHT_PUMP_IDS + "\"");
+                database.execSQL("UPDATE sqlite_sequence SET seq = " + System.currentTimeMillis() + " WHERE name = \"" + DatabaseHelperInterface.Companion.DATABASE_INSIGHT_BOLUS_IDS + "\"");
+                database.execSQL("UPDATE sqlite_sequence SET seq = " + System.currentTimeMillis() + " WHERE name = \"" + DatabaseHelperInterface.Companion.DATABASE_INSIGHT_PUMP_IDS + "\"");
             }
             TableUtils.createTableIfNotExists(connectionSource, OHQueueItem.class);
         } catch (SQLException e) {

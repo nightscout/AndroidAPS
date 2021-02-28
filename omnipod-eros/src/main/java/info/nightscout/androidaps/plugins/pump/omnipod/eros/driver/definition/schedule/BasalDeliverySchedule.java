@@ -1,5 +1,7 @@
 package info.nightscout.androidaps.plugins.pump.omnipod.eros.driver.definition.schedule;
 
+import androidx.annotation.NonNull;
+
 import info.nightscout.androidaps.plugins.pump.common.utils.ByteUtil;
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.driver.communication.message.IRawRepresentable;
 
@@ -49,7 +51,7 @@ public class BasalDeliverySchedule extends DeliverySchedule implements IRawRepre
         return checksum;
     }
 
-    @Override
+    @NonNull @Override
     public String toString() {
         return "BasalDeliverySchedule{" +
                 "currentSegment=" + currentSegment +

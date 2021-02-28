@@ -186,7 +186,7 @@ class SmsCommunicatorPluginTest : TestBaseWithProfile() {
         `when`(resourceHelper.gs(R.string.smscommunicator_tt_set)).thenReturn("Target %1\$s for %2\$d minutes set successfully")
         `when`(resourceHelper.gs(R.string.smscommunicator_tt_canceled)).thenReturn("Temp Target canceled successfully")
         `when`(resourceHelper.gs(R.string.loopsuspendedfor)).thenReturn("Suspended (%1\$d m)")
-        `when`(resourceHelper.gs(R.string.smscommunicator_loopisdisabled)).thenReturn("Loop is disabled")
+        `when`(resourceHelper.gs(R.string.loopisdisabled)).thenReturn("Loop is disabled")
         `when`(resourceHelper.gs(R.string.smscommunicator_loopisenabled)).thenReturn("Loop is enabled")
         `when`(resourceHelper.gs(R.string.wrongformat)).thenReturn("Wrong format")
         `when`(resourceHelper.gs(ArgumentMatchers.eq(R.string.wrongTbrDuration), ArgumentMatchers.any())).thenAnswer { i: InvocationOnMock -> "TBR duration must be a multiple of " + i.arguments[1] + " minutes and greater than 0." }
