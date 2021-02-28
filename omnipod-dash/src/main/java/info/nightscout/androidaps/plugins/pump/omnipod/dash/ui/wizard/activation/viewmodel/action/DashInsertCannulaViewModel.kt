@@ -4,11 +4,17 @@ import androidx.annotation.StringRes
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.data.PumpEnactResult
 import info.nightscout.androidaps.interfaces.ProfileFunction
+import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.plugins.pump.omnipod.common.ui.wizard.activation.viewmodel.action.InsertCannulaViewModel
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.R
+import io.reactivex.Single
 import javax.inject.Inject
 
-class DashInsertCannulaViewModel @Inject constructor(private val injector: HasAndroidInjector, private val profileFunction: ProfileFunction) : InsertCannulaViewModel() {
+class DashInsertCannulaViewModel @Inject constructor(
+    private val profileFunction: ProfileFunction,
+    injector: HasAndroidInjector,
+    logger: AAPSLogger
+) : InsertCannulaViewModel(injector, logger) {
 
     override fun isPodInAlarm(): Boolean = false // TODO
 
@@ -16,7 +22,7 @@ class DashInsertCannulaViewModel @Inject constructor(private val injector: HasAn
 
     override fun isPodDeactivatable(): Boolean = true // TODO
 
-    override fun doExecuteAction(): PumpEnactResult = PumpEnactResult(injector) // TODO
+    override fun doExecuteAction(): Single<PumpEnactResult> = Single.just(PumpEnactResult(injector).success(false).comment("TODO")) // TODO
 
     @StringRes
     override fun getTitleId(): Int = R.string.omnipod_common_pod_activation_wizard_insert_cannula_title

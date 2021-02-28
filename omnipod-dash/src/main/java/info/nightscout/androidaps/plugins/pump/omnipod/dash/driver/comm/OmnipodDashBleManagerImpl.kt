@@ -17,8 +17,10 @@ import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.ltk.LTKE
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.message.MessageIO
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.scan.PodScanner
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.status.ConnectionStatus
+import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.event.PodEvent
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.command.base.Command
-import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.response.Response
+import io.reactivex.Observable
+import org.apache.commons.lang3.NotImplementedException
 import java.util.concurrent.BlockingQueue
 import java.util.concurrent.LinkedBlockingDeque
 import java.util.concurrent.TimeoutException
@@ -62,8 +64,9 @@ class OmnipodDashBleManagerImpl @Inject constructor(private val context: Context
         return bleIO
     }
 
-    override fun sendCommand(cmd: Command): Response {
-        TODO("not implemented")
+    override fun sendCommand(cmd: Command): Observable<PodEvent> {
+        // TODO
+        return Observable.error(NotImplementedException("sendCommand is not yet implemented"))
     }
 
     override fun getStatus(): ConnectionStatus {
@@ -71,28 +74,40 @@ class OmnipodDashBleManagerImpl @Inject constructor(private val context: Context
     }
 
     @Throws(InterruptedException::class, ScanFailException::class, FailedToConnectException::class, CouldNotSendBleException::class, BleIOBusyException::class, TimeoutException::class, CouldNotConfirmWriteException::class, CouldNotEnableNotifications::class, DescriptorNotFoundException::class, CouldNotConfirmDescriptorWriteException::class)
-    override fun connect() {
-        // TODO: this is wrong and I know it
-        aapsLogger.info(LTag.PUMPBTCOMM, "starting new pod activation")
-        val podScanner = PodScanner(aapsLogger, bluetoothAdapter)
-        val podAddress = podScanner.scanForPod(PodScanner.SCAN_FOR_SERVICE_UUID, PodScanner.POD_ID_NOT_ACTIVATED).scanResult.device.address
-        // For tests: this.podAddress = "B8:27:EB:1D:7E:BB";
-        val bleIO = connect(podAddress)
-        val msgIO = MessageIO(aapsLogger, bleIO)
-        val ltkExchanger = LTKExchanger(aapsLogger, msgIO)
-        val ltk = ltkExchanger.negociateLTKAndNonce()
+    override fun connect(): Observable<PodEvent> = Observable.create { emitter ->
+        // TODO: when we are already connected,
+        //  emit PodEvent.AlreadyConnected, complete the observable and return from this method
 
-        aapsLogger.info(LTag.PUMPCOMM, "Got LTK and Nonce Prefix: ${ltk}")
+        try {
+            // TODO: this is wrong and I know it
+            aapsLogger.info(LTag.PUMPBTCOMM, "starting new pod activation")
+
+            val podScanner = PodScanner(aapsLogger, bluetoothAdapter)
+            emitter.onNext(PodEvent.Scanning)
+
+            val podAddress = podScanner.scanForPod(PodScanner.SCAN_FOR_SERVICE_UUID, PodScanner.POD_ID_NOT_ACTIVATED).scanResult.device.address
+            // For tests: this.podAddress = "B8:27:EB:1D:7E:BB";
+            emitter.onNext(PodEvent.BluetoothConnecting)
+
+            val bleIO = connect(podAddress)
+            emitter.onNext(PodEvent.BluetoothConnected(podAddress))
+
+            val msgIO = MessageIO(aapsLogger, bleIO)
+            val ltkExchanger = LTKExchanger(aapsLogger, msgIO)
+            emitter.onNext(PodEvent.Pairing)
+
+            val ltk = ltkExchanger.negotiateLTKAndNonce()
+            aapsLogger.info(LTag.PUMPCOMM, "Got LTK and Nonce Prefix: ${ltk}")
+            emitter.onNext(PodEvent.Connected(PodScanner.POD_ID_NOT_ACTIVATED)) // TODO supply actual pod id
+
+            emitter.onComplete()
+        } catch (ex: Exception) {
+            emitter.tryOnError(ex)
+        }
     }
 
     override fun disconnect() {
         TODO("not implemented")
-    }
-
-
-    override fun getPodId(): Id {
-        // TODO: return something meaningful here
-        return Id.fromInt(4243);
     }
 
     companion object {

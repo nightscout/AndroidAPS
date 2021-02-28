@@ -34,7 +34,7 @@ class ScanCollector(private val logger: AAPSLogger, private val podID: Long) : S
         for (result in found.values) {
             try {
                 result.scanRecord?.let {
-                    val device = BleDiscoveredDevice(result, result.scanRecord, podID)
+                    val device = BleDiscoveredDevice(result, it, podID)
                     ret.add(device)
                     logger.debug(LTag.PUMPBTCOMM, "ScanCollector found: " + result.toString() + "Pod ID: " + podID)
                 }

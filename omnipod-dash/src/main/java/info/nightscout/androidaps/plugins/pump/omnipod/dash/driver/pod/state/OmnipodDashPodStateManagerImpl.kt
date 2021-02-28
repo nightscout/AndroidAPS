@@ -34,8 +34,6 @@ class OmnipodDashPodStateManagerImpl @Inject constructor(
             store()
         }
 
-    // TODO: dynamic get() fun instead of assignment
-
     override val isUniqueIdSet: Boolean
         get() = activationProgress.isAtLeast(ActivationProgress.SET_UNIQUE_ID)
 
@@ -68,11 +66,27 @@ class OmnipodDashPodStateManagerImpl @Inject constructor(
     override val activationTime: Long?
         get() = podState.activationTime
 
-    override val uniqueId: Long?
+    override var uniqueId: Long?
         get() = podState.uniqueId
+        set(uniqueId) {
+            if (podState.uniqueId == null) {
+                podState.uniqueId = uniqueId
+                store()
+            } else if (uniqueId != podState.uniqueId) {
+                throw IllegalStateException("Trying to set Unique ID to $uniqueId, but it is already set to ${podState.uniqueId}")
+            }
+        }
 
-    override val bluetoothAddress: String?
+    override var bluetoothAddress: String?
         get() = podState.bluetoothAddress
+        set(bluetoothAddress) {
+            if (podState.bluetoothAddress == null) {
+                podState.bluetoothAddress = bluetoothAddress
+                store()
+            } else if (bluetoothAddress != podState.bluetoothAddress) {
+                throw IllegalStateException("Trying to set Bluetooth Address to $bluetoothAddress, but it is already set to ${podState.bluetoothAddress}")
+            }
+        }
 
     override val bluetoothVersion: SoftwareVersion?
         get() = podState.bleVersion

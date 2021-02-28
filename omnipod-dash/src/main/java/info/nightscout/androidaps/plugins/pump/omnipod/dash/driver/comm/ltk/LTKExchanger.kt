@@ -9,7 +9,7 @@ import info.nightscout.androidaps.utils.extensions.hexStringToByteArray
 
 internal class LTKExchanger(private val aapsLogger: AAPSLogger, private val msgIO: MessageIO) {
 
-    fun negociateLTKAndNonce(): LTK? {
+    fun negotiateLTKAndNonce(): LTK? {
         // send SP1, SP2
         // TODO: get this from somewhere(preferences?)
         var seq: Byte = 1
