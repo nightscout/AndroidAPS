@@ -19,11 +19,10 @@ object AlertUtil {
         }
     }
 
-    fun encodeAlertSet(alertSet: EnumSet<AlertType>): Byte {
-        var out = 0
-        alertSet.forEach { slot ->
-            out = out or (slot.value.toInt() and 0xff)
-        }
-        return out.toByte()
-    }
+    fun encodeAlertSet(alertSet: EnumSet<AlertType>): Byte =
+        alertSet.fold(0,
+            { out, slot ->
+                out or (slot.value.toInt() and 0xff)
+            }
+        ).toByte()
 }
