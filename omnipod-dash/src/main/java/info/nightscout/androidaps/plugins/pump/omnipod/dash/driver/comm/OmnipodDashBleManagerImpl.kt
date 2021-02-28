@@ -13,15 +13,15 @@ import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.command.
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.exceptions.*
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.io.BleIO
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.io.CharacteristicType
-import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.pair.LTKExchanger
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.message.MessageIO
+import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.pair.LTKExchanger
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.scan.PodScanner
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.status.ConnectionStatus
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.event.PodEvent
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.command.base.Command
+import info.nightscout.androidaps.utils.extensions.toHex
 import io.reactivex.Observable
 import org.apache.commons.lang3.NotImplementedException
-import info.nightscout.androidaps.utils.extensions.toHex
 import java.util.concurrent.BlockingQueue
 import java.util.concurrent.LinkedBlockingDeque
 import java.util.concurrent.TimeoutException
