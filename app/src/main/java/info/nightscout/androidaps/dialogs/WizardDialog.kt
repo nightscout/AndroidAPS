@@ -120,7 +120,7 @@ class WizardDialog : DaggerDialogFragment() {
         loadCheckedStates()
         processCobCheckBox()
         binding.sbcheckbox.visibility = sp.getBoolean(R.string.key_usesuperbolus, false).toVisibility()
-        binding.notesLayout.visibility = sp.getBoolean(R.string.key_show_notes_entry_dialogs, false).toVisibility()
+        binding.notesLayout.notesLayout.visibility = sp.getBoolean(R.string.key_show_notes_entry_dialogs, false).toVisibility()
 
         val maxCarbs = constraintChecker.getMaxCarbsAllowed().value()
         val maxCorrection = constraintChecker.getMaxBolusAllowed().value()
@@ -334,7 +334,7 @@ class WizardDialog : DaggerDialogFragment() {
             binding.ttcheckbox.isChecked,
             binding.bgtrendcheckbox.isChecked,
             binding.alarm.isChecked,
-            binding.notes.text.toString(), carbTime)
+            binding.notesLayout.notes.text.toString(), carbTime)
 
         wizard?.let { wizard ->
             binding.bg.text = String.format(resourceHelper.gs(R.string.format_bg_isf), valueToUnitsToString(Profile.toMgdl(bg, profileFunction.getUnits()), profileFunction.getUnits()), wizard.sens)
