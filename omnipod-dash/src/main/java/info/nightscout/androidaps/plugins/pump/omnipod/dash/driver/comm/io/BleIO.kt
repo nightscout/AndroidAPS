@@ -50,7 +50,6 @@ class BleIO(private val aapsLogger: AAPSLogger, private val chars: Map<Character
             state = IOState.WRITING
         }
         aapsLogger.debug(LTag.PUMPBTCOMM, "BleIO: Sending data on " + characteristic.name + "/" + payload.toHex())
-        aapsLogger.debug(LTag.PUMPBTCOMM, "BleIO: Sending data on " + characteristic.name + "/" + payload.toHex())
         val ch = chars[characteristic]
         val set = ch!!.setValue(payload)
         if (!set) {

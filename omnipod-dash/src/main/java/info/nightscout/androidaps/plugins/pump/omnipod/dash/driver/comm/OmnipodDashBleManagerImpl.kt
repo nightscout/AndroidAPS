@@ -13,12 +13,13 @@ import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.command.
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.exceptions.*
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.io.BleIO
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.io.CharacteristicType
-import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.ltk.LTKExchanger
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.message.MessageIO
+import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.pair.LTKExchanger
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.scan.PodScanner
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.status.ConnectionStatus
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.event.PodEvent
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.command.base.Command
+import info.nightscout.androidaps.utils.extensions.toHex
 import io.reactivex.Observable
 import org.apache.commons.lang3.NotImplementedException
 import java.util.concurrent.BlockingQueue
@@ -96,8 +97,10 @@ class OmnipodDashBleManagerImpl @Inject constructor(private val context: Context
             val ltkExchanger = LTKExchanger(aapsLogger, msgIO)
             emitter.onNext(PodEvent.Pairing)
 
-            val ltk = ltkExchanger.negotiateLTKAndNonce()
-            aapsLogger.info(LTag.PUMPCOMM, "Got LTK and Nonce Prefix: ${ltk}")
+            val ltk = ltkExchanger.negotiateLTK()
+
+            aapsLogger.info(LTag.PUMPCOMM, "Got LTK: ${ltk.ltk.toHex()}")
+
             emitter.onNext(PodEvent.Connected(PodScanner.POD_ID_NOT_ACTIVATED)) // TODO supply actual pod id
 
             emitter.onComplete()
@@ -112,7 +115,7 @@ class OmnipodDashBleManagerImpl @Inject constructor(private val context: Context
 
     companion object {
 
-        private const val CONNECT_TIMEOUT_MS = 5000
+        private const val CONNECT_TIMEOUT_MS = 7000
         const val CONTROLLER_ID = 4242 // TODO read from preferences or somewhere else.
     }
 

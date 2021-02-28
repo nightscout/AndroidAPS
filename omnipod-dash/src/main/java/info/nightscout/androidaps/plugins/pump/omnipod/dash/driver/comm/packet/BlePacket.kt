@@ -7,8 +7,8 @@ sealed class BlePacket {
     abstract fun asByteArray(): ByteArray
 
     companion object {
-        const val MAX_BLE_PACKET_LEN = 20
-        const val MAX_BLE_BUFFER_LEN = MAX_BLE_PACKET_LEN + 1 // we use this as the size allocated for the ByteBuffer
+
+        const val MAX_SIZE = 20
     }
 }
 
@@ -16,7 +16,7 @@ data class FirstBlePacket(val totalFragments: Byte, val payload: ByteArray, val 
 
     override fun asByteArray(): ByteArray {
         val bb = ByteBuffer
-            .allocate(MAX_BLE_BUFFER_LEN)
+            .allocate(MAX_SIZE)
             .put(0) // index
             .put(totalFragments) // # of fragments except FirstBlePacket and LastOptionalPlusOneBlePacket
         crc32?.let {
@@ -26,15 +26,22 @@ data class FirstBlePacket(val totalFragments: Byte, val payload: ByteArray, val 
             bb.put(size)
         }
         bb.put(payload)
-        val ret = ByteArray(bb.position())
+
+        val pos = bb.position()
+        val ret = ByteArray(MAX_SIZE)
         bb.flip()
-        bb.get(ret)
+        bb.get(ret, 0, pos)
+
         return ret
     }
 
     companion object {
-        internal const val CAPACITY_WITHOUT_MIDDLE_PACKETS = 13 // we are using all fields
-        internal const val CAPACITY_WITH_MIDDLE_PACKETS = 18 // we are not using crc32 or size
+
+        internal const val HEADER_SIZE_WITHOUT_MIDDLE_PACKETS = 7 // we are using all fields
+        internal const val HEADER_SIZE_WITH_MIDDLE_PACKETS = 2
+
+        internal const val CAPACITY_WITHOUT_MIDDLE_PACKETS = MAX_SIZE - HEADER_SIZE_WITHOUT_MIDDLE_PACKETS // we are using all fields
+        internal const val CAPACITY_WITH_MIDDLE_PACKETS = MAX_SIZE - HEADER_SIZE_WITH_MIDDLE_PACKETS // we are not using crc32 or size
         internal const val CAPACITY_WITH_THE_OPTIONAL_PLUS_ONE_PACKET = 18
     }
 }
@@ -46,6 +53,7 @@ data class MiddleBlePacket(val index: Byte, val payload: ByteArray) : BlePacket(
     }
 
     companion object {
+
         internal const val CAPACITY = 19
     }
 }
@@ -54,26 +62,34 @@ data class LastBlePacket(val index: Byte, val size: Byte, val payload: ByteArray
 
     override fun asByteArray(): ByteArray {
         val bb = ByteBuffer
-            .allocate(MAX_BLE_BUFFER_LEN)
+            .allocate(MAX_SIZE)
             .put(index)
             .put(size)
             .putInt(crc32.toInt())
             .put(payload)
-        val ret = ByteArray(bb.position())
+        val pos = bb.position()
+        val ret = ByteArray(MAX_SIZE)
         bb.flip()
-        bb.get(ret)
+        bb.get(ret, 0, pos)
         return ret
     }
 
     companion object {
-        internal const val CAPACITY = 14
+
+        internal const val HEADER_SIZE = 6
+        internal const val CAPACITY = MAX_SIZE - HEADER_SIZE
     }
 }
 
-data class LastOptionalPlusOneBlePacket(val index: Byte, val payload: ByteArray) : BlePacket() {
+data class LastOptionalPlusOneBlePacket(val index: Byte, val payload: ByteArray, val size: Byte) : BlePacket() {
 
     override fun asByteArray(): ByteArray {
-        return byteArrayOf(index) + payload
+        return byteArrayOf(index, size) + payload + ByteArray(MAX_SIZE - payload.size - 2)
+    }
+
+    companion object {
+
+        internal const val HEADER_SIZE = 2
     }
 }
 
