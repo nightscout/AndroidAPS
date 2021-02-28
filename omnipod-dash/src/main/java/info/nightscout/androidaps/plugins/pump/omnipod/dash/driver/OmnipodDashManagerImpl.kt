@@ -17,9 +17,11 @@ import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.response.
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.response.VersionResponse
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.state.OmnipodDashPodStateManager
 import info.nightscout.androidaps.utils.rx.AapsSchedulers
+import info.nightscout.androidaps.utils.rx.retryWithBackoff
 import io.reactivex.Observable
 import io.reactivex.functions.Consumer
 import java.util.*
+import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -41,7 +43,7 @@ class OmnipodDashManagerImpl @Inject constructor(
         }
 
     private val observeConnectToPod: Observable<PodEvent>
-        get() = Observable.defer { bleManager.connect() }
+        get() = Observable.defer { bleManager.connect().retryWithBackoff(retries = 2, delay = 3, timeUnit = TimeUnit.SECONDS) } // TODO are these reasonable values?
 
     private val observeSendGetVersionCommand: Observable<PodEvent>
         get() = Observable.defer {
