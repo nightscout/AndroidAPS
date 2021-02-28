@@ -75,7 +75,7 @@ internal class LTKExchanger(private val aapsLogger: AAPSLogger, private val msgI
         validateP0(p0)
 
         return PairResult(
-            ltk = ltk,
+            ltk = ltk
         )
     }
 
@@ -88,7 +88,7 @@ internal class LTKExchanger(private val aapsLogger: AAPSLogger, private val msgI
             sequenceNumber = seq,
             source = controllerId,
             destination = nodeId,
-            payload = payload,
+            payload = payload
         )
     }
 
@@ -101,7 +101,7 @@ internal class LTKExchanger(private val aapsLogger: AAPSLogger, private val msgI
             sequenceNumber = seq,
             source = controllerId,
             destination = nodeId,
-            payload = payload,
+            payload = payload
         )
     }
 
@@ -125,7 +125,7 @@ internal class LTKExchanger(private val aapsLogger: AAPSLogger, private val msgI
             sequenceNumber = seq,
             source = controllerId,
             destination = nodeId,
-            payload = payload,
+            payload = payload
         )
     }
 
@@ -156,7 +156,7 @@ internal class LTKExchanger(private val aapsLogger: AAPSLogger, private val msgI
             sequenceNumber = seq,
             source = controllerId,
             destination = nodeId,
-            payload = payload,
+            payload = payload
         )
     }
 
