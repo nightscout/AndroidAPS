@@ -7,6 +7,7 @@
     <string name="automation_missing_trigger">Oppgi minst en trigger.</string>
     <string name="automation_missing_action">Oppgi minst en aksjon.</string>
     <string name="alarm_message">Alarm: %1$s</string>
+    <string name="alarm_short">Alarm:</string>
     <string name="message_short">Meld:</string>
     <string name="alreadyenabled">Allerede aktivert</string>
     <string name="alreadydisabled">Allerede avslått</string>
@@ -88,6 +89,7 @@
     <string name="glucose_u">Glukose [%1$s]:</string>
     <string name="lastboluslabel">Siste bolus</string>
     <string name="lastboluscompared">Siste bolus for %1$s %2$s min siden</string>
+    <string name="triggercoblabel">COB</string>
     <string name="cobcompared">COB %1$s %2$.0f</string>
     <string name="iob_u">IOB [U]:</string>
     <string name="distance_short">Dist [m]:</string>

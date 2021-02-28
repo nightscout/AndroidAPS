@@ -18,6 +18,10 @@
     <string name="key_omnipod_eros_tbrs_set" translatable="false">AAPS.Omnipod.tbrs_set</string>
     <string name="key_omnipod_eros_std_boluses_delivered" translatable="false">AAPS.Omnipod.std_boluses_delivered</string>
     <string name="key_omnipod_eros_smb_boluses_delivered" translatable="false">AAPS.Omnipod.smb_boluses_delivered</string>
+    <string name="key_common_preferences_category_confirmation_beeps_settings" translatable="false">common_preferences_category_confirmation_beeps_settings</string>
+    <string name="key_omnipod_eros_preferences_category_notifications_settings" translatable="false">omnipod_eros_preferences_category_notifications_settings</string>
+    <string name="key_omnipod_common_preferences_category_other_settings" translatable="false">omnipod_common_preferences_category_other_settings</string>
+    <string name="key_omnipod_preference_category_rileylink_settings" translatable="false">omnipod_preference_category_rileylink_settings</string>
 
     <!-- Omnipod Eros - Overview -->
     <string name="omnipod_eros_overview_firmware_version_value" translatable="false">PM %1$s / PI %2$s</string>

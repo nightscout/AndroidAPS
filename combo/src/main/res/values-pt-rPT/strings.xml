@@ -3,6 +3,7 @@
     <string name="description_pump_combo">Integração para bombas Accu-Chek Combo, requer ter o ruffy instalado</string>
     <string name="combo_programming_bolus">A programar bomba para administrar bólus</string>
     <string name="combo_pump_state_label">Estado</string>
+    <string name="combo_pump_activity_label">Actividade</string>
     <string name="combo_no_pump_connection">Sem conexão há %1$d min</string>
     <string name="combo_tbr_remaining">%1$d%% (%2$d min restantes)</string>
     <string name="combo_pump_state_initializing">A iniciar</string>

@@ -34,6 +34,28 @@
     <string name="key_openapsama_autosens_max" translatable="false">autosens_max</string>
     <string name="key_openapsama_autosens_min" translatable="false">autosens_min</string>
     <string name="key_treatmentssafety_maxcarbs" translatable="false">treatmentssafety_maxcarbs</string>
+    <string name="key_bgsource_upload_settings" translatable="false">bgsource_upload_settings</string>
+    <string name="key_localalert_settings" translatable="false">localalert_settings</string>
+    <string name="key_wear_settings" translatable="false">wear_settings</string>
+    <string name="key_configbuilder_general_settings" translatable="false">configbuilder_general_settings</string>
+    <string name="key_maintenance_settings" translatable="false">maintenance_settings</string>
+    <string name="key_smscommunicator_settings" translatable="false">smscommunicator_settings</string>
+    <string name="key_openapssmb_settings" translatable="false">openapssmb_settings</string>
+    <string name="key_treatmentssafety_settings" translatable="false">treatmentssafety_settings</string>
+    <string name="key_loop_settings" translatable="false">loop_settings</string>
+    <string name="key_virtualpump_settings" translatable="false">virtualpump_settings</string>
+    <string name="key_pump_settings" translatable="false">pump_settings</string>
+    <string name="key_tidepool_settings" translatable="false">tidepool_settings</string>
+    <string name="key_absorption_settings" translatable="false">absorption_settings</string>
+    <string name="key_overview_settings" translatable="false">overview_settings</string>
+    <string name="key_openapsma_settings" translatable="false">openapsma_settings</string>
+    <string name="key_medtronic_settings" translatable="false">medtronic_settings</string>
+    <string name="key_danars_settings" translatable="false">danars_settings</string>
+    <string name="key_xdripstatus_settings" translatable="false">xdripstatus_settings</string>
+    <string name="key_nsclientinternal_settings" translatable="false">nsclientinternal_settings</string>
+    <string name="key_insight_local_settings" translatable="false">insight_local_settings</string>
+    <string name="key_data_choices_settings" translatable="false">data_choices_settings</string>
+    <string name="key_dexcom_settings" translatable="false">dexcom_settings</string>
 
     <!--    General-->
     <string name="refresh">Refresh</string>

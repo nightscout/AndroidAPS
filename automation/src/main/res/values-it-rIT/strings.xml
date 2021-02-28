@@ -7,6 +7,7 @@
     <string name="automation_missing_trigger">Specifica almeno un trigger.</string>
     <string name="automation_missing_action">Specifica almeno un\'azione.</string>
     <string name="alarm_message">Allarme: %1$s</string>
+    <string name="alarm_short">Allarme:</string>
     <string name="message_short">Msg:</string>
     <string name="alreadyenabled">Già abilitato</string>
     <string name="alreadydisabled">Già disabilitato</string>
@@ -88,6 +89,7 @@
     <string name="glucose_u">Glicemia [%1$s]:</string>
     <string name="lastboluslabel">Ultimo bolo</string>
     <string name="lastboluscompared">Ora ultimo bolo %1$s %2$s min fa</string>
+    <string name="triggercoblabel">COB</string>
     <string name="cobcompared">COB %1$s %2$.0f</string>
     <string name="iob_u">IOB [U]:</string>
     <string name="distance_short">Dist [m]:</string>
