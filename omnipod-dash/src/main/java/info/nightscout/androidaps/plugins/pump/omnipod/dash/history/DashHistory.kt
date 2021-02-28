@@ -2,6 +2,8 @@ package info.nightscout.androidaps.plugins.pump.omnipod.dash.history
 
 import com.github.guepardoapps.kulid.ULID
 import info.nightscout.androidaps.plugins.pump.omnipod.common.definition.OmnipodCommandType
+import info.nightscout.androidaps.plugins.pump.omnipod.common.definition.OmnipodCommandType.SET_BOLUS
+import info.nightscout.androidaps.plugins.pump.omnipod.common.definition.OmnipodCommandType.SET_TEMPORARY_BASAL
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.history.data.BolusRecord
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.history.data.HistoryRecord
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.history.data.InitialResult
@@ -20,12 +22,13 @@ class DashHistory @Inject constructor(
     private val historyMapper: HistoryMapper
 ) {
 
-    fun markSuccess(id: String): Completable = dao.markResolved(id, ResolvedResult.SUCCESS, currentTimeMillis()) // TODO pass time
+    fun markSuccess(id: String, date: Long): Completable = dao.markResolved(id, ResolvedResult.SUCCESS, currentTimeMillis())
 
-    fun markFailure(id: String): Completable = dao.markResolved(id, ResolvedResult.FAILURE, currentTimeMillis()) // TODO pass time
+    fun markFailure(id: String, date: Long): Completable = dao.markResolved(id, ResolvedResult.FAILURE, currentTimeMillis())
 
     fun createRecord(
         commandType: OmnipodCommandType,
+        date: Long,
         initialResult: InitialResult = InitialResult.UNCONFIRMED,
         tempBasalRecord: TempBasalRecord? = null,
         bolusRecord: BolusRecord? = null,
@@ -34,13 +37,20 @@ class DashHistory @Inject constructor(
     ): Single<String> {
         val id = ULID.random()
 
-        // TODO: verify that on OmnipodCommandType.SET_BOLUS bolusRecord is not null?
-        // TODO: verify that on SET_TEMPORARY_BASAL tempBasalRecord is not null
+        when {
+            commandType == SET_BOLUS && bolusRecord == null               ->
+                Single.error(IllegalArgumentException("bolusRecord missing on SET_BOLUS"))
+            commandType == SET_TEMPORARY_BASAL && tempBasalRecord == null ->
+                Single.error<String>(IllegalArgumentException("tempBasalRecord missing on SET_TEMPORARY_BASAL"))
+            else                                                          -> null
+        }?.let { return it }
+
 
         return dao.save(
             HistoryRecordEntity(
                 id = id,
-                createdAt = currentTimeMillis(), // TODO pass time (as date, keep createdAt)
+                date = date,
+                createdAt = currentTimeMillis(),
                 commandType = commandType,
                 tempBasalRecord = tempBasalRecord,
                 bolusRecord = bolusRecord,

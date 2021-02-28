@@ -36,19 +36,33 @@ class DashHistoryTest {
     }
 
     @Test
-    fun testInsertSomething() { // needs to be camel case as runs on Android
+    fun testInsertionAndConverters() {
         dashHistory.getRecords().test().apply {
             assertValue { it.isEmpty() }
         }
 
-        dashHistory.createRecord(commandType = OmnipodCommandType.SET_BOLUS).test().apply {
+        dashHistory.createRecord(commandType = OmnipodCommandType.CANCEL_BOLUS, 0L).test().apply {
             assertValue { ULID.isValid(it) }
         }
 
         dashHistory.getRecords().test().apply {
             assertValue { it.size == 1 }
         }
+    }
 
+    @Test
+    fun testExceptionOnBolusWithoutRecord() {
+        dashHistory.getRecords().test().apply {
+            assertValue { it.isEmpty() }
+        }
+
+        dashHistory.createRecord(commandType = OmnipodCommandType.SET_BOLUS, 0L).test().apply {
+            assertError(IllegalArgumentException::class.java)
+        }
+
+        dashHistory.getRecords().test().apply {
+            assertValue { it.isEmpty() }
+        }
     }
 
     @After

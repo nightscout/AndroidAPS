@@ -12,7 +12,8 @@ import info.nightscout.androidaps.plugins.pump.omnipod.dash.history.data.TempBas
 @Entity(tableName = "historyrecords")
 data class HistoryRecordEntity(
     @PrimaryKey val id: String, // ULID
-    val createdAt: Long,
+    val createdAt: Long, // creation date of the record
+    val date: Long, // when event actually happened
     val commandType: OmnipodCommandType,
     val initialResult: InitialResult,
     @Embedded(prefix = "tempBasalRecord_") val tempBasalRecord: TempBasalRecord?,

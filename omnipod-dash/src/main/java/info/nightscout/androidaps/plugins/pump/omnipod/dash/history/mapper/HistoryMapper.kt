@@ -11,17 +11,19 @@ class HistoryMapper {
         HistoryRecordEntity(
             id = historyRecord.id,
             createdAt = historyRecord.createdAt,
+            date = historyRecord.date,
             commandType = historyRecord.commandType,
             initialResult = historyRecord.initialResult,
             tempBasalRecord = historyRecord.record as? TempBasalRecord,
             bolusRecord = historyRecord.record as? BolusRecord,
             resolvedResult = historyRecord.resolvedResult,
-            resolvedAt = historyRecord.resolvedAt
+            resolvedAt = historyRecord.resolvedAt,
         )
 
     fun entityToDomain(entity: HistoryRecordEntity): HistoryRecord =
         HistoryRecord(id = entity.id,
             createdAt = entity.createdAt,
+            date = entity.date,
             initialResult = entity.initialResult,
             commandType = entity.commandType,
             record = entity.bolusRecord ?: entity.tempBasalRecord,
