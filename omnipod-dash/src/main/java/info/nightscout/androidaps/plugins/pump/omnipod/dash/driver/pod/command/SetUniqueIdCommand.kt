@@ -56,7 +56,7 @@ class SetUniqueIdCommand private constructor(
             return this
         }
 
-        fun setInitializationTime(initializationTime: Date?): Builder {
+        fun setInitializationTime(initializationTime: Date): Builder {
             this.initializationTime = initializationTime
             return this
         }

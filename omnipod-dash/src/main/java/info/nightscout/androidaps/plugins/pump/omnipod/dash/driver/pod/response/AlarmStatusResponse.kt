@@ -1,11 +1,14 @@
 package info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.response
 
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.definition.AlarmType
+import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.definition.AlertType
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.definition.DeliveryStatus
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.definition.PodStatus
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.response.ResponseType.StatusResponseType
+import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.util.AlertUtil
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.util.byValue
 import java.nio.ByteBuffer
+import java.util.*
 import kotlin.experimental.and
 
 class AlarmStatusResponse(
@@ -24,14 +27,7 @@ class AlarmStatusResponse(
     val alarmTime: Short = ByteBuffer.wrap(byteArrayOf(encoded[11], encoded[12])).short
     val reservoirPulsesRemaining: Short = ByteBuffer.wrap(byteArrayOf(encoded[13], encoded[14])).short
     val minutesSinceActivation: Short = ByteBuffer.wrap(byteArrayOf(encoded[15], encoded[16])).short
-    val alert0Active: Boolean
-    val alert1Active: Boolean
-    val alert2Active: Boolean
-    val alert3Active: Boolean
-    val alert4Active: Boolean
-    val alert5Active: Boolean
-    val alert6Active: Boolean
-    val alert7Active: Boolean
+    val activeAlerts: EnumSet<AlertType> = AlertUtil.decodeAlertSet(encoded[17])
     val occlusionAlarm: Boolean
     val pulseInfoInvalid: Boolean
     val podStatusWhenAlarmOccurred: PodStatus
@@ -44,15 +40,6 @@ class AlarmStatusResponse(
     val returnAddressOfPodAlarmHandlerCaller: Short
 
     init {
-        val activeAlerts = encoded[17].toInt()
-        alert0Active = activeAlerts and 1 == 1
-        alert1Active = activeAlerts ushr 1 and 1 == 1
-        alert2Active = activeAlerts ushr 2 and 1 == 1
-        alert3Active = activeAlerts ushr 3 and 1 == 1
-        alert4Active = activeAlerts ushr 4 and 1 == 1
-        alert5Active = activeAlerts ushr 5 and 1 == 1
-        alert6Active = activeAlerts ushr 6 and 1 == 1
-        alert7Active = activeAlerts ushr 7 and 1 == 1
         val alarmFlags = encoded[18]
         occlusionAlarm = (alarmFlags.toInt() and 1) == 1
         pulseInfoInvalid = alarmFlags shr 1 and 1 == 1
@@ -69,44 +56,33 @@ class AlarmStatusResponse(
     }
 
     override fun toString(): String {
-        return "AlarmStatusResponse{" +
-            "messageType=" + messageType +
-            ", messageLength=" + messageLength +
-            ", additionalStatusResponseType=" + additionalStatusResponseType +
-            ", podStatus=" + podStatus +
-            ", deliveryStatus=" + deliveryStatus +
-            ", bolusPulsesRemaining=" + bolusPulsesRemaining +
-            ", sequenceNumberOfLastProgrammingCommand=" + sequenceNumberOfLastProgrammingCommand +
-            ", totalPulsesDelivered=" + totalPulsesDelivered +
-            ", alarmType=" + alarmType +
-            ", alarmTime=" + alarmTime +
-            ", reservoirPulsesRemaining=" + reservoirPulsesRemaining +
-            ", minutesSinceActivation=" + minutesSinceActivation +
-            ", alert0Active=" + alert0Active +
-            ", alert1Active=" + alert1Active +
-            ", alert2Active=" + alert2Active +
-            ", alert3Active=" + alert3Active +
-            ", alert4Active=" + alert4Active +
-            ", alert5Active=" + alert5Active +
-            ", alert6Active=" + alert6Active +
-            ", alert7Active=" + alert7Active +
-            ", occlusionAlarm=" + occlusionAlarm +
-            ", pulseInfoInvalid=" + pulseInfoInvalid +
-            ", podStatusWhenAlarmOccurred=" + podStatusWhenAlarmOccurred +
-            ", immediateBolusWhenAlarmOccurred=" + immediateBolusWhenAlarmOccurred +
-            ", occlusionType=" + occlusionType +
-            ", occurredWhenFetchingImmediateBolusActiveInformation=" + occurredWhenFetchingImmediateBolusActiveInformation +
-            ", rssi=" + rssi +
-            ", receiverLowerGain=" + receiverLowerGain +
-            ", podStatusWhenAlarmOccurred2=" + podStatusWhenAlarmOccurred2 +
-            ", returnAddressOfPodAlarmHandlerCaller=" + returnAddressOfPodAlarmHandlerCaller +
-            ", statusResponseType=" + statusResponseType +
-            ", responseType=" + responseType +
-            ", encoded=" + encoded.contentToString() +
-            '}'
+        return "AlarmStatusResponse(" +
+            "messageType=$messageType, " +
+            "messageLength=$messageLength, " +
+            "additionalStatusResponseType=$additionalStatusResponseType, " +
+            "podStatus=$podStatus, " +
+            "deliveryStatus=$deliveryStatus, " +
+            "bolusPulsesRemaining=$bolusPulsesRemaining, " +
+            "sequenceNumberOfLastProgrammingCommand=$sequenceNumberOfLastProgrammingCommand, " +
+            "totalPulsesDelivered=$totalPulsesDelivered, " +
+            "alarmType=$alarmType, " +
+            "alarmTime=$alarmTime, " +
+            "reservoirPulsesRemaining=$reservoirPulsesRemaining, " +
+            "minutesSinceActivation=$minutesSinceActivation, " +
+            "activeAlerts=$activeAlerts, " +
+            "occlusionAlarm=$occlusionAlarm, " +
+            "pulseInfoInvalid=$pulseInfoInvalid, " +
+            "podStatusWhenAlarmOccurred=$podStatusWhenAlarmOccurred, " +
+            "immediateBolusWhenAlarmOccurred=$immediateBolusWhenAlarmOccurred, " +
+            "occlusionType=$occlusionType, " +
+            "occurredWhenFetchingImmediateBolusActiveInformation=$occurredWhenFetchingImmediateBolusActiveInformation, " +
+            "rssi=$rssi, " +
+            "receiverLowerGain=$receiverLowerGain, " +
+            "podStatusWhenAlarmOccurred2=$podStatusWhenAlarmOccurred2, " +
+            "returnAddressOfPodAlarmHandlerCaller=$returnAddressOfPodAlarmHandlerCaller" +
+            ")"
     }
 
     infix fun Byte.shr(i: Int): Int = toInt() shr i
 
 }
-

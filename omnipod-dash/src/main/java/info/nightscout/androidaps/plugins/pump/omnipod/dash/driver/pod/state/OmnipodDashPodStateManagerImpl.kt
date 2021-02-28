@@ -130,7 +130,7 @@ class OmnipodDashPodStateManagerImpl @Inject constructor(
     override val minutesSinceActivation: Short?
         get() = podState.minutesSinceActivation
 
-    override val activeAlerts: EnumSet<AlertSlot>?
+    override val activeAlerts: EnumSet<AlertType>?
         get() = podState.activeAlerts
 
     override val tempBasal: OmnipodDashPodStateManager.TempBasal?
@@ -247,7 +247,7 @@ class OmnipodDashPodStateManagerImpl @Inject constructor(
         var podStatus: PodStatus? = null
         var deliveryStatus: DeliveryStatus? = null
         var minutesSinceActivation: Short? = null
-        var activeAlerts: EnumSet<AlertSlot>? = null
+        var activeAlerts: EnumSet<AlertType>? = null
 
         var basalProgram: BasalProgram? = null
         var tempBasal: OmnipodDashPodStateManager.TempBasal? = null

@@ -70,7 +70,7 @@ class ProgramBolusCommand private constructor(
             return this
         }
 
-        fun setProgramReminder(programReminder: ProgramReminder?): Builder {
+        fun setProgramReminder(programReminder: ProgramReminder): Builder {
             this.programReminder = programReminder
             return this
         }

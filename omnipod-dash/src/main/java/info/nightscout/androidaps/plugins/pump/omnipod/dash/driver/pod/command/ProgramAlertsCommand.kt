@@ -53,14 +53,14 @@ class ProgramAlertsCommand private constructor(
 
         private var alertConfigurations: List<AlertConfiguration>? = null
 
-        fun setAlertConfigurations(alertConfigurations: List<AlertConfiguration>?): Builder {
+        fun setAlertConfigurations(alertConfigurations: List<AlertConfiguration>): Builder {
             this.alertConfigurations = alertConfigurations
             return this
         }
 
         override fun buildCommand(): ProgramAlertsCommand {
-            requireNotNull(alertConfigurations) { "alertConfigurations can not be null" } // !!?
-            return ProgramAlertsCommand(uniqueId!!, sequenceNumber!!, multiCommandFlag, alertConfigurations!!, nonce!!) // TODO this might crash if not all are set
+            requireNotNull(alertConfigurations) { "alertConfigurations can not be null" }
+            return ProgramAlertsCommand(uniqueId!!, sequenceNumber!!, multiCommandFlag, alertConfigurations!!, nonce!!)
         }
     }
 

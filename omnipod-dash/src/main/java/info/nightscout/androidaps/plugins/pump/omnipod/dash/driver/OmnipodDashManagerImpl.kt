@@ -8,7 +8,7 @@ import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.command.G
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.command.GetVersionCommand.Companion.DEFAULT_UNIQUE_ID
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.definition.ActivationProgress
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.definition.AlertConfiguration
-import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.definition.AlertSlot
+import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.definition.AlertType
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.definition.BasalProgram
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.response.AlarmStatusResponse
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.response.DefaultStatusResponse
@@ -119,7 +119,7 @@ class OmnipodDashManagerImpl @Inject constructor(
         return Observable.empty()
     }
 
-    override fun silenceAlerts(alerts: EnumSet<AlertSlot>): Observable<PodEvent> {
+    override fun silenceAlerts(alerts: EnumSet<AlertType>): Observable<PodEvent> {
         // TODO
         return Observable.empty()
     }

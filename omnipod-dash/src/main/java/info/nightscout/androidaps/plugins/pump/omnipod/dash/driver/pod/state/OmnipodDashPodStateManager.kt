@@ -39,7 +39,7 @@ interface OmnipodDashPodStateManager {
     val podStatus: PodStatus?
     val deliveryStatus: DeliveryStatus?
     val minutesSinceActivation: Short?
-    val activeAlerts: EnumSet<AlertSlot>?
+    val activeAlerts: EnumSet<AlertType>?
 
     val tempBasal: TempBasal?
     val tempBasalActive: Boolean

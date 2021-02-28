@@ -77,17 +77,17 @@ class ProgramBasalCommand private constructor(
         private var programReminder: ProgramReminder? = null
         private var currentTime: Date? = null
 
-        fun setBasalProgram(basalProgram: BasalProgram?): Builder {
+        fun setBasalProgram(basalProgram: BasalProgram): Builder {
             this.basalProgram = basalProgram
             return this
         }
 
-        fun setProgramReminder(programReminder: ProgramReminder?): Builder {
+        fun setProgramReminder(programReminder: ProgramReminder): Builder {
             this.programReminder = programReminder
             return this
         }
 
-        fun setCurrentTime(currentTime: Date?): Builder {
+        fun setCurrentTime(currentTime: Date): Builder {
             this.currentTime = currentTime
             return this
         }

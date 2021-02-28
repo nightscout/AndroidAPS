@@ -3,7 +3,8 @@ package info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.command
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.command.base.CommandType
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.command.base.NonceEnabledCommand
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.command.base.builder.NonceEnabledCommandBuilder
-import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.definition.Encodable
+import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.definition.AlertType
+import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.util.AlertUtil
 import java.nio.ByteBuffer
 import java.util.*
 
@@ -11,7 +12,7 @@ class SilenceAlertsCommand private constructor(
     uniqueId: Int,
     sequenceNumber: Short,
     multiCommandFlag: Boolean,
-    private val parameters: SilenceAlertCommandParameters,
+    private val alertTypes: EnumSet<AlertType>,
     nonce: Int
 ) : NonceEnabledCommand(CommandType.SILENCE_ALERTS, uniqueId, sequenceNumber, multiCommandFlag, nonce) {
 
@@ -22,12 +23,12 @@ class SilenceAlertsCommand private constructor(
                 .put(commandType.value) //
                 .put(BODY_LENGTH) //
                 .putInt(nonce) //
-                .put(parameters.encoded) //
+                .put(AlertUtil.encodeAlertSet(alertTypes)) //
                 .array())
 
     override fun toString(): String {
         return "SilenceAlertsCommand{" +
-            "parameters=" + parameters +
+            "alterTypes=" + alertTypes +
             ", nonce=" + nonce +
             ", commandType=" + commandType +
             ", uniqueId=" + uniqueId +
@@ -36,76 +37,18 @@ class SilenceAlertsCommand private constructor(
             '}'
     }
 
-    class SilenceAlertCommandParameters(private val silenceAutoOffAlert: Boolean, private val silenceMultiCommandAlert: Boolean, private val silenceExpirationImminentAlert: Boolean, private val silenceUserSetExpirationAlert: Boolean, private val silenceLowReservoirAlert: Boolean, private val silenceSuspendInProgressAlert: Boolean, private val silenceSuspendEndedAlert: Boolean, private val silencePodExpirationAlert: Boolean) : Encodable {
-
-        override val encoded: ByteArray
-            get() {
-                val bitSet = BitSet(8)
-                bitSet[0] = silenceAutoOffAlert
-                bitSet[1] = silenceMultiCommandAlert
-                bitSet[2] = silenceExpirationImminentAlert
-                bitSet[3] = silenceUserSetExpirationAlert
-                bitSet[4] = silenceLowReservoirAlert
-                bitSet[5] = silenceSuspendInProgressAlert
-                bitSet[6] = silenceSuspendEndedAlert
-                bitSet[7] = silencePodExpirationAlert
-                return bitSet.toByteArray()
-            }
-    }
-
     class Builder : NonceEnabledCommandBuilder<Builder, SilenceAlertsCommand>() {
 
-        private var silenceAutoOffAlert = false
-        private var silenceMultiCommandAlert = false
-        private var silenceExpirationImminentAlert = false
-        private var silenceUserSetExpirationAlert = false
-        private var silenceLowReservoirAlert = false
-        private var silenceSuspendInProgressAlert = false
-        private var silenceSuspendEndedAlert = false
-        private var silencePodExpirationAlert = false
+        private var alertTypes: EnumSet<AlertType>? = null
 
-        fun setSilenceAutoOffAlert(silenceAutoOffAlert: Boolean): Builder {
-            this.silenceAutoOffAlert = silenceAutoOffAlert
-            return this
-        }
-
-        fun setSilenceMultiCommandAlert(silenceMultiCommandAlert: Boolean): Builder {
-            this.silenceMultiCommandAlert = silenceMultiCommandAlert
-            return this
-        }
-
-        fun setSilenceExpirationImminentAlert(silenceExpirationImminentAlert: Boolean): Builder {
-            this.silenceExpirationImminentAlert = silenceExpirationImminentAlert
-            return this
-        }
-
-        fun setSilenceUserSetExpirationAlert(silenceUserSetExpirationAlert: Boolean): Builder {
-            this.silenceUserSetExpirationAlert = silenceUserSetExpirationAlert
-            return this
-        }
-
-        fun setSilenceLowReservoirAlert(silenceLowReservoirAlert: Boolean): Builder {
-            this.silenceLowReservoirAlert = silenceLowReservoirAlert
-            return this
-        }
-
-        fun setSilenceSuspendInProgressAlert(silenceSuspendInProgressAlert: Boolean): Builder {
-            this.silenceSuspendInProgressAlert = silenceSuspendInProgressAlert
-            return this
-        }
-
-        fun setSilenceSuspendEndedAlert(silenceSuspendEndedAlert: Boolean): Builder {
-            this.silenceSuspendEndedAlert = silenceSuspendEndedAlert
-            return this
-        }
-
-        fun setSilencePodExpirationAlert(silencePodExpirationAlert: Boolean): Builder {
-            this.silencePodExpirationAlert = silencePodExpirationAlert
+        fun setAlertTypes(alertTypes: EnumSet<AlertType>): Builder {
+            this.alertTypes = alertTypes
             return this
         }
 
         override fun buildCommand(): SilenceAlertsCommand {
-            return SilenceAlertsCommand(uniqueId!!, sequenceNumber!!, multiCommandFlag, SilenceAlertCommandParameters(silenceAutoOffAlert, silenceMultiCommandAlert, silenceExpirationImminentAlert, silenceUserSetExpirationAlert, silenceLowReservoirAlert, silenceSuspendInProgressAlert, silenceSuspendEndedAlert, silencePodExpirationAlert), nonce!!)
+            requireNotNull(alertTypes) { "alertTypes can not be null" }
+            return SilenceAlertsCommand(uniqueId!!, sequenceNumber!!, multiCommandFlag, alertTypes!!, nonce!!)
         }
     }
 

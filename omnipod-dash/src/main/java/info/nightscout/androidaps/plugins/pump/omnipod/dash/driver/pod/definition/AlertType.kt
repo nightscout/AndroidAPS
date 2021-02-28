@@ -2,7 +2,7 @@ package info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.definiti
 
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.util.HasValue
 
-enum class AlertSlot(override val value: Byte) : HasValue {
+enum class AlertType(val index: Byte) : HasValue {
 
     AUTO_OFF(0x00.toByte()),
     MULTI_COMMAND(0x01.toByte()),
@@ -13,4 +13,11 @@ enum class AlertSlot(override val value: Byte) : HasValue {
     SUSPEND_ENDED(0x06.toByte()),
     EXPIRATION(0x07.toByte()),
     UNKNOWN(0xff.toByte());
+
+    override val value: Byte
+        get() = if (this == UNKNOWN) {
+            0xff.toByte()
+        } else {
+            (1 shl index.toInt()).toByte()
+        }
 }
