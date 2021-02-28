@@ -1,4 +1,4 @@
-package info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.ltk
+package info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.pair
 
 import com.google.crypto.tink.subtle.X25519
 import info.nightscout.androidaps.logging.AAPSLogger
@@ -37,7 +37,7 @@ internal class LTKExchanger(private val aapsLogger: AAPSLogger, private val msgI
         random.nextBytes(pdmNonce)
     }
 
-    fun negotiateLTK(): LTK {
+    fun negotiateLTK(): PairResult {
         // send SP1, SP2
         var sp1sp2 = sp1sp2(nodeId.address, sp2())
         msgIO.sendMesssage(sp1sp2.messagePacket)
@@ -74,7 +74,7 @@ internal class LTKExchanger(private val aapsLogger: AAPSLogger, private val msgI
         val p0 = msgIO.receiveMessage()
         validateP0(p0)
 
-        return LTK(
+        return PairResult(
             ltk = ltk,
         )
     }
