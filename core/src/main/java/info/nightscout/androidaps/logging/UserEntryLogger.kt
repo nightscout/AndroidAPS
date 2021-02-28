@@ -23,12 +23,7 @@ class UserEntryLogger @Inject constructor(
     fun log(action: Action, s: String, vararg listvalues: ValueWithUnit) {
         val values = mutableListOf<ValueWithUnit>()
         for (v in listvalues){
-            var vConverted = v
-            // Convertion to always store all values in the same units in database
-            when(v.unit) {
-                Units.Mmol_L -> { vConverted = ValueWithUnit(v.dValue * Constants.MMOLL_TO_MGDL, Units.Mg_Dl)}
-            }
-            values.add(vConverted)
+            values.add(v)
         }
         compositeDisposable += repository.runTransaction(UserEntryTransaction(
             action = action,
@@ -38,20 +33,15 @@ class UserEntryLogger @Inject constructor(
             .subscribeOn(aapsSchedulers.io)
             .observeOn(aapsSchedulers.io)
             .subscribeBy(
-                //onError = { aapsLogger.debug("ERRORED USER ENTRY: $action $s ${if (d1.dValue != 0.0) d1 else ""} ${if (d2.dValue != 0.0) d2 else ""} ${if (i1.iValue != 0) i1 else ""} ${if (i2.iValue != 0) i2 else ""}") },
-                //onComplete = { aapsLogger.debug("USER ENTRY: $action $s ${if (d1.dValue != 0.0) d1 else ""} ${if (d2.dValue != 0.0) d2 else ""} ${if (i1.iValue != 0) i1 else ""} ${if (i2.iValue != 0) i2 else ""}") }
+                onError = { aapsLogger.debug("ERRORED USER ENTRY: $action $s $values") },
+                onComplete = { aapsLogger.debug("USER ENTRY: $action $s $values") }
             )
     }
 
     fun log(action: Action, vararg listvalues: ValueWithUnit) {
         val values = mutableListOf<ValueWithUnit>()
         for (v in listvalues){
-            var vConverted = v
-            // Convertion to always store all values in the same units in database
-            when(v.unit) {
-                Units.Mmol_L -> { vConverted = ValueWithUnit(v.dValue * Constants.MMOLL_TO_MGDL, Units.Mg_Dl)}
-            }
-            values.add(vConverted)
+            values.add(v)
         }
         compositeDisposable += repository.runTransaction(UserEntryTransaction(
             action = action,
@@ -61,15 +51,15 @@ class UserEntryLogger @Inject constructor(
             .subscribeOn(aapsSchedulers.io)
             .observeOn(aapsSchedulers.io)
             .subscribeBy(
-                //onError = { aapsLogger.debug("ERRORED USER ENTRY: $action $s ${if (d1.dValue != 0.0) d1 else ""} ${if (d2.dValue != 0.0) d2 else ""} ${if (i1.iValue != 0) i1 else ""} ${if (i2.iValue != 0) i2 else ""}") },
-                //onComplete = { aapsLogger.debug("USER ENTRY: $action $s ${if (d1.dValue != 0.0) d1 else ""} ${if (d2.dValue != 0.0) d2 else ""} ${if (i1.iValue != 0) i1 else ""} ${if (i2.iValue != 0) i2 else ""}") }
+                onError = { aapsLogger.debug("ERRORED USER ENTRY: $action $values") },
+                onComplete = { aapsLogger.debug("USER ENTRY: $action $values") }
             )
     }
 
-    fun log(action: Action) {
+    fun log(action: Action, s: String = "") {
         compositeDisposable += repository.runTransaction(UserEntryTransaction(
             action = action,
-            s = ""
+            s = s
         ))
             .subscribeOn(aapsSchedulers.io)
             .observeOn(aapsSchedulers.io)

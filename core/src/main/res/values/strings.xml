@@ -93,7 +93,7 @@
     <string name="mgdl">mg/dl</string>
     <string name="mmol">mmol/l</string>
     <string name="shortgram">g</string>
-    <string name="percent">%%</string>
+    <string name="shortpercent">%%</string>
     <string name="advancedsettings_title">Advanced Settings</string>
     <string name="bluetooth">Bluetooth</string>
     <string name="btwatchdog_title">BT Watchdog</string>

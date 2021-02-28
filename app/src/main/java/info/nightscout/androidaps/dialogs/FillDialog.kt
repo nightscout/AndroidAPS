@@ -9,7 +9,7 @@ import com.google.common.base.Joiner
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.activities.ErrorHelperActivity
 import info.nightscout.androidaps.data.DetailedBolusInfo
-import info.nightscout.androidaps.database.entities.UserEntry
+import info.nightscout.androidaps.database.entities.UserEntry.*
 import info.nightscout.androidaps.databinding.DialogFillBinding
 import info.nightscout.androidaps.db.CareportalEvent
 import info.nightscout.androidaps.db.Source
@@ -128,16 +128,16 @@ class FillDialog : DialogFragmentWithDate() {
             activity?.let { activity ->
                 OKDialog.showConfirmation(activity, resourceHelper.gs(R.string.primefill), HtmlHelper.fromHtml(Joiner.on("<br/>").join(actions)), {
                     if (insulinAfterConstraints > 0) {
-                        uel.log(UserEntry.Action.PRIME_BOLUS, d1 = insulinAfterConstraints)
+                        uel.log(Action.PRIME_BOLUS, ValueWithUnit(insulinAfterConstraints, Units.U))
                         requestPrimeBolus(insulinAfterConstraints, notes)
                     }
                     if (siteChange) {
-                        uel.log(UserEntry.Action.SITE_CHANGE)
+                        uel.log(Action.SITE_CHANGE)
                         nsUpload.generateCareportalEvent(CareportalEvent.SITECHANGE, eventTime, notes)
                     }
                     if (insulinChange) {
                         // add a second for case of both checked
-                        uel.log(UserEntry.Action.INSULIN_CHANGE)
+                        uel.log(Action.INSULIN_CHANGE)
                         nsUpload.generateCareportalEvent(CareportalEvent.INSULINCHANGE, eventTime + 1000, notes)
                     }
                 }, null)

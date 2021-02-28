@@ -22,6 +22,7 @@ open class DatabaseModule {
         Room
             .databaseBuilder(context, AppDatabase::class.java, fileName)
             .addMigrations(migration1to2)
+            .addMigrations(migration3to4)
             .fallbackToDestructiveMigration()
             .build()
 
@@ -36,7 +37,8 @@ open class DatabaseModule {
 
     private val migration3to4 = object : Migration(3, 4) {
         override fun migrate(database: SupportSQLiteDatabase) {
-            database.execSQL("CREATE TABLE IF NOT EXISTS userEntry (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `timestamp` INTEGER NOT NULL, `utcOffset` INTEGER NOT NULL, `action` TEXT NOT NULL, `s` TEXT NOT NULL, `d1` TEXT NOT NULL, `d2` TEXT NOT NULL, `i1` TEXT NOT NULL, `i2` TEXT NOT NULL)")
+            database.execSQL("DROP TABLE IF EXISTS userEntry")
+            database.execSQL("CREATE TABLE userEntry (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `timestamp` INTEGER NOT NULL, `utcOffset` INTEGER NOT NULL, `action` TEXT NOT NULL, `s` TEXT NOT NULL, `d1` TEXT NOT NULL, `d2` TEXT NOT NULL, `i1` TEXT NOT NULL, `i2` TEXT NOT NULL)")
         }
     }
 }

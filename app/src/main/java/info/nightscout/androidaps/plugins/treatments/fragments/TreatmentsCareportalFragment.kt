@@ -10,7 +10,7 @@ import androidx.recyclerview.widget.RecyclerView
 import dagger.android.support.DaggerFragment
 import info.nightscout.androidaps.MainApp
 import info.nightscout.androidaps.R
-import info.nightscout.androidaps.database.entities.UserEntry
+import info.nightscout.androidaps.database.entities.UserEntry.*
 import info.nightscout.androidaps.databinding.TreatmentsCareportalFragmentBinding
 import info.nightscout.androidaps.databinding.TreatmentsCareportalItemBinding
 import info.nightscout.androidaps.db.CareportalEvent
@@ -65,7 +65,7 @@ class TreatmentsCareportalFragment : DaggerFragment() {
         binding.refreshFromNightscout.setOnClickListener {
             activity?.let { activity ->
                 OKDialog.showConfirmation(activity, resourceHelper.gs(R.string.careportal), resourceHelper.gs(R.string.refresheventsfromnightscout) + " ?", Runnable {
-                    uel.log(UserEntry.Action.CAREPORTAL_NS_REFRESH)
+                    uel.log(Action.CAREPORTAL_NS_REFRESH)
                     MainApp.getDbHelper().resetCareportalEvents()
                     rxBus.send(EventNSClientRestart())
                 })
@@ -74,7 +74,7 @@ class TreatmentsCareportalFragment : DaggerFragment() {
         binding.removeAndroidapsStartedEvents.setOnClickListener {
             activity?.let { activity ->
                 OKDialog.showConfirmation(activity, resourceHelper.gs(R.string.careportal), resourceHelper.gs(R.string.careportal_removestartedevents), Runnable {
-                    uel.log(UserEntry.Action.RESTART_EVENTS_REMOVED)
+                    uel.log(Action.RESTART_EVENTS_REMOVED)
                     val events = MainApp.getDbHelper().getCareportalEvents(false)
                     for (i in events.indices) {
                         val careportalEvent = events[i]
@@ -155,7 +155,7 @@ class TreatmentsCareportalFragment : DaggerFragment() {
                             resourceHelper.gs(R.string.careportal_newnstreatment_notes_label) + ": " + careportalEvent.notes + "\n" +
                             resourceHelper.gs(R.string.date) + ": " + dateUtil.dateAndTimeString(careportalEvent.date)
                         OKDialog.showConfirmation(activity, resourceHelper.gs(R.string.removerecord), text, Runnable {
-                            uel.log(UserEntry.Action.CAREPORTAL_REMOVED, text)
+                            uel.log(Action.CAREPORTAL_REMOVED, careportalEvent.notes, ValueWithUnit(careportalEvent.eventType, Units.CPEvent), ValueWithUnit(careportalEvent.date, Units.Timestamp))
                             if (NSUpload.isIdValid(careportalEvent._id))
                                 nsUpload.removeCareportalEntryFromNS(careportalEvent._id)
                             else

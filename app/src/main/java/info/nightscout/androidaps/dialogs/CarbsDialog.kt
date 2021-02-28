@@ -213,7 +213,7 @@ class CarbsDialog : DialogFragmentWithDate() {
                 OKDialog.showConfirmation(activity, resourceHelper.gs(R.string.carbs), HtmlHelper.fromHtml(Joiner.on("<br/>").join(actions)), {
                     when {
                         activitySelected   -> {
-                            uel.log(Action.TT_ACTIVITY, ValueWithUnit(activityTT, if (units == Constants.MMOL) Units.Mmol_L else Units.Mg_Dl) , ValueWithUnit(activityTTDuration, Units.M))
+                            uel.log(Action.TT_ACTIVITY, ValueWithUnit(activityTT, units) , ValueWithUnit(activityTTDuration, Units.M))
                             val tempTarget = TempTarget()
                                 .date(System.currentTimeMillis())
                                 .duration(activityTTDuration)
@@ -225,7 +225,7 @@ class CarbsDialog : DialogFragmentWithDate() {
                         }
 
                         eatingSoonSelected -> {
-                            uel.log(Action.TT_EATING_SOON, ValueWithUnit(eatingSoonTT, if (units == Constants.MMOL) Units.Mmol_L else Units.Mg_Dl) , ValueWithUnit(eatingSoonTTDuration, Units.M))
+                            uel.log(Action.TT_EATING_SOON, ValueWithUnit(eatingSoonTT, units) , ValueWithUnit(eatingSoonTTDuration, Units.M))
                             val tempTarget = TempTarget()
                                 .date(System.currentTimeMillis())
                                 .duration(eatingSoonTTDuration)
@@ -237,7 +237,7 @@ class CarbsDialog : DialogFragmentWithDate() {
                         }
 
                         hypoSelected       -> {
-                            uel.log(Action.TT_HYPO, ValueWithUnit(hypoTT, if (units == Constants.MMOL) Units.Mmol_L else Units.Mg_Dl) , ValueWithUnit(hypoTTDuration, Units.M))
+                            uel.log(Action.TT_HYPO, ValueWithUnit(hypoTT, units) , ValueWithUnit(hypoTTDuration, Units.M))
                             val tempTarget = TempTarget()
                                 .date(System.currentTimeMillis())
                                 .duration(hypoTTDuration)

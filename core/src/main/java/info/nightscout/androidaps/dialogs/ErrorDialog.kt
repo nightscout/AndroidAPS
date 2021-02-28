@@ -11,7 +11,7 @@ import dagger.android.support.DaggerDialogFragment
 import info.nightscout.androidaps.activities.ErrorHelperActivity
 import info.nightscout.androidaps.core.R
 import info.nightscout.androidaps.core.databinding.DialogErrorBinding
-import info.nightscout.androidaps.database.entities.UserEntry
+import info.nightscout.androidaps.database.entities.UserEntry.*
 import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.logging.UserEntryLogger
 import info.nightscout.androidaps.services.AlarmSoundServiceHelper
@@ -59,15 +59,15 @@ class ErrorDialog : DaggerDialogFragment() {
 
         binding.title.text = title
         binding.ok.setOnClickListener {
-            uel.log(UserEntry.Action.ERROR_DIALOG_OK)
+            uel.log(Action.ERROR_DIALOG_OK)
             dismiss()
         }
         binding.mute.setOnClickListener {
-            uel.log(UserEntry.Action.ERROR_DIALOG_MUTE)
+            uel.log(Action.ERROR_DIALOG_MUTE)
             stopAlarm()
         }
         binding.mute5min.setOnClickListener {
-            uel.log(UserEntry.Action.ERROR_DIALOG_MUTE_5MIN)
+            uel.log(Action.ERROR_DIALOG_MUTE_5MIN)
             stopAlarm()
             loopHandler.postDelayed(this::startAlarm, T.mins(5).msecs())
         }

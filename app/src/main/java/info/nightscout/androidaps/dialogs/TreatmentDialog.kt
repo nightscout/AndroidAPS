@@ -12,7 +12,7 @@ import info.nightscout.androidaps.Config
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.activities.ErrorHelperActivity
 import info.nightscout.androidaps.data.DetailedBolusInfo
-import info.nightscout.androidaps.database.entities.UserEntry
+import info.nightscout.androidaps.database.entities.UserEntry.*
 import info.nightscout.androidaps.databinding.DialogTreatmentBinding
 import info.nightscout.androidaps.db.CareportalEvent
 import info.nightscout.androidaps.db.Source
@@ -130,7 +130,7 @@ class TreatmentDialog : DialogFragmentWithDate() {
         if (insulinAfterConstraints > 0 || carbsAfterConstraints > 0) {
             activity?.let { activity ->
                 OKDialog.showConfirmation(activity, resourceHelper.gs(R.string.overview_treatment_label), HtmlHelper.fromHtml(Joiner.on("<br/>").join(actions)), {
-                    uel.log(UserEntry.Action.TREATMENT, d1 = insulin, i1 = carbs)
+                    uel.log(Action.TREATMENT, ValueWithUnit(insulin, Units.U), ValueWithUnit(carbs, Units.G))
                     val detailedBolusInfo = DetailedBolusInfo()
                     if (insulinAfterConstraints == 0.0) detailedBolusInfo.eventType = CareportalEvent.CARBCORRECTION
                     if (carbsAfterConstraints == 0) detailedBolusInfo.eventType = CareportalEvent.CORRECTIONBOLUS

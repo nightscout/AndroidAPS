@@ -15,7 +15,7 @@ import info.nightscout.androidaps.BuildConfig
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.activities.DaggerAppCompatActivityWithResult
 import info.nightscout.androidaps.activities.PreferencesActivity
-import info.nightscout.androidaps.database.entities.UserEntry
+import info.nightscout.androidaps.database.entities.UserEntry.*
 import info.nightscout.androidaps.events.EventAppExit
 import info.nightscout.androidaps.interfaces.ConfigInterface
 import info.nightscout.androidaps.interfaces.ImportExportPrefsInterface
@@ -345,7 +345,7 @@ class ImportExportPrefs @Inject constructor(
     private fun restartAppAfterImport(context: Context) {
         sp.putBoolean(R.string.key_setupwizard_processed, true)
         OKDialog.show(context, resourceHelper.gs(R.string.setting_imported), resourceHelper.gs(R.string.restartingapp), Runnable {
-            uel.log(UserEntry.Action.IMPORT_SETTINGS)
+            uel.log(Action.IMPORT_SETTINGS)
             log.debug(LTag.CORE, "Exiting")
             rxBus.send(EventAppExit())
             if (context is AppCompatActivity) {

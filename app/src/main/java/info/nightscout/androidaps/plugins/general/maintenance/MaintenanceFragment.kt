@@ -9,7 +9,7 @@ import dagger.android.support.DaggerFragment
 import info.nightscout.androidaps.MainApp
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.database.AppRepository
-import info.nightscout.androidaps.database.entities.UserEntry
+import info.nightscout.androidaps.database.entities.UserEntry.*
 import info.nightscout.androidaps.databinding.MaintenanceFragmentBinding
 import info.nightscout.androidaps.events.EventNewBG
 import info.nightscout.androidaps.interfaces.ImportExportPrefsInterface
@@ -57,13 +57,13 @@ class MaintenanceFragment : DaggerFragment() {
         super.onViewCreated(view, savedInstanceState)
         binding.logSend.setOnClickListener { maintenancePlugin.sendLogs() }
         binding.logDelete.setOnClickListener {
-            uel.log(UserEntry.Action.DELETE_LOGS)
+            uel.log(Action.DELETE_LOGS)
             maintenancePlugin.deleteLogs()
         }
         binding.navResetdb.setOnClickListener {
             activity?.let { activity ->
                 OKDialog.showConfirmation(activity, resourceHelper.gs(R.string.maintenance), resourceHelper.gs(R.string.reset_db_confirm), Runnable {
-                    uel.log(UserEntry.Action.RESET_DATABASES)
+                    uel.log(Action.RESET_DATABASES)
                     compositeDisposable.add(
                         fromAction {
                             MainApp.getDbHelper().resetDatabases()
@@ -84,14 +84,14 @@ class MaintenanceFragment : DaggerFragment() {
             }
         }
         binding.navExport.setOnClickListener {
-            uel.log(UserEntry.Action.EXPORT_SETTINGS)
+            uel.log(Action.EXPORT_SETTINGS)
             // start activity for checking permissions...
             importExportPrefs.verifyStoragePermissions(this) {
                 importExportPrefs.exportSharedPreferences(this)
             }
         }
         binding.navImport.setOnClickListener {
-            uel.log(UserEntry.Action.IMPORT_SETTINGS)
+            uel.log(Action.IMPORT_SETTINGS)
             // start activity for checking permissions...
             importExportPrefs.verifyStoragePermissions(this) {
                 importExportPrefs.importSharedPreferences(this)

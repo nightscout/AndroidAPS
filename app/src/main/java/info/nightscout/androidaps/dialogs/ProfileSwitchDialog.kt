@@ -8,7 +8,7 @@ import android.widget.ArrayAdapter
 import com.google.common.base.Joiner
 import info.nightscout.androidaps.Constants
 import info.nightscout.androidaps.R
-import info.nightscout.androidaps.database.entities.UserEntry
+import info.nightscout.androidaps.database.entities.UserEntry.*
 import info.nightscout.androidaps.databinding.DialogProfileswitchBinding
 import info.nightscout.androidaps.interfaces.ActivePluginProvider
 import info.nightscout.androidaps.interfaces.ProfileFunction
@@ -125,7 +125,7 @@ class ProfileSwitchDialog : DialogFragmentWithDate() {
 
         activity?.let { activity ->
             OKDialog.showConfirmation(activity, resourceHelper.gs(R.string.careportal_profileswitch), HtmlHelper.fromHtml(Joiner.on("<br/>").join(actions)), {
-                uel.log(UserEntry.Action.PROFILE_SWITCH, d1 = percent.toDouble(), i1 = timeShift, i2 = duration)
+                uel.log(Action.PROFILE_SWITCH, ValueWithUnit(percent, Units.Percent), ValueWithUnit(timeShift, Units.H), ValueWithUnit(duration, Units.M))
                 treatmentsPlugin.doProfileSwitch(profileStore, profile, duration, percent, timeShift, eventTime)
             })
         }

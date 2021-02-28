@@ -13,7 +13,7 @@ import dagger.android.support.DaggerFragment
 import info.nightscout.androidaps.MainApp
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.data.Intervals
-import info.nightscout.androidaps.database.entities.UserEntry
+import info.nightscout.androidaps.database.entities.UserEntry.*
 import info.nightscout.androidaps.databinding.TreatmentsTemptargetFragmentBinding
 import info.nightscout.androidaps.databinding.TreatmentsTemptargetItemBinding
 import info.nightscout.androidaps.db.Source
@@ -70,7 +70,7 @@ class TreatmentsTempTargetFragment : DaggerFragment() {
         binding.refreshFromNightscout.setOnClickListener {
             context?.let { context ->
                 OKDialog.showConfirmation(context, resourceHelper.gs(R.string.refresheventsfromnightscout) + " ?", {
-                    uel.log(UserEntry.Action.TT_NS_REFRESH)
+                    uel.log(Action.TT_NS_REFRESH)
                     MainApp.getDbHelper().resetTempTargets()
                     rxBus.send(EventNSClientRestart())
                 })
@@ -162,7 +162,7 @@ class TreatmentsTempTargetFragment : DaggerFragment() {
                         ${dateUtil.dateAndTimeString(tempTarget.date)}
                         """.trimIndent(),
                             { _: DialogInterface?, _: Int ->
-                                uel.log(UserEntry.Action.TT_REMOVED, tempTarget.friendlyDescription(profileFunction.getUnits(), resourceHelper))
+                                uel.log(Action.TT_REMOVED, ValueWithUnit(tempTarget.reason, Units.TT_Reason), ValueWithUnit(tempTarget.date, Units.Timestamp), ValueWithUnit(tempTarget.low, Units.Mg_Dl), ValueWithUnit(tempTarget.high, Units.Mg_Dl), ValueWithUnit(tempTarget.durationInMinutes, Units.M))
                                 val id = tempTarget._id
                                 if (NSUpload.isIdValid(id)) nsUpload.removeCareportalEntryFromNS(id)
                                 else uploadQueue.removeID("dbAdd", id)

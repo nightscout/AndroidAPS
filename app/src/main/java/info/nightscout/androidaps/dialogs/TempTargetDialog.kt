@@ -10,7 +10,7 @@ import com.google.common.collect.Lists
 import info.nightscout.androidaps.Constants
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.data.Profile
-import info.nightscout.androidaps.database.entities.UserEntry
+import info.nightscout.androidaps.database.entities.UserEntry.*
 import info.nightscout.androidaps.databinding.DialogTemptargetBinding
 import info.nightscout.androidaps.db.Source
 import info.nightscout.androidaps.db.TempTarget
@@ -167,12 +167,13 @@ class TempTargetDialog : DialogFragmentWithDate() {
 
         activity?.let { activity ->
             OKDialog.showConfirmation(activity, resourceHelper.gs(R.string.careportal_temporarytarget), HtmlHelper.fromHtml(Joiner.on("<br/>").join(actions)), {
+                val units = profileFunction.getUnits()
                 when(reason) {
-                    resourceHelper.gs(R.string.eatingsoon) -> uel.log(UserEntry.Action.TT_EATING_SOON, d1 = target, i1 = duration)
-                    resourceHelper.gs(R.string.activity) -> uel.log(UserEntry.Action.TT_ACTIVITY, d1 = target, i1 = duration)
-                    resourceHelper.gs(R.string.hypo) -> uel.log(UserEntry.Action.TT_HYPO, d1 = target, i1 = duration)
-                    resourceHelper.gs(R.string.manual) -> uel.log(UserEntry.Action.TT, d1 = target, i1 = duration)
-                    resourceHelper.gs(R.string.stoptemptarget) -> uel.log(UserEntry.Action.CANCEL_TT)
+                    resourceHelper.gs(R.string.eatingsoon) -> uel.log(Action.TT_EATING_SOON, ValueWithUnit(target, units), ValueWithUnit(duration, Units.M))
+                    resourceHelper.gs(R.string.activity) -> uel.log(Action.TT_ACTIVITY, ValueWithUnit(target, units), ValueWithUnit(duration, Units.M))
+                    resourceHelper.gs(R.string.hypo) -> uel.log(Action.TT_HYPO, ValueWithUnit(target, units), ValueWithUnit(duration, Units.M))
+                    resourceHelper.gs(R.string.manual) -> uel.log(Action.TT, ValueWithUnit(target, units), ValueWithUnit(duration, Units.M))
+                    resourceHelper.gs(R.string.stoptemptarget) -> uel.log(Action.CANCEL_TT)
                 }
                 if (target == 0.0 || duration == 0) {
                     val tempTarget = TempTarget()

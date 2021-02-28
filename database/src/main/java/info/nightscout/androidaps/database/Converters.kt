@@ -5,6 +5,7 @@ import info.nightscout.androidaps.database.data.Block
 import info.nightscout.androidaps.database.data.TargetBlock
 import info.nightscout.androidaps.database.embedments.InterfaceIDs
 import info.nightscout.androidaps.database.entities.*
+import info.nightscout.androidaps.database.entities.UserEntry.*
 import org.json.JSONArray
 import org.json.JSONObject
 
@@ -17,47 +18,31 @@ class Converters {
     fun toAction(action: String?) = action?.let { UserEntry.Action.fromString(it) }
 
     @TypeConverter
-    fun fromValueWithUnit(valueWithUnit: UserEntry.ValueWithUnit?): String? {
-        if (valueWithUnit == null) return null
-        val jsonObject = JSONObject()
-        jsonObject.put("sValue", valueWithUnit.sValue)
-        jsonObject.put("dValue", valueWithUnit.dValue)
-        jsonObject.put("iValue", valueWithUnit.iValue)
-        jsonObject.put("lValue", valueWithUnit.lValue)
-        jsonObject.put("unit", valueWithUnit.unit.name)
-        return jsonObject.toString()
-    }
-
-    @TypeConverter
-    fun toValueWithUnit(jsonString: String?): UserEntry.ValueWithUnit? {
-        if (jsonString == null) return null
-        val jsonObject = JSONObject(jsonString)
-        return UserEntry.ValueWithUnit(jsonObject.getString("sValue"), jsonObject.getDouble("dValue"), jsonObject.getInt("iValue"), jsonObject.getLong("lValue"), UserEntry.Units.fromString(jsonObject.getString("unit")) )
-    }
-
-    @TypeConverter
     fun fromMutableListOfValueWithUnit(values: MutableList<UserEntry.ValueWithUnit>?): String? {
         if (values == null) return null
         val jsonArray = JSONArray()
         values.forEach {
             val jsonObject = JSONObject()
-            jsonObject.put("dValue", it.dValue)
-            jsonObject.put("iValue", it.iValue)
-            jsonObject.put("lValue", it.lValue)
-            jsonObject.put("unit", it.unit.name)
+            if (!it.dValue.equals(0.0)) jsonObject.put("dValue", it.dValue).put("unit", it.unit.name)
+            if (!it.iValue.equals(0)) jsonObject.put("iValue", it.iValue).put("unit", it.unit.name)
+            if (!it.lValue.equals(0)) jsonObject.put("lValue", it.lValue).put("unit", it.unit.name)
+            if (!it.sValue.equals("")) jsonObject.put("sValue", it.sValue).put("unit", it.unit.name)
             jsonArray.put(jsonObject)
         }
         return jsonArray.toString()
     }
 
     @TypeConverter
-    fun toMutableListOfValueWithUnit(jsonString: String?): List<Block>? {
+    fun toMutableListOfValueWithUnit(jsonString: String?): MutableList<UserEntry.ValueWithUnit>? {
         if (jsonString == null) return null
         val jsonArray = JSONArray(jsonString)
-        val list = mutableListOf<Block>()
+        val list = mutableListOf<UserEntry.ValueWithUnit>()
         for (i in 0 until jsonArray.length()) {
             val jsonObject = jsonArray.getJSONObject(i)
-            list.add(Block(jsonObject.getLong("duration"), jsonObject.getDouble("amount")))
+            if (jsonObject.has("dValue")) list.add(ValueWithUnit(jsonObject.getDouble("dValue"), jsonObject.getString("unit")))
+            if (jsonObject.has("iValue")) list.add(ValueWithUnit(jsonObject.getDouble("iValue"), jsonObject.getString("unit")))
+            if (jsonObject.has("lValue")) list.add(ValueWithUnit(jsonObject.getDouble("lValue"), jsonObject.getString("unit")))
+            if (jsonObject.has("sValue")) list.add(ValueWithUnit(jsonObject.getDouble("sValue"), jsonObject.getString("unit")))
         }
         return list
     }

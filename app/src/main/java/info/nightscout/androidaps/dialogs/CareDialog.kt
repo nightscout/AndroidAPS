@@ -13,7 +13,7 @@ import info.nightscout.androidaps.Constants
 import info.nightscout.androidaps.MainApp
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.data.Profile
-import info.nightscout.androidaps.database.entities.UserEntry
+import info.nightscout.androidaps.database.entities.UserEntry.*
 import info.nightscout.androidaps.databinding.DialogCareBinding
 import info.nightscout.androidaps.db.CareportalEvent
 import info.nightscout.androidaps.db.Source
@@ -223,7 +223,7 @@ class CareDialog : DialogFragmentWithDate() {
                     EventType.ANNOUNCEMENT   -> CareportalEvent.ANNOUNCEMENT
                 }
                 careportalEvent.json = json.toString()
-                uel.log(UserEntry.Action.CAREPORTAL, careportalEvent.eventType)
+                uel.log(Action.CAREPORTAL, ValueWithUnit(careportalEvent.eventType, Units.CPEvent))
                 MainApp.getDbHelper().createOrUpdate(careportalEvent)
                 nsUpload.uploadCareportalEntryToNS(json)
             }, null)

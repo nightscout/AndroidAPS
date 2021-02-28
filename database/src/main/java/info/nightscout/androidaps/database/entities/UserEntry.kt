@@ -3,7 +3,6 @@ package info.nightscout.androidaps.database.entities
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import com.google.gson.annotations.SerializedName
-import info.nightscout.androidaps.database.R
 import info.nightscout.androidaps.database.TABLE_USER_ENTRY
 import info.nightscout.androidaps.database.interfaces.DBEntry
 import info.nightscout.androidaps.database.interfaces.DBEntryWithTime
@@ -120,26 +119,31 @@ data class UserEntry(
             fun fromString(source: String?) = UserEntry.Action.values().firstOrNull { it.name == source } ?: UserEntry.Action.UNKNOWN
         }
     }
-    data class ValueWithUnit (val dValue: Double, val iValue: Int, val lValue: Long, val unit: Units) {
-        constructor(dvalue:Double, unit:Units) : this(dvalue,0, 0, unit)
-        constructor(ivalue:Int, unit:Units) : this(0.0, ivalue, 0, unit)
-        constructor(lvalue:Long, unit:Units) : this(0.0,0, lvalue, unit)
+    data class ValueWithUnit (val dValue: Double, val iValue: Int, val lValue: Long, val sValue: String, val unit: Units) {
+        constructor(dvalue:Double?, unit:Units) : this(dvalue ?:0.0,0, 0, "", unit)
+        constructor(ivalue:Int?, unit:Units) : this(0.0, ivalue ?:0, 0, "", unit)
+        constructor(lvalue:Long?, unit:Units) : this(0.0,0, lvalue ?:0, "", unit)
+        constructor(svalue:String?, unit:Units) : this(0.0,0, 0, svalue ?:"", unit)
+        constructor(dvalue:Double?, unit:String) : this(dvalue ?:0.0,0, 0, "", Units.fromString(unit))
     }
     enum class Units {
         @SerializedName("None") None,
-        @SerializedName("Mg_Dl") Mg_Dl,
-        @SerializedName("Mmol_L") Mmol_L,
+        @SerializedName("mg/dl") Mg_Dl,
+        @SerializedName("mmol") Mmol_L,
         @SerializedName("Timestamp") Timestamp,
         @SerializedName("U") U,
-        @SerializedName("U_H") U_H,
-        @SerializedName("G") G,
-        @SerializedName("M") M,
-        @SerializedName("H") H,
-        @SerializedName("Percent") Percent
+        @SerializedName("U/h") U_H,
+        @SerializedName("g") G,
+        @SerializedName("m") M,
+        @SerializedName("h") H,
+        @SerializedName("Percent") Percent,
+        @SerializedName("CPEvent") CPEvent,
+        @SerializedName("TT_Reason") TT_Reason,
+        @SerializedName("R_String") R_String
         ;
 
         companion object {
-            fun fromString(unit: String?) = UserEntry.Units.values().firstOrNull { it.name == unit } ?: UserEntry.Units.None
+            fun fromString(unit: String?) = values().firstOrNull { it.name == unit } ?: None
         }
     }
 }

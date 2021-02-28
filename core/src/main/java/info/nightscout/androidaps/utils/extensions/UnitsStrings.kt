@@ -14,7 +14,7 @@ fun UserEntry.Units.stringId(): Int {
         this == UserEntry.Units.G -> R.string.shortgram
         this == UserEntry.Units.M -> R.string.shortminute
         this == UserEntry.Units.H -> R.string.shorthour
-        this == UserEntry.Units.Percent -> R.string.percent
+        this == UserEntry.Units.Percent -> R.string.shortpercent
         else                            -> 0
     }
 }
