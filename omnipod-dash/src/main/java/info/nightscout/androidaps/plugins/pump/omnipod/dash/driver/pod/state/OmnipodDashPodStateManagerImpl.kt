@@ -154,8 +154,7 @@ class OmnipodDashPodStateManagerImpl @Inject constructor(
         podState.pulsesRemaining = response.reservoirPulsesRemaining
         podState.sequenceNumberOfLastProgrammingCommand = response.sequenceNumberOfLastProgrammingCommand
         podState.minutesSinceActivation = response.minutesSinceActivation
-
-        // TODO active alerts
+        podState.activeAlerts = response.activeAlerts
 
         podState.lastUpdated = System.currentTimeMillis()
         store()
