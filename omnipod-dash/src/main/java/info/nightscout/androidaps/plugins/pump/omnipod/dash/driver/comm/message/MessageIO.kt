@@ -3,12 +3,11 @@ package info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.message
 import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.logging.LTag
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.command.*
+import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.exceptions.MessageIOException
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.exceptions.UnexpectedCommandException
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.io.BleIO
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.io.CharacteristicType
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.io.PayloadJoiner
-import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.io.PayloadJoinerActionAccept
-import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.io.PayloadJoinerActionReject
 import info.nightscout.androidaps.utils.extensions.toHex
 
 class MessageIO(private val aapsLogger: AAPSLogger, private val bleIO: BleIO) {
@@ -21,10 +20,11 @@ class MessageIO(private val aapsLogger: AAPSLogger, private val bleIO: BleIO) {
             throw UnexpectedCommandException(BleCommand(expectCTS))
         }
         val payload = msg.asByteArray()
+        aapsLogger.debug(LTag.PUMPBTCOMM, "Sending message: ${payload.toHex()}")
         val splitter = PayloadSplitter(payload)
         val packets = splitter.splitInPackets()
         for (packet in packets) {
-            aapsLogger.debug(LTag.PUMPBTCOMM, "Sending DATA: ", packet.asByteArray().toHex())
+            aapsLogger.debug(LTag.PUMPBTCOMM, "Sending DATA: ${packet.asByteArray().toHex()}")
             bleIO.sendAndConfirmPacket(CharacteristicType.DATA, packet.asByteArray())
         }
         // TODO: peek for NACKs
@@ -38,33 +38,29 @@ class MessageIO(private val aapsLogger: AAPSLogger, private val bleIO: BleIO) {
 
     fun receiveMessage(): MessagePacket {
         val expectRTS = bleIO.receivePacket(CharacteristicType.CMD)
-        if (BleCommand(expectRTS) != BleCommandCTS()) {
+        if (BleCommand(expectRTS) != BleCommandRTS()) {
             throw UnexpectedCommandException(BleCommand(expectRTS))
         }
         bleIO.sendAndConfirmPacket(CharacteristicType.CMD, BleCommandCTS().data)
-        val joiner = PayloadJoiner()
-        var data = bleIO.receivePacket(CharacteristicType.DATA)
-        val fragments = joiner.start(data)
-        for (i in 1 until fragments) {
-            data = bleIO.receivePacket(CharacteristicType.DATA)
-            val accumlateAction = joiner.accumulate(data)
-            if (accumlateAction is PayloadJoinerActionReject) {
-                bleIO.sendAndConfirmPacket(CharacteristicType.CMD, BleCommandNack(accumlateAction.idx).data)
+        try {
+            val joiner = PayloadJoiner(bleIO.receivePacket(CharacteristicType.DATA))
+            for (i in 1 until joiner.fullFragments + 1) {
+                joiner.accumulate(bleIO.receivePacket(CharacteristicType.DATA))
             }
-        }
-        if (joiner.oneExtra) {
-            var data = bleIO.receivePacket(CharacteristicType.DATA)
-            val accumulateAction = joiner.accumulate(data)
-            if (accumulateAction is PayloadJoinerActionReject) {
-                bleIO.sendAndConfirmPacket(CharacteristicType.CMD, BleCommandNack(accumulateAction.idx).data)
+            if (joiner.oneExtraPacket) {
+                joiner.accumulate(bleIO.receivePacket(CharacteristicType.DATA))
             }
+            val fullPayload = joiner.finalize()
+            bleIO.sendAndConfirmPacket(CharacteristicType.CMD, BleCommandSuccess().data)
+            return MessagePacket.parse(fullPayload)
+        } catch (e: IncorrectPacketException) {
+            aapsLogger.warn(LTag.PUMPBTCOMM, "Received incorrect packet: $e")
+            bleIO.sendAndConfirmPacket(CharacteristicType.CMD, BleCommandNack(e.expectedIndex).data)
+            throw MessageIOException(cause = e)
+        } catch (e: CrcMismatchException) {
+            aapsLogger.warn(LTag.PUMPBTCOMM, "CRC mismatch: $e")
+            bleIO.sendAndConfirmPacket(CharacteristicType.CMD, BleCommandFail().data)
+            throw MessageIOException(cause = e)
         }
-        val finalCmd = when (joiner.finalize()) {
-            is PayloadJoinerActionAccept -> BleCommandSuccess()
-            is PayloadJoinerActionReject -> BleCommandFail()
-        }
-        bleIO.sendAndConfirmPacket(CharacteristicType.CMD, finalCmd.data)
-        val fullPayload = joiner.bytes()
-        return MessagePacket.parse(fullPayload)
     }
 }

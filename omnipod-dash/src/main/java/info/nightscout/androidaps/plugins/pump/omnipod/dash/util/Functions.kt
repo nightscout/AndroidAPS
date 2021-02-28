@@ -33,7 +33,7 @@ fun mapProfileToBasalProgram(profile: Profile): BasalProgram {
         if (previousBasalValue != null) {
             entries.add(
                 BasalProgram.Segment(
-                    (previousBasalValue!!.timeAsSeconds / 1800).toShort(),
+                    (previousBasalValue.timeAsSeconds / 1800).toShort(),
                     startSlotIndex,
                     (PumpType.Omnipod_Dash.determineCorrectBasalSize(previousBasalValue.value) * 100).roundToInt()
                 )

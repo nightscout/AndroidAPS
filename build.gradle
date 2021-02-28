@@ -23,6 +23,7 @@ buildscript {
         commonscodec_version = '1.15'
         jodatime_version = '2.10.10'
         work_version = '2.5.0'
+        tink_version = '1.5.0'
 
         junit_version = '4.13.2'
         mockitoVersion = '3.7.7'
