@@ -76,8 +76,8 @@ data class MessagePacket(
             if (payload.size < HEADER_SIZE) {
                 throw CouldNotParseMessageException(payload)
             }
-            if (payload.copyOfRange(0, 2).toString() != "TW") {
-                throw info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.exceptions.CouldNotParseMessageException(payload)
+            if (payload.copyOfRange(0, 2).decodeToString() != MAGIC_PATTERN) {
+                throw CouldNotParseMessageException(payload)
             }
             val f1 = Flag(payload[2].toInt())
             val sas = f1.get(3) != 0
@@ -96,7 +96,7 @@ data class MessagePacket(
             }
             val sequenceNumber = payload[4]
             val ackNumber = payload[5]
-            val size = (payload[6].toInt() shl 3) or (payload[7].toInt() ushr 5)
+            val size = (payload[6].toInt() shl 3) or (payload[7].toUnsignedInt() ushr 5)
             if (size + HEADER_SIZE > payload.size) {
                 throw CouldNotParseMessageException(payload)
             }
@@ -114,8 +114,8 @@ data class MessagePacket(
                 sas = sas,
                 tfs = tfs,
                 version = version,
-                sequenceNumber = payload[4],
-                ackNumber = payload[5],
+                sequenceNumber = sequenceNumber,
+                ackNumber = ackNumber,
                 source = Id(payload.copyOfRange(8, 12)),
                 destination = Id(payload.copyOfRange(12, 16)),
                 payload = payload.copyOfRange(16, payloadEnd),
@@ -142,3 +142,5 @@ private class Flag(var value: Int = 0) {
 
     }
 }
+
+internal fun Byte.toUnsignedInt() = this.toInt() and 0xff

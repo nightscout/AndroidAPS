@@ -47,7 +47,7 @@ class MessageIO(private val aapsLogger: AAPSLogger, private val bleIO: BleIO) {
             for (i in 1 until joiner.fullFragments + 1) {
                 joiner.accumulate(bleIO.receivePacket(CharacteristicType.DATA))
             }
-            if (joiner.oneExtra) {
+            if (joiner.oneExtraPacket) {
                 joiner.accumulate(bleIO.receivePacket(CharacteristicType.DATA))
             }
             val fullPayload = joiner.finalize()

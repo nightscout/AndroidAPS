@@ -1,8 +1,7 @@
 package info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.ltk
 
-data class LTK(val ltk: ByteArray, val noncePrefix: ByteArray) {
+data class LTK(val ltk: ByteArray) {
     init {
         require(ltk.size == 16)
-        require(noncePrefix.size == 16)
     }
 }

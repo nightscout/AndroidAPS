@@ -21,6 +21,7 @@ import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.event.PodEven
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.command.base.Command
 import io.reactivex.Observable
 import org.apache.commons.lang3.NotImplementedException
+import info.nightscout.androidaps.utils.extensions.toHex
 import java.util.concurrent.BlockingQueue
 import java.util.concurrent.LinkedBlockingDeque
 import java.util.concurrent.TimeoutException
@@ -96,8 +97,10 @@ class OmnipodDashBleManagerImpl @Inject constructor(private val context: Context
             val ltkExchanger = LTKExchanger(aapsLogger, msgIO)
             emitter.onNext(PodEvent.Pairing)
 
-            val ltk = ltkExchanger.negotiateLTKAndNonce()
-            aapsLogger.info(LTag.PUMPCOMM, "Got LTK and Nonce Prefix: ${ltk}")
+            val ltk = ltkExchanger.negotiateLTK()
+
+            aapsLogger.info(LTag.PUMPCOMM, "Got LTK: ${ltk.ltk.toHex()}")
+
             emitter.onNext(PodEvent.Connected(PodScanner.POD_ID_NOT_ACTIVATED)) // TODO supply actual pod id
 
             emitter.onComplete()
@@ -110,14 +113,9 @@ class OmnipodDashBleManagerImpl @Inject constructor(private val context: Context
         TODO("not implemented")
     }
 
-    override fun getPodId(): Id {
-        // TODO: return something meaningful here
-        return Id.fromInt(4243)
-    }
-
     companion object {
 
-        private const val CONNECT_TIMEOUT_MS = 5000
+        private const val CONNECT_TIMEOUT_MS = 7000
         const val CONTROLLER_ID = 4242 // TODO read from preferences or somewhere else.
     }
 
