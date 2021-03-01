@@ -9,7 +9,12 @@ import static org.junit.Assert.assertArrayEquals;
 public class SilenceAlertsCommandTest {
     @Test
     public void testSilenceLowReservoirAlert() throws DecoderException {
-        byte[] encoded = new SilenceAlertsCommand(37879811, (short) 1, false, new SilenceAlertsCommand.SilenceAlertCommandParameters(false, false, false, false, true, false, false, false)) //
+        byte[] encoded = new SilenceAlertsCommand.Builder() //
+                .setUniqueId(37879811) //
+                .setSequenceNumber((short) 1) //
+                .setNonce(1229869870) //
+                .setSilenceLowReservoirAlert(true) //
+                .build() //
                 .getEncoded();
 
         assertArrayEquals(Hex.decodeHex("0242000304071105494E532E1081CE"), encoded);

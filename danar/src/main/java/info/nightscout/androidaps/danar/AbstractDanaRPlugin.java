@@ -2,6 +2,7 @@ package info.nightscout.androidaps.danar;
 
 import androidx.annotation.NonNull;
 
+import androidx.annotation.NonNull;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -134,7 +135,7 @@ public abstract class AbstractDanaRPlugin extends PumpPluginBase implements Pump
 
     // Pump interface
     @NonNull @Override
-    public PumpEnactResult setNewBasalProfile(Profile profile) {
+    public PumpEnactResult setNewBasalProfile(@NonNull Profile profile) {
         PumpEnactResult result = new PumpEnactResult(getInjector());
 
         if (sExecutionService == null) {
@@ -155,7 +156,6 @@ public abstract class AbstractDanaRPlugin extends PumpPluginBase implements Pump
             Notification notification = new Notification(Notification.FAILED_UDPATE_PROFILE, getResourceHelper().gs(R.string.failedupdatebasalprofile), Notification.URGENT);
             rxBus.send(new EventNewNotification(notification));
             result.comment = getResourceHelper().gs(R.string.failedupdatebasalprofile);
-            return result;
         } else {
             rxBus.send(new EventDismissNotification(Notification.PROFILE_NOT_SET_NOT_INITIALIZED));
             rxBus.send(new EventDismissNotification(Notification.FAILED_UDPATE_PROFILE));
@@ -164,12 +164,12 @@ public abstract class AbstractDanaRPlugin extends PumpPluginBase implements Pump
             result.success = true;
             result.enacted = true;
             result.comment = "OK";
-            return result;
         }
+        return result;
     }
 
     @Override
-    public boolean isThisProfileSet(Profile profile) {
+    public boolean isThisProfileSet(@NonNull Profile profile) {
         if (!isInitialized())
             return true; // TODO: not sure what's better. so far TRUE to prevent too many SMS
         if (danaPump.getPumpProfiles() == null)
@@ -217,7 +217,7 @@ public abstract class AbstractDanaRPlugin extends PumpPluginBase implements Pump
     }
 
     @NonNull @Override
-    public PumpEnactResult setTempBasalPercent(int percent, int durationInMinutes, Profile profile, boolean enforceNew) {
+    public PumpEnactResult setTempBasalPercent(int percent, int durationInMinutes, @NonNull Profile profile, boolean enforceNew) {
         DanaPump pump = danaPump;
         PumpEnactResult result = new PumpEnactResult(getInjector());
         percent = constraintChecker.applyBasalPercentConstraints(new Constraint<>(percent), profile).value();
@@ -319,13 +319,12 @@ public abstract class AbstractDanaRPlugin extends PumpPluginBase implements Pump
             result.success = true;
             result.comment = getResourceHelper().gs(R.string.ok);
             getAapsLogger().debug(LTag.PUMP, "cancelExtendedBolus: OK");
-            return result;
         } else {
             result.success = false;
             result.comment = getResourceHelper().gs(R.string.danar_valuenotsetproperly);
             getAapsLogger().error("cancelExtendedBolus: Failed to cancel extended bolus");
-            return result;
         }
+        return result;
     }
 
     @Override

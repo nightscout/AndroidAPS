@@ -18,7 +18,7 @@ import info.nightscout.androidaps.plugins.general.overview.notifications.Notific
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.IobCobCalculatorPlugin.Companion.roundUpTime
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.data.AutosensData
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.events.EventAutosensBgLoaded
-import info.nightscout.androidaps.plugins.iob.iobCobCalculator.events.EventAutosensCalculationFinished
+import info.nightscout.androidaps.events.EventAutosensCalculationFinished
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.events.EventIobCalculationProgress
 import info.nightscout.androidaps.plugins.sensitivity.SensitivityAAPSPlugin
 import info.nightscout.androidaps.plugins.sensitivity.SensitivityWeightedAveragePlugin
@@ -83,7 +83,7 @@ class IobCobThread @Inject internal constructor(
                     rxBus.send(EventAutosensBgLoaded(cause))
                 }
                 val bucketedData = iobCobCalculatorPlugin.bucketedData
-                val autosensDataTable = iobCobCalculatorPlugin.autosensDataTable
+                val autosensDataTable = iobCobCalculatorPlugin.getAutosensDataTable()
                 if (bucketedData == null || bucketedData.size < 3) {
                     aapsLogger.debug(LTag.AUTOSENS, "Aborting calculation thread (No bucketed data available): $from")
                     return

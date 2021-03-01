@@ -8,7 +8,7 @@ import androidx.annotation.Nullable;
 
 import com.google.firebase.analytics.FirebaseAnalytics;
 
-import org.jetbrains.annotations.NotNull;
+import androidx.annotation.NonNull;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -765,7 +765,7 @@ public class TreatmentsPlugin extends PluginBase implements TreatmentsInterface 
     }
 
     @Override
-    public void doProfileSwitch(@NotNull final ProfileStore profileStore, @NotNull final String profileName, final int duration, final int percentage, final int timeShift, final long date) {
+    public void doProfileSwitch(@NonNull final ProfileStore profileStore, @NonNull final String profileName, final int duration, final int percentage, final int timeShift, final long date) {
         ProfileSwitch profileSwitch = profileFunction.prepareProfileSwitch(profileStore, profileName, duration, percentage, timeShift, date);
         addToHistoryProfileSwitch(profileSwitch);
         if (percentage == 90 && duration == 10)

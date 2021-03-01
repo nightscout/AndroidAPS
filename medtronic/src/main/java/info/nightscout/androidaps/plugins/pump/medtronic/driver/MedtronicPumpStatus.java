@@ -1,6 +1,6 @@
 package info.nightscout.androidaps.plugins.pump.medtronic.driver;
 
-import org.jetbrains.annotations.NotNull;
+import androidx.annotation.NonNull;
 
 import java.util.Calendar;
 import java.util.Date;
@@ -160,7 +160,7 @@ public class MedtronicPumpStatus extends info.nightscout.androidaps.plugins.pump
         return BatteryType.None;
     }
 
-    @NotNull
+    @NonNull
     public String getErrorInfo() {
         return (errorDescription == null) ? "-" : errorDescription;
     }

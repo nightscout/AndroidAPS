@@ -1,7 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+<androidx.preference.PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:validate="http://schemas.android.com/apk/res-auto">
 
-    <PreferenceCategory android:title="@string/open_humans">
+    <PreferenceCategory
+        android:key="@string/key_open_humans_settings"
+        android:title="@string/open_humans">
 
         <CheckBoxPreference
             android:defaultValue="true"
@@ -15,4 +19,4 @@
 
     </PreferenceCategory>
 
-</PreferenceScreen>
+</androidx.preference.PreferenceScreen>

@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="description_pump_combo">Pumpeintegration til Accu-Chek Combo pumper, kræver at ruffy er installeret</string>
+    <string name="bolusstopped">Bolus stoppet</string>
+    <string name="bolusstopping">Stopper bolus</string>
+</resources>

@@ -16,8 +16,8 @@ public class NakResponseTest {
     @Test
     public void testValidResponse() throws DecoderException {
         byte[] encoded = Hex.decodeHex("0603070009");
-
         NakResponse response = new NakResponse(encoded);
+
         assertArrayEquals(encoded, response.getEncoded());
         assertNotSame(encoded, response.getEncoded());
         assertEquals(ResponseType.NAK_RESPONSE, response.getResponseType());

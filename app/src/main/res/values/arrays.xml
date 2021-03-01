@@ -32,6 +32,7 @@
         <item>@string/nl_lang</item>
         <item>@string/es_lang</item>
         <item>@string/el_lang</item>
+        <item>@string/ga_lang</item>
         <item>@string/it_lang</item>
         <item>@string/ko_lang</item>
         <item>@string/lt_lang</item>
@@ -46,6 +47,7 @@
         <item>@string/tr_lang</item>
         <item>@string/zh_lang</item>
     </string-array>
+
     <string-array name="languagesValues" translatable="false">
         <item>default</item>
         <item>en</item>
@@ -57,6 +59,7 @@
         <item>nl</item>
         <item>es</item>
         <item>el</item>
+        <item>ga</item>
         <item>it</item>
         <item>ko</item>
         <item>lt</item>
@@ -85,18 +88,6 @@
         <item>@string/key_adult</item>
         <item>@string/key_resistantadult</item>
         <item>@string/key_pregnant</item>
-    </string-array>
-
-    <string-array name="location">
-        <item>@string/use_passive_location</item>
-        <item>@string/use_network_location</item>
-        <item>@string/use_gps_location</item>
-    </string-array>
-
-    <string-array name="locationValues" translatable="false">
-        <item>PASSIVE</item>
-        <item>NETWORK</item>
-        <item>GPS</item>
     </string-array>
 
     <string-array name="virtualPumpTypes">

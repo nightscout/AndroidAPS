@@ -21,7 +21,7 @@ import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.service.Riley
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.OmnipodErosPumpPlugin;
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.R;
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.driver.manager.PodStateManager;
-import info.nightscout.androidaps.plugins.pump.omnipod.eros.manager.AapsOmnipodManager;
+import info.nightscout.androidaps.plugins.pump.omnipod.eros.manager.AapsOmnipodErosManager;
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.rileylink.manager.OmnipodRileyLinkCommunicationManager;
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.util.AapsOmnipodUtil;
 
@@ -32,13 +32,13 @@ import info.nightscout.androidaps.plugins.pump.omnipod.eros.util.AapsOmnipodUtil
  */
 public class RileyLinkOmnipodService extends RileyLinkService {
 
-    private static final String REGEX_MAC = "([\\da-fA-F]{1,2}(?:\\:|$)){6}";
+    private static final String REGEX_MAC = "([\\da-fA-F]{1,2}(?::|$)){6}";
 
     @Inject OmnipodErosPumpPlugin omnipodErosPumpPlugin;
     @Inject AapsOmnipodUtil aapsOmnipodUtil;
     @Inject PodStateManager podStateManager;
     @Inject DatabaseHelperInterface databaseHelper;
-    @Inject AapsOmnipodManager aapsOmnipodManager;
+    @Inject AapsOmnipodErosManager aapsOmnipodErosManager;
     @Inject OmnipodRileyLinkCommunicationManager omnipodRileyLinkCommunicationManager;
 
     private final IBinder mBinder = new LocalBinder();
@@ -118,11 +118,11 @@ public class RileyLinkOmnipodService extends RileyLinkService {
 
             if (StringUtils.isEmpty(rileyLinkAddress)) {
                 aapsLogger.debug(LTag.PUMPBTCOMM, "RileyLink address invalid: no address");
-                errorDescription = resourceHelper.gs(R.string.omnipod_error_rileylink_address_invalid);
+                errorDescription = resourceHelper.gs(R.string.omnipod_eros_error_riley_link_address_invalid);
                 return false;
             } else {
                 if (!rileyLinkAddress.matches(REGEX_MAC)) {
-                    errorDescription = resourceHelper.gs(R.string.omnipod_error_rileylink_address_invalid);
+                    errorDescription = resourceHelper.gs(R.string.omnipod_eros_error_riley_link_address_invalid);
                     aapsLogger.debug(LTag.PUMPBTCOMM, "RileyLink address invalid: {}", rileyLinkAddress);
                 } else {
                     if (!rileyLinkAddress.equals(this.rileyLinkAddress)) {

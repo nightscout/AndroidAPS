@@ -18,6 +18,7 @@ abstract class WizardModule {
     @ContributesAndroidInjector abstract fun swEditEncryptedPasswordInjector(): SWEditEncryptedPassword
     @ContributesAndroidInjector abstract fun swEditUrlInjector(): SWEditUrl
     @ContributesAndroidInjector abstract fun swFragmentInjector(): SWFragment
+    @ContributesAndroidInjector abstract fun swPreferenceInjector(): SWPreference
     @ContributesAndroidInjector abstract fun swHtmlLinkInjector(): SWHtmlLink
     @ContributesAndroidInjector abstract fun swInfotextInjector(): SWInfoText
     @ContributesAndroidInjector abstract fun swItemInjector(): SWItem

@@ -1,5 +1,7 @@
 package info.nightscout.androidaps.plugins.general.food;
 
+import androidx.annotation.NonNull;
+
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
 
@@ -123,7 +125,7 @@ public class Food {
         gi = other.gi;
     }
 
-    @Override
+    @Override @NonNull
     public String toString() {
         StringBuilder sb = new StringBuilder();
         sb.append("_id=" + _id + ";");

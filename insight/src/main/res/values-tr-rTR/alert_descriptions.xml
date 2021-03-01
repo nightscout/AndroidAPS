@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="alert_r7_description"><![CDATA[Miktar: <b>%1$d%%</b>\nSüre: </b>%2$s st.</b>]]></string>
+    <string name="alert_w31_description"><![CDATA[Rezervuar içeriği: <b>%1$s U</b>]]></string>
+    <string name="alert_w33_description">Tarihi/saati ayarlayın.</string>
+    <string name="alert_w36_description"><![CDATA[Miktar: <b>%1$d%%</b><br/>Süre: <b>%2$s st.</b>]]></string>
+    <string name="alert_w38_description"><![CDATA[Programlandı: <b>%1$s U</b><br/>gönderildi: <b>%2$s U</b>]]></string>
+    <string name="alert_m20_description">Rezervuar yerleştirin.</string>
+    <string name="alert_m21_description">Rezervuar değiştir.</string>
+    <string name="alert_m22_description">Pili değiştirin.</string>
+    <string name="alert_m23_description">Pompa durumunu kontrol edin.</string>
+    <string name="alert_m24_description">İnfüzyon seti değiştirin.</string>
+    <string name="alert_m25_description">Accu-Chek desteğine başvurun.</string>
+    <string name="alert_m27_description">Veri karşıdan yüklemeyi yeniden başlatın.</string>
+    <string name="alert_m29_description">Pil tipini ayarlayın.</string>
+    <string name="alert_m30_description">Rezervuar türünü ayarlayın.</string>
+    <string name="alert_e6_description">Pil ve Rezervuarı değiştirin.</string>
+    <string name="alert_e13_description">Dili değiştir.</string>
+</resources>

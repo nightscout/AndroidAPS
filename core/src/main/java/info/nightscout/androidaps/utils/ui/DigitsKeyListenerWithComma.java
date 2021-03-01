@@ -6,6 +6,8 @@ import android.text.Spanned;
 import android.text.method.NumberKeyListener;
 import android.view.KeyEvent;
 
+import androidx.annotation.NonNull;
+
 class DigitsKeyListenerWithComma extends NumberKeyListener {
 
     /**
@@ -30,7 +32,7 @@ class DigitsKeyListenerWithComma extends NumberKeyListener {
 
     private static final DigitsKeyListenerWithComma[] sInstance = new DigitsKeyListenerWithComma[4];
 
-    @Override
+    @Override @NonNull
     protected char[] getAcceptedChars() {
         return mAccepted;
     }
@@ -109,7 +111,7 @@ class DigitsKeyListenerWithComma extends NumberKeyListener {
                                Spanned dest, int dstart, int dend) {
         CharSequence out = super.filter(source, start, end, dest, dstart, dend);
 
-        if (mSign == false && mDecimal == false) {
+        if (!mSign && !mDecimal) {
             return out;
         }
 

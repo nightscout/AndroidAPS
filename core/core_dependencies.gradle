@@ -42,6 +42,7 @@ dependencies {
     api "io.reactivex.rxjava2:rxkotlin:$rxkotlin_version"
     api "io.reactivex.rxjava2:rxandroid:$rxandroid_version"
     api "org.apache.commons:commons-lang3:$commonslang3_version"
+    api "commons-codec:commons-codec:$commonscodec_version"
 
     //CryptoUtil
     api 'com.madgag.spongycastle:core:1.58.0.0'

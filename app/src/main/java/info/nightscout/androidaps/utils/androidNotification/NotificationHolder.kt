@@ -2,11 +2,15 @@ package info.nightscout.androidaps.utils.androidNotification
 
 import android.app.Notification
 import android.app.NotificationManager
+import android.app.PendingIntent
 import android.content.Context
+import android.content.Intent
 import androidx.core.app.NotificationCompat
-import info.nightscout.androidaps.R
+import androidx.core.app.TaskStackBuilder
+import info.nightscout.androidaps.MainActivity
+import info.nightscout.androidaps.core.R
+import info.nightscout.androidaps.interfaces.IconsProviderInterface
 import info.nightscout.androidaps.interfaces.NotificationHolderInterface
-import info.nightscout.androidaps.utils.resources.IconsProvider
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -15,7 +19,7 @@ import javax.inject.Singleton
 class NotificationHolder @Inject constructor(
     resourceHelper: ResourceHelper,
     context: Context,
-    iconsProvider: IconsProvider
+    iconsProvider: IconsProviderInterface
 ) : NotificationHolderInterface {
 
     override val channelID = "AndroidAPS-Ongoing"
@@ -32,4 +36,10 @@ class NotificationHolder @Inject constructor(
         .also {
             (context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager).notify(notificationID, it)
         }
+
+    override fun openAppIntent(context: Context): PendingIntent? = TaskStackBuilder.create(context).run {
+        addParentStack(MainActivity::class.java)
+        addNextIntent(Intent(context, MainActivity::class.java))
+        getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT)
+    }
 }

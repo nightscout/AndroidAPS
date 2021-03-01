@@ -1,5 +1,7 @@
 package info.nightscout.androidaps.plugins.pump.omnipod.eros.driver.communication.message.response;
 
+import androidx.annotation.NonNull;
+
 import info.nightscout.androidaps.plugins.pump.common.utils.ByteUtil;
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.driver.communication.message.MessageBlock;
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.driver.definition.FaultEventCode;
@@ -60,7 +62,7 @@ public class ErrorResponse extends MessageBlock {
         return nonceSearchKey;
     }
 
-    @Override public String toString() {
+    @Override @NonNull public String toString() {
         return "ErrorResponse{" +
                 "errorResponseCode=" + errorResponseCode +
                 ", nonceSearchKey=" + nonceSearchKey +

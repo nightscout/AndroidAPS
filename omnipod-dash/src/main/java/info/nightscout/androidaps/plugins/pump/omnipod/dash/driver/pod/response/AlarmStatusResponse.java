@@ -1,5 +1,7 @@
 package info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.response;
 
+import androidx.annotation.NonNull;
+
 import java.nio.ByteBuffer;
 import java.util.Arrays;
 
@@ -200,7 +202,7 @@ public class AlarmStatusResponse extends AdditionalStatusResponseBase {
         return returnAddressOfPodAlarmHandlerCaller;
     }
 
-    @Override public String toString() {
+    @NonNull @Override public String toString() {
         return "AlarmStatusResponse{" +
                 "messageType=" + messageType +
                 ", messageLength=" + messageLength +
