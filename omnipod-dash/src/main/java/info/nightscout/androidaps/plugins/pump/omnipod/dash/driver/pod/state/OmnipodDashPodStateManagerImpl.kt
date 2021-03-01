@@ -3,6 +3,8 @@ package info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.state
 import com.google.gson.Gson
 import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.logging.LTag
+import info.nightscout.androidaps.plugins.bus.RxBusWrapper
+import info.nightscout.androidaps.plugins.pump.omnipod.dash.EventOmnipodDashPumpValuesChanged
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.R
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.definition.*
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.response.AlarmStatusResponse
@@ -18,7 +20,8 @@ import javax.inject.Singleton
 @Singleton
 class OmnipodDashPodStateManagerImpl @Inject constructor(
     private val logger: AAPSLogger,
-    private val sharedPreferences: SP
+    private val sharedPreferences: SP,
+    private val rxBus: RxBusWrapper
 ) : OmnipodDashPodStateManager {
 
     private var podState: PodState
@@ -158,6 +161,7 @@ class OmnipodDashPodStateManagerImpl @Inject constructor(
 
         podState.lastUpdated = System.currentTimeMillis()
         store()
+        rxBus.send(EventOmnipodDashPumpValuesChanged())
     }
 
     override fun updateFromVersionResponse(response: VersionResponse) {
@@ -169,6 +173,7 @@ class OmnipodDashPodStateManagerImpl @Inject constructor(
 
         podState.lastUpdated = System.currentTimeMillis()
         store()
+        rxBus.send(EventOmnipodDashPumpValuesChanged())
     }
 
     override fun updateFromSetUniqueIdResponse(response: SetUniqueIdResponse) {
@@ -186,10 +191,15 @@ class OmnipodDashPodStateManagerImpl @Inject constructor(
 
         podState.lastUpdated = System.currentTimeMillis()
         store()
+        rxBus.send(EventOmnipodDashPumpValuesChanged())
     }
 
     override fun updateFromAlarmStatusResponse(response: AlarmStatusResponse) {
-        TODO("Not yet implemented")
+        // TODO
+        logger.error(LTag.PUMP, "Not implemented: OmnipodDashPodStateManagerImpl.updateFromAlarmStatusResponse(AlarmStatusResponse)")
+
+        store()
+        rxBus.send(EventOmnipodDashPumpValuesChanged())
     }
 
     override fun reset() {
