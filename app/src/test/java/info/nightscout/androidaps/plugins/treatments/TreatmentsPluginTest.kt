@@ -3,11 +3,10 @@ package info.nightscout.androidaps.plugins.treatments
 import android.content.Context
 import dagger.android.AndroidInjector
 import dagger.android.HasAndroidInjector
-import info.nightscout.androidaps.MainApp
 import info.nightscout.androidaps.TestBaseWithProfile
 import info.nightscout.androidaps.database.AppRepository
-import info.nightscout.androidaps.db.DatabaseHelper
 import info.nightscout.androidaps.db.TemporaryBasal
+import info.nightscout.androidaps.interfaces.DatabaseHelperInterface
 import info.nightscout.androidaps.plugins.general.nsclient.NSUpload
 import info.nightscout.androidaps.plugins.general.nsclient.UploadQueue
 import info.nightscout.androidaps.plugins.insulin.InsulinOrefRapidActingPlugin
@@ -27,16 +26,16 @@ import org.powermock.modules.junit4.PowerMockRunner
 
 @Suppress("SpellCheckingInspection")
 @RunWith(PowerMockRunner::class)
-@PrepareForTest(FabricPrivacy::class, MainApp::class, DatabaseHelper::class, AppRepository::class)
+@PrepareForTest(FabricPrivacy::class, DatabaseHelperInterface::class, AppRepository::class)
 class TreatmentsPluginTest : TestBaseWithProfile() {
 
     @Mock lateinit var context: Context
     @Mock lateinit var sp: SP
-    @Mock lateinit var databaseHelper: DatabaseHelper
     @Mock lateinit var treatmentService: TreatmentService
     @Mock lateinit var nsUpload: NSUpload
     @Mock lateinit var uploadQueue: UploadQueue
     @Mock lateinit var repository: AppRepository
+    @Mock lateinit var databaseHelper: DatabaseHelperInterface
 
     val injector = HasAndroidInjector {
         AndroidInjector {
@@ -45,6 +44,7 @@ class TreatmentsPluginTest : TestBaseWithProfile() {
                 it.activePlugin = activePluginProvider
                 it.profileFunction = profileFunction
                 it.sp = sp
+                it.dateUtil = DateUtil(context)
             }
         }
     }
@@ -54,14 +54,12 @@ class TreatmentsPluginTest : TestBaseWithProfile() {
 
     @Before
     fun prepare() {
-        `when`(MainApp.getDbHelper()).thenReturn(databaseHelper)
-
         insulinOrefRapidActingPlugin = InsulinOrefRapidActingPlugin(profileInjector, resourceHelper, profileFunction, rxBus, aapsLogger)
 
         `when`(profileFunction.getProfile(ArgumentMatchers.anyLong())).thenReturn(validProfile)
         `when`(activePluginProvider.activeInsulin).thenReturn(insulinOrefRapidActingPlugin)
 
-        sot = TreatmentsPlugin(profileInjector, aapsLogger, rxBus, aapsSchedulers, resourceHelper, context, sp, profileFunction, activePluginProvider, nsUpload, fabricPrivacy, dateUtil, uploadQueue, repository)
+        sot = TreatmentsPlugin(profileInjector, aapsLogger, rxBus, aapsSchedulers, resourceHelper, context, sp, profileFunction, activePluginProvider, nsUpload, fabricPrivacy, dateUtil, uploadQueue, databaseHelper, repository)
         sot.service = treatmentService
     }
 

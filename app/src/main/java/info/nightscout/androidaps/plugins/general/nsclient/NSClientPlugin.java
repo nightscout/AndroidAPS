@@ -27,7 +27,6 @@ import javax.inject.Singleton;
 import dagger.android.HasAndroidInjector;
 import info.nightscout.androidaps.Config;
 import info.nightscout.androidaps.Constants;
-import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.database.AppRepository;
 import info.nightscout.androidaps.database.entities.TemporaryTarget;
@@ -39,6 +38,7 @@ import info.nightscout.androidaps.events.EventNetworkChange;
 import info.nightscout.androidaps.events.EventNsTreatment;
 import info.nightscout.androidaps.events.EventPreferenceChange;
 import info.nightscout.androidaps.interfaces.ActivePluginProvider;
+import info.nightscout.androidaps.interfaces.DatabaseHelperInterface;
 import info.nightscout.androidaps.interfaces.PluginBase;
 import info.nightscout.androidaps.interfaces.PluginDescription;
 import info.nightscout.androidaps.interfaces.PluginType;
@@ -86,6 +86,7 @@ public class NSClientPlugin extends PluginBase {
     private final ActivePluginProvider activePlugin;
     private final NSUpload nsUpload;
     private final AppRepository repository;
+    private final DatabaseHelperInterface databaseHelper;
     private final UserEntryLogger uel;
 
     public Handler handler;
@@ -117,6 +118,7 @@ public class NSClientPlugin extends PluginBase {
             BuildHelper buildHelper,
             ActivePluginProvider activePlugin,
             NSUpload nsUpload,
+            DatabaseHelperInterface databaseHelper,
             AppRepository repository,
             UserEntryLogger uel
     ) {
@@ -143,6 +145,7 @@ public class NSClientPlugin extends PluginBase {
         this.buildHelper = buildHelper;
         this.activePlugin = activePlugin;
         this.nsUpload = nsUpload;
+        this.databaseHelper = databaseHelper;
         this.repository = repository;
         this.uel = uel;
 
@@ -426,10 +429,10 @@ public class NSClientPlugin extends PluginBase {
         EventNsTreatment evtTreatment = new EventNsTreatment(EventNsTreatment.Companion.getREMOVE(), json);
         rxBus.send(evtTreatment);
         // old DB model
-        MainApp.getDbHelper().deleteTempBasalById(_id);
-        MainApp.getDbHelper().deleteExtendedBolusById(_id);
-        MainApp.getDbHelper().deleteCareportalEventById(_id);
-        MainApp.getDbHelper().deleteProfileSwitchById(_id);
+        databaseHelper.deleteTempBasalById(_id);
+        databaseHelper.deleteExtendedBolusById(_id);
+        databaseHelper.deleteCareportalEventById(_id);
+        databaseHelper.deleteProfileSwitchById(_id);
     }
 
     private void handleTreatmentFromNS(JSONObject json, String action) {
@@ -459,11 +462,11 @@ public class NSClientPlugin extends PluginBase {
                 aapsLogger.error("Error parsing TT json " + json.toString());
             }
         } else if (eventType.equals(CareportalEvent.TEMPBASAL)) {
-            MainApp.getDbHelper().createTempBasalFromJsonIfNotExists(json);
+            databaseHelper.createTempBasalFromJsonIfNotExists(json);
         } else if (eventType.equals(CareportalEvent.COMBOBOLUS)) {
-            MainApp.getDbHelper().createExtendedBolusFromJsonIfNotExists(json);
+            databaseHelper.createExtendedBolusFromJsonIfNotExists(json);
         } else if (eventType.equals(CareportalEvent.PROFILESWITCH)) {
-            MainApp.getDbHelper().createProfileSwitchFromJsonIfNotExists(activePlugin, nsUpload, json);
+            databaseHelper.createProfileSwitchFromJsonIfNotExists(activePlugin, nsUpload, json);
         } else if (eventType.equals(CareportalEvent.SITECHANGE) ||
                 eventType.equals(CareportalEvent.INSULINCHANGE) ||
                 eventType.equals(CareportalEvent.SENSORCHANGE) ||
@@ -475,7 +478,7 @@ public class NSClientPlugin extends PluginBase {
                 eventType.equals(CareportalEvent.EXERCISE) ||
                 eventType.equals(CareportalEvent.OPENAPSOFFLINE) ||
                 eventType.equals(CareportalEvent.PUMPBATTERYCHANGE)) {
-            MainApp.getDbHelper().createCareportalEventFromJsonIfNotExists(json);
+            databaseHelper.createCareportalEventFromJsonIfNotExists(json);
         }
 
         if (eventType.equals(CareportalEvent.ANNOUNCEMENT)) {
@@ -497,7 +500,7 @@ public class NSClientPlugin extends PluginBase {
     private void storeMbg(JSONObject mbgJson) {
         NSMbg nsMbg = new NSMbg(mbgJson);
         CareportalEvent careportalEvent = new CareportalEvent(nsMbg);
-        MainApp.getDbHelper().createOrUpdate(careportalEvent);
+        databaseHelper.createOrUpdate(careportalEvent);
         aapsLogger.debug(LTag.DATASERVICE, "Adding/Updating new MBG: " + careportalEvent.toString());
     }
 }

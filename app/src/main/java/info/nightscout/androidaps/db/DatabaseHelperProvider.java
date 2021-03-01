@@ -5,6 +5,7 @@ import androidx.annotation.NonNull;
 import com.j256.ormlite.dao.CloseableIterator;
 
 import org.jetbrains.annotations.Nullable;
+import org.json.JSONObject;
 
 import java.sql.SQLException;
 import java.util.List;
@@ -13,7 +14,9 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 
 import info.nightscout.androidaps.MainApp;
+import info.nightscout.androidaps.interfaces.ActivePluginProvider;
 import info.nightscout.androidaps.interfaces.DatabaseHelperInterface;
+import info.nightscout.androidaps.plugins.general.nsclient.NSUpload;
 
 @Singleton
 public class DatabaseHelperProvider implements DatabaseHelperInterface {
@@ -77,8 +80,8 @@ public class DatabaseHelperProvider implements DatabaseHelperInterface {
         MainApp.getDbHelper().createOrUpdateTDD(record);
     }
 
-    @Override public void createOrUpdate(@NonNull TemporaryBasal tempBasal) {
-        MainApp.getDbHelper().createOrUpdate(tempBasal);
+    @Override public boolean createOrUpdate(@NonNull TemporaryBasal tempBasal) {
+        return MainApp.getDbHelper().createOrUpdate(tempBasal);
     }
 
     @NonNull @Override public TemporaryBasal findTempBasalByPumpId(long id) {
@@ -139,5 +142,57 @@ public class DatabaseHelperProvider implements DatabaseHelperInterface {
 
     @Nullable @Override public InsightPumpID getPumpStoppedEvent(@NonNull String pumpSerial, long before) {
         return MainApp.getDbHelper().getPumpStoppedEvent(pumpSerial, before);
+    }
+
+    @Override public boolean createOrUpdate(@NonNull ExtendedBolus extendedBolus) {
+        return MainApp.getDbHelper().createOrUpdate(extendedBolus);
+    }
+
+    @Override public void createOrUpdate(@NonNull ProfileSwitch profileSwitch) {
+        MainApp.getDbHelper().createOrUpdate(profileSwitch);
+    }
+
+    @Override public void delete(@NonNull TemporaryBasal tempBasal) {
+        MainApp.getDbHelper().delete(tempBasal);
+    }
+
+    @NonNull @Override public List<ExtendedBolus> getExtendedBolusDataFromTime(long mills, boolean ascending) {
+        return MainApp.getDbHelper().getExtendedBolusDataFromTime(mills, ascending);
+    }
+
+    @Override public void deleteTempBasalById(@NonNull String _id) {
+        MainApp.getDbHelper().deleteTempBasalById(_id);
+    }
+
+    @Override public void deleteExtendedBolusById(@NonNull String _id) {
+        MainApp.getDbHelper().deleteExtendedBolusById(_id);
+    }
+
+    @Override public void deleteCareportalEventById(@NonNull String _id) {
+        MainApp.getDbHelper().deleteCareportalEventById(_id);
+    }
+
+    @Override public void deleteProfileSwitchById(@NonNull String _id) {
+        MainApp.getDbHelper().deleteProfileSwitchById(_id);
+    }
+
+    @Override public void createTempBasalFromJsonIfNotExists(@NonNull JSONObject json) {
+        MainApp.getDbHelper().createTempBasalFromJsonIfNotExists(json);
+    }
+
+    @Override public void createExtendedBolusFromJsonIfNotExists(@NonNull JSONObject json) {
+        MainApp.getDbHelper().createExtendedBolusFromJsonIfNotExists(json);
+    }
+
+    @Override public void createCareportalEventFromJsonIfNotExists(@NonNull JSONObject json) {
+        MainApp.getDbHelper().createCareportalEventFromJsonIfNotExists(json);
+    }
+
+    @Override public void createProfileSwitchFromJsonIfNotExists(@NonNull ActivePluginProvider activePluginProvider, @NonNull NSUpload nsUpload, @NonNull JSONObject trJson) {
+        MainApp.getDbHelper().createProfileSwitchFromJsonIfNotExists(activePluginProvider, nsUpload, trJson);
+    }
+
+    @Override public void resetDatabases() {
+        MainApp.getDbHelper().resetDatabases();
     }
 }
