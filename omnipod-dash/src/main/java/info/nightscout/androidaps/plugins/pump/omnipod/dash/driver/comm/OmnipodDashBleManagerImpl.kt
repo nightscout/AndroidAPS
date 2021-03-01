@@ -16,6 +16,7 @@ import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.io.Chara
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.message.MessageIO
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.pair.LTKExchanger
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.scan.PodScanner
+import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.session.EapAkaExchanger
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.status.ConnectionStatus
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.event.PodEvent
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.command.base.Command
@@ -125,13 +126,20 @@ class OmnipodDashBleManagerImpl @Inject constructor(
 
             val msgIO = MessageIO(aapsLogger, bleIO)
             val ltkExchanger = LTKExchanger(aapsLogger, msgIO)
+
             emitter.onNext(PodEvent.Pairing)
 
             val ltk = ltkExchanger.negotiateLTK()
 
             aapsLogger.info(LTag.PUMPCOMM, "Got LTK: ${ltk.ltk.toHex()}")
 
-            emitter.onNext(PodEvent.Connected(PodScanner.POD_ID_NOT_ACTIVATED)) // TODO supply actual pod id
+            emitter.onNext(PodEvent.EstablishingSession)
+
+            val EapAkaExchanger = EapAkaExchanger(msgIO, ltk)
+            val sessionKeys = EapAkaExchanger.negotiateSessionKeys()
+            aapsLogger.info(LTag.PUMPCOMM, "Got session Key: $sessionKeys")
+
+            emitter.onNext(PodEvent.Connected(ltk.podId.toLong())) // TODO supply actual pod id
 
             emitter.onComplete()
         } catch (ex: Exception) {
