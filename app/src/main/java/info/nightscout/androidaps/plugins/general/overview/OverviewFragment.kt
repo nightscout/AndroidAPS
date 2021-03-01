@@ -43,7 +43,7 @@ import info.nightscout.androidaps.plugins.general.nsclient.data.NSDeviceStatus
 import info.nightscout.androidaps.plugins.general.overview.activities.QuickWizardListActivity
 import info.nightscout.androidaps.plugins.general.overview.graphData.GraphData
 import info.nightscout.androidaps.plugins.general.overview.notifications.NotificationStore
-import info.nightscout.androidaps.plugins.general.wear.events.EventWearDoAction
+import info.nightscout.androidaps.plugins.general.wear.events.EventWearInitiateAction
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.GlucoseStatus
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.IobCobCalculatorPlugin
 import info.nightscout.androidaps.events.EventAutosensCalculationFinished
@@ -345,7 +345,7 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
                                     uel.log("ACCEPT TEMP BASAL")
                                     binding.buttonsLayout.acceptTempButton.visibility = View.GONE
                                     (context?.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager).cancel(Constants.notificationID)
-                                    rxBus.send(EventWearDoAction("cancelChangeRequest"))
+                                    rxBus.send(EventWearInitiateAction("cancelChangeRequest"))
                                     loopPlugin.acceptChangeRequest()
                                 })
                             })

@@ -27,7 +27,8 @@ import info.nightscout.androidaps.plugins.aps.loop.LoopPlugin
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper
 import info.nightscout.androidaps.plugins.configBuilder.ConstraintChecker
 import info.nightscout.androidaps.plugins.general.overview.events.EventDismissNotification
-import info.nightscout.androidaps.plugins.general.wear.events.EventWearDoAction
+import info.nightscout.androidaps.plugins.general.wear.events.EventWearConfirmAction
+import info.nightscout.androidaps.plugins.general.wear.events.EventWearInitiateAction
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.IobCobCalculatorPlugin
 import info.nightscout.androidaps.plugins.pump.insight.LocalInsightPlugin
 import info.nightscout.androidaps.plugins.treatments.CarbsGenerator
@@ -83,9 +84,14 @@ class ActionStringHandler @Inject constructor(
 
     init {
         disposable += rxBus
-            .toObservable(EventWearDoAction::class.java)
+            .toObservable(EventWearInitiateAction::class.java)
             .observeOn(aapsSchedulers.main)
             .subscribe({ handleInitiate(it.action) }, fabricPrivacy::logException)
+
+        disposable += rxBus
+            .toObservable(EventWearConfirmAction::class.java)
+            .observeOn(aapsSchedulers.main)
+            .subscribe({ handleConfirmation(it.action) }, fabricPrivacy::logException)
     }
 
     @Synchronized
