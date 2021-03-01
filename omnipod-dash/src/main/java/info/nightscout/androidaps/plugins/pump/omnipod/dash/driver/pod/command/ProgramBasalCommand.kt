@@ -48,12 +48,19 @@ class ProgramBasalCommand private constructor(
             }
             val basalCommand = buffer.array()
             val interlockCommand = interlockCommand.encoded
-            val header: ByteArray = encodeHeader(uniqueId, sequenceNumber, (basalCommand.size + interlockCommand.size).toShort(), multiCommandFlag)
-            return appendCrc(ByteBuffer.allocate(basalCommand.size + interlockCommand.size + header.size) //
-                .put(header) //
-                .put(interlockCommand) //
-                .put(basalCommand) //
-                .array())
+            val header: ByteArray = encodeHeader(
+                uniqueId,
+                sequenceNumber,
+                (basalCommand.size + interlockCommand.size).toShort(),
+                multiCommandFlag
+            )
+            return appendCrc(
+                ByteBuffer.allocate(basalCommand.size + interlockCommand.size + header.size) //
+                    .put(header) //
+                    .put(interlockCommand) //
+                    .put(basalCommand) //
+                    .array()
+            )
         }
 
     override fun toString(): String {
@@ -99,15 +106,33 @@ class ProgramBasalCommand private constructor(
             val pulsesPerSlot = ProgramBasalUtil.mapBasalProgramToPulsesPerSlot(basalProgram!!)
             val currentSlot = ProgramBasalUtil.calculateCurrentSlot(pulsesPerSlot, currentTime)
             val checksum = ProgramBasalUtil.calculateChecksum(pulsesPerSlot, currentSlot)
-            val longInsulinProgramElements: List<BasalInsulinProgramElement> = mapTenthPulsesPerSlotToLongInsulinProgramElements(ProgramBasalUtil.mapBasalProgramToTenthPulsesPerSlot(basalProgram!!))
-            val shortInsulinProgramElements = ProgramBasalUtil.mapPulsesPerSlotToShortInsulinProgramElements(pulsesPerSlot)
-            val currentBasalInsulinProgramElement = ProgramBasalUtil.calculateCurrentLongInsulinProgramElement(longInsulinProgramElements, currentTime)
-            val interlockCommand = ProgramInsulinCommand(uniqueId!!, sequenceNumber!!, multiCommandFlag, nonce!!,
+            val longInsulinProgramElements: List<BasalInsulinProgramElement> =
+                mapTenthPulsesPerSlotToLongInsulinProgramElements(
+                    ProgramBasalUtil.mapBasalProgramToTenthPulsesPerSlot(basalProgram!!)
+                )
+            val shortInsulinProgramElements = ProgramBasalUtil.mapPulsesPerSlotToShortInsulinProgramElements(
+                pulsesPerSlot
+            )
+            val currentBasalInsulinProgramElement = ProgramBasalUtil.calculateCurrentLongInsulinProgramElement(
+                longInsulinProgramElements,
+                currentTime
+            )
+            val interlockCommand = ProgramInsulinCommand(
+                uniqueId!!, sequenceNumber!!, multiCommandFlag, nonce!!,
                 shortInsulinProgramElements, checksum, currentSlot.index, currentSlot.eighthSecondsRemaining,
-                currentSlot.pulsesRemaining, ProgramInsulinCommand.DeliveryType.BASAL)
-            return ProgramBasalCommand(interlockCommand, uniqueId!!, sequenceNumber!!, multiCommandFlag,
-                longInsulinProgramElements, programReminder!!, currentBasalInsulinProgramElement.index,
-                currentBasalInsulinProgramElement.remainingTenthPulses, currentBasalInsulinProgramElement.delayUntilNextTenthPulseInUsec)
+                currentSlot.pulsesRemaining, ProgramInsulinCommand.DeliveryType.BASAL
+            )
+            return ProgramBasalCommand(
+                interlockCommand,
+                uniqueId!!,
+                sequenceNumber!!,
+                multiCommandFlag,
+                longInsulinProgramElements,
+                programReminder!!,
+                currentBasalInsulinProgramElement.index,
+                currentBasalInsulinProgramElement.remainingTenthPulses,
+                currentBasalInsulinProgramElement.delayUntilNextTenthPulseInUsec
+            )
         }
     }
 

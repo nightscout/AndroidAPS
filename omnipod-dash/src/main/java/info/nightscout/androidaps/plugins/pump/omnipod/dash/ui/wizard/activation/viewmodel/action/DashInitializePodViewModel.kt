@@ -8,6 +8,7 @@ import info.nightscout.androidaps.logging.LTag
 import info.nightscout.androidaps.plugins.pump.omnipod.common.ui.wizard.activation.viewmodel.action.InitializePodViewModel
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.R
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.OmnipodDashManager
+import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.definition.AlertTrigger
 import io.reactivex.Single
 import io.reactivex.rxkotlin.subscribeBy
 import javax.inject.Inject
@@ -26,8 +27,14 @@ class DashInitializePodViewModel @Inject constructor(
 
     override fun doExecuteAction(): Single<PumpEnactResult> =
         Single.create { source ->
-            val disposable = omnipodManager.activatePodPart1().subscribeBy(
-                onNext = { podEvent -> logger.debug(LTag.PUMP, "Received PodEvent in Pod activation part 1: $podEvent") },
+            // TODO use configured value for low reservoir trigger
+            val disposable = omnipodManager.activatePodPart1(AlertTrigger.ReservoirVolumeTrigger(200)).subscribeBy(
+                onNext = { podEvent ->
+                    logger.debug(
+                        LTag.PUMP,
+                        "Received PodEvent in Pod activation part 1: $podEvent"
+                    )
+                },
                 onError = { throwable ->
                     logger.error(LTag.PUMP, "Error in Pod activation part 1", throwable)
                     source.onSuccess(PumpEnactResult(injector).success(false).comment(throwable.message))

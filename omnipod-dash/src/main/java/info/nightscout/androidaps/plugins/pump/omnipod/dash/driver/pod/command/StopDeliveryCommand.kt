@@ -19,13 +19,15 @@ class StopDeliveryCommand private constructor(
 
     override val encoded: ByteArray
         get() {
-            return appendCrc(ByteBuffer.allocate(LENGTH + HEADER_LENGTH) //
-                .put(encodeHeader(uniqueId, sequenceNumber, LENGTH, multiCommandFlag)) //
-                .put(commandType.value) //
-                .put(BODY_LENGTH) //
-                .putInt(nonce) //
-                .put((beepType.value.toInt() shl 4 or deliveryType.encoded[0].toInt()).toByte()) //
-                .array())
+            return appendCrc(
+                ByteBuffer.allocate(LENGTH + HEADER_LENGTH) //
+                    .put(encodeHeader(uniqueId, sequenceNumber, LENGTH, multiCommandFlag)) //
+                    .put(commandType.value) //
+                    .put(BODY_LENGTH) //
+                    .putInt(nonce) //
+                    .put((beepType.value.toInt() shl 4 or deliveryType.encoded[0].toInt()).toByte()) //
+                    .array()
+            )
         }
 
     override fun toString(): String {
@@ -40,7 +42,12 @@ class StopDeliveryCommand private constructor(
             '}'
     }
 
-    enum class DeliveryType(private val basal: Boolean, private val tempBasal: Boolean, private val bolus: Boolean) : Encodable {
+    enum class DeliveryType(
+        private val basal: Boolean,
+        private val tempBasal: Boolean,
+        private val bolus: Boolean
+    ) : Encodable {
+
         BASAL(true, false, false), TEMP_BASAL(false, true, false), BOLUS(false, false, true), ALL(true, true, true);
 
         override val encoded: ByteArray
@@ -72,7 +79,14 @@ class StopDeliveryCommand private constructor(
             requireNotNull(deliveryType) { "deliveryType can not be null" }
             requireNotNull(beepType) { "beepType can not be null" }
 
-            return StopDeliveryCommand(uniqueId!!, sequenceNumber!!, multiCommandFlag, deliveryType!!, beepType!!, nonce!!)
+            return StopDeliveryCommand(
+                uniqueId!!,
+                sequenceNumber!!,
+                multiCommandFlag,
+                deliveryType!!,
+                beepType!!,
+                nonce!!
+            )
         }
     }
 

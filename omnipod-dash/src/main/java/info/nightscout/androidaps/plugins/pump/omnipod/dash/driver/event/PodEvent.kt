@@ -20,4 +20,3 @@ sealed class PodEvent {
     class CommandSent(val command: Command) : PodEvent()
     class ResponseReceived(val response: Response) : PodEvent()
 }
-

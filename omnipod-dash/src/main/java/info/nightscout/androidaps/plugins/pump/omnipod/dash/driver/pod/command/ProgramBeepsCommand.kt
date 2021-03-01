@@ -18,15 +18,17 @@ class ProgramBeepsCommand private constructor(
 ) : HeaderEnabledCommand(CommandType.PROGRAM_BEEPS, uniqueId, sequenceNumber, multiCommandFlag) {
 
     override val encoded: ByteArray
-        get() = appendCrc(ByteBuffer.allocate(LENGTH + HEADER_LENGTH) //
-            .put(encodeHeader(uniqueId, sequenceNumber, LENGTH, multiCommandFlag)) //
-            .put(commandType.value) //
-            .put(BODY_LENGTH) //
-            .put(immediateBeepType.value) //
-            .put(basalReminder.encoded) //
-            .put(tempBasalReminder.encoded) //
-            .put(bolusReminder.encoded) //
-            .array())
+        get() = appendCrc(
+            ByteBuffer.allocate(LENGTH + HEADER_LENGTH) //
+                .put(encodeHeader(uniqueId, sequenceNumber, LENGTH, multiCommandFlag)) //
+                .put(commandType.value) //
+                .put(BODY_LENGTH) //
+                .put(immediateBeepType.value) //
+                .put(basalReminder.encoded) //
+                .put(tempBasalReminder.encoded) //
+                .put(bolusReminder.encoded) //
+                .array()
+        )
 
     class Builder : HeaderEnabledCommandBuilder<Builder, ProgramBeepsCommand>() {
 
@@ -61,7 +63,15 @@ class ProgramBeepsCommand private constructor(
             requireNotNull(tempBasalReminder) { "tempBasalReminder can not be null" }
             requireNotNull(bolusReminder) { "bolusReminder can not be null" }
 
-            return ProgramBeepsCommand(uniqueId!!, sequenceNumber!!, multiCommandFlag, immediateBeepType!!, basalReminder!!, tempBasalReminder!!, bolusReminder!!)
+            return ProgramBeepsCommand(
+                uniqueId!!,
+                sequenceNumber!!,
+                multiCommandFlag,
+                immediateBeepType!!,
+                basalReminder!!,
+                tempBasalReminder!!,
+                bolusReminder!!
+            )
         }
     }
 

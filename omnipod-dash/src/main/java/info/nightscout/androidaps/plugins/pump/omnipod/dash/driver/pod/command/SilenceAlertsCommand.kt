@@ -18,13 +18,15 @@ class SilenceAlertsCommand private constructor(
 
     override val encoded: ByteArray
         get() =
-            appendCrc(ByteBuffer.allocate(LENGTH + HEADER_LENGTH) //
-                .put(encodeHeader(uniqueId, sequenceNumber, LENGTH, multiCommandFlag)) //
-                .put(commandType.value) //
-                .put(BODY_LENGTH) //
-                .putInt(nonce) //
-                .put(AlertUtil.encodeAlertSet(alertTypes)) //
-                .array())
+            appendCrc(
+                ByteBuffer.allocate(LENGTH + HEADER_LENGTH) //
+                    .put(encodeHeader(uniqueId, sequenceNumber, LENGTH, multiCommandFlag)) //
+                    .put(commandType.value) //
+                    .put(BODY_LENGTH) //
+                    .putInt(nonce) //
+                    .put(AlertUtil.encodeAlertSet(alertTypes)) //
+                    .array()
+            )
 
     override fun toString(): String {
         return "SilenceAlertsCommand{" +

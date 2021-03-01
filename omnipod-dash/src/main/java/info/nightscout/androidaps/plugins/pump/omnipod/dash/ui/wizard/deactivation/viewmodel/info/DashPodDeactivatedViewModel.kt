@@ -12,5 +12,4 @@ class DashPodDeactivatedViewModel @Inject constructor() : PodDeactivatedViewMode
 
     @StringRes
     override fun getTextId() = R.string.omnipod_common_pod_deactivation_wizard_pod_deactivated_text
-
 }

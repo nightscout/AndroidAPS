@@ -20,7 +20,8 @@ object AlertUtil {
     }
 
     fun encodeAlertSet(alertSet: EnumSet<AlertType>): Byte =
-        alertSet.fold(0,
+        alertSet.fold(
+            0,
             { out, slot ->
                 out or (slot.value.toInt() and 0xff)
             }

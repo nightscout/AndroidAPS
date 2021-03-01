@@ -45,7 +45,12 @@ class PayloadJoiner(private val firstPacket: ByteArray) {
                 throw IncorrectPacketException(0, firstPacket)
 
             else                                                                 -> {
-                fragments.add(firstPacket.copyOfRange(FirstBlePacket.HEADER_SIZE_WITH_MIDDLE_PACKETS, BlePacket.MAX_SIZE))
+                fragments.add(
+                    firstPacket.copyOfRange(
+                        FirstBlePacket.HEADER_SIZE_WITH_MIDDLE_PACKETS,
+                        BlePacket.MAX_SIZE
+                    )
+                )
             }
         }
     }
@@ -87,7 +92,12 @@ class PayloadJoiner(private val firstPacket: ByteArray) {
                     throw IncorrectPacketException(idx.toByte(), packet)
                 }
 
-                fragments.add(packet.copyOfRange(LastOptionalPlusOneBlePacket.HEADER_SIZE, LastOptionalPlusOneBlePacket.HEADER_SIZE + size))
+                fragments.add(
+                    packet.copyOfRange(
+                        LastOptionalPlusOneBlePacket.HEADER_SIZE,
+                        LastOptionalPlusOneBlePacket.HEADER_SIZE + size
+                    )
+                )
             }
         }
     }
@@ -103,7 +113,6 @@ class PayloadJoiner(private val firstPacket: ByteArray) {
         }
         return bytes.copyOfRange(0, bytes.size)
     }
-
 }
 
 internal fun Int.toUnsignedLong() = this.toLong() and 0xffffffffL

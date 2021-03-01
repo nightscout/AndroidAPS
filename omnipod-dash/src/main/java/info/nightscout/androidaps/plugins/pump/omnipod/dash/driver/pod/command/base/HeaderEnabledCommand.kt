@@ -18,7 +18,12 @@ abstract class HeaderEnabledCommand protected constructor(
                 .putShort(MessageUtil.createCrc(command)) //
                 .array()
 
-        internal fun encodeHeader(uniqueId: Int, sequenceNumber: Short, length: Short, multiCommandFlag: Boolean): ByteArray =
+        internal fun encodeHeader(
+            uniqueId: Int,
+            sequenceNumber: Short,
+            length: Short,
+            multiCommandFlag: Boolean
+        ): ByteArray =
             ByteBuffer.allocate(6) //
                 .putInt(uniqueId) //
                 .putShort((sequenceNumber.toInt() and 0x0f shl 10 or length.toInt() or ((if (multiCommandFlag) 1 else 0) shl 15)).toShort()) //

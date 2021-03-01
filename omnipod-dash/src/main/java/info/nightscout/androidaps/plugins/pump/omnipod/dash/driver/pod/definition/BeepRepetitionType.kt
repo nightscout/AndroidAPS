@@ -10,5 +10,4 @@ enum class BeepRepetitionType(
     XXX3(0x05.toByte()), // Used in user pod expiration alert
     XXX4(0x06.toByte()), // Used in pod expiration alert
     XXX5(0x08.toByte()); // Used in imminent pod expiration alert
-
 }

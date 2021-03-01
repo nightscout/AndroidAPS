@@ -14,7 +14,9 @@ class DashDeactivatePodViewModel @Inject constructor(
     logger: AAPSLogger
 ) : DeactivatePodViewModel(injector, logger) {
 
-    override fun doExecuteAction(): Single<PumpEnactResult> = Single.just(PumpEnactResult(injector).success(false).comment("TODO")) // TODO
+    override fun doExecuteAction(): Single<PumpEnactResult> = Single.just(
+        PumpEnactResult(injector).success(false).comment("TODO")
+    ) // TODO
 
     override fun discardPod() {
         // TODO

@@ -6,5 +6,4 @@ abstract class ResponseBase(
 ) : Response {
 
     override val encoded: ByteArray = encoded.copyOf(encoded.size)
-
 }

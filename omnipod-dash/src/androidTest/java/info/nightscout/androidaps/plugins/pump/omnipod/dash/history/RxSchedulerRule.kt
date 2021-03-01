@@ -26,7 +26,6 @@ class RxSchedulerRule(val scheduler: Scheduler) : TestRule {
                     RxJavaPlugins.reset()
                     RxAndroidPlugins.reset()
                 }
-
             }
         }
 }

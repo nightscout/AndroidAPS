@@ -14,12 +14,14 @@ class GetStatusCommand private constructor(
 ) : HeaderEnabledCommand(CommandType.GET_STATUS, uniqueId, sequenceNumber, multiCommandFlag) {
 
     override val encoded: ByteArray
-        get() = appendCrc(ByteBuffer.allocate(LENGTH + HEADER_LENGTH) //
-            .put(encodeHeader(uniqueId, sequenceNumber, LENGTH, multiCommandFlag)) //
-            .put(commandType.value) //
-            .put(BODY_LENGTH) //
-            .put(statusResponseType.value) //
-            .array())
+        get() = appendCrc(
+            ByteBuffer.allocate(LENGTH + HEADER_LENGTH) //
+                .put(encodeHeader(uniqueId, sequenceNumber, LENGTH, multiCommandFlag)) //
+                .put(commandType.value) //
+                .put(BODY_LENGTH) //
+                .put(statusResponseType.value) //
+                .array()
+        )
 
     class Builder : HeaderEnabledCommandBuilder<Builder, GetStatusCommand>() {
 
@@ -35,7 +37,6 @@ class GetStatusCommand private constructor(
 
             return GetStatusCommand(uniqueId!!, sequenceNumber!!, multiCommandFlag, statusResponseType!!)
         }
-
     }
 
     companion object {

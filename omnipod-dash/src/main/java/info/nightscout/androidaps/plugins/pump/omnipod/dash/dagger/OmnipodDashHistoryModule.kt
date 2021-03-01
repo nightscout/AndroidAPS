@@ -19,7 +19,8 @@ class OmnipodDashHistoryModule {
 
     @Provides
     @Singleton
-    internal fun provideHistoryRecordDao(dashHistoryDatabase: DashHistoryDatabase): HistoryRecordDao = dashHistoryDatabase.historyRecordDao()
+    internal fun provideHistoryRecordDao(dashHistoryDatabase: DashHistoryDatabase): HistoryRecordDao =
+        dashHistoryDatabase.historyRecordDao()
 
     @Provides
     @Reusable // no state, let system decide when to reuse or create new.
@@ -29,5 +30,4 @@ class OmnipodDashHistoryModule {
     @Singleton
     internal fun provideDashHistory(dao: HistoryRecordDao, historyMapper: HistoryMapper) =
         DashHistory(dao, historyMapper)
-
 }

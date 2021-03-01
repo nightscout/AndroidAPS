@@ -3,6 +3,8 @@ package info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.state
 import com.google.gson.Gson
 import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.logging.LTag
+import info.nightscout.androidaps.plugins.bus.RxBusWrapper
+import info.nightscout.androidaps.plugins.pump.omnipod.dash.EventOmnipodDashPumpValuesChanged
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.R
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.definition.*
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.response.AlarmStatusResponse
@@ -18,7 +20,8 @@ import javax.inject.Singleton
 @Singleton
 class OmnipodDashPodStateManagerImpl @Inject constructor(
     private val logger: AAPSLogger,
-    private val sharedPreferences: SP
+    private val sharedPreferences: SP,
+    private val rxBus: RxBusWrapper
 ) : OmnipodDashPodStateManager {
 
     private var podState: PodState
@@ -158,17 +161,27 @@ class OmnipodDashPodStateManagerImpl @Inject constructor(
 
         podState.lastUpdated = System.currentTimeMillis()
         store()
+        rxBus.send(EventOmnipodDashPumpValuesChanged())
     }
 
     override fun updateFromVersionResponse(response: VersionResponse) {
-        podState.bleVersion = SoftwareVersion(response.bleVersionMajor, response.bleVersionMinor, response.bleVersionInterim)
-        podState.firmwareVersion = SoftwareVersion(response.firmwareVersionMajor, response.firmwareVersionMinor, response.firmwareVersionInterim)
+        podState.bleVersion = SoftwareVersion(
+            response.bleVersionMajor,
+            response.bleVersionMinor,
+            response.bleVersionInterim
+        )
+        podState.firmwareVersion = SoftwareVersion(
+            response.firmwareVersionMajor,
+            response.firmwareVersionMinor,
+            response.firmwareVersionInterim
+        )
         podState.podStatus = response.podStatus
         podState.lotNumber = response.lotNumber
         podState.podSequenceNumber = response.podSequenceNumber
 
         podState.lastUpdated = System.currentTimeMillis()
         store()
+        rxBus.send(EventOmnipodDashPumpValuesChanged())
     }
 
     override fun updateFromSetUniqueIdResponse(response: SetUniqueIdResponse) {
@@ -177,8 +190,16 @@ class OmnipodDashPodStateManagerImpl @Inject constructor(
         podState.firstPrimeBolusVolume = response.numberOfPrimePulses
         podState.secondPrimeBolusVolume = response.numberOfEngagingClutchDrivePulses
         podState.podLifeInHours = response.podExpirationTimeInHours
-        podState.bleVersion = SoftwareVersion(response.bleVersionMajor, response.bleVersionMinor, response.bleVersionInterim)
-        podState.firmwareVersion = SoftwareVersion(response.firmwareVersionMajor, response.firmwareVersionMinor, response.firmwareVersionInterim)
+        podState.bleVersion = SoftwareVersion(
+            response.bleVersionMajor,
+            response.bleVersionMinor,
+            response.bleVersionInterim
+        )
+        podState.firmwareVersion = SoftwareVersion(
+            response.firmwareVersionMajor,
+            response.firmwareVersionMinor,
+            response.firmwareVersionInterim
+        )
         podState.podStatus = response.podStatus
         podState.lotNumber = response.lotNumber
         podState.podSequenceNumber = response.podSequenceNumber
@@ -186,10 +207,18 @@ class OmnipodDashPodStateManagerImpl @Inject constructor(
 
         podState.lastUpdated = System.currentTimeMillis()
         store()
+        rxBus.send(EventOmnipodDashPumpValuesChanged())
     }
 
     override fun updateFromAlarmStatusResponse(response: AlarmStatusResponse) {
-        TODO("Not yet implemented")
+        // TODO
+        logger.error(
+            LTag.PUMP,
+            "Not implemented: OmnipodDashPodStateManagerImpl.updateFromAlarmStatusResponse(AlarmStatusResponse)"
+        )
+
+        store()
+        rxBus.send(EventOmnipodDashPumpValuesChanged())
     }
 
     override fun reset() {
@@ -210,7 +239,10 @@ class OmnipodDashPodStateManagerImpl @Inject constructor(
     private fun load(): PodState {
         if (sharedPreferences.contains(R.string.key_omnipod_dash_pod_state)) {
             try {
-                return Gson().fromJson(sharedPreferences.getString(R.string.key_omnipod_dash_pod_state, ""), PodState::class.java)
+                return Gson().fromJson(
+                    sharedPreferences.getString(R.string.key_omnipod_dash_pod_state, ""),
+                    PodState::class.java
+                )
             } catch (ex: Exception) {
                 logger.error(LTag.PUMP, "Failed to deserialize Pod state", ex)
             }

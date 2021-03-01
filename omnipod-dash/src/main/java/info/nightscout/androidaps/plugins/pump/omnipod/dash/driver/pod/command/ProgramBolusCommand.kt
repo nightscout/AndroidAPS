@@ -31,12 +31,19 @@ class ProgramBolusCommand private constructor(
                 .putInt(0) // Delay between tenth extended pulses in usec
                 .array()
             val interlockCommand = interlockCommand.encoded
-            val header: ByteArray = encodeHeader(uniqueId, sequenceNumber, (bolusCommand.size + interlockCommand.size).toShort(), multiCommandFlag)
-            return appendCrc(ByteBuffer.allocate(header.size + interlockCommand.size + bolusCommand.size) //
-                .put(header) //
-                .put(interlockCommand) //
-                .put(bolusCommand) //
-                .array())
+            val header: ByteArray = encodeHeader(
+                uniqueId,
+                sequenceNumber,
+                (bolusCommand.size + interlockCommand.size).toShort(),
+                multiCommandFlag
+            )
+            return appendCrc(
+                ByteBuffer.allocate(header.size + interlockCommand.size + bolusCommand.size) //
+                    .put(header) //
+                    .put(interlockCommand) //
+                    .put(bolusCommand) //
+                    .array()
+            )
         }
 
     override fun toString(): String {
@@ -82,10 +89,28 @@ class ProgramBolusCommand private constructor(
 
             val numberOfPulses = Math.round(numberOfUnits!! * 20).toShort()
             val byte10And11 = (numberOfPulses * delayBetweenPulsesInEighthSeconds!!).toShort()
-            val interlockCommand = ProgramInsulinCommand(uniqueId!!, sequenceNumber!!, multiCommandFlag, nonce!!, listOf(BolusShortInsulinProgramElement(numberOfPulses)), calculateChecksum(0x01.toByte(), byte10And11, numberOfPulses),
-                0x01.toByte(), byte10And11, numberOfPulses, ProgramInsulinCommand.DeliveryType.BOLUS)
+            val interlockCommand = ProgramInsulinCommand(
+                uniqueId!!,
+                sequenceNumber!!,
+                multiCommandFlag,
+                nonce!!,
+                listOf(BolusShortInsulinProgramElement(numberOfPulses)),
+                calculateChecksum(0x01.toByte(), byte10And11, numberOfPulses),
+                0x01.toByte(),
+                byte10And11,
+                numberOfPulses,
+                ProgramInsulinCommand.DeliveryType.BOLUS
+            )
             val delayUntilFirstTenthPulseInUsec = delayBetweenPulsesInEighthSeconds!! / 8 * 100000
-            return ProgramBolusCommand(interlockCommand, uniqueId!!, sequenceNumber!!, multiCommandFlag, programReminder!!, (numberOfPulses * 10).toShort(), delayUntilFirstTenthPulseInUsec)
+            return ProgramBolusCommand(
+                interlockCommand,
+                uniqueId!!,
+                sequenceNumber!!,
+                multiCommandFlag,
+                programReminder!!,
+                (numberOfPulses * 10).toShort(),
+                delayUntilFirstTenthPulseInUsec
+            )
         }
     }
 
@@ -94,12 +119,14 @@ class ProgramBolusCommand private constructor(
         private const val LENGTH: Short = 15
         private const val BODY_LENGTH: Byte = 13
         private fun calculateChecksum(numberOfSlots: Byte, byte10And11: Short, numberOfPulses: Short): Short {
-            return MessageUtil.calculateChecksum(ByteBuffer.allocate(7) //
-                .put(numberOfSlots) //
-                .putShort(byte10And11) //
-                .putShort(numberOfPulses) //
-                .putShort(numberOfPulses) //
-                .array())
+            return MessageUtil.calculateChecksum(
+                ByteBuffer.allocate(7) //
+                    .put(numberOfSlots) //
+                    .putShort(byte10And11) //
+                    .putShort(numberOfPulses) //
+                    .putShort(numberOfPulses) //
+                    .array()
+            )
         }
     }
 }

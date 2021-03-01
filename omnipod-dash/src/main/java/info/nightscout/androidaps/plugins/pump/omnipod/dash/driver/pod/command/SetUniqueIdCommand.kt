@@ -16,17 +16,19 @@ class SetUniqueIdCommand private constructor(
 ) : HeaderEnabledCommand(CommandType.SET_UNIQUE_ID, uniqueId, sequenceNumber, multiCommandFlag) {
 
     override val encoded: ByteArray
-        get() = appendCrc(ByteBuffer.allocate(LENGTH + HEADER_LENGTH) //
-            .put(encodeHeader(DEFAULT_UNIQUE_ID, sequenceNumber, LENGTH, multiCommandFlag)) //
-            .put(commandType.value) //
-            .put(BODY_LENGTH) //
-            .putInt(uniqueId) //
-            .put(0x14.toByte()) // FIXME ??
-            .put(0x04.toByte()) // FIXME ??
-            .put(encodeInitializationTime(initializationTime)) //
-            .putInt(lotNumber) //
-            .putInt(podSequenceNumber) //
-            .array())
+        get() = appendCrc(
+            ByteBuffer.allocate(LENGTH + HEADER_LENGTH) //
+                .put(encodeHeader(DEFAULT_UNIQUE_ID, sequenceNumber, LENGTH, multiCommandFlag)) //
+                .put(commandType.value) //
+                .put(BODY_LENGTH) //
+                .putInt(uniqueId) //
+                .put(0x14.toByte()) // FIXME ??
+                .put(0x04.toByte()) // FIXME ??
+                .put(encodeInitializationTime(initializationTime)) //
+                .putInt(lotNumber) //
+                .putInt(podSequenceNumber) //
+                .array()
+        )
 
     override fun toString(): String {
         return "SetUniqueIdCommand{" +
@@ -65,7 +67,14 @@ class SetUniqueIdCommand private constructor(
             requireNotNull(lotNumber) { "lotNumber can not be null" }
             requireNotNull(podSequenceNumber) { "podSequenceNumber can not be null" }
             requireNotNull(initializationTime) { "initializationTime can not be null" }
-            return SetUniqueIdCommand(uniqueId!!, sequenceNumber!!, multiCommandFlag, lotNumber!!, podSequenceNumber!!, initializationTime!!)
+            return SetUniqueIdCommand(
+                uniqueId!!,
+                sequenceNumber!!,
+                multiCommandFlag,
+                lotNumber!!,
+                podSequenceNumber!!,
+                initializationTime!!
+            )
         }
     }
 
@@ -78,10 +87,10 @@ class SetUniqueIdCommand private constructor(
             val instance = Calendar.getInstance()
             instance.time = date
             return byteArrayOf( //
-                (instance[Calendar.MONTH] + 1).toByte(),  //
-                instance[Calendar.DATE].toByte(),  //
-                (instance[Calendar.YEAR] % 100).toByte(),  //
-                instance[Calendar.HOUR_OF_DAY].toByte(),  //
+                (instance[Calendar.MONTH] + 1).toByte(), //
+                instance[Calendar.DATE].toByte(), //
+                (instance[Calendar.YEAR] % 100).toByte(), //
+                instance[Calendar.HOUR_OF_DAY].toByte(), //
                 instance[Calendar.MINUTE].toByte() //
             )
         }

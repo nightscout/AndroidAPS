@@ -22,10 +22,19 @@ class DashHistory @Inject constructor(
     private val historyMapper: HistoryMapper
 ) {
 
-    fun markSuccess(id: String, date: Long): Completable = dao.markResolved(id, ResolvedResult.SUCCESS, currentTimeMillis())
+    fun markSuccess(id: String, date: Long): Completable = dao.markResolved(
+        id,
+        ResolvedResult.SUCCESS,
+        currentTimeMillis()
+    )
 
-    fun markFailure(id: String, date: Long): Completable = dao.markResolved(id, ResolvedResult.FAILURE, currentTimeMillis())
+    fun markFailure(id: String, date: Long): Completable = dao.markResolved(
+        id,
+        ResolvedResult.FAILURE,
+        currentTimeMillis()
+    )
 
+    @Suppress("ReturnCount")
     fun createRecord(
         commandType: OmnipodCommandType,
         date: Long,
@@ -44,16 +53,18 @@ class DashHistory @Inject constructor(
                 return Single.error(IllegalArgumentException("tempBasalRecord missing on SET_TEMPORARY_BASAL"))
         }
 
-        return dao.save(HistoryRecordEntity(
-            id = id,
-            date = date,
-            createdAt = currentTimeMillis(),
-            commandType = commandType,
-            tempBasalRecord = tempBasalRecord,
-            bolusRecord = bolusRecord,
-            initialResult = initialResult,
-            resolvedResult = resolveResult,
-            resolvedAt = resolvedAt)
+        return dao.save(
+            HistoryRecordEntity(
+                id = id,
+                date = date,
+                createdAt = currentTimeMillis(),
+                commandType = commandType,
+                tempBasalRecord = tempBasalRecord,
+                bolusRecord = bolusRecord,
+                initialResult = initialResult,
+                resolvedResult = resolveResult,
+                resolvedAt = resolvedAt
+            )
         ).toSingle { id }
     }
 
@@ -61,5 +72,4 @@ class DashHistory @Inject constructor(
         dao.all().map { list -> list.map(historyMapper::entityToDomain) }
 
     fun getRecordsAfter(time: Long): Single<List<HistoryRecordEntity>> = dao.allSince(time)
-
 }

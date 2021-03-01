@@ -2,6 +2,7 @@ package info.nightscout.androidaps.plugins.pump.omnipod.dash.driver
 
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.event.PodEvent
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.definition.AlertConfiguration
+import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.definition.AlertTrigger
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.definition.AlertType
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.definition.BasalProgram
 import io.reactivex.Observable
@@ -9,9 +10,9 @@ import java.util.*
 
 interface OmnipodDashManager {
 
-    fun activatePodPart1(): Observable<PodEvent>
+    fun activatePodPart1(lowReservoirAlertTrigger: AlertTrigger.ReservoirVolumeTrigger?): Observable<PodEvent>
 
-    fun activatePodPart2(): Observable<PodEvent>
+    fun activatePodPart2(basalProgram: BasalProgram): Observable<PodEvent>
 
     fun getStatus(): Observable<PodEvent>
 

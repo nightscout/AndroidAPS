@@ -12,12 +12,14 @@ class GetVersionCommand private constructor(
 ) : HeaderEnabledCommand(CommandType.GET_VERSION, uniqueId, sequenceNumber, multiCommandFlag) {
 
     override val encoded: ByteArray
-        get() = appendCrc(ByteBuffer.allocate(LENGTH + HEADER_LENGTH) //
-            .put(encodeHeader(uniqueId, sequenceNumber, LENGTH, multiCommandFlag)) //
-            .put(commandType.value) //
-            .put(BODY_LENGTH) //
-            .putInt(uniqueId) //
-            .array())
+        get() = appendCrc(
+            ByteBuffer.allocate(LENGTH + HEADER_LENGTH) //
+                .put(encodeHeader(uniqueId, sequenceNumber, LENGTH, multiCommandFlag)) //
+                .put(commandType.value) //
+                .put(BODY_LENGTH) //
+                .putInt(uniqueId) //
+                .array()
+        )
 
     override fun toString(): String {
         return "GetVersionCommand{" +

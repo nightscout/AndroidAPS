@@ -19,5 +19,5 @@ data class HistoryRecordEntity(
     @Embedded(prefix = "tempBasalRecord_") val tempBasalRecord: TempBasalRecord?,
     @Embedded(prefix = "bolusRecord_") val bolusRecord: BolusRecord?,
     val resolvedResult: ResolvedResult?,
-    val resolvedAt: Long?)
-
+    val resolvedAt: Long?
+)
