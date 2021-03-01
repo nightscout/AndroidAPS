@@ -7,6 +7,7 @@
     <string name="automation_missing_trigger">Mindestens eine auslösende Bedingung angeben.</string>
     <string name="automation_missing_action">Mindestens eine Aktion angeben.</string>
     <string name="alarm_message">Alarm: %1$s</string>
+    <string name="alarm_short">Alarm:</string>
     <string name="message_short">Nachricht:</string>
     <string name="alreadyenabled">Bereits aktiviert</string>
     <string name="alreadydisabled">Bereits deaktiviert</string>
@@ -88,6 +89,7 @@
     <string name="glucose_u">Glukosewert [%1$s]:</string>
     <string name="lastboluslabel">Letzter Bolus vor</string>
     <string name="lastboluscompared">Letzter Bolus vor %1$s %2$s Min</string>
+    <string name="triggercoblabel">COB</string>
     <string name="cobcompared">COB %1$s %2$.0f</string>
     <string name="iob_u">IOB [IE]:</string>
     <string name="distance_short">Umkreis [m]:</string>
