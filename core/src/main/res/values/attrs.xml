@@ -121,4 +121,5 @@
 <attr name="profilViewerLabel" format="reference|color" />
 <attr name="metadataOk" format="reference|color" />
 <attr name="metadataTextWarning" format="reference|color" />
+<attr name="trendarrow" format="reference|color" />
 </resources>

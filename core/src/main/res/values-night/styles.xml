@@ -153,6 +153,7 @@
         <item name="profilViewerLabel" >@color/white</item>
         <item name="metadataOk" >@color/metadataOk</item>
         <item name="metadataTextWarning" >@color/metadataTextWarning</item>
+        <item name="trendarrow" >@color/white</item>
     </style>
 
     <style name="Theme.MaterialComponents.DayNight.DarkActionBar" parent="Theme.MaterialComponents.DayNight.Bridge"/>
