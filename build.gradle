@@ -58,6 +58,11 @@ buildscript {
     }
 }
 
+plugins {
+    id "io.gitlab.arturbosch.detekt" version "1.15.0-RC2"
+    id "org.jlleitschuh.gradle.ktlint" version "9.4.1"
+}
+
 allprojects {
     repositories {
         google()
