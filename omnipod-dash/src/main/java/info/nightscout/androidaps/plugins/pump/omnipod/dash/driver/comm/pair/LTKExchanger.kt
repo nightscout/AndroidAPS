@@ -225,24 +225,24 @@ internal class LTKExchanger(private val aapsLogger: AAPSLogger, private val msgI
 
     companion object {
 
-        private val PUBLIC_KEY_SIZE = 32
-        private val NONCE_SIZE = 16
-        private val CONF_SIZE = 16
+        private const val PUBLIC_KEY_SIZE = 32
+        private const val NONCE_SIZE = 16
+        private const val CONF_SIZE = 16
 
-        private val CMAC_SIZE = 16
+        private const val CMAC_SIZE = 16
 
         private val INTERMEDIAR_KEY_MAGIC_STRING = "TWIt".toByteArray()
         private val PDM_CONF_MAGIC_PREFIX = "KC_2_U".toByteArray()
         private val POD_CONF_MAGIC_PREFIX = "KC_2_V".toByteArray()
 
-        private val GET_POD_STATUS_HEX_COMMAND = "ffc32dbd08030e0100008a" // TODO for now we are assuming this command is build out of constant parameters, use a proper command builder for that.
+        private const val GET_POD_STATUS_HEX_COMMAND = "ffc32dbd08030e0100008a" // TODO for now we are assuming this command is build out of constant parameters, use a proper command builder for that.
 
-        private val SP1 = "SP1="
-        private val SP2 = ",SP2="
-        private val SPS1 = "SPS1="
-        private val SPS2 = "SPS2="
-        private val SP0GP0 = "SP0,GP0"
-        private val P0 = "P0="
+        private const val SP1 = "SP1="
+        private const val SP2 = ",SP2="
+        private const val SPS1 = "SPS1="
+        private const val SPS2 = "SPS2="
+        private const val SP0GP0 = "SP0,GP0"
+        private const val P0 = "P0="
         private val UNKNOWN_P0_PAYLOAD = byteArrayOf(0xa5.toByte())
     }
 }

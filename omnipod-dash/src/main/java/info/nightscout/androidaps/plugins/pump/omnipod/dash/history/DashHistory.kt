@@ -26,6 +26,7 @@ class DashHistory @Inject constructor(
 
     fun markFailure(id: String, date: Long): Completable = dao.markResolved(id, ResolvedResult.FAILURE, currentTimeMillis())
 
+    @Suppress("ReturnCount")
     fun createRecord(
         commandType: OmnipodCommandType,
         date: Long,
