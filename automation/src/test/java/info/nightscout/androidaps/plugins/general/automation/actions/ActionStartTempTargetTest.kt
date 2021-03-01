@@ -13,6 +13,7 @@ import org.junit.Assert
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
+import org.mockito.ArgumentMatcher
 import org.mockito.Mockito
 import org.mockito.Mockito.`when`
 import org.powermock.modules.junit4.PowerMockRunner
@@ -45,15 +46,36 @@ class ActionStartTempTargetTest : ActionsTestBase() {
     }
 
     @Test fun doActionTest() {
+
+      val expectedTarget = TemporaryTarget(
+            id = 0,
+            version = 0,
+            dateCreated = -1,
+            isValid = true,
+            referenceId = null,
+            interfaceIDs_backing = null,
+            timestamp = 0,
+            utcOffset = 0,
+            reason = TemporaryTarget.Reason.AUTOMATION,
+            highTarget = 110.0,
+            lowTarget = 110.0,
+            duration = 1800000
+        )
+
         val inserted = mutableListOf<TemporaryTarget>().apply {
-            // insert all inserted TTs
+            add(expectedTarget)
         }
+
         val updated = mutableListOf<TemporaryTarget>().apply {
-            // add(TemporaryTarget(id = 0, version = 0, dateCreated = 0, isValid = false, referenceId = null, interfaceIDs_backing = null, timestamp = 0, utcOffset = 0, reason =, highTarget = 0.0, lowTarget = 0.0, duration = 0))
-            // insert all updated TTs
+            // TODO insert all updated TTs
         }
+
         `when`(
-            repository.runTransactionForResult(anyObject<Transaction<InsertTemporaryTargetAndCancelCurrentTransaction.TransactionResult>>())
+            repository.runTransactionForResult(argThatKotlin<InsertTemporaryTargetAndCancelCurrentTransaction> {
+                it.temporaryTarget
+                    .copy(timestamp = expectedTarget.timestamp, utcOffset = expectedTarget.utcOffset) // those can be different
+                    .contentEqualsTo(expectedTarget)
+            })
         ).thenReturn(Single.just(InsertTemporaryTargetAndCancelCurrentTransaction.TransactionResult().apply {
             inserted.addAll(inserted)
             updated.addAll(updated)
