@@ -32,5 +32,4 @@ abstract class HistoryRecordDao {
 
     @Query("UPDATE historyrecords SET resolvedResult = :resolvedResult, resolvedAt = :resolvedAt WHERE id = :id ")
     abstract fun markResolved(id: String, resolvedResult: ResolvedResult, resolvedAt: Long): Completable
-
 }

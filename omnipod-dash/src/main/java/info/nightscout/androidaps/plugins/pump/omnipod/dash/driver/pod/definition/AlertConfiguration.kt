@@ -29,15 +29,17 @@ class AlertConfiguration(
             return ByteBuffer.allocate(6) //
                 .put(firstByte)
                 .put(durationInMinutes.toByte()) //
-                .putShort(when (trigger) {
-                    is AlertTrigger.ReservoirVolumeTrigger -> {
-                        trigger.thresholdInMicroLiters
-                    }
+                .putShort(
+                    when (trigger) {
+                        is AlertTrigger.ReservoirVolumeTrigger -> {
+                            trigger.thresholdInMicroLiters
+                        }
 
-                    is AlertTrigger.TimerTrigger           -> {
-                        trigger.offsetInMinutes
+                        is AlertTrigger.TimerTrigger -> {
+                            trigger.offsetInMinutes
+                        }
                     }
-                }) //
+                ) //
                 .put(beepRepetition.value) //
                 .put(beepType.value) //
                 .array()

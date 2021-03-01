@@ -21,7 +21,8 @@ class HistoryMapper {
         )
 
     fun entityToDomain(entity: HistoryRecordEntity): HistoryRecord =
-        HistoryRecord(id = entity.id,
+        HistoryRecord(
+            id = entity.id,
             createdAt = entity.createdAt,
             date = entity.date,
             initialResult = entity.initialResult,
@@ -30,5 +31,4 @@ class HistoryMapper {
             resolvedResult = entity.resolvedResult,
             resolvedAt = entity.resolvedAt
         )
-
 }

@@ -49,5 +49,4 @@ class VersionResponse(
             ", encoded=" + Arrays.toString(encoded) +
             '}'
     }
-
 }

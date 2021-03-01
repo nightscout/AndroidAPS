@@ -4,7 +4,6 @@ import android.bluetooth.BluetoothGatt
 import android.bluetooth.BluetoothGattCharacteristic
 import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.logging.LTag
-
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.callbacks.BleCommCallbacks
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.exceptions.CharacteristicNotFoundException
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.exceptions.ServiceNotFoundException
@@ -29,8 +28,10 @@ class ServiceDiscoverer(private val logger: AAPSLogger, private val gatt: Blueto
             ?: throw CharacteristicNotFoundException(CharacteristicType.CMD.value)
         val dataChar = service.getCharacteristic(CharacteristicType.DATA.uuid) // TODO: this is never used
             ?: throw CharacteristicNotFoundException(CharacteristicType.DATA.value)
-        var chars = mapOf(CharacteristicType.CMD to cmdChar,
-            CharacteristicType.DATA to dataChar)
+        var chars = mapOf(
+            CharacteristicType.CMD to cmdChar,
+            CharacteristicType.DATA to dataChar
+        )
         return chars
     }
 

@@ -77,8 +77,11 @@ class BleCommCallbacks(private val aapsLogger: AAPSLogger, private val incomingP
         } else {
             CharacteristicWriteConfirmationError(status)
         }
-        aapsLogger.debug(LTag.PUMPBTCOMM, "OnCharacteristicWrite with status/char/value " +
-            status + "/" + byValue(characteristic.uuid.toString()) + "/" + characteristic.value.toHex())
+        aapsLogger.debug(
+            LTag.PUMPBTCOMM,
+            "OnCharacteristicWrite with status/char/value " +
+                status + "/" + byValue(characteristic.uuid.toString()) + "/" + characteristic.value.toHex()
+        )
         try {
             if (writeQueue.size > 0) {
                 aapsLogger.warn(LTag.PUMPBTCOMM, "Write confirm queue should be empty. found: " + writeQueue.size)
@@ -97,9 +100,12 @@ class BleCommCallbacks(private val aapsLogger: AAPSLogger, private val incomingP
         super.onCharacteristicChanged(gatt, characteristic)
         val payload = characteristic.value
         val characteristicType = byValue(characteristic.uuid.toString())
-        aapsLogger.debug(LTag.PUMPBTCOMM, "OnCharacteristicChanged with char/value " +
-            characteristicType + "/" +
-            payload.toHex())
+        aapsLogger.debug(
+            LTag.PUMPBTCOMM,
+            "OnCharacteristicChanged with char/value " +
+                characteristicType + "/" +
+                payload.toHex()
+        )
         incomingPackets[characteristicType]!!.add(payload)
     }
 
@@ -109,12 +115,13 @@ class BleCommCallbacks(private val aapsLogger: AAPSLogger, private val incomingP
             ?: throw TimeoutException()
         when (confirmed) {
             is DescriptorWriteConfirmationError -> throw CouldNotConfirmWriteException(confirmed.status)
-            is DescriptorWriteConfirmationUUID -> if (confirmed.uuid != descriptorUUID) {
-                aapsLogger.warn(LTag.PUMPBTCOMM, "Could not confirm descriptor write. Got ${confirmed.uuid}. Expected: $descriptorUUID")
-                throw CouldNotConfirmDescriptorWriteException(descriptorUUID, confirmed.uuid)
-            } else {
-                aapsLogger.debug(LTag.PUMPBTCOMM, "Confirmed descriptor write : " + confirmed.uuid)
-            }
+            is DescriptorWriteConfirmationUUID ->
+                if (confirmed.uuid != descriptorUUID) {
+                    aapsLogger.warn(LTag.PUMPBTCOMM, "Could not confirm descriptor write. Got ${confirmed.uuid}. Expected: $descriptorUUID")
+                    throw CouldNotConfirmDescriptorWriteException(descriptorUUID, confirmed.uuid)
+                } else {
+                    aapsLogger.debug(LTag.PUMPBTCOMM, "Confirmed descriptor write : " + confirmed.uuid)
+                }
         }
     }
 

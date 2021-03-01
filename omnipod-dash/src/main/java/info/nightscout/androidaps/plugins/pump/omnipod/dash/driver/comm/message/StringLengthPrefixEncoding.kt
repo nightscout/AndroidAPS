@@ -18,21 +18,21 @@ class StringLengthPrefixEncoding {
             var remaining = payload
             for ((index, key) in keys.withIndex()) {
                 when {
-                    remaining.size < key.length                                     ->
-                        throw MessageIOException("Payload too short: ${payload.toHex()} for key: ${key}")
+                    remaining.size < key.length ->
+                        throw MessageIOException("Payload too short: ${payload.toHex()} for key: $key")
                     !(remaining.copyOfRange(0, key.length).decodeToString() == key) ->
-                        throw MessageIOException("Key not found: ${key} in ${payload.toHex()}")
+                        throw MessageIOException("Key not found: $key in ${payload.toHex()}")
                     // last key can be empty, no length
-                    index == keys.size - 1 && remaining.size == key.length          ->
+                    index == keys.size - 1 && remaining.size == key.length ->
                         return ret
 
-                    remaining.size < key.length + LENGTH_BYTES                      ->
-                        throw MessageIOException("Length not found: for ${key} in ${payload.toHex()}")
+                    remaining.size < key.length + LENGTH_BYTES ->
+                        throw MessageIOException("Length not found: for $key in ${payload.toHex()}")
                 }
                 remaining = remaining.copyOfRange(key.length, remaining.size)
                 val length = (remaining[0].toUnsignedInt() shl 1) or remaining[1].toUnsignedInt()
                 if (length > remaining.size) {
-                    throw MessageIOException("Payload too short, looking for length ${length} for ${key} in ${payload.toHex()}")
+                    throw MessageIOException("Payload too short, looking for length $length for $key in ${payload.toHex()}")
                 }
                 ret[index] = remaining.copyOfRange(LENGTH_BYTES, LENGTH_BYTES + length)
                 remaining = remaining.copyOfRange(LENGTH_BYTES + length, remaining.size)

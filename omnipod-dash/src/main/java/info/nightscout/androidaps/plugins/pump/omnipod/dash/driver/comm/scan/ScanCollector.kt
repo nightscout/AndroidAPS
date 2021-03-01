@@ -45,5 +45,4 @@ class ScanCollector(private val logger: AAPSLogger, private val podID: Long) : S
         }
         return Collections.unmodifiableList(ret)
     }
-
 }

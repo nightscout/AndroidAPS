@@ -29,5 +29,4 @@ class OmnipodDashHistoryModule {
     @Singleton
     internal fun provideDashHistory(dao: HistoryRecordDao, historyMapper: HistoryMapper) =
         DashHistory(dao, historyMapper)
-
 }

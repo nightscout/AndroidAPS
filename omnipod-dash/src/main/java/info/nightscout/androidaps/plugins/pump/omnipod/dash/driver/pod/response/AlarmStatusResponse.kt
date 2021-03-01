@@ -84,5 +84,4 @@ class AlarmStatusResponse(
     }
 
     infix fun Byte.shr(i: Int): Int = toInt() shr i
-
 }

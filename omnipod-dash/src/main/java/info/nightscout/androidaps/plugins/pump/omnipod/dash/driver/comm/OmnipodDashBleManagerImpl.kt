@@ -39,8 +39,10 @@ class OmnipodDashBleManagerImpl @Inject constructor(private val context: Context
         // TODO: locking?
         val podDevice = bluetoothAdapter.getRemoteDevice(podAddress)
         val incomingPackets: Map<CharacteristicType, BlockingQueue<ByteArray>> =
-            mapOf(CharacteristicType.CMD to LinkedBlockingDeque(),
-                CharacteristicType.DATA to LinkedBlockingDeque())
+            mapOf(
+                CharacteristicType.CMD to LinkedBlockingDeque(),
+                CharacteristicType.DATA to LinkedBlockingDeque()
+            )
         val bleCommCallbacks = BleCommCallbacks(aapsLogger, incomingPackets)
         aapsLogger.debug(LTag.PUMPBTCOMM, "Connecting to $podAddress")
         var autoConnect = true
@@ -118,5 +120,4 @@ class OmnipodDashBleManagerImpl @Inject constructor(private val context: Context
         private const val CONNECT_TIMEOUT_MS = 7000
         const val CONTROLLER_ID = 4242 // TODO read from preferences or somewhere else.
     }
-
 }

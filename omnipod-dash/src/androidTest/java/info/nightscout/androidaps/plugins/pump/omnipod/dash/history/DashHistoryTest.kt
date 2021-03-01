@@ -30,7 +30,9 @@ class DashHistoryTest {
     fun setUp() {
         val context = ApplicationProvider.getApplicationContext<Context>()
         database = Room.inMemoryDatabaseBuilder(
-            context, DashHistoryDatabase::class.java).build()
+            context,
+            DashHistoryDatabase::class.java
+        ).build()
         dao = database.historyRecordDao()
         dashHistory = DashHistory(dao, HistoryMapper())
     }

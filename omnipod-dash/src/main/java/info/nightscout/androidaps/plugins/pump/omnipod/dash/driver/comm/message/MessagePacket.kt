@@ -21,7 +21,8 @@ data class MessagePacket(
     val gateway: Boolean = false,
     val sas: Boolean = false, // TODO: understand
     val tfs: Boolean = false, // TODO: understand
-    val version: Short = 0.toShort()) {
+    val version: Short = 0.toShort()
+) {
 
     fun asByteArray(): ByteArray {
         val bb = ByteBuffer.allocate(16 + payload.size)
@@ -139,7 +140,6 @@ private class Flag(var value: Int = 0) {
             return 0
         }
         return 1
-
     }
 }
 

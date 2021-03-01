@@ -10,7 +10,11 @@ class ProgramReminder(
 ) : Encodable, Serializable {
 
     override val encoded: ByteArray
-        get() = byteArrayOf(((if (atStart) 1 else 0) shl 7
-            or ((if (atEnd) 1 else 0) shl 6)
-            or ((atInterval and 0x3f).toInt())).toByte())
+        get() = byteArrayOf(
+            (
+                (if (atStart) 1 else 0) shl 7
+                    or ((if (atEnd) 1 else 0) shl 6)
+                    or ((atInterval and 0x3f).toInt())
+                ).toByte()
+        )
 }

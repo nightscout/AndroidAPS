@@ -50,14 +50,15 @@ class OmnipodDashManagerImpl @Inject constructor(
 
     private fun observeSendProgramBolusCommand(units: Double, rateInEighthPulsesPerSeconds: Byte, confirmationBeeps: Boolean, completionBeeps: Boolean): Observable<PodEvent> {
         return Observable.defer {
-            bleManager.sendCommand(ProgramBolusCommand.Builder()
-                .setUniqueId(podStateManager.uniqueId!!.toInt())
-                .setSequenceNumber(podStateManager.messageSequenceNumber)
-                .setNonce(1229869870) // TODO
-                .setNumberOfUnits(units)
-                .setDelayBetweenPulsesInEighthSeconds(rateInEighthPulsesPerSeconds)
-                .setProgramReminder(ProgramReminder(confirmationBeeps, completionBeeps, 0))
-                .build()
+            bleManager.sendCommand(
+                ProgramBolusCommand.Builder()
+                    .setUniqueId(podStateManager.uniqueId!!.toInt())
+                    .setSequenceNumber(podStateManager.messageSequenceNumber)
+                    .setNonce(1229869870) // TODO
+                    .setNumberOfUnits(units)
+                    .setDelayBetweenPulsesInEighthSeconds(rateInEighthPulsesPerSeconds)
+                    .setProgramReminder(ProgramReminder(confirmationBeeps, completionBeeps, 0))
+                    .build()
             )
         }
     }
@@ -78,13 +79,15 @@ class OmnipodDashManagerImpl @Inject constructor(
         get() = Observable.defer {
             observeSendGetPodStatusCommand()
                 .ignoreElements() //
-                .andThen(Observable.defer {
-                    if (podStateManager.podStatus == PodStatus.RUNNING_ABOVE_MIN_VOLUME) {
-                        Observable.empty()
-                    } else {
-                        Observable.error(IllegalStateException("Unexpected Pod status"))
+                .andThen(
+                    Observable.defer {
+                        if (podStateManager.podStatus == PodStatus.RUNNING_ABOVE_MIN_VOLUME) {
+                            Observable.empty()
+                        } else {
+                            Observable.error(IllegalStateException("Unexpected Pod status"))
+                        }
                     }
-                })
+                )
         }
 
     private fun observeSendProgramAlertsCommand(alertConfigurations: List<AlertConfiguration>, multiCommandFlag: Boolean = false): Observable<PodEvent> {
@@ -119,32 +122,38 @@ class OmnipodDashManagerImpl @Inject constructor(
         get() = Observable.defer {
             observeSendGetPodStatusCommand()
                 .ignoreElements() //
-                .andThen(Observable.defer {
-                    if (podStateManager.podStatus == PodStatus.CLUTCH_DRIVE_ENGAGED) {
-                        Observable.empty()
-                    } else {
-                        Observable.error(IllegalStateException("Unexpected Pod status"))
+                .andThen(
+                    Observable.defer {
+                        if (podStateManager.podStatus == PodStatus.CLUTCH_DRIVE_ENGAGED) {
+                            Observable.empty()
+                        } else {
+                            Observable.error(IllegalStateException("Unexpected Pod status"))
+                        }
                     }
-                })
+                )
         }
 
     private val observeSendSetUniqueIdCommand: Observable<PodEvent>
         get() = Observable.defer {
-            bleManager.sendCommand(SetUniqueIdCommand.Builder() //
-                .setSequenceNumber(podStateManager.messageSequenceNumber) //
-                .setUniqueId(podStateManager.uniqueId!!.toInt()) //
-                .setLotNumber(podStateManager.lotNumber!!.toInt()) //
-                .setPodSequenceNumber(podStateManager.podSequenceNumber!!.toInt())
-                .setInitializationTime(Date())
-                .build()) //
+            bleManager.sendCommand(
+                SetUniqueIdCommand.Builder() //
+                    .setSequenceNumber(podStateManager.messageSequenceNumber) //
+                    .setUniqueId(podStateManager.uniqueId!!.toInt()) //
+                    .setLotNumber(podStateManager.lotNumber!!.toInt()) //
+                    .setPodSequenceNumber(podStateManager.podSequenceNumber!!.toInt())
+                    .setInitializationTime(Date())
+                    .build()
+            ) //
         }
 
     private val observeSendGetVersionCommand: Observable<PodEvent>
         get() = Observable.defer {
-            bleManager.sendCommand(GetVersionCommand.Builder() //
-                .setSequenceNumber(podStateManager.messageSequenceNumber) //
-                .setUniqueId(DEFAULT_UNIQUE_ID) //
-                .build()) //
+            bleManager.sendCommand(
+                GetVersionCommand.Builder() //
+                    .setSequenceNumber(podStateManager.messageSequenceNumber) //
+                    .setUniqueId(DEFAULT_UNIQUE_ID) //
+                    .build()
+            ) //
         }
 
     override fun activatePodPart1(lowReservoirAlertTrigger: AlertTrigger.ReservoirVolumeTrigger?): Observable<PodEvent> {
@@ -277,30 +286,32 @@ class OmnipodDashManagerImpl @Inject constructor(
             )
         }
         if (podStateManager.activationProgress.isBefore(ActivationProgress.UPDATED_EXPIRATION_ALERTS)) {
-            observables.add(observeSendProgramAlertsCommand(
-                listOf(
-                    // FIXME use user configured expiration alert
-                    AlertConfiguration(
-                        AlertType.EXPIRATION,
-                        enabled = true,
-                        durationInMinutes = TimeUnit.HOURS.toMinutes(7).toShort(),
-                        autoOff = false,
-                        AlertTrigger.TimerTrigger(TimeUnit.HOURS.toMinutes(73).toShort()), // FIXME use activation time
-                        BeepType.FOUR_TIMES_BIP_BEEP,
-                        BeepRepetitionType.XXX3
+            observables.add(
+                observeSendProgramAlertsCommand(
+                    listOf(
+                        // FIXME use user configured expiration alert
+                        AlertConfiguration(
+                            AlertType.EXPIRATION,
+                            enabled = true,
+                            durationInMinutes = TimeUnit.HOURS.toMinutes(7).toShort(),
+                            autoOff = false,
+                            AlertTrigger.TimerTrigger(TimeUnit.HOURS.toMinutes(73).toShort()), // FIXME use activation time
+                            BeepType.FOUR_TIMES_BIP_BEEP,
+                            BeepRepetitionType.XXX3
+                        ),
+                        AlertConfiguration(
+                            AlertType.EXPIRATION_IMMINENT,
+                            enabled = true,
+                            durationInMinutes = TimeUnit.HOURS.toMinutes(1).toShort(),
+                            autoOff = false,
+                            AlertTrigger.TimerTrigger(TimeUnit.HOURS.toMinutes(79).toShort()), // FIXME use activation time
+                            BeepType.FOUR_TIMES_BIP_BEEP,
+                            BeepRepetitionType.XXX4
+                        )
                     ),
-                    AlertConfiguration(
-                        AlertType.EXPIRATION_IMMINENT,
-                        enabled = true,
-                        durationInMinutes = TimeUnit.HOURS.toMinutes(1).toShort(),
-                        autoOff = false,
-                        AlertTrigger.TimerTrigger(TimeUnit.HOURS.toMinutes(79).toShort()), // FIXME use activation time
-                        BeepType.FOUR_TIMES_BIP_BEEP,
-                        BeepRepetitionType.XXX4
-                    )
-                ),
-                multiCommandFlag = true
-            ).doOnComplete(ActivationProgressUpdater(ActivationProgress.UPDATED_EXPIRATION_ALERTS)))
+                    multiCommandFlag = true
+                ).doOnComplete(ActivationProgressUpdater(ActivationProgress.UPDATED_EXPIRATION_ALERTS))
+            )
         }
         if (podStateManager.activationProgress.isBefore(ActivationProgress.PROGRAMMED_BASAL)) {
             observables.add(
@@ -399,7 +410,7 @@ class OmnipodDashManagerImpl @Inject constructor(
                     handleResponse(event.response)
                 }
 
-                else                           -> {
+                else -> {
                     // Do nothing
                 }
             }
@@ -424,7 +435,6 @@ class OmnipodDashManagerImpl @Inject constructor(
                 }
             }
         }
-
     }
 
     inner class ErrorInterceptor : Consumer<Throwable> {
@@ -432,7 +442,6 @@ class OmnipodDashManagerImpl @Inject constructor(
         override fun accept(throwable: Throwable) {
             logger.debug(LTag.PUMP, "Intercepted error in OmnipodDashManagerImpl: ${throwable.javaClass.simpleName}")
         }
-
     }
 
     inner class ActivationProgressUpdater(private val value: ActivationProgress) : Action {
@@ -440,6 +449,5 @@ class OmnipodDashManagerImpl @Inject constructor(
         override fun run() {
             podStateManager.activationProgress = value
         }
-
     }
 }

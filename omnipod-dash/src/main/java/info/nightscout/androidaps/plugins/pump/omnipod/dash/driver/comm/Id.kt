@@ -22,7 +22,7 @@ data class Id(val address: ByteArray) {
 
     override fun toString(): String {
         val asInt = ByteBuffer.wrap(address).int
-        return "${asInt}/${address.toHex()}"
+        return "$asInt/${address.toHex()}"
     }
 
     companion object {
@@ -33,5 +33,4 @@ data class Id(val address: ByteArray) {
             return Id(ByteBuffer.allocate(4).putInt(v).array())
         }
     }
-
 }

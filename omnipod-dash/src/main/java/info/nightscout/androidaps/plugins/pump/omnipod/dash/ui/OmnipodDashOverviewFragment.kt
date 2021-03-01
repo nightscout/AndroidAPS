@@ -107,38 +107,47 @@ class OmnipodDashOverviewFragment : DaggerFragment() {
 
         buttonBinding.buttonResumeDelivery.setOnClickListener {
             disablePodActionButtons()
-            commandQueue.customCommand(CommandResumeDelivery(),
-                DisplayResultDialogCallback(resourceHelper.gs(R.string.omnipod_common_error_failed_to_resume_delivery), true).messageOnSuccess(resourceHelper.gs(R.string.omnipod_common_confirmation_delivery_resumed)))
+            commandQueue.customCommand(
+                CommandResumeDelivery(),
+                DisplayResultDialogCallback(resourceHelper.gs(R.string.omnipod_common_error_failed_to_resume_delivery), true).messageOnSuccess(resourceHelper.gs(R.string.omnipod_common_confirmation_delivery_resumed))
+            )
         }
 
         buttonBinding.buttonRefreshStatus.setOnClickListener {
             disablePodActionButtons()
-            commandQueue.readStatus("REQUESTED BY USER",
-                DisplayResultDialogCallback(resourceHelper.gs(R.string.omnipod_common_error_failed_to_refresh_status), false))
+            commandQueue.readStatus(
+                "REQUESTED BY USER",
+                DisplayResultDialogCallback(resourceHelper.gs(R.string.omnipod_common_error_failed_to_refresh_status), false)
+            )
         }
 
         buttonBinding.buttonSilenceAlerts.setOnClickListener {
             disablePodActionButtons()
-            commandQueue.customCommand(CommandAcknowledgeAlerts(),
+            commandQueue.customCommand(
+                CommandAcknowledgeAlerts(),
                 DisplayResultDialogCallback(resourceHelper.gs(R.string.omnipod_common_error_failed_to_silence_alerts), false)
                     .messageOnSuccess(resourceHelper.gs(R.string.omnipod_common_confirmation_silenced_alerts))
-                    .actionOnSuccess { rxBus.send(EventDismissNotification(Notification.OMNIPOD_POD_ALERTS)) })
+                    .actionOnSuccess { rxBus.send(EventDismissNotification(Notification.OMNIPOD_POD_ALERTS)) }
+            )
         }
 
         buttonBinding.buttonSuspendDelivery.setOnClickListener {
             disablePodActionButtons()
-            commandQueue.customCommand(CommandSuspendDelivery(),
+            commandQueue.customCommand(
+                CommandSuspendDelivery(),
                 DisplayResultDialogCallback(resourceHelper.gs(R.string.omnipod_common_error_failed_to_suspend_delivery), true)
-                    .messageOnSuccess(resourceHelper.gs(R.string.omnipod_common_confirmation_suspended_delivery)))
+                    .messageOnSuccess(resourceHelper.gs(R.string.omnipod_common_confirmation_suspended_delivery))
+            )
         }
 
         buttonBinding.buttonSetTime.setOnClickListener {
             disablePodActionButtons()
-            commandQueue.customCommand(CommandHandleTimeChange(true),
+            commandQueue.customCommand(
+                CommandHandleTimeChange(true),
                 DisplayResultDialogCallback(resourceHelper.gs(R.string.omnipod_common_error_failed_to_set_time), true)
-                    .messageOnSuccess(resourceHelper.gs(R.string.omnipod_common_confirmation_time_on_pod_updated)))
+                    .messageOnSuccess(resourceHelper.gs(R.string.omnipod_common_confirmation_time_on_pod_updated))
+            )
         }
-
     }
 
     override fun onResume() {
@@ -147,23 +156,32 @@ class OmnipodDashOverviewFragment : DaggerFragment() {
         disposables += rxBus
             .toObservable(EventOmnipodDashPumpValuesChanged::class.java)
             .observeOn(aapsSchedulers.main)
-            .subscribe({
-                updateOmnipodStatus()
-                updatePodActionButtons()
-            }, fabricPrivacy::logException)
+            .subscribe(
+                {
+                    updateOmnipodStatus()
+                    updatePodActionButtons()
+                },
+                fabricPrivacy::logException
+            )
         disposables += rxBus
             .toObservable(EventQueueChanged::class.java)
             .observeOn(aapsSchedulers.main)
-            .subscribe({
-                updateQueueStatus()
-                updatePodActionButtons()
-            }, fabricPrivacy::logException)
+            .subscribe(
+                {
+                    updateQueueStatus()
+                    updatePodActionButtons()
+                },
+                fabricPrivacy::logException
+            )
         disposables += rxBus
             .toObservable(EventPreferenceChange::class.java)
             .observeOn(aapsSchedulers.main)
-            .subscribe({
-                updatePodActionButtons()
-            }, fabricPrivacy::logException)
+            .subscribe(
+                {
+                    updatePodActionButtons()
+                },
+                fabricPrivacy::logException
+            )
         updateUi()
     }
 
@@ -267,16 +285,18 @@ class OmnipodDashOverviewFragment : DaggerFragment() {
                 podInfoBinding.reservoir.setTextColor(Color.WHITE)
             } else {
                 // TODO
-                //val lowReservoirThreshold = (omnipodAlertUtil.lowReservoirAlertUnits
+                // val lowReservoirThreshold = (omnipodAlertUtil.lowReservoirAlertUnits
                 //    ?: OmnipodConstants.DEFAULT_MAX_RESERVOIR_ALERT_THRESHOLD).toDouble()
                 val lowReservoirThreshold: Short = 20
 
                 podInfoBinding.reservoir.text = resourceHelper.gs(R.string.omnipod_common_overview_reservoir_value, podStateManager.pulsesRemaining)
-                podInfoBinding.reservoir.setTextColor(if (podStateManager.pulsesRemaining!! < lowReservoirThreshold) {
-                    Color.RED
-                } else {
-                    Color.WHITE
-                })
+                podInfoBinding.reservoir.setTextColor(
+                    if (podStateManager.pulsesRemaining!! < lowReservoirThreshold) {
+                        Color.RED
+                    } else {
+                        Color.WHITE
+                    }
+                )
             }
 
             podInfoBinding.podActiveAlerts.text = if (podStateManager.activeAlerts!!.size > 0) {
@@ -345,7 +365,7 @@ class OmnipodDashOverviewFragment : DaggerFragment() {
             }
         }
 
-        val podStatusColor = if (!podStateManager.isActivationCompleted ||/* TODO podStateManager.isPodDead || */ podStateManager.isSuspended) {
+        val podStatusColor = if (!podStateManager.isActivationCompleted || /* TODO podStateManager.isPodDead || */ podStateManager.isSuspended) {
             Color.RED
         } else {
             Color.WHITE
@@ -417,8 +437,8 @@ class OmnipodDashOverviewFragment : DaggerFragment() {
     }
 
     private fun updateRefreshStatusButton() {
-        buttonBinding.buttonRefreshStatus.isEnabled = podStateManager.isUniqueIdSet && podStateManager.activationProgress.isAtLeast(ActivationProgress.PHASE_1_COMPLETED)
-            && isQueueEmpty()
+        buttonBinding.buttonRefreshStatus.isEnabled = podStateManager.isUniqueIdSet && podStateManager.activationProgress.isAtLeast(ActivationProgress.PHASE_1_COMPLETED) &&
+            isQueueEmpty()
     }
 
     private fun updateResumeDeliveryButton() {
@@ -576,5 +596,4 @@ class OmnipodDashOverviewFragment : DaggerFragment() {
             return this
         }
     }
-
 }

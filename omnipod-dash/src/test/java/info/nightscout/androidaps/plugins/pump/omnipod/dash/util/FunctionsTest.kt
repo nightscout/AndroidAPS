@@ -26,11 +26,13 @@ class FunctionsTest {
         val value3 = Mockito.mock(ProfileValue::class.java)
         value3.timeAsSeconds = 50400
         value3.value = 3.05
-        PowerMockito.`when`(profile.basalValues).thenReturn(arrayOf(
-            value1,
-            value2,
-            value3
-        ))
+        PowerMockito.`when`(profile.basalValues).thenReturn(
+            arrayOf(
+                value1,
+                value2,
+                value3
+            )
+        )
         val basalProgram: BasalProgram = mapProfileToBasalProgram(profile)
         val entries: List<BasalProgram.Segment> = basalProgram.segments
         assertEquals(3, entries.size)
@@ -69,8 +71,11 @@ class FunctionsTest {
         val value = Mockito.mock(ProfileValue::class.java)
         value.timeAsSeconds = 1800
         value.value = 0.5
-        PowerMockito.`when`(profile.basalValues).thenReturn(arrayOf(
-            value))
+        PowerMockito.`when`(profile.basalValues).thenReturn(
+            arrayOf(
+                value
+            )
+        )
         mapProfileToBasalProgram(profile)
     }
 
@@ -85,10 +90,12 @@ class FunctionsTest {
         val value2 = Mockito.mock(ProfileValue::class.java)
         value2.timeAsSeconds = 86400
         value2.value = 0.5
-        PowerMockito.`when`(profile.basalValues).thenReturn(arrayOf(
-            value1,
-            value2
-        ))
+        PowerMockito.`when`(profile.basalValues).thenReturn(
+            arrayOf(
+                value1,
+                value2
+            )
+        )
         mapProfileToBasalProgram(profile)
     }
 
@@ -99,8 +106,11 @@ class FunctionsTest {
         val value = Mockito.mock(ProfileValue::class.java)
         value.timeAsSeconds = -1
         value.value = 0.5
-        PowerMockito.`when`(profile.basalValues).thenReturn(arrayOf(
-            value))
+        PowerMockito.`when`(profile.basalValues).thenReturn(
+            arrayOf(
+                value
+            )
+        )
         mapProfileToBasalProgram(profile)
     }
 
@@ -109,8 +119,11 @@ class FunctionsTest {
         val value = Mockito.mock(ProfileValue::class.java)
         value.timeAsSeconds = 0
         value.value = 0.04
-        PowerMockito.`when`(profile.basalValues).thenReturn(arrayOf(
-            value))
+        PowerMockito.`when`(profile.basalValues).thenReturn(
+            arrayOf(
+                value
+            )
+        )
         val basalProgram: BasalProgram = mapProfileToBasalProgram(profile)
         val basalProgramElement: BasalProgram.Segment = basalProgram.segments[0]
         assertEquals(5, basalProgramElement.basalRateInHundredthUnitsPerHour)

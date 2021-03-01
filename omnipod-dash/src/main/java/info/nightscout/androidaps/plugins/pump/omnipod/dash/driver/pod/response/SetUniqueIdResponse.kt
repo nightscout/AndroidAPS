@@ -55,5 +55,4 @@ class SetUniqueIdResponse(
             ", encoded=" + encoded.contentToString() +
             '}'
     }
-
 }

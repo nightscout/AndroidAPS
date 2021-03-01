@@ -159,5 +159,4 @@ enum class AlarmType(override val value: Byte) : HasValue {
     ALARM_BLE_QN_EXCEED_MAX_RETRY(0xc1.toByte()),
     ALARM_BLE_QN_CRIT_VAR_FAIL(0xc2.toByte()),
     UNKNOWN(0xff.toByte());
-
 }

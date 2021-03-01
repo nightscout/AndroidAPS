@@ -5,7 +5,6 @@ import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
-import androidx.room.migration.Migration
 
 @Database(
     entities = [HistoryRecordEntity::class],
@@ -15,7 +14,7 @@ import androidx.room.migration.Migration
 @TypeConverters(Converters::class)
 abstract class DashHistoryDatabase : RoomDatabase() {
 
-    abstract fun historyRecordDao() : HistoryRecordDao
+    abstract fun historyRecordDao(): HistoryRecordDao
 
     companion object {
 
@@ -26,5 +25,4 @@ abstract class DashHistoryDatabase : RoomDatabase() {
                 .fallbackToDestructiveMigration()
                 .build()
     }
-
 }

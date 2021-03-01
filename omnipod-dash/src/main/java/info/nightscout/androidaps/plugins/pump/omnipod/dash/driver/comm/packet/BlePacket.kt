@@ -92,4 +92,3 @@ data class LastOptionalPlusOneBlePacket(val index: Byte, val payload: ByteArray,
         internal const val HEADER_SIZE = 2
     }
 }
-

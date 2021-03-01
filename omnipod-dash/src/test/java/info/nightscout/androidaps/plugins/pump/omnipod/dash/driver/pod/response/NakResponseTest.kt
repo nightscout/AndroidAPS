@@ -3,7 +3,6 @@ package info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.response
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.definition.AlarmType
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.definition.NakErrorType
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.definition.PodStatus
-import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.response.ResponseType
 import org.apache.commons.codec.DecoderException
 import org.apache.commons.codec.binary.Hex
 import org.junit.Assert

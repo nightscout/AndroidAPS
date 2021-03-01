@@ -15,7 +15,6 @@ class BleDiscoveredDevice(val scanResult: ScanResult, private val scanRecord: Sc
         val serviceUuids = scanRecord.serviceUuids
         if (serviceUuids.size != 9) {
             throw DiscoveredInvalidPodException("Expected 9 service UUIDs, got" + serviceUuids.size, serviceUuids)
-
         }
         if (extractUUID16(serviceUuids[0]) != MAIN_SERVICE_UUID) {
             // this is the service that we filtered for

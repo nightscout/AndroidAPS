@@ -66,10 +66,13 @@ class DashPodManagementActivity : NoSplashAppCompatActivity() {
         }
 
         binding.buttonDiscardPod.setOnClickListener {
-            OKDialog.showConfirmation(this,
-                resourceHelper.gs(R.string.omnipod_common_pod_management_discard_pod_confirmation), Thread {
-                // TODO discard Pod
-            })
+            OKDialog.showConfirmation(
+                this,
+                resourceHelper.gs(R.string.omnipod_common_pod_management_discard_pod_confirmation),
+                Thread {
+                    // TODO discard Pod
+                }
+            )
         }
 
         binding.buttonPlayTestBeep.setOnClickListener {
@@ -77,13 +80,16 @@ class DashPodManagementActivity : NoSplashAppCompatActivity() {
             binding.buttonPlayTestBeep.isEnabled = false
             binding.buttonPlayTestBeep.setText(R.string.omnipod_common_pod_management_button_playing_test_beep)
 
-            commandQueue.customCommand(CommandPlayTestBeep(), object : Callback() {
-                override fun run() {
-                    if (!result.success) {
-                        displayErrorDialog(resourceHelper.gs(R.string.omnipod_common_warning), resourceHelper.gs(R.string.omnipod_common_two_strings_concatenated_by_colon, resourceHelper.gs(R.string.omnipod_common_error_failed_to_play_test_beep), result.comment), false)
+            commandQueue.customCommand(
+                CommandPlayTestBeep(),
+                object : Callback() {
+                    override fun run() {
+                        if (!result.success) {
+                            displayErrorDialog(resourceHelper.gs(R.string.omnipod_common_warning), resourceHelper.gs(R.string.omnipod_common_two_strings_concatenated_by_colon, resourceHelper.gs(R.string.omnipod_common_error_failed_to_play_test_beep), result.comment), false)
+                        }
                     }
                 }
-            })
+            )
         }
     }
 

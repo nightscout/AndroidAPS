@@ -13,12 +13,14 @@ class DeactivateCommand private constructor(
 ) : NonceEnabledCommand(CommandType.DEACTIVATE, uniqueId, sequenceNumber, multiCommandFlag, nonce) {
 
     override val encoded: ByteArray
-        get() = appendCrc(ByteBuffer.allocate(LENGTH + HEADER_LENGTH) //
-            .put(encodeHeader(uniqueId, sequenceNumber, LENGTH, multiCommandFlag)) //
-            .put(commandType.value) //
-            .put(BODY_LENGTH) //
-            .putInt(nonce) //
-            .array())
+        get() = appendCrc(
+            ByteBuffer.allocate(LENGTH + HEADER_LENGTH) //
+                .put(encodeHeader(uniqueId, sequenceNumber, LENGTH, multiCommandFlag)) //
+                .put(commandType.value) //
+                .put(BODY_LENGTH) //
+                .putInt(nonce) //
+                .array()
+        )
 
     override fun toString(): String = "DeactivateCommand{" +
         "nonce=" + nonce +

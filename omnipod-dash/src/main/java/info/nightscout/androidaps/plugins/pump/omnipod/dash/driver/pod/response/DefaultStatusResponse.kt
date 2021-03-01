@@ -34,7 +34,6 @@ class DefaultStatusResponse(
             ", minutesSinceActivation=$minutesSinceActivation" +
             ", reservoirPulsesRemaining=$reservoirPulsesRemaining)"
     }
-
 }
 
 infix fun Byte.ushr(i: Int) = toInt() ushr i

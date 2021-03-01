@@ -11,8 +11,9 @@ class ProgramInsulinCommand internal constructor(
     uniqueId: Int,
     sequenceNumber: Short,
     multiCommandFlag: Boolean,
-    nonce: Int, insulinProgramElements:
-    List<ShortInsulinProgramElement>,
+    nonce: Int,
+    insulinProgramElements:
+        List<ShortInsulinProgramElement>,
     private val checksum: Short,
     private val byte9: Byte,
     private val byte10And11: Short,
