@@ -125,7 +125,7 @@ class EversensePlugin @Inject constructor(
                                 nsUpload.uploadBg(it, GlucoseValue.SourceSensor.EVERSENSE.text)
                         }
                     }, {
-                        aapsLogger.error(LTag.BGSOURCE, "Error while saving values from Eversense App", it)
+                        aapsLogger.error("Error while saving values from Eversense App", it)
                     })
                 }
             }

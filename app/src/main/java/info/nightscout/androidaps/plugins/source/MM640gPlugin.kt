@@ -100,7 +100,7 @@ class MM640gPlugin @Inject constructor(
                                     nsUpload.uploadBg(it, GlucoseValue.SourceSensor.MM_600_SERIES.text)
                             }
                         }, {
-                            aapsLogger.error(LTag.BGSOURCE, "Error while saving values from Eversense App", it)
+                            aapsLogger.error("Error while saving values from Eversense App", it)
                         })
                     } catch (e: JSONException) {
                         aapsLogger.error("Exception: ", e)

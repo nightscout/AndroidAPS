@@ -591,14 +591,14 @@ class ActionStringHandler @Inject constructor(
                 result.inserted.forEach { nsUpload.uploadTempTarget(it) }
                 result.updated.forEach { nsUpload.updateTempTarget(it) }
             }, {
-                aapsLogger.error(LTag.BGSOURCE, "Error while saving temporary target", it)
+                aapsLogger.error("Error while saving temporary target", it)
             })
         else
             disposable += repository.runTransactionForResult(CancelCurrentTemporaryTargetIfAnyTransaction(System.currentTimeMillis()))
                 .subscribe({ result ->
                     result.updated.forEach { nsUpload.updateTempTarget(it) }
                 }, {
-                    aapsLogger.error(LTag.BGSOURCE, "Error while saving temporary target", it)
+                    aapsLogger.error("Error while saving temporary target", it)
                 })
     }
 
