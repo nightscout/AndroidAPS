@@ -2,7 +2,7 @@ package info.nightscout.androidaps.plugins.pump.omnipod.dash.driver
 
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.event.PodEvent
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.definition.AlertConfiguration
-import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.definition.AlertSlot
+import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.definition.AlertType
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.definition.BasalProgram
 import io.reactivex.Observable
 import java.util.*
@@ -33,7 +33,7 @@ interface OmnipodDashManager {
 
     fun programAlerts(alertConfigurations: List<AlertConfiguration>): Observable<PodEvent>
 
-    fun silenceAlerts(alerts: EnumSet<AlertSlot>): Observable<PodEvent>
+    fun silenceAlerts(alerts: EnumSet<AlertType>): Observable<PodEvent>
 
     fun deactivatePod(): Observable<PodEvent>
 }

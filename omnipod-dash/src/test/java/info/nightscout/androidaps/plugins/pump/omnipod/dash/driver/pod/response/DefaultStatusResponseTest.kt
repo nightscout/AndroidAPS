@@ -2,7 +2,6 @@ package info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.response
 
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.definition.DeliveryStatus
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.definition.PodStatus
-import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.response.ResponseType
 import org.apache.commons.codec.DecoderException
 import org.apache.commons.codec.binary.Hex
 import org.junit.Assert
@@ -22,14 +21,7 @@ class DefaultStatusResponseTest {
         Assert.assertEquals(320.toShort(), response.totalPulsesDelivered)
         Assert.assertEquals(5.toShort(), response.sequenceNumberOfLastProgrammingCommand)
         Assert.assertEquals(0.toShort(), response.bolusPulsesRemaining)
-        Assert.assertFalse(response.occlusionAlertActive)
-        Assert.assertFalse(response.alert1Active)
-        Assert.assertFalse(response.alert2Active)
-        Assert.assertFalse(response.alert3Active)
-        Assert.assertFalse(response.alert4Active)
-        Assert.assertFalse(response.alert5Active)
-        Assert.assertFalse(response.alert6Active)
-        Assert.assertFalse(response.alert7Active)
+        Assert.assertEquals(0, response.activeAlerts.size)
         Assert.assertEquals(280.toShort(), response.minutesSinceActivation)
         Assert.assertEquals(1023.toShort(), response.reservoirPulsesRemaining)
     }

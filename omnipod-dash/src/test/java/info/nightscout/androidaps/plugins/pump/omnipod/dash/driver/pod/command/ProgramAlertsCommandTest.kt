@@ -1,8 +1,8 @@
 package info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.command
 
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.definition.AlertConfiguration
-import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.definition.AlertSlot
-import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.definition.AlertTriggerType
+import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.definition.AlertType
+import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.definition.AlertTrigger
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.definition.BeepRepetitionType
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.definition.BeepType
 import org.apache.commons.codec.DecoderException
@@ -15,8 +15,8 @@ class ProgramAlertsCommandTest {
 
     @Test @Throws(DecoderException::class) fun testExpirationAlerts() {
         val configurations: MutableList<AlertConfiguration> = ArrayList()
-        configurations.add(AlertConfiguration(AlertSlot.EXPIRATION, true, 420.toShort(), false, AlertTriggerType.TIME_TRIGGER, 4305.toShort(), BeepType.FOUR_TIMES_BIP_BEEP, BeepRepetitionType.XXX3))
-        configurations.add(AlertConfiguration(AlertSlot.EXPIRATION_IMMINENT, true, 0.toShort(), false, AlertTriggerType.TIME_TRIGGER, 4725.toShort(), BeepType.FOUR_TIMES_BIP_BEEP, BeepRepetitionType.XXX4))
+        configurations.add(AlertConfiguration(AlertType.EXPIRATION, true, 420.toShort(), false, AlertTrigger.TimerTrigger(4305.toShort()), BeepType.FOUR_TIMES_BIP_BEEP, BeepRepetitionType.XXX3))
+        configurations.add(AlertConfiguration(AlertType.EXPIRATION_IMMINENT, true, 0.toShort(), false, AlertTrigger.TimerTrigger(4725.toShort()), BeepType.FOUR_TIMES_BIP_BEEP, BeepRepetitionType.XXX4))
 
         val encoded = ProgramAlertsCommand.Builder() //
             .setUniqueId(37879811) //
@@ -32,7 +32,7 @@ class ProgramAlertsCommandTest {
 
     @Test @Throws(DecoderException::class) fun testLowReservoirAlert() {
         val configurations: MutableList<AlertConfiguration> = ArrayList()
-        configurations.add(AlertConfiguration(AlertSlot.LOW_RESERVOIR, true, 0.toShort(), false, AlertTriggerType.RESERVOIR_VOLUME_TRIGGER, 200.toShort(), BeepType.FOUR_TIMES_BIP_BEEP, BeepRepetitionType.XXX))
+        configurations.add(AlertConfiguration(AlertType.LOW_RESERVOIR, true, 0.toShort(), false, AlertTrigger.ReservoirVolumeTrigger(200.toShort()), BeepType.FOUR_TIMES_BIP_BEEP, BeepRepetitionType.XXX))
 
         val encoded = ProgramAlertsCommand.Builder() //
             .setUniqueId(37879811) //
@@ -47,7 +47,7 @@ class ProgramAlertsCommandTest {
 
     @Test @Throws(DecoderException::class) fun testUserExpirationAlert() {
         val configurations: MutableList<AlertConfiguration> = ArrayList()
-        configurations.add(AlertConfiguration(AlertSlot.USER_SET_EXPIRATION, true, 0.toShort(), false, AlertTriggerType.TIME_TRIGGER, 4079.toShort(), BeepType.FOUR_TIMES_BIP_BEEP, BeepRepetitionType.XXX2))
+        configurations.add(AlertConfiguration(AlertType.USER_SET_EXPIRATION, true, 0.toShort(), false, AlertTrigger.TimerTrigger(4079.toShort()), BeepType.FOUR_TIMES_BIP_BEEP, BeepRepetitionType.XXX2))
 
         val encoded = ProgramAlertsCommand.Builder() //
             .setUniqueId(37879811) //
@@ -62,7 +62,7 @@ class ProgramAlertsCommandTest {
 
     @Test @Throws(DecoderException::class) fun testLumpOfCoalAlert() {
         val configurations: MutableList<AlertConfiguration> = ArrayList()
-        configurations.add(AlertConfiguration(AlertSlot.EXPIRATION, true, 55.toShort(), false, AlertTriggerType.TIME_TRIGGER, 5.toShort(), BeepType.FOUR_TIMES_BIP_BEEP, BeepRepetitionType.XXX5))
+        configurations.add(AlertConfiguration(AlertType.EXPIRATION, true, 55.toShort(), false, AlertTrigger.TimerTrigger(5.toShort()), BeepType.FOUR_TIMES_BIP_BEEP, BeepRepetitionType.XXX5))
 
         val encoded = ProgramAlertsCommand.Builder() //
             .setUniqueId(37879811) //

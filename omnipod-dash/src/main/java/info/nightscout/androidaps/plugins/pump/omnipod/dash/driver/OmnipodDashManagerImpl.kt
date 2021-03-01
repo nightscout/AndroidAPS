@@ -8,7 +8,7 @@ import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.command.G
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.command.GetVersionCommand.Companion.DEFAULT_UNIQUE_ID
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.definition.ActivationProgress
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.definition.AlertConfiguration
-import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.definition.AlertSlot
+import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.definition.AlertType
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.definition.BasalProgram
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.response.AlarmStatusResponse
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.response.DefaultStatusResponse
@@ -17,9 +17,11 @@ import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.response.
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.response.VersionResponse
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.state.OmnipodDashPodStateManager
 import info.nightscout.androidaps.utils.rx.AapsSchedulers
+import info.nightscout.androidaps.utils.rx.retryWithBackoff
 import io.reactivex.Observable
 import io.reactivex.functions.Consumer
 import java.util.*
+import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -41,7 +43,7 @@ class OmnipodDashManagerImpl @Inject constructor(
         }
 
     private val observeConnectToPod: Observable<PodEvent>
-        get() = Observable.defer { bleManager.connect() }
+        get() = Observable.defer { bleManager.connect().retryWithBackoff(retries = 2, delay = 3, timeUnit = TimeUnit.SECONDS) } // TODO are these reasonable values?
 
     private val observeSendGetVersionCommand: Observable<PodEvent>
         get() = Observable.defer {
@@ -119,7 +121,7 @@ class OmnipodDashManagerImpl @Inject constructor(
         return Observable.empty()
     }
 
-    override fun silenceAlerts(alerts: EnumSet<AlertSlot>): Observable<PodEvent> {
+    override fun silenceAlerts(alerts: EnumSet<AlertType>): Observable<PodEvent> {
         // TODO
         return Observable.empty()
     }

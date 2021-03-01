@@ -32,7 +32,7 @@ class ProgramTempBasalCommand private constructor(
         private var rateInUnitsPerHour: Double? = null
         private var durationInMinutes: Short? = null
 
-        fun setProgramReminder(programReminder: ProgramReminder?): Builder {
+        fun setProgramReminder(programReminder: ProgramReminder): Builder {
             this.programReminder = programReminder
             return this
         }
