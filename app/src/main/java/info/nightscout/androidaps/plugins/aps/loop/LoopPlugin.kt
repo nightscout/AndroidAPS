@@ -75,6 +75,7 @@ open class LoopPlugin @Inject constructor(
     private val receiverStatusStore: ReceiverStatusStore,
     private val fabricPrivacy: FabricPrivacy,
     private val nsUpload: NSUpload,
+    private val databaseHelper: DatabaseHelperInterface,
     private val hardLimits: HardLimits
 ) : PluginBase(PluginDescription()
     .mainType(PluginType.LOOP)
@@ -663,7 +664,7 @@ open class LoopPlugin @Inject constructor(
         event.source = Source.USER
         event.eventType = CareportalEvent.OPENAPSOFFLINE
         event.json = data.toString()
-        MainApp.getDbHelper().createOrUpdate(event)
+        databaseHelper.createOrUpdate(event)
         nsUpload.uploadOpenAPSOffline(event)
     }
 

@@ -4,6 +4,7 @@ import info.nightscout.androidaps.Constants
 import info.nightscout.androidaps.automation.R
 import info.nightscout.androidaps.database.entities.TemporaryTarget
 import info.nightscout.androidaps.database.transactions.InsertTemporaryTargetAndCancelCurrentTransaction
+import info.nightscout.androidaps.database.transactions.Transaction
 import info.nightscout.androidaps.plugins.general.automation.elements.InputDuration
 import info.nightscout.androidaps.plugins.general.automation.elements.InputTempTarget
 import info.nightscout.androidaps.queue.Callback
@@ -13,6 +14,7 @@ import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.ArgumentMatcher
+import org.mockito.Mockito
 import org.mockito.Mockito.`when`
 import org.powermock.modules.junit4.PowerMockRunner
 
@@ -44,9 +46,8 @@ class ActionStartTempTargetTest : ActionsTestBase() {
     }
 
     @Test fun doActionTest() {
-        //`when`(activePlugin.activeTreatments).thenReturn(treatmentsInterface)
 
-        val expectedTarget = TemporaryTarget(
+      val expectedTarget = TemporaryTarget(
             id = 0,
             version = 0,
             dateCreated = -1,
@@ -85,7 +86,7 @@ class ActionStartTempTargetTest : ActionsTestBase() {
                 Assert.assertTrue(result.success)
             }
         })
-        //Mockito.verify(repository, Mockito.times(1)).runTransactionForResult(anyObject())
+        Mockito.verify(repository, Mockito.times(1)).runTransactionForResult(anyObject<Transaction<InsertTemporaryTargetAndCancelCurrentTransaction.TransactionResult>>())
     }
 
     @Test fun hasDialogTest() {

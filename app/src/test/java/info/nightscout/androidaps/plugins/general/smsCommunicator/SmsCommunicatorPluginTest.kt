@@ -14,6 +14,7 @@ import info.nightscout.androidaps.data.IobTotal
 import info.nightscout.androidaps.data.PumpEnactResult
 import info.nightscout.androidaps.database.AppRepository
 import info.nightscout.androidaps.database.entities.GlucoseValue
+import info.nightscout.androidaps.database.transactions.InsertTemporaryTargetAndCancelCurrentTransaction
 import info.nightscout.androidaps.interfaces.ActivePluginProvider
 import info.nightscout.androidaps.interfaces.CommandQueueProvider
 import info.nightscout.androidaps.interfaces.Constraint
@@ -39,6 +40,7 @@ import info.nightscout.androidaps.utils.FabricPrivacy
 import info.nightscout.androidaps.utils.T
 import info.nightscout.androidaps.utils.XdripCalibrations
 import info.nightscout.androidaps.utils.sharedPreferences.SP
+import io.reactivex.Single
 import org.junit.Assert
 import org.junit.Before
 import org.junit.Test
@@ -115,6 +117,11 @@ class SmsCommunicatorPluginTest : TestBaseWithProfile() {
         val smsManager = PowerMockito.mock(SmsManager::class.java)
         `when`(SmsManager.getDefault()).thenReturn(smsManager)
         `when`(sp.getString(R.string.key_smscommunicator_allowednumbers, "")).thenReturn("1234;5678")
+
+        `when`(
+            repository.runTransactionForResult(anyObject<InsertTemporaryTargetAndCancelCurrentTransaction>())
+        ).thenReturn(Single.just(InsertTemporaryTargetAndCancelCurrentTransaction.TransactionResult().apply {
+        }))
 
         smsCommunicatorPlugin = SmsCommunicatorPlugin(injector, aapsLogger, resourceHelper, aapsSchedulers, sp, constraintChecker, rxBus, profileFunction, fabricPrivacy, activePlugin, commandQueue, loopPlugin, iobCobCalculatorPlugin, xdripCalibrations, otp, Config(), DateUtil(context), uel, nsUpload, repository)
         smsCommunicatorPlugin.setPluginEnabled(PluginType.GENERAL, true)
