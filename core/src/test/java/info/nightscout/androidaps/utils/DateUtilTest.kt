@@ -28,8 +28,8 @@ class DateUtilTest : TestBase() {
 
     @Test
     fun toISOStringTest() {
-        Assert.assertEquals("2017-12-22T00:32:30Z", DateUtil.toISOString(Date(1513902750000L)))
-        Assert.assertEquals("2017-12-22T00:32:30Z", DateUtil.toISOString(1513902750000L))
+        Assert.assertEquals("2017-12-22T00:32:30.000Z", DateUtil.toISOString(Date(1513902750000L)))
+        Assert.assertEquals("2017-12-22T00:32:30.000Z", DateUtil.toISOString(1513902750000L))
     }
 
     @Test fun toDateTest() {

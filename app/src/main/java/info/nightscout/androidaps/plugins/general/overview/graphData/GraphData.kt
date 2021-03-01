@@ -15,6 +15,8 @@ import info.nightscout.androidaps.R
 import info.nightscout.androidaps.data.GlucoseValueDataPoint
 import info.nightscout.androidaps.data.IobTotal
 import info.nightscout.androidaps.data.Profile
+import info.nightscout.androidaps.database.AppRepository
+import info.nightscout.androidaps.database.ValueWrapper
 import info.nightscout.androidaps.database.entities.GlucoseValue
 import info.nightscout.androidaps.interfaces.ActivePluginProvider
 import info.nightscout.androidaps.interfaces.LoopInterface
@@ -26,8 +28,10 @@ import info.nightscout.androidaps.plugins.aps.openAPSSMB.SMBDefaults
 import info.nightscout.androidaps.plugins.general.overview.graphExtensions.*
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.AutosensResult
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.IobCobCalculatorPlugin
+import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.DecimalFormatter
 import info.nightscout.androidaps.utils.Round
+import info.nightscout.androidaps.utils.extensions.target
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 import java.util.*
 import javax.inject.Inject
@@ -40,7 +44,6 @@ class GraphData(
     private val graph: GraphView,
     private val iobCobCalculatorPlugin: IobCobCalculatorPlugin,
     private val treatmentsPlugin: TreatmentsInterface
-
 ) {
 
     // IobCobCalculatorPlugin  Cannot be injected: HistoryBrowser
@@ -48,6 +51,8 @@ class GraphData(
     @Inject lateinit var profileFunction: ProfileFunction
     @Inject lateinit var resourceHelper: ResourceHelper
     @Inject lateinit var activePlugin: ActivePluginProvider
+    @Inject lateinit var repository: AppRepository
+    @Inject lateinit var dateUtil: DateUtil
 
     var maxY = Double.MIN_VALUE
     private var minY = Double.MAX_VALUE
@@ -212,11 +217,11 @@ class GraphData(
         lastRun?.constraintsProcessed?.let { toTime = max(it.latestPredictionsTime, toTime) }
         var time = fromTime
         while (time < toTime) {
-            val tt = treatmentsPlugin.getTempTargetFromHistory(time)
-            val value: Double = if (tt == null) {
-                Profile.fromMgdlToUnits((profile.getTargetLowMgdl(time) + profile.getTargetHighMgdl(time)) / 2, units)
+            val tt = repository.getTemporaryTargetActiveAt(time).blockingGet()
+            val value: Double = if (tt is ValueWrapper.Existing) {
+                Profile.fromMgdlToUnits(tt.value.target(), units)
             } else {
-                Profile.fromMgdlToUnits(tt.target(), units)
+                Profile.fromMgdlToUnits((profile.getTargetLowMgdl(time) + profile.getTargetHighMgdl(time)) / 2, units)
             }
             if (lastTarget != value) {
                 if (lastTarget != -1.0) targetsSeriesArray.add(DataPoint(time.toDouble(), lastTarget))
@@ -344,7 +349,8 @@ class GraphData(
                 time += 5 * 60 * 1000L
                 continue
             }
-            val deviation = if (devBgiScale) iobCobCalculatorPlugin.getAutosensData(time)?.deviation ?:0.0 else 0.0
+            val deviation = if (devBgiScale) iobCobCalculatorPlugin.getAutosensData(time)?.deviation
+                ?: 0.0 else 0.0
 
             total = iobCobCalculatorPlugin.calculateFromTreatmentsAndTempsSynchronized(time, profile)
             val bgi: Double = total.activity * profile.getIsfMgdl(time) * 5.0
@@ -405,7 +411,7 @@ class GraphData(
         if (showPrediction) {
             val autosensData = iobCobCalculatorPlugin.getLastAutosensDataSynchronized("GraphData")
             val lastAutosensResult = autosensData?.autosensResult ?: AutosensResult()
-            val isTempTarget = treatmentsPlugin.getTempTargetFromHistory(System.currentTimeMillis()) != null
+            val isTempTarget = repository.getTemporaryTargetActiveAt(dateUtil._now()).blockingGet() is ValueWrapper.Existing
             val iobPrediction: MutableList<DataPointWithLabelInterface> = ArrayList()
             val iobPredictionArray = iobCobCalculatorPlugin.calculateIobArrayForSMB(lastAutosensResult, SMBDefaults.exercise_mode, SMBDefaults.half_basal_exercise_target, isTempTarget)
             for (i in iobPredictionArray) {
@@ -519,10 +525,10 @@ class GraphData(
         while (time <= toTime) {
             // if align Dev Scale with BGI scale, then calculate BGI value, else bgi = 0.0
             val bgi: Double = if (devBgiScale) {
-                    val profile = profileFunction.getProfile(time)
-                    total = iobCobCalculatorPlugin.calculateFromTreatmentsAndTempsSynchronized(time, profile)
-                    total.activity * (profile?.getIsfMgdl(time) ?: 0.0) * 5.0
-                } else 0.0
+                val profile = profileFunction.getProfile(time)
+                total = iobCobCalculatorPlugin.calculateFromTreatmentsAndTempsSynchronized(time, profile)
+                total.activity * (profile?.getIsfMgdl(time) ?: 0.0) * 5.0
+            } else 0.0
 
             iobCobCalculatorPlugin.getAutosensData(time)?.let { autosensData ->
                 var color = resourceHelper.gc(R.color.deviationblack) // "="

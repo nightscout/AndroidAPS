@@ -5,6 +5,7 @@ import android.text.Spanned
 import android.util.LongSparseArray
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.R
+import info.nightscout.androidaps.database.AppRepository
 import info.nightscout.androidaps.db.TDD
 import info.nightscout.androidaps.interfaces.ActivePluginProvider
 import info.nightscout.androidaps.interfaces.ProfileFunction
@@ -31,15 +32,16 @@ class TddCalculator @Inject constructor(
     rxBus: RxBusWrapper,
     resourceHelper: ResourceHelper,
     context: Context,
-    private val aapsSchedulers: AapsSchedulers,
-    private val sp: SP,
+    aapsSchedulers: AapsSchedulers,
+    sp: SP,
     private val activePlugin: ActivePluginProvider,
     private val profileFunction: ProfileFunction,
     fabricPrivacy: FabricPrivacy,
     nsUpload: NSUpload,
     private val dateUtil: DateUtil,
-    uploadQueue: UploadQueue
-) : TreatmentsPlugin(injector, aapsLogger, rxBus, aapsSchedulers, resourceHelper, context, sp, profileFunction, activePlugin, nsUpload, fabricPrivacy, dateUtil, uploadQueue) {
+    uploadQueue: UploadQueue,
+    repository: AppRepository
+) : TreatmentsPlugin(injector, aapsLogger, rxBus, aapsSchedulers, resourceHelper, context, sp, profileFunction, activePlugin, nsUpload, fabricPrivacy, dateUtil, uploadQueue, repository) {
 
     init {
         service = TreatmentService(injector) // plugin is not started
@@ -113,6 +115,7 @@ class TddCalculator @Inject constructor(
         )
     }
 
+    @Suppress("SameParameterValue")
     private fun toText(tdds: LongSparseArray<TDD>, includeCarbs: Boolean): String {
         var t = ""
         for (i in 0 until tdds.size()) {

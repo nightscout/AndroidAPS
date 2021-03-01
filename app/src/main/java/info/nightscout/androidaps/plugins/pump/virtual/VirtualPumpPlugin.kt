@@ -290,7 +290,7 @@ class VirtualPumpPlugin @Inject constructor(
 
     override fun cancelExtendedBolus(): PumpEnactResult {
         val result = PumpEnactResult(injector)
-        if (treatmentsPlugin.isInHistoryExtendedBoluslInProgress) {
+        if (treatmentsPlugin.isInHistoryExtendedBolusInProgress) {
             val exStop = ExtendedBolus(injector, System.currentTimeMillis())
             exStop.source = Source.USER
             treatmentsPlugin.addToHistoryExtendedBolus(exStop)

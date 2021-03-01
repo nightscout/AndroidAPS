@@ -10,10 +10,10 @@ import android.os.HandlerThread;
 import android.os.IBinder;
 import android.text.Spanned;
 
+import androidx.annotation.NonNull;
 import androidx.preference.PreferenceFragmentCompat;
 import androidx.preference.SwitchPreference;
 
-import androidx.annotation.NonNull;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -29,6 +29,9 @@ import info.nightscout.androidaps.Config;
 import info.nightscout.androidaps.Constants;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
+import info.nightscout.androidaps.database.AppRepository;
+import info.nightscout.androidaps.database.entities.TemporaryTarget;
+import info.nightscout.androidaps.database.transactions.SyncTemporaryTargetTransaction;
 import info.nightscout.androidaps.db.CareportalEvent;
 import info.nightscout.androidaps.events.EventAppExit;
 import info.nightscout.androidaps.events.EventChargingState;
@@ -41,6 +44,7 @@ import info.nightscout.androidaps.interfaces.PluginDescription;
 import info.nightscout.androidaps.interfaces.PluginType;
 import info.nightscout.androidaps.logging.AAPSLogger;
 import info.nightscout.androidaps.logging.LTag;
+import info.nightscout.androidaps.logging.UserEntryLogger;
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper;
 import info.nightscout.androidaps.plugins.general.nsclient.data.AlarmAck;
 import info.nightscout.androidaps.plugins.general.nsclient.data.NSAlarm;
@@ -63,6 +67,9 @@ import info.nightscout.androidaps.utils.rx.AapsSchedulers;
 import info.nightscout.androidaps.utils.sharedPreferences.SP;
 import io.reactivex.disposables.CompositeDisposable;
 
+import static info.nightscout.androidaps.utils.extensions.TemporaryTargetExtensionKt.temporaryTargetFromJson;
+import static info.nightscout.androidaps.utils.extensions.TemporaryTargetExtensionKt.temporaryTargetFromNsIdForInvalidating;
+
 @Singleton
 public class NSClientPlugin extends PluginBase {
     private final CompositeDisposable disposable = new CompositeDisposable();
@@ -78,6 +85,8 @@ public class NSClientPlugin extends PluginBase {
     private final BuildHelper buildHelper;
     private final ActivePluginProvider activePlugin;
     private final NSUpload nsUpload;
+    private final AppRepository repository;
+    private final UserEntryLogger uel;
 
     public Handler handler;
 
@@ -107,7 +116,9 @@ public class NSClientPlugin extends PluginBase {
             Config config,
             BuildHelper buildHelper,
             ActivePluginProvider activePlugin,
-            NSUpload nsUpload
+            NSUpload nsUpload,
+            AppRepository repository,
+            UserEntryLogger uel
     ) {
         super(new PluginDescription()
                         .mainType(PluginType.GENERAL)
@@ -132,6 +143,8 @@ public class NSClientPlugin extends PluginBase {
         this.buildHelper = buildHelper;
         this.activePlugin = activePlugin;
         this.nsUpload = nsUpload;
+        this.repository = repository;
+        this.uel = uel;
 
         if (config.getNSCLIENT()) {
             getPluginDescription().alwaysEnabled(true).visibleByDefault(true);
@@ -170,12 +183,12 @@ public class NSClientPlugin extends PluginBase {
         disposable.add(rxBus
                 .toObservable(EventNetworkChange.class)
                 .observeOn(aapsSchedulers.getIo())
-                .subscribe(event -> nsClientReceiverDelegate.onStatusEvent(event), fabricPrivacy::logException)
+                .subscribe(nsClientReceiverDelegate::onStatusEvent, fabricPrivacy::logException)
         );
         disposable.add(rxBus
                 .toObservable(EventPreferenceChange.class)
                 .observeOn(aapsSchedulers.getIo())
-                .subscribe(event -> nsClientReceiverDelegate.onStatusEvent(event), fabricPrivacy::logException)
+                .subscribe(nsClientReceiverDelegate::onStatusEvent, fabricPrivacy::logException)
         );
         disposable.add(rxBus
                 .toObservable(EventAppExit.class)
@@ -197,7 +210,7 @@ public class NSClientPlugin extends PluginBase {
         disposable.add(rxBus
                 .toObservable(EventChargingState.class)
                 .observeOn(aapsSchedulers.getIo())
-                .subscribe(event -> nsClientReceiverDelegate.onStatusEvent(event), fabricPrivacy::logException)
+                .subscribe(nsClientReceiverDelegate::onStatusEvent, fabricPrivacy::logException)
         );
         disposable.add(rxBus
                 .toObservable(EventNSClientResend.class)
@@ -402,12 +415,17 @@ public class NSClientPlugin extends PluginBase {
     }
 
     private void handleRemovedTreatmentFromNS(JSONObject json) {
+        String _id = JsonHelper.safeGetString(json, "_id");
+        if (_id == null) return;
+        // room  Temporary target
+        TemporaryTarget temporaryTarget = temporaryTargetFromNsIdForInvalidating(_id);
+        disposable.add(repository.runTransactionForResult(new SyncTemporaryTargetTransaction(temporaryTarget)).subscribe(
+                result -> result.getInvalidated().forEach(record -> uel.log("TT DELETED FROM NS", record.getReason().getText(), record.getLowTarget(), record.getHighTarget(), (int) record.getDuration(), 0)),
+                error -> aapsLogger.error(LTag.BGSOURCE, "Error while saving temporary target", error)));
         // new DB model
         EventNsTreatment evtTreatment = new EventNsTreatment(EventNsTreatment.Companion.getREMOVE(), json);
         rxBus.send(evtTreatment);
         // old DB model
-        String _id = JsonHelper.safeGetString(json, "_id");
-        MainApp.getDbHelper().deleteTempTargetById(_id);
         MainApp.getDbHelper().deleteTempBasalById(_id);
         MainApp.getDbHelper().deleteExtendedBolusById(_id);
         MainApp.getDbHelper().deleteCareportalEventById(_id);
@@ -428,7 +446,18 @@ public class NSClientPlugin extends PluginBase {
             EventNsTreatment evtTreatment = new EventNsTreatment(mode, json);
             rxBus.send(evtTreatment);
         } else if (eventType.equals(CareportalEvent.TEMPORARYTARGET)) {
-            MainApp.getDbHelper().createTemptargetFromJsonIfNotExists(json);
+            TemporaryTarget temporaryTarget = temporaryTargetFromJson(json);
+            if (temporaryTarget != null) {
+                disposable.add(repository.runTransactionForResult(new SyncTemporaryTargetTransaction(temporaryTarget)).subscribe(
+                        result -> {
+                            result.getInserted().forEach(record -> uel.log("TT FROM NS", record.getReason().getText(), record.getLowTarget(), record.getHighTarget(), (int) record.getDuration(), 0));
+                            result.getInvalidated().forEach(record -> uel.log("TT DELETED FROM NS", record.getReason().getText(), record.getLowTarget(), record.getHighTarget(), (int) record.getDuration(), 0));
+                            result.getEnded().forEach(record -> uel.log("TT CANCELED FROM NS", record.getReason().getText(), record.getLowTarget(), record.getHighTarget(), (int) record.getDuration(), 0));
+                        },
+                        error -> aapsLogger.error(LTag.BGSOURCE, "Error while saving temporary target", error)));
+            } else {
+                aapsLogger.error("Error parsing TT json " + json.toString());
+            }
         } else if (eventType.equals(CareportalEvent.TEMPBASAL)) {
             MainApp.getDbHelper().createTempBasalFromJsonIfNotExists(json);
         } else if (eventType.equals(CareportalEvent.COMBOBOLUS)) {

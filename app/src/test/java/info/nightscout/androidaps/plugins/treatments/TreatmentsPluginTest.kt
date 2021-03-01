@@ -5,6 +5,7 @@ import dagger.android.AndroidInjector
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.MainApp
 import info.nightscout.androidaps.TestBaseWithProfile
+import info.nightscout.androidaps.database.AppRepository
 import info.nightscout.androidaps.db.DatabaseHelper
 import info.nightscout.androidaps.db.TemporaryBasal
 import info.nightscout.androidaps.plugins.general.nsclient.NSUpload
@@ -21,13 +22,12 @@ import org.junit.runner.RunWith
 import org.mockito.ArgumentMatchers
 import org.mockito.Mock
 import org.mockito.Mockito.`when`
-import org.powermock.api.mockito.PowerMockito
 import org.powermock.core.classloader.annotations.PrepareForTest
 import org.powermock.modules.junit4.PowerMockRunner
 
 @Suppress("SpellCheckingInspection")
 @RunWith(PowerMockRunner::class)
-@PrepareForTest(FabricPrivacy::class, MainApp::class, DatabaseHelper::class)
+@PrepareForTest(FabricPrivacy::class, MainApp::class, DatabaseHelper::class, AppRepository::class)
 class TreatmentsPluginTest : TestBaseWithProfile() {
 
     @Mock lateinit var context: Context
@@ -36,6 +36,7 @@ class TreatmentsPluginTest : TestBaseWithProfile() {
     @Mock lateinit var treatmentService: TreatmentService
     @Mock lateinit var nsUpload: NSUpload
     @Mock lateinit var uploadQueue: UploadQueue
+    @Mock lateinit var repository: AppRepository
 
     val injector = HasAndroidInjector {
         AndroidInjector {
@@ -53,7 +54,6 @@ class TreatmentsPluginTest : TestBaseWithProfile() {
 
     @Before
     fun prepare() {
-        PowerMockito.mockStatic(MainApp::class.java)
         `when`(MainApp.getDbHelper()).thenReturn(databaseHelper)
 
         insulinOrefRapidActingPlugin = InsulinOrefRapidActingPlugin(profileInjector, resourceHelper, profileFunction, rxBus, aapsLogger)
@@ -61,7 +61,7 @@ class TreatmentsPluginTest : TestBaseWithProfile() {
         `when`(profileFunction.getProfile(ArgumentMatchers.anyLong())).thenReturn(validProfile)
         `when`(activePluginProvider.activeInsulin).thenReturn(insulinOrefRapidActingPlugin)
 
-        sot = TreatmentsPlugin(profileInjector, aapsLogger, rxBus, aapsSchedulers, resourceHelper, context, sp, profileFunction, activePluginProvider, nsUpload, fabricPrivacy, dateUtil, uploadQueue)
+        sot = TreatmentsPlugin(profileInjector, aapsLogger, rxBus, aapsSchedulers, resourceHelper, context, sp, profileFunction, activePluginProvider, nsUpload, fabricPrivacy, dateUtil, uploadQueue, repository)
         sot.service = treatmentService
     }
 

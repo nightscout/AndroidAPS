@@ -10,20 +10,26 @@ import com.google.common.collect.Lists
 import info.nightscout.androidaps.Constants
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.data.Profile
+import info.nightscout.androidaps.database.AppRepository
+import info.nightscout.androidaps.database.ValueWrapper
+import info.nightscout.androidaps.database.entities.TemporaryTarget
+import info.nightscout.androidaps.database.transactions.CancelCurrentTemporaryTargetIfAnyTransaction
+import info.nightscout.androidaps.database.transactions.InsertTemporaryTargetAndCancelCurrentTransaction
 import info.nightscout.androidaps.databinding.DialogTemptargetBinding
-import info.nightscout.androidaps.db.Source
-import info.nightscout.androidaps.db.TempTarget
-import info.nightscout.androidaps.interfaces.ActivePluginProvider
 import info.nightscout.androidaps.interfaces.ProfileFunction
+import info.nightscout.androidaps.logging.LTag
 import info.nightscout.androidaps.logging.UserEntryLogger
 import info.nightscout.androidaps.plugins.configBuilder.ConstraintChecker
-import info.nightscout.androidaps.plugins.treatments.TreatmentsPlugin
+import info.nightscout.androidaps.plugins.general.nsclient.NSUpload
 import info.nightscout.androidaps.utils.DefaultValueHelper
 import info.nightscout.androidaps.utils.HtmlHelper
 import info.nightscout.androidaps.utils.alertDialogs.OKDialog
 import info.nightscout.androidaps.utils.resources.ResourceHelper
+import io.reactivex.disposables.CompositeDisposable
+import io.reactivex.rxkotlin.plusAssign
 import java.text.DecimalFormat
 import java.util.*
+import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
 class TempTargetDialog : DialogFragmentWithDate() {
@@ -32,11 +38,13 @@ class TempTargetDialog : DialogFragmentWithDate() {
     @Inject lateinit var resourceHelper: ResourceHelper
     @Inject lateinit var profileFunction: ProfileFunction
     @Inject lateinit var defaultValueHelper: DefaultValueHelper
-    @Inject lateinit var treatmentsPlugin: TreatmentsPlugin
-    @Inject lateinit var activePlugin: ActivePluginProvider
     @Inject lateinit var uel: UserEntryLogger
+    @Inject lateinit var repository: AppRepository
+    @Inject lateinit var nsUpload: NSUpload
 
     private lateinit var reasonList: List<String>
+
+    private val disposable = CompositeDisposable()
 
     private var _binding: DialogTemptargetBinding? = null
 
@@ -47,7 +55,7 @@ class TempTargetDialog : DialogFragmentWithDate() {
     override fun onSaveInstanceState(savedInstanceState: Bundle) {
         super.onSaveInstanceState(savedInstanceState)
         savedInstanceState.putDouble("duration", binding.duration.value)
-        savedInstanceState.putDouble("temptarget", binding.temptarget.value)
+        savedInstanceState.putDouble("tempTarget", binding.temptarget.value)
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
@@ -65,12 +73,12 @@ class TempTargetDialog : DialogFragmentWithDate() {
 
         if (profileFunction.getUnits() == Constants.MMOL)
             binding.temptarget.setParams(
-                savedInstanceState?.getDouble("temptarget")
+                savedInstanceState?.getDouble("tempTarget")
                     ?: 8.0,
                 Constants.MIN_TT_MMOL, Constants.MAX_TT_MMOL, 0.1, DecimalFormat("0.0"), false, binding.okcancel.ok)
         else
             binding.temptarget.setParams(
-                savedInstanceState?.getDouble("temptarget")
+                savedInstanceState?.getDouble("tempTarget")
                     ?: 144.0,
                 Constants.MIN_TT_MGDL, Constants.MAX_TT_MGDL, 1.0, DecimalFormat("0"), false, binding.okcancel.ok)
 
@@ -79,7 +87,7 @@ class TempTargetDialog : DialogFragmentWithDate() {
 
         // temp target
         context?.let { context ->
-            if (activePlugin.activeTreatments.tempTargetFromHistory != null)
+            if (repository.getTemporaryTargetActiveAt(dateUtil._now()).blockingGet() is ValueWrapper.Existing)
                 binding.targetCancel.visibility = View.VISIBLE
             else
                 binding.targetCancel.visibility = View.GONE
@@ -142,6 +150,7 @@ class TempTargetDialog : DialogFragmentWithDate() {
 
     override fun onDestroyView() {
         super.onDestroyView()
+        disposable.clear()
         _binding = null
     }
 
@@ -166,21 +175,30 @@ class TempTargetDialog : DialogFragmentWithDate() {
             OKDialog.showConfirmation(activity, resourceHelper.gs(R.string.careportal_temporarytarget), HtmlHelper.fromHtml(Joiner.on("<br/>").join(actions)), {
                 uel.log("TT", d1 = target, i1 = duration)
                 if (target == 0.0 || duration == 0) {
-                    val tempTarget = TempTarget()
-                        .date(eventTime)
-                        .duration(0)
-                        .low(0.0).high(0.0)
-                        .source(Source.USER)
-                    treatmentsPlugin.addToHistoryTempTarget(tempTarget)
+                    disposable += repository.runTransactionForResult(CancelCurrentTemporaryTargetIfAnyTransaction(eventTime))
+                        .subscribe({ result ->
+                            result.updated.forEach { nsUpload.updateTempTarget(it) }
+                        }, {
+                            aapsLogger.error(LTag.BGSOURCE, "Error while saving temporary target", it)
+                        })
                 } else {
-                    val tempTarget = TempTarget()
-                        .date(eventTime)
-                        .duration(duration)
-                        .reason(reason)
-                        .source(Source.USER)
-                        .low(Profile.toMgdl(target, profileFunction.getUnits()))
-                        .high(Profile.toMgdl(target, profileFunction.getUnits()))
-                    treatmentsPlugin.addToHistoryTempTarget(tempTarget)
+                    disposable += repository.runTransactionForResult(InsertTemporaryTargetAndCancelCurrentTransaction(
+                        timestamp = eventTime,
+                        duration = TimeUnit.MINUTES.toMillis(duration.toLong()),
+                        reason = when (reason) {
+                            "Eating Soon" -> TemporaryTarget.Reason.EATING_SOON
+                            "Activity"    -> TemporaryTarget.Reason.ACTIVITY
+                            "Hypo"        -> TemporaryTarget.Reason.HYPOGLYCEMIA
+                            else          -> TemporaryTarget.Reason.CUSTOM
+                        },
+                        lowTarget = Profile.toMgdl(target, profileFunction.getUnits()),
+                        highTarget = Profile.toMgdl(target, profileFunction.getUnits())
+                    )).subscribe({ result ->
+                        result.inserted.forEach { nsUpload.uploadTempTarget(it) }
+                        result.updated.forEach { nsUpload.updateTempTarget(it) }
+                    }, {
+                        aapsLogger.error(LTag.BGSOURCE, "Error while saving temporary target", it)
+                    })
                 }
                 if (duration == 10) sp.putBoolean(R.string.key_objectiveusetemptarget, true)
             })

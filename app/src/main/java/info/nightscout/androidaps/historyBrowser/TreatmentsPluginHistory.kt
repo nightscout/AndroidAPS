@@ -2,6 +2,7 @@ package info.nightscout.androidaps.historyBrowser
 
 import android.content.Context
 import dagger.android.HasAndroidInjector
+import info.nightscout.androidaps.database.AppRepository
 import info.nightscout.androidaps.interfaces.ActivePluginProvider
 import info.nightscout.androidaps.interfaces.ProfileFunction
 import info.nightscout.androidaps.logging.AAPSLogger
@@ -32,8 +33,9 @@ class TreatmentsPluginHistory @Inject constructor(
     nsUpload: NSUpload,
     fabricPrivacy: FabricPrivacy,
     dateUtil: DateUtil,
-    uploadQueue: UploadQueue
-) : TreatmentsPlugin(injector, aapsLogger, rxBus, aapsSchedulers, resourceHelper, context, sp, profileFunction, activePlugin, nsUpload, fabricPrivacy, dateUtil, uploadQueue) {
+    uploadQueue: UploadQueue,
+    repository: AppRepository
+) : TreatmentsPlugin(injector, aapsLogger, rxBus, aapsSchedulers, resourceHelper, context, sp, profileFunction, activePlugin, nsUpload, fabricPrivacy, dateUtil, uploadQueue, repository) {
 
     init {
         onStart()

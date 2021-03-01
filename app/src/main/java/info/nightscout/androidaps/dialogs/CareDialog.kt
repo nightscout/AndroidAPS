@@ -112,7 +112,7 @@ class CareDialog : DialogFragmentWithDate() {
         when (options) {
             EventType.QUESTION,
             EventType.ANNOUNCEMENT,
-            EventType.BGCHECK -> {
+            EventType.BGCHECK        -> {
                 binding.durationLayout.visibility = View.GONE
             }
 
@@ -124,7 +124,7 @@ class CareDialog : DialogFragmentWithDate() {
             }
 
             EventType.NOTE,
-            EventType.EXERCISE -> {
+            EventType.EXERCISE       -> {
                 binding.bgLayout.visibility = View.GONE
                 binding.bgsource.visibility = View.GONE
             }
@@ -224,7 +224,7 @@ class CareDialog : DialogFragmentWithDate() {
                 careportalEvent.json = json.toString()
                 uel.log("CAREPORTAL", careportalEvent.eventType)
                 MainApp.getDbHelper().createOrUpdate(careportalEvent)
-                nsUpload.uploadCareportalEntryToNS(json)
+                nsUpload.uploadCareportalEntryToNS(json, eventTime)
             }, null)
         }
         return true
