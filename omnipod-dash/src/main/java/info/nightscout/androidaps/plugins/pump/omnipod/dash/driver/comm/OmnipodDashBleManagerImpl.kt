@@ -29,12 +29,26 @@ import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-class OmnipodDashBleManagerImpl @Inject constructor(private val context: Context, private val aapsLogger: AAPSLogger) : OmnipodDashBleManager {
+class OmnipodDashBleManagerImpl @Inject constructor(
+    private val context: Context,
+    private val aapsLogger: AAPSLogger
+) : OmnipodDashBleManager {
 
-    private val bluetoothManager: BluetoothManager = context.getSystemService(Context.BLUETOOTH_SERVICE) as BluetoothManager
+    private val bluetoothManager: BluetoothManager =
+        context.getSystemService(Context.BLUETOOTH_SERVICE) as BluetoothManager
     private val bluetoothAdapter: BluetoothAdapter = bluetoothManager.adapter
 
-    @Throws(FailedToConnectException::class, CouldNotSendBleException::class, InterruptedException::class, BleIOBusyException::class, TimeoutException::class, CouldNotConfirmWriteException::class, CouldNotEnableNotifications::class, DescriptorNotFoundException::class, CouldNotConfirmDescriptorWriteException::class)
+    @Throws(
+        FailedToConnectException::class,
+        CouldNotSendBleException::class,
+        InterruptedException::class,
+        BleIOBusyException::class,
+        TimeoutException::class,
+        CouldNotConfirmWriteException::class,
+        CouldNotEnableNotifications::class,
+        DescriptorNotFoundException::class,
+        CouldNotConfirmDescriptorWriteException::class
+    )
     private fun connect(podAddress: String): BleIO {
         // TODO: locking?
         val podDevice = bluetoothAdapter.getRemoteDevice(podAddress)
@@ -76,7 +90,18 @@ class OmnipodDashBleManagerImpl @Inject constructor(private val context: Context
         TODO("not implemented")
     }
 
-    @Throws(InterruptedException::class, ScanFailException::class, FailedToConnectException::class, CouldNotSendBleException::class, BleIOBusyException::class, TimeoutException::class, CouldNotConfirmWriteException::class, CouldNotEnableNotifications::class, DescriptorNotFoundException::class, CouldNotConfirmDescriptorWriteException::class)
+    @Throws(
+        InterruptedException::class,
+        ScanFailException::class,
+        FailedToConnectException::class,
+        CouldNotSendBleException::class,
+        BleIOBusyException::class,
+        TimeoutException::class,
+        CouldNotConfirmWriteException::class,
+        CouldNotEnableNotifications::class,
+        DescriptorNotFoundException::class,
+        CouldNotConfirmDescriptorWriteException::class
+    )
     override fun connect(): Observable<PodEvent> = Observable.create { emitter ->
         // TODO: when we are already connected,
         //  emit PodEvent.AlreadyConnected, complete the observable and return from this method
@@ -88,7 +113,10 @@ class OmnipodDashBleManagerImpl @Inject constructor(private val context: Context
             val podScanner = PodScanner(aapsLogger, bluetoothAdapter)
             emitter.onNext(PodEvent.Scanning)
 
-            val podAddress = podScanner.scanForPod(PodScanner.SCAN_FOR_SERVICE_UUID, PodScanner.POD_ID_NOT_ACTIVATED).scanResult.device.address
+            val podAddress = podScanner.scanForPod(
+                PodScanner.SCAN_FOR_SERVICE_UUID,
+                PodScanner.POD_ID_NOT_ACTIVATED
+            ).scanResult.device.address
             // For tests: this.podAddress = "B8:27:EB:1D:7E:BB";
             emitter.onNext(PodEvent.BluetoothConnecting)
 

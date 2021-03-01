@@ -25,9 +25,42 @@ class SetUniqueIdResponse(
     val bleVersionInterim: Short = (encoded[14].toInt() and 0xff).toShort()
     val productId: Short = (encoded[15].toInt() and 0xff).toShort()
     val podStatus: PodStatus = byValue(encoded[16], PodStatus.UNKNOWN)
-    val lotNumber: Long = ByteBuffer.wrap(byteArrayOf(0, 0, 0, 0, encoded[17], encoded[18], encoded[19], encoded[20])).long
-    val podSequenceNumber: Long = ByteBuffer.wrap(byteArrayOf(0, 0, 0, 0, encoded[21], encoded[22], encoded[23], encoded[24])).long
-    val uniqueIdReceivedInCommand: Long = ByteBuffer.wrap(byteArrayOf(0, 0, 0, 0, encoded[25], encoded[26], encoded[27], encoded[28])).long
+    val lotNumber: Long = ByteBuffer.wrap(
+        byteArrayOf(
+            0,
+            0,
+            0,
+            0,
+            encoded[17],
+            encoded[18],
+            encoded[19],
+            encoded[20]
+        )
+    ).long
+    val podSequenceNumber: Long = ByteBuffer.wrap(
+        byteArrayOf(
+            0,
+            0,
+            0,
+            0,
+            encoded[21],
+            encoded[22],
+            encoded[23],
+            encoded[24]
+        )
+    ).long
+    val uniqueIdReceivedInCommand: Long = ByteBuffer.wrap(
+        byteArrayOf(
+            0,
+            0,
+            0,
+            0,
+            encoded[25],
+            encoded[26],
+            encoded[27],
+            encoded[28]
+        )
+    ).long
 
     override fun toString(): String {
         return "SetUniqueIdResponse{" +

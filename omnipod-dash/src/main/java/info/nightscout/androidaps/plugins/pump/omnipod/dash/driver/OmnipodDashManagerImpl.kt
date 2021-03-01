@@ -38,7 +38,9 @@ class OmnipodDashManagerImpl @Inject constructor(
 
     private val observePodReadyForActivationPart2: Observable<PodEvent>
         get() = Observable.defer {
-            if (podStateManager.activationProgress.isAtLeast(ActivationProgress.PHASE_1_COMPLETED) && podStateManager.activationProgress.isBefore(ActivationProgress.COMPLETED)) {
+            if (podStateManager.activationProgress.isAtLeast(ActivationProgress.PHASE_1_COMPLETED) && podStateManager.activationProgress.isBefore(
+                    ActivationProgress.COMPLETED
+                )) {
                 Observable.empty()
             } else {
                 Observable.error(IllegalStateException("Pod is in an incorrect state"))
@@ -46,9 +48,16 @@ class OmnipodDashManagerImpl @Inject constructor(
         }
 
     private val observeConnectToPod: Observable<PodEvent>
-        get() = Observable.defer { bleManager.connect().retryWithBackoff(retries = 2, delay = 3, timeUnit = TimeUnit.SECONDS) } // TODO are these reasonable values?
+        get() = Observable.defer {
+            bleManager.connect().retryWithBackoff(retries = 2, delay = 3, timeUnit = TimeUnit.SECONDS)
+        } // TODO are these reasonable values?
 
-    private fun observeSendProgramBolusCommand(units: Double, rateInEighthPulsesPerSeconds: Byte, confirmationBeeps: Boolean, completionBeeps: Boolean): Observable<PodEvent> {
+    private fun observeSendProgramBolusCommand(
+        units: Double,
+        rateInEighthPulsesPerSeconds: Byte,
+        confirmationBeeps: Boolean,
+        completionBeeps: Boolean
+    ): Observable<PodEvent> {
         return Observable.defer {
             bleManager.sendCommand(
                 ProgramBolusCommand.Builder()
@@ -90,7 +99,10 @@ class OmnipodDashManagerImpl @Inject constructor(
                 )
         }
 
-    private fun observeSendProgramAlertsCommand(alertConfigurations: List<AlertConfiguration>, multiCommandFlag: Boolean = false): Observable<PodEvent> {
+    private fun observeSendProgramAlertsCommand(
+        alertConfigurations: List<AlertConfiguration>,
+        multiCommandFlag: Boolean = false
+    ): Observable<PodEvent> {
         return Observable.defer {
             bleManager.sendCommand(
                 ProgramAlertsCommand.Builder()
@@ -295,7 +307,9 @@ class OmnipodDashManagerImpl @Inject constructor(
                             enabled = true,
                             durationInMinutes = TimeUnit.HOURS.toMinutes(7).toShort(),
                             autoOff = false,
-                            AlertTrigger.TimerTrigger(TimeUnit.HOURS.toMinutes(73).toShort()), // FIXME use activation time
+                            AlertTrigger.TimerTrigger(
+                                TimeUnit.HOURS.toMinutes(73).toShort()
+                            ), // FIXME use activation time
                             BeepType.FOUR_TIMES_BIP_BEEP,
                             BeepRepetitionType.XXX3
                         ),
@@ -304,7 +318,9 @@ class OmnipodDashManagerImpl @Inject constructor(
                             enabled = true,
                             durationInMinutes = TimeUnit.HOURS.toMinutes(1).toShort(),
                             autoOff = false,
-                            AlertTrigger.TimerTrigger(TimeUnit.HOURS.toMinutes(79).toShort()), // FIXME use activation time
+                            AlertTrigger.TimerTrigger(
+                                TimeUnit.HOURS.toMinutes(79).toShort()
+                            ), // FIXME use activation time
                             BeepType.FOUR_TIMES_BIP_BEEP,
                             BeepRepetitionType.XXX4
                         )
@@ -410,7 +426,7 @@ class OmnipodDashManagerImpl @Inject constructor(
                     handleResponse(event.response)
                 }
 
-                else -> {
+                else                           -> {
                     // Do nothing
                 }
             }

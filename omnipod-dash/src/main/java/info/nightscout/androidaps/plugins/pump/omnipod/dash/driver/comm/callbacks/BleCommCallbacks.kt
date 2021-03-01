@@ -18,7 +18,10 @@ import java.util.concurrent.LinkedBlockingQueue
 import java.util.concurrent.TimeUnit
 import java.util.concurrent.TimeoutException
 
-class BleCommCallbacks(private val aapsLogger: AAPSLogger, private val incomingPackets: Map<CharacteristicType, BlockingQueue<ByteArray>>) : BluetoothGattCallback() {
+class BleCommCallbacks(
+    private val aapsLogger: AAPSLogger,
+    private val incomingPackets: Map<CharacteristicType, BlockingQueue<ByteArray>>
+) : BluetoothGattCallback() {
 
     private val serviceDiscoveryComplete: CountDownLatch = CountDownLatch(1)
     private val connected: CountDownLatch = CountDownLatch(1)
@@ -64,7 +67,10 @@ class BleCommCallbacks(private val aapsLogger: AAPSLogger, private val incomingP
 
     private fun confirmWritePayload(expectedPayload: ByteArray, received: CharacteristicWriteConfirmationPayload) {
         if (!expectedPayload.contentEquals(received.payload)) {
-            aapsLogger.warn(LTag.PUMPBTCOMM, "Could not confirm write. Got " + received.payload.toHex() + ".Excepted: " + expectedPayload.toHex())
+            aapsLogger.warn(
+                LTag.PUMPBTCOMM,
+                "Could not confirm write. Got " + received.payload.toHex() + ".Excepted: " + expectedPayload.toHex()
+            )
             throw CouldNotConfirmWriteException(expectedPayload, received.payload)
         }
         aapsLogger.debug(LTag.PUMPBTCOMM, "Confirmed write with value: " + received.payload.toHex())
@@ -111,13 +117,19 @@ class BleCommCallbacks(private val aapsLogger: AAPSLogger, private val incomingP
 
     @Throws(InterruptedException::class, CouldNotConfirmDescriptorWriteException::class)
     fun confirmWriteDescriptor(descriptorUUID: String, timeout_ms: Int) {
-        val confirmed: DescriptorWriteConfirmation = descriptorWriteQueue.poll(timeout_ms.toLong(), TimeUnit.MILLISECONDS)
+        val confirmed: DescriptorWriteConfirmation = descriptorWriteQueue.poll(
+            timeout_ms.toLong(),
+            TimeUnit.MILLISECONDS
+        )
             ?: throw TimeoutException()
         when (confirmed) {
             is DescriptorWriteConfirmationError -> throw CouldNotConfirmWriteException(confirmed.status)
             is DescriptorWriteConfirmationUUID ->
                 if (confirmed.uuid != descriptorUUID) {
-                    aapsLogger.warn(LTag.PUMPBTCOMM, "Could not confirm descriptor write. Got ${confirmed.uuid}. Expected: $descriptorUUID")
+                    aapsLogger.warn(
+                        LTag.PUMPBTCOMM,
+                        "Could not confirm descriptor write. Got ${confirmed.uuid}. Expected: $descriptorUUID"
+                    )
                     throw CouldNotConfirmDescriptorWriteException(descriptorUUID, confirmed.uuid)
                 } else {
                     aapsLogger.debug(LTag.PUMPBTCOMM, "Confirmed descriptor write : " + confirmed.uuid)
@@ -135,10 +147,17 @@ class BleCommCallbacks(private val aapsLogger: AAPSLogger, private val incomingP
         }
         try {
             if (descriptorWriteQueue.size > 0) {
-                aapsLogger.warn(LTag.PUMPBTCOMM, "Descriptor write queue should be empty, found: ${descriptorWriteQueue.size}")
+                aapsLogger.warn(
+                    LTag.PUMPBTCOMM,
+                    "Descriptor write queue should be empty, found: ${descriptorWriteQueue.size}"
+                )
                 descriptorWriteQueue.clear()
             }
-            val offered = descriptorWriteQueue.offer(writeConfirmation, WRITE_CONFIRM_TIMEOUT_MS.toLong(), TimeUnit.MILLISECONDS)
+            val offered = descriptorWriteQueue.offer(
+                writeConfirmation,
+                WRITE_CONFIRM_TIMEOUT_MS.toLong(),
+                TimeUnit.MILLISECONDS
+            )
             if (!offered) {
                 aapsLogger.warn(LTag.PUMPBTCOMM, "Received delayed descriptor write confirmation")
             }

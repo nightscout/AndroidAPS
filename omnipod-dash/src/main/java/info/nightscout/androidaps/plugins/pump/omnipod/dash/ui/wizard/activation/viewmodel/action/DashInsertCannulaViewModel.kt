@@ -33,7 +33,12 @@ class DashInsertCannulaViewModel @Inject constructor(
             source.onError(IllegalStateException("No profile set"))
         } else {
             val disposable = omnipodManager.activatePodPart2(mapProfileToBasalProgram(profile)).subscribeBy(
-                onNext = { podEvent -> logger.debug(LTag.PUMP, "Received PodEvent in Pod activation part 2: $podEvent") },
+                onNext = { podEvent ->
+                    logger.debug(
+                        LTag.PUMP,
+                        "Received PodEvent in Pod activation part 2: $podEvent"
+                    )
+                },
                 onError = { throwable ->
                     logger.error(LTag.PUMP, "Error in Pod activation part 2", throwable)
                     source.onSuccess(PumpEnactResult(injector).success(false).comment(throwable.message))

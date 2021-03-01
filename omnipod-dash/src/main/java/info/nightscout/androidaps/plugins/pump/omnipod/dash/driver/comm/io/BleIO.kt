@@ -1,4 +1,5 @@
 @file:Suppress("WildcardImport")
+
 package info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.io
 
 import android.bluetooth.BluetoothGatt
@@ -13,7 +14,13 @@ import java.util.concurrent.BlockingQueue
 import java.util.concurrent.TimeUnit
 import java.util.concurrent.TimeoutException
 
-class BleIO(private val aapsLogger: AAPSLogger, private val chars: Map<CharacteristicType, BluetoothGattCharacteristic>, private val incomingPackets: Map<CharacteristicType, BlockingQueue<ByteArray>>, private val gatt: BluetoothGatt, private val bleCommCallbacks: BleCommCallbacks) {
+class BleIO(
+    private val aapsLogger: AAPSLogger,
+    private val chars: Map<CharacteristicType, BluetoothGattCharacteristic>,
+    private val incomingPackets: Map<CharacteristicType, BlockingQueue<ByteArray>>,
+    private val gatt: BluetoothGatt,
+    private val bleCommCallbacks: BleCommCallbacks
+) {
 
     private var state: IOState = IOState.IDLE
 
@@ -42,7 +49,13 @@ class BleIO(private val aapsLogger: AAPSLogger, private val chars: Map<Character
      * @param payload the data to send
      * @throws CouldNotSendBleException
      */
-    @Throws(CouldNotSendBleException::class, BleIOBusyException::class, InterruptedException::class, CouldNotConfirmWriteException::class, TimeoutException::class)
+    @Throws(
+        CouldNotSendBleException::class,
+        BleIOBusyException::class,
+        InterruptedException::class,
+        CouldNotConfirmWriteException::class,
+        TimeoutException::class
+    )
     fun sendAndConfirmPacket(characteristic: CharacteristicType, payload: ByteArray) {
         synchronized(state) {
             if (state != IOState.IDLE) {
@@ -75,7 +88,13 @@ class BleIO(private val aapsLogger: AAPSLogger, private val chars: Map<Character
      * This will signal the pod it can start sending back data
      * @return
      */
-    @Throws(CouldNotSendBleException::class, CouldNotEnableNotifications::class, DescriptorNotFoundException::class, InterruptedException::class, CouldNotConfirmDescriptorWriteException::class)
+    @Throws(
+        CouldNotSendBleException::class,
+        CouldNotEnableNotifications::class,
+        DescriptorNotFoundException::class,
+        InterruptedException::class,
+        CouldNotConfirmDescriptorWriteException::class
+    )
     fun readyToRead() {
         for (type in CharacteristicType.values()) {
             val ch = chars[type]

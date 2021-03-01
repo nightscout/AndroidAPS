@@ -11,7 +11,11 @@ import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.io.Chara
 import java.math.BigInteger
 import java.util.*
 
-class ServiceDiscoverer(private val logger: AAPSLogger, private val gatt: BluetoothGatt, private val bleCallbacks: BleCommCallbacks) {
+class ServiceDiscoverer(
+    private val logger: AAPSLogger,
+    private val gatt: BluetoothGatt,
+    private val bleCallbacks: BleCommCallbacks
+) {
 
     /***
      * This is first step after connection establishment

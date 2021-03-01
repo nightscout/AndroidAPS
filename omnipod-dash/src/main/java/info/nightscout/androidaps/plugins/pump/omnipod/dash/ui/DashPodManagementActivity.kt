@@ -85,7 +85,15 @@ class DashPodManagementActivity : NoSplashAppCompatActivity() {
                 object : Callback() {
                     override fun run() {
                         if (!result.success) {
-                            displayErrorDialog(resourceHelper.gs(R.string.omnipod_common_warning), resourceHelper.gs(R.string.omnipod_common_two_strings_concatenated_by_colon, resourceHelper.gs(R.string.omnipod_common_error_failed_to_play_test_beep), result.comment), false)
+                            displayErrorDialog(
+                                resourceHelper.gs(R.string.omnipod_common_warning),
+                                resourceHelper.gs(
+                                    R.string.omnipod_common_two_strings_concatenated_by_colon,
+                                    resourceHelper.gs(R.string.omnipod_common_error_failed_to_play_test_beep),
+                                    result.comment
+                                ),
+                                false
+                            )
                         }
                     }
                 }

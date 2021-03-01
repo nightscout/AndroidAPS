@@ -63,7 +63,15 @@ class ProgramBeepsCommand private constructor(
             requireNotNull(tempBasalReminder) { "tempBasalReminder can not be null" }
             requireNotNull(bolusReminder) { "bolusReminder can not be null" }
 
-            return ProgramBeepsCommand(uniqueId!!, sequenceNumber!!, multiCommandFlag, immediateBeepType!!, basalReminder!!, tempBasalReminder!!, bolusReminder!!)
+            return ProgramBeepsCommand(
+                uniqueId!!,
+                sequenceNumber!!,
+                multiCommandFlag,
+                immediateBeepType!!,
+                basalReminder!!,
+                tempBasalReminder!!,
+                bolusReminder!!
+            )
         }
     }
 

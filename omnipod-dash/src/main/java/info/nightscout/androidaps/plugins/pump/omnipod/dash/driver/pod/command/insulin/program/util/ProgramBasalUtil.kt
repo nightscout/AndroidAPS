@@ -30,7 +30,13 @@ object ProgramBasalUtil {
                 previousTenthPulsesPerSlot = tenthPulsesPerSlot[i]
                 numberOfSlotsInCurrentElement = 1
             } else if (previousTenthPulsesPerSlot != tenthPulsesPerSlot[i] || (numberOfSlotsInCurrentElement + 1) * previousTenthPulsesPerSlot > 65534) {
-                elements.add(insulinProgramElementFactory(startSlotIndex, numberOfSlotsInCurrentElement, (previousTenthPulsesPerSlot * numberOfSlotsInCurrentElement).toShort()))
+                elements.add(
+                    insulinProgramElementFactory(
+                        startSlotIndex,
+                        numberOfSlotsInCurrentElement,
+                        (previousTenthPulsesPerSlot * numberOfSlotsInCurrentElement).toShort()
+                    )
+                )
                 previousTenthPulsesPerSlot = tenthPulsesPerSlot[i]
                 numberOfSlotsInCurrentElement = 1
                 startSlotIndex = (numberOfSlotsInCurrentElement + startSlotIndex).toByte()
@@ -38,7 +44,13 @@ object ProgramBasalUtil {
                 numberOfSlotsInCurrentElement++
             }
         }
-        elements.add(insulinProgramElementFactory(startSlotIndex, numberOfSlotsInCurrentElement, (previousTenthPulsesPerSlot * numberOfSlotsInCurrentElement).toShort()))
+        elements.add(
+            insulinProgramElementFactory(
+                startSlotIndex,
+                numberOfSlotsInCurrentElement,
+                (previousTenthPulsesPerSlot * numberOfSlotsInCurrentElement).toShort()
+            )
+        )
         return elements
     }
 
@@ -60,7 +72,13 @@ object ProgramBasalUtil {
                 if (numberOfSlotsInCurrentElement < MAX_NUMBER_OF_SLOTS_IN_INSULIN_PROGRAM_ELEMENT) {
                     numberOfSlotsInCurrentElement++
                 } else {
-                    elements.add(BasalShortInsulinProgramElement(numberOfSlotsInCurrentElement, previousPulsesPerSlot, extraAlternatePulse))
+                    elements.add(
+                        BasalShortInsulinProgramElement(
+                            numberOfSlotsInCurrentElement,
+                            previousPulsesPerSlot,
+                            extraAlternatePulse
+                        )
+                    )
                     previousPulsesPerSlot = pulsesPerSlot[currentTotalNumberOfSlots.toInt()]
                     numberOfSlotsInCurrentElement = 1
                     extraAlternatePulse = false
@@ -82,7 +100,13 @@ object ProgramBasalUtil {
                             numberOfSlotsInCurrentElement++
                         } else {
                             // End of alternate pulse segment (no slots left in element)
-                            elements.add(BasalShortInsulinProgramElement(numberOfSlotsInCurrentElement, previousPulsesPerSlot, extraAlternatePulse))
+                            elements.add(
+                                BasalShortInsulinProgramElement(
+                                    numberOfSlotsInCurrentElement,
+                                    previousPulsesPerSlot,
+                                    extraAlternatePulse
+                                )
+                            )
                             previousPulsesPerSlot = pulsesPerSlot[currentTotalNumberOfSlots.toInt()]
                             numberOfSlotsInCurrentElement = 1
                             extraAlternatePulse = false
@@ -90,7 +114,13 @@ object ProgramBasalUtil {
                         }
                     } else {
                         // End of alternate pulse segment (new number of pulses per slot)
-                        elements.add(BasalShortInsulinProgramElement(numberOfSlotsInCurrentElement, previousPulsesPerSlot, extraAlternatePulse))
+                        elements.add(
+                            BasalShortInsulinProgramElement(
+                                numberOfSlotsInCurrentElement,
+                                previousPulsesPerSlot,
+                                extraAlternatePulse
+                            )
+                        )
                         previousPulsesPerSlot = pulsesPerSlot[currentTotalNumberOfSlots.toInt()]
                         numberOfSlotsInCurrentElement = 1
                         extraAlternatePulse = false
@@ -100,7 +130,13 @@ object ProgramBasalUtil {
                 }
             } else if (previousPulsesPerSlot != pulsesPerSlot[currentTotalNumberOfSlots.toInt()]) {
                 // End of segment (new number of pulses per slot)
-                elements.add(BasalShortInsulinProgramElement(numberOfSlotsInCurrentElement, previousPulsesPerSlot, extraAlternatePulse))
+                elements.add(
+                    BasalShortInsulinProgramElement(
+                        numberOfSlotsInCurrentElement,
+                        previousPulsesPerSlot,
+                        extraAlternatePulse
+                    )
+                )
                 previousPulsesPerSlot = pulsesPerSlot[currentTotalNumberOfSlots.toInt()]
                 currentTotalNumberOfSlots++
                 extraAlternatePulse = false
@@ -109,7 +145,13 @@ object ProgramBasalUtil {
                 throw IllegalStateException("Reached illegal point in mapBasalProgramToShortInsulinProgramElements")
             }
         }
-        elements.add(BasalShortInsulinProgramElement(numberOfSlotsInCurrentElement, previousPulsesPerSlot, extraAlternatePulse))
+        elements.add(
+            BasalShortInsulinProgramElement(
+                numberOfSlotsInCurrentElement,
+                previousPulsesPerSlot,
+                extraAlternatePulse
+            )
+        )
         return elements
     }
 
@@ -117,7 +159,8 @@ object ProgramBasalUtil {
         val tenthPulsesPerSlot = ShortArray(NUMBER_OF_BASAL_SLOTS.toInt())
         for (segment in basalProgram.segments) {
             for (i in segment.startSlotIndex until segment.endSlotIndex) {
-                tenthPulsesPerSlot[i] = (roundToHalf(segment.getPulsesPerHour() / 2.0) * 10).toInt().toShort() // TODO Adrian: int conversion ok?
+                tenthPulsesPerSlot[i] = (roundToHalf(segment.getPulsesPerHour() / 2.0) * 10).toInt()
+                    .toShort() // TODO Adrian: int conversion ok?
             }
         }
         return tenthPulsesPerSlot
@@ -157,7 +200,10 @@ object ProgramBasalUtil {
         return CurrentSlot(index, (secondsRemaining * 8).toShort(), pulsesRemaining)
     }
 
-    fun calculateCurrentLongInsulinProgramElement(elements: List<BasalInsulinProgramElement>, currentTime: Date?): CurrentBasalInsulinProgramElement {
+    fun calculateCurrentLongInsulinProgramElement(
+        elements: List<BasalInsulinProgramElement>,
+        currentTime: Date?
+    ): CurrentBasalInsulinProgramElement {
         val instance = Calendar.getInstance()
         instance.time = currentTime
         val hourOfDay = instance[Calendar.HOUR_OF_DAY]
@@ -176,8 +222,10 @@ object ProgramBasalUtil {
                 }
                 val durationInSeconds = endTimeInSeconds - startTimeInSeconds
                 val secondsPassedInCurrentSlot = secondOfDay - startTimeInSeconds
-                val remainingTenThousandthPulses = ((durationInSeconds - secondsPassedInCurrentSlot) / durationInSeconds.toDouble() * totalNumberOfTenThousandthPulsesInSlot).toLong()
-                val delayBetweenTenthPulsesInUsec = (durationInSeconds * 1000000L * 1000 / totalNumberOfTenThousandthPulsesInSlot).toInt()
+                val remainingTenThousandthPulses =
+                    ((durationInSeconds - secondsPassedInCurrentSlot) / durationInSeconds.toDouble() * totalNumberOfTenThousandthPulsesInSlot).toLong()
+                val delayBetweenTenthPulsesInUsec =
+                    (durationInSeconds * 1000000L * 1000 / totalNumberOfTenThousandthPulsesInSlot).toInt()
                 val secondsRemaining = secondsPassedInCurrentSlot % 1800
                 var delayUntilNextTenthPulseInUsec = delayBetweenTenthPulsesInUsec
                 for (i in 0 until secondsRemaining) {
@@ -186,7 +234,8 @@ object ProgramBasalUtil {
                         delayUntilNextTenthPulseInUsec += delayBetweenTenthPulsesInUsec
                     }
                 }
-                val remainingTenthPulses = ((if (remainingTenThousandthPulses % 1000 != 0L) 1 else 0) + remainingTenThousandthPulses / 1000).toShort()
+                val remainingTenthPulses =
+                    ((if (remainingTenThousandthPulses % 1000 != 0L) 1 else 0) + remainingTenThousandthPulses / 1000).toShort()
                 return CurrentBasalInsulinProgramElement(index, delayUntilNextTenthPulseInUsec, remainingTenthPulses)
             }
             index++

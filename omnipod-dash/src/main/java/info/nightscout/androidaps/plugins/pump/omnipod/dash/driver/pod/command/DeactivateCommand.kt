@@ -33,7 +33,12 @@ class DeactivateCommand private constructor(
     class Builder : NonceEnabledCommandBuilder<Builder, DeactivateCommand>() {
 
         override fun buildCommand(): DeactivateCommand =
-            DeactivateCommand(uniqueId!!, sequenceNumber!!, multiCommandFlag, nonce!!) // TODO this might crash if not all are set
+            DeactivateCommand(
+                uniqueId!!,
+                sequenceNumber!!,
+                multiCommandFlag,
+                nonce!!
+            ) // TODO this might crash if not all are set
     }
 
     companion object {

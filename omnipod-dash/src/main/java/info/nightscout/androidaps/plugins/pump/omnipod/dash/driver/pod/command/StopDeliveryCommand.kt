@@ -42,7 +42,12 @@ class StopDeliveryCommand private constructor(
             '}'
     }
 
-    enum class DeliveryType(private val basal: Boolean, private val tempBasal: Boolean, private val bolus: Boolean) : Encodable {
+    enum class DeliveryType(
+        private val basal: Boolean,
+        private val tempBasal: Boolean,
+        private val bolus: Boolean
+    ) : Encodable {
+
         BASAL(true, false, false), TEMP_BASAL(false, true, false), BOLUS(false, false, true), ALL(true, true, true);
 
         override val encoded: ByteArray
@@ -74,7 +79,14 @@ class StopDeliveryCommand private constructor(
             requireNotNull(deliveryType) { "deliveryType can not be null" }
             requireNotNull(beepType) { "beepType can not be null" }
 
-            return StopDeliveryCommand(uniqueId!!, sequenceNumber!!, multiCommandFlag, deliveryType!!, beepType!!, nonce!!)
+            return StopDeliveryCommand(
+                uniqueId!!,
+                sequenceNumber!!,
+                multiCommandFlag,
+                deliveryType!!,
+                beepType!!,
+                nonce!!
+            )
         }
     }
 

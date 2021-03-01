@@ -29,7 +29,7 @@ class PayloadJoiner(private val firstPacket: ByteArray) {
             firstPacket.size < FirstBlePacket.HEADER_SIZE_WITHOUT_MIDDLE_PACKETS ->
                 throw IncorrectPacketException(0, firstPacket)
 
-            fullFragments == 0 -> {
+            fullFragments == 0                                                   -> {
                 crc = ByteBuffer.wrap(firstPacket.copyOfRange(2, 6)).int.toUnsignedLong()
                 val rest = firstPacket[6]
                 val end = min(rest + FirstBlePacket.HEADER_SIZE_WITHOUT_MIDDLE_PACKETS, BlePacket.MAX_SIZE)
@@ -41,11 +41,16 @@ class PayloadJoiner(private val firstPacket: ByteArray) {
             }
 
             // With middle packets
-            firstPacket.size < BlePacket.MAX_SIZE ->
+            firstPacket.size < BlePacket.MAX_SIZE                                ->
                 throw IncorrectPacketException(0, firstPacket)
 
-            else -> {
-                fragments.add(firstPacket.copyOfRange(FirstBlePacket.HEADER_SIZE_WITH_MIDDLE_PACKETS, BlePacket.MAX_SIZE))
+            else                                                                 -> {
+                fragments.add(
+                    firstPacket.copyOfRange(
+                        FirstBlePacket.HEADER_SIZE_WITH_MIDDLE_PACKETS,
+                        BlePacket.MAX_SIZE
+                    )
+                )
             }
         }
     }
@@ -60,7 +65,7 @@ class PayloadJoiner(private val firstPacket: ByteArray) {
         }
         expectedIndex++
         when {
-            idx < fullFragments -> { // this is a middle fragment
+            idx < fullFragments  -> { // this is a middle fragment
                 if (packet.size < BlePacket.MAX_SIZE) {
                     throw IncorrectPacketException(idx.toByte(), packet)
                 }
@@ -81,13 +86,18 @@ class PayloadJoiner(private val firstPacket: ByteArray) {
                 fragments.add(packet.copyOfRange(LastBlePacket.HEADER_SIZE, packet.size))
             }
 
-            idx > fullFragments -> { // this is the extra fragment
+            idx > fullFragments  -> { // this is the extra fragment
                 val size = packet[1].toInt()
                 if (packet.size < LastOptionalPlusOneBlePacket.HEADER_SIZE + size) {
                     throw IncorrectPacketException(idx.toByte(), packet)
                 }
 
-                fragments.add(packet.copyOfRange(LastOptionalPlusOneBlePacket.HEADER_SIZE, LastOptionalPlusOneBlePacket.HEADER_SIZE + size))
+                fragments.add(
+                    packet.copyOfRange(
+                        LastOptionalPlusOneBlePacket.HEADER_SIZE,
+                        LastOptionalPlusOneBlePacket.HEADER_SIZE + size
+                    )
+                )
             }
         }
     }

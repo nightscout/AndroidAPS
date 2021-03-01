@@ -29,7 +29,12 @@ class DashInitializePodViewModel @Inject constructor(
         Single.create { source ->
             // TODO use configured value for low reservoir trigger
             val disposable = omnipodManager.activatePodPart1(AlertTrigger.ReservoirVolumeTrigger(200)).subscribeBy(
-                onNext = { podEvent -> logger.debug(LTag.PUMP, "Received PodEvent in Pod activation part 1: $podEvent") },
+                onNext = { podEvent ->
+                    logger.debug(
+                        LTag.PUMP,
+                        "Received PodEvent in Pod activation part 1: $podEvent"
+                    )
+                },
                 onError = { throwable ->
                     logger.error(LTag.PUMP, "Error in Pod activation part 1", throwable)
                     source.onSuccess(PumpEnactResult(injector).success(false).comment(throwable.message))

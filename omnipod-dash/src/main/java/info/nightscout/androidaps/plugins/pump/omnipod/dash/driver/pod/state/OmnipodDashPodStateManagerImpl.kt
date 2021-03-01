@@ -165,8 +165,16 @@ class OmnipodDashPodStateManagerImpl @Inject constructor(
     }
 
     override fun updateFromVersionResponse(response: VersionResponse) {
-        podState.bleVersion = SoftwareVersion(response.bleVersionMajor, response.bleVersionMinor, response.bleVersionInterim)
-        podState.firmwareVersion = SoftwareVersion(response.firmwareVersionMajor, response.firmwareVersionMinor, response.firmwareVersionInterim)
+        podState.bleVersion = SoftwareVersion(
+            response.bleVersionMajor,
+            response.bleVersionMinor,
+            response.bleVersionInterim
+        )
+        podState.firmwareVersion = SoftwareVersion(
+            response.firmwareVersionMajor,
+            response.firmwareVersionMinor,
+            response.firmwareVersionInterim
+        )
         podState.podStatus = response.podStatus
         podState.lotNumber = response.lotNumber
         podState.podSequenceNumber = response.podSequenceNumber
@@ -182,8 +190,16 @@ class OmnipodDashPodStateManagerImpl @Inject constructor(
         podState.firstPrimeBolusVolume = response.numberOfPrimePulses
         podState.secondPrimeBolusVolume = response.numberOfEngagingClutchDrivePulses
         podState.podLifeInHours = response.podExpirationTimeInHours
-        podState.bleVersion = SoftwareVersion(response.bleVersionMajor, response.bleVersionMinor, response.bleVersionInterim)
-        podState.firmwareVersion = SoftwareVersion(response.firmwareVersionMajor, response.firmwareVersionMinor, response.firmwareVersionInterim)
+        podState.bleVersion = SoftwareVersion(
+            response.bleVersionMajor,
+            response.bleVersionMinor,
+            response.bleVersionInterim
+        )
+        podState.firmwareVersion = SoftwareVersion(
+            response.firmwareVersionMajor,
+            response.firmwareVersionMinor,
+            response.firmwareVersionInterim
+        )
         podState.podStatus = response.podStatus
         podState.lotNumber = response.lotNumber
         podState.podSequenceNumber = response.podSequenceNumber
@@ -196,7 +212,10 @@ class OmnipodDashPodStateManagerImpl @Inject constructor(
 
     override fun updateFromAlarmStatusResponse(response: AlarmStatusResponse) {
         // TODO
-        logger.error(LTag.PUMP, "Not implemented: OmnipodDashPodStateManagerImpl.updateFromAlarmStatusResponse(AlarmStatusResponse)")
+        logger.error(
+            LTag.PUMP,
+            "Not implemented: OmnipodDashPodStateManagerImpl.updateFromAlarmStatusResponse(AlarmStatusResponse)"
+        )
 
         store()
         rxBus.send(EventOmnipodDashPumpValuesChanged())
@@ -220,7 +239,10 @@ class OmnipodDashPodStateManagerImpl @Inject constructor(
     private fun load(): PodState {
         if (sharedPreferences.contains(R.string.key_omnipod_dash_pod_state)) {
             try {
-                return Gson().fromJson(sharedPreferences.getString(R.string.key_omnipod_dash_pod_state, ""), PodState::class.java)
+                return Gson().fromJson(
+                    sharedPreferences.getString(R.string.key_omnipod_dash_pod_state, ""),
+                    PodState::class.java
+                )
             } catch (ex: Exception) {
                 logger.error(LTag.PUMP, "Failed to deserialize Pod state", ex)
             }

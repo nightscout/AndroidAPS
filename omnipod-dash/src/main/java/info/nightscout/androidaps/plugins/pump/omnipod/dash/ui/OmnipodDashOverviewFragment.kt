@@ -109,7 +109,10 @@ class OmnipodDashOverviewFragment : DaggerFragment() {
             disablePodActionButtons()
             commandQueue.customCommand(
                 CommandResumeDelivery(),
-                DisplayResultDialogCallback(resourceHelper.gs(R.string.omnipod_common_error_failed_to_resume_delivery), true).messageOnSuccess(resourceHelper.gs(R.string.omnipod_common_confirmation_delivery_resumed))
+                DisplayResultDialogCallback(
+                    resourceHelper.gs(R.string.omnipod_common_error_failed_to_resume_delivery),
+                    true
+                ).messageOnSuccess(resourceHelper.gs(R.string.omnipod_common_confirmation_delivery_resumed))
             )
         }
 
@@ -117,7 +120,10 @@ class OmnipodDashOverviewFragment : DaggerFragment() {
             disablePodActionButtons()
             commandQueue.readStatus(
                 "REQUESTED BY USER",
-                DisplayResultDialogCallback(resourceHelper.gs(R.string.omnipod_common_error_failed_to_refresh_status), false)
+                DisplayResultDialogCallback(
+                    resourceHelper.gs(R.string.omnipod_common_error_failed_to_refresh_status),
+                    false
+                )
             )
         }
 
@@ -125,7 +131,10 @@ class OmnipodDashOverviewFragment : DaggerFragment() {
             disablePodActionButtons()
             commandQueue.customCommand(
                 CommandAcknowledgeAlerts(),
-                DisplayResultDialogCallback(resourceHelper.gs(R.string.omnipod_common_error_failed_to_silence_alerts), false)
+                DisplayResultDialogCallback(
+                    resourceHelper.gs(R.string.omnipod_common_error_failed_to_silence_alerts),
+                    false
+                )
                     .messageOnSuccess(resourceHelper.gs(R.string.omnipod_common_confirmation_silenced_alerts))
                     .actionOnSuccess { rxBus.send(EventDismissNotification(Notification.OMNIPOD_POD_ALERTS)) }
             )
@@ -135,7 +144,10 @@ class OmnipodDashOverviewFragment : DaggerFragment() {
             disablePodActionButtons()
             commandQueue.customCommand(
                 CommandSuspendDelivery(),
-                DisplayResultDialogCallback(resourceHelper.gs(R.string.omnipod_common_error_failed_to_suspend_delivery), true)
+                DisplayResultDialogCallback(
+                    resourceHelper.gs(R.string.omnipod_common_error_failed_to_suspend_delivery),
+                    true
+                )
                     .messageOnSuccess(resourceHelper.gs(R.string.omnipod_common_confirmation_suspended_delivery))
             )
         }
@@ -229,7 +241,11 @@ class OmnipodDashOverviewFragment : DaggerFragment() {
             podInfoBinding.uniqueId.text = podStateManager.uniqueId.toString()
             podInfoBinding.podLot.text = podStateManager.lotNumber.toString()
             podInfoBinding.podSequenceNumber.text = podStateManager.podSequenceNumber.toString()
-            podInfoBinding.firmwareVersion.text = resourceHelper.gs(R.string.omnipod_dash_overview_firmware_version_value, podStateManager.firmwareVersion.toString(), podStateManager.bluetoothVersion.toString())
+            podInfoBinding.firmwareVersion.text = resourceHelper.gs(
+                R.string.omnipod_dash_overview_firmware_version_value,
+                podStateManager.firmwareVersion.toString(),
+                podStateManager.bluetoothVersion.toString()
+            )
 
             // TODO
             /*
@@ -267,21 +283,27 @@ class OmnipodDashOverviewFragment : DaggerFragment() {
 
             // base basal rate
             podInfoBinding.baseBasalRate.text = if (podStateManager.basalProgram != null) {
-                resourceHelper.gs(R.string.pump_basebasalrate, omnipodDashPumpPlugin.model().determineCorrectBasalSize(podStateManager.basalProgram!!.rateAt(Date())))
+                resourceHelper.gs(
+                    R.string.pump_basebasalrate,
+                    omnipodDashPumpPlugin.model()
+                        .determineCorrectBasalSize(podStateManager.basalProgram!!.rateAt(Date()))
+                )
             } else {
                 PLACEHOLDER
             }
 
             // total delivered
-            podInfoBinding.totalDelivered.text = if (podStateManager.isActivationCompleted && podStateManager.pulsesDelivered != null) {
-                resourceHelper.gs(R.string.omnipod_common_overview_total_delivered_value, podStateManager.pulseRate)
-            } else {
-                PLACEHOLDER
-            }
+            podInfoBinding.totalDelivered.text =
+                if (podStateManager.isActivationCompleted && podStateManager.pulsesDelivered != null) {
+                    resourceHelper.gs(R.string.omnipod_common_overview_total_delivered_value, podStateManager.pulseRate)
+                } else {
+                    PLACEHOLDER
+                }
 
             // reservoir
             if (podStateManager.pulsesRemaining == null) {
-                podInfoBinding.reservoir.text = resourceHelper.gs(R.string.omnipod_common_overview_reservoir_value_over50)
+                podInfoBinding.reservoir.text =
+                    resourceHelper.gs(R.string.omnipod_common_overview_reservoir_value_over50)
                 podInfoBinding.reservoir.setTextColor(Color.WHITE)
             } else {
                 // TODO
@@ -289,7 +311,10 @@ class OmnipodDashOverviewFragment : DaggerFragment() {
                 //    ?: OmnipodConstants.DEFAULT_MAX_RESERVOIR_ALERT_THRESHOLD).toDouble()
                 val lowReservoirThreshold: Short = 20
 
-                podInfoBinding.reservoir.text = resourceHelper.gs(R.string.omnipod_common_overview_reservoir_value, podStateManager.pulsesRemaining)
+                podInfoBinding.reservoir.text = resourceHelper.gs(
+                    R.string.omnipod_common_overview_reservoir_value,
+                    podStateManager.pulsesRemaining
+                )
                 podInfoBinding.reservoir.setTextColor(
                     if (podStateManager.pulsesRemaining!! < lowReservoirThreshold) {
                         Color.RED
@@ -365,11 +390,12 @@ class OmnipodDashOverviewFragment : DaggerFragment() {
             }
         }
 
-        val podStatusColor = if (!podStateManager.isActivationCompleted || /* TODO podStateManager.isPodDead || */ podStateManager.isSuspended) {
-            Color.RED
-        } else {
-            Color.WHITE
-        }
+        val podStatusColor =
+            if (!podStateManager.isActivationCompleted || /* TODO podStateManager.isPodDead || */ podStateManager.isSuspended) {
+                Color.RED
+            } else {
+                Color.WHITE
+            }
         podInfoBinding.podStatus.setTextColor(podStatusColor)
     }
 
@@ -405,7 +431,13 @@ class OmnipodDashOverviewFragment : DaggerFragment() {
 
             val minutesRunning = 0 // TODO
 
-            podInfoBinding.tempBasal.text = resourceHelper.gs(R.string.omnipod_common_overview_temp_basal_value, rate, dateUtil.timeString(startTime), minutesRunning, duration)
+            podInfoBinding.tempBasal.text = resourceHelper.gs(
+                R.string.omnipod_common_overview_temp_basal_value,
+                rate,
+                dateUtil.timeString(startTime),
+                minutesRunning,
+                duration
+            )
         } else {
             podInfoBinding.tempBasal.text = PLACEHOLDER
         }
@@ -437,12 +469,17 @@ class OmnipodDashOverviewFragment : DaggerFragment() {
     }
 
     private fun updateRefreshStatusButton() {
-        buttonBinding.buttonRefreshStatus.isEnabled = podStateManager.isUniqueIdSet && podStateManager.activationProgress.isAtLeast(ActivationProgress.PHASE_1_COMPLETED) &&
-            isQueueEmpty()
+        buttonBinding.buttonRefreshStatus.isEnabled =
+            podStateManager.isUniqueIdSet && podStateManager.activationProgress.isAtLeast(
+                ActivationProgress.PHASE_1_COMPLETED
+            ) &&
+                isQueueEmpty()
     }
 
     private fun updateResumeDeliveryButton() {
-        if (podStateManager.isPodRunning && (podStateManager.isSuspended || commandQueue.isCustomCommandInQueue(CommandResumeDelivery::class.java))) {
+        if (podStateManager.isPodRunning && (podStateManager.isSuspended || commandQueue.isCustomCommandInQueue(
+                CommandResumeDelivery::class.java
+            ))) {
             buttonBinding.buttonResumeDelivery.visibility = View.VISIBLE
             buttonBinding.buttonResumeDelivery.isEnabled = isQueueEmpty()
         } else {
@@ -451,7 +488,9 @@ class OmnipodDashOverviewFragment : DaggerFragment() {
     }
 
     private fun updateSilenceAlertsButton() {
-        if (isAutomaticallySilenceAlertsEnabled() && podStateManager.isPodRunning && (podStateManager.activeAlerts!!.size > 0 || commandQueue.isCustomCommandInQueue(CommandAcknowledgeAlerts::class.java))) {
+        if (isAutomaticallySilenceAlertsEnabled() && podStateManager.isPodRunning && (podStateManager.activeAlerts!!.size > 0 || commandQueue.isCustomCommandInQueue(
+                CommandAcknowledgeAlerts::class.java
+            ))) {
             buttonBinding.buttonSilenceAlerts.visibility = View.VISIBLE
             buttonBinding.buttonSilenceAlerts.isEnabled = isQueueEmpty()
         } else {
@@ -461,9 +500,12 @@ class OmnipodDashOverviewFragment : DaggerFragment() {
 
     private fun updateSuspendDeliveryButton() {
         // If the Pod is currently suspended, we show the Resume delivery button instead.
-        if (isSuspendDeliveryButtonEnabled() && podStateManager.isPodRunning && (!podStateManager.isSuspended || commandQueue.isCustomCommandInQueue(CommandSuspendDelivery::class.java))) {
+        if (isSuspendDeliveryButtonEnabled() && podStateManager.isPodRunning && (!podStateManager.isSuspended || commandQueue.isCustomCommandInQueue(
+                CommandSuspendDelivery::class.java
+            ))) {
             buttonBinding.buttonSuspendDelivery.visibility = View.VISIBLE
-            buttonBinding.buttonSuspendDelivery.isEnabled = podStateManager.isPodRunning && !podStateManager.isSuspended && isQueueEmpty()
+            buttonBinding.buttonSuspendDelivery.isEnabled =
+                podStateManager.isPodRunning && !podStateManager.isSuspended && isQueueEmpty()
         } else {
             buttonBinding.buttonSuspendDelivery.visibility = View.GONE
         }
@@ -566,10 +608,18 @@ class OmnipodDashOverviewFragment : DaggerFragment() {
 
     // FIXME ideally we should just have access to LocalAlertUtils here
     private fun getPumpUnreachableTimeout(): Duration {
-        return Duration.standardMinutes(sp.getInt(R.string.key_pump_unreachable_threshold_minutes, Constants.DEFAULT_PUMP_UNREACHABLE_THRESHOLD_MINUTES).toLong())
+        return Duration.standardMinutes(
+            sp.getInt(
+                R.string.key_pump_unreachable_threshold_minutes,
+                Constants.DEFAULT_PUMP_UNREACHABLE_THRESHOLD_MINUTES
+            ).toLong()
+        )
     }
 
-    inner class DisplayResultDialogCallback(private val errorMessagePrefix: String, private val withSoundOnError: Boolean) : Callback() {
+    inner class DisplayResultDialogCallback(
+        private val errorMessagePrefix: String,
+        private val withSoundOnError: Boolean
+    ) : Callback() {
 
         private var messageOnSuccess: String? = null
         private var actionOnSuccess: Runnable? = null
@@ -582,7 +632,15 @@ class OmnipodDashOverviewFragment : DaggerFragment() {
                 }
                 actionOnSuccess?.run()
             } else {
-                displayErrorDialog(resourceHelper.gs(R.string.omnipod_common_warning), resourceHelper.gs(R.string.omnipod_common_two_strings_concatenated_by_colon, errorMessagePrefix, result.comment), withSoundOnError)
+                displayErrorDialog(
+                    resourceHelper.gs(R.string.omnipod_common_warning),
+                    resourceHelper.gs(
+                        R.string.omnipod_common_two_strings_concatenated_by_colon,
+                        errorMessagePrefix,
+                        result.comment
+                    ),
+                    withSoundOnError
+                )
             }
         }
 

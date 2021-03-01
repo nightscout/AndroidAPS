@@ -22,9 +22,17 @@ class DashHistory @Inject constructor(
     private val historyMapper: HistoryMapper
 ) {
 
-    fun markSuccess(id: String, date: Long): Completable = dao.markResolved(id, ResolvedResult.SUCCESS, currentTimeMillis())
+    fun markSuccess(id: String, date: Long): Completable = dao.markResolved(
+        id,
+        ResolvedResult.SUCCESS,
+        currentTimeMillis()
+    )
 
-    fun markFailure(id: String, date: Long): Completable = dao.markResolved(id, ResolvedResult.FAILURE, currentTimeMillis())
+    fun markFailure(id: String, date: Long): Completable = dao.markResolved(
+        id,
+        ResolvedResult.FAILURE,
+        currentTimeMillis()
+    )
 
     @Suppress("ReturnCount")
     fun createRecord(
@@ -39,7 +47,7 @@ class DashHistory @Inject constructor(
         val id = ULID.random()
 
         when {
-            commandType == SET_BOLUS && bolusRecord == null ->
+            commandType == SET_BOLUS && bolusRecord == null               ->
                 return Single.error(IllegalArgumentException("bolusRecord missing on SET_BOLUS"))
             commandType == SET_TEMPORARY_BASAL && tempBasalRecord == null ->
                 return Single.error(IllegalArgumentException("tempBasalRecord missing on SET_TEMPORARY_BASAL"))

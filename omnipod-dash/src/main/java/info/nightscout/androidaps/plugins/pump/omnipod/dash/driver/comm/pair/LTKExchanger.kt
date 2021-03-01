@@ -139,7 +139,10 @@ internal class LTKExchanger(private val aapsLogger: AAPSLogger, private val msgI
             throw MessageIOException("Invalid payload size")
         }
         if (!podConf.contentEquals(payload)) {
-            aapsLogger.warn(LTag.PUMPBTCOMM, "Received invalid podConf. Expected: ${podConf.toHex()}. Got: ${payload.toHex()}")
+            aapsLogger.warn(
+                LTag.PUMPBTCOMM,
+                "Received invalid podConf. Expected: ${podConf.toHex()}. Got: ${payload.toHex()}"
+            )
             throw MessageIOException("Invalid podConf value received")
         }
     }
@@ -235,7 +238,8 @@ internal class LTKExchanger(private val aapsLogger: AAPSLogger, private val msgI
         private val PDM_CONF_MAGIC_PREFIX = "KC_2_U".toByteArray()
         private val POD_CONF_MAGIC_PREFIX = "KC_2_V".toByteArray()
 
-        private const val GET_POD_STATUS_HEX_COMMAND = "ffc32dbd08030e0100008a" // TODO for now we are assuming this command is build out of constant parameters, use a proper command builder for that.
+        private const val GET_POD_STATUS_HEX_COMMAND =
+            "ffc32dbd08030e0100008a" // TODO for now we are assuming this command is build out of constant parameters, use a proper command builder for that.
 
         private const val SP1 = "SP1="
         private const val SP2 = ",SP2="

@@ -10,7 +10,13 @@ import kotlin.math.roundToInt
 object ProgramTempBasalUtil {
 
     fun mapTenthPulsesPerSlotToLongInsulinProgramElements(tenthPulsesPerSlot: ShortArray): List<BasalInsulinProgramElement> {
-        return ProgramBasalUtil.mapTenthPulsesPerSlotToLongInsulinProgramElements(tenthPulsesPerSlot) { startSlotIndex: Byte, numberOfSlots: Byte, totalTenthPulses: Short -> TempBasalInsulinProgramElement(startSlotIndex, numberOfSlots, totalTenthPulses) }
+        return ProgramBasalUtil.mapTenthPulsesPerSlotToLongInsulinProgramElements(tenthPulsesPerSlot) { startSlotIndex: Byte, numberOfSlots: Byte, totalTenthPulses: Short ->
+            TempBasalInsulinProgramElement(
+                startSlotIndex,
+                numberOfSlots,
+                totalTenthPulses
+            )
+        }
     }
 
     fun mapTempBasalToTenthPulsesPerSlot(durationInSlots: Int, rateInUnitsPerHour: Double): ShortArray {

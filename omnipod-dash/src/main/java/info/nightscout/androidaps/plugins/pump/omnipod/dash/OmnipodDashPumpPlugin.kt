@@ -129,19 +129,31 @@ class OmnipodDashPumpPlugin @Inject constructor(
         // TODO
     }
 
-    override fun setTempBasalAbsolute(absoluteRate: Double, durationInMinutes: Int, profile: Profile, enforceNew: Boolean): PumpEnactResult {
+    override fun setTempBasalAbsolute(
+        absoluteRate: Double,
+        durationInMinutes: Int,
+        profile: Profile,
+        enforceNew: Boolean
+    ): PumpEnactResult {
         // TODO
         return PumpEnactResult(injector).success(false).enacted(false).comment("TODO")
     }
 
-    override fun setTempBasalPercent(percent: Int, durationInMinutes: Int, profile: Profile, enforceNew: Boolean): PumpEnactResult {
+    override fun setTempBasalPercent(
+        percent: Int,
+        durationInMinutes: Int,
+        profile: Profile,
+        enforceNew: Boolean
+    ): PumpEnactResult {
         // TODO i18n
-        return PumpEnactResult(injector).success(false).enacted(false).comment("Omnipod Dash driver does not support percentage temp basals")
+        return PumpEnactResult(injector).success(false).enacted(false)
+            .comment("Omnipod Dash driver does not support percentage temp basals")
     }
 
     override fun setExtendedBolus(insulin: Double, durationInMinutes: Int): PumpEnactResult {
         // TODO i18n
-        return PumpEnactResult(injector).success(false).enacted(false).comment("Omnipod Dash driver does not support extended boluses")
+        return PumpEnactResult(injector).success(false).enacted(false)
+            .comment("Omnipod Dash driver does not support extended boluses")
     }
 
     override fun cancelTempBasal(enforceNew: Boolean): PumpEnactResult {
@@ -151,7 +163,8 @@ class OmnipodDashPumpPlugin @Inject constructor(
 
     override fun cancelExtendedBolus(): PumpEnactResult {
         // TODO i18n
-        return PumpEnactResult(injector).success(false).enacted(false).comment("Omnipod Dash driver does not support extended boluses")
+        return PumpEnactResult(injector).success(false).enacted(false)
+            .comment("Omnipod Dash driver does not support extended boluses")
     }
 
     override fun getJSONStatus(profile: Profile, profileName: String, version: String): JSONObject {
@@ -184,7 +197,8 @@ class OmnipodDashPumpPlugin @Inject constructor(
 
     override fun loadTDDs(): PumpEnactResult {
         // TODO i18n
-        return PumpEnactResult(injector).success(false).enacted(false).comment("Omnipod Dash driver does not support TDD")
+        return PumpEnactResult(injector).success(false).enacted(false)
+            .comment("Omnipod Dash driver does not support TDD")
     }
 
     override fun canHandleDST(): Boolean {

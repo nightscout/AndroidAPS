@@ -67,7 +67,14 @@ class SetUniqueIdCommand private constructor(
             requireNotNull(lotNumber) { "lotNumber can not be null" }
             requireNotNull(podSequenceNumber) { "podSequenceNumber can not be null" }
             requireNotNull(initializationTime) { "initializationTime can not be null" }
-            return SetUniqueIdCommand(uniqueId!!, sequenceNumber!!, multiCommandFlag, lotNumber!!, podSequenceNumber!!, initializationTime!!)
+            return SetUniqueIdCommand(
+                uniqueId!!,
+                sequenceNumber!!,
+                multiCommandFlag,
+                lotNumber!!,
+                podSequenceNumber!!,
+                initializationTime!!
+            )
         }
     }
 

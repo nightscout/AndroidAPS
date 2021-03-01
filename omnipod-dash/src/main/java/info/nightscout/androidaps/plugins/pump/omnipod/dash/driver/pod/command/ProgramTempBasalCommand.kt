@@ -56,15 +56,36 @@ class ProgramTempBasalCommand private constructor(
 
             val durationInSlots = (durationInMinutes!! / 30).toByte()
             val pulsesPerSlot = ProgramTempBasalUtil.mapTempBasalToPulsesPerSlot(durationInSlots, rateInUnitsPerHour!!)
-            val tenthPulsesPerSlot = ProgramTempBasalUtil.mapTempBasalToTenthPulsesPerSlot(durationInSlots.toInt(), rateInUnitsPerHour!!)
-            val shortInsulinProgramElements = ProgramTempBasalUtil.mapPulsesPerSlotToShortInsulinProgramElements(pulsesPerSlot)
-            val insulinProgramElements = ProgramTempBasalUtil.mapTenthPulsesPerSlotToLongInsulinProgramElements(tenthPulsesPerSlot)
-            val interlockCommand = ProgramInsulinCommand(
-                uniqueId!!, sequenceNumber!!, multiCommandFlag, nonce!!, shortInsulinProgramElements,
-                ProgramTempBasalUtil.calculateChecksum(durationInSlots, pulsesPerSlot[0], pulsesPerSlot), durationInSlots,
-                0x3840.toShort(), pulsesPerSlot[0], ProgramInsulinCommand.DeliveryType.TEMP_BASAL
+            val tenthPulsesPerSlot = ProgramTempBasalUtil.mapTempBasalToTenthPulsesPerSlot(
+                durationInSlots.toInt(),
+                rateInUnitsPerHour!!
             )
-            return ProgramTempBasalCommand(interlockCommand, uniqueId!!, sequenceNumber!!, multiCommandFlag, programReminder!!, insulinProgramElements)
+            val shortInsulinProgramElements = ProgramTempBasalUtil.mapPulsesPerSlotToShortInsulinProgramElements(
+                pulsesPerSlot
+            )
+            val insulinProgramElements = ProgramTempBasalUtil.mapTenthPulsesPerSlotToLongInsulinProgramElements(
+                tenthPulsesPerSlot
+            )
+            val interlockCommand = ProgramInsulinCommand(
+                uniqueId!!,
+                sequenceNumber!!,
+                multiCommandFlag,
+                nonce!!,
+                shortInsulinProgramElements,
+                ProgramTempBasalUtil.calculateChecksum(durationInSlots, pulsesPerSlot[0], pulsesPerSlot),
+                durationInSlots,
+                0x3840.toShort(),
+                pulsesPerSlot[0],
+                ProgramInsulinCommand.DeliveryType.TEMP_BASAL
+            )
+            return ProgramTempBasalCommand(
+                interlockCommand,
+                uniqueId!!,
+                sequenceNumber!!,
+                multiCommandFlag,
+                programReminder!!,
+                insulinProgramElements
+            )
         }
     }
 
@@ -75,10 +96,12 @@ class ProgramTempBasalCommand private constructor(
             val delayUntilNextTenthPulseInUsec: Int
             if (firstProgramElement.totalTenthPulses.toInt() == 0) {
                 remainingTenthPulsesInFirstElement = firstProgramElement.numberOfSlots.toShort()
-                delayUntilNextTenthPulseInUsec = ProgramBasalUtil.MAX_DELAY_BETWEEN_TENTH_PULSES_IN_USEC_AND_USECS_IN_BASAL_SLOT
+                delayUntilNextTenthPulseInUsec =
+                    ProgramBasalUtil.MAX_DELAY_BETWEEN_TENTH_PULSES_IN_USEC_AND_USECS_IN_BASAL_SLOT
             } else {
                 remainingTenthPulsesInFirstElement = firstProgramElement.totalTenthPulses
-                delayUntilNextTenthPulseInUsec = (firstProgramElement.numberOfSlots.toLong() * 1800.0 / remainingTenthPulsesInFirstElement * 1000000).toInt()
+                delayUntilNextTenthPulseInUsec =
+                    (firstProgramElement.numberOfSlots.toLong() * 1800.0 / remainingTenthPulsesInFirstElement * 1000000).toInt()
             }
             val buffer = ByteBuffer.allocate(getLength().toInt()) //
                 .put(commandType.value) //
@@ -92,7 +115,12 @@ class ProgramTempBasalCommand private constructor(
             }
             val tempBasalCommand = buffer.array()
             val interlockCommand = interlockCommand.encoded
-            val header: ByteArray = encodeHeader(uniqueId, sequenceNumber, (tempBasalCommand.size + interlockCommand.size).toShort(), multiCommandFlag)
+            val header: ByteArray = encodeHeader(
+                uniqueId,
+                sequenceNumber,
+                (tempBasalCommand.size + interlockCommand.size).toShort(),
+                multiCommandFlag
+            )
             return appendCrc(
                 ByteBuffer.allocate(header.size + interlockCommand.size + tempBasalCommand.size) //
                     .put(header) //

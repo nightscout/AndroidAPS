@@ -91,7 +91,8 @@ data class MessagePacket(
             val priority = f2.get(1) != 0
             val lastMessage = f2.get(2) != 0
             val gateway = f2.get(3) != 0
-            val type = MessageType.byValue((f1.get(7) or (f1.get(6) shl 1) or (f1.get(5) shl 2) or (f1.get(4) shl 3)).toByte())
+            val type =
+                MessageType.byValue((f1.get(7) or (f1.get(6) shl 1) or (f1.get(5) shl 2) or (f1.get(4) shl 3)).toByte())
             if (version.toInt() != 0) {
                 throw CouldNotParseMessageException(payload)
             }
