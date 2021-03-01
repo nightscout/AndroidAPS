@@ -9,6 +9,7 @@ import info.nightscout.androidaps.R
 import info.nightscout.androidaps.database.AppRepository
 import info.nightscout.androidaps.database.ValueWrapper
 import info.nightscout.androidaps.events.Event
+import info.nightscout.androidaps.events.EventAutosensCalculationFinished
 import info.nightscout.androidaps.interfaces.ProfileFunction
 import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.logging.LTag
@@ -19,7 +20,6 @@ import info.nightscout.androidaps.plugins.general.overview.notifications.Notific
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.IobCobCalculatorPlugin.Companion.roundUpTime
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.data.AutosensData
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.events.EventAutosensBgLoaded
-import info.nightscout.androidaps.events.EventAutosensCalculationFinished
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.events.EventIobCalculationProgress
 import info.nightscout.androidaps.plugins.sensitivity.SensitivityAAPSPlugin
 import info.nightscout.androidaps.plugins.sensitivity.SensitivityWeightedAveragePlugin
@@ -297,7 +297,7 @@ class IobCobOref1Thread internal constructor(
                     @Suppress("SimplifyBooleanWithConstants")
                     if (false && sp.getBoolean(R.string.key_high_temptarget_raises_sensitivity, SMBDefaults.high_temptarget_raises_sensitivity)) {
                         val tempTarget = repository.getTemporaryTargetActiveAt(dateUtil._now()).blockingGet()
-                         if (tempTarget is ValueWrapper.Existing && tempTarget.value.target() >= 100) {
+                        if (tempTarget is ValueWrapper.Existing && tempTarget.value.target() >= 100) {
                             autosensData.extraDeviation.add(-(tempTarget.value.target() - 100) / 20)
                         }
                     }

@@ -170,7 +170,7 @@ class TreatmentsTempTargetFragment : DaggerFragment() {
             holder.binding.reason.text = tempTarget.reason.text
             holder.binding.date.setTextColor(
                 when {
-                    tempTarget === currentlyActiveTarget  -> resourceHelper.gc(R.color.colorActive)
+                    tempTarget.id == currentlyActiveTarget?.id  -> resourceHelper.gc(R.color.colorActive)
                     tempTarget.timestamp > DateUtil.now() -> resourceHelper.gc(R.color.colorScheduled)
                     else                                  -> holder.binding.reasonColon.currentTextColor
                 })

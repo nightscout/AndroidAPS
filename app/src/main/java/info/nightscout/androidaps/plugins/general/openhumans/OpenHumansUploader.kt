@@ -271,7 +271,7 @@ class OpenHumansUploader @Inject constructor(
     @JvmOverloads
     fun enqueueTempTarget(tempTarget: TemporaryTarget?, deleted: Boolean = false) = tempTarget?.let {
         insertQueueItem("TempTargets") {
-            put("date", tempTarget.dateCreated)
+            put("date", tempTarget.timestamp)
             put("isValid", tempTarget.isValid)
             put("nsId", tempTarget.interfaceIDs_backing?.nightscoutId)
             put("low", tempTarget.lowTarget)
