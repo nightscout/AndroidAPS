@@ -44,9 +44,10 @@ buildscript {
             }
         }
         maven { url "https://plugins.gradle.org/m2/" } // jacoco 0.2
+        maven { url "https://dl.bintray.com/kotlin/kotlinx" }
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:4.0.1'
+        classpath 'com.android.tools.build:gradle:4.1.2'
         classpath 'com.google.gms:google-services:4.3.4'
         classpath 'com.google.firebase:firebase-crashlytics-gradle:2.4.1'
 
@@ -59,7 +60,7 @@ buildscript {
 }
 
 plugins {
-    id "io.gitlab.arturbosch.detekt" version "1.15.0-RC2"
+    id "io.gitlab.arturbosch.detekt" version "1.16.0-RC2"
     id "org.jlleitschuh.gradle.ktlint" version "9.4.1"
 }
 
@@ -83,6 +84,8 @@ allprojects {
                 includeModule("org.jetbrains.trove4j", "trove4j")
             }
         }
+        maven { url "https://dl.bintray.com/kotlin/kotlinx" }
+
     }
     //Support @JvmDefault
     tasks.withType(org.jetbrains.kotlin.gradle.tasks.KotlinCompile).all {
