@@ -128,16 +128,16 @@ class FillDialog : DialogFragmentWithDate() {
             activity?.let { activity ->
                 OKDialog.showConfirmation(activity, resourceHelper.gs(R.string.primefill), HtmlHelper.fromHtml(Joiner.on("<br/>").join(actions)), {
                     if (insulinAfterConstraints > 0) {
-                        uel.log(Action.PRIME_BOLUS, ValueWithUnit(insulinAfterConstraints, Units.U))
+                        uel.log(Action.PRIME_BOLUS, notes, ValueWithUnit(insulinAfterConstraints, Units.U))
                         requestPrimeBolus(insulinAfterConstraints, notes)
                     }
                     if (siteChange) {
-                        uel.log(Action.SITE_CHANGE)
+                        uel.log(Action.SITE_CHANGE, notes)
                         nsUpload.generateCareportalEvent(CareportalEvent.SITECHANGE, eventTime, notes)
                     }
                     if (insulinChange) {
                         // add a second for case of both checked
-                        uel.log(Action.INSULIN_CHANGE)
+                        uel.log(Action.INSULIN_CHANGE, notes)
                         nsUpload.generateCareportalEvent(CareportalEvent.INSULINCHANGE, eventTime + 1000, notes)
                     }
                 }, null)

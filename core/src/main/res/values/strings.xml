@@ -482,6 +482,7 @@
     <string name="uel_sms_sms">SMS SMS</string>
     <string name="uel_sms_tt">SMS TT</string>
     <string name="uel_unknown">UNKNOWN</string>
+    <string name="formated_string">Formated string</string>
 
     <plurals name="days">
         <item quantity="one">%1$d day</item>

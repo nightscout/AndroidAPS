@@ -46,7 +46,7 @@
 
             <TextView
                 android:id="@+id/values"
-                android:layout_width="wrap_content"
+                android:layout_width="0px"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
                 android:layout_weight="1"
@@ -57,10 +57,10 @@
 
             <TextView
                 android:id="@+id/s"
-                android:layout_width="wrap_content"
+                android:layout_width="0px"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:paddingStart="10dp"
+                android:layout_weight="0.5"
+                android:paddingStart="20dp"
                 android:textAppearance="?android:attr/textAppearanceSmall"
                 tools:ignore="HardcodedText,RtlSymmetry" />
 

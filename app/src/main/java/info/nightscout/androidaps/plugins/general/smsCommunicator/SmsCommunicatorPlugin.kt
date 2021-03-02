@@ -648,9 +648,9 @@ class SmsCommunicatorPlugin @Inject constructor(
                                     replyText += "\n" + activePlugin.activePump.shortStatus(true)
                                     sendSMSToAllNumbers(Sms(receivedSms.phoneNumber, replyText))
                                     if (result.isPercent)
-                                        uel.log(Action.SMS_BASAL, activePlugin.activePump.shortStatus(true), ValueWithUnit(R.string.smscommunicator_tempbasalset_percent, Units.R_String), ValueWithUnit(result.percent, Units.Percent), ValueWithUnit(result.duration, Units.M))
+                                        uel.log(Action.SMS_BASAL, activePlugin.activePump.shortStatus(true), ValueWithUnit(R.string.smscommunicator_tempbasalset_percent, 2), ValueWithUnit(result.percent, Units.Percent), ValueWithUnit(result.duration, Units.M))
                                     else
-                                        uel.log(Action.SMS_BASAL, activePlugin.activePump.shortStatus(true), ValueWithUnit(R.string.smscommunicator_tempbasalset, Units.R_String), ValueWithUnit(result.absolute, Units.U_H), ValueWithUnit(result.duration, Units.M))
+                                        uel.log(Action.SMS_BASAL, activePlugin.activePump.shortStatus(true), ValueWithUnit(R.string.smscommunicator_tempbasalset, 2), ValueWithUnit(result.absolute, Units.U_H), ValueWithUnit(result.duration, Units.M))
                                 } else {
                                     var replyText = resourceHelper.gs(R.string.smscommunicator_tempbasalfailed)
                                     replyText += "\n" + activePlugin.activePump.shortStatus(true)
@@ -686,9 +686,9 @@ class SmsCommunicatorPlugin @Inject constructor(
                                     replyText += "\n" + activePlugin.activePump.shortStatus(true)
                                     sendSMSToAllNumbers(Sms(receivedSms.phoneNumber, replyText))
                                     if (result.isPercent)
-                                        uel.log(Action.SMS_BASAL, activePlugin.activePump.shortStatus(true), ValueWithUnit(R.string.smscommunicator_tempbasalset_percent, Units.R_String), ValueWithUnit(result.percent, Units.Percent), ValueWithUnit(result.duration, Units.M))
+                                        uel.log(Action.SMS_BASAL, activePlugin.activePump.shortStatus(true), ValueWithUnit(R.string.smscommunicator_tempbasalset_percent, 2), ValueWithUnit(result.percent, Units.Percent), ValueWithUnit(result.duration, Units.M))
                                     else
-                                        uel.log(Action.SMS_BASAL, activePlugin.activePump.shortStatus(true), ValueWithUnit(R.string.smscommunicator_tempbasalset, Units.R_String), ValueWithUnit(result.absolute, Units.U_H), ValueWithUnit(result.duration, Units.M))
+                                        uel.log(Action.SMS_BASAL, activePlugin.activePump.shortStatus(true), ValueWithUnit(R.string.smscommunicator_tempbasalset, 2), ValueWithUnit(result.absolute, Units.U_H), ValueWithUnit(result.duration, Units.M))
                                 } else {
                                     var replyText = resourceHelper.gs(R.string.smscommunicator_tempbasalfailed)
                                     replyText += "\n" + activePlugin.activePump.shortStatus(true)
@@ -747,9 +747,9 @@ class SmsCommunicatorPlugin @Inject constructor(
                                     replyText += "\n" + activePlugin.activePump.shortStatus(true)
                                     sendSMSToAllNumbers(Sms(receivedSms.phoneNumber, replyText))
                                     if (config.APS)
-                                        uel.log(Action.SMS_EXTENDED_BOLUS, activePlugin.activePump.shortStatus(true), ValueWithUnit(R.string.smscommunicator_extendedset, Units.R_String), ValueWithUnit(aDouble, Units.U), ValueWithUnit(duration, Units.M), ValueWithUnit(R.string.loopsuspended, Units.R_String))
+                                        uel.log(Action.SMS_EXTENDED_BOLUS, activePlugin.activePump.shortStatus(true), ValueWithUnit(R.string.smscommunicator_extendedset, 2), ValueWithUnit(aDouble, Units.U), ValueWithUnit(duration, Units.M), ValueWithUnit(R.string.loopsuspended, Units.R_String))
                                      else
-                                        uel.log(Action.SMS_EXTENDED_BOLUS, activePlugin.activePump.shortStatus(true), ValueWithUnit(R.string.smscommunicator_extendedset, Units.R_String), ValueWithUnit(aDouble, Units.U), ValueWithUnit(duration, Units.M))
+                                        uel.log(Action.SMS_EXTENDED_BOLUS, activePlugin.activePump.shortStatus(true), ValueWithUnit(R.string.smscommunicator_extendedset, 2), ValueWithUnit(aDouble, Units.U), ValueWithUnit(duration, Units.M))
                                 } else {
                                     var replyText = resourceHelper.gs(R.string.smscommunicator_extendedfailed)
                                     replyText += "\n" + activePlugin.activePump.shortStatus(true)
@@ -868,12 +868,12 @@ class SmsCommunicatorPlugin @Inject constructor(
                                     var replyText = String.format(resourceHelper.gs(R.string.smscommunicator_carbsset), anInteger)
                                     replyText += "\n" + activePlugin.activePump.shortStatus(true)
                                     sendSMSToAllNumbers(Sms(receivedSms.phoneNumber, replyText))
-                                    uel.log(Action.SMS_CARBS, activePlugin.activePump.shortStatus(true), ValueWithUnit(R.string.smscommunicator_carbsset, Units.R_String), ValueWithUnit(anInteger,Units.G))
+                                    uel.log(Action.SMS_CARBS, activePlugin.activePump.shortStatus(true), ValueWithUnit(R.string.smscommunicator_carbsset, 1), ValueWithUnit(anInteger,Units.G))
                                 } else {
                                     var replyText = resourceHelper.gs(R.string.smscommunicator_carbsfailed, anInteger)
                                     replyText += "\n" + activePlugin.activePump.shortStatus(true)
                                     sendSMS(Sms(receivedSms.phoneNumber, replyText))
-                                    uel.log(Action.SMS_CARBS, activePlugin.activePump.shortStatus(true), ValueWithUnit(R.string.smscommunicator_carbsfailed, Units.R_String), ValueWithUnit(anInteger,Units.G))
+                                    uel.log(Action.SMS_CARBS, activePlugin.activePump.shortStatus(true), ValueWithUnit(R.string.smscommunicator_carbsfailed, 1), ValueWithUnit(anInteger,Units.G))
                                 }
                             }
                         })
@@ -882,7 +882,7 @@ class SmsCommunicatorPlugin @Inject constructor(
                         var replyText = String.format(resourceHelper.gs(R.string.smscommunicator_carbsset), anInteger)
                         replyText += "\n" + activePlugin.activePump.shortStatus(true)
                         sendSMSToAllNumbers(Sms(receivedSms.phoneNumber, replyText))
-                        uel.log(Action.SMS_CARBS, activePlugin.activePump.shortStatus(true), ValueWithUnit(R.string.smscommunicator_carbsset, Units.R_String), ValueWithUnit(anInteger,Units.G))
+                        uel.log(Action.SMS_CARBS, activePlugin.activePump.shortStatus(true), ValueWithUnit(R.string.smscommunicator_carbsset, 1), ValueWithUnit(anInteger,Units.G))
                     }
                 }
             })
@@ -947,7 +947,8 @@ class SmsCommunicatorPlugin @Inject constructor(
                     val ttString = if (units == Constants.MMOL) DecimalFormatter.to1Decimal(tt) else DecimalFormatter.to0Decimal(tt)
                     val replyText = String.format(resourceHelper.gs(R.string.smscommunicator_tt_set), ttString, ttDuration)
                     sendSMSToAllNumbers(Sms(receivedSms.phoneNumber, replyText))
-                    uel.log(Action.SMS_TT, ValueWithUnit(R.string.smscommunicator_tt_set, Units.R_String), ValueWithUnit(tt, units), ValueWithUnit(ttDuration, Units.M))
+                    //uel.log(Action.SMS_TT, ValueWithUnit(R.string.smscommunicator_tt_set, 2), ValueWithUnit(tt, units), ValueWithUnit(ttDuration, Units.M))
+                    uel.log(Action.SMS_TT, ValueWithUnit(tt, units), ValueWithUnit(ttDuration, Units.M))
                 }
             })
         } else if (isStop) {

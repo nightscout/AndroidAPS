@@ -179,7 +179,7 @@ class InsulinDialog : DialogFragmentWithDate() {
             activity?.let { activity ->
                 OKDialog.showConfirmation(activity, resourceHelper.gs(R.string.bolus), HtmlHelper.fromHtml(Joiner.on("<br/>").join(actions)), {
                     if (eatingSoonChecked) {
-                        uel.log(Action.TT_EATING_SOON, ValueWithUnit(eatingSoonTT, units), ValueWithUnit(eatingSoonTTDuration, Units.M))
+                        uel.log(Action.TT_EATING_SOON, notes, ValueWithUnit(eatingSoonTT, units), ValueWithUnit(eatingSoonTTDuration, Units.M))
                         val tempTarget = TempTarget()
                             .date(System.currentTimeMillis())
                             .duration(eatingSoonTTDuration)
@@ -197,11 +197,11 @@ class InsulinDialog : DialogFragmentWithDate() {
                         detailedBolusInfo.source = Source.USER
                         detailedBolusInfo.notes = notes
                         if (recordOnlyChecked) {
-                            uel.log(Action.BOLUS_RECORD, ValueWithUnit(insulinAfterConstraints, Units.U), ValueWithUnit(timeOffset, Units.M))
+                            uel.log(Action.BOLUS_RECORD, notes, ValueWithUnit(insulinAfterConstraints, Units.U), ValueWithUnit(timeOffset, Units.M))
                             detailedBolusInfo.date = time
                             activePlugin.activeTreatments.addToHistoryTreatment(detailedBolusInfo, false)
                         } else {
-                            uel.log(Action.BOLUS, ValueWithUnit(insulinAfterConstraints, Units.U))
+                            uel.log(Action.BOLUS, notes, ValueWithUnit(insulinAfterConstraints, Units.U))
                             detailedBolusInfo.date = DateUtil.now()
                             commandQueue.bolus(detailedBolusInfo, object : Callback() {
                                 override fun run() {

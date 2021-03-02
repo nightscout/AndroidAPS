@@ -7,16 +7,20 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import dagger.android.support.DaggerFragment
+import info.nightscout.androidaps.Constants
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.database.AppRepository
 import info.nightscout.androidaps.database.entities.UserEntry
 import info.nightscout.androidaps.database.entities.UserEntry.*
 import info.nightscout.androidaps.databinding.TreatmentsUserEntryFragmentBinding
 import info.nightscout.androidaps.databinding.TreatmentsUserEntryItemBinding
+import info.nightscout.androidaps.interfaces.ProfileFunction
+import info.nightscout.androidaps.plugins.bus.RxBusWrapper
 import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.DecimalFormatter
+import info.nightscout.androidaps.utils.FabricPrivacy
 import info.nightscout.androidaps.utils.Translator
-import info.nightscout.androidaps.utils.extensions.stringId
+import info.nightscout.androidaps.utils.extensions.*
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 import info.nightscout.androidaps.utils.rx.AapsSchedulers
 import io.reactivex.disposables.CompositeDisposable
@@ -29,6 +33,9 @@ class TreatmentsUserEntryFragment : DaggerFragment() {
     @Inject lateinit var aapsSchedulers: AapsSchedulers
     @Inject lateinit var resourceHelper: ResourceHelper
     @Inject lateinit var dateUtil: DateUtil
+    @Inject lateinit var profileFunction: ProfileFunction
+    @Inject lateinit var fabricPrivacy: FabricPrivacy
+    @Inject lateinit var rxBus: RxBusWrapper
     @Inject lateinit var translator: Translator
 
     private val disposable = CompositeDisposable()
@@ -74,16 +81,30 @@ class TreatmentsUserEntryFragment : DaggerFragment() {
             if (current.s != "") holder.binding.s.text = current.s else holder.binding.s.visibility = View.GONE
             //holder.binding.s.text = current.toString()  //for debug
             var valuesWithUnitString = ""
+            var rStringParam = 0
             for(v in current.values) {
-                when (v.unit) {
-                    Units.Timestamp -> valuesWithUnitString += dateUtil.dateAndTimeAndSecondsString(v.lValue) + " "
-                    Units.CPEvent -> valuesWithUnitString += translator.translate(v.sValue) + " "
-                    Units.R_String -> valuesWithUnitString += resourceHelper.gs(v.iValue) + " "
-                    Units.Mg_Dl -> valuesWithUnitString += DecimalFormatter.to0Decimal(v.dValue) + resourceHelper.gs(Units.Mg_Dl.stringId()) + " "
-                    Units.Mmol_L -> valuesWithUnitString += DecimalFormatter.to1Decimal(v.dValue) + resourceHelper.gs(Units.Mmol_L.stringId()) + " "
-                    Units.G -> valuesWithUnitString += DecimalFormatter.to0Decimal(v.dValue) + resourceHelper.gs(Units.G.stringId()) + " "
-                    else -> valuesWithUnitString += if (!v.value().equals(0) && !v.value().equals("")) { v.value().toString() + if (!v.unit.stringId().equals(0)) resourceHelper.gs(v.unit.stringId()) + " " else " " } else ""
-                }
+                if (rStringParam >0)
+                    rStringParam--
+                else
+                    when (v.unit) {
+                        Units.Timestamp -> valuesWithUnitString += dateUtil.dateAndTimeAndSecondsString(v.lValue) + " "
+                        Units.CPEvent -> valuesWithUnitString += translator.translate(v.sValue) + " "
+                        Units.R_String -> {
+                            rStringParam = v.lValue.toInt()
+                            when (rStringParam) {   //
+                                0 -> valuesWithUnitString += resourceHelper.gs(v.iValue) + " "
+                                1 -> valuesWithUnitString += resourceHelper.gs(v.iValue, current.values[current.values.indexOf(v)+1].value()) + " "
+                                2 -> valuesWithUnitString += resourceHelper.gs(v.iValue, current.values[current.values.indexOf(v)+1].value(), current.values[current.values.indexOf(v)+2].value()) + " "
+                                3 -> valuesWithUnitString += resourceHelper.gs(v.iValue, current.values[current.values.indexOf(v)+1].value(), current.values[current.values.indexOf(v)+2].value(), current.values[current.values.indexOf(v)+3].value()) + " "
+                                4 -> rStringParam = 0
+                            }
+                        }
+                        Units.Mg_Dl -> valuesWithUnitString += if (profileFunction.getUnits()==Constants.MGDL) DecimalFormatter.to0Decimal(v.dValue) + resourceHelper.gs(Units.Mg_Dl.stringId()) + " " else DecimalFormatter.to1Decimal(v.dValue/Constants.MMOLL_TO_MGDL) + resourceHelper.gs(Units.Mmol_L.stringId()) + " "
+                        Units.Mmol_L -> valuesWithUnitString += if (profileFunction.getUnits()==Constants.MGDL) DecimalFormatter.to0Decimal(v.dValue*Constants.MMOLL_TO_MGDL) + resourceHelper.gs(Units.Mg_Dl.stringId()) + " " else DecimalFormatter.to1Decimal(v.dValue) + resourceHelper.gs(Units.Mmol_L.stringId()) + " "
+                        Units.G -> valuesWithUnitString += DecimalFormatter.to0Decimal(v.dValue) + resourceHelper.gs(Units.G.stringId()) + " "
+                        Units.U_H -> valuesWithUnitString += DecimalFormatter.to2Decimal(v.dValue) + resourceHelper.gs(Units.U_H.stringId()) + " "
+                        else -> valuesWithUnitString += if (!v.value().equals(0) && !v.value().equals("")) { v.value().toString() + if (!v.unit.stringId().equals(0)) resourceHelper.gs(v.unit.stringId()) + " " else " " } else ""
+                    }
             }
             if (current.values.size > 0)
                 holder.binding.values.visibility = View.VISIBLE

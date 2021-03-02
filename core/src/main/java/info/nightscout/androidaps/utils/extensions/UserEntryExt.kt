@@ -101,3 +101,33 @@ fun UserEntry.Action.stringId(): Int {
         else                                                -> R.string.uel_unknown
     }
 }
+
+
+fun UserEntry.Units.stringId(): Int {
+    return when {
+        this == UserEntry.Units.Mg_Dl    -> R.string.mgdl
+        this == UserEntry.Units.Mmol_L   -> R.string.mmol
+        this == UserEntry.Units.U        -> R.string.insulin_unit_shortname
+        this == UserEntry.Units.U_H      -> R.string.profile_ins_units_per_hour
+        this == UserEntry.Units.G        -> R.string.shortgram
+        this == UserEntry.Units.M        -> R.string.shortminute
+        this == UserEntry.Units.H        -> R.string.shorthour
+        this == UserEntry.Units.Percent  -> R.string.shortpercent
+        this == UserEntry.Units.R_String -> R.string.formated_string
+        else                             -> 0
+    }
+}
+
+fun UserEntry.ValueWithUnit.toStringWithUnit(): String {
+    /* need injection to maje convertion
+    return when (this.unit) {
+        UserEntry.Units.Timestamp -> dateUtil.dateAndTimeAndSecondsString(this.lValue)
+        UserEntry.Units.CPEvent   -> translator.translate(this.sValue)
+        UserEntry.Units.R_String  -> resourceHelper.gs(this.iValue)
+        UserEntry.Units.Mg_Dl     -> DecimalFormatter.to0Decimal(this.dValue) + resourceHelper.gs(UserEntry.Units.Mg_Dl.stringId())
+        UserEntry.Units.Mmol_L    -> DecimalFormatter.to1Decimal(this.dValue) + resourceHelper.gs(UserEntry.Units.Mmol_L.stringId())
+        UserEntry.Units.G         -> DecimalFormatter.to0Decimal(this.dValue) + resourceHelper.gs(UserEntry.Units.G.stringId())
+        else                      -> if (!this.value().equals(0) && !this.value().equals("")) { v.value().toString() + if (!this.unit.stringId().equals(0)) resourceHelper.gs(this.unit.stringId()) else "" } else ""
+    } */
+    return ""
+}

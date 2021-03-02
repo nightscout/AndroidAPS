@@ -125,11 +125,13 @@ data class UserEntry(
         constructor(lvalue:Long?, unit:Units) : this(0.0,0, lvalue ?:0, "", unit)
         constructor(svalue:String?, unit:Units) : this(0.0,0, 0, svalue ?:"", unit)
         constructor(dvalue:Double?, unit:String) : this(dvalue ?:0.0,0, 0, "", Units.fromText(unit))
+        constructor(rStringRef:Int, nbParam: Long) : this(0.0, rStringRef, nbParam, "", Units.R_String)             // additionnal constructors for formated strings with additional values as parameters (define number of parameters as long
+
         fun value() : Any {
+            if (sValue != "") return sValue
             if (!dValue.equals(0.0)) return dValue
             if (!iValue.equals(0)) return iValue
-            if (!lValue.equals(0)) return lValue
-            return sValue
+            return lValue
         }
     }
     enum class Units(val text: String) {
