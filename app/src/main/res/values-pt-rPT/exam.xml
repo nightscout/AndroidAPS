@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="dia_whatmeansdia">O que é verdade sobre DIA?</string>
-    <string name="dia_label_exam">Duração da Acção de Insulina (DIA)</string>
+    <string name="dia_label_exam">Duração da Acção da Insulina (DIA)</string>
     <string name="dia_profile">Deve definir o valor da DIA no seu perfil.</string>
     <string name="dia_minimumis5h">O valor mínimo permitido são 5 horas.</string>
     <string name="dia_hint1">https://androidaps.readthedocs.io/en/latest/EN/Configuration/Config-Builder.html?#insulin</string>
-    <string name="dia_meaningisequaltodiapump">Se estiver satisfeito com o valor para a DIA que utilizou na bomba antes do AndroidAPS e funcionou bem, não há necessidade de alterar isso quando inicia o loop.</string>
-    <string name="dia_valuemustbedetermined">Deve determinar para si mesmo o valor adequado para a DIA.</string>
+    <string name="dia_meaningisequaltodiapump">Se estiver satisfeito com o valor da DIA que utilizava na bomba antes da AndroidAPS e que funcionava bem, não há necessidade de o alterar quando iniciar o loop.</string>
+    <string name="dia_valuemustbedetermined">Deve determinar para o seu valor adequado para a DIA.</string>
     <string name="hypott_label">Hipo Alvo-Temp</string>
     <string name="hypott_whenhypott">Qual é a principal razão para definir um alvo temporário?</string>
     <string name="hypott_wrongbasal">Para corrigir hipos causadas por configurações de taxa de basal incorretas.</string>
