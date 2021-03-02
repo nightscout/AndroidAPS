@@ -194,7 +194,6 @@
     <string name="smscommunicator_loophasbeenenabled">Loop har blitt aktivert</string>
     <string name="smscommunicator_loopisenabled">Loop er aktivert</string>
     <string name="valuelimitedto">%1$.2f begrenset til %2$.2f</string>
-    <string name="valueoutofrange">Verdien %1$s er utenfor angitt begrensning</string>
     <string name="smscommunicator_pumpconnectwithcode">For å koble til pumpen, svar med kode %1$s</string>
     <string name="smscommunicator_pumpconnectfail">Tilkobling til pumpen mislyktes</string>
     <string name="smscommunicator_pumpdisconnectwithcode">For å koble fra pumpen i %1$d minutter, svar med koden %2$s</string>
