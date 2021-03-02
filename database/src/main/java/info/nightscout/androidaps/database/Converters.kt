@@ -23,10 +23,7 @@ class Converters {
         val jsonArray = JSONArray()
         values.forEach {
             val jsonObject = JSONObject()
-            if (!it.dValue.equals(0.0)) jsonObject.put("dValue", it.dValue).put("unit", it.unit.name)
-            if (!it.iValue.equals(0)) jsonObject.put("iValue", it.iValue).put("unit", it.unit.name)
-            if (!it.lValue.equals(0)) jsonObject.put("lValue", it.lValue).put("unit", it.unit.name)
-            if (!it.sValue.equals("")) jsonObject.put("sValue", it.sValue).put("unit", it.unit.name)
+            jsonObject.put("dValue", it.dValue).put("iValue", it.iValue).put("lValue", it.lValue).put("sValue", it.sValue).put("unit", it.unit.name)
             jsonArray.put(jsonObject)
         }
         return jsonArray.toString()
@@ -39,10 +36,7 @@ class Converters {
         val list = mutableListOf<UserEntry.ValueWithUnit>()
         for (i in 0 until jsonArray.length()) {
             val jsonObject = jsonArray.getJSONObject(i)
-            if (jsonObject.has("dValue")) list.add(ValueWithUnit(jsonObject.getDouble("dValue"), jsonObject.getString("unit")))
-            if (jsonObject.has("iValue")) list.add(ValueWithUnit(jsonObject.getDouble("iValue"), jsonObject.getString("unit")))
-            if (jsonObject.has("lValue")) list.add(ValueWithUnit(jsonObject.getDouble("lValue"), jsonObject.getString("unit")))
-            if (jsonObject.has("sValue")) list.add(ValueWithUnit(jsonObject.getDouble("sValue"), jsonObject.getString("unit")))
+            list.add(ValueWithUnit(jsonObject.getDouble("dValue"), jsonObject.getInt("iValue"), jsonObject.getLong("lValue"), jsonObject.getString("sValue"), Units.fromString(jsonObject.getString("unit"))))
         }
         return list
     }

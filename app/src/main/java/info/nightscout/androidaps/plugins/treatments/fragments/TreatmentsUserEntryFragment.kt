@@ -10,9 +10,12 @@ import dagger.android.support.DaggerFragment
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.database.AppRepository
 import info.nightscout.androidaps.database.entities.UserEntry
+import info.nightscout.androidaps.database.entities.UserEntry.*
 import info.nightscout.androidaps.databinding.TreatmentsUserEntryFragmentBinding
 import info.nightscout.androidaps.databinding.TreatmentsUserEntryItemBinding
 import info.nightscout.androidaps.utils.DateUtil
+import info.nightscout.androidaps.utils.DecimalFormatter
+import info.nightscout.androidaps.utils.Translator
 import info.nightscout.androidaps.utils.extensions.stringId
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 import info.nightscout.androidaps.utils.rx.AapsSchedulers
@@ -26,6 +29,7 @@ class TreatmentsUserEntryFragment : DaggerFragment() {
     @Inject lateinit var aapsSchedulers: AapsSchedulers
     @Inject lateinit var resourceHelper: ResourceHelper
     @Inject lateinit var dateUtil: DateUtil
+    @Inject lateinit var translator: Translator
 
     private val disposable = CompositeDisposable()
 
@@ -68,13 +72,22 @@ class TreatmentsUserEntryFragment : DaggerFragment() {
             holder.binding.date.text = dateUtil.dateAndTimeAndSecondsString(current.timestamp)
             holder.binding.action.text = resourceHelper.gs(current.action.stringId())
             if (current.s != "") holder.binding.s.text = current.s else holder.binding.s.visibility = View.GONE
-            /*
-            if (current.d1 != 0.0) holder.binding.d1.text = current.d1.toString() else holder.binding.d1.visibility = View.GONE
-            if (current.d2 != 0.0) holder.binding.d2.text = current.d2.toString() else holder.binding.d2.visibility = View.GONE
-            if (current.i1 != 0) holder.binding.i1.text = current.i1.toString() else holder.binding.i1.visibility = View.GONE
-            if (current.i2 != 0) holder.binding.i2.text = current.i2.toString() else holder.binding.i2.visibility = View.GONE
-
-             */
+            //holder.binding.s.text = current.toString()  //for debug
+            var valuesWithUnitString = ""
+            for(v in current.values) {
+                when (v.unit) {
+                    Units.Timestamp -> valuesWithUnitString += dateUtil.dateAndTimeAndSecondsString(v.lValue) + " "
+                    Units.CPEvent -> valuesWithUnitString += translator.translate(v.sValue) + " "
+                    Units.R_String -> valuesWithUnitString += resourceHelper.gs(v.iValue) + " "
+                    Units.Mg_Dl -> valuesWithUnitString += DecimalFormatter.to0Decimal(v.dValue) + resourceHelper.gs(Units.Mg_Dl.stringId()) + " "
+                    Units.Mmol_L -> valuesWithUnitString += DecimalFormatter.to1Decimal(v.dValue) + resourceHelper.gs(Units.Mmol_L.stringId()) + " "
+                    Units.G -> valuesWithUnitString += DecimalFormatter.to0Decimal(v.dValue) + resourceHelper.gs(Units.G.stringId()) + " "
+                    else -> valuesWithUnitString += if (!v.value().equals(0) && !v.value().equals("")) { v.value().toString() + if (!v.unit.stringId().equals(0)) resourceHelper.gs(v.unit.stringId()) + " " else " " } else ""
+                }
+            }
+            if (current.values.size > 0)
+                holder.binding.values.visibility = View.VISIBLE
+                holder.binding.values.text = valuesWithUnitString
         }
 
         inner class UserEntryViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
