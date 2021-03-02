@@ -235,6 +235,8 @@
     <string name="mealbolus">Masă</string>
     <string name="correctionbous">Corecție</string>
     <string name="actions">Acțiuni</string>
+    <string name="ns_upload_only">(E PERICULOS SĂ DEZACTIVEZI) Doar încărcare în NS</string>
+    <string name="ns_upload_only_summary">Numai încărcare NS (sincronizare dezactivata). Nu este eficient pe SGV (rom. valori de glicemie din senzor) dacă nu este selectată o sursă locală ca xDrip. Nu este eficient pe Profiluri dacă sunt utilizate cele din NS.\n!!! ATENȚIE !!! Dezactivarea acestei opțiuni poate determina disfuncționalități și supradozaj cu insulină dacă oricare dintre componentele dumneavoastră (AAPS, NS, xDrip) este configurată greșit. Urmăriți cu atenție dacă datele afișate de AAPS se potrivesc cu starea pompei!</string>
     <string name="pumpNotInitialized">Pompa nu este inițializată!</string>
     <string name="primefill">Pregătire/umplere</string>
     <string name="fillwarning">Asigurați-vă că aveți cantitatea specificată de instrucțiunile setului de infuzie!</string>
@@ -286,6 +288,7 @@
     <string name="smscommunicator_shortname">SMS</string>
     <string name="short_tabtitles">Scurtează titlurile secțiunilor</string>
     <string name="always_use_shortavg">Folosește întotdeauna media scurtă a diferenței în locul diferenței simple</string>
+    <string name="always_use_shortavg_summary">Folositor când datele de la surse nefiltrate precum xDrip+ devin \'\'zgomotoase\".</string>
     <string name="profile">Profil</string>
     <string name="openapsama_max_daily_safety_multiplier_summary">Valoare implicită: 3\nAceasta este o setare de critică de securitate a OpenAPS. Asta înseamnă că se limitează bazala lade 3x valoarea maximă a bazalelor tale.Cel mai probabil nu veți schimba această valoare, dar trebuie să țineți cont de ce se discută despre “3x max zilnic; 4x curent” ca valori de siguranță.</string>
     <string name="openapsama_current_basal_safety_multiplier_summary">Valoare implicită: 4\nAceasta este cealaltă jumătate a cheii de siguranță a OpenAPS și cealaltă jumătate a \"3x max zilnic; 4x curent\" al setărilor de siguranță.Aceasta înseamnă că bazala dumneavoastră, indiferent de bazala maximă configurată în pompă, nu poate fi mai mare de acest număr înmulțit cu nivelul curent al bazalei active. Această limitare este impusă pentru a evita posibilitatea de a intra pe un teritoriu periculos prin setarea unei bazale maxime excesiv de mari înainte de a înțelege funcționarea algoritmului. Din nou, valoarea implictă este 4x; majoritatea oamenilor nu vor trebui să ajusteze această valoare și vor modifica, mai degrabă, alte valori dacă vor simți că această valoare le stă în cale.</string>
@@ -394,6 +397,7 @@
     <string name="basal_shortname">R_BAZ</string>
     <string name="deviation_shortname">DEV</string>
     <string name="activity_shortname">ACT</string>
+    <string name="bgi_shortname">-BGI</string>
     <string name="abs_insulin_shortname">ABS</string>
     <string name="devslope_shortname">DEVSLOPE</string>
     <string name="nav_about">Despre</string>
@@ -467,6 +471,7 @@
     <string name="activity_target">țintă activitate</string>
     <string name="hypo_duration">durată țintă</string>
     <string name="hypo_target">țintă hipo</string>
+    <string name="reuse_profile_pct_hours">Reutilizare %1$d%% %2$dh</string>
     <string name="wearcontrol_title">Controlare din ceas</string>
     <string name="wearcontrol_summary">Setare Ținte-Temporare și se introduc Tratamente din ceas.</string>
     <string name="food">Mâncare</string>
@@ -564,6 +569,7 @@
     <string name="ns_autobackfill_summary">Autocompletează valorile glicemiei lipsă din NS</string>
     <string name="loop_smbsetbypump_label">SMB setat de pompă</string>
     <string name="overview_show_activity">Activitate</string>
+    <string name="overview_show_bgi">Impactul glicemiei</string>
     <string name="overview_show_sensitivity">Sensibilitate</string>
     <string name="overview_show_deviations">Deviații</string>
     <string name="overview_show_cob">Carbohidrați activi</string>
@@ -689,6 +695,7 @@
     <string name="nav_logsettings">Setări loguri</string>
     <string name="resettodefaults">Resetare la setările implicite</string>
     <string name="nsmalfunction">Funcționare incorectă a NSClient. Aveți în vedere un restart al NS și al NSClient.</string>
+    <string name="time_offset">Decalaj</string>
     <string name="setupwizard_preferred_aps_mode">Modul APS preferat</string>
     <string name="treatments_wizard_total_label">Total</string>
     <string name="calculation_short">Calc</string>
@@ -865,6 +872,7 @@
     <string name="donate_your_data_to_science">Donează datele în scopuri științifice</string>
     <string name="open_humans_short">OH</string>
     <string name="you_have_been_signed_out_of_open_humans">Ai fost deconectat de la Open Humans</string>
+    <string name="click_here_to_sign_in_again_if_this_wasnt_on_purpose">Dați click aici pentru a vă conecta din nou, dacă a fost din greșeală.</string>
     <string name="only_upload_if_connected_to_wifi">Încarcă numai pe conexiune WiFi</string>
     <string name="only_upload_if_charging">Încărca numai dacă telefonul este la încărcat</string>
     <string name="worker_state">Stare prelucrare: %s</string>
@@ -875,12 +883,25 @@
     <string name="copytolocalprofile_invalid">Nu se poate crea profilul local. Profilul este invalid.</string>
     <string name="cta_dont_kill_my_app_info">Nu-mi opri aplicația?</string>
     <string name="smscommunicator_report_pump_ureachable_summary">Trimite SMS dacă este generata o alarma de eroare conexiune pompa</string>
+    <string name="smscommunicator_pump_ureachable">Raportează pompa inaccesibilă</string>
     <string name="advisoralarm">Rulează alarma când este timpul să mănânci</string>
     <string name="alarminxmin">Rulează alarma în %1$d min</string>
     <string name="bolusadvisor">Consilier bolus</string>
     <string name="bolusadvisormessage">Glicemia ta e mare. In loc sa mănânci acum, este recomandat sa mai aștepți un pic. Vrei sa faci un bolus de corecție acum si sa setezi o alarma pentru a manca mai târziu? In acest caz, nu vor fi înregistrați carbohidrați si va trebui sa folosești calculatorul de bolus din nou când îți vom reaminti.</string>
     <string name="enablebolusadvisor">Activare consilier bolus</string>
+    <string name="enablebolusadvisor_summary">Folosește o alarma de reamintire pentru a începe sa mănânci mai târziu în loc de alerta de la calculatorul de bolus din timpul hiperglicemiei (\"pre-bolus\")</string>
     <string name="time_to_eat">Timpul sa mănânci!\nRuleaza Calculatorul de Bolus pentru a face calculele din nou.</string>
     <string name="timetoeat">Timpul sa mănânci</string>
+    <string name="fabric_upload_disabled">Încărcarea jurnalelor de erori este dezactivata!</string>
     <string name="graph_menu_divider_header">Grafic</string>
+    <string name="chart_menu">Meniu diagramă</string>
+    <string name="clear_filter">Șterge filtru</string>
+    <string name="trend_arrow">Săgeată tendinţă</string>
+    <string name="cannula">Canula</string>
+    <string name="userentry">Înregistrare utilizator</string>
+    <string name="common_values">Folosește valorile corespunzătoarea celor mai mari mese pe care le ai de obicei\n</string>
+    <string name="summary_email_for_crash_report">Această adresă de e-mail va fi atașată rapoartelor de eroare, astfel încât să vă putem contacta în cazuri urgente. Este opțională.</string>
+    <string name="email_address">Adresă de e-mail</string>
+    <string name="privacy_settings">Setări de confidenţialitate</string>
+    <string name="privacy_summary">Puteți furniza o adresă de e-mail opțională dacă doriți să fiți notificat despre erorile aplicației. Acesta nu este un serviciu automat. Veți fi contactat de dezvoltatori în situații periculoase.</string>
 </resources>
