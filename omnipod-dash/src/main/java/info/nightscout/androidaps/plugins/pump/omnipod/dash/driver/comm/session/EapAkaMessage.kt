@@ -3,7 +3,6 @@ package info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.session
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.Id
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.message.MessagePacket
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.message.MessageType
-import retrofit2.http.HEAD
 import java.nio.ByteBuffer
 
 enum class EapCode(val code: Byte) {
@@ -35,16 +34,17 @@ class EapAkaMessage(
         payload = payload,
         sequenceNumber = sequenceNumber,
         sas = true // TODO: understand why this is true for PairMessages
-    )) {
+    )
+) {
 
     fun toByteArray(): ByteArray {
 
-        val serializedAttributes = attributes?.flatMap{ it.toByteArray().asIterable() }
+        val serializedAttributes = attributes?.flatMap { it.toByteArray().asIterable() }
         val joinedAttributes = serializedAttributes?.toTypedArray()?.toByteArray()
 
         val attrSize = joinedAttributes?.size ?: 0
         val totalSize = HEADER_SIZE + attrSize
-        
+
         var bb = ByteBuffer
             .allocate(totalSize)
             .put(code.code)
@@ -53,7 +53,7 @@ class EapAkaMessage(
             .put((totalSize and 0XFF).toByte())
             .put(AKA_PACKET_TYPE)
             .put(SUBTYPE_AKA_CHALLENGE)
-            .put(byteArrayOf(0,0))
+            .put(byteArrayOf(0, 0))
             .put(joinedAttributes ?: ByteArray(0))
 
         val ret = bb.array()

@@ -86,7 +86,7 @@ class EapAkaAttributeCustomIV(val payload: ByteArray) : EapAkaAttribute(
 ) {
 
     init {
-        require(payload.size == 4) { "AT_RES payload size has to be 8 bytes. Payload: ${payload.toHex()}" }
+        require(payload.size == 4) { "CUSTOM_IV payload size has to be 4 bytes. Payload: ${payload.toHex()}" }
     }
 
     override fun toByteArray(): ByteArray {

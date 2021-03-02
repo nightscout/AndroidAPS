@@ -11,7 +11,7 @@ import javax.crypto.spec.SecretKeySpec
 class Milenage(private val aapsLogger: AAPSLogger, private val k: ByteArray, val sqn: ByteArray, val _rand: ByteArray? = null) {
     init {
         require(k.size == KEY_SIZE) { "Milenage key has to be $KEY_SIZE bytes long. Received: ${k.toHex()}" }
-        require(sqn.size == SEQ_SIZE) { "Milenage SEQ has to be $SEQ_SIZE long. Received: ${sqn.toHex()}" }
+        require(sqn.size == SQN) { "Milenage SQN has to be $SQN long. Received: ${sqn.toHex()}" }
     }
 
     private val secretKeySpec = SecretKeySpec(k, "AES")
@@ -31,45 +31,47 @@ class Milenage(private val aapsLogger: AAPSLogger, private val k: ByteArray, val
     }
 
     private val opc = cipher.doFinal(MILENAGE_OP) xor MILENAGE_OP
-    private val rand_opc_encrypted = cipher.doFinal(rand xor opc)
-    private val rand_opc_encrypted_opc = rand_opc_encrypted xor opc
+    private val randOpcEncrypted = cipher.doFinal(rand xor opc)
+    private val randOpcEncryptedXorOpc = randOpcEncrypted xor opc
+    private val resAkInput = randOpcEncryptedXorOpc.copyOfRange(0, KEY_SIZE)
 
     init {
-        rand_opc_encrypted_opc[15] = (rand_opc_encrypted_opc[15].toInt() xor 1).toByte()
+        resAkInput[15] = (resAkInput[15].toInt() xor 1).toByte()
     }
 
-    private val res_ak = cipher.doFinal(rand_opc_encrypted_opc) xor opc
+    private val resAk = cipher.doFinal(resAkInput) xor opc
 
-    val res = res_ak.copyOfRange(8, 16)
-    val ak = res_ak.copyOfRange(0, 6)
+    val res = resAk.copyOfRange(8, 16)
+    private val ak = resAk.copyOfRange(0, 6)
 
-    private val ck_input = ByteArray(KEY_SIZE)
+    private val ckInput = ByteArray(KEY_SIZE)
 
     init {
         for (i in 0..15) {
-            ck_input[(i + 12) % 16] = (rand_opc_encrypted[i].toInt() xor opc[i].toInt()).toByte()
+            ckInput[(i + 12) % 16] = randOpcEncryptedXorOpc[i]
         }
-        ck_input[15] = (ck_input[15].toInt() xor 2).toByte()
+        ckInput[15] = (ckInput[15].toInt() xor 2).toByte()
     }
 
-    val ck = cipher.doFinal(ck_input) xor opc
+    val ck = cipher.doFinal(ckInput) xor opc
 
+    private val sqnAmf = sqn + MILENAGE_AMF +  sqn + MILENAGE_AMF
+    private val sqnAmfXorOpc = sqnAmf xor opc
     private val macAInput = ByteArray(KEY_SIZE)
-
     init {
         for (i in 0..15) {
-            macAInput[(i + 8) % 16] = (rand_opc_encrypted[i].toInt() xor opc[i].toInt()).toByte()
+            macAInput[(i + 8) % 16] = sqnAmfXorOpc[i]
         }
     }
 
-    private val macAFull = cipher.doFinal(macAInput xor opc)
+    private val macAFull = cipher.doFinal(macAInput xor randOpcEncrypted) xor opc
     private val macA = macAFull.copyOfRange(0, 8)
     val autn = (ak xor sqn) + MILENAGE_AMF + macA
 
     init {
         aapsLogger.debug(LTag.PUMPBTCOMM, "Milenage K: ${k.toHex()}")
         aapsLogger.debug(LTag.PUMPBTCOMM, "Milenage RAND: ${rand.toHex()}")
-        aapsLogger.debug(LTag.PUMPBTCOMM, "Milenage SEQ: ${sqn.toHex()}")
+        aapsLogger.debug(LTag.PUMPBTCOMM, "Milenage SQN: ${sqn.toHex()}")
         aapsLogger.debug(LTag.PUMPBTCOMM, "Milenage CK: ${ck.toHex()}")
         aapsLogger.debug(LTag.PUMPBTCOMM, "Milenage AUTN: ${autn.toHex()}")
         aapsLogger.debug(LTag.PUMPBTCOMM, "Milenage RES: ${res.toHex()}")
@@ -83,7 +85,7 @@ class Milenage(private val aapsLogger: AAPSLogger, private val k: ByteArray, val
         private val MILENAGE_OP = Hex.decode("cdc202d5123e20f62b6d676ac72cb318")
         private val MILENAGE_AMF = Hex.decode("b9b9")
         private const val KEY_SIZE = 16
-        private const val SEQ_SIZE = 6
+        private const val SQN = 6
     }
 }
 
