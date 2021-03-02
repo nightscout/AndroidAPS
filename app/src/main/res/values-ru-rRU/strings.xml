@@ -194,7 +194,6 @@
     <string name="smscommunicator_loophasbeenenabled">зцикл был активирован</string>
     <string name="smscommunicator_loopisenabled">зцикл работает</string>
     <string name="valuelimitedto">%1$.2f ограничено до %2$.2f</string>
-    <string name="valueoutofrange">Значение %1$s недопустимо</string>
     <string name="smscommunicator_pumpconnectwithcode">Чтобы подсоединить помпу ответьте кодом %1$s</string>
     <string name="smscommunicator_pumpconnectfail">Ошибка подключения к помпе</string>
     <string name="smscommunicator_pumpdisconnectwithcode">Для разъединения с помпой на %1$d мин ответьте кодом %2$s</string>
