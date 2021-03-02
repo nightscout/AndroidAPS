@@ -194,7 +194,6 @@
     <string name="smscommunicator_loophasbeenenabled">Smyčka byla povolena</string>
     <string name="smscommunicator_loopisenabled">Smyčka je povolena</string>
     <string name="valuelimitedto">%1$.2f omezeno na %2$.2f</string>
-    <string name="valueoutofrange">Hodnota %1$s je mimo přednastavený rozsah</string>
     <string name="smscommunicator_pumpconnectwithcode">Chcete-li připojit pumpu, odpovězte pomocí SMS s kódem %1$s</string>
     <string name="smscommunicator_pumpconnectfail">Připojení k pumpě selhalo</string>
     <string name="smscommunicator_pumpdisconnectwithcode">Chcete-li odpojit pumpu na %1$d minut, odpovězte pomocí SMS s kódem %2$s</string>
