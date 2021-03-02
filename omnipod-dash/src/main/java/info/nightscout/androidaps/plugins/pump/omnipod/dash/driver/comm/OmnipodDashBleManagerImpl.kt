@@ -133,9 +133,9 @@ class OmnipodDashBleManagerImpl @Inject constructor(
 
             aapsLogger.info(LTag.PUMPCOMM, "Got LTK: ${ltk.ltk.toHex()}")
 
-            emitter.onNext(PodEvent.EstablishingSession)
+           // emitter.onNext(PodEvent.EstablishingSession)
 
-            val EapAkaExchanger = EapAkaExchanger(msgIO, ltk)
+            val EapAkaExchanger = EapAkaExchanger(aapsLogger, msgIO, ltk)
             val sessionKeys = EapAkaExchanger.negotiateSessionKeys()
             aapsLogger.info(LTag.PUMPCOMM, "Got session Key: $sessionKeys")
 

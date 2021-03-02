@@ -1,4 +1,3 @@
 package info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.session
 
-class SessionKeys {
-}
+class SessionKeys

@@ -182,7 +182,7 @@ internal class LTKExchanger(private val aapsLogger: AAPSLogger, private val msgI
             pdmPublic.copyOfRange(pdmPublic.size - 4, pdmPublic.size) +
             podNonce.copyOfRange(podNonce.size - 4, podNonce.size) +
             pdmNonce.copyOfRange(pdmNonce.size - 4, pdmNonce.size)
-        aapsLogger.debug(LTag.PUMPBTCOMM, "LTK, first key: ${firstKey.toHex()}")
+        aapsLogger.debug(LTag.PUMPBTCOMM, "First key for LTK: ${firstKey.toHex()}")
 
         val intermediateKey = ByteArray(CMAC_SIZE)
         aesCmac(firstKey, curveLTK, intermediateKey)
