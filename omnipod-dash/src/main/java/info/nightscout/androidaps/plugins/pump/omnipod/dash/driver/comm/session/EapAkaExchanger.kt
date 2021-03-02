@@ -47,7 +47,7 @@ class EapAkaExchanger(private val aapsLogger: AAPSLogger, private val msgIO: Mes
         return SessionKeys(
             milenage.ck,
             controllerIV + nodeIV,
-            sqn,
+            sqn
         )
     }
 
@@ -55,7 +55,7 @@ class EapAkaExchanger(private val aapsLogger: AAPSLogger, private val msgIO: Mes
         val attributes = arrayOf(
             EapAkaAttributeAutn(milenage.autn),
             EapAkaAttributeRand(milenage.rand),
-            EapAkaAttributeCustomIV(controllerIV),
+            EapAkaAttributeCustomIV(controllerIV)
         )
 
         val eapMsg = EapMessage(
@@ -99,7 +99,7 @@ class EapAkaExchanger(private val aapsLogger: AAPSLogger, private val msgIO: Mes
         val eapMsg = EapMessage(
             code = EapCode.SUCCESS,
             attributes = arrayOf(),
-            identifier = 44, // TODO: find what value we need here
+            identifier = 44 // TODO: find what value we need here
         )
 
         return MessagePacket(
