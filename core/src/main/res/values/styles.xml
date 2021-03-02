@@ -128,7 +128,7 @@
         <item name="prediction" >@color/prediction</item>
         <item name="basal" >@color/basal</item>
         <item name="overviewShowDeviations" >@color/red</item>
-        <item name="overviewShowSensitivity" >@color/ratio</item>
+        <item name="overviewShowSensitivity" >@color/sphere_plastic_grey</item>
         <item name="activity" >@color/activity</item>
         <item name="bgi" >@color/bgi</item>
         <item name="devslopepos" >@color/devslopepos</item>
