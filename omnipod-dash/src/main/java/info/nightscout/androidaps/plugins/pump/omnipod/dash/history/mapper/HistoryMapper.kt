@@ -17,7 +17,7 @@ class HistoryMapper {
             tempBasalRecord = historyRecord.record as? TempBasalRecord,
             bolusRecord = historyRecord.record as? BolusRecord,
             resolvedResult = historyRecord.resolvedResult,
-            resolvedAt = historyRecord.resolvedAt,
+            resolvedAt = historyRecord.resolvedAt
         )
 
     fun entityToDomain(entity: HistoryRecordEntity): HistoryRecord =

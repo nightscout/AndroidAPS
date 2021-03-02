@@ -82,7 +82,7 @@ internal class LTKExchanger(private val aapsLogger: AAPSLogger, private val msgI
     private fun sp1sp2(sp1: ByteArray, sp2: ByteArray): PairMessage {
         val payload = StringLengthPrefixEncoding.formatKeys(
             arrayOf(SP1, SP2),
-            arrayOf(sp1, sp2),
+            arrayOf(sp1, sp2)
         )
         return PairMessage(
             sequenceNumber = seq,
@@ -95,7 +95,7 @@ internal class LTKExchanger(private val aapsLogger: AAPSLogger, private val msgI
     private fun sps1(): PairMessage {
         val payload = StringLengthPrefixEncoding.formatKeys(
             arrayOf("SPS1="),
-            arrayOf(pdmPublic + pdmNonce),
+            arrayOf(pdmPublic + pdmNonce)
         )
         return PairMessage(
             sequenceNumber = seq,
@@ -119,7 +119,7 @@ internal class LTKExchanger(private val aapsLogger: AAPSLogger, private val msgI
     private fun sps2(): PairMessage {
         val payload = StringLengthPrefixEncoding.formatKeys(
             arrayOf(SPS2),
-            arrayOf(pdmConf),
+            arrayOf(pdmConf)
         )
         return PairMessage(
             sequenceNumber = seq,

@@ -120,7 +120,7 @@ data class MessagePacket(
                 ackNumber = ackNumber,
                 source = Id(payload.copyOfRange(8, 12)),
                 destination = Id(payload.copyOfRange(12, 16)),
-                payload = payload.copyOfRange(16, payloadEnd),
+                payload = payload.copyOfRange(16, payloadEnd)
             )
         }
     }
