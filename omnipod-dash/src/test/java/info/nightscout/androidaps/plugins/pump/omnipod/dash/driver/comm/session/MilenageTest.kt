@@ -47,5 +47,4 @@ class MilenageTest {
         Assert.assertEquals(m.ck.toHex(), "8dd4b3ceb849a01766e37f9d86045c39")
         Assert.assertEquals(m.autn.toHex(), "0e0264d056fcb9b9752227365a090955")
     }
-
 }

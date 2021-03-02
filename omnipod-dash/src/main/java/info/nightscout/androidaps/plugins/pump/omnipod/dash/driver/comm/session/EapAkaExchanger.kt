@@ -73,12 +73,11 @@ class EapAkaExchanger(private val aapsLogger: AAPSLogger, private val msgIO: Mes
     }
 
     private fun processChallengeResponse(challengeResponse: MessagePacket) {
-        //TODO verify that identifier matches identifer from the Challenge
+        // TODO verify that identifier matches identifer from the Challenge
         val eapMsg = EapMessage.parse(aapsLogger, challengeResponse.payload)
         if (eapMsg.attributes.size != 2) {
             aapsLogger.debug(LTag.PUMPBTCOMM, "EAP-AKA: got RES message: $eapMsg")
             throw SessionEstablishmentException("Expecting two attributes, got: ${eapMsg.attributes.size}")
-
         }
         for (attr in eapMsg.attributes) {
             when (attr) {
@@ -88,11 +87,10 @@ class EapAkaExchanger(private val aapsLogger: AAPSLogger, private val msgIO: Mes
                     }
                 is EapAkaAttributeCustomIV ->
                     nodeIV = attr.payload.copyOfRange(0, IV_SIZE)
-                else                       ->
-                    throw SessionEstablishmentException("Unknown attribute received: ${attr}")
+                else ->
+                    throw SessionEstablishmentException("Unknown attribute received: $attr")
             }
         }
-
     }
 
     private fun eapSuccess(): MessagePacket {
@@ -119,4 +117,3 @@ class EapAkaExchanger(private val aapsLogger: AAPSLogger, private val msgIO: Mes
         private const val IV_SIZE = 4
     }
 }
-

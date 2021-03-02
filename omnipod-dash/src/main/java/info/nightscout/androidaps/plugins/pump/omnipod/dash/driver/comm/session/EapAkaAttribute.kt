@@ -44,7 +44,7 @@ sealed class EapAkaAttribute {
                         ret.add(EapAkaAttributeRes.parse(tail.copyOfRange(2, size)))
                     EapAkaAttributeType.AT_CUSTOM_IV ->
                         ret.add(EapAkaAttributeCustomIV.parse(tail.copyOfRange(2, size)))
-                    else                             ->
+                    else ->
                         throw MessageIOException("Could not parse EAP attributes: ${payload.toHex()}. Expecting only AT_RES or CUSTOM_IV attribute types from the POD")
                 }
                 tail = tail.copyOfRange(size, tail.size)
@@ -94,7 +94,6 @@ data class EapAkaAttributeRes(val payload: ByteArray) : EapAkaAttribute() {
 
     override fun toByteArray(): ByteArray {
         return byteArrayOf(EapAkaAttributeType.AT_RES.type, SIZE, 0, PAYLOAD_SIZE_BITS) + payload
-
     }
 
     companion object {

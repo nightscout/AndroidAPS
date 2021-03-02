@@ -471,17 +471,17 @@ class OmnipodDashOverviewFragment : DaggerFragment() {
     private fun updateRefreshStatusButton() {
         buttonBinding.buttonRefreshStatus.isEnabled =
             podStateManager.isUniqueIdSet && podStateManager.activationProgress.isAtLeast(
-                ActivationProgress.PHASE_1_COMPLETED
-            ) &&
-                isQueueEmpty()
+            ActivationProgress.PHASE_1_COMPLETED
+        ) &&
+            isQueueEmpty()
     }
 
     private fun updateResumeDeliveryButton() {
         if (podStateManager.isPodRunning && (
-                podStateManager.isSuspended || commandQueue.isCustomCommandInQueue(
+            podStateManager.isSuspended || commandQueue.isCustomCommandInQueue(
                     CommandResumeDelivery::class.java
                 )
-                )
+            )
         ) {
             buttonBinding.buttonResumeDelivery.visibility = View.VISIBLE
             buttonBinding.buttonResumeDelivery.isEnabled = isQueueEmpty()
@@ -492,10 +492,10 @@ class OmnipodDashOverviewFragment : DaggerFragment() {
 
     private fun updateSilenceAlertsButton() {
         if (isAutomaticallySilenceAlertsEnabled() && podStateManager.isPodRunning && (
-                podStateManager.activeAlerts!!.size > 0 || commandQueue.isCustomCommandInQueue(
+            podStateManager.activeAlerts!!.size > 0 || commandQueue.isCustomCommandInQueue(
                     CommandAcknowledgeAlerts::class.java
                 )
-                )
+            )
         ) {
             buttonBinding.buttonSilenceAlerts.visibility = View.VISIBLE
             buttonBinding.buttonSilenceAlerts.isEnabled = isQueueEmpty()
@@ -507,10 +507,10 @@ class OmnipodDashOverviewFragment : DaggerFragment() {
     private fun updateSuspendDeliveryButton() {
         // If the Pod is currently suspended, we show the Resume delivery button instead.
         if (isSuspendDeliveryButtonEnabled() && podStateManager.isPodRunning && (
-                !podStateManager.isSuspended || commandQueue.isCustomCommandInQueue(
+            !podStateManager.isSuspended || commandQueue.isCustomCommandInQueue(
                     CommandSuspendDelivery::class.java
                 )
-                )
+            )
         ) {
             buttonBinding.buttonSuspendDelivery.visibility = View.VISIBLE
             buttonBinding.buttonSuspendDelivery.isEnabled =

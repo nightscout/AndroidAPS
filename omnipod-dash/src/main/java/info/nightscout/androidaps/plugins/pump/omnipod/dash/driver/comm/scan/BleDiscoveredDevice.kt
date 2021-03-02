@@ -21,7 +21,8 @@ class BleDiscoveredDevice(val scanResult: ScanResult, private val scanRecord: Sc
             throw DiscoveredInvalidPodException(
                 "The first exposed service UUID should be 4024, got " + extractUUID16(
                     serviceUuids[0]
-                ), serviceUuids
+                ),
+                serviceUuids
             )
         }
         // TODO understand what is serviceUUIDs[1]. 0x2470. Alarms?
