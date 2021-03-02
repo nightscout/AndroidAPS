@@ -7,6 +7,7 @@
     <string name="automation_missing_trigger">Vă rugăm să specificați cel puțin un factor declanșator.</string>
     <string name="automation_missing_action">Trebuie să specificați cel puțin o acțiune.</string>
     <string name="alarm_message">Alarmă: %1$s</string>
+    <string name="alarm_short">Alarmă:</string>
     <string name="message_short">Msj:</string>
     <string name="alreadyenabled">Deja activată</string>
     <string name="alreadydisabled">Deja dezactivată</string>
@@ -88,6 +89,7 @@
     <string name="glucose_u">Glicemie [%1$s]:</string>
     <string name="lastboluslabel">Ultimul bolus</string>
     <string name="lastboluscompared">Ultimul bolus acum %1$s %2$s min</string>
+    <string name="triggercoblabel">COB</string>
     <string name="cobcompared">COB %1$s %2$.0f</string>
     <string name="iob_u">IOB [U]:</string>
     <string name="distance_short">Dist [m]:</string>
