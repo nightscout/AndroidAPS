@@ -102,7 +102,7 @@
         <item name="actionsConfirm" >@color/lightyellow</item>
         <!-- local profil dialog -->
         <item name="errorBackground" >@color/lightPastelRed</item>
-        <item name="okBackground" >@color/darkgray</item>
+        <item name="okBackground" >@color/gray</item>
         <item name="defaultBackground" >@color/darkgrayVariant</item>
         <!-- Custom tabs background -->
         <item name="tabBgColorSelected" >@color/kobaltblue</item>
