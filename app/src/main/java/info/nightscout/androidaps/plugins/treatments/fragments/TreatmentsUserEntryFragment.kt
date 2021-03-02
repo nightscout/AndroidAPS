@@ -82,28 +82,29 @@ class TreatmentsUserEntryFragment : DaggerFragment() {
             //holder.binding.s.text = current.toString()  //for debug
             var valuesWithUnitString = ""
             var rStringParam = 0
+            val separator = " "
             for(v in current.values) {
                 if (rStringParam >0)
                     rStringParam--
                 else
                     when (v.unit) {
-                        Units.Timestamp -> valuesWithUnitString += dateUtil.dateAndTimeAndSecondsString(v.lValue) + " "
-                        Units.CPEvent -> valuesWithUnitString += translator.translate(v.sValue) + " "
+                        Units.Timestamp -> valuesWithUnitString += dateUtil.dateAndTimeAndSecondsString(v.lValue) + separator
+                        Units.CPEvent -> valuesWithUnitString += translator.translate(v.sValue) + separator
                         Units.R_String -> {
                             rStringParam = v.lValue.toInt()
                             when (rStringParam) {   //
-                                0 -> valuesWithUnitString += resourceHelper.gs(v.iValue) + " "
-                                1 -> valuesWithUnitString += resourceHelper.gs(v.iValue, current.values[current.values.indexOf(v)+1].value()) + " "
-                                2 -> valuesWithUnitString += resourceHelper.gs(v.iValue, current.values[current.values.indexOf(v)+1].value(), current.values[current.values.indexOf(v)+2].value()) + " "
-                                3 -> valuesWithUnitString += resourceHelper.gs(v.iValue, current.values[current.values.indexOf(v)+1].value(), current.values[current.values.indexOf(v)+2].value(), current.values[current.values.indexOf(v)+3].value()) + " "
+                                0 -> valuesWithUnitString += resourceHelper.gs(v.iValue) + separator
+                                1 -> valuesWithUnitString += resourceHelper.gs(v.iValue, current.values[current.values.indexOf(v)+1].value()) + separator
+                                2 -> valuesWithUnitString += resourceHelper.gs(v.iValue, current.values[current.values.indexOf(v)+1].value(), current.values[current.values.indexOf(v)+2].value()) + separator
+                                3 -> valuesWithUnitString += resourceHelper.gs(v.iValue, current.values[current.values.indexOf(v)+1].value(), current.values[current.values.indexOf(v)+2].value(), current.values[current.values.indexOf(v)+3].value()) + separator
                                 4 -> rStringParam = 0
                             }
                         }
-                        Units.Mg_Dl -> valuesWithUnitString += if (profileFunction.getUnits()==Constants.MGDL) DecimalFormatter.to0Decimal(v.dValue) + resourceHelper.gs(Units.Mg_Dl.stringId()) + " " else DecimalFormatter.to1Decimal(v.dValue/Constants.MMOLL_TO_MGDL) + resourceHelper.gs(Units.Mmol_L.stringId()) + " "
-                        Units.Mmol_L -> valuesWithUnitString += if (profileFunction.getUnits()==Constants.MGDL) DecimalFormatter.to0Decimal(v.dValue*Constants.MMOLL_TO_MGDL) + resourceHelper.gs(Units.Mg_Dl.stringId()) + " " else DecimalFormatter.to1Decimal(v.dValue) + resourceHelper.gs(Units.Mmol_L.stringId()) + " "
-                        Units.G -> valuesWithUnitString += DecimalFormatter.to0Decimal(v.dValue) + resourceHelper.gs(Units.G.stringId()) + " "
-                        Units.U_H -> valuesWithUnitString += DecimalFormatter.to2Decimal(v.dValue) + resourceHelper.gs(Units.U_H.stringId()) + " "
-                        else -> valuesWithUnitString += if (!v.value().equals(0) && !v.value().equals("")) { v.value().toString() + if (!v.unit.stringId().equals(0)) resourceHelper.gs(v.unit.stringId()) + " " else " " } else ""
+                        Units.Mg_Dl -> valuesWithUnitString += if (profileFunction.getUnits()==Constants.MGDL) DecimalFormatter.to0Decimal(v.dValue) + resourceHelper.gs(Units.Mg_Dl.stringId()) + separator else DecimalFormatter.to1Decimal(v.dValue/Constants.MMOLL_TO_MGDL) + resourceHelper.gs(Units.Mmol_L.stringId()) + separator
+                        Units.Mmol_L -> valuesWithUnitString += if (profileFunction.getUnits()==Constants.MGDL) DecimalFormatter.to0Decimal(v.dValue*Constants.MMOLL_TO_MGDL) + resourceHelper.gs(Units.Mg_Dl.stringId()) + separator else DecimalFormatter.to1Decimal(v.dValue) + resourceHelper.gs(Units.Mmol_L.stringId()) + separator
+                        Units.G -> valuesWithUnitString += DecimalFormatter.to0Decimal(v.dValue) + resourceHelper.gs(Units.G.stringId()) + separator
+                        Units.U_H -> valuesWithUnitString += DecimalFormatter.to2Decimal(v.dValue) + resourceHelper.gs(Units.U_H.stringId()) + separator
+                        else -> valuesWithUnitString += if (v.dValue != 0.0 || v.iValue != 0 || v.sValue != "") { v.value().toString() + if (!v.unit.stringId().equals(0)) resourceHelper.gs(v.unit.stringId()) + separator else separator } else ""
                     }
             }
             if (current.values.size > 0)
