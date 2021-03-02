@@ -26,7 +26,7 @@ data class Id(val address: ByteArray) {
     }
 
     fun toLong(): Long {
-        return ByteBuffer.wrap(address).long
+        return ByteBuffer.wrap(address).int.toLong() and 0xffffffffL
     }
 
     companion object {

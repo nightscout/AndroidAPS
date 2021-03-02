@@ -2,9 +2,7 @@ package info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.session
 
 import info.nightscout.androidaps.logging.AAPSLoggerTest
 import info.nightscout.androidaps.utils.extensions.toHex
-import okio.ByteString.Companion.decodeHex
 import org.junit.Assert
-import org.junit.Assert.*
 import org.junit.Test
 import org.spongycastle.util.encoders.Hex
 
@@ -15,7 +13,7 @@ class MilenageTest {
         val m = Milenage(
             aapsLogger,
             Hex.decode("c0772899720972a314f557de66d571dd"),
-            byteArrayOf(0,0,0,0,0,2),
+            byteArrayOf(0, 0, 0, 0, 0, 2),
             Hex.decode("c2cd1248451103bd77a6c7ef88c441ba")
         )
         Assert.assertEquals(m.res.toHex(), "a40bc6d13861447e")
@@ -28,7 +26,7 @@ class MilenageTest {
         val m = Milenage(
             aapsLogger,
             Hex.decode("78411ccad0fd0fb6f381a47fb3335ecb"),
-            byteArrayOf(0,0,0,0,0,2), // 1 + 1
+            byteArrayOf(0, 0, 0, 0, 0, 2), // 1 + 1
             Hex.decode("4fc01ac1a94376ae3e052339c07d9e1f")
         )
         Assert.assertEquals(m.res.toHex(), "ec549e00fa668a19")
@@ -41,8 +39,8 @@ class MilenageTest {
         val m = Milenage(
             aapsLogger,
             Hex.decode("c0772899720972a314f557de66d571dd"),
- //           byteArrayOf(0,0,0,0,0x01,0x5d), this is in logs. SQN has to be incremented.
-            byteArrayOf(0,0,0,0,0x01,0x5e),
+            //           byteArrayOf(0,0,0,0,0x01,0x5d), this is in logs. SQN has to be incremented.
+            byteArrayOf(0, 0, 0, 0, 0x01, 0x5e),
             Hex.decode("d71cc44820e5419f42c62ae97c035988")
         )
         Assert.assertEquals(m.res.toHex(), "5f807a379a5c5d30")

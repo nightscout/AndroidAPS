@@ -35,7 +35,7 @@ class AlertConfiguration(
                             trigger.thresholdInMicroLiters
                         }
 
-                        is AlertTrigger.TimerTrigger           -> {
+                        is AlertTrigger.TimerTrigger -> {
                             trigger.offsetInMinutes
                         }
                     }

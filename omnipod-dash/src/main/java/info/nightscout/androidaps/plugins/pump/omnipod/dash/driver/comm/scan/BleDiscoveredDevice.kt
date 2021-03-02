@@ -42,7 +42,7 @@ class BleDiscoveredDevice(val scanResult: ScanResult, private val scanRecord: Sc
         val podId = hexPodId.toLong(16)
         if (this.podId != podId) {
             throw DiscoveredInvalidPodException(
-                "This is not the POD we are looking for: ${this.podId} . Found: $podId/$hexPodId" ,
+                "This is not the POD we are looking for: ${this.podId} . Found: $podId/$hexPodId",
                 serviceUUIDs
             )
         }

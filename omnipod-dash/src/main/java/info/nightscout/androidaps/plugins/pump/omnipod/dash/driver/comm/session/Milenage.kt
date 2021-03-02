@@ -8,7 +8,13 @@ import java.security.SecureRandom
 import javax.crypto.Cipher
 import javax.crypto.spec.SecretKeySpec
 
-class Milenage(private val aapsLogger: AAPSLogger, private val k: ByteArray, val sqn: ByteArray, val _rand: ByteArray? = null) {
+class Milenage(
+    private val aapsLogger: AAPSLogger,
+    private val k: ByteArray,
+    val sqn: ByteArray,
+    val _rand: ByteArray? = null
+) {
+
     init {
         require(k.size == KEY_SIZE) { "Milenage key has to be $KEY_SIZE bytes long. Received: ${k.toHex()}" }
         require(sqn.size == SQN) { "Milenage SQN has to be $SQN long. Received: ${sqn.toHex()}" }
@@ -24,7 +30,7 @@ class Milenage(private val aapsLogger: AAPSLogger, private val k: ByteArray, val
     val rand = _rand ?: ByteArray(KEY_SIZE)
 
     init {
-        if (_rand == null ){
+        if (_rand == null) {
             val random = SecureRandom()
             random.nextBytes(rand)
         }
@@ -55,9 +61,10 @@ class Milenage(private val aapsLogger: AAPSLogger, private val k: ByteArray, val
 
     val ck = cipher.doFinal(ckInput) xor opc
 
-    private val sqnAmf = sqn + MILENAGE_AMF +  sqn + MILENAGE_AMF
+    private val sqnAmf = sqn + MILENAGE_AMF + sqn + MILENAGE_AMF
     private val sqnAmfXorOpc = sqnAmf xor opc
     private val macAInput = ByteArray(KEY_SIZE)
+
     init {
         for (i in 0..15) {
             macAInput[(i + 8) % 16] = sqnAmfXorOpc[i]

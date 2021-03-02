@@ -76,7 +76,6 @@ class OmnipodDashBleManagerImpl @Inject constructor(
         val discoverer = ServiceDiscoverer(aapsLogger, gatt, bleCommCallbacks)
         val chars = discoverer.discoverServices()
         val bleIO = BleIO(aapsLogger, chars, incomingPackets, gatt, bleCommCallbacks)
-        aapsLogger.debug(LTag.PUMPBTCOMM, "Saying hello to the pod")
         bleIO.sendAndConfirmPacket(CharacteristicType.CMD, BleCommandHello(CONTROLLER_ID).data)
         bleIO.readyToRead()
         return bleIO
@@ -133,11 +132,13 @@ class OmnipodDashBleManagerImpl @Inject constructor(
 
             aapsLogger.info(LTag.PUMPCOMM, "Got LTK: ${ltk.ltk.toHex()}")
 
-           // emitter.onNext(PodEvent.EstablishingSession)
+            // emitter.onNext(PodEvent.EstablishingSession)
 
             val EapAkaExchanger = EapAkaExchanger(aapsLogger, msgIO, ltk)
             val sessionKeys = EapAkaExchanger.negotiateSessionKeys()
-            aapsLogger.info(LTag.PUMPCOMM, "Got session Key: $sessionKeys")
+            aapsLogger.info(LTag.PUMPCOMM, "CK: ${sessionKeys.ck.toHex()}")
+            aapsLogger.info(LTag.PUMPCOMM, "noncePrefix: ${sessionKeys.noncePrefix.toHex()}")
+            aapsLogger.info(LTag.PUMPCOMM, "SQN: ${sessionKeys.sqn.toHex()}")
 
             emitter.onNext(PodEvent.Connected(ltk.podId.toLong())) // TODO supply actual pod id
 
