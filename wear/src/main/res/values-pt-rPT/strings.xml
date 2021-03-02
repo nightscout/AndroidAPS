@@ -88,7 +88,7 @@
     <string name="action_preset_3">Predefinição 3</string>
     <string name="action_free_amount" comment="In prime/fill menu, allows to enter any amount to be used for priming/filling">Valor livre</string>
     <string name="action_confirm">CONFIRMAR</string>
-    <string name="action_timeshift">alteração turno</string>
+    <string name="action_timeshift">Deslocamento temporal</string>
     <string name="action_bolus">bólus</string>
     <string name="bolus_progress">Progresso do Bólus</string>
     <string name="press_to_cancel">pressione para cancelar</string>
