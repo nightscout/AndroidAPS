@@ -1022,7 +1022,7 @@ public class AapsOmnipodErosManager {
             careportalEvent.eventType = event;
             careportalEvent.json = data.toString();
             databaseHelper.createOrUpdate(careportalEvent);
-            nsUpload.uploadCareportalEntryToNS(data);
+            nsUpload.uploadCareportalEntryToNS(data, date);
         } catch (JSONException e) {
             aapsLogger.error(LTag.PUMPCOMM, "Unhandled exception when uploading SiteChange event.", e);
         }

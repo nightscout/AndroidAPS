@@ -3,6 +3,8 @@ package info.nightscout.androidaps.utils.wizard
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.data.Profile
+import info.nightscout.androidaps.database.AppRepository
+import info.nightscout.androidaps.database.ValueWrapper
 import info.nightscout.androidaps.database.entities.GlucoseValue
 import info.nightscout.androidaps.interfaces.ProfileFunction
 import info.nightscout.androidaps.logging.AAPSLogger
@@ -28,11 +30,14 @@ class QuickWizardEntry @Inject constructor(private val injector: HasAndroidInjec
     @Inject lateinit var treatmentsPlugin: TreatmentsPlugin
     @Inject lateinit var loopPlugin: LoopPlugin
     @Inject lateinit var iobCobCalculatorPlugin: IobCobCalculatorPlugin
+    @Inject lateinit var repository: AppRepository
+    @Inject lateinit var dateUtil: DateUtil
 
     lateinit var storage: JSONObject
     var position: Int = -1
 
     companion object {
+
         const val YES = 0
         const val NO = 1
         private const val POSITIVE_ONLY = 2
@@ -73,7 +78,8 @@ class QuickWizardEntry @Inject constructor(private val injector: HasAndroidInjec
     fun isActive(): Boolean = Profile.secondsFromMidnight() >= validFrom() && Profile.secondsFromMidnight() <= validTo()
 
     fun doCalc(profile: Profile, profileName: String, lastBG: GlucoseValue, _synchronized: Boolean): BolusWizard {
-        val tempTarget = treatmentsPlugin.tempTargetFromHistory
+        val dbRecord = repository.getTemporaryTargetActiveAt(dateUtil._now()).blockingGet()
+        val tempTarget = if (dbRecord is ValueWrapper.Existing)  dbRecord.value else null
         //BG
         var bg = 0.0
         if (useBG() == YES) {
@@ -131,7 +137,7 @@ class QuickWizardEntry @Inject constructor(private val injector: HasAndroidInjec
 
     fun validFrom(): Int = safeGetInt(storage, "validFrom")
 
-    fun validTo(): Int = safeGetInt(storage, "validTo")
+    private fun validTo(): Int = safeGetInt(storage, "validTo")
 
     fun useBG(): Int = safeGetInt(storage, "useBG", YES)
 

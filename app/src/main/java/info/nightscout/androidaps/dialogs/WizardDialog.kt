@@ -19,26 +19,24 @@ import info.nightscout.androidaps.Constants
 import info.nightscout.androidaps.MainApp
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.data.Profile
+import info.nightscout.androidaps.database.AppRepository
+import info.nightscout.androidaps.database.ValueWrapper
 import info.nightscout.androidaps.databinding.DialogWizardBinding
+import info.nightscout.androidaps.events.EventAutosensCalculationFinished
 import info.nightscout.androidaps.interfaces.ActivePluginProvider
 import info.nightscout.androidaps.interfaces.Constraint
 import info.nightscout.androidaps.interfaces.ProfileFunction
+import info.nightscout.androidaps.interfaces.TreatmentsInterface
 import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.logging.LTag
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper
 import info.nightscout.androidaps.plugins.configBuilder.ConstraintChecker
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.IobCobCalculatorPlugin
-import info.nightscout.androidaps.events.EventAutosensCalculationFinished
-import info.nightscout.androidaps.plugins.treatments.TreatmentsPlugin
-import info.nightscout.androidaps.utils.DecimalFormatter
-import info.nightscout.androidaps.utils.FabricPrivacy
-import info.nightscout.androidaps.utils.SafeParse
-import info.nightscout.androidaps.utils.ToastUtils
+import info.nightscout.androidaps.utils.*
 import info.nightscout.androidaps.utils.extensions.toVisibility
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 import info.nightscout.androidaps.utils.rx.AapsSchedulers
 import info.nightscout.androidaps.utils.sharedPreferences.SP
-import info.nightscout.androidaps.utils.valueToUnits
 import info.nightscout.androidaps.utils.wizard.BolusWizard
 import io.reactivex.disposables.CompositeDisposable
 import java.text.DecimalFormat
@@ -58,9 +56,11 @@ class WizardDialog : DaggerDialogFragment() {
     @Inject lateinit var fabricPrivacy: FabricPrivacy
     @Inject lateinit var resourceHelper: ResourceHelper
     @Inject lateinit var profileFunction: ProfileFunction
-    @Inject lateinit var treatmentsPlugin: TreatmentsPlugin
     @Inject lateinit var activePlugin: ActivePluginProvider
     @Inject lateinit var iobCobCalculatorPlugin: IobCobCalculatorPlugin
+    @Inject lateinit var repository: AppRepository
+    @Inject lateinit var treatmentsPlugin: TreatmentsInterface
+    @Inject lateinit var dateUtil: DateUtil
 
     private var wizard: BolusWizard? = null
 
@@ -207,7 +207,7 @@ class WizardDialog : DaggerDialogFragment() {
 
     private fun onCheckedChanged(buttonView: CompoundButton, @Suppress("UNUSED_PARAMETER") state: Boolean) {
         saveCheckedStates()
-        binding.ttcheckbox.isEnabled = binding.bgcheckbox.isChecked && treatmentsPlugin.tempTargetFromHistory != null
+        binding.ttcheckbox.isEnabled = binding.bgcheckbox.isChecked && repository.getTemporaryTargetActiveAt(dateUtil._now()).blockingGet() is ValueWrapper.Existing
         if (buttonView.id == binding.cobcheckbox.id)
             processCobCheckBox()
         calculateInsulin()
@@ -271,7 +271,7 @@ class WizardDialog : DaggerDialogFragment() {
         } else {
             binding.bgInput.value = 0.0
         }
-        binding.ttcheckbox.isEnabled = treatmentsPlugin.tempTargetFromHistory != null
+        binding.ttcheckbox.isEnabled = repository.getTemporaryTargetActiveAt(dateUtil._now()).blockingGet() is ValueWrapper.Existing
 
         // IOB calculation
         treatmentsPlugin.updateTotalIOBTreatments()
@@ -313,7 +313,8 @@ class WizardDialog : DaggerDialogFragment() {
         }
 
         bg = if (binding.bgcheckbox.isChecked) bg else 0.0
-        val tempTarget = if (binding.ttcheckbox.isChecked) treatmentsPlugin.tempTargetFromHistory else null
+        val dbRecord = repository.getTemporaryTargetActiveAt(dateUtil._now()).blockingGet()
+        val tempTarget = if (binding.ttcheckbox.isChecked && dbRecord is ValueWrapper.Existing)  dbRecord.value else null
 
         // COB
         var cob = 0.0

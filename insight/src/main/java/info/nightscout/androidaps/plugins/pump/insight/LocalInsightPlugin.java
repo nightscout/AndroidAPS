@@ -31,6 +31,9 @@ import info.nightscout.androidaps.data.Profile;
 import info.nightscout.androidaps.data.PumpEnactResult;
 import info.nightscout.androidaps.db.CareportalEvent;
 import info.nightscout.androidaps.db.ExtendedBolus;
+import info.nightscout.androidaps.db.InsightBolusID;
+import info.nightscout.androidaps.db.InsightHistoryOffset;
+import info.nightscout.androidaps.db.InsightPumpID;
 import info.nightscout.androidaps.db.Source;
 import info.nightscout.androidaps.db.TDD;
 import info.nightscout.androidaps.db.TemporaryBasal;
@@ -108,9 +111,6 @@ import info.nightscout.androidaps.plugins.pump.insight.app_layer.status.GetPumpS
 import info.nightscout.androidaps.plugins.pump.insight.app_layer.status.GetTotalDailyDoseMessage;
 import info.nightscout.androidaps.plugins.pump.insight.app_layer.status.ResetPumpStatusRegisterMessage;
 import info.nightscout.androidaps.plugins.pump.insight.connection_service.InsightConnectionService;
-import info.nightscout.androidaps.db.InsightBolusID;
-import info.nightscout.androidaps.db.InsightHistoryOffset;
-import info.nightscout.androidaps.db.InsightPumpID;
 import info.nightscout.androidaps.plugins.pump.insight.descriptors.ActiveBasalRate;
 import info.nightscout.androidaps.plugins.pump.insight.descriptors.ActiveBolus;
 import info.nightscout.androidaps.plugins.pump.insight.descriptors.ActiveTBR;
@@ -131,7 +131,6 @@ import info.nightscout.androidaps.plugins.pump.insight.exceptions.app_layer_erro
 import info.nightscout.androidaps.plugins.pump.insight.utils.ExceptionTranslator;
 import info.nightscout.androidaps.plugins.pump.insight.utils.ParameterBlockUtil;
 import info.nightscout.androidaps.utils.DateUtil;
-import info.nightscout.androidaps.utils.TimeChangeType;
 import info.nightscout.androidaps.utils.resources.ResourceHelper;
 import info.nightscout.androidaps.utils.sharedPreferences.SP;
 
@@ -998,6 +997,7 @@ public class LocalInsightPlugin extends PumpPluginBase implements PumpInterface,
             try {
                 extended.put("ActiveProfile", profileFunction.getProfileName());
             } catch (Exception e) {
+                e.printStackTrace();
             }
             TemporaryBasal tb = treatmentsPlugin.getTempBasalFromHistory(now);
             if (tb != null) {
@@ -1576,7 +1576,7 @@ public class LocalInsightPlugin extends PumpPluginBase implements PumpInterface,
             careportalEvent.eventType = CareportalEvent.NOTE;
             careportalEvent.json = data.toString();
             databaseHelper.createOrUpdate(careportalEvent);
-            nsUpload.uploadCareportalEntryToNS(data);
+            nsUpload.uploadCareportalEntryToNS(data, date);
         } catch (JSONException e) {
             aapsLogger.error("Unhandled exception", e);
         }
@@ -1610,7 +1610,7 @@ public class LocalInsightPlugin extends PumpPluginBase implements PumpInterface,
             careportalEvent.eventType = event;
             careportalEvent.json = data.toString();
             databaseHelper.createOrUpdate(careportalEvent);
-            nsUpload.uploadCareportalEntryToNS(data);
+            nsUpload.uploadCareportalEntryToNS(data, date);
         } catch (JSONException e) {
             aapsLogger.error("Unhandled exception", e);
         }
@@ -1679,10 +1679,6 @@ public class LocalInsightPlugin extends PumpPluginBase implements PumpInterface,
     @Override
     public boolean canHandleDST() {
         return true;
-    }
-
-    @Override
-    public void timezoneOrDSTChanged(TimeChangeType changeType) {
     }
 
 }

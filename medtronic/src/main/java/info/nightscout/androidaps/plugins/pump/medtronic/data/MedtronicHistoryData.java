@@ -595,7 +595,7 @@ public class MedtronicHistoryData {
             careportalEvent.eventType = event;
             careportalEvent.json = data.toString();
             databaseHelper.createOrUpdate(careportalEvent);
-            nsUpload.uploadCareportalEntryToNS(data);
+            nsUpload.uploadCareportalEntryToNS(data, date);
         } catch (JSONException e) {
             aapsLogger.error("Unhandled exception", e);
         }

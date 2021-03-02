@@ -10,9 +10,9 @@ import info.nightscout.androidaps.R
 import info.nightscout.androidaps.activities.ErrorHelperActivity
 import info.nightscout.androidaps.data.DetailedBolusInfo
 import info.nightscout.androidaps.data.Profile
+import info.nightscout.androidaps.database.entities.TemporaryTarget
 import info.nightscout.androidaps.db.CareportalEvent
 import info.nightscout.androidaps.db.Source
-import info.nightscout.androidaps.db.TempTarget
 import info.nightscout.androidaps.events.EventRefreshOverview
 import info.nightscout.androidaps.interfaces.*
 import info.nightscout.androidaps.logging.AAPSLogger
@@ -106,7 +106,7 @@ class BolusWizard @Inject constructor(
     // Input
     lateinit var profile: Profile
     lateinit var profileName: String
-    var tempTarget: TempTarget? = null
+    var tempTarget: TemporaryTarget? = null
     var carbs: Int = 0
     var cob: Double = 0.0
     var bg: Double = 0.0
@@ -126,7 +126,7 @@ class BolusWizard @Inject constructor(
     @JvmOverloads
     fun doCalc(profile: Profile,
                profileName: String,
-               tempTarget: TempTarget?,
+               tempTarget: TemporaryTarget?,
                carbs: Int,
                cob: Double,
                bg: Double,
@@ -168,8 +168,8 @@ class BolusWizard @Inject constructor(
         targetBGLow = Profile.fromMgdlToUnits(profile.targetLowMgdl, profileFunction.getUnits())
         targetBGHigh = Profile.fromMgdlToUnits(profile.targetHighMgdl, profileFunction.getUnits())
         if (useTT && tempTarget != null) {
-            targetBGLow = Profile.fromMgdlToUnits(tempTarget.low, profileFunction.getUnits())
-            targetBGHigh = Profile.fromMgdlToUnits(tempTarget.high, profileFunction.getUnits())
+            targetBGLow = Profile.fromMgdlToUnits(tempTarget.lowTarget, profileFunction.getUnits())
+            targetBGHigh = Profile.fromMgdlToUnits(tempTarget.highTarget, profileFunction.getUnits())
         }
         if (useBg && bg > 0) {
             bgDiff = when {

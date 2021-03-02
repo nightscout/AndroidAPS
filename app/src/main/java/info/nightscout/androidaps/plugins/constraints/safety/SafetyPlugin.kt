@@ -68,7 +68,7 @@ class SafetyPlugin @Inject constructor(
             value[aapsLogger, false, resourceHelper.gs(R.string.closed_loop_disabled_on_dev_branch)] = this
         }
         val pump = activePlugin.activePump
-        if (!pump.isFakingTempsByExtendedBoluses && treatmentsPlugin.isInHistoryExtendedBoluslInProgress) {
+        if (!pump.isFakingTempsByExtendedBoluses && treatmentsPlugin.isInHistoryExtendedBolusInProgress) {
             value[aapsLogger, false, resourceHelper.gs(R.string.closed_loop_disabled_with_eb)] = this
         }
         return value

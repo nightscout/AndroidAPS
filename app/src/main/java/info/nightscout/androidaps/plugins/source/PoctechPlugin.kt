@@ -93,7 +93,7 @@ class PoctechPlugin @Inject constructor(
                             nsUpload.uploadBg(it, GlucoseValue.SourceSensor.POCTECH_NATIVE.text)
                     }
                 }, {
-                    aapsLogger.error(LTag.BGSOURCE, "Error while saving values from Poctech App", it)
+                    aapsLogger.error("Error while saving values from Poctech App", it)
                 })
             } catch (e: JSONException) {
                 aapsLogger.error("Exception: ", e)

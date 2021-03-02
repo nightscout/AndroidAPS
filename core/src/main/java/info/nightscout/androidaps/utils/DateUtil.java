@@ -51,7 +51,7 @@ public class DateUtil {
     /**
      * The date format in iso.
      */
-    private static final String FORMAT_DATE_ISO_OUT = "yyyy-MM-dd'T'HH:mm:ss'Z'";
+    private static final String FORMAT_DATE_ISO_OUT = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'";
 
     /**
      * Takes in an ISO date string of the following format:
@@ -253,6 +253,12 @@ public class DateUtil {
 
     public long _now() {
         return System.currentTimeMillis();
+    }
+
+    public long nowWithoutMilliseconds() {
+        long n = System.currentTimeMillis();
+        n = n - n % 1000;
+        return n;
     }
 
     public static long now() {

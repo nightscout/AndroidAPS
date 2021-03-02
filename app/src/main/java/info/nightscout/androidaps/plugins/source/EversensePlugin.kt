@@ -125,7 +125,7 @@ class EversensePlugin @Inject constructor(
                                 nsUpload.uploadBg(it, GlucoseValue.SourceSensor.EVERSENSE.text)
                         }
                     }, {
-                        aapsLogger.error(LTag.BGSOURCE, "Error while saving values from Eversense App", it)
+                        aapsLogger.error("Error while saving values from Eversense App", it)
                     })
                 }
             }
@@ -147,7 +147,7 @@ class EversensePlugin @Inject constructor(
                                 data.put("glucoseType", "Finger")
                                 data.put("glucose", calibrationGlucoseLevels[i])
                                 data.put("units", Constants.MGDL)
-                                nsUpload.uploadCareportalEntryToNS(data)
+                                nsUpload.uploadCareportalEntryToNS(data, calibrationTimestamps[i])
                             }
                         } catch (e: JSONException) {
                             aapsLogger.error("Unhandled exception", e)
