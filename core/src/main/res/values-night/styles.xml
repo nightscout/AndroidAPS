@@ -70,12 +70,13 @@
         <item name="graphVerticalLabelText">@color/graphVerticalLabelText</item>
         <item name="graphGrid">@color/graphgrid</item>
         <!-- Dialog specific colors  -->
-        <item name="dialogTitleBackground">@color/dialog_title_background</item>
+        <item name="dialogTitleBackground">?attr/colorPrimary</item>
         <item name="dialogTitleColor">@color/white</item>
-        <item name="dialogTitleIconTint">@color/white</item>
+        <item name="dialogTitleIconTint">?attr/colorPrimary</item>
         <item name="dialogUrgent" >@color/red</item>
         <!-- wizard dialog -->
         <item name="totalBackground" >@color/darkgray</item>
+        <!-- all dialogs -->
         <!-- TDD Stats   -->
         <item name="backgroundStatsColor">@color/background_stats_color</item>
         <!---Android Dark and Light Theme Base colors-->

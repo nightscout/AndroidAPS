@@ -4,7 +4,6 @@
 
     <color name="defaulttextcolor">#FFFFFF</color>
 
-    <color name="dialog_title_background">#EEEEEE</color>
     <color name="activity_title_background">#EEEEEE</color>
 
     <!---Graph Color for horizontal and vertical label text-->

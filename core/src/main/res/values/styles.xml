@@ -70,7 +70,7 @@
         <item name="graphVerticalLabelText">@color/graphVerticalLabelText</item>
         <item name="graphGrid">@color/graphgrid</item>
         <!-- Dialog specific colors  -->
-        <item name="dialogTitleBackground">@color/dialog_title_background</item>
+        <item name="dialogTitleBackground">?attr/colorPrimary</item>
         <item name="dialogTitleColor">@color/white</item>
         <item name="dialogTitleIconTint">@color/white</item>
         <item name="dialogUrgent" >@color/red</item>

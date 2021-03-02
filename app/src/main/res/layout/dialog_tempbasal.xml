@@ -18,7 +18,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:background="?attr/colorPrimary"
+            android:background="?attr/dialogTitleBackground"
             android:orientation="horizontal"
             android:padding="5dp">
 
@@ -26,8 +26,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:contentDescription="@string/tempbasal_label"
-                app:srcCompat="@drawable/ic_cp_basal_start"
-                app:tint="?attr/colorOnPrimary"/>
+                app:srcCompat="@drawable/ic_cp_basal_start" />
 
             <TextView
                 android:layout_width="match_parent"
