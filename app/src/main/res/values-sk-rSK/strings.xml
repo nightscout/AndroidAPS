@@ -900,4 +900,8 @@
     <string name="cannula">Kanyla</string>
     <string name="userentry">Vstup používateľa</string>
     <string name="common_values">Použite hodnoty pre najväčšie jedlo, aké obvykle jete\n</string>
+    <string name="summary_email_for_crash_report">Táto e-mailová adresa bude pripojená ku správam o zlyhaniach, aby sme vás mohli kontaktovať v naliehavých prípadoch. Je to dobrovoľné.</string>
+    <string name="email_address">Emailová adresa</string>
+    <string name="privacy_settings">Nastavenia súkromia</string>
+    <string name="privacy_summary">Pokiaľ chcete byť upozornení na zlyhanie aplikácie, môžete zadať voliteľne e-mailovú adresu. Toto nie je automatizovaná služba. Vývojári vás budú kontaktovať v nebezpečných situáciách.</string>
 </resources>
