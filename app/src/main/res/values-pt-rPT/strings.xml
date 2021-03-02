@@ -194,7 +194,6 @@
     <string name="smscommunicator_loophasbeenenabled">Loop foi activado</string>
     <string name="smscommunicator_loopisenabled">Loop activado</string>
     <string name="valuelimitedto">%1$.2f limitado a %2$.2f</string>
-    <string name="valueoutofrange">O valor %1$s está fora dos limites permitidos</string>
     <string name="smscommunicator_pumpconnectwithcode">Para ligar a bomba responda com o código %1$s</string>
     <string name="smscommunicator_pumpconnectfail">Ligação à bomba falhou</string>
     <string name="smscommunicator_pumpdisconnectwithcode">Para remover a bomba por %1$d minutos responda com o código %2$s</string>
@@ -463,7 +462,7 @@
     <string name="activate_profile">Activar perfil</string>
     <string name="invalid">INVÁLIDO</string>
     <string name="careportal_newnstreatment_percentage_label">Percentagem</string>
-    <string name="careportal_newnstreatment_timeshift_label">Alteração Turno</string>
+    <string name="careportal_newnstreatment_timeshift_label">Deslocamento temporal</string>
     <string name="default_temptargets">Alvo-Temp padrão</string>
     <string name="eatingsoon_duration">duração comerbreve</string>
     <string name="eatingsoon_target">alvo comerbreve</string>
