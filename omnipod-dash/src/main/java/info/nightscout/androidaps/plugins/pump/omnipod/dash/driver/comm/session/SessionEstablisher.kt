@@ -13,7 +13,7 @@ import info.nightscout.androidaps.utils.extensions.toHex
 import org.spongycastle.util.encoders.Hex
 import java.security.SecureRandom
 
-class EapAkaExchanger(private val aapsLogger: AAPSLogger, private val msgIO: MessageIO, private val ltk: PairResult) {
+class SessionEstablisher(private val aapsLogger: AAPSLogger, private val msgIO: MessageIO, private val ltk: PairResult) {
 
     var seq = ltk.seq
 
@@ -32,13 +32,12 @@ class EapAkaExchanger(private val aapsLogger: AAPSLogger, private val msgIO: Mes
 
     fun negotiateSessionKeys(): SessionKeys {
         // send EAP-AKA challenge
-        seq++ // TODO: get from pod state. This only works for activating a new pod
+        seq++ //TODO: get from pod state. This only works for activating a new pod
         var challenge = eapAkaChallenge()
         msgIO.sendMesssage(challenge)
 
         val challengeResponse = msgIO.receiveMessage()
-        processChallengeResponse(challengeResponse)
-        // TODO: what do we have to answer if challenge response does not validate?
+        processChallengeResponse(challengeResponse)  //TODO: what do we have to answer if challenge response does not validate?
 
         seq++
         var success = eapSuccess()

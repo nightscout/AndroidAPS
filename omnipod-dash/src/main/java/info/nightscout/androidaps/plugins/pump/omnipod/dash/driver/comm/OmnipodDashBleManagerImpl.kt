@@ -16,7 +16,7 @@ import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.io.Chara
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.message.MessageIO
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.pair.LTKExchanger
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.scan.PodScanner
-import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.session.EapAkaExchanger
+import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.session.SessionEstablisher
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.status.ConnectionStatus
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.event.PodEvent
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.command.base.Command
@@ -134,7 +134,7 @@ class OmnipodDashBleManagerImpl @Inject constructor(
 
             emitter.onNext(PodEvent.EstablishingSession)
 
-            val eapAkaExchanger = EapAkaExchanger(aapsLogger, msgIO, ltk)
+            val eapAkaExchanger = SessionEstablisher(aapsLogger, msgIO, ltk)
             val sessionKeys = eapAkaExchanger.negotiateSessionKeys()
             aapsLogger.info(LTag.PUMPCOMM, "CK: ${sessionKeys.ck.toHex()}")
             aapsLogger.info(LTag.PUMPCOMM, "noncePrefix: ${sessionKeys.noncePrefix.toHex()}")
