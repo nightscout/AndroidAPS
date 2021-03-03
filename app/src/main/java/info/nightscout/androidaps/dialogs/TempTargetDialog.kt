@@ -168,13 +168,22 @@ class TempTargetDialog : DialogFragmentWithDate() {
         activity?.let { activity ->
             OKDialog.showConfirmation(activity, resourceHelper.gs(R.string.careportal_temporarytarget), HtmlHelper.fromHtml(Joiner.on("<br/>").join(actions)), {
                 val units = profileFunction.getUnits()
-                when(reason) {
-                    resourceHelper.gs(R.string.eatingsoon) -> uel.log(Action.TT_EATING_SOON, ValueWithUnit(target, units), ValueWithUnit(duration, Units.M))
-                    resourceHelper.gs(R.string.activity) -> uel.log(Action.TT_ACTIVITY, ValueWithUnit(target, units), ValueWithUnit(duration, Units.M))
-                    resourceHelper.gs(R.string.hypo) -> uel.log(Action.TT_HYPO, ValueWithUnit(target, units), ValueWithUnit(duration, Units.M))
-                    resourceHelper.gs(R.string.manual) -> uel.log(Action.TT, ValueWithUnit(target, units), ValueWithUnit(duration, Units.M))
-                    resourceHelper.gs(R.string.stoptemptarget) -> uel.log(Action.CANCEL_TT)
-                }
+                if (eventTimeChanged)
+                    when(reason) {
+                        resourceHelper.gs(R.string.eatingsoon) -> uel.log(Action.TT_EATING_SOON, ValueWithUnit(eventTime, Units.Timestamp), ValueWithUnit(target, units), ValueWithUnit(duration, Units.M))
+                        resourceHelper.gs(R.string.activity) -> uel.log(Action.TT_ACTIVITY, ValueWithUnit(eventTime, Units.Timestamp), ValueWithUnit(target, units), ValueWithUnit(duration, Units.M))
+                        resourceHelper.gs(R.string.hypo) -> uel.log(Action.TT_HYPO, ValueWithUnit(eventTime, Units.Timestamp), ValueWithUnit(target, units), ValueWithUnit(duration, Units.M))
+                        resourceHelper.gs(R.string.manual) -> uel.log(Action.TT, ValueWithUnit(eventTime, Units.Timestamp), ValueWithUnit(target, units), ValueWithUnit(duration, Units.M))
+                        resourceHelper.gs(R.string.stoptemptarget) -> uel.log(Action.CANCEL_TT, ValueWithUnit(eventTime, Units.Timestamp))
+                    }
+                else
+                    when(reason) {
+                        resourceHelper.gs(R.string.eatingsoon) -> uel.log(Action.TT_EATING_SOON, ValueWithUnit(target, units), ValueWithUnit(duration, Units.M))
+                        resourceHelper.gs(R.string.activity) -> uel.log(Action.TT_ACTIVITY, ValueWithUnit(target, units), ValueWithUnit(duration, Units.M))
+                        resourceHelper.gs(R.string.hypo) -> uel.log(Action.TT_HYPO, ValueWithUnit(target, units), ValueWithUnit(duration, Units.M))
+                        resourceHelper.gs(R.string.manual) -> uel.log(Action.TT, ValueWithUnit(target, units), ValueWithUnit(duration, Units.M))
+                        resourceHelper.gs(R.string.stoptemptarget) -> uel.log(Action.CANCEL_TT)
+                    }
                 if (target == 0.0 || duration == 0) {
                     val tempTarget = TempTarget()
                         .date(eventTime)

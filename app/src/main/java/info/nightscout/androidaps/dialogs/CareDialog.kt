@@ -223,7 +223,10 @@ class CareDialog : DialogFragmentWithDate() {
                     EventType.ANNOUNCEMENT   -> CareportalEvent.ANNOUNCEMENT
                 }
                 careportalEvent.json = json.toString()
-                uel.log(Action.CAREPORTAL, notes, ValueWithUnit(careportalEvent.eventType, Units.CPEvent))
+                if (eventTimeChanged)
+                    uel.log(Action.CAREPORTAL, notes, ValueWithUnit(eventTime, Units.Timestamp), ValueWithUnit(careportalEvent.eventType, Units.CPEvent))
+                else
+                    uel.log(Action.CAREPORTAL, notes, ValueWithUnit(careportalEvent.eventType, Units.CPEvent))
                 MainApp.getDbHelper().createOrUpdate(careportalEvent)
                 nsUpload.uploadCareportalEntryToNS(json)
             }, null)
