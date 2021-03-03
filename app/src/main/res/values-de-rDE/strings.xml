@@ -901,4 +901,8 @@ Unerwartetes Verhalten.</string>
     <string name="cannula">Kanüle</string>
     <string name="userentry">Benutzereingabe</string>
     <string name="common_values">Verwende die Werte der größten Mahlzeit, die Du normalerweise zu Dir nimmst\n</string>
+    <string name="summary_email_for_crash_report">Diese E-Mail-Adresse wird an Absturzberichte angehängt, so dass wir Dich in dringenden Fällen kontaktieren können. Angabe ist optional.</string>
+    <string name="email_address">E‐Mail‐Adresse</string>
+    <string name="privacy_settings">Privatsphäre-Einstellungen</string>
+    <string name="privacy_summary">Du kannst optional eine E-Mail-Adresse angeben, wenn Du bei Absturzberichten kontaktiert werden möchtest. Dies ist keine Automatik, Du wirst von den Entwicklern in gefährlichen Situationen kontaktiert. </string>
 </resources>

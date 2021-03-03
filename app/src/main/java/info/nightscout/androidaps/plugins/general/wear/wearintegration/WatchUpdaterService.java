@@ -48,7 +48,8 @@ import info.nightscout.androidaps.plugins.aps.loop.LoopPlugin;
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper;
 import info.nightscout.androidaps.plugins.general.nsclient.data.NSDeviceStatus;
 import info.nightscout.androidaps.plugins.general.wear.WearPlugin;
-import info.nightscout.androidaps.plugins.general.wear.events.EventWearDoAction;
+import info.nightscout.androidaps.plugins.general.wear.events.EventWearConfirmAction;
+import info.nightscout.androidaps.plugins.general.wear.events.EventWearInitiateAction;
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.GlucoseStatus;
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.IobCobCalculatorPlugin;
 import info.nightscout.androidaps.plugins.treatments.TreatmentsPlugin;
@@ -261,13 +262,13 @@ public class WatchUpdaterService extends WearableListenerService implements Goog
             if (event != null && event.getPath().equals(WEARABLE_INITIATE_ACTIONSTRING_PATH)) {
                 String actionstring = new String(event.getData());
                 aapsLogger.debug(LTag.WEAR, "Wear: " + actionstring);
-                rxBus.send(new EventWearDoAction(actionstring));
+                rxBus.send(new EventWearInitiateAction(actionstring));
             }
 
             if (event != null && event.getPath().equals(WEARABLE_CONFIRM_ACTIONSTRING_PATH)) {
                 String actionstring = new String(event.getData());
                 aapsLogger.debug(LTag.WEAR, "Wear Confirm: " + actionstring);
-                rxBus.send(new EventWearDoAction(actionstring));
+                rxBus.send(new EventWearConfirmAction(actionstring));
             }
         }
     }

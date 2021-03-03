@@ -18,6 +18,7 @@ import info.nightscout.androidaps.MainApp
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.database.AppRepository
 import info.nightscout.androidaps.database.entities.GlucoseValue
+import info.nightscout.androidaps.database.entities.TemporaryTarget
 import info.nightscout.androidaps.db.*
 import info.nightscout.androidaps.events.EventPreferenceChange
 import info.nightscout.androidaps.interfaces.PluginBase
@@ -27,7 +28,6 @@ import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.logging.LTag
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper
 import info.nightscout.androidaps.plugins.treatments.TreatmentsPlugin
-import io.reactivex.rxkotlin.plusAssign
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 import info.nightscout.androidaps.utils.rx.AapsSchedulers
 import info.nightscout.androidaps.utils.sharedPreferences.SP
@@ -36,6 +36,7 @@ import io.reactivex.Observable
 import io.reactivex.Single
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.disposables.Disposable
+import io.reactivex.rxkotlin.plusAssign
 import org.json.JSONArray
 import org.json.JSONException
 import org.json.JSONObject
@@ -268,16 +269,15 @@ class OpenHumansUploader @Inject constructor(
     }
 
     @JvmOverloads
-    fun enqueueTempTarget(tempTarget: TempTarget?, deleted: Boolean = false) = tempTarget?.let {
+    fun enqueueTempTarget(tempTarget: TemporaryTarget?, deleted: Boolean = false) = tempTarget?.let {
         insertQueueItem("TempTargets") {
-            put("date", tempTarget.date)
+            put("date", tempTarget.timestamp)
             put("isValid", tempTarget.isValid)
-            put("source", tempTarget.source)
-            put("nsId", tempTarget._id)
-            put("low", tempTarget.low)
-            put("high", tempTarget.high)
+            put("nsId", tempTarget.interfaceIDs_backing?.nightscoutId)
+            put("low", tempTarget.lowTarget)
+            put("high", tempTarget.highTarget)
             put("reason", tempTarget.reason)
-            put("durationInMinutes", tempTarget.durationInMinutes)
+            put("durationInMinutes", tempTarget.duration)
             put("isDeletion", deleted)
         }
     }
@@ -384,7 +384,7 @@ class OpenHumansUploader @Inject constructor(
             .andThen(Observable.defer { Observable.fromIterable(MainApp.getDbHelper().allTemporaryBasals) })
             .map { enqueueTemporaryBasal(it); increaseCounter() }
             .ignoreElements()
-            .andThen(Observable.defer { Observable.fromIterable(MainApp.getDbHelper().allTempTargets) })
+            .andThen(Observable.defer { Observable.fromIterable(repository.compatGetTemporaryTargetData().blockingGet()) })
             .map { enqueueTempTarget(it); increaseCounter() }
             .ignoreElements()
             .doOnSubscribe {

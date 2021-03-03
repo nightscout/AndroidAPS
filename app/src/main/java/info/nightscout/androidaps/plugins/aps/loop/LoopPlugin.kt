@@ -33,9 +33,10 @@ import info.nightscout.androidaps.plugins.general.nsclient.NSUpload
 import info.nightscout.androidaps.plugins.general.overview.events.EventDismissNotification
 import info.nightscout.androidaps.plugins.general.overview.events.EventNewNotification
 import info.nightscout.androidaps.plugins.general.overview.notifications.Notification
-import info.nightscout.androidaps.plugins.general.wear.events.EventWearDoAction
+import info.nightscout.androidaps.plugins.general.wear.events.EventWearInitiateAction
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.IobCobCalculatorPlugin
 import info.nightscout.androidaps.events.EventAutosensCalculationFinished
+import info.nightscout.androidaps.plugins.general.wear.events.EventWearConfirmAction
 import info.nightscout.androidaps.plugins.pump.virtual.VirtualPumpPlugin
 import info.nightscout.androidaps.plugins.treatments.TreatmentsPlugin
 import info.nightscout.androidaps.queue.Callback
@@ -75,6 +76,7 @@ open class LoopPlugin @Inject constructor(
     private val receiverStatusStore: ReceiverStatusStore,
     private val fabricPrivacy: FabricPrivacy,
     private val nsUpload: NSUpload,
+    private val databaseHelper: DatabaseHelperInterface,
     private val hardLimits: HardLimits
 ) : PluginBase(PluginDescription()
     .mainType(PluginType.LOOP)
@@ -368,7 +370,7 @@ open class LoopPlugin @Inject constructor(
                             //only send to wear if Native notifications are turned off
                             if (!sp.getBoolean(R.string.key_raise_notifications_as_android_notifications, true)) {
                                 // Send to Wear
-                                rxBus.send(EventWearDoAction("changeRequest"))
+                                rxBus.send(EventWearInitiateAction("changeRequest"))
                             }
                         }
                     } else {
@@ -472,14 +474,14 @@ open class LoopPlugin @Inject constructor(
         rxBus.send(EventNewOpenLoopNotification())
 
         // Send to Wear
-        rxBus.send(EventWearDoAction("changeRequest"))
+        rxBus.send(EventWearInitiateAction("changeRequest"))
     }
 
     private fun dismissSuggestion() {
         // dismiss notifications
         val notificationManager = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
         notificationManager.cancel(Constants.notificationID)
-        rxBus.send(EventWearDoAction("cancelChangeRequest"))
+        rxBus.send(EventWearConfirmAction("cancelChangeRequest"))
     }
 
     fun acceptChangeRequest() {
@@ -626,7 +628,7 @@ open class LoopPlugin @Inject constructor(
                 }
             })
         }
-        if (pump.pumpDescription.isExtendedBolusCapable && treatmentsPlugin.isInHistoryExtendedBoluslInProgress) {
+        if (pump.pumpDescription.isExtendedBolusCapable && treatmentsPlugin.isInHistoryExtendedBolusInProgress) {
             commandQueue.cancelExtended(object : Callback() {
                 override fun run() {
                     if (!result.success) {
@@ -663,7 +665,7 @@ open class LoopPlugin @Inject constructor(
         event.source = Source.USER
         event.eventType = CareportalEvent.OPENAPSOFFLINE
         event.json = data.toString()
-        MainApp.getDbHelper().createOrUpdate(event)
+        databaseHelper.createOrUpdate(event)
         nsUpload.uploadOpenAPSOffline(event)
     }
 
