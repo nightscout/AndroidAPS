@@ -77,6 +77,7 @@ data class GlucoseValue(
         @SerializedName("DexcomG5") DEXCOM_G5_XDRIP("DexcomG5"),
         @SerializedName("G6 Native") DEXCOM_G6_NATIVE_XDRIP("G6 Native"),
         @SerializedName("G5 Native") DEXCOM_G5_NATIVE_XDRIP("G5 Native"),
+        @SerializedName("G6 Native / G5 Native") DEXCOM_G6_G5_NATIVE_XDRIP("G6 Native / G5 Native"),
         @SerializedName("Network libre") LIBRE_1_NET("Network libre"),
         @SerializedName("BlueReader") LIBRE_1_BLUE("BlueReader"),
         @SerializedName("Transmiter PL") LIBRE_1_PL("Transmiter PL"),
