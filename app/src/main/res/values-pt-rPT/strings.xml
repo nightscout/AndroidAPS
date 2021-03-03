@@ -799,8 +799,8 @@
     <string name="chartmenu">Menu do Gráfico</string>
     <string name="loop_smbrequest_time_label">Hora de solicitação SMB</string>
     <string name="loop_smbexecution_time_label">Hora de execução do SMB</string>
-    <string name="loop_tbrrequest_time_label">Hora de solicitação Basal Temp</string>
-    <string name="loop_tbrexecution_time_label">Hora de execução Basal Temp</string>
+    <string name="loop_tbrrequest_time_label">Hora de solicitação da BT</string>
+    <string name="loop_tbrexecution_time_label">Hora de execução da BT</string>
     <!-- SMS Communicator & OTP Authenticator -->
     <string name="smscommunicator_code_from_authenticator_for" comment="This is continuation of sentence: To [ACTION] reply with code">da app Authenticator para: %1$s seguido pelo PIN</string>
     <string name="smscommunicator_otp_pin">PIN obrigatório adicional no token final</string>
