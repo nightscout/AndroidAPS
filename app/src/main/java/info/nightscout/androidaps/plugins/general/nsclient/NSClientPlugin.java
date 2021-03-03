@@ -30,6 +30,7 @@ import info.nightscout.androidaps.Constants;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.database.AppRepository;
 import info.nightscout.androidaps.database.entities.TemporaryTarget;
+import info.nightscout.androidaps.database.entities.UserEntry.*;
 import info.nightscout.androidaps.database.transactions.SyncTemporaryTargetTransaction;
 import info.nightscout.androidaps.db.CareportalEvent;
 import info.nightscout.androidaps.events.EventAppExit;
@@ -423,7 +424,7 @@ public class NSClientPlugin extends PluginBase {
         // room  Temporary target
         TemporaryTarget temporaryTarget = temporaryTargetFromNsIdForInvalidating(_id);
         disposable.add(repository.runTransactionForResult(new SyncTemporaryTargetTransaction(temporaryTarget)).subscribe(
-                result -> result.getInvalidated().forEach(record -> uel.log("TT DELETED FROM NS", record.getReason().getText(), record.getLowTarget(), record.getHighTarget(), (int) record.getDuration(), 0)),
+                result -> result.getInvalidated().forEach(record -> uel.log(Action.TT_DELETED_FROM_NS, new ValueWithUnit(record.getReason().getText(), Units.TT_Reason), new ValueWithUnit(record.getLowTarget(), Units.Mg_Dl), new ValueWithUnit(record.getHighTarget(), Units.Mg_Dl), new ValueWithUnit((int) record.getDuration(), Units.M))),
                 error -> aapsLogger.error(LTag.BGSOURCE, "Error while saving temporary target", error)));
         // new DB model
         EventNsTreatment evtTreatment = new EventNsTreatment(EventNsTreatment.Companion.getREMOVE(), json);
@@ -453,9 +454,9 @@ public class NSClientPlugin extends PluginBase {
             if (temporaryTarget != null) {
                 disposable.add(repository.runTransactionForResult(new SyncTemporaryTargetTransaction(temporaryTarget)).subscribe(
                         result -> {
-                            result.getInserted().forEach(record -> uel.log("TT FROM NS", record.getReason().getText(), record.getLowTarget(), record.getHighTarget(), (int) record.getDuration(), 0));
-                            result.getInvalidated().forEach(record -> uel.log("TT DELETED FROM NS", record.getReason().getText(), record.getLowTarget(), record.getHighTarget(), (int) record.getDuration(), 0));
-                            result.getEnded().forEach(record -> uel.log("TT CANCELED FROM NS", record.getReason().getText(), record.getLowTarget(), record.getHighTarget(), (int) record.getDuration(), 0));
+                            result.getInserted().forEach(record -> uel.log(Action.TT_FROM_NS, new ValueWithUnit(record.getReason().getText(), Units.TT_Reason), new ValueWithUnit(record.getLowTarget(), Units.Mg_Dl), new ValueWithUnit(record.getHighTarget(), Units.Mg_Dl), new ValueWithUnit((int) record.getDuration(), Units.M)));
+                            result.getInvalidated().forEach(record -> uel.log(Action.TT_DELETED_FROM_NS, new ValueWithUnit(record.getReason().getText(), Units.TT_Reason), new ValueWithUnit(record.getLowTarget(), Units.Mg_Dl), new ValueWithUnit(record.getHighTarget(), Units.Mg_Dl), new ValueWithUnit((int) record.getDuration(), Units.M)));
+                            result.getEnded().forEach(record -> uel.log(Action.TT_CANCELED_FROM_NS, new ValueWithUnit(record.getReason().getText(), Units.TT_Reason), new ValueWithUnit(record.getLowTarget(), Units.Mg_Dl), new ValueWithUnit(record.getHighTarget(), Units.Mg_Dl), new ValueWithUnit((int) record.getDuration(), Units.M)));
                         },
                         error -> aapsLogger.error(LTag.BGSOURCE, "Error while saving temporary target", error)));
             } else {

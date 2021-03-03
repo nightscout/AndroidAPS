@@ -112,6 +112,9 @@ data class UserEntry(
         @SerializedName("SMS_PUMP_DISCONNECT") SMS_PUMP_DISCONNECT,
         @SerializedName("SMS_SMS") SMS_SMS,
         @SerializedName("SMS_TT") SMS_TT,
+        @SerializedName("TT_DELETED_FROM_NS") TT_DELETED_FROM_NS,
+        @SerializedName("TT_FROM_NS") TT_FROM_NS,
+        @SerializedName("TT_CANCELED_FROM_NS") TT_CANCELED_FROM_NS,
         @SerializedName("UNKNOWN") UNKNOWN
         ;
 

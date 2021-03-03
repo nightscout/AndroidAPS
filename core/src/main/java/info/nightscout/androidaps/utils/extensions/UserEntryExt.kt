@@ -1,5 +1,6 @@
 package info.nightscout.androidaps.utils.extensions
 
+import com.google.gson.annotations.SerializedName
 import info.nightscout.androidaps.core.R
 import info.nightscout.androidaps.database.entities.UserEntry
 
@@ -98,6 +99,9 @@ fun UserEntry.Action.stringId(): Int {
         this == UserEntry.Action.SMS_PUMP_DISCONNECT        -> R.string.uel_sms_pump_disconnect
         this == UserEntry.Action.SMS_SMS                    -> R.string.uel_sms_sms
         this == UserEntry.Action.SMS_TT                     -> R.string.uel_sms_tt
+        this == UserEntry.Action.TT_DELETED_FROM_NS         -> R.string.uel_tt_deleted_from_ns
+        this == UserEntry.Action.TT_FROM_NS                 -> R.string.uel_tt_from_ns
+        this == UserEntry.Action.TT_CANCELED_FROM_NS        -> R.string.uel_tt_canceleted_from_ns
         else                                                -> R.string.uel_unknown
     }
 }

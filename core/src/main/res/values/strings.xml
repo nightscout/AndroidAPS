@@ -481,6 +481,9 @@
     <string name="uel_sms_pump_disconnect">SMS PUMP DISCONNECT</string>
     <string name="uel_sms_sms">SMS SMS</string>
     <string name="uel_sms_tt">SMS TT</string>
+    <string name="uel_tt_deleted_from_ns">TT DELETED FROM NS</string>
+    <string name="uel_tt_from_ns">TT FROM NS</string>
+    <string name="uel_tt_canceleted_from_ns">TT CANCELED FROM NS</string>
     <string name="uel_unknown">UNKNOWN</string>
     <string name="formated_string">Formated string</string>
 
