@@ -15,16 +15,19 @@ import info.nightscout.androidaps.activities.ErrorHelperActivity
 import info.nightscout.androidaps.data.DetailedBolusInfo
 import info.nightscout.androidaps.data.Profile
 import info.nightscout.androidaps.database.AppRepository
+import info.nightscout.androidaps.database.entities.TemporaryTarget
+import info.nightscout.androidaps.database.transactions.InsertTemporaryTargetAndCancelCurrentTransaction
 import info.nightscout.androidaps.databinding.DialogInsulinBinding
 import info.nightscout.androidaps.db.CareportalEvent
 import info.nightscout.androidaps.db.Source
-import info.nightscout.androidaps.db.TempTarget
 import info.nightscout.androidaps.interfaces.ActivePluginProvider
 import info.nightscout.androidaps.interfaces.CommandQueueProvider
 import info.nightscout.androidaps.interfaces.Constraint
 import info.nightscout.androidaps.interfaces.ProfileFunction
+import info.nightscout.androidaps.logging.LTag
 import info.nightscout.androidaps.logging.UserEntryLogger
 import info.nightscout.androidaps.plugins.configBuilder.ConstraintChecker
+import info.nightscout.androidaps.plugins.general.nsclient.NSUpload
 import info.nightscout.androidaps.queue.Callback
 import info.nightscout.androidaps.utils.*
 import info.nightscout.androidaps.utils.alertDialogs.OKDialog
@@ -32,8 +35,11 @@ import info.nightscout.androidaps.utils.extensions.formatColor
 import info.nightscout.androidaps.utils.extensions.toSignedString
 import info.nightscout.androidaps.utils.extensions.toVisibility
 import info.nightscout.androidaps.utils.resources.ResourceHelper
+import io.reactivex.disposables.CompositeDisposable
+import io.reactivex.rxkotlin.plusAssign
 import java.text.DecimalFormat
 import java.util.*
+import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 import kotlin.math.abs
 import kotlin.math.max
@@ -50,6 +56,7 @@ class InsulinDialog : DialogFragmentWithDate() {
     @Inject lateinit var repository: AppRepository
     @Inject lateinit var config: Config
     @Inject lateinit var uel: UserEntryLogger
+    @Inject lateinit var nsUpload: NSUpload
 
     companion object {
 
@@ -57,6 +64,8 @@ class InsulinDialog : DialogFragmentWithDate() {
         private const val PLUS2_DEFAULT = 1.0
         private const val PLUS3_DEFAULT = 2.0
     }
+
+    private val disposable = CompositeDisposable()
 
     private val textWatcher: TextWatcher = object : TextWatcher {
         override fun afterTextChanged(s: Editable) {
@@ -139,6 +148,7 @@ class InsulinDialog : DialogFragmentWithDate() {
 
     override fun onDestroyView() {
         super.onDestroyView()
+        disposable.clear()
         _binding = null
     }
 
@@ -179,14 +189,18 @@ class InsulinDialog : DialogFragmentWithDate() {
                 OKDialog.showConfirmation(activity, resourceHelper.gs(R.string.bolus), HtmlHelper.fromHtml(Joiner.on("<br/>").join(actions)), {
                     if (eatingSoonChecked) {
                         uel.log("TT EATING SOON", d1 = eatingSoonTT, i1 = eatingSoonTTDuration)
-                        val tempTarget = TempTarget()
-                            .date(System.currentTimeMillis())
-                            .duration(eatingSoonTTDuration)
-                            .reason(resourceHelper.gs(R.string.eatingsoon))
-                            .source(Source.USER)
-                            .low(Profile.toMgdl(eatingSoonTT, profileFunction.getUnits()))
-                            .high(Profile.toMgdl(eatingSoonTT, profileFunction.getUnits()))
-                        activePlugin.activeTreatments.addToHistoryTempTarget(tempTarget)
+                        disposable += repository.runTransactionForResult(InsertTemporaryTargetAndCancelCurrentTransaction(
+                            timestamp = System.currentTimeMillis(),
+                            duration = TimeUnit.MINUTES.toMillis(eatingSoonTTDuration.toLong()),
+                            reason = TemporaryTarget.Reason.EATING_SOON,
+                            lowTarget = Profile.toMgdl(eatingSoonTT, profileFunction.getUnits()),
+                            highTarget = Profile.toMgdl(eatingSoonTT, profileFunction.getUnits())
+                        )).subscribe({ result ->
+                            result.inserted.forEach { nsUpload.uploadTempTarget(it) }
+                            result.updated.forEach { nsUpload.updateTempTarget(it) }
+                        }, {
+                            aapsLogger.error(LTag.BGSOURCE, "Error while saving temporary target", it)
+                        })
                     }
                     if (insulinAfterConstraints > 0) {
                         val detailedBolusInfo = DetailedBolusInfo()

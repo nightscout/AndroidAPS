@@ -6,6 +6,7 @@ import info.nightscout.androidaps.Constants
 import info.nightscout.androidaps.TestBaseWithProfile
 import info.nightscout.androidaps.TestPumpPlugin
 import info.nightscout.androidaps.data.PumpEnactResult
+import info.nightscout.androidaps.database.AppRepository
 import info.nightscout.androidaps.interfaces.*
 import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper
@@ -17,7 +18,7 @@ import org.mockito.Mock
 import org.mockito.Mockito.`when`
 import org.powermock.core.classloader.annotations.PrepareForTest
 
-@PrepareForTest(RxBusWrapper::class, ActionsTestBase.TestLoopPlugin::class)
+@PrepareForTest(RxBusWrapper::class, ActionsTestBase.TestLoopPlugin::class, AppRepository::class)
 open class ActionsTestBase : TestBaseWithProfile() {
 
     open class TestLoopPlugin(
@@ -44,6 +45,7 @@ open class ActionsTestBase : TestBaseWithProfile() {
     @Mock lateinit var profilePlugin: ProfileInterface
     @Mock lateinit var smsCommunicatorPlugin: SmsCommunicatorInterface
     @Mock lateinit var loopPlugin: TestLoopPlugin
+    @Mock lateinit var repository: AppRepository
 
     private val pluginDescription = PluginDescription()
     lateinit var testPumpPlugin: TestPumpPlugin
@@ -54,11 +56,13 @@ open class ActionsTestBase : TestBaseWithProfile() {
                 it.aapsLogger = aapsLogger
                 it.resourceHelper = resourceHelper
                 it.activePlugin = activePlugin
+                it.repository = repository
             }
             if (it is ActionStartTempTarget) {
                 it.aapsLogger = aapsLogger
                 it.resourceHelper = resourceHelper
                 it.activePlugin = activePlugin
+                it.repository = repository
             }
             if (it is ActionSendSMS) {
                 it.aapsLogger = aapsLogger

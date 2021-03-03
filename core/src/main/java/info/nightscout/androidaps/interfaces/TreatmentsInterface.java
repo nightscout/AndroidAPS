@@ -11,7 +11,6 @@ import info.nightscout.androidaps.data.NonOverlappingIntervals;
 import info.nightscout.androidaps.data.ProfileIntervals;
 import info.nightscout.androidaps.db.ExtendedBolus;
 import info.nightscout.androidaps.db.ProfileSwitch;
-import info.nightscout.androidaps.db.TempTarget;
 import info.nightscout.androidaps.db.TemporaryBasal;
 import info.nightscout.androidaps.db.Treatment;
 import info.nightscout.androidaps.plugins.treatments.TreatmentUpdateReturn;
@@ -42,6 +41,7 @@ public interface TreatmentsInterface {
     List<Treatment> getTreatmentsFromHistoryAfterTimestamp(long timestamp);
 
     long getLastBolusTime();
+
     long getLastBolusTime(boolean excludeSMB);
 
     // real basals (not faked by extended bolus)
@@ -60,7 +60,7 @@ public interface TreatmentsInterface {
 
     void removeTempBasal(TemporaryBasal temporaryBasal);
 
-    boolean isInHistoryExtendedBoluslInProgress();
+    boolean isInHistoryExtendedBolusInProgress();
 
     ExtendedBolus getExtendedBolusFromHistory(long time);
 
@@ -69,14 +69,6 @@ public interface TreatmentsInterface {
     boolean addToHistoryExtendedBolus(ExtendedBolus extendedBolus);
 
     boolean addToHistoryTreatment(DetailedBolusInfo detailedBolusInfo, boolean allowUpdate);
-
-    TempTarget getTempTargetFromHistory();
-
-    TempTarget getTempTargetFromHistory(long time);
-
-    Intervals<TempTarget> getTempTargetsFromHistory();
-
-    void addToHistoryTempTarget(TempTarget tempTarget);
 
     ProfileSwitch getProfileSwitchFromHistory(long time);
 

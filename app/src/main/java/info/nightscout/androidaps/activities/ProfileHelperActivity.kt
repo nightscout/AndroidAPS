@@ -140,7 +140,10 @@ class ProfileHelperActivity : NoSplashAppCompatActivity() {
             else defaultProfileDPV.profile(age, tdd, pct / 100.0, profileFunction.getUnits())
             profile?.let {
                 OKDialog.showConfirmation(this, resourceHelper.gs(R.string.careportal_profileswitch), resourceHelper.gs(R.string.copytolocalprofile), Runnable {
-                    localProfilePlugin.addProfile(localProfilePlugin.copyFrom(it, "DefaultProfile" + dateUtil.dateAndTimeAndSecondsString(dateUtil._now())))
+                    localProfilePlugin.addProfile(localProfilePlugin.copyFrom(it, "DefaultProfile " +
+                        dateUtil.dateAndTimeAndSecondsString(dateUtil._now())
+                            .replace(".", "/")
+                    ))
                     rxBus.send(EventLocalProfileChanged())
                 })
             }

@@ -2,13 +2,18 @@ package info.nightscout.androidaps.plugins.general.automation.actions
 
 import info.nightscout.androidaps.Constants
 import info.nightscout.androidaps.automation.R
+import info.nightscout.androidaps.database.entities.TemporaryTarget
+import info.nightscout.androidaps.database.transactions.InsertTemporaryTargetAndCancelCurrentTransaction
+import info.nightscout.androidaps.database.transactions.Transaction
 import info.nightscout.androidaps.plugins.general.automation.elements.InputDuration
 import info.nightscout.androidaps.plugins.general.automation.elements.InputTempTarget
 import info.nightscout.androidaps.queue.Callback
+import io.reactivex.Single
 import org.junit.Assert
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
+import org.mockito.ArgumentMatcher
 import org.mockito.Mockito
 import org.mockito.Mockito.`when`
 import org.powermock.modules.junit4.PowerMockRunner
@@ -41,13 +46,47 @@ class ActionStartTempTargetTest : ActionsTestBase() {
     }
 
     @Test fun doActionTest() {
-        `when`(activePlugin.activeTreatments).thenReturn(treatmentsInterface)
+
+      val expectedTarget = TemporaryTarget(
+            id = 0,
+            version = 0,
+            dateCreated = -1,
+            isValid = true,
+            referenceId = null,
+            interfaceIDs_backing = null,
+            timestamp = 0,
+            utcOffset = 0,
+            reason = TemporaryTarget.Reason.AUTOMATION,
+            highTarget = 110.0,
+            lowTarget = 110.0,
+            duration = 1800000
+        )
+
+        val inserted = mutableListOf<TemporaryTarget>().apply {
+            add(expectedTarget)
+        }
+
+        val updated = mutableListOf<TemporaryTarget>().apply {
+            // TODO insert all updated TTs
+        }
+
+        `when`(
+            repository.runTransactionForResult(argThatKotlin<InsertTemporaryTargetAndCancelCurrentTransaction> {
+                it.temporaryTarget
+                    .copy(timestamp = expectedTarget.timestamp, utcOffset = expectedTarget.utcOffset) // those can be different
+                    .contentEqualsTo(expectedTarget)
+            })
+        ).thenReturn(Single.just(InsertTemporaryTargetAndCancelCurrentTransaction.TransactionResult().apply {
+            inserted.addAll(inserted)
+            updated.addAll(updated)
+        }))
+
         sut.doAction(object : Callback() {
             override fun run() {
                 Assert.assertTrue(result.success)
             }
         })
-        Mockito.verify(treatmentsInterface, Mockito.times(1)).addToHistoryTempTarget(anyObject())
+        Mockito.verify(repository, Mockito.times(1)).runTransactionForResult(anyObject<Transaction<InsertTemporaryTargetAndCancelCurrentTransaction.TransactionResult>>())
     }
 
     @Test fun hasDialogTest() {

@@ -6,7 +6,10 @@ import android.os.SystemClock
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.Constants
 import info.nightscout.androidaps.R
+import info.nightscout.androidaps.database.AppRepository
+import info.nightscout.androidaps.database.ValueWrapper
 import info.nightscout.androidaps.events.Event
+import info.nightscout.androidaps.events.EventAutosensCalculationFinished
 import info.nightscout.androidaps.interfaces.ProfileFunction
 import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.logging.LTag
@@ -17,13 +20,13 @@ import info.nightscout.androidaps.plugins.general.overview.notifications.Notific
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.IobCobCalculatorPlugin.Companion.roundUpTime
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.data.AutosensData
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.events.EventAutosensBgLoaded
-import info.nightscout.androidaps.events.EventAutosensCalculationFinished
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.events.EventIobCalculationProgress
 import info.nightscout.androidaps.plugins.sensitivity.SensitivityAAPSPlugin
 import info.nightscout.androidaps.plugins.sensitivity.SensitivityWeightedAveragePlugin
 import info.nightscout.androidaps.plugins.treatments.TreatmentsPlugin
 import info.nightscout.androidaps.utils.*
 import info.nightscout.androidaps.utils.buildHelper.BuildHelper
+import info.nightscout.androidaps.utils.extensions.target
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 import info.nightscout.androidaps.utils.sharedPreferences.SP
 import java.util.*
@@ -56,6 +59,7 @@ class IobCobOref1Thread internal constructor(
     @Inject lateinit var profiler: Profiler
     @Inject lateinit var fabricPrivacy: FabricPrivacy
     @Inject lateinit var dateUtil: DateUtil
+    @Inject lateinit var repository: AppRepository
 
     private var mWakeLock: PowerManager.WakeLock? = null
 
@@ -292,9 +296,9 @@ class IobCobOref1Thread internal constructor(
                     // TODO AS-FIX
                     @Suppress("SimplifyBooleanWithConstants")
                     if (false && sp.getBoolean(R.string.key_high_temptarget_raises_sensitivity, SMBDefaults.high_temptarget_raises_sensitivity)) {
-                        val tempTarget = treatmentsPlugin.getTempTargetFromHistory(bgTime)
-                        if (tempTarget != null && tempTarget.target() >= 100) {
-                            autosensData.extraDeviation.add(-(tempTarget.target() - 100) / 20)
+                        val tempTarget = repository.getTemporaryTargetActiveAt(dateUtil._now()).blockingGet()
+                        if (tempTarget is ValueWrapper.Existing && tempTarget.value.target() >= 100) {
+                            autosensData.extraDeviation.add(-(tempTarget.value.target() - 100) / 20)
                         }
                     }
 

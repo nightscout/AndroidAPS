@@ -153,7 +153,7 @@ class ActionsFragment : DaggerFragment() {
             }
         }
         extendedBolusCancel?.setOnClickListener {
-            if (activePlugin.activeTreatments.isInHistoryExtendedBoluslInProgress) {
+            if (activePlugin.activeTreatments.isInHistoryExtendedBolusInProgress) {
                 uel.log("CANCEL EXTENDED BOLUS")
                 commandQueue.cancelExtended(object : Callback() {
                     override fun run() {

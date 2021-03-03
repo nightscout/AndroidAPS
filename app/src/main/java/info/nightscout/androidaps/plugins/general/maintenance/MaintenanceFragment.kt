@@ -6,11 +6,11 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import dagger.android.support.DaggerFragment
-import info.nightscout.androidaps.MainApp
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.database.AppRepository
 import info.nightscout.androidaps.databinding.MaintenanceFragmentBinding
 import info.nightscout.androidaps.events.EventNewBG
+import info.nightscout.androidaps.interfaces.DatabaseHelperInterface
 import info.nightscout.androidaps.interfaces.ImportExportPrefsInterface
 import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.logging.UserEntryLogger
@@ -37,6 +37,7 @@ class MaintenanceFragment : DaggerFragment() {
     @Inject lateinit var importExportPrefs: ImportExportPrefsInterface
     @Inject lateinit var aapsSchedulers: AapsSchedulers
     @Inject lateinit var repository: AppRepository
+    @Inject lateinit var databaseHelper: DatabaseHelperInterface
     @Inject lateinit var uel: UserEntryLogger
 
     private val compositeDisposable = CompositeDisposable()
@@ -65,7 +66,7 @@ class MaintenanceFragment : DaggerFragment() {
                     uel.log("RESET DATABASES")
                     compositeDisposable.add(
                         fromAction {
-                            MainApp.getDbHelper().resetDatabases()
+                            databaseHelper.resetDatabases()
                             // should be handled by Plugin-Interface and
                             // additional service interface and plugin registry
                             foodPlugin.service?.resetFood()

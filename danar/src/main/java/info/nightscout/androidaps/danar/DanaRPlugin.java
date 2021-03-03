@@ -88,7 +88,7 @@ public class DanaRPlugin extends AbstractDanaRPlugin {
                         boolean previousValue = useExtendedBoluses;
                         useExtendedBoluses = sp.getBoolean(R.string.key_danar_useextended, false);
 
-                        if (useExtendedBoluses != previousValue && activePlugin.getActiveTreatments().isInHistoryExtendedBoluslInProgress()) {
+                        if (useExtendedBoluses != previousValue && activePlugin.getActiveTreatments().isInHistoryExtendedBolusInProgress()) {
                             sExecutionService.extendedBolusStop();
                         }
                     }
@@ -192,12 +192,9 @@ public class DanaRPlugin extends AbstractDanaRPlugin {
 
     // This is called from APS
     @NonNull @Override
-    public PumpEnactResult setTempBasalAbsolute(double absoluteRate, int durationInMinutes, Profile profile, boolean enforceNew) {
+    public PumpEnactResult setTempBasalAbsolute(double absoluteRate, int durationInMinutes, @NonNull Profile profile, boolean enforceNew) {
         // Recheck pump status if older than 30 min
         //This should not be needed while using queue because connection should be done before calling this
-        //if (pump.lastConnection.getTime() + 30 * 60 * 1000L < System.currentTimeMillis()) {
-        //    connect("setTempBasalAbsolute old data");
-        //}
         PumpEnactResult result = new PumpEnactResult(getInjector());
 
         absoluteRate = constraintChecker.applyBasalConstraints(new Constraint<>(absoluteRate), profile).value();
@@ -232,8 +229,8 @@ public class DanaRPlugin extends AbstractDanaRPlugin {
         }
 
         if (doLowTemp || doHighTemp) {
-            Integer percentRate = Double.valueOf(absoluteRate / getBaseBasalRate() * 100).intValue();
-            // Any basal less than 0.10u/h will be dumped once per hour, not every 4 mins. So if it's less than .10u/h, set a zero temp.
+            int percentRate = Double.valueOf(absoluteRate / getBaseBasalRate() * 100).intValue();
+            // Any basal less than 0.10u/h will be dumped once per hour, not every 4 minutes. So if it's less than .10u/h, set a zero temp.
             if (absoluteRate < 0.10d) percentRate = 0;
             if (percentRate < 100) percentRate = Round.ceilTo((double) percentRate, 10d).intValue();
             else percentRate = Round.floorTo((double) percentRate, 10d).intValue();
@@ -271,7 +268,7 @@ public class DanaRPlugin extends AbstractDanaRPlugin {
                 }
             }
             // Convert duration from minutes to hours
-            aapsLogger.debug(LTag.PUMP, "setTempBasalAbsolute: Setting temp basal " + percentRate + "% for " + durationInMinutes + " mins (doLowTemp || doHighTemp)");
+            aapsLogger.debug(LTag.PUMP, "setTempBasalAbsolute: Setting temp basal " + percentRate + "% for " + durationInMinutes + " minutes (doLowTemp || doHighTemp)");
             return setTempBasalPercent(percentRate, durationInMinutes, profile, false);
         }
         if (doExtendedTemp) {
@@ -292,7 +289,7 @@ public class DanaRPlugin extends AbstractDanaRPlugin {
             Double extendedRateToSet = absoluteRate - getBaseBasalRate();
             extendedRateToSet = constraintChecker.applyBasalConstraints(new Constraint<>(extendedRateToSet), profile).value();
             // needs to be rounded to 0.1
-            extendedRateToSet = Round.roundTo(extendedRateToSet, pumpDescription.extendedBolusStep * 2); // *2 because of halfhours
+            extendedRateToSet = Round.roundTo(extendedRateToSet, pumpDescription.extendedBolusStep * 2); // *2 because of half hours
 
             // What is current rate of extended bolusing in u/h?
             aapsLogger.debug(LTag.PUMP, "setTempBasalAbsolute: Extended bolus in progress: " + (activeExtended != null) + " rate: " + danaPump.getExtendedBolusAbsoluteRate() + "U/h duration remaining: " + danaPump.getExtendedBolusRemainingMinutes() + "min");
@@ -313,7 +310,7 @@ public class DanaRPlugin extends AbstractDanaRPlugin {
 
             // Now set new extended, no need to to stop previous (if running) because it's replaced
             double extendedAmount = extendedRateToSet / 2 * durationInHalfHours;
-            aapsLogger.debug(LTag.PUMP, "setTempBasalAbsolute: Setting extended: " + extendedAmount + "U  halfhours: " + durationInHalfHours);
+            aapsLogger.debug(LTag.PUMP, "setTempBasalAbsolute: Setting extended: " + extendedAmount + "U  half hours: " + durationInHalfHours);
             result = setExtendedBolus(extendedAmount, durationInMinutes);
             if (!result.success) {
                 aapsLogger.error("setTempBasalAbsolute: Failed to set extended bolus");
@@ -334,7 +331,7 @@ public class DanaRPlugin extends AbstractDanaRPlugin {
     public PumpEnactResult cancelTempBasal(boolean force) {
         if (activePlugin.getActiveTreatments().isInHistoryRealTempBasalInProgress())
             return cancelRealTempBasal();
-        if (activePlugin.getActiveTreatments().isInHistoryExtendedBoluslInProgress() && useExtendedBoluses) {
+        if (activePlugin.getActiveTreatments().isInHistoryExtendedBolusInProgress() && useExtendedBoluses) {
             return cancelExtendedBolus();
         }
         PumpEnactResult result = new PumpEnactResult(getInjector());
@@ -363,22 +360,21 @@ public class DanaRPlugin extends AbstractDanaRPlugin {
             result.isTempCancel = true;
             result.comment = resourceHelper.gs(R.string.ok);
             aapsLogger.debug(LTag.PUMP, "cancelRealTempBasal: OK");
-            return result;
         } else {
             result.success = false;
             result.comment = resourceHelper.gs(R.string.danar_valuenotsetproperly);
             result.isTempCancel = true;
             aapsLogger.error("cancelRealTempBasal: Failed to cancel temp basal");
-            return result;
         }
+        return result;
     }
 
-    @Override
+    @NonNull @Override
     public PumpEnactResult loadEvents() {
-        return null; // no history, not needed
+        return new PumpEnactResult(getInjector()); // no history, not needed
     }
 
-    @Override
+    @NonNull @Override
     public PumpEnactResult setUserOptions() {
         return sExecutionService.setUserOptions();
     }

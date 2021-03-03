@@ -76,6 +76,7 @@ open class LoopPlugin @Inject constructor(
     private val receiverStatusStore: ReceiverStatusStore,
     private val fabricPrivacy: FabricPrivacy,
     private val nsUpload: NSUpload,
+    private val databaseHelper: DatabaseHelperInterface,
     private val hardLimits: HardLimits
 ) : PluginBase(PluginDescription()
     .mainType(PluginType.LOOP)
@@ -627,7 +628,7 @@ open class LoopPlugin @Inject constructor(
                 }
             })
         }
-        if (pump.pumpDescription.isExtendedBolusCapable && treatmentsPlugin.isInHistoryExtendedBoluslInProgress) {
+        if (pump.pumpDescription.isExtendedBolusCapable && treatmentsPlugin.isInHistoryExtendedBolusInProgress) {
             commandQueue.cancelExtended(object : Callback() {
                 override fun run() {
                     if (!result.success) {
@@ -664,7 +665,7 @@ open class LoopPlugin @Inject constructor(
         event.source = Source.USER
         event.eventType = CareportalEvent.OPENAPSOFFLINE
         event.json = data.toString()
-        MainApp.getDbHelper().createOrUpdate(event)
+        databaseHelper.createOrUpdate(event)
         nsUpload.uploadOpenAPSOffline(event)
     }
 

@@ -96,16 +96,16 @@ class HardLimits @Inject constructor(
     }
 
     // safety checks
-    fun checkOnlyHardLimits(value: Double, valueName: String?, lowLimit: Double, highLimit: Double): Boolean {
+    fun checkOnlyHardLimits(value: Double, valueName: Int, lowLimit: Double, highLimit: Double): Boolean {
         return value == verifyHardLimits(value, valueName, lowLimit, highLimit)
     }
 
-    fun verifyHardLimits(value: Double, valueName: String?, lowLimit: Double, highLimit: Double): Double {
+    fun verifyHardLimits(value: Double, valueName: Int, lowLimit: Double, highLimit: Double): Double {
         var newvalue = value
         if (newvalue < lowLimit || newvalue > highLimit) {
             newvalue = Math.max(newvalue, lowLimit)
             newvalue = Math.min(newvalue, highLimit)
-            var msg = String.format(resourceHelper.gs(R.string.valueoutofrange), valueName)
+            var msg = String.format(resourceHelper.gs(R.string.valueoutofrange), resourceHelper.gs(valueName))
             msg += ".\n"
             msg += String.format(resourceHelper.gs(R.string.valuelimitedto), value, newvalue)
             aapsLogger.error(msg)
