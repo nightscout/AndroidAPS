@@ -3,6 +3,7 @@
     <string name="description_pump_combo">Integrare cu pompele Accu-Chek, necesită aplicația Ruffy</string>
     <string name="combo_programming_bolus">Se programează pompa pentru livrare bolus</string>
     <string name="combo_pump_state_label">Stare</string>
+    <string name="combo_pump_activity_label">Activitate</string>
     <string name="combo_no_pump_connection">Fără conexiune de %1$d min</string>
     <string name="combo_tbr_remaining">%1$d%% (%2$d min rămase)</string>
     <string name="combo_pump_state_initializing">Inițializare</string>

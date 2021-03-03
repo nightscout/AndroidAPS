@@ -17,6 +17,7 @@ import info.nightscout.androidaps.database.entities.UserEntry.*
 import info.nightscout.androidaps.databinding.DialogCareBinding
 import info.nightscout.androidaps.db.CareportalEvent
 import info.nightscout.androidaps.db.Source
+import info.nightscout.androidaps.interfaces.DatabaseHelperInterface
 import info.nightscout.androidaps.interfaces.ProfileFunction
 import info.nightscout.androidaps.logging.UserEntryLogger
 import info.nightscout.androidaps.plugins.general.nsclient.NSUpload
@@ -40,6 +41,7 @@ class CareDialog : DialogFragmentWithDate() {
     @Inject lateinit var nsUpload: NSUpload
     @Inject lateinit var translator: Translator
     @Inject lateinit var uel: UserEntryLogger
+    @Inject lateinit var databaseHelper: DatabaseHelperInterface
 
     enum class EventType {
         BGCHECK,
@@ -225,7 +227,7 @@ class CareDialog : DialogFragmentWithDate() {
                 careportalEvent.json = json.toString()
                 uel.log(Action.CAREPORTAL, notes, ValueWithUnit(careportalEvent.eventType, Units.CPEvent))
                 MainApp.getDbHelper().createOrUpdate(careportalEvent)
-                nsUpload.uploadCareportalEntryToNS(json)
+                nsUpload.uploadCareportalEntryToNS(json, eventTime)
             }, null)
         }
         return true

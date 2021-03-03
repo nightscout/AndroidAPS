@@ -82,7 +82,7 @@ class TomatoPlugin @Inject constructor(
                         nsUpload.uploadBg(it, GlucoseValue.SourceSensor.LIBRE_1_TOMATO.text)
                 }
             }, {
-                aapsLogger.error(LTag.BGSOURCE, "Error while saving values from Tomato App", it)
+                aapsLogger.error("Error while saving values from Tomato App", it)
             })
             return Result.success()
         }
