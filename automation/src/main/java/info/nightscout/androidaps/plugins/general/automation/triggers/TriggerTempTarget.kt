@@ -4,14 +4,21 @@ import android.widget.LinearLayout
 import com.google.common.base.Optional
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.automation.R
+import info.nightscout.androidaps.database.AppRepository
 import info.nightscout.androidaps.logging.LTag
 import info.nightscout.androidaps.plugins.general.automation.elements.ComparatorExists
 import info.nightscout.androidaps.plugins.general.automation.elements.LayoutBuilder
 import info.nightscout.androidaps.plugins.general.automation.elements.StaticLabel
+import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.JsonHelper
 import org.json.JSONObject
+import javax.inject.Inject
 
 class TriggerTempTarget(injector: HasAndroidInjector) : Trigger(injector) {
+
+    @Inject lateinit var repository: AppRepository
+    @Inject lateinit var dateUtil: DateUtil
+
     var comparator = ComparatorExists(injector)
 
     constructor(injector: HasAndroidInjector, compare: ComparatorExists.Compare) : this(injector) {
@@ -28,7 +35,7 @@ class TriggerTempTarget(injector: HasAndroidInjector) : Trigger(injector) {
     }
 
     override fun shouldRun(): Boolean {
-        val tt = treatmentsInterface.tempTargetFromHistory
+        val tt = repository.getTemporaryTargetActiveAt(dateUtil._now()).blockingGet()
         if (tt == null && comparator.value == ComparatorExists.Compare.NOT_EXISTS) {
             aapsLogger.debug(LTag.AUTOMATION, "Ready for execution: " + friendlyDescription())
             return true

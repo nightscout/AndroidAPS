@@ -1,6 +1,5 @@
 package info.nightscout.androidaps.utils
 
-import android.content.Context
 import android.os.Bundle
 import com.google.firebase.analytics.FirebaseAnalytics
 import com.google.firebase.analytics.ktx.analytics
@@ -79,7 +78,7 @@ class FabricPrivacy @Inject constructor(
     // Crashlytics logException
     fun logException(throwable: Throwable) {
         FirebaseCrashlytics.getInstance().recordException(throwable)
-        aapsLogger.debug(LTag.CORE, "Exception: ", throwable)
+        aapsLogger.error("Exception: ", throwable)
     }
 
     fun fabricEnabled(): Boolean {

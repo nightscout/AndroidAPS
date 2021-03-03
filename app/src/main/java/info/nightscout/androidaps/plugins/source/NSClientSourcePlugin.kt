@@ -139,7 +139,7 @@ class NSClientSourcePlugin @Inject constructor(
                         nsClientSourcePlugin.detectSource(it)
                     }
                 }, {
-                    aapsLogger.error(LTag.BGSOURCE, "Error while saving values from NSClient App", it)
+                    aapsLogger.error("Error while saving values from NSClient App", it)
                 })
             } catch (e: Exception) {
                 aapsLogger.error("Unhandled exception", e)
