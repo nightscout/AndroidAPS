@@ -84,9 +84,8 @@ class BleIO(
     fun flushIncomingQueues() {
         for (char in CharacteristicType.values()) {
             do {
-                val found = incomingPackets[char]?.poll()
-                found?.let {
-                    aapsLogger.warn(LTag.PUMPBTCOMM, "BleIO: ${char.name} queue not empty, flushing: {${found.toHex()}")
+                val found = incomingPackets[char]?.poll()?.also {
+                    aapsLogger.warn(LTag.PUMPBTCOMM, "BleIO: ${char.name} queue not empty, flushing: {${it.toHex()}")
                 }
             } while (found != null)
         }
