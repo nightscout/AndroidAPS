@@ -424,7 +424,7 @@ public class NSClientPlugin extends PluginBase {
         // room  Temporary target
         TemporaryTarget temporaryTarget = temporaryTargetFromNsIdForInvalidating(_id);
         disposable.add(repository.runTransactionForResult(new SyncTemporaryTargetTransaction(temporaryTarget)).subscribe(
-                result -> result.getInvalidated().forEach(record -> uel.log(Action.TT_DELETED_FROM_NS, new ValueWithUnit(record.getReason().getText(), Units.TT_Reason), new ValueWithUnit(record.getLowTarget(), Units.Mg_Dl), new ValueWithUnit(record.getHighTarget(), Units.Mg_Dl), new ValueWithUnit((int) record.getDuration(), Units.M))),
+                result -> result.getInvalidated().forEach(record -> uel.log(Action.TT_DELETED_FROM_NS, new ValueWithUnit(record.getReason().getText(), Units.TT_Reason), new ValueWithUnit(record.getLowTarget(), Units.Mg_Dl), new ValueWithUnit(record.getHighTarget(), Units.Mg_Dl), new ValueWithUnit((int) record.getDuration()/60000, Units.M))),
                 error -> aapsLogger.error(LTag.BGSOURCE, "Error while saving temporary target", error)));
         // new DB model
         EventNsTreatment evtTreatment = new EventNsTreatment(EventNsTreatment.Companion.getREMOVE(), json);
@@ -454,9 +454,9 @@ public class NSClientPlugin extends PluginBase {
             if (temporaryTarget != null) {
                 disposable.add(repository.runTransactionForResult(new SyncTemporaryTargetTransaction(temporaryTarget)).subscribe(
                         result -> {
-                            result.getInserted().forEach(record -> uel.log(Action.TT_FROM_NS, new ValueWithUnit(record.getReason().getText(), Units.TT_Reason), new ValueWithUnit(record.getLowTarget(), Units.Mg_Dl), new ValueWithUnit(record.getHighTarget(), Units.Mg_Dl), new ValueWithUnit((int) record.getDuration(), Units.M)));
-                            result.getInvalidated().forEach(record -> uel.log(Action.TT_DELETED_FROM_NS, new ValueWithUnit(record.getReason().getText(), Units.TT_Reason), new ValueWithUnit(record.getLowTarget(), Units.Mg_Dl), new ValueWithUnit(record.getHighTarget(), Units.Mg_Dl), new ValueWithUnit((int) record.getDuration(), Units.M)));
-                            result.getEnded().forEach(record -> uel.log(Action.TT_CANCELED_FROM_NS, new ValueWithUnit(record.getReason().getText(), Units.TT_Reason), new ValueWithUnit(record.getLowTarget(), Units.Mg_Dl), new ValueWithUnit(record.getHighTarget(), Units.Mg_Dl), new ValueWithUnit((int) record.getDuration(), Units.M)));
+                            result.getInserted().forEach(record -> uel.log(Action.TT_FROM_NS, new ValueWithUnit(record.getReason().getText(), Units.TT_Reason), new ValueWithUnit(record.getLowTarget(), Units.Mg_Dl), new ValueWithUnit(record.getHighTarget(), Units.Mg_Dl), new ValueWithUnit((int) record.getDuration()/60000, Units.M)));
+                            result.getInvalidated().forEach(record -> uel.log(Action.TT_DELETED_FROM_NS, new ValueWithUnit(record.getReason().getText(), Units.TT_Reason), new ValueWithUnit(record.getLowTarget(), Units.Mg_Dl), new ValueWithUnit(record.getHighTarget(), Units.Mg_Dl), new ValueWithUnit((int) record.getDuration()/60000, Units.M)));
+                            result.getEnded().forEach(record -> uel.log(Action.TT_CANCELED_FROM_NS, new ValueWithUnit(record.getReason().getText(), Units.TT_Reason), new ValueWithUnit(record.getLowTarget(), Units.Mg_Dl), new ValueWithUnit(record.getHighTarget(), Units.Mg_Dl), new ValueWithUnit((int) record.getDuration()/60000, Units.M)));
                         },
                         error -> aapsLogger.error(LTag.BGSOURCE, "Error while saving temporary target", error)));
             } else {
