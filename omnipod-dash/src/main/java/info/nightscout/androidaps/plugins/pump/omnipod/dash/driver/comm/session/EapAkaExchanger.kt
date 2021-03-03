@@ -111,9 +111,6 @@ class EapAkaExchanger(private val aapsLogger: AAPSLogger, private val msgIO: Mes
 
     companion object {
 
-        private val MILENAGE_OP = Hex.decode("cdc202d5123e20f62b6d676ac72cb318")
-        private val MILENAGE_AMF = Hex.decode("b9b9")
-        private const val KEY_SIZE = 16 // 128 bits
         private const val IV_SIZE = 4
     }
 }
