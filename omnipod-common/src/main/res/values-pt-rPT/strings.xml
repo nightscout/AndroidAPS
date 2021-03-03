@@ -100,7 +100,7 @@
     <string name="omnipod_common_preferences_bolus_beeps_enabled">Beeps bólus activados</string>
     <string name="omnipod_common_preferences_basal_beeps_enabled">Beeps de basal activados</string>
     <string name="omnipod_common_preferences_smb_beeps_enabled">Beeps SMB activado</string>
-    <string name="omnipod_common_preferences_tbr_beeps_enabled">Beeps TBR activados</string>
+    <string name="omnipod_common_preferences_tbr_beeps_enabled">Beeps DBT activados</string>
     <string name="omnipod_common_preferences_suspend_delivery_button_enabled">Mostrar Botão Suspender Administração no separador Omnipod</string>
     <string name="omnipod_common_preferences_time_change_enabled">Detecção de DST/Fuso Horário Activado</string>
     <string name="omnipod_common_preferences_expiration_reminder_enabled">Lembrete de expiração activado</string>
