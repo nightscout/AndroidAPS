@@ -39,11 +39,11 @@ internal class LTKExchanger(private val aapsLogger: AAPSLogger, private val msgI
 
     fun negotiateLTK(): PairResult {
         // send SP1, SP2
-        var sp1sp2 = sp1sp2(nodeId.address, sp2())
+        val sp1sp2 = sp1sp2(nodeId.address, sp2())
         msgIO.sendMesssage(sp1sp2.messagePacket)
 
         seq++
-        var sps1 = sps1()
+        val sps1 = sps1()
         msgIO.sendMesssage(sps1.messagePacket)
         // send SPS1
 
