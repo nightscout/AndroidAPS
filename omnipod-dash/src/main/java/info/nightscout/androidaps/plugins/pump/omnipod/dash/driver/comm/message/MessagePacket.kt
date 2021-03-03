@@ -70,8 +70,8 @@ data class MessagePacket(
 
     companion object {
 
-        private val MAGIC_PATTERN = "TW" // all messages start with this string
-        private val HEADER_SIZE = 16
+        private const val MAGIC_PATTERN = "TW" // all messages start with this string
+        private const val HEADER_SIZE = 16
 
         fun parse(payload: ByteArray): MessagePacket {
             if (payload.size < HEADER_SIZE) {

@@ -12,7 +12,7 @@ class Milenage(
     private val aapsLogger: AAPSLogger,
     private val k: ByteArray,
     val sqn: ByteArray,
-    val _rand: ByteArray? = null
+    private val randParam: ByteArray? = null
 ) {
 
     init {
@@ -27,10 +27,10 @@ class Milenage(
         cipher.init(Cipher.ENCRYPT_MODE, secretKeySpec)
     }
 
-    val rand = _rand ?: ByteArray(KEY_SIZE)
+    val rand = randParam ?: ByteArray(KEY_SIZE)
 
     init {
-        if (_rand == null) {
+        if (randParam == null) {
             val random = SecureRandom()
             random.nextBytes(rand)
         }

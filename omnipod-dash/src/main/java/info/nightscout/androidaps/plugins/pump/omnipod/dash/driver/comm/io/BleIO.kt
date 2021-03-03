@@ -81,7 +81,16 @@ class BleIO(
      * Called before sending a new message.
      * The incoming queues should be empty, so we log when they are not.
      */
-    fun flushIncomingQueues() {}
+    fun flushIncomingQueues() {
+        for (chr in CharacteristicType.values()) {
+            do {
+                val found = incomingPackets[chr]?.poll()
+                found?.let {
+                    aapsLogger.warn(LTag.PUMPBTCOMM, "BleIO: CMD queue not empty, flushing: {${found.toHex()}")
+                }
+            } while (found != null)
+        }
+    }
 
     /**
      * Enable intentions on the characteristics.
