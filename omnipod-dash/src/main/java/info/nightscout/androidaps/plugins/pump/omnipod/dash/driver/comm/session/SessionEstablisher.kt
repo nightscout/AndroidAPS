@@ -44,9 +44,9 @@ class SessionEstablisher(private val aapsLogger: AAPSLogger, private val msgIO: 
         msgIO.sendMesssage(success)
 
         return SessionKeys(
-            milenage.ck,
-            controllerIV + nodeIV,
-            sqn
+            ck=milenage.ck,
+            noncePrefix = controllerIV + nodeIV,
+            sqn=sqn
         )
     }
 
