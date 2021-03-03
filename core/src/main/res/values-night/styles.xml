@@ -122,6 +122,10 @@
         <item name="notificationAnnouncement" >@color/notificationAnnouncement</item>
         <!---The pills for active profile and temp target -->
         <item name="ribbonTextWarning" >@color/black</item>
+        <!---TDD Statistics -->
+        <item name="rowBackgroundEven" >@color/darkgray</item>
+        <item name="rowBackgroundOdd" >@color/lightSandGray</item>
+        <item name="rowTextColor" >@color/white</item>
         <!---Misc -->
         <item name="carbsColor" >@color/carbs</item>
         <item name="tempTargetConfirmation" >@color/tempTargetConfirmation</item>

@@ -89,27 +89,27 @@ class TDDStatsActivity : NoSplashAppCompatActivity() {
         // add stats headers to tables
         binding.mainTable.addView(
             TableRow(this).also { trHead ->
-                trHead.setBackgroundColor(Color.DKGRAY)
+                trHead.setBackgroundColor(resourceHelper.getAttributeColor(null,R.attr.rowBackgroundEven))
                 trHead.layoutParams = TableLayout.LayoutParams(TableLayout.LayoutParams.MATCH_PARENT, TableLayout.LayoutParams.WRAP_CONTENT)
                 trHead.addView(TextView(this).also { labelDate ->
                     labelDate.text = resourceHelper.gs(R.string.date)
-                    labelDate.setTextColor(Color.WHITE)
+                    labelDate.setTextColor(resourceHelper.getAttributeColor(null,R.attr.rowTextColor))
                 })
                 trHead.addView(TextView(this).also { labelBasalRate ->
                     labelBasalRate.text = resourceHelper.gs(R.string.basalrate)
-                    labelBasalRate.setTextColor(Color.WHITE)
+                    labelBasalRate.setTextColor(resourceHelper.getAttributeColor(null,R.attr.rowTextColor))
                 })
                 trHead.addView(TextView(this).also { labelBolus ->
                     labelBolus.text = resourceHelper.gs(R.string.bolus)
-                    labelBolus.setTextColor(Color.WHITE)
+                    labelBolus.setTextColor(resourceHelper.getAttributeColor(null,R.attr.rowTextColor))
                 })
                 trHead.addView(TextView(this).also { labelTdd ->
                     labelTdd.text = resourceHelper.gs(R.string.tdd)
-                    labelTdd.setTextColor(Color.WHITE)
+                    labelTdd.setTextColor(resourceHelper.getAttributeColor(null,R.attr.rowTextColor))
                 })
                 trHead.addView(TextView(this).also { labelRatio ->
                     labelRatio.text = resourceHelper.gs(R.string.ratio)
-                    labelRatio.setTextColor(Color.WHITE)
+                    labelRatio.setTextColor(resourceHelper.getAttributeColor(null,R.attr.rowTextColor))
                 })
             }, TableLayout.LayoutParams(TableLayout.LayoutParams.MATCH_PARENT, TableLayout.LayoutParams.WRAP_CONTENT)
         )
@@ -117,19 +117,19 @@ class TDDStatsActivity : NoSplashAppCompatActivity() {
         // cumulative table
         binding.cumulativeTable.addView(
             TableRow(this).also { ctrHead ->
-                ctrHead.setBackgroundColor(Color.DKGRAY)
+                ctrHead.setBackgroundColor(resourceHelper.getAttributeColor(null,R.attr.rowBackgroundEven))
                 ctrHead.layoutParams = TableLayout.LayoutParams(TableLayout.LayoutParams.MATCH_PARENT, TableLayout.LayoutParams.WRAP_CONTENT)
                 ctrHead.addView(TextView(this).also { labelCumAmountDays ->
                     labelCumAmountDays.text = resourceHelper.gs(R.string.amount_days)
-                    labelCumAmountDays.setTextColor(Color.WHITE)
+                    labelCumAmountDays.setTextColor(resourceHelper.getAttributeColor(null,R.attr.rowTextColor))
                 })
                 ctrHead.addView(TextView(this).also { labelCumTdd ->
                     labelCumTdd.text = resourceHelper.gs(R.string.tdd)
-                    labelCumTdd.setTextColor(Color.WHITE)
+                    labelCumTdd.setTextColor(resourceHelper.getAttributeColor(null,R.attr.rowTextColor))
                 })
                 ctrHead.addView(TextView(this).also { labelCumRatio ->
                     labelCumRatio.text = resourceHelper.gs(R.string.ratio)
-                    labelCumRatio.setTextColor(Color.WHITE)
+                    labelCumRatio.setTextColor(resourceHelper.getAttributeColor(null,R.attr.rowTextColor))
                 })
             }, TableLayout.LayoutParams(TableLayout.LayoutParams.MATCH_PARENT, TableLayout.LayoutParams.WRAP_CONTENT)
         )
@@ -137,25 +137,26 @@ class TDDStatsActivity : NoSplashAppCompatActivity() {
         // exponential table
         binding.expweightTable.addView(
             TableRow(this).also { etrHead ->
-                etrHead.setBackgroundColor(Color.DKGRAY)
+                etrHead.setBackgroundColor(resourceHelper.getAttributeColor(null,R.attr.rowBackgroundEven))
                 etrHead.layoutParams = TableLayout.LayoutParams(TableLayout.LayoutParams.MATCH_PARENT, TableLayout.LayoutParams.WRAP_CONTENT)
                 etrHead.addView(TextView(this).also { labelExpWeight ->
                     labelExpWeight.text = resourceHelper.gs(R.string.weight)
-                    labelExpWeight.setTextColor(Color.WHITE)
+                    labelExpWeight.setTextColor(resourceHelper.getAttributeColor(null,R.attr.rowTextColor))
                 })
                 etrHead.addView(TextView(this).also { labelExpTdd ->
                     labelExpTdd.text = resourceHelper.gs(R.string.tdd)
-                    labelExpTdd.setTextColor(Color.WHITE)
+                    labelExpTdd.setTextColor(resourceHelper.getAttributeColor(null,R.attr.rowTextColor))
                 })
                 etrHead.addView(TextView(this).also { labelExpRatio ->
                     labelExpRatio.text = resourceHelper.gs(R.string.ratio)
-                    labelExpRatio.setTextColor(Color.WHITE)
+                    labelExpRatio.setTextColor(resourceHelper.getAttributeColor(null,R.attr.rowTextColor))
                 })
             }, TableLayout.LayoutParams(TableLayout.LayoutParams.MATCH_PARENT, TableLayout.LayoutParams.WRAP_CONTENT)
         )
 
         binding.reload.setOnClickListener {
             binding.reload.visibility = View.GONE
+            binding.mainTableHeader.visibility = View.INVISIBLE
             binding.connectionStatus.visibility = View.VISIBLE
             binding.message.visibility = View.VISIBLE
             binding.message.text = resourceHelper.gs(R.string.warning_Message)
@@ -164,6 +165,7 @@ class TDDStatsActivity : NoSplashAppCompatActivity() {
                     loadDataFromDB()
                     runOnUiThread {
                         binding.reload.visibility = View.VISIBLE
+                        binding.mainTableHeader.visibility = View.VISIBLE
                         binding.connectionStatus.visibility = View.GONE
                         binding.message.visibility = View.GONE
                     }
@@ -278,7 +280,10 @@ class TDDStatsActivity : NoSplashAppCompatActivity() {
                 // Create the table row
                 binding.mainTable.addView(
                     TableRow(this@TDDStatsActivity).also { tr ->
-                        if (i % 2 != 0) tr.setBackgroundColor(Color.DKGRAY)
+                        if (i % 2 != 0) 
+                            tr.setBackgroundColor(resourceHelper.getAttributeColor(null,R.attr.rowBackgroundEven))
+                        else
+                            tr.setBackgroundColor(resourceHelper.getAttributeColor(null,R.attr.rowBackgroundOdd))
                         if (dummies.contains(record))
                             tr.setBackgroundColor(Color.argb(125, 255, 0, 0))
 
@@ -291,26 +296,27 @@ class TDDStatsActivity : NoSplashAppCompatActivity() {
                         tr.addView(TextView(this@TDDStatsActivity).also { labelDATE ->
                             labelDATE.id = 200 + i
                             labelDATE.text = df1.format(Date(record.date))
-                            labelDATE.setTextColor(Color.WHITE)
+                            labelDATE.setTextColor(resourceHelper.getAttributeColor(null,R.attr.rowTextColor))
                         })
                         tr.addView(TextView(this@TDDStatsActivity).also { labelBASAL ->
                             labelBASAL.id = 300 + i
                             labelBASAL.text = resourceHelper.gs(R.string.formatinsulinunits, record.basal)
-                            labelBASAL.setTextColor(Color.WHITE)
+                            labelBASAL.setTextColor(resourceHelper.getAttributeColor(null,R.attr.rowTextColor))
                         })
                         tr.addView(TextView(this@TDDStatsActivity).also { labelBOLUS ->
                             labelBOLUS.id = 400 + i
                             labelBOLUS.text = resourceHelper.gs(R.string.formatinsulinunits, record.bolus)
-                            labelBOLUS.setTextColor(Color.WHITE)
+                            labelBOLUS.setTextColor(resourceHelper.getAttributeColor(null,R.attr.rowTextColor))
                         })
                         tr.addView(TextView(this@TDDStatsActivity).also { labelTDD ->
                             labelTDD.id = 500 + i
                             labelTDD.text = resourceHelper.gs(R.string.formatinsulinunits, tdd)
-                            labelTDD.setTextColor(Color.WHITE)
+                            labelTDD.setTextColor(resourceHelper.getAttributeColor(null,R.attr.rowTextColor))
                         })
                         tr.addView(TextView(this@TDDStatsActivity).also { labelRATIO ->
                             labelRATIO.id = 600 + i
                             labelRATIO.text = (100 * tdd / magicNumber).roundToInt().toString() + "%"
+                            labelRATIO.setTextColor(resourceHelper.getAttributeColor(null,R.attr.rowTextColor))
                         })
                     }, TableLayout.LayoutParams(TableLayout.LayoutParams.MATCH_PARENT, TableLayout.LayoutParams.WRAP_CONTENT))
                 i++
@@ -328,7 +334,10 @@ class TDDStatsActivity : NoSplashAppCompatActivity() {
                 // Create the cumulative table row
                 binding.cumulativeTable.addView(
                     TableRow(this@TDDStatsActivity).also { ctr ->
-                        if (i % 2 == 0) ctr.setBackgroundColor(Color.DKGRAY)
+                        if (i % 2 == 0) 
+                            ctr.setBackgroundColor(resourceHelper.getAttributeColor(null,R.attr.rowBackgroundEven))
+                        else
+                            ctr.setBackgroundColor(resourceHelper.getAttributeColor(null,R.attr.rowBackgroundOdd))
                         ctr.id = 700 + i
                         ctr.layoutParams = TableLayout.LayoutParams(TableLayout.LayoutParams.MATCH_PARENT, TableLayout.LayoutParams.WRAP_CONTENT)
 
@@ -336,19 +345,19 @@ class TDDStatsActivity : NoSplashAppCompatActivity() {
                         ctr.addView(TextView(this@TDDStatsActivity).also { labelDAYS ->
                             labelDAYS.id = 800 + i
                             labelDAYS.text = i.toString()
-                            labelDAYS.setTextColor(Color.WHITE)
+                            labelDAYS.setTextColor(resourceHelper.getAttributeColor(null,R.attr.rowTextColor))
                         })
 
                         ctr.addView(TextView(this@TDDStatsActivity).also { labelCUMTDD ->
                             labelCUMTDD.id = 900 + i
                             labelCUMTDD.text = resourceHelper.gs(R.string.formatinsulinunits, sum / i)
-                            labelCUMTDD.setTextColor(Color.WHITE)
+                            labelCUMTDD.setTextColor(resourceHelper.getAttributeColor(null,R.attr.rowTextColor))
                         })
 
                         ctr.addView(TextView(this@TDDStatsActivity).also { labelCUMRATIO ->
                             labelCUMRATIO.id = 1000 + i
                             labelCUMRATIO.text = (100 * sum / i / magicNumber).roundToInt().toString() + "%"
-                            labelCUMRATIO.setTextColor(Color.WHITE)
+                            labelCUMRATIO.setTextColor(resourceHelper.getAttributeColor(null,R.attr.rowTextColor))
                         })
                     }, TableLayout.LayoutParams(TableLayout.LayoutParams.MATCH_PARENT, TableLayout.LayoutParams.WRAP_CONTENT)
                 )
@@ -380,7 +389,10 @@ class TDDStatsActivity : NoSplashAppCompatActivity() {
             // Create the exponential table row
             binding.expweightTable.addView(
                 TableRow(this@TDDStatsActivity).also { etr ->
-                    if (i % 2 != 0) etr.setBackgroundColor(Color.DKGRAY)
+                    if (i % 2 != 0)
+                        etr.setBackgroundColor(resourceHelper.getAttributeColor(null,R.attr.rowBackgroundEven))
+                    else
+                        etr.setBackgroundColor(resourceHelper.getAttributeColor(null,R.attr.rowBackgroundOdd))
                     etr.id = 1100 + i
                     etr.layoutParams = TableLayout.LayoutParams(TableLayout.LayoutParams.MATCH_PARENT, TableLayout.LayoutParams.WRAP_CONTENT)
 

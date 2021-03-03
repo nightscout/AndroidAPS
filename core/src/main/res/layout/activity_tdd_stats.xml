@@ -4,6 +4,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
+    android:paddingStart="4dp"
+    android:paddingEnd="4dp"
     android:paddingTop="@dimen/activity_vertical_margin"
     android:paddingBottom="@dimen/activity_vertical_margin"
     tools:context="info.nightscout.androidaps.activities.TDDStatsActivity">
@@ -19,6 +21,7 @@
             android:orientation="vertical">
 
             <TextView
+                android:id="@+id/main_table_header"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
@@ -178,19 +181,19 @@
             android:layout_width="match_parent"
             android:layout_height="5dp" />
 
-        <info.nightscout.androidaps.utils.ui.SingleClickButton
-            android:id="@+id/reload"
-            style="@style/Widget.MaterialComponents.Button.UnelevatedButton"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="2dp"
-            android:layout_marginEnd="2dp"
-            android:layout_gravity="center_horizontal"
-            app:icon="@drawable/ic_actions_refill"
-            app:iconGravity="start"
-            android:textAlignment="center"
-            android:text="@string/reload" />
-
     </LinearLayout>
+
+    <info.nightscout.androidaps.utils.ui.SingleClickButton
+        android:id="@+id/reload"
+        style="@style/Widget.MaterialComponents.Button.UnelevatedButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_marginStart="2dp"
+        android:layout_marginEnd="2dp"
+        app:icon="@drawable/ic_actions_refill"
+        app:iconGravity="start"
+        android:textAlignment="center"
+        android:text="@string/reload" />
 
 </RelativeLayout>

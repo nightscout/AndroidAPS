@@ -89,6 +89,10 @@
 <!---The pills for active profile and temp target -->
 <attr name="ribbonWarning" format="reference|color" />
 <attr name="ribbonTextWarning" format="reference|color" />
+<!---TDD Statistics -->
+<attr name="rowBackgroundEven" format="reference|color" />
+<attr name="rowBackgroundOdd" format="reference|color" />
+<attr name="rowTextColor" format="reference|color" />
 <!---Misc -->
 <attr name="carbsColor" format="reference|color" />
 <attr name="smbColor" format="reference|color" />
