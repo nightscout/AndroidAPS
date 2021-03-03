@@ -2,6 +2,9 @@ package info.nightscout.androidaps.setupwizard
 
 import android.Manifest
 import android.content.Context
+import android.content.Intent
+import android.net.Uri
+import android.provider.Settings
 import androidx.appcompat.app.AppCompatActivity
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.Config
@@ -111,6 +114,17 @@ class SWDefinition @Inject constructor(
             .updateDelay(5)
             .label(R.string.high_mark)
             .comment(R.string.high_mark_comment))
+    private val screenPermissionWindow = SWScreen(injector, R.string.permission)
+        .skippable(false)
+        .add(SWInfoText(injector)
+            .label(resourceHelper.gs(R.string.needsystemwindowpermission)))
+        .add(SWBreak(injector))
+        .add(SWButton(injector)
+            .text(R.string.askforpermission)
+            .visibility { !Settings.canDrawOverlays(activity) }
+            .action { activity.startActivity(Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION, Uri.parse("package:" + activity.packageName))) })
+        .visibility { !Settings.canDrawOverlays(activity) }
+        .validator { Settings.canDrawOverlays(activity) }
     private val screenPermissionBattery = SWScreen(injector, R.string.permission)
         .skippable(false)
         .add(SWInfoText(injector)
@@ -377,6 +391,7 @@ class SWDefinition @Inject constructor(
             //.add(screenLanguage)
             .add(screenEula)
             .add(if (isRunningTest()) null else screenPermissionBattery) // cannot mock ask battery optimization
+            .add(screenPermissionWindow)
             .add(screenPermissionBt)
             .add(screenPermissionStore)
             .add(screenMasterPassword)
@@ -406,6 +421,7 @@ class SWDefinition @Inject constructor(
             //.add(screenLanguage)
             .add(screenEula)
             .add(if (isRunningTest()) null else screenPermissionBattery) // cannot mock ask battery optimization
+            .add(screenPermissionWindow)
             .add(screenPermissionBt)
             .add(screenPermissionStore)
             .add(screenMasterPassword)
@@ -430,6 +446,7 @@ class SWDefinition @Inject constructor(
             //.add(screenLanguage)
             .add(screenEula)
             .add(if (isRunningTest()) null else screenPermissionBattery) // cannot mock ask battery optimization
+            .add(screenPermissionWindow)
             .add(screenPermissionStore)
             .add(screenMasterPassword)
             .add(screenImport)
