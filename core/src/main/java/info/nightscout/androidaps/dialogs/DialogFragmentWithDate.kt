@@ -27,7 +27,7 @@ abstract class DialogFragmentWithDate : DaggerDialogFragment() {
     @Inject lateinit var sp: SP
     @Inject lateinit var dateUtil: DateUtil
 
-    var eventTime = DateUtil.now()
+    var eventTime: Long = 0
     var eventTimeChanged = false
 
     //one shot guards
@@ -60,7 +60,7 @@ abstract class DialogFragmentWithDate : DaggerDialogFragment() {
         val eventDateView = view.findViewById(R.id.eventdate) as TextView?
         val eventTimeView = view.findViewById(R.id.eventtime) as TextView?
 
-        eventTime = savedInstanceState?.getLong("eventTime") ?: DateUtil.now()
+        eventTime = savedInstanceState?.getLong("eventTime") ?: dateUtil.nowWithoutMilliseconds()
         eventTimeChanged = savedInstanceState?.getBoolean("eventTimeChanged") ?: false
 
         eventDateView?.text = DateUtil.dateString(eventTime)

@@ -6,8 +6,6 @@ import com.j256.ormlite.table.DatabaseTable;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import info.nightscout.androidaps.utils.DateUtil;
-
 /**
  * Created by mike on 27.02.2016.
  * <p>
@@ -35,10 +33,10 @@ public class DbRequest {
     }
 
     // dbAdd
-    public DbRequest(String action, String collection, JSONObject json) {
+    public DbRequest(String action, String collection, JSONObject json, long nsClientId) {
         this.action = action;
         this.collection = collection;
-        this.nsClientID = "" + DateUtil.now();
+        this.nsClientID = "" + nsClientId;
         try {
             json.put("NSCLIENT_ID", nsClientID);
         } catch (JSONException e) {
@@ -49,10 +47,10 @@ public class DbRequest {
     }
 
     // dbUpdate, dbUpdateUnset
-    public DbRequest(String action, String collection, String _id, JSONObject json) {
+    public DbRequest(String action, String collection, String _id, JSONObject json, long nsClientId) {
         this.action = action;
         this.collection = collection;
-        this.nsClientID = "" + DateUtil.now();
+        this.nsClientID = "" + nsClientId;
         try {
             json.put("NSCLIENT_ID", nsClientID);
         } catch (JSONException e) {
@@ -63,12 +61,11 @@ public class DbRequest {
     }
 
     // dbRemove
-    public DbRequest(String action, String collection,
-                     String _id) {
+    public DbRequest(String action, String collection, String _id, long nsClientId) {
         JSONObject json = new JSONObject();
         this.action = action;
         this.collection = collection;
-        this.nsClientID = "" + DateUtil.now();
+        this.nsClientID = "" + nsClientId;
         try {
             json.put("NSCLIENT_ID", nsClientID);
         } catch (JSONException e) {

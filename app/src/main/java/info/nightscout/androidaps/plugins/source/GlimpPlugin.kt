@@ -82,7 +82,7 @@ class GlimpPlugin @Inject constructor(
                         nsUpload.uploadBg(it, GlucoseValue.SourceSensor.GLIMP.text)
                 }
             }, {
-                aapsLogger.error(LTag.BGSOURCE, "Error while saving values from Glimp App", it)
+                aapsLogger.error("Error while saving values from Glimp App", it)
             })
             return Result.success()
         }

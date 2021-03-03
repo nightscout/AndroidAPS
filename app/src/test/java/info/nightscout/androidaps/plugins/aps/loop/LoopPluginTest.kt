@@ -7,11 +7,7 @@ import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.Config
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.TestBase
-import info.nightscout.androidaps.interfaces.ActivePluginProvider
-import info.nightscout.androidaps.interfaces.CommandQueueProvider
-import info.nightscout.androidaps.interfaces.PluginType
-import info.nightscout.androidaps.interfaces.ProfileFunction
-import info.nightscout.androidaps.interfaces.PumpDescription
+import info.nightscout.androidaps.interfaces.*
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper
 import info.nightscout.androidaps.plugins.configBuilder.ConstraintChecker
 import info.nightscout.androidaps.plugins.general.nsclient.NSUpload
@@ -53,15 +49,16 @@ class LoopPluginTest : TestBase() {
     @Mock lateinit var receiverStatusStore: ReceiverStatusStore
     @Mock lateinit var nsUpload: NSUpload
     @Mock lateinit var notificationManager: NotificationManager
+    @Mock lateinit var databaseHelper: DatabaseHelperInterface
     private lateinit var hardLimits: HardLimits
 
-    lateinit var loopPlugin: LoopPlugin
+    private lateinit var loopPlugin: LoopPlugin
 
     val injector = HasAndroidInjector { AndroidInjector { } }
     @Before fun prepareMock() {
         hardLimits = HardLimits(aapsLogger, rxBus, sp, resourceHelper, context, nsUpload)
 
-        loopPlugin = LoopPlugin(injector, aapsLogger, aapsSchedulers, rxBus, sp, Config(), constraintChecker, resourceHelper, profileFunction, context, commandQueue, activePlugin, treatmentsPlugin, virtualPumpPlugin, iobCobCalculatorPlugin, receiverStatusStore, fabricPrivacy, nsUpload, hardLimits)
+        loopPlugin = LoopPlugin(injector, aapsLogger, aapsSchedulers, rxBus, sp, Config(), constraintChecker, resourceHelper, profileFunction, context, commandQueue, activePlugin, treatmentsPlugin, virtualPumpPlugin, iobCobCalculatorPlugin, receiverStatusStore, fabricPrivacy, nsUpload, databaseHelper, hardLimits)
         `when`(activePlugin.activePump).thenReturn(virtualPumpPlugin)
         `when`(context.getSystemService(Context.NOTIFICATION_SERVICE)).thenReturn(notificationManager)
     }

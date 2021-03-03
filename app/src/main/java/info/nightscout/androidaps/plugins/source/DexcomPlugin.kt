@@ -149,7 +149,7 @@ class DexcomPlugin @Inject constructor(
                         }
                     }
                 }, {
-                    aapsLogger.error(LTag.BGSOURCE, "Error while saving values from Dexcom App", it)
+                    aapsLogger.error("Error while saving values from Dexcom App", it)
                 })
             } catch (e: Exception) {
                 aapsLogger.error("Error while processing intent from Dexcom App", e)

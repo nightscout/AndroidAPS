@@ -4,6 +4,13 @@
     <!-- Omnipod Eros - Keys -->
     <!-- Omnipod Eros - Overview -->
     <!-- Omnipod Eros - Preferences -->
+    <string name="omnipod_eros_preferences_riley_link_configuration">RileyLink-Konfiguration</string>
+    <string name="omnipod_eros_preferences_category_notifications">Benachrichtigungen</string>
+    <string name="omnipod_eros_preferences_pulse_log_button_enabled">Button \'Pulse Log\' im Menü Pod Mgmt. anzeigen</string>
+    <string name="omnipod_eros_preferences_riley_link_stats_button_enabled">Button \'RileyLink Status\' im Menü Pod Mgmt. anzeigen</string>
+    <string name="omnipod_eros_preferences_battery_change_logging_enabled">Aktiviere die Protokollierung des Akkuwechsels im Aktionen-Tab/Menü</string>
+    <string name="omnipod_eros_preferences_category_riley_link">RileyLink</string>
+    <string name="omnipod_eros_preferences_notification_uncertain_tbr_sound_enabled">Ton für unsichere TBR-Benachrichtigungen aktiviert</string>
     <!-- Omnipod Eros - History -->
     <!-- Omnipod Eros - Short Status -->
     <!-- Omnipod Eros - Error -->
