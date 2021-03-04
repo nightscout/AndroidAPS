@@ -1,4 +1,4 @@
-package info.nightscout.androidaps.plugins.configBuilder
+package info.nightscout.androidaps.plugins.constraints.constraintChecker
 
 import info.nightscout.androidaps.Constants
 import info.nightscout.androidaps.data.Profile
