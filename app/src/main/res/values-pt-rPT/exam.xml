@@ -110,7 +110,7 @@
     <string name="troubleshooting_hint2">https://www.facebook.com/groups/AndroidAPSUsers/</string>
     <string name="troubleshooting_hint3">https://gitter.im/MilosKozak/AndroidAPS</string>
     <string name="insulin_label">Plugins de Insulina</string>
-    <string name="insulin_ultrarapid">Qual insulina deve utilizar com o plugin Ultra-Rapid Oref?</string>
+    <string name="insulin_ultrarapid">Que insulina deve utilizar com o plugin Oref Ultra-Rápida ?</string>
     <string name="insulin_fiasp">Fiasp®</string>
     <string name="insulin_novorapid">NovoRapid®/Novolog®</string>
     <string name="insulin_humalog">Humalog ®</string>
