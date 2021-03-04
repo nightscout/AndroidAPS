@@ -124,7 +124,7 @@ public class UploadQueue implements UploadQueueInterface {
         String result = "";
         CloseableIterator<DbRequest> iterator;
         try {
-            iterator = databaseHelper.getDbRequestInterator();
+            iterator = databaseHelper.getDbRequestIterator();
             try {
                 while (iterator.hasNext()) {
                     DbRequest dbr = iterator.next();

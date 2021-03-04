@@ -807,7 +807,7 @@ public class NSClientService extends DaggerService {
             CloseableIterator<DbRequest> iterator;
             int maxcount = 30;
             try {
-                iterator = databaseHelper.getDbRequestInterator();
+                iterator = databaseHelper.getDbRequestIterator();
                 try {
                     while (iterator.hasNext() && maxcount > 0) {
                         DbRequest dbr = iterator.next();

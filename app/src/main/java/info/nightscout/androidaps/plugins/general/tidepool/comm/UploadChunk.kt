@@ -1,13 +1,13 @@
 package info.nightscout.androidaps.plugins.general.tidepool.comm
 
 import dagger.android.HasAndroidInjector
-import info.nightscout.androidaps.MainApp
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.data.Intervals
 import info.nightscout.androidaps.database.AppRepository
 import info.nightscout.androidaps.db.ProfileSwitch
 import info.nightscout.androidaps.db.TemporaryBasal
 import info.nightscout.androidaps.interfaces.ActivePluginProvider
+import info.nightscout.androidaps.interfaces.DatabaseHelperInterface
 import info.nightscout.androidaps.interfaces.ProfileFunction
 import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.logging.LTag
@@ -33,6 +33,7 @@ class UploadChunk @Inject constructor(
     private val profileFunction: ProfileFunction,
     private val treatmentsPlugin: TreatmentsPlugin,
     private val activePlugin: ActivePluginProvider,
+    private val databaseHelper: DatabaseHelperInterface,
     private val repository: AppRepository,
     private val dateUtil: DateUtil
 ) {
@@ -127,7 +128,7 @@ class UploadChunk @Inject constructor(
     }
 
     private fun getBloodTests(start: Long, end: Long): List<BloodGlucoseElement> {
-        val readings = MainApp.getDbHelper().getCareportalEvents(start, end, true)
+        val readings = databaseHelper.getCareportalEvents(start, end, true)
         val selection = BloodGlucoseElement.fromCareportalEvents(readings)
         if (selection.isNotEmpty())
             rxBus.send(EventTidepoolStatus("${selection.size} BGs selected for upload"))
@@ -169,7 +170,7 @@ class UploadChunk @Inject constructor(
     }
 
     private fun getProfiles(start: Long, end: Long): List<ProfileElement> {
-        val pss = MainApp.getDbHelper().getProfileSwitchEventsFromTime(start, end, true)
+        val pss = databaseHelper.getProfileSwitchEventsFromTime(start, end, true)
         val selection = LinkedList<ProfileElement>()
         for (ps in pss) {
             newInstanceOrNull(ps)?.let { selection.add(it) }

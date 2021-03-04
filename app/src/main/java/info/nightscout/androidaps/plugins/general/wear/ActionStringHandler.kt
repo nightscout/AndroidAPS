@@ -5,7 +5,6 @@ import android.content.Context
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.Config
 import info.nightscout.androidaps.Constants
-import info.nightscout.androidaps.MainApp
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.dana.DanaPump
 import info.nightscout.androidaps.danaRKorean.DanaRKoreanPlugin
@@ -23,13 +22,8 @@ import info.nightscout.androidaps.database.transactions.InsertTemporaryTargetAnd
 import info.nightscout.androidaps.db.CareportalEvent
 import info.nightscout.androidaps.db.Source
 import info.nightscout.androidaps.db.TDD
-import info.nightscout.androidaps.interfaces.ActivePluginProvider
-import info.nightscout.androidaps.interfaces.CommandQueueProvider
-import info.nightscout.androidaps.interfaces.Constraint
-import info.nightscout.androidaps.interfaces.PluginBase
-import info.nightscout.androidaps.interfaces.ProfileFunction
+import info.nightscout.androidaps.interfaces.*
 import info.nightscout.androidaps.logging.AAPSLogger
-import info.nightscout.androidaps.logging.LTag
 import info.nightscout.androidaps.plugins.aps.loop.LoopPlugin
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper
 import info.nightscout.androidaps.plugins.configBuilder.ConstraintChecker
@@ -55,6 +49,8 @@ import java.util.*
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 import javax.inject.Singleton
+import kotlin.math.abs
+import kotlin.math.min
 
 @Singleton
 class ActionStringHandler @Inject constructor(
@@ -83,6 +79,7 @@ class ActionStringHandler @Inject constructor(
     private val carbsGenerator: CarbsGenerator,
     private val dateUtil: DateUtil,
     private val config: Config,
+    private val databaseHelper: DatabaseHelperInterface,
     private val repository: AppRepository,
     private val nsUpload: NSUpload
 ) {
@@ -222,12 +219,12 @@ class ActionStringHandler @Inject constructor(
             val format = DecimalFormat("0.00")
             val formatInt = DecimalFormat("0")
             val dbRecord = repository.getTemporaryTargetActiveAt(dateUtil._now()).blockingGet()
-            val tempTarget = if (dbRecord is ValueWrapper.Existing)  dbRecord.value else null
+            val tempTarget = if (dbRecord is ValueWrapper.Existing) dbRecord.value else null
 
             val bolusWizard = BolusWizard(injector).doCalc(profile, profileName, tempTarget,
                 carbsAfterConstraints, if (cobInfo.displayCob != null) cobInfo.displayCob!! else 0.0, bgReading.valueToUnits(profileFunction.getUnits()),
                 0.0, percentage.toDouble(), useBG, useCOB, useBolusIOB, useBasalIOB, false, useTT, useTrend, false)
-            if (Math.abs(bolusWizard.insulinAfterConstraints - bolusWizard.calculatedTotalInsulin) >= 0.01) {
+            if (abs(bolusWizard.insulinAfterConstraints - bolusWizard.calculatedTotalInsulin) >= 0.01) {
                 sendError("Insulin constraint violation!" +
                     "\nCannot deliver " + format.format(bolusWizard.calculatedTotalInsulin) + "!")
                 return
@@ -365,7 +362,7 @@ class ActionStringHandler @Inject constructor(
         var weighted03 = 0.0
         var weighted05 = 0.0
         var weighted07 = 0.0
-        Collections.reverse(historyList)
+        historyList.reverse()
         for (record in historyList) {
             val tdd = record.getTotal()
             if (i == 0) {
@@ -384,7 +381,7 @@ class ActionStringHandler @Inject constructor(
         message += "0.5: " + DecimalFormatter.to2Decimal(weighted05) + "U " + (DecimalFormatter.to0Decimal(100 * weighted05 / refTDD) + "%") + "\n"
         message += "0.7: " + DecimalFormatter.to2Decimal(weighted07) + "U " + (DecimalFormatter.to0Decimal(100 * weighted07 / refTDD) + "%") + "\n"
         message += "\n"
-        Collections.reverse(historyList)
+        historyList.reverse()
         //add TDDs:
         for (record in historyList) {
             val tdd = record.getTotal()
@@ -401,15 +398,15 @@ class ActionStringHandler @Inject constructor(
     }
 
     private fun getTDDList(returnDummies: MutableList<TDD>): MutableList<TDD> {
-        var historyList = MainApp.getDbHelper().tdDs
-        historyList = historyList.subList(0, Math.min(10, historyList.size))
+        var historyList = databaseHelper.getTDDs().toMutableList()
+        historyList = historyList.subList(0, min(10, historyList.size))
         //fill single gaps - only needed for Dana*R data
         val dummies: MutableList<TDD> = returnDummies
         val df: DateFormat = SimpleDateFormat("dd.MM.", Locale.getDefault())
         for (i in 0 until historyList.size - 1) {
             val elem1 = historyList[i]
             val elem2 = historyList[i + 1]
-            if (df.format(Date(elem1!!.date)) != df.format(Date(elem2!!.date + 25 * 60 * 60 * 1000))) {
+            if (df.format(Date(elem1.date)) != df.format(Date(elem2.date + 25 * 60 * 60 * 1000))) {
                 val dummy = TDD()
                 dummy.date = elem1.date - 24 * 60 * 60 * 1000
                 dummy.basal = elem1.basal / 2
@@ -420,7 +417,7 @@ class ActionStringHandler @Inject constructor(
             }
         }
         historyList.addAll(dummies)
-        Collections.sort(historyList) { lhs, rhs -> (rhs.date - lhs.date).toInt() }
+        historyList.sortWith { lhs, rhs -> (rhs.date - lhs.date).toInt() }
         return historyList
     }
 

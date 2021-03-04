@@ -32,7 +32,6 @@ import java.util.concurrent.TimeUnit;
 
 import javax.inject.Inject;
 
-import info.nightscout.androidaps.Constants;
 import info.nightscout.androidaps.dana.comm.RecordTypes;
 import info.nightscout.androidaps.data.NonOverlappingIntervals;
 import info.nightscout.androidaps.data.Profile;
@@ -44,7 +43,6 @@ import info.nightscout.androidaps.events.EventReloadProfileSwitchData;
 import info.nightscout.androidaps.events.EventReloadTempBasalData;
 import info.nightscout.androidaps.events.EventReloadTreatmentData;
 import info.nightscout.androidaps.events.EventTempBasalChange;
-import info.nightscout.androidaps.events.EventTempTargetChange;
 import info.nightscout.androidaps.interfaces.ActivePluginProvider;
 import info.nightscout.androidaps.interfaces.DatabaseHelperInterface;
 import info.nightscout.androidaps.interfaces.ProfileInterface;
@@ -56,7 +54,6 @@ import info.nightscout.androidaps.plugins.general.nsclient.NSUpload;
 import info.nightscout.androidaps.plugins.general.openhumans.OpenHumansUploader;
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.events.EventNewHistoryData;
 import info.nightscout.androidaps.plugins.pump.virtual.VirtualPumpPlugin;
-import info.nightscout.androidaps.utils.JsonHelper;
 import info.nightscout.androidaps.utils.PercentageSplitter;
 
 /**
@@ -79,7 +76,6 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
     public static final String DATABASE_DBREQUESTS = "DBRequests";
     public static final String DATABASE_CAREPORTALEVENTS = "CareportalEvents";
     public static final String DATABASE_TDDS = "TDDs";
-    public static final String DATABASE_OPEN_HUMANS_QUEUE = "OpenHumansQueue";
 
     private static final int DATABASE_VERSION = 13;
 
@@ -436,7 +432,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
         }
     }
 
-    public CloseableIterator getDbRequestInterator() {
+    public CloseableIterator getDbRequestIterator() {
         try {
             return getDaoDbRequest().closeableIterator();
         } catch (SQLException e) {

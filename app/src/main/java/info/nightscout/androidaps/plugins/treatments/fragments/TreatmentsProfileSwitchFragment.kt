@@ -8,7 +8,6 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import dagger.android.support.DaggerFragment
-import info.nightscout.androidaps.MainApp
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.database.entities.UserEntry.*
 import info.nightscout.androidaps.databinding.TreatmentsProfileswitchFragmentBinding
@@ -17,6 +16,7 @@ import info.nightscout.androidaps.db.ProfileSwitch
 import info.nightscout.androidaps.db.Source
 import info.nightscout.androidaps.dialogs.ProfileViewerDialog
 import info.nightscout.androidaps.events.EventProfileNeedsUpdate
+import info.nightscout.androidaps.interfaces.DatabaseHelperInterface
 import info.nightscout.androidaps.logging.UserEntryLogger
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper
 import info.nightscout.androidaps.plugins.general.nsclient.NSUpload
@@ -51,6 +51,7 @@ class TreatmentsProfileSwitchFragment : DaggerFragment() {
     @Inject lateinit var dateUtil: DateUtil
     @Inject lateinit var buildHelper: BuildHelper
     @Inject lateinit var aapsSchedulers: AapsSchedulers
+    @Inject lateinit var databaseHelper: DatabaseHelperInterface
     @Inject lateinit var uel: UserEntryLogger
 
     private var _binding: TreatmentsProfileswitchFragmentBinding? = null
@@ -66,13 +67,13 @@ class TreatmentsProfileSwitchFragment : DaggerFragment() {
         super.onViewCreated(view, savedInstanceState)
         binding.recyclerview.setHasFixedSize(true)
         binding.recyclerview.layoutManager = LinearLayoutManager(view.context)
-        binding.recyclerview.adapter = RecyclerProfileViewAdapter(MainApp.getDbHelper().getProfileSwitchData(DateUtil.now() - T.days(30).msecs(), false))
+        binding.recyclerview.adapter = RecyclerProfileViewAdapter(databaseHelper.getProfileSwitchData(DateUtil.now() - T.days(30).msecs(), false))
 
         binding.refreshFromNightscout.setOnClickListener {
             activity?.let { activity ->
                 uel.log(Action.PROFILE_SWITCH_NS_REFRESH)
                 OKDialog.showConfirmation(activity, resourceHelper.gs(R.string.refresheventsfromnightscout) + "?") {
-                    MainApp.getDbHelper().resetProfileSwitch()
+                    databaseHelper.resetProfileSwitch()
                     rxBus.send(EventNSClientRestart())
                 }
             }
@@ -105,7 +106,7 @@ class TreatmentsProfileSwitchFragment : DaggerFragment() {
 
     fun updateGUI() {
         if (_binding == null) return
-        binding.recyclerview.swapAdapter(RecyclerProfileViewAdapter(MainApp.getDbHelper().getProfileSwitchData(DateUtil.now() - T.days(30).msecs(), false)), false)
+        binding.recyclerview.swapAdapter(RecyclerProfileViewAdapter(databaseHelper.getProfileSwitchData(DateUtil.now() - T.days(30).msecs(), false)), false)
     }
 
     inner class RecyclerProfileViewAdapter(private var profileSwitchList: List<ProfileSwitch>) : RecyclerView.Adapter<ProfileSwitchViewHolder>() {
@@ -151,7 +152,7 @@ class TreatmentsProfileSwitchFragment : DaggerFragment() {
                             val id = profileSwitch._id
                             if (NSUpload.isIdValid(id)) nsUpload.removeCareportalEntryFromNS(id)
                             else uploadQueue.removeID("dbAdd", id)
-                            MainApp.getDbHelper().delete(profileSwitch)
+                            databaseHelper.delete(profileSwitch)
                         })
                     }
                 }

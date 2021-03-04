@@ -25,174 +25,262 @@ public class DatabaseHelperProvider implements DatabaseHelperInterface {
     }
 
     @Override public void createOrUpdate(@NonNull CareportalEvent careportalEvent) {
-        MainApp.getDbHelper().createOrUpdate(careportalEvent);
+        MainApp.Companion.getDbHelper().createOrUpdate(careportalEvent);
     }
 
     @Override public void createOrUpdate(@NonNull DanaRHistoryRecord record) {
-        MainApp.getDbHelper().createOrUpdate(record);
+        MainApp.Companion.getDbHelper().createOrUpdate(record);
     }
 
     @Override public void createOrUpdate(@NonNull OmnipodHistoryRecord record) {
-        MainApp.getDbHelper().createOrUpdate(record);
+        MainApp.Companion.getDbHelper().createOrUpdate(record);
     }
 
     @NonNull @Override public List<DanaRHistoryRecord> getDanaRHistoryRecordsByType(byte type) {
-        return MainApp.getDbHelper().getDanaRHistoryRecordsByType(type);
+        return MainApp.Companion.getDbHelper().getDanaRHistoryRecordsByType(type);
     }
 
     @NonNull @Override public List<TDD> getTDDs() {
-        return MainApp.getDbHelper().getTDDs();
+        return MainApp.Companion.getDbHelper().getTDDs();
     }
 
     @Override public long size(@NonNull String table) {
-        return MainApp.getDbHelper().size(table);
+        return MainApp.Companion.getDbHelper().size(table);
     }
 
     @Override public void create(@NonNull DbRequest record) {
         try {
-            MainApp.getDbHelper().create(record);
+            MainApp.Companion.getDbHelper().create(record);
         } catch (SQLException e) {
             e.printStackTrace();
         }
     }
 
     @Override public void deleteAllDbRequests() {
-        MainApp.getDbHelper().deleteAllDbRequests();
+        MainApp.Companion.getDbHelper().deleteAllDbRequests();
     }
 
     @Override public int deleteDbRequest(@NonNull String id) {
-        return MainApp.getDbHelper().deleteDbRequest(id);
+        return MainApp.Companion.getDbHelper().deleteDbRequest(id);
     }
 
     @Override public void deleteDbRequestbyMongoId(@NonNull String action, @NonNull String _id) {
-        MainApp.getDbHelper().deleteDbRequestbyMongoId(action, _id);
+        MainApp.Companion.getDbHelper().deleteDbRequestbyMongoId(action, _id);
     }
 
-    @NonNull @Override public CloseableIterator<DbRequest> getDbRequestInterator() {
-        return MainApp.getDbHelper().getDbRequestInterator();
+    @NonNull @Override public CloseableIterator<DbRequest> getDbRequestIterator() {
+        return MainApp.Companion.getDbHelper().getDbRequestIterator();
     }
 
     @Override public long roundDateToSec(long date) {
-        return MainApp.getDbHelper().roundDateToSec(date);
+        return MainApp.Companion.getDbHelper().roundDateToSec(date);
     }
 
     @Override public void createOrUpdateTDD(@NonNull TDD record) {
-        MainApp.getDbHelper().createOrUpdateTDD(record);
+        MainApp.Companion.getDbHelper().createOrUpdateTDD(record);
     }
 
     @Override public boolean createOrUpdate(@NonNull TemporaryBasal tempBasal) {
-        return MainApp.getDbHelper().createOrUpdate(tempBasal);
+        return MainApp.Companion.getDbHelper().createOrUpdate(tempBasal);
     }
 
     @NonNull @Override public TemporaryBasal findTempBasalByPumpId(long id) {
-        return MainApp.getDbHelper().findTempBasalByPumpId(id);
+        return MainApp.Companion.getDbHelper().findTempBasalByPumpId(id);
     }
 
     @NonNull @Override public List<TemporaryBasal> getTemporaryBasalsDataFromTime(long mills, boolean ascending) {
-        return MainApp.getDbHelper().getTemporaryBasalsDataFromTime(mills, ascending);
+        return MainApp.Companion.getDbHelper().getTemporaryBasalsDataFromTime(mills, ascending);
     }
 
     @Override public CareportalEvent getCareportalEventFromTimestamp(long timestamp) {
-        return MainApp.getDbHelper().getCareportalEventFromTimestamp(timestamp);
+        return MainApp.Companion.getDbHelper().getCareportalEventFromTimestamp(timestamp);
     }
 
     @NonNull @Override public List<OmnipodHistoryRecord> getAllOmnipodHistoryRecordsFromTimestamp(long timestamp, boolean ascending) {
-        return MainApp.getDbHelper().getAllOmnipodHistoryRecordsFromTimeStamp(timestamp, ascending);
+        return MainApp.Companion.getDbHelper().getAllOmnipodHistoryRecordsFromTimeStamp(timestamp, ascending);
     }
 
     @Nullable @Override public OmnipodHistoryRecord findOmnipodHistoryRecordByPumpId(long pumpId) {
-        return MainApp.getDbHelper().findOmnipodHistoryRecordByPumpId(pumpId);
+        return MainApp.Companion.getDbHelper().findOmnipodHistoryRecordByPumpId(pumpId);
     }
 
     @NonNull @Override public List<TDD> getTDDsForLastXDays(int days) {
-        return MainApp.getDbHelper().getTDDsForLastXDays(days);
+        return MainApp.Companion.getDbHelper().getTDDsForLastXDays(days);
     }
 
     @NonNull @Override public List<ProfileSwitch> getProfileSwitchData(long from, boolean ascending) {
-        return MainApp.getDbHelper().getProfileSwitchData(from, ascending);
+        return MainApp.Companion.getDbHelper().getProfileSwitchData(from, ascending);
     }
 
     @Override public void createOrUpdate(@NonNull InsightBolusID record) {
-        MainApp.getDbHelper().createOrUpdate(record);
+        MainApp.Companion.getDbHelper().createOrUpdate(record);
     }
 
     @Override public void createOrUpdate(@NonNull InsightPumpID record) {
-        MainApp.getDbHelper().createOrUpdate(record);
+        MainApp.Companion.getDbHelper().createOrUpdate(record);
     }
 
     @Override public void createOrUpdate(@NonNull InsightHistoryOffset record) {
-        MainApp.getDbHelper().createOrUpdate(record);
+        MainApp.Companion.getDbHelper().createOrUpdate(record);
     }
 
     @Override public void delete(@NonNull ExtendedBolus extendedBolus) {
-        MainApp.getDbHelper().delete(extendedBolus);
+        MainApp.Companion.getDbHelper().delete(extendedBolus);
     }
 
     @Nullable @Override public ExtendedBolus getExtendedBolusByPumpId(long pumpId) {
-        return MainApp.getDbHelper().getExtendedBolusByPumpId(pumpId);
+        return MainApp.Companion.getDbHelper().getExtendedBolusByPumpId(pumpId);
     }
 
     @Nullable @Override public InsightBolusID getInsightBolusID(@NonNull String pumpSerial, int bolusID, long timestamp) {
-        return MainApp.getDbHelper().getInsightBolusID(pumpSerial, bolusID, timestamp);
+        return MainApp.Companion.getDbHelper().getInsightBolusID(pumpSerial, bolusID, timestamp);
     }
 
     @Nullable @Override public InsightHistoryOffset getInsightHistoryOffset(@NonNull String pumpSerial) {
-        return MainApp.getDbHelper().getInsightHistoryOffset(pumpSerial);
+        return MainApp.Companion.getDbHelper().getInsightHistoryOffset(pumpSerial);
     }
 
     @Nullable @Override public InsightPumpID getPumpStoppedEvent(@NonNull String pumpSerial, long before) {
-        return MainApp.getDbHelper().getPumpStoppedEvent(pumpSerial, before);
+        return MainApp.Companion.getDbHelper().getPumpStoppedEvent(pumpSerial, before);
     }
 
     @Override public boolean createOrUpdate(@NonNull ExtendedBolus extendedBolus) {
-        return MainApp.getDbHelper().createOrUpdate(extendedBolus);
+        return MainApp.Companion.getDbHelper().createOrUpdate(extendedBolus);
     }
 
     @Override public void createOrUpdate(@NonNull ProfileSwitch profileSwitch) {
-        MainApp.getDbHelper().createOrUpdate(profileSwitch);
+        MainApp.Companion.getDbHelper().createOrUpdate(profileSwitch);
     }
 
     @Override public void delete(@NonNull TemporaryBasal tempBasal) {
-        MainApp.getDbHelper().delete(tempBasal);
+        MainApp.Companion.getDbHelper().delete(tempBasal);
     }
 
     @NonNull @Override public List<ExtendedBolus> getExtendedBolusDataFromTime(long mills, boolean ascending) {
-        return MainApp.getDbHelper().getExtendedBolusDataFromTime(mills, ascending);
+        return MainApp.Companion.getDbHelper().getExtendedBolusDataFromTime(mills, ascending);
     }
 
     @Override public void deleteTempBasalById(@NonNull String _id) {
-        MainApp.getDbHelper().deleteTempBasalById(_id);
+        MainApp.Companion.getDbHelper().deleteTempBasalById(_id);
     }
 
     @Override public void deleteExtendedBolusById(@NonNull String _id) {
-        MainApp.getDbHelper().deleteExtendedBolusById(_id);
+        MainApp.Companion.getDbHelper().deleteExtendedBolusById(_id);
     }
 
     @Override public void deleteCareportalEventById(@NonNull String _id) {
-        MainApp.getDbHelper().deleteCareportalEventById(_id);
+        MainApp.Companion.getDbHelper().deleteCareportalEventById(_id);
     }
 
     @Override public void deleteProfileSwitchById(@NonNull String _id) {
-        MainApp.getDbHelper().deleteProfileSwitchById(_id);
+        MainApp.Companion.getDbHelper().deleteProfileSwitchById(_id);
     }
 
     @Override public void createTempBasalFromJsonIfNotExists(@NonNull JSONObject json) {
-        MainApp.getDbHelper().createTempBasalFromJsonIfNotExists(json);
+        MainApp.Companion.getDbHelper().createTempBasalFromJsonIfNotExists(json);
     }
 
     @Override public void createExtendedBolusFromJsonIfNotExists(@NonNull JSONObject json) {
-        MainApp.getDbHelper().createExtendedBolusFromJsonIfNotExists(json);
+        MainApp.Companion.getDbHelper().createExtendedBolusFromJsonIfNotExists(json);
     }
 
     @Override public void createCareportalEventFromJsonIfNotExists(@NonNull JSONObject json) {
-        MainApp.getDbHelper().createCareportalEventFromJsonIfNotExists(json);
+        MainApp.Companion.getDbHelper().createCareportalEventFromJsonIfNotExists(json);
     }
 
     @Override public void createProfileSwitchFromJsonIfNotExists(@NonNull ActivePluginProvider activePluginProvider, @NonNull NSUpload nsUpload, @NonNull JSONObject trJson) {
-        MainApp.getDbHelper().createProfileSwitchFromJsonIfNotExists(activePluginProvider, nsUpload, trJson);
+        MainApp.Companion.getDbHelper().createProfileSwitchFromJsonIfNotExists(activePluginProvider, nsUpload, trJson);
     }
 
     @Override public void resetDatabases() {
-        MainApp.getDbHelper().resetDatabases();
+        MainApp.Companion.getDbHelper().resetDatabases();
+    }
+
+    @Override public void createOrUpdate(@NonNull OHQueueItem record) {
+        MainApp.Companion.getDbHelper().createOrUpdate(record);
+    }
+
+    @Override public void delete(@NonNull CareportalEvent careportalEvent) {
+        MainApp.Companion.getDbHelper().delete(careportalEvent);
+    }
+
+    @Override public void delete(@NonNull ProfileSwitch profileSwitch) {
+        MainApp.Companion.getDbHelper().delete(profileSwitch);
+    }
+
+    @Nullable @Override public CareportalEvent getLastCareportalEvent(@NonNull String event) {
+        return MainApp.Companion.getDbHelper().getLastCareportalEvent(event);
+    }
+
+    @NonNull @Override public List<CareportalEvent> getCareportalEventsFromTime(long mills, boolean ascending) {
+        return MainApp.Companion.getDbHelper().getCareportalEventsFromTime(mills, ascending);
+    }
+
+    @NonNull @Override public List<CareportalEvent> getCareportalEventsFromTime(long mills, @NonNull String type, boolean ascending) {
+        return MainApp.Companion.getDbHelper().getCareportalEventsFromTime(mills, type, ascending);
+    }
+
+    @NonNull @Override public List<CareportalEvent> getCareportalEvents(long start, long end, boolean ascending) {
+        return MainApp.Companion.getDbHelper().getCareportalEvents(start, end, ascending);
+    }
+
+    @NonNull @Override public List<CareportalEvent> getCareportalEvents(boolean ascending) {
+        return MainApp.Companion.getDbHelper().getCareportalEvents(ascending);
+    }
+
+    @NonNull @Override public List<ProfileSwitch> getProfileSwitchEventsFromTime(long from, long to, boolean ascending) {
+        return MainApp.Companion.getDbHelper().getProfileSwitchEventsFromTime(from, to, ascending);
+    }
+
+    @NonNull @Override public List<ProfileSwitch> getProfileSwitchEventsFromTime(long mills, boolean ascending) {
+        return MainApp.Companion.getDbHelper().getProfileSwitchEventsFromTime(mills, ascending);
+    }
+
+    @NonNull @Override public List<CareportalEvent> getAllCareportalEvents() {
+        return MainApp.Companion.getDbHelper().getAllCareportalEvents();
+    }
+
+    @NonNull @Override public List<ExtendedBolus> getAllExtendedBoluses() {
+        return MainApp.Companion.getDbHelper().getAllExtendedBoluses();
+    }
+
+    @NonNull @Override public List<ProfileSwitch> getAllProfileSwitches() {
+        return MainApp.Companion.getDbHelper().getAllProfileSwitches();
+    }
+
+    @NonNull @Override public List<TDD> getAllTDDs() {
+        return MainApp.Companion.getDbHelper().getAllTDDs();
+    }
+
+    @NonNull @Override public List<TemporaryBasal> getAllTemporaryBasals() {
+        return MainApp.Companion.getDbHelper().getAllTemporaryBasals();
+    }
+
+    @NonNull @Override public List<OHQueueItem> getAllOHQueueItems(long maxEntries) {
+        return MainApp.Companion.getDbHelper().getAllOHQueueItems(maxEntries);
+    }
+
+    @Override public void resetCareportalEvents() {
+        MainApp.Companion.getDbHelper().resetCareportalEvents();
+    }
+
+    @Override public void resetProfileSwitch() {
+        MainApp.Companion.getDbHelper().resetProfileSwitch();
+    }
+
+    @Override public long getOHQueueSize() {
+        return MainApp.Companion.getDbHelper().getOHQueueSize();
+    }
+
+    @Override public void clearOpenHumansQueue() {
+        MainApp.Companion.getDbHelper().clearOpenHumansQueue();
+    }
+
+    @Override public long getCountOfAllRows() {
+        return MainApp.Companion.getDbHelper().getCountOfAllRows();
+    }
+
+    @Override public void removeAllOHQueueItemsWithIdSmallerThan(long id) {
+        MainApp.Companion.getDbHelper().removeAllOHQueueItemsWithIdSmallerThan(id);
     }
 }
