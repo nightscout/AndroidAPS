@@ -33,7 +33,7 @@
     <string name="description_pump_mdi">Integração para as pessoas que fazem múltiplas injeções diárias para a sua terapia de diabetes</string>
     <string name="description_pump_virtual">Integração para as bombas que não têm qualquer driver ainda (Open Loop)</string>
     <string name="description_sensitivity_aaps">A sensibilidade é calculada da mesma forma que Oref0, mas pode especificar o período de tempo para o passado. A absorção mínima de hidratos de carbono é calculada a partir do tempo máximo de absorção de hidratos de carbono das preferências.</string>
-    <string name="description_sensitivity_oref1">A sensibilidade é calculada a partir de dados das últimas 8h ou 24h (usando qualquer um que é mais sensível). Hidratos são cortados (se não absorvidos) após o tempo especificado nas preferências. O Plugin também calcula o UAM.</string>
+    <string name="description_sensitivity_oref1">A sensibilidade é calculada a partir de dados das últimas 8h ou 24h (usando o que é mais sensível). Os hidratos de carbono são descartados (se não absorvidos) após o tempo especificado nas preferências. O Plugin também calcula o RNA.</string>
     <string name="description_sensitivity_weighted_average">A sensibilidade é calculada como uma média ponderada de desvios. Desvios mais recentes têm maior peso. A absorção mínima de hidratos de carbono é calculada a partir do tempo máximo de absorção de hidratos de carbono das preferências. Este algoritmo é o mais rápido em seguir as mudanças de sensibilidade.</string>
     <string name="description_source_eversense">Receber valores Glicose da aplicação Eversense modificada.</string>
     <string name="description_source_glimp">Receber valores Glicose do Glimp.</string>
@@ -448,15 +448,15 @@
     <string name="ns_localbroadcasts">Activar transmissões para outras aplicações (como xDrip+). Não habilite se tiver mais de uma instância de AAPS ou ClienteNS instalado!</string>
     <string name="ns_localbroadcasts_title">Activar partilha local.</string>
     <string name="openapssmb">OpenAPS SMB</string>
-    <string name="enableuam">Activar UAM</string>
+    <string name="enableuam">Activar RNA</string>
     <string name="enablesmb">Activar SMB</string>
     <string name="enablesmb_summary">Use Super Micro Boluses em vez de basal temp para uma acção mais rápida</string>
     <string name="enableuam_summary">Detecção de Refeições Não Introduzidas</string>
-    <string name="insulin_oref_peak">Tempo Pico da curva de IOB</string>
+    <string name="insulin_oref_peak">Tempo do Pico da curva de IOB</string>
     <string name="insulin_peak_time">Tempo Pico [min]</string>
     <string name="free_peak_oref">Oref Pico-Livre</string>
-    <string name="rapid_acting_oref">Oref Acção Rápida</string>
-    <string name="ultrarapid_oref">Ultra-Rapid Oref</string>
+    <string name="rapid_acting_oref">Oref Acção-Rápida</string>
+    <string name="ultrarapid_oref">Oref Ultra-Rápida</string>
     <string name="lyumjev">Lyumjev</string>
     <string name="dia_too_short">Duração de Acção da Insulina (DIA) de %1$f demasiado curto - corrigido para %2$f!</string>
     <string name="activate_profile">Activar perfil</string>
@@ -499,7 +499,7 @@
     <string name="wear_detailed_delta_summary">Mostrar delta com mais um ponto decimal</string>
     <string name="smbinterval_summary">Com que frequência em min os SMBs serão dados</string>
     <string name="smbmaxminutes_summary">Limite de minutos de basal para SMB</string>
-    <string name="uamsmbmaxminutes">UAM SMB máx minutos</string>
+    <string name="uamsmbmaxminutes">RNA SMB máx minutos</string>
     <string name="uamsmbmaxminutes_summary">Max minutos de basal para limitar SMB para UAM</string>
     <string name="carbsReqThreshold">Mínimo De Hidratos Necessários Para Sugestão</string>
     <string name="carbsReqThreshold_summary">Mínimo de gramas de hidratos de carbono ara exibir um alerta de sugestão de hidratos. As sugestões de hidratos abaixo deste número não activarão uma notificação.</string>
@@ -584,7 +584,7 @@
     <string name="autosensdisabledinpreferences">Autosens desabilitado nas preferências</string>
     <string name="smbdisabledinpreferences">SMB desactivado nas configurações</string>
     <string name="uamdisabledinpreferences">UAM desactivado nas configurações</string>
-    <string name="uamdisabledoref1notselected">UAM desactivado porque confia no plugin de sensibilidade Oref1</string>
+    <string name="uamdisabledoref1notselected">RNA desactivado porque confia no plugin de sensibilidade Oref1</string>
     <string name="maxbasalmultiplier">multiplicador de basal máx</string>
     <string name="maxdailybasalmultiplier">multiplicador de basal máx diária</string>
     <string name="smb_frequency_exceeded">Um bólus foi administrado nos últimos 3 minutos, a ignorar SMB</string>
