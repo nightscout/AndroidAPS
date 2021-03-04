@@ -451,7 +451,7 @@
     <string name="enableuam">Activar RNA</string>
     <string name="enablesmb">Activar SMB</string>
     <string name="enablesmb_summary">Use Super Micro Boluses em vez de basal temp para uma acção mais rápida</string>
-    <string name="enableuam_summary">Detecção de Refeições Não Introduzidas</string>
+    <string name="enableuam_summary">Deteção de Refeições Não Anunciadas (RNA)</string>
     <string name="insulin_oref_peak">Tempo do Pico da curva de IOB</string>
     <string name="insulin_peak_time">Tempo Pico [min]</string>
     <string name="free_peak_oref">Oref Pico-Livre</string>
@@ -500,7 +500,7 @@
     <string name="smbinterval_summary">Com que frequência em min os SMBs serão dados</string>
     <string name="smbmaxminutes_summary">Limite de minutos de basal para SMB</string>
     <string name="uamsmbmaxminutes">RNA SMB máx minutos</string>
-    <string name="uamsmbmaxminutes_summary">Max minutos de basal para limitar SMB para UAM</string>
+    <string name="uamsmbmaxminutes_summary">Max minutos de basal para limitar SMB para RNA</string>
     <string name="carbsReqThreshold">Mínimo De Hidratos Necessários Para Sugestão</string>
     <string name="carbsReqThreshold_summary">Mínimo de gramas de hidratos de carbono ara exibir um alerta de sugestão de hidratos. As sugestões de hidratos abaixo deste número não activarão uma notificação.</string>
     <string name="dexcomg5_xdripupload_title">Enviar dados Glicose para xDrip+</string>
@@ -583,8 +583,8 @@
     <string name="closedmodedisabledinpreferences">Loop fecchado disabilitado nas preferências</string>
     <string name="autosensdisabledinpreferences">Autosens desabilitado nas preferências</string>
     <string name="smbdisabledinpreferences">SMB desactivado nas configurações</string>
-    <string name="uamdisabledinpreferences">UAM desactivado nas configurações</string>
-    <string name="uamdisabledoref1notselected">RNA desactivado porque confia no plugin de sensibilidade Oref1</string>
+    <string name="uamdisabledinpreferences">RNA desactivada nas configurações</string>
+    <string name="uamdisabledoref1notselected">RNA desactivada porque confia no plugin de sensibilidade Oref1</string>
     <string name="maxbasalmultiplier">multiplicador de basal máx</string>
     <string name="maxdailybasalmultiplier">multiplicador de basal máx diária</string>
     <string name="smb_frequency_exceeded">Um bólus foi administrado nos últimos 3 minutos, a ignorar SMB</string>
