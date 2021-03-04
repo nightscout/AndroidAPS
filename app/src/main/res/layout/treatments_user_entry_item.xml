@@ -52,6 +52,7 @@
                 android:layout_weight="1"
                 android:paddingStart="20dp"
                 android:paddingEnd="10dp"
+                android:textStyle="bold"
                 android:visibility="gone"
                 android:text="Values with units" />
 

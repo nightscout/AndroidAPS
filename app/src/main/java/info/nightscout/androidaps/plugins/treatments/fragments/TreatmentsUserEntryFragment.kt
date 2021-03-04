@@ -78,11 +78,12 @@ class TreatmentsUserEntryFragment : DaggerFragment() {
             val current = entries[position]
             holder.binding.date.text = dateUtil.dateAndTimeAndSecondsString(current.timestamp)
             holder.binding.action.text = resourceHelper.gs(current.action.stringId())
+            holder.binding.action.setTextColor(resourceHelper.gc(current.action.colorId()))
             if (current.s != "") holder.binding.s.text = current.s else holder.binding.s.visibility = View.GONE
             //holder.binding.s.text = current.toString()  //for debug
             var valuesWithUnitString = ""
             var rStringParam = 0
-            val separator = " "
+            val separator = "  "
             for(v in current.values) {
                 if (rStringParam >0)
                     rStringParam--
@@ -109,7 +110,7 @@ class TreatmentsUserEntryFragment : DaggerFragment() {
             }
             if (current.values.size > 0)
                 holder.binding.values.visibility = View.VISIBLE
-                holder.binding.values.text = valuesWithUnitString
+                holder.binding.values.text = valuesWithUnitString.trim()
         }
 
         inner class UserEntryViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
