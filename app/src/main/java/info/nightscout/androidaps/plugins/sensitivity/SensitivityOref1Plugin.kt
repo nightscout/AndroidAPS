@@ -2,11 +2,11 @@ package info.nightscout.androidaps.plugins.sensitivity
 
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.Constants
-import info.nightscout.androidaps.MainApp
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.data.Profile
 import info.nightscout.androidaps.db.CareportalEvent
 import info.nightscout.androidaps.db.ProfileSwitch
+import info.nightscout.androidaps.interfaces.DatabaseHelperInterface
 import info.nightscout.androidaps.interfaces.IobCobCalculatorInterface
 import info.nightscout.androidaps.interfaces.PluginDescription
 import info.nightscout.androidaps.interfaces.PluginType
@@ -34,7 +34,8 @@ open class SensitivityOref1Plugin @Inject constructor(
     resourceHelper: ResourceHelper?,
     sp: SP?,
     private val profileFunction: ProfileFunction,
-    private val dateUtil: DateUtil
+    private val dateUtil: DateUtil,
+    private val databaseHelper: DatabaseHelperInterface
 ) : AbstractSensitivityPlugin(PluginDescription()
     .mainType(PluginType.SENSITIVITY)
     .pluginIcon(R.drawable.ic_generic_icon)
@@ -67,8 +68,8 @@ open class SensitivityOref1Plugin @Inject constructor(
             aapsLogger.debug(LTag.AUTOSENS, "No autosens data available. toTime: " + dateUtil.dateAndTimeString(toTime) + " lastDataTime: " + plugin.lastDataTime())
             return AutosensResult()
         }
-        val siteChanges = MainApp.getDbHelper().getCareportalEventsFromTime(fromTime, CareportalEvent.SITECHANGE, true)
-        val profileSwitches = MainApp.getDbHelper().getProfileSwitchEventsFromTime(fromTime, true)
+        val siteChanges = databaseHelper.getCareportalEventsFromTime(fromTime, CareportalEvent.SITECHANGE, true)
+        val profileSwitches = databaseHelper.getProfileSwitchEventsFromTime(fromTime, true)
 
         //[0] = 8 hour
         //[1] = 24 hour

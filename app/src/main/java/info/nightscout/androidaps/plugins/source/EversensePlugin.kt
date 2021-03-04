@@ -5,13 +5,13 @@ import androidx.work.Worker
 import androidx.work.WorkerParameters
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.Constants
-import info.nightscout.androidaps.MainApp
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.database.AppRepository
 import info.nightscout.androidaps.database.entities.GlucoseValue
 import info.nightscout.androidaps.database.transactions.CgmSourceTransaction
 import info.nightscout.androidaps.db.CareportalEvent
 import info.nightscout.androidaps.interfaces.BgSourceInterface
+import info.nightscout.androidaps.interfaces.DatabaseHelperInterface
 import info.nightscout.androidaps.interfaces.PluginBase
 import info.nightscout.androidaps.interfaces.PluginDescription
 import info.nightscout.androidaps.interfaces.PluginType
@@ -36,7 +36,8 @@ import javax.inject.Singleton
 class EversensePlugin @Inject constructor(
     injector: HasAndroidInjector,
     resourceHelper: ResourceHelper,
-    aapsLogger: AAPSLogger
+    aapsLogger: AAPSLogger,
+    private val databaseHelper: DatabaseHelperInterface
 ) : PluginBase(PluginDescription()
     .mainType(PluginType.BGSOURCE)
     .fragmentClass(BGSourceFragment::class.java.name)
@@ -139,7 +140,7 @@ class EversensePlugin @Inject constructor(
                     aapsLogger.debug(LTag.BGSOURCE, "calibrationRecordNumbers" + Arrays.toString(calibrationRecordNumbers))
                     for (i in calibrationGlucoseLevels.indices) {
                         try {
-                            if (MainApp.getDbHelper().getCareportalEventFromTimestamp(calibrationTimestamps[i]) == null) {
+                            if (eversensePlugin.databaseHelper.getCareportalEventFromTimestamp(calibrationTimestamps[i]) == null) {
                                 val data = JSONObject()
                                 data.put("enteredBy", "AndroidAPS-Eversense")
                                 data.put("created_at", DateUtil.toISOString(calibrationTimestamps[i]))

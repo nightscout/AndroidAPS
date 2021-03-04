@@ -4,10 +4,10 @@ import android.graphics.Color
 import android.widget.TextView
 import androidx.annotation.StringRes
 import info.nightscout.androidaps.Config
-import info.nightscout.androidaps.MainApp
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.db.CareportalEvent
 import info.nightscout.androidaps.interfaces.ActivePluginProvider
+import info.nightscout.androidaps.interfaces.DatabaseHelperInterface
 import info.nightscout.androidaps.plugins.pump.common.defs.PumpType
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.OmnipodErosPumpPlugin
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.driver.definition.OmnipodConstants
@@ -24,7 +24,8 @@ class StatusLightHandler @Inject constructor(
     private val sp: SP,
     private val activePlugin: ActivePluginProvider,
     private val warnColors: WarnColors,
-    private val config: Config
+    private val config: Config,
+    private val databaseHelper: DatabaseHelperInterface
 ) {
 
     /**
@@ -69,7 +70,7 @@ class StatusLightHandler @Inject constructor(
     private fun handleAge(view: TextView?, eventName: String, @StringRes warnSettings: Int, defaultWarnThreshold: Double, @StringRes urgentSettings: Int, defaultUrgentThreshold: Double) {
         val warn = sp.getDouble(warnSettings, defaultWarnThreshold)
         val urgent = sp.getDouble(urgentSettings, defaultUrgentThreshold)
-        val careportalEvent = MainApp.getDbHelper().getLastCareportalEvent(eventName)
+        val careportalEvent = databaseHelper.getLastCareportalEvent(eventName)
         if (careportalEvent != null) {
             warnColors.setColorByAge(view, careportalEvent, warn, urgent)
             view?.text = careportalEvent.age(resourceHelper.shortTextMode(), resourceHelper)

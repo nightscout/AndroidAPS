@@ -10,21 +10,21 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import dagger.android.support.DaggerFragment
-import info.nightscout.androidaps.MainApp
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.data.Intervals
 import info.nightscout.androidaps.databinding.TreatmentsExtendedbolusFragmentBinding
 import info.nightscout.androidaps.databinding.TreatmentsExtendedbolusItemBinding
 import info.nightscout.androidaps.db.ExtendedBolus
 import info.nightscout.androidaps.db.Source
+import info.nightscout.androidaps.events.EventAutosensCalculationFinished
 import info.nightscout.androidaps.events.EventExtendedBolusChange
 import info.nightscout.androidaps.interfaces.ActivePluginProvider
+import info.nightscout.androidaps.interfaces.DatabaseHelperInterface
 import info.nightscout.androidaps.interfaces.ProfileFunction
 import info.nightscout.androidaps.logging.UserEntryLogger
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper
 import info.nightscout.androidaps.plugins.general.nsclient.NSUpload
 import info.nightscout.androidaps.plugins.general.nsclient.UploadQueue
-import info.nightscout.androidaps.events.EventAutosensCalculationFinished
 import info.nightscout.androidaps.plugins.treatments.fragments.TreatmentsExtendedBolusesFragment.RecyclerViewAdapter.ExtendedBolusesViewHolder
 import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.FabricPrivacy
@@ -47,6 +47,7 @@ class TreatmentsExtendedBolusesFragment : DaggerFragment() {
     @Inject lateinit var profileFunction: ProfileFunction
     @Inject lateinit var dateUtil: DateUtil
     @Inject lateinit var aapsSchedulers: AapsSchedulers
+    @Inject lateinit var databaseHelper: DatabaseHelperInterface
     @Inject lateinit var uel: UserEntryLogger
 
     private var _binding: TreatmentsExtendedbolusFragmentBinding? = null
@@ -123,10 +124,10 @@ class TreatmentsExtendedBolusesFragment : DaggerFragment() {
                 """.trimIndent(), { _: DialogInterface, _: Int ->
                             uel.log("REMOVED EB")
                             val id = extendedBolus._id
-                                            if (NSUpload.isIdValid(id)) nsUpload.removeCareportalEntryFromNS(id)
-                                            else uploadQueue.removeID("dbAdd", id)
-                                            MainApp.getDbHelper().delete(extendedBolus)
-                                        }, null)
+                            if (NSUpload.isIdValid(id)) nsUpload.removeCareportalEntryFromNS(id)
+                            else uploadQueue.removeID("dbAdd", id)
+                            databaseHelper.delete(extendedBolus)
+                        }, null)
                     }
                 }
                 binding.remove.paintFlags = binding.remove.paintFlags or Paint.UNDERLINE_TEXT_FLAG

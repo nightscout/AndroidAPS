@@ -8,12 +8,12 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import dagger.android.support.DaggerFragment
-import info.nightscout.androidaps.MainApp
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.databinding.TreatmentsCareportalFragmentBinding
 import info.nightscout.androidaps.databinding.TreatmentsCareportalItemBinding
 import info.nightscout.androidaps.db.CareportalEvent
 import info.nightscout.androidaps.events.EventCareportalEventChange
+import info.nightscout.androidaps.interfaces.DatabaseHelperInterface
 import info.nightscout.androidaps.logging.UserEntryLogger
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper
 import info.nightscout.androidaps.plugins.general.nsclient.NSUpload
@@ -45,6 +45,7 @@ class TreatmentsCareportalFragment : DaggerFragment() {
     @Inject lateinit var dateUtil: DateUtil
     @Inject lateinit var buildHelper: BuildHelper
     @Inject lateinit var aapsSchedulers: AapsSchedulers
+    @Inject lateinit var databaseHelper: DatabaseHelperInterface
     @Inject lateinit var uel: UserEntryLogger
 
     private var _binding: TreatmentsCareportalFragmentBinding? = null
@@ -60,12 +61,12 @@ class TreatmentsCareportalFragment : DaggerFragment() {
         super.onViewCreated(view, savedInstanceState)
         binding.recyclerview.setHasFixedSize(true)
         binding.recyclerview.layoutManager = LinearLayoutManager(view.context)
-        binding.recyclerview.adapter = RecyclerViewAdapter(MainApp.getDbHelper().getCareportalEvents(false))
+        binding.recyclerview.adapter = RecyclerViewAdapter(databaseHelper.getCareportalEvents(false))
         binding.refreshFromNightscout.setOnClickListener {
             activity?.let { activity ->
                 OKDialog.showConfirmation(activity, resourceHelper.gs(R.string.careportal), resourceHelper.gs(R.string.refresheventsfromnightscout) + " ?", Runnable {
                     uel.log("CAREPORTAL NS REFRESH")
-                    MainApp.getDbHelper().resetCareportalEvents()
+                    databaseHelper.resetCareportalEvents()
                     rxBus.send(EventNSClientRestart())
                 })
             }
@@ -74,7 +75,7 @@ class TreatmentsCareportalFragment : DaggerFragment() {
             activity?.let { activity ->
                 OKDialog.showConfirmation(activity, resourceHelper.gs(R.string.careportal), resourceHelper.gs(R.string.careportal_removestartedevents), Runnable {
                     uel.log("REMOVED RESTART EVENTS")
-                    val events = MainApp.getDbHelper().getCareportalEvents(false)
+                    val events = databaseHelper.getCareportalEvents(false)
                     for (i in events.indices) {
                         val careportalEvent = events[i]
                         if (careportalEvent.json.contains(resourceHelper.gs(R.string.androidaps_start))) {
@@ -82,7 +83,7 @@ class TreatmentsCareportalFragment : DaggerFragment() {
                                 nsUpload.removeCareportalEntryFromNS(careportalEvent._id)
                             else
                                 uploadQueue.removeID("dbAdd", careportalEvent._id)
-                            MainApp.getDbHelper().delete(careportalEvent)
+                            databaseHelper.delete(careportalEvent)
                         }
                     }
                 }, null)
@@ -118,7 +119,7 @@ class TreatmentsCareportalFragment : DaggerFragment() {
 
     private fun updateGui() {
         if (_binding == null) return
-        binding.recyclerview.swapAdapter(RecyclerViewAdapter(MainApp.getDbHelper().getCareportalEvents(false)), false)
+        binding.recyclerview.swapAdapter(RecyclerViewAdapter(databaseHelper.getCareportalEvents(false)), false)
     }
 
     inner class RecyclerViewAdapter internal constructor(private var careportalEventList: List<CareportalEvent>) : RecyclerView.Adapter<CareportalEventsViewHolder>() {
@@ -159,7 +160,7 @@ class TreatmentsCareportalFragment : DaggerFragment() {
                                 nsUpload.removeCareportalEntryFromNS(careportalEvent._id)
                             else
                                 uploadQueue.removeID("dbAdd", careportalEvent._id)
-                            MainApp.getDbHelper().delete(careportalEvent)
+                            databaseHelper.delete(careportalEvent)
                         }, null)
                     }
                 }
