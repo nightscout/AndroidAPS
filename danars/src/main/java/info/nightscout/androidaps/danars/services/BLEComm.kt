@@ -105,16 +105,21 @@ class BLEComm @Inject internal constructor(
             return false
         }
 
-        isConnected = false
-        v3Encryption = false
-        encryptedDataRead = false
-        encryptedCommandSent = false
-        isConnecting = true
         val device = bluetoothAdapter?.getRemoteDevice(address)
         if (device == null) {
             aapsLogger.error("Device not found.  Unable to connect from: $from")
             return false
         }
+        if (device.bondState == BluetoothDevice.BOND_NONE) {
+            device.createBond()
+            SystemClock.sleep(10000)
+            return false
+        }
+        isConnected = false
+        v3Encryption = false
+        encryptedDataRead = false
+        encryptedCommandSent = false
+        isConnecting = true
         aapsLogger.debug(LTag.PUMPBTCOMM, "Trying to create a new connection from: $from")
         connectDeviceName = device.name
         bluetoothGatt = device.connectGatt(context, false, mGattCallback)

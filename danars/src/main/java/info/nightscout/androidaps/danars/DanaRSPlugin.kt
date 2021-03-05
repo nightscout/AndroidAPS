@@ -137,7 +137,7 @@ class DanaRSPlugin @Inject constructor(
         aapsLogger.debug(LTag.PUMP, "RS connect from: $reason")
         if (danaRSService != null && mDeviceAddress != "" && mDeviceName != "") {
             val success = danaRSService?.connect(reason, mDeviceAddress) ?: false
-            if (!success) ToastUtils.showToastInUiThread(context, resourceHelper.gs(R.string.ble_not_supported))
+            if (!success) ToastUtils.showToastInUiThread(context, resourceHelper.gs(R.string.ble_not_supported_or_not_paired))
         }
     }
 

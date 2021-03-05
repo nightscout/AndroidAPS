@@ -177,6 +177,7 @@
 
     <!--    BlePreCheck-->
     <string name="ble_not_supported">Bluetooth Low Energy not supported.</string>
+    <string name="ble_not_supported_or_not_paired">Bluetooth Low Energy not supported or device not paired.</string>
     <string name="ble_not_enabled">Bluetooth not enabled.</string>
     <string name="location_not_found_title">Location Is Not Enabled</string>
     <string name="location_not_found_message">For Bluetooth discovery to work on newer devices, location must be enabled. AAPS does not track your location and it can be disabled after pairing is successful.</string>
