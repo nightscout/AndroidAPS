@@ -109,6 +109,7 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
     @Inject lateinit var fabricPrivacy: FabricPrivacy
     @Inject lateinit var overviewMenus: OverviewMenus
     @Inject lateinit var skinProvider: SkinProvider
+    @Inject lateinit var trendCalculator: TrendCalculator
     @Inject lateinit var config: Config
     @Inject lateinit var dateUtil: DateUtil
     @Inject lateinit var databaseHelper: DatabaseHelperInterface
@@ -584,7 +585,7 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
 
             binding.infoLayout.bg.text = lastBG.valueToUnitsString(units)
             binding.infoLayout.bg.setTextColor(color)
-            binding.infoLayout.arrow.setImageResource(lastBG.trendArrow.directionToIcon())
+            binding.infoLayout.arrow.setImageResource(trendCalculator.getTrendArrow(lastBG).directionToIcon())
             binding.infoLayout.arrow.setColorFilter(color)
 
             val glucoseStatus = GlucoseStatus(injector).glucoseStatusData
