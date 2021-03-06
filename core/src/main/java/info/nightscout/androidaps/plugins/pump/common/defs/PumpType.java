@@ -148,7 +148,7 @@ public enum PumpType {
 
 
     // MDI
-    MDI("MDI", ManufacturerType.AndroidAPS, "MDI");
+    MDI("MDI", ManufacturerType.AndroidAPS, "MDI", PumpCapability.MDICapabilities);
 
 
     private final String description;
@@ -192,6 +192,13 @@ public enum PumpType {
         this.model = model;
     }
 
+
+    PumpType(String description, ManufacturerType manufacturer, String model, PumpCapability pumpCapability) {
+        this.description = description;
+        this.manufacturer = manufacturer;
+        this.model = model;
+        this.pumpCapability = pumpCapability;
+    }
 
     PumpType(String description, String model, PumpType parent, PumpCapability pumpCapability) {
         this.description = description;
