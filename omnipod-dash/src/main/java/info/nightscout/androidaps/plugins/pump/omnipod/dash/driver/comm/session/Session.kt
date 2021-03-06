@@ -63,7 +63,7 @@ class Session(
             payload = ByteArray(0),
             eqos = 1,
             ack = true,
-            ackNumber = response.sequenceNumber.inc(),
+            ackNumber = response.sequenceNumber.inc()
         )
         return enDecrypt.encrypt((msg))
     }

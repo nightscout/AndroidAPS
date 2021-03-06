@@ -96,7 +96,7 @@ class OmnipodDashBleManagerImpl @Inject constructor(
             val enDecrypt = EnDecrypt(
                 aapsLogger,
                 keys.nonce,
-                keys.ck,
+                keys.ck
             )
 
             val session = Session(

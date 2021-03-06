@@ -77,7 +77,7 @@ internal class LTKExchanger(private val aapsLogger: AAPSLogger, private val msgI
         return PairResult(
             ltk = ltk,
             podId = nodeId,
-            msgSeq = seq,
+            msgSeq = seq
         )
     }
 
