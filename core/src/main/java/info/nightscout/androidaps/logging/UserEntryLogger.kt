@@ -68,4 +68,18 @@ class UserEntryLogger @Inject constructor(
                 onComplete = { aapsLogger.debug("USER ENTRY: $action") }
             )
     }
+
+    fun log(action: Action, s: String = "",  values: MutableList<ValueWithUnit>) {
+        compositeDisposable += repository.runTransaction(UserEntryTransaction(
+            action = action,
+            s = s,
+            values = values
+        ))
+            .subscribeOn(aapsSchedulers.io)
+            .observeOn(aapsSchedulers.io)
+            .subscribeBy(
+                onError = { aapsLogger.debug("ERRORED USER ENTRY: $action $s $values") },
+                onComplete = { aapsLogger.debug("USER ENTRY: $action $s $values") }
+            )
+    }
 }
