@@ -23,6 +23,8 @@ interface OmnipodDashPodStateManager {
     val activationTime: Long?
     var uniqueId: Long? // TODO make Int
     var bluetoothAddress: String?
+    var ltk: ByteArray?
+    var eapAkaSequenceNumber: Long
 
     val bluetoothVersion: SoftwareVersion?
     val firmwareVersion: SoftwareVersion?
@@ -46,6 +48,8 @@ interface OmnipodDashPodStateManager {
     val basalProgram: BasalProgram?
 
     fun increaseMessageSequenceNumber()
+    fun increaseEapAkaSequenceNumber():ByteArray
+    fun commitEapAkaSequenceNumber()
     fun updateFromDefaultStatusResponse(response: DefaultStatusResponse)
     fun updateFromVersionResponse(response: VersionResponse)
     fun updateFromSetUniqueIdResponse(response: SetUniqueIdResponse)

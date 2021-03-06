@@ -13,6 +13,7 @@ import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.response.
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.response.VersionResponse
 import info.nightscout.androidaps.utils.sharedPreferences.SP
 import java.io.Serializable
+import java.nio.ByteBuffer
 import java.util.*
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -150,6 +151,32 @@ class OmnipodDashPodStateManagerImpl @Inject constructor(
         store()
     }
 
+    override var eapAkaSequenceNumber: Long
+        get() = podState.eapAkaSequenceNumber
+        set(value) {
+            podState.eapAkaSequenceNumber = value
+            store()
+        }
+
+    override var ltk: ByteArray?
+    get() = podState.ltk
+    set(value) {
+        podState.ltk = value
+        store()
+    }
+
+    override fun increaseEapAkaSequenceNumber():ByteArray {
+        podState.eapAkaSequenceNumber++
+        return ByteBuffer.allocate(8)
+            .putLong(podState.eapAkaSequenceNumber)
+            .array()
+            .copyOfRange(2, 8)
+    }
+
+    override fun commitEapAkaSequenceNumber() {
+        store()
+    }
+
     override fun updateFromDefaultStatusResponse(response: DefaultStatusResponse) {
         podState.deliveryStatus = response.deliveryStatus
         podState.podStatus = response.podStatus
@@ -262,6 +289,8 @@ class OmnipodDashPodStateManagerImpl @Inject constructor(
         var activationTime: Long? = null
         var uniqueId: Long? = null
         var bluetoothAddress: String? = null
+        var ltk: ByteArray? = null
+        var eapAkaSequenceNumber: Long = 1
 
         var bleVersion: SoftwareVersion? = null
         var firmwareVersion: SoftwareVersion? = null

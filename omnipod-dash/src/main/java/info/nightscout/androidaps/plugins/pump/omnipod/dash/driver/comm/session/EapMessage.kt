@@ -78,7 +78,7 @@ data class EapMessage(
                 throw MessageIOException("Invalid eap payload. Expected AKA packet type: ${payload.toHex()}")
             }
             val attributesPayload = payload.copyOfRange(8, totalSize)
-            aapsLogger.debug(LTag.PUMPBTCOMM, "EAP attributes: ${attributesPayload.toByteString()}")
+            aapsLogger.debug(LTag.PUMPBTCOMM, "parsing EAP payload: ${payload.toHex()}")
             return EapMessage(
                 code = EapCode.byValue(payload[0]),
                 identifier = payload[1],

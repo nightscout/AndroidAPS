@@ -11,9 +11,10 @@ class BleCommandAbort : BleCommand(BleCommandType.ABORT)
 class BleCommandSuccess : BleCommand(BleCommandType.SUCCESS)
 
 class BleCommandFail : BleCommand(BleCommandType.FAIL)
+
 open class BleCommand(val data: ByteArray) {
 
-    constructor(type: BleCommandType) : this(byteArrayOf(type.value))
+    constructor(type: BleCommandType) : this(byteArrayOf(type.value, 0))
 
     constructor(type: BleCommandType, payload: ByteArray) : this(
         byteArrayOf(type.value) + payload
