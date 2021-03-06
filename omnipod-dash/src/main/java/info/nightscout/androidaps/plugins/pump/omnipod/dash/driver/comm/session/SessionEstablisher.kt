@@ -27,8 +27,8 @@ class SessionEstablisher(
     private val milenage = Milenage(aapsLogger, ltk, eapSqn)
 
     init {
-        require(eapSqn.size == 6) {"EAP-SQN has to be 6 bytes long"}
-        require(ltk.size == 16) {"LTK has to be 16 bytes long"}
+        require(eapSqn.size == 6) { "EAP-SQN has to be 6 bytes long" }
+        require(ltk.size == 16) { "LTK has to be 16 bytes long" }
 
         aapsLogger.debug(LTag.PUMPBTCOMM, "Starting EAP-AKA")
         val random = SecureRandom()

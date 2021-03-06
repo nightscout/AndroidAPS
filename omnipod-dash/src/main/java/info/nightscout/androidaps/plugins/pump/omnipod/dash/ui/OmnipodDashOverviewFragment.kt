@@ -325,7 +325,6 @@ class OmnipodDashOverviewFragment : DaggerFragment() {
             }
 
             podInfoBinding.podActiveAlerts.text = PLACEHOLDER
-
         }
 
         if (errors.size == 0) {

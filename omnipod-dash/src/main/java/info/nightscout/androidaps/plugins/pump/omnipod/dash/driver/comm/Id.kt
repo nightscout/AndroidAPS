@@ -37,7 +37,7 @@ data class Id(val address: ByteArray) {
             return Id(ByteBuffer.allocate(4).putInt(v).array())
         }
         fun fromLong(v: Long): Id {
-            return Id(ByteBuffer.allocate(8).putLong(v).array().copyOfRange(4,8))
+            return Id(ByteBuffer.allocate(8).putLong(v).array().copyOfRange(4, 8))
         }
     }
 }

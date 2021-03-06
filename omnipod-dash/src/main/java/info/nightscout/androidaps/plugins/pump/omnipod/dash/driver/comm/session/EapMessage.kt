@@ -4,7 +4,6 @@ import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.logging.LTag
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.exceptions.MessageIOException
 import info.nightscout.androidaps.utils.extensions.toHex
-import okio.ByteString.Companion.toByteString
 import java.nio.ByteBuffer
 
 enum class EapCode(val code: Byte) {

@@ -159,13 +159,13 @@ class OmnipodDashPodStateManagerImpl @Inject constructor(
         }
 
     override var ltk: ByteArray?
-    get() = podState.ltk
-    set(value) {
-        podState.ltk = value
-        store()
-    }
+        get() = podState.ltk
+        set(value) {
+            podState.ltk = value
+            store()
+        }
 
-    override fun increaseEapAkaSequenceNumber():ByteArray {
+    override fun increaseEapAkaSequenceNumber(): ByteArray {
         podState.eapAkaSequenceNumber++
         return ByteBuffer.allocate(8)
             .putLong(podState.eapAkaSequenceNumber)
