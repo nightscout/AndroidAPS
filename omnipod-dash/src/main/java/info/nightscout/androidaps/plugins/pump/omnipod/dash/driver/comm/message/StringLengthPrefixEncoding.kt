@@ -18,15 +18,15 @@ class StringLengthPrefixEncoding {
             var remaining = payload
             for ((index, key) in keys.withIndex()) {
                 when {
-                    remaining.size < key.length ->
+                    remaining.size < key.length                                     ->
                         throw MessageIOException("Payload too short: ${payload.toHex()} for key: $key")
                     !(remaining.copyOfRange(0, key.length).decodeToString() == key) ->
                         throw MessageIOException("Key not found: $key in ${payload.toHex()}")
                     // last key can be empty, no length
-                    index == keys.size - 1 && remaining.size == key.length ->
+                    index == keys.size - 1 && remaining.size == key.length          ->
                         return ret
 
-                    remaining.size < key.length + LENGTH_BYTES ->
+                    remaining.size < key.length + LENGTH_BYTES                      ->
                         throw MessageIOException("Length not found: for $key in ${payload.toHex()}")
                 }
                 remaining = remaining.copyOfRange(key.length, remaining.size)
@@ -43,14 +43,17 @@ class StringLengthPrefixEncoding {
         fun formatKeys(keys: Array<String>, payloads: Array<ByteArray>): ByteArray {
             val payloadTotalSize = payloads.fold(0) { acc, i -> acc + i.size }
             val keyTotalSize = keys.fold(0) { acc, i -> acc + i.length }
+            val zeros = payloads.fold(0) { acc, i -> acc + if (i.size == 0) 1 else 0 }
 
-            val bb = ByteBuffer.allocate(2 * keys.size + keyTotalSize + payloadTotalSize)
+            val bb = ByteBuffer.allocate(2 * (keys.size - zeros) + keyTotalSize + payloadTotalSize)
             for (idx in keys.indices) {
                 val k = keys[idx]
                 val payload = payloads[idx]
                 bb.put(k.toByteArray())
-                bb.putShort(payload.size.toShort())
-                bb.put(payload)
+                if (payload.size > 0) {
+                    bb.putShort(payload.size.toShort())
+                    bb.put(payload)
+                }
             }
 
             val ret = ByteArray(bb.position())

@@ -7,22 +7,24 @@ import android.bluetooth.BluetoothProfile
 import android.content.Context
 import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.logging.LTag
-import info.nightscout.androidaps.plugins.pump.omnipod.dash.BuildConfig
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.callbacks.BleCommCallbacks
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.command.BleCommandHello
+import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.endecrypt.EnDecrypt
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.exceptions.*
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.io.BleIO
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.io.CharacteristicType
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.message.MessageIO
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.pair.LTKExchanger
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.scan.PodScanner
+import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.session.EapSqn
+import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.session.Session
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.session.SessionEstablisher
+import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.session.SessionKeys
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.status.ConnectionStatus
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.event.PodEvent
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.command.base.Command
 import info.nightscout.androidaps.utils.extensions.toHex
 import io.reactivex.Observable
-import org.apache.commons.lang3.NotImplementedException
 import java.util.concurrent.BlockingQueue
 import java.util.concurrent.LinkedBlockingDeque
 import java.util.concurrent.TimeoutException
@@ -38,6 +40,8 @@ class OmnipodDashBleManagerImpl @Inject constructor(
     private val bluetoothManager: BluetoothManager =
         context.getSystemService(Context.BLUETOOTH_SERVICE) as BluetoothManager
     private val bluetoothAdapter: BluetoothAdapter = bluetoothManager.adapter
+    private var sessionKeys: SessionKeys? = null
+    private var msgIO: MessageIO? = null
 
     @Throws(
         FailedToConnectException::class,
@@ -60,12 +64,8 @@ class OmnipodDashBleManagerImpl @Inject constructor(
             )
         val bleCommCallbacks = BleCommCallbacks(aapsLogger, incomingPackets)
         aapsLogger.debug(LTag.PUMPBTCOMM, "Connecting to $podAddress")
-        var autoConnect = true
-        if (BuildConfig.DEBUG) {
-            autoConnect = false
-            // TODO: remove this in the future
-            // it's easier to start testing from scratch on each run.
-        }
+        val autoConnect = false // TODO: check what to use here
+
         val gatt = podDevice.connectGatt(context, autoConnect, bleCommCallbacks, BluetoothDevice.TRANSPORT_LE)
         bleCommCallbacks.waitForConnection(CONNECT_TIMEOUT_MS)
         val connectionState = bluetoothManager.getConnectionState(podDevice, BluetoothProfile.GATT)
@@ -81,9 +81,39 @@ class OmnipodDashBleManagerImpl @Inject constructor(
         return bleIO
     }
 
-    override fun sendCommand(cmd: Command): Observable<PodEvent> {
-        // TODO
-        return Observable.error(NotImplementedException("sendCommand is not yet implemented"))
+    override fun sendCommand(cmd: Command): Observable<PodEvent> = Observable.create { emitter ->
+        try {
+            val keys = sessionKeys
+            val mIO = msgIO
+            if (keys == null || mIO == null) {
+                //TODO handle reconnects
+                throw Exception("Not connected")
+            }
+            emitter.onNext(PodEvent.CommandSending(cmd))
+            // TODO switch to RX
+            emitter.onNext(PodEvent.CommandSent(cmd))
+
+            val enDecrypt = EnDecrypt(
+                aapsLogger,
+                keys.nonce,
+                keys.ck,
+            )
+
+            val session = Session(
+                aapsLogger = aapsLogger,
+                msgIO = mIO,
+                myId = Id.fromInt(CONTROLLER_ID),
+                podId = Id.fromInt(CONTROLLER_ID).increment(),
+                sessionKeys = keys,
+                enDecrypt = enDecrypt
+            )
+            val response = session.sendCommand(cmd)
+            emitter.onNext(PodEvent.ResponseReceived(response))
+
+            emitter.onComplete()
+        } catch (ex: Exception) {
+            emitter.tryOnError(ex)
+        }
     }
 
     override fun getStatus(): ConnectionStatus {
@@ -107,7 +137,6 @@ class OmnipodDashBleManagerImpl @Inject constructor(
         //  emit PodEvent.AlreadyConnected, complete the observable and return from this method
 
         try {
-            // TODO: this is wrong and I know it
             aapsLogger.info(LTag.PUMPBTCOMM, "starting new pod activation")
 
             val podScanner = PodScanner(aapsLogger, bluetoothAdapter)
@@ -123,24 +152,30 @@ class OmnipodDashBleManagerImpl @Inject constructor(
             val bleIO = connect(podAddress)
             emitter.onNext(PodEvent.BluetoothConnected(podAddress))
 
-            val msgIO = MessageIO(aapsLogger, bleIO)
-            val ltkExchanger = LTKExchanger(aapsLogger, msgIO)
+            val mIO = MessageIO(aapsLogger, bleIO)
+            val myId = Id.fromInt(CONTROLLER_ID)
+            val podId = myId.increment()
+
+            val ltkExchanger = LTKExchanger(aapsLogger, mIO)
 
             emitter.onNext(PodEvent.Pairing)
 
             val ltk = ltkExchanger.negotiateLTK()
 
-            aapsLogger.info(LTag.PUMPCOMM, "Got LTK: ${ltk.ltk.toHex()}")
-
             emitter.onNext(PodEvent.EstablishingSession)
 
-            val eapAkaExchanger = SessionEstablisher(aapsLogger, msgIO, ltk)
-            val sessionKeys = eapAkaExchanger.negotiateSessionKeys()
-            aapsLogger.info(LTag.PUMPCOMM, "CK: ${sessionKeys.ck.toHex()}")
-            aapsLogger.info(LTag.PUMPCOMM, "noncePrefix: ${sessionKeys.noncePrefix.toHex()}")
-            aapsLogger.info(LTag.PUMPCOMM, "SQN: ${sessionKeys.sqn.toHex()}")
+            val eapSqn = EapSqn(1)
+            aapsLogger.info(LTag.PUMPCOMM, "Got LTK: ${ltk.ltk.toHex()}")
+            val eapAkaExchanger = SessionEstablisher(aapsLogger, mIO, ltk, eapSqn)
+            val keys = eapAkaExchanger.negotiateSessionKeys()
+            aapsLogger.info(LTag.PUMPCOMM, "CK: ${keys.ck.toHex()}")
+            aapsLogger.info(LTag.PUMPCOMM, "msgSequenceNumber: ${keys.msgSequenceNumber}")
+            aapsLogger.info(LTag.PUMPCOMM, "Nonce: ${keys.nonce}")
 
-            emitter.onNext(PodEvent.Connected(ltk.podId.toLong())) // TODO supply actual pod id
+            sessionKeys = keys
+            msgIO = mIO
+
+            emitter.onNext(PodEvent.Connected(ltk.podId.toLong()))
 
             emitter.onComplete()
         } catch (ex: Exception) {

@@ -24,7 +24,7 @@ data class MessagePacket(
     val version: Short = 0.toShort()
 ) {
 
-    fun asByteArray(): ByteArray {
+    fun asByteArray(forEncryption: Boolean = false): ByteArray {
         val bb = ByteBuffer.allocate(16 + payload.size)
         bb.put(MAGIC_PATTERN.toByteArray())
 
@@ -52,9 +52,10 @@ data class MessagePacket(
         bb.put(f2.value.toByte())
         bb.put(this.sequenceNumber)
         bb.put(this.ackNumber)
-
-        bb.put((this.payload.size ushr 3).toByte())
-        bb.put((this.payload.size shl 5).toByte())
+        val size = payload.size -
+            if (type == MessageType.ENCRYPTED && !forEncryption) 8 else 0
+        bb.put((size ushr 3).toByte())
+        bb.put((size shl 5).toByte())
 
         bb.put(this.source.address)
         bb.put(this.destination.address)
@@ -103,7 +104,7 @@ data class MessagePacket(
                 throw CouldNotParseMessageException(payload)
             }
             val payloadEnd = 16 + size +
-                if (type == MessageType.ENCRYPTED) 8
+                if (type == MessageType.ENCRYPTED) 8 // TAG
                 else 0
 
             return MessagePacket(

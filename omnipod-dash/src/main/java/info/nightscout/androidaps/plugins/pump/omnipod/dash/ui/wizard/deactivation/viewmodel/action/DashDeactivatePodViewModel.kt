@@ -6,16 +6,18 @@ import info.nightscout.androidaps.data.PumpEnactResult
 import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.plugins.pump.omnipod.common.R
 import info.nightscout.androidaps.plugins.pump.omnipod.common.ui.wizard.deactivation.viewmodel.action.DeactivatePodViewModel
+import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.OmnipodDashManager
 import io.reactivex.Single
 import javax.inject.Inject
 
 class DashDeactivatePodViewModel @Inject constructor(
+    private val omnipodManager: OmnipodDashManager,
     injector: HasAndroidInjector,
     logger: AAPSLogger
 ) : DeactivatePodViewModel(injector, logger) {
 
     override fun doExecuteAction(): Single<PumpEnactResult> = Single.just(
-        PumpEnactResult(injector).success(false).comment("TODO")
+     PumpEnactResult(injector).success(true).comment("TODO")
     ) // TODO
 
     override fun discardPod() {

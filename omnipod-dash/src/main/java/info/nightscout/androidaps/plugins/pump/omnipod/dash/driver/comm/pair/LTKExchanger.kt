@@ -40,11 +40,11 @@ internal class LTKExchanger(private val aapsLogger: AAPSLogger, private val msgI
     fun negotiateLTK(): PairResult {
         // send SP1, SP2
         val sp1sp2 = sp1sp2(nodeId.address, sp2())
-        msgIO.sendMesssage(sp1sp2.messagePacket)
+        msgIO.sendMessage(sp1sp2.messagePacket)
 
         seq++
         val sps1 = sps1()
-        msgIO.sendMesssage(sps1.messagePacket)
+        msgIO.sendMessage(sps1.messagePacket)
         // send SPS1
 
         // read SPS1
@@ -55,7 +55,7 @@ internal class LTKExchanger(private val aapsLogger: AAPSLogger, private val msgI
         seq++
         // send SPS2
         val sps2 = sps2()
-        msgIO.sendMesssage(sps2.messagePacket)
+        msgIO.sendMessage(sps2.messagePacket)
         // read SPS2
 
         val podSps2 = msgIO.receiveMessage()
@@ -63,7 +63,7 @@ internal class LTKExchanger(private val aapsLogger: AAPSLogger, private val msgI
 
         seq++
         // send SP0GP0
-        msgIO.sendMesssage(sp0gp0().messagePacket)
+        msgIO.sendMessage(sp0gp0().messagePacket)
         // read P0
 
         // TODO: failing to read or validate p0 will lead to undefined state
@@ -77,7 +77,7 @@ internal class LTKExchanger(private val aapsLogger: AAPSLogger, private val msgI
         return PairResult(
             ltk = ltk,
             podId = nodeId,
-            seq = seq
+            msgSeq = seq,
         )
     }
 

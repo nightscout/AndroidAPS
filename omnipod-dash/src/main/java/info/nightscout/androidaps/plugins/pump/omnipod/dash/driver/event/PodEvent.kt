@@ -18,5 +18,5 @@ sealed class PodEvent {
     /* Message exchange events */
     class CommandSending(val command: Command) : PodEvent()
     class CommandSent(val command: Command) : PodEvent()
-    class ResponseReceived(val response: Response) : PodEvent()
+    class ResponseReceived(val response:Response) : PodEvent()
 }

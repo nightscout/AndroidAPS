@@ -4,25 +4,29 @@ import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.logging.LTag
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.Id
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.OmnipodDashBleManagerImpl
+import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.endecrypt.Nonce
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.exceptions.SessionEstablishmentException
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.message.MessageIO
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.message.MessagePacket
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.message.MessageType
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.pair.PairResult
 import info.nightscout.androidaps.utils.extensions.toHex
-import org.spongycastle.util.encoders.Hex
 import java.security.SecureRandom
 
-class SessionEstablisher(private val aapsLogger: AAPSLogger, private val msgIO: MessageIO, private val ltk: PairResult) {
+class SessionEstablisher(
+    private val aapsLogger: AAPSLogger,
+    private val msgIO: MessageIO,
+    private val ltk: PairResult,
+    private val eapSqn: EapSqn
+) {
 
-    var seq = ltk.seq
+    var sequenceNumber = ltk.msgSeq
 
     private val controllerIV = ByteArray(IV_SIZE)
     private var nodeIV = ByteArray(IV_SIZE)
 
     private val controllerId = Id.fromInt(OmnipodDashBleManagerImpl.CONTROLLER_ID)
-    private val sqn = byteArrayOf(0, 0, 0, 0, 0, 2)
-    private val milenage = Milenage(aapsLogger, ltk.ltk, sqn)
+    private val milenage = Milenage(aapsLogger, ltk.ltk, eapSqn.increment())
 
     init {
         aapsLogger.debug(LTag.PUMPBTCOMM, "Starting EAP-AKA")
@@ -32,21 +36,24 @@ class SessionEstablisher(private val aapsLogger: AAPSLogger, private val msgIO: 
 
     fun negotiateSessionKeys(): SessionKeys {
         // send EAP-AKA challenge
-        seq++ //TODO: get from pod state. This only works for activating a new pod
+        sequenceNumber++ //TODO: get from pod state. This only works for activating a new pod
         var challenge = eapAkaChallenge()
-        msgIO.sendMesssage(challenge)
+        msgIO.sendMessage(challenge)
 
         val challengeResponse = msgIO.receiveMessage()
         processChallengeResponse(challengeResponse)  //TODO: what do we have to answer if challenge response does not validate?
 
-        seq++
+        sequenceNumber++
         var success = eapSuccess()
-        msgIO.sendMesssage(success)
+        msgIO.sendMessage(success)
 
         return SessionKeys(
-            ck=milenage.ck,
-            noncePrefix = controllerIV + nodeIV,
-            sqn=sqn
+            ck = milenage.ck,
+            nonce = Nonce(
+                prefix = controllerIV + nodeIV,
+                sqn = 0
+            ),
+            msgSequenceNumber = sequenceNumber
         )
     }
 
@@ -64,7 +71,7 @@ class SessionEstablisher(private val aapsLogger: AAPSLogger, private val msgIO: 
         )
         return MessagePacket(
             type = MessageType.SESSION_ESTABLISHMENT,
-            sequenceNumber = seq,
+            sequenceNumber = sequenceNumber,
             source = controllerId,
             destination = ltk.podId,
             payload = eapMsg.toByteArray()
@@ -86,7 +93,7 @@ class SessionEstablisher(private val aapsLogger: AAPSLogger, private val msgIO: 
                     }
                 is EapAkaAttributeCustomIV ->
                     nodeIV = attr.payload.copyOfRange(0, IV_SIZE)
-                else ->
+                else                       ->
                     throw SessionEstablishmentException("Unknown attribute received: $attr")
             }
         }
@@ -101,7 +108,7 @@ class SessionEstablisher(private val aapsLogger: AAPSLogger, private val msgIO: 
 
         return MessagePacket(
             type = MessageType.SESSION_ESTABLISHMENT,
-            sequenceNumber = seq,
+            sequenceNumber = sequenceNumber,
             source = controllerId,
             destination = ltk.podId,
             payload = eapMsg.toByteArray()

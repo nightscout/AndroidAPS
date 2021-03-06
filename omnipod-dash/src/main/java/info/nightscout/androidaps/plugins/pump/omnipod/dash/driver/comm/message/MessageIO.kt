@@ -12,7 +12,7 @@ import info.nightscout.androidaps.utils.extensions.toHex
 
 class MessageIO(private val aapsLogger: AAPSLogger, private val bleIO: BleIO) {
 
-    fun sendMesssage(msg: MessagePacket) {
+    fun sendMessage(msg: MessagePacket) {
         bleIO.flushIncomingQueues()
         bleIO.sendAndConfirmPacket(CharacteristicType.CMD, BleCommandRTS().data)
         val expectCTS = bleIO.receivePacket(CharacteristicType.CMD)
@@ -33,7 +33,6 @@ class MessageIO(private val aapsLogger: AAPSLogger, private val bleIO: BleIO) {
             throw UnexpectedCommandException(BleCommand(expectSuccess))
         }
         // TODO: handle NACKS/FAILS/etc
-        bleIO.flushIncomingQueues()
     }
 
     fun receiveMessage(): MessagePacket {

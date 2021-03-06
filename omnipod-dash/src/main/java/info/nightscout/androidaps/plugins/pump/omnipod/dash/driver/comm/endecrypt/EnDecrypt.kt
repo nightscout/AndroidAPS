@@ -18,7 +18,7 @@ class EnDecrypt(private val aapsLogger: AAPSLogger, private val nonce: Nonce, pr
         val payload = msg.payload
         val header = msg.asByteArray().copyOfRange(0, 16)
 
-        val n = nonce.increment()
+        val n = nonce.increment(false)
         aapsLogger.debug(LTag.PUMPBTCOMM, "Decrypt header ${header.toHex()} payload: ${payload.toHex()}")
         aapsLogger.debug(LTag.PUMPBTCOMM, "Decrypt NONCE ${n.toHex()}")
         cipher.init(
@@ -38,7 +38,7 @@ class EnDecrypt(private val aapsLogger: AAPSLogger, private val nonce: Nonce, pr
         val payload = headerMessage.payload
         val header = headerMessage.asByteArray(true).copyOfRange(0, 16)
 
-        val n = nonce.increment()
+        val n = nonce.increment(true)
         aapsLogger.debug(LTag.PUMPBTCOMM, "Encrypt header ${header.toHex()} payload: ${payload.toHex()}")
         aapsLogger.debug(LTag.PUMPBTCOMM, "Encrypt NONCE ${n.toHex()}")
         val encryptedPayload = ByteArray(payload.size + MAC_SIZE)

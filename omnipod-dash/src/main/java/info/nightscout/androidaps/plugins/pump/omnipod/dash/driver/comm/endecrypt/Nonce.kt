@@ -2,19 +2,22 @@ package info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.endecry
 
 import java.nio.ByteBuffer
 
-class CryptSequence(var sqn: Long) {
+data class Nonce(val prefix: ByteArray, var sqn: Long) {
+    init {
+        require(prefix.size == 8) { "Nonce prefix should be 8 bytes long" }
+    }
 
-    fun incrementForEnDecrypt(fromPdmToPod: Boolean): ByteArray {
+    fun increment(podReceiving: Boolean): ByteArray {
         sqn++
         val ret = ByteBuffer.allocate(8)
             .putLong(sqn)
             .array()
             .copyOfRange(3, 8)
-        if (fromPdmToPod) {
+        if (podReceiving) {
             ret[0] = (ret[0].toInt() and 127).toByte()
         } else {
             ret[0] = (ret[0].toInt() or 128).toByte()
         }
-        return ret
+        return prefix + ret
     }
 }
