@@ -115,6 +115,7 @@ data class UserEntry(
         @SerializedName("TT_DELETED_FROM_NS") TT_DELETED_FROM_NS,
         @SerializedName("TT_FROM_NS") TT_FROM_NS,
         @SerializedName("TT_CANCELED_FROM_NS") TT_CANCELED_FROM_NS,
+        @SerializedName("UE_EXPORT_TO_XML") UE_EXPORT_TO_XML,
         @SerializedName("UNKNOWN") UNKNOWN
         ;
 

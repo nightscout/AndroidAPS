@@ -15,6 +15,7 @@ import info.nightscout.androidaps.BuildConfig
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.activities.DaggerAppCompatActivityWithResult
 import info.nightscout.androidaps.activities.PreferencesActivity
+import info.nightscout.androidaps.database.entities.UserEntry
 import info.nightscout.androidaps.database.entities.UserEntry.*
 import info.nightscout.androidaps.events.EventAppExit
 import info.nightscout.androidaps.interfaces.ConfigInterface
@@ -35,6 +36,7 @@ import info.nightscout.androidaps.utils.buildHelper.BuildHelper
 import info.nightscout.androidaps.utils.protection.PasswordCheck
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 import info.nightscout.androidaps.utils.sharedPreferences.SP
+import io.reactivex.Single
 import java.io.File
 import java.io.FileNotFoundException
 import java.io.IOException
@@ -354,5 +356,50 @@ class ImportExportPrefs @Inject constructor(
             System.runFinalization()
             exitProcess(0)
         })
+    }
+
+
+    override fun exportUserEntriesXml(activity: FragmentActivity, listEntries: Single<List<UserEntry>>) {
+        val entries = listEntries.blockingGet()
+        prefFileList.ensureExportDirExists()
+        val legacyFile = prefFileList.legacyFile()
+        val newFile = prefFileList.newExportXmlFile()
+/*
+        askToConfirmExport(activity, newFile) { password ->
+            try {
+                val entries: MutableMap<String, String> = mutableMapOf()
+                for ((key, value) in sp.getAll()) {
+                    entries[key] = value.toString()
+                }
+
+                val prefs = Prefs(entries, prepareMetadata(activity))
+
+                if (BuildConfig.DEBUG && buildHelper.isEngineeringMode()) {
+                    classicPrefsFormat.savePreferences(legacyFile, prefs)
+                }
+                encryptedPrefsFormat.savePreferences(newFile, prefs, password)
+
+                ToastUtils.okToast(activity, resourceHelper.gs(R.string.exported))
+            } catch (e: FileNotFoundException) {
+                ToastUtils.errorToast(activity, resourceHelper.gs(R.string.filenotfound) + " " + newFile)
+                log.error(LTag.CORE, "Unhandled exception", e)
+            } catch (e: IOException) {
+                ToastUtils.errorToast(activity, e.message)
+                log.error(LTag.CORE, "Unhandled exception", e)
+            } catch (e: PrefFileNotFoundError) {
+                ToastUtils.Long.errorToast(activity, resourceHelper.gs(R.string.preferences_export_canceled)
+                    + "\n\n" + resourceHelper.gs(R.string.filenotfound)
+                    + ": " + e.message
+                    + "\n\n" + resourceHelper.gs(R.string.needstoragepermission))
+                log.error(LTag.CORE, "File system exception", e)
+            } catch (e: PrefIOError) {
+                ToastUtils.Long.errorToast(activity, resourceHelper.gs(R.string.preferences_export_canceled)
+                    + "\n\n" + resourceHelper.gs(R.string.needstoragepermission)
+                    + ": " + e.message)
+                log.error(LTag.CORE, "File system exception", e)
+            }
+        }
+
+ */
     }
 }

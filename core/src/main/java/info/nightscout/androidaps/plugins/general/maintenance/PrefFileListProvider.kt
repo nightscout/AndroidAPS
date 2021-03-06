@@ -100,6 +100,11 @@ class PrefFileListProvider @Inject constructor(
         return File(aapsPath, timeLocal + "_" + config.FLAVOR + ".json")
     }
 
+    fun newExportXmlFile(): File {
+        val timeLocal = LocalDateTime.now().toString(DateTimeFormat.forPattern("yyyy-MM-dd'_'HHmmss"))
+        return File(aapsPath, timeLocal + "_UserEntry.xml")
+    }
+
     // check metadata for known issues, change their status and add info with explanations
     fun checkMetadata(metadata: Map<PrefsMetadataKey, PrefMetadata>): Map<PrefsMetadataKey, PrefMetadata> {
         val meta = metadata.toMutableMap()

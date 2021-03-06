@@ -102,6 +102,7 @@ fun UserEntry.Action.stringId(): Int {
         UserEntry.Action.TT_DELETED_FROM_NS         -> R.string.uel_tt_deleted_from_ns
         UserEntry.Action.TT_FROM_NS                 -> R.string.uel_tt_from_ns
         UserEntry.Action.TT_CANCELED_FROM_NS        -> R.string.uel_tt_canceleted_from_ns
+        UserEntry.Action.UE_EXPORT_TO_XML           -> R.string.ue_export_to_xml
         else                                        -> R.string.uel_unknown
     }
 }
