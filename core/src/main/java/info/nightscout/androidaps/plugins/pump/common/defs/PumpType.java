@@ -148,7 +148,11 @@ public enum PumpType {
 
 
     // MDI
-    MDI("MDI", ManufacturerType.AndroidAPS, "MDI", PumpCapability.MDICapabilities);
+    MDI("MDI", ManufacturerType.AndroidAPS, "MDI", 0.5d, null, //
+            new DoseSettings(0.5d, 30, 8 * 60, 0.5d), //
+            PumpTempBasalType.Percent, //
+            new DoseSettings(0.05d, 60, 12 * 60, 0d, 30.0d), PumpCapability.BasalRate_Duration15and30minNotAllowed, //
+            0.05d, 0.05d, null, PumpCapability.MDICapabilities);
 
 
     private final String description;
@@ -192,13 +196,6 @@ public enum PumpType {
         this.model = model;
     }
 
-
-    PumpType(String description, ManufacturerType manufacturer, String model, PumpCapability pumpCapability) {
-        this.description = description;
-        this.manufacturer = manufacturer;
-        this.model = model;
-        this.pumpCapability = pumpCapability;
-    }
 
     PumpType(String description, String model, PumpType parent, PumpCapability pumpCapability) {
         this.description = description;
