@@ -78,7 +78,7 @@ class TreatmentsUserEntryFragment : DaggerFragment() {
             val current = entries[position]
             holder.binding.date.text = dateUtil.dateAndTimeAndSecondsString(current.timestamp)
             holder.binding.action.text = resourceHelper.gs(current.action.stringId())
-            holder.binding.action.setTextColor(resourceHelper.gc(current.action.colorId()))
+            holder.binding.action.setTextColor(resourceHelper.gc(current.action.colorGroup.colorId()))
             if (current.s != "") holder.binding.s.text = current.s else holder.binding.s.visibility = View.GONE
             //holder.binding.s.text = current.toString()  //for debug
             var valuesWithUnitString = ""
@@ -103,7 +103,7 @@ class TreatmentsUserEntryFragment : DaggerFragment() {
                         }
                         Units.Mg_Dl -> valuesWithUnitString += if (profileFunction.getUnits()==Constants.MGDL) DecimalFormatter.to0Decimal(v.dValue) + resourceHelper.gs(Units.Mg_Dl.stringId()) + separator else DecimalFormatter.to1Decimal(v.dValue/Constants.MMOLL_TO_MGDL) + resourceHelper.gs(Units.Mmol_L.stringId()) + separator
                         Units.Mmol_L -> valuesWithUnitString += if (profileFunction.getUnits()==Constants.MGDL) DecimalFormatter.to0Decimal(v.dValue*Constants.MMOLL_TO_MGDL) + resourceHelper.gs(Units.Mg_Dl.stringId()) + separator else DecimalFormatter.to1Decimal(v.dValue) + resourceHelper.gs(Units.Mmol_L.stringId()) + separator
-                        Units.G -> valuesWithUnitString += DecimalFormatter.to0Decimal(v.dValue) + resourceHelper.gs(Units.G.stringId()) + separator
+                        Units.G -> valuesWithUnitString += v.iValue.toString() + resourceHelper.gs(Units.G.stringId()) + separator
                         Units.U_H -> valuesWithUnitString += DecimalFormatter.to2Decimal(v.dValue) + resourceHelper.gs(Units.U_H.stringId()) + separator
                         else -> valuesWithUnitString += if (v.dValue != 0.0 || v.iValue != 0 || v.sValue != "") { v.value().toString() + if (!v.unit.stringId().equals(0)) resourceHelper.gs(v.unit.stringId()) + separator else separator } else ""
                     }

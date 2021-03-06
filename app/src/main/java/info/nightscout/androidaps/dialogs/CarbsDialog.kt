@@ -272,12 +272,12 @@ class CarbsDialog : DialogFragmentWithDate() {
                     if (carbsAfterConstraints > 0) {
                         if (duration == 0) {
                             if (eventTimeChanged)
-                                uel.log(Action.CARBS, notes, ValueWithUnit(eventTime, Units.Timestamp), ValueWithUnit(carbsAfterConstraints.toDouble(), Units.G), ValueWithUnit(timeOffset, Units.M))
+                                uel.log(Action.CARBS, notes, ValueWithUnit(eventTime, Units.Timestamp), ValueWithUnit(carbsAfterConstraints, Units.G), ValueWithUnit(timeOffset, Units.M))
                             else
-                                uel.log(Action.CARBS, notes, ValueWithUnit(carbsAfterConstraints.toDouble(), Units.G), ValueWithUnit(timeOffset, Units.M))
+                                uel.log(Action.CARBS, notes, ValueWithUnit(carbsAfterConstraints, Units.G), ValueWithUnit(timeOffset, Units.M))
                             carbsGenerator.createCarb(carbsAfterConstraints, time, CareportalEvent.CARBCORRECTION, notes)
                         } else {
-                            uel.log(Action.CARBS, notes, ValueWithUnit(carbsAfterConstraints.toDouble(), Units.G), ValueWithUnit(timeOffset,Units.M), ValueWithUnit(duration, Units.H))
+                            uel.log(Action.CARBS, notes, ValueWithUnit(carbsAfterConstraints, Units.G), ValueWithUnit(timeOffset,Units.M), ValueWithUnit(duration, Units.H))
                             carbsGenerator.generateCarbs(carbsAfterConstraints, time, duration, notes)
                             nsUpload.uploadEvent(CareportalEvent.NOTE, DateUtil.now() - 2000, resourceHelper.gs(R.string.generated_ecarbs_note, carbsAfterConstraints, duration, timeOffset))
                         }
