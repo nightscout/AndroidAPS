@@ -54,6 +54,7 @@ class CareDialog : DialogFragmentWithDate() {
     }
 
     private var options: EventType = EventType.BGCHECK
+    private var valuesWithUnit = mutableListOf<ValueWithUnit>()
 
     @StringRes
     private var event: Int = R.string.none
@@ -178,11 +179,14 @@ class CareDialog : DialogFragmentWithDate() {
                 }
             actions.add(resourceHelper.gs(R.string.careportal_newnstreatment_glucosetype) + ": " + translator.translate(type))
             actions.add(resourceHelper.gs(R.string.treatments_wizard_bg_label) + ": " + Profile.toCurrentUnitsString(profileFunction, binding.bg.value) + " " + resourceHelper.gs(unitResId))
+            valuesWithUnit.add(ValueWithUnit(binding.bg.value.toDouble(), profileFunction.getUnits()))
+            valuesWithUnit.add(ValueWithUnit(type,Units.CPEvent))
             json.put("glucose", binding.bg.value)
             json.put("glucoseType", type)
         }
         if (options == EventType.NOTE || options == EventType.EXERCISE) {
             actions.add(resourceHelper.gs(R.string.careportal_newnstreatment_duration_label) + ": " + resourceHelper.gs(R.string.format_mins, binding.duration.value.toInt()))
+            valuesWithUnit.add(ValueWithUnit(binding.duration.value.toInt(), Units.M))
             json.put("duration", binding.duration.value.toInt())
         }
         val notes = binding.notesLayout.notes.text.toString()
@@ -192,8 +196,10 @@ class CareDialog : DialogFragmentWithDate() {
         }
         eventTime -= eventTime % 1000
 
-        if (eventTimeChanged)
+        if (eventTimeChanged) {
             actions.add(resourceHelper.gs(R.string.time) + ": " + dateUtil.dateAndTimeString(eventTime))
+            valuesWithUnit.add(0, ValueWithUnit(eventTime, Units.Timestamp))
+        }
 
         json.put("created_at", DateUtil.toISOString(eventTime))
         json.put("mills", eventTime)
@@ -224,11 +230,9 @@ class CareDialog : DialogFragmentWithDate() {
                     EventType.QUESTION       -> CareportalEvent.QUESTION
                     EventType.ANNOUNCEMENT   -> CareportalEvent.ANNOUNCEMENT
                 }
+                valuesWithUnit.add(if (eventTimeChanged) 1 else 0, ValueWithUnit(careportalEvent.eventType, Units.CPEvent))
                 careportalEvent.json = json.toString()
-                if (eventTimeChanged)
-                    uel.log(Action.CAREPORTAL, notes, ValueWithUnit(eventTime, Units.Timestamp), ValueWithUnit(careportalEvent.eventType, Units.CPEvent))
-                else
-                    uel.log(Action.CAREPORTAL, notes, ValueWithUnit(careportalEvent.eventType, Units.CPEvent))
+                uel.log(Action.CAREPORTAL, notes, valuesWithUnit)
                 databaseHelper.createOrUpdate(careportalEvent)
                 nsUpload.uploadCareportalEntryToNS(json, eventTime)
             }, null)
