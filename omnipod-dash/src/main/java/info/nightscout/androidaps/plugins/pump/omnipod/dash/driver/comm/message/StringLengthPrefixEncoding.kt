@@ -18,15 +18,15 @@ class StringLengthPrefixEncoding {
             var remaining = payload
             for ((index, key) in keys.withIndex()) {
                 when {
-                    remaining.size < key.length                                     ->
+                    remaining.size < key.length ->
                         throw MessageIOException("Payload too short: ${payload.toHex()} for key: $key")
                     !(remaining.copyOfRange(0, key.length).decodeToString() == key) ->
                         throw MessageIOException("Key not found: $key in ${payload.toHex()}")
                     // last key can be empty, no length
-                    index == keys.size - 1 && remaining.size == key.length          ->
+                    index == keys.size - 1 && remaining.size == key.length ->
                         return ret
 
-                    remaining.size < key.length + LENGTH_BYTES                      ->
+                    remaining.size < key.length + LENGTH_BYTES ->
                         throw MessageIOException("Length not found: for $key in ${payload.toHex()}")
                 }
                 remaining = remaining.copyOfRange(key.length, remaining.size)

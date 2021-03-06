@@ -93,6 +93,5 @@ class Session(
         private const val COMMAND_PREFIX = "S0.0="
         private const val COMMAND_SUFFIX = ",G0.0"
         private const val RESPONSE_PREFIX = "0.0="
-
     }
 }

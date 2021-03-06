@@ -36,12 +36,12 @@ class SessionEstablisher(
 
     fun negotiateSessionKeys(): SessionKeys {
         // send EAP-AKA challenge
-        sequenceNumber++ //TODO: get from pod state. This only works for activating a new pod
+        sequenceNumber++ // TODO: get from pod state. This only works for activating a new pod
         var challenge = eapAkaChallenge()
         msgIO.sendMessage(challenge)
 
         val challengeResponse = msgIO.receiveMessage()
-        processChallengeResponse(challengeResponse)  //TODO: what do we have to answer if challenge response does not validate?
+        processChallengeResponse(challengeResponse) // TODO: what do we have to answer if challenge response does not validate?
 
         sequenceNumber++
         var success = eapSuccess()
@@ -93,7 +93,7 @@ class SessionEstablisher(
                     }
                 is EapAkaAttributeCustomIV ->
                     nodeIV = attr.payload.copyOfRange(0, IV_SIZE)
-                else                       ->
+                else ->
                     throw SessionEstablishmentException("Unknown attribute received: $attr")
             }
         }

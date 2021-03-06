@@ -54,6 +54,5 @@ class EnDecryptTest {
         val encrypted = enDecrypt.encrypt(msg)
 
         Assert.assertEquals(encryptedMessage.toHex(), encrypted.asByteArray().toHex())
-
     }
 }

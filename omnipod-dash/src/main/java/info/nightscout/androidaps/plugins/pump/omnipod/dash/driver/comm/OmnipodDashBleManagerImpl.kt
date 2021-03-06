@@ -86,7 +86,7 @@ class OmnipodDashBleManagerImpl @Inject constructor(
             val keys = sessionKeys
             val mIO = msgIO
             if (keys == null || mIO == null) {
-                //TODO handle reconnects
+                // TODO handle reconnects
                 throw Exception("Not connected")
             }
             emitter.onNext(PodEvent.CommandSending(cmd))

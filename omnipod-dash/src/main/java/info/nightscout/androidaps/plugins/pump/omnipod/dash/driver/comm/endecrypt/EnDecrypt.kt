@@ -22,12 +22,13 @@ class EnDecrypt(private val aapsLogger: AAPSLogger, private val nonce: Nonce, pr
         aapsLogger.debug(LTag.PUMPBTCOMM, "Decrypt header ${header.toHex()} payload: ${payload.toHex()}")
         aapsLogger.debug(LTag.PUMPBTCOMM, "Decrypt NONCE ${n.toHex()}")
         cipher.init(
-            false, AEADParameters(
-            KeyParameter(ck),
-            MAC_SIZE * 8, // in bits
-            n,
-            header
-        )
+            false,
+            AEADParameters(
+                KeyParameter(ck),
+                MAC_SIZE * 8, // in bits
+                n,
+                header
+            )
         )
         val decryptedPayload = ByteArray(payload.size - MAC_SIZE)
         cipher.processPacket(payload, 0, payload.size, decryptedPayload, 0)
@@ -44,12 +45,13 @@ class EnDecrypt(private val aapsLogger: AAPSLogger, private val nonce: Nonce, pr
         val encryptedPayload = ByteArray(payload.size + MAC_SIZE)
 
         cipher.init(
-            true, AEADParameters(
-            KeyParameter(ck),
-            MAC_SIZE * 8, // in bits
-            n,
-            header
-        )
+            true,
+            AEADParameters(
+                KeyParameter(ck),
+                MAC_SIZE * 8, // in bits
+                n,
+                header
+            )
         )
         cipher.processPacket(payload, 0, payload.size, encryptedPayload, 0)
 
