@@ -1,6 +1,6 @@
 package info.nightscout.androidaps.interfaces
 
-import info.nightscout.androidaps.plugins.profile.ns.NSProfileFragment
+import androidx.fragment.app.Fragment
 import org.junit.Assert
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -15,8 +15,8 @@ class PluginDescriptionTest {
     }
 
     @Test fun fragmentClassTest() {
-        val pluginDescription = PluginDescription().fragmentClass(NSProfileFragment::class.java.name)
-        Assert.assertEquals(NSProfileFragment::class.java.name, pluginDescription.getFragmentClass())
+        val pluginDescription = PluginDescription().fragmentClass(Fragment::class.java.name)
+        Assert.assertEquals(Fragment::class.java.name, pluginDescription.getFragmentClass())
     }
 
     @Test fun alwaysEnabledTest() {
@@ -24,7 +24,7 @@ class PluginDescriptionTest {
         Assert.assertEquals(true, pluginDescription.alwaysEnabled)
     }
 
-    @Test fun alwayVisibleTest() {
+    @Test fun alwaysVisibleTest() {
         val pluginDescription = PluginDescription().alwaysVisible(true)
         Assert.assertEquals(true, pluginDescription.alwaysVisible)
     }

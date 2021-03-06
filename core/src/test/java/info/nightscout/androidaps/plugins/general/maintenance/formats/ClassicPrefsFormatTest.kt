@@ -1,9 +1,6 @@
-package info.nightscout.androidaps.plugins.general.maintenance
+package info.nightscout.androidaps.plugins.general.maintenance.formats
 
 import info.nightscout.androidaps.TestBase
-import info.nightscout.androidaps.plugins.general.maintenance.formats.ClassicPrefsFormat
-import info.nightscout.androidaps.plugins.general.maintenance.formats.Prefs
-import info.nightscout.androidaps.testing.utils.SingleStringStorage
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 import info.nightscout.androidaps.utils.sharedPreferences.SP
 import org.junit.Assert

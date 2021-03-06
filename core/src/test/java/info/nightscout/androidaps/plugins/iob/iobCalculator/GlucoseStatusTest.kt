@@ -1,9 +1,11 @@
-package info.nightscout.androidaps.plugins.iob.iobCobCalculator
+package info.nightscout.androidaps.plugins.iob.iobCalculator
 
 import dagger.android.AndroidInjector
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.TestBase
 import info.nightscout.androidaps.database.entities.GlucoseValue
+import info.nightscout.androidaps.interfaces.IobCobCalculatorInterface
+import info.nightscout.androidaps.plugins.iob.iobCobCalculator.GlucoseStatus
 import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.T
 import org.junit.Assert
@@ -20,12 +22,13 @@ import java.util.*
 /**
  * Created by mike on 26.03.2018.
  */
+@Suppress("SpellCheckingInspection")
 @RunWith(PowerMockRunner::class)
-@PrepareForTest(IobCobCalculatorPlugin::class, DateUtil::class)
+@PrepareForTest(DateUtil::class)
 class GlucoseStatusTest : TestBase() {
 
     @Mock lateinit var dateUtil: DateUtil
-    @Mock lateinit var iobCobCalculatorPlugin: IobCobCalculatorPlugin
+    @Mock lateinit var iobCobCalculatorPlugin: IobCobCalculatorInterface
 
     val injector = HasAndroidInjector {
         AndroidInjector {
@@ -80,7 +83,7 @@ class GlucoseStatusTest : TestBase() {
         Assert.assertEquals(1514766900000L, glucoseStatus.date) // latest date
     }
 
-    @Test fun insuffientDataShouldReturnNull() {
+    @Test fun insufficientDataShouldReturnNull() {
         PowerMockito.`when`(iobCobCalculatorPlugin.bgReadings).thenReturn(generateInsufficientBgData())
         val glucoseStatus: GlucoseStatus? = GlucoseStatus(injector).glucoseStatusData
         Assert.assertEquals(null, glucoseStatus)

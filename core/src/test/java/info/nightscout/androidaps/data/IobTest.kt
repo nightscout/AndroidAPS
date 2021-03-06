@@ -23,6 +23,7 @@ class IobTest {
         Assert.assertTrue(a1 == a1)
         Assert.assertTrue(a1 == a2)
         Assert.assertFalse(a1 == b)
+        @Suppress("SENSELESS_COMPARISON")
         Assert.assertFalse(a1 == null)
         Assert.assertFalse(a1 == Any())
     }

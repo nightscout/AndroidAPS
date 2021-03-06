@@ -3,12 +3,11 @@ package info.nightscout.androidaps.plugins.aps.loop
 import dagger.android.AndroidInjector
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.TestBaseWithProfile
+import info.nightscout.androidaps.TestPumpPlugin
 import info.nightscout.androidaps.db.TemporaryBasal
 import info.nightscout.androidaps.interfaces.Constraint
-import info.nightscout.androidaps.interfaces.PumpDescription
 import info.nightscout.androidaps.plugins.configBuilder.ConstraintChecker
 import info.nightscout.androidaps.plugins.pump.common.defs.PumpType
-import info.nightscout.androidaps.plugins.pump.virtual.VirtualPumpPlugin
 import info.nightscout.androidaps.utils.JsonHelper.safeGetDouble
 import info.nightscout.androidaps.utils.sharedPreferences.SP
 import org.junit.Assert
@@ -22,22 +21,21 @@ import org.powermock.core.classloader.annotations.PrepareForTest
 import org.powermock.modules.junit4.PowerMockRunner
 
 @RunWith(PowerMockRunner::class)
-@PrepareForTest(ConstraintChecker::class, VirtualPumpPlugin::class)
+@PrepareForTest(ConstraintChecker::class)
 class APSResultTest : TestBaseWithProfile() {
 
     @Mock lateinit var constraintChecker: ConstraintChecker
     @Mock lateinit var sp: SP
-    @Mock lateinit var virtualPumpPlugin: VirtualPumpPlugin
 
+    private lateinit var testPumpPlugin: TestPumpPlugin
     private val injector = HasAndroidInjector { AndroidInjector { } }
 
     private var closedLoopEnabled = Constraint(false)
-    private val pumpDescription = PumpDescription()
 
     @Test
     fun changeRequestedTest() {
 
-        val apsResult = APSResult(HasAndroidInjector { AndroidInjector { Unit } })
+        val apsResult = APSResult { AndroidInjector { } }
             .also {
                 it.aapsLogger = aapsLogger
                 it.constraintChecker = constraintChecker
@@ -51,7 +49,7 @@ class APSResultTest : TestBaseWithProfile() {
         // BASAL RATE IN TEST PROFILE IS 1U/h
 
         // **** PERCENT pump ****
-        pumpDescription.setPumpDescription(PumpType.Cellnovo1) // % based
+        testPumpPlugin.pumpDescription.setPumpDescription(PumpType.Cellnovo1) // % based
         apsResult.usePercent(true)
 
         // closed loop mode return original request
@@ -109,7 +107,7 @@ class APSResultTest : TestBaseWithProfile() {
         Assert.assertEquals(true, apsResult.isChangeRequested)
 
         // **** ABSOLUTE pump ****
-        virtualPumpPlugin.pumpDescription.setPumpDescription(PumpType.Medtronic_515_715) // U/h based
+        testPumpPlugin.pumpDescription.setPumpDescription(PumpType.Medtronic_515_715) // U/h based
         apsResult.usePercent(false)
 
         // open loop
@@ -158,7 +156,7 @@ class APSResultTest : TestBaseWithProfile() {
     }
 
     @Test fun cloneTest() {
-        val apsResult = APSResult(HasAndroidInjector { AndroidInjector { Unit } })
+        val apsResult = APSResult { AndroidInjector { } }
             .also {
                 it.aapsLogger = aapsLogger
                 it.constraintChecker = constraintChecker
@@ -175,7 +173,7 @@ class APSResultTest : TestBaseWithProfile() {
 
     @Test fun jsonTest() {
         closedLoopEnabled.set(aapsLogger, true)
-        val apsResult = APSResult(HasAndroidInjector { AndroidInjector { Unit } })
+        val apsResult = APSResult { AndroidInjector { } }
             .also {
                 it.aapsLogger = aapsLogger
                 it.constraintChecker = constraintChecker
@@ -193,10 +191,10 @@ class APSResultTest : TestBaseWithProfile() {
 
     @Before
     fun prepare() {
+        testPumpPlugin = TestPumpPlugin(profileInjector)
         `when`(constraintChecker.isClosedLoopAllowed()).thenReturn(closedLoopEnabled)
-        `when`(activePluginProvider.activePump).thenReturn(virtualPumpPlugin)
+        `when`(activePluginProvider.activePump).thenReturn(testPumpPlugin)
         `when`(sp.getDouble(ArgumentMatchers.anyInt(), ArgumentMatchers.anyDouble())).thenReturn(30.0)
-        `when`(virtualPumpPlugin.pumpDescription).thenReturn(pumpDescription)
         `when`(profileFunction.getProfile()).thenReturn(validProfile)
     }
 }

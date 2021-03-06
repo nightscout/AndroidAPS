@@ -1,9 +1,11 @@
-package info.nightscout.androidaps.plugins.pump.common.utils;
+package info.nightscout.androidaps.pump.common.utils;
 
 import android.util.Log;
 
 import org.junit.Assert;
 import org.junit.Test;
+
+import info.nightscout.androidaps.plugins.pump.common.utils.DateTimeUtil;
 
 public class DateTimeUtilUTest {
 

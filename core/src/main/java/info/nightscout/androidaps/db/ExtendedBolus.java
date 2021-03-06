@@ -254,8 +254,8 @@ public class ExtendedBolus implements Interval, DataPointWithLabelInterface {
                     tempBolusPart.date = calcdate;
 
                     Iob aIOB = insulinInterface.iobCalcForTreatment(tempBolusPart, time, dia);
-                    result.iob += aIOB.iobContrib;
-                    result.activity += aIOB.activityContrib;
+                    result.iob += aIOB.getIobContrib();
+                    result.activity += aIOB.getActivityContrib();
                     result.extendedBolusInsulin += tempBolusPart.insulin;
                 }
             }
@@ -305,8 +305,8 @@ public class ExtendedBolus implements Interval, DataPointWithLabelInterface {
                     tempBolusPart.date = calcdate;
 
                     Iob aIOB = insulinInterface.iobCalcForTreatment(tempBolusPart, time, dia);
-                    result.iob += aIOB.iobContrib;
-                    result.activity += aIOB.activityContrib;
+                    result.iob += aIOB.getIobContrib();
+                    result.activity += aIOB.getActivityContrib();
                     result.extendedBolusInsulin += tempBolusPart.insulin;
                 }
             }

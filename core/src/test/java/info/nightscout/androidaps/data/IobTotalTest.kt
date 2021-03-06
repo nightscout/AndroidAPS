@@ -6,11 +6,12 @@ import org.junit.Test
 import org.junit.runner.RunWith
 import org.powermock.modules.junit4.PowerMockRunner
 
+@Suppress("SpellCheckingInspection")
 @RunWith(PowerMockRunner::class)
 class IobTotalTest {
 
     var now = DateUtil.now()
-    @Test fun copytest() {
+    @Test fun copyTest() {
         val a = IobTotal(now)
         a.iob = 10.0
         val b = a.copy()

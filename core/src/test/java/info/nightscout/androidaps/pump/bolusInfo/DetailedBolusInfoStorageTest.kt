@@ -1,7 +1,8 @@
-package info.nightscout.androidaps.plugins.pump.common.bolusInfo
+package info.nightscout.androidaps.pump.bolusInfo
 
 import info.nightscout.androidaps.TestBase
 import info.nightscout.androidaps.data.DetailedBolusInfo
+import info.nightscout.androidaps.plugins.pump.common.bolusInfo.DetailedBolusInfoStorage
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertNull
 import org.junit.Before
@@ -16,7 +17,7 @@ class DetailedBolusInfoStorageTest : TestBase() {
     private val info2 = DetailedBolusInfo()
     private val info3 = DetailedBolusInfo()
 
-    lateinit var detailedBolusInfoStorage: DetailedBolusInfoStorage
+    private lateinit var detailedBolusInfoStorage: DetailedBolusInfoStorage
     
     init {
         info1.date = 1000000

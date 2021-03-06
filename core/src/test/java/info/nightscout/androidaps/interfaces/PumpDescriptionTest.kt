@@ -9,7 +9,7 @@ import org.junit.Test
 /**
  * Created by andy on 5/13/18.
  */
-class PumpDescritpionTest {
+class PumpDescriptionTest {
 
     @Test fun setPumpDescription() {
         val pumpDescription = PumpDescription()

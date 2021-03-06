@@ -285,8 +285,8 @@ public class TemporaryBasal implements Interval, DbObjectBase {
                     tempBolusPart.date = calcdate;
 
                     Iob aIOB = insulinInterface.iobCalcForTreatment(tempBolusPart, time, dia);
-                    result.basaliob += aIOB.iobContrib;
-                    result.activity += aIOB.activityContrib;
+                    result.basaliob += aIOB.getIobContrib();
+                    result.activity += aIOB.getActivityContrib();
                     result.netbasalinsulin += tempBolusPart.insulin;
                     if (tempBolusPart.insulin > 0) {
                         result.hightempinsulin += tempBolusPart.insulin;
@@ -352,8 +352,8 @@ public class TemporaryBasal implements Interval, DbObjectBase {
                     tempBolusPart.date = calcdate;
 
                     Iob aIOB = insulinInterface.iobCalcForTreatment(tempBolusPart, time, dia);
-                    result.basaliob += aIOB.iobContrib;
-                    result.activity += aIOB.activityContrib;
+                    result.basaliob += aIOB.getIobContrib();
+                    result.activity += aIOB.getActivityContrib();
                     result.netbasalinsulin += tempBolusPart.insulin;
                     if (tempBolusPart.insulin > 0) {
                         result.hightempinsulin += tempBolusPart.insulin;
