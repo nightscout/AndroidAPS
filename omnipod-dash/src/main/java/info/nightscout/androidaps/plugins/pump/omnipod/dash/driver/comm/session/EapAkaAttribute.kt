@@ -9,6 +9,7 @@ enum class EapAkaAttributeType(val type: Byte) {
     AT_RAND(1),
     AT_AUTN(2),
     AT_RES(3),
+    AT_CLIENT_ERROR_CODE(22),
     AT_CUSTOM_IV(126);
 
     companion object {
@@ -30,7 +31,7 @@ sealed class EapAkaAttribute {
         fun parseAttributes(aapsLogger: AAPSLogger, payload: ByteArray): List<EapAkaAttribute> {
             var tail = payload
             val ret = LinkedList<EapAkaAttribute>()
-            while (tail.size > 0) {
+            while (tail.isNotEmpty()) {
                 if (tail.size < 2) {
                     throw MessageIOException("Could not parse EAP attributes: ${payload.toHex()}")
                 }
@@ -41,11 +42,15 @@ sealed class EapAkaAttribute {
                 val type = EapAkaAttributeType.byValue(tail[0])
                 when (type) {
                     EapAkaAttributeType.AT_RES ->
-                        ret.add(EapAkaAttributeRes.parse(tail.copyOfRange(2, size)))
+                        ret.add(EapAkaAttributeRes.parse(tail.copyOfRange(2, EapAkaAttributeRes.SIZE)))
                     EapAkaAttributeType.AT_CUSTOM_IV ->
-                        ret.add(EapAkaAttributeCustomIV.parse(tail.copyOfRange(2, size)))
-                    else ->
-                        throw MessageIOException("Could not parse EAP attributes: ${payload.toHex()}. Expecting only AT_RES or CUSTOM_IV attribute types from the POD")
+                        ret.add(EapAkaAttributeCustomIV.parse(tail.copyOfRange(2, EapAkaAttributeCustomIV.SIZE)))
+                    EapAkaAttributeType.AT_AUTN ->
+                        ret.add(EapAkaAttributeAutn.parse(tail.copyOfRange(2, EapAkaAttributeAutn.SIZE)))
+                    EapAkaAttributeType.AT_RAND ->
+                        ret.add(EapAkaAttributeRand.parse(tail.copyOfRange(2, EapAkaAttributeRand.SIZE)))
+                    EapAkaAttributeType.AT_CLIENT_ERROR_CODE ->
+                        ret.add(EapAkaAttributeClientErrorCode.parse(tail.copyOfRange(2, EapAkaAttributeClientErrorCode.SIZE)))
                 }
                 tail = tail.copyOfRange(size, tail.size)
             }
@@ -61,12 +66,17 @@ data class EapAkaAttributeRand(val payload: ByteArray) : EapAkaAttribute() {
     }
 
     override fun toByteArray(): ByteArray {
-        return byteArrayOf(EapAkaAttributeType.AT_RAND.type, SIZE, 0, 0) + payload
+        return byteArrayOf(EapAkaAttributeType.AT_RAND.type, (SIZE / SIZE_MULTIPLIER).toByte(), 0, 0) + payload
     }
 
     companion object {
-
-        private const val SIZE = (20 / SIZE_MULTIPLIER).toByte() // type, size, 2 reserved bytes, payload=16
+        fun parse(payload: ByteArray): EapAkaAttribute {
+            if (payload.size < 2 + 16) {
+                throw MessageIOException("Could not parse RAND attribute: ${payload.toHex()}")
+            }
+            return EapAkaAttributeRand(payload.copyOfRange(2, 2 + 16))
+        }
+        const val SIZE = 20 // type, size, 2 reserved bytes, payload=16
     }
 }
 
@@ -77,12 +87,19 @@ data class EapAkaAttributeAutn(val payload: ByteArray) : EapAkaAttribute() {
     }
 
     override fun toByteArray(): ByteArray {
-        return byteArrayOf(EapAkaAttributeType.AT_AUTN.type, SIZE, 0, 0) + payload
+        return byteArrayOf(EapAkaAttributeType.AT_AUTN.type, (SIZE / SIZE_MULTIPLIER).toByte(), 0, 0) + payload
     }
 
     companion object {
 
-        private const val SIZE = (20 / SIZE_MULTIPLIER).toByte() // type, size, 2 reserved bytes, payload=16
+        fun parse(payload: ByteArray): EapAkaAttribute {
+            if (payload.size < 2 + 16) {
+                throw MessageIOException("Could not parse AUTN attribute: ${payload.toHex()}")
+            }
+            return EapAkaAttributeAutn(payload.copyOfRange(2, 2 + 16))
+        }
+
+        const val SIZE = 20 // type, size, 2 reserved bytes, payload=16
     }
 }
 
@@ -93,7 +110,7 @@ data class EapAkaAttributeRes(val payload: ByteArray) : EapAkaAttribute() {
     }
 
     override fun toByteArray(): ByteArray {
-        return byteArrayOf(EapAkaAttributeType.AT_RES.type, SIZE, 0, PAYLOAD_SIZE_BITS) + payload
+        return byteArrayOf(EapAkaAttributeType.AT_RES.type, (SIZE / SIZE_MULTIPLIER).toByte(), 0, PAYLOAD_SIZE_BITS) + payload
     }
 
     companion object {
@@ -105,7 +122,7 @@ data class EapAkaAttributeRes(val payload: ByteArray) : EapAkaAttribute() {
             return EapAkaAttributeRes(payload.copyOfRange(2, 2 + 8))
         }
 
-        private const val SIZE = (12 / SIZE_MULTIPLIER).toByte() // type, size, len in bits=2, payload=8
+        const val SIZE = 12 // type, size, len in bits=2, payload=8
         private const val PAYLOAD_SIZE_BITS = 64.toByte() // type, size, 2 reserved bytes, payload
     }
 }
@@ -117,7 +134,7 @@ data class EapAkaAttributeCustomIV(val payload: ByteArray) : EapAkaAttribute() {
     }
 
     override fun toByteArray(): ByteArray {
-        return byteArrayOf(EapAkaAttributeType.AT_CUSTOM_IV.type, SIZE, 0, 0) + payload
+        return byteArrayOf(EapAkaAttributeType.AT_CUSTOM_IV.type, (SIZE / SIZE_MULTIPLIER).toByte(), 0, 0) + payload
     }
 
     companion object {
@@ -128,7 +145,29 @@ data class EapAkaAttributeCustomIV(val payload: ByteArray) : EapAkaAttribute() {
             }
             return EapAkaAttributeCustomIV(payload.copyOfRange(2, 2 + 4))
         }
+        const val SIZE = 8 // type, size, 2 reserved bytes, payload=4
+    }
+}
 
-        private const val SIZE = (8 / SIZE_MULTIPLIER).toByte() // type, size, 2 reserved bytes, payload=4
+data class EapAkaAttributeClientErrorCode(val payload: ByteArray) : EapAkaAttribute() {
+
+    init {
+        require(payload.size == 2) { "Error code hast to be 2 bytes. Payload: ${payload.toHex()}" }
+    }
+
+    override fun toByteArray(): ByteArray {
+        return byteArrayOf(EapAkaAttributeType.AT_CLIENT_ERROR_CODE.type, (SIZE / SIZE_MULTIPLIER).toByte(), 0, 0) + payload
+    }
+
+    companion object {
+
+        fun parse(payload: ByteArray): EapAkaAttributeClientErrorCode {
+            if (payload.size < 2 + 2) {
+                throw MessageIOException("Could not parse CLIENT_ERROR_CODE attribute: ${payload.toHex()}")
+            }
+            return EapAkaAttributeClientErrorCode(payload.copyOfRange(2, 4))
+        }
+
+        const val SIZE = 4 // type, size=1, payload:2
     }
 }

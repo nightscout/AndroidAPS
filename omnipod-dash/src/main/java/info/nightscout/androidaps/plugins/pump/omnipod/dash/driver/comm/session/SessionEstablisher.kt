@@ -83,7 +83,11 @@ class SessionEstablisher(
         // TODO verify that identifier matches identifer from the Challenge
         val eapMsg = EapMessage.parse(aapsLogger, challengeResponse.payload)
         if (eapMsg.attributes.size != 2) {
-            aapsLogger.debug(LTag.PUMPBTCOMM, "EAP-AKA: got RES message: $eapMsg")
+            aapsLogger.debug(LTag.PUMPBTCOMM, "EAP-AKA: got message: $eapMsg")
+            if (eapMsg.attributes.size == 1 && eapMsg.attributes[0] is EapAkaAttributeClientErrorCode) {
+                // TODO: special exception for this
+                throw SessionEstablishmentException("Received CLIENT_ERROR_CODE for EAP-AKA challenge: ${eapMsg.attributes[0].toByteArray().toHex()}")
+            }
             throw SessionEstablishmentException("Expecting two attributes, got: ${eapMsg.attributes.size}")
         }
         for (attr in eapMsg.attributes) {

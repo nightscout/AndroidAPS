@@ -16,7 +16,7 @@ class EnDecryptTest {
             aapsLogger,
             Nonce(
                 Hex.decode("dda23c090a0a0a0a"),
-                Hex.decode("0000000001")
+                0
             ),
             Hex.decode("ba1283744b6de9fab6d9b77d95a71d6e"),
         )
@@ -39,7 +39,7 @@ class EnDecryptTest {
             aapsLogger,
             Nonce(
                 Hex.decode("dda23c090a0a0a0a"),
-                Hex.decode("0000000001")
+                0
             ),
             Hex.decode("ba1283744b6de9fab6d9b77d95a71d6e"),
         )

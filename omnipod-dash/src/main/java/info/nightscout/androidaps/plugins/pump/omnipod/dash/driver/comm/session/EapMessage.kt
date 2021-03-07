@@ -41,7 +41,7 @@ data class EapMessage(
             .allocate(totalSize)
             .put(code.code)
             .put(identifier)
-            .put(((totalSize ushr 1) and 0XFF).toByte())
+            .put(((totalSize ushr 8) and 0XFF).toByte())
             .put((totalSize and 0XFF).toByte())
             .put(AKA_PACKET_TYPE)
             .put(SUBTYPE_AKA_CHALLENGE)
@@ -62,7 +62,7 @@ data class EapMessage(
             if (payload.size < 4) {
                 throw MessageIOException("Invalid eap payload: ${payload.toHex()}")
             }
-            val totalSize = (payload[2].toInt() shl 1) or payload[3].toInt()
+            val totalSize = (payload[2].toInt() shl 8) or payload[3].toInt()
             if (totalSize > payload.size) {
                 throw MessageIOException("Invalid eap payload. Too short: ${payload.toHex()}")
             }
