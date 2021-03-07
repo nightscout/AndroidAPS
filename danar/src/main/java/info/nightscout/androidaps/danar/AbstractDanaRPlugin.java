@@ -152,12 +152,12 @@ public abstract class AbstractDanaRPlugin extends PumpPluginBase implements Pump
             rxBus.send(new EventDismissNotification(Notification.PROFILE_NOT_SET_NOT_INITIALIZED));
         }
         if (!sExecutionService.updateBasalsInPump(profile)) {
-            Notification notification = new Notification(Notification.FAILED_UDPATE_PROFILE, getResourceHelper().gs(R.string.failedupdatebasalprofile), Notification.URGENT);
+            Notification notification = new Notification(Notification.FAILED_UPDATE_PROFILE, getResourceHelper().gs(R.string.failedupdatebasalprofile), Notification.URGENT);
             rxBus.send(new EventNewNotification(notification));
             result.comment(R.string.failedupdatebasalprofile);
         } else {
             rxBus.send(new EventDismissNotification(Notification.PROFILE_NOT_SET_NOT_INITIALIZED));
-            rxBus.send(new EventDismissNotification(Notification.FAILED_UDPATE_PROFILE));
+            rxBus.send(new EventDismissNotification(Notification.FAILED_UPDATE_PROFILE));
             Notification notification = new Notification(Notification.PROFILE_SET_OK, getResourceHelper().gs(R.string.profile_set_ok), Notification.INFO, 60);
             rxBus.send(new EventNewNotification(notification));
             result.success(true).enacted(true).comment("OK");

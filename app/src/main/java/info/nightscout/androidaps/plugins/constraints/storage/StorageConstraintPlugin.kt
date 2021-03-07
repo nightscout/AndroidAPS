@@ -40,10 +40,10 @@ open class StorageConstraintPlugin @Inject constructor(
         aapsLogger.debug(LTag.CONSTRAINTS, "Internal storage free (Mb):$diskFree")
         if (diskFree < Constants.MINIMUM_FREE_SPACE) {
             value[aapsLogger, false, resourceHelper.gs(R.string.diskfull, Constants.MINIMUM_FREE_SPACE)] = this
-            val notification = Notification(Notification.DISKFULL, resourceHelper.gs(R.string.diskfull, Constants.MINIMUM_FREE_SPACE), Notification.NORMAL)
+            val notification = Notification(Notification.DISK_FULL, resourceHelper.gs(R.string.diskfull, Constants.MINIMUM_FREE_SPACE), Notification.NORMAL)
             rxBus.send(EventNewNotification(notification))
         } else {
-            rxBus.send(EventDismissNotification(Notification.DISKFULL))
+            rxBus.send(EventDismissNotification(Notification.DISK_FULL))
         }
         return value
     }

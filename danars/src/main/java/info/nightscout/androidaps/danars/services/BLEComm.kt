@@ -439,7 +439,7 @@ class BLEComm @Inject internal constructor(
     private fun sendConnect() {
         val deviceName = connectDeviceName
         if (deviceName == null || deviceName == "") {
-            val n = Notification(Notification.DEVICENOTPAIRED, resourceHelper.gs(R.string.pairfirst), Notification.URGENT)
+            val n = Notification(Notification.DEVICE_NOT_PAIRED, resourceHelper.gs(R.string.pairfirst), Notification.URGENT)
             rxBus.send(EventNewNotification(n))
             return
         }
@@ -489,7 +489,7 @@ class BLEComm @Inject internal constructor(
             mSendQueue.clear()
             rxBus.send(EventPumpStatusChanged(EventPumpStatusChanged.Status.DISCONNECTED, resourceHelper.gs(R.string.pumperror)))
             nsUpload.uploadError(resourceHelper.gs(R.string.pumperror))
-            val n = Notification(Notification.PUMPERROR, resourceHelper.gs(R.string.pumperror), Notification.URGENT)
+            val n = Notification(Notification.PUMP_ERROR, resourceHelper.gs(R.string.pumperror), Notification.URGENT)
             rxBus.send(EventNewNotification(n))
             // response BUSY: error status
         } else if (decryptedBuffer.size == 6 && decryptedBuffer[2] == 'B'.toByte() && decryptedBuffer[3] == 'U'.toByte() && decryptedBuffer[4] == 'S'.toByte() && decryptedBuffer[5] == 'Y'.toByte()) {
@@ -502,7 +502,7 @@ class BLEComm @Inject internal constructor(
             mSendQueue.clear()
             rxBus.send(EventPumpStatusChanged(EventPumpStatusChanged.Status.DISCONNECTED, resourceHelper.gs(R.string.connectionerror)))
             sp.remove(resourceHelper.gs(R.string.key_danars_pairingkey) + danaRSPlugin.mDeviceName)
-            val n = Notification(Notification.WRONGSERIALNUMBER, resourceHelper.gs(R.string.wrongpassword), Notification.URGENT)
+            val n = Notification(Notification.WRONG_SERIAL_NUMBER, resourceHelper.gs(R.string.wrongpassword), Notification.URGENT)
             rxBus.send(EventNewNotification(n))
         }
     }

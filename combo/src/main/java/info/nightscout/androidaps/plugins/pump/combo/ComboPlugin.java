@@ -258,7 +258,7 @@ public class ComboPlugin extends PumpPluginBase implements PumpInterface, Constr
         if (pump.basalProfile.equals(requestedBasalProfile)) {
             //dismiss previously "FAILED" overview notifications
             rxBus.send(new EventDismissNotification(Notification.PROFILE_NOT_SET_NOT_INITIALIZED));
-            rxBus.send(new EventDismissNotification(Notification.FAILED_UDPATE_PROFILE));
+            rxBus.send(new EventDismissNotification(Notification.FAILED_UPDATE_PROFILE));
             return new PumpEnactResult(getInjector()).success(true).enacted(false);
         }
 
@@ -270,7 +270,7 @@ public class ComboPlugin extends PumpPluginBase implements PumpInterface, Constr
         CommandResult setResult = runCommand(getResourceHelper().gs(R.string.combo_activity_setting_basal_profile), 2,
                 () -> ruffyScripter.setBasalProfile(requestedBasalProfile));
         if (!setResult.success) {
-            Notification notification = new Notification(Notification.FAILED_UDPATE_PROFILE, getResourceHelper().gs(R.string.failedupdatebasalprofile), Notification.URGENT);
+            Notification notification = new Notification(Notification.FAILED_UPDATE_PROFILE, getResourceHelper().gs(R.string.failedupdatebasalprofile), Notification.URGENT);
             rxBus.send(new EventNewNotification(notification));
             return new PumpEnactResult(getInjector()).success(false).enacted(false).comment(R.string.failedupdatebasalprofile);
         }
@@ -279,7 +279,7 @@ public class ComboPlugin extends PumpPluginBase implements PumpInterface, Constr
 
         //dismiss previously "FAILED" overview notifications
         rxBus.send(new EventDismissNotification(Notification.PROFILE_NOT_SET_NOT_INITIALIZED));
-        rxBus.send(new EventDismissNotification(Notification.FAILED_UDPATE_PROFILE));
+        rxBus.send(new EventDismissNotification(Notification.FAILED_UPDATE_PROFILE));
         //issue success notification
         Notification notification = new Notification(Notification.PROFILE_SET_OK, getResourceHelper().gs(R.string.profile_set_ok), Notification.INFO, 60);
         rxBus.send(new EventNewNotification(notification));
@@ -374,7 +374,7 @@ public class ComboPlugin extends PumpPluginBase implements PumpInterface, Constr
             Notification n = new Notification(Notification.COMBO_PUMP_ALARM,
                     getResourceHelper().gs(R.string.combo_force_disabled_notification),
                     Notification.URGENT);
-            n.soundId = R.raw.alarm;
+            n.setSoundId(R.raw.alarm);
             rxBus.send(new EventNewNotification(n));
             return;
         }
@@ -900,7 +900,7 @@ public class ComboPlugin extends PumpPluginBase implements PumpInterface, Constr
                     Notification n = new Notification(Notification.COMBO_PUMP_ALARM,
                             getResourceHelper().gs(R.string.combo_force_disabled_notification),
                             Notification.URGENT);
-                    n.soundId = R.raw.alarm;
+                    n.setSoundId(R.raw.alarm);
                     rxBus.send(new EventNewNotification(n));
                     commandQueue.cancelTempBasal(true, null);
                 }
@@ -948,11 +948,7 @@ public class ComboPlugin extends PumpPluginBase implements PumpInterface, Constr
                 // so update the var with it, so the check routines below can work on it
                 preCheckResult = alertConfirmationResult;
             } else if (activeAlert.errorCode != null) {
-                Notification notification = new Notification();
-                notification.date = DateUtil.now();
-                notification.id = Notification.COMBO_PUMP_ALARM;
-                notification.level = Notification.URGENT;
-                notification.text = getResourceHelper().gs(R.string.combo_is_in_error_state, activeAlert.errorCode, activeAlert.message);
+                Notification notification = new Notification(Notification.COMBO_PUMP_ALARM, DateUtil.now(), getResourceHelper().gs(R.string.combo_is_in_error_state, activeAlert.errorCode, activeAlert.message), Notification.URGENT, 0);
                 rxBus.send(new EventNewNotification(notification));
                 return preCheckResult.success(false);
             }
@@ -1046,15 +1042,15 @@ public class ComboPlugin extends PumpPluginBase implements PumpInterface, Constr
             throw new IllegalArgumentException(activeAlert.toString());
         }
         Notification notification = new Notification();
-        notification.date = DateUtil.now();
-        notification.id = Notification.COMBO_PUMP_ALARM;
-        notification.level = Notification.NORMAL;
+        notification.setDate(DateUtil.now());
+        notification.setId(Notification.COMBO_PUMP_ALARM);
+        notification.setLevel(Notification.NORMAL);
         if (activeAlert.warningCode == PumpWarningCodes.CARTRIDGE_LOW) {
-            notification.text = getResourceHelper().gs(R.string.combo_pump_cartridge_low_warrning);
+            notification.setText(getResourceHelper().gs(R.string.combo_pump_cartridge_low_warrning));
         } else if (activeAlert.warningCode == PumpWarningCodes.BATTERY_LOW) {
-            notification.text = getResourceHelper().gs(R.string.combo_pump_battery_low_warrning);
+            notification.setText(getResourceHelper().gs(R.string.combo_pump_battery_low_warrning));
         } else if (activeAlert.warningCode == PumpWarningCodes.TBR_CANCELLED) {
-            notification.text = getResourceHelper().gs(R.string.combo_pump_tbr_cancelled_warrning);
+            notification.setText(getResourceHelper().gs(R.string.combo_pump_tbr_cancelled_warrning));
         }
         rxBus.send(new EventNewNotification(notification));
     }
@@ -1078,7 +1074,7 @@ public class ComboPlugin extends PumpPluginBase implements PumpInterface, Constr
                 Notification n = new Notification(Notification.COMBO_PUMP_ALARM,
                         getResourceHelper().gs(R.string.combo_low_suspend_forced_notification),
                         Notification.URGENT);
-                n.soundId = R.raw.alarm;
+                n.setSoundId(R.raw.alarm);
                 rxBus.send(new EventNewNotification(n));
                 violationWarningRaisedForBolusAt = lowSuspendOnlyLoopEnforcedUntil;
                 commandQueue.cancelTempBasal(true, null);

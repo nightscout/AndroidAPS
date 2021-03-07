@@ -82,7 +82,7 @@ class VersionCheckerPlugin @Inject constructor(
                 gracePeriod.old,
                 gracePeriod.veryOld
             )
-            val notification = Notification(Notification.OLDVERSION, message, Notification.NORMAL)
+            val notification = Notification(Notification.OLD_VERSION, message, Notification.NORMAL)
             rxBus.send(EventNewNotification(notification))
         }
     }

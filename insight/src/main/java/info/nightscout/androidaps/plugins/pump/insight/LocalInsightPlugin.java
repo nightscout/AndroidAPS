@@ -505,7 +505,7 @@ public class LocalInsightPlugin extends PumpPluginBase implements PumpInterface,
             BRProfileBlock profileBlock = new BRProfile1Block();
             profileBlock.setProfileBlocks(profileBlocks);
             ParameterBlockUtil.writeConfigurationBlock(connectionService, profileBlock);
-            rxBus.send(new EventDismissNotification(Notification.FAILED_UDPATE_PROFILE));
+            rxBus.send(new EventDismissNotification(Notification.FAILED_UPDATE_PROFILE));
             Notification notification = new Notification(Notification.PROFILE_SET_OK, resourceHelper.gs(R.string.profile_set_ok), Notification.INFO, 60);
             rxBus.send(new EventNewNotification(notification));
             result.success(true)
@@ -518,17 +518,17 @@ public class LocalInsightPlugin extends PumpPluginBase implements PumpInterface,
             }
         } catch (AppLayerErrorException e) {
             aapsLogger.info(LTag.PUMP, "Exception while setting profile: " + e.getClass().getCanonicalName() + " (" + e.getErrorCode() + ")");
-            Notification notification = new Notification(Notification.FAILED_UDPATE_PROFILE, resourceHelper.gs(R.string.failedupdatebasalprofile), Notification.URGENT);
+            Notification notification = new Notification(Notification.FAILED_UPDATE_PROFILE, resourceHelper.gs(R.string.failedupdatebasalprofile), Notification.URGENT);
             rxBus.send(new EventNewNotification(notification));
             result.comment(ExceptionTranslator.getString(context, e));
         } catch (InsightException e) {
             aapsLogger.info(LTag.PUMP, "Exception while setting profile: " + e.getClass().getCanonicalName());
-            Notification notification = new Notification(Notification.FAILED_UDPATE_PROFILE, resourceHelper.gs(R.string.failedupdatebasalprofile), Notification.URGENT);
+            Notification notification = new Notification(Notification.FAILED_UPDATE_PROFILE, resourceHelper.gs(R.string.failedupdatebasalprofile), Notification.URGENT);
             rxBus.send(new EventNewNotification(notification));
             result.comment(ExceptionTranslator.getString(context, e));
         } catch (Exception e) {
             aapsLogger.error("Exception while setting profile", e);
-            Notification notification = new Notification(Notification.FAILED_UDPATE_PROFILE, resourceHelper.gs(R.string.failedupdatebasalprofile), Notification.URGENT);
+            Notification notification = new Notification(Notification.FAILED_UPDATE_PROFILE, resourceHelper.gs(R.string.failedupdatebasalprofile), Notification.URGENT);
             rxBus.send(new EventNewNotification(notification));
             result.comment(ExceptionTranslator.getString(context, e));
         }

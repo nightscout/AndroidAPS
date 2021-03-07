@@ -4,7 +4,6 @@ import info.nightscout.androidaps.Constants
 import info.nightscout.androidaps.TestBaseWithProfile
 import info.nightscout.androidaps.TestPumpPlugin
 import info.nightscout.androidaps.core.R
-import info.nightscout.androidaps.interfaces.PumpDescription
 import info.nightscout.androidaps.utils.FabricPrivacy
 import org.json.JSONObject
 import org.junit.Assert
@@ -12,6 +11,8 @@ import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.Mockito.`when`
+import org.mockito.Mockito.anyInt
+import org.mockito.Mockito.anyString
 import org.powermock.core.classloader.annotations.PrepareForTest
 import org.powermock.modules.junit4.PowerMockRunner
 import org.skyscreamer.jsonassert.JSONAssert
@@ -43,6 +44,7 @@ class ProfileTest : TestBaseWithProfile() {
         `when`(resourceHelper.gs(R.string.profile_per_unit)).thenReturn("/U")
         `when`(resourceHelper.gs(R.string.profile_carbs_per_unit)).thenReturn("g/U")
         `when`(resourceHelper.gs(R.string.profile_ins_units_per_hour)).thenReturn("U/h")
+        `when`(resourceHelper.gs(anyInt(), anyString())).thenReturn("")
     }
 
     @Test

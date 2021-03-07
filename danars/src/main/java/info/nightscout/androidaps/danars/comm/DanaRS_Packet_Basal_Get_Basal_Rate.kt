@@ -48,10 +48,10 @@ class DanaRS_Packet_Basal_Get_Basal_Rate(
             aapsLogger.debug(LTag.PUMPCOMM, "Basal " + String.format(Locale.ENGLISH, "%02d", index) + "h: " + danaPump.pumpProfiles!![danaPump.activeProfile][index])
         if (danaPump.basalStep != 0.01) {
             failed = true
-            val notification = Notification(Notification.WRONGBASALSTEP, resourceHelper.gs(R.string.danar_setbasalstep001), Notification.URGENT)
+            val notification = Notification(Notification.WRONG_BASAL_STEP, resourceHelper.gs(R.string.danar_setbasalstep001), Notification.URGENT)
             rxBus.send(EventNewNotification(notification))
         } else {
-            rxBus.send(EventDismissNotification(Notification.WRONGBASALSTEP))
+            rxBus.send(EventDismissNotification(Notification.WRONG_BASAL_STEP))
         }
     }
 

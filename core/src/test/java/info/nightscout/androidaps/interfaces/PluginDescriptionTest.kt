@@ -11,12 +11,12 @@ class PluginDescriptionTest {
 
     @Test fun mainTypeTest() {
         val pluginDescription = PluginDescription().mainType(PluginType.PUMP)
-        Assert.assertEquals(PluginType.PUMP, pluginDescription.type)
+        Assert.assertEquals(PluginType.PUMP, pluginDescription.mainType)
     }
 
     @Test fun fragmentClassTest() {
         val pluginDescription = PluginDescription().fragmentClass(Fragment::class.java.name)
-        Assert.assertEquals(Fragment::class.java.name, pluginDescription.getFragmentClass())
+        Assert.assertEquals(Fragment::class.java.name, pluginDescription.fragmentClass)
     }
 
     @Test fun alwaysEnabledTest() {

@@ -62,7 +62,7 @@ class DanaRS_Packet_Notify_Alarm(
             aapsLogger.debug(LTag.PUMPCOMM, "Error detected: $errorString")
             return
         }
-        val notification = Notification(Notification.USERMESSAGE, errorString, Notification.URGENT)
+        val notification = Notification(Notification.USER_MESSAGE, errorString, Notification.URGENT)
         rxBus.send(EventNewNotification(notification))
         nsUpload.uploadError(errorString)
     }

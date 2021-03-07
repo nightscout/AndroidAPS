@@ -490,7 +490,7 @@ public class NSClientPlugin extends PluginBase {
                     && !enteredBy.equals(sp.getString("careportal_enteredby", "AndroidAPS"))) {
                 boolean defaultVal = config.getNSCLIENT();
                 if (sp.getBoolean(R.string.key_ns_announcements, defaultVal)) {
-                    Notification announcement = new Notification(Notification.NSANNOUNCEMENT, notes, Notification.ANNOUNCEMENT, 60);
+                    Notification announcement = new Notification(Notification.NS_ANNOUNCEMENT, notes, Notification.ANNOUNCEMENT, 60);
                     rxBus.send(new EventNewNotification(announcement));
                 }
             }

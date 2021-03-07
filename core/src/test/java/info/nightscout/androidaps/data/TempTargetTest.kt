@@ -60,9 +60,9 @@ class TempTargetTest(
     override fun match(time: Long): Boolean = start() <= time && end() >= time
     override fun before(time: Long): Boolean = end() < time
     override fun after(time: Long): Boolean = start() > time
-    override fun isInProgress(): Boolean = match(System.currentTimeMillis())
-    override fun isEndingEvent(): Boolean = data.duration == 0L
-    override fun isValid(): Boolean = true
+    override val isInProgress: Boolean get() = match(System.currentTimeMillis())
+    override val isEndingEvent: Boolean get() = data.duration == 0L
+    override val isValid: Boolean get() = true
 
     // -------- Interval interface end ---------
 
