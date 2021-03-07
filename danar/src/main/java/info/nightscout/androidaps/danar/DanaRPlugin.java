@@ -167,7 +167,7 @@ public class DanaRPlugin extends AbstractDanaRPlugin {
             if (detailedBolusInfo.insulin > 0 || detailedBolusInfo.carbs > 0)
                 connectionOK = sExecutionService.bolus(detailedBolusInfo.insulin, (int) detailedBolusInfo.carbs, detailedBolusInfo.carbTime, t);
             PumpEnactResult result = new PumpEnactResult(getInjector());
-            result.success(connectionOK && Math.abs(detailedBolusInfo.insulin - t.insulin) < pumpDescription.bolusStep)
+            result.success(connectionOK && Math.abs(detailedBolusInfo.insulin - t.insulin) < pumpDescription.getBolusStep())
                     .bolusDelivered(t.insulin)
                     .carbsDelivered(detailedBolusInfo.carbs);
             if (!result.getSuccess())
@@ -227,8 +227,8 @@ public class DanaRPlugin extends AbstractDanaRPlugin {
             if (absoluteRate < 0.10d) percentRate = 0;
             if (percentRate < 100) percentRate = Round.ceilTo((double) percentRate, 10d).intValue();
             else percentRate = Round.floorTo((double) percentRate, 10d).intValue();
-            if (percentRate > getPumpDescription().maxTempPercent) {
-                percentRate = getPumpDescription().maxTempPercent;
+            if (percentRate > getPumpDescription().getMaxTempPercent()) {
+                percentRate = getPumpDescription().getMaxTempPercent();
             }
             aapsLogger.debug(LTag.PUMP, "setTempBasalAbsolute: Calculated percent rate: " + percentRate);
 
@@ -274,17 +274,17 @@ public class DanaRPlugin extends AbstractDanaRPlugin {
             // Calculate # of halfHours from minutes
             int durationInHalfHours = Math.max(durationInMinutes / 30, 1);
             // We keep current basal running so need to sub current basal
-            Double extendedRateToSet = absoluteRate - getBaseBasalRate();
+            double extendedRateToSet = absoluteRate - getBaseBasalRate();
             extendedRateToSet = constraintChecker.applyBasalConstraints(new Constraint<>(extendedRateToSet), profile).value();
             // needs to be rounded to 0.1
-            extendedRateToSet = Round.roundTo(extendedRateToSet, pumpDescription.extendedBolusStep * 2); // *2 because of half hours
+            extendedRateToSet = Round.roundTo(extendedRateToSet, pumpDescription.getExtendedBolusStep() * 2); // *2 because of half hours
 
             // What is current rate of extended bolusing in u/h?
             aapsLogger.debug(LTag.PUMP, "setTempBasalAbsolute: Extended bolus in progress: " + (activeExtended != null) + " rate: " + danaPump.getExtendedBolusAbsoluteRate() + "U/h duration remaining: " + danaPump.getExtendedBolusRemainingMinutes() + "min");
             aapsLogger.debug(LTag.PUMP, "setTempBasalAbsolute: Rate to set: " + extendedRateToSet + "U/h");
 
             // Compare with extended rate in progress
-            if (activeExtended != null && Math.abs(danaPump.getExtendedBolusAbsoluteRate() - extendedRateToSet) < getPumpDescription().extendedBolusStep) {
+            if (activeExtended != null && Math.abs(danaPump.getExtendedBolusAbsoluteRate() - extendedRateToSet) < getPumpDescription().getExtendedBolusStep()) {
                 // correct extended already set
                 result.success(true).absolute(danaPump.getExtendedBolusAbsoluteRate()).enacted(false).duration(danaPump.getExtendedBolusRemainingMinutes()).isPercent(false).isTempCancel(false);
                 aapsLogger.debug(LTag.PUMP, "setTempBasalAbsolute: Correct extended already set");

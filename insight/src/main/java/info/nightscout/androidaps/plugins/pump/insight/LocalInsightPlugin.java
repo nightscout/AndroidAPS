@@ -477,8 +477,8 @@ public class LocalInsightPlugin extends PumpPluginBase implements PumpInterface,
         maximumBasalAmount = ParameterBlockUtil.readParameterBlock(connectionService, Service.CONFIGURATION, MaxBasalAmountBlock.class).getAmountLimitation();
         minimumBolusAmount = ParameterBlockUtil.readParameterBlock(connectionService, Service.CONFIGURATION, FactoryMinBolusAmountBlock.class).getAmountLimitation();
         minimumBasalAmount = ParameterBlockUtil.readParameterBlock(connectionService, Service.CONFIGURATION, FactoryMinBasalAmountBlock.class).getAmountLimitation();
-        this.pumpDescription.basalMaximumRate = maximumBasalAmount;
-        this.pumpDescription.basalMinimumRate = minimumBasalAmount;
+        this.pumpDescription.setBasalMaximumRate(maximumBasalAmount);
+        this.pumpDescription.setBasalMinimumRate(minimumBasalAmount);
         limitsFetched = true;
     }
 
@@ -1610,7 +1610,7 @@ public class LocalInsightPlugin extends PumpPluginBase implements PumpInterface,
     @NonNull @Override
     public Constraint<Integer> applyBasalPercentConstraints(Constraint<Integer> percentRate, @NonNull Profile profile) {
         percentRate.setIfGreater(getAapsLogger(), 0, String.format(resourceHelper.gs(R.string.limitingpercentrate), 0, resourceHelper.gs(R.string.itmustbepositivevalue)), this);
-        percentRate.setIfSmaller(getAapsLogger(), getPumpDescription().maxTempPercent, String.format(resourceHelper.gs(R.string.limitingpercentrate), getPumpDescription().maxTempPercent, resourceHelper.gs(R.string.pumplimit)), this);
+        percentRate.setIfSmaller(getAapsLogger(), getPumpDescription().getMaxTempPercent(), String.format(resourceHelper.gs(R.string.limitingpercentrate), getPumpDescription().getMaxTempPercent(), resourceHelper.gs(R.string.pumplimit)), this);
         return percentRate;
     }
 

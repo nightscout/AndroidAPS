@@ -161,7 +161,7 @@ public class DanaRExecutionService extends AbstractDanaRExecutionService {
             danaPump.setLastConnection(now);
 
             Profile profile = profileFunction.getProfile();
-            if (profile != null && Math.abs(danaPump.getCurrentBasal() - profile.getBasal()) >= danaRPlugin.getPumpDescription().basalStep) {
+            if (profile != null && Math.abs(danaPump.getCurrentBasal() - profile.getBasal()) >= danaRPlugin.getPumpDescription().getBasalStep()) {
                 rxBus.send(new EventPumpStatusChanged(resourceHelper.gs(R.string.gettingpumpsettings)));
                 mSerialIOThread.sendMessage(new MsgSettingBasal(injector));
                 if (!danaRPlugin.isThisProfileSet(profile) && !commandQueue.isRunning(Command.CommandType.BASAL_PROFILE)) {
@@ -185,7 +185,7 @@ public class DanaRExecutionService extends AbstractDanaRExecutionService {
                 rxBus.send(new EventPumpStatusChanged(resourceHelper.gs(R.string.gettingpumptime)));
                 mSerialIOThread.sendMessage(new MsgSettingPumpTime(injector));
                 if (danaPump.getPumpTime() == 0) {
-                    // initial handshake was not successfull
+                    // initial handshake was not successful
                     // deinitialize pump
                     danaPump.reset();
                     rxBus.send(new EventDanaRNewStatus());

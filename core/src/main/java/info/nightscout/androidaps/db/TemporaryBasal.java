@@ -431,11 +431,11 @@ public class TemporaryBasal implements Interval, DbObjectBase {
                 return "null";
             Double currentBasalRate = profile.getBasal();
             double rate = currentBasalRate + netExtendedRate;
-            return getCalcuatedPercentageIfNeeded() + DecimalFormatter.to2Decimal(rate) + "U/h (" + DecimalFormatter.to2Decimal(netExtendedRate) + "E) @" +
+            return getCalcuatedPercentageIfNeeded() + DecimalFormatter.INSTANCE.to2Decimal(rate) + "U/h (" + DecimalFormatter.INSTANCE.to2Decimal(netExtendedRate) + "E) @" +
                     dateUtil.timeString(date) +
                     " " + getRealDuration() + "/" + durationInMinutes + "'";
         } else if (isAbsolute) {
-            return DecimalFormatter.to2Decimal(absoluteRate) + "U/h @" +
+            return DecimalFormatter.INSTANCE.to2Decimal(absoluteRate) + "U/h @" +
                     dateUtil.timeString(date) +
                     " " + getRealDuration() + "/" + durationInMinutes + "'";
         } else { // percent
@@ -468,7 +468,7 @@ public class TemporaryBasal implements Interval, DbObjectBase {
                     }
                 }
             }
-            return DecimalFormatter.to2Decimal(rate) + "U/h";
+            return DecimalFormatter.INSTANCE.to2Decimal(rate) + "U/h";
         } else { // percent
             return percentRate + "%";
         }
@@ -515,7 +515,7 @@ public class TemporaryBasal implements Interval, DbObjectBase {
             } else {
                 rate = absoluteRate;
             }
-            return DecimalFormatter.to2Decimal(rate) + "U/h";
+            return DecimalFormatter.INSTANCE.to2Decimal(rate) + "U/h";
         } else { // percent
             return percentRate + "%";
         }

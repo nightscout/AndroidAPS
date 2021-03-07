@@ -188,7 +188,7 @@ public class DanaRv2Plugin extends AbstractDanaRPlugin {
             if (detailedBolusInfo.insulin > 0 || carbs > 0)
                 connectionOK = sExecutionService.bolus(detailedBolusInfo.insulin, (int) carbs, DateUtil.now() + T.mins(carbTime).msecs(), t);
             PumpEnactResult result = new PumpEnactResult(getInjector());
-            result.success(connectionOK && Math.abs(detailedBolusInfo.insulin - t.insulin) < pumpDescription.bolusStep)
+            result.success(connectionOK && Math.abs(detailedBolusInfo.insulin - t.insulin) < pumpDescription.getBolusStep())
                     .bolusDelivered(t.insulin)
                     .carbsDelivered(detailedBolusInfo.carbs);
             if (!result.getSuccess())
@@ -218,11 +218,6 @@ public class DanaRv2Plugin extends AbstractDanaRPlugin {
     // This is called from APS
     @NonNull @Override
     public PumpEnactResult setTempBasalAbsolute(double absoluteRate, int durationInMinutes, @NonNull Profile profile, boolean enforceNew) {
-        // Recheck pump status if older than 30 min
-        //This should not be needed while using queue because connection should be done before calling this
-        //if (pump.lastConnection.getTime() + 30 * 60 * 1000L < System.currentTimeMillis()) {
-        //    connect("setTempBasalAbsolute old data");
-        //}
 
         PumpEnactResult result = new PumpEnactResult(getInjector());
 
@@ -294,8 +289,8 @@ public class DanaRv2Plugin extends AbstractDanaRPlugin {
             aapsLogger.error("setTempBasalPercent: Invalid input");
             return result;
         }
-        if (percent > getPumpDescription().maxTempPercent)
-            percent = getPumpDescription().maxTempPercent;
+        if (percent > getPumpDescription().getMaxTempPercent())
+            percent = getPumpDescription().getMaxTempPercent();
         long now = System.currentTimeMillis();
         TemporaryBasal activeTemp = activePlugin.getActiveTreatments().getRealTempBasalFromHistory(now);
         if (activeTemp != null && activeTemp.percentRate == percent && activeTemp.getPlannedRemainingMinutes() > 4 && !enforceNew) {

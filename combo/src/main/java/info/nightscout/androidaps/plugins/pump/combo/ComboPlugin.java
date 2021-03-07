@@ -745,9 +745,9 @@ public class ComboPlugin extends PumpPluginBase implements PumpInterface, Constr
 
         int adjustedPercent = percent;
 
-        if (adjustedPercent > pumpDescription.maxTempPercent) {
-            getAapsLogger().debug(LTag.PUMP, "Reducing requested TBR to the maximum support by the pump: " + percent + " -> " + pumpDescription.maxTempPercent);
-            adjustedPercent = pumpDescription.maxTempPercent;
+        if (adjustedPercent > pumpDescription.getMaxTempPercent()) {
+            getAapsLogger().debug(LTag.PUMP, "Reducing requested TBR to the maximum support by the pump: " + percent + " -> " + pumpDescription.getMaxTempPercent());
+            adjustedPercent = pumpDescription.getMaxTempPercent();
         }
 
         if (adjustedPercent % 10 != 0) {

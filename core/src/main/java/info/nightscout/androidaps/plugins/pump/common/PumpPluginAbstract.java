@@ -375,7 +375,7 @@ public abstract class PumpPluginAbstract extends PumpPluginBase implements PumpI
             ret += "LastConn: " + agoMin + " min ago\n";
         }
         if (getPumpStatusData().lastBolusTime != null && getPumpStatusData().lastBolusTime.getTime() != 0) {
-            ret += "LastBolus: " + DecimalFormatter.to2Decimal(getPumpStatusData().lastBolusAmount) + "U @" + //
+            ret += "LastBolus: " + DecimalFormatter.INSTANCE.to2Decimal(getPumpStatusData().lastBolusAmount) + "U @" + //
                     android.text.format.DateFormat.format("HH:mm", getPumpStatusData().lastBolusTime) + "\n";
         }
         TemporaryBasal activeTemp = activePlugin.getActiveTreatments().getRealTempBasalFromHistory(System.currentTimeMillis());
@@ -392,7 +392,7 @@ public abstract class PumpPluginAbstract extends PumpPluginBase implements PumpI
         // + pumpStatus.maxDailyTotalUnits + " U\n";
         // }
         ret += "IOB: " + getPumpStatusData().iob + "U\n";
-        ret += "Reserv: " + DecimalFormatter.to0Decimal(getPumpStatusData().reservoirRemainingUnits) + "U\n";
+        ret += "Reserv: " + DecimalFormatter.INSTANCE.to0Decimal(getPumpStatusData().reservoirRemainingUnits) + "U\n";
         ret += "Batt: " + getPumpStatusData().batteryRemaining + "\n";
         return ret;
     }

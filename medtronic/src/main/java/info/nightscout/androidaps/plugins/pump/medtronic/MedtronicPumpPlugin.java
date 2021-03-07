@@ -226,7 +226,7 @@ public class MedtronicPumpPlugin extends PumpPluginAbstract implements PumpInter
         aapsLogger.debug(LTag.PUMP, "initPumpStatusData: " + this.medtronicPumpStatus);
 
         // this is only thing that can change, by being configured
-        pumpDescription.maxTempAbsolute = (medtronicPumpStatus.maxBasal != null) ? medtronicPumpStatus.maxBasal : 35.0d;
+        pumpDescription.setMaxTempAbsolute((medtronicPumpStatus.maxBasal != null) ? medtronicPumpStatus.maxBasal : 35.0d);
 
         // set first Medtronic Pump Start
         if (!sp.contains(MedtronicConst.Statistics.FirstPumpStart)) {
@@ -681,7 +681,7 @@ public class MedtronicPumpPlugin extends PumpPluginAbstract implements PumpInter
 
         for (Profile.ProfileValue basalValue : profile.getBasalValues()) {
 
-            double basalValueValue = pumpDescription.pumpType.determineCorrectBasalSize(basalValue.value);
+            double basalValueValue = pumpDescription.getPumpType().determineCorrectBasalSize(basalValue.value);
 
             int hour = basalValue.timeAsSeconds / (60 * 60);
 
@@ -1073,7 +1073,7 @@ public class MedtronicPumpPlugin extends PumpPluginAbstract implements PumpInter
             return setTempBasalAbsolute(0.0d, durationInMinutes, profile, enforceNew);
         } else {
             double absoluteValue = profile.getBasal() * (percent / 100.0d);
-            absoluteValue = pumpDescription.pumpType.determineCorrectBasalSize(absoluteValue);
+            absoluteValue = pumpDescription.getPumpType().determineCorrectBasalSize(absoluteValue);
             aapsLogger.warn(LTag.PUMP, "setTempBasalPercent [MedtronicPumpPlugin] - You are trying to use setTempBasalPercent with percent other then 0% (" + percent + "). This will start setTempBasalAbsolute, with calculated value (" + absoluteValue + "). Result might not be 100% correct.");
             return setTempBasalAbsolute(absoluteValue, durationInMinutes, profile, enforceNew);
         }
@@ -1110,7 +1110,7 @@ public class MedtronicPumpPlugin extends PumpPluginAbstract implements PumpInter
 
         if (this.medtronicPumpStatus.basalProfileStatus != BasalProfileStatus.NotInitialized
                 && medtronicHistoryData.hasBasalProfileChanged()) {
-            medtronicHistoryData.processLastBasalProfileChange(pumpDescription.pumpType, medtronicPumpStatus);
+            medtronicHistoryData.processLastBasalProfileChange(pumpDescription.getPumpType(), medtronicPumpStatus);
         }
 
         PumpDriverState previousState = this.pumpState;
@@ -1409,12 +1409,12 @@ public class MedtronicPumpPlugin extends PumpPluginAbstract implements PumpInter
 
     @NonNull @Override
     public ManufacturerType manufacturer() {
-        return pumpDescription.pumpType.getManufacturer();
+        return pumpDescription.getPumpType().getManufacturer();
     }
 
     @NonNull @Override
     public PumpType model() {
-        return pumpDescription.pumpType;
+        return pumpDescription.getPumpType();
     }
 
     @NonNull @Override
@@ -1503,7 +1503,7 @@ public class MedtronicPumpPlugin extends PumpPluginAbstract implements PumpInter
         for (int i = 0; i < 24; i++) {
             double rate = profile.getBasalTimeFromMidnight(i * 60 * 60);
 
-            double v = pumpDescription.pumpType.determineCorrectBasalSize(rate);
+            double v = pumpDescription.getPumpType().determineCorrectBasalSize(rate);
 
             BasalProfileEntry basalEntry = new BasalProfileEntry(v, i, 0);
             basalProfile.addEntry(basalEntry);

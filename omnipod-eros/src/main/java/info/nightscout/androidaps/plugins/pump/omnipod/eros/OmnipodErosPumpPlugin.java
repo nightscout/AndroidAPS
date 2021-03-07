@@ -801,7 +801,7 @@ public class OmnipodErosPumpPlugin extends PumpPluginBase implements PumpInterfa
             ret += resourceHelper.gs(R.string.omnipod_common_short_status_last_connection, agoMin) + "\n";
         }
         if (podStateManager.getLastBolusStartTime() != null) {
-            ret += resourceHelper.gs(R.string.omnipod_common_short_status_last_bolus, DecimalFormatter.to2Decimal(podStateManager.getLastBolusAmount()),
+            ret += resourceHelper.gs(R.string.omnipod_common_short_status_last_bolus, DecimalFormatter.INSTANCE.to2Decimal(podStateManager.getLastBolusAmount()),
                     android.text.format.DateFormat.format("HH:mm", podStateManager.getLastBolusStartTime().toDate())) + "\n";
         }
         TemporaryBasal activeTemp = activePlugin.getActiveTreatments().getRealTempBasalFromHistory(System.currentTimeMillis());
@@ -813,7 +813,7 @@ public class OmnipodErosPumpPlugin extends PumpPluginBase implements PumpInterfa
         if (activeExtendedBolus != null) {
             ret += resourceHelper.gs(R.string.omnipod_common_short_status_extended_bolus, activeExtendedBolus.toString()) + "\n";
         }
-        ret += resourceHelper.gs(R.string.omnipod_common_short_status_reservoir, (getReservoirLevel() > OmnipodConstants.MAX_RESERVOIR_READING ? "50+" : DecimalFormatter.to0Decimal(getReservoirLevel()))) + "\n";
+        ret += resourceHelper.gs(R.string.omnipod_common_short_status_reservoir, (getReservoirLevel() > OmnipodConstants.MAX_RESERVOIR_READING ? "50+" : DecimalFormatter.INSTANCE.to0Decimal(getReservoirLevel()))) + "\n";
         if (isUseRileyLinkBatteryLevel()) {
             ret += resourceHelper.gs(R.string.omnipod_eros_short_status_riley_link_battery, getBatteryLevel()) + "\n";
         }
@@ -1032,7 +1032,7 @@ public class OmnipodErosPumpPlugin extends PumpPluginBase implements PumpInterfa
             return setTempBasalAbsolute(0.0d, durationInMinutes, profile, enforceNew);
         } else {
             double absoluteValue = profile.getBasal() * (percent / 100.0d);
-            absoluteValue = pumpDescription.pumpType.determineCorrectBasalSize(absoluteValue);
+            absoluteValue = pumpDescription.getPumpType().determineCorrectBasalSize(absoluteValue);
             aapsLogger.warn(LTag.PUMP, "setTempBasalPercent [OmnipodPumpPlugin] - You are trying to use setTempBasalPercent with percent other then 0% (" + percent + "). This will start setTempBasalAbsolute, with calculated value (" + absoluteValue + "). Result might not be 100% correct.");
             return setTempBasalAbsolute(absoluteValue, durationInMinutes, profile, enforceNew);
         }

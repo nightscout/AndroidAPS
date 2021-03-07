@@ -176,7 +176,7 @@ public abstract class AbstractDanaRPlugin extends PumpPluginBase implements Pump
         for (int h = 0; h < basalValues; h++) {
             Double pumpValue = danaPump.getPumpProfiles()[danaPump.getActiveProfile()][h];
             Double profileValue = profile.getBasalTimeFromMidnight(h * basalIncrement);
-            if (Math.abs(pumpValue - profileValue) > getPumpDescription().basalStep) {
+            if (Math.abs(pumpValue - profileValue) > getPumpDescription().getBasalStep()) {
                 getAapsLogger().debug(LTag.PUMP, "Diff found. Hour: " + h + " Pump: " + pumpValue + " Profile: " + profileValue);
                 return false;
             }
@@ -223,8 +223,8 @@ public abstract class AbstractDanaRPlugin extends PumpPluginBase implements Pump
             getAapsLogger().error("setTempBasalPercent: Invalid input");
             return result;
         }
-        if (percent > getPumpDescription().maxTempPercent)
-            percent = getPumpDescription().maxTempPercent;
+        if (percent > getPumpDescription().getMaxTempPercent())
+            percent = getPumpDescription().getMaxTempPercent();
         long now = System.currentTimeMillis();
         TemporaryBasal activeTemp = activePlugin.getActiveTreatments().getRealTempBasalFromHistory(now);
         if (activeTemp != null && activeTemp.percentRate == percent && activeTemp.getPlannedRemainingMinutes() > 4 && !enforceNew) {
@@ -260,11 +260,11 @@ public abstract class AbstractDanaRPlugin extends PumpPluginBase implements Pump
         insulin = constraintChecker.applyExtendedBolusConstraints(new Constraint<>(insulin)).value();
         // needs to be rounded
         int durationInHalfHours = Math.max(durationInMinutes / 30, 1);
-        insulin = Round.roundTo(insulin, getPumpDescription().extendedBolusStep);
+        insulin = Round.roundTo(insulin, getPumpDescription().getExtendedBolusStep());
 
         PumpEnactResult result = new PumpEnactResult(getInjector());
         ExtendedBolus runningEB = activePlugin.getActiveTreatments().getExtendedBolusFromHistory(System.currentTimeMillis());
-        if (runningEB != null && Math.abs(runningEB.insulin - insulin) < getPumpDescription().extendedBolusStep) {
+        if (runningEB != null && Math.abs(runningEB.insulin - insulin) < getPumpDescription().getExtendedBolusStep()) {
             result.enacted(false)
                     .success(true)
                     .comment(R.string.ok)
@@ -276,7 +276,7 @@ public abstract class AbstractDanaRPlugin extends PumpPluginBase implements Pump
             return result;
         }
         boolean connectionOK = sExecutionService.extendedBolus(insulin, durationInHalfHours);
-        if (connectionOK && pump.isExtendedInProgress() && Math.abs(pump.getExtendedBolusAmount() - insulin) < getPumpDescription().extendedBolusStep) {
+        if (connectionOK && pump.isExtendedInProgress() && Math.abs(pump.getExtendedBolusAmount() - insulin) < getPumpDescription().getExtendedBolusStep()) {
             result.enacted(true)
                     .success(true)
                     .comment(R.string.ok)
@@ -316,8 +316,8 @@ public abstract class AbstractDanaRPlugin extends PumpPluginBase implements Pump
     public void connect(@NonNull String from) {
         if (sExecutionService != null) {
             sExecutionService.connect();
-            pumpDescription.basalStep = danaPump.getBasalStep();
-            pumpDescription.bolusStep = danaPump.getBolusStep();
+            pumpDescription.setBasalStep(danaPump.getBasalStep());
+            pumpDescription.setBolusStep(danaPump.getBolusStep());
         }
     }
 
@@ -345,19 +345,19 @@ public abstract class AbstractDanaRPlugin extends PumpPluginBase implements Pump
     public void getPumpStatus(@NonNull String reason) {
         if (sExecutionService != null) {
             sExecutionService.getPumpStatus();
-            pumpDescription.basalStep = danaPump.getBasalStep();
-            pumpDescription.bolusStep = danaPump.getBolusStep();
+            pumpDescription.setBasalStep(danaPump.getBasalStep());
+            pumpDescription.setBolusStep(danaPump.getBolusStep());
         }
     }
 
     @NonNull @Override
-    public JSONObject getJSONStatus(@NonNull Profile profile, @NonNull String profilename, @NonNull String version) {
+    public JSONObject getJSONStatus(@NonNull Profile profile, @NonNull String profileName, @NonNull String version) {
         DanaPump pump = danaPump;
         long now = System.currentTimeMillis();
         if (pump.getLastConnection() + 60 * 60 * 1000L < System.currentTimeMillis()) {
             return new JSONObject();
         }
-        JSONObject pumpjson = new JSONObject();
+        JSONObject pumpJson = new JSONObject();
         JSONObject battery = new JSONObject();
         JSONObject status = new JSONObject();
         JSONObject extended = new JSONObject();
@@ -384,19 +384,19 @@ public abstract class AbstractDanaRPlugin extends PumpPluginBase implements Pump
             }
             extended.put("BaseBasalRate", getBaseBasalRate());
             try {
-                extended.put("ActiveProfile", profilename);
+                extended.put("ActiveProfile", profileName);
             } catch (Exception ignored) {
             }
 
-            pumpjson.put("battery", battery);
-            pumpjson.put("status", status);
-            pumpjson.put("extended", extended);
-            pumpjson.put("reservoir", (int) pump.getReservoirRemainingUnits());
-            pumpjson.put("clock", DateUtil.toISOString(new Date()));
+            pumpJson.put("battery", battery);
+            pumpJson.put("status", status);
+            pumpJson.put("extended", extended);
+            pumpJson.put("reservoir", (int) pump.getReservoirRemainingUnits());
+            pumpJson.put("clock", DateUtil.toISOString(new Date()));
         } catch (JSONException e) {
             getAapsLogger().error("Unhandled exception", e);
         }
-        return pumpjson;
+        return pumpJson;
     }
 
     @NonNull @Override
@@ -436,7 +436,7 @@ public abstract class AbstractDanaRPlugin extends PumpPluginBase implements Pump
     @NonNull @Override
     public Constraint<Integer> applyBasalPercentConstraints(Constraint<Integer> percentRate, @NonNull Profile profile) {
         percentRate.setIfGreater(getAapsLogger(), 0, String.format(getResourceHelper().gs(R.string.limitingpercentrate), 0, getResourceHelper().gs(R.string.itmustbepositivevalue)), this);
-        percentRate.setIfSmaller(getAapsLogger(), getPumpDescription().maxTempPercent, String.format(getResourceHelper().gs(R.string.limitingpercentrate), getPumpDescription().maxTempPercent, getResourceHelper().gs(R.string.pumplimit)), this);
+        percentRate.setIfSmaller(getAapsLogger(), getPumpDescription().getMaxTempPercent(), String.format(getResourceHelper().gs(R.string.limitingpercentrate), getPumpDescription().getMaxTempPercent(), getResourceHelper().gs(R.string.pumplimit)), this);
 
         return percentRate;
     }
@@ -467,7 +467,7 @@ public abstract class AbstractDanaRPlugin extends PumpPluginBase implements Pump
             ret += "LastConn: " + agoMin + " min ago\n";
         }
         if (pump.getLastBolusTime() != 0) {
-            ret += "LastBolus: " + DecimalFormatter.to2Decimal(pump.getLastBolusAmount()) + "U @" + android.text.format.DateFormat.format("HH:mm", pump.getLastBolusTime()) + "\n";
+            ret += "LastBolus: " + DecimalFormatter.INSTANCE.to2Decimal(pump.getLastBolusAmount()) + "U @" + android.text.format.DateFormat.format("HH:mm", pump.getLastBolusTime()) + "\n";
         }
         TemporaryBasal activeTemp = activePlugin.getActiveTreatments().getRealTempBasalFromHistory(System.currentTimeMillis());
         if (activeTemp != null) {
@@ -478,9 +478,9 @@ public abstract class AbstractDanaRPlugin extends PumpPluginBase implements Pump
             ret += "Extended: " + activeExtendedBolus.toString() + "\n";
         }
         if (!veryShort) {
-            ret += "TDD: " + DecimalFormatter.to0Decimal(pump.getDailyTotalUnits()) + " / " + pump.getMaxDailyTotalUnits() + " U\n";
+            ret += "TDD: " + DecimalFormatter.INSTANCE.to0Decimal(pump.getDailyTotalUnits()) + " / " + pump.getMaxDailyTotalUnits() + " U\n";
         }
-        ret += "Reserv: " + DecimalFormatter.to0Decimal(pump.getReservoirRemainingUnits()) + "U\n";
+        ret += "Reserv: " + DecimalFormatter.INSTANCE.to0Decimal(pump.getReservoirRemainingUnits()) + "U\n";
         ret += "Batt: " + pump.getBatteryRemaining() + "\n";
         return ret;
     }
