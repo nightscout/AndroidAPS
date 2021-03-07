@@ -18,6 +18,9 @@ class ConstraintChecker @Inject constructor(private val activePlugin: ActivePlug
     fun isClosedLoopAllowed(): Constraint<Boolean> =
         isClosedLoopAllowed(Constraint(true))
 
+    fun isLgsAllowed(): Constraint<Boolean> =
+        isLgsAllowed(Constraint(true))
+
     fun isAutosensModeEnabled(): Constraint<Boolean> =
         isAutosensModeEnabled(Constraint(true))
 
@@ -73,6 +76,16 @@ class ConstraintChecker @Inject constructor(private val activePlugin: ActivePlug
             val constraint = p as ConstraintsInterface
             if (!p.isEnabled(PluginType.CONSTRAINTS)) continue
             constraint.isClosedLoopAllowed(value)
+        }
+        return value
+    }
+
+    override fun isLgsAllowed(value: Constraint<Boolean>): Constraint<Boolean> {
+        val constraintsPlugins = activePlugin.getSpecificPluginsListByInterface(ConstraintsInterface::class.java)
+        for (p in constraintsPlugins) {
+            val constraint = p as ConstraintsInterface
+            if (!p.isEnabled(PluginType.CONSTRAINTS)) continue
+            constraint.isLgsAllowed(value)
         }
         return value
     }
