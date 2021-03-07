@@ -15,6 +15,7 @@ import info.nightscout.androidaps.plugins.general.automation.elements.InputBg
 import info.nightscout.androidaps.plugins.general.automation.elements.InputTempTarget
 import info.nightscout.androidaps.plugins.general.automation.elements.StaticLabel
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.GlucoseStatus
+import info.nightscout.androidaps.plugins.iob.iobCobCalculator.GlucoseStatusProvider
 import info.nightscout.androidaps.receivers.ReceiverStatusStore
 import info.nightscout.androidaps.services.LastLocationDataContainer
 import info.nightscout.androidaps.utils.sharedPreferences.SP
@@ -57,6 +58,7 @@ open class TriggerTestBase : TestBaseWithProfile() {
                 it.treatmentsInterface = treatmentsInterface
                 it.activePlugin = activePlugin
                 it.iobCobCalculatorPlugin = iobCobCalculatorPlugin
+                it.glucoseStatusProvider = GlucoseStatusProvider(aapsLogger, iobCobCalculatorPlugin)
             }
             if (it is TriggerBg) {
                 it.profileFunction = profileFunction
