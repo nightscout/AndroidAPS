@@ -11,6 +11,8 @@ class EnDecryptTest {
 
     @Test
     fun decrypt() {
+        // TODO: add data received from the pod
+        // this test is failing because the way we increment the nonce
         val aapsLogger = AAPSLoggerTest()
         val enDecrypt = EnDecrypt(
             aapsLogger,
