@@ -140,7 +140,7 @@ fun String.numericVersionPart(): String =
     "(((\\d+)\\.)+(\\d+))(\\D(.*))?".toRegex().matchEntire(this)?.groupValues?.getOrNull(1)
         ?: ""
 
-fun findVersion(file: String?): String? {
+@Suppress("unused") fun findVersion(file: String?): String? {
     val regex = "(.*)version(.*)\"(((\\d+)\\.)+(\\d+))\"(.*)".toRegex()
     return file?.lines()?.filter { regex.matches(it) }?.mapNotNull { regex.matchEntire(it)?.groupValues?.getOrNull(3) }?.firstOrNull()
 }

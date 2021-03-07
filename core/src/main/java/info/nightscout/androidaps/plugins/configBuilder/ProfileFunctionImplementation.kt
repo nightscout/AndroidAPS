@@ -88,7 +88,7 @@ class ProfileFunctionImplementation @Inject constructor(
         }
         if (activeTreatments.profileSwitchesFromHistory.size() > 0) {
             val bundle = Bundle()
-            bundle.putString(FirebaseAnalytics.Param.ITEM_LIST_ID, "CatchedError")
+            bundle.putString(FirebaseAnalytics.Param.ITEM_LIST_ID, "CaughtError")
             bundle.putString(FirebaseAnalytics.Param.START_DATE, time.toString())
             bundle.putString(FirebaseAnalytics.Param.ITEM_LIST_NAME, activeTreatments.profileSwitchesFromHistory.toString())
             fabricPrivacy.logCustom(bundle)
