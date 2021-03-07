@@ -49,7 +49,7 @@ class SafetyPluginTest : TestBaseWithProfile() {
     private lateinit var safetyPlugin: SafetyPlugin
 
     val injector = HasAndroidInjector { AndroidInjector { } }
-    val pumpDescription = PumpDescription()
+    private val pumpDescription = PumpDescription()
 
     @Before
     fun prepare() {
@@ -198,7 +198,7 @@ class SafetyPluginTest : TestBaseWithProfile() {
         `when`(sp.getString(R.string.key_age, "")).thenReturn("child")
         var d = Constraint(Constants.REALLYHIGHBOLUS)
         d = safetyPlugin.applyBolusConstraints(d)
-        Assert.assertEquals(3.0, d.value()!!, 0.01)
+        Assert.assertEquals(3.0, d.value(), 0.01)
         Assert.assertEquals("""
     Safety: Limiting bolus to 3.0 U because of max value in preferences
     Safety: Limiting bolus to 5.0 U because of hard limit
@@ -240,7 +240,7 @@ class SafetyPluginTest : TestBaseWithProfile() {
         // Apply all limits
         var d = Constraint(Constants.REALLYHIGHIOB)
         d = safetyPlugin.applyMaxIOBConstraints(d)
-        Assert.assertEquals(1.5, d.value()!!, 0.01)
+        Assert.assertEquals(1.5, d.value(), 0.01)
         Assert.assertEquals("""
     Safety: Limiting IOB to 1.5 U because of max value in preferences
     """.trimIndent(), d.getReasons(aapsLogger))

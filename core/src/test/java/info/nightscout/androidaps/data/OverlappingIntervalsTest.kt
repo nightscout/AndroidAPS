@@ -53,7 +53,7 @@ class OverlappingIntervalsTest {
         list.reset()
         list.add(someList)
         Assert.assertEquals(startDate, list[0]?.data?.timestamp)
-        Assert.assertEquals(startDate + T.hours(1).msecs(), list.getReversed(0)?.data?.timestamp)
+        Assert.assertEquals(startDate + T.hours(1).msecs(), list.getReversed(0).data.timestamp)
         Assert.assertEquals(startDate + T.hours(1).msecs(), list.reversedList[0].data.timestamp)
     }
 }
