@@ -39,11 +39,11 @@ internal class LTKExchanger(private val aapsLogger: AAPSLogger, private val msgI
 
     fun negotiateLTK(): PairResult {
         // send SP1, SP2
-        var sp1sp2 = sp1sp2(nodeId.address, sp2())
+        val sp1sp2 = sp1sp2(nodeId.address, sp2())
         msgIO.sendMesssage(sp1sp2.messagePacket)
 
         seq++
-        var sps1 = sps1()
+        val sps1 = sps1()
         msgIO.sendMesssage(sps1.messagePacket)
         // send SPS1
 
@@ -75,7 +75,9 @@ internal class LTKExchanger(private val aapsLogger: AAPSLogger, private val msgI
         validateP0(p0)
 
         return PairResult(
-            ltk = ltk
+            ltk = ltk,
+            podId = nodeId,
+            seq = seq
         )
     }
 
@@ -180,7 +182,7 @@ internal class LTKExchanger(private val aapsLogger: AAPSLogger, private val msgI
             pdmPublic.copyOfRange(pdmPublic.size - 4, pdmPublic.size) +
             podNonce.copyOfRange(podNonce.size - 4, podNonce.size) +
             pdmNonce.copyOfRange(pdmNonce.size - 4, pdmNonce.size)
-        aapsLogger.debug(LTag.PUMPBTCOMM, "LTK, first key: ${firstKey.toHex()}")
+        aapsLogger.debug(LTag.PUMPBTCOMM, "First key for LTK: ${firstKey.toHex()}")
 
         val intermediateKey = ByteArray(CMAC_SIZE)
         aesCmac(firstKey, curveLTK, intermediateKey)

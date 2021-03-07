@@ -16,6 +16,7 @@ import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.io.Chara
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.message.MessageIO
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.pair.LTKExchanger
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.scan.PodScanner
+import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.session.SessionEstablisher
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.status.ConnectionStatus
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.event.PodEvent
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.command.base.Command
@@ -75,7 +76,6 @@ class OmnipodDashBleManagerImpl @Inject constructor(
         val discoverer = ServiceDiscoverer(aapsLogger, gatt, bleCommCallbacks)
         val chars = discoverer.discoverServices()
         val bleIO = BleIO(aapsLogger, chars, incomingPackets, gatt, bleCommCallbacks)
-        aapsLogger.debug(LTag.PUMPBTCOMM, "Saying hello to the pod")
         bleIO.sendAndConfirmPacket(CharacteristicType.CMD, BleCommandHello(CONTROLLER_ID).data)
         bleIO.readyToRead()
         return bleIO
@@ -125,13 +125,22 @@ class OmnipodDashBleManagerImpl @Inject constructor(
 
             val msgIO = MessageIO(aapsLogger, bleIO)
             val ltkExchanger = LTKExchanger(aapsLogger, msgIO)
+
             emitter.onNext(PodEvent.Pairing)
 
             val ltk = ltkExchanger.negotiateLTK()
 
             aapsLogger.info(LTag.PUMPCOMM, "Got LTK: ${ltk.ltk.toHex()}")
 
-            emitter.onNext(PodEvent.Connected(PodScanner.POD_ID_NOT_ACTIVATED)) // TODO supply actual pod id
+            emitter.onNext(PodEvent.EstablishingSession)
+
+            val eapAkaExchanger = SessionEstablisher(aapsLogger, msgIO, ltk)
+            val sessionKeys = eapAkaExchanger.negotiateSessionKeys()
+            aapsLogger.info(LTag.PUMPCOMM, "CK: ${sessionKeys.ck.toHex()}")
+            aapsLogger.info(LTag.PUMPCOMM, "noncePrefix: ${sessionKeys.noncePrefix.toHex()}")
+            aapsLogger.info(LTag.PUMPCOMM, "SQN: ${sessionKeys.sqn.toHex()}")
+
+            emitter.onNext(PodEvent.Connected(ltk.podId.toLong())) // TODO supply actual pod id
 
             emitter.onComplete()
         } catch (ex: Exception) {
