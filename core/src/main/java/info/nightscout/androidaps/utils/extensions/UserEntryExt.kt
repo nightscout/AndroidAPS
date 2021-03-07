@@ -1,6 +1,7 @@
 package info.nightscout.androidaps.utils.extensions
 
 import info.nightscout.androidaps.core.R
+import info.nightscout.androidaps.database.entities.UserEntry
 import info.nightscout.androidaps.database.entities.UserEntry.*
 
 fun Action.stringId(): Int {
@@ -227,4 +228,9 @@ fun Units.stringId(): Int {
         Units.R_String -> R.string.formated_string
         else                             -> 0
     }
+}
+
+fun UserEntry.toXml(): String {
+    val content = action.name + "," + values.joinToString(",") {value -> value.toXml()}
+    return ""
 }

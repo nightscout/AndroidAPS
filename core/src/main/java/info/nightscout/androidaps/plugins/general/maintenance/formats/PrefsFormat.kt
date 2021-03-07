@@ -5,6 +5,7 @@ import android.os.Parcelable
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
 import info.nightscout.androidaps.core.R
+import info.nightscout.androidaps.database.entities.UserEntry
 import kotlinx.parcelize.Parcelize
 import java.io.File
 

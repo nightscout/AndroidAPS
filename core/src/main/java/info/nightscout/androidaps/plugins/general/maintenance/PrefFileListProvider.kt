@@ -31,6 +31,7 @@ class PrefFileListProvider @Inject constructor(
 
         private val path = File(Environment.getExternalStorageDirectory().toString())
         private val aapsPath = File(path, "AAPS" + File.separator + "preferences")
+        private val xmlPath = File(path, "AAPS" + File.separator + "xml")
         private const val IMPORT_AGE_NOT_YET_OLD_DAYS = 60
     }
 
@@ -93,6 +94,9 @@ class PrefFileListProvider @Inject constructor(
         if (!aapsPath.exists()) {
             aapsPath.mkdirs()
         }
+        if (!xmlPath.exists()) {
+            xmlPath.mkdirs()
+        }
     }
 
     fun newExportFile(): File {
@@ -102,7 +106,7 @@ class PrefFileListProvider @Inject constructor(
 
     fun newExportXmlFile(): File {
         val timeLocal = LocalDateTime.now().toString(DateTimeFormat.forPattern("yyyy-MM-dd'_'HHmmss"))
-        return File(aapsPath, timeLocal + "_UserEntry.xml")
+        return File(xmlPath, timeLocal + "_UserEntry.xml")
     }
 
     // check metadata for known issues, change their status and add info with explanations

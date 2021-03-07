@@ -179,6 +179,7 @@
     <string name="configbuilder_nightscoutversion_label">Nightscout version:</string>
     <string name="missing_carbs">Missing %1$d g</string>
     <string name="exported">Preferences exported</string>
+    <string name="ue_exported">User Entries exported</string>
     <string name="export_to">Export settings to</string>
     <string name="import_from">Import settings from</string>
     <string name="setting_imported">Settings imported</string>

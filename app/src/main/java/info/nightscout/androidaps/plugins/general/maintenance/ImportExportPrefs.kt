@@ -361,25 +361,16 @@ class ImportExportPrefs @Inject constructor(
 
     override fun exportUserEntriesXml(activity: FragmentActivity, listEntries: Single<List<UserEntry>>) {
         val entries = listEntries.blockingGet()
+        log.debug("XXXXX " + entries.size)
         prefFileList.ensureExportDirExists()
-        val legacyFile = prefFileList.legacyFile()
         val newFile = prefFileList.newExportXmlFile()
-/*
+        log.debug("XXXXX " + classicPrefsFormat.returnXml(entries))
+
         askToConfirmExport(activity, newFile) { password ->
             try {
-                val entries: MutableMap<String, String> = mutableMapOf()
-                for ((key, value) in sp.getAll()) {
-                    entries[key] = value.toString()
-                }
-
-                val prefs = Prefs(entries, prepareMetadata(activity))
-
-                if (BuildConfig.DEBUG && buildHelper.isEngineeringMode()) {
-                    classicPrefsFormat.savePreferences(legacyFile, prefs)
-                }
-                encryptedPrefsFormat.savePreferences(newFile, prefs, password)
-
-                ToastUtils.okToast(activity, resourceHelper.gs(R.string.exported))
+                classicPrefsFormat.saveXml(newFile, entries)
+                log.debug("XXXXX " + newFile.isHidden + " " + newFile.absolutePath)
+                ToastUtils.okToast(activity, resourceHelper.gs(R.string.ue_exported))
             } catch (e: FileNotFoundException) {
                 ToastUtils.errorToast(activity, resourceHelper.gs(R.string.filenotfound) + " " + newFile)
                 log.error(LTag.CORE, "Unhandled exception", e)
@@ -400,6 +391,5 @@ class ImportExportPrefs @Inject constructor(
             }
         }
 
- */
     }
 }
