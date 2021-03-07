@@ -1,7 +1,5 @@
 package info.nightscout.androidaps.plugins.pump.medtronic.data.dto;
 
-import android.util.Log;
-
 import androidx.annotation.NonNull;
 
 import java.util.ArrayList;
@@ -48,16 +46,10 @@ public class TempBasalPair extends info.nightscout.androidaps.plugins.pump.commo
      * @param isPercent
      */
     public TempBasalPair(byte rateByte0, byte rateByte1, int startTimeByte, boolean isPercent) {
-        // int rateInt = ByteUtil.asUINT8(rateByte0);
-
         if (isPercent) {
             this.insulinRate = rateByte0;
         } else {
-            int rateInt2 = ByteUtil.toInt(rateByte1, rateByte0);
-            int rateInt3 = (rateByte1 & 0x7) << 8 | rateByte0;
-            this.insulinRate = rateInt2 * 0.025;
-            Log.d("ddd", "OldRate=" + this.insulinRate + ", NewRate=" + rateInt2 * 0.025 + ", NewRate2="
-                    + rateInt2 * 0.1 + ", NNNRate=" + rateInt3 * 0.025);
+            this.insulinRate = ByteUtil.toInt(rateByte1, rateByte0) * 0.025;
         }
         this.durationMinutes = startTimeByte * 30;
         this.isPercent = isPercent;
