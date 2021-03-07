@@ -214,13 +214,14 @@ class OmnipodDashBleManagerImpl @Inject constructor(
 
             emitter.onComplete()
         } catch (ex: Exception) {
+            disconnect()
             emitter.tryOnError(ex)
         }
     }
 
     override fun disconnect() {
         val localGatt = gatt
-        localGatt?.close()
+        localGatt?.close() // TODO: use disconnect?
         gatt = null
         msgIO = null
         sessionKeys = null
