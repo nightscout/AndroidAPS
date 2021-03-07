@@ -52,8 +52,8 @@ class OverlappingIntervalsTest {
         someList.add(TempTargetTest().date(startDate + T.hours(1).msecs()).duration(T.hours(1).mins()).low(100.0).high(100.0))
         list.reset()
         list.add(someList)
-        Assert.assertEquals(startDate, list[0].data.timestamp)
-        Assert.assertEquals(startDate + T.hours(1).msecs(), list.getReversed(0).data.timestamp)
+        Assert.assertEquals(startDate, list[0]?.data?.timestamp)
+        Assert.assertEquals(startDate + T.hours(1).msecs(), list.getReversed(0)?.data?.timestamp)
         Assert.assertEquals(startDate + T.hours(1).msecs(), list.reversedList[0].data.timestamp)
     }
 }
