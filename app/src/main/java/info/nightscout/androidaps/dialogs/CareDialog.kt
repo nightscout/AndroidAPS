@@ -20,7 +20,7 @@ import info.nightscout.androidaps.interfaces.DatabaseHelperInterface
 import info.nightscout.androidaps.interfaces.ProfileFunction
 import info.nightscout.androidaps.logging.UserEntryLogger
 import info.nightscout.androidaps.plugins.general.nsclient.NSUpload
-import info.nightscout.androidaps.plugins.iob.iobCobCalculator.GlucoseStatus
+import info.nightscout.androidaps.plugins.iob.iobCobCalculator.GlucoseStatusProvider
 import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.HtmlHelper
 import info.nightscout.androidaps.utils.Translator
@@ -41,6 +41,7 @@ class CareDialog : DialogFragmentWithDate() {
     @Inject lateinit var translator: Translator
     @Inject lateinit var uel: UserEntryLogger
     @Inject lateinit var databaseHelper: DatabaseHelperInterface
+    @Inject lateinit var glucoseStatusProvider: GlucoseStatusProvider
 
     enum class EventType {
         BGCHECK,
@@ -132,7 +133,7 @@ class CareDialog : DialogFragmentWithDate() {
             }
         }
 
-        val bg = Profile.fromMgdlToUnits(GlucoseStatus(injector).glucoseStatusData?.glucose
+        val bg = Profile.fromMgdlToUnits(glucoseStatusProvider.glucoseStatusData?.glucose
             ?: 0.0, profileFunction.getUnits())
         val bgTextWatcher: TextWatcher = object : TextWatcher {
             override fun afterTextChanged(s: Editable) {}

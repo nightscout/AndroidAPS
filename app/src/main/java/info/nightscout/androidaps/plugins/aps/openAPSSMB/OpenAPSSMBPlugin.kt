@@ -18,6 +18,7 @@ import info.nightscout.androidaps.plugins.bus.RxBusWrapper
 import info.nightscout.androidaps.plugins.configBuilder.ConstraintChecker
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.AutosensResult
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.GlucoseStatus
+import info.nightscout.androidaps.plugins.iob.iobCobCalculator.GlucoseStatusProvider
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.IobCobCalculatorPlugin
 import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.HardLimits
@@ -45,7 +46,8 @@ open class OpenAPSSMBPlugin @Inject constructor(
     private val profiler: Profiler,
     private val sp: SP,
     private val dateUtil: DateUtil,
-    private val repository: AppRepository
+    private val repository: AppRepository,
+    private val glucoseStatusProvider: GlucoseStatusProvider
 ) : PluginBase(PluginDescription()
     .mainType(PluginType.APS)
     .fragmentClass(OpenAPSSMBFragment::class.java.name)
@@ -89,7 +91,7 @@ open class OpenAPSSMBPlugin @Inject constructor(
     override fun invoke(initiator: String, tempBasalFallback: Boolean) {
         aapsLogger.debug(LTag.APS, "invoke from $initiator tempBasalFallback: $tempBasalFallback")
         lastAPSResult = null
-        val glucoseStatus = GlucoseStatus(injector).glucoseStatusData
+        val glucoseStatus = glucoseStatusProvider.glucoseStatusData
         val profile = profileFunction.getProfile()
         val pump = activePlugin.activePump
         if (profile == null) {

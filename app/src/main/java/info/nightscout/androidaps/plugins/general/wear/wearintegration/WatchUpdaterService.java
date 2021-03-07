@@ -51,6 +51,7 @@ import info.nightscout.androidaps.plugins.general.wear.WearPlugin;
 import info.nightscout.androidaps.plugins.general.wear.events.EventWearConfirmAction;
 import info.nightscout.androidaps.plugins.general.wear.events.EventWearInitiateAction;
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.GlucoseStatus;
+import info.nightscout.androidaps.plugins.iob.iobCobCalculator.GlucoseStatusProvider;
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.IobCobCalculatorPlugin;
 import info.nightscout.androidaps.plugins.treatments.TreatmentsPlugin;
 import info.nightscout.androidaps.receivers.ReceiverStatusStore;
@@ -62,7 +63,7 @@ import info.nightscout.androidaps.utils.resources.ResourceHelper;
 import info.nightscout.androidaps.utils.sharedPreferences.SP;
 
 public class WatchUpdaterService extends WearableListenerService implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
-    @Inject public HasAndroidInjector injector;
+    @Inject public GlucoseStatusProvider glucoseStatusProvider;
     @Inject public AAPSLogger aapsLogger;
     @Inject public WearPlugin wearPlugin;
     @Inject public ResourceHelper resourceHelper;
@@ -282,7 +283,7 @@ public class WatchUpdaterService extends WearableListenerService implements Goog
         GlucoseValue lastBG = iobCobCalculatorPlugin.lastBg();
         // Log.d(TAG, logPrefix + "LastBg=" + lastBG);
         if (lastBG != null) {
-            GlucoseStatus glucoseStatus = new GlucoseStatus(injector).getGlucoseStatusData();
+            GlucoseStatus glucoseStatus = glucoseStatusProvider.getGlucoseStatusData();
 
             if (googleApiClient != null && !googleApiClient.isConnected() && !googleApiClient.isConnecting()) {
                 googleApiConnect();
@@ -323,7 +324,7 @@ public class WatchUpdaterService extends WearableListenerService implements Goog
         } else {
             dataMap.putString("slopeArrow", slopeArrow(glucoseStatus.getDelta()));
             dataMap.putString("delta", deltastring(glucoseStatus.getDelta(), glucoseStatus.getDelta() * Constants.MGDL_TO_MMOLL, units));
-            dataMap.putString("avgDelta", deltastring(glucoseStatus.getAvgDelta(), glucoseStatus.getAvgDelta() * Constants.MGDL_TO_MMOLL, units));
+            dataMap.putString("avgDelta", deltastring(glucoseStatus.getShortAvgDelta(), glucoseStatus.getShortAvgDelta() * Constants.MGDL_TO_MMOLL, units));
         }
         dataMap.putLong("sgvLevel", sgvLevel);
         dataMap.putDouble("sgvDouble", lastBG.getValue());
@@ -386,7 +387,7 @@ public class WatchUpdaterService extends WearableListenerService implements Goog
         if (last_bg == null) return;
 
         List<GlucoseValue> graph_bgs = repository.compatGetBgReadingsDataFromTime(startTime, true).blockingGet();
-        GlucoseStatus glucoseStatus = new GlucoseStatus(injector).getGlucoseStatusData(true);
+        GlucoseStatus glucoseStatus = glucoseStatusProvider.getGlucoseStatusData(true);
 
         if (!graph_bgs.isEmpty()) {
             DataMap entries = dataMapSingleBG(last_bg, glucoseStatus);

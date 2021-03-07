@@ -83,10 +83,6 @@ open class TriggerTestBase : TestBaseWithProfile() {
             if (it is InputTempTarget) {
                 it.profileFunction = profileFunction
             }
-            if (it is GlucoseStatus) {
-                it.aapsLogger = aapsLogger
-                it.iobCobCalculatorPlugin = iobCobCalculatorPlugin
-            }
             if (it is StaticLabel) {
                 it.resourceHelper = resourceHelper
             }
