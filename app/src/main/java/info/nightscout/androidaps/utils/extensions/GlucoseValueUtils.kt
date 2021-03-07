@@ -1,7 +1,8 @@
-package info.nightscout.androidaps.utils
+package info.nightscout.androidaps.utils.extensions
 
 import info.nightscout.androidaps.Constants
 import info.nightscout.androidaps.database.entities.GlucoseValue
+import info.nightscout.androidaps.utils.DecimalFormatter
 
 fun GlucoseValue.valueToUnits(units: String): Double =
     if (units == Constants.MGDL) value

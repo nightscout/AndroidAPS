@@ -62,6 +62,8 @@ import info.nightscout.androidaps.utils.alertDialogs.OKDialog
 import info.nightscout.androidaps.utils.buildHelper.BuildHelper
 import info.nightscout.androidaps.utils.extensions.directionToIcon
 import info.nightscout.androidaps.utils.extensions.toVisibility
+import info.nightscout.androidaps.utils.extensions.valueToUnits
+import info.nightscout.androidaps.utils.extensions.valueToUnitsString
 import info.nightscout.androidaps.utils.protection.ProtectionCheck
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 import info.nightscout.androidaps.utils.rx.AapsSchedulers

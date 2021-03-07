@@ -18,6 +18,7 @@ import info.nightscout.androidaps.data.PumpEnactResult
 import info.nightscout.androidaps.db.CareportalEvent
 import info.nightscout.androidaps.db.Source
 import info.nightscout.androidaps.events.EventAcceptOpenLoopChange
+import info.nightscout.androidaps.events.EventAutosensCalculationFinished
 import info.nightscout.androidaps.events.EventNewBG
 import info.nightscout.androidaps.events.EventTempTargetChange
 import info.nightscout.androidaps.interfaces.*
@@ -33,10 +34,9 @@ import info.nightscout.androidaps.plugins.general.nsclient.NSUpload
 import info.nightscout.androidaps.plugins.general.overview.events.EventDismissNotification
 import info.nightscout.androidaps.plugins.general.overview.events.EventNewNotification
 import info.nightscout.androidaps.plugins.general.overview.notifications.Notification
+import info.nightscout.androidaps.plugins.general.wear.events.EventWearConfirmAction
 import info.nightscout.androidaps.plugins.general.wear.events.EventWearInitiateAction
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.IobCobCalculatorPlugin
-import info.nightscout.androidaps.events.EventAutosensCalculationFinished
-import info.nightscout.androidaps.plugins.general.wear.events.EventWearConfirmAction
 import info.nightscout.androidaps.plugins.pump.virtual.VirtualPumpPlugin
 import info.nightscout.androidaps.plugins.treatments.TreatmentsPlugin
 import info.nightscout.androidaps.queue.Callback
@@ -76,8 +76,7 @@ open class LoopPlugin @Inject constructor(
     private val receiverStatusStore: ReceiverStatusStore,
     private val fabricPrivacy: FabricPrivacy,
     private val nsUpload: NSUpload,
-    private val databaseHelper: DatabaseHelperInterface,
-    private val hardLimits: HardLimits
+    private val databaseHelper: DatabaseHelperInterface
 ) : PluginBase(PluginDescription()
     .mainType(PluginType.LOOP)
     .fragmentClass(LoopFragment::class.java.name)
@@ -198,7 +197,7 @@ open class LoopPlugin @Inject constructor(
             val apsMode = sp.getString(R.string.key_aps_mode, "open")
             val pump = activePlugin.activePump
             var isLGS = false
-            if (!isSuspended && !pump.isSuspended()) if (closedLoopEnabled.value()) if (maxIobAllowed == hardLimits.MAXIOB_LGS || apsMode == "lgs") isLGS = true
+            if (!isSuspended && !pump.isSuspended()) if (closedLoopEnabled.value()) if (maxIobAllowed == HardLimits.MAX_IOB_LGS || apsMode == "lgs") isLGS = true
             return isLGS
         }
 

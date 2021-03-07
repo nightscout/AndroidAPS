@@ -41,6 +41,7 @@ import info.nightscout.androidaps.queue.Callback
 import info.nightscout.androidaps.receivers.BundleStore
 import info.nightscout.androidaps.receivers.DataReceiver
 import info.nightscout.androidaps.utils.*
+import info.nightscout.androidaps.utils.extensions.valueToUnitsString
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 import info.nightscout.androidaps.utils.rx.AapsSchedulers
 import info.nightscout.androidaps.utils.sharedPreferences.SP

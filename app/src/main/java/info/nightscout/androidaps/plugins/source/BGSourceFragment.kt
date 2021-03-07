@@ -25,9 +25,9 @@ import info.nightscout.androidaps.utils.T
 import info.nightscout.androidaps.utils.alertDialogs.OKDialog
 import info.nightscout.androidaps.utils.extensions.directionToIcon
 import info.nightscout.androidaps.utils.extensions.toVisibility
+import info.nightscout.androidaps.utils.extensions.valueToUnitsString
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 import info.nightscout.androidaps.utils.rx.AapsSchedulers
-import info.nightscout.androidaps.utils.valueToUnitsString
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.rxkotlin.plusAssign
 import java.util.concurrent.TimeUnit
