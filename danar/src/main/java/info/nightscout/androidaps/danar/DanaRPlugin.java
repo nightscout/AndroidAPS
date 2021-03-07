@@ -167,24 +167,21 @@ public class DanaRPlugin extends AbstractDanaRPlugin {
             if (detailedBolusInfo.insulin > 0 || detailedBolusInfo.carbs > 0)
                 connectionOK = sExecutionService.bolus(detailedBolusInfo.insulin, (int) detailedBolusInfo.carbs, detailedBolusInfo.carbTime, t);
             PumpEnactResult result = new PumpEnactResult(getInjector());
-            result.success = connectionOK && Math.abs(detailedBolusInfo.insulin - t.insulin) < pumpDescription.bolusStep;
-            result.bolusDelivered = t.insulin;
-            result.carbsDelivered = detailedBolusInfo.carbs;
-            if (!result.success)
-                result.comment = String.format(resourceHelper.gs(R.string.boluserrorcode), detailedBolusInfo.insulin, t.insulin, danaPump.getBolusStartErrorCode());
+            result.success(connectionOK && Math.abs(detailedBolusInfo.insulin - t.insulin) < pumpDescription.bolusStep)
+                    .bolusDelivered(t.insulin)
+                    .carbsDelivered(detailedBolusInfo.carbs);
+            if (!result.getSuccess())
+                result.comment(resourceHelper.gs(R.string.boluserrorcode, detailedBolusInfo.insulin, t.insulin, danaPump.getBolusStartErrorCode()));
             else
-                result.comment = resourceHelper.gs(R.string.ok);
-            aapsLogger.debug(LTag.PUMP, "deliverTreatment: OK. Asked: " + detailedBolusInfo.insulin + " Delivered: " + result.bolusDelivered);
+                result.comment(R.string.ok);
+            aapsLogger.debug(LTag.PUMP, "deliverTreatment: OK. Asked: " + detailedBolusInfo.insulin + " Delivered: " + result.getBolusDelivered());
             detailedBolusInfo.insulin = t.insulin;
             detailedBolusInfo.date = System.currentTimeMillis();
             activePlugin.getActiveTreatments().addToHistoryTreatment(detailedBolusInfo, false);
             return result;
         } else {
             PumpEnactResult result = new PumpEnactResult(getInjector());
-            result.success = false;
-            result.bolusDelivered = 0d;
-            result.carbsDelivered = 0d;
-            result.comment = resourceHelper.gs(R.string.invalidinput);
+            result.success(false).bolusDelivered(0d).carbsDelivered(0d).comment(R.string.invalidinput);
             aapsLogger.error("deliverTreatment: Invalid input");
             return result;
         }
@@ -219,11 +216,7 @@ public class DanaRPlugin extends AbstractDanaRPlugin {
                 aapsLogger.debug(LTag.PUMP, "setTempBasalAbsolute: Stopping temp basal (doTempOff)");
                 return cancelRealTempBasal();
             }
-            result.success = true;
-            result.enacted = false;
-            result.percent = 100;
-            result.isPercent = true;
-            result.isTempCancel = true;
+            result.success(true).enacted(false).percent(100).isPercent(true).isTempCancel(true);
             aapsLogger.debug(LTag.PUMP, "setTempBasalAbsolute: doTempOff OK");
             return result;
         }
@@ -243,7 +236,7 @@ public class DanaRPlugin extends AbstractDanaRPlugin {
             if (activeExtended != null && useExtendedBoluses) {
                 aapsLogger.debug(LTag.PUMP, "setTempBasalAbsolute: Stopping extended bolus (doLowTemp || doHighTemp)");
                 result = cancelExtendedBolus();
-                if (!result.success) {
+                if (!result.getSuccess()) {
                     aapsLogger.error("setTempBasalAbsolute: Failed to stop previous extended bolus (doLowTemp || doHighTemp)");
                     return result;
                 }
@@ -256,12 +249,7 @@ public class DanaRPlugin extends AbstractDanaRPlugin {
                     if (enforceNew) {
                         cancelTempBasal(true);
                     } else {
-                        result.success = true;
-                        result.percent = percentRate;
-                        result.enacted = false;
-                        result.duration = activeTemp.getPlannedRemainingMinutes();
-                        result.isPercent = true;
-                        result.isTempCancel = false;
+                        result.success(true).percent(percentRate).enacted(false).duration(activeTemp.getPlannedRemainingMinutes()).isPercent(true).isTempCancel(false);
                         aapsLogger.debug(LTag.PUMP, "setTempBasalAbsolute: Correct temp basal already set (doLowTemp || doHighTemp)");
                         return result;
                     }
@@ -277,7 +265,7 @@ public class DanaRPlugin extends AbstractDanaRPlugin {
                 aapsLogger.debug(LTag.PUMP, "setTempBasalAbsolute: Stopping temp basal (doExtendedTemp)");
                 result = cancelRealTempBasal();
                 // Check for proper result
-                if (!result.success) {
+                if (!result.getSuccess()) {
                     aapsLogger.error("setTempBasalAbsolute: Failed to stop previous temp basal (doExtendedTemp)");
                     return result;
                 }
@@ -298,12 +286,7 @@ public class DanaRPlugin extends AbstractDanaRPlugin {
             // Compare with extended rate in progress
             if (activeExtended != null && Math.abs(danaPump.getExtendedBolusAbsoluteRate() - extendedRateToSet) < getPumpDescription().extendedBolusStep) {
                 // correct extended already set
-                result.success = true;
-                result.absolute = danaPump.getExtendedBolusAbsoluteRate();
-                result.enacted = false;
-                result.duration = danaPump.getExtendedBolusRemainingMinutes();
-                result.isPercent = false;
-                result.isTempCancel = false;
+                result.success(true).absolute(danaPump.getExtendedBolusAbsoluteRate()).enacted(false).duration(danaPump.getExtendedBolusRemainingMinutes()).isPercent(false).isTempCancel(false);
                 aapsLogger.debug(LTag.PUMP, "setTempBasalAbsolute: Correct extended already set");
                 return result;
             }
@@ -312,18 +295,17 @@ public class DanaRPlugin extends AbstractDanaRPlugin {
             double extendedAmount = extendedRateToSet / 2 * durationInHalfHours;
             aapsLogger.debug(LTag.PUMP, "setTempBasalAbsolute: Setting extended: " + extendedAmount + "U  half hours: " + durationInHalfHours);
             result = setExtendedBolus(extendedAmount, durationInMinutes);
-            if (!result.success) {
+            if (!result.getSuccess()) {
                 aapsLogger.error("setTempBasalAbsolute: Failed to set extended bolus");
                 return result;
             }
             aapsLogger.debug(LTag.PUMP, "setTempBasalAbsolute: Extended bolus set ok");
-            result.absolute = result.absolute + getBaseBasalRate();
+            result.absolute(result.getAbsolute() + getBaseBasalRate());
             return result;
         }
         // We should never end here
         aapsLogger.error("setTempBasalAbsolute: Internal error");
-        result.success = false;
-        result.comment = "Internal error";
+        result.success(false).comment("Internal error");
         return result;
     }
 
@@ -335,10 +317,7 @@ public class DanaRPlugin extends AbstractDanaRPlugin {
             return cancelExtendedBolus();
         }
         PumpEnactResult result = new PumpEnactResult(getInjector());
-        result.success = true;
-        result.enacted = false;
-        result.comment = resourceHelper.gs(R.string.ok);
-        result.isTempCancel = true;
+        result.success(true).enacted(false).comment(R.string.ok).isTempCancel(true);
         return result;
     }
 
@@ -352,18 +331,13 @@ public class DanaRPlugin extends AbstractDanaRPlugin {
         TemporaryBasal runningTB = activePlugin.getActiveTreatments().getTempBasalFromHistory(System.currentTimeMillis());
         if (runningTB != null) {
             sExecutionService.tempBasalStop();
-            result.enacted = true;
-            result.isTempCancel = true;
+            result.enacted(true).isTempCancel(true);
         }
         if (!danaPump.isTempBasalInProgress()) {
-            result.success = true;
-            result.isTempCancel = true;
-            result.comment = resourceHelper.gs(R.string.ok);
+            result.success(true).isTempCancel(true).comment(R.string.ok);
             aapsLogger.debug(LTag.PUMP, "cancelRealTempBasal: OK");
         } else {
-            result.success = false;
-            result.comment = resourceHelper.gs(R.string.danar_valuenotsetproperly);
-            result.isTempCancel = true;
+            result.success(false).comment(R.string.danar_valuenotsetproperly).isTempCancel(true);
             aapsLogger.error("cancelRealTempBasal: Failed to cancel temp basal");
         }
         return result;

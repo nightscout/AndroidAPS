@@ -406,7 +406,7 @@ public abstract class PumpPluginAbstract extends PumpPluginBase implements PumpI
                 // neither carbs nor bolus requested
                 aapsLogger.error("deliverTreatment: Invalid input");
                 return new PumpEnactResult(getInjector()).success(false).enacted(false).bolusDelivered(0d).carbsDelivered(0d)
-                        .comment(getResourceHelper().gs(R.string.invalidinput));
+                        .comment(R.string.invalidinput);
             } else if (detailedBolusInfo.insulin > 0) {
                 // bolus needed, ask pump to deliver it
                 return deliverBolus(detailedBolusInfo);
@@ -426,7 +426,7 @@ public abstract class PumpPluginAbstract extends PumpPluginBase implements PumpI
                 aapsLogger.debug(LTag.PUMP, "deliverTreatment: Carb only treatment.");
 
                 return new PumpEnactResult(getInjector()).success(true).enacted(true).bolusDelivered(0d)
-                        .carbsDelivered(detailedBolusInfo.carbs).comment(getResourceHelper().gs(R.string.common_resultok));
+                        .carbsDelivered(detailedBolusInfo.carbs).comment(R.string.common_resultok);
             }
         } finally {
             triggerUIChange();
@@ -471,6 +471,6 @@ public abstract class PumpPluginAbstract extends PumpPluginBase implements PumpI
     protected abstract void triggerUIChange();
 
     private PumpEnactResult getOperationNotSupportedWithCustomText(int resourceId) {
-        return new PumpEnactResult(getInjector()).success(false).enacted(false).comment(getResourceHelper().gs(resourceId));
+        return new PumpEnactResult(getInjector()).success(false).enacted(false).comment(resourceId);
     }
 }

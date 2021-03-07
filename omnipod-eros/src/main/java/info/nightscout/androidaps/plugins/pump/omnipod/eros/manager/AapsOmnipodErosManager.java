@@ -194,7 +194,7 @@ public class AapsOmnipodErosManager {
             result.success(false).enacted(false).comment(translateException(ex));
         }
 
-        addToHistory(System.currentTimeMillis(), PodHistoryEntryType.INITIALIZE_POD, result.comment, result.success);
+        addToHistory(System.currentTimeMillis(), PodHistoryEntryType.INITIALIZE_POD, result.getComment(), result.getSuccess());
 
         return result;
     }
@@ -221,9 +221,9 @@ public class AapsOmnipodErosManager {
             result.success(false).enacted(false).comment(translateException(ex));
         }
 
-        addToHistory(System.currentTimeMillis(), PodHistoryEntryType.INSERT_CANNULA, result.comment, result.success);
+        addToHistory(System.currentTimeMillis(), PodHistoryEntryType.INSERT_CANNULA, result.getComment(), result.getSuccess());
 
-        if (result.success) {
+        if (result.getSuccess()) {
             uploadCareportalEvent(System.currentTimeMillis() - 1000, CareportalEvent.INSULINCHANGE);
             uploadCareportalEvent(System.currentTimeMillis(), CareportalEvent.SITECHANGE);
 

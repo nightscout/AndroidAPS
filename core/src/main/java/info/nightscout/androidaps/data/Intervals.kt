@@ -68,5 +68,5 @@ abstract class Intervals<T : Interval> {
 
     @Synchronized operator fun get(index: Int): T? = rawData.valueAt(index)
 
-    @Synchronized fun getReversed(index: Int): T? = rawData.valueAt(size() - 1 - index)
+    @Synchronized fun getReversed(index: Int): T = rawData.valueAt(size() - 1 - index)
 }

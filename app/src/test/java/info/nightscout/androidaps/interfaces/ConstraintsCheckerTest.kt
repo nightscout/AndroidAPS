@@ -10,6 +10,7 @@ import info.nightscout.androidaps.TestBaseWithProfile
 import info.nightscout.androidaps.dana.DanaPump
 import info.nightscout.androidaps.danar.DanaRPlugin
 import info.nightscout.androidaps.danars.DanaRSPlugin
+import info.nightscout.androidaps.data.PumpEnactResult
 import info.nightscout.androidaps.database.AppRepository
 import info.nightscout.androidaps.logging.UserEntryLogger
 import info.nightscout.androidaps.plugins.aps.openAPSAMA.OpenAPSAMAPlugin
@@ -90,6 +91,9 @@ class ConstraintsCheckerTest : TestBaseWithProfile() {
         AndroidInjector {
             if (it is Objective) {
                 it.sp = sp
+            }
+            if (it is PumpEnactResult) {
+                it.resourceHelper = resourceHelper
             }
         }
     }

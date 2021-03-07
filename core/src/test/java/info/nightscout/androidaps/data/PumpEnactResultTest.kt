@@ -22,7 +22,6 @@ class PumpEnactResultTest : TestBaseWithProfile() {
     val injector = HasAndroidInjector {
         AndroidInjector {
             if (it is PumpEnactResult) {
-                it.aapsLogger = aapsLogger
                 it.resourceHelper = resourceHelper
             }
         }

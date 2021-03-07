@@ -9,6 +9,7 @@ import android.content.ServiceConnection;
 import android.os.Handler;
 import android.os.IBinder;
 import android.os.Looper;
+import android.os.SystemClock;
 
 import androidx.annotation.NonNull;
 
@@ -342,13 +343,13 @@ public class LocalInsightPlugin extends PumpPluginBase implements PumpInterface,
     }
 
     @Override
-    public void connect(String reason) {
+    public void connect(@NonNull String reason) {
         if (connectionService != null && alertService != null)
             connectionService.requestConnection(this);
     }
 
     @Override
-    public void disconnect(String reason) {
+    public void disconnect(@NonNull String reason) {
         if (connectionService != null && alertService != null)
             connectionService.withdrawConnectionRequest(this);
     }
@@ -360,7 +361,7 @@ public class LocalInsightPlugin extends PumpPluginBase implements PumpInterface,
     }
 
     @Override
-    public void getPumpStatus(String reason) {
+    public void getPumpStatus(@NonNull String reason) {
         try {
             tbrOverNotificationBlock = ParameterBlockUtil.readParameterBlock(connectionService, Service.CONFIGURATION, TBROverNotificationBlock.class);
             readHistory();
@@ -507,9 +508,9 @@ public class LocalInsightPlugin extends PumpPluginBase implements PumpInterface,
             rxBus.send(new EventDismissNotification(Notification.FAILED_UDPATE_PROFILE));
             Notification notification = new Notification(Notification.PROFILE_SET_OK, resourceHelper.gs(R.string.profile_set_ok), Notification.INFO, 60);
             rxBus.send(new EventNewNotification(notification));
-            result.success = true;
-            result.enacted = true;
-            result.comment = resourceHelper.gs(R.string.virtualpump_resultok);
+            result.success(true)
+                    .enacted(true)
+                    .comment(R.string.virtualpump_resultok);
             this.profileBlocks = profileBlocks;
             try {
                 fetchStatus();
@@ -519,23 +520,23 @@ public class LocalInsightPlugin extends PumpPluginBase implements PumpInterface,
             aapsLogger.info(LTag.PUMP, "Exception while setting profile: " + e.getClass().getCanonicalName() + " (" + e.getErrorCode() + ")");
             Notification notification = new Notification(Notification.FAILED_UDPATE_PROFILE, resourceHelper.gs(R.string.failedupdatebasalprofile), Notification.URGENT);
             rxBus.send(new EventNewNotification(notification));
-            result.comment = ExceptionTranslator.getString(context, e);
+            result.comment(ExceptionTranslator.getString(context, e));
         } catch (InsightException e) {
             aapsLogger.info(LTag.PUMP, "Exception while setting profile: " + e.getClass().getCanonicalName());
             Notification notification = new Notification(Notification.FAILED_UDPATE_PROFILE, resourceHelper.gs(R.string.failedupdatebasalprofile), Notification.URGENT);
             rxBus.send(new EventNewNotification(notification));
-            result.comment = ExceptionTranslator.getString(context, e);
+            result.comment(ExceptionTranslator.getString(context, e));
         } catch (Exception e) {
             aapsLogger.error("Exception while setting profile", e);
             Notification notification = new Notification(Notification.FAILED_UDPATE_PROFILE, resourceHelper.gs(R.string.failedupdatebasalprofile), Notification.URGENT);
             rxBus.send(new EventNewNotification(notification));
-            result.comment = ExceptionTranslator.getString(context, e);
+            result.comment(ExceptionTranslator.getString(context, e));
         }
         return result;
     }
 
     @Override
-    public boolean isThisProfileSet(Profile profile) {
+    public boolean isThisProfileSet(@NonNull Profile profile) {
         if (!isInitialized() || profileBlocks == null) return true;
         if (profile.getBasalValues().length != profileBlocks.size()) return false;
         if (activeBasalProfile != BasalProfile.PROFILE_1) return false;
@@ -594,8 +595,7 @@ public class LocalInsightPlugin extends PumpPluginBase implements PumpInterface,
                     bolusID = connectionService.requestMessage(bolusMessage).await().getBolusId();
                     bolusCancelled = false;
                 }
-                result.success = true;
-                result.enacted = true;
+                result.success(true).enacted(true);
                 Treatment t = new Treatment();
                 t.isSMB = detailedBolusInfo.isSMB;
                 final EventOverviewBolusProgress bolusingEvent = EventOverviewBolusProgress.INSTANCE;
@@ -655,26 +655,24 @@ public class LocalInsightPlugin extends PumpPluginBase implements PumpInterface,
                             }
                         }
                     }
-                    Thread.sleep(200);
+                    SystemClock.sleep(200);
                 }
                 readHistory();
                 fetchStatus();
             } catch (AppLayerErrorException e) {
                 aapsLogger.info(LTag.PUMP, "Exception while delivering bolus: " + e.getClass().getCanonicalName() + " (" + e.getErrorCode() + ")");
-                result.comment = ExceptionTranslator.getString(context, e);
+                result.comment(ExceptionTranslator.getString(context, e));
             } catch (InsightException e) {
                 aapsLogger.info(LTag.PUMP, "Exception while delivering bolus: " + e.getClass().getCanonicalName());
-                result.comment = ExceptionTranslator.getString(context, e);
+                result.comment(ExceptionTranslator.getString(context, e));
             } catch (Exception e) {
                 aapsLogger.error("Exception while delivering bolus", e);
-                result.comment = ExceptionTranslator.getString(context, e);
+                result.comment(ExceptionTranslator.getString(context, e));
             }
         } else if (detailedBolusInfo.carbs > 0) {
-            result.success = true;
-            result.enacted = true;
+            result.success(true).enacted(true);
         }
-        result.carbsDelivered = detailedBolusInfo.carbs;
-        result.bolusDelivered = insulin;
+        result.carbsDelivered(detailedBolusInfo.carbs).bolusDelivered(insulin);
         return result;
     }
 
@@ -709,31 +707,31 @@ public class LocalInsightPlugin extends PumpPluginBase implements PumpInterface,
         double percent = 100D / activeBasalRate.getActiveBasalRate() * absoluteRate;
         if (isFakingTempsByExtendedBoluses()) {
             PumpEnactResult cancelEBResult = cancelExtendedBolusOnly();
-            if (cancelEBResult.success) {
+            if (cancelEBResult.getSuccess()) {
                 if (percent > 250) {
                     PumpEnactResult cancelTBRResult = cancelTempBasalOnly();
-                    if (cancelTBRResult.success) {
+                    if (cancelTBRResult.getSuccess()) {
                         PumpEnactResult ebResult = setExtendedBolusOnly((absoluteRate - getBaseBasalRate()) / 60D
                                         * ((double) durationInMinutes), durationInMinutes,
                                 sp.getBoolean(R.string.key_disable_vibration_auto, false));
-                        if (ebResult.success) {
-                            result.success = true;
-                            result.enacted = true;
-                            result.isPercent = false;
-                            result.absolute = absoluteRate;
-                            result.duration = durationInMinutes;
-                            result.comment = resourceHelper.gs(R.string.virtualpump_resultok);
+                        if (ebResult.getSuccess()) {
+                            result.success(true)
+                                    .enacted(true)
+                                    .isPercent(false)
+                                    .absolute(absoluteRate)
+                                    .duration(durationInMinutes)
+                                    .comment(R.string.virtualpump_resultok);
                         } else {
-                            result.comment = ebResult.comment;
+                            result.comment(ebResult.getComment());
                         }
                     } else {
-                        result.comment = cancelTBRResult.comment;
+                        result.comment(cancelTBRResult.getComment());
                     }
                 } else {
                     return setTempBasalPercent((int) Math.round(percent), durationInMinutes, profile, enforceNew);
                 }
             } else {
-                result.comment = cancelEBResult.comment;
+                result.comment(cancelEBResult.getComment());
             }
         } else {
             return setTempBasalPercent((int) Math.round(percent), durationInMinutes, profile, enforceNew);
@@ -769,23 +767,23 @@ public class LocalInsightPlugin extends PumpPluginBase implements PumpInterface,
                 message.setPercentage(percent);
                 connectionService.requestMessage(message);
             }
-            result.isPercent = true;
-            result.percent = percent;
-            result.duration = durationInMinutes;
-            result.success = true;
-            result.enacted = true;
-            result.comment = resourceHelper.gs(R.string.virtualpump_resultok);
+            result.isPercent(true)
+                    .percent(percent)
+                    .duration(durationInMinutes)
+                    .success(true)
+                    .enacted(true)
+                    .comment(R.string.virtualpump_resultok);
             readHistory();
             fetchStatus();
         } catch (AppLayerErrorException e) {
             aapsLogger.info(LTag.PUMP, "Exception while setting TBR: " + e.getClass().getCanonicalName() + " (" + e.getErrorCode() + ")");
-            result.comment = ExceptionTranslator.getString(context, e);
+            result.comment(ExceptionTranslator.getString(context, e));
         } catch (InsightException e) {
             aapsLogger.info(LTag.PUMP, "Exception while setting TBR: " + e.getClass().getCanonicalName());
-            result.comment = ExceptionTranslator.getString(context, e);
+            result.comment(ExceptionTranslator.getString(context, e));
         } catch (Exception e) {
             aapsLogger.error("Exception while setting TBR", e);
-            result.comment = ExceptionTranslator.getString(context, e);
+            result.comment(ExceptionTranslator.getString(context, e));
         }
         return result;
     }
@@ -793,7 +791,7 @@ public class LocalInsightPlugin extends PumpPluginBase implements PumpInterface,
     @NonNull @Override
     public PumpEnactResult setExtendedBolus(double insulin, int durationInMinutes) {
         PumpEnactResult result = cancelExtendedBolusOnly();
-        if (result.success)
+        if (result.getSuccess())
             result = setExtendedBolusOnly(insulin, durationInMinutes, sp.getBoolean(R.string.key_disable_vibration, false));
         try {
             fetchStatus();
@@ -830,18 +828,16 @@ public class LocalInsightPlugin extends PumpPluginBase implements PumpInterface,
             extendedBolus.insulin = insulin;
             extendedBolus.pumpId = insightBolusID.id;
             treatmentsPlugin.addToHistoryExtendedBolus(extendedBolus);
-            result.success = true;
-            result.enacted = true;
-            result.comment = resourceHelper.gs(R.string.virtualpump_resultok);
+            result.success(true).enacted(true).comment(R.string.virtualpump_resultok);
         } catch (AppLayerErrorException e) {
             aapsLogger.info(LTag.PUMP, "Exception while delivering extended bolus: " + e.getClass().getCanonicalName() + " (" + e.getErrorCode() + ")");
-            result.comment = ExceptionTranslator.getString(context, e);
+            result.comment(ExceptionTranslator.getString(context, e));
         } catch (InsightException e) {
             aapsLogger.info(LTag.PUMP, "Exception while delivering extended bolus: " + e.getClass().getCanonicalName());
-            result.comment = ExceptionTranslator.getString(context, e);
+            result.comment(ExceptionTranslator.getString(context, e));
         } catch (Exception e) {
             aapsLogger.error("Exception while delivering extended bolus", e);
-            result.comment = ExceptionTranslator.getString(context, e);
+            result.comment(ExceptionTranslator.getString(context, e));
         }
         return result;
     }
@@ -852,9 +848,9 @@ public class LocalInsightPlugin extends PumpPluginBase implements PumpInterface,
         PumpEnactResult cancelEBResult = null;
         if (isFakingTempsByExtendedBoluses()) cancelEBResult = cancelExtendedBolusOnly();
         PumpEnactResult cancelTBRResult = cancelTempBasalOnly();
-        result.success = (cancelEBResult != null && cancelEBResult.success) && cancelTBRResult.success;
-        result.enacted = (cancelEBResult != null && cancelEBResult.enacted) || cancelTBRResult.enacted;
-        result.comment = cancelEBResult != null ? cancelEBResult.comment : cancelTBRResult.comment;
+        result.success((cancelEBResult != null && cancelEBResult.getSuccess()) && cancelTBRResult.getSuccess());
+        result.enacted((cancelEBResult != null && cancelEBResult.getEnacted()) || cancelTBRResult.getEnacted());
+        result.comment(cancelEBResult != null ? cancelEBResult.getComment() : cancelTBRResult.getComment());
         try {
             fetchStatus();
             readHistory();
@@ -873,24 +869,24 @@ public class LocalInsightPlugin extends PumpPluginBase implements PumpInterface,
         try {
             alertService.ignore(AlertType.WARNING_36);
             connectionService.requestMessage(new CancelTBRMessage()).await();
-            result.success = true;
-            result.enacted = true;
-            result.isTempCancel = true;
+            result.success(true)
+                    .enacted(true)
+                    .isTempCancel(true);
             confirmAlert(AlertType.WARNING_36);
             alertService.ignore(null);
-            result.comment = resourceHelper.gs(R.string.virtualpump_resultok);
+            result.comment(R.string.virtualpump_resultok);
         } catch (NoActiveTBRToCanceLException e) {
-            result.success = true;
-            result.comment = resourceHelper.gs(R.string.virtualpump_resultok);
+            result.success(true);
+            result.comment(R.string.virtualpump_resultok);
         } catch (AppLayerErrorException e) {
             aapsLogger.info(LTag.PUMP, "Exception while canceling TBR: " + e.getClass().getCanonicalName() + " (" + e.getErrorCode() + ")");
-            result.comment = ExceptionTranslator.getString(context, e);
+            result.comment(ExceptionTranslator.getString(context, e));
         } catch (InsightException e) {
             aapsLogger.info(LTag.PUMP, "Exception while canceling TBR: " + e.getClass().getCanonicalName());
-            result.comment = ExceptionTranslator.getString(context, e);
+            result.comment(ExceptionTranslator.getString(context, e));
         } catch (Exception e) {
             aapsLogger.error("Exception while canceling TBR", e);
-            result.comment = ExceptionTranslator.getString(context, e);
+            result.comment(ExceptionTranslator.getString(context, e));
         }
         return result;
     }
@@ -937,22 +933,20 @@ public class LocalInsightPlugin extends PumpPluginBase implements PumpInterface,
                             } else
                                 treatmentsPlugin.addToHistoryExtendedBolus(extendedBolus);
                         }
-                        result.enacted = true;
-                        result.success = true;
+                        result.enacted(true).success(true);
                     }
                 }
             }
-            result.success = true;
-            result.comment = resourceHelper.gs(R.string.virtualpump_resultok);
+            result.success(true).comment(R.string.virtualpump_resultok);
         } catch (AppLayerErrorException e) {
             aapsLogger.info(LTag.PUMP, "Exception while canceling extended bolus: " + e.getClass().getCanonicalName() + " (" + e.getErrorCode() + ")");
-            result.comment = ExceptionTranslator.getString(context, e);
+            result.comment(ExceptionTranslator.getString(context, e));
         } catch (InsightException e) {
             aapsLogger.info(LTag.PUMP, "Exception while canceling extended bolus: " + e.getClass().getCanonicalName());
-            result.comment = ExceptionTranslator.getString(context, e);
+            result.comment(ExceptionTranslator.getString(context, e));
         } catch (Exception e) {
             aapsLogger.error("Exception while canceling extended bolus", e);
-            result.comment = ExceptionTranslator.getString(context, e);
+            result.comment(ExceptionTranslator.getString(context, e));
         }
         return result;
     }
@@ -1051,19 +1045,18 @@ public class LocalInsightPlugin extends PumpPluginBase implements PumpInterface,
             SetOperatingModeMessage operatingModeMessage = new SetOperatingModeMessage();
             operatingModeMessage.setOperatingMode(OperatingMode.STOPPED);
             connectionService.requestMessage(operatingModeMessage).await();
-            result.success = true;
-            result.enacted = true;
+            result.success(true).enacted(true);
             fetchStatus();
             readHistory();
         } catch (AppLayerErrorException e) {
             aapsLogger.info(LTag.PUMP, "Exception while stopping pump: " + e.getClass().getCanonicalName() + " (" + e.getErrorCode() + ")");
-            result.comment = ExceptionTranslator.getString(context, e);
+            result.comment(ExceptionTranslator.getString(context, e));
         } catch (InsightException e) {
             aapsLogger.info(LTag.PUMP, "Exception while stopping pump: " + e.getClass().getCanonicalName());
-            result.comment = ExceptionTranslator.getString(context, e);
+            result.comment(ExceptionTranslator.getString(context, e));
         } catch (Exception e) {
             aapsLogger.error("Exception while stopping pump", e);
-            result.comment = ExceptionTranslator.getString(context, e);
+            result.comment(ExceptionTranslator.getString(context, e));
         }
         return result;
     }
@@ -1074,19 +1067,18 @@ public class LocalInsightPlugin extends PumpPluginBase implements PumpInterface,
             SetOperatingModeMessage operatingModeMessage = new SetOperatingModeMessage();
             operatingModeMessage.setOperatingMode(OperatingMode.STARTED);
             connectionService.requestMessage(operatingModeMessage).await();
-            result.success = true;
-            result.enacted = true;
+            result.success(true).enacted(true);
             fetchStatus();
             readHistory();
         } catch (AppLayerErrorException e) {
             aapsLogger.info(LTag.PUMP, "Exception while starting pump: " + e.getClass().getCanonicalName() + " (" + e.getErrorCode() + ")");
-            result.comment = ExceptionTranslator.getString(context, e);
+            result.comment(ExceptionTranslator.getString(context, e));
         } catch (InsightException e) {
             aapsLogger.info(LTag.PUMP, "Exception while starting pump: " + e.getClass().getCanonicalName());
-            result.comment = ExceptionTranslator.getString(context, e);
+            result.comment(ExceptionTranslator.getString(context, e));
         } catch (Exception e) {
             aapsLogger.error("Exception while starting pump", e);
-            result.comment = ExceptionTranslator.getString(context, e);
+            result.comment(ExceptionTranslator.getString(context, e));
         }
         return result;
     }
@@ -1097,20 +1089,19 @@ public class LocalInsightPlugin extends PumpPluginBase implements PumpInterface,
         tbrOverNotificationBlock.setEnabled(enabled);
         try {
             ParameterBlockUtil.writeConfigurationBlock(connectionService, tbrOverNotificationBlock);
-            result.success = true;
-            result.enacted = true;
+            result.success(true).enacted(true);
         } catch (AppLayerErrorException e) {
             tbrOverNotificationBlock.setEnabled(valueBefore);
             aapsLogger.info(LTag.PUMP, "Exception while updating TBR notification block: " + e.getClass().getCanonicalName() + " (" + e.getErrorCode() + ")");
-            result.comment = ExceptionTranslator.getString(context, e);
+            result.comment(ExceptionTranslator.getString(context, e));
         } catch (InsightException e) {
             tbrOverNotificationBlock.setEnabled(valueBefore);
             aapsLogger.info(LTag.PUMP, "Exception while updating TBR notification block: " + e.getClass().getSimpleName());
-            result.comment = ExceptionTranslator.getString(context, e);
+            result.comment(ExceptionTranslator.getString(context, e));
         } catch (Exception e) {
             tbrOverNotificationBlock.setEnabled(valueBefore);
             aapsLogger.error("Exception while updating TBR notification block", e);
-            result.comment = ExceptionTranslator.getString(context, e);
+            result.comment(ExceptionTranslator.getString(context, e));
         }
         return result;
     }
@@ -1124,27 +1115,27 @@ public class LocalInsightPlugin extends PumpPluginBase implements PumpInterface,
     public String shortStatus(boolean veryShort) {
         StringBuilder ret = new StringBuilder();
         if (connectionService.getLastConnected() != 0) {
-            Long agoMsec = System.currentTimeMillis() - connectionService.getLastConnected();
+            long agoMsec = System.currentTimeMillis() - connectionService.getLastConnected();
             int agoMin = (int) (agoMsec / 60d / 1000d);
-            ret.append(resourceHelper.gs(R.string.short_status_last_connected, agoMin) + "\n");
+            ret.append(resourceHelper.gs(R.string.short_status_last_connected, agoMin)).append("\n");
         }
         if (activeTBR != null) {
             ret.append(resourceHelper.gs(R.string.short_status_tbr, activeTBR.getPercentage(),
-                    activeTBR.getInitialDuration() - activeTBR.getRemainingDuration(), activeTBR.getInitialDuration()) + "\n");
+                    activeTBR.getInitialDuration() - activeTBR.getRemainingDuration(), activeTBR.getInitialDuration())).append("\n");
         }
         if (activeBoluses != null) for (ActiveBolus activeBolus : activeBoluses) {
             if (activeBolus.getBolusType() == BolusType.STANDARD) continue;
             ret.append(resourceHelper.gs(activeBolus.getBolusType() == BolusType.MULTIWAVE ? R.string.short_status_multiwave : R.string.short_status_extended,
-                    activeBolus.getRemainingAmount(), activeBolus.getInitialAmount(), activeBolus.getRemainingDuration()) + "\n");
+                    activeBolus.getRemainingAmount(), activeBolus.getInitialAmount(), activeBolus.getRemainingDuration())).append("\n");
         }
         if (!veryShort && totalDailyDose != null) {
-            ret.append(resourceHelper.gs(R.string.short_status_tdd, totalDailyDose.getBolusAndBasal()) + "\n");
+            ret.append(resourceHelper.gs(R.string.short_status_tdd, totalDailyDose.getBolusAndBasal())).append("\n");
         }
         if (cartridgeStatus != null) {
-            ret.append(resourceHelper.gs(R.string.short_status_reservoir, cartridgeStatus.getRemainingAmount()) + "\n");
+            ret.append(resourceHelper.gs(R.string.short_status_reservoir, cartridgeStatus.getRemainingAmount())).append("\n");
         }
         if (batteryStatus != null) {
-            ret.append(resourceHelper.gs(R.string.short_status_battery, batteryStatus.getBatteryAmount()) + "\n");
+            ret.append(resourceHelper.gs(R.string.short_status_battery, batteryStatus.getBatteryAmount())).append("\n");
         }
         return ret.toString();
     }
@@ -1236,7 +1227,7 @@ public class LocalInsightPlugin extends PumpPluginBase implements PumpInterface,
             temporaryBasal.isAbsolute = false;
             temporaryBasals.add(temporaryBasal);
         }
-        Collections.sort(temporaryBasals, (o1, o2) -> (int) (o1.date - o2.date));
+        temporaryBasals.sort((o1, o2) -> (int) (o1.date - o2.date));
         for (TemporaryBasal temporaryBasal : temporaryBasals)
             treatmentsPlugin.addToHistoryTempBasal(temporaryBasal);
     }

@@ -434,7 +434,7 @@ public class DanaRv2ExecutionService extends AbstractDanaRExecutionService {
     public PumpEnactResult loadEvents() {
         if (!danaRv2Plugin.isInitialized()) {
             PumpEnactResult result = new PumpEnactResult(injector).success(false);
-            result.comment = "pump not initialized";
+            result.comment("pump not initialized");
             return result;
         }
 
