@@ -367,9 +367,11 @@ class VirtualPumpPlugin @Inject constructor(
     }
 
     fun refreshConfiguration() {
-        val pumpType = sp.getString(R.string.key_virtualpump_type, PumpType.GenericAAPS.description)
-        val pumpTypeNew = PumpType.getByDescription(pumpType)
-        aapsLogger.debug(LTag.PUMP, "Pump in configuration: $pumpType, PumpType object: $pumpTypeNew")
+        var pumpTypeDesc: String = sp.getString(R.string.key_virtualpump_type, PumpType.GenericAAPS.description)
+        if (pumpTypeDesc.equals("MDI")) // this shouldn't happen, but in case it does
+            pumpTypeDesc = PumpType.GenericAAPS.description
+        val pumpTypeNew = PumpType.getByDescription(pumpTypeDesc)
+        aapsLogger.debug(LTag.PUMP, "Pump in configuration: $pumpTypeDesc, PumpType object: $pumpTypeNew")
         if (this.pumpType == pumpTypeNew) return
         aapsLogger.debug(LTag.PUMP, "New pump configuration found ($pumpTypeNew), changing from previous (${this.pumpType})")
         pumpDescription.setPumpDescription(pumpTypeNew)

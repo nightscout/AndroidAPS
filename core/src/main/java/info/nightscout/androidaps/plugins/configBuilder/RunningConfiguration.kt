@@ -80,10 +80,12 @@ class RunningConfiguration @Inject constructor(
         }
 
         if (configuration.has("pump")) {
-            val pumpType = JsonHelper.safeGetString(configuration, "pump", PumpType.GenericAAPS.description)
-            sp.putString(R.string.key_virtualpump_type, pumpType)
-            activePlugin.activePump.pumpDescription.setPumpDescription(PumpType.getByDescription(pumpType))
-            aapsLogger.debug(LTag.CORE, "Changing pump type to $pumpType")
+            var pumpTypeDesc = JsonHelper.safeGetString(configuration, "pump", PumpType.GenericAAPS.description)
+            if (pumpTypeDesc.equals("MDI")) // this shouldn't happen, but in case it does
+                pumpTypeDesc = PumpType.GenericAAPS.description
+            sp.putString(R.string.key_virtualpump_type, pumpTypeDesc)
+            activePlugin.activePump.pumpDescription.setPumpDescription(PumpType.getByDescription(pumpTypeDesc))
+            aapsLogger.debug(LTag.CORE, "Changing pump type to $pumpTypeDesc")
         }
 
         if (configuration.has("overviewConfiguration"))
