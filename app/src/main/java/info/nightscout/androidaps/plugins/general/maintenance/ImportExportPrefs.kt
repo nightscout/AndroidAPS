@@ -364,7 +364,7 @@ class ImportExportPrefs @Inject constructor(
         log.debug("XXXXX " + entries.size)
         prefFileList.ensureExportDirExists()
         val newFile = prefFileList.newExportXmlFile()
-        log.debug("XXXXX " + classicPrefsFormat.returnXml(entries))
+        log.debug("XXXXX " + classicPrefsFormat.UserEntriesToCsv(entries))
 
         askToConfirmExport(activity, newFile) { password ->
             try {

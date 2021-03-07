@@ -229,8 +229,3 @@ fun Units.stringId(): Int {
         else                             -> 0
     }
 }
-
-fun UserEntry.toXml(): String {
-    val content = action.name + "," + values.joinToString(",") {value -> value.toXml()}
-    return ""
-}

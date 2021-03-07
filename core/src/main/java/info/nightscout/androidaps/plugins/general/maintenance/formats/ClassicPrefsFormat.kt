@@ -79,20 +79,7 @@ class ClassicPrefsFormat @Inject constructor(
 
     fun saveXml(file: File, userEntries: List<UserEntry>) {
         try {
-            val contents = userEntries.joinToString("\n") { entry ->
-                    if (entry.values.size > 0) {
-                        dateUtil.dateAndTimeAndSecondsString(entry.timestamp) + "," +
-                            dateUtil.dateAndTimeAndSecondsString(entry.utcOffset) + "," +
-                            resourceHelper.gs(entry.action.stringId()) + "," +
-                            "\""+ entry.s.replace("\"", "\\\"") + "\"," +
-                            entry.values.joinToString(",") { value -> valueWithUnitToStringXml(value) } + "\n"
-                    } else {
-                        dateUtil.dateAndTimeAndSecondsString(entry.timestamp) + "," +
-                            dateUtil.dateAndTimeAndSecondsString(entry.utcOffset) + "," +
-                            resourceHelper.gs(entry.action.stringId()) + "," +
-                            "\""+ entry.s.replace("\"", "\\\"") + "\",,\n"
-                    }
-            }
+            val contents = UserEntriesToCsv(userEntries)
             storage.putFileContents(file, contents)
         } catch (e: FileNotFoundException) {
             throw PrefFileNotFoundError(file.absolutePath)
@@ -101,37 +88,37 @@ class ClassicPrefsFormat @Inject constructor(
         }
     }
 
-    fun returnXml(userEntries: List<UserEntry>): String {
-
-         return userEntries.joinToString("\n") { entry ->
+    fun UserEntriesToCsv(userEntries: List<UserEntry>): String {
+        val userEntryHeader = "Date;UTC Offset;Action;Note;Value;Unit\n"
+        return userEntryHeader + userEntries.joinToString("\n") { entry ->
             if (entry.values.size > 0) {
                 entry.values.joinToString("\n") { value ->
-                    "\"" + dateUtil.dateAndTimeAndSecondsString(entry.timestamp) + "\"," +
-                        "\"" + dateUtil.timeString(entry.utcOffset) + "\"," +
-                        "\"" + resourceHelper.gs(entry.action.stringId()) + "\"," +
-                        if (entry.s != "") {"\""+ entry.s.replace("\"", "\\\"") + "\"," } else { "," } +
-                        valueWithUnitToStringXml(value) }
+                    dateUtil.dateAndTimeAndSecondsString(entry.timestamp) + ";" +
+                        dateUtil.timeString(entry.utcOffset) + ";" +
+                        "\"" + resourceHelper.gs(entry.action.stringId()) + "\";" +
+                        if (entry.s != "") {"\""+ entry.s.replace("\"", "\"\"") + "\";" } else { ";" } +
+                        valueWithUnitToCsv(value) }
             } else {
-                "\"" + dateUtil.dateAndTimeAndSecondsString(entry.timestamp) + "\"," +
-                    "\"" + dateUtil.timeString(entry.utcOffset) + "\"," +
-                    "\"" + resourceHelper.gs(entry.action.stringId()) + "\"," +
-                    if (entry.s != "") {"\""+ entry.s.replace("\"", "\\\"") + "\"," } else { ",," }
+                dateUtil.dateAndTimeAndSecondsString(entry.timestamp) + ";" +
+                    dateUtil.timeString(entry.utcOffset) + ";" +
+                    "\"" + resourceHelper.gs(entry.action.stringId()) + "\";" +
+                    if (entry.s != "") {"\""+ entry.s.replace("\"", "\"\"") + "\";" } else { ";;" }
             }
         }
     }
 
-    fun valueWithUnitToStringXml(v: ValueWithUnit): String {
+    fun valueWithUnitToCsv(v: ValueWithUnit): String {
         return when (v.unit) {
-            Units.Timestamp -> "\"" + dateUtil.dateAndTimeAndSecondsString(v.lValue) + "\",\"" + resourceHelper.gs(R.string.date) + "\""
-            Units.CPEvent -> "\"" + translator.translate(v.sValue) + "\","
-            Units.R_String -> "\"" + resourceHelper.gs(v.iValue) + "\","
-            Units.Mg_Dl -> if (profileFunction.getUnits()==Constants.MGDL) DecimalFormatter.to0Decimal(v.dValue) + ",\"" + resourceHelper.gs(Units.Mg_Dl.stringId()) + "\"" else DecimalFormatter.to1Decimal(v.dValue/Constants.MMOLL_TO_MGDL) + ",\"" + resourceHelper.gs(Units.Mmol_L.stringId()) + "\""
-            Units.Mmol_L -> if (profileFunction.getUnits()==Constants.MGDL) DecimalFormatter.to0Decimal(v.dValue*Constants.MMOLL_TO_MGDL) + ",\"" + resourceHelper.gs(Units.Mg_Dl.stringId()) + "\"" else DecimalFormatter.to1Decimal(v.dValue) + ",\"" + resourceHelper.gs(Units.Mmol_L.stringId()) + "\""
-            Units.G -> v.iValue.toString() + ",\"" + resourceHelper.gs(Units.G.stringId()) + "\""
-            Units.U_H -> DecimalFormatter.to2Decimal(v.dValue) + ",\"" + resourceHelper.gs(Units.U_H.stringId()) + "\""
-            else -> if (v.sValue != "")  {"\""+ v.sValue.replace("\"", "\\\"") + if (!v.unit.stringId().equals(0)) "\",\"" + resourceHelper.gs(v.unit.stringId())  + "\"" else "\","}
-            else if (v.dValue != 0.0 || v.iValue != 0) { v.value().toString() + if (!v.unit.stringId().equals(0)) ",\"" + resourceHelper.gs(v.unit.stringId())  + "\"" else "," }
-            else ","
+            Units.Timestamp -> dateUtil.dateAndTimeAndSecondsString(v.lValue) + ";" + resourceHelper.gs(R.string.date)
+            Units.CPEvent -> translator.translate(v.sValue) + ";"
+            Units.R_String -> "\"" + resourceHelper.gs(v.iValue).replace("\"", "\"\"") + "\";"
+            Units.Mg_Dl -> if (profileFunction.getUnits()==Constants.MGDL) DecimalFormatter.to0Decimal(v.dValue) + ";" + resourceHelper.gs(Units.Mg_Dl.stringId()) else DecimalFormatter.to1Decimal(v.dValue/Constants.MMOLL_TO_MGDL) + ";" + resourceHelper.gs(Units.Mmol_L.stringId())
+            Units.Mmol_L -> if (profileFunction.getUnits()==Constants.MGDL) DecimalFormatter.to0Decimal(v.dValue*Constants.MMOLL_TO_MGDL) + ";" + resourceHelper.gs(Units.Mg_Dl.stringId()) else DecimalFormatter.to1Decimal(v.dValue) + ";" + resourceHelper.gs(Units.Mmol_L.stringId())
+            Units.G -> v.iValue.toString() + ";" + resourceHelper.gs(Units.G.stringId())
+            Units.U_H -> DecimalFormatter.to2Decimal(v.dValue) + ";" + resourceHelper.gs(Units.U_H.stringId())
+            else -> if (v.sValue != "")  {"\""+ v.sValue.replace("\"", "\"\"") + if (!v.unit.stringId().equals(0)) "\";\"" + resourceHelper.gs(v.unit.stringId()).replace("\"", "\"\"")  + "\"" else "\";"}
+            else if (v.dValue != 0.0 || v.iValue != 0) { v.value().toString() + if (!v.unit.stringId().equals(0)) ";" + resourceHelper.gs(v.unit.stringId()) else ";" }
+            else ";"
         }
     }
 }

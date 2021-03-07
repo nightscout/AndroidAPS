@@ -136,13 +136,6 @@ data class UserEntry(
             if (!iValue.equals(0)) return iValue
             return lValue
         }
-
-        fun toXml() : String {
-            if (sValue != "") return "\""+ sValue.replace("\"", "\\\"") + "\"," + unit.text
-            if (!dValue.equals(0.0)) return dValue.toString() + "," + unit.text
-            if (!iValue.equals(0)) return return iValue.toString() + "," + unit.text
-            return return lValue.toString() + "," + unit.text
-        }
     }
     enum class Units(val text: String) {
         @SerializedName("None") None (""),

@@ -18,7 +18,6 @@ import info.nightscout.androidaps.interfaces.ImportExportPrefsInterface
 import info.nightscout.androidaps.interfaces.ProfileFunction
 import info.nightscout.androidaps.logging.UserEntryLogger
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper
-import info.nightscout.androidaps.plugins.general.nsclient.events.EventNSClientRestart
 import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.DecimalFormatter
 import info.nightscout.androidaps.utils.FabricPrivacy
@@ -61,7 +60,7 @@ class TreatmentsUserEntryFragment : DaggerFragment() {
         binding.recyclerview.layoutManager = LinearLayoutManager(view.context)
         binding.ueExportToXml.setOnClickListener {
             activity?.let { activity ->
-                OKDialog.showConfirmation(activity, resourceHelper.gs(R.string.ue_export_to_xml) + "?") {
+                OKDialog.showConfirmation(activity, resourceHelper.gs(R.string.ue_export_to_csv) + "?") {
                     uel.log(Action.TREATMENTS_NS_REFRESH)
                     importExportPrefs.exportUserEntriesXml(activity, repository.getAllUserEntries())
                 }

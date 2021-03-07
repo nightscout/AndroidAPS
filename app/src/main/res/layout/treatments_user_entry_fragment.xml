@@ -12,7 +12,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
         android:drawableStart="@drawable/ic_header_export"
-        android:text="@string/ue_export_to_xml" />
+        android:text="@string/ue_export_to_csv" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerview"
