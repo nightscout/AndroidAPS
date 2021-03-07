@@ -180,13 +180,13 @@ class CareDialog : DialogFragmentWithDate() {
             actions.add(resourceHelper.gs(R.string.careportal_newnstreatment_glucosetype) + ": " + translator.translate(type))
             actions.add(resourceHelper.gs(R.string.treatments_wizard_bg_label) + ": " + Profile.toCurrentUnitsString(profileFunction, binding.bg.value) + " " + resourceHelper.gs(unitResId))
             valuesWithUnit.add(ValueWithUnit(binding.bg.value.toDouble(), profileFunction.getUnits()))
-            valuesWithUnit.add(ValueWithUnit(type,Units.CPEvent))
+            valuesWithUnit.add(ValueWithUnit(type, Units.CPEvent))
             json.put("glucose", binding.bg.value)
             json.put("glucoseType", type)
         }
         if (options == EventType.NOTE || options == EventType.EXERCISE) {
             actions.add(resourceHelper.gs(R.string.careportal_newnstreatment_duration_label) + ": " + resourceHelper.gs(R.string.format_mins, binding.duration.value.toInt()))
-            valuesWithUnit.add(ValueWithUnit(binding.duration.value.toInt(), Units.M))
+            if (!binding.duration.value.equals(0.0)) valuesWithUnit.add(ValueWithUnit(binding.duration.value.toInt(), Units.M))
             json.put("duration", binding.duration.value.toInt())
         }
         val notes = binding.notesLayout.notes.text.toString()
