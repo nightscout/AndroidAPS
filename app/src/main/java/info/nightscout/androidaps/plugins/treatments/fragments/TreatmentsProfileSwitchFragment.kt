@@ -129,7 +129,7 @@ class TreatmentsProfileSwitchFragment : DaggerFragment() {
             holder.binding.clone.tag = profileSwitch
             holder.binding.name.tag = profileSwitch
             holder.binding.date.tag = profileSwitch
-            holder.binding.invalid.visibility = if (profileSwitch.isValid()) View.GONE else View.VISIBLE
+            holder.binding.invalid.visibility = if (profileSwitch.isValid) View.GONE else View.VISIBLE
         }
 
         override fun getItemCount(): Int {
