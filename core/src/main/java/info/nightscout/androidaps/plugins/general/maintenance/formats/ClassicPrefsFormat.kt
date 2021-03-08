@@ -77,7 +77,7 @@ class ClassicPrefsFormat @Inject constructor(
         return metadata
     }
 
-    fun saveXml(file: File, userEntries: List<UserEntry>) {
+    fun saveCsv(file: File, userEntries: List<UserEntry>) {
         try {
             val contents = UserEntriesToCsv(userEntries)
             storage.putFileContents(file, contents)

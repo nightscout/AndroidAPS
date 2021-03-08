@@ -61,8 +61,8 @@ class TreatmentsUserEntryFragment : DaggerFragment() {
         binding.ueExportToXml.setOnClickListener {
             activity?.let { activity ->
                 OKDialog.showConfirmation(activity, resourceHelper.gs(R.string.ue_export_to_csv) + "?") {
-                    uel.log(Action.TREATMENTS_NS_REFRESH)
-                    importExportPrefs.exportUserEntriesXml(activity, repository.getAllUserEntries())
+                    uel.log(Action.EXPORT_CSV)
+                    importExportPrefs.exportUserEntriesCsv(activity, repository.getAllUserEntries())
                 }
             }
         }

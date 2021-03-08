@@ -1,7 +1,6 @@
 package info.nightscout.androidaps.utils.extensions
 
 import info.nightscout.androidaps.core.R
-import info.nightscout.androidaps.database.entities.UserEntry
 import info.nightscout.androidaps.database.entities.UserEntry.*
 
 fun Action.stringId(): Int {
@@ -102,7 +101,8 @@ fun Action.stringId(): Int {
         Action.TT_DELETED_FROM_NS         -> R.string.uel_tt_deleted_from_ns
         Action.TT_FROM_NS                 -> R.string.uel_tt_from_ns
         Action.TT_CANCELED_FROM_NS        -> R.string.uel_tt_canceleted_from_ns
-        else                                        -> R.string.uel_unknown
+        Action.EXPORT_CSV                 -> R.string.uel_export_csv
+        else                              -> R.string.uel_unknown
     }
 }
 

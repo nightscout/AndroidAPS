@@ -115,6 +115,7 @@ data class UserEntry(
         @SerializedName("TT_DELETED_FROM_NS") TT_DELETED_FROM_NS (ColorGroup.TT),
         @SerializedName("TT_FROM_NS") TT_FROM_NS (ColorGroup.TT),
         @SerializedName("TT_CANCELED_FROM_NS") TT_CANCELED_FROM_NS (ColorGroup.TT),
+        @SerializedName("EXPORT_CSV") EXPORT_CSV (ColorGroup.Aaps),
         @SerializedName("UNKNOWN") UNKNOWN (ColorGroup.Aaps)
         ;
 
@@ -169,5 +170,4 @@ data class UserEntry(
         Pump,
         Aaps
     }
-
 }

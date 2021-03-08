@@ -485,6 +485,7 @@
     <string name="uel_tt_deleted_from_ns">TT DELETED FROM NS</string>
     <string name="uel_tt_from_ns">TT FROM NS</string>
     <string name="uel_tt_canceleted_from_ns">TT CANCELED FROM NS</string>
+    <string name="uel_export_csv">EXPORT USER ENTRIES</string>
     <string name="uel_unknown">UNKNOWN</string>
     <string name="formated_string">Formated string</string>
     <string name="ue_export_to_csv">Export User Entries to Excel (csv)</string>

@@ -358,38 +358,21 @@ class ImportExportPrefs @Inject constructor(
         })
     }
 
-
-    override fun exportUserEntriesXml(activity: FragmentActivity, listEntries: Single<List<UserEntry>>) {
+    override fun exportUserEntriesCsv(activity: FragmentActivity, listEntries: Single<List<UserEntry>>) {
         val entries = listEntries.blockingGet()
-        log.debug("XXXXX " + entries.size)
         prefFileList.ensureExportDirExists()
         val newFile = prefFileList.newExportXmlFile()
-        log.debug("XXXXX " + classicPrefsFormat.UserEntriesToCsv(entries))
+        //log.debug("XXXXX " + classicPrefsFormat.UserEntriesToCsv(entries))
 
-        askToConfirmExport(activity, newFile) { password ->
-            try {
-                classicPrefsFormat.saveXml(newFile, entries)
-                log.debug("XXXXX " + newFile.isHidden + " " + newFile.absolutePath)
-                ToastUtils.okToast(activity, resourceHelper.gs(R.string.ue_exported))
-            } catch (e: FileNotFoundException) {
-                ToastUtils.errorToast(activity, resourceHelper.gs(R.string.filenotfound) + " " + newFile)
-                log.error(LTag.CORE, "Unhandled exception", e)
-            } catch (e: IOException) {
-                ToastUtils.errorToast(activity, e.message)
-                log.error(LTag.CORE, "Unhandled exception", e)
-            } catch (e: PrefFileNotFoundError) {
-                ToastUtils.Long.errorToast(activity, resourceHelper.gs(R.string.preferences_export_canceled)
-                    + "\n\n" + resourceHelper.gs(R.string.filenotfound)
-                    + ": " + e.message
-                    + "\n\n" + resourceHelper.gs(R.string.needstoragepermission))
-                log.error(LTag.CORE, "File system exception", e)
-            } catch (e: PrefIOError) {
-                ToastUtils.Long.errorToast(activity, resourceHelper.gs(R.string.preferences_export_canceled)
-                    + "\n\n" + resourceHelper.gs(R.string.needstoragepermission)
-                    + ": " + e.message)
-                log.error(LTag.CORE, "File system exception", e)
-            }
+        try {
+            classicPrefsFormat.saveCsv(newFile, entries)
+            ToastUtils.okToast(activity, resourceHelper.gs(R.string.ue_exported))
+        } catch (e: FileNotFoundException) {
+            ToastUtils.errorToast(activity, resourceHelper.gs(R.string.filenotfound) + " " + newFile)
+            log.error(LTag.CORE, "Unhandled exception", e)
+        } catch (e: IOException) {
+            ToastUtils.errorToast(activity, e.message)
+            log.error(LTag.CORE, "Unhandled exception", e)
         }
-
     }
 }
