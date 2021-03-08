@@ -1,6 +1,5 @@
 package info.nightscout.androidaps.plugins.configBuilder
 
-import info.nightscout.androidaps.core.R
 import info.nightscout.androidaps.interfaces.ActivePluginProvider
 import info.nightscout.androidaps.interfaces.ConfigBuilderInterface
 import info.nightscout.androidaps.interfaces.InsulinInterface
@@ -81,9 +80,6 @@ class RunningConfiguration @Inject constructor(
 
         if (configuration.has("pump")) {
             var pumpTypeDesc = JsonHelper.safeGetString(configuration, "pump", PumpType.GenericAAPS.description)
-            if (pumpTypeDesc.equals("MDI")) // this shouldn't happen, but in case it does
-                pumpTypeDesc = PumpType.GenericAAPS.description
-            sp.putString(R.string.key_virtualpump_type, pumpTypeDesc)
             activePlugin.activePump.pumpDescription.setPumpDescription(PumpType.getByDescription(pumpTypeDesc))
             aapsLogger.debug(LTag.CORE, "Changing pump type to $pumpTypeDesc")
         }
