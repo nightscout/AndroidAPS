@@ -247,6 +247,8 @@
     <string name="careportal_pumpsitechange">Pump Site Change</string>
     <string name="careportal_cgmsensorinsert">CGM Sensor Insert</string>
     <string name="careportal_cgmsensorstart">CGM Sensor Start</string>
+    <string name="careportal_cgm_sensor_stop">CGM Sensor Stop</string>
+    <string name="careportal_dad_alert">D.A.D. Alert</string>
     <string name="careportal_insulincartridgechange">Insulin Cartridge Change</string>
     <string name="careportal_profileswitch">Profile switch</string>
     <string name="careportal_snackbolus">Snack Bolus</string>

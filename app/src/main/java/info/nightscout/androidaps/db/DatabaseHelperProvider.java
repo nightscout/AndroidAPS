@@ -24,10 +24,6 @@ public class DatabaseHelperProvider implements DatabaseHelperInterface {
     @Inject DatabaseHelperProvider() {
     }
 
-    @Override public void createOrUpdate(@NonNull CareportalEvent careportalEvent) {
-        MainApp.Companion.getDbHelper().createOrUpdate(careportalEvent);
-    }
-
     @Override public void createOrUpdate(@NonNull DanaRHistoryRecord record) {
         MainApp.Companion.getDbHelper().createOrUpdate(record);
     }
@@ -90,10 +86,6 @@ public class DatabaseHelperProvider implements DatabaseHelperInterface {
 
     @NonNull @Override public List<TemporaryBasal> getTemporaryBasalsDataFromTime(long mills, boolean ascending) {
         return MainApp.Companion.getDbHelper().getTemporaryBasalsDataFromTime(mills, ascending);
-    }
-
-    @Override public CareportalEvent getCareportalEventFromTimestamp(long timestamp) {
-        return MainApp.Companion.getDbHelper().getCareportalEventFromTimestamp(timestamp);
     }
 
     @NonNull @Override public List<OmnipodHistoryRecord> getAllOmnipodHistoryRecordsFromTimestamp(long timestamp, boolean ascending) {
@@ -168,10 +160,6 @@ public class DatabaseHelperProvider implements DatabaseHelperInterface {
         MainApp.Companion.getDbHelper().deleteExtendedBolusById(_id);
     }
 
-    @Override public void deleteCareportalEventById(@NonNull String _id) {
-        MainApp.Companion.getDbHelper().deleteCareportalEventById(_id);
-    }
-
     @Override public void deleteProfileSwitchById(@NonNull String _id) {
         MainApp.Companion.getDbHelper().deleteProfileSwitchById(_id);
     }
@@ -182,10 +170,6 @@ public class DatabaseHelperProvider implements DatabaseHelperInterface {
 
     @Override public void createExtendedBolusFromJsonIfNotExists(@NonNull JSONObject json) {
         MainApp.Companion.getDbHelper().createExtendedBolusFromJsonIfNotExists(json);
-    }
-
-    @Override public void createCareportalEventFromJsonIfNotExists(@NonNull JSONObject json) {
-        MainApp.Companion.getDbHelper().createCareportalEventFromJsonIfNotExists(json);
     }
 
     @Override public void createProfileSwitchFromJsonIfNotExists(@NonNull ActivePluginProvider activePluginProvider, @NonNull NSUpload nsUpload, @NonNull JSONObject trJson) {
@@ -200,32 +184,8 @@ public class DatabaseHelperProvider implements DatabaseHelperInterface {
         MainApp.Companion.getDbHelper().createOrUpdate(record);
     }
 
-    @Override public void delete(@NonNull CareportalEvent careportalEvent) {
-        MainApp.Companion.getDbHelper().delete(careportalEvent);
-    }
-
     @Override public void delete(@NonNull ProfileSwitch profileSwitch) {
         MainApp.Companion.getDbHelper().delete(profileSwitch);
-    }
-
-    @Nullable @Override public CareportalEvent getLastCareportalEvent(@NonNull String event) {
-        return MainApp.Companion.getDbHelper().getLastCareportalEvent(event);
-    }
-
-    @NonNull @Override public List<CareportalEvent> getCareportalEventsFromTime(long mills, boolean ascending) {
-        return MainApp.Companion.getDbHelper().getCareportalEventsFromTime(mills, ascending);
-    }
-
-    @NonNull @Override public List<CareportalEvent> getCareportalEventsFromTime(long mills, @NonNull String type, boolean ascending) {
-        return MainApp.Companion.getDbHelper().getCareportalEventsFromTime(mills, type, ascending);
-    }
-
-    @NonNull @Override public List<CareportalEvent> getCareportalEvents(long start, long end, boolean ascending) {
-        return MainApp.Companion.getDbHelper().getCareportalEvents(start, end, ascending);
-    }
-
-    @NonNull @Override public List<CareportalEvent> getCareportalEvents(boolean ascending) {
-        return MainApp.Companion.getDbHelper().getCareportalEvents(ascending);
     }
 
     @NonNull @Override public List<ProfileSwitch> getProfileSwitchEventsFromTime(long from, long to, boolean ascending) {
@@ -234,10 +194,6 @@ public class DatabaseHelperProvider implements DatabaseHelperInterface {
 
     @NonNull @Override public List<ProfileSwitch> getProfileSwitchEventsFromTime(long mills, boolean ascending) {
         return MainApp.Companion.getDbHelper().getProfileSwitchEventsFromTime(mills, ascending);
-    }
-
-    @NonNull @Override public List<CareportalEvent> getAllCareportalEvents() {
-        return MainApp.Companion.getDbHelper().getAllCareportalEvents();
     }
 
     @NonNull @Override public List<ExtendedBolus> getAllExtendedBoluses() {
@@ -258,10 +214,6 @@ public class DatabaseHelperProvider implements DatabaseHelperInterface {
 
     @NonNull @Override public List<OHQueueItem> getAllOHQueueItems(long maxEntries) {
         return MainApp.Companion.getDbHelper().getAllOHQueueItems(maxEntries);
-    }
-
-    @Override public void resetCareportalEvents() {
-        MainApp.Companion.getDbHelper().resetCareportalEvents();
     }
 
     @Override public void resetProfileSwitch() {

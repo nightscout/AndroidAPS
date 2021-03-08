@@ -18,6 +18,7 @@ import info.nightscout.androidaps.R
 import info.nightscout.androidaps.database.AppRepository
 import info.nightscout.androidaps.database.entities.GlucoseValue
 import info.nightscout.androidaps.database.entities.TemporaryTarget
+import info.nightscout.androidaps.database.entities.TherapyEvent
 import info.nightscout.androidaps.db.*
 import info.nightscout.androidaps.events.EventPreferenceChange
 import info.nightscout.androidaps.interfaces.DatabaseHelperInterface
@@ -198,23 +199,16 @@ class OpenHumansUploader @Inject constructor(
     }
 
     @JvmOverloads
-    fun enqueueCareportalEvent(careportalEvent: CareportalEvent, deleted: Boolean = false) = insertQueueItem("CareportalEvents") {
-        put("date", careportalEvent.date)
-        put("isValid", careportalEvent.isValid)
-        put("source", careportalEvent.source)
-        put("nsId", careportalEvent._id)
-        put("eventType", careportalEvent.eventType)
-        val data = JSONObject(careportalEvent.json)
-        val reducedData = JSONObject()
-        if (data.has("mgdl")) reducedData.put("mgdl", data.getDouble("mgdl"))
-        if (data.has("glucose")) reducedData.put("glucose", data.getDouble("glucose"))
-        if (data.has("units")) reducedData.put("units", data.getString("units"))
-        if (data.has("created_at")) reducedData.put("created_at", data.getString("created_at"))
-        if (data.has("glucoseType")) reducedData.put("glucoseType", data.getString("glucoseType"))
-        if (data.has("duration")) reducedData.put("duration", data.getInt("duration"))
-        if (data.has("mills")) reducedData.put("mills", data.getLong("mills"))
-        if (data.has("eventType")) reducedData.put("eventType", data.getString("eventType"))
-        put("data", reducedData)
+    fun enqueueTherapyEvent(therapyEvent: TherapyEvent, deleted: Boolean = false) = insertQueueItem("TherapyEvents") {
+        put("date", therapyEvent.timestamp)
+        put("isValid", therapyEvent.isValid)
+        put("nsId", therapyEvent.interfaceIDs.nightscoutId)
+        put("eventType", therapyEvent.type.text)
+        put("glucose", therapyEvent.glucose)
+        put("units", therapyEvent.units)
+        put("glucoseType", therapyEvent.glucoseType?.text)
+        put("units", therapyEvent.units)
+        put("duration", therapyEvent.duration)
         put("isDeletion", deleted)
     }
 
@@ -370,8 +364,8 @@ class OpenHumansUploader @Inject constructor(
             .andThen(Observable.defer { Observable.fromIterable(repository.compatGetBgReadingsDataFromTime(0, true).blockingGet()) })
             .map { enqueueBGReading(it); increaseCounter() }
             .ignoreElements()
-            .andThen(Observable.defer { Observable.fromIterable(databaseHelper.getAllCareportalEvents()) })
-            .map { enqueueCareportalEvent(it); increaseCounter() }
+            .andThen(Observable.defer { Observable.fromIterable(repository.compatGetTherapyEventDataFromTime(0, true).blockingGet()) })
+            .map { enqueueTherapyEvent(it); increaseCounter() }
             .ignoreElements()
             .andThen(Observable.defer { Observable.fromIterable(databaseHelper.getAllExtendedBoluses()) })
             .map { enqueueExtendedBolus(it); increaseCounter() }

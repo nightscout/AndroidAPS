@@ -6,6 +6,7 @@ import android.os.SystemClock;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import org.joda.time.DateTime;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
@@ -24,7 +25,7 @@ import info.nightscout.androidaps.combo.R;
 import info.nightscout.androidaps.data.DetailedBolusInfo;
 import info.nightscout.androidaps.data.Profile;
 import info.nightscout.androidaps.data.PumpEnactResult;
-import info.nightscout.androidaps.db.CareportalEvent;
+import info.nightscout.androidaps.database.entities.TherapyEvent;
 import info.nightscout.androidaps.db.Source;
 import info.nightscout.androidaps.db.TDD;
 import info.nightscout.androidaps.db.TemporaryBasal;
@@ -996,8 +997,8 @@ public class ComboPlugin extends PumpPluginBase implements PumpInterface, Constr
         double pumpBasalRate = state.tbrActive
                 ? Math.round(state.basalRate * 100 / state.tbrPercent * 100) / 100d
                 : state.basalRate;
-        int pumpHour = new Date(state.pumpTime).getHours();
-        int phoneHour = new Date().getHours();
+        int pumpHour = new DateTime(state.pumpTime).getHourOfDay();
+        int phoneHour = DateTime.now().getHourOfDay();
         if (pumpHour != phoneHour) {
             // only check if clocks are close
             return;
@@ -1157,7 +1158,7 @@ public class ComboPlugin extends PumpPluginBase implements PumpInterface, Constr
             dbi.pumpId = dbi.date;
             dbi.source = Source.PUMP;
             dbi.insulin = pumpBolus.amount;
-            dbi.eventType = CareportalEvent.CORRECTIONBOLUS;
+            dbi.eventType = TherapyEvent.Type.CORRECTION_BOLUS.getText();
             if (treatmentsPlugin.addToHistoryTreatment(dbi, true)) {
                 updated = true;
             }

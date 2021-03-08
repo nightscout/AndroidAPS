@@ -1,3 +1,3 @@
 package info.nightscout.androidaps.events
 
-class EventCareportalEventChange : Event()
+class EventTherapyEventChange : Event()

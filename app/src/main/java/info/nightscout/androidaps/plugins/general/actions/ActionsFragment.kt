@@ -235,7 +235,7 @@ class ActionsFragment : DaggerFragment() {
             .observeOn(aapsSchedulers.main)
             .subscribe({ updateGui() }, fabricPrivacy::logException)
         disposable += rxBus
-            .toObservable(EventCareportalEventChange::class.java)
+            .toObservable(EventTherapyEventChange::class.java)
             .observeOn(aapsSchedulers.main)
             .subscribe({ updateGui() }, fabricPrivacy::logException)
         updateGui()

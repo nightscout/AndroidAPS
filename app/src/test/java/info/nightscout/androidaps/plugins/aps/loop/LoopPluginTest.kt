@@ -7,7 +7,12 @@ import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.Config
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.TestBase
-import info.nightscout.androidaps.interfaces.*
+import info.nightscout.androidaps.database.AppRepository
+import info.nightscout.androidaps.interfaces.ActivePluginProvider
+import info.nightscout.androidaps.interfaces.CommandQueueProvider
+import info.nightscout.androidaps.interfaces.PluginType
+import info.nightscout.androidaps.interfaces.ProfileFunction
+import info.nightscout.androidaps.interfaces.PumpDescription
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper
 import info.nightscout.androidaps.plugins.configBuilder.ConstraintChecker
 import info.nightscout.androidaps.plugins.general.nsclient.NSUpload
@@ -15,6 +20,7 @@ import info.nightscout.androidaps.plugins.iob.iobCobCalculator.IobCobCalculatorP
 import info.nightscout.androidaps.plugins.pump.virtual.VirtualPumpPlugin
 import info.nightscout.androidaps.plugins.treatments.TreatmentsPlugin
 import info.nightscout.androidaps.receivers.ReceiverStatusStore
+import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.FabricPrivacy
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 import info.nightscout.androidaps.utils.sharedPreferences.SP
@@ -30,7 +36,7 @@ import org.powermock.modules.junit4.PowerMockRunner
 @RunWith(PowerMockRunner::class)
 @PrepareForTest(
     ConstraintChecker::class, VirtualPumpPlugin::class, FabricPrivacy::class, ReceiverStatusStore::class,
-    IobCobCalculatorPlugin::class)
+    IobCobCalculatorPlugin::class, AppRepository::class)
 class LoopPluginTest : TestBase() {
 
     @Mock lateinit var sp: SP
@@ -48,14 +54,15 @@ class LoopPluginTest : TestBase() {
     @Mock lateinit var receiverStatusStore: ReceiverStatusStore
     @Mock lateinit var nsUpload: NSUpload
     @Mock lateinit var notificationManager: NotificationManager
-    @Mock lateinit var databaseHelper: DatabaseHelperInterface
+    @Mock lateinit var repository: AppRepository
+    @Mock lateinit var dateUtil: DateUtil
 
     private lateinit var loopPlugin: LoopPlugin
 
     val injector = HasAndroidInjector { AndroidInjector { } }
     @Before fun prepareMock() {
 
-        loopPlugin = LoopPlugin(injector, aapsLogger, aapsSchedulers, rxBus, sp, Config(), constraintChecker, resourceHelper, profileFunction, context, commandQueue, activePlugin, treatmentsPlugin, virtualPumpPlugin, iobCobCalculatorPlugin, receiverStatusStore, fabricPrivacy, nsUpload, databaseHelper)
+        loopPlugin = LoopPlugin(injector, aapsLogger, aapsSchedulers, rxBus, sp, Config(), constraintChecker, resourceHelper, profileFunction, context, commandQueue, activePlugin, treatmentsPlugin, virtualPumpPlugin, iobCobCalculatorPlugin, receiverStatusStore, fabricPrivacy, nsUpload, dateUtil, repository)
         `when`(activePlugin.activePump).thenReturn(virtualPumpPlugin)
         `when`(context.getSystemService(Context.NOTIFICATION_SERVICE)).thenReturn(notificationManager)
     }

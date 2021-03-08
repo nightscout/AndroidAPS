@@ -20,13 +20,11 @@ import info.nightscout.androidaps.data.IobTotal;
 import info.nightscout.androidaps.data.Profile;
 import info.nightscout.androidaps.database.entities.GlucoseValue;
 import info.nightscout.androidaps.database.entities.TemporaryTarget;
-import info.nightscout.androidaps.db.CareportalEvent;
+import info.nightscout.androidaps.database.entities.TherapyEvent;
 import info.nightscout.androidaps.db.DbRequest;
 import info.nightscout.androidaps.db.ExtendedBolus;
 import info.nightscout.androidaps.db.ProfileSwitch;
-import info.nightscout.androidaps.db.Source;
 import info.nightscout.androidaps.db.TemporaryBasal;
-import info.nightscout.androidaps.interfaces.DatabaseHelperInterface;
 import info.nightscout.androidaps.interfaces.IobCobCalculatorInterface;
 import info.nightscout.androidaps.interfaces.LoopInterface;
 import info.nightscout.androidaps.interfaces.ProfileFunction;
@@ -51,12 +49,10 @@ import info.nightscout.androidaps.utils.sharedPreferences.SP;
 @Singleton
 public class NSUpload {
 
-    private final HasAndroidInjector injector;
     private final AAPSLogger aapsLogger;
     private final ResourceHelper resourceHelper;
     private final SP sp;
     private final UploadQueueInterface uploadQueue;
-    private final DatabaseHelperInterface databaseHelper;
     private final RunningConfiguration runningConfiguration;
     private final ProfileFunction profileFunction;
 
@@ -64,29 +60,25 @@ public class NSUpload {
 
     @Inject
     public NSUpload(
-            HasAndroidInjector injector,
             AAPSLogger aapsLogger,
             ResourceHelper resourceHelper,
             SP sp,
             UploadQueueInterface uploadQueue,
             RunningConfiguration runningConfiguration,
-            DatabaseHelperInterface databaseHelper,
             ProfileFunction profileFunction
     ) {
-        this.injector = injector;
         this.aapsLogger = aapsLogger;
         this.resourceHelper = resourceHelper;
         this.sp = sp;
         this.uploadQueue = uploadQueue;
         this.runningConfiguration = runningConfiguration;
-        this.databaseHelper = databaseHelper;
         this.profileFunction = profileFunction;
     }
 
     public void uploadTempBasalStartAbsolute(TemporaryBasal temporaryBasal, Double originalExtendedAmount) {
         try {
             JSONObject data = new JSONObject();
-            data.put("eventType", CareportalEvent.TEMPBASAL);
+            data.put("eventType", TherapyEvent.Type.TEMPORARY_BASAL.getText());
             data.put("duration", temporaryBasal.durationInMinutes);
             data.put("absolute", temporaryBasal.absoluteRate);
             data.put("rate", temporaryBasal.absoluteRate);
@@ -118,7 +110,7 @@ public class NSUpload {
                 }
             } else {
                 JSONObject data = new JSONObject();
-                data.put("eventType", CareportalEvent.TEMPBASAL);
+                data.put("eventType", TherapyEvent.Type.TEMPORARY_BASAL.getText());
                 data.put("duration", temporaryBasal.durationInMinutes);
                 data.put("percent", temporaryBasal.percentRate - 100);
                 if (profile != null)
@@ -137,7 +129,7 @@ public class NSUpload {
     public void uploadTempBasalEnd(long time, boolean isFakedTempBasal, long pumpId) {
         try {
             JSONObject data = new JSONObject();
-            data.put("eventType", CareportalEvent.TEMPBASAL);
+            data.put("eventType", TherapyEvent.Type.TEMPORARY_BASAL.getText());
             data.put("created_at", DateUtil.toISOString(time));
             data.put("enteredBy", "openaps://" + "AndroidAPS");
             if (isFakedTempBasal)
@@ -153,7 +145,7 @@ public class NSUpload {
     public void uploadExtendedBolus(ExtendedBolus extendedBolus) {
         try {
             JSONObject data = new JSONObject();
-            data.put("eventType", CareportalEvent.COMBOBOLUS);
+            data.put("eventType", TherapyEvent.Type.COMBO_BOLUS.getText());
             data.put("duration", extendedBolus.durationInMinutes);
             data.put("splitNow", 0);
             data.put("splitExt", 100);
@@ -172,7 +164,7 @@ public class NSUpload {
     public void uploadExtendedBolusEnd(long time, long pumpId) {
         try {
             JSONObject data = new JSONObject();
-            data.put("eventType", CareportalEvent.COMBOBOLUS);
+            data.put("eventType", TherapyEvent.Type.COMBO_BOLUS.getText());
             data.put("duration", 0);
             data.put("splitNow", 0);
             data.put("splitExt", 100);
@@ -293,7 +285,7 @@ public class NSUpload {
     public void uploadTempTarget(TemporaryTarget tempTarget) {
         try {
             JSONObject data = new JSONObject();
-            data.put("eventType", CareportalEvent.TEMPORARYTARGET);
+            data.put("eventType", TherapyEvent.Type.TEMPORARY_TARGET.getText());
             data.put("duration", T.msecs(tempTarget.getDuration()).mins());
             data.put(ISVALID, tempTarget.isValid());
             if (tempTarget.getLowTarget() > 0) {
@@ -313,7 +305,7 @@ public class NSUpload {
     public void updateTempTarget(TemporaryTarget tempTarget) {
         try {
             JSONObject data = new JSONObject();
-            data.put("eventType", CareportalEvent.TEMPORARYTARGET);
+            data.put("eventType", TherapyEvent.Type.TEMPORARY_TARGET.getText());
             data.put("duration", T.msecs(tempTarget.getDuration()).mins());
             data.put(ISVALID, tempTarget.isValid());
             if (tempTarget.getLowTarget() > 0) {
@@ -343,7 +335,7 @@ public class NSUpload {
 
     private static JSONObject getJson(ProfileSwitch profileSwitch) throws JSONException {
         JSONObject data = new JSONObject();
-        data.put("eventType", CareportalEvent.PROFILESWITCH);
+        data.put("eventType", TherapyEvent.Type.PROFILE_SWITCH.getText());
         data.put("duration", profileSwitch.durationInMinutes);
         data.put("profile", profileSwitch.getCustomizedName());
         data.put("profileJson", profileSwitch.profileJson);
@@ -382,19 +374,9 @@ public class NSUpload {
 
     }
 
+    // TODO replace with seting isValid = false
     public void removeCareportalEntryFromNS(String _id) {
         uploadQueue.add(new DbRequest("dbRemove", "treatments", _id, System.currentTimeMillis()));
-    }
-
-    public void uploadOpenAPSOffline(CareportalEvent event) {
-        try {
-            JSONObject data = new JSONObject(event.json);
-            data.put("created_at", DateUtil.toISOString(event.date));
-            data.put("enteredBy", "openaps://" + "AndroidAPS");
-            uploadQueue.add(new DbRequest("dbAdd", "treatments", data, event.date));
-        } catch (JSONException e) {
-            aapsLogger.error("Unhandled exception", e);
-        }
     }
 
     public void uploadError(String error) {
@@ -473,6 +455,7 @@ public class NSUpload {
             data.put("eventType", careportalEvent);
             data.put("created_at", DateUtil.toISOString(time));
             data.put("enteredBy", sp.getString("careportal_enteredby", "AndroidAPS"));
+            data.put("units", profileFunction.getUnits());
             if (notes != null) {
                 data.put("notes", notes);
             }
@@ -480,6 +463,23 @@ public class NSUpload {
             aapsLogger.error("Unhandled exception", e);
         }
         uploadQueue.add(new DbRequest("dbAdd", "treatments", data, time));
+    }
+
+    public void uploadEvent(TherapyEvent event) {
+        JSONObject data = new JSONObject();
+        try {
+            data.put("eventType", event.getType().getText());
+            data.put("created_at", event.getTimestamp());
+            data.put("enteredBy", event.getEnteredBy());
+            if (event.getUnits() != null) data.put("units", event.getUnits());
+            if (event.getDuration() != 0) data.put("duration", T.msecs(event.getDuration()).mins());
+            if (event.getNote() != null) data.put("notes", event.getNote());
+            if (event.getGlucose() != null) data.put("glucose", event.getGlucose());
+            if (event.getGlucoseType() != null) data.put("glucoseType", event.getGlucoseType().getText());
+        } catch (JSONException e) {
+            aapsLogger.error("Unhandled exception", e);
+        }
+        uploadQueue.add(new DbRequest("dbAdd", "treatments", data, event.getTimestamp()));
     }
 
     public void removeFoodFromNS(String _id) {
@@ -492,7 +492,7 @@ public class NSUpload {
     }
 
     public void createNSTreatment(JSONObject data, ProfileStore profileStore, ProfileFunction profileFunction, long eventTime) {
-        if (JsonHelper.safeGetString(data, "eventType", "").equals(CareportalEvent.PROFILESWITCH)) {
+        if (JsonHelper.safeGetString(data, "eventType", "").equals(TherapyEvent.Type.PROFILE_SWITCH.getText())) {
             ProfileSwitch profileSwitch = profileFunction.prepareProfileSwitch(
                     profileStore,
                     JsonHelper.safeGetString(data, "profile"),
@@ -511,29 +511,6 @@ public class NSUpload {
         if (_id == null)
             return false;
         return _id.length() == 24;
-    }
-
-    public void generateCareportalEvent(String eventType, long time, String notes) {
-        CareportalEvent careportalEvent = new CareportalEvent(injector);
-        careportalEvent.source = Source.USER;
-        careportalEvent.date = time;
-        careportalEvent.json = generateJson(eventType, time, notes).toString();
-        careportalEvent.eventType = eventType;
-        databaseHelper.createOrUpdate(careportalEvent);
-        uploadEvent(eventType, time, notes);
-    }
-
-    private JSONObject generateJson(String careportalEvent, long time, String notes) {
-        JSONObject data = new JSONObject();
-        try {
-            data.put("eventType", careportalEvent);
-            data.put("created_at", DateUtil.toISOString(time));
-            data.put("mills", time);
-            data.put("enteredBy", sp.getString("careportal_enteredby", "AndroidAPS"));
-            if (!notes.isEmpty()) data.put("notes", notes);
-        } catch (JSONException ignored) {
-        }
-        return data;
     }
 
 }
