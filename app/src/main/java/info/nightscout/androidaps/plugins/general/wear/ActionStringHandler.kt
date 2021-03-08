@@ -36,6 +36,7 @@ import info.nightscout.androidaps.plugins.pump.insight.LocalInsightPlugin
 import info.nightscout.androidaps.plugins.treatments.CarbsGenerator
 import info.nightscout.androidaps.queue.Callback
 import info.nightscout.androidaps.utils.*
+import info.nightscout.androidaps.utils.extensions.valueToUnits
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 import info.nightscout.androidaps.utils.rx.AapsSchedulers
 import info.nightscout.androidaps.utils.sharedPreferences.SP
@@ -52,6 +53,7 @@ import javax.inject.Singleton
 import kotlin.math.abs
 import kotlin.math.min
 
+@Suppress("SpellCheckingInspection")
 @Singleton
 class ActionStringHandler @Inject constructor(
     private val sp: SP,
@@ -75,7 +77,6 @@ class ActionStringHandler @Inject constructor(
     private val danaRv2Plugin: DanaRv2Plugin,
     private val danaRSPlugin: DanaRSPlugin,
     private val danaPump: DanaPump,
-    private val hardLimits: HardLimits,
     private val carbsGenerator: CarbsGenerator,
     private val dateUtil: DateUtil,
     private val config: Config,
@@ -84,7 +85,7 @@ class ActionStringHandler @Inject constructor(
     private val nsUpload: NSUpload
 ) {
 
-    private val TIMEOUT = 65 * 1000
+    private val timeout = 65 * 1000
     private var lastSentTimestamp: Long = 0
     private var lastConfirmActionString: String? = null
     private var lastBolusWizard: BolusWizard? = null
@@ -113,14 +114,11 @@ class ActionStringHandler @Inject constructor(
         // do the parsing and check constraints
         val act = actionString.split("\\s+".toRegex()).toTypedArray()
         if ("fillpreset" == act[0]) { ///////////////////////////////////// PRIME/FILL
-            val amount: Double = if ("1" == act[1]) {
-                sp.getDouble("fill_button1", 0.3)
-            } else if ("2" == act[1]) {
-                sp.getDouble("fill_button2", 0.0)
-            } else if ("3" == act[1]) {
-                sp.getDouble("fill_button3", 0.0)
-            } else {
-                return
+            val amount: Double = when {
+                "1" == act[1] -> sp.getDouble("fill_button1", 0.3)
+                "2" == act[1] -> sp.getDouble("fill_button2", 0.0)
+                "3" == act[1] -> sp.getDouble("fill_button3", 0.0)
+                else          -> return
             }
             val insulinAfterConstraints = constraintChecker.applyBolusConstraints(Constraint(amount)).value()
             rMessage += resourceHelper.gs(R.string.primefill) + ": " + insulinAfterConstraints + "U"
@@ -160,11 +158,11 @@ class ActionStringHandler @Inject constructor(
                     low *= Constants.MMOLL_TO_MGDL
                     high *= Constants.MMOLL_TO_MGDL
                 }
-                if (low < hardLimits.VERY_HARD_LIMIT_TEMP_MIN_BG[0] || low > hardLimits.VERY_HARD_LIMIT_TEMP_MIN_BG[1]) {
+                if (low < HardLimits.VERY_HARD_LIMIT_TEMP_MIN_BG[0] || low > HardLimits.VERY_HARD_LIMIT_TEMP_MIN_BG[1]) {
                     sendError("Min-BG out of range!")
                     return
                 }
-                if (high < hardLimits.VERY_HARD_LIMIT_TEMP_MAX_BG[0] || high > hardLimits.VERY_HARD_LIMIT_TEMP_MAX_BG[1]) {
+                if (high < HardLimits.VERY_HARD_LIMIT_TEMP_MAX_BG[0] || high > HardLimits.VERY_HARD_LIMIT_TEMP_MAX_BG[1]) {
                     sendError("Max-BG out of range!")
                     return
                 }
@@ -358,12 +356,11 @@ class ActionStringHandler @Inject constructor(
             message += "Today: " + DecimalFormatter.to2Decimal(tdd) + "U " + (DecimalFormatter.to0Decimal(100 * tdd / refTDD) + "%") + "\n"
             message += "\n"
         }
-        var i = 0
         var weighted03 = 0.0
         var weighted05 = 0.0
         var weighted07 = 0.0
         historyList.reverse()
-        for (record in historyList) {
+        for ((i, record) in historyList.withIndex()) {
             val tdd = record.getTotal()
             if (i == 0) {
                 weighted03 = tdd
@@ -374,7 +371,6 @@ class ActionStringHandler @Inject constructor(
                 weighted05 = weighted05 * 0.5 + tdd * 0.5
                 weighted03 = weighted03 * 0.7 + tdd * 0.3
             }
-            i++
         }
         message += "weighted:\n"
         message += "0.3: " + DecimalFormatter.to2Decimal(weighted03) + "U " + (DecimalFormatter.to0Decimal(100 * weighted03 / refTDD) + "%") + "\n"
@@ -495,7 +491,7 @@ class ActionStringHandler @Inject constructor(
         //Guard from old or duplicate confirmations
         if (lastConfirmActionString == null) return
         if (lastConfirmActionString != actionString) return
-        if (System.currentTimeMillis() - lastSentTimestamp > TIMEOUT) return
+        if (System.currentTimeMillis() - lastSentTimestamp > timeout) return
         lastConfirmActionString = null
         // do the parsing, check constraints and enact!
         val act = actionString.split("\\s+".toRegex()).toTypedArray()
@@ -578,7 +574,7 @@ class ActionStringHandler @Inject constructor(
             lastConfirmActionString = rAction
             return
         }
-        //send profile to pumpe
+        //send profile to pump
         activePlugin.activeTreatments.doProfileSwitch(0, percentage, timeshift)
     }
 
@@ -642,8 +638,8 @@ class ActionStringHandler @Inject constructor(
         }
     }
 
-    @Synchronized private fun sendError(errormessage: String) {
-        wearPlugin.requestActionConfirmation("ERROR", errormessage, "error")
+    @Synchronized private fun sendError(errorMessage: String) {
+        wearPlugin.requestActionConfirmation("ERROR", errorMessage, "error")
         lastSentTimestamp = System.currentTimeMillis()
         lastConfirmActionString = null
         lastBolusWizard = null

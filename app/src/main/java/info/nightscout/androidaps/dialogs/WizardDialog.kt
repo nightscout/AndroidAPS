@@ -34,6 +34,7 @@ import info.nightscout.androidaps.plugins.configBuilder.ConstraintChecker
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.IobCobCalculatorPlugin
 import info.nightscout.androidaps.utils.*
 import info.nightscout.androidaps.utils.extensions.toVisibility
+import info.nightscout.androidaps.utils.extensions.valueToUnits
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 import info.nightscout.androidaps.utils.rx.AapsSchedulers
 import info.nightscout.androidaps.utils.sharedPreferences.SP
@@ -314,7 +315,7 @@ class WizardDialog : DaggerDialogFragment() {
 
         bg = if (binding.bgcheckbox.isChecked) bg else 0.0
         val dbRecord = repository.getTemporaryTargetActiveAt(dateUtil._now()).blockingGet()
-        val tempTarget = if (binding.ttcheckbox.isChecked && dbRecord is ValueWrapper.Existing)  dbRecord.value else null
+        val tempTarget = if (binding.ttcheckbox.isChecked && dbRecord is ValueWrapper.Existing) dbRecord.value else null
 
         // COB
         var cob = 0.0

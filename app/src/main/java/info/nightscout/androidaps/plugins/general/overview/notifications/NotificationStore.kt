@@ -68,7 +68,7 @@ class NotificationStore @Inject constructor(
         store.add(n)
         if (sp.getBoolean(R.string.key_raise_notifications_as_android_notifications, true) && n !is NotificationWithAction)
             raiseSystemNotification(n)
-        if (n.soundId != null && n.soundId != 0) alarmSoundServiceHelper.startAlarm(context, n.soundId)
+        if (n.soundId != null && n.soundId != 0) alarmSoundServiceHelper.startAlarm(context, n.soundId!!)
         Collections.sort(store, NotificationComparator())
         return true
     }
@@ -163,10 +163,10 @@ class NotificationStore @Inject constructor(
             @Suppress("SetTextI18n")
             holder.binding.text.text = dateUtil.timeString(notification.date) + " " + notification.text
             when (notification.level) {
-                Notification.URGENT -> holder.binding.cv.setBackgroundColor(resourceHelper.gc(R.color.notificationUrgent))
-                Notification.NORMAL -> holder.binding.cv.setBackgroundColor(resourceHelper.gc(R.color.notificationNormal))
-                Notification.LOW -> holder.binding.cv.setBackgroundColor(resourceHelper.gc(R.color.notificationLow))
-                Notification.INFO -> holder.binding.cv.setBackgroundColor(resourceHelper.gc(R.color.notificationInfo))
+                Notification.URGENT       -> holder.binding.cv.setBackgroundColor(resourceHelper.gc(R.color.notificationUrgent))
+                Notification.NORMAL       -> holder.binding.cv.setBackgroundColor(resourceHelper.gc(R.color.notificationNormal))
+                Notification.LOW          -> holder.binding.cv.setBackgroundColor(resourceHelper.gc(R.color.notificationLow))
+                Notification.INFO         -> holder.binding.cv.setBackgroundColor(resourceHelper.gc(R.color.notificationInfo))
                 Notification.ANNOUNCEMENT -> holder.binding.cv.setBackgroundColor(resourceHelper.gc(R.color.notificationAnnouncement))
             }
         }

@@ -1,6 +1,5 @@
 package info.nightscout.androidaps.plugins.general.nsclient;
 
-import android.content.Context;
 import android.os.Build;
 
 import androidx.annotation.Nullable;
@@ -212,7 +211,7 @@ public class NSUpload {
 
                 JSONObject requested = new JSONObject();
 
-                if (lastRun.getTbrSetByPump() != null && lastRun.getTbrSetByPump().enacted) { // enacted
+                if (lastRun.getTbrSetByPump() != null && lastRun.getTbrSetByPump().getEnacted()) { // enacted
                     deviceStatus.enacted = lastRun.getRequest().json();
                     deviceStatus.enacted.put("rate", lastRun.getTbrSetByPump().json(profile).get("rate"));
                     deviceStatus.enacted.put("duration", lastRun.getTbrSetByPump().json(profile).get("duration"));
@@ -222,11 +221,11 @@ public class NSUpload {
                     requested.put("temp", "absolute");
                     deviceStatus.enacted.put("requested", requested);
                 }
-                if (lastRun.getTbrSetByPump() != null && lastRun.getTbrSetByPump().enacted) { // enacted
+                if (lastRun.getTbrSetByPump() != null && lastRun.getTbrSetByPump().getEnacted()) { // enacted
                     if (deviceStatus.enacted == null) {
                         deviceStatus.enacted = lastRun.getRequest().json();
                     }
-                    deviceStatus.enacted.put("smb", lastRun.getTbrSetByPump().bolusDelivered);
+                    deviceStatus.enacted.put("smb", lastRun.getTbrSetByPump().getBolusDelivered());
                     requested.put("smb", lastRun.getRequest().getSmb());
                     deviceStatus.enacted.put("requested", requested);
                 }
@@ -240,9 +239,7 @@ public class NSUpload {
             }
             deviceStatus.device = "openaps://" + Build.MANUFACTURER + " " + Build.MODEL;
             JSONObject pumpstatus = pumpInterface.getJSONStatus(profile, profileName, version);
-            if (pumpstatus != null) {
-                deviceStatus.pump = pumpstatus;
-            }
+            deviceStatus.pump = pumpstatus;
 
             deviceStatus.uploaderBattery = receiverStatusStore.getBatteryLevel();
 

@@ -25,7 +25,7 @@ class RunningConfiguration @Inject constructor(
 ) {
 
     private var counter = 0
-    private val every = 20 // Send only every 20 devicestatus to save traffic
+    private val every = 20 // Send only every 20 device status to save traffic
 
     // called in AAPS mode only
     fun configuration(): JSONObject {
@@ -83,7 +83,7 @@ class RunningConfiguration @Inject constructor(
             val pumpType = JsonHelper.safeGetString(configuration, "pump", PumpType.GenericAAPS.description)
             sp.putString(R.string.key_virtualpump_type, pumpType)
             activePlugin.activePump.pumpDescription.setPumpDescription(PumpType.getByDescription(pumpType))
-            aapsLogger.debug(LTag.CORE, "Changing pump type to ${pumpType}")
+            aapsLogger.debug(LTag.CORE, "Changing pump type to $pumpType")
         }
 
         if (configuration.has("overviewConfiguration"))

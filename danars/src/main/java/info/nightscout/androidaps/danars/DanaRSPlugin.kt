@@ -137,7 +137,7 @@ class DanaRSPlugin @Inject constructor(
         aapsLogger.debug(LTag.PUMP, "RS connect from: $reason")
         if (danaRSService != null && mDeviceAddress != "" && mDeviceName != "") {
             val success = danaRSService?.connect(reason, mDeviceAddress) ?: false
-            if (!success) ToastUtils.showToastInUiThread(context, resourceHelper.gs(R.string.ble_not_supported))
+            if (!success) ToastUtils.showToastInUiThread(context, resourceHelper.gs(R.string.ble_not_supported_or_not_paired))
         }
     }
 
@@ -216,13 +216,13 @@ class DanaRSPlugin @Inject constructor(
             rxBus.send(EventDismissNotification(Notification.PROFILE_NOT_SET_NOT_INITIALIZED))
         }
         return if (danaRSService?.updateBasalsInPump(profile) != true) {
-            val notification = Notification(Notification.FAILED_UDPATE_PROFILE, resourceHelper.gs(R.string.failedupdatebasalprofile), Notification.URGENT)
+            val notification = Notification(Notification.FAILED_UPDATE_PROFILE, resourceHelper.gs(R.string.failedupdatebasalprofile), Notification.URGENT)
             rxBus.send(EventNewNotification(notification))
             result.comment = resourceHelper.gs(R.string.failedupdatebasalprofile)
             result
         } else {
             rxBus.send(EventDismissNotification(Notification.PROFILE_NOT_SET_NOT_INITIALIZED))
-            rxBus.send(EventDismissNotification(Notification.FAILED_UDPATE_PROFILE))
+            rxBus.send(EventDismissNotification(Notification.FAILED_UPDATE_PROFILE))
             val notification = Notification(Notification.PROFILE_SET_OK, resourceHelper.gs(R.string.profile_set_ok), Notification.INFO, 60)
             rxBus.send(EventNewNotification(notification))
             result.success = true

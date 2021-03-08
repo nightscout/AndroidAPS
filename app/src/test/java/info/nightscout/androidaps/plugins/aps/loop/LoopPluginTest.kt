@@ -16,7 +16,6 @@ import info.nightscout.androidaps.plugins.pump.virtual.VirtualPumpPlugin
 import info.nightscout.androidaps.plugins.treatments.TreatmentsPlugin
 import info.nightscout.androidaps.receivers.ReceiverStatusStore
 import info.nightscout.androidaps.utils.FabricPrivacy
-import info.nightscout.androidaps.utils.HardLimits
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 import info.nightscout.androidaps.utils.sharedPreferences.SP
 import org.junit.Assert
@@ -50,15 +49,13 @@ class LoopPluginTest : TestBase() {
     @Mock lateinit var nsUpload: NSUpload
     @Mock lateinit var notificationManager: NotificationManager
     @Mock lateinit var databaseHelper: DatabaseHelperInterface
-    private lateinit var hardLimits: HardLimits
 
     private lateinit var loopPlugin: LoopPlugin
 
     val injector = HasAndroidInjector { AndroidInjector { } }
     @Before fun prepareMock() {
-        hardLimits = HardLimits(aapsLogger, rxBus, sp, resourceHelper, context, nsUpload)
 
-        loopPlugin = LoopPlugin(injector, aapsLogger, aapsSchedulers, rxBus, sp, Config(), constraintChecker, resourceHelper, profileFunction, context, commandQueue, activePlugin, treatmentsPlugin, virtualPumpPlugin, iobCobCalculatorPlugin, receiverStatusStore, fabricPrivacy, nsUpload, databaseHelper, hardLimits)
+        loopPlugin = LoopPlugin(injector, aapsLogger, aapsSchedulers, rxBus, sp, Config(), constraintChecker, resourceHelper, profileFunction, context, commandQueue, activePlugin, treatmentsPlugin, virtualPumpPlugin, iobCobCalculatorPlugin, receiverStatusStore, fabricPrivacy, nsUpload, databaseHelper)
         `when`(activePlugin.activePump).thenReturn(virtualPumpPlugin)
         `when`(context.getSystemService(Context.NOTIFICATION_SERVICE)).thenReturn(notificationManager)
     }

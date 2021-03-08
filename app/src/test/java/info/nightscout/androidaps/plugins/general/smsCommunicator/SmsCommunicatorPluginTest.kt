@@ -83,7 +83,6 @@ class SmsCommunicatorPluginTest : TestBaseWithProfile() {
     var injector: HasAndroidInjector = HasAndroidInjector {
         AndroidInjector {
             if (it is PumpEnactResult) {
-                it.aapsLogger = aapsLogger
                 it.resourceHelper = resourceHelper
             }
             if (it is AuthRequest) {

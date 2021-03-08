@@ -180,7 +180,7 @@ public class DanaRv2ExecutionService extends AbstractDanaRExecutionService {
 
             Profile profile = profileFunction.getProfile();
             PumpInterface pump = activePlugin.getActivePump();
-            if (profile != null && Math.abs(danaPump.getCurrentBasal() - profile.getBasal()) >= pump.getPumpDescription().basalStep) {
+            if (profile != null && Math.abs(danaPump.getCurrentBasal() - profile.getBasal()) >= pump.getPumpDescription().getBasalStep()) {
                 rxBus.send(new EventPumpStatusChanged(resourceHelper.gs(R.string.gettingpumpsettings)));
                 mSerialIOThread.sendMessage(new MsgSettingBasal(injector));
                 if (!pump.isThisProfileSet(profile) && !commandQueue.isRunning(Command.CommandType.BASAL_PROFILE)) {
@@ -434,7 +434,7 @@ public class DanaRv2ExecutionService extends AbstractDanaRExecutionService {
     public PumpEnactResult loadEvents() {
         if (!danaRv2Plugin.isInitialized()) {
             PumpEnactResult result = new PumpEnactResult(injector).success(false);
-            result.comment = "pump not initialized";
+            result.comment("pump not initialized");
             return result;
         }
 
