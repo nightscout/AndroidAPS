@@ -16,10 +16,10 @@ import info.nightscout.androidaps.data.Profile
 import info.nightscout.androidaps.database.AppRepository
 import info.nightscout.androidaps.database.ValueWrapper
 import info.nightscout.androidaps.database.entities.TemporaryTarget
+import info.nightscout.androidaps.database.entities.TherapyEvent
 import info.nightscout.androidaps.database.interfaces.end
 import info.nightscout.androidaps.database.transactions.CancelCurrentTemporaryTargetIfAnyTransaction
 import info.nightscout.androidaps.database.transactions.InsertTemporaryTargetAndCancelCurrentTransaction
-import info.nightscout.androidaps.db.CareportalEvent
 import info.nightscout.androidaps.db.Source
 import info.nightscout.androidaps.db.TDD
 import info.nightscout.androidaps.interfaces.*
@@ -545,7 +545,7 @@ class ActionStringHandler @Inject constructor(
     private fun doECarbs(carbs: Int, time: Long, duration: Int) {
         if (carbs > 0) {
             if (duration == 0) {
-                carbsGenerator.createCarb(carbs, time, CareportalEvent.CARBCORRECTION, "watch")
+                carbsGenerator.createCarb(carbs, time, TherapyEvent.Type.CARBS_CORRECTION.text, "watch")
             } else {
                 carbsGenerator.generateCarbs(carbs, time, duration, "watch eCarbs")
             }

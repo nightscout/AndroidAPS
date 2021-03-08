@@ -13,20 +13,22 @@ import info.nightscout.androidaps.Constants
 import info.nightscout.androidaps.MainApp
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.data.Profile
+import info.nightscout.androidaps.database.AppRepository
+import info.nightscout.androidaps.database.entities.TherapyEvent
+import info.nightscout.androidaps.database.transactions.InsertTherapyEventIfNewTransaction
 import info.nightscout.androidaps.databinding.DialogCareBinding
-import info.nightscout.androidaps.db.CareportalEvent
-import info.nightscout.androidaps.db.Source
-import info.nightscout.androidaps.interfaces.DatabaseHelperInterface
 import info.nightscout.androidaps.interfaces.ProfileFunction
+import info.nightscout.androidaps.logging.LTag
 import info.nightscout.androidaps.logging.UserEntryLogger
 import info.nightscout.androidaps.plugins.general.nsclient.NSUpload
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.GlucoseStatusProvider
-import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.HtmlHelper
+import info.nightscout.androidaps.utils.T
 import info.nightscout.androidaps.utils.Translator
 import info.nightscout.androidaps.utils.alertDialogs.OKDialog
 import info.nightscout.androidaps.utils.resources.ResourceHelper
-import org.json.JSONObject
+import io.reactivex.disposables.CompositeDisposable
+import io.reactivex.rxkotlin.plusAssign
 import java.text.DecimalFormat
 import java.util.*
 import javax.inject.Inject
@@ -40,8 +42,10 @@ class CareDialog : DialogFragmentWithDate() {
     @Inject lateinit var nsUpload: NSUpload
     @Inject lateinit var translator: Translator
     @Inject lateinit var uel: UserEntryLogger
-    @Inject lateinit var databaseHelper: DatabaseHelperInterface
+    @Inject lateinit var repository: AppRepository
     @Inject lateinit var glucoseStatusProvider: GlucoseStatusProvider
+
+    private val disposable = CompositeDisposable()
 
     enum class EventType {
         BGCHECK,
@@ -115,7 +119,7 @@ class CareDialog : DialogFragmentWithDate() {
         when (options) {
             EventType.QUESTION,
             EventType.ANNOUNCEMENT,
-            EventType.BGCHECK -> {
+            EventType.BGCHECK        -> {
                 binding.durationLayout.visibility = View.GONE
             }
 
@@ -127,7 +131,7 @@ class CareDialog : DialogFragmentWithDate() {
             }
 
             EventType.NOTE,
-            EventType.EXERCISE -> {
+            EventType.EXERCISE       -> {
                 binding.bgLayout.visibility = View.GONE
                 binding.bgsource.visibility = View.GONE
             }
@@ -164,70 +168,62 @@ class CareDialog : DialogFragmentWithDate() {
     }
 
     override fun submit(): Boolean {
-        val enteredBy = sp.getString("careportal_enteredby", "")
+        val enteredBy = sp.getString("careportal_enteredby", "AndroidAPS")
         val unitResId = if (profileFunction.getUnits() == Constants.MGDL) R.string.mgdl else R.string.mmol
 
-        val json = JSONObject()
+        eventTime -= eventTime % 1000
+
+        val therapyEvent = TherapyEvent(
+            timestamp = eventTime,
+            type = when (options) {
+                EventType.BGCHECK        -> TherapyEvent.Type.FINGER_STICK_BG_VALUE
+                EventType.SENSOR_INSERT  -> TherapyEvent.Type.SENSOR_CHANGE
+                EventType.BATTERY_CHANGE -> TherapyEvent.Type.PUMP_BATTERY_CHANGE
+                EventType.NOTE           -> TherapyEvent.Type.NOTE
+                EventType.EXERCISE       -> TherapyEvent.Type.EXERCISE
+                EventType.QUESTION       -> TherapyEvent.Type.QUESTION
+                EventType.ANNOUNCEMENT   -> TherapyEvent.Type.ANNOUNCEMENT
+            },
+            units = profileFunction.getUnits()
+        )
+
         val actions: LinkedList<String> = LinkedList()
         if (options == EventType.BGCHECK || options == EventType.QUESTION || options == EventType.ANNOUNCEMENT) {
-            val type =
+            val meterType =
                 when {
-                    binding.meter.isChecked  -> CareportalEvent.FINGER
-                    binding.sensor.isChecked -> CareportalEvent.SENSOR
-                    else                     -> CareportalEvent.MANUAL
+                    binding.meter.isChecked  -> TherapyEvent.MeterType.FINGER
+                    binding.sensor.isChecked -> TherapyEvent.MeterType.SENSOR
+                    else                     -> TherapyEvent.MeterType.MANUAL
                 }
-            actions.add(resourceHelper.gs(R.string.careportal_newnstreatment_glucosetype) + ": " + translator.translate(type))
+            actions.add(resourceHelper.gs(R.string.careportal_newnstreatment_glucosetype) + ": " + translator.translate(meterType.text))
             actions.add(resourceHelper.gs(R.string.treatments_wizard_bg_label) + ": " + Profile.toCurrentUnitsString(profileFunction, binding.bg.value) + " " + resourceHelper.gs(unitResId))
-            json.put("glucose", binding.bg.value)
-            json.put("glucoseType", type)
+            therapyEvent.glucoseType = meterType
+            therapyEvent.glucose = binding.bg.value
         }
         if (options == EventType.NOTE || options == EventType.EXERCISE) {
             actions.add(resourceHelper.gs(R.string.careportal_newnstreatment_duration_label) + ": " + resourceHelper.gs(R.string.format_mins, binding.duration.value.toInt()))
-            json.put("duration", binding.duration.value.toInt())
+            therapyEvent.duration = T.mins(binding.duration.value.toLong()).msecs()
         }
         val notes = binding.notesLayout.notes.text.toString()
         if (notes.isNotEmpty()) {
             actions.add(resourceHelper.gs(R.string.notes_label) + ": " + notes)
-            json.put("notes", notes)
+            therapyEvent.note = notes
         }
-        eventTime -= eventTime % 1000
 
         if (eventTimeChanged)
             actions.add(resourceHelper.gs(R.string.time) + ": " + dateUtil.dateAndTimeString(eventTime))
 
-        json.put("created_at", DateUtil.toISOString(eventTime))
-        json.put("mills", eventTime)
-        json.put("eventType", when (options) {
-            EventType.BGCHECK        -> CareportalEvent.BGCHECK
-            EventType.SENSOR_INSERT  -> CareportalEvent.SENSORCHANGE
-            EventType.BATTERY_CHANGE -> CareportalEvent.PUMPBATTERYCHANGE
-            EventType.NOTE           -> CareportalEvent.NOTE
-            EventType.EXERCISE       -> CareportalEvent.EXERCISE
-            EventType.QUESTION       -> CareportalEvent.QUESTION
-            EventType.ANNOUNCEMENT   -> CareportalEvent.ANNOUNCEMENT
-        })
-        json.put("units", profileFunction.getUnits())
-        if (enteredBy.isNotEmpty())
-            json.put("enteredBy", enteredBy)
+        therapyEvent.enteredBy = enteredBy
 
         activity?.let { activity ->
             OKDialog.showConfirmation(activity, resourceHelper.gs(event), HtmlHelper.fromHtml(Joiner.on("<br/>").join(actions)), {
-                val careportalEvent = CareportalEvent(injector)
-                careportalEvent.date = eventTime
-                careportalEvent.source = Source.USER
-                careportalEvent.eventType = when (options) {
-                    EventType.BGCHECK        -> CareportalEvent.BGCHECK
-                    EventType.SENSOR_INSERT  -> CareportalEvent.SENSORCHANGE
-                    EventType.BATTERY_CHANGE -> CareportalEvent.PUMPBATTERYCHANGE
-                    EventType.NOTE           -> CareportalEvent.NOTE
-                    EventType.EXERCISE       -> CareportalEvent.EXERCISE
-                    EventType.QUESTION       -> CareportalEvent.QUESTION
-                    EventType.ANNOUNCEMENT   -> CareportalEvent.ANNOUNCEMENT
-                }
-                careportalEvent.json = json.toString()
-                uel.log("CAREPORTAL", careportalEvent.eventType)
-                databaseHelper.createOrUpdate(careportalEvent)
-                nsUpload.uploadCareportalEntryToNS(json, eventTime)
+                disposable += repository.runTransactionForResult(InsertTherapyEventIfNewTransaction(therapyEvent)).subscribe({ result ->
+                    result.inserted.forEach { nsUpload.uploadEvent(it) }
+                }, {
+                    aapsLogger.error(LTag.BGSOURCE, "Error while saving therapy event", it)
+                })
+
+                uel.log("CAREPORTAL", therapyEvent.type.text)
             }, null)
         }
         return true

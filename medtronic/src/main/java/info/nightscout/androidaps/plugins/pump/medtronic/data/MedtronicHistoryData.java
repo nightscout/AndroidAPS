@@ -6,8 +6,6 @@ import com.google.gson.GsonBuilder;
 import org.apache.commons.lang3.StringUtils;
 import org.joda.time.LocalDateTime;
 import org.joda.time.Minutes;
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -23,12 +21,15 @@ import javax.inject.Singleton;
 
 import dagger.android.HasAndroidInjector;
 import info.nightscout.androidaps.data.DetailedBolusInfo;
-import info.nightscout.androidaps.db.CareportalEvent;
+import info.nightscout.androidaps.database.AppRepository;
+import info.nightscout.androidaps.database.entities.TherapyEvent;
+import info.nightscout.androidaps.database.transactions.InsertTherapyEventIfNewTransaction;
 import info.nightscout.androidaps.db.DbObjectBase;
 import info.nightscout.androidaps.db.ExtendedBolus;
 import info.nightscout.androidaps.db.Source;
 import info.nightscout.androidaps.db.TDD;
 import info.nightscout.androidaps.db.TemporaryBasal;
+import info.nightscout.androidaps.db.Treatment;
 import info.nightscout.androidaps.interfaces.ActivePluginProvider;
 import info.nightscout.androidaps.interfaces.DatabaseHelperInterface;
 import info.nightscout.androidaps.logging.AAPSLogger;
@@ -51,11 +52,10 @@ import info.nightscout.androidaps.plugins.pump.medtronic.data.dto.TempBasalProce
 import info.nightscout.androidaps.plugins.pump.medtronic.driver.MedtronicPumpStatus;
 import info.nightscout.androidaps.plugins.pump.medtronic.util.MedtronicConst;
 import info.nightscout.androidaps.plugins.pump.medtronic.util.MedtronicUtil;
-import info.nightscout.androidaps.db.Treatment;
 import info.nightscout.androidaps.plugins.treatments.TreatmentUpdateReturn;
-import info.nightscout.androidaps.utils.DateUtil;
 import info.nightscout.androidaps.utils.Round;
 import info.nightscout.androidaps.utils.sharedPreferences.SP;
+import io.reactivex.disposables.CompositeDisposable;
 
 
 /**
@@ -81,6 +81,7 @@ public class MedtronicHistoryData {
     private final MedtronicUtil medtronicUtil;
     private final MedtronicPumpHistoryDecoder medtronicPumpHistoryDecoder;
     private final DatabaseHelperInterface databaseHelper;
+    private final AppRepository repository;
 
     private final List<PumpHistoryEntry> allHistory;
     private List<PumpHistoryEntry> newHistory = null;
@@ -94,6 +95,7 @@ public class MedtronicHistoryData {
 
     private long lastIdUsed = 0;
 
+    private final CompositeDisposable disposable = new CompositeDisposable();
     /**
      * Double bolus debug. We seem to have small problem with double Boluses (or sometimes also missing boluses
      * from history. This flag turns on debugging for that (default is off=false)... Debuging is pretty detailed,
@@ -112,7 +114,8 @@ public class MedtronicHistoryData {
             NSUpload nsUpload,
             MedtronicUtil medtronicUtil,
             MedtronicPumpHistoryDecoder medtronicPumpHistoryDecoder,
-            DatabaseHelperInterface databaseHelperInterface
+            DatabaseHelperInterface databaseHelperInterface,
+            AppRepository repository
     ) {
         this.allHistory = new ArrayList<>();
 
@@ -124,6 +127,7 @@ public class MedtronicHistoryData {
         this.medtronicUtil = medtronicUtil;
         this.medtronicPumpHistoryDecoder = medtronicPumpHistoryDecoder;
         this.databaseHelper = databaseHelperInterface;
+        this.repository = repository;
     }
 
     private Gson gson() {
@@ -549,7 +553,7 @@ public class MedtronicHistoryData {
             long lastPrimeFromAAPS = sp.getLong(MedtronicConst.Statistics.LastPrime, 0L);
 
             if (lastPrimeRecord != lastPrimeFromAAPS) {
-                uploadCareportalEvent(DateTimeUtil.toMillisFromATD(lastPrimeRecord), CareportalEvent.SITECHANGE);
+                uploadCareportalEvent(DateTimeUtil.toMillisFromATD(lastPrimeRecord), TherapyEvent.Type.CANNULA_CHANGE);
 
                 sp.putLong(MedtronicConst.Statistics.LastPrime, lastPrimeRecord);
             }
@@ -572,7 +576,7 @@ public class MedtronicHistoryData {
             long lastRewindFromAAPS = sp.getLong(MedtronicConst.Statistics.LastRewind, 0L);
 
             if (lastRewindRecord != lastRewindFromAAPS) {
-                uploadCareportalEvent(DateTimeUtil.toMillisFromATD(lastRewindRecord), CareportalEvent.INSULINCHANGE);
+                uploadCareportalEvent(DateTimeUtil.toMillisFromATD(lastRewindRecord), TherapyEvent.Type.INSULIN_CHANGE);
 
                 sp.putLong(MedtronicConst.Statistics.LastRewind, lastRewindRecord);
             }
@@ -580,27 +584,14 @@ public class MedtronicHistoryData {
     }
 
 
-    private void uploadCareportalEvent(long date, String event) {
-        if (databaseHelper.getCareportalEventFromTimestamp(date) != null)
-            return;
-        try {
-            JSONObject data = new JSONObject();
-            String enteredBy = sp.getString("careportal_enteredby", "");
-            if (!enteredBy.equals("")) data.put("enteredBy", enteredBy);
-            data.put("created_at", DateUtil.toISOString(date));
-            data.put("eventType", event);
-            CareportalEvent careportalEvent = new CareportalEvent(injector);
-            careportalEvent.date = date;
-            careportalEvent.source = Source.USER;
-            careportalEvent.eventType = event;
-            careportalEvent.json = data.toString();
-            databaseHelper.createOrUpdate(careportalEvent);
-            nsUpload.uploadCareportalEntryToNS(data, date);
-        } catch (JSONException e) {
-            aapsLogger.error("Unhandled exception", e);
-        }
+    private void uploadCareportalEvent(long date, TherapyEvent.Type event) {
+        if (repository.getTherapyEventByTimestamp(event, date) != null) return;
+        disposable.add(repository.runTransactionForResult(new InsertTherapyEventIfNewTransaction(date, event, 0, null, sp.getString("careportal_enteredby", "AndroidAPS"), null, null, null))
+                .subscribe(
+                        result -> result.getInserted().forEach(nsUpload::uploadEvent),
+                        error -> aapsLogger.error(LTag.DATABASE, "Error while saving therapy event", error)
+                ));
     }
-
 
     private void processTDDs(List<PumpHistoryEntry> tddsIn) {
 
@@ -1523,7 +1514,7 @@ public class MedtronicHistoryData {
     // HELPER METHODS
 
     private void sort(List<PumpHistoryEntry> list) {
-        if (list!=null && !list.isEmpty()) {
+        if (list != null && !list.isEmpty()) {
             Collections.sort(list, new PumpHistoryEntry.Comparator());
         }
     }

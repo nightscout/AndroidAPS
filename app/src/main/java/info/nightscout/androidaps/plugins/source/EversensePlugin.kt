@@ -8,10 +8,10 @@ import info.nightscout.androidaps.Constants
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.database.AppRepository
 import info.nightscout.androidaps.database.entities.GlucoseValue
+import info.nightscout.androidaps.database.entities.TherapyEvent
 import info.nightscout.androidaps.database.transactions.CgmSourceTransaction
-import info.nightscout.androidaps.db.CareportalEvent
+import info.nightscout.androidaps.database.transactions.InsertTherapyEventIfNewTransaction
 import info.nightscout.androidaps.interfaces.BgSourceInterface
-import info.nightscout.androidaps.interfaces.DatabaseHelperInterface
 import info.nightscout.androidaps.interfaces.PluginBase
 import info.nightscout.androidaps.interfaces.PluginDescription
 import info.nightscout.androidaps.interfaces.PluginType
@@ -26,8 +26,6 @@ import info.nightscout.androidaps.utils.resources.ResourceHelper
 import info.nightscout.androidaps.utils.sharedPreferences.SP
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.rxkotlin.plusAssign
-import org.json.JSONException
-import org.json.JSONObject
 import java.util.*
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -36,8 +34,7 @@ import javax.inject.Singleton
 class EversensePlugin @Inject constructor(
     injector: HasAndroidInjector,
     resourceHelper: ResourceHelper,
-    aapsLogger: AAPSLogger,
-    private val databaseHelper: DatabaseHelperInterface
+    aapsLogger: AAPSLogger
 ) : PluginBase(PluginDescription()
     .mainType(PluginType.BGSOURCE)
     .fragmentClass(BGSourceFragment::class.java.name)
@@ -139,20 +136,18 @@ class EversensePlugin @Inject constructor(
                     aapsLogger.debug(LTag.BGSOURCE, "calibrationTimestamps" + Arrays.toString(calibrationTimestamps))
                     aapsLogger.debug(LTag.BGSOURCE, "calibrationRecordNumbers" + Arrays.toString(calibrationRecordNumbers))
                     for (i in calibrationGlucoseLevels.indices) {
-                        try {
-                            if (eversensePlugin.databaseHelper.getCareportalEventFromTimestamp(calibrationTimestamps[i]) == null) {
-                                val data = JSONObject()
-                                data.put("enteredBy", "AndroidAPS-Eversense")
-                                data.put("created_at", DateUtil.toISOString(calibrationTimestamps[i]))
-                                data.put("eventType", CareportalEvent.BGCHECK)
-                                data.put("glucoseType", "Finger")
-                                data.put("glucose", calibrationGlucoseLevels[i])
-                                data.put("units", Constants.MGDL)
-                                nsUpload.uploadCareportalEntryToNS(data, calibrationTimestamps[i])
-                            }
-                        } catch (e: JSONException) {
-                            aapsLogger.error("Unhandled exception", e)
-                        }
+                        eversensePlugin.disposable += repository.runTransactionForResult(InsertTherapyEventIfNewTransaction(
+                            timestamp = calibrationTimestamps[i],
+                            type = TherapyEvent.Type.FINGER_STICK_BG_VALUE,
+                            glucose = calibrationGlucoseLevels[i].toDouble(),
+                            glucoseType = TherapyEvent.MeterType.FINGER,
+                            units = Constants.MGDL,
+                            enteredBy = "AndroidAPS-Eversense"
+                        )).subscribe({ result ->
+                            result.inserted.forEach { nsUpload.uploadEvent(it) }
+                        }, {
+                            aapsLogger.error(LTag.BGSOURCE, "Error while saving therapy event", it)
+                        })
                     }
                 }
             }

@@ -246,7 +246,7 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
             .observeOn(aapsSchedulers.io)
             .subscribe({ scheduleUpdateGUI("EventAcceptOpenLoopChange") }, fabricPrivacy::logException))
         disposable.add(rxBus
-            .toObservable(EventCareportalEventChange::class.java)
+            .toObservable(EventTherapyEventChange::class.java)
             .observeOn(aapsSchedulers.io)
             .subscribe({ scheduleUpdateGUI("EventCareportalEventChange") }, fabricPrivacy::logException))
         disposable.add(rxBus

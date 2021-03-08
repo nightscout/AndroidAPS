@@ -56,15 +56,15 @@ class CgmSourceTransaction(
                 database.therapyEventDao.insertNewEntry(TherapyEvent(
                     timestamp = it.timestamp,
                     type = TherapyEvent.Type.FINGER_STICK_BG_VALUE,
-                    amount = it.value
+                    glucose = it.value
                 ))
             }
         }
         sensorInsertionTime?.let {
-            if (database.therapyEventDao.findByTimestamp(TherapyEvent.Type.SENSOR_INSERTED, it) == null) {
+            if (database.therapyEventDao.findByTimestamp(TherapyEvent.Type.SENSOR_CHANGE, it) == null) {
                 database.therapyEventDao.insertNewEntry(TherapyEvent(
                     timestamp = it,
-                    type = TherapyEvent.Type.SENSOR_INSERTED
+                    type = TherapyEvent.Type.SENSOR_CHANGE
                 ))
             }
         }

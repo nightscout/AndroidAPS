@@ -33,9 +33,7 @@ import java.util.concurrent.TimeUnit;
 import javax.inject.Inject;
 
 import info.nightscout.androidaps.dana.comm.RecordTypes;
-import info.nightscout.androidaps.data.NonOverlappingIntervals;
 import info.nightscout.androidaps.data.Profile;
-import info.nightscout.androidaps.events.EventCareportalEventChange;
 import info.nightscout.androidaps.events.EventExtendedBolusChange;
 import info.nightscout.androidaps.events.EventProfileNeedsUpdate;
 import info.nightscout.androidaps.events.EventRefreshOverview;
@@ -74,7 +72,6 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
     public static final String DATABASE_EXTENDEDBOLUSES = "ExtendedBoluses";
     public static final String DATABASE_DANARHISTORY = "DanaRHistory";
     public static final String DATABASE_DBREQUESTS = "DBRequests";
-    public static final String DATABASE_CAREPORTALEVENTS = "CareportalEvents";
     public static final String DATABASE_TDDS = "TDDs";
 
     private static final int DATABASE_VERSION = 13;
@@ -86,9 +83,6 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 
     private static final ScheduledExecutorService extendedBolusWorker = Executors.newSingleThreadScheduledExecutor();
     private static ScheduledFuture<?> scheduledExtendedBolusPost = null;
-
-    private static final ScheduledExecutorService careportalEventWorker = Executors.newSingleThreadScheduledExecutor();
-    private static ScheduledFuture<?> scheduledCareportalEventPost = null;
 
     private static final ScheduledExecutorService profileSwitchEventWorker = Executors.newSingleThreadScheduledExecutor();
     private static ScheduledFuture<?> scheduledProfileSwitchEventPost = null;
@@ -111,7 +105,6 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
             TableUtils.createTableIfNotExists(connectionSource, DbRequest.class);
             TableUtils.createTableIfNotExists(connectionSource, TemporaryBasal.class);
             TableUtils.createTableIfNotExists(connectionSource, ExtendedBolus.class);
-            TableUtils.createTableIfNotExists(connectionSource, CareportalEvent.class);
             TableUtils.createTableIfNotExists(connectionSource, ProfileSwitch.class);
             TableUtils.createTableIfNotExists(connectionSource, TDD.class);
             TableUtils.createTableIfNotExists(connectionSource, InsightHistoryOffset.class);
@@ -141,7 +134,6 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
                 TableUtils.dropTable(connectionSource, DbRequest.class, true);
                 TableUtils.dropTable(connectionSource, TemporaryBasal.class, true);
                 TableUtils.dropTable(connectionSource, ExtendedBolus.class, true);
-                TableUtils.dropTable(connectionSource, CareportalEvent.class, true);
                 TableUtils.dropTable(connectionSource, ProfileSwitch.class, true);
                 onCreate(database, connectionSource);
             } else if (oldVersion < 10) {
@@ -189,7 +181,6 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
             TableUtils.dropTable(connectionSource, DbRequest.class, true);
             TableUtils.dropTable(connectionSource, TemporaryBasal.class, true);
             TableUtils.dropTable(connectionSource, ExtendedBolus.class, true);
-            TableUtils.dropTable(connectionSource, CareportalEvent.class, true);
             TableUtils.dropTable(connectionSource, ProfileSwitch.class, true);
             TableUtils.dropTable(connectionSource, TDD.class, true);
             TableUtils.dropTable(connectionSource, OmnipodHistoryRecord.class, true);
@@ -197,7 +188,6 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
             TableUtils.createTableIfNotExists(connectionSource, DbRequest.class);
             TableUtils.createTableIfNotExists(connectionSource, TemporaryBasal.class);
             TableUtils.createTableIfNotExists(connectionSource, ExtendedBolus.class);
-            TableUtils.createTableIfNotExists(connectionSource, CareportalEvent.class);
             TableUtils.createTableIfNotExists(connectionSource, ProfileSwitch.class);
             TableUtils.createTableIfNotExists(connectionSource, TDD.class);
             TableUtils.createTableIfNotExists(connectionSource, OmnipodHistoryRecord.class);
@@ -208,7 +198,6 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
         virtualPumpPlugin.setFakingStatus(true);
         scheduleTemporaryBasalChange();
         scheduleExtendedBolusChange();
-        scheduleCareportalEventChange();
         scheduleProfileSwitchChange();
         new java.util.Timer().schedule(
                 new java.util.TimerTask() {
@@ -242,16 +231,6 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
             aapsLogger.error("Unhandled exception", e);
         }
         scheduleExtendedBolusChange();
-    }
-
-    public void resetCareportalEvents() {
-        try {
-            TableUtils.dropTable(connectionSource, CareportalEvent.class, true);
-            TableUtils.createTableIfNotExists(connectionSource, CareportalEvent.class);
-        } catch (SQLException e) {
-            aapsLogger.error("Unhandled exception", e);
-        }
-        scheduleCareportalEventChange();
     }
 
     public void resetProfileSwitch() {
@@ -293,10 +272,6 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 
     private Dao<ExtendedBolus, Long> getDaoExtendedBolus() throws SQLException {
         return getDao(ExtendedBolus.class);
-    }
-
-    private Dao<CareportalEvent, Long> getDaoCareportalEvents() throws SQLException {
-        return getDao(CareportalEvent.class);
     }
 
     private Dao<ProfileSwitch, Long> getDaoProfileSwitch() throws SQLException {
@@ -411,14 +386,20 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
     public void deleteDbRequestbyMongoId(String action, String id) {
         try {
             QueryBuilder<DbRequest, String> queryBuilder = getDaoDbRequest().queryBuilder();
+            // By nsID
             Where where = queryBuilder.where();
             where.eq("_id", id).and().eq("action", action);
             queryBuilder.limit(10L);
             PreparedQuery<DbRequest> preparedQuery = queryBuilder.prepare();
             List<DbRequest> dbList = getDaoDbRequest().query(preparedQuery);
-            for (DbRequest r : dbList) {
-                delete(r);
-            }
+            for (DbRequest r : dbList) delete(r);
+            // By nsClientID
+            where = queryBuilder.where();
+            where.eq("nsClientID", id).and().eq("action", action);
+            queryBuilder.limit(10L);
+            preparedQuery = queryBuilder.prepare();
+            dbList = getDaoDbRequest().query(preparedQuery);
+            for (DbRequest r : dbList) delete(r);
         } catch (SQLException e) {
             aapsLogger.error("Unhandled exception", e);
         }
@@ -1033,219 +1014,6 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 
     }
 
-
-    // ------------ CareportalEvent handling ---------------
-
-    public void createOrUpdate(CareportalEvent careportalEvent) {
-        careportalEvent.date = careportalEvent.date - careportalEvent.date % 1000;
-        try {
-            getDaoCareportalEvents().createOrUpdate(careportalEvent);
-            openHumansUploader.enqueueCareportalEvent(careportalEvent);
-        } catch (SQLException e) {
-            aapsLogger.error("Unhandled exception", e);
-        }
-        scheduleCareportalEventChange();
-    }
-
-    public void delete(CareportalEvent careportalEvent) {
-        try {
-            getDaoCareportalEvents().delete(careportalEvent);
-            openHumansUploader.enqueueCareportalEvent(careportalEvent, true);
-        } catch (SQLException e) {
-            aapsLogger.error("Unhandled exception", e);
-        }
-        scheduleCareportalEventChange();
-    }
-
-    public CareportalEvent getCareportalEventFromTimestamp(long timestamp) {
-        try {
-            return getDaoCareportalEvents().queryForId(timestamp);
-        } catch (SQLException e) {
-            aapsLogger.error("Unhandled exception", e);
-        }
-        return null;
-    }
-
-    public List<CareportalEvent> getAllCareportalEvents() {
-        try {
-            return getDaoCareportalEvents().queryForAll();
-        } catch (SQLException e) {
-            aapsLogger.error("Unhandled exception", e);
-        }
-        return Collections.emptyList();
-    }
-
-    @Nullable
-    public CareportalEvent getLastCareportalEvent(String event) {
-        try {
-            List<CareportalEvent> careportalEvents;
-            QueryBuilder<CareportalEvent, Long> queryBuilder = getDaoCareportalEvents().queryBuilder();
-            queryBuilder.orderBy("date", false);
-            Where where = queryBuilder.where();
-            where.eq("eventType", event).and().isNotNull("json");
-            queryBuilder.limit(1L);
-            PreparedQuery<CareportalEvent> preparedQuery = queryBuilder.prepare();
-            careportalEvents = getDaoCareportalEvents().query(preparedQuery);
-            if (careportalEvents.size() == 1)
-                return careportalEvents.get(0);
-            else
-                return null;
-        } catch (SQLException e) {
-            aapsLogger.error("Unhandled exception", e);
-        }
-        return null;
-    }
-
-    public List<CareportalEvent> getCareportalEventsFromTime(long mills, boolean ascending) {
-        try {
-            List<CareportalEvent> careportalEvents;
-            QueryBuilder<CareportalEvent, Long> queryBuilder = getDaoCareportalEvents().queryBuilder();
-            queryBuilder.orderBy("date", ascending);
-            Where where = queryBuilder.where();
-            where.ge("date", mills).and().isNotNull("json").and().isNotNull("eventType");
-            PreparedQuery<CareportalEvent> preparedQuery = queryBuilder.prepare();
-            careportalEvents = getDaoCareportalEvents().query(preparedQuery);
-            careportalEvents = preprocessOpenAPSOfflineEvents(careportalEvents);
-            return careportalEvents;
-        } catch (SQLException e) {
-            aapsLogger.error("Unhandled exception", e);
-        }
-        return new ArrayList<>();
-    }
-
-    public List<CareportalEvent> getCareportalEvents(long start, long end, boolean ascending) {
-        try {
-            List<CareportalEvent> careportalEvents;
-            QueryBuilder<CareportalEvent, Long> queryBuilder = getDaoCareportalEvents().queryBuilder();
-            queryBuilder.orderBy("date", ascending);
-            Where where = queryBuilder.where();
-            where.between("date", start, end).and().isNotNull("json").and().isNotNull("eventType");
-            PreparedQuery<CareportalEvent> preparedQuery = queryBuilder.prepare();
-            careportalEvents = getDaoCareportalEvents().query(preparedQuery);
-            careportalEvents = preprocessOpenAPSOfflineEvents(careportalEvents);
-            return careportalEvents;
-        } catch (SQLException e) {
-            aapsLogger.error("Unhandled exception", e);
-        }
-        return new ArrayList<>();
-    }
-
-    public List<CareportalEvent> preprocessOpenAPSOfflineEvents(List<CareportalEvent> list) {
-        NonOverlappingIntervals offlineEvents = new NonOverlappingIntervals();
-        List<CareportalEvent> other = new ArrayList<>();
-        for (int i = 0; i < list.size(); i++) {
-            CareportalEvent event = list.get(i);
-            if (event.eventType.equals(CareportalEvent.OPENAPSOFFLINE)) offlineEvents.add(event);
-            else other.add(event);
-        }
-        other.addAll(offlineEvents.getList());
-        return other;
-    }
-
-    public List<CareportalEvent> getCareportalEventsFromTime(long mills, String type, boolean ascending) {
-        try {
-            List<CareportalEvent> careportalEvents;
-            QueryBuilder<CareportalEvent, Long> queryBuilder = getDaoCareportalEvents().queryBuilder();
-            queryBuilder.orderBy("date", ascending);
-            Where where = queryBuilder.where();
-            where.ge("date", mills).and().eq("eventType", type).and().isNotNull("json");
-            PreparedQuery<CareportalEvent> preparedQuery = queryBuilder.prepare();
-            careportalEvents = getDaoCareportalEvents().query(preparedQuery);
-            careportalEvents = preprocessOpenAPSOfflineEvents(careportalEvents);
-            return careportalEvents;
-        } catch (SQLException e) {
-            aapsLogger.error("Unhandled exception", e);
-        }
-        return new ArrayList<>();
-    }
-
-    public List<CareportalEvent> getCareportalEvents(boolean ascending) {
-        try {
-            List<CareportalEvent> careportalEvents;
-            QueryBuilder<CareportalEvent, Long> queryBuilder = getDaoCareportalEvents().queryBuilder();
-            queryBuilder.orderBy("date", ascending);
-            Where where = queryBuilder.where();
-            where.isNotNull("json").and().isNotNull("eventType");
-            PreparedQuery<CareportalEvent> preparedQuery = queryBuilder.prepare();
-            careportalEvents = getDaoCareportalEvents().query(preparedQuery);
-            careportalEvents = preprocessOpenAPSOfflineEvents(careportalEvents);
-            return careportalEvents;
-        } catch (SQLException e) {
-            aapsLogger.error("Unhandled exception", e);
-        }
-        return new ArrayList<>();
-    }
-
-    public void deleteCareportalEventById(String _id) {
-        try {
-            QueryBuilder<CareportalEvent, Long> queryBuilder;
-            queryBuilder = getDaoCareportalEvents().queryBuilder();
-            Where where = queryBuilder.where();
-            where.eq("_id", _id);
-            PreparedQuery<CareportalEvent> preparedQuery = queryBuilder.prepare();
-            List<CareportalEvent> list = getDaoCareportalEvents().query(preparedQuery);
-
-            if (list.size() == 1) {
-                CareportalEvent record = list.get(0);
-                aapsLogger.debug(LTag.DATABASE, "Removing CareportalEvent record from database: " + record.toString());
-                delete(record);
-            } else {
-                aapsLogger.debug(LTag.DATABASE, "CareportalEvent not found database: " + _id);
-            }
-        } catch (SQLException e) {
-            aapsLogger.error("Unhandled exception", e);
-        }
-    }
-
-    public void createCareportalEventFromJsonIfNotExists(JSONObject trJson) {
-        try {
-            QueryBuilder<CareportalEvent, Long> queryBuilder;
-            queryBuilder = getDaoCareportalEvents().queryBuilder();
-            Where where = queryBuilder.where();
-            where.eq("_id", trJson.getString("_id")).or().eq("date", trJson.getLong("mills"));
-            PreparedQuery<CareportalEvent> preparedQuery = queryBuilder.prepare();
-            List<CareportalEvent> list = getDaoCareportalEvents().query(preparedQuery);
-            CareportalEvent careportalEvent;
-            if (list.size() == 0) {
-                careportalEvent = new CareportalEvent(StaticInjector.Companion.getInstance());
-                careportalEvent.source = Source.NIGHTSCOUT;
-                aapsLogger.debug(LTag.DATABASE, "Adding CareportalEvent record to database: " + trJson.toString());
-                // Record does not exists. add
-            } else if (list.size() == 1) {
-                careportalEvent = list.get(0);
-                aapsLogger.debug(LTag.DATABASE, "Updating CareportalEvent record in database: " + trJson.toString());
-            } else {
-                aapsLogger.error("Something went wrong");
-                return;
-            }
-            careportalEvent.date = trJson.getLong("mills");
-            careportalEvent.eventType = trJson.getString("eventType");
-            careportalEvent.json = trJson.toString();
-            careportalEvent._id = trJson.getString("_id");
-            createOrUpdate(careportalEvent);
-        } catch (SQLException | JSONException e) {
-            aapsLogger.error("Unhandled exception: " + trJson.toString(), e);
-        }
-    }
-
-    private void scheduleCareportalEventChange() {
-        class PostRunnable implements Runnable {
-            public void run() {
-                aapsLogger.debug(LTag.DATABASE, "Firing scheduleCareportalEventChange");
-                rxBus.send(new EventCareportalEventChange());
-                scheduledCareportalEventPost = null;
-            }
-        }
-        // prepare task for execution in 1 sec
-        // cancel waiting task to prevent sending multiple posts
-        if (scheduledCareportalEventPost != null)
-            scheduledCareportalEventPost.cancel(false);
-        Runnable task = new PostRunnable();
-        final int sec = 1;
-        scheduledCareportalEventPost = careportalEventWorker.schedule(task, sec, TimeUnit.SECONDS);
-
-    }
-
     // ---------------- ProfileSwitch handling ---------------
 
     public List<ProfileSwitch> getProfileSwitchData(long from, boolean ascending) {
@@ -1726,9 +1494,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 
     public long getCountOfAllRows() {
         try {
-            return getDaoCareportalEvents().countOf()
-                    + getDaoExtendedBolus().countOf()
-                    + getDaoCareportalEvents().countOf()
+            return getDaoExtendedBolus().countOf()
                     + getDaoProfileSwitch().countOf()
                     + getDaoTDD().countOf()
                     + getDaoTemporaryBasal().countOf();

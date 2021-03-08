@@ -5,7 +5,8 @@ import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.Constants
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.data.Profile
-import info.nightscout.androidaps.db.CareportalEvent
+import info.nightscout.androidaps.database.AppRepository
+import info.nightscout.androidaps.database.entities.TherapyEvent
 import info.nightscout.androidaps.db.ProfileSwitch
 import info.nightscout.androidaps.interfaces.DatabaseHelperInterface
 import info.nightscout.androidaps.interfaces.IobCobCalculatorInterface
@@ -17,6 +18,7 @@ import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.logging.LTag
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.AutosensResult
 import info.nightscout.androidaps.utils.DateUtil
+import info.nightscout.androidaps.utils.extensions.isEvent5minBack
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 import info.nightscout.androidaps.utils.sharedPreferences.SP
 import org.json.JSONException
@@ -33,7 +35,8 @@ open class SensitivityWeightedAveragePlugin @Inject constructor(
     sp: SP,
     private val profileFunction: ProfileFunction,
     private val dateUtil: DateUtil,
-    private val databaseHelper: DatabaseHelperInterface
+    private val databaseHelper: DatabaseHelperInterface,
+    private val repository: AppRepository
 ) : AbstractSensitivityPlugin(PluginDescription()
     .mainType(PluginType.SENSITIVITY)
     .pluginIcon(R.drawable.ic_generic_icon)
@@ -66,7 +69,7 @@ open class SensitivityWeightedAveragePlugin @Inject constructor(
             aapsLogger.debug(LTag.AUTOSENS, "No profile available")
             return AutosensResult()
         }
-        val siteChanges = databaseHelper.getCareportalEventsFromTime(fromTime, CareportalEvent.SITECHANGE, true)
+        val siteChanges = repository.getTherapyEventDataFromTime(fromTime, TherapyEvent.Type.CANNULA_CHANGE, true).blockingGet()
         val profileSwitches = databaseHelper.getProfileSwitchEventsFromTime(fromTime, true)
         var pastSensitivity = ""
         var index = 0
@@ -87,7 +90,7 @@ open class SensitivityWeightedAveragePlugin @Inject constructor(
             }
 
             // reset deviations after site change
-            if (CareportalEvent(injector).isEvent5minBack(siteChanges, autosensData.time)) {
+            if (isEvent5minBack(siteChanges, autosensData.time)) {
                 data.clear()
                 pastSensitivity += "(SITECHANGE)"
             }

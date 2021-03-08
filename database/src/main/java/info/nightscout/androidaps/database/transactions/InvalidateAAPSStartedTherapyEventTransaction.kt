@@ -1,0 +1,22 @@
+package info.nightscout.androidaps.database.transactions
+
+import info.nightscout.androidaps.database.entities.TherapyEvent
+
+class InvalidateAAPSStartedTherapyEventTransaction : Transaction<InvalidateAAPSStartedTherapyEventTransaction.TransactionResult>() {
+
+    override fun run(): TransactionResult {
+        val result = TransactionResult()
+        val therapyEvents = database.therapyEventDao.getValidByType(TherapyEvent.Type.NOTE)
+        for (event in therapyEvents) {
+            event.isValid = false
+            database.therapyEventDao.updateExistingEntry(event)
+            result.invalidated.add(event)
+        }
+        return result
+    }
+
+    class TransactionResult {
+
+        val invalidated = mutableListOf<TherapyEvent>()
+    }
+}

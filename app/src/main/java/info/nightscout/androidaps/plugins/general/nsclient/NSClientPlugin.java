@@ -30,8 +30,9 @@ import info.nightscout.androidaps.Constants;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.database.AppRepository;
 import info.nightscout.androidaps.database.entities.TemporaryTarget;
+import info.nightscout.androidaps.database.entities.TherapyEvent;
 import info.nightscout.androidaps.database.transactions.SyncTemporaryTargetTransaction;
-import info.nightscout.androidaps.db.CareportalEvent;
+import info.nightscout.androidaps.database.transactions.SyncTherapyEventTransaction;
 import info.nightscout.androidaps.events.EventAppExit;
 import info.nightscout.androidaps.events.EventChargingState;
 import info.nightscout.androidaps.events.EventNetworkChange;
@@ -69,6 +70,9 @@ import io.reactivex.disposables.CompositeDisposable;
 
 import static info.nightscout.androidaps.utils.extensions.TemporaryTargetExtensionKt.temporaryTargetFromJson;
 import static info.nightscout.androidaps.utils.extensions.TemporaryTargetExtensionKt.temporaryTargetFromNsIdForInvalidating;
+import static info.nightscout.androidaps.utils.extensions.TherapyEventExtensionKt.therapyEventFromJson;
+import static info.nightscout.androidaps.utils.extensions.TherapyEventExtensionKt.therapyEventFromNsIdForInvalidating;
+import static info.nightscout.androidaps.utils.extensions.TherapyEventExtensionKt.therapyEventFromNsMbg;
 
 @Singleton
 public class NSClientPlugin extends PluginBase {
@@ -424,14 +428,18 @@ public class NSClientPlugin extends PluginBase {
         TemporaryTarget temporaryTarget = temporaryTargetFromNsIdForInvalidating(_id);
         disposable.add(repository.runTransactionForResult(new SyncTemporaryTargetTransaction(temporaryTarget)).subscribe(
                 result -> result.getInvalidated().forEach(record -> uel.log("TT DELETED FROM NS", record.getReason().getText(), record.getLowTarget(), record.getHighTarget(), (int) record.getDuration(), 0)),
-                error -> aapsLogger.error(LTag.BGSOURCE, "Error while saving temporary target", error)));
+                error -> aapsLogger.error(LTag.DATABASE, "Error while removing temporary target", error)));
+        // room  Therapy Event
+        TherapyEvent therapyEvent = therapyEventFromNsIdForInvalidating(_id);
+        disposable.add(repository.runTransactionForResult(new SyncTherapyEventTransaction(therapyEvent)).subscribe(
+                result -> result.getInvalidated().forEach(record -> uel.log("CAREPORTAL EVENT DELETED FROM NS", record.getType().getText(), 0.0, 0.0, 0, 0)),
+                error -> aapsLogger.error(LTag.DATABASE, "Error while removing therapy event", error)));
         // new DB model
         EventNsTreatment evtTreatment = new EventNsTreatment(EventNsTreatment.Companion.getREMOVE(), json);
         rxBus.send(evtTreatment);
         // old DB model
         databaseHelper.deleteTempBasalById(_id);
         databaseHelper.deleteExtendedBolusById(_id);
-        databaseHelper.deleteCareportalEventById(_id);
         databaseHelper.deleteProfileSwitchById(_id);
     }
 
@@ -448,40 +456,52 @@ public class NSClientPlugin extends PluginBase {
         if (insulin > 0 || carbs > 0) {
             EventNsTreatment evtTreatment = new EventNsTreatment(mode, json);
             rxBus.send(evtTreatment);
-        } else if (eventType.equals(CareportalEvent.TEMPORARYTARGET)) {
+        } else if (eventType.equals(TherapyEvent.Type.TEMPORARY_TARGET.getText())) {
             TemporaryTarget temporaryTarget = temporaryTargetFromJson(json);
             if (temporaryTarget != null) {
-                disposable.add(repository.runTransactionForResult(new SyncTemporaryTargetTransaction(temporaryTarget)).subscribe(
-                        result -> {
-                            result.getInserted().forEach(record -> uel.log("TT FROM NS", record.getReason().getText(), record.getLowTarget(), record.getHighTarget(), (int) record.getDuration(), 0));
-                            result.getInvalidated().forEach(record -> uel.log("TT DELETED FROM NS", record.getReason().getText(), record.getLowTarget(), record.getHighTarget(), (int) record.getDuration(), 0));
-                            result.getEnded().forEach(record -> uel.log("TT CANCELED FROM NS", record.getReason().getText(), record.getLowTarget(), record.getHighTarget(), (int) record.getDuration(), 0));
-                        },
-                        error -> aapsLogger.error(LTag.BGSOURCE, "Error while saving temporary target", error)));
+                disposable.add(repository.runTransactionForResult(new SyncTemporaryTargetTransaction(temporaryTarget))
+                        .subscribe(
+                                result -> {
+                                    result.getInserted().forEach(record -> uel.log("TT FROM NS", record.getReason().getText(), record.getLowTarget(), record.getHighTarget(), (int) record.getDuration(), 0));
+                                    result.getInvalidated().forEach(record -> uel.log("TT DELETED FROM NS", record.getReason().getText(), record.getLowTarget(), record.getHighTarget(), (int) record.getDuration(), 0));
+                                    result.getEnded().forEach(record -> uel.log("TT CANCELED FROM NS", record.getReason().getText(), record.getLowTarget(), record.getHighTarget(), (int) record.getDuration(), 0));
+                                },
+                                error -> aapsLogger.error(LTag.DATABASE, "Error while saving temporary target", error)));
             } else {
                 aapsLogger.error("Error parsing TT json " + json.toString());
             }
-        } else if (eventType.equals(CareportalEvent.TEMPBASAL)) {
+        } else if (eventType.equals(TherapyEvent.Type.TEMPORARY_BASAL.getText())) {
             databaseHelper.createTempBasalFromJsonIfNotExists(json);
-        } else if (eventType.equals(CareportalEvent.COMBOBOLUS)) {
+        } else if (eventType.equals(TherapyEvent.Type.COMBO_BOLUS.getText())) {
             databaseHelper.createExtendedBolusFromJsonIfNotExists(json);
-        } else if (eventType.equals(CareportalEvent.PROFILESWITCH)) {
+        } else if (eventType.equals(TherapyEvent.Type.PROFILE_SWITCH.getText())) {
             databaseHelper.createProfileSwitchFromJsonIfNotExists(activePlugin, nsUpload, json);
-        } else if (eventType.equals(CareportalEvent.SITECHANGE) ||
-                eventType.equals(CareportalEvent.INSULINCHANGE) ||
-                eventType.equals(CareportalEvent.SENSORCHANGE) ||
-                eventType.equals(CareportalEvent.BGCHECK) ||
-                eventType.equals(CareportalEvent.NOTE) ||
-                eventType.equals(CareportalEvent.NONE) ||
-                eventType.equals(CareportalEvent.ANNOUNCEMENT) ||
-                eventType.equals(CareportalEvent.QUESTION) ||
-                eventType.equals(CareportalEvent.EXERCISE) ||
-                eventType.equals(CareportalEvent.OPENAPSOFFLINE) ||
-                eventType.equals(CareportalEvent.PUMPBATTERYCHANGE)) {
-            databaseHelper.createCareportalEventFromJsonIfNotExists(json);
+        } else if (eventType.equals(TherapyEvent.Type.CANNULA_CHANGE.getText()) ||
+                eventType.equals(TherapyEvent.Type.INSULIN_CHANGE.getText()) ||
+                eventType.equals(TherapyEvent.Type.SENSOR_CHANGE.getText()) ||
+                eventType.equals(TherapyEvent.Type.FINGER_STICK_BG_VALUE.getText()) ||
+                eventType.equals(TherapyEvent.Type.NOTE.getText()) ||
+                eventType.equals(TherapyEvent.Type.NONE.getText()) ||
+                eventType.equals(TherapyEvent.Type.ANNOUNCEMENT.getText()) ||
+                eventType.equals(TherapyEvent.Type.QUESTION.getText()) ||
+                eventType.equals(TherapyEvent.Type.EXERCISE.getText()) ||
+                eventType.equals(TherapyEvent.Type.APS_OFFLINE.getText()) ||
+                eventType.equals(TherapyEvent.Type.PUMP_BATTERY_CHANGE.getText())) {
+            TherapyEvent therapyEvent = therapyEventFromJson(json);
+            if (therapyEvent != null) {
+                disposable.add(repository.runTransactionForResult(new SyncTherapyEventTransaction(therapyEvent))
+                        .subscribe(
+                                result -> {
+                                    result.getInserted().forEach(record -> uel.log("CAREPORTAL EVENT NS", record.getType().getText(), 0.0, 0.0, 0, 0));
+                                    result.getInvalidated().forEach(record -> uel.log("CAREPORTAL EVENT DELETED FROM NS", record.getType().getText(), 0.0, 0.0, 0, 0));
+                                },
+                                error -> aapsLogger.error(LTag.DATABASE, "Error while saving therapy event", error)));
+            } else {
+                aapsLogger.error("Error parsing TherapyEvent json " + json.toString());
+            }
         }
 
-        if (eventType.equals(CareportalEvent.ANNOUNCEMENT)) {
+        if (eventType.equals(TherapyEvent.Type.ANNOUNCEMENT.getText())) {
             long date = JsonHelper.safeGetLong(json, "mills");
             long now = System.currentTimeMillis();
             String enteredBy = JsonHelper.safeGetString(json, "enteredBy", "");
@@ -498,9 +518,12 @@ public class NSClientPlugin extends PluginBase {
     }
 
     private void storeMbg(JSONObject mbgJson) {
-        NSMbg nsMbg = new NSMbg(mbgJson);
-        CareportalEvent careportalEvent = new CareportalEvent(nsMbg);
-        databaseHelper.createOrUpdate(careportalEvent);
-        aapsLogger.debug(LTag.DATASERVICE, "Adding/Updating new MBG: " + careportalEvent.toString());
+        NSMbg nsMbg = new NSMbg(getInjector(), mbgJson);
+        if (nsMbg.mbg != 0.0 && nsMbg.date != 0)
+            disposable.add(repository.runTransactionForResult(new SyncTherapyEventTransaction(therapyEventFromNsMbg(nsMbg)))
+                    .subscribe(
+                            result -> aapsLogger.debug(LTag.DATABASE, "Saved therapy event" + result),
+                            error -> aapsLogger.error("Error while saving therapy event", error))
+            );
     }
 }

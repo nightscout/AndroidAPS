@@ -2,6 +2,7 @@ package info.nightscout.androidaps.database
 
 import info.nightscout.androidaps.database.entities.GlucoseValue
 import info.nightscout.androidaps.database.entities.TemporaryTarget
+import info.nightscout.androidaps.database.entities.TherapyEvent
 import info.nightscout.androidaps.database.entities.UserEntry
 import info.nightscout.androidaps.database.interfaces.DBEntry
 import info.nightscout.androidaps.database.transactions.Transaction
@@ -129,6 +130,45 @@ class AppRepository @Inject internal constructor(
     fun insert(word: UserEntry) {
         database.userEntryDao.insert(word)
     }
+
+    // THERAPY EVENT
+    fun getTherapyEventDataFromTime(timestamp: Long, ascending: Boolean): Single<List<TherapyEvent>> =
+        database.therapyEventDao.getTherapyEventDataFromTime(timestamp)
+            .map { if (!ascending) it.reversed() else it }
+            .subscribeOn(Schedulers.io())
+
+    fun getTherapyEventDataFromTime(timestamp: Long, type: TherapyEvent.Type, ascending: Boolean): Single<List<TherapyEvent>> =
+        database.therapyEventDao.getTherapyEventDataFromTime(timestamp, type)
+            .map { if (!ascending) it.reversed() else it }
+            .subscribeOn(Schedulers.io())
+
+    fun getTherapyEventDataIncludingInvalidFromTime(timestamp: Long, ascending: Boolean): Single<List<TherapyEvent>> =
+        database.therapyEventDao.getTherapyEventDataIncludingInvalidFromTime(timestamp)
+            .map { if (!ascending) it.reversed() else it }
+            .subscribeOn(Schedulers.io())
+
+    @Suppress("unused")
+    fun getValidTherapyEventsByType(type: TherapyEvent.Type): List<TherapyEvent> =
+        database.therapyEventDao.getValidByType(type)
+
+    fun deleteAllTherapyEventsEntries() =
+        database.therapyEventDao.deleteAllEntries()
+
+    fun getLastTherapyRecord(type: TherapyEvent.Type): Single<ValueWrapper<TherapyEvent>> =
+        database.therapyEventDao.getLastTherapyRecord(type).toWrappedSingle()
+            .subscribeOn(Schedulers.io())
+
+    fun getTherapyEventByTimestamp(type: TherapyEvent.Type, timestamp: Long): TherapyEvent? =
+        database.therapyEventDao.findByTimestamp(type, timestamp)
+
+    fun compatGetTherapyEventDataFromTime(timestamp: Long, ascending: Boolean): Single<List<TherapyEvent>> =
+        database.therapyEventDao.compatGetTherapyEventDataFromTime(timestamp)
+            .map { if (!ascending) it.reversed() else it }
+            .subscribeOn(Schedulers.io())
+
+    fun compatGetTherapyEventDataFromToTime(from: Long, to: Long): Single<List<TherapyEvent>> =
+        database.therapyEventDao.compatGetTherapyEventDataFromToTime(from, to)
+            .subscribeOn(Schedulers.io())
 
 }
 

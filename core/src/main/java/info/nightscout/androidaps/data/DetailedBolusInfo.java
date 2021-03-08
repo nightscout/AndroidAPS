@@ -6,7 +6,7 @@ import org.json.JSONObject;
 
 import java.util.Date;
 
-import info.nightscout.androidaps.db.CareportalEvent;
+import info.nightscout.androidaps.database.entities.TherapyEvent;
 import info.nightscout.androidaps.db.Source;
 
 /**
@@ -16,7 +16,7 @@ import info.nightscout.androidaps.db.Source;
 public class DetailedBolusInfo {
     public long date = System.currentTimeMillis();
     public long lastKnownBolusTime;
-    public String eventType = CareportalEvent.MEALBOLUS;
+    public String eventType = TherapyEvent.Type.MEAL_BOLUS.getText();
     public double insulin = 0;
     public double carbs = 0;
     public int source = Source.NONE;

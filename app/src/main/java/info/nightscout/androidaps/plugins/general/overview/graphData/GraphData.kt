@@ -14,6 +14,7 @@ import info.nightscout.androidaps.R
 import info.nightscout.androidaps.data.GlucoseValueDataPoint
 import info.nightscout.androidaps.data.IobTotal
 import info.nightscout.androidaps.data.Profile
+import info.nightscout.androidaps.data.TherapyEventDataPoint
 import info.nightscout.androidaps.database.AppRepository
 import info.nightscout.androidaps.database.ValueWrapper
 import info.nightscout.androidaps.database.entities.GlucoseValue
@@ -268,10 +269,12 @@ class GraphData(
         }
 
         // Careportal
-        databaseHelper.getCareportalEventsFromTime(fromTime - 6 * 60 * 60 * 1000, true)
+//        databaseHelper.getCareportalEventsFromTime(fromTime - 6 * 60 * 60 * 1000, true)
+        repository.compatGetTherapyEventDataFromToTime(fromTime - 6 * 60 * 60 * 1000, endTime).blockingGet()
+            .map { TherapyEventDataPoint(injector, it) }
             .filterTimeframe(fromTime, endTime)
             .forEach {
-                it.y = getNearestBg(it.x.toLong())
+                if (it.y == 0.0) it.y = getNearestBg(it.x.toLong())
                 filteredTreatments.add(it)
             }
 
