@@ -7,6 +7,7 @@
     <string name="automation_missing_trigger">Prosím, zadajte aspoň jednu podmienku.</string>
     <string name="automation_missing_action">Prosím, zadajte aspoň jednu akciu.</string>
     <string name="alarm_message">Výstraha: %1$s</string>
+    <string name="alarm_short">Alarm:</string>
     <string name="message_short">Spr:</string>
     <string name="alreadyenabled">Už aktivované</string>
     <string name="alreadydisabled">Už deaktivované</string>
@@ -88,6 +89,7 @@
     <string name="glucose_u">Glykémia [%1$s]:</string>
     <string name="lastboluslabel">Od posledného bolusu</string>
     <string name="lastboluscompared">Čas posledného bolusu: pred %1$s %2$s min </string>
+    <string name="triggercoblabel">COB</string>
     <string name="cobcompared">COB %1$s %2$.0f</string>
     <string name="iob_u">IOB [JI]:</string>
     <string name="distance_short">Vzdial. [m]:</string>
