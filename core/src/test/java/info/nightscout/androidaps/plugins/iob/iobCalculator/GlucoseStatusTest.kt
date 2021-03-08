@@ -1,11 +1,11 @@
 package info.nightscout.androidaps.plugins.iob.iobCalculator
 
-import dagger.android.AndroidInjector
-import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.TestBase
 import info.nightscout.androidaps.database.entities.GlucoseValue
 import info.nightscout.androidaps.interfaces.IobCobCalculatorInterface
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.GlucoseStatus
+import info.nightscout.androidaps.plugins.iob.iobCobCalculator.GlucoseStatusProvider
+import info.nightscout.androidaps.plugins.iob.iobCobCalculator.asRounded
 import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.T
 import org.junit.Assert
@@ -30,88 +30,74 @@ class GlucoseStatusTest : TestBase() {
     @Mock lateinit var dateUtil: DateUtil
     @Mock lateinit var iobCobCalculatorPlugin: IobCobCalculatorInterface
 
-    val injector = HasAndroidInjector {
-        AndroidInjector {
-            if (it is GlucoseStatus) {
-                it.aapsLogger = aapsLogger
-                it.iobCobCalculatorPlugin = iobCobCalculatorPlugin
-            }
-        }
-    }
-
     @Test fun toStringShouldBeOverloaded() {
-        val glucoseStatus = GlucoseStatus(injector)
+        val glucoseStatus = GlucoseStatus(glucose = 0.0, noise = 0.0, delta = 0.0, shortAvgDelta = 0.0, longAvgDelta = 0.0, date = 0)
         Assert.assertEquals(true, glucoseStatus.log().contains("Delta"))
     }
 
     @Test fun roundTest() {
-        val glucoseStatus = GlucoseStatus(injector)
-        glucoseStatus.glucose = 100.11111
-        Assert.assertEquals(100.1, glucoseStatus.round().glucose, 0.0001)
+        val glucoseStatus = GlucoseStatus(glucose = 100.11111, noise = 0.0, delta = 0.0, shortAvgDelta = 0.0, longAvgDelta = 0.0, date = 0)
+        Assert.assertEquals(100.1, glucoseStatus.asRounded().glucose, 0.0001)
     }
 
     @Test fun calculateValidGlucoseStatus() {
         PowerMockito.`when`(iobCobCalculatorPlugin.bgReadings).thenReturn(generateValidBgData())
-        val glucoseStatus = GlucoseStatus(injector).glucoseStatusData!!
+        val glucoseStatus = GlucoseStatusProvider(aapsLogger, iobCobCalculatorPlugin).glucoseStatusData!!
         Assert.assertEquals(214.0, glucoseStatus.glucose, 0.001)
         Assert.assertEquals(-2.0, glucoseStatus.delta, 0.001)
         Assert.assertEquals(-2.5, glucoseStatus.shortAvgDelta, 0.001) // -2 -2.5 -3 deltas are relative to current value
-        Assert.assertEquals(-2.5, glucoseStatus.avgDelta, 0.001) // the same as short_avgdelta
         Assert.assertEquals(-2.0, glucoseStatus.longAvgDelta, 0.001) // -2 -2 -2 -2
         Assert.assertEquals(1514766900000L, glucoseStatus.date) // latest date
     }
 
     @Test fun calculateMostRecentGlucoseStatus() {
         PowerMockito.`when`(iobCobCalculatorPlugin.bgReadings).thenReturn(generateMostRecentBgData())
-        val glucoseStatus: GlucoseStatus = GlucoseStatus(injector).glucoseStatusData!!
+        val glucoseStatus: GlucoseStatus = GlucoseStatusProvider(aapsLogger, iobCobCalculatorPlugin).glucoseStatusData!!
         Assert.assertEquals(215.0, glucoseStatus.glucose, 0.001) // (214+216) / 2
         Assert.assertEquals(-1.0, glucoseStatus.delta, 0.001)
         Assert.assertEquals(-1.0, glucoseStatus.shortAvgDelta, 0.001)
-        Assert.assertEquals(-1.0, glucoseStatus.avgDelta, 0.001)
         Assert.assertEquals(0.0, glucoseStatus.longAvgDelta, 0.001)
         Assert.assertEquals(1514766900000L, glucoseStatus.date) // latest date, even when averaging
     }
 
     @Test fun oneRecordShouldProduceZeroDeltas() {
         PowerMockito.`when`(iobCobCalculatorPlugin.bgReadings).thenReturn(generateOneCurrentRecordBgData())
-        val glucoseStatus: GlucoseStatus = GlucoseStatus(injector).glucoseStatusData!!
+        val glucoseStatus: GlucoseStatus = GlucoseStatusProvider(aapsLogger, iobCobCalculatorPlugin).glucoseStatusData!!
         Assert.assertEquals(214.0, glucoseStatus.glucose, 0.001)
         Assert.assertEquals(0.0, glucoseStatus.delta, 0.001)
         Assert.assertEquals(0.0, glucoseStatus.shortAvgDelta, 0.001) // -2 -2.5 -3 deltas are relative to current value
-        Assert.assertEquals(0.0, glucoseStatus.avgDelta, 0.001) // the same as short_avgdelta
         Assert.assertEquals(0.0, glucoseStatus.longAvgDelta, 0.001) // -2 -2 -2 -2
         Assert.assertEquals(1514766900000L, glucoseStatus.date) // latest date
     }
 
     @Test fun insufficientDataShouldReturnNull() {
         PowerMockito.`when`(iobCobCalculatorPlugin.bgReadings).thenReturn(generateInsufficientBgData())
-        val glucoseStatus: GlucoseStatus? = GlucoseStatus(injector).glucoseStatusData
+        val glucoseStatus: GlucoseStatus? = GlucoseStatusProvider(aapsLogger, iobCobCalculatorPlugin).glucoseStatusData
         Assert.assertEquals(null, glucoseStatus)
     }
 
     @Test fun oldDataShouldReturnNull() {
         PowerMockito.`when`(iobCobCalculatorPlugin.bgReadings).thenReturn(generateOldBgData())
-        val glucoseStatus: GlucoseStatus? = GlucoseStatus(injector).glucoseStatusData
+        val glucoseStatus: GlucoseStatus? = GlucoseStatusProvider(aapsLogger, iobCobCalculatorPlugin).glucoseStatusData
         Assert.assertEquals(null, glucoseStatus)
     }
 
     @Test fun returnOldDataIfAllowed() {
         PowerMockito.`when`(iobCobCalculatorPlugin.bgReadings).thenReturn(generateOldBgData())
-        val glucoseStatus: GlucoseStatus? = GlucoseStatus(injector).getGlucoseStatusData(true)
+        val glucoseStatus: GlucoseStatus? = GlucoseStatusProvider(aapsLogger, iobCobCalculatorPlugin).getGlucoseStatusData(true)
         Assert.assertNotEquals(null, glucoseStatus)
     }
 
     @Test fun averageShouldNotFailOnEmptyArray() {
-        Assert.assertEquals(0.0, GlucoseStatus.average(ArrayList()), 0.001)
+        Assert.assertEquals(0.0, GlucoseStatusProvider.average(ArrayList()), 0.001)
     }
 
     @Test fun calculateGlucoseStatusForLibreTestBgData() {
         PowerMockito.`when`(iobCobCalculatorPlugin.bgReadings).thenReturn(generateLibreTestData())
-        val glucoseStatus: GlucoseStatus = GlucoseStatus(injector).glucoseStatusData!!
+        val glucoseStatus: GlucoseStatus = GlucoseStatusProvider(aapsLogger, iobCobCalculatorPlugin).glucoseStatusData!!
         Assert.assertEquals(100.0, glucoseStatus.glucose, 0.001) //
         Assert.assertEquals(-10.0, glucoseStatus.delta, 0.001)
         Assert.assertEquals(-10.0, glucoseStatus.shortAvgDelta, 0.001)
-        Assert.assertEquals(-10.0, glucoseStatus.avgDelta, 0.001)
         Assert.assertEquals(-10.0, glucoseStatus.longAvgDelta, 0.001)
         Assert.assertEquals(1514766900000L, glucoseStatus.date) // latest date
     }

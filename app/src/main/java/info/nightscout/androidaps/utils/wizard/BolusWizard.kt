@@ -22,6 +22,7 @@ import info.nightscout.androidaps.plugins.aps.loop.LoopPlugin
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper
 import info.nightscout.androidaps.plugins.configBuilder.ConstraintChecker
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.GlucoseStatus
+import info.nightscout.androidaps.plugins.iob.iobCobCalculator.GlucoseStatusProvider
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.IobCobCalculatorPlugin
 import info.nightscout.androidaps.queue.Callback
 import info.nightscout.androidaps.utils.CarbTimer
@@ -57,6 +58,7 @@ class BolusWizard @Inject constructor(
     @Inject lateinit var config: Config
     @Inject lateinit var uel: UserEntryLogger
     @Inject lateinit var carbTimer: CarbTimer
+    @Inject lateinit var glucoseStatusProvider: GlucoseStatusProvider
 
     init {
         injector.androidInjector().inject(this)
@@ -181,7 +183,7 @@ class BolusWizard @Inject constructor(
         }
 
         // Insulin from 15 min trend
-        glucoseStatus = GlucoseStatus(injector).glucoseStatusData
+        glucoseStatus = glucoseStatusProvider.glucoseStatusData
         glucoseStatus?.let {
             if (useTrend) {
                 trend = it.shortAvgDelta

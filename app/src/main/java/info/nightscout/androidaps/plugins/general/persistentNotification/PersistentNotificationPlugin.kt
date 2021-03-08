@@ -16,6 +16,7 @@ import info.nightscout.androidaps.interfaces.*
 import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.GlucoseStatus
+import info.nightscout.androidaps.plugins.iob.iobCobCalculator.GlucoseStatusProvider
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.IobCobCalculatorPlugin
 import info.nightscout.androidaps.utils.DecimalFormatter
 import info.nightscout.androidaps.utils.FabricPrivacy
@@ -42,7 +43,8 @@ class PersistentNotificationPlugin @Inject constructor(
     private val context: Context,
     private val notificationHolder: NotificationHolderInterface,
     private val dummyServiceHelper: DummyServiceHelper,
-    private val iconsProvider: IconsProvider
+    private val iconsProvider: IconsProvider,
+    private val glucoseStatusProvider: GlucoseStatusProvider
 ) : PluginBase(PluginDescription()
     .mainType(PluginType.GENERAL)
     .neverVisible(true)
@@ -130,13 +132,13 @@ class PersistentNotificationPlugin @Inject constructor(
             var line1aa: String
             val units = profileFunction.getUnits()
             val lastBG = iobCobCalculatorPlugin.lastBg()
-            val glucoseStatus = GlucoseStatus(injector).glucoseStatusData
+            val glucoseStatus = glucoseStatusProvider.glucoseStatusData
             if (lastBG != null) {
                 line1aa = lastBG.valueToUnitsString(units)
                 line1 = line1aa
                 if (glucoseStatus != null) {
                     line1 += ("  Δ" + Profile.toSignedUnitsString(glucoseStatus.delta, glucoseStatus.delta * Constants.MGDL_TO_MMOLL, units)
-                        + " avgΔ" + Profile.toSignedUnitsString(glucoseStatus.avgDelta, glucoseStatus.avgDelta * Constants.MGDL_TO_MMOLL, units))
+                        + " avgΔ" + Profile.toSignedUnitsString(glucoseStatus.shortAvgDelta, glucoseStatus.shortAvgDelta * Constants.MGDL_TO_MMOLL, units))
                     line1aa += "  " + lastBG.trendArrow.symbol
                 } else {
                     line1 += " " +
