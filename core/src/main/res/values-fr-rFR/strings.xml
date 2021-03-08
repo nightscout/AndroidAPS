@@ -12,7 +12,7 @@
     <string name="goingtodeliver">%1$.2f U vont être injectées</string>
     <string name="waitingforpump">Attente connection pompe</string>
     <string name="connectingfor">Connexion à %1$d en cours</string>
-    <string name="bolusdelivering">%1$.2f U en cours d\'injection</string>
+    <string name="bolusdelivering">%1$.2f U ont été injectées</string>
     <string name="handshaking">Connexion</string>
     <string name="connecting">Connection en cours</string>
     <string name="connected">Connectée</string>
