@@ -73,9 +73,11 @@
     <string name="bolusdelivered">Bólus %1$.2f U administrado com sucesso</string>
     <string name="virtualpump_resultok">OK</string>
     <string name="novalidbasalrate">Nenhum valor de basal válido foi lido da bomba</string>
+    <string name="limitingmaxiob">A limitar IOB máx. para %1$.1f U porque %2$s</string>
     <string name="unsafeusage">uso não seguro</string>
     <string name="pump_unreachable">Bomba inacessível</string>
     <string name="extended_bolus">Bólus Prolongado</string>
+    <string name="pump_time_updated">Hora da bomba actualizada</string>
     <string name="exit">Sair</string>
     <string name="serial_number">Número de Série</string>
     <string name="removerecord">Remover registo</string>
@@ -116,6 +118,7 @@
     <string name="dismiss">DISPENSAR</string>
     <!--    BlePreCheck-->
     <string name="ble_not_supported">Bluetooth Low Energy não suportado.</string>
+    <string name="ble_not_supported_or_not_paired">Bluetooth Low Energy não suportado ou dispositivo não emparalhado.</string>
     <string name="ble_not_enabled">Bluetooth não está activado.</string>
     <string name="location_not_found_title">Localização Não Está Activa</string>
     <string name="location_not_found_message">Para a Pesquisa Bluetooth funcionar em dispositivos mais recentes, a localização deve ser activada. AAPS não acompanha a sua localização e pode ser desactivada após o emparelhamento bem-sucedido.</string>

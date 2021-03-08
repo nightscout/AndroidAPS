@@ -20,6 +20,7 @@ import info.nightscout.androidaps.plugins.general.automation.dialogs.ChooseTrigg
 import info.nightscout.androidaps.plugins.general.automation.events.EventTriggerChanged
 import info.nightscout.androidaps.plugins.general.automation.events.EventTriggerClone
 import info.nightscout.androidaps.plugins.general.automation.events.EventTriggerRemove
+import info.nightscout.androidaps.plugins.iob.iobCobCalculator.GlucoseStatusProvider
 import info.nightscout.androidaps.services.LastLocationDataContainer
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 import info.nightscout.androidaps.utils.sharedPreferences.SP
@@ -39,6 +40,7 @@ abstract class Trigger(val injector: HasAndroidInjector) {
     @Inject lateinit var treatmentsInterface: TreatmentsInterface
     @Inject lateinit var activePlugin: ActivePluginProvider
     @Inject lateinit var iobCobCalculatorPlugin: IobCobCalculatorInterface
+    @Inject lateinit var glucoseStatusProvider: GlucoseStatusProvider
 
     init {
         injector.androidInjector().inject(this)

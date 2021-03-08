@@ -10,6 +10,7 @@ import info.nightscout.androidaps.interfaces.ProfileFunction
 import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.plugins.aps.loop.LoopPlugin
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.GlucoseStatus
+import info.nightscout.androidaps.plugins.iob.iobCobCalculator.GlucoseStatusProvider
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.IobCobCalculatorPlugin
 import info.nightscout.androidaps.plugins.treatments.TreatmentsPlugin
 import info.nightscout.androidaps.utils.DateUtil
@@ -32,6 +33,7 @@ class QuickWizardEntry @Inject constructor(private val injector: HasAndroidInjec
     @Inject lateinit var iobCobCalculatorPlugin: IobCobCalculatorPlugin
     @Inject lateinit var repository: AppRepository
     @Inject lateinit var dateUtil: DateUtil
+    @Inject lateinit var glucoseStatusProvider: GlucoseStatusProvider
 
     lateinit var storage: JSONObject
     var position: Int = -1
@@ -114,7 +116,7 @@ class QuickWizardEntry @Inject constructor(private val injector: HasAndroidInjec
         }
         if (loopPlugin.isEnabled(loopPlugin.getType()) && loopPlugin.isSuperBolus) superBolus = false
         // Trend
-        val glucoseStatus = GlucoseStatus(injector).glucoseStatusData
+        val glucoseStatus = glucoseStatusProvider.glucoseStatusData
         var trend = false
         if (useTrend() == YES) {
             trend = true

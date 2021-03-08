@@ -51,13 +51,13 @@
     <string name="medtronic_pump_history">Histórico da Bomba Medtronic</string>
     <!-- <string name="medtronic_cmd_profile_not_set">Remote Basal profile setting is not supported. Please modify Basal profile on your pump manually.</string> -->
     <string name="medtronic_cmd_cancel_bolus_not_supported">Cancelou o Bolus, depois de ele já ter sido definido na Bomba. Uma vez que a Bomba Medtronic não suporta cancelamento, precisará de cancelar manualmente. Coloque a Bomba no modo de Suspender e depois Retome (se ainda quiser cancelar). A aplicação irá obter as alterações, na próxima actualização (em menos de 5 minutos).</string>
-    <string name="medtronic_cmd_cant_read_tbr">Não foi possível ler o DBT actual.</string>
-    <string name="medtronic_cmd_cant_cancel_tbr_stop_op">Não foi possível cancelar o DBT actual. A parar a operação.</string>
+    <string name="medtronic_cmd_cant_read_tbr">Não foi possível ler a DBT actual.</string>
+    <string name="medtronic_cmd_cant_cancel_tbr_stop_op">Não foi possível cancelar a DBT actual. A parar a operação.</string>
     <string name="medtronic_cmd_set_profile_pattern_overflow">Falhou Definir Perfil devido aos seguintes padrões, tem uma taxa de basal muito grande: %1$s</string>
     <string name="medtronic_cmd_bolus_could_not_be_delivered">O bólus não pôde ser administrado.</string>
     <string name="medtronic_cmd_bolus_could_not_be_delivered_no_insulin">Bólus não foi administado, porque o quantidade de insulina disponível (%1$.2f) é menor que o bólus necessário (%2$.2f).</string>
-    <string name="medtronic_cmd_tbr_could_not_be_delivered">DBT não pode ser definido.</string>
-    <string name="medtronic_cmd_cant_cancel_tbr">Não foi possível cancelar o DBT actual.</string>
+    <string name="medtronic_cmd_tbr_could_not_be_delivered">DBT não pode ser definida.</string>
+    <string name="medtronic_cmd_cant_cancel_tbr">Não foi possível cancelar a DBT actual.</string>
     <string name="medtronic_cmd_basal_profile_could_not_be_set">Perfil Basal não pôde ser definido.</string>
     <string name="medtronic_cmd_basal_profile_not_set_is_same">Perfil Basal é o mesmo, então não será definido novamente.</string>
     <string name="medtronic_cmd_desc_get_history">Obter Histórico - Página %1$d (%2$d/16)</string>
