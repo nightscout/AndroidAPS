@@ -80,8 +80,10 @@ class RunningConfiguration @Inject constructor(
 
         if (configuration.has("pump")) {
             var pumpTypeDesc = JsonHelper.safeGetString(configuration, "pump", PumpType.GenericAAPS.description)
-            activePlugin.activePump.pumpDescription.setPumpDescription(PumpType.getByDescription(pumpTypeDesc))
-            aapsLogger.debug(LTag.CORE, "Changing pump type to $pumpTypeDesc")
+            if (!"MDI".equals(pumpTypeDesc)) {
+                activePlugin.activePump.pumpDescription.setPumpDescription(PumpType.getByDescription(pumpTypeDesc))
+                aapsLogger.debug(LTag.CORE, "Changing pump type to $pumpTypeDesc")
+            }
         }
 
         if (configuration.has("overviewConfiguration"))
