@@ -14,7 +14,7 @@ class BleCommandFail : BleCommand(BleCommandType.FAIL)
 
 open class BleCommand(val data: ByteArray) {
 
-    constructor(type: BleCommandType) : this(byteArrayOf(type.value, 0))
+    constructor(type: BleCommandType) : this(byteArrayOf(type.value))
 
     constructor(type: BleCommandType, payload: ByteArray) : this(
         byteArrayOf(type.value) + payload
@@ -36,4 +36,5 @@ open class BleCommand(val data: ByteArray) {
     override fun hashCode(): Int {
         return data.contentHashCode()
     }
+
 }

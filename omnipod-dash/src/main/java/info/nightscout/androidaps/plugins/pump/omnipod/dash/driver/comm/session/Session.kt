@@ -31,12 +31,14 @@ class Session(
      */
     fun sendCommand(cmd: Command): Response {
         sessionKeys.msgSequenceNumber++
-        aapsLogger.debug(LTag.PUMPBTCOMM, "Sending command: ${cmd.encoded.toHex()}")
+        aapsLogger.debug(LTag.PUMPBTCOMM, "Sending command: ${cmd.encoded.toHex()} in packet $cmd")
 
         val msg = getCmdMessage(cmd)
         aapsLogger.debug(LTag.PUMPBTCOMM, "Sending command(wrapped): ${msg.payload.toHex()}")
-        msgIO.sendMessage(msg)
-
+        val reply = msgIO.sendMessage(msg)
+        if (reply != null) { // TODO : this means the last ACK was not received, send it again?
+            aapsLogger.debug(LTag.PUMPBTCOMM, "Received a message with payload instead of CTS: ${reply.payload.toHex()} in packet $reply")
+        }
         val responseMsg = msgIO.receiveMessage()
         val decrypted = enDecrypt.decrypt(responseMsg)
         aapsLogger.debug(LTag.PUMPBTCOMM, "Received response: $decrypted")
@@ -44,13 +46,15 @@ class Session(
 
         sessionKeys.msgSequenceNumber++
         val ack = getAck(responseMsg)
-        aapsLogger.debug(LTag.PUMPBTCOMM, "Sending ACK: ${ack.payload.toHex()}")
+        aapsLogger.debug(LTag.PUMPBTCOMM, "Sending ACK: ${ack.payload.toHex()} in packet $ack")
         msgIO.sendMessage(ack)
         return response
     }
 
     private fun parseResponse(decrypted: MessagePacket): Response {
+
         val payload = parseKeys(arrayOf(RESPONSE_PREFIX), decrypted.payload)[0]
+        aapsLogger.info(LTag.PUMPBTCOMM, "Received decrypted response: ${payload.toHex()} in packet: $decrypted")
         return NakResponse(payload)
     }
 
@@ -61,9 +65,9 @@ class Session(
             source = myId,
             destination = podId,
             payload = ByteArray(0),
-            eqos = 1,
+            eqos = 0,
             ack = true,
-            ackNumber = response.sequenceNumber.inc()
+            ackNumber = (response.sequenceNumber.toInt()+1).toByte()
         )
         return enDecrypt.encrypt((msg))
     }

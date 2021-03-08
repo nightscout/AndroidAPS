@@ -32,6 +32,7 @@ class EnDecrypt(private val aapsLogger: AAPSLogger, private val nonce: Nonce, pr
         )
         val decryptedPayload = ByteArray(payload.size - MAC_SIZE)
         cipher.processPacket(payload, 0, payload.size, decryptedPayload, 0)
+        aapsLogger.debug(LTag.PUMPBTCOMM, "Decrypted payload ${decryptedPayload.toHex()}")
         return msg.copy(payload = decryptedPayload)
     }
 
