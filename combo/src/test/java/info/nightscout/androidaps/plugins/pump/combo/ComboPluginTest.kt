@@ -5,6 +5,7 @@ import dagger.android.AndroidInjector
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.TestBase
 import info.nightscout.androidaps.combo.R
+import info.nightscout.androidaps.data.PumpEnactResult
 import info.nightscout.androidaps.interfaces.*
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper
 import info.nightscout.androidaps.plugins.pump.combo.ruffyscripter.history.Bolus
@@ -34,6 +35,9 @@ class ComboPluginTest : TestBase() {
 
     val injector = HasAndroidInjector {
         AndroidInjector {
+            if (it is PumpEnactResult) {
+                it.resourceHelper = resourceHelper
+            }
         }
     }
 
@@ -42,6 +46,7 @@ class ComboPluginTest : TestBase() {
     @Before
     fun prepareMocks() {
         `when`(resourceHelper.gs(R.string.novalidbasalrate)).thenReturn("No valid basal rate read from pump")
+        `when`(resourceHelper.gs(R.string.combo_pump_unsupported_operation)).thenReturn("Requested operation not supported by pump")
         comboPlugin = ComboPlugin(injector, aapsLogger, RxBusWrapper(aapsSchedulers), resourceHelper, profileFunction, treatmentsPlugin, sp, commandQueue, context, databaseHelper)
     }
 

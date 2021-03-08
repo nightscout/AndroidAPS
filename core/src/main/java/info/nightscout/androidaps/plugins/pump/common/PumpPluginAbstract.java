@@ -375,7 +375,7 @@ public abstract class PumpPluginAbstract extends PumpPluginBase implements PumpI
             ret += "LastConn: " + agoMin + " min ago\n";
         }
         if (getPumpStatusData().lastBolusTime != null && getPumpStatusData().lastBolusTime.getTime() != 0) {
-            ret += "LastBolus: " + DecimalFormatter.to2Decimal(getPumpStatusData().lastBolusAmount) + "U @" + //
+            ret += "LastBolus: " + DecimalFormatter.INSTANCE.to2Decimal(getPumpStatusData().lastBolusAmount) + "U @" + //
                     android.text.format.DateFormat.format("HH:mm", getPumpStatusData().lastBolusTime) + "\n";
         }
         TemporaryBasal activeTemp = activePlugin.getActiveTreatments().getRealTempBasalFromHistory(System.currentTimeMillis());
@@ -392,7 +392,7 @@ public abstract class PumpPluginAbstract extends PumpPluginBase implements PumpI
         // + pumpStatus.maxDailyTotalUnits + " U\n";
         // }
         ret += "IOB: " + getPumpStatusData().iob + "U\n";
-        ret += "Reserv: " + DecimalFormatter.to0Decimal(getPumpStatusData().reservoirRemainingUnits) + "U\n";
+        ret += "Reserv: " + DecimalFormatter.INSTANCE.to0Decimal(getPumpStatusData().reservoirRemainingUnits) + "U\n";
         ret += "Batt: " + getPumpStatusData().batteryRemaining + "\n";
         return ret;
     }
@@ -406,7 +406,7 @@ public abstract class PumpPluginAbstract extends PumpPluginBase implements PumpI
                 // neither carbs nor bolus requested
                 aapsLogger.error("deliverTreatment: Invalid input");
                 return new PumpEnactResult(getInjector()).success(false).enacted(false).bolusDelivered(0d).carbsDelivered(0d)
-                        .comment(getResourceHelper().gs(R.string.invalidinput));
+                        .comment(R.string.invalidinput);
             } else if (detailedBolusInfo.insulin > 0) {
                 // bolus needed, ask pump to deliver it
                 return deliverBolus(detailedBolusInfo);
@@ -426,7 +426,7 @@ public abstract class PumpPluginAbstract extends PumpPluginBase implements PumpI
                 aapsLogger.debug(LTag.PUMP, "deliverTreatment: Carb only treatment.");
 
                 return new PumpEnactResult(getInjector()).success(true).enacted(true).bolusDelivered(0d)
-                        .carbsDelivered(detailedBolusInfo.carbs).comment(getResourceHelper().gs(R.string.common_resultok));
+                        .carbsDelivered(detailedBolusInfo.carbs).comment(R.string.common_resultok);
             }
         } finally {
             triggerUIChange();
@@ -471,6 +471,6 @@ public abstract class PumpPluginAbstract extends PumpPluginBase implements PumpI
     protected abstract void triggerUIChange();
 
     private PumpEnactResult getOperationNotSupportedWithCustomText(int resourceId) {
-        return new PumpEnactResult(getInjector()).success(false).enacted(false).comment(getResourceHelper().gs(resourceId));
+        return new PumpEnactResult(getInjector()).success(false).enacted(false).comment(resourceId);
     }
 }

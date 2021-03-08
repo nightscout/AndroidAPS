@@ -10,6 +10,7 @@ import info.nightscout.androidaps.TestBaseWithProfile
 import info.nightscout.androidaps.dana.DanaPump
 import info.nightscout.androidaps.danar.DanaRPlugin
 import info.nightscout.androidaps.danars.DanaRSPlugin
+import info.nightscout.androidaps.data.PumpEnactResult
 import info.nightscout.androidaps.database.AppRepository
 import info.nightscout.androidaps.logging.UserEntryLogger
 import info.nightscout.androidaps.plugins.aps.openAPSAMA.OpenAPSAMAPlugin
@@ -41,6 +42,8 @@ import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.Mock
 import org.mockito.Mockito.`when`
+import org.mockito.Mockito.anyInt
+import org.mockito.Mockito.anyString
 import org.powermock.core.classloader.annotations.PrepareForTest
 import org.powermock.modules.junit4.PowerMockRunner
 import java.util.*
@@ -91,6 +94,9 @@ class ConstraintsCheckerTest : TestBaseWithProfile() {
             if (it is Objective) {
                 it.sp = sp
             }
+            if (it is PumpEnactResult) {
+                it.resourceHelper = resourceHelper
+            }
         }
     }
 
@@ -115,6 +121,15 @@ class ConstraintsCheckerTest : TestBaseWithProfile() {
         `when`(resourceHelper.gs(R.string.limitingiob)).thenReturn("Limiting IOB to %.1f U because of %s")
         `when`(resourceHelper.gs(R.string.limitingbasalratio)).thenReturn("Limiting max basal rate to %1\$.2f U/h because of %2\$s")
         `when`(resourceHelper.gs(R.string.limitingpercentrate)).thenReturn("Limiting max percent rate to %1\$d%% because of %2\$s")
+        `when`(resourceHelper.gs(R.string.itmustbepositivevalue)).thenReturn("it must be positive value")
+        `when`(resourceHelper.gs(R.string.smbnotallowedinopenloopmode)).thenReturn("SMB not allowed in open loop mode")
+        `when`(resourceHelper.gs(R.string.pumplimit)).thenReturn("pump limit")
+        `when`(resourceHelper.gs(R.string.smbalwaysdisabled)).thenReturn("SMB always and after carbs disabled because active BG source doesn\\'t support advanced filtering")
+        `when`(resourceHelper.gs(R.string.limitingpercentrate, 0, "it must be positive value")).thenReturn("")
+        `when`(resourceHelper.gs(R.string.limitingbolus, 3.0, "pump limit")).thenReturn("")
+        `when`(resourceHelper.gs(R.string.limitingbolus, 6.0, "pump limit")).thenReturn("")
+        `when`(resourceHelper.gs(R.string.limitingbasalratio, 0.8, "pump limit")).thenReturn("")
+        `when`(resourceHelper.gs(R.string.limitingpercentrate, 200, "pump limit")).thenReturn("")
 
         // RS constructor
         `when`(sp.getString(R.string.key_danars_address, "")).thenReturn("")

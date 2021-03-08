@@ -267,8 +267,7 @@ public abstract class AbstractDanaRExecutionService extends DaggerService {
         }
         SystemClock.sleep(200);
         mSerialIOThread.sendMessage(new MsgPCCommStop(injector));
-        result.success = true;
-        result.comment = "OK";
+        result.success(true).comment("OK");
         return result;
     }
 

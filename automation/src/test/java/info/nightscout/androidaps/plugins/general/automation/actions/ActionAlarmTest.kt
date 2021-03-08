@@ -41,7 +41,6 @@ class ActionAlarmTest : TestBase() {
                 it.timerUtil = timerUtil
             }
             if (it is PumpEnactResult) {
-                it.aapsLogger = aapsLogger
                 it.resourceHelper = resourceHelper
             }
         }

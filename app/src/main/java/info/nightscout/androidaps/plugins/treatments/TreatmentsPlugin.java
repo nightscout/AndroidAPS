@@ -250,8 +250,8 @@ public class TreatmentsPlugin extends PluginBase implements TreatmentsInterface 
                 if (!t.isValid) continue;
                 if (t.date > time) continue;
                 Iob tIOB = t.iobCalc(time, dia);
-                total.iob += tIOB.iobContrib;
-                total.activity += tIOB.activityContrib;
+                total.iob += tIOB.getIobContrib();
+                total.activity += tIOB.getActivityContrib();
                 if (t.insulin > 0 && t.date > total.lastBolusTime)
                     total.lastBolusTime = t.date;
                 if (!t.isSMB) {
@@ -260,7 +260,7 @@ public class TreatmentsPlugin extends PluginBase implements TreatmentsInterface 
                     long timeSinceTreatment = time - t.date;
                     long snoozeTime = t.date + (long) (timeSinceTreatment * sp.getDouble(R.string.key_openapsama_bolussnooze_dia_divisor, 2.0));
                     Iob bIOB = t.iobCalc(snoozeTime, dia);
-                    total.bolussnooze += bIOB.iobContrib;
+                    total.bolussnooze += bIOB.getIobContrib();
                 }
             }
         }
@@ -476,8 +476,8 @@ public class TreatmentsPlugin extends PluginBase implements TreatmentsInterface 
             treatment.date = i;
             treatment.insulin = running * 5.0 / 60.0; // 5 min chunk
             Iob iob = treatment.iobCalc(time, profile.getDia());
-            total.basaliob += iob.iobContrib;
-            total.activity += iob.activityContrib;
+            total.basaliob += iob.getIobContrib();
+            total.activity += iob.getActivityContrib();
         }
         return total;
     }

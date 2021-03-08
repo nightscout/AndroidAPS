@@ -159,7 +159,7 @@ class IobCobOref1Thread internal constructor(
                                         aapsLogger.debug(LTag.AUTOSENS, autosensDataTable.toString())
                                         aapsLogger.debug(LTag.AUTOSENS, bucketedData.toString())
                                         aapsLogger.debug(LTag.AUTOSENS, iobCobCalculatorPlugin.bgReadings.toString())
-                                        val notification = Notification(Notification.SENDLOGFILES, resourceHelper.gs(R.string.sendlogfiles), Notification.LOW)
+                                        val notification = Notification(Notification.SEND_LOGFILES, resourceHelper.gs(R.string.sendlogfiles), Notification.LOW)
                                         rxBus.send(EventNewNotification(notification))
                                         sp.putBoolean("log_AUTOSENS", true)
                                         break
@@ -182,7 +182,7 @@ class IobCobOref1Thread internal constructor(
                                 aapsLogger.debug(autosensDataTable.toString())
                                 aapsLogger.debug(bucketedData.toString())
                                 aapsLogger.debug(iobCobCalculatorPlugin.bgReadings.toString())
-                                val notification = Notification(Notification.SENDLOGFILES, resourceHelper.gs(R.string.sendlogfiles), Notification.LOW)
+                                val notification = Notification(Notification.SEND_LOGFILES, resourceHelper.gs(R.string.sendlogfiles), Notification.LOW)
                                 rxBus.send(EventNewNotification(notification))
                                 sp.putBoolean("log_AUTOSENS", true)
                                 break

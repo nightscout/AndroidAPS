@@ -116,7 +116,7 @@ public class RileyLinkStatusGeneralFragment extends DaggerFragment implements Re
         this.deviceType.setText(targetDevice.getResourceId());
         if (targetDevice == RileyLinkTargetDevice.MedtronicPump) {
             this.connectedDeviceDetails.setVisibility(View.VISIBLE);
-            this.configuredDeviceModel.setText(activePlugin.getActivePump().getPumpDescription().pumpType.getDescription());
+            this.configuredDeviceModel.setText(activePlugin.getActivePump().getPumpDescription().getPumpType().getDescription());
             this.connectedDeviceModel.setText(rileyLinkPumpInfo.getConnectedDeviceModel());
         } else {
             this.connectedDeviceDetails.setVisibility(View.GONE);
