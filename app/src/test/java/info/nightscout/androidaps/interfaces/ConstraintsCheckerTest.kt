@@ -23,6 +23,7 @@ import info.nightscout.androidaps.plugins.constraints.safety.SafetyPlugin
 import info.nightscout.androidaps.plugins.general.maintenance.LoggerUtils
 import info.nightscout.androidaps.plugins.general.nsclient.NSUpload
 import info.nightscout.androidaps.plugins.general.nsclient.UploadQueue
+import info.nightscout.androidaps.plugins.iob.iobCobCalculator.GlucoseStatusProvider
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.IobCobCalculatorPlugin
 import info.nightscout.androidaps.plugins.pump.combo.ComboPlugin
 import info.nightscout.androidaps.plugins.pump.common.bolusInfo.DetailedBolusInfoStorage
@@ -42,8 +43,6 @@ import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.Mock
 import org.mockito.Mockito.`when`
-import org.mockito.Mockito.anyInt
-import org.mockito.Mockito.anyString
 import org.powermock.core.classloader.annotations.PrepareForTest
 import org.powermock.modules.junit4.PowerMockRunner
 import java.util.*
@@ -138,15 +137,18 @@ class ConstraintsCheckerTest : TestBaseWithProfile() {
         `when`(activePlugin.activePump).thenReturn(virtualPumpPlugin)
         constraintChecker = ConstraintChecker(activePlugin)
 
+        val glucoseStatusProvider = GlucoseStatusProvider(aapsLogger = aapsLogger, iobCobCalculatorPlugin = iobCobCalculatorPlugin)
+
+
         danaPump = DanaPump(aapsLogger, sp, injector)
         hardLimits = HardLimits(aapsLogger, rxBus, sp, resourceHelper, context, nsUpload)
         objectivesPlugin = ObjectivesPlugin(injector, aapsLogger, resourceHelper, activePlugin, sp, Config(), uel)
         comboPlugin = ComboPlugin(injector, aapsLogger, rxBus, resourceHelper, profileFunction, treatmentsInterface, sp, commandQueue, context, databaseHelper)
         danaRPlugin = DanaRPlugin(injector, aapsLogger, aapsSchedulers, rxBus, context, resourceHelper, constraintChecker, activePlugin, sp, commandQueue, danaPump, dateUtil, fabricPrivacy)
         danaRSPlugin = DanaRSPlugin(injector, aapsLogger, aapsSchedulers, rxBus, context, resourceHelper, constraintChecker, profileFunction, activePluginProvider, sp, commandQueue, danaPump, detailedBolusInfoStorage, fabricPrivacy, dateUtil)
-        insightPlugin = LocalInsightPlugin(injector, aapsLogger, rxBus, resourceHelper, treatmentsInterface, sp, commandQueue, profileFunction, nsUpload, context, uploadQueue, Config(), dateUtil, databaseHelper)
-        openAPSSMBPlugin = OpenAPSSMBPlugin(injector, aapsLogger, rxBus, constraintChecker, resourceHelper, profileFunction, context, activePlugin, treatmentsInterface, iobCobCalculatorPlugin, hardLimits, profiler, sp, dateUtil, repository)
-        openAPSAMAPlugin = OpenAPSAMAPlugin(injector, aapsLogger, rxBus, constraintChecker, resourceHelper, profileFunction, context, activePlugin, treatmentsInterface, iobCobCalculatorPlugin, hardLimits, profiler, fabricPrivacy, dateUtil, repository)
+        insightPlugin = LocalInsightPlugin(injector, aapsLogger, rxBus, resourceHelper, treatmentsInterface, sp, commandQueue, profileFunction, nsUpload, context, uploadQueue, Config(), dateUtil, databaseHelper, repository)
+        openAPSSMBPlugin = OpenAPSSMBPlugin(injector, aapsLogger, rxBus, constraintChecker, resourceHelper, profileFunction, context, activePlugin, treatmentsInterface, iobCobCalculatorPlugin, hardLimits, profiler, sp, dateUtil, repository, glucoseStatusProvider)
+        openAPSAMAPlugin = OpenAPSAMAPlugin(injector, aapsLogger, rxBus, constraintChecker, resourceHelper, profileFunction, context, activePlugin, treatmentsInterface, iobCobCalculatorPlugin, hardLimits, profiler, fabricPrivacy, dateUtil, repository, glucoseStatusProvider)
         safetyPlugin = SafetyPlugin(injector, aapsLogger, resourceHelper, sp, rxBus, constraintChecker, openAPSAMAPlugin, openAPSSMBPlugin, sensitivityOref1Plugin, activePlugin, hardLimits, BuildHelper(Config(), loggerUtils), treatmentsInterface, Config())
         val constraintsPluginsList = ArrayList<PluginBase>()
         constraintsPluginsList.add(safetyPlugin)
@@ -184,7 +186,7 @@ class ConstraintsCheckerTest : TestBaseWithProfile() {
         Assert.assertEquals(false, c.value())
         `when`(sp.getString(R.string.key_aps_mode, "open")).thenReturn("open")
         c = constraintChecker.isClosedLoopAllowed()
-        Assert.assertTrue(c.reasonList[0].toString().contains("Closed loop mode disabled in preferences")) // Safety & Objectives
+        Assert.assertTrue(c.reasonList[0].contains("Closed loop mode disabled in preferences")) // Safety & Objectives
 //        Assert.assertEquals(3, c.reasonList.size) // 2x Safety & Objectives
         Assert.assertEquals(false, c.value())
     }

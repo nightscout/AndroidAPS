@@ -18,4 +18,5 @@ dependencies {
     implementation project(':core')
     implementation project(':omnipod-common')
     implementation project(':rileylink')
+    implementation project(':database')
 }

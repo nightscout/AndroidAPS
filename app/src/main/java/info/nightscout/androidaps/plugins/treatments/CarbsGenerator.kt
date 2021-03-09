@@ -4,7 +4,7 @@ import android.content.Context
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.activities.ErrorHelperActivity
 import info.nightscout.androidaps.data.DetailedBolusInfo
-import info.nightscout.androidaps.db.CareportalEvent
+import info.nightscout.androidaps.database.entities.TherapyEvent
 import info.nightscout.androidaps.db.Source
 import info.nightscout.androidaps.interfaces.ActivePluginProvider
 import info.nightscout.androidaps.interfaces.CommandQueueProvider
@@ -14,6 +14,7 @@ import info.nightscout.androidaps.utils.T
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 import javax.inject.Inject
 import javax.inject.Singleton
+import kotlin.math.roundToInt
 
 @Singleton
 class CarbsGenerator @Inject constructor(
@@ -28,9 +29,9 @@ class CarbsGenerator @Inject constructor(
         val ticks = duration * 4 //duration guaranteed to be integer greater zero
         for (i in 0 until ticks) {
             val carbTime = startTime + i * 15 * 60 * 1000
-            val smallCarbAmount = Math.round(1.0 * remainingCarbs / (ticks - i)).toInt() //on last iteration (ticks-i) is 1 -> smallCarbAmount == remainingCarbs
+            val smallCarbAmount = (1.0 * remainingCarbs / (ticks - i)).roundToInt() //on last iteration (ticks-i) is 1 -> smallCarbAmount == remainingCarbs
             remainingCarbs -= smallCarbAmount.toLong()
-            if (smallCarbAmount > 0) createCarb(smallCarbAmount, carbTime, CareportalEvent.MEALBOLUS, notes)
+            if (smallCarbAmount > 0) createCarb(smallCarbAmount, carbTime, TherapyEvent.Type.MEAL_BOLUS.text, notes)
         }
     }
 

@@ -13,10 +13,10 @@ import info.nightscout.androidaps.R
 import info.nightscout.androidaps.data.Profile
 import info.nightscout.androidaps.database.AppRepository
 import info.nightscout.androidaps.database.entities.TemporaryTarget
+import info.nightscout.androidaps.database.entities.TherapyEvent
 import info.nightscout.androidaps.database.entities.UserEntry.*
 import info.nightscout.androidaps.database.transactions.InsertTemporaryTargetAndCancelCurrentTransaction
 import info.nightscout.androidaps.databinding.DialogCarbsBinding
-import info.nightscout.androidaps.db.CareportalEvent
 import info.nightscout.androidaps.interfaces.Constraint
 import info.nightscout.androidaps.interfaces.ProfileFunction
 import info.nightscout.androidaps.logging.LTag
@@ -275,11 +275,11 @@ class CarbsDialog : DialogFragmentWithDate() {
                                 uel.log(Action.CARBS, notes, ValueWithUnit(eventTime, Units.Timestamp), ValueWithUnit(carbsAfterConstraints, Units.G), ValueWithUnit(timeOffset, Units.M))
                             else
                                 uel.log(Action.CARBS, notes, ValueWithUnit(carbsAfterConstraints, Units.G), ValueWithUnit(timeOffset, Units.M))
-                            carbsGenerator.createCarb(carbsAfterConstraints, time, CareportalEvent.CARBCORRECTION, notes)
+                            carbsGenerator.createCarb(carbsAfterConstraints, time, TherapyEvent.Type.CARBS_CORRECTION.text, notes)
                         } else {
                             uel.log(Action.CARBS, notes, ValueWithUnit(carbsAfterConstraints, Units.G), ValueWithUnit(timeOffset,Units.M), ValueWithUnit(duration, Units.H))
                             carbsGenerator.generateCarbs(carbsAfterConstraints, time, duration, notes)
-                            nsUpload.uploadEvent(CareportalEvent.NOTE, DateUtil.now() - 2000, resourceHelper.gs(R.string.generated_ecarbs_note, carbsAfterConstraints, duration, timeOffset))
+                            nsUpload.uploadEvent(TherapyEvent.Type.NOTE.text, DateUtil.now() - 2000, resourceHelper.gs(R.string.generated_ecarbs_note, carbsAfterConstraints, duration, timeOffset))
                         }
                     }
                     if (useAlarm && carbs > 0 && timeOffset > 0) {

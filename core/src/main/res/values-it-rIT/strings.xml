@@ -118,6 +118,7 @@
     <string name="dismiss">RIMUOVI</string>
     <!--    BlePreCheck-->
     <string name="ble_not_supported">Bluetooth Low Energy non supportato.</string>
+    <string name="ble_not_supported_or_not_paired">Bluetooth Low Energy non supportato o dispositivo non associato.</string>
     <string name="ble_not_enabled">Bluetooth non abilitato.</string>
     <string name="location_not_found_title">La localizzazione non è abilitata</string>
     <string name="location_not_found_message">Affinché la ricerca bluetooth funzioni sui dispositivi più recenti, la localizzazione deve essere abilitata, ma può essere disabilitata dopo l\'associazione. AAPS non tiene traccia della tua posizione.</string>

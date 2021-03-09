@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="dia_whatmeansdia">O que é verdade sobre DIA?</string>
-    <string name="dia_label_exam">Duração da Acção de Insulina (DIA)</string>
+    <string name="dia_label_exam">Duração da Acção da Insulina (DIA)</string>
     <string name="dia_profile">Deve definir o valor da DIA no seu perfil.</string>
     <string name="dia_minimumis5h">O valor mínimo permitido são 5 horas.</string>
     <string name="dia_hint1">https://androidaps.readthedocs.io/en/latest/EN/Configuration/Config-Builder.html?#insulin</string>
-    <string name="dia_meaningisequaltodiapump">Se estiver satisfeito com o valor para a DIA que utilizou na bomba antes do AndroidAPS e funcionou bem, não há necessidade de alterar isso quando inicia o loop.</string>
-    <string name="dia_valuemustbedetermined">Deve determinar para si mesmo o valor adequado para a DIA.</string>
+    <string name="dia_meaningisequaltodiapump">Se estiver satisfeito com o valor da DIA que utilizava na bomba antes da AndroidAPS e que funcionava bem, não há necessidade de o alterar quando iniciar o loop.</string>
+    <string name="dia_valuemustbedetermined">Deve determinar para o seu valor adequado para a DIA.</string>
     <string name="hypott_label">Hipo Alvo-Temp</string>
     <string name="hypott_whenhypott">Qual é a principal razão para definir um alvo temporário?</string>
     <string name="hypott_wrongbasal">Para corrigir hipos causadas por configurações de taxa de basal incorretas.</string>
@@ -110,7 +110,7 @@
     <string name="troubleshooting_hint2">https://www.facebook.com/groups/AndroidAPSUsers/</string>
     <string name="troubleshooting_hint3">https://gitter.im/MilosKozak/AndroidAPS</string>
     <string name="insulin_label">Plugins de Insulina</string>
-    <string name="insulin_ultrarapid">Qual insulina deve utilizar com o plugin Ultra-Rapid Oref?</string>
+    <string name="insulin_ultrarapid">Que insulina deve utilizar com o plugin Oref Ultra-Rápida ?</string>
     <string name="insulin_fiasp">Fiasp®</string>
     <string name="insulin_novorapid">NovoRapid®/Novolog®</string>
     <string name="insulin_humalog">Humalog ®</string>
@@ -193,8 +193,8 @@
     <string name="profileswitch2_isfhigher">FSI será 20% maior.</string>
     <string name="profileswitchtime_label">Troca de Perfil</string>
     <string name="profileswitchtime_iwant">Se você se levanta 2 horas mais cedo do que o normal, como deve notificar o AndroidAPS da alteração no seu horário?</string>
-    <string name="profileswitchtime_2">Iniciar uma mudança de perfil com uma alteração de turno de 2</string>
-    <string name="profileswitchtime__2">Iniciar uma mudança de perfil com uma alteração de turno de -2</string>
+    <string name="profileswitchtime_2">Iniciar uma mudança de perfil com um deslocamento temporal de 2</string>
+    <string name="profileswitchtime__2">Iniciar uma mudança de perfil com uma deslocamento temporal de -2</string>
     <string name="profileswitchtime_tt">Defina um alvo temporário de comer brevemente.</string>
     <string name="profileswitchtime_100">Faça troca de perfil para mais de 100%. </string>
     <string name="profileswitchtime_hint1">https://androidaps.readthedocs.io/en/latest/EN/Usage/Profiles.html?highlight=profile%20switch#timeshift</string>

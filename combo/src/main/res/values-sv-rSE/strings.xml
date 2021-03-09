@@ -3,6 +3,7 @@
     <string name="description_pump_combo">Pumpintegration för Accu-Chek Combo. Kräver att Ruffy är installerat</string>
     <string name="combo_programming_bolus">Programmerar bolus i pump</string>
     <string name="combo_pump_state_label">Läge</string>
+    <string name="combo_pump_activity_label">Insulinaktivitet (5m)</string>
     <string name="combo_no_pump_connection">Ingen anslutning på %1$d min</string>
     <string name="combo_tbr_remaining">%1$d%% (%2$d min återstår)</string>
     <string name="combo_pump_state_initializing">Initierar</string>

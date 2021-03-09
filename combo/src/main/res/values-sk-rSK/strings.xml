@@ -3,6 +3,7 @@
     <string name="description_pump_combo">Ovládač pumpy pre Accu-Check Combo, vyžaduje nainštalovanú aplikáciu Ruffy</string>
     <string name="combo_programming_bolus">Programovanie pumpy pre bolus</string>
     <string name="combo_pump_state_label">Stav</string>
+    <string name="combo_pump_activity_label">Aktivita</string>
     <string name="combo_no_pump_connection">Žiadne spojenie už %1$d min</string>
     <string name="combo_tbr_remaining">%1$d%% (%2$d min zostáva)</string>
     <string name="combo_pump_state_initializing">Inicializácia</string>

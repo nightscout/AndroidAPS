@@ -2,7 +2,7 @@
   "formatVersion": 1,
   "database": {
     "version": 4,
-    "identityHash": "9e6e8a398493c289fd1db6f1aa5155db",
+    "identityHash": "e8b8785efbd1699431eef90a5b441ed3",
     "entities": [
       {
         "tableName": "apsResults",
@@ -1714,7 +1714,7 @@
       },
       {
         "tableName": "therapyEvents",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `version` INTEGER NOT NULL, `dateCreated` INTEGER NOT NULL, `isValid` INTEGER NOT NULL, `referenceId` INTEGER, `timestamp` INTEGER NOT NULL, `utcOffset` INTEGER NOT NULL, `duration` INTEGER NOT NULL, `type` TEXT NOT NULL, `note` TEXT, `amount` REAL, `nightscoutSystemId` TEXT, `nightscoutId` TEXT, `pumpType` TEXT, `pumpSerial` TEXT, `pumpId` INTEGER, `startId` INTEGER, `endId` INTEGER, FOREIGN KEY(`referenceId`) REFERENCES `therapyEvents`(`id`) ON UPDATE NO ACTION ON DELETE NO ACTION )",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `version` INTEGER NOT NULL, `dateCreated` INTEGER NOT NULL, `isValid` INTEGER NOT NULL, `referenceId` INTEGER, `timestamp` INTEGER NOT NULL, `utcOffset` INTEGER NOT NULL, `duration` INTEGER NOT NULL, `type` TEXT NOT NULL, `note` TEXT, `enteredBy` TEXT, `glucose` REAL, `glucoseType` TEXT, `units` TEXT, `nightscoutSystemId` TEXT, `nightscoutId` TEXT, `pumpType` TEXT, `pumpSerial` TEXT, `pumpId` INTEGER, `startId` INTEGER, `endId` INTEGER, FOREIGN KEY(`referenceId`) REFERENCES `therapyEvents`(`id`) ON UPDATE NO ACTION ON DELETE NO ACTION )",
         "fields": [
           {
             "fieldPath": "id",
@@ -1777,9 +1777,27 @@
             "notNull": false
           },
           {
-            "fieldPath": "amount",
-            "columnName": "amount",
+            "fieldPath": "enteredBy",
+            "columnName": "enteredBy",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "glucose",
+            "columnName": "glucose",
             "affinity": "REAL",
+            "notNull": false
+          },
+          {
+            "fieldPath": "glucoseType",
+            "columnName": "glucoseType",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "units",
+            "columnName": "units",
+            "affinity": "TEXT",
             "notNull": false
           },
           {
@@ -2681,7 +2699,7 @@
       },
       {
         "tableName": "userEntry",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `timestamp` INTEGER NOT NULL, `utcOffset` INTEGER NOT NULL, `action` TEXT NOT NULL, `s` TEXT NOT NULL, `values` TEXT NOT NULL)",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `timestamp` INTEGER NOT NULL, `utcOffset` INTEGER NOT NULL, `action` TEXT NOT NULL, `s` TEXT NOT NULL, `d1` REAL NOT NULL, `d2` REAL NOT NULL, `i1` INTEGER NOT NULL, `i2` INTEGER NOT NULL)",
         "fields": [
           {
             "fieldPath": "id",
@@ -2714,9 +2732,27 @@
             "notNull": true
           },
           {
-            "fieldPath": "values",
-            "columnName": "values",
-            "affinity": "TEXT",
+            "fieldPath": "d1",
+            "columnName": "d1",
+            "affinity": "REAL",
+            "notNull": true
+          },
+          {
+            "fieldPath": "d2",
+            "columnName": "d2",
+            "affinity": "REAL",
+            "notNull": true
+          },
+          {
+            "fieldPath": "i1",
+            "columnName": "i1",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "i2",
+            "columnName": "i2",
+            "affinity": "INTEGER",
             "notNull": true
           }
         ],
@@ -2733,7 +2769,7 @@
     "views": [],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '9e6e8a398493c289fd1db6f1aa5155db')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'e8b8785efbd1699431eef90a5b441ed3')"
     ]
   }
 }

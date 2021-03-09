@@ -9,13 +9,16 @@ import com.google.common.base.Joiner
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.activities.ErrorHelperActivity
 import info.nightscout.androidaps.data.DetailedBolusInfo
+import info.nightscout.androidaps.database.AppRepository
+import info.nightscout.androidaps.database.entities.TherapyEvent
+import info.nightscout.androidaps.database.transactions.InsertTherapyEventIfNewTransaction
 import info.nightscout.androidaps.database.entities.UserEntry.*
 import info.nightscout.androidaps.databinding.DialogFillBinding
-import info.nightscout.androidaps.db.CareportalEvent
 import info.nightscout.androidaps.db.Source
 import info.nightscout.androidaps.interfaces.ActivePluginProvider
 import info.nightscout.androidaps.interfaces.CommandQueueProvider
 import info.nightscout.androidaps.interfaces.Constraint
+import info.nightscout.androidaps.logging.LTag
 import info.nightscout.androidaps.logging.UserEntryLogger
 import info.nightscout.androidaps.plugins.configBuilder.ConstraintChecker
 import info.nightscout.androidaps.plugins.general.nsclient.NSUpload
@@ -26,6 +29,8 @@ import info.nightscout.androidaps.utils.SafeParse
 import info.nightscout.androidaps.utils.alertDialogs.OKDialog
 import info.nightscout.androidaps.utils.extensions.formatColor
 import info.nightscout.androidaps.utils.resources.ResourceHelper
+import io.reactivex.disposables.CompositeDisposable
+import io.reactivex.rxkotlin.plusAssign
 import java.util.*
 import javax.inject.Inject
 import kotlin.math.abs
@@ -39,6 +44,9 @@ class FillDialog : DialogFragmentWithDate() {
     @Inject lateinit var commandQueue: CommandQueueProvider
     @Inject lateinit var activePlugin: ActivePluginProvider
     @Inject lateinit var uel: UserEntryLogger
+    @Inject lateinit var repository: AppRepository
+
+    private val disposable = CompositeDisposable()
 
     private var _binding: DialogFillBinding? = null
 
@@ -133,12 +141,28 @@ class FillDialog : DialogFragmentWithDate() {
                     }
                     if (siteChange) {
                         uel.log(Action.SITE_CHANGE, notes)
-                        nsUpload.generateCareportalEvent(CareportalEvent.SITECHANGE, eventTime, notes)
+                        disposable += repository.runTransactionForResult(InsertTherapyEventIfNewTransaction(
+                            timestamp = eventTime,
+                            type = TherapyEvent.Type.CANNULA_CHANGE,
+                            note = notes
+                        )).subscribe({ result ->
+                            result.inserted.forEach { nsUpload.uploadEvent(it) }
+                        }, {
+                            aapsLogger.error(LTag.BGSOURCE, "Error while saving therapy event", it)
+                        })
                     }
                     if (insulinChange) {
                         // add a second for case of both checked
                         uel.log(Action.INSULIN_CHANGE, notes)
-                        nsUpload.generateCareportalEvent(CareportalEvent.INSULINCHANGE, eventTime + 1000, notes)
+                        disposable += repository.runTransactionForResult(InsertTherapyEventIfNewTransaction(
+                            timestamp = eventTime + 1000,
+                            type = TherapyEvent.Type.INSULIN_CHANGE,
+                            note = notes
+                        )).subscribe({ result ->
+                            result.inserted.forEach { nsUpload.uploadEvent(it) }
+                        }, {
+                            aapsLogger.error(LTag.BGSOURCE, "Error while saving therapy event", it)
+                        })
                     }
                 }, null)
             }

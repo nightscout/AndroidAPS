@@ -12,7 +12,7 @@
     <string name="goingtodeliver">%1$.2f U vont être injectées</string>
     <string name="waitingforpump">Attente connection pompe</string>
     <string name="connectingfor">Connexion à %1$d en cours</string>
-    <string name="bolusdelivering">%1$.2f U en cours d\'injection</string>
+    <string name="bolusdelivering">%1$.2f U ont été injectées</string>
     <string name="handshaking">Connexion</string>
     <string name="connecting">Connection en cours</string>
     <string name="connected">Connectée</string>
@@ -118,6 +118,7 @@
     <string name="dismiss">REJETER</string>
     <!--    BlePreCheck-->
     <string name="ble_not_supported">Bluetooth Low Energy non pris en charge.</string>
+    <string name="ble_not_supported_or_not_paired">Bluetooth Low Energy non pris en charge ou appareil non appairé.</string>
     <string name="ble_not_enabled">Bluetooth désactivé.</string>
     <string name="location_not_found_title">Localisation désactivée</string>
     <string name="location_not_found_message">La localisation doit être activée sur les nouveaux appareils pour que la recherche Bluetooth fonctionne. AAPS n\'enregistre pas votre localisation et la localisation peut être désactivée après l\'appairage.</string>

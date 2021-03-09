@@ -4,8 +4,6 @@ import android.content.Context;
 
 import org.joda.time.DateTime;
 import org.joda.time.Duration;
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -20,7 +18,9 @@ import info.nightscout.androidaps.activities.ErrorHelperActivity;
 import info.nightscout.androidaps.data.DetailedBolusInfo;
 import info.nightscout.androidaps.data.Profile;
 import info.nightscout.androidaps.data.PumpEnactResult;
-import info.nightscout.androidaps.db.CareportalEvent;
+import info.nightscout.androidaps.database.AppRepository;
+import info.nightscout.androidaps.database.entities.TherapyEvent;
+import info.nightscout.androidaps.database.transactions.InsertTherapyEventIfNewTransaction;
 import info.nightscout.androidaps.db.OmnipodHistoryRecord;
 import info.nightscout.androidaps.db.Source;
 import info.nightscout.androidaps.db.TemporaryBasal;
@@ -28,7 +28,6 @@ import info.nightscout.androidaps.events.Event;
 import info.nightscout.androidaps.events.EventRefreshOverview;
 import info.nightscout.androidaps.interfaces.ActivePluginProvider;
 import info.nightscout.androidaps.interfaces.DatabaseHelperInterface;
-import info.nightscout.androidaps.interfaces.ProfileFunction;
 import info.nightscout.androidaps.logging.AAPSLogger;
 import info.nightscout.androidaps.logging.LTag;
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper;
@@ -85,10 +84,10 @@ import info.nightscout.androidaps.plugins.pump.omnipod.eros.event.EventOmnipodEr
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.rileylink.manager.OmnipodRileyLinkCommunicationManager;
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.util.AapsOmnipodUtil;
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.util.OmnipodAlertUtil;
-import info.nightscout.androidaps.utils.DateUtil;
 import info.nightscout.androidaps.utils.resources.ResourceHelper;
 import info.nightscout.androidaps.utils.rx.AapsSchedulers;
 import info.nightscout.androidaps.utils.sharedPreferences.SP;
+import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.subjects.SingleSubject;
 
 @Singleton
@@ -97,7 +96,6 @@ public class AapsOmnipodErosManager {
     private final PodStateManager podStateManager;
     private final AapsOmnipodUtil aapsOmnipodUtil;
     private final AAPSLogger aapsLogger;
-    private final AapsSchedulers aapsSchedulers;
     private final RxBusWrapper rxBus;
     private final ResourceHelper resourceHelper;
     private final HasAndroidInjector injector;
@@ -107,8 +105,8 @@ public class AapsOmnipodErosManager {
     private final DatabaseHelperInterface databaseHelper;
     private final OmnipodAlertUtil omnipodAlertUtil;
     private final NSUpload nsUpload;
-    private final ProfileFunction profileFunction;
     private final Context context;
+    private final AppRepository repository;
 
     private boolean basalBeepsEnabled;
     private boolean bolusBeepsEnabled;
@@ -125,6 +123,8 @@ public class AapsOmnipodErosManager {
     private boolean showRileyLinkBatteryLevel;
     private boolean batteryChangeLoggingEnabled;
 
+    private final CompositeDisposable disposable = new CompositeDisposable();
+
     @Inject
     public AapsOmnipodErosManager(OmnipodRileyLinkCommunicationManager communicationService,
                                   PodStateManager podStateManager,
@@ -139,13 +139,12 @@ public class AapsOmnipodErosManager {
                                   DatabaseHelperInterface databaseHelper,
                                   OmnipodAlertUtil omnipodAlertUtil,
                                   NSUpload nsUpload,
-                                  ProfileFunction profileFunction,
-                                  Context context) {
+                                  Context context,
+                                  AppRepository repository) {
 
         this.podStateManager = podStateManager;
         this.aapsOmnipodUtil = aapsOmnipodUtil;
         this.aapsLogger = aapsLogger;
-        this.aapsSchedulers = aapsSchedulers;
         this.rxBus = rxBus;
         this.sp = sp;
         this.resourceHelper = resourceHelper;
@@ -154,8 +153,8 @@ public class AapsOmnipodErosManager {
         this.databaseHelper = databaseHelper;
         this.omnipodAlertUtil = omnipodAlertUtil;
         this.nsUpload = nsUpload;
-        this.profileFunction = profileFunction;
         this.context = context;
+        this.repository = repository;
 
         delegate = new OmnipodManager(aapsLogger, aapsSchedulers, communicationService, podStateManager);
 
@@ -224,8 +223,8 @@ public class AapsOmnipodErosManager {
         addToHistory(System.currentTimeMillis(), PodHistoryEntryType.INSERT_CANNULA, result.getComment(), result.getSuccess());
 
         if (result.getSuccess()) {
-            uploadCareportalEvent(System.currentTimeMillis() - 1000, CareportalEvent.INSULINCHANGE);
-            uploadCareportalEvent(System.currentTimeMillis(), CareportalEvent.SITECHANGE);
+            uploadCareportalEvent(System.currentTimeMillis() - 1000, TherapyEvent.Type.INSULIN_CHANGE);
+            uploadCareportalEvent(System.currentTimeMillis(), TherapyEvent.Type.CANNULA_CHANGE);
 
             dismissNotification(Notification.OMNIPOD_POD_NOT_ATTACHED);
 
@@ -1003,28 +1002,12 @@ public class AapsOmnipodErosManager {
         return new BasalSchedule(entries);
     }
 
-    private void uploadCareportalEvent(long date, String event) {
-        if (databaseHelper.getCareportalEventFromTimestamp(date) != null)
-            return;
-        try {
-            JSONObject data = new JSONObject();
-            String enteredBy = sp.getString("careportal_enteredby", "");
-            if (enteredBy.isEmpty()) {
-                data.put("enteredBy", enteredBy);
-            }
-            data.put("created_at", DateUtil.toISOString(date));
-            data.put("mills", date);
-            data.put("eventType", event);
-            data.put("units", profileFunction.getUnits());
-            CareportalEvent careportalEvent = new CareportalEvent(injector);
-            careportalEvent.date = date;
-            careportalEvent.source = Source.USER;
-            careportalEvent.eventType = event;
-            careportalEvent.json = data.toString();
-            databaseHelper.createOrUpdate(careportalEvent);
-            nsUpload.uploadCareportalEntryToNS(data, date);
-        } catch (JSONException e) {
-            aapsLogger.error(LTag.PUMPCOMM, "Unhandled exception when uploading SiteChange event.", e);
-        }
+    private void uploadCareportalEvent(long date, TherapyEvent.Type event) {
+        if (repository.getTherapyEventByTimestamp(event, date) != null) return;
+        disposable.add(repository.runTransactionForResult(new InsertTherapyEventIfNewTransaction(date, event, 0, null, sp.getString("careportal_enteredby", "AndroidAPS"), null, null, null))
+                .subscribe(
+                        result -> result.getInserted().forEach(nsUpload::uploadEvent),
+                        error -> aapsLogger.error(LTag.DATABASE, "Error while saving therapy event", error)
+                ));
     }
 }

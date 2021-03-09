@@ -15,7 +15,9 @@ import info.nightscout.androidaps.activities.ErrorHelperActivity
 import info.nightscout.androidaps.data.DetailedBolusInfo
 import info.nightscout.androidaps.data.Profile
 import info.nightscout.androidaps.data.PumpEnactResult
-import info.nightscout.androidaps.db.CareportalEvent
+import info.nightscout.androidaps.database.AppRepository
+import info.nightscout.androidaps.database.entities.TherapyEvent
+import info.nightscout.androidaps.database.transactions.InsertTherapyEventIfNewTransaction
 import info.nightscout.androidaps.db.Source
 import info.nightscout.androidaps.events.EventAcceptOpenLoopChange
 import info.nightscout.androidaps.events.EventAutosensCalculationFinished
@@ -50,8 +52,7 @@ import info.nightscout.androidaps.utils.resources.ResourceHelper
 import info.nightscout.androidaps.utils.rx.AapsSchedulers
 import info.nightscout.androidaps.utils.sharedPreferences.SP
 import io.reactivex.disposables.CompositeDisposable
-import org.json.JSONException
-import org.json.JSONObject
+import io.reactivex.rxkotlin.plusAssign
 import javax.inject.Inject
 import javax.inject.Singleton
 import kotlin.math.abs
@@ -76,7 +77,8 @@ open class LoopPlugin @Inject constructor(
     private val receiverStatusStore: ReceiverStatusStore,
     private val fabricPrivacy: FabricPrivacy,
     private val nsUpload: NSUpload,
-    private val databaseHelper: DatabaseHelperInterface
+    private val dateUtil: DateUtil,
+    private val repository: AppRepository
 ) : PluginBase(PluginDescription()
     .mainType(PluginType.LOOP)
     .fragmentClass(LoopFragment::class.java.name)
@@ -594,7 +596,7 @@ open class LoopPlugin @Inject constructor(
         // deliver SMB
         val detailedBolusInfo = DetailedBolusInfo()
         detailedBolusInfo.lastKnownBolusTime = treatmentsPlugin.lastBolusTime
-        detailedBolusInfo.eventType = CareportalEvent.CORRECTIONBOLUS
+        detailedBolusInfo.eventType = TherapyEvent.Type.CORRECTION_BOLUS.text
         detailedBolusInfo.insulin = request.smb
         detailedBolusInfo.isSMB = true
         detailedBolusInfo.source = Source.USER
@@ -652,20 +654,16 @@ open class LoopPlugin @Inject constructor(
     }
 
     override fun createOfflineEvent(durationInMinutes: Int) {
-        val data = JSONObject()
-        try {
-            data.put("eventType", CareportalEvent.OPENAPSOFFLINE)
-            data.put("duration", durationInMinutes)
-        } catch (e: JSONException) {
-            aapsLogger.error("Unhandled exception", e)
-        }
-        val event = CareportalEvent(injector)
-        event.date = DateUtil.now()
-        event.source = Source.USER
-        event.eventType = CareportalEvent.OPENAPSOFFLINE
-        event.json = data.toString()
-        databaseHelper.createOrUpdate(event)
-        nsUpload.uploadOpenAPSOffline(event)
+        disposable += repository.runTransactionForResult(InsertTherapyEventIfNewTransaction(
+            timestamp = dateUtil._now(),
+            type = TherapyEvent.Type.APS_OFFLINE,
+            duration = T.mins(durationInMinutes.toLong()).msecs(),
+            enteredBy = "openaps://" + "AndroidAPS"
+        )).subscribe({ result ->
+            result.inserted.forEach { nsUpload.uploadEvent(it) }
+        }, {
+            aapsLogger.error(LTag.BGSOURCE, "Error while saving therapy event", it)
+        })
     }
 
     companion object {

@@ -118,6 +118,7 @@
     <string name="dismiss">POTVRDIT</string>
     <!--    BlePreCheck-->
     <string name="ble_not_supported">Bluetooth Low Energy nepodporováno.</string>
+    <string name="ble_not_supported_or_not_paired">Bluetooth Low Energy není podporováno, nebo zařízení není spárováno.</string>
     <string name="ble_not_enabled">Bluetooth není povoleno.</string>
     <string name="location_not_found_title">Zjišťování polohy není povoleno</string>
     <string name="location_not_found_message">Pro vyhledání Bluetooth zařízení na novějších telefonech musí být povoleno zjišťování polohy. AAPS vás nesleduje a po provedení párování můžete tuto volbu opět zakázat.</string>

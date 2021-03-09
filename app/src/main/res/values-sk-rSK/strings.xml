@@ -194,7 +194,6 @@
     <string name="smscommunicator_loophasbeenenabled">Uzavretý okruh bol aktivovaný</string>
     <string name="smscommunicator_loopisenabled">Uzavretý okruh je aktivovaný</string>
     <string name="valuelimitedto">%1$.2f obmedzené na %2$.2f</string>
-    <string name="valueoutofrange">Hodnota %1$s je mimo prednastavený rozsah</string>
     <string name="smscommunicator_pumpconnectwithcode">Ak chcete pripojiť pumpu, odpovedzte pomocou SMS s kódom %1$s</string>
     <string name="smscommunicator_pumpconnectfail">Pripojenie k pumpe zlyhalo</string>
     <string name="smscommunicator_pumpdisconnectwithcode">Ak chcete odpojiť pumpu na %1$d minút, odpovedzte pomocou SMS s kódom %2$s</string>
@@ -900,4 +899,8 @@
     <string name="cannula">Kanyla</string>
     <string name="userentry">Vstup používateľa</string>
     <string name="common_values">Použite hodnoty pre najväčšie jedlo, aké obvykle jete\n</string>
+    <string name="summary_email_for_crash_report">Táto e-mailová adresa bude pripojená ku správam o zlyhaniach, aby sme vás mohli kontaktovať v naliehavých prípadoch. Je to dobrovoľné.</string>
+    <string name="email_address">Emailová adresa</string>
+    <string name="privacy_settings">Nastavenia súkromia</string>
+    <string name="privacy_summary">Pokiaľ chcete byť upozornení na zlyhanie aplikácie, môžete zadať voliteľne e-mailovú adresu. Toto nie je automatizovaná služba. Vývojári vás budú kontaktovať v nebezpečných situáciách.</string>
 </resources>

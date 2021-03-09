@@ -16,6 +16,7 @@ import info.nightscout.androidaps.plugins.bus.RxBusWrapper
 import info.nightscout.androidaps.plugins.configBuilder.ConstraintChecker
 import info.nightscout.androidaps.interfaces.ProfileFunction
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.GlucoseStatus
+import info.nightscout.androidaps.plugins.iob.iobCobCalculator.GlucoseStatusProvider
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.IobCobCalculatorPlugin
 import info.nightscout.androidaps.plugins.pump.virtual.VirtualPumpPlugin
 import info.nightscout.androidaps.plugins.treatments.TreatmentsPlugin
@@ -59,10 +60,7 @@ class BolusWizardTest : TestBase() {
                 it.commandQueue = commandQueue
                 it.loopPlugin = loopPlugin
                 it.iobCobCalculatorPlugin = iobCobCalculatorPlugin
-            }
-            if (it is GlucoseStatus) {
-                it.aapsLogger = aapsLogger
-                it.iobCobCalculatorPlugin = iobCobCalculatorPlugin
+                it.glucoseStatusProvider = GlucoseStatusProvider(aapsLogger = aapsLogger, iobCobCalculatorPlugin = iobCobCalculatorPlugin)
             }
         }
     }
