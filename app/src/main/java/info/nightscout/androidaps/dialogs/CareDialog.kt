@@ -202,7 +202,7 @@ class CareDialog : DialogFragmentWithDate() {
             therapyEvent.glucoseType = meterType
             therapyEvent.glucose = binding.bg.value
             valuesWithUnit.add(ValueWithUnit(binding.bg.value.toDouble(), profileFunction.getUnits()))
-            valuesWithUnit.add(ValueWithUnit(meterType, Units.CPEvent))
+            valuesWithUnit.add(ValueWithUnit(meterType.text, Units.CPEvent))
         }
         if (options == EventType.NOTE || options == EventType.EXERCISE) {
             actions.add(resourceHelper.gs(R.string.careportal_newnstreatment_duration_label) + ": " + resourceHelper.gs(R.string.format_mins, binding.duration.value.toInt()))
