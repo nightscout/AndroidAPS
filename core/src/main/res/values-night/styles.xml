@@ -161,6 +161,10 @@
         <item name="trendarrow" >@color/white</item>
         <!---Round dialog corner only if sdk >= 28 -->
         <item name="android:dialogCornerRadius" ns2:targetApi="p">8dp</item>
+        <!---windowBackground -->
+        <item name="android:windowBackground">?attr/windowBackground</item>
+        <item name="background">?attr/windowBackground</item>
+        <item name="windowBackground" >@color/black</item>
     </style>
 
     <style name="Theme.MaterialComponents.DayNight.DarkActionBar" parent="Theme.MaterialComponents.DayNight.Bridge"/>

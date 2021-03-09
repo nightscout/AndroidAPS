@@ -126,4 +126,6 @@
 <attr name="metadataOk" format="reference|color" />
 <attr name="metadataTextWarning" format="reference|color" />
 <attr name="trendarrow" format="reference|color" />
+<!-- Window background-->
+<attr name="windowBackground" format="reference|color" />
 </resources>

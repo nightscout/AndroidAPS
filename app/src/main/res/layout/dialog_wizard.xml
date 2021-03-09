@@ -7,6 +7,7 @@
     android:focusableInTouchMode="true"
     android:minWidth="300dp"
     android:orientation="vertical"
+    android:background="?attr/windowBackground"
     tools:context=".dialogs.InsulinDialog">
 
     <LinearLayout
