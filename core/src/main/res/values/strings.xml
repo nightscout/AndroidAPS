@@ -489,6 +489,7 @@
     <string name="uel_unknown">UNKNOWN</string>
     <string name="formated_string">Formated string</string>
     <string name="ue_export_to_csv">Export User Entries to Excel (csv)</string>
+    <string name="ue_csv_header">"Timestamp;Date;UTC Offset;Action;Note;Value;Unit"</string>
 
     <plurals name="days">
         <item quantity="one">%1$d day</item>

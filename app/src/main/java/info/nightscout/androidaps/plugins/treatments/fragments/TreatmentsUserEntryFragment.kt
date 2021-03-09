@@ -116,9 +116,9 @@ class TreatmentsUserEntryFragment : DaggerFragment() {
                         }
                         Units.Mg_Dl -> valuesWithUnitString += if (profileFunction.getUnits()==Constants.MGDL) DecimalFormatter.to0Decimal(v.dValue) + resourceHelper.gs(Units.Mg_Dl.stringId()) + separator else DecimalFormatter.to1Decimal(v.dValue/Constants.MMOLL_TO_MGDL) + resourceHelper.gs(Units.Mmol_L.stringId()) + separator
                         Units.Mmol_L -> valuesWithUnitString += if (profileFunction.getUnits()==Constants.MGDL) DecimalFormatter.to0Decimal(v.dValue*Constants.MMOLL_TO_MGDL) + resourceHelper.gs(Units.Mg_Dl.stringId()) + separator else DecimalFormatter.to1Decimal(v.dValue) + resourceHelper.gs(Units.Mmol_L.stringId()) + separator
-                        Units.G -> valuesWithUnitString += v.iValue.toString() + resourceHelper.gs(Units.G.stringId()) + separator
-                        Units.U_H -> valuesWithUnitString += DecimalFormatter.to2Decimal(v.dValue) + resourceHelper.gs(Units.U_H.stringId()) + separator
-                        else -> valuesWithUnitString += if (v.dValue != 0.0 || v.iValue != 0 || v.sValue != "") { v.value().toString() + if (!v.unit.stringId().equals(0)) resourceHelper.gs(v.unit.stringId()) + separator else separator } else ""
+                        Units.U_H, Units.U -> valuesWithUnitString += DecimalFormatter.to2Decimal(v.dValue) + resourceHelper.gs(v.unit.stringId()) + separator
+                        Units.G, Units.M, Units.H, Units.Percent -> valuesWithUnitString += v.iValue.toString() + resourceHelper.gs(v.unit.stringId()) + separator
+                        else -> valuesWithUnitString += if (v.iValue != 0 || v.sValue != "") { v.value().toString() + if (!v.unit.stringId().equals(0)) resourceHelper.gs(v.unit.stringId()) + separator else separator } else ""
                     }
             }
             if (current.values.size > 0)

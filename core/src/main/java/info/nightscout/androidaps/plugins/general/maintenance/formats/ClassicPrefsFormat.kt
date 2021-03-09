@@ -89,36 +89,43 @@ class ClassicPrefsFormat @Inject constructor(
     }
 
     fun UserEntriesToCsv(userEntries: List<UserEntry>): String {
-        val userEntryHeader = "Date;UTC Offset;Action;Note;Value;Unit\n"
+        val userEntryHeader = resourceHelper.gs(R.string.ue_csv_header) + "\n"
         return userEntryHeader + userEntries.joinToString("\n") { entry ->
             if (entry.values.size > 0) {
                 entry.values.joinToString("\n") { value ->
-                    dateUtil.dateAndTimeAndSecondsString(entry.timestamp) + ";" +
+                    entry.timestamp.toString() + ";" +
+                        dateUtil.dateAndTimeAndSecondsString(entry.timestamp) + ";" +
                         dateUtil.timeString(entry.utcOffset) + ";" +
-                        "\"" + resourceHelper.gs(entry.action.stringId()) + "\";" +
-                        if (entry.s != "") {"\""+ entry.s.replace("\"", "\"\"") + "\";" } else { ";" } +
-                        valueWithUnitToCsv(value) }
+                        csvString(entry.action.stringId()) + ";" +
+                        csvString(entry.s) + ";" +
+                        valueWithUnitToCsv(value)
+                }
             } else {
-                dateUtil.dateAndTimeAndSecondsString(entry.timestamp) + ";" +
+                entry.timestamp.toString() + ";" +
+                    dateUtil.dateAndTimeAndSecondsString(entry.timestamp) + ";" +
                     dateUtil.timeString(entry.utcOffset) + ";" +
-                    "\"" + resourceHelper.gs(entry.action.stringId()) + "\";" +
-                    if (entry.s != "") {"\""+ entry.s.replace("\"", "\"\"") + "\";" } else { ";;" }
+                    csvString(entry.action.stringId()) + ";" +
+                    csvString(entry.s) + ";;"
             }
         }
     }
 
     fun valueWithUnitToCsv(v: ValueWithUnit): String {
         return when (v.unit) {
-            Units.Timestamp -> dateUtil.dateAndTimeAndSecondsString(v.lValue) + ";" + resourceHelper.gs(R.string.date)
-            Units.CPEvent -> translator.translate(v.sValue) + ";"
-            Units.R_String -> "\"" + resourceHelper.gs(v.iValue).replace("\"", "\"\"") + "\";"
-            Units.Mg_Dl -> if (profileFunction.getUnits()==Constants.MGDL) DecimalFormatter.to0Decimal(v.dValue) + ";" + resourceHelper.gs(Units.Mg_Dl.stringId()) else DecimalFormatter.to1Decimal(v.dValue/Constants.MMOLL_TO_MGDL) + ";" + resourceHelper.gs(Units.Mmol_L.stringId())
-            Units.Mmol_L -> if (profileFunction.getUnits()==Constants.MGDL) DecimalFormatter.to0Decimal(v.dValue*Constants.MMOLL_TO_MGDL) + ";" + resourceHelper.gs(Units.Mg_Dl.stringId()) else DecimalFormatter.to1Decimal(v.dValue) + ";" + resourceHelper.gs(Units.Mmol_L.stringId())
-            Units.G -> v.iValue.toString() + ";" + resourceHelper.gs(Units.G.stringId())
-            Units.U_H -> DecimalFormatter.to2Decimal(v.dValue) + ";" + resourceHelper.gs(Units.U_H.stringId())
-            else -> if (v.sValue != "")  {"\""+ v.sValue.replace("\"", "\"\"") + if (!v.unit.stringId().equals(0)) "\";\"" + resourceHelper.gs(v.unit.stringId()).replace("\"", "\"\"")  + "\"" else "\";"}
-            else if (v.dValue != 0.0 || v.iValue != 0) { v.value().toString() + if (!v.unit.stringId().equals(0)) ";" + resourceHelper.gs(v.unit.stringId()) else ";" }
-            else ";"
+            Units.Timestamp     -> dateUtil.dateAndTimeAndSecondsString(v.lValue) + ";" + csvString(R.string.date)
+            Units.CPEvent       -> csvString(translator.translate(v.sValue)) + ";"
+            Units.R_String      -> if (v.lValue.toInt() == 0) csvString(v.iValue) + ";" else ";"                //If lValue > 0 it's a formated string, so hidden for
+            Units.Mg_Dl         -> if (profileFunction.getUnits()==Constants.MGDL) DecimalFormatter.to0Decimal(v.dValue) + ";" + csvString(Units.Mg_Dl.stringId()) else DecimalFormatter.to1Decimal(v.dValue/Constants.MMOLL_TO_MGDL) + ";" + csvString(Units.Mmol_L.stringId())
+            Units.Mmol_L        -> if (profileFunction.getUnits()==Constants.MGDL) DecimalFormatter.to0Decimal(v.dValue*Constants.MMOLL_TO_MGDL) + ";" + csvString(Units.Mg_Dl.stringId()) else DecimalFormatter.to1Decimal(v.dValue) + ";" + csvString(Units.Mmol_L.stringId())
+            Units.U_H, Units.U  -> DecimalFormatter.to2Decimal(v.dValue) + ";" + csvString(v.unit.stringId())
+            Units.G, Units.M, Units.H, Units.Percent
+                                -> v.iValue.toString() + ";" + csvString(v.unit.stringId())
+            else                -> if (v.sValue != "")  { csvString(v.sValue) +  ";" + csvString(v.unit.stringId())}
+                                    else if (v.iValue != 0) { v.iValue.toString() + ";" + csvString(v.unit.stringId())}
+                                    else ";"
         }
     }
+
+    private fun csvString(id: Int): String = if (id != 0) "\"" + resourceHelper.gs(id).replace("\"", "\"\"") + "\"" else ""
+    private fun csvString(s: String): String = if (s != "") "\"" + s.replace("\"", "\"\"") + "\"" else ""
 }

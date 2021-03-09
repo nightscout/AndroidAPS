@@ -139,19 +139,19 @@ data class UserEntry(
         }
     }
     enum class Units(val text: String) {
-        @SerializedName("None") None (""),
-        @SerializedName("Mg_Dl") Mg_Dl ("mg/dl"),
-        @SerializedName("Mmol_L") Mmol_L ("mmol"),
-        @SerializedName("Timestamp") Timestamp("Timestamp"),
-        @SerializedName("U") U ("U"),
-        @SerializedName("U_H") U_H ("U/h"),
-        @SerializedName("G") G ("g"),
-        @SerializedName("M") M ("m"),
-        @SerializedName("H") H ("h"),
-        @SerializedName("Percent") Percent ("%"),
-        @SerializedName("CPEvent") CPEvent ("CPEvent"),
-        @SerializedName("TT_Reason") TT_Reason ("TTReason"),
-        @SerializedName("R_String") R_String ("R.string")
+        @SerializedName("None") None (""),                      //Int or String
+        @SerializedName("Mg_Dl") Mg_Dl ("mg/dl"),               //Double
+        @SerializedName("Mmol_L") Mmol_L ("mmol"),              //Double
+        @SerializedName("Timestamp") Timestamp("Timestamp"),    //long
+        @SerializedName("U") U ("U"),                           //Double
+        @SerializedName("U_H") U_H ("U/h"),                     //Double
+        @SerializedName("G") G ("g"),                           //Int
+        @SerializedName("M") M ("m"),                           //Int
+        @SerializedName("H") H ("h"),                           //Int
+        @SerializedName("Percent") Percent ("%"),               //Int
+        @SerializedName("CPEvent") CPEvent ("CPEvent"),         //String (CareportalEvent.Event => Translated by Translator function)
+        @SerializedName("TT_Reason") TT_Reason ("TTReason"),    //TemporaryTarget.Reason => String (to Improve for translation)
+        @SerializedName("R_String") R_String ("R.string")       //Int
         ;
 
         companion object {
