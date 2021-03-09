@@ -50,7 +50,12 @@ class OmnipodDashManagerImpl @Inject constructor(
     private val observeConnectToPod: Observable<PodEvent>
         get() = Observable.defer {
             bleManager.connect()
+        } // TODO are these reasonable values?
 
+
+    private val observeScanAndActivateNewPod: Observable<PodEvent>
+        get() = Observable.defer {
+            bleManager.activateNewPod()
         } // TODO are these reasonable values?
 
     private fun observeSendProgramBolusCommand(
@@ -172,7 +177,7 @@ class OmnipodDashManagerImpl @Inject constructor(
     override fun activatePodPart1(lowReservoirAlertTrigger: AlertTrigger.ReservoirVolumeTrigger?): Observable<PodEvent> {
         return Observable.concat(
             observePodReadyForActivationPart1,
-            observeConnectToPod,
+            observeScanAndActivateNewPod,
             observeActivationPart1Commands(lowReservoirAlertTrigger)
         ).doOnComplete(ActivationProgressUpdater(ActivationProgress.PHASE_1_COMPLETED))
             // TODO these would be common for any observable returned in a public function in this class
@@ -407,15 +412,12 @@ class OmnipodDashManagerImpl @Inject constructor(
             when (event) {
                 is PodEvent.AlreadyConnected -> {
                     podStateManager.bluetoothAddress = event.bluetoothAddress
-                    podStateManager.uniqueId = event.uniqueId
                 }
 
                 is PodEvent.BluetoothConnected -> {
-                    podStateManager.bluetoothAddress = event.address
                 }
 
                 is PodEvent.Connected -> {
-                    podStateManager.uniqueId = event.uniqueId
                 }
 
                 is PodEvent.CommandSent -> {
@@ -427,7 +429,11 @@ class OmnipodDashManagerImpl @Inject constructor(
                     handleResponse(event.response)
                 }
 
-                else                           -> {
+                is PodEvent.Paired -> {
+                    podStateManager.uniqueId = event.uniqueId.toLong()
+                }
+
+                else -> {
                     // Do nothing
                 }
             }

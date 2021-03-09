@@ -59,6 +59,7 @@ class OmnipodDashBleManagerImpl @Inject constructor(
         DescriptorNotFoundException::class,
         CouldNotConfirmDescriptorWriteException::class
     )
+
     private fun connect(podDevice: BluetoothDevice): BleIO {
         val incomingPackets: Map<CharacteristicType, BlockingQueue<ByteArray>> =
             mapOf(
@@ -90,7 +91,6 @@ class OmnipodDashBleManagerImpl @Inject constructor(
             val keys = sessionKeys
             val mIO = msgIO
             if (keys == null || mIO == null) {
-                // TODO handle reconnects
                 throw Exception("Not connected")
             }
             emitter.onNext(PodEvent.CommandSending(cmd))
@@ -142,75 +142,100 @@ class OmnipodDashBleManagerImpl @Inject constructor(
     )
 
     override fun connect(): Observable<PodEvent> = Observable.create { emitter ->
-        // TODO: when we are already connected,
-        //  emit PodEvent.AlreadyConnected, complete the observable and return from this method
         try {
-            if (podState.bluetoothAddress == null) {
-                aapsLogger.info(LTag.PUMPBTCOMM, "starting new pod activation")
 
-                val podScanner = PodScanner(aapsLogger, bluetoothAdapter)
-                emitter.onNext(PodEvent.Scanning)
-
-                val podAddress = podScanner.scanForPod(
-                    PodScanner.SCAN_FOR_SERVICE_UUID,
-                    PodScanner.POD_ID_NOT_ACTIVATED
-                ).scanResult.device.address
-                // For tests: this.podAddress = "B8:27:EB:1D:7E:BB";
-                podState.bluetoothAddress = podAddress
-            }
-            emitter.onNext(PodEvent.BluetoothConnecting)
-            val podAddress = podState.bluetoothAddress ?: throw FailedToConnectException("Lost connection")
+            val podAddress = podState.bluetoothAddress ?: throw FailedToConnectException("Missing bluetoothAddress, activate the pod first")
             // check if already connected
             val podDevice = bluetoothAdapter.getRemoteDevice(podAddress)
             val connectionState = bluetoothManager.getConnectionState(podDevice, BluetoothProfile.GATT)
             aapsLogger.debug(LTag.PUMPBTCOMM, "GATT connection state: $connectionState")
-
-            emitter.onNext(PodEvent.BluetoothConnected(podAddress))
             if (connectionState == BluetoothProfile.STATE_CONNECTED) {
-                podState.uniqueId ?: throw FailedToConnectException("Already connection and uniqueId is missing")
-                emitter.onNext(PodEvent.AlreadyConnected(podAddress, podState.uniqueId ?: 0))
+                emitter.onNext(PodEvent.AlreadyConnected(podAddress))
                 emitter.onComplete()
                 return@create
             }
+            emitter.onNext(PodEvent.BluetoothConnecting)
             if (msgIO != null) {
                 disconnect()
             }
-
             val bleIO = connect(podDevice)
+            val mIO = MessageIO(aapsLogger, bleIO)
+            msgIO = mIO
+            emitter.onNext(PodEvent.BluetoothConnected)
+
+            emitter.onNext(PodEvent.EstablishingSession)
+
+            establishSession(1.toByte())
+
+            emitter.onNext(PodEvent.Connected)
+
+            emitter.onComplete()
+        } catch (ex: Exception) {
+            disconnect()
+            emitter.tryOnError(ex)
+        }
+    }
+
+    private fun establishSession(msgSeq: Byte) {
+        val mIO = msgIO ?: throw FailedToConnectException("connection lost")
+        val ltk: ByteArray = podState.ltk ?: throw FailedToConnectException("Missing LTK, activate the pod first")
+        val myId = Id.fromInt(CONTROLLER_ID)
+        val uniqueId = podState.uniqueId
+        val podId = uniqueId?.let { Id.fromLong(uniqueId) }
+            ?: myId.increment() // pod not activated
+
+        val eapSqn = podState.increaseEapAkaSequenceNumber()
+        val eapAkaExchanger = SessionEstablisher(aapsLogger, mIO, ltk, eapSqn, myId, podId, msgSeq)
+        val keys = eapAkaExchanger.negotiateSessionKeys()
+        podState.commitEapAkaSequenceNumber()
+
+        if (BuildConfig.DEBUG) {
+            aapsLogger.info(LTag.PUMPCOMM, "CK: ${keys.ck.toHex()}")
+            aapsLogger.info(LTag.PUMPCOMM, "msgSequenceNumber: ${keys.msgSequenceNumber}")
+            aapsLogger.info(LTag.PUMPCOMM, "Nonce: ${keys.nonce}")
+        }
+        sessionKeys = keys
+    }
+
+    override fun activateNewPod(): Observable<PodEvent>  = Observable.create { emitter ->
+        try {
+            if (podState.ltk != null) {
+                throw PodAlreadyActivatedException()
+            }
+            aapsLogger.info(LTag.PUMPBTCOMM, "starting new pod activation")
+
+            val podScanner = PodScanner(aapsLogger, bluetoothAdapter)
+            emitter.onNext(PodEvent.Scanning)
+
+            val podAddress = podScanner.scanForPod(
+                PodScanner.SCAN_FOR_SERVICE_UUID,
+                PodScanner.POD_ID_NOT_ACTIVATED
+            ).scanResult.device.address
+            // For tests: this.podAddress = "B8:27:EB:1D:7E:BB";
+            podState.bluetoothAddress = podAddress
+            emitter.onNext(PodEvent.BluetoothConnecting)
+            val podDevice = bluetoothAdapter.getRemoteDevice(podAddress)
+            val bleIO = connect(podDevice)
+            emitter.onNext(PodEvent.BluetoothConnected)
+
             val mIO = MessageIO(aapsLogger, bleIO)
             val myId = Id.fromInt(CONTROLLER_ID)
             val podId = myId.increment()
-            var msgSeq = 1.toByte()
+            emitter.onNext(PodEvent.Pairing)
+
             val ltkExchanger = LTKExchanger(aapsLogger, mIO, myId, podId, Id.fromLong(PodScanner.POD_ID_NOT_ACTIVATED))
-            if (podState.ltk == null) {
-                emitter.onNext(PodEvent.Pairing)
-                val pairResult = ltkExchanger.negotiateLTK()
-                podState.ltk = pairResult.ltk
-                podState.uniqueId = podId.toLong()
-                msgSeq = pairResult.msgSeq
-                podState.eapAkaSequenceNumber = 1
-                if (BuildConfig.DEBUG) {
-                    aapsLogger.info(LTag.PUMPCOMM, "Got LTK: ${pairResult.ltk.toHex()}")
-                }
-            }
-
-            val ltk: ByteArray = podState.ltk!!
-
-            emitter.onNext(PodEvent.EstablishingSession)
-            val eapSqn = podState.increaseEapAkaSequenceNumber()
-            val eapAkaExchanger = SessionEstablisher(aapsLogger, mIO, ltk, eapSqn, myId, podId, msgSeq)
-            val keys = eapAkaExchanger.negotiateSessionKeys()
-            podState.commitEapAkaSequenceNumber()
-
+            val pairResult = ltkExchanger.negotiateLTK()
+            podState.ltk = pairResult.ltk
+            podState.eapAkaSequenceNumber = 1
+            emitter.onNext(PodEvent.Paired(podId))
+            podState.uniqueId = podId.toLong()
+            val msgSeq = pairResult.msgSeq
             if (BuildConfig.DEBUG) {
-                aapsLogger.info(LTag.PUMPCOMM, "CK: ${keys.ck.toHex()}")
-                aapsLogger.info(LTag.PUMPCOMM, "msgSequenceNumber: ${keys.msgSequenceNumber}")
-                aapsLogger.info(LTag.PUMPCOMM, "Nonce: ${keys.nonce}")
+                aapsLogger.info(LTag.PUMPCOMM, "Got LTK: ${pairResult.ltk.toHex()}")
             }
-            sessionKeys = keys
-            msgIO = mIO
-
-            emitter.onNext(PodEvent.Connected(podId.toLong()))
+            emitter.onNext(PodEvent.EstablishingSession)
+            establishSession(msgSeq)
+            emitter.onNext(PodEvent.Paired(podId))
 
             emitter.onComplete()
         } catch (ex: Exception) {
