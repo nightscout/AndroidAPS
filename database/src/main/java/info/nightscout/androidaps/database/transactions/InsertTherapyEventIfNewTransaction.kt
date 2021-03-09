@@ -6,8 +6,8 @@ class InsertTherapyEventIfNewTransaction(
     val therapyEvent: TherapyEvent
 ) : Transaction<InsertTherapyEventIfNewTransaction.TransactionResult>() {
 
-    constructor(timestamp: Long, type: TherapyEvent.Type, duration: Long = 0, note: String? = null, enteredBy: String? = null, glucose: Double? = null, glucoseType: TherapyEvent.MeterType? = null, units: String? = null) :
-        this(TherapyEvent(timestamp = timestamp, type = type, duration = duration, note = note, enteredBy = enteredBy, glucose = glucose, glucoseType = glucoseType, units = units))
+    constructor(timestamp: Long, type: TherapyEvent.Type, duration: Long = 0, note: String? = null, enteredBy: String? = null, glucose: Double? = null, glucoseType: TherapyEvent.MeterType? = null, glucoseUnit: TherapyEvent.GlucoseUnit) :
+        this(TherapyEvent(timestamp = timestamp, type = type, duration = duration, note = note, enteredBy = enteredBy, glucose = glucose, glucoseType = glucoseType, glucoseUnit = glucoseUnit))
 
     override fun run(): TransactionResult {
         val result = TransactionResult()

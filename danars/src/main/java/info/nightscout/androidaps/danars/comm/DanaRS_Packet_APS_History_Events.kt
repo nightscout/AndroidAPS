@@ -183,7 +183,8 @@ open class DanaRS_Packet_APS_History_Events(
                     disposable += repository.runTransactionForResult(InsertTherapyEventIfNewTransaction(
                         timestamp = datetime,
                         type = TherapyEvent.Type.INSULIN_CHANGE,
-                        note = resourceHelper.gs(R.string.danarspump)
+                        note = resourceHelper.gs(R.string.danarspump),
+                        glucoseUnit = TherapyEvent.GlucoseUnit.MGDL
                     )).subscribe({ result ->
                         result.inserted.forEach { nsUpload.uploadEvent(it) }
                     }, {
@@ -219,7 +220,8 @@ open class DanaRS_Packet_APS_History_Events(
                     disposable += repository.runTransactionForResult(InsertTherapyEventIfNewTransaction(
                         timestamp = datetime,
                         type = TherapyEvent.Type.CANNULA_CHANGE,
-                        note = resourceHelper.gs(R.string.danarspump)
+                        note = resourceHelper.gs(R.string.danarspump),
+                        glucoseUnit = TherapyEvent.GlucoseUnit.MGDL
                     )).subscribe({ result ->
                         result.inserted.forEach { nsUpload.uploadEvent(it) }
                     }, {

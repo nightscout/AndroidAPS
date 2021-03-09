@@ -35,8 +35,14 @@ data class TherapyEvent(
     var enteredBy: String? = null,
     var glucose: Double? = null,
     var glucoseType: MeterType? = null,
-    var units: String? = null
+    var glucoseUnit: GlucoseUnit,
 ) : TraceableDBEntry, DBEntryWithTimeAndDuration {
+
+    enum class GlucoseUnit {
+        MGDL,
+        MMOL;
+        companion object { }
+    }
 
     enum class MeterType(val text: String) {
         @SerializedName("Finger")

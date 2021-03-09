@@ -26,6 +26,7 @@ import info.nightscout.androidaps.utils.HtmlHelper
 import info.nightscout.androidaps.utils.T
 import info.nightscout.androidaps.utils.Translator
 import info.nightscout.androidaps.utils.alertDialogs.OKDialog
+import info.nightscout.androidaps.utils.extensions.fromConstant
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.rxkotlin.plusAssign
@@ -184,7 +185,7 @@ class CareDialog : DialogFragmentWithDate() {
                 EventType.QUESTION       -> TherapyEvent.Type.QUESTION
                 EventType.ANNOUNCEMENT   -> TherapyEvent.Type.ANNOUNCEMENT
             },
-            units = profileFunction.getUnits()
+            glucoseUnit = TherapyEvent.GlucoseUnit.fromConstant(profileFunction.getUnits())
         )
 
         val actions: LinkedList<String> = LinkedList()

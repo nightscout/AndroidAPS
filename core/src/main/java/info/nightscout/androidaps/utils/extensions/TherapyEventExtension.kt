@@ -31,11 +31,20 @@ fun TherapyEvent.getHoursFromStart(): Double {
     return (System.currentTimeMillis() - timestamp) / (60 * 60 * 1000.0)
 }
 
+fun TherapyEvent.GlucoseUnit.toConstant(): String =
+    if (this == TherapyEvent.GlucoseUnit.MGDL) Constants.MGDL
+    else Constants.MMOL
+
+fun TherapyEvent.GlucoseUnit.Companion.fromConstant(units: String): TherapyEvent.GlucoseUnit =
+    if (units == Constants.MGDL) TherapyEvent.GlucoseUnit.MGDL
+    else TherapyEvent.GlucoseUnit.MMOL
+
 fun therapyEventFromNsMbg(mbg: NSMbg) =
     TherapyEvent(
         type = TherapyEvent.Type.NS_MBG,
         timestamp = mbg.date,
-        glucose = mbg.mbg
+        glucose = mbg.mbg,
+        glucoseUnit = TherapyEvent.GlucoseUnit.MGDL
     ).also {
         it.interfaceIDs.nightscoutId = mbg.id()
     }
@@ -52,7 +61,7 @@ fun therapyEventFromNsIdForInvalidating(nsId: String): TherapyEvent =
     )!!
 
 fun therapyEventFromJson(jsonObject: JSONObject): TherapyEvent? {
-    val units = JsonHelper.safeGetString(jsonObject, "units", Constants.MGDL)
+    val glucoseUnit = if (JsonHelper.safeGetString(jsonObject, "units", Constants.MGDL) == Constants.MGDL) TherapyEvent.GlucoseUnit.MGDL else TherapyEvent.GlucoseUnit.MMOL
     val timestamp = JsonHelper.safeGetLongAllowNull(jsonObject, "mills", null) ?: return null
     val type = TherapyEvent.Type.fromString(JsonHelper.safeGetString(jsonObject, "eventType", TherapyEvent.Type.NONE.text))
     val duration = JsonHelper.safeGetLong(jsonObject, "duration")
@@ -66,7 +75,7 @@ fun therapyEventFromJson(jsonObject: JSONObject): TherapyEvent? {
     val te = TherapyEvent(
         timestamp = timestamp,
         duration = TimeUnit.MINUTES.toMillis(duration),
-        units = units,
+        glucoseUnit = glucoseUnit,
         type = type,
         glucose = glucose,
         glucoseType = glucoseType,

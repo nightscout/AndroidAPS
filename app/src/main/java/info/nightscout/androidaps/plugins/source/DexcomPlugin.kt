@@ -12,6 +12,7 @@ import info.nightscout.androidaps.R
 import info.nightscout.androidaps.activities.RequestDexcomPermissionActivity
 import info.nightscout.androidaps.database.AppRepository
 import info.nightscout.androidaps.database.entities.GlucoseValue
+import info.nightscout.androidaps.database.entities.TherapyEvent
 import info.nightscout.androidaps.database.transactions.CgmSourceTransaction
 import info.nightscout.androidaps.interfaces.BgSourceInterface
 import info.nightscout.androidaps.interfaces.PluginBase
@@ -122,8 +123,11 @@ class DexcomPlugin @Inject constructor(
                             val timestamp = it.getLong("timestamp") * 1000
                             val now = DateUtil.now()
                             if (timestamp > now - T.months(1).msecs() && timestamp < now) {
-                                calibrations.add(CgmSourceTransaction.Calibration(it.getLong("timestamp") * 1000,
-                                    it.getInt("meterValue").toDouble()))
+                                calibrations.add(CgmSourceTransaction.Calibration(
+                                    timestamp = it.getLong("timestamp") * 1000,
+                                    value = it.getInt("meterValue").toDouble(),
+                                    glucoseUnit = TherapyEvent.GlucoseUnit.MGDL
+                                ))
                             }
                         }
                     }
@@ -133,7 +137,7 @@ class DexcomPlugin @Inject constructor(
                 } else {
                     null
                 }
-               dexcomPlugin.disposable += repository.runTransactionForResult(CgmSourceTransaction(glucoseValues, calibrations, sensorStartTime)).subscribe({ result ->
+                dexcomPlugin.disposable += repository.runTransactionForResult(CgmSourceTransaction(glucoseValues, calibrations, sensorStartTime)).subscribe({ result ->
                     result.inserted.forEach {
                         broadcastToXDrip(it)
                         if (sp.getBoolean(R.string.key_dexcomg5_nsupload, false)) {
