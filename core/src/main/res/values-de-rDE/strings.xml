@@ -178,6 +178,8 @@
     <string name="careportal_pumpsitechange">Pumpenkatheter-Wechsel</string>
     <string name="careportal_cgmsensorinsert">CGM-Sensor gesetzt</string>
     <string name="careportal_cgmsensorstart">CGM-Sensor Start</string>
+    <string name="careportal_cgm_sensor_stop">CGM-Sensor-Stopp</string>
+    <string name="careportal_dad_alert">D.A.D. Warnung</string>
     <string name="careportal_insulincartridgechange">Insulinreservoir-Wechsel</string>
     <string name="careportal_profileswitch">Profilwechsel</string>
     <string name="careportal_snackbolus">Snack-Bolus</string>
