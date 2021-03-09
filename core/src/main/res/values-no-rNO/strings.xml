@@ -178,6 +178,8 @@
     <string name="careportal_pumpsitechange">Bytte av pumpens kanyle</string>
     <string name="careportal_cgmsensorinsert">Bytte av CGM sensor</string>
     <string name="careportal_cgmsensorstart">CGM sensor start</string>
+    <string name="careportal_cgm_sensor_stop">CGM sensor stopp</string>
+    <string name="careportal_dad_alert">Logg diabetes hund varsel</string>
     <string name="careportal_insulincartridgechange">Bytte insulinreservoar</string>
     <string name="careportal_profileswitch">Profil bytte</string>
     <string name="careportal_snackbolus">Mellommåltids bolus</string>
