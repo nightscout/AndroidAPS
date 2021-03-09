@@ -141,7 +141,7 @@ class EversensePlugin @Inject constructor(
                             type = TherapyEvent.Type.FINGER_STICK_BG_VALUE,
                             glucose = calibrationGlucoseLevels[i].toDouble(),
                             glucoseType = TherapyEvent.MeterType.FINGER,
-                            units = Constants.MGDL,
+                            glucoseUnit = TherapyEvent.GlucoseUnit.MGDL,
                             enteredBy = "AndroidAPS-Eversense"
                         )).subscribe({ result ->
                             result.inserted.forEach { nsUpload.uploadEvent(it) }

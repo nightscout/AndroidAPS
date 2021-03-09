@@ -658,7 +658,8 @@ open class LoopPlugin @Inject constructor(
             timestamp = dateUtil._now(),
             type = TherapyEvent.Type.APS_OFFLINE,
             duration = T.mins(durationInMinutes.toLong()).msecs(),
-            enteredBy = "openaps://" + "AndroidAPS"
+            enteredBy = "openaps://" + "AndroidAPS",
+            glucoseUnit = TherapyEvent.GlucoseUnit.MGDL
         )).subscribe({ result ->
             result.inserted.forEach { nsUpload.uploadEvent(it) }
         }, {

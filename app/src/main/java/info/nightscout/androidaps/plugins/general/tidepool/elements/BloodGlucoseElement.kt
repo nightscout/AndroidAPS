@@ -3,6 +3,7 @@ package info.nightscout.androidaps.plugins.general.tidepool.elements
 import com.google.gson.annotations.Expose
 import info.nightscout.androidaps.data.Profile
 import info.nightscout.androidaps.database.entities.TherapyEvent
+import info.nightscout.androidaps.utils.extensions.toConstant
 import java.util.*
 
 class BloodGlucoseElement(therapyEvent: TherapyEvent)
@@ -20,8 +21,8 @@ class BloodGlucoseElement(therapyEvent: TherapyEvent)
     init {
         type = "cbg"
         subType = "manual" // TODO
-        value = if (therapyEvent.glucose != null && therapyEvent.units != null)
-            Profile.toMgdl(therapyEvent.glucose!!, therapyEvent.units).toInt()
+        value = if (therapyEvent.glucose != null)
+            Profile.toMgdl(therapyEvent.glucose!!, therapyEvent.glucoseUnit.toConstant()).toInt()
         else 0
     }
 

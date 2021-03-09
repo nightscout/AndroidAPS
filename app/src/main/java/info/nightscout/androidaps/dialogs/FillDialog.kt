@@ -144,7 +144,8 @@ class FillDialog : DialogFragmentWithDate() {
                         disposable += repository.runTransactionForResult(InsertTherapyEventIfNewTransaction(
                             timestamp = eventTime,
                             type = TherapyEvent.Type.CANNULA_CHANGE,
-                            note = notes
+                            note = notes,
+                            glucoseUnit = TherapyEvent.GlucoseUnit.MGDL
                         )).subscribe({ result ->
                             result.inserted.forEach { nsUpload.uploadEvent(it) }
                         }, {
@@ -157,7 +158,8 @@ class FillDialog : DialogFragmentWithDate() {
                         disposable += repository.runTransactionForResult(InsertTherapyEventIfNewTransaction(
                             timestamp = eventTime + 1000,
                             type = TherapyEvent.Type.INSULIN_CHANGE,
-                            note = notes
+                            note = notes,
+                            glucoseUnit = TherapyEvent.GlucoseUnit.MGDL
                         )).subscribe({ result ->
                             result.inserted.forEach { nsUpload.uploadEvent(it) }
                         }, {

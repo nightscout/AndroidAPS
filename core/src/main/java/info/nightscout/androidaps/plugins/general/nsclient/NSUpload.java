@@ -13,7 +13,7 @@ import java.util.Date;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
-import dagger.android.HasAndroidInjector;
+import info.nightscout.androidaps.Constants;
 import info.nightscout.androidaps.core.R;
 import info.nightscout.androidaps.data.DetailedBolusInfo;
 import info.nightscout.androidaps.data.IobTotal;
@@ -471,11 +471,14 @@ public class NSUpload {
             data.put("eventType", event.getType().getText());
             data.put("created_at", event.getTimestamp());
             data.put("enteredBy", event.getEnteredBy());
-            if (event.getUnits() != null) data.put("units", event.getUnits());
+            if (event.getGlucoseUnit() == TherapyEvent.GlucoseUnit.MGDL)
+                data.put("units", Constants.MGDL);
+            else data.put("units", Constants.MMOL);
             if (event.getDuration() != 0) data.put("duration", T.msecs(event.getDuration()).mins());
             if (event.getNote() != null) data.put("notes", event.getNote());
             if (event.getGlucose() != null) data.put("glucose", event.getGlucose());
-            if (event.getGlucoseType() != null) data.put("glucoseType", event.getGlucoseType().getText());
+            if (event.getGlucoseType() != null)
+                data.put("glucoseType", event.getGlucoseType().getText());
         } catch (JSONException e) {
             aapsLogger.error("Unhandled exception", e);
         }

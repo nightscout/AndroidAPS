@@ -29,6 +29,7 @@ import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.logging.LTag
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper
 import info.nightscout.androidaps.plugins.treatments.TreatmentsPlugin
+import info.nightscout.androidaps.utils.extensions.toConstant
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 import info.nightscout.androidaps.utils.rx.AapsSchedulers
 import info.nightscout.androidaps.utils.sharedPreferences.SP
@@ -205,9 +206,8 @@ class OpenHumansUploader @Inject constructor(
         put("nsId", therapyEvent.interfaceIDs.nightscoutId)
         put("eventType", therapyEvent.type.text)
         put("glucose", therapyEvent.glucose)
-        put("units", therapyEvent.units)
+        put("units", therapyEvent.glucoseUnit.toConstant())
         put("glucoseType", therapyEvent.glucoseType?.text)
-        put("units", therapyEvent.units)
         put("duration", therapyEvent.duration)
         put("isDeletion", deleted)
     }
