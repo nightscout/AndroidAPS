@@ -433,7 +433,7 @@ public class NSClientPlugin extends PluginBase {
         // room  Therapy Event
         TherapyEvent therapyEvent = therapyEventFromNsIdForInvalidating(_id);
         disposable.add(repository.runTransactionForResult(new SyncTherapyEventTransaction(therapyEvent)).subscribe(
-                result -> result.getInvalidated().forEach(record -> uel.log(Action.CAREPORTAL_DELETED_FROM_NS, record.getNote() , new ValueWithUnit(record.getTimestamp(), Units.Timestamp), new ValueWithUnit(record.getType().getText(), Units.CPEvent), new ValueWithUnit(record.getGlucose(), Units.Mg_Dl), new ValueWithUnit((int) record.getDuration()/60000, Units.M))),
+                result -> result.getInvalidated().forEach(record -> uel.log(Action.CAREPORTAL_DELETED_FROM_NS, record.getNote() , new ValueWithUnit(record.getTimestamp(), Units.Timestamp), new ValueWithUnit(record.getType().getText(), Units.CPEvent))),
                 error -> aapsLogger.error(LTag.DATABASE, "Error while removing therapy event", error)));
         // new DB model
         EventNsTreatment evtTreatment = new EventNsTreatment(EventNsTreatment.Companion.getREMOVE(), json);
