@@ -49,7 +49,8 @@ class OmnipodDashManagerImpl @Inject constructor(
 
     private val observeConnectToPod: Observable<PodEvent>
         get() = Observable.defer {
-            bleManager.connect().retryWithBackoff(retries = 2, delay = 3, timeUnit = TimeUnit.SECONDS)
+            bleManager.connect()
+
         } // TODO are these reasonable values?
 
     private fun observeSendProgramBolusCommand(

@@ -5,7 +5,6 @@ import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.logging.LTag
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.BuildConfig
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.Id
-import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.OmnipodDashBleManagerImpl
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.exceptions.MessageIOException
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.message.MessageIO
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.message.MessagePacket
@@ -18,7 +17,7 @@ import org.spongycastle.crypto.macs.CMac
 import org.spongycastle.crypto.params.KeyParameter
 import java.security.SecureRandom
 
-internal class LTKExchanger(private val aapsLogger: AAPSLogger, private val msgIO: MessageIO) {
+internal class LTKExchanger(private val aapsLogger: AAPSLogger, private val msgIO: MessageIO, val myId: Id, val podId: Id, val podAddress: Id) {
 
     private val pdmPrivate = X25519.generatePrivateKey()
     private val pdmPublic = X25519.publicFromPrivate(pdmPrivate)
@@ -27,8 +26,6 @@ internal class LTKExchanger(private val aapsLogger: AAPSLogger, private val msgI
     private val pdmNonce = ByteArray(NONCE_SIZE)
     private val pdmConf = ByteArray(CMAC_SIZE)
     private val podConf = ByteArray(CMAC_SIZE)
-    private val controllerId = Id.fromInt(OmnipodDashBleManagerImpl.CONTROLLER_ID)
-    val nodeId = controllerId.increment()
     private var seq: Byte = 1
     private var ltk = ByteArray(CMAC_SIZE)
 
@@ -39,12 +36,12 @@ internal class LTKExchanger(private val aapsLogger: AAPSLogger, private val msgI
 
     fun negotiateLTK(): PairResult {
         // send SP1, SP2
-        val sp1sp2 = sp1sp2(nodeId.address, sp2())
-        msgIO.sendMesssage(sp1sp2.messagePacket)
+        val sp1sp2 = sp1sp2(podId.address, sp2())
+        msgIO.sendMessage(sp1sp2.messagePacket)
 
         seq++
         val sps1 = sps1()
-        msgIO.sendMesssage(sps1.messagePacket)
+        msgIO.sendMessage(sps1.messagePacket)
         // send SPS1
 
         // read SPS1
@@ -55,7 +52,7 @@ internal class LTKExchanger(private val aapsLogger: AAPSLogger, private val msgI
         seq++
         // send SPS2
         val sps2 = sps2()
-        msgIO.sendMesssage(sps2.messagePacket)
+        msgIO.sendMessage(sps2.messagePacket)
         // read SPS2
 
         val podSps2 = msgIO.receiveMessage()
@@ -63,7 +60,7 @@ internal class LTKExchanger(private val aapsLogger: AAPSLogger, private val msgI
 
         seq++
         // send SP0GP0
-        msgIO.sendMesssage(sp0gp0().messagePacket)
+        msgIO.sendMessage(sp0gp0().messagePacket)
         // read P0
 
         // TODO: failing to read or validate p0 will lead to undefined state
@@ -76,8 +73,7 @@ internal class LTKExchanger(private val aapsLogger: AAPSLogger, private val msgI
 
         return PairResult(
             ltk = ltk,
-            podId = nodeId,
-            seq = seq
+            msgSeq = seq
         )
     }
 
@@ -88,8 +84,8 @@ internal class LTKExchanger(private val aapsLogger: AAPSLogger, private val msgI
         )
         return PairMessage(
             sequenceNumber = seq,
-            source = controllerId,
-            destination = nodeId,
+            source = myId,
+            destination = podAddress,
             payload = payload
         )
     }
@@ -101,8 +97,8 @@ internal class LTKExchanger(private val aapsLogger: AAPSLogger, private val msgI
         )
         return PairMessage(
             sequenceNumber = seq,
-            source = controllerId,
-            destination = nodeId,
+            source = myId,
+            destination = podAddress,
             payload = payload
         )
     }
@@ -125,8 +121,8 @@ internal class LTKExchanger(private val aapsLogger: AAPSLogger, private val msgI
         )
         return PairMessage(
             sequenceNumber = seq,
-            source = controllerId,
-            destination = nodeId,
+            source = myId,
+            destination = podAddress,
             payload = payload
         )
     }
@@ -159,8 +155,8 @@ internal class LTKExchanger(private val aapsLogger: AAPSLogger, private val msgI
         val payload = SP0GP0.toByteArray()
         return PairMessage(
             sequenceNumber = seq,
-            source = controllerId,
-            destination = nodeId,
+            source = myId,
+            destination = podAddress,
             payload = payload
         )
     }

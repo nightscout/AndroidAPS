@@ -324,13 +324,7 @@ class OmnipodDashOverviewFragment : DaggerFragment() {
                 )
             }
 
-            podInfoBinding.podActiveAlerts.text = if (podStateManager.activeAlerts!!.size > 0) {
-                // TODO
-                // TextUtils.join(System.lineSeparator(), omnipodUtil.getTranslatedActiveAlerts(podStateManager))
-                "TODO"
-            } else {
-                PLACEHOLDER
-            }
+            podInfoBinding.podActiveAlerts.text = PLACEHOLDER
         }
 
         if (errors.size == 0) {

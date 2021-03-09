@@ -8,17 +8,34 @@ import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.exceptio
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.io.BleIO
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.io.CharacteristicType
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.io.PayloadJoiner
+import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.command.base.CommandType
 import info.nightscout.androidaps.utils.extensions.toHex
 
 class MessageIO(private val aapsLogger: AAPSLogger, private val bleIO: BleIO) {
 
-    fun sendMesssage(msg: MessagePacket) {
+    private fun expectCommandType(actual: BleCommand, expected: BleCommand) {
+        if (actual.data.isEmpty()) {
+            throw UnexpectedCommandException(actual)
+        }
+        // first byte is the command type
+        if (actual.data[0] == expected.data[0]) {
+            return
+        }
+        throw UnexpectedCommandException(actual)
+
+    }
+
+    fun sendMessage(msg: MessagePacket):MessagePacket? {
         bleIO.flushIncomingQueues()
         bleIO.sendAndConfirmPacket(CharacteristicType.CMD, BleCommandRTS().data)
         val expectCTS = bleIO.receivePacket(CharacteristicType.CMD)
-        if (BleCommand(expectCTS) != BleCommandCTS()) {
+        if (expectCTS.isEmpty()) {
             throw UnexpectedCommandException(BleCommand(expectCTS))
         }
+        //if (expectCTS[0] == BleCommandType.RTS.value) {
+            //the pod is trying to send something, after we sent RTS, let's read it
+        //}
+        expectCommandType(BleCommand(expectCTS), BleCommandCTS())
         val payload = msg.asByteArray()
         aapsLogger.debug(LTag.PUMPBTCOMM, "Sending message: ${payload.toHex()}")
         val splitter = PayloadSplitter(payload)
@@ -29,18 +46,18 @@ class MessageIO(private val aapsLogger: AAPSLogger, private val bleIO: BleIO) {
         }
         // TODO: peek for NACKs
         val expectSuccess = bleIO.receivePacket(CharacteristicType.CMD)
-        if (BleCommand(expectSuccess) != BleCommandSuccess()) {
-            throw UnexpectedCommandException(BleCommand(expectSuccess))
-        }
+        expectCommandType(BleCommand(expectSuccess), BleCommandSuccess())
         // TODO: handle NACKS/FAILS/etc
-        bleIO.flushIncomingQueues()
+        return null
     }
 
-    fun receiveMessage(): MessagePacket {
-        val expectRTS = bleIO.receivePacket(CharacteristicType.CMD)
-        if (BleCommand(expectRTS) != BleCommandRTS()) {
-            throw UnexpectedCommandException(BleCommand(expectRTS))
+    // TODO: use higher timeout when receiving the first packet in a message
+    fun receiveMessage( firstCmd: ByteArray? = null): MessagePacket {
+        var expectRTS = firstCmd
+        if (expectRTS == null) {
+            expectRTS = bleIO.receivePacket(CharacteristicType.CMD)
         }
+        expectCommandType(BleCommand(expectRTS), BleCommandRTS())
         bleIO.sendAndConfirmPacket(CharacteristicType.CMD, BleCommandCTS().data)
         try {
             val joiner = PayloadJoiner(bleIO.receivePacket(CharacteristicType.DATA))

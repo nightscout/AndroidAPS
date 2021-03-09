@@ -2,6 +2,16 @@ package info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.command
 
 import info.nightscout.androidaps.utils.extensions.toHex
 
+class BleCommandRTS : BleCommand(BleCommandType.RTS)
+
+class BleCommandCTS : BleCommand(BleCommandType.CTS)
+
+class BleCommandAbort : BleCommand(BleCommandType.ABORT)
+
+class BleCommandSuccess : BleCommand(BleCommandType.SUCCESS)
+
+class BleCommandFail : BleCommand(BleCommandType.FAIL)
+
 open class BleCommand(val data: ByteArray) {
 
     constructor(type: BleCommandType) : this(byteArrayOf(type.value))
@@ -26,14 +36,5 @@ open class BleCommand(val data: ByteArray) {
     override fun hashCode(): Int {
         return data.contentHashCode()
     }
+
 }
-
-class BleCommandRTS : BleCommand(BleCommandType.RTS)
-
-class BleCommandCTS : BleCommand(BleCommandType.CTS)
-
-class BleCommandAbort : BleCommand(BleCommandType.ABORT)
-
-class BleCommandSuccess : BleCommand(BleCommandType.SUCCESS)
-
-class BleCommandFail : BleCommand(BleCommandType.FAIL)

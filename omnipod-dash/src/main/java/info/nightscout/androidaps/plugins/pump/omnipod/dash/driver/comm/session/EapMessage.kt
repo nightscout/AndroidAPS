@@ -4,7 +4,6 @@ import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.logging.LTag
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.exceptions.MessageIOException
 import info.nightscout.androidaps.utils.extensions.toHex
-import okio.ByteString.Companion.toByteString
 import java.nio.ByteBuffer
 
 enum class EapCode(val code: Byte) {
@@ -42,7 +41,7 @@ data class EapMessage(
             .allocate(totalSize)
             .put(code.code)
             .put(identifier)
-            .put(((totalSize ushr 1) and 0XFF).toByte())
+            .put(((totalSize ushr 8) and 0XFF).toByte())
             .put((totalSize and 0XFF).toByte())
             .put(AKA_PACKET_TYPE)
             .put(SUBTYPE_AKA_CHALLENGE)
@@ -63,7 +62,7 @@ data class EapMessage(
             if (payload.size < 4) {
                 throw MessageIOException("Invalid eap payload: ${payload.toHex()}")
             }
-            val totalSize = (payload[2].toInt() shl 1) or payload[3].toInt()
+            val totalSize = (payload[2].toInt() shl 8) or payload[3].toInt()
             if (totalSize > payload.size) {
                 throw MessageIOException("Invalid eap payload. Too short: ${payload.toHex()}")
             }
@@ -78,7 +77,7 @@ data class EapMessage(
                 throw MessageIOException("Invalid eap payload. Expected AKA packet type: ${payload.toHex()}")
             }
             val attributesPayload = payload.copyOfRange(8, totalSize)
-            aapsLogger.debug(LTag.PUMPBTCOMM, "EAP attributes: ${attributesPayload.toByteString()}")
+            aapsLogger.debug(LTag.PUMPBTCOMM, "parsing EAP payload: ${payload.toHex()}")
             return EapMessage(
                 code = EapCode.byValue(payload[0]),
                 identifier = payload[1],

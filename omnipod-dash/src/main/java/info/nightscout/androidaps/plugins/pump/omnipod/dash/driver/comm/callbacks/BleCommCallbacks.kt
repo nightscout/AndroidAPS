@@ -30,7 +30,7 @@ class BleCommCallbacks(
 
     override fun onConnectionStateChange(gatt: BluetoothGatt, status: Int, newState: Int) {
         super.onConnectionStateChange(gatt, status, newState)
-        aapsLogger.debug(LTag.PUMPBTCOMM, "OnConnectionStateChange discovered with status/state$status/$newState")
+        aapsLogger.debug(LTag.PUMPBTCOMM, "OnConnectionStateChange with status/state: $status/$newState")
         if (newState == BluetoothProfile.STATE_CONNECTED && status == BluetoothGatt.GATT_SUCCESS) {
             connected.countDown()
         }

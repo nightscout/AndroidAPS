@@ -32,7 +32,7 @@ class PayloadJoiner(private val firstPacket: ByteArray) {
             fullFragments == 0 -> {
                 crc = ByteBuffer.wrap(firstPacket.copyOfRange(2, 6)).int.toUnsignedLong()
                 val rest = firstPacket[6]
-                val end = min(rest + FirstBlePacket.HEADER_SIZE_WITHOUT_MIDDLE_PACKETS, BlePacket.MAX_SIZE)
+                val end = min(rest + FirstBlePacket.HEADER_SIZE_WITHOUT_MIDDLE_PACKETS, firstPacket.size)
                 oneExtraPacket = rest + FirstBlePacket.HEADER_SIZE_WITHOUT_MIDDLE_PACKETS > end
                 if (end > firstPacket.size) {
                     throw IncorrectPacketException(0, firstPacket)
@@ -78,12 +78,12 @@ class PayloadJoiner(private val firstPacket: ByteArray) {
                 }
                 crc = ByteBuffer.wrap(packet.copyOfRange(2, 6)).int.toUnsignedLong()
                 val rest = packet[1].toInt()
-                val end = min(rest + LastBlePacket.HEADER_SIZE, BlePacket.MAX_SIZE)
+                val end = min(rest + LastBlePacket.HEADER_SIZE, packet.size)
                 oneExtraPacket = rest + LastBlePacket.HEADER_SIZE > end
                 if (packet.size < end) {
                     throw IncorrectPacketException(idx.toByte(), packet)
                 }
-                fragments.add(packet.copyOfRange(LastBlePacket.HEADER_SIZE, packet.size))
+                fragments.add(packet.copyOfRange(LastBlePacket.HEADER_SIZE, end))
             }
 
             idx > fullFragments -> { // this is the extra fragment
