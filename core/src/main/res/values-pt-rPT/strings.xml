@@ -179,7 +179,7 @@
     <string name="careportal_cgmsensorinsert">Colocação Sensor CGM</string>
     <string name="careportal_cgmsensorstart">Início do Sensor CGM</string>
     <string name="careportal_cgm_sensor_stop">Parar Sensor CGM</string>
-    <string name="careportal_dad_alert">Alerta D.A.D. (Diabete Dog Alert)</string>
+    <string name="careportal_dad_alert">Alertar D.A.D. (Alerta cão apoio a pesso)</string>
     <string name="careportal_insulincartridgechange">Mudança de Cartucho de Insulina</string>
     <string name="careportal_profileswitch">Troca de Perfil</string>
     <string name="careportal_snackbolus">Bólus Lanche</string>
