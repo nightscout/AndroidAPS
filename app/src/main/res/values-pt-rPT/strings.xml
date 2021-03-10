@@ -486,7 +486,7 @@
     <string name="missed_bg_readings">Leituras Glicose perdidas</string>
     <string name="raise_notifications_as_android_notifications">Utilizar as notificações do sistema para alertas e notificações</string>
     <string name="gradually_increase_notification_volume">Aumentar gradualmente o volume de alertas e notificações</string>
-    <string name="localalertsettings_title">Alertas local</string>
+    <string name="localalertsettings_title">Alertas locais</string>
     <string name="enable_missed_bg_readings_alert">Alerta caso nenhuma Glicose seja recebida</string>
     <string name="enable_pump_unreachable_alert">Alerta caso não seja possivel alcançar a bomba</string>
     <string name="pump_unreachable_threshold">Limite para bomba inacessível [min]</string>
