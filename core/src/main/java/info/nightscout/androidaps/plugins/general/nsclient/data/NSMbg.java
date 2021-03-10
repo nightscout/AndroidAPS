@@ -2,25 +2,40 @@ package info.nightscout.androidaps.plugins.general.nsclient.data;
 
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.slf4j.Logger;
 
-import info.nightscout.androidaps.logging.LTag;
-import info.nightscout.androidaps.logging.StacktraceLoggerWrapper;
+import javax.inject.Inject;
+
+import dagger.android.HasAndroidInjector;
+import info.nightscout.androidaps.logging.AAPSLogger;
 
 public class NSMbg {
-    private static final Logger log = StacktraceLoggerWrapper.getLogger(LTag.NSCLIENT);
+    @Inject public AAPSLogger aapsLogger;
+
     public long date;
     public double mbg;
     public String json;
 
-    public NSMbg(JSONObject json) {
+    public NSMbg(HasAndroidInjector injector) {
+        injector.androidInjector().inject(this);
+    }
+
+    public NSMbg(HasAndroidInjector injector, JSONObject json) {
+        this(injector);
         try {
             date = json.getLong("mills");
             mbg = json.getDouble("mgdl");
             this.json = json.toString();
         } catch (JSONException e) {
-            log.error("Unhandled exception", e);
-            log.error("Data: " + json.toString());
+            aapsLogger.error("Unhandled exception", e);
+            aapsLogger.error("Data: " + json.toString());
+        }
+    }
+
+    public String id() {
+        try {
+            return new JSONObject(json).getString("_id");
+        } catch (JSONException e) {
+            return null;
         }
     }
 }

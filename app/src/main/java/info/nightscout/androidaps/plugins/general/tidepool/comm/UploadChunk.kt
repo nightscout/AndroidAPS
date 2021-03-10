@@ -1,13 +1,12 @@
 package info.nightscout.androidaps.plugins.general.tidepool.comm
 
-import dagger.android.HasAndroidInjector
-import info.nightscout.androidaps.MainApp
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.data.Intervals
 import info.nightscout.androidaps.database.AppRepository
 import info.nightscout.androidaps.db.ProfileSwitch
 import info.nightscout.androidaps.db.TemporaryBasal
 import info.nightscout.androidaps.interfaces.ActivePluginProvider
+import info.nightscout.androidaps.interfaces.DatabaseHelperInterface
 import info.nightscout.androidaps.interfaces.ProfileFunction
 import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.logging.LTag
@@ -23,33 +22,34 @@ import java.util.*
 import javax.inject.Inject
 import javax.inject.Singleton
 import kotlin.math.max
+import kotlin.math.min
 
 @Singleton
 class UploadChunk @Inject constructor(
-    private val injector: HasAndroidInjector,
     private val sp: SP,
     private val rxBus: RxBusWrapper,
     private val aapsLogger: AAPSLogger,
     private val profileFunction: ProfileFunction,
     private val treatmentsPlugin: TreatmentsPlugin,
     private val activePlugin: ActivePluginProvider,
+    private val databaseHelper: DatabaseHelperInterface,
     private val repository: AppRepository,
     private val dateUtil: DateUtil
 ) {
 
-    private val MAX_UPLOAD_SIZE = T.days(7).msecs() // don't change this
+    private val maxUploadSize = T.days(7).msecs() // don't change this
 
     fun getNext(session: Session?): String? {
         if (session == null)
             return null
 
         session.start = getLastEnd()
-        session.end = Math.min(session.start + MAX_UPLOAD_SIZE, DateUtil.now())
+        session.end = min(session.start + maxUploadSize, DateUtil.now())
 
         val result = get(session.start, session.end)
         if (result.length < 3) {
             aapsLogger.debug(LTag.TIDEPOOL, "No records in this time period, setting start to best end time")
-            setLastEnd(Math.max(session.end, getOldestRecordTimeStamp()))
+            setLastEnd(max(session.end, getOldestRecordTimeStamp()))
         }
         return result
     }
@@ -61,7 +61,7 @@ class UploadChunk @Inject constructor(
             aapsLogger.debug(LTag.TIDEPOOL, "End is <= start: " + dateUtil.dateAndTimeString(start) + " " + dateUtil.dateAndTimeString(end))
             return ""
         }
-        if (end - start > MAX_UPLOAD_SIZE) {
+        if (end - start > maxUploadSize) {
             aapsLogger.debug(LTag.TIDEPOOL, "More than max range - rejecting")
             return ""
         }
@@ -127,7 +127,7 @@ class UploadChunk @Inject constructor(
     }
 
     private fun getBloodTests(start: Long, end: Long): List<BloodGlucoseElement> {
-        val readings = MainApp.getDbHelper().getCareportalEvents(start, end, true)
+        val readings = repository.compatGetTherapyEventDataFromToTime(start, end).blockingGet()
         val selection = BloodGlucoseElement.fromCareportalEvents(readings)
         if (selection.isNotEmpty())
             rxBus.send(EventTidepoolStatus("${selection.size} BGs selected for upload"))
@@ -147,29 +147,29 @@ class UploadChunk @Inject constructor(
     private fun fromTemporaryBasals(tbrList: Intervals<TemporaryBasal>, start: Long, end: Long): List<BasalElement> {
         val results = LinkedList<BasalElement>()
         for (tbr in tbrList.list) {
-            if (tbr.date >= start && tbr.date <= end && tbr.durationInMinutes != 0)
+            if (tbr.date in start..end && tbr.durationInMinutes != 0)
                 results.add(BasalElement(tbr, profileFunction))
         }
         return results
     }
 
     private fun getBasals(start: Long, end: Long): List<BasalElement> {
-        val tbrs = treatmentsPlugin.temporaryBasalsFromHistory
-        tbrs.merge()
-        val selection = fromTemporaryBasals(tbrs, start, end) // TODO do not upload running TBR
+        val temporaryBasals = treatmentsPlugin.temporaryBasalsFromHistory
+        temporaryBasals.merge()
+        val selection = fromTemporaryBasals(temporaryBasals, start, end) // TODO do not upload running TBR
         if (selection.isNotEmpty())
             rxBus.send(EventTidepoolStatus("${selection.size} TBRs selected for upload"))
         return selection
     }
 
-    fun newInstanceOrNull(ps: ProfileSwitch): ProfileElement? = try {
+    private fun newInstanceOrNull(ps: ProfileSwitch): ProfileElement? = try {
         ProfileElement(ps, activePlugin.activePump.serialNumber())
     } catch (e: Throwable) {
         null
     }
 
     private fun getProfiles(start: Long, end: Long): List<ProfileElement> {
-        val pss = MainApp.getDbHelper().getProfileSwitchEventsFromTime(start, end, true)
+        val pss = databaseHelper.getProfileSwitchEventsFromTime(start, end, true)
         val selection = LinkedList<ProfileElement>()
         for (ps in pss) {
             newInstanceOrNull(ps)?.let { selection.add(it) }

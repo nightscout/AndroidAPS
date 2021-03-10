@@ -108,7 +108,6 @@ open class ActionsTestBase : TestBaseWithProfile() {
                 it.rxBus = rxBus
             }
             if (it is PumpEnactResult) {
-                it.aapsLogger = aapsLogger
                 it.resourceHelper = resourceHelper
             }
             if (it is InputTempTarget) {

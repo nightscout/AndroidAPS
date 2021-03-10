@@ -245,7 +245,7 @@ public class Profile {
         if (isValid) {
             // Check for hours alignment
             PumpInterface pump = activePlugin.getActivePump();
-            if (!pump.getPumpDescription().is30minBasalRatesCapable) {
+            if (!pump.getPumpDescription().is30minBasalRatesCapable()) {
                 for (int index = 0; index < basal_v.size(); index++) {
                     long secondsFromMidnight = basal_v.keyAt(index);
                     if (notify && secondsFromMidnight % 3600 != 0) {
@@ -260,12 +260,12 @@ public class Profile {
             // Check for minimal basal value
             PumpDescription description = pump.getPumpDescription();
             for (int i = 0; i < basal_v.size(); i++) {
-                if (basal_v.valueAt(i) < description.basalMinimumRate) {
-                    basal_v.setValueAt(i, description.basalMinimumRate);
+                if (basal_v.valueAt(i) < description.getBasalMinimumRate()) {
+                    basal_v.setValueAt(i, description.getBasalMinimumRate());
                     if (notify)
                         sendBelowMinimumNotification(from);
-                } else if (basal_v.valueAt(i) > description.basalMaximumRate) {
-                    basal_v.setValueAt(i, description.basalMaximumRate);
+                } else if (basal_v.valueAt(i) > description.getBasalMaximumRate()) {
+                    basal_v.setValueAt(i, description.getBasalMaximumRate());
                     if (notify)
                         sendAboveMaximumNotification(from);
                 }
@@ -666,14 +666,14 @@ public class Profile {
     }
 
     public static String toUnitsString(double valueInMgdl, double valueInMmol, String units) {
-        if (units.equals(Constants.MGDL)) return DecimalFormatter.to0Decimal(valueInMgdl);
-        else return DecimalFormatter.to1Decimal(valueInMmol);
+        if (units.equals(Constants.MGDL)) return DecimalFormatter.INSTANCE.to0Decimal(valueInMgdl);
+        else return DecimalFormatter.INSTANCE.to1Decimal(valueInMmol);
     }
 
     public static String toSignedUnitsString(double valueInMgdl, double valueInMmol, String units) {
         if (units.equals(Constants.MGDL))
-            return (valueInMgdl > 0 ? "+" : "") + DecimalFormatter.to0Decimal(valueInMgdl);
-        else return (valueInMmol > 0 ? "+" : "") + DecimalFormatter.to1Decimal(valueInMmol);
+            return (valueInMgdl > 0 ? "+" : "") + DecimalFormatter.INSTANCE.to0Decimal(valueInMgdl);
+        else return (valueInMmol > 0 ? "+" : "") + DecimalFormatter.INSTANCE.to1Decimal(valueInMmol);
     }
 
     public static double toCurrentUnits(ProfileFunction profileFunction, double anyBg) {

@@ -68,7 +68,7 @@ class NotificationStore @Inject constructor(
         store.add(n)
         if (sp.getBoolean(R.string.key_raise_notifications_as_android_notifications, true) && n !is NotificationWithAction)
             raiseSystemNotification(n)
-        if (n.soundId != null && n.soundId != 0) alarmSoundServiceHelper.startAlarm(context, n.soundId)
+        if (n.soundId != null && n.soundId != 0) alarmSoundServiceHelper.startAlarm(context, n.soundId!!)
         Collections.sort(store, NotificationComparator())
         return true
     }

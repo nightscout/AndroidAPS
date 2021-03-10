@@ -176,7 +176,7 @@ public class MedtronicCommunicationManager extends RileyLinkCommunicationManager
                     } else {
 
                         // radioResponse.rssi;
-                        Object dataResponse = medtronicConverter.convertResponse(medtronicPumpPlugin.getPumpDescription().pumpType, MedtronicCommandType.PumpModel,
+                        Object dataResponse = medtronicConverter.convertResponse(medtronicPumpPlugin.getPumpDescription().getPumpType(), MedtronicCommandType.PumpModel,
                                 pumpResponse.getRawContent());
 
                         MedtronicDeviceType pumpModel = (MedtronicDeviceType) dataResponse;
@@ -574,7 +574,7 @@ public class MedtronicCommunicationManager extends RileyLinkCommunicationManager
 
                 if (check == null) {
 
-                    Object dataResponse = medtronicConverter.convertResponse(medtronicPumpPlugin.getPumpDescription().pumpType, commandType, response.getRawContent());
+                    Object dataResponse = medtronicConverter.convertResponse(medtronicPumpPlugin.getPumpDescription().getPumpType(), commandType, response.getRawContent());
 
                     if (dataResponse != null) {
                         this.errorMessage = null;
@@ -711,7 +711,7 @@ public class MedtronicCommunicationManager extends RileyLinkCommunicationManager
                     errorMessage = check;
                 }
 
-                BasalProfile basalProfile = (BasalProfile) medtronicConverter.convertResponse(medtronicPumpPlugin.getPumpDescription().pumpType, commandType, data);
+                BasalProfile basalProfile = (BasalProfile) medtronicConverter.convertResponse(medtronicPumpPlugin.getPumpDescription().getPumpType(), commandType, data);
 
                 if (basalProfile != null) {
                     aapsLogger.debug(LTag.PUMPCOMM, "Converted response for {} is {}.", commandType.name(), basalProfile);

@@ -254,8 +254,8 @@ public class ExtendedBolus implements Interval, DataPointWithLabelInterface {
                     tempBolusPart.date = calcdate;
 
                     Iob aIOB = insulinInterface.iobCalcForTreatment(tempBolusPart, time, dia);
-                    result.iob += aIOB.iobContrib;
-                    result.activity += aIOB.activityContrib;
+                    result.iob += aIOB.getIobContrib();
+                    result.activity += aIOB.getActivityContrib();
                     result.extendedBolusInsulin += tempBolusPart.insulin;
                 }
             }
@@ -305,8 +305,8 @@ public class ExtendedBolus implements Interval, DataPointWithLabelInterface {
                     tempBolusPart.date = calcdate;
 
                     Iob aIOB = insulinInterface.iobCalcForTreatment(tempBolusPart, time, dia);
-                    result.iob += aIOB.iobContrib;
-                    result.activity += aIOB.activityContrib;
+                    result.iob += aIOB.getIobContrib();
+                    result.activity += aIOB.getActivityContrib();
                     result.extendedBolusInsulin += tempBolusPart.insulin;
                 }
             }
@@ -330,23 +330,23 @@ public class ExtendedBolus implements Interval, DataPointWithLabelInterface {
     }
 
     public String toString() {
-        return "E " + DecimalFormatter.to2Decimal(absoluteRate()) + "U/h @" +
+        return "E " + DecimalFormatter.INSTANCE.to2Decimal(absoluteRate()) + "U/h @" +
                 dateUtil.timeString(date) +
                 " " + getRealDuration() + "/" + durationInMinutes + "min";
     }
 
     public String toStringShort() {
-        return "E " + DecimalFormatter.to2Decimal(absoluteRate()) + "U/h ";
+        return "E " + DecimalFormatter.INSTANCE.to2Decimal(absoluteRate()) + "U/h ";
     }
 
     public String toStringMedium() {
-        return DecimalFormatter.to2Decimal(absoluteRate()) + "U/h "
+        return DecimalFormatter.INSTANCE.to2Decimal(absoluteRate()) + "U/h "
                 + getRealDuration() + "/" + durationInMinutes + "'";
     }
 
     public String toStringTotal() {
-        return DecimalFormatter.to2Decimal(insulin) + "U ( " +
-                DecimalFormatter.to2Decimal(absoluteRate()) + " U/h )";
+        return DecimalFormatter.INSTANCE.to2Decimal(insulin) + "U ( " +
+                DecimalFormatter.INSTANCE.to2Decimal(absoluteRate()) + " U/h )";
     }
 
     // -------- DataPointWithLabelInterface --------

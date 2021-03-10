@@ -128,7 +128,7 @@ open class CommandQueue @Inject constructor(
     }
 
     private fun executingNowError(): PumpEnactResult =
-        PumpEnactResult(injector).success(false).enacted(false).comment(resourceHelper.gs(R.string.executingrightnow))
+        PumpEnactResult(injector).success(false).enacted(false).comment(R.string.executingrightnow)
 
     override fun isRunning(type: CommandType): Boolean = performing?.commandType == type
 
@@ -380,7 +380,7 @@ open class CommandQueue @Inject constructor(
         if (!buildHelper.isEngineeringModeOrRelease()) {
             val notification = Notification(Notification.NOT_ENG_MODE_OR_RELEASE, resourceHelper.gs(R.string.not_eng_mode_or_release), Notification.URGENT)
             rxBus.send(EventNewNotification(notification))
-            callback?.result(PumpEnactResult(injector).success(false).enacted(false).comment(resourceHelper.gs(R.string.not_eng_mode_or_release)))?.run()
+            callback?.result(PumpEnactResult(injector).success(false).enacted(false).comment(R.string.not_eng_mode_or_release)))?.run()
             return false
         }
         */
@@ -390,7 +390,7 @@ open class CommandQueue @Inject constructor(
             if (basalValue.value < activePlugin.get().activePump.pumpDescription.basalMinimumRate) {
                 val notification = Notification(Notification.BASAL_VALUE_BELOW_MINIMUM, resourceHelper.gs(R.string.basalvaluebelowminimum), Notification.URGENT)
                 rxBus.send(EventNewNotification(notification))
-                callback?.result(PumpEnactResult(injector).success(false).enacted(false).comment(resourceHelper.gs(R.string.basalvaluebelowminimum)))?.run()
+                callback?.result(PumpEnactResult(injector).success(false).enacted(false).comment(R.string.basalvaluebelowminimum))?.run()
                 return false
             }
         }

@@ -3,7 +3,8 @@ package info.nightscout.androidaps.utils
 import android.graphics.Color
 import android.widget.TextView
 import info.nightscout.androidaps.core.R
-import info.nightscout.androidaps.db.CareportalEvent
+import info.nightscout.androidaps.database.entities.TherapyEvent
+import info.nightscout.androidaps.utils.extensions.isOlderThan
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -25,10 +26,10 @@ class WarnColors @Inject constructor(val resourceHelper: ResourceHelper) {
             else                 -> colorNormal
         })
 
-    fun setColorByAge(view: TextView?, careportalEvent: CareportalEvent, warnThreshold: Double, urgentThreshold: Double, colorNormal: Int, colorWarning: Int, colorAlarm: Int) =
+    fun setColorByAge(view: TextView?, therapyEvent: TherapyEvent, warnThreshold: Double, urgentThreshold: Double, colorNormal: Int, colorWarning: Int, colorAlarm: Int) =
         view?.setTextColor(when {
-            careportalEvent.isOlderThan(urgentThreshold) -> colorAlarm
-            careportalEvent.isOlderThan(warnThreshold)   -> colorWarning
+            therapyEvent.isOlderThan(urgentThreshold) -> colorAlarm
+            therapyEvent.isOlderThan(warnThreshold)   -> colorWarning
             else                                         -> colorNormal
         })
 }

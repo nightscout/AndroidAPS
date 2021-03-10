@@ -19,6 +19,7 @@ import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 import info.nightscout.androidaps.utils.sharedPreferences.SP
 import org.junit.Before
+import org.mockito.ArgumentMatchers
 import org.mockito.Mock
 import org.mockito.Mockito.`when`
 import org.mockito.Mockito.anyBoolean
@@ -54,6 +55,7 @@ open class DanaRTestBase : TestBase() {
         `when`(activePluginProvider.activePump).thenReturn(testPumpPlugin)
         doNothing().`when`(danaRKoreanPlugin).setPluginEnabled(anyObject(), anyBoolean())
         doNothing().`when`(danaRPlugin).setPluginEnabled(anyObject(), anyBoolean())
+        `when`(resourceHelper.gs(ArgumentMatchers.anyInt())).thenReturn("")
     }
 
     val injector = HasAndroidInjector {

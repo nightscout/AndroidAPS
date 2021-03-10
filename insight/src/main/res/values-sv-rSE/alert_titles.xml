@@ -3,6 +3,7 @@
     <string name="alert_r1_title">Leverera bolus</string>
     <string name="alert_r2_title">Missad bolus</string>
     <string name="alert_r3_title">Väckarklocka</string>
+    <string name="alert_r4_title">Byt infusionsset</string>
     <string name="alert_r7_title">Temp basal avslutad</string>
     <string name="alert_w31_title">Låg nivå reservoar</string>
     <string name="alert_w32_title">Låg batterinivå</string>

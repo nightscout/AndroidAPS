@@ -38,7 +38,6 @@ class ActionNotificationTest : TestBase() {
                 it.nsUpload = nsUpload
             }
             if (it is PumpEnactResult) {
-                it.aapsLogger = aapsLogger
                 it.resourceHelper = resourceHelper
             }
         }

@@ -47,10 +47,22 @@ class Converters {
     fun toTherapyEventType(therapyEventType: String?) = therapyEventType?.let { TherapyEvent.Type.valueOf(it) }
 
     @TypeConverter
+    fun fromGlucoseType(meterType: TherapyEvent.MeterType?) = meterType?.name
+
+    @TypeConverter
+    fun toGlucoseType(meterType: String?) = meterType?.let { TherapyEvent.MeterType.valueOf(it) }
+
+    @TypeConverter
     fun fromGlucoseUnit(glucoseUnit: ProfileSwitch.GlucoseUnit?) = glucoseUnit?.name
 
     @TypeConverter
     fun toGlucoseUnit(glucoseUnit: String?) = glucoseUnit?.let { ProfileSwitch.GlucoseUnit.valueOf(it) }
+
+    @TypeConverter
+    fun fromTherapyGlucoseUnit(glucoseUnit: TherapyEvent.GlucoseUnit?) = glucoseUnit?.name
+
+    @TypeConverter
+    fun toTherapyGlucoseUnit(glucoseUnit: String?) = glucoseUnit?.let { TherapyEvent.GlucoseUnit.valueOf(it) }
 
     @TypeConverter
     fun fromPumpType(pumpType: InterfaceIDs.PumpType?) = pumpType?.name
@@ -91,24 +103,24 @@ class Converters {
 
     @TypeConverter
     fun anyToString(value: Any?) = when (value) {
-        null -> null
-        is String -> "S$value"
-        is Int -> "I$value"
-        is Long -> "L$value"
+        null       -> null
+        is String  -> "S$value"
+        is Int     -> "I$value"
+        is Long    -> "L$value"
         is Boolean -> "B$value"
-        is Float -> "F$value"
-        else -> throw IllegalArgumentException("Type not supported")
+        is Float   -> "F$value"
+        else       -> throw IllegalArgumentException("Type not supported")
     }
 
     @TypeConverter
     fun stringToAny(value: String?): Any? = when {
-        value == null -> null
+        value == null         -> null
         value.startsWith("S") -> value.substring(1)
         value.startsWith("I") -> value.substring(1).toInt()
         value.startsWith("L") -> value.substring(1).toLong()
         value.startsWith("B") -> value.substring(1).toBoolean()
         value.startsWith("F") -> value.substring(1).toFloat()
-        else -> throw IllegalArgumentException("Type not supported")
+        else                  -> throw IllegalArgumentException("Type not supported")
     }
 
     @TypeConverter

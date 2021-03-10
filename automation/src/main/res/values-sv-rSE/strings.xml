@@ -7,6 +7,7 @@
     <string name="automation_missing_trigger">Specificera åtminstone en utlösare.</string>
     <string name="automation_missing_action">Specificera åtminstone en åtgärd.</string>
     <string name="alarm_message">Larm: %1$s</string>
+    <string name="alarm_short">Larm:</string>
     <string name="message_short">Medd:</string>
     <string name="alreadyenabled">Redan aktiverad</string>
     <string name="alreadydisabled">Redan inaktiverad</string>
@@ -88,6 +89,7 @@
     <string name="glucose_u">BG [%1$s]:</string>
     <string name="lastboluslabel">Senaste bolus</string>
     <string name="lastboluscompared">Senaste bolus %1$s %2$s min sedan</string>
+    <string name="triggercoblabel">COB</string>
     <string name="cobcompared">COB %1$s %2$.0f</string>
     <string name="iob_u">IOB [U]:</string>
     <string name="distance_short">Dist [m]:</string>

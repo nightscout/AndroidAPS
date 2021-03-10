@@ -1,9 +1,13 @@
 package info.nightscout.androidaps.danars.comm
 
 import dagger.android.HasAndroidInjector
+import info.nightscout.androidaps.dana.DanaPump
 import info.nightscout.androidaps.danars.R
+import info.nightscout.androidaps.danars.encryption.BleEncryption
 import info.nightscout.androidaps.data.DetailedBolusInfo
-import info.nightscout.androidaps.db.CareportalEvent
+import info.nightscout.androidaps.database.AppRepository
+import info.nightscout.androidaps.database.entities.TherapyEvent
+import info.nightscout.androidaps.database.transactions.InsertTherapyEventIfNewTransaction
 import info.nightscout.androidaps.db.ExtendedBolus
 import info.nightscout.androidaps.db.Source
 import info.nightscout.androidaps.db.TemporaryBasal
@@ -13,14 +17,13 @@ import info.nightscout.androidaps.logging.LTag
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper
 import info.nightscout.androidaps.plugins.general.nsclient.NSUpload
 import info.nightscout.androidaps.plugins.pump.common.bolusInfo.DetailedBolusInfoStorage
-import info.nightscout.androidaps.dana.DanaPump
-import info.nightscout.androidaps.danars.encryption.BleEncryption
 import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 import info.nightscout.androidaps.utils.sharedPreferences.SP
+import io.reactivex.disposables.CompositeDisposable
+import io.reactivex.rxkotlin.plusAssign
 import org.joda.time.DateTime
 import org.joda.time.DateTimeZone
-import java.util.*
 import javax.inject.Inject
 
 open class DanaRS_Packet_APS_History_Events(
@@ -35,6 +38,9 @@ open class DanaRS_Packet_APS_History_Events(
     @Inject lateinit var detailedBolusInfoStorage: DetailedBolusInfoStorage
     @Inject lateinit var sp: SP
     @Inject lateinit var nsUpload: NSUpload
+    @Inject lateinit var repository: AppRepository
+
+    private val disposable = CompositeDisposable()
 
     init {
         opCode = BleEncryption.DANAR_PACKET__OPCODE__APS_HISTORY_EVENTS
@@ -174,7 +180,16 @@ open class DanaRS_Packet_APS_History_Events(
             DanaPump.REFILL            -> {
                 aapsLogger.debug(LTag.PUMPCOMM, "[" + id + "] " + "EVENT REFILL (" + recordCode + ") " + dateUtil.dateAndTimeString(datetime) + " (" + datetime + ")" + " Amount: " + param1 / 100.0 + "U")
                 if (sp.getBoolean(R.string.key_rs_loginsulinchange, true))
-                    nsUpload.generateCareportalEvent(CareportalEvent.INSULINCHANGE, datetime, resourceHelper.gs(R.string.danarspump))
+                    disposable += repository.runTransactionForResult(InsertTherapyEventIfNewTransaction(
+                        timestamp = datetime,
+                        type = TherapyEvent.Type.INSULIN_CHANGE,
+                        note = resourceHelper.gs(R.string.danarspump),
+                        glucoseUnit = TherapyEvent.GlucoseUnit.MGDL
+                    )).subscribe({ result ->
+                        result.inserted.forEach { nsUpload.uploadEvent(it) }
+                    }, {
+                        aapsLogger.error(LTag.BGSOURCE, "Error while saving therapy event", it)
+                    })
                 status = "REFILL " + dateUtil.timeString(datetime)
             }
 
@@ -202,11 +217,20 @@ open class DanaRS_Packet_APS_History_Events(
             DanaPump.PRIMECANNULA      -> {
                 aapsLogger.debug(LTag.PUMPCOMM, "[" + id + "] " + "EVENT PRIMECANNULA(" + recordCode + ") " + dateUtil.dateAndTimeString(datetime) + " (" + datetime + ")" + " Amount: " + param1 / 100.0 + "U")
                 if (sp.getBoolean(R.string.key_rs_logcanulachange, true))
-                    nsUpload.generateCareportalEvent(CareportalEvent.SITECHANGE, datetime, resourceHelper.gs(R.string.danarspump))
+                    disposable += repository.runTransactionForResult(InsertTherapyEventIfNewTransaction(
+                        timestamp = datetime,
+                        type = TherapyEvent.Type.CANNULA_CHANGE,
+                        note = resourceHelper.gs(R.string.danarspump),
+                        glucoseUnit = TherapyEvent.GlucoseUnit.MGDL
+                    )).subscribe({ result ->
+                        result.inserted.forEach { nsUpload.uploadEvent(it) }
+                    }, {
+                        aapsLogger.error(LTag.BGSOURCE, "Error while saving therapy event", it)
+                    })
                 status = "PRIMECANNULA " + dateUtil.timeString(datetime)
             }
 
-            DanaPump.TIMECHANGE      -> {
+            DanaPump.TIMECHANGE        -> {
                 val oldDateTime = intFromBuffMsbLsb(data, 7, 4) * 1000L
                 aapsLogger.debug(LTag.PUMPCOMM, "[" + id + "] " + "EVENT TIMECHANGE(" + recordCode + ") " + dateUtil.dateAndTimeString(datetime) + " (" + datetime + ")" + " Previous: " + dateUtil.dateAndTimeString(oldDateTime))
                 status = "TIMECHANGE " + dateUtil.timeString(datetime)

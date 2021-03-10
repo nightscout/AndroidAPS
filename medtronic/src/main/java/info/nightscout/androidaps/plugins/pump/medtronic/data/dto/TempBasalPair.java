@@ -38,6 +38,23 @@ public class TempBasalPair extends info.nightscout.androidaps.plugins.pump.commo
     }
 
 
+    /**
+     * This constructor is for use with PumpHistoryDecoder
+     *
+     * @param rateByte0
+     * @param startTimeByte
+     * @param isPercent
+     */
+    public TempBasalPair(byte rateByte0, byte rateByte1, int startTimeByte, boolean isPercent) {
+        if (isPercent) {
+            this.insulinRate = rateByte0;
+        } else {
+            this.insulinRate = ByteUtil.toInt(rateByte1, rateByte0) * 0.025;
+        }
+        this.durationMinutes = startTimeByte * 30;
+        this.isPercent = isPercent;
+    }
+
     public TempBasalPair(AAPSLogger aapsLogger, byte[] response) {
         super();
 

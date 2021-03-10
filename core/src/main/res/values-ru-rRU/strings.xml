@@ -118,6 +118,7 @@
     <string name="dismiss">ОТКЛОНИТЬ</string>
     <!--    BlePreCheck-->
     <string name="ble_not_supported">Bluetooth с низким энергопотреблением не поддерживается.</string>
+    <string name="ble_not_supported_or_not_paired">Bluetooth Low Energy не поддерживается или устройство не сопряжено.</string>
     <string name="ble_not_enabled">Bluetooth не включен.</string>
     <string name="location_not_found_title">Геолокация не включена</string>
     <string name="location_not_found_message">Для обнаружения Bluetooth на новых устройствах необходимо включить геолокацию. AAPS не отслеживает ваше местоположение и может быть отключен после успешного сопряжения.</string>

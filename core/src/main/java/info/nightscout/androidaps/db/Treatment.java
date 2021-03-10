@@ -243,7 +243,7 @@ public class Treatment implements DataPointWithLabelInterface, DbObjectBase {
     @Override
     public String getLabel() {
         String label = "";
-        if (insulin > 0) label += DecimalFormatter.toPumpSupportedBolus(insulin, activePlugin.getActivePump(), resourceHelper);
+        if (insulin > 0) label += DecimalFormatter.INSTANCE.toPumpSupportedBolus(insulin, activePlugin.getActivePump(), resourceHelper);
         if (carbs > 0)
             label += "~" + resourceHelper.gs(R.string.format_carbs, (int) carbs);
         return label;

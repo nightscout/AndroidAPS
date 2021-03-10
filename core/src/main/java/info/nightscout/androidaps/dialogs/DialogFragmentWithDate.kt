@@ -1,6 +1,7 @@
 package info.nightscout.androidaps.dialogs
 
 import android.app.DatePickerDialog
+import android.app.Dialog
 import android.app.TimePickerDialog
 import android.os.Bundle
 import android.text.format.DateFormat
@@ -20,6 +21,8 @@ import info.nightscout.androidaps.utils.extensions.toVisibility
 import info.nightscout.androidaps.utils.sharedPreferences.SP
 import java.util.*
 import javax.inject.Inject
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import android.view.LayoutInflater
 
 abstract class DialogFragmentWithDate : DaggerDialogFragment() {
 
@@ -36,6 +39,21 @@ abstract class DialogFragmentWithDate : DaggerDialogFragment() {
     companion object {
 
         private var seconds: Int = (Math.random() * 59.0).toInt()
+    }
+
+    private var dialogView: View? = null
+
+    override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
+        return MaterialAlertDialogBuilder(requireContext(), theme).apply {
+            dialogView = onCreateView(LayoutInflater.from(requireContext()), null, savedInstanceState)
+
+            dialogView?.let { onViewCreated(it, savedInstanceState) }
+            setView(dialogView)
+        }.create()
+    }
+
+    override fun getView(): View? {
+        return dialogView
     }
 
     override fun onStart() {
