@@ -14,6 +14,7 @@ import info.nightscout.androidaps.database.entities.UserEntry
 import info.nightscout.androidaps.database.entities.UserEntry.*
 import info.nightscout.androidaps.databinding.TreatmentsUserEntryFragmentBinding
 import info.nightscout.androidaps.databinding.TreatmentsUserEntryItemBinding
+import info.nightscout.androidaps.events.EventPreferenceChange
 import info.nightscout.androidaps.interfaces.ImportExportPrefsInterface
 import info.nightscout.androidaps.interfaces.ProfileFunction
 import info.nightscout.androidaps.logging.UserEntryLogger
@@ -27,7 +28,6 @@ import info.nightscout.androidaps.utils.extensions.*
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 import info.nightscout.androidaps.utils.rx.AapsSchedulers
 import io.reactivex.disposables.CompositeDisposable
-import io.reactivex.rxkotlin.plusAssign
 import javax.inject.Inject
 
 class TreatmentsUserEntryFragment : DaggerFragment() {
@@ -67,10 +67,31 @@ class TreatmentsUserEntryFragment : DaggerFragment() {
             }
         }
 
-        disposable += repository
+    }
+
+    fun swapAdapter() {
+       disposable.add( repository
             .getAllUserEntries()
             .observeOn(aapsSchedulers.main)
             .subscribe { list -> binding.recyclerview.swapAdapter(UserEntryAdapter(list), true) }
+       )
+    }
+
+    @Synchronized
+    override fun onResume() {
+        super.onResume()
+        swapAdapter()
+
+        disposable.add(rxBus
+            .toObservable(EventPreferenceChange::class.java)
+            .observeOn(aapsSchedulers.io)
+            .subscribe({ swapAdapter() }, fabricPrivacy::logException))
+    }
+
+    @Synchronized
+    override fun onPause() {
+        super.onPause()
+        disposable.clear()
     }
 
     @Synchronized
@@ -92,8 +113,11 @@ class TreatmentsUserEntryFragment : DaggerFragment() {
             holder.binding.date.text = dateUtil.dateAndTimeAndSecondsString(current.timestamp)
             holder.binding.action.text = resourceHelper.gs(current.action.stringId())
             holder.binding.action.setTextColor(resourceHelper.gc(current.action.colorGroup.colorId()))
-            if (current.s != "") holder.binding.s.text = current.s else holder.binding.s.visibility = View.GONE
-            //holder.binding.s.text = current.toString()  //for debug
+            if (current.s != "") {
+                holder.binding.s.text = current.s
+                holder.binding.s.visibility = View.VISIBLE
+            } else
+                holder.binding.s.visibility = View.GONE
             var valuesWithUnitString = ""
             var rStringParam = 0
             val separator = "  "
