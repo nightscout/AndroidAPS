@@ -51,18 +51,19 @@ import info.nightscout.androidaps.plugins.general.wear.WearPlugin;
 import info.nightscout.androidaps.plugins.general.wear.events.EventWearConfirmAction;
 import info.nightscout.androidaps.plugins.general.wear.events.EventWearInitiateAction;
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.GlucoseStatus;
+import info.nightscout.androidaps.plugins.iob.iobCobCalculator.GlucoseStatusProvider;
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.IobCobCalculatorPlugin;
 import info.nightscout.androidaps.plugins.treatments.TreatmentsPlugin;
 import info.nightscout.androidaps.receivers.ReceiverStatusStore;
 import info.nightscout.androidaps.utils.DecimalFormatter;
 import info.nightscout.androidaps.utils.DefaultValueHelper;
-import info.nightscout.androidaps.utils.GlucoseValueUtilsKt;
 import info.nightscout.androidaps.utils.ToastUtils;
+import info.nightscout.androidaps.utils.extensions.GlucoseValueUtilsKt;
 import info.nightscout.androidaps.utils.resources.ResourceHelper;
 import info.nightscout.androidaps.utils.sharedPreferences.SP;
 
 public class WatchUpdaterService extends WearableListenerService implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
-    @Inject public HasAndroidInjector injector;
+    @Inject public GlucoseStatusProvider glucoseStatusProvider;
     @Inject public AAPSLogger aapsLogger;
     @Inject public WearPlugin wearPlugin;
     @Inject public ResourceHelper resourceHelper;
@@ -282,7 +283,7 @@ public class WatchUpdaterService extends WearableListenerService implements Goog
         GlucoseValue lastBG = iobCobCalculatorPlugin.lastBg();
         // Log.d(TAG, logPrefix + "LastBg=" + lastBG);
         if (lastBG != null) {
-            GlucoseStatus glucoseStatus = new GlucoseStatus(injector).getGlucoseStatusData();
+            GlucoseStatus glucoseStatus = glucoseStatusProvider.getGlucoseStatusData();
 
             if (googleApiClient != null && !googleApiClient.isConnected() && !googleApiClient.isConnecting()) {
                 googleApiConnect();
@@ -323,7 +324,7 @@ public class WatchUpdaterService extends WearableListenerService implements Goog
         } else {
             dataMap.putString("slopeArrow", slopeArrow(glucoseStatus.getDelta()));
             dataMap.putString("delta", deltastring(glucoseStatus.getDelta(), glucoseStatus.getDelta() * Constants.MGDL_TO_MMOLL, units));
-            dataMap.putString("avgDelta", deltastring(glucoseStatus.getAvgDelta(), glucoseStatus.getAvgDelta() * Constants.MGDL_TO_MMOLL, units));
+            dataMap.putString("avgDelta", deltastring(glucoseStatus.getShortAvgDelta(), glucoseStatus.getShortAvgDelta() * Constants.MGDL_TO_MMOLL, units));
         }
         dataMap.putLong("sgvLevel", sgvLevel);
         dataMap.putDouble("sgvDouble", lastBG.getValue());
@@ -343,15 +344,15 @@ public class WatchUpdaterService extends WearableListenerService implements Goog
         boolean detailed = sp.getBoolean(R.string.key_wear_detailed_delta, false);
         if (units.equals(Constants.MGDL)) {
             if (detailed) {
-                deltastring += DecimalFormatter.to1Decimal(Math.abs(deltaMGDL));
+                deltastring += DecimalFormatter.INSTANCE.to1Decimal(Math.abs(deltaMGDL));
             } else {
-                deltastring += DecimalFormatter.to0Decimal(Math.abs(deltaMGDL));
+                deltastring += DecimalFormatter.INSTANCE.to0Decimal(Math.abs(deltaMGDL));
             }
         } else {
             if (detailed) {
-                deltastring += DecimalFormatter.to2Decimal(Math.abs(deltaMMOL));
+                deltastring += DecimalFormatter.INSTANCE.to2Decimal(Math.abs(deltaMMOL));
             } else {
-                deltastring += DecimalFormatter.to1Decimal(Math.abs(deltaMMOL));
+                deltastring += DecimalFormatter.INSTANCE.to1Decimal(Math.abs(deltaMMOL));
             }
         }
         return deltastring;
@@ -386,7 +387,7 @@ public class WatchUpdaterService extends WearableListenerService implements Goog
         if (last_bg == null) return;
 
         List<GlucoseValue> graph_bgs = repository.compatGetBgReadingsDataFromTime(startTime, true).blockingGet();
-        GlucoseStatus glucoseStatus = new GlucoseStatus(injector).getGlucoseStatusData(true);
+        GlucoseStatus glucoseStatus = glucoseStatusProvider.getGlucoseStatusData(true);
 
         if (!graph_bgs.isEmpty()) {
             DataMap entries = dataMapSingleBG(last_bg, glucoseStatus);
@@ -689,14 +690,14 @@ public class WatchUpdaterService extends WearableListenerService implements Goog
                 treatmentsPlugin.updateTotalIOBTempBasals();
                 IobTotal basalIob = treatmentsPlugin.getLastCalculationTempBasals().round();
 
-                iobSum = DecimalFormatter.to2Decimal(bolusIob.iob + basalIob.basaliob);
-                iobDetail = "(" + DecimalFormatter.to2Decimal(bolusIob.iob) + "|" + DecimalFormatter.to2Decimal(basalIob.basaliob) + ")";
+                iobSum = DecimalFormatter.INSTANCE.to2Decimal(bolusIob.iob + basalIob.basaliob);
+                iobDetail = "(" + DecimalFormatter.INSTANCE.to2Decimal(bolusIob.iob) + "|" + DecimalFormatter.INSTANCE.to2Decimal(basalIob.basaliob) + ")";
                 cobString = iobCobCalculatorPlugin.getCobInfo(false, "WatcherUpdaterService").generateCOBString();
                 currentBasal = generateBasalString();
 
                 //bgi
                 double bgi = -(bolusIob.activity + basalIob.activity) * 5 * Profile.fromMgdlToUnits(profile.getIsfMgdl(), profileFunction.getUnits());
-                bgiString = "" + ((bgi >= 0) ? "+" : "") + DecimalFormatter.to1Decimal(bgi);
+                bgiString = "" + ((bgi >= 0) ? "+" : "") + DecimalFormatter.INSTANCE.to1Decimal(bgi);
 
                 status = generateStatusString(profile, currentBasal, iobSum, iobDetail, bgiString);
             }
@@ -804,7 +805,7 @@ public class WatchUpdaterService extends WearableListenerService implements Goog
             if (sp.getBoolean(R.string.key_danar_visualizeextendedaspercentage, false)) {
                 basalStringResult = "100%";
             } else {
-                basalStringResult = DecimalFormatter.to2Decimal(profile.getBasal()) + "U/h";
+                basalStringResult = DecimalFormatter.INSTANCE.to2Decimal(profile.getBasal()) + "U/h";
             }
         }
         return basalStringResult;

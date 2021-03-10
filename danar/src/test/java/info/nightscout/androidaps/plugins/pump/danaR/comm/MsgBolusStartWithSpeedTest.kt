@@ -15,7 +15,7 @@ import org.powermock.modules.junit4.PowerMockRunner
 class MsgBolusStartWithSpeedTest : DanaRTestBase() {
 
     @Test fun runTest() {
-        Mockito.`when`(constraintChecker.applyBolusConstraints(Constraint(anyObject()))).thenReturn(Constraint(0.0))
+        Mockito.`when`(constraintChecker.applyBolusConstraints(anyObject())).thenReturn(Constraint(0.0))
         val packet = MsgBolusStartWithSpeed(injector, 0.0, 0)
 
         // test message decoding

@@ -194,7 +194,6 @@
     <string name="smscommunicator_loophasbeenenabled">Loop was ingeschakeld</string>
     <string name="smscommunicator_loopisenabled">Loop is ingeschakeld</string>
     <string name="valuelimitedto">%1$.2f gelimiteerd tot %2$.2f</string>
-    <string name="valueoutofrange">Waarde %1$s valt buiten de toegestane harde limieten</string>
     <string name="smscommunicator_pumpconnectwithcode">Om verbinding te maken met pomp antwoord met code %1$s</string>
     <string name="smscommunicator_pumpconnectfail">Verbinding maken met pomp is mislukt</string>
     <string name="smscommunicator_pumpdisconnectwithcode">Om de pomp te ontkoppelen gedurende %1$d minuten antwoord met code %2$s</string>

@@ -8,7 +8,9 @@ import info.nightscout.androidaps.danars.comm.DanaRS_Packet
 import info.nightscout.androidaps.db.TemporaryBasal
 import info.nightscout.androidaps.utils.sharedPreferences.SP
 import org.junit.Before
+import org.mockito.ArgumentMatchers
 import org.mockito.Mock
+import org.mockito.Mockito
 
 open class DanaRSTestBase : TestBaseWithProfile() {
 
@@ -26,6 +28,11 @@ open class DanaRSTestBase : TestBaseWithProfile() {
     }
 
     lateinit var danaPump: DanaPump
+
+    @Before
+    fun prepare() {
+        Mockito.`when`(resourceHelper.gs(ArgumentMatchers.anyInt())).thenReturn("AnyString")
+    }
 
     fun createArray(length: Int, fillWith: Byte): ByteArray {
         val ret = ByteArray(length)

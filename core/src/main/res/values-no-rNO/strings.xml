@@ -118,6 +118,7 @@
     <string name="dismiss">Avvis</string>
     <!--    BlePreCheck-->
     <string name="ble_not_supported">Lavenergi Bluetooth BLE er ikke støttet.</string>
+    <string name="ble_not_supported_or_not_paired">Bluetooth Low Energy er ikke støttet eller enheten er ikke paret.</string>
     <string name="ble_not_enabled">Bluetooth er ikke aktivert.</string>
     <string name="location_not_found_title">Stedstjeneste er ikke aktivert</string>
     <string name="location_not_found_message">Bluetooth søk på nye mobiler virker bare når posisjonstjeneste er aktivert. AAPS lagrer ikke dine posisjonsdata og den kan derfor slås av etter vellykket sammenkobling.</string>

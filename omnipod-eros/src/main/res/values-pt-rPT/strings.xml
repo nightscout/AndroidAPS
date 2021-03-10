@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- Omnipod Eros - Description -->
+    <string name="omnipod_eros_pump_description">Integração da bomba para Omnipod Eros (o modelo mais antigo). Requer um dispositivo RileyLink com pelo menos firmware versão 2.0.</string>
     <!-- Omnipod Eros - Keys -->
     <!-- Omnipod Eros - Overview -->
     <!-- Omnipod Eros - Preferences -->
@@ -10,7 +11,7 @@
     <string name="omnipod_eros_preferences_riley_link_stats_button_enabled">Mostrar botão de Estatísticas do RileyLink no menu de Gestão do Pod</string>
     <string name="omnipod_eros_preferences_battery_change_logging_enabled">Activar o registo de mudança da bateria em Acções</string>
     <string name="omnipod_eros_preferences_category_riley_link">RileyLink</string>
-    <string name="omnipod_eros_preferences_notification_uncertain_tbr_sound_enabled">Som activado para notificações DBT incerto</string>
+    <string name="omnipod_eros_preferences_notification_uncertain_tbr_sound_enabled">Som activado para notificações incertas da DBT</string>
     <string name="omnipod_eros_preferences_notification_uncertain_smb_sound_enabled">Som activado para notificações SMB incerto</string>
     <string name="omnipod_eros_preferences_notification_uncertain_bolus_sound_enabled">Som activado para notificações de bolús incerto</string>
     <!-- Omnipod Eros - History -->
@@ -46,8 +47,8 @@
     <string name="omnipod_eros_error_set_basal_failed_delivery_suspended">Falha na configuração do perfil basal. A administração está suspensa! Por favor, retome manualmente a administração a partir do separador Omnipod.</string>
     <string name="omnipod_eros_error_cancel_temp_basal_failed_uncertain">O cancelamento de basal temporária pode ter falhado. Por favor, actualize manualmente o estado do Pod no separador Omnipod.</string>
     <string name="omnipod_eros_error_set_temp_basal_failed_old_tbr_might_be_cancelled">Falha ao configurar basal temporária. Se uma basal temporária foi executada anteriormente, ela pode ter sido cancelada. Por favor, actualize manualmente o estado do Pod no separador Omnipod.</string>
-    <string name="omnipod_eros_error_set_temp_basal_failed_old_tbr_cancelled_new_might_have_failed">Configuração de basal temporária pode ter falhado basal. Se uma basal temp foi executada anteriormente, ela foi cancelada. Por favor, actualize manualmente o estado do Pod no separador Omnipod.</string>
-    <string name="omnipod_eros_error_set_temp_basal_failed_validation">A duração do DBT deve ser maior que zero e um múltiplo de %1$s minutos.</string>
+    <string name="omnipod_eros_error_set_temp_basal_failed_old_tbr_cancelled_new_might_have_failed">Configuração de basal temporária pode ter feito falhar a basal. Se uma basal temporária foi executada anteriormente, ela foi cancelada. Por favor, actualize manualmente o estado do Pod no separador Omnipod.</string>
+    <string name="omnipod_eros_error_set_temp_basal_failed_validation">A duração da DBT deve ser maior que zero e um múltiplo de %1$s minutos.</string>
     <string name="omnipod_eros_error_set_time_failed_delivery_might_be_suspended">Configuração da hora pode ter falhado. A administração pode estar suspensa! Por favor, actualize manualmente o estado do Pod no separador Omnipod e retome a administração, se necessário.</string>
     <string name="omnipod_eros_error_set_time_failed_delivery_suspended">Configuração da Hora falhou. A administração está suspensa! Por favor, retome manualmente a administração no separador do Omnipod.</string>
     <string name="omnipod_eros_error_failed_to_read_pulse_log">Falha ao ler o Pulse Log</string>
@@ -55,7 +56,7 @@
     <string name="omnipod_eros_error_operation_not_possible_no_configuration">A operação não é possível.\n\nPrecisa configurar o Omnipod primeiro, antes de pode usar esta operação.</string>
     <string name="omnipod_eros_error_bolus_failed_uncertain">Não é possível verificar se o bólus foi bem sucedido. Por favor, verifique manualmente se o Pod está administrar bólus ouvindo os cliques. &lt;b&gt;Se tem certeza de que o bólus não foi bem sucedido, deve apagar manualmente a entrada de bólus dos Tratamentos, mesmo se clicar em \'Cancelar Bólus\' agora! &lt;b&gt;&lt;/b&gt;</string>
     <string name="omnipod_eros_error_bolus_failed_uncertain_smb">Não é possível verificar se o bólus SMB (%1$.2f U) foi bem sucedido. <b>Se tiver certeza de que o Bólus não foi bem sucedido, deve excluir manualmente a entrada SMB a partir de Tratamentos.</b></string>
-    <string name="omnipod_eros_error_tbr_running_but_aaps_not_aware">Uma basal temporária está sendo executada no Pod, mas o AAPS não está ciente desta basal temporária. Por favor, cancele sua basal temporária manualmente.</string>
+    <string name="omnipod_eros_error_tbr_running_but_aaps_not_aware">Uma basal temporária está sendo executada no Pod, mas a AAPS não está ciente desta basal temporária. Por favor, cancele a sua basal temporária manualmente.</string>
     <!-- Omnipod Eros - Pod Management -->
     <string name="omnipod_eros_pod_management_button_riley_link_stats">Estatísticas do RileyLink</string>
     <string name="omnipod_eros_pod_management_waiting_for_riley_link_connection">À espera de ligação RileyLink…</string>

@@ -68,7 +68,7 @@ public class MedtronicUIPostprocessor {
                 if (response) {
                     BasalProfile basalProfile = (BasalProfile) uiTask.getParameter(0);
 
-                    medtronicPumpStatus.basalsByHour = basalProfile.getProfilesByHour(medtronicPumpPlugin.getPumpDescription().pumpType);
+                    medtronicPumpStatus.basalsByHour = basalProfile.getProfilesByHour(medtronicPumpPlugin.getPumpDescription().getPumpType());
                 }
             }
             break;
@@ -77,7 +77,7 @@ public class MedtronicUIPostprocessor {
                 BasalProfile basalProfile = (BasalProfile) uiTask.returnData;
 
                 try {
-                    Double[] profilesByHour = basalProfile.getProfilesByHour(medtronicPumpPlugin.getPumpDescription().pumpType);
+                    Double[] profilesByHour = basalProfile.getProfilesByHour(medtronicPumpPlugin.getPumpDescription().getPumpType());
 
                     if (profilesByHour != null) {
                         medtronicPumpStatus.basalsByHour = profilesByHour;

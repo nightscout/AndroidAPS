@@ -13,6 +13,7 @@ import info.nightscout.androidaps.databinding.DialogCalibrationBinding
 import info.nightscout.androidaps.interfaces.ProfileFunction
 import info.nightscout.androidaps.logging.UserEntryLogger
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.GlucoseStatus
+import info.nightscout.androidaps.plugins.iob.iobCobCalculator.GlucoseStatusProvider
 import info.nightscout.androidaps.utils.HtmlHelper
 import info.nightscout.androidaps.utils.XdripCalibrations
 import info.nightscout.androidaps.utils.alertDialogs.OKDialog
@@ -28,6 +29,7 @@ class CalibrationDialog : DialogFragmentWithDate() {
     @Inject lateinit var profileFunction: ProfileFunction
     @Inject lateinit var xdripCalibrations: XdripCalibrations
     @Inject lateinit var uel: UserEntryLogger
+    @Inject lateinit var glucoseStatusProvider: GlucoseStatusProvider
 
     private var _binding: DialogCalibrationBinding? = null
 
@@ -51,7 +53,7 @@ class CalibrationDialog : DialogFragmentWithDate() {
         super.onViewCreated(view, savedInstanceState)
 
         val units = profileFunction.getUnits()
-        val bg = Profile.fromMgdlToUnits(GlucoseStatus(injector).glucoseStatusData?.glucose
+        val bg = Profile.fromMgdlToUnits(glucoseStatusProvider.glucoseStatusData?.glucose
             ?: 0.0, units)
         if (units == Constants.MMOL)
             binding.bg.setParams(savedInstanceState?.getDouble("bg")

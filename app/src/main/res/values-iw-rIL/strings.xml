@@ -194,7 +194,7 @@
     <string name="smscommunicator_loophasbeenenabled">הלולאה הופעלה</string>
     <string name="smscommunicator_loopisenabled">לולאה פעילה</string>
     <string name="valuelimitedto">%1$.2f מוגבלת ל- %2$.2f</string>
-    <string name="valueoutofrange">ערך %1$s הינו מחוץ לתחום</string>
+    <string name="valueoutofrange">»הערך %1$s« מחוץ לתחום הקשיח</string>
     <string name="smscommunicator_pumpconnectwithcode">לחיבור המשאבה יש להשיב עם הקוד %1$s</string>
     <string name="smscommunicator_pumpconnectfail">החיבור אל המשאבה נכשל</string>
     <string name="smscommunicator_pumpdisconnectwithcode">לניתוק המשאבה למשך %1$d דקות השיבו עם הקוד %2$s</string>
@@ -520,7 +520,7 @@
     <string name="apsselected">נבחר APS</string>
     <string name="nsclienthaswritepermission">ל-NSClient יש הרשאת כתיבה</string>
     <string name="closedmodeenabled">מצב סגור מופעל</string>
-    <string name="maxiobset">IOB מקסימלי הוגדר כראוי</string>
+    <string name="maxiobset">ערך IOB מקסימלי הוגדר כראוי</string>
     <string name="hasbgdata">ערכי סוכר זמינים מהמקור הנבחר</string>
     <string name="extendedbolusdeliveryerror">שגיאה במתן הבולוס הממושך</string>
     <string name="enablesmbalways">הפעלת SMB תמיד</string>
@@ -586,8 +586,8 @@
     <string name="smbdisabledinpreferences">SMB מושבת בהעדפות</string>
     <string name="uamdisabledinpreferences">UAM מושבת בהעדפות</string>
     <string name="uamdisabledoref1notselected">UAM מושבת מפני שהוא מסתמך על תוסף רגישות של Oref1</string>
-    <string name="maxbasalmultiplier">מכפלת בזאלי מירבי</string>
-    <string name="maxdailybasalmultiplier">מכפלת בזאלי יומי מירבי</string>
+    <string name="maxbasalmultiplier">מכפלת בזאלי מרבי</string>
+    <string name="maxdailybasalmultiplier">מכפלת בזאלי יומי מרבי</string>
     <string name="smb_frequency_exceeded">ניתן בולוס ב-3 הדקות האחרונות, מדלג על SMB</string>
     <string name="basal_set_correctly">הבזאלי הוגדר כהלכה</string>
     <string name="limitingextendedbolus">הגבלת בולוס ממושך ל- %1$.1f יח\' בגלל %2$s</string>
@@ -627,7 +627,7 @@
     <string name="openapsama_autosens_max">יחס Autosens מקסימלי</string>
     <string name="openapsama_autosens_min">יחס Autosens מינימלי</string>
     <string name="openapsama_bolussnooze_dia_divisor">נמנום בולוס - מחלק משך פעילות אינסולין</string>
-    <string name="openapsama_max_daily_safety_multiplier">מכפלת בטיחות בזאלי יומי מירבי</string>
+    <string name="openapsama_max_daily_safety_multiplier">מכפלת בטיחות בזאלי יומי מרבי</string>
     <string name="openapsama_current_basal_safety_multiplier">מכפלת בטיחות בזאלי נוכחי</string>
     <string name="value_unavailable_short">לא זמין</string>
     <string name="virtualpump_type">סוג משאבה וירטואלית</string>
@@ -904,4 +904,14 @@
     <string name="email_address">כתובת דוא\"ל</string>
     <string name="privacy_settings">הגדרות פרטיות</string>
     <string name="privacy_summary">אם תרצו, תוכלו לספק כתובת דוא\"ל כדי לקבל דיווח על קריסות יישום. שירות זה אינו אוטומטי. המפתחים יצרו איתכם קשר במצבים מסוכנים.</string>
+    <string name="profile_low_target">ערך המטרה הנמוך של הפרופיל</string>
+    <string name="profile_high_target">ערך המטרה הגבוה של הפרופיל</string>
+    <string name="temp_target_low_target">ערך תחתון של המטרה הזמנית</string>
+    <string name="temp_target_high_target">ערך עליון של המטרה הזמנית</string>
+    <string name="temp_target_value">ערך המטרה הזמני</string>
+    <string name="profile_dia">ערך DIA של הפרופיל</string>
+    <string name="profile_sensitivity_value">ערך הרגישות של הפרופיל</string>
+    <string name="profile_max_daily_basal_value">ערך מינון בזאלי מרבי של הפרופיל</string>
+    <string name="current_basal_value">מינון בזאלי נוכחי</string>
+    <string name="profile_carbs_ratio_value">יחס הפחמימות של הפרופיל</string>
 </resources>

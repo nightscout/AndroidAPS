@@ -11,7 +11,7 @@ import info.nightscout.androidaps.activities.ErrorHelperActivity
 import info.nightscout.androidaps.data.DetailedBolusInfo
 import info.nightscout.androidaps.data.Profile
 import info.nightscout.androidaps.database.entities.TemporaryTarget
-import info.nightscout.androidaps.db.CareportalEvent
+import info.nightscout.androidaps.database.entities.TherapyEvent
 import info.nightscout.androidaps.db.Source
 import info.nightscout.androidaps.events.EventRefreshOverview
 import info.nightscout.androidaps.interfaces.*
@@ -22,6 +22,7 @@ import info.nightscout.androidaps.plugins.aps.loop.LoopPlugin
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper
 import info.nightscout.androidaps.plugins.configBuilder.ConstraintChecker
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.GlucoseStatus
+import info.nightscout.androidaps.plugins.iob.iobCobCalculator.GlucoseStatusProvider
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.IobCobCalculatorPlugin
 import info.nightscout.androidaps.queue.Callback
 import info.nightscout.androidaps.utils.CarbTimer
@@ -57,6 +58,7 @@ class BolusWizard @Inject constructor(
     @Inject lateinit var config: Config
     @Inject lateinit var uel: UserEntryLogger
     @Inject lateinit var carbTimer: CarbTimer
+    @Inject lateinit var glucoseStatusProvider: GlucoseStatusProvider
 
     init {
         injector.androidInjector().inject(this)
@@ -181,7 +183,7 @@ class BolusWizard @Inject constructor(
         }
 
         // Insulin from 15 min trend
-        glucoseStatus = GlucoseStatus(injector).glucoseStatusData
+        glucoseStatus = glucoseStatusProvider.glucoseStatusData
         glucoseStatus?.let {
             if (useTrend) {
                 trend = it.shortAvgDelta
@@ -336,7 +338,7 @@ class BolusWizard @Inject constructor(
         val confirmMessage = confirmMessageAfterConstraints(advisor = true)
         OKDialog.showConfirmation(ctx, resourceHelper.gs(R.string.boluswizard), confirmMessage, {
             DetailedBolusInfo().apply {
-                eventType = CareportalEvent.CORRECTIONBOLUS
+                eventType = TherapyEvent.Type.CORRECTION_BOLUS.text
                 insulin = insulinAfterConstraints
                 carbs = 0.0
                 context = ctx
@@ -400,7 +402,7 @@ class BolusWizard @Inject constructor(
                     }
                 }
                 DetailedBolusInfo().apply {
-                    eventType = CareportalEvent.BOLUSWIZARD
+                    eventType = TherapyEvent.Type.BOLUS_WIZARD.text
                     insulin = insulinAfterConstraints
                     carbs = this@BolusWizard.carbs.toDouble()
                     context = ctx

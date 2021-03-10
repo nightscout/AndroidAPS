@@ -10,13 +10,14 @@ import info.nightscout.androidaps.interfaces.ProfileFunction
 import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.plugins.aps.loop.LoopPlugin
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.GlucoseStatus
+import info.nightscout.androidaps.plugins.iob.iobCobCalculator.GlucoseStatusProvider
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.IobCobCalculatorPlugin
 import info.nightscout.androidaps.plugins.treatments.TreatmentsPlugin
 import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.JsonHelper.safeGetInt
 import info.nightscout.androidaps.utils.JsonHelper.safeGetString
+import info.nightscout.androidaps.utils.extensions.valueToUnits
 import info.nightscout.androidaps.utils.sharedPreferences.SP
-import info.nightscout.androidaps.utils.valueToUnits
 import org.json.JSONException
 import org.json.JSONObject
 import java.util.*
@@ -32,6 +33,7 @@ class QuickWizardEntry @Inject constructor(private val injector: HasAndroidInjec
     @Inject lateinit var iobCobCalculatorPlugin: IobCobCalculatorPlugin
     @Inject lateinit var repository: AppRepository
     @Inject lateinit var dateUtil: DateUtil
+    @Inject lateinit var glucoseStatusProvider: GlucoseStatusProvider
 
     lateinit var storage: JSONObject
     var position: Int = -1
@@ -79,7 +81,7 @@ class QuickWizardEntry @Inject constructor(private val injector: HasAndroidInjec
 
     fun doCalc(profile: Profile, profileName: String, lastBG: GlucoseValue, _synchronized: Boolean): BolusWizard {
         val dbRecord = repository.getTemporaryTargetActiveAt(dateUtil._now()).blockingGet()
-        val tempTarget = if (dbRecord is ValueWrapper.Existing)  dbRecord.value else null
+        val tempTarget = if (dbRecord is ValueWrapper.Existing) dbRecord.value else null
         //BG
         var bg = 0.0
         if (useBG() == YES) {
@@ -114,7 +116,7 @@ class QuickWizardEntry @Inject constructor(private val injector: HasAndroidInjec
         }
         if (loopPlugin.isEnabled(loopPlugin.getType()) && loopPlugin.isSuperBolus) superBolus = false
         // Trend
-        val glucoseStatus = GlucoseStatus(injector).glucoseStatusData
+        val glucoseStatus = glucoseStatusProvider.glucoseStatusData
         var trend = false
         if (useTrend() == YES) {
             trend = true

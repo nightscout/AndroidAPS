@@ -1,6 +1,7 @@
 package info.nightscout.androidaps.database.transactions
 
 import info.nightscout.androidaps.database.entities.GlucoseValue
+import info.nightscout.androidaps.database.entities.ProfileSwitch
 import info.nightscout.androidaps.database.entities.TherapyEvent
 
 /**
@@ -56,15 +57,17 @@ class CgmSourceTransaction(
                 database.therapyEventDao.insertNewEntry(TherapyEvent(
                     timestamp = it.timestamp,
                     type = TherapyEvent.Type.FINGER_STICK_BG_VALUE,
-                    amount = it.value
+                    glucose = it.value,
+                    glucoseUnit = it.glucoseUnit
                 ))
             }
         }
         sensorInsertionTime?.let {
-            if (database.therapyEventDao.findByTimestamp(TherapyEvent.Type.SENSOR_INSERTED, it) == null) {
+            if (database.therapyEventDao.findByTimestamp(TherapyEvent.Type.SENSOR_CHANGE, it) == null) {
                 database.therapyEventDao.insertNewEntry(TherapyEvent(
                     timestamp = it,
-                    type = TherapyEvent.Type.SENSOR_INSERTED
+                    type = TherapyEvent.Type.SENSOR_CHANGE,
+                    glucoseUnit = TherapyEvent.GlucoseUnit.MGDL
                 ))
             }
         }
@@ -83,7 +86,8 @@ class CgmSourceTransaction(
 
     data class Calibration(
         val timestamp: Long,
-        val value: Double
+        val value: Double,
+        val glucoseUnit: TherapyEvent.GlucoseUnit
     )
 
     class TransactionResult {

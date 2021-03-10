@@ -106,7 +106,7 @@ public class MedtronicPumpHistoryDecoder extends MedtronicHistoryDecoder<PumpHis
                 int els = getUnsignedInt(elements);
 
                 for (int k = 0; k < (els - 2); k++) {
-                    if (counter<1022) {
+                    if (counter < 1022) {
                         listRawData.add(dataClear.get(counter));
                         counter++;
                     }
@@ -621,8 +621,16 @@ public class MedtronicPumpHistoryDecoder extends MedtronicHistoryDecoder<PumpHis
             tbrRate = tbrPreviousRecord;
         }
 
-        TempBasalPair tbr = new TempBasalPair(tbrRate.getHead()[0], tbrDuration.getHead()[0], (ByteUtil.asUINT8(tbrRate
-                .getDatetime()[4]) >> 3) == 0);
+//        TempBasalPair tbr = new TempBasalPair(
+//                tbrRate.getHead()[0],
+//                tbrDuration.getHead()[0],
+//                (ByteUtil.asUINT8(tbrRate.getDatetime()[4]) >> 3) == 0);
+
+        TempBasalPair tbr = new TempBasalPair(
+                tbrRate.getHead()[0],
+                tbrRate.getBody()[0],
+                tbrDuration.getHead()[0],
+                (ByteUtil.asUINT8(tbrRate.getDatetime()[4]) >> 3) == 0);
 
         // System.out.println("TBR: amount=" + tbr.getInsulinRate() + ", duration=" + tbr.getDurationMinutes()
         // // + " min. Packed: " + tbr.getValue()

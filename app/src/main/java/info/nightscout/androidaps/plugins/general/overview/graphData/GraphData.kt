@@ -10,15 +10,16 @@ import com.jjoe64.graphview.series.LineGraphSeries
 import com.jjoe64.graphview.series.Series
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.Constants
-import info.nightscout.androidaps.MainApp
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.data.GlucoseValueDataPoint
 import info.nightscout.androidaps.data.IobTotal
 import info.nightscout.androidaps.data.Profile
+import info.nightscout.androidaps.data.TherapyEventDataPoint
 import info.nightscout.androidaps.database.AppRepository
 import info.nightscout.androidaps.database.ValueWrapper
 import info.nightscout.androidaps.database.entities.GlucoseValue
 import info.nightscout.androidaps.interfaces.ActivePluginProvider
+import info.nightscout.androidaps.interfaces.DatabaseHelperInterface
 import info.nightscout.androidaps.interfaces.LoopInterface
 import info.nightscout.androidaps.interfaces.ProfileFunction
 import info.nightscout.androidaps.interfaces.TreatmentsInterface
@@ -51,6 +52,7 @@ class GraphData(
     @Inject lateinit var profileFunction: ProfileFunction
     @Inject lateinit var resourceHelper: ResourceHelper
     @Inject lateinit var activePlugin: ActivePluginProvider
+    @Inject lateinit var databaseHelper: DatabaseHelperInterface
     @Inject lateinit var repository: AppRepository
     @Inject lateinit var dateUtil: DateUtil
 
@@ -267,10 +269,12 @@ class GraphData(
         }
 
         // Careportal
-        MainApp.getDbHelper().getCareportalEventsFromTime(fromTime - 6 * 60 * 60 * 1000, true)
+//        databaseHelper.getCareportalEventsFromTime(fromTime - 6 * 60 * 60 * 1000, true)
+        repository.compatGetTherapyEventDataFromToTime(fromTime - 6 * 60 * 60 * 1000, endTime).blockingGet()
+            .map { TherapyEventDataPoint(injector, it) }
             .filterTimeframe(fromTime, endTime)
             .forEach {
-                it.y = getNearestBg(it.x.toLong())
+                if (it.y == 0.0) it.y = getNearestBg(it.x.toLong())
                 filteredTreatments.add(it)
             }
 

@@ -15,9 +15,12 @@ import info.nightscout.androidaps.activities.ErrorHelperActivity
 import info.nightscout.androidaps.data.DetailedBolusInfo
 import info.nightscout.androidaps.data.Profile
 import info.nightscout.androidaps.data.PumpEnactResult
-import info.nightscout.androidaps.db.CareportalEvent
+import info.nightscout.androidaps.database.AppRepository
+import info.nightscout.androidaps.database.entities.TherapyEvent
+import info.nightscout.androidaps.database.transactions.InsertTherapyEventIfNewTransaction
 import info.nightscout.androidaps.db.Source
 import info.nightscout.androidaps.events.EventAcceptOpenLoopChange
+import info.nightscout.androidaps.events.EventAutosensCalculationFinished
 import info.nightscout.androidaps.events.EventNewBG
 import info.nightscout.androidaps.events.EventTempTargetChange
 import info.nightscout.androidaps.interfaces.*
@@ -33,10 +36,9 @@ import info.nightscout.androidaps.plugins.general.nsclient.NSUpload
 import info.nightscout.androidaps.plugins.general.overview.events.EventDismissNotification
 import info.nightscout.androidaps.plugins.general.overview.events.EventNewNotification
 import info.nightscout.androidaps.plugins.general.overview.notifications.Notification
+import info.nightscout.androidaps.plugins.general.wear.events.EventWearConfirmAction
 import info.nightscout.androidaps.plugins.general.wear.events.EventWearInitiateAction
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.IobCobCalculatorPlugin
-import info.nightscout.androidaps.events.EventAutosensCalculationFinished
-import info.nightscout.androidaps.plugins.general.wear.events.EventWearConfirmAction
 import info.nightscout.androidaps.plugins.pump.virtual.VirtualPumpPlugin
 import info.nightscout.androidaps.plugins.treatments.TreatmentsPlugin
 import info.nightscout.androidaps.queue.Callback
@@ -50,8 +52,7 @@ import info.nightscout.androidaps.utils.resources.ResourceHelper
 import info.nightscout.androidaps.utils.rx.AapsSchedulers
 import info.nightscout.androidaps.utils.sharedPreferences.SP
 import io.reactivex.disposables.CompositeDisposable
-import org.json.JSONException
-import org.json.JSONObject
+import io.reactivex.rxkotlin.plusAssign
 import javax.inject.Inject
 import javax.inject.Singleton
 import kotlin.math.abs
@@ -76,8 +77,8 @@ open class LoopPlugin @Inject constructor(
     private val receiverStatusStore: ReceiverStatusStore,
     private val fabricPrivacy: FabricPrivacy,
     private val nsUpload: NSUpload,
-    private val databaseHelper: DatabaseHelperInterface,
-    private val hardLimits: HardLimits
+    private val dateUtil: DateUtil,
+    private val repository: AppRepository
 ) : PluginBase(PluginDescription()
     .mainType(PluginType.LOOP)
     .fragmentClass(LoopFragment::class.java.name)
@@ -198,7 +199,7 @@ open class LoopPlugin @Inject constructor(
             val apsMode = sp.getString(R.string.key_aps_mode, "open")
             val pump = activePlugin.activePump
             var isLGS = false
-            if (!isSuspended && !pump.isSuspended()) if (closedLoopEnabled.value()) if (maxIobAllowed == hardLimits.MAXIOB_LGS || apsMode == "lgs") isLGS = true
+            if (!isSuspended && !pump.isSuspended()) if (closedLoopEnabled.value()) if (maxIobAllowed == HardLimits.MAX_IOB_LGS || apsMode == "lgs") isLGS = true
             return isLGS
         }
 
@@ -509,18 +510,18 @@ open class LoopPlugin @Inject constructor(
      */
     private fun applyTBRRequest(request: APSResult?, profile: Profile?, callback: Callback?) {
         if (!request!!.tempBasalRequested) {
-            callback?.result(PumpEnactResult(injector).enacted(false).success(true).comment(resourceHelper.gs(R.string.nochangerequested)))?.run()
+            callback?.result(PumpEnactResult(injector).enacted(false).success(true).comment(R.string.nochangerequested))?.run()
             return
         }
         val pump = activePlugin.activePump
         if (!pump.isInitialized()) {
             aapsLogger.debug(LTag.APS, "applyAPSRequest: " + resourceHelper.gs(R.string.pumpNotInitialized))
-            callback?.result(PumpEnactResult(injector).comment(resourceHelper.gs(R.string.pumpNotInitialized)).enacted(false).success(false))?.run()
+            callback?.result(PumpEnactResult(injector).comment(R.string.pumpNotInitialized).enacted(false).success(false))?.run()
             return
         }
         if (pump.isSuspended()) {
             aapsLogger.debug(LTag.APS, "applyAPSRequest: " + resourceHelper.gs(R.string.pumpsuspended))
-            callback?.result(PumpEnactResult(injector).comment(resourceHelper.gs(R.string.pumpsuspended)).enacted(false).success(false))?.run()
+            callback?.result(PumpEnactResult(injector).comment(R.string.pumpsuspended).enacted(false).success(false))?.run()
             return
         }
         aapsLogger.debug(LTag.APS, "applyAPSRequest: $request")
@@ -534,13 +535,13 @@ open class LoopPlugin @Inject constructor(
                 } else {
                     aapsLogger.debug(LTag.APS, "applyAPSRequest: Basal set correctly")
                     callback?.result(PumpEnactResult(injector).percent(request.percent).duration(0)
-                        .enacted(false).success(true).comment(resourceHelper.gs(R.string.basal_set_correctly)))?.run()
+                        .enacted(false).success(true).comment(R.string.basal_set_correctly))?.run()
                 }
             } else if (activeTemp != null && activeTemp.plannedRemainingMinutes > 5 && request.duration - activeTemp.plannedRemainingMinutes < 30 && request.percent == activeTemp.percentRate) {
                 aapsLogger.debug(LTag.APS, "applyAPSRequest: Temp basal set correctly")
                 callback?.result(PumpEnactResult(injector).percent(request.percent)
                     .enacted(false).success(true).duration(activeTemp.plannedRemainingMinutes)
-                    .comment(resourceHelper.gs(R.string.let_temp_basal_run)))?.run()
+                    .comment(R.string.let_temp_basal_run))?.run()
             } else {
                 aapsLogger.debug(LTag.APS, "applyAPSRequest: tempBasalPercent()")
                 commandQueue.tempBasalPercent(request.percent, request.duration, false, profile!!, callback)
@@ -553,13 +554,13 @@ open class LoopPlugin @Inject constructor(
                 } else {
                     aapsLogger.debug(LTag.APS, "applyAPSRequest: Basal set correctly")
                     callback?.result(PumpEnactResult(injector).absolute(request.rate).duration(0)
-                        .enacted(false).success(true).comment(resourceHelper.gs(R.string.basal_set_correctly)))?.run()
+                        .enacted(false).success(true).comment(R.string.basal_set_correctly))?.run()
                 }
             } else if (activeTemp != null && activeTemp.plannedRemainingMinutes > 5 && request.duration - activeTemp.plannedRemainingMinutes < 30 && abs(request.rate - activeTemp.tempBasalConvertedToAbsolute(now, profile)) < pump.pumpDescription.basalStep) {
                 aapsLogger.debug(LTag.APS, "applyAPSRequest: Temp basal set correctly")
                 callback?.result(PumpEnactResult(injector).absolute(activeTemp.tempBasalConvertedToAbsolute(now, profile))
                     .enacted(false).success(true).duration(activeTemp.plannedRemainingMinutes)
-                    .comment(resourceHelper.gs(R.string.let_temp_basal_run)))?.run()
+                    .comment(R.string.let_temp_basal_run))?.run()
             } else {
                 aapsLogger.debug(LTag.APS, "applyAPSRequest: setTempBasalAbsolute()")
                 commandQueue.tempBasalAbsolute(request.rate, request.duration, false, profile!!, callback)
@@ -576,18 +577,18 @@ open class LoopPlugin @Inject constructor(
         if (lastBolusTime != 0L && lastBolusTime + 3 * 60 * 1000 > System.currentTimeMillis()) {
             aapsLogger.debug(LTag.APS, "SMB requested but still in 3 min interval")
             callback?.result(PumpEnactResult(injector)
-                .comment(resourceHelper.gs(R.string.smb_frequency_exceeded))
+                .comment(R.string.smb_frequency_exceeded)
                 .enacted(false).success(false))?.run()
             return
         }
         if (!pump.isInitialized()) {
             aapsLogger.debug(LTag.APS, "applySMBRequest: " + resourceHelper.gs(R.string.pumpNotInitialized))
-            callback?.result(PumpEnactResult(injector).comment(resourceHelper.gs(R.string.pumpNotInitialized)).enacted(false).success(false))?.run()
+            callback?.result(PumpEnactResult(injector).comment(R.string.pumpNotInitialized).enacted(false).success(false))?.run()
             return
         }
         if (pump.isSuspended()) {
             aapsLogger.debug(LTag.APS, "applySMBRequest: " + resourceHelper.gs(R.string.pumpsuspended))
-            callback?.result(PumpEnactResult(injector).comment(resourceHelper.gs(R.string.pumpsuspended)).enacted(false).success(false))?.run()
+            callback?.result(PumpEnactResult(injector).comment(R.string.pumpsuspended).enacted(false).success(false))?.run()
             return
         }
         aapsLogger.debug(LTag.APS, "applySMBRequest: $request")
@@ -595,7 +596,7 @@ open class LoopPlugin @Inject constructor(
         // deliver SMB
         val detailedBolusInfo = DetailedBolusInfo()
         detailedBolusInfo.lastKnownBolusTime = treatmentsPlugin.lastBolusTime
-        detailedBolusInfo.eventType = CareportalEvent.CORRECTIONBOLUS
+        detailedBolusInfo.eventType = TherapyEvent.Type.CORRECTION_BOLUS.text
         detailedBolusInfo.insulin = request.smb
         detailedBolusInfo.isSMB = true
         detailedBolusInfo.source = Source.USER
@@ -653,20 +654,17 @@ open class LoopPlugin @Inject constructor(
     }
 
     override fun createOfflineEvent(durationInMinutes: Int) {
-        val data = JSONObject()
-        try {
-            data.put("eventType", CareportalEvent.OPENAPSOFFLINE)
-            data.put("duration", durationInMinutes)
-        } catch (e: JSONException) {
-            aapsLogger.error("Unhandled exception", e)
-        }
-        val event = CareportalEvent(injector)
-        event.date = DateUtil.now()
-        event.source = Source.USER
-        event.eventType = CareportalEvent.OPENAPSOFFLINE
-        event.json = data.toString()
-        databaseHelper.createOrUpdate(event)
-        nsUpload.uploadOpenAPSOffline(event)
+        disposable += repository.runTransactionForResult(InsertTherapyEventIfNewTransaction(
+            timestamp = dateUtil._now(),
+            type = TherapyEvent.Type.APS_OFFLINE,
+            duration = T.mins(durationInMinutes.toLong()).msecs(),
+            enteredBy = "openaps://" + "AndroidAPS",
+            glucoseUnit = TherapyEvent.GlucoseUnit.MGDL
+        )).subscribe({ result ->
+            result.inserted.forEach { nsUpload.uploadEvent(it) }
+        }, {
+            aapsLogger.error(LTag.BGSOURCE, "Error while saving therapy event", it)
+        })
     }
 
     companion object {

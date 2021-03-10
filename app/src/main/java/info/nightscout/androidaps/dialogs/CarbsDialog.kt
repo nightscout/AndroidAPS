@@ -13,9 +13,9 @@ import info.nightscout.androidaps.R
 import info.nightscout.androidaps.data.Profile
 import info.nightscout.androidaps.database.AppRepository
 import info.nightscout.androidaps.database.entities.TemporaryTarget
+import info.nightscout.androidaps.database.entities.TherapyEvent
 import info.nightscout.androidaps.database.transactions.InsertTemporaryTargetAndCancelCurrentTransaction
 import info.nightscout.androidaps.databinding.DialogCarbsBinding
-import info.nightscout.androidaps.db.CareportalEvent
 import info.nightscout.androidaps.interfaces.Constraint
 import info.nightscout.androidaps.interfaces.ProfileFunction
 import info.nightscout.androidaps.logging.LTag
@@ -271,11 +271,11 @@ class CarbsDialog : DialogFragmentWithDate() {
                     if (carbsAfterConstraints > 0) {
                         if (duration == 0) {
                             uel.log("CARBS", d1 = carbsAfterConstraints.toDouble(), i1 = timeOffset)
-                            carbsGenerator.createCarb(carbsAfterConstraints, time, CareportalEvent.CARBCORRECTION, notes)
+                            carbsGenerator.createCarb(carbsAfterConstraints, time, TherapyEvent.Type.CARBS_CORRECTION.text, notes)
                         } else {
                             uel.log("CARBS", d1 = carbsAfterConstraints.toDouble(), i1 = timeOffset, i2 = duration)
                             carbsGenerator.generateCarbs(carbsAfterConstraints, time, duration, notes)
-                            nsUpload.uploadEvent(CareportalEvent.NOTE, DateUtil.now() - 2000, resourceHelper.gs(R.string.generated_ecarbs_note, carbsAfterConstraints, duration, timeOffset))
+                            nsUpload.uploadEvent(TherapyEvent.Type.NOTE.text, DateUtil.now() - 2000, resourceHelper.gs(R.string.generated_ecarbs_note, carbsAfterConstraints, duration, timeOffset))
                         }
                     }
                     if (useAlarm && carbs > 0 && timeOffset > 0) {

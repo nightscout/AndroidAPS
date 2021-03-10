@@ -156,11 +156,11 @@ public class OmnipodDashPumpPlugin extends PumpPluginBase implements PumpInterfa
     }
 
     @NotNull @Override public ManufacturerType manufacturer() {
-        return getPumpDescription().pumpType.getManufacturer();
+        return getPumpDescription().getPumpType().getManufacturer();
     }
 
     @NotNull @Override public PumpType model() {
-        return getPumpDescription().pumpType;
+        return getPumpDescription().getPumpType();
     }
 
     @NotNull @Override public String serialNumber() {

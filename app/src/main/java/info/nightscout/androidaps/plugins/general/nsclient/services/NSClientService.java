@@ -347,7 +347,7 @@ public class NSClientService extends DaggerService {
             }
             rxBus.send(new EventNSClientNewLog("WATCHDOG", "connections in last " + WATCHDOG_INTERVAL_MINUTES + " mins: " + reconnections.size() + "/" + WATCHDOG_MAXCONNECTIONS));
             if (reconnections.size() >= WATCHDOG_MAXCONNECTIONS) {
-                Notification n = new Notification(Notification.NSMALFUNCTION, resourceHelper.gs(R.string.nsmalfunction), Notification.URGENT);
+                Notification n = new Notification(Notification.NS_MALFUNCTION, resourceHelper.gs(R.string.nsmalfunction), Notification.URGENT);
                 rxBus.send(new EventNewNotification(n));
                 rxBus.send(new EventNSClientNewLog("WATCHDOG", "pausing for " + WATCHDOG_RECONNECT_IN + " mins"));
                 nsClientPlugin.pause(true);
@@ -508,8 +508,8 @@ public class NSClientService extends DaggerService {
             try {
                 data = (JSONObject) args[0];
                 rxBus.send(new EventNSClientNewLog("CLEARALARM", "received"));
-                rxBus.send(new EventDismissNotification(Notification.NSALARM));
-                rxBus.send(new EventDismissNotification(Notification.NSURGENTALARM));
+                rxBus.send(new EventDismissNotification(Notification.NS_ALARM));
+                rxBus.send(new EventDismissNotification(Notification.NS_URGENT_ALARM));
                 aapsLogger.debug(LTag.NSCLIENT, data.toString());
             } catch (Exception e) {
                 aapsLogger.error("Unhandled exception", e);
@@ -710,8 +710,8 @@ public class NSClientService extends DaggerService {
                             }
                             // Was that sgv more less 5 mins ago ?
                             if ((System.currentTimeMillis() - latestDateInReceivedData) / (60 * 1000L) < 5L) {
-                                rxBus.send(new EventDismissNotification(Notification.NSALARM));
-                                rxBus.send(new EventDismissNotification(Notification.NSURGENTALARM));
+                                rxBus.send(new EventDismissNotification(Notification.NS_ALARM));
+                                rxBus.send(new EventDismissNotification(Notification.NS_URGENT_ALARM));
                             }
                             handleNewSgv(sgvs, isDelta);
                         }
@@ -807,7 +807,7 @@ public class NSClientService extends DaggerService {
             CloseableIterator<DbRequest> iterator;
             int maxcount = 30;
             try {
-                iterator = databaseHelper.getDbRequestInterator();
+                iterator = databaseHelper.getDbRequestIterator();
                 try {
                     while (iterator.hasNext() && maxcount > 0) {
                         DbRequest dbr = iterator.next();
