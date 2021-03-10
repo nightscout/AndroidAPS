@@ -4,7 +4,7 @@
     <!--   <string name="he_lang" translatable="false">Hebrew</string> -->
     <!--    <string name="ja_lang" translatable="false">Japanese</string> -->
     <string name="treatmentssafety_title">Segurança de Tratamentos</string>
-    <string name="treatmentssafety_maxbolus_title">Max bolus permitido [U]</string>
+    <string name="treatmentssafety_maxbolus_title">Max bólus permitido [U]</string>
     <string name="treatmentssafety_maxcarbs_title">Max hidratos permitidos [g]</string>
     <string name="nav_preferences_plugin">%1$s Preferências</string>
     <string name="nav_preferences">Preferências</string>
@@ -108,7 +108,7 @@
     <string name="overview_treatment_label">Tratamento</string>
     <string name="overview_calculator_label">Calculadora</string>
     <string name="constraintapllied">Restrição aplicada!</string>
-    <string name="sms_bolus">Bolus:</string>
+    <string name="sms_bolus">Bólus:</string>
     <string name="basal">Basal</string>
     <string name="sms_basal">Basal:</string>
     <string name="changeyourinput">Altere o seu input!</string>
@@ -487,8 +487,8 @@
     <string name="raise_notifications_as_android_notifications">Utilizar as notificações do sistema para alertas e notificações</string>
     <string name="gradually_increase_notification_volume">Aumentar gradualmente o volume de alertas e notificações</string>
     <string name="localalertsettings_title">Alertas locais</string>
-    <string name="enable_missed_bg_readings_alert">Alerta caso nenhuma Glicose seja recebida</string>
-    <string name="enable_pump_unreachable_alert">Alerta caso não seja possivel alcançar a bomba</string>
+    <string name="enable_missed_bg_readings_alert">Alertar caso nenhuma Glicose seja recebida</string>
+    <string name="enable_pump_unreachable_alert">Alertar caso não seja possível alcançar a bomba</string>
     <string name="pump_unreachable_threshold">Limite para bomba inacessível [min]</string>
     <string name="enable_carbs_req_alert">Alertar se forem necessários Hidratos</string>
     <string name="urgent_alarm">Alarme Urgente</string>
@@ -882,7 +882,7 @@
     <string name="filter">Filtro</string>
     <string name="copytolocalprofile_invalid">Não é possível criar perfil local. Perfil é inválido.</string>
     <string name="cta_dont_kill_my_app_info">Não encerre minha app?</string>
-    <string name="smscommunicator_report_pump_ureachable_summary">Enviar SMS se evento de bomba inacessível for accionado</string>
+    <string name="smscommunicator_report_pump_ureachable_summary">Enviar SMS se evento de bomba inacessível for acionado</string>
     <string name="smscommunicator_pump_ureachable">Reportar bomba inacessível</string>
     <string name="advisoralarm">Executar alarme quando for tempo de comer</string>
     <string name="alarminxmin">Executar alarme em %1$d min</string>
