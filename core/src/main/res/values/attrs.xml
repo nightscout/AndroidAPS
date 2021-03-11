@@ -107,6 +107,34 @@
 <attr name="cgmIconColor" format="reference|color" />
 <!---QuickWizzard Icon Color-->
 <attr name="quickwizzardIconColor" format="reference|color" />
+<!---Profile switch Icon Color-->
+<attr name="profileswitchIconColor" format="reference|color" />
+<!---Temp target Icon Color-->
+<attr name="temptargetIconColor" format="reference|color" />
+<!---Start temp basal Icon Color-->
+<attr name="settempbasalIconColor" format="reference|color" />
+<!---Cancel temp basal Icon Color-->
+<attr name="canceltempbasalIconColor" format="reference|color" />
+<!---Start extended bolus Icon Color-->
+<attr name="startextbolusIconColor" format="reference|color" />
+<!---Cancel extended bolus Icon Color-->
+<attr name="cancelextbolusIconColor" format="reference|color" />
+<!---BG check Icon Color-->
+<attr name="bgcheckIconColor" format="reference|color" />
+<!---Prime fill Icon Color-->
+<attr name="primefillIconColor" format="reference|color" />
+<!---CGM insert Icon Color-->
+<attr name="cgminsertIconColor" format="reference|color" />
+<!---Note Icon Color-->
+<attr name="noteIconColor" format="reference|color" />
+<!---Announcement Icon Color-->
+<attr name="announcementIconColor" format="reference|color" />
+<!---Question Icon Color-->
+<attr name="questionIconColor" format="reference|color" />
+<!---History Icon Color-->
+<attr name="historyIconColor" format="reference|color" />
+<!---Stats Icon Color-->
+<attr name="statsIconColor" format="reference|color" />
 <!---Exercise Icon Color-->
 <attr name="exerciseIconColor01" format="reference|color" />
 <attr name="exerciseIconColor02" format="reference|color" />
