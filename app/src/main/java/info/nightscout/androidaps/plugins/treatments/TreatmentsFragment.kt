@@ -119,6 +119,7 @@ class TreatmentsFragment : DaggerFragment() {
         binding.tempTargets.setBackgroundColor(resourceHelper.getAttributeColor(context, R.attr.defaultBackground))
         binding.profileSwitches.setBackgroundColor(resourceHelper.getAttributeColor(context, R.attr.defaultBackground))
         binding.careportal.setBackgroundColor(resourceHelper.getAttributeColor(context, R.attr.defaultBackground))
+        binding.userentry.setBackgroundColor(resourceHelper.getAttributeColor(context, R.attr.defaultBackground))
         selected.setBackgroundColor(resourceHelper.getAttributeColor(context, R.attr.tabBgColorSelected))
     }
 
