@@ -1,5 +1,6 @@
 package info.nightscout.androidaps.db;
 
+import android.content.Context;
 import android.graphics.Color;
 
 import androidx.annotation.NonNull;
@@ -308,7 +309,7 @@ public class ProfileSwitch implements Interval, DataPointWithLabelInterface {
 
     @Override
     public int getColor() {
-        return Color.CYAN;
+        return resourceHelper.getAttributeColor(null,R.attr.profilSwitch );
     }
 
     @NonNull

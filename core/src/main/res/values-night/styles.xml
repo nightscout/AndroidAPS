@@ -130,14 +130,24 @@
         <!---Loop Icon Color-->
         <item name="loopPaused" >@color/lightyellow</item>
         <!---Bolus Icon Color-->
-        <item name="bolusIcon" >@color/cyan_blue</item>
+        <item name="bolusIconColor" >@color/cyan_blue</item>
+        <!---Carbs Icon Color-->
+        <item name="carbsIconColor" >@color/carbsOrange</item>
+        <!---Wizard Icon Color-->
+        <item name="wizardIconColor" >@color/calcGreen</item>
+        <!---Calibration Icon Color-->
+        <item name="calibrationIconColor" >@color/calibrationRed</item>
+        <!---CGM Icon Color-->
+        <item name="cgmIconColor" >@color/darkRed</item>
+        <!---QuickWizzard Icon Color-->
+        <item name="quickwizzardIconColor" >@color/carbsOrange</item>
         <!---Exercise Icon Color-->
         <item name="exerciseIconColor01" >@color/cyan_blue</item>
         <item name="exerciseIconColor02" >@color/lightGreen</item>
         <!---Pump Battery Icon Color-->
-        <item name="pumpBatteryIcon" >@color/lightGreen</item>
+        <item name="pumpBatteryIconColor" >@color/lightGreen</item>
         <!---Misc -->
-        <item name="carbsColor" >@color/carbs</item>
+        <item name="carbsColor" >@color/carbsOrange</item>
         <item name="tempTargetConfirmation" >@color/tempTargetConfirmation</item>
         <item name="lightGreen" >@color/lightGreen</item>
         <item name="prediction" >@color/prediction</item>
@@ -169,6 +179,7 @@
         <item name="metadataOk" >@color/metadataOk</item>
         <item name="metadataTextWarning" >@color/metadataTextWarning</item>
         <item name="trendarrow" >@color/white</item>
+        <item name="profilSwitch" >@color/lightblue</item>
         <!---Round dialog corner only if sdk >= 28 -->
         <item name="android:dialogCornerRadius" ns2:targetApi="p">8dp</item>
         <!---windowBackground -->

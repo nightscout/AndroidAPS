@@ -96,12 +96,22 @@
 <!---Loop Icon Color-->
 <attr name="loopPaused" format="reference|color" />
 <!---Bolus Icon Color-->
-<attr name="bolusIcon" format="reference|color" />
+<attr name="bolusIconColor" format="reference|color" />
+<!---Carbs Icon Color-->
+<attr name="carbsIconColor" format="reference|color" />
+<!---Wizard Icon Color-->
+<attr name="wizardIconColor" format="reference|color" />
+<!---Calibration Icon Color-->
+<attr name="calibrationIconColor" format="reference|color" />
+<!---CGM Icon Color-->
+<attr name="cgmIconColor" format="reference|color" />
+<!---QuickWizzard Icon Color-->
+<attr name="quickwizzardIconColor" format="reference|color" />
 <!---Exercise Icon Color-->
 <attr name="exerciseIconColor01" format="reference|color" />
 <attr name="exerciseIconColor02" format="reference|color" />
 <!---Pump Battery Icon Color-->
-<attr name="pumpBatteryIcon" format="reference|color" />
+<attr name="pumpBatteryIconColor" format="reference|color" />
 <!---Misc -->
 <attr name="carbsColor" format="reference|color" />
 <attr name="smbColor" format="reference|color" />
@@ -136,6 +146,7 @@
 <attr name="metadataOk" format="reference|color" />
 <attr name="metadataTextWarning" format="reference|color" />
 <attr name="trendarrow" format="reference|color" />
+<attr name="profilSwitch" format="reference|color" />
 <!-- Window background-->
 <attr name="windowBackground" format="reference|color" />
 </resources>

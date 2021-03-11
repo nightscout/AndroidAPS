@@ -81,8 +81,10 @@
     <color name="colorSetExtendedButton">#FFDD7792</color>
 
     <!-- Red Colors -->
+    <color name="darkRed">#B92929</color>
     <color name="red">#FF0000</color>
     <color name="lightPastelRed">#66FC0000</color>
+    <color name="calibrationRed">#E83258</color>
     <color name="notificationNormal">#ff5e55</color>
     <color name="notificationLow">#ff827c</color>
     <color name="metadataTextError">#FF5555</color>
@@ -101,12 +103,13 @@
     <color name="notificationAnnouncement">#FF8C00</color>
     <color name="metadataTextWarning">#FF8C00</color>
     <color name="cob">#f0a30a</color>
-    <color name="carbs">#F2A370</color>
+    <color name="carbsOrange">#FEAD01</color>
     <color name="midorange">#f0a30a</color>
 
     <!-- Green Colors -->
     <color name="lightPastelGreen">#7200FF00</color>
     <color name="lightGreen">#00FF00</color>
+    <color name="calcGreen">#67e86a</color>
     <color name="swampGreen">#c9bd60</color>
     <color name="activity">#C4E265</color>
     <color name="toastOk">#77dd77</color>
