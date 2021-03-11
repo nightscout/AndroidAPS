@@ -126,7 +126,7 @@
     <string name="wrongcarbs_label">Erros de Entrada de Hidratos</string>
     <string name="wrongcarbs_whattodo">O que deve fazer se tiver feito uma entrada incorrecta de hidratos?</string>
     <string name="wrongcarbs_treatmentstab">Elimine a entrada incorreta em Tratamentos e insira o novo valor correto dos hidratos.</string>
-    <string name="wrongcarbs_addinsulin">Bólus com insulina usando o conjunto de infusão no meu purgar.</string>
+    <string name="wrongcarbs_addinsulin">Bólus com insulina usando o conjunto de infusão no menu purgar.</string>
     <string name="wrongcarbs_donothing">Fazer nada – o AndroidAPS fará os ajustes adequados.</string>
     <string name="wrongcarbs_bolus">Bólus com insulina usando o botão Insulina (bólus) na Visão Geral.</string>
     <string name="wronginsulin_label">Erros de entrada/administração de insulina</string>
