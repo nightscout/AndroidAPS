@@ -575,11 +575,11 @@
     <string name="overview_show_cob">Hidratos a Bordo (COB)</string>
     <string name="overview_show_iob">Insulina a bordo</string>
     <string name="overview_show_basals">Basais</string>
-    <string name="no_action_selected">Nenhuma acção seleccionada, nada irá acontecer</string>
+    <string name="no_action_selected">Nenhuma ação seleccionada, nada irá acontecer</string>
     <string name="start_hypo_tt">Começar TT Hipo</string>
     <string name="closed_loop_disabled_on_dev_branch">A correr a versão dev. O Loop fechado está desabilitado.</string>
     <string name="engineering_mode_enabled">Modo engenheiro activado</string>
-    <string name="profileswitch_ismissing">TrocaPerfil em falta. Por favor faça uma troca de perfil ou pressione \"Activar Perfil\" em PerfilLocal.</string>
+    <string name="profileswitch_ismissing">Troca de Perfil em falta. Por favor faça uma troca de perfil ou pressione \"Activar Perfil\" em Perfil Local.</string>
     <string name="pumpisnottempbasalcapable">A bomba não é capaz de basais temporárias</string>
     <string name="closedmodedisabledinpreferences">Loop fecchado disabilitado nas preferências</string>
     <string name="autosensdisabledinpreferences">Autosens desabilitado nas preferências</string>
@@ -648,10 +648,10 @@
     <string name="setupwizard_sensitivity_url">https://github.com/MilosKozak/AndroidAPS/wiki/Sensitivity-detection-and-COB</string>
     <string name="nsclientinfotext">ClienteNS gere a ligação ao Nightscout. Pode saltar esta parte mas não será possível passar os objectivos até que o configure.</string>
     <string name="diawarning">Lembre-se: novos perfis de insulina requerem diâmetro de pelo menos 5h. DIA 5–6h no novo perfil é igual ao diâmetro 3h nos antigos perfis de insulina.</string>
-    <string name="setupwizard_profile_description">Por favor seleccione a fonte do perfil. Se o paciente é uma criança deverá utilizar perfil NS. Se ninguém o está a seguir no Nightscout provavelmente preferirá um perfil Local. Lembre-se que apenas está a escolher a fonte de perfil. Para o utilizar terá que o activar executando \"Troca Perfil\"</string>
+    <string name="setupwizard_profile_description">Por favor selecione a fonte do perfil. Se o paciente é uma criança deverá utilizar perfil NS. Se ninguém o está a seguir no Nightscout provavelmente preferirá um perfil Local. Lembre-se que apenas está a escolher a fonte de perfil. Para o utilizar terá que o ativar executando \"Troca Perfil\"</string>
     <string name="setupwizard_aps_description">Seleccione um dos algoritmos disponíveis. Eles são classificados do mais antigo para o mais recente. Algoritmo mais recente é geralmente mais forte e mais agressivo. Assim, se é novo looper, poderá provavelmente começar com AMA e não com a versão mais recente. Não se esqueça de ler a documentação de OpenAPS e configurá-lo antes de utilizar.</string>
     <string name="setupwizard_pump_waiting_for_riley_link_connection">Por favor, configure o seu RileyLink abaixo. Depois de seleccionar um RileyLink, será possível continuar a configuração quando o estado do RileyLink estiver \"Conectado\". Isso pode levar um minuto.\n</string>
-    <string name="setupwizard_pump_pump_not_initialized"><b>Nota:</b> Pode continuar confguração uma vez que a bomba foi configurada.\n</string>
+    <string name="setupwizard_pump_pump_not_initialized"><b>Nota:</b> Pode continuar a configuração assim que a bomba for configurada.\n</string>
     <string name="startobjective">Iniciar primeiro objectivo</string>
     <string name="permission">Permissão</string>
     <string name="askforpermission">Pedir permissão</string>
@@ -778,7 +778,7 @@
     <string name="id">ID:</string>
     <string name="submit">Enviar</string>
     <string name="mostcommonprofile">Perfil mais comum:</string>
-    <string name="survey_comment">Nota: Apenas os dados visíveis neste ecrã serão enviados anonimamente. O ID é atribuído a esta instalação do AndroidAPS. Pode enviar dados novamente se o perfil principal for alterado, mas deixá-lo rodar pelo menos uma semana para tornar o resultado visível no intervalo de tempo. Sua ajuda é apreciada.</string>
+    <string name="survey_comment">Nota: Apenas os dados visíveis neste ecrã serão enviados anonimamente. O ID é atribuído a esta instalação da AndroidAPS. Pode enviar dados novamente se o perfil principal for alterado, mas deixá-lo rodar pelo menos uma semana para tornar o resultado visível no intervalo de tempo. A sua ajuda é bem vinda.</string>
     <string name="invalidage">Entrada de idade inválida</string>
     <string name="invalidweight">Entrada de peso inválida</string>
     <string name="invalidpct">Entrada % inválida</string>
@@ -887,7 +887,7 @@
     <string name="advisoralarm">Executar alarme quando for tempo de comer</string>
     <string name="alarminxmin">Executar alarme em %1$d min</string>
     <string name="bolusadvisor">Guia de Bólus</string>
-    <string name="bolusadvisormessage">Tem glicemia alta. Em vez de comer agora é recomendado esperar por uma melhor glicemia. Quer fazer um bólus de correção agora e lembrá-lo quando fôr hora de comer? Neste caso nenhum hidrato será registado e deve utilizar o assistente novamente quando for lembrado.</string>
+    <string name="bolusadvisormessage">Tem glicemia alta. Em vez de comer agora é recomendado esperar por uma melhor glicemia. Quer fazer um bólus de correção agora e lembrá-lo quando for hora de comer? Neste caso nenhum hidrato será registado e deve utilizar o assistente novamente quando for lembrado.</string>
     <string name="enablebolusadvisor">Activar Guia de Bólus</string>
     <string name="enablebolusadvisor_summary">Use lembrete para começar a comer mais tarde em vez di resultado do assistente durante a glicemia alta (\"pré-bolus\")</string>
     <string name="time_to_eat">Hora de comer!\nExecutar assistente de Bólus e fazer cálculo novamente.</string>
