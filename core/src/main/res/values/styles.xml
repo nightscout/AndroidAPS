@@ -126,6 +126,8 @@
         <item name="rowBackgroundEven" >@color/darkgray</item>
         <item name="rowBackgroundOdd" >@color/gray</item>
         <item name="rowTextColor" >@color/white</item>
+        <!---Loop Icon Color-->
+        <item name="loopPaused" >@color/ribbonWarning</item>
         <!---Misc -->
         <item name="carbsColor" >@color/carbs</item>
         <item name="tempTargetConfirmation" >@color/tempTargetConfirmation</item>

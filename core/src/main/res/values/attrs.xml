@@ -93,6 +93,8 @@
 <attr name="rowBackgroundEven" format="reference|color" />
 <attr name="rowBackgroundOdd" format="reference|color" />
 <attr name="rowTextColor" format="reference|color" />
+<!---Loop Icon Color-->
+<attr name="loopPaused" format="reference|color" />
 <!---Misc -->
 <attr name="carbsColor" format="reference|color" />
 <attr name="smbColor" format="reference|color" />
