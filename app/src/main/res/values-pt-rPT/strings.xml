@@ -147,7 +147,7 @@
     <string name="openapsma_maxbasal_title">Max U/h em que uma Temp Basal pode ser definida</string>
     <string name="openapsma_maxbasal_summary">Este valor é chamado max basal no contexto do OpenAPS</string>
     <string name="openapsma_maxiob_title">Basal Máxima IOB que OpenAPS pode administrar [U]</string>
-    <string name="openapsma_maxiob_summary">Este valor é denominado Max IOB em contexto OpenAPS \nEste é o valor máximo de insulina em [U] que APS pode administrar de uma vez.</string>
+    <string name="openapsma_maxiob_summary">Este valor é denominado Max IOB em contexto OpenAPS \nEste é o valor máximo de insulina em [U] que a APS pode administrar de uma vez.</string>
     <string name="password_preferences_encrypt_prompt">Será perguntado pela senha mestra, que será usada para encriptar preferências exportadas.</string>
     <string name="password_preferences_decrypt_prompt">Será perguntado pela senha mestra, que será necessária para desencriptar preferências importadas.</string>
     <string name="preferences_export_canceled">Exportação cancelada! Preferências NÃO foram exportadas!</string>
@@ -413,7 +413,7 @@
     <string name="overview_extendedbolus_cancel_button">Cancelar Bólus Prolongado</string>
     <string name="doprofileswitch">Fazer Mudança De Perfil</string>
     <string name="careportal_sensor_label">Sensor</string>
-    <string name="careportal_insulin_label">Insulina</string>
+    <string name="careportal_insulin_label">Bólus</string>
     <string name="careportal_pb_label">Bateria da Bomba</string>
     <string name="careportal_age_label">idade:</string>
     <string name="careportal_level_label">nível:</string>
@@ -533,7 +533,7 @@
     <string name="enablesmbwithtemptarget_summary">SMB activo quando há valor alvo temporário activo (comer brevemente, exercício)</string>
     <string name="enablesmbwithhightemptarget">SMB activo com alvos temporários elevados</string>
     <string name="enablesmbwithhightemptarget_summary">Activar SMB quando há alvo temporário elevado activo (exercício, acima de 100 mg/dl ou 5,5 mmol/l)</string>
-    <string name="overview_insulin_label">Insulina</string>
+    <string name="overview_insulin_label">Bólus</string>
     <string name="overview_buttons_selection">Botões</string>
     <string name="show_calibration_button_summary">Enviar calibrações para o xDrip+ ou abrir sistema de calibração do G5</string>
     <string name="show_cgm_button_summary">Abre xDrip+, botão retorcer volta ao AAPS</string>
@@ -597,7 +597,7 @@
     <string name="hardlimit">limite rígido</string>
     <string name="readstatusfailed">Erro na leitura de estado</string>
     <string name="record_pump_site_change">Registar mudança local bomba</string>
-    <string name="record_insulin_cartridge_change">Registar mudança cartucho</string>
+    <string name="record_insulin_cartridge_change">Registar mudança de reservatório</string>
     <string name="smbalwaysdisabled">SMB sempre e depois dos hidratos desactivado por fonte da Glicose activa não suportar filtro avançado</string>
     <string name="smbnotallowedinopenloopmode">SMB não permitido no modo open loop</string>
     <string name="food_short">Alimentos</string>
@@ -611,9 +611,9 @@
     <string name="previous_button">Anterior</string>
     <string name="nav_setupwizard">Assistente de Configuração</string>
     <string name="setupwizard_finish">TERMINAR</string>
-    <string name="firstinsulinincrement">Primeiro incremento insulina</string>
-    <string name="secondinsulinincrement">Segundo incremento insulina</string>
-    <string name="thirdinsulinincrement">Terceiro incremento insulina</string>
+    <string name="firstinsulinincrement">Primeiro incremento de insulina</string>
+    <string name="secondinsulinincrement">Segundo incremento de insulina</string>
+    <string name="thirdinsulinincrement">Terceiro incremento de insulina</string>
     <string name="firstcarbsincrement">Primeiro incremento hidratos</string>
     <string name="secondcarbsincrement">Segundo incremento hidratos</string>
     <string name="thirdcarbsincrement">Terceiro incremento hidratos</string>
