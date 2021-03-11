@@ -1,5 +1,7 @@
 package info.nightscout.androidaps.dialogs
 
+import android.graphics.PorterDuff
+import android.graphics.drawable.Drawable
 import android.os.Bundle
 import android.text.Spanned
 import android.view.LayoutInflater
@@ -7,6 +9,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.Window
 import android.view.WindowManager
+import androidx.core.content.ContextCompat
 import dagger.android.HasAndroidInjector
 import dagger.android.support.DaggerDialogFragment
 import info.nightscout.androidaps.Constants
@@ -68,6 +71,13 @@ class ProfileViewerDialog : DaggerDialogFragment() {
 
         dialog?.window?.requestFeature(Window.FEATURE_NO_TITLE)
         dialog?.window?.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN)
+
+        val drawable: Drawable? = context?.let { ContextCompat.getDrawable(it, R.drawable.dialog) }
+        if (drawable != null) {
+            drawable.setColorFilter( resourceHelper.getAttributeColor(context, R.attr.windowBackground ), PorterDuff.Mode.SRC_IN)
+        }
+        dialog?.window?.setBackgroundDrawable(drawable)
+
         isCancelable = true
         dialog?.setCanceledOnTouchOutside(false)
 
