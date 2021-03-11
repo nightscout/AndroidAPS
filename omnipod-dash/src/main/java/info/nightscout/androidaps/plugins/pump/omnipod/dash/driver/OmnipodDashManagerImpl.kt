@@ -53,9 +53,9 @@ class OmnipodDashManagerImpl @Inject constructor(
         } // TODO are these reasonable values?
 
 
-    private val observeScanAndActivateNewPod: Observable<PodEvent>
+    private val observePairNewPod: Observable<PodEvent>
         get() = Observable.defer {
-            bleManager.activateNewPod()
+            bleManager.pairNewPod()
         } // TODO are these reasonable values?
 
     private fun observeSendProgramBolusCommand(
@@ -177,7 +177,7 @@ class OmnipodDashManagerImpl @Inject constructor(
     override fun activatePodPart1(lowReservoirAlertTrigger: AlertTrigger.ReservoirVolumeTrigger?): Observable<PodEvent> {
         return Observable.concat(
             observePodReadyForActivationPart1,
-            observeScanAndActivateNewPod,
+            observePairNewPod,
             observeActivationPart1Commands(lowReservoirAlertTrigger)
         ).doOnComplete(ActivationProgressUpdater(ActivationProgress.PHASE_1_COMPLETED))
             // TODO these would be common for any observable returned in a public function in this class
@@ -415,6 +415,7 @@ class OmnipodDashManagerImpl @Inject constructor(
                 }
 
                 is PodEvent.BluetoothConnected -> {
+                    podStateManager.bluetoothAddress = event.bluetoothAddress
                 }
 
                 is PodEvent.Connected -> {

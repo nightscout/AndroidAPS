@@ -8,9 +8,10 @@ sealed class PodEvent {
 
     /* BT connection events */
     class AlreadyConnected(val bluetoothAddress: String) : PodEvent()
+    object AlreadyPaired : PodEvent()
     object Scanning : PodEvent()
     object BluetoothConnecting : PodEvent()
-    object BluetoothConnected : PodEvent()
+    class BluetoothConnected(val bluetoothAddress: String) : PodEvent()
     object Pairing : PodEvent()
     class Paired(val uniqueId: Id) : PodEvent()
     object EstablishingSession : PodEvent()
