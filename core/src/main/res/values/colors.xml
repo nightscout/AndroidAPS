@@ -107,17 +107,17 @@
     <color name="midorange">#f0a30a</color>
 
     <!-- Green Colors -->
+    <color name="emerald">#25912e</color>
+    <color name="notificationInfo">#009705</color>
+    <color name="tempTargetConfirmation">#77dd77</color>
     <color name="lightPastelGreen">#7200FF00</color>
     <color name="lightGreen">#00FF00</color>
     <color name="calcGreen">#67e86a</color>
     <color name="swampGreen">#c9bd60</color>
     <color name="activity">#C4E265</color>
     <color name="toastOk">#77dd77</color>
-    <color name="tempTargetConfirmation">#77dd77</color>
     <color name="metadataOk">#77dd77</color>
     <color name="info">#77dd77</color>
-    <color name="emerald">#25912e</color>
-    <color name="notificationInfo">#009705</color>
     <color name="colorCalculatorButton">#67e86a</color>
 
     <!-- Blue Colors -->

@@ -141,6 +141,9 @@
         <item name="cgmIconColor" >@color/darkRed</item>
         <!---QuickWizzard Icon Color-->
         <item name="quickwizzardIconColor" >@color/carbsOrange</item>
+        <!---Temp target Icon Color-->
+        <item name="temptargetIconColor" >@color/lightGreen</item>
+        <item name="temptargetIconColor1" >@color/tempTargetConfirmation</item>
         <!---Exercise Icon Color-->
         <item name="exerciseIconColor01" >@color/cyan_blue</item>
         <item name="exerciseIconColor02" >@color/lightGreen</item>
