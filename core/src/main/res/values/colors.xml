@@ -79,6 +79,7 @@
     <color name="prediction">#ff00ff</color>
     <color name="devslopeneg">#FFFF00FF</color>
     <color name="colorSetExtendedButton">#FFDD7792</color>
+    <color name="pastellPurple">#CF8BFE</color>
 
     <!-- Red Colors -->
     <color name="darkRed">#B92929</color>
