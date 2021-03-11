@@ -238,7 +238,7 @@
         <item name="colorSecondary">@color/black_alpha_20</item>
     </style>
 
-    <style name="ButtonSmallFontStyle">
+    <style name="ButtonSmallFontStyle" parent="Widget.MaterialComponents.Button.UnelevatedButton">
         <item name="android:textSize">10sp</item>
     </style>
 
