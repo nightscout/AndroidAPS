@@ -297,7 +297,7 @@
     <string name="openapsama_autosens_adjusttargets">Autosens ajusta os alvos, também</string>
     <string name="openapsama_autosens_adjusttargets_summary">Valor padrão: true\nÉ usado para permitir que autosens possa ajustar os valores alvo de glucose no sangue (BG), além de FSI e basais.</string>
     <string name="openapsama_bolussnooze_dia_divisor_summary">Valor padrão: 2\nBólus Snooze (pausa após bólus) é executado depois de realizar um bólus por refeição Desta maneira o algoritmo não irá contrariar com temporárias baixas logo depois da refeição. O valor padrão é 2; Então uma duração de ação da insulina (DIA) de 5h significa que o Bólus Snooze irá ser gradualmente reduzido ao longo de 2,5 horas = 5/2 = DIA/Valor padrão.</string>
-    <string name="openapsama_min_5m_carbimpact_summary">Valor padrão: 3.0 para detecção avançada de refeições (AMA) ou 8.0 para super micro bolus (SMB). Esta é a configuração padrão para o calculo de quanto varia a cada 5 min a glucose no sangue (BG)  devido à absorção de hidratos de carbono. O padrão é  3mg/ dl / 5min. Isso afeta a rapidez com que decaem as calorias no corpo (COB), e quantos hidratos de carbono terão de ser considerados no cálculo da previsão de BG, quando é que a BG está baixando mais do que espectável ou não subindo como espectável.</string>
+    <string name="openapsama_min_5m_carbimpact_summary">Valor padrão: 3.0 para deteção avançada de refeições (AMA) ou 8.0 para super micro bólus (SMB). Esta é a configuração padrão para o cálculo de quanto varia a cada 5 min a glicose no sangue (GLIC)  devido à absorção de hidratos de carbono. O padrão é  3mg/ dl / 5min. Isso afeta a rapidez com que decaem as calorias no corpo (HCA), e quantos hidratos de carbono terão de ser considerados no cálculo da previsão de GLIC, quando é que a BG está baixando mais do que espectável ou não subindo como espectável.</string>
     <string name="openapsama_link_to_preferncejson_doc_txt">Atenção!\n Normalmente não é necessário modificar os valores abaixo. Por favor PRESSIONE AQUI e LEIA o texto para garantir que ENTENDE as consequenciais antes de alterar algum destes valores.</string>
     <string name="smscommunicator_invalidphonennumber">SMS número de telefone inválido</string>
     <string name="overview_calibration">Calibração</string>
@@ -368,7 +368,7 @@
     <string name="smscommunicator_loopsuspended">Loop suspenso</string>
     <string name="smscommunicator_loopresumed">Loop retomado</string>
     <string name="treatments_wizard_bgtrend_label">Tendência 15 min</string>
-    <string name="treatments_wizard_cob_label">COB</string>
+    <string name="treatments_wizard_cob_label">HCA</string>
     <string name="superbolus">Superbólus</string>
     <string name="ns_logappstartedevent">Registar inicio da app no NS</string>
     <string name="restartingapp">A sair da aplicação para aplicar as definições.</string>
@@ -514,7 +514,7 @@
     <string name="overview_editquickwizard_usesuperbolus">Cálculo de superbolus</string>
     <string name="positiveonly">Positivo apenas</string>
     <string name="negativeonly">Negativo apenas</string>
-    <string name="overview_editquickwizard_usecob">Cálculo COB</string>
+    <string name="overview_editquickwizard_usecob">Cálculo HCA</string>
     <string name="overview_editquickwizard_usetemptarget">Cálculo alvo temporário</string>
     <string name="loopenabled">Loop activado</string>
     <string name="apsselected">APS seleccionado</string>
@@ -527,8 +527,8 @@
     <string name="enablesmbalways_summary">SMB sempre activo independentemente dos bolus. Possível apenas quando o medidor tive um bom filtro de dados como o G5</string>
     <string name="enablesmbaftercarbs">Activar SMB após hidratos</string>
     <string name="enablesmbaftercarbs_summary">SMB activo por 6h após carbs, mesmo com 0 COB. Possível apenas quando o medidor tive um bom filtro de dados como o G5</string>
-    <string name="enablesmbwithcob">Activar SMB com COB</string>
-    <string name="enablesmbwithcob_summary">Activar SMB quando tem COB activo.</string>
+    <string name="enablesmbwithcob">Ativar SMB com HCA</string>
+    <string name="enablesmbwithcob_summary">Ativar SMB quando tem HCA positivos.</string>
     <string name="enablesmbwithtemptarget">SMB activo com valores alvo temporários</string>
     <string name="enablesmbwithtemptarget_summary">SMB activo quando há valor alvo temporário activo (comer brevemente, exercício)</string>
     <string name="enablesmbwithhightemptarget">SMB activo com alvos temporários elevados</string>
@@ -739,7 +739,7 @@
     <string name="dexcom_app_patched">App Dexcom (com patch)</string>
     <string name="dexcom_short">DXCM</string>
     <string name="description_source_dexcom">Receber valores da Glicose da app Dexcom com patch.</string>
-    <string name="cobvsiob">COB vs IOB</string>
+    <string name="cobvsiob">HCA vs IA</string>
     <string name="bolusconstraintappliedwarn">Restrição de bólus aplicada: %1$.2f U a %2$.2f U</string>
     <string name="slowabsorptiondetected"><![CDATA[<font color=\'%1$s\'>!!!!! Absorção lenta de hidratos detectada: %2$d%% do tempo. Verifique o seu cálculo. COB pode estar sobreestimado, assim mais insulina pode ser dada !!!</font>]]></string>
     <string name="partialboluswizard">Administrar esta parte do resultado do assistente de bólus [%]</string>
