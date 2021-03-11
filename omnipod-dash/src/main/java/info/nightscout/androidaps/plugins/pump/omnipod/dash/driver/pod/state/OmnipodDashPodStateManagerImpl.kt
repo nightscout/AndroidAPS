@@ -250,12 +250,11 @@ class OmnipodDashPodStateManagerImpl @Inject constructor(
         rxBus.send(EventOmnipodDashPumpValuesChanged())
     }
 
-    override fun updateFromPairing(uniqueId: Id, pairResult: PairResult){
+    override fun updateFromPairing(uniqueId: Id, pairResult: PairResult) {
         podState.eapAkaSequenceNumber = 1
         podState.ltk = pairResult.ltk
         podState.uniqueId = uniqueId.toLong()
     }
-
 
     override fun reset() {
         podState = PodState()

@@ -8,7 +8,6 @@ import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.exceptio
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.io.BleIO
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.io.CharacteristicType
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.io.PayloadJoiner
-import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.command.base.CommandType
 import info.nightscout.androidaps.utils.extensions.toHex
 
 class MessageIO(private val aapsLogger: AAPSLogger, private val bleIO: BleIO) {
@@ -22,19 +21,12 @@ class MessageIO(private val aapsLogger: AAPSLogger, private val bleIO: BleIO) {
             return
         }
         throw UnexpectedCommandException(actual)
-
     }
 
-    fun sendMessage(msg: MessagePacket):MessagePacket? {
+    fun sendMessage(msg: MessagePacket) {
         bleIO.flushIncomingQueues()
         bleIO.sendAndConfirmPacket(CharacteristicType.CMD, BleCommandRTS().data)
         val expectCTS = bleIO.receivePacket(CharacteristicType.CMD)
-        if (expectCTS.isEmpty()) {
-            throw UnexpectedCommandException(BleCommand(expectCTS))
-        }
-        //if (expectCTS[0] == BleCommandType.RTS.value) {
-            //the pod is trying to send something, after we sent RTS, let's read it
-        //}
         expectCommandType(BleCommand(expectCTS), BleCommandCTS())
         val payload = msg.asByteArray()
         aapsLogger.debug(LTag.PUMPBTCOMM, "Sending message: ${payload.toHex()}")
@@ -48,11 +40,10 @@ class MessageIO(private val aapsLogger: AAPSLogger, private val bleIO: BleIO) {
         val expectSuccess = bleIO.receivePacket(CharacteristicType.CMD)
         expectCommandType(BleCommand(expectSuccess), BleCommandSuccess())
         // TODO: handle NACKS/FAILS/etc
-        return null
     }
 
     // TODO: use higher timeout when receiving the first packet in a message
-    fun receiveMessage( firstCmd: ByteArray? = null): MessagePacket {
+    fun receiveMessage(firstCmd: ByteArray? = null): MessagePacket {
         var expectRTS = firstCmd
         if (expectRTS == null) {
             expectRTS = bleIO.receivePacket(CharacteristicType.CMD)
