@@ -22,7 +22,7 @@
     <string name="description_insulin_ultra_rapid">Predefinição de Insulina Fiasp</string>
     <string name="description_insulin_lyumjev">Predefinição para Insulina Lyumjev</string>
     <string name="description_insulin_free_peak">Permite definir o pico de atividade da insulina e deve ser usado somente por usuários avançados</string>
-    <string name="description_loop">Activar ou desactivar a aplicação que desencadeia o loop.</string>
+    <string name="description_loop">Ativar ou desativar a aplicação que desencadeia o loop.</string>
     <string name="description_ns_client">Sincroniza os seus dados com o Nightscout</string>
     <string name="description_ama">Estado do algoritmo em 2017</string>
     <string name="description_smb">Algoritmo mais recente para usuários avançados</string>
@@ -49,7 +49,7 @@
     <string name="treatments_iob_label_string">IA:</string>
     <string name="sms_iob">IA:</string>
     <string name="treatments_iobtotal_label_string">IA Total:</string>
-    <string name="treatments_iobactivitytotal_label_string">Actividade Total da IA:</string>
+    <string name="treatments_iobactivitytotal_label_string">Atividade Total da IA:</string>
     <string name="tempbasals_realduration_label_string">Dur:</string>
     <string name="tempbasals_netratio_label_string">Rácio:</string>
     <string name="tempbasals_netinsulin_label_string">Ins:</string>
@@ -133,7 +133,7 @@
     <string name="careportal_newnstreatment_duration_label">Duração</string>
     <string name="careportal_newnstreatment_profile_label">Perfil</string>
     <string name="careportal_newnstreatment_glucosetype">Tipo de Glicose</string>
-    <string name="overview_tempbasal_button">BasalTemp</string>
+    <string name="overview_tempbasal_button">Basal Temporária</string>
     <string name="overview_extendedbolus_button">Bólus Prolongado</string>
     <string name="configbuilder_nightscoutversion_label">Versão Nightscout:</string>
     <string name="missing_carbs">A faltar %1$d g</string>
