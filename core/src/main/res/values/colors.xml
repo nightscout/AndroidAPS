@@ -2,7 +2,7 @@
 <resources>
     <color name="ratio">#000000</color>
 
-    <color name="defaulttextcolor">#FFFFFF</color>
+    <color name="defaulttextcolor">#000000</color>
 
     <color name="activity_title_background">#EEEEEE</color>
 
