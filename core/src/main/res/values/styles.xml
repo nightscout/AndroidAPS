@@ -48,7 +48,7 @@
         <item name="popupMenuStyle">@style/Widget.MaterialComponents.PopupMenu</item>
         <item name="actionOverflowMenuStyle">@style/Widget.MaterialComponents.PopupMenu.Overflow</item>
         <!-- Color of bg value -->
-        <item name="bgInRange">@color/lightgreen</item>
+        <item name="bgInRange">@color/lightGreen</item>
         <item name="bgLow">@color/red</item>
         <item name="bgHigh">@color/midorange</item>
         <!-- Color of dialog -->
@@ -128,6 +128,13 @@
         <item name="rowTextColor" >@color/white</item>
         <!---Loop Icon Color-->
         <item name="loopPaused" >@color/ribbonWarning</item>
+        <!---Bolus Icon Color-->
+        <item name="bolusIcon" >@color/cyan_blue</item>
+        <!---Exercise Icon Color-->
+        <item name="exerciseIconColor01" >@color/cyan_blue</item>
+        <item name="exerciseIconColor02" >@color/lightGreen</item>
+        <!---Pump Battery Icon Color-->
+        <item name="pumpBatteryIcon" >@color/lightGreen</item>
         <!---Misc -->
         <item name="carbsColor" >@color/carbs</item>
         <item name="tempTargetConfirmation" >@color/tempTargetConfirmation</item>

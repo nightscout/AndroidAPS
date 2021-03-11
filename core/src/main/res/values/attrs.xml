@@ -95,6 +95,13 @@
 <attr name="rowTextColor" format="reference|color" />
 <!---Loop Icon Color-->
 <attr name="loopPaused" format="reference|color" />
+<!---Bolus Icon Color-->
+<attr name="bolusIcon" format="reference|color" />
+<!---Exercise Icon Color-->
+<attr name="exerciseIconColor01" format="reference|color" />
+<attr name="exerciseIconColor02" format="reference|color" />
+<!---Pump Battery Icon Color-->
+<attr name="pumpBatteryIcon" format="reference|color" />
 <!---Misc -->
 <attr name="carbsColor" format="reference|color" />
 <attr name="smbColor" format="reference|color" />

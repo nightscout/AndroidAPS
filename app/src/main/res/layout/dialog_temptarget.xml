@@ -191,7 +191,7 @@
                 android:paddingEnd="5dp"
                 android:text="@string/activity"
                 android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-                android:textColor="@color/exercise"
+                android:textColor="@color/cyan_blue"
                 android:textSize="11sp" />
 
             <info.nightscout.androidaps.utils.ui.SingleClickButton

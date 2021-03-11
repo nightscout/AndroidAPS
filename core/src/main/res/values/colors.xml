@@ -105,7 +105,8 @@
     <color name="midorange">#f0a30a</color>
 
     <!-- Green Colors -->
-    <color name="lightGreen">#7200FF00</color>
+    <color name="lightPastelGreen">#7200FF00</color>
+    <color name="lightGreen">#00FF00</color>
     <color name="swampGreen">#c9bd60</color>
     <color name="activity">#C4E265</color>
     <color name="toastOk">#77dd77</color>
@@ -115,7 +116,6 @@
     <color name="emerald">#25912e</color>
     <color name="notificationInfo">#009705</color>
     <color name="colorCalculatorButton">#67e86a</color>
-    <color name="lightgreen">#00FF00</color>
 
     <!-- Blue Colors -->
     <color name="blue_default">#007AFF</color>
@@ -123,7 +123,7 @@
     <color name="lightblue">#1ba1e2</color>
     <color name="bgi">#00EEEE</color>
     <color name="cyan">#00d2d2</color>
-    <color name="exercise">#67DFE8</color>
+    <color name="cyan_blue">#67DFE8</color>
     <color name="bolus">#1ea3e5</color>
     <color name="iobPredAS">#1ea3e5</color>
     <color name="basebasal">#3D15FF</color>
