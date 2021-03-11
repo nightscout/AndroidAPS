@@ -145,6 +145,8 @@
         <item name="temptargetIconColor1" >@color/tempTargetConfirmation</item>
         <!---Start temp basal Icon Color-->
         <item name="settempbasalIconColor" >@color/pastellPurple</item>
+        <!---Cancel temp basal Icon Color-->
+        <item name="canceltempbasalIconColor" >@color/pastellPurple</item>
         <!---Exercise Icon Color-->
         <item name="exerciseIconColor01" >@color/cyan_blue</item>
         <item name="exerciseIconColor02" >@color/lightGreen</item>
