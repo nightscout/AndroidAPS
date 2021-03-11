@@ -14,8 +14,8 @@ import java.security.SecureRandom
 class SessionEstablisher(
     private val aapsLogger: AAPSLogger,
     private val msgIO: MessageIO,
-    private val ltk: ByteArray,
-    private val eapSqn: ByteArray,
+    ltk: ByteArray,
+    eapSqn: ByteArray,
     private val myId: Id,
     private val podId: Id,
     private var msgSeq: Byte
