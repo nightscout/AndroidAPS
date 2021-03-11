@@ -24,7 +24,7 @@
     <string name="unsupportedfirmware">Firmware bomba não suportado</string>
     <string name="pumperror">Erro Bomba</string>
     <string name="lowbattery">Bateria fraca</string>
-    <string name="basalcompare">A administrar menos que a taxa de base predefinida</string>
+    <string name="basalcompare">A administrar menos insulina basal que a predefinida</string>
     <string name="pumpshutdown">Encerrar Bomba</string>
     <string name="batterydischarged">Bateria da Bomba Descarregada</string>
     <string name="occlusion">Oclusão</string>
