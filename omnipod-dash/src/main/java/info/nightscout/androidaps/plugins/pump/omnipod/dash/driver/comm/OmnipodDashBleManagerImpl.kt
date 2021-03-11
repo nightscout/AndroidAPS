@@ -49,7 +49,7 @@ class OmnipodDashBleManagerImpl @Inject constructor(
     private var status: ConnectionStatus = ConnectionStatus.IDLE
     private val myId = Id.fromInt(CONTROLLER_ID)
     private val uniqueId = podState.uniqueId
-    private val podId = uniqueId?.let { Id.fromLong(uniqueId) }
+    private val podId = uniqueId?.let(Id::fromLong)
         ?: myId.increment() // pod not activated
 
     @Throws(
