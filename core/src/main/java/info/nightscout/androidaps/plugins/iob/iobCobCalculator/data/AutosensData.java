@@ -1,5 +1,7 @@
 package info.nightscout.androidaps.plugins.iob.iobCobCalculator.data;
 
+import android.content.Context;
+
 import androidx.annotation.NonNull;
 
 import java.util.ArrayList;
@@ -196,8 +198,8 @@ public class AutosensData implements DataPointWithLabelInterface {
     }
 
     @Override
-    public int getColor() {
-        return resourceHelper.getAttributeColor(null, R.attr.cobColor);
+    public int getColor(Context context) {
+        return resourceHelper.getAttributeColor(context, R.attr.cobColor);
     }
 
 }

@@ -4,6 +4,7 @@ package info.nightscout.androidaps.db;
  * Created by mike on 21.05.2017.
  */
 
+import android.content.Context;
 import android.graphics.Color;
 
 import com.j256.ormlite.field.DatabaseField;
@@ -390,7 +391,7 @@ public class ExtendedBolus implements Interval, DataPointWithLabelInterface {
     }
 
     @Override
-    public int getColor() {
+    public int getColor(Context context) {
         return Color.CYAN;
     }
 

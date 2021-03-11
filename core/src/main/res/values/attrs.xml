@@ -141,6 +141,18 @@
 <attr name="exerciseIconColor02" format="reference|color" />
 <!---Pump Battery Icon Color-->
 <attr name="pumpBatteryIconColor" format="reference|color" />
+<!---Therapy Event Announcement-->
+<attr name="therapyeventAnnouncement" format="reference|color" />
+<!---NS MBG Event-->
+<attr name="therapyeventNsmbg" format="reference|color" />
+<!---Finger Stick Event-->
+<attr name="therapyeventFingerstick" format="reference|color" />
+<!---Exercise Event-->
+<attr name="therapyeventExercise" format="reference|color" />
+<!---AAPS offline Event-->
+<attr name="therapyeventAapsoffline" format="reference|color" />
+<!---Default Event-->
+<attr name="therapyeventDefault" format="reference|color" />
 <!---Misc -->
 <attr name="carbsColor" format="reference|color" />
 <attr name="smbColor" format="reference|color" />

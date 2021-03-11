@@ -1,5 +1,6 @@
 package info.nightscout.androidaps.data
 
+import android.content.Context
 import android.graphics.Color
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.Constants
@@ -74,14 +75,14 @@ class TherapyEventDataPoint @Inject constructor(
         }
 
     override fun getSize(): Float = if (resourceHelper.gb(R.bool.isTablet)) 12.0f else 10.0f
-    override fun getColor(): Int =
+    override fun getColor(context: Context): Int =
         when (data.type) {
-            TherapyEvent.Type.ANNOUNCEMENT          -> resourceHelper.gc(R.color.notificationAnnouncement)
-            TherapyEvent.Type.NS_MBG                -> Color.RED
-            TherapyEvent.Type.FINGER_STICK_BG_VALUE -> Color.RED
-            TherapyEvent.Type.EXERCISE              -> Color.BLUE
-            TherapyEvent.Type.APS_OFFLINE           -> Color.GRAY and -0x7f000001
-            else                                    -> Color.GRAY
+            TherapyEvent.Type.ANNOUNCEMENT          -> resourceHelper.getAttributeColor(context, R.attr.therapyeventAnnouncement)
+            TherapyEvent.Type.NS_MBG                -> resourceHelper.getAttributeColor(context, R.attr.therapyeventNsmbg)
+            TherapyEvent.Type.FINGER_STICK_BG_VALUE -> resourceHelper.getAttributeColor(context, R.attr.therapyeventFingerstick)
+            TherapyEvent.Type.EXERCISE              -> resourceHelper.getAttributeColor(context, R.attr.therapyeventExercise)
+            TherapyEvent.Type.APS_OFFLINE           -> resourceHelper.getAttributeColor(context, R.attr.therapyeventAapsoffline)
+            else                                    -> resourceHelper.getAttributeColor(context, R.attr.therapyeventDefault)
         }
 
     // Interval interface

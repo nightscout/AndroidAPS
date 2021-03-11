@@ -153,6 +153,18 @@
         <item name="exerciseIconColor02" >@color/lightGreen</item>
         <!---Pump Battery Icon Color-->
         <item name="pumpBatteryIconColor" >@color/lightGreen</item>
+        <!---Therapy Event Announcement-->
+        <item name="therapyeventAnnouncement" >@color/notificationAnnouncement</item>
+        <!---NS MBG Event-->
+        <item name="therapyeventNsmbg" >@color/red</item>
+        <!---Finger Stick Event-->
+        <item name="therapyeventFingerstick" >@color/red</item>
+        <!---Exercise Event-->
+        <item name="therapyeventExercise" >@color/blue_default</item>
+        <!---AAPS offline Event-->
+        <item name="therapyeventAapsoffline" >@color/sandGray</item>
+        <!---Default  Event-->
+        <item name="therapyeventDefault" >@color/gray</item>
         <!---Misc -->
         <item name="carbsColor" >@color/carbsOrange</item>
         <item name="tempTargetConfirmation" >@color/tempTargetConfirmation</item>

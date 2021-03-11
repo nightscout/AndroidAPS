@@ -56,8 +56,8 @@
         <item name="colorPrimaryDarkDialog">?attr/colorPrimaryDark</item>
         <item name="colorAccentDialog">?attr/colorAccent</item>
         <!-- Color of graph background -->
-        <item name="colorGraphBackground">@color/transparent</item>
-        <item name="inrangeBackground">@color/lightgray</item>
+        <item name="colorGraphBackground">@color/white_alpha_80</item>
+        <item name="inrangeBackground">@color/black_alpha_10</item>
         <!-- Top bar icons -->
         <item name="iconSensor">@drawable/ic_dexcom_g6</item>
         <!-- Icons of bottom naviagtion bar -->
@@ -152,6 +152,18 @@
         <item name="exerciseIconColor02" >@color/lightGreen</item>
         <!---Pump Battery Icon Color-->
         <item name="pumpBatteryIconColor" >@color/lightGreen</item>
+        <!---Therapy Event Announcement-->
+        <item name="therapyeventAnnouncement" >@color/notificationAnnouncement</item>
+        <!---NS MBG Event-->
+        <item name="therapyeventNsmbg" >@color/red</item>
+        <!---Finger Stick Event-->
+        <item name="therapyeventFingerstick" >@color/red</item>
+        <!---Exercise Event-->
+        <item name="therapyeventExercise" >@color/blue_default</item>
+        <!---AAPS offline Event-->
+        <item name="therapyeventAapsoffline" >@color/sandGray</item>
+        <!---Default  Event-->
+        <item name="therapyeventDefault" >@color/gray</item>
         <!---Misc -->
         <item name="carbsColor" >@color/carbsOrange</item>
         <item name="tempTargetConfirmation" >@color/tempTargetConfirmation</item>
@@ -185,7 +197,7 @@
         <item name="metadataOk" >@color/metadataOk</item>
         <item name="metadataTextWarning" >@color/metadataTextWarning</item>
         <item name="trendarrow" >@color/black</item>
-        <item name="profilSwitch" >@color/lightblue</item>
+        <item name="profilSwitch" >@color/black</item>
         <!---Round dialog corner only if sdk >= 28 -->
         <item name="android:dialogCornerRadius" ns2:targetApi="p">8dp</item>
         <!---windowBackground -->

@@ -1,5 +1,6 @@
 package info.nightscout.androidaps.db;
 
+import android.content.Context;
 import android.graphics.Color;
 
 import androidx.annotation.NonNull;
@@ -268,13 +269,13 @@ public class Treatment implements DataPointWithLabelInterface, DbObjectBase {
     }
 
     @Override
-    public int getColor() {
+    public int getColor(Context context) {
         if (isSMB)
-            return resourceHelper.getAttributeColor(null, R.attr.lightblue);
+            return resourceHelper.getAttributeColor(context, R.attr.lightblue);
         else if (isValid)
-            return resourceHelper.getAttributeColor(null, R.attr.smbColor);
+            return resourceHelper.getAttributeColor(context, R.attr.smbColor);
         else
-            return resourceHelper.getAttributeColor(null, R.attr.treatmentsRed);
+            return resourceHelper.getAttributeColor(context, R.attr.treatmentsRed);
     }
 
     @Override

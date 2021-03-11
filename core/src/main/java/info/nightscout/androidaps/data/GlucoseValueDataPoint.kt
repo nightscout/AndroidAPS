@@ -1,5 +1,6 @@
 package info.nightscout.androidaps.data
 
+import android.content.Context
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.Constants
 import info.nightscout.androidaps.core.R
@@ -44,15 +45,15 @@ class GlucoseValueDataPoint @Inject constructor(
 
     override fun getSize(): Float = 1f
 
-    override fun getColor(): Int {
+    override fun getColor(context: Context): Int {
         val units = profileFunction.getUnits()
         val lowLine = defaultValueHelper.determineLowLine()
         val highLine = defaultValueHelper.determineHighLine()
         return when {
             isPrediction                   -> predictionColor
-            valueToUnits(units) < lowLine  -> resourceHelper.getAttributeColor(null, R.attr.bgLow)
-            valueToUnits(units) > highLine -> resourceHelper.getAttributeColor(null, R.attr.bgHigh)
-            else                           -> resourceHelper.getAttributeColor(null, R.attr.bgInRange)
+            valueToUnits(units) < lowLine  -> resourceHelper.getAttributeColor(context, R.attr.bgLow)
+            valueToUnits(units) > highLine -> resourceHelper.getAttributeColor(context, R.attr.bgHigh)
+            else                           -> resourceHelper.getAttributeColor(context, R.attr.bgInRange)
         }
     }
 

@@ -1,5 +1,6 @@
 package info.nightscout.androidaps.data
 
+import android.content.Context
 import info.nightscout.androidaps.plugins.general.overview.graphExtensions.DataPointWithLabelInterface
 import info.nightscout.androidaps.plugins.general.overview.graphExtensions.PointsWithLabelGraphSeries
 import info.nightscout.androidaps.utils.DateUtil
@@ -134,7 +135,7 @@ class IobTotal(var time: Long) : DataPointWithLabelInterface {
         return 0.5f
     }
 
-    override fun getColor(): Int {
+    override fun getColor(context: Context): Int {
         return color
     }
 

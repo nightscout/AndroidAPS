@@ -1,8 +1,10 @@
 package info.nightscout.androidaps.plugins.general.overview.graphData
 
+import android.content.Context
 import android.graphics.Color
 import android.graphics.DashPathEffect
 import android.graphics.Paint
+import android.view.ContextThemeWrapper
 import com.jjoe64.graphview.GraphView
 import com.jjoe64.graphview.series.BarGraphSeries
 import com.jjoe64.graphview.series.DataPoint
@@ -102,7 +104,7 @@ class GraphData(
     private fun addUpperChartMargin(maxBgValue: Double) =
         if (units == Constants.MGDL) Round.roundTo(maxBgValue, 40.0) + 80 else Round.roundTo(maxBgValue, 2.0) + 4
 
-    fun addInRangeArea(fromTime: Long, toTime: Long, lowLine: Double, highLine: Double) {
+    fun addInRangeArea(fromTime: Long, toTime: Long, lowLine: Double, highLine: Double,context: Context) {
         val inRangeAreaSeries: AreaGraphSeries<DoubleDataPoint>
         val inRangeAreaDataPoints = arrayOf(
             DoubleDataPoint(fromTime.toDouble(), lowLine, highLine),
@@ -111,12 +113,12 @@ class GraphData(
         inRangeAreaSeries = AreaGraphSeries(inRangeAreaDataPoints)
         inRangeAreaSeries.color = 0
         inRangeAreaSeries.isDrawBackground = true
-        inRangeAreaSeries.backgroundColor = resourceHelper.getAttributeColor(null, R.attr.inrangeBackground)
+        inRangeAreaSeries.backgroundColor = resourceHelper.getAttributeColor(context, R.attr.inrangeBackground)
         addSeries(inRangeAreaSeries)
     }
 
     // scale in % of vertical size (like 0.3)
-    fun addBasals(fromTime: Long, toTime: Long, scale: Double) {
+    fun addBasals(fromTime: Long, toTime: Long, scale: Double,context: Context) {
         var maxBasalValueFound = 0.0
         val basalScale = Scale()
         val baseBasalArray: MutableList<ScaledDataPoint> = ArrayList()
@@ -186,12 +188,12 @@ class GraphData(
         // create series
         addSeries(LineGraphSeries(Array(baseBasalArray.size) { i -> baseBasalArray[i] }).also {
             it.isDrawBackground = true
-            it.backgroundColor = resourceHelper.getAttributeColor(null, R.attr.basebasal)
+            it.backgroundColor = resourceHelper.getAttributeColor(context, R.attr.basebasal)
             it.thickness = 0
         })
         addSeries(LineGraphSeries(Array(tempBasalArray.size) { i -> tempBasalArray[i] }).also {
             it.isDrawBackground = true
-            it.backgroundColor =resourceHelper.getAttributeColor(null, R.attr.lightblue)
+            it.backgroundColor =resourceHelper.getAttributeColor(context, R.attr.lightblue)
             it.thickness = 0
         })
         addSeries(LineGraphSeries(Array(basalLineArray.size) { i -> basalLineArray[i] }).also {
@@ -199,20 +201,20 @@ class GraphData(
                 paint.style = Paint.Style.STROKE
                 paint.strokeWidth = resourceHelper.getDisplayMetrics().scaledDensity * 2
                 paint.pathEffect = DashPathEffect(floatArrayOf(2f, 4f), 0f)
-                paint.color = resourceHelper.getAttributeColor(null, R.attr.basal)
+                paint.color = resourceHelper.getAttributeColor(context, R.attr.basal)
             })
         })
         addSeries(LineGraphSeries(Array(absoluteBasalLineArray.size) { i -> absoluteBasalLineArray[i] }).also {
             it.setCustomPaint(Paint().also { absolutePaint ->
                 absolutePaint.style = Paint.Style.STROKE
                 absolutePaint.strokeWidth = resourceHelper.getDisplayMetrics().scaledDensity * 2
-                absolutePaint.color = resourceHelper.getAttributeColor(null, R.attr.basal)
+                absolutePaint.color = resourceHelper.getAttributeColor(context, R.attr.basal)
             })
         })
         basalScale.setMultiplier(maxY * scale / maxBasalValueFound)
     }
 
-    fun addTargetLine(fromTime: Long, toTimeParam: Long, profile: Profile, lastRun: LoopInterface.LastRun?) {
+    fun addTargetLine(fromTime: Long, toTimeParam: Long, profile: Profile, lastRun: LoopInterface.LastRun?, context: Context) {
         var toTime = toTimeParam
         val targetsSeriesArray: MutableList<DataPoint> = ArrayList()
         var lastTarget = -1.0
@@ -237,7 +239,7 @@ class GraphData(
         // create series
         addSeries(LineGraphSeries(Array(targetsSeriesArray.size) { i -> targetsSeriesArray[i] }).also {
             it.isDrawBackground = false
-            it.color = resourceHelper.getAttributeColor(null, R.attr.tempTargetBackground)
+            it.color = resourceHelper.getAttributeColor(context, R.attr.tempTargetBackground)
             it.thickness = 2
         })
     }
@@ -298,7 +300,7 @@ class GraphData(
         } ?: return Profile.fromMgdlToUnits(100.0, units)
     }
 
-    fun addActivity(fromTime: Long, toTime: Long, useForScale: Boolean, scale: Double) {
+    fun addActivity(fromTime: Long, toTime: Long, useForScale: Boolean, scale: Double, context: Context) {
         val actArrayHist: MutableList<ScaledDataPoint> = ArrayList()
         val actArrayPrediction: MutableList<ScaledDataPoint> = ArrayList()
         val now = System.currentTimeMillis().toDouble()
@@ -320,7 +322,7 @@ class GraphData(
         }
         addSeries(FixedLineGraphSeries(Array(actArrayHist.size) { i -> actArrayHist[i] }).also {
             it.isDrawBackground = false
-            it.color = resourceHelper.getAttributeColor(null, R.attr.activity)
+            it.color = resourceHelper.getAttributeColor(context, R.attr.activity)
             it.thickness = 3
         })
         addSeries(FixedLineGraphSeries(Array(actArrayPrediction.size) { i -> actArrayPrediction[i] }).also {
@@ -328,7 +330,7 @@ class GraphData(
                 paint.style = Paint.Style.STROKE
                 paint.strokeWidth = 3f
                 paint.pathEffect = DashPathEffect(floatArrayOf(4f, 4f), 0f)
-                paint.color = resourceHelper.getAttributeColor(null, R.attr.activity)
+                paint.color = resourceHelper.getAttributeColor(context, R.attr.activity)
             })
         })
         if (useForScale) {
@@ -339,7 +341,7 @@ class GraphData(
     }
 
     //Function below show -BGI to be able to compare curves with deviations
-    fun addMinusBGI(fromTime: Long, toTime: Long, useForScale: Boolean, scale: Double, devBgiScale: Boolean) {
+    fun addMinusBGI(fromTime: Long, toTime: Long, useForScale: Boolean, scale: Double, devBgiScale: Boolean,context: Context) {
         val bgiArrayHist: MutableList<ScaledDataPoint> = ArrayList()
         val bgiArrayPrediction: MutableList<ScaledDataPoint> = ArrayList()
         val now = System.currentTimeMillis().toDouble()
@@ -364,7 +366,7 @@ class GraphData(
         }
         addSeries(FixedLineGraphSeries(Array(bgiArrayHist.size) { i -> bgiArrayHist[i] }).also {
             it.isDrawBackground = false
-            it.color = resourceHelper.getAttributeColor(null, R.attr.bgi)
+            it.color = resourceHelper.getAttributeColor(context, R.attr.bgi)
             it.thickness = 3
         })
         addSeries(FixedLineGraphSeries(Array(bgiArrayPrediction.size) { i -> bgiArrayPrediction[i] }).also {
@@ -372,7 +374,7 @@ class GraphData(
                 paint.style = Paint.Style.STROKE
                 paint.strokeWidth = 3f
                 paint.pathEffect = DashPathEffect(floatArrayOf(4f, 4f), 0f)
-                paint.color = resourceHelper.getAttributeColor(null, R.attr.bgi)
+                paint.color = resourceHelper.getAttributeColor(context, R.attr.bgi)
             })
         })
         if (useForScale) {
@@ -383,7 +385,7 @@ class GraphData(
     }
 
     // scale in % of vertical size (like 0.3)
-    fun addIob(fromTime: Long, toTime: Long, useForScale: Boolean, scale: Double, showPrediction: Boolean, absScale: Boolean) {
+    fun addIob(fromTime: Long, toTime: Long, useForScale: Boolean, scale: Double, showPrediction: Boolean, absScale: Boolean,context: Context) {
         val iobSeries: FixedLineGraphSeries<ScaledDataPoint?>
         val iobArray: MutableList<ScaledDataPoint> = ArrayList()
         var maxIobValueFound = Double.MIN_VALUE
@@ -408,8 +410,8 @@ class GraphData(
         }
         iobSeries = FixedLineGraphSeries(Array(iobArray.size) { i -> iobArray[i] }).also {
             it.isDrawBackground = true
-            it.backgroundColor = -0x7f000001 and resourceHelper.getAttributeColor(null, R.attr.iobColor) //50%
-            it.color = resourceHelper.getAttributeColor(null, R.attr.iobColor)
+            it.backgroundColor = -0x7f000001 and resourceHelper.getAttributeColor(context, R.attr.iobColor) //50%
+            it.color = resourceHelper.getAttributeColor(context, R.attr.iobColor)
             it.thickness = 3
         }
         if (showPrediction) {
@@ -419,14 +421,14 @@ class GraphData(
             val iobPrediction: MutableList<DataPointWithLabelInterface> = ArrayList()
             val iobPredictionArray = iobCobCalculatorPlugin.calculateIobArrayForSMB(lastAutosensResult, SMBDefaults.exercise_mode, SMBDefaults.half_basal_exercise_target, isTempTarget)
             for (i in iobPredictionArray) {
-                iobPrediction.add(i.setColor(resourceHelper.getAttributeColor(null, R.attr.iobPredAS)))
+                iobPrediction.add(i.setColor(resourceHelper.getAttributeColor(context, R.attr.iobPredAS)))
                 maxIobValueFound = max(maxIobValueFound, abs(i.iob))
             }
             addSeries(PointsWithLabelGraphSeries(Array(iobPrediction.size) { i -> iobPrediction[i] }))
             val iobPrediction2: MutableList<DataPointWithLabelInterface> = ArrayList()
             val iobPredictionArray2 = iobCobCalculatorPlugin.calculateIobArrayForSMB(AutosensResult(), SMBDefaults.exercise_mode, SMBDefaults.half_basal_exercise_target, isTempTarget)
             for (i in iobPredictionArray2) {
-                iobPrediction2.add(i.setColor(resourceHelper.getAttributeColor(null,R.attr.iobPred)))
+                iobPrediction2.add(i.setColor(resourceHelper.getAttributeColor(context,R.attr.iobPred)))
                 maxIobValueFound = max(maxIobValueFound, abs(i.iob))
             }
             addSeries(PointsWithLabelGraphSeries(Array(iobPrediction2.size) { i -> iobPrediction2[i] }))
@@ -442,7 +444,7 @@ class GraphData(
     }
 
     // scale in % of vertical size (like 0.3)
-    fun addAbsIob(fromTime: Long, toTime: Long, useForScale: Boolean, scale: Double) {
+    fun addAbsIob(fromTime: Long, toTime: Long, useForScale: Boolean, scale: Double,context: Context) {
         val iobSeries: FixedLineGraphSeries<ScaledDataPoint?>
         val iobArray: MutableList<ScaledDataPoint> = ArrayList()
         var maxIobValueFound = Double.MIN_VALUE
@@ -463,8 +465,8 @@ class GraphData(
         }
         iobSeries = FixedLineGraphSeries(Array(iobArray.size) { i -> iobArray[i] }).also {
             it.isDrawBackground = true
-            it.backgroundColor = -0x7f000001 and resourceHelper.getAttributeColor(null, R.attr.iobColor) //50%
-            it.color = resourceHelper.getAttributeColor(null, R.attr.iobColor)
+            it.backgroundColor = -0x7f000001 and resourceHelper.getAttributeColor(context, R.attr.iobColor) //50%
+            it.color = resourceHelper.getAttributeColor(context, R.attr.iobColor)
             it.thickness = 3
         }
         if (useForScale) {
@@ -476,7 +478,7 @@ class GraphData(
     }
 
     // scale in % of vertical size (like 0.3)
-    fun addCob(fromTime: Long, toTime: Long, useForScale: Boolean, scale: Double) {
+    fun addCob(fromTime: Long, toTime: Long, useForScale: Boolean, scale: Double, context: Context) {
         val minFailOverActiveList: MutableList<DataPointWithLabelInterface> = ArrayList()
         val cobArray: MutableList<ScaledDataPoint> = ArrayList()
         var maxCobValueFound = 0.0
@@ -504,8 +506,8 @@ class GraphData(
         // COB
         addSeries(FixedLineGraphSeries(Array(cobArray.size) { i -> cobArray[i] }).also {
             it.isDrawBackground = true
-            it.backgroundColor = -0x7f000001 and resourceHelper.getAttributeColor(null, R.attr.cobColor) //50%
-            it.color = resourceHelper.getAttributeColor(null, R.attr.cobColor)
+            it.backgroundColor = -0x7f000001 and resourceHelper.getAttributeColor(context, R.attr.cobColor) //50%
+            it.color = resourceHelper.getAttributeColor(context, R.attr.cobColor)
             it.thickness = 3
         })
         if (useForScale) {
@@ -517,7 +519,7 @@ class GraphData(
     }
 
     // scale in % of vertical size (like 0.3)
-    fun addDeviations(fromTime: Long, toTime: Long, useForScale: Boolean, scale: Double, devBgiScale: Boolean) {
+    fun addDeviations(fromTime: Long, toTime: Long, useForScale: Boolean, scale: Double, devBgiScale: Boolean, context: Context) {
         class DeviationDataPoint(x: Double, y: Double, var color: Int, scale: Scale) : ScaledDataPoint(x, y, scale)
 
         val devArray: MutableList<DeviationDataPoint> = ArrayList()
@@ -535,15 +537,15 @@ class GraphData(
             } else 0.0
 
             iobCobCalculatorPlugin.getAutosensData(time)?.let { autosensData ->
-                var color = resourceHelper.getAttributeColor(null, R.attr.deviationEqual) // "="
+                var color = resourceHelper.getAttributeColor(context, R.attr.deviationEqual) // "="
                 if (autosensData.type == "" || autosensData.type == "non-meal") {
-                    if (autosensData.pastSensitivity == "C") color = resourceHelper.getAttributeColor(null, R.attr.deviationCsf)
-                    if (autosensData.pastSensitivity == "+") color = resourceHelper.getAttributeColor(null, R.attr.deviationPlus)
-                    if (autosensData.pastSensitivity == "-") color = resourceHelper.getAttributeColor(null, R.attr.deviationMinus)
+                    if (autosensData.pastSensitivity == "C") color = resourceHelper.getAttributeColor(context, R.attr.deviationCsf)
+                    if (autosensData.pastSensitivity == "+") color = resourceHelper.getAttributeColor(context, R.attr.deviationPlus)
+                    if (autosensData.pastSensitivity == "-") color = resourceHelper.getAttributeColor(context, R.attr.deviationMinus)
                 } else if (autosensData.type == "uam") {
-                    color = resourceHelper.getAttributeColor(null, R.attr.uamColor)
+                    color = resourceHelper.getAttributeColor(context, R.attr.uamColor)
                 } else if (autosensData.type == "csf") {
-                    color = resourceHelper.getAttributeColor(null, R.attr.deviationCsf)
+                    color = resourceHelper.getAttributeColor(context, R.attr.deviationCsf)
                 }
                 devArray.add(DeviationDataPoint(time.toDouble(), autosensData.deviation, color, devScale))
                 maxDevValueFound = max(maxDevValueFound, max(abs(autosensData.deviation), abs(bgi)))
@@ -563,7 +565,7 @@ class GraphData(
     }
 
     // scale in % of vertical size (like 0.3)
-    fun addRatio(fromTime: Long, toTime: Long, useForScale: Boolean, scale: Double) {
+    fun addRatio(fromTime: Long, toTime: Long, useForScale: Boolean, scale: Double, context: Context) {
         val ratioArray: MutableList<ScaledDataPoint> = ArrayList()
         var maxRatioValueFound = Double.MIN_VALUE
         var minRatioValueFound = Double.MAX_VALUE
@@ -580,7 +582,7 @@ class GraphData(
 
         // RATIOS
         addSeries(LineGraphSeries(Array(ratioArray.size) { i -> ratioArray[i] }).also {
-            it.color = resourceHelper.getAttributeColor(null, R.attr.overviewShowSensitivity)
+            it.color = resourceHelper.getAttributeColor(context, R.attr.overviewShowSensitivity)
             it.thickness = 3
         })
         if (useForScale) {
@@ -591,7 +593,7 @@ class GraphData(
     }
 
     // scale in % of vertical size (like 0.3)
-    fun addDeviationSlope(fromTime: Long, toTime: Long, useForScale: Boolean, scale: Double) {
+    fun addDeviationSlope(fromTime: Long, toTime: Long, useForScale: Boolean, scale: Double,context: Context) {
         val dsMaxArray: MutableList<ScaledDataPoint> = ArrayList()
         val dsMinArray: MutableList<ScaledDataPoint> = ArrayList()
         var maxFromMaxValueFound = 0.0
@@ -611,11 +613,11 @@ class GraphData(
 
         // Slopes
         addSeries(LineGraphSeries(Array(dsMaxArray.size) { i -> dsMaxArray[i] }).also {
-            it.color = resourceHelper.getAttributeColor(null, R.attr.devslopepos)
+            it.color = resourceHelper.getAttributeColor(context, R.attr.devslopepos)
             it.thickness = 3
         })
         addSeries(LineGraphSeries(Array(dsMinArray.size) { i -> dsMinArray[i] }).also {
-            it.color = resourceHelper.getAttributeColor(null, R.attr.devslopeneg)
+            it.color = resourceHelper.getAttributeColor(context, R.attr.devslopeneg)
             it.thickness = 3
         })
         if (useForScale) {

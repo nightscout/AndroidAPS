@@ -308,8 +308,8 @@ public class ProfileSwitch implements Interval, DataPointWithLabelInterface {
     }
 
     @Override
-    public int getColor() {
-        return resourceHelper.getAttributeColor(null,R.attr.profilSwitch );
+    public int getColor(Context context) {
+        return resourceHelper.getAttributeColor(context,R.attr.profilSwitch );
     }
 
     @NonNull
