@@ -118,17 +118,23 @@
             android:layout_height="match_parent"
             android:orientation="horizontal">
 
-            <Button
+            <com.google.android.material.button.MaterialButton
                 android:id="@+id/overview_quickwizard_item_edit_button"
+                style="@style/Widget.MaterialComponents.Button.UnelevatedButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginStart="2dp"
+                android:layout_marginEnd="2dp"
                 android:layout_weight="1"
                 android:text="@string/overview_quickwizard_item_edit_button" />
 
-            <Button
+            <com.google.android.material.button.MaterialButton
                 android:id="@+id/overview_quickwizard_item_remove_button"
+                style="@style/Widget.MaterialComponents.Button.UnelevatedButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginStart="2dp"
+                android:layout_marginEnd="2dp"
                 android:layout_weight="1"
                 android:text="@string/remove_button" />
         </LinearLayout>
