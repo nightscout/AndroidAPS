@@ -50,13 +50,12 @@ class OmnipodDashManagerImpl @Inject constructor(
     private val observeConnectToPod: Observable<PodEvent>
         get() = Observable.defer {
             bleManager.connect()
-        } // TODO are these reasonable values?
-
+        } // TODO add retry
 
     private val observePairNewPod: Observable<PodEvent>
         get() = Observable.defer {
             bleManager.pairNewPod()
-        } // TODO are these reasonable values?
+        }
 
     private fun observeSendProgramBolusCommand(
         units: Double,
