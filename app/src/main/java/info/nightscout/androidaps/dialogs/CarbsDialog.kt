@@ -40,7 +40,6 @@ import kotlin.math.max
 class CarbsDialog : DialogFragmentWithDate() {
 
     @Inject lateinit var mainApp: MainApp
-    @Inject lateinit var resourceHelper: ResourceHelper
     @Inject lateinit var constraintChecker: ConstraintChecker
     @Inject lateinit var defaultValueHelper: DefaultValueHelper
     @Inject lateinit var treatmentsPlugin: TreatmentsPlugin

@@ -23,7 +23,6 @@ import javax.inject.Inject
 
 class ProfileSwitchDialog : DialogFragmentWithDate() {
 
-    @Inject lateinit var resourceHelper: ResourceHelper
     @Inject lateinit var profileFunction: ProfileFunction
     @Inject lateinit var treatmentsPlugin: TreatmentsPlugin
     @Inject lateinit var activePlugin: ActivePluginProvider

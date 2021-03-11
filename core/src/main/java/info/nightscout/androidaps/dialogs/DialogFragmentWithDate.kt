@@ -3,6 +3,8 @@ package info.nightscout.androidaps.dialogs
 import android.app.DatePickerDialog
 import android.app.Dialog
 import android.app.TimePickerDialog
+import android.graphics.PorterDuff
+import android.graphics.drawable.Drawable
 import android.os.Bundle
 import android.text.format.DateFormat
 import android.view.View
@@ -23,9 +25,12 @@ import java.util.*
 import javax.inject.Inject
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import android.view.LayoutInflater
+import androidx.core.content.ContextCompat
+import info.nightscout.androidaps.utils.resources.ResourceHelper
 
 abstract class DialogFragmentWithDate : DaggerDialogFragment() {
 
+    @Inject lateinit var resourceHelper: ResourceHelper
     @Inject lateinit var aapsLogger: AAPSLogger
     @Inject lateinit var sp: SP
     @Inject lateinit var dateUtil: DateUtil
@@ -39,21 +44,6 @@ abstract class DialogFragmentWithDate : DaggerDialogFragment() {
     companion object {
 
         private var seconds: Int = (Math.random() * 59.0).toInt()
-    }
-
-    private var dialogView: View? = null
-
-    override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-        return MaterialAlertDialogBuilder(requireContext(), theme).apply {
-            dialogView = onCreateView(LayoutInflater.from(requireContext()), null, savedInstanceState)
-
-            dialogView?.let { onViewCreated(it, savedInstanceState) }
-            setView(dialogView)
-        }.create()
-    }
-
-    override fun getView(): View? {
-        return dialogView
     }
 
     override fun onStart() {
@@ -72,6 +62,12 @@ abstract class DialogFragmentWithDate : DaggerDialogFragment() {
         dialog?.window?.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN)
         isCancelable = true
         dialog?.setCanceledOnTouchOutside(false)
+
+        val drawable: Drawable? = context?.let { ContextCompat.getDrawable(it, R.drawable.dialog) }
+        if (drawable != null) {
+            drawable.setColorFilter( resourceHelper.getAttributeColor(context, R.attr.windowBackground ), PorterDuff.Mode.SRC_IN)
+        }
+        dialog?.window?.setBackgroundDrawable(drawable)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {

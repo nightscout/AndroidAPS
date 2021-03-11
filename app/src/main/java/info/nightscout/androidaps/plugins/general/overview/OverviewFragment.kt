@@ -705,11 +705,11 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
                 val drawableLeft: Array<Drawable?> = binding.loopPumpStatusLayout.tempTarget.compoundDrawables
                 if (drawableLeft[0] != null) resourceHelper.getAttributeColor(context, R.attr.ribbonTextWarning).let { drawableLeft[0]!!.setTint(it) }
             } else {
-                binding.loopPumpStatusLayout.tempTarget.setTextColor(resourceHelper.getAttributeColor(context, R.attr.defaultTextColor))
+                binding.loopPumpStatusLayout.tempTarget.setTextColor(resourceHelper.getAttributeColor(context, R.attr.defaultPillTextColor))
                 binding.loopPumpStatusLayout.tempTarget.setBackgroundColor(resourceHelper.getAttributeColor(context, R.attr.ribbonDefault))
                 binding.loopPumpStatusLayout.tempTarget.text = Profile.toTargetRangeString(profile.targetLowMgdl, profile.targetHighMgdl, Constants.MGDL, units)
                 val drawableLeft: Array<Drawable?> = binding.loopPumpStatusLayout.tempTarget.compoundDrawables
-                if (drawableLeft[0] != null) resourceHelper.getAttributeColor(context, R.attr.defaultTextColor).let { drawableLeft[0]!!.setTint(it) }
+                if (drawableLeft[0] != null) resourceHelper.getAttributeColor(context, R.attr.defaultPillTextColor).let { drawableLeft[0]!!.setTint(it) }
             }
         }
 
@@ -756,9 +756,9 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
             if (drawableLeft[0] != null) resourceHelper.getAttributeColor(context, R.attr.ribbonTextWarning).let { drawableLeft[0]!!.setTint(it) }
         } else {
             binding.loopPumpStatusLayout.activeProfile.setBackgroundColor(resourceHelper.getAttributeColor(context, R.attr.ribbonDefault))
-            binding.loopPumpStatusLayout.activeProfile.setTextColor(resourceHelper.getAttributeColor(context, R.attr.defaultTextColor))
+            binding.loopPumpStatusLayout.activeProfile.setTextColor(resourceHelper.getAttributeColor(context, R.attr.defaultPillTextColor))
             val drawableLeft: Array<Drawable?> = binding.loopPumpStatusLayout.activeProfile.compoundDrawables
-            if (drawableLeft[0] != null) resourceHelper.getAttributeColor(context, R.attr.defaultTextColor).let { drawableLeft[0]!!.setTint(it) }
+            if (drawableLeft[0] != null) resourceHelper.getAttributeColor(context, R.attr.defaultPillTextColor).let { drawableLeft[0]!!.setTint(it) }
         }
 
         processButtonsVisibility()

@@ -38,7 +38,6 @@ class CareDialog : DialogFragmentWithDate() {
 
     @Inject lateinit var injector: HasAndroidInjector
     @Inject lateinit var mainApp: MainApp
-    @Inject lateinit var resourceHelper: ResourceHelper
     @Inject lateinit var profileFunction: ProfileFunction
     @Inject lateinit var nsUpload: NSUpload
     @Inject lateinit var translator: Translator
