@@ -20,8 +20,8 @@
     <string name="pref_vibrate_on_bolus">Vibrar no Bólus</string>
     <string name="pref_units_for_actions">Unidades para Acções</string>
     <string name="pref_show_date">Mostrar Data</string>
-    <string name="pref_show_iob">Mostrar IOB</string>
-    <string name="pref_show_cob">Mostrar COB</string>
+    <string name="pref_show_iob">Mostrar IA </string>
+    <string name="pref_show_cob">Mostrar HCA</string>
     <string name="pref_show_delta">Mostrar Delta</string>
     <string name="pref_show_avgdelta">Mostrar MedDelta</string>
     <string name="pref_show_phone_battery">Mostrar Bateria Telefone</string>
@@ -98,7 +98,7 @@
     <string name="status_cpp">CPP</string>
     <string name="status_tdd">TDI</string>
     <string name="activity_carb">Hidratos</string>
-    <string name="activity_IOB">IOB</string>
+    <string name="activity_IOB">IA </string>
     <string name="activity_no_status">sem estado</string>
     <string name="color_name_red">vermelho</string>
     <string name="color_name_pink">rosa</string>
