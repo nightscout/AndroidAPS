@@ -43,7 +43,7 @@
     <string name="description_treatments">Guarda todos os tratamentos que foram feitos</string>
     <string name="description_wear">Monitorizar e controlar o AndroidAPS usando o seu relógio WearOS.</string>
     <string name="description_xdrip_status_line">Mostrar informações sobre o loop no mostrador do xDrip+.</string>
-    <string name="description_sms_communicator">Controlar remotamente o AndroidAPS usando comandos SMS.</string>
+    <string name="description_sms_communicator">Controlar remotamente a AndroidAPS usando comandos SMS.</string>
     <string name="treatments_insulin_label_string">Insulina:</string>
     <string name="treatments_carbs_label_string">Hidratos:</string>
     <string name="treatments_iob_label_string">IA:</string>
@@ -55,7 +55,7 @@
     <string name="tempbasals_netinsulin_label_string">Ins:</string>
     <string name="tempbasals_iob_label_string">IA:</string>
     <string name="tempbasals_iobtotal_label_string">Total da IA:</string>
-    <string name="treatments_wizard_bg_label">Glicose</string>
+    <string name="treatments_wizard_bg_label">GLIC</string>
     <string name="treatments_wizard_tt_label">TT</string>
     <string name="treatments_wizard_carbs_label">Hidratos</string>
     <string name="treatments_wizard_correction_label">Corr</string>
@@ -148,8 +148,8 @@
     <string name="openapsma_maxbasal_summary">Este valor é chamado máx basal no contexto do OpenAPS</string>
     <string name="openapsma_maxiob_title">Basal Máxima IA que OpenAPS pode administrar [U]</string>
     <string name="openapsma_maxiob_summary">Este valor é denominado Máx IA em contexto OpenAPS \nEste é o valor máximo de insulina em [U] que a APS pode administrar de uma vez.</string>
-    <string name="password_preferences_encrypt_prompt">Será perguntado pela senha mestra, que será usada para encriptar preferências exportadas.</string>
-    <string name="password_preferences_decrypt_prompt">Será perguntado pela senha mestra, que será necessária para desencriptar preferências importadas.</string>
+    <string name="password_preferences_encrypt_prompt">Ser-lhe-á pedida a senha mestra, que será usada para encriptar preferências exportadas.</string>
+    <string name="password_preferences_decrypt_prompt">Ser-lhe-á pedida a senha mestra, que será necessária para desencriptar preferências importadas.</string>
     <string name="preferences_export_canceled">Exportação cancelada! Preferências NÃO foram exportadas!</string>
     <string name="preferences_import_canceled">Importação cancelada! Preferências NÃO foram importadas!</string>
     <string name="preferences_import_impossible">Não é possível importar as preferências!</string>
@@ -174,8 +174,8 @@
     <string name="smscommunicator_allowednumbers_summary">+XXXXXXXXXX;+YYYYYYYYYY</string>
     <string name="smscommunicator_bolusreplywithcode">Para administrar bólus %1$.2fU responder com código %2$s</string>
     <string name="smscommunicator_mealbolusreplywithcode">Para administrar bólus %1$.2fU responder com código %2$s</string>
-    <string name="smscommunicator_temptargetwithcode">Para definir o Alvo Tempo %1$s responda com o código %2$s</string>
-    <string name="smscommunicator_temptargetcancel">Para cancelar Alvo Temp responda com o código %1$s</string>
+    <string name="smscommunicator_temptargetwithcode">Para definir o Alvo Temporário %1$s responda com o código %2$s</string>
+    <string name="smscommunicator_temptargetcancel">Para cancelar Alvo Temporário responda com o código %1$s</string>
     <string name="smscommunicator_stopsmswithcode">Para desactivar o Serviço Remoto SMS de responda com o código %1$s.\n\nTenha em mente que será capaz de o reactivar directamente apenas a partir do telemóvel mestre do AAPS.</string>
     <string name="smscommunicator_stoppedsms">SMS Serviço Remoto interrompido. Para reactivá-lo, use o AAPS no telemóvel mestre.</string>
     <string name="smscommunicator_calibrationreplywithcode">Para enviar calibração %1$.2f responder com código %2$s</string>
@@ -184,11 +184,11 @@
     <string name="smscommunicator_remotebolusmindistance">Quantos minutos deve decorrer, pelo menos, entre um bólus e o próximo</string>
     <string name="smscommunicator_remotebolusmindistance_caveat">Para sua segurança, para editar esta preferência precisa adicionar pelo menos 2 números de telefone.</string>
     <string name="bolusrequested">A ser administrado %1$.2f U</string>
-    <string name="smscommunicator_bolusdelivered">Bólus %1$.2f U administrador com sucesso</string>
+    <string name="smscommunicator_bolusdelivered">Bólus %1$.2f U administrado com sucesso</string>
     <string name="smscommunicator_mealbolusdelivered">Bólus de Refeição %1$.2f U administrado com sucesso</string>
     <string name="smscommunicator_mealbolusdelivered_tt">Alvo %1$s para %2$d minutos</string>
     <string name="smscommunicator_tt_set">Alvo %1$s para %2$d minutos definido com sucesso</string>
-    <string name="smscommunicator_tt_canceled">Alvo Temp cancelado com êxito</string>
+    <string name="smscommunicator_tt_canceled">Alvo Temporário cancelado com êxito</string>
     <string name="smscommunicator_remotecommandsallowed">Permitir comandos remotos via SMS</string>
     <string name="smscommunicator_loophasbeendisabled">Loop foi desactivado</string>
     <string name="smscommunicator_loophasbeenenabled">Loop foi activado</string>
@@ -210,19 +210,19 @@
     <string name="smscommunicator_suspendreplywithcode">Para suspender o loop por %1$d minutos resposta com código %2$s</string>
     <string name="smscommunicator_loopresumereplywithcode">Para retomar o loop responda com o código %1$s</string>
     <string name="smscommunicator_loopenablereplywithcode">Para activar o loop responda com o código %1$s</string>
-    <string name="smscommunicator_loopdisablereplywithcode">Para desactivar o loop responda com o código %1$s</string>
+    <string name="smscommunicator_loopdisablereplywithcode">Para desativar o loop responda com o código %1$s</string>
     <string name="smscommunicator_tempbasalset">Basal temporária %1$.2fU/h para %2$d min iniciada com êxito</string>
     <string name="smscommunicator_extendedset">Bólus prolongado %1$.2fU/h para %2$d min iniciado com êxito</string>
     <string name="smscommunicator_carbsset">Hidratos %1$d  g inseridos com sucesso</string>
     <string name="smscommunicator_carbsfailed">Introdução de %1$dg de hidratos falhou</string>
     <string name="smscommunicator_tempbasalset_percent">Basal temporária %1$d%% U/h durante%2$d min iniciada com êxito</string>
-    <string name="smscommunicator_tempbasalfailed">Início basal temp falhou </string>
+    <string name="smscommunicator_tempbasalfailed">Início basal temporária falhou</string>
     <string name="smscommunicator_extendedfailed">Falha ao iniciar o bólus prolongado</string>
     <string name="smscommunicator_basalstopreplywithcode">Para parar a basal temporária responda com o código %1$s</string>
     <string name="smscommunicator_extendedstopreplywithcode">Para parar o bólus prolongado responda com o código %1$s</string>
-    <string name="smscommunicator_tempbasalcanceled">Basal temp cancelada</string>
+    <string name="smscommunicator_tempbasalcanceled">Basal temporária cancelada</string>
     <string name="smscommunicator_extendedcanceled">Bólus prolongado cancelado</string>
-    <string name="smscommunicator_tempbasalcancelfailed">Não foi possivel cancelar a basal temp</string>
+    <string name="smscommunicator_tempbasalcancelfailed">Não foi possível cancelar a basal temporária</string>
     <string name="smscommunicator_extendedcancelfailed">Falhou a cancelar bólus prolongado</string>
     <string name="smscommunicator_unknowncommand">Comando desconhecido ou resposta errada</string>
     <string name="quickwizard">Assistente Rápido</string>
@@ -297,14 +297,14 @@
     <string name="openapsama_autosens_adjusttargets">Autosens ajusta os alvos, também</string>
     <string name="openapsama_autosens_adjusttargets_summary">Valor padrão: true\nÉ usado para permitir que autosens possa ajustar os valores alvo de glucose no sangue (BG), além de FSI e basais.</string>
     <string name="openapsama_bolussnooze_dia_divisor_summary">Valor padrão: 2\nBólus Snooze (pausa após bólus) é executado depois de realizar um bólus por refeição Desta maneira o algoritmo não irá contrariar com temporárias baixas logo depois da refeição. O valor padrão é 2; Então uma duração de ação da insulina (DIA) de 5h significa que o Bólus Snooze irá ser gradualmente reduzido ao longo de 2,5 horas = 5/2 = DIA/Valor padrão.</string>
-    <string name="openapsama_min_5m_carbimpact_summary">Valor padrão: 3.0 para deteção avançada de refeições (AMA) ou 8.0 para super micro bólus (SMB). Esta é a configuração padrão para o cálculo de quanto varia a cada 5 min a glicose no sangue (GLIC)  devido à absorção de hidratos de carbono. O padrão é  3mg/ dl / 5min. Isso afeta a rapidez com que decaem as calorias no corpo (HCA), e quantos hidratos de carbono terão de ser considerados no cálculo da previsão de GLIC, quando é que a BG está baixando mais do que espectável ou não subindo como espectável.</string>
+    <string name="openapsama_min_5m_carbimpact_summary">Valor padrão: 3.0 para deteção avançada de refeições (AMA) ou 8.0 para super micro bólus (SMB). Esta é a configuração padrão para o cálculo de quanto varia a cada 5 min a glicose no sangue (GLIC)  devido à absorção de hidratos de carbono. O padrão é  3mg/ dl / 5min. Isso afeta a rapidez com que decaem as calorias no corpo (HCA), e quantos hidratos de carbono terão de ser considerados no cálculo da previsão de GLIC, quando é que a GLIC está baixando mais do que espectável ou não subindo como espectável.</string>
     <string name="openapsama_link_to_preferncejson_doc_txt">Atenção!\n Normalmente não é necessário modificar os valores abaixo. Por favor PRESSIONE AQUI e LEIA o texto para garantir que ENTENDE as consequenciais antes de alterar algum destes valores.</string>
-    <string name="smscommunicator_invalidphonennumber">SMS número de telefone inválido</string>
+    <string name="smscommunicator_invalidphonennumber">Número de telefone de SMS inválido</string>
     <string name="overview_calibration">Calibração</string>
     <string name="xdripnotinstalled">xDrip+ não está instalado</string>
     <string name="calibrationsent">Calibração enviada para xDrip+</string>
-    <string name="smscommunicator_calibrationsent">Calibração enviada. Recepção têm de estar activada na xDrip+.</string>
-    <string name="smscommunicator_calibrationfailed">O xDrip+ não esta a receber as calibrações</string>
+    <string name="smscommunicator_calibrationsent">Calibração enviada. Receção tem de estar ativada na xDrip+.</string>
+    <string name="smscommunicator_calibrationfailed">O xDrip+ não está a receber as calibrações</string>
     <string name="pumpsuspended">Bomba suspensa</string>
     <string name="executing">A Executar</string>
     <string name="virtualpump_settings">Definições da bomba virtual</string>
@@ -340,7 +340,7 @@
     <string name="pregnant">Gravidez</string>
     <string name="patientage_summary">Por favor seleccione o tipo de paciente para configurar limites de segurança</string>
     <string name="patient_name">Nome do Paciente</string>
-    <string name="patient_name_summary">Por favor, forneça nome do paciente ou alcunha para diferenciar entre várias configurações</string>
+    <string name="patient_name_summary">Por favor, forneça o nome do paciente ou alcunha para diferenciar entre várias configurações</string>
     <string name="patient_name_default" comment="This is default patient display name, when user does not provide real one">Utilizador</string>
     <string name="Glimp">Glimp</string>
     <string name="needwhitelisting">%1$s necessita de autorizar a não optimização da bateria para assegurar a performance necessária</string>
@@ -380,17 +380,17 @@
     <string name="enablesuperbolus_summary">Active a funcionalidade de superbolus no assistente. Não active até que aprenda o funcionamento. PODE CAUSAR OVERDOSE DE INSULINA SE UTILIZAR INDISCRIMINADAMENTE!</string>
     <string name="show_statuslights">Mostrar luzes de estado no ecrã principal</string>
     <string name="statuslights_cage_warning">Limite aviso idade canula [h]</string>
-    <string name="statuslights_cage_critical">Limite Crítico Idade Canula [h]</string>
+    <string name="statuslights_cage_critical">Limite Crítico Idade Cânula/cateter [h]</string>
     <string name="statuslights_iage_warning">Limite aviso idade insulina [h]</string>
-    <string name="statuslights_iage_critical">Limite crítico idade insulina [h]</string>
+    <string name="statuslights_iage_critical">Limite crítico da idade da insulina [h]</string>
     <string name="statuslights_sage_warning">Limite aviso idade sensor [h]</string>
-    <string name="statuslights_sage_critical">Limite crítico idade sensor [h]</string>
+    <string name="statuslights_sage_critical">Limite crítico da idade do sensor [h]</string>
     <string name="statuslights_sbat_warning">Limite de aviso do nível da bateria do sensor [%]</string>
     <string name="statuslights_sbat_critical">Limite crítico do nível da bateria do sensor [%]</string>
     <string name="statuslights_bage_warning">Limite de aviso de idade da bateria da bomba [h]</string>
     <string name="statuslights_bage_critical">Limite crítico de idade da bateria da bomba [h]</string>
     <string name="statuslights_res_warning">Limite de aviso de nível de reservatório [U]</string>
-    <string name="statuslights_res_critical">Limite crítico de nível de reservatório [U]</string>
+    <string name="statuslights_res_critical">Limite crítico do nível do reservatório [U]</string>
     <string name="statuslights_bat_warning">Limite de aviso do nível da bateria da bomba [%]</string>
     <string name="statuslights_bat_critical">Limite crítico do nível da bateria da bomba [%]</string>
     <string name="prediction_shortname">PREV</string>
@@ -453,7 +453,7 @@
     <string name="enablesmb">Activar SMB</string>
     <string name="enablesmb_summary">Use Super Micro Bólus em vez de basal temporária para uma ação mais rápida</string>
     <string name="enableuam_summary">Deteção de Refeições Não Anunciadas (RNA)</string>
-    <string name="insulin_oref_peak">Tempo do Pico da curva de IOB</string>
+    <string name="insulin_oref_peak">Tempo do Pico da curva de IA</string>
     <string name="insulin_peak_time">Tempo Pico [min]</string>
     <string name="free_peak_oref">Oref Pico-Livre</string>
     <string name="rapid_acting_oref">Oref Acção-Rápida</string>
@@ -511,7 +511,7 @@
     <string name="overview_editquickwizard_usebolusiob">Cálculo de Bólus IA</string>
     <string name="overview_editquickwizard_usebasaliob">Cálculo de Basal IA</string>
     <string name="overview_editquickwizard_usetrend">Cálculo tendência</string>
-    <string name="overview_editquickwizard_usesuperbolus">Cálculo de superbolus</string>
+    <string name="overview_editquickwizard_usesuperbolus">Cálculo do superbólus</string>
     <string name="positiveonly">Positivo apenas</string>
     <string name="negativeonly">Negativo apenas</string>
     <string name="overview_editquickwizard_usecob">Cálculo HCA</string>
@@ -524,9 +524,9 @@
     <string name="hasbgdata">Glicose disponível da fonte seleccionada</string>
     <string name="extendedbolusdeliveryerror">Erro na administração Bólus Prolongado</string>
     <string name="enablesmbalways">SMB sempre activado</string>
-    <string name="enablesmbalways_summary">SMB sempre activo independentemente dos bolus. Possível apenas quando o medidor tive um bom filtro de dados como o G5</string>
+    <string name="enablesmbalways_summary">SMB sempre activo independentemente dos bólus. Possível apenas quando o medidor tive um bom filtro de dados como o G5</string>
     <string name="enablesmbaftercarbs">Activar SMB após hidratos</string>
-    <string name="enablesmbaftercarbs_summary">SMB activo por 6h após carbs, mesmo com 0 COB. Possível apenas quando o medidor tive um bom filtro de dados como o G5</string>
+    <string name="enablesmbaftercarbs_summary">SMB ativo por 6h após HCs, mesmo com 0 HCA. Possível apenas quando o medidor tive um bom filtro de dados como o G5</string>
     <string name="enablesmbwithcob">Ativar SMB com HCA</string>
     <string name="enablesmbwithcob_summary">Ativar SMB quando tem HCA positivos.</string>
     <string name="enablesmbwithtemptarget">SMB activo com valores alvo temporários</string>
@@ -552,8 +552,8 @@
     <string name="ns_create_announcements_from_carbs_req_title">Criar anúncios a partir dos alertas de hidratos necessários</string>
     <string name="ns_create_announcements_from_errors_summary">Criar um anúncio no Nightscout para caixas de diálogo de erro e alertas locais (também podem ser visualizados em Careportal sob tratamentos)</string>
     <string name="ns_create_announcements_from_carbs_req_summary">Criar anúncios Nightscout para alertas de hidratos necessários</string>
-    <string name="wear_predictions_summary">Mostrar a predições mostrador.</string>
-    <string name="wear_predictions_title">Previsão</string>
+    <string name="wear_predictions_summary">Mostrar previsões no mostrador.</string>
+    <string name="wear_predictions_title">Previsões</string>
     <string name="data_choices">Escolha de Dados</string>
     <string name="fabric_upload">Envio Fabric</string>
     <string name="allow_automated_crash_reporting">Permitir que seja enviado automaticamente à equipa de desenvolvimento o report de crashes e das funções utilizadas, utilizando o serviço fabric.io.</string>
@@ -572,8 +572,8 @@
     <string name="overview_show_bgi">Impacto Glicose</string>
     <string name="overview_show_sensitivity">Sensibilidade</string>
     <string name="overview_show_deviations">Desvios</string>
-    <string name="overview_show_cob">Hidratos a Bordo (COB)</string>
-    <string name="overview_show_iob">Insulina a bordo</string>
+    <string name="overview_show_cob">Hidratos de Carbono Ativos (HCA)</string>
+    <string name="overview_show_iob">Insulina ativa</string>
     <string name="overview_show_basals">Basais</string>
     <string name="no_action_selected">Nenhuma ação seleccionada, nada irá acontecer</string>
     <string name="start_hypo_tt">Começar TT Hipo</string>
@@ -602,7 +602,7 @@
     <string name="smbnotallowedinopenloopmode">SMB não permitido no modo open loop</string>
     <string name="food_short">Alimentos</string>
     <string name="reset">repor</string>
-    <string name="openapssmb_maxiob_title">Máximo total IA que a OpenAPS não pode superar [U]</string>
+    <string name="openapssmb_maxiob_title">Máximo total de IA que a OpenAPS não pode superar [U]</string>
     <string name="openapssmb_maxiob_summary">Este valor é chamado de Máx IA em contexto da OpenAPS\n A OpenAPS não adicionará mais insulina se a IA atual for maior que este valor</string>
     <string name="absorption_cutoff_title">Tempo máx. absorção refeição [h]</string>
     <string name="absorption_cutoff_summary">Hora em que qualquer refeição é considerada absorvida. Restantes hidratos de carbono serão cortados.</string>
@@ -644,7 +644,7 @@
     <string name="adjustprofileinns">Alterações devem ser feitas no NS</string>
     <string name="exitwizard">Saltar assistente de configuração</string>
     <string name="setupwizard_loop_description">Pressione o botão abaixo para activar o AndroidAPS para sugerir/fazer alterações basais</string>
-    <string name="setupwizard_sensitivity_description">Plugin de Sensibilidade é usado para detecção de sensibilidade e cálculos COB. Para mais info visite:</string>
+    <string name="setupwizard_sensitivity_description">Plugin de Sensibilidade é usado para deteção de sensibilidade e cálculos HCA. Para mais info visite:</string>
     <string name="setupwizard_sensitivity_url">https://github.com/MilosKozak/AndroidAPS/wiki/Sensitivity-detection-and-COB</string>
     <string name="nsclientinfotext">ClienteNS gere a ligação ao Nightscout. Pode saltar esta parte mas não será possível passar os objectivos até que o configure.</string>
     <string name="diawarning">Lembre-se: novos perfis de insulina requerem diâmetro de pelo menos 5h. DIA 5–6h no novo perfil é igual ao diâmetro 3h nos antigos perfis de insulina.</string>
@@ -741,14 +741,14 @@
     <string name="description_source_dexcom">Receber valores da Glicose da app Dexcom com patch.</string>
     <string name="cobvsiob">HCA vs IA</string>
     <string name="bolusconstraintappliedwarn">Restrição de bólus aplicada: %1$.2f U a %2$.2f U</string>
-    <string name="slowabsorptiondetected"><![CDATA[<font color=\'%1$s\'>!!!!! Absorção lenta de hidratos detectada: %2$d%% do tempo. Verifique o seu cálculo. COB pode estar sobreestimado, assim mais insulina pode ser dada !!!</font>]]></string>
+    <string name="slowabsorptiondetected"><![CDATA[<font color=\'%1$s\'>!!!!! Absorção lenta de hidratos detetada: %2$d%% do tempo. Verifique o seu cálculo. HCA podem estar sobrestimados, assim mais insulina pode ser dada !!!</font>]]></string>
     <string name="partialboluswizard">Administrar esta parte do resultado do assistente de bólus [%]</string>
     <string name="deliverpartofboluswizard">Assistente de bólus executa o cálculo, mas apenas esta parte da insulina calculada é administada. Útil com o algoritmo SMB.</string>
     <string name="snooze">Silenciar</string>
     <string name="increasingmaxbasal">Aumentar o valor máximo de basal porque a configuração é inferior à sua basal máxima no perfil</string>
     <string name="smscommunicator_messagebody">Corpo da mensagem inválido</string>
     <string name="format_bg_isf">%1$s FSI: %2$.1f</string>
-    <string name="format_carbs_ic">%1$.0fg IC: %2$.1f</string>
+    <string name="format_carbs_ic">%1$.0fg IHC: %2$.1f</string>
     <string name="format_cob_ic">%1$.1fg IC: %2$.1f</string>
     <string name="format_percent">%1$d%%</string>
     <string name="boluswizard">Assistente de Bólus</string>
@@ -763,7 +763,7 @@
     <string name="setupwizard_units_prompt">Seleccione as unidades em que deseja exibir os valores</string>
     <string name="ns_ploadlocalprofile">Carregar as alterações do perfil local para NS</string>
     <string name="dia_short">DIA</string>
-    <string name="ic_short">IC</string>
+    <string name="ic_short">IHC</string>
     <string name="isf_short">FSI</string>
     <string name="target_short">ALV</string>
     <string name="clone_label">Clone</string>
@@ -818,7 +818,7 @@
     <string name="smscommunicator_otp_export_prompt">Tem a certeza de que deseja copiar o segredo da OTP para a área de transferêencia?\n\nSó pode precisar se a app do seu autenticador tiver problemas para digitalizar QRCode, deseja digitá-lo manualmente ou deseja configurar o token OTP de hardware usando app dedicada.</string>
     <string name="smscommunicator_otp_export_successful">Segredo da OTP (em formato Base32) exportado e copiado na áreas de transferênca. Cole-o no autenticador ou no hardware OTP burner!</string>
     <string name="smscommunicator_otp_step1_install_header">1. Instalar Autenticador</string>
-    <string name="smscommunicator_otp_step2_provisioning_header">2. Pesquise o código para configurar os códigos OTP do AndroidAPS</string>
+    <string name="smscommunicator_otp_step2_provisioning_header">2. Pesquise o código para configurar os códigos OTP da AndroidAPS</string>
     <string name="smscommunicator_otp_step3_test_header">3. Testar Uma-Senha-Única (OTP)</string>
     <string name="smscommunicator_otp_reset_header">Repor Autenticadores</string>
     <string name="smscommunicator_otp_install_info">Instalar uma app Autenticador que suporte Tokens RFC 6238 TOTP em cada telefone seguidor. Populares aplicativos gratuitos são:\n • Authy\n • o Google Authenticator\n • LastPass Autenticador\n • FreeOTP Autenticador</string>
@@ -892,7 +892,7 @@
     <string name="enablebolusadvisor_summary">Use lembrete para começar a comer mais tarde em vez di resultado do assistente durante a glicemia alta (\"pré-bolus\")</string>
     <string name="time_to_eat">Hora de comer!\nExecutar assistente de Bólus e fazer cálculo novamente.</string>
     <string name="timetoeat">Hora de comer</string>
-    <string name="fabric_upload_disabled">Envio de logs de erro desabilitado!</string>
+    <string name="fabric_upload_disabled">Envio de registos de erro desativado!</string>
     <string name="graph_menu_divider_header">Gráfico</string>
     <string name="chart_menu">Menu do Gráfico</string>
     <string name="clear_filter">Limpar filtros</string>
