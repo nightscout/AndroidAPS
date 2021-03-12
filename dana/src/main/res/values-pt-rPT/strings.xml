@@ -93,7 +93,7 @@
     <string name="danar_disableeasymode">Desactivar modo EasyUI na bomba</string>
     <string name="profile_set_failed">Não foi possível configurar o perfil de basal</string>
     <string name="danar_bluetooth_status">Estado Bluetooth</string>
-    <string name="danar_iob_label">IOB Bomba</string>
+    <string name="danar_iob_label">IA Bomba</string>
     <string name="basal_step">Incremento Basal</string>
     <string name="bolus_step">Incremento Bólus</string>
     <string name="virtualpump_firmware_label">Firmware</string>
