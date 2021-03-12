@@ -178,6 +178,8 @@
     <string name="careportal_pumpsitechange">Сена места катетера помпы</string>
     <string name="careportal_cgmsensorinsert">Установка сенсора мониторинга глюкозы</string>
     <string name="careportal_cgmsensorstart">Сарт сенсора</string>
+    <string name="careportal_cgm_sensor_stop">Останов сенсора мониторинга</string>
+    <string name="careportal_dad_alert">Сигнал служебной собаки</string>
     <string name="careportal_insulincartridgechange">Замена картриджа инсулина</string>
     <string name="careportal_profileswitch">Смена профиля</string>
     <string name="careportal_snackbolus">Болюс на перекус</string>
