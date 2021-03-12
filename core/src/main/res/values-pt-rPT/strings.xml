@@ -73,7 +73,7 @@
     <string name="bolusdelivered">Bólus %1$.2f U administrado com sucesso</string>
     <string name="virtualpump_resultok">OK</string>
     <string name="novalidbasalrate">Nenhum valor de basal válido foi lido da bomba</string>
-    <string name="limitingmaxiob">A limitar IOB máx. para %1$.1f U porque %2$s</string>
+    <string name="limitingmaxiob">A limitar IA máx. para %1$.1f U porque %2$s</string>
     <string name="unsafeusage">uso não seguro</string>
     <string name="pump_unreachable">Bomba inacessível</string>
     <string name="extended_bolus">Bólus Prolongado</string>
@@ -93,8 +93,8 @@
     <string name="exists">existe</string>
     <string name="notexists">não existe</string>
     <string name="glucose">Glicose</string>
-    <string name="iob">IOB</string>
-    <string name="cob">COB</string>
+    <string name="iob">IA</string>
+    <string name="cob">HCA</string>
     <string name="name_short">Nome:</string>
     <string name="time">Hora</string>
     <string name="ns_wifi_ssids">SSID WiFi</string>
