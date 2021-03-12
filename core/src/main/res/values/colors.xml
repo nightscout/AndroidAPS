@@ -63,7 +63,7 @@
     <color name="primaryColorDefault">@color/sphere_plastic_grey</color>
     <color name="primaryLightColorDefault">#bbb9bb</color>
     <color name="primaryDarkColorDefault">#666666</color>
-    <color name="secondaryColorDefault">#a0a0a0</color>
+    <color name="secondaryColorDefault">#FFFB8C00</color>
     <color name="secondaryLightColorDefault">#e3e3e3</color>
     <color name="secondaryDarkColorDefault">#848484</color>
     <color name="primaryTextColorDefault">#4e4e4e</color>
