@@ -161,7 +161,7 @@
         <!---Exercise Event-->
         <item name="therapyeventExercise" >@color/blue_default</item>
         <!---AAPS offline Event-->
-        <item name="therapyeventAapsoffline" >@color/sandGray</item>
+        <item name="therapyeventAapsoffline" >@color/lightSandGray</item>
         <!---Default  Event-->
         <item name="therapyeventDefault" >@color/gray</item>
         <!---Misc -->
