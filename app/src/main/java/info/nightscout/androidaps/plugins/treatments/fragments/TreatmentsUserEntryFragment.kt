@@ -111,7 +111,7 @@ class TreatmentsUserEntryFragment : DaggerFragment() {
         override fun onBindViewHolder(holder: UserEntryViewHolder, position: Int) {
             val current = entries[position]
             holder.binding.date.text = dateUtil.dateAndTimeAndSecondsString(current.timestamp)
-            holder.binding.action.text = resourceHelper.gs(current.action.stringId())
+            holder.binding.action.text = translator.translate(current.action.name)
             holder.binding.action.setTextColor(resourceHelper.gc(current.action.colorGroup.colorId()))
             if (current.s != "") {
                 holder.binding.s.text = current.s
@@ -127,8 +127,9 @@ class TreatmentsUserEntryFragment : DaggerFragment() {
                 else
                     when (v.unit) {
                         Units.Timestamp -> valuesWithUnitString += dateUtil.dateAndTimeAndSecondsString(v.lValue) + separator
-                        Units.CPEvent -> valuesWithUnitString += translator.translate(v.sValue) + separator
-                        Units.R_String -> {
+                        Units.CPEvent   -> valuesWithUnitString += translator.translate(v.sValue) + separator
+                        Units.TT_Reason -> valuesWithUnitString += v.sValue + separator
+                        Units.R_String  -> {
                             rStringParam = v.lValue.toInt()
                             when (rStringParam) {   //
                                 0 -> valuesWithUnitString += resourceHelper.gs(v.iValue) + separator
@@ -138,11 +139,13 @@ class TreatmentsUserEntryFragment : DaggerFragment() {
                                 4 -> rStringParam = 0
                             }
                         }
-                        Units.Mg_Dl -> valuesWithUnitString += if (profileFunction.getUnits()==Constants.MGDL) DecimalFormatter.to0Decimal(v.dValue) + resourceHelper.gs(Units.Mg_Dl.stringId()) + separator else DecimalFormatter.to1Decimal(v.dValue/Constants.MMOLL_TO_MGDL) + resourceHelper.gs(Units.Mmol_L.stringId()) + separator
-                        Units.Mmol_L -> valuesWithUnitString += if (profileFunction.getUnits()==Constants.MGDL) DecimalFormatter.to0Decimal(v.dValue*Constants.MMOLL_TO_MGDL) + resourceHelper.gs(Units.Mg_Dl.stringId()) + separator else DecimalFormatter.to1Decimal(v.dValue) + resourceHelper.gs(Units.Mmol_L.stringId()) + separator
-                        Units.U_H, Units.U -> valuesWithUnitString += DecimalFormatter.to2Decimal(v.dValue) + resourceHelper.gs(v.unit.stringId()) + separator
-                        Units.G, Units.M, Units.H, Units.Percent -> valuesWithUnitString += v.iValue.toString() + resourceHelper.gs(v.unit.stringId()) + separator
-                        else -> valuesWithUnitString += if (v.iValue != 0 || v.sValue != "") { v.value().toString() + if (!v.unit.stringId().equals(0)) resourceHelper.gs(v.unit.stringId()) + separator else separator } else ""
+                        Units.Mg_Dl     -> valuesWithUnitString += if (profileFunction.getUnits()==Constants.MGDL) DecimalFormatter.to0Decimal(v.dValue) + translator.translate(Units.Mg_Dl.name) + separator else DecimalFormatter.to1Decimal(v.dValue/Constants.MMOLL_TO_MGDL) + translator.translate(Units.Mmol_L.name) + separator
+                        Units.Mmol_L    -> valuesWithUnitString += if (profileFunction.getUnits()==Constants.MGDL) DecimalFormatter.to0Decimal(v.dValue*Constants.MMOLL_TO_MGDL) + translator.translate(Units.Mg_Dl.name) + separator else DecimalFormatter.to1Decimal(v.dValue) + translator.translate(Units.Mmol_L.name) + separator
+                        Units.U_H, Units.U
+                                        -> valuesWithUnitString += DecimalFormatter.to2Decimal(v.dValue) + translator.translate(v.unit.name) + separator
+                        Units.G, Units.M, Units.H, Units.Percent
+                                        -> valuesWithUnitString += v.iValue.toString() + translator.translate(v.unit.name) + separator
+                        else            -> valuesWithUnitString += if (v.iValue != 0 || v.sValue != "") { v.value().toString() + separator } else ""
                     }
             }
             holder.binding.values.text = valuesWithUnitString.trim()

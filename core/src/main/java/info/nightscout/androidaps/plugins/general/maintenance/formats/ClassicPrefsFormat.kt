@@ -8,7 +8,6 @@ import info.nightscout.androidaps.interfaces.ProfileFunction
 import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.DecimalFormatter
 import info.nightscout.androidaps.utils.Translator
-import info.nightscout.androidaps.utils.extensions.stringId
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 import info.nightscout.androidaps.utils.storage.Storage
 import java.io.File
@@ -96,7 +95,7 @@ class ClassicPrefsFormat @Inject constructor(
                     entry.timestamp.toString() + ";" +
                         dateUtil.dateAndTimeAndSecondsString(entry.timestamp) + ";" +
                         dateUtil.timeString(entry.utcOffset) + ";" +
-                        csvString(entry.action.stringId()) + ";" +
+                        csvString(entry.action) + ";" +
                         csvString(entry.s) + ";" +
                         valueWithUnitToCsv(value)
                 }
@@ -104,7 +103,7 @@ class ClassicPrefsFormat @Inject constructor(
                 entry.timestamp.toString() + ";" +
                     dateUtil.dateAndTimeAndSecondsString(entry.timestamp) + ";" +
                     dateUtil.timeString(entry.utcOffset) + ";" +
-                    csvString(entry.action.stringId()) + ";" +
+                    csvString(entry.action) + ";" +
                     csvString(entry.s) + ";;"
             }
         }
@@ -114,18 +113,21 @@ class ClassicPrefsFormat @Inject constructor(
         return when (v.unit) {
             Units.Timestamp     -> dateUtil.dateAndTimeAndSecondsString(v.lValue) + ";" + csvString(R.string.date)
             Units.CPEvent       -> csvString(translator.translate(v.sValue)) + ";"
+            Units.TT_Reason     -> csvString(v.sValue) + ";"
             Units.R_String      -> if (v.lValue.toInt() == 0) csvString(v.iValue) + ";" else ";"                //If lValue > 0 it's a formated string, so hidden for
-            Units.Mg_Dl         -> if (profileFunction.getUnits()==Constants.MGDL) DecimalFormatter.to0Decimal(v.dValue) + ";" + csvString(Units.Mg_Dl.stringId()) else DecimalFormatter.to1Decimal(v.dValue/Constants.MMOLL_TO_MGDL) + ";" + csvString(Units.Mmol_L.stringId())
-            Units.Mmol_L        -> if (profileFunction.getUnits()==Constants.MGDL) DecimalFormatter.to0Decimal(v.dValue*Constants.MMOLL_TO_MGDL) + ";" + csvString(Units.Mg_Dl.stringId()) else DecimalFormatter.to1Decimal(v.dValue) + ";" + csvString(Units.Mmol_L.stringId())
-            Units.U_H, Units.U  -> DecimalFormatter.to2Decimal(v.dValue) + ";" + csvString(v.unit.stringId())
+            Units.Mg_Dl         -> if (profileFunction.getUnits()==Constants.MGDL) DecimalFormatter.to0Decimal(v.dValue) + ";" + csvString(Units.Mg_Dl) else DecimalFormatter.to1Decimal(v.dValue/Constants.MMOLL_TO_MGDL) + ";" + csvString(Units.Mmol_L)
+            Units.Mmol_L        -> if (profileFunction.getUnits()==Constants.MGDL) DecimalFormatter.to0Decimal(v.dValue*Constants.MMOLL_TO_MGDL) + ";" + csvString(Units.Mg_Dl) else DecimalFormatter.to1Decimal(v.dValue) + ";" + csvString(Units.Mmol_L)
+            Units.U_H, Units.U  -> DecimalFormatter.to2Decimal(v.dValue) + ";" + csvString(v.unit)
             Units.G, Units.M, Units.H, Units.Percent
-                                -> v.iValue.toString() + ";" + csvString(v.unit.stringId())
-            else                -> if (v.sValue != "")  { csvString(v.sValue) +  ";" + csvString(v.unit.stringId())}
-                                    else if (v.iValue != 0) { v.iValue.toString() + ";" + csvString(v.unit.stringId())}
+                                -> v.iValue.toString() + ";" + csvString(v.unit)
+            else                -> if (v.sValue != "")  { csvString(v.sValue) +  ";" + csvString(v.unit)}
+                                    else if (v.iValue != 0) { v.iValue.toString() + ";" + csvString(v.unit)}
                                     else ";"
         }
     }
 
+    private fun csvString(action: Action): String = "\"" + translator.translate(action.name).replace("\"", "\"\"") + "\""
+    private fun csvString(unit: Units): String = "\"" + translator.translate(unit.name).replace("\"", "\"\"") + "\""
     private fun csvString(id: Int): String = if (id != 0) "\"" + resourceHelper.gs(id).replace("\"", "\"\"") + "\"" else ""
     private fun csvString(s: String): String = if (s != "") "\"" + s.replace("\"", "\"\"") + "\"" else ""
 }
