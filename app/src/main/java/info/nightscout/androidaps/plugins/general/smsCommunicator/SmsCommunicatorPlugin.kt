@@ -758,9 +758,9 @@ class SmsCommunicatorPlugin @Inject constructor(
                                     replyText += "\n" + activePlugin.activePump.shortStatus(true)
                                     sendSMSToAllNumbers(Sms(receivedSms.phoneNumber, replyText))
                                     if (config.APS)
-                                        uel.log(Action.SMS_EXTENDED_BOLUS, activePlugin.activePump.shortStatus(true), ValueWithUnit(R.string.smscommunicator_extendedset, 2), ValueWithUnit(aDouble, Units.U), ValueWithUnit(duration, Units.M), ValueWithUnit(R.string.loopsuspended, Units.R_String))
+                                        uel.log(Action.SMS_EXTENDED_BOLUS, activePlugin.activePump.shortStatus(true), ValueWithUnit(R.string.smscommunicator_extendedset, 2), ValueWithUnit(aDouble ?:0.0, Units.U), ValueWithUnit(duration, Units.M), ValueWithUnit(R.string.loopsuspended, Units.R_String))
                                      else
-                                        uel.log(Action.SMS_EXTENDED_BOLUS, activePlugin.activePump.shortStatus(true), ValueWithUnit(R.string.smscommunicator_extendedset, 2), ValueWithUnit(aDouble, Units.U), ValueWithUnit(duration, Units.M))
+                                        uel.log(Action.SMS_EXTENDED_BOLUS, activePlugin.activePump.shortStatus(true), ValueWithUnit(R.string.smscommunicator_extendedset, 2), ValueWithUnit(aDouble ?:0.0, Units.U), ValueWithUnit(duration, Units.M))
                                 } else {
                                     var replyText = resourceHelper.gs(R.string.smscommunicator_extendedfailed)
                                     replyText += "\n" + activePlugin.activePump.shortStatus(true)
@@ -883,12 +883,12 @@ class SmsCommunicatorPlugin @Inject constructor(
                                     var replyText = String.format(resourceHelper.gs(R.string.smscommunicator_carbsset), anInteger)
                                     replyText += "\n" + activePlugin.activePump.shortStatus(true)
                                     sendSMSToAllNumbers(Sms(receivedSms.phoneNumber, replyText))
-                                    uel.log(Action.SMS_CARBS, activePlugin.activePump.shortStatus(true), ValueWithUnit(R.string.smscommunicator_carbsset, 1), ValueWithUnit(anInteger,Units.G))
+                                    uel.log(Action.SMS_CARBS, activePlugin.activePump.shortStatus(true), ValueWithUnit(R.string.smscommunicator_carbsset, 1), ValueWithUnit(anInteger ?:0,Units.G))
                                 } else {
                                     var replyText = resourceHelper.gs(R.string.smscommunicator_carbsfailed, anInteger)
                                     replyText += "\n" + activePlugin.activePump.shortStatus(true)
                                     sendSMS(Sms(receivedSms.phoneNumber, replyText))
-                                    uel.log(Action.SMS_CARBS, activePlugin.activePump.shortStatus(true), ValueWithUnit(R.string.smscommunicator_carbsfailed, 1), ValueWithUnit(anInteger,Units.G))
+                                    uel.log(Action.SMS_CARBS, activePlugin.activePump.shortStatus(true), ValueWithUnit(R.string.smscommunicator_carbsfailed, 1), ValueWithUnit(anInteger ?:0,Units.G))
                                 }
                             }
                         })
@@ -897,7 +897,7 @@ class SmsCommunicatorPlugin @Inject constructor(
                         var replyText = String.format(resourceHelper.gs(R.string.smscommunicator_carbsset), anInteger)
                         replyText += "\n" + activePlugin.activePump.shortStatus(true)
                         sendSMSToAllNumbers(Sms(receivedSms.phoneNumber, replyText))
-                        uel.log(Action.SMS_CARBS, activePlugin.activePump.shortStatus(true), ValueWithUnit(R.string.smscommunicator_carbsset, 1), ValueWithUnit(anInteger,Units.G))
+                        uel.log(Action.SMS_CARBS, activePlugin.activePump.shortStatus(true), ValueWithUnit(R.string.smscommunicator_carbsset, 1), ValueWithUnit(anInteger ?:0,Units.G))
                     }
                 }
             })

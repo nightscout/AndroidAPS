@@ -208,7 +208,7 @@ class CareDialog : DialogFragmentWithDate() {
         if (options == EventType.NOTE || options == EventType.EXERCISE) {
             actions.add(resourceHelper.gs(R.string.careportal_newnstreatment_duration_label) + ": " + resourceHelper.gs(R.string.format_mins, binding.duration.value.toInt()))
             therapyEvent.duration = T.mins(binding.duration.value.toLong()).msecs()
-            if (!binding.duration.value.equals(0.0)) valuesWithUnit.add(ValueWithUnit(binding.duration.value.toInt(), Units.M))
+            valuesWithUnit.add(ValueWithUnit(binding.duration.value.toInt(), Units.M, !binding.duration.value.equals(0.0)))
         }
         val notes = binding.notesLayout.notes.text.toString()
         if (notes.isNotEmpty()) {
@@ -216,10 +216,7 @@ class CareDialog : DialogFragmentWithDate() {
             therapyEvent.note = notes
         }
 
-        if (eventTimeChanged) {
-            actions.add(resourceHelper.gs(R.string.time) + ": " + dateUtil.dateAndTimeString(eventTime))
-            valuesWithUnit.add(0, ValueWithUnit(eventTime, Units.Timestamp))
-        }
+        if (eventTimeChanged) actions.add(resourceHelper.gs(R.string.time) + ": " + dateUtil.dateAndTimeString(eventTime))
 
         therapyEvent.enteredBy = enteredBy
 
@@ -230,7 +227,8 @@ class CareDialog : DialogFragmentWithDate() {
                 }, {
                     aapsLogger.error(LTag.BGSOURCE, "Error while saving therapy event", it)
                 })
-                valuesWithUnit.add(if (eventTimeChanged) 1 else 0, ValueWithUnit(therapyEvent.type.text, Units.CPEvent))
+                valuesWithUnit.add(0, ValueWithUnit(eventTime, Units.Timestamp, eventTimeChanged))
+                valuesWithUnit.add(1, ValueWithUnit(therapyEvent.type.text, Units.CPEvent))
                 uel.log(Action.CAREPORTAL, notes, valuesWithUnit)
             }, null)
         }

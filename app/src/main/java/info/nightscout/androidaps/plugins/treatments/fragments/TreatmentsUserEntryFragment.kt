@@ -145,9 +145,8 @@ class TreatmentsUserEntryFragment : DaggerFragment() {
                         else -> valuesWithUnitString += if (v.iValue != 0 || v.sValue != "") { v.value().toString() + if (!v.unit.stringId().equals(0)) resourceHelper.gs(v.unit.stringId()) + separator else separator } else ""
                     }
             }
-            if (current.values.size > 0)
-                holder.binding.values.visibility = View.VISIBLE
-                holder.binding.values.text = valuesWithUnitString.trim()
+            holder.binding.values.text = valuesWithUnitString.trim()
+            holder.binding.values.visibility = if (current.values.size > 0) View.VISIBLE else View.GONE
         }
 
         inner class UserEntryViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {

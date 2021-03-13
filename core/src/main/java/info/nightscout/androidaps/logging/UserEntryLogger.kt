@@ -23,7 +23,7 @@ class UserEntryLogger @Inject constructor(
     fun log(action: Action, s: String, vararg listvalues: ValueWithUnit) {
         val values = mutableListOf<ValueWithUnit>()
         for (v in listvalues){
-            values.add(v)
+            if (v.condition) values.add(v)
         }
         compositeDisposable += repository.runTransaction(UserEntryTransaction(
             action = action,
@@ -41,7 +41,7 @@ class UserEntryLogger @Inject constructor(
     fun log(action: Action, vararg listvalues: ValueWithUnit) {
         val values = mutableListOf<ValueWithUnit>()
         for (v in listvalues){
-            values.add(v)
+            if (v.condition) values.add(v)
         }
         compositeDisposable += repository.runTransaction(UserEntryTransaction(
             action = action,

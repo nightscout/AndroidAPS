@@ -136,7 +136,7 @@ class FillDialog : DialogFragmentWithDate() {
             activity?.let { activity ->
                 OKDialog.showConfirmation(activity, resourceHelper.gs(R.string.primefill), HtmlHelper.fromHtml(Joiner.on("<br/>").join(actions)), {
                     if (insulinAfterConstraints > 0) {
-                        uel.log(Action.PRIME_BOLUS, notes, ValueWithUnit(insulinAfterConstraints, Units.U))
+                        uel.log(Action.PRIME_BOLUS, notes, ValueWithUnit(insulinAfterConstraints, Units.U, insulinAfterConstraints != 0.0))
                         requestPrimeBolus(insulinAfterConstraints, notes)
                     }
                     if (siteChange) {

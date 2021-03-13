@@ -452,6 +452,7 @@
     <string name="uel_treatment_removed">TREATMENT REMOVED</string>
     <string name="uel_tt_removed">TT REMOVED</string>
     <string name="uel_ns_paused">NS PAUSED</string>
+    <string name="uel_ns_resume">NS RESUME</string>
     <string name="uel_ns_queue_cleared">NS QUEUE CLEARED</string>
     <string name="uel_ns_settings_copied">NS SETTINGS COPIED</string>
     <string name="uel_error_dialog_ok">ERROR DIALOG OK</string>

@@ -125,10 +125,7 @@ class ProfileSwitchDialog : DialogFragmentWithDate() {
 
         activity?.let { activity ->
             OKDialog.showConfirmation(activity, resourceHelper.gs(R.string.careportal_profileswitch), HtmlHelper.fromHtml(Joiner.on("<br/>").join(actions)), {
-                if (eventTimeChanged)
-                    uel.log(Action.PROFILE_SWITCH, notes, ValueWithUnit(eventTime, Units.Timestamp), ValueWithUnit(percent, Units.Percent), ValueWithUnit(timeShift, Units.H), ValueWithUnit(duration, Units.M))
-                else
-                    uel.log(Action.PROFILE_SWITCH, notes, ValueWithUnit(percent, Units.Percent), ValueWithUnit(timeShift, Units.H), ValueWithUnit(duration, Units.M))
+                uel.log(Action.PROFILE_SWITCH, notes, ValueWithUnit(eventTime, Units.Timestamp, eventTimeChanged), ValueWithUnit(percent, Units.Percent), ValueWithUnit(timeShift, Units.H, timeShift != 0), ValueWithUnit(duration, Units.M, duration != 0))
                 treatmentsPlugin.doProfileSwitch(profileStore, profile, duration, percent, timeShift, eventTime)
             })
         }

@@ -27,7 +27,7 @@ data class UserEntry(
         @SerializedName("SUPERBOLUS_TBR") SUPERBOLUS_TBR (ColorGroup.InsulinTreatment),
         @SerializedName("CARBS") CARBS (ColorGroup.CarbTreatment),
         @SerializedName("EXTENDED_CARBS") EXTENDED_CARBS (ColorGroup.CarbTreatment),
-        @SerializedName("TEMP_BASAL") TEMP_BASAL (ColorGroup.TT),
+        @SerializedName("TEMP_BASAL") TEMP_BASAL (ColorGroup.InsulinTreatment),
         @SerializedName("TT") TT (ColorGroup.TT),
         @SerializedName("TT_ACTIVITY") TT_ACTIVITY (ColorGroup.TT),
         @SerializedName("TT_EATING_SOON") TT_EATING_SOON (ColorGroup.TT),
@@ -80,6 +80,7 @@ data class UserEntry(
         @SerializedName("TREATMENT_REMOVED") TREATMENT_REMOVED (ColorGroup.InsulinTreatment),
         @SerializedName("TT_REMOVED") TT_REMOVED (ColorGroup.TT),
         @SerializedName("NS_PAUSED") NS_PAUSED (ColorGroup.Aaps),
+        @SerializedName("NS_RESUME") NS_RESUME (ColorGroup.Aaps),
         @SerializedName("NS_QUEUE_CLEARED") NS_QUEUE_CLEARED (ColorGroup.Aaps),
         @SerializedName("NS_SETTINGS_COPIED") NS_SETTINGS_COPIED (ColorGroup.Aaps),
         @SerializedName("ERROR_DIALOG_OK") ERROR_DIALOG_OK (ColorGroup.Aaps),
@@ -125,13 +126,13 @@ data class UserEntry(
             fun fromString(source: String?) = values().firstOrNull { it.name == source } ?: UNKNOWN
         }
     }
-    data class ValueWithUnit (val dValue: Double, val iValue: Int, val lValue: Long, val sValue: String, val unit: Units) {
-        constructor(dvalue:Double?, unit:Units) : this(dvalue ?:0.0,0, 0, "", unit)
-        constructor(ivalue:Int?, unit:Units) : this(0.0, ivalue ?:0, 0, "", unit)
-        constructor(lvalue:Long?, unit:Units) : this(0.0,0, lvalue ?:0, "", unit)
-        constructor(svalue:String?, unit:Units) : this(0.0,0, 0, svalue ?:"", unit)
-        constructor(dvalue:Double?, unit:String) : this(dvalue ?:0.0,0, 0, "", Units.fromText(unit))
-        constructor(rStringRef:Int, nbParam: Long) : this(0.0, rStringRef, nbParam, "", Units.R_String)             // additionnal constructors for formated strings with additional values as parameters (define number of parameters as long
+    data class ValueWithUnit (val dValue: Double=0.0, val iValue: Int=0, val lValue: Long=0, val sValue: String="", val unit: Units=Units.None, val condition:Boolean=true){
+        constructor(dvalue: Double, unit: Units, condition:Boolean = true) : this(dvalue, 0, 0, "", unit, condition)
+        constructor(ivalue: Int, unit: Units, condition:Boolean = true) : this(0.0, ivalue, 0, "", unit, condition)
+        constructor(lvalue: Long, unit: Units, condition:Boolean = true) : this(0.0,0, lvalue, "", unit, condition)
+        constructor(svalue: String, unit:Units) : this(0.0,0, 0, svalue, unit, svalue != "")
+        constructor(dvalue: Double, unit:String) : this(dvalue,0, 0, "", Units.fromText(unit))
+        constructor(rStringRef: Int, nbParam: Long) : this(0.0, rStringRef, nbParam, "", Units.R_String, !rStringRef.equals(0))             // additionnal constructors for formated strings with additional values as parameters (define number of parameters as long
 
         fun value() : Any {
             if (sValue != "") return sValue

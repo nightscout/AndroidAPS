@@ -175,7 +175,7 @@ class TreatmentsBolusFragment : DaggerFragment() {
                             resourceHelper.gs(R.string.carbs) + ": " + resourceHelper.gs(R.string.format_carbs, treatment.carbs.toInt()) + "\n" +
                             resourceHelper.gs(R.string.date) + ": " + dateUtil.dateAndTimeString(treatment.date)
                         OKDialog.showConfirmation(activity, resourceHelper.gs(R.string.removerecord), text, Runnable {
-                            uel.log(Action.TREATMENT_REMOVED, ValueWithUnit(treatment.date, Units.Timestamp), ValueWithUnit(treatment.insulin, Units.U), ValueWithUnit(treatment.carbs.toInt(), Units.G))
+                            uel.log(Action.TREATMENT_REMOVED, ValueWithUnit(treatment.date, Units.Timestamp), ValueWithUnit(treatment.insulin, Units.U, treatment.insulin != 0.0), ValueWithUnit(treatment.carbs.toInt(), Units.G, treatment.carbs != 0.0))
                             if (treatment.source == Source.PUMP) {
                                 treatment.isValid = false
                                 treatmentsPlugin.service.update(treatment)

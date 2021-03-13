@@ -125,7 +125,7 @@ public class NSClientFragment extends DaggerFragment implements View.OnClickList
                 break;
             case R.id.nsclientinternal_clearqueue:
                 OKDialog.showConfirmation(getContext(), resourceHelper.gs(R.string.nsclientinternal), resourceHelper.gs(R.string.clearqueueconfirm), () -> {
-                    uel.log(Action.NS_QUEUE_CLEARED, new ValueWithUnit(0, Units.None));
+                    uel.log(Action.NS_QUEUE_CLEARED);
                     uploadQueue.clearQueue();
                     updateGui();
                     fabricPrivacy.logCustom("NSClientClearQueue");
@@ -141,7 +141,7 @@ public class NSClientFragment extends DaggerFragment implements View.OnClickList
     public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
         switch (buttonView.getId()) {
             case R.id.nsclientinternal_paused:
-                uel.log(Action.NS_PAUSED, new ValueWithUnit(isChecked ? 1 : 0, Units.None));
+                uel.log(isChecked ? Action.NS_PAUSED : Action.NS_RESUME);
                 nsClientPlugin.pause(isChecked);
                 updateGui();
                 fabricPrivacy.logCustom("NSClientPause");

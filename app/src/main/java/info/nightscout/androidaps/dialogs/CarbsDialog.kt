@@ -271,16 +271,12 @@ class CarbsDialog : DialogFragmentWithDate() {
                     }
                     if (carbsAfterConstraints > 0) {
                         if (duration == 0) {
-                            if (eventTimeChanged)
-                                uel.log(Action.CARBS, notes, ValueWithUnit(eventTime, Units.Timestamp), ValueWithUnit(carbsAfterConstraints, Units.G), ValueWithUnit(timeOffset, Units.M))
-                            else
-                                uel.log(Action.CARBS, notes, ValueWithUnit(carbsAfterConstraints, Units.G), ValueWithUnit(timeOffset, Units.M))
                             carbsGenerator.createCarb(carbsAfterConstraints, time, TherapyEvent.Type.CARBS_CORRECTION.text, notes)
                         } else {
-                            uel.log(Action.CARBS, notes, ValueWithUnit(carbsAfterConstraints, Units.G), ValueWithUnit(timeOffset,Units.M), ValueWithUnit(duration, Units.H))
                             carbsGenerator.generateCarbs(carbsAfterConstraints, time, duration, notes)
                             nsUpload.uploadEvent(TherapyEvent.Type.NOTE.text, DateUtil.now() - 2000, resourceHelper.gs(R.string.generated_ecarbs_note, carbsAfterConstraints, duration, timeOffset))
                         }
+                        uel.log(Action.CARBS, notes, ValueWithUnit(eventTime, Units.Timestamp, eventTimeChanged), ValueWithUnit(carbsAfterConstraints, Units.G), ValueWithUnit(timeOffset, Units.M, timeOffset != 0), ValueWithUnit(duration, Units.H, duration != 0))
                     }
                     if (useAlarm && carbs > 0 && timeOffset > 0) {
                         carbTimer.scheduleReminder(dateUtil._now() + T.mins(timeOffset.toLong()).msecs())

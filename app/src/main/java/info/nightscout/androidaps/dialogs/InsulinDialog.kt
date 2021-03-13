@@ -211,7 +211,7 @@ class InsulinDialog : DialogFragmentWithDate() {
                         detailedBolusInfo.source = Source.USER
                         detailedBolusInfo.notes = notes
                         if (recordOnlyChecked) {
-                            uel.log(Action.BOLUS_RECORD, notes, ValueWithUnit(insulinAfterConstraints, Units.U), ValueWithUnit(timeOffset, Units.M))
+                            uel.log(Action.BOLUS_RECORD, notes, ValueWithUnit(insulinAfterConstraints, Units.U), ValueWithUnit(timeOffset, Units.M, timeOffset!= 0))
                             detailedBolusInfo.date = time
                             activePlugin.activeTreatments.addToHistoryTreatment(detailedBolusInfo, false)
                         } else {

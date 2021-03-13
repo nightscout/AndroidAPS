@@ -66,6 +66,7 @@ fun Action.stringId(): Int {
         Action.TREATMENT_REMOVED          -> R.string.uel_treatment_removed
         Action.TT_REMOVED                 -> R.string.uel_tt_removed
         Action.NS_PAUSED                  -> R.string.uel_ns_paused
+        Action.NS_RESUME                  -> R.string.uel_ns_resume
         Action.NS_QUEUE_CLEARED           -> R.string.uel_ns_queue_cleared
         Action.NS_SETTINGS_COPIED         -> R.string.uel_ns_settings_copied
         Action.ERROR_DIALOG_OK            -> R.string.uel_error_dialog_ok
