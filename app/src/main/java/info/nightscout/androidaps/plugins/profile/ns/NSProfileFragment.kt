@@ -62,7 +62,7 @@ class NSProfileFragment : DaggerFragment() {
                     activity?.let { activity ->
                         OKDialog.showConfirmation(activity, resourceHelper.gs(R.string.nsprofile),
                             resourceHelper.gs(R.string.activate_profile) + ": " + name + " ?", Runnable {
-                            uel.log(Action.PROFILE_SWITCH, ValueWithUnit(name,Units.None), ValueWithUnit(100.toInt(), Units.Percent))
+                            uel.log(Action.PROFILE_SWITCH, ValueWithUnit(name, Units.None), ValueWithUnit(100.toInt(), Units.Percent))
                             treatmentsPlugin.doProfileSwitch(store, name, 0, 100, 0, DateUtil.now())
                         })
                     }
