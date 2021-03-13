@@ -186,10 +186,10 @@ class TempTargetDialog : DialogFragmentWithDate() {
                         timestamp = eventTime,
                         duration = TimeUnit.MINUTES.toMillis(duration.toLong()),
                         reason = when (reason) {
-                            "Eating Soon" -> TemporaryTarget.Reason.EATING_SOON
-                            "Activity"    -> TemporaryTarget.Reason.ACTIVITY
-                            "Hypo"        -> TemporaryTarget.Reason.HYPOGLYCEMIA
-                            else          -> TemporaryTarget.Reason.CUSTOM
+                            resourceHelper.gs(R.string.eatingsoon) -> TemporaryTarget.Reason.EATING_SOON
+                            resourceHelper.gs(R.string.activity)    -> TemporaryTarget.Reason.ACTIVITY
+                            resourceHelper.gs(R.string.hypo)        -> TemporaryTarget.Reason.HYPOGLYCEMIA
+                            else                             -> TemporaryTarget.Reason.CUSTOM
                         },
                         lowTarget = Profile.toMgdl(target, profileFunction.getUnits()),
                         highTarget = Profile.toMgdl(target, profileFunction.getUnits())

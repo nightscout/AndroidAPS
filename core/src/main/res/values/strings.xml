@@ -266,6 +266,12 @@
     <string name="glucosetype_sensor">Sensor</string>
     <string name="manual">Manual</string>
     <string name="unknown">unknown</string>
+    <string name="eatingsoon">Eating Soon</string>
+    <string name="hypo">Hypo</string>
+    <string name="activity">Activity</string>
+    <string name="wear">Wear</string>
+    <string name="automation">Automation</string>
+    <string name="custom">Custom</string>
 
     <!--    Command-->
     <string name="connectiontimedout">Connection timed out</string>
