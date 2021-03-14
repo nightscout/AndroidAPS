@@ -178,6 +178,7 @@
     <string name="careportal_pumpsitechange">Changement Zone D\'insertion</string>
     <string name="careportal_cgmsensorinsert">Insertion Capteur MGC</string>
     <string name="careportal_cgmsensorstart">Démarrage Capteur MGC</string>
+    <string name="careportal_cgm_sensor_stop">Arrêt capteur MGC</string>
     <string name="careportal_insulincartridgechange">Changement du Réservoir</string>
     <string name="careportal_profileswitch">Changement de profil</string>
     <string name="careportal_snackbolus">Bolus Goûter</string>
