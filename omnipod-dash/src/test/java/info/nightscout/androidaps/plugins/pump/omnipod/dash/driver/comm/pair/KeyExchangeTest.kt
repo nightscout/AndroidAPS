@@ -27,7 +27,7 @@ class KeyExchangeTest {
 
         val pdmNonce = Hex.decode("edfdacb242c7f4e1d2bc4d93ca3c5706")
 
-       Mockito.`when`(randomByteGenerator.nextBytes(anyInt())).thenReturn(pdmNonce)
+        Mockito.`when`(randomByteGenerator.nextBytes(anyInt())).thenReturn(pdmNonce)
 
         val ke = KeyExchange(
             aapsLogger,

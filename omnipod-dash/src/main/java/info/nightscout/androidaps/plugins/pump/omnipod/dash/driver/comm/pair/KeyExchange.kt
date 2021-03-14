@@ -10,13 +10,12 @@ import info.nightscout.androidaps.utils.extensions.toHex
 import org.spongycastle.crypto.engines.AESEngine
 import org.spongycastle.crypto.macs.CMac
 import org.spongycastle.crypto.params.KeyParameter
-import org.spongycastle.util.encoders.Hex
 
 class KeyExchange(
     private val aapsLogger: AAPSLogger,
     private val x25519: X25519KeyGenerator,
-    private val randomByteGenerator: RandomByteGenerator
-){
+    randomByteGenerator: RandomByteGenerator
+) {
 
     val pdmNonce: ByteArray = randomByteGenerator.nextBytes(NONCE_SIZE)
     val pdmPrivate: ByteArray = x25519.generatePrivateKey()
@@ -24,7 +23,7 @@ class KeyExchange(
 
     var podPublic = ByteArray(PUBLIC_KEY_SIZE)
         private set
-    var podNonce : ByteArray = ByteArray(NONCE_SIZE)
+    var podNonce: ByteArray = ByteArray(NONCE_SIZE)
 
     val podConf = ByteArray(CMAC_SIZE)
     val pdmConf = ByteArray(CMAC_SIZE)
