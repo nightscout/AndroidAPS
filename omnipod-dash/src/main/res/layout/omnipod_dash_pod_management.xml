@@ -119,6 +119,7 @@
                 android:orientation="vertical"
                 app:layout_constraintGuide_percent="0.5" />
 
+            <!-- FIXME visible for development -->
             <info.nightscout.androidaps.utils.ui.SingleClickButton
                 android:id="@+id/button_discard_pod"
                 style="?android:attr/buttonStyle"
@@ -127,7 +128,7 @@
                 android:drawableTop="@drawable/ic_pod_management_discard_pod"
                 android:text="@string/omnipod_common_pod_management_button_discard_pod"
                 android:textAllCaps="false"
-                android:visibility="gone"
+                android:visibility="visible"
                 app:layout_constrainedHeight="@+id/Actions_Row_2_horizontal_guideline"
                 app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintLeft_toRightOf="@+id/Actions_Col_1_Row_2_vertical_guideline"

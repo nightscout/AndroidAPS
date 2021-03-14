@@ -25,9 +25,6 @@ import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.rxkotlin.plusAssign
 import javax.inject.Inject
 
-/**
- * Created by andy on 30/08/2019
- */
 class DashPodManagementActivity : NoSplashAppCompatActivity() {
 
     @Inject lateinit var rxBus: RxBusWrapper
@@ -70,7 +67,7 @@ class DashPodManagementActivity : NoSplashAppCompatActivity() {
                 this,
                 resourceHelper.gs(R.string.omnipod_common_pod_management_discard_pod_confirmation),
                 Thread {
-                    // TODO discard Pod
+                    podStateManager.reset()
                 }
             )
         }

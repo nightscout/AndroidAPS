@@ -313,7 +313,7 @@ class OmnipodDashOverviewFragment : DaggerFragment() {
 
                 podInfoBinding.reservoir.text = resourceHelper.gs(
                     R.string.omnipod_common_overview_reservoir_value,
-                    podStateManager.pulsesRemaining
+                    (podStateManager.pulsesRemaining!! / 20.0)
                 )
                 podInfoBinding.reservoir.setTextColor(
                     if (podStateManager.pulsesRemaining!! < lowReservoirThreshold) {

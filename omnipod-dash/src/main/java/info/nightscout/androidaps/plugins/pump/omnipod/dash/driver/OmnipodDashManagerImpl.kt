@@ -161,7 +161,7 @@ class OmnipodDashManagerImpl @Inject constructor(
                         if (podStateManager.podStatus == PodStatus.CLUTCH_DRIVE_ENGAGED) {
                             Observable.empty()
                         } else {
-                            Observable.error(IllegalStateException("Unexpected Pod status"))
+                            Observable.error(IllegalStateException("Unexpected Pod status: got ${podStateManager.podStatus}, expected CLUTCH_DRIVE_ENGAGED"))
                         }
                     }
                 )

@@ -47,6 +47,7 @@ class Session(
         val responseMsg = msgIO.receiveMessage()
         val decrypted = enDecrypt.decrypt(responseMsg)
         aapsLogger.debug(LTag.PUMPBTCOMM, "Received response: $decrypted")
+
         val response = parseResponse(decrypted)
 
         if (!responseType.isInstance(response)) {
@@ -69,8 +70,17 @@ class Session(
     @Throws(CouldNotParseResponseException::class, UnsupportedOperationException::class)
     private fun parseResponse(decrypted: MessagePacket): Response {
 
-        val payload = parseKeys(arrayOf(RESPONSE_PREFIX), decrypted.payload)[0]
-        aapsLogger.info(LTag.PUMPBTCOMM, "Received decrypted response: ${payload.toHex()} in packet: $decrypted")
+        val data = parseKeys(arrayOf(RESPONSE_PREFIX), decrypted.payload)[0]
+        aapsLogger.info(LTag.PUMPBTCOMM, "Received decrypted response: ${data.toHex()} in packet: $decrypted")
+
+        // TODO verify length
+
+        val uniqueId = data.copyOfRange(0, 4)
+        val lenghtAndSequenceNumber = data.copyOfRange(4, 6)
+        val payload = data.copyOfRange(6, data.size - 2)
+        val crc = data.copyOfRange(data.size - 2, data.size)
+
+        // TODO validate uniqueId, sequenceNumber and crc
 
         return ResponseUtil.parseResponse(payload)
     }
