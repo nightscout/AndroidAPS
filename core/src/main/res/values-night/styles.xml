@@ -199,6 +199,7 @@
         <item name="metadataTextWarning" >@color/metadataTextWarning</item>
         <item name="trendarrow" >@color/white</item>
         <item name="profilSwitch" >@color/lightblue</item>
+        <item name="automationTitleText" >@color/white</item>
         <!---Round dialog corner only if sdk >= 28 -->
         <item name="android:dialogCornerRadius" ns2:targetApi="p">8dp</item>
         <!---windowBackground -->
