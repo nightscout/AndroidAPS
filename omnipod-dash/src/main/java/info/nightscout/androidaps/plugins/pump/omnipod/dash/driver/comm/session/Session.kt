@@ -6,6 +6,7 @@ import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.Id
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.endecrypt.EnDecrypt
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.exceptions.CouldNotParseResponseException
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.exceptions.IllegalResponseException
+import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.exceptions.NakResponseException
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.exceptions.PodAlarmException
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.message.MessageIO
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.message.MessagePacket
@@ -14,6 +15,7 @@ import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.message.
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.message.StringLengthPrefixEncoding.Companion.parseKeys
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.command.base.Command
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.response.AlarmStatusResponse
+import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.response.NakResponse
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.response.Response
 import info.nightscout.androidaps.utils.extensions.toHex
 import kotlin.reflect.KClass
@@ -50,6 +52,9 @@ class Session(
         if (!responseType.isInstance(response)) {
             if (response is AlarmStatusResponse) {
                 throw PodAlarmException(response)
+            }
+            if (response is NakResponse) {
+                throw NakResponseException(response)
             }
             throw IllegalResponseException(responseType, response)
         }
