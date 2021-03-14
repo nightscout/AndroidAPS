@@ -701,7 +701,7 @@
     <string name="calculation_short">Calc</string>
     <string name="sendlogfiles">Enviar os ficheiros de registo do dia de hoje para os programadores. Situação inesperada.</string>
     <string name="loop_openmode_min_change">Pedido de mudança mínima [%]</string>
-    <string name="loop_openmode_min_change_summary" formatted="false">A app mostrará um pedido de alteração apenas se a mudança for superior a este valor em %. O valor padrão é 20%</string>
+    <string name="loop_openmode_min_change_summary" formatted="false">A app mostrará um pedido de alteração apenas se a mudança para uma nova basal temporária for superior a este valor em %. O valor padrão é 20%</string>
     <string name="profile_total">== ∑  %1$s U</string>
     <string name="dexcom_lognssensorchange_title">Registar mudança de sensor para NS</string>
     <string name="dexcom_lognssensorchange_summary">Criar evento \"Mudança de Sensor\" automaticamente no NS aquando do início do sensor</string>
