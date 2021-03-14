@@ -90,6 +90,7 @@ class OmnipodDashBleManagerImpl @Inject constructor(
         return bleIO
     }
 
+    @Throws(IllegalResponseException::class, UnsupportedOperationException::class)
     override fun sendCommand(cmd: Command): Observable<PodEvent> = Observable.create { emitter ->
         try {
             val keys = sessionKeys

@@ -4,13 +4,13 @@ import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.logging.LTag
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.Id
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.endecrypt.EnDecrypt
+import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.exceptions.IllegalResponseException
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.message.MessageIO
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.message.MessagePacket
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.message.MessageType
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.message.StringLengthPrefixEncoding
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.message.StringLengthPrefixEncoding.Companion.parseKeys
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.command.base.Command
-import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.response.NakResponse
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.response.Response
 import info.nightscout.androidaps.utils.extensions.toHex
 
@@ -29,6 +29,7 @@ class Session(
      *  <- response, ACK TODO: retries?
      *  -> ACK
      */
+    @Throws(IllegalResponseException::class, UnsupportedOperationException::class)
     fun sendCommand(cmd: Command): Response {
         sessionKeys.msgSequenceNumber++
         aapsLogger.debug(LTag.PUMPBTCOMM, "Sending command: ${cmd.encoded.toHex()} in packet $cmd")
@@ -49,11 +50,13 @@ class Session(
         return response
     }
 
+    @Throws(IllegalResponseException::class, UnsupportedOperationException::class)
     private fun parseResponse(decrypted: MessagePacket): Response {
 
         val payload = parseKeys(arrayOf(RESPONSE_PREFIX), decrypted.payload)[0]
         aapsLogger.info(LTag.PUMPBTCOMM, "Received decrypted response: ${payload.toHex()} in packet: $decrypted")
-        return NakResponse(payload)
+
+        return ResponseUtil.parseResponse(payload)
     }
 
     private fun getAck(response: MessagePacket): MessagePacket {
