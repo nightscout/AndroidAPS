@@ -11,8 +11,6 @@ class EnDecryptTest {
 
     @Test
     fun decrypt() {
-        // TODO: add data received from the pod
-        // this test is failing because the way we increment the nonce
         val received =
             "54,57,11,a1,0c,16,03,00,08,20,2e,a9,08,20,2e,a8,34,7c,b9,7b,38,5d,45,a3,c4,0e,40,4c,55,71,5e,f3,c3,86,50,17,36,7e,62,3c,7d,0b,46,9e,81,cd,fd,9a".replace(
                 ",",
