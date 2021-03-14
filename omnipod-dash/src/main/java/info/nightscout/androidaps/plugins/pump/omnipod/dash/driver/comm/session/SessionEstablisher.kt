@@ -37,7 +37,7 @@ class SessionEstablisher(
 
     fun negotiateSessionKeys(): SessionKeys {
         // send EAP-AKA challenge
-        msgSeq++ // TODO: get from pod state. This only works for activating a new pod
+        msgSeq++
         var challenge = eapAkaChallenge()
         msgIO.sendMessage(challenge)
 
@@ -80,7 +80,7 @@ class SessionEstablisher(
     }
 
     private fun processChallengeResponse(challengeResponse: MessagePacket) {
-        // TODO verify that identifier matches identifer from the Challenge
+        // TODO verify that identifier matches identifier from the Challenge
         val eapMsg = EapMessage.parse(aapsLogger, challengeResponse.payload)
         if (eapMsg.attributes.size != 2) {
             aapsLogger.debug(LTag.PUMPBTCOMM, "EAP-AKA: got message: $eapMsg")
