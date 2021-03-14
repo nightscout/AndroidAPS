@@ -7,8 +7,8 @@ import org.junit.Test
 import java.util.*
 
 class PayloadSplitJoinTest {
+    private val random = Random(42)
 
-    val random = Random(42)
     @Test fun testSplitAndJoinBack() {
         for (s in 0..250) {
             val payload = ByteArray(s)
