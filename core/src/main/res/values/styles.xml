@@ -199,6 +199,7 @@
         <item name="trendarrow" >@color/black</item>
         <item name="profilSwitch" >@color/black</item>
         <item name="automationTitleText" >@color/white</item>
+        <item name="objectivesBackground" >@color/darkgrayVariant</item>
         <!---Round dialog corner only if sdk >= 28 -->
         <item name="android:dialogCornerRadius" ns2:targetApi="p">8dp</item>
         <!---windowBackground -->

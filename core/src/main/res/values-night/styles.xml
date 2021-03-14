@@ -206,6 +206,7 @@
         <item name="android:windowBackground">?attr/windowBackground</item>
         <item name="background">?attr/windowBackground</item>
         <item name="windowBackground" >@color/background_dark</item>
+        <item name="objectivesBackground" >@color/darkgrayVariant</item>
     </style>
 
     <style name="Theme.MaterialComponents.DayNight.DarkActionBar" parent="Theme.MaterialComponents.DayNight.Bridge"/>

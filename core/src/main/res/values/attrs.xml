@@ -189,6 +189,7 @@
 <attr name="trendarrow" format="reference|color" />
 <attr name="profilSwitch" format="reference|color" />
 <attr name="automationTitleText" format="reference|color" />
+<attr name="objectivesBackground" format="reference" />
 <!-- Window background-->
 <attr name="windowBackground" format="reference|color" />
 </resources>
