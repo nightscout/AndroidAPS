@@ -13,7 +13,7 @@ object ResponseUtil {
             ResponseType.DEFAULT_STATUS_RESPONSE -> DefaultStatusResponse(payload)
             ResponseType.ADDITIONAL_STATUS_RESPONSE -> parseAdditionalStatusResponse(payload)
             ResponseType.NAK_RESPONSE -> NakResponse(payload)
-            ResponseType.UNKNOWN -> throw CouldNotParseResponseException("Unrecognized message type: $responseType")
+            ResponseType.UNKNOWN -> throw CouldNotParseResponseException("Unrecognized message type: ${payload[0]}")
         }
     }
 
@@ -22,7 +22,7 @@ object ResponseUtil {
         return when (val activationResponseType = byValue(payload[1], ResponseType.ActivationResponseType.UNKNOWN)) {
             ResponseType.ActivationResponseType.GET_VERSION_RESPONSE -> VersionResponse(payload)
             ResponseType.ActivationResponseType.SET_UNIQUE_ID_RESPONSE -> SetUniqueIdResponse(payload)
-            ResponseType.ActivationResponseType.UNKNOWN -> throw CouldNotParseResponseException("Unrecognized activation response type: $activationResponseType")
+            ResponseType.ActivationResponseType.UNKNOWN -> throw CouldNotParseResponseException("Unrecognized activation response type: ${payload[1]}")
         }
     }
 
@@ -38,7 +38,7 @@ object ResponseUtil {
             ResponseType.StatusResponseType.STATUS_RESPONSE_PAGE_70 -> throw UnsupportedOperationException("Status response page 70 is not (yet) implemented")
             ResponseType.StatusResponseType.STATUS_RESPONSE_PAGE_80 -> throw UnsupportedOperationException("Status response page 80 is not (yet) implemented")
             ResponseType.StatusResponseType.STATUS_RESPONSE_PAGE_81 -> throw UnsupportedOperationException("Status response page 81 is not (yet) implemented")
-            ResponseType.StatusResponseType.UNKNOWN -> throw CouldNotParseResponseException("Unrecognized additional status response type: $additionalStatusResponseType")
+            ResponseType.StatusResponseType.UNKNOWN -> throw CouldNotParseResponseException("Unrecognized additional status response type: ${payload[2]}")
         }
     }
 }
