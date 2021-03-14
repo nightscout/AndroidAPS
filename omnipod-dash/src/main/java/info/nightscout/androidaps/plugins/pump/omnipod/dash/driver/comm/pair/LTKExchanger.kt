@@ -8,6 +8,8 @@ import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.message.
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.message.MessagePacket
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.message.StringLengthPrefixEncoding
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.message.StringLengthPrefixEncoding.Companion.parseKeys
+import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.util.RandomByteGenerator
+import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.util.X25519KeyGenerator
 import info.nightscout.androidaps.utils.extensions.hexStringToByteArray
 import info.nightscout.androidaps.utils.extensions.toHex
 
@@ -19,7 +21,7 @@ internal class LTKExchanger(
     val podAddress: Id
 ) {
 
-    private val keyExchange = KeyExchange(aapsLogger)
+    private val keyExchange = KeyExchange(aapsLogger, X25519KeyGenerator(), RandomByteGenerator())
     private var seq: Byte = 1
 
     fun negotiateLTK(): PairResult {
