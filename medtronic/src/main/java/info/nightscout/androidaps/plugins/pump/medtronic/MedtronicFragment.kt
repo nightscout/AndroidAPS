@@ -91,7 +91,7 @@ class MedtronicFragment : DaggerFragment() {
 
         binding.rlStatus.text = resourceHelper.gs(RileyLinkServiceState.NotStarted.resourceId)
 
-        binding.pumpStatusIcon.setTextColor(Color.WHITE)
+        binding.pumpStatusIcon.setTextColor(resourceHelper.getAttributeColor(context,R.attr.iconColorToolbar ))
         @SuppressLint("SetTextI18n")
         binding.pumpStatusIcon.text = "{fa-bed}"
 
@@ -199,7 +199,7 @@ class MedtronicFragment : DaggerFragment() {
                 rileyLinkServiceData.rileyLinkServiceState.isError && rileyLinkError != null   -> "{fa-bluetooth-b}   " + resourceHelper.gs(rileyLinkError.getResourceId(RileyLinkTargetDevice.MedtronicPump))
                 else                                                                           -> "{fa-bluetooth-b}   " + resourceHelper.gs(resourceId)
             }
-        binding.rlStatus.setTextColor(if (rileyLinkError != null) Color.RED else Color.WHITE)
+        binding.rlStatus.setTextColor(if (rileyLinkError != null) resourceHelper.getAttributeColor(context, R.attr.statuslightAlarm)  else resourceHelper.getAttributeColor(context, R.attr.defaultTextColor))
 
         binding.errors.text =
             rileyLinkServiceData.rileyLinkError?.let {
@@ -268,7 +268,7 @@ class MedtronicFragment : DaggerFragment() {
             val min = (System.currentTimeMillis() - medtronicPumpStatus.lastConnection) / 1000 / 60
             if (medtronicPumpStatus.lastConnection + 60 * 1000 > System.currentTimeMillis()) {
                 binding.lastConnection.setText(R.string.medtronic_pump_connected_now)
-                binding.lastConnection.setTextColor(Color.WHITE)
+                binding.lastConnection.setTextColor(resourceHelper.getAttributeColor(context, R.attr.defaultTextColor))
             } else if (medtronicPumpStatus.lastConnection + 30 * 60 * 1000 < System.currentTimeMillis()) {
 
                 if (min < 60) {
@@ -284,10 +284,10 @@ class MedtronicFragment : DaggerFragment() {
                     binding.lastConnection.text = (resourceHelper.gq(R.plurals.duration_days, d, d) + " "
                         + resourceHelper.gs(R.string.ago))
                 }
-                binding.lastConnection.setTextColor(Color.RED)
+                binding.lastConnection.setTextColor(resourceHelper.getAttributeColor(context, R.attr.statuslightAlarm))
             } else {
                 binding.lastConnection.text = minAgo
-                binding.lastConnection.setTextColor(Color.WHITE)
+                binding.lastConnection.setTextColor(resourceHelper.getAttributeColor(context, R.attr.defaultTextColor))
             }
         }
 
@@ -306,6 +306,7 @@ class MedtronicFragment : DaggerFragment() {
             binding.lastBolus.text = resourceHelper.gs(R.string.mdt_last_bolus, bolus, unit, ago)
         } else {
             binding.lastBolus.text = ""
+            binding.lastBolus.setTextColor(resourceHelper.getAttributeColor(context, R.attr.defaultTextColor))
         }
 
         // base basal rate
