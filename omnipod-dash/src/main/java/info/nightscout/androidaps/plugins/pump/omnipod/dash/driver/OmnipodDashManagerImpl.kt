@@ -25,7 +25,9 @@ class OmnipodDashManagerImpl @Inject constructor(
     private val bleManager: OmnipodDashBleManager,
     private val aapsSchedulers: AapsSchedulers
 ) : OmnipodDashManager {
+
     companion object {
+
         const val PRIME_BOLUS_DURATION_SECONDS = 35L
         const val CANNULA_INSERTION_BOLUS_DURATION_SECONDS = 10L
     }
@@ -221,14 +223,22 @@ class OmnipodDashManagerImpl @Inject constructor(
             )
         }
         if (podStateManager.activationProgress.isBefore(ActivationProgress.PRIMING)) {
-            observables.add(Observable.timer(PRIME_BOLUS_DURATION_SECONDS, TimeUnit.SECONDS).flatMap { Observable.empty() })
             observables.add(
-                observeSendProgramBolusCommand(
-                    podStateManager.firstPrimeBolusVolume!! * 0.05,
-                    podStateManager.primePulseRate!!.toByte(),
-                    confirmationBeeps = false,
-                    completionBeeps = false
-                ).doOnComplete(ActivationProgressUpdater(ActivationProgress.PRIMING))
+                Observable.timer(PRIME_BOLUS_DURATION_SECONDS, TimeUnit.SECONDS).flatMap { Observable.empty() })
+            observables.add(
+                Observable.defer {
+                    bleManager.sendCommand(
+                        ProgramBolusCommand.Builder()
+                            .setUniqueId(podStateManager.uniqueId!!.toInt())
+                            .setSequenceNumber(podStateManager.messageSequenceNumber)
+                            .setNonce(1229869870) // TODO
+                            .setNumberOfUnits(podStateManager.firstPrimeBolusVolume!! * 0.05)
+                            .setDelayBetweenPulsesInEighthSeconds(podStateManager.primePulseRate!!.toByte())
+                            .setProgramReminder(ProgramReminder(false, false, 0))
+                            .build(),
+                        DefaultStatusResponse::class
+                    )
+                }.doOnComplete(ActivationProgressUpdater(ActivationProgress.PRIMING))
             )
         }
         if (podStateManager.activationProgress.isBefore(ActivationProgress.REPROGRAMMED_LUMP_OF_COAL_ALERT)) {
@@ -311,7 +321,9 @@ class OmnipodDashManagerImpl @Inject constructor(
             )
         }
         if (podStateManager.activationProgress.isBefore(ActivationProgress.INSERTING_CANNULA)) {
-            observables.add(Observable.timer(CANNULA_INSERTION_BOLUS_DURATION_SECONDS, TimeUnit.SECONDS).flatMap { Observable.empty() })
+            observables.add(
+                Observable.timer(CANNULA_INSERTION_BOLUS_DURATION_SECONDS, TimeUnit.SECONDS)
+                    .flatMap { Observable.empty() })
             observables.add(
                 observeSendProgramBolusCommand(
                     podStateManager.secondPrimeBolusVolume!! * 0.05,
