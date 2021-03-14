@@ -55,8 +55,8 @@ class BleCommCallbacks(
     }
 
     @Throws(InterruptedException::class, TimeoutException::class, CouldNotConfirmWriteException::class)
-    fun confirmWrite(expectedPayload: ByteArray, timeoutMs: Int) {
-        val received: CharacteristicWriteConfirmation = writeQueue.poll(timeoutMs.toLong(), TimeUnit.MILLISECONDS)
+    fun confirmWrite(expectedPayload: ByteArray, timeoutMs: Long) {
+        val received: CharacteristicWriteConfirmation = writeQueue.poll(timeoutMs, TimeUnit.MILLISECONDS)
             ?: throw TimeoutException()
 
         when (received) {
@@ -116,9 +116,9 @@ class BleCommCallbacks(
     }
 
     @Throws(InterruptedException::class, CouldNotConfirmDescriptorWriteException::class)
-    fun confirmWriteDescriptor(descriptorUUID: String, timeoutMs: Int) {
+    fun confirmWriteDescriptor(descriptorUUID: String, timeoutMs: Long) {
         val confirmed: DescriptorWriteConfirmation = descriptorWriteQueue.poll(
-            timeoutMs.toLong(),
+            timeoutMs,
             TimeUnit.MILLISECONDS
         )
             ?: throw TimeoutException()

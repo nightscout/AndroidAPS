@@ -24,33 +24,34 @@ class MessageIO(private val aapsLogger: AAPSLogger, private val bleIO: BleIO) {
         throw UnexpectedCommandException(actual)
     }
 
-    fun peekForNack(index: Int, packets: List<BlePacket>) {
-        bleIO.peekCommand()?.let {
-            if (it.isEmpty()) {
-                throw UnexpectedCommandException(BleCommand(it))
-            }
-            when (BleCommandType.byValue(it[0])) {
-                BleCommandType.NACK -> {
-                    if (it.size < 2) {
-                        throw UnexpectedCommandException(BleCommand(it))
-                    }
-                    val missingIdx = it[1]
-                    if (missingIdx > packets.size) {
-                        throw UnexpectedCommandException(BleCommand(it))
+    private fun peekForNack(index: Int, packets: List<BlePacket>) {
+        val peekCmd = bleIO.peekCommand() ?: return
 
-                    }
-                    bleIO.sendAndConfirmPacket(CharacteristicType.DATA, packets[missingIdx.toInt()].toByteArray())
+        if (peekCmd.isEmpty()) {
+            throw UnexpectedCommandException(BleCommand(peekCmd))
+        }
+        when (BleCommandType.byValue(peekCmd[0])) {
+            BleCommandType.NACK -> {
+                if (peekCmd.size < 2) {
+                    throw UnexpectedCommandException(BleCommand(peekCmd))
                 }
+                val missingIdx = peekCmd[1]
+                if (missingIdx > packets.size) {
+                    throw UnexpectedCommandException(BleCommand(peekCmd))
 
-                BleCommandType.SUCCESS -> {
-                    if (index != packets.size - 1) {
-                        throw UnexpectedCommandException(BleCommand(it))
-                    }
                 }
-
-                else ->
-                    throw UnexpectedCommandException(BleCommand(it))
+                bleIO.receivePacket(CharacteristicType.CMD) //consume NACK
+                bleIO.sendAndConfirmPacket(CharacteristicType.DATA, packets[missingIdx.toInt()].toByteArray())
             }
+
+            BleCommandType.SUCCESS -> {
+                if (index != packets.size - 1) {
+                    throw UnexpectedCommandException(BleCommand(peekCmd))
+                }
+            }
+
+            else ->
+                throw UnexpectedCommandException(BleCommand(peekCmd))
         }
     }
 
@@ -67,24 +68,20 @@ class MessageIO(private val aapsLogger: AAPSLogger, private val bleIO: BleIO) {
             aapsLogger.debug(LTag.PUMPBTCOMM, "Sending DATA: ${packet.toByteArray().toHex()}")
             bleIO.sendAndConfirmPacket(CharacteristicType.DATA, packet.toByteArray())
             peekForNack(index, packets)
-        // This is implementing the same logic as the PDM.
-        // I think it wil not work in case of packet lost.
-        // This is because each lost packet, we will receive a NACK on the next packet.
-        // At the end, we will still be missing the last packet(s).
-        // I don't worry too much about this because for commands we have retries implemented at MessagePacket level anyway
-        // If this will be a problem in the future, the fix might be(pending testing with a real pod) to move back the index
-        // at the value received in the NACK and make sure don't retry forever.
+            // This is implementing the same logic as the PDM.
+            // I think it wil not work in case of packet lost.
+            // This is because each lost packet, we will receive a NACK on the next packet.
+            // At the end, we will still be missing the last packet(s).
+            // I don't worry too much about this because for commands we have retries implemented at MessagePacket level anyway
+            // If this will be a problem in the future, the fix might be(pending testing with a real pod) to move back the index
+            // at the value received in the NACK and make sure don't retry forever.
         }
         val expectSuccess = bleIO.receivePacket(CharacteristicType.CMD)
         expectCommandType(BleCommand(expectSuccess), BleCommandSuccess())
     }
 
-    // TODO: use higher timeout when receiving the first packet in a message
-    fun receiveMessage(firstCmd: ByteArray? = null): MessagePacket {
-        var expectRTS = firstCmd
-        if (expectRTS == null) {
-            expectRTS = bleIO.receivePacket(CharacteristicType.CMD)
-        }
+    fun receiveMessage(): MessagePacket {
+        val expectRTS = bleIO.receivePacket(CharacteristicType.CMD, MESSAGE_READ_TIMEOUT_MS)
         expectCommandType(BleCommand(expectRTS), BleCommandRTS())
         bleIO.sendAndConfirmPacket(CharacteristicType.CMD, BleCommandCTS().data)
         try {
@@ -107,5 +104,9 @@ class MessageIO(private val aapsLogger: AAPSLogger, private val bleIO: BleIO) {
             bleIO.sendAndConfirmPacket(CharacteristicType.CMD, BleCommandFail().data)
             throw MessageIOException(cause = e)
         }
+    }
+
+    companion object {
+        private const val MESSAGE_READ_TIMEOUT_MS = 4000.toLong()
     }
 }

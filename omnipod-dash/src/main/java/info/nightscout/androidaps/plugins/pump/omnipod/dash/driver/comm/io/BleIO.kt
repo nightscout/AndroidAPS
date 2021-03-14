@@ -30,14 +30,14 @@ class BleIO(
      * @return a byte array with the received data
      */
     @Throws(BleIOBusyException::class, InterruptedException::class, TimeoutException::class)
-    fun receivePacket(characteristic: CharacteristicType): ByteArray {
+    fun receivePacket(characteristic: CharacteristicType, timeoutMs:Long = DEFAULT_IO_TIMEOUT_MS): ByteArray {
         synchronized(state) {
             if (state != IOState.IDLE) {
                 throw BleIOBusyException()
             }
             state = IOState.READING
         }
-        val ret = incomingPackets[characteristic]?.poll(DEFAULT_IO_TIMEOUT_MS.toLong(), TimeUnit.MILLISECONDS)
+        val ret = incomingPackets[characteristic]?.poll(timeoutMs.toLong(), TimeUnit.MILLISECONDS)
             ?: throw TimeoutException()
         synchronized(state) { state = IOState.IDLE }
         return ret
@@ -129,6 +129,6 @@ class BleIO(
 
     companion object {
 
-        private const val DEFAULT_IO_TIMEOUT_MS = 2000
+        private const val DEFAULT_IO_TIMEOUT_MS = 2000.toLong()
     }
 }
