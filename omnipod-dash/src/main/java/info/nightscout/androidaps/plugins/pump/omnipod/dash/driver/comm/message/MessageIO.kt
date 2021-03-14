@@ -67,6 +67,13 @@ class MessageIO(private val aapsLogger: AAPSLogger, private val bleIO: BleIO) {
             aapsLogger.debug(LTag.PUMPBTCOMM, "Sending DATA: ${packet.toByteArray().toHex()}")
             bleIO.sendAndConfirmPacket(CharacteristicType.DATA, packet.toByteArray())
             peekForNack(index, packets)
+        // This is implementing the same logic as the PDM.
+        // I think it wil not work in case of packet lost.
+        // This is because each lost packet, we will receive a NACK on the next packet.
+        // At the end, we will still be missing the last packet(s).
+        // I don't worry too much about this because for commands we have retries implemented at MessagePacket level anyway
+        // If this will be a problem in the future, the fix might be(pending testing with a real pod) to move back the index
+        // at the value received in the NACK and make sure don't retry forever.
         }
         val expectSuccess = bleIO.receivePacket(CharacteristicType.CMD)
         expectCommandType(BleCommand(expectSuccess), BleCommandSuccess())
