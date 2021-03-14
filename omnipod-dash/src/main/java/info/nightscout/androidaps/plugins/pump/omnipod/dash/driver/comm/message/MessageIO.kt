@@ -8,6 +8,7 @@ import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.exceptio
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.io.BleIO
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.io.CharacteristicType
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.io.PayloadJoiner
+import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.packet.BlePacket
 import info.nightscout.androidaps.utils.extensions.toHex
 
 class MessageIO(private val aapsLogger: AAPSLogger, private val bleIO: BleIO) {
@@ -23,6 +24,36 @@ class MessageIO(private val aapsLogger: AAPSLogger, private val bleIO: BleIO) {
         throw UnexpectedCommandException(actual)
     }
 
+    fun peekForNack(index: Int, packets: List<BlePacket>) {
+        bleIO.peekCommand()?.let {
+            if (it.isEmpty()) {
+                throw UnexpectedCommandException(BleCommand(it))
+            }
+            when (BleCommandType.byValue(it[0])) {
+                BleCommandType.NACK -> {
+                    if (it.size < 2) {
+                        throw UnexpectedCommandException(BleCommand(it))
+                    }
+                    val missingIdx = it[1]
+                    if (missingIdx > packets.size) {
+                        throw UnexpectedCommandException(BleCommand(it))
+
+                    }
+                    bleIO.sendAndConfirmPacket(CharacteristicType.DATA, packets[missingIdx.toInt()].toByteArray())
+                }
+
+                BleCommandType.SUCCESS -> {
+                    if (index != packets.size - 1) {
+                        throw UnexpectedCommandException(BleCommand(it))
+                    }
+                }
+
+                else ->
+                    throw UnexpectedCommandException(BleCommand(it))
+            }
+        }
+    }
+
     fun sendMessage(msg: MessagePacket) {
         bleIO.flushIncomingQueues()
         bleIO.sendAndConfirmPacket(CharacteristicType.CMD, BleCommandRTS().data)
@@ -32,14 +63,13 @@ class MessageIO(private val aapsLogger: AAPSLogger, private val bleIO: BleIO) {
         aapsLogger.debug(LTag.PUMPBTCOMM, "Sending message: ${payload.toHex()}")
         val splitter = PayloadSplitter(payload)
         val packets = splitter.splitInPackets()
-        for (packet in packets) {
-            aapsLogger.debug(LTag.PUMPBTCOMM, "Sending DATA: ${packet.asByteArray().toHex()}")
-            bleIO.sendAndConfirmPacket(CharacteristicType.DATA, packet.asByteArray())
+        for ((index, packet) in packets.withIndex()) {
+            aapsLogger.debug(LTag.PUMPBTCOMM, "Sending DATA: ${packet.toByteArray().toHex()}")
+            bleIO.sendAndConfirmPacket(CharacteristicType.DATA, packet.toByteArray())
+            peekForNack(index, packets)
         }
-        // TODO: peek for NACKs
         val expectSuccess = bleIO.receivePacket(CharacteristicType.CMD)
         expectCommandType(BleCommand(expectSuccess), BleCommandSuccess())
-        // TODO: handle NACKS/FAILS/etc
     }
 
     // TODO: use higher timeout when receiving the first packet in a message

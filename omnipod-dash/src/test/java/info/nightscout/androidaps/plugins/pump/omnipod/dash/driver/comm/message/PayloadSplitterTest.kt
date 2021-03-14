@@ -16,8 +16,8 @@ class PayloadSplitterTest {
         val packets = splitter.splitInPackets()
 
         assertEquals(packets.size, 2)
-        assertEquals(f1, packets.get(0).asByteArray().toHex())
-        val p2 = packets.get(1).asByteArray()
+        assertEquals(f1, packets.get(0).toByteArray().toHex())
+        val p2 = packets.get(1).toByteArray()
         assertTrue(p2.size >= 10)
         assertEquals(f2.subSequence(0, 20), p2.copyOfRange(0, 10).toHex())
     }

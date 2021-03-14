@@ -4,7 +4,7 @@ import java.nio.ByteBuffer
 
 sealed class BlePacket {
 
-    abstract fun asByteArray(): ByteArray
+    abstract fun toByteArray(): ByteArray
 
     companion object {
 
@@ -19,7 +19,7 @@ data class FirstBlePacket(
     val crc32: Long? = null
 ) : BlePacket() {
 
-    override fun asByteArray(): ByteArray {
+    override fun toByteArray(): ByteArray {
         val bb = ByteBuffer
             .allocate(MAX_SIZE)
             .put(0) // index
@@ -55,7 +55,7 @@ data class FirstBlePacket(
 
 data class MiddleBlePacket(val index: Byte, val payload: ByteArray) : BlePacket() {
 
-    override fun asByteArray(): ByteArray {
+    override fun toByteArray(): ByteArray {
         return byteArrayOf(index) + payload
     }
 
@@ -67,7 +67,7 @@ data class MiddleBlePacket(val index: Byte, val payload: ByteArray) : BlePacket(
 
 data class LastBlePacket(val index: Byte, val size: Byte, val payload: ByteArray, val crc32: Long) : BlePacket() {
 
-    override fun asByteArray(): ByteArray {
+    override fun toByteArray(): ByteArray {
         val bb = ByteBuffer
             .allocate(MAX_SIZE)
             .put(index)
@@ -90,7 +90,7 @@ data class LastBlePacket(val index: Byte, val size: Byte, val payload: ByteArray
 
 data class LastOptionalPlusOneBlePacket(val index: Byte, val payload: ByteArray, val size: Byte) : BlePacket() {
 
-    override fun asByteArray(): ByteArray {
+    override fun toByteArray(): ByteArray {
         return byteArrayOf(index, size) + payload + ByteArray(MAX_SIZE - payload.size - 2)
     }
 

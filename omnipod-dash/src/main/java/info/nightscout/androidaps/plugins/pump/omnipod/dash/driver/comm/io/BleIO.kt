@@ -43,6 +43,10 @@ class BleIO(
         return ret
     }
 
+    fun peekCommand(): ByteArray? {
+        return incomingPackets[CharacteristicType.CMD]?.peek()
+    }
+
     /***
      *
      * @param characteristic where to write to(CMD or DATA)
@@ -82,6 +86,8 @@ class BleIO(
      * The incoming queues should be empty, so we log when they are not.
      */
     fun flushIncomingQueues() {
+        synchronized(state) { state = IOState.IDLE }
+
         for (char in CharacteristicType.values()) {
             do {
                 val found = incomingPackets[char]?.poll()?.also {
@@ -123,6 +129,6 @@ class BleIO(
 
     companion object {
 
-        private const val DEFAULT_IO_TIMEOUT_MS = 60000
+        private const val DEFAULT_IO_TIMEOUT_MS = 2000
     }
 }
