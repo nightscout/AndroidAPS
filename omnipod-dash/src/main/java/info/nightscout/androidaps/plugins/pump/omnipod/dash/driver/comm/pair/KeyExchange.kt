@@ -2,7 +2,6 @@ package info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.pair
 
 import com.google.crypto.tink.subtle.X25519
 import info.nightscout.androidaps.logging.AAPSLogger
-import info.nightscout.androidaps.logging.AAPSLoggerTest
 import info.nightscout.androidaps.logging.LTag
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.BuildConfig
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.exceptions.MessageIOException
@@ -12,10 +11,11 @@ import org.spongycastle.crypto.macs.CMac
 import org.spongycastle.crypto.params.KeyParameter
 import java.security.SecureRandom
 
-class KeyExchange(private val aapsLogger: AAPSLogger,
-                  var pdmPrivate: ByteArray = X25519.generatePrivateKey(),
-                  val pdmNonce: ByteArray = ByteArray(NONCE_SIZE)
-    ) {
+class KeyExchange(
+    private val aapsLogger: AAPSLogger,
+    var pdmPrivate: ByteArray = X25519.generatePrivateKey(),
+    val pdmNonce: ByteArray = ByteArray(NONCE_SIZE)
+) {
     val pdmPublic = X25519.publicFromPrivate(pdmPrivate)
 
     var podPublic = ByteArray(PUBLIC_KEY_SIZE)

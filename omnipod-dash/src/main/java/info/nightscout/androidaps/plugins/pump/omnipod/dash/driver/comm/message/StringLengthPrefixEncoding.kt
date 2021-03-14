@@ -7,7 +7,7 @@ import java.nio.ByteBuffer
 /***
  *  String prefix and length encoding and decoding. Example message:
  */
-class StringLengthPrefixEncoding {
+class StringLengthPrefixEncoding private constructor() {
 
     companion object {
 

@@ -29,6 +29,21 @@ data class Id(val address: ByteArray) {
         return ByteBuffer.wrap(address).int.toLong() and 0xffffffffL
     }
 
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (javaClass != other?.javaClass) return false
+
+        other as Id
+
+        if (!address.contentEquals(other.address)) return false
+
+        return true
+    }
+
+    override fun hashCode(): Int {
+        return address.contentHashCode()
+    }
+
     companion object {
 
         private const val PERIPHERAL_NODE_INDEX = 1 // TODO: understand the meaning of this value. It comes from preferences

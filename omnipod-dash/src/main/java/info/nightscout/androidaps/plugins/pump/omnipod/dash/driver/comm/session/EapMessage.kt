@@ -23,7 +23,7 @@ enum class EapCode(val code: Byte) {
 data class EapMessage(
     val code: EapCode,
     val identifier: Byte,
-    val attributes: Array<EapAkaAttribute>,
+    val attributes: Array<EapAkaAttribute>
 ) {
 
     fun toByteArray(): ByteArray {
