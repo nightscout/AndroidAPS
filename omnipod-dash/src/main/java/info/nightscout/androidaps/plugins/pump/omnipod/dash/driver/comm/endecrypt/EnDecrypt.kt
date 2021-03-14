@@ -61,6 +61,6 @@ class EnDecrypt(private val aapsLogger: AAPSLogger, private val nonce: Nonce, pr
 
     companion object {
 
-        private val MAC_SIZE = 8
+        private const val MAC_SIZE = 8
     }
 }
