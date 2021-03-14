@@ -10,7 +10,6 @@ import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.definitio
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.response.*
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.state.OmnipodDashPodStateManager
 import info.nightscout.androidaps.utils.rx.AapsSchedulers
-import info.nightscout.androidaps.utils.rx.retryWithBackoff
 import io.reactivex.Observable
 import io.reactivex.functions.Action
 import io.reactivex.functions.Consumer
@@ -72,19 +71,29 @@ class OmnipodDashManagerImpl @Inject constructor(
                     .setNumberOfUnits(units)
                     .setDelayBetweenPulsesInEighthSeconds(rateInEighthPulsesPerSeconds)
                     .setProgramReminder(ProgramReminder(confirmationBeeps, completionBeeps, 0))
-                    .build()
+                    .build(),
+                DefaultStatusResponse::class
             )
         }
     }
 
     private fun observeSendGetPodStatusCommand(type: ResponseType.StatusResponseType = ResponseType.StatusResponseType.DEFAULT_STATUS_RESPONSE): Observable<PodEvent> {
+        // TODO move somewhere else
+        val expectedResponseType = when (type) {
+            ResponseType.StatusResponseType.DEFAULT_STATUS_RESPONSE -> DefaultStatusResponse::class
+            ResponseType.StatusResponseType.ALARM_STATUS -> AlarmStatusResponse::class
+
+            else -> return Observable.error(UnsupportedOperationException("No response type to class mapping for ${type.name}"))
+        }
+
         return Observable.defer {
             bleManager.sendCommand(
                 GetStatusCommand.Builder()
                     .setUniqueId(podStateManager.uniqueId!!.toInt())
                     .setSequenceNumber(podStateManager.messageSequenceNumber)
                     .setStatusResponseType(type)
-                    .build()
+                    .build(),
+                expectedResponseType
             )
         }
     }
@@ -115,7 +124,8 @@ class OmnipodDashManagerImpl @Inject constructor(
                     .setSequenceNumber(podStateManager.messageSequenceNumber)
                     .setNonce(1229869870) // TODO
                     .setAlertConfigurations(alertConfigurations)
-                    .build()
+                    .build(),
+                DefaultStatusResponse::class
             )
         }
     }
@@ -130,7 +140,8 @@ class OmnipodDashManagerImpl @Inject constructor(
                     .setProgramReminder(ProgramReminder(atStart = false, atEnd = false, atInterval = 0))
                     .setBasalProgram(basalProgram)
                     .setCurrentTime(Date())
-                    .build()
+                    .build(),
+                DefaultStatusResponse::class
             )
         }
     }
@@ -159,7 +170,8 @@ class OmnipodDashManagerImpl @Inject constructor(
                     .setLotNumber(podStateManager.lotNumber!!.toInt()) //
                     .setPodSequenceNumber(podStateManager.podSequenceNumber!!.toInt())
                     .setInitializationTime(Date())
-                    .build()
+                    .build(),
+                SetUniqueIdResponse::class
             ) //
         }
 
@@ -169,7 +181,8 @@ class OmnipodDashManagerImpl @Inject constructor(
                 GetVersionCommand.Builder() //
                     .setSequenceNumber(podStateManager.messageSequenceNumber) //
                     .setUniqueId(DEFAULT_UNIQUE_ID) //
-                    .build()
+                    .build(),
+                VersionResponse::class
             ) //
         }
 

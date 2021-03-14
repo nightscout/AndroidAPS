@@ -4,15 +4,19 @@ import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.logging.LTag
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.Id
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.endecrypt.EnDecrypt
+import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.exceptions.CouldNotParseResponseException
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.exceptions.IllegalResponseException
+import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.exceptions.PodAlarmException
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.message.MessageIO
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.message.MessagePacket
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.message.MessageType
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.message.StringLengthPrefixEncoding
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.message.StringLengthPrefixEncoding.Companion.parseKeys
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.command.base.Command
+import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.response.AlarmStatusResponse
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.response.Response
 import info.nightscout.androidaps.utils.extensions.toHex
+import kotlin.reflect.KClass
 
 class Session(
     private val aapsLogger: AAPSLogger,
@@ -29,8 +33,8 @@ class Session(
      *  <- response, ACK TODO: retries?
      *  -> ACK
      */
-    @Throws(IllegalResponseException::class, UnsupportedOperationException::class)
-    fun sendCommand(cmd: Command): Response {
+    @Throws(CouldNotParseResponseException::class, UnsupportedOperationException::class)
+    fun sendCommand(cmd: Command, responseType: KClass<out Response>): Response {
         sessionKeys.msgSequenceNumber++
         aapsLogger.debug(LTag.PUMPBTCOMM, "Sending command: ${cmd.encoded.toHex()} in packet $cmd")
 
@@ -43,6 +47,13 @@ class Session(
         aapsLogger.debug(LTag.PUMPBTCOMM, "Received response: $decrypted")
         val response = parseResponse(decrypted)
 
+        if (!responseType.isInstance(response)) {
+            if (response is AlarmStatusResponse) {
+                throw PodAlarmException(response)
+            }
+            throw IllegalResponseException(responseType, response)
+        }
+
         sessionKeys.msgSequenceNumber++
         val ack = getAck(responseMsg)
         aapsLogger.debug(LTag.PUMPBTCOMM, "Sending ACK: ${ack.payload.toHex()} in packet $ack")
@@ -50,7 +61,7 @@ class Session(
         return response
     }
 
-    @Throws(IllegalResponseException::class, UnsupportedOperationException::class)
+    @Throws(CouldNotParseResponseException::class, UnsupportedOperationException::class)
     private fun parseResponse(decrypted: MessagePacket): Response {
 
         val payload = parseKeys(arrayOf(RESPONSE_PREFIX), decrypted.payload)[0]

@@ -24,6 +24,7 @@ import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.session.
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.status.ConnectionStatus
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.event.PodEvent
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.command.base.Command
+import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.response.Response
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.state.OmnipodDashPodStateManager
 import info.nightscout.androidaps.utils.extensions.toHex
 import io.reactivex.Observable
@@ -32,6 +33,7 @@ import java.util.concurrent.LinkedBlockingDeque
 import java.util.concurrent.TimeoutException
 import javax.inject.Inject
 import javax.inject.Singleton
+import kotlin.reflect.KClass
 
 @Singleton
 class OmnipodDashBleManagerImpl @Inject constructor(
@@ -90,40 +92,39 @@ class OmnipodDashBleManagerImpl @Inject constructor(
         return bleIO
     }
 
-    @Throws(IllegalResponseException::class, UnsupportedOperationException::class)
-    override fun sendCommand(cmd: Command): Observable<PodEvent> = Observable.create { emitter ->
-        try {
-            val keys = sessionKeys
-            val mIO = msgIO
-            if (keys == null || mIO == null) {
-                throw Exception("Not connected")
+    override fun sendCommand(cmd: Command, responseType: KClass<out Response>): Observable<PodEvent> =
+        Observable.create { emitter ->
+            try {
+                val keys = sessionKeys
+                val mIO = msgIO
+                if (keys == null || mIO == null) {
+                    throw Exception("Not connected")
+                }
+                emitter.onNext(PodEvent.CommandSending(cmd))
+                // TODO switch to RX
+                emitter.onNext(PodEvent.CommandSent(cmd))
+
+                val enDecrypt = EnDecrypt(
+                    aapsLogger,
+                    keys.nonce,
+                    keys.ck
+                )
+
+                val session = Session(
+                    aapsLogger = aapsLogger,
+                    msgIO = mIO,
+                    myId = myId,
+                    podId = podId,
+                    sessionKeys = keys,
+                    enDecrypt = enDecrypt
+                )
+                val response = session.sendCommand(cmd, responseType)
+                emitter.onNext(PodEvent.ResponseReceived(response))
+                emitter.onComplete()
+            } catch (ex: Exception) {
+                emitter.tryOnError(ex)
             }
-            emitter.onNext(PodEvent.CommandSending(cmd))
-            // TODO switch to RX
-            emitter.onNext(PodEvent.CommandSent(cmd))
-
-            val enDecrypt = EnDecrypt(
-                aapsLogger,
-                keys.nonce,
-                keys.ck
-            )
-
-            val session = Session(
-                aapsLogger = aapsLogger,
-                msgIO = mIO,
-                myId = myId,
-                podId = podId,
-                sessionKeys = keys,
-                enDecrypt = enDecrypt
-            )
-            val response = session.sendCommand(cmd)
-            emitter.onNext(PodEvent.ResponseReceived(response))
-
-            emitter.onComplete()
-        } catch (ex: Exception) {
-            emitter.tryOnError(ex)
         }
-    }
 
     override fun getStatus(): ConnectionStatus {
         var s: ConnectionStatus
