@@ -18,5 +18,3 @@ class PayloadJoinerTest {
         assertEquals(payload, actual.toHex())
     }
 }
-
-

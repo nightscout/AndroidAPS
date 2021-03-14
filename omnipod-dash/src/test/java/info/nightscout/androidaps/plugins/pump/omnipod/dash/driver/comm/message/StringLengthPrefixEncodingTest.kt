@@ -6,7 +6,7 @@ import org.junit.Assert.*
 import org.junit.Test
 
 class StringLengthPrefixEncodingTest {
-    private val p0Payload = Hex.decode("50,30,3d,00,01,a5".replace(",","")) // from logs
+    private val p0Payload = Hex.decode("50,30,3d,00,01,a5".replace(",", "")) // from logs
     private val p0Content = Hex.decode("a5")
 
     @Test fun testFormatKeysP0() {

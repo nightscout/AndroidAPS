@@ -1,9 +1,7 @@
 package info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.message
 
-import android.app.Notification
 import com.google.crypto.tink.subtle.Hex
 import info.nightscout.androidaps.logging.AAPSLoggerTest
-import info.nightscout.androidaps.logging.LTag
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.Id
 import info.nightscout.androidaps.utils.extensions.toHex
 import org.junit.Assert.*
@@ -32,23 +30,23 @@ class MessagePacketTest {
         assertEquals(msg.sas, true)
         assertEquals(msg.tfs, false)
         assertEquals(msg.version, 0.toShort())
-        assertEquals(msg.payload.toHex(), payload.substring(32, payload.length) )
+        assertEquals(msg.payload.toHex(), payload.substring(32, payload.length))
     }
 
     @Test fun testSerializeMessagePacket() {
         val msg = MessagePacket(
             type = MessageType.ENCRYPTED,
             source = Id.fromLong(136326824),
-            destination =  Id.fromLong(136326825),
+            destination = Id.fromLong(136326825),
             sequenceNumber = 7.toByte(),
             ackNumber = 0.toByte(),
-            eqos =  1.toShort(),
-            priority =  false,
-            lastMessage =  false,
-            gateway =  false,
+            eqos = 1.toShort(),
+            priority = false,
+            lastMessage = false,
+            gateway = false,
             sas = true,
             tfs = false,
-            payload =  Hex.decode(payload.substring(32, payload.length))
+            payload = Hex.decode(payload.substring(32, payload.length))
         )
         assertEquals(msg.asByteArray().toHex(), payload)
     }
