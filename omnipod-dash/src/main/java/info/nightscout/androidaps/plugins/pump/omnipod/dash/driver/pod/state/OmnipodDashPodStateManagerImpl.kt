@@ -6,6 +6,8 @@ import info.nightscout.androidaps.logging.LTag
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.EventOmnipodDashPumpValuesChanged
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.R
+import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.Id
+import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.pair.PairResult
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.definition.*
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.response.AlarmStatusResponse
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.response.DefaultStatusResponse
@@ -246,6 +248,12 @@ class OmnipodDashPodStateManagerImpl @Inject constructor(
 
         store()
         rxBus.send(EventOmnipodDashPumpValuesChanged())
+    }
+
+    override fun updateFromPairing(uniqueId: Id, pairResult: PairResult) {
+        podState.eapAkaSequenceNumber = 1
+        podState.ltk = pairResult.ltk
+        podState.uniqueId = uniqueId.toLong()
     }
 
     override fun reset() {

@@ -123,6 +123,6 @@ class BleIO(
 
     companion object {
 
-        private const val DEFAULT_IO_TIMEOUT_MS = 10000
+        private const val DEFAULT_IO_TIMEOUT_MS = 60000
     }
 }

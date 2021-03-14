@@ -35,10 +35,8 @@ class Session(
 
         val msg = getCmdMessage(cmd)
         aapsLogger.debug(LTag.PUMPBTCOMM, "Sending command(wrapped): ${msg.payload.toHex()}")
-        val reply = msgIO.sendMessage(msg)
-        if (reply != null) { // TODO : this means the last ACK was not received, send it again?
-            aapsLogger.debug(LTag.PUMPBTCOMM, "Received a message with payload instead of CTS: ${reply.payload.toHex()} in packet $reply")
-        }
+        msgIO.sendMessage(msg)
+
         val responseMsg = msgIO.receiveMessage()
         val decrypted = enDecrypt.decrypt(responseMsg)
         aapsLogger.debug(LTag.PUMPBTCOMM, "Received response: $decrypted")
@@ -67,7 +65,7 @@ class Session(
             payload = ByteArray(0),
             eqos = 0,
             ack = true,
-            ackNumber = (response.sequenceNumber.toInt()+1).toByte()
+            ackNumber = response.sequenceNumber.inc()
         )
         return enDecrypt.encrypt((msg))
     }

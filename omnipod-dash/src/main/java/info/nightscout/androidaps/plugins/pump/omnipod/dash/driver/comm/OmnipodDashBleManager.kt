@@ -13,5 +13,7 @@ interface OmnipodDashBleManager {
 
     fun connect(): Observable<PodEvent>
 
+    fun pairNewPod(): Observable<PodEvent>
+
     fun disconnect()
 }

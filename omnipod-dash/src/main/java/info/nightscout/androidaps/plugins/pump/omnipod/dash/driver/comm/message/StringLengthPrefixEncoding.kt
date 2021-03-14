@@ -11,7 +11,7 @@ class StringLengthPrefixEncoding {
 
     companion object {
 
-        private val LENGTH_BYTES = 2
+        private const val LENGTH_BYTES = 2
 
         fun parseKeys(keys: Array<String>, payload: ByteArray): Array<ByteArray> {
             val ret = Array<ByteArray>(keys.size, { ByteArray(0) })

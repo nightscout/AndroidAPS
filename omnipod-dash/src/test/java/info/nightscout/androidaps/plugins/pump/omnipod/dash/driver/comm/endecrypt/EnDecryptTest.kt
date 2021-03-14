@@ -20,7 +20,7 @@ class EnDecryptTest {
                 Hex.decode("dda23c090a0a0a0a"),
                 0
             ),
-            Hex.decode("ba1283744b6de9fab6d9b77d95a71d6e"),
+            Hex.decode("ba1283744b6de9fab6d9b77d95a71d6e")
         )
         val encryptedMessage = Hex.decode(
             "54571101070003400242000002420001" +
@@ -43,7 +43,7 @@ class EnDecryptTest {
                 Hex.decode("dda23c090a0a0a0a"),
                 0
             ),
-            Hex.decode("ba1283744b6de9fab6d9b77d95a71d6e"),
+            Hex.decode("ba1283744b6de9fab6d9b77d95a71d6e")
         )
         val encryptedMessage = Hex.decode(
             "54571101070003400242000002420001" +

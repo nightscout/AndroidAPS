@@ -31,7 +31,7 @@ data class Id(val address: ByteArray) {
 
     companion object {
 
-        private val PERIPHERAL_NODE_INDEX = 1 // TODO: understand the meaning of this value. It comes from preferences
+        private const val PERIPHERAL_NODE_INDEX = 1 // TODO: understand the meaning of this value. It comes from preferences
 
         fun fromInt(v: Int): Id {
             return Id(ByteBuffer.allocate(4).putInt(v).array())

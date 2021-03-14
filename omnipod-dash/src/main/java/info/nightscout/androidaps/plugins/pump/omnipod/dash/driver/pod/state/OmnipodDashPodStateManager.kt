@@ -1,5 +1,7 @@
 package info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.state
 
+import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.Id
+import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.pair.PairResult
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.definition.*
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.response.AlarmStatusResponse
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.response.DefaultStatusResponse
@@ -54,6 +56,7 @@ interface OmnipodDashPodStateManager {
     fun updateFromVersionResponse(response: VersionResponse)
     fun updateFromSetUniqueIdResponse(response: SetUniqueIdResponse)
     fun updateFromAlarmStatusResponse(response: AlarmStatusResponse)
+    fun updateFromPairing(uniqueId: Id, pairResult: PairResult)
     fun reset()
 
     data class TempBasal(val startTime: Long, val rate: Double, val durationInMinutes: Short) : Serializable
