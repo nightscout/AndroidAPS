@@ -116,8 +116,8 @@
     <string name="configbuilder_bgsource_description">De onde deve o AndroidAPS obter os dados?</string>
     <string name="xdrip">xDrip+</string>
     <string name="apsmode_title">Modo APS</string>
-    <string name="closedloop">Closed Loop</string>
-    <string name="openloop">Open Loop</string>
+    <string name="closedloop">Loop Fechado</string>
+    <string name="openloop">Loop Aberto</string>
     <string name="lowglucosesuspend">Suspensão Glicose Baixa</string>
     <string name="disabledloop">Loop Desactivado</string>
     <string name="openloop_newsuggestion">Disponível nova sugestão</string>
@@ -577,11 +577,11 @@
     <string name="overview_show_basals">Basais</string>
     <string name="no_action_selected">Nenhuma ação seleccionada, nada irá acontecer</string>
     <string name="start_hypo_tt">Começar TT Hipo</string>
-    <string name="closed_loop_disabled_on_dev_branch">A correr a versão dev. O Loop fechado está desabilitado.</string>
+    <string name="closed_loop_disabled_on_dev_branch">A correr a versão dev. O Loop fechado está desativado.</string>
     <string name="engineering_mode_enabled">Modo engenheiro activado</string>
     <string name="profileswitch_ismissing">Troca de Perfil em falta. Por favor faça uma troca de perfil ou pressione \"Activar Perfil\" em Perfil Local.</string>
     <string name="pumpisnottempbasalcapable">A bomba não é capaz de basais temporárias</string>
-    <string name="closedmodedisabledinpreferences">Loop fecchado disabilitado nas preferências</string>
+    <string name="closedmodedisabledinpreferences">Loop fechado desativado nas preferências</string>
     <string name="autosensdisabledinpreferences">Autosens desabilitado nas preferências</string>
     <string name="smbdisabledinpreferences">SMB desactivado nas configurações</string>
     <string name="uamdisabledinpreferences">RNA desactivada nas configurações</string>
@@ -663,7 +663,7 @@
     <string name="close_navigation">Fechar a navegação</string>
     <string name="nav_plugin_preferences">Preferências plugin</string>
     <string name="completed_well_done">Terminado, parabéns!</string>
-    <string name="not_completed_yet">Incompleto</string>
+    <string name="not_completed_yet">Não concluído ainda</string>
     <string name="time_elapsed">Tempo decorrido</string>
     <string name="poctech">Poctech</string>
     <string name="description_source_poctech">Receber valores Glucose da app Poctech</string>
@@ -723,7 +723,7 @@
     <string name="tidepool_upload_profile">Enviar trocas de perfil, alvos temporários</string>
     <string name="tidepool_upload_bg">Enviar testes Glicose</string>
     <string name="dst_in_24h_warning">Horário de Verão em 24h ou menos</string>
-    <string name="dst_loop_disabled_warning">Horário de Verão a menos de 3 horas - Closed Loop desligado</string>
+    <string name="dst_loop_disabled_warning">Horário de Verão a menos de 3 horas - Loop Fechado desativado</string>
     <string name="storage">restrição de armazenamento interno</string>
     <string name="diskfull">Liberte pelo menos %1$d MB do armazenamento interno! Loop desativado!</string>
     <string name="wrongformat">Formato incorrecto</string>
@@ -794,8 +794,8 @@
     <string name="tools">Ferramentas</string>
     <string name="show_calculation">Mostrar Localização</string>
     <string name="clearqueueconfirm">Limpar fila? Todos os dados na fila serão perdidos!</string>
-    <string name="ebstopsloop">O uso do Bólus Prolongado irá parar o modo Closed Loop no tempo do bólus prolongado. Quer realmente isso?</string>
-    <string name="closed_loop_disabled_with_eb">Closed Loop desabilitado por causa da execução do Bólus Prolongado</string>
+    <string name="ebstopsloop">O uso do Bólus Prolongado irá parar o modo Loop Fechado durante o tempo do bólus prolongado. Quer realmente isso?</string>
+    <string name="closed_loop_disabled_with_eb">Loop Fechado desativado por causa da execução do Bólus Prolongado</string>
     <string name="phonechecker">\"VerificadorTelefone\"</string>
     <string name="chartmenu">Menu do Gráfico</string>
     <string name="loop_smbrequest_time_label">Hora de solicitação SMB</string>
