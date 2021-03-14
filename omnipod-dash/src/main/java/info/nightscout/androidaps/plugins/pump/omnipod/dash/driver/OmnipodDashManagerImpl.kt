@@ -25,6 +25,10 @@ class OmnipodDashManagerImpl @Inject constructor(
     private val bleManager: OmnipodDashBleManager,
     private val aapsSchedulers: AapsSchedulers
 ) : OmnipodDashManager {
+    companion object {
+        const val PRIME_BOLUS_DURATION_SECONDS = 35L
+        const val CANNULA_INSERTION_BOLUS_DURATION_SECONDS = 10L
+    }
 
     private val observePodReadyForActivationPart1: Observable<PodEvent>
         get() = Observable.defer {
@@ -217,6 +221,7 @@ class OmnipodDashManagerImpl @Inject constructor(
             )
         }
         if (podStateManager.activationProgress.isBefore(ActivationProgress.PRIMING)) {
+            observables.add(Observable.timer(PRIME_BOLUS_DURATION_SECONDS, TimeUnit.SECONDS).flatMap { Observable.empty() })
             observables.add(
                 observeSendProgramBolusCommand(
                     podStateManager.firstPrimeBolusVolume!! * 0.05,
@@ -306,6 +311,7 @@ class OmnipodDashManagerImpl @Inject constructor(
             )
         }
         if (podStateManager.activationProgress.isBefore(ActivationProgress.INSERTING_CANNULA)) {
+            observables.add(Observable.timer(CANNULA_INSERTION_BOLUS_DURATION_SECONDS, TimeUnit.SECONDS).flatMap { Observable.empty() })
             observables.add(
                 observeSendProgramBolusCommand(
                     podStateManager.secondPrimeBolusVolume!! * 0.05,
