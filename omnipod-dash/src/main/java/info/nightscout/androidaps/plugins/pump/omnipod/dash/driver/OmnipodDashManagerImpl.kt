@@ -10,7 +10,6 @@ import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.definitio
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.response.*
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.state.OmnipodDashPodStateManager
 import info.nightscout.androidaps.utils.rx.AapsSchedulers
-import info.nightscout.androidaps.utils.rx.retryWithBackoff
 import io.reactivex.Observable
 import io.reactivex.functions.Action
 import io.reactivex.functions.Consumer
@@ -38,9 +37,9 @@ class OmnipodDashManagerImpl @Inject constructor(
 
     private val observePodReadyForActivationPart2: Observable<PodEvent>
         get() = Observable.defer {
-            if (podStateManager.activationProgress.isAtLeast(ActivationProgress.PHASE_1_COMPLETED) && podStateManager.activationProgress.isBefore(
-                    ActivationProgress.COMPLETED
-                )) {
+            if (podStateManager.activationProgress.isAtLeast(ActivationProgress.PHASE_1_COMPLETED) &&
+                podStateManager.activationProgress.isBefore(ActivationProgress.COMPLETED)
+            ) {
                 Observable.empty()
             } else {
                 Observable.error(IllegalStateException("Pod is in an incorrect state"))

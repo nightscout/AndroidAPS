@@ -1,38 +1,34 @@
 package info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.pair
 
-import com.google.crypto.tink.subtle.X25519
 import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.logging.LTag
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.BuildConfig
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.exceptions.MessageIOException
+import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.util.RandomByteGenerator
+import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.util.X25519KeyGenerator
 import info.nightscout.androidaps.utils.extensions.toHex
 import org.spongycastle.crypto.engines.AESEngine
 import org.spongycastle.crypto.macs.CMac
 import org.spongycastle.crypto.params.KeyParameter
-import java.security.SecureRandom
 
 class KeyExchange(
     private val aapsLogger: AAPSLogger,
-    var pdmPrivate: ByteArray = X25519.generatePrivateKey(),
-    val pdmNonce: ByteArray = ByteArray(NONCE_SIZE)
+    private val x25519: X25519KeyGenerator,
+    randomByteGenerator: RandomByteGenerator
 ) {
-    val pdmPublic = X25519.publicFromPrivate(pdmPrivate)
+
+    val pdmNonce: ByteArray = randomByteGenerator.nextBytes(NONCE_SIZE)
+    val pdmPrivate: ByteArray = x25519.generatePrivateKey()
+    val pdmPublic = x25519.publicFromPrivate(pdmPrivate)
 
     var podPublic = ByteArray(PUBLIC_KEY_SIZE)
-    var podNonce = ByteArray(NONCE_SIZE)
+        private set
+    var podNonce: ByteArray = ByteArray(NONCE_SIZE)
 
     val podConf = ByteArray(CMAC_SIZE)
     val pdmConf = ByteArray(CMAC_SIZE)
 
     var ltk = ByteArray(CMAC_SIZE)
-
-    init {
-        if (pdmNonce.all { it == 0.toByte() }) {
-            // pdmNonce is in the constructor for tests
-            val random = SecureRandom()
-            random.nextBytes(pdmNonce)
-        }
-    }
 
     fun updatePodPublicData(payload: ByteArray) {
         if (payload.size != PUBLIC_KEY_SIZE + NONCE_SIZE) {
@@ -54,7 +50,7 @@ class KeyExchange(
     }
 
     private fun generateKeys() {
-        val curveLTK = X25519.computeSharedSecret(pdmPrivate, podPublic)
+        val curveLTK = x25519.computeSharedSecret(pdmPrivate, podPublic)
 
         val firstKey = podPublic.copyOfRange(podPublic.size - 4, podPublic.size) +
             pdmPublic.copyOfRange(pdmPublic.size - 4, pdmPublic.size) +
