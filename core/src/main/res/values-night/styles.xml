@@ -152,6 +152,8 @@
         <item name="startextbolusIconColor" >@color/cyan_blue</item>
         <!---Cancel extended bolus Icon Color-->
         <item name="cancelextbolusIconColor" >@color/carbsOrange</item>
+        <!---BG check Icon Color-->
+        <item name="bgcheckIconColor" >@color/calibrationRed</item>
         <!---Exercise Icon Color-->
         <item name="exerciseIconColor01" >@color/cyan_blue</item>
         <item name="exerciseIconColor02" >@color/lightGreen</item>
