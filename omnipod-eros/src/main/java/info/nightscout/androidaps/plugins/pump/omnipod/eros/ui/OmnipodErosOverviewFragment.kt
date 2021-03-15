@@ -236,7 +236,7 @@ class OmnipodErosOverviewFragment : DaggerFragment() {
                 rileyLinkServiceState.isError && rileyLinkError != null   -> "{fa-bluetooth-b}   " + resourceHelper.gs(rileyLinkError.getResourceId(RileyLinkTargetDevice.Omnipod))
                 else                                                      -> "{fa-bluetooth-b}   " + resourceHelper.gs(resourceId)
             }
-        rileyLinkStatusBinding.rileyLinkStatus.setTextColor(if (rileyLinkServiceState.isError || rileyLinkError != null) Color.RED else Color.WHITE)
+        rileyLinkStatusBinding.rileyLinkStatus.setTextColor(if (rileyLinkError != null) resourceHelper.getAttributeColor(context, R.attr.statuslightAlarm)  else resourceHelper.getAttributeColor(context, R.attr.defaultTextColor))
     }
 
     private fun updateOmnipodStatus() {
@@ -351,9 +351,9 @@ class OmnipodErosOverviewFragment : DaggerFragment() {
             podInfoBinding.lastConnection.text = readableDuration(podStateManager.lastSuccessfulCommunication)
             val lastConnectionColor =
                 if (omnipodErosPumpPlugin.isUnreachableAlertTimeoutExceeded(getPumpUnreachableTimeout().millis)) {
-                    Color.RED
+                    resourceHelper.getAttributeColor(context, R.attr.statuslightNormal)
                 } else {
-                    Color.WHITE
+                    resourceHelper.getAttributeColor(context, R.attr.statuslightNormal)
                 }
             podInfoBinding.lastConnection.setTextColor(lastConnectionColor)
         } else {
