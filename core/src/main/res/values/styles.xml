@@ -155,6 +155,8 @@
         <item name="bgcheckIconColor" >@color/calibrationRed</item>
         <!---Prime fill Icon Color-->
         <item name="primefillIconColor" >@color/cyan_blue</item>
+        <!---CGM insert Icon Color-->
+        <item name="cgminsertIconColor" >@color/cyan_blue</item>
         <!---Exercise Icon Color-->
         <item name="exerciseIconColor01" >@color/cyan_blue</item>
         <item name="exerciseIconColor02" >@color/lightGreen</item>
