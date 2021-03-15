@@ -158,6 +158,8 @@
         <item name="primefillIconColor" >@color/cyan_blue</item>
         <!---CGM insert Icon Color-->
         <item name="cgminsertIconColor" >@color/cyan_blue</item>
+        <!---Note Icon Color-->
+        <item name="noteIconColor" >@color/carbsOrange</item>
         <!---Exercise Icon Color-->
         <item name="exerciseIconColor01" >@color/cyan_blue</item>
         <item name="exerciseIconColor02" >@color/lightGreen</item>
