@@ -643,7 +643,7 @@ L\'ENSEMBLE DES RISQUES LIÉS À LA QUALITÉ ET À LA PERFORMANCE DU PROGRAMME S
     <string name="welcometosetupwizard">Bienvenue à l\'assistant de configuration. Je vais vous guider à travers le processus de configuration\n</string>
     <string name="readstatus">Statut de lecture</string>
     <string name="adjustprofileinns">Des modifications doivent être effectuées dans NS</string>
-    <string name="exitwizard">Passer l\'Assistant de configuration</string>
+    <string name="exitwizard">Ignorer l\'assistant de configuration</string>
     <string name="setupwizard_loop_description">Appuyez sur le bouton ci-dessous pour autoriser AndroidAPS à suggérer/faire des changements de basal</string>
     <string name="setupwizard_sensitivity_description">Le plugin de Sensibilité est utilisé pour la détection de la Sensibilité et de calcul de glucides actifs. Pour plus d’informations visitez :</string>
     <string name="setupwizard_sensitivity_url">https://github.com/MilosKozak/AndroidAPS/wiki/Sensitivity-detection-and-COB</string>
