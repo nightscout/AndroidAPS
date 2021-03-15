@@ -251,7 +251,7 @@ class AutomationFragment : DaggerFragment(), OnStartDragListener {
 
             val binding = AutomationEventItemBinding.bind(view)
 
-            override fun onItemSelected() = itemView.setBackgroundColor(resourceHelper.getAttributeColor(context, R.attr.gray))
+            override fun onItemSelected() = itemView.setBackgroundColor(resourceHelper.getAttributeColor(context, R.attr.automationSelectedItemBackground))
 
             override fun onItemClear() = itemView.setBackgroundColor(resourceHelper.getAttributeColor(context, R.attr.ribbonDefault))
         }

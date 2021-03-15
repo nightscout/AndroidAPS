@@ -342,7 +342,7 @@ class OmnipodErosOverviewFragment : DaggerFragment() {
             podInfoBinding.errors.setTextColor(resourceHelper.getAttributeColor(context, R.attr.statuslightNormal))
         } else {
             podInfoBinding.errors.text = StringUtils.join(errors, System.lineSeparator())
-            podInfoBinding.errors.setTextColor(resourceHelper.getAttributeColor(context, R.attr.statuslightAlarm)
+            podInfoBinding.errors.setTextColor(resourceHelper.getAttributeColor(context, R.attr.statuslightAlarm))
         }
     }
 
