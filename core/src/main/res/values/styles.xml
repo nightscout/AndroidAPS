@@ -159,6 +159,8 @@
         <item name="cgminsertIconColor" >@color/cyan_blue</item>
         <!---Note Icon Color-->
         <item name="noteIconColor" >@color/carbsOrange</item>
+        <!---Announcement Icon Color-->
+        <item name="announcementIconColor" >@color/pastellPurple</item>
         <!---Exercise Icon Color-->
         <item name="exerciseIconColor01" >@color/cyan_blue</item>
         <item name="exerciseIconColor02" >@color/lightGreen</item>
