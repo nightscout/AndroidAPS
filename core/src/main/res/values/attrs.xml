@@ -188,6 +188,7 @@
 <attr name="metadataTextWarning" format="reference|color" />
 <attr name="trendarrow" format="reference|color" />
 <attr name="profilSwitch" format="reference|color" />
+<attr name="automationSelectedItemBackground" format="reference|color" />
 <attr name="automationTitleText" format="reference|color" />
 <attr name="objectivesBackground" format="reference" />
 <attr name="extendedBolus" format="reference" />

@@ -65,7 +65,7 @@ class GlucoseValueDataPoint @Inject constructor(
                 GlucoseValue.SourceSensor.aCOB_PREDICTION -> -0x7f000001 and resourceHelper.getAttributeColor(null, R.attr.cobColor)
                 GlucoseValue.SourceSensor.UAM_PREDICTION ->  resourceHelper.getAttributeColor(null, R.attr.uamColor)
                 GlucoseValue.SourceSensor.ZT_PREDICTION -> resourceHelper.getAttributeColor(null, R.attr.ztColor)
-                else                                      -> R.color.white
+                else                                      -> resourceHelper.getAttributeColor(null, R.attr.defaultColor)
             }
         }
 
