@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.util.DisplayMetrics
 import android.view.LayoutInflater
 import android.view.View
+import android.view.View.TEXT_ALIGNMENT_CENTER
 import android.view.ViewGroup
 import android.widget.LinearLayout
 import android.widget.TextView
@@ -323,8 +324,9 @@ class ActionsFragment : DaggerFragment() {
         for (customAction in customActions) {
             if (!customAction.isEnabled) continue
 
-            val btn = SingleClickButton(currentContext, null, android.R.attr.buttonStyle)
+            val btn = SingleClickButton(currentContext, null, info.nightscout.androidaps.core.R.style.Widget_MaterialComponents_Button_UnelevatedButton)
             btn.text = resourceHelper.gs(customAction.name)
+            btn.setBackgroundColor(resourceHelper.getAttributeColor(context, R.attr.colorPrimary))
 
             val layoutParams = LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT, 0.5f)
@@ -339,6 +341,7 @@ class ActionsFragment : DaggerFragment() {
             }
             val top = activity?.let { ContextCompat.getDrawable(it, customAction.iconResourceId) }
             btn.setCompoundDrawablesWithIntrinsicBounds(null, top, null, null)
+            btn.textAlignment = TEXT_ALIGNMENT_CENTER
 
             buttonsLayout?.addView(btn)
 
