@@ -18,6 +18,7 @@ import javax.inject.Inject;
 
 import dagger.android.HasAndroidInjector;
 import info.nightscout.androidaps.Constants;
+import info.nightscout.androidaps.core.R;
 import info.nightscout.androidaps.data.Iob;
 import info.nightscout.androidaps.data.IobTotal;
 import info.nightscout.androidaps.data.Profile;
@@ -31,6 +32,7 @@ import info.nightscout.androidaps.utils.DateUtil;
 import info.nightscout.androidaps.utils.DecimalFormatter;
 import info.nightscout.androidaps.utils.JsonHelper;
 import info.nightscout.androidaps.utils.Round;
+import info.nightscout.androidaps.utils.resources.ResourceHelper;
 
 /**
  * Created by mike on 21.05.2017.
@@ -41,6 +43,7 @@ public class ExtendedBolus implements Interval, DataPointWithLabelInterface {
 
     @Inject ActivePluginProvider activePlugin;
     @Inject DateUtil dateUtil;
+    @Inject ResourceHelper resourceHelper;
 
     private HasAndroidInjector injector;
 
@@ -392,7 +395,7 @@ public class ExtendedBolus implements Interval, DataPointWithLabelInterface {
 
     @Override
     public int getColor(Context context) {
-        return Color.CYAN;
+        return resourceHelper.getAttributeColor(context, R.attr.extendedBolus);
     }
 
 }

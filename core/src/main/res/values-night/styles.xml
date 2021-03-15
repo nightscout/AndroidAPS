@@ -207,6 +207,7 @@
         <item name="background">?attr/windowBackground</item>
         <item name="windowBackground" >@color/background_dark</item>
         <item name="objectivesBackground" >@color/darkgrayVariant</item>
+        <item name="extendedBolus" >@color/cyan</item>
     </style>
 
     <style name="Theme.MaterialComponents.DayNight.DarkActionBar" parent="Theme.MaterialComponents.DayNight.Bridge"/>
