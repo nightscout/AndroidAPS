@@ -351,7 +351,7 @@ class OmnipodErosOverviewFragment : DaggerFragment() {
             podInfoBinding.lastConnection.text = readableDuration(podStateManager.lastSuccessfulCommunication)
             val lastConnectionColor =
                 if (omnipodErosPumpPlugin.isUnreachableAlertTimeoutExceeded(getPumpUnreachableTimeout().millis)) {
-                    resourceHelper.getAttributeColor(context, R.attr.statuslightNormal)
+                    resourceHelper.getAttributeColor(context, R.attr.statuslightAlarm)
                 } else {
                     resourceHelper.getAttributeColor(context, R.attr.statuslightNormal)
                 }
