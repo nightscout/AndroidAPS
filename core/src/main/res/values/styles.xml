@@ -184,6 +184,11 @@
         <item name="therapyeventAapsoffline" >@color/lightSandGray</item>
         <!---Default  Event-->
         <item name="therapyeventDefault" >@color/gray</item>
+        <!---SMS Communicator -->
+        <item name="smsCommunicatorOK" >@color/lightGreen</item>
+        <item name="smsCommunicatorWrongLength" >@color/lightyellow</item>
+        <item name="smsCommunicatorWrongPin" >@color/red</item>
+        <item name="smsCommunicatorOtp" >@color/red</item>
         <!---Misc -->
         <item name="carbsColor" >@color/carbsOrange</item>
         <item name="tempTargetConfirmation" >@color/tempTargetConfirmation</item>

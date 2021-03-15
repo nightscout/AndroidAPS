@@ -153,6 +153,11 @@
 <attr name="therapyeventAapsoffline" format="reference|color" />
 <!---Default Event-->
 <attr name="therapyeventDefault" format="reference|color" />
+<!---SMS Communicator -->
+<attr name="smsCommunicatorOK" format="reference|color" />
+<attr name="smsCommunicatorWrongLength" format="reference|color" />
+<attr name="smsCommunicatorWrongPin" format="reference|color" />
+<attr name="smsCommunicatorOtp" format="reference|color" />
 <!---Misc -->
 <attr name="carbsColor" format="reference|color" />
 <attr name="smbColor" format="reference|color" />
