@@ -105,19 +105,16 @@ class OmnipodDashManagerImpl @Inject constructor(
     }
 
     private val observeVerifyCannulaInsertion: Observable<PodEvent>
-        get() = Observable.defer {
-            observeSendGetPodStatusCommand()
-                .ignoreElements() //
-                .andThen(
-                    Observable.defer {
-                        if (podStateManager.podStatus == PodStatus.RUNNING_ABOVE_MIN_VOLUME) {
-                            Observable.empty()
-                        } else {
-                            Observable.error(IllegalStateException("Unexpected Pod status"))
-                        }
-                    }
-                )
-        }
+        get() = Observable.concat(
+            observeSendGetPodStatusCommand(),
+            Observable.defer {
+                if (podStateManager.podStatus == PodStatus.RUNNING_ABOVE_MIN_VOLUME) {
+                    Observable.empty()
+                } else {
+                    Observable.error(IllegalStateException("Unexpected Pod status"))
+                }
+            }
+        )
 
     private fun observeSendProgramAlertsCommand(
         alertConfigurations: List<AlertConfiguration>,
@@ -153,19 +150,16 @@ class OmnipodDashManagerImpl @Inject constructor(
     }
 
     private val observeVerifyPrime: Observable<PodEvent>
-        get() = Observable.defer {
-            observeSendGetPodStatusCommand()
-                .ignoreElements() //
-                .andThen(
-                    Observable.defer {
-                        if (podStateManager.podStatus == PodStatus.CLUTCH_DRIVE_ENGAGED) {
-                            Observable.empty()
-                        } else {
-                            Observable.error(IllegalStateException("Unexpected Pod status: got ${podStateManager.podStatus}, expected CLUTCH_DRIVE_ENGAGED"))
-                        }
-                    }
-                )
-        }
+        get() = Observable.concat(
+            observeSendGetPodStatusCommand(ResponseType.StatusResponseType.DEFAULT_STATUS_RESPONSE),
+            Observable.defer {
+                if (podStateManager.podStatus == PodStatus.CLUTCH_DRIVE_ENGAGED) {
+                    Observable.empty()
+                } else {
+                    Observable.error(IllegalStateException("Unexpected Pod status: got ${podStateManager.podStatus}, expected CLUTCH_DRIVE_ENGAGED"))
+                }
+            }
+        )
 
     private val observeSendSetUniqueIdCommand: Observable<PodEvent>
         get() = Observable.defer {
@@ -196,6 +190,7 @@ class OmnipodDashManagerImpl @Inject constructor(
         return Observable.concat(
             observePodReadyForActivationPart1,
             observePairNewPod,
+            observeConnectToPod, // FIXME needed after disconnect; observePairNewPod does not connect in that case.
             observeActivationPart1Commands(lowReservoirAlertTrigger)
         ).doOnComplete(ActivationProgressUpdater(ActivationProgress.PHASE_1_COMPLETED))
             // TODO these would be common for any observable returned in a public function in this class
