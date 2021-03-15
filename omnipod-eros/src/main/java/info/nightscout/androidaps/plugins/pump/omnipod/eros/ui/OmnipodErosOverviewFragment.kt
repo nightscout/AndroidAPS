@@ -278,9 +278,9 @@ class OmnipodErosOverviewFragment : DaggerFragment() {
 
             podInfoBinding.timeOnPod.text = readableZonedTime(podStateManager.time)
             podInfoBinding.timeOnPod.setTextColor(if (podStateManager.timeDeviatesMoreThan(OmnipodConstants.TIME_DEVIATION_THRESHOLD)) {
-                Color.RED
+                resourceHelper.getAttributeColor(context, R.attr.statuslightAlarm)
             } else {
-                Color.WHITE
+                resourceHelper.getAttributeColor(context, R.attr.statuslightNormal)
             })
             val expiresAt = podStateManager.expiresAt
             if (expiresAt == null) {
@@ -289,9 +289,9 @@ class OmnipodErosOverviewFragment : DaggerFragment() {
             } else {
                 podInfoBinding.podExpiryDate.text = readableZonedTime(expiresAt)
                 podInfoBinding.podExpiryDate.setTextColor(if (DateTime.now().isAfter(expiresAt)) {
-                    Color.RED
+                    resourceHelper.getAttributeColor(context, R.attr.statuslightAlarm)
                 } else {
-                    Color.WHITE
+                    resourceHelper.getAttributeColor(context, R.attr.statuslightNormal)
                 })
             }
 
@@ -317,16 +317,16 @@ class OmnipodErosOverviewFragment : DaggerFragment() {
             // reservoir
             if (podStateManager.reservoirLevel == null) {
                 podInfoBinding.reservoir.text = resourceHelper.gs(R.string.omnipod_common_overview_reservoir_value_over50)
-                podInfoBinding.reservoir.setTextColor(Color.WHITE)
+                podInfoBinding.reservoir.setTextColor(resourceHelper.getAttributeColor(context, R.attr.statuslightNormal))
             } else {
                 val lowReservoirThreshold = (omnipodAlertUtil.lowReservoirAlertUnits
                     ?: OmnipodConstants.DEFAULT_MAX_RESERVOIR_ALERT_THRESHOLD).toDouble()
 
                 podInfoBinding.reservoir.text = resourceHelper.gs(R.string.omnipod_common_overview_reservoir_value, podStateManager.reservoirLevel)
                 podInfoBinding.reservoir.setTextColor(if (podStateManager.reservoirLevel < lowReservoirThreshold) {
-                    Color.RED
+                    resourceHelper.getAttributeColor(context, R.attr.statuslightAlarm)
                 } else {
-                    Color.WHITE
+                    resourceHelper.getAttributeColor(context, R.attr.statuslightNormal)
                 })
             }
 
@@ -339,10 +339,10 @@ class OmnipodErosOverviewFragment : DaggerFragment() {
 
         if (errors.size == 0) {
             podInfoBinding.errors.text = PLACEHOLDER
-            podInfoBinding.errors.setTextColor(Color.WHITE)
+            podInfoBinding.errors.setTextColor(resourceHelper.getAttributeColor(context, R.attr.statuslightNormal))
         } else {
             podInfoBinding.errors.text = StringUtils.join(errors, System.lineSeparator())
-            podInfoBinding.errors.setTextColor(Color.RED)
+            podInfoBinding.errors.setTextColor(resourceHelper.getAttributeColor(context, R.attr.statuslightAlarm)
         }
     }
 
@@ -402,9 +402,9 @@ class OmnipodErosOverviewFragment : DaggerFragment() {
         }
 
         val podStatusColor = if (!podStateManager.isPodActivationCompleted || podStateManager.isPodDead || podStateManager.isSuspended || (podStateManager.isPodRunning && !podStateManager.isBasalCertain)) {
-            Color.RED
+            resourceHelper.getAttributeColor(context, R.attr.statuslightAlarm)
         } else {
-            Color.WHITE
+            resourceHelper.getAttributeColor(context, R.attr.statuslightNormal)
         }
         podInfoBinding.podStatus.setTextColor(podStatusColor)
     }
@@ -417,7 +417,7 @@ class OmnipodErosOverviewFragment : DaggerFragment() {
             if (podStateManager.isLastBolusCertain) {
                 textColor = resourceHelper.getAttributeColor(context, R.attr.statuslightNormal)
             } else {
-                textColor = Color.RED
+                textColor = resourceHelper.getAttributeColor(context, R.attr.statuslightAlarm)
                 text += " (" + resourceHelper.gs(R.string.omnipod_eros_uncertain) + ")"
             }
 
@@ -434,7 +434,7 @@ class OmnipodErosOverviewFragment : DaggerFragment() {
         if (podStateManager.isPodActivationCompleted && podStateManager.isTempBasalRunning) {
             if (!podStateManager.hasTempBasal()) {
                 podInfoBinding.tempBasal.text = "???"
-                podInfoBinding.tempBasal.setTextColor(Color.RED)
+                podInfoBinding.tempBasal.setTextColor(resourceHelper.getAttributeColor(context, R.attr.statuslightAlarm))
             } else {
                 val now = DateTime.now()
 
@@ -448,9 +448,9 @@ class OmnipodErosOverviewFragment : DaggerFragment() {
                 val textColor: Int
                 text = resourceHelper.gs(R.string.omnipod_common_overview_temp_basal_value, amount, dateUtil.timeString(startTime.millis), minutesRunning, duration.standardMinutes)
                 if (podStateManager.isTempBasalCertain) {
-                    textColor = Color.WHITE
+                    textColor = resourceHelper.getAttributeColor(context, R.attr.statuslightNormal)
                 } else {
-                    textColor = Color.RED
+                    textColor = resourceHelper.getAttributeColor(context, R.attr.statuslightAlarm)
                     text += " (" + resourceHelper.gs(R.string.omnipod_eros_uncertain) + ")"
                 }
 
@@ -462,9 +462,9 @@ class OmnipodErosOverviewFragment : DaggerFragment() {
             val textColor: Int
 
             if (!podStateManager.isPodActivationCompleted || podStateManager.isTempBasalCertain) {
-                textColor = Color.WHITE
+                textColor = resourceHelper.getAttributeColor(context, R.attr.statuslightNormal)
             } else {
-                textColor = Color.RED
+                textColor = resourceHelper.getAttributeColor(context, R.attr.statuslightAlarm)
                 text += " (" + resourceHelper.gs(R.string.omnipod_eros_uncertain) + ")"
             }
 
