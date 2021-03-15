@@ -148,6 +148,10 @@
         <item name="settempbasalIconColor" >@color/pastellPurple</item>
         <!---Cancel temp basal Icon Color-->
         <item name="canceltempbasalIconColor" >@color/pastellPurple</item>
+        <!---Start extended bolus Icon Color-->
+        <item name="startextbolusIconColor" >@color/cyan_blue</item>
+        <!---Cancel extended bolus Icon Color-->
+        <item name="cancelextbolusIconColor" >@color/carbsOrange</item>
         <!---Exercise Icon Color-->
         <item name="exerciseIconColor01" >@color/cyan_blue</item>
         <item name="exerciseIconColor02" >@color/lightGreen</item>
