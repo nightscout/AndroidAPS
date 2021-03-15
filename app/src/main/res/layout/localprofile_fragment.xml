@@ -104,6 +104,7 @@
                 android:text="@string/dia_short"
                 android:textAlignment="center"
                 android:textAppearance="?android:attr/textAppearanceMedium"
+                android:textColor="?attr/localProfileTabTitleTextColor"
                 android:textStyle="bold" />
 
             <TextView
@@ -114,6 +115,7 @@
                 android:text="@string/ic_short"
                 android:textAlignment="center"
                 android:textAppearance="?android:attr/textAppearanceMedium"
+                android:textColor="?attr/localProfileTabTitleTextColor"
                 android:textStyle="bold" />
 
             <TextView
@@ -124,6 +126,7 @@
                 android:text="@string/isf_short"
                 android:textAlignment="center"
                 android:textAppearance="?android:attr/textAppearanceMedium"
+                android:textColor="?attr/localProfileTabTitleTextColor"
                 android:textStyle="bold" />
 
             <TextView
@@ -134,6 +137,7 @@
                 android:text="@string/basal_short"
                 android:textAlignment="center"
                 android:textAppearance="?android:attr/textAppearanceMedium"
+                android:textColor="?attr/localProfileTabTitleTextColor"
                 android:textStyle="bold" />
 
             <TextView
@@ -144,6 +148,7 @@
                 android:text="@string/target_short"
                 android:textAlignment="center"
                 android:textAppearance="?android:attr/textAppearanceMedium"
+                android:textColor="?attr/localProfileTabTitleTextColor"
                 android:textStyle="bold" />
         </LinearLayout>
 
