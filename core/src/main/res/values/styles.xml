@@ -163,6 +163,8 @@
         <item name="questionIconColor" >@color/carbsOrange</item>
         <!---History Icon Color-->
         <item name="historyIconColor" >@color/cyan_blue</item>
+        <!---Stats Icon Color-->
+        <item name="statsIconColor" >@color/carbsOrange</item>
         <!---Announcement Icon Color-->
         <item name="announcementIconColor" >@color/pastellPurple</item>
         <!---Exercise Icon Color-->
