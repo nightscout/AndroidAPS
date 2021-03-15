@@ -246,7 +246,8 @@ class HistoryBrowseActivity : NoSplashAppCompatActivity() {
                     graph.gridLabelRenderer?.isHorizontalLabelsVisible = false
                     graph.gridLabelRenderer?.labelVerticalWidth = axisWidth
                     graph.gridLabelRenderer?.numVerticalLabels = 3
-                    graph.viewport.backgroundColor = Color.argb(20, 255, 255, 255) // 8% of gray
+                    graph.viewport.backgroundColor = resourceHelper.getAttributeColor(null, R.attr.colorGraphBackground)
+
                     relativeLayout.addView(graph)
 
                     val label = TextView(this)
