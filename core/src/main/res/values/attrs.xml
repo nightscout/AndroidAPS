@@ -198,6 +198,7 @@
 <attr name="objectivesBackground" format="reference" />
 <attr name="extendedBolus" format="reference" />
 <attr name="localProfileTabTitleTextColor" format="reference" />
+<attr name="tddStatsActivityBackgroundColor" format="reference" />
 <!-- Window background-->
 <attr name="windowBackground" format="reference|color" />
 </resources>

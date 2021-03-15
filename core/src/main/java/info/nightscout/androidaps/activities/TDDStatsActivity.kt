@@ -365,7 +365,8 @@ class TDDStatsActivity : NoSplashAppCompatActivity() {
             if (isOldData(historyList) && activePlugin.activePump.pumpDescription.needsManualTDDLoad) {
                 binding.message.visibility = View.VISIBLE
                 binding.message.text = resourceHelper.gs(R.string.olddata_Message)
-            } else binding.mainTable.setBackgroundColor(Color.TRANSPARENT)
+            } else binding.mainTable.setBackgroundColor(resourceHelper.getAttributeColor(null,R.attr.tddStatsActivityBackgroundColor))
+
             if (historyList.isNotEmpty() && df1.format(Date(historyList[0].date)) == df1.format(Date())) {
                 //Today should not be included
                 historyList.removeAt(0)
