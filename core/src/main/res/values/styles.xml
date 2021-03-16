@@ -213,7 +213,7 @@
         <item name="defaultTextColor" >@color/defaulttextcolor</item>
         <item name="automationBgUrgent" >@color/red</item>
         <item name="iobPredAS" >@color/iobPredAS</item>
-        <item name="labelBackground" >@color/black</item>
+        <item name="labelBackground" >@color/sphere_plastic_grey</item>
         <item name="examinedProfile" >@color/red</item>
         <item name="spinnerBackground" >@color/black_alpha_40</item>
         <item name="triggerConnectorBackground" >@color/mdtp_line_dark</item>
@@ -227,7 +227,7 @@
         <item name="automationSelectedItemBackground" >@color/gray</item>
         <item name="objectivesBackground" >@color/darkgrayVariant</item>
         <item name="extendedBolus" >@color/cyan</item>
-        <item name="tabTitleTextColor" >@color/white</item>
+        <item name="TitleAndLabelTextColor" >@color/white</item>
         <item name="tddStatsActivityBackgroundColor" >@color/transparent</item>
         <!---Round dialog corner only if sdk >= 28 -->
         <item name="android:dialogCornerRadius" ns2:targetApi="p">8dp</item>

@@ -89,7 +89,7 @@
                 android:layout_marginEnd="8dp"
                 android:layout_marginBottom="1dp"
                 card_view:srcCompat="@drawable/ic_meta_name"
-                card_view:tint="@color/importListAdditionalInfo" />
+                card_view:tint="@color/gray" />
 
             <TextView
                 android:id="@+id/meta_device_name"
@@ -98,7 +98,7 @@
                 android:layout_weight="1"
                 android:text="exported on this Patient phone"
                 android:textAppearance="?android:attr/textAppearanceSmall"
-                android:textColor="@color/importListAdditionalInfo"
+                android:textColor="@color/gray"
                 tools:ignore="HardcodedText" />
 
 
@@ -121,7 +121,7 @@
                 android:layout_marginEnd="8dp"
                 android:layout_marginBottom="1dp"
                 card_view:srcCompat="@drawable/ic_meta_date"
-                card_view:tint="@color/importListAdditionalInfo" />
+                card_view:tint="@color/gray" />
 
             <TextView
                 android:id="@+id/meta_date_time"
@@ -130,7 +130,7 @@
                 android:layout_weight="1"
                 android:text="exported how long ago"
                 android:textAppearance="?android:attr/textAppearanceSmall"
-                android:textColor="@color/importListAdditionalInfo"
+                android:textColor="@color/gray"
                 tools:ignore="HardcodedText" />
 
             <TextView

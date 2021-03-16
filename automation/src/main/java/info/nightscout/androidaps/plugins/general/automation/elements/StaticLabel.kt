@@ -40,6 +40,7 @@ class StaticLabel(injector: HasAndroidInjector) : Element(injector) {
         textView.layoutParams = params
         textView.setPadding(px, px, px, px)
         textView.setTypeface(textView.typeface, Typeface.BOLD)
+        textView.setTextColor(resourceHelper.getAttributeColor(null, R.attr.TitleAndLabelTextColor))
         headerLayout.addView(textView)
         trigger?.let {
             headerLayout.addView(it.createDeleteButton(root.context, it))

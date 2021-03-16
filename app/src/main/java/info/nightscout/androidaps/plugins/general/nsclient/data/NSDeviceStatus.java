@@ -178,7 +178,7 @@ public class NSDeviceStatus {
         //String[] ALL_STATUS_FIELDS = {"reservoir", "battery", "clock", "status", "device"};
 
         StringBuilder string = new StringBuilder();
-        string.append("<span style=\"color:" + resourceHelper.gcs(R.color.defaulttext) + "\">");
+        string.append("<span style=\"color:" + resourceHelper.gcs(R.color.gray) + "\">");
         string.append(resourceHelper.gs(R.string.pump));
         string.append(": </span>");
 
@@ -336,7 +336,7 @@ public class NSDeviceStatus {
 
     public Spanned getOpenApsStatus() {
         StringBuilder string = new StringBuilder();
-        string.append("<span style=\"color:" + resourceHelper.gcs(R.color.defaulttext) + "\">");
+        string.append("<span style=\"color:" + resourceHelper.gcs(R.color.gray) + "\">");
         string.append(resourceHelper.gs(R.string.openaps_short));
         string.append(": </span>");
 
@@ -439,7 +439,7 @@ public class NSDeviceStatus {
 
     public Spanned getUploaderStatusSpanned() {
         StringBuilder string = new StringBuilder();
-        string.append("<span style=\"color:" + resourceHelper.gcs(R.color.defaulttext) + "\">");
+        string.append("<span style=\"color:" + resourceHelper.gcs(R.color.gray) + "\">");
         string.append(resourceHelper.gs(R.string.uploader_short));
         string.append(": </span>");
 

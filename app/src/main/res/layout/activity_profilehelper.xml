@@ -28,7 +28,7 @@
                 android:gravity="center"
                 android:paddingStart="5dp"
                 android:paddingEnd="5dp"
-                android:textColor="?attr/tabTitleTextColor"
+                android:textColor="?attr/TitleAndLabelTextColor"
                 android:text="1" />
 
             <TextView
@@ -39,7 +39,7 @@
                 android:gravity="center"
                 android:paddingStart="5dp"
                 android:paddingEnd="5dp"
-                android:textColor="?attr/tabTitleTextColor"
+                android:textColor="?attr/TitleAndLabelTextColor"
                 android:text="2" />
 
         </LinearLayout>

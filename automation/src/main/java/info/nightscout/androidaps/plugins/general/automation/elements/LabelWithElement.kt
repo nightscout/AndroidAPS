@@ -6,6 +6,7 @@ import android.widget.LinearLayout
 import android.widget.TableLayout
 import android.widget.TextView
 import dagger.android.HasAndroidInjector
+import info.nightscout.androidaps.core.R
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 import javax.inject.Inject
 
@@ -36,6 +37,8 @@ class LabelWithElement(injector: HasAndroidInjector) : Element(injector) {
         //textViewPre.setWidth(MainApp.dpToPx(120));
         textViewPre.setPadding(px, px, px, px)
         textViewPre.setTypeface(textViewPre.typeface, Typeface.BOLD)
+        textViewPre.setTextColor(resourceHelper.getAttributeColor(null, R.attr.TitleAndLabelTextColor))
+
         layout.addView(textViewPre)
         val spacer = TextView(root.context)
         spacer.layoutParams = TableLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT, 1f)

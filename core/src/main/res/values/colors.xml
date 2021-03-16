@@ -60,8 +60,9 @@
 
     <!-- Default theme color -->
     <!-- This section describes the main theme colors -->
-    <color name="primaryColorDefault">@color/colorLightGray</color>
+    <color name="primaryColorDefault">@color/gray</color>
     <color name="primaryDarkColorDefault">@color/sphere_plastic_grey</color>
+    <color name="primaryLightColorDefault">#bbb9bb</color>
     <color name="secondaryColorDefault">@color/blue_default</color>
     <color name="secondaryLightColorDefault">#e3e3e3</color>
     <color name="secondaryDarkColorDefault">#848484</color>
@@ -144,23 +145,19 @@
     <!-- Gray colors -->
     <color name="darkgray">#323232</color>
     <color name="darkgrayVariant">#424242</color>
+    <color name="ribbonDefault">#5a595b</color>
+    <color name="plastic_grey">#666666</color>
+    <color name="graphgrid">#757575</color>
+    <color name="mdtp_line_dark">#808080</color>
+    <color name="sphere_plastic_grey">#8c8c8c</color>
+    <color name="lightSandGray">#72000000</color>
+    <color name="sandGray">#c8666666</color>
+    <color name="treatment">#B2B2B2</color>
     <color name="gray">#BBBBBB</color>
     <color name="lightgray">#4dB1B1B1</color>
-    <color name="plastic">#EBEBEA</color>
-    <color name="plastic_grey">#666666</color>
-    <color name="sphere_plastic_grey">#8c8c8c</color>
     <color name="mdtp_button_selected">#33969696</color>
-    <color name="mdtp_line_dark">#808080</color>
-    <color name="importListAdditionalInfo">#BBBBBB</color>
-    <color name="treatment">#B2B2B2</color>
-    <color name="graphgrid">#757575</color>
     <color name="colorLightGray">#d8d8d8</color>
-    <color name="defaulttext">#BBBBBB</color>
-    <color name="sandGray">#c8666666</color>
-    <color name="lightSandGray">#72000000</color>
-    <color name="ribbonDefault">#5a595b</color>
-    <color name="ribbonTextWarning">#303030</color>
-    <color name="toastBorder">#666666</color>
+    <color name="plastic">#EBEBEA</color>
 
     <!-- White colors -->
     <color name="tempTargetBackground">#FAFAE1</color>
