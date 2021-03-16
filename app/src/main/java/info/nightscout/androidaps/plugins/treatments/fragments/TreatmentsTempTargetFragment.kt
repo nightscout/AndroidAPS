@@ -32,6 +32,7 @@ import info.nightscout.androidaps.plugins.treatments.fragments.TreatmentsTempTar
 import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.FabricPrivacy
 import info.nightscout.androidaps.utils.T
+import info.nightscout.androidaps.utils.Translator
 import info.nightscout.androidaps.utils.alertDialogs.OKDialog
 import info.nightscout.androidaps.utils.buildHelper.BuildHelper
 import info.nightscout.androidaps.utils.extensions.friendlyDescription
@@ -58,6 +59,7 @@ class TreatmentsTempTargetFragment : DaggerFragment() {
     @Inject lateinit var nsUpload: NSUpload
     @Inject lateinit var uploadQueue: UploadQueue
     @Inject lateinit var fabricPrivacy: FabricPrivacy
+    @Inject lateinit var translator: Translator
     @Inject lateinit var dateUtil: DateUtil
     @Inject lateinit var buildHelper: BuildHelper
     @Inject lateinit var aapsSchedulers: AapsSchedulers
@@ -167,7 +169,7 @@ class TreatmentsTempTargetFragment : DaggerFragment() {
             holder.binding.duration.text = resourceHelper.gs(R.string.format_mins, T.msecs(tempTarget.duration).mins())
             holder.binding.low.text = tempTarget.lowValueToUnitsToString(units)
             holder.binding.high.text = tempTarget.highValueToUnitsToString(units)
-            holder.binding.reason.text = tempTarget.reason.text
+            holder.binding.reason.text = translator.translate(tempTarget.reason.text)
             holder.binding.date.setTextColor(
                 when {
                     tempTarget.id == currentlyActiveTarget?.id  -> resourceHelper.gc(R.color.colorActive)
