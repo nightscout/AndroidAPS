@@ -720,7 +720,7 @@ public class AapsOmnipodErosManager {
             detailedBolusInfo.carbTime = 0;
             detailedBolusInfo.carbs = 0;
         }
-        aBoolean;
+        activePlugin.getActiveTreatments().addToHistoryTreatment(detailedBolusInfo, false);
     }
 
     public synchronized void createSuspendedFakeTbrIfNotExists() {
