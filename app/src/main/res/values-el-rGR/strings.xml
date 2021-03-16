@@ -212,9 +212,6 @@
     <string name="openapsama_useautosens">Χρήση του Autosens</string>
     <string name="refresheventsfromnightscout">Ανανέωσε συμβάντα από NS</string>
     <string name="deletefuturetreatments">Διαγραφή συμβάντων στο μέλλον</string>
-    <string name="eatingsoon">Γεύμα Σύντομα</string>
-    <string name="hypo">Υπογλυκαιμία</string>
-    <string name="activity">Άσκηση</string>
     <string name="actions_shortname">ΔΡΑΣΗ</string>
     <string name="configbuilder_shortname">Διαμόρφωση</string>
     <string name="loop_shortname">ΚΥΚΛΩΜΑ</string>
