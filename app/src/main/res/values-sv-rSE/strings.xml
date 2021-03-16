@@ -272,9 +272,6 @@ Eversense-appen.</string>
     <string name="openapsama_useautosens">Använd autosens</string>
     <string name="refresheventsfromnightscout">Uppdatera från Nightscout</string>
     <string name="deletefuturetreatments">Ta bort behandlingar från framtiden</string>
-    <string name="eatingsoon">Äta snart</string>
-    <string name="hypo">Hypo</string>
-    <string name="activity">Träning</string>
     <string name="actions_shortname">Act</string>
     <string name="configbuilder_shortname">Konf</string>
     <string name="loop_shortname">Loop</string>
