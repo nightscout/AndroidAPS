@@ -270,9 +270,6 @@
     <string name="openapsama_useautosens">Použi automatickú detekciu citlivosti</string>
     <string name="refresheventsfromnightscout">Aktualizuj udalosti z NS</string>
     <string name="deletefuturetreatments">Zmazať ošetrenia v budúcnosti</string>
-    <string name="eatingsoon">Pred jedlom</string>
-    <string name="hypo">Hypoglykémia</string>
-    <string name="activity">Aktivita</string>
     <string name="actions_shortname">AKCIA</string>
     <string name="configbuilder_shortname">KONF</string>
     <string name="loop_shortname">OKRUH</string>
