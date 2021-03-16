@@ -266,9 +266,6 @@
     <string name="openapsama_useautosens">Naudoti Autosens funkciją</string>
     <string name="refresheventsfromnightscout">Atnaujinti įvykius iš NS</string>
     <string name="deletefuturetreatments">Ištrinti ateities įrašus</string>
-    <string name="eatingsoon">Netrukus valgysiu</string>
-    <string name="hypo">Hipo</string>
-    <string name="activity">Aktyvumas</string>
     <string name="actions_shortname">VEIKS</string>
     <string name="configbuilder_shortname">KONF</string>
     <string name="loop_shortname">CIKLAS</string>
