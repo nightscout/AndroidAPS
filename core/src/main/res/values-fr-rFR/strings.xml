@@ -168,6 +168,7 @@
     <!--    TDD-->
     <string name="tddformat"><![CDATA[<b>%1$s:</b> ∑: <b>%2$.2fU</b> Bol: <b>%3$.2fU</b> Bas: <b>%4$.2fU (%5$.0f%%)</b>]]></string>
     <string name="tddwithcarbsformat"><![CDATA[<b>%1$s:</b> ∑: <b>%2$.2fU</b> Bol: <b>%3$.2fU</b> Bas: <b>%4$.2fU (%5$.0f%%)</b> Gluc: <b>%6$.0fg</b>]]></string>
+    <string name="activitymonitorformat"><![CDATA[<b><span style=\"color:yellow\">%1$s:</span></b> <b>%2$s</b> en <b>%3$d</b> jours<br>]]></string>
     <!--    Translator-->
     <string name="careportal_bgcheck">Contrôle Glycémie</string>
     <string name="careportal_mbg">Gly manuelle/Calib.</string>
@@ -197,6 +198,12 @@
     <string name="glucosetype_sensor">Capteur</string>
     <string name="manual">Manuel</string>
     <string name="unknown">inconnu</string>
+    <string name="eatingsoon">Repas imminent</string>
+    <string name="hypo">Hypo</string>
+    <string name="activity">Activité</string>
+    <string name="wear">Montre</string>
+    <string name="automation">Automatisation</string>
+    <string name="custom">Manuel</string>
     <!--    Command-->
     <string name="connectiontimedout">Connexion expirée</string>
     <!--    PumpEnactResult-->
