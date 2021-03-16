@@ -463,7 +463,7 @@ public class AapsOmnipodErosManager {
             }
         }
 
-        String comment = null;
+        String comment = "Unknown";
         for (int i = 1; delegate.hasActiveBolus(); i++) {
             aapsLogger.debug(LTag.PUMP, "Attempting to cancel bolus (#{})", i);
 
@@ -704,8 +704,7 @@ public class AapsOmnipodErosManager {
     public void addBolusToHistory(DetailedBolusInfo originalDetailedBolusInfo) {
         DetailedBolusInfo detailedBolusInfo = originalDetailedBolusInfo.copy();
 
-        long pumpId = addSuccessToHistory(detailedBolusInfo.date, PodHistoryEntryType.SET_BOLUS, detailedBolusInfo.insulin + ";" + detailedBolusInfo.carbs);
-        detailedBolusInfo.pumpId = pumpId;
+        detailedBolusInfo.pumpId = addSuccessToHistory(detailedBolusInfo.date, PodHistoryEntryType.SET_BOLUS, detailedBolusInfo.insulin + ";" + detailedBolusInfo.carbs);
 
         if (detailedBolusInfo.carbs > 0 && detailedBolusInfo.carbTime > 0) {
             // split out a separate carbs record without a pumpId
@@ -1004,7 +1003,7 @@ public class AapsOmnipodErosManager {
 
     private void uploadCareportalEvent(long date, TherapyEvent.Type event) {
         if (repository.getTherapyEventByTimestamp(event, date) != null) return;
-        disposable.add(repository.runTransactionForResult(new InsertTherapyEventIfNewTransaction(date, event, 0, null, sp.getString("careportal_enteredby", "AndroidAPS"), null, null, null))
+        disposable.add(repository.runTransactionForResult(new InsertTherapyEventIfNewTransaction(date, event, 0, null, sp.getString("careportal_enteredby", "AndroidAPS"), null, null, TherapyEvent.GlucoseUnit.MGDL))
                 .subscribe(
                         result -> result.getInserted().forEach(nsUpload::uploadEvent),
                         error -> aapsLogger.error(LTag.DATABASE, "Error while saving therapy event", error)
