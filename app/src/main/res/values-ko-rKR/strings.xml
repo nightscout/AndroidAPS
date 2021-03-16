@@ -228,9 +228,6 @@
     <string name="openapsama_useautosens">Autosens 기능 사용</string>
     <string name="refresheventsfromnightscout">NS에서 이벤트 새로고침</string>
     <string name="deletefuturetreatments">미래시점의 관리 삭제</string>
-    <string name="eatingsoon">식사직전</string>
-    <string name="hypo">저혈당</string>
-    <string name="activity">활동</string>
     <string name="actions_shortname">ACT</string>
     <string name="configbuilder_shortname">CONF</string>
     <string name="loop_shortname">LOOP</string>
