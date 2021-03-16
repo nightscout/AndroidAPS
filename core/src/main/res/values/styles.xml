@@ -227,7 +227,7 @@
         <item name="automationSelectedItemBackground" >@color/gray</item>
         <item name="objectivesBackground" >@color/darkgrayVariant</item>
         <item name="extendedBolus" >@color/cyan</item>
-        <item name="localProfileTabTitleTextColor" >@color/white</item>
+        <item name="tabTitleTextColor" >@color/white</item>
         <item name="tddStatsActivityBackgroundColor" >@color/transparent</item>
         <!---Round dialog corner only if sdk >= 28 -->
         <item name="android:dialogCornerRadius" ns2:targetApi="p">8dp</item>

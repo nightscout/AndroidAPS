@@ -234,7 +234,7 @@
         <item name="windowBackground" >@color/background_dark</item>
         <item name="objectivesBackground" >@color/darkgrayVariant</item>
         <item name="extendedBolus" >@color/cyan</item>
-        <item name="localProfileTabTitleTextColor" >@color/white</item>
+        <item name="tabTitleTextColor" >@color/white</item>
         <item name="tddStatsActivityBackgroundColor" >@color/transparent</item>
     </style>
 

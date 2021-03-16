@@ -10,6 +10,7 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginTop="4dp"
         android:orientation="vertical">
 
         <LinearLayout
@@ -27,6 +28,7 @@
                 android:gravity="center"
                 android:paddingStart="5dp"
                 android:paddingEnd="5dp"
+                android:textColor="?attr/tabTitleTextColor"
                 android:text="1" />
 
             <TextView
@@ -37,6 +39,7 @@
                 android:gravity="center"
                 android:paddingStart="5dp"
                 android:paddingEnd="5dp"
+                android:textColor="?attr/tabTitleTextColor"
                 android:text="2" />
 
         </LinearLayout>
@@ -46,6 +49,8 @@
             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginStart="4dp"
+            android:layout_marginEnd="4dp"
             android:hint="@string/profiletype"
             android:textColorHint="?attr/tabBgColorSelected"
             app:boxStrokeColor="?attr/tabBgColorSelected">
@@ -76,6 +81,7 @@
                 <TableRow
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
+                    android:layout_marginBottom="2dp"
                     android:gravity="center_vertical">
 
                     <TextView
@@ -98,6 +104,7 @@
                     android:id="@+id/tdd_row"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
+                    android:layout_marginBottom="2dp"
                     android:gravity="center_vertical">
 
                     <TextView
