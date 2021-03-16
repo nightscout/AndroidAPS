@@ -271,9 +271,6 @@
     <string name="openapsama_useautosens">שימוש בפונקציית חישוב רגישות אוטומטית (Autosens)</string>
     <string name="refresheventsfromnightscout">רענן אירועים מ-Nightscout</string>
     <string name="deletefuturetreatments">מחיקת טיפולים עתידיים</string>
-    <string name="eatingsoon">אכילה בקרוב</string>
-    <string name="hypo">היפו</string>
-    <string name="activity">פעילות</string>
     <string name="actions_shortname">ACT</string>
     <string name="configbuilder_shortname">CONF</string>
     <string name="loop_shortname">לולאה</string>
