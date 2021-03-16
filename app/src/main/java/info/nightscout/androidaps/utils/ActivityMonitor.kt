@@ -66,7 +66,7 @@ class ActivityMonitor @Inject constructor(
                 val duration = DateUtil.niceTimeScalar(v as Long, resourceHelper)
                 val start = sp.getLong(key.replace("total", "start"), 0)
                 val days = T.msecs(DateUtil.now() - start).days()
-                result += "<b><span style=\"color:yellow\">$activity:</span></b> <b>$duration</b> in <b>$days</b> days<br>"
+                result += resourceHelper.gs(R.string.activitymonitorformat, activity, duration, days)
             }
         return result
     }

@@ -318,9 +318,6 @@
     <string name="openapsama_useautosens">Use Autosens feature</string>
     <string name="refresheventsfromnightscout">Refresh events from NS</string>
     <string name="deletefuturetreatments">Delete treatments in the future</string>
-    <string name="eatingsoon">Eating Soon</string>
-    <string name="hypo">Hypo</string>
-    <string name="activity">Activity</string>
     <string name="actions_shortname">ACT</string>
     <string name="configbuilder_shortname">CONF</string>
     <string name="loop_shortname">LOOP</string>
