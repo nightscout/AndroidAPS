@@ -272,9 +272,6 @@ L\'ENSEMBLE DES RISQUES LIÉS À LA QUALITÉ ET À LA PERFORMANCE DU PROGRAMME S
     <string name="openapsama_useautosens">Utiliser la fonction Autosens</string>
     <string name="refresheventsfromnightscout">Actualiser les événements depuis NS</string>
     <string name="deletefuturetreatments">Supprimer les futurs traitements</string>
-    <string name="eatingsoon">Repas imminent</string>
-    <string name="hypo">Hypo</string>
-    <string name="activity">Activité</string>
     <string name="actions_shortname">ACT</string>
     <string name="configbuilder_shortname">CONF</string>
     <string name="loop_shortname">BOUCLE</string>
