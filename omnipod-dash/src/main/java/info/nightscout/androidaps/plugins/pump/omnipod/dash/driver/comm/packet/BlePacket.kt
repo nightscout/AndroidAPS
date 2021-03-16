@@ -1,9 +1,11 @@
 package info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.packet
 
+import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.io.toUnsignedLong
+import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.message.IncorrectPacketException
 import java.nio.ByteBuffer
 
 sealed class BlePacket {
-
+    abstract val payload: ByteArray
     abstract fun toByteArray(): ByteArray
 
     companion object {
@@ -13,17 +15,18 @@ sealed class BlePacket {
 }
 
 data class FirstBlePacket(
-    val totalFragments: Byte,
-    val payload: ByteArray,
+    val fullFragments: Int,
+    override val payload: ByteArray,
     val size: Byte? = null,
-    val crc32: Long? = null
+    val crc32: Long? = null,
+    val oneExtraPacket: Boolean = false
 ) : BlePacket() {
 
     override fun toByteArray(): ByteArray {
         val bb = ByteBuffer
             .allocate(MAX_SIZE)
             .put(0) // index
-            .put(totalFragments) // # of fragments except FirstBlePacket and LastOptionalPlusOneBlePacket
+            .put(fullFragments.toByte()) // # of fragments except FirstBlePacket and LastOptionalPlusOneBlePacket
         crc32?.let {
             bb.putInt(crc32.toInt())
         }
@@ -42,18 +45,64 @@ data class FirstBlePacket(
 
     companion object {
 
-        internal const val HEADER_SIZE_WITHOUT_MIDDLE_PACKETS = 7 // we are using all fields
-        internal const val HEADER_SIZE_WITH_MIDDLE_PACKETS = 2
+        fun parse(payload: ByteArray): FirstBlePacket {
+            if (payload.size < FirstBlePacket.HEADER_SIZE_WITH_MIDDLE_PACKETS) {
+                throw IncorrectPacketException(0, payload)
+            }
+            if (payload[0].toInt() != 0) {
+                // most likely we lost the first packet.
+                // TODO: try to recover with NACKs?
+                throw IncorrectPacketException(0, payload)
+            }
+            val fullFragments = payload[1].toInt()
+            require(fullFragments < MAX_FRAGMENTS) { "Received more than ${MAX_FRAGMENTS} fragments" }
+            when {
+                // Without middle packets
+                payload.size < HEADER_SIZE_WITHOUT_MIDDLE_PACKETS ->
+                    throw IncorrectPacketException(0, payload)
+
+                fullFragments == 0 -> {
+                    val rest = payload[6]
+                    val end = Integer.min(rest + HEADER_SIZE_WITHOUT_MIDDLE_PACKETS, payload.size)
+                    if (end > payload.size) {
+                        throw IncorrectPacketException(0, payload)
+                    }
+                    return FirstBlePacket(
+                        fullFragments = fullFragments,
+                        payload = payload.copyOfRange(HEADER_SIZE_WITHOUT_MIDDLE_PACKETS, end),
+                        crc32 = ByteBuffer.wrap(payload.copyOfRange(2, 6)).int.toUnsignedLong(),
+                        size = rest,
+                        oneExtraPacket = rest + HEADER_SIZE_WITHOUT_MIDDLE_PACKETS > end
+                    )
+                }
+
+                // With middle packets
+                payload.size < BlePacket.MAX_SIZE ->
+                    throw IncorrectPacketException(0, payload)
+
+                else -> {
+                    return FirstBlePacket(
+                        fullFragments = fullFragments,
+                        payload = payload.copyOfRange(HEADER_SIZE_WITH_MIDDLE_PACKETS, MAX_SIZE)
+                    )
+                }
+            }
+        }
+
+        private const val HEADER_SIZE_WITHOUT_MIDDLE_PACKETS = 7 // we are using all fields
+        private const val HEADER_SIZE_WITH_MIDDLE_PACKETS = 2
 
         internal const val CAPACITY_WITHOUT_MIDDLE_PACKETS =
             MAX_SIZE - HEADER_SIZE_WITHOUT_MIDDLE_PACKETS // we are using all fields
         internal const val CAPACITY_WITH_MIDDLE_PACKETS =
             MAX_SIZE - HEADER_SIZE_WITH_MIDDLE_PACKETS // we are not using crc32 or size
         internal const val CAPACITY_WITH_THE_OPTIONAL_PLUS_ONE_PACKET = 18
+
+        private const val MAX_FRAGMENTS = 15 // 15*20=300 bytes
     }
 }
 
-data class MiddleBlePacket(val index: Byte, val payload: ByteArray) : BlePacket() {
+data class MiddleBlePacket(val index: Byte, override val payload: ByteArray) : BlePacket() {
 
     override fun toByteArray(): ByteArray {
         return byteArrayOf(index) + payload
@@ -61,11 +110,27 @@ data class MiddleBlePacket(val index: Byte, val payload: ByteArray) : BlePacket(
 
     companion object {
 
+        fun parse(payload: ByteArray): MiddleBlePacket {
+            if (payload.size < MAX_SIZE) {
+                throw IncorrectPacketException(0, payload)
+            }
+            return MiddleBlePacket(
+                index = payload[0],
+                payload.copyOfRange(1, MAX_SIZE)
+            )
+        }
+
         internal const val CAPACITY = 19
     }
 }
 
-data class LastBlePacket(val index: Byte, val size: Byte, val payload: ByteArray, val crc32: Long) : BlePacket() {
+data class LastBlePacket(
+    val index: Byte,
+    val size: Byte,
+    override val payload: ByteArray,
+    val crc32: Long,
+    val oneExtraPacket: Boolean = false
+) : BlePacket() {
 
     override fun toByteArray(): ByteArray {
         val bb = ByteBuffer
@@ -83,12 +148,33 @@ data class LastBlePacket(val index: Byte, val size: Byte, val payload: ByteArray
 
     companion object {
 
-        internal const val HEADER_SIZE = 6
+        fun parse(payload: ByteArray): LastBlePacket {
+            if (payload.size < HEADER_SIZE) {
+                throw IncorrectPacketException(0, payload)
+            }
+            val rest = payload[1]
+            val end = Integer.min(rest + HEADER_SIZE, payload.size)
+            if (payload.size < end) {
+                throw IncorrectPacketException(0, payload)
+            }
+            return LastBlePacket(
+                index = payload[0],
+                crc32 = ByteBuffer.wrap(payload.copyOfRange(2, 6)).int.toUnsignedLong(),
+                oneExtraPacket = rest + HEADER_SIZE > end,
+                size = rest,
+                payload = payload.copyOfRange(HEADER_SIZE, end)
+            )
+        }
+
+        private const val HEADER_SIZE = 6
         internal const val CAPACITY = MAX_SIZE - HEADER_SIZE
     }
 }
 
-data class LastOptionalPlusOneBlePacket(val index: Byte, val payload: ByteArray, val size: Byte) : BlePacket() {
+data class LastOptionalPlusOneBlePacket(
+    val index: Byte,
+    override val payload: ByteArray,
+    val size: Byte) : BlePacket() {
 
     override fun toByteArray(): ByteArray {
         return byteArrayOf(index, size) + payload + ByteArray(MAX_SIZE - payload.size - 2)
@@ -96,6 +182,22 @@ data class LastOptionalPlusOneBlePacket(val index: Byte, val payload: ByteArray,
 
     companion object {
 
-        internal const val HEADER_SIZE = 2
+        fun parse(payload: ByteArray): LastOptionalPlusOneBlePacket {
+            val size = payload[1].toInt()
+            if (payload.size < HEADER_SIZE + size) {
+                throw IncorrectPacketException(0, payload)
+            }
+            return LastOptionalPlusOneBlePacket(
+                index = payload[0],
+                payload = payload.copyOfRange(
+                    HEADER_SIZE,
+                    HEADER_SIZE + size
+                ),
+                size = size.toByte(),
+            )
+
+        }
+
+        private const val HEADER_SIZE = 2
     }
 }
