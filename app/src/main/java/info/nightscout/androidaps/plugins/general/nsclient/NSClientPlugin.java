@@ -493,7 +493,7 @@ public class NSClientPlugin extends PluginBase {
                         .subscribe(
                                 result -> {
                                     result.getInserted().forEach(record -> uel.log("CAREPORTAL EVENT NS", record.getType().getText(), 0.0, 0.0, 0, 0));
-                                    result.getInvalidated().forEach(record -> uel.log("CAREPORTAL EVENT DELETED FROM NS", record.getType().getText(), 0.0, 0.0, 0, 0));
+                                    result.getInvalidated().forEach(record -> uel.log("CAREPORTAL EVENT DELETED FROM NS", "", 0.0, 0.0, record.getTimestamp(), 0));
                                 },
                                 error -> aapsLogger.error(LTag.DATABASE, "Error while saving therapy event", error)));
             } else {

@@ -124,6 +124,7 @@ public class AapsOmnipodErosManager {
     private boolean batteryChangeLoggingEnabled;
 
     private final CompositeDisposable disposable = new CompositeDisposable();
+    private boolean aBoolean;
 
     @Inject
     public AapsOmnipodErosManager(OmnipodRileyLinkCommunicationManager communicationService,
@@ -719,7 +720,7 @@ public class AapsOmnipodErosManager {
             detailedBolusInfo.carbTime = 0;
             detailedBolusInfo.carbs = 0;
         }
-        activePlugin.getActiveTreatments().addToHistoryTreatment(detailedBolusInfo, false);
+        aBoolean;
     }
 
     public synchronized void createSuspendedFakeTbrIfNotExists() {
