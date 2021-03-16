@@ -271,9 +271,6 @@
     <string name="openapsama_useautosens">Пользоваться функцией Autosens</string>
     <string name="refresheventsfromnightscout">обновить данные из NS</string>
     <string name="deletefuturetreatments">Удалить назначения из будущего</string>
-    <string name="eatingsoon">Ожидаемый прием пищи</string>
-    <string name="hypo">Гипо</string>
-    <string name="activity">Нагрузка</string>
     <string name="actions_shortname">ДЕЙСТВ</string>
     <string name="configbuilder_shortname">КОНФ</string>
     <string name="loop_shortname">ЗЦ</string>
