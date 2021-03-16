@@ -270,9 +270,6 @@
     <string name="openapsama_useautosens">Usar función Autosens</string>
     <string name="refresheventsfromnightscout">Renovar datos desde NS</string>
     <string name="deletefuturetreatments">Borrar tratamientos en el futuro</string>
-    <string name="eatingsoon">ComidendoPronto</string>
-    <string name="hypo">Hipo</string>
-    <string name="activity">Actividad</string>
     <string name="actions_shortname">ACC</string>
     <string name="configbuilder_shortname">CONF</string>
     <string name="loop_shortname">LAZO</string>
