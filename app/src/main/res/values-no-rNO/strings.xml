@@ -271,9 +271,6 @@
     <string name="openapsama_useautosens">Bruk Autosens funksjon</string>
     <string name="refresheventsfromnightscout">Oppdater hendelser fra NS</string>
     <string name="deletefuturetreatments">Slett behandlinger i fremtiden</string>
-    <string name="eatingsoon">Spise snart</string>
-    <string name="hypo">Hypo</string>
-    <string name="activity">Aktivitet</string>
     <string name="actions_shortname">ACT</string>
     <string name="configbuilder_shortname">KONF</string>
     <string name="loop_shortname">LOOP</string>
