@@ -271,9 +271,6 @@
     <string name="openapsama_useautosens">Nutze Autosens</string>
     <string name="refresheventsfromnightscout">Aktualisiere Einträge von Nightscout</string>
     <string name="deletefuturetreatments">Lösche Behandlungen in der Zukunft</string>
-    <string name="eatingsoon">Bald essen</string>
-    <string name="hypo">Hypo</string>
-    <string name="activity">Aktivität</string>
     <string name="actions_shortname">AKT</string>
     <string name="configbuilder_shortname">KONF</string>
     <string name="loop_shortname">LOOP</string>
