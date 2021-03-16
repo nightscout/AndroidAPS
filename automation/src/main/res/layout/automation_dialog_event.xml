@@ -89,6 +89,7 @@
                     android:layout_centerVertical="true"
                     android:background="@color/ribbonDefault"
                     android:padding="8dp"
+                    android:textColor="?attr/automationTitleText"
                     android:text="@string/edit_short" />
 
             </RelativeLayout>
@@ -152,6 +153,7 @@
                     android:layout_centerVertical="true"
                     android:background="@color/ribbonDefault"
                     android:padding="8dp"
+                    android:textColor="?attr/automationTitleText"
                     android:text="@string/add_short" />
 
             </RelativeLayout>
