@@ -1,14 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="ratio">#000000</color>
-
     <color name="defaulttextcolor">#000000</color>
 
     <color name="activity_title_background">#EEEEEE</color>
 
     <!---Graph Color for horizontal and vertical label text-->
-    <color name="graphHorizontalLabelText">#8c8c8c</color>
-    <color name="graphVerticalLabelText">#8c8c8c</color>
     <color name="daySelected">#D000FF00</color>
     <color name="weekdayOutline">#1ea3e5</color>
     <color name="weekendOutline">#1e88e5</color>
@@ -46,14 +42,13 @@
     <color name="transparent">#00000000</color>
 
     <!---Theme based colors-->
-    <color name="colorAccent">#FFFFFF</color>
     <color name="iconColorbottomAppbar">#999999</color>
     <color name="actionBarColor">#FFFFFF</color>
 
     <!-- TDD Stats   -->
     <color name="background_stats_color">#707991</color>
 
-    <!---Android Dark ans Light Theme Base colors-->
+    <!---Android Dark and Light Theme Base colors-->
     <color name="background_dark">#121212</color>
     <color name="background_light">#FFFFFF</color>
     <color name="splashBackground">#FFFFFF</color>

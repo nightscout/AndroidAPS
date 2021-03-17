@@ -66,8 +66,8 @@
         <!-- Fragment background for some themes default transparent  -->
         <item name="fragmentbackground">@color/transparent</item>
         <!-- Graph specific colors  -->
-        <item name="graphHorizontalLabelText">@color/graphHorizontalLabelText</item>
-        <item name="graphVerticalLabelText">@color/graphVerticalLabelText</item>
+        <item name="graphHorizontalLabelText">@color/sphere_plastic_grey</item>
+        <item name="graphVerticalLabelText">@color/sphere_plastic_grey</item>
         <item name="graphGrid">@color/graphgrid</item>
         <!-- Dialog specific colors  -->
         <item name="dialogTitleBackground">?attr/colorPrimary</item>
@@ -327,7 +327,7 @@
         <item name="android:layout_marginTop">15dp</item>
         <item name="android:paddingStart">15dp</item>
         <item name="android:paddingEnd">15dp</item>
-        <item name="android:textColor">@color/colorAccent</item>
+        <item name="android:textColor">@color/white</item>
     </style>
 
     <style name="warning_label">

@@ -66,8 +66,8 @@
         <item name="colorGraphBackground">@color/white_alpha_08</item>
         <item name="inrangeBackground">@color/white_alpha_08</item>
         <!-- Graph specific colors  -->
-        <item name="graphHorizontalLabelText">@color/graphHorizontalLabelText</item>
-        <item name="graphVerticalLabelText">@color/graphVerticalLabelText</item>
+        <item name="graphHorizontalLabelText">@color/white</item>
+        <item name="graphVerticalLabelText">@color/white</item>
         <item name="graphGrid">@color/graphgrid</item>
         <!-- Dialog specific colors  -->
         <item name="dialogTitleBackground">?attr/colorPrimary</item>
@@ -197,7 +197,7 @@
         <item name="prediction" >@color/prediction</item>
         <item name="basal" >@color/basal</item>
         <item name="overviewShowDeviations" >@color/red</item>
-        <item name="overviewShowSensitivity" >@color/ratio</item>
+        <item name="overviewShowSensitivity" >@color/black</item>
         <item name="activity" >@color/activity</item>
         <item name="bgi" >@color/bgi</item>
         <item name="devslopepos" >@color/devslopepos</item>
