@@ -216,12 +216,12 @@ public class MedtronicPumpHistoryDecoder extends MedtronicHistoryDecoder<PumpHis
             case SelfTest:
             case JournalEntryInsulinMarker:
             case JournalEntryOtherMarker:
-            case ChangeBolusWizardSetup512:
+            case BolusWizardSetup512:
             case ChangeSensorSetup2:
             case ChangeSensorAlarmSilenceConfig:
             case ChangeSensorRateOfChangeAlertSetup:
             case ChangeBolusScrollStepSize:
-            case ChangeBolusWizardSetup:
+            case BolusWizardSetup:
             case ChangeVariableBolus:
             case ChangeAudioBolus:
             case ChangeBGReminderEnable:

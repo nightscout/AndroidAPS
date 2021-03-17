@@ -89,7 +89,7 @@ public enum PumpHistoryEntryType // implements CodeEnum
     /**/EventUnknown_MM522_0x4c(0x4c, "Unknown Event 0x4c", PumpHistoryEntryGroup.Unknown, 2, 5, 1), //
     /**/EventUnknown_0x4d(0x4d, "Unknown Event 0x4d", PumpHistoryEntryGroup.Unknown), // V5: 512: 7, 522: 8 ????NS
     /**/EventUnknown_MM512_0x4e(0x4e, "Unknown Event 0x4e", PumpHistoryEntryGroup.Unknown), // /**/
-    ChangeBolusWizardSetup512(0x4f, "Bolus Wizard Setup (512)", PumpHistoryEntryGroup.Configuration, 2, 5, 32), //
+    BolusWizardSetup512(0x4f, "Bolus Wizard Setup (512)", PumpHistoryEntryGroup.Configuration, 2, 5, 32), //
     ChangeSensorSetup2(0x50, "Sensor Setup2", PumpHistoryEntryGroup.Configuration, 2, 5, 30), // Ian50
     /**/Sensor_0x51(0x51, "Unknown Event 0x51", PumpHistoryEntryGroup.Unknown), //
     /**/Sensor_0x52(0x52, "Unknown Event 0x52", PumpHistoryEntryGroup.Unknown), //
@@ -102,8 +102,8 @@ public enum PumpHistoryEntryType // implements CodeEnum
 
     // V4
     // Andy58(0x58, "Unknown", 13, 5, 0), // TO DO is this one really there ???
-
-    ChangeBolusWizardSetup(0x5a, "Bolus Wizard Setup (512)", PumpHistoryEntryGroup.Configuration, 2, 5, 137), // V2: 522+[B=143] // V6 124 -> 144
+    BolusWizardSetup(0x5a, "Bolus Wizard Setup (522)", PumpHistoryEntryGroup.Configuration, 2, 5, 117),
+    // V2: 522+[B=143]; V6: 124, v6: 137, v7: 117/137 [523]
     BolusWizard(0x5b, "Bolus Wizard Estimate", PumpHistoryEntryGroup.Configuration, 2, 5, 13), // 15 //
     UnabsorbedInsulin(0x5c, "Unabsorbed Insulin", PumpHistoryEntryGroup.Statistic, 5, 0, 0), // head[1] -> body
     SaveSettings(0x5d, "Save Settings", PumpHistoryEntryGroup.Configuration), //
@@ -212,9 +212,7 @@ public enum PumpHistoryEntryType // implements CodeEnum
     static void setSpecialRulesForEntryTypes() {
         EndResultTotals.addSpecialRuleBody(new SpecialRule(MedtronicDeviceType.Medtronic_523andHigher, 3));
         Bolus.addSpecialRuleHead(new SpecialRule(MedtronicDeviceType.Medtronic_523andHigher, 8));
-        // BolusWizardChange.addSpecialRuleBody(new SpecialRule(MedtronicDeviceType.Medtronic_522andHigher, 143));
-        //ChangeBolusWizardSetup.addSpecialRuleBody(new SpecialRule(MedtronicDeviceType.Medtronic_523andHigher, 137)); // V5:
-        // 522 has old form
+        BolusWizardSetup.addSpecialRuleBody(new SpecialRule(MedtronicDeviceType.Medtronic_523andHigher, 137));
         BolusWizard.addSpecialRuleBody(new SpecialRule(MedtronicDeviceType.Medtronic_523andHigher, 15));
         BolusReminder.addSpecialRuleBody(new SpecialRule(MedtronicDeviceType.Medtronic_523andHigher, 2));
         ChangeSensorSetup2.addSpecialRuleBody(new SpecialRule(MedtronicDeviceType.Medtronic_523andHigher, 34));
