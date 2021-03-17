@@ -20,7 +20,6 @@ data class UserEntry(
 ) : DBEntry, DBEntryWithTime {
     enum class Action (val colorGroup: ColorGroup) {
         @SerializedName("BOLUS") BOLUS (ColorGroup.InsulinTreatment),
-        @SerializedName("BOLUS_WIZARD") BOLUS_WIZARD (ColorGroup.InsulinTreatment),
         @SerializedName("BOLUS_ADVISOR") BOLUS_ADVISOR (ColorGroup.InsulinTreatment),
         @SerializedName("BOLUS_RECORD") BOLUS_RECORD (ColorGroup.InsulinTreatment),
         @SerializedName("EXTENDED_BOLUS") EXTENDED_BOLUS (ColorGroup.InsulinTreatment),
@@ -29,9 +28,6 @@ data class UserEntry(
         @SerializedName("EXTENDED_CARBS") EXTENDED_CARBS (ColorGroup.CarbTreatment),
         @SerializedName("TEMP_BASAL") TEMP_BASAL (ColorGroup.InsulinTreatment),
         @SerializedName("TT") TT (ColorGroup.TT),
-        @SerializedName("TT_ACTIVITY") TT_ACTIVITY (ColorGroup.TT),
-        @SerializedName("TT_EATING_SOON") TT_EATING_SOON (ColorGroup.TT),
-        @SerializedName("TT_HYPO") TT_HYPO (ColorGroup.TT),
         @SerializedName("NEW_PROFILE") NEW_PROFILE (ColorGroup.Profile),
         @SerializedName("CLONE_PROFILE") CLONE_PROFILE (ColorGroup.Profile),
         @SerializedName("STORE_PROFILE") STORE_PROFILE (ColorGroup.Profile),
@@ -43,16 +39,9 @@ data class UserEntry(
         @SerializedName("LOOP_DISABLED") LOOP_DISABLED (ColorGroup.Loop),
         @SerializedName("LOOP_ENABLED") LOOP_ENABLED (ColorGroup.Loop),
         @SerializedName("RECONNECT") RECONNECT (ColorGroup.Pump),
-        @SerializedName("DISCONNECT_15M") DISCONNECT_15M (ColorGroup.Pump),
-        @SerializedName("DISCONNECT_30M") DISCONNECT_30M (ColorGroup.Pump),
-        @SerializedName("DISCONNECT_1H") DISCONNECT_1H (ColorGroup.Pump),
-        @SerializedName("DISCONNECT_2H") DISCONNECT_2H (ColorGroup.Pump),
-        @SerializedName("DISCONNECT_3H") DISCONNECT_3H (ColorGroup.Pump),
+        @SerializedName("DISCONNECT") DISCONNECT (ColorGroup.Pump),
         @SerializedName("RESUME") RESUME (ColorGroup.Loop),
-        @SerializedName("SUSPEND_1H") SUSPEND_1H (ColorGroup.Loop),
-        @SerializedName("SUSPEND_2H") SUSPEND_2H (ColorGroup.Loop),
-        @SerializedName("SUSPEND_3H") SUSPEND_3H (ColorGroup.Loop),
-        @SerializedName("SUSPEND_10H") SUSPEND_10H (ColorGroup.Loop),
+        @SerializedName("SUSPEND") SUSPEND (ColorGroup.Loop),
         @SerializedName("HW_PUMP_ALLOWED") HW_PUMP_ALLOWED (ColorGroup.Pump),
         @SerializedName("CLEAR_PAIRING_KEYS") CLEAR_PAIRING_KEYS (ColorGroup.Pump),
         @SerializedName("ACCEPTS_TEMP_BASAL") ACCEPTS_TEMP_BASAL (ColorGroup.InsulinTreatment),
@@ -61,9 +50,7 @@ data class UserEntry(
         @SerializedName("CANCEL_TT") CANCEL_TT (ColorGroup.TT),
         @SerializedName("CAREPORTAL") CAREPORTAL (ColorGroup.Careportal),
         @SerializedName("CALIBRATION") CALIBRATION (ColorGroup.Careportal),
-        @SerializedName("INSULIN_CHANGE") INSULIN_CHANGE (ColorGroup.InsulinTreatment),
         @SerializedName("PRIME_BOLUS") PRIME_BOLUS (ColorGroup.Careportal),
-        @SerializedName("SITE_CHANGE") SITE_CHANGE (ColorGroup.Careportal),
         @SerializedName("TREATMENT") TREATMENT (ColorGroup.InsulinTreatment),
         @SerializedName("CAREPORTAL_NS_REFRESH") CAREPORTAL_NS_REFRESH (ColorGroup.Aaps),
         @SerializedName("PROFILE_SWITCH_NS_REFRESH") PROFILE_SWITCH_NS_REFRESH (ColorGroup.Aaps),
@@ -142,19 +129,19 @@ data class UserEntry(
         }
     }
     enum class Units(val text: String) {
-        @SerializedName("None") None (""),                      //Int or String
-        @SerializedName("Mg_Dl") Mg_Dl ("mg/dl"),               //Double
-        @SerializedName("Mmol_L") Mmol_L ("mmol"),              //Double
-        @SerializedName("Timestamp") Timestamp("Timestamp"),    //long
-        @SerializedName("U") U ("U"),                           //Double
-        @SerializedName("U_H") U_H ("U/h"),                     //Double
-        @SerializedName("G") G ("g"),                           //Int
-        @SerializedName("M") M ("m"),                           //Int
-        @SerializedName("H") H ("h"),                           //Int
-        @SerializedName("Percent") Percent ("%"),               //Int
-        @SerializedName("CPEvent") CPEvent ("CPEvent"),         //String (CareportalEvent.Event => Translated by Translator function)
-        @SerializedName("TT_Reason") TT_Reason ("TTReason"),    //TemporaryTarget.Reason => String (to Improve for translation)
-        @SerializedName("R_String") R_String ("R.string")       //Int
+        @SerializedName("None") None (""),                              //Int or String
+        @SerializedName("Mg_Dl") Mg_Dl ("mg/dl"),                       //Double
+        @SerializedName("Mmol_L") Mmol_L ("mmol"),                      //Double
+        @SerializedName("Timestamp") Timestamp("Timestamp"),            //long
+        @SerializedName("U") U ("U"),                                   //Double
+        @SerializedName("U_H") U_H ("U/h"),                             //Double
+        @SerializedName("G") G ("g"),                                   //Int
+        @SerializedName("M") M ("m"),                                   //Int
+        @SerializedName("H") H ("h"),                                   //Int
+        @SerializedName("Percent") Percent ("%"),                       //Int
+        @SerializedName("TherapyEvent") TherapyEvent ("TherapyEvent"),  //String (CareportalEvent.Event => Translated by Translator function)
+        @SerializedName("TT_Reason") TT_Reason ("TTReason"),            //TemporaryTarget.Reason => String (to Improve for translation)
+        @SerializedName("R_String") R_String ("R.string")               //Int
         ;
 
         companion object {

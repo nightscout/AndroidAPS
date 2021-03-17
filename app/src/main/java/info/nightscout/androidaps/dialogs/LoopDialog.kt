@@ -303,49 +303,49 @@ class LoopDialog : DaggerDialogFragment() {
             }
 
             R.id.overview_suspend_1h -> {
-                uel.log(Action.SUSPEND_1H)
+                uel.log(Action.SUSPEND, ValueWithUnit(1, Units.H))
                 loopPlugin.suspendLoop(60)
                 rxBus.send(EventRefreshOverview("suspendmenu"))
                 return true
             }
 
             R.id.overview_suspend_2h -> {
-                uel.log(Action.SUSPEND_2H)
+                uel.log(Action.SUSPEND, ValueWithUnit(2, Units.H))
                 loopPlugin.suspendLoop(120)
                 rxBus.send(EventRefreshOverview("suspendmenu"))
                 return true
             }
 
             R.id.overview_suspend_3h -> {
-                uel.log(Action.SUSPEND_3H)
+                uel.log(Action.SUSPEND, ValueWithUnit(3, Units.H))
                 loopPlugin.suspendLoop(180)
                 rxBus.send(EventRefreshOverview("suspendmenu"))
                 return true
             }
 
             R.id.overview_suspend_10h -> {
-                uel.log(Action.SUSPEND_10H)
+                uel.log(Action.SUSPEND, ValueWithUnit(10, Units.H))
                 loopPlugin.suspendLoop(600)
                 rxBus.send(EventRefreshOverview("suspendmenu"))
                 return true
             }
 
             R.id.overview_disconnect_15m -> {
-                uel.log(Action.DISCONNECT_15M)
+                uel.log(Action.DISCONNECT, ValueWithUnit(15, Units.M))
                 loopPlugin.disconnectPump(15, profile)
                 rxBus.send(EventRefreshOverview("suspendmenu"))
                 return true
             }
 
             R.id.overview_disconnect_30m -> {
-                uel.log(Action.DISCONNECT_30M)
+                uel.log(Action.DISCONNECT, ValueWithUnit(30, Units.M))
                 loopPlugin.disconnectPump(30, profile)
                 rxBus.send(EventRefreshOverview("suspendmenu"))
                 return true
             }
 
             R.id.overview_disconnect_1h -> {
-                uel.log(Action.DISCONNECT_1H)
+                uel.log(Action.DISCONNECT, ValueWithUnit(1, Units.H))
                 loopPlugin.disconnectPump(60, profile)
                 sp.putBoolean(R.string.key_objectiveusedisconnect, true)
                 rxBus.send(EventRefreshOverview("suspendmenu"))
@@ -353,14 +353,14 @@ class LoopDialog : DaggerDialogFragment() {
             }
 
             R.id.overview_disconnect_2h -> {
-                uel.log(Action.DISCONNECT_2H)
+                uel.log(Action.DISCONNECT, ValueWithUnit(2, Units.H))
                 loopPlugin.disconnectPump(120, profile)
                 rxBus.send(EventRefreshOverview("suspendmenu"))
                 return true
             }
 
             R.id.overview_disconnect_3h -> {
-                uel.log(Action.DISCONNECT_3H)
+                uel.log(Action.DISCONNECT, ValueWithUnit(3, Units.H))
                 loopPlugin.disconnectPump(180, profile)
                 rxBus.send(EventRefreshOverview("suspendmenu"))
                 return true

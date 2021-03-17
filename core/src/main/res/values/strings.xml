@@ -265,6 +265,7 @@
     <string name="careportal_pumpbatterychange">Pump Battery Change</string>
     <string name="careportal_temporarytarget">Temporary target</string>
     <string name="careportal_temporarytargetcancel">Temporary target cancel</string>
+    <string name="boluswizard">Bolus wizard</string>
     <string name="glucosetype_finger">Finger</string>
     <string name="glucosetype_sensor">Sensor</string>
     <string name="manual">Manual</string>
@@ -399,7 +400,6 @@
 
     <!-- User Entry -->
     <string name="uel_bolus">BOLUS</string>
-    <string name="uel_bolus_wizard">BOLUS WIZARD</string>
     <string name="uel_bolus_advisor">BOLUS ADVISOR</string>
     <string name="uel_bolus_record">BOLUS RECORD</string>
     <string name="uel_extended_bolus">EXTENDED BOLUS</string>
@@ -408,9 +408,6 @@
     <string name="uel_extended_carbs">EXTENDED CARBS</string>
     <string name="uel_temp_basal">TEMP BASAL</string>
     <string name="uel_tt">TT</string>
-    <string name="uel_tt_activity">TT ACTIVITY</string>
-    <string name="uel_tt_eating_soon">TT EATING SOON</string>
-    <string name="uel_tt_hypo">TT HYPO</string>
     <string name="uel_new_profile">NEW PROFILE</string>
     <string name="uel_clone_profile">CLONE PROFILE</string>
     <string name="uel_store_profile">STORE PROFILE</string>
@@ -422,16 +419,9 @@
     <string name="uel_loop_disabled">LOOP DISABLED</string>
     <string name="uel_loop_enabled">LOOP ENABLED</string>
     <string name="uel_reconnect">RECONNECT</string>
-    <string name="uel_disconnect_15m">DISCONNECT 15M</string>
-    <string name="uel_disconnect_30m">DISCONNECT 30M</string>
-    <string name="uel_disconnect_1h">DISCONNECT 1H</string>
-    <string name="uel_disconnect_2h">DISCONNECT 2H</string>
-    <string name="uel_disconnect_3h">DISCONNECT 3H</string>
+    <string name="uel_disconnect">DISCONNECT</string>
     <string name="uel_resume">RESUME</string>
-    <string name="uel_suspend_1h">SUSPEND 1H</string>
-    <string name="uel_suspend_2h">SUSPEND 2H</string>
-    <string name="uel_suspend_3h">SUSPEND 3H</string>
-    <string name="uel_suspend_10h">SUSPEND 10H</string>
+    <string name="uel_suspend">SUSPEND</string>
     <string name="uel_hw_pump_allowed">HW PUMP ALLOWED</string>
     <string name="uel_clear_pairing_keys">CLEAR PAIRING KEYS</string>
     <string name="uel_accepts_temp_basal">ACCEPTS TEMP BASAL</string>
@@ -440,9 +430,7 @@
     <string name="uel_cancel_tt">CANCEL TT</string>
     <string name="uel_careportal">CAREPORTAL</string>
     <string name="uel_calibration">CALIBRATION</string>
-    <string name="uel_insulin_change">INSULIN CHANGE</string>
     <string name="uel_prime_bolus">PRIME BOLUS</string>
-    <string name="uel_site_change">SITE CHANGE</string>
     <string name="uel_treatment">TREATMENT</string>
     <string name="uel_careportal_ns_refresh">CAREPORTAL NS REFRESH</string>
     <string name="uel_profile_switch_ns_refresh">PROFILE SWITCH NS REFRESH</string>

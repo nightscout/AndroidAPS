@@ -196,7 +196,7 @@ class TreatmentsCareportalFragment : DaggerFragment() {
                             resourceHelper.gs(R.string.notes_label) + ": " + (therapyEvent.note ?: "") + "\n" +
                             resourceHelper.gs(R.string.date) + ": " + dateUtil.dateAndTimeString(therapyEvent.timestamp)
                         OKDialog.showConfirmation(activity, resourceHelper.gs(R.string.removerecord), text, Runnable {
-                            uel.log(Action.CAREPORTAL_REMOVED, therapyEvent.note ?: "", ValueWithUnit(therapyEvent.type.text, Units.CPEvent), ValueWithUnit(therapyEvent.timestamp, Units.Timestamp))
+                            uel.log(Action.CAREPORTAL_REMOVED, therapyEvent.note ?: "", ValueWithUnit(therapyEvent.type.text, Units.TherapyEvent), ValueWithUnit(therapyEvent.timestamp, Units.Timestamp))
                             disposable += repository.runTransactionForResult(InvalidateTherapyEventTransaction(therapyEvent.id))
                                 .subscribe({
                                     val id = therapyEvent.interfaceIDs.nightscoutId

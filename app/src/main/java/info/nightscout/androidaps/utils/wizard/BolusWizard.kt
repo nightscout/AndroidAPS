@@ -349,7 +349,7 @@ class BolusWizard @Inject constructor(
                 boluscalc = nsJSON()
                 source = Source.USER
                 notes = this@BolusWizard.notes
-                uel.log(Action.BOLUS_ADVISOR, ValueWithUnit(insulinAfterConstraints, Units.U))
+                uel.log(Action.BOLUS_ADVISOR, notes, ValueWithUnit(eventType, Units.TherapyEvent), ValueWithUnit(insulinAfterConstraints, Units.U))
                 if (insulin > 0) {
                     commandQueue.bolus(this, object : Callback() {
                         override fun run() {
@@ -413,7 +413,7 @@ class BolusWizard @Inject constructor(
                     boluscalc = nsJSON()
                     source = Source.USER
                     notes = this@BolusWizard.notes
-                    uel.log(Action.BOLUS_WIZARD, notes, ValueWithUnit(insulinAfterConstraints, Units.U), ValueWithUnit(this@BolusWizard.carbs, Units.G, this@BolusWizard.carbs != 0), ValueWithUnit(carbTime, Units.M, carbTime != 0))
+                    uel.log(Action.BOLUS, notes, ValueWithUnit(eventType,Units.TherapyEvent), ValueWithUnit(insulinAfterConstraints, Units.U), ValueWithUnit(this@BolusWizard.carbs, Units.G, this@BolusWizard.carbs != 0), ValueWithUnit(carbTime, Units.M, carbTime != 0))
                     if (insulin > 0 || pump.pumpDescription.storesCarbInfo) {
                         commandQueue.bolus(this, object : Callback() {
                             override fun run() {
