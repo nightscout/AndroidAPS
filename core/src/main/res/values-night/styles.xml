@@ -246,6 +246,13 @@
         <item name="android:singleLine">true</item>
     </style>
 
+    <!-- The launcher theme. It sets the main window background to the launch_screen drawable -->
+    <style name="AppTheme.Launcher"  parent="Theme.MaterialComponents.NoActionBar">
+        <item name="android:windowBackground">@drawable/launch_screen_night</item>
+        <!-- Optional, on Android 5+ you can modify the colorPrimaryDark color to match the windowBackground color for further branding-->
+        <!-- <item name="colorPrimaryDark">@android:color/white</item> -->
+    </style>
+
     <style name="AppTheme.base" parent="Theme.MaterialComponents">
         <item name="android:textColorSecondary">@color/white</item>
     </style>

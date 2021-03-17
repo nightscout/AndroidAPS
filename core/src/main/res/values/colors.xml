@@ -56,7 +56,7 @@
     <!---Android Dark ans Light Theme Base colors-->
     <color name="background_dark">#121212</color>
     <color name="background_light">#FFFFFF</color>
-    <color name="splashBackground">#000000</color>
+    <color name="splashBackground">#FFFFFF</color>
 
     <!-- Default theme color -->
     <!-- This section describes the main theme colors -->
