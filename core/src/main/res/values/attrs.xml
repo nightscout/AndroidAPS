@@ -151,6 +151,8 @@
 <attr name="therapyeventAnnouncement" format="reference|color" />
 <!---Trashbin Icon Color-->
 <attr name="trashbinIconColor" format="reference|color" />
+<!---Target Hypo Icon Color-->
+<attr name="targetHypoBgIconColor" format="reference|color" />
 <!---NS MBG Event-->
 <attr name="therapyeventNsmbg" format="reference|color" />
 <!---Finger Stick Event-->

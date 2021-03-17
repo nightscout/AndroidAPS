@@ -126,7 +126,7 @@
         <item name="rowBackgroundEven" >@color/darkgray</item>
         <item name="rowBackgroundOdd" >@color/gray</item>
         <item name="rowTextColor" >@color/white</item>
-        <!-- Icon specific colors  -->
+        <!-- Icon specific colors begin -->
         <!---Loop Icon Color-->
         <item name="loopPaused" >@color/ribbonWarning</item>
         <!---Profile Switch Icon Color-->
@@ -183,6 +183,9 @@
         <item name="refillIconColor" >@color/calibrationRed</item>
         <!---Trashbin Icon Color-->
         <item name="trashbinIconColor" >@color/gray</item>
+        <!---Target Hypo Icon Color-->
+        <item name="targetHypoBgIconColor" >@color/red</item>
+        <!-- Icon specific colors end -->
         <!---Therapy Event Announcement-->
         <item name="therapyeventAnnouncement" >@color/notificationAnnouncement</item>
         <!---NS MBG Event-->
