@@ -48,7 +48,7 @@
         <item name="popupMenuStyle">@style/Widget.MaterialComponents.PopupMenu</item>
         <item name="actionOverflowMenuStyle">@style/Widget.MaterialComponents.PopupMenu.Overflow</item>
         <!-- Color of bg value -->
-        <item name="bgInRange">@color/lightGreen</item>
+        <item name="bgInRange">@color/blue_default</item>
         <item name="bgLow">@color/red</item>
         <item name="bgHigh">@color/lightyellow</item>
         <!-- Color of dialog -->
@@ -129,57 +129,57 @@
         <item name="rowTextColor" >@color/white</item>
         <!-- Icon specific colors  -->
         <!---Loop Icon Color-->
-        <item name="loopPaused" >@color/lightyellow</item>
+        <item name="loopPaused" >@color/blue_default</item>
         <!---Profile Switch Icon Color-->
-        <item name="profileswitchIconColor" >@color/white</item>
+        <item name="profileswitchIconColor" >@color/blue_default</item>
         <!---Sensitivity Icon Color-->
-        <item name="sensitivityIconColor" >@color/sensGreen</item>
+        <item name="sensitivityIconColor" >@color/blue_default</item>
         <!---Bolus Icon Color-->
-        <item name="bolusIconColor" >@color/cyan_blue</item>
+        <item name="bolusIconColor" >@color/blue_default</item>
         <!---Carbs Icon Color-->
-        <item name="carbsIconColor" >@color/carbsOrange</item>
+        <item name="carbsIconColor" >@color/blue_default</item>
         <!---Wizard Icon Color-->
-        <item name="wizardIconColor" >@color/calcGreen</item>
+        <item name="wizardIconColor" >@color/blue_default</item>
         <!---Calibration Icon Color-->
-        <item name="calibrationIconColor" >@color/calibrationRed</item>
+        <item name="calibrationIconColor" >@color/blue_default</item>
         <!---CGM Icon Color-->
-        <item name="cgmIconColor" >@color/darkRed</item>
+        <item name="cgmIconColor" >@color/blue_default</item>
         <!---QuickWizzard Icon Color-->
-        <item name="quickwizzardIconColor" >@color/carbsOrange</item>
+        <item name="quickwizzardIconColor" >@color/blue_default</item>
         <!---Temp target Icon Color-->
-        <item name="temptargetIconColor" >@color/lightGreen</item>
-        <item name="temptargetIconColor1" >@color/tempTargetConfirmation</item>
+        <item name="temptargetIconColor" >@color/blue_default</item>
+        <item name="temptargetIconColor1" >@color/blue_default</item>
         <!---Start temp basal Icon Color-->
-        <item name="tempbasalIconColor" >@color/pastellPurple</item>
+        <item name="tempbasalIconColor" >@color/blue_default</item>
         <!---Cancel temp basal Icon Color-->
-        <item name="canceltempbasalIconColor" >@color/pastellPurple</item>
+        <item name="canceltempbasalIconColor" >@color/blue_default</item>
         <!---Start extended bolus Icon Color-->
-        <item name="startextbolusIconColor" >@color/cyan_blue</item>
+        <item name="startextbolusIconColor" >@color/blue_default</item>
         <!---Cancel extended bolus Icon Color-->
-        <item name="cancelextbolusIconColor" >@color/carbsOrange</item>
+        <item name="cancelextbolusIconColor" >@color/blue_default</item>
         <!---BG check Icon Color-->
-        <item name="bgcheckIconColor" >@color/calibrationRed</item>
+        <item name="bgcheckIconColor" >@color/blue_default</item>
         <!---Prime fill Icon Color-->
-        <item name="primefillIconColor" >@color/cyan_blue</item>
+        <item name="primefillIconColor" >@color/blue_default</item>
         <!---CGM insert Icon Color-->
-        <item name="cgminsertIconColor" >@color/cyan_blue</item>
+        <item name="cgminsertIconColor" >@color/blue_default</item>
         <!---Note Icon Color-->
-        <item name="noteIconColor" >@color/carbsOrange</item>
+        <item name="noteIconColor" >@color/blue_default</item>
         <!---Question Icon Color-->
-        <item name="questionIconColor" >@color/carbsOrange</item>
+        <item name="questionIconColor" >@color/blue_default</item>
         <!---History Icon Color-->
-        <item name="historyIconColor" >@color/cyan_blue</item>
+        <item name="historyIconColor" >@color/blue_default</item>
         <!---Stats Icon Color-->
-        <item name="statsIconColor" >@color/carbsOrange</item>
+        <item name="statsIconColor" >@color/blue_default</item>
         <!---Announcement Icon Color-->
-        <item name="announcementIconColor" >@color/pastellPurple</item>
+        <item name="announcementIconColor" >@color/blue_default</item>
         <!---Exercise Icon Color-->
-        <item name="exerciseIconColor01" >@color/cyan_blue</item>
-        <item name="exerciseIconColor02" >@color/lightGreen</item>
+        <item name="exerciseIconColor01" >@color/blue_default</item>
+        <item name="exerciseIconColor02" >@color/blue_default</item>
         <!---Pump Battery Icon Color-->
-        <item name="pumpBatteryIconColor" >@color/lightGreen</item>
+        <item name="pumpBatteryIconColor" >@color/blue_default</item>
         <!---User Option Icon Color-->
-        <item name="userOptionsIconColor" >@color/calcGreen</item>
+        <item name="userOptionsIconColor" >@color/blue_default</item>
         <!---Therapy Event Announcement-->
         <item name="therapyeventAnnouncement" >@color/notificationAnnouncement</item>
         <!---NS MBG Event-->
