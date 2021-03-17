@@ -261,8 +261,6 @@
 
     <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
 
-    <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
-
     <style name="NavigationDrawer" />
 
     <!-- Text styles -->
@@ -310,18 +308,6 @@
         <item name="android:windowAnimationStyle">@android:style/Animation</item>
     </style>
 
-    <style name="ButtonSmallFontStyle" parent="Widget.MaterialComponents.Button.UnelevatedButton">
-        <item name="android:textSize">10sp</item>
-    </style>
-
-    <style name="TextViewStyleDark" parent="android:Widget.TextView">
-        <item name="android:textColor">@color/black</item>
-    </style>
-
-    <style name="TextViewStyleBright" parent="android:Widget.TextView">
-        <item name="android:textColor">@color/white</item>
-    </style>
-
     <style name="section_header_label">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
@@ -361,7 +347,6 @@
         <item name="android:paddingStart">60px</item>
         <item name="android:paddingEnd">60px</item>
         <item name="android:textSize">18sp</item>
-        <!-- <item name="android:textColor">#000000</item> -->
     </style>
 
     <style name="PodInfoListView" parent="@android:style/Widget.ListView">
@@ -374,8 +359,8 @@
     <style name="AppThemeWarningDialog" parent="AppTheme">
         <item name="alertDialogTheme">@style/AppThemeWarningDialogTheme</item>
         <item name="dialogTitleBackground">@color/warningAlertBackground</item>
-        <item name="dialogTitleColor">@color/warningAlertHeaderText</item>
-        <item name="dialogTitleIconTint">@color/warningAlertHeaderText</item>
+        <item name="dialogTitleColor">@color/black</item>
+        <item name="dialogTitleIconTint">@color/black</item>
     </style>
 
     <style name="AppThemeWarningDialogTheme" parent="Theme.AppCompat.Dialog.MinWidth">
@@ -386,8 +371,8 @@
     <style name="AppThemeErrorDialog" parent="AppTheme">
         <item name="alertDialogTheme">@style/AppThemeErrorDialogTheme</item>
         <item name="dialogTitleBackground">@color/red</item>
-        <item name="dialogTitleColor">@color/errorAlertHeaderText</item>
-        <item name="dialogTitleIconTint">@color/errorAlertHeaderText</item>
+        <item name="dialogTitleColor">@color/black</item>
+        <item name="dialogTitleIconTint">@color/black</item>
     </style>
 
     <style name="AppThemeErrorDialogTheme" parent="Theme.AppCompat.Dialog.MinWidth">
@@ -397,6 +382,10 @@
 
     <style name="ButtonMediumFontStyle">
         <item name="android:textSize">15sp</item>
+    </style>
+
+    <style name="ButtonSmallFontStyle" parent="Widget.MaterialComponents.Button.UnelevatedButton">
+        <item name="android:textSize">10sp</item>
     </style>
 
     <!--    Buttons from MaterialDateTimePicker    -->
@@ -427,5 +416,4 @@
     </style>
 
     <style name="ProfileHelperAppTheme" parent="Theme.MaterialComponents.DayNight.NoActionBar"/>
-
 </resources>

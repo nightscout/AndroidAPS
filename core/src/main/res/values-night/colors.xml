@@ -26,10 +26,6 @@
     <color name="overviewPillColorDefault">#1c171c</color>
     <color name="colorOnPrimaryDefault">#FFFFFF</color>
 
-    <!--    Dialogs-->
-    <color name="warningAlertHeaderText">#FF000000</color>
-    <color name="errorAlertHeaderText">#FF000000</color>
-
     <!-- Pink Colors -->
     <color name="prediction">#ff00ff</color>
     <color name="devslopeneg">#FFFF00FF</color>
