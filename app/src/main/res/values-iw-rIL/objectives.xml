@@ -45,7 +45,7 @@
     <string name="wronganswer">תשובה שגויה!</string>
     <string name="unfinshed_button">הבא שלא נעשה</string>
     <string name="requestcode">בקשת קוד: %1$s</string>
-    <string name="objectives_hint">(בדקו את כל התשובות הנכונות)</string>
+    <string name="objectives_hint">(בחרו את כל ההיגדים הנכונים)</string>
     <string name="disconnectpump_hint" formatted="false">https://androidaps.readthedocs.io/en/latest/EN/Getting-Started/FAQ.html#what-to-do-when-taking-a-shower-or-bath</string>
     <string name="usetemptarget_hint" formatted="false">https://androidaps.readthedocs.io/en/latest/EN/Getting-Started/Screenshots.html#the-homescreen</string>
     <string name="useaction_hint" formatted="false">https://androidaps.readthedocs.io/en/latest/EN/Getting-Started/Screenshots.html#config-builder</string>
