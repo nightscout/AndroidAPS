@@ -179,6 +179,8 @@
         <item name="pumpBatteryIconColor" >@color/lightGreen</item>
         <!---User Option Icon Color-->
         <item name="userOptionsIconColor" >@color/calcGreen</item>
+        <!---Refill Icon Color-->
+        <item name="refillIconColor" >@color/calibrationRed</item>
         <!---Therapy Event Announcement-->
         <item name="therapyeventAnnouncement" >@color/notificationAnnouncement</item>
         <!---NS MBG Event-->

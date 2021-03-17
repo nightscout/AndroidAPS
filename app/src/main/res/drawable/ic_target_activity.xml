@@ -14,5 +14,5 @@
       android:fillColor="?attr/exerciseIconColor02"/>
   <path
       android:pathData="M13.949,6.338h-2.831c-0.232,0 -0.421,-0.193 -0.421,-0.431V4.19H5.856l0,1.717c0,0.238 -0.188,0.431 -0.42,0.431h-2.84c-0.232,0 -0.42,-0.193 -0.42,-0.431c0,-0.238 0.188,-0.431 0.42,-0.431h2.42l0,-1.717c0,-0.238 0.188,-0.431 0.42,-0.431h5.682c0.232,0 0.421,0.193 0.421,0.431v1.717h2.411c0.232,0 0.421,0.193 0.421,0.431C14.37,6.145 14.181,6.338 13.949,6.338z"
-      android:fillColor="@color/tempTargetConfirmation"/>
+      android:fillColor="?attr/temptargetIconColor1"/>
 </vector>
