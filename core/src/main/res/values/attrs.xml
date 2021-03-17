@@ -149,6 +149,8 @@
 <attr name="userOptionsIconColor" format="reference|color" />
 <!---Therapy Event Announcement-->
 <attr name="therapyeventAnnouncement" format="reference|color" />
+<!---Trashbin Icon Color-->
+<attr name="trashbinIconColor" format="reference|color" />
 <!---NS MBG Event-->
 <attr name="therapyeventNsmbg" format="reference|color" />
 <!---Finger Stick Event-->
