@@ -192,6 +192,7 @@
         android:layout_marginStart="2dp"
         android:layout_marginEnd="2dp"
         app:icon="@drawable/ic_actions_refill"
+        app:iconTint="?attr/iconColorToolbar"
         app:iconGravity="start"
         android:textAlignment="center"
         android:text="@string/reload" />

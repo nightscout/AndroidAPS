@@ -324,6 +324,7 @@
             android:layout_marginStart="2dp"
             android:layout_marginEnd="2dp"
             app:icon="@drawable/ic_local_save"
+            app:iconTint="?attr/iconColorToolbar"
             app:iconGravity="start"
             android:textAlignment="center"
             android:text="@string/danar_saveuseroptions" />
