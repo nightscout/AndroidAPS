@@ -168,6 +168,7 @@
     <!--    TDD-->
     <string name="tddformat"><![CDATA[<b>%1$s:</b> ∑: <b>%2$.2f U</b> Bol: <b>%3$.2f U</b> Baz: <b>%4$.2f U(%5$.0f%%)</b>]]></string>
     <string name="tddwithcarbsformat"><![CDATA[<b>%1$s:</b> ∑: <b>%2$.2f U</b> Bol: <b>%3$.2f U</b> Baz: <b>%4$.2f U(%5$.0f%%)</b> Sach.: <b>%6$.0f g</b>]]></string>
+    <string name="activitymonitorformat"><![CDATA[<b><span style=\"color:yellow\">%1$s:</span></b> <b>%2$s</b> ve <b>%3$d</b> dnech<br>]]></string>
     <!--    Translator-->
     <string name="careportal_bgcheck">Kontrola glykémie</string>
     <string name="careportal_mbg">Ruční glykémie nebo kalibrace</string>
@@ -197,6 +198,12 @@
     <string name="glucosetype_sensor">Senzor</string>
     <string name="manual">Ručně</string>
     <string name="unknown">neznámý</string>
+    <string name="eatingsoon">Před jídlem</string>
+    <string name="hypo">Hypoglykémie</string>
+    <string name="activity">Aktivita</string>
+    <string name="wear">Wear</string>
+    <string name="automation">Automatizace</string>
+    <string name="custom">Volitelný</string>
     <!--    Command-->
     <string name="connectiontimedout">Vypršel čas připojování</string>
     <!--    PumpEnactResult-->
