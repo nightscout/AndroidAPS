@@ -141,6 +141,8 @@
 <attr name="exerciseIconColor02" format="reference|color" />
 <!---Pump Battery Icon Color-->
 <attr name="pumpBatteryIconColor" format="reference|color" />
+<!---User Option Icon Color-->
+<attr name="userOptionsIconColor" format="reference|color" />
 <!---Therapy Event Announcement-->
 <attr name="therapyeventAnnouncement" format="reference|color" />
 <!---NS MBG Event-->

@@ -172,6 +172,8 @@
         <item name="exerciseIconColor02" >@color/lightGreen</item>
         <!---Pump Battery Icon Color-->
         <item name="pumpBatteryIconColor" >@color/lightGreen</item>
+        <!---User Option Icon Color-->
+        <item name="userOptionsIconColor" >@color/calcGreen</item>
         <!---Therapy Event Announcement-->
         <item name="therapyeventAnnouncement" >@color/notificationAnnouncement</item>
         <!---NS MBG Event-->
