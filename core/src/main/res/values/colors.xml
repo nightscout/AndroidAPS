@@ -48,7 +48,7 @@
     <!-- Default theme color -->
     <!-- This section describes the main theme colors -->
     <color name="primaryColorDefault">@color/gray</color>
-    <color name="primaryDarkColorDefault">@color/mdtp_line_dark</color>
+    <color name="primaryDarkColorDefault">@color/graphgrid</color>
     <color name="primaryLightColorDefault">#bbb9bb</color>
     <color name="secondaryColorDefault">@color/blue_default</color>
     <color name="secondaryLightColorDefault">#e3e3e3</color>
