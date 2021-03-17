@@ -168,6 +168,7 @@
     <!--    TDD-->
     <string name="tddformat"><![CDATA[<b>%1$s:</b> ∑: <b>%2$.2fед</b> Бол:<b>%3$.2fед</b> Баз: <b>%4$.2fед(%5$.0f%%)</b>]]></string>
     <string name="tddwithcarbsformat"><![CDATA[<b>%1$s</b>∑: <b>%2$.2fед</b> Бол: <b>%3$.2fед</b> Баз: <b>%4$.2fед(%5$.0f%%)</b> Угл: <b>%6$.0fг</b>]]></string>
+    <string name="activitymonitorformat"><![CDATA[<b><span style=\"color:yellow\">%1$s</span></b> <b>%2$s</b>через<b>%3$d</b> дней<br>]]></string>
     <!--    Translator-->
     <string name="careportal_bgcheck">Проверка ГК</string>
     <string name="careportal_mbg">Ввести значение ГК или калибровку</string>
@@ -197,6 +198,12 @@
     <string name="glucosetype_sensor">Сенсор</string>
     <string name="manual">Вручную</string>
     <string name="unknown">неизвестно</string>
+    <string name="eatingsoon">Ожидаемый прием пищи</string>
+    <string name="hypo">Гипо</string>
+    <string name="activity">Нагрузка</string>
+    <string name="wear">Смарт-часы Wear</string>
+    <string name="automation">Автоматизация</string>
+    <string name="custom">Пользовательский</string>
     <!--    Command-->
     <string name="connectiontimedout">Истекло время ожидания соединения</string>
     <!--    PumpEnactResult-->
