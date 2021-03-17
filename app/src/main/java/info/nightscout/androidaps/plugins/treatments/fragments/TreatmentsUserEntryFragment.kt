@@ -128,7 +128,7 @@ class TreatmentsUserEntryFragment : DaggerFragment() {
                     when (v.unit) {
                         Units.Timestamp -> valuesWithUnitString += dateUtil.dateAndTimeAndSecondsString(v.lValue) + separator
                         Units.CPEvent   -> valuesWithUnitString += translator.translate(v.sValue) + separator
-                        Units.TT_Reason -> valuesWithUnitString += v.sValue + separator
+                        Units.TT_Reason -> valuesWithUnitString += translator.translate(v.sValue) + separator
                         Units.R_String  -> {
                             rStringParam = v.lValue.toInt()
                             when (rStringParam) {   //
