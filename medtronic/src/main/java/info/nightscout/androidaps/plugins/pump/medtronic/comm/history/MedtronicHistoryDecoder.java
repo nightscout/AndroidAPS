@@ -25,8 +25,8 @@ import info.nightscout.androidaps.plugins.pump.medtronic.util.MedtronicUtil;
 
 public abstract class MedtronicHistoryDecoder<T extends MedtronicHistoryEntry> implements MedtronicHistoryDecoderInterface<T> {
 
-    @Inject AAPSLogger aapsLogger;
-    @Inject MedtronicUtil medtronicUtil;
+    @Inject protected AAPSLogger aapsLogger;
+    @Inject protected MedtronicUtil medtronicUtil;
 
     protected ByteUtil bitUtils;
 
