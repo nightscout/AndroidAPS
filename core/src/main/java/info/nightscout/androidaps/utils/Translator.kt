@@ -1,6 +1,7 @@
 package info.nightscout.androidaps.utils
 
 import info.nightscout.androidaps.core.R
+import info.nightscout.androidaps.database.entities.TemporaryTarget
 import info.nightscout.androidaps.database.entities.TherapyEvent
 import info.nightscout.androidaps.database.entities.UserEntry.*
 import info.nightscout.androidaps.utils.resources.ResourceHelper
@@ -41,6 +42,13 @@ class Translator @Inject internal constructor(
             TherapyEvent.MeterType.FINGER.text             -> resourceHelper.gs(R.string.glucosetype_finger)
             TherapyEvent.MeterType.SENSOR.text             -> resourceHelper.gs(R.string.glucosetype_sensor)
             TherapyEvent.MeterType.MANUAL.text             -> resourceHelper.gs(R.string.manual)
+
+            TemporaryTarget.Reason.CUSTOM.text             -> resourceHelper.gs(R.string.custom)
+            TemporaryTarget.Reason.HYPOGLYCEMIA.text       -> resourceHelper.gs(R.string.hypo)
+            TemporaryTarget.Reason.EATING_SOON.text        -> resourceHelper.gs(R.string.eatingsoon)
+            TemporaryTarget.Reason.ACTIVITY.text           -> resourceHelper.gs(R.string.activity)
+            TemporaryTarget.Reason.AUTOMATION.text         -> resourceHelper.gs(R.string.automation)
+            TemporaryTarget.Reason.WEAR.text               -> resourceHelper.gs(R.string.wear)
 
             Action.BOLUS.name                               -> resourceHelper.gs(R.string.uel_bolus)
             Action.BOLUS_WIZARD.name                        -> resourceHelper.gs(R.string.uel_bolus_wizard)
@@ -154,6 +162,5 @@ class Translator @Inject internal constructor(
             Units.None.name                                 -> ""
 
             else                                           -> resourceHelper.gs(R.string.unknown)
-
         }
 }
