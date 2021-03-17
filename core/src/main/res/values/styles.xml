@@ -233,6 +233,7 @@
         <item name="android:dialogCornerRadius" ns2:targetApi="p">8dp</item>
         <!---windowBackground -->
         <item name="windowBackground" >?attr/colorSurface</item>
+        <item name="activity_title_background" >@color/background_light</item>
     </style>
 
     <style name="Theme.MaterialComponents.DayNight.DarkActionBar" parent="Theme.MaterialComponents.DayNight.Bridge"/>

@@ -27,7 +27,7 @@
             style="@style/Widget.MaterialComponents.TabLayout.Colored"
             app:tabMode="scrollable"
             app:tabGravity="center"
-            android:background="@color/transparent"
+            android:background="?attr/fragmentbackground"
             app:tabIndicatorAnimationDuration="500"
             app:tabIndicatorFullWidth="false"
             app:tabUnboundedRipple="false"

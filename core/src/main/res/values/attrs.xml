@@ -199,6 +199,7 @@
 <attr name="extendedBolus" format="reference" />
 <attr name="TitleAndLabelTextColor" format="reference" />
 <attr name="tddStatsActivityBackgroundColor" format="reference" />
+<attr name="activity_title_background" format="reference" />
 <!-- Window background-->
 <attr name="windowBackground" format="reference|color" />
 </resources>

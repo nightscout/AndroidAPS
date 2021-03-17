@@ -236,6 +236,7 @@
         <item name="extendedBolus" >@color/cyan</item>
         <item name="TitleAndLabelTextColor" >@color/white</item>
         <item name="tddStatsActivityBackgroundColor" >@color/transparent</item>
+        <item name="activity_title_background" >@color/background_dark</item>
     </style>
 
     <style name="Theme.MaterialComponents.DayNight.DarkActionBar" parent="Theme.MaterialComponents.DayNight.Bridge"/>

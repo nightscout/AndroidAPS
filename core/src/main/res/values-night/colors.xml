@@ -2,11 +2,8 @@
 <resources>
     <color name="defaulttextcolor">#FFFFFF</color>
 
-    <color name="activity_title_background">#121212</color>
-
     <!---Theme based colors-->
     <color name="iconColorbottomAppbar">#FFFFFF</color>
-    <color name="actionBarColor">#000000</color>
 
     <!-- TDD Stats   -->
     <color name="background_stats_color">#666666</color>
