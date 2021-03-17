@@ -113,7 +113,7 @@
 <attr name="temptargetIconColor" format="reference|color" />
 <attr name="temptargetIconColor1" format="reference|color" />
 <!---Start temp basal Icon Color-->
-<attr name="settempbasalIconColor" format="reference|color" />
+<attr name="tempbasalIconColor" format="reference|color" />
 <!---Cancel temp basal Icon Color-->
 <attr name="canceltempbasalIconColor" format="reference|color" />
 <!---Start extended bolus Icon Color-->
