@@ -130,6 +130,10 @@
         <!-- Icon specific colors  -->
         <!---Loop Icon Color-->
         <item name="loopPaused" >@color/lightyellow</item>
+        <!---Profile Switch Icon Color-->
+        <item name="profileswitchIconColor" >@color/white</item>
+        <!---Sensitivity Icon Color-->
+        <item name="sensitivityIconColor" >@color/sensGreen</item>
         <!---Bolus Icon Color-->
         <item name="bolusIconColor" >@color/cyan_blue</item>
         <!---Carbs Icon Color-->

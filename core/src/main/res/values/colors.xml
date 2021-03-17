@@ -93,6 +93,7 @@
     <!-- Green Colors -->
     <color name="emerald">#25912e</color>
     <color name="notificationInfo">#009705</color>
+    <color name="sensGreen">#008585</color>
     <color name="tempTargetConfirmation">#77dd77</color>
     <color name="lightPastelGreen">#7200FF00</color>
     <color name="lightGreen">#00FF00</color>
