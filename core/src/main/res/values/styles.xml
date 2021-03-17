@@ -261,8 +261,6 @@
 
     <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
 
-    <style name="NavigationDrawer" />
-
     <!-- Text styles -->
     <style name="Text" parent="TextAppearance.AppCompat"/>
     <style name="Text.Caption" parent="TextAppearance.AppCompat.Caption"/>

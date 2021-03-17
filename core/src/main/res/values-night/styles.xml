@@ -262,10 +262,6 @@
 
     <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
 
-    <style name="NavigationDrawer" parent="Theme.MaterialComponents.DayNight.Bridge" >
-        <item name="android:colorActivatedHighlight">@color/white</item>
-    </style>
-
     <!-- Text styles -->
     <style name="Text" parent="TextAppearance.AppCompat"/>
     <style name="Text.Caption" parent="TextAppearance.AppCompat.Caption"/>
