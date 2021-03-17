@@ -127,8 +127,10 @@
         <item name="rowBackgroundOdd" >@color/gray</item>
         <item name="rowTextColor" >@color/white</item>
         <!-- Icon specific colors begin -->
-        <!---Loop Icon Color-->
+        <!---Loop Paused Icon Color-->
         <item name="loopPaused" >@color/ribbonWarning</item>
+        <!---Loop Closed Icon Color-->
+        <item name="loopClosed" >@color/loopGreen</item>
         <!---Profile Switch Icon Color-->
         <item name="profileswitchIconColor" >@color/white</item>
         <!---Sensitivity Icon Color-->

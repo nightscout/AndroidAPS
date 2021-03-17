@@ -71,6 +71,7 @@
     <color name="toastOk">#77dd77</color>
     <color name="metadataOk">#77dd77</color>
     <color name="info">#77dd77</color>
+    <color name="loopGreen">#00C03E</color>
 
     <!-- Blue Colors -->
     <color name="blue_default">#007AFF</color>
