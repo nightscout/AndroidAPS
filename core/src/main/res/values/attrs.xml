@@ -155,6 +155,8 @@
 <attr name="trashbinIconColor" format="reference|color" />
 <!---Target Hypo Icon Color-->
 <attr name="targetHypoBgIconColor" format="reference|color" />
+<!---Refresh Icon Color-->
+<attr name="refreshIconColor" format="reference|color" />
 <!---NS MBG Event-->
 <attr name="therapyeventNsmbg" format="reference|color" />
 <!---Finger Stick Event-->
