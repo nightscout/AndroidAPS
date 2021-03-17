@@ -127,6 +127,7 @@
         <item name="rowBackgroundEven" >@color/darkgray</item>
         <item name="rowBackgroundOdd" >@color/lightSandGray</item>
         <item name="rowTextColor" >@color/white</item>
+        <!-- Icon specific colors  -->
         <!---Loop Icon Color-->
         <item name="loopPaused" >@color/lightyellow</item>
         <!---Bolus Icon Color-->
