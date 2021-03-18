@@ -139,8 +139,7 @@ data class UserEntry(
         @SerializedName("M") M ("m"),                                   //Int
         @SerializedName("H") H ("h"),                                   //Int
         @SerializedName("Percent") Percent ("%"),                       //Int
-        @SerializedName("TherapyEvent") TherapyEvent ("TherapyEvent"),  //String (CareportalEvent.Event => Translated by Translator function)
-        @SerializedName("TT_Reason") TT_Reason ("TTReason"),            //TemporaryTarget.Reason => String (to Improve for translation)
+        @SerializedName("TherapyEvent") TherapyEvent ("TherapyEvent"),  //String (All enum key translated by Translator function, mainly TherapyEvent)
         @SerializedName("R_String") R_String ("R.string")               //Int
         ;
 

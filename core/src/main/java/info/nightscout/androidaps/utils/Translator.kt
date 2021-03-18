@@ -73,7 +73,7 @@ class Translator @Inject internal constructor(
             Action.RECONNECT.name                           -> resourceHelper.gs(R.string.uel_reconnect)
             Action.DISCONNECT.name                          -> resourceHelper.gs(R.string.uel_disconnect)
             Action.RESUME.name                              -> resourceHelper.gs(R.string.uel_resume)
-            Action.SUSPEND.name                          -> resourceHelper.gs(R.string.uel_suspend)
+            Action.SUSPEND.name                             -> resourceHelper.gs(R.string.uel_suspend)
             Action.HW_PUMP_ALLOWED.name                     -> resourceHelper.gs(R.string.uel_hw_pump_allowed)
             Action.CLEAR_PAIRING_KEYS.name                  -> resourceHelper.gs(R.string.uel_clear_pairing_keys)
             Action.ACCEPTS_TEMP_BASAL.name                  -> resourceHelper.gs(R.string.uel_accepts_temp_basal)

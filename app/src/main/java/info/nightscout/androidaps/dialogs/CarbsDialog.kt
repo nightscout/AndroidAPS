@@ -222,7 +222,7 @@ class CarbsDialog : DialogFragmentWithDate() {
                 OKDialog.showConfirmation(activity, resourceHelper.gs(R.string.carbs), HtmlHelper.fromHtml(Joiner.on("<br/>").join(actions)), {
                     when {
                         activitySelected   -> {
-                            uel.log(Action.TT, ValueWithUnit(TemporaryTarget.Reason.ACTIVITY.text, Units.TT_Reason), ValueWithUnit(activityTT, units) , ValueWithUnit(activityTTDuration, Units.M))
+                            uel.log(Action.TT, ValueWithUnit(TemporaryTarget.Reason.ACTIVITY.text, Units.TherapyEvent), ValueWithUnit(activityTT, units) , ValueWithUnit(activityTTDuration, Units.M))
                             disposable += repository.runTransactionForResult(InsertTemporaryTargetAndCancelCurrentTransaction(
                                 timestamp = System.currentTimeMillis(),
                                 duration = TimeUnit.MINUTES.toMillis(activityTTDuration.toLong()),
@@ -238,7 +238,7 @@ class CarbsDialog : DialogFragmentWithDate() {
                         }
 
                         eatingSoonSelected -> {
-                            uel.log(Action.TT, ValueWithUnit(TemporaryTarget.Reason.EATING_SOON.text, Units.TT_Reason), ValueWithUnit(eatingSoonTT, units) , ValueWithUnit(eatingSoonTTDuration, Units.M))
+                            uel.log(Action.TT, ValueWithUnit(TemporaryTarget.Reason.EATING_SOON.text, Units.TherapyEvent), ValueWithUnit(eatingSoonTT, units) , ValueWithUnit(eatingSoonTTDuration, Units.M))
                             disposable += repository.runTransactionForResult(InsertTemporaryTargetAndCancelCurrentTransaction(
                                 timestamp = System.currentTimeMillis(),
                                 duration = TimeUnit.MINUTES.toMillis(eatingSoonTTDuration.toLong()),
@@ -254,7 +254,7 @@ class CarbsDialog : DialogFragmentWithDate() {
                         }
 
                         hypoSelected       -> {
-                            uel.log(Action.TT, ValueWithUnit(TemporaryTarget.Reason.HYPOGLYCEMIA.text, Units.TT_Reason), ValueWithUnit(hypoTT, units) , ValueWithUnit(hypoTTDuration, Units.M))
+                            uel.log(Action.TT, ValueWithUnit(TemporaryTarget.Reason.HYPOGLYCEMIA.text, Units.TherapyEvent), ValueWithUnit(hypoTT, units) , ValueWithUnit(hypoTTDuration, Units.M))
                             disposable += repository.runTransactionForResult(InsertTemporaryTargetAndCancelCurrentTransaction(
                                 timestamp = System.currentTimeMillis(),
                                 duration = TimeUnit.MINUTES.toMillis(hypoTTDuration.toLong()),

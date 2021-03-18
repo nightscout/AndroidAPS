@@ -113,8 +113,7 @@ class ClassicPrefsFormat @Inject constructor(
         return when (v.unit) {
             Units.Timestamp    -> dateUtil.dateAndTimeAndSecondsString(v.lValue) + ";" + csvString(R.string.date)
             Units.TherapyEvent -> csvString(translator.translate(v.sValue)) + ";"
-            Units.TT_Reason    -> csvString(translator.translate(v.sValue)) + ";"
-            Units.R_String      -> if (v.lValue.toInt() == 0) csvString(v.iValue) + ";" else ";"                //If lValue > 0 it's a formated string, so hidden for
+            Units.R_String     -> if (v.lValue.toInt() == 0) csvString(v.iValue) + ";" else ";"                //If lValue > 0 it's a formated string, so hidden for
             Units.Mg_Dl         -> if (profileFunction.getUnits()==Constants.MGDL) DecimalFormatter.to0Decimal(v.dValue) + ";" + csvString(Units.Mg_Dl) else DecimalFormatter.to1Decimal(v.dValue/Constants.MMOLL_TO_MGDL) + ";" + csvString(Units.Mmol_L)
             Units.Mmol_L        -> if (profileFunction.getUnits()==Constants.MGDL) DecimalFormatter.to0Decimal(v.dValue*Constants.MMOLL_TO_MGDL) + ";" + csvString(Units.Mg_Dl) else DecimalFormatter.to1Decimal(v.dValue) + ";" + csvString(Units.Mmol_L)
             Units.U_H, Units.U  -> DecimalFormatter.to2Decimal(v.dValue) + ";" + csvString(v.unit)

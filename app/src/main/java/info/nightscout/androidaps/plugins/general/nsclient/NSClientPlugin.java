@@ -428,7 +428,7 @@ public class NSClientPlugin extends PluginBase {
         // room  Temporary target
         TemporaryTarget temporaryTarget = temporaryTargetFromNsIdForInvalidating(_id);
         disposable.add(repository.runTransactionForResult(new SyncTemporaryTargetTransaction(temporaryTarget)).subscribe(
-                result -> result.getInvalidated().forEach(record -> uel.log(Action.TT_DELETED_FROM_NS, new ValueWithUnit(record.getReason().getText(), Units.TT_Reason), new ValueWithUnit(record.getLowTarget(), Units.Mg_Dl, true), new ValueWithUnit(record.getHighTarget(), Units.Mg_Dl, record.getLowTarget() != record.getHighTarget()), new ValueWithUnit((int) record.getDuration()/60000, Units.M, record.getDuration() != 0))),
+                result -> result.getInvalidated().forEach(record -> uel.log(Action.TT_DELETED_FROM_NS, new ValueWithUnit(record.getReason().getText(), Units.TherapyEvent), new ValueWithUnit(record.getLowTarget(), Units.Mg_Dl, true), new ValueWithUnit(record.getHighTarget(), Units.Mg_Dl, record.getLowTarget() != record.getHighTarget()), new ValueWithUnit((int) record.getDuration()/60000, Units.M, record.getDuration() != 0))),
                 error -> aapsLogger.error(LTag.DATABASE, "Error while removing temporary target", error)));
         // room  Therapy Event
         TherapyEvent therapyEvent = therapyEventFromNsIdForInvalidating(_id);
@@ -463,9 +463,9 @@ public class NSClientPlugin extends PluginBase {
                 disposable.add(repository.runTransactionForResult(new SyncTemporaryTargetTransaction(temporaryTarget))
                         .subscribe(
                                 result -> {
-                                    result.getInserted().forEach(record -> uel.log(Action.TT_FROM_NS, new ValueWithUnit(record.getReason().getText(), Units.TT_Reason), new ValueWithUnit(record.getLowTarget(), Units.Mg_Dl, true), new ValueWithUnit(record.getHighTarget(), Units.Mg_Dl, record.getLowTarget() != record.getHighTarget()), new ValueWithUnit((int) record.getDuration()/60000, Units.M, true)));
-                                    result.getInvalidated().forEach(record -> uel.log(Action.TT_DELETED_FROM_NS, new ValueWithUnit(record.getReason().getText(), Units.TT_Reason), new ValueWithUnit(record.getLowTarget(), Units.Mg_Dl, true), new ValueWithUnit(record.getHighTarget(), Units.Mg_Dl, record.getLowTarget() != record.getHighTarget()), new ValueWithUnit((int) record.getDuration()/60000, Units.M, true)));
-                                    result.getEnded().forEach(record -> uel.log(Action.TT_CANCELED_FROM_NS, new ValueWithUnit(record.getReason().getText(), Units.TT_Reason), new ValueWithUnit(record.getLowTarget(), Units.Mg_Dl, true), new ValueWithUnit(record.getHighTarget(), Units.Mg_Dl, record.getLowTarget() != record.getHighTarget()), new ValueWithUnit((int) record.getDuration()/60000, Units.M, true)));
+                                    result.getInserted().forEach(record -> uel.log(Action.TT_FROM_NS, new ValueWithUnit(record.getReason().getText(), Units.TherapyEvent), new ValueWithUnit(record.getLowTarget(), Units.Mg_Dl, true), new ValueWithUnit(record.getHighTarget(), Units.Mg_Dl, record.getLowTarget() != record.getHighTarget()), new ValueWithUnit((int) record.getDuration()/60000, Units.M, true)));
+                                    result.getInvalidated().forEach(record -> uel.log(Action.TT_DELETED_FROM_NS, new ValueWithUnit(record.getReason().getText(), Units.TherapyEvent), new ValueWithUnit(record.getLowTarget(), Units.Mg_Dl, true), new ValueWithUnit(record.getHighTarget(), Units.Mg_Dl, record.getLowTarget() != record.getHighTarget()), new ValueWithUnit((int) record.getDuration()/60000, Units.M, true)));
+                                    result.getEnded().forEach(record -> uel.log(Action.TT_CANCELED_FROM_NS, new ValueWithUnit(record.getReason().getText(), Units.TherapyEvent), new ValueWithUnit(record.getLowTarget(), Units.Mg_Dl, true), new ValueWithUnit(record.getHighTarget(), Units.Mg_Dl, record.getLowTarget() != record.getHighTarget()), new ValueWithUnit((int) record.getDuration()/60000, Units.M, true)));
                                 },
                                 error -> aapsLogger.error(LTag.DATABASE, "Error while saving temporary target", error)));
             } else {
