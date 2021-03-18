@@ -168,6 +168,7 @@
     <!--    TDD-->
     <string name="tddformat"><![CDATA[<b>%1$s:</b> ∑: <b>%2$.2f U</b> Bol: <b>%3$.2f U</b> Bas: <b>%4$.2f U(%5$.0f%%)</b>]]></string>
     <string name="tddwithcarbsformat"><![CDATA[<b>%1$s:</b> ∑: <b>%2$.2f U</b> Bol: <b>%3$.2f U</b> Bas: <b>%4$.2f U(%5$.0f%%)</b> CHO: <b>%6$.0f g</b>]]></string>
+    <string name="activitymonitorformat"><![CDATA[<b><span style=\"color:yellow\">%1$s:</span></b> <b>%2$s</b> in <b>%3$d</b> giorni<br>]]></string>
     <!--    Translator-->
     <string name="careportal_bgcheck">Controllo BG</string>
     <string name="careportal_mbg">BG manuale o Calibrazione</string>
@@ -197,6 +198,12 @@
     <string name="glucosetype_sensor">Sensore</string>
     <string name="manual">Manuale</string>
     <string name="unknown">sconosciuto</string>
+    <string name="eatingsoon">Pasto a breve</string>
+    <string name="hypo">Ipoglicemia</string>
+    <string name="activity">Attività</string>
+    <string name="wear">Smartwatch</string>
+    <string name="automation">Automazione</string>
+    <string name="custom">Personalizzato</string>
     <!--    Command-->
     <string name="connectiontimedout">Time out connessione</string>
     <!--    PumpEnactResult-->
