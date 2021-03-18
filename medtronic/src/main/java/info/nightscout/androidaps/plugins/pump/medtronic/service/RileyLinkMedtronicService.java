@@ -317,6 +317,8 @@ public class RileyLinkMedtronicService extends RileyLinkService {
             //boolean bolusDebug = bolusDebugEnabled != null && bolusDebugEnabled.equals(resourceHelper.gs(R.string.common_on));
             //MedtronicHistoryData.doubleBolusDebug = bolusDebug;
 
+            medtronicPumpStatus.showRileyLinkBatteryLevel = sp.getBoolean(RileyLinkConst.Prefs.ShowBatteryLevel, false);
+
             reconfigureService(forceRileyLinkAddressRenewal);
 
             return true;
