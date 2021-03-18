@@ -462,8 +462,8 @@
     <string name="careportal_newnstreatment_percentage_label">% změna</string>
     <string name="careportal_newnstreatment_timeshift_label">Posun času</string>
     <string name="default_temptargets">Výchozí nastavení dočasných cílů</string>
-    <string name="eatingsoon_duration">Trvání \"blížícího se jídla\"</string>
-    <string name="eatingsoon_target">Cíl pro \"blížící se jídlo\"</string>
+    <string name="eatingsoon_duration">Trvání „Před jídlem“</string>
+    <string name="eatingsoon_target">Cíl „Před jídlem“</string>
     <string name="activity_duration">Trvání aktivity</string>
     <string name="activity_target">Cíl při aktivitě</string>
     <string name="hypo_duration">Trvání dočasného cíle při hypoglykémii</string>
@@ -527,7 +527,7 @@
     <string name="enablesmbwithcob">Povolit SMB se sacharidy</string>
     <string name="enablesmbwithcob_summary">Povolit SMB, pokud zbývají aktivní sacharidy.</string>
     <string name="enablesmbwithtemptarget">Povolit SMB s dočasnými cíli</string>
-    <string name="enablesmbwithtemptarget_summary">Povolit SMB, pokud je aktivní dočasný cíl (aktivita, blížící se jídlo)</string>
+    <string name="enablesmbwithtemptarget_summary">Povolit SMB, pokud je aktivní dočasný cíl (aktivita, před jídlem)</string>
     <string name="enablesmbwithhightemptarget">Povolit SMB s vysokými dočasnými cíli</string>
     <string name="enablesmbwithhightemptarget_summary">Povolit SMB, je-li aktivní vysoký cíl (cvičení, vyšší než 100 mg/dl nebo 5,5 mmol/l)</string>
     <string name="overview_insulin_label">Inzulín</string>
