@@ -25,8 +25,8 @@ import info.nightscout.androidaps.plugins.pump.medtronic.util.MedtronicUtil;
 
 public abstract class MedtronicHistoryDecoder<T extends MedtronicHistoryEntry> implements MedtronicHistoryDecoderInterface<T> {
 
-    @Inject AAPSLogger aapsLogger;
-    @Inject MedtronicUtil medtronicUtil;
+    @Inject protected AAPSLogger aapsLogger;
+    @Inject protected MedtronicUtil medtronicUtil;
 
     protected ByteUtil bitUtils;
 
@@ -121,7 +121,7 @@ public abstract class MedtronicHistoryDecoder<T extends MedtronicHistoryEntry> i
         aapsLogger.info(LTag.PUMPCOMM, "STATISTICS OF PUMP DECODE");
 
         if (unknownOpCodes.size() > 0) {
-            aapsLogger.warn(LTag.PUMPCOMM, "Unknown Op Codes: {}", sb.toString());
+            aapsLogger.warn(LTag.PUMPCOMM, "Unknown Op Codes: " + sb.toString());
         }
 
         for (Map.Entry<RecordDecodeStatus, Map<String, String>> entry : mapStatistics.entrySet()) {
@@ -137,9 +137,9 @@ public abstract class MedtronicHistoryDecoder<T extends MedtronicHistoryEntry> i
 
                 String spaces = StringUtils.repeat(" ", 14 - entry.getKey().name().length());
 
-                aapsLogger.info(LTag.PUMPCOMM, "    {}{} - {}. Elements: {}", entry.getKey().name(), spaces, entry.getValue().size(), sb.toString());
+                aapsLogger.info(LTag.PUMPCOMM, String.format("    %s%s - %d. Elements: %s", entry.getKey().name(), spaces, entry.getValue().size(), sb.toString()));
             } else {
-                aapsLogger.info(LTag.PUMPCOMM, "    {}             - {}", entry.getKey().name(), entry.getValue().size());
+                aapsLogger.info(LTag.PUMPCOMM, String.format("    %s             - %d", entry.getKey().name(), entry.getValue().size()));
             }
         }
     }
