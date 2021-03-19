@@ -749,7 +749,6 @@ L\'ENSEMBLE DES RISQUES LIÉS À LA QUALITÉ ET À LA PERFORMANCE DU PROGRAMME S
     <string name="format_carbs_ic">%1$.0fg G/I: %2$.1f</string>
     <string name="format_cob_ic">%1$.1fg G/I: %2$.1f</string>
     <string name="format_percent">%1$d%%</string>
-    <string name="boluswizard">Assistant Bolus</string>
     <string name="unit_minute_short">min</string>
     <string name="profile_name">Nom du profil :</string>
     <string name="selected_profile">Sélectionné :</string>
