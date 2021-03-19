@@ -3,6 +3,7 @@ package info.nightscout.androidaps.plugins.configBuilder
 import androidx.fragment.app.FragmentActivity
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.R
+import info.nightscout.androidaps.database.entities.UserEntry.*
 import info.nightscout.androidaps.events.EventAppInitialized
 import info.nightscout.androidaps.events.EventConfigBuilderChange
 import info.nightscout.androidaps.events.EventRebuildTabs
@@ -142,7 +143,7 @@ class ConfigBuilderPlugin @Inject constructor(
             OKDialog.showConfirmation(activity, resourceHelper.gs(R.string.allow_hardware_pump_text), Runnable {
                 performPluginSwitch(changedPlugin, newState, type)
                 sp.putBoolean("allow_hardware_pump", true)
-                uel.log("HW PUMP ALLOWED")
+                uel.log(Action.HW_PUMP_ALLOWED)
                 aapsLogger.debug(LTag.PUMP, "First time HW pump allowed!")
             }, Runnable {
                 rxBus.send(EventConfigBuilderUpdateGui())

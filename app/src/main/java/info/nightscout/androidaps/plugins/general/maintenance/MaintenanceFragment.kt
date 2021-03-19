@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import dagger.android.support.DaggerFragment
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.database.AppRepository
+import info.nightscout.androidaps.database.entities.UserEntry.*
 import info.nightscout.androidaps.databinding.MaintenanceFragmentBinding
 import info.nightscout.androidaps.events.EventNewBG
 import info.nightscout.androidaps.interfaces.DatabaseHelperInterface
@@ -57,13 +58,13 @@ class MaintenanceFragment : DaggerFragment() {
         super.onViewCreated(view, savedInstanceState)
         binding.logSend.setOnClickListener { maintenancePlugin.sendLogs() }
         binding.logDelete.setOnClickListener {
-            uel.log("DELETE LOGS")
+            uel.log(Action.DELETE_LOGS)
             maintenancePlugin.deleteLogs()
         }
         binding.navResetdb.setOnClickListener {
             activity?.let { activity ->
                 OKDialog.showConfirmation(activity, resourceHelper.gs(R.string.maintenance), resourceHelper.gs(R.string.reset_db_confirm), Runnable {
-                    uel.log("RESET DATABASES")
+                    uel.log(Action.RESET_DATABASES)
                     compositeDisposable.add(
                         fromAction {
                             databaseHelper.resetDatabases()
@@ -84,20 +85,28 @@ class MaintenanceFragment : DaggerFragment() {
             }
         }
         binding.navExport.setOnClickListener {
-            uel.log("EXPORT SETTINGS")
+            uel.log(Action.EXPORT_SETTINGS)
             // start activity for checking permissions...
             importExportPrefs.verifyStoragePermissions(this) {
                 importExportPrefs.exportSharedPreferences(this)
             }
         }
         binding.navImport.setOnClickListener {
-            uel.log("IMPORT SETTINGS")
+            uel.log(Action.IMPORT_SETTINGS)
             // start activity for checking permissions...
             importExportPrefs.verifyStoragePermissions(this) {
                 importExportPrefs.importSharedPreferences(this)
             }
         }
         binding.navLogsettings.setOnClickListener { startActivity(Intent(activity, LogSettingActivity::class.java)) }
+        binding.exportCsv.setOnClickListener {
+            activity?.let { activity ->
+                OKDialog.showConfirmation(activity, resourceHelper.gs(R.string.ue_export_to_csv) + "?") {
+                    uel.log(Action.EXPORT_CSV)
+                    importExportPrefs.exportUserEntriesCsv(activity, repository.getAllUserEntries())
+                }
+            }
+        }
     }
 
     @Synchronized

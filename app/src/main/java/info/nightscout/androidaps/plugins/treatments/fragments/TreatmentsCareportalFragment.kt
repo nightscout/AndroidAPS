@@ -13,6 +13,7 @@ import info.nightscout.androidaps.database.AppRepository
 import info.nightscout.androidaps.database.entities.TherapyEvent
 import info.nightscout.androidaps.database.transactions.InvalidateAAPSStartedTherapyEventTransaction
 import info.nightscout.androidaps.database.transactions.InvalidateTherapyEventTransaction
+import info.nightscout.androidaps.database.entities.UserEntry.*
 import info.nightscout.androidaps.databinding.TreatmentsCareportalFragmentBinding
 import info.nightscout.androidaps.databinding.TreatmentsCareportalItemBinding
 import info.nightscout.androidaps.events.EventTherapyEventChange
@@ -78,7 +79,7 @@ class TreatmentsCareportalFragment : DaggerFragment() {
         binding.refreshFromNightscout.setOnClickListener {
             activity?.let { activity ->
                 OKDialog.showConfirmation(activity, resourceHelper.gs(R.string.careportal), resourceHelper.gs(R.string.refresheventsfromnightscout) + " ?", Runnable {
-                    uel.log("CAREPORTAL NS REFRESH")
+                    uel.log(Action.CAREPORTAL_NS_REFRESH)
                     disposable += Completable.fromAction { repository.deleteAllTherapyEventsEntries() }
                         .subscribeOn(aapsSchedulers.io)
                         .observeOn(aapsSchedulers.main)
@@ -93,7 +94,7 @@ class TreatmentsCareportalFragment : DaggerFragment() {
         binding.removeAndroidapsStartedEvents.setOnClickListener {
             activity?.let { activity ->
                 OKDialog.showConfirmation(activity, resourceHelper.gs(R.string.careportal), resourceHelper.gs(R.string.careportal_removestartedevents), Runnable {
-                    uel.log("REMOVED RESTART EVENTS")
+                    uel.log(Action.RESTART_EVENTS_REMOVED)
                     //               val events = databaseHelper.getCareportalEvents(false)
                     repository.runTransactionForResult(InvalidateAAPSStartedTherapyEventTransaction())
                         .subscribe({ result ->
@@ -195,7 +196,7 @@ class TreatmentsCareportalFragment : DaggerFragment() {
                             resourceHelper.gs(R.string.notes_label) + ": " + (therapyEvent.note ?: "") + "\n" +
                             resourceHelper.gs(R.string.date) + ": " + dateUtil.dateAndTimeString(therapyEvent.timestamp)
                         OKDialog.showConfirmation(activity, resourceHelper.gs(R.string.removerecord), text, Runnable {
-                            uel.log("REMOVED CAREPORTAL", text)
+                            uel.log(Action.CAREPORTAL_REMOVED, therapyEvent.note ?: "", ValueWithUnit(therapyEvent.type.text, Units.TherapyEvent), ValueWithUnit(therapyEvent.timestamp, Units.Timestamp))
                             disposable += repository.runTransactionForResult(InvalidateTherapyEventTransaction(therapyEvent.id))
                                 .subscribe({
                                     val id = therapyEvent.interfaceIDs.nightscoutId

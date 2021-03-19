@@ -9,6 +9,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import dagger.android.support.DaggerFragment
 import info.nightscout.androidaps.R
+import info.nightscout.androidaps.database.entities.UserEntry.*
 import info.nightscout.androidaps.databinding.TreatmentsBolusFragmentBinding
 import info.nightscout.androidaps.databinding.TreatmentsBolusItemBinding
 import info.nightscout.androidaps.db.Source
@@ -68,7 +69,7 @@ class TreatmentsBolusFragment : DaggerFragment() {
         binding.refreshFromNightscout.setOnClickListener {
             activity?.let { activity ->
                 OKDialog.showConfirmation(activity, resourceHelper.gs(R.string.refresheventsfromnightscout) + "?") {
-                    uel.log("TREAT NS REFRESH")
+                    uel.log(Action.TREATMENTS_NS_REFRESH)
                     treatmentsPlugin.service.resetTreatments()
                     rxBus.send(EventNSClientRestart())
                 }
@@ -77,7 +78,7 @@ class TreatmentsBolusFragment : DaggerFragment() {
         binding.deleteFutureTreatments.setOnClickListener {
             activity?.let { activity ->
                 OKDialog.showConfirmation(activity, resourceHelper.gs(R.string.overview_treatment_label), resourceHelper.gs(R.string.deletefuturetreatments) + "?", Runnable {
-                    uel.log("DELETE FUTURE TREATMENTS")
+                    uel.log(Action.DELETE_FUTURE_TREATMENTS)
                     val futureTreatments = treatmentsPlugin.service.getTreatmentDataFromTime(DateUtil.now() + 1000, true)
                     for (treatment in futureTreatments) {
                         if (NSUpload.isIdValid(treatment._id))
@@ -174,7 +175,7 @@ class TreatmentsBolusFragment : DaggerFragment() {
                             resourceHelper.gs(R.string.carbs) + ": " + resourceHelper.gs(R.string.format_carbs, treatment.carbs.toInt()) + "\n" +
                             resourceHelper.gs(R.string.date) + ": " + dateUtil.dateAndTimeString(treatment.date)
                         OKDialog.showConfirmation(activity, resourceHelper.gs(R.string.removerecord), text, Runnable {
-                            uel.log("REMOVED TREATMENT", text)
+                            uel.log(Action.TREATMENT_REMOVED, ValueWithUnit(treatment.date, Units.Timestamp), ValueWithUnit(treatment.insulin, Units.U, treatment.insulin != 0.0), ValueWithUnit(treatment.carbs.toInt(), Units.G, treatment.carbs != 0.0))
                             if (treatment.source == Source.PUMP) {
                                 treatment.isValid = false
                                 treatmentsPlugin.service.update(treatment)
