@@ -329,7 +329,7 @@ class MedtronicFragment : DaggerFragment() {
         medtronicPumpPlugin.rileyLinkService?.verifyConfiguration()
         binding.errors.text = medtronicPumpStatus.errorInfo
 
-        var showRileyLinkBatteryLevel: Boolean = medtronicPumpStatus.showRileyLinkBatteryLevel
+        var showRileyLinkBatteryLevel: Boolean = rileyLinkServiceData.showBatteryLevel
 
         if (showRileyLinkBatteryLevel) {
             binding.rlBatteryView.visibility = View.VISIBLE

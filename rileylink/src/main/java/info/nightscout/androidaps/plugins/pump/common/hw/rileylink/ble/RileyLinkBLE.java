@@ -148,12 +148,12 @@ public class RileyLinkBLE {
                     if (status == BluetoothGatt.GATT_SUCCESS) {
                         rileyLinkUtil.sendBroadcastMessage(RileyLinkConst.Intents.BluetoothConnected, context);
                     } else {
-                        aapsLogger.debug(LTag.PUMPBTCOMM, "BT State connected, GATT status {} ({})", status, getGattStatusMessage(status));
+                        aapsLogger.debug(LTag.PUMPBTCOMM, "BT State connected, GATT status %d (%s)", status, getGattStatusMessage(status));
                     }
 
                 } else if ((newState == BluetoothProfile.STATE_CONNECTING) || //
                         (newState == BluetoothProfile.STATE_DISCONNECTING)) {
-                    aapsLogger.debug(LTag.PUMPBTCOMM, "We are in {} state.", status == BluetoothProfile.STATE_CONNECTING ? "Connecting" :
+                    aapsLogger.debug(LTag.PUMPBTCOMM, "We are in %s state.", status == BluetoothProfile.STATE_CONNECTING ? "Connecting" :
                             "Disconnecting");
                 } else if (newState == BluetoothProfile.STATE_DISCONNECTED) {
                     rileyLinkUtil.sendBroadcastMessage(RileyLinkConst.Intents.RileyLinkDisconnected, context);
@@ -161,7 +161,7 @@ public class RileyLinkBLE {
                         close();
                     aapsLogger.warn(LTag.PUMPBTCOMM, "RileyLink Disconnected.");
                 } else {
-                    aapsLogger.warn(LTag.PUMPBTCOMM, "Some other state: (status={},newState={})", status, newState);
+                    aapsLogger.warn(LTag.PUMPBTCOMM, "Some other state: (status=%d, newState=%d)", status, newState);
                 }
             }
 

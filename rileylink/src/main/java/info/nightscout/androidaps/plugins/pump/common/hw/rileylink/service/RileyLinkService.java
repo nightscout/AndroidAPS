@@ -174,7 +174,7 @@ public abstract class RileyLinkService extends DaggerService {
 
             if (rileyLinkServiceData.getRileyLinkServiceState() == RileyLinkServiceState.NotStarted) {
                 if (!bluetoothInit()) {
-                    aapsLogger.error("RileyLink can't get activated, Bluetooth is not functioning correctly. {}",
+                    aapsLogger.error("RileyLink can't get activated, Bluetooth is not functioning correctly. %s",
                             getError() != null ? getError().name() : "Unknown error (null)");
                     return false;
                 }
@@ -205,7 +205,7 @@ public abstract class RileyLinkService extends DaggerService {
         newFrequency = getDeviceCommunicationManager().tuneForDevice();
 
         if ((newFrequency != 0.0) && (newFrequency != lastGoodFrequency)) {
-            aapsLogger.info(LTag.PUMPBTCOMM, "Saving new pump frequency of {} MHz", newFrequency);
+            aapsLogger.info(LTag.PUMPBTCOMM, "Saving new pump frequency of %.3f MHz", newFrequency);
             sp.putDouble(RileyLinkConst.Prefs.LastGoodDeviceFrequency, newFrequency);
             rileyLinkServiceData.lastGoodFrequency = newFrequency;
             rileyLinkServiceData.tuneUpDone = true;

@@ -17,8 +17,8 @@ public abstract class Encoding4b6bAbstract implements Encoding4b6b {
      * The 6 bit codes are what is used on the RF side of the RileyLink to communicate
      * with a Medtronic pump.
      */
-    public static final byte[] encode4b6bList = new byte[] {
-        0x15, 0x31, 0x32, 0x23, 0x34, 0x25, 0x26, 0x16, 0x1a, 0x19, 0x2a, 0x0b, 0x2c, 0x0d, 0x0e, 0x1c };
+    public static final byte[] encode4b6bList = new byte[]{
+            0x15, 0x31, 0x32, 0x23, 0x34, 0x25, 0x26, 0x16, 0x1a, 0x19, 0x2a, 0x0b, 0x2c, 0x0d, 0x0e, 0x1c};
 
 
     // 21, 49, 50, 35, 52, 37, 38, 22, 26, 25, 42, 11, 44, 13, 14, 28
@@ -53,12 +53,12 @@ public abstract class Encoding4b6bAbstract implements Encoding4b6b {
 
     public void writeError(Logger LOG, byte[] raw, String errorData) {
 
-        LOG.error("\n=============================================================================\n" + //
-                  " Decoded payload length is zero.\n" +
-                  " encodedPayload: {}\n" +
-                  " errors: {}\n" +
-                  "=============================================================================", //
-                ByteUtil.getHex(raw), errorData);
+        LOG.error(String.format("\n=============================================================================\n" + //
+                        " Decoded payload length is zero.\n" +
+                        " encodedPayload: %s\n" +
+                        " errors: %s\n" +
+                        "=============================================================================", //
+                ByteUtil.getHex(raw), errorData));
 
         //FabricUtil.createEvent("MedtronicDecode4b6bError", null);
 

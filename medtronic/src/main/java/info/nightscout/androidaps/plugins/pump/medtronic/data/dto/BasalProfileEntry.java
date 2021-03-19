@@ -53,7 +53,7 @@ public class BasalProfileEntry {
             startTime = new LocalTime(startTimeInterval / 2, (startTimeInterval % 2) * 30);
         } catch (Exception ex) {
             aapsLogger.error(LTag.PUMPCOMM,
-                    "Error creating BasalProfileEntry: startTimeInterval={}, startTime_raw={}, hours={}, rateStrokes={}",
+                    "Error creating BasalProfileEntry: startTimeInterval=%d, startTime_raw=%d, hours=%d, rateStrokes=%d",
                     startTimeInterval, startTime_raw, startTimeInterval / 2, rateStrokes);
             throw ex;
         }

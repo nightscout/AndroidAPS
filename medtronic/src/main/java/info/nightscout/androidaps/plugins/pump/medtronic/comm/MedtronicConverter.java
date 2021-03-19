@@ -46,7 +46,7 @@ public class MedtronicConverter {
     Object convertResponse(PumpType pumpType, MedtronicCommandType commandType, byte[] rawContent) {
 
         if ((rawContent == null || rawContent.length < 1) && commandType != MedtronicCommandType.PumpModel) {
-            aapsLogger.warn(LTag.PUMPCOMM, "Content is empty or too short, no data to convert (type={},isNull={},length={})",
+            aapsLogger.warn(LTag.PUMPCOMM, "Content is empty or too short, no data to convert (type=%s,isNull=%b,length=%s)",
                     commandType.name(), rawContent == null, rawContent == null ? "-" : rawContent.length);
             return null;
         }
@@ -120,7 +120,7 @@ public class MedtronicConverter {
 
         String rawModel = StringUtil.fromBytes(ByteUtil.substring(rawContent, 1, 3));
         MedtronicDeviceType pumpModel = MedtronicDeviceType.getByDescription(rawModel);
-        aapsLogger.debug(LTag.PUMPCOMM, "PumpModel: [raw={}, resolved={}]", rawModel, pumpModel.name());
+        aapsLogger.debug(LTag.PUMPCOMM, "PumpModel: [raw=%s, resolved=%s]", rawModel, pumpModel.name());
 
         if (pumpModel != MedtronicDeviceType.Unknown_Device) {
             if (!medtronicUtil.isModelSet()) {
@@ -177,7 +177,7 @@ public class MedtronicConverter {
             startIdx = 2;
         }
 
-        int reqLength = startIdx+1;
+        int reqLength = startIdx + 1;
         float value = 0;
 
         if (reqLength >= rawData.length) {

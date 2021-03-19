@@ -43,7 +43,6 @@ public class MedtronicPumpStatus extends info.nightscout.androidaps.plugins.pump
     public String pumpFrequency = null;
     public Double maxBolus;
     public Double maxBasal;
-    public boolean showRileyLinkBatteryLevel;
 
     // statuses
     private PumpDeviceState pumpDeviceState = PumpDeviceState.NeverContacted;

@@ -85,7 +85,7 @@ public abstract class RileyLinkCommunicationManager<T extends RLMessage> {
             // Mark this as the last time we heard from the pump.
             rememberLastGoodDeviceCommunicationTime();
         } else {
-            aapsLogger.warn(LTag.PUMPBTCOMM, "isDeviceReachable. Response is invalid ! [noResponseFromRileyLink={}, interrupted={}, timeout={}, unknownCommand={}, invalidParam={}]",
+            aapsLogger.warn(LTag.PUMPBTCOMM, "isDeviceReachable. Response is invalid ! [noResponseFromRileyLink=%b, interrupted=%b, timeout=%b, unknownCommand=%b, invalidParam=%b]",
                     rfSpyResponse.wasNoResponseFromRileyLink(), rfSpyResponse.wasInterrupted(), rfSpyResponse.wasTimeout(), rfSpyResponse.isUnknownCommand(), rfSpyResponse.isInvalidParam());
 
             if (rfSpyResponse.wasTimeout()) {
@@ -214,7 +214,7 @@ public abstract class RileyLinkCommunicationManager<T extends RLMessage> {
 
 
     private double scanForDevice(double[] frequencies) {
-        aapsLogger.info(LTag.PUMPBTCOMM, "Scanning for receiver ({})", receiverDeviceID);
+        aapsLogger.info(LTag.PUMPBTCOMM, "Scanning for receiver (%s)", receiverDeviceID);
         wakeUp(receiverDeviceAwakeForMinutes, false);
         FrequencyScanResults results = new FrequencyScanResults();
 
@@ -231,7 +231,7 @@ public abstract class RileyLinkCommunicationManager<T extends RLMessage> {
                 RFSpyResponse resp = rfspy.transmitThenReceive(new RadioPacket(injector, pumpMsgContent), (byte) 0, (byte) 0,
                         (byte) 0, (byte) 0, 1250, (byte) 0);
                 if (resp.wasTimeout()) {
-                    aapsLogger.error(LTag.PUMPBTCOMM, "scanForPump: Failed to find pump at frequency {}", frequencies[i]);
+                    aapsLogger.error(LTag.PUMPBTCOMM, "scanForPump: Failed to find pump at frequency %.3f", frequencies[i]);
                 } else if (resp.looksLikeRadioPacket()) {
                     RadioResponse radioResponse = new RadioResponse(injector);
 
@@ -319,14 +319,14 @@ public abstract class RileyLinkCommunicationManager<T extends RLMessage> {
         RadioPacket pkt = new RadioPacket(injector, pumpMsgContent);
         RFSpyResponse resp = rfspy.transmitThenReceive(pkt, (byte) 0, (byte) 0, (byte) 0, (byte) 0, SCAN_TIMEOUT, (byte) 0);
         if (resp.wasTimeout()) {
-            aapsLogger.warn(LTag.PUMPBTCOMM, "tune_tryFrequency: no pump response at frequency {}", freqMHz);
+            aapsLogger.warn(LTag.PUMPBTCOMM, "tune_tryFrequency: no pump response at frequency %.3f", freqMHz);
         } else if (resp.looksLikeRadioPacket()) {
             RadioResponse radioResponse = new RadioResponse(injector);
             try {
                 radioResponse.init(resp.getRaw());
 
                 if (radioResponse.isValid()) {
-                    aapsLogger.warn(LTag.PUMPBTCOMM, "tune_tryFrequency: saw response level {} at frequency {}", radioResponse.rssi, freqMHz);
+                    aapsLogger.warn(LTag.PUMPBTCOMM, "tune_tryFrequency: saw response level %d at frequency %.3f", radioResponse.rssi, freqMHz);
                     return calculateRssi(radioResponse.rssi);
                 } else {
                     aapsLogger.warn(LTag.PUMPBTCOMM, "tune_tryFrequency: invalid radio response:"
@@ -365,9 +365,9 @@ public abstract class RileyLinkCommunicationManager<T extends RLMessage> {
         } else {
             rfspy.setBaseFrequency(betterFrequency);
             if (betterFrequency != startFrequencyMHz) {
-                aapsLogger.info(LTag.PUMPBTCOMM, "quickTuneForPump: new frequency is {}MHz", betterFrequency);
+                aapsLogger.info(LTag.PUMPBTCOMM, "quickTuneForPump: new frequency is %.3fMHz", betterFrequency);
             } else {
-                aapsLogger.info(LTag.PUMPBTCOMM, "quickTuneForPump: pump frequency is the same: {}MHz", startFrequencyMHz);
+                aapsLogger.info(LTag.PUMPBTCOMM, "quickTuneForPump: pump frequency is the same: %.3fMHz", startFrequencyMHz);
             }
         }
         return betterFrequency;
@@ -375,7 +375,7 @@ public abstract class RileyLinkCommunicationManager<T extends RLMessage> {
 
 
     private double quickTunePumpStep(double startFrequencyMHz, double stepSizeMHz) {
-        aapsLogger.info(LTag.PUMPBTCOMM, "Doing quick radio tune for receiver ({})", receiverDeviceID);
+        aapsLogger.info(LTag.PUMPBTCOMM, "Doing quick radio tune for receiver (%s)", receiverDeviceID);
         wakeUp(false);
         int startRssi = tune_tryFrequency(startFrequencyMHz);
         double lowerFrequency = startFrequencyMHz - stepSizeMHz;
