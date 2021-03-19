@@ -20,9 +20,9 @@ import info.nightscout.androidaps.interfaces.ProfileFunction
 import info.nightscout.androidaps.logging.UserEntryLogger
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper
 import info.nightscout.androidaps.plugins.general.nsclient.NSUpload
-import info.nightscout.androidaps.plugins.general.nsclient.UploadQueue
 import info.nightscout.androidaps.plugins.general.nsclient.events.EventNSClientRestart
 import info.nightscout.androidaps.events.EventAutosensCalculationFinished
+import info.nightscout.androidaps.interfaces.UploadQueueInterface
 import info.nightscout.androidaps.plugins.treatments.TreatmentsPlugin
 import info.nightscout.androidaps.plugins.treatments.fragments.TreatmentsBolusFragment.RecyclerViewAdapter.TreatmentsViewHolder
 import info.nightscout.androidaps.utils.DateUtil
@@ -46,7 +46,7 @@ class TreatmentsBolusFragment : DaggerFragment() {
     @Inject lateinit var treatmentsPlugin: TreatmentsPlugin
     @Inject lateinit var profileFunction: ProfileFunction
     @Inject lateinit var nsUpload: NSUpload
-    @Inject lateinit var uploadQueue: UploadQueue
+    @Inject lateinit var uploadQueue: UploadQueueInterface
     @Inject lateinit var dateUtil: DateUtil
     @Inject lateinit var buildHelper: BuildHelper
     @Inject lateinit var aapsSchedulers: AapsSchedulers
@@ -84,7 +84,7 @@ class TreatmentsBolusFragment : DaggerFragment() {
                         if (NSUpload.isIdValid(treatment._id))
                             nsUpload.removeCareportalEntryFromNS(treatment._id)
                         else
-                            uploadQueue.removeID("dbAdd", treatment._id)
+                            uploadQueue.removeByMongoId("dbAdd", treatment._id)
                         treatmentsPlugin.service.delete(treatment)
                     }
                     updateGui()
@@ -183,7 +183,7 @@ class TreatmentsBolusFragment : DaggerFragment() {
                                 if (NSUpload.isIdValid(treatment._id))
                                     nsUpload.removeCareportalEntryFromNS(treatment._id)
                                 else
-                                    uploadQueue.removeID("dbAdd", treatment._id)
+                                    uploadQueue.removeByMongoId("dbAdd", treatment._id)
                                 treatmentsPlugin.service.delete(treatment)
                             }
                             updateGui()

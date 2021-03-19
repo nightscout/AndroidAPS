@@ -928,7 +928,7 @@ public class LocalInsightPlugin extends PumpPluginBase implements PumpInterface,
                                 final String _id = extendedBolus._id;
                                 if (NSUpload.isIdValid(_id))
                                     nsUpload.removeCareportalEntryFromNS(_id);
-                                else uploadQueue.removeID("dbAdd", _id);
+                                else uploadQueue.removeByMongoId("dbAdd", _id);
                                 databaseHelper.delete(extendedBolus);
                             } else
                                 treatmentsPlugin.addToHistoryExtendedBolus(extendedBolus);
@@ -1436,7 +1436,7 @@ public class LocalInsightPlugin extends PumpPluginBase implements PumpInterface,
                 if (extendedBolus != null) {
                     final String _id = extendedBolus._id;
                     if (NSUpload.isIdValid(_id)) nsUpload.removeCareportalEntryFromNS(_id);
-                    else uploadQueue.removeID("dbAdd", _id);
+                    else uploadQueue.removeByMongoId("dbAdd", _id);
                     databaseHelper.delete(extendedBolus);
                 }
             } else {
