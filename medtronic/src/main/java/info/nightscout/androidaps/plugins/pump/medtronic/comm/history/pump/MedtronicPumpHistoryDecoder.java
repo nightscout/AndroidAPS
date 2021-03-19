@@ -32,9 +32,6 @@ import info.nightscout.androidaps.plugins.pump.medtronic.util.MedtronicUtil;
 @Singleton
 public class MedtronicPumpHistoryDecoder extends MedtronicHistoryDecoder<PumpHistoryEntry> {
 
-    private final AAPSLogger aapsLogger;
-    private final MedtronicUtil medtronicUtil;
-
     private PumpHistoryEntry tbrPreviousRecord;
     private PumpHistoryEntry changeTimeRecord;
 
@@ -43,7 +40,7 @@ public class MedtronicPumpHistoryDecoder extends MedtronicHistoryDecoder<PumpHis
             AAPSLogger aapsLogger,
             MedtronicUtil medtronicUtil
     ) {
-        this.aapsLogger = aapsLogger;
+        super.aapsLogger = aapsLogger;
         this.medtronicUtil = medtronicUtil;
     }
 
@@ -67,6 +64,7 @@ public class MedtronicPumpHistoryDecoder extends MedtronicHistoryDecoder<PumpHis
             int opCode = dataClear.get(counter);
             boolean special = false;
             incompletePacket = false;
+            boolean skippedRecords = false;
 
             if (opCode == 0) {
                 counter++;
@@ -79,7 +77,12 @@ public class MedtronicPumpHistoryDecoder extends MedtronicHistoryDecoder<PumpHis
                 if (skipped != null) {
                     aapsLogger.warn(LTag.PUMPBTCOMM, " ... Skipped " + skipped);
                     skipped = null;
+                    skippedRecords = true;
                 }
+            }
+
+            if (skippedRecords) {
+                aapsLogger.error(LTag.PUMPBTCOMM, "We had some skipped bytes, which might indicate error in pump history. Please report this problem.");
             }
 
             PumpHistoryEntryType entryType = PumpHistoryEntryType.getByCode(opCode);
@@ -216,12 +219,12 @@ public class MedtronicPumpHistoryDecoder extends MedtronicHistoryDecoder<PumpHis
             case SelfTest:
             case JournalEntryInsulinMarker:
             case JournalEntryOtherMarker:
-            case ChangeBolusWizardSetup512:
+            case BolusWizardSetup512:
             case ChangeSensorSetup2:
             case ChangeSensorAlarmSilenceConfig:
             case ChangeSensorRateOfChangeAlertSetup:
             case ChangeBolusScrollStepSize:
-            case ChangeBolusWizardSetup:
+            case BolusWizardSetup:
             case ChangeVariableBolus:
             case ChangeAudioBolus:
             case ChangeBGReminderEnable:
