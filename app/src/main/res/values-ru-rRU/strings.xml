@@ -750,7 +750,6 @@ Context | Edit Context</string>
     <string name="format_carbs_ic">%1$.0fg IC: %2$.1f</string>
     <string name="format_cob_ic">%1$.1fg IC: %2$.1f</string>
     <string name="format_percent">%1$d%%</string>
-    <string name="boluswizard">Мастер Болюса</string>
     <string name="unit_minute_short">мин</string>
     <string name="profile_name">Название профиля:</string>
     <string name="selected_profile">Выбрано:</string>
