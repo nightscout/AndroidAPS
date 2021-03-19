@@ -309,6 +309,7 @@
     <string name="friday_short">V</string>
     <string name="saturday_short">S</string>
     <string name="sunday_short">D</string>
+    <!-- User Entry -->
     <plurals name="days">
         <item quantity="one">%1$d giorno</item>
         <item quantity="other">%1$d giorni</item>
