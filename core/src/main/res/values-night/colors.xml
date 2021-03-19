@@ -67,32 +67,32 @@
     <color name="calcGreen">#67e86a</color>
     <color name="lightGreen">#00FF00</color>
     <color name="swampGreen">#c9bd60</color>
-    <color name="activity">#d3f166</color>
     <color name="toastOk">#77dd77</color>
     <color name="metadataOk">#77dd77</color>
     <color name="info">#77dd77</color>
     <color name="loopGreen">#00C03E</color>
+    <color name="activity">#d3f166</color>
 
     <!-- Blue Colors -->
+    <color name="tempTargetDisabledBackground">#303F9F</color>
+    <color name="basebasal">#3D15FF</color>
     <color name="blue_default">#007AFF</color>
     <color name="lightblue">#1ba1e2</color>
     <color name="kobaltblue">#5F7BA6</color>
-    <color name="bgi">#00EEEE</color>
-    <color name="cyan">#00d2d2</color>
-    <color name="cyan_blue">#67DFE8</color>
+    <color name="mdtp_accent_color">#3A7EFF</color>
+    <color name="mdtp_button_color">@color/mdtp_accent_color</color>
     <color name="bolus">#1ea3e5</color>
     <color name="iobPredAS">#1ea3e5</color>
-    <color name="basebasal">#3D15FF</color>
     <color name="iob">#1ba1e2</color>
-    <color name="tempTargetDisabledBackground">#303F9F</color>
-    <color name="mdtp_button_color">@color/mdtp_accent_color</color>
     <color name="toastInfo">#03A9F4</color>
-    <color name="mdtp_accent_color">#3A7EFF</color>
     <color name="basal">#6B85FF</color>
     <color name="cobAlert">#7484E2</color>
     <color name="cardObjectiveText">#779ECB</color>
     <color name="colorInsulinButton">#8EC1FF</color>
     <color name="colorSetTempButton">#FF478EFF</color>
+    <color name="bgi">#00EEEE</color>
+    <color name="cyan">#00d2d2</color>
+    <color name="cyan_blue">#67DFE8</color>
 
     <!-- Gray colors -->
     <color name="darkgray">#323232</color>
