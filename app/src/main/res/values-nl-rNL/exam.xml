@@ -46,6 +46,7 @@
     <string name="exerciseprofile_label">Beweging en profielen</string>
     <string name="exerciseprofile_whattodo">Hoe kun je profielen gebruiken om het systeem het beste te helpen omgaan met conditietraining?</string>
     <string name="exerciseprofile_switchprofilebelow100">Doe een profielwissel naar minder dan 100%.</string>
+    <string name="exerciseprofile_switchprofileabove100">Pas het profiel percentage aan naar een waarde boven de 100%.</string>
     <string name="exerciseprofile_leaveat100">Laat het profiel op 100% staan.</string>
     <string name="exerciseprofile_suspendloop">Onderbreek de loop.</string>
     <string name="exerciseprofile_hint1">https://androidaps.readthedocs.io/en/latest/CROWDIN/nl/Usage/temptarget.html#activiteit-tijdelijk-streefdoel</string>
