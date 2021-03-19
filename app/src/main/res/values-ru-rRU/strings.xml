@@ -138,6 +138,7 @@
     <string name="configbuilder_nightscoutversion_label">версия Nightscout:</string>
     <string name="missing_carbs">Не хватает %1$d г</string>
     <string name="exported">настройки экспортированы</string>
+    <string name="ue_exported">Записи пользователя экспортированы</string>
     <string name="export_to">экспортировать настройки в</string>
     <string name="import_from">импортировать настройки из</string>
     <string name="setting_imported">настройки импортированы</string>
