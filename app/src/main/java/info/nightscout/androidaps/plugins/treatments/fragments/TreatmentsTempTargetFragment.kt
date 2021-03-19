@@ -21,12 +21,12 @@ import info.nightscout.androidaps.databinding.TreatmentsTemptargetFragmentBindin
 import info.nightscout.androidaps.databinding.TreatmentsTemptargetItemBinding
 import info.nightscout.androidaps.events.EventTempTargetChange
 import info.nightscout.androidaps.interfaces.ProfileFunction
+import info.nightscout.androidaps.interfaces.UploadQueueInterface
 import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.logging.LTag
 import info.nightscout.androidaps.logging.UserEntryLogger
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper
 import info.nightscout.androidaps.plugins.general.nsclient.NSUpload
-import info.nightscout.androidaps.plugins.general.nsclient.UploadQueue
 import info.nightscout.androidaps.plugins.general.nsclient.events.EventNSClientRestart
 import info.nightscout.androidaps.plugins.treatments.events.EventTreatmentUpdateGui
 import info.nightscout.androidaps.plugins.treatments.fragments.TreatmentsTempTargetFragment.RecyclerViewAdapter.TempTargetsViewHolder
@@ -58,7 +58,7 @@ class TreatmentsTempTargetFragment : DaggerFragment() {
     @Inject lateinit var profileFunction: ProfileFunction
     @Inject lateinit var resourceHelper: ResourceHelper
     @Inject lateinit var nsUpload: NSUpload
-    @Inject lateinit var uploadQueue: UploadQueue
+    @Inject lateinit var uploadQueue: UploadQueueInterface
     @Inject lateinit var fabricPrivacy: FabricPrivacy
     @Inject lateinit var translator: Translator
     @Inject lateinit var dateUtil: DateUtil
@@ -201,7 +201,7 @@ class TreatmentsTempTargetFragment : DaggerFragment() {
                                     .subscribe({
                                         val id = tempTarget.interfaceIDs.nightscoutId
                                         if (NSUpload.isIdValid(id)) nsUpload.removeCareportalEntryFromNS(id)
-                                        else uploadQueue.removeID("dbAdd", tempTarget.timestamp.toString())
+                                        else uploadQueue.removeByMongoId("dbAdd", tempTarget.timestamp.toString())
                                     }, {
                                         aapsLogger.error(LTag.BGSOURCE, "Error while invalidating temporary target", it)
                                     })
