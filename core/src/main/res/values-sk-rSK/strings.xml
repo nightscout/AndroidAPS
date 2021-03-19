@@ -299,6 +299,7 @@
     <string name="friday_short">Pi</string>
     <string name="saturday_short">So</string>
     <string name="sunday_short">Ne</string>
+    <!-- User Entry -->
     <plurals name="days">
         <item quantity="one">%1$d deň</item>
         <item quantity="few">%1$d dní</item>
