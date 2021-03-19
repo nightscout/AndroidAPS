@@ -432,4 +432,8 @@
     </style>
 
     <style name="ProfileHelperAppTheme" parent="Theme.MaterialComponents.DayNight.NoActionBar"/>
+
+    <!-- Custom Theme -->
+    <style name="CustomTheme">
+    </style>
 </resources>

@@ -215,7 +215,7 @@
         <item name="prediction" >@color/prediction</item>
         <item name="basal" >@color/basal</item>
         <item name="overviewShowDeviations" >@color/red</item>
-        <item name="overviewShowSensitivity" >@color/black</item>
+        <item name="overviewShowSensitivity" >@color/gray</item>
         <item name="activity" >@color/activity</item>
         <item name="bgi" >@color/bgi</item>
         <item name="devslopepos" >@color/devslopepos</item>
@@ -345,5 +345,9 @@
 
     <style name="ButtonSmallFontStyle" parent="Widget.MaterialComponents.Button.UnelevatedButton">
         <item name="android:textSize">10sp</item>
+    </style>
+
+    <!-- Custom Theme -->
+    <style name="CustomTheme">
     </style>
 </resources>

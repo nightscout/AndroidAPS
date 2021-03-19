@@ -1,8 +1,13 @@
 package info.nightscout.androidaps.plugins.general.themes
 
+import android.app.Application
+import android.content.res.Resources
+import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
 import dagger.android.HasAndroidInjector
+import info.nightscout.androidaps.MainActivity
 import info.nightscout.androidaps.R
+
 import info.nightscout.androidaps.events.EventPreferenceChange
 import info.nightscout.androidaps.events.EventThemeSwitch
 import info.nightscout.androidaps.interfaces.PluginBase

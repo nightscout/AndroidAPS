@@ -20,6 +20,7 @@ open class NoSplashAppCompatActivity : DaggerAppCompatActivityWithResult() {
         setTheme(R.style.AppTheme_NoActionBar)
 
         compositeDisposable.add(rxBusWrapper.toObservable(EventThemeSwitch::class.java).subscribe {
+            theme.applyStyle(R.style.CustomTheme,true)
             recreate()
         })
     }
