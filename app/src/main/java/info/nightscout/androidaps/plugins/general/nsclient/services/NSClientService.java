@@ -39,11 +39,11 @@ import info.nightscout.androidaps.events.EventPreferenceChange;
 import info.nightscout.androidaps.interfaces.DatabaseHelperInterface;
 import info.nightscout.androidaps.interfaces.PluginType;
 import info.nightscout.androidaps.interfaces.ProfileStore;
+import info.nightscout.androidaps.interfaces.UploadQueueInterface;
 import info.nightscout.androidaps.logging.AAPSLogger;
 import info.nightscout.androidaps.logging.LTag;
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper;
 import info.nightscout.androidaps.plugins.general.nsclient.NSClientPlugin;
-import info.nightscout.androidaps.plugins.general.nsclient.UploadQueue;
 import info.nightscout.androidaps.plugins.general.nsclient.acks.NSAddAck;
 import info.nightscout.androidaps.plugins.general.nsclient.acks.NSAuthAck;
 import info.nightscout.androidaps.plugins.general.nsclient.acks.NSUpdateAck;
@@ -90,7 +90,7 @@ public class NSClientService extends DaggerService {
     @Inject BuildHelper buildHelper;
     @Inject Config config;
     @Inject DateUtil dateUtil;
-    @Inject UploadQueue uploadQueue;
+    @Inject UploadQueueInterface uploadQueue;
 
     private final CompositeDisposable disposable = new CompositeDisposable();
 
@@ -214,7 +214,7 @@ public class NSClientService extends DaggerService {
 
     public void processAddAck(NSAddAck ack) {
         if (ack.nsClientID != null) {
-            uploadQueue.removeID(ack.json);
+            uploadQueue.removeByNsClientIdIfExists(ack.json);
             rxBus.send(new EventNSClientNewLog("DBADD", "Acked " + ack.nsClientID));
         } else {
             rxBus.send(new EventNSClientNewLog("ERROR", "DBADD Unknown response"));
@@ -223,7 +223,7 @@ public class NSClientService extends DaggerService {
 
     public void processUpdateAck(NSUpdateAck ack) {
         if (ack.result) {
-            uploadQueue.removeID(ack.action, ack._id);
+            uploadQueue.removeByMongoId(ack.action, ack._id);
             rxBus.send(new EventNSClientNewLog("DBUPDATE/DBREMOVE", "Acked " + ack._id));
         } else {
             rxBus.send(new EventNSClientNewLog("ERROR", "DBUPDATE/DBREMOVE Unknown response"));
@@ -597,7 +597,7 @@ public class NSClientService extends DaggerService {
                                 NSTreatment treatment = new NSTreatment(jsonTreatment);
 
                                 // remove from upload queue if Ack is failing
-                                uploadQueue.removeID(jsonTreatment);
+                                uploadQueue.removeByNsClientIdIfExists(jsonTreatment);
                                 //Find latest date in treatment
                                 if (treatment.getMills() != null && treatment.getMills() < System.currentTimeMillis())
                                     if (treatment.getMills() > latestDateInReceivedData)
@@ -629,7 +629,7 @@ public class NSClientService extends DaggerService {
                                 for (Integer index = 0; index < devicestatuses.length(); index++) {
                                     JSONObject jsonStatus = devicestatuses.getJSONObject(index);
                                     // remove from upload queue if Ack is failing
-                                    uploadQueue.removeID(jsonStatus);
+                                    uploadQueue.removeByNsClientIdIfExists(jsonStatus);
                                 }
                                 nsDeviceStatus.handleNewData(devicestatuses);
                             }
@@ -645,7 +645,7 @@ public class NSClientService extends DaggerService {
                                 JSONObject jsonFood = foods.getJSONObject(index);
 
                                 // remove from upload queue if Ack is failing
-                                uploadQueue.removeID(jsonFood);
+                                uploadQueue.removeByNsClientIdIfExists(jsonFood);
 
                                 String action = JsonHelper.safeGetString(jsonFood, "action");
 
@@ -677,7 +677,7 @@ public class NSClientService extends DaggerService {
                             for (Integer index = 0; index < mbgs.length(); index++) {
                                 JSONObject jsonMbg = mbgs.getJSONObject(index);
                                 // remove from upload queue if Ack is failing
-                                uploadQueue.removeID(jsonMbg);
+                                uploadQueue.removeByNsClientIdIfExists(jsonMbg);
                             }
                             handleNewMbg(mbgs, isDelta);
                         }
@@ -688,7 +688,7 @@ public class NSClientService extends DaggerService {
                             // Retreive actual calibration
                             for (Integer index = 0; index < cals.length(); index++) {
                                 // remove from upload queue if Ack is failing
-                                uploadQueue.removeID(cals.optJSONObject(index));
+                                uploadQueue.removeByNsClientIdIfExists(cals.optJSONObject(index));
                             }
                             handleNewCal(cals, isDelta);
                         }
@@ -702,7 +702,7 @@ public class NSClientService extends DaggerService {
                                 NSSgv sgv = new NSSgv(jsonSgv);
                                 // Handle new sgv here
                                 // remove from upload queue if Ack is failing
-                                uploadQueue.removeID(jsonSgv);
+                                uploadQueue.removeByNsClientIdIfExists(jsonSgv);
                                 //Find latest date in sgv
                                 if (sgv.getMills() != null && sgv.getMills() < System.currentTimeMillis())
                                     if (sgv.getMills() > latestDateInReceivedData)

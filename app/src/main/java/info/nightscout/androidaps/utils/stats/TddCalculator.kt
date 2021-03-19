@@ -10,11 +10,11 @@ import info.nightscout.androidaps.db.TDD
 import info.nightscout.androidaps.interfaces.ActivePluginProvider
 import info.nightscout.androidaps.interfaces.DatabaseHelperInterface
 import info.nightscout.androidaps.interfaces.ProfileFunction
+import info.nightscout.androidaps.interfaces.UploadQueueInterface
 import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.logging.LTag
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper
 import info.nightscout.androidaps.plugins.general.nsclient.NSUpload
-import info.nightscout.androidaps.plugins.general.nsclient.UploadQueue
 import info.nightscout.androidaps.plugins.treatments.TreatmentService
 import info.nightscout.androidaps.plugins.treatments.TreatmentsPlugin
 import info.nightscout.androidaps.utils.DateUtil
@@ -40,7 +40,7 @@ class TddCalculator @Inject constructor(
     fabricPrivacy: FabricPrivacy,
     nsUpload: NSUpload,
     private val dateUtil: DateUtil,
-    uploadQueue: UploadQueue,
+    uploadQueue: UploadQueueInterface,
     databaseHelper: DatabaseHelperInterface,
     repository: AppRepository
 ) : TreatmentsPlugin(injector, aapsLogger, rxBus, aapsSchedulers, resourceHelper, context, sp, profileFunction, activePlugin, nsUpload, fabricPrivacy, dateUtil, uploadQueue, databaseHelper, repository) {

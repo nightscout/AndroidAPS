@@ -22,7 +22,6 @@ import info.nightscout.androidaps.plugins.constraints.objectives.objectives.Obje
 import info.nightscout.androidaps.plugins.constraints.safety.SafetyPlugin
 import info.nightscout.androidaps.plugins.general.maintenance.LoggerUtils
 import info.nightscout.androidaps.plugins.general.nsclient.NSUpload
-import info.nightscout.androidaps.plugins.general.nsclient.UploadQueue
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.GlucoseStatusProvider
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.IobCobCalculatorPlugin
 import info.nightscout.androidaps.plugins.pump.combo.ComboPlugin
@@ -69,7 +68,7 @@ class ConstraintsCheckerTest : TestBaseWithProfile() {
     @Mock lateinit var sensitivityOref1Plugin: SensitivityOref1Plugin
     @Mock lateinit var profiler: Profiler
     @Mock lateinit var nsUpload: NSUpload
-    @Mock lateinit var uploadQueue: UploadQueue
+    @Mock lateinit var uploadQueue: UploadQueueInterface
     @Mock lateinit var uel: UserEntryLogger
     @Mock lateinit var loggerUtils: LoggerUtils
     @Mock lateinit var databaseHelper: DatabaseHelperInterface

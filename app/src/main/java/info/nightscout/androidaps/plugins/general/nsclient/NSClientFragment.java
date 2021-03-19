@@ -16,6 +16,7 @@ import javax.inject.Inject;
 
 import dagger.android.support.DaggerFragment;
 import info.nightscout.androidaps.R;
+import info.nightscout.androidaps.interfaces.UploadQueueAdminInterface;
 import info.nightscout.androidaps.database.entities.UserEntry;
 import info.nightscout.androidaps.database.entities.UserEntry.*;
 import info.nightscout.androidaps.logging.UserEntryLogger;
@@ -36,7 +37,7 @@ public class NSClientFragment extends DaggerFragment implements View.OnClickList
     @Inject SP sp;
     @Inject ResourceHelper resourceHelper;
     @Inject RxBusWrapper rxBus;
-    @Inject UploadQueue uploadQueue;
+    @Inject UploadQueueAdminInterface uploadQueue;
     @Inject FabricPrivacy fabricPrivacy;
     @Inject AapsSchedulers aapsSchedulers;
     @Inject UserEntryLogger uel;
