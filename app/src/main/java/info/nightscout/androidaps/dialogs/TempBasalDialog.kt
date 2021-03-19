@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import com.google.common.base.Joiner
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.activities.ErrorHelperActivity
+import info.nightscout.androidaps.database.entities.UserEntry.*
 import info.nightscout.androidaps.databinding.DialogTempbasalBinding
 import info.nightscout.androidaps.interfaces.ActivePluginProvider
 import info.nightscout.androidaps.interfaces.CommandQueueProvider
@@ -125,10 +126,10 @@ class TempBasalDialog : DialogFragmentWithDate() {
                     }
                 }
                 if (isPercentPump) {
-                    uel.log("TEMP BASAL", d1 = percent.toDouble(), i1 = durationInMinutes)
+                    uel.log(Action.TEMP_BASAL, ValueWithUnit(percent, Units.Percent), ValueWithUnit(durationInMinutes, Units.M))
                     commandQueue.tempBasalPercent(percent, durationInMinutes, true, profile, callback)
                 } else {
-                    uel.log("TEMP BASAL", d1 = absolute, i1 = durationInMinutes)
+                    uel.log(Action.TEMP_BASAL, ValueWithUnit(absolute, Units.U), ValueWithUnit(durationInMinutes, Units.M))
                     commandQueue.tempBasalAbsolute(absolute, durationInMinutes, true, profile, callback)
                 }
             })

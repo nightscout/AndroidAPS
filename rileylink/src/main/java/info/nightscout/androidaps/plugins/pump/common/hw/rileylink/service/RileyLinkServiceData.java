@@ -1,5 +1,7 @@
 package info.nightscout.androidaps.plugins.pump.common.hw.rileylink.service;
 
+import java.util.Locale;
+
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
@@ -84,7 +86,7 @@ public class RileyLinkServiceData {
             lastServiceStateChange = System.currentTimeMillis();
             this.rileyLinkError = errorCode;
 
-            aapsLogger.info(LTag.PUMP, "RileyLink State Changed: %s %s", newState, errorCode == null ? "" : " - Error State: " + errorCode.name());
+            aapsLogger.info(LTag.PUMP, String.format(Locale.ENGLISH, "RileyLink State Changed: %s %s", newState, errorCode == null ? "" : " - Error State: " + errorCode.name()));
 
             rileyLinkUtil.getRileyLinkHistory().add(new RLHistoryItem(rileyLinkServiceState, errorCode, targetDevice));
             rxBus.send(new EventRileyLinkDeviceStatusChange(targetDevice, newState, errorCode));

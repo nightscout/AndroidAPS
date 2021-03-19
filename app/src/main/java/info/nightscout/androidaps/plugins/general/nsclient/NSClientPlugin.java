@@ -31,6 +31,7 @@ import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.database.AppRepository;
 import info.nightscout.androidaps.database.entities.TemporaryTarget;
 import info.nightscout.androidaps.database.entities.TherapyEvent;
+import info.nightscout.androidaps.database.entities.UserEntry.*;
 import info.nightscout.androidaps.database.transactions.SyncTemporaryTargetTransaction;
 import info.nightscout.androidaps.database.transactions.SyncTherapyEventTransaction;
 import info.nightscout.androidaps.events.EventAppExit;
@@ -427,12 +428,12 @@ public class NSClientPlugin extends PluginBase {
         // room  Temporary target
         TemporaryTarget temporaryTarget = temporaryTargetFromNsIdForInvalidating(_id);
         disposable.add(repository.runTransactionForResult(new SyncTemporaryTargetTransaction(temporaryTarget)).subscribe(
-                result -> result.getInvalidated().forEach(record -> uel.log("TT DELETED FROM NS", record.getReason().getText(), record.getLowTarget(), record.getHighTarget(), (int) record.getDuration(), 0)),
+                result -> result.getInvalidated().forEach(record -> uel.log(Action.TT_DELETED_FROM_NS, new ValueWithUnit(record.getReason().getText(), Units.TherapyEvent), new ValueWithUnit(record.getLowTarget(), Units.Mg_Dl, true), new ValueWithUnit(record.getHighTarget(), Units.Mg_Dl, record.getLowTarget() != record.getHighTarget()), new ValueWithUnit((int) record.getDuration()/60000, Units.M, record.getDuration() != 0))),
                 error -> aapsLogger.error(LTag.DATABASE, "Error while removing temporary target", error)));
         // room  Therapy Event
         TherapyEvent therapyEvent = therapyEventFromNsIdForInvalidating(_id);
         disposable.add(repository.runTransactionForResult(new SyncTherapyEventTransaction(therapyEvent)).subscribe(
-                result -> result.getInvalidated().forEach(record -> uel.log("CAREPORTAL EVENT DELETED FROM NS", record.getType().getText(), 0.0, 0.0, 0, 0)),
+                result -> result.getInvalidated().forEach(record -> uel.log(Action.CAREPORTAL_DELETED_FROM_NS, record.getNote() , new ValueWithUnit(record.getTimestamp(), Units.Timestamp, true), new ValueWithUnit(record.getType().getText(), Units.TherapyEvent))),
                 error -> aapsLogger.error(LTag.DATABASE, "Error while removing therapy event", error)));
         // new DB model
         EventNsTreatment evtTreatment = new EventNsTreatment(EventNsTreatment.Companion.getREMOVE(), json);
@@ -462,9 +463,9 @@ public class NSClientPlugin extends PluginBase {
                 disposable.add(repository.runTransactionForResult(new SyncTemporaryTargetTransaction(temporaryTarget))
                         .subscribe(
                                 result -> {
-                                    result.getInserted().forEach(record -> uel.log("TT FROM NS", record.getReason().getText(), record.getLowTarget(), record.getHighTarget(), (int) record.getDuration(), 0));
-                                    result.getInvalidated().forEach(record -> uel.log("TT DELETED FROM NS", record.getReason().getText(), record.getLowTarget(), record.getHighTarget(), (int) record.getDuration(), 0));
-                                    result.getEnded().forEach(record -> uel.log("TT CANCELED FROM NS", record.getReason().getText(), record.getLowTarget(), record.getHighTarget(), (int) record.getDuration(), 0));
+                                    result.getInserted().forEach(record -> uel.log(Action.TT_FROM_NS, new ValueWithUnit(record.getReason().getText(), Units.TherapyEvent), new ValueWithUnit(record.getLowTarget(), Units.Mg_Dl, true), new ValueWithUnit(record.getHighTarget(), Units.Mg_Dl, record.getLowTarget() != record.getHighTarget()), new ValueWithUnit((int) record.getDuration()/60000, Units.M, true)));
+                                    result.getInvalidated().forEach(record -> uel.log(Action.TT_DELETED_FROM_NS, new ValueWithUnit(record.getReason().getText(), Units.TherapyEvent), new ValueWithUnit(record.getLowTarget(), Units.Mg_Dl, true), new ValueWithUnit(record.getHighTarget(), Units.Mg_Dl, record.getLowTarget() != record.getHighTarget()), new ValueWithUnit((int) record.getDuration()/60000, Units.M, true)));
+                                    result.getEnded().forEach(record -> uel.log(Action.TT_CANCELED_FROM_NS, new ValueWithUnit(record.getReason().getText(), Units.TherapyEvent), new ValueWithUnit(record.getLowTarget(), Units.Mg_Dl, true), new ValueWithUnit(record.getHighTarget(), Units.Mg_Dl, record.getLowTarget() != record.getHighTarget()), new ValueWithUnit((int) record.getDuration()/60000, Units.M, true)));
                                 },
                                 error -> aapsLogger.error(LTag.DATABASE, "Error while saving temporary target", error)));
             } else {
@@ -492,8 +493,8 @@ public class NSClientPlugin extends PluginBase {
                 disposable.add(repository.runTransactionForResult(new SyncTherapyEventTransaction(therapyEvent))
                         .subscribe(
                                 result -> {
-                                    result.getInserted().forEach(record -> uel.log("CAREPORTAL EVENT NS", record.getType().getText(), 0.0, 0.0, 0, 0));
-                                    result.getInvalidated().forEach(record -> uel.log("CAREPORTAL EVENT DELETED FROM NS", "", 0.0, 0.0, (int) record.getTimestamp(), 0));
+                                    result.getInserted().forEach(record -> uel.log(Action.CAREPORTAL_FROM_NS, record.getNote() , new ValueWithUnit(record.getTimestamp(), Units.Timestamp, true), new ValueWithUnit(record.getType().getText(), Units.TherapyEvent)));
+                                    result.getInvalidated().forEach(record -> uel.log(Action.CAREPORTAL_DELETED_FROM_NS, record.getNote() , new ValueWithUnit(record.getTimestamp(), Units.Timestamp, true), new ValueWithUnit(record.getType().getText(), Units.TherapyEvent)));
                                 },
                                 error -> aapsLogger.error(LTag.DATABASE, "Error while saving therapy event", error)));
             } else {

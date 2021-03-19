@@ -25,22 +25,34 @@
     <color name="errorAlertBackground">#FFFF5555</color>
     <color name="errorAlertHeaderText">#FF000000</color>
     <color name="examinedProfile">#FFFF5555</color>
+    <color name="defaulttext">#BBBBBB</color>
 
     <!--    Treatment-->
     <color name="tempbasal">#C803A9F4</color>
     <color name="list_delimiter">#505050</color>
+    <color name="basal">#00ffff</color>
+
+
+    <!--    Loop     -->
+    <color name="loopDisconnected">#939393</color>
+    <color name="loopClosed">#00C03E</color>
+    <color name="loopSuspended">#FFFF13</color>
+    <color name="loopOpened">#4983D7</color>
+    <color name="loopDisabled">#FF1313</color>
 
     <!--    BgReading-->
     <color name="inrange">#00FF00</color>
     <color name="low">#FF0000</color>
     <color name="high">#FFFF00</color>
     <color name="iob">#1e88e5</color>
+    <color name="extendedBolus">#67DFE8</color>
     <color name="iobPredAS">#1ea3e5</color>
     <color name="cob">#FFFB8C00</color>
     <color name="carbs">#FFFB8C00</color>
     <color name="uam">#c9bd60</color>
     <color name="zt">#00d2d2</color>
     <color name="white">#ffffff</color>
+    <color name="calibration">#E83258</color>
 
     <color name="ribbonDefault">#5a595b</color>
     <color name="daySelected">#D000FF00</color>

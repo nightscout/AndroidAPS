@@ -15,6 +15,8 @@ import info.nightscout.androidaps.BuildConfig
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.activities.DaggerAppCompatActivityWithResult
 import info.nightscout.androidaps.activities.PreferencesActivity
+import info.nightscout.androidaps.database.entities.UserEntry
+import info.nightscout.androidaps.database.entities.UserEntry.*
 import info.nightscout.androidaps.events.EventAppExit
 import info.nightscout.androidaps.interfaces.ConfigInterface
 import info.nightscout.androidaps.interfaces.ImportExportPrefsInterface
@@ -34,6 +36,7 @@ import info.nightscout.androidaps.utils.buildHelper.BuildHelper
 import info.nightscout.androidaps.utils.protection.PasswordCheck
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 import info.nightscout.androidaps.utils.sharedPreferences.SP
+import io.reactivex.Single
 import java.io.File
 import java.io.FileNotFoundException
 import java.io.IOException
@@ -344,7 +347,7 @@ class ImportExportPrefs @Inject constructor(
     private fun restartAppAfterImport(context: Context) {
         sp.putBoolean(R.string.key_setupwizard_processed, true)
         OKDialog.show(context, resourceHelper.gs(R.string.setting_imported), resourceHelper.gs(R.string.restartingapp), Runnable {
-            uel.log("IMPORT")
+            uel.log(Action.IMPORT_SETTINGS)
             log.debug(LTag.CORE, "Exiting")
             rxBus.send(EventAppExit())
             if (context is AppCompatActivity) {
@@ -353,5 +356,23 @@ class ImportExportPrefs @Inject constructor(
             System.runFinalization()
             exitProcess(0)
         })
+    }
+
+    override fun exportUserEntriesCsv(activity: FragmentActivity, listEntries: Single<List<UserEntry>>) {
+        val entries = listEntries.blockingGet()
+        prefFileList.ensureExportDirExists()
+        val newFile = prefFileList.newExportXmlFile()
+        //log.debug("XXXXX " + classicPrefsFormat.UserEntriesToCsv(entries))
+
+        try {
+            classicPrefsFormat.saveCsv(newFile, entries)
+            ToastUtils.okToast(activity, resourceHelper.gs(R.string.ue_exported))
+        } catch (e: FileNotFoundException) {
+            ToastUtils.errorToast(activity, resourceHelper.gs(R.string.filenotfound) + " " + newFile)
+            log.error(LTag.CORE, "Unhandled exception", e)
+        } catch (e: IOException) {
+            ToastUtils.errorToast(activity, e.message)
+            log.error(LTag.CORE, "Unhandled exception", e)
+        }
     }
 }

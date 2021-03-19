@@ -9,6 +9,7 @@ import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 import javax.inject.Inject;
@@ -275,7 +276,7 @@ public class MedtronicUtil {
 
         byte[] payload = sendPayloadBuffer.array();
 
-        aapsLogger.debug(LTag.PUMPCOMM, "buildCommandPayload [%s]", ByteUtil.shortHexString(payload));
+        aapsLogger.debug(LTag.PUMPCOMM, String.format(Locale.ENGLISH, "buildCommandPayload [%s]", ByteUtil.shortHexString(payload)));
 
         // int crc = computeCRC8WithPolynomial(payload, 0, payload.length - 1);
 

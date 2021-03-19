@@ -2,6 +2,7 @@ package info.nightscout.androidaps.activities
 
 import android.os.Bundle
 import info.nightscout.androidaps.R
+import info.nightscout.androidaps.database.entities.UserEntry.*
 import info.nightscout.androidaps.databinding.ActivityStatsBinding
 import info.nightscout.androidaps.logging.UserEntryLogger
 import info.nightscout.androidaps.utils.ActivityMonitor
@@ -31,7 +32,7 @@ class StatsActivity : NoSplashAppCompatActivity() {
         binding.ok.setOnClickListener { finish() }
         binding.reset.setOnClickListener {
             OKDialog.showConfirmation(this, resourceHelper.gs(R.string.doyouwantresetstats)) {
-                uel.log("STATS RESET")
+                uel.log(Action.STAT_RESET)
                 activityMonitor.reset()
                 recreate()
             }

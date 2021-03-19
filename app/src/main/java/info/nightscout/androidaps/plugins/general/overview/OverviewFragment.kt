@@ -31,6 +31,7 @@ import info.nightscout.androidaps.data.Profile
 import info.nightscout.androidaps.database.AppRepository
 import info.nightscout.androidaps.database.ValueWrapper
 import info.nightscout.androidaps.database.entities.TemporaryTarget
+import info.nightscout.androidaps.database.entities.UserEntry.*
 import info.nightscout.androidaps.database.interfaces.end
 import info.nightscout.androidaps.databinding.OverviewFragmentBinding
 import info.nightscout.androidaps.dialogs.*
@@ -350,7 +351,7 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
                             protectionCheck.queryProtection(activity, ProtectionCheck.Protection.BOLUS, UIRunnable {
                                 OKDialog.showConfirmation(activity, resourceHelper.gs(R.string.tempbasal_label), lastRun.constraintsProcessed?.toSpanned()
                                     ?: "".toSpanned(), {
-                                    uel.log("ACCEPT TEMP BASAL")
+                                    uel.log(Action.ACCEPTS_TEMP_BASAL)
                                     binding.buttonsLayout.acceptTempButton.visibility = View.GONE
                                     (context?.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager).cancel(Constants.notificationID)
                                     rxBus.send(EventWearInitiateAction("cancelChangeRequest"))

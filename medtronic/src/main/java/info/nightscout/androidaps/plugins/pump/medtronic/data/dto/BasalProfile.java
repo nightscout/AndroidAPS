@@ -8,6 +8,7 @@ import org.joda.time.Instant;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 import info.nightscout.androidaps.logging.AAPSLogger;
 import info.nightscout.androidaps.logging.LTag;
@@ -123,8 +124,8 @@ public class BasalProfile {
             BasalProfileEntry entry = entries.get(i);
             String startString = entry.startTime.toString("HH:mm");
             // this doesn't work
-            aapsLogger.debug(LTag.PUMPCOMM, "Entry %d, rate=%.3f (0x%02X), start=%s (0x%02X)", i + 1, entry.rate,
-                    entry.rate_raw, startString, entry.startTime_raw);
+            aapsLogger.debug(LTag.PUMPCOMM, String.format(Locale.ENGLISH, "Entry %d, rate=%.3f (%s), start=%s (0x%02X)", i + 1, entry.rate,
+                    ByteUtil.getHex(entry.rate_raw), startString, entry.startTime_raw));
 
         }
     }
@@ -137,7 +138,7 @@ public class BasalProfile {
             BasalProfileEntry entry = entries.get(i);
             String startString = entry.startTime.toString("HH:mm");
 
-            sb.append(String.format("Entry %d, rate=%.3f, start=%s\n", i + 1, entry.rate, startString));
+            sb.append(String.format(Locale.ENGLISH, "Entry %d, rate=%.3f, start=%s\n", i + 1, entry.rate, startString));
         }
 
         return sb.toString();
@@ -155,7 +156,7 @@ public class BasalProfile {
             BasalProfileEntry entry = entries.get(i);
             String startString = entry.startTime.toString("HH:mm");
 
-            sb.append(String.format("%s=%.3f, ", startString, entry.rate));
+            sb.append(String.format(Locale.ENGLISH, "%s=%.3f, ", startString, entry.rate));
         }
 
         sb.append("]");
@@ -170,8 +171,8 @@ public class BasalProfile {
         BasalProfileEntry rval = new BasalProfileEntry();
         List<BasalProfileEntry> entries = getEntries();
         if (entries.size() == 0) {
-            aapsLogger.warn(LTag.PUMPCOMM, "getEntryForTime(%s): table is empty",
-                    when.toDateTime().toLocalTime().toString("HH:mm"));
+            aapsLogger.warn(LTag.PUMPCOMM, String.format(Locale.ENGLISH, "getEntryForTime(%s): table is empty",
+                    when.toDateTime().toLocalTime().toString("HH:mm")));
             return rval;
         }
         // Log.w(TAG,"Assuming first entry");
@@ -187,8 +188,8 @@ public class BasalProfile {
         while (!done) {
             BasalProfileEntry entry = entries.get(i);
             if (DEBUG_BASALPROFILE) {
-                aapsLogger.debug(LTag.PUMPCOMM, "Comparing 'now'=%s to entry 'start time'=%s", when.toDateTime().toLocalTime()
-                        .toString("HH:mm"), entry.startTime.toString("HH:mm"));
+                aapsLogger.debug(LTag.PUMPCOMM, String.format(Locale.ENGLISH, "Comparing 'now'=%s to entry 'start time'=%s", when.toDateTime().toLocalTime()
+                        .toString("HH:mm"), entry.startTime.toString("HH:mm")));
             }
             if (localMillis >= entry.startTime.getMillisOfDay()) {
                 rval = entry;
@@ -206,9 +207,9 @@ public class BasalProfile {
             }
         }
         if (DEBUG_BASALPROFILE) {
-            aapsLogger.debug(LTag.PUMPCOMM, "getEntryForTime(%s): Returning entry: rate=%.3f (%d), start=%s (%d)", when
-                            .toDateTime().toLocalTime().toString("HH:mm"), rval.rate, rval.rate_raw,
-                    rval.startTime.toString("HH:mm"), rval.startTime_raw);
+            aapsLogger.debug(LTag.PUMPCOMM, String.format(Locale.ENGLISH, "getEntryForTime(%s): Returning entry: rate=%.3f (%s), start=%s (%d)", when
+                            .toDateTime().toLocalTime().toString("HH:mm"), rval.rate, ByteUtil.getHex(rval.rate_raw),
+                    rval.startTime.toString("HH:mm"), rval.startTime_raw));
         }
         return rval;
     }
@@ -237,7 +238,7 @@ public class BasalProfile {
             try {
                 entries.add(new BasalProfileEntry(aapsLogger, r, st));
             } catch (Exception ex) {
-                aapsLogger.error(LTag.PUMPCOMM, "Error decoding basal profile from bytes: %s", ByteUtil.shortHexString(mRawData));
+                aapsLogger.error(LTag.PUMPCOMM, "Error decoding basal profile from bytes: " + ByteUtil.shortHexString(mRawData));
                 throw ex;
             }
 

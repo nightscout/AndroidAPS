@@ -780,7 +780,7 @@ public class MedtronicPumpPlugin extends PumpPluginAbstract implements PumpInter
 
             if ((clock.localDeviceTime.getYear() <= 2015) || (timeDiff <= 24 * 60 * 60)) {
 
-                aapsLogger.info(LTag.PUMP, "MedtronicPumpPlugin::checkTimeAndOptionallySetTime - Time difference is %d s. Set time on pump.", timeDiff);
+                aapsLogger.info(LTag.PUMP, String.format(Locale.ENGLISH, "MedtronicPumpPlugin::checkTimeAndOptionallySetTime - Time difference is %d s. Set time on pump.", timeDiff));
 
                 rileyLinkMedtronicService.getMedtronicUIComm().executeCommand(MedtronicCommandType.SetRealTimeClock);
 
@@ -790,13 +790,13 @@ public class MedtronicPumpPlugin extends PumpPluginAbstract implements PumpInter
                 }
             } else {
                 if ((clock.localDeviceTime.getYear() > 2015)) {
-                    aapsLogger.error("MedtronicPumpPlugin::checkTimeAndOptionallySetTime - Time difference over 24h requested [diff=%d s]. Doing nothing.", timeDiff);
+                    aapsLogger.error(String.format(Locale.ENGLISH, "MedtronicPumpPlugin::checkTimeAndOptionallySetTime - Time difference over 24h requested [diff=%d s]. Doing nothing.", timeDiff));
                     medtronicUtil.sendNotification(MedtronicNotificationType.TimeChangeOver24h, getResourceHelper(), rxBus);
                 }
             }
 
         } else {
-            aapsLogger.info(LTag.PUMP, "MedtronicPumpPlugin::checkTimeAndOptionallySetTime - Time difference is %d s. Do nothing.", timeDiff);
+            aapsLogger.info(LTag.PUMP, String.format(Locale.ENGLISH, "MedtronicPumpPlugin::checkTimeAndOptionallySetTime - Time difference is %d s. Do nothing.", timeDiff));
         }
 
         scheduleNextRefresh(MedtronicStatusRefreshType.PumpTime, 0);

@@ -32,9 +32,6 @@ import info.nightscout.androidaps.plugins.pump.medtronic.util.MedtronicUtil;
 @Singleton
 public class MedtronicPumpHistoryDecoder extends MedtronicHistoryDecoder<PumpHistoryEntry> {
 
-    private final AAPSLogger aapsLogger;
-    private final MedtronicUtil medtronicUtil;
-
     private PumpHistoryEntry tbrPreviousRecord;
     private PumpHistoryEntry changeTimeRecord;
 
@@ -43,7 +40,7 @@ public class MedtronicPumpHistoryDecoder extends MedtronicHistoryDecoder<PumpHis
             AAPSLogger aapsLogger,
             MedtronicUtil medtronicUtil
     ) {
-        this.aapsLogger = aapsLogger;
+        super.aapsLogger = aapsLogger;
         this.medtronicUtil = medtronicUtil;
     }
 
@@ -67,6 +64,7 @@ public class MedtronicPumpHistoryDecoder extends MedtronicHistoryDecoder<PumpHis
             int opCode = dataClear.get(counter);
             boolean special = false;
             incompletePacket = false;
+            boolean skippedRecords = false;
 
             if (opCode == 0) {
                 counter++;
@@ -79,7 +77,12 @@ public class MedtronicPumpHistoryDecoder extends MedtronicHistoryDecoder<PumpHis
                 if (skipped != null) {
                     aapsLogger.warn(LTag.PUMPBTCOMM, " ... Skipped " + skipped);
                     skipped = null;
+                    skippedRecords = true;
                 }
+            }
+
+            if (skippedRecords) {
+                aapsLogger.error(LTag.PUMPBTCOMM, "We had some skipped bytes, which might indicate error in pump history. Please report this problem.");
             }
 
             PumpHistoryEntryType entryType = PumpHistoryEntryType.getByCode(opCode);
@@ -176,7 +179,7 @@ public class MedtronicPumpHistoryDecoder extends MedtronicHistoryDecoder<PumpHis
         try {
             return decodeRecord(record, false);
         } catch (Exception ex) {
-            aapsLogger.error(LTag.PUMPBTCOMM, "     Error decoding: type=%s, ex=%s", record.getEntryType().name(), ex.getMessage(), ex);
+            aapsLogger.error(LTag.PUMPBTCOMM, String.format(Locale.ENGLISH, "     Error decoding: type=%s, ex=%s", record.getEntryType().name(), ex.getMessage(), ex));
             return RecordDecodeStatus.Error;
         }
     }
@@ -216,12 +219,12 @@ public class MedtronicPumpHistoryDecoder extends MedtronicHistoryDecoder<PumpHis
             case SelfTest:
             case JournalEntryInsulinMarker:
             case JournalEntryOtherMarker:
-            case ChangeBolusWizardSetup512:
+            case BolusWizardSetup512:
             case ChangeSensorSetup2:
             case ChangeSensorAlarmSilenceConfig:
             case ChangeSensorRateOfChangeAlertSetup:
             case ChangeBolusScrollStepSize:
-            case ChangeBolusWizardSetup:
+            case BolusWizardSetup:
             case ChangeVariableBolus:
             case ChangeAudioBolus:
             case ChangeBGReminderEnable:
@@ -418,7 +421,7 @@ public class MedtronicPumpHistoryDecoder extends MedtronicHistoryDecoder<PumpHis
         //LOG.info("Basal Profile Start: offset={}, rate={}, index={}, body_raw={}", offset, rate, index, body);
 
         if (rate == null) {
-            aapsLogger.warn(LTag.PUMPBTCOMM, "Basal Profile Start (ERROR): offset=%d, rate=%.3f, index=%d, body_raw=%s", offset, rate, index, ByteUtil.getHex(body));
+            aapsLogger.warn(LTag.PUMPBTCOMM, String.format(Locale.ENGLISH, "Basal Profile Start (ERROR): offset=%d, rate=%.3f, index=%d, body_raw=%s", offset, rate, index, ByteUtil.getHex(body)));
             return RecordDecodeStatus.Error;
         } else {
             entry.addDecodedData("Value", getFormattedFloat(rate, 3));
@@ -680,8 +683,8 @@ public class MedtronicPumpHistoryDecoder extends MedtronicHistoryDecoder<PumpHis
             //LOG.debug("DT: {} {} {}", year, month, dayOfMonth);
 
             if (dayOfMonth == 32) {
-                aapsLogger.warn(LTag.PUMPBTCOMM, "Entry: Day 32 %s = [%s] %s", entry.getEntryType().name(),
-                        ByteUtil.getHex(entry.getRawData()), entry);
+                aapsLogger.warn(LTag.PUMPBTCOMM, String.format(Locale.ENGLISH, "Entry: Day 32 %s = [%s] %s", entry.getEntryType().name(),
+                        ByteUtil.getHex(entry.getRawData()), entry));
             }
 
             if (isEndResults(entry.getEntryType())) {

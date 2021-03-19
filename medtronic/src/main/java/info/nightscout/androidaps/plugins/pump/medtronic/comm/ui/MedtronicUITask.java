@@ -2,6 +2,8 @@ package info.nightscout.androidaps.plugins.pump.medtronic.comm.ui;
 
 import org.joda.time.LocalDateTime;
 
+import java.util.Locale;
+
 import javax.inject.Inject;
 
 import dagger.android.HasAndroidInjector;
@@ -59,7 +61,7 @@ public class MedtronicUITask {
 
     public void execute(MedtronicCommunicationManager communicationManager) {
 
-        aapsLogger.debug(LTag.PUMP, "MedtronicUITask: @@@ In execute. %s", commandType);
+        aapsLogger.debug(LTag.PUMP, "MedtronicUITask: @@@ In execute. " + commandType);
 
         switch (commandType) {
             case PumpModel: {
@@ -141,7 +143,7 @@ public class MedtronicUITask {
             break;
 
             default: {
-                aapsLogger.warn(LTag.PUMP, "This commandType is not supported (yet) - %s.", commandType);
+                aapsLogger.warn(LTag.PUMP, String.format(Locale.ENGLISH, "This commandType is not supported (yet) - %s.", commandType));
                 // invalid = true;
                 responseType = MedtronicUIResponseType.Invalid;
             }
@@ -194,7 +196,7 @@ public class MedtronicUITask {
 
     void postProcess(MedtronicUIPostprocessor postprocessor) {
 
-        aapsLogger.debug(LTag.PUMP, "MedtronicUITask: @@@ In execute. %s", commandType);
+        aapsLogger.debug(LTag.PUMP, "MedtronicUITask: @@@ In execute. " + commandType);
 
         if (responseType == MedtronicUIResponseType.Data) {
             postprocessor.postProcessData(this);

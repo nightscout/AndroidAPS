@@ -9,6 +9,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import dagger.android.support.DaggerFragment
 import info.nightscout.androidaps.R
+import info.nightscout.androidaps.database.entities.UserEntry.*
 import info.nightscout.androidaps.databinding.TreatmentsProfileswitchFragmentBinding
 import info.nightscout.androidaps.databinding.TreatmentsProfileswitchItemBinding
 import info.nightscout.androidaps.db.ProfileSwitch
@@ -70,7 +71,7 @@ class TreatmentsProfileSwitchFragment : DaggerFragment() {
 
         binding.refreshFromNightscout.setOnClickListener {
             activity?.let { activity ->
-                uel.log("PROFILE SWITCH NS REFRESH")
+                uel.log(Action.PROFILE_SWITCH_NS_REFRESH)
                 OKDialog.showConfirmation(activity, resourceHelper.gs(R.string.refresheventsfromnightscout) + "?") {
                     databaseHelper.resetProfileSwitch()
                     rxBus.send(EventNSClientRestart())
@@ -147,7 +148,7 @@ class TreatmentsProfileSwitchFragment : DaggerFragment() {
                         OKDialog.showConfirmation(activity, resourceHelper.gs(R.string.removerecord),
                             resourceHelper.gs(R.string.careportal_profileswitch) + ": " + profileSwitch.profileName +
                                 "\n" + resourceHelper.gs(R.string.date) + ": " + dateUtil.dateAndTimeString(profileSwitch.date), Runnable {
-                            uel.log("REMOVED PROFILE SWITCH", profileSwitch.profileName + " " + dateUtil.dateAndTimeString(profileSwitch.date))
+                            uel.log(Action.PROFILE_SWITCH_REMOVED, profileSwitch.profileName, ValueWithUnit(profileSwitch.date, Units.Timestamp))
                             val id = profileSwitch._id
                             if (NSUpload.isIdValid(id)) nsUpload.removeCareportalEntryFromNS(id)
                             else uploadQueue.removeID("dbAdd", id)
@@ -160,7 +161,7 @@ class TreatmentsProfileSwitchFragment : DaggerFragment() {
                         val profileSwitch = it.tag as ProfileSwitch
                         OKDialog.showConfirmation(activity, resourceHelper.gs(R.string.careportal_profileswitch), resourceHelper.gs(R.string.copytolocalprofile) + "\n" + profileSwitch.customizedName + "\n" + dateUtil.dateAndTimeString(profileSwitch.date), Runnable {
                             profileSwitch.profileObject?.let {
-                                uel.log("PROFILE SWITCH CLONE", profileSwitch.profileName + " " + dateUtil.dateAndTimeString(profileSwitch.date))
+                                uel.log(Action.PROFILE_SWITCH_CLONED, ValueWithUnit(profileSwitch.date, Units.Timestamp), ValueWithUnit(profileSwitch.profileName, Units.None))
                                 val nonCustomized = it.convertToNonCustomizedProfile()
                                 if (nonCustomized.isValid(resourceHelper.gs(R.string.careportal_profileswitch, false))) {
                                     localProfilePlugin.addProfile(localProfilePlugin.copyFrom(nonCustomized, profileSwitch.customizedName + " " + dateUtil.dateAndTimeString(profileSwitch.date).replace(".", "_")))
