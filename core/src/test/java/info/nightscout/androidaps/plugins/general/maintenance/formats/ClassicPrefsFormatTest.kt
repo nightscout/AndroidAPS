@@ -15,8 +15,7 @@ import org.powermock.modules.junit4.PowerMockRunner
 import java.io.File
 
 @RunWith(PowerMockRunner::class)
-@PrepareForTest(File::class)
-
+@PrepareForTest(File::class, Translator::class)
 class ClassicPrefsFormatTest : TestBase() {
 
     @Mock lateinit var resourceHelper: ResourceHelper
