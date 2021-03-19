@@ -659,7 +659,6 @@
     <string name="increasingmaxbasal">Aumentar o valor máximo de basal porque a configuração é inferior à sua basal máxima no perfil</string>
     <string name="smscommunicator_messagebody">Corpo da mensagem inválido</string>
     <string name="format_bg_isf">%1$s FSI: %2$.1f</string>
-    <string name="boluswizard">Assistente de Bólus</string>
     <string name="profile_name">Nome do Perfil:</string>
     <string name="selected_profile">Seleccionado:</string>
     <string name="unitsnosemicolon">Unidades</string>
