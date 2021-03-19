@@ -1,5 +1,6 @@
 package info.nightscout.androidaps.database
 
+import info.nightscout.androidaps.database.entities.Food
 import info.nightscout.androidaps.database.entities.GlucoseValue
 import info.nightscout.androidaps.database.entities.TemporaryTarget
 import info.nightscout.androidaps.database.entities.TherapyEvent
@@ -169,6 +170,14 @@ class AppRepository @Inject internal constructor(
     fun compatGetTherapyEventDataFromToTime(from: Long, to: Long): Single<List<TherapyEvent>> =
         database.therapyEventDao.compatGetTherapyEventDataFromToTime(from, to)
             .subscribeOn(Schedulers.io())
+
+    // FOOD
+    fun getFoodData(): Single<List<Food>> =
+        database.foodDao.getFoodData()
+            .subscribeOn(Schedulers.io())
+
+    fun deleteAllFoods() =
+        database.foodDao.deleteAllEntries()
 
 }
 

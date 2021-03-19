@@ -34,7 +34,6 @@ import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.db.DbRequest;
 import info.nightscout.androidaps.events.EventAppExit;
 import info.nightscout.androidaps.events.EventConfigBuilderChange;
-import info.nightscout.androidaps.events.EventNsFood;
 import info.nightscout.androidaps.events.EventPreferenceChange;
 import info.nightscout.androidaps.interfaces.DatabaseHelperInterface;
 import info.nightscout.androidaps.interfaces.PluginType;
@@ -636,39 +635,8 @@ public class NSClientService extends DaggerService {
                         }
                         if (data.has("food")) {
                             JSONArray foods = data.getJSONArray("food");
-                            JSONArray removedFoods = new JSONArray();
-                            JSONArray updatedFoods = new JSONArray();
-                            JSONArray addedFoods = new JSONArray();
-                            if (foods.length() > 0)
-                                rxBus.send(new EventNSClientNewLog("DATA", "received " + foods.length() + " foods"));
-                            for (Integer index = 0; index < foods.length(); index++) {
-                                JSONObject jsonFood = foods.getJSONObject(index);
-
-                                // remove from upload queue if Ack is failing
-                                uploadQueue.removeID(jsonFood);
-
-                                String action = JsonHelper.safeGetString(jsonFood, "action");
-
-                                if (action == null) {
-                                    addedFoods.put(jsonFood);
-                                } else if (action.equals("update")) {
-                                    updatedFoods.put(jsonFood);
-                                } else if (action.equals("remove")) {
-                                    removedFoods.put(jsonFood);
-                                }
-                            }
-                            if (removedFoods.length() > 0) {
-                                EventNsFood evt = new EventNsFood(EventNsFood.Companion.getREMOVE(), removedFoods);
-                                rxBus.send(evt);
-                            }
-                            if (updatedFoods.length() > 0) {
-                                EventNsFood evt = new EventNsFood(EventNsFood.Companion.getUPDATE(), updatedFoods);
-                                rxBus.send(evt);
-                            }
-                            if (addedFoods.length() > 0) {
-                                EventNsFood evt = new EventNsFood(EventNsFood.Companion.getADD(), addedFoods);
-                                rxBus.send(evt);
-                            }
+                            if (foods.length() > 0) rxBus.send(new EventNSClientNewLog("DATA", "received " + foods.length() + " foods"));
+                            handleFood(foods, isDelta);
                         }
                         if (data.has("mbgs")) {
                             JSONArray mbgs = data.getJSONArray("mbgs");
@@ -879,6 +847,16 @@ public class NSClientService extends DaggerService {
             rxBus.send(new EventNSClientNewLog("URGENTALARM", JsonHelper.safeGetString(alarm, "message", "received")));
             aapsLogger.debug(LTag.NSCLIENT, alarm.toString());
         }
+    }
+
+    public void handleFood(JSONArray foods, boolean isDelta) {
+        Bundle bundle = new Bundle();
+        bundle.putString("foods", foods.toString());
+        bundle.putBoolean("delta", isDelta);
+        Intent intent = new Intent(Intents.ACTION_FOOD);
+        intent.putExtras(bundle);
+        intent.addFlags(Intent.FLAG_INCLUDE_STOPPED_PACKAGES);
+        LocalBroadcastManager.getInstance(this).sendBroadcast(intent);
     }
 
     public void handleNewCal(JSONArray cals, boolean isDelta) {

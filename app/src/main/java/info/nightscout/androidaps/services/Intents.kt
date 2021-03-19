@@ -13,6 +13,7 @@ interface Intents {
         const val ACTION_NEW_SGV = "info.nightscout.client.NEW_SGV"
         const val ACTION_NEW_MBG = "info.nightscout.client.NEW_MBG"
         const val ACTION_NEW_CAL = "info.nightscout.client.NEW_CAL"
+        const val ACTION_FOOD = "info.nightscout.client.FOOD"
 
         // xDrip -> App
         const val ACTION_NEW_BG_ESTIMATE = "com.eveningoutpost.dexdrip.BgEstimate"
