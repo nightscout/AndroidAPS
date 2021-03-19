@@ -18,8 +18,6 @@ import info.nightscout.androidaps.receivers.BundleStore
 import info.nightscout.androidaps.receivers.DataReceiver
 import info.nightscout.androidaps.services.Intents
 import info.nightscout.androidaps.utils.resources.ResourceHelper
-import io.reactivex.disposables.CompositeDisposable
-import io.reactivex.rxkotlin.plusAssign
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -55,19 +53,13 @@ class XdripPlugin @Inject constructor(
         ).any { it == glucoseValue.sourceSensor }
     }
 
-    private val disposable = CompositeDisposable()
-
-    override fun onStop() {
-        disposable.clear()
-        super.onStop()
-    }
-
     // cannot be inner class because of needed injection
     class XdripWorker(
         context: Context,
         params: WorkerParameters
     ) : Worker(context, params) {
 
+        @Inject lateinit var aapsLogger: AAPSLogger
         @Inject lateinit var xdripPlugin: XdripPlugin
         @Inject lateinit var repository: AppRepository
         @Inject lateinit var bundleStore: BundleStore
@@ -77,11 +69,13 @@ class XdripPlugin @Inject constructor(
         }
 
         override fun doWork(): Result {
+            var ret = Result.success()
+
             if (!xdripPlugin.isEnabled(PluginType.BGSOURCE)) return Result.failure()
             val bundle = bundleStore.pickup(inputData.getLong(DataReceiver.STORE_KEY, -1))
                 ?: return Result.failure()
-            
-            xdripPlugin.aapsLogger.debug(LTag.BGSOURCE, "Received xDrip data: $bundle")
+
+            aapsLogger.debug(LTag.BGSOURCE, "Received xDrip data: $bundle")
             val glucoseValues = mutableListOf<CgmSourceTransaction.TransactionGlucoseValue>()
             glucoseValues += CgmSourceTransaction.TransactionGlucoseValue(
                 timestamp = bundle.getLong(Intents.EXTRA_TIMESTAMP, 0),
@@ -92,15 +86,20 @@ class XdripPlugin @Inject constructor(
                 sourceSensor = GlucoseValue.SourceSensor.fromString(bundle.getString(Intents.XDRIP_DATA_SOURCE_DESCRIPTION)
                     ?: "")
             )
-            xdripPlugin.disposable += repository.runTransactionForResult(CgmSourceTransaction(glucoseValues, emptyList(), null)).subscribe({ savedValues ->
-                savedValues.all().forEach {
-                    xdripPlugin.detectSource(it)
+            repository.runTransactionForResult(CgmSourceTransaction(glucoseValues, emptyList(), null))
+                .doOnError {
+                    aapsLogger.error(LTag.BGSOURCE, "Error while saving values from Eversense App", it)
+                    ret = Result.failure()
                 }
-            }, {
-                xdripPlugin.aapsLogger.error(LTag.BGSOURCE, "Error while saving values from Eversense App", it)
-            })
+                .blockingGet()
+                .also { savedValues ->
+                    savedValues.all().forEach {
+                        xdripPlugin.detectSource(it)
+                        aapsLogger.debug(LTag.BGSOURCE, "Inserted bg $it")
+                    }
+                }
             xdripPlugin.sensorBatteryLevel = bundle.getInt(Intents.EXTRA_SENSOR_BATTERY, -1)
-            return Result.success()
+            return ret
         }
     }
 }

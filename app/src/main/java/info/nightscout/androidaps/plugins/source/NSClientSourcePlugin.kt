@@ -22,8 +22,6 @@ import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.XDripBroadcast
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 import info.nightscout.androidaps.utils.sharedPreferences.SP
-import io.reactivex.disposables.CompositeDisposable
-import io.reactivex.rxkotlin.plusAssign
 import org.json.JSONArray
 import org.json.JSONObject
 import javax.inject.Inject
@@ -53,13 +51,6 @@ class NSClientSourcePlugin @Inject constructor(
                 .alwaysEnabled(true)
                 .setDefault()
         }
-    }
-
-    private val disposable = CompositeDisposable()
-
-    override fun onStop() {
-        disposable.clear()
-        super.onStop()
     }
 
     override fun advancedFilteringSupported(): Boolean {
@@ -113,7 +104,10 @@ class NSClientSourcePlugin @Inject constructor(
             )
         }
 
+        @Suppress("SpellCheckingInspection")
         override fun doWork(): Result {
+            var ret = Result.success()
+
             if (!nsClientSourcePlugin.isEnabled() && !sp.getBoolean(R.string.key_ns_autobackfill, true) && !dexcomPlugin.isEnabled()) return Result.failure()
             try {
                 val glucoseValues = mutableListOf<CgmSourceTransaction.TransactionGlucoseValue>()
@@ -127,27 +121,31 @@ class NSClientSourcePlugin @Inject constructor(
                     for (i in 0 until jsonArray.length())
                         glucoseValues += toGv(jsonArray.getJSONObject(i))
                 }
-                nsClientSourcePlugin.disposable += repository.runTransactionForResult(CgmSourceTransaction(glucoseValues, emptyList(), null, !nsClientSourcePlugin.isEnabled())).subscribe({ result ->
-                    result.updated.forEach {
-                        //aapsLogger.debug("XXXXX: Updated $it")
-                        broadcastToXDrip(it)
-                        nsClientSourcePlugin.detectSource(it)
+                repository.runTransactionForResult(CgmSourceTransaction(glucoseValues, emptyList(), null, !nsClientSourcePlugin.isEnabled()))
+                    .doOnError {
+                        aapsLogger.error("Error while saving values from NSClient App", it)
+                        ret = Result.failure()
                     }
-                    result.inserted.forEach {
-                        //aapsLogger.debug("XXXXX: Inserted $it")
-                        broadcastToXDrip(it)
-                        nsClientSourcePlugin.detectSource(it)
+                    .blockingGet()
+                    .also { result ->
+                        result.updated.forEach {
+                            broadcastToXDrip(it)
+                            nsClientSourcePlugin.detectSource(it)
+                            aapsLogger.debug(LTag.BGSOURCE, "Updated bg $it")
+                        }
+                        result.inserted.forEach {
+                            broadcastToXDrip(it)
+                            nsClientSourcePlugin.detectSource(it)
+                            aapsLogger.debug(LTag.BGSOURCE, "Inserted bg $it")
+                        }
                     }
-                }, {
-                    aapsLogger.error("Error while saving values from NSClient App", it)
-                })
             } catch (e: Exception) {
                 aapsLogger.error("Unhandled exception", e)
-                return Result.failure()
+                ret = Result.failure()
             }
             // Objectives 0
             sp.putBoolean(R.string.key_ObjectivesbgIsAvailableInNS, true)
-            return Result.success()
+            return ret
         }
     }
 }

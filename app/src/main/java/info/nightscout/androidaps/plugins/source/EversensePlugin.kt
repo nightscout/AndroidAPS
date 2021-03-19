@@ -4,7 +4,6 @@ import android.content.Context
 import androidx.work.Worker
 import androidx.work.WorkerParameters
 import dagger.android.HasAndroidInjector
-import info.nightscout.androidaps.Constants
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.database.AppRepository
 import info.nightscout.androidaps.database.entities.GlucoseValue
@@ -24,8 +23,6 @@ import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.XDripBroadcast
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 import info.nightscout.androidaps.utils.sharedPreferences.SP
-import io.reactivex.disposables.CompositeDisposable
-import io.reactivex.rxkotlin.plusAssign
 import java.util.*
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -48,13 +45,6 @@ class EversensePlugin @Inject constructor(
 
     override var sensorBatteryLevel = -1
 
-    private val disposable = CompositeDisposable()
-
-    override fun onStop() {
-        disposable.clear()
-        super.onStop()
-    }
-
     // cannot be inner class because of needed injection
     class EversenseWorker(
         context: Context,
@@ -76,6 +66,8 @@ class EversensePlugin @Inject constructor(
         }
 
         override fun doWork(): Result {
+            var ret = Result.success()
+
             if (!eversensePlugin.isEnabled(PluginType.BGSOURCE)) return Result.failure()
             val bundle = bundleStore.pickup(inputData.getLong(DataReceiver.STORE_KEY, -1))
                 ?: return Result.failure()
@@ -116,15 +108,20 @@ class EversensePlugin @Inject constructor(
                             trendArrow = GlucoseValue.TrendArrow.NONE,
                             sourceSensor = GlucoseValue.SourceSensor.EVERSENSE
                         )
-                    eversensePlugin.disposable += repository.runTransactionForResult(CgmSourceTransaction(glucoseValues, emptyList(), null)).subscribe({ savedValues ->
-                        savedValues.inserted.forEach {
-                            broadcastToXDrip(it)
-                            if (sp.getBoolean(R.string.key_dexcomg5_nsupload, false))
-                                nsUpload.uploadBg(it, GlucoseValue.SourceSensor.EVERSENSE.text)
+                    repository.runTransactionForResult(CgmSourceTransaction(glucoseValues, emptyList(), null))
+                        .doOnError {
+                            aapsLogger.error("Error while saving values from Eversense App", it)
+                            ret = Result.failure()
                         }
-                    }, {
-                        aapsLogger.error("Error while saving values from Eversense App", it)
-                    })
+                        .blockingGet()
+                        .also { savedValues ->
+                            savedValues.inserted.forEach {
+                                broadcastToXDrip(it)
+                                if (sp.getBoolean(R.string.key_dexcomg5_nsupload, false))
+                                    nsUpload.uploadBg(it, GlucoseValue.SourceSensor.EVERSENSE.text)
+                                aapsLogger.debug(LTag.BGSOURCE, "Inserted bg $it")
+                            }
+                        }
                 }
             }
             if (bundle.containsKey("calibrationGlucoseLevels")) {
@@ -136,22 +133,29 @@ class EversensePlugin @Inject constructor(
                     aapsLogger.debug(LTag.BGSOURCE, "calibrationTimestamps" + Arrays.toString(calibrationTimestamps))
                     aapsLogger.debug(LTag.BGSOURCE, "calibrationRecordNumbers" + Arrays.toString(calibrationRecordNumbers))
                     for (i in calibrationGlucoseLevels.indices) {
-                        eversensePlugin.disposable += repository.runTransactionForResult(InsertTherapyEventIfNewTransaction(
+                        repository.runTransactionForResult(InsertTherapyEventIfNewTransaction(
                             timestamp = calibrationTimestamps[i],
                             type = TherapyEvent.Type.FINGER_STICK_BG_VALUE,
                             glucose = calibrationGlucoseLevels[i].toDouble(),
                             glucoseType = TherapyEvent.MeterType.FINGER,
                             glucoseUnit = TherapyEvent.GlucoseUnit.MGDL,
                             enteredBy = "AndroidAPS-Eversense"
-                        )).subscribe({ result ->
-                            result.inserted.forEach { nsUpload.uploadEvent(it) }
-                        }, {
-                            aapsLogger.error(LTag.BGSOURCE, "Error while saving therapy event", it)
-                        })
+                        ))
+                            .doOnError {
+                                aapsLogger.error(LTag.BGSOURCE, "Error while saving therapy event", it)
+                                ret = Result.failure()
+                            }
+                            .blockingGet()
+                            .also { result ->
+                                result.inserted.forEach {
+                                    nsUpload.uploadEvent(it)
+                                    aapsLogger.debug(LTag.BGSOURCE, "Inserted bg $it")
+                                }
+                            }
                     }
                 }
             }
-            return Result.success()
+            return ret
         }
     }
 }

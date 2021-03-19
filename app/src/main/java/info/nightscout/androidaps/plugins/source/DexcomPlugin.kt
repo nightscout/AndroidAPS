@@ -93,6 +93,8 @@ class DexcomPlugin @Inject constructor(
         }
 
         override fun doWork(): Result {
+            var ret = Result.success()
+
             if (!dexcomPlugin.isEnabled(PluginType.BGSOURCE)) return Result.failure()
             val bundle = bundleStore.pickup(inputData.getLong(DataReceiver.STORE_KEY, -1))
                 ?: return Result.failure()
@@ -142,23 +144,25 @@ class DexcomPlugin @Inject constructor(
                         broadcastToXDrip(it)
                         if (sp.getBoolean(R.string.key_dexcomg5_nsupload, false)) {
                             nsUpload.uploadBg(it, sourceSensor.text)
-                            //aapsLogger.debug("XXXXX: dbAdd $it")
                         }
+                        aapsLogger.debug(LTag.BGSOURCE, "Inserted bg $it")
                     }
                     result.updated.forEach {
                         broadcastToXDrip(it)
                         if (sp.getBoolean(R.string.key_dexcomg5_nsupload, false)) {
                             nsUpload.updateBg(it, sourceSensor.text)
-                            //aapsLogger.debug("XXXXX: dpUpdate $it")
                         }
+                        aapsLogger.debug(LTag.BGSOURCE, "Updated bg $it")
                     }
                 }, {
                     aapsLogger.error("Error while saving values from Dexcom App", it)
+                    ret = Result.failure()
                 })
             } catch (e: Exception) {
                 aapsLogger.error("Error while processing intent from Dexcom App", e)
+                ret = Result.failure()
             }
-            return Result.success()
+            return ret
         }
     }
 

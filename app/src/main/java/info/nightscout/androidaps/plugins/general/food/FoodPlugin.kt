@@ -19,8 +19,6 @@ import info.nightscout.androidaps.utils.JsonHelper
 import info.nightscout.androidaps.utils.extensions.foodFromJson
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 import info.nightscout.androidaps.utils.sharedPreferences.SP
-import io.reactivex.disposables.CompositeDisposable
-import io.reactivex.rxkotlin.plusAssign
 import org.json.JSONArray
 import org.json.JSONObject
 import javax.inject.Inject
@@ -41,8 +39,6 @@ class FoodPlugin @Inject constructor(
     aapsLogger, resourceHelper, injector
 ) {
 
-    private val disposable = CompositeDisposable()
-
     // cannot be inner class because of needed injection
     class FoodWorker(
         context: Context,
@@ -54,7 +50,6 @@ class FoodPlugin @Inject constructor(
         @Inject lateinit var repository: AppRepository
         @Inject lateinit var sp: SP
         @Inject lateinit var bundleStore: BundleStore
-        @Inject lateinit var foodPlugin: FoodPlugin
 
         init {
             (context.applicationContext as HasAndroidInjector).androidInjector().inject(this)
@@ -83,25 +78,31 @@ class FoodPlugin @Inject constructor(
                             isValid = false
                         ).also { it.interfaceIDs.nightscoutId = JsonHelper.safeGetString(jsonFood, "_id") }
 
-                        foodPlugin.disposable += repository.runTransactionForResult(SyncFoodTransaction(delFood)).subscribe({ result ->
-                            result.invalidated.forEach { aapsLogger.debug(LTag.DATAFOOD, "Invalidated food ${it.interfaceIDs.nightscoutId}") }
-                        }, {
-                            aapsLogger.error(LTag.DATAFOOD, "Error while removing food", it)
-                            ret = Result.failure()
-                        })
+                        repository.runTransactionForResult(SyncFoodTransaction(delFood))
+                            .doOnError {
+                                aapsLogger.error(LTag.DATAFOOD, "Error while removing food", it)
+                                ret = Result.failure()
+                            }
+                            .blockingGet()
+                            .also {
+                                it.invalidated.forEach { f -> aapsLogger.debug(LTag.DATAFOOD, "Invalidated food ${f.interfaceIDs.nightscoutId}") }
+                            }
                     }
 
                     else     -> {
                         val food = foodFromJson(jsonFood)
                         if (food != null) {
-                            foodPlugin.disposable += repository.runTransactionForResult(SyncFoodTransaction(food)).subscribe({ result ->
-                                result.inserted.forEach { aapsLogger.debug(LTag.DATAFOOD, "Inserted food $it") }
-                                result.updated.forEach { aapsLogger.debug(LTag.DATAFOOD, "Updated food $it") }
-                                result.invalidated.forEach { aapsLogger.debug(LTag.DATAFOOD, "Invalidated food $it") }
-                            }, {
-                                aapsLogger.error(LTag.DATAFOOD, "Error while adding/updating food", it)
-                                ret = Result.failure()
-                            })
+                            repository.runTransactionForResult(SyncFoodTransaction(food))
+                                .doOnError {
+                                    aapsLogger.error(LTag.DATAFOOD, "Error while adding/updating food", it)
+                                    ret = Result.failure()
+                                }
+                                .blockingGet()
+                                .also { result ->
+                                    result.inserted.forEach { aapsLogger.debug(LTag.DATAFOOD, "Inserted food $it") }
+                                    result.updated.forEach { aapsLogger.debug(LTag.DATAFOOD, "Updated food $it") }
+                                    result.invalidated.forEach { aapsLogger.debug(LTag.DATAFOOD, "Invalidated food $it") }
+                                }
                         } else {
                             aapsLogger.error(LTag.DATAFOOD, "Error parsing food", jsonFood.toString())
                             ret = Result.failure()

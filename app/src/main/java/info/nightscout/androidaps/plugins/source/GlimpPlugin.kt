@@ -18,8 +18,6 @@ import info.nightscout.androidaps.plugins.general.nsclient.NSUpload
 import info.nightscout.androidaps.utils.XDripBroadcast
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 import info.nightscout.androidaps.utils.sharedPreferences.SP
-import io.reactivex.disposables.CompositeDisposable
-import io.reactivex.rxkotlin.plusAssign
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -37,13 +35,6 @@ class GlimpPlugin @Inject constructor(
     .description(R.string.description_source_glimp),
     aapsLogger, resourceHelper, injector
 ), BgSourceInterface {
-
-    private val disposable = CompositeDisposable()
-
-    override fun onStop() {
-        disposable.clear()
-        super.onStop()
-    }
 
     // cannot be inner class because of needed injection
     class GlimpWorker(
@@ -64,6 +55,8 @@ class GlimpPlugin @Inject constructor(
         }
 
         override fun doWork(): Result {
+            var ret = Result.success()
+
             if (!glimpPlugin.isEnabled(PluginType.BGSOURCE)) return Result.failure()
             aapsLogger.debug(LTag.BGSOURCE, "Received Glimp Data: $inputData}")
             val glucoseValues = mutableListOf<CgmSourceTransaction.TransactionGlucoseValue>()
@@ -75,16 +68,21 @@ class GlimpPlugin @Inject constructor(
                 trendArrow = GlucoseValue.TrendArrow.fromString(inputData.getString("myTrend")),
                 sourceSensor = GlucoseValue.SourceSensor.GLIMP
             )
-            glimpPlugin.disposable += repository.runTransactionForResult(CgmSourceTransaction(glucoseValues, emptyList(), null)).subscribe({ savedValues ->
-                savedValues.inserted.forEach {
-                    broadcastToXDrip(it)
-                    if (sp.getBoolean(R.string.key_dexcomg5_nsupload, false))
-                        nsUpload.uploadBg(it, GlucoseValue.SourceSensor.GLIMP.text)
+            repository.runTransactionForResult(CgmSourceTransaction(glucoseValues, emptyList(), null))
+                .doOnError {
+                    aapsLogger.error("Error while saving values from Glimp App", it)
+                    ret = Result.failure()
                 }
-            }, {
-                aapsLogger.error("Error while saving values from Glimp App", it)
-            })
-            return Result.success()
+                .blockingGet()
+                .also { savedValues ->
+                    savedValues.inserted.forEach {
+                        broadcastToXDrip(it)
+                        if (sp.getBoolean(R.string.key_dexcomg5_nsupload, false))
+                            nsUpload.uploadBg(it, GlucoseValue.SourceSensor.GLIMP.text)
+                        aapsLogger.debug(LTag.BGSOURCE, "Inserted bg $it")
+                    }
+                }
+            return ret
         }
     }
 }
