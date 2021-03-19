@@ -309,6 +309,7 @@
     <string name="friday_short">ו\'</string>
     <string name="saturday_short">ש\'</string>
     <string name="sunday_short">א\'</string>
+    <!-- User Entry -->
     <plurals name="days">
         <item quantity="one">%1$d יום</item>
         <item quantity="two">%1$d ימים</item>
