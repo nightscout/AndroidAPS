@@ -51,6 +51,7 @@ object JsonHelper {
         return result
     }
 
+    @JvmStatic
     fun safeGetStringAllowNull(json: JSONObject?, fieldName: String, defaultValue: String?): String? {
         var result = defaultValue
         if (json != null && json.has(fieldName)) {
@@ -112,7 +113,7 @@ object JsonHelper {
     }
 
     fun safeGetIntAllowNull(json: JSONObject?, fieldName: String): Int? {
-        var result : Int? = null
+        var result: Int? = null
         if (json != null && json.has(fieldName)) {
             try {
                 result = json.getInt(fieldName)

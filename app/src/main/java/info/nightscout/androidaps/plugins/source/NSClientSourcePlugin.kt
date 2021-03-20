@@ -16,6 +16,7 @@ import info.nightscout.androidaps.interfaces.PluginType
 import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.logging.LTag
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper
+import info.nightscout.androidaps.plugins.general.nsclient.NSClientPlugin
 import info.nightscout.androidaps.plugins.general.nsclient.NSUpload
 import info.nightscout.androidaps.plugins.general.nsclient.data.NSSgv
 import info.nightscout.androidaps.plugins.general.overview.events.EventDismissNotification
@@ -26,7 +27,6 @@ import info.nightscout.androidaps.utils.T
 import info.nightscout.androidaps.utils.XDripBroadcast
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 import info.nightscout.androidaps.utils.sharedPreferences.SP
-import org.json.JSONArray
 import org.json.JSONObject
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -91,6 +91,7 @@ class NSClientSourcePlugin @Inject constructor(
         @Inject lateinit var repository: AppRepository
         @Inject lateinit var broadcastToXDrip: XDripBroadcast
         @Inject lateinit var dexcomPlugin: DexcomPlugin
+        @Inject lateinit var nsClientPlugin: NSClientPlugin
 
         init {
             (context.applicationContext as HasAndroidInjector).androidInjector().inject(this)
@@ -134,6 +135,8 @@ class NSClientSourcePlugin @Inject constructor(
                     rxBus.send(EventDismissNotification(Notification.NS_ALARM))
                     rxBus.send(EventDismissNotification(Notification.NS_URGENT_ALARM))
                 }
+
+                nsClientPlugin.updateLatestDateReceivedIfNewer(latestDateInReceivedData)
 
                 repository.runTransactionForResult(CgmSourceTransaction(glucoseValues, emptyList(), null, !nsClientSourcePlugin.isEnabled()))
                     .doOnError {

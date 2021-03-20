@@ -4,13 +4,17 @@ import android.content.Context
 import androidx.work.Worker
 import androidx.work.WorkerParameters
 import dagger.android.HasAndroidInjector
+import info.nightscout.androidaps.R
 import info.nightscout.androidaps.database.AppRepository
 import info.nightscout.androidaps.database.transactions.SyncTherapyEventTransaction
+import info.nightscout.androidaps.interfaces.ConfigInterface
 import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.logging.LTag
 import info.nightscout.androidaps.plugins.general.nsclient.data.NSMbg
 import info.nightscout.androidaps.receivers.DataWorker
+import info.nightscout.androidaps.utils.buildHelper.BuildHelper
 import info.nightscout.androidaps.utils.extensions.therapyEventFromNsMbg
+import info.nightscout.androidaps.utils.sharedPreferences.SP
 import javax.inject.Inject
 
 class NSClientMbgWorker(
@@ -21,9 +25,15 @@ class NSClientMbgWorker(
     @Inject lateinit var repository: AppRepository
     @Inject lateinit var dataWorker: DataWorker
     @Inject lateinit var aapsLogger: AAPSLogger
+    @Inject lateinit var sp: SP
+    @Inject lateinit var buildHelper: BuildHelper
+    @Inject lateinit var config: ConfigInterface
 
     override fun doWork(): Result {
         var ret = Result.success()
+
+        val acceptNSData = !sp.getBoolean(R.string.key_ns_upload_only, true) && buildHelper.isEngineeringMode() || config.NSCLIENT
+        if (!acceptNSData) return ret
 
         val mbgArray = dataWorker.pickupJSONArray(inputData.getLong(DataWorker.STORE_KEY, -1))
             ?: return Result.failure()

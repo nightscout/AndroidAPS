@@ -38,13 +38,14 @@ import info.nightscout.androidaps.events.EventConfigBuilderChange;
 import info.nightscout.androidaps.events.EventPreferenceChange;
 import info.nightscout.androidaps.interfaces.DatabaseHelperInterface;
 import info.nightscout.androidaps.interfaces.PluginType;
-import info.nightscout.androidaps.interfaces.ProfileStore;
 import info.nightscout.androidaps.logging.AAPSLogger;
 import info.nightscout.androidaps.logging.LTag;
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper;
 import info.nightscout.androidaps.plugins.general.food.FoodPlugin;
+import info.nightscout.androidaps.plugins.general.nsclient.NSClientAddUpdateWorker;
 import info.nightscout.androidaps.plugins.general.nsclient.NSClientMbgWorker;
 import info.nightscout.androidaps.plugins.general.nsclient.NSClientPlugin;
+import info.nightscout.androidaps.plugins.general.nsclient.NSClientRemoveWorker;
 import info.nightscout.androidaps.plugins.general.nsclient.UploadQueue;
 import info.nightscout.androidaps.plugins.general.nsclient.acks.NSAddAck;
 import info.nightscout.androidaps.plugins.general.nsclient.acks.NSAuthAck;
@@ -53,7 +54,6 @@ import info.nightscout.androidaps.plugins.general.nsclient.data.AlarmAck;
 import info.nightscout.androidaps.plugins.general.nsclient.data.NSAlarm;
 import info.nightscout.androidaps.plugins.general.nsclient.data.NSDeviceStatus;
 import info.nightscout.androidaps.plugins.general.nsclient.data.NSSettingsStatus;
-import info.nightscout.androidaps.plugins.general.nsclient.data.NSTreatment;
 import info.nightscout.androidaps.plugins.general.nsclient.events.EventNSClientNewLog;
 import info.nightscout.androidaps.plugins.general.nsclient.events.EventNSClientRestart;
 import info.nightscout.androidaps.plugins.general.nsclient.events.EventNSClientStatus;
@@ -568,38 +568,54 @@ public class NSClientService extends DaggerService {
                         if (data.has("treatments")) {
                             JSONArray treatments = data.getJSONArray("treatments");
                             JSONArray removedTreatments = new JSONArray();
-                            JSONArray updatedTreatments = new JSONArray();
-                            JSONArray addedTreatments = new JSONArray();
+                            JSONArray addedOrUpdatedTreatments = new JSONArray();
                             if (treatments.length() > 0)
                                 rxBus.send(new EventNSClientNewLog("DATA", "received " + treatments.length() + " treatments"));
                             for (Integer index = 0; index < treatments.length(); index++) {
                                 JSONObject jsonTreatment = treatments.getJSONObject(index);
-                                NSTreatment treatment = new NSTreatment(jsonTreatment);
+                                String action = JsonHelper.safeGetStringAllowNull(jsonTreatment, "action", null);
+                                long mills = JsonHelper.safeGetLong(jsonTreatment, "mills");
 
-                                // remove from upload queue if Ack is failing
-                                uploadQueue.removeID(jsonTreatment);
-                                //Find latest date in treatment
-                                if (treatment.getMills() != null && treatment.getMills() < System.currentTimeMillis())
-                                    if (treatment.getMills() > latestDateInReceivedData)
-                                        latestDateInReceivedData = treatment.getMills();
-
-                                if (treatment.getAction() == null) {
-                                    addedTreatments.put(jsonTreatment);
-                                } else if (treatment.getAction().equals("update")) {
-                                    updatedTreatments.put(jsonTreatment);
-                                } else if (treatment.getAction().equals("remove")) {
-                                    if (treatment.getMills() != null && treatment.getMills() > System.currentTimeMillis() - 24 * 60 * 60 * 1000L) // handle 1 day old deletions only
-                                        removedTreatments.put(jsonTreatment);
-                                }
+                                if (action == null) addedOrUpdatedTreatments.put(jsonTreatment);
+                                else if (action.equals("update"))
+                                    addedOrUpdatedTreatments.put(jsonTreatment);
+                                else if (action.equals("remove") && mills > dateUtil._now() - T.days(1).msecs()) // handle 1 day old deletions only
+                                    removedTreatments.put(jsonTreatment);
                             }
                             if (removedTreatments.length() > 0) {
-                                handleRemovedTreatment(removedTreatments, isDelta);
+                                dataWorker.enqueue(
+                                        new OneTimeWorkRequest.Builder(NSClientRemoveWorker.class)
+                                                .setInputData(dataWorker.storeInputData(removedTreatments, null))
+                                                .build());
+
+                                if (sp.getBoolean(R.string.key_nsclient_localbroadcasts, false)) {
+                                    Bundle bundle = new Bundle();
+                                    bundle.putString("treatments", removedTreatments.toString());
+                                    bundle.putBoolean("delta", isDelta);
+                                    Intent intent = new Intent(Intents.ACTION_REMOVED_TREATMENT);
+                                    intent.putExtras(bundle);
+                                    intent.addFlags(Intent.FLAG_INCLUDE_STOPPED_PACKAGES);
+                                    sendBroadcast(intent);
+                                }
                             }
-                            if (updatedTreatments.length() > 0) {
-                                handleChangedTreatment(updatedTreatments, isDelta);
-                            }
-                            if (addedTreatments.length() > 0) {
-                                handleNewTreatment(addedTreatments, isDelta);
+                            if (addedOrUpdatedTreatments.length() > 0) {
+                                dataWorker.enqueue(
+                                        new OneTimeWorkRequest.Builder(NSClientAddUpdateWorker.class)
+                                                .setInputData(dataWorker.storeInputData(addedOrUpdatedTreatments, null))
+                                                .build());
+
+                                if (sp.getBoolean(R.string.key_nsclient_localbroadcasts, false)) {
+                                    List<JSONArray> splitted = splitArray(addedOrUpdatedTreatments);
+                                    for (JSONArray part : splitted) {
+                                        Bundle bundle = new Bundle();
+                                        bundle.putString("treatments", part.toString());
+                                        bundle.putBoolean("delta", isDelta);
+                                        Intent intent = new Intent(Intents.ACTION_CHANGED_TREATMENT);
+                                        intent.putExtras(bundle);
+                                        intent.addFlags(Intent.FLAG_INCLUDE_STOPPED_PACKAGES);
+                                        sendBroadcast(intent);
+                                    }
+                                }
                             }
                         }
                         if (data.has("devicestatus")) {
@@ -847,54 +863,6 @@ public class NSClientService extends DaggerService {
             }
         }
     }
-
-    public void handleChangedTreatment(JSONArray treatments, boolean isDelta) {
-        List<JSONArray> splitted = splitArray(treatments);
-        for (JSONArray part : splitted) {
-            Bundle bundle = new Bundle();
-            bundle.putString("treatments", part.toString());
-            bundle.putBoolean("delta", isDelta);
-            Intent intent = new Intent(Intents.ACTION_CHANGED_TREATMENT);
-            intent.putExtras(bundle);
-            intent.addFlags(Intent.FLAG_INCLUDE_STOPPED_PACKAGES);
-            LocalBroadcastManager.getInstance(this).sendBroadcast(intent);
-        }
-
-        if (sp.getBoolean(R.string.key_nsclient_localbroadcasts, false)) {
-            splitted = splitArray(treatments);
-            for (JSONArray part : splitted) {
-                Bundle bundle = new Bundle();
-                bundle.putString("treatments", part.toString());
-                bundle.putBoolean("delta", isDelta);
-                Intent intent = new Intent(Intents.ACTION_CHANGED_TREATMENT);
-                intent.putExtras(bundle);
-                intent.addFlags(Intent.FLAG_INCLUDE_STOPPED_PACKAGES);
-                this.getApplicationContext().sendBroadcast(intent);
-            }
-        }
-    }
-
-    public void handleRemovedTreatment(JSONArray treatments, boolean isDelta) {
-        Bundle bundle = new Bundle();
-        bundle.putString("treatments", treatments.toString());
-        bundle.putBoolean("delta", isDelta);
-        Intent intent = new Intent(Intents.ACTION_REMOVED_TREATMENT);
-        intent.putExtras(bundle);
-        intent.addFlags(Intent.FLAG_INCLUDE_STOPPED_PACKAGES);
-        LocalBroadcastManager.getInstance(this).sendBroadcast(intent);
-
-
-        if (sp.getBoolean(R.string.key_nsclient_localbroadcasts, false)) {
-            bundle = new Bundle();
-            bundle.putString("treatments", treatments.toString());
-            bundle.putBoolean("delta", isDelta);
-            intent = new Intent(Intents.ACTION_REMOVED_TREATMENT);
-            intent.putExtras(bundle);
-            intent.addFlags(Intent.FLAG_INCLUDE_STOPPED_PACKAGES);
-            this.getApplicationContext().sendBroadcast(intent);
-        }
-    }
-
 
     public List<JSONArray> splitArray(JSONArray array) {
         List<JSONArray> ret = new ArrayList<>();

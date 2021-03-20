@@ -9,7 +9,6 @@ import dagger.android.DaggerBroadcastReceiver
 import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.logging.BundleLogger
 import info.nightscout.androidaps.logging.LTag
-import info.nightscout.androidaps.plugins.general.nsclient.NSClientWorker
 import info.nightscout.androidaps.plugins.general.smsCommunicator.SmsCommunicatorPlugin
 import info.nightscout.androidaps.plugins.source.*
 import info.nightscout.androidaps.services.Intents
@@ -71,11 +70,6 @@ open class DataReceiver : DaggerBroadcastReceiver() {
                     .setInputData(dataWorker.storeInputData(bundle, intent)).build()
             Intents.DEXCOM_BG                         ->
                 OneTimeWorkRequest.Builder(DexcomPlugin.DexcomWorker::class.java)
-                    .setInputData(dataWorker.storeInputData(bundle, intent)).build()
-            Intents.ACTION_NEW_TREATMENT,
-            Intents.ACTION_CHANGED_TREATMENT,
-            Intents.ACTION_REMOVED_TREATMENT ->
-                OneTimeWorkRequest.Builder(NSClientWorker::class.java)
                     .setInputData(dataWorker.storeInputData(bundle, intent)).build()
             else                                      -> null
         }?.let { request -> dataWorker.enqueue(request) }
