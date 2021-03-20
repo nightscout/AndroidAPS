@@ -2,7 +2,7 @@
 <resources>
     <string name="automation_short">Auto</string>
     <string name="automation">Automatização</string>
-    <string name="automation_description">Tarefas de automação definidas pelo utilizador</string>
+    <string name="automation_description">Tarefas de automatização definidas pelo utilizador</string>
     <string name="automation_missing_task_name">Insira um nome da tarefa.</string>
     <string name="automation_missing_trigger">Especifique pelo menos um gatilho.</string>
     <string name="automation_missing_action">Especifique pelo menos uma acção.</string>
@@ -105,6 +105,6 @@
     <string name="triggers">Gatilhos:</string>
     <string name="remove_label">REMOVER</string>
     <string name="preconditions">Precondições:</string>
-    <string name="automation_event">Evento de automação</string>
+    <string name="automation_event">Evento de automatização</string>
     <string name="reorder_label">Reordenar</string>
 </resources>
