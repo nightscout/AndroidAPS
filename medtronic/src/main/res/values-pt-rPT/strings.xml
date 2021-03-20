@@ -56,7 +56,7 @@
     <string name="medtronic_cmd_set_profile_pattern_overflow">Falhou Definir Perfil devido aos seguintes padrões, tem uma taxa de basal muito grande: %1$s</string>
     <string name="medtronic_cmd_bolus_could_not_be_delivered">O bólus não pôde ser administrado.</string>
     <string name="medtronic_cmd_bolus_could_not_be_delivered_no_insulin">Bólus não foi administado, porque o quantidade de insulina disponível (%1$.2f) é menor que o bólus necessário (%2$.2f).</string>
-    <string name="medtronic_cmd_tbr_could_not_be_delivered">DBT não pode ser definida.</string>
+    <string name="medtronic_cmd_tbr_could_not_be_delivered">DBT não pôde ser definida.</string>
     <string name="medtronic_cmd_cant_cancel_tbr">Não foi possível cancelar a DBT actual.</string>
     <string name="medtronic_cmd_basal_profile_could_not_be_set">Perfil Basal não pôde ser definido.</string>
     <string name="medtronic_cmd_basal_profile_not_set_is_same">Perfil Basal é o mesmo, então não será definido novamente.</string>
