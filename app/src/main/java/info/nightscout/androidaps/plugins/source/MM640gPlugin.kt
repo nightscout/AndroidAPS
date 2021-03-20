@@ -15,7 +15,7 @@ import info.nightscout.androidaps.interfaces.PluginType
 import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.logging.LTag
 import info.nightscout.androidaps.plugins.general.nsclient.NSUpload
-import info.nightscout.androidaps.receivers.BundleStore
+import info.nightscout.androidaps.receivers.DataWorker
 import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.XDripBroadcast
 import info.nightscout.androidaps.utils.resources.ResourceHelper
@@ -51,7 +51,7 @@ class MM640gPlugin @Inject constructor(
         @Inject lateinit var sp: SP
         @Inject lateinit var nsUpload: NSUpload
         @Inject lateinit var dateUtil: DateUtil
-        @Inject lateinit var bundleStore: BundleStore
+        @Inject lateinit var dataWorker: DataWorker
         @Inject lateinit var repository: AppRepository
         @Inject lateinit var broadcastToXDrip: XDripBroadcast
 

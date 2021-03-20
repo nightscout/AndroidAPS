@@ -15,10 +15,14 @@ import info.nightscout.androidaps.interfaces.PluginDescription
 import info.nightscout.androidaps.interfaces.PluginType
 import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.logging.LTag
+import info.nightscout.androidaps.plugins.bus.RxBusWrapper
 import info.nightscout.androidaps.plugins.general.nsclient.NSUpload
 import info.nightscout.androidaps.plugins.general.nsclient.data.NSSgv
-import info.nightscout.androidaps.receivers.BundleStore
+import info.nightscout.androidaps.plugins.general.overview.events.EventDismissNotification
+import info.nightscout.androidaps.plugins.general.overview.notifications.Notification
+import info.nightscout.androidaps.receivers.DataWorker
 import info.nightscout.androidaps.utils.DateUtil
+import info.nightscout.androidaps.utils.T
 import info.nightscout.androidaps.utils.XDripBroadcast
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 import info.nightscout.androidaps.utils.sharedPreferences.SP
@@ -80,9 +84,10 @@ class NSClientSourcePlugin @Inject constructor(
         @Inject lateinit var injector: HasAndroidInjector
         @Inject lateinit var aapsLogger: AAPSLogger
         @Inject lateinit var sp: SP
+        @Inject lateinit var rxBus: RxBusWrapper
         @Inject lateinit var nsUpload: NSUpload
         @Inject lateinit var dateUtil: DateUtil
-        @Inject lateinit var bundleStore: BundleStore
+        @Inject lateinit var dataWorker: DataWorker
         @Inject lateinit var repository: AppRepository
         @Inject lateinit var broadcastToXDrip: XDripBroadcast
         @Inject lateinit var dexcomPlugin: DexcomPlugin
@@ -109,18 +114,27 @@ class NSClientSourcePlugin @Inject constructor(
             var ret = Result.success()
 
             if (!nsClientSourcePlugin.isEnabled() && !sp.getBoolean(R.string.key_ns_autobackfill, true) && !dexcomPlugin.isEnabled()) return Result.failure()
+
+            val sgvs = dataWorker.pickupJSONArray(inputData.getLong(DataWorker.STORE_KEY, -1))
+                ?: return Result.failure()
+
             try {
+                var latestDateInReceivedData: Long = 0
+
+                aapsLogger.debug(LTag.BGSOURCE, "Received NS Data: $sgvs")
                 val glucoseValues = mutableListOf<CgmSourceTransaction.TransactionGlucoseValue>()
-                inputData.getString("sgv")?.let { sgvString ->
-                    aapsLogger.debug(LTag.BGSOURCE, "Received NS Data: $sgvString")
-                    glucoseValues += toGv(JSONObject(sgvString))
+                for (i in 0 until sgvs.length()) {
+                    val sgv = toGv(sgvs.getJSONObject(i))
+                    if (sgv.timestamp < dateUtil._now() && sgv.timestamp > latestDateInReceivedData) latestDateInReceivedData = sgv.timestamp
+                    glucoseValues += sgv
+
                 }
-                inputData.getString("sgvs")?.let { sgvString ->
-                    aapsLogger.debug(LTag.BGSOURCE, "Received NS Data: $sgvString")
-                    val jsonArray = JSONArray(sgvString)
-                    for (i in 0 until jsonArray.length())
-                        glucoseValues += toGv(jsonArray.getJSONObject(i))
+                // Was that sgv more less 5 mins ago ?
+                if (T.msecs(dateUtil._now() - latestDateInReceivedData).mins() < 5L) {
+                    rxBus.send(EventDismissNotification(Notification.NS_ALARM))
+                    rxBus.send(EventDismissNotification(Notification.NS_URGENT_ALARM))
                 }
+
                 repository.runTransactionForResult(CgmSourceTransaction(glucoseValues, emptyList(), null, !nsClientSourcePlugin.isEnabled()))
                     .doOnError {
                         aapsLogger.error("Error while saving values from NSClient App", it)

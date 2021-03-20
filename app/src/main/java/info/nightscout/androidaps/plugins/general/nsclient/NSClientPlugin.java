@@ -433,7 +433,7 @@ public class NSClientPlugin extends PluginBase {
         // room  Therapy Event
         TherapyEvent therapyEvent = therapyEventFromNsIdForInvalidating(_id);
         disposable.add(repository.runTransactionForResult(new SyncTherapyEventTransaction(therapyEvent)).subscribe(
-                result -> result.getInvalidated().forEach(record -> uel.log(Action.CAREPORTAL_DELETED_FROM_NS, record.getNote() , new ValueWithUnit(record.getTimestamp(), Units.Timestamp, true), new ValueWithUnit(record.getType().getText(), Units.TherapyEvent))),
+                result -> result.getInvalidated().forEach(record -> uel.log(Action.CAREPORTAL_DELETED_FROM_NS, record.getNote() != null ? record.getNote() : "" , new ValueWithUnit(record.getTimestamp(), Units.Timestamp, true), new ValueWithUnit(record.getType().getText(), Units.TherapyEvent))),
                 error -> aapsLogger.error(LTag.DATABASE, "Error while removing therapy event", error)));
         // new DB model
         EventNsTreatment evtTreatment = new EventNsTreatment(EventNsTreatment.Companion.getREMOVE(), json);
@@ -493,8 +493,8 @@ public class NSClientPlugin extends PluginBase {
                 disposable.add(repository.runTransactionForResult(new SyncTherapyEventTransaction(therapyEvent))
                         .subscribe(
                                 result -> {
-                                    result.getInserted().forEach(record -> uel.log(Action.CAREPORTAL_FROM_NS, record.getNote() , new ValueWithUnit(record.getTimestamp(), Units.Timestamp, true), new ValueWithUnit(record.getType().getText(), Units.TherapyEvent)));
-                                    result.getInvalidated().forEach(record -> uel.log(Action.CAREPORTAL_DELETED_FROM_NS, record.getNote() , new ValueWithUnit(record.getTimestamp(), Units.Timestamp, true), new ValueWithUnit(record.getType().getText(), Units.TherapyEvent)));
+                                    result.getInserted().forEach(record -> uel.log(Action.CAREPORTAL_FROM_NS, record.getNote() != null ? record.getNote() : "", new ValueWithUnit(record.getTimestamp(), Units.Timestamp, true), new ValueWithUnit(record.getType().getText(), Units.TherapyEvent)));
+                                    result.getInvalidated().forEach(record -> uel.log(Action.CAREPORTAL_DELETED_FROM_NS, record.getNote() != null ? record.getNote() : "" , new ValueWithUnit(record.getTimestamp(), Units.Timestamp, true), new ValueWithUnit(record.getType().getText(), Units.TherapyEvent)));
                                 },
                                 error -> aapsLogger.error(LTag.DATABASE, "Error while saving therapy event", error)));
             } else {

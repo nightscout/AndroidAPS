@@ -13,8 +13,7 @@ import info.nightscout.androidaps.interfaces.PluginDescription
 import info.nightscout.androidaps.interfaces.PluginType
 import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.logging.LTag
-import info.nightscout.androidaps.receivers.BundleStore
-import info.nightscout.androidaps.receivers.DataReceiver
+import info.nightscout.androidaps.receivers.DataWorker
 import info.nightscout.androidaps.utils.JsonHelper
 import info.nightscout.androidaps.utils.extensions.foodFromJson
 import info.nightscout.androidaps.utils.resources.ResourceHelper
@@ -49,21 +48,19 @@ class FoodPlugin @Inject constructor(
         @Inject lateinit var aapsLogger: AAPSLogger
         @Inject lateinit var repository: AppRepository
         @Inject lateinit var sp: SP
-        @Inject lateinit var bundleStore: BundleStore
+        @Inject lateinit var dataWorker: DataWorker
 
         init {
             (context.applicationContext as HasAndroidInjector).androidInjector().inject(this)
         }
 
         override fun doWork(): Result {
-            aapsLogger.debug(LTag.DATAFOOD, "Received Food Data: $inputData}")
-            val bundle = bundleStore.pickup(inputData.getLong(DataReceiver.STORE_KEY, -1))
+            val foods = dataWorker.pickupJSONArray(inputData.getLong(DataWorker.STORE_KEY, -1))
                 ?: return Result.failure()
+            aapsLogger.debug(LTag.DATAFOOD, "Received Food Data: $foods")
 
             var ret = Result.success()
 
-            val foodsString = bundle.getString("foods") ?: return Result.failure()
-            val foods = JSONArray(foodsString)
             for (index in 0 until foods.length()) {
                 val jsonFood: JSONObject = foods.getJSONObject(index)
 

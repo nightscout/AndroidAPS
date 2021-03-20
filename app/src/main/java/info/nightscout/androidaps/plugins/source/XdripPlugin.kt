@@ -14,8 +14,7 @@ import info.nightscout.androidaps.interfaces.PluginDescription
 import info.nightscout.androidaps.interfaces.PluginType
 import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.logging.LTag
-import info.nightscout.androidaps.receivers.BundleStore
-import info.nightscout.androidaps.receivers.DataReceiver
+import info.nightscout.androidaps.receivers.DataWorker
 import info.nightscout.androidaps.services.Intents
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 import javax.inject.Inject
@@ -62,7 +61,7 @@ class XdripPlugin @Inject constructor(
         @Inject lateinit var aapsLogger: AAPSLogger
         @Inject lateinit var xdripPlugin: XdripPlugin
         @Inject lateinit var repository: AppRepository
-        @Inject lateinit var bundleStore: BundleStore
+        @Inject lateinit var dataWorker: DataWorker
 
         init {
             (context.applicationContext as HasAndroidInjector).androidInjector().inject(this)
@@ -72,7 +71,7 @@ class XdripPlugin @Inject constructor(
             var ret = Result.success()
 
             if (!xdripPlugin.isEnabled(PluginType.BGSOURCE)) return Result.failure()
-            val bundle = bundleStore.pickup(inputData.getLong(DataReceiver.STORE_KEY, -1))
+            val bundle = dataWorker.pickupBundle(inputData.getLong(DataWorker.STORE_KEY, -1))
                 ?: return Result.failure()
 
             aapsLogger.debug(LTag.BGSOURCE, "Received xDrip data: $bundle")

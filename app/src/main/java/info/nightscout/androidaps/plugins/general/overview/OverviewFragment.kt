@@ -839,7 +839,7 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
                 val toTime: Long
                 val fromTime: Long
                 val endTime: Long
-                val apsResult = if (config.APS) lastRun?.constraintsProcessed else NSDeviceStatus.getAPSResult(injector)
+                val apsResult = if (config.APS) lastRun?.constraintsProcessed else nsDeviceStatus.getAPSResult(injector)
                 if (predictionsAvailable && apsResult != null && menuChartSettings[0][OverviewMenus.CharType.PRE.ordinal]) {
                     var predictionHours = (ceil(apsResult.latestPredictionsTime - System.currentTimeMillis().toDouble()) / (60 * 60 * 1000)).toInt()
                     predictionHours = min(2, predictionHours)

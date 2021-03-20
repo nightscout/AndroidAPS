@@ -11,6 +11,7 @@ import android.os.PowerManager;
 import android.os.SystemClock;
 
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
+import androidx.work.OneTimeWorkRequest;
 
 import com.google.common.base.Charsets;
 import com.google.common.hash.Hashing;
@@ -41,6 +42,7 @@ import info.nightscout.androidaps.interfaces.ProfileStore;
 import info.nightscout.androidaps.logging.AAPSLogger;
 import info.nightscout.androidaps.logging.LTag;
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper;
+import info.nightscout.androidaps.plugins.general.food.FoodPlugin;
 import info.nightscout.androidaps.plugins.general.nsclient.NSClientPlugin;
 import info.nightscout.androidaps.plugins.general.nsclient.UploadQueue;
 import info.nightscout.androidaps.plugins.general.nsclient.acks.NSAddAck;
@@ -60,6 +62,9 @@ import info.nightscout.androidaps.plugins.general.overview.events.EventDismissNo
 import info.nightscout.androidaps.plugins.general.overview.events.EventNewNotification;
 import info.nightscout.androidaps.plugins.general.overview.notifications.Notification;
 import info.nightscout.androidaps.plugins.general.overview.notifications.NotificationWithAction;
+import info.nightscout.androidaps.plugins.profile.ns.NSProfilePlugin;
+import info.nightscout.androidaps.plugins.source.NSClientSourcePlugin;
+import info.nightscout.androidaps.receivers.DataWorker;
 import info.nightscout.androidaps.services.Intents;
 import info.nightscout.androidaps.utils.DateUtil;
 import info.nightscout.androidaps.utils.FabricPrivacy;
@@ -90,6 +95,7 @@ public class NSClientService extends DaggerService {
     @Inject Config config;
     @Inject DateUtil dateUtil;
     @Inject UploadQueue uploadQueue;
+    @Inject DataWorker dataWorker;
 
     private final CompositeDisposable disposable = new CompositeDisposable();
 
@@ -534,16 +540,6 @@ public class NSClientService extends DaggerService {
                         boolean isFull = !isDelta;
                         rxBus.send(new EventNSClientNewLog("DATA", "Data packet #" + dataCounter++ + (isDelta ? " delta" : " full")));
 
-                        if (data.has("profiles")) {
-                            JSONArray profiles = data.getJSONArray("profiles");
-                            if (profiles.length() > 0) {
-                                JSONObject profile = (JSONObject) profiles.get(profiles.length() - 1);
-                                profileStore = new ProfileStore(injector, profile);
-                                broadcastProfile = true;
-                                rxBus.send(new EventNSClientNewLog("PROFILE", "profile received"));
-                            }
-                        }
-
                         if (data.has("status")) {
                             JSONObject status = data.getJSONObject("status");
                             nsSettingsStatus.setData(status);
@@ -558,30 +554,48 @@ public class NSClientService extends DaggerService {
                             }
                             nsSettingsStatus.handleNewData(nightscoutVersionName, nightscoutVersionCode, status);
 
-                /*  Other received data to 2016/02/10
-                    {
-                      status: 'ok'
-                      , name: env.name
-                      , version: env.version
-                      , versionNum: versionNum (for ver 1.2.3 contains 10203)
-                      , serverTime: new Date().toISOString()
-                      , apiEnabled: apiEnabled
-                      , careportalEnabled: apiEnabled && env.settings.enable.indexOf('careportal') > -1
-                      , boluscalcEnabled: apiEnabled && env.settings.enable.indexOf('boluscalc') > -1
-                      , head: env.head
-                      , settings: env.settings
-                      , extendedSettings: ctx.plugins && ctx.plugins.extendedClientSettings ? ctx.plugins.extendedClientSettings(env.extendedSettings) : {}
-                      , activeProfile ..... calculated from treatments or missing
-                    }
-                 */
+                            /*  Other received data to 2016/02/10
+                                {
+                                  status: 'ok'
+                                  , name: env.name
+                                  , version: env.version
+                                  , versionNum: versionNum (for ver 1.2.3 contains 10203)
+                                  , serverTime: new Date().toISOString()
+                                  , apiEnabled: apiEnabled
+                                  , careportalEnabled: apiEnabled && env.settings.enable.indexOf('careportal') > -1
+                                  , boluscalcEnabled: apiEnabled && env.settings.enable.indexOf('boluscalc') > -1
+                                  , head: env.head
+                                  , settings: env.settings
+                                  , extendedSettings: ctx.plugins && ctx.plugins.extendedClientSettings ? ctx.plugins.extendedClientSettings(env.extendedSettings) : {}
+                                  , activeProfile ..... calculated from treatments or missing
+                                }
+                             */
                         } else if (!isDelta) {
                             rxBus.send(new EventNSClientNewLog("ERROR", "Unsupported Nightscout version !!!!"));
                         }
 
                         // If new profile received or change detected broadcast it
-                        if (broadcastProfile && profileStore != null) {
-                            handleNewProfile(profileStore, isDelta);
-                            rxBus.send(new EventNSClientNewLog("PROFILE", "broadcasting"));
+                        if (data.has("profiles")) {
+                            JSONArray profiles = data.getJSONArray("profiles");
+                            if (profiles.length() > 0) {
+                                // take the newest
+                                JSONObject profileStoreJson = (JSONObject) profiles.get(profiles.length() - 1);
+                                rxBus.send(new EventNSClientNewLog("PROFILE", "profile received"));
+                                dataWorker.enqueue(
+                                        new OneTimeWorkRequest.Builder(NSProfilePlugin.NSProfileWorker.class)
+                                                .setInputData(dataWorker.storeInputData(profileStoreJson, null))
+                                                .build());
+
+                                if (sp.getBoolean(R.string.key_nsclient_localbroadcasts, false)) {
+                                    Bundle bundle = new Bundle();
+                                    bundle.putString("profile", profileStoreJson.toString());
+                                    bundle.putBoolean("delta", isDelta);
+                                    Intent intent = new Intent(Intents.ACTION_NEW_PROFILE);
+                                    intent.putExtras(bundle);
+                                    intent.addFlags(Intent.FLAG_INCLUDE_STOPPED_PACKAGES);
+                                    sendBroadcast(intent);
+                                }
+                            }
                         }
 
                         if (data.has("treatments")) {
@@ -635,8 +649,12 @@ public class NSClientService extends DaggerService {
                         }
                         if (data.has("food")) {
                             JSONArray foods = data.getJSONArray("food");
-                            if (foods.length() > 0) rxBus.send(new EventNSClientNewLog("DATA", "received " + foods.length() + " foods"));
-                            handleFood(foods, isDelta);
+                            if (foods.length() > 0)
+                                rxBus.send(new EventNSClientNewLog("DATA", "received " + foods.length() + " foods"));
+                            dataWorker.enqueue(
+                                    new OneTimeWorkRequest.Builder(FoodPlugin.FoodWorker.class)
+                                            .setInputData(dataWorker.storeInputData(foods, null))
+                                            .build());
                         }
                         if (data.has("mbgs")) {
                             JSONArray mbgs = data.getJSONArray("mbgs");
@@ -664,24 +682,23 @@ public class NSClientService extends DaggerService {
                             JSONArray sgvs = data.getJSONArray("sgvs");
                             if (sgvs.length() > 0)
                                 rxBus.send(new EventNSClientNewLog("DATA", "received " + sgvs.length() + " sgvs"));
-                            for (int index = 0; index < sgvs.length(); index++) {
-                                JSONObject jsonSgv = sgvs.getJSONObject(index);
-                                // rxBus.send(new EventNSClientNewLog("DATA", "svg " + sgvs.getJSONObject(index).toString());
-                                NSSgv sgv = new NSSgv(jsonSgv);
-                                // Handle new sgv here
-                                // remove from upload queue if Ack is failing
-                                uploadQueue.removeID(jsonSgv);
-                                //Find latest date in sgv
-                                if (sgv.getMills() != null && sgv.getMills() < System.currentTimeMillis())
-                                    if (sgv.getMills() > latestDateInReceivedData)
-                                        latestDateInReceivedData = sgv.getMills();
+
+                            dataWorker.enqueue(new OneTimeWorkRequest.Builder(NSClientSourcePlugin.NSClientSourceWorker.class)
+                                    .setInputData(dataWorker.storeInputData(sgvs, null))
+                                    .build());
+
+                            List<JSONArray> splitted = splitArray(sgvs);
+                            if (sp.getBoolean(R.string.key_nsclient_localbroadcasts, false)) {
+                                for (JSONArray part : splitted) {
+                                    Bundle bundle = new Bundle();
+                                    bundle.putString("sgvs", part.toString());
+                                    bundle.putBoolean("delta", isDelta);
+                                    Intent intent = new Intent(Intents.ACTION_NEW_SGV);
+                                    intent.putExtras(bundle);
+                                    intent.addFlags(Intent.FLAG_INCLUDE_STOPPED_PACKAGES);
+                                    sendBroadcast(intent);
+                                }
                             }
-                            // Was that sgv more less 5 mins ago ?
-                            if ((System.currentTimeMillis() - latestDateInReceivedData) / (60 * 1000L) < 5L) {
-                                rxBus.send(new EventDismissNotification(Notification.NS_ALARM));
-                                rxBus.send(new EventDismissNotification(Notification.NS_URGENT_ALARM));
-                            }
-                            handleNewSgv(sgvs, isDelta);
                         }
                         rxBus.send(new EventNSClientNewLog("LAST", dateUtil.dateAndTimeString(latestDateInReceivedData)));
                     } catch (JSONException e) {
@@ -849,16 +866,6 @@ public class NSClientService extends DaggerService {
         }
     }
 
-    public void handleFood(JSONArray foods, boolean isDelta) {
-        Bundle bundle = new Bundle();
-        bundle.putString("foods", foods.toString());
-        bundle.putBoolean("delta", isDelta);
-        Intent intent = new Intent(Intents.ACTION_FOOD);
-        intent.putExtras(bundle);
-        intent.addFlags(Intent.FLAG_INCLUDE_STOPPED_PACKAGES);
-        LocalBroadcastManager.getInstance(this).sendBroadcast(intent);
-    }
-
     public void handleNewCal(JSONArray cals, boolean isDelta) {
         Bundle bundle = new Bundle();
         bundle.putString("cals", cals.toString());
@@ -877,51 +884,6 @@ public class NSClientService extends DaggerService {
         intent.putExtras(bundle);
         intent.addFlags(Intent.FLAG_INCLUDE_STOPPED_PACKAGES);
         LocalBroadcastManager.getInstance(this).sendBroadcast(intent);
-    }
-
-    public void handleNewProfile(ProfileStore profile, boolean isDelta) {
-        Bundle bundle = new Bundle();
-        bundle.putString("profile", profile.getData().toString());
-        bundle.putBoolean("delta", isDelta);
-        Intent intent = new Intent(Intents.ACTION_NEW_PROFILE);
-        intent.putExtras(bundle);
-        intent.addFlags(Intent.FLAG_INCLUDE_STOPPED_PACKAGES);
-        LocalBroadcastManager.getInstance(this).sendBroadcast(intent);
-
-        if (sp.getBoolean(R.string.key_nsclient_localbroadcasts, false)) {
-            bundle = new Bundle();
-            bundle.putString("profile", profile.getData().toString());
-            bundle.putBoolean("delta", isDelta);
-            intent = new Intent(Intents.ACTION_NEW_PROFILE);
-            intent.putExtras(bundle);
-            intent.addFlags(Intent.FLAG_INCLUDE_STOPPED_PACKAGES);
-            this.sendBroadcast(intent);
-        }
-    }
-
-    public void handleNewSgv(JSONArray sgvs, boolean isDelta) {
-        List<JSONArray> splitted = splitArray(sgvs);
-        for (JSONArray part : splitted) {
-            Bundle bundle = new Bundle();
-            bundle.putString("sgvs", part.toString());
-            bundle.putBoolean("delta", isDelta);
-            Intent intent = new Intent(Intents.ACTION_NEW_SGV);
-            intent.putExtras(bundle);
-            intent.addFlags(Intent.FLAG_INCLUDE_STOPPED_PACKAGES);
-            LocalBroadcastManager.getInstance(this).sendBroadcast(intent);
-        }
-
-        if (sp.getBoolean(R.string.key_nsclient_localbroadcasts, false)) {
-            for (JSONArray part : splitted) {
-                Bundle bundle = new Bundle();
-                bundle.putString("sgvs", part.toString());
-                bundle.putBoolean("delta", isDelta);
-                Intent intent = new Intent(Intents.ACTION_NEW_SGV);
-                intent.putExtras(bundle);
-                intent.addFlags(Intent.FLAG_INCLUDE_STOPPED_PACKAGES);
-                this.sendBroadcast(intent);
-            }
-        }
     }
 
     public void handleNewTreatment(JSONArray treatments, boolean isDelta) {

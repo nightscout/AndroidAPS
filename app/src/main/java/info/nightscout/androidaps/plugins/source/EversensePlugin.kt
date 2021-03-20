@@ -17,8 +17,7 @@ import info.nightscout.androidaps.interfaces.PluginType
 import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.logging.LTag
 import info.nightscout.androidaps.plugins.general.nsclient.NSUpload
-import info.nightscout.androidaps.receivers.BundleStore
-import info.nightscout.androidaps.receivers.DataReceiver
+import info.nightscout.androidaps.receivers.DataWorker
 import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.XDripBroadcast
 import info.nightscout.androidaps.utils.resources.ResourceHelper
@@ -57,7 +56,7 @@ class EversensePlugin @Inject constructor(
         @Inject lateinit var sp: SP
         @Inject lateinit var nsUpload: NSUpload
         @Inject lateinit var dateUtil: DateUtil
-        @Inject lateinit var bundleStore: BundleStore
+        @Inject lateinit var dataWorker: DataWorker
         @Inject lateinit var repository: AppRepository
         @Inject lateinit var broadcastToXDrip: XDripBroadcast
 
@@ -69,7 +68,7 @@ class EversensePlugin @Inject constructor(
             var ret = Result.success()
 
             if (!eversensePlugin.isEnabled(PluginType.BGSOURCE)) return Result.failure()
-            val bundle = bundleStore.pickup(inputData.getLong(DataReceiver.STORE_KEY, -1))
+            val bundle = dataWorker.pickupBundle(inputData.getLong(DataWorker.STORE_KEY, -1))
                 ?: return Result.failure()
             if (bundle.containsKey("currentCalibrationPhase")) aapsLogger.debug(LTag.BGSOURCE, "currentCalibrationPhase: " + bundle.getString("currentCalibrationPhase"))
             if (bundle.containsKey("placementModeInProgress")) aapsLogger.debug(LTag.BGSOURCE, "placementModeInProgress: " + bundle.getBoolean("placementModeInProgress"))
