@@ -387,6 +387,11 @@
     <string name="uel_sms_extended_bolus">BOLUS ÉTENDU SMS</string>
     <string name="uel_sms_loop_disabled">BOUCLE DÉSACTIVÉE SMS</string>
     <string name="uel_sms_loop_enabled">BOUCLE ACTIVÉE SMS</string>
+    <string name="uel_export_csv">ENTRÉES UTILISATEUR EXPORTÉES</string>
+    <string name="uel_unknown">INCONNU</string>
+    <string name="formated_string">Chaîne de caractères formatée</string>
+    <string name="ue_export_to_csv">Exporter les entrées utilisateur vers Excel (csv)</string>
+    <string name="ue_csv_header">"Horodatage;Date;Décalage TU;Action;Note;Valeur;Unité"</string>
     <plurals name="days">
         <item quantity="one">%1$d jour</item>
         <item quantity="other">%1$d jours</item>
