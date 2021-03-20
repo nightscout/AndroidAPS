@@ -20,14 +20,14 @@ class UserEntryLogger @Inject constructor(
 
     private val compositeDisposable = CompositeDisposable()
 
-    fun log(action: Action, s: String, vararg listvalues: ValueWithUnit) {
+    fun log(action: Action, s: String? ="", vararg listvalues: ValueWithUnit) {
         val values = mutableListOf<ValueWithUnit>()
         for (v in listvalues){
             if (v.condition) values.add(v)
         }
         compositeDisposable += repository.runTransaction(UserEntryTransaction(
             action = action,
-            s = s,
+            s = s ?:"",
             values = values
         ))
             .subscribeOn(aapsSchedulers.io)
@@ -56,10 +56,10 @@ class UserEntryLogger @Inject constructor(
             )
     }
 
-    fun log(action: Action, s: String = "") {
+    fun log(action: Action, s: String? = "") {
         compositeDisposable += repository.runTransaction(UserEntryTransaction(
             action = action,
-            s = s
+            s = s ?:""
         ))
             .subscribeOn(aapsSchedulers.io)
             .observeOn(aapsSchedulers.io)
@@ -69,10 +69,10 @@ class UserEntryLogger @Inject constructor(
             )
     }
 
-    fun log(action: Action, s: String = "",  values: MutableList<ValueWithUnit>) {
+    fun log(action: Action, s: String? = "",  values: MutableList<ValueWithUnit>) {
         compositeDisposable += repository.runTransaction(UserEntryTransaction(
             action = action,
-            s = s,
+            s = s ?:"",
             values = values
         ))
             .subscribeOn(aapsSchedulers.io)

@@ -37,6 +37,7 @@ public class RileyLinkConst {
         public static final String LastGoodDeviceCommunicationTime = Prefix + "lastGoodDeviceCommunicationTime";
         public static final String LastGoodDeviceFrequency = Prefix + "LastGoodDeviceFrequency";
         public static final int Encoding = R.string.key_medtronic_encoding;
+        public static final int ShowBatteryLevel = R.string.key_riley_link_show_battery_level;
     }
 
     public static class IPC {

@@ -4,6 +4,7 @@ import org.joda.time.DateTimeZone;
 import org.joda.time.Duration;
 
 import java.util.Date;
+import java.util.Locale;
 import java.util.Map;
 
 import javax.inject.Inject;
@@ -85,10 +86,10 @@ public class MedtronicUIPostprocessor {
                     } else {
                         uiTask.responseType = MedtronicUIResponseType.Error;
                         uiTask.errorDescription = "No profile found.";
-                        aapsLogger.error("Basal Profile was NOT valid. [{}]", basalProfile.basalProfileToStringError());
+                        aapsLogger.error(LTag.PUMPCOMM, String.format(Locale.ENGLISH, "Basal Profile was NOT valid. [%s]", basalProfile.basalProfileToStringError()));
                     }
                 } catch (Exception ex) {
-                    aapsLogger.error("Basal Profile was returned, but was invalid. [{}]", basalProfile.basalProfileToStringError());
+                    aapsLogger.error(LTag.PUMPCOMM, String.format(Locale.ENGLISH, "Basal Profile was returned, but was invalid. [%s]", basalProfile.basalProfileToStringError()));
                     uiTask.responseType = MedtronicUIResponseType.Error;
                     uiTask.errorDescription = "No profile found.";
                 }
@@ -121,7 +122,7 @@ public class MedtronicUIPostprocessor {
             case SetRealTimeClock: {
                 boolean response = (Boolean) uiTask.returnData;
 
-                aapsLogger.debug(LTag.PUMP, "New time was {} set.", response ? "" : "NOT");
+                aapsLogger.debug(LTag.PUMP, String.format(Locale.ENGLISH, "New time was %s set.", response ? "" : "NOT"));
 
                 if (response) {
                     medtronicUtil.getPumpTime().timeDifference = 0;
@@ -139,7 +140,7 @@ public class MedtronicUIPostprocessor {
                     medtronicPumpStatus.batteryVoltage = batteryStatusDTO.voltage;
                 }
 
-                aapsLogger.debug(LTag.PUMP, "BatteryStatus: {}", batteryStatusDTO.toString());
+                aapsLogger.debug(LTag.PUMP, String.format(Locale.ENGLISH, "BatteryStatus: %s", batteryStatusDTO.toString()));
 
             }
             break;
@@ -162,7 +163,7 @@ public class MedtronicUIPostprocessor {
 
             default:
                 break;
-                //aapsLogger.error(LTag.PUMP, "Post-processing not implemented for {}.", uiTask.commandType.name());
+            //aapsLogger.error(LTag.PUMP, "Post-processing not implemented for {}.", uiTask.commandType.name());
 
         }
 
@@ -236,14 +237,14 @@ public class MedtronicUIPostprocessor {
         checkValue = settings.get("PCFG_MAX_BOLUS");
 
         if (!MedtronicUtil.isSame(Double.parseDouble(checkValue.value), medtronicPumpStatus.maxBolus)) {
-            aapsLogger.error("Wrong Max Bolus set on Pump (current={}, required={}).", checkValue.value, medtronicPumpStatus.maxBolus);
+            aapsLogger.error(LTag.PUMPCOMM, String.format(Locale.ENGLISH, "Wrong Max Bolus set on Pump (current=%s, required=%.2f).", checkValue.value, medtronicPumpStatus.maxBolus));
             medtronicUtil.sendNotification(MedtronicNotificationType.PumpWrongMaxBolusSet, resourceHelper, rxBus, medtronicPumpStatus.maxBolus);
         }
 
         checkValue = settings.get("PCFG_MAX_BASAL");
 
         if (!MedtronicUtil.isSame(Double.parseDouble(checkValue.value), medtronicPumpStatus.maxBasal)) {
-            aapsLogger.error("Wrong Max Basal set on Pump (current={}, required={}).", checkValue.value, medtronicPumpStatus.maxBasal);
+            aapsLogger.error(LTag.PUMPCOMM, String.format(Locale.ENGLISH, "Wrong Max Basal set on Pump (current=%s, required=%.2f).", checkValue.value, medtronicPumpStatus.maxBasal));
             medtronicUtil.sendNotification(MedtronicNotificationType.PumpWrongMaxBasalSet, resourceHelper, rxBus, medtronicPumpStatus.maxBasal);
         }
 

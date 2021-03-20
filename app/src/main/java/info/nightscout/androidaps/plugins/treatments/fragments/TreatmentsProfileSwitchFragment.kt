@@ -17,10 +17,10 @@ import info.nightscout.androidaps.db.Source
 import info.nightscout.androidaps.dialogs.ProfileViewerDialog
 import info.nightscout.androidaps.events.EventProfileNeedsUpdate
 import info.nightscout.androidaps.interfaces.DatabaseHelperInterface
+import info.nightscout.androidaps.interfaces.UploadQueueInterface
 import info.nightscout.androidaps.logging.UserEntryLogger
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper
 import info.nightscout.androidaps.plugins.general.nsclient.NSUpload
-import info.nightscout.androidaps.plugins.general.nsclient.UploadQueue
 import info.nightscout.androidaps.plugins.general.nsclient.events.EventNSClientRestart
 import info.nightscout.androidaps.plugins.profile.local.LocalProfilePlugin
 import info.nightscout.androidaps.plugins.profile.local.events.EventLocalProfileChanged
@@ -47,7 +47,7 @@ class TreatmentsProfileSwitchFragment : DaggerFragment() {
     @Inject lateinit var resourceHelper: ResourceHelper
     @Inject lateinit var fabricPrivacy: FabricPrivacy
     @Inject lateinit var nsUpload: NSUpload
-    @Inject lateinit var uploadQueue: UploadQueue
+    @Inject lateinit var uploadQueue: UploadQueueInterface
     @Inject lateinit var dateUtil: DateUtil
     @Inject lateinit var buildHelper: BuildHelper
     @Inject lateinit var aapsSchedulers: AapsSchedulers
@@ -151,7 +151,7 @@ class TreatmentsProfileSwitchFragment : DaggerFragment() {
                             uel.log(Action.PROFILE_SWITCH_REMOVED, profileSwitch.profileName, ValueWithUnit(profileSwitch.date, Units.Timestamp))
                             val id = profileSwitch._id
                             if (NSUpload.isIdValid(id)) nsUpload.removeCareportalEntryFromNS(id)
-                            else uploadQueue.removeID("dbAdd", id)
+                            else uploadQueue.removeByMongoId("dbAdd", id)
                             databaseHelper.delete(profileSwitch)
                         })
                     }

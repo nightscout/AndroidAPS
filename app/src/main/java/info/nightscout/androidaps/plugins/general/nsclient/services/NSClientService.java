@@ -38,6 +38,7 @@ import info.nightscout.androidaps.events.EventConfigBuilderChange;
 import info.nightscout.androidaps.events.EventPreferenceChange;
 import info.nightscout.androidaps.interfaces.DatabaseHelperInterface;
 import info.nightscout.androidaps.interfaces.PluginType;
+import info.nightscout.androidaps.interfaces.UploadQueueInterface;
 import info.nightscout.androidaps.logging.AAPSLogger;
 import info.nightscout.androidaps.logging.LTag;
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper;
@@ -46,7 +47,6 @@ import info.nightscout.androidaps.plugins.general.nsclient.NSClientAddUpdateWork
 import info.nightscout.androidaps.plugins.general.nsclient.NSClientMbgWorker;
 import info.nightscout.androidaps.plugins.general.nsclient.NSClientPlugin;
 import info.nightscout.androidaps.plugins.general.nsclient.NSClientRemoveWorker;
-import info.nightscout.androidaps.plugins.general.nsclient.UploadQueue;
 import info.nightscout.androidaps.plugins.general.nsclient.acks.NSAddAck;
 import info.nightscout.androidaps.plugins.general.nsclient.acks.NSAuthAck;
 import info.nightscout.androidaps.plugins.general.nsclient.acks.NSUpdateAck;
@@ -94,7 +94,7 @@ public class NSClientService extends DaggerService {
     @Inject BuildHelper buildHelper;
     @Inject Config config;
     @Inject DateUtil dateUtil;
-    @Inject UploadQueue uploadQueue;
+    @Inject UploadQueueInterface uploadQueue;
     @Inject DataWorker dataWorker;
 
     private final CompositeDisposable disposable = new CompositeDisposable();
@@ -214,7 +214,7 @@ public class NSClientService extends DaggerService {
 
     public void processAddAck(NSAddAck ack) {
         if (ack.nsClientID != null) {
-            uploadQueue.removeID(ack.json);
+            uploadQueue.removeByNsClientIdIfExists(ack.json);
             rxBus.send(new EventNSClientNewLog("DBADD", "Acked " + ack.nsClientID));
         } else {
             rxBus.send(new EventNSClientNewLog("ERROR", "DBADD Unknown response"));
@@ -223,7 +223,7 @@ public class NSClientService extends DaggerService {
 
     public void processUpdateAck(NSUpdateAck ack) {
         if (ack.result) {
-            uploadQueue.removeID(ack.action, ack._id);
+            uploadQueue.removeByMongoId(ack.action, ack._id);
             rxBus.send(new EventNSClientNewLog("DBUPDATE/DBREMOVE", "Acked " + ack._id));
         } else {
             rxBus.send(new EventNSClientNewLog("ERROR", "DBUPDATE/DBREMOVE Unknown response"));

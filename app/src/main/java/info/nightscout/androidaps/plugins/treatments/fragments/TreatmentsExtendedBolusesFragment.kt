@@ -22,10 +22,10 @@ import info.nightscout.androidaps.events.EventExtendedBolusChange
 import info.nightscout.androidaps.interfaces.ActivePluginProvider
 import info.nightscout.androidaps.interfaces.DatabaseHelperInterface
 import info.nightscout.androidaps.interfaces.ProfileFunction
+import info.nightscout.androidaps.interfaces.UploadQueueInterface
 import info.nightscout.androidaps.logging.UserEntryLogger
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper
 import info.nightscout.androidaps.plugins.general.nsclient.NSUpload
-import info.nightscout.androidaps.plugins.general.nsclient.UploadQueue
 import info.nightscout.androidaps.plugins.treatments.fragments.TreatmentsExtendedBolusesFragment.RecyclerViewAdapter.ExtendedBolusesViewHolder
 import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.FabricPrivacy
@@ -44,7 +44,7 @@ class TreatmentsExtendedBolusesFragment : DaggerFragment() {
     @Inject lateinit var resourceHelper: ResourceHelper
     @Inject lateinit var fabricPrivacy: FabricPrivacy
     @Inject lateinit var nsUpload: NSUpload
-    @Inject lateinit var uploadQueue: UploadQueue
+    @Inject lateinit var uploadQueue: UploadQueueInterface
     @Inject lateinit var profileFunction: ProfileFunction
     @Inject lateinit var dateUtil: DateUtil
     @Inject lateinit var aapsSchedulers: AapsSchedulers
@@ -126,7 +126,7 @@ class TreatmentsExtendedBolusesFragment : DaggerFragment() {
                             uel.log(Action.EXTENDED_BOLUS_REMOVED)
                             val id = extendedBolus._id
                             if (NSUpload.isIdValid(id)) nsUpload.removeCareportalEntryFromNS(id)
-                            else uploadQueue.removeID("dbAdd", id)
+                            else uploadQueue.removeByMongoId("dbAdd", id)
                             databaseHelper.delete(extendedBolus)
                         }, null)
                     }
