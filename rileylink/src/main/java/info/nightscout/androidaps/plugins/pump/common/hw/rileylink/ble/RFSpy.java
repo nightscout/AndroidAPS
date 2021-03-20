@@ -116,7 +116,7 @@ public class RFSpy {
         if (result.resultCode == BLECommOperationResult.RESULT_SUCCESS) {
             if (ArrayUtils.isNotEmpty(result.value)) {
                 int value = result.value[0];
-                aapsLogger.debug(LTag.PUMPBTCOMM, "BLE battery level: " + value);
+                aapsLogger.debug(LTag.PUMPBTCOMM, "getBatteryLevel response received: " + value);
                 return value;
             } else {
                 aapsLogger.error(LTag.PUMPBTCOMM, "getBatteryLevel received an empty result. Value: " + result.value);
