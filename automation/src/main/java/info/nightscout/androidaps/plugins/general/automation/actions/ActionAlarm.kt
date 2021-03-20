@@ -26,10 +26,10 @@ class ActionAlarm(injector: HasAndroidInjector) : Action(injector) {
     @Inject lateinit var context: Context
     @Inject lateinit var timerUtil: TimerUtil
 
-    var text = InputString(injector)
+    var text = InputString()
 
     constructor(injector: HasAndroidInjector, text: String) : this(injector) {
-        this.text = InputString(injector, text)
+        this.text = InputString(text)
     }
 
     override fun friendlyName(): Int = R.string.alarm
@@ -62,7 +62,7 @@ class ActionAlarm(injector: HasAndroidInjector) : Action(injector) {
 
     override fun generateDialog(root: LinearLayout) {
         LayoutBuilder()
-            .add(LabelWithElement(injector, resourceHelper.gs(R.string.alarm_short), "", text))
+            .add(LabelWithElement(resourceHelper, resourceHelper.gs(R.string.alarm_short), "", text))
             .build(root)
     }
 }

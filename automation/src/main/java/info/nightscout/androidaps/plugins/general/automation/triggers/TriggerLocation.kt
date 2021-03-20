@@ -12,11 +12,11 @@ import org.json.JSONObject
 import java.text.DecimalFormat
 
 class TriggerLocation(injector: HasAndroidInjector) : Trigger(injector) {
-    var latitude = InputDouble(injector, 0.0, -90.0, +90.0, 0.000001, DecimalFormat("0.000000"))
-    var longitude = InputDouble(injector, 0.0, -180.0, +180.0, 0.000001, DecimalFormat("0.000000"))
-    var distance = InputDouble(injector, 200.0, 0.0, 100000.0, 10.0, DecimalFormat("0"))
-    var modeSelected = InputLocationMode(injector)
-    var name: InputString = InputString(injector)
+    var latitude = InputDouble(0.0, -90.0, +90.0, 0.000001, DecimalFormat("0.000000"))
+    var longitude = InputDouble(0.0, -180.0, +180.0, 0.000001, DecimalFormat("0.000000"))
+    var distance = InputDouble(200.0, 0.0, 100000.0, 10.0, DecimalFormat("0"))
+    var modeSelected = InputLocationMode(resourceHelper)
+    var name: InputString = InputString()
 
     var lastMode = InputLocationMode.Mode.INSIDE
     private val buttonAction = Runnable {
@@ -28,10 +28,10 @@ class TriggerLocation(injector: HasAndroidInjector) : Trigger(injector) {
     }
 
     private constructor(injector: HasAndroidInjector, triggerLocation: TriggerLocation) : this(injector) {
-        latitude = InputDouble(injector, triggerLocation.latitude)
-        longitude = InputDouble(injector, triggerLocation.longitude)
-        distance = InputDouble(injector, triggerLocation.distance)
-        modeSelected = InputLocationMode(injector, triggerLocation.modeSelected.value)
+        latitude = InputDouble(triggerLocation.latitude)
+        longitude = InputDouble(triggerLocation.longitude)
+        distance = InputDouble(triggerLocation.distance)
+        modeSelected = InputLocationMode(resourceHelper, triggerLocation.modeSelected.value)
         if (modeSelected.value == InputLocationMode.Mode.GOING_OUT)
             lastMode = InputLocationMode.Mode.OUTSIDE
         name = triggerLocation.name
@@ -91,13 +91,13 @@ class TriggerLocation(injector: HasAndroidInjector) : Trigger(injector) {
 
     override fun generateDialog(root: LinearLayout) {
         LayoutBuilder()
-            .add(StaticLabel(injector, R.string.location, this))
-            .add(LabelWithElement(injector, resourceHelper.gs(R.string.name_short), "", name))
-            .add(LabelWithElement(injector, resourceHelper.gs(R.string.latitude_short), "", latitude))
-            .add(LabelWithElement(injector, resourceHelper.gs(R.string.longitude_short), "", longitude))
-            .add(LabelWithElement(injector, resourceHelper.gs(R.string.distance_short), "", distance))
-            .add(LabelWithElement(injector, resourceHelper.gs(R.string.location_mode), "", modeSelected))
-            .add(InputButton(injector, resourceHelper.gs(R.string.currentlocation), buttonAction), locationDataContainer.lastLocation != null)
+            .add(StaticLabel(resourceHelper, R.string.location, this))
+            .add(LabelWithElement(resourceHelper, resourceHelper.gs(R.string.name_short), "", name))
+            .add(LabelWithElement(resourceHelper, resourceHelper.gs(R.string.latitude_short), "", latitude))
+            .add(LabelWithElement(resourceHelper, resourceHelper.gs(R.string.longitude_short), "", longitude))
+            .add(LabelWithElement(resourceHelper, resourceHelper.gs(R.string.distance_short), "", distance))
+            .add(LabelWithElement(resourceHelper, resourceHelper.gs(R.string.location_mode), "", modeSelected))
+            .maybeAdd(InputButton(resourceHelper.gs(R.string.currentlocation), buttonAction), locationDataContainer.lastLocation != null)
             .build(root)
     }
 

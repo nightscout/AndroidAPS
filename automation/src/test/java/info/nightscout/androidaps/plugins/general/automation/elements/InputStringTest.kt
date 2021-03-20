@@ -10,7 +10,7 @@ import org.powermock.modules.junit4.PowerMockRunner
 class InputStringTest : TriggerTestBase() {
 
     @Test fun setValueTest() {
-        val i = InputString(injector)
+        val i = InputString()
         i.value = "asd"
         Assert.assertEquals("asd", i.value)
     }

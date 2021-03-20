@@ -44,7 +44,7 @@ class ActionProfileSwitchTest : ActionsTestBase() {
     @Test fun doAction() {
         //Empty input
         `when`(profileFunction.getProfileName()).thenReturn("Test")
-        sut.inputProfileName = InputProfileName(injector, "")
+        sut.inputProfileName = InputProfileName(resourceHelper, activePlugin, "")
         sut.doAction(object : Callback() {
             override fun run() {
                 Assert.assertFalse(result.success)
@@ -53,7 +53,7 @@ class ActionProfileSwitchTest : ActionsTestBase() {
 
         //Not initialized profileStore
         `when`(profileFunction.getProfile()).thenReturn(null)
-        sut.inputProfileName = InputProfileName(injector, "someProfile")
+        sut.inputProfileName = InputProfileName(resourceHelper, activePlugin, "someProfile")
         sut.doAction(object : Callback() {
             override fun run() {
                 Assert.assertFalse(result.success)
@@ -63,7 +63,7 @@ class ActionProfileSwitchTest : ActionsTestBase() {
         //profile already set
         `when`(profileFunction.getProfile()).thenReturn(validProfile)
         `when`(profileFunction.getProfileName()).thenReturn("Test")
-        sut.inputProfileName = InputProfileName(injector, "Test")
+        sut.inputProfileName = InputProfileName(resourceHelper, activePlugin, "Test")
         sut.doAction(object : Callback() {
             override fun run() {
                 Assert.assertTrue(result.success)
@@ -73,7 +73,7 @@ class ActionProfileSwitchTest : ActionsTestBase() {
 
         // profile doesn't exists
         `when`(profileFunction.getProfileName()).thenReturn("Active")
-        sut.inputProfileName = InputProfileName(injector, "Test")
+        sut.inputProfileName = InputProfileName(resourceHelper, activePlugin, "Test")
         sut.doAction(object : Callback() {
             override fun run() {
                 Assert.assertFalse(result.success)
@@ -83,7 +83,7 @@ class ActionProfileSwitchTest : ActionsTestBase() {
 
         // do profile switch
         `when`(profileFunction.getProfileName()).thenReturn("Test")
-        sut.inputProfileName = InputProfileName(injector, TESTPROFILENAME)
+        sut.inputProfileName = InputProfileName(resourceHelper, activePlugin, TESTPROFILENAME)
         sut.doAction(object : Callback() {
             override fun run() {
                 Assert.assertTrue(result.success)
@@ -98,7 +98,7 @@ class ActionProfileSwitchTest : ActionsTestBase() {
     }
 
     @Test fun toJSONTest() {
-        sut.inputProfileName = InputProfileName(injector, "Test")
+        sut.inputProfileName = InputProfileName(resourceHelper, activePlugin, "Test")
         Assert.assertEquals(stringJson, sut.toJSON())
     }
 
