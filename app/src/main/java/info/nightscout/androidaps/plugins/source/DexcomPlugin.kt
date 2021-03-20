@@ -153,6 +153,18 @@ class DexcomPlugin @Inject constructor(
                         }
                         aapsLogger.debug(LTag.BGSOURCE, "Updated bg $it")
                     }
+                    result.sensorInsertionsInserted.forEach {
+                        if (sp.getBoolean(R.string.key_dexcomg5_nsupload, false)) {
+                            nsUpload.uploadEvent(it)
+                        }
+                        aapsLogger.debug(LTag.BGSOURCE, "Inserted sensor insertion $it")
+                    }
+                    result.calibrationsInserted.forEach {
+                        if (sp.getBoolean(R.string.key_dexcomg5_nsupload, false)) {
+                            nsUpload.uploadEvent(it)
+                        }
+                        aapsLogger.debug(LTag.BGSOURCE, "Inserted calibration $it")
+                    }
                 }, {
                     aapsLogger.error("Error while saving values from Dexcom App", it)
                     ret = Result.failure()

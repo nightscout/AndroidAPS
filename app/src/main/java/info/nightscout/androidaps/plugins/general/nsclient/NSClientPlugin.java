@@ -31,7 +31,9 @@ import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.database.AppRepository;
 import info.nightscout.androidaps.database.entities.TemporaryTarget;
 import info.nightscout.androidaps.database.entities.TherapyEvent;
-import info.nightscout.androidaps.database.entities.UserEntry.*;
+import info.nightscout.androidaps.database.entities.UserEntry.Action;
+import info.nightscout.androidaps.database.entities.UserEntry.Units;
+import info.nightscout.androidaps.database.entities.UserEntry.ValueWithUnit;
 import info.nightscout.androidaps.database.transactions.SyncTemporaryTargetTransaction;
 import info.nightscout.androidaps.database.transactions.SyncTherapyEventTransaction;
 import info.nightscout.androidaps.events.EventAppExit;
@@ -50,7 +52,6 @@ import info.nightscout.androidaps.logging.UserEntryLogger;
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper;
 import info.nightscout.androidaps.plugins.general.nsclient.data.AlarmAck;
 import info.nightscout.androidaps.plugins.general.nsclient.data.NSAlarm;
-import info.nightscout.androidaps.plugins.general.nsclient.data.NSMbg;
 import info.nightscout.androidaps.plugins.general.nsclient.events.EventNSClientNewLog;
 import info.nightscout.androidaps.plugins.general.nsclient.events.EventNSClientResend;
 import info.nightscout.androidaps.plugins.general.nsclient.events.EventNSClientStatus;
@@ -73,7 +74,6 @@ import static info.nightscout.androidaps.utils.extensions.TemporaryTargetExtensi
 import static info.nightscout.androidaps.utils.extensions.TemporaryTargetExtensionKt.temporaryTargetFromNsIdForInvalidating;
 import static info.nightscout.androidaps.utils.extensions.TherapyEventExtensionKt.therapyEventFromJson;
 import static info.nightscout.androidaps.utils.extensions.TherapyEventExtensionKt.therapyEventFromNsIdForInvalidating;
-import static info.nightscout.androidaps.utils.extensions.TherapyEventExtensionKt.therapyEventFromNsMbg;
 
 @Singleton
 public class NSClientPlugin extends PluginBase {
@@ -257,7 +257,7 @@ public class NSClientPlugin extends PluginBase {
             SwitchPreference key_ns_sync_use_absolute = preferenceFragment.findPreference(resourceHelper.gs(R.string.key_ns_sync_use_absolute));
             if (key_ns_sync_use_absolute != null) key_ns_sync_use_absolute.setVisible(false);
         } else {
-            // APS or pumpcontrol mode
+            // APS or pumpControl mode
             SwitchPreference key_ns_upload_only = preferenceFragment.findPreference(resourceHelper.gs(R.string.key_ns_upload_only));
             if (key_ns_upload_only != null)
                 key_ns_upload_only.setVisible(buildHelper.isEngineeringMode());
@@ -400,26 +400,6 @@ public class NSClientPlugin extends PluginBase {
             }
         }
 
-        if (action.equals(Intents.ACTION_NEW_MBG)) {
-            try {
-                if (bundle.containsKey("mbg")) {
-                    String mbgstring = bundle.getString("mbg");
-                    JSONObject mbgJson = new JSONObject(mbgstring);
-                    storeMbg(mbgJson);
-                }
-
-                if (bundle.containsKey("mbgs")) {
-                    String sgvstring = bundle.getString("mbgs");
-                    JSONArray jsonArray = new JSONArray(sgvstring);
-                    for (int i = 0; i < jsonArray.length(); i++) {
-                        JSONObject mbgJson = jsonArray.getJSONObject(i);
-                        storeMbg(mbgJson);
-                    }
-                }
-            } catch (Exception e) {
-                aapsLogger.error(LTag.DATASERVICE, "Unhandled exception", e);
-            }
-        }
     }
 
     private void handleRemovedTreatmentFromNS(JSONObject json) {
@@ -518,13 +498,4 @@ public class NSClientPlugin extends PluginBase {
         }
     }
 
-    private void storeMbg(JSONObject mbgJson) {
-        NSMbg nsMbg = new NSMbg(getInjector(), mbgJson);
-        if (nsMbg.mbg != 0.0 && nsMbg.date != 0)
-            disposable.add(repository.runTransactionForResult(new SyncTherapyEventTransaction(therapyEventFromNsMbg(nsMbg)))
-                    .subscribe(
-                            result -> aapsLogger.debug(LTag.DATABASE, "Saved therapy event" + result),
-                            error -> aapsLogger.error("Error while saving therapy event", error))
-            );
-    }
 }

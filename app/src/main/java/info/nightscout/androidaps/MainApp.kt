@@ -105,8 +105,6 @@ class MainApp : DaggerApplication() {
         filter.addAction(Intents.ACTION_NEW_TREATMENT)
         filter.addAction(Intents.ACTION_CHANGED_TREATMENT)
         filter.addAction(Intents.ACTION_REMOVED_TREATMENT)
-        filter.addAction(Intents.ACTION_NEW_MBG)
-        filter.addAction(Intents.ACTION_NEW_CAL)
         LocalBroadcastManager.getInstance(this).registerReceiver(DataReceiver(), filter)
         filter = IntentFilter()
         filter.addAction(Intent.ACTION_TIME_CHANGED)

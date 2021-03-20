@@ -43,6 +43,7 @@ import info.nightscout.androidaps.logging.AAPSLogger;
 import info.nightscout.androidaps.logging.LTag;
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper;
 import info.nightscout.androidaps.plugins.general.food.FoodPlugin;
+import info.nightscout.androidaps.plugins.general.nsclient.NSClientMbgWorker;
 import info.nightscout.androidaps.plugins.general.nsclient.NSClientPlugin;
 import info.nightscout.androidaps.plugins.general.nsclient.UploadQueue;
 import info.nightscout.androidaps.plugins.general.nsclient.acks.NSAddAck;
@@ -52,7 +53,6 @@ import info.nightscout.androidaps.plugins.general.nsclient.data.AlarmAck;
 import info.nightscout.androidaps.plugins.general.nsclient.data.NSAlarm;
 import info.nightscout.androidaps.plugins.general.nsclient.data.NSDeviceStatus;
 import info.nightscout.androidaps.plugins.general.nsclient.data.NSSettingsStatus;
-import info.nightscout.androidaps.plugins.general.nsclient.data.NSSgv;
 import info.nightscout.androidaps.plugins.general.nsclient.data.NSTreatment;
 import info.nightscout.androidaps.plugins.general.nsclient.events.EventNSClientNewLog;
 import info.nightscout.androidaps.plugins.general.nsclient.events.EventNSClientRestart;
@@ -102,8 +102,6 @@ public class NSClientService extends DaggerService {
     static public PowerManager.WakeLock mWakeLock;
     private final IBinder mBinder = new NSClientService.LocalBinder();
 
-    static ProfileStore profileStore;
-
     static public Handler handler;
 
     public static Socket mSocket;
@@ -112,9 +110,6 @@ public class NSClientService extends DaggerService {
     private static Integer dataCounter = 0;
     private static Integer connectCounter = 0;
 
-
-    public static String nightscoutVersionName = "";
-    public static Integer nightscoutVersionCode = 0;
 
     private boolean nsEnabled = false;
     static public String nsURL = "";
@@ -542,39 +537,11 @@ public class NSClientService extends DaggerService {
 
                         if (data.has("status")) {
                             JSONObject status = data.getJSONObject("status");
-                            nsSettingsStatus.setData(status);
-
-                            if (!status.has("versionNum")) {
-                                if (status.getInt("versionNum") < config.getSUPPORTEDNSVERSION()) {
-                                    rxBus.send(new EventNSClientNewLog("ERROR", "Unsupported Nightscout version !!!!"));
-                                }
-                            } else {
-                                nightscoutVersionName = nsSettingsStatus.getVersion();
-                                nightscoutVersionCode = nsSettingsStatus.getVersionNum();
-                            }
-                            nsSettingsStatus.handleNewData(nightscoutVersionName, nightscoutVersionCode, status);
-
-                            /*  Other received data to 2016/02/10
-                                {
-                                  status: 'ok'
-                                  , name: env.name
-                                  , version: env.version
-                                  , versionNum: versionNum (for ver 1.2.3 contains 10203)
-                                  , serverTime: new Date().toISOString()
-                                  , apiEnabled: apiEnabled
-                                  , careportalEnabled: apiEnabled && env.settings.enable.indexOf('careportal') > -1
-                                  , boluscalcEnabled: apiEnabled && env.settings.enable.indexOf('boluscalc') > -1
-                                  , head: env.head
-                                  , settings: env.settings
-                                  , extendedSettings: ctx.plugins && ctx.plugins.extendedClientSettings ? ctx.plugins.extendedClientSettings(env.extendedSettings) : {}
-                                  , activeProfile ..... calculated from treatments or missing
-                                }
-                             */
+                            nsSettingsStatus.handleNewData(status);
                         } else if (!isDelta) {
                             rxBus.send(new EventNSClientNewLog("ERROR", "Unsupported Nightscout version !!!!"));
                         }
 
-                        // If new profile received or change detected broadcast it
                         if (data.has("profiles")) {
                             JSONArray profiles = data.getJSONArray("profiles");
                             if (profiles.length() > 0) {
@@ -638,12 +605,7 @@ public class NSClientService extends DaggerService {
                         if (data.has("devicestatus")) {
                             JSONArray devicestatuses = data.getJSONArray("devicestatus");
                             if (devicestatuses.length() > 0) {
-                                rxBus.send(new EventNSClientNewLog("DATA", "received " + devicestatuses.length() + " devicestatuses"));
-                                for (Integer index = 0; index < devicestatuses.length(); index++) {
-                                    JSONObject jsonStatus = devicestatuses.getJSONObject(index);
-                                    // remove from upload queue if Ack is failing
-                                    uploadQueue.removeID(jsonStatus);
-                                }
+                                rxBus.send(new EventNSClientNewLog("DATA", "received " + devicestatuses.length() + " device statuses"));
                                 nsDeviceStatus.handleNewData(devicestatuses);
                             }
                         }
@@ -656,27 +618,21 @@ public class NSClientService extends DaggerService {
                                             .setInputData(dataWorker.storeInputData(foods, null))
                                             .build());
                         }
+                        //noinspection SpellCheckingInspection
                         if (data.has("mbgs")) {
-                            JSONArray mbgs = data.getJSONArray("mbgs");
-                            if (mbgs.length() > 0)
-                                rxBus.send(new EventNSClientNewLog("DATA", "received " + mbgs.length() + " mbgs"));
-                            for (Integer index = 0; index < mbgs.length(); index++) {
-                                JSONObject jsonMbg = mbgs.getJSONObject(index);
-                                // remove from upload queue if Ack is failing
-                                uploadQueue.removeID(jsonMbg);
-                            }
-                            handleNewMbg(mbgs, isDelta);
+                            JSONArray mbgArray = data.getJSONArray("mbgs");
+                            if (mbgArray.length() > 0)
+                                rxBus.send(new EventNSClientNewLog("DATA", "received " + mbgArray.length() + " mbgs"));
+                            dataWorker.enqueue(
+                                    new OneTimeWorkRequest.Builder(NSClientMbgWorker.class)
+                                            .setInputData(dataWorker.storeInputData(mbgArray, null))
+                                            .build());
                         }
                         if (data.has("cals")) {
                             JSONArray cals = data.getJSONArray("cals");
                             if (cals.length() > 0)
                                 rxBus.send(new EventNSClientNewLog("DATA", "received " + cals.length() + " cals"));
-                            // Retreive actual calibration
-                            for (Integer index = 0; index < cals.length(); index++) {
-                                // remove from upload queue if Ack is failing
-                                uploadQueue.removeID(cals.optJSONObject(index));
-                            }
-                            handleNewCal(cals, isDelta);
+                            // Calibrations ignored
                         }
                         if (data.has("sgvs")) {
                             JSONArray sgvs = data.getJSONArray("sgvs");
@@ -864,26 +820,6 @@ public class NSClientService extends DaggerService {
             rxBus.send(new EventNSClientNewLog("URGENTALARM", JsonHelper.safeGetString(alarm, "message", "received")));
             aapsLogger.debug(LTag.NSCLIENT, alarm.toString());
         }
-    }
-
-    public void handleNewCal(JSONArray cals, boolean isDelta) {
-        Bundle bundle = new Bundle();
-        bundle.putString("cals", cals.toString());
-        bundle.putBoolean("delta", isDelta);
-        Intent intent = new Intent(Intents.ACTION_NEW_CAL);
-        intent.putExtras(bundle);
-        intent.addFlags(Intent.FLAG_INCLUDE_STOPPED_PACKAGES);
-        LocalBroadcastManager.getInstance(this).sendBroadcast(intent);
-    }
-
-    public void handleNewMbg(JSONArray mbgs, boolean isDelta) {
-        Bundle bundle = new Bundle();
-        bundle.putString("mbgs", mbgs.toString());
-        bundle.putBoolean("delta", isDelta);
-        Intent intent = new Intent(Intents.ACTION_NEW_MBG);
-        intent.putExtras(bundle);
-        intent.addFlags(Intent.FLAG_INCLUDE_STOPPED_PACKAGES);
-        LocalBroadcastManager.getInstance(this).sendBroadcast(intent);
     }
 
     public void handleNewTreatment(JSONArray treatments, boolean isDelta) {

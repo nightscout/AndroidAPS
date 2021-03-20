@@ -12,7 +12,6 @@ import javax.inject.Inject;
 import dagger.android.HasAndroidInjector;
 import info.nightscout.androidaps.receivers.DataWorker;
 
-// cannot be inner class because of needed injection
 public class NSClientWorker extends Worker {
 
     public NSClientWorker(

@@ -74,9 +74,7 @@ open class DataReceiver : DaggerBroadcastReceiver() {
                     .setInputData(dataWorker.storeInputData(bundle, intent)).build()
             Intents.ACTION_NEW_TREATMENT,
             Intents.ACTION_CHANGED_TREATMENT,
-            Intents.ACTION_REMOVED_TREATMENT,
-            Intents.ACTION_NEW_CAL,
-            Intents.ACTION_NEW_MBG                    ->
+            Intents.ACTION_REMOVED_TREATMENT ->
                 OneTimeWorkRequest.Builder(NSClientWorker::class.java)
                     .setInputData(dataWorker.storeInputData(bundle, intent)).build()
             else                                      -> null
