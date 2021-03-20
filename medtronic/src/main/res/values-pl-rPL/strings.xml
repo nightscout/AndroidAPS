@@ -24,6 +24,7 @@
     <string name="medtronic_pump_battery_nizn">NiZn (widok rozszerzony)</string>
     <string name="medtronic_pump_battery_nimh">NiMH (widok rozszerzony)</string>
     <string name="medtronic_bolus_debugging">Bolus/Leczenie - debugowanie</string>
+    <!-- MDT Fragment -->
     <!-- MDT Errors -->
     <string name="medtronic_errors">Błędy</string>
     <string name="medtronic_error_serial_not_set">Numer seryjny # nie ustawiony.</string>
