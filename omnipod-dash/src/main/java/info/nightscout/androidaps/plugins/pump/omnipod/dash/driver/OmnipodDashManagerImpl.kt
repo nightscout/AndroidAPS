@@ -135,6 +135,7 @@ class OmnipodDashManagerImpl @Inject constructor(
 
     private fun observeProgramBasalCommand(basalProgram: BasalProgram): Observable<PodEvent> {
         return Observable.defer {
+            logger.debug(LTag.PUMPCOMM, "Programming basal. basalProgram={}", basalProgram)
             bleManager.sendCommand(
                 ProgramBasalCommand.Builder()
                     .setUniqueId(podStateManager.uniqueId!!.toInt())
@@ -219,7 +220,10 @@ class OmnipodDashManagerImpl @Inject constructor(
         }
         if (podStateManager.activationProgress.isBefore(ActivationProgress.PRIMING)) {
             observables.add(
-                Observable.timer(PRIME_BOLUS_DURATION_SECONDS, TimeUnit.SECONDS).flatMap { Observable.empty() })
+                Observable.defer {
+                    Observable.timer(podStateManager.firstPrimeBolusVolume!!.toLong(), TimeUnit.SECONDS)
+                        .flatMap { Observable.empty() }
+                })
             observables.add(
                 Observable.defer {
                     bleManager.sendCommand(
@@ -317,8 +321,10 @@ class OmnipodDashManagerImpl @Inject constructor(
         }
         if (podStateManager.activationProgress.isBefore(ActivationProgress.INSERTING_CANNULA)) {
             observables.add(
-                Observable.timer(CANNULA_INSERTION_BOLUS_DURATION_SECONDS, TimeUnit.SECONDS)
-                    .flatMap { Observable.empty() })
+                Observable.defer {
+                    Observable.timer(podStateManager.secondPrimeBolusVolume!!.toLong(), TimeUnit.SECONDS)
+                        .flatMap { Observable.empty() }
+                })
             observables.add(
                 observeSendProgramBolusCommand(
                     podStateManager.secondPrimeBolusVolume!! * 0.05,
