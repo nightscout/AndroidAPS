@@ -5,22 +5,14 @@ import android.view.ViewGroup
 import android.widget.LinearLayout
 import android.widget.TableLayout
 import android.widget.TextView
-import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.utils.resources.ResourceHelper
-import javax.inject.Inject
 
-class LabelWithElement(injector: HasAndroidInjector) : Element(injector) {
-    @Inject lateinit var resourceHelper: ResourceHelper
-
-    var element: Element? = null
-    var textPre: String = ""
-    var textPost: String = ""
-
-    constructor(injector: HasAndroidInjector, textPre: String, textPost: String, element: Element) : this(injector) {
-        this.textPre = textPre
-        this.textPost = textPost
-        this.element = element
-    }
+class LabelWithElement(
+    private val resourceHelper: ResourceHelper,
+    var textPre: String = "",
+    var textPost: String = "",
+    var element: Element? = null,
+) : Element() {
 
     override fun addToLayout(root: LinearLayout) { // container layout
         val layout = LinearLayout(root.context)

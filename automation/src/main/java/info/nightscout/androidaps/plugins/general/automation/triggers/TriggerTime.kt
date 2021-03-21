@@ -1,5 +1,6 @@
 package info.nightscout.androidaps.plugins.general.automation.triggers
 
+import android.content.Context
 import android.widget.LinearLayout
 import com.google.common.base.Optional
 import dagger.android.HasAndroidInjector
@@ -17,7 +18,7 @@ import javax.inject.Inject
 class TriggerTime(injector: HasAndroidInjector) : Trigger(injector) {
     @Inject lateinit var dateUtil: DateUtil
 
-    var time = InputDateTime(injector)
+    var time = InputDateTime(resourceHelper, dateUtil)
 
     constructor(injector: HasAndroidInjector, runAt: Long) : this(injector) {
         this.time.value = runAt
@@ -68,7 +69,7 @@ class TriggerTime(injector: HasAndroidInjector) : Trigger(injector) {
 
     override fun generateDialog(root: LinearLayout) {
         LayoutBuilder()
-            .add(StaticLabel(injector, R.string.time, this))
+            .add(StaticLabel(resourceHelper, R.string.time, this))
             .add(time)
             .build(root)
     }

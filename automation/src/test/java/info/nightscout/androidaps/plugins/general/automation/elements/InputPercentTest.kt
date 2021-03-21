@@ -10,7 +10,7 @@ import org.powermock.modules.junit4.PowerMockRunner
 class InputPercentTest : TriggerTestBase() {
 
     @Test fun setValueTest() {
-        val i = InputPercent(injector)
+        val i = InputPercent()
         i.value = 10.0
         Assert.assertEquals(10.0, i.value, 0.01)
     }

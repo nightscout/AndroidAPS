@@ -6,14 +6,10 @@ import android.widget.ArrayAdapter
 import android.widget.LinearLayout
 import android.widget.Spinner
 import androidx.annotation.StringRes
-import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.automation.R
 import info.nightscout.androidaps.utils.resources.ResourceHelper
-import java.util.*
-import javax.inject.Inject
 
-class ComparatorExists(injector: HasAndroidInjector) : Element(injector) {
-    @Inject lateinit var resourceHelper: ResourceHelper
+class ComparatorExists(private val resourceHelper: ResourceHelper, var value: Compare = Compare.EXISTS) : Element() {
 
     enum class Compare {
         EXISTS, NOT_EXISTS;
@@ -32,12 +28,6 @@ class ComparatorExists(injector: HasAndroidInjector) : Element(injector) {
             }
         }
     }
-
-    constructor(injector: HasAndroidInjector, value: Compare) : this(injector) {
-        this.value = value
-    }
-
-    var value = Compare.EXISTS
 
     override fun addToLayout(root: LinearLayout) {
         val spinner = Spinner(root.context)
