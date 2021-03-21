@@ -268,7 +268,6 @@
     <string name="openapsma_autosensdata_label">Autosens gegevens</string>
     <string name="openapsma_scriptdebugdata_label">Script debug</string>
     <string name="openapsama_useautosens">Gebruik Autosens functie</string>
-    <string name="refresheventsfromnightscout">Haal wijzigingen op van NS</string>
     <string name="deletefuturetreatments">Verwijder behandelingen in de toekomst</string>
     <string name="actions_shortname">ACT</string>
     <string name="configbuilder_shortname">CONF</string>
