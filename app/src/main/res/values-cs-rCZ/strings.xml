@@ -138,6 +138,7 @@
     <string name="configbuilder_nightscoutversion_label">Verze Nightscoutu:</string>
     <string name="missing_carbs">Chybí %1$d g</string>
     <string name="exported">Nastavení exportováno</string>
+    <string name="ue_exported">Uživatelské záznamy exportovány</string>
     <string name="export_to">Exportovat nastavení do</string>
     <string name="import_from">Importovat nastavení z</string>
     <string name="setting_imported">Nastavení importováno</string>
@@ -269,6 +270,7 @@
     <string name="openapsma_autosensdata_label">Data detekce senzitivity</string>
     <string name="openapsma_scriptdebugdata_label">Ladící informace</string>
     <string name="openapsama_useautosens">Používat autodetekci senzitivity</string>
+    <string name="refresheventsfromnightscout">Aktualizovat z NS</string>
     <string name="deletefuturetreatments">Smazat události v budoucnosti</string>
     <string name="actions_shortname">AKCE</string>
     <string name="configbuilder_shortname">KONF</string>
