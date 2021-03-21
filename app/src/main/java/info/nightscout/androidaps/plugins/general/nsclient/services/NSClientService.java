@@ -11,6 +11,7 @@ import android.os.PowerManager;
 import android.os.SystemClock;
 
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
+import androidx.work.OneTimeWorkRequest;
 
 import com.google.common.base.Charsets;
 import com.google.common.hash.Hashing;
@@ -34,16 +35,18 @@ import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.db.DbRequest;
 import info.nightscout.androidaps.events.EventAppExit;
 import info.nightscout.androidaps.events.EventConfigBuilderChange;
-import info.nightscout.androidaps.events.EventNsFood;
 import info.nightscout.androidaps.events.EventPreferenceChange;
 import info.nightscout.androidaps.interfaces.DatabaseHelperInterface;
 import info.nightscout.androidaps.interfaces.PluginType;
-import info.nightscout.androidaps.interfaces.ProfileStore;
 import info.nightscout.androidaps.interfaces.UploadQueueInterface;
 import info.nightscout.androidaps.logging.AAPSLogger;
 import info.nightscout.androidaps.logging.LTag;
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper;
+import info.nightscout.androidaps.plugins.general.food.FoodPlugin;
+import info.nightscout.androidaps.plugins.general.nsclient.NSClientAddUpdateWorker;
+import info.nightscout.androidaps.plugins.general.nsclient.NSClientMbgWorker;
 import info.nightscout.androidaps.plugins.general.nsclient.NSClientPlugin;
+import info.nightscout.androidaps.plugins.general.nsclient.NSClientRemoveWorker;
 import info.nightscout.androidaps.plugins.general.nsclient.acks.NSAddAck;
 import info.nightscout.androidaps.plugins.general.nsclient.acks.NSAuthAck;
 import info.nightscout.androidaps.plugins.general.nsclient.acks.NSUpdateAck;
@@ -51,8 +54,6 @@ import info.nightscout.androidaps.plugins.general.nsclient.data.AlarmAck;
 import info.nightscout.androidaps.plugins.general.nsclient.data.NSAlarm;
 import info.nightscout.androidaps.plugins.general.nsclient.data.NSDeviceStatus;
 import info.nightscout.androidaps.plugins.general.nsclient.data.NSSettingsStatus;
-import info.nightscout.androidaps.plugins.general.nsclient.data.NSSgv;
-import info.nightscout.androidaps.plugins.general.nsclient.data.NSTreatment;
 import info.nightscout.androidaps.plugins.general.nsclient.events.EventNSClientNewLog;
 import info.nightscout.androidaps.plugins.general.nsclient.events.EventNSClientRestart;
 import info.nightscout.androidaps.plugins.general.nsclient.events.EventNSClientStatus;
@@ -61,6 +62,9 @@ import info.nightscout.androidaps.plugins.general.overview.events.EventDismissNo
 import info.nightscout.androidaps.plugins.general.overview.events.EventNewNotification;
 import info.nightscout.androidaps.plugins.general.overview.notifications.Notification;
 import info.nightscout.androidaps.plugins.general.overview.notifications.NotificationWithAction;
+import info.nightscout.androidaps.plugins.profile.ns.NSProfilePlugin;
+import info.nightscout.androidaps.plugins.source.NSClientSourcePlugin;
+import info.nightscout.androidaps.receivers.DataWorker;
 import info.nightscout.androidaps.services.Intents;
 import info.nightscout.androidaps.utils.DateUtil;
 import info.nightscout.androidaps.utils.FabricPrivacy;
@@ -91,13 +95,12 @@ public class NSClientService extends DaggerService {
     @Inject Config config;
     @Inject DateUtil dateUtil;
     @Inject UploadQueueInterface uploadQueue;
+    @Inject DataWorker dataWorker;
 
     private final CompositeDisposable disposable = new CompositeDisposable();
 
     static public PowerManager.WakeLock mWakeLock;
     private final IBinder mBinder = new NSClientService.LocalBinder();
-
-    static ProfileStore profileStore;
 
     static public Handler handler;
 
@@ -107,9 +110,6 @@ public class NSClientService extends DaggerService {
     private static Integer dataCounter = 0;
     private static Integer connectCounter = 0;
 
-
-    public static String nightscoutVersionName = "";
-    public static Integer nightscoutVersionCode = 0;
 
     private boolean nsEnabled = false;
     static public String nsURL = "";
@@ -535,185 +535,142 @@ public class NSClientService extends DaggerService {
                         boolean isFull = !isDelta;
                         rxBus.send(new EventNSClientNewLog("DATA", "Data packet #" + dataCounter++ + (isDelta ? " delta" : " full")));
 
-                        if (data.has("profiles")) {
-                            JSONArray profiles = data.getJSONArray("profiles");
-                            if (profiles.length() > 0) {
-                                JSONObject profile = (JSONObject) profiles.get(profiles.length() - 1);
-                                profileStore = new ProfileStore(injector, profile);
-                                broadcastProfile = true;
-                                rxBus.send(new EventNSClientNewLog("PROFILE", "profile received"));
-                            }
-                        }
-
                         if (data.has("status")) {
                             JSONObject status = data.getJSONObject("status");
-                            nsSettingsStatus.setData(status);
-
-                            if (!status.has("versionNum")) {
-                                if (status.getInt("versionNum") < config.getSUPPORTEDNSVERSION()) {
-                                    rxBus.send(new EventNSClientNewLog("ERROR", "Unsupported Nightscout version !!!!"));
-                                }
-                            } else {
-                                nightscoutVersionName = nsSettingsStatus.getVersion();
-                                nightscoutVersionCode = nsSettingsStatus.getVersionNum();
-                            }
-                            nsSettingsStatus.handleNewData(nightscoutVersionName, nightscoutVersionCode, status);
-
-                /*  Other received data to 2016/02/10
-                    {
-                      status: 'ok'
-                      , name: env.name
-                      , version: env.version
-                      , versionNum: versionNum (for ver 1.2.3 contains 10203)
-                      , serverTime: new Date().toISOString()
-                      , apiEnabled: apiEnabled
-                      , careportalEnabled: apiEnabled && env.settings.enable.indexOf('careportal') > -1
-                      , boluscalcEnabled: apiEnabled && env.settings.enable.indexOf('boluscalc') > -1
-                      , head: env.head
-                      , settings: env.settings
-                      , extendedSettings: ctx.plugins && ctx.plugins.extendedClientSettings ? ctx.plugins.extendedClientSettings(env.extendedSettings) : {}
-                      , activeProfile ..... calculated from treatments or missing
-                    }
-                 */
+                            nsSettingsStatus.handleNewData(status);
                         } else if (!isDelta) {
                             rxBus.send(new EventNSClientNewLog("ERROR", "Unsupported Nightscout version !!!!"));
                         }
 
-                        // If new profile received or change detected broadcast it
-                        if (broadcastProfile && profileStore != null) {
-                            handleNewProfile(profileStore, isDelta);
-                            rxBus.send(new EventNSClientNewLog("PROFILE", "broadcasting"));
+                        if (data.has("profiles")) {
+                            JSONArray profiles = data.getJSONArray("profiles");
+                            if (profiles.length() > 0) {
+                                // take the newest
+                                JSONObject profileStoreJson = (JSONObject) profiles.get(profiles.length() - 1);
+                                rxBus.send(new EventNSClientNewLog("PROFILE", "profile received"));
+                                dataWorker.enqueue(
+                                        new OneTimeWorkRequest.Builder(NSProfilePlugin.NSProfileWorker.class)
+                                                .setInputData(dataWorker.storeInputData(profileStoreJson, null))
+                                                .build());
+
+                                if (sp.getBoolean(R.string.key_nsclient_localbroadcasts, false)) {
+                                    Bundle bundle = new Bundle();
+                                    bundle.putString("profile", profileStoreJson.toString());
+                                    bundle.putBoolean("delta", isDelta);
+                                    Intent intent = new Intent(Intents.ACTION_NEW_PROFILE);
+                                    intent.putExtras(bundle);
+                                    intent.addFlags(Intent.FLAG_INCLUDE_STOPPED_PACKAGES);
+                                    sendBroadcast(intent);
+                                }
+                            }
                         }
 
                         if (data.has("treatments")) {
                             JSONArray treatments = data.getJSONArray("treatments");
                             JSONArray removedTreatments = new JSONArray();
-                            JSONArray updatedTreatments = new JSONArray();
-                            JSONArray addedTreatments = new JSONArray();
+                            JSONArray addedOrUpdatedTreatments = new JSONArray();
                             if (treatments.length() > 0)
                                 rxBus.send(new EventNSClientNewLog("DATA", "received " + treatments.length() + " treatments"));
                             for (Integer index = 0; index < treatments.length(); index++) {
                                 JSONObject jsonTreatment = treatments.getJSONObject(index);
-                                NSTreatment treatment = new NSTreatment(jsonTreatment);
+                                String action = JsonHelper.safeGetStringAllowNull(jsonTreatment, "action", null);
+                                long mills = JsonHelper.safeGetLong(jsonTreatment, "mills");
 
-                                // remove from upload queue if Ack is failing
-                                uploadQueue.removeByNsClientIdIfExists(jsonTreatment);
-                                //Find latest date in treatment
-                                if (treatment.getMills() != null && treatment.getMills() < System.currentTimeMillis())
-                                    if (treatment.getMills() > latestDateInReceivedData)
-                                        latestDateInReceivedData = treatment.getMills();
-
-                                if (treatment.getAction() == null) {
-                                    addedTreatments.put(jsonTreatment);
-                                } else if (treatment.getAction().equals("update")) {
-                                    updatedTreatments.put(jsonTreatment);
-                                } else if (treatment.getAction().equals("remove")) {
-                                    if (treatment.getMills() != null && treatment.getMills() > System.currentTimeMillis() - 24 * 60 * 60 * 1000L) // handle 1 day old deletions only
-                                        removedTreatments.put(jsonTreatment);
-                                }
+                                if (action == null) addedOrUpdatedTreatments.put(jsonTreatment);
+                                else if (action.equals("update"))
+                                    addedOrUpdatedTreatments.put(jsonTreatment);
+                                else if (action.equals("remove") && mills > dateUtil._now() - T.days(1).msecs()) // handle 1 day old deletions only
+                                    removedTreatments.put(jsonTreatment);
                             }
                             if (removedTreatments.length() > 0) {
-                                handleRemovedTreatment(removedTreatments, isDelta);
+                                dataWorker.enqueue(
+                                        new OneTimeWorkRequest.Builder(NSClientRemoveWorker.class)
+                                                .setInputData(dataWorker.storeInputData(removedTreatments, null))
+                                                .build());
+
+                                if (sp.getBoolean(R.string.key_nsclient_localbroadcasts, false)) {
+                                    Bundle bundle = new Bundle();
+                                    bundle.putString("treatments", removedTreatments.toString());
+                                    bundle.putBoolean("delta", isDelta);
+                                    Intent intent = new Intent(Intents.ACTION_REMOVED_TREATMENT);
+                                    intent.putExtras(bundle);
+                                    intent.addFlags(Intent.FLAG_INCLUDE_STOPPED_PACKAGES);
+                                    sendBroadcast(intent);
+                                }
                             }
-                            if (updatedTreatments.length() > 0) {
-                                handleChangedTreatment(updatedTreatments, isDelta);
-                            }
-                            if (addedTreatments.length() > 0) {
-                                handleNewTreatment(addedTreatments, isDelta);
+                            if (addedOrUpdatedTreatments.length() > 0) {
+                                dataWorker.enqueue(
+                                        new OneTimeWorkRequest.Builder(NSClientAddUpdateWorker.class)
+                                                .setInputData(dataWorker.storeInputData(addedOrUpdatedTreatments, null))
+                                                .build());
+
+                                if (sp.getBoolean(R.string.key_nsclient_localbroadcasts, false)) {
+                                    List<JSONArray> splitted = splitArray(addedOrUpdatedTreatments);
+                                    for (JSONArray part : splitted) {
+                                        Bundle bundle = new Bundle();
+                                        bundle.putString("treatments", part.toString());
+                                        bundle.putBoolean("delta", isDelta);
+                                        Intent intent = new Intent(Intents.ACTION_CHANGED_TREATMENT);
+                                        intent.putExtras(bundle);
+                                        intent.addFlags(Intent.FLAG_INCLUDE_STOPPED_PACKAGES);
+                                        sendBroadcast(intent);
+                                    }
+                                }
                             }
                         }
                         if (data.has("devicestatus")) {
                             JSONArray devicestatuses = data.getJSONArray("devicestatus");
                             if (devicestatuses.length() > 0) {
-                                rxBus.send(new EventNSClientNewLog("DATA", "received " + devicestatuses.length() + " devicestatuses"));
-                                for (Integer index = 0; index < devicestatuses.length(); index++) {
-                                    JSONObject jsonStatus = devicestatuses.getJSONObject(index);
-                                    // remove from upload queue if Ack is failing
-                                    uploadQueue.removeByNsClientIdIfExists(jsonStatus);
-                                }
+                                rxBus.send(new EventNSClientNewLog("DATA", "received " + devicestatuses.length() + " device statuses"));
                                 nsDeviceStatus.handleNewData(devicestatuses);
                             }
                         }
                         if (data.has("food")) {
                             JSONArray foods = data.getJSONArray("food");
-                            JSONArray removedFoods = new JSONArray();
-                            JSONArray updatedFoods = new JSONArray();
-                            JSONArray addedFoods = new JSONArray();
                             if (foods.length() > 0)
                                 rxBus.send(new EventNSClientNewLog("DATA", "received " + foods.length() + " foods"));
-                            for (Integer index = 0; index < foods.length(); index++) {
-                                JSONObject jsonFood = foods.getJSONObject(index);
-
-                                // remove from upload queue if Ack is failing
-                                uploadQueue.removeByNsClientIdIfExists(jsonFood);
-
-                                String action = JsonHelper.safeGetString(jsonFood, "action");
-
-                                if (action == null) {
-                                    addedFoods.put(jsonFood);
-                                } else if (action.equals("update")) {
-                                    updatedFoods.put(jsonFood);
-                                } else if (action.equals("remove")) {
-                                    removedFoods.put(jsonFood);
-                                }
-                            }
-                            if (removedFoods.length() > 0) {
-                                EventNsFood evt = new EventNsFood(EventNsFood.Companion.getREMOVE(), removedFoods);
-                                rxBus.send(evt);
-                            }
-                            if (updatedFoods.length() > 0) {
-                                EventNsFood evt = new EventNsFood(EventNsFood.Companion.getUPDATE(), updatedFoods);
-                                rxBus.send(evt);
-                            }
-                            if (addedFoods.length() > 0) {
-                                EventNsFood evt = new EventNsFood(EventNsFood.Companion.getADD(), addedFoods);
-                                rxBus.send(evt);
-                            }
+                            dataWorker.enqueue(
+                                    new OneTimeWorkRequest.Builder(FoodPlugin.FoodWorker.class)
+                                            .setInputData(dataWorker.storeInputData(foods, null))
+                                            .build());
                         }
+                        //noinspection SpellCheckingInspection
                         if (data.has("mbgs")) {
-                            JSONArray mbgs = data.getJSONArray("mbgs");
-                            if (mbgs.length() > 0)
-                                rxBus.send(new EventNSClientNewLog("DATA", "received " + mbgs.length() + " mbgs"));
-                            for (Integer index = 0; index < mbgs.length(); index++) {
-                                JSONObject jsonMbg = mbgs.getJSONObject(index);
-                                // remove from upload queue if Ack is failing
-                                uploadQueue.removeByNsClientIdIfExists(jsonMbg);
-                            }
-                            handleNewMbg(mbgs, isDelta);
+                            JSONArray mbgArray = data.getJSONArray("mbgs");
+                            if (mbgArray.length() > 0)
+                                rxBus.send(new EventNSClientNewLog("DATA", "received " + mbgArray.length() + " mbgs"));
+                            dataWorker.enqueue(
+                                    new OneTimeWorkRequest.Builder(NSClientMbgWorker.class)
+                                            .setInputData(dataWorker.storeInputData(mbgArray, null))
+                                            .build());
                         }
                         if (data.has("cals")) {
                             JSONArray cals = data.getJSONArray("cals");
                             if (cals.length() > 0)
                                 rxBus.send(new EventNSClientNewLog("DATA", "received " + cals.length() + " cals"));
-                            // Retreive actual calibration
-                            for (Integer index = 0; index < cals.length(); index++) {
-                                // remove from upload queue if Ack is failing
-                                uploadQueue.removeByNsClientIdIfExists(cals.optJSONObject(index));
-                            }
-                            handleNewCal(cals, isDelta);
+                            // Calibrations ignored
                         }
                         if (data.has("sgvs")) {
                             JSONArray sgvs = data.getJSONArray("sgvs");
                             if (sgvs.length() > 0)
                                 rxBus.send(new EventNSClientNewLog("DATA", "received " + sgvs.length() + " sgvs"));
-                            for (int index = 0; index < sgvs.length(); index++) {
-                                JSONObject jsonSgv = sgvs.getJSONObject(index);
-                                // rxBus.send(new EventNSClientNewLog("DATA", "svg " + sgvs.getJSONObject(index).toString());
-                                NSSgv sgv = new NSSgv(jsonSgv);
-                                // Handle new sgv here
-                                // remove from upload queue if Ack is failing
-                                uploadQueue.removeByNsClientIdIfExists(jsonSgv);
-                                //Find latest date in sgv
-                                if (sgv.getMills() != null && sgv.getMills() < System.currentTimeMillis())
-                                    if (sgv.getMills() > latestDateInReceivedData)
-                                        latestDateInReceivedData = sgv.getMills();
+
+                            dataWorker.enqueue(new OneTimeWorkRequest.Builder(NSClientSourcePlugin.NSClientSourceWorker.class)
+                                    .setInputData(dataWorker.storeInputData(sgvs, null))
+                                    .build());
+
+                            List<JSONArray> splitted = splitArray(sgvs);
+                            if (sp.getBoolean(R.string.key_nsclient_localbroadcasts, false)) {
+                                for (JSONArray part : splitted) {
+                                    Bundle bundle = new Bundle();
+                                    bundle.putString("sgvs", part.toString());
+                                    bundle.putBoolean("delta", isDelta);
+                                    Intent intent = new Intent(Intents.ACTION_NEW_SGV);
+                                    intent.putExtras(bundle);
+                                    intent.addFlags(Intent.FLAG_INCLUDE_STOPPED_PACKAGES);
+                                    sendBroadcast(intent);
+                                }
                             }
-                            // Was that sgv more less 5 mins ago ?
-                            if ((System.currentTimeMillis() - latestDateInReceivedData) / (60 * 1000L) < 5L) {
-                                rxBus.send(new EventDismissNotification(Notification.NS_ALARM));
-                                rxBus.send(new EventDismissNotification(Notification.NS_URGENT_ALARM));
-                            }
-                            handleNewSgv(sgvs, isDelta);
                         }
                         rxBus.send(new EventNSClientNewLog("LAST", dateUtil.dateAndTimeString(latestDateInReceivedData)));
                     } catch (JSONException e) {
@@ -881,71 +838,6 @@ public class NSClientService extends DaggerService {
         }
     }
 
-    public void handleNewCal(JSONArray cals, boolean isDelta) {
-        Bundle bundle = new Bundle();
-        bundle.putString("cals", cals.toString());
-        bundle.putBoolean("delta", isDelta);
-        Intent intent = new Intent(Intents.ACTION_NEW_CAL);
-        intent.putExtras(bundle);
-        intent.addFlags(Intent.FLAG_INCLUDE_STOPPED_PACKAGES);
-        LocalBroadcastManager.getInstance(this).sendBroadcast(intent);
-    }
-
-    public void handleNewMbg(JSONArray mbgs, boolean isDelta) {
-        Bundle bundle = new Bundle();
-        bundle.putString("mbgs", mbgs.toString());
-        bundle.putBoolean("delta", isDelta);
-        Intent intent = new Intent(Intents.ACTION_NEW_MBG);
-        intent.putExtras(bundle);
-        intent.addFlags(Intent.FLAG_INCLUDE_STOPPED_PACKAGES);
-        LocalBroadcastManager.getInstance(this).sendBroadcast(intent);
-    }
-
-    public void handleNewProfile(ProfileStore profile, boolean isDelta) {
-        Bundle bundle = new Bundle();
-        bundle.putString("profile", profile.getData().toString());
-        bundle.putBoolean("delta", isDelta);
-        Intent intent = new Intent(Intents.ACTION_NEW_PROFILE);
-        intent.putExtras(bundle);
-        intent.addFlags(Intent.FLAG_INCLUDE_STOPPED_PACKAGES);
-        LocalBroadcastManager.getInstance(this).sendBroadcast(intent);
-
-        if (sp.getBoolean(R.string.key_nsclient_localbroadcasts, false)) {
-            bundle = new Bundle();
-            bundle.putString("profile", profile.getData().toString());
-            bundle.putBoolean("delta", isDelta);
-            intent = new Intent(Intents.ACTION_NEW_PROFILE);
-            intent.putExtras(bundle);
-            intent.addFlags(Intent.FLAG_INCLUDE_STOPPED_PACKAGES);
-            this.sendBroadcast(intent);
-        }
-    }
-
-    public void handleNewSgv(JSONArray sgvs, boolean isDelta) {
-        List<JSONArray> splitted = splitArray(sgvs);
-        for (JSONArray part : splitted) {
-            Bundle bundle = new Bundle();
-            bundle.putString("sgvs", part.toString());
-            bundle.putBoolean("delta", isDelta);
-            Intent intent = new Intent(Intents.ACTION_NEW_SGV);
-            intent.putExtras(bundle);
-            intent.addFlags(Intent.FLAG_INCLUDE_STOPPED_PACKAGES);
-            LocalBroadcastManager.getInstance(this).sendBroadcast(intent);
-        }
-
-        if (sp.getBoolean(R.string.key_nsclient_localbroadcasts, false)) {
-            for (JSONArray part : splitted) {
-                Bundle bundle = new Bundle();
-                bundle.putString("sgvs", part.toString());
-                bundle.putBoolean("delta", isDelta);
-                Intent intent = new Intent(Intents.ACTION_NEW_SGV);
-                intent.putExtras(bundle);
-                intent.addFlags(Intent.FLAG_INCLUDE_STOPPED_PACKAGES);
-                this.sendBroadcast(intent);
-            }
-        }
-    }
-
     public void handleNewTreatment(JSONArray treatments, boolean isDelta) {
         List<JSONArray> splitted = splitArray(treatments);
         for (JSONArray part : splitted) {
@@ -971,54 +863,6 @@ public class NSClientService extends DaggerService {
             }
         }
     }
-
-    public void handleChangedTreatment(JSONArray treatments, boolean isDelta) {
-        List<JSONArray> splitted = splitArray(treatments);
-        for (JSONArray part : splitted) {
-            Bundle bundle = new Bundle();
-            bundle.putString("treatments", part.toString());
-            bundle.putBoolean("delta", isDelta);
-            Intent intent = new Intent(Intents.ACTION_CHANGED_TREATMENT);
-            intent.putExtras(bundle);
-            intent.addFlags(Intent.FLAG_INCLUDE_STOPPED_PACKAGES);
-            LocalBroadcastManager.getInstance(this).sendBroadcast(intent);
-        }
-
-        if (sp.getBoolean(R.string.key_nsclient_localbroadcasts, false)) {
-            splitted = splitArray(treatments);
-            for (JSONArray part : splitted) {
-                Bundle bundle = new Bundle();
-                bundle.putString("treatments", part.toString());
-                bundle.putBoolean("delta", isDelta);
-                Intent intent = new Intent(Intents.ACTION_CHANGED_TREATMENT);
-                intent.putExtras(bundle);
-                intent.addFlags(Intent.FLAG_INCLUDE_STOPPED_PACKAGES);
-                this.getApplicationContext().sendBroadcast(intent);
-            }
-        }
-    }
-
-    public void handleRemovedTreatment(JSONArray treatments, boolean isDelta) {
-        Bundle bundle = new Bundle();
-        bundle.putString("treatments", treatments.toString());
-        bundle.putBoolean("delta", isDelta);
-        Intent intent = new Intent(Intents.ACTION_REMOVED_TREATMENT);
-        intent.putExtras(bundle);
-        intent.addFlags(Intent.FLAG_INCLUDE_STOPPED_PACKAGES);
-        LocalBroadcastManager.getInstance(this).sendBroadcast(intent);
-
-
-        if (sp.getBoolean(R.string.key_nsclient_localbroadcasts, false)) {
-            bundle = new Bundle();
-            bundle.putString("treatments", treatments.toString());
-            bundle.putBoolean("delta", isDelta);
-            intent = new Intent(Intents.ACTION_REMOVED_TREATMENT);
-            intent.putExtras(bundle);
-            intent.addFlags(Intent.FLAG_INCLUDE_STOPPED_PACKAGES);
-            this.getApplicationContext().sendBroadcast(intent);
-        }
-    }
-
 
     public List<JSONArray> splitArray(JSONArray array) {
         List<JSONArray> ret = new ArrayList<>();

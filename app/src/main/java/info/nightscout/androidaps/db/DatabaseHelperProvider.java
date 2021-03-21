@@ -14,9 +14,7 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 
 import info.nightscout.androidaps.MainApp;
-import info.nightscout.androidaps.interfaces.ActivePluginProvider;
 import info.nightscout.androidaps.interfaces.DatabaseHelperInterface;
-import info.nightscout.androidaps.plugins.general.nsclient.NSUpload;
 
 @Singleton
 public class DatabaseHelperProvider implements DatabaseHelperInterface {
@@ -172,8 +170,8 @@ public class DatabaseHelperProvider implements DatabaseHelperInterface {
         MainApp.Companion.getDbHelper().createExtendedBolusFromJsonIfNotExists(json);
     }
 
-    @Override public void createProfileSwitchFromJsonIfNotExists(@NonNull ActivePluginProvider activePluginProvider, @NonNull NSUpload nsUpload, @NonNull JSONObject trJson) {
-        MainApp.Companion.getDbHelper().createProfileSwitchFromJsonIfNotExists(activePluginProvider, nsUpload, trJson);
+    @Override public void createProfileSwitchFromJsonIfNotExists(@NonNull JSONObject trJson) {
+        MainApp.Companion.getDbHelper().createProfileSwitchFromJsonIfNotExists(trJson);
     }
 
     @Override public void resetDatabases() {

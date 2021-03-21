@@ -112,6 +112,7 @@ class RandomBgPlugin @Inject constructor(
                 xDripBroadcast(it)
                 if (sp.getBoolean(R.string.key_dexcomg5_nsupload, false))
                     nsUpload.uploadBg(it, GlucoseValue.SourceSensor.RANDOM.text)
+                aapsLogger.debug(LTag.BGSOURCE, "Inserted bg $it")
             }
         }, {
             aapsLogger.error(LTag.BGSOURCE, "Error while saving values from Random plugin", it)
