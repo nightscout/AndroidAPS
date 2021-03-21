@@ -244,7 +244,6 @@
     <string name="openapsma_autosensdata_label">Dados Autosens</string>
     <string name="openapsma_scriptdebugdata_label">Script debug</string>
     <string name="openapsama_useautosens">Usar função Autosens</string>
-    <string name="refresheventsfromnightscout">Atualizar tratamentos do NS</string>
     <string name="deletefuturetreatments">Apagar tratamentos do futuro</string>
     <string name="actions_shortname">ACT</string>
     <string name="configbuilder_shortname">CONF</string>
