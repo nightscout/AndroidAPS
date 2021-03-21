@@ -106,7 +106,7 @@ class MessageIO(private val aapsLogger: AAPSLogger, private val bleIO: BleIO) {
                 continue
             }
         }
-        throw MessageIOException("Ran out retries trying to receive a packet. $maxTries")
+        throw TimeoutException()
     }
 
     private fun readReset() {
