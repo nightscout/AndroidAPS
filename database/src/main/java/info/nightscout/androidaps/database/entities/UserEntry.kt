@@ -141,12 +141,30 @@ data class UserEntry(
         @SerializedName("H") H ("h"),                                   //Int
         @SerializedName("Percent") Percent ("%"),                       //Int
         @SerializedName("TherapyEvent") TherapyEvent ("TherapyEvent"),  //String (All enum key translated by Translator function, mainly TherapyEvent)
-        @SerializedName("R_String") R_String ("R.string")               //Int
+        @SerializedName("R_String") R_String ("R.string"),              //Int
+        @SerializedName("Source") Source ("Source")                     //String
         ;
 
         companion object {
             fun fromString(unit: String?) = values().firstOrNull { it.name == unit } ?: None
             fun fromText(unit: String?) = values().firstOrNull { it.text == unit } ?: None
+        }
+    }
+    enum class Sources(val text: String) {
+        @SerializedName("Manual") Manual ("Manual"),                //Manual entry by user, given through AAPS (default)
+        @SerializedName("External") External ("External"),          //Manual entry by user, treatment given outside AAPS (for example Bolus with Serynge)
+        @SerializedName("Automation") Automation ("Automation"),    //From Automation plugin
+        @SerializedName("Loop") Loop ("Loop"),                      //From Loop plugin
+        @SerializedName("NS") NS ("NS"),                            //From NSClient plugin
+        @SerializedName("Pump") Pump ("Pump"),                      //From Pump plugin (for example from pump history)
+        @SerializedName("SMS") SMS ("SMS"),                         //From SMS plugin
+        @SerializedName("Wear") Wear ("Wear"),                      //From Wear plugin
+        @SerializedName("Unknown") Unknown ("Unknown")              //if necessary
+        ;
+
+        companion object {
+            fun fromString(source: String?) = values().firstOrNull { it.name == source } ?: Unknown
+            fun fromText(source: String?) = values().firstOrNull { it.text == source } ?: Unknown
         }
     }
 

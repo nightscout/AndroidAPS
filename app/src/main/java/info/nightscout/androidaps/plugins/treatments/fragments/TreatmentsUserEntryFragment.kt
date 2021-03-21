@@ -111,8 +111,7 @@ class TreatmentsUserEntryFragment : DaggerFragment() {
         override fun onBindViewHolder(holder: UserEntryViewHolder, position: Int) {
             val current = entries[position]
             holder.binding.date.text = dateUtil.dateAndTimeAndSecondsString(current.timestamp)
-            holder.binding.action.text = translator.translate(current.action.name)
-            holder.binding.action.setTextColor(resourceHelper.gc(current.action.colorGroup.colorId()))
+
             if (current.s != "") {
                 holder.binding.s.text = current.s
                 holder.binding.s.visibility = View.VISIBLE
@@ -121,6 +120,7 @@ class TreatmentsUserEntryFragment : DaggerFragment() {
             var valuesWithUnitString = ""
             var rStringParam = 0
             val separator = "  "
+            var source = ""
             for(v in current.values) {
                 if (rStringParam >0)
                     rStringParam--
@@ -144,11 +144,14 @@ class TreatmentsUserEntryFragment : DaggerFragment() {
                                         -> valuesWithUnitString += DecimalFormatter.to2Decimal(v.dValue) + translator.translate(v.unit.name) + separator
                         Units.G, Units.M, Units.H, Units.Percent
                                         -> valuesWithUnitString += v.iValue.toString() + translator.translate(v.unit.name) + separator
+                        Units.Source    -> source = separator + translator.translate(v.sValue)
                         else            -> valuesWithUnitString += if (v.iValue != 0 || v.sValue != "") { v.value().toString() + separator } else ""
                     }
             }
             holder.binding.values.text = valuesWithUnitString.trim()
             holder.binding.values.visibility = if (current.values.size > 0) View.VISIBLE else View.GONE
+            holder.binding.action.text = translator.translate(current.action.name) + source
+            holder.binding.action.setTextColor(resourceHelper.gc(current.action.colorGroup.colorId()))
         }
 
         inner class UserEntryViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
