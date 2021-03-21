@@ -268,7 +268,6 @@
     <string name="openapsma_autosensdata_label">Datos Autosens</string>
     <string name="openapsma_scriptdebugdata_label">Depurar script</string>
     <string name="openapsama_useautosens">Usar función Autosens</string>
-    <string name="refresheventsfromnightscout">Renovar datos desde NS</string>
     <string name="deletefuturetreatments">Borrar tratamientos en el futuro</string>
     <string name="actions_shortname">ACC</string>
     <string name="configbuilder_shortname">CONF</string>
