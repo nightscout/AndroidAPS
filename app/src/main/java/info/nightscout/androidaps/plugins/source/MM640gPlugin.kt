@@ -15,13 +15,11 @@ import info.nightscout.androidaps.interfaces.PluginType
 import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.logging.LTag
 import info.nightscout.androidaps.plugins.general.nsclient.NSUpload
-import info.nightscout.androidaps.receivers.BundleStore
+import info.nightscout.androidaps.receivers.DataWorker
 import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.XDripBroadcast
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 import info.nightscout.androidaps.utils.sharedPreferences.SP
-import io.reactivex.disposables.CompositeDisposable
-import io.reactivex.rxkotlin.plusAssign
 import org.json.JSONArray
 import org.json.JSONException
 import javax.inject.Inject
@@ -41,13 +39,6 @@ class MM640gPlugin @Inject constructor(
     aapsLogger, resourceHelper, injector
 ), BgSourceInterface {
 
-    private val disposable = CompositeDisposable()
-
-    override fun onStop() {
-        disposable.clear()
-        super.onStop()
-    }
-
     // cannot be inner class because of needed injection
     class MM640gWorker(
         context: Context,
@@ -60,7 +51,7 @@ class MM640gPlugin @Inject constructor(
         @Inject lateinit var sp: SP
         @Inject lateinit var nsUpload: NSUpload
         @Inject lateinit var dateUtil: DateUtil
-        @Inject lateinit var bundleStore: BundleStore
+        @Inject lateinit var dataWorker: DataWorker
         @Inject lateinit var repository: AppRepository
         @Inject lateinit var broadcastToXDrip: XDripBroadcast
 
@@ -69,6 +60,8 @@ class MM640gPlugin @Inject constructor(
         }
 
         override fun doWork(): Result {
+            var ret = Result.success()
+
             if (!mM640gPlugin.isEnabled(PluginType.BGSOURCE)) return Result.failure()
             val collection = inputData.getString("collection") ?: return Result.failure()
             if (collection == "entries") {
@@ -93,21 +86,27 @@ class MM640gPlugin @Inject constructor(
                                 else  -> aapsLogger.debug(LTag.BGSOURCE, "Unknown entries type: $type")
                             }
                         }
-                        mM640gPlugin.disposable += repository.runTransactionForResult(CgmSourceTransaction(glucoseValues, emptyList(), null)).subscribe({ savedValues ->
+                        repository.runTransactionForResult(CgmSourceTransaction(glucoseValues, emptyList(), null))
+                            .doOnError {
+                                aapsLogger.error("Error while saving values from Eversense App", it)
+                                ret = Result.failure()
+                            }
+                            .blockingGet()
+                            .also { savedValues ->
                             savedValues.all().forEach {
                                 broadcastToXDrip(it)
                                 if (sp.getBoolean(R.string.key_dexcomg5_nsupload, false))
                                     nsUpload.uploadBg(it, GlucoseValue.SourceSensor.MM_600_SERIES.text)
+                                aapsLogger.debug(LTag.BGSOURCE, "Inserted bg $it")
                             }
-                        }, {
-                            aapsLogger.error("Error while saving values from Eversense App", it)
-                        })
+                        }
                     } catch (e: JSONException) {
                         aapsLogger.error("Exception: ", e)
+                        ret = Result.failure()
                     }
                 }
             }
-            return Result.success()
+            return ret
         }
     }
 }

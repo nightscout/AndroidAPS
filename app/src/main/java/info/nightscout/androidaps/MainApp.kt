@@ -5,7 +5,6 @@ import android.content.Intent
 import android.content.IntentFilter
 import android.net.ConnectivityManager
 import android.net.wifi.WifiManager
-import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import com.j256.ormlite.android.apptools.OpenHelperManager
 import dagger.android.AndroidInjector
 import dagger.android.DaggerApplication
@@ -24,11 +23,9 @@ import info.nightscout.androidaps.plugins.constraints.versionChecker.VersionChec
 import info.nightscout.androidaps.plugins.general.nsclient.NSUpload
 import info.nightscout.androidaps.receivers.BTReceiver
 import info.nightscout.androidaps.receivers.ChargingStateReceiver
-import info.nightscout.androidaps.receivers.DataReceiver
 import info.nightscout.androidaps.receivers.KeepAliveReceiver.KeepAliveManager
 import info.nightscout.androidaps.receivers.NetworkChangeReceiver
 import info.nightscout.androidaps.receivers.TimeDateOrTZChangeReceiver
-import info.nightscout.androidaps.services.Intents
 import info.nightscout.androidaps.utils.ActivityMonitor
 import info.nightscout.androidaps.utils.locale.LocaleHelper.update
 import info.nightscout.androidaps.utils.sharedPreferences.SP
@@ -102,15 +99,6 @@ class MainApp : DaggerApplication() {
 
     private fun registerLocalBroadcastReceiver() {
         var filter = IntentFilter()
-        filter.addAction(Intents.ACTION_NEW_TREATMENT)
-        filter.addAction(Intents.ACTION_CHANGED_TREATMENT)
-        filter.addAction(Intents.ACTION_REMOVED_TREATMENT)
-        filter.addAction(Intents.ACTION_NEW_SGV)
-        filter.addAction(Intents.ACTION_NEW_PROFILE)
-        filter.addAction(Intents.ACTION_NEW_MBG)
-        filter.addAction(Intents.ACTION_NEW_CAL)
-        LocalBroadcastManager.getInstance(this).registerReceiver(DataReceiver(), filter)
-        filter = IntentFilter()
         filter.addAction(Intent.ACTION_TIME_CHANGED)
         filter.addAction(Intent.ACTION_TIMEZONE_CHANGED)
         registerReceiver(TimeDateOrTZChangeReceiver(), filter)

@@ -108,6 +108,7 @@ class ImportExportPrefs @Inject constructor(
         return metadata
     }
 
+    @Suppress("SpellCheckingInspection")
     private fun detectUserName(context: Context): String {
         // based on https://medium.com/@pribble88/how-to-get-an-android-device-nickname-4b4700b3068c
         val n1 = Settings.System.getString(context.contentResolver, "bluetooth_name")
@@ -346,7 +347,7 @@ class ImportExportPrefs @Inject constructor(
 
     private fun restartAppAfterImport(context: Context) {
         sp.putBoolean(R.string.key_setupwizard_processed, true)
-        OKDialog.show(context, resourceHelper.gs(R.string.setting_imported), resourceHelper.gs(R.string.restartingapp), Runnable {
+        OKDialog.show(context, resourceHelper.gs(R.string.setting_imported), resourceHelper.gs(R.string.restartingapp)) {
             uel.log(Action.IMPORT_SETTINGS)
             log.debug(LTag.CORE, "Exiting")
             rxBus.send(EventAppExit())
@@ -355,14 +356,13 @@ class ImportExportPrefs @Inject constructor(
             }
             System.runFinalization()
             exitProcess(0)
-        })
+        }
     }
 
-    override fun exportUserEntriesCsv(activity: FragmentActivity, listEntries: Single<List<UserEntry>>) {
-        val entries = listEntries.blockingGet()
+    override fun exportUserEntriesCsv(activity: FragmentActivity, singleEntries: Single<List<UserEntry>>) {
+        val entries = singleEntries.blockingGet()
         prefFileList.ensureExportDirExists()
         val newFile = prefFileList.newExportXmlFile()
-        //log.debug("XXXXX " + classicPrefsFormat.UserEntriesToCsv(entries))
 
         try {
             classicPrefsFormat.saveCsv(newFile, entries)

@@ -1,7 +1,6 @@
 package info.nightscout.androidaps.plugins.general.food
 
 import android.annotation.SuppressLint
-import android.content.DialogInterface
 import android.graphics.Paint
 import android.os.Bundle
 import android.text.Editable
@@ -15,20 +14,30 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import dagger.android.support.DaggerFragment
 import info.nightscout.androidaps.R
-import info.nightscout.androidaps.database.entities.UserEntry.*
+import info.nightscout.androidaps.database.AppRepository
+import info.nightscout.androidaps.database.entities.Food
+import info.nightscout.androidaps.database.entities.UserEntry.Action
+import info.nightscout.androidaps.database.transactions.InvalidateFoodTransaction
 import info.nightscout.androidaps.databinding.FoodFragmentBinding
 import info.nightscout.androidaps.databinding.FoodItemBinding
 import info.nightscout.androidaps.events.EventFoodDatabaseChanged
+import info.nightscout.androidaps.logging.AAPSLogger
+import info.nightscout.androidaps.logging.LTag
 import info.nightscout.androidaps.logging.UserEntryLogger
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper
-import info.nightscout.androidaps.plugins.general.food.FoodFragment.RecyclerViewAdapter.FoodsViewHolder
 import info.nightscout.androidaps.plugins.general.nsclient.NSUpload
+import info.nightscout.androidaps.plugins.general.nsclient.events.EventNSClientRestart
 import info.nightscout.androidaps.utils.FabricPrivacy
 import info.nightscout.androidaps.utils.alertDialogs.OKDialog
+import info.nightscout.androidaps.utils.extensions.toVisibility
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 import info.nightscout.androidaps.utils.rx.AapsSchedulers
+import io.reactivex.Completable
 import io.reactivex.disposables.CompositeDisposable
+import io.reactivex.rxkotlin.plusAssign
+import io.reactivex.rxkotlin.subscribeBy
 import java.util.*
+import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 import kotlin.collections.ArrayList
 
@@ -36,10 +45,11 @@ class FoodFragment : DaggerFragment() {
 
     @Inject lateinit var aapsSchedulers: AapsSchedulers
     @Inject lateinit var rxBus: RxBusWrapper
+    @Inject lateinit var aapsLogger: AAPSLogger
     @Inject lateinit var resourceHelper: ResourceHelper
     @Inject lateinit var fabricPrivacy: FabricPrivacy
-    @Inject lateinit var foodPlugin: FoodPlugin
     @Inject lateinit var nsUpload: NSUpload
+    @Inject lateinit var repository: AppRepository
     @Inject lateinit var uel: UserEntryLogger
 
     private val disposable = CompositeDisposable()
@@ -62,8 +72,23 @@ class FoodFragment : DaggerFragment() {
 
         binding.recyclerview.setHasFixedSize(true)
         binding.recyclerview.layoutManager = LinearLayoutManager(view.context)
-        binding.recyclerview.adapter = RecyclerViewAdapter(foodPlugin.service?.foodData
-            ?: ArrayList())
+
+        binding.refreshFromNightscout.setOnClickListener {
+            context?.let { context ->
+                OKDialog.showConfirmation(context, resourceHelper.gs(R.string.refresheventsfromnightscout) + " ?", {
+                    uel.log(Action.FOOD_FROM_NS)
+                    disposable += Completable.fromAction { repository.deleteAllFoods() }
+                        .subscribeOn(aapsSchedulers.io)
+                        .observeOn(aapsSchedulers.main)
+                        .subscribeBy(
+                            onError = { aapsLogger.error("Error removing foods", it) },
+                            onComplete = { rxBus.send(EventFoodDatabaseChanged()) }
+                        )
+
+                    rxBus.send(EventNSClientRestart())
+                })
+            }
+        }
 
         binding.clearfilter.setOnClickListener {
             binding.filter.setText("")
@@ -99,10 +124,6 @@ class FoodFragment : DaggerFragment() {
 
             override fun afterTextChanged(s: Editable) {}
         })
-        loadData()
-        fillCategories()
-        fillSubcategories()
-        filterData()
     }
 
     @Synchronized
@@ -111,9 +132,23 @@ class FoodFragment : DaggerFragment() {
         disposable.add(rxBus
             .toObservable(EventFoodDatabaseChanged::class.java)
             .observeOn(aapsSchedulers.main)
-            .subscribe({ updateGui() }, fabricPrivacy::logException)
+            .debounce(1L, TimeUnit.SECONDS)
+            .subscribe({ swapAdapter() }, fabricPrivacy::logException)
         )
-        updateGui()
+        swapAdapter()
+    }
+
+    private fun swapAdapter() {
+        disposable += repository
+            .getFoodData()
+            .observeOn(aapsSchedulers.main)
+            .subscribe { list ->
+                unfiltered = list
+                fillCategories()
+                fillSubcategories()
+                filterData()
+                binding.recyclerview.swapAdapter(RecyclerViewAdapter(filtered), true)
+            }
     }
 
     @Synchronized
@@ -128,14 +163,11 @@ class FoodFragment : DaggerFragment() {
         _binding = null
     }
 
-    private fun loadData() {
-        unfiltered = foodPlugin.service?.foodData ?: ArrayList()
-    }
-
     private fun fillCategories() {
         val catSet: MutableSet<CharSequence> = HashSet()
         for (f in unfiltered) {
-            if (f.category != null && f.category != "") catSet.add(f.category)
+            val category = f.category
+            if (!category.isNullOrBlank()) catSet.add(category)
         }
         // make it unique
         val categories = ArrayList(catSet)
@@ -151,7 +183,10 @@ class FoodFragment : DaggerFragment() {
         val subCatSet: MutableSet<CharSequence> = HashSet()
         if (categoryFilter != resourceHelper.gs(R.string.none)) {
             for (f in unfiltered) {
-                if (f.category != null && f.category == categoryFilter) if (f.subcategory != null && f.subcategory != "") subCatSet.add(f.subcategory)
+                if (f.category != null && f.category == categoryFilter) {
+                    val subCategory = f.subCategory
+                    if (!subCategory.isNullOrEmpty()) subCatSet.add(subCategory)
+                }
             }
         }
         // make it unique
@@ -169,21 +204,19 @@ class FoodFragment : DaggerFragment() {
         val subcategoryFilter = binding.subcategory.selectedItem.toString()
         val newFiltered = ArrayList<Food>()
         for (f in unfiltered) {
-            if (f.name == null || f.category == null || f.subcategory == null) continue
-            if (subcategoryFilter != resourceHelper.gs(R.string.none) && f.subcategory != subcategoryFilter) continue
+            if (f.category == null || f.subCategory == null) continue
+            if (subcategoryFilter != resourceHelper.gs(R.string.none) && f.subCategory != subcategoryFilter) continue
             if (categoryFilter != resourceHelper.gs(R.string.none) && f.category != categoryFilter) continue
             if (textFilter != "" && !f.name.toLowerCase(Locale.getDefault()).contains(textFilter.toLowerCase(Locale.getDefault()))) continue
             newFiltered.add(f)
         }
         filtered = newFiltered
-        updateGui()
-    }
-
-    private fun updateGui() {
         binding.recyclerview.swapAdapter(RecyclerViewAdapter(filtered), true)
     }
 
-    inner class RecyclerViewAdapter internal constructor(var foodList: List<Food>) : RecyclerView.Adapter<FoodsViewHolder>() {
+    fun Int?.isNotZero(): Boolean = this != null && this != 0
+
+    inner class RecyclerViewAdapter internal constructor(private var foodList: List<Food>) : RecyclerView.Adapter<RecyclerViewAdapter.FoodsViewHolder>() {
 
         override fun onCreateViewHolder(viewGroup: ViewGroup, viewType: Int): FoodsViewHolder {
             val v = LayoutInflater.from(viewGroup.context).inflate(R.layout.food_item, viewGroup, false)
@@ -193,16 +226,16 @@ class FoodFragment : DaggerFragment() {
         @SuppressLint("SetTextI18n")
         override fun onBindViewHolder(holder: FoodsViewHolder, position: Int) {
             val food = foodList[position]
-            holder.binding.nsSign.visibility = if (food._id != null) View.VISIBLE else View.GONE
+            holder.binding.nsSign.visibility = (food.interfaceIDs.nightscoutId != null).toVisibility()
             holder.binding.name.text = food.name
-            holder.binding.portion.text = food.portion.toString() + food.units
+            holder.binding.portion.text = food.portion.toString() + food.unit
             holder.binding.carbs.text = food.carbs.toString() + resourceHelper.gs(R.string.shortgramm)
             holder.binding.fat.text = resourceHelper.gs(R.string.shortfat) + ": " + food.fat + resourceHelper.gs(R.string.shortgramm)
-            if (food.fat == 0) holder.binding.fat.visibility = View.INVISIBLE
+            holder.binding.fat.visibility = food.fat.isNotZero().toVisibility()
             holder.binding.protein.text = resourceHelper.gs(R.string.shortprotein) + ": " + food.protein + resourceHelper.gs(R.string.shortgramm)
-            if (food.protein == 0) holder.binding.protein.visibility = View.INVISIBLE
+            holder.binding.protein.visibility = food.protein.isNotZero().toVisibility()
             holder.binding.energy.text = resourceHelper.gs(R.string.shortenergy) + ": " + food.energy + resourceHelper.gs(R.string.shortkilojoul)
-            if (food.energy == 0) holder.binding.energy.visibility = View.INVISIBLE
+            holder.binding.energy.visibility = food.energy.isNotZero().toVisibility()
             holder.binding.remove.tag = food
         }
 
@@ -216,12 +249,17 @@ class FoodFragment : DaggerFragment() {
                 binding.remove.setOnClickListener { v: View ->
                     val food = v.tag as Food
                     activity?.let { activity ->
-                        OKDialog.showConfirmation(activity, resourceHelper.gs(R.string.confirmation), resourceHelper.gs(R.string.removerecord) + "\n" + food.name, DialogInterface.OnClickListener { _: DialogInterface?, _: Int ->
+                        OKDialog.showConfirmation(activity, resourceHelper.gs(R.string.removerecord) + "\n" + food.name, {
                             uel.log(Action.FOOD_REMOVED, food.name)
-                            if (food._id != null && food._id != "") {
-                                nsUpload.removeFoodFromNS(food._id)
-                            }
-                            foodPlugin.service?.delete(food)
+                            disposable += repository.runTransactionForResult(InvalidateFoodTransaction(food.id))
+                                .subscribe({
+                                    val id = food.interfaceIDs.nightscoutId
+                                    if (NSUpload.isIdValid(id)) nsUpload.removeFoodFromNS(id)
+                                    // no create at the moment
+                                    // else uploadQueue.removeID("dbAdd", food.timestamp.toString())
+                                }, {
+                                    aapsLogger.error(LTag.BGSOURCE, "Error while invalidating food", it)
+                                })
                         }, null)
                     }
                 }

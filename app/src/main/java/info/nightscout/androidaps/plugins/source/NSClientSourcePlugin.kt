@@ -15,16 +15,18 @@ import info.nightscout.androidaps.interfaces.PluginDescription
 import info.nightscout.androidaps.interfaces.PluginType
 import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.logging.LTag
+import info.nightscout.androidaps.plugins.bus.RxBusWrapper
+import info.nightscout.androidaps.plugins.general.nsclient.NSClientPlugin
 import info.nightscout.androidaps.plugins.general.nsclient.NSUpload
 import info.nightscout.androidaps.plugins.general.nsclient.data.NSSgv
-import info.nightscout.androidaps.receivers.BundleStore
+import info.nightscout.androidaps.plugins.general.overview.events.EventDismissNotification
+import info.nightscout.androidaps.plugins.general.overview.notifications.Notification
+import info.nightscout.androidaps.receivers.DataWorker
 import info.nightscout.androidaps.utils.DateUtil
+import info.nightscout.androidaps.utils.T
 import info.nightscout.androidaps.utils.XDripBroadcast
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 import info.nightscout.androidaps.utils.sharedPreferences.SP
-import io.reactivex.disposables.CompositeDisposable
-import io.reactivex.rxkotlin.plusAssign
-import org.json.JSONArray
 import org.json.JSONObject
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -55,13 +57,6 @@ class NSClientSourcePlugin @Inject constructor(
         }
     }
 
-    private val disposable = CompositeDisposable()
-
-    override fun onStop() {
-        disposable.clear()
-        super.onStop()
-    }
-
     override fun advancedFilteringSupported(): Boolean {
         return isAdvancedFilteringEnabled
     }
@@ -89,12 +84,14 @@ class NSClientSourcePlugin @Inject constructor(
         @Inject lateinit var injector: HasAndroidInjector
         @Inject lateinit var aapsLogger: AAPSLogger
         @Inject lateinit var sp: SP
+        @Inject lateinit var rxBus: RxBusWrapper
         @Inject lateinit var nsUpload: NSUpload
         @Inject lateinit var dateUtil: DateUtil
-        @Inject lateinit var bundleStore: BundleStore
+        @Inject lateinit var dataWorker: DataWorker
         @Inject lateinit var repository: AppRepository
         @Inject lateinit var broadcastToXDrip: XDripBroadcast
         @Inject lateinit var dexcomPlugin: DexcomPlugin
+        @Inject lateinit var nsClientPlugin: NSClientPlugin
 
         init {
             (context.applicationContext as HasAndroidInjector).androidInjector().inject(this)
@@ -113,41 +110,59 @@ class NSClientSourcePlugin @Inject constructor(
             )
         }
 
+        @Suppress("SpellCheckingInspection")
         override fun doWork(): Result {
+            var ret = Result.success()
+
             if (!nsClientSourcePlugin.isEnabled() && !sp.getBoolean(R.string.key_ns_autobackfill, true) && !dexcomPlugin.isEnabled()) return Result.failure()
+
+            val sgvs = dataWorker.pickupJSONArray(inputData.getLong(DataWorker.STORE_KEY, -1))
+                ?: return Result.failure()
+
             try {
+                var latestDateInReceivedData: Long = 0
+
+                aapsLogger.debug(LTag.BGSOURCE, "Received NS Data: $sgvs")
                 val glucoseValues = mutableListOf<CgmSourceTransaction.TransactionGlucoseValue>()
-                inputData.getString("sgv")?.let { sgvString ->
-                    aapsLogger.debug(LTag.BGSOURCE, "Received NS Data: $sgvString")
-                    glucoseValues += toGv(JSONObject(sgvString))
+                for (i in 0 until sgvs.length()) {
+                    val sgv = toGv(sgvs.getJSONObject(i))
+                    if (sgv.timestamp < dateUtil._now() && sgv.timestamp > latestDateInReceivedData) latestDateInReceivedData = sgv.timestamp
+                    glucoseValues += sgv
+
                 }
-                inputData.getString("sgvs")?.let { sgvString ->
-                    aapsLogger.debug(LTag.BGSOURCE, "Received NS Data: $sgvString")
-                    val jsonArray = JSONArray(sgvString)
-                    for (i in 0 until jsonArray.length())
-                        glucoseValues += toGv(jsonArray.getJSONObject(i))
+                // Was that sgv more less 5 mins ago ?
+                if (T.msecs(dateUtil._now() - latestDateInReceivedData).mins() < 5L) {
+                    rxBus.send(EventDismissNotification(Notification.NS_ALARM))
+                    rxBus.send(EventDismissNotification(Notification.NS_URGENT_ALARM))
                 }
-                nsClientSourcePlugin.disposable += repository.runTransactionForResult(CgmSourceTransaction(glucoseValues, emptyList(), null, !nsClientSourcePlugin.isEnabled())).subscribe({ result ->
-                    result.updated.forEach {
-                        //aapsLogger.debug("XXXXX: Updated $it")
-                        broadcastToXDrip(it)
-                        nsClientSourcePlugin.detectSource(it)
+
+                nsClientPlugin.updateLatestDateReceivedIfNewer(latestDateInReceivedData)
+
+                repository.runTransactionForResult(CgmSourceTransaction(glucoseValues, emptyList(), null, !nsClientSourcePlugin.isEnabled()))
+                    .doOnError {
+                        aapsLogger.error("Error while saving values from NSClient App", it)
+                        ret = Result.failure()
                     }
-                    result.inserted.forEach {
-                        //aapsLogger.debug("XXXXX: Inserted $it")
-                        broadcastToXDrip(it)
-                        nsClientSourcePlugin.detectSource(it)
+                    .blockingGet()
+                    .also { result ->
+                        result.updated.forEach {
+                            broadcastToXDrip(it)
+                            nsClientSourcePlugin.detectSource(it)
+                            aapsLogger.debug(LTag.BGSOURCE, "Updated bg $it")
+                        }
+                        result.inserted.forEach {
+                            broadcastToXDrip(it)
+                            nsClientSourcePlugin.detectSource(it)
+                            aapsLogger.debug(LTag.BGSOURCE, "Inserted bg $it")
+                        }
                     }
-                }, {
-                    aapsLogger.error("Error while saving values from NSClient App", it)
-                })
             } catch (e: Exception) {
                 aapsLogger.error("Unhandled exception", e)
-                return Result.failure()
+                ret = Result.failure()
             }
             // Objectives 0
             sp.putBoolean(R.string.key_ObjectivesbgIsAvailableInNS, true)
-            return Result.success()
+            return ret
         }
     }
 }

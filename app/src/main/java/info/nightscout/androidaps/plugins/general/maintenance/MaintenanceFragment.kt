@@ -16,7 +16,6 @@ import info.nightscout.androidaps.interfaces.ImportExportPrefsInterface
 import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.logging.UserEntryLogger
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper
-import info.nightscout.androidaps.plugins.general.food.FoodPlugin
 import info.nightscout.androidaps.plugins.general.maintenance.activities.LogSettingActivity
 import info.nightscout.androidaps.plugins.treatments.TreatmentsPlugin
 import info.nightscout.androidaps.utils.alertDialogs.OKDialog
@@ -34,7 +33,6 @@ class MaintenanceFragment : DaggerFragment() {
     @Inject lateinit var rxBus: RxBusWrapper
     @Inject lateinit var resourceHelper: ResourceHelper
     @Inject lateinit var treatmentsPlugin: TreatmentsPlugin
-    @Inject lateinit var foodPlugin: FoodPlugin
     @Inject lateinit var importExportPrefs: ImportExportPrefsInterface
     @Inject lateinit var aapsSchedulers: AapsSchedulers
     @Inject lateinit var repository: AppRepository
@@ -70,7 +68,6 @@ class MaintenanceFragment : DaggerFragment() {
                             databaseHelper.resetDatabases()
                             // should be handled by Plugin-Interface and
                             // additional service interface and plugin registry
-                            foodPlugin.service?.resetFood()
                             treatmentsPlugin.service.resetTreatments()
                             repository.clearDatabases()
                         }

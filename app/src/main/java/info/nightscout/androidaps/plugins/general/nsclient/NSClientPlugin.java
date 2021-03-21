@@ -31,7 +31,9 @@ import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.database.AppRepository;
 import info.nightscout.androidaps.database.entities.TemporaryTarget;
 import info.nightscout.androidaps.database.entities.TherapyEvent;
-import info.nightscout.androidaps.database.entities.UserEntry.*;
+import info.nightscout.androidaps.database.entities.UserEntry.Action;
+import info.nightscout.androidaps.database.entities.UserEntry.Units;
+import info.nightscout.androidaps.database.entities.UserEntry.ValueWithUnit;
 import info.nightscout.androidaps.database.transactions.SyncTemporaryTargetTransaction;
 import info.nightscout.androidaps.database.transactions.SyncTherapyEventTransaction;
 import info.nightscout.androidaps.events.EventAppExit;
@@ -50,7 +52,6 @@ import info.nightscout.androidaps.logging.UserEntryLogger;
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper;
 import info.nightscout.androidaps.plugins.general.nsclient.data.AlarmAck;
 import info.nightscout.androidaps.plugins.general.nsclient.data.NSAlarm;
-import info.nightscout.androidaps.plugins.general.nsclient.data.NSMbg;
 import info.nightscout.androidaps.plugins.general.nsclient.events.EventNSClientNewLog;
 import info.nightscout.androidaps.plugins.general.nsclient.events.EventNSClientResend;
 import info.nightscout.androidaps.plugins.general.nsclient.events.EventNSClientStatus;
@@ -73,7 +74,6 @@ import static info.nightscout.androidaps.utils.extensions.TemporaryTargetExtensi
 import static info.nightscout.androidaps.utils.extensions.TemporaryTargetExtensionKt.temporaryTargetFromNsIdForInvalidating;
 import static info.nightscout.androidaps.utils.extensions.TherapyEventExtensionKt.therapyEventFromJson;
 import static info.nightscout.androidaps.utils.extensions.TherapyEventExtensionKt.therapyEventFromNsIdForInvalidating;
-import static info.nightscout.androidaps.utils.extensions.TherapyEventExtensionKt.therapyEventFromNsMbg;
 
 @Singleton
 public class NSClientPlugin extends PluginBase {
@@ -257,7 +257,7 @@ public class NSClientPlugin extends PluginBase {
             SwitchPreference key_ns_sync_use_absolute = preferenceFragment.findPreference(resourceHelper.gs(R.string.key_ns_sync_use_absolute));
             if (key_ns_sync_use_absolute != null) key_ns_sync_use_absolute.setVisible(false);
         } else {
-            // APS or pumpcontrol mode
+            // APS or pumpControl mode
             SwitchPreference key_ns_upload_only = preferenceFragment.findPreference(resourceHelper.gs(R.string.key_ns_upload_only));
             if (key_ns_upload_only != null)
                 key_ns_upload_only.setVisible(buildHelper.isEngineeringMode());
@@ -353,178 +353,8 @@ public class NSClientPlugin extends PluginBase {
             nsClientService.sendAlarmAck(ack);
     }
 
-    // Parsing input data
-
-    public void handleNewDataFromNSClient(String action, Bundle bundle) {
-        boolean acceptNSData = !sp.getBoolean(R.string.key_ns_upload_only, true) && buildHelper.isEngineeringMode() || config.getNSCLIENT();
-        if (!acceptNSData) return;
-        aapsLogger.debug(LTag.DATASERVICE, "Got intent: " + action);
-
-        if (action.equals(Intents.ACTION_NEW_TREATMENT) || action.equals(Intents.ACTION_CHANGED_TREATMENT)) {
-            try {
-                if (bundle.containsKey("treatment")) {
-                    JSONObject json = new JSONObject(bundle.getString("treatment"));
-                    handleTreatmentFromNS(json, action);
-                }
-                if (bundle.containsKey("treatments")) {
-                    String trstring = bundle.getString("treatments");
-                    JSONArray jsonArray = new JSONArray(trstring);
-                    for (int i = 0; i < jsonArray.length(); i++) {
-                        JSONObject json = jsonArray.getJSONObject(i);
-                        handleTreatmentFromNS(json, action);
-                    }
-                }
-            } catch (JSONException e) {
-                aapsLogger.error(LTag.DATASERVICE, "Unhandled exception", e);
-            }
-        }
-
-        if (action.equals(Intents.ACTION_REMOVED_TREATMENT)) {
-            try {
-                if (bundle.containsKey("treatment")) {
-                    String trstring = bundle.getString("treatment");
-                    JSONObject json = new JSONObject(trstring);
-                    handleRemovedTreatmentFromNS(json);
-                }
-
-                if (bundle.containsKey("treatments")) {
-                    String trstring = bundle.getString("treatments");
-                    JSONArray jsonArray = new JSONArray(trstring);
-                    for (int i = 0; i < jsonArray.length(); i++) {
-                        JSONObject json = jsonArray.getJSONObject(i);
-                        handleRemovedTreatmentFromNS(json);
-                    }
-                }
-            } catch (JSONException e) {
-                aapsLogger.error(LTag.DATASERVICE, "Unhandled exception", e);
-            }
-        }
-
-        if (action.equals(Intents.ACTION_NEW_MBG)) {
-            try {
-                if (bundle.containsKey("mbg")) {
-                    String mbgstring = bundle.getString("mbg");
-                    JSONObject mbgJson = new JSONObject(mbgstring);
-                    storeMbg(mbgJson);
-                }
-
-                if (bundle.containsKey("mbgs")) {
-                    String sgvstring = bundle.getString("mbgs");
-                    JSONArray jsonArray = new JSONArray(sgvstring);
-                    for (int i = 0; i < jsonArray.length(); i++) {
-                        JSONObject mbgJson = jsonArray.getJSONObject(i);
-                        storeMbg(mbgJson);
-                    }
-                }
-            } catch (Exception e) {
-                aapsLogger.error(LTag.DATASERVICE, "Unhandled exception", e);
-            }
-        }
-    }
-
-    private void handleRemovedTreatmentFromNS(JSONObject json) {
-        String _id = JsonHelper.safeGetString(json, "_id");
-        if (_id == null) return;
-        // room  Temporary target
-        TemporaryTarget temporaryTarget = temporaryTargetFromNsIdForInvalidating(_id);
-        disposable.add(repository.runTransactionForResult(new SyncTemporaryTargetTransaction(temporaryTarget)).subscribe(
-                result -> result.getInvalidated().forEach(record -> uel.log(Action.TT_DELETED_FROM_NS, new ValueWithUnit(record.getReason().getText(), Units.TherapyEvent), new ValueWithUnit(record.getLowTarget(), Units.Mg_Dl, true), new ValueWithUnit(record.getHighTarget(), Units.Mg_Dl, record.getLowTarget() != record.getHighTarget()), new ValueWithUnit((int) record.getDuration()/60000, Units.M, record.getDuration() != 0))),
-                error -> aapsLogger.error(LTag.DATABASE, "Error while removing temporary target", error)));
-        // room  Therapy Event
-        TherapyEvent therapyEvent = therapyEventFromNsIdForInvalidating(_id);
-        disposable.add(repository.runTransactionForResult(new SyncTherapyEventTransaction(therapyEvent)).subscribe(
-                result -> result.getInvalidated().forEach(record -> uel.log(Action.CAREPORTAL_DELETED_FROM_NS, record.getNote() , new ValueWithUnit(record.getTimestamp(), Units.Timestamp, true), new ValueWithUnit(record.getType().getText(), Units.TherapyEvent))),
-                error -> aapsLogger.error(LTag.DATABASE, "Error while removing therapy event", error)));
-        // new DB model
-        EventNsTreatment evtTreatment = new EventNsTreatment(EventNsTreatment.Companion.getREMOVE(), json);
-        rxBus.send(evtTreatment);
-        // old DB model
-        databaseHelper.deleteTempBasalById(_id);
-        databaseHelper.deleteExtendedBolusById(_id);
-        databaseHelper.deleteProfileSwitchById(_id);
-    }
-
-    private void handleTreatmentFromNS(JSONObject json, String action) {
-        // new DB model
-        int mode = Intents.ACTION_NEW_TREATMENT.equals(action) ? EventNsTreatment.Companion.getADD() : EventNsTreatment.Companion.getUPDATE();
-        double insulin = JsonHelper.safeGetDouble(json, "insulin");
-        double carbs = JsonHelper.safeGetDouble(json, "carbs");
-        String eventType = JsonHelper.safeGetString(json, "eventType");
-        if (eventType == null) {
-            aapsLogger.debug(LTag.DATASERVICE, "Wrong treatment. Ignoring : " + json.toString());
-            return;
-        }
-        if (insulin > 0 || carbs > 0) {
-            EventNsTreatment evtTreatment = new EventNsTreatment(mode, json);
-            rxBus.send(evtTreatment);
-        } else if (eventType.equals(TherapyEvent.Type.TEMPORARY_TARGET.getText())) {
-            TemporaryTarget temporaryTarget = temporaryTargetFromJson(json);
-            if (temporaryTarget != null) {
-                disposable.add(repository.runTransactionForResult(new SyncTemporaryTargetTransaction(temporaryTarget))
-                        .subscribe(
-                                result -> {
-                                    result.getInserted().forEach(record -> uel.log(Action.TT_FROM_NS, new ValueWithUnit(record.getReason().getText(), Units.TherapyEvent), new ValueWithUnit(record.getLowTarget(), Units.Mg_Dl, true), new ValueWithUnit(record.getHighTarget(), Units.Mg_Dl, record.getLowTarget() != record.getHighTarget()), new ValueWithUnit((int) record.getDuration()/60000, Units.M, true)));
-                                    result.getInvalidated().forEach(record -> uel.log(Action.TT_DELETED_FROM_NS, new ValueWithUnit(record.getReason().getText(), Units.TherapyEvent), new ValueWithUnit(record.getLowTarget(), Units.Mg_Dl, true), new ValueWithUnit(record.getHighTarget(), Units.Mg_Dl, record.getLowTarget() != record.getHighTarget()), new ValueWithUnit((int) record.getDuration()/60000, Units.M, true)));
-                                    result.getEnded().forEach(record -> uel.log(Action.TT_CANCELED_FROM_NS, new ValueWithUnit(record.getReason().getText(), Units.TherapyEvent), new ValueWithUnit(record.getLowTarget(), Units.Mg_Dl, true), new ValueWithUnit(record.getHighTarget(), Units.Mg_Dl, record.getLowTarget() != record.getHighTarget()), new ValueWithUnit((int) record.getDuration()/60000, Units.M, true)));
-                                },
-                                error -> aapsLogger.error(LTag.DATABASE, "Error while saving temporary target", error)));
-            } else {
-                aapsLogger.error("Error parsing TT json " + json.toString());
-            }
-        } else if (eventType.equals(TherapyEvent.Type.TEMPORARY_BASAL.getText())) {
-            databaseHelper.createTempBasalFromJsonIfNotExists(json);
-        } else if (eventType.equals(TherapyEvent.Type.COMBO_BOLUS.getText())) {
-            databaseHelper.createExtendedBolusFromJsonIfNotExists(json);
-        } else if (eventType.equals(TherapyEvent.Type.PROFILE_SWITCH.getText())) {
-            databaseHelper.createProfileSwitchFromJsonIfNotExists(activePlugin, nsUpload, json);
-        } else if (eventType.equals(TherapyEvent.Type.CANNULA_CHANGE.getText()) ||
-                eventType.equals(TherapyEvent.Type.INSULIN_CHANGE.getText()) ||
-                eventType.equals(TherapyEvent.Type.SENSOR_CHANGE.getText()) ||
-                eventType.equals(TherapyEvent.Type.FINGER_STICK_BG_VALUE.getText()) ||
-                eventType.equals(TherapyEvent.Type.NOTE.getText()) ||
-                eventType.equals(TherapyEvent.Type.NONE.getText()) ||
-                eventType.equals(TherapyEvent.Type.ANNOUNCEMENT.getText()) ||
-                eventType.equals(TherapyEvent.Type.QUESTION.getText()) ||
-                eventType.equals(TherapyEvent.Type.EXERCISE.getText()) ||
-                eventType.equals(TherapyEvent.Type.APS_OFFLINE.getText()) ||
-                eventType.equals(TherapyEvent.Type.PUMP_BATTERY_CHANGE.getText())) {
-            TherapyEvent therapyEvent = therapyEventFromJson(json);
-            if (therapyEvent != null) {
-                disposable.add(repository.runTransactionForResult(new SyncTherapyEventTransaction(therapyEvent))
-                        .subscribe(
-                                result -> {
-                                    result.getInserted().forEach(record -> uel.log(Action.CAREPORTAL_FROM_NS, record.getNote() , new ValueWithUnit(record.getTimestamp(), Units.Timestamp, true), new ValueWithUnit(record.getType().getText(), Units.TherapyEvent)));
-                                    result.getInvalidated().forEach(record -> uel.log(Action.CAREPORTAL_DELETED_FROM_NS, record.getNote() , new ValueWithUnit(record.getTimestamp(), Units.Timestamp, true), new ValueWithUnit(record.getType().getText(), Units.TherapyEvent)));
-                                },
-                                error -> aapsLogger.error(LTag.DATABASE, "Error while saving therapy event", error)));
-            } else {
-                aapsLogger.error("Error parsing TherapyEvent json " + json.toString());
-            }
-        }
-
-        if (eventType.equals(TherapyEvent.Type.ANNOUNCEMENT.getText())) {
-            long date = JsonHelper.safeGetLong(json, "mills");
-            long now = System.currentTimeMillis();
-            String enteredBy = JsonHelper.safeGetString(json, "enteredBy", "");
-            String notes = JsonHelper.safeGetString(json, "notes", "");
-            if (date > now - 15 * 60 * 1000L && !notes.isEmpty()
-                    && !enteredBy.equals(sp.getString("careportal_enteredby", "AndroidAPS"))) {
-                boolean defaultVal = config.getNSCLIENT();
-                if (sp.getBoolean(R.string.key_ns_announcements, defaultVal)) {
-                    Notification announcement = new Notification(Notification.NS_ANNOUNCEMENT, notes, Notification.ANNOUNCEMENT, 60);
-                    rxBus.send(new EventNewNotification(announcement));
-                }
-            }
-        }
-    }
-
-    private void storeMbg(JSONObject mbgJson) {
-        NSMbg nsMbg = new NSMbg(getInjector(), mbgJson);
-        if (nsMbg.mbg != 0.0 && nsMbg.date != 0)
-            disposable.add(repository.runTransactionForResult(new SyncTherapyEventTransaction(therapyEventFromNsMbg(nsMbg)))
-                    .subscribe(
-                            result -> aapsLogger.debug(LTag.DATABASE, "Saved therapy event" + result),
-                            error -> aapsLogger.error("Error while saving therapy event", error))
-            );
+    public void updateLatestDateReceivedIfNewer(long latestReceived) {
+        if (latestReceived > nsClientService.latestDateInReceivedData)
+            nsClientService.latestDateInReceivedData = latestReceived;
     }
 }
