@@ -269,7 +269,6 @@
     <string name="openapsma_autosensdata_label">Autosens data</string>
     <string name="openapsma_scriptdebugdata_label">Script feilsøking</string>
     <string name="openapsama_useautosens">Bruk Autosens funksjon</string>
-    <string name="refresheventsfromnightscout">Oppdater hendelser fra NS</string>
     <string name="deletefuturetreatments">Slett behandlinger i fremtiden</string>
     <string name="actions_shortname">ACT</string>
     <string name="configbuilder_shortname">KONF</string>
