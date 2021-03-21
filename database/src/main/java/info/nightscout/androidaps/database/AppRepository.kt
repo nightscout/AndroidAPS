@@ -18,7 +18,7 @@ import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-class AppRepository @Inject internal constructor(
+open class AppRepository @Inject internal constructor(
     internal val database: AppDatabase
 ) {
 
