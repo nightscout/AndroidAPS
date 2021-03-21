@@ -97,13 +97,13 @@ class NSClientSourcePlugin @Inject constructor(
             (context.applicationContext as HasAndroidInjector).androidInjector().inject(this)
         }
 
-        private fun toGv(jsonObject: JSONObject): CgmSourceTransaction.TransactionGlucoseValue {
+        private fun toGv(jsonObject: JSONObject): CgmSourceTransaction.TransactionGlucoseValue? {
             val sgv = NSSgv(jsonObject)
             return CgmSourceTransaction.TransactionGlucoseValue(
-                timestamp = sgv.mills,
-                value = sgv.mgdl.toDouble(),
+                timestamp = sgv.mills ?: return null,
+                value = sgv.mgdl?.toDouble() ?: return null,
                 noise = null,
-                raw = if (sgv.filtered != null) sgv.filtered.toDouble() else sgv.mgdl.toDouble(),
+                raw = sgv.filtered?.toDouble() ?:  sgv.mgdl?.toDouble(),
                 trendArrow = GlucoseValue.TrendArrow.fromString(sgv.direction),
                 nightscoutId = sgv.id,
                 sourceSensor = GlucoseValue.SourceSensor.fromString(sgv.device)
@@ -125,7 +125,7 @@ class NSClientSourcePlugin @Inject constructor(
                 aapsLogger.debug(LTag.BGSOURCE, "Received NS Data: $sgvs")
                 val glucoseValues = mutableListOf<CgmSourceTransaction.TransactionGlucoseValue>()
                 for (i in 0 until sgvs.length()) {
-                    val sgv = toGv(sgvs.getJSONObject(i))
+                    val sgv = toGv(sgvs.getJSONObject(i)) ?: continue
                     if (sgv.timestamp < dateUtil._now() && sgv.timestamp > latestDateInReceivedData) latestDateInReceivedData = sgv.timestamp
                     glucoseValues += sgv
 
