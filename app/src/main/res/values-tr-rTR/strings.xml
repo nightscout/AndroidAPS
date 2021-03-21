@@ -194,7 +194,6 @@
     <string name="array_of_elements">%1$d öğelerin dizisi.\nGerçek değer:</string>
     <string name="openapsma_autosensdata_label">Autosens verileri</string>
     <string name="openapsma_scriptdebugdata_label">Skriptte hata ayıkla</string>
-    <string name="refresheventsfromnightscout">NS\'den olayları yenile</string>
     <string name="deletefuturetreatments">Gelecekte tedavileri sil</string>
     <string name="actions_shortname">ACT</string>
     <string name="configbuilder_shortname">KONF</string>
