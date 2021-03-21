@@ -208,7 +208,6 @@
     <string name="openapsma_autosensdata_label">Autosens data</string>
     <string name="openapsma_scriptdebugdata_label">Skrip foutopspoor</string>
     <string name="openapsama_useautosens">Gebruik autosens kenmerk</string>
-    <string name="refresheventsfromnightscout">Verfris gebeure van NS</string>
     <string name="deletefuturetreatments">Skrap behandelings in die toekoms</string>
     <string name="actions_shortname">ACT</string>
     <string name="configbuilder_shortname">CONF</string>
