@@ -264,7 +264,6 @@
     <string name="openapsma_autosensdata_label">Autosens duomenys</string>
     <string name="openapsma_scriptdebugdata_label">Scenarijų derinimas</string>
     <string name="openapsama_useautosens">Naudoti Autosens funkciją</string>
-    <string name="refresheventsfromnightscout">Atnaujinti įvykius iš NS</string>
     <string name="deletefuturetreatments">Ištrinti ateities įrašus</string>
     <string name="actions_shortname">VEIKS</string>
     <string name="configbuilder_shortname">KONF</string>
