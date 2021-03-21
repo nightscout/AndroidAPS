@@ -269,7 +269,6 @@
     <string name="openapsma_autosensdata_label">נתוני חישוב רגישות אוטו\'</string>
     <string name="openapsma_scriptdebugdata_label">תיקון באגים בסקריפט</string>
     <string name="openapsama_useautosens">שימוש בפונקציית חישוב רגישות אוטומטית (Autosens)</string>
-    <string name="refresheventsfromnightscout">רענן אירועים מ-Nightscout</string>
     <string name="deletefuturetreatments">מחיקת טיפולים עתידיים</string>
     <string name="actions_shortname">ACT</string>
     <string name="configbuilder_shortname">CONF</string>
