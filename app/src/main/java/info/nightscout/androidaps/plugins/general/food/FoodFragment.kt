@@ -200,8 +200,8 @@ class FoodFragment : DaggerFragment() {
 
     private fun filterData() {
         val textFilter = binding.filter.text.toString()
-        val categoryFilter = binding.category.selectedItem.toString()
-        val subcategoryFilter = binding.subcategory.selectedItem.toString()
+        val categoryFilter = binding.category.selectedItem?.toString() ?: resourceHelper.gs(R.string.none)
+        val subcategoryFilter = binding.subcategory.selectedItem?.toString() ?: resourceHelper.gs(R.string.none)
         val newFiltered = ArrayList<Food>()
         for (f in unfiltered) {
             if (f.category == null || f.subCategory == null) continue
