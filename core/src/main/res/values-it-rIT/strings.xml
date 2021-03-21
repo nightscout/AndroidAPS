@@ -62,6 +62,8 @@
     <string name="eventtype">Tipo evento</string>
     <string name="mgdl">mg/dl</string>
     <string name="mmol">mmol/l</string>
+    <string name="shortgram">g</string>
+    <string name="shortpercent">%</string>
     <string name="advancedsettings_title">Impostazioni avanzate</string>
     <string name="bluetooth">Bluetooth</string>
     <string name="btwatchdog_title">BT Watchdog</string>
@@ -310,6 +312,10 @@
     <string name="saturday_short">S</string>
     <string name="sunday_short">D</string>
     <!-- User Entry -->
+    <string name="uel_tt">TT</string>
+    <string name="uel_new_profile">NUOVO PROFILO</string>
+    <string name="uel_clone_profile">CLONA PROFILO</string>
+    <string name="uel_profile_switch">CAMBIO PROFILO</string>
     <plurals name="days">
         <item quantity="one">%1$d giorno</item>
         <item quantity="other">%1$d giorni</item>
