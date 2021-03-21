@@ -226,7 +226,6 @@
     <string name="openapsma_autosensdata_label">Autosens 정보</string>
     <string name="openapsma_scriptdebugdata_label">스크립트 디버그</string>
     <string name="openapsama_useautosens">Autosens 기능 사용</string>
-    <string name="refresheventsfromnightscout">NS에서 이벤트 새로고침</string>
     <string name="deletefuturetreatments">미래시점의 관리 삭제</string>
     <string name="actions_shortname">ACT</string>
     <string name="configbuilder_shortname">CONF</string>
