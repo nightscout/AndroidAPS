@@ -268,7 +268,6 @@
     <string name="openapsma_autosensdata_label">Autosens данни</string>
     <string name="openapsma_scriptdebugdata_label">От скрипта</string>
     <string name="openapsama_useautosens">Използвайте функцията за Autosens</string>
-    <string name="refresheventsfromnightscout">Обнови от NS</string>
     <string name="deletefuturetreatments">Изтрий записите в бъдещето</string>
     <string name="actions_shortname">ДЕЙСТВ</string>
     <string name="configbuilder_shortname">КОНФ</string>
