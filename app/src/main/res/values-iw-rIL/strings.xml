@@ -138,6 +138,7 @@
     <string name="configbuilder_nightscoutversion_label">גירסת Nightscout:</string>
     <string name="missing_carbs">חסרים %1$d גר\'</string>
     <string name="exported">ההעדפות יוצאו</string>
+    <string name="ue_exported">רשומות המשתמש יוצאו</string>
     <string name="export_to">ייצא הגדרות ל</string>
     <string name="import_from">יבא הגדרות מ-</string>
     <string name="setting_imported">הגדרות מיובאות</string>
@@ -269,6 +270,7 @@
     <string name="openapsma_autosensdata_label">נתוני חישוב רגישות אוטו\'</string>
     <string name="openapsma_scriptdebugdata_label">תיקון באגים בסקריפט</string>
     <string name="openapsama_useautosens">שימוש בפונקציית חישוב רגישות אוטומטית (Autosens)</string>
+    <string name="refresheventsfromnightscout">רענון אירועים מנייטסקאוט</string>
     <string name="deletefuturetreatments">מחיקת טיפולים עתידיים</string>
     <string name="actions_shortname">ACT</string>
     <string name="configbuilder_shortname">CONF</string>
