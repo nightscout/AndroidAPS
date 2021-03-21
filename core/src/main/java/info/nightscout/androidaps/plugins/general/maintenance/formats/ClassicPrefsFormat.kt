@@ -88,43 +88,72 @@ class ClassicPrefsFormat @Inject constructor(
     }
 
     fun UserEntriesToCsv(userEntries: List<UserEntry>): String {
-        val userEntryHeader = resourceHelper.gs(R.string.ue_csv_header) + "\n"
+        val userEntryHeader = resourceHelper.gs(R.string.ue_csv_header,
+            csvString(R.string.date),
+            csvString(R.string.eventtype),
+            csvString(R.string.careportal_note),
+            csvString(R.string.event_time_label),
+            csvString(Units.fromText(profileFunction.getUnits())),
+            csvString(Units.G),
+            csvString(Units.U),
+            csvString(Units.U_H),
+            csvString(Units.Percent),
+            csvString(Units.H),
+            csvString(Units.M)
+        ) + "\n"
         return userEntryHeader + userEntries.joinToString("\n") { entry ->
-            if (entry.values.size > 0) {
-                entry.values.joinToString("\n") { value ->
-                    entry.timestamp.toString() + ";" +
-                        dateUtil.dateAndTimeAndSecondsString(entry.timestamp) + ";" +
-                        dateUtil.timeString(entry.utcOffset) + ";" +
-                        csvString(entry.action) + ";" +
-                        csvString(entry.s) + ";" +
-                        valueWithUnitToCsv(value)
+            var timestampRec = "" + entry.timestamp
+            var dateTimestampRev = dateUtil.dateAndTimeAndSecondsString(entry.timestamp)
+            var utcOffset = dateUtil.timeString(entry.utcOffset)
+            var action = csvString(entry.action)
+            var therapyEvent = ""
+            var source = ""
+            var note = csvString(entry.s)
+            var formatedString = ""
+            var timestamp = ""
+            var bg = ""
+            var g = ""
+            var u = ""
+            var uh = ""
+            var percent = ""
+            var h = ""
+            var m = ""
+            var other = ""
+
+            for (v in entry.values) {
+                when (v.unit) {
+                    Units.Timestamp    -> timestamp = dateUtil.dateAndTimeAndSecondsString(v.lValue)
+                    Units.TherapyEvent -> therapyEvent = if (therapyEvent == "") translator.translate(v.sValue) else therapyEvent + " / " + translator.translate(v.sValue)
+                    Units.R_String     -> if (v.iValue != 0) {  //Formated string lValue is the number of parameters, up to 3
+                        var rStringParam = v.lValue.toInt()
+                        var tempString = ""
+                        when (rStringParam) {   //
+                            0 -> tempString = resourceHelper.gs(v.iValue)
+                            1 -> tempString = resourceHelper.gs(v.iValue, entry.values[entry.values.indexOf(v)+1].value())
+                            2 -> tempString = resourceHelper.gs(v.iValue, entry.values[entry.values.indexOf(v)+1].value(), entry.values[entry.values.indexOf(v)+2].value())
+                            3 -> tempString = resourceHelper.gs(v.iValue, entry.values[entry.values.indexOf(v)+1].value(), entry.values[entry.values.indexOf(v)+2].value(), entry.values[entry.values.indexOf(v)+3].value())
+                        }
+                        formatedString = if (formatedString == "") tempString else  formatedString + " / " + tempString
+                    }
+                    Units.Mg_Dl         -> bg = if (profileFunction.getUnits()==Constants.MGDL) DecimalFormatter.to0Decimal(v.dValue) else DecimalFormatter.to1Decimal(v.dValue/Constants.MMOLL_TO_MGDL)
+                    Units.Mmol_L        -> bg = if (profileFunction.getUnits()==Constants.MGDL) DecimalFormatter.to0Decimal(v.dValue*Constants.MMOLL_TO_MGDL) else DecimalFormatter.to1Decimal(v.dValue)
+                    Units.G             -> g = v.iValue.toString()
+                    Units.U             -> u = DecimalFormatter.to2Decimal(v.dValue)
+                    Units.U_H           -> uh = DecimalFormatter.to2Decimal(v.dValue)
+                    Units.Percent       -> percent = v.iValue.toString()
+                    Units.H             -> h = v.iValue.toString()
+                    Units.M             -> m = v.iValue.toString()
+                    else                -> other = if (other == "") v.value().toString() else other + " / " + v.value().toString()
                 }
-            } else {
-                entry.timestamp.toString() + ";" +
-                    dateUtil.dateAndTimeAndSecondsString(entry.timestamp) + ";" +
-                    dateUtil.timeString(entry.utcOffset) + ";" +
-                    csvString(entry.action) + ";" +
-                    csvString(entry.s) + ";;"
             }
+            therapyEvent = csvString(therapyEvent)
+            formatedString = csvString(formatedString)
+            other = csvString(other)
+            timestampRec + ";" + dateTimestampRev + ";" + utcOffset + ";" + action + ";" + therapyEvent  + ";" + source  + ";" + note  + ";" + formatedString  + ";" + timestamp  + ";" + bg  + ";" + g  + ";" + u  + ";" + uh  + ";" + percent  + ";" + h  + ";" + m + ";" + other
         }
     }
 
-    fun valueWithUnitToCsv(v: ValueWithUnit): String {
-        return when (v.unit) {
-            Units.Timestamp    -> dateUtil.dateAndTimeAndSecondsString(v.lValue) + ";" + csvString(R.string.date)
-            Units.TherapyEvent -> csvString(translator.translate(v.sValue)) + ";"
-            Units.R_String     -> if (v.lValue.toInt() == 0) csvString(v.iValue) + ";" else ";"                //If lValue > 0 it's a formated string, so hidden for
-            Units.Mg_Dl         -> if (profileFunction.getUnits()==Constants.MGDL) DecimalFormatter.to0Decimal(v.dValue) + ";" + csvString(Units.Mg_Dl) else DecimalFormatter.to1Decimal(v.dValue/Constants.MMOLL_TO_MGDL) + ";" + csvString(Units.Mmol_L)
-            Units.Mmol_L        -> if (profileFunction.getUnits()==Constants.MGDL) DecimalFormatter.to0Decimal(v.dValue*Constants.MMOLL_TO_MGDL) + ";" + csvString(Units.Mg_Dl) else DecimalFormatter.to1Decimal(v.dValue) + ";" + csvString(Units.Mmol_L)
-            Units.U_H, Units.U  -> DecimalFormatter.to2Decimal(v.dValue) + ";" + csvString(v.unit)
-            Units.G, Units.M, Units.H, Units.Percent
-                                -> v.iValue.toString() + ";" + csvString(v.unit)
-            else                -> if (v.sValue != "")  { csvString(v.sValue) +  ";" + csvString(v.unit)}
-                                    else if (v.iValue != 0) { v.iValue.toString() + ";" + csvString(v.unit)}
-                                    else ";"
-        }
-    }
-
+    private fun saveString(id: Int): String = if (id != 0) resourceHelper.gs(id) else ""
     private fun csvString(action: Action): String = "\"" + translator.translate(action.name).replace("\"", "\"\"") + "\""
     private fun csvString(unit: Units): String = "\"" + translator.translate(unit.name).replace("\"", "\"\"") + "\""
     private fun csvString(id: Int): String = if (id != 0) "\"" + resourceHelper.gs(id).replace("\"", "\"\"") + "\"" else ""
