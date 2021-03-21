@@ -129,6 +129,6 @@ class BleIO(
 
     companion object {
 
-        private const val DEFAULT_IO_TIMEOUT_MS = 2000.toLong()
+        private const val DEFAULT_IO_TIMEOUT_MS = 1000.toLong()
     }
 }

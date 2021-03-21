@@ -10,8 +10,13 @@ import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.io.Chara
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.io.PayloadJoiner
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.packet.BlePacket
 import info.nightscout.androidaps.utils.extensions.toHex
+import java.util.concurrent.TimeoutException
 
 class MessageIO(private val aapsLogger: AAPSLogger, private val bleIO: BleIO) {
+
+    val receivedOutOfOrder = LinkedHashMap<Byte, ByteArray>()
+    var maxTries = 3
+    var tries = 0
 
     private fun expectCommandType(actual: BleCommand, expected: BleCommand) {
         if (actual.data.isEmpty()) {
@@ -80,33 +85,72 @@ class MessageIO(private val aapsLogger: AAPSLogger, private val bleIO: BleIO) {
         expectCommandType(BleCommand(expectSuccess), BleCommandSuccess())
     }
 
+    private fun expectBlePacket(index: Byte): ByteArray {
+        receivedOutOfOrder[index]?.let {
+            return it
+        }
+        while (tries < maxTries) {
+            try {
+                tries++
+                val payload = bleIO.receivePacket(CharacteristicType.DATA)
+                if (payload.isEmpty()) {
+                    throw IncorrectPacketException(payload, index)
+                }
+                if (payload[0] == index) {
+                    return payload
+                }
+                receivedOutOfOrder[payload[0]] = payload
+                bleIO.sendAndConfirmPacket(CharacteristicType.CMD, BleCommandNack(index).data)
+            } catch (e: TimeoutException) {
+                bleIO.sendAndConfirmPacket(CharacteristicType.CMD, BleCommandNack(index).data)
+                continue
+            }
+        }
+        throw MessageIOException("Ran out retries trying to receive a packet. $maxTries")
+    }
+
+    private fun readReset() {
+        maxTries = 3
+        tries = 0
+        receivedOutOfOrder.clear()
+    }
+
     fun receiveMessage(): MessagePacket {
         val expectRTS = bleIO.receivePacket(CharacteristicType.CMD, MESSAGE_READ_TIMEOUT_MS)
         expectCommandType(BleCommand(expectRTS), BleCommandRTS())
         bleIO.sendAndConfirmPacket(CharacteristicType.CMD, BleCommandCTS().data)
+        readReset()
+        var expected: Byte = 0
         try {
-            val joiner = PayloadJoiner(bleIO.receivePacket(CharacteristicType.DATA))
+            val firstPacket = expectBlePacket(0)
+            val joiner = PayloadJoiner(firstPacket)
+            maxTries = joiner.fullFragments * 2 + 2
             for (i in 1 until joiner.fullFragments + 1) {
-                joiner.accumulate(bleIO.receivePacket(CharacteristicType.DATA))
+                expected++
+                val packet = expectBlePacket(expected)
+                joiner.accumulate(packet)
             }
             if (joiner.oneExtraPacket) {
-                joiner.accumulate(bleIO.receivePacket(CharacteristicType.DATA))
+                expected++
+                joiner.accumulate(expectBlePacket(expected))
             }
             val fullPayload = joiner.finalize()
             bleIO.sendAndConfirmPacket(CharacteristicType.CMD, BleCommandSuccess().data)
             return MessagePacket.parse(fullPayload)
         } catch (e: IncorrectPacketException) {
-            aapsLogger.warn(LTag.PUMPBTCOMM, "Received incorrect packet: $e")
-            bleIO.sendAndConfirmPacket(CharacteristicType.CMD, BleCommandNack(e.expectedIndex).data)
+            aapsLogger.warn(LTag.PUMPBTCOMM, "Could not read message: $e")
+            bleIO.sendAndConfirmPacket(CharacteristicType.CMD, BleCommandAbort().data)
             throw MessageIOException(cause = e)
         } catch (e: CrcMismatchException) {
             aapsLogger.warn(LTag.PUMPBTCOMM, "CRC mismatch: $e")
             bleIO.sendAndConfirmPacket(CharacteristicType.CMD, BleCommandFail().data)
             throw MessageIOException(cause = e)
         }
+        receivedOutOfOrder.clear()
     }
 
     companion object {
-        private const val MESSAGE_READ_TIMEOUT_MS = 4000.toLong()
+
+        private const val MESSAGE_READ_TIMEOUT_MS = 2500.toLong()
     }
 }

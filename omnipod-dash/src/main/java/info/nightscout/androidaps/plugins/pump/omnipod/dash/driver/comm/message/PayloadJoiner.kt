@@ -29,11 +29,11 @@ class PayloadJoiner(private val firstPacket: ByteArray) {
 
     fun accumulate(packet: ByteArray) {
         if (packet.size < 3) { // idx, size, at least 1 byte of payload
-            throw IncorrectPacketException((expectedIndex + 1).toByte(), packet)
+            throw IncorrectPacketException(packet, (expectedIndex + 1).toByte())
         }
         val idx = packet[0].toInt()
         if (idx != expectedIndex + 1) {
-            throw IncorrectPacketException((expectedIndex + 1).toByte(), packet)
+            throw IncorrectPacketException(packet, (expectedIndex + 1).toByte())
         }
         expectedIndex++
         when {
@@ -53,7 +53,7 @@ class PayloadJoiner(private val firstPacket: ByteArray) {
             }
 
             idx > fullFragments -> {
-                throw IncorrectPacketException(idx.toByte(), packet)
+                throw IncorrectPacketException(packet, idx.toByte())
             }
         }
     }

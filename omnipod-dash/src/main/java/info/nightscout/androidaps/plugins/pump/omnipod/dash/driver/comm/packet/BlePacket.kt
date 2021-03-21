@@ -47,25 +47,25 @@ data class FirstBlePacket(
 
         fun parse(payload: ByteArray): FirstBlePacket {
             if (payload.size < FirstBlePacket.HEADER_SIZE_WITH_MIDDLE_PACKETS) {
-                throw IncorrectPacketException(0, payload)
+                throw IncorrectPacketException(payload, 0)
             }
             if (payload[0].toInt() != 0) {
                 // most likely we lost the first packet.
                 // TODO: try to recover with NACKs?
-                throw IncorrectPacketException(0, payload)
+                throw IncorrectPacketException(payload, 0)
             }
             val fullFragments = payload[1].toInt()
             require(fullFragments < MAX_FRAGMENTS) { "Received more than ${MAX_FRAGMENTS} fragments" }
             when {
                 // Without middle packets
                 payload.size < HEADER_SIZE_WITHOUT_MIDDLE_PACKETS ->
-                    throw IncorrectPacketException(0, payload)
+                    throw IncorrectPacketException(payload, 0)
 
                 fullFragments == 0 -> {
                     val rest = payload[6]
                     val end = Integer.min(rest + HEADER_SIZE_WITHOUT_MIDDLE_PACKETS, payload.size)
                     if (end > payload.size) {
-                        throw IncorrectPacketException(0, payload)
+                        throw IncorrectPacketException(payload, 0)
                     }
                     return FirstBlePacket(
                         fullFragments = fullFragments,
@@ -78,7 +78,7 @@ data class FirstBlePacket(
 
                 // With middle packets
                 payload.size < BlePacket.MAX_SIZE ->
-                    throw IncorrectPacketException(0, payload)
+                    throw IncorrectPacketException(payload, 0)
 
                 else -> {
                     return FirstBlePacket(
@@ -112,7 +112,7 @@ data class MiddleBlePacket(val index: Byte, override val payload: ByteArray) : B
 
         fun parse(payload: ByteArray): MiddleBlePacket {
             if (payload.size < MAX_SIZE) {
-                throw IncorrectPacketException(0, payload)
+                throw IncorrectPacketException(payload, 0)
             }
             return MiddleBlePacket(
                 index = payload[0],
@@ -150,12 +150,12 @@ data class LastBlePacket(
 
         fun parse(payload: ByteArray): LastBlePacket {
             if (payload.size < HEADER_SIZE) {
-                throw IncorrectPacketException(0, payload)
+                throw IncorrectPacketException(payload, 0)
             }
             val rest = payload[1]
             val end = Integer.min(rest + HEADER_SIZE, payload.size)
             if (payload.size < end) {
-                throw IncorrectPacketException(0, payload)
+                throw IncorrectPacketException(payload, 0)
             }
             return LastBlePacket(
                 index = payload[0],
@@ -185,7 +185,7 @@ data class LastOptionalPlusOneBlePacket(
         fun parse(payload: ByteArray): LastOptionalPlusOneBlePacket {
             val size = payload[1].toInt()
             if (payload.size < HEADER_SIZE + size) {
-                throw IncorrectPacketException(0, payload)
+                throw IncorrectPacketException(payload, 0)
             }
             return LastOptionalPlusOneBlePacket(
                 index = payload[0],
