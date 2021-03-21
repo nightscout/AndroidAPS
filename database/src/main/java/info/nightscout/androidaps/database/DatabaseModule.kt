@@ -22,6 +22,7 @@ open class DatabaseModule {
         Room
             .databaseBuilder(context, AppDatabase::class.java, fileName)
             .addMigrations(migration5to6)
+            .addMigrations(migration6to7)
             .fallbackToDestructiveMigration()
             .build()
 
