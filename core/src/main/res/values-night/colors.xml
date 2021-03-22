@@ -18,7 +18,7 @@
     <color name="primaryColorDefault">#222222</color>
     <color name="primaryLightColorDefault">#bbb9bb</color>
     <color name="primaryDarkColorDefault">#222222</color>
-    <color name="secondaryColorDefault">@color/blue_default</color>
+    <color name="secondaryColorDefault">#03dac6</color>
     <color name="secondaryLightColorDefault">#e3e3e3</color>
     <color name="secondaryDarkColorDefault">#848484</color>
     <color name="primaryTextColorDefault">#ffffff</color>
