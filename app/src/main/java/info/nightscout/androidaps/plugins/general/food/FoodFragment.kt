@@ -198,17 +198,21 @@ class FoodFragment : DaggerFragment() {
         }
     }
 
+    fun isUnfilteredInitialized() = ::unfiltered.isInitialized
+
     private fun filterData() {
         val textFilter = binding.filter.text.toString()
         val categoryFilter = binding.category.selectedItem?.toString() ?: resourceHelper.gs(R.string.none)
         val subcategoryFilter = binding.subcategory.selectedItem?.toString() ?: resourceHelper.gs(R.string.none)
         val newFiltered = ArrayList<Food>()
-        for (f in unfiltered) {
-            if (f.category == null || f.subCategory == null) continue
-            if (subcategoryFilter != resourceHelper.gs(R.string.none) && f.subCategory != subcategoryFilter) continue
-            if (categoryFilter != resourceHelper.gs(R.string.none) && f.category != categoryFilter) continue
-            if (textFilter != "" && !f.name.toLowerCase(Locale.getDefault()).contains(textFilter.toLowerCase(Locale.getDefault()))) continue
-            newFiltered.add(f)
+        if(isUnfilteredInitialized()) {
+            for (f in unfiltered) {
+                if (f.category == null || f.subCategory == null) continue
+                if (subcategoryFilter != resourceHelper.gs(R.string.none) && f.subCategory != subcategoryFilter) continue
+                if (categoryFilter != resourceHelper.gs(R.string.none) && f.category != categoryFilter) continue
+                if (textFilter != "" && !f.name.toLowerCase(Locale.getDefault()).contains(textFilter.toLowerCase(Locale.getDefault()))) continue
+                newFiltered.add(f)
+            }
         }
         filtered = newFiltered
         binding.recyclerview.swapAdapter(RecyclerViewAdapter(filtered), true)
