@@ -112,7 +112,7 @@ class TreatmentsUserEntryFragment : DaggerFragment() {
             val current = entries[position]
             holder.binding.date.text = dateUtil.dateAndTimeAndSecondsString(current.timestamp)
             holder.binding.action.text = translator.translate(current.action.name)
-            holder.binding.action.setTextColor(resourceHelper.gc(current.action.colorGroup.colorId()))
+            holder.binding.action.setTextColor(resourceHelper.getAttributeColor(null, current.action.colorGroup.attributId()))
             if (current.s != "") {
                 holder.binding.s.text = current.s
                 holder.binding.s.visibility = View.VISIBLE
