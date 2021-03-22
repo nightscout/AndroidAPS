@@ -2,15 +2,15 @@
 <layer-list
     xmlns:android="http://schemas.android.com/apk/res/android">
 <item
-android:right="10dp"
-android:left="10dp"
-android:bottom="10dp"
-android:top="10dp"
+android:right="8dp"
+android:left="8dp"
+android:bottom="8dp"
+android:top="8dp"
     >
 <shape >
     <padding
-        android:top="10dp"
-        android:bottom="2dp"
+        android:top="0dp"
+        android:bottom="0dp"
         android:left="10dp"
         android:right="10dp"
         />
