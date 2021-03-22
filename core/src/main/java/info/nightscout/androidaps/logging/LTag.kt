@@ -13,7 +13,7 @@ enum class LTag(val tag: String, val defaultValue : Boolean = true, val requires
     DATASERVICE("DATASERVICE"),
     DATATREATMENTS("DATATREATMENTS"),
     EVENTS("EVENTS", defaultValue = false, requiresRestart = true),
-    GLUCOSE("GLUCOSE"),
+    GLUCOSE("GLUCOSE", defaultValue = false),
     LOCATION("LOCATION"),
     NOTIFICATION("NOTIFICATION"),
     NSCLIENT("NSCLIENT"),

@@ -40,7 +40,7 @@ import javax.inject.Singleton
 import kotlin.math.min
 
 @Singleton
-class VirtualPumpPlugin @Inject constructor(
+open class VirtualPumpPlugin @Inject constructor(
     injector: HasAndroidInjector,
     aapsLogger: AAPSLogger,
     private val rxBus: RxBusWrapper,

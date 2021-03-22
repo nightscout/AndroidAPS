@@ -207,7 +207,7 @@ class MedtronicFragment : DaggerFragment() {
 
         when (medtronicPumpStatus.pumpDeviceState) {
             null,
-            PumpDeviceState.Sleeping -> binding.pumpStatusIcon.text = "{fa-bed}   " // + pumpStatus.pumpDeviceState.name());
+            PumpDeviceState.Sleeping             -> binding.pumpStatusIcon.text = "{fa-bed}   " // + pumpStatus.pumpDeviceState.name());
             PumpDeviceState.NeverContacted,
             PumpDeviceState.WakingUp,
             PumpDeviceState.PumpUnreachable,
@@ -215,7 +215,7 @@ class MedtronicFragment : DaggerFragment() {
             PumpDeviceState.TimeoutWhenCommunicating,
             PumpDeviceState.InvalidConfiguration -> binding.pumpStatusIcon.text = " " + resourceHelper.gs(medtronicPumpStatus.pumpDeviceState.resourceId)
 
-            PumpDeviceState.Active -> {
+            PumpDeviceState.Active               -> {
                 val cmd = medtronicUtil.currentCommand
                 if (cmd == null)
                     binding.pumpStatusIcon.text = " " + resourceHelper.gs(medtronicPumpStatus.pumpDeviceState.resourceId)
@@ -328,5 +328,27 @@ class MedtronicFragment : DaggerFragment() {
 
         medtronicPumpPlugin.rileyLinkService?.verifyConfiguration()
         binding.errors.text = medtronicPumpStatus.errorInfo
+
+        var showRileyLinkBatteryLevel: Boolean = rileyLinkServiceData.showBatteryLevel
+
+        if (showRileyLinkBatteryLevel) {
+            binding.rlBatteryView.visibility = View.VISIBLE
+            binding.rlBatteryLabel.visibility = View.VISIBLE
+            binding.rlBatteryState.visibility = View.VISIBLE
+            binding.rlBatteryLayout.visibility = View.VISIBLE
+            binding.rlBatterySemicolon.visibility = View.VISIBLE
+            if (rileyLinkServiceData.batteryLevel == null) {
+                binding.rlBatteryState.text = " ?"
+            } else {
+                binding.rlBatteryState.text = "{fa-battery-" + rileyLinkServiceData.batteryLevel / 25 + "}  " + rileyLinkServiceData.batteryLevel + "%"
+            }
+        } else {
+            binding.rlBatteryView.visibility = View.GONE
+            binding.rlBatteryLabel.visibility = View.GONE
+            binding.rlBatteryState.visibility = View.GONE
+            binding.rlBatteryLayout.visibility = View.GONE
+            binding.rlBatterySemicolon.visibility = View.GONE
+        }
+
     }
 }

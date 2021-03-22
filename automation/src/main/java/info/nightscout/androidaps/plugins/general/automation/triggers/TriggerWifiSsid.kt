@@ -18,17 +18,17 @@ import javax.inject.Inject
 class TriggerWifiSsid(injector: HasAndroidInjector) : Trigger(injector) {
     @Inject lateinit var receiverStatusStore: ReceiverStatusStore
 
-    var ssid = InputString(injector)
-    var comparator = Comparator(injector)
+    var ssid = InputString()
+    var comparator = Comparator(resourceHelper)
 
     @Suppress("unused") constructor(injector: HasAndroidInjector, ssid: String, compare: Comparator.Compare) : this(injector) {
-        this.ssid = InputString(injector, ssid)
-        comparator = Comparator(injector, compare)
+        this.ssid = InputString(ssid)
+        comparator = Comparator(resourceHelper, compare)
     }
 
     constructor(injector: HasAndroidInjector, triggerWifiSsid: TriggerWifiSsid) : this(injector) {
-        this.ssid = InputString(injector, triggerWifiSsid.ssid.value)
-        comparator = Comparator(injector, triggerWifiSsid.comparator.value)
+        this.ssid = InputString(triggerWifiSsid.ssid.value)
+        comparator = Comparator(resourceHelper, triggerWifiSsid.comparator.value)
     }
 
     fun setValue(ssid: String): TriggerWifiSsid {
@@ -83,9 +83,9 @@ class TriggerWifiSsid(injector: HasAndroidInjector) : Trigger(injector) {
 
     override fun generateDialog(root: LinearLayout) {
         LayoutBuilder()
-            .add(StaticLabel(injector, R.string.ns_wifi_ssids, this))
+            .add(StaticLabel(resourceHelper, R.string.ns_wifi_ssids, this))
             .add(comparator)
-            .add(LabelWithElement(injector, resourceHelper.gs(R.string.ns_wifi_ssids) + ": ", "", ssid))
+            .add(LabelWithElement(resourceHelper, resourceHelper.gs(R.string.ns_wifi_ssids) + ": ", "", ssid))
             .build(root)
     }
 }

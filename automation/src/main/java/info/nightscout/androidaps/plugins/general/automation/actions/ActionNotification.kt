@@ -25,7 +25,7 @@ class ActionNotification(injector: HasAndroidInjector) : Action(injector) {
     @Inject lateinit var rxBus: RxBusWrapper
     @Inject lateinit var nsUpload: NSUpload
 
-    var text = InputString(injector)
+    var text = InputString()
 
     override fun friendlyName(): Int = R.string.notification
     override fun shortDescription(): String = resourceHelper.gs(R.string.notification_message, text.value)
@@ -57,7 +57,7 @@ class ActionNotification(injector: HasAndroidInjector) : Action(injector) {
 
     override fun generateDialog(root: LinearLayout) {
         LayoutBuilder()
-            .add(LabelWithElement(injector, resourceHelper.gs(R.string.message_short), "", text))
+            .add(LabelWithElement(resourceHelper, resourceHelper.gs(R.string.message_short), "", text))
             .build(root)
     }
 

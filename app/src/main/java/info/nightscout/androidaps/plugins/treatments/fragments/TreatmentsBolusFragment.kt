@@ -9,6 +9,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import dagger.android.support.DaggerFragment
 import info.nightscout.androidaps.R
+import info.nightscout.androidaps.database.entities.UserEntry.*
 import info.nightscout.androidaps.databinding.TreatmentsBolusFragmentBinding
 import info.nightscout.androidaps.databinding.TreatmentsBolusItemBinding
 import info.nightscout.androidaps.db.Source
@@ -19,9 +20,9 @@ import info.nightscout.androidaps.interfaces.ProfileFunction
 import info.nightscout.androidaps.logging.UserEntryLogger
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper
 import info.nightscout.androidaps.plugins.general.nsclient.NSUpload
-import info.nightscout.androidaps.plugins.general.nsclient.UploadQueue
 import info.nightscout.androidaps.plugins.general.nsclient.events.EventNSClientRestart
 import info.nightscout.androidaps.events.EventAutosensCalculationFinished
+import info.nightscout.androidaps.interfaces.UploadQueueInterface
 import info.nightscout.androidaps.plugins.treatments.TreatmentsPlugin
 import info.nightscout.androidaps.plugins.treatments.fragments.TreatmentsBolusFragment.RecyclerViewAdapter.TreatmentsViewHolder
 import info.nightscout.androidaps.utils.DateUtil
@@ -45,7 +46,7 @@ class TreatmentsBolusFragment : DaggerFragment() {
     @Inject lateinit var treatmentsPlugin: TreatmentsPlugin
     @Inject lateinit var profileFunction: ProfileFunction
     @Inject lateinit var nsUpload: NSUpload
-    @Inject lateinit var uploadQueue: UploadQueue
+    @Inject lateinit var uploadQueue: UploadQueueInterface
     @Inject lateinit var dateUtil: DateUtil
     @Inject lateinit var buildHelper: BuildHelper
     @Inject lateinit var aapsSchedulers: AapsSchedulers
@@ -68,7 +69,7 @@ class TreatmentsBolusFragment : DaggerFragment() {
         binding.refreshFromNightscout.setOnClickListener {
             activity?.let { activity ->
                 OKDialog.showConfirmation(activity, resourceHelper.gs(R.string.refresheventsfromnightscout) + "?") {
-                    uel.log("TREAT NS REFRESH")
+                    uel.log(Action.TREATMENTS_NS_REFRESH)
                     treatmentsPlugin.service.resetTreatments()
                     rxBus.send(EventNSClientRestart())
                 }
@@ -77,13 +78,13 @@ class TreatmentsBolusFragment : DaggerFragment() {
         binding.deleteFutureTreatments.setOnClickListener {
             activity?.let { activity ->
                 OKDialog.showConfirmation(activity, resourceHelper.gs(R.string.overview_treatment_label), resourceHelper.gs(R.string.deletefuturetreatments) + "?", Runnable {
-                    uel.log("DELETE FUTURE TREATMENTS")
+                    uel.log(Action.DELETE_FUTURE_TREATMENTS)
                     val futureTreatments = treatmentsPlugin.service.getTreatmentDataFromTime(DateUtil.now() + 1000, true)
                     for (treatment in futureTreatments) {
                         if (NSUpload.isIdValid(treatment._id))
                             nsUpload.removeCareportalEntryFromNS(treatment._id)
                         else
-                            uploadQueue.removeID("dbAdd", treatment._id)
+                            uploadQueue.removeByMongoId("dbAdd", treatment._id)
                         treatmentsPlugin.service.delete(treatment)
                     }
                     updateGui()
@@ -174,7 +175,7 @@ class TreatmentsBolusFragment : DaggerFragment() {
                             resourceHelper.gs(R.string.carbs) + ": " + resourceHelper.gs(R.string.format_carbs, treatment.carbs.toInt()) + "\n" +
                             resourceHelper.gs(R.string.date) + ": " + dateUtil.dateAndTimeString(treatment.date)
                         OKDialog.showConfirmation(activity, resourceHelper.gs(R.string.removerecord), text, Runnable {
-                            uel.log("REMOVED TREATMENT", text)
+                            uel.log(Action.TREATMENT_REMOVED, ValueWithUnit(treatment.date, Units.Timestamp), ValueWithUnit(treatment.insulin, Units.U, treatment.insulin != 0.0), ValueWithUnit(treatment.carbs.toInt(), Units.G, treatment.carbs != 0.0))
                             if (treatment.source == Source.PUMP) {
                                 treatment.isValid = false
                                 treatmentsPlugin.service.update(treatment)
@@ -182,7 +183,7 @@ class TreatmentsBolusFragment : DaggerFragment() {
                                 if (NSUpload.isIdValid(treatment._id))
                                     nsUpload.removeCareportalEntryFromNS(treatment._id)
                                 else
-                                    uploadQueue.removeID("dbAdd", treatment._id)
+                                    uploadQueue.removeByMongoId("dbAdd", treatment._id)
                                 treatmentsPlugin.service.delete(treatment)
                             }
                             updateGui()

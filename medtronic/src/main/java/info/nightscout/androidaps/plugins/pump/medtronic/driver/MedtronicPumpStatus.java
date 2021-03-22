@@ -14,17 +14,16 @@ import javax.inject.Singleton;
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper;
 import info.nightscout.androidaps.plugins.pump.common.defs.PumpDeviceState;
 import info.nightscout.androidaps.plugins.pump.common.defs.PumpType;
+import info.nightscout.androidaps.plugins.pump.common.events.EventRileyLinkDeviceStatusChange;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.RileyLinkUtil;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.data.RLHistoryItem;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.defs.RileyLinkTargetDevice;
 import info.nightscout.androidaps.plugins.pump.medtronic.defs.BasalProfileStatus;
 import info.nightscout.androidaps.plugins.pump.medtronic.defs.BatteryType;
 import info.nightscout.androidaps.plugins.pump.medtronic.defs.MedtronicDeviceType;
-import info.nightscout.androidaps.plugins.pump.common.events.EventRileyLinkDeviceStatusChange;
 import info.nightscout.androidaps.plugins.pump.medtronic.util.MedtronicConst;
 import info.nightscout.androidaps.utils.resources.ResourceHelper;
 import info.nightscout.androidaps.utils.sharedPreferences.SP;
-
 
 
 /**
@@ -32,7 +31,7 @@ import info.nightscout.androidaps.utils.sharedPreferences.SP;
  */
 
 @Singleton
-public class MedtronicPumpStatus extends info.nightscout.androidaps.plugins.pump.common.data.PumpStatus  {
+public class MedtronicPumpStatus extends info.nightscout.androidaps.plugins.pump.common.data.PumpStatus {
 
     private final ResourceHelper resourceHelper;
     private final SP sp;
@@ -62,9 +61,9 @@ public class MedtronicPumpStatus extends info.nightscout.androidaps.plugins.pump
 
     @Inject
     public MedtronicPumpStatus(ResourceHelper resourceHelper,
-            SP sp,
-            RxBusWrapper rxBus,
-            RileyLinkUtil rileyLinkUtil
+                               SP sp,
+                               RxBusWrapper rxBus,
+                               RileyLinkUtil rileyLinkUtil
     ) {
         super(PumpType.Medtronic_522_722);
         this.resourceHelper = resourceHelper;

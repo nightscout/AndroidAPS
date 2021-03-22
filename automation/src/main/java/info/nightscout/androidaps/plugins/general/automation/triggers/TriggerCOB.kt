@@ -18,12 +18,12 @@ import java.text.DecimalFormat
 class TriggerCOB(injector: HasAndroidInjector) : Trigger(injector) {
     private val minValue = 0
     private val maxValue = sp.getInt(R.string.key_treatmentssafety_maxcarbs, 48)
-    var cob: InputDouble = InputDouble(injector, 0.0, minValue.toDouble(), maxValue.toDouble(), 1.0, DecimalFormat("1"))
-    var comparator: Comparator = Comparator(injector)
+    var cob: InputDouble = InputDouble(0.0, minValue.toDouble(), maxValue.toDouble(), 1.0, DecimalFormat("1"))
+    var comparator: Comparator = Comparator(resourceHelper)
 
     private constructor(injector: HasAndroidInjector, triggerCOB: TriggerCOB) : this(injector) {
-        cob = InputDouble(injector, triggerCOB.cob)
-        comparator = Comparator(injector, triggerCOB.comparator.value)
+        cob = InputDouble(triggerCOB.cob)
+        comparator = Comparator(resourceHelper, triggerCOB.comparator.value)
     }
 
     fun setValue(value:Double) : TriggerCOB {
@@ -83,9 +83,9 @@ class TriggerCOB(injector: HasAndroidInjector) : Trigger(injector) {
 
     override fun generateDialog(root: LinearLayout) {
         LayoutBuilder()
-            .add(StaticLabel(injector, R.string.triggercoblabel, this))
+            .add(StaticLabel(resourceHelper, R.string.triggercoblabel, this))
             .add(comparator)
-            .add(LabelWithElement(injector, resourceHelper.gs(R.string.triggercoblabel) + ": ", "", cob))
+            .add(LabelWithElement(resourceHelper, resourceHelper.gs(R.string.triggercoblabel) + ": ", "", cob))
             .build(root)
     }
 }

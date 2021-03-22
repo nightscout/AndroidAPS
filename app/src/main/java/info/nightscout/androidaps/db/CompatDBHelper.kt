@@ -1,9 +1,11 @@
 package info.nightscout.androidaps.db
 
 import info.nightscout.androidaps.database.AppRepository
+import info.nightscout.androidaps.database.entities.Food
 import info.nightscout.androidaps.database.entities.GlucoseValue
 import info.nightscout.androidaps.database.entities.TemporaryTarget
 import info.nightscout.androidaps.database.entities.TherapyEvent
+import info.nightscout.androidaps.events.EventFoodDatabaseChanged
 import info.nightscout.androidaps.events.EventNewBG
 import info.nightscout.androidaps.events.EventTempTargetChange
 import info.nightscout.androidaps.events.EventTherapyEventChange
@@ -43,6 +45,10 @@ class CompatDBHelper @Inject constructor(
             it.filterIsInstance<TherapyEvent>().firstOrNull()?.let {
                 aapsLogger.debug(LTag.DATABASE, "Firing EventTherapyEventChange")
                 rxBus.send(EventTherapyEventChange())
+            }
+            it.filterIsInstance<Food>().firstOrNull()?.let {
+                aapsLogger.debug(LTag.DATABASE, "Firing EventFoodDatabaseChanged")
+                rxBus.send(EventFoodDatabaseChanged())
             }
         }
 }

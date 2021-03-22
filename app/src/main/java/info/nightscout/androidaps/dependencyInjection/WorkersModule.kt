@@ -2,7 +2,10 @@ package info.nightscout.androidaps.dependencyInjection
 
 import dagger.Module
 import dagger.android.ContributesAndroidInjector
-import info.nightscout.androidaps.plugins.general.nsclient.NSClientWorker
+import info.nightscout.androidaps.plugins.general.food.FoodPlugin
+import info.nightscout.androidaps.plugins.general.nsclient.NSClientAddUpdateWorker
+import info.nightscout.androidaps.plugins.general.nsclient.NSClientMbgWorker
+import info.nightscout.androidaps.plugins.general.nsclient.NSClientRemoveWorker
 import info.nightscout.androidaps.plugins.general.smsCommunicator.SmsCommunicatorPlugin
 import info.nightscout.androidaps.plugins.profile.ns.NSProfilePlugin
 import info.nightscout.androidaps.plugins.source.*
@@ -21,5 +24,8 @@ abstract class WorkersModule {
     @ContributesAndroidInjector abstract fun contributesNSClientSourceWorker(): NSClientSourcePlugin.NSClientSourceWorker
     @ContributesAndroidInjector abstract fun contributesNSProfileWorker(): NSProfilePlugin.NSProfileWorker
     @ContributesAndroidInjector abstract fun contributesSmsCommunicatorWorker(): SmsCommunicatorPlugin.SmsCommunicatorWorker
-    @ContributesAndroidInjector abstract fun contributesNSClientWorker(): NSClientWorker
+    @ContributesAndroidInjector abstract fun contributesNSClientWorker(): NSClientAddUpdateWorker
+    @ContributesAndroidInjector abstract fun contributesNSClientRemoveWorker(): NSClientRemoveWorker
+    @ContributesAndroidInjector abstract fun contributesNSClientMbgWorker(): NSClientMbgWorker
+    @ContributesAndroidInjector abstract fun contributesFoodWorker(): FoodPlugin.FoodWorker
 }

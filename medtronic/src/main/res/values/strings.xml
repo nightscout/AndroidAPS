@@ -48,7 +48,8 @@
     <string name="medtronic_pump_battery_nimh">NiMH (Extended view)</string>
     <string name="medtronic_bolus_debugging">Bolus/Treatments Debugging</string>
 
-
+    <!-- MDT Fragment -->
+    <string name="rl_battery_label">RileyLink Battery</string>
 
     <!-- MDT Errors -->
     <string name="medtronic_errors">Errors</string>
@@ -77,8 +78,6 @@
     <!--    <string name="medtronic_history_group_unknown">Unknowns</string>-->
     <!--    <string name="medtronic_history_group_all">All</string>-->
     <string name="medtronic_pump_history">Medtronic Pump History</string>
-
-
 
 
     <!-- <string name="medtronic_cmd_profile_not_set">Remote Basal profile setting is not supported. Please modify Basal profile on your pump manually.</string> -->
@@ -116,6 +115,7 @@
     <string name="key_set_neutral_temps" translatable="false">set_neutral_temps</string>
     <string name="set_neutral_temps_title">Set neutral temp basals</string>
     <string name="set_neutral_temps_summary">If enabled, it will cancel a temporary basal before the end of each hour. This method can help stop some pumps beeping/vibrating on the hour.</string>
+
 
     <string name="sixdigitnumber" translatable="false">^\\d{6}</string>
 

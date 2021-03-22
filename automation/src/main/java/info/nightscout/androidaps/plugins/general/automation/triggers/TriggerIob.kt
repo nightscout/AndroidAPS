@@ -15,12 +15,12 @@ import info.nightscout.androidaps.utils.JsonHelper
 import org.json.JSONObject
 
 class TriggerIob(injector: HasAndroidInjector) : Trigger(injector) {
-    var insulin = InputInsulin(injector)
-    var comparator: Comparator = Comparator(injector)
+    var insulin = InputInsulin()
+    var comparator: Comparator = Comparator(resourceHelper)
 
     constructor(injector: HasAndroidInjector, triggerIob: TriggerIob) : this(injector) {
-        insulin = InputInsulin(injector, triggerIob.insulin)
-        comparator = Comparator(injector, triggerIob.comparator.value)
+        insulin = InputInsulin(triggerIob.insulin)
+        comparator = Comparator(resourceHelper, triggerIob.comparator.value)
     }
 
     fun setValue(value: Double): TriggerIob {
@@ -72,9 +72,9 @@ class TriggerIob(injector: HasAndroidInjector) : Trigger(injector) {
 
     override fun generateDialog(root: LinearLayout) {
         LayoutBuilder()
-            .add(StaticLabel(injector, R.string.iob, this))
+            .add(StaticLabel(resourceHelper, R.string.iob, this))
             .add(comparator)
-            .add(LabelWithElement(injector, resourceHelper.gs(R.string.iob_u), "", insulin))
+            .add(LabelWithElement(resourceHelper, resourceHelper.gs(R.string.iob_u), "", insulin))
             .build(root)
     }
 }

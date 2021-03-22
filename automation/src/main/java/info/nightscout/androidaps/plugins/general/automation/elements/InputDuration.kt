@@ -1,27 +1,22 @@
 package info.nightscout.androidaps.plugins.general.automation.elements
 
 import android.widget.LinearLayout
-import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.automation.R
 import info.nightscout.androidaps.utils.ui.MinutesNumberPicker
 import info.nightscout.androidaps.utils.ui.NumberPicker
 import java.text.DecimalFormat
 
-class InputDuration(injector: HasAndroidInjector) : Element(injector) {
+class InputDuration(
+    var value: Int = 0,
+    var unit: TimeUnit = TimeUnit.MINUTES,
+) : Element() {
+
     enum class TimeUnit {
         MINUTES, HOURS
     }
 
-    constructor(injector: HasAndroidInjector, value: Int, unit: TimeUnit) : this(injector) {
-        this.unit = unit
-        this.value = value
-    }
-
-    var unit: TimeUnit = TimeUnit.MINUTES
-    var value: Int = 0
-
     override fun addToLayout(root: LinearLayout) {
-        val numberPicker : NumberPicker
+        val numberPicker: NumberPicker
         if (unit == TimeUnit.MINUTES) {
             numberPicker = MinutesNumberPicker(root.context, null)
             numberPicker.setParams(value.toDouble(), 5.0, 24 * 60.0, 10.0, DecimalFormat("0"), false, root.findViewById(R.id.ok))
@@ -34,7 +29,7 @@ class InputDuration(injector: HasAndroidInjector) : Element(injector) {
     }
 
     fun duplicate(): InputDuration {
-        val i = InputDuration(injector)
+        val i = InputDuration()
         i.unit = unit
         i.value = value
         return i

@@ -20,14 +20,14 @@ class TriggerTempTarget(injector: HasAndroidInjector) : Trigger(injector) {
     @Inject lateinit var repository: AppRepository
     @Inject lateinit var dateUtil: DateUtil
 
-    var comparator = ComparatorExists(injector)
+    var comparator = ComparatorExists(resourceHelper)
 
     constructor(injector: HasAndroidInjector, compare: ComparatorExists.Compare) : this(injector) {
-        comparator = ComparatorExists(injector, compare)
+        comparator = ComparatorExists(resourceHelper, compare)
     }
 
     constructor(injector: HasAndroidInjector, triggerTempTarget: TriggerTempTarget) : this(injector) {
-        comparator = ComparatorExists(injector, triggerTempTarget.comparator.value)
+        comparator = ComparatorExists(resourceHelper, triggerTempTarget.comparator.value)
     }
 
     fun comparator(comparator: ComparatorExists.Compare): TriggerTempTarget {
@@ -75,7 +75,7 @@ class TriggerTempTarget(injector: HasAndroidInjector) : Trigger(injector) {
 
     override fun generateDialog(root: LinearLayout) {
         LayoutBuilder()
-            .add(StaticLabel(injector, R.string.careportal_temporarytarget, this))
+            .add(StaticLabel(resourceHelper, R.string.careportal_temporarytarget, this))
             .add(comparator)
             .build(root)
     }

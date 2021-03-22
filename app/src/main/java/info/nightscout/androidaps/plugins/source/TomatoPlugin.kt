@@ -18,8 +18,6 @@ import info.nightscout.androidaps.plugins.general.nsclient.NSUpload
 import info.nightscout.androidaps.utils.XDripBroadcast
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 import info.nightscout.androidaps.utils.sharedPreferences.SP
-import io.reactivex.disposables.CompositeDisposable
-import io.reactivex.rxkotlin.plusAssign
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -39,13 +37,6 @@ class TomatoPlugin @Inject constructor(
     aapsLogger, resourceHelper, injector
 ), BgSourceInterface {
 
-    private val disposable = CompositeDisposable()
-
-    override fun onStop() {
-        disposable.clear()
-        super.onStop()
-    }
-
     // cannot be inner class because of needed injection
     class TomatoWorker(
         context: Context,
@@ -64,7 +55,10 @@ class TomatoPlugin @Inject constructor(
             (context.applicationContext as HasAndroidInjector).androidInjector().inject(this)
         }
 
+        @Suppress("SpellCheckingInspection")
         override fun doWork(): Result {
+            var ret = Result.success()
+
             if (!tomatoPlugin.isEnabled(PluginType.BGSOURCE)) return Result.failure()
             val glucoseValues = mutableListOf<CgmSourceTransaction.TransactionGlucoseValue>()
             glucoseValues += CgmSourceTransaction.TransactionGlucoseValue(
@@ -75,16 +69,21 @@ class TomatoPlugin @Inject constructor(
                 trendArrow = GlucoseValue.TrendArrow.NONE,
                 sourceSensor = GlucoseValue.SourceSensor.LIBRE_1_TOMATO
             )
-            tomatoPlugin.disposable += repository.runTransactionForResult(CgmSourceTransaction(glucoseValues, emptyList(), null)).subscribe({ savedValues ->
-                savedValues.inserted.forEach {
-                    broadcastToXDrip(it)
-                    if (sp.getBoolean(R.string.key_dexcomg5_nsupload, false))
-                        nsUpload.uploadBg(it, GlucoseValue.SourceSensor.LIBRE_1_TOMATO.text)
+            repository.runTransactionForResult(CgmSourceTransaction(glucoseValues, emptyList(), null))
+                .doOnError {
+                    aapsLogger.error("Error while saving values from Tomato App", it)
+                    ret = Result.failure()
                 }
-            }, {
-                aapsLogger.error("Error while saving values from Tomato App", it)
-            })
-            return Result.success()
+                .blockingGet()
+                .also { savedValues ->
+                    savedValues.inserted.forEach {
+                        broadcastToXDrip(it)
+                        if (sp.getBoolean(R.string.key_dexcomg5_nsupload, false))
+                            nsUpload.uploadBg(it, GlucoseValue.SourceSensor.LIBRE_1_TOMATO.text)
+                        aapsLogger.debug(LTag.BGSOURCE, "Inserted bg $it")
+                    }
+                }
+            return ret
         }
     }
 }

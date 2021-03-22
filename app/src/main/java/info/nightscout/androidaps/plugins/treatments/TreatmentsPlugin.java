@@ -45,11 +45,11 @@ import info.nightscout.androidaps.interfaces.PumpInterface;
 import info.nightscout.androidaps.interfaces.TreatmentServiceInterface;
 import info.nightscout.androidaps.interfaces.TreatmentsInterface;
 import info.nightscout.androidaps.interfaces.UpdateReturn;
+import info.nightscout.androidaps.interfaces.UploadQueueInterface;
 import info.nightscout.androidaps.logging.AAPSLogger;
 import info.nightscout.androidaps.logging.LTag;
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper;
 import info.nightscout.androidaps.plugins.general.nsclient.NSUpload;
-import info.nightscout.androidaps.plugins.general.nsclient.UploadQueue;
 import info.nightscout.androidaps.plugins.general.overview.events.EventDismissNotification;
 import info.nightscout.androidaps.plugins.general.overview.notifications.Notification;
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.AutosensResult;
@@ -74,7 +74,7 @@ public class TreatmentsPlugin extends PluginBase implements TreatmentsInterface 
     private final ProfileFunction profileFunction;
     private final ActivePluginProvider activePlugin;
     private final NSUpload nsUpload;
-    private final UploadQueue uploadQueue;
+    private final UploadQueueInterface uploadQueue;
     private final FabricPrivacy fabricPrivacy;
     private final DateUtil dateUtil;
     private final DatabaseHelperInterface databaseHelper;
@@ -106,7 +106,7 @@ public class TreatmentsPlugin extends PluginBase implements TreatmentsInterface 
             NSUpload nsUpload,
             FabricPrivacy fabricPrivacy,
             DateUtil dateUtil,
-            UploadQueue uploadQueue,
+            UploadQueueInterface uploadQueue,
             DatabaseHelperInterface databaseHelper,
             AppRepository repository
     ) {
@@ -386,7 +386,7 @@ public class TreatmentsPlugin extends PluginBase implements TreatmentsInterface 
         if (NSUpload.isIdValid(tempBasalId)) {
             nsUpload.removeCareportalEntryFromNS(tempBasalId);
         } else {
-            uploadQueue.removeID("dbAdd", tempBasalId);
+            uploadQueue.removeByMongoId("dbAdd", tempBasalId);
         }
         databaseHelper.delete(tempBasal);
     }

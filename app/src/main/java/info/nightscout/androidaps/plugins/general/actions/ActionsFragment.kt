@@ -16,6 +16,7 @@ import info.nightscout.androidaps.Constants
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.activities.ErrorHelperActivity
 import info.nightscout.androidaps.activities.TDDStatsActivity
+import info.nightscout.androidaps.database.entities.UserEntry.*
 import info.nightscout.androidaps.dialogs.*
 import info.nightscout.androidaps.events.*
 import info.nightscout.androidaps.historyBrowser.HistoryBrowseActivity
@@ -154,7 +155,7 @@ class ActionsFragment : DaggerFragment() {
         }
         extendedBolusCancel?.setOnClickListener {
             if (activePlugin.activeTreatments.isInHistoryExtendedBolusInProgress) {
-                uel.log("CANCEL EXTENDED BOLUS")
+                uel.log(Action.CANCEL_EXTENDED_BOLUS)
                 commandQueue.cancelExtended(object : Callback() {
                     override fun run() {
                         if (!result.success) {
@@ -169,7 +170,7 @@ class ActionsFragment : DaggerFragment() {
         }
         cancelTempBasal?.setOnClickListener {
             if (activePlugin.activeTreatments.isTempBasalInProgress) {
-                uel.log("CANCEL TEMP BASAL")
+                uel.log(Action.CANCEL_TEMP_BASAL)
                 commandQueue.cancelTempBasal(true, object : Callback() {
                     override fun run() {
                         if (!result.success) {

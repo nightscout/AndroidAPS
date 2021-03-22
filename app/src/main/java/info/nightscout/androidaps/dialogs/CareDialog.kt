@@ -16,6 +16,7 @@ import info.nightscout.androidaps.data.Profile
 import info.nightscout.androidaps.database.AppRepository
 import info.nightscout.androidaps.database.entities.TherapyEvent
 import info.nightscout.androidaps.database.transactions.InsertTherapyEventIfNewTransaction
+import info.nightscout.androidaps.database.entities.UserEntry.*
 import info.nightscout.androidaps.databinding.DialogCareBinding
 import info.nightscout.androidaps.interfaces.ProfileFunction
 import info.nightscout.androidaps.logging.LTag
@@ -59,6 +60,7 @@ class CareDialog : DialogFragmentWithDate() {
     }
 
     private var options: EventType = EventType.BGCHECK
+    private var valuesWithUnit = mutableListOf<ValueWithUnit>()
 
     @StringRes
     private var event: Int = R.string.none
@@ -200,10 +202,13 @@ class CareDialog : DialogFragmentWithDate() {
             actions.add(resourceHelper.gs(R.string.treatments_wizard_bg_label) + ": " + Profile.toCurrentUnitsString(profileFunction, binding.bg.value) + " " + resourceHelper.gs(unitResId))
             therapyEvent.glucoseType = meterType
             therapyEvent.glucose = binding.bg.value
+            valuesWithUnit.add(ValueWithUnit(binding.bg.value.toDouble(), profileFunction.getUnits()))
+            valuesWithUnit.add(ValueWithUnit(meterType.text, Units.TherapyEvent))
         }
         if (options == EventType.NOTE || options == EventType.EXERCISE) {
             actions.add(resourceHelper.gs(R.string.careportal_newnstreatment_duration_label) + ": " + resourceHelper.gs(R.string.format_mins, binding.duration.value.toInt()))
             therapyEvent.duration = T.mins(binding.duration.value.toLong()).msecs()
+            valuesWithUnit.add(ValueWithUnit(binding.duration.value.toInt(), Units.M, !binding.duration.value.equals(0.0)))
         }
         val notes = binding.notesLayout.notes.text.toString()
         if (notes.isNotEmpty()) {
@@ -211,8 +216,7 @@ class CareDialog : DialogFragmentWithDate() {
             therapyEvent.note = notes
         }
 
-        if (eventTimeChanged)
-            actions.add(resourceHelper.gs(R.string.time) + ": " + dateUtil.dateAndTimeString(eventTime))
+        if (eventTimeChanged) actions.add(resourceHelper.gs(R.string.time) + ": " + dateUtil.dateAndTimeString(eventTime))
 
         therapyEvent.enteredBy = enteredBy
 
@@ -223,8 +227,9 @@ class CareDialog : DialogFragmentWithDate() {
                 }, {
                     aapsLogger.error(LTag.BGSOURCE, "Error while saving therapy event", it)
                 })
-
-                uel.log("CAREPORTAL", therapyEvent.type.text)
+                valuesWithUnit.add(0, ValueWithUnit(eventTime, Units.Timestamp, eventTimeChanged))
+                valuesWithUnit.add(1, ValueWithUnit(therapyEvent.type.text, Units.TherapyEvent))
+                uel.log(Action.CAREPORTAL, notes, valuesWithUnit)
             }, null)
         }
         return true

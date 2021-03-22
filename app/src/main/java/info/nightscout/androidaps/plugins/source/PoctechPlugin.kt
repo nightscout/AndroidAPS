@@ -20,8 +20,6 @@ import info.nightscout.androidaps.utils.JsonHelper.safeGetString
 import info.nightscout.androidaps.utils.XDripBroadcast
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 import info.nightscout.androidaps.utils.sharedPreferences.SP
-import io.reactivex.disposables.CompositeDisposable
-import io.reactivex.rxkotlin.plusAssign
 import org.json.JSONArray
 import org.json.JSONException
 import javax.inject.Inject
@@ -42,13 +40,6 @@ class PoctechPlugin @Inject constructor(
     aapsLogger, resourceHelper, injector
 ), BgSourceInterface {
 
-    private val disposable = CompositeDisposable()
-
-    override fun onStop() {
-        disposable.clear()
-        super.onStop()
-    }
-
     // cannot be inner class because of needed injection
     class PoctechWorker(
         context: Context,
@@ -68,6 +59,8 @@ class PoctechPlugin @Inject constructor(
         }
 
         override fun doWork(): Result {
+            var ret = Result.success()
+
             if (!poctechPlugin.isEnabled(PluginType.BGSOURCE)) return Result.failure()
             aapsLogger.debug(LTag.BGSOURCE, "Received Poctech Data $inputData")
             try {
@@ -86,20 +79,25 @@ class PoctechPlugin @Inject constructor(
                         sourceSensor = GlucoseValue.SourceSensor.POCTECH_NATIVE
                     )
                 }
-                poctechPlugin.disposable += repository.runTransactionForResult(CgmSourceTransaction(glucoseValues, emptyList(), null)).subscribe({ savedValues ->
-                    savedValues.inserted.forEach {
-                        broadcastToXDrip(it)
-                        if (sp.getBoolean(R.string.key_dexcomg5_nsupload, false))
-                            nsUpload.uploadBg(it, GlucoseValue.SourceSensor.POCTECH_NATIVE.text)
+                repository.runTransactionForResult(CgmSourceTransaction(glucoseValues, emptyList(), null))
+                    .doOnError {
+                        aapsLogger.error("Error while saving values from Poctech App", it)
+                        ret = Result.failure()
                     }
-                }, {
-                    aapsLogger.error("Error while saving values from Poctech App", it)
-                })
+                    .blockingGet()
+                    .also { savedValues ->
+                        savedValues.inserted.forEach {
+                            broadcastToXDrip(it)
+                            if (sp.getBoolean(R.string.key_dexcomg5_nsupload, false))
+                                nsUpload.uploadBg(it, GlucoseValue.SourceSensor.POCTECH_NATIVE.text)
+                            aapsLogger.debug(LTag.BGSOURCE, "Inserted bg $it")
+                        }
+                    }
             } catch (e: JSONException) {
                 aapsLogger.error("Exception: ", e)
-                return Result.failure()
+                ret = Result.failure()
             }
-            return Result.success()
+            return ret
         }
     }
 }

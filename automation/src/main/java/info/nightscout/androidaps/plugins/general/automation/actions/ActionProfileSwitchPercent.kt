@@ -22,8 +22,8 @@ class ActionProfileSwitchPercent(injector: HasAndroidInjector) : Action(injector
     @Inject lateinit var resourceHelper: ResourceHelper
     @Inject lateinit var activePlugin: ActivePluginProvider
 
-    var pct = InputPercent(injector)
-    var duration = InputDuration(injector, 30, InputDuration.TimeUnit.MINUTES)
+    var pct = InputPercent()
+    var duration = InputDuration(30, InputDuration.TimeUnit.MINUTES)
 
     override fun friendlyName(): Int = R.string.profilepercentage
     override fun shortDescription(): String =
@@ -43,8 +43,8 @@ class ActionProfileSwitchPercent(injector: HasAndroidInjector) : Action(injector
 
     override fun generateDialog(root: LinearLayout) {
         LayoutBuilder()
-            .add(LabelWithElement(injector, resourceHelper.gs(R.string.percent_u), "", pct))
-            .add(LabelWithElement(injector, resourceHelper.gs(R.string.duration_min_label), "", duration))
+            .add(LabelWithElement(resourceHelper, resourceHelper.gs(R.string.percent_u), "", pct))
+            .add(LabelWithElement(resourceHelper, resourceHelper.gs(R.string.duration_min_label), "", duration))
             .build(root)
     }
 
