@@ -19,6 +19,7 @@ import info.nightscout.androidaps.danar.R;
 import info.nightscout.androidaps.data.DetailedBolusInfo;
 import info.nightscout.androidaps.data.Profile;
 import info.nightscout.androidaps.data.PumpEnactResult;
+import info.nightscout.androidaps.database.entities.Bolus;
 import info.nightscout.androidaps.db.TemporaryBasal;
 import info.nightscout.androidaps.db.Treatment;
 import info.nightscout.androidaps.events.EventAppExit;
@@ -171,7 +172,7 @@ public class DanaRv2Plugin extends AbstractDanaRPlugin {
                     speed = 60;
                     break;
             }
-            detailedBolusInfo.date = DateUtil.now() + (long) (speed * detailedBolusInfo.insulin * 1000);
+            detailedBolusInfo.timestamp = DateUtil.now() + (long) (speed * detailedBolusInfo.insulin * 1000);
             // clean carbs to prevent counting them as twice because they will picked up as another record
             // I don't think it's necessary to copy DetailedBolusInfo right now for carbs records
             double carbs = detailedBolusInfo.carbs;
@@ -183,7 +184,7 @@ public class DanaRv2Plugin extends AbstractDanaRPlugin {
             detailedBolusInfoStorage.add(detailedBolusInfo); // will be picked up on reading history
 
             Treatment t = new Treatment();
-            t.isSMB = detailedBolusInfo.isSMB;
+            t.isSMB = detailedBolusInfo.getBolusType() == Bolus.Type.SMB;
             boolean connectionOK = false;
             if (detailedBolusInfo.insulin > 0 || carbs > 0)
                 connectionOK = sExecutionService.bolus(detailedBolusInfo.insulin, (int) carbs, DateUtil.now() + T.mins(carbTime).msecs(), t);

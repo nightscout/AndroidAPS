@@ -17,10 +17,11 @@ import info.nightscout.androidaps.data.DetailedBolusInfo
 import info.nightscout.androidaps.data.Profile
 import info.nightscout.androidaps.database.AppRepository
 import info.nightscout.androidaps.database.entities.TemporaryTarget
-import info.nightscout.androidaps.database.entities.UserEntry.*
+import info.nightscout.androidaps.database.entities.UserEntry.Action
+import info.nightscout.androidaps.database.entities.UserEntry.Units
+import info.nightscout.androidaps.database.entities.UserEntry.ValueWithUnit
 import info.nightscout.androidaps.database.transactions.CancelCurrentTemporaryTargetIfAnyTransaction
 import info.nightscout.androidaps.database.transactions.InsertTemporaryTargetAndCancelCurrentTransaction
-import info.nightscout.androidaps.db.Source
 import info.nightscout.androidaps.events.EventPreferenceChange
 import info.nightscout.androidaps.events.EventRefreshOverview
 import info.nightscout.androidaps.interfaces.*
@@ -40,7 +41,6 @@ import info.nightscout.androidaps.plugins.iob.iobCobCalculator.GlucoseStatusProv
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.IobCobCalculatorPlugin
 import info.nightscout.androidaps.queue.Callback
 import info.nightscout.androidaps.receivers.DataWorker
-import info.nightscout.androidaps.receivers.DataReceiver
 import info.nightscout.androidaps.utils.*
 import info.nightscout.androidaps.utils.extensions.valueToUnitsString
 import info.nightscout.androidaps.utils.resources.ResourceHelper
@@ -793,7 +793,6 @@ class SmsCommunicatorPlugin @Inject constructor(
                 override fun run() {
                     val detailedBolusInfo = DetailedBolusInfo()
                     detailedBolusInfo.insulin = aDouble()
-                    detailedBolusInfo.source = Source.USER
                     commandQueue.bolus(detailedBolusInfo, object : Callback() {
                         override fun run() {
                             val resultSuccess = result.success
@@ -875,8 +874,7 @@ class SmsCommunicatorPlugin @Inject constructor(
                 override fun run() {
                     val detailedBolusInfo = DetailedBolusInfo()
                     detailedBolusInfo.carbs = anInteger().toDouble()
-                    detailedBolusInfo.source = Source.USER
-                    detailedBolusInfo.date = secondLong()
+                    detailedBolusInfo.timestamp = secondLong()
                     if (activePlugin.activePump.pumpDescription.storesCarbInfo) {
                         commandQueue.bolus(detailedBolusInfo, object : Callback() {
                             override fun run() {

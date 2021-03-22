@@ -25,6 +25,7 @@ import info.nightscout.androidaps.combo.R;
 import info.nightscout.androidaps.data.DetailedBolusInfo;
 import info.nightscout.androidaps.data.Profile;
 import info.nightscout.androidaps.data.PumpEnactResult;
+import info.nightscout.androidaps.database.embedments.InterfaceIDs;
 import info.nightscout.androidaps.database.entities.TherapyEvent;
 import info.nightscout.androidaps.db.Source;
 import info.nightscout.androidaps.db.TDD;
@@ -490,7 +491,7 @@ public class ComboPlugin extends PumpPluginBase implements PumpInterface, Constr
 
                 EventOverviewBolusProgress bolusingEvent = EventOverviewBolusProgress.INSTANCE;
                 bolusingEvent.setT(new Treatment());
-                bolusingEvent.getT().isSMB = detailedBolusInfo.isSMB;
+                bolusingEvent.getT().isSMB = detailedBolusInfo.getBolusType() == info.nightscout.androidaps.database.entities.Bolus.Type.SMB;
                 bolusingEvent.setPercent(100);
                 rxBus.send(bolusingEvent);
 
@@ -568,7 +569,7 @@ public class ComboPlugin extends PumpPluginBase implements PumpInterface, Constr
             }
 
             Treatment treatment = new Treatment();
-            treatment.isSMB = detailedBolusInfo.isSMB;
+            treatment.isSMB = detailedBolusInfo.getBolusType() == info.nightscout.androidaps.database.entities.Bolus.Type.SMB;
             EventOverviewBolusProgress.INSTANCE.setT(treatment);
 
             // start bolus delivery
@@ -666,17 +667,18 @@ public class ComboPlugin extends PumpPluginBase implements PumpInterface, Constr
      */
     private boolean addBolusToTreatments(DetailedBolusInfo detailedBolusInfo, Bolus lastPumpBolus) {
         DetailedBolusInfo bolusInfo = detailedBolusInfo.copy();
-        bolusInfo.date = calculateFakeBolusDate(lastPumpBolus);
-        bolusInfo.pumpId = bolusInfo.date;
-        bolusInfo.source = Source.PUMP;
+        bolusInfo.timestamp = calculateFakeBolusDate(lastPumpBolus);
+        bolusInfo.setPumpType(InterfaceIDs.PumpType.ACCU_CHEK_COMBO);
+        bolusInfo.setPumpSerial(serialNumber());
+        bolusInfo.setBolusPumpId(bolusInfo.timestamp);
         bolusInfo.insulin = lastPumpBolus.amount;
         try {
             if (bolusInfo.carbs > 0 && bolusInfo.carbTime != 0) {
                 // split out a separate carbs record without a pumpId
                 DetailedBolusInfo carbInfo = new DetailedBolusInfo();
-                carbInfo.date = bolusInfo.date + bolusInfo.carbTime * 60L * 1000L;
+                carbInfo.timestamp = bolusInfo.timestamp + bolusInfo.carbTime * 60L * 1000L;
                 carbInfo.carbs = bolusInfo.carbs;
-                carbInfo.source = Source.USER;
+                carbInfo.setPumpType(InterfaceIDs.PumpType.USER);
                 treatmentsPlugin.addToHistoryTreatment(carbInfo, true);
 
                 // remove carbs from bolusInfo to not trigger any unwanted code paths in
@@ -687,7 +689,7 @@ public class ComboPlugin extends PumpPluginBase implements PumpInterface, Constr
             treatmentsPlugin.addToHistoryTreatment(bolusInfo, true);
         } catch (Exception e) {
             getAapsLogger().error("Adding treatment record failed", e);
-            if (bolusInfo.isSMB) {
+            if (bolusInfo.getBolusType() == info.nightscout.androidaps.database.entities.Bolus.Type.SMB) {
                 Notification notification = new Notification(Notification.COMBO_PUMP_ALARM, getResourceHelper().gs(R.string.combo_error_updating_treatment_record), Notification.URGENT);
                 rxBus.send(new EventNewNotification(notification));
             }
@@ -1154,11 +1156,12 @@ public class ComboPlugin extends PumpPluginBase implements PumpInterface, Constr
         boolean updated = false;
         for (Bolus pumpBolus : history.bolusHistory) {
             DetailedBolusInfo dbi = new DetailedBolusInfo();
-            dbi.date = calculateFakeBolusDate(pumpBolus);
-            dbi.pumpId = dbi.date;
-            dbi.source = Source.PUMP;
+            dbi.timestamp = calculateFakeBolusDate(pumpBolus);
+            dbi.setPumpType(InterfaceIDs.PumpType.ACCU_CHEK_COMBO);
+            dbi.setPumpSerial(serialNumber());
+            dbi.setBolusPumpId(dbi.timestamp);
             dbi.insulin = pumpBolus.amount;
-            dbi.eventType = TherapyEvent.Type.CORRECTION_BOLUS.getText();
+            dbi.setEventType(TherapyEvent.Type.CORRECTION_BOLUS);
             if (treatmentsPlugin.addToHistoryTreatment(dbi, true)) {
                 updated = true;
             }

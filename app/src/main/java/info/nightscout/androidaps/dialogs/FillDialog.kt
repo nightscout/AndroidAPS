@@ -10,11 +10,13 @@ import info.nightscout.androidaps.R
 import info.nightscout.androidaps.activities.ErrorHelperActivity
 import info.nightscout.androidaps.data.DetailedBolusInfo
 import info.nightscout.androidaps.database.AppRepository
+import info.nightscout.androidaps.database.entities.Bolus
 import info.nightscout.androidaps.database.entities.TherapyEvent
+import info.nightscout.androidaps.database.entities.UserEntry.Action
+import info.nightscout.androidaps.database.entities.UserEntry.Units
+import info.nightscout.androidaps.database.entities.UserEntry.ValueWithUnit
 import info.nightscout.androidaps.database.transactions.InsertTherapyEventIfNewTransaction
-import info.nightscout.androidaps.database.entities.UserEntry.*
 import info.nightscout.androidaps.databinding.DialogFillBinding
-import info.nightscout.androidaps.db.Source
 import info.nightscout.androidaps.interfaces.ActivePluginProvider
 import info.nightscout.androidaps.interfaces.CommandQueueProvider
 import info.nightscout.androidaps.interfaces.Constraint
@@ -181,8 +183,7 @@ class FillDialog : DialogFragmentWithDate() {
         val detailedBolusInfo = DetailedBolusInfo()
         detailedBolusInfo.insulin = insulin
         detailedBolusInfo.context = context
-        detailedBolusInfo.source = Source.USER
-        detailedBolusInfo.isValid = false // do not count it in IOB (for pump history)
+        detailedBolusInfo.bolusType = Bolus.Type.PRIMING
         detailedBolusInfo.notes = notes
         commandQueue.bolus(detailedBolusInfo, object : Callback() {
             override fun run() {

@@ -119,6 +119,7 @@ data class UserEntry(
         constructor(ivalue: Int, unit: Units, condition:Boolean = true) : this(0.0, ivalue, 0, "", unit, condition)
         constructor(lvalue: Long, unit: Units, condition:Boolean = true) : this(0.0,0, lvalue, "", unit, condition)
         constructor(svalue: String, unit:Units) : this(0.0,0, 0, svalue, unit, svalue != "")
+        constructor(svalue: TherapyEvent.Type, unit:Units) : this(0.0,0, 0, svalue.text, unit)
         constructor(dvalue: Double, unit:String) : this(dvalue,0, 0, "", Units.fromText(unit))
         constructor(rStringRef: Int, nbParam: Long) : this(0.0, rStringRef, nbParam, "", Units.R_String, !rStringRef.equals(0))             // additionnal constructors for formated strings with additional values as parameters (define number of parameters as long
 

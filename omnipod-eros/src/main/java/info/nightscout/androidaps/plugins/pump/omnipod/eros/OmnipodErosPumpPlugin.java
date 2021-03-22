@@ -31,6 +31,7 @@ import info.nightscout.androidaps.activities.ErrorHelperActivity;
 import info.nightscout.androidaps.data.DetailedBolusInfo;
 import info.nightscout.androidaps.data.Profile;
 import info.nightscout.androidaps.data.PumpEnactResult;
+import info.nightscout.androidaps.database.entities.Bolus;
 import info.nightscout.androidaps.db.ExtendedBolus;
 import info.nightscout.androidaps.db.Source;
 import info.nightscout.androidaps.db.TemporaryBasal;
@@ -72,7 +73,6 @@ import info.nightscout.androidaps.plugins.pump.omnipod.common.queue.command.Comm
 import info.nightscout.androidaps.plugins.pump.omnipod.common.queue.command.CommandResumeDelivery;
 import info.nightscout.androidaps.plugins.pump.omnipod.common.queue.command.CommandSuspendDelivery;
 import info.nightscout.androidaps.plugins.pump.omnipod.common.queue.command.CommandUpdateAlertConfiguration;
-import info.nightscout.androidaps.plugins.pump.omnipod.eros.data.ActiveBolus;
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.data.RLHistoryItemOmnipod;
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.definition.OmnipodErosStorageKeys;
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.driver.communication.action.service.ExpirationReminderBuilder;
@@ -349,8 +349,7 @@ public class OmnipodErosPumpPlugin extends PumpPluginBase implements PumpInterfa
                         String activeBolusString = sp.getString(OmnipodErosStorageKeys.Preferences.ACTIVE_BOLUS, "");
                         aapsLogger.warn(LTag.PUMP, "Found active bolus in SP: {}. Adding Treatment.", activeBolusString);
                         try {
-                            ActiveBolus activeBolus = aapsOmnipodUtil.getGsonInstance().fromJson(activeBolusString, ActiveBolus.class);
-                            aapsOmnipodErosManager.addBolusToHistory(activeBolus.toDetailedBolusInfo(aapsLogger));
+                            aapsOmnipodErosManager.addBolusToHistory(DetailedBolusInfo.Companion.fromJsonString(activeBolusString));
                         } catch (Exception ex) {
                             aapsLogger.error(LTag.PUMP, "Failed to add active bolus to history", ex);
                         }
@@ -1087,7 +1086,7 @@ public class OmnipodErosPumpPlugin extends PumpPluginBase implements PumpInterfa
         PumpEnactResult result = executeCommand(OmnipodCommandType.SET_BOLUS, () -> aapsOmnipodErosManager.bolus(detailedBolusInfo));
 
         if (result.getSuccess()) {
-            incrementStatistics(detailedBolusInfo.isSMB ? OmnipodErosStorageKeys.Statistics.SMB_BOLUSES_DELIVERED
+            incrementStatistics(detailedBolusInfo.getBolusType() == Bolus.Type.SMB ? OmnipodErosStorageKeys.Statistics.SMB_BOLUSES_DELIVERED
                     : OmnipodErosStorageKeys.Statistics.STANDARD_BOLUSES_DELIVERED);
 
             result.carbsDelivered(detailedBolusInfo.carbs);

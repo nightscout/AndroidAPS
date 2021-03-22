@@ -4,7 +4,6 @@ import android.os.Build;
 
 import androidx.annotation.Nullable;
 
-import org.apache.commons.lang3.StringUtils;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -246,13 +245,14 @@ public class NSUpload {
     }
 
     public void uploadTreatmentRecord(DetailedBolusInfo detailedBolusInfo) {
+/*
         JSONObject data = new JSONObject();
         try {
             data.put("eventType", detailedBolusInfo.eventType);
             if (detailedBolusInfo.insulin != 0d) data.put("insulin", detailedBolusInfo.insulin);
             if (detailedBolusInfo.carbs != 0d) data.put("carbs", (int) detailedBolusInfo.carbs);
-            data.put("created_at", DateUtil.toISOString(detailedBolusInfo.date));
-            data.put("date", detailedBolusInfo.date);
+            data.put("created_at", DateUtil.toISOString(detailedBolusInfo.timestamp));
+            data.put("date", detailedBolusInfo.timestamp);
             data.put("isSMB", detailedBolusInfo.isSMB);
             if (detailedBolusInfo.pumpId != 0)
                 data.put("pumpId", detailedBolusInfo.pumpId);
@@ -264,13 +264,15 @@ public class NSUpload {
                 data.put("boluscalc", detailedBolusInfo.boluscalc);
             if (detailedBolusInfo.carbTime != 0)
                 data.put("preBolus", detailedBolusInfo.carbTime);
-            if (!StringUtils.isEmpty(detailedBolusInfo.notes)) {
-                data.put("notes", detailedBolusInfo.notes);
+            if (StringUtils.isNotEmpty(detailedBolusInfo.notes())) {
+                data.put("notes", detailedBolusInfo.notes());
             }
         } catch (JSONException e) {
             aapsLogger.error("Unhandled exception", e);
         }
-        uploadCareportalEntryToNS(data, detailedBolusInfo.date);
+        uploadCareportalEntryToNS(data, detailedBolusInfo.timestamp);
+
+ */
     }
 
     public void uploadProfileSwitch(ProfileSwitch profileSwitch, long nsClientId) {

@@ -18,13 +18,13 @@ class DetailedBolusInfoStorageTest : TestBase() {
     private val info3 = DetailedBolusInfo()
 
     private lateinit var detailedBolusInfoStorage: DetailedBolusInfoStorage
-    
+
     init {
-        info1.date = 1000000
+        info1.timestamp = 1000000
         info1.insulin = 3.0
-        info2.date = 1000001
+        info2.timestamp = 1000001
         info2.insulin = 4.0
-        info3.date = 2000000
+        info3.timestamp = 2000000
         info3.insulin = 5.0
     }
 

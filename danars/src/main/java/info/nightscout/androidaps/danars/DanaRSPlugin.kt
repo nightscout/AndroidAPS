@@ -15,6 +15,7 @@ import info.nightscout.androidaps.danars.services.DanaRSService
 import info.nightscout.androidaps.data.DetailedBolusInfo
 import info.nightscout.androidaps.data.Profile
 import info.nightscout.androidaps.data.PumpEnactResult
+import info.nightscout.androidaps.database.entities.Bolus
 import info.nightscout.androidaps.db.Treatment
 import info.nightscout.androidaps.events.EventAppExit
 import info.nightscout.androidaps.events.EventConfigBuilderChange
@@ -269,7 +270,7 @@ class DanaRSPlugin @Inject constructor(
             }
             // RS stores end time for bolus, we need to adjust time
             // default delivery speed is 12 sec/U
-            detailedBolusInfo.date = DateUtil.now() + (speed * detailedBolusInfo.insulin * 1000).toLong()
+            detailedBolusInfo.timestamp = DateUtil.now() + (speed * detailedBolusInfo.insulin * 1000).toLong()
             // clean carbs to prevent counting them as twice because they will picked up as another record
             // I don't think it's necessary to copy DetailedBolusInfo right now for carbs records
             val carbs = detailedBolusInfo.carbs
@@ -279,7 +280,7 @@ class DanaRSPlugin @Inject constructor(
             detailedBolusInfo.carbTime = 0
             detailedBolusInfoStorage.add(detailedBolusInfo) // will be picked up on reading history
             val t = Treatment()
-            t.isSMB = detailedBolusInfo.isSMB
+            t.isSMB = detailedBolusInfo.bolusType == Bolus.Type.SMB
             var connectionOK = false
             if (detailedBolusInfo.insulin > 0 || carbs > 0) connectionOK = danaRSService?.bolus(detailedBolusInfo.insulin, carbs.toInt(), DateUtil.now() + T.mins(carbTime.toLong()).msecs(), t)
                 ?: false

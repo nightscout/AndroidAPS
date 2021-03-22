@@ -15,12 +15,12 @@ import info.nightscout.androidaps.data.DetailedBolusInfo
 import info.nightscout.androidaps.data.Profile
 import info.nightscout.androidaps.database.AppRepository
 import info.nightscout.androidaps.database.ValueWrapper
+import info.nightscout.androidaps.database.entities.Bolus
 import info.nightscout.androidaps.database.entities.TemporaryTarget
 import info.nightscout.androidaps.database.entities.TherapyEvent
 import info.nightscout.androidaps.database.interfaces.end
 import info.nightscout.androidaps.database.transactions.CancelCurrentTemporaryTargetIfAnyTransaction
 import info.nightscout.androidaps.database.transactions.InsertTemporaryTargetAndCancelCurrentTransaction
-import info.nightscout.androidaps.db.Source
 import info.nightscout.androidaps.db.TDD
 import info.nightscout.androidaps.interfaces.*
 import info.nightscout.androidaps.logging.AAPSLogger
@@ -545,7 +545,7 @@ class ActionStringHandler @Inject constructor(
     private fun doECarbs(carbs: Int, time: Long, duration: Int) {
         if (carbs > 0) {
             if (duration == 0) {
-                carbsGenerator.createCarb(carbs, time, TherapyEvent.Type.CARBS_CORRECTION.text, "watch")
+                carbsGenerator.createCarb(carbs, time, TherapyEvent.Type.CARBS_CORRECTION, "watch")
             } else {
                 carbsGenerator.generateCarbs(carbs, time, duration, "watch eCarbs")
             }
@@ -604,8 +604,7 @@ class ActionStringHandler @Inject constructor(
     private fun doFillBolus(amount: Double) {
         val detailedBolusInfo = DetailedBolusInfo()
         detailedBolusInfo.insulin = amount
-        detailedBolusInfo.isValid = false
-        detailedBolusInfo.source = Source.USER
+        detailedBolusInfo.bolusType = Bolus.Type.PRIMING
         commandQueue.bolus(detailedBolusInfo, object : Callback() {
             override fun run() {
                 if (!result.success) {
@@ -621,7 +620,7 @@ class ActionStringHandler @Inject constructor(
         val detailedBolusInfo = DetailedBolusInfo()
         detailedBolusInfo.insulin = amount
         detailedBolusInfo.carbs = carbs.toDouble()
-        detailedBolusInfo.source = Source.USER
+        detailedBolusInfo.bolusType = Bolus.Type.NORMAL
         val storesCarbs = activePlugin.activePump.pumpDescription.storesCarbInfo
         if (detailedBolusInfo.insulin > 0 || storesCarbs) {
             commandQueue.bolus(detailedBolusInfo, object : Callback() {

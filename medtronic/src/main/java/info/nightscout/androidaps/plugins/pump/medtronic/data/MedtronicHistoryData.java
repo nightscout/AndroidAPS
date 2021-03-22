@@ -22,6 +22,7 @@ import javax.inject.Singleton;
 import dagger.android.HasAndroidInjector;
 import info.nightscout.androidaps.data.DetailedBolusInfo;
 import info.nightscout.androidaps.database.AppRepository;
+import info.nightscout.androidaps.database.embedments.InterfaceIDs;
 import info.nightscout.androidaps.database.entities.TherapyEvent;
 import info.nightscout.androidaps.database.transactions.InsertTherapyEventIfNewTransaction;
 import info.nightscout.androidaps.db.DbObjectBase;
@@ -80,6 +81,7 @@ public class MedtronicHistoryData {
     private final NSUpload nsUpload;
     private final MedtronicUtil medtronicUtil;
     private final MedtronicPumpHistoryDecoder medtronicPumpHistoryDecoder;
+    private final MedtronicPumpStatus medtronicPumpStatus;
     private final DatabaseHelperInterface databaseHelper;
     private final AppRepository repository;
 
@@ -114,6 +116,7 @@ public class MedtronicHistoryData {
             NSUpload nsUpload,
             MedtronicUtil medtronicUtil,
             MedtronicPumpHistoryDecoder medtronicPumpHistoryDecoder,
+            MedtronicPumpStatus medtronicPumpStatus,
             DatabaseHelperInterface databaseHelperInterface,
             AppRepository repository
     ) {
@@ -126,6 +129,7 @@ public class MedtronicHistoryData {
         this.nsUpload = nsUpload;
         this.medtronicUtil = medtronicUtil;
         this.medtronicPumpHistoryDecoder = medtronicPumpHistoryDecoder;
+        this.medtronicPumpStatus = medtronicPumpStatus;
         this.databaseHelper = databaseHelperInterface;
         this.repository = repository;
     }
@@ -982,9 +986,10 @@ public class MedtronicHistoryData {
                 case Normal: {
                     DetailedBolusInfo detailedBolusInfo = new DetailedBolusInfo();
 
-                    detailedBolusInfo.date = tryToGetByLocalTime(bolus.atechDateTime);
-                    detailedBolusInfo.source = Source.PUMP;
-                    detailedBolusInfo.pumpId = bolus.getPumpId();
+                    detailedBolusInfo.timestamp = tryToGetByLocalTime(bolus.atechDateTime);
+                    detailedBolusInfo.setPumpType(InterfaceIDs.PumpType.MEDTRONIC);
+                    detailedBolusInfo.setPumpSerial(medtronicPumpStatus.serialNumber);
+                    detailedBolusInfo.setBolusPumpId(bolus.getPumpId());
                     detailedBolusInfo.insulin = bolusDTO.getDeliveredAmount();
 
                     addCarbsFromEstimate(detailedBolusInfo, bolus);
@@ -996,8 +1001,8 @@ public class MedtronicHistoryData {
 
                     bolus.setLinkedObject(detailedBolusInfo);
 
-                    aapsLogger.debug(LTag.PUMP, String.format(Locale.ENGLISH, "addBolus - [date=%d,pumpId=%d, insulin=%.2f, newRecord=%b]", detailedBolusInfo.date,
-                            detailedBolusInfo.pumpId, detailedBolusInfo.insulin, newRecord));
+                    aapsLogger.debug(LTag.PUMP, String.format(Locale.ENGLISH, "addBolus - [date=%d,pumpId=%d, insulin=%.2f, newRecord=%b]", detailedBolusInfo.timestamp,
+                            detailedBolusInfo.getBolusPumpId(), detailedBolusInfo.insulin, newRecord));
                 }
                 break;
 

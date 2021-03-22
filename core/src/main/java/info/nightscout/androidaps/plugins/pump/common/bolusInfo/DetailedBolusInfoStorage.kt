@@ -12,7 +12,7 @@ import kotlin.math.abs
 @Singleton
 class DetailedBolusInfoStorage @Inject constructor(
     val aapsLogger: AAPSLogger
-){
+) {
 
     val store = ArrayList<DetailedBolusInfo>()
 
@@ -27,8 +27,8 @@ class DetailedBolusInfoStorage @Inject constructor(
         // Look for info with bolus
         for (i in store.indices) {
             val d = store[i]
-                aapsLogger.debug(LTag.PUMP, "Existing bolus info: " + store[i])
-            if (bolusTime > d.date - T.mins(1).msecs() && bolusTime < d.date + T.mins(1).msecs() && abs(store[i].insulin - bolus) < 0.01) {
+            aapsLogger.debug(LTag.PUMP, "Existing bolus info: " + store[i])
+            if (bolusTime > d.timestamp - T.mins(1).msecs() && bolusTime < d.timestamp + T.mins(1).msecs() && abs(store[i].insulin - bolus) < 0.01) {
                 aapsLogger.debug(LTag.PUMP, "Using & removing bolus info: ${store[i]}")
                 store.removeAt(i)
                 return d
@@ -37,7 +37,7 @@ class DetailedBolusInfoStorage @Inject constructor(
         // If not found use time only
         for (i in store.indices) {
             val d = store[i]
-            if (bolusTime > d.date - T.mins(1).msecs() && bolusTime < d.date + T.mins(1).msecs() && bolus <= store[i].insulin + 0.01) {
+            if (bolusTime > d.timestamp - T.mins(1).msecs() && bolusTime < d.timestamp + T.mins(1).msecs() && bolus <= store[i].insulin + 0.01) {
                 aapsLogger.debug(LTag.PUMP, "Using TIME-ONLY & removing bolus info: ${store[i]}")
                 store.removeAt(i)
                 return d

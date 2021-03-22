@@ -6,6 +6,7 @@ import info.nightscout.androidaps.danars.R
 import info.nightscout.androidaps.danars.encryption.BleEncryption
 import info.nightscout.androidaps.data.DetailedBolusInfo
 import info.nightscout.androidaps.database.AppRepository
+import info.nightscout.androidaps.database.embedments.InterfaceIDs
 import info.nightscout.androidaps.database.entities.TherapyEvent
 import info.nightscout.androidaps.database.transactions.InsertTherapyEventIfNewTransaction
 import info.nightscout.androidaps.db.ExtendedBolus
@@ -132,9 +133,10 @@ open class DanaRS_Packet_APS_History_Events(
             DanaPump.BOLUS             -> {
                 val detailedBolusInfo = detailedBolusInfoStorage.findDetailedBolusInfo(datetime, param1 / 100.0)
                     ?: DetailedBolusInfo()
-                detailedBolusInfo.date = datetime
-                detailedBolusInfo.source = Source.PUMP
-                detailedBolusInfo.pumpId = datetime
+                detailedBolusInfo.timestamp = datetime
+                detailedBolusInfo.pumpType = InterfaceIDs.PumpType.DANA_RS
+                detailedBolusInfo.pumpSerial = danaPump.serialNumber
+                detailedBolusInfo.bolusPumpId = pumpId
                 detailedBolusInfo.insulin = param1 / 100.0
                 val newRecord = activePlugin.activeTreatments.addToHistoryTreatment(detailedBolusInfo, false)
                 aapsLogger.debug(LTag.PUMPCOMM, "[" + id + "] " + (if (newRecord) "**NEW** " else "") + "EVENT BOLUS (" + recordCode + ") " + dateUtil.dateAndTimeString(datetime) + " (" + datetime + ")" + " Bolus: " + param1 / 100.0 + "U Duration: " + param2 + "min")
@@ -144,9 +146,10 @@ open class DanaRS_Packet_APS_History_Events(
             DanaPump.DUALBOLUS         -> {
                 val detailedBolusInfo = detailedBolusInfoStorage.findDetailedBolusInfo(datetime, param1 / 100.0)
                     ?: DetailedBolusInfo()
-                detailedBolusInfo.date = datetime
-                detailedBolusInfo.source = Source.PUMP
-                detailedBolusInfo.pumpId = datetime
+                detailedBolusInfo.timestamp = datetime
+                detailedBolusInfo.pumpType = InterfaceIDs.PumpType.DANA_RS
+                detailedBolusInfo.pumpSerial = danaPump.serialNumber
+                detailedBolusInfo.bolusPumpId = pumpId
                 detailedBolusInfo.insulin = param1 / 100.0
                 val newRecord = activePlugin.activeTreatments.addToHistoryTreatment(detailedBolusInfo, false)
                 aapsLogger.debug(LTag.PUMPCOMM, "[" + id + "] " + (if (newRecord) "**NEW** " else "") + "EVENT DUALBOLUS (" + recordCode + ") " + dateUtil.dateAndTimeString(datetime) + " (" + datetime + ")" + " Bolus: " + param1 / 100.0 + "U Duration: " + param2 + "min")
@@ -206,9 +209,10 @@ open class DanaRS_Packet_APS_History_Events(
             DanaPump.CARBS             -> {
                 val emptyCarbsInfo = DetailedBolusInfo()
                 emptyCarbsInfo.carbs = param1.toDouble()
-                emptyCarbsInfo.date = datetime
-                emptyCarbsInfo.source = Source.PUMP
-                emptyCarbsInfo.pumpId = datetime
+                emptyCarbsInfo.timestamp = datetime
+                emptyCarbsInfo.pumpType = InterfaceIDs.PumpType.DANA_RS
+                emptyCarbsInfo.pumpSerial = danaPump.serialNumber
+                emptyCarbsInfo.carbsPumpId = pumpId
                 val newRecord = activePlugin.activeTreatments.addToHistoryTreatment(emptyCarbsInfo, false)
                 aapsLogger.debug(LTag.PUMPCOMM, "[" + id + "] " + (if (newRecord) "**NEW** " else "") + "EVENT CARBS (" + recordCode + ") " + dateUtil.dateAndTimeString(datetime) + " (" + datetime + ")" + " Carbs: " + param1 + "g")
                 status = "CARBS " + dateUtil.timeString(datetime)

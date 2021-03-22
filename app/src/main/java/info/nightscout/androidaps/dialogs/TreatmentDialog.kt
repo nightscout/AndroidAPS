@@ -13,9 +13,10 @@ import info.nightscout.androidaps.R
 import info.nightscout.androidaps.activities.ErrorHelperActivity
 import info.nightscout.androidaps.data.DetailedBolusInfo
 import info.nightscout.androidaps.database.entities.TherapyEvent
-import info.nightscout.androidaps.database.entities.UserEntry.*
+import info.nightscout.androidaps.database.entities.UserEntry.Action
+import info.nightscout.androidaps.database.entities.UserEntry.Units
+import info.nightscout.androidaps.database.entities.UserEntry.ValueWithUnit
 import info.nightscout.androidaps.databinding.DialogTreatmentBinding
-import info.nightscout.androidaps.db.Source
 import info.nightscout.androidaps.interfaces.ActivePluginProvider
 import info.nightscout.androidaps.interfaces.CommandQueueProvider
 import info.nightscout.androidaps.interfaces.Constraint
@@ -132,12 +133,11 @@ class TreatmentDialog : DialogFragmentWithDate() {
                 OKDialog.showConfirmation(activity, resourceHelper.gs(R.string.overview_treatment_label), HtmlHelper.fromHtml(Joiner.on("<br/>").join(actions)), {
                     uel.log(Action.TREATMENT, ValueWithUnit(insulin, Units.U, insulin != 0.0), ValueWithUnit(carbs, Units.G, carbs != 0))
                     val detailedBolusInfo = DetailedBolusInfo()
-                    if (insulinAfterConstraints == 0.0) detailedBolusInfo.eventType = TherapyEvent.Type.CARBS_CORRECTION.text
-                    if (carbsAfterConstraints == 0) detailedBolusInfo.eventType = TherapyEvent.Type.CORRECTION_BOLUS.text
+                    if (insulinAfterConstraints == 0.0) detailedBolusInfo.eventType = TherapyEvent.Type.CARBS_CORRECTION
+                    if (carbsAfterConstraints == 0) detailedBolusInfo.eventType = TherapyEvent.Type.CORRECTION_BOLUS
                     detailedBolusInfo.insulin = insulinAfterConstraints
                     detailedBolusInfo.carbs = carbsAfterConstraints.toDouble()
                     detailedBolusInfo.context = context
-                    detailedBolusInfo.source = Source.USER
                     if (!(recordOnlyChecked && (detailedBolusInfo.insulin > 0 || pumpDescription.storesCarbInfo))) {
                         commandQueue.bolus(detailedBolusInfo, object : Callback() {
                             override fun run() {

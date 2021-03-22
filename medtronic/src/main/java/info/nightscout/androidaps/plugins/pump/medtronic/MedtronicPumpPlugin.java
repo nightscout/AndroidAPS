@@ -32,6 +32,7 @@ import info.nightscout.androidaps.activities.ErrorHelperActivity;
 import info.nightscout.androidaps.data.DetailedBolusInfo;
 import info.nightscout.androidaps.data.Profile;
 import info.nightscout.androidaps.data.PumpEnactResult;
+import info.nightscout.androidaps.database.entities.Bolus;
 import info.nightscout.androidaps.db.Source;
 import info.nightscout.androidaps.db.TemporaryBasal;
 import info.nightscout.androidaps.events.EventRefreshOverview;
@@ -879,15 +880,15 @@ public class MedtronicPumpPlugin extends PumpPluginAbstract implements PumpInter
 
                 long now = System.currentTimeMillis();
 
-                detailedBolusInfo.date = now;
-                detailedBolusInfo.deliverAt = now; // not sure about that one
+                detailedBolusInfo.timestamp = now;
+                detailedBolusInfo.deliverAtTheLatest = now; // not sure about that one
 
                 activePlugin.getActiveTreatments().addToHistoryTreatment(detailedBolusInfo, true);
 
                 // we subtract insulin, exact amount will be visible with next remainingInsulin update.
                 medtronicPumpStatus.reservoirRemainingUnits -= detailedBolusInfo.insulin;
 
-                incrementStatistics(detailedBolusInfo.isSMB ? MedtronicConst.Statistics.SMBBoluses
+                incrementStatistics(detailedBolusInfo.getBolusType() == Bolus.Type.SMB ? MedtronicConst.Statistics.SMBBoluses
                         : MedtronicConst.Statistics.StandardBoluses);
 
 

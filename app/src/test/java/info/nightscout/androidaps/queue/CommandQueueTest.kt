@@ -10,6 +10,7 @@ import info.nightscout.androidaps.TestBaseWithProfile
 import info.nightscout.androidaps.TestPumpPlugin
 import info.nightscout.androidaps.core.R
 import info.nightscout.androidaps.data.DetailedBolusInfo
+import info.nightscout.androidaps.database.entities.Bolus
 import info.nightscout.androidaps.interfaces.ActivePluginProvider
 import info.nightscout.androidaps.interfaces.Constraint
 import info.nightscout.androidaps.interfaces.ProfileFunction
@@ -95,8 +96,8 @@ class CommandQueueTest : TestBaseWithProfile() {
         }
     }
 
-    lateinit var commandQueue: CommandQueue
-    lateinit var testPumpPlugin: TestPumpPlugin
+    private lateinit var commandQueue: CommandQueue
+    private lateinit var testPumpPlugin: TestPumpPlugin
 
     @Before
     fun prepare() {
@@ -214,7 +215,7 @@ class CommandQueueTest : TestBaseWithProfile() {
         Assert.assertEquals(0, commandQueue.size())
         val smb = DetailedBolusInfo()
         smb.lastKnownBolusTime = DateUtil.now()
-        smb.isSMB = true
+        smb.bolusType = Bolus.Type.SMB
         commandQueue.bolus(smb, null)
         commandQueue.bolus(DetailedBolusInfo(), null)
         Assert.assertEquals(2, commandQueue.size())
@@ -234,7 +235,7 @@ class CommandQueueTest : TestBaseWithProfile() {
         // when
         commandQueue.bolus(DetailedBolusInfo(), null)
         val smb = DetailedBolusInfo()
-        smb.isSMB = true
+        smb.bolusType = Bolus.Type.SMB
         val queued: Boolean = commandQueue.bolus(smb, null)
 
         // then
@@ -249,7 +250,7 @@ class CommandQueueTest : TestBaseWithProfile() {
 
         // when
         val bolus = DetailedBolusInfo()
-        bolus.isSMB = true
+        bolus.bolusType = Bolus.Type.SMB
         bolus.lastKnownBolusTime = 0
         val queued: Boolean = commandQueue.bolus(bolus, null)
 

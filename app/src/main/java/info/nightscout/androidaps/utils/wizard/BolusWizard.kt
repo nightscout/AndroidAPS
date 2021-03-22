@@ -10,10 +10,10 @@ import info.nightscout.androidaps.R
 import info.nightscout.androidaps.activities.ErrorHelperActivity
 import info.nightscout.androidaps.data.DetailedBolusInfo
 import info.nightscout.androidaps.data.Profile
+import info.nightscout.androidaps.database.entities.BolusCalculatorResult
 import info.nightscout.androidaps.database.entities.TemporaryTarget
 import info.nightscout.androidaps.database.entities.TherapyEvent
 import info.nightscout.androidaps.database.entities.UserEntry.*
-import info.nightscout.androidaps.db.Source
 import info.nightscout.androidaps.events.EventRefreshOverview
 import info.nightscout.androidaps.interfaces.*
 import info.nightscout.androidaps.logging.AAPSLogger
@@ -35,8 +35,6 @@ import info.nightscout.androidaps.utils.alertDialogs.OKDialog
 import info.nightscout.androidaps.utils.extensions.formatColor
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 import info.nightscout.androidaps.utils.sharedPreferences.SP
-import org.json.JSONException
-import org.json.JSONObject
 import java.util.*
 import javax.inject.Inject
 import kotlin.math.abs
@@ -241,47 +239,38 @@ class BolusWizard @Inject constructor(
         return this
     }
 
-    @Suppress("SpellCheckingInspection")
-    private fun nsJSON(): JSONObject {
-        val bolusCalcJSON = JSONObject()
-        try {
-            bolusCalcJSON.put("profile", profileName)
-            bolusCalcJSON.put("notes", notes)
-            bolusCalcJSON.put("eventTime", DateUtil.toISOString(Date()))
-            bolusCalcJSON.put("targetBGLow", targetBGLow)
-            bolusCalcJSON.put("targetBGHigh", targetBGHigh)
-            bolusCalcJSON.put("isf", sens)
-            bolusCalcJSON.put("ic", ic)
-            bolusCalcJSON.put("iob", -(insulinFromBolusIOB + insulinFromBasalIOB))
-            bolusCalcJSON.put("bolusiob", insulinFromBolusIOB)
-            bolusCalcJSON.put("basaliob", insulinFromBasalIOB)
-            bolusCalcJSON.put("bolusiobused", includeBolusIOB)
-            bolusCalcJSON.put("basaliobused", includeBasalIOB)
-            bolusCalcJSON.put("bg", bg)
-            bolusCalcJSON.put("insulinbg", insulinFromBG)
-            bolusCalcJSON.put("insulinbgused", useBg)
-            bolusCalcJSON.put("bgdiff", bgDiff)
-            bolusCalcJSON.put("insulincarbs", insulinFromCarbs)
-            bolusCalcJSON.put("carbs", carbs)
-            bolusCalcJSON.put("cob", cob)
-            bolusCalcJSON.put("cobused", useCob)
-            bolusCalcJSON.put("insulincob", insulinFromCOB)
-            bolusCalcJSON.put("othercorrection", correction)
-            bolusCalcJSON.put("insulinsuperbolus", insulinFromSuperBolus)
-            bolusCalcJSON.put("insulintrend", insulinFromTrend)
-            bolusCalcJSON.put("insulin", calculatedTotalInsulin)
-            bolusCalcJSON.put("superbolusused", useSuperBolus)
-            bolusCalcJSON.put("insulinsuperbolus", insulinFromSuperBolus)
-            bolusCalcJSON.put("trendused", useTrend)
-            bolusCalcJSON.put("insulintrend", insulinFromTrend)
-            bolusCalcJSON.put("trend", trend)
-            bolusCalcJSON.put("ttused", useTT)
-            bolusCalcJSON.put("percentageCorrection", percentageCorrection)
-        } catch (e: JSONException) {
-            aapsLogger.error("Unhandled exception", e)
-        }
-        return bolusCalcJSON
-    }
+    private fun createBolusCalculatorResult(): BolusCalculatorResult =
+        BolusCalculatorResult(
+            timestamp = dateUtil._now(),
+            targetBGLow = targetBGLow,
+            targetBGHigh = targetBGHigh,
+            isf = sens,
+            ic = ic,
+            bolusIOB = insulinFromBolusIOB,
+            wasBolusIOBUsed = includeBolusIOB,
+            basalIOB = insulinFromBasalIOB,
+            wasBasalIOBUsed = includeBasalIOB,
+            glucoseValue = bg,
+            wasGlucoseUsed = useBg && bg > 0,
+            glucoseDifference = bgDiff,
+            glucoseInsulin = insulinFromBG,
+            glucoseTrend = trend,
+            wasTrendUsed = useTrend,
+            trendInsulin = insulinFromTrend,
+            cob = cob,
+            wasCOBUsed = useCob,
+            cobInsulin = insulinFromCOB,
+            carbs = carbs.toDouble(),
+            wereCarbsUsed = cob > 0,
+            carbsInsulin = insulinFromCarbs,
+            otherCorrection = correction,
+            wasSuperbolusUsed = useSuperBolus,
+            superbolusInsulin = insulinFromSuperBolus,
+            wasTempTargetUsed = useTT,
+            totalInsulin = calculatedTotalInsulin,
+            percentageCorrection = percentageCorrection,
+            profileName = profileName
+        )
 
     private fun confirmMessageAfterConstraints(advisor: Boolean): Spanned {
 
@@ -339,15 +328,14 @@ class BolusWizard @Inject constructor(
         val confirmMessage = confirmMessageAfterConstraints(advisor = true)
         OKDialog.showConfirmation(ctx, resourceHelper.gs(R.string.boluswizard), confirmMessage, {
             DetailedBolusInfo().apply {
-                eventType = TherapyEvent.Type.CORRECTION_BOLUS.text
+                eventType = TherapyEvent.Type.CORRECTION_BOLUS
                 insulin = insulinAfterConstraints
                 carbs = 0.0
                 context = ctx
-                glucose = bg
-                glucoseType = "Manual"
+                mgdlGlucose = Profile.toMgdl(bg, profile.units)
+                glucoseType = TherapyEvent.MeterType.MANUAL
                 carbTime = 0
-                boluscalc = nsJSON()
-                source = Source.USER
+                bolusCalculatorResult = createBolusCalculatorResult()
                 notes = this@BolusWizard.notes
                 uel.log(Action.BOLUS_ADVISOR, notes, ValueWithUnit(eventType, Units.TherapyEvent), ValueWithUnit(insulinAfterConstraints, Units.U))
                 if (insulin > 0) {
@@ -403,17 +391,16 @@ class BolusWizard @Inject constructor(
                     }
                 }
                 DetailedBolusInfo().apply {
-                    eventType = TherapyEvent.Type.BOLUS_WIZARD.text
+                    eventType = TherapyEvent.Type.BOLUS_WIZARD
                     insulin = insulinAfterConstraints
                     carbs = this@BolusWizard.carbs.toDouble()
                     context = ctx
-                    glucose = bg
-                    glucoseType = "Manual"
+                    mgdlGlucose = Profile.toMgdl(bg, profile.units)
+                    glucoseType = TherapyEvent.MeterType.MANUAL
                     carbTime = this@BolusWizard.carbTime
-                    boluscalc = nsJSON()
-                    source = Source.USER
+                    bolusCalculatorResult = createBolusCalculatorResult()
                     notes = this@BolusWizard.notes
-                    uel.log(Action.BOLUS, notes, ValueWithUnit(eventType,Units.TherapyEvent), ValueWithUnit(insulinAfterConstraints, Units.U), ValueWithUnit(this@BolusWizard.carbs, Units.G, this@BolusWizard.carbs != 0), ValueWithUnit(carbTime, Units.M, carbTime != 0))
+                    uel.log(Action.BOLUS, notes, ValueWithUnit(eventType, Units.TherapyEvent), ValueWithUnit(insulinAfterConstraints, Units.U), ValueWithUnit(this@BolusWizard.carbs, Units.G, this@BolusWizard.carbs != 0), ValueWithUnit(carbTime, Units.M, carbTime != 0))
                     if (insulin > 0 || pump.pumpDescription.storesCarbInfo) {
                         commandQueue.bolus(this, object : Callback() {
                             override fun run() {

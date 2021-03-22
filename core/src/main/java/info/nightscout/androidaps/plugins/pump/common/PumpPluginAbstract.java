@@ -16,6 +16,7 @@ import info.nightscout.androidaps.core.R;
 import info.nightscout.androidaps.data.DetailedBolusInfo;
 import info.nightscout.androidaps.data.Profile;
 import info.nightscout.androidaps.data.PumpEnactResult;
+import info.nightscout.androidaps.database.entities.Bolus;
 import info.nightscout.androidaps.db.ExtendedBolus;
 import info.nightscout.androidaps.db.TemporaryBasal;
 import info.nightscout.androidaps.db.Treatment;
@@ -419,7 +420,7 @@ public abstract class PumpPluginAbstract extends PumpPluginBase implements PumpI
 
                 EventOverviewBolusProgress bolusingEvent = EventOverviewBolusProgress.INSTANCE;
                 bolusingEvent.setT(new Treatment());
-                bolusingEvent.getT().isSMB = detailedBolusInfo.isSMB;
+                bolusingEvent.getT().isSMB = detailedBolusInfo.getBolusType() == Bolus.Type.SMB;
                 bolusingEvent.setPercent(100);
                 rxBus.send(bolusingEvent);
 

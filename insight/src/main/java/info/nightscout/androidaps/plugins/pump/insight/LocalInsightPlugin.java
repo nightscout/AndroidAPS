@@ -31,6 +31,8 @@ import info.nightscout.androidaps.data.DetailedBolusInfo;
 import info.nightscout.androidaps.data.Profile;
 import info.nightscout.androidaps.data.PumpEnactResult;
 import info.nightscout.androidaps.database.AppRepository;
+import info.nightscout.androidaps.database.embedments.InterfaceIDs;
+import info.nightscout.androidaps.database.entities.Bolus;
 import info.nightscout.androidaps.database.entities.TherapyEvent;
 import info.nightscout.androidaps.database.transactions.InsertTherapyEventIfNewTransaction;
 import info.nightscout.androidaps.db.ExtendedBolus;
@@ -591,13 +593,13 @@ public class LocalInsightPlugin extends PumpPluginBase implements PumpInterface,
                     bolusMessage.setDuration(0);
                     bolusMessage.setExtendedAmount(0);
                     bolusMessage.setImmediateAmount(insulin);
-                    bolusMessage.setVibration(sp.getBoolean(detailedBolusInfo.isSMB ? R.string.key_disable_vibration_auto : R.string.key_disable_vibration, false));
+                    bolusMessage.setVibration(sp.getBoolean(detailedBolusInfo.getBolusType() == Bolus.Type.SMB ? R.string.key_disable_vibration_auto : R.string.key_disable_vibration, false));
                     bolusID = connectionService.requestMessage(bolusMessage).await().getBolusId();
                     bolusCancelled = false;
                 }
                 result.success(true).enacted(true);
                 Treatment t = new Treatment();
-                t.isSMB = detailedBolusInfo.isSMB;
+                t.isSMB = detailedBolusInfo.getBolusType() == Bolus.Type.SMB;
                 final EventOverviewBolusProgress bolusingEvent = EventOverviewBolusProgress.INSTANCE;
                 bolusingEvent.setT(t);
                 bolusingEvent.setStatus(resourceHelper.gs(R.string.insight_delivered, 0d, insulin));
@@ -609,14 +611,15 @@ public class LocalInsightPlugin extends PumpPluginBase implements PumpInterface,
                 insightBolusID.timestamp = System.currentTimeMillis();
                 insightBolusID.pumpSerial = connectionService.getPumpSystemIdentification().getSerialNumber();
                 databaseHelper.createOrUpdate(insightBolusID);
-                detailedBolusInfo.date = insightBolusID.timestamp;
-                detailedBolusInfo.source = Source.PUMP;
-                detailedBolusInfo.pumpId = insightBolusID.id;
+                detailedBolusInfo.timestamp = insightBolusID.timestamp;
+                detailedBolusInfo.setPumpType(InterfaceIDs.PumpType.ACCU_CHEK_INSIGHT);
+                detailedBolusInfo.setPumpSerial(serialNumber());
+                detailedBolusInfo.setBolusPumpId(insightBolusID.id);
                 if (detailedBolusInfo.carbs > 0 && detailedBolusInfo.carbTime != 0) {
                     DetailedBolusInfo carbInfo = new DetailedBolusInfo();
                     carbInfo.carbs = detailedBolusInfo.carbs;
-                    carbInfo.date = detailedBolusInfo.date + detailedBolusInfo.carbTime * 60L * 1000L;
-                    carbInfo.source = Source.USER;
+                    carbInfo.timestamp = detailedBolusInfo.timestamp + detailedBolusInfo.carbTime * 60L * 1000L;
+                    carbInfo.setPumpType(InterfaceIDs.PumpType.USER);
                     treatmentsPlugin.addToHistoryTreatment(carbInfo, false);
                     detailedBolusInfo.carbTime = 0;
                     detailedBolusInfo.carbs = 0;
@@ -1390,9 +1393,10 @@ public class LocalInsightPlugin extends PumpPluginBase implements PumpInterface,
         databaseHelper.createOrUpdate(bolusID);
         if (event.getBolusType() == BolusType.STANDARD || event.getBolusType() == BolusType.MULTIWAVE) {
             DetailedBolusInfo detailedBolusInfo = new DetailedBolusInfo();
-            detailedBolusInfo.date = bolusID.timestamp;
-            detailedBolusInfo.source = Source.PUMP;
-            detailedBolusInfo.pumpId = bolusID.id;
+            detailedBolusInfo.timestamp = bolusID.timestamp;
+            detailedBolusInfo.setPumpType(InterfaceIDs.PumpType.ACCU_CHEK_INSIGHT);
+            detailedBolusInfo.setPumpSerial(serialNumber());
+            detailedBolusInfo.setBolusPumpId(bolusID.id);
             detailedBolusInfo.insulin = event.getImmediateAmount();
             treatmentsPlugin.addToHistoryTreatment(detailedBolusInfo, true);
         }
@@ -1424,9 +1428,10 @@ public class LocalInsightPlugin extends PumpPluginBase implements PumpInterface,
         databaseHelper.createOrUpdate(bolusID);
         if (event.getBolusType() == BolusType.STANDARD || event.getBolusType() == BolusType.MULTIWAVE) {
             DetailedBolusInfo detailedBolusInfo = new DetailedBolusInfo();
-            detailedBolusInfo.date = bolusID.timestamp;
-            detailedBolusInfo.source = Source.PUMP;
-            detailedBolusInfo.pumpId = bolusID.id;
+            detailedBolusInfo.timestamp = bolusID.timestamp;
+            detailedBolusInfo.setPumpType(InterfaceIDs.PumpType.ACCU_CHEK_INSIGHT);
+            detailedBolusInfo.setPumpSerial(serialNumber());
+            detailedBolusInfo.setBolusPumpId(bolusID.id);
             detailedBolusInfo.insulin = event.getImmediateAmount();
             treatmentsPlugin.addToHistoryTreatment(detailedBolusInfo, true);
         }
@@ -1553,7 +1558,7 @@ public class LocalInsightPlugin extends PumpPluginBase implements PumpInterface,
 
     private void logNote(long date, String note) {
         if (repository.getTherapyEventByTimestamp(TherapyEvent.Type.NOTE, date) != null) return;
-        disposable.add(repository.runTransactionForResult(new InsertTherapyEventIfNewTransaction(date, TherapyEvent.Type.NOTE, 0, note, sp.getString("careportal_enteredby", "AndroidAPS"), null, null, null))
+        disposable.add(repository.runTransactionForResult(new InsertTherapyEventIfNewTransaction(date, TherapyEvent.Type.NOTE, 0, note, sp.getString("careportal_enteredby", "AndroidAPS"), null, null, TherapyEvent.GlucoseUnit.MGDL))
                 .subscribe(
                         result -> result.getInserted().forEach(nsUpload::uploadEvent),
                         error -> aapsLogger.error(LTag.DATABASE, "Error while saving therapy event", error)
@@ -1575,7 +1580,7 @@ public class LocalInsightPlugin extends PumpPluginBase implements PumpInterface,
 
     private void uploadCareportalEvent(long date, TherapyEvent.Type event) {
         if (repository.getTherapyEventByTimestamp(event, date) != null) return;
-        disposable.add(repository.runTransactionForResult(new InsertTherapyEventIfNewTransaction(date, event, 0, null, sp.getString("careportal_enteredby", "AndroidAPS"), null, null, null))
+        disposable.add(repository.runTransactionForResult(new InsertTherapyEventIfNewTransaction(date, event, 0, null, sp.getString("careportal_enteredby", "AndroidAPS"), null, null, TherapyEvent.GlucoseUnit.MGDL))
                 .subscribe(
                         result -> result.getInserted().forEach(nsUpload::uploadEvent),
                         error -> aapsLogger.error(LTag.DATABASE, "Error while saving therapy event", error)

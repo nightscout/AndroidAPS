@@ -5,7 +5,6 @@ import info.nightscout.androidaps.R
 import info.nightscout.androidaps.activities.ErrorHelperActivity
 import info.nightscout.androidaps.data.DetailedBolusInfo
 import info.nightscout.androidaps.database.entities.TherapyEvent
-import info.nightscout.androidaps.db.Source
 import info.nightscout.androidaps.interfaces.ActivePluginProvider
 import info.nightscout.androidaps.interfaces.CommandQueueProvider
 import info.nightscout.androidaps.queue.Callback
@@ -31,19 +30,18 @@ class CarbsGenerator @Inject constructor(
             val carbTime = startTime + i * 15 * 60 * 1000
             val smallCarbAmount = (1.0 * remainingCarbs / (ticks - i)).roundToInt() //on last iteration (ticks-i) is 1 -> smallCarbAmount == remainingCarbs
             remainingCarbs -= smallCarbAmount.toLong()
-            if (smallCarbAmount > 0) createCarb(smallCarbAmount, carbTime, TherapyEvent.Type.MEAL_BOLUS.text, notes)
+            if (smallCarbAmount > 0) createCarb(smallCarbAmount, carbTime, TherapyEvent.Type.MEAL_BOLUS, notes)
         }
     }
 
-    fun createCarb(carbs: Int, time: Long, eventType: String, notes: String) {
+    fun createCarb(carbs: Int, time: Long, eventType: TherapyEvent.Type, notes: String) {
         val carbInfo = DetailedBolusInfo()
-        carbInfo.date = time
+        carbInfo.timestamp = time
         carbInfo.eventType = eventType
         carbInfo.carbs = carbs.toDouble()
         carbInfo.context = context
-        carbInfo.source = Source.USER
         carbInfo.notes = notes
-        if (activePlugin.activePump.pumpDescription.storesCarbInfo && carbInfo.date <= DateUtil.now() && carbInfo.date > DateUtil.now() - T.mins(2).msecs()) {
+        if (activePlugin.activePump.pumpDescription.storesCarbInfo && carbInfo.timestamp <= DateUtil.now() && carbInfo.timestamp > DateUtil.now() - T.mins(2).msecs()) {
             commandQueue.bolus(carbInfo, object : Callback() {
                 override fun run() {
                     if (!result.success) {
