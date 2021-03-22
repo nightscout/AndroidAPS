@@ -21,6 +21,7 @@
         <!-- Misc. colors -->
         <item name="android:navigationBarColor">?attr/colorPrimary</item>
         <item name="android:actionBarTheme">@android:style/Theme.Material</item>
+        <item name="iconColor">@color/white</item>
         <item name="iconColorDialog">@color/white</item>
         <item name="iconColorbottomAppbar">@color/iconColorbottomAppbar</item>
         <item name="iconColorToolbar">@color/white</item>
