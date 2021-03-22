@@ -9,7 +9,7 @@
     <color name="background_stats_color">#666666</color>
 
     <!---Android Dark and Light Theme Base colors-->
-    <color name="background_dark">#121212</color>
+    <color name="background_dark">#262626</color>
     <color name="background_light">#FFFFFF</color>
     <color name="splashBackground">#000000</color>
 
