@@ -97,6 +97,12 @@
 <attr name="loopPaused" format="reference|color" />
 <!---Loop Closed Icon Color-->
 <attr name="loopClosed" format="reference|color" />
+<!---Loop Disabled Icon Color-->
+<attr name="loopDisabled" format="reference|color" />
+<!---Loop Disconnected Icon Color-->
+<attr name="loopDisconnected" format="reference|color" />
+<!---Loop Opened Icon Color-->
+<attr name="loopOpened" format="reference|color" />
 <!---Sensitivity Icon Color-->
 <attr name="sensitivityIconColor" format="reference|color" />
 <!---Refill Icon Color-->

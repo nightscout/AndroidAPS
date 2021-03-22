@@ -130,6 +130,12 @@
         <item name="loopPaused" >@color/ribbonWarning</item>
         <!---Loop Closed Icon Color-->
         <item name="loopClosed" >@color/loopGreen</item>
+        <!---Loop Disabled Icon Color-->
+        <item name="loopDisabled" >@color/gray</item>
+        <!---Loop Disconnected Icon Color-->
+        <item name="loopDisconnected" >@color/red</item>
+        <!---Loop Opened Icon Color-->
+        <item name="loopOpened" >@color/blue_default</item>
         <!---Profile Switch Icon Color-->
         <item name="profileswitchIconColor" >@color/white</item>
         <!---Sensitivity Icon Color-->
