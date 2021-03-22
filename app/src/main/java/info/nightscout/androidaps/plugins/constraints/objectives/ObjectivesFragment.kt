@@ -17,6 +17,7 @@ import androidx.recyclerview.widget.LinearSmoothScroller
 import androidx.recyclerview.widget.RecyclerView
 import dagger.android.support.DaggerFragment
 import info.nightscout.androidaps.R
+import info.nightscout.androidaps.database.entities.UserEntry.*
 import info.nightscout.androidaps.databinding.ObjectivesFragmentBinding
 import info.nightscout.androidaps.databinding.ObjectivesItemBinding
 import info.nightscout.androidaps.dialogs.NtpProgressDialog
@@ -307,7 +308,7 @@ class ObjectivesFragment : DaggerFragment() {
             holder.binding.unstart.setOnClickListener {
                 activity?.let { activity ->
                     OKDialog.showConfirmation(activity, resourceHelper.gs(R.string.objectives), resourceHelper.gs(R.string.doyouwantresetstart), Runnable {
-                        uel.log("OBJECTIVE UNSTARTED", i1 = position + 1)
+                        uel.log(Action.OBJECTIVE_UNSTARTED, ValueWithUnit(position + 1, Units.None))
                         objective.startedOn = 0
                         scrollToCurrentObjective()
                         rxBus.send(EventObjectivesUpdateGui())

@@ -76,7 +76,7 @@ public class TempBasalPair extends info.nightscout.androidaps.plugins.pump.commo
             durationMinutes = MedtronicUtil.makeUnsignedShort(response[4], response[5]);
         }
 
-        aapsLogger.warn(LTag.PUMPBTCOMM, "TempBasalPair (with {} byte response): {}", response.length, toString());
+        aapsLogger.warn(LTag.PUMPBTCOMM, String.format(Locale.ENGLISH, "TempBasalPair (with %d byte response): %s", response.length, toString()));
 
     }
 

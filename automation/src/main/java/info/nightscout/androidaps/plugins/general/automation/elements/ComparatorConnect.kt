@@ -6,14 +6,10 @@ import android.widget.ArrayAdapter
 import android.widget.LinearLayout
 import android.widget.Spinner
 import androidx.annotation.StringRes
-import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.automation.R
 import info.nightscout.androidaps.utils.resources.ResourceHelper
-import java.util.*
-import javax.inject.Inject
 
-class ComparatorConnect(injector: HasAndroidInjector) : Element(injector) {
-    @Inject lateinit var resourceHelper: ResourceHelper
+class ComparatorConnect(private val resourceHelper: ResourceHelper) : Element() {
 
     enum class Compare {
         ON_CONNECT, ON_DISCONNECT;
@@ -33,7 +29,7 @@ class ComparatorConnect(injector: HasAndroidInjector) : Element(injector) {
         }
     }
 
-    constructor(injector: HasAndroidInjector, value: Compare) : this(injector) {
+    constructor(resourceHelper: ResourceHelper, value: Compare) : this(resourceHelper) {
         this.value = value
     }
 

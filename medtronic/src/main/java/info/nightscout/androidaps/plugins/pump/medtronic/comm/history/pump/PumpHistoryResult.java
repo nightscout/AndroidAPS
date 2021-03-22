@@ -89,13 +89,13 @@ public class PumpHistoryResult {
             }
             break;
             case Date: {
-                aapsLogger.debug(LTag.PUMPCOMM, "PE. Date search: Search date: {}", this.searchDate);
+                aapsLogger.debug(LTag.PUMPCOMM, "PE. Date search: Search date: " + this.searchDate);
 
 
                 for (PumpHistoryEntry unprocessedEntry : unprocessedEntries) {
 
                     if (unprocessedEntry.atechDateTime == null || unprocessedEntry.atechDateTime == 0) {
-                        aapsLogger.debug(LTag.PUMPCOMM, "PE. PumpHistoryResult. Search entry date: Entry with no date: {}", unprocessedEntry);
+                        aapsLogger.debug(LTag.PUMPCOMM, "PE. PumpHistoryResult. Search entry date: Entry with no date: " + unprocessedEntry);
                         continue;
                     }
 

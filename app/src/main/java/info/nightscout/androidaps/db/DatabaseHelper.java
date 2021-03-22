@@ -67,6 +67,8 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
     @Inject RxBusWrapper rxBus;
     @Inject VirtualPumpPlugin virtualPumpPlugin;
     @Inject OpenHumansUploader openHumansUploader;
+    @Inject ActivePluginProvider activePlugin;
+    @Inject NSUpload nsUpload;
 
     public static final String DATABASE_NAME = "AndroidAPSDb";
     public static final String DATABASE_EXTENDEDBOLUSES = "ExtendedBoluses";
@@ -1216,7 +1218,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 }
   */
 
-    public void createProfileSwitchFromJsonIfNotExists(ActivePluginProvider activePluginProvider, NSUpload nsUpload, JSONObject trJson) {
+    public void createProfileSwitchFromJsonIfNotExists(JSONObject trJson) {
         try {
             ProfileSwitch profileSwitch = new ProfileSwitch(StaticInjector.Companion.getInstance());
             profileSwitch.date = trJson.getLong("mills");
@@ -1233,7 +1235,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
             if (trJson.has("profileJson"))
                 profileSwitch.profileJson = trJson.getString("profileJson");
             else {
-                ProfileInterface profileInterface = activePluginProvider.getActiveProfileInterface();
+                ProfileInterface profileInterface = activePlugin.getActiveProfileInterface();
                 ProfileStore store = profileInterface.getProfile();
                 if (store != null) {
                     Profile profile = store.getSpecificProfile(profileSwitch.profileName);

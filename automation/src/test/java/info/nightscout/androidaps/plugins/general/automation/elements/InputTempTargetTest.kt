@@ -13,7 +13,7 @@ import org.powermock.modules.junit4.PowerMockRunner
 class InputTempTargetTest : TriggerTestBase() {
 
     @Test fun setValueTest() {
-        val i = InputTempTarget(injector)
+        val i = InputTempTarget(profileFunction)
         i.units = Constants.MMOL
         i.value = 5.0
         Assert.assertEquals(5.0, i.value, 0.01)

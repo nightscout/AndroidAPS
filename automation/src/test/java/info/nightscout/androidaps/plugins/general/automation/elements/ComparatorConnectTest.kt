@@ -14,7 +14,7 @@ class ComparatorConnectTest : TriggerTestBase() {
     }
 
     @Test fun setValueTest() {
-        val c = ComparatorConnect(injector)
+        val c = ComparatorConnect(resourceHelper)
         c.value = ComparatorConnect.Compare.ON_DISCONNECT
         Assert.assertEquals(ComparatorConnect.Compare.ON_DISCONNECT, c.value)
     }

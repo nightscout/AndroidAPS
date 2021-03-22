@@ -20,8 +20,8 @@ import javax.inject.Inject
 class TriggerRecurringTime(injector: HasAndroidInjector) : Trigger(injector) {
     @Inject lateinit var dateUtil: DateUtil
 
-    val days = InputWeekDay(injector)
-    val time = InputTime(injector)
+    val days = InputWeekDay()
+    val time = InputTime(resourceHelper, dateUtil)
 
     constructor(injector: HasAndroidInjector, triggerRecurringTime: TriggerRecurringTime) : this(injector) {
         this.time.value = triggerRecurringTime.time.value
@@ -100,7 +100,7 @@ class TriggerRecurringTime(injector: HasAndroidInjector) : Trigger(injector) {
 
     override fun generateDialog(root: LinearLayout) {
         LayoutBuilder()
-            .add(StaticLabel(injector, R.string.recurringTime, this))
+            .add(StaticLabel(resourceHelper, R.string.recurringTime, this))
             .add(days)
             .add(time)
             .build(root)

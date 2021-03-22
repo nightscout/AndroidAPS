@@ -171,7 +171,7 @@ public abstract class MedtronicHistoryEntry implements MedtronicHistoryEntryInte
         StringBuilder sb = new StringBuilder();
 
         if (this.DT == null) {
-            LOG.error("DT is null. RawData={}", ByteUtil.getHex(this.rawData));
+            LOG.error("DT is null. RawData=" + ByteUtil.getHex(this.rawData));
         }
 
         sb.append(getToStringStart());

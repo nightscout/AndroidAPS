@@ -21,8 +21,7 @@ import info.nightscout.androidaps.interfaces.PluginType
 import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.logging.LTag
 import info.nightscout.androidaps.plugins.general.nsclient.NSUpload
-import info.nightscout.androidaps.receivers.BundleStore
-import info.nightscout.androidaps.receivers.DataReceiver
+import info.nightscout.androidaps.receivers.DataWorker
 import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.T
 import info.nightscout.androidaps.utils.XDripBroadcast
@@ -84,7 +83,7 @@ class DexcomPlugin @Inject constructor(
         @Inject lateinit var dexcomPlugin: DexcomPlugin
         @Inject lateinit var nsUpload: NSUpload
         @Inject lateinit var sp: SP
-        @Inject lateinit var bundleStore: BundleStore
+        @Inject lateinit var dataWorker: DataWorker
         @Inject lateinit var broadcastToXDrip: XDripBroadcast
         @Inject lateinit var repository: AppRepository
 
@@ -93,8 +92,10 @@ class DexcomPlugin @Inject constructor(
         }
 
         override fun doWork(): Result {
+            var ret = Result.success()
+
             if (!dexcomPlugin.isEnabled(PluginType.BGSOURCE)) return Result.failure()
-            val bundle = bundleStore.pickup(inputData.getLong(DataReceiver.STORE_KEY, -1))
+            val bundle = dataWorker.pickupBundle(inputData.getLong(DataWorker.STORE_KEY, -1))
                 ?: return Result.failure()
             try {
                 val sourceSensor = when (bundle.getString("sensorType") ?: "") {
@@ -142,23 +143,37 @@ class DexcomPlugin @Inject constructor(
                         broadcastToXDrip(it)
                         if (sp.getBoolean(R.string.key_dexcomg5_nsupload, false)) {
                             nsUpload.uploadBg(it, sourceSensor.text)
-                            //aapsLogger.debug("XXXXX: dbAdd $it")
                         }
+                        aapsLogger.debug(LTag.BGSOURCE, "Inserted bg $it")
                     }
                     result.updated.forEach {
                         broadcastToXDrip(it)
                         if (sp.getBoolean(R.string.key_dexcomg5_nsupload, false)) {
                             nsUpload.updateBg(it, sourceSensor.text)
-                            //aapsLogger.debug("XXXXX: dpUpdate $it")
                         }
+                        aapsLogger.debug(LTag.BGSOURCE, "Updated bg $it")
+                    }
+                    result.sensorInsertionsInserted.forEach {
+                        if (sp.getBoolean(R.string.key_dexcomg5_nsupload, false)) {
+                            nsUpload.uploadEvent(it)
+                        }
+                        aapsLogger.debug(LTag.BGSOURCE, "Inserted sensor insertion $it")
+                    }
+                    result.calibrationsInserted.forEach {
+                        if (sp.getBoolean(R.string.key_dexcomg5_nsupload, false)) {
+                            nsUpload.uploadEvent(it)
+                        }
+                        aapsLogger.debug(LTag.BGSOURCE, "Inserted calibration $it")
                     }
                 }, {
                     aapsLogger.error("Error while saving values from Dexcom App", it)
+                    ret = Result.failure()
                 })
             } catch (e: Exception) {
                 aapsLogger.error("Error while processing intent from Dexcom App", e)
+                ret = Result.failure()
             }
-            return Result.success()
+            return ret
         }
     }
 

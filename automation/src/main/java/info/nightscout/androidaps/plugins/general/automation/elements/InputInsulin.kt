@@ -7,10 +7,10 @@ import info.nightscout.androidaps.automation.R
 import info.nightscout.androidaps.utils.ui.NumberPicker
 import java.text.DecimalFormat
 
-class InputInsulin(injector: HasAndroidInjector) : Element(injector) {
+class InputInsulin() : Element() {
     var value = 0.0
 
-    constructor(injector: HasAndroidInjector, another: InputInsulin) : this(injector) {
+    constructor(another: InputInsulin) : this() {
         value = another.value
     }
 

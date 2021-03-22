@@ -14,6 +14,7 @@ import com.google.common.primitives.Ints.min
 import com.google.zxing.qrcode.decoder.ErrorCorrectionLevel
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.activities.NoSplashAppCompatActivity
+import info.nightscout.androidaps.database.entities.UserEntry.*
 import info.nightscout.androidaps.databinding.ActivitySmscommunicatorOtpBinding
 import info.nightscout.androidaps.logging.UserEntryLogger
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper
@@ -72,7 +73,7 @@ class SmsCommunicatorOtpActivity : NoSplashAppCompatActivity() {
                 resourceHelper.gs(R.string.smscommunicator_otp_reset_title),
                 resourceHelper.gs(R.string.smscommunicator_otp_reset_prompt),
                 Runnable {
-                    uel.log("OTP RESET")
+                    uel.log(Action.OTP_RESET)
                     otp.ensureKey(true)
                     updateGui()
                     ToastUtils.Long.infoToast(this, resourceHelper.gs(R.string.smscommunicator_otp_reset_successful))
@@ -88,7 +89,7 @@ class SmsCommunicatorOtpActivity : NoSplashAppCompatActivity() {
                     val clip = ClipData.newPlainText("OTP Secret", otp.provisioningSecret())
                     clipboard.primaryClip = clip
                     ToastUtils.Long.infoToast(this, resourceHelper.gs(R.string.smscommunicator_otp_export_successful))
-                    uel.log("OTP EXPORT")
+                    uel.log(Action.OTP_EXPORT)
                 })
 
             true

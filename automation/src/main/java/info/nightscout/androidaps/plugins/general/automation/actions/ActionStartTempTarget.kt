@@ -11,6 +11,7 @@ import info.nightscout.androidaps.database.AppRepository
 import info.nightscout.androidaps.database.entities.TemporaryTarget
 import info.nightscout.androidaps.database.transactions.InsertTemporaryTargetAndCancelCurrentTransaction
 import info.nightscout.androidaps.interfaces.ActivePluginProvider
+import info.nightscout.androidaps.interfaces.ProfileFunction
 import info.nightscout.androidaps.logging.LTag
 import info.nightscout.androidaps.plugins.general.automation.elements.ComparatorExists
 import info.nightscout.androidaps.plugins.general.automation.elements.InputDuration
@@ -37,11 +38,12 @@ class ActionStartTempTarget(injector: HasAndroidInjector) : Action(injector) {
     @Inject lateinit var activePlugin: ActivePluginProvider
     @Inject lateinit var repository: AppRepository
     @Inject lateinit var nsUpload: NSUpload
+    @Inject lateinit var profileFunction: ProfileFunction
 
     private val disposable = CompositeDisposable()
 
-    var value = InputTempTarget(injector)
-    var duration = InputDuration(injector, 30, InputDuration.TimeUnit.MINUTES)
+    var value = InputTempTarget(profileFunction)
+    var duration = InputDuration(30, InputDuration.TimeUnit.MINUTES)
 
     init {
         precondition = TriggerTempTarget(injector, ComparatorExists.Compare.NOT_EXISTS)
@@ -66,8 +68,8 @@ class ActionStartTempTarget(injector: HasAndroidInjector) : Action(injector) {
     override fun generateDialog(root: LinearLayout) {
         val unitResId = if (value.units == Constants.MGDL) R.string.mgdl else R.string.mmol
         LayoutBuilder()
-            .add(LabelWithElement(injector, resourceHelper.gs(R.string.careportal_temporarytarget) + "\n[" + resourceHelper.gs(unitResId) + "]", "", value))
-            .add(LabelWithElement(injector, resourceHelper.gs(R.string.duration_min_label), "", duration))
+            .add(LabelWithElement(resourceHelper, resourceHelper.gs(R.string.careportal_temporarytarget) + "\n[" + resourceHelper.gs(unitResId) + "]", "", value))
+            .add(LabelWithElement(resourceHelper, resourceHelper.gs(R.string.duration_min_label), "", duration))
             .build(root)
     }
 

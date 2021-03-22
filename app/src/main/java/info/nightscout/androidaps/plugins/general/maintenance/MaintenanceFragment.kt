@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import dagger.android.support.DaggerFragment
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.database.AppRepository
+import info.nightscout.androidaps.database.entities.UserEntry.*
 import info.nightscout.androidaps.databinding.MaintenanceFragmentBinding
 import info.nightscout.androidaps.events.EventNewBG
 import info.nightscout.androidaps.interfaces.DatabaseHelperInterface
@@ -15,7 +16,6 @@ import info.nightscout.androidaps.interfaces.ImportExportPrefsInterface
 import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.logging.UserEntryLogger
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper
-import info.nightscout.androidaps.plugins.general.food.FoodPlugin
 import info.nightscout.androidaps.plugins.general.maintenance.activities.LogSettingActivity
 import info.nightscout.androidaps.plugins.treatments.TreatmentsPlugin
 import info.nightscout.androidaps.utils.alertDialogs.OKDialog
@@ -33,7 +33,6 @@ class MaintenanceFragment : DaggerFragment() {
     @Inject lateinit var rxBus: RxBusWrapper
     @Inject lateinit var resourceHelper: ResourceHelper
     @Inject lateinit var treatmentsPlugin: TreatmentsPlugin
-    @Inject lateinit var foodPlugin: FoodPlugin
     @Inject lateinit var importExportPrefs: ImportExportPrefsInterface
     @Inject lateinit var aapsSchedulers: AapsSchedulers
     @Inject lateinit var repository: AppRepository
@@ -57,19 +56,18 @@ class MaintenanceFragment : DaggerFragment() {
         super.onViewCreated(view, savedInstanceState)
         binding.logSend.setOnClickListener { maintenancePlugin.sendLogs() }
         binding.logDelete.setOnClickListener {
-            uel.log("DELETE LOGS")
+            uel.log(Action.DELETE_LOGS)
             maintenancePlugin.deleteLogs()
         }
         binding.navResetdb.setOnClickListener {
             activity?.let { activity ->
                 OKDialog.showConfirmation(activity, resourceHelper.gs(R.string.maintenance), resourceHelper.gs(R.string.reset_db_confirm), Runnable {
-                    uel.log("RESET DATABASES")
+                    uel.log(Action.RESET_DATABASES)
                     compositeDisposable.add(
                         fromAction {
                             databaseHelper.resetDatabases()
                             // should be handled by Plugin-Interface and
                             // additional service interface and plugin registry
-                            foodPlugin.service?.resetFood()
                             treatmentsPlugin.service.resetTreatments()
                             repository.clearDatabases()
                         }
@@ -84,20 +82,28 @@ class MaintenanceFragment : DaggerFragment() {
             }
         }
         binding.navExport.setOnClickListener {
-            uel.log("EXPORT SETTINGS")
+            uel.log(Action.EXPORT_SETTINGS)
             // start activity for checking permissions...
             importExportPrefs.verifyStoragePermissions(this) {
                 importExportPrefs.exportSharedPreferences(this)
             }
         }
         binding.navImport.setOnClickListener {
-            uel.log("IMPORT SETTINGS")
+            uel.log(Action.IMPORT_SETTINGS)
             // start activity for checking permissions...
             importExportPrefs.verifyStoragePermissions(this) {
                 importExportPrefs.importSharedPreferences(this)
             }
         }
         binding.navLogsettings.setOnClickListener { startActivity(Intent(activity, LogSettingActivity::class.java)) }
+        binding.exportCsv.setOnClickListener {
+            activity?.let { activity ->
+                OKDialog.showConfirmation(activity, resourceHelper.gs(R.string.ue_export_to_csv) + "?") {
+                    uel.log(Action.EXPORT_CSV)
+                    importExportPrefs.exportUserEntriesCsv(activity, repository.getAllUserEntries())
+                }
+            }
+        }
     }
 
     @Synchronized

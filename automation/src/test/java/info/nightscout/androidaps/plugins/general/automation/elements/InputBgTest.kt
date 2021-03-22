@@ -16,10 +16,10 @@ class InputBgTest : TriggerTestBase() {
 
     @Test
     fun setValueTest() {
-        var i: InputBg = InputBg(injector).setUnits(Constants.MMOL).setValue(5.0)
+        var i: InputBg = InputBg(profileFunction).setUnits(Constants.MMOL).setValue(5.0)
         Assert.assertEquals(5.0, i.value, 0.01)
         Assert.assertEquals(InputBg.MMOL_MIN, i.minValue, 0.01)
-        i = InputBg(injector).setValue(100.0).setUnits(Constants.MGDL)
+        i = InputBg(profileFunction).setValue(100.0).setUnits(Constants.MGDL)
         Assert.assertEquals(100.0, i.value, 0.01)
         Assert.assertEquals(InputBg.MGDL_MIN, i.minValue, 0.01)
         Assert.assertEquals(Constants.MGDL, i.units)

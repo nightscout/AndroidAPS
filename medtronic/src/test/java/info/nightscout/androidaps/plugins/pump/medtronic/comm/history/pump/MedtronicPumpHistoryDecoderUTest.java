@@ -1,14 +1,56 @@
 package info.nightscout.androidaps.plugins.pump.medtronic.comm.history.pump;
 
-import org.junit.Ignore;
+import org.junit.Before;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.mockito.Answers;
+import org.mockito.Mock;
+import org.powermock.modules.junit4.PowerMockRunner;
 
-import info.nightscout.androidaps.plugins.pump.common.defs.PumpHistoryEntryGroup;
+import java.util.List;
+
+import dagger.android.HasAndroidInjector;
+import info.nightscout.androidaps.interfaces.ActivePluginProvider;
+import info.nightscout.androidaps.logging.AAPSLogger;
+import info.nightscout.androidaps.logging.AAPSLoggerTest;
+import info.nightscout.androidaps.plugins.bus.RxBusWrapper;
+import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.RileyLinkUtil;
+import info.nightscout.androidaps.plugins.pump.common.utils.ByteUtil;
+import info.nightscout.androidaps.plugins.pump.medtronic.comm.history.RawHistoryPage;
+import info.nightscout.androidaps.plugins.pump.medtronic.defs.MedtronicDeviceType;
+import info.nightscout.androidaps.plugins.pump.medtronic.driver.MedtronicPumpStatus;
+import info.nightscout.androidaps.plugins.pump.medtronic.util.MedtronicUtil;
+import info.nightscout.androidaps.utils.resources.ResourceHelper;
+import info.nightscout.androidaps.utils.rx.TestAapsSchedulers;
+import info.nightscout.androidaps.utils.sharedPreferences.SP;
 
 /**
  * Created by andy on 11/1/18.
  */
-@Ignore
+@RunWith(PowerMockRunner.class)
 public class MedtronicPumpHistoryDecoderUTest {
+
+    @Mock HasAndroidInjector injector;
+    AAPSLogger aapsLogger = new AAPSLoggerTest();
+    RxBusWrapper rxBusWrapper = new RxBusWrapper(new TestAapsSchedulers());
+    @Mock ResourceHelper resourceHelper;
+    @Mock(answer = Answers.RETURNS_DEEP_STUBS) ActivePluginProvider activePluginProvider;
+    @Mock RileyLinkUtil rileyLinkUtil;
+    @Mock SP sp;
+    MedtronicPumpStatus medtronicPumpStatus;
+    MedtronicUtil medtronicUtil;
+    MedtronicPumpHistoryDecoder decoder;
+
+
+    @Before
+    public void setup() {
+        medtronicPumpStatus = new MedtronicPumpStatus(resourceHelper, sp, rxBusWrapper, rileyLinkUtil);
+        medtronicUtil = new MedtronicUtil(aapsLogger, rxBusWrapper, rileyLinkUtil, medtronicPumpStatus);
+        decoder = new MedtronicPumpHistoryDecoder(aapsLogger, medtronicUtil);
+    }
+
+
+
 /*
     MedtronicPumpHistoryDecoder decoder = new MedtronicPumpHistoryDecoder();
 
@@ -151,4 +193,34 @@ public class MedtronicPumpHistoryDecoderUTest {
 
     }
 */
+
+
+    @Test
+    public void historyProblem_148_amunhateb() throws Exception {
+        byte[] historyPageData = ByteUtil.createByteArrayFromString(
+                "5A 0F 20 F4 0C 03 15 19 11 00 17 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 1E 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 32 50 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 1A 11 00 0F 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 1E 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 32 50 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 33 01 12 12 00 25 DE 2D 43 15 01 50 50 00 26 EA 2D 43 15 01 4B 4B 00 2C C9 34 43 15 62 00 2F CB 17 03 15 01 33 33 00 16 DE 37 43 15 07 00 00 07 FE 23 95 6D 23 95 0A 08 00 2B 00 00 00 00 07 FE 03 8E 2C 04 70 38 00 00 04 70 38 00 00 00 00 00 00 04 70 64 06 00 00 00 06 08 00 2B 00 00 00 2C A0 2F E3 01 04 15 33 00 2F E7 04 44 15 00 16 03 2F E7 04 44 15 33 28 3B C2 06 44 15 00 16 01 3B C2 06 44 15 08 08 17 DB 0B 44 15 00 26 00 06 26 00 0C 26 00 12 28 00 18 26 00 1E 26 00 24 24 00 2A 26 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 09 18 17 DB 0B 44 15 00 26 00 02 26 00 04 26 00 06 24 00 08 24 00 0A 24 00 0C 26 00 0E 26 00 10 26 00 12 28 00 14 28 00 16 28 00 18 26 00 1A 26 00 1C 26 00 1E 26 00 20 26 00 22 26 00 24 24 00 26 24 00 28 24 00 2A 26 00 2C 26 00 2E 26 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 01 45 45 00 28 E9 2B 44 15 19 00 00 C1 0D 04 15 1A 00 15 C3 0D 04 15 1A 01 33 C3 0D 04 15 01 28 28 00 07 CC 2E 44 15 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 14 2D");
+
+        System.out.println("HDP:" + historyPageData.length);
+
+        medtronicUtil.setMedtronicPumpModel(MedtronicDeviceType.Medtronic_522_722);
+
+
+        RawHistoryPage historyPage = new RawHistoryPage(aapsLogger);
+        historyPage.appendData(historyPageData);
+
+        List<PumpHistoryEntry> pumpHistoryEntries = decoder.processPageAndCreateRecords(historyPage);
+
+        System.out.println("PumpHistoryEntries: " + pumpHistoryEntries.size());
+
+        displayHistoryRecords(pumpHistoryEntries);
+    }
+
+
+    private void displayHistoryRecords(List<PumpHistoryEntry> pumpHistoryEntries) {
+        for (PumpHistoryEntry pumpHistoryEntry : pumpHistoryEntries) {
+            aapsLogger.debug(pumpHistoryEntry.toString());
+        }
+    }
+
+
 }

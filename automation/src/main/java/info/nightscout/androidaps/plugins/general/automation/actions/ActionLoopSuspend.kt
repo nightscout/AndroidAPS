@@ -22,7 +22,7 @@ class ActionLoopSuspend(injector: HasAndroidInjector) : Action(injector) {
     @Inject lateinit var loopPlugin: LoopInterface
     @Inject lateinit var rxBus: RxBusWrapper
 
-    var minutes = InputDuration(injector, 30, InputDuration.TimeUnit.MINUTES)
+    var minutes = InputDuration(30, InputDuration.TimeUnit.MINUTES)
 
     override fun friendlyName(): Int = R.string.suspendloop
     override fun shortDescription(): String = resourceHelper.gs(R.string.suspendloopforXmin, minutes.getMinutes())
@@ -56,7 +56,7 @@ class ActionLoopSuspend(injector: HasAndroidInjector) : Action(injector) {
 
     override fun generateDialog(root: LinearLayout) {
         LayoutBuilder()
-            .add(LabelWithElement(injector, resourceHelper.gs(R.string.duration_min_label), "", minutes))
+            .add(LabelWithElement(resourceHelper, resourceHelper.gs(R.string.duration_min_label), "", minutes))
             .build(root)
     }
 

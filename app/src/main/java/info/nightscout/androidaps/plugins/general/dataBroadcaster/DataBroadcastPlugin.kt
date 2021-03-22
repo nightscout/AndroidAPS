@@ -163,7 +163,7 @@ class DataBroadcastPlugin @Inject constructor(
                 bundle.putString("enacted", loopPlugin.lastRun?.request?.json().toString())
             }
         } else { //NSClient or remote
-            val data = NSDeviceStatus.deviceStatusOpenAPSData
+            val data = nsDeviceStatus.deviceStatusOpenAPSData
             if (data.clockSuggested != 0L && data.suggested != null) {
                 bundle.putLong("suggestedTimeStamp", data.clockSuggested)
                 bundle.putString("suggested", data.suggested.toString())
