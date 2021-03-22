@@ -5,12 +5,12 @@
     <string name="dia_profile">יש לקבוע ערך DIA בפרופיל.</string>
     <string name="dia_minimumis5h">הערך המינימלי הוא 5 שעות.</string>
     <string name="dia_hint1">https://androidaps.readthedocs.io/en/latest/EN/Configuration/Config-Builder.html?#insulin</string>
-    <string name="dia_meaningisequaltodiapump">אם ערך ה- DIA אותו קבעתם במשאבה לפני המעבר ל- AndroidAPS עבד היטב, אפשר להמשיך להשתמש באותו ערך עם הלולאה.</string>
-    <string name="dia_valuemustbedetermined">עליכם לקבוע לעצמכם את ערך ה- DIA הרצוי.</string>
+    <string name="dia_meaningisequaltodiapump">אם ערך ה-DIA אותו קבעתם במשאבה לפני המעבר ל- AndroidAPS עבד היטב, אפשר להמשיך להשתמש באותו ערך עם הלולאה.</string>
+    <string name="dia_valuemustbedetermined">עליכם לקבוע לעצמכם את ערך ה-DIA הרצוי.</string>
     <string name="hypott_label">ערך מטרה זמני - היפו</string>
     <string name="hypott_whenhypott">מהי הסיבה העיקרית לקביעת ערך מטרה זמני \"היפו\"?</string>
     <string name="hypott_wrongbasal">לתיקון מצבי היפו שנגרמו עקב הגדרות מינון בזאלי שגויות.</string>
-    <string name="hypott_preventoversmb">כדי למנוע מ- AndroidAPS לבצע תיקון יתר של עליית רמת הסוכר שנגרמה ע\"י פחמימות בעלות קצב פירוק גבוה בהן נעשה שימוש לטיפול בהיפו.</string>
+    <string name="hypott_preventoversmb">כדי למנוע מ-AndroidAPS לבצע תיקון יתר של עליית רמת הסוכר שנגרמה ע\"י פחמימות בעלות קצב פירוק גבוה שנאכלו לצורך הטיפול בהיפו.</string>
     <string name="hypott_exercise">לתיקון היפו שנגרם ע\"י פעילות גופנית.</string>
     <string name="hypott_0basal">כדי למנוע מרמת הסוכר לרדת במידה ומינון בזאלי זמני 0% כבר פעיל.</string>
     <string name="hypott_hint1">https://androidaps.readthedocs.io/en/latest/EN/Usage/temptarget.html</string>
@@ -132,7 +132,7 @@
     <string name="wronginsulin_label">שגיאות ברישום\\הזרקת אינסולין</string>
     <string name="wronginsulin_whattodo">מה עליכם לעשות אם מקבלים פחות אינסולין מאשר המוצע ע\"י היסטוריית המשאבה למשל עקב חסימה, צינורית כושלת או אי חיבור מחדש של המשאבה אחרי מקלחת? </string>
     <string name="wronginsulin_careportal">מחקו את נתוני האינסולין מפורטל הטיפולים של נייטסקאוט כדי לסלק אותו מהיסטוריית המשאבה.</string>
-    <string name="wronginsulin_compare">השווה ערכים ב-AndroidAPS ובהיסטוריית משאבה.</string>
+    <string name="wronginsulin_compare">השוו את הערכים שב-AndroidAPS לאלה שבהיסטוריית משאבה.</string>
     <string name="wronginsulin_prime">מזריקים בולוס על חלק מהאינסולין המחושב \"שחסר\" עם מזרק\\עט או באמצעות תיחול (Prime).</string>
     <string name="wronginsulin_donothing">לא לעשות דבר ולאפשר ל-AndroidAPS לתקן כל רמת סוכר גבוהה.</string>
     <string name="iob_label">אינסולין פעיל בגוף (IOB)</string>
