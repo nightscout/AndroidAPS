@@ -16,6 +16,7 @@ import dagger.android.support.DaggerFragment
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.database.AppRepository
 import info.nightscout.androidaps.database.entities.Food
+import info.nightscout.androidaps.database.entities.UserEntry
 import info.nightscout.androidaps.database.entities.UserEntry.Action
 import info.nightscout.androidaps.database.transactions.InvalidateFoodTransaction
 import info.nightscout.androidaps.databinding.FoodFragmentBinding
@@ -76,7 +77,7 @@ class FoodFragment : DaggerFragment() {
         binding.refreshFromNightscout.setOnClickListener {
             context?.let { context ->
                 OKDialog.showConfirmation(context, resourceHelper.gs(R.string.refresheventsfromnightscout) + " ?", {
-                    uel.log(Action.FOOD_FROM_NS)
+                    uel.log(Action.FOOD, UserEntry.ValueWithUnit(UserEntry.Sources.NS))
                     disposable += Completable.fromAction { repository.deleteAllFoods() }
                         .subscribeOn(aapsSchedulers.io)
                         .observeOn(aapsSchedulers.main)

@@ -86,26 +86,8 @@ data class UserEntry(
         @SerializedName("IMPORT_DATABASES") IMPORT_DATABASES (ColorGroup.Aaps),
         @SerializedName("OTP_EXPORT") OTP_EXPORT (ColorGroup.Aaps),
         @SerializedName("OTP_RESET") OTP_RESET (ColorGroup.Aaps),
-        @SerializedName("SMS_BASAL") SMS_BASAL (ColorGroup.InsulinTreatment),
-        @SerializedName("SMS_BOLUS") SMS_BOLUS (ColorGroup.InsulinTreatment),
-        @SerializedName("SMS_CAL") SMS_CAL (ColorGroup.Careportal),
-        @SerializedName("SMS_CARBS") SMS_CARBS (ColorGroup.CarbTreatment),
-        @SerializedName("SMS_EXTENDED_BOLUS") SMS_EXTENDED_BOLUS (ColorGroup.InsulinTreatment),
-        @SerializedName("SMS_LOOP_DISABLED") SMS_LOOP_DISABLED (ColorGroup.Loop),
-        @SerializedName("SMS_LOOP_ENABLED") SMS_LOOP_ENABLED (ColorGroup.Loop),
-        @SerializedName("SMS_LOOP_RESUME") SMS_LOOP_RESUME (ColorGroup.Loop),
-        @SerializedName("SMS_LOOP_SUSPEND") SMS_LOOP_SUSPEND (ColorGroup.Loop),
-        @SerializedName("SMS_PROFILE") SMS_PROFILE (ColorGroup.Profile),
-        @SerializedName("SMS_PUMP_CONNECT") SMS_PUMP_CONNECT (ColorGroup.Pump),
-        @SerializedName("SMS_PUMP_DISCONNECT") SMS_PUMP_DISCONNECT (ColorGroup.Pump),
         @SerializedName("SMS_SMS") SMS_SMS (ColorGroup.Aaps),
-        @SerializedName("SMS_TT") SMS_TT (ColorGroup.TT),
-        @SerializedName("TT_DELETED_FROM_NS") TT_DELETED_FROM_NS (ColorGroup.TT),
-        @SerializedName("CAREPORTAL_DELETED_FROM_NS") CAREPORTAL_DELETED_FROM_NS (ColorGroup.Careportal),
-        @SerializedName("CAREPORTAL_FROM_NS") CAREPORTAL_FROM_NS (ColorGroup.Careportal),
-        @SerializedName("FOOD_FROM_NS") FOOD_FROM_NS (ColorGroup.Careportal),
-        @SerializedName("TT_FROM_NS") TT_FROM_NS (ColorGroup.TT),
-        @SerializedName("TT_CANCELED_FROM_NS") TT_CANCELED_FROM_NS (ColorGroup.TT),
+        @SerializedName("FOOD") FOOD (ColorGroup.Careportal),
         @SerializedName("EXPORT_CSV") EXPORT_CSV (ColorGroup.Aaps),
         @SerializedName("UNKNOWN") UNKNOWN (ColorGroup.Aaps)
         ;
@@ -119,6 +101,7 @@ data class UserEntry(
         constructor(ivalue: Int, unit: Units, condition:Boolean = true) : this(0.0, ivalue, 0, "", unit, condition)
         constructor(lvalue: Long, unit: Units, condition:Boolean = true) : this(0.0,0, lvalue, "", unit, condition)
         constructor(svalue: String, unit:Units) : this(0.0,0, 0, svalue, unit, svalue != "")
+        constructor(source: Sources) : this(0.0,0, 0, source.text, Units.Source, true)
         constructor(dvalue: Double, unit:String) : this(dvalue,0, 0, "", Units.fromText(unit))
         constructor(rStringRef: Int, nbParam: Long) : this(0.0, rStringRef, nbParam, "", Units.R_String, !rStringRef.equals(0))             // additionnal constructors for formated strings with additional values as parameters (define number of parameters as long
 
@@ -152,7 +135,7 @@ data class UserEntry(
     }
     enum class Sources(val text: String) {
         @SerializedName("Manual") Manual ("Manual"),                //Manual entry by user, given through AAPS (default)
-        @SerializedName("External") External ("External"),          //Manual entry by user, treatment given outside AAPS (for example Bolus with Serynge)
+        @SerializedName("Record") Record ("Record"),          //Manual entry by user, treatment given outside AAPS (for example Bolus with Serynge)
         @SerializedName("Automation") Automation ("Automation"),    //From Automation plugin
         @SerializedName("Loop") Loop ("Loop"),                      //From Loop plugin
         @SerializedName("NS") NS ("NS"),                            //From NSClient plugin

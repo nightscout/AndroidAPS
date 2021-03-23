@@ -7,7 +7,7 @@ import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.database.AppRepository
 import info.nightscout.androidaps.database.entities.UserEntry
-import info.nightscout.androidaps.database.entities.UserEntry.ValueWithUnit
+import info.nightscout.androidaps.database.entities.UserEntry.*
 import info.nightscout.androidaps.database.transactions.SyncTemporaryTargetTransaction
 import info.nightscout.androidaps.database.transactions.SyncTherapyEventTransaction
 import info.nightscout.androidaps.events.EventNsTreatment
@@ -68,10 +68,10 @@ class NSClientRemoveWorker(
                 .also { result ->
                     result.invalidated.forEach {
                         uel.log(
-                            UserEntry.Action.TT_DELETED_FROM_NS,
-                            ValueWithUnit(it.reason.text, UserEntry.Units.TherapyEvent),
-                            ValueWithUnit(it.lowTarget, UserEntry.Units.Mg_Dl, true),
-                            ValueWithUnit(it.highTarget, UserEntry.Units.Mg_Dl, it.lowTarget != it.highTarget),
+                            Action.TT_REMOVED, ValueWithUnit(Sources.NS),
+                            ValueWithUnit(it.reason.text, Units.TherapyEvent),
+                            ValueWithUnit(it.lowTarget, Units.Mg_Dl, true),
+                            ValueWithUnit(it.highTarget, Units.Mg_Dl, it.lowTarget != it.highTarget),
                             ValueWithUnit(it.duration.toInt() / 60000, UserEntry.Units.M, it.duration != 0L)
                         )
                     }
@@ -88,9 +88,9 @@ class NSClientRemoveWorker(
                 .also { result ->
                     result.invalidated.forEach {
                         uel.log(
-                            UserEntry.Action.CAREPORTAL_DELETED_FROM_NS, (it.note ?: ""),
-                            ValueWithUnit(it.timestamp, UserEntry.Units.Timestamp, true),
-                            ValueWithUnit(it.type.text, UserEntry.Units.TherapyEvent))
+                            Action.CAREPORTAL_REMOVED, (it.note ?: ""), ValueWithUnit(Sources.NS),
+                            ValueWithUnit(it.timestamp, Units.Timestamp, true),
+                            ValueWithUnit(it.type.text, Units.TherapyEvent))
                     }
                 }
 

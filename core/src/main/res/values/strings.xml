@@ -276,6 +276,10 @@
     <string name="wear">Wear</string>
     <string name="automation">Automation</string>
     <string name="custom">Custom</string>
+    <string name="pump">Pump</string>
+    <string name="loop">Loop</string>
+    <string name="ns">NS</string>
+    <string name="record">Record</string>
 
     <!--    Command-->
     <string name="connectiontimedout">Connection timed out</string>
@@ -401,7 +405,6 @@
     <!-- User Entry -->
     <string name="uel_bolus">BOLUS</string>
     <string name="uel_bolus_advisor">BOLUS ADVISOR</string>
-    <string name="uel_bolus_record">BOLUS RECORD</string>
     <string name="uel_extended_bolus">EXTENDED BOLUS</string>
     <string name="uel_superbolus_tbr">SUPERBOLUS TBR</string>
     <string name="uel_carbs">CARBS</string>
@@ -466,25 +469,7 @@
     <string name="uel_import_databases">IMPORT DATABASES</string>
     <string name="uel_otp_export">OTP EXPORT</string>
     <string name="uel_otp_reset">OTP RESET</string>
-    <string name="uel_sms_basal">SMS BASAL</string>
-    <string name="uel_sms_bolus">SMS BOLUS</string>
-    <string name="uel_sms_cal">SMS CAL</string>
-    <string name="uel_sms_carbs">SMS CARBS</string>
-    <string name="uel_sms_extended_bolus">SMS EXTENDED BOLUS</string>
-    <string name="uel_sms_loop_disabled">SMS LOOP DISABLED</string>
-    <string name="uel_sms_loop_enabled">SMS LOOP ENABLED</string>
-    <string name="uel_sms_loop_resume">SMS LOOP RESUME</string>
-    <string name="uel_sms_loop_suspend">SMS LOOP SUSPEND</string>
-    <string name="uel_sms_profile">SMS PROFILE</string>
-    <string name="uel_sms_pump_connect">SMS PUMP CONNECT</string>
-    <string name="uel_sms_pump_disconnect">SMS PUMP DISCONNECT</string>
     <string name="uel_sms_sms">SMS SMS</string>
-    <string name="uel_sms_tt">SMS TT</string>
-    <string name="uel_tt_deleted_from_ns">TT DELETED FROM NS</string>
-    <string name="uel_careportal_deleted_from_ns">CAREPORTAL DELETED FROM NS</string>
-    <string name="uel_careportal_from_ns">CAREPORTAL FROM NS</string>
-    <string name="uel_tt_from_ns">TT FROM NS</string>
-    <string name="uel_tt_canceleted_from_ns">TT CANCELED FROM NS</string>
     <string name="uel_export_csv">EXPORT USER ENTRIES</string>
     <string name="uel_unknown">UNKNOWN</string>
     <string name="formated_string">Formated string</string>

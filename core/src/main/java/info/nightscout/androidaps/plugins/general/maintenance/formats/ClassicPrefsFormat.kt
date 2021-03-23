@@ -124,6 +124,7 @@ class ClassicPrefsFormat @Inject constructor(
                 when (v.unit) {
                     Units.Timestamp    -> timestamp = dateUtil.dateAndTimeAndSecondsString(v.lValue)
                     Units.TherapyEvent -> therapyEvent = if (therapyEvent == "") translator.translate(v.sValue) else therapyEvent + " / " + translator.translate(v.sValue)
+                    Units.Source       -> source = csvString(translator.translate(v.sValue))
                     Units.R_String     -> if (v.iValue != 0) {  //Formated string lValue is the number of parameters, up to 3
                         var rStringParam = v.lValue.toInt()
                         var tempString = ""
