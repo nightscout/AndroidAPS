@@ -13,10 +13,10 @@ import org.powermock.modules.junit4.PowerMockRunner
 class StaticLabelTest : TriggerTestBase() {
 
     @Test fun constructor() {
-        var sl = StaticLabel(injector, "any", TriggerDummy(injector))
+        var sl = StaticLabel(resourceHelper, "any", TriggerDummy(injector))
         Assert.assertEquals("any", sl.label)
         `when`(resourceHelper.gs(R.string.pumplimit)).thenReturn("pump limit")
-        sl = StaticLabel(injector, R.string.pumplimit, TriggerDummy(injector))
+        sl = StaticLabel(resourceHelper, R.string.pumplimit, TriggerDummy(injector))
         Assert.assertEquals("pump limit", sl.label)
     }
 }

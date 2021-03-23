@@ -79,15 +79,6 @@ open class TriggerTestBase : TestBaseWithProfile() {
             if (it is TriggerWifiSsid) {
                 it.receiverStatusStore = receiverStatusStore
             }
-            if (it is InputBg) {
-                it.profileFunction = profileFunction
-            }
-            if (it is InputTempTarget) {
-                it.profileFunction = profileFunction
-            }
-            if (it is StaticLabel) {
-                it.resourceHelper = resourceHelper
-            }
         }
     }
 

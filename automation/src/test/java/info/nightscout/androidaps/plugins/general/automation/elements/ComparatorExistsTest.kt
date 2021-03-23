@@ -14,7 +14,7 @@ class ComparatorExistsTest : TriggerTestBase() {
     }
 
     @Test fun setValueTest() {
-        val c = ComparatorExists(injector)
+        val c = ComparatorExists(resourceHelper)
         c.value = ComparatorExists.Compare.NOT_EXISTS
         Assert.assertEquals(ComparatorExists.Compare.NOT_EXISTS, c.value)
     }

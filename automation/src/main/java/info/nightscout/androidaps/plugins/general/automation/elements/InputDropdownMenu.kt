@@ -6,23 +6,21 @@ import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.LinearLayout
 import android.widget.Spinner
-import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.automation.R
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 import java.util.*
-import javax.inject.Inject
 
-class InputDropdownMenu(injector: HasAndroidInjector) : Element(injector) {
-    @Inject lateinit var resourceHelper: ResourceHelper
+class InputDropdownMenu(private val resourceHelper: ResourceHelper) : Element() {
 
     private var itemList: ArrayList<CharSequence> = ArrayList()
     var value: String = ""
 
-    constructor(injector: HasAndroidInjector, name: String) : this(injector) {
+    constructor(resourceHelper: ResourceHelper, name: String) : this(resourceHelper) {
         value = name
     }
 
-    @Suppress("unused") constructor(injector: HasAndroidInjector, another: InputDropdownMenu) : this(injector) {
+    @Suppress("unused")
+    constructor(resourceHelper: ResourceHelper, another: InputDropdownMenu) : this(resourceHelper) {
         value = another.value
     }
 

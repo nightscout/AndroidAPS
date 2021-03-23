@@ -23,7 +23,7 @@ class ActionProfileSwitch(injector: HasAndroidInjector) : Action(injector) {
     @Inject lateinit var activePlugin: ActivePluginProvider
     @Inject lateinit var profileFunction: ProfileFunction
 
-    var inputProfileName: InputProfileName = InputProfileName(injector, "")
+    var inputProfileName: InputProfileName = InputProfileName(resourceHelper, activePlugin, "")
 
     override fun friendlyName(): Int = R.string.profilename
     override fun shortDescription(): String = resourceHelper.gs(R.string.changengetoprofilename, inputProfileName.value)
@@ -59,7 +59,7 @@ class ActionProfileSwitch(injector: HasAndroidInjector) : Action(injector) {
 
     override fun generateDialog(root: LinearLayout) {
         LayoutBuilder()
-            .add(LabelWithElement(injector, resourceHelper.gs(R.string.profilename), "", inputProfileName))
+            .add(LabelWithElement(resourceHelper, resourceHelper.gs(R.string.profilename), "", inputProfileName))
             .build(root)
     }
 

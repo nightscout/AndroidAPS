@@ -21,7 +21,7 @@ class TriggerTimeRange(injector: HasAndroidInjector) : Trigger(injector) {
     @Inject lateinit var dateUtil: DateUtil
     
     // in minutes since midnight 60 means 1AM
-    var range = InputTimeRange(injector)
+    var range = InputTimeRange(resourceHelper, dateUtil)
 
     constructor(injector: HasAndroidInjector, start: Int, end: Int) : this(injector) {
         range.start = start
@@ -84,7 +84,7 @@ class TriggerTimeRange(injector: HasAndroidInjector) : Trigger(injector) {
 
     override fun generateDialog(root: LinearLayout) {
         LayoutBuilder()
-            .add(StaticLabel(injector, R.string.time_range, this))
+            .add(StaticLabel(resourceHelper, R.string.time_range, this))
             .add(range)
             .build(root)
     }

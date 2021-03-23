@@ -40,7 +40,7 @@ class ActionSendSMSTest : ActionsTestBase() {
 
     @Test fun doActionTest() {
         `when`(smsCommunicatorPlugin.sendNotificationToAllNumbers(anyString())).thenReturn(true)
-        sut.text = InputString(injector, "Asd")
+        sut.text = InputString("Asd")
         sut.doAction(object : Callback() {
             override fun run() {
                 Assert.assertTrue(result.success)
@@ -53,7 +53,7 @@ class ActionSendSMSTest : ActionsTestBase() {
     }
 
     @Test fun toJSONTest() {
-        sut.text = InputString(injector, "Asd")
+        sut.text = InputString("Asd")
         Assert.assertEquals("{\"data\":{\"text\":\"Asd\"},\"type\":\"info.nightscout.androidaps.plugins.general.automation.actions.ActionSendSMS\"}", sut.toJSON())
     }
 
