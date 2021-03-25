@@ -19,6 +19,7 @@ import info.nightscout.androidaps.interfaces.ImportExportPrefsInterface
 import info.nightscout.androidaps.interfaces.ProfileFunction
 import info.nightscout.androidaps.logging.UserEntryLogger
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper
+import info.nightscout.androidaps.plugins.treatments.events.EventTreatmentUpdateGui
 import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.DecimalFormatter
 import info.nightscout.androidaps.utils.FabricPrivacy
@@ -28,6 +29,7 @@ import info.nightscout.androidaps.utils.extensions.*
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 import info.nightscout.androidaps.utils.rx.AapsSchedulers
 import io.reactivex.disposables.CompositeDisposable
+import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
 class TreatmentsUserEntryFragment : DaggerFragment() {
@@ -66,14 +68,24 @@ class TreatmentsUserEntryFragment : DaggerFragment() {
                 }
             }
         }
+        binding.showLoop.setOnCheckedChangeListener { _, _ ->
+            rxBus.send(EventTreatmentUpdateGui())
+        }
     }
 
     fun swapAdapter() {
-       disposable.add( repository
-            .getAllUserEntries()
-            .observeOn(aapsSchedulers.main)
-            .subscribe { list -> binding.recyclerview.swapAdapter(UserEntryAdapter(list), true) }
-       )
+        if (binding.showLoop.isChecked)
+            disposable.add( repository
+                .getAllUserEntries()
+                .observeOn(aapsSchedulers.main)
+                .subscribe { list -> binding.recyclerview.swapAdapter(UserEntryAdapter(list), true) }
+            )
+        else
+            disposable.add( repository
+                .getAllUserEntries()
+                .observeOn(aapsSchedulers.main)
+                .subscribe { list -> binding.recyclerview.swapAdapter(UserEntryAdapter(filterUserEntries(list)), true) }
+            )
     }
 
     @Synchronized
@@ -84,6 +96,11 @@ class TreatmentsUserEntryFragment : DaggerFragment() {
         disposable.add(rxBus
             .toObservable(EventPreferenceChange::class.java)
             .observeOn(aapsSchedulers.io)
+            .subscribe({ swapAdapter() }, fabricPrivacy::logException))
+        disposable.add(rxBus
+            .toObservable(EventTreatmentUpdateGui::class.java)
+            .observeOn(aapsSchedulers.io)
+            .debounce(1L, TimeUnit.SECONDS)
             .subscribe({ swapAdapter() }, fabricPrivacy::logException))
     }
 
@@ -165,6 +182,13 @@ class TreatmentsUserEntryFragment : DaggerFragment() {
         }
 
         override fun getItemCount(): Int = entries.size
+    }
 
+    fun filterUserEntries(list: List<UserEntry>): List<UserEntry> {
+        val filteredList = mutableListOf<UserEntry>()
+        for (ue in list) {
+            if (! ue.isLoop()) filteredList.add(ue)
+        }
+        return filteredList
     }
 }

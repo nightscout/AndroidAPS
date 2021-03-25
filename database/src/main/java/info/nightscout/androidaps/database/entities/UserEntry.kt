@@ -180,4 +180,12 @@ data class UserEntry(
         Pump,
         Aaps
     }
+
+    fun isLoop(): Boolean {
+        var result = false
+        for (v in values) {
+            if (v.unit == Units.Source && Sources.fromText(v.sValue).equals(Sources.Loop)) result = true
+        }
+        return result
+    }
 }
