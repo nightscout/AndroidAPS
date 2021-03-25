@@ -1,10 +1,6 @@
 package info.nightscout.androidaps.database
 
-import info.nightscout.androidaps.database.entities.Food
-import info.nightscout.androidaps.database.entities.GlucoseValue
-import info.nightscout.androidaps.database.entities.TemporaryTarget
-import info.nightscout.androidaps.database.entities.TherapyEvent
-import info.nightscout.androidaps.database.entities.UserEntry
+import info.nightscout.androidaps.database.entities.*
 import info.nightscout.androidaps.database.interfaces.DBEntry
 import info.nightscout.androidaps.database.transactions.Transaction
 import io.reactivex.Completable
@@ -179,6 +175,28 @@ open class AppRepository @Inject internal constructor(
     fun deleteAllFoods() =
         database.foodDao.deleteAllEntries()
 
+    // MEAL LINK
+    fun getMealLinkLoadedDataFromTime(timestamp: Long, ascending: Boolean): Single<List<MealLinkLoaded>> =
+        database.mealLinkDao.getMealLinkLoadedFromTime(timestamp)
+            .map { if (!ascending) it.reversed() else it }
+            .subscribeOn(Schedulers.io())
+
+    fun getMealLinkLoadedDataIncludingInvalidFromTime(timestamp: Long, ascending: Boolean): Single<List<MealLinkLoaded>> =
+        database.mealLinkDao.getMealLinkLoadedIncludingInvalidFromTime(timestamp)
+            .map { if (!ascending) it.reversed() else it }
+            .subscribeOn(Schedulers.io())
+
+    fun deleteAllBoluses() =
+        database.bolusDao.deleteAllEntries()
+
+    fun deleteAllCarbs() =
+        database.carbsDao.deleteAllEntries()
+
+    fun deleteAllBolusCalculatorResults() =
+        database.bolusCalculatorResultDao.deleteAllEntries()
+
+    fun deleteAllMealLinks() =
+        database.mealLinkDao.deleteAllEntries()
 }
 
 @Suppress("USELESS_CAST")

@@ -15,7 +15,6 @@ import info.nightscout.androidaps.danars.services.DanaRSService
 import info.nightscout.androidaps.data.DetailedBolusInfo
 import info.nightscout.androidaps.data.Profile
 import info.nightscout.androidaps.data.PumpEnactResult
-import info.nightscout.androidaps.database.entities.Bolus
 import info.nightscout.androidaps.db.Treatment
 import info.nightscout.androidaps.events.EventAppExit
 import info.nightscout.androidaps.events.EventConfigBuilderChange
@@ -74,7 +73,7 @@ class DanaRSPlugin @Inject constructor(
     private var danaRSService: DanaRSService? = null
     private var mDeviceAddress = ""
     var mDeviceName = ""
-    override val pumpDescription = PumpDescription(PumpType.DanaRS)
+    override val pumpDescription = PumpDescription(PumpType.DANA_RS)
 
     override fun updatePreferenceSummary(pref: Preference) {
         super.updatePreferenceSummary(pref)
@@ -280,7 +279,7 @@ class DanaRSPlugin @Inject constructor(
             detailedBolusInfo.carbTime = 0
             detailedBolusInfoStorage.add(detailedBolusInfo) // will be picked up on reading history
             val t = Treatment()
-            t.isSMB = detailedBolusInfo.bolusType == Bolus.Type.SMB
+            t.isSMB = detailedBolusInfo.bolusType == DetailedBolusInfo.BolusType.SMB
             var connectionOK = false
             if (detailedBolusInfo.insulin > 0 || carbs > 0) connectionOK = danaRSService?.bolus(detailedBolusInfo.insulin, carbs.toInt(), DateUtil.now() + T.mins(carbTime.toLong()).msecs(), t)
                 ?: false
@@ -597,7 +596,7 @@ class DanaRSPlugin @Inject constructor(
     }
 
     override fun model(): PumpType {
-        return PumpType.DanaRS
+        return PumpType.DANA_RS
     }
 
     override fun serialNumber(): String {

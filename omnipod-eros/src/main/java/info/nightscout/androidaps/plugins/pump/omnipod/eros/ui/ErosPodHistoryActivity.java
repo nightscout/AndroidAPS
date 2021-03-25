@@ -309,7 +309,7 @@ public class ErosPodHistoryActivity extends NoSplashAppCompatActivity {
 
             try {
                 Profile.ProfileValue[] profileValuesArray = aapsOmnipodUtil.getGsonInstance().fromJson(data, Profile.ProfileValue[].class);
-                valueView.setText(ProfileUtil.getBasalProfilesDisplayable(profileValuesArray, PumpType.Omnipod_Eros));
+                valueView.setText(ProfileUtil.getBasalProfilesDisplayable(profileValuesArray, PumpType.OMNIPOD_EROS));
             } catch (Exception e) {
                 aapsLogger.error(LTag.PUMP, "Problem parsing Profile json. Ex: {}, Data:\n{}", e.getMessage(), data);
                 valueView.setText("");

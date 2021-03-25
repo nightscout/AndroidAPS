@@ -1,5 +1,6 @@
 package info.nightscout.androidaps.dialogs
 
+import android.content.Context
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
@@ -8,13 +9,15 @@ import android.view.View
 import android.view.ViewGroup
 import com.google.common.base.Joiner
 import info.nightscout.androidaps.Constants
-import info.nightscout.androidaps.MainApp
 import info.nightscout.androidaps.R
+import info.nightscout.androidaps.activities.ErrorHelperActivity
+import info.nightscout.androidaps.data.DetailedBolusInfo
 import info.nightscout.androidaps.data.Profile
 import info.nightscout.androidaps.database.AppRepository
 import info.nightscout.androidaps.database.entities.TemporaryTarget
-import info.nightscout.androidaps.database.entities.TherapyEvent
-import info.nightscout.androidaps.database.entities.UserEntry.*
+import info.nightscout.androidaps.database.entities.UserEntry.Action
+import info.nightscout.androidaps.database.entities.UserEntry.Units
+import info.nightscout.androidaps.database.entities.UserEntry.ValueWithUnit
 import info.nightscout.androidaps.database.transactions.InsertTemporaryTargetAndCancelCurrentTransaction
 import info.nightscout.androidaps.databinding.DialogCarbsBinding
 import info.nightscout.androidaps.interfaces.Constraint
@@ -24,8 +27,9 @@ import info.nightscout.androidaps.logging.UserEntryLogger
 import info.nightscout.androidaps.plugins.configBuilder.ConstraintChecker
 import info.nightscout.androidaps.plugins.general.nsclient.NSUpload
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.IobCobCalculatorPlugin
-import info.nightscout.androidaps.plugins.treatments.CarbsGenerator
 import info.nightscout.androidaps.plugins.treatments.TreatmentsPlugin
+import info.nightscout.androidaps.queue.Callback
+import info.nightscout.androidaps.queue.CommandQueue
 import info.nightscout.androidaps.utils.*
 import info.nightscout.androidaps.utils.alertDialogs.OKDialog
 import info.nightscout.androidaps.utils.extensions.formatColor
@@ -40,7 +44,7 @@ import kotlin.math.max
 
 class CarbsDialog : DialogFragmentWithDate() {
 
-    @Inject lateinit var mainApp: MainApp
+    @Inject lateinit var ctx: Context
     @Inject lateinit var resourceHelper: ResourceHelper
     @Inject lateinit var constraintChecker: ConstraintChecker
     @Inject lateinit var defaultValueHelper: DefaultValueHelper
@@ -48,9 +52,9 @@ class CarbsDialog : DialogFragmentWithDate() {
     @Inject lateinit var profileFunction: ProfileFunction
     @Inject lateinit var iobCobCalculatorPlugin: IobCobCalculatorPlugin
     @Inject lateinit var nsUpload: NSUpload
-    @Inject lateinit var carbsGenerator: CarbsGenerator
     @Inject lateinit var uel: UserEntryLogger
     @Inject lateinit var carbTimer: CarbTimer
+    @Inject lateinit var commandQueue: CommandQueue
     @Inject lateinit var repository: AppRepository
 
     companion object {
@@ -76,15 +80,15 @@ class CarbsDialog : DialogFragmentWithDate() {
         val time = binding.time.value.toInt()
         if (time > 12 * 60 || time < -12 * 60) {
             binding.time.value = 0.0
-            ToastUtils.showToastInUiThread(mainApp, resourceHelper.gs(R.string.constraintapllied))
+            ToastUtils.showToastInUiThread(ctx, resourceHelper.gs(R.string.constraintapllied))
         }
         if (binding.duration.value > 10) {
             binding.duration.value = 0.0
-            ToastUtils.showToastInUiThread(mainApp, resourceHelper.gs(R.string.constraintapllied))
+            ToastUtils.showToastInUiThread(ctx, resourceHelper.gs(R.string.constraintapllied))
         }
         if (binding.carbs.value.toInt() > maxCarbs) {
             binding.carbs.value = 0.0
-            ToastUtils.showToastInUiThread(mainApp, resourceHelper.gs(R.string.carbsconstraintapplied))
+            ToastUtils.showToastInUiThread(ctx, resourceHelper.gs(R.string.carbsconstraintapplied))
         }
     }
 
@@ -270,13 +274,39 @@ class CarbsDialog : DialogFragmentWithDate() {
                         }
                     }
                     if (carbsAfterConstraints > 0) {
-                        if (duration == 0) {
-                            carbsGenerator.createCarb(carbsAfterConstraints, time, TherapyEvent.Type.CARBS_CORRECTION, notes)
+                        val detailedBolusInfo = DetailedBolusInfo()
+                        detailedBolusInfo.eventType = DetailedBolusInfo.EventType.CORRECTION_BOLUS
+                        detailedBolusInfo.carbs = carbsAfterConstraints.toDouble()
+                        detailedBolusInfo.context = context
+                        detailedBolusInfo.notes = notes
+                        detailedBolusInfo.carbsDuration = T.mins(duration.toLong()).msecs()
+                        if (duration != 0 || timeOffset != 0) {
+                            detailedBolusInfo.carbsTimestamp = time
+                            disposable += repository.runTransactionForResult(detailedBolusInfo.insertMealLinkTransaction())
+                                .subscribe({ result ->
+                                    result.inserted.forEach {
+                                        uel.log(Action.CARBS, notes,
+                                            ValueWithUnit(eventTime, Units.Timestamp, eventTimeChanged),
+                                            ValueWithUnit(carbsAfterConstraints, Units.G),
+                                            ValueWithUnit(timeOffset, Units.M, timeOffset != 0),
+                                            ValueWithUnit(duration, Units.H, duration != 0)
+                                        )
+                                        nsUpload.uploadMealLinkRecord(it)
+                                    }
+                                }, {
+                                    aapsLogger.error(LTag.BGSOURCE, "Error while saving meal link", it)
+                                })
                         } else {
-                            carbsGenerator.generateCarbs(carbsAfterConstraints, time, duration, notes)
-                            nsUpload.uploadEvent(TherapyEvent.Type.NOTE.text, DateUtil.now() - 2000, resourceHelper.gs(R.string.generated_ecarbs_note, carbsAfterConstraints, duration, timeOffset))
+                            commandQueue.bolus(detailedBolusInfo, object : Callback() {
+                                override fun run() {
+                                    if (!result.success) {
+                                        ErrorHelperActivity.runAlarm(ctx, result.comment, resourceHelper.gs(R.string.treatmentdeliveryerror), R.raw.boluserror)
+                                    } else
+                                        uel.log(Action.BOLUS, notes, ValueWithUnit(carbsAfterConstraints, Units.G))
+
+                                }
+                            })
                         }
-                        uel.log(Action.CARBS, notes, ValueWithUnit(eventTime, Units.Timestamp, eventTimeChanged), ValueWithUnit(carbsAfterConstraints, Units.G), ValueWithUnit(timeOffset, Units.M, timeOffset != 0), ValueWithUnit(duration, Units.H, duration != 0))
                     }
                     if (useAlarm && carbs > 0 && timeOffset > 0) {
                         carbTimer.scheduleReminder(dateUtil._now() + T.mins(timeOffset.toLong()).msecs())

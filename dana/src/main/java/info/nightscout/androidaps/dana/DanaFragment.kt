@@ -10,7 +10,7 @@ import android.view.ViewGroup
 import dagger.android.support.DaggerFragment
 import info.nightscout.androidaps.activities.TDDStatsActivity
 import info.nightscout.androidaps.dana.databinding.DanarFragmentBinding
-import info.nightscout.androidaps.database.entities.UserEntry.*
+import info.nightscout.androidaps.database.entities.UserEntry
 import info.nightscout.androidaps.dialogs.ProfileViewerDialog
 import info.nightscout.androidaps.events.EventExtendedBolusChange
 import info.nightscout.androidaps.events.EventInitializationChanged
@@ -105,11 +105,11 @@ class DanaFragment : DaggerFragment() {
             danaPump.lastConnection = 0
             commandQueue.readStatus("Clicked connect to pump", null)
         }
-        if (activePlugin.activePump.pumpDescription.pumpType == PumpType.DanaRS)
+        if (activePlugin.activePump.pumpDescription.pumpType == PumpType.DANA_RS)
             binding.btconnection.setOnLongClickListener {
                 activity?.let {
                     OKDialog.showConfirmation(it, resourceHelper.gs(R.string.resetpairing)) {
-                        uel.log(Action.CLEAR_PAIRING_KEYS)
+                        uel.log(UserEntry.Action.CLEAR_PAIRING_KEYS)
                         (activePlugin.activePump as DanaPumpInterface).clearPairing()
                     }
                 }

@@ -10,7 +10,6 @@ import info.nightscout.androidaps.R
 import info.nightscout.androidaps.activities.ErrorHelperActivity
 import info.nightscout.androidaps.data.DetailedBolusInfo
 import info.nightscout.androidaps.database.AppRepository
-import info.nightscout.androidaps.database.entities.Bolus
 import info.nightscout.androidaps.database.entities.TherapyEvent
 import info.nightscout.androidaps.database.entities.UserEntry.Action
 import info.nightscout.androidaps.database.entities.UserEntry.Units
@@ -183,7 +182,7 @@ class FillDialog : DialogFragmentWithDate() {
         val detailedBolusInfo = DetailedBolusInfo()
         detailedBolusInfo.insulin = insulin
         detailedBolusInfo.context = context
-        detailedBolusInfo.bolusType = Bolus.Type.PRIMING
+        detailedBolusInfo.bolusType = DetailedBolusInfo.BolusType.PRIMING
         detailedBolusInfo.notes = notes
         commandQueue.bolus(detailedBolusInfo, object : Callback() {
             override fun run() {

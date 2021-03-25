@@ -19,7 +19,6 @@ import info.nightscout.androidaps.danar.R;
 import info.nightscout.androidaps.data.DetailedBolusInfo;
 import info.nightscout.androidaps.data.Profile;
 import info.nightscout.androidaps.data.PumpEnactResult;
-import info.nightscout.androidaps.database.entities.Bolus;
 import info.nightscout.androidaps.db.TemporaryBasal;
 import info.nightscout.androidaps.db.Treatment;
 import info.nightscout.androidaps.events.EventAppExit;
@@ -82,7 +81,7 @@ public class DanaRv2Plugin extends AbstractDanaRPlugin {
         getPluginDescription().description(R.string.description_pump_dana_r_v2);
 
         useExtendedBoluses = false;
-        pumpDescription.setPumpDescription(PumpType.DanaRv2);
+        pumpDescription.setPumpDescription(PumpType.DANA_RV2);
     }
 
     @Override
@@ -184,7 +183,7 @@ public class DanaRv2Plugin extends AbstractDanaRPlugin {
             detailedBolusInfoStorage.add(detailedBolusInfo); // will be picked up on reading history
 
             Treatment t = new Treatment();
-            t.isSMB = detailedBolusInfo.getBolusType() == Bolus.Type.SMB;
+            t.isSMB = detailedBolusInfo.getBolusType() == DetailedBolusInfo.BolusType.SMB;
             boolean connectionOK = false;
             if (detailedBolusInfo.insulin > 0 || carbs > 0)
                 connectionOK = sExecutionService.bolus(detailedBolusInfo.insulin, (int) carbs, DateUtil.now() + T.mins(carbTime).msecs(), t);
@@ -350,7 +349,7 @@ public class DanaRv2Plugin extends AbstractDanaRPlugin {
 
     @NonNull @Override
     public PumpType model() {
-        return PumpType.DanaRv2;
+        return PumpType.DANA_RV2;
     }
 
     @NonNull @Override

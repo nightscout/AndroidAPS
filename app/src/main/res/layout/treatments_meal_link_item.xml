@@ -22,8 +22,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
+                android:layout_marginStart="5dp"
                 android:gravity="center"
-                android:paddingStart="10dp"
                 android:text="{fa-clock-o}"
                 tools:ignore="HardcodedText,RtlSymmetry" />
 
@@ -31,15 +31,48 @@
                 android:id="@+id/date"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:paddingStart="5dp"
-                tools:ignore="RtlSymmetry" />
+                android:layout_marginStart="5dp"
+                android:text="1.1.2000"
+                tools:ignore="HardcodedText,RtlSymmetry" />
 
             <TextView
-                android:id="@+id/meal_or_correction"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="top"
+                android:layout_marginStart="10dp"
+                android:layout_marginEnd="10dp"
+                android:text="@string/treatments_iob_label_string" />
+
+            <TextView
+                android:id="@+id/iob"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_marginEnd="10dp"
+                android:textStyle="bold" />
+
+            <TextView
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="10dp"
                 android:layout_weight="1"
+                android:text="" />
+
+            <TextView
+                android:id="@+id/calculation"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="10dp"
+                android:text="@string/calculation_short"
+                android:textAlignment="viewEnd"
+                android:textColor="@color/colorCalculatorButton"
+                tools:ignore="RtlSymmetry" />
+
+            <TextView
+                android:id="@+id/meal_or_correction"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="10dp"
                 android:text="Meal"
                 android:textAlignment="textEnd"
                 tools:ignore="HardcodedText" />
@@ -48,16 +81,34 @@
         </LinearLayout>
 
         <LinearLayout
+            android:id="@+id/bolus_layout"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="horizontal">
+
+            <com.joanzapata.iconify.widget.IconTextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_marginStart="15dp"
+                android:gravity="center"
+                android:text="{fa-clock-o}"
+                tools:ignore="HardcodedText,RtlSymmetry" />
+
+            <TextView
+                android:id="@+id/bolus_date"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="5dp"
+                android:text="1.1.2000"
+                tools:ignore="HardcodedText,RtlSymmetry" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="top"
-                android:paddingLeft="10dp"
-                android:paddingRight="10dp"
+                android:layout_marginStart="10dp"
+                android:layout_marginEnd="10dp"
                 android:text="@string/treatments_insulin_label_string" />
 
             <TextView
@@ -69,11 +120,78 @@
                 android:textStyle="bold" />
 
             <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="10dp"
+                android:layout_weight="1"
+                android:text="" />
+
+            <TextView
+                android:id="@+id/bolus_ns"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="10dp"
+                android:text="NS"
+                android:textColor="@color/colorSetTempButton"
+                tools:ignore="HardcodedText" />
+
+            <TextView
+                android:id="@+id/bolus_pump"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="10dp"
+                android:text="PH"
+                android:textColor="@color/colorSetTempButton"
+                tools:ignore="HardcodedText" />
+
+            <TextView
+                android:id="@+id/bolus_invalid"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="10dp"
+                android:text="@string/invalid"
+                android:textColor="@android:color/holo_red_light" />
+
+            <TextView
+                android:id="@+id/bolus_remove"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="10dp"
+                android:text="@string/remove_button"
+                android:textAlignment="viewEnd"
+                android:textColor="@android:color/holo_orange_light" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/carbs_layout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="horizontal">
+
+            <com.joanzapata.iconify.widget.IconTextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_marginStart="15dp"
+                android:gravity="center"
+                android:text="{fa-clock-o}"
+                tools:ignore="HardcodedText,RtlSymmetry" />
+
+            <TextView
+                android:id="@+id/carbs_date"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="5dp"
+                android:text="1.1.2000"
+                tools:ignore="HardcodedText,RtlSymmetry" />
+
+            <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="top"
-                android:paddingLeft="10dp"
-                android:paddingRight="10dp"
+                android:layout_marginStart="10dp"
+                android:layout_marginEnd="10dp"
                 android:text="@string/treatments_carbs_label_string" />
 
             <TextView
@@ -91,16 +209,7 @@
                 android:text="" />
 
             <TextView
-                android:id="@+id/pump"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="10dp"
-                android:text="PH"
-                android:textColor="@color/colorSetTempButton"
-                tools:ignore="HardcodedText" />
-
-            <TextView
-                android:id="@+id/ns"
+                android:id="@+id/carbs_ns"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="10dp"
@@ -109,57 +218,24 @@
                 tools:ignore="HardcodedText" />
 
             <TextView
-                android:id="@+id/invalid"
+                android:id="@+id/carbs_pump"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="10dp"
+                android:text="PH"
+                android:textColor="@color/colorSetTempButton"
+                tools:ignore="HardcodedText" />
+
+            <TextView
+                android:id="@+id/carbs_invalid"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="10dp"
                 android:text="@string/invalid"
                 android:textColor="@android:color/holo_red_light" />
 
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="horizontal">
-
             <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="top"
-                android:paddingLeft="10dp"
-                android:paddingRight="10dp"
-                android:text="@string/treatments_iob_label_string" />
-
-            <TextView
-                android:id="@+id/iob"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
-                android:layout_marginEnd="30dp"
-                android:textStyle="bold" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
-                android:layout_marginEnd="30dp"
-                android:textStyle="bold" />
-
-            <TextView
-                android:id="@+id/calculation"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="10dp"
-                android:layout_weight="1"
-                android:paddingEnd="10dp"
-                android:text="@string/calculation_short"
-                android:textAlignment="viewEnd"
-                android:textColor="@color/colorCalculatorButton"
-                tools:ignore="RtlSymmetry" />
-
-            <TextView
-                android:id="@+id/remove"
+                android:id="@+id/carbs_remove"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="10dp"

@@ -151,7 +151,7 @@ public class MedtronicPumpPlugin extends PumpPluginAbstract implements PumpInter
                         .shortName(R.string.medtronic_name_short) //
                         .preferencesId(R.xml.pref_medtronic)
                         .description(R.string.description_pump_medtronic), //
-                PumpType.Medtronic_522_722, // we default to most basic model, correct model from config is loaded later
+                PumpType.MEDTRONIC_522_722, // we default to most basic model, correct model from config is loaded later
                 injector, resourceHelper, aapsLogger, commandQueue, rxBus, activePlugin, sp, context, fabricPrivacy, dateUtil, aapsSchedulers
         );
 
@@ -888,7 +888,7 @@ public class MedtronicPumpPlugin extends PumpPluginAbstract implements PumpInter
                 // we subtract insulin, exact amount will be visible with next remainingInsulin update.
                 medtronicPumpStatus.reservoirRemainingUnits -= detailedBolusInfo.insulin;
 
-                incrementStatistics(detailedBolusInfo.getBolusType() == Bolus.Type.SMB ? MedtronicConst.Statistics.SMBBoluses
+                incrementStatistics(detailedBolusInfo.getBolusType() == DetailedBolusInfo.BolusType.SMB ? MedtronicConst.Statistics.SMBBoluses
                         : MedtronicConst.Statistics.StandardBoluses);
 
 

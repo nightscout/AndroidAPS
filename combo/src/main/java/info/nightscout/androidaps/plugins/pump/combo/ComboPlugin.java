@@ -25,8 +25,6 @@ import info.nightscout.androidaps.combo.R;
 import info.nightscout.androidaps.data.DetailedBolusInfo;
 import info.nightscout.androidaps.data.Profile;
 import info.nightscout.androidaps.data.PumpEnactResult;
-import info.nightscout.androidaps.database.embedments.InterfaceIDs;
-import info.nightscout.androidaps.database.entities.TherapyEvent;
 import info.nightscout.androidaps.db.Source;
 import info.nightscout.androidaps.db.TDD;
 import info.nightscout.androidaps.db.TemporaryBasal;
@@ -160,7 +158,7 @@ public class ComboPlugin extends PumpPluginBase implements PumpInterface, Constr
         this.context = context;
         this.databaseHelper = databaseHelper;
 
-        pumpDescription.setPumpDescription(PumpType.AccuChekCombo);
+        pumpDescription.setPumpDescription(PumpType.ACCU_CHEK_COMBO);
     }
 
     @Override protected void onStart() {
@@ -491,7 +489,7 @@ public class ComboPlugin extends PumpPluginBase implements PumpInterface, Constr
 
                 EventOverviewBolusProgress bolusingEvent = EventOverviewBolusProgress.INSTANCE;
                 bolusingEvent.setT(new Treatment());
-                bolusingEvent.getT().isSMB = detailedBolusInfo.getBolusType() == info.nightscout.androidaps.database.entities.Bolus.Type.SMB;
+                bolusingEvent.getT().isSMB = detailedBolusInfo.getBolusType() == DetailedBolusInfo.BolusType.SMB;
                 bolusingEvent.setPercent(100);
                 rxBus.send(bolusingEvent);
 
@@ -569,7 +567,7 @@ public class ComboPlugin extends PumpPluginBase implements PumpInterface, Constr
             }
 
             Treatment treatment = new Treatment();
-            treatment.isSMB = detailedBolusInfo.getBolusType() == info.nightscout.androidaps.database.entities.Bolus.Type.SMB;
+            treatment.isSMB = detailedBolusInfo.getBolusType() == DetailedBolusInfo.BolusType.SMB;
             EventOverviewBolusProgress.INSTANCE.setT(treatment);
 
             // start bolus delivery
@@ -667,8 +665,8 @@ public class ComboPlugin extends PumpPluginBase implements PumpInterface, Constr
      */
     private boolean addBolusToTreatments(DetailedBolusInfo detailedBolusInfo, Bolus lastPumpBolus) {
         DetailedBolusInfo bolusInfo = detailedBolusInfo.copy();
-        bolusInfo.timestamp = calculateFakeBolusDate(lastPumpBolus);
-        bolusInfo.setPumpType(InterfaceIDs.PumpType.ACCU_CHEK_COMBO);
+        bolusInfo.setBolusTimestamp(calculateFakeBolusDate(lastPumpBolus));
+        bolusInfo.setPumpType(PumpType.ACCU_CHEK_COMBO);
         bolusInfo.setPumpSerial(serialNumber());
         bolusInfo.setBolusPumpId(bolusInfo.timestamp);
         bolusInfo.insulin = lastPumpBolus.amount;
@@ -678,7 +676,7 @@ public class ComboPlugin extends PumpPluginBase implements PumpInterface, Constr
                 DetailedBolusInfo carbInfo = new DetailedBolusInfo();
                 carbInfo.timestamp = bolusInfo.timestamp + bolusInfo.carbTime * 60L * 1000L;
                 carbInfo.carbs = bolusInfo.carbs;
-                carbInfo.setPumpType(InterfaceIDs.PumpType.USER);
+                carbInfo.setPumpType(PumpType.USER);
                 treatmentsPlugin.addToHistoryTreatment(carbInfo, true);
 
                 // remove carbs from bolusInfo to not trigger any unwanted code paths in
@@ -689,7 +687,7 @@ public class ComboPlugin extends PumpPluginBase implements PumpInterface, Constr
             treatmentsPlugin.addToHistoryTreatment(bolusInfo, true);
         } catch (Exception e) {
             getAapsLogger().error("Adding treatment record failed", e);
-            if (bolusInfo.getBolusType() == info.nightscout.androidaps.database.entities.Bolus.Type.SMB) {
+            if (bolusInfo.getBolusType() == DetailedBolusInfo.BolusType.SMB) {
                 Notification notification = new Notification(Notification.COMBO_PUMP_ALARM, getResourceHelper().gs(R.string.combo_error_updating_treatment_record), Notification.URGENT);
                 rxBus.send(new EventNewNotification(notification));
             }
@@ -1156,12 +1154,12 @@ public class ComboPlugin extends PumpPluginBase implements PumpInterface, Constr
         boolean updated = false;
         for (Bolus pumpBolus : history.bolusHistory) {
             DetailedBolusInfo dbi = new DetailedBolusInfo();
-            dbi.timestamp = calculateFakeBolusDate(pumpBolus);
-            dbi.setPumpType(InterfaceIDs.PumpType.ACCU_CHEK_COMBO);
+            dbi.setBolusTimestamp(calculateFakeBolusDate(pumpBolus));
+            dbi.setPumpType(PumpType.ACCU_CHEK_COMBO);
             dbi.setPumpSerial(serialNumber());
             dbi.setBolusPumpId(dbi.timestamp);
             dbi.insulin = pumpBolus.amount;
-            dbi.setEventType(TherapyEvent.Type.CORRECTION_BOLUS);
+            dbi.setEventType(DetailedBolusInfo.EventType.CORRECTION_BOLUS);
             if (treatmentsPlugin.addToHistoryTreatment(dbi, true)) {
                 updated = true;
             }
@@ -1311,7 +1309,7 @@ public class ComboPlugin extends PumpPluginBase implements PumpInterface, Constr
 
     @NonNull @Override
     public PumpType model() {
-        return PumpType.AccuChekCombo;
+        return PumpType.ACCU_CHEK_COMBO;
     }
 
     @NonNull @Override

@@ -43,7 +43,7 @@ class StatusLightHandler @Inject constructor(
             handleAge(careportal_pb_age, TherapyEvent.Type.PUMP_BATTERY_CHANGE, R.string.key_statuslights_bage_warning, 216.0, R.string.key_statuslights_bage_critical, 240.0)
         }
         if (!config.NSCLIENT) {
-            if (pump.model() == PumpType.Omnipod_Eros || pump.model() == PumpType.Omnipod_Dash) {
+            if (pump.model() == PumpType.OMNIPOD_EROS || pump.model() == PumpType.OMNIPOD_DASH) {
                 handleOmnipodReservoirLevel(careportal_reservoir_level, R.string.key_statuslights_res_critical, 10.0, R.string.key_statuslights_res_warning, 80.0, pump.reservoirLevel, "U")
             } else {
                 handleLevel(careportal_reservoir_level, R.string.key_statuslights_res_critical, 10.0, R.string.key_statuslights_res_warning, 80.0, pump.reservoirLevel, "U")
@@ -55,15 +55,15 @@ class StatusLightHandler @Inject constructor(
         }
 
         if (!config.NSCLIENT) {
-            if (pump.model() == PumpType.Omnipod_Dash) {
+            if (pump.model() == PumpType.OMNIPOD_DASH) {
                 // Omnipod Dash does not report its battery level
                 careportal_battery_level?.text = resourceHelper.gs(R.string.notavailable)
                 careportal_battery_level?.setTextColor(Color.WHITE)
-            } else if (pump.model() == PumpType.Omnipod_Eros && pump is OmnipodErosPumpPlugin) { // instance of check is needed because at startup, pump can still be VirtualPumpPlugin and that will cause a crash because of the class cast below
+            } else if (pump.model() == PumpType.OMNIPOD_EROS && pump is OmnipodErosPumpPlugin) { // instance of check is needed because at startup, pump can still be VirtualPumpPlugin and that will cause a crash because of the class cast below
                 // The Omnipod Eros does not report its battery level. However, some RileyLink alternatives do.
                 // Depending on the user's configuration, we will either show the battery level reported by the RileyLink or "n/a"
                 handleOmnipodErosBatteryLevel(careportal_battery_level, R.string.key_statuslights_bat_critical, 26.0, R.string.key_statuslights_bat_warning, 51.0, pump.batteryLevel.toDouble(), "%", pump.isUseRileyLinkBatteryLevel)
-            } else if (pump.model() != PumpType.AccuChekCombo) {
+            } else if (pump.model() != PumpType.ACCU_CHEK_COMBO) {
                 handleLevel(careportal_battery_level, R.string.key_statuslights_bat_critical, 26.0, R.string.key_statuslights_bat_warning, 51.0, pump.batteryLevel.toDouble(), "%")
             }
         }

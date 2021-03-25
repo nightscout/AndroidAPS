@@ -39,9 +39,9 @@ class DanaUserOptionsActivity : NoSplashAppCompatActivity() {
     private val disposable = CompositeDisposable()
 
     // This is for Dana pumps only
-    private fun isRS() = activePlugin.activePump.pumpDescription.pumpType == PumpType.DanaRS
-    private fun isDanaR() = activePlugin.activePump.pumpDescription.pumpType == PumpType.DanaR
-    private fun isDanaRv2() = activePlugin.activePump.pumpDescription.pumpType == PumpType.DanaRv2
+    private fun isRS() = activePlugin.activePump.pumpDescription.pumpType == PumpType.DANA_RS
+    private fun isDanaR() = activePlugin.activePump.pumpDescription.pumpType == PumpType.DANA_R
+    private fun isDanaRv2() = activePlugin.activePump.pumpDescription.pumpType == PumpType.DANA_RV2
 
     var minBacklight = 1
 

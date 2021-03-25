@@ -26,8 +26,6 @@ import info.nightscout.androidaps.data.NonOverlappingIntervals;
 import info.nightscout.androidaps.data.Profile;
 import info.nightscout.androidaps.data.ProfileIntervals;
 import info.nightscout.androidaps.database.AppRepository;
-import info.nightscout.androidaps.database.embedments.InterfaceIDs;
-import info.nightscout.androidaps.database.entities.Bolus;
 import info.nightscout.androidaps.db.ExtendedBolus;
 import info.nightscout.androidaps.db.ProfileSwitch;
 import info.nightscout.androidaps.db.Source;
@@ -55,6 +53,7 @@ import info.nightscout.androidaps.plugins.general.nsclient.NSUpload;
 import info.nightscout.androidaps.plugins.general.overview.events.EventDismissNotification;
 import info.nightscout.androidaps.plugins.general.overview.notifications.Notification;
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.AutosensResult;
+import info.nightscout.androidaps.plugins.pump.common.defs.PumpType;
 import info.nightscout.androidaps.plugins.pump.medtronic.MedtronicPumpPlugin;
 import info.nightscout.androidaps.plugins.pump.medtronic.data.MedtronicHistoryData;
 import info.nightscout.androidaps.utils.DateUtil;
@@ -626,11 +625,11 @@ public class TreatmentsPlugin extends PluginBase implements TreatmentsInterface 
 
         Treatment treatment = new Treatment();
         treatment.date = detailedBolusInfo.timestamp;
-        treatment.source = (detailedBolusInfo.getPumpType() == InterfaceIDs.PumpType.USER) ? Source.USER : Source.PUMP;
+        treatment.source = (detailedBolusInfo.getPumpType() == PumpType.USER) ? Source.USER : Source.PUMP;
         treatment.pumpId = detailedBolusInfo.getBolusPumpId();
         treatment.insulin = detailedBolusInfo.insulin;
-        treatment.isValid = detailedBolusInfo.getBolusType() != Bolus.Type.PRIMING;
-        treatment.isSMB = detailedBolusInfo.getBolusType() == Bolus.Type.SMB;
+        treatment.isValid = detailedBolusInfo.getBolusType() != DetailedBolusInfo.BolusType.PRIMING;
+        treatment.isSMB = detailedBolusInfo.getBolusType() == DetailedBolusInfo.BolusType.SMB;
         if (detailedBolusInfo.carbTime == 0)
             treatment.carbs = detailedBolusInfo.carbs;
         treatment.mealBolus = treatment.carbs > 0;
@@ -650,7 +649,7 @@ public class TreatmentsPlugin extends PluginBase implements TreatmentsInterface 
         if (detailedBolusInfo.carbTime != 0) {
 
             Treatment carbsTreatment = new Treatment();
-            carbsTreatment.source = (detailedBolusInfo.getPumpType() == InterfaceIDs.PumpType.USER) ? Source.USER : Source.PUMP;
+            carbsTreatment.source = (detailedBolusInfo.getPumpType() == PumpType.USER) ? Source.USER : Source.PUMP;
             carbsTreatment.pumpId = detailedBolusInfo.getCarbsPumpId(); // but this should never happen
             carbsTreatment.date = detailedBolusInfo.timestamp + detailedBolusInfo.carbTime * 60 * 1000L + 1000L; // add 1 sec to make them different records
             carbsTreatment.carbs = detailedBolusInfo.carbs;
@@ -663,7 +662,7 @@ public class TreatmentsPlugin extends PluginBase implements TreatmentsInterface 
                 getService().createOrUpdateMedtronic(carbsTreatment, false);
             //log.debug("Adding new Treatment record" + carbsTreatment);
         }
-        if (newRecordCreated && detailedBolusInfo.getBolusType() != Bolus.Type.PRIMING)
+        if (newRecordCreated && detailedBolusInfo.getBolusType() != DetailedBolusInfo.BolusType.PRIMING)
             nsUpload.uploadTreatmentRecord(detailedBolusInfo);
 
         if (!allowUpdate && !creatOrUpdateResult.getSuccess()) {

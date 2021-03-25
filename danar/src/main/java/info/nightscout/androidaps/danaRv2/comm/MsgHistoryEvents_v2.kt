@@ -10,6 +10,7 @@ import info.nightscout.androidaps.db.Source
 import info.nightscout.androidaps.db.TemporaryBasal
 import info.nightscout.androidaps.events.EventPumpStatusChanged
 import info.nightscout.androidaps.logging.LTag
+import info.nightscout.androidaps.plugins.pump.common.defs.PumpType
 import info.nightscout.androidaps.utils.DateUtil
 import java.util.*
 
@@ -92,8 +93,8 @@ class MsgHistoryEvents_v2 constructor(
             info.nightscout.androidaps.dana.DanaPump.BOLUS             -> {
                 val detailedBolusInfo = detailedBolusInfoStorage.findDetailedBolusInfo(datetime, param1 / 100.0)
                     ?: DetailedBolusInfo()
-                detailedBolusInfo.timestamp = datetime
-                detailedBolusInfo.pumpType = InterfaceIDs.PumpType.DANA_RV2
+                detailedBolusInfo.bolusTimestamp = datetime
+                detailedBolusInfo.pumpType = PumpType.DANA_RV2
                 detailedBolusInfo.pumpSerial = danaPump.serialNumber
                 detailedBolusInfo.bolusPumpId = datetime
                 detailedBolusInfo.insulin = param1 / 100.0
@@ -105,8 +106,8 @@ class MsgHistoryEvents_v2 constructor(
             info.nightscout.androidaps.dana.DanaPump.DUALBOLUS         -> {
                 val detailedBolusInfo = detailedBolusInfoStorage.findDetailedBolusInfo(datetime, param1 / 100.0)
                     ?: DetailedBolusInfo()
-                detailedBolusInfo.timestamp = datetime
-                detailedBolusInfo.pumpType = InterfaceIDs.PumpType.DANA_RV2
+                detailedBolusInfo.bolusTimestamp = datetime
+                detailedBolusInfo.pumpType = PumpType.DANA_RV2
                 detailedBolusInfo.pumpSerial = danaPump.serialNumber
                 detailedBolusInfo.bolusPumpId = datetime
                 detailedBolusInfo.insulin = param1 / 100.0
@@ -157,8 +158,8 @@ class MsgHistoryEvents_v2 constructor(
             info.nightscout.androidaps.dana.DanaPump.CARBS             -> {
                 val emptyCarbsInfo = DetailedBolusInfo()
                 emptyCarbsInfo.carbs = param1.toDouble()
-                emptyCarbsInfo.timestamp = datetime
-                emptyCarbsInfo.pumpType = InterfaceIDs.PumpType.DANA_RV2
+                emptyCarbsInfo.carbsTimestamp = datetime
+                emptyCarbsInfo.pumpType = PumpType.DANA_RV2
                 emptyCarbsInfo.pumpSerial = danaPump.serialNumber
                 emptyCarbsInfo.carbsPumpId = datetime
                 val newRecord = activePlugin.activeTreatments.addToHistoryTreatment(emptyCarbsInfo, false)

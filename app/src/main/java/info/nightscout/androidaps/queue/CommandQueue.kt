@@ -13,7 +13,6 @@ import info.nightscout.androidaps.activities.ErrorHelperActivity
 import info.nightscout.androidaps.data.DetailedBolusInfo
 import info.nightscout.androidaps.data.Profile
 import info.nightscout.androidaps.data.PumpEnactResult
-import info.nightscout.androidaps.database.entities.Bolus
 import info.nightscout.androidaps.dialogs.BolusProgressDialog
 import info.nightscout.androidaps.events.EventBolusRequested
 import info.nightscout.androidaps.events.EventNewBasalProfile
@@ -230,7 +229,7 @@ open class CommandQueue @Inject constructor(
     // returns true if command is queued
     @Synchronized
     override fun bolus(detailedBolusInfo: DetailedBolusInfo, callback: Callback?): Boolean {
-        var type = if (detailedBolusInfo.bolusType == Bolus.Type.SMB) CommandType.SMB_BOLUS else CommandType.BOLUS
+        var type = if (detailedBolusInfo.bolusType == DetailedBolusInfo.BolusType.SMB) CommandType.SMB_BOLUS else CommandType.BOLUS
         if (type == CommandType.SMB_BOLUS) {
             if (isRunning(CommandType.BOLUS) || isRunning(CommandType.SMB_BOLUS) || bolusInQueue()) {
                 aapsLogger.debug(LTag.PUMPQUEUE, "Rejecting SMB since a bolus is queue/running")
@@ -257,7 +256,7 @@ open class CommandQueue @Inject constructor(
         detailedBolusInfo.insulin = constraintChecker.applyBolusConstraints(Constraint(detailedBolusInfo.insulin)).value()
         detailedBolusInfo.carbs = constraintChecker.applyCarbsConstraints(Constraint(detailedBolusInfo.carbs.toInt())).value().toDouble()
         // add new command to queue
-        if (detailedBolusInfo.bolusType == Bolus.Type.SMB) {
+        if (detailedBolusInfo.bolusType == DetailedBolusInfo.BolusType.SMB) {
             add(CommandSMBBolus(injector, detailedBolusInfo, callback))
         } else {
             add(CommandBolus(injector, detailedBolusInfo, callback, type))

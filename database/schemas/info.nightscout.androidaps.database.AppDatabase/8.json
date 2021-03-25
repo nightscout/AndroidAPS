@@ -2,7 +2,7 @@
   "formatVersion": 1,
   "database": {
     "version": 8,
-    "identityHash": "b45eaf7386412002a6289168c3dfa06e",
+    "identityHash": "c38f6acf42463481d39fe05be1fd3b55",
     "entities": [
       {
         "tableName": "apsResults",
@@ -350,7 +350,7 @@
       },
       {
         "tableName": "bolusCalculatorResults",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `version` INTEGER NOT NULL, `dateCreated` INTEGER NOT NULL, `isValid` INTEGER NOT NULL, `referenceId` INTEGER, `timestamp` INTEGER NOT NULL, `utcOffset` INTEGER NOT NULL, `targetBGLow` REAL NOT NULL, `targetBGHigh` REAL NOT NULL, `isf` REAL NOT NULL, `ic` REAL NOT NULL, `bolusIOB` REAL NOT NULL, `wasBolusIOBUsed` INTEGER NOT NULL, `basalIOB` REAL NOT NULL, `wasBasalIOBUsed` INTEGER NOT NULL, `glucoseValue` REAL NOT NULL, `wasGlucoseUsed` INTEGER NOT NULL, `glucoseDifference` REAL NOT NULL, `glucoseInsulin` REAL NOT NULL, `glucoseTrend` REAL NOT NULL, `wasTrendUsed` INTEGER NOT NULL, `trendInsulin` REAL NOT NULL, `cob` REAL NOT NULL, `wasCOBUsed` INTEGER NOT NULL, `cobInsulin` REAL NOT NULL, `carbs` REAL NOT NULL, `wereCarbsUsed` INTEGER NOT NULL, `carbsInsulin` REAL NOT NULL, `otherCorrection` REAL NOT NULL, `wasSuperbolusUsed` INTEGER NOT NULL, `superbolusInsulin` REAL NOT NULL, `wasTempTargetUsed` INTEGER NOT NULL, `totalInsulin` REAL NOT NULL, `percentageCorrection` REAL NOT NULL, `profileName` TEXT NOT NULL, `nightscoutSystemId` TEXT, `nightscoutId` TEXT, `pumpType` TEXT, `pumpSerial` TEXT, `pumpId` INTEGER, `startId` INTEGER, `endId` INTEGER, FOREIGN KEY(`referenceId`) REFERENCES `bolusCalculatorResults`(`id`) ON UPDATE NO ACTION ON DELETE NO ACTION )",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `version` INTEGER NOT NULL, `dateCreated` INTEGER NOT NULL, `isValid` INTEGER NOT NULL, `referenceId` INTEGER, `timestamp` INTEGER NOT NULL, `utcOffset` INTEGER NOT NULL, `targetBGLow` REAL NOT NULL, `targetBGHigh` REAL NOT NULL, `isf` REAL NOT NULL, `ic` REAL NOT NULL, `bolusIOB` REAL NOT NULL, `wasBolusIOBUsed` INTEGER NOT NULL, `basalIOB` REAL NOT NULL, `wasBasalIOBUsed` INTEGER NOT NULL, `glucoseValue` REAL NOT NULL, `wasGlucoseUsed` INTEGER NOT NULL, `glucoseDifference` REAL NOT NULL, `glucoseInsulin` REAL NOT NULL, `glucoseTrend` REAL NOT NULL, `wasTrendUsed` INTEGER NOT NULL, `trendInsulin` REAL NOT NULL, `cob` REAL NOT NULL, `wasCOBUsed` INTEGER NOT NULL, `cobInsulin` REAL NOT NULL, `carbs` REAL NOT NULL, `wereCarbsUsed` INTEGER NOT NULL, `carbsInsulin` REAL NOT NULL, `otherCorrection` REAL NOT NULL, `wasSuperbolusUsed` INTEGER NOT NULL, `superbolusInsulin` REAL NOT NULL, `wasTempTargetUsed` INTEGER NOT NULL, `totalInsulin` REAL NOT NULL, `percentageCorrection` INTEGER NOT NULL, `profileName` TEXT NOT NULL, `nightscoutSystemId` TEXT, `nightscoutId` TEXT, `pumpType` TEXT, `pumpSerial` TEXT, `pumpId` INTEGER, `startId` INTEGER, `endId` INTEGER, FOREIGN KEY(`referenceId`) REFERENCES `bolusCalculatorResults`(`id`) ON UPDATE NO ACTION ON DELETE NO ACTION )",
         "fields": [
           {
             "fieldPath": "id",
@@ -553,7 +553,7 @@
           {
             "fieldPath": "percentageCorrection",
             "columnName": "percentageCorrection",
-            "affinity": "REAL",
+            "affinity": "INTEGER",
             "notNull": true
           },
           {
@@ -2222,7 +2222,7 @@
       },
       {
         "tableName": "mealLinks",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `version` INTEGER NOT NULL, `dateCreated` INTEGER NOT NULL, `isValid` INTEGER NOT NULL, `referenceId` INTEGER, `bolusId` INTEGER, `carbsId` INTEGER, `bolusCalcResultId` INTEGER, `superbolusTempBasalId` INTEGER, `noteId` INTEGER, `nightscoutSystemId` TEXT, `nightscoutId` TEXT, `pumpType` TEXT, `pumpSerial` TEXT, `pumpId` INTEGER, `startId` INTEGER, `endId` INTEGER, FOREIGN KEY(`bolusId`) REFERENCES `boluses`(`id`) ON UPDATE NO ACTION ON DELETE NO ACTION , FOREIGN KEY(`carbsId`) REFERENCES `carbs`(`id`) ON UPDATE NO ACTION ON DELETE NO ACTION , FOREIGN KEY(`bolusCalcResultId`) REFERENCES `bolusCalculatorResults`(`id`) ON UPDATE NO ACTION ON DELETE NO ACTION , FOREIGN KEY(`superbolusTempBasalId`) REFERENCES `temporaryBasals`(`id`) ON UPDATE NO ACTION ON DELETE NO ACTION , FOREIGN KEY(`noteId`) REFERENCES `therapyEvents`(`id`) ON UPDATE NO ACTION ON DELETE NO ACTION , FOREIGN KEY(`referenceId`) REFERENCES `mealLinks`(`id`) ON UPDATE NO ACTION ON DELETE NO ACTION )",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `version` INTEGER NOT NULL, `dateCreated` INTEGER NOT NULL, `isValid` INTEGER NOT NULL, `referenceId` INTEGER, `timestamp` INTEGER NOT NULL, `utcOffset` INTEGER NOT NULL, `bolusId` INTEGER, `carbsId` INTEGER, `bolusCalcResultId` INTEGER, `superbolusTempBasalId` INTEGER, `noteId` INTEGER, `nightscoutSystemId` TEXT, `nightscoutId` TEXT, `pumpType` TEXT, `pumpSerial` TEXT, `pumpId` INTEGER, `startId` INTEGER, `endId` INTEGER, FOREIGN KEY(`bolusId`) REFERENCES `boluses`(`id`) ON UPDATE NO ACTION ON DELETE NO ACTION , FOREIGN KEY(`carbsId`) REFERENCES `carbs`(`id`) ON UPDATE NO ACTION ON DELETE NO ACTION , FOREIGN KEY(`bolusCalcResultId`) REFERENCES `bolusCalculatorResults`(`id`) ON UPDATE NO ACTION ON DELETE NO ACTION , FOREIGN KEY(`superbolusTempBasalId`) REFERENCES `temporaryBasals`(`id`) ON UPDATE NO ACTION ON DELETE NO ACTION , FOREIGN KEY(`noteId`) REFERENCES `therapyEvents`(`id`) ON UPDATE NO ACTION ON DELETE NO ACTION , FOREIGN KEY(`referenceId`) REFERENCES `mealLinks`(`id`) ON UPDATE NO ACTION ON DELETE NO ACTION )",
         "fields": [
           {
             "fieldPath": "id",
@@ -2253,6 +2253,18 @@
             "columnName": "referenceId",
             "affinity": "INTEGER",
             "notNull": false
+          },
+          {
+            "fieldPath": "timestamp",
+            "columnName": "timestamp",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "utcOffset",
+            "columnName": "utcOffset",
+            "affinity": "INTEGER",
+            "notNull": true
           },
           {
             "fieldPath": "bolusId",
@@ -2930,7 +2942,7 @@
     "views": [],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'b45eaf7386412002a6289168c3dfa06e')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'c38f6acf42463481d39fe05be1fd3b55')"
     ]
   }
 }

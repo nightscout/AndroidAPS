@@ -31,8 +31,6 @@ import info.nightscout.androidaps.data.DetailedBolusInfo;
 import info.nightscout.androidaps.data.Profile;
 import info.nightscout.androidaps.data.PumpEnactResult;
 import info.nightscout.androidaps.database.AppRepository;
-import info.nightscout.androidaps.database.embedments.InterfaceIDs;
-import info.nightscout.androidaps.database.entities.Bolus;
 import info.nightscout.androidaps.database.entities.TherapyEvent;
 import info.nightscout.androidaps.database.transactions.InsertTherapyEventIfNewTransaction;
 import info.nightscout.androidaps.db.ExtendedBolus;
@@ -247,7 +245,7 @@ public class LocalInsightPlugin extends PumpPluginBase implements PumpInterface,
         this.repository = repository;
 
         pumpDescription = new PumpDescription();
-        pumpDescription.setPumpDescription(PumpType.AccuChekInsightBluetooth);
+        pumpDescription.setPumpDescription(PumpType.ACCU_CHEK_INSIGHT_BLUETOOTH);
     }
 
     public TBROverNotificationBlock getTBROverNotificationBlock() {
@@ -593,13 +591,13 @@ public class LocalInsightPlugin extends PumpPluginBase implements PumpInterface,
                     bolusMessage.setDuration(0);
                     bolusMessage.setExtendedAmount(0);
                     bolusMessage.setImmediateAmount(insulin);
-                    bolusMessage.setVibration(sp.getBoolean(detailedBolusInfo.getBolusType() == Bolus.Type.SMB ? R.string.key_disable_vibration_auto : R.string.key_disable_vibration, false));
+                    bolusMessage.setVibration(sp.getBoolean(detailedBolusInfo.getBolusType() == DetailedBolusInfo.BolusType.SMB ? R.string.key_disable_vibration_auto : R.string.key_disable_vibration, false));
                     bolusID = connectionService.requestMessage(bolusMessage).await().getBolusId();
                     bolusCancelled = false;
                 }
                 result.success(true).enacted(true);
                 Treatment t = new Treatment();
-                t.isSMB = detailedBolusInfo.getBolusType() == Bolus.Type.SMB;
+                t.isSMB = detailedBolusInfo.getBolusType() == DetailedBolusInfo.BolusType.SMB;
                 final EventOverviewBolusProgress bolusingEvent = EventOverviewBolusProgress.INSTANCE;
                 bolusingEvent.setT(t);
                 bolusingEvent.setStatus(resourceHelper.gs(R.string.insight_delivered, 0d, insulin));
@@ -611,15 +609,15 @@ public class LocalInsightPlugin extends PumpPluginBase implements PumpInterface,
                 insightBolusID.timestamp = System.currentTimeMillis();
                 insightBolusID.pumpSerial = connectionService.getPumpSystemIdentification().getSerialNumber();
                 databaseHelper.createOrUpdate(insightBolusID);
-                detailedBolusInfo.timestamp = insightBolusID.timestamp;
-                detailedBolusInfo.setPumpType(InterfaceIDs.PumpType.ACCU_CHEK_INSIGHT);
+                detailedBolusInfo.setBolusTimestamp(insightBolusID.timestamp);
+                detailedBolusInfo.setPumpType(PumpType.ACCU_CHEK_INSIGHT);
                 detailedBolusInfo.setPumpSerial(serialNumber());
                 detailedBolusInfo.setBolusPumpId(insightBolusID.id);
                 if (detailedBolusInfo.carbs > 0 && detailedBolusInfo.carbTime != 0) {
                     DetailedBolusInfo carbInfo = new DetailedBolusInfo();
                     carbInfo.carbs = detailedBolusInfo.carbs;
-                    carbInfo.timestamp = detailedBolusInfo.timestamp + detailedBolusInfo.carbTime * 60L * 1000L;
-                    carbInfo.setPumpType(InterfaceIDs.PumpType.USER);
+                    carbInfo.setCarbsTimestamp(detailedBolusInfo.timestamp + detailedBolusInfo.carbTime * 60L * 1000L);
+                    carbInfo.setPumpType(PumpType.USER);
                     treatmentsPlugin.addToHistoryTreatment(carbInfo, false);
                     detailedBolusInfo.carbTime = 0;
                     detailedBolusInfo.carbs = 0;
@@ -1033,7 +1031,7 @@ public class LocalInsightPlugin extends PumpPluginBase implements PumpInterface,
 
     @NonNull @Override
     public PumpType model() {
-        return PumpType.AccuChekInsightBluetooth;
+        return PumpType.ACCU_CHEK_INSIGHT_BLUETOOTH;
     }
 
     @NonNull @Override
@@ -1394,7 +1392,7 @@ public class LocalInsightPlugin extends PumpPluginBase implements PumpInterface,
         if (event.getBolusType() == BolusType.STANDARD || event.getBolusType() == BolusType.MULTIWAVE) {
             DetailedBolusInfo detailedBolusInfo = new DetailedBolusInfo();
             detailedBolusInfo.timestamp = bolusID.timestamp;
-            detailedBolusInfo.setPumpType(InterfaceIDs.PumpType.ACCU_CHEK_INSIGHT);
+            detailedBolusInfo.setPumpType(PumpType.ACCU_CHEK_INSIGHT);
             detailedBolusInfo.setPumpSerial(serialNumber());
             detailedBolusInfo.setBolusPumpId(bolusID.id);
             detailedBolusInfo.insulin = event.getImmediateAmount();
@@ -1428,8 +1426,8 @@ public class LocalInsightPlugin extends PumpPluginBase implements PumpInterface,
         databaseHelper.createOrUpdate(bolusID);
         if (event.getBolusType() == BolusType.STANDARD || event.getBolusType() == BolusType.MULTIWAVE) {
             DetailedBolusInfo detailedBolusInfo = new DetailedBolusInfo();
-            detailedBolusInfo.timestamp = bolusID.timestamp;
-            detailedBolusInfo.setPumpType(InterfaceIDs.PumpType.ACCU_CHEK_INSIGHT);
+            detailedBolusInfo.setBolusTimestamp(bolusID.timestamp);
+            detailedBolusInfo.setPumpType(PumpType.ACCU_CHEK_INSIGHT);
             detailedBolusInfo.setPumpSerial(serialNumber());
             detailedBolusInfo.setBolusPumpId(bolusID.id);
             detailedBolusInfo.insulin = event.getImmediateAmount();

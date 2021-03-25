@@ -1,14 +1,12 @@
 package info.nightscout.androidaps.db
 
 import info.nightscout.androidaps.database.AppRepository
-import info.nightscout.androidaps.database.entities.Food
-import info.nightscout.androidaps.database.entities.GlucoseValue
-import info.nightscout.androidaps.database.entities.TemporaryTarget
-import info.nightscout.androidaps.database.entities.TherapyEvent
+import info.nightscout.androidaps.database.entities.*
 import info.nightscout.androidaps.events.EventFoodDatabaseChanged
 import info.nightscout.androidaps.events.EventNewBG
 import info.nightscout.androidaps.events.EventTempTargetChange
 import info.nightscout.androidaps.events.EventTherapyEventChange
+import info.nightscout.androidaps.events.EventTreatmentChange
 import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.logging.LTag
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper
@@ -49,6 +47,14 @@ class CompatDBHelper @Inject constructor(
             it.filterIsInstance<Food>().firstOrNull()?.let {
                 aapsLogger.debug(LTag.DATABASE, "Firing EventFoodDatabaseChanged")
                 rxBus.send(EventFoodDatabaseChanged())
+            }
+            it.filterIsInstance<Carbs>().firstOrNull()?.let {
+                aapsLogger.debug(LTag.DATABASE, "Firing EventFoodDatabaseChanged")
+                rxBus.send(EventTreatmentChange(null))
+            }
+            it.filterIsInstance<Bolus>().firstOrNull()?.let {
+                aapsLogger.debug(LTag.DATABASE, "Firing EventFoodDatabaseChanged")
+                rxBus.send(EventTreatmentChange(null))
             }
         }
 }

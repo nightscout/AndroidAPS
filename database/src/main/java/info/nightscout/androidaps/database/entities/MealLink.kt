@@ -3,7 +3,9 @@ package info.nightscout.androidaps.database.entities
 import androidx.room.*
 import info.nightscout.androidaps.database.TABLE_MEAL_LINKS
 import info.nightscout.androidaps.database.embedments.InterfaceIDs
+import info.nightscout.androidaps.database.interfaces.DBEntryWithTime
 import info.nightscout.androidaps.database.interfaces.TraceableDBEntry
+import java.util.*
 
 @Entity(tableName = TABLE_MEAL_LINKS,
     foreignKeys = [
@@ -41,6 +43,8 @@ data class MealLink(
     override var dateCreated: Long = -1,
     override var isValid: Boolean = true,
     override var referenceId: Long? = null,
+    override var timestamp: Long,
+    override var utcOffset: Long = TimeZone.getDefault().getOffset(timestamp).toLong(),
     @Embedded
     override var interfaceIDs_backing: InterfaceIDs? = null,
     var bolusId: Long? = null,
@@ -48,7 +52,8 @@ data class MealLink(
     var bolusCalcResultId: Long? = null,
     var superbolusTempBasalId: Long? = null,
     var noteId: Long? = null
-) : TraceableDBEntry {
+
+    ) : TraceableDBEntry, DBEntryWithTime {
 
     override val foreignKeysValid: Boolean
         get() = super.foreignKeysValid && bolusId != 0L && carbsId != 0L &&

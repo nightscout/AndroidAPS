@@ -51,7 +51,7 @@ import java.util.*
  */
 @RunWith(PowerMockRunner::class)
 @PrepareForTest(
-    MainApp::class, ConfigBuilderPlugin::class, ConstraintChecker::class, SP::class, Context::class,
+    ConfigBuilderPlugin::class, ConstraintChecker::class, SP::class, Context::class,
     OpenAPSAMAPlugin::class, OpenAPSSMBPlugin::class, TreatmentsPlugin::class, TreatmentService::class,
     VirtualPumpPlugin::class, DetailedBolusInfoStorage::class, GlimpPlugin::class, Profiler::class,
     UserEntryLogger::class, IobCobCalculatorPlugin::class, LoggerUtils::class, AppRepository::class)

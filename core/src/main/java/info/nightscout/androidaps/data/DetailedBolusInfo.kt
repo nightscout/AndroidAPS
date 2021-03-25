@@ -2,11 +2,14 @@ package info.nightscout.androidaps.data
 
 import android.content.Context
 import com.google.gson.Gson
-import info.nightscout.androidaps.database.embedments.InterfaceIDs
 import info.nightscout.androidaps.database.entities.Bolus
 import info.nightscout.androidaps.database.entities.BolusCalculatorResult
 import info.nightscout.androidaps.database.entities.Carbs
+import info.nightscout.androidaps.database.entities.TemporaryBasal
 import info.nightscout.androidaps.database.entities.TherapyEvent
+import info.nightscout.androidaps.database.transactions.InsertMealLinkTransaction
+import info.nightscout.androidaps.plugins.pump.common.defs.PumpType
+import info.nightscout.androidaps.utils.T
 
 class DetailedBolusInfo {
 
@@ -23,36 +26,79 @@ class DetailedBolusInfo {
 
     // Prefilled info for storing to db
     var bolusCalculatorResult: BolusCalculatorResult? = null
-    var eventType = TherapyEvent.Type.MEAL_BOLUS
+    var eventType = EventType.MEAL_BOLUS
     var notes: String? = null
     var mgdlGlucose: Double? = null // Bg value in mgdl
-    var glucoseType: TherapyEvent.MeterType? = null // NS values: Manual, Finger, Sensor
-    var bolusType = Bolus.Type.NORMAL
+    var glucoseType: MeterType? = null // NS values: Manual, Finger, Sensor
+    var bolusType = BolusType.NORMAL
+    var carbsDuration = 0L // in milliseconds
 
     // Collected info from driver
-    var pumpType: InterfaceIDs.PumpType? = null // if == USER
+    var pumpType: PumpType? = null // if == USER
     var pumpSerial: String? = null
     var bolusPumpId: Long? = null
+    var bolusTimestamp: Long? = null
     var carbsPumpId: Long? = null
+    var carbsTimestamp: Long? = null
+    var superBolusTemporaryBasal: TemporaryBasal? = null
 
-    fun createTherapyEvent(): TherapyEvent? =
-        if (mgdlGlucose != null || notes != null)
-            TherapyEvent(
-                timestamp = timestamp,
-                type = TherapyEvent.Type.NOTE,
-                glucoseUnit = TherapyEvent.GlucoseUnit.MGDL,
-                note = notes,
-                glucose = mgdlGlucose,
-                glucoseType = glucoseType
-            )
-        else null
+    enum class MeterType(val text: String) {
+        FINGER("Finger"),
+        SENSOR("Sensor"),
+        MANUAL("Manual");
+
+        fun toDbMeterType(): TherapyEvent.MeterType =
+            when (this) {
+                FINGER -> TherapyEvent.MeterType.FINGER
+                SENSOR -> TherapyEvent.MeterType.SENSOR
+                MANUAL -> TherapyEvent.MeterType.MANUAL
+            }
+    }
+
+    enum class BolusType {
+        NORMAL,
+        SMB,
+        PRIMING;
+
+        fun toDBbBolusType(): Bolus.Type =
+            when (this) {
+                NORMAL  -> Bolus.Type.NORMAL
+                SMB     -> Bolus.Type.SMB
+                PRIMING -> Bolus.Type.PRIMING
+            }
+    }
+
+    enum class EventType {
+        MEAL_BOLUS,
+        BOLUS_WIZARD,
+        CORRECTION_BOLUS,
+        CARBS_CORRECTION;
+
+        fun toDBbEventType(): TherapyEvent.Type =
+            when (this) {
+                MEAL_BOLUS       -> TherapyEvent.Type.MEAL_BOLUS
+                BOLUS_WIZARD     -> TherapyEvent.Type.BOLUS_WIZARD
+                CORRECTION_BOLUS -> TherapyEvent.Type.CORRECTION_BOLUS
+                CARBS_CORRECTION -> TherapyEvent.Type.CARBS_CORRECTION
+            }
+    }
+
+    fun createTherapyEvent(): TherapyEvent =
+        TherapyEvent(
+            timestamp = timestamp,
+            type = eventType.toDBbEventType(),
+            glucoseUnit = TherapyEvent.GlucoseUnit.MGDL,
+            note = notes,
+            glucose = mgdlGlucose,
+            glucoseType = glucoseType?.toDbMeterType()
+        )
 
     fun createBolus(): Bolus? =
         if (insulin != 0.0)
             Bolus(
-                timestamp = timestamp,
+                timestamp = bolusTimestamp ?: timestamp,
                 amount = insulin,
-                type = bolusType,
+                type = bolusType.toDBbBolusType(),
                 isBasalInsulin = false
             )
         else null
@@ -60,11 +106,25 @@ class DetailedBolusInfo {
     fun createCarbs(): Carbs? =
         if (carbs != 0.0)
             Carbs(
-                timestamp = timestamp,
+                timestamp = carbsTimestamp ?: T.mins(timestamp).msecs(),
                 amount = carbs,
-                duration = 0
+                duration = carbsDuration
             )
         else null
+
+    fun insertMealLinkTransaction(): InsertMealLinkTransaction {
+        // For NS make sure timestamps of bolus and carbs are different to avoid unwanted deduplication
+        bolusTimestamp = bolusTimestamp ?: timestamp
+        carbsTimestamp = carbsTimestamp ?: timestamp
+        if (bolusTimestamp == carbsTimestamp) carbsTimestamp = carbsTimestamp!! + 1000
+        return InsertMealLinkTransaction(
+            bolus = createBolus(),
+            carbs = createCarbs(),
+            bolusCalculatorResult = bolusCalculatorResult,
+            therapyEvent = createTherapyEvent(),
+            superBolusTemporaryBasal = superBolusTemporaryBasal
+        )
+    }
 
     fun toJsonString(): String =
         Gson().toJson(this)

@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context="info.nightscout.androidaps.plugins.treatments.fragments.TreatmentsTempTargetFragment">
+    tools:context=".plugins.treatments.fragments.TreatmentsBolusFragment">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -14,13 +14,22 @@
         <info.nightscout.androidaps.utils.ui.SingleClickButton
             android:id="@+id/refresh_from_nightscout"
             style="?android:attr/buttonStyle"
-            android:layout_width="0dp"
+            android:layout_width="0px"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
             android:layout_weight="1"
             android:drawableStart="@drawable/ic_refresh"
-            android:text="@string/refresheventsfromnightscout"
-            tools:visibility="visible" />
+            android:text="@string/nav_refreshtreatments" />
+
+        <info.nightscout.androidaps.utils.ui.SingleClickButton
+            android:id="@+id/delete_future_treatments"
+            style="?android:attr/buttonStyle"
+            android:layout_width="0px"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_weight="1"
+            android:drawableStart="@drawable/ic_remove"
+            android:text="@string/deletefuturetreatments" />
 
         <CheckBox
             android:id="@+id/show_invalidated"
@@ -37,7 +46,6 @@
             android:layout_gravity="center_vertical"
             android:contentDescription="@string/show_removed"
             app:srcCompat="@drawable/ic_visibility" />
-
 
     </LinearLayout>
 

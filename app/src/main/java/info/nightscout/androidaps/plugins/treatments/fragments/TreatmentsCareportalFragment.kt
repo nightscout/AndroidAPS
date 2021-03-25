@@ -120,28 +120,28 @@ class TreatmentsCareportalFragment : DaggerFragment() {
 
     fun swapAdapter() {
         val now = System.currentTimeMillis()
-        if (binding.showInvalidated.isChecked)
-            repository
-                .getTherapyEventDataIncludingInvalidFromTime(now - millsToThePast, false)
-                .observeOn(aapsSchedulers.main)
-                .subscribe { list -> binding.recyclerview.swapAdapter(RecyclerViewAdapter(list), true) }
-        else
-            repository
-                .getTherapyEventDataFromTime(now - millsToThePast, false)
-                .observeOn(aapsSchedulers.main)
-                .subscribe { list -> binding.recyclerview.swapAdapter(RecyclerViewAdapter(list), true) }
+        disposable +=
+            if (binding.showInvalidated.isChecked)
+                repository
+                    .getTherapyEventDataIncludingInvalidFromTime(now - millsToThePast, false)
+                    .observeOn(aapsSchedulers.main)
+                    .subscribe { list -> binding.recyclerview.swapAdapter(RecyclerViewAdapter(list), true) }
+            else
+                repository
+                    .getTherapyEventDataFromTime(now - millsToThePast, false)
+                    .observeOn(aapsSchedulers.main)
+                    .subscribe { list -> binding.recyclerview.swapAdapter(RecyclerViewAdapter(list), true) }
     }
 
     @Synchronized
     override fun onResume() {
         super.onResume()
         swapAdapter()
-        disposable.add(rxBus
+        disposable += rxBus
             .toObservable(EventTherapyEventChange::class.java)
             .observeOn(aapsSchedulers.main)
             .debounce(1L, TimeUnit.SECONDS)
             .subscribe({ swapAdapter() }, fabricPrivacy::logException)
-        )
         disposable += rxBus
             .toObservable(EventTreatmentUpdateGui::class.java) // TODO join with above
             .observeOn(aapsSchedulers.io)
@@ -193,10 +193,11 @@ class TreatmentsCareportalFragment : DaggerFragment() {
                     val therapyEvent = v.tag as TherapyEvent
                     activity?.let { activity ->
                         val text = resourceHelper.gs(R.string.eventtype) + ": " + translator.translate(therapyEvent.type.text) + "\n" +
-                            resourceHelper.gs(R.string.notes_label) + ": " + (therapyEvent.note ?: "") + "\n" +
+                            resourceHelper.gs(R.string.notes_label) + ": " + (therapyEvent.note
+                            ?: "") + "\n" +
                             resourceHelper.gs(R.string.date) + ": " + dateUtil.dateAndTimeString(therapyEvent.timestamp)
                         OKDialog.showConfirmation(activity, resourceHelper.gs(R.string.removerecord), text, Runnable {
-                            uel.log(Action.CAREPORTAL_REMOVED, therapyEvent.note , ValueWithUnit(therapyEvent.timestamp, Units.Timestamp), ValueWithUnit(therapyEvent.type.text, Units.TherapyEvent))
+                            uel.log(Action.CAREPORTAL_REMOVED, therapyEvent.note, ValueWithUnit(therapyEvent.timestamp, Units.Timestamp), ValueWithUnit(therapyEvent.type.text, Units.TherapyEvent))
                             disposable += repository.runTransactionForResult(InvalidateTherapyEventTransaction(therapyEvent.id))
                                 .subscribe({
                                     val id = therapyEvent.interfaceIDs.nightscoutId

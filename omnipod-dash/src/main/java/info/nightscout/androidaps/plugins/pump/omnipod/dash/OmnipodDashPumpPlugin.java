@@ -34,7 +34,7 @@ import info.nightscout.androidaps.utils.resources.ResourceHelper;
 
 @Singleton
 public class OmnipodDashPumpPlugin extends PumpPluginBase implements PumpInterface {
-    private static final PumpDescription PUMP_DESCRIPTION = new PumpDescription(PumpType.Omnipod_Dash);
+    private static final PumpDescription PUMP_DESCRIPTION = new PumpDescription(PumpType.OMNIPOD_DASH);
 
     private final AAPSLogger aapsLogger;
     private final ResourceHelper resourceHelper;

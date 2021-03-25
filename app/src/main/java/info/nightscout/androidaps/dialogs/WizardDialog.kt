@@ -1,5 +1,6 @@
 package info.nightscout.androidaps.dialogs
 
+import android.content.Context
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
@@ -16,7 +17,6 @@ import androidx.fragment.app.FragmentManager
 import dagger.android.HasAndroidInjector
 import dagger.android.support.DaggerDialogFragment
 import info.nightscout.androidaps.Constants
-import info.nightscout.androidaps.MainApp
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.data.Profile
 import info.nightscout.androidaps.database.AppRepository
@@ -32,7 +32,11 @@ import info.nightscout.androidaps.logging.LTag
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper
 import info.nightscout.androidaps.plugins.configBuilder.ConstraintChecker
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.IobCobCalculatorPlugin
-import info.nightscout.androidaps.utils.*
+import info.nightscout.androidaps.utils.DateUtil
+import info.nightscout.androidaps.utils.DecimalFormatter
+import info.nightscout.androidaps.utils.FabricPrivacy
+import info.nightscout.androidaps.utils.SafeParse
+import info.nightscout.androidaps.utils.ToastUtils
 import info.nightscout.androidaps.utils.extensions.toVisibility
 import info.nightscout.androidaps.utils.extensions.valueToUnits
 import info.nightscout.androidaps.utils.resources.ResourceHelper
@@ -51,7 +55,7 @@ class WizardDialog : DaggerDialogFragment() {
     @Inject lateinit var aapsLogger: AAPSLogger
     @Inject lateinit var aapsSchedulers: AapsSchedulers
     @Inject lateinit var constraintChecker: ConstraintChecker
-    @Inject lateinit var mainApp: MainApp
+    @Inject lateinit var ctx: Context
     @Inject lateinit var sp: SP
     @Inject lateinit var rxBus: RxBusWrapper
     @Inject lateinit var fabricPrivacy: FabricPrivacy
@@ -180,7 +184,7 @@ class WizardDialog : DaggerDialogFragment() {
         // profile spinner
         binding.profile.onItemSelectedListener = object : OnItemSelectedListener {
             override fun onNothingSelected(parent: AdapterView<*>?) {
-                ToastUtils.showToastInUiThread(mainApp, resourceHelper.gs(R.string.noprofileselected))
+                ToastUtils.showToastInUiThread(ctx, resourceHelper.gs(R.string.noprofileselected))
                 binding.ok.visibility = View.GONE
             }
 
@@ -245,7 +249,7 @@ class WizardDialog : DaggerDialogFragment() {
         val profileStore = activePlugin.activeProfileInterface.profile
 
         if (profile == null || profileStore == null) {
-            ToastUtils.showToastInUiThread(mainApp, resourceHelper.gs(R.string.noprofile))
+            ToastUtils.showToastInUiThread(ctx, resourceHelper.gs(R.string.noprofile))
             dismiss()
             return
         }
@@ -309,7 +313,7 @@ class WizardDialog : DaggerDialogFragment() {
         val carbsAfterConstraint = constraintChecker.applyCarbsConstraints(Constraint(carbs)).value()
         if (abs(carbs - carbsAfterConstraint) > 0.01) {
             binding.carbsInput.value = 0.0
-            ToastUtils.showToastInUiThread(mainApp, resourceHelper.gs(R.string.carbsconstraintapplied))
+            ToastUtils.showToastInUiThread(ctx, resourceHelper.gs(R.string.carbsconstraintapplied))
             return
         }
 
@@ -326,8 +330,8 @@ class WizardDialog : DaggerDialogFragment() {
 
         val carbTime = SafeParse.stringToInt(binding.carbTimeInput.text)
 
-        wizard = BolusWizard(mainApp).doCalc(specificProfile, profileName, tempTarget, carbsAfterConstraint, cob, bg, correction,
-            sp.getInt(R.string.key_boluswizard_percentage, 100).toDouble(),
+        wizard = BolusWizard(injector).doCalc(specificProfile, profileName, tempTarget, carbsAfterConstraint, cob, bg, correction,
+            sp.getInt(R.string.key_boluswizard_percentage, 100),
             binding.bgcheckbox.isChecked,
             binding.cobcheckbox.isChecked,
             binding.bolusiobcheckbox.isChecked,

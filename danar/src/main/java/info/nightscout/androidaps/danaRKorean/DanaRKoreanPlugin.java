@@ -19,7 +19,6 @@ import info.nightscout.androidaps.danar.R;
 import info.nightscout.androidaps.data.DetailedBolusInfo;
 import info.nightscout.androidaps.data.Profile;
 import info.nightscout.androidaps.data.PumpEnactResult;
-import info.nightscout.androidaps.database.entities.Bolus;
 import info.nightscout.androidaps.db.ExtendedBolus;
 import info.nightscout.androidaps.db.TemporaryBasal;
 import info.nightscout.androidaps.db.Treatment;
@@ -77,7 +76,7 @@ public class DanaRKoreanPlugin extends AbstractDanaRPlugin {
         getPluginDescription().description(R.string.description_pump_dana_r_korean);
 
         useExtendedBoluses = sp.getBoolean(R.string.key_danar_useextended, false);
-        pumpDescription.setPumpDescription(PumpType.DanaRKorean);
+        pumpDescription.setPumpDescription(PumpType.DANA_R_KOREAN);
     }
 
     @Override
@@ -165,7 +164,7 @@ public class DanaRKoreanPlugin extends AbstractDanaRPlugin {
         detailedBolusInfo.insulin = constraintChecker.applyBolusConstraints(new Constraint<>(detailedBolusInfo.insulin)).value();
         if (detailedBolusInfo.insulin > 0 || detailedBolusInfo.carbs > 0) {
             Treatment t = new Treatment();
-            t.isSMB = detailedBolusInfo.getBolusType() == Bolus.Type.SMB;
+            t.isSMB = detailedBolusInfo.getBolusType() == DetailedBolusInfo.BolusType.SMB;
             boolean connectionOK = false;
             if (detailedBolusInfo.insulin > 0 || detailedBolusInfo.carbs > 0)
                 connectionOK = sExecutionService.bolus(detailedBolusInfo.insulin, (int) detailedBolusInfo.carbs, detailedBolusInfo.carbTime, t);
@@ -326,7 +325,7 @@ public class DanaRKoreanPlugin extends AbstractDanaRPlugin {
 
     @NonNull @Override
     public PumpType model() {
-        return PumpType.DanaRKorean;
+        return PumpType.DANA_R_KOREAN;
     }
 
     private PumpEnactResult cancelRealTempBasal() {

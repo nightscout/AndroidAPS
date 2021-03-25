@@ -978,6 +978,7 @@
     <string name="randombg_short">BG</string>
     <string name="tools">Tools</string>
     <string name="show_calculation">Show calcuation</string>
+    <string name="show_removed">Show removed</string>
     <string name="clearqueueconfirm">Clear queue? All data in queue will be lost!</string>
     <string name="key_xdripstatus_detailediob" translatable="false">xdripstatus_detailediob</string>
     <string name="key_xdripstatus_showbgi" translatable="false">xdripstatus_showbgi</string>

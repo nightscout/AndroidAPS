@@ -338,7 +338,7 @@ open class APSResult @Inject constructor(val injector: HasAndroidInjector) {
                 }
                 // always report hightemp
                 if (pump.pumpDescription.tempBasalStyle == PumpDescription.PERCENT) {
-                    val pumpLimit = pump.pumpDescription.pumpType.tbrSettings.maxDose
+                    val pumpLimit = pump.pumpDescription.pumpType.tbrSettings?.maxDose ?: 0.0
                     if (percent.toDouble() == pumpLimit) {
                         aapsLogger.debug(LTag.APS, "TRUE: Pump limit")
                         return true
@@ -374,7 +374,7 @@ open class APSResult @Inject constructor(val injector: HasAndroidInjector) {
                 }
                 // always report hightemp
                 if (pump.pumpDescription.tempBasalStyle == PumpDescription.ABSOLUTE) {
-                    val pumpLimit = pump.pumpDescription.pumpType.tbrSettings.maxDose
+                    val pumpLimit = pump.pumpDescription.pumpType.tbrSettings?.maxDose ?: 0.0
                     if (rate == pumpLimit) {
                         aapsLogger.debug(LTag.APS, "TRUE: Pump limit")
                         return true

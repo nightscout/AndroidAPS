@@ -50,6 +50,6 @@ data class BolusCalculatorResult(
     var superbolusInsulin: Double,
     var wasTempTargetUsed: Boolean,
     var totalInsulin: Double,
-    var percentageCorrection: Double,
+    var percentageCorrection: Int,
     var profileName: String
 ) : TraceableDBEntry, DBEntryWithTime

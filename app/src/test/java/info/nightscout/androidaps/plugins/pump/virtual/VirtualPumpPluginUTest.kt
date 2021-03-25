@@ -46,7 +46,7 @@ class VirtualPumpPluginUTest : TestBase() {
     fun refreshConfiguration() {
         PowerMockito.`when`(sp.getString(R.string.key_virtualpump_type, "Generic AAPS")).thenReturn("Accu-Chek Combo")
         virtualPumpPlugin.refreshConfiguration()
-        Assert.assertEquals(PumpType.AccuChekCombo, virtualPumpPlugin.pumpType)
+        Assert.assertEquals(PumpType.ACCU_CHEK_COMBO, virtualPumpPlugin.pumpType)
     }
 
     @Test
@@ -55,6 +55,6 @@ class VirtualPumpPluginUTest : TestBase() {
         virtualPumpPlugin.refreshConfiguration()
         PowerMockito.`when`(sp.getString(R.string.key_virtualpump_type, "Generic AAPS")).thenReturn("Accu-Chek Combo")
         virtualPumpPlugin.refreshConfiguration()
-        Assert.assertEquals(PumpType.AccuChekCombo, virtualPumpPlugin.pumpType)
+        Assert.assertEquals(PumpType.ACCU_CHEK_COMBO, virtualPumpPlugin.pumpType)
     }
 }

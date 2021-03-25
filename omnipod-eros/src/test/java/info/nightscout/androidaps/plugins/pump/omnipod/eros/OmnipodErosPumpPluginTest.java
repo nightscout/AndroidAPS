@@ -30,7 +30,6 @@ import info.nightscout.androidaps.plugins.pump.omnipod.eros.manager.AapsOmnipodE
 import info.nightscout.androidaps.utils.resources.ResourceHelper;
 import info.nightscout.androidaps.utils.rx.TestAapsSchedulers;
 
-import static info.nightscout.androidaps.plugins.pump.omnipod.eros.driver.definition.OmnipodConstants.BASAL_STEP_DURATION;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyInt;
@@ -124,7 +123,7 @@ public class OmnipodErosPumpPluginTest {
         // When treatment
         result1 = plugin.setTempBasalPercent(80, 30, profile, false);
         // Then return sane values
-        assertEquals(result1.getAbsolute(), PumpType.Omnipod_Eros.determineCorrectBasalSize(500d * 0.8), 0.01d);
+        assertEquals(result1.getAbsolute(), PumpType.OMNIPOD_EROS.determineCorrectBasalSize(500d * 0.8), 0.01d);
         assertEquals(result1.getDuration(), 30);
 
         // Given weird basal

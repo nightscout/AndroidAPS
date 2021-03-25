@@ -11,15 +11,33 @@ data class InterfaceIDs(
 ) {
 
     enum class PumpType {
-        USER,
-        VIRTUAL_PUMP,
-        ACCU_CHEK_INSIGHT,
+        GENERIC_AAPS,
+        CELLNOVO,
         ACCU_CHEK_COMBO,
+        ACCU_CHEK_SPIRIT,
+        ACCU_CHEK_INSIGHT,
+        ACCU_CHEK_INSIGHT_BLUETOOTH,
+        ACCU_CHEK_SOLO,
+        ANIMAS_VIBE,
+        ANIMAS_PING,
         DANA_R,
+        DANA_R_KOREAN,
         DANA_RV2,
         DANA_RS,
-        MEDTRONIC,
         OMNIPOD_EROS,
-        OMNIPOD_DASH
+        OMNIPOD_DASH,
+        MEDTRONIC_512_517,
+        MEDTRONIC_515_715,
+        MEDTRONIC_522_722,
+        MEDTRONIC_523_723_REVEL,
+        MEDTRONIC_554_754_VEO,
+        MEDTRONIC_640G,
+        TANDEM_T_SLIM,
+        TANDEM_T_FLEX,
+        TANDEM_T_SLIM_G4,
+        TANDEM_T_SLIM_X2,
+        YPSOPUMP,
+        MDI,
+        USER
     }
 }

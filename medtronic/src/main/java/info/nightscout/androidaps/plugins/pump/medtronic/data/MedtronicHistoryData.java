@@ -22,7 +22,6 @@ import javax.inject.Singleton;
 import dagger.android.HasAndroidInjector;
 import info.nightscout.androidaps.data.DetailedBolusInfo;
 import info.nightscout.androidaps.database.AppRepository;
-import info.nightscout.androidaps.database.embedments.InterfaceIDs;
 import info.nightscout.androidaps.database.entities.TherapyEvent;
 import info.nightscout.androidaps.database.transactions.InsertTherapyEventIfNewTransaction;
 import info.nightscout.androidaps.db.DbObjectBase;
@@ -986,8 +985,8 @@ public class MedtronicHistoryData {
                 case Normal: {
                     DetailedBolusInfo detailedBolusInfo = new DetailedBolusInfo();
 
-                    detailedBolusInfo.timestamp = tryToGetByLocalTime(bolus.atechDateTime);
-                    detailedBolusInfo.setPumpType(InterfaceIDs.PumpType.MEDTRONIC);
+                    detailedBolusInfo.setBolusTimestamp(tryToGetByLocalTime(bolus.atechDateTime));
+                    detailedBolusInfo.setPumpType(PumpType.MEDTRONIC_512_712); // TODO grab real model
                     detailedBolusInfo.setPumpSerial(medtronicPumpStatus.serialNumber);
                     detailedBolusInfo.setBolusPumpId(bolus.getPumpId());
                     detailedBolusInfo.insulin = bolusDTO.getDeliveredAmount();

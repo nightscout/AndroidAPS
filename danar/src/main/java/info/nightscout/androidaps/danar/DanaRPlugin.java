@@ -17,7 +17,6 @@ import info.nightscout.androidaps.danar.services.DanaRExecutionService;
 import info.nightscout.androidaps.data.DetailedBolusInfo;
 import info.nightscout.androidaps.data.Profile;
 import info.nightscout.androidaps.data.PumpEnactResult;
-import info.nightscout.androidaps.database.entities.Bolus;
 import info.nightscout.androidaps.db.ExtendedBolus;
 import info.nightscout.androidaps.db.TemporaryBasal;
 import info.nightscout.androidaps.db.Treatment;
@@ -74,7 +73,7 @@ public class DanaRPlugin extends AbstractDanaRPlugin {
         this.fabricPrivacy = fabricPrivacy;
 
         useExtendedBoluses = sp.getBoolean(R.string.key_danar_useextended, false);
-        pumpDescription.setPumpDescription(PumpType.DanaR);
+        pumpDescription.setPumpDescription(PumpType.DANA_R);
     }
 
     @Override
@@ -163,7 +162,7 @@ public class DanaRPlugin extends AbstractDanaRPlugin {
         detailedBolusInfo.insulin = constraintChecker.applyBolusConstraints(new Constraint<>(detailedBolusInfo.insulin)).value();
         if (detailedBolusInfo.insulin > 0 || detailedBolusInfo.carbs > 0) {
             Treatment t = new Treatment();
-            t.isSMB = detailedBolusInfo.getBolusType() == Bolus.Type.SMB;
+            t.isSMB = detailedBolusInfo.getBolusType() == DetailedBolusInfo.BolusType.SMB;
             boolean connectionOK = false;
             if (detailedBolusInfo.insulin > 0 || detailedBolusInfo.carbs > 0)
                 connectionOK = sExecutionService.bolus(detailedBolusInfo.insulin, (int) detailedBolusInfo.carbs, detailedBolusInfo.carbTime, t);
@@ -324,7 +323,7 @@ public class DanaRPlugin extends AbstractDanaRPlugin {
 
     @NonNull @Override
     public PumpType model() {
-        return PumpType.DanaR;
+        return PumpType.DANA_R;
     }
 
     private PumpEnactResult cancelRealTempBasal() {

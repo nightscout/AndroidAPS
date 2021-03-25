@@ -68,7 +68,7 @@ class TestPumpPlugin(pluginDescription: PluginDescription,
     override fun cancelExtendedBolus(): PumpEnactResult = PumpEnactResult(injector).success(true)
     override fun getJSONStatus(profile: Profile, profileName: String, version: String): JSONObject = JSONObject()
     override fun manufacturer(): ManufacturerType = ManufacturerType.AndroidAPS
-    override fun model(): PumpType = PumpType.GenericAAPS
+    override fun model(): PumpType = PumpType.GENERIC_AAPS
     override fun serialNumber(): String = "1"
     override fun shortStatus(veryShort: Boolean): String = ""
     override val isFakingTempsByExtendedBoluses: Boolean = false

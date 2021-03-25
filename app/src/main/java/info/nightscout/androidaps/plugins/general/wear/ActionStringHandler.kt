@@ -15,9 +15,7 @@ import info.nightscout.androidaps.data.DetailedBolusInfo
 import info.nightscout.androidaps.data.Profile
 import info.nightscout.androidaps.database.AppRepository
 import info.nightscout.androidaps.database.ValueWrapper
-import info.nightscout.androidaps.database.entities.Bolus
 import info.nightscout.androidaps.database.entities.TemporaryTarget
-import info.nightscout.androidaps.database.entities.TherapyEvent
 import info.nightscout.androidaps.database.interfaces.end
 import info.nightscout.androidaps.database.transactions.CancelCurrentTemporaryTargetIfAnyTransaction
 import info.nightscout.androidaps.database.transactions.InsertTemporaryTargetAndCancelCurrentTransaction
@@ -33,7 +31,6 @@ import info.nightscout.androidaps.plugins.general.wear.events.EventWearConfirmAc
 import info.nightscout.androidaps.plugins.general.wear.events.EventWearInitiateAction
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.IobCobCalculatorPlugin
 import info.nightscout.androidaps.plugins.pump.insight.LocalInsightPlugin
-import info.nightscout.androidaps.plugins.treatments.CarbsGenerator
 import info.nightscout.androidaps.queue.Callback
 import info.nightscout.androidaps.utils.*
 import info.nightscout.androidaps.utils.extensions.valueToUnits
@@ -77,7 +74,6 @@ class ActionStringHandler @Inject constructor(
     private val danaRv2Plugin: DanaRv2Plugin,
     private val danaRSPlugin: DanaRSPlugin,
     private val danaPump: DanaPump,
-    private val carbsGenerator: CarbsGenerator,
     private val dateUtil: DateUtil,
     private val config: Config,
     private val databaseHelper: DatabaseHelperInterface,
@@ -221,7 +217,7 @@ class ActionStringHandler @Inject constructor(
 
             val bolusWizard = BolusWizard(injector).doCalc(profile, profileName, tempTarget,
                 carbsAfterConstraints, if (cobInfo.displayCob != null) cobInfo.displayCob!! else 0.0, bgReading.valueToUnits(profileFunction.getUnits()),
-                0.0, percentage.toDouble(), useBG, useCOB, useBolusIOB, useBasalIOB, false, useTT, useTrend, false)
+                0.0, percentage, useBG, useCOB, useBolusIOB, useBasalIOB, false, useTT, useTrend, false)
             if (abs(bolusWizard.insulinAfterConstraints - bolusWizard.calculatedTotalInsulin) >= 0.01) {
                 sendError("Insulin constraint violation!" +
                     "\nCannot deliver " + format.format(bolusWizard.calculatedTotalInsulin) + "!")
@@ -516,13 +512,13 @@ class ActionStringHandler @Inject constructor(
             generateTempTarget(duration, low, high)
         } else if ("wizard2" == act[0]) {
             if (lastBolusWizard != null) { //use last calculation as confirmed string matches
-                doBolus(lastBolusWizard!!.calculatedTotalInsulin, lastBolusWizard!!.carbs)
+                doBolus(lastBolusWizard!!.calculatedTotalInsulin, lastBolusWizard!!.carbs, null, 0)
                 lastBolusWizard = null
             }
         } else if ("bolus" == act[0]) {
             val insulin = SafeParse.stringToDouble(act[1])
             val carbs = SafeParse.stringToInt(act[2])
-            doBolus(insulin, carbs)
+            doBolus(insulin, carbs, null, 0)
         } else if ("cppset" == act[0]) {
             val timeshift = SafeParse.stringToInt(act[1])
             val percentage = SafeParse.stringToInt(act[2])
@@ -540,16 +536,6 @@ class ActionStringHandler @Inject constructor(
             notificationManager.cancel(Constants.notificationID)
         }
         lastBolusWizard = null
-    }
-
-    private fun doECarbs(carbs: Int, time: Long, duration: Int) {
-        if (carbs > 0) {
-            if (duration == 0) {
-                carbsGenerator.createCarb(carbs, time, TherapyEvent.Type.CARBS_CORRECTION, "watch")
-            } else {
-                carbsGenerator.generateCarbs(carbs, time, duration, "watch eCarbs")
-            }
-        }
     }
 
     private fun setCPP(timeshift: Int, percentage: Int) {
@@ -604,7 +590,7 @@ class ActionStringHandler @Inject constructor(
     private fun doFillBolus(amount: Double) {
         val detailedBolusInfo = DetailedBolusInfo()
         detailedBolusInfo.insulin = amount
-        detailedBolusInfo.bolusType = Bolus.Type.PRIMING
+        detailedBolusInfo.bolusType = DetailedBolusInfo.BolusType.PRIMING
         commandQueue.bolus(detailedBolusInfo, object : Callback() {
             override fun run() {
                 if (!result.success) {
@@ -616,13 +602,19 @@ class ActionStringHandler @Inject constructor(
         })
     }
 
-    private fun doBolus(amount: Double, carbs: Int) {
+    private fun doECarbs(carbs: Int, time: Long, duration: Int) {
+        doBolus(0.0, carbs, time, duration)
+    }
+
+    private fun doBolus(amount: Double, carbs: Int, carbsTime: Long?, carbsDuration: Int) {
         val detailedBolusInfo = DetailedBolusInfo()
         detailedBolusInfo.insulin = amount
         detailedBolusInfo.carbs = carbs.toDouble()
-        detailedBolusInfo.bolusType = Bolus.Type.NORMAL
+        detailedBolusInfo.bolusType = DetailedBolusInfo.BolusType.NORMAL
+        detailedBolusInfo.carbsTimestamp = carbsTime
+        detailedBolusInfo.carbsDuration = carbsDuration.toLong()
         val storesCarbs = activePlugin.activePump.pumpDescription.storesCarbInfo
-        if (detailedBolusInfo.insulin > 0 || storesCarbs) {
+        if (detailedBolusInfo.insulin > 0 || (storesCarbs && carbsDuration == 0)) {
             commandQueue.bolus(detailedBolusInfo, object : Callback() {
                 override fun run() {
                     if (!result.success) {

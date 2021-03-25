@@ -140,7 +140,7 @@ public class OmnipodErosPumpPlugin extends PumpPluginBase implements PumpInterfa
     private final DateUtil dateUtil;
     private final PumpDescription pumpDescription;
     private final ServiceConnection serviceConnection;
-    private final PumpType pumpType = PumpType.Omnipod_Eros;
+    private final PumpType pumpType = PumpType.OMNIPOD_EROS;
     private final CompositeDisposable disposables = new CompositeDisposable();
     private final NSUpload nsUpload;
 
@@ -1086,7 +1086,7 @@ public class OmnipodErosPumpPlugin extends PumpPluginBase implements PumpInterfa
         PumpEnactResult result = executeCommand(OmnipodCommandType.SET_BOLUS, () -> aapsOmnipodErosManager.bolus(detailedBolusInfo));
 
         if (result.getSuccess()) {
-            incrementStatistics(detailedBolusInfo.getBolusType() == Bolus.Type.SMB ? OmnipodErosStorageKeys.Statistics.SMB_BOLUSES_DELIVERED
+            incrementStatistics(detailedBolusInfo.getBolusType() == DetailedBolusInfo.BolusType.SMB ? OmnipodErosStorageKeys.Statistics.SMB_BOLUSES_DELIVERED
                     : OmnipodErosStorageKeys.Statistics.STANDARD_BOLUSES_DELIVERED);
 
             result.carbsDelivered(detailedBolusInfo.carbs);

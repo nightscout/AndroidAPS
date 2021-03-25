@@ -11,7 +11,6 @@ import info.nightscout.androidaps.R
 import info.nightscout.androidaps.databinding.TreatmentsFragmentBinding
 import info.nightscout.androidaps.events.EventExtendedBolusChange
 import info.nightscout.androidaps.interfaces.ActivePluginProvider
-import info.nightscout.androidaps.interfaces.ConfigInterface
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper
 import info.nightscout.androidaps.plugins.treatments.fragments.*
 import info.nightscout.androidaps.utils.FabricPrivacy
@@ -51,7 +50,7 @@ class TreatmentsFragment : DaggerFragment() {
         binding.extendedBoluses.visibility = (buildHelper.isEngineeringMode() && !activePlugin.activePump.isFakingTempsByExtendedBoluses).toVisibility()
 
         binding.treatments.setOnClickListener {
-            setFragment(TreatmentsBolusFragment())
+            setFragment(TreatmentsMealLinkFragment())
             setBackgroundColorOnSelected(it)
         }
         binding.extendedBoluses.setOnClickListener {
@@ -78,7 +77,7 @@ class TreatmentsFragment : DaggerFragment() {
             setFragment(TreatmentsUserEntryFragment())
             setBackgroundColorOnSelected(it)
         }
-        setFragment(TreatmentsBolusFragment())
+        setFragment(TreatmentsMealLinkFragment())
         setBackgroundColorOnSelected(binding.treatments)
     }
 

@@ -1,6 +1,7 @@
 package info.nightscout.androidaps.interfaces
 
 import info.nightscout.androidaps.data.Iob
+import info.nightscout.androidaps.database.entities.Bolus
 import info.nightscout.androidaps.db.Treatment
 import org.json.JSONObject
 
@@ -27,4 +28,5 @@ interface InsulinInterface : ConfigExportImportInterface{
     val dia: Double
 
     fun iobCalcForTreatment(treatment: Treatment, time: Long, dia: Double): Iob
+    fun iobCalcForTreatment(bolus: Bolus, time: Long, dia: Double): Iob
 }

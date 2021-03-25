@@ -91,8 +91,8 @@ class DanaHistoryActivity : NoSplashAppCompatActivity() {
         binding.status.visibility = View.GONE
 
         val pump = activePlugin.activePump
-        val isKorean = pump.pumpDescription.pumpType == PumpType.DanaRKorean
-        val isRS = pump.pumpDescription.pumpType == PumpType.DanaRS
+        val isKorean = pump.pumpDescription.pumpType == PumpType.DANA_R_KOREAN
+        val isRS = pump.pumpDescription.pumpType == PumpType.DANA_RS
 
         // Types
         val typeList = ArrayList<TypeList>()

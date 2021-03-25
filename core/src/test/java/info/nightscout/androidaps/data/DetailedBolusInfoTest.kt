@@ -49,12 +49,12 @@ class DetailedBolusInfoTest : TestBase() {
         detailedBolusInfo.glucoseType = TherapyEvent.MeterType.FINGER
 
         val therapyEvent = detailedBolusInfo.createTherapyEvent()
-        Assert.assertEquals(1000L, therapyEvent?.timestamp)
-        Assert.assertEquals(TherapyEvent.Type.NOTE, therapyEvent?.type)
-        Assert.assertEquals(TherapyEvent.GlucoseUnit.MGDL, therapyEvent?.glucoseUnit)
-        Assert.assertEquals("note", therapyEvent?.note)
-        Assert.assertEquals(180.0, therapyEvent?.glucose)
-        Assert.assertEquals(TherapyEvent.MeterType.FINGER, therapyEvent?.glucoseType)
+        Assert.assertEquals(1000L, therapyEvent.timestamp)
+        Assert.assertEquals(TherapyEvent.Type.NOTE, therapyEvent.type)
+        Assert.assertEquals(TherapyEvent.GlucoseUnit.MGDL, therapyEvent.glucoseUnit)
+        Assert.assertEquals("note", therapyEvent.note)
+        Assert.assertEquals(180.0, therapyEvent.glucose)
+        Assert.assertEquals(TherapyEvent.MeterType.FINGER, therapyEvent.glucoseType)
     }
 
     @Test
@@ -110,7 +110,7 @@ class DetailedBolusInfoTest : TestBase() {
             superbolusInsulin = 1.0,
             wasTempTargetUsed = true,
             totalInsulin = 15.0,
-            percentageCorrection = 50.0,
+            percentageCorrection = 50,
             profileName = "profile"
         )
 }

@@ -10,6 +10,7 @@ import info.nightscout.androidaps.R
 import info.nightscout.androidaps.activities.ErrorHelperActivity
 import info.nightscout.androidaps.data.DetailedBolusInfo
 import info.nightscout.androidaps.data.Profile
+import info.nightscout.androidaps.database.AppRepository
 import info.nightscout.androidaps.database.entities.BolusCalculatorResult
 import info.nightscout.androidaps.database.entities.TemporaryTarget
 import info.nightscout.androidaps.database.entities.TherapyEvent
@@ -22,6 +23,7 @@ import info.nightscout.androidaps.logging.UserEntryLogger
 import info.nightscout.androidaps.plugins.aps.loop.LoopPlugin
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper
 import info.nightscout.androidaps.plugins.configBuilder.ConstraintChecker
+import info.nightscout.androidaps.plugins.general.nsclient.NSUpload
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.GlucoseStatus
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.GlucoseStatusProvider
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.IobCobCalculatorPlugin
@@ -35,6 +37,8 @@ import info.nightscout.androidaps.utils.alertDialogs.OKDialog
 import info.nightscout.androidaps.utils.extensions.formatColor
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 import info.nightscout.androidaps.utils.sharedPreferences.SP
+import io.reactivex.disposables.CompositeDisposable
+import io.reactivex.rxkotlin.plusAssign
 import java.util.*
 import javax.inject.Inject
 import kotlin.math.abs
@@ -58,6 +62,10 @@ class BolusWizard @Inject constructor(
     @Inject lateinit var uel: UserEntryLogger
     @Inject lateinit var carbTimer: CarbTimer
     @Inject lateinit var glucoseStatusProvider: GlucoseStatusProvider
+    @Inject lateinit var repository: AppRepository
+    @Inject lateinit var nsUpload: NSUpload
+
+    private val disposable = CompositeDisposable()
 
     init {
         injector.androidInjector().inject(this)
@@ -112,7 +120,7 @@ class BolusWizard @Inject constructor(
     var cob: Double = 0.0
     var bg: Double = 0.0
     private var correction: Double = 0.0
-    private var percentageCorrection: Double = 0.0
+    private var percentageCorrection: Int = 0
     private var useBg: Boolean = false
     private var useCob: Boolean = false
     private var includeBolusIOB: Boolean = false
@@ -132,7 +140,7 @@ class BolusWizard @Inject constructor(
                cob: Double,
                bg: Double,
                correction: Double,
-               percentageCorrection: Double = 100.0,
+               percentageCorrection: Int = 100,
                useBg: Boolean,
                useCob: Boolean,
                includeBolusIOB: Boolean,
@@ -276,7 +284,7 @@ class BolusWizard @Inject constructor(
 
         val actions: LinkedList<String> = LinkedList()
         if (insulinAfterConstraints > 0) {
-            val pct = if (percentageCorrection != 100.0) " (" + percentageCorrection.toInt() + "%)" else ""
+            val pct = if (percentageCorrection != 100) " ($percentageCorrection%)" else ""
             actions.add(resourceHelper.gs(R.string.bolus) + ": " + resourceHelper.gs(R.string.formatinsulinunits, insulinAfterConstraints).formatColor(resourceHelper, R.color.bolus) + pct)
         }
         if (carbs > 0 && !advisor) {
@@ -328,16 +336,16 @@ class BolusWizard @Inject constructor(
         val confirmMessage = confirmMessageAfterConstraints(advisor = true)
         OKDialog.showConfirmation(ctx, resourceHelper.gs(R.string.boluswizard), confirmMessage, {
             DetailedBolusInfo().apply {
-                eventType = TherapyEvent.Type.CORRECTION_BOLUS
+                eventType = DetailedBolusInfo.EventType.CORRECTION_BOLUS
                 insulin = insulinAfterConstraints
                 carbs = 0.0
                 context = ctx
                 mgdlGlucose = Profile.toMgdl(bg, profile.units)
-                glucoseType = TherapyEvent.MeterType.MANUAL
+                glucoseType = DetailedBolusInfo.MeterType.MANUAL
                 carbTime = 0
                 bolusCalculatorResult = createBolusCalculatorResult()
                 notes = this@BolusWizard.notes
-                uel.log(Action.BOLUS_ADVISOR, notes, ValueWithUnit(eventType, Units.TherapyEvent), ValueWithUnit(insulinAfterConstraints, Units.U))
+                uel.log(Action.BOLUS_ADVISOR, notes, ValueWithUnit(eventType.toDBbEventType(), Units.TherapyEvent), ValueWithUnit(insulinAfterConstraints, Units.U))
                 if (insulin > 0) {
                     commandQueue.bolus(this, object : Callback() {
                         override fun run() {
@@ -391,26 +399,44 @@ class BolusWizard @Inject constructor(
                     }
                 }
                 DetailedBolusInfo().apply {
-                    eventType = TherapyEvent.Type.BOLUS_WIZARD
+                    eventType = DetailedBolusInfo.EventType.BOLUS_WIZARD
                     insulin = insulinAfterConstraints
                     carbs = this@BolusWizard.carbs.toDouble()
                     context = ctx
                     mgdlGlucose = Profile.toMgdl(bg, profile.units)
-                    glucoseType = TherapyEvent.MeterType.MANUAL
+                    glucoseType = DetailedBolusInfo.MeterType.MANUAL
                     carbTime = this@BolusWizard.carbTime
                     bolusCalculatorResult = createBolusCalculatorResult()
                     notes = this@BolusWizard.notes
-                    uel.log(Action.BOLUS, notes, ValueWithUnit(eventType, Units.TherapyEvent), ValueWithUnit(insulinAfterConstraints, Units.U), ValueWithUnit(this@BolusWizard.carbs, Units.G, this@BolusWizard.carbs != 0), ValueWithUnit(carbTime, Units.M, carbTime != 0))
                     if (insulin > 0 || pump.pumpDescription.storesCarbInfo) {
                         commandQueue.bolus(this, object : Callback() {
                             override fun run() {
                                 if (!result.success) {
                                     ErrorHelperActivity.runAlarm(ctx, result.comment, resourceHelper.gs(R.string.treatmentdeliveryerror), R.raw.boluserror)
-                                }
+                                } else
+                                    uel.log(Action.BOLUS, notes,
+                                        ValueWithUnit(eventType.toDBbEventType(), Units.TherapyEvent),
+                                        ValueWithUnit(insulinAfterConstraints, Units.U),
+                                        ValueWithUnit(this@BolusWizard.carbs, Units.G, this@BolusWizard.carbs != 0),
+                                        ValueWithUnit(carbTime, Units.M, carbTime != 0)
+                                    )
                             }
                         })
                     } else {
-                        activePlugin.activeTreatments.addToHistoryTreatment(this, false)
+                        disposable += repository.runTransactionForResult(insertMealLinkTransaction())
+                            .subscribe({ result ->
+                                result.inserted.forEach { inserted ->
+                                    uel.log(Action.BOLUS, notes,
+                                        ValueWithUnit(eventType.toDBbEventType(), Units.TherapyEvent),
+                                        ValueWithUnit(insulinAfterConstraints, Units.U),
+                                        ValueWithUnit(this@BolusWizard.carbs, Units.G, this@BolusWizard.carbs != 0),
+                                        ValueWithUnit(carbTime, Units.M, carbTime != 0)
+                                    )
+                                    nsUpload.uploadMealLinkRecord(inserted)
+                                }
+                            }, {
+                                aapsLogger.error(LTag.BGSOURCE, "Error while saving meal link", it)
+                            })
                     }
                 }
                 if (useAlarm && carbs > 0 && carbTime > 0) {

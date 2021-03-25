@@ -6,7 +6,6 @@ import info.nightscout.androidaps.danars.R
 import info.nightscout.androidaps.danars.encryption.BleEncryption
 import info.nightscout.androidaps.data.DetailedBolusInfo
 import info.nightscout.androidaps.database.AppRepository
-import info.nightscout.androidaps.database.embedments.InterfaceIDs
 import info.nightscout.androidaps.database.entities.TherapyEvent
 import info.nightscout.androidaps.database.transactions.InsertTherapyEventIfNewTransaction
 import info.nightscout.androidaps.db.ExtendedBolus
@@ -18,6 +17,7 @@ import info.nightscout.androidaps.logging.LTag
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper
 import info.nightscout.androidaps.plugins.general.nsclient.NSUpload
 import info.nightscout.androidaps.plugins.pump.common.bolusInfo.DetailedBolusInfoStorage
+import info.nightscout.androidaps.plugins.pump.common.defs.PumpType
 import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 import info.nightscout.androidaps.utils.sharedPreferences.SP
@@ -133,8 +133,8 @@ open class DanaRS_Packet_APS_History_Events(
             DanaPump.BOLUS             -> {
                 val detailedBolusInfo = detailedBolusInfoStorage.findDetailedBolusInfo(datetime, param1 / 100.0)
                     ?: DetailedBolusInfo()
-                detailedBolusInfo.timestamp = datetime
-                detailedBolusInfo.pumpType = InterfaceIDs.PumpType.DANA_RS
+                detailedBolusInfo.bolusTimestamp = datetime
+                detailedBolusInfo.pumpType = PumpType.DANA_RS
                 detailedBolusInfo.pumpSerial = danaPump.serialNumber
                 detailedBolusInfo.bolusPumpId = pumpId
                 detailedBolusInfo.insulin = param1 / 100.0
@@ -146,8 +146,8 @@ open class DanaRS_Packet_APS_History_Events(
             DanaPump.DUALBOLUS         -> {
                 val detailedBolusInfo = detailedBolusInfoStorage.findDetailedBolusInfo(datetime, param1 / 100.0)
                     ?: DetailedBolusInfo()
-                detailedBolusInfo.timestamp = datetime
-                detailedBolusInfo.pumpType = InterfaceIDs.PumpType.DANA_RS
+                detailedBolusInfo.bolusTimestamp = datetime
+                detailedBolusInfo.pumpType = PumpType.DANA_RS
                 detailedBolusInfo.pumpSerial = danaPump.serialNumber
                 detailedBolusInfo.bolusPumpId = pumpId
                 detailedBolusInfo.insulin = param1 / 100.0
@@ -209,8 +209,8 @@ open class DanaRS_Packet_APS_History_Events(
             DanaPump.CARBS             -> {
                 val emptyCarbsInfo = DetailedBolusInfo()
                 emptyCarbsInfo.carbs = param1.toDouble()
-                emptyCarbsInfo.timestamp = datetime
-                emptyCarbsInfo.pumpType = InterfaceIDs.PumpType.DANA_RS
+                emptyCarbsInfo.carbsTimestamp = datetime
+                emptyCarbsInfo.pumpType = PumpType.DANA_RS
                 emptyCarbsInfo.pumpSerial = danaPump.serialNumber
                 emptyCarbsInfo.carbsPumpId = pumpId
                 val newRecord = activePlugin.activeTreatments.addToHistoryTreatment(emptyCarbsInfo, false)

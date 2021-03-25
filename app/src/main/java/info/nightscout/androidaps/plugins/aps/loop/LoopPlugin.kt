@@ -16,7 +16,6 @@ import info.nightscout.androidaps.data.DetailedBolusInfo
 import info.nightscout.androidaps.data.Profile
 import info.nightscout.androidaps.data.PumpEnactResult
 import info.nightscout.androidaps.database.AppRepository
-import info.nightscout.androidaps.database.entities.Bolus
 import info.nightscout.androidaps.database.entities.TherapyEvent
 import info.nightscout.androidaps.database.transactions.InsertTherapyEventIfNewTransaction
 import info.nightscout.androidaps.events.EventAcceptOpenLoopChange
@@ -596,9 +595,9 @@ open class LoopPlugin @Inject constructor(
         // deliver SMB
         val detailedBolusInfo = DetailedBolusInfo()
         detailedBolusInfo.lastKnownBolusTime = treatmentsPlugin.lastBolusTime
-        detailedBolusInfo.eventType = TherapyEvent.Type.CORRECTION_BOLUS
+        detailedBolusInfo.eventType = DetailedBolusInfo.EventType.CORRECTION_BOLUS
         detailedBolusInfo.insulin = request.smb
-        detailedBolusInfo.bolusType = Bolus.Type.SMB
+        detailedBolusInfo.bolusType = DetailedBolusInfo.BolusType.SMB
         detailedBolusInfo.deliverAtTheLatest = request.deliverAt
         aapsLogger.debug(LTag.APS, "applyAPSRequest: bolus()")
         commandQueue.bolus(detailedBolusInfo, callback)

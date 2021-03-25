@@ -23,6 +23,7 @@ class InsertMealLinkTransaction(
         val therapyEventId = if (therapyEvent != null) database.therapyEventDao.insert(therapyEvent) else null
 
         val mealLink = MealLink(
+            timestamp = System.currentTimeMillis(),
             bolusId = bolusId,
             carbsId = carbsId,
             bolusCalcResultId = bolusCalculatorResultId,
@@ -31,13 +32,14 @@ class InsertMealLinkTransaction(
         )
 
         database.mealLinkDao.insert(mealLink)
-        result.inserted.add(mealLink)
+        val full = MealLinkLoaded(mealLink, bolus, carbs, bolusCalculatorResult, superBolusTemporaryBasal, therapyEvent)
+        result.inserted.add(full)
 
         return result
     }
 
     class TransactionResult {
 
-        val inserted = mutableListOf<MealLink>()
+        val inserted = mutableListOf<MealLinkLoaded>()
     }
 }

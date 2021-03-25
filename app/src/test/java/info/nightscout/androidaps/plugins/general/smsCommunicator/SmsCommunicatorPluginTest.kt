@@ -170,7 +170,7 @@ class SmsCommunicatorPluginTest : TestBaseWithProfile() {
         `when`(virtualPumpPlugin.shortStatus(ArgumentMatchers.anyBoolean())).thenReturn("Virtual Pump")
         `when`(virtualPumpPlugin.isSuspended()).thenReturn(false)
         `when`(virtualPumpPlugin.pumpDescription).thenReturn(PumpDescription())
-        `when`(virtualPumpPlugin.model()).thenReturn(PumpType.GenericAAPS)
+        `when`(virtualPumpPlugin.model()).thenReturn(PumpType.GENERIC_AAPS)
 
         `when`(treatmentsInterface.lastCalculationTreatments).thenReturn(IobTotal(0))
         `when`(treatmentsInterface.lastCalculationTempBasals).thenReturn(IobTotal(0))

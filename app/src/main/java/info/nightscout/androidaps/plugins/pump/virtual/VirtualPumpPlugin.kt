@@ -40,7 +40,7 @@ import javax.inject.Singleton
 import kotlin.math.min
 
 @Singleton
-open class VirtualPumpPlugin @Inject constructor(
+class VirtualPumpPlugin @Inject constructor(
     injector: HasAndroidInjector,
     aapsLogger: AAPSLogger,
     private val rxBus: RxBusWrapper,
@@ -347,7 +347,7 @@ open class VirtualPumpPlugin @Inject constructor(
     }
 
     override fun manufacturer(): ManufacturerType {
-        return pumpDescription.pumpType.manufacturer
+        return pumpDescription.pumpType.manufacturer ?: ManufacturerType.AndroidAPS
     }
 
     override fun model(): PumpType {
@@ -367,7 +367,7 @@ open class VirtualPumpPlugin @Inject constructor(
     }
 
     fun refreshConfiguration() {
-        val pumpType = sp.getString(R.string.key_virtualpump_type, PumpType.GenericAAPS.description)
+        val pumpType = sp.getString(R.string.key_virtualpump_type, PumpType.GENERIC_AAPS.description)
         val pumpTypeNew = PumpType.getByDescription(pumpType)
         aapsLogger.debug(LTag.PUMP, "Pump in configuration: $pumpType, PumpType object: $pumpTypeNew")
         if (this.pumpType == pumpTypeNew) return

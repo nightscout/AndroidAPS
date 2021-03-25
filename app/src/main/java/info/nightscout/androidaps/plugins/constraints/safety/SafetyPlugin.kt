@@ -124,7 +124,7 @@ class SafetyPlugin @Inject constructor(
         val pump = activePlugin.activePump
         // check for pump max
         if (pump.pumpDescription.tempBasalStyle == PumpDescription.ABSOLUTE) {
-            val pumpLimit = pump.pumpDescription.pumpType.tbrSettings.maxDose
+            val pumpLimit = pump.pumpDescription.pumpType.tbrSettings?.maxDose ?: 0.0
             absoluteRate.setIfSmaller(aapsLogger, pumpLimit, String.format(resourceHelper.gs(R.string.limitingbasalratio), pumpLimit, resourceHelper.gs(R.string.pumplimit)), this)
         }
 
@@ -147,7 +147,7 @@ class SafetyPlugin @Inject constructor(
         percentRateAfterConst = if (percentRateAfterConst < 100) Round.ceilTo(percentRateAfterConst.toDouble(), pump.pumpDescription.tempPercentStep.toDouble()).toInt() else Round.floorTo(percentRateAfterConst.toDouble(), pump.pumpDescription.tempPercentStep.toDouble()).toInt()
         percentRate[aapsLogger, percentRateAfterConst, String.format(resourceHelper.gs(R.string.limitingpercentrate), percentRateAfterConst, resourceHelper.gs(R.string.pumplimit))] = this
         if (pump.pumpDescription.tempBasalStyle == PumpDescription.PERCENT) {
-            val pumpLimit = pump.pumpDescription.pumpType.tbrSettings.maxDose
+            val pumpLimit = pump.pumpDescription.pumpType.tbrSettings?.maxDose ?: 0.0
             percentRate.setIfSmaller(aapsLogger, pumpLimit.toInt(), String.format(resourceHelper.gs(R.string.limitingbasalratio), pumpLimit, resourceHelper.gs(R.string.pumplimit)), this)
         }
         return percentRate

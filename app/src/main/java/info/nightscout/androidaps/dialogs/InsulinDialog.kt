@@ -16,7 +16,6 @@ import info.nightscout.androidaps.data.DetailedBolusInfo
 import info.nightscout.androidaps.data.Profile
 import info.nightscout.androidaps.database.AppRepository
 import info.nightscout.androidaps.database.entities.TemporaryTarget
-import info.nightscout.androidaps.database.entities.TherapyEvent
 import info.nightscout.androidaps.database.entities.UserEntry.Action
 import info.nightscout.androidaps.database.entities.UserEntry.Units
 import info.nightscout.androidaps.database.entities.UserEntry.ValueWithUnit
@@ -206,22 +205,32 @@ class InsulinDialog : DialogFragmentWithDate() {
                     }
                     if (insulinAfterConstraints > 0) {
                         val detailedBolusInfo = DetailedBolusInfo()
-                        detailedBolusInfo.eventType = TherapyEvent.Type.CORRECTION_BOLUS
+                        detailedBolusInfo.eventType = DetailedBolusInfo.EventType.CORRECTION_BOLUS
                         detailedBolusInfo.insulin = insulinAfterConstraints
                         detailedBolusInfo.context = context
                         detailedBolusInfo.notes = notes
                         if (recordOnlyChecked) {
-                            uel.log(Action.BOLUS_RECORD, notes, ValueWithUnit(insulinAfterConstraints, Units.U), ValueWithUnit(timeOffset, Units.M, timeOffset != 0))
-                            detailedBolusInfo.timestamp = time
-                            activePlugin.activeTreatments.addToHistoryTreatment(detailedBolusInfo, false)
+                            detailedBolusInfo.bolusTimestamp = time
+                            disposable += repository.runTransactionForResult(detailedBolusInfo.insertMealLinkTransaction())
+                                .subscribe({ result ->
+                                result.inserted.forEach {
+                                    uel.log(Action.BOLUS_RECORD, notes,
+                                        ValueWithUnit(it.bolus?.amount ?: 0.0, Units.U),
+                                        ValueWithUnit(timeOffset, Units.M, timeOffset != 0)
+                                    )
+                                    nsUpload.uploadMealLinkRecord(it)
+                                }
+                            }, {
+                                aapsLogger.error(LTag.BGSOURCE, "Error while saving meal link", it)
+                            })
                         } else {
-                            uel.log(Action.BOLUS, notes, ValueWithUnit(insulinAfterConstraints, Units.U))
-                            detailedBolusInfo.timestamp = DateUtil.now()
                             commandQueue.bolus(detailedBolusInfo, object : Callback() {
                                 override fun run() {
                                     if (!result.success) {
                                         ErrorHelperActivity.runAlarm(ctx, result.comment, resourceHelper.gs(R.string.treatmentdeliveryerror), info.nightscout.androidaps.dana.R.raw.boluserror)
-                                    }
+                                    } else
+                                        uel.log(Action.BOLUS, notes, ValueWithUnit(insulinAfterConstraints, Units.U))
+
                                 }
                             })
                         }

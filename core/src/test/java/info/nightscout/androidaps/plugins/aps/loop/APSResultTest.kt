@@ -49,7 +49,7 @@ class APSResultTest : TestBaseWithProfile() {
         // BASAL RATE IN TEST PROFILE IS 1U/h
 
         // **** PERCENT pump ****
-        testPumpPlugin.pumpDescription.setPumpDescription(PumpType.Cellnovo1) // % based
+        testPumpPlugin.pumpDescription.setPumpDescription(PumpType.CELLNOVO) // % based
         apsResult.usePercent(true)
 
         // closed loop mode return original request
@@ -107,7 +107,7 @@ class APSResultTest : TestBaseWithProfile() {
         Assert.assertEquals(true, apsResult.isChangeRequested)
 
         // **** ABSOLUTE pump ****
-        testPumpPlugin.pumpDescription.setPumpDescription(PumpType.Medtronic_515_715) // U/h based
+        testPumpPlugin.pumpDescription.setPumpDescription(PumpType.MEDTRONIC_515_715) // U/h based
         apsResult.usePercent(false)
 
         // open loop

@@ -12,7 +12,7 @@ import info.nightscout.androidaps.Config
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.activities.ErrorHelperActivity
 import info.nightscout.androidaps.data.DetailedBolusInfo
-import info.nightscout.androidaps.database.entities.TherapyEvent
+import info.nightscout.androidaps.database.AppRepository
 import info.nightscout.androidaps.database.entities.UserEntry.Action
 import info.nightscout.androidaps.database.entities.UserEntry.Units
 import info.nightscout.androidaps.database.entities.UserEntry.ValueWithUnit
@@ -20,8 +20,10 @@ import info.nightscout.androidaps.databinding.DialogTreatmentBinding
 import info.nightscout.androidaps.interfaces.ActivePluginProvider
 import info.nightscout.androidaps.interfaces.CommandQueueProvider
 import info.nightscout.androidaps.interfaces.Constraint
+import info.nightscout.androidaps.logging.LTag
 import info.nightscout.androidaps.logging.UserEntryLogger
 import info.nightscout.androidaps.plugins.configBuilder.ConstraintChecker
+import info.nightscout.androidaps.plugins.general.nsclient.NSUpload
 import info.nightscout.androidaps.queue.Callback
 import info.nightscout.androidaps.utils.DecimalFormatter
 import info.nightscout.androidaps.utils.HtmlHelper
@@ -30,6 +32,8 @@ import info.nightscout.androidaps.utils.ToastUtils
 import info.nightscout.androidaps.utils.alertDialogs.OKDialog
 import info.nightscout.androidaps.utils.extensions.formatColor
 import info.nightscout.androidaps.utils.resources.ResourceHelper
+import io.reactivex.disposables.CompositeDisposable
+import io.reactivex.rxkotlin.plusAssign
 import java.text.DecimalFormat
 import java.util.*
 import javax.inject.Inject
@@ -44,6 +48,10 @@ class TreatmentDialog : DialogFragmentWithDate() {
     @Inject lateinit var ctx: Context
     @Inject lateinit var config: Config
     @Inject lateinit var uel: UserEntryLogger
+    @Inject lateinit var nsUpload: NSUpload
+    @Inject lateinit var repository: AppRepository
+
+    private val disposable = CompositeDisposable()
 
     private val textWatcher: TextWatcher = object : TextWatcher {
         override fun afterTextChanged(s: Editable) {}
@@ -131,10 +139,9 @@ class TreatmentDialog : DialogFragmentWithDate() {
         if (insulinAfterConstraints > 0 || carbsAfterConstraints > 0) {
             activity?.let { activity ->
                 OKDialog.showConfirmation(activity, resourceHelper.gs(R.string.overview_treatment_label), HtmlHelper.fromHtml(Joiner.on("<br/>").join(actions)), {
-                    uel.log(Action.TREATMENT, ValueWithUnit(insulin, Units.U, insulin != 0.0), ValueWithUnit(carbs, Units.G, carbs != 0))
                     val detailedBolusInfo = DetailedBolusInfo()
-                    if (insulinAfterConstraints == 0.0) detailedBolusInfo.eventType = TherapyEvent.Type.CARBS_CORRECTION
-                    if (carbsAfterConstraints == 0) detailedBolusInfo.eventType = TherapyEvent.Type.CORRECTION_BOLUS
+                    if (insulinAfterConstraints == 0.0) detailedBolusInfo.eventType = DetailedBolusInfo.EventType.CARBS_CORRECTION
+                    if (carbsAfterConstraints == 0) detailedBolusInfo.eventType = DetailedBolusInfo.EventType.CORRECTION_BOLUS
                     detailedBolusInfo.insulin = insulinAfterConstraints
                     detailedBolusInfo.carbs = carbsAfterConstraints.toDouble()
                     detailedBolusInfo.context = context
@@ -143,11 +150,27 @@ class TreatmentDialog : DialogFragmentWithDate() {
                             override fun run() {
                                 if (!result.success) {
                                     ErrorHelperActivity.runAlarm(ctx, result.comment, resourceHelper.gs(R.string.treatmentdeliveryerror), info.nightscout.androidaps.dana.R.raw.boluserror)
-                                }
+                                } else
+                                    uel.log(Action.TREATMENT,
+                                        ValueWithUnit(insulin, Units.U, insulin != 0.0),
+                                        ValueWithUnit(carbs, Units.G, carbs != 0)
+                                    )
                             }
                         })
-                    } else
-                        activePlugin.activeTreatments.addToHistoryTreatment(detailedBolusInfo, false)
+                    } else {
+                        disposable += repository.runTransactionForResult(detailedBolusInfo.insertMealLinkTransaction())
+                            .subscribe({ result ->
+                                result.inserted.forEach {
+                                    uel.log(Action.TREATMENT,
+                                        ValueWithUnit(insulin, Units.U, insulin != 0.0),
+                                        ValueWithUnit(carbs, Units.G, carbs != 0)
+                                    )
+                                    nsUpload.uploadMealLinkRecord(it)
+                                }
+                            }, {
+                                aapsLogger.error(LTag.BGSOURCE, "Error while saving meal link", it)
+                            })
+                    }
                 })
             }
         } else

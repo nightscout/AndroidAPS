@@ -125,7 +125,7 @@ class QuickWizardEntry @Inject constructor(private val injector: HasAndroidInjec
         } else if (useTrend() == NEGATIVE_ONLY && glucoseStatus != null && glucoseStatus.shortAvgDelta < 0) {
             trend = true
         }
-        val percentage = sp.getDouble(R.string.key_boluswizard_percentage, 100.0)
+        val percentage = sp.getInt(R.string.key_boluswizard_percentage, 100)
         return BolusWizard(injector).doCalc(profile, profileName, tempTarget, carbs(), cob, bg, 0.0, percentage, true, useCOB() == YES, bolusIOB, basalIOB, superBolus, useTempTarget() == YES, trend, false, "QuickWizard")
     }
 
