@@ -197,7 +197,7 @@ class TreatmentsTempTargetFragment : DaggerFragment() {
                         ${dateUtil.dateAndTimeString(tempTarget.timestamp)}
                         """.trimIndent(),
                             { _: DialogInterface?, _: Int ->
-                                uel.log(Action.TT_REMOVED, XXXValueWithUnit.Timestamp(tempTarget.timestamp), XXXValueWithUnit.TherapyEvent(tempTarget.reason.text), XXXValueWithUnit.Mgdl(tempTarget.lowTarget), XXXValueWithUnit.Mgdl(tempTarget.highTarget).takeIf { tempTarget.lowTarget != tempTarget.highTarget }, XXXValueWithUnit.Minute(tempTarget.duration.toInt()))
+                                uel.log(Action.TT_REMOVED, XXXValueWithUnit.Timestamp(tempTarget.timestamp), XXXValueWithUnit.TherapyEventTTReason(tempTarget.reason), XXXValueWithUnit.Mgdl(tempTarget.lowTarget), XXXValueWithUnit.Mgdl(tempTarget.highTarget).takeIf { tempTarget.lowTarget != tempTarget.highTarget }, XXXValueWithUnit.Minute(tempTarget.duration.toInt()))
                                 disposable += repository.runTransactionForResult(InvalidateTemporaryTargetTransaction(tempTarget.id))
                                     .subscribe({
                                         val id = tempTarget.interfaceIDs.nightscoutId

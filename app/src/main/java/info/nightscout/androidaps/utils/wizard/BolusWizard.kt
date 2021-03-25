@@ -340,7 +340,7 @@ class BolusWizard @Inject constructor(
         val confirmMessage = confirmMessageAfterConstraints(advisor = true)
         OKDialog.showConfirmation(ctx, resourceHelper.gs(R.string.boluswizard), confirmMessage, {
             DetailedBolusInfo().apply {
-                eventType = TherapyEvent.Type.CORRECTION_BOLUS.text
+                eventType = TherapyEvent.Type.CORRECTION_BOLUS
                 insulin = insulinAfterConstraints
                 carbs = 0.0
                 context = ctx
@@ -350,7 +350,7 @@ class BolusWizard @Inject constructor(
                 boluscalc = nsJSON()
                 source = Source.USER
                 notes = this@BolusWizard.notes
-                uel.log(Action.BOLUS_ADVISOR, notes, XXXValueWithUnit.TherapyEvent(eventType), XXXValueWithUnit.Insulin(insulinAfterConstraints))
+                uel.log(Action.BOLUS_ADVISOR, notes, XXXValueWithUnit.TherapyEventType(eventType), XXXValueWithUnit.Insulin(insulinAfterConstraints))
                 if (insulin > 0) {
                     commandQueue.bolus(this, object : Callback() {
                         override fun run() {
@@ -404,7 +404,7 @@ class BolusWizard @Inject constructor(
                     }
                 }
                 DetailedBolusInfo().apply {
-                    eventType = TherapyEvent.Type.BOLUS_WIZARD.text
+                    eventType = TherapyEvent.Type.BOLUS_WIZARD
                     insulin = insulinAfterConstraints
                     carbs = this@BolusWizard.carbs.toDouble()
                     context = ctx
@@ -414,7 +414,7 @@ class BolusWizard @Inject constructor(
                     boluscalc = nsJSON()
                     source = Source.USER
                     notes = this@BolusWizard.notes
-                    uel.log(Action.BOLUS, notes, XXXValueWithUnit.TherapyEvent(eventType), XXXValueWithUnit.Insulin(insulinAfterConstraints), XXXValueWithUnit.Gram(this@BolusWizard.carbs).takeIf { this@BolusWizard.carbs != 0 }, XXXValueWithUnit.Minute(carbTime).takeIf { carbTime != 0 })
+                    uel.log(Action.BOLUS, notes, XXXValueWithUnit.TherapyEventType(eventType), XXXValueWithUnit.Insulin(insulinAfterConstraints), XXXValueWithUnit.Gram(this@BolusWizard.carbs).takeIf { this@BolusWizard.carbs != 0 }, XXXValueWithUnit.Minute(carbTime).takeIf { carbTime != 0 })
                     if (insulin > 0 || pump.pumpDescription.storesCarbInfo) {
                         commandQueue.bolus(this, object : Callback() {
                             override fun run() {

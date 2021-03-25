@@ -596,7 +596,7 @@ open class LoopPlugin @Inject constructor(
         // deliver SMB
         val detailedBolusInfo = DetailedBolusInfo()
         detailedBolusInfo.lastKnownBolusTime = treatmentsPlugin.lastBolusTime
-        detailedBolusInfo.eventType = TherapyEvent.Type.CORRECTION_BOLUS.text
+        detailedBolusInfo.eventType = TherapyEvent.Type.CORRECTION_BOLUS
         detailedBolusInfo.insulin = request.smb
         detailedBolusInfo.isSMB = true
         detailedBolusInfo.source = Source.USER

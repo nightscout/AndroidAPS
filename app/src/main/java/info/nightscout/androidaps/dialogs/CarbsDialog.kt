@@ -223,7 +223,7 @@ class CarbsDialog : DialogFragmentWithDate() {
                 OKDialog.showConfirmation(activity, resourceHelper.gs(R.string.carbs), HtmlHelper.fromHtml(Joiner.on("<br/>").join(actions)), {
                     when {
                         activitySelected   -> {
-                            uel.log(Action.TT, XXXValueWithUnit.TherapyEvent(TemporaryTarget.Reason.ACTIVITY.text), XXXValueWithUnit.fromGlucoseUnit(activityTT, units) , XXXValueWithUnit.Minute(activityTTDuration))
+                            uel.log(Action.TT, XXXValueWithUnit.TherapyEventTTReason(TemporaryTarget.Reason.ACTIVITY), XXXValueWithUnit.fromGlucoseUnit(activityTT, units) , XXXValueWithUnit.Minute(activityTTDuration))
                             disposable += repository.runTransactionForResult(InsertTemporaryTargetAndCancelCurrentTransaction(
                                 timestamp = System.currentTimeMillis(),
                                 duration = TimeUnit.MINUTES.toMillis(activityTTDuration.toLong()),
@@ -239,7 +239,7 @@ class CarbsDialog : DialogFragmentWithDate() {
                         }
 
                         eatingSoonSelected -> {
-                            uel.log(Action.TT, XXXValueWithUnit.TherapyEvent(TemporaryTarget.Reason.EATING_SOON.text), XXXValueWithUnit.fromGlucoseUnit(eatingSoonTT, units) , XXXValueWithUnit.Minute(eatingSoonTTDuration))
+                            uel.log(Action.TT, XXXValueWithUnit.TherapyEventTTReason(TemporaryTarget.Reason.EATING_SOON), XXXValueWithUnit.fromGlucoseUnit(eatingSoonTT, units) , XXXValueWithUnit.Minute(eatingSoonTTDuration))
                             disposable += repository.runTransactionForResult(InsertTemporaryTargetAndCancelCurrentTransaction(
                                 timestamp = System.currentTimeMillis(),
                                 duration = TimeUnit.MINUTES.toMillis(eatingSoonTTDuration.toLong()),
@@ -255,7 +255,7 @@ class CarbsDialog : DialogFragmentWithDate() {
                         }
 
                         hypoSelected       -> {
-                            uel.log(Action.TT, XXXValueWithUnit.TherapyEvent(TemporaryTarget.Reason.HYPOGLYCEMIA.text), XXXValueWithUnit.fromGlucoseUnit(hypoTT, units) , XXXValueWithUnit.Minute(hypoTTDuration))
+                            uel.log(Action.TT, XXXValueWithUnit.TherapyEventTTReason(TemporaryTarget.Reason.HYPOGLYCEMIA), XXXValueWithUnit.fromGlucoseUnit(hypoTT, units) , XXXValueWithUnit.Minute(hypoTTDuration))
                             disposable += repository.runTransactionForResult(InsertTemporaryTargetAndCancelCurrentTransaction(
                                 timestamp = System.currentTimeMillis(),
                                 duration = TimeUnit.MINUTES.toMillis(hypoTTDuration.toLong()),
@@ -272,7 +272,7 @@ class CarbsDialog : DialogFragmentWithDate() {
                     }
                     if (carbsAfterConstraints > 0) {
                         if (duration == 0) {
-                            carbsGenerator.createCarb(carbsAfterConstraints, time, TherapyEvent.Type.CARBS_CORRECTION.text, notes)
+                            carbsGenerator.createCarb(carbsAfterConstraints, time, TherapyEvent.Type.CARBS_CORRECTION, notes)
                         } else {
                             carbsGenerator.generateCarbs(carbsAfterConstraints, time, duration, notes)
                             nsUpload.uploadEvent(TherapyEvent.Type.NOTE.text, DateUtil.now() - 2000, resourceHelper.gs(R.string.generated_ecarbs_note, carbsAfterConstraints, duration, timeOffset))

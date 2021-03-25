@@ -204,7 +204,7 @@ class CareDialog : DialogFragmentWithDate() {
             therapyEvent.glucoseType = meterType
             therapyEvent.glucose = binding.bg.value
             valuesWithUnit.add(XXXValueWithUnit.fromGlucoseUnit(binding.bg.value.toDouble(), profileFunction.getUnits()))
-            valuesWithUnit.add(XXXValueWithUnit.TherapyEvent(meterType.text))
+            valuesWithUnit.add(XXXValueWithUnit.TherapyEventMeterType(meterType))
         }
         if (options == EventType.NOTE || options == EventType.EXERCISE) {
             actions.add(resourceHelper.gs(R.string.careportal_newnstreatment_duration_label) + ": " + resourceHelper.gs(R.string.format_mins, binding.duration.value.toInt()))
@@ -229,7 +229,7 @@ class CareDialog : DialogFragmentWithDate() {
                     aapsLogger.error(LTag.BGSOURCE, "Error while saving therapy event", it)
                 })
                 valuesWithUnit.add(0, XXXValueWithUnit.Timestamp(eventTime).takeIf { eventTimeChanged })
-                valuesWithUnit.add(1, XXXValueWithUnit.TherapyEvent(therapyEvent.type.text))
+                valuesWithUnit.add(1, XXXValueWithUnit.TherapyEventType(therapyEvent.type))
                 uel.log(Action.CAREPORTAL, notes, valuesWithUnit)
             }, null)
         }

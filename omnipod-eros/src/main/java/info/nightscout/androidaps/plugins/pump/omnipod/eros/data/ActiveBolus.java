@@ -5,6 +5,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import info.nightscout.androidaps.data.DetailedBolusInfo;
+import info.nightscout.androidaps.database.entities.TherapyEvent;
 import info.nightscout.androidaps.logging.AAPSLogger;
 import info.nightscout.androidaps.logging.LTag;
 
@@ -16,7 +17,7 @@ import info.nightscout.androidaps.logging.LTag;
 public class ActiveBolus {
     private long date;
     private long lastKnownBolusTime;
-    private String eventType;
+    private TherapyEvent.Type eventType;
     private double insulin;
     private double carbs;
     private int source;

@@ -31,11 +31,11 @@ class CarbsGenerator @Inject constructor(
             val carbTime = startTime + i * 15 * 60 * 1000
             val smallCarbAmount = (1.0 * remainingCarbs / (ticks - i)).roundToInt() //on last iteration (ticks-i) is 1 -> smallCarbAmount == remainingCarbs
             remainingCarbs -= smallCarbAmount.toLong()
-            if (smallCarbAmount > 0) createCarb(smallCarbAmount, carbTime, TherapyEvent.Type.MEAL_BOLUS.text, notes)
+            if (smallCarbAmount > 0) createCarb(smallCarbAmount, carbTime, TherapyEvent.Type.MEAL_BOLUS, notes)
         }
     }
 
-    fun createCarb(carbs: Int, time: Long, eventType: String, notes: String) {
+    fun createCarb(carbs: Int, time: Long, eventType: TherapyEvent.Type, notes: String) {
         val carbInfo = DetailedBolusInfo()
         carbInfo.date = time
         carbInfo.eventType = eventType

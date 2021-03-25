@@ -16,7 +16,7 @@ import info.nightscout.androidaps.db.Source;
 public class DetailedBolusInfo {
     public long date = System.currentTimeMillis();
     public long lastKnownBolusTime;
-    public String eventType = TherapyEvent.Type.MEAL_BOLUS.getText();
+    public TherapyEvent.Type eventType = TherapyEvent.Type.MEAL_BOLUS;
     public double insulin = 0;
     public double carbs = 0;
     public int source = Source.NONE;

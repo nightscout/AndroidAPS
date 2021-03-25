@@ -69,7 +69,7 @@ class NSClientRemoveWorker(
                     result.invalidated.forEach { tt ->
                         uel.log(
                             UserEntry.Action.TT_DELETED_FROM_NS,
-                            XXXValueWithUnit.TherapyEvent(tt.reason.text),
+                            XXXValueWithUnit.TherapyEventTTReason(tt.reason),
                             XXXValueWithUnit.Mgdl(tt.lowTarget),
                             XXXValueWithUnit.Mgdl(tt.highTarget).takeIf { tt.lowTarget != tt.highTarget },
                             XXXValueWithUnit.Minute(tt.duration.toInt() / 60000).takeIf { tt.duration != 0L }
@@ -90,7 +90,7 @@ class NSClientRemoveWorker(
                         uel.log(
                             UserEntry.Action.CAREPORTAL_DELETED_FROM_NS, (it.note ?: ""),
                             XXXValueWithUnit.Timestamp(it.timestamp),
-                            XXXValueWithUnit.TherapyEvent(it.type.text))
+                            XXXValueWithUnit.TherapyEventType(it.type))
                     }
                 }
 

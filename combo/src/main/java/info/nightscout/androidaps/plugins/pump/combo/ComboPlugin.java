@@ -1158,7 +1158,7 @@ public class ComboPlugin extends PumpPluginBase implements PumpInterface, Constr
             dbi.pumpId = dbi.date;
             dbi.source = Source.PUMP;
             dbi.insulin = pumpBolus.amount;
-            dbi.eventType = TherapyEvent.Type.CORRECTION_BOLUS.getText();
+            dbi.eventType = TherapyEvent.Type.CORRECTION_BOLUS;
             if (treatmentsPlugin.addToHistoryTreatment(dbi, true)) {
                 updated = true;
             }

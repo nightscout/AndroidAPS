@@ -87,7 +87,7 @@ class NSClientAddUpdateWorker(
                             .also { result ->
                                 result.inserted.forEach { tt ->
                                     uel.log(UserEntry.Action.TT_FROM_NS,
-                                        XXXValueWithUnit.TherapyEvent(tt.reason.text),
+                                        XXXValueWithUnit.TherapyEventTTReason(tt.reason),
                                         XXXValueWithUnit.Mgdl(tt.lowTarget),
                                         XXXValueWithUnit.Mgdl(tt.highTarget).takeIf { tt.lowTarget != tt.highTarget },
                                         XXXValueWithUnit.Minute(tt.duration.toInt() / 60000)
@@ -95,7 +95,7 @@ class NSClientAddUpdateWorker(
                                 }
                                 result.invalidated.forEach { tt ->
                                     uel.log(UserEntry.Action.TT_DELETED_FROM_NS,
-                                        XXXValueWithUnit.TherapyEvent(tt.reason.text),
+                                        XXXValueWithUnit.TherapyEventTTReason(tt.reason),
                                         XXXValueWithUnit.Mgdl(tt.lowTarget),
                                         XXXValueWithUnit.Mgdl(tt.highTarget).takeIf { tt.lowTarget != tt.highTarget },
                                         XXXValueWithUnit.Minute(tt.duration.toInt() / 60000)
@@ -103,7 +103,7 @@ class NSClientAddUpdateWorker(
                                 }
                                 result.ended.forEach { tt ->
                                     uel.log(UserEntry.Action.TT_CANCELED_FROM_NS,
-                                        XXXValueWithUnit.TherapyEvent(tt.reason.text),
+                                        XXXValueWithUnit.TherapyEventTTReason(tt.reason),
                                         XXXValueWithUnit.Mgdl(tt.lowTarget),
                                         XXXValueWithUnit.Mgdl(tt.highTarget).takeIf { tt.lowTarget != tt.highTarget },
                                         XXXValueWithUnit.Minute(tt.duration.toInt() / 60000)
@@ -134,14 +134,14 @@ class NSClientAddUpdateWorker(
                                     uel.log(UserEntry.Action.CAREPORTAL_FROM_NS,
                                         it.note ?: "",
                                         XXXValueWithUnit.Timestamp(it.timestamp),
-                                        XXXValueWithUnit.TherapyEvent(it.type.text)
+                                        XXXValueWithUnit.TherapyEventType(it.type)
                                     )
                                 }
                                 result.invalidated.forEach {
                                     uel.log(UserEntry.Action.CAREPORTAL_DELETED_FROM_NS,
                                         it.note ?: "",
                                         XXXValueWithUnit.Timestamp(it.timestamp),
-                                        XXXValueWithUnit.TherapyEvent(it.type.text)
+                                        XXXValueWithUnit.TherapyEventType(it.type)
                                     )
                                 }
                             }

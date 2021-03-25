@@ -545,7 +545,7 @@ class ActionStringHandler @Inject constructor(
     private fun doECarbs(carbs: Int, time: Long, duration: Int) {
         if (carbs > 0) {
             if (duration == 0) {
-                carbsGenerator.createCarb(carbs, time, TherapyEvent.Type.CARBS_CORRECTION.text, "watch")
+                carbsGenerator.createCarb(carbs, time, TherapyEvent.Type.CARBS_CORRECTION, "watch")
             } else {
                 carbsGenerator.generateCarbs(carbs, time, duration, "watch eCarbs")
             }
