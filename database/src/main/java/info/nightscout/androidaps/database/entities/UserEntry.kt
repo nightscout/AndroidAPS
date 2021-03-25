@@ -145,6 +145,15 @@ data class UserEntry(
         @SerializedName("LoopDialog") LoopDialog ("LoopDialog"),
         @SerializedName("TempBasalDialog") TempBasalDialog ("TempBasalDialog"),
         @SerializedName("CalibrationDialog") CalibrationDialog ("CalibrationDialog"),
+        @SerializedName("FillDialog") FillDialog ("FillDialog"),
+        @SerializedName("BgCheck") BgCheck ("BgCheck"),
+        @SerializedName("SensorInsert") SensorInsert ("SensorInsert"),
+        @SerializedName("BatteryChange") BatteryChange ("BatteryChange"),
+        @SerializedName("Note") Note ("Note"),
+        @SerializedName("Exercise") Exercise ("Exercise"),
+        @SerializedName("Question") Question ("Question"),
+        @SerializedName("Announcement") Announcement ("Announcement"),
+        @SerializedName("Actions") Actions ("Actions"),             //From Actions plugin
         @SerializedName("Automation") Automation ("Automation"),    //From Automation plugin
         @SerializedName("Loop") Loop ("Loop"),                      //From Loop plugin
         @SerializedName("NSClient") NSClient ("NSClient"),          //From NSClient plugin

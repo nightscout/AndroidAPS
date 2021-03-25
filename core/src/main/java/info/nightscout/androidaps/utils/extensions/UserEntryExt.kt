@@ -30,6 +30,15 @@ fun Sources.iconId(): Int {
         Sources.LoopDialog          -> R.drawable.ic_loop_closed
         Sources.TempBasalDialog     -> R.drawable.ic_actions_starttempbasal
         Sources.CalibrationDialog   -> R.drawable.ic_calibration
+        Sources.FillDialog          -> R.drawable.ic_cp_pump_canula
+        Sources.BgCheck             -> R.drawable.ic_cp_bgcheck
+        Sources.SensorInsert        -> R.drawable.ic_cp_cgm_insert
+        Sources.BatteryChange       -> R.drawable.ic_cp_pump_battery
+        Sources.Note                -> R.drawable.ic_cp_note
+        Sources.Exercise            -> R.drawable.ic_cp_exercise
+        Sources.Question            -> R.drawable.ic_cp_question
+        Sources.Announcement        -> R.drawable.ic_cp_announcement
+        Sources.Actions             -> R.drawable.ic_action
         Sources.Automation          -> R.drawable.ic_automation
         Sources.Loop                -> R.drawable.ic_loop_closed_white
         Sources.NSClient            -> R.drawable.ic_nightscout_syncs

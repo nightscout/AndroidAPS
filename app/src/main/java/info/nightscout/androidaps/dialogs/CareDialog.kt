@@ -220,6 +220,17 @@ class CareDialog : DialogFragmentWithDate() {
 
         therapyEvent.enteredBy = enteredBy
 
+        var source = when  (options) {
+            EventType.BGCHECK        -> Sources.BgCheck
+            EventType.SENSOR_INSERT  -> Sources.SensorInsert
+            EventType.BATTERY_CHANGE -> Sources.BatteryChange
+            EventType.NOTE           -> Sources.Note
+            EventType.EXERCISE       -> Sources.Exercise
+            EventType.QUESTION       -> Sources.Question
+            EventType.ANNOUNCEMENT   -> Sources.Announcement
+        }
+        valuesWithUnit.add(ValueWithUnit(source))
+
         activity?.let { activity ->
             OKDialog.showConfirmation(activity, resourceHelper.gs(event), HtmlHelper.fromHtml(Joiner.on("<br/>").join(actions)), {
                 disposable += repository.runTransactionForResult(InsertTherapyEventIfNewTransaction(therapyEvent)).subscribe({ result ->
