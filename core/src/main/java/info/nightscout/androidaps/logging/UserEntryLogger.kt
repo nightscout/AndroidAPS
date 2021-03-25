@@ -20,7 +20,7 @@ class UserEntryLogger @Inject constructor(
 
     private val compositeDisposable = CompositeDisposable()
 
-    fun log(action: Action, s: String? ="", vararg listvalues: ValueWithUnit) {
+/*    fun log(action: Action, s: String? ="", vararg listvalues: ValueWithUnit) {
         val values = mutableListOf<ValueWithUnit>()
         for (v in listvalues){
             if (v.condition) values.add(v)
@@ -36,7 +36,7 @@ class UserEntryLogger @Inject constructor(
                 onError = { aapsLogger.debug("ERRORED USER ENTRY: $action $s $values") },
                 onComplete = { aapsLogger.debug("USER ENTRY: $action $s $values") }
             )
-    }
+    }*/
 
     fun log(action: Action, vararg listvalues: XXXValueWithUnit?) = Unit // TODO
 
@@ -44,7 +44,7 @@ class UserEntryLogger @Inject constructor(
 
     fun log(action: Action, s: String? , vararg listvalues: XXXValueWithUnit?) = Unit
 
-    fun log(action: Action, vararg listvalues: ValueWithUnit) {
+/*    fun log(action: Action, vararg listvalues: ValueWithUnit) {
         val values = mutableListOf<ValueWithUnit>()
         for (v in listvalues){
             if (v.condition) values.add(v)
@@ -73,7 +73,7 @@ class UserEntryLogger @Inject constructor(
                 onError = { aapsLogger.debug("ERRORED USER ENTRY: $action") },
                 onComplete = { aapsLogger.debug("USER ENTRY: $action") }
             )
-    }
+    }*/
 
     // fun log(action: Action, s: String? = "",  values: List<ValueWithUnit>) { // TODO re-enable with new signature
     //     compositeDisposable += repository.runTransaction(UserEntryTransaction(
