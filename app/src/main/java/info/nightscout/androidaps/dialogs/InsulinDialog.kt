@@ -15,6 +15,7 @@ import info.nightscout.androidaps.activities.ErrorHelperActivity
 import info.nightscout.androidaps.data.DetailedBolusInfo
 import info.nightscout.androidaps.data.Profile
 import info.nightscout.androidaps.database.AppRepository
+import info.nightscout.androidaps.database.entities.XXXValueWithUnit
 import info.nightscout.androidaps.database.entities.TemporaryTarget
 import info.nightscout.androidaps.database.entities.TherapyEvent
 import info.nightscout.androidaps.database.entities.UserEntry.*
@@ -189,7 +190,7 @@ class InsulinDialog : DialogFragmentWithDate() {
             activity?.let { activity ->
                 OKDialog.showConfirmation(activity, resourceHelper.gs(R.string.bolus), HtmlHelper.fromHtml(Joiner.on("<br/>").join(actions)), {
                     if (eatingSoonChecked) {
-                        uel.log(Action.TT, notes, ValueWithUnit(TemporaryTarget.Reason.EATING_SOON.text, Units.TherapyEvent), ValueWithUnit(eatingSoonTT, units), ValueWithUnit(eatingSoonTTDuration, Units.M))
+                        uel.log(Action.TT, notes, XXXValueWithUnit.TherapyEvent(TemporaryTarget.Reason.EATING_SOON.text), XXXValueWithUnit.fromGlucoseUnit(eatingSoonTT, units), XXXValueWithUnit.Minute(eatingSoonTTDuration))
                         disposable += repository.runTransactionForResult(InsertTemporaryTargetAndCancelCurrentTransaction(
                             timestamp = System.currentTimeMillis(),
                             duration = TimeUnit.MINUTES.toMillis(eatingSoonTTDuration.toLong()),
@@ -211,11 +212,11 @@ class InsulinDialog : DialogFragmentWithDate() {
                         detailedBolusInfo.source = Source.USER
                         detailedBolusInfo.notes = notes
                         if (recordOnlyChecked) {
-                            uel.log(Action.BOLUS_RECORD, notes, ValueWithUnit(insulinAfterConstraints, Units.U), ValueWithUnit(timeOffset, Units.M, timeOffset!= 0))
+                            uel.log(Action.BOLUS_RECORD, notes, XXXValueWithUnit.Insulin(insulinAfterConstraints), XXXValueWithUnit.Minute(timeOffset).takeIf { timeOffset!= 0 })
                             detailedBolusInfo.date = time
                             activePlugin.activeTreatments.addToHistoryTreatment(detailedBolusInfo, false)
                         } else {
-                            uel.log(Action.BOLUS, notes, ValueWithUnit(insulinAfterConstraints, Units.U))
+                            uel.log(Action.BOLUS, notes, XXXValueWithUnit.Insulin(insulinAfterConstraints))
                             detailedBolusInfo.date = DateUtil.now()
                             commandQueue.bolus(detailedBolusInfo, object : Callback() {
                                 override fun run() {

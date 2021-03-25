@@ -13,6 +13,7 @@ import dagger.android.support.DaggerFragment
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.database.AppRepository
 import info.nightscout.androidaps.database.ValueWrapper
+import info.nightscout.androidaps.database.entities.XXXValueWithUnit
 import info.nightscout.androidaps.database.entities.TemporaryTarget
 import info.nightscout.androidaps.database.entities.UserEntry.*
 import info.nightscout.androidaps.database.interfaces.end
@@ -170,7 +171,7 @@ class TreatmentsTempTargetFragment : DaggerFragment() {
             holder.binding.duration.text = resourceHelper.gs(R.string.format_mins, T.msecs(tempTarget.duration).mins())
             holder.binding.low.text = tempTarget.lowValueToUnitsToString(units)
             holder.binding.high.text = tempTarget.highValueToUnitsToString(units)
-            holder.binding.reason.text = translator.translate(tempTarget.reason.text)
+            holder.binding.reason.text = translator.translate(tempTarget.reason)
             holder.binding.date.setTextColor(
                 when {
                     tempTarget.id == currentlyActiveTarget?.id  -> resourceHelper.gc(R.color.colorActive)
@@ -196,7 +197,7 @@ class TreatmentsTempTargetFragment : DaggerFragment() {
                         ${dateUtil.dateAndTimeString(tempTarget.timestamp)}
                         """.trimIndent(),
                             { _: DialogInterface?, _: Int ->
-                                uel.log(Action.TT_REMOVED, ValueWithUnit(tempTarget.timestamp, Units.Timestamp), ValueWithUnit(tempTarget.reason.text, Units.TherapyEvent), ValueWithUnit(tempTarget.lowTarget, Units.Mg_Dl), ValueWithUnit(tempTarget.highTarget, Units.Mg_Dl, tempTarget.lowTarget != tempTarget.highTarget), ValueWithUnit(tempTarget.duration.toInt(), Units.M))
+                                uel.log(Action.TT_REMOVED, XXXValueWithUnit.Timestamp(tempTarget.timestamp), XXXValueWithUnit.TherapyEvent(tempTarget.reason.text), XXXValueWithUnit.Mgdl(tempTarget.lowTarget), XXXValueWithUnit.Mgdl(tempTarget.highTarget).takeIf { tempTarget.lowTarget != tempTarget.highTarget }, XXXValueWithUnit.Minute(tempTarget.duration.toInt()))
                                 disposable += repository.runTransactionForResult(InvalidateTemporaryTargetTransaction(tempTarget.id))
                                     .subscribe({
                                         val id = tempTarget.interfaceIDs.nightscoutId

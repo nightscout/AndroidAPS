@@ -17,7 +17,8 @@ import androidx.recyclerview.widget.LinearSmoothScroller
 import androidx.recyclerview.widget.RecyclerView
 import dagger.android.support.DaggerFragment
 import info.nightscout.androidaps.R
-import info.nightscout.androidaps.database.entities.UserEntry.*
+import info.nightscout.androidaps.database.entities.XXXValueWithUnit
+import info.nightscout.androidaps.database.entities.UserEntry.Action
 import info.nightscout.androidaps.databinding.ObjectivesFragmentBinding
 import info.nightscout.androidaps.databinding.ObjectivesItemBinding
 import info.nightscout.androidaps.dialogs.NtpProgressDialog
@@ -35,11 +36,11 @@ import info.nightscout.androidaps.utils.FabricPrivacy
 import info.nightscout.androidaps.utils.HtmlHelper
 import info.nightscout.androidaps.utils.SntpClient
 import info.nightscout.androidaps.utils.alertDialogs.OKDialog
-import io.reactivex.rxkotlin.plusAssign
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 import info.nightscout.androidaps.utils.rx.AapsSchedulers
 import info.nightscout.androidaps.utils.sharedPreferences.SP
 import io.reactivex.disposables.CompositeDisposable
+import io.reactivex.rxkotlin.plusAssign
 import javax.inject.Inject
 
 class ObjectivesFragment : DaggerFragment() {
@@ -308,7 +309,7 @@ class ObjectivesFragment : DaggerFragment() {
             holder.binding.unstart.setOnClickListener {
                 activity?.let { activity ->
                     OKDialog.showConfirmation(activity, resourceHelper.gs(R.string.objectives), resourceHelper.gs(R.string.doyouwantresetstart), Runnable {
-                        uel.log(Action.OBJECTIVE_UNSTARTED, ValueWithUnit(position + 1, Units.None))
+                        uel.log(Action.OBJECTIVE_UNSTARTED, XXXValueWithUnit.SimpleInt(position + 1))
                         objective.startedOn = 0
                         scrollToCurrentObjective()
                         rxBus.send(EventObjectivesUpdateGui())

@@ -10,6 +10,7 @@ import info.nightscout.androidaps.R
 import info.nightscout.androidaps.activities.ErrorHelperActivity
 import info.nightscout.androidaps.data.DetailedBolusInfo
 import info.nightscout.androidaps.data.Profile
+import info.nightscout.androidaps.database.entities.XXXValueWithUnit
 import info.nightscout.androidaps.database.entities.TemporaryTarget
 import info.nightscout.androidaps.database.entities.TherapyEvent
 import info.nightscout.androidaps.database.entities.UserEntry.*
@@ -349,7 +350,7 @@ class BolusWizard @Inject constructor(
                 boluscalc = nsJSON()
                 source = Source.USER
                 notes = this@BolusWizard.notes
-                uel.log(Action.BOLUS_ADVISOR, notes, ValueWithUnit(eventType, Units.TherapyEvent), ValueWithUnit(insulinAfterConstraints, Units.U))
+                uel.log(Action.BOLUS_ADVISOR, notes, XXXValueWithUnit.TherapyEvent(eventType), XXXValueWithUnit.Insulin(insulinAfterConstraints))
                 if (insulin > 0) {
                     commandQueue.bolus(this, object : Callback() {
                         override fun run() {
@@ -413,7 +414,7 @@ class BolusWizard @Inject constructor(
                     boluscalc = nsJSON()
                     source = Source.USER
                     notes = this@BolusWizard.notes
-                    uel.log(Action.BOLUS, notes, ValueWithUnit(eventType,Units.TherapyEvent), ValueWithUnit(insulinAfterConstraints, Units.U), ValueWithUnit(this@BolusWizard.carbs, Units.G, this@BolusWizard.carbs != 0), ValueWithUnit(carbTime, Units.M, carbTime != 0))
+                    uel.log(Action.BOLUS, notes, XXXValueWithUnit.TherapyEvent(eventType), XXXValueWithUnit.Insulin(insulinAfterConstraints), XXXValueWithUnit.Gram(this@BolusWizard.carbs).takeIf { this@BolusWizard.carbs != 0 }, XXXValueWithUnit.Minute(carbTime).takeIf { carbTime != 0 })
                     if (insulin > 0 || pump.pumpDescription.storesCarbInfo) {
                         commandQueue.bolus(this, object : Callback() {
                             override fun run() {

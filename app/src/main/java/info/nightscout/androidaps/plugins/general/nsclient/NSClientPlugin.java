@@ -33,7 +33,6 @@ import info.nightscout.androidaps.database.entities.TemporaryTarget;
 import info.nightscout.androidaps.database.entities.TherapyEvent;
 import info.nightscout.androidaps.database.entities.UserEntry.Action;
 import info.nightscout.androidaps.database.entities.UserEntry.Units;
-import info.nightscout.androidaps.database.entities.UserEntry.ValueWithUnit;
 import info.nightscout.androidaps.database.transactions.SyncTemporaryTargetTransaction;
 import info.nightscout.androidaps.database.transactions.SyncTherapyEventTransaction;
 import info.nightscout.androidaps.events.EventAppExit;

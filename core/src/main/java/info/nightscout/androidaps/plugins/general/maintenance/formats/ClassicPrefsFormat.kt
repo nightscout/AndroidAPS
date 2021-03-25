@@ -125,8 +125,8 @@ class ClassicPrefsFormat @Inject constructor(
         }
     }
 
-    private fun csvString(action: Action): String = "\"" + translator.translate(action.name).replace("\"", "\"\"") + "\""
-    private fun csvString(unit: Units): String = "\"" + translator.translate(unit.name).replace("\"", "\"\"") + "\""
+    private fun csvString(action: Action): String = "\"" + translator.translate(action).replace("\"", "\"\"") + "\""
+    private fun csvString(unit: Units): String = "\"" + translator.translate(unit).replace("\"", "\"\"") + "\""
     private fun csvString(id: Int): String = if (id != 0) "\"" + resourceHelper.gs(id).replace("\"", "\"\"") + "\"" else ""
     private fun csvString(s: String): String = if (s != "") "\"" + s.replace("\"", "\"\"") + "\"" else ""
 }

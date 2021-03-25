@@ -111,7 +111,7 @@ class TreatmentsUserEntryFragment : DaggerFragment() {
         override fun onBindViewHolder(holder: UserEntryViewHolder, position: Int) {
             val current = entries[position]
             holder.binding.date.text = dateUtil.dateAndTimeAndSecondsString(current.timestamp)
-            holder.binding.action.text = translator.translate(current.action.name)
+            holder.binding.action.text = translator.translate(current.action)
             holder.binding.action.setTextColor(resourceHelper.gc(current.action.colorGroup.colorId()))
             if (current.s != "") {
                 holder.binding.s.text = current.s
@@ -138,12 +138,12 @@ class TreatmentsUserEntryFragment : DaggerFragment() {
                                 4 -> rStringParam = 0
                             }
                         }
-                        Units.Mg_Dl     -> valuesWithUnitString += if (profileFunction.getUnits()==Constants.MGDL) DecimalFormatter.to0Decimal(v.dValue) + translator.translate(Units.Mg_Dl.name) + separator else DecimalFormatter.to1Decimal(v.dValue/Constants.MMOLL_TO_MGDL) + translator.translate(Units.Mmol_L.name) + separator
-                        Units.Mmol_L    -> valuesWithUnitString += if (profileFunction.getUnits()==Constants.MGDL) DecimalFormatter.to0Decimal(v.dValue*Constants.MMOLL_TO_MGDL) + translator.translate(Units.Mg_Dl.name) + separator else DecimalFormatter.to1Decimal(v.dValue) + translator.translate(Units.Mmol_L.name) + separator
+                        Units.Mg_Dl     -> valuesWithUnitString += if (profileFunction.getUnits()==Constants.MGDL) DecimalFormatter.to0Decimal(v.dValue) + translator.translate(Units.Mg_Dl) + separator else DecimalFormatter.to1Decimal(v.dValue/Constants.MMOLL_TO_MGDL) + translator.translate(Units.Mmol_L) + separator
+                        Units.Mmol_L    -> valuesWithUnitString += if (profileFunction.getUnits()==Constants.MGDL) DecimalFormatter.to0Decimal(v.dValue*Constants.MMOLL_TO_MGDL) + translator.translate(Units.Mg_Dl) + separator else DecimalFormatter.to1Decimal(v.dValue) + translator.translate(Units.Mmol_L) + separator
                         Units.U_H, Units.U
-                                        -> valuesWithUnitString += DecimalFormatter.to2Decimal(v.dValue) + translator.translate(v.unit.name) + separator
+                                        -> valuesWithUnitString += DecimalFormatter.to2Decimal(v.dValue) + translator.translate(v.unit) + separator
                         Units.G, Units.M, Units.H, Units.Percent
-                                        -> valuesWithUnitString += v.iValue.toString() + translator.translate(v.unit.name) + separator
+                                        -> valuesWithUnitString += v.iValue.toString() + translator.translate(v.unit) + separator
                         else            -> valuesWithUnitString += if (v.iValue != 0 || v.sValue != "") { v.value().toString() + separator } else ""
                     }
             }

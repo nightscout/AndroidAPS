@@ -12,6 +12,7 @@ import info.nightscout.androidaps.MainApp
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.data.Profile
 import info.nightscout.androidaps.database.AppRepository
+import info.nightscout.androidaps.database.entities.XXXValueWithUnit
 import info.nightscout.androidaps.database.entities.TemporaryTarget
 import info.nightscout.androidaps.database.entities.TherapyEvent
 import info.nightscout.androidaps.database.entities.UserEntry.*
@@ -222,7 +223,7 @@ class CarbsDialog : DialogFragmentWithDate() {
                 OKDialog.showConfirmation(activity, resourceHelper.gs(R.string.carbs), HtmlHelper.fromHtml(Joiner.on("<br/>").join(actions)), {
                     when {
                         activitySelected   -> {
-                            uel.log(Action.TT, ValueWithUnit(TemporaryTarget.Reason.ACTIVITY.text, Units.TherapyEvent), ValueWithUnit(activityTT, units) , ValueWithUnit(activityTTDuration, Units.M))
+                            uel.log(Action.TT, XXXValueWithUnit.TherapyEvent(TemporaryTarget.Reason.ACTIVITY.text), XXXValueWithUnit.fromGlucoseUnit(activityTT, units) , XXXValueWithUnit.Minute(activityTTDuration))
                             disposable += repository.runTransactionForResult(InsertTemporaryTargetAndCancelCurrentTransaction(
                                 timestamp = System.currentTimeMillis(),
                                 duration = TimeUnit.MINUTES.toMillis(activityTTDuration.toLong()),
@@ -238,7 +239,7 @@ class CarbsDialog : DialogFragmentWithDate() {
                         }
 
                         eatingSoonSelected -> {
-                            uel.log(Action.TT, ValueWithUnit(TemporaryTarget.Reason.EATING_SOON.text, Units.TherapyEvent), ValueWithUnit(eatingSoonTT, units) , ValueWithUnit(eatingSoonTTDuration, Units.M))
+                            uel.log(Action.TT, XXXValueWithUnit.TherapyEvent(TemporaryTarget.Reason.EATING_SOON.text), XXXValueWithUnit.fromGlucoseUnit(eatingSoonTT, units) , XXXValueWithUnit.Minute(eatingSoonTTDuration))
                             disposable += repository.runTransactionForResult(InsertTemporaryTargetAndCancelCurrentTransaction(
                                 timestamp = System.currentTimeMillis(),
                                 duration = TimeUnit.MINUTES.toMillis(eatingSoonTTDuration.toLong()),
@@ -254,7 +255,7 @@ class CarbsDialog : DialogFragmentWithDate() {
                         }
 
                         hypoSelected       -> {
-                            uel.log(Action.TT, ValueWithUnit(TemporaryTarget.Reason.HYPOGLYCEMIA.text, Units.TherapyEvent), ValueWithUnit(hypoTT, units) , ValueWithUnit(hypoTTDuration, Units.M))
+                            uel.log(Action.TT, XXXValueWithUnit.TherapyEvent(TemporaryTarget.Reason.HYPOGLYCEMIA.text), XXXValueWithUnit.fromGlucoseUnit(hypoTT, units) , XXXValueWithUnit.Minute(hypoTTDuration))
                             disposable += repository.runTransactionForResult(InsertTemporaryTargetAndCancelCurrentTransaction(
                                 timestamp = System.currentTimeMillis(),
                                 duration = TimeUnit.MINUTES.toMillis(hypoTTDuration.toLong()),
@@ -276,7 +277,7 @@ class CarbsDialog : DialogFragmentWithDate() {
                             carbsGenerator.generateCarbs(carbsAfterConstraints, time, duration, notes)
                             nsUpload.uploadEvent(TherapyEvent.Type.NOTE.text, DateUtil.now() - 2000, resourceHelper.gs(R.string.generated_ecarbs_note, carbsAfterConstraints, duration, timeOffset))
                         }
-                        uel.log(Action.CARBS, notes, ValueWithUnit(eventTime, Units.Timestamp, eventTimeChanged), ValueWithUnit(carbsAfterConstraints, Units.G), ValueWithUnit(timeOffset, Units.M, timeOffset != 0), ValueWithUnit(duration, Units.H, duration != 0))
+                        uel.log(Action.CARBS, notes, XXXValueWithUnit.Timestamp(eventTime).takeIf { eventTimeChanged }, XXXValueWithUnit.Gram(carbsAfterConstraints), XXXValueWithUnit.Minute(timeOffset).takeIf { timeOffset != 0 }, XXXValueWithUnit.Hour(duration).takeIf { duration != 0 })
                     }
                     if (useAlarm && carbs > 0 && timeOffset > 0) {
                         carbTimer.scheduleReminder(dateUtil._now() + T.mins(timeOffset.toLong()).msecs())

@@ -9,6 +9,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import dagger.android.support.DaggerFragment
 import info.nightscout.androidaps.R
+import info.nightscout.androidaps.database.entities.XXXValueWithUnit
 import info.nightscout.androidaps.database.entities.UserEntry.*
 import info.nightscout.androidaps.databinding.TreatmentsBolusFragmentBinding
 import info.nightscout.androidaps.databinding.TreatmentsBolusItemBinding
@@ -175,7 +176,7 @@ class TreatmentsBolusFragment : DaggerFragment() {
                             resourceHelper.gs(R.string.carbs) + ": " + resourceHelper.gs(R.string.format_carbs, treatment.carbs.toInt()) + "\n" +
                             resourceHelper.gs(R.string.date) + ": " + dateUtil.dateAndTimeString(treatment.date)
                         OKDialog.showConfirmation(activity, resourceHelper.gs(R.string.removerecord), text, Runnable {
-                            uel.log(Action.TREATMENT_REMOVED, ValueWithUnit(treatment.date, Units.Timestamp), ValueWithUnit(treatment.insulin, Units.U, treatment.insulin != 0.0), ValueWithUnit(treatment.carbs.toInt(), Units.G, treatment.carbs != 0.0))
+                            uel.log(Action.TREATMENT_REMOVED, XXXValueWithUnit.Timestamp(treatment.date), XXXValueWithUnit.Insulin(treatment.insulin).takeIf { treatment.insulin != 0.0 }, XXXValueWithUnit.Gram(treatment.carbs.toInt()).takeIf { treatment.carbs != 0.0 })
                             if (treatment.source == Source.PUMP) {
                                 treatment.isValid = false
                                 treatmentsPlugin.service.update(treatment)
