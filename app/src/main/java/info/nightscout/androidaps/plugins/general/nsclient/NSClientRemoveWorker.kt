@@ -68,7 +68,7 @@ class NSClientRemoveWorker(
                 .also { result ->
                     result.invalidated.forEach {
                         uel.log(
-                            Action.TT_REMOVED, ValueWithUnit(Sources.NS),
+                            Action.TT_REMOVED, ValueWithUnit(Sources.NSClient),
                             ValueWithUnit(it.reason.text, Units.TherapyEvent),
                             ValueWithUnit(it.lowTarget, Units.Mg_Dl, true),
                             ValueWithUnit(it.highTarget, Units.Mg_Dl, it.lowTarget != it.highTarget),
@@ -88,7 +88,7 @@ class NSClientRemoveWorker(
                 .also { result ->
                     result.invalidated.forEach {
                         uel.log(
-                            Action.CAREPORTAL_REMOVED, (it.note ?: ""), ValueWithUnit(Sources.NS),
+                            Action.CAREPORTAL_REMOVED, (it.note ?: ""), ValueWithUnit(Sources.NSClient),
                             ValueWithUnit(it.timestamp, Units.Timestamp, true),
                             ValueWithUnit(it.type.text, Units.TherapyEvent))
                     }

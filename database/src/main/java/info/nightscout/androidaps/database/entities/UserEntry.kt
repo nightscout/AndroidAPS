@@ -20,8 +20,8 @@ data class UserEntry(
 ) : DBEntry, DBEntryWithTime {
     enum class Action (val colorGroup: ColorGroup) {
         @SerializedName("BOLUS") BOLUS (ColorGroup.InsulinTreatment),
+        @SerializedName("SMB") SMB (ColorGroup.InsulinTreatment),
         @SerializedName("BOLUS_ADVISOR") BOLUS_ADVISOR (ColorGroup.InsulinTreatment),
-        @SerializedName("BOLUS_RECORD") BOLUS_RECORD (ColorGroup.InsulinTreatment),
         @SerializedName("EXTENDED_BOLUS") EXTENDED_BOLUS (ColorGroup.InsulinTreatment),
         @SerializedName("SUPERBOLUS_TBR") SUPERBOLUS_TBR (ColorGroup.InsulinTreatment),
         @SerializedName("CARBS") CARBS (ColorGroup.CarbTreatment),
@@ -86,7 +86,7 @@ data class UserEntry(
         @SerializedName("IMPORT_DATABASES") IMPORT_DATABASES (ColorGroup.Aaps),
         @SerializedName("OTP_EXPORT") OTP_EXPORT (ColorGroup.Aaps),
         @SerializedName("OTP_RESET") OTP_RESET (ColorGroup.Aaps),
-        @SerializedName("SMS_SMS") SMS_SMS (ColorGroup.Aaps),
+        @SerializedName("STOP_SMS") STOP_SMS (ColorGroup.Aaps),
         @SerializedName("FOOD") FOOD (ColorGroup.Careportal),
         @SerializedName("EXPORT_CSV") EXPORT_CSV (ColorGroup.Aaps),
         @SerializedName("UNKNOWN") UNKNOWN (ColorGroup.Aaps)
@@ -134,14 +134,24 @@ data class UserEntry(
         }
     }
     enum class Sources(val text: String) {
-        @SerializedName("Manual") Manual ("Manual"),                //Manual entry by user, given through AAPS (default)
-        @SerializedName("Record") Record ("Record"),          //Manual entry by user, treatment given outside AAPS (for example Bolus with Serynge)
+        @SerializedName("TreatmentDialog") TreatmentDialog ("TreatmentDialog"),
+        @SerializedName("InsulinDialog") InsulinDialog ("InsulinDialog"),
+        @SerializedName("CarbDialog") CarbDialog ("CarbDialog"),
+        @SerializedName("WizardDialog") WizardDialog ("WizardDialog"),
+        @SerializedName("QuickWizard") QuickWizard ("QuickWizard"),
+        @SerializedName("ExtendedBolusDialog") ExtendedBolusDialog ("ExtendedBolusDialog"),
+        @SerializedName("TTDialog") TTDialog ("TTDialog"),
+        @SerializedName("ProfileSwitchDialog") ProfileSwitchDialog ("ProfileSwitchDialog"),
+        @SerializedName("LoopDialog") LoopDialog ("LoopDialog"),
+        @SerializedName("TempBasalDialog") TempBasalDialog ("TempBasalDialog"),
+        @SerializedName("CalibrationDialog") CalibrationDialog ("CalibrationDialog"),
         @SerializedName("Automation") Automation ("Automation"),    //From Automation plugin
         @SerializedName("Loop") Loop ("Loop"),                      //From Loop plugin
-        @SerializedName("NS") NS ("NS"),                            //From NSClient plugin
+        @SerializedName("NSClient") NSClient ("NSClient"),          //From NSClient plugin
         @SerializedName("Pump") Pump ("Pump"),                      //From Pump plugin (for example from pump history)
         @SerializedName("SMS") SMS ("SMS"),                         //From SMS plugin
         @SerializedName("Wear") Wear ("Wear"),                      //From Wear plugin
+        @SerializedName("Food") Food ("Food"),                      //From Food plugin
         @SerializedName("Unknown") Unknown ("Unknown")              //if necessary
         ;
 

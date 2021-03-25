@@ -119,8 +119,9 @@ class TreatmentsUserEntryFragment : DaggerFragment() {
                 holder.binding.s.visibility = View.GONE
             var valuesWithUnitString = ""
             var rStringParam = 0
+            var source = Sources.Unknown
             val separator = "  "
-            var source = ""
+            //var source = ""
             for(v in current.values) {
                 if (rStringParam >0)
                     rStringParam--
@@ -144,13 +145,18 @@ class TreatmentsUserEntryFragment : DaggerFragment() {
                                         -> valuesWithUnitString += DecimalFormatter.to2Decimal(v.dValue) + translator.translate(v.unit.name) + separator
                         Units.G, Units.M, Units.H, Units.Percent
                                         -> valuesWithUnitString += v.iValue.toString() + translator.translate(v.unit.name) + separator
-                        Units.Source    -> source = separator + translator.translate(v.sValue)
+                        Units.Source    -> source = Sources.fromText(v.sValue) // = separator + translator.translate(v.sValue)
                         else            -> valuesWithUnitString += if (v.iValue != 0 || v.sValue != "") { v.value().toString() + separator } else ""
                     }
             }
+            if (source.iconId() > 0) {
+                holder.binding.iconSource.setImageResource(source.iconId())
+                holder.binding.iconSource.visibility = View.VISIBLE
+            } else
+                holder.binding.iconSource.visibility = View.INVISIBLE
             holder.binding.values.text = valuesWithUnitString.trim()
-            holder.binding.values.visibility = if (current.values.size > 0) View.VISIBLE else View.GONE
-            holder.binding.action.text = translator.translate(current.action.name) + source
+            holder.binding.values.visibility = if (holder.binding.values.text != "") View.VISIBLE else View.GONE
+            holder.binding.action.text = translator.translate(current.action.name)
             holder.binding.action.setTextColor(resourceHelper.gc(current.action.colorGroup.colorId()))
         }
 

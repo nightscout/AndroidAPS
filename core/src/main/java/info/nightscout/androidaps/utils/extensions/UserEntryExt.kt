@@ -17,3 +17,22 @@ fun ColorGroup.colorId(): Int {
     }
 }
 
+fun Sources.iconId(): Int {
+    return when (this) {
+        Sources.TreatmentDialog     -> R.drawable.icon_insulin_carbs
+        Sources.InsulinDialog       -> R.drawable.ic_bolus
+        Sources.CarbDialog          -> R.drawable.ic_cp_bolus_carbs
+        Sources.WizardDialog        -> R.drawable.ic_calculator
+        Sources.QuickWizard         -> R.drawable.ic_quick_wizard
+        Sources.ExtendedBolusDialog -> R.drawable.ic_actions_startextbolus
+        Sources.TTDialog            -> R.drawable.ic_temptarget_high
+        Sources.ProfileSwitchDialog -> R.drawable.ic_actions_profileswitch
+        Sources.LoopDialog          -> R.drawable.ic_loop_closed
+        Sources.TempBasalDialog     -> R.drawable.ic_actions_starttempbasal
+        Sources.CalibrationDialog   -> R.drawable.ic_calibration
+        Sources.Automation          -> R.drawable.ic_automation
+        Sources.Loop                -> R.drawable.ic_loop_closed_white
+        Sources.NSClient            -> R.drawable.ic_nightscout_syncs
+        else                        -> -1
+    }
+}

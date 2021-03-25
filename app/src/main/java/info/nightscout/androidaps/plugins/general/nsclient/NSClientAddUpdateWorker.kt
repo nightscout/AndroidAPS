@@ -86,7 +86,7 @@ class NSClientAddUpdateWorker(
                             .blockingGet()
                             .also { result ->
                                 result.inserted.forEach {
-                                    uel.log(UserEntry.Action.TT, ValueWithUnit(UserEntry.Sources.NS),
+                                    uel.log(UserEntry.Action.TT, ValueWithUnit(UserEntry.Sources.NSClient),
                                         ValueWithUnit(it.reason.text, UserEntry.Units.TherapyEvent),
                                         ValueWithUnit(it.lowTarget, UserEntry.Units.Mg_Dl, true),
                                         ValueWithUnit(it.highTarget, UserEntry.Units.Mg_Dl, it.lowTarget != it.highTarget),
@@ -94,7 +94,7 @@ class NSClientAddUpdateWorker(
                                     )
                                 }
                                 result.invalidated.forEach {
-                                    uel.log(UserEntry.Action.TT_REMOVED, ValueWithUnit(UserEntry.Sources.NS),
+                                    uel.log(UserEntry.Action.TT_REMOVED, ValueWithUnit(UserEntry.Sources.NSClient),
                                         ValueWithUnit(it.reason.text, UserEntry.Units.TherapyEvent),
                                         ValueWithUnit(it.lowTarget, UserEntry.Units.Mg_Dl, true),
                                         ValueWithUnit(it.highTarget, UserEntry.Units.Mg_Dl, it.lowTarget != it.highTarget),
@@ -102,7 +102,7 @@ class NSClientAddUpdateWorker(
                                     )
                                 }
                                 result.ended.forEach {
-                                    uel.log(UserEntry.Action.CANCEL_TT, ValueWithUnit(UserEntry.Sources.NS),
+                                    uel.log(UserEntry.Action.CANCEL_TT, ValueWithUnit(UserEntry.Sources.NSClient),
                                         ValueWithUnit(it.reason.text, UserEntry.Units.TherapyEvent),
                                         ValueWithUnit(it.lowTarget, UserEntry.Units.Mg_Dl, true),
                                         ValueWithUnit(it.highTarget, UserEntry.Units.Mg_Dl, it.lowTarget != it.highTarget),
@@ -132,14 +132,14 @@ class NSClientAddUpdateWorker(
                             .also { result ->
                                 result.inserted.forEach {
                                     uel.log(UserEntry.Action.CAREPORTAL,
-                                        it.note ?: "",  ValueWithUnit(UserEntry.Sources.NS),
+                                        it.note ?: "",  ValueWithUnit(UserEntry.Sources.NSClient),
                                         ValueWithUnit(it.timestamp, UserEntry.Units.Timestamp, true),
                                         ValueWithUnit(it.type.text, UserEntry.Units.TherapyEvent)
                                     )
                                 }
                                 result.invalidated.forEach {
                                     uel.log(UserEntry.Action.CAREPORTAL_REMOVED,
-                                        it.note ?: "", ValueWithUnit(UserEntry.Sources.NS),
+                                        it.note ?: "", ValueWithUnit(UserEntry.Sources.NSClient),
                                         ValueWithUnit(it.timestamp, UserEntry.Units.Timestamp, true),
                                         ValueWithUnit(it.type.text, UserEntry.Units.TherapyEvent)
                                     )

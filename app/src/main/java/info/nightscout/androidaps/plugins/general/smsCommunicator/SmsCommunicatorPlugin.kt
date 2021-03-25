@@ -40,7 +40,6 @@ import info.nightscout.androidaps.plugins.iob.iobCobCalculator.GlucoseStatusProv
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.IobCobCalculatorPlugin
 import info.nightscout.androidaps.queue.Callback
 import info.nightscout.androidaps.receivers.DataWorker
-import info.nightscout.androidaps.receivers.DataReceiver
 import info.nightscout.androidaps.utils.*
 import info.nightscout.androidaps.utils.extensions.valueToUnitsString
 import info.nightscout.androidaps.utils.resources.ResourceHelper
@@ -1007,7 +1006,7 @@ class SmsCommunicatorPlugin @Inject constructor(
                     sp.putBoolean(R.string.key_smscommunicator_remotecommandsallowed, false)
                     val replyText = String.format(resourceHelper.gs(R.string.smscommunicator_stoppedsms))
                     sendSMSToAllNumbers(Sms(receivedSms.phoneNumber, replyText))
-                    uel.log(Action.SMS_SMS, ValueWithUnit(Sources.SMS), ValueWithUnit(R.string.smscommunicator_stoppedsms, Units.R_String))
+                    uel.log(Action.STOP_SMS, ValueWithUnit(Sources.SMS), ValueWithUnit(R.string.smscommunicator_stoppedsms, Units.R_String))
                 }
             })
         } else sendSMS(Sms(receivedSms.phoneNumber, resourceHelper.gs(R.string.wrongformat)))

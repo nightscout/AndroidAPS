@@ -17,6 +17,7 @@ import info.nightscout.androidaps.data.Profile
 import info.nightscout.androidaps.data.PumpEnactResult
 import info.nightscout.androidaps.database.AppRepository
 import info.nightscout.androidaps.database.entities.TherapyEvent
+import info.nightscout.androidaps.database.entities.UserEntry.*
 import info.nightscout.androidaps.database.transactions.InsertTherapyEventIfNewTransaction
 import info.nightscout.androidaps.db.Source
 import info.nightscout.androidaps.events.EventAcceptOpenLoopChange
@@ -27,6 +28,7 @@ import info.nightscout.androidaps.interfaces.*
 import info.nightscout.androidaps.interfaces.LoopInterface.LastRun
 import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.logging.LTag
+import info.nightscout.androidaps.logging.UserEntryLogger
 import info.nightscout.androidaps.plugins.aps.loop.events.EventLoopSetLastRunGui
 import info.nightscout.androidaps.plugins.aps.loop.events.EventLoopUpdateGui
 import info.nightscout.androidaps.plugins.aps.loop.events.EventNewOpenLoopNotification
@@ -78,6 +80,7 @@ open class LoopPlugin @Inject constructor(
     private val fabricPrivacy: FabricPrivacy,
     private val nsUpload: NSUpload,
     private val dateUtil: DateUtil,
+    private val uel: UserEntryLogger,
     private val repository: AppRepository
 ) : PluginBase(PluginDescription()
     .mainType(PluginType.LOOP)
@@ -531,6 +534,7 @@ open class LoopPlugin @Inject constructor(
             if (request.percent == 100 && request.duration == 0) {
                 if (activeTemp != null) {
                     aapsLogger.debug(LTag.APS, "applyAPSRequest: cancelTempBasal()")
+                    uel.log(Action.CANCEL_TEMP_BASAL, ValueWithUnit(Sources.Loop))
                     commandQueue.cancelTempBasal(false, callback)
                 } else {
                     aapsLogger.debug(LTag.APS, "applyAPSRequest: Basal set correctly")
@@ -544,12 +548,14 @@ open class LoopPlugin @Inject constructor(
                     .comment(R.string.let_temp_basal_run))?.run()
             } else {
                 aapsLogger.debug(LTag.APS, "applyAPSRequest: tempBasalPercent()")
+                uel.log(Action.TEMP_BASAL, ValueWithUnit(Sources.Loop), ValueWithUnit(request.percent, Units.Percent), ValueWithUnit(request.duration, Units.M))
                 commandQueue.tempBasalPercent(request.percent, request.duration, false, profile!!, callback)
             }
         } else {
             if (request.rate == 0.0 && request.duration == 0 || abs(request.rate - pump.baseBasalRate) < pump.pumpDescription.basalStep) {
                 if (activeTemp != null) {
                     aapsLogger.debug(LTag.APS, "applyAPSRequest: cancelTempBasal()")
+                    uel.log(Action.CANCEL_TEMP_BASAL, ValueWithUnit(Sources.Loop))
                     commandQueue.cancelTempBasal(false, callback)
                 } else {
                     aapsLogger.debug(LTag.APS, "applyAPSRequest: Basal set correctly")
@@ -563,6 +569,7 @@ open class LoopPlugin @Inject constructor(
                     .comment(R.string.let_temp_basal_run))?.run()
             } else {
                 aapsLogger.debug(LTag.APS, "applyAPSRequest: setTempBasalAbsolute()")
+                uel.log(Action.TEMP_BASAL, ValueWithUnit(Sources.Loop), ValueWithUnit(request.rate, Units.U_H), ValueWithUnit(request.duration, Units.M))
                 commandQueue.tempBasalAbsolute(request.rate, request.duration, false, profile!!, callback)
             }
         }
@@ -602,6 +609,7 @@ open class LoopPlugin @Inject constructor(
         detailedBolusInfo.source = Source.USER
         detailedBolusInfo.deliverAt = request.deliverAt
         aapsLogger.debug(LTag.APS, "applyAPSRequest: bolus()")
+        uel.log(Action.SMB, ValueWithUnit(Sources.Loop), ValueWithUnit(detailedBolusInfo.insulin, Units.U))
         commandQueue.bolus(detailedBolusInfo, callback)
     }
 

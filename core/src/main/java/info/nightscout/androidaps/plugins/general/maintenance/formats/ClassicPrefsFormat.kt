@@ -89,9 +89,14 @@ class ClassicPrefsFormat @Inject constructor(
 
     fun UserEntriesToCsv(userEntries: List<UserEntry>): String {
         val userEntryHeader = resourceHelper.gs(R.string.ue_csv_header,
+            csvString(R.string.ue_timestamp),
             csvString(R.string.date),
+            csvString(R.string.ue_utc_offset),
+            csvString(R.string.ue_action),
             csvString(R.string.eventtype),
+            csvString(R.string.ue_source),
             csvString(R.string.careportal_note),
+            csvString(R.string.ue_formated_string),
             csvString(R.string.event_time_label),
             csvString(Units.fromText(profileFunction.getUnits())),
             csvString(Units.G),
@@ -99,7 +104,8 @@ class ClassicPrefsFormat @Inject constructor(
             csvString(Units.U_H),
             csvString(Units.Percent),
             csvString(Units.H),
-            csvString(Units.M)
+            csvString(Units.M),
+            csvString(R.string.ue_none)
         ) + "\n"
         return userEntryHeader + userEntries.joinToString("\n") { entry ->
             var timestampRec = "" + entry.timestamp
@@ -124,7 +130,7 @@ class ClassicPrefsFormat @Inject constructor(
                 when (v.unit) {
                     Units.Timestamp    -> timestamp = dateUtil.dateAndTimeAndSecondsString(v.lValue)
                     Units.TherapyEvent -> therapyEvent = if (therapyEvent == "") translator.translate(v.sValue) else therapyEvent + " / " + translator.translate(v.sValue)
-                    Units.Source       -> source = csvString(translator.translate(v.sValue))
+                    Units.Source       -> source = csvString(v.sValue)
                     Units.R_String     -> if (v.iValue != 0) {  //Formated string lValue is the number of parameters, up to 3
                         var rStringParam = v.lValue.toInt()
                         var tempString = ""

@@ -79,7 +79,7 @@ class CalibrationDialog : DialogFragmentWithDate() {
         if (bg > 0) {
             activity?.let { activity ->
                 OKDialog.showConfirmation(activity, resourceHelper.gs(R.string.overview_calibration), HtmlHelper.fromHtml(Joiner.on("<br/>").join(actions)), {
-                    uel.log(Action.CALIBRATION, ValueWithUnit(bg, units))
+                    uel.log(Action.CALIBRATION, ValueWithUnit(Sources.CalibrationDialog), ValueWithUnit(bg, units))
                     xdripCalibrations.sendIntent(bg)
                 })
             }

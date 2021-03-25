@@ -126,10 +126,10 @@ class TempBasalDialog : DialogFragmentWithDate() {
                     }
                 }
                 if (isPercentPump) {
-                    uel.log(Action.TEMP_BASAL, ValueWithUnit(percent, Units.Percent), ValueWithUnit(durationInMinutes, Units.M))
+                    uel.log(Action.TEMP_BASAL, ValueWithUnit(Sources.TempBasalDialog), ValueWithUnit(percent, Units.Percent), ValueWithUnit(durationInMinutes, Units.M))
                     commandQueue.tempBasalPercent(percent, durationInMinutes, true, profile, callback)
                 } else {
-                    uel.log(Action.TEMP_BASAL, ValueWithUnit(absolute, Units.U), ValueWithUnit(durationInMinutes, Units.M))
+                    uel.log(Action.TEMP_BASAL, ValueWithUnit(Sources.TempBasalDialog), ValueWithUnit(absolute, Units.U), ValueWithUnit(durationInMinutes, Units.M))
                     commandQueue.tempBasalAbsolute(absolute, durationInMinutes, true, profile, callback)
                 }
             })

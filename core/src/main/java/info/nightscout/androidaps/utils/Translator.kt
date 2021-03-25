@@ -52,6 +52,7 @@ class Translator @Inject internal constructor(
             TemporaryTarget.Reason.WEAR.text               -> resourceHelper.gs(R.string.wear)
 
             Action.BOLUS.name                               -> resourceHelper.gs(R.string.uel_bolus)
+            Action.SMB.name                                 -> resourceHelper.gs(R.string.smb_shortname)
             Action.BOLUS_ADVISOR.name                       -> resourceHelper.gs(R.string.uel_bolus_advisor)
             Action.EXTENDED_BOLUS.name                      -> resourceHelper.gs(R.string.uel_extended_bolus)
             Action.SUPERBOLUS_TBR.name                      -> resourceHelper.gs(R.string.uel_superbolus_tbr)
@@ -117,7 +118,7 @@ class Translator @Inject internal constructor(
             Action.IMPORT_DATABASES.name                    -> resourceHelper.gs(R.string.uel_import_databases)
             Action.OTP_EXPORT.name                          -> resourceHelper.gs(R.string.uel_otp_export)
             Action.OTP_RESET.name                           -> resourceHelper.gs(R.string.uel_otp_reset)
-            Action.SMS_SMS.name                             -> resourceHelper.gs(R.string.uel_sms_sms)
+            Action.STOP_SMS.name                            -> resourceHelper.gs(R.string.uel_stop_sms)
             Action.EXPORT_CSV.name                          -> resourceHelper.gs(R.string.uel_export_csv)
 
             Units.Mg_Dl.name                                -> resourceHelper.gs(R.string.mgdl)
@@ -130,11 +131,9 @@ class Translator @Inject internal constructor(
             Units.Percent.name                              -> resourceHelper.gs(R.string.shortpercent)
             Units.None.name                                 -> ""
 
-            Sources.Manual.text                             -> resourceHelper.gs(R.string.manual)
-            Sources.Record.text                             -> resourceHelper.gs(R.string.record)
             Sources.Automation.text                         -> resourceHelper.gs(R.string.automation)
             Sources.Loop.text                               -> resourceHelper.gs(R.string.loop)
-            Sources.NS.text                                 -> resourceHelper.gs(R.string.ns)
+            Sources.NSClient.text                           -> resourceHelper.gs(R.string.ns)
             Sources.Pump.text                               -> resourceHelper.gs(R.string.pump)
             Sources.SMS.text                                -> resourceHelper.gs(R.string.smb_shortname)
             Sources.Wear.text                               -> resourceHelper.gs(R.string.wear)

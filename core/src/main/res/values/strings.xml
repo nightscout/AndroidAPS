@@ -469,12 +469,17 @@
     <string name="uel_import_databases">IMPORT DATABASES</string>
     <string name="uel_otp_export">OTP EXPORT</string>
     <string name="uel_otp_reset">OTP RESET</string>
-    <string name="uel_sms_sms">SMS SMS</string>
+    <string name="uel_stop_sms">STOP SMS</string>
     <string name="uel_export_csv">EXPORT USER ENTRIES</string>
     <string name="uel_unknown">UNKNOWN</string>
-    <string name="formated_string">Formated string</string>
+    <string name="ue_formated_string">Formated string</string>
+    <string name="ue_source">Source</string>
+    <string name="ue_utc_offset">UTC Offset</string>
+    <string name="ue_action">Action</string>
+    <string name="ue_timestamp">Timestamp</string>
+    <string name="ue_none">No Unit</string>
     <string name="ue_export_to_csv">Export User Entries to Excel (csv)</string>
-    <string name="ue_csv_header">"Timestamp;%1$s;UTC Offset;Action;%2$s;Source;%3$s;Formated string;%4$s;%5$s;%6$s;%7$s;%8$s;%9$s;%10$s;%11$s;other"</string>
+    <string name="ue_csv_header">"%1$s;%2$s;%3$s;%4$s;%5$s;%6$s;%7$s;%8$s;%9$s;%10$s;%11$s;%12$s;%13$s;%14$s;%15$s;%16$s;%17$s"</string>
 
     <plurals name="days">
         <item quantity="one">%1$d day</item>
