@@ -66,7 +66,7 @@ abstract class FragmentsModule {
 
     @ContributesAndroidInjector abstract fun contributesTidepoolFragment(): TidepoolFragment
     @ContributesAndroidInjector abstract fun contributesTreatmentsFragment(): TreatmentsFragment
-    @ContributesAndroidInjector abstract fun contributesTreatmentsBolusFragment(): TreatmentsMealLinkFragment
+    @ContributesAndroidInjector abstract fun contributesTreatmentsBolusFragment(): TreatmentsBolusCarbsFragment
     @ContributesAndroidInjector abstract fun contributesTreatmentsTemporaryBasalsFragment(): TreatmentsTemporaryBasalsFragment
     @ContributesAndroidInjector abstract fun contributesTreatmentsTempTargetFragment(): TreatmentsTempTargetFragment
     @ContributesAndroidInjector abstract fun contributesTreatmentsExtendedBolusesFragment(): TreatmentsExtendedBolusesFragment

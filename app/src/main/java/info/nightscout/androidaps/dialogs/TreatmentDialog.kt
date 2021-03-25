@@ -145,31 +145,38 @@ class TreatmentDialog : DialogFragmentWithDate() {
                     detailedBolusInfo.insulin = insulinAfterConstraints
                     detailedBolusInfo.carbs = carbsAfterConstraints.toDouble()
                     detailedBolusInfo.context = context
-                    if (!(recordOnlyChecked && (detailedBolusInfo.insulin > 0 || pumpDescription.storesCarbInfo))) {
+                    uel.log(Action.TREATMENT,
+                        ValueWithUnit(detailedBolusInfo.timestamp, Units.Timestamp),
+                        ValueWithUnit(insulin, Units.U, insulin != 0.0),
+                        ValueWithUnit(carbs, Units.G, carbs != 0)
+                    )
+                    if (recordOnlyChecked) {
+                        disposable += repository.runTransactionForResult(detailedBolusInfo.insertBolusTransaction())
+                            .subscribe({ result ->
+                                result.inserted.forEach {
+                                    aapsLogger.debug(LTag.DATABASE, "Inserted bolus $it")
+                                    nsUpload.uploadBolusRecord(it, detailedBolusInfo.createTherapyEvent(), null)
+                                }
+                            }, {
+                                aapsLogger.error(LTag.BGSOURCE, "Error while saving bolus", it)
+                            })
+                        disposable += repository.runTransactionForResult(detailedBolusInfo.insertCarbsTransaction())
+                            .subscribe({ result ->
+                                result.inserted.forEach {
+                                    aapsLogger.debug(LTag.DATABASE, "Inserted carbs $it")
+                                    nsUpload.uploadCarbsRecord(it, detailedBolusInfo.createTherapyEvent())
+                                }
+                            }, {
+                                aapsLogger.error(LTag.BGSOURCE, "Error while saving carbs", it)
+                            })
+                    } else {
                         commandQueue.bolus(detailedBolusInfo, object : Callback() {
                             override fun run() {
                                 if (!result.success) {
                                     ErrorHelperActivity.runAlarm(ctx, result.comment, resourceHelper.gs(R.string.treatmentdeliveryerror), info.nightscout.androidaps.dana.R.raw.boluserror)
-                                } else
-                                    uel.log(Action.TREATMENT,
-                                        ValueWithUnit(insulin, Units.U, insulin != 0.0),
-                                        ValueWithUnit(carbs, Units.G, carbs != 0)
-                                    )
+                                }
                             }
                         })
-                    } else {
-                        disposable += repository.runTransactionForResult(detailedBolusInfo.insertMealLinkTransaction())
-                            .subscribe({ result ->
-                                result.inserted.forEach {
-                                    uel.log(Action.TREATMENT,
-                                        ValueWithUnit(insulin, Units.U, insulin != 0.0),
-                                        ValueWithUnit(carbs, Units.G, carbs != 0)
-                                    )
-                                    nsUpload.uploadMealLinkRecord(it)
-                                }
-                            }, {
-                                aapsLogger.error(LTag.BGSOURCE, "Error while saving meal link", it)
-                            })
                     }
                 })
             }

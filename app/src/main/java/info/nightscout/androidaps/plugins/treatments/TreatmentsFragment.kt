@@ -50,7 +50,7 @@ class TreatmentsFragment : DaggerFragment() {
         binding.extendedBoluses.visibility = (buildHelper.isEngineeringMode() && !activePlugin.activePump.isFakingTempsByExtendedBoluses).toVisibility()
 
         binding.treatments.setOnClickListener {
-            setFragment(TreatmentsMealLinkFragment())
+            setFragment(TreatmentsBolusCarbsFragment())
             setBackgroundColorOnSelected(it)
         }
         binding.extendedBoluses.setOnClickListener {
@@ -77,7 +77,7 @@ class TreatmentsFragment : DaggerFragment() {
             setFragment(TreatmentsUserEntryFragment())
             setBackgroundColorOnSelected(it)
         }
-        setFragment(TreatmentsMealLinkFragment())
+        setFragment(TreatmentsBolusCarbsFragment())
         setBackgroundColorOnSelected(binding.treatments)
     }
 

@@ -13,8 +13,8 @@ import info.nightscout.androidaps.data.Profile
 import info.nightscout.androidaps.database.AppRepository
 import info.nightscout.androidaps.database.entities.BolusCalculatorResult
 import info.nightscout.androidaps.database.entities.TemporaryTarget
-import info.nightscout.androidaps.database.entities.TherapyEvent
 import info.nightscout.androidaps.database.entities.UserEntry.*
+import info.nightscout.androidaps.database.transactions.InsertOrUpdateBolusCalculatorResultTransaction
 import info.nightscout.androidaps.events.EventRefreshOverview
 import info.nightscout.androidaps.interfaces.*
 import info.nightscout.androidaps.logging.AAPSLogger
@@ -277,7 +277,8 @@ class BolusWizard @Inject constructor(
             wasTempTargetUsed = useTT,
             totalInsulin = calculatedTotalInsulin,
             percentageCorrection = percentageCorrection,
-            profileName = profileName
+            profileName = profileName,
+            note = notes
         )
 
     private fun confirmMessageAfterConstraints(advisor: Boolean): Spanned {
@@ -408,36 +409,31 @@ class BolusWizard @Inject constructor(
                     carbTime = this@BolusWizard.carbTime
                     bolusCalculatorResult = createBolusCalculatorResult()
                     notes = this@BolusWizard.notes
-                    if (insulin > 0 || pump.pumpDescription.storesCarbInfo) {
+                    uel.log(Action.BOLUS, notes,
+                        ValueWithUnit(eventType.toDBbEventType(), Units.TherapyEvent),
+                        ValueWithUnit(insulinAfterConstraints, Units.U),
+                        ValueWithUnit(this@BolusWizard.carbs, Units.G, this@BolusWizard.carbs != 0),
+                        ValueWithUnit(carbTime, Units.M, carbTime != 0)
+                    )
+                    if (insulin > 0 || carbs > 0) {
                         commandQueue.bolus(this, object : Callback() {
                             override fun run() {
                                 if (!result.success) {
                                     ErrorHelperActivity.runAlarm(ctx, result.comment, resourceHelper.gs(R.string.treatmentdeliveryerror), R.raw.boluserror)
-                                } else
-                                    uel.log(Action.BOLUS, notes,
-                                        ValueWithUnit(eventType.toDBbEventType(), Units.TherapyEvent),
-                                        ValueWithUnit(insulinAfterConstraints, Units.U),
-                                        ValueWithUnit(this@BolusWizard.carbs, Units.G, this@BolusWizard.carbs != 0),
-                                        ValueWithUnit(carbTime, Units.M, carbTime != 0)
-                                    )
+                                }
                             }
                         })
-                    } else {
-                        disposable += repository.runTransactionForResult(insertMealLinkTransaction())
-                            .subscribe({ result ->
-                                result.inserted.forEach { inserted ->
-                                    uel.log(Action.BOLUS, notes,
-                                        ValueWithUnit(eventType.toDBbEventType(), Units.TherapyEvent),
-                                        ValueWithUnit(insulinAfterConstraints, Units.U),
-                                        ValueWithUnit(this@BolusWizard.carbs, Units.G, this@BolusWizard.carbs != 0),
-                                        ValueWithUnit(carbTime, Units.M, carbTime != 0)
-                                    )
-                                    nsUpload.uploadMealLinkRecord(inserted)
-                                }
-                            }, {
-                                aapsLogger.error(LTag.BGSOURCE, "Error while saving meal link", it)
-                            })
                     }
+                    disposable += repository.runTransactionForResult(InsertOrUpdateBolusCalculatorResultTransaction(bolusCalculatorResult!!))
+                        .subscribe({ result ->
+                            result.inserted.forEach { inserted ->
+                                aapsLogger.debug(LTag.DATABASE, "Inserted bolusCalculatorResult $inserted")
+                                nsUpload.uploadBolusCalc(this)
+                            }
+                        }, {
+                            aapsLogger.error(LTag.BGSOURCE, "Error while saving meal link", it)
+                        })
+
                 }
                 if (useAlarm && carbs > 0 && carbTime > 0) {
                     carbTimer.scheduleReminder(dateUtil._now() + T.mins(carbTime.toLong()).msecs())

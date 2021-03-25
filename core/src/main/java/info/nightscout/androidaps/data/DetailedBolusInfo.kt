@@ -7,7 +7,8 @@ import info.nightscout.androidaps.database.entities.BolusCalculatorResult
 import info.nightscout.androidaps.database.entities.Carbs
 import info.nightscout.androidaps.database.entities.TemporaryBasal
 import info.nightscout.androidaps.database.entities.TherapyEvent
-import info.nightscout.androidaps.database.transactions.InsertMealLinkTransaction
+import info.nightscout.androidaps.database.transactions.InsertOrUpdateBolusTransaction
+import info.nightscout.androidaps.database.transactions.InsertOrUpdateCarbsTransaction
 import info.nightscout.androidaps.plugins.pump.common.defs.PumpType
 import info.nightscout.androidaps.utils.T
 
@@ -40,7 +41,6 @@ class DetailedBolusInfo {
     var bolusTimestamp: Long? = null
     var carbsPumpId: Long? = null
     var carbsTimestamp: Long? = null
-    var superBolusTemporaryBasal: TemporaryBasal? = null
 
     enum class MeterType(val text: String) {
         FINGER("Finger"),
@@ -106,24 +106,20 @@ class DetailedBolusInfo {
     fun createCarbs(): Carbs? =
         if (carbs != 0.0)
             Carbs(
-                timestamp = carbsTimestamp ?: T.mins(timestamp).msecs(),
+                timestamp = carbsTimestamp ?: timestamp + T.mins(carbTime.toLong()).msecs(),
                 amount = carbs,
                 duration = carbsDuration
             )
         else null
 
-    fun insertMealLinkTransaction(): InsertMealLinkTransaction {
-        // For NS make sure timestamps of bolus and carbs are different to avoid unwanted deduplication
-        bolusTimestamp = bolusTimestamp ?: timestamp
-        carbsTimestamp = carbsTimestamp ?: timestamp
-        if (bolusTimestamp == carbsTimestamp) carbsTimestamp = carbsTimestamp!! + 1000
-        return InsertMealLinkTransaction(
-            bolus = createBolus(),
-            carbs = createCarbs(),
-            bolusCalculatorResult = bolusCalculatorResult,
-            therapyEvent = createTherapyEvent(),
-            superBolusTemporaryBasal = superBolusTemporaryBasal
-        )
+    fun insertCarbsTransaction(): InsertOrUpdateCarbsTransaction {
+        if (carbs == 0.0) throw IllegalStateException("carbs == 0.0")
+        return InsertOrUpdateCarbsTransaction(createCarbs()!!)
+    }
+
+    fun insertBolusTransaction(): InsertOrUpdateBolusTransaction {
+        if (insulin == 0.0) throw IllegalStateException("insulin == 0.0")
+        return InsertOrUpdateBolusTransaction(createBolus()!!)
     }
 
     fun toJsonString(): String =
@@ -146,11 +142,13 @@ class DetailedBolusInfo {
         n.mgdlGlucose = mgdlGlucose
         n.glucoseType = glucoseType
         n.bolusType = bolusType
+        n.carbsDuration = carbsDuration
 
         n.pumpType = pumpType
         n.pumpSerial = pumpSerial
         n.bolusPumpId = bolusPumpId
         n.carbsPumpId = carbsPumpId
+        n.carbsTimestamp = carbsTimestamp
         return n
     }
 

@@ -23,11 +23,9 @@ class WizardInfoDialog : DaggerDialogFragment() {
     @Inject lateinit var profileFunction: ProfileFunction
 
     private lateinit var data: BolusCalculatorResult
-    private lateinit var notes: String
 
-    fun setData(bolusCalculatorResult: BolusCalculatorResult, notes: String) {
+    fun setData(bolusCalculatorResult: BolusCalculatorResult) {
         this.data = bolusCalculatorResult
-        this.notes = notes
     }
 
     private var _binding: DialogWizardinfoBinding? = null
@@ -82,7 +80,7 @@ class WizardInfoDialog : DaggerDialogFragment() {
         // Profile
         binding.profile.text = data.profileName
         // Notes
-        binding.notes.text = notes
+        binding.notes.text = data.note
         // Percentage
         binding.percentUsed.text = resourceHelper.gs(R.string.format_percent, data.percentageCorrection)
         // Total

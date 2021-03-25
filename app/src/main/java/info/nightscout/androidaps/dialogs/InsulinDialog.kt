@@ -197,8 +197,14 @@ class InsulinDialog : DialogFragmentWithDate() {
                             lowTarget = Profile.toMgdl(eatingSoonTT, profileFunction.getUnits()),
                             highTarget = Profile.toMgdl(eatingSoonTT, profileFunction.getUnits())
                         )).subscribe({ result ->
-                            result.inserted.forEach { nsUpload.uploadTempTarget(it) }
-                            result.updated.forEach { nsUpload.updateTempTarget(it) }
+                            result.inserted.forEach {
+                                aapsLogger.debug(LTag.DATABASE, "Inserted tt $it")
+                                nsUpload.uploadTempTarget(it)
+                            }
+                            result.updated.forEach {
+                                aapsLogger.debug(LTag.DATABASE, "Updated tt $it")
+                                nsUpload.updateTempTarget(it)
+                            }
                         }, {
                             aapsLogger.error(LTag.BGSOURCE, "Error while saving temporary target", it)
                         })
@@ -209,19 +215,21 @@ class InsulinDialog : DialogFragmentWithDate() {
                         detailedBolusInfo.insulin = insulinAfterConstraints
                         detailedBolusInfo.context = context
                         detailedBolusInfo.notes = notes
+                        detailedBolusInfo.timestamp = time
+                        uel.log(Action.BOLUS_RECORD, notes,
+                            ValueWithUnit(detailedBolusInfo.timestamp, Units.Timestamp),
+                            ValueWithUnit(detailedBolusInfo.insulin, Units.U),
+                            ValueWithUnit(timeOffset, Units.M, timeOffset != 0)
+                        )
                         if (recordOnlyChecked) {
-                            detailedBolusInfo.bolusTimestamp = time
-                            disposable += repository.runTransactionForResult(detailedBolusInfo.insertMealLinkTransaction())
+                            disposable += repository.runTransactionForResult(detailedBolusInfo.insertBolusTransaction())
                                 .subscribe({ result ->
                                 result.inserted.forEach {
-                                    uel.log(Action.BOLUS_RECORD, notes,
-                                        ValueWithUnit(it.bolus?.amount ?: 0.0, Units.U),
-                                        ValueWithUnit(timeOffset, Units.M, timeOffset != 0)
-                                    )
-                                    nsUpload.uploadMealLinkRecord(it)
+                                    aapsLogger.debug(LTag.DATABASE, "Inserted bolus $it")
+                                    nsUpload.uploadBolusRecord(it, detailedBolusInfo.createTherapyEvent(), null)
                                 }
                             }, {
-                                aapsLogger.error(LTag.BGSOURCE, "Error while saving meal link", it)
+                                aapsLogger.error(LTag.BGSOURCE, "Error while saving bolus", it)
                             })
                         } else {
                             commandQueue.bolus(detailedBolusInfo, object : Callback() {

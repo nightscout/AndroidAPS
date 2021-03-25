@@ -13,6 +13,8 @@ import info.nightscout.androidaps.activities.ErrorHelperActivity
 import info.nightscout.androidaps.data.DetailedBolusInfo
 import info.nightscout.androidaps.data.Profile
 import info.nightscout.androidaps.data.PumpEnactResult
+import info.nightscout.androidaps.database.AppRepository
+import info.nightscout.androidaps.database.entities.UserEntry
 import info.nightscout.androidaps.dialogs.BolusProgressDialog
 import info.nightscout.androidaps.events.EventBolusRequested
 import info.nightscout.androidaps.events.EventNewBasalProfile
@@ -23,14 +25,17 @@ import info.nightscout.androidaps.interfaces.Constraint
 import info.nightscout.androidaps.interfaces.ProfileFunction
 import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.logging.LTag
+import info.nightscout.androidaps.logging.UserEntryLogger
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper
 import info.nightscout.androidaps.plugins.configBuilder.ConstraintChecker
+import info.nightscout.androidaps.plugins.general.nsclient.NSUpload
 import info.nightscout.androidaps.plugins.general.overview.events.EventDismissBolusProgressIfRunning
 import info.nightscout.androidaps.plugins.general.overview.events.EventDismissNotification
 import info.nightscout.androidaps.plugins.general.overview.events.EventNewNotification
 import info.nightscout.androidaps.plugins.general.overview.notifications.Notification
 import info.nightscout.androidaps.queue.commands.*
 import info.nightscout.androidaps.queue.commands.Command.CommandType
+import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.FabricPrivacy
 import info.nightscout.androidaps.utils.HtmlHelper
 import info.nightscout.androidaps.utils.buildHelper.BuildHelper
@@ -38,50 +43,10 @@ import info.nightscout.androidaps.utils.resources.ResourceHelper
 import info.nightscout.androidaps.utils.rx.AapsSchedulers
 import info.nightscout.androidaps.utils.sharedPreferences.SP
 import io.reactivex.disposables.CompositeDisposable
+import io.reactivex.rxkotlin.plusAssign
 import java.util.*
 import javax.inject.Inject
 import javax.inject.Singleton
-
-/**
- * Created by mike on 08.11.2017.
- *
- *
- * DATA FLOW:
- * ---------
- *
- *
- * (request) - > ConfigBuilder.getCommandQueue().bolus(...)
- *
- *
- * app no longer waits for result but passes Callback
- *
- *
- * request is added to queue, if another request of the same type already exists in queue, it's removed prior adding
- * but if request of the same type is currently executed (probably important only for bolus which is running long time), new request is declined
- * new QueueThread is created and started if current if finished
- * CommandReadStatus is added automatically before command if queue is empty
- *
- *
- * biggest change is we don't need exec pump commands in Handler because it's finished immediately
- * command queueing if not realized by stacking in different Handlers and threads anymore but by internal queue with better control
- *
- *
- * QueueThread calls ConfigBuilder#connect which is passed to getActivePump().connect
- * connect should be executed on background and return immediately. afterwards isConnecting() is expected to be true
- *
- *
- * while isConnecting() == true GUI is updated by posting connection progress
- *
- *
- * if connect is successful: isConnected() becomes true, isConnecting() becomes false
- * CommandQueue starts calling execute() of commands. execute() is expected to be blocking (return after finish).
- * callback with result is called after finish automatically
- * if connect failed: isConnected() becomes false, isConnecting() becomes false
- * connect() is called again
- *
- *
- * when queue is empty, disconnect is called
- */
 
 @Singleton
 open class CommandQueue @Inject constructor(
@@ -96,7 +61,10 @@ open class CommandQueue @Inject constructor(
     private val context: Context,
     private val sp: SP,
     private val buildHelper: BuildHelper,
-    private val fabricPrivacy: FabricPrivacy
+    private val dateUtil: DateUtil,
+    private val repository: AppRepository,
+    private val fabricPrivacy: FabricPrivacy,
+    private val nsUpload: NSUpload
 ) : CommandQueueProvider {
 
     private val disposable = CompositeDisposable()
@@ -209,7 +177,7 @@ open class CommandQueue @Inject constructor(
 
     override fun independentConnect(reason: String, callback: Callback?) {
         aapsLogger.debug(LTag.PUMPQUEUE, "Starting new queue")
-        val tempCommandQueue = CommandQueue(injector, aapsLogger, rxBus, aapsSchedulers, resourceHelper, constraintChecker, profileFunction, activePlugin, context, sp, buildHelper, fabricPrivacy)
+        val tempCommandQueue = CommandQueue(injector, aapsLogger, rxBus, aapsSchedulers, resourceHelper, constraintChecker, profileFunction, activePlugin, context, sp, buildHelper, dateUtil, repository, fabricPrivacy, nsUpload)
         tempCommandQueue.readStatus(reason, callback)
     }
 
@@ -229,6 +197,28 @@ open class CommandQueue @Inject constructor(
     // returns true if command is queued
     @Synchronized
     override fun bolus(detailedBolusInfo: DetailedBolusInfo, callback: Callback?): Boolean {
+        // Check if pump store carbs
+        // If not, it's not necessary add command to the queue and initiate connection
+        // Assuming carbs in the future and carbs with duration are NOT stores anyway
+        if (detailedBolusInfo.carbs > 0)
+            if (!activePlugin.get().activePump.pumpDescription.storesCarbInfo
+                || detailedBolusInfo.carbsDuration != 0L
+                || detailedBolusInfo.carbsTimestamp ?: detailedBolusInfo.timestamp > dateUtil._now()
+            ) {
+                disposable += repository.runTransactionForResult(detailedBolusInfo.insertCarbsTransaction())
+                    .subscribe({ result ->
+                        result.inserted.forEach {
+                            aapsLogger.debug(LTag.DATABASE, "Inserted carbs $it")
+                            nsUpload.uploadCarbsRecord(it, detailedBolusInfo.createTherapyEvent())
+                        }
+                    }, {
+                        aapsLogger.error(LTag.BGSOURCE, "Error while saving carbs", it)
+                    })
+                // Do not process carbs anymore
+                detailedBolusInfo.carbs = 0.0
+                // if no insulin just exit
+                if (detailedBolusInfo.insulin == 0.0) return true
+            }
         var type = if (detailedBolusInfo.bolusType == DetailedBolusInfo.BolusType.SMB) CommandType.SMB_BOLUS else CommandType.BOLUS
         if (type == CommandType.SMB_BOLUS) {
             if (isRunning(CommandType.BOLUS) || isRunning(CommandType.SMB_BOLUS) || bolusInQueue()) {

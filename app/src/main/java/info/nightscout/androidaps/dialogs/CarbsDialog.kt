@@ -234,8 +234,14 @@ class CarbsDialog : DialogFragmentWithDate() {
                                 lowTarget = Profile.toMgdl(activityTT, profileFunction.getUnits()),
                                 highTarget = Profile.toMgdl(activityTT, profileFunction.getUnits())
                             )).subscribe({ result ->
-                                result.inserted.forEach { nsUpload.uploadTempTarget(it) }
-                                result.updated.forEach { nsUpload.updateTempTarget(it) }
+                                result.inserted.forEach {
+                                    aapsLogger.debug(LTag.DATABASE, "Inserted tt $it")
+                                    nsUpload.uploadTempTarget(it)
+                                }
+                                result.updated.forEach {
+                                    aapsLogger.debug(LTag.DATABASE, "Updated tt $it")
+                                    nsUpload.updateTempTarget(it)
+                                }
                             }, {
                                 aapsLogger.error(LTag.BGSOURCE, "Error while saving temporary target", it)
                             })
@@ -250,8 +256,14 @@ class CarbsDialog : DialogFragmentWithDate() {
                                 lowTarget = Profile.toMgdl(eatingSoonTT, profileFunction.getUnits()),
                                 highTarget = Profile.toMgdl(eatingSoonTT, profileFunction.getUnits())
                             )).subscribe({ result ->
-                                result.inserted.forEach { nsUpload.uploadTempTarget(it) }
-                                result.updated.forEach { nsUpload.updateTempTarget(it) }
+                                result.inserted.forEach {
+                                    aapsLogger.debug(LTag.DATABASE, "Inserted tt $it")
+                                    nsUpload.uploadTempTarget(it)
+                                }
+                                result.updated.forEach {
+                                    aapsLogger.debug(LTag.DATABASE, "Updated tt $it")
+                                    nsUpload.updateTempTarget(it)
+                                }
                             }, {
                                 aapsLogger.error(LTag.BGSOURCE, "Error while saving temporary target", it)
                             })
@@ -266,10 +278,16 @@ class CarbsDialog : DialogFragmentWithDate() {
                                 lowTarget = Profile.toMgdl(hypoTT, profileFunction.getUnits()),
                                 highTarget = Profile.toMgdl(hypoTT, profileFunction.getUnits())
                             )).subscribe({ result ->
-                                result.inserted.forEach { nsUpload.uploadTempTarget(it) }
-                                result.updated.forEach { nsUpload.updateTempTarget(it) }
+                                result.inserted.forEach {
+                                    aapsLogger.debug(LTag.DATABASE, "Inserted tt $it")
+                                    nsUpload.uploadTempTarget(it)
+                                }
+                                result.updated.forEach {
+                                    aapsLogger.debug(LTag.DATABASE, "Updated tt $it")
+                                    nsUpload.updateTempTarget(it)
+                                }
                             }, {
-                                aapsLogger.error(LTag.BGSOURCE, "Error while saving temporary target", it)
+                                aapsLogger.error(LTag.DATABASE, "Error while saving temporary target", it)
                             })
                         }
                     }
@@ -280,33 +298,22 @@ class CarbsDialog : DialogFragmentWithDate() {
                         detailedBolusInfo.context = context
                         detailedBolusInfo.notes = notes
                         detailedBolusInfo.carbsDuration = T.mins(duration.toLong()).msecs()
-                        if (duration != 0 || timeOffset != 0) {
-                            detailedBolusInfo.carbsTimestamp = time
-                            disposable += repository.runTransactionForResult(detailedBolusInfo.insertMealLinkTransaction())
-                                .subscribe({ result ->
-                                    result.inserted.forEach {
-                                        uel.log(Action.CARBS, notes,
-                                            ValueWithUnit(eventTime, Units.Timestamp, eventTimeChanged),
-                                            ValueWithUnit(carbsAfterConstraints, Units.G),
-                                            ValueWithUnit(timeOffset, Units.M, timeOffset != 0),
-                                            ValueWithUnit(duration, Units.H, duration != 0)
-                                        )
-                                        nsUpload.uploadMealLinkRecord(it)
-                                    }
-                                }, {
-                                    aapsLogger.error(LTag.BGSOURCE, "Error while saving meal link", it)
-                                })
-                        } else {
-                            commandQueue.bolus(detailedBolusInfo, object : Callback() {
-                                override fun run() {
-                                    if (!result.success) {
-                                        ErrorHelperActivity.runAlarm(ctx, result.comment, resourceHelper.gs(R.string.treatmentdeliveryerror), R.raw.boluserror)
-                                    } else
-                                        uel.log(Action.BOLUS, notes, ValueWithUnit(carbsAfterConstraints, Units.G))
+                        detailedBolusInfo.carbsTimestamp = time
+                        uel.log(Action.CARBS, detailedBolusInfo.notes,
+                            ValueWithUnit(detailedBolusInfo.timestamp, Units.Timestamp),
+                            ValueWithUnit(detailedBolusInfo.carbs, Units.G),
+                            ValueWithUnit(detailedBolusInfo.carbTime, Units.M, detailedBolusInfo.carbTime != 0),
+                            ValueWithUnit(detailedBolusInfo.carbsDuration, Units.H, detailedBolusInfo.carbsDuration != 0L)
+                        )
+                        commandQueue.bolus(detailedBolusInfo, object : Callback() {
+                            override fun run() {
+                                if (!result.success) {
+                                    ErrorHelperActivity.runAlarm(ctx, result.comment, resourceHelper.gs(R.string.treatmentdeliveryerror), R.raw.boluserror)
+                                } else
+                                    uel.log(Action.BOLUS, notes, ValueWithUnit(carbsAfterConstraints, Units.G))
 
-                                }
-                            })
-                        }
+                            }
+                        })
                     }
                     if (useAlarm && carbs > 0 && timeOffset > 0) {
                         carbTimer.scheduleReminder(dateUtil._now() + T.mins(timeOffset.toLong()).msecs())

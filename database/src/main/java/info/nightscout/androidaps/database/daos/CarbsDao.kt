@@ -15,4 +15,10 @@ internal interface CarbsDao : TraceableDao<Carbs> {
 
     @Query("DELETE FROM $TABLE_CARBS")
     override fun deleteAllEntries()
+
+    @Query("SELECT * FROM $TABLE_CARBS WHERE isValid = 1 AND timestamp >= :timestamp AND referenceId IS NULL ORDER BY id DESC")
+    fun getCarbsFromTime(timestamp: Long): Single<List<Carbs>>
+
+    @Query("SELECT * FROM $TABLE_CARBS WHERE timestamp >= :timestamp AND referenceId IS NULL ORDER BY id DESC")
+    fun getCarbsIncludingInvalidFromTime(timestamp: Long): Single<List<Carbs>>
 }

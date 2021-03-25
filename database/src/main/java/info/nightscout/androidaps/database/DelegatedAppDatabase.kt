@@ -14,7 +14,6 @@ internal class DelegatedAppDatabase(val changes: MutableList<DBEntry>, val datab
     val multiwaveBolusLinkDao: MultiwaveBolusLinkDao = DelegatedMultiwaveBolusLinkDao(changes, database.multiwaveBolusLinkDao)
     val totalDailyDoseDao: TotalDailyDoseDao = DelegatedTotalDailyDoseDao(changes, database.totalDailyDoseDao)
     val carbsDao: CarbsDao = DelegatedCarbsDao(changes, database.carbsDao)
-    val mealLinkDao: MealLinkDao = DelegatedMealLinkDao(changes, database.mealLinkDao)
     val temporaryTargetDao: TemporaryTargetDao = DelegatedTemporaryTargetDao(changes, database.temporaryTargetDao)
     val apsResultLinkDao: APSResultLinkDao = DelegatedAPSResultLinkLinkDao(changes, database.apsResultLinkDao)
     val bolusCalculatorResultDao: BolusCalculatorResultDao = DelegatedBolusCalculatorResultDao(changes, database.bolusCalculatorResultDao)

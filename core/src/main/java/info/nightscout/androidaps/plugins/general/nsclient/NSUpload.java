@@ -2,6 +2,7 @@ package info.nightscout.androidaps.plugins.general.nsclient;
 
 import android.os.Build;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import com.google.gson.Gson;
@@ -20,9 +21,9 @@ import info.nightscout.androidaps.data.DetailedBolusInfo;
 import info.nightscout.androidaps.data.IobTotal;
 import info.nightscout.androidaps.data.Profile;
 import info.nightscout.androidaps.database.entities.Bolus;
+import info.nightscout.androidaps.database.entities.BolusCalculatorResult;
 import info.nightscout.androidaps.database.entities.Carbs;
 import info.nightscout.androidaps.database.entities.GlucoseValue;
-import info.nightscout.androidaps.database.entities.MealLinkLoaded;
 import info.nightscout.androidaps.database.entities.TemporaryTarget;
 import info.nightscout.androidaps.database.entities.TherapyEvent;
 import info.nightscout.androidaps.db.DbRequest;
@@ -280,54 +281,72 @@ public class NSUpload {
  */
     }
 
-    public void uploadMealLinkRecord(MealLinkLoaded mealLinkLoaded) {
-        Bolus bolus = mealLinkLoaded.getBolus();
-        Carbs carbs = mealLinkLoaded.getCarbs();
-        TherapyEvent therapyEvent = mealLinkLoaded.getTherapyEvent();
-        if (bolus != null && therapyEvent != null && bolus.getAmount() > 0) {
-            try {
-                JSONObject data = new JSONObject();
-                data.put("eventType", therapyEvent.getType().getText());
-                data.put("insulin", bolus.getAmount());
-                data.put("created_at", DateUtil.toISOString(bolus.getTimestamp()));
-                data.put("date", bolus.getTimestamp());
-                data.put("isSMB", bolus.getType() == Bolus.Type.SMB);
-                if (bolus.getInterfaceIDs().getPumpId() != null)
-                    data.put("pumpId", bolus.getInterfaceIDs().getPumpId());
-                if (therapyEvent.getGlucose() != null)
-                    data.put("glucose", therapyEvent.getGlucose());
-                if (therapyEvent.getGlucoseType() != null)
-                    data.put("glucoseType", therapyEvent.getGlucoseType().getText());
-                if (mealLinkLoaded.getBolusCalculatorResult() != null)
-                    data.put("bolusCalc", new Gson().toJson(mealLinkLoaded.getBolusCalculatorResult()));
-                if (therapyEvent.getNote() != null)
-                    data.put("notes", therapyEvent.getNote());
-                uploadCareportalEntryToNS(data, bolus.getTimestamp());
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
+    public void uploadCarbsRecord(@NonNull Carbs carbs, @NonNull TherapyEvent therapyEvent) {
+        try {
+            JSONObject data = new JSONObject();
+            data.put("eventType", therapyEvent.getType().getText());
+            data.put("carbs", carbs.getAmount());
+            data.put("created_at", DateUtil.toISOString(carbs.getTimestamp()));
+            data.put("date", carbs.getTimestamp());
+            if (carbs.getDuration() != 0)
+                data.put("duration", carbs.getDuration());
+            if (carbs.getInterfaceIDs().getPumpId() != null)
+                data.put("pumpId", carbs.getInterfaceIDs().getPumpId());
+            if (therapyEvent.getGlucose() != null)
+                data.put("glucose", therapyEvent.getGlucose());
+            if (therapyEvent.getGlucoseType() != null)
+                data.put("glucoseType", therapyEvent.getGlucoseType().getText());
+            if (therapyEvent.getNote() != null)
+                data.put("notes", therapyEvent.getNote());
+            uploadCareportalEntryToNS(data, carbs.getTimestamp());
+        } catch (JSONException e) {
+            e.printStackTrace();
         }
-        if (carbs != null && therapyEvent != null && carbs.getAmount() > 0) {
-            try {
-                JSONObject data = new JSONObject();
-                data.put("eventType", therapyEvent.getType().getText());
-                data.put("carbs", carbs.getAmount());
-                data.put("created_at", DateUtil.toISOString(carbs.getTimestamp()));
-                data.put("date", carbs.getTimestamp());
-                if (carbs.getDuration() != 0)
-                    data.put("duration", carbs.getDuration());
-                if (carbs.getInterfaceIDs().getPumpId() != null)
-                    data.put("pumpId", carbs.getInterfaceIDs().getPumpId());
-                if (therapyEvent.getGlucose() != null)
-                    data.put("glucose", therapyEvent.getGlucose());
-                if (therapyEvent.getGlucoseType() != null)
-                    data.put("glucoseType", therapyEvent.getGlucoseType().getText());
-                if (therapyEvent.getNote() != null)
-                    data.put("notes", therapyEvent.getNote());
-                uploadCareportalEntryToNS(data, carbs.getTimestamp());
-            } catch (JSONException e) {
-                e.printStackTrace();
+    }
+
+    public void uploadBolusRecord(@NonNull Bolus bolus, @NonNull TherapyEvent therapyEvent, @Nullable BolusCalculatorResult bolusCalculatorResult) {
+        try {
+            JSONObject data = new JSONObject();
+            data.put("eventType", therapyEvent.getType().getText());
+            data.put("insulin", bolus.getAmount());
+            data.put("created_at", DateUtil.toISOString(bolus.getTimestamp()));
+            data.put("date", bolus.getTimestamp());
+            data.put("isSMB", bolus.getType() == Bolus.Type.SMB);
+            if (bolus.getInterfaceIDs().getPumpId() != null)
+                data.put("pumpId", bolus.getInterfaceIDs().getPumpId());
+            if (therapyEvent.getGlucose() != null)
+                data.put("glucose", therapyEvent.getGlucose());
+            if (therapyEvent.getGlucoseType() != null)
+                data.put("glucoseType", therapyEvent.getGlucoseType().getText());
+            if (bolusCalculatorResult != null)
+                data.put("bolusCalculatorResult", new Gson().toJson(bolusCalculatorResult));
+            if (therapyEvent.getNote() != null)
+                data.put("notes", therapyEvent.getNote());
+            uploadCareportalEntryToNS(data, bolus.getTimestamp());
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void uploadBolusCalc(@NonNull DetailedBolusInfo detailedBolusInfo) {
+        try {
+            JSONObject data = new JSONObject();
+            data.put("eventType", detailedBolusInfo.getEventType().toDBbEventType().getText());
+            data.put("created_at", DateUtil.toISOString(detailedBolusInfo.timestamp));
+            data.put("date", detailedBolusInfo.timestamp);
+            if (detailedBolusInfo.getMgdlGlucose() != null) {
+                data.put("glucose", detailedBolusInfo.getMgdlGlucose());
+                data.put("units", Constants.MGDL);
             }
+            if (detailedBolusInfo.getGlucoseType() != null)
+                data.put("glucoseType", detailedBolusInfo.getGlucoseType().getText());
+            if (detailedBolusInfo.getBolusCalculatorResult() != null)
+                data.put("bolusCalculatorResult", new Gson().toJson(detailedBolusInfo.getBolusCalculatorResult()));
+            if (detailedBolusInfo.getNotes() != null)
+                data.put("notes", detailedBolusInfo.getNotes());
+            uploadCareportalEntryToNS(data, detailedBolusInfo.timestamp);
+        } catch (JSONException e) {
+            e.printStackTrace();
         }
     }
 

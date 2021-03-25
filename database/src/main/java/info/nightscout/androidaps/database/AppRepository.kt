@@ -175,28 +175,48 @@ open class AppRepository @Inject internal constructor(
     fun deleteAllFoods() =
         database.foodDao.deleteAllEntries()
 
-    // MEAL LINK
-    fun getMealLinkLoadedDataFromTime(timestamp: Long, ascending: Boolean): Single<List<MealLinkLoaded>> =
-        database.mealLinkDao.getMealLinkLoadedFromTime(timestamp)
+    // BOLUS
+    fun getBolusesDataFromTime(timestamp: Long, ascending: Boolean): Single<List<Bolus>> =
+        database.bolusDao.getBolusesFromTime(timestamp)
             .map { if (!ascending) it.reversed() else it }
             .subscribeOn(Schedulers.io())
 
-    fun getMealLinkLoadedDataIncludingInvalidFromTime(timestamp: Long, ascending: Boolean): Single<List<MealLinkLoaded>> =
-        database.mealLinkDao.getMealLinkLoadedIncludingInvalidFromTime(timestamp)
+    fun getBolusesIncludingInvalidFromTime(timestamp: Long, ascending: Boolean): Single<List<Bolus>> =
+        database.bolusDao.getBolusesIncludingInvalidFromTime(timestamp)
             .map { if (!ascending) it.reversed() else it }
             .subscribeOn(Schedulers.io())
 
     fun deleteAllBoluses() =
         database.bolusDao.deleteAllEntries()
 
+    // CARBS
+    fun getCarbsDataFromTime(timestamp: Long, ascending: Boolean): Single<List<Carbs>> =
+        database.carbsDao.getCarbsFromTime(timestamp)
+            .map { if (!ascending) it.reversed() else it }
+            .subscribeOn(Schedulers.io())
+
+    fun getCarbsIncludingInvalidFromTime(timestamp: Long, ascending: Boolean): Single<List<Carbs>> =
+        database.carbsDao.getCarbsIncludingInvalidFromTime(timestamp)
+            .map { if (!ascending) it.reversed() else it }
+            .subscribeOn(Schedulers.io())
+
     fun deleteAllCarbs() =
         database.carbsDao.deleteAllEntries()
+
+    // CARBS
+    fun getBolusCalculatorResultsDataFromTime(timestamp: Long, ascending: Boolean): Single<List<BolusCalculatorResult>> =
+        database.bolusCalculatorResultDao.getBolusCalculatorResultsFromTime(timestamp)
+            .map { if (!ascending) it.reversed() else it }
+            .subscribeOn(Schedulers.io())
+
+    fun getBolusCalculatorResultsIncludingInvalidFromTime(timestamp: Long, ascending: Boolean): Single<List<BolusCalculatorResult>> =
+        database.bolusCalculatorResultDao.getBolusCalculatorResultsIncludingInvalidFromTime(timestamp)
+            .map { if (!ascending) it.reversed() else it }
+            .subscribeOn(Schedulers.io())
 
     fun deleteAllBolusCalculatorResults() =
         database.bolusCalculatorResultDao.deleteAllEntries()
 
-    fun deleteAllMealLinks() =
-        database.mealLinkDao.deleteAllEntries()
 }
 
 @Suppress("USELESS_CAST")

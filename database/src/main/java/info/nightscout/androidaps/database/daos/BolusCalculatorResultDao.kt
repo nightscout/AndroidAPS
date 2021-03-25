@@ -14,5 +14,12 @@ internal interface BolusCalculatorResultDao : TraceableDao<BolusCalculatorResult
     override fun findById(id: Long): BolusCalculatorResult?
 
     @Query("DELETE FROM $TABLE_BOLUS_CALCULATOR_RESULTS")
+
     override fun deleteAllEntries()
+
+    @Query("SELECT * FROM $TABLE_BOLUS_CALCULATOR_RESULTS WHERE isValid = 1 AND timestamp >= :timestamp AND referenceId IS NULL ORDER BY id DESC")
+    fun getBolusCalculatorResultsFromTime(timestamp: Long): Single<List<BolusCalculatorResult>>
+
+    @Query("SELECT * FROM $TABLE_BOLUS_CALCULATOR_RESULTS WHERE timestamp >= :timestamp AND referenceId IS NULL ORDER BY id DESC")
+    fun getBolusCalculatorResultsIncludingInvalidFromTime(timestamp: Long): Single<List<BolusCalculatorResult>>
 }

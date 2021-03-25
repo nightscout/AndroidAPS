@@ -12,7 +12,7 @@ const val DATABASE_VERSION = 8
     entities = [APSResult::class, Bolus::class, BolusCalculatorResult::class, Carbs::class,
         EffectiveProfileSwitch::class, ExtendedBolus::class, GlucoseValue::class, ProfileSwitch::class,
         TemporaryBasal::class, TemporaryTarget::class, TherapyEvent::class, TotalDailyDose::class, APSResultLink::class,
-        MealLink::class, MultiwaveBolusLink::class, PreferenceChange::class, VersionChange::class, UserEntry::class,
+        MultiwaveBolusLink::class, PreferenceChange::class, VersionChange::class, UserEntry::class,
         Food::class],
     exportSchema = true)
 @TypeConverters(Converters::class)
@@ -33,8 +33,6 @@ internal abstract class AppDatabase : RoomDatabase() {
     abstract val totalDailyDoseDao: TotalDailyDoseDao
 
     abstract val carbsDao: CarbsDao
-
-    abstract val mealLinkDao: MealLinkDao
 
     abstract val temporaryTargetDao: TemporaryTargetDao
 

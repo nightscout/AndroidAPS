@@ -2,7 +2,7 @@
   "formatVersion": 1,
   "database": {
     "version": 8,
-    "identityHash": "c38f6acf42463481d39fe05be1fd3b55",
+    "identityHash": "2e4a472793f7dd21528ddcb540500f1b",
     "entities": [
       {
         "tableName": "apsResults",
@@ -350,7 +350,7 @@
       },
       {
         "tableName": "bolusCalculatorResults",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `version` INTEGER NOT NULL, `dateCreated` INTEGER NOT NULL, `isValid` INTEGER NOT NULL, `referenceId` INTEGER, `timestamp` INTEGER NOT NULL, `utcOffset` INTEGER NOT NULL, `targetBGLow` REAL NOT NULL, `targetBGHigh` REAL NOT NULL, `isf` REAL NOT NULL, `ic` REAL NOT NULL, `bolusIOB` REAL NOT NULL, `wasBolusIOBUsed` INTEGER NOT NULL, `basalIOB` REAL NOT NULL, `wasBasalIOBUsed` INTEGER NOT NULL, `glucoseValue` REAL NOT NULL, `wasGlucoseUsed` INTEGER NOT NULL, `glucoseDifference` REAL NOT NULL, `glucoseInsulin` REAL NOT NULL, `glucoseTrend` REAL NOT NULL, `wasTrendUsed` INTEGER NOT NULL, `trendInsulin` REAL NOT NULL, `cob` REAL NOT NULL, `wasCOBUsed` INTEGER NOT NULL, `cobInsulin` REAL NOT NULL, `carbs` REAL NOT NULL, `wereCarbsUsed` INTEGER NOT NULL, `carbsInsulin` REAL NOT NULL, `otherCorrection` REAL NOT NULL, `wasSuperbolusUsed` INTEGER NOT NULL, `superbolusInsulin` REAL NOT NULL, `wasTempTargetUsed` INTEGER NOT NULL, `totalInsulin` REAL NOT NULL, `percentageCorrection` INTEGER NOT NULL, `profileName` TEXT NOT NULL, `nightscoutSystemId` TEXT, `nightscoutId` TEXT, `pumpType` TEXT, `pumpSerial` TEXT, `pumpId` INTEGER, `startId` INTEGER, `endId` INTEGER, FOREIGN KEY(`referenceId`) REFERENCES `bolusCalculatorResults`(`id`) ON UPDATE NO ACTION ON DELETE NO ACTION )",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `version` INTEGER NOT NULL, `dateCreated` INTEGER NOT NULL, `isValid` INTEGER NOT NULL, `referenceId` INTEGER, `timestamp` INTEGER NOT NULL, `utcOffset` INTEGER NOT NULL, `targetBGLow` REAL NOT NULL, `targetBGHigh` REAL NOT NULL, `isf` REAL NOT NULL, `ic` REAL NOT NULL, `bolusIOB` REAL NOT NULL, `wasBolusIOBUsed` INTEGER NOT NULL, `basalIOB` REAL NOT NULL, `wasBasalIOBUsed` INTEGER NOT NULL, `glucoseValue` REAL NOT NULL, `wasGlucoseUsed` INTEGER NOT NULL, `glucoseDifference` REAL NOT NULL, `glucoseInsulin` REAL NOT NULL, `glucoseTrend` REAL NOT NULL, `wasTrendUsed` INTEGER NOT NULL, `trendInsulin` REAL NOT NULL, `cob` REAL NOT NULL, `wasCOBUsed` INTEGER NOT NULL, `cobInsulin` REAL NOT NULL, `carbs` REAL NOT NULL, `wereCarbsUsed` INTEGER NOT NULL, `carbsInsulin` REAL NOT NULL, `otherCorrection` REAL NOT NULL, `wasSuperbolusUsed` INTEGER NOT NULL, `superbolusInsulin` REAL NOT NULL, `wasTempTargetUsed` INTEGER NOT NULL, `totalInsulin` REAL NOT NULL, `percentageCorrection` INTEGER NOT NULL, `profileName` TEXT NOT NULL, `note` TEXT NOT NULL, `nightscoutSystemId` TEXT, `nightscoutId` TEXT, `pumpType` TEXT, `pumpSerial` TEXT, `pumpId` INTEGER, `startId` INTEGER, `endId` INTEGER, FOREIGN KEY(`referenceId`) REFERENCES `bolusCalculatorResults`(`id`) ON UPDATE NO ACTION ON DELETE NO ACTION )",
         "fields": [
           {
             "fieldPath": "id",
@@ -559,6 +559,12 @@
           {
             "fieldPath": "profileName",
             "columnName": "profileName",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "note",
+            "columnName": "note",
             "affinity": "TEXT",
             "notNull": true
           },
@@ -2221,250 +2227,6 @@
         ]
       },
       {
-        "tableName": "mealLinks",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `version` INTEGER NOT NULL, `dateCreated` INTEGER NOT NULL, `isValid` INTEGER NOT NULL, `referenceId` INTEGER, `timestamp` INTEGER NOT NULL, `utcOffset` INTEGER NOT NULL, `bolusId` INTEGER, `carbsId` INTEGER, `bolusCalcResultId` INTEGER, `superbolusTempBasalId` INTEGER, `noteId` INTEGER, `nightscoutSystemId` TEXT, `nightscoutId` TEXT, `pumpType` TEXT, `pumpSerial` TEXT, `pumpId` INTEGER, `startId` INTEGER, `endId` INTEGER, FOREIGN KEY(`bolusId`) REFERENCES `boluses`(`id`) ON UPDATE NO ACTION ON DELETE NO ACTION , FOREIGN KEY(`carbsId`) REFERENCES `carbs`(`id`) ON UPDATE NO ACTION ON DELETE NO ACTION , FOREIGN KEY(`bolusCalcResultId`) REFERENCES `bolusCalculatorResults`(`id`) ON UPDATE NO ACTION ON DELETE NO ACTION , FOREIGN KEY(`superbolusTempBasalId`) REFERENCES `temporaryBasals`(`id`) ON UPDATE NO ACTION ON DELETE NO ACTION , FOREIGN KEY(`noteId`) REFERENCES `therapyEvents`(`id`) ON UPDATE NO ACTION ON DELETE NO ACTION , FOREIGN KEY(`referenceId`) REFERENCES `mealLinks`(`id`) ON UPDATE NO ACTION ON DELETE NO ACTION )",
-        "fields": [
-          {
-            "fieldPath": "id",
-            "columnName": "id",
-            "affinity": "INTEGER",
-            "notNull": true
-          },
-          {
-            "fieldPath": "version",
-            "columnName": "version",
-            "affinity": "INTEGER",
-            "notNull": true
-          },
-          {
-            "fieldPath": "dateCreated",
-            "columnName": "dateCreated",
-            "affinity": "INTEGER",
-            "notNull": true
-          },
-          {
-            "fieldPath": "isValid",
-            "columnName": "isValid",
-            "affinity": "INTEGER",
-            "notNull": true
-          },
-          {
-            "fieldPath": "referenceId",
-            "columnName": "referenceId",
-            "affinity": "INTEGER",
-            "notNull": false
-          },
-          {
-            "fieldPath": "timestamp",
-            "columnName": "timestamp",
-            "affinity": "INTEGER",
-            "notNull": true
-          },
-          {
-            "fieldPath": "utcOffset",
-            "columnName": "utcOffset",
-            "affinity": "INTEGER",
-            "notNull": true
-          },
-          {
-            "fieldPath": "bolusId",
-            "columnName": "bolusId",
-            "affinity": "INTEGER",
-            "notNull": false
-          },
-          {
-            "fieldPath": "carbsId",
-            "columnName": "carbsId",
-            "affinity": "INTEGER",
-            "notNull": false
-          },
-          {
-            "fieldPath": "bolusCalcResultId",
-            "columnName": "bolusCalcResultId",
-            "affinity": "INTEGER",
-            "notNull": false
-          },
-          {
-            "fieldPath": "superbolusTempBasalId",
-            "columnName": "superbolusTempBasalId",
-            "affinity": "INTEGER",
-            "notNull": false
-          },
-          {
-            "fieldPath": "noteId",
-            "columnName": "noteId",
-            "affinity": "INTEGER",
-            "notNull": false
-          },
-          {
-            "fieldPath": "interfaceIDs_backing.nightscoutSystemId",
-            "columnName": "nightscoutSystemId",
-            "affinity": "TEXT",
-            "notNull": false
-          },
-          {
-            "fieldPath": "interfaceIDs_backing.nightscoutId",
-            "columnName": "nightscoutId",
-            "affinity": "TEXT",
-            "notNull": false
-          },
-          {
-            "fieldPath": "interfaceIDs_backing.pumpType",
-            "columnName": "pumpType",
-            "affinity": "TEXT",
-            "notNull": false
-          },
-          {
-            "fieldPath": "interfaceIDs_backing.pumpSerial",
-            "columnName": "pumpSerial",
-            "affinity": "TEXT",
-            "notNull": false
-          },
-          {
-            "fieldPath": "interfaceIDs_backing.pumpId",
-            "columnName": "pumpId",
-            "affinity": "INTEGER",
-            "notNull": false
-          },
-          {
-            "fieldPath": "interfaceIDs_backing.startId",
-            "columnName": "startId",
-            "affinity": "INTEGER",
-            "notNull": false
-          },
-          {
-            "fieldPath": "interfaceIDs_backing.endId",
-            "columnName": "endId",
-            "affinity": "INTEGER",
-            "notNull": false
-          }
-        ],
-        "primaryKey": {
-          "columnNames": [
-            "id"
-          ],
-          "autoGenerate": true
-        },
-        "indices": [
-          {
-            "name": "index_mealLinks_referenceId",
-            "unique": false,
-            "columnNames": [
-              "referenceId"
-            ],
-            "createSql": "CREATE INDEX IF NOT EXISTS `index_mealLinks_referenceId` ON `${TABLE_NAME}` (`referenceId`)"
-          },
-          {
-            "name": "index_mealLinks_bolusId",
-            "unique": false,
-            "columnNames": [
-              "bolusId"
-            ],
-            "createSql": "CREATE INDEX IF NOT EXISTS `index_mealLinks_bolusId` ON `${TABLE_NAME}` (`bolusId`)"
-          },
-          {
-            "name": "index_mealLinks_carbsId",
-            "unique": false,
-            "columnNames": [
-              "carbsId"
-            ],
-            "createSql": "CREATE INDEX IF NOT EXISTS `index_mealLinks_carbsId` ON `${TABLE_NAME}` (`carbsId`)"
-          },
-          {
-            "name": "index_mealLinks_bolusCalcResultId",
-            "unique": false,
-            "columnNames": [
-              "bolusCalcResultId"
-            ],
-            "createSql": "CREATE INDEX IF NOT EXISTS `index_mealLinks_bolusCalcResultId` ON `${TABLE_NAME}` (`bolusCalcResultId`)"
-          },
-          {
-            "name": "index_mealLinks_superbolusTempBasalId",
-            "unique": false,
-            "columnNames": [
-              "superbolusTempBasalId"
-            ],
-            "createSql": "CREATE INDEX IF NOT EXISTS `index_mealLinks_superbolusTempBasalId` ON `${TABLE_NAME}` (`superbolusTempBasalId`)"
-          },
-          {
-            "name": "index_mealLinks_noteId",
-            "unique": false,
-            "columnNames": [
-              "noteId"
-            ],
-            "createSql": "CREATE INDEX IF NOT EXISTS `index_mealLinks_noteId` ON `${TABLE_NAME}` (`noteId`)"
-          }
-        ],
-        "foreignKeys": [
-          {
-            "table": "boluses",
-            "onDelete": "NO ACTION",
-            "onUpdate": "NO ACTION",
-            "columns": [
-              "bolusId"
-            ],
-            "referencedColumns": [
-              "id"
-            ]
-          },
-          {
-            "table": "carbs",
-            "onDelete": "NO ACTION",
-            "onUpdate": "NO ACTION",
-            "columns": [
-              "carbsId"
-            ],
-            "referencedColumns": [
-              "id"
-            ]
-          },
-          {
-            "table": "bolusCalculatorResults",
-            "onDelete": "NO ACTION",
-            "onUpdate": "NO ACTION",
-            "columns": [
-              "bolusCalcResultId"
-            ],
-            "referencedColumns": [
-              "id"
-            ]
-          },
-          {
-            "table": "temporaryBasals",
-            "onDelete": "NO ACTION",
-            "onUpdate": "NO ACTION",
-            "columns": [
-              "superbolusTempBasalId"
-            ],
-            "referencedColumns": [
-              "id"
-            ]
-          },
-          {
-            "table": "therapyEvents",
-            "onDelete": "NO ACTION",
-            "onUpdate": "NO ACTION",
-            "columns": [
-              "noteId"
-            ],
-            "referencedColumns": [
-              "id"
-            ]
-          },
-          {
-            "table": "mealLinks",
-            "onDelete": "NO ACTION",
-            "onUpdate": "NO ACTION",
-            "columns": [
-              "referenceId"
-            ],
-            "referencedColumns": [
-              "id"
-            ]
-          }
-        ]
-      },
-      {
         "tableName": "multiwaveBolusLinks",
         "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `version` INTEGER NOT NULL, `dateCreated` INTEGER NOT NULL, `isValid` INTEGER NOT NULL, `referenceId` INTEGER, `bolusId` INTEGER NOT NULL, `extendedBolusId` INTEGER NOT NULL, `nightscoutSystemId` TEXT, `nightscoutId` TEXT, `pumpType` TEXT, `pumpSerial` TEXT, `pumpId` INTEGER, `startId` INTEGER, `endId` INTEGER, FOREIGN KEY(`bolusId`) REFERENCES `boluses`(`id`) ON UPDATE NO ACTION ON DELETE NO ACTION , FOREIGN KEY(`extendedBolusId`) REFERENCES `extendedBoluses`(`id`) ON UPDATE NO ACTION ON DELETE NO ACTION , FOREIGN KEY(`referenceId`) REFERENCES `multiwaveBolusLinks`(`id`) ON UPDATE NO ACTION ON DELETE NO ACTION )",
         "fields": [
@@ -2942,7 +2704,7 @@
     "views": [],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'c38f6acf42463481d39fe05be1fd3b55')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '2e4a472793f7dd21528ddcb540500f1b')"
     ]
   }
 }
