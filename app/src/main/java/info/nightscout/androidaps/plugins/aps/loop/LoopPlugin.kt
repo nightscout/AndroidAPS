@@ -609,7 +609,8 @@ open class LoopPlugin @Inject constructor(
         detailedBolusInfo.source = Source.USER
         detailedBolusInfo.deliverAt = request.deliverAt
         aapsLogger.debug(LTag.APS, "applyAPSRequest: bolus()")
-        uel.log(Action.SMB, ValueWithUnit(Sources.Loop), ValueWithUnit(detailedBolusInfo.insulin, Units.U))
+        if (request.smb > 0.0)
+            uel.log(Action.SMB, ValueWithUnit(Sources.Loop), ValueWithUnit(detailedBolusInfo.insulin, Units.U))
         commandQueue.bolus(detailedBolusInfo, callback)
     }
 
