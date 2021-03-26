@@ -42,6 +42,7 @@ fun Sources.iconId(): Int {
         Sources.Automation          -> R.drawable.ic_automation
         Sources.Loop                -> R.drawable.ic_loop_closed_white
         Sources.NSClient            -> R.drawable.ic_nightscout_syncs
+        Sources.Wear                -> R.drawable.ic_watch
         else                        -> -1
     }
 }
