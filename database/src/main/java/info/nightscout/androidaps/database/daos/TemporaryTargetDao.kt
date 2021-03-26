@@ -17,8 +17,8 @@ internal interface TemporaryTargetDao : TraceableDao<TemporaryTarget> {
     @Query("DELETE FROM $TABLE_TEMPORARY_TARGETS")
     override fun deleteAllEntries()
 
-    @Query("SELECT * FROM $TABLE_TEMPORARY_TARGETS WHERE dateCreated >= :timestamp AND referenceId IS NULL ORDER BY timestamp ASC")
-    fun getAllChangedFromTime(timestamp: Long): Single<List<TemporaryTarget>>
+    @Query("SELECT * FROM $TABLE_TEMPORARY_TARGETS WHERE dateCreated > :timestamp AND referenceId IS NULL ORDER BY timestamp ASC LIMIT :amount")
+    fun getAllChangedFromTime(timestamp: Long, amount: Int): Single<List<TemporaryTarget>>
 
     @Query("SELECT * FROM $TABLE_TEMPORARY_TARGETS WHERE nightscoutId = :nsId AND referenceId IS NULL")
     fun findByNSId(nsId: String): TemporaryTarget?

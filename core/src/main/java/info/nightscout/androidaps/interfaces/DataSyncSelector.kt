@@ -8,8 +8,9 @@ interface DataSyncSelector {
     fun resetToNextFullSync()
 
     fun confirmTempTargetsTimestamp(lastSynced: Long)
+    fun confirmTempTargetsTimestampIfGreater(lastSynced: Long)
     fun changedTempTargets() : List<TemporaryTarget>
 
     // Until NS v3
-    fun changedTempTargetsCompat() : List<DbRequest>
+    fun processChangedTempTargetsCompat(): Boolean
 }

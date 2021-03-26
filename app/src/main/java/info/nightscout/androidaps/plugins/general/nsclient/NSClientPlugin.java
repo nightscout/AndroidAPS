@@ -4,19 +4,15 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
-import android.os.Bundle;
 import android.os.Handler;
 import android.os.HandlerThread;
 import android.os.IBinder;
 import android.text.Spanned;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.preference.PreferenceFragmentCompat;
 import androidx.preference.SwitchPreference;
-
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -28,27 +24,15 @@ import dagger.android.HasAndroidInjector;
 import info.nightscout.androidaps.Config;
 import info.nightscout.androidaps.Constants;
 import info.nightscout.androidaps.R;
-import info.nightscout.androidaps.database.AppRepository;
-import info.nightscout.androidaps.database.entities.TemporaryTarget;
-import info.nightscout.androidaps.database.entities.TherapyEvent;
-import info.nightscout.androidaps.database.entities.UserEntry.Action;
-import info.nightscout.androidaps.database.entities.UserEntry.Units;
-import info.nightscout.androidaps.database.entities.UserEntry.ValueWithUnit;
-import info.nightscout.androidaps.database.transactions.SyncTemporaryTargetTransaction;
-import info.nightscout.androidaps.database.transactions.SyncTherapyEventTransaction;
 import info.nightscout.androidaps.events.EventAppExit;
 import info.nightscout.androidaps.events.EventChargingState;
 import info.nightscout.androidaps.events.EventNetworkChange;
-import info.nightscout.androidaps.events.EventNsTreatment;
 import info.nightscout.androidaps.events.EventPreferenceChange;
-import info.nightscout.androidaps.interfaces.ActivePluginProvider;
-import info.nightscout.androidaps.interfaces.DatabaseHelperInterface;
 import info.nightscout.androidaps.interfaces.PluginBase;
 import info.nightscout.androidaps.interfaces.PluginDescription;
 import info.nightscout.androidaps.interfaces.PluginType;
 import info.nightscout.androidaps.logging.AAPSLogger;
 import info.nightscout.androidaps.logging.LTag;
-import info.nightscout.androidaps.logging.UserEntryLogger;
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper;
 import info.nightscout.androidaps.plugins.general.nsclient.data.AlarmAck;
 import info.nightscout.androidaps.plugins.general.nsclient.data.NSAlarm;
@@ -57,23 +41,14 @@ import info.nightscout.androidaps.plugins.general.nsclient.events.EventNSClientR
 import info.nightscout.androidaps.plugins.general.nsclient.events.EventNSClientStatus;
 import info.nightscout.androidaps.plugins.general.nsclient.events.EventNSClientUpdateGUI;
 import info.nightscout.androidaps.plugins.general.nsclient.services.NSClientService;
-import info.nightscout.androidaps.plugins.general.overview.events.EventNewNotification;
-import info.nightscout.androidaps.plugins.general.overview.notifications.Notification;
-import info.nightscout.androidaps.services.Intents;
 import info.nightscout.androidaps.utils.FabricPrivacy;
 import info.nightscout.androidaps.utils.HtmlHelper;
-import info.nightscout.androidaps.utils.JsonHelper;
 import info.nightscout.androidaps.utils.ToastUtils;
 import info.nightscout.androidaps.utils.buildHelper.BuildHelper;
 import info.nightscout.androidaps.utils.resources.ResourceHelper;
 import info.nightscout.androidaps.utils.rx.AapsSchedulers;
 import info.nightscout.androidaps.utils.sharedPreferences.SP;
 import io.reactivex.disposables.CompositeDisposable;
-
-import static info.nightscout.androidaps.utils.extensions.TemporaryTargetExtensionKt.temporaryTargetFromJson;
-import static info.nightscout.androidaps.utils.extensions.TemporaryTargetExtensionKt.temporaryTargetFromNsIdForInvalidating;
-import static info.nightscout.androidaps.utils.extensions.TherapyEventExtensionKt.therapyEventFromJson;
-import static info.nightscout.androidaps.utils.extensions.TherapyEventExtensionKt.therapyEventFromNsIdForInvalidating;
 
 @Singleton
 public class NSClientPlugin extends PluginBase {
@@ -86,13 +61,9 @@ public class NSClientPlugin extends PluginBase {
     private final AapsSchedulers aapsSchedulers;
     private final FabricPrivacy fabricPrivacy;
     private final SP sp;
+    private final NsClientReceiverDelegate nsClientReceiverDelegate;
     private final Config config;
     private final BuildHelper buildHelper;
-    private final ActivePluginProvider activePlugin;
-    private final NSUpload nsUpload;
-    private final AppRepository repository;
-    private final DatabaseHelperInterface databaseHelper;
-    private final UserEntryLogger uel;
 
     public Handler handler;
 
@@ -104,9 +75,8 @@ public class NSClientPlugin extends PluginBase {
 
     public String status = "";
 
-    public NSClientService nsClientService = null;
+    public @Nullable NSClientService nsClientService = null;
 
-    private final NsClientReceiverDelegate nsClientReceiverDelegate;
 
     @Inject
     public NSClientPlugin(
@@ -120,12 +90,7 @@ public class NSClientPlugin extends PluginBase {
             SP sp,
             NsClientReceiverDelegate nsClientReceiverDelegate,
             Config config,
-            BuildHelper buildHelper,
-            ActivePluginProvider activePlugin,
-            NSUpload nsUpload,
-            DatabaseHelperInterface databaseHelper,
-            AppRepository repository,
-            UserEntryLogger uel
+            BuildHelper buildHelper
     ) {
         super(new PluginDescription()
                         .mainType(PluginType.GENERAL)
@@ -148,11 +113,6 @@ public class NSClientPlugin extends PluginBase {
         this.nsClientReceiverDelegate = nsClientReceiverDelegate;
         this.config = config;
         this.buildHelper = buildHelper;
-        this.activePlugin = activePlugin;
-        this.nsUpload = nsUpload;
-        this.databaseHelper = databaseHelper;
-        this.repository = repository;
-        this.uel = uel;
 
         if (config.getNSCLIENT()) {
             getPluginDescription().alwaysEnabled(true).visibleByDefault(true);
@@ -354,7 +314,7 @@ public class NSClientPlugin extends PluginBase {
     }
 
     public void updateLatestDateReceivedIfNewer(long latestReceived) {
-        if (latestReceived > nsClientService.latestDateInReceivedData)
+        if (nsClientService != null && latestReceived > nsClientService.latestDateInReceivedData)
             nsClientService.latestDateInReceivedData = latestReceived;
     }
 }

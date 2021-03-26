@@ -10,7 +10,6 @@ import android.os.IBinder;
 import android.os.PowerManager;
 import android.os.SystemClock;
 
-import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 import androidx.work.OneTimeWorkRequest;
 
 import com.google.common.base.Charsets;
@@ -32,6 +31,9 @@ import dagger.android.DaggerService;
 import dagger.android.HasAndroidInjector;
 import info.nightscout.androidaps.Config;
 import info.nightscout.androidaps.R;
+import info.nightscout.androidaps.database.AppRepository;
+import info.nightscout.androidaps.database.entities.TemporaryTarget;
+import info.nightscout.androidaps.database.transactions.UpdateNsIdTemporaryTargetTransaction;
 import info.nightscout.androidaps.db.DbRequest;
 import info.nightscout.androidaps.events.EventAppExit;
 import info.nightscout.androidaps.events.EventConfigBuilderChange;
@@ -79,7 +81,6 @@ import io.reactivex.disposables.CompositeDisposable;
 import io.socket.client.IO;
 import io.socket.client.Socket;
 import io.socket.emitter.Emitter;
-import kotlin.reflect.jvm.internal.impl.load.kotlin.JvmType;
 
 public class NSClientService extends DaggerService {
     @Inject HasAndroidInjector injector;
@@ -99,6 +100,7 @@ public class NSClientService extends DaggerService {
     @Inject UploadQueueInterface uploadQueue;
     @Inject DataWorker dataWorker;
     @Inject DataSyncSelector dataSyncSelector;
+    @Inject AppRepository repository;
 
     private final CompositeDisposable disposable = new CompositeDisposable();
 
@@ -216,6 +218,22 @@ public class NSClientService extends DaggerService {
     }
 
     public void processAddAck(NSAddAck ack) {
+        // new room way
+        if (ack.getOriginalObject() instanceof TemporaryTarget) {
+            ((TemporaryTarget) ack.getOriginalObject()).getInterfaceIDs().setNightscoutId(ack.getId());
+
+            disposable.add(repository.runTransactionForResult(new UpdateNsIdTemporaryTargetTransaction((TemporaryTarget) ack.getOriginalObject()))
+                    .observeOn(aapsSchedulers.getIo())
+                    .subscribe(
+                            result -> aapsLogger.debug(LTag.DATABASE, "Updated ns id of temporary target $originalObject"),
+                            error -> aapsLogger.error(LTag.DATABASE, "Updated ns id of temporary target failed")
+                    ));
+            dataSyncSelector.confirmTempTargetsTimestampIfGreater(((TemporaryTarget) ack.getOriginalObject()).getDateCreated());
+            rxBus.send(new EventNSClientNewLog("DBADD", "Acked " + ack.nsClientID));
+            resend("AddAck");
+            return;
+        }
+        // old way
         if (ack.nsClientID != null) {
             uploadQueue.removeByNsClientIdIfExists(ack.json);
             rxBus.send(new EventNSClientNewLog("DBADD", "Acked " + ack.nsClientID));
@@ -225,9 +243,17 @@ public class NSClientService extends DaggerService {
     }
 
     public void processUpdateAck(NSUpdateAck ack) {
-        if (ack.result) {
-            uploadQueue.removeByMongoId(ack.action, ack._id);
-            rxBus.send(new EventNSClientNewLog("DBUPDATE/DBREMOVE", "Acked " + ack._id));
+        // new room way
+        if (ack.getOriginalObject() instanceof TemporaryTarget) {
+            dataSyncSelector.confirmTempTargetsTimestampIfGreater(((TemporaryTarget) ack.getOriginalObject()).getDateCreated());
+            rxBus.send(new EventNSClientNewLog("DBUPDATE/DBREMOVE", "Acked " + ack.get_id()));
+            resend("UpdateAck");
+            return;
+        }
+        // old way
+        if (ack.getResult()) {
+            uploadQueue.removeByMongoId(ack.getAction(), ack.get_id());
+            rxBus.send(new EventNSClientNewLog("DBUPDATE/DBREMOVE", "Acked " + ack.get_id()));
         } else {
             rxBus.send(new EventNSClientNewLog("ERROR", "DBUPDATE/DBREMOVE Unknown response"));
         }
@@ -261,6 +287,7 @@ public class NSClientService extends DaggerService {
         public NSClientService getServiceInstance() {
             return NSClientService.this;
         }
+
     }
 
     @Override
@@ -701,15 +728,15 @@ public class NSClientService extends DaggerService {
         }
     }
 
-    public void dbUpdateUnset(DbRequest dbr, NSUpdateAck ack) {
+    public void dbUpdate(String collection, String _id, JSONObject data, Object originalObject) {
         try {
             if (!isConnected || !hasWriteAuth) return;
             JSONObject message = new JSONObject();
-            message.put("collection", dbr.collection);
-            message.put("_id", dbr._id);
-            message.put("data", new JSONObject(dbr.data));
-            mSocket.emit("dbUpdateUnset", message, ack);
-            rxBus.send(new EventNSClientNewLog("DBUPDATEUNSET " + dbr.collection, "Sent " + dbr._id));
+            message.put("collection", collection);
+            message.put("_id", _id);
+            message.put("data", data);
+            mSocket.emit("dbUpdate", message, new NSUpdateAck("dbUpdate", _id, aapsLogger, rxBus, originalObject));
+            rxBus.send(new EventNSClientNewLog("DBUPDATE " + collection, "Sent " + originalObject.toString()));
         } catch (JSONException e) {
             aapsLogger.error("Unhandled exception", e);
         }
@@ -728,6 +755,19 @@ public class NSClientService extends DaggerService {
         }
     }
 
+    public void dbRemove(String collection, String _id, Object originalObject) {
+        try {
+            if (!isConnected || !hasWriteAuth) return;
+            JSONObject message = new JSONObject();
+            message.put("collection", collection);
+            message.put("_id", _id);
+            mSocket.emit("dbRemove", message, new NSUpdateAck("dbRemove", _id, aapsLogger, rxBus, originalObject));
+            rxBus.send(new EventNSClientNewLog("DBREMOVE " + collection, "Sent " + _id));
+        } catch (JSONException e) {
+            aapsLogger.error("Unhandled exception", e);
+        }
+    }
+
     public void dbAdd(DbRequest dbr, NSAddAck ack) {
         try {
             if (!isConnected || !hasWriteAuth) return;
@@ -741,14 +781,14 @@ public class NSClientService extends DaggerService {
         }
     }
 
-    public void dbAdd(DbRequest dbr, NSAddAck ack, JvmType.Object originalData) {
+    public void dbAdd(String collection, JSONObject data, Object originalObject) {
         try {
             if (!isConnected || !hasWriteAuth) return;
             JSONObject message = new JSONObject();
-            message.put("collection", dbr.collection);
-            message.put("data", new JSONObject(dbr.data));
-            mSocket.emit("dbAdd", message, ack);
-            rxBus.send(new EventNSClientNewLog("DBADD " + dbr.collection, "Sent " + dbr.nsClientID));
+            message.put("collection", collection);
+            message.put("data", data);
+            mSocket.emit("dbAdd", message, new NSAddAck(aapsLogger, rxBus, originalObject));
+            rxBus.send(new EventNSClientNewLog("DBADD " + collection, "Sent " + originalObject.toString()));
         } catch (JSONException e) {
             aapsLogger.error("Unhandled exception", e);
         }
@@ -761,27 +801,24 @@ public class NSClientService extends DaggerService {
     }
 
     public void resend(final String reason) {
-        if (uploadQueue.size() == 0)
-            return;
-
         if (!isConnected || !hasWriteAuth) return;
 
         handler.post(() -> {
             if (mSocket == null || !mSocket.connected()) return;
 
-            if (lastResendTime > System.currentTimeMillis() - 10 * 1000L) {
-                aapsLogger.debug(LTag.NSCLIENT, "Skipping resend by lastResendTime: " + ((System.currentTimeMillis() - lastResendTime) / 1000L) + " sec");
-                return;
-            }
+// for room db I send record by record . this would make the process slow
+//            if (lastResendTime > System.currentTimeMillis() - 10 * 1000L) {
+//                aapsLogger.debug(LTag.NSCLIENT, "Skipping resend by lastResendTime: " + ((System.currentTimeMillis() - lastResendTime) / 1000L) + " sec");
+//                return;
+//            }
             lastResendTime = System.currentTimeMillis();
 
             rxBus.send(new EventNSClientNewLog("QUEUE", "Resend started: " + reason));
 
-            List<DbRequest> ttData = dataSyncSelector.changedTempTargetsCompat();
-            for (DbRequest dbr : ttData) {
-                uploadQueue.add(dbr);
-                dataSyncSelector.confirmTempTargetsTimestamp(Long.parseLong(dbr.nsClientID));
-            }
+            if (dataSyncSelector.processChangedTempTargetsCompat()) return;
+
+            if (uploadQueue.size() == 0)
+                return;
 
             CloseableIterator<DbRequest> iterator;
             int maxcount = 30;
@@ -790,7 +827,16 @@ public class NSClientService extends DaggerService {
                 try {
                     while (iterator.hasNext() && maxcount > 0) {
                         DbRequest dbr = iterator.next();
-                        processDbRequest(dbr);
+                        if (dbr.action.equals("dbAdd")) {
+                            NSAddAck addAck = new NSAddAck(aapsLogger, rxBus, null);
+                            dbAdd(dbr, addAck);
+                        } else if (dbr.action.equals("dbRemove")) {
+                            NSUpdateAck removeAck = new NSUpdateAck("dbRemove", dbr._id, aapsLogger, rxBus, null);
+                            dbRemove(dbr, removeAck);
+                        } else if (dbr.action.equals("dbUpdate")) {
+                            NSUpdateAck updateAck = new NSUpdateAck("dbUpdate", dbr._id, aapsLogger, rxBus, null);
+                            dbUpdate(dbr, updateAck);
+                        }
                         maxcount--;
                     }
                 } finally {
@@ -802,22 +848,6 @@ public class NSClientService extends DaggerService {
 
             rxBus.send(new EventNSClientNewLog("QUEUE", "Resend ended: " + reason));
         });
-    }
-
-    private void processDbRequest(DbRequest dbr) {
-        if (dbr.action.equals("dbAdd")) {
-            NSAddAck addAck = new NSAddAck(aapsLogger, rxBus);
-            dbAdd(dbr, addAck);
-        } else if (dbr.action.equals("dbRemove")) {
-            NSUpdateAck removeAck = new NSUpdateAck(dbr.action, dbr._id, aapsLogger, rxBus);
-            dbRemove(dbr, removeAck);
-        } else if (dbr.action.equals("dbUpdate")) {
-            NSUpdateAck updateAck = new NSUpdateAck(dbr.action, dbr._id, aapsLogger, rxBus);
-            dbUpdate(dbr, updateAck);
-        } else if (dbr.action.equals("dbUpdateUnset")) {
-            NSUpdateAck updateUnsetAck = new NSUpdateAck(dbr.action, dbr._id, aapsLogger, rxBus);
-            dbUpdateUnset(dbr, updateUnsetAck);
-        }
     }
 
     public void restart() {
@@ -864,7 +894,7 @@ public class NSClientService extends DaggerService {
         }
     }
 
-     public List<JSONArray> splitArray(JSONArray array) {
+    public List<JSONArray> splitArray(JSONArray array) {
         List<JSONArray> ret = new ArrayList<>();
         try {
             int size = array.length();

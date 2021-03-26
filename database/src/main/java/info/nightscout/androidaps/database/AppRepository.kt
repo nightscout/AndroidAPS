@@ -93,8 +93,8 @@ open class AppRepository @Inject internal constructor(
             .map { if (!ascending) it.reversed() else it }
             .subscribeOn(Schedulers.io())
 
-    fun getAllChangedTemporaryTargetsFromTime(timestamp: Long): Single<List<TemporaryTarget>> =
-        database.temporaryTargetDao.getAllChangedFromTime(timestamp)
+    fun getAllChangedTemporaryTargetsFromTime(timestamp: Long, amount: Int): Single<List<TemporaryTarget>> =
+        database.temporaryTargetDao.getAllChangedFromTime(timestamp, amount)
             .subscribeOn(Schedulers.io())
 
     fun getTemporaryTargetDataIncludingInvalidFromTime(timestamp: Long, ascending: Boolean): Single<List<TemporaryTarget>> =
