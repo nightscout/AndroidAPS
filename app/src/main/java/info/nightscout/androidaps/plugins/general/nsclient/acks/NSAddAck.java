@@ -38,6 +38,7 @@ public class NSAddAck extends Event implements Ack {
                 if (response.has("NSCLIENT_ID")) {
                     nsClientID = response.getString("NSCLIENT_ID");
                 }
+                aapsLogger.debug(LTag.NSCLIENT, "DBACCESS YYYYY " + this.toString() + " " + response.toString());
             }
             rxBus.send(this);
             return;

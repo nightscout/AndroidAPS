@@ -150,7 +150,7 @@ class FillDialog : DialogFragmentWithDate() {
                         )).subscribe({ result ->
                             result.inserted.forEach { nsUpload.uploadEvent(it) }
                         }, {
-                            aapsLogger.error(LTag.BGSOURCE, "Error while saving therapy event", it)
+                            aapsLogger.error(LTag.DATABASE, "Error while saving therapy event", it)
                         })
                     }
                     if (insulinChange) {
@@ -164,7 +164,7 @@ class FillDialog : DialogFragmentWithDate() {
                         )).subscribe({ result ->
                             result.inserted.forEach { nsUpload.uploadEvent(it) }
                         }, {
-                            aapsLogger.error(LTag.BGSOURCE, "Error while saving therapy event", it)
+                            aapsLogger.error(LTag.DATABASE, "Error while saving therapy event", it)
                         })
                     }
                 }, null)

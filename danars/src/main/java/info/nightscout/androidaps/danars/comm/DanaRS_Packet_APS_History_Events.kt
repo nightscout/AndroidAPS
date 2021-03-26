@@ -191,7 +191,7 @@ open class DanaRS_Packet_APS_History_Events(
                     )).subscribe({ result ->
                         result.inserted.forEach { nsUpload.uploadEvent(it) }
                     }, {
-                        aapsLogger.error(LTag.BGSOURCE, "Error while saving therapy event", it)
+                        aapsLogger.error(LTag.DATABASE, "Error while saving therapy event", it)
                     })
                 status = "REFILL " + dateUtil.timeString(datetime)
             }
@@ -229,7 +229,7 @@ open class DanaRS_Packet_APS_History_Events(
                     )).subscribe({ result ->
                         result.inserted.forEach { nsUpload.uploadEvent(it) }
                     }, {
-                        aapsLogger.error(LTag.BGSOURCE, "Error while saving therapy event", it)
+                        aapsLogger.error(LTag.DATABASE, "Error while saving therapy event", it)
                     })
                 status = "PRIMECANNULA " + dateUtil.timeString(datetime)
             }

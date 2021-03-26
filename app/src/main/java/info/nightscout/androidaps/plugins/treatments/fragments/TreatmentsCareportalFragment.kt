@@ -105,7 +105,7 @@ class TreatmentsCareportalFragment : DaggerFragment() {
                                     uploadQueue.removeByMongoId("dbAdd", event.timestamp.toString())
                             }
                         }, {
-                            aapsLogger.error(LTag.BGSOURCE, "Error while invalidating therapy event", it)
+                            aapsLogger.error(LTag.DATABASE, "Error while invalidating therapy event", it)
                         })
                 }, null)
             }
@@ -204,7 +204,7 @@ class TreatmentsCareportalFragment : DaggerFragment() {
                                     if (NSUpload.isIdValid(id)) nsUpload.removeCareportalEntryFromNS(id)
                                     else uploadQueue.removeByMongoId("dbAdd", therapyEvent.timestamp.toString())
                                 }, {
-                                    aapsLogger.error(LTag.BGSOURCE, "Error while invalidating therapy event", it)
+                                    aapsLogger.error(LTag.DATABASE, "Error while invalidating therapy event", it)
                                 })
                         }, null)
                     }

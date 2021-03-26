@@ -158,7 +158,7 @@ class TreatmentDialog : DialogFragmentWithDate() {
                                     nsUpload.uploadBolusRecord(it, detailedBolusInfo.createTherapyEvent(), null)
                                 }
                             }, {
-                                aapsLogger.error(LTag.BGSOURCE, "Error while saving bolus", it)
+                                aapsLogger.error(LTag.DATABASE, "Error while saving bolus", it)
                             })
                         disposable += repository.runTransactionForResult(detailedBolusInfo.insertCarbsTransaction())
                             .subscribe({ result ->
@@ -167,7 +167,7 @@ class TreatmentDialog : DialogFragmentWithDate() {
                                     nsUpload.uploadCarbsRecord(it, detailedBolusInfo.createTherapyEvent())
                                 }
                             }, {
-                                aapsLogger.error(LTag.BGSOURCE, "Error while saving carbs", it)
+                                aapsLogger.error(LTag.DATABASE, "Error while saving carbs", it)
                             })
                     } else {
                         commandQueue.bolus(detailedBolusInfo, object : Callback() {

@@ -78,7 +78,6 @@ class SmsCommunicatorPlugin @Inject constructor(
     private val config: Config,
     private val dateUtil: DateUtil,
     private val uel: UserEntryLogger,
-    private val nsUpload: NSUpload,
     private val glucoseStatusProvider: GlucoseStatusProvider,
     private val repository: AppRepository
 ) : PluginBase(PluginDescription()
@@ -826,10 +825,10 @@ class SmsCommunicatorPlugin @Inject constructor(
                                                     lowTarget = Profile.toMgdl(eatingSoonTT, profileFunction.getUnits()),
                                                     highTarget = Profile.toMgdl(eatingSoonTT, profileFunction.getUnits())
                                                 )).subscribe({ result ->
-                                                    result.inserted.forEach { nsUpload.uploadTempTarget(it) }
-                                                    result.updated.forEach { nsUpload.updateTempTarget(it) }
+                                                    result.inserted.forEach { aapsLogger.debug(LTag.DATABASE, "Inserted temp target $it") }
+                                                    result.updated.forEach { aapsLogger.debug(LTag.DATABASE, "Updated temp target $it") }
                                                 }, {
-                                                    aapsLogger.error(LTag.BGSOURCE, "Error while saving temporary target", it)
+                                                    aapsLogger.error(LTag.DATABASE, "Error while saving temporary target", it)
                                                 })
                                                 val tt = if (currentProfile.units == Constants.MMOL) {
                                                     DecimalFormatter.to1Decimal(eatingSoonTT)
@@ -960,10 +959,10 @@ class SmsCommunicatorPlugin @Inject constructor(
                         lowTarget = Profile.toMgdl(tt, profileFunction.getUnits()),
                         highTarget = Profile.toMgdl(tt, profileFunction.getUnits())
                     )).subscribe({ result ->
-                        result.inserted.forEach { nsUpload.uploadTempTarget(it) }
-                        result.updated.forEach { nsUpload.updateTempTarget(it) }
+                        result.inserted.forEach { aapsLogger.debug(LTag.DATABASE, "Inserted temp target $it") }
+                        result.updated.forEach { aapsLogger.debug(LTag.DATABASE, "Updated temp target $it") }
                     }, {
-                        aapsLogger.error(LTag.BGSOURCE, "Error while saving temporary target", it)
+                        aapsLogger.error(LTag.DATABASE, "Error while saving temporary target", it)
                     })
                     val ttString = if (units == Constants.MMOL) DecimalFormatter.to1Decimal(tt) else DecimalFormatter.to0Decimal(tt)
                     val replyText = String.format(resourceHelper.gs(R.string.smscommunicator_tt_set), ttString, ttDuration)
@@ -980,9 +979,9 @@ class SmsCommunicatorPlugin @Inject constructor(
                 override fun run() {
                     disposable += repository.runTransactionForResult(CancelCurrentTemporaryTargetIfAnyTransaction(dateUtil._now()))
                         .subscribe({ result ->
-                            result.updated.forEach { nsUpload.updateTempTarget(it) }
+                            result.updated.forEach { aapsLogger.debug(LTag.DATABASE, "Updated temp target $it") }
                         }, {
-                            aapsLogger.error(LTag.BGSOURCE, "Error while saving temporary target", it)
+                            aapsLogger.error(LTag.DATABASE, "Error while saving temporary target", it)
                         })
                     val replyText = String.format(resourceHelper.gs(R.string.smscommunicator_tt_canceled))
                     sendSMSToAllNumbers(Sms(receivedSms.phoneNumber, replyText))

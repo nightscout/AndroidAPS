@@ -25,7 +25,6 @@ import info.nightscout.androidaps.interfaces.ProfileFunction
 import info.nightscout.androidaps.logging.LTag
 import info.nightscout.androidaps.logging.UserEntryLogger
 import info.nightscout.androidaps.plugins.configBuilder.ConstraintChecker
-import info.nightscout.androidaps.plugins.general.nsclient.NSUpload
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.IobCobCalculatorPlugin
 import info.nightscout.androidaps.plugins.treatments.TreatmentsPlugin
 import info.nightscout.androidaps.queue.Callback
@@ -51,7 +50,6 @@ class CarbsDialog : DialogFragmentWithDate() {
     @Inject lateinit var treatmentsPlugin: TreatmentsPlugin
     @Inject lateinit var profileFunction: ProfileFunction
     @Inject lateinit var iobCobCalculatorPlugin: IobCobCalculatorPlugin
-    @Inject lateinit var nsUpload: NSUpload
     @Inject lateinit var uel: UserEntryLogger
     @Inject lateinit var carbTimer: CarbTimer
     @Inject lateinit var commandQueue: CommandQueue
@@ -234,16 +232,10 @@ class CarbsDialog : DialogFragmentWithDate() {
                                 lowTarget = Profile.toMgdl(activityTT, profileFunction.getUnits()),
                                 highTarget = Profile.toMgdl(activityTT, profileFunction.getUnits())
                             )).subscribe({ result ->
-                                result.inserted.forEach {
-                                    aapsLogger.debug(LTag.DATABASE, "Inserted tt $it")
-                                    nsUpload.uploadTempTarget(it)
-                                }
-                                result.updated.forEach {
-                                    aapsLogger.debug(LTag.DATABASE, "Updated tt $it")
-                                    nsUpload.updateTempTarget(it)
-                                }
+                                result.inserted.forEach { aapsLogger.debug(LTag.DATABASE, "Inserted temp target $it") }
+                                result.updated.forEach { aapsLogger.debug(LTag.DATABASE, "Updated temp target $it") }
                             }, {
-                                aapsLogger.error(LTag.BGSOURCE, "Error while saving temporary target", it)
+                                aapsLogger.error(LTag.DATABASE, "Error while saving temporary target", it)
                             })
                         }
 
@@ -256,16 +248,10 @@ class CarbsDialog : DialogFragmentWithDate() {
                                 lowTarget = Profile.toMgdl(eatingSoonTT, profileFunction.getUnits()),
                                 highTarget = Profile.toMgdl(eatingSoonTT, profileFunction.getUnits())
                             )).subscribe({ result ->
-                                result.inserted.forEach {
-                                    aapsLogger.debug(LTag.DATABASE, "Inserted tt $it")
-                                    nsUpload.uploadTempTarget(it)
-                                }
-                                result.updated.forEach {
-                                    aapsLogger.debug(LTag.DATABASE, "Updated tt $it")
-                                    nsUpload.updateTempTarget(it)
-                                }
+                                result.inserted.forEach { aapsLogger.debug(LTag.DATABASE, "Inserted temp target $it") }
+                                result.updated.forEach { aapsLogger.debug(LTag.DATABASE, "Updated temp target $it") }
                             }, {
-                                aapsLogger.error(LTag.BGSOURCE, "Error while saving temporary target", it)
+                                aapsLogger.error(LTag.DATABASE, "Error while saving temporary target", it)
                             })
                         }
 
@@ -278,14 +264,8 @@ class CarbsDialog : DialogFragmentWithDate() {
                                 lowTarget = Profile.toMgdl(hypoTT, profileFunction.getUnits()),
                                 highTarget = Profile.toMgdl(hypoTT, profileFunction.getUnits())
                             )).subscribe({ result ->
-                                result.inserted.forEach {
-                                    aapsLogger.debug(LTag.DATABASE, "Inserted tt $it")
-                                    nsUpload.uploadTempTarget(it)
-                                }
-                                result.updated.forEach {
-                                    aapsLogger.debug(LTag.DATABASE, "Updated tt $it")
-                                    nsUpload.updateTempTarget(it)
-                                }
+                                result.inserted.forEach { aapsLogger.debug(LTag.DATABASE, "Inserted temp target $it") }
+                                result.updated.forEach { aapsLogger.debug(LTag.DATABASE, "Updated temp target $it") }
                             }, {
                                 aapsLogger.error(LTag.DATABASE, "Error while saving temporary target", it)
                             })

@@ -19,7 +19,6 @@ import info.nightscout.androidaps.plugins.general.automation.elements.InputTempT
 import info.nightscout.androidaps.plugins.general.automation.elements.LabelWithElement
 import info.nightscout.androidaps.plugins.general.automation.elements.LayoutBuilder
 import info.nightscout.androidaps.plugins.general.automation.triggers.TriggerTempTarget
-import info.nightscout.androidaps.plugins.general.nsclient.NSUpload
 import info.nightscout.androidaps.queue.Callback
 import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.JsonHelper
@@ -37,7 +36,6 @@ class ActionStartTempTarget(injector: HasAndroidInjector) : Action(injector) {
     @Inject lateinit var resourceHelper: ResourceHelper
     @Inject lateinit var activePlugin: ActivePluginProvider
     @Inject lateinit var repository: AppRepository
-    @Inject lateinit var nsUpload: NSUpload
     @Inject lateinit var profileFunction: ProfileFunction
 
     private val disposable = CompositeDisposable()
@@ -56,11 +54,11 @@ class ActionStartTempTarget(injector: HasAndroidInjector) : Action(injector) {
     override fun doAction(callback: Callback) {
         disposable += repository.runTransactionForResult(InsertTemporaryTargetAndCancelCurrentTransaction(tt()))
             .subscribe({ result ->
-                result.inserted.forEach { nsUpload.uploadTempTarget(it) }
-                result.updated.forEach { nsUpload.updateTempTarget(it) }
+                result.inserted.forEach { aapsLogger.debug(LTag.DATABASE, "Inserted temp target $it") }
+                result.updated.forEach { aapsLogger.debug(LTag.DATABASE, "Updated temp target $it") }
                 callback.result(PumpEnactResult(injector).success(true).comment(R.string.ok))?.run()
             }, {
-                aapsLogger.error(LTag.BGSOURCE, "Error while saving temporary target", it)
+                aapsLogger.error(LTag.DATABASE, "Error while saving temporary target", it)
                 callback.result(PumpEnactResult(injector).success(false).comment(R.string.error))?.run()
             })
     }

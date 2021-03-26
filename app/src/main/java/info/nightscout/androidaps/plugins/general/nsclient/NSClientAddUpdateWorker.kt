@@ -64,7 +64,7 @@ class NSClientAddUpdateWorker(
             val carbs = JsonHelper.safeGetDouble(json, "carbs")
             val eventType = JsonHelper.safeGetString(json, "eventType")
             if (eventType == null) {
-                aapsLogger.debug(LTag.DATASERVICE, "Wrong treatment. Ignoring : $json")
+                aapsLogger.debug(LTag.NSCLIENT, "Wrong treatment. Ignoring : $json")
                 continue
             }
 

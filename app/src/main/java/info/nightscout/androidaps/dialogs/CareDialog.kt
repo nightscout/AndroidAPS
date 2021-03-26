@@ -227,7 +227,7 @@ class CareDialog : DialogFragmentWithDate() {
                 disposable += repository.runTransactionForResult(InsertTherapyEventIfNewTransaction(therapyEvent)).subscribe({ result ->
                     result.inserted.forEach { nsUpload.uploadEvent(it) }
                 }, {
-                    aapsLogger.error(LTag.BGSOURCE, "Error while saving therapy event", it)
+                    aapsLogger.error(LTag.DATABASE, "Error while saving therapy event", it)
                 })
                 valuesWithUnit.add(0, ValueWithUnit(eventTime, Units.Timestamp, eventTimeChanged))
                 valuesWithUnit.add(1, ValueWithUnit(therapyEvent.type.text, Units.TherapyEvent))

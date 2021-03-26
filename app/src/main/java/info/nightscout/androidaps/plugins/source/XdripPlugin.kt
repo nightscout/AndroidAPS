@@ -87,7 +87,7 @@ class XdripPlugin @Inject constructor(
             )
             repository.runTransactionForResult(CgmSourceTransaction(glucoseValues, emptyList(), null))
                 .doOnError {
-                    aapsLogger.error(LTag.BGSOURCE, "Error while saving values from Eversense App", it)
+                    aapsLogger.error(LTag.DATABASE, "Error while saving values from Eversense App", it)
                     ret = Result.failure()
                 }
                 .blockingGet()

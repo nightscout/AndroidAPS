@@ -212,7 +212,7 @@ open class CommandQueue @Inject constructor(
                             nsUpload.uploadCarbsRecord(it, detailedBolusInfo.createTherapyEvent())
                         }
                     }, {
-                        aapsLogger.error(LTag.BGSOURCE, "Error while saving carbs", it)
+                        aapsLogger.error(LTag.DATABASE, "Error while saving carbs", it)
                     })
                 // Do not process carbs anymore
                 detailedBolusInfo.carbs = 0.0

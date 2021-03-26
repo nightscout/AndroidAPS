@@ -22,6 +22,7 @@ import info.nightscout.androidaps.database.transactions.InsertTemporaryTargetAnd
 import info.nightscout.androidaps.db.TDD
 import info.nightscout.androidaps.interfaces.*
 import info.nightscout.androidaps.logging.AAPSLogger
+import info.nightscout.androidaps.logging.LTag
 import info.nightscout.androidaps.plugins.aps.loop.LoopPlugin
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper
 import info.nightscout.androidaps.plugins.configBuilder.ConstraintChecker
@@ -573,17 +574,17 @@ class ActionStringHandler @Inject constructor(
                 lowTarget = Profile.toMgdl(low, profileFunction.getUnits()),
                 highTarget = Profile.toMgdl(high, profileFunction.getUnits())
             )).subscribe({ result ->
-                result.inserted.forEach { nsUpload.uploadTempTarget(it) }
-                result.updated.forEach { nsUpload.updateTempTarget(it) }
+                result.inserted.forEach { aapsLogger.debug(LTag.DATABASE, "Inserted temp target $it") }
+                result.updated.forEach { aapsLogger.debug(LTag.DATABASE, "Updated temp target $it") }
             }, {
-                aapsLogger.error("Error while saving temporary target", it)
+                aapsLogger.error(LTag.DATABASE, "Error while saving temporary target", it)
             })
         else
             disposable += repository.runTransactionForResult(CancelCurrentTemporaryTargetIfAnyTransaction(System.currentTimeMillis()))
                 .subscribe({ result ->
-                    result.updated.forEach { nsUpload.updateTempTarget(it) }
+                    result.updated.forEach { aapsLogger.debug(LTag.DATABASE, "Updated temp target $it") }
                 }, {
-                    aapsLogger.error("Error while saving temporary target", it)
+                    aapsLogger.error(LTag.DATABASE, "Error while saving temporary target", it)
                 })
     }
 

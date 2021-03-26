@@ -125,7 +125,7 @@ class TreatmentsBolusCarbsFragment : DaggerFragment() {
                                         if (NSUpload.isIdValid(id)) nsUpload.removeCareportalEntryFromNS(id)
                                         else uploadQueue.removeByMongoId("dbAdd", bolus.timestamp.toString())
                                     }, {
-                                        aapsLogger.error(LTag.DATATREATMENTS, "Error while invalidating bolus", it)
+                                        aapsLogger.error(LTag.DATABASE, "Error while invalidating bolus", it)
                                     })
                             }
                         }
@@ -140,7 +140,7 @@ class TreatmentsBolusCarbsFragment : DaggerFragment() {
                                         if (NSUpload.isIdValid(id)) nsUpload.removeCareportalEntryFromNS(id)
                                         else uploadQueue.removeByMongoId("dbAdd", carb.timestamp.toString())
                                     }, {
-                                        aapsLogger.error(LTag.DATATREATMENTS, "Error while invalidating carbs", it)
+                                        aapsLogger.error(LTag.DATABASE, "Error while invalidating carbs", it)
                                     })
                             }
                         }
@@ -155,7 +155,7 @@ class TreatmentsBolusCarbsFragment : DaggerFragment() {
                                         if (NSUpload.isIdValid(id)) nsUpload.removeCareportalEntryFromNS(id)
                                         else uploadQueue.removeByMongoId("dbAdd", bolusCalc.timestamp.toString())
                                     }, {
-                                        aapsLogger.error(LTag.DATATREATMENTS, "Error while invalidating carbs", it)
+                                        aapsLogger.error(LTag.DATABASE, "Error while invalidating carbs", it)
                                     })
                             }
                         }
@@ -355,7 +355,7 @@ class TreatmentsBolusCarbsFragment : DaggerFragment() {
                                     if (NSUpload.isIdValid(id)) nsUpload.removeCareportalEntryFromNS(id)
                                     else uploadQueue.removeByMongoId("dbAdd", bolus.timestamp.toString())
                                 }, {
-                                    aapsLogger.error(LTag.DATATREATMENTS, "Error while invalidating bolus", it)
+                                    aapsLogger.error(LTag.DATABASE, "Error while invalidating bolus", it)
                                 })
                         })
                     }
@@ -379,7 +379,7 @@ class TreatmentsBolusCarbsFragment : DaggerFragment() {
                                     if (NSUpload.isIdValid(id)) nsUpload.removeCareportalEntryFromNS(id)
                                     else uploadQueue.removeByMongoId("dbAdd", carb.timestamp.toString())
                                 }, {
-                                    aapsLogger.error(LTag.DATATREATMENTS, "Error while invalidating carbs", it)
+                                    aapsLogger.error(LTag.DATABASE, "Error while invalidating carbs", it)
                                 })
                         })
                     }

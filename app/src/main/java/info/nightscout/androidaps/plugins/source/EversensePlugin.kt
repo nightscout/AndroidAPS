@@ -141,14 +141,14 @@ class EversensePlugin @Inject constructor(
                             enteredBy = "AndroidAPS-Eversense"
                         ))
                             .doOnError {
-                                aapsLogger.error(LTag.BGSOURCE, "Error while saving therapy event", it)
+                                aapsLogger.error(LTag.DATABASE, "Error while saving therapy event", it)
                                 ret = Result.failure()
                             }
                             .blockingGet()
                             .also { result ->
                                 result.inserted.forEach {
                                     nsUpload.uploadEvent(it)
-                                    aapsLogger.debug(LTag.BGSOURCE, "Inserted bg $it")
+                                    aapsLogger.debug(LTag.DATABASE, "Inserted bg $it")
                                 }
                             }
                     }

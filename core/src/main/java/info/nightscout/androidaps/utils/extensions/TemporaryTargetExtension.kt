@@ -1,12 +1,20 @@
 package info.nightscout.androidaps.utils.extensions
 
+import androidx.work.ListenableWorker
+import com.google.gson.Gson
 import info.nightscout.androidaps.Constants
 import info.nightscout.androidaps.core.R
 import info.nightscout.androidaps.data.Profile
+import info.nightscout.androidaps.database.AppRepository
 import info.nightscout.androidaps.database.entities.TemporaryTarget
-import info.nightscout.androidaps.plugins.general.nsclient.NSUpload
+import info.nightscout.androidaps.database.entities.TherapyEvent
+import info.nightscout.androidaps.database.transactions.SyncTemporaryTargetTransaction
+import info.nightscout.androidaps.database.transactions.UpdateTemporaryTargetTransaction
+import info.nightscout.androidaps.logging.LTag
+import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.DecimalFormatter
 import info.nightscout.androidaps.utils.JsonHelper
+import info.nightscout.androidaps.utils.T
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 import org.json.JSONObject
 import java.util.concurrent.TimeUnit
@@ -37,7 +45,7 @@ fun temporaryTargetFromNsIdForInvalidating(nsId: String): TemporaryTarget =
             .put("duration", -1)
             .put("reason", "fake")
             .put("_id", nsId)
-            .put(NSUpload.ISVALID, false)
+            .put("isValid", false)
     )!!
 
 fun temporaryTargetFromJson(jsonObject: JSONObject): TemporaryTarget? {
@@ -53,7 +61,7 @@ fun temporaryTargetFromJson(jsonObject: JSONObject): TemporaryTarget? {
     // this string can be localized from NS, it will not work in this case CUSTOM will be used
     val reason = TemporaryTarget.Reason.fromString(reasonString)
     val id = JsonHelper.safeGetStringAllowNull(jsonObject, "_id", null) ?: return null
-    val isValid = JsonHelper.safeGetBoolean(jsonObject, NSUpload.ISVALID, true)
+    val isValid = JsonHelper.safeGetBoolean(jsonObject, "isValid", true)
 
     if (duration > 0L) {
         // not ending event
@@ -82,3 +90,17 @@ fun temporaryTargetFromJson(jsonObject: JSONObject): TemporaryTarget? {
     tt.interfaceIDs.nightscoutId = id
     return tt
 }
+
+fun TemporaryTarget.toJson(units: String): JSONObject =
+    JSONObject()
+        .put("eventType", TherapyEvent.Type.TEMPORARY_TARGET.text)
+        .put("duration", T.msecs(duration).mins())
+        .put("isValid", isValid)
+        .put("created_at", DateUtil.toISOString(timestamp))
+        .put("enteredBy", "AndroidAPS").also {
+            if (lowTarget > 0) it
+                .put("reason", reason.text)
+                .put("targetBottom", Profile.fromMgdlToUnits(lowTarget, units))
+                .put("targetTop", Profile.fromMgdlToUnits(highTarget, units))
+                .put("units", units)
+        }

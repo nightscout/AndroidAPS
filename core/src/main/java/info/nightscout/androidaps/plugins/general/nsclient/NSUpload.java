@@ -359,46 +359,6 @@ public class NSUpload {
         }
     }
 
-    public void uploadTempTarget(TemporaryTarget tempTarget) {
-        try {
-            JSONObject data = new JSONObject();
-            data.put("eventType", TherapyEvent.Type.TEMPORARY_TARGET.getText());
-            data.put("duration", T.msecs(tempTarget.getDuration()).mins());
-            data.put(ISVALID, tempTarget.isValid());
-            if (tempTarget.getLowTarget() > 0) {
-                data.put("reason", tempTarget.getReason().getText());
-                data.put("targetBottom", Profile.fromMgdlToUnits(tempTarget.getLowTarget(), profileFunction.getUnits()));
-                data.put("targetTop", Profile.fromMgdlToUnits(tempTarget.getHighTarget(), profileFunction.getUnits()));
-                data.put("units", profileFunction.getUnits());
-            }
-            data.put("created_at", DateUtil.toISOString(tempTarget.getTimestamp()));
-            data.put("enteredBy", "AndroidAPS");
-            uploadCareportalEntryToNS(data, tempTarget.getTimestamp());
-        } catch (JSONException e) {
-            aapsLogger.error("Unhandled exception", e);
-        }
-    }
-
-    public void updateTempTarget(TemporaryTarget tempTarget) {
-        try {
-            JSONObject data = new JSONObject();
-            data.put("eventType", TherapyEvent.Type.TEMPORARY_TARGET.getText());
-            data.put("duration", T.msecs(tempTarget.getDuration()).mins());
-            data.put(ISVALID, tempTarget.isValid());
-            if (tempTarget.getLowTarget() > 0) {
-                data.put("reason", tempTarget.getReason().getText());
-                data.put("targetBottom", Profile.fromMgdlToUnits(tempTarget.getLowTarget(), profileFunction.getUnits()));
-                data.put("targetTop", Profile.fromMgdlToUnits(tempTarget.getHighTarget(), profileFunction.getUnits()));
-                data.put("units", profileFunction.getUnits());
-            }
-            data.put("created_at", DateUtil.toISOString(tempTarget.getTimestamp()));
-            data.put("enteredBy", "AndroidAPS");
-            uploadQueue.add(new DbRequest("dbUpdate", "treatments", tempTarget.getInterfaceIDs().getNightscoutId(), data, tempTarget.getTimestamp()));
-        } catch (JSONException e) {
-            aapsLogger.error("Unhandled exception", e);
-        }
-    }
-
     public void updateProfileSwitch(ProfileSwitch profileSwitch) {
         try {
             JSONObject data = getJson(profileSwitch);

@@ -197,16 +197,10 @@ class InsulinDialog : DialogFragmentWithDate() {
                             lowTarget = Profile.toMgdl(eatingSoonTT, profileFunction.getUnits()),
                             highTarget = Profile.toMgdl(eatingSoonTT, profileFunction.getUnits())
                         )).subscribe({ result ->
-                            result.inserted.forEach {
-                                aapsLogger.debug(LTag.DATABASE, "Inserted tt $it")
-                                nsUpload.uploadTempTarget(it)
-                            }
-                            result.updated.forEach {
-                                aapsLogger.debug(LTag.DATABASE, "Updated tt $it")
-                                nsUpload.updateTempTarget(it)
-                            }
+                            result.inserted.forEach { aapsLogger.debug(LTag.DATABASE, "Inserted temp target $it") }
+                            result.updated.forEach { aapsLogger.debug(LTag.DATABASE, "Updated temp target $it") }
                         }, {
-                            aapsLogger.error(LTag.BGSOURCE, "Error while saving temporary target", it)
+                            aapsLogger.error(LTag.DATABASE, "Error while saving temporary target", it)
                         })
                     }
                     if (insulinAfterConstraints > 0) {
@@ -229,7 +223,7 @@ class InsulinDialog : DialogFragmentWithDate() {
                                     nsUpload.uploadBolusRecord(it, detailedBolusInfo.createTherapyEvent(), null)
                                 }
                             }, {
-                                aapsLogger.error(LTag.BGSOURCE, "Error while saving bolus", it)
+                                aapsLogger.error(LTag.DATABASE, "Error while saving bolus", it)
                             })
                         } else {
                             commandQueue.bolus(detailedBolusInfo, object : Callback() {

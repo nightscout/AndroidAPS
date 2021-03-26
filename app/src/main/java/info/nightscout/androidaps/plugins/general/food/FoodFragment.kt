@@ -258,7 +258,7 @@ class FoodFragment : DaggerFragment() {
                                     // no create at the moment
                                     // else uploadQueue.removeID("dbAdd", food.timestamp.toString())
                                 }, {
-                                    aapsLogger.error(LTag.BGSOURCE, "Error while invalidating food", it)
+                                    aapsLogger.error(LTag.DATABASE, "Error while invalidating food", it)
                                 })
                         }, null)
                     }

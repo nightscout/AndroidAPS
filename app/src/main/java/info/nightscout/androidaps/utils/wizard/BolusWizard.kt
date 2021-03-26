@@ -431,7 +431,7 @@ class BolusWizard @Inject constructor(
                                 nsUpload.uploadBolusCalc(this)
                             }
                         }, {
-                            aapsLogger.error(LTag.BGSOURCE, "Error while saving meal link", it)
+                            aapsLogger.error(LTag.DATABASE, "Error while saving meal link", it)
                         })
 
                 }

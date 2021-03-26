@@ -14,7 +14,9 @@ import info.nightscout.androidaps.R
 import info.nightscout.androidaps.database.AppRepository
 import info.nightscout.androidaps.database.ValueWrapper
 import info.nightscout.androidaps.database.entities.TemporaryTarget
-import info.nightscout.androidaps.database.entities.UserEntry.*
+import info.nightscout.androidaps.database.entities.UserEntry.Action
+import info.nightscout.androidaps.database.entities.UserEntry.Units
+import info.nightscout.androidaps.database.entities.UserEntry.ValueWithUnit
 import info.nightscout.androidaps.database.interfaces.end
 import info.nightscout.androidaps.database.transactions.InvalidateTemporaryTargetTransaction
 import info.nightscout.androidaps.databinding.TreatmentsTemptargetFragmentBinding
@@ -26,7 +28,6 @@ import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.logging.LTag
 import info.nightscout.androidaps.logging.UserEntryLogger
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper
-import info.nightscout.androidaps.plugins.general.nsclient.NSUpload
 import info.nightscout.androidaps.plugins.general.nsclient.events.EventNSClientRestart
 import info.nightscout.androidaps.plugins.treatments.events.EventTreatmentUpdateGui
 import info.nightscout.androidaps.plugins.treatments.fragments.TreatmentsTempTargetFragment.RecyclerViewAdapter.TempTargetsViewHolder
@@ -57,7 +58,6 @@ class TreatmentsTempTargetFragment : DaggerFragment() {
     @Inject lateinit var aapsLogger: AAPSLogger
     @Inject lateinit var profileFunction: ProfileFunction
     @Inject lateinit var resourceHelper: ResourceHelper
-    @Inject lateinit var nsUpload: NSUpload
     @Inject lateinit var uploadQueue: UploadQueueInterface
     @Inject lateinit var fabricPrivacy: FabricPrivacy
     @Inject lateinit var translator: Translator
@@ -173,9 +173,9 @@ class TreatmentsTempTargetFragment : DaggerFragment() {
             holder.binding.reason.text = translator.translate(tempTarget.reason.text)
             holder.binding.date.setTextColor(
                 when {
-                    tempTarget.id == currentlyActiveTarget?.id  -> resourceHelper.gc(R.color.colorActive)
-                    tempTarget.timestamp > DateUtil.now() -> resourceHelper.gc(R.color.colorScheduled)
-                    else                                  -> holder.binding.reasonColon.currentTextColor
+                    tempTarget.id == currentlyActiveTarget?.id -> resourceHelper.gc(R.color.colorActive)
+                    tempTarget.timestamp > DateUtil.now()      -> resourceHelper.gc(R.color.colorScheduled)
+                    else                                       -> holder.binding.reasonColon.currentTextColor
                 })
             holder.binding.remove.tag = tempTarget
         }
@@ -198,13 +198,9 @@ class TreatmentsTempTargetFragment : DaggerFragment() {
                             { _: DialogInterface?, _: Int ->
                                 uel.log(Action.TT_REMOVED, ValueWithUnit(tempTarget.timestamp, Units.Timestamp), ValueWithUnit(tempTarget.reason.text, Units.TherapyEvent), ValueWithUnit(tempTarget.lowTarget, Units.Mg_Dl), ValueWithUnit(tempTarget.highTarget, Units.Mg_Dl, tempTarget.lowTarget != tempTarget.highTarget), ValueWithUnit(tempTarget.duration.toInt(), Units.M))
                                 disposable += repository.runTransactionForResult(InvalidateTemporaryTargetTransaction(tempTarget.id))
-                                    .subscribe({
-                                        val id = tempTarget.interfaceIDs.nightscoutId
-                                        if (NSUpload.isIdValid(id)) nsUpload.removeCareportalEntryFromNS(id)
-                                        else uploadQueue.removeByMongoId("dbAdd", tempTarget.timestamp.toString())
-                                    }, {
-                                        aapsLogger.error(LTag.BGSOURCE, "Error while invalidating temporary target", it)
-                                    })
+                                    .subscribe(
+                                        { aapsLogger.debug(LTag.DATABASE, "Removed temp target $tempTarget") },
+                                        { aapsLogger.error(LTag.DATABASE, "Error while invalidating temporary target", it) })
                             }, null)
                     }
                 }

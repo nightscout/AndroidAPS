@@ -21,9 +21,9 @@ open class DatabaseModule {
     internal fun provideAppDatabase(context: Context, @DbFileName fileName: String) =
         Room
             .databaseBuilder(context, AppDatabase::class.java, fileName)
-            .addMigrations(migration5to6)
-            .addMigrations(migration6to7)
-            .addMigrations(migration7to8)
+ //           .addMigrations(migration5to6)
+ //           .addMigrations(migration6to7)
+ //           .addMigrations(migration7to8)
             .fallbackToDestructiveMigration()
             .build()
 

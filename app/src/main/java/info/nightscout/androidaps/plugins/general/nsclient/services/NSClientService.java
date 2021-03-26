@@ -36,6 +36,7 @@ import info.nightscout.androidaps.db.DbRequest;
 import info.nightscout.androidaps.events.EventAppExit;
 import info.nightscout.androidaps.events.EventConfigBuilderChange;
 import info.nightscout.androidaps.events.EventPreferenceChange;
+import info.nightscout.androidaps.interfaces.DataSyncSelector;
 import info.nightscout.androidaps.interfaces.DatabaseHelperInterface;
 import info.nightscout.androidaps.interfaces.PluginType;
 import info.nightscout.androidaps.interfaces.UploadQueueInterface;
@@ -78,6 +79,7 @@ import io.reactivex.disposables.CompositeDisposable;
 import io.socket.client.IO;
 import io.socket.client.Socket;
 import io.socket.emitter.Emitter;
+import kotlin.reflect.jvm.internal.impl.load.kotlin.JvmType;
 
 public class NSClientService extends DaggerService {
     @Inject HasAndroidInjector injector;
@@ -96,6 +98,7 @@ public class NSClientService extends DaggerService {
     @Inject DateUtil dateUtil;
     @Inject UploadQueueInterface uploadQueue;
     @Inject DataWorker dataWorker;
+    @Inject DataSyncSelector dataSyncSelector;
 
     private final CompositeDisposable disposable = new CompositeDisposable();
 
@@ -738,6 +741,19 @@ public class NSClientService extends DaggerService {
         }
     }
 
+    public void dbAdd(DbRequest dbr, NSAddAck ack, JvmType.Object originalData) {
+        try {
+            if (!isConnected || !hasWriteAuth) return;
+            JSONObject message = new JSONObject();
+            message.put("collection", dbr.collection);
+            message.put("data", new JSONObject(dbr.data));
+            mSocket.emit("dbAdd", message, ack);
+            rxBus.send(new EventNSClientNewLog("DBADD " + dbr.collection, "Sent " + dbr.nsClientID));
+        } catch (JSONException e) {
+            aapsLogger.error("Unhandled exception", e);
+        }
+    }
+
     public void sendAlarmAck(AlarmAck alarmAck) {
         if (!isConnected || !hasWriteAuth) return;
         mSocket.emit("ack", alarmAck.level, alarmAck.group, alarmAck.silenceTime);
@@ -761,6 +777,12 @@ public class NSClientService extends DaggerService {
 
             rxBus.send(new EventNSClientNewLog("QUEUE", "Resend started: " + reason));
 
+            List<DbRequest> ttData = dataSyncSelector.changedTempTargetsCompat();
+            for (DbRequest dbr : ttData) {
+                uploadQueue.add(dbr);
+                dataSyncSelector.confirmTempTargetsTimestamp(Long.parseLong(dbr.nsClientID));
+            }
+
             CloseableIterator<DbRequest> iterator;
             int maxcount = 30;
             try {
@@ -768,19 +790,7 @@ public class NSClientService extends DaggerService {
                 try {
                     while (iterator.hasNext() && maxcount > 0) {
                         DbRequest dbr = iterator.next();
-                        if (dbr.action.equals("dbAdd")) {
-                            NSAddAck addAck = new NSAddAck(aapsLogger, rxBus);
-                            dbAdd(dbr, addAck);
-                        } else if (dbr.action.equals("dbRemove")) {
-                            NSUpdateAck removeAck = new NSUpdateAck(dbr.action, dbr._id, aapsLogger, rxBus);
-                            dbRemove(dbr, removeAck);
-                        } else if (dbr.action.equals("dbUpdate")) {
-                            NSUpdateAck updateAck = new NSUpdateAck(dbr.action, dbr._id, aapsLogger, rxBus);
-                            dbUpdate(dbr, updateAck);
-                        } else if (dbr.action.equals("dbUpdateUnset")) {
-                            NSUpdateAck updateUnsetAck = new NSUpdateAck(dbr.action, dbr._id, aapsLogger, rxBus);
-                            dbUpdateUnset(dbr, updateUnsetAck);
-                        }
+                        processDbRequest(dbr);
                         maxcount--;
                     }
                 } finally {
@@ -792,6 +802,22 @@ public class NSClientService extends DaggerService {
 
             rxBus.send(new EventNSClientNewLog("QUEUE", "Resend ended: " + reason));
         });
+    }
+
+    private void processDbRequest(DbRequest dbr) {
+        if (dbr.action.equals("dbAdd")) {
+            NSAddAck addAck = new NSAddAck(aapsLogger, rxBus);
+            dbAdd(dbr, addAck);
+        } else if (dbr.action.equals("dbRemove")) {
+            NSUpdateAck removeAck = new NSUpdateAck(dbr.action, dbr._id, aapsLogger, rxBus);
+            dbRemove(dbr, removeAck);
+        } else if (dbr.action.equals("dbUpdate")) {
+            NSUpdateAck updateAck = new NSUpdateAck(dbr.action, dbr._id, aapsLogger, rxBus);
+            dbUpdate(dbr, updateAck);
+        } else if (dbr.action.equals("dbUpdateUnset")) {
+            NSUpdateAck updateUnsetAck = new NSUpdateAck(dbr.action, dbr._id, aapsLogger, rxBus);
+            dbUpdateUnset(dbr, updateUnsetAck);
+        }
     }
 
     public void restart() {
@@ -838,33 +864,7 @@ public class NSClientService extends DaggerService {
         }
     }
 
-    public void handleNewTreatment(JSONArray treatments, boolean isDelta) {
-        List<JSONArray> splitted = splitArray(treatments);
-        for (JSONArray part : splitted) {
-            Bundle bundle = new Bundle();
-            bundle.putString("treatments", part.toString());
-            bundle.putBoolean("delta", isDelta);
-            Intent intent = new Intent(Intents.ACTION_NEW_TREATMENT);
-            intent.putExtras(bundle);
-            intent.addFlags(Intent.FLAG_INCLUDE_STOPPED_PACKAGES);
-            LocalBroadcastManager.getInstance(this).sendBroadcast(intent);
-        }
-
-        if (sp.getBoolean(R.string.key_nsclient_localbroadcasts, false)) {
-            splitted = splitArray(treatments);
-            for (JSONArray part : splitted) {
-                Bundle bundle = new Bundle();
-                bundle.putString("treatments", part.toString());
-                bundle.putBoolean("delta", isDelta);
-                Intent intent = new Intent(Intents.ACTION_NEW_TREATMENT);
-                intent.putExtras(bundle);
-                intent.addFlags(Intent.FLAG_INCLUDE_STOPPED_PACKAGES);
-                this.getApplicationContext().sendBroadcast(intent);
-            }
-        }
-    }
-
-    public List<JSONArray> splitArray(JSONArray array) {
+     public List<JSONArray> splitArray(JSONArray array) {
         List<JSONArray> ret = new ArrayList<>();
         try {
             int size = array.length();
