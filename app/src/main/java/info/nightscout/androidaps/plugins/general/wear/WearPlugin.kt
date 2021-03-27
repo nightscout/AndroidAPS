@@ -134,7 +134,7 @@ class WearPlugin @Inject constructor(
     override fun onStop() {
         disposable.clear()
         super.onStop()
-        actionStringHandler.get().setup()
+        actionStringHandler.get().tearDown()
     }
 
     private fun sendDataToWatch(status: Boolean, basals: Boolean, bgValue: Boolean) {
