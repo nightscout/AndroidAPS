@@ -46,39 +46,6 @@ sealed class XXXValueWithUnit {
     }
 }
 
-fun List<XXXValueWithUnit>.toPresentationString(translator: Translator) =
-    joinToString(separator = " ") { it.toPresentationString(translator) }
-
-// TODO Move to destination module, then uncomment
-fun XXXValueWithUnit.toPresentationString(translator: Translator) : String = when(this){
-    is XXXValueWithUnit.Gram                  -> "$value ${translator.translate(UserEntry.Units.G)}"
-    is XXXValueWithUnit.Hour                  -> "$value ${translator.translate(UserEntry.Units.H)}"
-    is XXXValueWithUnit.Minute                -> "$value ${translator.translate(UserEntry.Units.G)}"
-    is XXXValueWithUnit.Percent               -> "$value ${translator.translate(UserEntry.Units.Percent)}"
-    is XXXValueWithUnit.Insulin               -> "" // DecimalFormatter.to2Decimal(value) + translator.translate(UserEntry.Units.U)
-    is XXXValueWithUnit.UnitPerHour           -> "" // DecimalFormatter.to2Decimal(value) + translator.translate(UserEntry.Units.U_H)
-    is XXXValueWithUnit.SimpleInt             -> value.toString()
-    is XXXValueWithUnit.SimpleString          -> value
-    is XXXValueWithUnit.StringResource -> "" //resourceHelper.gs(value, params.map { it.toPresentationString(translator) }) // recursively resolve params
-    is XXXValueWithUnit.TherapyEventMeterType -> translator.translate(value)
-    is XXXValueWithUnit.TherapyEventTTReason  -> translator.translate(value)
-    is XXXValueWithUnit.TherapyEventType      -> translator.translate(value)
-    is XXXValueWithUnit.Timestamp             -> "" // TODO dateUtil.dateAndTimeAndSecondsString(value)
-    is XXXValueWithUnit.Mgdl -> {
-        // if (profileFunction.getUnits()==Constants.MGDL) DecimalFormatter.to0Decimal(value) + translator.translate(UserEntry.Units.Mg_Dl)
-        // else DecimalFormatter.to1Decimal(value/Constants.MMOLL_TO_MGDL) + translator.translate(UserEntry.Units.Mmol_L)
-        ""
-    }
-
-    is XXXValueWithUnit.Mmoll -> {
-        // if (profileFunction.getUnits()==Constants.MGDL) DecimalFormatter.to0Decimal(value) + translator.translate(UserEntry.Units.Mmol_L)
-        // else DecimalFormatter.to1Decimal(value * Constants.MMOLL_TO_MGDL) + translator.translate(UserEntry.Units.Mg_Dl)
-        ""
-    }
-
-    XXXValueWithUnit.UNKNOWN                  -> ""
-}
-
 
 
 /***
@@ -104,4 +71,44 @@ interface Translator {
     fun translate(meterType: TherapyEvent.MeterType): String
     fun translate(type: TherapyEvent.Type): String
     fun translate(reason: TemporaryTarget.Reason): String
+}
+
+enum class Sources(val text: String) {
+    @SerializedName("TreatmentDialog") TreatmentDialog ("TreatmentDialog"),
+    @SerializedName("InsulinDialog") InsulinDialog ("InsulinDialog"),
+    @SerializedName("CarbDialog") CarbDialog ("CarbDialog"),
+    @SerializedName("WizardDialog") WizardDialog ("WizardDialog"),
+    @SerializedName("QuickWizard") QuickWizard ("QuickWizard"),
+    @SerializedName("ExtendedBolusDialog") ExtendedBolusDialog ("ExtendedBolusDialog"),
+    @SerializedName("TTDialog") TTDialog ("TTDialog"),
+    @SerializedName("ProfileSwitchDialog") ProfileSwitchDialog ("ProfileSwitchDialog"),
+    @SerializedName("LoopDialog") LoopDialog ("LoopDialog"),
+    @SerializedName("TempBasalDialog") TempBasalDialog ("TempBasalDialog"),
+    @SerializedName("CalibrationDialog") CalibrationDialog ("CalibrationDialog"),
+    @SerializedName("FillDialog") FillDialog ("FillDialog"),
+    @SerializedName("BgCheck") BgCheck ("BgCheck"),
+    @SerializedName("SensorInsert") SensorInsert ("SensorInsert"),
+    @SerializedName("BatteryChange") BatteryChange ("BatteryChange"),
+    @SerializedName("Note") Note ("Note"),
+    @SerializedName("Exercise") Exercise ("Exercise"),
+    @SerializedName("Question") Question ("Question"),
+    @SerializedName("Announcement") Announcement ("Announcement"),
+    @SerializedName("Actions") Actions ("Actions"),             //From Actions plugin
+    @SerializedName("Automation") Automation ("Automation"),    //From Automation plugin
+    @SerializedName("LocalProfile") LocalProfile ("LocalProfile"),  //From LocalProfile plugin
+    @SerializedName("Loop") Loop ("Loop"),                      //From Loop plugin
+    @SerializedName("Maintenance") Maintenance ("Maintenance"), //From Maintenance plugin
+    @SerializedName("NSClient") NSClient ("NSClient"),          //From NSClient plugin
+    @SerializedName("Pump") Pump ("Pump"),                      //From Pump plugin (for example from pump history)
+    @SerializedName("SMS") SMS ("SMS"),                         //From SMS plugin
+    @SerializedName("Treatments") Treatments ("Treatments"),    //From Treatments plugin
+    @SerializedName("Wear") Wear ("Wear"),                      //From Wear plugin
+    @SerializedName("Food") Food ("Food"),                      //From Food plugin
+    @SerializedName("Unknown") Unknown ("Unknown")              //if necessary
+    ;
+
+    companion object {
+        fun fromString(source: String?) = values().firstOrNull { it.name == source } ?: Unknown
+        fun fromText(source: String?) = values().firstOrNull { it.text == source } ?: Unknown
+    }
 }

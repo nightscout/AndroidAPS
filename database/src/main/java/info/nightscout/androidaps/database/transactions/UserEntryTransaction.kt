@@ -13,7 +13,7 @@ class UserEntryTransaction(
         database.userEntryDao.insert(UserEntry(
             timestamp = System.currentTimeMillis(),
             action = action,
-            s = s,
+            remark = s,
             values = values
         ))
     }

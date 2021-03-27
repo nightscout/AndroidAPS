@@ -15,7 +15,8 @@ data class UserEntry(
     override var timestamp: Long,
     override var utcOffset: Long = TimeZone.getDefault().getOffset(timestamp).toLong(),
     var action: Action,
-    var s: String,
+    var remark: String,
+    val sources: Sources,
     var values: MutableList<ValueWithUnit>
 ) : DBEntry, DBEntryWithTime {
     enum class Action (val colorGroup: ColorGroup) {

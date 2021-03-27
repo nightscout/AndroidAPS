@@ -96,7 +96,7 @@ class ClassicPrefsFormat @Inject constructor(
                         dateUtil.dateAndTimeAndSecondsString(entry.timestamp) + ";" +
                         dateUtil.timeString(entry.utcOffset) + ";" +
                         csvString(entry.action) + ";" +
-                        csvString(entry.s) + ";" +
+                        csvString(entry.remark) + ";" +
                         valueWithUnitToCsv(value)
                 }
             } else {
@@ -104,7 +104,7 @@ class ClassicPrefsFormat @Inject constructor(
                     dateUtil.dateAndTimeAndSecondsString(entry.timestamp) + ";" +
                     dateUtil.timeString(entry.utcOffset) + ";" +
                     csvString(entry.action) + ";" +
-                    csvString(entry.s) + ";;"
+                    csvString(entry.remark) + ";;"
             }
         }
     }

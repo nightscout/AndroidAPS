@@ -42,6 +42,7 @@ class TreatmentsUserEntryFragment : DaggerFragment() {
     @Inject lateinit var translator: Translator
     @Inject lateinit var importExportPrefs: ImportExportPrefsInterface
     @Inject lateinit var uel: UserEntryLogger
+    @Inject lateinit var userEntryPresentationHelper: UserEntryPresentationHelper
 
     private val disposable = CompositeDisposable()
 
@@ -112,9 +113,9 @@ class TreatmentsUserEntryFragment : DaggerFragment() {
             val current = entries[position]
             holder.binding.date.text = dateUtil.dateAndTimeAndSecondsString(current.timestamp)
             holder.binding.action.text = translator.translate(current.action)
-            holder.binding.action.setTextColor(resourceHelper.gc(current.action.colorGroup.colorId()))
-            if (current.s != "") {
-                holder.binding.s.text = current.s
+            holder.binding.action.setTextColor(resourceHelper.gc(userEntryPresentationHelper.colorId(current.action.colorGroup)))
+            if (current.remark != "") {
+                holder.binding.s.text = current.remark
                 holder.binding.s.visibility = View.VISIBLE
             } else
                 holder.binding.s.visibility = View.GONE
