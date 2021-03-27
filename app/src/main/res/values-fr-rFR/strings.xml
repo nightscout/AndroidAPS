@@ -271,6 +271,7 @@ L\'ENSEMBLE DES RISQUES LIÉS À LA QUALITÉ ET À LA PERFORMANCE DU PROGRAMME S
     <string name="openapsma_autosensdata_label">Données Autosens</string>
     <string name="openapsma_scriptdebugdata_label">Débogage du Script</string>
     <string name="openapsama_useautosens">Utiliser la fonction Autosens</string>
+    <string name="refresheventsfromnightscout">Actualiser depuis NS</string>
     <string name="deletefuturetreatments">Supprimer les futurs traitements</string>
     <string name="actions_shortname">ACT</string>
     <string name="configbuilder_shortname">CONF</string>
