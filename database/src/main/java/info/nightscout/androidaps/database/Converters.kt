@@ -1,6 +1,7 @@
 package info.nightscout.androidaps.database
 
 import androidx.room.TypeConverter
+import com.google.gson.JsonArray
 import info.nightscout.androidaps.database.data.Block
 import info.nightscout.androidaps.database.data.TargetBlock
 import info.nightscout.androidaps.database.embedments.InterfaceIDs
@@ -18,8 +19,7 @@ class Converters {
     fun toAction(action: String?) = action?.let { Action.fromString(it) }
 
     @TypeConverter
-    fun fromMutableListOfValueWithUnit(values: MutableList<ValueWithUnit>?): String? {
-        if (values == null) return null
+    fun fromMutableListOfValueWithUnit(values: MutableList<ValueWithUnit>): String {
         val jsonArray = JSONArray()
         values.forEach {
             if (it.condition) {
@@ -32,8 +32,7 @@ class Converters {
     }
 
     @TypeConverter
-    fun toMutableListOfValueWithUnit(jsonString: String?): MutableList<ValueWithUnit>? {
-        if (jsonString == null) return null
+    fun toMutableListOfValueWithUnit(jsonString: String): MutableList<ValueWithUnit> {
         val jsonArray = JSONArray(jsonString)
         val list = mutableListOf<ValueWithUnit>()
         for (i in 0 until jsonArray.length()) {
