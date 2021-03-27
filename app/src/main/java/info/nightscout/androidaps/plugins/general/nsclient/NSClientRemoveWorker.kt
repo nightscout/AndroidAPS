@@ -24,6 +24,7 @@ import info.nightscout.androidaps.utils.buildHelper.BuildHelper
 import info.nightscout.androidaps.utils.extensions.temporaryTargetFromNsIdForInvalidating
 import info.nightscout.androidaps.utils.extensions.therapyEventFromNsIdForInvalidating
 import info.nightscout.androidaps.utils.sharedPreferences.SP
+import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
 // This will not be needed fpr NS v3
@@ -72,7 +73,7 @@ class NSClientRemoveWorker(
                             ValueWithUnit(it.reason.text, Units.TherapyEvent),
                             ValueWithUnit(it.lowTarget, Units.Mg_Dl, true),
                             ValueWithUnit(it.highTarget, Units.Mg_Dl, it.lowTarget != it.highTarget),
-                            ValueWithUnit(it.duration.toInt() / 60000, UserEntry.Units.M, it.duration != 0L)
+                            ValueWithUnit(TimeUnit.MILLISECONDS.toMinutes(it.duration).toInt(), Units.M, it.duration != 0L)
                         )
                     }
                 }
