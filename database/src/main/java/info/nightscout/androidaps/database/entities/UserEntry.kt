@@ -160,6 +160,7 @@ data class UserEntry(
         @SerializedName("NSClient") NSClient ("NSClient"),          //From NSClient plugin
         @SerializedName("Pump") Pump ("Pump"),                      //From Pump plugin (for example from pump history)
         @SerializedName("SMS") SMS ("SMS"),                         //From SMS plugin
+        @SerializedName("Treatments") Treatments ("Treatments"),    //From Treatments plugin
         @SerializedName("Wear") Wear ("Wear"),                      //From Wear plugin
         @SerializedName("Food") Food ("Food"),                      //From Food plugin
         @SerializedName("Unknown") Unknown ("Unknown")              //if necessary

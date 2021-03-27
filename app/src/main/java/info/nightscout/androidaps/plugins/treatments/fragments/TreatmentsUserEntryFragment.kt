@@ -1,6 +1,7 @@
 package info.nightscout.androidaps.plugins.treatments.fragments
 
 import android.os.Bundle
+import android.renderscript.Sampler
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -63,7 +64,7 @@ class TreatmentsUserEntryFragment : DaggerFragment() {
         binding.ueExportToXml.setOnClickListener {
             activity?.let { activity ->
                 OKDialog.showConfirmation(activity, resourceHelper.gs(R.string.ue_export_to_csv) + "?") {
-                    uel.log(Action.EXPORT_CSV)
+                    uel.log(Action.EXPORT_CSV, ValueWithUnit(Sources.Treatments))
                     importExportPrefs.exportUserEntriesCsv(activity, repository.getAllUserEntries())
                 }
             }
