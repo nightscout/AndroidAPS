@@ -61,7 +61,7 @@ class ActionStringHandler @Inject constructor(
     private val sp: SP,
     private val rxBus: RxBusWrapper,
     private val aapsLogger: AAPSLogger,
-    aapsSchedulers: AapsSchedulers,
+    private val aapsSchedulers: AapsSchedulers,
     private val resourceHelper: ResourceHelper,
     private val injector: HasAndroidInjector,
     private val context: Context,
@@ -95,7 +95,7 @@ class ActionStringHandler @Inject constructor(
 
     private val disposable = CompositeDisposable()
 
-    init {
+    fun setup() {
         disposable += rxBus
             .toObservable(EventWearInitiateAction::class.java)
             .observeOn(aapsSchedulers.main)
@@ -105,6 +105,10 @@ class ActionStringHandler @Inject constructor(
             .toObservable(EventWearConfirmAction::class.java)
             .observeOn(aapsSchedulers.main)
             .subscribe({ handleConfirmation(it.action) }, fabricPrivacy::logException)
+    }
+
+    fun tearDown(){
+        disposable.clear()
     }
 
     @Synchronized
