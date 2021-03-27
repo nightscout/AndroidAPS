@@ -156,6 +156,7 @@ data class UserEntry(
         @SerializedName("Actions") Actions ("Actions"),             //From Actions plugin
         @SerializedName("Automation") Automation ("Automation"),    //From Automation plugin
         @SerializedName("Loop") Loop ("Loop"),                      //From Loop plugin
+        @SerializedName("Maintenance") Maintenance ("Maintenance"), //From Maintenance plugin
         @SerializedName("NSClient") NSClient ("NSClient"),          //From NSClient plugin
         @SerializedName("Pump") Pump ("Pump"),                      //From Pump plugin (for example from pump history)
         @SerializedName("SMS") SMS ("SMS"),                         //From SMS plugin

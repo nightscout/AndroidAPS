@@ -38,6 +38,7 @@ fun Sources.iconId(): Int {
         Sources.Exercise            -> R.drawable.ic_cp_exercise
         Sources.Question            -> R.drawable.ic_cp_question
         Sources.Announcement        -> R.drawable.ic_cp_announcement
+        Sources.Maintenance         -> R.drawable.ic_maintenance
         Sources.Actions             -> R.drawable.ic_action
         Sources.Automation          -> R.drawable.ic_automation
         Sources.Loop                -> R.drawable.ic_loop_closed_white
