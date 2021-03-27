@@ -4,9 +4,11 @@ import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.automation.R
 import info.nightscout.androidaps.data.PumpEnactResult
 import info.nightscout.androidaps.database.AppRepository
+import info.nightscout.androidaps.database.entities.UserEntry
 import info.nightscout.androidaps.database.transactions.CancelCurrentTemporaryTargetIfAnyTransaction
 import info.nightscout.androidaps.interfaces.ActivePluginProvider
 import info.nightscout.androidaps.logging.LTag
+import info.nightscout.androidaps.logging.UserEntryLogger
 import info.nightscout.androidaps.plugins.general.nsclient.NSUpload
 import info.nightscout.androidaps.queue.Callback
 import info.nightscout.androidaps.utils.DateUtil
@@ -22,6 +24,7 @@ class ActionStopTempTarget(injector: HasAndroidInjector) : Action(injector) {
     @Inject lateinit var repository: AppRepository
     @Inject lateinit var nsUpload: NSUpload
     @Inject lateinit var dateUtil: DateUtil
+    @Inject lateinit var uel: UserEntryLogger
 
     private val disposable = CompositeDisposable()
 
@@ -32,6 +35,7 @@ class ActionStopTempTarget(injector: HasAndroidInjector) : Action(injector) {
     override fun doAction(callback: Callback) {
         disposable += repository.runTransactionForResult(CancelCurrentTemporaryTargetIfAnyTransaction(DateUtil.now()))
             .subscribe({ result ->
+                uel.log(UserEntry.Action.CANCEL_TT, UserEntry.ValueWithUnit(UserEntry.Sources.Automation))
                 result.updated.forEach { nsUpload.updateTempTarget(it) }
             }, {
                 aapsLogger.error(LTag.BGSOURCE, "Error while saving temporary target", it)
