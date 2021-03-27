@@ -25,7 +25,8 @@ import javax.inject.Singleton
 class TomatoPlugin @Inject constructor(
     injector: HasAndroidInjector,
     resourceHelper: ResourceHelper,
-    aapsLogger: AAPSLogger
+    aapsLogger: AAPSLogger,
+    private val sp: SP
 ) : PluginBase(PluginDescription()
     .mainType(PluginType.BGSOURCE)
     .fragmentClass(BGSourceFragment::class.java.name)
@@ -71,19 +72,21 @@ class TomatoPlugin @Inject constructor(
             )
             repository.runTransactionForResult(CgmSourceTransaction(glucoseValues, emptyList(), null))
                 .doOnError {
-                    aapsLogger.error("Error while saving values from Tomato App", it)
+                    aapsLogger.error(LTag.DATABASE, "Error while saving values from Tomato App", it)
                     ret = Result.failure()
                 }
                 .blockingGet()
                 .also { savedValues ->
                     savedValues.inserted.forEach {
                         broadcastToXDrip(it)
-                        if (sp.getBoolean(R.string.key_dexcomg5_nsupload, false))
-                            nsUpload.uploadBg(it, GlucoseValue.SourceSensor.LIBRE_1_TOMATO.text)
-                        aapsLogger.debug(LTag.BGSOURCE, "Inserted bg $it")
+                        aapsLogger.debug(LTag.DATABASE, "Inserted bg $it")
                     }
                 }
             return ret
         }
     }
+
+    override fun uploadToNs(glucoseValue: GlucoseValue): Boolean =
+        glucoseValue.sourceSensor == GlucoseValue.SourceSensor.LIBRE_1_TOMATO && sp.getBoolean(R.string.key_dexcomg5_nsupload, false)
+
 }

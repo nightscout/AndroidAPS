@@ -626,7 +626,7 @@ public class TreatmentsPlugin extends PluginBase implements TreatmentsInterface 
         Treatment treatment = new Treatment();
         treatment.date = detailedBolusInfo.timestamp;
         treatment.source = (detailedBolusInfo.getPumpType() == PumpType.USER) ? Source.USER : Source.PUMP;
-        treatment.pumpId = detailedBolusInfo.getBolusPumpId();
+        treatment.pumpId = detailedBolusInfo.getBolusPumpId() != null ? detailedBolusInfo.getBolusPumpId() : 0;
         treatment.insulin = detailedBolusInfo.insulin;
         treatment.isValid = detailedBolusInfo.getBolusType() != DetailedBolusInfo.BolusType.PRIMING;
         treatment.isSMB = detailedBolusInfo.getBolusType() == DetailedBolusInfo.BolusType.SMB;
@@ -650,7 +650,7 @@ public class TreatmentsPlugin extends PluginBase implements TreatmentsInterface 
 
             Treatment carbsTreatment = new Treatment();
             carbsTreatment.source = (detailedBolusInfo.getPumpType() == PumpType.USER) ? Source.USER : Source.PUMP;
-            carbsTreatment.pumpId = detailedBolusInfo.getCarbsPumpId(); // but this should never happen
+            carbsTreatment.pumpId = detailedBolusInfo.getCarbsPumpId() != null ? detailedBolusInfo.getCarbsPumpId() : 0; // but this should never happen
             carbsTreatment.date = detailedBolusInfo.timestamp + detailedBolusInfo.carbTime * 60 * 1000L + 1000L; // add 1 sec to make them different records
             carbsTreatment.carbs = detailedBolusInfo.carbs;
 

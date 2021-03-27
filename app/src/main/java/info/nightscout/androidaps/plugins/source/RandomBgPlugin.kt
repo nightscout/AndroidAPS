@@ -13,7 +13,6 @@ import info.nightscout.androidaps.interfaces.PluginDescription
 import info.nightscout.androidaps.interfaces.PluginType
 import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.logging.LTag
-import info.nightscout.androidaps.plugins.general.nsclient.NSUpload
 import info.nightscout.androidaps.plugins.pump.virtual.VirtualPumpPlugin
 import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.T
@@ -38,7 +37,6 @@ class RandomBgPlugin @Inject constructor(
     private val virtualPumpPlugin: VirtualPumpPlugin,
     private val buildHelper: BuildHelper,
     private val sp: SP,
-    private val nsUpload: NSUpload,
     private val dateUtil: DateUtil,
     private val repository: AppRepository,
     private val xDripBroadcast: XDripBroadcast
@@ -74,6 +72,9 @@ class RandomBgPlugin @Inject constructor(
         return true
     }
 
+    override fun uploadToNs(glucoseValue: GlucoseValue): Boolean =
+        glucoseValue.sourceSensor == GlucoseValue.SourceSensor.RANDOM && sp.getBoolean(R.string.key_dexcomg5_nsupload, false)
+
     override fun onStart() {
         super.onStart()
         loopHandler.postDelayed(refreshLoop, T.mins(interval).msecs())
@@ -107,16 +108,13 @@ class RandomBgPlugin @Inject constructor(
             trendArrow = GlucoseValue.TrendArrow.NONE,
             sourceSensor = GlucoseValue.SourceSensor.RANDOM
         )
-        disposable += repository.runTransactionForResult(CgmSourceTransaction(glucoseValues, emptyList(), null)).subscribe({ savedValues ->
-            savedValues.inserted.forEach {
-                xDripBroadcast(it)
-                if (sp.getBoolean(R.string.key_dexcomg5_nsupload, false))
-                    nsUpload.uploadBg(it, GlucoseValue.SourceSensor.RANDOM.text)
-                aapsLogger.debug(LTag.DATABASE, "Inserted bg $it")
-            }
-        }, {
-            aapsLogger.error(LTag.DATABASE, "Error while saving values from Random plugin", it)
-        })
-        aapsLogger.debug(LTag.DATABASE, "Generated BG: $bgMgdl ${Date()}")
+        disposable += repository.runTransactionForResult(CgmSourceTransaction(glucoseValues, emptyList(), null))
+            .subscribe({ savedValues ->
+                savedValues.inserted.forEach {
+                    xDripBroadcast(it)
+                    aapsLogger.debug(LTag.DATABASE, "Inserted bg $it")
+                }
+            }, { aapsLogger.error(LTag.DATABASE, "Error while saving values from Random plugin", it) }
+            )
     }
 }

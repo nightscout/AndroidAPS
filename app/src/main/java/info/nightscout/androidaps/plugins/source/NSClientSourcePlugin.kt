@@ -17,7 +17,6 @@ import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.logging.LTag
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper
 import info.nightscout.androidaps.plugins.general.nsclient.NSClientPlugin
-import info.nightscout.androidaps.plugins.general.nsclient.NSUpload
 import info.nightscout.androidaps.plugins.general.nsclient.data.NSSgv
 import info.nightscout.androidaps.plugins.general.overview.events.EventDismissNotification
 import info.nightscout.androidaps.plugins.general.overview.notifications.Notification
@@ -61,6 +60,8 @@ class NSClientSourcePlugin @Inject constructor(
         return isAdvancedFilteringEnabled
     }
 
+    override fun uploadToNs(glucoseValue: GlucoseValue): Boolean = false
+
     private fun detectSource(glucoseValue: GlucoseValue) {
         if (glucoseValue.timestamp > lastBGTimeStamp) {
             isAdvancedFilteringEnabled = arrayOf(
@@ -85,7 +86,6 @@ class NSClientSourcePlugin @Inject constructor(
         @Inject lateinit var aapsLogger: AAPSLogger
         @Inject lateinit var sp: SP
         @Inject lateinit var rxBus: RxBusWrapper
-        @Inject lateinit var nsUpload: NSUpload
         @Inject lateinit var dateUtil: DateUtil
         @Inject lateinit var dataWorker: DataWorker
         @Inject lateinit var repository: AppRepository
@@ -103,7 +103,7 @@ class NSClientSourcePlugin @Inject constructor(
                 timestamp = sgv.mills ?: return null,
                 value = sgv.mgdl?.toDouble() ?: return null,
                 noise = null,
-                raw = sgv.filtered?.toDouble() ?:  sgv.mgdl?.toDouble(),
+                raw = sgv.filtered?.toDouble() ?: sgv.mgdl?.toDouble(),
                 trendArrow = GlucoseValue.TrendArrow.fromString(sgv.direction),
                 nightscoutId = sgv.id,
                 sourceSensor = GlucoseValue.SourceSensor.fromString(sgv.device)
@@ -140,7 +140,7 @@ class NSClientSourcePlugin @Inject constructor(
 
                 repository.runTransactionForResult(CgmSourceTransaction(glucoseValues, emptyList(), null, !nsClientSourcePlugin.isEnabled()))
                     .doOnError {
-                        aapsLogger.error("Error while saving values from NSClient App", it)
+                        aapsLogger.error(LTag.DATABASE, "Error while saving values from NSClient App", it)
                         ret = Result.failure()
                     }
                     .blockingGet()
@@ -148,12 +148,12 @@ class NSClientSourcePlugin @Inject constructor(
                         result.updated.forEach {
                             broadcastToXDrip(it)
                             nsClientSourcePlugin.detectSource(it)
-                            aapsLogger.debug(LTag.BGSOURCE, "Updated bg $it")
+                            aapsLogger.debug(LTag.DATABASE, "Updated bg $it")
                         }
                         result.inserted.forEach {
                             broadcastToXDrip(it)
                             nsClientSourcePlugin.detectSource(it)
-                            aapsLogger.debug(LTag.BGSOURCE, "Inserted bg $it")
+                            aapsLogger.debug(LTag.DATABASE, "Inserted bg $it")
                         }
                     }
             } catch (e: Exception) {

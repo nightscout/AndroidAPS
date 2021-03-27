@@ -32,7 +32,7 @@ import dagger.android.HasAndroidInjector;
 import info.nightscout.androidaps.Config;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.database.AppRepository;
-import info.nightscout.androidaps.database.entities.TemporaryTarget;
+import info.nightscout.androidaps.database.transactions.UpdateNsIdGlucoseValueTransaction;
 import info.nightscout.androidaps.database.transactions.UpdateNsIdTemporaryTargetTransaction;
 import info.nightscout.androidaps.db.DbRequest;
 import info.nightscout.androidaps.events.EventAppExit;
@@ -123,6 +123,7 @@ public class NSClientService extends DaggerService {
     private final Integer nsHours = 48;
 
     public long lastResendTime = 0;
+    public long lastAckTime = 0;
 
     public long latestDateInReceivedData = 0;
 
@@ -218,19 +219,38 @@ public class NSClientService extends DaggerService {
     }
 
     public void processAddAck(NSAddAck ack) {
+        lastAckTime = dateUtil._now();
         // new room way
-        if (ack.getOriginalObject() instanceof TemporaryTarget) {
-            ((TemporaryTarget) ack.getOriginalObject()).getInterfaceIDs().setNightscoutId(ack.getId());
+        if (ack.getOriginalObject() instanceof DataSyncSelector.PairTemporaryTarget) {
+            DataSyncSelector.PairTemporaryTarget pair = (DataSyncSelector.PairTemporaryTarget) ack.getOriginalObject();
+            pair.getValue().getInterfaceIDs().setNightscoutId(ack.getId());
 
-            disposable.add(repository.runTransactionForResult(new UpdateNsIdTemporaryTargetTransaction((TemporaryTarget) ack.getOriginalObject()))
+            disposable.add(repository.runTransactionForResult(new UpdateNsIdTemporaryTargetTransaction((pair.getValue())))
                     .observeOn(aapsSchedulers.getIo())
                     .subscribe(
-                            result -> aapsLogger.debug(LTag.DATABASE, "Updated ns id of temporary target $originalObject"),
+                            result -> aapsLogger.debug(LTag.DATABASE, "Updated ns id of temporary target " + pair.getValue()),
                             error -> aapsLogger.error(LTag.DATABASE, "Updated ns id of temporary target failed")
                     ));
-            dataSyncSelector.confirmTempTargetsTimestampIfGreater(((TemporaryTarget) ack.getOriginalObject()).getDateCreated());
-            rxBus.send(new EventNSClientNewLog("DBADD", "Acked " + ack.nsClientID));
-            resend("AddAck");
+            dataSyncSelector.confirmTempTargetsTimestampIfGreater(pair.getUpdateRecordId());
+            rxBus.send(new EventNSClientNewLog("DBADD", "Acked " + pair.getValue().getInterfaceIDs().getNightscoutId()));
+            // Send new if waiting
+            dataSyncSelector.processChangedTempTargetsCompat();
+            return;
+        }
+        if (ack.getOriginalObject() instanceof DataSyncSelector.PairGlucoseValue) {
+            DataSyncSelector.PairGlucoseValue pair = (DataSyncSelector.PairGlucoseValue) ack.getOriginalObject();
+            pair.getValue().getInterfaceIDs().setNightscoutId(ack.getId());
+
+            disposable.add(repository.runTransactionForResult(new UpdateNsIdGlucoseValueTransaction(pair.getValue()))
+                    .observeOn(aapsSchedulers.getIo())
+                    .subscribe(
+                            result -> aapsLogger.debug(LTag.DATABASE, "Updated ns id of glucose value " + pair.getValue()),
+                            error -> aapsLogger.error(LTag.DATABASE, "Updated ns id of glucose value failed", error)
+                    ));
+            dataSyncSelector.confirmLastGlucoseValueIdIfGreater(pair.getUpdateRecordId());
+            rxBus.send(new EventNSClientNewLog("DBADD", "Acked " + pair.getValue().getInterfaceIDs().getNightscoutId()));
+            // Send new if waiting
+            dataSyncSelector.processChangedGlucoseValuesCompat();
             return;
         }
         // old way
@@ -243,11 +263,22 @@ public class NSClientService extends DaggerService {
     }
 
     public void processUpdateAck(NSUpdateAck ack) {
+        lastAckTime = dateUtil._now();
         // new room way
-        if (ack.getOriginalObject() instanceof TemporaryTarget) {
-            dataSyncSelector.confirmTempTargetsTimestampIfGreater(((TemporaryTarget) ack.getOriginalObject()).getDateCreated());
+        if (ack.getOriginalObject() instanceof DataSyncSelector.PairTemporaryTarget) {
+            DataSyncSelector.PairTemporaryTarget pair = (DataSyncSelector.PairTemporaryTarget) ack.getOriginalObject();
+            dataSyncSelector.confirmTempTargetsTimestampIfGreater(pair.getUpdateRecordId());
             rxBus.send(new EventNSClientNewLog("DBUPDATE/DBREMOVE", "Acked " + ack.get_id()));
-            resend("UpdateAck");
+            // Send new if waiting
+            dataSyncSelector.processChangedTempTargetsCompat();
+            return;
+        }
+        if (ack.getOriginalObject() instanceof DataSyncSelector.PairGlucoseValue) {
+            DataSyncSelector.PairGlucoseValue pair = (DataSyncSelector.PairGlucoseValue) ack.getOriginalObject();
+            dataSyncSelector.confirmLastGlucoseValueIdIfGreater(pair.getUpdateRecordId());
+            rxBus.send(new EventNSClientNewLog("DBUPDATE/DBREMOVE", "Acked " + ack.get_id()));
+            // Send new if waiting
+            dataSyncSelector.processChangedGlucoseValuesCompat();
             return;
         }
         // old way
@@ -736,7 +767,7 @@ public class NSClientService extends DaggerService {
             message.put("_id", _id);
             message.put("data", data);
             mSocket.emit("dbUpdate", message, new NSUpdateAck("dbUpdate", _id, aapsLogger, rxBus, originalObject));
-            rxBus.send(new EventNSClientNewLog("DBUPDATE " + collection, "Sent " + originalObject.toString()));
+            rxBus.send(new EventNSClientNewLog("DBUPDATE " + collection, "Sent " + _id));
         } catch (JSONException e) {
             aapsLogger.error("Unhandled exception", e);
         }
@@ -788,7 +819,7 @@ public class NSClientService extends DaggerService {
             message.put("collection", collection);
             message.put("data", data);
             mSocket.emit("dbAdd", message, new NSAddAck(aapsLogger, rxBus, originalObject));
-            rxBus.send(new EventNSClientNewLog("DBADD " + collection, "Sent " + originalObject.toString()));
+            rxBus.send(new EventNSClientNewLog("DBADD " + collection, "Sent " + data));
         } catch (JSONException e) {
             aapsLogger.error("Unhandled exception", e);
         }
@@ -806,19 +837,23 @@ public class NSClientService extends DaggerService {
         handler.post(() -> {
             if (mSocket == null || !mSocket.connected()) return;
 
-// for room db I send record by record . this would make the process slow
-//            if (lastResendTime > System.currentTimeMillis() - 10 * 1000L) {
-//                aapsLogger.debug(LTag.NSCLIENT, "Skipping resend by lastResendTime: " + ((System.currentTimeMillis() - lastResendTime) / 1000L) + " sec");
-//                return;
-//            }
-            lastResendTime = System.currentTimeMillis();
-
             rxBus.send(new EventNSClientNewLog("QUEUE", "Resend started: " + reason));
 
+            if (lastAckTime > System.currentTimeMillis() - 10 * 1000L) {
+                aapsLogger.debug(LTag.NSCLIENT, "Skipping resend by lastAckTime: " + ((System.currentTimeMillis() - lastAckTime) / 1000L) + " sec");
+                return;
+            }
+            if (dataSyncSelector.processChangedGlucoseValuesCompat()) return;
             if (dataSyncSelector.processChangedTempTargetsCompat()) return;
 
             if (uploadQueue.size() == 0)
                 return;
+
+            if (lastResendTime > System.currentTimeMillis() - 10 * 1000L) {
+                aapsLogger.debug(LTag.NSCLIENT, "Skipping resend by lastResendTime: " + ((System.currentTimeMillis() - lastResendTime) / 1000L) + " sec");
+                return;
+            }
+            lastResendTime = System.currentTimeMillis();
 
             CloseableIterator<DbRequest> iterator;
             int maxcount = 30;

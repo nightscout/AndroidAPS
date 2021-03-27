@@ -30,7 +30,8 @@ import javax.inject.Singleton
 class EversensePlugin @Inject constructor(
     injector: HasAndroidInjector,
     resourceHelper: ResourceHelper,
-    aapsLogger: AAPSLogger
+    aapsLogger: AAPSLogger,
+    private val sp: SP
 ) : PluginBase(PluginDescription()
     .mainType(PluginType.BGSOURCE)
     .fragmentClass(BGSourceFragment::class.java.name)
@@ -44,6 +45,9 @@ class EversensePlugin @Inject constructor(
 
     override var sensorBatteryLevel = -1
 
+    override fun uploadToNs(glucoseValue: GlucoseValue): Boolean =
+        glucoseValue.sourceSensor == GlucoseValue.SourceSensor.EVERSENSE && sp.getBoolean(R.string.key_dexcomg5_nsupload, false)
+
     // cannot be inner class because of needed injection
     class EversenseWorker(
         context: Context,
@@ -53,9 +57,8 @@ class EversensePlugin @Inject constructor(
         @Inject lateinit var injector: HasAndroidInjector
         @Inject lateinit var eversensePlugin: EversensePlugin
         @Inject lateinit var aapsLogger: AAPSLogger
-        @Inject lateinit var sp: SP
-        @Inject lateinit var nsUpload: NSUpload
         @Inject lateinit var dateUtil: DateUtil
+        @Inject lateinit var nsUpload: NSUpload
         @Inject lateinit var dataWorker: DataWorker
         @Inject lateinit var repository: AppRepository
         @Inject lateinit var broadcastToXDrip: XDripBroadcast
@@ -109,16 +112,14 @@ class EversensePlugin @Inject constructor(
                         )
                     repository.runTransactionForResult(CgmSourceTransaction(glucoseValues, emptyList(), null))
                         .doOnError {
-                            aapsLogger.error("Error while saving values from Eversense App", it)
+                            aapsLogger.error(LTag.DATABASE, "Error while saving values from Eversense App", it)
                             ret = Result.failure()
                         }
                         .blockingGet()
                         .also { savedValues ->
                             savedValues.inserted.forEach {
                                 broadcastToXDrip(it)
-                                if (sp.getBoolean(R.string.key_dexcomg5_nsupload, false))
-                                    nsUpload.uploadBg(it, GlucoseValue.SourceSensor.EVERSENSE.text)
-                                aapsLogger.debug(LTag.BGSOURCE, "Inserted bg $it")
+                                aapsLogger.debug(LTag.DATABASE, "Inserted bg $it")
                             }
                         }
                 }
@@ -148,7 +149,7 @@ class EversensePlugin @Inject constructor(
                             .also { result ->
                                 result.inserted.forEach {
                                     nsUpload.uploadEvent(it)
-                                    aapsLogger.debug(LTag.DATABASE, "Inserted bg $it")
+                                    aapsLogger.debug(LTag.DATABASE, "Inserted therapy event $it")
                                 }
                             }
                     }

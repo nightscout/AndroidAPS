@@ -434,38 +434,6 @@ public class NSUpload {
         uploadQueue.add(new DbRequest("dbAdd", "treatments", data, date.getTime()));
     }
 
-    public void uploadBg(GlucoseValue reading, String source) {
-        JSONObject data = new JSONObject();
-        try {
-            data.put("device", source);
-            data.put("date", reading.getTimestamp());
-            data.put("dateString", DateUtil.toISOString(reading.getTimestamp()));
-            data.put("sgv", reading.getValue());
-            data.put("direction", reading.getTrendArrow().getText());
-            data.put("type", "sgv");
-        } catch (JSONException e) {
-            aapsLogger.error("Unhandled exception", e);
-        }
-        uploadQueue.add(new DbRequest("dbAdd", "entries", data, reading.getTimestamp()));
-    }
-
-    public void updateBg(GlucoseValue reading, String source) {
-        JSONObject data = new JSONObject();
-        try {
-            data.put("device", source);
-            data.put("date", reading.getTimestamp());
-            data.put("dateString", DateUtil.toISOString(reading.getTimestamp()));
-            data.put("sgv", reading.getValue());
-            data.put("direction", reading.getTrendArrow().getText());
-            data.put("type", "sgv");
-            if (reading.getInterfaceIDs().getNightscoutId() != null) {
-                uploadQueue.add(new DbRequest("dbUpdate", "entries", reading.getInterfaceIDs().getNightscoutId(), data, System.currentTimeMillis()));
-            }
-        } catch (JSONException e) {
-            aapsLogger.error("Unhandled exception", e);
-        }
-    }
-
     public void uploadAppStart() {
         if (sp.getBoolean(R.string.key_ns_logappstartedevent, true)) {
             JSONObject data = new JSONObject();

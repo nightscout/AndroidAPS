@@ -37,6 +37,8 @@ class XdripPlugin @Inject constructor(
     private var advancedFiltering = false
     override var sensorBatteryLevel = -1
 
+    override fun uploadToNs(glucoseValue: GlucoseValue): Boolean  = false
+
     override fun advancedFilteringSupported(): Boolean {
         return advancedFiltering
     }
@@ -87,14 +89,14 @@ class XdripPlugin @Inject constructor(
             )
             repository.runTransactionForResult(CgmSourceTransaction(glucoseValues, emptyList(), null))
                 .doOnError {
-                    aapsLogger.error(LTag.DATABASE, "Error while saving values from Eversense App", it)
+                    aapsLogger.error(LTag.DATABASE, "Error while saving values from Xdrip", it)
                     ret = Result.failure()
                 }
                 .blockingGet()
                 .also { savedValues ->
                     savedValues.all().forEach {
                         xdripPlugin.detectSource(it)
-                        aapsLogger.debug(LTag.BGSOURCE, "Inserted bg $it")
+                        aapsLogger.debug(LTag.DATABASE, "Inserted bg $it")
                     }
                 }
             xdripPlugin.sensorBatteryLevel = bundle.getInt(Intents.EXTRA_SENSOR_BATTERY, -1)

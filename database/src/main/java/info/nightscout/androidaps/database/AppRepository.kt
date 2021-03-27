@@ -75,6 +75,25 @@ open class AppRepository @Inject internal constructor(
         database.glucoseValueDao.getModifiedFrom(lastId)
             .subscribeOn(Schedulers.io())
 
+    /*
+       * returns a Pair of the next entity to sync and the ID of the "update".
+       * The update id might either be the entry id itself if it is a new entry - or the id
+       * of the update ("historic") entry. The sync counter should be incremented to that id if it was synced successfully.
+       *
+       * It is a Maybe as there might be no next element.
+       * */
+    fun getNextSyncElementGlucoseValue(id: Long): Maybe<Pair<GlucoseValue, Long>> =
+        database.glucoseValueDao.getNextModifiedOrNewAfter(id)
+            .flatMap { nextIdElement ->
+                val nextIdElemReferenceId = nextIdElement.referenceId
+                if (nextIdElemReferenceId == null) {
+                    Maybe.just(nextIdElement to nextIdElement.id)
+                } else {
+                    database.glucoseValueDao.getCurrentFromHistoric(nextIdElemReferenceId)
+                        .map { it to nextIdElement.id}
+                }
+            }
+
     fun getBgReadingsCorrespondingLastHistoryRecord(lastId: Long): GlucoseValue? =
         database.glucoseValueDao.getLastHistoryRecord(lastId)
 
@@ -84,6 +103,25 @@ open class AppRepository @Inject internal constructor(
             .subscribeOn(Schedulers.io())
 
     // TEMP TARGETS
+    /*
+       * returns a Pair of the next entity to sync and the ID of the "update".
+       * The update id might either be the entry id itself if it is a new entry - or the id
+       * of the update ("historic") entry. The sync counter should be incremented to that id if it was synced successfully.
+       *
+       * It is a Maybe as there might be no next element.
+       * */
+    fun getNextSyncElementTemporaryTarget(id: Long): Maybe<Pair<TemporaryTarget, Long>> =
+        database.temporaryTargetDao.getNextModifiedOrNewAfter(id)
+            .flatMap { nextIdElement ->
+                val nextIdElemReferenceId = nextIdElement.referenceId
+                if (nextIdElemReferenceId == null) {
+                    Maybe.just(nextIdElement to nextIdElement.id)
+                } else {
+                    database.temporaryTargetDao.getCurrentFromHistoric(nextIdElemReferenceId)
+                        .map { it to nextIdElement.id}
+                }
+            }
+
     fun compatGetTemporaryTargetData(): Single<List<TemporaryTarget>> =
         database.temporaryTargetDao.getTemporaryTargetData()
             .subscribeOn(Schedulers.io())
@@ -93,20 +131,10 @@ open class AppRepository @Inject internal constructor(
             .map { if (!ascending) it.reversed() else it }
             .subscribeOn(Schedulers.io())
 
-    fun getAllChangedTemporaryTargetsFromTime(timestamp: Long, amount: Int): Single<List<TemporaryTarget>> =
-        database.temporaryTargetDao.getAllChangedFromTime(timestamp, amount)
-            .subscribeOn(Schedulers.io())
-
     fun getTemporaryTargetDataIncludingInvalidFromTime(timestamp: Long, ascending: Boolean): Single<List<TemporaryTarget>> =
         database.temporaryTargetDao.getTemporaryTargetDataIncludingInvalidFromTime(timestamp)
             .map { if (!ascending) it.reversed() else it }
             .subscribeOn(Schedulers.io())
-
-    fun findTemporaryTargetByNSIdSingle(nsId: String): TemporaryTarget? =
-        database.temporaryTargetDao.findByNSId(nsId)
-
-    fun findTemporaryTargetByTimestamp(timestamp: Long): TemporaryTarget? =
-        database.temporaryTargetDao.findByTimestamp(timestamp)
 
     fun getModifiedTemporaryTargetsDataFromId(lastId: Long): Single<List<TemporaryTarget>> =
         database.temporaryTargetDao.getModifiedFrom(lastId)

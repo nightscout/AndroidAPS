@@ -37,6 +37,7 @@ class DexcomPlugin @Inject constructor(
     injector: HasAndroidInjector,
     resourceHelper: ResourceHelper,
     aapsLogger: AAPSLogger,
+    private val sp: SP,
     private val dexcomMediator: DexcomMediator,
     config: Config
 ) : PluginBase(PluginDescription()
@@ -50,8 +51,6 @@ class DexcomPlugin @Inject constructor(
     aapsLogger, resourceHelper, injector
 ), BgSourceInterface {
 
-    private val disposable = CompositeDisposable()
-
     init {
         if (!config.NSCLIENT) {
             pluginDescription.setDefault()
@@ -62,13 +61,18 @@ class DexcomPlugin @Inject constructor(
         return true
     }
 
+    override fun uploadToNs(glucoseValue: GlucoseValue): Boolean =
+        (glucoseValue.sourceSensor == GlucoseValue.SourceSensor.DEXCOM_G6_NATIVE ||
+            glucoseValue.sourceSensor == GlucoseValue.SourceSensor.DEXCOM_G5_NATIVE ||
+            glucoseValue.sourceSensor == GlucoseValue.SourceSensor.DEXCOM_NATIVE_UNKNOWN)
+            && sp.getBoolean(R.string.key_dexcomg5_nsupload, false)
+
     override fun onStart() {
         super.onStart()
         dexcomMediator.requestPermissionIfNeeded()
     }
 
     override fun onStop() {
-        disposable.clear()
         super.onStop()
     }
 
@@ -138,37 +142,34 @@ class DexcomPlugin @Inject constructor(
                 } else {
                     null
                 }
-                dexcomPlugin.disposable += repository.runTransactionForResult(CgmSourceTransaction(glucoseValues, calibrations, sensorStartTime)).subscribe({ result ->
-                    result.inserted.forEach {
-                        broadcastToXDrip(it)
-                        if (sp.getBoolean(R.string.key_dexcomg5_nsupload, false)) {
-                            nsUpload.uploadBg(it, sourceSensor.text)
-                        }
-                        aapsLogger.debug(LTag.BGSOURCE, "Inserted bg $it")
+                repository.runTransactionForResult(CgmSourceTransaction(glucoseValues, calibrations, sensorStartTime))
+                    .doOnError {
+                        aapsLogger.error(LTag.DATABASE, "Error while saving values from Dexcom App", it)
+                        ret = Result.failure()
                     }
-                    result.updated.forEach {
-                        broadcastToXDrip(it)
-                        if (sp.getBoolean(R.string.key_dexcomg5_nsupload, false)) {
-                            nsUpload.updateBg(it, sourceSensor.text)
+                    .blockingGet()
+                    .also { result ->
+                        result.inserted.forEach {
+                            broadcastToXDrip(it)
+                            aapsLogger.debug(LTag.DATABASE, "Inserted bg $it")
                         }
-                        aapsLogger.debug(LTag.BGSOURCE, "Updated bg $it")
-                    }
-                    result.sensorInsertionsInserted.forEach {
-                        if (sp.getBoolean(R.string.key_dexcomg5_nsupload, false)) {
-                            nsUpload.uploadEvent(it)
+                        result.updated.forEach {
+                            broadcastToXDrip(it)
+                            aapsLogger.debug(LTag.DATABASE, "Updated bg $it")
                         }
-                        aapsLogger.debug(LTag.BGSOURCE, "Inserted sensor insertion $it")
-                    }
-                    result.calibrationsInserted.forEach {
-                        if (sp.getBoolean(R.string.key_dexcomg5_nsupload, false)) {
-                            nsUpload.uploadEvent(it)
+                        result.sensorInsertionsInserted.forEach {
+                            if (sp.getBoolean(R.string.key_dexcomg5_nsupload, false)) {
+                                nsUpload.uploadEvent(it)
+                            }
+                            aapsLogger.debug(LTag.DATABASE, "Inserted sensor insertion $it")
                         }
-                        aapsLogger.debug(LTag.BGSOURCE, "Inserted calibration $it")
+                        result.calibrationsInserted.forEach {
+                            if (sp.getBoolean(R.string.key_dexcomg5_nsupload, false)) {
+                                nsUpload.uploadEvent(it)
+                            }
+                            aapsLogger.debug(LTag.DATABASE, "Inserted calibration $it")
+                        }
                     }
-                }, {
-                    aapsLogger.error("Error while saving values from Dexcom App", it)
-                    ret = Result.failure()
-                })
             } catch (e: Exception) {
                 aapsLogger.error("Error while processing intent from Dexcom App", e)
                 ret = Result.failure()

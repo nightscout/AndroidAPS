@@ -14,7 +14,6 @@ import info.nightscout.androidaps.interfaces.PluginDescription
 import info.nightscout.androidaps.interfaces.PluginType
 import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.logging.LTag
-import info.nightscout.androidaps.plugins.general.nsclient.NSUpload
 import info.nightscout.androidaps.utils.XDripBroadcast
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 import info.nightscout.androidaps.utils.sharedPreferences.SP
@@ -25,7 +24,8 @@ import javax.inject.Singleton
 class GlimpPlugin @Inject constructor(
     injector: HasAndroidInjector,
     resourceHelper: ResourceHelper,
-    aapsLogger: AAPSLogger
+    aapsLogger: AAPSLogger,
+    private val sp: SP
 ) : PluginBase(PluginDescription()
     .mainType(PluginType.BGSOURCE)
     .fragmentClass(BGSourceFragment::class.java.name)
@@ -47,8 +47,6 @@ class GlimpPlugin @Inject constructor(
         @Inject lateinit var aapsLogger: AAPSLogger
         @Inject lateinit var repository: AppRepository
         @Inject lateinit var broadcastToXDrip: XDripBroadcast
-        @Inject lateinit var sp: SP
-        @Inject lateinit var nsUpload: NSUpload
 
         init {
             (context.applicationContext as HasAndroidInjector).androidInjector().inject(this)
@@ -70,19 +68,21 @@ class GlimpPlugin @Inject constructor(
             )
             repository.runTransactionForResult(CgmSourceTransaction(glucoseValues, emptyList(), null))
                 .doOnError {
-                    aapsLogger.error("Error while saving values from Glimp App", it)
+                    aapsLogger.error(LTag.DATABASE, "Error while saving values from Glimp App", it)
                     ret = Result.failure()
                 }
                 .blockingGet()
                 .also { savedValues ->
                     savedValues.inserted.forEach {
                         broadcastToXDrip(it)
-                        if (sp.getBoolean(R.string.key_dexcomg5_nsupload, false))
-                            nsUpload.uploadBg(it, GlucoseValue.SourceSensor.GLIMP.text)
-                        aapsLogger.debug(LTag.BGSOURCE, "Inserted bg $it")
+                        aapsLogger.debug(LTag.DATABASE, "Inserted bg $it")
                     }
                 }
             return ret
         }
     }
+
+    override fun uploadToNs(glucoseValue: GlucoseValue): Boolean =
+        glucoseValue.sourceSensor == GlucoseValue.SourceSensor.GLIMP && sp.getBoolean(R.string.key_dexcomg5_nsupload, false)
+
 }
