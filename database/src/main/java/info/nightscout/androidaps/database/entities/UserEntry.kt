@@ -155,6 +155,7 @@ data class UserEntry(
         @SerializedName("Announcement") Announcement ("Announcement"),
         @SerializedName("Actions") Actions ("Actions"),             //From Actions plugin
         @SerializedName("Automation") Automation ("Automation"),    //From Automation plugin
+        @SerializedName("LocalProfile") LocalProfile ("LocalProfile"),  //From LocalProfile plugin
         @SerializedName("Loop") Loop ("Loop"),                      //From Loop plugin
         @SerializedName("Maintenance") Maintenance ("Maintenance"), //From Maintenance plugin
         @SerializedName("NSClient") NSClient ("NSClient"),          //From NSClient plugin

@@ -116,7 +116,6 @@ class LocalProfilePlugin @Inject constructor(
         createAndStoreConvertedProfile()
         isEdited = false
         aapsLogger.debug(LTag.PROFILE, "Storing settings: " + rawProfile?.data.toString())
-        uel.log(Action.STORE_PROFILE)
         rxBus.send(EventProfileStoreChanged())
         var namesOK = true
         profiles.forEach {
@@ -294,6 +293,7 @@ class LocalProfilePlugin @Inject constructor(
 
     fun cloneProfile() {
         val p = profiles[currentProfileIndex].deepClone()
+        val sourceName = p.name
         p.name = p.name + " copy"
         profiles.add(p)
         currentProfileIndex = profiles.size - 1
