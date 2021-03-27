@@ -12,7 +12,8 @@
                 android:id="@+id/date"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:paddingStart="5dp"
+                android:paddingStart="10dp"
+                android:paddingTop="3dp"
                 android:text="1.1.2021 09:00"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="@+id/iconSource"
@@ -22,13 +23,14 @@
 
             <TextView
                 android:id="@+id/action"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:paddingStart="10dp"
+                android:paddingTop="3dp"
                 android:text="USER ENTRY"
                 app:layout_constraintStart_toEndOf="@id/date"
-                app:layout_constraintTop_toTopOf="@+id/iconSource"
-                app:layout_constraintBottom_toBottomOf="@+id/iconSource"
+                app:layout_constraintEnd_toStartOf="@+id/iconSource"
+                app:layout_constraintTop_toTopOf="parent"
                 android:textAppearance="?android:attr/textAppearanceSmall" />
 
             <ImageView
@@ -38,7 +40,8 @@
                 android:layout_marginEnd="8dp"
                 android:orientation="horizontal"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintTop_toTopOf="@+id/action"
+                app:layout_constraintBottom_toBottomOf="@+id/action"
                 app:srcCompat="@drawable/ic_cp_bolus_carbs" />
 
 
@@ -51,7 +54,7 @@
             android:paddingEnd="10dp"
             android:textStyle="bold"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/date"
+            app:layout_constraintTop_toBottomOf="@id/action"
             android:visibility="gone"
             android:text="Values with units" />
 
@@ -60,6 +63,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:paddingStart="20dp"
+            android:paddingEnd="10dp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/values"
             android:textAppearance="?android:attr/textAppearanceSmall"
