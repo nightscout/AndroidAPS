@@ -34,7 +34,6 @@ import info.nightscout.androidaps.interfaces.ActivePluginProvider;
 import info.nightscout.androidaps.interfaces.DatabaseHelperInterface;
 import info.nightscout.androidaps.logging.AAPSLogger;
 import info.nightscout.androidaps.logging.LTag;
-import info.nightscout.androidaps.plugins.general.nsclient.NSUpload;
 import info.nightscout.androidaps.plugins.pump.common.defs.PumpType;
 import info.nightscout.androidaps.plugins.pump.common.utils.DateTimeUtil;
 import info.nightscout.androidaps.plugins.pump.common.utils.StringUtil;
@@ -77,7 +76,6 @@ public class MedtronicHistoryData {
     private final AAPSLogger aapsLogger;
     private final SP sp;
     private final ActivePluginProvider activePlugin;
-    private final NSUpload nsUpload;
     private final MedtronicUtil medtronicUtil;
     private final MedtronicPumpHistoryDecoder medtronicPumpHistoryDecoder;
     private final MedtronicPumpStatus medtronicPumpStatus;
@@ -112,7 +110,6 @@ public class MedtronicHistoryData {
             AAPSLogger aapsLogger,
             SP sp,
             ActivePluginProvider activePlugin,
-            NSUpload nsUpload,
             MedtronicUtil medtronicUtil,
             MedtronicPumpHistoryDecoder medtronicPumpHistoryDecoder,
             MedtronicPumpStatus medtronicPumpStatus,
@@ -125,7 +122,6 @@ public class MedtronicHistoryData {
         this.aapsLogger = aapsLogger;
         this.sp = sp;
         this.activePlugin = activePlugin;
-        this.nsUpload = nsUpload;
         this.medtronicUtil = medtronicUtil;
         this.medtronicPumpHistoryDecoder = medtronicPumpHistoryDecoder;
         this.medtronicPumpStatus = medtronicPumpStatus;
@@ -593,7 +589,7 @@ public class MedtronicHistoryData {
                 event, 0, null, sp.getString("careportal_enteredby", "AndroidAPS"),
                 null, null, TherapyEvent.GlucoseUnit.MGDL))
                 .subscribe(
-                        result -> result.getInserted().forEach(nsUpload::uploadEvent),
+                        result -> result.getInserted().forEach(record -> aapsLogger.debug(LTag.DATABASE, "Inserted therapy event " + record)),
                         error -> aapsLogger.error(LTag.DATABASE, "Error while saving therapy event", error)
                 ));
     }

@@ -16,11 +16,12 @@ import info.nightscout.androidaps.danars.comm.DanaRS_Packet
 import info.nightscout.androidaps.danars.comm.DanaRS_Packet_Etc_Keep_Connection
 import info.nightscout.androidaps.danars.encryption.BleEncryption
 import info.nightscout.androidaps.danars.events.EventDanaRSPairingSuccess
+import info.nightscout.androidaps.database.AppRepository
+import info.nightscout.androidaps.database.transactions.InsertTherapyEventAnnouncementTransaction
 import info.nightscout.androidaps.events.EventPumpStatusChanged
 import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.logging.LTag
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper
-import info.nightscout.androidaps.plugins.general.nsclient.NSUpload
 import info.nightscout.androidaps.plugins.general.overview.events.EventDismissNotification
 import info.nightscout.androidaps.plugins.general.overview.events.EventNewNotification
 import info.nightscout.androidaps.plugins.general.overview.notifications.Notification
@@ -31,6 +32,8 @@ import info.nightscout.androidaps.utils.extensions.notify
 import info.nightscout.androidaps.utils.extensions.waitMillis
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 import info.nightscout.androidaps.utils.sharedPreferences.SP
+import io.reactivex.disposables.CompositeDisposable
+import io.reactivex.rxkotlin.plusAssign
 import java.util.*
 import java.util.concurrent.ScheduledFuture
 import javax.inject.Inject
@@ -48,7 +51,7 @@ class BLEComm @Inject internal constructor(
     private val danaPump: DanaPump,
     private val danaRSPlugin: DanaRSPlugin,
     private val bleEncryption: BleEncryption,
-    private val nsUpload: NSUpload
+    private val repository: AppRepository
 ) {
 
     companion object {
@@ -60,6 +63,8 @@ class BLEComm @Inject internal constructor(
         private const val PACKET_START_BYTE = 0xA5.toByte()
         private const val PACKET_END_BYTE = 0x5A.toByte()
     }
+
+    private val disposable = CompositeDisposable()
 
     private var scheduledDisconnection: ScheduledFuture<*>? = null
     private var processedMessage: DanaRS_Packet? = null
@@ -391,22 +396,22 @@ class BLEComm @Inject internal constructor(
                     if (decryptedBuffer[0] == BleEncryption.DANAR_PACKET__TYPE_ENCRYPTION_RESPONSE.toByte()) {
                         when (decryptedBuffer[1]) {
                             // 1st packet exchange
-                            BleEncryption.DANAR_PACKET__OPCODE_ENCRYPTION__PUMP_CHECK.toByte() ->
+                            BleEncryption.DANAR_PACKET__OPCODE_ENCRYPTION__PUMP_CHECK.toByte()         ->
                                 processConnectResponse(decryptedBuffer)
 
-                            BleEncryption.DANAR_PACKET__OPCODE_ENCRYPTION__TIME_INFORMATION.toByte() ->
+                            BleEncryption.DANAR_PACKET__OPCODE_ENCRYPTION__TIME_INFORMATION.toByte()   ->
                                 processEncryptionResponse(decryptedBuffer)
 
-                            BleEncryption.DANAR_PACKET__OPCODE_ENCRYPTION__CHECK_PASSKEY.toByte() ->
+                            BleEncryption.DANAR_PACKET__OPCODE_ENCRYPTION__CHECK_PASSKEY.toByte()      ->
                                 processPasskeyCheck(decryptedBuffer)
 
-                            BleEncryption.DANAR_PACKET__OPCODE_ENCRYPTION__PASSKEY_REQUEST.toByte() ->
+                            BleEncryption.DANAR_PACKET__OPCODE_ENCRYPTION__PASSKEY_REQUEST.toByte()    ->
                                 processPairingRequest(decryptedBuffer)
 
-                            BleEncryption.DANAR_PACKET__OPCODE_ENCRYPTION__PASSKEY_RETURN.toByte() ->
+                            BleEncryption.DANAR_PACKET__OPCODE_ENCRYPTION__PASSKEY_RETURN.toByte()     ->
                                 processPairingRequest2(decryptedBuffer)
 
-                            BleEncryption.DANAR_PACKET__OPCODE_ENCRYPTION__GET_PUMP_CHECK.toByte() -> {
+                            BleEncryption.DANAR_PACKET__OPCODE_ENCRYPTION__GET_PUMP_CHECK.toByte()     -> {
                                 // not easy mode, request time info
                                 if (decryptedBuffer[2] == 0x05.toByte()) sendTimeInfo()
                                 // easy mode
@@ -488,7 +493,7 @@ class BLEComm @Inject internal constructor(
             aapsLogger.debug(LTag.PUMPBTCOMM, "<<<<< " + "ENCRYPTION__PUMP_CHECK (PUMP)" + " " + DanaRS_Packet.toHexString(decryptedBuffer))
             mSendQueue.clear()
             rxBus.send(EventPumpStatusChanged(EventPumpStatusChanged.Status.DISCONNECTED, resourceHelper.gs(R.string.pumperror)))
-            nsUpload.uploadError(resourceHelper.gs(R.string.pumperror))
+            disposable += repository.runTransaction(InsertTherapyEventAnnouncementTransaction(resourceHelper.gs(R.string.pumperror))).subscribe()
             val n = Notification(Notification.PUMP_ERROR, resourceHelper.gs(R.string.pumperror), Notification.URGENT)
             rxBus.send(EventNewNotification(n))
             // response BUSY: error status

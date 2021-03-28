@@ -32,8 +32,14 @@ import dagger.android.HasAndroidInjector;
 import info.nightscout.androidaps.Config;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.database.AppRepository;
+import info.nightscout.androidaps.database.entities.Carbs;
+import info.nightscout.androidaps.database.transactions.UpdateNsIdBolusCalculatorResultTransaction;
+import info.nightscout.androidaps.database.transactions.UpdateNsIdBolusTransaction;
+import info.nightscout.androidaps.database.transactions.UpdateNsIdCarbsTransaction;
+import info.nightscout.androidaps.database.transactions.UpdateNsIdFoodTransaction;
 import info.nightscout.androidaps.database.transactions.UpdateNsIdGlucoseValueTransaction;
 import info.nightscout.androidaps.database.transactions.UpdateNsIdTemporaryTargetTransaction;
+import info.nightscout.androidaps.database.transactions.UpdateNsIdTherapyEventTransaction;
 import info.nightscout.androidaps.db.DbRequest;
 import info.nightscout.androidaps.events.EventAppExit;
 import info.nightscout.androidaps.events.EventConfigBuilderChange;
@@ -231,8 +237,8 @@ public class NSClientService extends DaggerService {
                             result -> aapsLogger.debug(LTag.DATABASE, "Updated ns id of temporary target " + pair.getValue()),
                             error -> aapsLogger.error(LTag.DATABASE, "Updated ns id of temporary target failed")
                     ));
-            dataSyncSelector.confirmTempTargetsTimestampIfGreater(pair.getUpdateRecordId());
-            rxBus.send(new EventNSClientNewLog("DBADD", "Acked " + pair.getValue().getInterfaceIDs().getNightscoutId()));
+            dataSyncSelector.confirmLastTempTargetsIdIfGreater(pair.getUpdateRecordId());
+            rxBus.send(new EventNSClientNewLog("DBADD", "Acked TemporaryTarget " + pair.getValue().getInterfaceIDs().getNightscoutId()));
             // Send new if waiting
             dataSyncSelector.processChangedTempTargetsCompat();
             return;
@@ -248,9 +254,89 @@ public class NSClientService extends DaggerService {
                             error -> aapsLogger.error(LTag.DATABASE, "Updated ns id of glucose value failed", error)
                     ));
             dataSyncSelector.confirmLastGlucoseValueIdIfGreater(pair.getUpdateRecordId());
-            rxBus.send(new EventNSClientNewLog("DBADD", "Acked " + pair.getValue().getInterfaceIDs().getNightscoutId()));
+            rxBus.send(new EventNSClientNewLog("DBADD", "Acked GlucoseValue " + pair.getValue().getInterfaceIDs().getNightscoutId()));
             // Send new if waiting
             dataSyncSelector.processChangedGlucoseValuesCompat();
+            return;
+        }
+        if (ack.getOriginalObject() instanceof DataSyncSelector.PairFood) {
+            DataSyncSelector.PairFood pair = (DataSyncSelector.PairFood) ack.getOriginalObject();
+            pair.getValue().getInterfaceIDs().setNightscoutId(ack.getId());
+
+            disposable.add(repository.runTransactionForResult(new UpdateNsIdFoodTransaction(pair.getValue()))
+                    .observeOn(aapsSchedulers.getIo())
+                    .subscribe(
+                            result -> aapsLogger.debug(LTag.DATABASE, "Updated ns id of food " + pair.getValue()),
+                            error -> aapsLogger.error(LTag.DATABASE, "Updated ns id of food failed", error)
+                    ));
+            dataSyncSelector.confirmLastFoodIdIfGreater(pair.getUpdateRecordId());
+            rxBus.send(new EventNSClientNewLog("DBADD", "Acked Food " + pair.getValue().getInterfaceIDs().getNightscoutId()));
+            // Send new if waiting
+            dataSyncSelector.processChangedFoodsCompat();
+            return;
+        }
+        if (ack.getOriginalObject() instanceof DataSyncSelector.PairTherapyEvent) {
+            DataSyncSelector.PairTherapyEvent pair = (DataSyncSelector.PairTherapyEvent) ack.getOriginalObject();
+            pair.getValue().getInterfaceIDs().setNightscoutId(ack.getId());
+
+            disposable.add(repository.runTransactionForResult(new UpdateNsIdTherapyEventTransaction(pair.getValue()))
+                    .observeOn(aapsSchedulers.getIo())
+                    .subscribe(
+                            result -> aapsLogger.debug(LTag.DATABASE, "Updated ns id of therapy event " + pair.getValue()),
+                            error -> aapsLogger.error(LTag.DATABASE, "Updated ns id of therapy event failed", error)
+                    ));
+            dataSyncSelector.confirmLastTherapyEventIdIfGreater(pair.getUpdateRecordId());
+            rxBus.send(new EventNSClientNewLog("DBADD", "Acked TherapyEvent " + pair.getValue().getInterfaceIDs().getNightscoutId()));
+            // Send new if waiting
+            dataSyncSelector.processChangedTherapyEventsCompat();
+            return;
+        }
+        if (ack.getOriginalObject() instanceof DataSyncSelector.PairBolus) {
+            DataSyncSelector.PairBolus pair = (DataSyncSelector.PairBolus) ack.getOriginalObject();
+            pair.getValue().getInterfaceIDs().setNightscoutId(ack.getId());
+
+            disposable.add(repository.runTransactionForResult(new UpdateNsIdBolusTransaction(pair.getValue()))
+                    .observeOn(aapsSchedulers.getIo())
+                    .subscribe(
+                            result -> aapsLogger.debug(LTag.DATABASE, "Updated ns id of bolus " + pair.getValue()),
+                            error -> aapsLogger.error(LTag.DATABASE, "Updated ns id of bolus failed", error)
+                    ));
+            dataSyncSelector.confirmLastBolusIdIfGreater(pair.getUpdateRecordId());
+            rxBus.send(new EventNSClientNewLog("DBADD", "Acked Bolus " + pair.getValue().getInterfaceIDs().getNightscoutId()));
+            // Send new if waiting
+            dataSyncSelector.processChangedBolusesCompat();
+            return;
+        }
+        if (ack.getOriginalObject() instanceof DataSyncSelector.PairCarbs) {
+            DataSyncSelector.PairCarbs pair = (DataSyncSelector.PairCarbs) ack.getOriginalObject();
+            pair.getValue().getInterfaceIDs().setNightscoutId(ack.getId());
+
+            disposable.add(repository.runTransactionForResult(new UpdateNsIdCarbsTransaction(pair.getValue()))
+                    .observeOn(aapsSchedulers.getIo())
+                    .subscribe(
+                            result -> aapsLogger.debug(LTag.DATABASE, "Updated ns id of carbs " + pair.getValue()),
+                            error -> aapsLogger.error(LTag.DATABASE, "Updated ns id of carbs failed", error)
+                    ));
+            dataSyncSelector.confirmLastCarbsIdIfGreater(pair.getUpdateRecordId());
+            rxBus.send(new EventNSClientNewLog("DBADD", "Acked Carbs" + pair.getValue().getInterfaceIDs().getNightscoutId()));
+            // Send new if waiting
+            dataSyncSelector.processChangedCarbsCompat();
+            return;
+        }
+        if (ack.getOriginalObject() instanceof DataSyncSelector.PairBolusCalculatorResult) {
+            DataSyncSelector.PairBolusCalculatorResult pair = (DataSyncSelector.PairBolusCalculatorResult) ack.getOriginalObject();
+            pair.getValue().getInterfaceIDs().setNightscoutId(ack.getId());
+
+            disposable.add(repository.runTransactionForResult(new UpdateNsIdBolusCalculatorResultTransaction(pair.getValue()))
+                    .observeOn(aapsSchedulers.getIo())
+                    .subscribe(
+                            result -> aapsLogger.debug(LTag.DATABASE, "Updated ns id of BolusCalculatorResult " + pair.getValue()),
+                            error -> aapsLogger.error(LTag.DATABASE, "Updated ns id of BolusCalculatorResult failed", error)
+                    ));
+            dataSyncSelector.confirmLastBolusCalculatorResultsIdIfGreater(pair.getUpdateRecordId());
+            rxBus.send(new EventNSClientNewLog("DBADD", "Acked BolusCalculatorResult" + pair.getValue().getInterfaceIDs().getNightscoutId()));
+            // Send new if waiting
+            dataSyncSelector.processChangedBolusCalculatorResultsCompat();
             return;
         }
         // old way
@@ -267,8 +353,8 @@ public class NSClientService extends DaggerService {
         // new room way
         if (ack.getOriginalObject() instanceof DataSyncSelector.PairTemporaryTarget) {
             DataSyncSelector.PairTemporaryTarget pair = (DataSyncSelector.PairTemporaryTarget) ack.getOriginalObject();
-            dataSyncSelector.confirmTempTargetsTimestampIfGreater(pair.getUpdateRecordId());
-            rxBus.send(new EventNSClientNewLog("DBUPDATE/DBREMOVE", "Acked " + ack.get_id()));
+            dataSyncSelector.confirmLastTempTargetsIdIfGreater(pair.getUpdateRecordId());
+            rxBus.send(new EventNSClientNewLog("DBUPDATE/DBREMOVE", "Acked TemporaryTarget" + ack.get_id()));
             // Send new if waiting
             dataSyncSelector.processChangedTempTargetsCompat();
             return;
@@ -276,9 +362,49 @@ public class NSClientService extends DaggerService {
         if (ack.getOriginalObject() instanceof DataSyncSelector.PairGlucoseValue) {
             DataSyncSelector.PairGlucoseValue pair = (DataSyncSelector.PairGlucoseValue) ack.getOriginalObject();
             dataSyncSelector.confirmLastGlucoseValueIdIfGreater(pair.getUpdateRecordId());
-            rxBus.send(new EventNSClientNewLog("DBUPDATE/DBREMOVE", "Acked " + ack.get_id()));
+            rxBus.send(new EventNSClientNewLog("DBUPDATE/DBREMOVE", "Acked GlucoseValue " + ack.get_id()));
             // Send new if waiting
             dataSyncSelector.processChangedGlucoseValuesCompat();
+            return;
+        }
+        if (ack.getOriginalObject() instanceof DataSyncSelector.PairFood) {
+            DataSyncSelector.PairFood pair = (DataSyncSelector.PairFood) ack.getOriginalObject();
+            dataSyncSelector.confirmLastFoodIdIfGreater(pair.getUpdateRecordId());
+            rxBus.send(new EventNSClientNewLog("DBUPDATE/DBREMOVE", "Acked Food " + ack.get_id()));
+            // Send new if waiting
+            dataSyncSelector.processChangedFoodsCompat();
+            return;
+        }
+        if (ack.getOriginalObject() instanceof DataSyncSelector.PairTherapyEvent) {
+            DataSyncSelector.PairTherapyEvent pair = (DataSyncSelector.PairTherapyEvent) ack.getOriginalObject();
+            dataSyncSelector.confirmLastTherapyEventIdIfGreater(pair.getUpdateRecordId());
+            rxBus.send(new EventNSClientNewLog("DBUPDATE/DBREMOVE", "Acked TherapyEvent " + ack.get_id()));
+            // Send new if waiting
+            dataSyncSelector.processChangedTherapyEventsCompat();
+            return;
+        }
+        if (ack.getOriginalObject() instanceof DataSyncSelector.PairBolus) {
+            DataSyncSelector.PairBolus pair = (DataSyncSelector.PairBolus) ack.getOriginalObject();
+            dataSyncSelector.confirmLastBolusIdIfGreater(pair.getUpdateRecordId());
+            rxBus.send(new EventNSClientNewLog("DBUPDATE/DBREMOVE", "Acked Bolus " + ack.get_id()));
+            // Send new if waiting
+            dataSyncSelector.processChangedBolusesCompat();
+            return;
+        }
+        if (ack.getOriginalObject() instanceof DataSyncSelector.PairCarbs) {
+            DataSyncSelector.PairCarbs pair = (DataSyncSelector.PairCarbs) ack.getOriginalObject();
+            dataSyncSelector.confirmLastCarbsIdIfGreater(pair.getUpdateRecordId());
+            rxBus.send(new EventNSClientNewLog("DBUPDATE/DBREMOVE", "Acked Carbs " + ack.get_id()));
+            // Send new if waiting
+            dataSyncSelector.processChangedCarbsCompat();
+            return;
+        }
+        if (ack.getOriginalObject() instanceof DataSyncSelector.PairBolusCalculatorResult) {
+            DataSyncSelector.PairBolusCalculatorResult pair = (DataSyncSelector.PairBolusCalculatorResult) ack.getOriginalObject();
+            dataSyncSelector.confirmLastBolusCalculatorResultsIdIfGreater(pair.getUpdateRecordId());
+            rxBus.send(new EventNSClientNewLog("DBUPDATE/DBREMOVE", "Acked BolusCalculatorResult " + ack.get_id()));
+            // Send new if waiting
+            dataSyncSelector.processChangedBolusCalculatorResultsCompat();
             return;
         }
         // old way
@@ -767,7 +893,7 @@ public class NSClientService extends DaggerService {
             message.put("_id", _id);
             message.put("data", data);
             mSocket.emit("dbUpdate", message, new NSUpdateAck("dbUpdate", _id, aapsLogger, rxBus, originalObject));
-            rxBus.send(new EventNSClientNewLog("DBUPDATE " + collection, "Sent " + _id));
+            rxBus.send(new EventNSClientNewLog("DBUPDATE " + collection, "Sent " + originalObject.getClass().getSimpleName() + " " + _id));
         } catch (JSONException e) {
             aapsLogger.error("Unhandled exception", e);
         }
@@ -793,7 +919,7 @@ public class NSClientService extends DaggerService {
             message.put("collection", collection);
             message.put("_id", _id);
             mSocket.emit("dbRemove", message, new NSUpdateAck("dbRemove", _id, aapsLogger, rxBus, originalObject));
-            rxBus.send(new EventNSClientNewLog("DBREMOVE " + collection, "Sent " + _id));
+            rxBus.send(new EventNSClientNewLog("DBREMOVE " + collection, "Sent " + originalObject.getClass().getSimpleName() + " " + _id));
         } catch (JSONException e) {
             aapsLogger.error("Unhandled exception", e);
         }
@@ -819,7 +945,7 @@ public class NSClientService extends DaggerService {
             message.put("collection", collection);
             message.put("data", data);
             mSocket.emit("dbAdd", message, new NSAddAck(aapsLogger, rxBus, originalObject));
-            rxBus.send(new EventNSClientNewLog("DBADD " + collection, "Sent " + data));
+            rxBus.send(new EventNSClientNewLog("DBADD " + collection, "Sent " + originalObject.getClass().getSimpleName() + " " + data));
         } catch (JSONException e) {
             aapsLogger.error("Unhandled exception", e);
         }
@@ -843,8 +969,14 @@ public class NSClientService extends DaggerService {
                 aapsLogger.debug(LTag.NSCLIENT, "Skipping resend by lastAckTime: " + ((System.currentTimeMillis() - lastAckTime) / 1000L) + " sec");
                 return;
             }
-            if (dataSyncSelector.processChangedGlucoseValuesCompat()) return;
-            if (dataSyncSelector.processChangedTempTargetsCompat()) return;
+
+            dataSyncSelector.processChangedBolusesCompat();
+            dataSyncSelector.processChangedCarbsCompat();
+            dataSyncSelector.processChangedBolusCalculatorResultsCompat();
+            dataSyncSelector.processChangedGlucoseValuesCompat();
+            dataSyncSelector.processChangedTempTargetsCompat();
+            dataSyncSelector.processChangedFoodsCompat();
+            dataSyncSelector.processChangedTherapyEventsCompat();
 
             if (uploadQueue.size() == 0)
                 return;

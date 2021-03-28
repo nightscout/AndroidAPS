@@ -5,10 +5,13 @@ import android.content.Intent
 import android.content.IntentFilter
 import android.net.ConnectivityManager
 import android.net.wifi.WifiManager
+import android.os.Build
 import com.j256.ormlite.android.apptools.OpenHelperManager
 import dagger.android.AndroidInjector
 import dagger.android.DaggerApplication
 import info.nightscout.androidaps.database.AppRepository
+import info.nightscout.androidaps.database.entities.TherapyEvent
+import info.nightscout.androidaps.database.transactions.InsertTherapyEventIfNewTransaction
 import info.nightscout.androidaps.database.transactions.VersionChangeTransaction
 import info.nightscout.androidaps.db.CompatDBHelper
 import info.nightscout.androidaps.db.DatabaseHelper
@@ -27,9 +30,11 @@ import info.nightscout.androidaps.receivers.KeepAliveReceiver.KeepAliveManager
 import info.nightscout.androidaps.receivers.NetworkChangeReceiver
 import info.nightscout.androidaps.receivers.TimeDateOrTZChangeReceiver
 import info.nightscout.androidaps.utils.ActivityMonitor
+import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.locale.LocaleHelper.update
 import info.nightscout.androidaps.utils.sharedPreferences.SP
 import io.reactivex.disposables.CompositeDisposable
+import io.reactivex.rxkotlin.plusAssign
 import net.danlew.android.joda.JodaTimeAndroid
 import javax.inject.Inject
 
@@ -49,6 +54,7 @@ class MainApp : DaggerApplication() {
     @Inject lateinit var plugins: List<@JvmSuppressWildcards PluginBase>
     @Inject lateinit var compatDBHelper: CompatDBHelper
     @Inject lateinit var repository: AppRepository
+    @Inject lateinit var dateUtil: DateUtil
     @Inject lateinit var staticInjector: StaticInjector// TODO avoid , here fake only to initialize
 
     override fun onCreate() {
@@ -63,8 +69,9 @@ class MainApp : DaggerApplication() {
             gitRemote = null
             commitHash = null
         }
-        disposable.add(repository.runTransaction(VersionChangeTransaction(BuildConfig.VERSION_NAME, BuildConfig.VERSION_CODE, gitRemote, commitHash)).subscribe())
-        disposable.add(compatDBHelper.dbChangeDisposable())
+        disposable += repository.runTransaction(VersionChangeTransaction(BuildConfig.VERSION_NAME, BuildConfig.VERSION_CODE, gitRemote, commitHash)).subscribe()
+        disposable += repository.runTransaction(InsertTherapyEventIfNewTransaction(timestamp = dateUtil._now(), type = TherapyEvent.Type.NOTE, note = getString(info.nightscout.androidaps.core.R.string.androidaps_start).toString() + " - " + Build.MANUFACTURER + " " + Build.MODEL, glucoseUnit = TherapyEvent.GlucoseUnit.MGDL)).subscribe()
+        disposable += compatDBHelper.dbChangeDisposable()
         registerActivityLifecycleCallbacks(activityMonitor)
         JodaTimeAndroid.init(this)
         aapsLogger.debug("Version: " + BuildConfig.VERSION_NAME)
@@ -78,8 +85,7 @@ class MainApp : DaggerApplication() {
         // Register all tabs in app here
         pluginStore.plugins = plugins
         configBuilderPlugin.initialize()
-        nsUpload.uploadAppStart()
-        Thread { keepAliveManager.setAlarm(this) }.start()
+        keepAliveManager.setAlarm(this)
         doMigrations()
     }
 

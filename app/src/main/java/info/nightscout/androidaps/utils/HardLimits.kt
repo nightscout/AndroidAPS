@@ -2,11 +2,14 @@ package info.nightscout.androidaps.utils
 
 import android.content.Context
 import info.nightscout.androidaps.R
+import info.nightscout.androidaps.database.AppRepository
+import info.nightscout.androidaps.database.transactions.InsertTherapyEventAnnouncementTransaction
 import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper
-import info.nightscout.androidaps.plugins.general.nsclient.NSUpload
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 import info.nightscout.androidaps.utils.sharedPreferences.SP
+import io.reactivex.disposables.CompositeDisposable
+import io.reactivex.rxkotlin.plusAssign
 import javax.inject.Inject
 import javax.inject.Singleton
 import kotlin.math.max
@@ -19,8 +22,10 @@ class HardLimits @Inject constructor(
     private val sp: SP,
     private val resourceHelper: ResourceHelper,
     private val context: Context,
-    private val nsUpload: NSUpload
+    private val repository: AppRepository
 ) {
+
+    private val disposable = CompositeDisposable()
 
     companion object {
 
@@ -88,7 +93,7 @@ class HardLimits @Inject constructor(
             msg += ".\n"
             msg += String.format(resourceHelper.gs(R.string.valuelimitedto), value, newValue)
             aapsLogger.error(msg)
-            nsUpload.uploadError(msg)
+            disposable += repository.runTransaction(InsertTherapyEventAnnouncementTransaction(msg)).subscribe()
             ToastUtils.showToastInUiThread(context, rxBus, msg, R.raw.error)
         }
         return newValue

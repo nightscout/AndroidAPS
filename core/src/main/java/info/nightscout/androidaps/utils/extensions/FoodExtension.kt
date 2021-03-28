@@ -1,7 +1,6 @@
 package info.nightscout.androidaps.utils.extensions
 
 import info.nightscout.androidaps.database.entities.Food
-import info.nightscout.androidaps.plugins.general.nsclient.NSUpload
 import info.nightscout.androidaps.utils.JsonHelper
 import org.json.JSONObject
 
@@ -18,7 +17,7 @@ fun foodFromJson(jsonObject: JSONObject): Food? {
         val protein = JsonHelper.safeGetIntAllowNull(jsonObject, "protein")
         val fat = JsonHelper.safeGetIntAllowNull(jsonObject, "fat")
         val id = JsonHelper.safeGetStringAllowNull(jsonObject, "_id", null) ?: return null
-        val isValid = JsonHelper.safeGetBoolean(jsonObject, NSUpload.ISVALID, true)
+        val isValid = JsonHelper.safeGetBoolean(jsonObject, "isValid", true)
 
         val food = Food(
             name = name,
@@ -38,3 +37,22 @@ fun foodFromJson(jsonObject: JSONObject): Food? {
     }
     return null
 }
+
+fun Food.toJson(units: String): JSONObject =
+    JSONObject()
+        .put("type", "food")
+        .put("name", name)
+        .put("category", category)
+        .put("subcategory", subCategory)
+        .put("unit", unit)
+        .put("portion", portion)
+        .put("carbs", carbs)
+        .put("gi", gi)
+        .put("energy", energy)
+        .put("protein", protein)
+        .put("fat", fat)
+        .put("isValid", isValid).also {
+            if (interfaceIDs.nightscoutId != null) it
+                .put("_id", interfaceIDs.nightscoutId)
+        }
+

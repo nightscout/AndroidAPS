@@ -425,14 +425,10 @@ class BolusWizard @Inject constructor(
                         })
                     }
                     disposable += repository.runTransactionForResult(InsertOrUpdateBolusCalculatorResultTransaction(bolusCalculatorResult!!))
-                        .subscribe({ result ->
-                            result.inserted.forEach { inserted ->
-                                aapsLogger.debug(LTag.DATABASE, "Inserted bolusCalculatorResult $inserted")
-                                nsUpload.uploadBolusCalc(this)
-                            }
-                        }, {
-                            aapsLogger.error(LTag.DATABASE, "Error while saving meal link", it)
-                        })
+                        .subscribe(
+                            { result -> result.inserted.forEach { inserted -> aapsLogger.debug(LTag.DATABASE, "Inserted bolusCalculatorResult $inserted") } },
+                            { aapsLogger.error(LTag.DATABASE, "Error while saving bolusCalculatorResult", it) }
+                        )
 
                 }
                 if (useAlarm && carbs > 0 && carbTime > 0) {

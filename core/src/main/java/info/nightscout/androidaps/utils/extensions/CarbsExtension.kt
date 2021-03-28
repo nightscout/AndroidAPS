@@ -1,7 +1,10 @@
 package info.nightscout.androidaps.utils.extensions
 
 import info.nightscout.androidaps.database.entities.Carbs
+import info.nightscout.androidaps.database.entities.TherapyEvent
+import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.T
+import org.json.JSONObject
 import kotlin.math.roundToInt
 
 fun Carbs.expandCarbs(): List<Carbs> =
@@ -24,3 +27,14 @@ fun Carbs.expandCarbs(): List<Carbs> =
             }
         }
     }
+
+fun Carbs.toJson(): JSONObject =
+    JSONObject()
+        .put("eventType", if (amount < 12) TherapyEvent.Type.CARBS_CORRECTION else TherapyEvent.Type.MEAL_BOLUS)
+        .put("carbs", amount)
+        .put("created_at", DateUtil.toISOString(timestamp))
+        .put("date", timestamp).also {
+            if (duration != 0L) it.put("duration", duration)
+            if (interfaceIDs.pumpId != null) it.put("pumpId", interfaceIDs.pumpId)
+            if (interfaceIDs.nightscoutId != null) it.put("_id", interfaceIDs.nightscoutId)
+        }

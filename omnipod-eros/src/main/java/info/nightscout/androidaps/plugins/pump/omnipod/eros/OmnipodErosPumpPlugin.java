@@ -1,5 +1,7 @@
 package info.nightscout.androidaps.plugins.pump.omnipod.eros;
 
+import static info.nightscout.androidaps.plugins.pump.omnipod.eros.driver.definition.OmnipodConstants.BASAL_STEP_DURATION;
+
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
@@ -31,7 +33,8 @@ import info.nightscout.androidaps.activities.ErrorHelperActivity;
 import info.nightscout.androidaps.data.DetailedBolusInfo;
 import info.nightscout.androidaps.data.Profile;
 import info.nightscout.androidaps.data.PumpEnactResult;
-import info.nightscout.androidaps.database.entities.Bolus;
+import info.nightscout.androidaps.database.AppRepository;
+import info.nightscout.androidaps.database.transactions.InsertTherapyEventAnnouncementTransaction;
 import info.nightscout.androidaps.db.ExtendedBolus;
 import info.nightscout.androidaps.db.Source;
 import info.nightscout.androidaps.db.TemporaryBasal;
@@ -52,7 +55,6 @@ import info.nightscout.androidaps.logging.LTag;
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper;
 import info.nightscout.androidaps.plugins.common.ManufacturerType;
 import info.nightscout.androidaps.plugins.general.actions.defs.CustomActionType;
-import info.nightscout.androidaps.plugins.general.nsclient.NSUpload;
 import info.nightscout.androidaps.plugins.general.overview.events.EventDismissNotification;
 import info.nightscout.androidaps.plugins.general.overview.events.EventNewNotification;
 import info.nightscout.androidaps.plugins.general.overview.notifications.Notification;
@@ -108,8 +110,6 @@ import info.nightscout.androidaps.utils.rx.AapsSchedulers;
 import info.nightscout.androidaps.utils.sharedPreferences.SP;
 import io.reactivex.disposables.CompositeDisposable;
 
-import static info.nightscout.androidaps.plugins.pump.omnipod.eros.driver.definition.OmnipodConstants.BASAL_STEP_DURATION;
-
 /**
  * Created by andy on 23.04.18.
  *
@@ -141,8 +141,9 @@ public class OmnipodErosPumpPlugin extends PumpPluginBase implements PumpInterfa
     private final PumpDescription pumpDescription;
     private final ServiceConnection serviceConnection;
     private final PumpType pumpType = PumpType.OMNIPOD_EROS;
-    private final CompositeDisposable disposables = new CompositeDisposable();
-    private final NSUpload nsUpload;
+    private final AppRepository repository;
+
+    private final CompositeDisposable disposable = new CompositeDisposable();
 
     // variables for handling statuses and history
     private boolean firstRun = true;
@@ -177,7 +178,7 @@ public class OmnipodErosPumpPlugin extends PumpPluginBase implements PumpInterfa
             RileyLinkUtil rileyLinkUtil,
             OmnipodAlertUtil omnipodAlertUtil,
             ProfileFunction profileFunction,
-            NSUpload nsUpload
+            AppRepository repository
     ) {
         super(new PluginDescription() //
                         .mainType(PluginType.PUMP) //
@@ -204,7 +205,7 @@ public class OmnipodErosPumpPlugin extends PumpPluginBase implements PumpInterfa
         this.rileyLinkUtil = rileyLinkUtil;
         this.omnipodAlertUtil = omnipodAlertUtil;
         this.profileFunction = profileFunction;
-        this.nsUpload = nsUpload;
+        this.repository = repository;
 
         pumpDescription = new PumpDescription(pumpType);
 
@@ -283,32 +284,32 @@ public class OmnipodErosPumpPlugin extends PumpPluginBase implements PumpInterfa
         Intent intent = new Intent(context, RileyLinkOmnipodService.class);
         context.bindService(intent, serviceConnection, Context.BIND_AUTO_CREATE);
 
-        disposables.add(rxBus
+        disposable.add(rxBus
                 .toObservable(EventAppExit.class)
                 .observeOn(aapsSchedulers.getIo())
                 .subscribe(event -> context.unbindService(serviceConnection), fabricPrivacy::logException)
         );
-        disposables.add(rxBus
+        disposable.add(rxBus
                 .toObservable(EventOmnipodErosTbrChanged.class)
                 .observeOn(aapsSchedulers.getIo())
                 .subscribe(event -> handleCancelledTbr(), fabricPrivacy::logException)
         );
-        disposables.add(rxBus
+        disposable.add(rxBus
                 .toObservable(EventOmnipodErosUncertainTbrRecovered.class)
                 .observeOn(aapsSchedulers.getIo())
                 .subscribe(event -> handleUncertainTbrRecovery(), fabricPrivacy::logException)
         );
-        disposables.add(rxBus
+        disposable.add(rxBus
                 .toObservable(EventOmnipodErosActiveAlertsChanged.class)
                 .observeOn(aapsSchedulers.getIo())
                 .subscribe(event -> handleActivePodAlerts(), fabricPrivacy::logException)
         );
-        disposables.add(rxBus
+        disposable.add(rxBus
                 .toObservable(EventOmnipodErosFaultEventChanged.class)
                 .observeOn(aapsSchedulers.getIo())
                 .subscribe(event -> handlePodFaultEvent(), fabricPrivacy::logException)
         );
-        disposables.add(rxBus
+        disposable.add(rxBus
                 .toObservable(EventPreferenceChange.class)
                 .observeOn(aapsSchedulers.getIo())
                 .subscribe(event -> {
@@ -337,7 +338,7 @@ public class OmnipodErosPumpPlugin extends PumpPluginBase implements PumpInterfa
                     }
                 }, fabricPrivacy::logException)
         );
-        disposables.add(rxBus
+        disposable.add(rxBus
                 .toObservable(EventAppInitialized.class)
                 .observeOn(aapsSchedulers.getIo())
                 .subscribe(event -> {
@@ -407,7 +408,7 @@ public class OmnipodErosPumpPlugin extends PumpPluginBase implements PumpInterfa
                 String notificationText = resourceHelper.gq(R.plurals.omnipod_common_pod_alerts, activeAlerts.size(), alerts);
                 Notification notification = new Notification(Notification.OMNIPOD_POD_ALERTS, notificationText, Notification.URGENT);
                 rxBus.send(new EventNewNotification(notification));
-                nsUpload.uploadError(notificationText);
+                disposable.add(repository.runTransaction(new InsertTherapyEventAnnouncementTransaction(notificationText)).subscribe());
 
                 if (aapsOmnipodErosManager.isAutomaticallyAcknowledgeAlertsEnabled() && !getCommandQueue().isCustomCommandInQueue(CommandAcknowledgeAlerts.class)) {
                     queueAcknowledgeAlertsCommand();
@@ -419,7 +420,7 @@ public class OmnipodErosPumpPlugin extends PumpPluginBase implements PumpInterfa
     private void handlePodFaultEvent() {
         if (podStateManager.isPodFaulted()) {
             String notificationText = resourceHelper.gs(R.string.omnipod_common_pod_status_pod_fault_description, podStateManager.getFaultEventCode().getValue(), podStateManager.getFaultEventCode().name());
-            nsUpload.uploadError(notificationText);
+            disposable.add(repository.runTransaction(new InsertTherapyEventAnnouncementTransaction(notificationText)).subscribe());
         }
     }
 
@@ -432,7 +433,7 @@ public class OmnipodErosPumpPlugin extends PumpPluginBase implements PumpInterfa
 
         context.unbindService(serviceConnection);
 
-        disposables.clear();
+        disposable.clear();
     }
 
     private void queueAcknowledgeAlertsCommand() {

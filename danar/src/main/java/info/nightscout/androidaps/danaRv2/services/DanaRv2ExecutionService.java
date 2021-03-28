@@ -52,6 +52,8 @@ import info.nightscout.androidaps.danar.comm.MsgStatusBasic;
 import info.nightscout.androidaps.danar.services.AbstractDanaRExecutionService;
 import info.nightscout.androidaps.data.Profile;
 import info.nightscout.androidaps.data.PumpEnactResult;
+import info.nightscout.androidaps.database.AppRepository;
+import info.nightscout.androidaps.database.transactions.InsertTherapyEventAnnouncementTransaction;
 import info.nightscout.androidaps.db.Treatment;
 import info.nightscout.androidaps.dialogs.BolusProgressDialog;
 import info.nightscout.androidaps.events.EventInitializationChanged;
@@ -66,7 +68,6 @@ import info.nightscout.androidaps.logging.AAPSLogger;
 import info.nightscout.androidaps.logging.LTag;
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper;
 import info.nightscout.androidaps.plugins.configBuilder.ConstraintChecker;
-import info.nightscout.androidaps.plugins.general.nsclient.NSUpload;
 import info.nightscout.androidaps.plugins.general.overview.events.EventNewNotification;
 import info.nightscout.androidaps.plugins.general.overview.events.EventOverviewBolusProgress;
 import info.nightscout.androidaps.plugins.general.overview.notifications.Notification;
@@ -77,6 +78,7 @@ import info.nightscout.androidaps.utils.DateUtil;
 import info.nightscout.androidaps.utils.T;
 import info.nightscout.androidaps.utils.resources.ResourceHelper;
 import info.nightscout.androidaps.utils.sharedPreferences.SP;
+import io.reactivex.disposables.CompositeDisposable;
 
 public class DanaRv2ExecutionService extends AbstractDanaRExecutionService {
     @Inject HasAndroidInjector injector;
@@ -96,11 +98,12 @@ public class DanaRv2ExecutionService extends AbstractDanaRExecutionService {
     @Inject DetailedBolusInfoStorage detailedBolusInfoStorage;
     @Inject ActivePluginProvider activePluginProvider;
     @Inject ProfileFunction profileFunction;
-    @Inject NSUpload nsUpload;
+    @Inject AppRepository repository;
     @Inject SP sp;
     @Inject DateUtil dateUtil;
 
     private long lastHistoryFetched = 0;
+    private final CompositeDisposable disposable = new CompositeDisposable();
 
     public DanaRv2ExecutionService() {
     }
@@ -248,7 +251,7 @@ public class DanaRv2ExecutionService extends AbstractDanaRExecutionService {
                 if (System.currentTimeMillis() > lastApproachingDailyLimit + 30 * 60 * 1000) {
                     Notification reportFail = new Notification(Notification.APPROACHING_DAILY_LIMIT, resourceHelper.gs(R.string.approachingdailylimit), Notification.URGENT);
                     rxBus.send(new EventNewNotification(reportFail));
-                    nsUpload.uploadError(resourceHelper.gs(R.string.approachingdailylimit) + ": " + danaPump.getDailyTotalUnits() + "/" + danaPump.getMaxDailyTotalUnits() + "U");
+                    disposable.add(repository.runTransaction(new InsertTherapyEventAnnouncementTransaction(resourceHelper.gs(R.string.approachingdailylimit) + ": " + danaPump.getDailyTotalUnits() + "/" + danaPump.getMaxDailyTotalUnits() + "U")).subscribe());
                     lastApproachingDailyLimit = System.currentTimeMillis();
                 }
             }

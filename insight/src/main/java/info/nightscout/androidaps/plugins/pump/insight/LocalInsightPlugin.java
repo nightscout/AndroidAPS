@@ -1558,7 +1558,7 @@ public class LocalInsightPlugin extends PumpPluginBase implements PumpInterface,
         if (repository.getTherapyEventByTimestamp(TherapyEvent.Type.NOTE, date) != null) return;
         disposable.add(repository.runTransactionForResult(new InsertTherapyEventIfNewTransaction(date, TherapyEvent.Type.NOTE, 0, note, sp.getString("careportal_enteredby", "AndroidAPS"), null, null, TherapyEvent.GlucoseUnit.MGDL))
                 .subscribe(
-                        result -> result.getInserted().forEach(nsUpload::uploadEvent),
+                        result -> result.getInserted().forEach(event -> aapsLogger.debug(LTag.DATABASE, "Inserted therapy event " + event)),
                         error -> aapsLogger.error(LTag.DATABASE, "Error while saving therapy event", error)
                 ));
     }
@@ -1580,7 +1580,7 @@ public class LocalInsightPlugin extends PumpPluginBase implements PumpInterface,
         if (repository.getTherapyEventByTimestamp(event, date) != null) return;
         disposable.add(repository.runTransactionForResult(new InsertTherapyEventIfNewTransaction(date, event, 0, null, sp.getString("careportal_enteredby", "AndroidAPS"), null, null, TherapyEvent.GlucoseUnit.MGDL))
                 .subscribe(
-                        result -> result.getInserted().forEach(nsUpload::uploadEvent),
+                        result -> result.getInserted().forEach(record -> aapsLogger.debug(LTag.DATABASE, "Inserted therapy event " + record)),
                         error -> aapsLogger.error(LTag.DATABASE, "Error while saving therapy event", error)
                 ));
     }

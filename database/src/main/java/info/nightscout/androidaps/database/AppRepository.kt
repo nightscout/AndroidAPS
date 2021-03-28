@@ -90,7 +90,7 @@ open class AppRepository @Inject internal constructor(
                     Maybe.just(nextIdElement to nextIdElement.id)
                 } else {
                     database.glucoseValueDao.getCurrentFromHistoric(nextIdElemReferenceId)
-                        .map { it to nextIdElement.id}
+                        .map { it to nextIdElement.id }
                 }
             }
 
@@ -118,7 +118,7 @@ open class AppRepository @Inject internal constructor(
                     Maybe.just(nextIdElement to nextIdElement.id)
                 } else {
                     database.temporaryTargetDao.getCurrentFromHistoric(nextIdElemReferenceId)
-                        .map { it to nextIdElement.id}
+                        .map { it to nextIdElement.id }
                 }
             }
 
@@ -161,6 +161,29 @@ open class AppRepository @Inject internal constructor(
     }
 
     // THERAPY EVENT
+    /*
+       * returns a Pair of the next entity to sync and the ID of the "update".
+       * The update id might either be the entry id itself if it is a new entry - or the id
+       * of the update ("historic") entry. The sync counter should be incremented to that id if it was synced successfully.
+       *
+       * It is a Maybe as there might be no next element.
+       * */
+    fun getNextSyncElementTherapyEvent(id: Long): Maybe<Pair<TherapyEvent, Long>> =
+        database.therapyEventDao.getNextModifiedOrNewAfter(id)
+            .flatMap { nextIdElement ->
+                val nextIdElemReferenceId = nextIdElement.referenceId
+                if (nextIdElemReferenceId == null) {
+                    Maybe.just(nextIdElement to nextIdElement.id)
+                } else {
+                    database.therapyEventDao.getCurrentFromHistoric(nextIdElemReferenceId)
+                        .map { it to nextIdElement.id }
+                }
+            }
+
+    fun getModifiedTherapyEventDataFromId(lastId: Long): Single<List<TherapyEvent>> =
+        database.therapyEventDao.getModifiedFrom(lastId)
+            .subscribeOn(Schedulers.io())
+
     fun getTherapyEventDataFromTime(timestamp: Long, ascending: Boolean): Single<List<TherapyEvent>> =
         database.therapyEventDao.getTherapyEventDataFromTime(timestamp)
             .map { if (!ascending) it.reversed() else it }
@@ -200,6 +223,29 @@ open class AppRepository @Inject internal constructor(
             .subscribeOn(Schedulers.io())
 
     // FOOD
+    /*
+       * returns a Pair of the next entity to sync and the ID of the "update".
+       * The update id might either be the entry id itself if it is a new entry - or the id
+       * of the update ("historic") entry. The sync counter should be incremented to that id if it was synced successfully.
+       *
+       * It is a Maybe as there might be no next element.
+       * */
+    fun getNextSyncElementFood(id: Long): Maybe<Pair<Food, Long>> =
+        database.foodDao.getNextModifiedOrNewAfter(id)
+            .flatMap { nextIdElement ->
+                val nextIdElemReferenceId = nextIdElement.referenceId
+                if (nextIdElemReferenceId == null) {
+                    Maybe.just(nextIdElement to nextIdElement.id)
+                } else {
+                    database.foodDao.getCurrentFromHistoric(nextIdElemReferenceId)
+                        .map { it to nextIdElement.id }
+                }
+            }
+
+    fun getModifiedFoodDataFromId(lastId: Long): Single<List<Food>> =
+        database.foodDao.getModifiedFrom(lastId)
+            .subscribeOn(Schedulers.io())
+
     fun getFoodData(): Single<List<Food>> =
         database.foodDao.getFoodData()
             .subscribeOn(Schedulers.io())
@@ -208,6 +254,29 @@ open class AppRepository @Inject internal constructor(
         database.foodDao.deleteAllEntries()
 
     // BOLUS
+    /*
+      * returns a Pair of the next entity to sync and the ID of the "update".
+      * The update id might either be the entry id itself if it is a new entry - or the id
+      * of the update ("historic") entry. The sync counter should be incremented to that id if it was synced successfully.
+      *
+      * It is a Maybe as there might be no next element.
+      * */
+    fun getNextSyncElementBolus(id: Long): Maybe<Pair<Bolus, Long>> =
+        database.bolusDao.getNextModifiedOrNewAfter(id)
+            .flatMap { nextIdElement ->
+                val nextIdElemReferenceId = nextIdElement.referenceId
+                if (nextIdElemReferenceId == null) {
+                    Maybe.just(nextIdElement to nextIdElement.id)
+                } else {
+                    database.bolusDao.getCurrentFromHistoric(nextIdElemReferenceId)
+                        .map { it to nextIdElement.id }
+                }
+            }
+
+    fun getModifiedBolusesDataFromId(lastId: Long): Single<List<Bolus>> =
+        database.bolusDao.getModifiedFrom(lastId)
+            .subscribeOn(Schedulers.io())
+
     fun getBolusesDataFromTime(timestamp: Long, ascending: Boolean): Single<List<Bolus>> =
         database.bolusDao.getBolusesFromTime(timestamp)
             .map { if (!ascending) it.reversed() else it }
@@ -222,6 +291,29 @@ open class AppRepository @Inject internal constructor(
         database.bolusDao.deleteAllEntries()
 
     // CARBS
+    /*
+      * returns a Pair of the next entity to sync and the ID of the "update".
+      * The update id might either be the entry id itself if it is a new entry - or the id
+      * of the update ("historic") entry. The sync counter should be incremented to that id if it was synced successfully.
+      *
+      * It is a Maybe as there might be no next element.
+      * */
+    fun getNextSyncElementCarbs(id: Long): Maybe<Pair<Carbs, Long>> =
+        database.carbsDao.getNextModifiedOrNewAfter(id)
+            .flatMap { nextIdElement ->
+                val nextIdElemReferenceId = nextIdElement.referenceId
+                if (nextIdElemReferenceId == null) {
+                    Maybe.just(nextIdElement to nextIdElement.id)
+                } else {
+                    database.carbsDao.getCurrentFromHistoric(nextIdElemReferenceId)
+                        .map { it to nextIdElement.id }
+                }
+            }
+
+    fun getModifiedCarbsDataFromId(lastId: Long): Single<List<Carbs>> =
+        database.carbsDao.getModifiedFrom(lastId)
+            .subscribeOn(Schedulers.io())
+
     fun getCarbsDataFromTime(timestamp: Long, ascending: Boolean): Single<List<Carbs>> =
         database.carbsDao.getCarbsFromTime(timestamp)
             .map { if (!ascending) it.reversed() else it }
@@ -235,7 +327,30 @@ open class AppRepository @Inject internal constructor(
     fun deleteAllCarbs() =
         database.carbsDao.deleteAllEntries()
 
-    // CARBS
+    // BOLUS CALCULATOR RESULT
+    /*
+      * returns a Pair of the next entity to sync and the ID of the "update".
+      * The update id might either be the entry id itself if it is a new entry - or the id
+      * of the update ("historic") entry. The sync counter should be incremented to that id if it was synced successfully.
+      *
+      * It is a Maybe as there might be no next element.
+      * */
+    fun getNextSyncElementBolusCalculatorResult(id: Long): Maybe<Pair<BolusCalculatorResult, Long>> =
+        database.bolusCalculatorResultDao.getNextModifiedOrNewAfter(id)
+            .flatMap { nextIdElement ->
+                val nextIdElemReferenceId = nextIdElement.referenceId
+                if (nextIdElemReferenceId == null) {
+                    Maybe.just(nextIdElement to nextIdElement.id)
+                } else {
+                    database.bolusCalculatorResultDao.getCurrentFromHistoric(nextIdElemReferenceId)
+                        .map { it to nextIdElement.id }
+                }
+            }
+
+    fun getModifiedBolusCalculatorResultsDataFromId(lastId: Long): Single<List<BolusCalculatorResult>> =
+        database.bolusCalculatorResultDao.getModifiedFrom(lastId)
+            .subscribeOn(Schedulers.io())
+
     fun getBolusCalculatorResultsDataFromTime(timestamp: Long, ascending: Boolean): Single<List<BolusCalculatorResult>> =
         database.bolusCalculatorResultDao.getBolusCalculatorResultsFromTime(timestamp)
             .map { if (!ascending) it.reversed() else it }

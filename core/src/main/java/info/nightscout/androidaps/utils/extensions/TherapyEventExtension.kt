@@ -3,7 +3,6 @@ package info.nightscout.androidaps.utils.extensions
 import info.nightscout.androidaps.Constants
 import info.nightscout.androidaps.core.R
 import info.nightscout.androidaps.database.entities.TherapyEvent
-import info.nightscout.androidaps.plugins.general.nsclient.NSUpload
 import info.nightscout.androidaps.plugins.general.nsclient.data.NSMbg
 import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.JsonHelper
@@ -57,7 +56,7 @@ fun therapyEventFromNsIdForInvalidating(nsId: String): TherapyEvent =
         JSONObject()
             .put("mills", 1)
             .put("_id", nsId)
-            .put(NSUpload.ISVALID, false)
+            .put("isValid", false)
     )!!
 
 fun therapyEventFromJson(jsonObject: JSONObject): TherapyEvent? {
@@ -70,7 +69,7 @@ fun therapyEventFromJson(jsonObject: JSONObject): TherapyEvent? {
     val enteredBy = JsonHelper.safeGetStringAllowNull(jsonObject, "enteredBy", null)
     val note = JsonHelper.safeGetStringAllowNull(jsonObject, "notes", null)
     val id = JsonHelper.safeGetStringAllowNull(jsonObject, "_id", null) ?: return null
-    val isValid = JsonHelper.safeGetBoolean(jsonObject, NSUpload.ISVALID, true)
+    val isValid = JsonHelper.safeGetBoolean(jsonObject, "isValid", true)
 
     val te = TherapyEvent(
         timestamp = timestamp,
@@ -86,6 +85,21 @@ fun therapyEventFromJson(jsonObject: JSONObject): TherapyEvent? {
     te.interfaceIDs.nightscoutId = id
     return te
 }
+
+fun TherapyEvent.toJson(): JSONObject =
+    JSONObject()
+        .put("eventType", type.text)
+        .put("created_at", timestamp)
+        .put("enteredBy", enteredBy)
+        .put("units", if (glucoseUnit == TherapyEvent.GlucoseUnit.MGDL) Constants.MGDL else Constants.MMOL)
+        .also {
+            if (duration != 0L) it.put("duration", T.msecs(duration).mins())
+            if (note != null) it.put("notes", note)
+            if (glucose != null) it.put("glucose", glucose)
+            if (glucoseType != null) it.put("glucoseType", glucoseType!!.text)
+            if (interfaceIDs.nightscoutId != null) it.put("_id", interfaceIDs.nightscoutId)
+            if (type == TherapyEvent.Type.ANNOUNCEMENT) it.put("isAnnouncement", true)
+        }
 
 fun isEvent5minBack(list: List<TherapyEvent>, time: Long): Boolean {
     for (i in list.indices) {

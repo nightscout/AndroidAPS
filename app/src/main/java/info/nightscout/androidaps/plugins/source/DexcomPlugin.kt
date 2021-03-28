@@ -85,7 +85,6 @@ class DexcomPlugin @Inject constructor(
         @Inject lateinit var aapsLogger: AAPSLogger
         @Inject lateinit var injector: HasAndroidInjector
         @Inject lateinit var dexcomPlugin: DexcomPlugin
-        @Inject lateinit var nsUpload: NSUpload
         @Inject lateinit var sp: SP
         @Inject lateinit var dataWorker: DataWorker
         @Inject lateinit var broadcastToXDrip: XDripBroadcast
@@ -157,18 +156,8 @@ class DexcomPlugin @Inject constructor(
                             broadcastToXDrip(it)
                             aapsLogger.debug(LTag.DATABASE, "Updated bg $it")
                         }
-                        result.sensorInsertionsInserted.forEach {
-                            if (sp.getBoolean(R.string.key_dexcomg5_nsupload, false)) {
-                                nsUpload.uploadEvent(it)
-                            }
-                            aapsLogger.debug(LTag.DATABASE, "Inserted sensor insertion $it")
-                        }
-                        result.calibrationsInserted.forEach {
-                            if (sp.getBoolean(R.string.key_dexcomg5_nsupload, false)) {
-                                nsUpload.uploadEvent(it)
-                            }
-                            aapsLogger.debug(LTag.DATABASE, "Inserted calibration $it")
-                        }
+                        result.sensorInsertionsInserted.forEach { aapsLogger.debug(LTag.DATABASE, "Inserted sensor insertion $it") }
+                        result.calibrationsInserted.forEach { aapsLogger.debug(LTag.DATABASE, "Inserted calibration $it") }
                     }
             } catch (e: Exception) {
                 aapsLogger.error("Error while processing intent from Dexcom App", e)

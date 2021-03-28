@@ -14,7 +14,6 @@ import info.nightscout.androidaps.data.DetailedBolusInfo
 import info.nightscout.androidaps.data.Profile
 import info.nightscout.androidaps.data.PumpEnactResult
 import info.nightscout.androidaps.database.AppRepository
-import info.nightscout.androidaps.database.entities.UserEntry
 import info.nightscout.androidaps.dialogs.BolusProgressDialog
 import info.nightscout.androidaps.events.EventBolusRequested
 import info.nightscout.androidaps.events.EventNewBasalProfile
@@ -25,7 +24,6 @@ import info.nightscout.androidaps.interfaces.Constraint
 import info.nightscout.androidaps.interfaces.ProfileFunction
 import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.logging.LTag
-import info.nightscout.androidaps.logging.UserEntryLogger
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper
 import info.nightscout.androidaps.plugins.configBuilder.ConstraintChecker
 import info.nightscout.androidaps.plugins.general.nsclient.NSUpload
@@ -206,14 +204,10 @@ open class CommandQueue @Inject constructor(
                 || detailedBolusInfo.carbsTimestamp ?: detailedBolusInfo.timestamp > dateUtil._now()
             ) {
                 disposable += repository.runTransactionForResult(detailedBolusInfo.insertCarbsTransaction())
-                    .subscribe({ result ->
-                        result.inserted.forEach {
-                            aapsLogger.debug(LTag.DATABASE, "Inserted carbs $it")
-                            nsUpload.uploadCarbsRecord(it, detailedBolusInfo.createTherapyEvent())
-                        }
-                    }, {
-                        aapsLogger.error(LTag.DATABASE, "Error while saving carbs", it)
-                    })
+                    .subscribe(
+                        { result -> result.inserted.forEach { aapsLogger.debug(LTag.DATABASE, "Inserted carbs $it") } },
+                        { aapsLogger.error(LTag.DATABASE, "Error while saving carbs", it) }
+                    )
                 // Do not process carbs anymore
                 detailedBolusInfo.carbs = 0.0
                 // if no insulin just exit

@@ -17,6 +17,7 @@ import info.nightscout.androidaps.dana.DanaPump;
 import info.nightscout.androidaps.danaRKorean.DanaRKoreanPlugin;
 import info.nightscout.androidaps.danaRv2.DanaRv2Plugin;
 import info.nightscout.androidaps.danar.DanaRPlugin;
+import info.nightscout.androidaps.database.AppRepository;
 import info.nightscout.androidaps.interfaces.ActivePluginProvider;
 import info.nightscout.androidaps.interfaces.CommandQueueProvider;
 import info.nightscout.androidaps.interfaces.ConfigBuilderInterface;
@@ -30,6 +31,7 @@ import info.nightscout.androidaps.plugins.pump.common.bolusInfo.DetailedBolusInf
 import info.nightscout.androidaps.utils.CRC;
 import info.nightscout.androidaps.utils.DateUtil;
 import info.nightscout.androidaps.utils.resources.ResourceHelper;
+import io.reactivex.disposables.CompositeDisposable;
 
 /*
  *  00  01   02  03   04   05  06
@@ -51,9 +53,11 @@ public class MessageBase {
     @Inject public CommandQueueProvider commandQueue;
     @Inject public DetailedBolusInfoStorage detailedBolusInfoStorage;
     @Inject public ConstraintChecker constraintChecker;
-    @Inject public NSUpload nsUpload;
+    @Inject public AppRepository repository;
     @Inject public DatabaseHelperInterface databaseHelper;
     HasAndroidInjector injector;
+
+    final CompositeDisposable disposable = new CompositeDisposable();
 
     public byte[] buffer = new byte[512];
     private int position = 6;

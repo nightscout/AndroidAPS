@@ -17,6 +17,7 @@ import info.nightscout.androidaps.data.Profile
 import info.nightscout.androidaps.data.PumpEnactResult
 import info.nightscout.androidaps.database.AppRepository
 import info.nightscout.androidaps.database.entities.TherapyEvent
+import info.nightscout.androidaps.database.transactions.InsertTherapyEventAnnouncementTransaction
 import info.nightscout.androidaps.database.transactions.InsertTherapyEventIfNewTransaction
 import info.nightscout.androidaps.events.EventAcceptOpenLoopChange
 import info.nightscout.androidaps.events.EventAutosensCalculationFinished
@@ -334,7 +335,7 @@ open class LoopPlugin @Inject constructor(
                             rxBus.send(EventNewNotification(carbReqLocal))
                         }
                         if (sp.getBoolean(R.string.key_ns_create_announcements_from_carbs_req, false)) {
-                            nsUpload.uploadError(resultAfterConstraints.carbsRequiredText)
+                            disposable += repository.runTransaction(InsertTherapyEventAnnouncementTransaction(resultAfterConstraints.carbsRequiredText)).subscribe()
                         }
                         if (sp.getBoolean(R.string.key_enable_carbs_required_alert_local, true) && sp.getBoolean(R.string.key_raise_notifications_as_android_notifications, true)) {
                             val intentAction5m = Intent(context, CarbSuggestionReceiver::class.java)
@@ -658,11 +659,10 @@ open class LoopPlugin @Inject constructor(
             duration = T.mins(durationInMinutes.toLong()).msecs(),
             enteredBy = "openaps://" + "AndroidAPS",
             glucoseUnit = TherapyEvent.GlucoseUnit.MGDL
-        )).subscribe({ result ->
-            result.inserted.forEach { nsUpload.uploadEvent(it) }
-        }, {
-            aapsLogger.error(LTag.DATABASE, "Error while saving therapy event", it)
-        })
+        )).subscribe(
+            { result -> result.inserted.forEach { aapsLogger.debug(LTag.DATABASE, "Inserted therapy event $it") } },
+            { aapsLogger.error(LTag.DATABASE, "Error while saving therapy event", it) }
+        )
     }
 
     companion object {

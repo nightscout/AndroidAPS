@@ -38,6 +38,8 @@ import info.nightscout.androidaps.danar.comm.MsgStatusTempBasal;
 import info.nightscout.androidaps.danar.services.AbstractDanaRExecutionService;
 import info.nightscout.androidaps.data.Profile;
 import info.nightscout.androidaps.data.PumpEnactResult;
+import info.nightscout.androidaps.database.AppRepository;
+import info.nightscout.androidaps.database.transactions.InsertTherapyEventAnnouncementTransaction;
 import info.nightscout.androidaps.db.Treatment;
 import info.nightscout.androidaps.dialogs.BolusProgressDialog;
 import info.nightscout.androidaps.events.EventInitializationChanged;
@@ -50,13 +52,13 @@ import info.nightscout.androidaps.logging.AAPSLogger;
 import info.nightscout.androidaps.logging.LTag;
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper;
 import info.nightscout.androidaps.plugins.configBuilder.ConstraintChecker;
-import info.nightscout.androidaps.plugins.general.nsclient.NSUpload;
 import info.nightscout.androidaps.plugins.general.overview.events.EventNewNotification;
 import info.nightscout.androidaps.plugins.general.overview.notifications.Notification;
 import info.nightscout.androidaps.queue.commands.Command;
 import info.nightscout.androidaps.utils.DateUtil;
 import info.nightscout.androidaps.utils.T;
 import info.nightscout.androidaps.utils.resources.ResourceHelper;
+import io.reactivex.disposables.CompositeDisposable;
 
 public class DanaRKoreanExecutionService extends AbstractDanaRExecutionService {
     @Inject AAPSLogger aapsLogger;
@@ -70,8 +72,9 @@ public class DanaRKoreanExecutionService extends AbstractDanaRExecutionService {
     @Inject MessageHashTableRKorean messageHashTableRKorean;
     @Inject ActivePluginProvider activePlugin;
     @Inject ProfileFunction profileFunction;
-    @Inject NSUpload nsUpload;
-    @Inject DateUtil dateUtil;
+    @Inject AppRepository repository;
+
+    private final CompositeDisposable disposable = new CompositeDisposable();
 
     public DanaRKoreanExecutionService() {
     }
@@ -199,7 +202,7 @@ public class DanaRKoreanExecutionService extends AbstractDanaRExecutionService {
                 if (System.currentTimeMillis() > lastApproachingDailyLimit + 30 * 60 * 1000) {
                     Notification reportFail = new Notification(Notification.APPROACHING_DAILY_LIMIT, resourceHelper.gs(R.string.approachingdailylimit), Notification.URGENT);
                     rxBus.send(new EventNewNotification(reportFail));
-                    nsUpload.uploadError(resourceHelper.gs(R.string.approachingdailylimit) + ": " + danaPump.getDailyTotalUnits() + "/" + danaPump.getMaxDailyTotalUnits() + "U");
+                    disposable.add(repository.runTransaction(new InsertTherapyEventAnnouncementTransaction(resourceHelper.gs(R.string.approachingdailylimit) + ": " + danaPump.getDailyTotalUnits() + "/" + danaPump.getMaxDailyTotalUnits() + "U")).subscribe());
                     lastApproachingDailyLimit = System.currentTimeMillis();
                 }
             }

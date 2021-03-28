@@ -16,7 +16,6 @@ import info.nightscout.androidaps.interfaces.PluginDescription
 import info.nightscout.androidaps.interfaces.PluginType
 import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.logging.LTag
-import info.nightscout.androidaps.plugins.general.nsclient.NSUpload
 import info.nightscout.androidaps.receivers.DataWorker
 import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.XDripBroadcast
@@ -58,7 +57,6 @@ class EversensePlugin @Inject constructor(
         @Inject lateinit var eversensePlugin: EversensePlugin
         @Inject lateinit var aapsLogger: AAPSLogger
         @Inject lateinit var dateUtil: DateUtil
-        @Inject lateinit var nsUpload: NSUpload
         @Inject lateinit var dataWorker: DataWorker
         @Inject lateinit var repository: AppRepository
         @Inject lateinit var broadcastToXDrip: XDripBroadcast
@@ -147,10 +145,7 @@ class EversensePlugin @Inject constructor(
                             }
                             .blockingGet()
                             .also { result ->
-                                result.inserted.forEach {
-                                    nsUpload.uploadEvent(it)
-                                    aapsLogger.debug(LTag.DATABASE, "Inserted therapy event $it")
-                                }
+                                result.inserted.forEach { aapsLogger.debug(LTag.DATABASE, "Inserted therapy event $it") }
                             }
                     }
                 }

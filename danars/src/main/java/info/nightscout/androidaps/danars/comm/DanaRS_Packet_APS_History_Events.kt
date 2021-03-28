@@ -15,7 +15,6 @@ import info.nightscout.androidaps.events.EventPumpStatusChanged
 import info.nightscout.androidaps.interfaces.ActivePluginProvider
 import info.nightscout.androidaps.logging.LTag
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper
-import info.nightscout.androidaps.plugins.general.nsclient.NSUpload
 import info.nightscout.androidaps.plugins.pump.common.bolusInfo.DetailedBolusInfoStorage
 import info.nightscout.androidaps.plugins.pump.common.defs.PumpType
 import info.nightscout.androidaps.utils.DateUtil
@@ -38,7 +37,6 @@ open class DanaRS_Packet_APS_History_Events(
     @Inject lateinit var danaPump: DanaPump
     @Inject lateinit var detailedBolusInfoStorage: DetailedBolusInfoStorage
     @Inject lateinit var sp: SP
-    @Inject lateinit var nsUpload: NSUpload
     @Inject lateinit var repository: AppRepository
 
     private val disposable = CompositeDisposable()
@@ -188,11 +186,10 @@ open class DanaRS_Packet_APS_History_Events(
                         type = TherapyEvent.Type.INSULIN_CHANGE,
                         note = resourceHelper.gs(R.string.danarspump),
                         glucoseUnit = TherapyEvent.GlucoseUnit.MGDL
-                    )).subscribe({ result ->
-                        result.inserted.forEach { nsUpload.uploadEvent(it) }
-                    }, {
-                        aapsLogger.error(LTag.DATABASE, "Error while saving therapy event", it)
-                    })
+                    )).subscribe(
+                        { result -> result.inserted.forEach { aapsLogger.debug(LTag.DATABASE, "Inserted therapy event $it") } },
+                        { aapsLogger.error(LTag.DATABASE, "Error while saving therapy event", it) }
+                    )
                 status = "REFILL " + dateUtil.timeString(datetime)
             }
 
@@ -226,11 +223,10 @@ open class DanaRS_Packet_APS_History_Events(
                         type = TherapyEvent.Type.CANNULA_CHANGE,
                         note = resourceHelper.gs(R.string.danarspump),
                         glucoseUnit = TherapyEvent.GlucoseUnit.MGDL
-                    )).subscribe({ result ->
-                        result.inserted.forEach { nsUpload.uploadEvent(it) }
-                    }, {
-                        aapsLogger.error(LTag.DATABASE, "Error while saving therapy event", it)
-                    })
+                    )).subscribe(
+                        { result -> result.inserted.forEach { aapsLogger.debug(LTag.DATABASE, "Inserted therapy event $it") } },
+                        { aapsLogger.error(LTag.DATABASE, "Error while saving therapy event", it) }
+                    )
                 status = "PRIMECANNULA " + dateUtil.timeString(datetime)
             }
 

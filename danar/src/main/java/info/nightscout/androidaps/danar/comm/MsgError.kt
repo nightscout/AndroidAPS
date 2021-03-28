@@ -2,8 +2,10 @@ package info.nightscout.androidaps.danar.comm
 
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.danar.R
+import info.nightscout.androidaps.database.transactions.InsertTherapyEventAnnouncementTransaction
 import info.nightscout.androidaps.logging.LTag
 import info.nightscout.androidaps.plugins.general.overview.events.EventOverviewBolusProgress
+import io.reactivex.rxkotlin.plusAssign
 
 class MsgError(
     injector: HasAndroidInjector
@@ -34,6 +36,6 @@ class MsgError(
             failed = false
         }
         aapsLogger.debug(LTag.PUMPCOMM, "Error detected: $errorString")
-        nsUpload.uploadError(errorString)
+        disposable += repository.runTransaction(InsertTherapyEventAnnouncementTransaction(errorString)).subscribe();
     }
 }

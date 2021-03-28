@@ -33,8 +33,16 @@
     <string name="key_protection_settings" translatable="false">protection</string>
     <string name="key_absorption_category_settings" translatable="false">absorption_category_settings</string>
     <string name="key_insulin_oref_peak_settings" translatable="false">insulin_oref_peak_settings</string>
-    <string name="key_ns_temporary_target_last_sync" translatable="false">ns_temporary_target_last_sync</string>
-    <string name="key_ns_glucose_value_last_sync" translatable="false">ns_glucose_value_last_sync</string>
+    <string name="key_ns_temporary_target_last_synced_id" translatable="false">ns_temporary_target_last_sync</string>
+    <string name="key_ns_glucose_value_last_synced_id" translatable="false">ns_glucose_value_last_sync</string>
+    <string name="key_ns_food_last_synced_id" translatable="false">ns_food_last_sync</string>
+    <string name="key_ns_therapy_event_last_synced_id" translatable="false">ns_therapy_event_last_sync</string>
+    <string name="key_smscommunicator_remotebolusmindistance" translatable="false">smscommunicator_remotebolusmindistance</string>
+    <string name="key_openapsama_bolussnooze_dia_divisor" translatable="false">bolussnooze_dia_divisor</string>
+    <string name="key_openapsama_autosens_adjusttargets" translatable="false">autosens_adjust_targets</string>
+    <string name="key_ns_bolus_calculator_result_last_synced_id" translatable="false">ns_bolus_calculator_result_last_synced_id</string>
+    <string name="key_ns_carbs_last_synced_id" translatable="false">ns_carbs_last_synced_id</string>
+    <string name="key_ns_bolus_last_synced_id" translatable="false">ns_bolus_last_synced_id</string>
 
     <string name="treatmentssafety_title">Treatments safety</string>
     <string name="treatmentssafety_maxbolus_title">Max allowed bolus [U]</string>
@@ -228,7 +236,6 @@
     <string name="smscommunicator_stoppedsms">SMS Remote Service stopped. To reactivate it, use AAPS on master smartphone.</string>
     <string name="smscommunicator_calibrationreplywithcode">To send calibration %1$.2f reply with code %2$s</string>
     <string name="smscommunicator_bolusfailed">Bolus failed</string>
-    <string name="key_smscommunicator_remotebolusmindistance" translatable="false">smscommunicator_remotebolusmindistance</string>
     <string name="smscommunicator_remotebolusmindistance_summary">Minimum number of minutes that must elapse between one remote bolus and the next</string>
     <string name="smscommunicator_remotebolusmindistance">How many minutes must elapse, at least, between one bolus and the next</string>
     <string name="smscommunicator_remotebolusmindistance_caveat">For your safety, to edit this preference you need to add at least 2 phone numbers.</string>
@@ -341,10 +348,8 @@
     <string name="openapsama_current_basal_safety_multiplier_summary">Default value: 4 This is the other half of the key OpenAPS safety caps, and the other half of “3x max daily; 4x current” of the safety caps. This means your basal, regardless of max basal set on your pump, cannot be any higher than this number times the current level of your basal. This is to prevent people from getting into dangerous territory by setting excessively high max basals before understanding how the algorithm works. Again, the default is 4x; most people will never need to adjust this and are instead more likely to need to adjust other settings if they feel like they are “running into” this safety cap.</string>
     <string name="openapsama_autosens_max_summary">Default value: 1.2\nThis is a multiplier cap for autosens (and soon autotune) to set a 20%% max limit on how high the autosens ratio can be, which in turn determines how high autosens can adjust basals, how low it can adjust ISF, and how low it can set the BG target.</string>
     <string name="openapsama_autosens_min_summary">Default value: 0.7\nThe other side of the autosens safety limits, putting a cap on how low autosens can adjust basals, and how high it can adjust ISF and BG targets.</string>
-    <string name="key_openapsama_autosens_adjusttargets" translatable="false">autosens_adjust_targets</string>
     <string name="openapsama_autosens_adjusttargets">Autosens adjust targets, too</string>
     <string name="openapsama_autosens_adjusttargets_summary">Default value: true\nThis is used to allow autosens to adjust BG targets, in addition to ISF and basals.</string>
-    <string name="key_openapsama_bolussnooze_dia_divisor" translatable="false">bolussnooze_dia_divisor</string>
     <string name="openapsama_bolussnooze_dia_divisor_summary">Default value: 2\nBolus snooze is enacted after you do a meal bolus, so the loop won’t counteract with low temps when you’ve just eaten. The example here and default is 2; so a 3 hour DIA means that bolus snooze will be gradually phased out over 1.5 hours (3DIA/2).</string>
     <string name="openapsama_min_5m_carbimpact" translatable="false">min_5m_carbimpact</string>
     <string name="openapsama_min_5m_carbimpact_summary">Default value: 3.0 (AMA) or 8.0 (SMB). This is a setting for default carb absorption impact per 5 minutes. The default is an expected 3mg/dl/5min. This affects how fast COB are decayed, and how much carb absorption is assumed in calculating future predicted BG, when BG is falling more than expected, or not rising as much as expected.</string>
@@ -1129,6 +1134,5 @@
     <string name="current_basal_value">Current basal value</string>
     <string name="profile_carbs_ratio_value">Profile carbs ratio value</string>
     <string name="full_sync">Full sync</string>
-
 
 </resources>

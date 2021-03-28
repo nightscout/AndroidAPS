@@ -5,6 +5,8 @@ import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.TestBase
 import info.nightscout.androidaps.automation.R
 import info.nightscout.androidaps.data.PumpEnactResult
+import info.nightscout.androidaps.database.AppRepository
+import info.nightscout.androidaps.database.transactions.InsertTherapyEventAnnouncementTransaction
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper
 import info.nightscout.androidaps.plugins.general.automation.elements.InputString
 import info.nightscout.androidaps.plugins.general.nsclient.NSUpload
@@ -27,7 +29,7 @@ class ActionNotificationTest : TestBase() {
 
     @Mock lateinit var resourceHelper: ResourceHelper
     @Mock lateinit var rxBus: RxBusWrapper
-    @Mock lateinit var nsUpload: NSUpload
+    @Mock lateinit var repository: AppRepository
 
     private lateinit var sut: ActionNotification
     var injector: HasAndroidInjector = HasAndroidInjector {
@@ -35,7 +37,6 @@ class ActionNotificationTest : TestBase() {
             if (it is ActionNotification) {
                 it.resourceHelper = resourceHelper
                 it.rxBus = rxBus
-                it.nsUpload = nsUpload
             }
             if (it is PumpEnactResult) {
                 it.resourceHelper = resourceHelper
@@ -72,7 +73,7 @@ class ActionNotificationTest : TestBase() {
             }
         })
         Mockito.verify(rxBus, Mockito.times(2)).send(anyObject())
-        Mockito.verify(nsUpload, Mockito.times(1)).uploadError(anyObject())
+        Mockito.verify(repository, Mockito.times(1)).runTransaction(anyObject() as InsertTherapyEventAnnouncementTransaction)
     }
 
     @Test fun hasDialogTest() {

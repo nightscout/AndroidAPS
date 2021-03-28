@@ -23,7 +23,6 @@ import info.nightscout.androidaps.databinding.DialogCareBinding
 import info.nightscout.androidaps.interfaces.ProfileFunction
 import info.nightscout.androidaps.logging.LTag
 import info.nightscout.androidaps.logging.UserEntryLogger
-import info.nightscout.androidaps.plugins.general.nsclient.NSUpload
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.GlucoseStatusProvider
 import info.nightscout.androidaps.utils.HtmlHelper
 import info.nightscout.androidaps.utils.T
@@ -43,7 +42,6 @@ class CareDialog : DialogFragmentWithDate() {
     @Inject lateinit var ctx: Context
     @Inject lateinit var resourceHelper: ResourceHelper
     @Inject lateinit var profileFunction: ProfileFunction
-    @Inject lateinit var nsUpload: NSUpload
     @Inject lateinit var translator: Translator
     @Inject lateinit var uel: UserEntryLogger
     @Inject lateinit var repository: AppRepository
@@ -224,11 +222,11 @@ class CareDialog : DialogFragmentWithDate() {
 
         activity?.let { activity ->
             OKDialog.showConfirmation(activity, resourceHelper.gs(event), HtmlHelper.fromHtml(Joiner.on("<br/>").join(actions)), {
-                disposable += repository.runTransactionForResult(InsertTherapyEventIfNewTransaction(therapyEvent)).subscribe({ result ->
-                    result.inserted.forEach { nsUpload.uploadEvent(it) }
-                }, {
-                    aapsLogger.error(LTag.DATABASE, "Error while saving therapy event", it)
-                })
+                disposable += repository.runTransactionForResult(InsertTherapyEventIfNewTransaction(therapyEvent))
+                    .subscribe(
+                        { result -> result.inserted.forEach { aapsLogger.debug(LTag.DATABASE, "Inserted therapy event $it") } },
+                        { aapsLogger.error(LTag.DATABASE, "Error while saving therapy event", it) }
+                    )
                 valuesWithUnit.add(0, ValueWithUnit(eventTime, Units.Timestamp, eventTimeChanged))
                 valuesWithUnit.add(1, ValueWithUnit(therapyEvent.type.text, Units.TherapyEvent))
                 uel.log(Action.CAREPORTAL, notes, valuesWithUnit)

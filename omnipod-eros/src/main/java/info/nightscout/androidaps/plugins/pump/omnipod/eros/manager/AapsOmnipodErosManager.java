@@ -31,7 +31,6 @@ import info.nightscout.androidaps.interfaces.DatabaseHelperInterface;
 import info.nightscout.androidaps.logging.AAPSLogger;
 import info.nightscout.androidaps.logging.LTag;
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper;
-import info.nightscout.androidaps.plugins.general.nsclient.NSUpload;
 import info.nightscout.androidaps.plugins.general.overview.events.EventDismissNotification;
 import info.nightscout.androidaps.plugins.general.overview.events.EventNewNotification;
 import info.nightscout.androidaps.plugins.general.overview.events.EventOverviewBolusProgress;
@@ -103,7 +102,6 @@ public class AapsOmnipodErosManager {
     private final OmnipodManager delegate;
     private final DatabaseHelperInterface databaseHelper;
     private final OmnipodAlertUtil omnipodAlertUtil;
-    private final NSUpload nsUpload;
     private final Context context;
     private final AppRepository repository;
 
@@ -137,7 +135,6 @@ public class AapsOmnipodErosManager {
                                   ActivePluginProvider activePlugin,
                                   DatabaseHelperInterface databaseHelper,
                                   OmnipodAlertUtil omnipodAlertUtil,
-                                  NSUpload nsUpload,
                                   Context context,
                                   AppRepository repository) {
 
@@ -151,7 +148,6 @@ public class AapsOmnipodErosManager {
         this.activePlugin = activePlugin;
         this.databaseHelper = databaseHelper;
         this.omnipodAlertUtil = omnipodAlertUtil;
-        this.nsUpload = nsUpload;
         this.context = context;
         this.repository = repository;
 
@@ -1007,7 +1003,7 @@ public class AapsOmnipodErosManager {
         if (repository.getTherapyEventByTimestamp(event, date) != null) return;
         disposable.add(repository.runTransactionForResult(new InsertTherapyEventIfNewTransaction(date, event, 0, null, sp.getString("careportal_enteredby", "AndroidAPS"), null, null, TherapyEvent.GlucoseUnit.MGDL))
                 .subscribe(
-                        result -> result.getInserted().forEach(nsUpload::uploadEvent),
+                        result -> result.getInserted().forEach(record -> aapsLogger.debug(LTag.DATABASE, "Inserted therapy event " + record)),
                         error -> aapsLogger.error(LTag.DATABASE, "Error while saving therapy event", error)
                 ));
     }

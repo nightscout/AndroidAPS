@@ -3,12 +3,13 @@ package info.nightscout.androidaps.utils
 import info.nightscout.androidaps.Config
 import info.nightscout.androidaps.Constants
 import info.nightscout.androidaps.R
+import info.nightscout.androidaps.database.AppRepository
+import info.nightscout.androidaps.database.transactions.InsertTherapyEventAnnouncementTransaction
 import info.nightscout.androidaps.interfaces.ActivePluginProvider
 import info.nightscout.androidaps.interfaces.ProfileFunction
 import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.logging.LTag
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper
-import info.nightscout.androidaps.plugins.general.nsclient.NSUpload
 import info.nightscout.androidaps.plugins.general.overview.events.EventDismissNotification
 import info.nightscout.androidaps.plugins.general.overview.events.EventNewNotification
 import info.nightscout.androidaps.plugins.general.overview.notifications.Notification
@@ -16,6 +17,8 @@ import info.nightscout.androidaps.plugins.general.smsCommunicator.SmsCommunicato
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.IobCobCalculatorPlugin
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 import info.nightscout.androidaps.utils.sharedPreferences.SP
+import io.reactivex.disposables.CompositeDisposable
+import io.reactivex.rxkotlin.plusAssign
 import javax.inject.Inject
 import javax.inject.Singleton
 import kotlin.math.min
@@ -34,9 +37,11 @@ class LocalAlertUtils @Inject constructor(
     private val iobCobCalculatorPlugin: IobCobCalculatorPlugin,
     private val smsCommunicatorPlugin: SmsCommunicatorPlugin,
     private val config: Config,
-    private val nsUpload: NSUpload,
+    private val repository: AppRepository,
     private val dateUtil: DateUtil
 ) {
+
+    private val disposable = CompositeDisposable()
 
     private fun missedReadingsThreshold(): Long {
         return T.mins(sp.getInt(R.string.key_missed_bg_readings_threshold_minutes, Constants.DEFAULT_MISSED_BG_READINGS_THRESHOLD_MINUTES).toLong()).msecs()
@@ -55,7 +60,7 @@ class LocalAlertUtils @Inject constructor(
                 sp.putLong("nextPumpDisconnectedAlarm", System.currentTimeMillis() + pumpUnreachableThreshold())
                 rxBus.send(EventNewNotification(Notification(Notification.PUMP_UNREACHABLE, resourceHelper.gs(R.string.pump_unreachable), Notification.URGENT).also { it.soundId = R.raw.alarm }))
                 if (sp.getBoolean(R.string.key_ns_create_announcements_from_errors, true))
-                    nsUpload.uploadError(resourceHelper.gs(R.string.pump_unreachable))
+                    disposable += repository.runTransaction(InsertTherapyEventAnnouncementTransaction(resourceHelper.gs(R.string.pump_unreachable))).subscribe()
             }
             if (sp.getBoolean(R.string.key_smscommunicator_report_pump_ureachable, true))
                 smsCommunicatorPlugin.sendNotificationToAllNumbers(resourceHelper.gs(R.string.pump_unreachable))
@@ -113,7 +118,7 @@ class LocalAlertUtils @Inject constructor(
             sp.putLong("nextMissedReadingsAlarm", System.currentTimeMillis() + missedReadingsThreshold())
             rxBus.send(EventNewNotification(n))
             if (sp.getBoolean(R.string.key_ns_create_announcements_from_errors, true)) {
-                nsUpload.uploadError(n.text)
+                n.text?.let { disposable += repository.runTransaction(InsertTherapyEventAnnouncementTransaction(it)).subscribe() }
             }
         }
     }

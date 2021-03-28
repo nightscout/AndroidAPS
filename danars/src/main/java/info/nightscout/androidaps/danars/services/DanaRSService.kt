@@ -18,6 +18,8 @@ import info.nightscout.androidaps.danars.R
 import info.nightscout.androidaps.danars.comm.*
 import info.nightscout.androidaps.data.Profile
 import info.nightscout.androidaps.data.PumpEnactResult
+import info.nightscout.androidaps.database.AppRepository
+import info.nightscout.androidaps.database.transactions.InsertTherapyEventAnnouncementTransaction
 import info.nightscout.androidaps.db.Treatment
 import info.nightscout.androidaps.dialogs.BolusProgressDialog
 import info.nightscout.androidaps.events.EventAppExit
@@ -31,7 +33,6 @@ import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.logging.LTag
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper
 import info.nightscout.androidaps.plugins.configBuilder.ConstraintChecker
-import info.nightscout.androidaps.plugins.general.nsclient.NSUpload
 import info.nightscout.androidaps.plugins.general.overview.events.EventNewNotification
 import info.nightscout.androidaps.plugins.general.overview.events.EventOverviewBolusProgress
 import info.nightscout.androidaps.plugins.general.overview.notifications.Notification
@@ -45,6 +46,7 @@ import info.nightscout.androidaps.utils.resources.ResourceHelper
 import info.nightscout.androidaps.utils.rx.AapsSchedulers
 import info.nightscout.androidaps.utils.sharedPreferences.SP
 import io.reactivex.disposables.CompositeDisposable
+import io.reactivex.rxkotlin.plusAssign
 import org.joda.time.DateTime
 import org.joda.time.DateTimeZone
 import java.util.concurrent.TimeUnit
@@ -71,7 +73,7 @@ class DanaRSService : DaggerService() {
     @Inject lateinit var detailedBolusInfoStorage: DetailedBolusInfoStorage
     @Inject lateinit var bleComm: BLEComm
     @Inject lateinit var fabricPrivacy: FabricPrivacy
-    @Inject lateinit var nsUpload: NSUpload
+    @Inject lateinit var repository: AppRepository
     @Inject lateinit var dateUtil: DateUtil
 
     private val disposable = CompositeDisposable()
@@ -180,9 +182,11 @@ class DanaRSService : DaggerService() {
                         danaPump.usingUTC      -> {
                             sendMessage(DanaRS_Packet_Option_Set_Pump_UTC_And_TimeZone(injector, DateUtil.now(), offset))
                         }
+
                         danaPump.protocol >= 6 -> { // can set seconds
                             sendMessage(DanaRS_Packet_Option_Set_Pump_Time(injector, DateUtil.now()))
                         }
+
                         else                   -> {
                             waitForWholeMinute() // Dana can set only whole minute
                             // add 10sec to be sure we are over minute (will be cut off anyway)
@@ -204,7 +208,7 @@ class DanaRSService : DaggerService() {
                 if (System.currentTimeMillis() > lastApproachingDailyLimit + 30 * 60 * 1000) {
                     val reportFail = Notification(Notification.APPROACHING_DAILY_LIMIT, resourceHelper.gs(R.string.approachingdailylimit), Notification.URGENT)
                     rxBus.send(EventNewNotification(reportFail))
-                    nsUpload.uploadError(resourceHelper.gs(R.string.approachingdailylimit) + ": " + danaPump.dailyTotalUnits + "/" + danaPump.maxDailyTotalUnits + "U")
+                    disposable += repository.runTransaction(InsertTherapyEventAnnouncementTransaction(resourceHelper.gs(R.string.approachingdailylimit) + ": " + danaPump.dailyTotalUnits + "/" + danaPump.maxDailyTotalUnits + "U")).subscribe()
                     lastApproachingDailyLimit = System.currentTimeMillis()
                 }
             }
@@ -435,15 +439,15 @@ class DanaRSService : DaggerService() {
         if (!isConnected) return result
         var msg: DanaRS_Packet_History_? = null
         when (type) {
-            RecordTypes.RECORD_TYPE_ALARM -> msg = DanaRS_Packet_History_Alarm(injector)
-            RecordTypes.RECORD_TYPE_PRIME -> msg = DanaRS_Packet_History_Prime(injector)
+            RecordTypes.RECORD_TYPE_ALARM     -> msg = DanaRS_Packet_History_Alarm(injector)
+            RecordTypes.RECORD_TYPE_PRIME     -> msg = DanaRS_Packet_History_Prime(injector)
             RecordTypes.RECORD_TYPE_BASALHOUR -> msg = DanaRS_Packet_History_Basal(injector)
-            RecordTypes.RECORD_TYPE_BOLUS -> msg = DanaRS_Packet_History_Bolus(injector)
-            RecordTypes.RECORD_TYPE_CARBO -> msg = DanaRS_Packet_History_Carbohydrate(injector)
-            RecordTypes.RECORD_TYPE_DAILY -> msg = DanaRS_Packet_History_Daily(injector)
-            RecordTypes.RECORD_TYPE_GLUCOSE -> msg = DanaRS_Packet_History_Blood_Glucose(injector)
-            RecordTypes.RECORD_TYPE_REFILL -> msg = DanaRS_Packet_History_Refill(injector)
-            RecordTypes.RECORD_TYPE_SUSPEND -> msg = DanaRS_Packet_History_Suspend(injector)
+            RecordTypes.RECORD_TYPE_BOLUS     -> msg = DanaRS_Packet_History_Bolus(injector)
+            RecordTypes.RECORD_TYPE_CARBO     -> msg = DanaRS_Packet_History_Carbohydrate(injector)
+            RecordTypes.RECORD_TYPE_DAILY     -> msg = DanaRS_Packet_History_Daily(injector)
+            RecordTypes.RECORD_TYPE_GLUCOSE   -> msg = DanaRS_Packet_History_Blood_Glucose(injector)
+            RecordTypes.RECORD_TYPE_REFILL    -> msg = DanaRS_Packet_History_Refill(injector)
+            RecordTypes.RECORD_TYPE_SUSPEND   -> msg = DanaRS_Packet_History_Suspend(injector)
         }
         if (msg != null) {
             sendMessage(DanaRS_Packet_General_Set_History_Upload_Mode(injector, 1))

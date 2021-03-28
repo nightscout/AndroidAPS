@@ -23,8 +23,6 @@ import info.nightscout.androidaps.data.Profile;
 import info.nightscout.androidaps.database.entities.Bolus;
 import info.nightscout.androidaps.database.entities.BolusCalculatorResult;
 import info.nightscout.androidaps.database.entities.Carbs;
-import info.nightscout.androidaps.database.entities.GlucoseValue;
-import info.nightscout.androidaps.database.entities.TemporaryTarget;
 import info.nightscout.androidaps.database.entities.TherapyEvent;
 import info.nightscout.androidaps.db.DbRequest;
 import info.nightscout.androidaps.db.ExtendedBolus;
@@ -33,7 +31,6 @@ import info.nightscout.androidaps.db.TemporaryBasal;
 import info.nightscout.androidaps.interfaces.IobCobCalculatorInterface;
 import info.nightscout.androidaps.interfaces.LoopInterface;
 import info.nightscout.androidaps.interfaces.ProfileFunction;
-import info.nightscout.androidaps.interfaces.ProfileStore;
 import info.nightscout.androidaps.interfaces.PumpInterface;
 import info.nightscout.androidaps.interfaces.UploadQueueInterface;
 import info.nightscout.androidaps.logging.AAPSLogger;
@@ -43,9 +40,6 @@ import info.nightscout.androidaps.plugins.aps.loop.DeviceStatus;
 import info.nightscout.androidaps.plugins.configBuilder.RunningConfiguration;
 import info.nightscout.androidaps.receivers.ReceiverStatusStore;
 import info.nightscout.androidaps.utils.DateUtil;
-import info.nightscout.androidaps.utils.JsonHelper;
-import info.nightscout.androidaps.utils.T;
-import info.nightscout.androidaps.utils.resources.ResourceHelper;
 import info.nightscout.androidaps.utils.sharedPreferences.SP;
 
 /**
@@ -55,29 +49,21 @@ import info.nightscout.androidaps.utils.sharedPreferences.SP;
 public class NSUpload {
 
     private final AAPSLogger aapsLogger;
-    private final ResourceHelper resourceHelper;
     private final SP sp;
     private final UploadQueueInterface uploadQueue;
     private final RunningConfiguration runningConfiguration;
-    private final ProfileFunction profileFunction;
-
-    public static String ISVALID = "isValid";
 
     @Inject
     public NSUpload(
             AAPSLogger aapsLogger,
-            ResourceHelper resourceHelper,
             SP sp,
             UploadQueueInterface uploadQueue,
-            RunningConfiguration runningConfiguration,
-            ProfileFunction profileFunction
+            RunningConfiguration runningConfiguration
     ) {
         this.aapsLogger = aapsLogger;
-        this.resourceHelper = resourceHelper;
         this.sp = sp;
         this.uploadQueue = uploadQueue;
         this.runningConfiguration = runningConfiguration;
-        this.profileFunction = profileFunction;
     }
 
     public void uploadTempBasalStartAbsolute(TemporaryBasal temporaryBasal, Double originalExtendedAmount) {
@@ -281,79 +267,12 @@ public class NSUpload {
  */
     }
 
-    public void uploadCarbsRecord(@NonNull Carbs carbs, @NonNull TherapyEvent therapyEvent) {
-        try {
-            JSONObject data = new JSONObject();
-            data.put("eventType", therapyEvent.getType().getText());
-            data.put("carbs", carbs.getAmount());
-            data.put("created_at", DateUtil.toISOString(carbs.getTimestamp()));
-            data.put("date", carbs.getTimestamp());
-            if (carbs.getDuration() != 0)
-                data.put("duration", carbs.getDuration());
-            if (carbs.getInterfaceIDs().getPumpId() != null)
-                data.put("pumpId", carbs.getInterfaceIDs().getPumpId());
-            if (therapyEvent.getGlucose() != null)
-                data.put("glucose", therapyEvent.getGlucose());
-            if (therapyEvent.getGlucoseType() != null)
-                data.put("glucoseType", therapyEvent.getGlucoseType().getText());
-            if (therapyEvent.getNote() != null)
-                data.put("notes", therapyEvent.getNote());
-            uploadCareportalEntryToNS(data, carbs.getTimestamp());
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-    }
-
-    public void uploadBolusRecord(@NonNull Bolus bolus, @NonNull TherapyEvent therapyEvent, @Nullable BolusCalculatorResult bolusCalculatorResult) {
-        try {
-            JSONObject data = new JSONObject();
-            data.put("eventType", therapyEvent.getType().getText());
-            data.put("insulin", bolus.getAmount());
-            data.put("created_at", DateUtil.toISOString(bolus.getTimestamp()));
-            data.put("date", bolus.getTimestamp());
-            data.put("isSMB", bolus.getType() == Bolus.Type.SMB);
-            if (bolus.getInterfaceIDs().getPumpId() != null)
-                data.put("pumpId", bolus.getInterfaceIDs().getPumpId());
-            if (therapyEvent.getGlucose() != null)
-                data.put("glucose", therapyEvent.getGlucose());
-            if (therapyEvent.getGlucoseType() != null)
-                data.put("glucoseType", therapyEvent.getGlucoseType().getText());
-            if (bolusCalculatorResult != null)
-                data.put("bolusCalculatorResult", new Gson().toJson(bolusCalculatorResult));
-            if (therapyEvent.getNote() != null)
-                data.put("notes", therapyEvent.getNote());
-            uploadCareportalEntryToNS(data, bolus.getTimestamp());
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-    }
-
-    public void uploadBolusCalc(@NonNull DetailedBolusInfo detailedBolusInfo) {
-        try {
-            JSONObject data = new JSONObject();
-            data.put("eventType", detailedBolusInfo.getEventType().toDBbEventType().getText());
-            data.put("created_at", DateUtil.toISOString(detailedBolusInfo.timestamp));
-            data.put("date", detailedBolusInfo.timestamp);
-            if (detailedBolusInfo.getMgdlGlucose() != null) {
-                data.put("glucose", detailedBolusInfo.getMgdlGlucose());
-                data.put("units", Constants.MGDL);
-            }
-            if (detailedBolusInfo.getGlucoseType() != null)
-                data.put("glucoseType", detailedBolusInfo.getGlucoseType().getText());
-            if (detailedBolusInfo.getBolusCalculatorResult() != null)
-                data.put("bolusCalculatorResult", new Gson().toJson(detailedBolusInfo.getBolusCalculatorResult()));
-            if (detailedBolusInfo.getNotes() != null)
-                data.put("notes", detailedBolusInfo.getNotes());
-            uploadCareportalEntryToNS(data, detailedBolusInfo.timestamp);
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-    }
-
     public void uploadProfileSwitch(ProfileSwitch profileSwitch, long nsClientId) {
         try {
             JSONObject data = getJson(profileSwitch);
-            uploadCareportalEntryToNS(data, nsClientId);
+            DbRequest dbr = new DbRequest("dbAdd", "treatments", data, nsClientId);
+            aapsLogger.debug("Prepared: " + dbr.log());
+            uploadQueue.add(dbr);
         } catch (JSONException e) {
             aapsLogger.error("Unhandled exception", e);
         }
@@ -388,130 +307,14 @@ public class NSUpload {
         return data;
     }
 
-    public void uploadCareportalEntryToNS(JSONObject data, long nsClientId) {
-        try {
-            if (data.has("preBolus") && data.has("carbs")) {
-                JSONObject prebolus = new JSONObject();
-                prebolus.put("carbs", data.get("carbs"));
-                data.remove("carbs");
-                prebolus.put("eventType", data.get("eventType"));
-                if (data.has("enteredBy")) prebolus.put("enteredBy", data.get("enteredBy"));
-                if (data.has("notes")) prebolus.put("notes", data.get("notes"));
-                long mills = DateUtil.fromISODateString(data.getString("created_at")).getTime();
-                Date preBolusDate = new Date(mills + data.getInt("preBolus") * 60000L + 1000L);
-                prebolus.put("created_at", DateUtil.toISOString(preBolusDate));
-                uploadCareportalEntryToNS(prebolus, preBolusDate.getTime());
-            }
-            DbRequest dbr = new DbRequest("dbAdd", "treatments", data, nsClientId);
-            aapsLogger.debug("Prepared: " + dbr.log());
-            uploadQueue.add(dbr);
-        } catch (Exception e) {
-            aapsLogger.error("Unhandled exception", e);
-        }
-
-    }
-
-    // TODO replace with seting isValid = false
+    // TODO replace with setting isValid = false
     public void removeCareportalEntryFromNS(String _id) {
         uploadQueue.add(new DbRequest("dbRemove", "treatments", _id, System.currentTimeMillis()));
-    }
-
-    public void uploadError(String error) {
-        uploadError(error, new Date());
-    }
-
-    public void uploadError(String error, Date date) {
-        JSONObject data = new JSONObject();
-        try {
-            data.put("eventType", "Announcement");
-            data.put("created_at", DateUtil.toISOString(date));
-            data.put("enteredBy", sp.getString("careportal_enteredby", "AndroidAPS"));
-            data.put("notes", error);
-            data.put("isAnnouncement", true);
-        } catch (JSONException e) {
-            aapsLogger.error("Unhandled exception", e);
-        }
-        uploadQueue.add(new DbRequest("dbAdd", "treatments", data, date.getTime()));
-    }
-
-    public void uploadAppStart() {
-        if (sp.getBoolean(R.string.key_ns_logappstartedevent, true)) {
-            JSONObject data = new JSONObject();
-            try {
-                data.put("eventType", "Note");
-                data.put("created_at", DateUtil.toISOString(new Date()));
-                data.put("notes", resourceHelper.gs(R.string.androidaps_start) + " - " + Build.MANUFACTURER + " " + Build.MODEL);
-            } catch (JSONException e) {
-                aapsLogger.error("Unhandled exception", e);
-            }
-            uploadQueue.add(new DbRequest("dbAdd", "treatments", data, System.currentTimeMillis()));
-        }
     }
 
     public void uploadProfileStore(JSONObject profileStore) {
         if (sp.getBoolean(R.string.key_ns_uploadlocalprofile, false)) {
             uploadQueue.add(new DbRequest("dbAdd", "profile", profileStore, System.currentTimeMillis()));
-        }
-    }
-
-    public void uploadEvent(String careportalEvent, long time, @Nullable String notes) {
-        JSONObject data = new JSONObject();
-        try {
-            data.put("eventType", careportalEvent);
-            data.put("created_at", DateUtil.toISOString(time));
-            data.put("enteredBy", sp.getString("careportal_enteredby", "AndroidAPS"));
-            data.put("units", profileFunction.getUnits());
-            if (notes != null) {
-                data.put("notes", notes);
-            }
-        } catch (JSONException e) {
-            aapsLogger.error("Unhandled exception", e);
-        }
-        uploadQueue.add(new DbRequest("dbAdd", "treatments", data, time));
-    }
-
-    public void uploadEvent(TherapyEvent event) {
-        JSONObject data = new JSONObject();
-        try {
-            data.put("eventType", event.getType().getText());
-            data.put("created_at", event.getTimestamp());
-            data.put("enteredBy", event.getEnteredBy());
-            if (event.getGlucoseUnit() == TherapyEvent.GlucoseUnit.MGDL)
-                data.put("units", Constants.MGDL);
-            else data.put("units", Constants.MMOL);
-            if (event.getDuration() != 0) data.put("duration", T.msecs(event.getDuration()).mins());
-            if (event.getNote() != null) data.put("notes", event.getNote());
-            if (event.getGlucose() != null) data.put("glucose", event.getGlucose());
-            if (event.getGlucoseType() != null)
-                data.put("glucoseType", event.getGlucoseType().getText());
-        } catch (JSONException e) {
-            aapsLogger.error("Unhandled exception", e);
-        }
-        uploadQueue.add(new DbRequest("dbAdd", "treatments", data, event.getTimestamp()));
-    }
-
-    public void removeFoodFromNS(String _id) {
-        try {
-            uploadQueue.add(new DbRequest("dbRemove", "food", _id, System.currentTimeMillis()));
-        } catch (Exception e) {
-            aapsLogger.error("Unhandled exception", e);
-        }
-
-    }
-
-    public void createNSTreatment(JSONObject data, ProfileStore profileStore, ProfileFunction profileFunction, long eventTime) {
-        if (JsonHelper.safeGetString(data, "eventType", "").equals(TherapyEvent.Type.PROFILE_SWITCH.getText())) {
-            ProfileSwitch profileSwitch = profileFunction.prepareProfileSwitch(
-                    profileStore,
-                    JsonHelper.safeGetString(data, "profile"),
-                    JsonHelper.safeGetInt(data, "duration"),
-                    JsonHelper.safeGetInt(data, "percentage"),
-                    JsonHelper.safeGetInt(data, "timeshift"),
-                    eventTime
-            );
-            uploadProfileSwitch(profileSwitch, eventTime);
-        } else {
-            uploadCareportalEntryToNS(data, eventTime);
         }
     }
 

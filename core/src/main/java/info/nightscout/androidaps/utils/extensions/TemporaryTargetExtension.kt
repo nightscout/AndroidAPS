@@ -103,4 +103,5 @@ fun TemporaryTarget.toJson(units: String): JSONObject =
                 .put("targetBottom", Profile.fromMgdlToUnits(lowTarget, units))
                 .put("targetTop", Profile.fromMgdlToUnits(highTarget, units))
                 .put("units", units)
+            if (interfaceIDs.nightscoutId != null) it.put("_id", interfaceIDs.nightscoutId)
         }

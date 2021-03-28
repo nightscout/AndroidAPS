@@ -22,7 +22,6 @@ import info.nightscout.androidaps.interfaces.Constraint
 import info.nightscout.androidaps.logging.LTag
 import info.nightscout.androidaps.logging.UserEntryLogger
 import info.nightscout.androidaps.plugins.configBuilder.ConstraintChecker
-import info.nightscout.androidaps.plugins.general.nsclient.NSUpload
 import info.nightscout.androidaps.queue.Callback
 import info.nightscout.androidaps.utils.DecimalFormatter
 import info.nightscout.androidaps.utils.HtmlHelper
@@ -41,7 +40,6 @@ class FillDialog : DialogFragmentWithDate() {
     @Inject lateinit var constraintChecker: ConstraintChecker
     @Inject lateinit var resourceHelper: ResourceHelper
     @Inject lateinit var ctx: Context
-    @Inject lateinit var nsUpload: NSUpload
     @Inject lateinit var commandQueue: CommandQueueProvider
     @Inject lateinit var activePlugin: ActivePluginProvider
     @Inject lateinit var uel: UserEntryLogger
@@ -147,11 +145,10 @@ class FillDialog : DialogFragmentWithDate() {
                             type = TherapyEvent.Type.CANNULA_CHANGE,
                             note = notes,
                             glucoseUnit = TherapyEvent.GlucoseUnit.MGDL
-                        )).subscribe({ result ->
-                            result.inserted.forEach { nsUpload.uploadEvent(it) }
-                        }, {
-                            aapsLogger.error(LTag.DATABASE, "Error while saving therapy event", it)
-                        })
+                        )).subscribe(
+                            { result -> result.inserted.forEach { aapsLogger.debug(LTag.DATABASE, "Inserted therapy event $it") } },
+                            { aapsLogger.error(LTag.DATABASE, "Error while saving therapy event", it) }
+                        )
                     }
                     if (insulinChange) {
                         // add a second for case of both checked
@@ -161,11 +158,10 @@ class FillDialog : DialogFragmentWithDate() {
                             type = TherapyEvent.Type.INSULIN_CHANGE,
                             note = notes,
                             glucoseUnit = TherapyEvent.GlucoseUnit.MGDL
-                        )).subscribe({ result ->
-                            result.inserted.forEach { nsUpload.uploadEvent(it) }
-                        }, {
-                            aapsLogger.error(LTag.DATABASE, "Error while saving therapy event", it)
-                        })
+                        )).subscribe(
+                            { result -> result.inserted.forEach { aapsLogger.debug(LTag.DATABASE, "Inserted therapy event $it") } },
+                            { aapsLogger.error(LTag.DATABASE, "Error while saving therapy event", it) }
+                        )
                     }
                 }, null)
             }

@@ -25,7 +25,6 @@ import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.logging.LTag
 import info.nightscout.androidaps.logging.UserEntryLogger
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper
-import info.nightscout.androidaps.plugins.general.nsclient.NSUpload
 import info.nightscout.androidaps.plugins.general.nsclient.events.EventNSClientRestart
 import info.nightscout.androidaps.utils.FabricPrivacy
 import info.nightscout.androidaps.utils.alertDialogs.OKDialog
@@ -48,7 +47,6 @@ class FoodFragment : DaggerFragment() {
     @Inject lateinit var aapsLogger: AAPSLogger
     @Inject lateinit var resourceHelper: ResourceHelper
     @Inject lateinit var fabricPrivacy: FabricPrivacy
-    @Inject lateinit var nsUpload: NSUpload
     @Inject lateinit var repository: AppRepository
     @Inject lateinit var uel: UserEntryLogger
 
@@ -200,8 +198,10 @@ class FoodFragment : DaggerFragment() {
 
     private fun filterData() {
         val textFilter = binding.filter.text.toString()
-        val categoryFilter = binding.category.selectedItem?.toString() ?: resourceHelper.gs(R.string.none)
-        val subcategoryFilter = binding.subcategory.selectedItem?.toString() ?: resourceHelper.gs(R.string.none)
+        val categoryFilter = binding.category.selectedItem?.toString()
+            ?: resourceHelper.gs(R.string.none)
+        val subcategoryFilter = binding.subcategory.selectedItem?.toString()
+            ?: resourceHelper.gs(R.string.none)
         val newFiltered = ArrayList<Food>()
         for (f in unfiltered) {
             if (f.category == null || f.subCategory == null) continue
@@ -252,14 +252,10 @@ class FoodFragment : DaggerFragment() {
                         OKDialog.showConfirmation(activity, resourceHelper.gs(R.string.removerecord) + "\n" + food.name, {
                             uel.log(Action.FOOD_REMOVED, food.name)
                             disposable += repository.runTransactionForResult(InvalidateFoodTransaction(food.id))
-                                .subscribe({
-                                    val id = food.interfaceIDs.nightscoutId
-                                    if (NSUpload.isIdValid(id)) nsUpload.removeFoodFromNS(id)
-                                    // no create at the moment
-                                    // else uploadQueue.removeID("dbAdd", food.timestamp.toString())
-                                }, {
-                                    aapsLogger.error(LTag.DATABASE, "Error while invalidating food", it)
-                                })
+                                .subscribe(
+                                    { aapsLogger.error(LTag.DATABASE, "Invalidated food $it") },
+                                    { aapsLogger.error(LTag.DATABASE, "Error while invalidating food", it) }
+                                )
                         }, null)
                     }
                 }
