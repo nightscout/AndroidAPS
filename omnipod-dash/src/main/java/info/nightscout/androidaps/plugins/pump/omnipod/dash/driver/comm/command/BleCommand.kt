@@ -17,13 +17,14 @@ data class BleCommandNack(val idx: Byte) : BleCommand(BleCommandType.NACK, byteA
     companion object {
 
         fun parse(payload: ByteArray): BleCommand {
-            if (payload.size < 2) {
-                return BleCommandIncorrect("Incorrect NACK payload", payload)
+            return when {
+                payload.size < 2 ->
+                    BleCommandIncorrect("Incorrect NACK payload", payload)
+                payload[0] != BleCommandType.NACK.value ->
+                    BleCommandIncorrect("Incorrect NACK header", payload)
+                else ->
+                    BleCommandNack(payload[1])
             }
-            if (payload[0] != BleCommandType.NACK.value) {
-                return BleCommandIncorrect("Incorrect NACK header", payload)
-            }
-            return BleCommandNack(payload[1])
         }
     }
 }

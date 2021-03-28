@@ -30,9 +30,6 @@ class CmdBleIO(
     CharacteristicType.CMD
 ) {
 
-    init {
-    }
-
     fun peekCommand(): ByteArray? {
         return incomingPackets.peek()
     }
