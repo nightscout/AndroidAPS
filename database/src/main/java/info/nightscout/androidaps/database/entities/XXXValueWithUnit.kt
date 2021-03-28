@@ -65,6 +65,7 @@ sealed class XXXValueWithUnit {
  */
 
 // just do develop in this file. Remove when done.
+/*
 interface Translator {
 
     fun translate(units: UserEntry.Units): String
@@ -72,43 +73,4 @@ interface Translator {
     fun translate(type: TherapyEvent.Type): String
     fun translate(reason: TemporaryTarget.Reason): String
 }
-
-enum class Sources(val text: String) {
-    @SerializedName("TreatmentDialog") TreatmentDialog ("TreatmentDialog"),
-    @SerializedName("InsulinDialog") InsulinDialog ("InsulinDialog"),
-    @SerializedName("CarbDialog") CarbDialog ("CarbDialog"),
-    @SerializedName("WizardDialog") WizardDialog ("WizardDialog"),
-    @SerializedName("QuickWizard") QuickWizard ("QuickWizard"),
-    @SerializedName("ExtendedBolusDialog") ExtendedBolusDialog ("ExtendedBolusDialog"),
-    @SerializedName("TTDialog") TTDialog ("TTDialog"),
-    @SerializedName("ProfileSwitchDialog") ProfileSwitchDialog ("ProfileSwitchDialog"),
-    @SerializedName("LoopDialog") LoopDialog ("LoopDialog"),
-    @SerializedName("TempBasalDialog") TempBasalDialog ("TempBasalDialog"),
-    @SerializedName("CalibrationDialog") CalibrationDialog ("CalibrationDialog"),
-    @SerializedName("FillDialog") FillDialog ("FillDialog"),
-    @SerializedName("BgCheck") BgCheck ("BgCheck"),
-    @SerializedName("SensorInsert") SensorInsert ("SensorInsert"),
-    @SerializedName("BatteryChange") BatteryChange ("BatteryChange"),
-    @SerializedName("Note") Note ("Note"),
-    @SerializedName("Exercise") Exercise ("Exercise"),
-    @SerializedName("Question") Question ("Question"),
-    @SerializedName("Announcement") Announcement ("Announcement"),
-    @SerializedName("Actions") Actions ("Actions"),             //From Actions plugin
-    @SerializedName("Automation") Automation ("Automation"),    //From Automation plugin
-    @SerializedName("LocalProfile") LocalProfile ("LocalProfile"),  //From LocalProfile plugin
-    @SerializedName("Loop") Loop ("Loop"),                      //From Loop plugin
-    @SerializedName("Maintenance") Maintenance ("Maintenance"), //From Maintenance plugin
-    @SerializedName("NSClient") NSClient ("NSClient"),          //From NSClient plugin
-    @SerializedName("Pump") Pump ("Pump"),                      //From Pump plugin (for example from pump history)
-    @SerializedName("SMS") SMS ("SMS"),                         //From SMS plugin
-    @SerializedName("Treatments") Treatments ("Treatments"),    //From Treatments plugin
-    @SerializedName("Wear") Wear ("Wear"),                      //From Wear plugin
-    @SerializedName("Food") Food ("Food"),                      //From Food plugin
-    @SerializedName("Unknown") Unknown ("Unknown")              //if necessary
-    ;
-
-    companion object {
-        fun fromString(source: String?) = values().firstOrNull { it.name == source } ?: Unknown
-        fun fromText(source: String?) = values().firstOrNull { it.text == source } ?: Unknown
-    }
-}
+*/

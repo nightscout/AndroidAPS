@@ -17,7 +17,7 @@ object SealedClassHelper {
             override fun <T : Any> create(gson: Gson, type: TypeToken<T>): TypeAdapter<T> {
                 val kClass = Reflection.getOrCreateKotlinClass(type.rawType)
                 return if (kClass.sealedSubclasses.any()) {
-                    SealedClassTypeAdapter<T>(kClass, gson)
+                    SealedClassTypeAdapter(kClass, gson)
                 } else
                     gson.getDelegateAdapter(this, type)
             }
@@ -26,25 +26,26 @@ object SealedClassHelper {
     private class SealedClassTypeAdapter<T : Any>(private val kClass: KClass<Any>, val gson: Gson) : TypeAdapter<T>() {
 
         override fun read(jsonReader: JsonReader): T? {
-            jsonReader.beginObject() //start reading the object
-            val nextName = jsonReader.nextName() //get the name on the object
-            val innerClass = kClass.sealedSubclasses.firstOrNull {
-                it.simpleName!!.contains(nextName)
-            }
-                ?: throw Exception("$nextName is not found to be a data class of the sealed class ${kClass.qualifiedName}")
+            jsonReader.beginObject()
+            val nextName = jsonReader.nextName()
+            val innerClass = kClass.sealedSubclasses.firstOrNull { it.simpleName == nextName }
+                ?: throw Exception("$nextName is not a child of the sealed class ${kClass.qualifiedName}")
             val x = gson.fromJson<T>(jsonReader, innerClass.javaObjectType)
             jsonReader.endObject()
-            //if there a static object, actually return that back to ensure equality and such!
+            // if there a static object, actually return that
             return innerClass.objectInstance as T? ?: x
         }
 
         override fun write(out: JsonWriter, value: T) {
             val jsonString = gson.toJson(value)
-            out.beginObject()
             val name = value.javaClass.canonicalName
-            out.name(name.splitToSequence(".").last()).jsonValue(jsonString)
-            out.endObject()
+            if (name != null) {
+                out.beginObject()
+                out.name(name.splitToSequence(".").last()).jsonValue(jsonString)
+                out.endObject()
+            }
         }
     }
-
 }
+
+inline fun <reified T> Gson.fromJson(json: String): T = fromJson(json, object : TypeToken<T>() {}.type)

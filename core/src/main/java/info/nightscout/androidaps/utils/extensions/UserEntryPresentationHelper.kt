@@ -3,7 +3,6 @@ package info.nightscout.androidaps.utils.extensions
 import dagger.Reusable
 import info.nightscout.androidaps.Constants
 import info.nightscout.androidaps.core.R
-import info.nightscout.androidaps.database.entities.Translator
 import info.nightscout.androidaps.database.entities.UserEntry
 import info.nightscout.androidaps.database.entities.UserEntry.ColorGroup
 import info.nightscout.androidaps.database.entities.UserEntry.Units
@@ -12,6 +11,7 @@ import info.nightscout.androidaps.interfaces.ProfileFunction
 import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.DecimalFormatter
 import info.nightscout.androidaps.utils.resources.ResourceHelper
+import info.nightscout.androidaps.utils.Translator
 import javax.inject.Inject
 
 @Reusable
