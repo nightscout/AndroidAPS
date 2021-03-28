@@ -2,12 +2,6 @@ package info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.packet
 
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.message.CrcMismatchException
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.message.IncorrectPacketException
-import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.message.crc32
-import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.packet.BlePacket
-import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.packet.FirstBlePacket
-import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.packet.LastBlePacket
-import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.packet.LastOptionalPlusOneBlePacket
-import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.packet.MiddleBlePacket
 import java.nio.ByteBuffer
 import java.util.*
 

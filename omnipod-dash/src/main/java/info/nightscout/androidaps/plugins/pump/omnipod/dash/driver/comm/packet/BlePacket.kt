@@ -1,6 +1,5 @@
 package info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.packet
 
-import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.io.toUnsignedLong
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.message.IncorrectPacketException
 import java.nio.ByteBuffer
 

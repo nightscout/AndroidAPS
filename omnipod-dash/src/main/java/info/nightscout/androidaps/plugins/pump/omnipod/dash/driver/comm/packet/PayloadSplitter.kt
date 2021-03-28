@@ -1,10 +1,5 @@
 package info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.packet
 
-import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.packet.BlePacket
-import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.packet.FirstBlePacket
-import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.packet.LastBlePacket
-import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.packet.LastOptionalPlusOneBlePacket
-import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.packet.MiddleBlePacket
 import java.lang.Integer.min
 import java.util.zip.CRC32
 
