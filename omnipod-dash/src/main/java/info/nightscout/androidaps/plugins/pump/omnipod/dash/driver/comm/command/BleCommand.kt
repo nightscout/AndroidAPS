@@ -1,18 +1,44 @@
 package info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.command
 
+import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.command.base.CommandType
 import info.nightscout.androidaps.utils.extensions.toHex
+import java.nio.ByteBuffer
 
-class BleCommandRTS : BleCommand(BleCommandType.RTS)
+object BleCommandRTS : BleCommand(BleCommandType.RTS)
 
-class BleCommandCTS : BleCommand(BleCommandType.CTS)
+object BleCommandCTS : BleCommand(BleCommandType.CTS)
 
-class BleCommandAbort : BleCommand(BleCommandType.ABORT)
+object BleCommandAbort : BleCommand(BleCommandType.ABORT)
 
-class BleCommandSuccess : BleCommand(BleCommandType.SUCCESS)
+object BleCommandSuccess : BleCommand(BleCommandType.SUCCESS)
 
-class BleCommandFail : BleCommand(BleCommandType.FAIL)
+object BleCommandFail : BleCommand(BleCommandType.FAIL)
 
-open class BleCommand(val data: ByteArray) {
+data class BleCommandNack(val idx: Byte) : BleCommand(BleCommandType.NACK, byteArrayOf(idx)) {
+    companion object {
+        fun parse(payload: ByteArray): BleCommand {
+            if (payload.size < 2) {
+                return BleCommandIncorrect("Incorrect NACK payload", payload)
+            }
+            if (payload[0] != BleCommandType.NACK.value) {
+                return  BleCommandIncorrect("Incorrect NACK header", payload)
+            }
+            return BleCommandNack(payload[1])
+        }
+    }
+}
+
+data class BleCommandHello(private val controllerId: Int) : BleCommand(
+    BleCommandType.HELLO,
+    ByteBuffer.allocate(6)
+        .put(1.toByte()) // TODO find the meaning of this constant
+        .put(4.toByte()) // TODO find the meaning of this constant
+        .putInt(controllerId).array()
+)
+
+data class BleCommandIncorrect(val msg:String, val payload: ByteArray): BleCommand(BleCommandType.INCORRECT)
+
+sealed class BleCommand(val data: ByteArray) {
 
     constructor(type: BleCommandType) : this(byteArrayOf(type.value))
 
@@ -35,5 +61,36 @@ open class BleCommand(val data: ByteArray) {
 
     override fun hashCode(): Int {
         return data.contentHashCode()
+    }
+
+    companion object {
+        fun parse(payload: ByteArray): BleCommand {
+            if (payload.isEmpty()) {
+                return BleCommandIncorrect("Incorrect command: empty payload", payload)
+            }
+
+            try {
+                return when(BleCommandType.byValue(payload[0])) {
+                    BleCommandType.RTS ->
+                        BleCommandRTS
+                    BleCommandType.CTS ->
+                        BleCommandCTS
+                    BleCommandType.NACK ->
+                        BleCommandNack.parse(payload)
+                    BleCommandType.ABORT ->
+                        BleCommandAbort
+                    BleCommandType.SUCCESS ->
+                        BleCommandSuccess
+                    BleCommandType.FAIL ->
+                        BleCommandFail
+                    BleCommandType.HELLO ->
+                        BleCommandIncorrect("Incorrect hello command received", payload)
+                    BleCommandType.INCORRECT ->
+                        BleCommandIncorrect("Incorrect command received", payload)
+                }
+            } catch (e: IllegalArgumentException) {
+                return BleCommandIncorrect("Incorrect command payload", payload)
+            }
+        }
     }
 }

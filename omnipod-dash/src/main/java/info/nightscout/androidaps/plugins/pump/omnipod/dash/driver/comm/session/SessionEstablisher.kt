@@ -4,12 +4,16 @@ import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.logging.LTag
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.Id
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.endecrypt.Nonce
+import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.exceptions.CouldNotInitiateConnection
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.exceptions.SessionEstablishmentException
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.message.MessageIO
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.message.MessagePacket
+import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.message.MessageReceiveSuccess
+import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.message.MessageSendSuccess
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.message.MessageType
 import info.nightscout.androidaps.utils.extensions.toHex
 import java.security.SecureRandom
+import java.util.*
 
 class SessionEstablisher(
     private val aapsLogger: AAPSLogger,
@@ -23,7 +27,7 @@ class SessionEstablisher(
 
     private val controllerIV = ByteArray(IV_SIZE)
     private var nodeIV = ByteArray(IV_SIZE)
-
+    private val identifier = Random().nextInt().toByte()
     private val milenage = Milenage(aapsLogger, ltk, eapSqn)
 
     init {
@@ -36,13 +40,18 @@ class SessionEstablisher(
     }
 
     fun negotiateSessionKeys(): SessionKeys {
-        // send EAP-AKA challenge
         msgSeq++
         var challenge = eapAkaChallenge()
-        msgIO.sendMessage(challenge)
-
+        val sendResult = msgIO.sendMessage(challenge)
+        if (sendResult !is MessageSendSuccess) {
+            throw SessionEstablishmentException("Could not send the EAP AKA challenge: $sendResult")
+        }
         val challengeResponse = msgIO.receiveMessage()
-        processChallengeResponse(challengeResponse) // TODO: what do we have to answer if challenge response does not validate?
+        if (challengeResponse !is MessageReceiveSuccess) {
+            throw SessionEstablishmentException("Could not establish session: $challengeResponse")
+        }
+
+        processChallengeResponse(challengeResponse.msg)
 
         msgSeq++
         var success = eapSuccess()
@@ -67,7 +76,7 @@ class SessionEstablisher(
 
         val eapMsg = EapMessage(
             code = EapCode.REQUEST,
-            identifier = 189.toByte(), // TODO: find what value we need here, it's probably random
+            identifier = identifier, // TODO: find what value we need here, it's probably random
             attributes = attributes
         )
         return MessagePacket(
@@ -80,12 +89,14 @@ class SessionEstablisher(
     }
 
     private fun processChallengeResponse(challengeResponse: MessagePacket) {
-        // TODO verify that identifier matches identifier from the Challenge
         val eapMsg = EapMessage.parse(aapsLogger, challengeResponse.payload)
+        if (eapMsg.identifier != identifier ) {
+            aapsLogger.debug(LTag.PUMPBTCOMM, "EAP-AKA: got incorrect identifier ${eapMsg.identifier} expected: $identifier")
+            throw SessionEstablishmentException("Received incorrect EAP identifier: ${eapMsg.identifier}")
+        }
         if (eapMsg.attributes.size != 2) {
             aapsLogger.debug(LTag.PUMPBTCOMM, "EAP-AKA: got message: $eapMsg")
             if (eapMsg.attributes.size == 1 && eapMsg.attributes[0] is EapAkaAttributeClientErrorCode) {
-                // TODO: special exception for this
                 throw SessionEstablishmentException("Received CLIENT_ERROR_CODE for EAP-AKA challenge: ${eapMsg.attributes[0].toByteArray().toHex()}")
             }
             throw SessionEstablishmentException("Expecting two attributes, got: ${eapMsg.attributes.size}")
@@ -108,7 +119,7 @@ class SessionEstablisher(
         val eapMsg = EapMessage(
             code = EapCode.SUCCESS,
             attributes = arrayOf(),
-            identifier = 189.toByte() // TODO: find what value we need here
+            identifier = identifier.toByte()
         )
 
         return MessagePacket(

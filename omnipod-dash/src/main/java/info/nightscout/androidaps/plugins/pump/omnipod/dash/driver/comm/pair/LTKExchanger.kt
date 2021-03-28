@@ -1,17 +1,18 @@
 package info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.pair
 
+import android.app.Notification
 import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.logging.LTag
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.Id
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.exceptions.MessageIOException
-import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.message.MessageIO
-import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.message.MessagePacket
-import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.message.StringLengthPrefixEncoding
+import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.exceptions.PairingException
+import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.message.*
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.message.StringLengthPrefixEncoding.Companion.parseKeys
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.util.RandomByteGenerator
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.util.X25519KeyGenerator
 import info.nightscout.androidaps.utils.extensions.hexStringToByteArray
 import info.nightscout.androidaps.utils.extensions.toHex
+import info.nightscout.androidaps.utils.extensions.waitMillis
 
 internal class LTKExchanger(
     private val aapsLogger: AAPSLogger,
@@ -25,42 +26,54 @@ internal class LTKExchanger(
     private var seq: Byte = 1
 
     fun negotiateLTK(): PairResult {
-        // send SP1, SP2
         val sp1sp2 = sp1sp2(podId.address, sp2())
-        msgIO.sendMessage(sp1sp2.messagePacket)
+        val sendSp1Sp2Result = msgIO.sendMessage(sp1sp2.messagePacket)
+        if (sendSp1Sp2Result !is MessageSendSuccess) {
+            throw PairingException("Could not send SP1SP2: $sendSp1Sp2Result")
+        }
 
         seq++
         val sps1 = sps1()
-        msgIO.sendMessage(sps1.messagePacket)
-        // send SPS1
+        val sp1Result = msgIO.sendMessage(sps1.messagePacket)
+        if (sp1Result !is MessageSendSuccess) {
+            throw PairingException("Could not send SP1: $sp1Result")
+        }
 
-        // read SPS1
         val podSps1 = msgIO.receiveMessage()
-        processSps1FromPod(podSps1)
+        if (podSps1 !is MessageReceiveSuccess) {
+            throw PairingException("Could not read SPS1: $podSps1")
+        }
+        processSps1FromPod(podSps1.msg)
         // now we have all the data to generate: confPod, confPdm, ltk and noncePrefix
 
         seq++
-        // send SPS2
         val sps2 = sps2()
-        msgIO.sendMessage(sps2.messagePacket)
-        // read SPS2
+        val sp2Result = msgIO.sendMessage(sps2.messagePacket)
+        if (sp1Result !is MessageSendSuccess) {
+            throw PairingException("Could not send sps2: ${sp2Result}")
+        }
 
         val podSps2 = msgIO.receiveMessage()
-        validatePodSps2(podSps2)
+        if (podSps2 !is MessageReceiveSuccess) {
+            throw PairingException("Could not read SPS2: $podSps2")
+        }
+        validatePodSps2(podSps2.msg)
 
         seq++
         // send SP0GP0
-        msgIO.sendMessage(sp0gp0().messagePacket)
-        // read P0
+        val sp0gp0Result = msgIO.sendMessage(sp0gp0().messagePacket)
+        if (sp0gp0Result is MessageSendErrorSending) {
+            throw PairingException("Could not send SP0GP0: $sp0gp0Result")
+        }
 
-        // TODO: failing to read or validate p0 will lead to undefined state
-        // It could be that:
-        // - the pod answered with p0 and we did not receive/could not process the answer
-        // - the pod answered with some sort of error. This is very unlikely, because we already received(and validated) SPS2 from the pod
-        // But if sps2 conf value is incorrect, then we would probablysee this when receiving the pod podSps2(to test)
+        // No exception throwing after this point. It is possible that the pod saved the LTK
+        //
         val p0 = msgIO.receiveMessage()
-        validateP0(p0)
-
+        if (p0 is MessageReceiveSuccess) {
+            validateP0(p0.msg)
+        } else{
+            aapsLogger.warn(LTag.PUMPBTCOMM, "Could not read P0: $p0")
+        }
         return PairResult(
             ltk = keyExchange.ltk,
             msgSeq = seq
@@ -147,7 +160,7 @@ internal class LTKExchanger(
         val payload = parseKeys(arrayOf(P0), msg.payload)[0]
         aapsLogger.debug(LTag.PUMPBTCOMM, "P0 payload from pod: ${payload.toHex()}")
         if (!payload.contentEquals(UNKNOWN_P0_PAYLOAD)) {
-            throw MessageIOException("Invalid P0 payload received")
+            aapsLogger.warn(LTag.PUMPBTCOMM, "Reveived invalid P0 payload: ${payload.toHex()}")
         }
     }
 

@@ -7,7 +7,8 @@ enum class BleCommandType(val value: Byte) {
     ABORT(0x03.toByte()),
     SUCCESS(0x04.toByte()),
     FAIL(0x05.toByte()),
-    HELLO(0x06.toByte());
+    HELLO(0x06.toByte()),
+    INCORRECT(0x09.toByte());
 
     companion object {
 

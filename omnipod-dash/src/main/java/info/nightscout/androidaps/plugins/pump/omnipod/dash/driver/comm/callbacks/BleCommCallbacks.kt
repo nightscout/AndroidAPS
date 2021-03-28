@@ -7,26 +7,23 @@ import android.bluetooth.BluetoothGattDescriptor
 import android.bluetooth.BluetoothProfile
 import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.logging.LTag
-import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.exceptions.CouldNotConfirmDescriptorWriteException
-import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.exceptions.CouldNotConfirmWriteException
-import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.io.CharacteristicType
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.io.CharacteristicType.Companion.byValue
+import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.io.IncomingPackets
 import info.nightscout.androidaps.utils.extensions.toHex
+import java.util.*
 import java.util.concurrent.BlockingQueue
 import java.util.concurrent.CountDownLatch
 import java.util.concurrent.LinkedBlockingQueue
 import java.util.concurrent.TimeUnit
-import java.util.concurrent.TimeoutException
 
 class BleCommCallbacks(
     private val aapsLogger: AAPSLogger,
-    private val incomingPackets: Map<CharacteristicType, BlockingQueue<ByteArray>>
+    private val incomingPackets: IncomingPackets,
 ) : BluetoothGattCallback() {
 
     private val serviceDiscoveryComplete: CountDownLatch = CountDownLatch(1)
     private val connected: CountDownLatch = CountDownLatch(1)
-    private val writeQueue: BlockingQueue<CharacteristicWriteConfirmation> = LinkedBlockingQueue(1)
-    private val descriptorWriteQueue: BlockingQueue<DescriptorWriteConfirmation> = LinkedBlockingQueue(1)
+    private val writeQueue: BlockingQueue<WriteConfirmation> = LinkedBlockingQueue(1)
 
     override fun onConnectionStateChange(gatt: BluetoothGatt, status: Int, newState: Int) {
         super.onConnectionStateChange(gatt, status, newState)
@@ -54,52 +51,32 @@ class BleCommCallbacks(
         serviceDiscoveryComplete.await(timeoutMs.toLong(), TimeUnit.MILLISECONDS)
     }
 
-    @Throws(InterruptedException::class, TimeoutException::class, CouldNotConfirmWriteException::class)
-    fun confirmWrite(expectedPayload: ByteArray, timeoutMs: Long) {
-        val received: CharacteristicWriteConfirmation = writeQueue.poll(timeoutMs, TimeUnit.MILLISECONDS)
-            ?: throw TimeoutException()
-
-        when (received) {
-            is CharacteristicWriteConfirmationPayload -> confirmWritePayload(expectedPayload, received)
-            is CharacteristicWriteConfirmationError -> throw CouldNotConfirmWriteException(received.status)
+    fun confirmWrite(expectedPayload: ByteArray, expectedUUID: String, timeoutMs: Long) : WriteConfirmation{
+        try {
+            return when(val received = writeQueue.poll(timeoutMs, TimeUnit.MILLISECONDS) ) {
+                null -> return WriteConfirmationError("Timeout waiting for writeConfirmation")
+                is WriteConfirmationSuccess ->
+                    if (expectedPayload.contentEquals(received.payload) &&
+                        expectedUUID == received.uuid) {
+                        received
+                    } else {
+                        aapsLogger.warn(
+                            LTag.PUMPBTCOMM,
+                            "Could not confirm write. Got " + received.payload.toHex() + ".Excepted: " + expectedPayload.toHex()
+                        )
+                        WriteConfirmationError("Received incorrect writeConfirmation")
+                    }
+                is WriteConfirmationError ->
+                    received
+            }
+        }catch (e: InterruptedException) {
+            return WriteConfirmationError("Interrupted waiting for confirmation")
         }
-    }
-
-    private fun confirmWritePayload(expectedPayload: ByteArray, received: CharacteristicWriteConfirmationPayload) {
-        if (!expectedPayload.contentEquals(received.payload)) {
-            aapsLogger.warn(
-                LTag.PUMPBTCOMM,
-                "Could not confirm write. Got " + received.payload.toHex() + ".Excepted: " + expectedPayload.toHex()
-            )
-            throw CouldNotConfirmWriteException(expectedPayload, received.payload)
-        }
-        aapsLogger.debug(LTag.PUMPBTCOMM, "Confirmed write with value: " + received.payload.toHex())
     }
 
     override fun onCharacteristicWrite(gatt: BluetoothGatt, characteristic: BluetoothGattCharacteristic, status: Int) {
         super.onCharacteristicWrite(gatt, characteristic, status)
-        val writeConfirmation = if (status == BluetoothGatt.GATT_SUCCESS) {
-            CharacteristicWriteConfirmationPayload(characteristic.value)
-        } else {
-            CharacteristicWriteConfirmationError(status)
-        }
-        aapsLogger.debug(
-            LTag.PUMPBTCOMM,
-            "OnCharacteristicWrite with status/char/value " +
-                status + "/" + byValue(characteristic.uuid.toString()) + "/" + characteristic.value.toHex()
-        )
-        try {
-            if (writeQueue.size > 0) {
-                aapsLogger.warn(LTag.PUMPBTCOMM, "Write confirm queue should be empty. found: " + writeQueue.size)
-                writeQueue.clear()
-            }
-            val offered = writeQueue.offer(writeConfirmation, WRITE_CONFIRM_TIMEOUT_MS.toLong(), TimeUnit.MILLISECONDS)
-            if (!offered) {
-                aapsLogger.warn(LTag.PUMPBTCOMM, "Received delayed write confirmation")
-            }
-        } catch (e: InterruptedException) {
-            aapsLogger.warn(LTag.PUMPBTCOMM, "Interrupted while sending write confirmation")
-        }
+        onWrite(status, characteristic.uuid, characteristic.value)
     }
 
     override fun onCharacteristicChanged(gatt: BluetoothGatt, characteristic: BluetoothGattCharacteristic) {
@@ -112,57 +89,52 @@ class BleCommCallbacks(
                 characteristicType + "/" +
                 payload.toHex()
         )
-        incomingPackets[characteristicType]!!.add(payload)
-    }
 
-    @Throws(InterruptedException::class, CouldNotConfirmDescriptorWriteException::class)
-    fun confirmWriteDescriptor(descriptorUUID: String, timeoutMs: Long) {
-        val confirmed: DescriptorWriteConfirmation = descriptorWriteQueue.poll(
-            timeoutMs,
-            TimeUnit.MILLISECONDS
-        )
-            ?: throw TimeoutException()
-        when (confirmed) {
-            is DescriptorWriteConfirmationError -> throw CouldNotConfirmWriteException(confirmed.status)
-            is DescriptorWriteConfirmationUUID ->
-                if (confirmed.uuid != descriptorUUID) {
-                    aapsLogger.warn(
-                        LTag.PUMPBTCOMM,
-                        "Could not confirm descriptor write. Got ${confirmed.uuid}. Expected: $descriptorUUID"
-                    )
-                    throw CouldNotConfirmDescriptorWriteException(descriptorUUID, confirmed.uuid)
-                } else {
-                    aapsLogger.debug(LTag.PUMPBTCOMM, "Confirmed descriptor write : " + confirmed.uuid)
-                }
-        }
+        incomingPackets.byCharacteristicType(characteristicType).add(payload)
     }
 
     override fun onDescriptorWrite(gatt: BluetoothGatt, descriptor: BluetoothGattDescriptor, status: Int) {
         super.onDescriptorWrite(gatt, descriptor, status)
-        val writeConfirmation = if (status == BluetoothGatt.GATT_SUCCESS) {
-            aapsLogger.debug(LTag.PUMPBTCOMM, "OnDescriptor value " + descriptor.value.toHex())
-            DescriptorWriteConfirmationUUID(descriptor.uuid.toString())
-        } else {
-            DescriptorWriteConfirmationError(status)
+
+        onWrite(status, descriptor.uuid, descriptor.value)
+    }
+
+    private fun onWrite(status: Int, uuid: UUID?, value: ByteArray?) {
+        if (uuid == null || value == null) {
+            return
         }
-        try {
-            if (descriptorWriteQueue.size > 0) {
-                aapsLogger.warn(
-                    LTag.PUMPBTCOMM,
-                    "Descriptor write queue should be empty, found: ${descriptorWriteQueue.size}"
-                )
-                descriptorWriteQueue.clear()
+        val writeConfirmation = when {
+            uuid == null || value == null ->
+                WriteConfirmationError("onWrite received Null: UUID=$uuid, value=${value.toHex()} status=$status")
+            status == BluetoothGatt.GATT_SUCCESS    -> {
+                aapsLogger.debug(LTag.PUMPBTCOMM, "OnWrite value " + value.toHex())
+                WriteConfirmationSuccess(uuid.toString(), value)
             }
-            val offered = descriptorWriteQueue.offer(
+            else ->WriteConfirmationError("onDescriptorWrite status is not success: $status")
+        }
+
+        try {
+            flushConfirmationQueue()
+            val offered = writeQueue.offer(
                 writeConfirmation,
                 WRITE_CONFIRM_TIMEOUT_MS.toLong(),
                 TimeUnit.MILLISECONDS
             )
             if (!offered) {
-                aapsLogger.warn(LTag.PUMPBTCOMM, "Received delayed descriptor write confirmation")
+                aapsLogger.warn(LTag.PUMPBTCOMM, "Received delayed write confirmation")
             }
         } catch (e: InterruptedException) {
-            aapsLogger.warn(LTag.PUMPBTCOMM, "Interrupted while sending descriptor write confirmation")
+            aapsLogger.warn(LTag.PUMPBTCOMM, "Interrupted while sending write confirmation")
+        }
+    }
+
+    fun flushConfirmationQueue() {
+        if (writeQueue.size > 0) {
+            aapsLogger.warn(
+                LTag.PUMPBTCOMM,
+                "Write queue should be empty, found: ${writeQueue.size}"
+            )
+            writeQueue.clear()
         }
     }
 

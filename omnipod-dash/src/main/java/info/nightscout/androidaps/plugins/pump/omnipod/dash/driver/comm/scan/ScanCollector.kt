@@ -5,7 +5,7 @@ import android.bluetooth.le.ScanResult
 import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.logging.LTag
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.exceptions.DiscoveredInvalidPodException
-import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.exceptions.ScanFailException
+import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.exceptions.ScanException
 import java.util.*
 import java.util.concurrent.ConcurrentHashMap
 
@@ -25,10 +25,10 @@ class ScanCollector(private val logger: AAPSLogger, private val podID: Long) : S
         super.onScanFailed(errorCode)
     }
 
-    @Throws(ScanFailException::class) fun collect(): List<BleDiscoveredDevice> {
+    @Throws(ScanException::class) fun collect(): List<BleDiscoveredDevice> {
         val ret: MutableList<BleDiscoveredDevice> = ArrayList()
         if (scanFailed != 0) {
-            throw ScanFailException(scanFailed)
+            throw ScanException(scanFailed)
         }
         logger.debug(LTag.PUMPBTCOMM, "ScanCollector looking for podID: $podID")
         for (result in found.values) {

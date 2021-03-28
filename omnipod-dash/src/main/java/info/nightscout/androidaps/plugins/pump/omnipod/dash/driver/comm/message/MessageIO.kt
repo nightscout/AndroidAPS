@@ -3,154 +3,221 @@ package info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.message
 import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.logging.LTag
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.command.*
-import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.exceptions.MessageIOException
-import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.exceptions.UnexpectedCommandException
-import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.io.BleIO
-import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.io.CharacteristicType
-import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.io.PayloadJoiner
+import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.io.*
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.packet.BlePacket
 import info.nightscout.androidaps.utils.extensions.toHex
-import java.util.concurrent.TimeoutException
 
-class MessageIO(private val aapsLogger: AAPSLogger, private val bleIO: BleIO) {
+sealed class MesssageReceiveResult
+data class MessageReceiveSuccess(val msg: MessagePacket) : MesssageReceiveResult()
+data class MessageReceiveError(val msg: String, val cause: Throwable? = null) : MesssageReceiveResult() {
+    constructor(e: PacketReceiveResult) : this("Could not read DATA packet: $e")
+}
+
+sealed class MessageSendResult
+object MessageSendSuccess : MessageSendResult()
+data class MessageSendErrorSending(val msg: String, val cause: Throwable? = null) : MessageSendResult() {
+    constructor(e: BleSendResult): this("Could not send packet: $e")
+}
+
+data class MessageSendErrorConfirming(val msg: String, val cause: Throwable? = null) : MessageSendResult() {
+    constructor(e: BleSendResult): this("Could not confirm packet: $e")
+}
+
+sealed class PacketReceiveResult
+data class PacketReceiveSuccess(val payload: ByteArray) : PacketReceiveResult()
+data class PacketReceiveError(val msg: String) : PacketReceiveResult()
+
+class MessageIO(
+    private val aapsLogger: AAPSLogger,
+    private val cmdBleIO: CmdBleIO,
+    private val dataBleIO: DataBleIO,
+) {
 
     val receivedOutOfOrder = LinkedHashMap<Byte, ByteArray>()
-    var maxTries = 3
-    var tries = 0
+    var maxMessageReadTries = 3
+    var messageReadTries = 0
 
-    private fun expectCommandType(actual: BleCommand, expected: BleCommand) {
-        if (actual.data.isEmpty()) {
-            throw UnexpectedCommandException(actual)
+    fun sendMessage(msg: MessagePacket): MessageSendResult {
+        cmdBleIO.flushIncomingQueue()
+        dataBleIO.flushIncomingQueue()
+
+        val sendResult = cmdBleIO.sendAndConfirmPacket(BleCommandRTS.data)
+        if (sendResult is BleSendErrorSending) {
+            return MessageSendErrorSending(sendResult)
         }
-        // first byte is the command type
-        if (actual.data[0] == expected.data[0]) {
-            return
+
+        val expectCTS = cmdBleIO.expectCommandType(BleCommandCTS)
+        if (expectCTS !is BleConfirmSuccess) {
+            return MessageSendErrorSending(sendResult)
         }
-        throw UnexpectedCommandException(actual)
-    }
 
-    private fun peekForNack(index: Int, packets: List<BlePacket>) {
-        val peekCmd = bleIO.peekCommand() ?: return
-
-        if (peekCmd.isEmpty()) {
-            throw UnexpectedCommandException(BleCommand(peekCmd))
-        }
-        when (BleCommandType.byValue(peekCmd[0])) {
-            BleCommandType.NACK -> {
-                if (peekCmd.size < 2) {
-                    throw UnexpectedCommandException(BleCommand(peekCmd))
-                }
-                val missingIdx = peekCmd[1]
-                if (missingIdx > packets.size) {
-                    throw UnexpectedCommandException(BleCommand(peekCmd))
-
-                }
-                bleIO.receivePacket(CharacteristicType.CMD) //consume NACK
-                bleIO.sendAndConfirmPacket(CharacteristicType.DATA, packets[missingIdx.toInt()].toByteArray())
-            }
-
-            BleCommandType.SUCCESS -> {
-                if (index != packets.size - 1) {
-                    throw UnexpectedCommandException(BleCommand(peekCmd))
-                }
-            }
-
-            else ->
-                throw UnexpectedCommandException(BleCommand(peekCmd))
-        }
-    }
-
-    fun sendMessage(msg: MessagePacket) {
-        bleIO.flushIncomingQueues()
-        bleIO.sendAndConfirmPacket(CharacteristicType.CMD, BleCommandRTS().data)
-        val expectCTS = bleIO.receivePacket(CharacteristicType.CMD)
-        expectCommandType(BleCommand(expectCTS), BleCommandCTS())
         val payload = msg.asByteArray()
         aapsLogger.debug(LTag.PUMPBTCOMM, "Sending message: ${payload.toHex()}")
         val splitter = PayloadSplitter(payload)
         val packets = splitter.splitInPackets()
+
         for ((index, packet) in packets.withIndex()) {
             aapsLogger.debug(LTag.PUMPBTCOMM, "Sending DATA: ${packet.toByteArray().toHex()}")
-            bleIO.sendAndConfirmPacket(CharacteristicType.DATA, packet.toByteArray())
-            peekForNack(index, packets)
-            // This is implementing the same logic as the PDM.
-            // I think it wil not work in case of packet lost.
-            // This is because each lost packet, we will receive a NACK on the next packet.
-            // At the end, we will still be missing the last packet(s).
-            // I don't worry too much about this because for commands we have retries implemented at MessagePacket level anyway
-            // If this will be a problem in the future, the fix might be(pending testing with a real pod) to move back the index
-            // at the value received in the NACK and make sure don't retry forever.
-        }
-        val expectSuccess = bleIO.receivePacket(CharacteristicType.CMD)
-        expectCommandType(BleCommand(expectSuccess), BleCommandSuccess())
-    }
-
-    private fun expectBlePacket(index: Byte): ByteArray {
-        receivedOutOfOrder[index]?.let {
-            return it
-        }
-        while (tries < maxTries) {
-            try {
-                tries++
-                val payload = bleIO.receivePacket(CharacteristicType.DATA)
-                if (payload.isEmpty()) {
-                    throw IncorrectPacketException(payload, index)
-                }
-                if (payload[0] == index) {
-                    return payload
-                }
-                receivedOutOfOrder[payload[0]] = payload
-                bleIO.sendAndConfirmPacket(CharacteristicType.CMD, BleCommandNack(index).data)
-            } catch (e: TimeoutException) {
-                bleIO.sendAndConfirmPacket(CharacteristicType.CMD, BleCommandNack(index).data)
-                continue
+            val sendResult = dataBleIO.sendAndConfirmPacket(packet.toByteArray())
+            val ret = handleSendResult(sendResult, index, packets)
+            if (ret !is MessageSendSuccess) {
+                return ret
+            }
+            val peek = peekForNack(index, packets)
+            if (peek !is MessageSendSuccess) {
+                return if (index == packets.size - 1)
+                    MessageSendErrorConfirming(peek.toString())
+                else
+                    MessageSendErrorSending(peek.toString())
             }
         }
-        throw TimeoutException()
+
+        return when (val expectSuccess = cmdBleIO.expectCommandType(BleCommandSuccess)) {
+            is BleConfirmSuccess ->
+                MessageSendSuccess
+            is BleConfirmError ->
+                MessageSendErrorConfirming("Error reading message confirmation: $expectSuccess")
+            is BleConfirmIncorrectData ->
+                when (val received = (BleCommand.parse((expectSuccess.payload)))) {
+                    is BleCommandFail ->
+                        // this can happen if CRC does not match
+                        MessageSendErrorSending("Received FAIL after sending message")
+                    else ->
+                        MessageSendErrorConfirming("Received confirmation message: $received")
+                }
+        }
     }
 
-    private fun readReset() {
-        maxTries = 3
-        tries = 0
-        receivedOutOfOrder.clear()
-    }
+    fun receiveMessage(): MesssageReceiveResult {
+        cmdBleIO.expectCommandType(BleCommandRTS, MESSAGE_READ_TIMEOUT_MS)
 
-    fun receiveMessage(): MessagePacket {
-        val expectRTS = bleIO.receivePacket(CharacteristicType.CMD, MESSAGE_READ_TIMEOUT_MS)
-        expectCommandType(BleCommand(expectRTS), BleCommandRTS())
-        bleIO.sendAndConfirmPacket(CharacteristicType.CMD, BleCommandCTS().data)
+        val sendResult = cmdBleIO.sendAndConfirmPacket(BleCommandCTS.data)
+        if (sendResult !is BleSendSuccess) {
+            return MessageReceiveError("Error sending CTS: $sendResult")
+        }
         readReset()
         var expected: Byte = 0
         try {
             val firstPacket = expectBlePacket(0)
-            val joiner = PayloadJoiner(firstPacket)
-            maxTries = joiner.fullFragments * 2 + 2
+            if (firstPacket !is PacketReceiveSuccess) {
+                return MessageReceiveError(firstPacket)
+            }
+            val joiner = PayloadJoiner(firstPacket.payload)
+            maxMessageReadTries = joiner.fullFragments * 2 + 2
             for (i in 1 until joiner.fullFragments + 1) {
                 expected++
                 val packet = expectBlePacket(expected)
-                joiner.accumulate(packet)
+                if (packet !is PacketReceiveSuccess) {
+                    return MessageReceiveError(packet)
+                }
+                joiner.accumulate(packet.payload)
             }
             if (joiner.oneExtraPacket) {
                 expected++
-                joiner.accumulate(expectBlePacket(expected))
+                val packet = expectBlePacket(expected)
+                if (packet !is PacketReceiveSuccess) {
+                    return MessageReceiveError(packet)
+                }
+                joiner.accumulate(packet.payload)
             }
             val fullPayload = joiner.finalize()
-            bleIO.sendAndConfirmPacket(CharacteristicType.CMD, BleCommandSuccess().data)
-            return MessagePacket.parse(fullPayload)
+            cmdBleIO.sendAndConfirmPacket(BleCommandSuccess.data)
+            return MessageReceiveSuccess(MessagePacket.parse(fullPayload))
         } catch (e: IncorrectPacketException) {
             aapsLogger.warn(LTag.PUMPBTCOMM, "Could not read message: $e")
-            bleIO.sendAndConfirmPacket(CharacteristicType.CMD, BleCommandAbort().data)
-            throw MessageIOException(cause = e)
+            cmdBleIO.sendAndConfirmPacket(BleCommandAbort.data)
+            return MessageReceiveError("Received incorrect packet: $e", cause = e)
         } catch (e: CrcMismatchException) {
             aapsLogger.warn(LTag.PUMPBTCOMM, "CRC mismatch: $e")
-            bleIO.sendAndConfirmPacket(CharacteristicType.CMD, BleCommandFail().data)
-            throw MessageIOException(cause = e)
+            cmdBleIO.sendAndConfirmPacket(BleCommandFail.data)
+            return MessageReceiveError("CRC mismatch: $e", cause = e)
+        } finally {
+            readReset()
         }
+    }
+
+    private fun handleSendResult(sendResult: BleSendResult, index: Int, packets: List<BlePacket>): MessageSendResult {
+        return when {
+            sendResult is BleSendSuccess ->
+                MessageSendSuccess
+            index == packets.size - 1 && sendResult is BleSendErrorConfirming ->
+                return MessageSendErrorConfirming("Error confirming last DATA packet $sendResult")
+            else ->
+                return MessageSendErrorSending("Error sending DATA: $sendResult")
+        }
+    }
+
+    private fun peekForNack(index: Int, packets: List<BlePacket>): MessageSendResult {
+        val peekCmd = cmdBleIO.peekCommand()
+            ?: return MessageSendSuccess
+
+        when (val receivedCmd = BleCommand.parse(peekCmd)) {
+            is BleCommandNack -> {
+                //// Consume NACK
+                val received = cmdBleIO.receivePacket()
+                if (received !is BleReceivePayload) {
+                    return MessageSendErrorSending(received.toString())
+                }
+
+                val sendResult = dataBleIO.sendAndConfirmPacket(packets[receivedCmd.idx.toInt()].toByteArray())
+                return handleSendResult(sendResult, index, packets)
+            }
+
+            BleCommandSuccess -> {
+                if (index != packets.size) {
+                    return MessageSendErrorSending("Received SUCCESS before sending all the data. $index")
+                }
+                return MessageSendSuccess
+            }
+
+            else ->
+                return MessageSendErrorSending("Received unexpected command: ${peekCmd.toHex()}")
+        }
+    }
+
+    private fun expectBlePacket(index: Byte, nackOnTimeout: Boolean = false): PacketReceiveResult {
+        receivedOutOfOrder[index]?.let {
+            return PacketReceiveSuccess(it)
+        }
+        var packetTries = 0
+        while (messageReadTries < maxMessageReadTries && packetTries < MAX_PACKET_READ_TRIES) {
+            messageReadTries++
+            packetTries++
+
+            when (val received = dataBleIO.receivePacket()) {
+                is BleReceiveError -> {
+                    if (nackOnTimeout)
+                        cmdBleIO.sendAndConfirmPacket(BleCommandNack(index).data)
+                    aapsLogger.info(LTag.PUMPBTCOMM, "Error receiving DATA packet: $received")
+                }
+
+                is BleReceivePayload -> {
+                    val payload = received.payload
+                    if (payload.isEmpty()) {
+                        aapsLogger.info(LTag.PUMPBTCOMM, "Received empty payload at index $index")
+                        continue
+                    }
+                    if (payload[0] == index) {
+                        return PacketReceiveSuccess(payload)
+                    }
+                    receivedOutOfOrder[payload[0]] = payload
+                    cmdBleIO.sendAndConfirmPacket(BleCommandNack(index).data)
+                }
+            }
+        }
+
+        return PacketReceiveError("Reached the maximum number tries to read a packet")
+    }
+
+    private fun readReset() {
+        maxMessageReadTries = 3
+        messageReadTries = 0
         receivedOutOfOrder.clear()
     }
 
     companion object {
 
+        private const val MAX_PACKET_READ_TRIES = 4
         private const val MESSAGE_READ_TIMEOUT_MS = 2500.toLong()
     }
 }

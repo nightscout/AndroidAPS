@@ -4,16 +4,25 @@ import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.logging.LTag
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.Id
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.endecrypt.EnDecrypt
-import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.message.MessageIO
-import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.message.MessagePacket
-import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.message.MessageType
-import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.message.StringLengthPrefixEncoding
+import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.message.*
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.message.StringLengthPrefixEncoding.Companion.parseKeys
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.command.base.Command
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.response.NakResponse
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.response.Response
 import info.nightscout.androidaps.utils.extensions.toHex
-import java.util.concurrent.TimeoutException
+
+sealed class CommandSendResult
+object CommandSendSuccess: CommandSendResult()
+data class CommandSendErrorSending(val msg: String): CommandSendResult()
+
+// This error marks the undefined state
+data class CommandSendErrorConfirming(val msg: String): CommandSendResult()
+
+sealed class CommandReceiveResult
+data class CommandReceiveSuccess(val result: Response): CommandReceiveResult()
+data class CommandReceiveError(val msg: String): CommandReceiveResult()
+data class CommandAckError(val result: Response, val msg: String): CommandReceiveResult()
+
 
 class Session(
     private val aapsLogger: AAPSLogger,
@@ -24,50 +33,62 @@ class Session(
     val enDecrypt: EnDecrypt
 ) {
 
-    /**
-     * Used for commands:
-     *  -> command with retries
-     *  <- response, ACK TODO: retries?
-     *  -> ACK
-     */
-    fun sendCommand(cmd: Command): Response {
+    fun sendCommand(cmd: Command): CommandSendResult {
         sessionKeys.msgSequenceNumber++
         aapsLogger.debug(LTag.PUMPBTCOMM, "Sending command: ${cmd.encoded.toHex()} in packet $cmd")
         var tries = 0
-        var certainFailure = true
+        val msg = getCmdMessage(cmd)
+        var possiblyUnconfirmedCommand = false
         for (i in 0..MAX_TRIES) {
-            try {
-                val msg = getCmdMessage(cmd)
-                aapsLogger.debug(LTag.PUMPBTCOMM, "Sending command(wrapped): ${msg.payload.toHex()}")
-                msgIO.sendMessage(msg)
-            } catch (e: TimeoutException) {
-                aapsLogger.info(LTag.PUMPBTCOMM,"Exception trying to send command: $e. Try: $i/$MAX_TRIES")
-            } // TODO filter out certain vs uncertain errors
-        }
-        certainFailure = false
-        var response: Response?= null
-        for (i in 0..MAX_TRIES) {
-            try {
-                val responseMsg = msgIO.receiveMessage()
-                val decrypted = enDecrypt.decrypt(responseMsg)
-                aapsLogger.debug(LTag.PUMPBTCOMM, "Received response: $decrypted")
-                response = parseResponse(decrypted)
-                sessionKeys.msgSequenceNumber++
-                val ack = getAck(responseMsg)
-                aapsLogger.debug(LTag.PUMPBTCOMM, "Sending ACK: ${ack.payload.toHex()} in packet $ack")
-                msgIO.sendMessage(ack)
-            } catch (e: TimeoutException) {
-                aapsLogger.info(LTag.PUMPBTCOMM,"Exception trying to send command: $e. Try: $i/$MAX_TRIES")
+            aapsLogger.debug(LTag.PUMPBTCOMM, "Sending command(wrapped): ${msg.payload.toHex()}")
+
+            when (val sendResult = msgIO.sendMessage(msg)) {
+                is MessageSendSuccess ->
+                    return CommandSendSuccess
+                is MessageSendErrorConfirming -> {
+                    possiblyUnconfirmedCommand = true
+                    aapsLogger.debug(LTag.PUMPBTCOMM, "Error confirming command: $sendResult")
+                }
+                is MessageSendErrorSending ->
+                    aapsLogger.debug(LTag.PUMPBTCOMM, "Error sending command: $sendResult")
             }
         }
-        response?.let{
-            return it
-        }
-        if (certainFailure) {
-            throw CertainFailureException("Could not send command")
-        }
-        throw UncertainFailureException("Possible failure to send commnd")
+
+        val errMsg = "Maximum number of tries reached. Could not send command\""
+        return if (possiblyUnconfirmedCommand)
+            CommandSendErrorConfirming(errMsg)
+        else
+            CommandSendErrorSending(errMsg)
     }
+
+    fun readAndAckCommandResponse(): CommandReceiveResult {
+        var responseMsgPacket: MessagePacket?= null
+        for (i in 0..MAX_TRIES) {
+            val responseMsg = msgIO.receiveMessage()
+            if (responseMsg !is MessageReceiveSuccess) {
+                aapsLogger.debug(LTag.PUMPBTCOMM, "Error receiving response: $responseMsg")
+                continue
+            }
+            responseMsgPacket = responseMsg.msg
+        }
+        if (responseMsgPacket == null) {
+            return CommandReceiveError("Could not read response")
+        }
+
+        val decrypted = enDecrypt.decrypt(responseMsgPacket)
+        aapsLogger.debug(LTag.PUMPBTCOMM, "Received response: $decrypted")
+        val response = parseResponse(decrypted)
+
+        sessionKeys.msgSequenceNumber++
+        val ack = getAck(responseMsgPacket)
+        aapsLogger.debug(LTag.PUMPBTCOMM, "Sending ACK: ${ack.payload.toHex()} in packet $ack")
+        val sendResult = msgIO.sendMessage(ack)
+        if (sendResult !is MessageSendSuccess) {
+            return CommandAckError(response, "Could not ACK the response: $sendResult")
+        }
+        return CommandReceiveSuccess(response)
+    }
+
 
     private fun parseResponse(decrypted: MessagePacket): Response {
 

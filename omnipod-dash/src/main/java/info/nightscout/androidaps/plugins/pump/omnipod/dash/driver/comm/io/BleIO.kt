@@ -8,127 +8,122 @@ import android.bluetooth.BluetoothGattDescriptor
 import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.logging.LTag
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.callbacks.BleCommCallbacks
+import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.callbacks.WriteConfirmation
+import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.callbacks.WriteConfirmationError
+import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.callbacks.WriteConfirmationSuccess
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.exceptions.*
 import info.nightscout.androidaps.utils.extensions.toHex
 import java.util.concurrent.BlockingQueue
 import java.util.concurrent.TimeUnit
 import java.util.concurrent.TimeoutException
 
-class BleIO(
-    private val aapsLogger: AAPSLogger,
-    private val chars: Map<CharacteristicType, BluetoothGattCharacteristic>,
-    private val incomingPackets: Map<CharacteristicType, BlockingQueue<ByteArray>>,
-    private val gatt: BluetoothGatt,
-    private val bleCommCallbacks: BleCommCallbacks
-) {
+sealed class BleReceiveResult
+data class BleReceivePayload(val payload: ByteArray) : BleReceiveResult()
+data class BleReceiveError(val msg: String, val cause: Throwable? = null) : BleReceiveResult()
 
-    private var state: IOState = IOState.IDLE
+
+sealed class BleSendResult
+
+object BleSendSuccess : BleSendResult()
+data class BleSendErrorSending(val msg: String, val cause: Throwable? = null) : BleSendResult()
+data class BleSendErrorConfirming(val msg: String, val cause: Throwable? = null) : BleSendResult()
+
+abstract class BleIO(
+    private val aapsLogger: AAPSLogger,
+    private val characteristic: BluetoothGattCharacteristic,
+    private val incomingPackets: BlockingQueue<ByteArray>,
+    private val gatt: BluetoothGatt,
+    private val bleCommCallbacks: BleCommCallbacks,
+    private val type: CharacteristicType
+) {
 
     /***
      *
      * @param characteristic where to read from(CMD or DATA)
-     * @return a byte array with the received data
+     * @return a byte array with the received data or error
      */
-    @Throws(BleIOBusyException::class, InterruptedException::class, TimeoutException::class)
-    fun receivePacket(characteristic: CharacteristicType, timeoutMs:Long = DEFAULT_IO_TIMEOUT_MS): ByteArray {
-        synchronized(state) {
-            if (state != IOState.IDLE) {
-                throw BleIOBusyException()
-            }
-            state = IOState.READING
+    fun receivePacket(timeoutMs: Long = DEFAULT_IO_TIMEOUT_MS): BleReceiveResult {
+        try {
+            val ret = incomingPackets.poll(timeoutMs, TimeUnit.MILLISECONDS)
+                ?: return BleReceiveError("Timeout")
+            return BleReceivePayload(ret)
+        } catch (e: InterruptedException) {
+            return BleReceiveError("Interrupted", cause = e)
         }
-        val ret = incomingPackets[characteristic]?.poll(timeoutMs.toLong(), TimeUnit.MILLISECONDS)
-            ?: throw TimeoutException()
-        synchronized(state) { state = IOState.IDLE }
-        return ret
-    }
-
-    fun peekCommand(): ByteArray? {
-        return incomingPackets[CharacteristicType.CMD]?.peek()
     }
 
     /***
      *
      * @param characteristic where to write to(CMD or DATA)
      * @param payload the data to send
-     * @throws CouldNotSendBleException
      */
-    @Throws(
-        CouldNotSendBleException::class,
-        BleIOBusyException::class,
-        InterruptedException::class,
-        CouldNotConfirmWriteException::class,
-        TimeoutException::class
-    )
-    fun sendAndConfirmPacket(characteristic: CharacteristicType, payload: ByteArray) {
-        synchronized(state) {
-            if (state != IOState.IDLE) {
-                throw BleIOBusyException()
-            }
-            state = IOState.WRITING
-        }
-        aapsLogger.debug(LTag.PUMPBTCOMM, "BleIO: Sending data on " + characteristic.name + "/" + payload.toHex())
-        val ch = chars[characteristic]
-        val set = ch!!.setValue(payload)
+    fun sendAndConfirmPacket(payload: ByteArray): BleSendResult {
+        aapsLogger.debug(LTag.PUMPBTCOMM, "BleIO: Sending data on ${payload.toHex()}")
+        val set = characteristic.setValue(payload)
         if (!set) {
-            throw CouldNotSendBleException("setValue")
+            return BleSendErrorSending("Could set setValue on ${type.name}")
         }
-        val sent = gatt.writeCharacteristic(ch)
+        bleCommCallbacks.flushConfirmationQueue()
+        val sent = gatt.writeCharacteristic(characteristic)
         if (!sent) {
-            throw CouldNotSendBleException("writeCharacteristic")
+            return BleSendErrorSending("Could not writeCharacteristic on {$type.name}")
         }
-        bleCommCallbacks.confirmWrite(payload, DEFAULT_IO_TIMEOUT_MS)
-        synchronized(state) { state = IOState.IDLE }
+
+        return when (val confirmation = bleCommCallbacks.confirmWrite(
+            payload, type.value,
+            DEFAULT_IO_TIMEOUT_MS)){
+             is WriteConfirmationError ->
+                BleSendErrorConfirming(confirmation.msg)
+             is WriteConfirmationSuccess ->
+                 BleSendSuccess
+        }
     }
 
     /**
      * Called before sending a new message.
      * The incoming queues should be empty, so we log when they are not.
      */
-    fun flushIncomingQueues() {
-        synchronized(state) { state = IOState.IDLE }
-
-        for (char in CharacteristicType.values()) {
-            do {
-                val found = incomingPackets[char]?.poll()?.also {
-                    aapsLogger.warn(LTag.PUMPBTCOMM, "BleIO: ${char.name} queue not empty, flushing: {${it.toHex()}")
-                }
-            } while (found != null)
-        }
+    fun flushIncomingQueue() {
+        do {
+            val found = incomingPackets.poll()?.also {
+                aapsLogger.warn(LTag.PUMPBTCOMM, "BleIO: queue not empty, flushing: {${it.toHex()}")
+            }
+        } while (found != null)
     }
 
     /**
-     * Enable intentions on the characteristics.
+     * Enable intentions on the characteristic
      * This will signal the pod it can start sending back data
      * @return
      */
-    @Throws(
-        CouldNotSendBleException::class,
-        CouldNotEnableNotifications::class,
-        DescriptorNotFoundException::class,
-        InterruptedException::class,
-        CouldNotConfirmDescriptorWriteException::class
-    )
-    fun readyToRead() {
-        for (type in CharacteristicType.values()) {
-            val ch = chars[type]
-            val notificationSet = gatt.setCharacteristicNotification(ch, true)
-            if (!notificationSet) {
-                throw CouldNotEnableNotifications(type)
-            }
-            val descriptors = ch!!.descriptors
-            if (descriptors.size != 1) {
-                throw DescriptorNotFoundException()
-            }
-            val descriptor = descriptors[0]
-            descriptor.value = BluetoothGattDescriptor.ENABLE_INDICATION_VALUE
-            gatt.writeDescriptor(descriptor)
-            bleCommCallbacks.confirmWriteDescriptor(descriptor.uuid.toString(), DEFAULT_IO_TIMEOUT_MS)
+    fun readyToRead(): BleSendResult {
+        val notificationSet = gatt.setCharacteristicNotification(characteristic, true)
+        if (!notificationSet) {
+            throw CouldNotInitiateConnection("Could not enable notifications")
         }
+        val descriptors = characteristic.descriptors
+        if (descriptors.size != 1) {
+            throw CouldNotInitiateConnection("Expecting one descriptor, found: ${descriptors.size}")
+        }
+        val descriptor = descriptors[0]
+        descriptor.value = BluetoothGattDescriptor.ENABLE_INDICATION_VALUE
+        val wrote = gatt.writeDescriptor(descriptor)
+        if (!wrote) {
+            throw CouldNotInitiateConnection("Could not enable indications on descriptor")
+        }
+        val confirmation = bleCommCallbacks.confirmWrite(BluetoothGattDescriptor.ENABLE_INDICATION_VALUE,
+                                      descriptor.uuid.toString(),
+                                      DEFAULT_IO_TIMEOUT_MS)
+        if (confirmation is WriteConfirmationError) {
+            throw CouldNotInitiateConnection(confirmation.msg)
+        }
+        return BleSendSuccess
     }
 
     companion object {
 
-        private const val DEFAULT_IO_TIMEOUT_MS = 1000.toLong()
+        const val DEFAULT_IO_TIMEOUT_MS = 1000.toLong()
     }
 }
+
+

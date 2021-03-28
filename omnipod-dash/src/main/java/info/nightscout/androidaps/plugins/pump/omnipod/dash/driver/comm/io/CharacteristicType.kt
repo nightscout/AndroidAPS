@@ -14,7 +14,6 @@ enum class CharacteristicType(val value: String) {
 
     companion object {
 
-        @JvmStatic
         fun byValue(value: String): CharacteristicType =
             values().firstOrNull { it.value == value }
                 ?: throw IllegalArgumentException("Unknown Characteristic Type: $value")
