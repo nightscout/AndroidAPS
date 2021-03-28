@@ -45,7 +45,7 @@ class BleCommCallbacks(
         try {
             connected.await(timeoutMs.toLong(), TimeUnit.MILLISECONDS)
         } catch (e: InterruptedException) {
-            aapsLogger.warn(LTag.PUMPBTCOMM,"Interrupted while waiting for Connection")
+            aapsLogger.warn(LTag.PUMPBTCOMM, "Interrupted while waiting for Connection")
         }
     }
 
@@ -53,13 +53,13 @@ class BleCommCallbacks(
         try {
             serviceDiscoveryComplete.await(timeoutMs.toLong(), TimeUnit.MILLISECONDS)
         } catch (e: InterruptedException) {
-            aapsLogger.warn(LTag.PUMPBTCOMM,"Interrupted while waiting for ServiceDiscovery")
+            aapsLogger.warn(LTag.PUMPBTCOMM, "Interrupted while waiting for ServiceDiscovery")
         }
     }
 
-    fun confirmWrite(expectedPayload: ByteArray, expectedUUID: String, timeoutMs: Long) : WriteConfirmation{
+    fun confirmWrite(expectedPayload: ByteArray, expectedUUID: String, timeoutMs: Long): WriteConfirmation {
         try {
-            return when(val received = writeQueue.poll(timeoutMs, TimeUnit.MILLISECONDS) ) {
+            return when (val received = writeQueue.poll(timeoutMs, TimeUnit.MILLISECONDS)) {
                 null -> return WriteConfirmationError("Timeout waiting for writeConfirmation")
                 is WriteConfirmationSuccess ->
                     if (expectedPayload.contentEquals(received.payload) &&
@@ -75,7 +75,7 @@ class BleCommCallbacks(
                 is WriteConfirmationError ->
                     received
             }
-        }catch (e: InterruptedException) {
+        } catch (e: InterruptedException) {
             return WriteConfirmationError("Interrupted waiting for confirmation")
         }
     }
@@ -112,11 +112,13 @@ class BleCommCallbacks(
         val writeConfirmation = when {
             uuid == null || value == null ->
                 WriteConfirmationError("onWrite received Null: UUID=$uuid, value=${value.toHex()} status=$status")
-            status == BluetoothGatt.GATT_SUCCESS    -> {
+
+            status == BluetoothGatt.GATT_SUCCESS -> {
                 aapsLogger.debug(LTag.PUMPBTCOMM, "OnWrite value " + value.toHex())
                 WriteConfirmationSuccess(uuid.toString(), value)
             }
-            else ->WriteConfirmationError("onDescriptorWrite status is not success: $status")
+
+            else -> WriteConfirmationError("onDescriptorWrite status is not success: $status")
         }
 
         try {

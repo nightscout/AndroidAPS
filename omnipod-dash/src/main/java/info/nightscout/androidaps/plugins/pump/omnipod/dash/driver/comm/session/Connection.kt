@@ -5,7 +5,6 @@ import android.bluetooth.BluetoothGatt
 import android.bluetooth.BluetoothManager
 import android.bluetooth.BluetoothProfile
 import android.content.Context
-import com.j256.ormlite.stmt.query.Not
 import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.logging.LTag
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.BuildConfig
@@ -21,7 +20,6 @@ import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.io.DataB
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.io.IncomingPackets
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.message.MessageIO
 import info.nightscout.androidaps.utils.extensions.toHex
-import info.nightscout.androidaps.utils.extensions.wait
 
 sealed class ConnectionState
 
@@ -43,17 +41,21 @@ class Connection(val podDevice: BluetoothDevice, private val aapsLogger: AAPSLog
         val autoConnect = false
         gattConnection = podDevice.connectGatt(context, autoConnect, bleCommCallbacks, BluetoothDevice.TRANSPORT_LE)
         val state = waitForConnection()
-        if (state !is Connected){
+        if (state !is Connected) {
             throw FailedToConnectException(podDevice.address)
         }
     }
 
     private val discoverer = ServiceDiscoverer(aapsLogger, gattConnection, bleCommCallbacks)
     private val discoveredCharacteristics = discoverer.discoverServices()
-    private val cmdBleIO = CmdBleIO(aapsLogger, discoveredCharacteristics[CharacteristicType.CMD]!!, incomingPackets
-        .cmdQueue, gattConnection, bleCommCallbacks)
-    private val dataBleIO = DataBleIO(aapsLogger, discoveredCharacteristics[CharacteristicType.DATA]!!, incomingPackets
-        .dataQueue, gattConnection, bleCommCallbacks)
+    private val cmdBleIO = CmdBleIO(
+        aapsLogger, discoveredCharacteristics[CharacteristicType.CMD]!!, incomingPackets
+        .cmdQueue, gattConnection, bleCommCallbacks
+    )
+    private val dataBleIO = DataBleIO(
+        aapsLogger, discoveredCharacteristics[CharacteristicType.DATA]!!, incomingPackets
+        .dataQueue, gattConnection, bleCommCallbacks
+    )
     val msgIO = MessageIO(aapsLogger, cmdBleIO, dataBleIO)
     var session: Session? = null
 
@@ -71,7 +73,7 @@ class Connection(val podDevice: BluetoothDevice, private val aapsLogger: AAPSLog
             throw FailedToConnectException("connect() returned false")
         }
 
-        if (waitForConnection() is NotConnected){
+        if (waitForConnection() is NotConnected) {
             throw FailedToConnectException(podDevice.address)
         }
 
@@ -82,12 +84,12 @@ class Connection(val podDevice: BluetoothDevice, private val aapsLogger: AAPSLog
         gattConnection.disconnect()
     }
 
-    fun waitForConnection(): ConnectionState {
+    private fun waitForConnection(): ConnectionState {
         try {
             bleCommCallbacks.waitForConnection(CONNECT_TIMEOUT_MS)
-        }catch (e: InterruptedException) {
+        } catch (e: InterruptedException) {
             // We are still going to check if connection was successful
-            aapsLogger.info(LTag.PUMPBTCOMM,"Interruped while waiting for connection")
+            aapsLogger.info(LTag.PUMPBTCOMM, "Interruped while waiting for connection")
         }
         return connectionState()
     }
@@ -116,6 +118,7 @@ class Connection(val podDevice: BluetoothDevice, private val aapsLogger: AAPSLog
         )
         session = Session(aapsLogger, msgIO, myId, podID, sessionKeys = keys, enDecrypt = enDecrypt)
     }
+
     companion object {
 
         private const val CONNECT_TIMEOUT_MS = 7000

@@ -3,12 +3,10 @@ package info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm
 import android.bluetooth.BluetoothAdapter
 import android.bluetooth.BluetoothManager
 import android.content.Context
-import android.os.Message
 import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.logging.LTag
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.BuildConfig
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.exceptions.*
-import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.message.MessageIO
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.pair.LTKExchanger
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.scan.PodScanner
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.session.*
@@ -18,7 +16,6 @@ import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.command.b
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.state.OmnipodDashPodStateManager
 import info.nightscout.androidaps.utils.extensions.toHex
 import io.reactivex.Observable
-import java.util.concurrent.TimeoutException
 import java.util.concurrent.atomic.AtomicBoolean
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -29,7 +26,8 @@ class OmnipodDashBleManagerImpl @Inject constructor(
     private val aapsLogger: AAPSLogger,
     private val podState: OmnipodDashPodStateManager
 ) : OmnipodDashBleManager {
-    private val busy =  AtomicBoolean(false);
+
+    private val busy = AtomicBoolean(false)
     private val bluetoothManager: BluetoothManager =
         context.getSystemService(Context.BLUETOOTH_SERVICE) as BluetoothManager
     private val bluetoothAdapter: BluetoothAdapter = bluetoothManager.adapter

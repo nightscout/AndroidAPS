@@ -12,17 +12,16 @@ import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.response.
 import info.nightscout.androidaps.utils.extensions.toHex
 
 sealed class CommandSendResult
-object CommandSendSuccess: CommandSendResult()
-data class CommandSendErrorSending(val msg: String): CommandSendResult()
+object CommandSendSuccess : CommandSendResult()
+data class CommandSendErrorSending(val msg: String) : CommandSendResult()
 
 // This error marks the undefined state
-data class CommandSendErrorConfirming(val msg: String): CommandSendResult()
+data class CommandSendErrorConfirming(val msg: String) : CommandSendResult()
 
 sealed class CommandReceiveResult
-data class CommandReceiveSuccess(val result: Response): CommandReceiveResult()
-data class CommandReceiveError(val msg: String): CommandReceiveResult()
-data class CommandAckError(val result: Response, val msg: String): CommandReceiveResult()
-
+data class CommandReceiveSuccess(val result: Response) : CommandReceiveResult()
+data class CommandReceiveError(val msg: String) : CommandReceiveResult()
+data class CommandAckError(val result: Response, val msg: String) : CommandReceiveResult()
 
 class Session(
     private val aapsLogger: AAPSLogger,
@@ -45,10 +44,12 @@ class Session(
             when (val sendResult = msgIO.sendMessage(msg)) {
                 is MessageSendSuccess ->
                     return CommandSendSuccess
+
                 is MessageSendErrorConfirming -> {
                     possiblyUnconfirmedCommand = true
                     aapsLogger.debug(LTag.PUMPBTCOMM, "Error confirming command: $sendResult")
                 }
+
                 is MessageSendErrorSending ->
                     aapsLogger.debug(LTag.PUMPBTCOMM, "Error sending command: $sendResult")
             }
@@ -62,7 +63,7 @@ class Session(
     }
 
     fun readAndAckCommandResponse(): CommandReceiveResult {
-        var responseMsgPacket: MessagePacket?= null
+        var responseMsgPacket: MessagePacket? = null
         for (i in 0..MAX_TRIES) {
             val responseMsg = msgIO.receiveMessage()
             if (responseMsg !is MessageReceiveSuccess) {
@@ -88,7 +89,6 @@ class Session(
         }
         return CommandReceiveSuccess(response)
     }
-
 
     private fun parseResponse(decrypted: MessagePacket): Response {
 

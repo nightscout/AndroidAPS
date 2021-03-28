@@ -1,6 +1,5 @@
 package info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.pair
 
-import android.app.Notification
 import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.logging.LTag
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.Id
@@ -12,7 +11,6 @@ import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.util.Rand
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.util.X25519KeyGenerator
 import info.nightscout.androidaps.utils.extensions.hexStringToByteArray
 import info.nightscout.androidaps.utils.extensions.toHex
-import info.nightscout.androidaps.utils.extensions.waitMillis
 
 internal class LTKExchanger(
     private val aapsLogger: AAPSLogger,
@@ -71,7 +69,7 @@ internal class LTKExchanger(
         val p0 = msgIO.receiveMessage()
         if (p0 is MessageReceiveSuccess) {
             validateP0(p0.msg)
-        } else{
+        } else {
             aapsLogger.warn(LTag.PUMPBTCOMM, "Could not read P0: $p0")
         }
         return PairResult(

@@ -4,6 +4,7 @@ import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.message.
 import java.nio.ByteBuffer
 
 sealed class BlePacket {
+
     abstract val payload: ByteArray
     abstract fun toByteArray(): ByteArray
 
@@ -173,7 +174,8 @@ data class LastBlePacket(
 data class LastOptionalPlusOneBlePacket(
     val index: Byte,
     override val payload: ByteArray,
-    val size: Byte) : BlePacket() {
+    val size: Byte
+) : BlePacket() {
 
     override fun toByteArray(): ByteArray {
         return byteArrayOf(index, size) + payload + ByteArray(MAX_SIZE - payload.size - 2)

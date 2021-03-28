@@ -8,19 +8,16 @@ import android.bluetooth.BluetoothGattDescriptor
 import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.logging.LTag
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.callbacks.BleCommCallbacks
-import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.callbacks.WriteConfirmation
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.callbacks.WriteConfirmationError
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.callbacks.WriteConfirmationSuccess
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.exceptions.*
 import info.nightscout.androidaps.utils.extensions.toHex
 import java.util.concurrent.BlockingQueue
 import java.util.concurrent.TimeUnit
-import java.util.concurrent.TimeoutException
 
 sealed class BleReceiveResult
 data class BleReceivePayload(val payload: ByteArray) : BleReceiveResult()
 data class BleReceiveError(val msg: String, val cause: Throwable? = null) : BleReceiveResult()
-
 
 sealed class BleSendResult
 
@@ -71,11 +68,12 @@ abstract class BleIO(
 
         return when (val confirmation = bleCommCallbacks.confirmWrite(
             payload, type.value,
-            DEFAULT_IO_TIMEOUT_MS)){
-             is WriteConfirmationError ->
+            DEFAULT_IO_TIMEOUT_MS
+        )) {
+            is WriteConfirmationError ->
                 BleSendErrorConfirming(confirmation.msg)
-             is WriteConfirmationSuccess ->
-                 BleSendSuccess
+            is WriteConfirmationSuccess ->
+                BleSendSuccess
         }
     }
 
@@ -111,10 +109,12 @@ abstract class BleIO(
         if (!wrote) {
             throw ConnectException("Could not enable indications on descriptor")
         }
-        val confirmation = bleCommCallbacks.confirmWrite(BluetoothGattDescriptor.ENABLE_INDICATION_VALUE,
-                                      descriptor.uuid.toString(),
-                                      DEFAULT_IO_TIMEOUT_MS)
-        return when(confirmation) {
+        val confirmation = bleCommCallbacks.confirmWrite(
+            BluetoothGattDescriptor.ENABLE_INDICATION_VALUE,
+            descriptor.uuid.toString(),
+            DEFAULT_IO_TIMEOUT_MS
+        )
+        return when (confirmation) {
             is WriteConfirmationError ->
                 throw ConnectException(confirmation.msg)
             is WriteConfirmationSuccess ->

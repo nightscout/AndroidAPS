@@ -29,6 +29,7 @@ class CmdBleIO(
     bleCommCallbacks,
     CharacteristicType.CMD
 ) {
+
     init {
     }
 
@@ -37,7 +38,6 @@ class CmdBleIO(
     }
 
     fun hello() = sendAndConfirmPacket(BleCommandHello(OmnipodDashBleManagerImpl.CONTROLLER_ID).data)
-
 
     fun expectCommandType(expected: BleCommand, timeoutMs: Long = DEFAULT_IO_TIMEOUT_MS): BleConfirmResult {
         return when (val actual = receivePacket(timeoutMs)) {

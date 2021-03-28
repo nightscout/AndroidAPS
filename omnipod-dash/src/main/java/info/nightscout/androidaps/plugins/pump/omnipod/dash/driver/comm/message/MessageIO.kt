@@ -18,11 +18,11 @@ data class MessageReceiveError(val msg: String, val cause: Throwable? = null) : 
 sealed class MessageSendResult
 object MessageSendSuccess : MessageSendResult()
 data class MessageSendErrorSending(val msg: String, val cause: Throwable? = null) : MessageSendResult() {
-    constructor(e: BleSendResult): this("Could not send packet: $e")
+    constructor(e: BleSendResult) : this("Could not send packet: $e")
 }
 
 data class MessageSendErrorConfirming(val msg: String, val cause: Throwable? = null) : MessageSendResult() {
-    constructor(e: BleSendResult): this("Could not confirm packet: $e")
+    constructor(e: BleSendResult) : this("Could not confirm packet: $e")
 }
 
 sealed class PacketReceiveResult

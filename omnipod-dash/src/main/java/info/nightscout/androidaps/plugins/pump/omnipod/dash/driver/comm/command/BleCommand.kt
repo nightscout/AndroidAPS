@@ -1,6 +1,5 @@
 package info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.command
 
-import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.command.base.CommandType
 import info.nightscout.androidaps.utils.extensions.toHex
 import java.nio.ByteBuffer
 
@@ -16,12 +15,13 @@ object BleCommandFail : BleCommand(BleCommandType.FAIL)
 
 data class BleCommandNack(val idx: Byte) : BleCommand(BleCommandType.NACK, byteArrayOf(idx)) {
     companion object {
+
         fun parse(payload: ByteArray): BleCommand {
             if (payload.size < 2) {
                 return BleCommandIncorrect("Incorrect NACK payload", payload)
             }
             if (payload[0] != BleCommandType.NACK.value) {
-                return  BleCommandIncorrect("Incorrect NACK header", payload)
+                return BleCommandIncorrect("Incorrect NACK header", payload)
             }
             return BleCommandNack(payload[1])
         }
@@ -36,7 +36,7 @@ data class BleCommandHello(private val controllerId: Int) : BleCommand(
         .putInt(controllerId).array()
 )
 
-data class BleCommandIncorrect(val msg:String, val payload: ByteArray): BleCommand(BleCommandType.INCORRECT)
+data class BleCommandIncorrect(val msg: String, val payload: ByteArray) : BleCommand(BleCommandType.INCORRECT)
 
 sealed class BleCommand(val data: ByteArray) {
 
@@ -64,13 +64,14 @@ sealed class BleCommand(val data: ByteArray) {
     }
 
     companion object {
+
         fun parse(payload: ByteArray): BleCommand {
             if (payload.isEmpty()) {
                 return BleCommandIncorrect("Incorrect command: empty payload", payload)
             }
 
             try {
-                return when(BleCommandType.byValue(payload[0])) {
+                return when (BleCommandType.byValue(payload[0])) {
                     BleCommandType.RTS ->
                         BleCommandRTS
                     BleCommandType.CTS ->

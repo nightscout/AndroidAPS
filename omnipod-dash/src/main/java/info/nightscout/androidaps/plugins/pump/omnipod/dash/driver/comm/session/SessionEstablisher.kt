@@ -89,14 +89,21 @@ class SessionEstablisher(
 
     private fun processChallengeResponse(challengeResponse: MessagePacket) {
         val eapMsg = EapMessage.parse(aapsLogger, challengeResponse.payload)
-        if (eapMsg.identifier != identifier ) {
-            aapsLogger.debug(LTag.PUMPBTCOMM, "EAP-AKA: got incorrect identifier ${eapMsg.identifier} expected: $identifier")
+        if (eapMsg.identifier != identifier) {
+            aapsLogger.debug(
+                LTag.PUMPBTCOMM,
+                "EAP-AKA: got incorrect identifier ${eapMsg.identifier} expected: $identifier"
+            )
             throw SessionEstablishmentException("Received incorrect EAP identifier: ${eapMsg.identifier}")
         }
         if (eapMsg.attributes.size != 2) {
             aapsLogger.debug(LTag.PUMPBTCOMM, "EAP-AKA: got message: $eapMsg")
             if (eapMsg.attributes.size == 1 && eapMsg.attributes[0] is EapAkaAttributeClientErrorCode) {
-                throw SessionEstablishmentException("Received CLIENT_ERROR_CODE for EAP-AKA challenge: ${eapMsg.attributes[0].toByteArray().toHex()}")
+                throw SessionEstablishmentException(
+                    "Received CLIENT_ERROR_CODE for EAP-AKA challenge: ${
+                        eapMsg.attributes[0].toByteArray().toHex()
+                    }"
+                )
             }
             throw SessionEstablishmentException("Expecting two attributes, got: ${eapMsg.attributes.size}")
         }
