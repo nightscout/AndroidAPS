@@ -12,7 +12,6 @@ enum class BleCommandType(val value: Byte) {
 
     companion object {
 
-        @JvmStatic
         fun byValue(value: Byte): BleCommandType =
             values().firstOrNull { it.value == value }
                 ?: throw IllegalArgumentException("Unknown BleCommandType: $value")

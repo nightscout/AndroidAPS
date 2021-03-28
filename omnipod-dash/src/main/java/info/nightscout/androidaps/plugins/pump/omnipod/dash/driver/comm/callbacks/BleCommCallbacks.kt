@@ -46,7 +46,6 @@ class BleCommCallbacks(
             connected.await(timeoutMs.toLong(), TimeUnit.MILLISECONDS)
         } catch (e: InterruptedException) {
             aapsLogger.warn(LTag.PUMPBTCOMM,"Interrupted while waiting for Connection")
-
         }
     }
 

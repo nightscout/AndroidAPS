@@ -19,6 +19,7 @@ import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.state.Omn
 import info.nightscout.androidaps.utils.extensions.toHex
 import io.reactivex.Observable
 import java.util.concurrent.TimeoutException
+import java.util.concurrent.atomic.AtomicBoolean
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -28,8 +29,7 @@ class OmnipodDashBleManagerImpl @Inject constructor(
     private val aapsLogger: AAPSLogger,
     private val podState: OmnipodDashPodStateManager
 ) : OmnipodDashBleManager {
-
-    // TODO: add busy AtomicBoolean
+    private val busy =  AtomicBoolean(false);
     private val bluetoothManager: BluetoothManager =
         context.getSystemService(Context.BLUETOOTH_SERVICE) as BluetoothManager
     private val bluetoothAdapter: BluetoothAdapter = bluetoothManager.adapter
@@ -41,38 +41,47 @@ class OmnipodDashBleManagerImpl @Inject constructor(
         ?: myId.increment() // pod not activated
 
     override fun sendCommand(cmd: Command): Observable<PodEvent> = Observable.create { emitter ->
-        val conn = connection ?: throw NotConnectedException("Not connected")
-
-        val session = conn.session ?: throw NotConnectedException("Missing session")
-
-        emitter.onNext(PodEvent.CommandSending(cmd))
-
-        val sendResult = session.sendCommand(cmd)
-        when(sendResult) {
-            is CommandSendErrorSending -> {
-                emitter.tryOnError(CouldNotSendCommandException())
-                return@create
-            }
-            is CommandSendSuccess ->
-                emitter.onNext(PodEvent.CommandSent(cmd))
-            is CommandSendErrorConfirming ->
-                emitter.onNext(PodEvent.CommandSendNotConfirmed(cmd))
+        if (!busy.compareAndSet(false, true)) {
+            throw BusyException()
         }
+        try {
+            val conn = connection ?: throw NotConnectedException("Not connected")
 
-        val readResult = session.readAndAckCommandResponse()
-        when (readResult){
-             is CommandReceiveSuccess ->
-                emitter.onNext(PodEvent.ResponseReceived(readResult.result))
+            val session = conn.session ?: throw NotConnectedException("Missing session")
 
-             is CommandAckError ->
-                emitter.onNext(PodEvent.ResponseReceived(readResult.result))
+            emitter.onNext(PodEvent.CommandSending(cmd))
 
-            is CommandReceiveError -> {
-                emitter.tryOnError(MessageIOException("Could not read response: $readResult"))
-                return@create
+            when (session.sendCommand(cmd)) {
+                is CommandSendErrorSending -> {
+                    emitter.tryOnError(CouldNotSendCommandException())
+                    return@create
+                }
+
+                is CommandSendSuccess ->
+                    emitter.onNext(PodEvent.CommandSent(cmd))
+                is CommandSendErrorConfirming ->
+                    emitter.onNext(PodEvent.CommandSendNotConfirmed(cmd))
             }
+
+            when (val readResult = session.readAndAckCommandResponse()) {
+                is CommandReceiveSuccess ->
+                    emitter.onNext(PodEvent.ResponseReceived(readResult.result))
+
+                is CommandAckError ->
+                    emitter.onNext(PodEvent.ResponseReceived(readResult.result))
+
+                is CommandReceiveError -> {
+                    emitter.tryOnError(MessageIOException("Could not read response: $readResult"))
+                    return@create
+                }
+            }
+            emitter.onComplete()
+        } catch (ex: Exception) {
+            disconnect()
+            emitter.tryOnError(ex)
+        } finally {
+            busy.set(false)
         }
-        emitter.onComplete()
     }
 
     override fun getStatus(): ConnectionStatus {
@@ -84,6 +93,9 @@ class OmnipodDashBleManagerImpl @Inject constructor(
     }
 
     override fun connect(): Observable<PodEvent> = Observable.create { emitter ->
+        if (!busy.compareAndSet(false, true)) {
+            throw BusyException()
+        }
         try {
             emitter.onNext(PodEvent.BluetoothConnecting)
 
@@ -110,6 +122,8 @@ class OmnipodDashBleManagerImpl @Inject constructor(
         } catch (ex: Exception) {
             disconnect()
             emitter.tryOnError(ex)
+        } finally {
+            busy.set(false)
         }
     }
 
@@ -126,6 +140,9 @@ class OmnipodDashBleManagerImpl @Inject constructor(
     }
 
     override fun pairNewPod(): Observable<PodEvent> = Observable.create { emitter ->
+        if (!busy.compareAndSet(false, true)) {
+            throw BusyException()
+        }
         try {
 
             if (podState.ltk != null) {
@@ -170,6 +187,8 @@ class OmnipodDashBleManagerImpl @Inject constructor(
         } catch (ex: Exception) {
             disconnect()
             emitter.tryOnError(ex)
+        } finally {
+            busy.set(false)
         }
     }
 

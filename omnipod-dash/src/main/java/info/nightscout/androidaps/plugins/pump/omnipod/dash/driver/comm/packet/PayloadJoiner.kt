@@ -1,4 +1,4 @@
-package info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.io
+package info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.packet
 
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.message.CrcMismatchException
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.message.IncorrectPacketException

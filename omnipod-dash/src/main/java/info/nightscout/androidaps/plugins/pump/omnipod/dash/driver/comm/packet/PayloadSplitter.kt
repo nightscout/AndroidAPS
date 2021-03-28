@@ -1,4 +1,4 @@
-package info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.message
+package info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.packet
 
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.packet.BlePacket
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.packet.FirstBlePacket
