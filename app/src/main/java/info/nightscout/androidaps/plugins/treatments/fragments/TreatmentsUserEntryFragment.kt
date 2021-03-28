@@ -161,7 +161,7 @@ class TreatmentsUserEntryFragment : DaggerFragment() {
                                         -> valuesWithUnitString += DecimalFormatter.to2Decimal(v.dValue) + translator.translate(v.unit) + separator
                         Units.G, Units.M, Units.H, Units.Percent
                                         -> valuesWithUnitString += v.iValue.toString() + translator.translate(v.unit) + separator
-                        Units.Source    -> source = Sources.fromText(v.sValue) // = separator + translator.translate(v.sValue)
+                        Units.Source    -> source = Sources.fromString(v.sValue) // = separator + translator.translate(v.sValue)
                         else            -> valuesWithUnitString += if (v.iValue != 0 || v.sValue != "") { v.value().toString() + separator } else ""
                     }
             }
