@@ -19,7 +19,6 @@ class Translator @Inject internal constructor(
     fun translate(action: Action): String = when(action) {
         Action.BOLUS                               -> resourceHelper.gs(R.string.uel_bolus)
         Action.BOLUS_ADVISOR                       -> resourceHelper.gs(R.string.uel_bolus_advisor)
-        Action.BOLUS_RECORD                        -> resourceHelper.gs(R.string.uel_bolus_record)
         Action.EXTENDED_BOLUS                      -> resourceHelper.gs(R.string.uel_extended_bolus)
         Action.SUPERBOLUS_TBR                      -> resourceHelper.gs(R.string.uel_superbolus_tbr)
         Action.CARBS                               -> resourceHelper.gs(R.string.uel_carbs)
@@ -58,6 +57,7 @@ class Translator @Inject internal constructor(
         Action.BG_REMOVED                          -> resourceHelper.gs(R.string.uel_bg_removed)
         Action.CAREPORTAL_REMOVED                  -> resourceHelper.gs(R.string.uel_careportal_removed)
         Action.EXTENDED_BOLUS_REMOVED              -> resourceHelper.gs(R.string.uel_extended_bolus_removed)
+        Action.FOOD                                -> resourceHelper.gs(R.string.uel_food)
         Action.FOOD_REMOVED                        -> resourceHelper.gs(R.string.uel_food_removed)
         Action.PROFILE_REMOVED                     -> resourceHelper.gs(R.string.uel_profile_removed)
         Action.PROFILE_SWITCH_REMOVED              -> resourceHelper.gs(R.string.uel_profile_switch_removed)
@@ -84,27 +84,9 @@ class Translator @Inject internal constructor(
         Action.IMPORT_DATABASES                    -> resourceHelper.gs(R.string.uel_import_databases)
         Action.OTP_EXPORT                          -> resourceHelper.gs(R.string.uel_otp_export)
         Action.OTP_RESET                           -> resourceHelper.gs(R.string.uel_otp_reset)
-        Action.SMS_BASAL                           -> resourceHelper.gs(R.string.uel_sms_basal)
-        Action.SMS_BOLUS                           -> resourceHelper.gs(R.string.uel_sms_bolus)
-        Action.SMS_CAL                             -> resourceHelper.gs(R.string.uel_sms_cal)
-        Action.SMS_CARBS                           -> resourceHelper.gs(R.string.uel_sms_carbs)
-        Action.SMS_EXTENDED_BOLUS                  -> resourceHelper.gs(R.string.uel_sms_extended_bolus)
-        Action.SMS_LOOP_DISABLED                   -> resourceHelper.gs(R.string.uel_sms_loop_disabled)
-        Action.SMS_LOOP_ENABLED                    -> resourceHelper.gs(R.string.uel_sms_loop_enabled)
-        Action.SMS_LOOP_RESUME                     -> resourceHelper.gs(R.string.uel_sms_loop_resume)
-        Action.SMS_LOOP_SUSPEND                    -> resourceHelper.gs(R.string.uel_sms_loop_suspend)
-        Action.SMS_PROFILE                         -> resourceHelper.gs(R.string.uel_sms_profile)
-        Action.SMS_PUMP_CONNECT                    -> resourceHelper.gs(R.string.uel_sms_pump_connect)
-        Action.SMS_PUMP_DISCONNECT                 -> resourceHelper.gs(R.string.uel_sms_pump_disconnect)
-        Action.SMS_SMS                             -> resourceHelper.gs(R.string.uel_sms_sms)
-        Action.SMS_TT                              -> resourceHelper.gs(R.string.uel_sms_tt)
-        Action.TT_DELETED_FROM_NS                  -> resourceHelper.gs(R.string.uel_tt_deleted_from_ns)
-        Action.TT_FROM_NS                          -> resourceHelper.gs(R.string.uel_tt_from_ns)
-        Action.TT_CANCELED_FROM_NS                 -> resourceHelper.gs(R.string.uel_tt_canceleted_from_ns)
-        Action.CAREPORTAL_DELETED_FROM_NS          -> resourceHelper.gs(R.string.uel_careportal_deleted_from_ns)
-        Action.CAREPORTAL_FROM_NS                  -> resourceHelper.gs(R.string.uel_careportal_from_ns)
         Action.EXPORT_CSV                          -> resourceHelper.gs(R.string.uel_export_csv)
-        Action.FOOD_FROM_NS                        -> resourceHelper.gs(R.string.unknown) // TODO?
+        Action.SMB                                 -> TODO()
+        Action.STOP_SMS                            -> TODO()
         Action.UNKNOWN                             -> resourceHelper.gs(R.string.unknown)
     }
 
@@ -172,14 +154,14 @@ class Translator @Inject internal constructor(
     }
 
     fun translate(source: Sources): String = when(source) {
-            Sources.Automation.text                         -> resourceHelper.gs(R.string.automation)
-            Sources.Loop.text                               -> resourceHelper.gs(R.string.loop)
-            Sources.NSClient.text                           -> resourceHelper.gs(R.string.ns)
-            Sources.Pump.text                               -> resourceHelper.gs(R.string.pump)
-            Sources.SMS.text                                -> resourceHelper.gs(R.string.smb_shortname)
-            Sources.Wear.text                               -> resourceHelper.gs(R.string.wear)
-            Sources.Unknown.text                            -> resourceHelper.gs(R.string.unknown)
+            Sources.Automation                         -> resourceHelper.gs(R.string.automation)
+            Sources.Loop                               -> resourceHelper.gs(R.string.loop)
+            Sources.NSClient                           -> resourceHelper.gs(R.string.ns)
+            Sources.Pump                               -> resourceHelper.gs(R.string.pump)
+            Sources.SMS                                -> resourceHelper.gs(R.string.smb_shortname)
+            Sources.Wear                               -> resourceHelper.gs(R.string.wear)
+            Sources.Unknown                            -> resourceHelper.gs(R.string.unknown)
 
-            else                                           -> resourceHelper.gs(R.string.unknown)
+            else                                       -> resourceHelper.gs(R.string.unknown)
         }
 }

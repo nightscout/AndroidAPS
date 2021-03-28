@@ -443,6 +443,7 @@
     <string name="uel_bg_removed">BG REMOVED</string>
     <string name="uel_careportal_removed">CAREPORTAL REMOVED</string>
     <string name="uel_extended_bolus_removed">EXTENDED BOLUS REMOVED</string>
+    <string name="uel_food">FOOD</string>
     <string name="uel_food_removed">FOOD REMOVED</string>
     <string name="uel_profile_removed">PROFILE REMOVED</string>
     <string name="uel_profile_switch_removed">PROFILE SWITCH REMOVED</string>
