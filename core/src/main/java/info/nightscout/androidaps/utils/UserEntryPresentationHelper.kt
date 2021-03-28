@@ -1,17 +1,13 @@
-package info.nightscout.androidaps.utils.extensions
+package info.nightscout.androidaps.utils
 
 import dagger.Reusable
 import info.nightscout.androidaps.Constants
 import info.nightscout.androidaps.core.R
 import info.nightscout.androidaps.database.entities.UserEntry
-import info.nightscout.androidaps.database.entities.UserEntry.ColorGroup
-import info.nightscout.androidaps.database.entities.UserEntry.Units
+import info.nightscout.androidaps.database.entities.UserEntry.*
 import info.nightscout.androidaps.database.entities.XXXValueWithUnit
 import info.nightscout.androidaps.interfaces.ProfileFunction
-import info.nightscout.androidaps.utils.DateUtil
-import info.nightscout.androidaps.utils.DecimalFormatter
 import info.nightscout.androidaps.utils.resources.ResourceHelper
-import info.nightscout.androidaps.utils.Translator
 import javax.inject.Inject
 
 @Reusable
@@ -24,14 +20,48 @@ class UserEntryPresentationHelper @Inject constructor(
 
     fun colorId(colorGroup: ColorGroup): Int = when (colorGroup) {
         ColorGroup.InsulinTreatment -> R.color.basal
-        ColorGroup.CarbTreatment -> R.color.carbs
-        ColorGroup.TT -> R.color.tempTargetConfirmation
-        ColorGroup.Profile -> R.color.white
-        ColorGroup.Loop -> R.color.loopClosed
-        ColorGroup.Careportal -> R.color.high
-        ColorGroup.Pump -> R.color.iob
-        ColorGroup.Aaps -> R.color.defaulttext
+        ColorGroup.CarbTreatment    -> R.color.carbs
+        ColorGroup.TT               -> R.color.tempTargetConfirmation
+        ColorGroup.Profile          -> R.color.white
+        ColorGroup.Loop             -> R.color.loopClosed
+        ColorGroup.Careportal       -> R.color.high
+        ColorGroup.Pump             -> R.color.iob
+        ColorGroup.Aaps             -> R.color.defaulttext
         else                        -> R.color.defaulttext
+    }
+
+    fun iconId(source: Sources): Int = when (source) {
+        Sources.TreatmentDialog     -> R.drawable.icon_insulin_carbs
+        Sources.InsulinDialog       -> R.drawable.ic_bolus
+        Sources.CarbDialog          -> R.drawable.ic_cp_bolus_carbs
+        Sources.WizardDialog        -> R.drawable.ic_calculator
+        Sources.QuickWizard         -> R.drawable.ic_quick_wizard
+        Sources.ExtendedBolusDialog -> R.drawable.ic_actions_startextbolus
+        Sources.TTDialog            -> R.drawable.ic_temptarget_high
+        Sources.ProfileSwitchDialog -> R.drawable.ic_actions_profileswitch
+        Sources.LoopDialog          -> R.drawable.ic_loop_closed
+        Sources.TempBasalDialog     -> R.drawable.ic_actions_starttempbasal
+        Sources.CalibrationDialog   -> R.drawable.ic_calibration
+        Sources.FillDialog          -> R.drawable.ic_cp_pump_canula
+        Sources.BgCheck             -> R.drawable.ic_cp_bgcheck
+        Sources.SensorInsert        -> R.drawable.ic_cp_cgm_insert
+        Sources.BatteryChange       -> R.drawable.ic_cp_pump_battery
+        Sources.Note                -> R.drawable.ic_cp_note
+        Sources.Exercise            -> R.drawable.ic_cp_exercise
+        Sources.Question            -> R.drawable.ic_cp_question
+        Sources.Announcement        -> R.drawable.ic_cp_announcement
+        Sources.Actions             -> R.drawable.ic_action
+        Sources.Automation          -> R.drawable.ic_automation
+        Sources.LocalProfile        -> R.drawable.ic_local_profile
+        Sources.Loop                -> R.drawable.ic_loop_closed_white
+        Sources.Maintenance         -> R.drawable.ic_maintenance
+        Sources.NSClient            -> R.drawable.ic_nightscout_syncs
+        Sources.Pump                -> R.drawable.ic_generic_icon
+        Sources.SMS                 -> R.drawable.ic_sms
+        Sources.Treatments          -> R.drawable.ic_treatments
+        Sources.Wear                -> R.drawable.ic_watch
+        Sources.Food                -> R.drawable.ic_food
+        Sources.Unknown             -> R.drawable.ic_generic_icon
     }
 
     fun listToPresentationString(list: List<XXXValueWithUnit>) =

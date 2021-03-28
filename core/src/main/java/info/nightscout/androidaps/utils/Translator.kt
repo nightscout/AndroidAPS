@@ -162,6 +162,6 @@ class Translator @Inject internal constructor(
             Sources.Wear                               -> resourceHelper.gs(R.string.wear)
             Sources.Unknown                            -> resourceHelper.gs(R.string.unknown)
 
-            else                                       -> resourceHelper.gs(R.string.unknown)
+            else                                       -> source.name
         }
 }

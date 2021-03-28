@@ -1,7 +1,6 @@
 package info.nightscout.androidaps.plugins.treatments.fragments
 
 import android.os.Bundle
-import android.renderscript.Sampler
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -25,8 +24,8 @@ import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.DecimalFormatter
 import info.nightscout.androidaps.utils.FabricPrivacy
 import info.nightscout.androidaps.utils.Translator
+import info.nightscout.androidaps.utils.UserEntryPresentationHelper
 import info.nightscout.androidaps.utils.alertDialogs.OKDialog
-import info.nightscout.androidaps.utils.extensions.*
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 import info.nightscout.androidaps.utils.rx.AapsSchedulers
 import io.reactivex.disposables.CompositeDisposable
@@ -166,11 +165,9 @@ class TreatmentsUserEntryFragment : DaggerFragment() {
                         else            -> valuesWithUnitString += if (v.iValue != 0 || v.sValue != "") { v.value().toString() + separator } else ""
                     }
             }
-            if (source.iconId() > 0) {
-                holder.binding.iconSource.setImageResource(source.iconId())
-                holder.binding.iconSource.visibility = View.VISIBLE
-            } else
-                holder.binding.iconSource.visibility = View.INVISIBLE
+
+            holder.binding.iconSource.setImageResource(userEntryPresentationHelper.iconId(source))
+            holder.binding.iconSource.visibility = View.VISIBLE
             holder.binding.values.text = valuesWithUnitString.trim()
             holder.binding.values.visibility = if (holder.binding.values.text != "") View.VISIBLE else View.GONE
             holder.binding.action.text = translator.translate(current.action)
