@@ -205,7 +205,7 @@ public class MedtronicPumpHistoryDecoder extends MedtronicHistoryDecoder<PumpHis
             case ChangeTimeFormat:
             case ChangeReservoirWarningTime:
             case ChangeBolusReminderEnable:
-            case ChangeBolusReminderTime:
+            case SetBolusReminderTime:
             case ChangeChildBlockEnable:
             case BolusWizardEnabled:
             case ChangeBGReminderOffset:
@@ -246,26 +246,26 @@ public class MedtronicPumpHistoryDecoder extends MedtronicHistoryDecoder<PumpHis
             case Sensor_0x55:
             case Sensor_0x51:
             case Sensor_0x52:
-            case EventUnknown_MM522_0x45:
-            case EventUnknown_MM522_0x46:
-            case EventUnknown_MM522_0x47:
-            case EventUnknown_MM522_0x48:
-            case EventUnknown_MM522_0x49:
-            case EventUnknown_MM522_0x4a:
-            case EventUnknown_MM522_0x4b:
-            case EventUnknown_MM522_0x4c:
-            case EventUnknown_MM512_0x10:
+//            case EventUnknown_MM522_0x45:
+//            case EventUnknown_MM522_0x46:
+//            case EventUnknown_MM522_0x47:
+//            case EventUnknown_MM522_0x48:
+//            case EventUnknown_MM522_0x49:
+//            case EventUnknown_MM522_0x4a:
+//            case EventUnknown_MM522_0x4b:
+//            case EventUnknown_MM522_0x4c:
+//            case EventUnknown_MM512_0x10:
             case EventUnknown_MM512_0x2e:
-            case EventUnknown_MM512_0x37:
-            case EventUnknown_MM512_0x38:
-            case EventUnknown_MM512_0x4e:
-            case EventUnknown_MM522_0x70:
-            case EventUnknown_MM512_0x88:
-            case EventUnknown_MM512_0x94:
-            case EventUnknown_MM522_0xE8:
-            case EventUnknown_0x4d:
-            case EventUnknown_MM522_0x25:
-            case EventUnknown_MM522_0x05:
+//            case EventUnknown_MM512_0x37:
+//            case EventUnknown_MM512_0x38:
+//            case EventUnknown_MM512_0x4e:
+//            case EventUnknown_MM522_0x70:
+//            case EventUnknown_MM512_0x88:
+//            case EventUnknown_MM512_0x94:
+//            case EventUnknown_MM522_0xE8:
+//            case EventUnknown_0x4d:
+//            case EventUnknown_MM522_0x25:
+//            case EventUnknown_MM522_0x05:
                 aapsLogger.debug(LTag.PUMPBTCOMM, " -- ignored Unknown Pump Entry: " + entry);
                 return RecordDecodeStatus.Ignored;
 
@@ -317,8 +317,8 @@ public class MedtronicPumpHistoryDecoder extends MedtronicHistoryDecoder<PumpHis
                 return RecordDecodeStatus.OK;
 
             case LowBattery:
-            case Suspend:
-            case Resume:
+            case SuspendPump:
+            case ResumePump:
             case Rewind:
             case NoDeliveryAlarm:
             case ChangeTempBasalType:
