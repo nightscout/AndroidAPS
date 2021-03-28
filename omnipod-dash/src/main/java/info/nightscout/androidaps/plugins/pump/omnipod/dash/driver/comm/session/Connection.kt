@@ -49,12 +49,20 @@ class Connection(val podDevice: BluetoothDevice, private val aapsLogger: AAPSLog
     private val discoverer = ServiceDiscoverer(aapsLogger, gattConnection, bleCommCallbacks)
     private val discoveredCharacteristics = discoverer.discoverServices()
     private val cmdBleIO = CmdBleIO(
-        aapsLogger, discoveredCharacteristics[CharacteristicType.CMD]!!, incomingPackets
-        .cmdQueue, gattConnection, bleCommCallbacks
+        aapsLogger,
+        discoveredCharacteristics[CharacteristicType.CMD]!!,
+        incomingPackets
+            .cmdQueue,
+        gattConnection,
+        bleCommCallbacks
     )
     private val dataBleIO = DataBleIO(
-        aapsLogger, discoveredCharacteristics[CharacteristicType.DATA]!!, incomingPackets
-        .dataQueue, gattConnection, bleCommCallbacks
+        aapsLogger,
+        discoveredCharacteristics[CharacteristicType.DATA]!!,
+        incomingPackets
+            .dataQueue,
+        gattConnection,
+        bleCommCallbacks
     )
     val msgIO = MessageIO(aapsLogger, cmdBleIO, dataBleIO)
     var session: Session? = null

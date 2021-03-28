@@ -55,7 +55,7 @@ data class FirstBlePacket(
                 throw IncorrectPacketException(payload, 0)
             }
             val fullFragments = payload[1].toInt()
-            require(fullFragments < MAX_FRAGMENTS) { "Received more than ${MAX_FRAGMENTS} fragments" }
+            require(fullFragments < MAX_FRAGMENTS) { "Received more than $MAX_FRAGMENTS fragments" }
             when {
                 // Without middle packets
                 payload.size < HEADER_SIZE_WITHOUT_MIDDLE_PACKETS ->
@@ -196,7 +196,6 @@ data class LastOptionalPlusOneBlePacket(
                 ),
                 size = size.toByte(),
             )
-
         }
 
         private const val HEADER_SIZE = 2

@@ -48,7 +48,7 @@ internal class LTKExchanger(
         val sps2 = sps2()
         val sp2Result = msgIO.sendMessage(sps2.messagePacket)
         if (sp1Result !is MessageSendSuccess) {
-            throw PairingException("Could not send sps2: ${sp2Result}")
+            throw PairingException("Could not send sps2: $sp2Result")
         }
 
         val podSps2 = msgIO.receiveMessage()

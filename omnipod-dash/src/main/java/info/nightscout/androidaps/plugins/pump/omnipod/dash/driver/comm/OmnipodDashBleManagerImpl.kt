@@ -166,10 +166,14 @@ class OmnipodDashBleManagerImpl @Inject constructor(
 
             emitter.onNext(PodEvent.Pairing)
             val ltkExchanger = LTKExchanger(
-                aapsLogger, conn.msgIO, myId, podId, Id.fromLong(
-                PodScanner
-                    .POD_ID_NOT_ACTIVATED
-            )
+                aapsLogger,
+                conn.msgIO,
+                myId,
+                podId,
+                Id.fromLong(
+                    PodScanner
+                        .POD_ID_NOT_ACTIVATED
+                )
             )
             val pairResult = ltkExchanger.negotiateLTK()
             emitter.onNext(PodEvent.Paired(podId))

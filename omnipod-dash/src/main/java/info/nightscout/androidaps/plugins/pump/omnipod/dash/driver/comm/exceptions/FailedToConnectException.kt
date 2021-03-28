@@ -3,4 +3,3 @@ package info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.excepti
 open class FailedToConnectException : Exception {
     constructor(message: String? = null) : super("Failed to connect: ${message ?: ""}")
 }
-

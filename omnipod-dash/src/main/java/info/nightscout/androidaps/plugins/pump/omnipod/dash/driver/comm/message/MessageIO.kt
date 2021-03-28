@@ -155,7 +155,7 @@ class MessageIO(
 
         when (val receivedCmd = BleCommand.parse(peekCmd)) {
             is BleCommandNack -> {
-                //// Consume NACK
+                // // Consume NACK
                 val received = cmdBleIO.receivePacket()
                 if (received !is BleReceivePayload) {
                     return MessageSendErrorSending(received.toString())

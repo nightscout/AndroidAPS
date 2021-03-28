@@ -63,7 +63,8 @@ class BleCommCallbacks(
                 null -> return WriteConfirmationError("Timeout waiting for writeConfirmation")
                 is WriteConfirmationSuccess ->
                     if (expectedPayload.contentEquals(received.payload) &&
-                        expectedUUID == received.uuid) {
+                        expectedUUID == received.uuid
+                    ) {
                         received
                     } else {
                         aapsLogger.warn(

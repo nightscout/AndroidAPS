@@ -66,10 +66,13 @@ abstract class BleIO(
             return BleSendErrorSending("Could not writeCharacteristic on {$type.name}")
         }
 
-        return when (val confirmation = bleCommCallbacks.confirmWrite(
-            payload, type.value,
-            DEFAULT_IO_TIMEOUT_MS
-        )) {
+        return when (
+            val confirmation = bleCommCallbacks.confirmWrite(
+                payload,
+                type.value,
+                DEFAULT_IO_TIMEOUT_MS
+            )
+        ) {
             is WriteConfirmationError ->
                 BleSendErrorConfirming(confirmation.msg)
             is WriteConfirmationSuccess ->
@@ -127,5 +130,3 @@ abstract class BleIO(
         const val DEFAULT_IO_TIMEOUT_MS = 1000.toLong()
     }
 }
-
-
