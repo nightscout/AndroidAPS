@@ -13,6 +13,7 @@ import info.nightscout.androidaps.data.Profile
 import info.nightscout.androidaps.database.AppRepository
 import info.nightscout.androidaps.database.ValueWrapper
 import info.nightscout.androidaps.database.entities.TemporaryTarget
+import info.nightscout.androidaps.database.entities.UserEntry.*
 import info.nightscout.androidaps.database.transactions.CancelCurrentTemporaryTargetIfAnyTransaction
 import info.nightscout.androidaps.database.transactions.InsertTemporaryTargetAndCancelCurrentTransaction
 import info.nightscout.androidaps.databinding.DialogTemptargetBinding
@@ -145,6 +146,10 @@ class TempTargetDialog : DialogFragmentWithDate() {
                 binding.duration.value = defaultValueHelper.determineHypoTTDuration().toDouble()
                 binding.reason.setSelection(reasonList.indexOf(resourceHelper.gs(R.string.hypo)))
             }
+
+            R.id.cancel -> {
+                binding.duration.value = 0.0
+            }
         }
     }
 
@@ -157,7 +162,7 @@ class TempTargetDialog : DialogFragmentWithDate() {
     override fun submit(): Boolean {
         if (_binding == null) return false
         val actions: LinkedList<String> = LinkedList()
-        val reason = binding.reason.selectedItem?.toString() ?: return false
+        var reason = binding.reason.selectedItem?.toString() ?: return false
         val unitResId = if (profileFunction.getUnits() == Constants.MGDL) R.string.mgdl else R.string.mmol
         val target = binding.temptarget.value
         val duration = binding.duration.value.toInt()
@@ -167,13 +172,21 @@ class TempTargetDialog : DialogFragmentWithDate() {
             actions.add(resourceHelper.gs(R.string.duration) + ": " + resourceHelper.gs(R.string.format_mins, duration))
         } else {
             actions.add(resourceHelper.gs(R.string.stoptemptarget))
+            reason = resourceHelper.gs(R.string.stoptemptarget)
         }
         if (eventTimeChanged)
             actions.add(resourceHelper.gs(R.string.time) + ": " + dateUtil.dateAndTimeString(eventTime))
 
         activity?.let { activity ->
             OKDialog.showConfirmation(activity, resourceHelper.gs(R.string.careportal_temporarytarget), HtmlHelper.fromHtml(Joiner.on("<br/>").join(actions)), {
-                uel.log("TT", d1 = target, i1 = duration)
+                val units = profileFunction.getUnits()
+                when(reason) {
+                    resourceHelper.gs(R.string.eatingsoon) -> uel.log(Action.TT, ValueWithUnit(eventTime, Units.Timestamp, eventTimeChanged), ValueWithUnit(TemporaryTarget.Reason.EATING_SOON.text, Units.TherapyEvent), ValueWithUnit(target, units), ValueWithUnit(duration, Units.M))
+                    resourceHelper.gs(R.string.activity) -> uel.log(Action.TT, ValueWithUnit(eventTime, Units.Timestamp, eventTimeChanged), ValueWithUnit(TemporaryTarget.Reason.ACTIVITY.text, Units.TherapyEvent), ValueWithUnit(target, units), ValueWithUnit(duration, Units.M))
+                    resourceHelper.gs(R.string.hypo) -> uel.log(Action.TT, ValueWithUnit(eventTime, Units.Timestamp, eventTimeChanged), ValueWithUnit(TemporaryTarget.Reason.HYPOGLYCEMIA.text, Units.TherapyEvent), ValueWithUnit(target, units), ValueWithUnit(duration, Units.M))
+                    resourceHelper.gs(R.string.manual) -> uel.log(Action.TT, ValueWithUnit(eventTime, Units.Timestamp, eventTimeChanged), ValueWithUnit(TemporaryTarget.Reason.CUSTOM.text, Units.TherapyEvent), ValueWithUnit(target, units), ValueWithUnit(duration, Units.M))
+                    resourceHelper.gs(R.string.stoptemptarget) -> uel.log(Action.CANCEL_TT, ValueWithUnit(eventTime, Units.Timestamp, eventTimeChanged))
+                }
                 if (target == 0.0 || duration == 0) {
                     disposable += repository.runTransactionForResult(CancelCurrentTemporaryTargetIfAnyTransaction(eventTime))
                         .subscribe({ result ->
@@ -200,6 +213,7 @@ class TempTargetDialog : DialogFragmentWithDate() {
                         aapsLogger.error(LTag.BGSOURCE, "Error while saving temporary target", it)
                     })
                 }
+
                 if (duration == 10) sp.putBoolean(R.string.key_objectiveusetemptarget, true)
             })
         }

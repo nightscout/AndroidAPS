@@ -7,8 +7,8 @@ import info.nightscout.androidaps.TestBaseWithProfile
 import info.nightscout.androidaps.database.AppRepository
 import info.nightscout.androidaps.db.TemporaryBasal
 import info.nightscout.androidaps.interfaces.DatabaseHelperInterface
+import info.nightscout.androidaps.interfaces.UploadQueueInterface
 import info.nightscout.androidaps.plugins.general.nsclient.NSUpload
-import info.nightscout.androidaps.plugins.general.nsclient.UploadQueue
 import info.nightscout.androidaps.plugins.insulin.InsulinOrefRapidActingPlugin
 import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.FabricPrivacy
@@ -33,7 +33,7 @@ class TreatmentsPluginTest : TestBaseWithProfile() {
     @Mock lateinit var sp: SP
     @Mock lateinit var treatmentService: TreatmentService
     @Mock lateinit var nsUpload: NSUpload
-    @Mock lateinit var uploadQueue: UploadQueue
+    @Mock lateinit var uploadQueue: UploadQueueInterface
     @Mock lateinit var repository: AppRepository
     @Mock lateinit var databaseHelper: DatabaseHelperInterface
 

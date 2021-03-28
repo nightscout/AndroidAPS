@@ -11,12 +11,11 @@ import org.json.JSONObject;
 
 import java.sql.SQLException;
 
-import javax.inject.Inject;
-
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.db.DatabaseHelper;
 import info.nightscout.androidaps.db.DbRequest;
 import info.nightscout.androidaps.interfaces.DatabaseHelperInterface;
+import info.nightscout.androidaps.interfaces.UploadQueueAdminInterface;
 import info.nightscout.androidaps.interfaces.UploadQueueInterface;
 import info.nightscout.androidaps.logging.AAPSLogger;
 import info.nightscout.androidaps.logging.LTag;
@@ -28,14 +27,13 @@ import info.nightscout.androidaps.utils.sharedPreferences.SP;
 /**
  * Created by mike on 21.02.2016.
  */
-public class UploadQueue implements UploadQueueInterface {
+public class UploadQueue implements UploadQueueAdminInterface {
     private final AAPSLogger aapsLogger;
     private final DatabaseHelperInterface databaseHelper;
     private final Context context;
     private final SP sp;
     private final RxBusWrapper rxBus;
 
-    @Inject
     public UploadQueue(
             AAPSLogger aapsLogger,
             DatabaseHelperInterface databaseHelper,
@@ -54,6 +52,7 @@ public class UploadQueue implements UploadQueueInterface {
         return "QUEUE: " + databaseHelper.size(DatabaseHelper.DATABASE_DBREQUESTS);
     }
 
+    @Override
     public long size() {
         return databaseHelper.size(DatabaseHelper.DATABASE_DBREQUESTS);
     }
@@ -76,7 +75,7 @@ public class UploadQueue implements UploadQueueInterface {
         rxBus.send(new EventNSClientResend("newdata"));
     }
 
-    void clearQueue() {
+    @Override public void clearQueue() {
         startService();
         if (NSClientService.handler != null) {
             NSClientService.handler.post(() -> {
@@ -87,7 +86,8 @@ public class UploadQueue implements UploadQueueInterface {
         }
     }
 
-    public void removeID(final JSONObject record) {
+    @Override
+    public void removeByNsClientIdIfExists(final JSONObject record) {
         startService();
         if (NSClientService.handler != null) {
             NSClientService.handler.post(() -> {
@@ -108,7 +108,8 @@ public class UploadQueue implements UploadQueueInterface {
         }
     }
 
-    public void removeID(final String action, final String _id) {
+    @Override
+    public void removeByMongoId(final String action, final String _id) {
         if (_id == null || _id.equals(""))
             return;
         startService();
@@ -120,7 +121,7 @@ public class UploadQueue implements UploadQueueInterface {
         }
     }
 
-    String textList() {
+    @Override public String textList() {
         String result = "";
         CloseableIterator<DbRequest> iterator;
         try {

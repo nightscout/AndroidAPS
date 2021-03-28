@@ -16,12 +16,12 @@ import info.nightscout.androidaps.utils.JsonHelper.safeGetString
 import org.json.JSONObject
 
 class TriggerBolusAgo(injector: HasAndroidInjector) : Trigger(injector) {
-    var minutesAgo: InputDuration = InputDuration(injector, 30, InputDuration.TimeUnit.MINUTES)
-    var comparator: Comparator = Comparator(injector)
+    var minutesAgo: InputDuration = InputDuration( 30, InputDuration.TimeUnit.MINUTES)
+    var comparator: Comparator = Comparator(resourceHelper)
 
     private constructor(injector: HasAndroidInjector, triggerBolusAgo: TriggerBolusAgo) : this(injector) {
-        minutesAgo = InputDuration(injector, triggerBolusAgo.minutesAgo.value, InputDuration.TimeUnit.MINUTES)
-        comparator = Comparator(injector, triggerBolusAgo.comparator.value)
+        minutesAgo = InputDuration(triggerBolusAgo.minutesAgo.value, InputDuration.TimeUnit.MINUTES)
+        comparator = Comparator(resourceHelper, triggerBolusAgo.comparator.value)
     }
 
     fun setValue(value: Int): TriggerBolusAgo {
@@ -83,9 +83,9 @@ class TriggerBolusAgo(injector: HasAndroidInjector) : Trigger(injector) {
 
     override fun generateDialog(root: LinearLayout) {
         LayoutBuilder()
-            .add(StaticLabel(injector, R.string.lastboluslabel, this))
+            .add(StaticLabel(resourceHelper, R.string.lastboluslabel, this))
             .add(comparator)
-            .add(LabelWithElement(injector, resourceHelper.gs(R.string.lastboluslabel) + ": ", "", minutesAgo))
+            .add(LabelWithElement(resourceHelper, resourceHelper.gs(R.string.lastboluslabel) + ": ", "", minutesAgo))
             .build(root)
     }
 }

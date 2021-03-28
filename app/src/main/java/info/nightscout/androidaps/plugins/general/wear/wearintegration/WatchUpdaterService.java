@@ -715,7 +715,7 @@ public class WatchUpdaterService extends WearableListenerService implements Goog
                 openApsStatus = loopPlugin.getLastRun() != null && loopPlugin.getLastRun().getLastTBREnact() != 0 ? loopPlugin.getLastRun().getLastTBREnact() : -1;
             } else {
                 //NSClient or remote
-                openApsStatus = NSDeviceStatus.getOpenApsTimestamp();
+                openApsStatus = nsDeviceStatus.getOpenApsTimestamp();
             }
 
             PutDataMapRequest dataMapRequest = PutDataMapRequest.create(NEW_STATUS_PATH);

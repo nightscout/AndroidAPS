@@ -5,7 +5,7 @@ interface Intents {
 
     companion object {
 
-        // NSClient -> App
+        // AAPS -> Xdrip
         const val ACTION_NEW_TREATMENT = "info.nightscout.client.NEW_TREATMENT"
         const val ACTION_CHANGED_TREATMENT = "info.nightscout.client.CHANGED_TREATMENT"
         const val ACTION_REMOVED_TREATMENT = "info.nightscout.client.REMOVED_TREATMENT"
@@ -14,7 +14,7 @@ interface Intents {
         const val ACTION_NEW_MBG = "info.nightscout.client.NEW_MBG"
         const val ACTION_NEW_CAL = "info.nightscout.client.NEW_CAL"
 
-        // xDrip -> App
+        // xDrip -> AAPS
         const val ACTION_NEW_BG_ESTIMATE = "com.eveningoutpost.dexdrip.BgEstimate"
         const val EXTRA_BG_ESTIMATE = "com.eveningoutpost.dexdrip.Extras.BgEstimate"
         const val EXTRA_BG_SLOPE = "com.eveningoutpost.dexdrip.Extras.BgSlope"

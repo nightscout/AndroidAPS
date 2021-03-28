@@ -1,13 +1,14 @@
 package info.nightscout.androidaps;
 
 import info.nightscout.androidaps.utils.T;
+import info.nightscout.androidaps.database.entities.UserEntry.*;
 
 /**
  * Created by mike on 07.06.2016.
  */
 public class Constants {
-    public static final String MGDL = "mg/dl"; // This is Nightscout's representation
-    public static final String MMOL = "mmol";
+    public static final String MGDL = Units.Mg_Dl.getText(); // This is Nightscout's representation
+    public static final String MMOL = Units.Mmol_L.getText();
 
     public static final double MMOLL_TO_MGDL = 18; // 18.0182;
     public static final double MGDL_TO_MMOLL = 1 / MMOLL_TO_MGDL;

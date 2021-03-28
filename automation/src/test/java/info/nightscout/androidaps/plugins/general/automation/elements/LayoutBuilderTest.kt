@@ -15,17 +15,17 @@ class LayoutBuilderTest : TestBase() {
 
     @Test fun addTest() {
         val layoutBuilder = LayoutBuilder()
-        val inputInsulin = InputInsulin(injector)
+        val inputInsulin = InputInsulin()
         layoutBuilder.add(inputInsulin)
         Assert.assertEquals(1, layoutBuilder.mElements.size)
     }
 
     @Test fun addConditionalTest() {
         val layoutBuilder = LayoutBuilder()
-        val inputInsulin = InputInsulin(injector)
-        layoutBuilder.add(inputInsulin, true)
+        val inputInsulin = InputInsulin()
+        layoutBuilder.maybeAdd(inputInsulin, true)
         Assert.assertEquals(1, layoutBuilder.mElements.size)
-        layoutBuilder.add(inputInsulin, false)
+        layoutBuilder.maybeAdd(inputInsulin, false)
         Assert.assertEquals(1, layoutBuilder.mElements.size)
     }
 }

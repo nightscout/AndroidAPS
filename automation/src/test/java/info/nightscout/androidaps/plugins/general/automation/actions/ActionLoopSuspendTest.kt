@@ -31,7 +31,7 @@ class ActionLoopSuspendTest : ActionsTestBase() {
     }
 
     @Test fun shortDescriptionTest() {
-        sut.minutes = InputDuration(injector, 30, InputDuration.TimeUnit.MINUTES)
+        sut.minutes = InputDuration(30, InputDuration.TimeUnit.MINUTES)
         Assert.assertEquals("Suspend loop for %d min", sut.shortDescription())
     }
 
@@ -41,7 +41,7 @@ class ActionLoopSuspendTest : ActionsTestBase() {
 
     @Test fun doActionTest() {
         `when`(loopPlugin.isSuspended).thenReturn(false)
-        sut.minutes = InputDuration(injector, 30, InputDuration.TimeUnit.MINUTES)
+        sut.minutes = InputDuration(30, InputDuration.TimeUnit.MINUTES)
         sut.doAction(object : Callback() {
             override fun run() {}
         })
@@ -57,7 +57,7 @@ class ActionLoopSuspendTest : ActionsTestBase() {
 
     @Test fun applyTest() {
         val a = ActionLoopSuspend(injector)
-        a.minutes = InputDuration(injector, 20, InputDuration.TimeUnit.MINUTES)
+        a.minutes = InputDuration(20, InputDuration.TimeUnit.MINUTES)
         val b = ActionLoopSuspend(injector)
         b.apply(a)
         Assert.assertEquals(20, b.minutes.getMinutes().toLong())

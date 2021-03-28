@@ -17,8 +17,7 @@ import info.nightscout.androidaps.logging.LTag
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper
 import info.nightscout.androidaps.plugins.general.nsclient.events.EventNSClientRestart
 import info.nightscout.androidaps.plugins.profile.ns.events.EventNSProfileUpdateGUI
-import info.nightscout.androidaps.receivers.BundleStore
-import info.nightscout.androidaps.receivers.DataReceiver
+import info.nightscout.androidaps.receivers.DataWorker
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 import info.nightscout.androidaps.utils.sharedPreferences.SP
 import org.json.JSONObject
@@ -89,26 +88,23 @@ class NSProfilePlugin @Inject constructor(
         @Inject lateinit var nsProfilePlugin: NSProfilePlugin
         @Inject lateinit var aapsLogger: AAPSLogger
         @Inject lateinit var rxBus: RxBusWrapper
-        @Inject lateinit var bundleStore: BundleStore
+        @Inject lateinit var dataWorker: DataWorker
 
         init {
             (context.applicationContext as HasAndroidInjector).androidInjector().inject(this)
         }
 
         override fun doWork(): Result {
-            val bundle = bundleStore.pickup(inputData.getLong(DataReceiver.STORE_KEY, -1))
+            val profileString = dataWorker.pickupJSONObject(inputData.getLong(DataWorker.STORE_KEY, -1))
                 ?: return Result.failure()
-            bundle.getString("profile")?.let { profileString ->
-                nsProfilePlugin.profile = ProfileStore(injector, JSONObject(profileString))
-                nsProfilePlugin.storeNSProfile()
-                if (nsProfilePlugin.isEnabled()) {
-                    rxBus.send(EventProfileStoreChanged())
-                    rxBus.send(EventNSProfileUpdateGUI())
-                }
-                aapsLogger.debug(LTag.PROFILE, "Received profileStore: ${nsProfilePlugin.profile}")
-                return Result.success()
+            nsProfilePlugin.profile = ProfileStore(injector, profileString)
+            nsProfilePlugin.storeNSProfile()
+            if (nsProfilePlugin.isEnabled()) {
+                rxBus.send(EventProfileStoreChanged())
+                rxBus.send(EventNSProfileUpdateGUI())
             }
-            return Result.failure()
+            aapsLogger.debug(LTag.PROFILE, "Received profileStore: ${nsProfilePlugin.profile}")
+            return Result.success()
         }
     }
 }

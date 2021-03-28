@@ -32,7 +32,7 @@ class ComparatorTest : TriggerTestBase() {
 
     @Test
     fun setValueTest() {
-        val c: Comparator = Comparator(injector).setValue(Comparator.Compare.IS_EQUAL_OR_GREATER)
+        val c: Comparator = Comparator(resourceHelper).setValue(Comparator.Compare.IS_EQUAL_OR_GREATER)
         Assert.assertEquals(Comparator.Compare.IS_EQUAL_OR_GREATER, c.value)
     }
 }

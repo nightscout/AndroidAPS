@@ -5,6 +5,7 @@ import org.apache.commons.lang3.StringUtils;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 import javax.inject.Inject;
@@ -137,9 +138,9 @@ public abstract class MedtronicHistoryDecoder<T extends MedtronicHistoryEntry> i
 
                 String spaces = StringUtils.repeat(" ", 14 - entry.getKey().name().length());
 
-                aapsLogger.info(LTag.PUMPCOMM, String.format("    %s%s - %d. Elements: %s", entry.getKey().name(), spaces, entry.getValue().size(), sb.toString()));
+                aapsLogger.info(LTag.PUMPCOMM, String.format(Locale.ENGLISH, "    %s%s - %d. Elements: %s", entry.getKey().name(), spaces, entry.getValue().size(), sb.toString()));
             } else {
-                aapsLogger.info(LTag.PUMPCOMM, String.format("    %s             - %d", entry.getKey().name(), entry.getValue().size()));
+                aapsLogger.info(LTag.PUMPCOMM, String.format(Locale.ENGLISH, "    %s             - %d", entry.getKey().name(), entry.getValue().size()));
             }
         }
     }

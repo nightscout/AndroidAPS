@@ -1,9 +1,18 @@
 package info.nightscout.androidaps.interfaces;
 
+import org.json.JSONObject;
+
 import info.nightscout.androidaps.db.DbRequest;
 
 public interface UploadQueueInterface {
 
+    long size();
+
     void add(DbRequest dbRequest);
-    void removeID(final String action, final String _id);
+
+    void removeByNsClientIdIfExists(JSONObject record);
+
+    void removeByMongoId(final String action, final String _id);
+
+    String textList();
 }

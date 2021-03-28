@@ -2,7 +2,6 @@ package info.nightscout.androidaps.interfaces
 
 import com.j256.ormlite.dao.CloseableIterator
 import info.nightscout.androidaps.db.*
-import info.nightscout.androidaps.plugins.general.nsclient.NSUpload
 import org.json.JSONObject
 
 interface DatabaseHelperInterface {
@@ -54,7 +53,7 @@ interface DatabaseHelperInterface {
     fun deleteProfileSwitchById(_id: String)
     fun createTempBasalFromJsonIfNotExists(json: JSONObject)
     fun createExtendedBolusFromJsonIfNotExists(json: JSONObject)
-    fun createProfileSwitchFromJsonIfNotExists(activePluginProvider: ActivePluginProvider, nsUpload: NSUpload, trJson: JSONObject)
+    fun createProfileSwitchFromJsonIfNotExists(trJson: JSONObject)
 
     fun getInsightBolusID(pumpSerial: String, bolusID: Int, timestamp: Long): InsightBolusID?
     fun getInsightHistoryOffset(pumpSerial: String): InsightHistoryOffset?

@@ -179,7 +179,7 @@ public class MedtronicPumpHistoryDecoder extends MedtronicHistoryDecoder<PumpHis
         try {
             return decodeRecord(record, false);
         } catch (Exception ex) {
-            aapsLogger.error(LTag.PUMPBTCOMM, "     Error decoding: type={}, ex={}", record.getEntryType().name(), ex.getMessage(), ex);
+            aapsLogger.error(LTag.PUMPBTCOMM, String.format(Locale.ENGLISH, "     Error decoding: type=%s, ex=%s", record.getEntryType().name(), ex.getMessage(), ex));
             return RecordDecodeStatus.Error;
         }
     }
@@ -421,7 +421,7 @@ public class MedtronicPumpHistoryDecoder extends MedtronicHistoryDecoder<PumpHis
         //LOG.info("Basal Profile Start: offset={}, rate={}, index={}, body_raw={}", offset, rate, index, body);
 
         if (rate == null) {
-            aapsLogger.warn(LTag.PUMPBTCOMM, "Basal Profile Start (ERROR): offset={}, rate={}, index={}, body_raw={}", offset, rate, index, body);
+            aapsLogger.warn(LTag.PUMPBTCOMM, String.format(Locale.ENGLISH, "Basal Profile Start (ERROR): offset=%d, rate=%.3f, index=%d, body_raw=%s", offset, rate, index, ByteUtil.getHex(body)));
             return RecordDecodeStatus.Error;
         } else {
             entry.addDecodedData("Value", getFormattedFloat(rate, 3));
@@ -683,8 +683,8 @@ public class MedtronicPumpHistoryDecoder extends MedtronicHistoryDecoder<PumpHis
             //LOG.debug("DT: {} {} {}", year, month, dayOfMonth);
 
             if (dayOfMonth == 32) {
-                aapsLogger.warn(LTag.PUMPBTCOMM, "Entry: Day 32 {} = [{}] {}", entry.getEntryType().name(),
-                        ByteUtil.getHex(entry.getRawData()), entry);
+                aapsLogger.warn(LTag.PUMPBTCOMM, String.format(Locale.ENGLISH, "Entry: Day 32 %s = [%s] %s", entry.getEntryType().name(),
+                        ByteUtil.getHex(entry.getRawData()), entry));
             }
 
             if (isEndResults(entry.getEntryType())) {

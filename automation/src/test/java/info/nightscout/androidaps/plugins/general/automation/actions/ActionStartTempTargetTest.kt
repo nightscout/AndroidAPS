@@ -35,9 +35,9 @@ class ActionStartTempTargetTest : ActionsTestBase() {
     }
 
     @Test fun shortDescriptionTest() {
-        sut.value = InputTempTarget(injector)
+        sut.value = InputTempTarget(profileFunction)
         sut.value.value = 100.0
-        sut.duration = InputDuration(injector, 30, InputDuration.TimeUnit.MINUTES)
+        sut.duration = InputDuration(30, InputDuration.TimeUnit.MINUTES)
         Assert.assertEquals("Start temp target: 100mg/dl@null(Automation)", sut.shortDescription())
     }
 
@@ -94,9 +94,9 @@ class ActionStartTempTargetTest : ActionsTestBase() {
     }
 
     @Test fun toJSONTest() {
-        sut.value = InputTempTarget(injector)
+        sut.value = InputTempTarget(profileFunction)
         sut.value.value = 100.0
-        sut.duration = InputDuration(injector, 30, InputDuration.TimeUnit.MINUTES)
+        sut.duration = InputDuration(30, InputDuration.TimeUnit.MINUTES)
         Assert.assertEquals("{\"data\":{\"durationInMinutes\":30,\"units\":\"mg/dl\",\"value\":100},\"type\":\"info.nightscout.androidaps.plugins.general.automation.actions.ActionStartTempTarget\"}", sut.toJSON())
     }
 

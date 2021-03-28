@@ -4,7 +4,6 @@ import androidx.room.Insert
 import androidx.room.Update
 import info.nightscout.androidaps.database.daos.workaround.TraceableDaoWorkaround
 import info.nightscout.androidaps.database.interfaces.TraceableDBEntry
-import io.reactivex.Single
 
 internal interface TraceableDao<T : TraceableDBEntry> : TraceableDaoWorkaround<T> {
 

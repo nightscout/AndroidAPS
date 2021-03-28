@@ -17,17 +17,17 @@ import info.nightscout.androidaps.utils.JsonHelper
 import org.json.JSONObject
 
 class TriggerBg(injector: HasAndroidInjector) : Trigger(injector) {
-    var bg = InputBg(injector)
-    var comparator = Comparator(injector)
+    var bg = InputBg(profileFunction)
+    var comparator = Comparator(resourceHelper)
 
     constructor(injector: HasAndroidInjector, value: Double, units: String, compare: Comparator.Compare) : this(injector) {
-        bg = InputBg(injector, value, units)
-        comparator = Comparator(injector, compare)
+        bg = InputBg(profileFunction, value, units)
+        comparator = Comparator(resourceHelper, compare)
     }
 
     constructor(injector: HasAndroidInjector, triggerBg: TriggerBg) : this(injector) {
-        bg = InputBg(injector, triggerBg.bg.value, triggerBg.bg.units)
-        comparator = Comparator(injector, triggerBg.comparator.value)
+        bg = InputBg(profileFunction, triggerBg.bg.value, triggerBg.bg.units)
+        comparator = Comparator(resourceHelper, triggerBg.comparator.value)
     }
 
     fun setUnits(units: String): TriggerBg {
@@ -97,9 +97,9 @@ class TriggerBg(injector: HasAndroidInjector) : Trigger(injector) {
 
     override fun generateDialog(root: LinearLayout) {
         LayoutBuilder()
-            .add(StaticLabel(injector, R.string.glucose, this))
+            .add(StaticLabel(resourceHelper, R.string.glucose, this))
             .add(comparator)
-            .add(LabelWithElement(injector, resourceHelper.gs(R.string.glucose_u, bg.units), "", bg))
+            .add(LabelWithElement(resourceHelper, resourceHelper.gs(R.string.glucose_u, bg.units), "", bg))
             .build(root)
     }
 }

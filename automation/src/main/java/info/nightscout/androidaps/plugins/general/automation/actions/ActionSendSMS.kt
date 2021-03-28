@@ -19,7 +19,7 @@ class ActionSendSMS(injector: HasAndroidInjector) : Action(injector) {
     @Inject lateinit var resourceHelper: ResourceHelper
     @Inject lateinit var smsCommunicatorPlugin: SmsCommunicatorInterface
 
-    var text = InputString(injector)
+    var text = InputString()
 
     override fun friendlyName(): Int = R.string.sendsmsactiondescription
     override fun shortDescription(): String = resourceHelper.gs(R.string.sendsmsactionlabel, text.value)
@@ -50,7 +50,7 @@ class ActionSendSMS(injector: HasAndroidInjector) : Action(injector) {
 
     override fun generateDialog(root: LinearLayout) {
         LayoutBuilder()
-            .add(LabelWithElement(injector, resourceHelper.gs(R.string.sendsmsactiontext), "", text))
+            .add(LabelWithElement(resourceHelper, resourceHelper.gs(R.string.sendsmsactiontext), "", text))
             .build(root)
     }
 }

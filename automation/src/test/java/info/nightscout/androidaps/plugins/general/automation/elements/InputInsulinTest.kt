@@ -10,7 +10,7 @@ import org.powermock.modules.junit4.PowerMockRunner
 class InputInsulinTest : TriggerTestBase() {
 
     @Test fun setValueTest() {
-        val i = InputInsulin(injector)
+        val i = InputInsulin()
         i.value = 5.0
         Assert.assertEquals(5.0, i.value, 0.01)
     }
