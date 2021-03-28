@@ -8,7 +8,6 @@ import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.logging.LTag
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.exceptions.ScanException
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.exceptions.ScanFailFoundTooManyException
-import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.exceptions.ScanFailNotFoundException
 import java.util.*
 
 class PodScanner(private val logger: AAPSLogger, private val bluetoothAdapter: BluetoothAdapter) {
@@ -32,7 +31,7 @@ class PodScanner(private val logger: AAPSLogger, private val bluetoothAdapter: B
         scanner.stopScan(scanCollector)
         val collected = scanCollector.collect()
         if (collected.isEmpty()) {
-            throw ScanFailNotFoundException()
+            throw ScanException("Not found")
         } else if (collected.size > 1) {
             throw ScanFailFoundTooManyException(collected)
         }

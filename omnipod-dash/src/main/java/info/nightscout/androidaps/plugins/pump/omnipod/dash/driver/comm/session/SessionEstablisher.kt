@@ -4,7 +4,6 @@ import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.logging.LTag
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.Id
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.endecrypt.Nonce
-import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.exceptions.CouldNotInitiateConnection
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.exceptions.SessionEstablishmentException
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.message.MessageIO
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.message.MessagePacket

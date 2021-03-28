@@ -3,7 +3,6 @@ package info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.scan
 import android.bluetooth.le.ScanRecord
 import android.bluetooth.le.ScanResult
 import android.os.ParcelUuid
-import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.exceptions.DiscoveredInvalidPodException
 
 class BleDiscoveredDevice(val scanResult: ScanResult, private val scanRecord: ScanRecord, private val podId: Long) {
 

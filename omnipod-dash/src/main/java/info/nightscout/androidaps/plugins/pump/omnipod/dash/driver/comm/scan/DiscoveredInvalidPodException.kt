@@ -1,4 +1,4 @@
-package info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.exceptions
+package info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.scan
 
 import android.os.ParcelUuid
 

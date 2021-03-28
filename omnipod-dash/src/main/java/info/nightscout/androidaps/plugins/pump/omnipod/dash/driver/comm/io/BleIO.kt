@@ -99,25 +99,27 @@ abstract class BleIO(
     fun readyToRead(): BleSendResult {
         val notificationSet = gatt.setCharacteristicNotification(characteristic, true)
         if (!notificationSet) {
-            throw CouldNotInitiateConnection("Could not enable notifications")
+            throw ConnectException("Could not enable notifications")
         }
         val descriptors = characteristic.descriptors
         if (descriptors.size != 1) {
-            throw CouldNotInitiateConnection("Expecting one descriptor, found: ${descriptors.size}")
+            throw ConnectException("Expecting one descriptor, found: ${descriptors.size}")
         }
         val descriptor = descriptors[0]
         descriptor.value = BluetoothGattDescriptor.ENABLE_INDICATION_VALUE
         val wrote = gatt.writeDescriptor(descriptor)
         if (!wrote) {
-            throw CouldNotInitiateConnection("Could not enable indications on descriptor")
+            throw ConnectException("Could not enable indications on descriptor")
         }
         val confirmation = bleCommCallbacks.confirmWrite(BluetoothGattDescriptor.ENABLE_INDICATION_VALUE,
                                       descriptor.uuid.toString(),
                                       DEFAULT_IO_TIMEOUT_MS)
-        if (confirmation is WriteConfirmationError) {
-            throw CouldNotInitiateConnection(confirmation.msg)
+        return when(confirmation) {
+            is WriteConfirmationError ->
+                throw ConnectException(confirmation.msg)
+            is WriteConfirmationSuccess ->
+                BleSendSuccess
         }
-        return BleSendSuccess
     }
 
     companion object {

@@ -41,14 +41,21 @@ class BleCommCallbacks(
         }
     }
 
-    @Throws(InterruptedException::class)
     fun waitForConnection(timeoutMs: Int) {
-        connected.await(timeoutMs.toLong(), TimeUnit.MILLISECONDS)
+        try {
+            connected.await(timeoutMs.toLong(), TimeUnit.MILLISECONDS)
+        } catch (e: InterruptedException) {
+            aapsLogger.warn(LTag.PUMPBTCOMM,"Interrupted while waiting for Connection")
+
+        }
     }
 
-    @Throws(InterruptedException::class)
     fun waitForServiceDiscovery(timeoutMs: Int) {
-        serviceDiscoveryComplete.await(timeoutMs.toLong(), TimeUnit.MILLISECONDS)
+        try {
+            serviceDiscoveryComplete.await(timeoutMs.toLong(), TimeUnit.MILLISECONDS)
+        } catch (e: InterruptedException) {
+            aapsLogger.warn(LTag.PUMPBTCOMM,"Interrupted while waiting for ServiceDiscovery")
+        }
     }
 
     fun confirmWrite(expectedPayload: ByteArray, expectedUUID: String, timeoutMs: Long) : WriteConfirmation{
