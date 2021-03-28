@@ -9,6 +9,7 @@ import info.nightscout.androidaps.database.AppRepository
 import info.nightscout.androidaps.database.entities.XXXValueWithUnit
 import info.nightscout.androidaps.database.entities.TherapyEvent
 import info.nightscout.androidaps.database.entities.UserEntry
+import info.nightscout.androidaps.database.entities.UserEntry.*
 import info.nightscout.androidaps.database.transactions.SyncTemporaryTargetTransaction
 import info.nightscout.androidaps.database.transactions.SyncTherapyEventTransaction
 import info.nightscout.androidaps.events.EventNsTreatment
@@ -28,6 +29,7 @@ import info.nightscout.androidaps.utils.buildHelper.BuildHelper
 import info.nightscout.androidaps.utils.extensions.temporaryTargetFromJson
 import info.nightscout.androidaps.utils.extensions.therapyEventFromJson
 import info.nightscout.androidaps.utils.sharedPreferences.SP
+import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
 class NSClientAddUpdateWorker(
@@ -85,28 +87,46 @@ class NSClientAddUpdateWorker(
                             }
                             .blockingGet()
                             .also { result ->
-                                result.inserted.forEach { tt ->
+                                /*result.inserted.forEach { tt ->
                                     uel.log(UserEntry.Action.TT_FROM_NS,
                                         XXXValueWithUnit.TherapyEventTTReason(tt.reason),
                                         XXXValueWithUnit.Mgdl(tt.lowTarget),
                                         XXXValueWithUnit.Mgdl(tt.highTarget).takeIf { tt.lowTarget != tt.highTarget },
-                                        XXXValueWithUnit.Minute(tt.duration.toInt() / 60000)
+                                        XXXValueWithUnit.Minute(tt.duration.toInt() / 60000)*/
+                                result.inserted.forEach {
+                                    uel.log(Action.TT, ValueWithUnit(Sources.NSClient),
+                                        ValueWithUnit(it.reason.text, Units.TherapyEvent),
+                                        ValueWithUnit(it.lowTarget, Units.Mg_Dl, true),
+                                        ValueWithUnit(it.highTarget, Units.Mg_Dl, it.lowTarget != it.highTarget),
+                                        ValueWithUnit(TimeUnit.MILLISECONDS.toMinutes(it.duration).toInt(), Units.M, true)
                                     )
                                 }
-                                result.invalidated.forEach { tt ->
+                                /*result.invalidated.forEach { tt ->
                                     uel.log(UserEntry.Action.TT_DELETED_FROM_NS,
                                         XXXValueWithUnit.TherapyEventTTReason(tt.reason),
                                         XXXValueWithUnit.Mgdl(tt.lowTarget),
                                         XXXValueWithUnit.Mgdl(tt.highTarget).takeIf { tt.lowTarget != tt.highTarget },
-                                        XXXValueWithUnit.Minute(tt.duration.toInt() / 60000)
+                                        XXXValueWithUnit.Minute(tt.duration.toInt() / 60000)*/
+                                result.invalidated.forEach {
+                                    uel.log(Action.TT_REMOVED, ValueWithUnit(Sources.NSClient),
+                                        ValueWithUnit(it.reason.text, Units.TherapyEvent),
+                                        ValueWithUnit(it.lowTarget, Units.Mg_Dl, true),
+                                        ValueWithUnit(it.highTarget, Units.Mg_Dl, it.lowTarget != it.highTarget),
+                                        ValueWithUnit(TimeUnit.MILLISECONDS.toMinutes(it.duration).toInt(), Units.M, true)
                                     )
                                 }
-                                result.ended.forEach { tt ->
+                                /*result.ended.forEach { tt ->
                                     uel.log(UserEntry.Action.TT_CANCELED_FROM_NS,
                                         XXXValueWithUnit.TherapyEventTTReason(tt.reason),
                                         XXXValueWithUnit.Mgdl(tt.lowTarget),
                                         XXXValueWithUnit.Mgdl(tt.highTarget).takeIf { tt.lowTarget != tt.highTarget },
-                                        XXXValueWithUnit.Minute(tt.duration.toInt() / 60000)
+                                        XXXValueWithUnit.Minute(tt.duration.toInt() / 60000)*/
+                                result.ended.forEach {
+                                    uel.log(Action.CANCEL_TT, ValueWithUnit(Sources.NSClient),
+                                        ValueWithUnit(it.reason.text, Units.TherapyEvent),
+                                        ValueWithUnit(it.lowTarget, Units.Mg_Dl, true),
+                                        ValueWithUnit(it.highTarget, Units.Mg_Dl, it.lowTarget != it.highTarget),
+                                        ValueWithUnit(TimeUnit.MILLISECONDS.toMinutes(it.duration).toInt(), Units.M, true)
                                     )
                                 }
                             }
@@ -130,18 +150,28 @@ class NSClientAddUpdateWorker(
                             }
                             .blockingGet()
                             .also { result ->
-                                result.inserted.forEach {
+                                /*result.inserted.forEach {
                                     uel.log(UserEntry.Action.CAREPORTAL_FROM_NS,
                                         it.note ?: "",
                                         XXXValueWithUnit.Timestamp(it.timestamp),
-                                        XXXValueWithUnit.TherapyEventType(it.type)
+                                        XXXValueWithUnit.TherapyEventType(it.type)*/
+                                 result.inserted.forEach {
+                                        uel.log(Action.CAREPORTAL,
+                                        it.note ?: "",  ValueWithUnit(Sources.NSClient),
+                                        ValueWithUnit(it.timestamp, Units.Timestamp, true),
+                                        ValueWithUnit(it.type.text, Units.TherapyEvent)
                                     )
                                 }
-                                result.invalidated.forEach {
+                                /*result.invalidated.forEach {
                                     uel.log(UserEntry.Action.CAREPORTAL_DELETED_FROM_NS,
                                         it.note ?: "",
                                         XXXValueWithUnit.Timestamp(it.timestamp),
-                                        XXXValueWithUnit.TherapyEventType(it.type)
+                                        XXXValueWithUnit.TherapyEventType(it.type)*/
+                                result.invalidated.forEach {
+                                    uel.log(UserEntry.Action.CAREPORTAL_REMOVED,
+                                        it.note ?: "", ValueWithUnit(Sources.NSClient),
+                                        ValueWithUnit(it.timestamp, Units.Timestamp, true),
+                                        ValueWithUnit(it.type.text, Units.TherapyEvent)
                                     )
                                 }
                             }

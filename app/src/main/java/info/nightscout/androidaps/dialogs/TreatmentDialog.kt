@@ -131,7 +131,13 @@ class TreatmentDialog : DialogFragmentWithDate() {
         if (insulinAfterConstraints > 0 || carbsAfterConstraints > 0) {
             activity?.let { activity ->
                 OKDialog.showConfirmation(activity, resourceHelper.gs(R.string.overview_treatment_label), HtmlHelper.fromHtml(Joiner.on("<br/>").join(actions)), {
-                    uel.log(Action.TREATMENT, XXXValueWithUnit.Insulin(insulin ).takeIf { insulin != 0.0 }, XXXValueWithUnit.Gram(carbs).takeIf { carbs != 0 })
+                    //uel.log(Action.TREATMENT, XXXValueWithUnit.Insulin(insulin ).takeIf { insulin != 0.0 }, XXXValueWithUnit.Gram(carbs).takeIf { carbs != 0 })
+                    val action = when {
+                        insulinAfterConstraints.equals(0.0) -> Action.CARBS
+                        carbsAfterConstraints.equals(0)     -> Action.BOLUS
+                        else                                -> Action.TREATMENT
+                    }
+                    uel.log(action, ValueWithUnit(Sources.TreatmentDialog), ValueWithUnit(insulin, Units.U, insulin != 0.0), ValueWithUnit(carbs, Units.G, carbs != 0))
                     val detailedBolusInfo = DetailedBolusInfo()
                     if (insulinAfterConstraints == 0.0) detailedBolusInfo.eventType = TherapyEvent.Type.CARBS_CORRECTION
                     if (carbsAfterConstraints == 0) detailedBolusInfo.eventType = TherapyEvent.Type.CORRECTION_BOLUS

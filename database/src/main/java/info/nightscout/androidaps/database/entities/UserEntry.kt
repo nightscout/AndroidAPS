@@ -15,14 +15,14 @@ data class UserEntry(
     override var timestamp: Long,
     override var utcOffset: Long = TimeZone.getDefault().getOffset(timestamp).toLong(),
     var action: Action,
-    var remark: String,
+    var s: String,
    // val sources: Sources,
     var values: MutableList<ValueWithUnit>
 ) : DBEntry, DBEntryWithTime {
     enum class Action (val colorGroup: ColorGroup) {
         @SerializedName("BOLUS") BOLUS (ColorGroup.InsulinTreatment),
+        @SerializedName("SMB") SMB (ColorGroup.InsulinTreatment),
         @SerializedName("BOLUS_ADVISOR") BOLUS_ADVISOR (ColorGroup.InsulinTreatment),
-        @SerializedName("BOLUS_RECORD") BOLUS_RECORD (ColorGroup.InsulinTreatment),
         @SerializedName("EXTENDED_BOLUS") EXTENDED_BOLUS (ColorGroup.InsulinTreatment),
         @SerializedName("SUPERBOLUS_TBR") SUPERBOLUS_TBR (ColorGroup.InsulinTreatment),
         @SerializedName("CARBS") CARBS (ColorGroup.CarbTreatment),
@@ -87,26 +87,8 @@ data class UserEntry(
         @SerializedName("IMPORT_DATABASES") IMPORT_DATABASES (ColorGroup.Aaps),
         @SerializedName("OTP_EXPORT") OTP_EXPORT (ColorGroup.Aaps),
         @SerializedName("OTP_RESET") OTP_RESET (ColorGroup.Aaps),
-        @SerializedName("SMS_BASAL") SMS_BASAL (ColorGroup.InsulinTreatment),
-        @SerializedName("SMS_BOLUS") SMS_BOLUS (ColorGroup.InsulinTreatment),
-        @SerializedName("SMS_CAL") SMS_CAL (ColorGroup.Careportal),
-        @SerializedName("SMS_CARBS") SMS_CARBS (ColorGroup.CarbTreatment),
-        @SerializedName("SMS_EXTENDED_BOLUS") SMS_EXTENDED_BOLUS (ColorGroup.InsulinTreatment),
-        @SerializedName("SMS_LOOP_DISABLED") SMS_LOOP_DISABLED (ColorGroup.Loop),
-        @SerializedName("SMS_LOOP_ENABLED") SMS_LOOP_ENABLED (ColorGroup.Loop),
-        @SerializedName("SMS_LOOP_RESUME") SMS_LOOP_RESUME (ColorGroup.Loop),
-        @SerializedName("SMS_LOOP_SUSPEND") SMS_LOOP_SUSPEND (ColorGroup.Loop),
-        @SerializedName("SMS_PROFILE") SMS_PROFILE (ColorGroup.Profile),
-        @SerializedName("SMS_PUMP_CONNECT") SMS_PUMP_CONNECT (ColorGroup.Pump),
-        @SerializedName("SMS_PUMP_DISCONNECT") SMS_PUMP_DISCONNECT (ColorGroup.Pump),
-        @SerializedName("SMS_SMS") SMS_SMS (ColorGroup.Aaps),
-        @SerializedName("SMS_TT") SMS_TT (ColorGroup.TT),
-        @SerializedName("TT_DELETED_FROM_NS") TT_DELETED_FROM_NS (ColorGroup.TT),
-        @SerializedName("CAREPORTAL_DELETED_FROM_NS") CAREPORTAL_DELETED_FROM_NS (ColorGroup.Careportal),
-        @SerializedName("CAREPORTAL_FROM_NS") CAREPORTAL_FROM_NS (ColorGroup.Careportal),
-        @SerializedName("FOOD_FROM_NS") FOOD_FROM_NS (ColorGroup.Careportal),
-        @SerializedName("TT_FROM_NS") TT_FROM_NS (ColorGroup.TT),
-        @SerializedName("TT_CANCELED_FROM_NS") TT_CANCELED_FROM_NS (ColorGroup.TT),
+        @SerializedName("STOP_SMS") STOP_SMS (ColorGroup.Aaps),
+        @SerializedName("FOOD") FOOD (ColorGroup.Careportal),
         @SerializedName("EXPORT_CSV") EXPORT_CSV (ColorGroup.Aaps),
         @SerializedName("UNKNOWN") UNKNOWN (ColorGroup.Aaps)
         ;
@@ -116,10 +98,18 @@ data class UserEntry(
         }
     }
     data class ValueWithUnit (val dValue: Double=0.0, val iValue: Int=0, val lValue: Long=0, val sValue: String="", val unit: Units=Units.None, val condition:Boolean=true){
+        constructor(dvalue: Double, unit: Units, condition:Boolean = true) : this(dvalue, 0, 0, "", unit, condition)
+        constructor(ivalue: Int, unit: Units, condition:Boolean = true) : this(0.0, ivalue, 0, "", unit, condition)
+        constructor(lvalue: Long, unit: Units, condition:Boolean = true) : this(0.0,0, lvalue, "", unit, condition)
+        constructor(svalue: String, unit:Units) : this(0.0,0, 0, svalue, unit, svalue != "")
+        constructor(source: Sources) : this(0.0,0, 0, source.text, Units.Source, true)
+        constructor(dvalue: Double, unit:String, condition:Boolean = true) : this(dvalue,0, 0, "", Units.fromText(unit), condition)
+        constructor(rStringRef: Int, nbParam: Long) : this(0.0, rStringRef, nbParam, "", Units.R_String, !rStringRef.equals(0))             // additionnal constructors for formated strings with additional values as parameters (define number of parameters as long
+
         fun value() : Any {
             if (sValue != "") return sValue
             if (!dValue.equals(0.0)) return dValue
-            if (iValue != 0) return iValue
+            if (!iValue.equals(0)) return iValue
             return lValue
         }
     }
@@ -135,12 +125,52 @@ data class UserEntry(
         @SerializedName("H") H ("h"),                                   //Int
         @SerializedName("Percent") Percent ("%"),                       //Int
         @SerializedName("TherapyEvent") TherapyEvent ("TherapyEvent"),  //String (All enum key translated by Translator function, mainly TherapyEvent)
-        @SerializedName("R_String") R_String ("R.string")               //Int
+        @SerializedName("R_String") R_String ("R.string"),              //Int
+        @SerializedName("Source") Source ("Source")                     //String
         ;
 
         companion object {
             fun fromString(unit: String?) = values().firstOrNull { it.name == unit } ?: None
             fun fromText(unit: String?) = values().firstOrNull { it.text == unit } ?: None
+        }
+    }
+    enum class Sources(val text: String) {
+        @SerializedName("TreatmentDialog") TreatmentDialog ("TreatmentDialog"),
+        @SerializedName("InsulinDialog") InsulinDialog ("InsulinDialog"),
+        @SerializedName("CarbDialog") CarbDialog ("CarbDialog"),
+        @SerializedName("WizardDialog") WizardDialog ("WizardDialog"),
+        @SerializedName("QuickWizard") QuickWizard ("QuickWizard"),
+        @SerializedName("ExtendedBolusDialog") ExtendedBolusDialog ("ExtendedBolusDialog"),
+        @SerializedName("TTDialog") TTDialog ("TTDialog"),
+        @SerializedName("ProfileSwitchDialog") ProfileSwitchDialog ("ProfileSwitchDialog"),
+        @SerializedName("LoopDialog") LoopDialog ("LoopDialog"),
+        @SerializedName("TempBasalDialog") TempBasalDialog ("TempBasalDialog"),
+        @SerializedName("CalibrationDialog") CalibrationDialog ("CalibrationDialog"),
+        @SerializedName("FillDialog") FillDialog ("FillDialog"),
+        @SerializedName("BgCheck") BgCheck ("BgCheck"),
+        @SerializedName("SensorInsert") SensorInsert ("SensorInsert"),
+        @SerializedName("BatteryChange") BatteryChange ("BatteryChange"),
+        @SerializedName("Note") Note ("Note"),
+        @SerializedName("Exercise") Exercise ("Exercise"),
+        @SerializedName("Question") Question ("Question"),
+        @SerializedName("Announcement") Announcement ("Announcement"),
+        @SerializedName("Actions") Actions ("Actions"),             //From Actions plugin
+        @SerializedName("Automation") Automation ("Automation"),    //From Automation plugin
+        @SerializedName("LocalProfile") LocalProfile ("LocalProfile"),  //From LocalProfile plugin
+        @SerializedName("Loop") Loop ("Loop"),                      //From Loop plugin
+        @SerializedName("Maintenance") Maintenance ("Maintenance"), //From Maintenance plugin
+        @SerializedName("NSClient") NSClient ("NSClient"),          //From NSClient plugin
+        @SerializedName("Pump") Pump ("Pump"),                      //From Pump plugin (for example from pump history)
+        @SerializedName("SMS") SMS ("SMS"),                         //From SMS plugin
+        @SerializedName("Treatments") Treatments ("Treatments"),    //From Treatments plugin
+        @SerializedName("Wear") Wear ("Wear"),                      //From Wear plugin
+        @SerializedName("Food") Food ("Food"),                      //From Food plugin
+        @SerializedName("Unknown") Unknown ("Unknown")              //if necessary
+        ;
+
+        companion object {
+            fun fromString(source: String?) = values().firstOrNull { it.name == source } ?: Unknown
+            fun fromText(source: String?) = values().firstOrNull { it.text == source } ?: Unknown
         }
     }
 
@@ -153,5 +183,13 @@ data class UserEntry(
         Careportal,
         Pump,
         Aaps
+    }
+
+    fun isLoop(): Boolean {
+        var result = false
+        for (v in values) {
+            if (v.unit == Units.Source && Sources.fromText(v.sValue).equals(Sources.Loop)) result = true
+        }
+        return result
     }
 }

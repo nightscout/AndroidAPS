@@ -223,7 +223,8 @@ class CarbsDialog : DialogFragmentWithDate() {
                 OKDialog.showConfirmation(activity, resourceHelper.gs(R.string.carbs), HtmlHelper.fromHtml(Joiner.on("<br/>").join(actions)), {
                     when {
                         activitySelected   -> {
-                            uel.log(Action.TT, XXXValueWithUnit.TherapyEventTTReason(TemporaryTarget.Reason.ACTIVITY), XXXValueWithUnit.fromGlucoseUnit(activityTT, units) , XXXValueWithUnit.Minute(activityTTDuration))
+                            //uel.log(Action.TT, XXXValueWithUnit.TherapyEventTTReason(TemporaryTarget.Reason.ACTIVITY), XXXValueWithUnit.fromGlucoseUnit(activityTT, units) , XXXValueWithUnit.Minute(activityTTDuration))
+                            uel.log(Action.TT, ValueWithUnit(Sources.CarbDialog), ValueWithUnit(TemporaryTarget.Reason.ACTIVITY.text, Units.TherapyEvent), ValueWithUnit(activityTT, units) , ValueWithUnit(activityTTDuration, Units.M))
                             disposable += repository.runTransactionForResult(InsertTemporaryTargetAndCancelCurrentTransaction(
                                 timestamp = System.currentTimeMillis(),
                                 duration = TimeUnit.MINUTES.toMillis(activityTTDuration.toLong()),
@@ -239,7 +240,8 @@ class CarbsDialog : DialogFragmentWithDate() {
                         }
 
                         eatingSoonSelected -> {
-                            uel.log(Action.TT, XXXValueWithUnit.TherapyEventTTReason(TemporaryTarget.Reason.EATING_SOON), XXXValueWithUnit.fromGlucoseUnit(eatingSoonTT, units) , XXXValueWithUnit.Minute(eatingSoonTTDuration))
+                            //uel.log(Action.TT, XXXValueWithUnit.TherapyEventTTReason(TemporaryTarget.Reason.EATING_SOON), XXXValueWithUnit.fromGlucoseUnit(eatingSoonTT, units) , XXXValueWithUnit.Minute(eatingSoonTTDuration))
+                            uel.log(Action.TT, ValueWithUnit(Sources.CarbDialog), ValueWithUnit(TemporaryTarget.Reason.EATING_SOON.text, Units.TherapyEvent), ValueWithUnit(eatingSoonTT, units) , ValueWithUnit(eatingSoonTTDuration, Units.M))
                             disposable += repository.runTransactionForResult(InsertTemporaryTargetAndCancelCurrentTransaction(
                                 timestamp = System.currentTimeMillis(),
                                 duration = TimeUnit.MINUTES.toMillis(eatingSoonTTDuration.toLong()),
@@ -255,7 +257,8 @@ class CarbsDialog : DialogFragmentWithDate() {
                         }
 
                         hypoSelected       -> {
-                            uel.log(Action.TT, XXXValueWithUnit.TherapyEventTTReason(TemporaryTarget.Reason.HYPOGLYCEMIA), XXXValueWithUnit.fromGlucoseUnit(hypoTT, units) , XXXValueWithUnit.Minute(hypoTTDuration))
+                            //uel.log(Action.TT, XXXValueWithUnit.TherapyEventTTReason(TemporaryTarget.Reason.HYPOGLYCEMIA), XXXValueWithUnit.fromGlucoseUnit(hypoTT, units) , XXXValueWithUnit.Minute(hypoTTDuration))
+                            uel.log(Action.TT, ValueWithUnit(Sources.CarbDialog), ValueWithUnit(TemporaryTarget.Reason.HYPOGLYCEMIA.text, Units.TherapyEvent), ValueWithUnit(hypoTT, units) , ValueWithUnit(hypoTTDuration, Units.M))
                             disposable += repository.runTransactionForResult(InsertTemporaryTargetAndCancelCurrentTransaction(
                                 timestamp = System.currentTimeMillis(),
                                 duration = TimeUnit.MINUTES.toMillis(hypoTTDuration.toLong()),
@@ -273,11 +276,14 @@ class CarbsDialog : DialogFragmentWithDate() {
                     if (carbsAfterConstraints > 0) {
                         if (duration == 0) {
                             carbsGenerator.createCarb(carbsAfterConstraints, time, TherapyEvent.Type.CARBS_CORRECTION, notes)
+                            uel.log(Action.CARBS, notes, ValueWithUnit(Sources.CarbDialog), ValueWithUnit(eventTime, Units.Timestamp, eventTimeChanged), ValueWithUnit(carbsAfterConstraints, Units.G), ValueWithUnit(timeOffset, Units.M, timeOffset != 0))
+
                         } else {
                             carbsGenerator.generateCarbs(carbsAfterConstraints, time, duration, notes)
                             nsUpload.uploadEvent(TherapyEvent.Type.NOTE.text, DateUtil.now() - 2000, resourceHelper.gs(R.string.generated_ecarbs_note, carbsAfterConstraints, duration, timeOffset))
+                            uel.log(Action.EXTENDED_CARBS, notes, ValueWithUnit(Sources.CarbDialog), ValueWithUnit(eventTime, Units.Timestamp, eventTimeChanged), ValueWithUnit(carbsAfterConstraints, Units.G), ValueWithUnit(timeOffset, Units.M, timeOffset != 0), ValueWithUnit(duration, Units.H))
                         }
-                        uel.log(Action.CARBS, notes, XXXValueWithUnit.Timestamp(eventTime).takeIf { eventTimeChanged }, XXXValueWithUnit.Gram(carbsAfterConstraints), XXXValueWithUnit.Minute(timeOffset).takeIf { timeOffset != 0 }, XXXValueWithUnit.Hour(duration).takeIf { duration != 0 })
+                        //uel.log(Action.CARBS, notes, XXXValueWithUnit.Timestamp(eventTime).takeIf { eventTimeChanged }, XXXValueWithUnit.Gram(carbsAfterConstraints), XXXValueWithUnit.Minute(timeOffset).takeIf { timeOffset != 0 }, XXXValueWithUnit.Hour(duration).takeIf { duration != 0 })
                     }
                     if (useAlarm && carbs > 0 && timeOffset > 0) {
                         carbTimer.scheduleReminder(dateUtil._now() + T.mins(timeOffset.toLong()).msecs())

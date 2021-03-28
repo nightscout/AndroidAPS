@@ -89,7 +89,8 @@ class ExtendedBolusDialog : DialogFragmentWithDate() {
 
         activity?.let { activity ->
             OKDialog.showConfirmation(activity, resourceHelper.gs(R.string.extended_bolus), HtmlHelper.fromHtml(Joiner.on("<br/>").join(actions)), {
-                uel.log(Action.EXTENDED_BOLUS, XXXValueWithUnit.Insulin(insulinAfterConstraint), XXXValueWithUnit.Minute(durationInMinutes))
+                //uel.log(Action.EXTENDED_BOLUS, XXXValueWithUnit.Insulin(insulinAfterConstraint), XXXValueWithUnit.Minute(durationInMinutes))
+                uel.log(Action.EXTENDED_BOLUS, ValueWithUnit(Sources.ExtendedBolusDialog), ValueWithUnit(insulinAfterConstraint, Units.U), ValueWithUnit(durationInMinutes, Units.M))
                 commandQueue.extendedBolus(insulinAfterConstraint, durationInMinutes, object : Callback() {
                     override fun run() {
                         if (!result.success) {

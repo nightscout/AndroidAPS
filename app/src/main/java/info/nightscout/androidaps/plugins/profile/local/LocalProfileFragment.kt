@@ -163,7 +163,7 @@ class LocalProfileFragment : DaggerFragment() {
             if (localProfilePlugin.isEdited) {
                 activity?.let { OKDialog.show(it, "", resourceHelper.gs(R.string.saveorresetchangesfirst)) }
             } else {
-                uel.log(Action.NEW_PROFILE)
+                uel.log(Action.NEW_PROFILE, ValueWithUnit(Sources.LocalProfile))
                 localProfilePlugin.addNewProfile()
                 build()
             }
@@ -173,7 +173,7 @@ class LocalProfileFragment : DaggerFragment() {
             if (localProfilePlugin.isEdited) {
                 activity?.let { OKDialog.show(it, "", resourceHelper.gs(R.string.saveorresetchangesfirst)) }
             } else {
-                uel.log(Action.CLONE_PROFILE, localProfilePlugin.currentProfile()?.name ?: "")
+                uel.log(Action.CLONE_PROFILE, ValueWithUnit(Sources.LocalProfile), ValueWithUnit(localProfilePlugin.currentProfile()?.name ?: "", Units.None))
                 localProfilePlugin.cloneProfile()
                 build()
             }
@@ -182,7 +182,7 @@ class LocalProfileFragment : DaggerFragment() {
         binding.profileRemove.setOnClickListener {
             activity?.let { activity ->
                 OKDialog.showConfirmation(activity, resourceHelper.gs(R.string.deletecurrentprofile), {
-                    uel.log(Action.PROFILE_REMOVED, localProfilePlugin.currentProfile()?.name ?: "")
+                    uel.log(Action.PROFILE_REMOVED, ValueWithUnit(Sources.LocalProfile), ValueWithUnit(localProfilePlugin.currentProfile()?.name ?: "", Units.None))
                     localProfilePlugin.removeCurrentProfile()
                     build()
                 }, null)
@@ -210,6 +210,7 @@ class LocalProfileFragment : DaggerFragment() {
             if (!localProfilePlugin.isValidEditState()) {
                 return@setOnClickListener  //Should not happen as saveButton should not be visible if not valid
             }
+            uel.log(Action.STORE_PROFILE, ValueWithUnit(Sources.LocalProfile), ValueWithUnit(localProfilePlugin.currentProfile()?.name ?: "", Units.None))
             localProfilePlugin.storeSettings(activity)
             build()
         }

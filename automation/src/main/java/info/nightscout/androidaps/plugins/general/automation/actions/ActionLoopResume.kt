@@ -4,9 +4,12 @@ import androidx.annotation.DrawableRes
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.automation.R
 import info.nightscout.androidaps.data.PumpEnactResult
+import info.nightscout.androidaps.database.entities.UserEntry
+import info.nightscout.androidaps.database.entities.UserEntry.*
 import info.nightscout.androidaps.events.EventRefreshOverview
 import info.nightscout.androidaps.interfaces.ConfigBuilderInterface
 import info.nightscout.androidaps.interfaces.LoopInterface
+import info.nightscout.androidaps.logging.UserEntryLogger
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper
 import info.nightscout.androidaps.queue.Callback
 import info.nightscout.androidaps.utils.resources.ResourceHelper
@@ -17,6 +20,7 @@ class ActionLoopResume(injector: HasAndroidInjector) : Action(injector) {
     @Inject lateinit var loopPlugin: LoopInterface
     @Inject lateinit var configBuilderPlugin: ConfigBuilderInterface
     @Inject lateinit var rxBus: RxBusWrapper
+    @Inject lateinit var uel: UserEntryLogger
 
     override fun friendlyName(): Int = R.string.resumeloop
     override fun shortDescription(): String = resourceHelper.gs(R.string.resumeloop)
@@ -28,6 +32,7 @@ class ActionLoopResume(injector: HasAndroidInjector) : Action(injector) {
             configBuilderPlugin.storeSettings("ActionLoopResume")
             loopPlugin.createOfflineEvent(0)
             rxBus.send(EventRefreshOverview("ActionLoopResume"))
+            uel.log(UserEntry.Action.RESUME, ValueWithUnit(Sources.Automation))
             callback.result(PumpEnactResult(injector).success(true).comment(R.string.ok))?.run()
         } else {
             callback.result(PumpEnactResult(injector).success(true).comment(R.string.notsuspended))?.run()

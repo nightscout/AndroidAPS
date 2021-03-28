@@ -8,6 +8,7 @@ import info.nightscout.androidaps.R
 import info.nightscout.androidaps.database.AppRepository
 import info.nightscout.androidaps.database.entities.XXXValueWithUnit
 import info.nightscout.androidaps.database.entities.UserEntry
+import info.nightscout.androidaps.database.entities.UserEntry.*
 import info.nightscout.androidaps.database.transactions.SyncTemporaryTargetTransaction
 import info.nightscout.androidaps.database.transactions.SyncTherapyEventTransaction
 import info.nightscout.androidaps.events.EventNsTreatment
@@ -24,6 +25,7 @@ import info.nightscout.androidaps.utils.buildHelper.BuildHelper
 import info.nightscout.androidaps.utils.extensions.temporaryTargetFromNsIdForInvalidating
 import info.nightscout.androidaps.utils.extensions.therapyEventFromNsIdForInvalidating
 import info.nightscout.androidaps.utils.sharedPreferences.SP
+import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
 // This will not be needed fpr NS v3
@@ -66,13 +68,22 @@ class NSClientRemoveWorker(
                 }
                 .blockingGet()
                 .also { result ->
-                    result.invalidated.forEach { tt ->
+                    /*result.invalidated.forEach { tt ->
                         uel.log(
                             UserEntry.Action.TT_DELETED_FROM_NS,
                             XXXValueWithUnit.TherapyEventTTReason(tt.reason),
                             XXXValueWithUnit.Mgdl(tt.lowTarget),
                             XXXValueWithUnit.Mgdl(tt.highTarget).takeIf { tt.lowTarget != tt.highTarget },
                             XXXValueWithUnit.Minute(tt.duration.toInt() / 60000).takeIf { tt.duration != 0L }
+                        )
+                    }*/
+                    result.invalidated.forEach {
+                        uel.log(
+                            Action.TT_REMOVED, ValueWithUnit(Sources.NSClient),
+                            ValueWithUnit(it.reason.text, Units.TherapyEvent),
+                            ValueWithUnit(it.lowTarget, Units.Mg_Dl, true),
+                            ValueWithUnit(it.highTarget, Units.Mg_Dl, it.lowTarget != it.highTarget),
+                            ValueWithUnit(TimeUnit.MILLISECONDS.toMinutes(it.duration).toInt(), Units.M, it.duration != 0L)
                         )
                     }
                 }
@@ -87,10 +98,15 @@ class NSClientRemoveWorker(
                 .blockingGet()
                 .also { result ->
                     result.invalidated.forEach {
-                        uel.log(
+                        /*uel.log(
                             UserEntry.Action.CAREPORTAL_DELETED_FROM_NS, (it.note ?: ""),
                             XXXValueWithUnit.Timestamp(it.timestamp),
-                            XXXValueWithUnit.TherapyEventType(it.type))
+                            XXXValueWithUnit.TherapyEventType(it.type))*/
+                        uel.log(
+                            Action.CAREPORTAL_REMOVED, (it.note ?: ""), ValueWithUnit(Sources.NSClient),
+                            ValueWithUnit(it.timestamp, Units.Timestamp, true),
+                            ValueWithUnit(it.type.text, Units.TherapyEvent))
+
                     }
                 }
 

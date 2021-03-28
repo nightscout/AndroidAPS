@@ -137,11 +137,13 @@ class FillDialog : DialogFragmentWithDate() {
             activity?.let { activity ->
                 OKDialog.showConfirmation(activity, resourceHelper.gs(R.string.primefill), HtmlHelper.fromHtml(Joiner.on("<br/>").join(actions)), {
                     if (insulinAfterConstraints > 0) {
-                        uel.log(Action.PRIME_BOLUS, notes, XXXValueWithUnit.Insulin(insulinAfterConstraints).takeIf { insulinAfterConstraints != 0.0 })
+                        //uel.log(Action.PRIME_BOLUS, notes, XXXValueWithUnit.Insulin(insulinAfterConstraints).takeIf { insulinAfterConstraints != 0.0 })
+                        uel.log(Action.PRIME_BOLUS, notes, ValueWithUnit(Sources.FillDialog), ValueWithUnit(insulinAfterConstraints, Units.U, insulinAfterConstraints != 0.0))
                         requestPrimeBolus(insulinAfterConstraints, notes)
                     }
                     if (siteChange) {
-                        uel.log(Action.CAREPORTAL, notes, XXXValueWithUnit.TherapyEventType(TherapyEvent.Type.CANNULA_CHANGE))
+                        //uel.log(Action.CAREPORTAL, notes, XXXValueWithUnit.TherapyEventType(TherapyEvent.Type.CANNULA_CHANGE))
+                        uel.log(Action.CAREPORTAL, notes, ValueWithUnit(Sources.FillDialog), ValueWithUnit(eventTime, Units.Timestamp, eventTimeChanged), ValueWithUnit(TherapyEvent.Type.CANNULA_CHANGE.text, Units.TherapyEvent))
                         disposable += repository.runTransactionForResult(InsertTherapyEventIfNewTransaction(
                             timestamp = eventTime,
                             type = TherapyEvent.Type.CANNULA_CHANGE,
@@ -155,7 +157,8 @@ class FillDialog : DialogFragmentWithDate() {
                     }
                     if (insulinChange) {
                         // add a second for case of both checked
-                        uel.log(Action.CAREPORTAL, notes, XXXValueWithUnit.TherapyEventType(TherapyEvent.Type.INSULIN_CHANGE))
+                        //uel.log(Action.CAREPORTAL, notes, XXXValueWithUnit.TherapyEventType(TherapyEvent.Type.INSULIN_CHANGE))
+                        uel.log(Action.CAREPORTAL, notes, ValueWithUnit(Sources.FillDialog), ValueWithUnit(eventTime, Units.Timestamp, eventTimeChanged), ValueWithUnit(TherapyEvent.Type.INSULIN_CHANGE.text, Units.TherapyEvent))
                         disposable += repository.runTransactionForResult(InsertTherapyEventIfNewTransaction(
                             timestamp = eventTime + 1000,
                             type = TherapyEvent.Type.INSULIN_CHANGE,

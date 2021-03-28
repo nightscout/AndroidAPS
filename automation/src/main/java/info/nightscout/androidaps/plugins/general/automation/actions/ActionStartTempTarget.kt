@@ -9,10 +9,13 @@ import info.nightscout.androidaps.data.Profile
 import info.nightscout.androidaps.data.PumpEnactResult
 import info.nightscout.androidaps.database.AppRepository
 import info.nightscout.androidaps.database.entities.TemporaryTarget
+import info.nightscout.androidaps.database.entities.UserEntry
+import info.nightscout.androidaps.database.entities.UserEntry.*
 import info.nightscout.androidaps.database.transactions.InsertTemporaryTargetAndCancelCurrentTransaction
 import info.nightscout.androidaps.interfaces.ActivePluginProvider
 import info.nightscout.androidaps.interfaces.ProfileFunction
 import info.nightscout.androidaps.logging.LTag
+import info.nightscout.androidaps.logging.UserEntryLogger
 import info.nightscout.androidaps.plugins.general.automation.elements.ComparatorExists
 import info.nightscout.androidaps.plugins.general.automation.elements.InputDuration
 import info.nightscout.androidaps.plugins.general.automation.elements.InputTempTarget
@@ -39,6 +42,7 @@ class ActionStartTempTarget(injector: HasAndroidInjector) : Action(injector) {
     @Inject lateinit var repository: AppRepository
     @Inject lateinit var nsUpload: NSUpload
     @Inject lateinit var profileFunction: ProfileFunction
+    @Inject lateinit var uel: UserEntryLogger
 
     private val disposable = CompositeDisposable()
 
@@ -58,6 +62,7 @@ class ActionStartTempTarget(injector: HasAndroidInjector) : Action(injector) {
             .subscribe({ result ->
                 result.inserted.forEach { nsUpload.uploadTempTarget(it) }
                 result.updated.forEach { nsUpload.updateTempTarget(it) }
+                uel.log(UserEntry.Action.TT, ValueWithUnit(Sources.Automation), ValueWithUnit(TemporaryTarget.Reason.AUTOMATION.text, Units.TherapyEvent), ValueWithUnit(tt().lowTarget, Units.Mg_Dl), ValueWithUnit(tt().highTarget, Units.Mg_Dl, tt().lowTarget!=tt().highTarget), ValueWithUnit(TimeUnit.MILLISECONDS.toMinutes(tt().duration).toInt(), Units.M))
                 callback.result(PumpEnactResult(injector).success(true).comment(R.string.ok))?.run()
             }, {
                 aapsLogger.error(LTag.BGSOURCE, "Error while saving temporary target", it)

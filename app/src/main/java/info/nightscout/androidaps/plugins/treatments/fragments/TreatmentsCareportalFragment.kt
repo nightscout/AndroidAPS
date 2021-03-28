@@ -80,7 +80,7 @@ class TreatmentsCareportalFragment : DaggerFragment() {
         binding.refreshFromNightscout.setOnClickListener {
             activity?.let { activity ->
                 OKDialog.showConfirmation(activity, resourceHelper.gs(R.string.careportal), resourceHelper.gs(R.string.refresheventsfromnightscout) + " ?", Runnable {
-                    uel.log(Action.CAREPORTAL_NS_REFRESH)
+                    uel.log(Action.CAREPORTAL_NS_REFRESH, ValueWithUnit(Sources.Treatments))
                     disposable += Completable.fromAction { repository.deleteAllTherapyEventsEntries() }
                         .subscribeOn(aapsSchedulers.io)
                         .observeOn(aapsSchedulers.main)
@@ -95,7 +95,7 @@ class TreatmentsCareportalFragment : DaggerFragment() {
         binding.removeAndroidapsStartedEvents.setOnClickListener {
             activity?.let { activity ->
                 OKDialog.showConfirmation(activity, resourceHelper.gs(R.string.careportal), resourceHelper.gs(R.string.careportal_removestartedevents), Runnable {
-                    uel.log(Action.RESTART_EVENTS_REMOVED)
+                    uel.log(Action.RESTART_EVENTS_REMOVED, ValueWithUnit(Sources.Treatments))
                     //               val events = databaseHelper.getCareportalEvents(false)
                     repository.runTransactionForResult(InvalidateAAPSStartedTherapyEventTransaction())
                         .subscribe({ result ->
@@ -197,7 +197,8 @@ class TreatmentsCareportalFragment : DaggerFragment() {
                             resourceHelper.gs(R.string.notes_label) + ": " + (therapyEvent.note ?: "") + "\n" +
                             resourceHelper.gs(R.string.date) + ": " + dateUtil.dateAndTimeString(therapyEvent.timestamp)
                         OKDialog.showConfirmation(activity, resourceHelper.gs(R.string.removerecord), text, Runnable {
-                            uel.log(Action.CAREPORTAL_REMOVED, therapyEvent.note , XXXValueWithUnit.Timestamp(therapyEvent.timestamp), XXXValueWithUnit.TherapyEventType(therapyEvent.type))
+                            //uel.log(Action.CAREPORTAL_REMOVED, therapyEvent.note , XXXValueWithUnit.Timestamp(therapyEvent.timestamp), XXXValueWithUnit.TherapyEventType(therapyEvent.type))
+                            uel.log(Action.CAREPORTAL_REMOVED, therapyEvent.note, ValueWithUnit(Sources.Treatments), ValueWithUnit(therapyEvent.timestamp, Units.Timestamp), ValueWithUnit(therapyEvent.type.text, Units.TherapyEvent))
                             disposable += repository.runTransactionForResult(InvalidateTherapyEventTransaction(therapyEvent.id))
                                 .subscribe({
                                     val id = therapyEvent.interfaceIDs.nightscoutId

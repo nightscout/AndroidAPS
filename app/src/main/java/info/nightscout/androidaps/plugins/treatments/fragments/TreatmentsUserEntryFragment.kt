@@ -1,6 +1,7 @@
 package info.nightscout.androidaps.plugins.treatments.fragments
 
 import android.os.Bundle
+import android.renderscript.Sampler
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -19,6 +20,7 @@ import info.nightscout.androidaps.interfaces.ImportExportPrefsInterface
 import info.nightscout.androidaps.interfaces.ProfileFunction
 import info.nightscout.androidaps.logging.UserEntryLogger
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper
+import info.nightscout.androidaps.plugins.treatments.events.EventTreatmentUpdateGui
 import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.DecimalFormatter
 import info.nightscout.androidaps.utils.FabricPrivacy
@@ -28,6 +30,7 @@ import info.nightscout.androidaps.utils.extensions.*
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 import info.nightscout.androidaps.utils.rx.AapsSchedulers
 import io.reactivex.disposables.CompositeDisposable
+import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
 class TreatmentsUserEntryFragment : DaggerFragment() {
@@ -62,20 +65,29 @@ class TreatmentsUserEntryFragment : DaggerFragment() {
         binding.ueExportToXml.setOnClickListener {
             activity?.let { activity ->
                 OKDialog.showConfirmation(activity, resourceHelper.gs(R.string.ue_export_to_csv) + "?") {
-                    uel.log(Action.EXPORT_CSV)
+                    uel.log(Action.EXPORT_CSV, ValueWithUnit(Sources.Treatments))
                     importExportPrefs.exportUserEntriesCsv(activity, repository.getAllUserEntries())
                 }
             }
         }
-
+        binding.showLoop.setOnCheckedChangeListener { _, _ ->
+            rxBus.send(EventTreatmentUpdateGui())
+        }
     }
 
     fun swapAdapter() {
-       disposable.add( repository
-            .getAllUserEntries()
-            .observeOn(aapsSchedulers.main)
-            .subscribe { list -> binding.recyclerview.swapAdapter(UserEntryAdapter(list), true) }
-       )
+        if (binding.showLoop.isChecked)
+            disposable.add( repository
+                .getAllUserEntries()
+                .observeOn(aapsSchedulers.main)
+                .subscribe { list -> binding.recyclerview.swapAdapter(UserEntryAdapter(list), true) }
+            )
+        else
+            disposable.add( repository
+                .getAllUserEntries()
+                .observeOn(aapsSchedulers.main)
+                .subscribe { list -> binding.recyclerview.swapAdapter(UserEntryAdapter(filterUserEntries(list)), true) }
+            )
     }
 
     @Synchronized
@@ -86,6 +98,11 @@ class TreatmentsUserEntryFragment : DaggerFragment() {
         disposable.add(rxBus
             .toObservable(EventPreferenceChange::class.java)
             .observeOn(aapsSchedulers.io)
+            .subscribe({ swapAdapter() }, fabricPrivacy::logException))
+        disposable.add(rxBus
+            .toObservable(EventTreatmentUpdateGui::class.java)
+            .observeOn(aapsSchedulers.io)
+            .debounce(1L, TimeUnit.SECONDS)
             .subscribe({ swapAdapter() }, fabricPrivacy::logException))
     }
 
@@ -112,15 +129,15 @@ class TreatmentsUserEntryFragment : DaggerFragment() {
         override fun onBindViewHolder(holder: UserEntryViewHolder, position: Int) {
             val current = entries[position]
             holder.binding.date.text = dateUtil.dateAndTimeAndSecondsString(current.timestamp)
-            holder.binding.action.text = translator.translate(current.action)
-            holder.binding.action.setTextColor(resourceHelper.gc(userEntryPresentationHelper.colorId(current.action.colorGroup)))
-            if (current.remark != "") {
-                holder.binding.s.text = current.remark
+
+            if (current.s != "") {
+                holder.binding.s.text = current.s
                 holder.binding.s.visibility = View.VISIBLE
             } else
                 holder.binding.s.visibility = View.GONE
             var valuesWithUnitString = ""
             var rStringParam = 0
+            var source = Sources.Unknown
             val separator = "  "
             for(v in current.values) {
                 if (rStringParam >0)
@@ -145,11 +162,19 @@ class TreatmentsUserEntryFragment : DaggerFragment() {
                                         -> valuesWithUnitString += DecimalFormatter.to2Decimal(v.dValue) + translator.translate(v.unit) + separator
                         Units.G, Units.M, Units.H, Units.Percent
                                         -> valuesWithUnitString += v.iValue.toString() + translator.translate(v.unit) + separator
+                        Units.Source    -> source = Sources.fromText(v.sValue) // = separator + translator.translate(v.sValue)
                         else            -> valuesWithUnitString += if (v.iValue != 0 || v.sValue != "") { v.value().toString() + separator } else ""
                     }
             }
+            if (source.iconId() > 0) {
+                holder.binding.iconSource.setImageResource(source.iconId())
+                holder.binding.iconSource.visibility = View.VISIBLE
+            } else
+                holder.binding.iconSource.visibility = View.INVISIBLE
             holder.binding.values.text = valuesWithUnitString.trim()
-            holder.binding.values.visibility = if (current.values.size > 0) View.VISIBLE else View.GONE
+            holder.binding.values.visibility = if (holder.binding.values.text != "") View.VISIBLE else View.GONE
+            holder.binding.action.text = translator.translate(current.action.name)
+            holder.binding.action.setTextColor(resourceHelper.gc(userEntryPresentationHelper.colorId(current.action.colorGroup)))
         }
 
         inner class UserEntryViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
@@ -158,6 +183,13 @@ class TreatmentsUserEntryFragment : DaggerFragment() {
         }
 
         override fun getItemCount(): Int = entries.size
+    }
 
+    fun filterUserEntries(list: List<UserEntry>): List<UserEntry> {
+        val filteredList = mutableListOf<UserEntry>()
+        for (ue in list) {
+            if (! ue.isLoop()) filteredList.add(ue)
+        }
+        return filteredList
     }
 }

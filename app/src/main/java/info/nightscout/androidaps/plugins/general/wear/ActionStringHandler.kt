@@ -17,6 +17,7 @@ import info.nightscout.androidaps.database.AppRepository
 import info.nightscout.androidaps.database.ValueWrapper
 import info.nightscout.androidaps.database.entities.TemporaryTarget
 import info.nightscout.androidaps.database.entities.TherapyEvent
+import info.nightscout.androidaps.database.entities.UserEntry.*
 import info.nightscout.androidaps.database.interfaces.end
 import info.nightscout.androidaps.database.transactions.CancelCurrentTemporaryTargetIfAnyTransaction
 import info.nightscout.androidaps.database.transactions.InsertTemporaryTargetAndCancelCurrentTransaction
@@ -24,6 +25,7 @@ import info.nightscout.androidaps.db.Source
 import info.nightscout.androidaps.db.TDD
 import info.nightscout.androidaps.interfaces.*
 import info.nightscout.androidaps.logging.AAPSLogger
+import info.nightscout.androidaps.logging.UserEntryLogger
 import info.nightscout.androidaps.plugins.aps.loop.LoopPlugin
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper
 import info.nightscout.androidaps.plugins.configBuilder.ConstraintChecker
@@ -59,7 +61,7 @@ class ActionStringHandler @Inject constructor(
     private val sp: SP,
     private val rxBus: RxBusWrapper,
     private val aapsLogger: AAPSLogger,
-    aapsSchedulers: AapsSchedulers,
+    private val aapsSchedulers: AapsSchedulers,
     private val resourceHelper: ResourceHelper,
     private val injector: HasAndroidInjector,
     private val context: Context,
@@ -82,6 +84,7 @@ class ActionStringHandler @Inject constructor(
     private val config: Config,
     private val databaseHelper: DatabaseHelperInterface,
     private val repository: AppRepository,
+    private val uel: UserEntryLogger,
     private val nsUpload: NSUpload
 ) {
 
@@ -92,7 +95,7 @@ class ActionStringHandler @Inject constructor(
 
     private val disposable = CompositeDisposable()
 
-    init {
+    fun setup() {
         disposable += rxBus
             .toObservable(EventWearInitiateAction::class.java)
             .observeOn(aapsSchedulers.main)
@@ -102,6 +105,10 @@ class ActionStringHandler @Inject constructor(
             .toObservable(EventWearConfirmAction::class.java)
             .observeOn(aapsSchedulers.main)
             .subscribe({ handleConfirmation(it.action) }, fabricPrivacy::logException)
+    }
+
+    fun tearDown(){
+        disposable.clear()
     }
 
     @Synchronized
@@ -546,8 +553,10 @@ class ActionStringHandler @Inject constructor(
         if (carbs > 0) {
             if (duration == 0) {
                 carbsGenerator.createCarb(carbs, time, TherapyEvent.Type.CARBS_CORRECTION, "watch")
+                uel.log(Action.CARBS, ValueWithUnit(Sources.Wear), ValueWithUnit(time, Units.Timestamp), ValueWithUnit(carbs, Units.G))
             } else {
                 carbsGenerator.generateCarbs(carbs, time, duration, "watch eCarbs")
+                uel.log(Action.EXTENDED_CARBS, ValueWithUnit(Sources.Wear), ValueWithUnit(time, Units.Timestamp), ValueWithUnit(carbs, Units.G), ValueWithUnit(duration, Units.H))
             }
         }
     }
@@ -575,11 +584,12 @@ class ActionStringHandler @Inject constructor(
             return
         }
         //send profile to pump
+        uel.log(Action.PROFILE_SWITCH, ValueWithUnit(Sources.Wear), ValueWithUnit(percentage, Units.Percent), ValueWithUnit(timeshift, Units.H, timeshift != 0))
         activePlugin.activeTreatments.doProfileSwitch(0, percentage, timeshift)
     }
 
     private fun generateTempTarget(duration: Int, low: Double, high: Double) {
-        if (duration != 0)
+        if (duration != 0) {
             disposable += repository.runTransactionForResult(InsertTemporaryTargetAndCancelCurrentTransaction(
                 timestamp = System.currentTimeMillis(),
                 duration = TimeUnit.MINUTES.toMillis(duration.toLong()),
@@ -592,13 +602,16 @@ class ActionStringHandler @Inject constructor(
             }, {
                 aapsLogger.error("Error while saving temporary target", it)
             })
-        else
+            uel.log(Action.TT, ValueWithUnit(Sources.Wear), ValueWithUnit(TemporaryTarget.Reason.WEAR.text, Units.TherapyEvent), ValueWithUnit(low, profileFunction.getUnits()), ValueWithUnit(high, profileFunction.getUnits(), low!=high), ValueWithUnit(duration, Units.M))
+        } else {
             disposable += repository.runTransactionForResult(CancelCurrentTemporaryTargetIfAnyTransaction(System.currentTimeMillis()))
                 .subscribe({ result ->
                     result.updated.forEach { nsUpload.updateTempTarget(it) }
                 }, {
                     aapsLogger.error("Error while saving temporary target", it)
                 })
+            uel.log(Action.CANCEL_TT, ValueWithUnit(Sources.Wear), ValueWithUnit(TemporaryTarget.Reason.WEAR.text, Units.TherapyEvent))
+        }
     }
 
     private fun doFillBolus(amount: Double) {
@@ -606,6 +619,7 @@ class ActionStringHandler @Inject constructor(
         detailedBolusInfo.insulin = amount
         detailedBolusInfo.isValid = false
         detailedBolusInfo.source = Source.USER
+        uel.log(Action.PRIME_BOLUS, ValueWithUnit(Sources.Wear), ValueWithUnit(amount, Units.U, amount != 0.0))
         commandQueue.bolus(detailedBolusInfo, object : Callback() {
             override fun run() {
                 if (!result.success) {
@@ -624,6 +638,12 @@ class ActionStringHandler @Inject constructor(
         detailedBolusInfo.source = Source.USER
         val storesCarbs = activePlugin.activePump.pumpDescription.storesCarbInfo
         if (detailedBolusInfo.insulin > 0 || storesCarbs) {
+            val action = when {
+                amount.equals(0.0) -> Action.CARBS
+                carbs.equals(0)    -> Action.BOLUS
+                else               -> Action.TREATMENT
+            }
+            uel.log(action, ValueWithUnit(Sources.Wear), ValueWithUnit(amount, Units.U, amount != 0.0), ValueWithUnit(carbs, Units.G, carbs != 0))
             commandQueue.bolus(detailedBolusInfo, object : Callback() {
                 override fun run() {
                     if (!result.success) {
