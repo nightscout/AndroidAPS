@@ -173,7 +173,7 @@ class TreatmentsUserEntryFragment : DaggerFragment() {
                 holder.binding.iconSource.visibility = View.INVISIBLE
             holder.binding.values.text = valuesWithUnitString.trim()
             holder.binding.values.visibility = if (holder.binding.values.text != "") View.VISIBLE else View.GONE
-            holder.binding.action.text = translator.translate(current.action.name)
+            holder.binding.action.text = translator.translate(current.action)
             holder.binding.action.setTextColor(resourceHelper.gc(userEntryPresentationHelper.colorId(current.action.colorGroup)))
         }
 

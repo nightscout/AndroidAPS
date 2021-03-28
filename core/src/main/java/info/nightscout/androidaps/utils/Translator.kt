@@ -18,6 +18,7 @@ class Translator @Inject internal constructor(
 
     fun translate(action: Action): String = when(action) {
         Action.BOLUS                               -> resourceHelper.gs(R.string.uel_bolus)
+        Action.SMB                                 -> resourceHelper.gs(R.string.smb_shortname)
         Action.BOLUS_ADVISOR                       -> resourceHelper.gs(R.string.uel_bolus_advisor)
         Action.EXTENDED_BOLUS                      -> resourceHelper.gs(R.string.uel_extended_bolus)
         Action.SUPERBOLUS_TBR                      -> resourceHelper.gs(R.string.uel_superbolus_tbr)
@@ -85,8 +86,7 @@ class Translator @Inject internal constructor(
         Action.OTP_EXPORT                          -> resourceHelper.gs(R.string.uel_otp_export)
         Action.OTP_RESET                           -> resourceHelper.gs(R.string.uel_otp_reset)
         Action.EXPORT_CSV                          -> resourceHelper.gs(R.string.uel_export_csv)
-        Action.SMB                                 -> TODO()
-        Action.STOP_SMS                            -> TODO()
+        Action.STOP_SMS                            -> resourceHelper.gs(R.string.uel_stop_sms)
         Action.UNKNOWN                             -> resourceHelper.gs(R.string.unknown)
     }
 
