@@ -52,18 +52,19 @@ class Connection(val podDevice: BluetoothDevice, private val aapsLogger: AAPSLog
     private val discoveredCharacteristics = discoverer.discoverServices()
     private val cmdBleIO = CmdBleIO(aapsLogger, discoveredCharacteristics[CharacteristicType.CMD]!!, incomingPackets
         .cmdQueue, gattConnection, bleCommCallbacks)
+    private val dataBleIO = DataBleIO(aapsLogger, discoveredCharacteristics[CharacteristicType.DATA]!!, incomingPackets
+        .dataQueue, gattConnection, bleCommCallbacks)
+    val msgIO = MessageIO(aapsLogger, cmdBleIO, dataBleIO)
+    var session: Session? = null
 
     init {
         val sendResult = cmdBleIO.hello()
         if (sendResult !is BleSendSuccess) {
             throw FailedToConnectException("Could not send HELLO command to ${podDevice.address}")
         }
+        cmdBleIO.readyToRead()
+        dataBleIO.readyToRead()
     }
-
-    private val dataBleIO = DataBleIO(aapsLogger, discoveredCharacteristics[CharacteristicType.DATA]!!, incomingPackets
-        .dataQueue, gattConnection, bleCommCallbacks)
-    val msgIO = MessageIO(aapsLogger, cmdBleIO, dataBleIO)
-    var session: Session? = null
 
     fun connect() {
         if (!gattConnection.connect()) {
