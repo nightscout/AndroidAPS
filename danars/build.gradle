@@ -23,5 +23,4 @@ android {
 dependencies {
     implementation project(':core')
     implementation project(':dana')
-    implementation project(':database')
 }

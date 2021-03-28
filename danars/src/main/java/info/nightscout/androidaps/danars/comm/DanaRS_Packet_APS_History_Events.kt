@@ -5,14 +5,12 @@ import info.nightscout.androidaps.dana.DanaPump
 import info.nightscout.androidaps.danars.R
 import info.nightscout.androidaps.danars.encryption.BleEncryption
 import info.nightscout.androidaps.data.DetailedBolusInfo
-import info.nightscout.androidaps.database.AppRepository
-import info.nightscout.androidaps.database.entities.TherapyEvent
-import info.nightscout.androidaps.database.transactions.InsertTherapyEventIfNewTransaction
 import info.nightscout.androidaps.db.ExtendedBolus
 import info.nightscout.androidaps.db.Source
 import info.nightscout.androidaps.db.TemporaryBasal
 import info.nightscout.androidaps.events.EventPumpStatusChanged
 import info.nightscout.androidaps.interfaces.ActivePluginProvider
+import info.nightscout.androidaps.interfaces.PumpSync
 import info.nightscout.androidaps.logging.LTag
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper
 import info.nightscout.androidaps.plugins.pump.common.bolusInfo.DetailedBolusInfoStorage
@@ -20,8 +18,6 @@ import info.nightscout.androidaps.plugins.pump.common.defs.PumpType
 import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 import info.nightscout.androidaps.utils.sharedPreferences.SP
-import io.reactivex.disposables.CompositeDisposable
-import io.reactivex.rxkotlin.plusAssign
 import org.joda.time.DateTime
 import org.joda.time.DateTimeZone
 import javax.inject.Inject
@@ -37,9 +33,7 @@ open class DanaRS_Packet_APS_History_Events(
     @Inject lateinit var danaPump: DanaPump
     @Inject lateinit var detailedBolusInfoStorage: DetailedBolusInfoStorage
     @Inject lateinit var sp: SP
-    @Inject lateinit var repository: AppRepository
-
-    private val disposable = CompositeDisposable()
+    @Inject lateinit var pumpSync: PumpSync
 
     init {
         opCode = BleEncryption.DANAR_PACKET__OPCODE__APS_HISTORY_EVENTS
@@ -181,14 +175,12 @@ open class DanaRS_Packet_APS_History_Events(
             DanaPump.REFILL            -> {
                 aapsLogger.debug(LTag.PUMPCOMM, "[" + id + "] " + "EVENT REFILL (" + recordCode + ") " + dateUtil.dateAndTimeString(datetime) + " (" + datetime + ")" + " Amount: " + param1 / 100.0 + "U")
                 if (sp.getBoolean(R.string.key_rs_loginsulinchange, true))
-                    disposable += repository.runTransactionForResult(InsertTherapyEventIfNewTransaction(
+                    pumpSync.insertTherapyEventIfNewWithTimestamp(
                         timestamp = datetime,
-                        type = TherapyEvent.Type.INSULIN_CHANGE,
-                        note = resourceHelper.gs(R.string.danarspump),
-                        glucoseUnit = TherapyEvent.GlucoseUnit.MGDL
-                    )).subscribe(
-                        { result -> result.inserted.forEach { aapsLogger.debug(LTag.DATABASE, "Inserted therapy event $it") } },
-                        { aapsLogger.error(LTag.DATABASE, "Error while saving therapy event", it) }
+                        type = DetailedBolusInfo.EventType.INSULIN_CHANGE,
+                        pumpId = pumpId,
+                        pumpType = danaPump.pumpType(),
+                        pumpSerial = danaPump.serialNumber
                     )
                 status = "REFILL " + dateUtil.timeString(datetime)
             }
@@ -218,14 +210,12 @@ open class DanaRS_Packet_APS_History_Events(
             DanaPump.PRIMECANNULA      -> {
                 aapsLogger.debug(LTag.PUMPCOMM, "[" + id + "] " + "EVENT PRIMECANNULA(" + recordCode + ") " + dateUtil.dateAndTimeString(datetime) + " (" + datetime + ")" + " Amount: " + param1 / 100.0 + "U")
                 if (sp.getBoolean(R.string.key_rs_logcanulachange, true))
-                    disposable += repository.runTransactionForResult(InsertTherapyEventIfNewTransaction(
+                    pumpSync.insertTherapyEventIfNewWithTimestamp(
                         timestamp = datetime,
-                        type = TherapyEvent.Type.CANNULA_CHANGE,
-                        note = resourceHelper.gs(R.string.danarspump),
-                        glucoseUnit = TherapyEvent.GlucoseUnit.MGDL
-                    )).subscribe(
-                        { result -> result.inserted.forEach { aapsLogger.debug(LTag.DATABASE, "Inserted therapy event $it") } },
-                        { aapsLogger.error(LTag.DATABASE, "Error while saving therapy event", it) }
+                        type = DetailedBolusInfo.EventType.CANNULA_CHANGE,
+                        pumpId = pumpId,
+                        pumpType = danaPump.pumpType(),
+                        pumpSerial = danaPump.serialNumber
                     )
                 status = "PRIMECANNULA " + dateUtil.timeString(datetime)
             }

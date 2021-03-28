@@ -51,6 +51,7 @@ class VirtualPumpPlugin @Inject constructor(
     private val profileFunction: ProfileFunction,
     private val treatmentsPlugin: TreatmentsPlugin,
     commandQueue: CommandQueueProvider,
+    private val pumpSync: PumpSync,
     private val config: Config,
     private val dateUtil: DateUtil
 ) : PumpPluginBase(PluginDescription()
@@ -181,22 +182,21 @@ class VirtualPumpPlugin @Inject constructor(
 
     override fun deliverTreatment(detailedBolusInfo: DetailedBolusInfo): PumpEnactResult {
         val result = PumpEnactResult(injector)
-        result.success = true
-        result.bolusDelivered = detailedBolusInfo.insulin
-        result.carbsDelivered = detailedBolusInfo.carbs
-        result.enacted = result.bolusDelivered > 0 || result.carbsDelivered > 0
-        result.comment = resourceHelper.gs(R.string.virtualpump_resultok)
+            .success(true)
+            .bolusDelivered(detailedBolusInfo.insulin)
+            .carbsDelivered(detailedBolusInfo.carbs)
+            .enacted(detailedBolusInfo.insulin > 0 || detailedBolusInfo.carbs > 0)
+            .comment(resourceHelper.gs(R.string.virtualpump_resultok))
+        val bolusingEvent = EventOverviewBolusProgress
         var delivering = 0.0
         while (delivering < detailedBolusInfo.insulin) {
             SystemClock.sleep(200)
-            val bolusingEvent = EventOverviewBolusProgress
             bolusingEvent.status = resourceHelper.gs(R.string.bolusdelivering, delivering)
             bolusingEvent.percent = min((delivering / detailedBolusInfo.insulin * 100).toInt(), 100)
             rxBus.send(bolusingEvent)
             delivering += 0.1
         }
         SystemClock.sleep(200)
-        val bolusingEvent = EventOverviewBolusProgress
         bolusingEvent.status = resourceHelper.gs(R.string.bolusdelivered, detailedBolusInfo.insulin)
         bolusingEvent.percent = 100
         rxBus.send(bolusingEvent)
@@ -204,7 +204,10 @@ class VirtualPumpPlugin @Inject constructor(
         aapsLogger.debug(LTag.PUMP, "Delivering treatment insulin: " + detailedBolusInfo.insulin + "U carbs: " + detailedBolusInfo.carbs + "g " + result)
         rxBus.send(EventVirtualPumpUpdateGui())
         lastDataTime = System.currentTimeMillis()
-        treatmentsPlugin.addToHistoryTreatment(detailedBolusInfo, false)
+        pumpSync.syncBolusWithPumpId(dateUtil._now(), detailedBolusInfo.insulin, detailedBolusInfo.bolusType, dateUtil._now(), pumpType
+            ?: PumpType.GENERIC_AAPS, serialNumber())
+        pumpSync.syncCarbsWithTimestamp(dateUtil._now(), detailedBolusInfo.carbs, dateUtil._now(), pumpType
+            ?: PumpType.GENERIC_AAPS, serialNumber())
         return result
     }
 

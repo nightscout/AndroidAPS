@@ -30,9 +30,6 @@ import dagger.android.HasAndroidInjector;
 import info.nightscout.androidaps.data.DetailedBolusInfo;
 import info.nightscout.androidaps.data.Profile;
 import info.nightscout.androidaps.data.PumpEnactResult;
-import info.nightscout.androidaps.database.AppRepository;
-import info.nightscout.androidaps.database.entities.TherapyEvent;
-import info.nightscout.androidaps.database.transactions.InsertTherapyEventIfNewTransaction;
 import info.nightscout.androidaps.db.ExtendedBolus;
 import info.nightscout.androidaps.db.InsightBolusID;
 import info.nightscout.androidaps.db.InsightHistoryOffset;
@@ -55,6 +52,7 @@ import info.nightscout.androidaps.interfaces.ProfileFunction;
 import info.nightscout.androidaps.interfaces.PumpDescription;
 import info.nightscout.androidaps.interfaces.PumpInterface;
 import info.nightscout.androidaps.interfaces.PumpPluginBase;
+import info.nightscout.androidaps.interfaces.PumpSync;
 import info.nightscout.androidaps.interfaces.TreatmentsInterface;
 import info.nightscout.androidaps.interfaces.UploadQueueInterface;
 import info.nightscout.androidaps.logging.AAPSLogger;
@@ -136,7 +134,6 @@ import info.nightscout.androidaps.plugins.pump.insight.utils.ParameterBlockUtil;
 import info.nightscout.androidaps.utils.DateUtil;
 import info.nightscout.androidaps.utils.resources.ResourceHelper;
 import info.nightscout.androidaps.utils.sharedPreferences.SP;
-import io.reactivex.disposables.CompositeDisposable;
 
 @Singleton
 public class LocalInsightPlugin extends PumpPluginBase implements PumpInterface, ConstraintsInterface, InsightConnectionService.StateCallback {
@@ -153,7 +150,7 @@ public class LocalInsightPlugin extends PumpPluginBase implements PumpInterface,
     private final UploadQueueInterface uploadQueue;
     private final DateUtil dateUtil;
     private final DatabaseHelperInterface databaseHelper;
-    private final AppRepository repository;
+    private final PumpSync pumpSync;
 
     public static final String ALERT_CHANNEL_ID = "AndroidAPS-InsightAlert";
 
@@ -199,8 +196,6 @@ public class LocalInsightPlugin extends PumpPluginBase implements PumpInterface,
     private boolean statusLoaded;
     private TBROverNotificationBlock tbrOverNotificationBlock;
 
-    private final CompositeDisposable disposable = new CompositeDisposable();
-
     @Inject
     public LocalInsightPlugin(
             HasAndroidInjector injector,
@@ -217,7 +212,7 @@ public class LocalInsightPlugin extends PumpPluginBase implements PumpInterface,
             ConfigInterface config,
             DateUtil dateUtil,
             DatabaseHelperInterface databaseHelper,
-            AppRepository repository
+            PumpSync pumpSync
     ) {
         super(new PluginDescription()
                         .pluginIcon(R.drawable.ic_insight_128)
@@ -242,7 +237,7 @@ public class LocalInsightPlugin extends PumpPluginBase implements PumpInterface,
         this.uploadQueue = uploadQueue;
         this.dateUtil = dateUtil;
         this.databaseHelper = databaseHelper;
-        this.repository = repository;
+        this.pumpSync = pumpSync;
 
         pumpDescription = new PumpDescription();
         pumpDescription.setPumpDescription(PumpType.ACCU_CHEK_INSIGHT_BLUETOOTH);
@@ -1270,7 +1265,7 @@ public class LocalInsightPlugin extends PumpPluginBase implements PumpInterface,
         if (!sp.getBoolean("insight_log_site_changes", false)) return;
         long timestamp = parseDate(event.getEventYear(), event.getEventMonth(), event.getEventDay(),
                 event.getEventHour(), event.getEventMinute(), event.getEventSecond()) + timeOffset;
-        uploadCareportalEvent(timestamp, TherapyEvent.Type.CANNULA_CHANGE);
+        uploadCareportalEvent(timestamp, DetailedBolusInfo.EventType.CANNULA_CHANGE);
     }
 
     private void processTotalDailyDoseEvent(TotalDailyDoseEvent event) {
@@ -1298,14 +1293,14 @@ public class LocalInsightPlugin extends PumpPluginBase implements PumpInterface,
         if (!sp.getBoolean("insight_log_reservoir_changes", false)) return;
         long timestamp = parseDate(event.getEventYear(), event.getEventMonth(), event.getEventDay(),
                 event.getEventHour(), event.getEventMinute(), event.getEventSecond()) + timeOffset;
-        uploadCareportalEvent(timestamp, TherapyEvent.Type.INSULIN_CHANGE);
+        uploadCareportalEvent(timestamp, DetailedBolusInfo.EventType.INSULIN_CHANGE);
     }
 
     private void processPowerUpEvent(PowerUpEvent event) {
         if (!sp.getBoolean("insight_log_battery_changes", false)) return;
         long timestamp = parseDate(event.getEventYear(), event.getEventMonth(), event.getEventDay(),
                 event.getEventHour(), event.getEventMinute(), event.getEventSecond()) + timeOffset;
-        uploadCareportalEvent(timestamp, TherapyEvent.Type.PUMP_BATTERY_CHANGE);
+        uploadCareportalEvent(timestamp, DetailedBolusInfo.EventType.PUMP_BATTERY_CHANGE);
     }
 
     private void processOperatingModeChangedEvent(String serial, List<InsightPumpID> pumpStartedEvents, OperatingModeChangedEvent event) {
@@ -1555,12 +1550,7 @@ public class LocalInsightPlugin extends PumpPluginBase implements PumpInterface,
     }
 
     private void logNote(long date, String note) {
-        if (repository.getTherapyEventByTimestamp(TherapyEvent.Type.NOTE, date) != null) return;
-        disposable.add(repository.runTransactionForResult(new InsertTherapyEventIfNewTransaction(date, TherapyEvent.Type.NOTE, 0, note, sp.getString("careportal_enteredby", "AndroidAPS"), null, null, TherapyEvent.GlucoseUnit.MGDL))
-                .subscribe(
-                        result -> result.getInserted().forEach(event -> aapsLogger.debug(LTag.DATABASE, "Inserted therapy event " + event)),
-                        error -> aapsLogger.error(LTag.DATABASE, "Error while saving therapy event", error)
-                ));
+        pumpSync.insertTherapyEventIfNewWithTimestamp(date, DetailedBolusInfo.EventType.NOTE, note, null, PumpType.ACCU_CHEK_INSIGHT, serialNumber());
     }
 
     private long parseRelativeDate(int year, int month, int day, int hour, int minute, int second, int relativeHour, int relativeMinute, int relativeSecond) {
@@ -1576,13 +1566,8 @@ public class LocalInsightPlugin extends PumpPluginBase implements PumpInterface,
         return calendar.getTimeInMillis();
     }
 
-    private void uploadCareportalEvent(long date, TherapyEvent.Type event) {
-        if (repository.getTherapyEventByTimestamp(event, date) != null) return;
-        disposable.add(repository.runTransactionForResult(new InsertTherapyEventIfNewTransaction(date, event, 0, null, sp.getString("careportal_enteredby", "AndroidAPS"), null, null, TherapyEvent.GlucoseUnit.MGDL))
-                .subscribe(
-                        result -> result.getInserted().forEach(record -> aapsLogger.debug(LTag.DATABASE, "Inserted therapy event " + record)),
-                        error -> aapsLogger.error(LTag.DATABASE, "Error while saving therapy event", error)
-                ));
+    private void uploadCareportalEvent(long date, DetailedBolusInfo.EventType event) {
+        pumpSync.insertTherapyEventIfNewWithTimestamp(date, event, null, null, PumpType.ACCU_CHEK_INSIGHT, serialNumber());
     }
 
     @NonNull @Override

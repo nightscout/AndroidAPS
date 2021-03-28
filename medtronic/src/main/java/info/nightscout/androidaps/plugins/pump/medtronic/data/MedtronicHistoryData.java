@@ -21,9 +21,6 @@ import javax.inject.Singleton;
 
 import dagger.android.HasAndroidInjector;
 import info.nightscout.androidaps.data.DetailedBolusInfo;
-import info.nightscout.androidaps.database.AppRepository;
-import info.nightscout.androidaps.database.entities.TherapyEvent;
-import info.nightscout.androidaps.database.transactions.InsertTherapyEventIfNewTransaction;
 import info.nightscout.androidaps.db.DbObjectBase;
 import info.nightscout.androidaps.db.ExtendedBolus;
 import info.nightscout.androidaps.db.Source;
@@ -32,6 +29,7 @@ import info.nightscout.androidaps.db.TemporaryBasal;
 import info.nightscout.androidaps.db.Treatment;
 import info.nightscout.androidaps.interfaces.ActivePluginProvider;
 import info.nightscout.androidaps.interfaces.DatabaseHelperInterface;
+import info.nightscout.androidaps.interfaces.PumpSync;
 import info.nightscout.androidaps.logging.AAPSLogger;
 import info.nightscout.androidaps.logging.LTag;
 import info.nightscout.androidaps.plugins.pump.common.defs.PumpType;
@@ -54,7 +52,6 @@ import info.nightscout.androidaps.plugins.pump.medtronic.util.MedtronicUtil;
 import info.nightscout.androidaps.plugins.treatments.TreatmentUpdateReturn;
 import info.nightscout.androidaps.utils.Round;
 import info.nightscout.androidaps.utils.sharedPreferences.SP;
-import io.reactivex.disposables.CompositeDisposable;
 
 
 /**
@@ -80,7 +77,7 @@ public class MedtronicHistoryData {
     private final MedtronicPumpHistoryDecoder medtronicPumpHistoryDecoder;
     private final MedtronicPumpStatus medtronicPumpStatus;
     private final DatabaseHelperInterface databaseHelper;
-    private final AppRepository repository;
+    private final PumpSync pumpSync;
 
     private final List<PumpHistoryEntry> allHistory;
     private List<PumpHistoryEntry> newHistory = null;
@@ -94,10 +91,9 @@ public class MedtronicHistoryData {
 
     private long lastIdUsed = 0;
 
-    private final CompositeDisposable disposable = new CompositeDisposable();
     /**
      * Double bolus debug. We seem to have small problem with double Boluses (or sometimes also missing boluses
-     * from history. This flag turns on debugging for that (default is off=false)... Debuging is pretty detailed,
+     * from history. This flag turns on debugging for that (default is off=false)... Debugging is pretty detailed,
      * so log files will get bigger.
      * Note: June 2020. Since this seems to be fixed, I am disabling this per default. I will leave code inside
      * in case we need it again. Code that turns this on is commented out RileyLinkMedtronicService#verifyConfiguration()
@@ -114,7 +110,7 @@ public class MedtronicHistoryData {
             MedtronicPumpHistoryDecoder medtronicPumpHistoryDecoder,
             MedtronicPumpStatus medtronicPumpStatus,
             DatabaseHelperInterface databaseHelperInterface,
-            AppRepository repository
+            PumpSync pumpSync
     ) {
         this.allHistory = new ArrayList<>();
 
@@ -126,7 +122,7 @@ public class MedtronicHistoryData {
         this.medtronicPumpHistoryDecoder = medtronicPumpHistoryDecoder;
         this.medtronicPumpStatus = medtronicPumpStatus;
         this.databaseHelper = databaseHelperInterface;
-        this.repository = repository;
+        this.pumpSync = pumpSync;
     }
 
     private Gson gson() {
@@ -552,7 +548,7 @@ public class MedtronicHistoryData {
             long lastPrimeFromAAPS = sp.getLong(MedtronicConst.Statistics.LastPrime, 0L);
 
             if (lastPrimeRecord != lastPrimeFromAAPS) {
-                uploadCareportalEvent(DateTimeUtil.toMillisFromATD(lastPrimeRecord), TherapyEvent.Type.CANNULA_CHANGE);
+                uploadCareportalEvent(DateTimeUtil.toMillisFromATD(lastPrimeRecord), DetailedBolusInfo.EventType.CANNULA_CHANGE);
 
                 sp.putLong(MedtronicConst.Statistics.LastPrime, lastPrimeRecord);
             }
@@ -575,7 +571,7 @@ public class MedtronicHistoryData {
             long lastRewindFromAAPS = sp.getLong(MedtronicConst.Statistics.LastRewind, 0L);
 
             if (lastRewindRecord != lastRewindFromAAPS) {
-                uploadCareportalEvent(DateTimeUtil.toMillisFromATD(lastRewindRecord), TherapyEvent.Type.INSULIN_CHANGE);
+                uploadCareportalEvent(DateTimeUtil.toMillisFromATD(lastRewindRecord), DetailedBolusInfo.EventType.INSULIN_CHANGE);
 
                 sp.putLong(MedtronicConst.Statistics.LastRewind, lastRewindRecord);
             }
@@ -583,15 +579,8 @@ public class MedtronicHistoryData {
     }
 
 
-    private void uploadCareportalEvent(long date, TherapyEvent.Type event) {
-        if (repository.getTherapyEventByTimestamp(event, date) != null) return;
-        disposable.add(repository.runTransactionForResult(new InsertTherapyEventIfNewTransaction(date,
-                event, 0, null, sp.getString("careportal_enteredby", "AndroidAPS"),
-                null, null, TherapyEvent.GlucoseUnit.MGDL))
-                .subscribe(
-                        result -> result.getInserted().forEach(record -> aapsLogger.debug(LTag.DATABASE, "Inserted therapy event " + record)),
-                        error -> aapsLogger.error(LTag.DATABASE, "Error while saving therapy event", error)
-                ));
+    private void uploadCareportalEvent(long date, DetailedBolusInfo.EventType event) {
+        pumpSync.insertTherapyEventIfNewWithTimestamp(date, event, null, null, medtronicPumpStatus.pumpType, medtronicPumpStatus.serialNumber);
     }
 
     private void processTDDs(List<PumpHistoryEntry> tddsIn) {

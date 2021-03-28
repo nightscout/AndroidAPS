@@ -9,7 +9,7 @@ import info.nightscout.androidaps.database.AppRepository
 import info.nightscout.androidaps.database.entities.GlucoseValue
 import info.nightscout.androidaps.database.entities.TherapyEvent
 import info.nightscout.androidaps.database.transactions.CgmSourceTransaction
-import info.nightscout.androidaps.database.transactions.InsertTherapyEventIfNewTransaction
+import info.nightscout.androidaps.database.transactions.InsertIfNewByTimestampTherapyEventTransaction
 import info.nightscout.androidaps.interfaces.BgSourceInterface
 import info.nightscout.androidaps.interfaces.PluginBase
 import info.nightscout.androidaps.interfaces.PluginDescription
@@ -131,7 +131,7 @@ class EversensePlugin @Inject constructor(
                     aapsLogger.debug(LTag.BGSOURCE, "calibrationTimestamps" + Arrays.toString(calibrationTimestamps))
                     aapsLogger.debug(LTag.BGSOURCE, "calibrationRecordNumbers" + Arrays.toString(calibrationRecordNumbers))
                     for (i in calibrationGlucoseLevels.indices) {
-                        repository.runTransactionForResult(InsertTherapyEventIfNewTransaction(
+                        repository.runTransactionForResult(InsertIfNewByTimestampTherapyEventTransaction(
                             timestamp = calibrationTimestamps[i],
                             type = TherapyEvent.Type.FINGER_STICK_BG_VALUE,
                             glucose = calibrationGlucoseLevels[i].toDouble(),

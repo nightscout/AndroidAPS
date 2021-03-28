@@ -33,8 +33,6 @@ import info.nightscout.androidaps.activities.ErrorHelperActivity;
 import info.nightscout.androidaps.data.DetailedBolusInfo;
 import info.nightscout.androidaps.data.Profile;
 import info.nightscout.androidaps.data.PumpEnactResult;
-import info.nightscout.androidaps.database.AppRepository;
-import info.nightscout.androidaps.database.transactions.InsertTherapyEventAnnouncementTransaction;
 import info.nightscout.androidaps.db.ExtendedBolus;
 import info.nightscout.androidaps.db.Source;
 import info.nightscout.androidaps.db.TemporaryBasal;
@@ -50,6 +48,7 @@ import info.nightscout.androidaps.interfaces.ProfileFunction;
 import info.nightscout.androidaps.interfaces.PumpDescription;
 import info.nightscout.androidaps.interfaces.PumpInterface;
 import info.nightscout.androidaps.interfaces.PumpPluginBase;
+import info.nightscout.androidaps.interfaces.PumpSync;
 import info.nightscout.androidaps.logging.AAPSLogger;
 import info.nightscout.androidaps.logging.LTag;
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper;
@@ -141,7 +140,7 @@ public class OmnipodErosPumpPlugin extends PumpPluginBase implements PumpInterfa
     private final PumpDescription pumpDescription;
     private final ServiceConnection serviceConnection;
     private final PumpType pumpType = PumpType.OMNIPOD_EROS;
-    private final AppRepository repository;
+    private final PumpSync pumpSync;
 
     private final CompositeDisposable disposable = new CompositeDisposable();
 
@@ -178,7 +177,7 @@ public class OmnipodErosPumpPlugin extends PumpPluginBase implements PumpInterfa
             RileyLinkUtil rileyLinkUtil,
             OmnipodAlertUtil omnipodAlertUtil,
             ProfileFunction profileFunction,
-            AppRepository repository
+            PumpSync pumpSync
     ) {
         super(new PluginDescription() //
                         .mainType(PluginType.PUMP) //
@@ -205,7 +204,7 @@ public class OmnipodErosPumpPlugin extends PumpPluginBase implements PumpInterfa
         this.rileyLinkUtil = rileyLinkUtil;
         this.omnipodAlertUtil = omnipodAlertUtil;
         this.profileFunction = profileFunction;
-        this.repository = repository;
+        this.pumpSync = pumpSync;
 
         pumpDescription = new PumpDescription(pumpType);
 
@@ -408,7 +407,7 @@ public class OmnipodErosPumpPlugin extends PumpPluginBase implements PumpInterfa
                 String notificationText = resourceHelper.gq(R.plurals.omnipod_common_pod_alerts, activeAlerts.size(), alerts);
                 Notification notification = new Notification(Notification.OMNIPOD_POD_ALERTS, notificationText, Notification.URGENT);
                 rxBus.send(new EventNewNotification(notification));
-                disposable.add(repository.runTransaction(new InsertTherapyEventAnnouncementTransaction(notificationText)).subscribe());
+                pumpSync.insertAnnouncement(notificationText, null, PumpType.OMNIPOD_EROS, serialNumber());
 
                 if (aapsOmnipodErosManager.isAutomaticallyAcknowledgeAlertsEnabled() && !getCommandQueue().isCustomCommandInQueue(CommandAcknowledgeAlerts.class)) {
                     queueAcknowledgeAlertsCommand();
@@ -420,7 +419,7 @@ public class OmnipodErosPumpPlugin extends PumpPluginBase implements PumpInterfa
     private void handlePodFaultEvent() {
         if (podStateManager.isPodFaulted()) {
             String notificationText = resourceHelper.gs(R.string.omnipod_common_pod_status_pod_fault_description, podStateManager.getFaultEventCode().getValue(), podStateManager.getFaultEventCode().name());
-            disposable.add(repository.runTransaction(new InsertTherapyEventAnnouncementTransaction(notificationText)).subscribe());
+            pumpSync.insertAnnouncement(notificationText, null, PumpType.OMNIPOD_EROS, serialNumber());
         }
     }
 

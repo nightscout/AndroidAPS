@@ -24,7 +24,6 @@ import info.nightscout.androidaps.events.EventAutosensCalculationFinished
 import info.nightscout.androidaps.events.EventTreatmentChange
 import info.nightscout.androidaps.interfaces.ActivePluginProvider
 import info.nightscout.androidaps.interfaces.ProfileFunction
-import info.nightscout.androidaps.interfaces.UploadQueueInterface
 import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.logging.LTag
 import info.nightscout.androidaps.logging.UserEntryLogger
@@ -57,8 +56,6 @@ class TreatmentsBolusCarbsFragment : DaggerFragment() {
     @Inject lateinit var resourceHelper: ResourceHelper
     @Inject lateinit var fabricPrivacy: FabricPrivacy
     @Inject lateinit var profileFunction: ProfileFunction
-    @Inject lateinit var nsUpload: NSUpload
-    @Inject lateinit var uploadQueue: UploadQueueInterface
     @Inject lateinit var dateUtil: DateUtil
     @Inject lateinit var buildHelper: BuildHelper
     @Inject lateinit var aapsSchedulers: AapsSchedulers
@@ -120,13 +117,10 @@ class TreatmentsBolusCarbsFragment : DaggerFragment() {
                         .subscribe { list ->
                             list.forEach { bolus ->
                                 disposable += repository.runTransactionForResult(InvalidateBolusTransaction(bolus.id))
-                                    .subscribe({
-                                        val id = bolus.interfaceIDs.nightscoutId
-                                        if (NSUpload.isIdValid(id)) nsUpload.removeCareportalEntryFromNS(id)
-                                        else uploadQueue.removeByMongoId("dbAdd", bolus.timestamp.toString())
-                                    }, {
-                                        aapsLogger.error(LTag.DATABASE, "Error while invalidating bolus", it)
-                                    })
+                                    .subscribe(
+                                        { result -> result.invalidated.forEach { aapsLogger.debug(LTag.DATABASE, "Invalidated bolus $it") } },
+                                        { aapsLogger.error(LTag.DATABASE, "Error while invalidating bolus", it) }
+                                    )
                             }
                         }
                     repository
@@ -135,13 +129,10 @@ class TreatmentsBolusCarbsFragment : DaggerFragment() {
                         .subscribe { list ->
                             list.forEach { carb ->
                                 disposable += repository.runTransactionForResult(InvalidateCarbsTransaction(carb.id))
-                                    .subscribe({
-                                        val id = carb.interfaceIDs.nightscoutId
-                                        if (NSUpload.isIdValid(id)) nsUpload.removeCareportalEntryFromNS(id)
-                                        else uploadQueue.removeByMongoId("dbAdd", carb.timestamp.toString())
-                                    }, {
-                                        aapsLogger.error(LTag.DATABASE, "Error while invalidating carbs", it)
-                                    })
+                                    .subscribe(
+                                        { result -> result.invalidated.forEach { aapsLogger.debug(LTag.DATABASE, "Invalidated carbs $it") } },
+                                        { aapsLogger.error(LTag.DATABASE, "Error while invalidating carbs", it) }
+                                    )
                             }
                         }
                     repository
@@ -150,13 +141,10 @@ class TreatmentsBolusCarbsFragment : DaggerFragment() {
                         .subscribe { list ->
                             list.forEach { bolusCalc ->
                                 disposable += repository.runTransactionForResult(InvalidateBolusCalculatorResultTransaction(bolusCalc.id))
-                                    .subscribe({
-                                        val id = bolusCalc.interfaceIDs.nightscoutId
-                                        if (NSUpload.isIdValid(id)) nsUpload.removeCareportalEntryFromNS(id)
-                                        else uploadQueue.removeByMongoId("dbAdd", bolusCalc.timestamp.toString())
-                                    }, {
-                                        aapsLogger.error(LTag.DATABASE, "Error while invalidating carbs", it)
-                                    })
+                                    .subscribe(
+                                        { result -> result.invalidated.forEach { aapsLogger.debug(LTag.DATABASE, "Invalidated bolusCalculatorResult $it") } },
+                                        { aapsLogger.error(LTag.DATABASE, "Error while invalidating bolusCalculatorResult", it) }
+                                    )
                             }
                         }
                     binding.deleteFutureTreatments.visibility = View.GONE
@@ -350,13 +338,10 @@ class TreatmentsBolusCarbsFragment : DaggerFragment() {
                                 //              ValueWithUnit(mealLinkLoaded.carbs.toInt(), Units.G)
                             )
                             disposable += repository.runTransactionForResult(InvalidateBolusTransaction(bolus.id))
-                                .subscribe({
-                                    val id = bolus.interfaceIDs.nightscoutId
-                                    if (NSUpload.isIdValid(id)) nsUpload.removeCareportalEntryFromNS(id)
-                                    else uploadQueue.removeByMongoId("dbAdd", bolus.timestamp.toString())
-                                }, {
-                                    aapsLogger.error(LTag.DATABASE, "Error while invalidating bolus", it)
-                                })
+                                .subscribe(
+                                    { result -> result.invalidated.forEach { aapsLogger.debug(LTag.DATABASE, "Invalidated bolus $it") } },
+                                    { aapsLogger.error(LTag.DATABASE, "Error while invalidating bolus", it) }
+                                )
                         })
                     }
                 }
@@ -374,13 +359,10 @@ class TreatmentsBolusCarbsFragment : DaggerFragment() {
                                 ValueWithUnit(carb.amount, Units.G)
                             )
                             disposable += repository.runTransactionForResult(InvalidateCarbsTransaction(carb.id))
-                                .subscribe({
-                                    val id = carb.interfaceIDs.nightscoutId
-                                    if (NSUpload.isIdValid(id)) nsUpload.removeCareportalEntryFromNS(id)
-                                    else uploadQueue.removeByMongoId("dbAdd", carb.timestamp.toString())
-                                }, {
-                                    aapsLogger.error(LTag.DATABASE, "Error while invalidating carbs", it)
-                                })
+                                .subscribe(
+                                    { result -> result.invalidated.forEach { aapsLogger.debug(LTag.DATABASE, "Invalidated carbs $it") } },
+                                    { aapsLogger.error(LTag.DATABASE, "Error while invalidating carbs", it) }
+                                )
                         })
                     }
                 }

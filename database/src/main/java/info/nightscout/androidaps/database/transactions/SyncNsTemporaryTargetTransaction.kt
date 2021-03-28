@@ -7,7 +7,7 @@ import kotlin.math.abs
 /**
  * Sync the TemporaryTarget from NS
  */
-class SyncTemporaryTargetTransaction(private val temporaryTarget: TemporaryTarget) : Transaction<SyncTemporaryTargetTransaction.TransactionResult>() {
+class SyncNsTemporaryTargetTransaction(private val temporaryTarget: TemporaryTarget) : Transaction<SyncNsTemporaryTargetTransaction.TransactionResult>() {
 
     override fun run(): TransactionResult {
         val result = TransactionResult()

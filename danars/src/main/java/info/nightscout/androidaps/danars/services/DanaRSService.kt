@@ -18,8 +18,6 @@ import info.nightscout.androidaps.danars.R
 import info.nightscout.androidaps.danars.comm.*
 import info.nightscout.androidaps.data.Profile
 import info.nightscout.androidaps.data.PumpEnactResult
-import info.nightscout.androidaps.database.AppRepository
-import info.nightscout.androidaps.database.transactions.InsertTherapyEventAnnouncementTransaction
 import info.nightscout.androidaps.db.Treatment
 import info.nightscout.androidaps.dialogs.BolusProgressDialog
 import info.nightscout.androidaps.events.EventAppExit
@@ -29,6 +27,7 @@ import info.nightscout.androidaps.events.EventPumpStatusChanged
 import info.nightscout.androidaps.interfaces.ActivePluginProvider
 import info.nightscout.androidaps.interfaces.CommandQueueProvider
 import info.nightscout.androidaps.interfaces.ProfileFunction
+import info.nightscout.androidaps.interfaces.PumpSync
 import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.logging.LTag
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper
@@ -46,7 +45,6 @@ import info.nightscout.androidaps.utils.resources.ResourceHelper
 import info.nightscout.androidaps.utils.rx.AapsSchedulers
 import info.nightscout.androidaps.utils.sharedPreferences.SP
 import io.reactivex.disposables.CompositeDisposable
-import io.reactivex.rxkotlin.plusAssign
 import org.joda.time.DateTime
 import org.joda.time.DateTimeZone
 import java.util.concurrent.TimeUnit
@@ -73,7 +71,7 @@ class DanaRSService : DaggerService() {
     @Inject lateinit var detailedBolusInfoStorage: DetailedBolusInfoStorage
     @Inject lateinit var bleComm: BLEComm
     @Inject lateinit var fabricPrivacy: FabricPrivacy
-    @Inject lateinit var repository: AppRepository
+    @Inject lateinit var pumpSync: PumpSync
     @Inject lateinit var dateUtil: DateUtil
 
     private val disposable = CompositeDisposable()
@@ -208,7 +206,7 @@ class DanaRSService : DaggerService() {
                 if (System.currentTimeMillis() > lastApproachingDailyLimit + 30 * 60 * 1000) {
                     val reportFail = Notification(Notification.APPROACHING_DAILY_LIMIT, resourceHelper.gs(R.string.approachingdailylimit), Notification.URGENT)
                     rxBus.send(EventNewNotification(reportFail))
-                    disposable += repository.runTransaction(InsertTherapyEventAnnouncementTransaction(resourceHelper.gs(R.string.approachingdailylimit) + ": " + danaPump.dailyTotalUnits + "/" + danaPump.maxDailyTotalUnits + "U")).subscribe()
+                    pumpSync.insertAnnouncement(resourceHelper.gs(R.string.approachingdailylimit) + ": " + danaPump.dailyTotalUnits + "/" + danaPump.maxDailyTotalUnits + "U", null, danaPump.pumpType(), danaPump.serialNumber)
                     lastApproachingDailyLimit = System.currentTimeMillis()
                 }
             }

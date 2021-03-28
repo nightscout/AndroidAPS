@@ -7,6 +7,7 @@ import info.nightscout.androidaps.db.Treatment
 import info.nightscout.androidaps.interfaces.ProfileStore
 import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.logging.LTag
+import info.nightscout.androidaps.plugins.pump.common.defs.PumpType
 import info.nightscout.androidaps.utils.T
 import info.nightscout.androidaps.utils.sharedPreferences.SP
 import org.joda.time.DateTime
@@ -19,9 +20,6 @@ import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 import javax.inject.Singleton
 
-/**
- * Created by mike on 04.07.2016.
- */
 @Singleton
 class DanaPump @Inject constructor(
     private val aapsLogger: AAPSLogger,
@@ -38,6 +36,7 @@ class DanaPump @Inject constructor(
         NOPRIME(0x10);
 
         companion object {
+
             private val map = values().associateBy(ErrorState::code)
             operator fun get(value: Int) = map[value]
         }
@@ -286,9 +285,11 @@ class DanaPump @Inject constructor(
         when (hwModel) {
             0x01 -> "DanaR Korean"
             0x03 ->
-                if (protocol == 0x00) "DanaR old"
-                else if (protocol == 0x02) "DanaR v2"
-                else "DanaR" // 0x01 and 0x03 known
+                when (protocol) {
+                    0x00 -> "DanaR old"
+                    0x02 -> "DanaR v2"
+                    else -> "DanaR" // 0x01 and 0x03 known
+                }
             0x05 ->
                 if (protocol < 10) "DanaRS"
                 else "DanaRS v3"
@@ -297,7 +298,23 @@ class DanaPump @Inject constructor(
             else -> "Unknown Dana pump"
         }
 
+    fun pumpType(): PumpType =
+        when (hwModel) {
+            0x01 -> PumpType.DANA_R_KOREAN
+            0x03 ->
+                when (protocol) {
+                    0x00 -> PumpType.DANA_R
+                    0x02 -> PumpType.DANA_RV2
+                    else -> PumpType.DANA_R // 0x01 and 0x03 known
+                }
+            0x05 -> PumpType.DANA_RS
+            0x06 -> PumpType.DANA_RS_KOREAN
+            0x07 -> PumpType.DANA_I
+            else -> PumpType.DANA_R
+        }
+
     companion object {
+
         const val UNITS_MGDL = 0
         const val UNITS_MMOL = 1
         const val DELIVERY_PRIME = 0x01

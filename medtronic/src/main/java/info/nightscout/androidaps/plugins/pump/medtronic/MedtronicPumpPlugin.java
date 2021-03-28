@@ -32,7 +32,6 @@ import info.nightscout.androidaps.activities.ErrorHelperActivity;
 import info.nightscout.androidaps.data.DetailedBolusInfo;
 import info.nightscout.androidaps.data.Profile;
 import info.nightscout.androidaps.data.PumpEnactResult;
-import info.nightscout.androidaps.database.entities.Bolus;
 import info.nightscout.androidaps.db.Source;
 import info.nightscout.androidaps.db.TemporaryBasal;
 import info.nightscout.androidaps.events.EventRefreshOverview;
@@ -55,7 +54,6 @@ import info.nightscout.androidaps.plugins.pump.common.defs.PumpDriverState;
 import info.nightscout.androidaps.plugins.pump.common.defs.PumpType;
 import info.nightscout.androidaps.plugins.pump.common.events.EventRefreshButtonState;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.RileyLinkConst;
-import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.RileyLinkUtil;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.defs.RileyLinkPumpDevice;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.defs.RileyLinkPumpInfo;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.defs.RileyLinkServiceState;
@@ -101,7 +99,6 @@ import info.nightscout.androidaps.utils.sharedPreferences.SP;
 public class MedtronicPumpPlugin extends PumpPluginAbstract implements PumpInterface, RileyLinkPumpDevice {
 
     private final SP sp;
-    private final RileyLinkUtil rileyLinkUtil;
     private final MedtronicUtil medtronicUtil;
     private final MedtronicPumpStatus medtronicPumpStatus;
     private final MedtronicHistoryData medtronicHistoryData;
@@ -133,7 +130,6 @@ public class MedtronicPumpPlugin extends PumpPluginAbstract implements PumpInter
             SP sp,
             CommandQueueProvider commandQueue,
             FabricPrivacy fabricPrivacy,
-            RileyLinkUtil rileyLinkUtil,
             MedtronicUtil medtronicUtil,
             MedtronicPumpStatus medtronicPumpStatus,
             MedtronicHistoryData medtronicHistoryData,
@@ -155,7 +151,6 @@ public class MedtronicPumpPlugin extends PumpPluginAbstract implements PumpInter
                 injector, resourceHelper, aapsLogger, commandQueue, rxBus, activePlugin, sp, context, fabricPrivacy, dateUtil, aapsSchedulers
         );
 
-        this.rileyLinkUtil = rileyLinkUtil;
         this.medtronicUtil = medtronicUtil;
         this.sp = sp;
         this.medtronicPumpStatus = medtronicPumpStatus;

@@ -1,17 +1,15 @@
 package info.nightscout.androidaps.danars.comm
 
 import dagger.android.HasAndroidInjector
+import info.nightscout.androidaps.dana.DanaPump
 import info.nightscout.androidaps.danars.R
 import info.nightscout.androidaps.danars.encryption.BleEncryption
-import info.nightscout.androidaps.database.AppRepository
-import info.nightscout.androidaps.database.transactions.InsertTherapyEventAnnouncementTransaction
+import info.nightscout.androidaps.interfaces.PumpSync
 import info.nightscout.androidaps.logging.LTag
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper
 import info.nightscout.androidaps.plugins.general.overview.events.EventNewNotification
 import info.nightscout.androidaps.plugins.general.overview.notifications.Notification
 import info.nightscout.androidaps.utils.resources.ResourceHelper
-import io.reactivex.disposables.CompositeDisposable
-import io.reactivex.rxkotlin.plusAssign
 import javax.inject.Inject
 
 class DanaRS_Packet_Notify_Alarm(
@@ -20,9 +18,8 @@ class DanaRS_Packet_Notify_Alarm(
 
     @Inject lateinit var rxBus: RxBusWrapper
     @Inject lateinit var resourceHelper: ResourceHelper
-    @Inject lateinit var repository: AppRepository
-
-    private val disposable = CompositeDisposable()
+    @Inject lateinit var pumpSync: PumpSync
+    @Inject lateinit var danaPump: DanaPump
 
     init {
         type = BleEncryption.DANAR_PACKET__TYPE_NOTIFY
@@ -69,7 +66,7 @@ class DanaRS_Packet_Notify_Alarm(
         }
         val notification = Notification(Notification.USER_MESSAGE, errorString, Notification.URGENT)
         rxBus.send(EventNewNotification(notification))
-        disposable += repository.runTransaction(InsertTherapyEventAnnouncementTransaction(errorString)).subscribe()
+        pumpSync.insertAnnouncement(errorString, null, danaPump.pumpType(), danaPump.serialNumber)
     }
 
     override fun getFriendlyName(): String {

@@ -1,5 +1,6 @@
 package info.nightscout.androidaps.database
 
+import info.nightscout.androidaps.database.embedments.InterfaceIDs
 import info.nightscout.androidaps.database.entities.*
 import info.nightscout.androidaps.database.interfaces.DBEntry
 import info.nightscout.androidaps.database.transactions.Transaction
@@ -277,6 +278,9 @@ open class AppRepository @Inject internal constructor(
         database.bolusDao.getModifiedFrom(lastId)
             .subscribeOn(Schedulers.io())
 
+    fun findBolusByPumpIds(pumpId: Long, pumpType: InterfaceIDs.PumpType, pumpSerial: String): Bolus? =
+        database.bolusDao.findByPumpIds(pumpId, pumpType, pumpSerial)
+
     fun getBolusesDataFromTime(timestamp: Long, ascending: Boolean): Single<List<Bolus>> =
         database.bolusDao.getBolusesFromTime(timestamp)
             .map { if (!ascending) it.reversed() else it }
@@ -313,6 +317,9 @@ open class AppRepository @Inject internal constructor(
     fun getModifiedCarbsDataFromId(lastId: Long): Single<List<Carbs>> =
         database.carbsDao.getModifiedFrom(lastId)
             .subscribeOn(Schedulers.io())
+
+    fun getCarbsByTimestamp(timestamp: Long): Carbs? =
+        database.carbsDao.findByTimestamp(timestamp)
 
     fun getCarbsDataFromTime(timestamp: Long, ascending: Boolean): Single<List<Carbs>> =
         database.carbsDao.getCarbsFromTime(timestamp)

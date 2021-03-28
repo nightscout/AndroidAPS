@@ -3,6 +3,7 @@ package info.nightscout.androidaps.database.daos
 import androidx.room.Dao
 import androidx.room.Query
 import info.nightscout.androidaps.database.TABLE_BOLUSES
+import info.nightscout.androidaps.database.embedments.InterfaceIDs
 import info.nightscout.androidaps.database.entities.Bolus
 import io.reactivex.Maybe
 import io.reactivex.Single
@@ -16,6 +17,9 @@ internal interface BolusDao : TraceableDao<Bolus> {
 
     @Query("DELETE FROM $TABLE_BOLUSES")
     override fun deleteAllEntries()
+
+    @Query("SELECT * FROM $TABLE_BOLUSES WHERE pumpId = :pumpId AND pumpType = :pumpType AND pumpSerial = :pumpSerial AND referenceId IS NULL")
+    fun findByPumpIds(pumpId: Long, pumpType: InterfaceIDs.PumpType, pumpSerial: String): Bolus?
 
     @Query("SELECT * FROM $TABLE_BOLUSES WHERE isValid = 1 AND timestamp >= :timestamp AND referenceId IS NULL ORDER BY id DESC")
     fun getBolusesFromTime(timestamp: Long): Single<List<Bolus>>

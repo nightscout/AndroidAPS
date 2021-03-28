@@ -16,9 +16,8 @@ import info.nightscout.androidaps.danars.comm.DanaRS_Packet
 import info.nightscout.androidaps.danars.comm.DanaRS_Packet_Etc_Keep_Connection
 import info.nightscout.androidaps.danars.encryption.BleEncryption
 import info.nightscout.androidaps.danars.events.EventDanaRSPairingSuccess
-import info.nightscout.androidaps.database.AppRepository
-import info.nightscout.androidaps.database.transactions.InsertTherapyEventAnnouncementTransaction
 import info.nightscout.androidaps.events.EventPumpStatusChanged
+import info.nightscout.androidaps.interfaces.PumpSync
 import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.logging.LTag
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper
@@ -32,8 +31,6 @@ import info.nightscout.androidaps.utils.extensions.notify
 import info.nightscout.androidaps.utils.extensions.waitMillis
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 import info.nightscout.androidaps.utils.sharedPreferences.SP
-import io.reactivex.disposables.CompositeDisposable
-import io.reactivex.rxkotlin.plusAssign
 import java.util.*
 import java.util.concurrent.ScheduledFuture
 import javax.inject.Inject
@@ -51,7 +48,7 @@ class BLEComm @Inject internal constructor(
     private val danaPump: DanaPump,
     private val danaRSPlugin: DanaRSPlugin,
     private val bleEncryption: BleEncryption,
-    private val repository: AppRepository
+    private val pumpSync: PumpSync
 ) {
 
     companion object {
@@ -63,8 +60,6 @@ class BLEComm @Inject internal constructor(
         private const val PACKET_START_BYTE = 0xA5.toByte()
         private const val PACKET_END_BYTE = 0x5A.toByte()
     }
-
-    private val disposable = CompositeDisposable()
 
     private var scheduledDisconnection: ScheduledFuture<*>? = null
     private var processedMessage: DanaRS_Packet? = null
@@ -493,7 +488,7 @@ class BLEComm @Inject internal constructor(
             aapsLogger.debug(LTag.PUMPBTCOMM, "<<<<< " + "ENCRYPTION__PUMP_CHECK (PUMP)" + " " + DanaRS_Packet.toHexString(decryptedBuffer))
             mSendQueue.clear()
             rxBus.send(EventPumpStatusChanged(EventPumpStatusChanged.Status.DISCONNECTED, resourceHelper.gs(R.string.pumperror)))
-            disposable += repository.runTransaction(InsertTherapyEventAnnouncementTransaction(resourceHelper.gs(R.string.pumperror))).subscribe()
+            pumpSync.insertAnnouncement(resourceHelper.gs(R.string.pumperror), null, danaPump.pumpType(), danaPump.serialNumber)
             val n = Notification(Notification.PUMP_ERROR, resourceHelper.gs(R.string.pumperror), Notification.URGENT)
             rxBus.send(EventNewNotification(n))
             // response BUSY: error status

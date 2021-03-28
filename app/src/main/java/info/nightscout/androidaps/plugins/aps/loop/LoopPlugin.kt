@@ -18,7 +18,7 @@ import info.nightscout.androidaps.data.PumpEnactResult
 import info.nightscout.androidaps.database.AppRepository
 import info.nightscout.androidaps.database.entities.TherapyEvent
 import info.nightscout.androidaps.database.transactions.InsertTherapyEventAnnouncementTransaction
-import info.nightscout.androidaps.database.transactions.InsertTherapyEventIfNewTransaction
+import info.nightscout.androidaps.database.transactions.InsertIfNewByTimestampTherapyEventTransaction
 import info.nightscout.androidaps.events.EventAcceptOpenLoopChange
 import info.nightscout.androidaps.events.EventAutosensCalculationFinished
 import info.nightscout.androidaps.events.EventNewBG
@@ -653,7 +653,7 @@ open class LoopPlugin @Inject constructor(
     }
 
     override fun createOfflineEvent(durationInMinutes: Int) {
-        disposable += repository.runTransactionForResult(InsertTherapyEventIfNewTransaction(
+        disposable += repository.runTransactionForResult(InsertIfNewByTimestampTherapyEventTransaction(
             timestamp = dateUtil._now(),
             type = TherapyEvent.Type.APS_OFFLINE,
             duration = T.mins(durationInMinutes.toLong()).msecs(),

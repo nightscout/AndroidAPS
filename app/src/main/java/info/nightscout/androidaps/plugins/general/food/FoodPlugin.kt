@@ -7,7 +7,7 @@ import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.database.AppRepository
 import info.nightscout.androidaps.database.entities.Food
-import info.nightscout.androidaps.database.transactions.SyncFoodTransaction
+import info.nightscout.androidaps.database.transactions.SyncNsFoodTransaction
 import info.nightscout.androidaps.interfaces.PluginBase
 import info.nightscout.androidaps.interfaces.PluginDescription
 import info.nightscout.androidaps.interfaces.PluginType
@@ -18,7 +18,6 @@ import info.nightscout.androidaps.utils.JsonHelper
 import info.nightscout.androidaps.utils.extensions.foodFromJson
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 import info.nightscout.androidaps.utils.sharedPreferences.SP
-import org.json.JSONArray
 import org.json.JSONObject
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -75,7 +74,7 @@ class FoodPlugin @Inject constructor(
                             isValid = false
                         ).also { it.interfaceIDs.nightscoutId = JsonHelper.safeGetString(jsonFood, "_id") }
 
-                        repository.runTransactionForResult(SyncFoodTransaction(delFood))
+                        repository.runTransactionForResult(SyncNsFoodTransaction(delFood))
                             .doOnError {
                                 aapsLogger.error(LTag.DATABASE, "Error while removing food", it)
                                 ret = Result.failure()
@@ -89,7 +88,7 @@ class FoodPlugin @Inject constructor(
                     else     -> {
                         val food = foodFromJson(jsonFood)
                         if (food != null) {
-                            repository.runTransactionForResult(SyncFoodTransaction(food))
+                            repository.runTransactionForResult(SyncNsFoodTransaction(food))
                                 .doOnError {
                                     aapsLogger.error(LTag.DATABASE, "Error while adding/updating food", it)
                                     ret = Result.failure()

@@ -1,16 +1,10 @@
 package info.nightscout.androidaps.utils.extensions
 
-import androidx.work.ListenableWorker
-import com.google.gson.Gson
 import info.nightscout.androidaps.Constants
 import info.nightscout.androidaps.core.R
 import info.nightscout.androidaps.data.Profile
-import info.nightscout.androidaps.database.AppRepository
 import info.nightscout.androidaps.database.entities.TemporaryTarget
 import info.nightscout.androidaps.database.entities.TherapyEvent
-import info.nightscout.androidaps.database.transactions.SyncTemporaryTargetTransaction
-import info.nightscout.androidaps.database.transactions.UpdateTemporaryTargetTransaction
-import info.nightscout.androidaps.logging.LTag
 import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.DecimalFormatter
 import info.nightscout.androidaps.utils.JsonHelper

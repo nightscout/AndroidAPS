@@ -1,6 +1,7 @@
 package info.nightscout.androidaps.plugins.pump.common.defs
 
 import info.nightscout.androidaps.core.R
+import info.nightscout.androidaps.database.embedments.InterfaceIDs
 import info.nightscout.androidaps.plugins.common.ManufacturerType
 import info.nightscout.androidaps.plugins.pump.common.data.DoseSettings
 import info.nightscout.androidaps.utils.Round
@@ -160,6 +161,8 @@ enum class PumpType {
         baseBasalStep = 0.01,
         baseBasalSpecialSteps = null,
         pumpCapability = PumpCapability.DanaWithHistoryCapabilities),
+    DANA_RS_KOREAN(description = "DanaRSKorean", model = "DanaRSKorean", parent = DANA_RS),
+    DANA_I(description = "DanaI", model = "DanaI", parent = DANA_RS),
     DANA_RV2(description = "DanaRv2", model = "DanaRv2", parent = DANA_RS),
     OMNIPOD_EROS(description = "Omnipod Eros",
         manufacturer = ManufacturerType.Insulet,
@@ -275,6 +278,7 @@ enum class PumpType {
         tbrSettings = DoseSettings(1.0, 15, 24 * 60, 0.0, 500.0),
         extendedBolusSettings = DoseSettings(0.1, 15, 12 * 60, 0.1),
         pumpCapability = PumpCapability.MDI),
+
     // Not real pump. Used for User as a source
     USER(description = "USER",
         manufacturer = ManufacturerType.AndroidAPS,
@@ -408,4 +412,38 @@ enum class PumpType {
         return Round.roundTo(min(basalAmount, tSettings.maxDose), baseBasalSpecialSteps?.getStepSizeForAmount(basalAmount)
             ?: baseBasalStep)
     }
+
+    fun toDbPumpType(): InterfaceIDs.PumpType =
+        when (this) {
+            GENERIC_AAPS                -> InterfaceIDs.PumpType.GENERIC_AAPS
+            CELLNOVO                    -> InterfaceIDs.PumpType.CELLNOVO
+            ACCU_CHEK_COMBO             -> InterfaceIDs.PumpType.ACCU_CHEK_COMBO
+            ACCU_CHEK_SPIRIT            -> InterfaceIDs.PumpType.ACCU_CHEK_SPIRIT
+            ACCU_CHEK_INSIGHT           -> InterfaceIDs.PumpType.ACCU_CHEK_INSIGHT
+            ACCU_CHEK_INSIGHT_BLUETOOTH -> InterfaceIDs.PumpType.ACCU_CHEK_INSIGHT_BLUETOOTH
+            ACCU_CHEK_SOLO              -> InterfaceIDs.PumpType.ACCU_CHEK_SOLO
+            ANIMAS_VIBE                 -> InterfaceIDs.PumpType.ANIMAS_VIBE
+            ANIMAS_PING                 -> InterfaceIDs.PumpType.ANIMAS_PING
+            DANA_R                      -> InterfaceIDs.PumpType.DANA_R
+            DANA_R_KOREAN               -> InterfaceIDs.PumpType.DANA_R_KOREAN
+            DANA_RS                     -> InterfaceIDs.PumpType.DANA_RS
+            DANA_RS_KOREAN              -> InterfaceIDs.PumpType.DANA_RS_KOREAN
+            DANA_RV2                    -> InterfaceIDs.PumpType.DANA_RV2
+            DANA_I                      -> InterfaceIDs.PumpType.DANA_I
+            OMNIPOD_EROS                -> InterfaceIDs.PumpType.OMNIPOD_EROS
+            OMNIPOD_DASH                -> InterfaceIDs.PumpType.OMNIPOD_DASH
+            MEDTRONIC_512_712           -> InterfaceIDs.PumpType.MEDTRONIC_512_517
+            MEDTRONIC_515_715           -> InterfaceIDs.PumpType.MEDTRONIC_515_715
+            MEDTRONIC_522_722           -> InterfaceIDs.PumpType.MEDTRONIC_522_722
+            MEDTRONIC_523_723_REVEL     -> InterfaceIDs.PumpType.MEDTRONIC_523_723_REVEL
+            MEDTRONIC_554_754_VEO       -> InterfaceIDs.PumpType.MEDTRONIC_554_754_VEO
+            MEDTRONIC_640G              -> InterfaceIDs.PumpType.MEDTRONIC_640G
+            TANDEM_T_SLIM               -> InterfaceIDs.PumpType.TANDEM_T_SLIM
+            TANDEM_T_SLIM_G4            -> InterfaceIDs.PumpType.TANDEM_T_SLIM_G4
+            TANDEM_T_FLEX               -> InterfaceIDs.PumpType.TANDEM_T_FLEX
+            TANDEM_T_SLIM_X2            -> InterfaceIDs.PumpType.TANDEM_T_SLIM_X2
+            YPSOPUMP                    -> InterfaceIDs.PumpType.YPSOPUMP
+            MDI                         -> InterfaceIDs.PumpType.MDI
+            USER                        -> InterfaceIDs.PumpType.USER
+        }
 }

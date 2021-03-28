@@ -20,6 +20,7 @@ import info.nightscout.androidaps.plugins.general.nsclient.DataSyncSelectorImple
 import info.nightscout.androidaps.plugins.general.nsclient.UploadQueue
 import info.nightscout.androidaps.plugins.general.smsCommunicator.SmsCommunicatorPlugin
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.IobCobCalculatorPlugin
+import info.nightscout.androidaps.plugins.pump.PumpSyncImplementation
 import info.nightscout.androidaps.plugins.treatments.TreatmentsPlugin
 import info.nightscout.androidaps.queue.CommandQueue
 import info.nightscout.androidaps.utils.androidNotification.NotificationHolder
@@ -30,6 +31,7 @@ import info.nightscout.androidaps.utils.sharedPreferences.SP
 import info.nightscout.androidaps.utils.storage.FileStorage
 import info.nightscout.androidaps.utils.storage.Storage
 import javax.inject.Singleton
+@Suppress("unused")
 @Module(includes = [
     AppModule.AppBindings::class
 ])
@@ -87,6 +89,7 @@ open class AppModule {
         @Binds fun bindSmsCommunicatorInterface(smsCommunicatorPlugin: SmsCommunicatorPlugin): SmsCommunicatorInterface
         @Binds fun bindUploadQueueAdminInterfaceToUploadQueue(uploadQueueAdminInterface: UploadQueueAdminInterface) : UploadQueueInterface
         @Binds fun bindDataSyncSelector(dataSyncSelectorImplementation: DataSyncSelectorImplementation): DataSyncSelector
+        @Binds fun bindPumpSync(pumpSyncImplementation: PumpSyncImplementation): PumpSync
 
     }
 }

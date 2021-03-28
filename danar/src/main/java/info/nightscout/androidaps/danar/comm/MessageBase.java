@@ -17,21 +17,19 @@ import info.nightscout.androidaps.dana.DanaPump;
 import info.nightscout.androidaps.danaRKorean.DanaRKoreanPlugin;
 import info.nightscout.androidaps.danaRv2.DanaRv2Plugin;
 import info.nightscout.androidaps.danar.DanaRPlugin;
-import info.nightscout.androidaps.database.AppRepository;
 import info.nightscout.androidaps.interfaces.ActivePluginProvider;
 import info.nightscout.androidaps.interfaces.CommandQueueProvider;
 import info.nightscout.androidaps.interfaces.ConfigBuilderInterface;
 import info.nightscout.androidaps.interfaces.DatabaseHelperInterface;
+import info.nightscout.androidaps.interfaces.PumpSync;
 import info.nightscout.androidaps.logging.AAPSLogger;
 import info.nightscout.androidaps.logging.LTag;
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper;
 import info.nightscout.androidaps.plugins.configBuilder.ConstraintChecker;
-import info.nightscout.androidaps.plugins.general.nsclient.NSUpload;
 import info.nightscout.androidaps.plugins.pump.common.bolusInfo.DetailedBolusInfoStorage;
 import info.nightscout.androidaps.utils.CRC;
 import info.nightscout.androidaps.utils.DateUtil;
 import info.nightscout.androidaps.utils.resources.ResourceHelper;
-import io.reactivex.disposables.CompositeDisposable;
 
 /*
  *  00  01   02  03   04   05  06
@@ -53,11 +51,9 @@ public class MessageBase {
     @Inject public CommandQueueProvider commandQueue;
     @Inject public DetailedBolusInfoStorage detailedBolusInfoStorage;
     @Inject public ConstraintChecker constraintChecker;
-    @Inject public AppRepository repository;
+    @Inject public PumpSync pumpSync;
     @Inject public DatabaseHelperInterface databaseHelper;
     HasAndroidInjector injector;
-
-    final CompositeDisposable disposable = new CompositeDisposable();
 
     public byte[] buffer = new byte[512];
     private int position = 6;
@@ -67,7 +63,7 @@ public class MessageBase {
 
     public MessageBase(HasAndroidInjector injector) {
         injector.androidInjector().inject(this);
-        this. injector = injector;
+        this.injector = injector;
     }
 
     public void SetCommand(int cmd) {

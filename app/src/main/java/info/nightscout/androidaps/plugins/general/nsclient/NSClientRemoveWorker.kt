@@ -8,8 +8,8 @@ import info.nightscout.androidaps.R
 import info.nightscout.androidaps.database.AppRepository
 import info.nightscout.androidaps.database.entities.UserEntry
 import info.nightscout.androidaps.database.entities.UserEntry.ValueWithUnit
-import info.nightscout.androidaps.database.transactions.SyncTemporaryTargetTransaction
-import info.nightscout.androidaps.database.transactions.SyncTherapyEventTransaction
+import info.nightscout.androidaps.database.transactions.SyncNsTemporaryTargetTransaction
+import info.nightscout.androidaps.database.transactions.SyncNsTherapyEventTransaction
 import info.nightscout.androidaps.events.EventNsTreatment
 import info.nightscout.androidaps.events.EventNsTreatment.Companion.REMOVE
 import info.nightscout.androidaps.interfaces.ConfigInterface
@@ -59,7 +59,7 @@ class NSClientRemoveWorker(
 
             // room  Temporary target
             val temporaryTarget = temporaryTargetFromNsIdForInvalidating(nsId)
-            repository.runTransactionForResult(SyncTemporaryTargetTransaction(temporaryTarget))
+            repository.runTransactionForResult(SyncNsTemporaryTargetTransaction(temporaryTarget))
                 .doOnError {
                     aapsLogger.error(LTag.DATABASE, "Error while removing temporary target", it)
                     ret = Result.failure()
@@ -79,7 +79,7 @@ class NSClientRemoveWorker(
 
             // room  Therapy Event
             val therapyEvent = therapyEventFromNsIdForInvalidating(nsId)
-            repository.runTransactionForResult(SyncTherapyEventTransaction(therapyEvent))
+            repository.runTransactionForResult(SyncNsTherapyEventTransaction(therapyEvent))
                 .doOnError {
                     aapsLogger.error(LTag.DATABASE, "Error while removing therapy event", it)
                     ret = Result.failure()

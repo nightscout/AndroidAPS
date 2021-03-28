@@ -6,7 +6,7 @@ import androidx.work.WorkerParameters
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.database.AppRepository
-import info.nightscout.androidaps.database.transactions.SyncTherapyEventTransaction
+import info.nightscout.androidaps.database.transactions.SyncNsTherapyEventTransaction
 import info.nightscout.androidaps.interfaces.ConfigInterface
 import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.logging.LTag
@@ -40,7 +40,7 @@ class NSClientMbgWorker(
         for (i in 0 until mbgArray.length()) {
             val nsMbg = NSMbg(mbgArray.getJSONObject(i))
             if (!nsMbg.isValid()) continue
-            repository.runTransactionForResult(SyncTherapyEventTransaction(therapyEventFromNsMbg(nsMbg)))
+            repository.runTransactionForResult(SyncNsTherapyEventTransaction(therapyEventFromNsMbg(nsMbg)))
                 .doOnError {
                     aapsLogger.error("Error while saving therapy event", it)
                     ret = Result.failure()

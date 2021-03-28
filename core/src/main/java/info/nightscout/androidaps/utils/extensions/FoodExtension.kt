@@ -38,7 +38,7 @@ fun foodFromJson(jsonObject: JSONObject): Food? {
     return null
 }
 
-fun Food.toJson(units: String): JSONObject =
+fun Food.toJson(): JSONObject =
     JSONObject()
         .put("type", "food")
         .put("name", name)

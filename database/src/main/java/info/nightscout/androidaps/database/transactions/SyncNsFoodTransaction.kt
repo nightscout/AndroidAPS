@@ -5,7 +5,7 @@ import info.nightscout.androidaps.database.entities.Food
 /**
  * Sync the TherapyEvents from NS
  */
-class SyncFoodTransaction(private val food: Food) : Transaction<SyncFoodTransaction.TransactionResult>() {
+class SyncNsFoodTransaction(private val food: Food) : Transaction<SyncNsFoodTransaction.TransactionResult>() {
 
     override fun run(): TransactionResult {
         val result = TransactionResult()

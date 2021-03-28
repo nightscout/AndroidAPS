@@ -9,8 +9,8 @@ import info.nightscout.androidaps.database.AppRepository
 import info.nightscout.androidaps.database.entities.TherapyEvent
 import info.nightscout.androidaps.database.entities.UserEntry
 import info.nightscout.androidaps.database.entities.UserEntry.ValueWithUnit
-import info.nightscout.androidaps.database.transactions.SyncTemporaryTargetTransaction
-import info.nightscout.androidaps.database.transactions.SyncTherapyEventTransaction
+import info.nightscout.androidaps.database.transactions.SyncNsTemporaryTargetTransaction
+import info.nightscout.androidaps.database.transactions.SyncNsTherapyEventTransaction
 import info.nightscout.androidaps.events.EventNsTreatment
 import info.nightscout.androidaps.interfaces.ConfigInterface
 import info.nightscout.androidaps.interfaces.DatabaseHelperInterface
@@ -78,7 +78,7 @@ class NSClientAddUpdateWorker(
                     rxBus.send(EventNsTreatment(EventNsTreatment.ADD, json))
                 eventType == TherapyEvent.Type.TEMPORARY_TARGET.text        ->
                     temporaryTargetFromJson(json)?.let { temporaryTarget ->
-                        repository.runTransactionForResult(SyncTemporaryTargetTransaction(temporaryTarget))
+                        repository.runTransactionForResult(SyncNsTemporaryTargetTransaction(temporaryTarget))
                             .doOnError {
                                 aapsLogger.error(LTag.DATABASE, "Error while saving temporary target", it)
                                 ret = Result.failure()
@@ -123,7 +123,7 @@ class NSClientAddUpdateWorker(
                     eventType == TherapyEvent.Type.APS_OFFLINE.text ||
                     eventType == TherapyEvent.Type.PUMP_BATTERY_CHANGE.text ->
                     therapyEventFromJson(json)?.let { therapyEvent ->
-                        repository.runTransactionForResult(SyncTherapyEventTransaction(therapyEvent))
+                        repository.runTransactionForResult(SyncNsTherapyEventTransaction(therapyEvent))
                             .doOnError {
                                 aapsLogger.error(LTag.DATABASE, "Error while saving therapy event", it)
                                 ret = Result.failure()

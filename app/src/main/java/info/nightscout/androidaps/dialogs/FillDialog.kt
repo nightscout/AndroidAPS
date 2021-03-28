@@ -14,7 +14,7 @@ import info.nightscout.androidaps.database.entities.TherapyEvent
 import info.nightscout.androidaps.database.entities.UserEntry.Action
 import info.nightscout.androidaps.database.entities.UserEntry.Units
 import info.nightscout.androidaps.database.entities.UserEntry.ValueWithUnit
-import info.nightscout.androidaps.database.transactions.InsertTherapyEventIfNewTransaction
+import info.nightscout.androidaps.database.transactions.InsertIfNewByTimestampTherapyEventTransaction
 import info.nightscout.androidaps.databinding.DialogFillBinding
 import info.nightscout.androidaps.interfaces.ActivePluginProvider
 import info.nightscout.androidaps.interfaces.CommandQueueProvider
@@ -140,7 +140,7 @@ class FillDialog : DialogFragmentWithDate() {
                     }
                     if (siteChange) {
                         uel.log(Action.CAREPORTAL, notes, ValueWithUnit(TherapyEvent.Type.CANNULA_CHANGE.text, Units.TherapyEvent))
-                        disposable += repository.runTransactionForResult(InsertTherapyEventIfNewTransaction(
+                        disposable += repository.runTransactionForResult(InsertIfNewByTimestampTherapyEventTransaction(
                             timestamp = eventTime,
                             type = TherapyEvent.Type.CANNULA_CHANGE,
                             note = notes,
@@ -153,7 +153,7 @@ class FillDialog : DialogFragmentWithDate() {
                     if (insulinChange) {
                         // add a second for case of both checked
                         uel.log(Action.CAREPORTAL, notes, ValueWithUnit(TherapyEvent.Type.INSULIN_CHANGE.text, Units.TherapyEvent))
-                        disposable += repository.runTransactionForResult(InsertTherapyEventIfNewTransaction(
+                        disposable += repository.runTransactionForResult(InsertIfNewByTimestampTherapyEventTransaction(
                             timestamp = eventTime + 1000,
                             type = TherapyEvent.Type.INSULIN_CHANGE,
                             note = notes,

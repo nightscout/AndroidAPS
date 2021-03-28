@@ -4,7 +4,6 @@ import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.danar.R
 import info.nightscout.androidaps.danar.comm.MessageBase
 import info.nightscout.androidaps.data.DetailedBolusInfo
-import info.nightscout.androidaps.database.embedments.InterfaceIDs
 import info.nightscout.androidaps.db.ExtendedBolus
 import info.nightscout.androidaps.db.Source
 import info.nightscout.androidaps.db.TemporaryBasal

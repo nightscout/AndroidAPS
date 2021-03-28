@@ -2,9 +2,9 @@ package info.nightscout.androidaps.database.transactions
 
 import info.nightscout.androidaps.database.entities.TherapyEvent
 
-class InsertTherapyEventIfNewTransaction(
+class InsertIfNewByTimestampTherapyEventTransaction(
     val therapyEvent: TherapyEvent
-) : Transaction<InsertTherapyEventIfNewTransaction.TransactionResult>() {
+) : Transaction<InsertIfNewByTimestampTherapyEventTransaction.TransactionResult>() {
 
     constructor(timestamp: Long, type: TherapyEvent.Type, duration: Long = 0, note: String? = null, enteredBy: String? = null, glucose: Double? = null, glucoseType: TherapyEvent.MeterType? = null, glucoseUnit: TherapyEvent.GlucoseUnit) :
         this(TherapyEvent(timestamp = timestamp, type = type, duration = duration, note = note, enteredBy = enteredBy, glucose = glucose, glucoseType = glucoseType, glucoseUnit = glucoseUnit))

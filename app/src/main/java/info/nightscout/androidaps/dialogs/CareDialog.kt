@@ -18,7 +18,7 @@ import info.nightscout.androidaps.database.entities.TherapyEvent
 import info.nightscout.androidaps.database.entities.UserEntry.Action
 import info.nightscout.androidaps.database.entities.UserEntry.Units
 import info.nightscout.androidaps.database.entities.UserEntry.ValueWithUnit
-import info.nightscout.androidaps.database.transactions.InsertTherapyEventIfNewTransaction
+import info.nightscout.androidaps.database.transactions.InsertIfNewByTimestampTherapyEventTransaction
 import info.nightscout.androidaps.databinding.DialogCareBinding
 import info.nightscout.androidaps.interfaces.ProfileFunction
 import info.nightscout.androidaps.logging.LTag
@@ -222,7 +222,7 @@ class CareDialog : DialogFragmentWithDate() {
 
         activity?.let { activity ->
             OKDialog.showConfirmation(activity, resourceHelper.gs(event), HtmlHelper.fromHtml(Joiner.on("<br/>").join(actions)), {
-                disposable += repository.runTransactionForResult(InsertTherapyEventIfNewTransaction(therapyEvent))
+                disposable += repository.runTransactionForResult(InsertIfNewByTimestampTherapyEventTransaction(therapyEvent))
                     .subscribe(
                         { result -> result.inserted.forEach { aapsLogger.debug(LTag.DATABASE, "Inserted therapy event $it") } },
                         { aapsLogger.error(LTag.DATABASE, "Error while saving therapy event", it) }

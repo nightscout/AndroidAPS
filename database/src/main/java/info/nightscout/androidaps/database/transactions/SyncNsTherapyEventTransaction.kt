@@ -5,7 +5,7 @@ import info.nightscout.androidaps.database.entities.TherapyEvent
 /**
  * Sync the TherapyEvents from NS
  */
-class SyncTherapyEventTransaction(private val therapyEvent: TherapyEvent) : Transaction<SyncTherapyEventTransaction.TransactionResult>() {
+class SyncNsTherapyEventTransaction(private val therapyEvent: TherapyEvent) : Transaction<SyncNsTherapyEventTransaction.TransactionResult>() {
 
     override fun run(): TransactionResult {
         val result = TransactionResult()

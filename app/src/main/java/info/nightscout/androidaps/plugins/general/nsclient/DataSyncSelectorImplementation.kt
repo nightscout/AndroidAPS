@@ -205,10 +205,10 @@ class DataSyncSelectorImplementation @Inject constructor(
                     nsClientPlugin.nsClientService?.dbRemove("food", tt.first.interfaceIDs.nightscoutId, DataSyncSelector.PairFood(tt.first, tt.second))
                 // existing without nsId = create new
                 tt.first.isValid && tt.first.interfaceIDs.nightscoutId == null  ->
-                    nsClientPlugin.nsClientService?.dbAdd("food", tt.first.toJson(profileFunction.getUnits()), DataSyncSelector.PairFood(tt.first, tt.second))
+                    nsClientPlugin.nsClientService?.dbAdd("food", tt.first.toJson(), DataSyncSelector.PairFood(tt.first, tt.second))
                 // existing with nsId = update
                 tt.first.isValid && tt.first.interfaceIDs.nightscoutId != null  ->
-                    nsClientPlugin.nsClientService?.dbUpdate("food", tt.first.interfaceIDs.nightscoutId, tt.first.toJson(profileFunction.getUnits()), DataSyncSelector.PairFood(tt.first, tt.second))
+                    nsClientPlugin.nsClientService?.dbUpdate("food", tt.first.interfaceIDs.nightscoutId, tt.first.toJson(), DataSyncSelector.PairFood(tt.first, tt.second))
             }
             return true
         }

@@ -18,9 +18,6 @@ import info.nightscout.androidaps.activities.ErrorHelperActivity;
 import info.nightscout.androidaps.data.DetailedBolusInfo;
 import info.nightscout.androidaps.data.Profile;
 import info.nightscout.androidaps.data.PumpEnactResult;
-import info.nightscout.androidaps.database.AppRepository;
-import info.nightscout.androidaps.database.entities.TherapyEvent;
-import info.nightscout.androidaps.database.transactions.InsertTherapyEventIfNewTransaction;
 import info.nightscout.androidaps.db.OmnipodHistoryRecord;
 import info.nightscout.androidaps.db.Source;
 import info.nightscout.androidaps.db.TemporaryBasal;
@@ -28,6 +25,7 @@ import info.nightscout.androidaps.events.Event;
 import info.nightscout.androidaps.events.EventRefreshOverview;
 import info.nightscout.androidaps.interfaces.ActivePluginProvider;
 import info.nightscout.androidaps.interfaces.DatabaseHelperInterface;
+import info.nightscout.androidaps.interfaces.PumpSync;
 import info.nightscout.androidaps.logging.AAPSLogger;
 import info.nightscout.androidaps.logging.LTag;
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper;
@@ -85,7 +83,6 @@ import info.nightscout.androidaps.plugins.pump.omnipod.eros.util.OmnipodAlertUti
 import info.nightscout.androidaps.utils.resources.ResourceHelper;
 import info.nightscout.androidaps.utils.rx.AapsSchedulers;
 import info.nightscout.androidaps.utils.sharedPreferences.SP;
-import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.subjects.SingleSubject;
 
 @Singleton
@@ -103,7 +100,7 @@ public class AapsOmnipodErosManager {
     private final DatabaseHelperInterface databaseHelper;
     private final OmnipodAlertUtil omnipodAlertUtil;
     private final Context context;
-    private final AppRepository repository;
+    private final PumpSync pumpSync;
 
     private boolean basalBeepsEnabled;
     private boolean bolusBeepsEnabled;
@@ -120,8 +117,6 @@ public class AapsOmnipodErosManager {
     private boolean showRileyLinkBatteryLevel;
     private boolean batteryChangeLoggingEnabled;
 
-    private final CompositeDisposable disposable = new CompositeDisposable();
-
     @Inject
     public AapsOmnipodErosManager(OmnipodRileyLinkCommunicationManager communicationService,
                                   PodStateManager podStateManager,
@@ -136,7 +131,7 @@ public class AapsOmnipodErosManager {
                                   DatabaseHelperInterface databaseHelper,
                                   OmnipodAlertUtil omnipodAlertUtil,
                                   Context context,
-                                  AppRepository repository) {
+                                  PumpSync pumpSync) {
 
         this.podStateManager = podStateManager;
         this.aapsOmnipodUtil = aapsOmnipodUtil;
@@ -149,7 +144,7 @@ public class AapsOmnipodErosManager {
         this.databaseHelper = databaseHelper;
         this.omnipodAlertUtil = omnipodAlertUtil;
         this.context = context;
-        this.repository = repository;
+        this.pumpSync = pumpSync;
 
         delegate = new OmnipodManager(aapsLogger, aapsSchedulers, communicationService, podStateManager);
 
@@ -218,8 +213,8 @@ public class AapsOmnipodErosManager {
         addToHistory(System.currentTimeMillis(), PodHistoryEntryType.INSERT_CANNULA, result.getComment(), result.getSuccess());
 
         if (result.getSuccess()) {
-            uploadCareportalEvent(System.currentTimeMillis() - 1000, TherapyEvent.Type.INSULIN_CHANGE);
-            uploadCareportalEvent(System.currentTimeMillis(), TherapyEvent.Type.CANNULA_CHANGE);
+            uploadCareportalEvent(System.currentTimeMillis() - 1000, DetailedBolusInfo.EventType.INSULIN_CHANGE);
+            uploadCareportalEvent(System.currentTimeMillis(), DetailedBolusInfo.EventType.CANNULA_CHANGE);
 
             dismissNotification(Notification.OMNIPOD_POD_NOT_ATTACHED);
 
@@ -999,13 +994,8 @@ public class AapsOmnipodErosManager {
         return new BasalSchedule(entries);
     }
 
-    private void uploadCareportalEvent(long date, TherapyEvent.Type event) {
-        if (repository.getTherapyEventByTimestamp(event, date) != null) return;
-        disposable.add(repository.runTransactionForResult(new InsertTherapyEventIfNewTransaction(date, event, 0, null, sp.getString("careportal_enteredby", "AndroidAPS"), null, null, TherapyEvent.GlucoseUnit.MGDL))
-                .subscribe(
-                        result -> result.getInserted().forEach(record -> aapsLogger.debug(LTag.DATABASE, "Inserted therapy event " + record)),
-                        error -> aapsLogger.error(LTag.DATABASE, "Error while saving therapy event", error)
-                ));
+    private void uploadCareportalEvent(long date, DetailedBolusInfo.EventType event) {
+        pumpSync.insertTherapyEventIfNewWithTimestamp(date, event, null, null, PumpType.OMNIPOD_EROS, Integer.toString(podStateManager.getAddress()));
     }
 
     public String serialNumber() {
