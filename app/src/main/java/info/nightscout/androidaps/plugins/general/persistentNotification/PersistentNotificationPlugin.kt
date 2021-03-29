@@ -156,8 +156,6 @@ class PersistentNotificationPlugin @Inject constructor(
                 line1aa += "  " + activeTemp.toStringShort() + "."
             }
             //IOB
-            activePlugins.activeTreatments.updateTotalIOBTreatments()
-            activePlugins.activeTreatments.updateTotalIOBTempBasals()
             val bolusIob = activePlugins.activeTreatments.lastCalculationTreatments.round()
             val basalIob = activePlugins.activeTreatments.lastCalculationTempBasals.round()
             line2 = resourceHelper.gs(R.string.treatments_iob_label_string) + " " + DecimalFormatter.to2Decimal(bolusIob.iob + basalIob.basaliob) + "U " + resourceHelper.gs(R.string.cob) + ": " + iobCobCalculatorPlugin.getCobInfo(false, "PersistentNotificationPlugin").generateCOBString()

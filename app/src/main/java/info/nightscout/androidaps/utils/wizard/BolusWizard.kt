@@ -205,9 +205,7 @@ class BolusWizard @Inject constructor(
 
         // Insulin from IOB
         // IOB calculation
-        activePlugin.activeTreatments.updateTotalIOBTreatments()
         val bolusIob = activePlugin.activeTreatments.lastCalculationTreatments.round()
-        activePlugin.activeTreatments.updateTotalIOBTempBasals()
         val basalIob = activePlugin.activeTreatments.lastCalculationTempBasals.round()
 
         insulinFromBolusIOB = if (includeBolusIOB) -bolusIob.iob else 0.0

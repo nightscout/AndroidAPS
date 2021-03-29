@@ -325,9 +325,7 @@ class SmsCommunicatorPlugin @Inject constructor(
         }
         val glucoseStatus = glucoseStatusProvider.glucoseStatusData
         if (glucoseStatus != null) reply += resourceHelper.gs(R.string.sms_delta) + " " + Profile.toUnitsString(glucoseStatus.delta, glucoseStatus.delta * Constants.MGDL_TO_MMOLL, units) + " " + units + ", "
-        activePlugin.activeTreatments.updateTotalIOBTreatments()
         val bolusIob = activePlugin.activeTreatments.lastCalculationTreatments.round()
-        activePlugin.activeTreatments.updateTotalIOBTempBasals()
         val basalIob = activePlugin.activeTreatments.lastCalculationTempBasals.round()
         val cobInfo = iobCobCalculatorPlugin.getCobInfo(false, "SMS COB")
         reply += (resourceHelper.gs(R.string.sms_iob) + " " + DecimalFormatter.to2Decimal(bolusIob.iob + basalIob.basaliob) + "U ("

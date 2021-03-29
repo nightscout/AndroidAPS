@@ -749,8 +749,6 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
         processButtonsVisibility()
 
         // iob
-        treatmentsPlugin.updateTotalIOBTreatments()
-        treatmentsPlugin.updateTotalIOBTempBasals()
         val bolusIob = treatmentsPlugin.lastCalculationTreatments.round()
         val basalIob = treatmentsPlugin.lastCalculationTempBasals.round()
         binding.infoLayout.iob.text = resourceHelper.gs(R.string.formatinsulinunits, bolusIob.iob + basalIob.basaliob)

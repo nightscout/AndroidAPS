@@ -9,7 +9,6 @@ import info.nightscout.androidaps.database.entities.GlucoseValue
 import info.nightscout.androidaps.interfaces.ProfileFunction
 import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.plugins.aps.loop.LoopPlugin
-import info.nightscout.androidaps.plugins.iob.iobCobCalculator.GlucoseStatus
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.GlucoseStatusProvider
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.IobCobCalculatorPlugin
 import info.nightscout.androidaps.plugins.treatments.TreatmentsPlugin
@@ -99,7 +98,6 @@ class QuickWizardEntry @Inject constructor(private val injector: HasAndroidInjec
             bolusIOB = true
         }
         // Basal IOB
-        treatmentsPlugin.updateTotalIOBTempBasals()
         val basalIob = treatmentsPlugin.lastCalculationTempBasals.round()
         var basalIOB = false
         if (useBasalIOB() == YES) {

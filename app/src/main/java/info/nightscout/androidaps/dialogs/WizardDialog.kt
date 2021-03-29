@@ -279,9 +279,7 @@ class WizardDialog : DaggerDialogFragment() {
         binding.ttcheckbox.isEnabled = repository.getTemporaryTargetActiveAt(dateUtil._now()).blockingGet() is ValueWrapper.Existing
 
         // IOB calculation
-        treatmentsPlugin.updateTotalIOBTreatments()
         val bolusIob = treatmentsPlugin.lastCalculationTreatments.round()
-        treatmentsPlugin.updateTotalIOBTempBasals()
         val basalIob = treatmentsPlugin.lastCalculationTempBasals.round()
 
         binding.bolusiobinsulin.text = resourceHelper.gs(R.string.formatinsulinunits, -bolusIob.iob)

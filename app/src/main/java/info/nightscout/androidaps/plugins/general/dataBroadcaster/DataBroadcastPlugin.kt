@@ -136,9 +136,7 @@ class DataBroadcastPlugin @Inject constructor(
 
     private fun iobCob(bundle: Bundle) {
         profileFunction.getProfile() ?: return
-        activePlugin.activeTreatments.updateTotalIOBTreatments()
         val bolusIob: IobTotal = activePlugin.activeTreatments.lastCalculationTreatments.round()
-        activePlugin.activeTreatments.updateTotalIOBTempBasals()
         val basalIob: IobTotal = activePlugin.activeTreatments.lastCalculationTempBasals.round()
         bundle.putDouble("bolusIob", bolusIob.iob)
         bundle.putDouble("basalIob", basalIob.basaliob)

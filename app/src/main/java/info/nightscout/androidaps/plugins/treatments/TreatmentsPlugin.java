@@ -85,9 +85,6 @@ public class TreatmentsPlugin extends PluginBase implements TreatmentsInterface 
 
     protected TreatmentServiceInterface service;
 
-    private IobTotal lastTreatmentCalculation;
-    private IobTotal lastTempBasalsCalculation;
-
     private final ArrayList<Treatment> treatments = new ArrayList<>();
     private final Intervals<TemporaryBasal> tempBasals = new NonOverlappingIntervals<>();
     private final Intervals<ExtendedBolus> extendedBoluses = new NonOverlappingIntervals<>();
@@ -149,7 +146,6 @@ public class TreatmentsPlugin extends PluginBase implements TreatmentsInterface 
                             getAapsLogger().debug(LTag.DATATREATMENTS, "EventReloadTreatmentData");
                             initializeTreatmentData(range());
                             initializeExtendedBolusData(range());
-                            updateTotalIOBTreatments();
                             rxBus.send(event.getNext());
                         },
                         fabricPrivacy::logException
@@ -166,7 +162,6 @@ public class TreatmentsPlugin extends PluginBase implements TreatmentsInterface 
                 .subscribe(event -> {
                             getAapsLogger().debug(LTag.DATATREATMENTS, "EventReloadTempBasalData");
                             initializeTempBasalData(range());
-                            updateTotalIOBTempBasals();
                         },
                         fabricPrivacy::logException
                 ));
@@ -230,7 +225,7 @@ public class TreatmentsPlugin extends PluginBase implements TreatmentsInterface 
 
     @Override
     public IobTotal getLastCalculationTreatments() {
-        return lastTreatmentCalculation;
+        return getCalculationToTimeTreatments(System.currentTimeMillis());
     }
 
     @Override
@@ -276,11 +271,6 @@ public class TreatmentsPlugin extends PluginBase implements TreatmentsInterface 
                 }
             }
         return total;
-    }
-
-    @Override
-    public void updateTotalIOBTreatments() {
-        lastTreatmentCalculation = getCalculationToTimeTreatments(System.currentTimeMillis());
     }
 
     @Override
@@ -399,7 +389,7 @@ public class TreatmentsPlugin extends PluginBase implements TreatmentsInterface 
 
     @Override
     public IobTotal getLastCalculationTempBasals() {
-        return lastTempBasalsCalculation;
+        return getCalculationToTimeTempBasals(DateUtil.now());
     }
 
     @Override
@@ -535,11 +525,6 @@ public class TreatmentsPlugin extends PluginBase implements TreatmentsInterface 
             total.plus(totalExt);
         }
         return total;
-    }
-
-    @Override
-    public void updateTotalIOBTempBasals() {
-        lastTempBasalsCalculation = getCalculationToTimeTempBasals(DateUtil.now());
     }
 
     @Nullable

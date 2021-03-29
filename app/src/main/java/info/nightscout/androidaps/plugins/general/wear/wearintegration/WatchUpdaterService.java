@@ -685,9 +685,7 @@ public class WatchUpdaterService extends WearableListenerService implements Goog
             String iobSum, iobDetail, cobString, currentBasal, bgiString;
             iobSum = iobDetail = cobString = currentBasal = bgiString = "";
             if (profile != null) {
-                treatmentsPlugin.updateTotalIOBTreatments();
                 IobTotal bolusIob = treatmentsPlugin.getLastCalculationTreatments().round();
-                treatmentsPlugin.updateTotalIOBTempBasals();
                 IobTotal basalIob = treatmentsPlugin.getLastCalculationTempBasals().round();
 
                 iobSum = DecimalFormatter.INSTANCE.to2Decimal(bolusIob.iob + basalIob.basaliob);

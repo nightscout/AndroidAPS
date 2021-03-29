@@ -22,10 +22,6 @@ public interface TreatmentsInterface {
 
     TreatmentServiceInterface getService();
 
-    void updateTotalIOBTreatments();
-
-    void updateTotalIOBTempBasals();
-
     IobTotal getLastCalculationTreatments();
 
     IobTotal getCalculationToTimeTreatments(long time);
