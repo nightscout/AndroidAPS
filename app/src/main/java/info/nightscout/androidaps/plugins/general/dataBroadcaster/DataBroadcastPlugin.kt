@@ -9,11 +9,7 @@ import info.nightscout.androidaps.Config
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.data.IobTotal
 import info.nightscout.androidaps.events.*
-import info.nightscout.androidaps.interfaces.ActivePluginProvider
-import info.nightscout.androidaps.interfaces.PluginBase
-import info.nightscout.androidaps.interfaces.PluginDescription
-import info.nightscout.androidaps.interfaces.PluginType
-import info.nightscout.androidaps.interfaces.ProfileFunction
+import info.nightscout.androidaps.interfaces.*
 import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.logging.LTag
 import info.nightscout.androidaps.plugins.aps.events.EventOpenAPSUpdateGui
@@ -22,7 +18,6 @@ import info.nightscout.androidaps.plugins.bus.RxBusWrapper
 import info.nightscout.androidaps.plugins.general.nsclient.data.NSDeviceStatus
 import info.nightscout.androidaps.plugins.general.overview.events.EventOverviewBolusProgress
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.GlucoseStatusProvider
-import info.nightscout.androidaps.plugins.iob.iobCobCalculator.IobCobCalculatorPlugin
 import info.nightscout.androidaps.receivers.ReceiverStatusStore
 import info.nightscout.androidaps.services.Intents
 import info.nightscout.androidaps.utils.DefaultValueHelper
@@ -42,7 +37,7 @@ class DataBroadcastPlugin @Inject constructor(
     private val context: Context,
     private val fabricPrivacy: FabricPrivacy,
     private val rxBus: RxBusWrapper,
-    private val iobCobCalculatorPlugin: IobCobCalculatorPlugin,
+    private val iobCobCalculator: IobCobCalculator,
     private val profileFunction: ProfileFunction,
     private val defaultValueHelper: DefaultValueHelper,
     private val nsDeviceStatus: NSDeviceStatus,
@@ -121,7 +116,7 @@ class DataBroadcastPlugin @Inject constructor(
     }
 
     private fun bgStatus(bundle: Bundle) {
-        val lastBG = iobCobCalculatorPlugin.lastBg() ?: return
+        val lastBG = iobCobCalculator.lastBg() ?: return
         val glucoseStatus = glucoseStatusProvider.glucoseStatusData ?: return
 
         bundle.putDouble("glucoseMgdl", lastBG.value)   // last BG in mgdl
@@ -136,13 +131,13 @@ class DataBroadcastPlugin @Inject constructor(
 
     private fun iobCob(bundle: Bundle) {
         profileFunction.getProfile() ?: return
-        val bolusIob: IobTotal = activePlugin.activeTreatments.lastCalculationTreatments.round()
+        val bolusIob: IobTotal = iobCobCalculator.calculateIobFromBolus().round()
         val basalIob: IobTotal = activePlugin.activeTreatments.lastCalculationTempBasals.round()
         bundle.putDouble("bolusIob", bolusIob.iob)
         bundle.putDouble("basalIob", basalIob.basaliob)
         bundle.putDouble("iob", bolusIob.iob + basalIob.basaliob) // total IOB
 
-        val cob = iobCobCalculatorPlugin.getCobInfo(false, "broadcast")
+        val cob = iobCobCalculator.getCobInfo(false, "broadcast")
         bundle.putDouble("cob", cob.displayCob ?: -1.0) // COB [g] or -1 if N/A
         bundle.putDouble("futureCarbs", cob.futureCarbs) // future scheduled carbs
     }

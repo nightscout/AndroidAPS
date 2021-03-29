@@ -25,13 +25,13 @@ import info.nightscout.androidaps.databinding.DialogWizardBinding
 import info.nightscout.androidaps.events.EventAutosensCalculationFinished
 import info.nightscout.androidaps.interfaces.ActivePluginProvider
 import info.nightscout.androidaps.interfaces.Constraint
+import info.nightscout.androidaps.interfaces.IobCobCalculator
 import info.nightscout.androidaps.interfaces.ProfileFunction
 import info.nightscout.androidaps.interfaces.TreatmentsInterface
 import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.logging.LTag
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper
 import info.nightscout.androidaps.plugins.configBuilder.ConstraintChecker
-import info.nightscout.androidaps.plugins.iob.iobCobCalculator.IobCobCalculatorPlugin
 import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.DecimalFormatter
 import info.nightscout.androidaps.utils.FabricPrivacy
@@ -62,7 +62,7 @@ class WizardDialog : DaggerDialogFragment() {
     @Inject lateinit var resourceHelper: ResourceHelper
     @Inject lateinit var profileFunction: ProfileFunction
     @Inject lateinit var activePlugin: ActivePluginProvider
-    @Inject lateinit var iobCobCalculatorPlugin: IobCobCalculatorPlugin
+    @Inject lateinit var iobCobCalculator: IobCobCalculator
     @Inject lateinit var repository: AppRepository
     @Inject lateinit var treatmentsPlugin: TreatmentsInterface
     @Inject lateinit var dateUtil: DateUtil
@@ -269,17 +269,11 @@ class WizardDialog : DaggerDialogFragment() {
             binding.bgInput.setStep(0.1)
 
         // Set BG if not old
-        val lastBg = iobCobCalculatorPlugin.actualBg()
-
-        if (lastBg != null) {
-            binding.bgInput.value = lastBg.valueToUnits(units)
-        } else {
-            binding.bgInput.value = 0.0
-        }
+        binding.bgInput.value = iobCobCalculator.actualBg()?.valueToUnits(units) ?: 0.0
         binding.ttcheckbox.isEnabled = repository.getTemporaryTargetActiveAt(dateUtil._now()).blockingGet() is ValueWrapper.Existing
 
         // IOB calculation
-        val bolusIob = treatmentsPlugin.lastCalculationTreatments.round()
+        val bolusIob = iobCobCalculator.calculateIobFromBolus().round()
         val basalIob = treatmentsPlugin.lastCalculationTempBasals.round()
 
         binding.bolusiobinsulin.text = resourceHelper.gs(R.string.formatinsulinunits, -bolusIob.iob)
@@ -322,7 +316,7 @@ class WizardDialog : DaggerDialogFragment() {
         // COB
         var cob = 0.0
         if (binding.cobcheckbox.isChecked) {
-            val cobInfo = iobCobCalculatorPlugin.getCobInfo(false, "Wizard COB")
+            val cobInfo = iobCobCalculator.getCobInfo(false, "Wizard COB")
             cobInfo.displayCob?.let { cob = it }
         }
 

@@ -42,7 +42,7 @@ class TddCalculator @Inject constructor(
     private val dateUtil: DateUtil,
     uploadQueue: UploadQueueInterface,
     databaseHelper: DatabaseHelperInterface,
-    repository: AppRepository
+    private val repository: AppRepository
 ) : TreatmentsPlugin(injector, aapsLogger, rxBus, aapsSchedulers, resourceHelper, context, sp, profileFunction, activePlugin, nsUpload, fabricPrivacy, dateUtil, uploadQueue, databaseHelper, repository) {
 
     init {
@@ -56,13 +56,16 @@ class TddCalculator @Inject constructor(
         initializeData(range)
 
         val result = LongSparseArray<TDD>()
-        for (t in treatmentsFromHistory) {
-            if (!t.isValid) continue
-            if (t.date < startTime || t.date > endTime) continue
-            val midnight = MidnightTime.calc(t.date)
+        repository.getBolusesDataFromTimeToTime(startTime, endTime, true).blockingGet().forEach {  t->
+            val midnight = MidnightTime.calc(t.timestamp)
             val tdd = result[midnight] ?: TDD(midnight, 0.0, 0.0, 0.0)
-            tdd.bolus += t.insulin
-            tdd.carbs += t.carbs
+            tdd.bolus += t.amount
+            result.put(midnight, tdd)
+        }
+        repository.getCarbsDataFromTimeToTime(startTime, endTime, true).blockingGet().forEach {  t->
+            val midnight = MidnightTime.calc(t.timestamp)
+            val tdd = result[midnight] ?: TDD(midnight, 0.0, 0.0, 0.0)
+            tdd.carbs += t.amount
             result.put(midnight, tdd)
         }
 

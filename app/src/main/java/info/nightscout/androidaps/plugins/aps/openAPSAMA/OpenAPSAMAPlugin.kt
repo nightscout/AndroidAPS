@@ -15,9 +15,7 @@ import info.nightscout.androidaps.plugins.aps.loop.ScriptReader
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper
 import info.nightscout.androidaps.plugins.configBuilder.ConstraintChecker
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.AutosensResult
-import info.nightscout.androidaps.plugins.iob.iobCobCalculator.GlucoseStatus
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.GlucoseStatusProvider
-import info.nightscout.androidaps.plugins.iob.iobCobCalculator.IobCobCalculatorPlugin
 import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.FabricPrivacy
 import info.nightscout.androidaps.utils.HardLimits
@@ -40,7 +38,7 @@ open class OpenAPSAMAPlugin @Inject constructor(
     private val context: Context,
     private val activePlugin: ActivePluginProvider,
     private val treatmentsPlugin: TreatmentsInterface,
-    private val iobCobCalculatorPlugin: IobCobCalculatorPlugin,
+    private val iobCobCalculator: IobCobCalculator,
     private val hardLimits: HardLimits,
     private val profiler: Profiler,
     private val fabricPrivacy: FabricPrivacy,
@@ -107,10 +105,10 @@ open class OpenAPSAMAPlugin @Inject constructor(
         }.value()
         var start = System.currentTimeMillis()
         var startPart = System.currentTimeMillis()
-        val iobArray = iobCobCalculatorPlugin.calculateIobArrayInDia(profile)
+        val iobArray = iobCobCalculator.calculateIobArrayInDia(profile)
         profiler.log(LTag.APS, "calculateIobArrayInDia()", startPart)
         startPart = System.currentTimeMillis()
-        val mealData = iobCobCalculatorPlugin.mealData
+        val mealData = iobCobCalculator.mealData
         profiler.log(LTag.APS, "getMealData()", startPart)
         val maxIob = constraintChecker.getMaxIOBAllowed().also { maxIOBAllowedConstraint ->
             inputConstraints.copyReasons(maxIOBAllowedConstraint)
@@ -133,7 +131,7 @@ open class OpenAPSAMAPlugin @Inject constructor(
         if (!hardLimits.checkOnlyHardLimits(pump.baseBasalRate, R.string.current_basal_value, 0.01, hardLimits.maxBasal())) return
         startPart = System.currentTimeMillis()
         if (constraintChecker.isAutosensModeEnabled().value()) {
-            val autosensData = iobCobCalculatorPlugin.getLastAutosensDataSynchronized("OpenAPSPlugin")
+            val autosensData = iobCobCalculator.getLastAutosensDataSynchronized("OpenAPSPlugin")
             if (autosensData == null) {
                 rxBus.send(EventOpenAPSUpdateResultGui(resourceHelper.gs(R.string.openaps_noasdata)))
                 return

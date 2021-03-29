@@ -281,13 +281,26 @@ open class AppRepository @Inject internal constructor(
     fun findBolusByPumpIds(pumpId: Long, pumpType: InterfaceIDs.PumpType, pumpSerial: String): Bolus? =
         database.bolusDao.findByPumpIds(pumpId, pumpType, pumpSerial)
 
+    fun getOldestBolusRecord(): Bolus? =
+        database.bolusDao.getOldestBolusRecord()
+
     fun getBolusesDataFromTime(timestamp: Long, ascending: Boolean): Single<List<Bolus>> =
         database.bolusDao.getBolusesFromTime(timestamp)
             .map { if (!ascending) it.reversed() else it }
             .subscribeOn(Schedulers.io())
 
+    fun getBolusesDataFromTimeToTime(from: Long, to: Long, ascending: Boolean): Single<List<Bolus>> =
+        database.bolusDao.getBolusesFromTime(from, to)
+            .map { if (!ascending) it.reversed() else it }
+            .subscribeOn(Schedulers.io())
+
     fun getBolusesIncludingInvalidFromTime(timestamp: Long, ascending: Boolean): Single<List<Bolus>> =
         database.bolusDao.getBolusesIncludingInvalidFromTime(timestamp)
+            .map { if (!ascending) it.reversed() else it }
+            .subscribeOn(Schedulers.io())
+
+    fun getBolusesIncludingInvalidFromTimeToTime(from: Long, to: Long, ascending: Boolean): Single<List<Bolus>> =
+        database.bolusDao.getBolusesIncludingInvalidFromTimeToTime(from, to)
             .map { if (!ascending) it.reversed() else it }
             .subscribeOn(Schedulers.io())
 
@@ -321,13 +334,26 @@ open class AppRepository @Inject internal constructor(
     fun getCarbsByTimestamp(timestamp: Long): Carbs? =
         database.carbsDao.findByTimestamp(timestamp)
 
+    fun getOldestCarbsRecord(): Carbs? =
+        database.carbsDao.getOldestCarbsRecord()
+
     fun getCarbsDataFromTime(timestamp: Long, ascending: Boolean): Single<List<Carbs>> =
         database.carbsDao.getCarbsFromTime(timestamp)
             .map { if (!ascending) it.reversed() else it }
             .subscribeOn(Schedulers.io())
 
+    fun getCarbsDataFromTimeToTime(from: Long, to: Long, ascending: Boolean): Single<List<Carbs>> =
+        database.carbsDao.getCarbsFromTimeToTime(from, to)
+            .map { if (!ascending) it.reversed() else it }
+            .subscribeOn(Schedulers.io())
+
     fun getCarbsIncludingInvalidFromTime(timestamp: Long, ascending: Boolean): Single<List<Carbs>> =
         database.carbsDao.getCarbsIncludingInvalidFromTime(timestamp)
+            .map { if (!ascending) it.reversed() else it }
+            .subscribeOn(Schedulers.io())
+
+    fun getCarbsIncludingInvalidFromTimeToTime(from: Long, to: Long, ascending: Boolean): Single<List<Carbs>> =
+        database.carbsDao.getCarbsIncludingInvalidFromTimeToTime(from, to)
             .map { if (!ascending) it.reversed() else it }
             .subscribeOn(Schedulers.io())
 

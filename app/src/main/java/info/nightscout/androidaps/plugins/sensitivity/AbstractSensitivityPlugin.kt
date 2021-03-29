@@ -2,7 +2,7 @@ package info.nightscout.androidaps.plugins.sensitivity
 
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.R
-import info.nightscout.androidaps.interfaces.IobCobCalculatorInterface
+import info.nightscout.androidaps.interfaces.IobCobCalculator
 import info.nightscout.androidaps.interfaces.PluginBase
 import info.nightscout.androidaps.interfaces.PluginDescription
 import info.nightscout.androidaps.interfaces.SensitivityInterface
@@ -24,7 +24,7 @@ abstract class AbstractSensitivityPlugin(
     val sp: SP
 ) : PluginBase(pluginDescription, aapsLogger, resourceHelper, injector), SensitivityInterface {
 
-    abstract override fun detectSensitivity(plugin: IobCobCalculatorInterface, fromTime: Long, toTime: Long): AutosensResult
+    abstract override fun detectSensitivity(plugin: IobCobCalculator, fromTime: Long, toTime: Long): AutosensResult
 
     fun fillResult(ratio: Double, carbsAbsorbed: Double, pastSensitivity: String,
                    ratioLimit: String, sensResult: String, deviationsArraySize: Int): AutosensResult {

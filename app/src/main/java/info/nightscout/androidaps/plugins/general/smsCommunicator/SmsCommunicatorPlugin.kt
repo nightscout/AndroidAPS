@@ -31,14 +31,12 @@ import info.nightscout.androidaps.logging.UserEntryLogger
 import info.nightscout.androidaps.plugins.aps.loop.LoopPlugin
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper
 import info.nightscout.androidaps.plugins.configBuilder.ConstraintChecker
-import info.nightscout.androidaps.plugins.general.nsclient.NSUpload
 import info.nightscout.androidaps.plugins.general.nsclient.events.EventNSClientRestart
 import info.nightscout.androidaps.plugins.general.overview.events.EventNewNotification
 import info.nightscout.androidaps.plugins.general.overview.notifications.Notification
 import info.nightscout.androidaps.plugins.general.smsCommunicator.events.EventSmsCommunicatorUpdateGui
 import info.nightscout.androidaps.plugins.general.smsCommunicator.otp.OneTimePassword
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.GlucoseStatusProvider
-import info.nightscout.androidaps.plugins.iob.iobCobCalculator.IobCobCalculatorPlugin
 import info.nightscout.androidaps.queue.Callback
 import info.nightscout.androidaps.receivers.DataWorker
 import info.nightscout.androidaps.utils.*
@@ -72,7 +70,7 @@ class SmsCommunicatorPlugin @Inject constructor(
     private val activePlugin: ActivePluginProvider,
     private val commandQueue: CommandQueueProvider,
     private val loopPlugin: LoopPlugin,
-    private val iobCobCalculatorPlugin: IobCobCalculatorPlugin,
+    private val iobCobCalculator: IobCobCalculator,
     private val xdripCalibrations: XdripCalibrations,
     private var otp: OneTimePassword,
     private val config: Config,
@@ -312,8 +310,8 @@ class SmsCommunicatorPlugin @Inject constructor(
     }
 
     private fun processBG(receivedSms: Sms) {
-        val actualBG = iobCobCalculatorPlugin.actualBg()
-        val lastBG = iobCobCalculatorPlugin.lastBg()
+        val actualBG = iobCobCalculator.actualBg()
+        val lastBG = iobCobCalculator.lastBg()
         var reply = ""
         val units = profileFunction.getUnits()
         if (actualBG != null) {
@@ -325,9 +323,9 @@ class SmsCommunicatorPlugin @Inject constructor(
         }
         val glucoseStatus = glucoseStatusProvider.glucoseStatusData
         if (glucoseStatus != null) reply += resourceHelper.gs(R.string.sms_delta) + " " + Profile.toUnitsString(glucoseStatus.delta, glucoseStatus.delta * Constants.MGDL_TO_MMOLL, units) + " " + units + ", "
-        val bolusIob = activePlugin.activeTreatments.lastCalculationTreatments.round()
+        val bolusIob = iobCobCalculator.calculateIobFromBolus().round()
         val basalIob = activePlugin.activeTreatments.lastCalculationTempBasals.round()
-        val cobInfo = iobCobCalculatorPlugin.getCobInfo(false, "SMS COB")
+        val cobInfo = iobCobCalculator.getCobInfo(false, "SMS COB")
         reply += (resourceHelper.gs(R.string.sms_iob) + " " + DecimalFormatter.to2Decimal(bolusIob.iob + basalIob.basaliob) + "U ("
             + resourceHelper.gs(R.string.sms_bolus) + " " + DecimalFormatter.to2Decimal(bolusIob.iob) + "U "
             + resourceHelper.gs(R.string.sms_basal) + " " + DecimalFormatter.to2Decimal(basalIob.basaliob) + "U), "

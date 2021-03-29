@@ -31,11 +31,11 @@ class DetailedBolusInfoTest : TestBase() {
         val detailedBolusInfo = DetailedBolusInfo()
         detailedBolusInfo.bolusCalculatorResult = createBolusCalculatorResult()
         detailedBolusInfo.context = context
-        detailedBolusInfo.eventType = TherapyEvent.Type.BOLUS_WIZARD
+        detailedBolusInfo.eventType = DetailedBolusInfo.EventType.BOLUS_WIZARD
         val serialized = detailedBolusInfo.toJsonString()
         val deserialized = DetailedBolusInfo.fromJsonString(serialized)
         Assert.assertEquals(1L, deserialized.bolusCalculatorResult?.timestamp)
-        Assert.assertEquals(TherapyEvent.Type.BOLUS_WIZARD, deserialized.eventType)
+        Assert.assertEquals(DetailedBolusInfo.EventType.BOLUS_WIZARD, deserialized.eventType)
         // Context should be excluded
         Assert.assertNull(deserialized.context)
     }
@@ -46,11 +46,11 @@ class DetailedBolusInfoTest : TestBase() {
         detailedBolusInfo.timestamp = 1000
         detailedBolusInfo.notes = "note"
         detailedBolusInfo.mgdlGlucose = 180.0
-        detailedBolusInfo.glucoseType = TherapyEvent.MeterType.FINGER
+        detailedBolusInfo.glucoseType = DetailedBolusInfo.MeterType.FINGER
 
         val therapyEvent = detailedBolusInfo.createTherapyEvent()
         Assert.assertEquals(1000L, therapyEvent.timestamp)
-        Assert.assertEquals(TherapyEvent.Type.NOTE, therapyEvent.type)
+        Assert.assertEquals(TherapyEvent.Type.MEAL_BOLUS, therapyEvent.type)
         Assert.assertEquals(TherapyEvent.GlucoseUnit.MGDL, therapyEvent.glucoseUnit)
         Assert.assertEquals("note", therapyEvent.note)
         Assert.assertEquals(180.0, therapyEvent.glucose)
@@ -61,7 +61,7 @@ class DetailedBolusInfoTest : TestBase() {
     fun generateBolus() {
         val detailedBolusInfo = DetailedBolusInfo()
         detailedBolusInfo.timestamp = 1000
-        detailedBolusInfo.bolusType = Bolus.Type.SMB
+        detailedBolusInfo.bolusType = DetailedBolusInfo.BolusType.SMB
         detailedBolusInfo.insulin = 7.0
 
         val bolus = detailedBolusInfo.createBolus()
@@ -111,6 +111,7 @@ class DetailedBolusInfoTest : TestBase() {
             wasTempTargetUsed = true,
             totalInsulin = 15.0,
             percentageCorrection = 50,
-            profileName = "profile"
+            profileName = "profile",
+            note = ""
         )
 }

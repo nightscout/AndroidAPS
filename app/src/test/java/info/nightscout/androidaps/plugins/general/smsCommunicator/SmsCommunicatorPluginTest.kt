@@ -15,11 +15,7 @@ import info.nightscout.androidaps.data.PumpEnactResult
 import info.nightscout.androidaps.database.AppRepository
 import info.nightscout.androidaps.database.entities.GlucoseValue
 import info.nightscout.androidaps.database.transactions.InsertTemporaryTargetAndCancelCurrentTransaction
-import info.nightscout.androidaps.interfaces.ActivePluginProvider
-import info.nightscout.androidaps.interfaces.CommandQueueProvider
-import info.nightscout.androidaps.interfaces.Constraint
-import info.nightscout.androidaps.interfaces.PluginType
-import info.nightscout.androidaps.interfaces.PumpDescription
+import info.nightscout.androidaps.interfaces.*
 import info.nightscout.androidaps.logging.UserEntryLogger
 import info.nightscout.androidaps.plugins.aps.loop.LoopPlugin
 import info.nightscout.androidaps.plugins.configBuilder.ConstraintChecker
@@ -70,7 +66,7 @@ class SmsCommunicatorPluginTest : TestBaseWithProfile() {
     @Mock lateinit var activePlugin: ActivePluginProvider
     @Mock lateinit var commandQueue: CommandQueueProvider
     @Mock lateinit var loopPlugin: LoopPlugin
-    @Mock lateinit var iobCobCalculatorPlugin: IobCobCalculatorPlugin
+    @Mock lateinit var iobCobCalculator: IobCobCalculator
     @Mock lateinit var virtualPumpPlugin: VirtualPumpPlugin
     @Mock lateinit var localProfilePlugin: LocalProfilePlugin
     @Mock lateinit var treatmentService: TreatmentService
@@ -102,10 +98,10 @@ class SmsCommunicatorPluginTest : TestBaseWithProfile() {
         val bgList: MutableList<GlucoseValue> = ArrayList()
         bgList.add(reading)
 
-        `when`(iobCobCalculatorPlugin.dataLock).thenReturn(Unit)
-        `when`(iobCobCalculatorPlugin.bgReadings).thenReturn(bgList)
-        `when`(iobCobCalculatorPlugin.getCobInfo(false, "SMS COB")).thenReturn(CobInfo(10.0, 2.0))
-        `when`(iobCobCalculatorPlugin.lastBg()).thenReturn(reading)
+        `when`(iobCobCalculator.dataLock).thenReturn(Any())
+        `when`(iobCobCalculator.bgReadings).thenReturn(bgList)
+        `when`(iobCobCalculator.getCobInfo(false, "SMS COB")).thenReturn(CobInfo(10.0, 2.0))
+        `when`(iobCobCalculator.lastBg()).thenReturn(reading)
 
         PowerMockito.spy(DateUtil::class.java)
         PowerMockito.mockStatic(SmsManager::class.java)
@@ -117,9 +113,9 @@ class SmsCommunicatorPluginTest : TestBaseWithProfile() {
             repository.runTransactionForResult(anyObject<InsertTemporaryTargetAndCancelCurrentTransaction>())
         ).thenReturn(Single.just(InsertTemporaryTargetAndCancelCurrentTransaction.TransactionResult().apply {
         }))
-        val glucoseStatusProvider = GlucoseStatusProvider(aapsLogger = aapsLogger, iobCobCalculatorPlugin = iobCobCalculatorPlugin)
+        val glucoseStatusProvider = GlucoseStatusProvider(aapsLogger = aapsLogger, iobCobCalculator = iobCobCalculator)
 
-        smsCommunicatorPlugin = SmsCommunicatorPlugin(injector, aapsLogger, resourceHelper, aapsSchedulers, sp, constraintChecker, rxBus, profileFunction, fabricPrivacy, activePlugin, commandQueue, loopPlugin, iobCobCalculatorPlugin, xdripCalibrations, otp, Config(), DateUtil(context), uel, nsUpload, glucoseStatusProvider, repository)
+        smsCommunicatorPlugin = SmsCommunicatorPlugin(injector, aapsLogger, resourceHelper, aapsSchedulers, sp, constraintChecker, rxBus, profileFunction, fabricPrivacy, activePlugin, commandQueue, loopPlugin, iobCobCalculator, xdripCalibrations, otp, Config(), DateUtil(context), uel, glucoseStatusProvider, repository)
         smsCommunicatorPlugin.setPluginEnabled(PluginType.GENERAL, true)
         Mockito.doAnswer { invocation: InvocationOnMock ->
             val callback = invocation.getArgument<Callback>(1)
@@ -172,7 +168,7 @@ class SmsCommunicatorPluginTest : TestBaseWithProfile() {
         `when`(virtualPumpPlugin.pumpDescription).thenReturn(PumpDescription())
         `when`(virtualPumpPlugin.model()).thenReturn(PumpType.GENERIC_AAPS)
 
-        `when`(treatmentsInterface.lastCalculationTreatments).thenReturn(IobTotal(0))
+        `when`(iobCobCalculator.calculateIobFromBolus()).thenReturn(IobTotal(0))
         `when`(treatmentsInterface.lastCalculationTempBasals).thenReturn(IobTotal(0))
         `when`(treatmentsInterface.service).thenReturn(treatmentService)
 

@@ -6,6 +6,7 @@ import info.nightscout.androidaps.R
 import info.nightscout.androidaps.TestBase
 import info.nightscout.androidaps.interfaces.CommandQueueProvider
 import info.nightscout.androidaps.interfaces.ProfileFunction
+import info.nightscout.androidaps.interfaces.PumpSync
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper
 import info.nightscout.androidaps.plugins.pump.common.defs.PumpType
 import info.nightscout.androidaps.plugins.treatments.TreatmentsPlugin
@@ -34,12 +35,13 @@ class VirtualPumpPluginUTest : TestBase() {
     @Mock lateinit var treatmentsPlugin: TreatmentsPlugin
     @Mock lateinit var commandQueue: CommandQueueProvider
     @Mock lateinit var dateUtil: DateUtil
+    @Mock lateinit var pumpSync: PumpSync
 
     lateinit var virtualPumpPlugin: VirtualPumpPlugin
 
     @Before
     fun prepareMocks() {
-        virtualPumpPlugin = VirtualPumpPlugin({ AndroidInjector { } }, aapsLogger, rxBus, fabricPrivacy, resourceHelper, aapsSchedulers, sp, profileFunction, treatmentsPlugin, commandQueue, Config(), dateUtil)
+        virtualPumpPlugin = VirtualPumpPlugin({ AndroidInjector { } }, aapsLogger, rxBus, fabricPrivacy, resourceHelper, aapsSchedulers, sp, profileFunction, treatmentsPlugin, commandQueue, pumpSync, Config(), dateUtil)
     }
 
     @Test

@@ -26,7 +26,6 @@ import info.nightscout.androidaps.plugins.configBuilder.ConstraintChecker
 import info.nightscout.androidaps.plugins.general.nsclient.NSUpload
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.GlucoseStatus
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.GlucoseStatusProvider
-import info.nightscout.androidaps.plugins.iob.iobCobCalculator.IobCobCalculatorPlugin
 import info.nightscout.androidaps.queue.Callback
 import info.nightscout.androidaps.utils.CarbTimer
 import info.nightscout.androidaps.utils.DateUtil
@@ -56,7 +55,7 @@ class BolusWizard @Inject constructor(
     @Inject lateinit var activePlugin: ActivePluginProvider
     @Inject lateinit var commandQueue: CommandQueueProvider
     @Inject lateinit var loopPlugin: LoopPlugin
-    @Inject lateinit var iobCobCalculatorPlugin: IobCobCalculatorPlugin
+    @Inject lateinit var iobCobCalculator: IobCobCalculator
     @Inject lateinit var dateUtil: DateUtil
     @Inject lateinit var config: Config
     @Inject lateinit var uel: UserEntryLogger
@@ -205,7 +204,7 @@ class BolusWizard @Inject constructor(
 
         // Insulin from IOB
         // IOB calculation
-        val bolusIob = activePlugin.activeTreatments.lastCalculationTreatments.round()
+        val bolusIob = iobCobCalculator.calculateIobFromBolus().round()
         val basalIob = activePlugin.activeTreatments.lastCalculationTempBasals.round()
 
         insulinFromBolusIOB = if (includeBolusIOB) -bolusIob.iob else 0.0
@@ -297,7 +296,7 @@ class BolusWizard @Inject constructor(
         }
         if (insulinFromCOB > 0) {
             actions.add(resourceHelper.gs(R.string.cobvsiob) + ": " + resourceHelper.gs(R.string.formatsignedinsulinunits, insulinFromBolusIOB + insulinFromBasalIOB + insulinFromCOB + insulinFromBG).formatColor(resourceHelper, R.color.cobAlert))
-            val absorptionRate = iobCobCalculatorPlugin.slowAbsorptionPercentage(60)
+            val absorptionRate = iobCobCalculator.slowAbsorptionPercentage(60)
             if (absorptionRate > .25)
                 actions.add(resourceHelper.gs(R.string.slowabsorptiondetected, resourceHelper.gc(R.color.cobAlert), (absorptionRate * 100).toInt()))
         }

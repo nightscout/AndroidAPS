@@ -11,7 +11,7 @@ import com.google.common.base.Optional
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.automation.R
 import info.nightscout.androidaps.interfaces.ActivePluginProvider
-import info.nightscout.androidaps.interfaces.IobCobCalculatorInterface
+import info.nightscout.androidaps.interfaces.IobCobCalculator
 import info.nightscout.androidaps.interfaces.ProfileFunction
 import info.nightscout.androidaps.interfaces.TreatmentsInterface
 import info.nightscout.androidaps.logging.AAPSLogger
@@ -39,7 +39,7 @@ abstract class Trigger(val injector: HasAndroidInjector) {
     @Inject lateinit var locationDataContainer: LastLocationDataContainer
     @Inject lateinit var treatmentsInterface: TreatmentsInterface
     @Inject lateinit var activePlugin: ActivePluginProvider
-    @Inject lateinit var iobCobCalculatorPlugin: IobCobCalculatorInterface
+    @Inject lateinit var iobCobCalculatorPlugin: IobCobCalculator
     @Inject lateinit var glucoseStatusProvider: GlucoseStatusProvider
 
     init {

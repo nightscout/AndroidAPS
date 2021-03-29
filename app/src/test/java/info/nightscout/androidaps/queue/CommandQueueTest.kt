@@ -10,7 +10,7 @@ import info.nightscout.androidaps.TestBaseWithProfile
 import info.nightscout.androidaps.TestPumpPlugin
 import info.nightscout.androidaps.core.R
 import info.nightscout.androidaps.data.DetailedBolusInfo
-import info.nightscout.androidaps.database.entities.Bolus
+import info.nightscout.androidaps.database.AppRepository
 import info.nightscout.androidaps.interfaces.ActivePluginProvider
 import info.nightscout.androidaps.interfaces.Constraint
 import info.nightscout.androidaps.interfaces.ProfileFunction
@@ -51,6 +51,7 @@ class CommandQueueTest : TestBaseWithProfile() {
     @Mock lateinit var sp: SP
     @Mock lateinit var loggerUtils: LoggerUtils
     @Mock lateinit var powerManager: PowerManager
+    @Mock lateinit var repository: AppRepository
 
     class CommandQueueMocked(
         injector: HasAndroidInjector,
@@ -64,8 +65,10 @@ class CommandQueueTest : TestBaseWithProfile() {
         context: Context,
         sp: SP,
         buildHelper: BuildHelper,
+        dateUtil: DateUtil,
+        repository: AppRepository,
         fabricPrivacy: FabricPrivacy
-    ) : CommandQueue(injector, aapsLogger, rxBus, aapsSchedulers, resourceHelper, constraintChecker, profileFunction, activePlugin, context, sp, buildHelper, fabricPrivacy) {
+    ) : CommandQueue(injector, aapsLogger, rxBus, aapsSchedulers, resourceHelper, constraintChecker, profileFunction, activePlugin, context, sp, buildHelper, dateUtil, repository, fabricPrivacy) {
 
         override fun notifyAboutNewCommand() {}
 
@@ -101,7 +104,7 @@ class CommandQueueTest : TestBaseWithProfile() {
 
     @Before
     fun prepare() {
-        commandQueue = CommandQueueMocked(injector, aapsLogger, rxBus, aapsSchedulers, resourceHelper, constraintChecker, profileFunction, lazyActivePlugin, context, sp, BuildHelper(Config(), loggerUtils), fabricPrivacy)
+        commandQueue = CommandQueueMocked(injector, aapsLogger, rxBus, aapsSchedulers, resourceHelper, constraintChecker, profileFunction, lazyActivePlugin, context, sp, BuildHelper(Config(), loggerUtils), dateUtil, repository, fabricPrivacy)
         testPumpPlugin = TestPumpPlugin(injector)
 
         testPumpPlugin.pumpDescription.basalMinimumRate = 0.1
@@ -127,7 +130,7 @@ class CommandQueueTest : TestBaseWithProfile() {
 
     @Test
     fun commandIsPickedUp() {
-        val commandQueue = CommandQueue(injector, aapsLogger, rxBus, aapsSchedulers, resourceHelper, constraintChecker, profileFunction, lazyActivePlugin, context, sp, BuildHelper(Config(), loggerUtils), fabricPrivacy)
+        val commandQueue = CommandQueue(injector, aapsLogger, rxBus, aapsSchedulers, resourceHelper, constraintChecker, profileFunction, lazyActivePlugin, context, sp, BuildHelper(Config(), loggerUtils), dateUtil, repository, fabricPrivacy)
         // start with empty queue
         Assert.assertEquals(0, commandQueue.size())
 
@@ -215,7 +218,7 @@ class CommandQueueTest : TestBaseWithProfile() {
         Assert.assertEquals(0, commandQueue.size())
         val smb = DetailedBolusInfo()
         smb.lastKnownBolusTime = DateUtil.now()
-        smb.bolusType = Bolus.Type.SMB
+        smb.bolusType = DetailedBolusInfo.BolusType.SMB
         commandQueue.bolus(smb, null)
         commandQueue.bolus(DetailedBolusInfo(), null)
         Assert.assertEquals(2, commandQueue.size())
@@ -235,7 +238,7 @@ class CommandQueueTest : TestBaseWithProfile() {
         // when
         commandQueue.bolus(DetailedBolusInfo(), null)
         val smb = DetailedBolusInfo()
-        smb.bolusType = Bolus.Type.SMB
+        smb.bolusType = DetailedBolusInfo.BolusType.SMB
         val queued: Boolean = commandQueue.bolus(smb, null)
 
         // then
@@ -250,7 +253,7 @@ class CommandQueueTest : TestBaseWithProfile() {
 
         // when
         val bolus = DetailedBolusInfo()
-        bolus.bolusType = Bolus.Type.SMB
+        bolus.bolusType = DetailedBolusInfo.BolusType.SMB
         bolus.lastKnownBolusTime = 0
         val queued: Boolean = commandQueue.bolus(bolus, null)
 

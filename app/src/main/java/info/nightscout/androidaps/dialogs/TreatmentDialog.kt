@@ -151,16 +151,18 @@ class TreatmentDialog : DialogFragmentWithDate() {
                         ValueWithUnit(carbs, Units.G, carbs != 0)
                     )
                     if (recordOnlyChecked) {
-                        disposable += repository.runTransactionForResult(detailedBolusInfo.insertBolusTransaction())
-                            .subscribe(
-                                { result -> result.inserted.forEach { aapsLogger.debug(LTag.DATABASE, "Inserted bolus $it") } },
-                                { aapsLogger.error(LTag.DATABASE, "Error while saving bolus", it) }
-                            )
-                        disposable += repository.runTransactionForResult(detailedBolusInfo.insertCarbsTransaction())
-                            .subscribe(
-                                { result -> result.inserted.forEach { aapsLogger.debug(LTag.DATABASE, "Inserted carbs $it") } },
-                                { aapsLogger.error(LTag.DATABASE, "Error while saving carbs", it) }
-                            )
+                        if (detailedBolusInfo.insulin > 0)
+                            disposable += repository.runTransactionForResult(detailedBolusInfo.insertBolusTransaction())
+                                .subscribe(
+                                    { result -> result.inserted.forEach { aapsLogger.debug(LTag.DATABASE, "Inserted bolus $it") } },
+                                    { aapsLogger.error(LTag.DATABASE, "Error while saving bolus", it) }
+                                )
+                        if (detailedBolusInfo.carbs > 0)
+                            disposable += repository.runTransactionForResult(detailedBolusInfo.insertCarbsTransaction())
+                                .subscribe(
+                                    { result -> result.inserted.forEach { aapsLogger.debug(LTag.DATABASE, "Inserted carbs $it") } },
+                                    { aapsLogger.error(LTag.DATABASE, "Error while saving carbs", it) }
+                                )
                     } else {
                         commandQueue.bolus(detailedBolusInfo, object : Callback() {
                             override fun run() {

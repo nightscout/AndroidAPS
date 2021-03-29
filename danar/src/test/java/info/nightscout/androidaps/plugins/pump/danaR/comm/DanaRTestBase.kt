@@ -43,7 +43,7 @@ open class DanaRTestBase : TestBase() {
     @Mock lateinit var commandQueue: CommandQueueProvider
     @Mock lateinit var detailedBolusInfoStorage: DetailedBolusInfoStorage
     @Mock lateinit var constraintChecker: ConstraintChecker
-    @Mock lateinit var nsUpload: NSUpload
+    @Mock lateinit var pumpSync: PumpSync
 
     lateinit var testPumpPlugin: TestPumpPlugin
 
@@ -73,9 +73,9 @@ open class DanaRTestBase : TestBase() {
                 it.configBuilder = configBuilder
                 it.detailedBolusInfoStorage = detailedBolusInfoStorage
                 it.constraintChecker = constraintChecker
-                it.nsUpload = nsUpload
                 it.databaseHelper = databaseHelper
                 it.commandQueue = commandQueue
+                it.pumpSync = pumpSync
             }
             if (it is TemporaryBasal) {
                 it.aapsLogger = aapsLogger

@@ -21,11 +21,20 @@ internal interface BolusDao : TraceableDao<Bolus> {
     @Query("SELECT * FROM $TABLE_BOLUSES WHERE pumpId = :pumpId AND pumpType = :pumpType AND pumpSerial = :pumpSerial AND referenceId IS NULL")
     fun findByPumpIds(pumpId: Long, pumpType: InterfaceIDs.PumpType, pumpSerial: String): Bolus?
 
+    @Query("SELECT * FROM $TABLE_BOLUSES WHERE isValid = 1 AND referenceId IS NULL ORDER BY id ASC LIMIT 1")
+    fun getOldestBolusRecord(): Bolus?
+
     @Query("SELECT * FROM $TABLE_BOLUSES WHERE isValid = 1 AND timestamp >= :timestamp AND referenceId IS NULL ORDER BY id DESC")
     fun getBolusesFromTime(timestamp: Long): Single<List<Bolus>>
 
+    @Query("SELECT * FROM $TABLE_BOLUSES WHERE isValid = 1 AND timestamp >= :start AND timestamp <= :end AND referenceId IS NULL ORDER BY id DESC")
+    fun getBolusesFromTime(start: Long, end: Long): Single<List<Bolus>>
+
     @Query("SELECT * FROM $TABLE_BOLUSES WHERE timestamp >= :timestamp AND referenceId IS NULL ORDER BY id DESC")
     fun getBolusesIncludingInvalidFromTime(timestamp: Long): Single<List<Bolus>>
+
+    @Query("SELECT * FROM $TABLE_BOLUSES WHERE timestamp >= :from AND timestamp <= :to AND referenceId IS NULL ORDER BY id DESC")
+    fun getBolusesIncludingInvalidFromTimeToTime(from: Long, to: Long): Single<List<Bolus>>
 
     // This query will be used with v3 to get all changed records
     @Query("SELECT * FROM $TABLE_BOLUSES WHERE id > :id AND referenceId IS NULL OR id IN (SELECT DISTINCT referenceId FROM $TABLE_BOLUSES WHERE id > :id) ORDER BY id ASC")

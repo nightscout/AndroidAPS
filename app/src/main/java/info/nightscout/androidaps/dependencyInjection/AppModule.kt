@@ -85,7 +85,7 @@ open class AppModule {
         @Binds fun bindImportExportPrefsInterface(importExportPrefs: ImportExportPrefs): ImportExportPrefsInterface
         @Binds fun bindIconsProviderInterface(iconsProvider: IconsProvider): IconsProviderInterface
         @Binds fun bindLoopInterface(loopPlugin: LoopPlugin): LoopInterface
-        @Binds fun bindIobCobCalculatorInterface(iobCobCalculatorPlugin: IobCobCalculatorPlugin): IobCobCalculatorInterface
+        @Binds fun bindIobCobCalculatorInterface(iobCobCalculatorPlugin: IobCobCalculatorPlugin): IobCobCalculator
         @Binds fun bindSmsCommunicatorInterface(smsCommunicatorPlugin: SmsCommunicatorPlugin): SmsCommunicatorInterface
         @Binds fun bindUploadQueueAdminInterfaceToUploadQueue(uploadQueueAdminInterface: UploadQueueAdminInterface) : UploadQueueInterface
         @Binds fun bindDataSyncSelector(dataSyncSelectorImplementation: DataSyncSelectorImplementation): DataSyncSelector

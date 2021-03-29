@@ -6,7 +6,9 @@ import android.os.SystemClock
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.Constants
 import info.nightscout.androidaps.R
+import info.nightscout.androidaps.database.AppRepository
 import info.nightscout.androidaps.events.Event
+import info.nightscout.androidaps.events.EventAutosensCalculationFinished
 import info.nightscout.androidaps.interfaces.PluginType
 import info.nightscout.androidaps.interfaces.ProfileFunction
 import info.nightscout.androidaps.logging.AAPSLogger
@@ -18,11 +20,9 @@ import info.nightscout.androidaps.plugins.general.overview.notifications.Notific
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.IobCobCalculatorPlugin.Companion.roundUpTime
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.data.AutosensData
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.events.EventAutosensBgLoaded
-import info.nightscout.androidaps.events.EventAutosensCalculationFinished
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.events.EventIobCalculationProgress
 import info.nightscout.androidaps.plugins.sensitivity.SensitivityAAPSPlugin
 import info.nightscout.androidaps.plugins.sensitivity.SensitivityWeightedAveragePlugin
-import info.nightscout.androidaps.plugins.treatments.TreatmentsPlugin
 import info.nightscout.androidaps.utils.*
 import info.nightscout.androidaps.utils.buildHelper.BuildHelper
 import info.nightscout.androidaps.utils.resources.ResourceHelper
@@ -37,7 +37,6 @@ import kotlin.math.roundToLong
 class IobCobThread @Inject internal constructor(
     private val injector: HasAndroidInjector,
     private val iobCobCalculatorPlugin: IobCobCalculatorPlugin, // cannot be injected : HistoryBrowser uses different instance
-    private val treatmentsPlugin: TreatmentsPlugin, // cannot be injected : HistoryBrowser uses different instance
     private val from: String,
     private val end: Long,
     private val bgDataReload: Boolean,
@@ -57,6 +56,7 @@ class IobCobThread @Inject internal constructor(
     @Inject lateinit var profiler: Profiler
     @Inject lateinit var fabricPrivacy: FabricPrivacy
     @Inject lateinit var dateUtil: DateUtil
+    @Inject lateinit var repository: AppRepository
 
     private var mWakeLock: PowerManager.WakeLock? = null
 
@@ -188,12 +188,12 @@ class IobCobThread @Inject internal constructor(
                             aapsLogger.debug(LTag.AUTOSENS, ">>>>> bucketed_data.size()=" + bucketedData.size + " i=" + i + " hourAgoData=" + "null")
                         }
                     }
-                    val recentCarbTreatments = treatmentsPlugin.getCarbTreatments5MinBackFromHistory(bgTime)
+                    val recentCarbTreatments = repository.getCarbsDataFromTimeToTime(bgTime - T.mins(5).msecs(), bgTime, true).blockingGet()
                     for (recentCarbTreatment in recentCarbTreatments) {
-                        autosensData.carbsFromBolus += recentCarbTreatment.carbs
+                        autosensData.carbsFromBolus += recentCarbTreatment.amount
                         val isAAPSOrWeighted = sensitivityAAPSPlugin.isEnabled() || sensitivityWeightedAveragePlugin.isEnabled()
                         autosensData.activeCarbsList.add(autosensData.CarbsInPast(recentCarbTreatment, isAAPSOrWeighted))
-                        autosensData.pastSensitivity += "[" + DecimalFormatter.to0Decimal(recentCarbTreatment.carbs) + "g]"
+                        autosensData.pastSensitivity += "[" + DecimalFormatter.to0Decimal(recentCarbTreatment.amount) + "g]"
                     }
 
                     // if we are absorbing carbs

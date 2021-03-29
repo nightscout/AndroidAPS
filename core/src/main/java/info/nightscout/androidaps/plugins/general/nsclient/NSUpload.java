@@ -2,11 +2,6 @@ package info.nightscout.androidaps.plugins.general.nsclient;
 
 import android.os.Build;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-
-import com.google.gson.Gson;
-
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -15,20 +10,16 @@ import java.util.Date;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
-import info.nightscout.androidaps.Constants;
 import info.nightscout.androidaps.core.R;
 import info.nightscout.androidaps.data.DetailedBolusInfo;
 import info.nightscout.androidaps.data.IobTotal;
 import info.nightscout.androidaps.data.Profile;
-import info.nightscout.androidaps.database.entities.Bolus;
-import info.nightscout.androidaps.database.entities.BolusCalculatorResult;
-import info.nightscout.androidaps.database.entities.Carbs;
 import info.nightscout.androidaps.database.entities.TherapyEvent;
 import info.nightscout.androidaps.db.DbRequest;
 import info.nightscout.androidaps.db.ExtendedBolus;
 import info.nightscout.androidaps.db.ProfileSwitch;
 import info.nightscout.androidaps.db.TemporaryBasal;
-import info.nightscout.androidaps.interfaces.IobCobCalculatorInterface;
+import info.nightscout.androidaps.interfaces.IobCobCalculator;
 import info.nightscout.androidaps.interfaces.LoopInterface;
 import info.nightscout.androidaps.interfaces.ProfileFunction;
 import info.nightscout.androidaps.interfaces.PumpInterface;
@@ -171,7 +162,7 @@ public class NSUpload {
         }
     }
 
-    public void uploadDeviceStatus(LoopInterface loopPlugin, IobCobCalculatorInterface iobCobCalculatorPlugin, ProfileFunction profileFunction, PumpInterface pumpInterface, ReceiverStatusStore receiverStatusStore, String version) {
+    public void uploadDeviceStatus(LoopInterface loopPlugin, IobCobCalculator iobCobCalculatorPlugin, ProfileFunction profileFunction, PumpInterface pumpInterface, ReceiverStatusStore receiverStatusStore, String version) {
         Profile profile = profileFunction.getProfile();
         String profileName = profileFunction.getProfileName();
 

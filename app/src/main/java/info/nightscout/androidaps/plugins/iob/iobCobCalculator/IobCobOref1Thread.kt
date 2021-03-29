@@ -23,7 +23,6 @@ import info.nightscout.androidaps.plugins.iob.iobCobCalculator.events.EventAutos
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.events.EventIobCalculationProgress
 import info.nightscout.androidaps.plugins.sensitivity.SensitivityAAPSPlugin
 import info.nightscout.androidaps.plugins.sensitivity.SensitivityWeightedAveragePlugin
-import info.nightscout.androidaps.plugins.treatments.TreatmentsPlugin
 import info.nightscout.androidaps.utils.*
 import info.nightscout.androidaps.utils.buildHelper.BuildHelper
 import info.nightscout.androidaps.utils.extensions.target
@@ -39,7 +38,6 @@ import kotlin.math.roundToLong
 class IobCobOref1Thread internal constructor(
     private val injector: HasAndroidInjector,
     private val iobCobCalculatorPlugin: IobCobCalculatorPlugin, // cannot be injected : HistoryBrowser uses different instance
-    private val treatmentsPlugin: TreatmentsPlugin, // cannot be injected : HistoryBrowser uses different instance
     private val from: String,
     private val end: Long,
     private val bgDataReload: Boolean,
@@ -191,12 +189,12 @@ class IobCobOref1Thread internal constructor(
                             aapsLogger.debug(LTag.AUTOSENS, ">>>>> bucketed_data.size()=" + bucketedData.size + " i=" + i + " hourAgoData=" + "null")
                         }
                     }
-                    val recentCarbTreatments = treatmentsPlugin.getCarbTreatments5MinBackFromHistory(bgTime)
+                    val recentCarbTreatments = repository.getCarbsDataFromTimeToTime(bgTime - T.mins(5).msecs(), bgTime, true).blockingGet()
                     for (recentCarbTreatment in recentCarbTreatments) {
-                        autosensData.carbsFromBolus += recentCarbTreatment.carbs
+                        autosensData.carbsFromBolus += recentCarbTreatment.amount
                         val isAAPSOrWeighted = sensitivityAAPSPlugin.isEnabled() || sensitivityWeightedAveragePlugin.isEnabled()
                         autosensData.activeCarbsList.add(autosensData.CarbsInPast(recentCarbTreatment, isAAPSOrWeighted))
-                        autosensData.pastSensitivity += "[" + DecimalFormatter.to0Decimal(recentCarbTreatment.carbs) + "g]"
+                        autosensData.pastSensitivity += "[" + DecimalFormatter.to0Decimal(recentCarbTreatment.amount) + "g]"
                     }
 
                     // if we are absorbing carbs

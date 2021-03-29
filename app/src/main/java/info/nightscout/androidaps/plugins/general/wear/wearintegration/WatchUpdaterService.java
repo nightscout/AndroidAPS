@@ -28,7 +28,6 @@ import java.util.Set;
 import javax.inject.Inject;
 
 import dagger.android.AndroidInjection;
-import dagger.android.HasAndroidInjector;
 import info.nightscout.androidaps.Config;
 import info.nightscout.androidaps.Constants;
 import info.nightscout.androidaps.R;
@@ -36,10 +35,11 @@ import info.nightscout.androidaps.data.GlucoseValueDataPoint;
 import info.nightscout.androidaps.data.IobTotal;
 import info.nightscout.androidaps.data.Profile;
 import info.nightscout.androidaps.database.AppRepository;
+import info.nightscout.androidaps.database.entities.Bolus;
 import info.nightscout.androidaps.database.entities.GlucoseValue;
 import info.nightscout.androidaps.db.TemporaryBasal;
-import info.nightscout.androidaps.db.Treatment;
 import info.nightscout.androidaps.interfaces.ActivePluginProvider;
+import info.nightscout.androidaps.interfaces.IobCobCalculator;
 import info.nightscout.androidaps.interfaces.PluginType;
 import info.nightscout.androidaps.interfaces.ProfileFunction;
 import info.nightscout.androidaps.logging.AAPSLogger;
@@ -52,13 +52,12 @@ import info.nightscout.androidaps.plugins.general.wear.events.EventWearConfirmAc
 import info.nightscout.androidaps.plugins.general.wear.events.EventWearInitiateAction;
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.GlucoseStatus;
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.GlucoseStatusProvider;
-import info.nightscout.androidaps.plugins.iob.iobCobCalculator.IobCobCalculatorPlugin;
 import info.nightscout.androidaps.plugins.treatments.TreatmentsPlugin;
 import info.nightscout.androidaps.receivers.ReceiverStatusStore;
 import info.nightscout.androidaps.utils.DecimalFormatter;
 import info.nightscout.androidaps.utils.DefaultValueHelper;
 import info.nightscout.androidaps.utils.ToastUtils;
-import info.nightscout.androidaps.utils.extensions.GlucoseValueUtilsKt;
+import info.nightscout.androidaps.utils.extensions.GlucoseValueExtensionKt;
 import info.nightscout.androidaps.utils.resources.ResourceHelper;
 import info.nightscout.androidaps.utils.sharedPreferences.SP;
 
@@ -74,7 +73,7 @@ public class WatchUpdaterService extends WearableListenerService implements Goog
     @Inject public NSDeviceStatus nsDeviceStatus;
     @Inject public ActivePluginProvider activePlugin;
     @Inject public LoopPlugin loopPlugin;
-    @Inject public IobCobCalculatorPlugin iobCobCalculatorPlugin;
+    @Inject public IobCobCalculator iobCobCalculator;
     @Inject public TreatmentsPlugin treatmentsPlugin;
     @Inject public AppRepository repository;
     @Inject ReceiverStatusStore receiverStatusStore;
@@ -280,7 +279,7 @@ public class WatchUpdaterService extends WearableListenerService implements Goog
 
     private void sendData() {
 
-        GlucoseValue lastBG = iobCobCalculatorPlugin.lastBg();
+        GlucoseValue lastBG = iobCobCalculator.lastBg();
         // Log.d(TAG, logPrefix + "LastBg=" + lastBG);
         if (lastBG != null) {
             GlucoseStatus glucoseStatus = glucoseStatusProvider.getGlucoseStatusData();
@@ -314,7 +313,7 @@ public class WatchUpdaterService extends WearableListenerService implements Goog
         }
 
         DataMap dataMap = new DataMap();
-        dataMap.putString("sgvString", GlucoseValueUtilsKt.valueToUnitsString(lastBG, units));
+        dataMap.putString("sgvString", GlucoseValueExtensionKt.valueToUnitsString(lastBG, units));
         dataMap.putString("glucoseUnits", units);
         dataMap.putLong("timestamp", lastBG.getTimestamp());
         if (glucoseStatus == null) {
@@ -382,7 +381,7 @@ public class WatchUpdaterService extends WearableListenerService implements Goog
             googleApiConnect();
         }
         long startTime = System.currentTimeMillis() - (long) (60000 * 60 * 5.5);
-        GlucoseValue last_bg = iobCobCalculatorPlugin.lastBg();
+        GlucoseValue last_bg = iobCobCalculator.lastBg();
 
         if (last_bg == null) return;
 
@@ -527,13 +526,10 @@ public class WatchUpdaterService extends WearableListenerService implements Goog
             }
         }
 
-        List<Treatment> treatments = treatmentsPlugin.getTreatmentsFromHistory();
-        for (Treatment treatment : treatments) {
-            if (treatment.date > startTimeWindow) {
-                boluses.add(treatmentMap(treatment.date, treatment.insulin, treatment.carbs, treatment.isSMB, treatment.isValid));
-            }
-
-        }
+        repository.getBolusesIncludingInvalidFromTime(startTimeWindow, true).blockingGet()
+                .forEach(bolus -> boluses.add(treatmentMap(bolus.getTimestamp(), bolus.getAmount(), 0, bolus.getType() == Bolus.Type.SMB, bolus.isValid())));
+        repository.getCarbsIncludingInvalidFromTime(startTimeWindow, true).blockingGet()
+                .forEach(carb -> boluses.add(treatmentMap(carb.getTimestamp(), 0, carb.getAmount(), false, carb.isValid())));
 
         final LoopPlugin.LastRun finalLastRun = loopPlugin.getLastRun();
         if (sp.getBoolean("wear_predictions", true) && finalLastRun != null && finalLastRun.getRequest().getHasPredictions() && finalLastRun.getConstraintsProcessed() != null) {
@@ -685,12 +681,12 @@ public class WatchUpdaterService extends WearableListenerService implements Goog
             String iobSum, iobDetail, cobString, currentBasal, bgiString;
             iobSum = iobDetail = cobString = currentBasal = bgiString = "";
             if (profile != null) {
-                IobTotal bolusIob = treatmentsPlugin.getLastCalculationTreatments().round();
+                IobTotal bolusIob = iobCobCalculator.calculateIobFromBolus().round();
                 IobTotal basalIob = treatmentsPlugin.getLastCalculationTempBasals().round();
 
                 iobSum = DecimalFormatter.INSTANCE.to2Decimal(bolusIob.iob + basalIob.basaliob);
                 iobDetail = "(" + DecimalFormatter.INSTANCE.to2Decimal(bolusIob.iob) + "|" + DecimalFormatter.INSTANCE.to2Decimal(basalIob.basaliob) + ")";
-                cobString = iobCobCalculatorPlugin.getCobInfo(false, "WatcherUpdaterService").generateCOBString();
+                cobString = iobCobCalculator.getCobInfo(false, "WatcherUpdaterService").generateCOBString();
                 currentBasal = generateBasalString();
 
                 //bgi
