@@ -1,7 +1,7 @@
 package info.nightscout.androidaps.plugins.iob.iobCobCalculator
 
 import dagger.Reusable
-import info.nightscout.androidaps.interfaces.IobCobCalculatorInterface
+import info.nightscout.androidaps.interfaces.IobCobCalculator
 import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.logging.LTag
 import info.nightscout.androidaps.utils.DateUtil
@@ -10,14 +10,14 @@ import javax.inject.Inject
 import kotlin.math.roundToLong
 
 @Reusable
-class GlucoseStatusProvider @Inject constructor(private val aapsLogger: AAPSLogger, private val iobCobCalculatorPlugin: IobCobCalculatorInterface) {
+class GlucoseStatusProvider @Inject constructor(private val aapsLogger: AAPSLogger, private val iobCobCalculator: IobCobCalculator) {
 
     val glucoseStatusData: GlucoseStatus?
         get() = getGlucoseStatusData()
 
     fun getGlucoseStatusData(allowOldData: Boolean = false): GlucoseStatus? {
-        synchronized(iobCobCalculatorPlugin.dataLock) {
-            val data = iobCobCalculatorPlugin.bgReadings
+        synchronized(iobCobCalculator.dataLock) {
+            val data = iobCobCalculator.bgReadings
             val sizeRecords = data.size
             if (sizeRecords == 0) {
                 aapsLogger.debug(LTag.GLUCOSE, "sizeRecords==0")

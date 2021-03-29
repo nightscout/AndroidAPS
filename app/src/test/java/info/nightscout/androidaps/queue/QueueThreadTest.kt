@@ -8,6 +8,7 @@ import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.Config
 import info.nightscout.androidaps.TestBaseWithProfile
 import info.nightscout.androidaps.TestPumpPlugin
+import info.nightscout.androidaps.database.AppRepository
 import info.nightscout.androidaps.interfaces.ActivePluginProvider
 import info.nightscout.androidaps.interfaces.Constraint
 import info.nightscout.androidaps.interfaces.PumpDescription
@@ -44,6 +45,7 @@ class QueueThreadTest : TestBaseWithProfile() {
     @Mock lateinit var sp: SP
     @Mock lateinit var loggerUtils: LoggerUtils
     @Mock lateinit var powerManager: PowerManager
+    @Mock lateinit var repository: AppRepository
 
     val injector = HasAndroidInjector {
         AndroidInjector {
@@ -58,13 +60,13 @@ class QueueThreadTest : TestBaseWithProfile() {
     }
 
     private lateinit var pumpPlugin: TestPumpPlugin
-    lateinit var commandQueue: CommandQueue
-    lateinit var sut: QueueThread
+    private lateinit var commandQueue: CommandQueue
+    private lateinit var sut: QueueThread
 
     @Before
     fun prepare() {
         pumpPlugin = TestPumpPlugin(injector)
-        commandQueue = CommandQueue(injector, aapsLogger, rxBus, aapsSchedulers, resourceHelper, constraintChecker, profileFunction, lazyActivePlugin, context, sp, BuildHelper(Config(), loggerUtils), fabricPrivacy)
+        commandQueue = CommandQueue(injector, aapsLogger, rxBus, aapsSchedulers, resourceHelper, constraintChecker, profileFunction, lazyActivePlugin, context, sp, BuildHelper(Config(), loggerUtils), dateUtil, repository, fabricPrivacy)
 
         val pumpDescription = PumpDescription()
         pumpDescription.basalMinimumRate = 0.1

@@ -23,7 +23,7 @@ import info.nightscout.androidaps.interfaces.CommandQueueProvider;
 import info.nightscout.androidaps.logging.AAPSLogger;
 import info.nightscout.androidaps.logging.AAPSLoggerTest;
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper;
-import info.nightscout.androidaps.plugins.pump.common.data.TempBasalPair;
+import info.nightscout.androidaps.plugins.pump.common.defs.TempBasalPair;
 import info.nightscout.androidaps.plugins.pump.common.defs.PumpType;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.RileyLinkUtil;
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.manager.AapsOmnipodErosManager;

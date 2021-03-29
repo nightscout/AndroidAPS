@@ -29,7 +29,7 @@ import info.nightscout.androidaps.db.OmnipodHistoryRecord;
 import info.nightscout.androidaps.interfaces.DatabaseHelperInterface;
 import info.nightscout.androidaps.logging.AAPSLogger;
 import info.nightscout.androidaps.logging.LTag;
-import info.nightscout.androidaps.plugins.pump.common.data.TempBasalPair;
+import info.nightscout.androidaps.plugins.pump.common.defs.TempBasalPair;
 import info.nightscout.androidaps.plugins.pump.common.defs.PumpHistoryEntryGroup;
 import info.nightscout.androidaps.plugins.pump.common.defs.PumpType;
 import info.nightscout.androidaps.plugins.pump.common.utils.ProfileUtil;

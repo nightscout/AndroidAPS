@@ -10,7 +10,6 @@ import info.nightscout.androidaps.database.AppRepository
 import info.nightscout.androidaps.interfaces.*
 import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper
-import info.nightscout.androidaps.plugins.general.automation.elements.InputTempTarget
 import info.nightscout.androidaps.plugins.general.automation.triggers.Trigger
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 import info.nightscout.androidaps.utils.sharedPreferences.SP
@@ -18,7 +17,6 @@ import org.junit.Before
 import org.mockito.Mock
 import org.mockito.Mockito.`when`
 import org.powermock.core.classloader.annotations.PrepareForTest
-import javax.inject.Inject
 
 @PrepareForTest(RxBusWrapper::class, ActionsTestBase.TestLoopPlugin::class, AppRepository::class)
 open class ActionsTestBase : TestBaseWithProfile() {
@@ -57,7 +55,7 @@ open class ActionsTestBase : TestBaseWithProfile() {
             if (it is ActionStopTempTarget) {
                 it.aapsLogger = aapsLogger
                 it.resourceHelper = resourceHelper
-                it.activePlugin = activePlugin
+                it.dateUtil = dateUtil
                 it.repository = repository
             }
             if (it is ActionStartTempTarget) {
@@ -113,7 +111,7 @@ open class ActionsTestBase : TestBaseWithProfile() {
             if (it is PumpEnactResult) {
                 it.resourceHelper = resourceHelper
             }
-            if(it is Trigger) {
+            if (it is Trigger) {
                 it.resourceHelper = resourceHelper
                 it.profileFunction = profileFunction
             }

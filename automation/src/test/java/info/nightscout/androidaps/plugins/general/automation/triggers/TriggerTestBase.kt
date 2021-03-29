@@ -7,14 +7,10 @@ import info.nightscout.androidaps.TestBaseWithProfile
 import info.nightscout.androidaps.TestPumpPlugin
 import info.nightscout.androidaps.database.AppRepository
 import info.nightscout.androidaps.interfaces.ActivePluginProvider
-import info.nightscout.androidaps.interfaces.IobCobCalculatorInterface
+import info.nightscout.androidaps.interfaces.IobCobCalculator
 import info.nightscout.androidaps.interfaces.PluginDescription
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper
 import info.nightscout.androidaps.plugins.general.automation.AutomationPlugin
-import info.nightscout.androidaps.plugins.general.automation.elements.InputBg
-import info.nightscout.androidaps.plugins.general.automation.elements.InputTempTarget
-import info.nightscout.androidaps.plugins.general.automation.elements.StaticLabel
-import info.nightscout.androidaps.plugins.iob.iobCobCalculator.GlucoseStatus
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.GlucoseStatusProvider
 import info.nightscout.androidaps.receivers.ReceiverStatusStore
 import info.nightscout.androidaps.services.LastLocationDataContainer
@@ -30,7 +26,7 @@ open class TriggerTestBase : TestBaseWithProfile() {
     @Mock lateinit var sp: SP
     @Mock lateinit var locationDataContainer: LastLocationDataContainer
     @Mock lateinit var activePlugin: ActivePluginProvider
-    @Mock lateinit var iobCobCalculatorPlugin: IobCobCalculatorInterface
+    @Mock lateinit var iobCobCalculatorPlugin: IobCobCalculator
     @Mock lateinit var context: Context
     @Mock lateinit var automationPlugin: AutomationPlugin
     @Mock lateinit var repository: AppRepository

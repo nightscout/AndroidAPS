@@ -29,7 +29,7 @@ class TriggerDeltaTest : TriggerTestBase() {
     fun mock() {
         PowerMockito.mockStatic(DateUtil::class.java)
         PowerMockito.`when`(DateUtil.now()).thenReturn(now)
-        `when`(iobCobCalculatorPlugin.dataLock).thenReturn(Unit)
+        `when`(iobCobCalculatorPlugin.dataLock).thenReturn(Any())
         `when`(profileFunction.getUnits()).thenReturn(Constants.MGDL)
     }
 

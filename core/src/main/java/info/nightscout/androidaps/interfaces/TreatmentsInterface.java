@@ -22,22 +22,13 @@ public interface TreatmentsInterface {
 
     TreatmentServiceInterface getService();
 
-    void updateTotalIOBTreatments();
-
-    void updateTotalIOBTempBasals();
-
-    IobTotal getLastCalculationTreatments();
-
-    IobTotal getCalculationToTimeTreatments(long time);
-
     IobTotal getLastCalculationTempBasals();
 
     IobTotal getCalculationToTimeTempBasals(long time);
 
-    List<Treatment> getTreatmentsFromHistory();
+    IobTotal getCalculationToTimeExtendedBoluses(long time);
 
-    List<Treatment> getCarbTreatments5MinBackFromHistory(long time);
-
+    @Deprecated
     List<Treatment> getTreatmentsFromHistoryAfterTimestamp(long timestamp);
 
     long getLastBolusTime();

@@ -157,7 +157,7 @@ public abstract class PumpPluginAbstract extends PumpPluginBase implements PumpI
 
 
     public boolean isInitialized() {
-        return PumpDriverState.isInitialized(pumpState);
+        return pumpState.isInitialized();
     }
 
 
@@ -174,7 +174,7 @@ public abstract class PumpPluginAbstract extends PumpPluginBase implements PumpI
     public boolean isConnected() {
         if (displayConnectionMessages)
             aapsLogger.debug(LTag.PUMP, "isConnected [PumpPluginAbstract].");
-        return PumpDriverState.isConnected(pumpState);
+        return pumpState.isConnected();
     }
 
 

@@ -206,7 +206,6 @@ class DetermineBasalAdapterAMAJS internal constructor(scriptReader: ScriptReader
         this.glucoseStatus.put("long_avgdelta", glucoseStatus.longAvgDelta)
         this.mealData = JSONObject()
         this.mealData.put("carbs", mealData.carbs)
-        this.mealData.put("boluses", mealData.boluses)
         this.mealData.put("mealCOB", mealData.mealCOB)
         if (constraintChecker.isAutosensModeEnabled().value()) {
             autosensData.put("ratio", autosensDataRatio)

@@ -17,9 +17,7 @@ import info.nightscout.androidaps.plugins.aps.loop.ScriptReader
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper
 import info.nightscout.androidaps.plugins.configBuilder.ConstraintChecker
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.AutosensResult
-import info.nightscout.androidaps.plugins.iob.iobCobCalculator.GlucoseStatus
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.GlucoseStatusProvider
-import info.nightscout.androidaps.plugins.iob.iobCobCalculator.IobCobCalculatorPlugin
 import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.HardLimits
 import info.nightscout.androidaps.utils.Profiler
@@ -41,7 +39,7 @@ open class OpenAPSSMBPlugin @Inject constructor(
     private val context: Context,
     private val activePlugin: ActivePluginProvider,
     private val treatmentsPlugin: TreatmentsInterface,
-    private val iobCobCalculatorPlugin: IobCobCalculatorPlugin,
+    private val iobCobCalculator: IobCobCalculator,
     private val hardLimits: HardLimits,
     private val profiler: Profiler,
     private val sp: SP,
@@ -139,7 +137,7 @@ open class OpenAPSSMBPlugin @Inject constructor(
         if (!hardLimits.checkOnlyHardLimits(pump.baseBasalRate, R.string.current_basal_value, 0.01, hardLimits.maxBasal())) return
         startPart = System.currentTimeMillis()
         if (constraintChecker.isAutosensModeEnabled().value()) {
-            val autosensData = iobCobCalculatorPlugin.getLastAutosensDataSynchronized("OpenAPSPlugin")
+            val autosensData = iobCobCalculator.getLastAutosensDataSynchronized("OpenAPSPlugin")
             if (autosensData == null) {
                 rxBus.send(EventOpenAPSUpdateResultGui(resourceHelper.gs(R.string.openaps_noasdata)))
                 return
@@ -148,7 +146,7 @@ open class OpenAPSSMBPlugin @Inject constructor(
         } else {
             lastAutosensResult.sensResult = "autosens disabled"
         }
-        val iobArray = iobCobCalculatorPlugin.calculateIobArrayForSMB(lastAutosensResult, SMBDefaults.exercise_mode, SMBDefaults.half_basal_exercise_target, isTempTarget)
+        val iobArray = iobCobCalculator.calculateIobArrayForSMB(lastAutosensResult, SMBDefaults.exercise_mode, SMBDefaults.half_basal_exercise_target, isTempTarget)
         profiler.log(LTag.APS, "calculateIobArrayInDia()", startPart)
         startPart = System.currentTimeMillis()
         val smbAllowed = Constraint(!tempBasalFallback).also {
@@ -172,7 +170,7 @@ open class OpenAPSSMBPlugin @Inject constructor(
                 activePlugin.activePump.baseBasalRate,
                 iobArray,
                 glucoseStatus,
-                iobCobCalculatorPlugin.mealData,
+                iobCobCalculator.mealData,
                 lastAutosensResult.ratio,
                 isTempTarget,
                 smbAllowed.value(),

@@ -9,7 +9,7 @@ import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-open class ReceiverStatusStore @Inject constructor(val context: Context, val rxBus: RxBusWrapper) {
+class ReceiverStatusStore @Inject constructor(val context: Context, val rxBus: RxBusWrapper) {
 
     var lastNetworkEvent: EventNetworkChange? = null
 

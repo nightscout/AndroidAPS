@@ -27,7 +27,7 @@ class TriggerBgTest : TriggerTestBase() {
     @Before
     fun prepare() {
         `when`(profileFunction.getUnits()).thenReturn(Constants.MGDL)
-        `when`(iobCobCalculatorPlugin.dataLock).thenReturn(Unit)
+        `when`(iobCobCalculatorPlugin.dataLock).thenReturn(Any())
         PowerMockito.mockStatic(DateUtil::class.java)
         `when`(DateUtil.now()).thenReturn(now)
     }

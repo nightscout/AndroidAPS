@@ -10,6 +10,7 @@ import com.google.firebase.analytics.FirebaseAnalytics;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -26,6 +27,8 @@ import info.nightscout.androidaps.data.NonOverlappingIntervals;
 import info.nightscout.androidaps.data.Profile;
 import info.nightscout.androidaps.data.ProfileIntervals;
 import info.nightscout.androidaps.database.AppRepository;
+import info.nightscout.androidaps.database.entities.Bolus;
+import info.nightscout.androidaps.database.entities.Carbs;
 import info.nightscout.androidaps.db.ExtendedBolus;
 import info.nightscout.androidaps.db.ProfileSwitch;
 import info.nightscout.androidaps.db.Source;
@@ -85,10 +88,6 @@ public class TreatmentsPlugin extends PluginBase implements TreatmentsInterface 
 
     protected TreatmentServiceInterface service;
 
-    private IobTotal lastTreatmentCalculation;
-    private IobTotal lastTempBasalsCalculation;
-
-    private final ArrayList<Treatment> treatments = new ArrayList<>();
     private final Intervals<TemporaryBasal> tempBasals = new NonOverlappingIntervals<>();
     private final Intervals<ExtendedBolus> extendedBoluses = new NonOverlappingIntervals<>();
     private final ProfileIntervals<ProfileSwitch> profiles = new ProfileIntervals<>();
@@ -147,9 +146,8 @@ public class TreatmentsPlugin extends PluginBase implements TreatmentsInterface 
                 .observeOn(aapsSchedulers.getIo())
                 .subscribe(event -> {
                             getAapsLogger().debug(LTag.DATATREATMENTS, "EventReloadTreatmentData");
-                            initializeTreatmentData(range());
+                            //initializeTreatmentData(range());
                             initializeExtendedBolusData(range());
-                            updateTotalIOBTreatments();
                             rxBus.send(event.getNext());
                         },
                         fabricPrivacy::logException
@@ -166,7 +164,6 @@ public class TreatmentsPlugin extends PluginBase implements TreatmentsInterface 
                 .subscribe(event -> {
                             getAapsLogger().debug(LTag.DATATREATMENTS, "EventReloadTempBasalData");
                             initializeTempBasalData(range());
-                            updateTotalIOBTempBasals();
                         },
                         fabricPrivacy::logException
                 ));
@@ -192,17 +189,8 @@ public class TreatmentsPlugin extends PluginBase implements TreatmentsInterface 
 
     public void initializeData(long range) {
         initializeTempBasalData(range);
-        initializeTreatmentData(range);
         initializeExtendedBolusData(range);
         initializeProfileSwitchData(range);
-    }
-
-    private void initializeTreatmentData(long range) {
-        getAapsLogger().debug(LTag.DATATREATMENTS, "initializeTreatmentData");
-        synchronized (treatments) {
-            treatments.clear();
-            treatments.addAll(getService().getTreatmentDataFromTime(DateUtil.now() - range, false));
-        }
     }
 
     private void initializeTempBasalData(long range) {
@@ -229,12 +217,7 @@ public class TreatmentsPlugin extends PluginBase implements TreatmentsInterface 
     }
 
     @Override
-    public IobTotal getLastCalculationTreatments() {
-        return lastTreatmentCalculation;
-    }
-
-    @Override
-    public IobTotal getCalculationToTimeTreatments(long time) {
+    public IobTotal getCalculationToTimeExtendedBoluses(long time) {
         IobTotal total = new IobTotal(time);
 
         Profile profile = profileFunction.getProfile();
@@ -242,29 +225,6 @@ public class TreatmentsPlugin extends PluginBase implements TreatmentsInterface 
             return total;
 
         PumpInterface pumpInterface = activePlugin.getActivePump();
-
-        double dia = profile.getDia();
-
-        synchronized (treatments) {
-            for (int pos = 0; pos < treatments.size(); pos++) {
-                Treatment t = treatments.get(pos);
-                if (!t.isValid) continue;
-                if (t.date > time) continue;
-                Iob tIOB = t.iobCalc(time, dia);
-                total.iob += tIOB.getIobContrib();
-                total.activity += tIOB.getActivityContrib();
-                if (t.insulin > 0 && t.date > total.lastBolusTime)
-                    total.lastBolusTime = t.date;
-                if (!t.isSMB) {
-                    // instead of dividing the DIA that only worked on the bilinear curves,
-                    // multiply the time the treatment is seen active.
-                    long timeSinceTreatment = time - t.date;
-                    long snoozeTime = t.date + (long) (timeSinceTreatment * sp.getDouble(R.string.key_openapsama_bolussnooze_dia_divisor, 2.0));
-                    Iob bIOB = t.iobCalc(snoozeTime, dia);
-                    total.bolussnooze += bIOB.getIobContrib();
-                }
-            }
-        }
 
         if (!pumpInterface.isFakingTempsByExtendedBoluses())
             synchronized (extendedBoluses) {
@@ -278,19 +238,6 @@ public class TreatmentsPlugin extends PluginBase implements TreatmentsInterface 
         return total;
     }
 
-    @Override
-    public void updateTotalIOBTreatments() {
-        lastTreatmentCalculation = getCalculationToTimeTreatments(System.currentTimeMillis());
-    }
-
-    @Override
-    public List<Treatment> getTreatmentsFromHistory() {
-        synchronized (treatments) {
-            return new ArrayList<>(treatments);
-        }
-    }
-
-
     /**
      * Returns all Treatments after specified timestamp. Also returns invalid entries (required to
      * map "Fill Canula" entries to history (and not to add double bolus for it)
@@ -298,8 +245,15 @@ public class TreatmentsPlugin extends PluginBase implements TreatmentsInterface 
      * @param fromTimestamp
      * @return
      */
+    @Deprecated
     @Override
     public List<Treatment> getTreatmentsFromHistoryAfterTimestamp(long fromTimestamp) {
+        return repository.getBolusesIncludingInvalidFromTimeToTime(fromTimestamp, dateUtil._now(), true)
+                .blockingGet()
+                .stream()
+                .map(bolus -> new Treatment(getInjector(), bolus))
+                .collect(Collectors.toList());
+/*
         List<Treatment> in5minback = new ArrayList<>();
 
         long time = System.currentTimeMillis();
@@ -307,27 +261,13 @@ public class TreatmentsPlugin extends PluginBase implements TreatmentsInterface 
 //            getAapsLogger().debug(MedtronicHistoryData.doubleBolusDebug, LTag.DATATREATMENTS, "DoubleBolusDebug: AllTreatmentsInDb: " + new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create().toJson(treatments));
 
             for (Treatment t : treatments) {
-                if (t.date <= time && t.date >= fromTimestamp)
+                if (t.date >= fromTimestamp && t.date <= time)
                     in5minback.add(t);
             }
 //            getAapsLogger().debug(MedtronicHistoryData.doubleBolusDebug, LTag.DATATREATMENTS, "DoubleBolusDebug: FilteredTreatments: AfterTime={}, Items={} " + fromTimestamp + " " + new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create().toJson(in5minback));
             return in5minback;
         }
-    }
-
-
-    @Override
-    public List<Treatment> getCarbTreatments5MinBackFromHistory(long time) {
-        List<Treatment> in5minback = new ArrayList<>();
-        synchronized (treatments) {
-            for (Treatment t : treatments) {
-                if (!t.isValid)
-                    continue;
-                if (t.date <= time && t.date > time - 5 * 60 * 1000 && t.carbs > 0)
-                    in5minback.add(t);
-            }
-            return in5minback;
-        }
+*/
     }
 
     @Override
@@ -399,7 +339,7 @@ public class TreatmentsPlugin extends PluginBase implements TreatmentsInterface 
 
     @Override
     public IobTotal getLastCalculationTempBasals() {
-        return lastTempBasalsCalculation;
+        return getCalculationToTimeTempBasals(DateUtil.now());
     }
 
     @Override
@@ -535,11 +475,6 @@ public class TreatmentsPlugin extends PluginBase implements TreatmentsInterface 
             total.plus(totalExt);
         }
         return total;
-    }
-
-    @Override
-    public void updateTotalIOBTempBasals() {
-        lastTempBasalsCalculation = getCalculationToTimeTempBasals(DateUtil.now());
     }
 
     @Nullable
@@ -692,10 +627,12 @@ public class TreatmentsPlugin extends PluginBase implements TreatmentsInterface 
             if (extendedBoluses.size() > 0)
                 oldestTime = Math.min(oldestTime, extendedBoluses.get(0).date);
         }
-        synchronized (treatments) {
-            if (treatments.size() > 0)
-                oldestTime = Math.min(oldestTime, treatments.get(treatments.size() - 1).date);
-        }
+        Bolus oldestBolus = repository.getOldestBolusRecord();
+        if (oldestBolus != null)
+            oldestTime = Math.min(oldestTime, oldestBolus.getTimestamp());
+        Carbs oldestCarbs = repository.getOldestCarbsRecord();
+        if (oldestCarbs != null)
+            oldestTime = Math.min(oldestTime, oldestCarbs.getTimestamp());
         oldestTime -= 15 * 60 * 1000L; // allow 15 min before
         return oldestTime;
     }

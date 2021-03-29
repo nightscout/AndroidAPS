@@ -40,7 +40,7 @@ import javax.inject.Singleton
 import kotlin.math.min
 
 @Singleton
-class VirtualPumpPlugin @Inject constructor(
+open class VirtualPumpPlugin @Inject constructor(
     injector: HasAndroidInjector,
     aapsLogger: AAPSLogger,
     private val rxBus: RxBusWrapper,
@@ -204,10 +204,12 @@ class VirtualPumpPlugin @Inject constructor(
         aapsLogger.debug(LTag.PUMP, "Delivering treatment insulin: " + detailedBolusInfo.insulin + "U carbs: " + detailedBolusInfo.carbs + "g " + result)
         rxBus.send(EventVirtualPumpUpdateGui())
         lastDataTime = System.currentTimeMillis()
-        pumpSync.syncBolusWithPumpId(dateUtil._now(), detailedBolusInfo.insulin, detailedBolusInfo.bolusType, dateUtil._now(), pumpType
-            ?: PumpType.GENERIC_AAPS, serialNumber())
-        pumpSync.syncCarbsWithTimestamp(dateUtil._now(), detailedBolusInfo.carbs, dateUtil._now(), pumpType
-            ?: PumpType.GENERIC_AAPS, serialNumber())
+        if (detailedBolusInfo.insulin > 0)
+            pumpSync.syncBolusWithPumpId(dateUtil._now(), detailedBolusInfo.insulin, detailedBolusInfo.bolusType, dateUtil._now(), pumpType
+                ?: PumpType.GENERIC_AAPS, serialNumber())
+        if (detailedBolusInfo.carbs > 0)
+            pumpSync.syncCarbsWithTimestamp(dateUtil._now(), detailedBolusInfo.carbs, dateUtil._now(), pumpType
+                ?: PumpType.GENERIC_AAPS, serialNumber())
         return result
     }
 

@@ -26,7 +26,6 @@ import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.logging.LTag
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper
 import info.nightscout.androidaps.plugins.configBuilder.ConstraintChecker
-import info.nightscout.androidaps.plugins.general.nsclient.NSUpload
 import info.nightscout.androidaps.plugins.general.overview.events.EventDismissBolusProgressIfRunning
 import info.nightscout.androidaps.plugins.general.overview.events.EventDismissNotification
 import info.nightscout.androidaps.plugins.general.overview.events.EventNewNotification
@@ -61,8 +60,7 @@ open class CommandQueue @Inject constructor(
     private val buildHelper: BuildHelper,
     private val dateUtil: DateUtil,
     private val repository: AppRepository,
-    private val fabricPrivacy: FabricPrivacy,
-    private val nsUpload: NSUpload
+    private val fabricPrivacy: FabricPrivacy
 ) : CommandQueueProvider {
 
     private val disposable = CompositeDisposable()
@@ -175,7 +173,7 @@ open class CommandQueue @Inject constructor(
 
     override fun independentConnect(reason: String, callback: Callback?) {
         aapsLogger.debug(LTag.PUMPQUEUE, "Starting new queue")
-        val tempCommandQueue = CommandQueue(injector, aapsLogger, rxBus, aapsSchedulers, resourceHelper, constraintChecker, profileFunction, activePlugin, context, sp, buildHelper, dateUtil, repository, fabricPrivacy, nsUpload)
+        val tempCommandQueue = CommandQueue(injector, aapsLogger, rxBus, aapsSchedulers, resourceHelper, constraintChecker, profileFunction, activePlugin, context, sp, buildHelper, dateUtil, repository, fabricPrivacy)
         tempCommandQueue.readStatus(reason, callback)
     }
 

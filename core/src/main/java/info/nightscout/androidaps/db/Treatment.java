@@ -20,6 +20,7 @@ import info.nightscout.androidaps.Constants;
 import info.nightscout.androidaps.core.R;
 import info.nightscout.androidaps.data.Iob;
 import info.nightscout.androidaps.data.Profile;
+import info.nightscout.androidaps.database.entities.Bolus;
 import info.nightscout.androidaps.interfaces.ActivePluginProvider;
 import info.nightscout.androidaps.interfaces.InsulinInterface;
 import info.nightscout.androidaps.interfaces.ProfileFunction;
@@ -77,6 +78,17 @@ public class Treatment implements DataPointWithLabelInterface, DbObjectBase {
 
     public Treatment(HasAndroidInjector injector) {
         injector.androidInjector().inject(this);
+    }
+
+    public Treatment(HasAndroidInjector injector, Bolus bolus) {
+        this(injector);
+        date = bolus.getTimestamp();
+        isValid = bolus.isValid();
+        pumpId = (bolus.getInterfaceIDs().getPumpId() != null) ? bolus.getInterfaceIDs().getPumpId() : 0;
+        source = (bolus.getInterfaceIDs().getPumpId() != null) ? Source.PUMP : Source.USER;
+        _id = bolus.getInterfaceIDs().getNightscoutId();
+        insulin = bolus.getAmount();
+        isSMB = bolus.getType() == Bolus.Type.SMB;
     }
 
     public static Treatment createFromJson(JSONObject json) throws JSONException {
@@ -243,7 +255,8 @@ public class Treatment implements DataPointWithLabelInterface, DbObjectBase {
     @Override
     public String getLabel() {
         String label = "";
-        if (insulin > 0) label += DecimalFormatter.INSTANCE.toPumpSupportedBolus(insulin, activePlugin.getActivePump(), resourceHelper);
+        if (insulin > 0)
+            label += DecimalFormatter.INSTANCE.toPumpSupportedBolus(insulin, activePlugin.getActivePump(), resourceHelper);
         if (carbs > 0)
             label += "~" + resourceHelper.gs(R.string.format_carbs, (int) carbs);
         return label;

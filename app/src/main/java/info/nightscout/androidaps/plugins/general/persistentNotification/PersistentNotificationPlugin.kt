@@ -38,7 +38,7 @@ class PersistentNotificationPlugin @Inject constructor(
     private val profileFunction: ProfileFunction,
     private val fabricPrivacy: FabricPrivacy,
     private val activePlugins: ActivePluginProvider,
-    private val iobCobCalculatorPlugin: IobCobCalculatorPlugin,
+    private val iobCobCalculator: IobCobCalculator,
     private val rxBus: RxBusWrapper,
     private val context: Context,
     private val notificationHolder: NotificationHolderInterface,
@@ -131,7 +131,7 @@ class PersistentNotificationPlugin @Inject constructor(
         if (profileFunction.isProfileValid("Notification")) {
             var line1aa: String
             val units = profileFunction.getUnits()
-            val lastBG = iobCobCalculatorPlugin.lastBg()
+            val lastBG = iobCobCalculator.lastBg()
             val glucoseStatus = glucoseStatusProvider.glucoseStatusData
             if (lastBG != null) {
                 line1aa = lastBG.valueToUnitsString(units)
@@ -156,12 +156,10 @@ class PersistentNotificationPlugin @Inject constructor(
                 line1aa += "  " + activeTemp.toStringShort() + "."
             }
             //IOB
-            activePlugins.activeTreatments.updateTotalIOBTreatments()
-            activePlugins.activeTreatments.updateTotalIOBTempBasals()
-            val bolusIob = activePlugins.activeTreatments.lastCalculationTreatments.round()
+            val bolusIob = iobCobCalculator.calculateIobFromBolus().round()
             val basalIob = activePlugins.activeTreatments.lastCalculationTempBasals.round()
-            line2 = resourceHelper.gs(R.string.treatments_iob_label_string) + " " + DecimalFormatter.to2Decimal(bolusIob.iob + basalIob.basaliob) + "U " + resourceHelper.gs(R.string.cob) + ": " + iobCobCalculatorPlugin.getCobInfo(false, "PersistentNotificationPlugin").generateCOBString()
-            val line2aa = resourceHelper.gs(R.string.treatments_iob_label_string) + " " + DecimalFormatter.to2Decimal(bolusIob.iob + basalIob.basaliob) + "U. " + resourceHelper.gs(R.string.cob) + ": " + iobCobCalculatorPlugin.getCobInfo(false, "PersistentNotificationPlugin").generateCOBString() + "."
+            line2 = resourceHelper.gs(R.string.treatments_iob_label_string) + " " + DecimalFormatter.to2Decimal(bolusIob.iob + basalIob.basaliob) + "U " + resourceHelper.gs(R.string.cob) + ": " + iobCobCalculator.getCobInfo(false, "PersistentNotificationPlugin").generateCOBString()
+            val line2aa = resourceHelper.gs(R.string.treatments_iob_label_string) + " " + DecimalFormatter.to2Decimal(bolusIob.iob + basalIob.basaliob) + "U. " + resourceHelper.gs(R.string.cob) + ": " + iobCobCalculator.getCobInfo(false, "PersistentNotificationPlugin").generateCOBString() + "."
             line3 = DecimalFormatter.to2Decimal(pump.baseBasalRate) + " U/h"
             var line3aa = DecimalFormatter.to2Decimal(pump.baseBasalRate) + " U/h."
             line3 += " - " + profileFunction.getProfileName()

@@ -12,6 +12,7 @@ import dagger.android.HasAndroidInjector;
 import info.nightscout.androidaps.Constants;
 import info.nightscout.androidaps.core.R;
 import info.nightscout.androidaps.data.Profile;
+import info.nightscout.androidaps.database.entities.Carbs;
 import info.nightscout.androidaps.db.Treatment;
 import info.nightscout.androidaps.interfaces.ProfileFunction;
 import info.nightscout.androidaps.logging.AAPSLogger;
@@ -47,17 +48,17 @@ public class AutosensData implements DataPointWithLabelInterface {
         public double min5minCarbImpact;
         double remaining;
 
-        public CarbsInPast(Treatment t, boolean isAAPSOrWeighted) {
-            time = t.date;
-            carbs = t.carbs;
-            remaining = t.carbs;
+        public CarbsInPast(Carbs t, boolean isAAPSOrWeighted) {
+            time = t.getTimestamp();
+            carbs = t.getAmount();
+            remaining = t.getAmount();
             if (isAAPSOrWeighted) {
                 double maxAbsorptionHours = sp.getDouble(R.string.key_absorption_maxtime, Constants.DEFAULT_MAX_ABSORPTION_TIME);
-                Profile profile = profileFunction.getProfile(t.date);
-                double sens = profile.getIsfMgdl(t.date);
-                double ic = profile.getIc(t.date);
-                min5minCarbImpact = t.carbs / (maxAbsorptionHours * 60 / 5) * sens / ic;
-                aapsLogger.debug(LTag.AUTOSENS, "Min 5m carbs impact for " + carbs + "g @" + dateUtil.dateAndTimeString(t.date) + " for " + maxAbsorptionHours + "h calculated to " + min5minCarbImpact + " ISF: " + sens + " IC: " + ic);
+                Profile profile = profileFunction.getProfile(t.getTimestamp());
+                double sens = profile.getIsfMgdl(t.getTimestamp());
+                double ic = profile.getIc(t.getTimestamp());
+                min5minCarbImpact = t.getAmount() / (maxAbsorptionHours * 60 / 5) * sens / ic;
+                aapsLogger.debug(LTag.AUTOSENS, "Min 5m carbs impact for " + carbs + "g @" + dateUtil.dateAndTimeString(t.getTimestamp()) + " for " + maxAbsorptionHours + "h calculated to " + min5minCarbImpact + " ISF: " + sens + " IC: " + ic);
             } else {
                 min5minCarbImpact = sp.getDouble(R.string.key_openapsama_min_5m_carbimpact, SMBDefaults.min_5m_carbimpact);
             }

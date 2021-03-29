@@ -100,7 +100,7 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
     @Inject lateinit var configBuilderPlugin: ConfigBuilderPlugin
     @Inject lateinit var activePlugin: ActivePluginProvider
     @Inject lateinit var treatmentsPlugin: TreatmentsPlugin
-    @Inject lateinit var iobCobCalculatorPlugin: IobCobCalculatorPlugin
+    @Inject lateinit var iobCobCalculatorPlugin: IobCobCalculator
     @Inject lateinit var dexcomPlugin: DexcomPlugin
     @Inject lateinit var dexcomMediator: DexcomPlugin.DexcomMediator
     @Inject lateinit var xdripPlugin: XdripPlugin
@@ -749,9 +749,7 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
         processButtonsVisibility()
 
         // iob
-        treatmentsPlugin.updateTotalIOBTreatments()
-        treatmentsPlugin.updateTotalIOBTempBasals()
-        val bolusIob = treatmentsPlugin.lastCalculationTreatments.round()
+        val bolusIob = iobCobCalculatorPlugin.calculateIobFromBolus().round()
         val basalIob = treatmentsPlugin.lastCalculationTempBasals.round()
         binding.infoLayout.iob.text = resourceHelper.gs(R.string.formatinsulinunits, bolusIob.iob + basalIob.basaliob)
 

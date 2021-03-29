@@ -7,23 +7,17 @@ import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.data.Profile
 import info.nightscout.androidaps.events.*
-import info.nightscout.androidaps.interfaces.ActivePluginProvider
-import info.nightscout.androidaps.interfaces.PluginBase
-import info.nightscout.androidaps.interfaces.PluginDescription
-import info.nightscout.androidaps.interfaces.PluginType
-import info.nightscout.androidaps.interfaces.ProfileFunction
+import info.nightscout.androidaps.interfaces.*
 import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.plugins.aps.loop.LoopPlugin
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper
-import info.nightscout.androidaps.plugins.iob.iobCobCalculator.IobCobCalculatorPlugin
-import info.nightscout.androidaps.events.EventAutosensCalculationFinished
 import info.nightscout.androidaps.utils.DecimalFormatter
 import info.nightscout.androidaps.utils.FabricPrivacy
-import io.reactivex.rxkotlin.plusAssign
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 import info.nightscout.androidaps.utils.rx.AapsSchedulers
 import info.nightscout.androidaps.utils.sharedPreferences.SP
 import io.reactivex.disposables.CompositeDisposable
+import io.reactivex.rxkotlin.plusAssign
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -38,7 +32,7 @@ class StatusLinePlugin @Inject constructor(
     private val fabricPrivacy: FabricPrivacy,
     private val activePlugin: ActivePluginProvider,
     private val loopPlugin: LoopPlugin,
-    private val iobCobCalculatorPlugin: IobCobCalculatorPlugin,
+    private val iobCobCalculator: IobCobCalculator,
     private val rxBus: RxBusWrapper,
     aapsLogger: AAPSLogger
 ) : PluginBase(
@@ -132,9 +126,7 @@ class StatusLinePlugin @Inject constructor(
             status += activeTemp.toStringShort() + " "
         }
         //IOB
-        activePlugin.activeTreatments.updateTotalIOBTreatments()
-        val bolusIob = activePlugin.activeTreatments.lastCalculationTreatments.round()
-        activePlugin.activeTreatments.updateTotalIOBTempBasals()
+        val bolusIob = iobCobCalculator.calculateIobFromBolus().round()
         val basalIob = activePlugin.activeTreatments.lastCalculationTempBasals.round()
         status += DecimalFormatter.to2Decimal(bolusIob.iob + basalIob.basaliob) + "U"
         if (sp.getBoolean(R.string.key_xdripstatus_detailediob, true)) {
@@ -147,7 +139,7 @@ class StatusLinePlugin @Inject constructor(
             status += " " + (if (bgi >= 0) "+" else "") + DecimalFormatter.to2Decimal(bgi)
         }
         // COB
-        status += " " + iobCobCalculatorPlugin.getCobInfo(false, "StatusLinePlugin").generateCOBString()
+        status += " " + iobCobCalculator.getCobInfo(false, "StatusLinePlugin").generateCOBString()
         return status
     }
 }

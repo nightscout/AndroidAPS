@@ -9,6 +9,7 @@ import info.nightscout.androidaps.data.IobTotal
 import info.nightscout.androidaps.data.MealData
 import info.nightscout.androidaps.data.Profile
 import info.nightscout.androidaps.database.AppRepository
+import info.nightscout.androidaps.database.entities.Bolus
 import info.nightscout.androidaps.database.entities.GlucoseValue
 import info.nightscout.androidaps.db.TemporaryBasal
 import info.nightscout.androidaps.events.*
@@ -27,6 +28,7 @@ import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.DecimalFormatter
 import info.nightscout.androidaps.utils.FabricPrivacy
 import info.nightscout.androidaps.utils.T
+import info.nightscout.androidaps.utils.extensions.iobCalc
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 import info.nightscout.androidaps.utils.rx.AapsSchedulers
 import info.nightscout.androidaps.utils.sharedPreferences.SP
@@ -64,7 +66,7 @@ open class IobCobCalculatorPlugin @Inject constructor(
     .neverVisible(true)
     .alwaysEnabled(true),
     aapsLogger, resourceHelper, injector
-), IobCobCalculatorInterface {
+), IobCobCalculator {
 
     private val disposable = CompositeDisposable()
     private var iobTable = LongSparseArray<IobTotal?>() // oldest at index 0
@@ -404,7 +406,7 @@ open class IobCobCalculatorPlugin @Inject constructor(
             //og.debug(">>> calculateFromTreatmentsAndTemps Cache hit " + new Date(time).toLocaleString());
             return cacheHit
         } // else log.debug(">>> calculateFromTreatmentsAndTemps Cache miss " + new Date(time).toLocaleString());
-        val bolusIob = treatmentsPlugin.getCalculationToTimeTreatments(time).round()
+        val bolusIob = calculateIobFromBolusToTime(time).round()
         val basalIob = treatmentsPlugin.getCalculationToTimeTempBasals(time, true, now).round()
         // OpenAPSSMB only
         // Add expected zero temp basal for next 240 minutes
@@ -425,7 +427,7 @@ open class IobCobCalculatorPlugin @Inject constructor(
         return iobTotal
     }
 
-    fun calculateAbsInsulinFromTreatmentsAndTempsSynchronized(fromTime: Long): IobTotal {
+    override fun calculateAbsInsulinFromTreatmentsAndTempsSynchronized(fromTime: Long): IobTotal {
         synchronized(dataLock) {
             val now = System.currentTimeMillis()
             val time = roundUpTime(fromTime)
@@ -434,7 +436,7 @@ open class IobCobCalculatorPlugin @Inject constructor(
                 //log.debug(">>> calculateFromTreatmentsAndTemps Cache hit " + new Date(time).toLocaleString());
                 return cacheHit
             } // else log.debug(">>> calculateFromTreatmentsAndTemps Cache miss " + new Date(time).toLocaleString());
-            val bolusIob = treatmentsPlugin.getCalculationToTimeTreatments(time).round()
+            val bolusIob = calculateIobFromBolusToTime(time).round()
             val basalIob = treatmentsPlugin.getAbsoluteIOBTempBasals(time).round()
             val iobTotal = IobTotal.combine(bolusIob, basalIob).round()
             if (time < System.currentTimeMillis()) {
@@ -446,7 +448,7 @@ open class IobCobCalculatorPlugin @Inject constructor(
 
     private fun calculateFromTreatmentsAndTemps(time: Long, lastAutosensResult: AutosensResult, exercise_mode: Boolean, half_basal_exercise_target: Int, isTempTarget: Boolean): IobTotal {
         val now = DateUtil.now()
-        val bolusIob = treatmentsPlugin.getCalculationToTimeTreatments(time).round()
+        val bolusIob = calculateIobFromBolusToTime(time).round()
         val basalIob = treatmentsPlugin.getCalculationToTimeTempBasals(time, now, lastAutosensResult, exercise_mode, half_basal_exercise_target, isTempTarget).round()
         // OpenAPSSMB only
         // Add expected zero temp basal for next 240 minutes
@@ -474,7 +476,7 @@ open class IobCobCalculatorPlugin @Inject constructor(
         return null
     }
 
-    fun getBasalData(profile: Profile, fromTime: Long): BasalData {
+    override fun getBasalData(profile: Profile, fromTime: Long): BasalData {
         synchronized(dataLock) {
             val now = System.currentTimeMillis()
             val time = roundUpTime(fromTime)
@@ -512,7 +514,7 @@ open class IobCobCalculatorPlugin @Inject constructor(
         }
     }
 
-    fun getLastAutosensDataSynchronized(reason: String): AutosensData? {
+    override fun getLastAutosensDataSynchronized(reason: String): AutosensData? {
         if (thread?.isAlive == true) {
             aapsLogger.debug(LTag.AUTOSENS, "AUTOSENSDATA is waiting for calculation thread: $reason")
             try {
@@ -529,26 +531,21 @@ open class IobCobCalculatorPlugin @Inject constructor(
         var displayCob: Double? = null
         var futureCarbs = 0.0
         val now = DateUtil.now()
-        val treatments = treatmentsPlugin.treatmentsFromHistory
+        val carbs = repository.getCarbsDataFromTime(now, true).blockingGet()
         if (autosensData != null) {
             displayCob = autosensData.cob
-            for (treatment in treatments) {
-                if (!treatment.isValid) continue
-                if (roundUpTime(treatment.date) > roundUpTime(autosensData.time) && treatment.date <= now && treatment.carbs > 0) {
-                    displayCob += treatment.carbs
+            carbs.forEach { carb ->
+                if (roundUpTime(carb.timestamp) > roundUpTime(autosensData.time) && carb.timestamp <= now) {
+                    displayCob += carb.amount
                 }
             }
         }
-        for (treatment in treatments) {
-            if (!treatment.isValid) continue
-            if (treatment.date > now && treatment.carbs > 0) {
-                futureCarbs += treatment.carbs
-            }
-        }
+        // Future carbs
+        carbs.forEach { carb -> if (carb.timestamp > now) futureCarbs += carb.amount }
         return CobInfo(displayCob, futureCarbs)
     }
 
-    fun slowAbsorptionPercentage(timeInMinutes: Int): Double {
+    override fun slowAbsorptionPercentage(timeInMinutes: Int): Double {
         var sum = 0.0
         var count = 0
         val valuesToProcess = timeInMinutes / 5
@@ -594,32 +591,20 @@ open class IobCobCalculatorPlugin @Inject constructor(
         return if (autosensDataTable.size() > 0) dateUtil.dateAndTimeAndSecondsString(autosensDataTable.valueAt(autosensDataTable.size() - 1).time) else "autosensDataTable empty"
     }
 
-    val mealData: MealData
+    override val mealData: MealData
         get() {
             val result = MealData()
-            val profile = profileFunction.getProfile() ?: return result
             val now = System.currentTimeMillis()
-            val diaAgo = now - java.lang.Double.valueOf(profile.dia * T.hours(1).msecs()).toLong()
             val maxAbsorptionHours: Double = if (sensitivityAAPSPlugin.isEnabled() || sensitivityWeightedAveragePlugin.isEnabled()) {
                 sp.getDouble(R.string.key_absorption_maxtime, Constants.DEFAULT_MAX_ABSORPTION_TIME)
             } else {
                 sp.getDouble(R.string.key_absorption_cutoff, Constants.DEFAULT_MAX_ABSORPTION_TIME)
             }
-            val absorptionTimeAgo = now - java.lang.Double.valueOf(maxAbsorptionHours * T.hours(1).msecs()).toLong()
-            val treatments = treatmentsPlugin.treatmentsFromHistory
-            for (treatment in treatments) {
-                if (!treatment.isValid) continue
-                val t = treatment.date
-                if (t in (diaAgo + 1)..now) {
-                    if (treatment.insulin > 0 && treatment.mealBolus) {
-                        result.boluses += treatment.insulin
-                    }
-                }
-                if (t in (absorptionTimeAgo + 1)..now) {
-                    if (treatment.carbs >= 1) {
-                        result.carbs += treatment.carbs
-                        if (t > result.lastCarbTime) result.lastCarbTime = t
-                    }
+            val absorptionTimeAgo = now - (maxAbsorptionHours * T.hours(1).msecs()).toLong()
+            repository.getCarbsDataFromTimeToTime(absorptionTimeAgo + 1, now, true).blockingGet().forEach {
+                if (it.amount > 0) {
+                    result.carbs += it.amount
+                    if (it.timestamp > result.lastCarbTime) result.lastCarbTime = it.timestamp
                 }
             }
             val autosensData = getLastAutosensDataSynchronized("getMealData()")
@@ -647,7 +632,7 @@ open class IobCobCalculatorPlugin @Inject constructor(
         return array
     }
 
-    fun calculateIobArrayForSMB(lastAutosensResult: AutosensResult, exercise_mode: Boolean, half_basal_exercise_target: Int, isTempTarget: Boolean): Array<IobTotal> {
+    override fun calculateIobArrayForSMB(lastAutosensResult: AutosensResult, exercise_mode: Boolean, half_basal_exercise_target: Int, isTempTarget: Boolean): Array<IobTotal> {
         // predict IOB out to DIA plus 30m
         val now = DateUtil.now()
         val len = 4 * 60 / 5
@@ -660,7 +645,7 @@ open class IobCobCalculatorPlugin @Inject constructor(
         return array
     }
 
-    fun iobArrayToString(array: Array<IobTotal>): String {
+    override fun iobArrayToString(array: Array<IobTotal>): String {
         val sb = StringBuilder()
         sb.append("[")
         for (i in array) {
@@ -689,7 +674,7 @@ open class IobCobCalculatorPlugin @Inject constructor(
     fun runCalculation(from: String, end: Long, bgDataReload: Boolean, limitDataToOldestAvailable: Boolean, cause: Event) {
         aapsLogger.debug(LTag.AUTOSENS, "Starting calculation thread: " + from + " to " + dateUtil.dateAndTimeAndSecondsString(end))
         if (thread == null || thread?.state == Thread.State.TERMINATED) {
-            thread = if (sensitivityOref1Plugin.isEnabled()) IobCobOref1Thread(injector, this, treatmentsPlugin, from, end, bgDataReload, limitDataToOldestAvailable, cause) else IobCobThread(injector, this, treatmentsPlugin, from, end, bgDataReload, limitDataToOldestAvailable, cause)
+            thread = if (sensitivityOref1Plugin.isEnabled()) IobCobOref1Thread(injector, this, from, end, bgDataReload, limitDataToOldestAvailable, cause) else IobCobThread(injector, this, from, end, bgDataReload, limitDataToOldestAvailable, cause)
             thread?.start()
         }
     }
@@ -752,19 +737,15 @@ open class IobCobCalculatorPlugin @Inject constructor(
     /*
      * Return last BgReading from database or null if db is empty
      */
-    fun lastBg(): GlucoseValue? {
+    override fun lastBg(): GlucoseValue? {
         val bgList = bgReadings
         for (i in bgList.indices) if (bgList[i].value >= 39) return bgList[i]
         return null
     }
 
-    /*
-     * Return bg reading if not old ( <9 min )
-     * or null if older
-     */
-    fun actualBg(): GlucoseValue? {
+    override fun actualBg(): GlucoseValue? {
         val lastBg = lastBg() ?: return null
-        return if (lastBg.timestamp > System.currentTimeMillis() - 9 * 60 * 1000) lastBg else null
+        return if (lastBg.timestamp > System.currentTimeMillis() - T.mins(9).msecs()) lastBg else null
     }
 
     companion object {
@@ -796,4 +777,36 @@ open class IobCobCalculatorPlugin @Inject constructor(
             return if (upper >= arr.size) arr[lower.toInt()] else arr[lower.toInt()] * (1 - weight) + arr[upper.toInt()] * weight
         }
     }
+
+    override fun calculateIobFromBolus(): IobTotal = calculateIobFromBolusToTime(dateUtil._now())
+
+    override fun calculateIobFromBolusToTime(timestamp: Long): IobTotal {
+        val total = IobTotal(timestamp)
+        val profile = profileFunction.getProfile() ?: return total
+        val dia = profile.dia
+        val divisor = sp.getDouble(R.string.key_openapsama_bolussnooze_dia_divisor, 2.0)
+
+        val boluses = repository.getBolusesDataFromTime(timestamp, true).blockingGet()
+
+        boluses.forEach { t ->
+            if (t.isValid && t.timestamp < timestamp) {
+                val tIOB = t.iobCalc(activePlugin, timestamp, dia)
+                total.iob += tIOB.iobContrib
+                total.activity += tIOB.activityContrib
+                if (t.amount > 0 && t.timestamp > total.lastBolusTime) total.lastBolusTime = t.timestamp
+                if (t.type != Bolus.Type.SMB) {
+                    // instead of dividing the DIA that only worked on the bilinear curves,
+                    // multiply the time the treatment is seen active.
+                    val timeSinceTreatment = timestamp - t.timestamp
+                    val snoozeTime = t.timestamp + (timeSinceTreatment * divisor).toLong()
+                    val bIOB = t.iobCalc(activePlugin, snoozeTime, dia)
+                    total.bolussnooze += bIOB.iobContrib
+                }
+            }
+        }
+
+        total.plus(treatmentsPlugin.getCalculationToTimeExtendedBoluses(timestamp))
+        return total
+    }
+
 }
