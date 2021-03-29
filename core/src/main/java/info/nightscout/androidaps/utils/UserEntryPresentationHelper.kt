@@ -1,5 +1,6 @@
 package info.nightscout.androidaps.utils
 
+import android.text.Spanned
 import dagger.Reusable
 import info.nightscout.androidaps.Constants
 import info.nightscout.androidaps.core.R
@@ -63,6 +64,13 @@ class UserEntryPresentationHelper @Inject constructor(
         Sources.Food                -> R.drawable.ic_food
         Sources.Unknown             -> R.drawable.ic_generic_icon
     }
+
+    fun actionToColoredString(action: Action): Spanned = when (action) {
+            Action.TREATMENT -> HtmlHelper.fromHtml(coloredAction(Action.BOLUS) + " + " + coloredAction(Action.CARBS))
+            else             -> HtmlHelper.fromHtml(coloredAction(action))
+    }
+
+    private fun coloredAction(action: Action): String = "<font color='${resourceHelper.gc(colorId(action.colorGroup))}'>${translator.translate(action)}</font>"
 
     fun listToPresentationString(list: List<XXXValueWithUnit>) =
         list.joinToString(separator = " ", transform = this::toPresentationString)

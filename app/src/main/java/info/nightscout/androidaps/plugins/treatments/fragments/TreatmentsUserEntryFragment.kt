@@ -128,7 +128,7 @@ class TreatmentsUserEntryFragment : DaggerFragment() {
         override fun onBindViewHolder(holder: UserEntryViewHolder, position: Int) {
             val current = entries[position]
             holder.binding.date.text = dateUtil.dateAndTimeAndSecondsString(current.timestamp)
-
+            holder.binding.action.text = userEntryPresentationHelper.actionToColoredString(current.action)
             if (current.s != "") {
                 holder.binding.s.text = current.s
                 holder.binding.s.visibility = View.VISIBLE
@@ -170,8 +170,6 @@ class TreatmentsUserEntryFragment : DaggerFragment() {
             holder.binding.iconSource.visibility = View.VISIBLE
             holder.binding.values.text = valuesWithUnitString.trim()
             holder.binding.values.visibility = if (holder.binding.values.text != "") View.VISIBLE else View.GONE
-            holder.binding.action.text = translator.translate(current.action)
-            holder.binding.action.setTextColor(resourceHelper.gc(userEntryPresentationHelper.colorId(current.action.colorGroup)))
         }
 
         inner class UserEntryViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
