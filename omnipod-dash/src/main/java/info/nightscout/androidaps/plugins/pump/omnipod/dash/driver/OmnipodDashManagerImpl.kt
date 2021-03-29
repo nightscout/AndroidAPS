@@ -26,12 +26,6 @@ class OmnipodDashManagerImpl @Inject constructor(
     private val aapsSchedulers: AapsSchedulers
 ) : OmnipodDashManager {
 
-    companion object {
-
-        const val PRIME_BOLUS_DURATION_SECONDS = 35L
-        const val CANNULA_INSERTION_BOLUS_DURATION_SECONDS = 10L
-    }
-
     private val observePodReadyForActivationPart1: Observable<PodEvent>
         get() = Observable.defer {
             if (podStateManager.activationProgress.isBefore(ActivationProgress.PHASE_1_COMPLETED)) {
