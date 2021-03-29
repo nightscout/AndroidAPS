@@ -348,7 +348,7 @@ class BolusWizard @Inject constructor(
                 bolusCalculatorResult = createBolusCalculatorResult()
                 notes = this@BolusWizard.notes
                 //uel.log(Action.BOLUS_ADVISOR, notes, XXXValueWithUnit.TherapyEventType(eventType), XXXValueWithUnit.Insulin(insulinAfterConstraints))
-                uel.log(Action.BOLUS_ADVISOR, notes, ValueWithUnit(Sources.WizardDialog), ValueWithUnit(eventType.toDBbEventType(), Units.TherapyEvent), ValueWithUnit(insulinAfterConstraints, Units.U))
+                uel.log(Action.BOLUS_ADVISOR, notes, ValueWithUnit(Sources.WizardDialog), ValueWithUnit(eventType.toDBbEventType().text, Units.TherapyEvent), ValueWithUnit(insulinAfterConstraints, Units.U))
                 if (insulin > 0) {
                     commandQueue.bolus(this, object : Callback() {
                         override fun run() {
@@ -420,8 +420,8 @@ class BolusWizard @Inject constructor(
                         }
                         uel.log(action, notes,
                             ValueWithUnit(Sources.WizardDialog),
-                            ValueWithUnit(eventType.toDBbEventType(), Units.TherapyEvent),
-                            ValueWithUnit(insulinAfterConstraints, Units.U),
+                            ValueWithUnit(eventType.toDBbEventType().text, Units.TherapyEvent),
+                            ValueWithUnit(insulinAfterConstraints, Units.U, insulinAfterConstraints != 0.0),
                             ValueWithUnit(this@BolusWizard.carbs, Units.G, this@BolusWizard.carbs != 0),
                             ValueWithUnit(carbTime, Units.M, carbTime != 0)
                         )

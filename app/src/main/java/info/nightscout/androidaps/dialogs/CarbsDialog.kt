@@ -281,13 +281,13 @@ class CarbsDialog : DialogFragmentWithDate() {
                         detailedBolusInfo.notes = notes
                         detailedBolusInfo.carbsDuration = T.mins(duration.toLong()).msecs()
                         detailedBolusInfo.carbsTimestamp = time
-                        uel.log(if (detailedBolusInfo.carbsDuration == 0) Action.CARBS else Action.EXTENDED_CARBS,
+                        uel.log(if (duration == 0) Action.CARBS else Action.EXTENDED_CARBS,
                             detailedBolusInfo.notes,
                             ValueWithUnit(Sources.CarbDialog),
-                            ValueWithUnit(detailedBolusInfo.timestamp, Units.Timestamp),
-                            ValueWithUnit(detailedBolusInfo.carbs, Units.G),
-                            ValueWithUnit(detailedBolusInfo.carbTime, Units.M, detailedBolusInfo.carbTime != 0),
-                            ValueWithUnit(detailedBolusInfo.carbsDuration, Units.H, detailedBolusInfo.carbsDuration != 0L)
+                            ValueWithUnit(detailedBolusInfo.timestamp, Units.Timestamp, eventTimeChanged),
+                            ValueWithUnit(carbsAfterConstraints, Units.G),
+                            ValueWithUnit(timeOffset, Units.M, timeOffset != 0),
+                            ValueWithUnit(duration, Units.H, duration != 0)
                         )
                         //uel.log(Action.CARBS, notes, XXXValueWithUnit.Timestamp(eventTime).takeIf { eventTimeChanged }, XXXValueWithUnit.Gram(carbsAfterConstraints), XXXValueWithUnit.Minute(timeOffset).takeIf { timeOffset != 0 }, XXXValueWithUnit.Hour(duration).takeIf { duration != 0 })
                         commandQueue.bolus(detailedBolusInfo, object : Callback() {
@@ -295,7 +295,7 @@ class CarbsDialog : DialogFragmentWithDate() {
                                 if (!result.success) {
                                     ErrorHelperActivity.runAlarm(ctx, result.comment, resourceHelper.gs(R.string.treatmentdeliveryerror), R.raw.boluserror)
                                 } else
-                                    uel.log(Action.BOLUS, notes, ValueWithUnit(carbsAfterConstraints, Units.G))
+                                    uel.log(Action.CARBS, notes, ValueWithUnit(carbsAfterConstraints, Units.G))
 
                             }
                         })

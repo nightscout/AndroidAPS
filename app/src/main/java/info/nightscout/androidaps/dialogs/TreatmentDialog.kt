@@ -144,19 +144,19 @@ class TreatmentDialog : DialogFragmentWithDate() {
                         carbsAfterConstraints.equals(0)     -> Action.BOLUS
                         else                                -> Action.TREATMENT
                     }
-                    uel.log(action, ValueWithUnit(Sources.TreatmentDialog), ValueWithUnit(insulin, Units.U, insulin != 0.0), ValueWithUnit(carbs, Units.G, carbs != 0))
                     val detailedBolusInfo = DetailedBolusInfo()
                     if (insulinAfterConstraints == 0.0) detailedBolusInfo.eventType = DetailedBolusInfo.EventType.CARBS_CORRECTION
                     if (carbsAfterConstraints == 0) detailedBolusInfo.eventType = DetailedBolusInfo.EventType.CORRECTION_BOLUS
                     detailedBolusInfo.insulin = insulinAfterConstraints
                     detailedBolusInfo.carbs = carbsAfterConstraints.toDouble()
                     detailedBolusInfo.context = context
-                    uel.log(Action.TREATMENT,
-                        ValueWithUnit(detailedBolusInfo.timestamp, Units.Timestamp),
-                        ValueWithUnit(insulin, Units.U, insulin != 0.0),
-                        ValueWithUnit(carbs, Units.G, carbs != 0)
-                    )
                     if (recordOnlyChecked) {
+                        uel.log(action,
+                            ValueWithUnit(Sources.TreatmentDialog),
+                            ValueWithUnit(detailedBolusInfo.timestamp, Units.Timestamp, eventTimeChanged),
+                            ValueWithUnit(R.string.record, Units.R_String),
+                            ValueWithUnit(insulinAfterConstraints, Units.U, insulin != 0.0),
+                            ValueWithUnit(carbsAfterConstraints, Units.G, carbs != 0))
                         disposable += repository.runTransactionForResult(detailedBolusInfo.insertBolusTransaction())
                             .subscribe(
                                 { result -> result.inserted.forEach { aapsLogger.debug(LTag.DATABASE, "Inserted bolus $it") } },
@@ -172,7 +172,12 @@ class TreatmentDialog : DialogFragmentWithDate() {
                             override fun run() {
                                 if (!result.success) {
                                     ErrorHelperActivity.runAlarm(ctx, result.comment, resourceHelper.gs(R.string.treatmentdeliveryerror), info.nightscout.androidaps.dana.R.raw.boluserror)
-                                }
+                                } else
+                                    uel.log(action,
+                                        ValueWithUnit(Sources.TreatmentDialog),
+                                        ValueWithUnit(insulin, Units.U, insulin != 0.0),
+                                        ValueWithUnit(carbs, Units.G, carbs != 0)
+                                    )
                             }
                         })
                     }

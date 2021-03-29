@@ -210,14 +210,14 @@ class InsulinDialog : DialogFragmentWithDate() {
                         detailedBolusInfo.context = context
                         detailedBolusInfo.notes = notes
                         detailedBolusInfo.timestamp = time
-                        //uel.log(Action.BOLUS_RECORD, notes, XXXValueWithUnit.Insulin(insulinAfterConstraints), XXXValueWithUnit.Minute(timeOffset).takeIf { timeOffset!= 0 })
-                        uel.log(Action.BOLUS, notes,
-                            ValueWithUnit(detailedBolusInfo.timestamp, Units.Timestamp),
-                            , ValueWithUnit(R.string.record, Units.R_String, recordOnlyChecked),
-                            ValueWithUnit(detailedBolusInfo.insulin, Units.U),
-                            ValueWithUnit(timeOffset, Units.M, timeOffset != 0)
-                        )
                         if (recordOnlyChecked) {
+                            //uel.log(Action.BOLUS_RECORD, notes, XXXValueWithUnit.Insulin(insulinAfterConstraints), XXXValueWithUnit.Minute(timeOffset).takeIf { timeOffset!= 0 })
+                            uel.log(Action.BOLUS, notes,
+                                ValueWithUnit(Sources.InsulinDialog),
+                                ValueWithUnit(detailedBolusInfo.timestamp, Units.Timestamp, eventTimeChanged),
+                                ValueWithUnit(R.string.record, Units.R_String),
+                                ValueWithUnit(detailedBolusInfo.insulin, Units.U),
+                                ValueWithUnit(timeOffset, Units.M, timeOffset != 0))
                             disposable += repository.runTransactionForResult(detailedBolusInfo.insertBolusTransaction())
                                 .subscribe(
                                     { result -> result.inserted.forEach { aapsLogger.debug(LTag.DATABASE, "Inserted bolus $it") } },
@@ -229,7 +229,9 @@ class InsulinDialog : DialogFragmentWithDate() {
                                     if (!result.success) {
                                         ErrorHelperActivity.runAlarm(ctx, result.comment, resourceHelper.gs(R.string.treatmentdeliveryerror), info.nightscout.androidaps.dana.R.raw.boluserror)
                                     } else
-                                        uel.log(Action.BOLUS, notes, ValueWithUnit(insulinAfterConstraints, Units.U))
+                                        uel.log(Action.BOLUS, notes,
+                                            ValueWithUnit(Sources.InsulinDialog),
+                                            ValueWithUnit(insulinAfterConstraints, Units.U))
 
                                 }
                             })

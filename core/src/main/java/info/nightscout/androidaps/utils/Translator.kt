@@ -14,7 +14,7 @@ class Translator @Inject internal constructor(
 ) {
 
     @Deprecated("use type instead of string")
-    fun translate(text: String): String = ""
+    fun translate(text: String): String = text
 
     fun translate(action: Action): String = when(action) {
         Action.BOLUS                               -> resourceHelper.gs(R.string.uel_bolus)
