@@ -241,7 +241,7 @@ public class NSUpload {
 /*
         JSONObject data = new JSONObject();
         try {
-            data.put("eventType", detailedBolusInfo.eventType);
+            data.put("eventType", detailedBolusInfo.eventType.getText());
             if (detailedBolusInfo.insulin != 0d) data.put("insulin", detailedBolusInfo.insulin);
             if (detailedBolusInfo.carbs != 0d) data.put("carbs", (int) detailedBolusInfo.carbs);
             data.put("created_at", DateUtil.toISOString(detailedBolusInfo.timestamp));

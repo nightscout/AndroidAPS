@@ -14,10 +14,9 @@ import info.nightscout.androidaps.activities.ErrorHelperActivity
 import info.nightscout.androidaps.data.DetailedBolusInfo
 import info.nightscout.androidaps.data.Profile
 import info.nightscout.androidaps.database.AppRepository
+import info.nightscout.androidaps.database.entities.XXXValueWithUnit
 import info.nightscout.androidaps.database.entities.TemporaryTarget
-import info.nightscout.androidaps.database.entities.UserEntry.Action
-import info.nightscout.androidaps.database.entities.UserEntry.Units
-import info.nightscout.androidaps.database.entities.UserEntry.ValueWithUnit
+import info.nightscout.androidaps.database.entities.UserEntry.*
 import info.nightscout.androidaps.database.transactions.InsertTemporaryTargetAndCancelCurrentTransaction
 import info.nightscout.androidaps.databinding.DialogCarbsBinding
 import info.nightscout.androidaps.interfaces.Constraint
@@ -224,7 +223,8 @@ class CarbsDialog : DialogFragmentWithDate() {
                 OKDialog.showConfirmation(activity, resourceHelper.gs(R.string.carbs), HtmlHelper.fromHtml(Joiner.on("<br/>").join(actions)), {
                     when {
                         activitySelected   -> {
-                            uel.log(Action.TT, ValueWithUnit(TemporaryTarget.Reason.ACTIVITY.text, Units.TherapyEvent), ValueWithUnit(activityTT, units), ValueWithUnit(activityTTDuration, Units.M))
+                            //uel.log(Action.TT, XXXValueWithUnit.TherapyEventTTReason(TemporaryTarget.Reason.ACTIVITY), XXXValueWithUnit.fromGlucoseUnit(activityTT, units) , XXXValueWithUnit.Minute(activityTTDuration))
+                            uel.log(Action.TT, ValueWithUnit(Sources.CarbDialog), ValueWithUnit(TemporaryTarget.Reason.ACTIVITY.text, Units.TherapyEvent), ValueWithUnit(activityTT, units) , ValueWithUnit(activityTTDuration, Units.M))
                             disposable += repository.runTransactionForResult(InsertTemporaryTargetAndCancelCurrentTransaction(
                                 timestamp = System.currentTimeMillis(),
                                 duration = TimeUnit.MINUTES.toMillis(activityTTDuration.toLong()),
@@ -240,7 +240,8 @@ class CarbsDialog : DialogFragmentWithDate() {
                         }
 
                         eatingSoonSelected -> {
-                            uel.log(Action.TT, ValueWithUnit(TemporaryTarget.Reason.EATING_SOON.text, Units.TherapyEvent), ValueWithUnit(eatingSoonTT, units), ValueWithUnit(eatingSoonTTDuration, Units.M))
+                            //uel.log(Action.TT, XXXValueWithUnit.TherapyEventTTReason(TemporaryTarget.Reason.EATING_SOON), XXXValueWithUnit.fromGlucoseUnit(eatingSoonTT, units) , XXXValueWithUnit.Minute(eatingSoonTTDuration))
+                            uel.log(Action.TT, ValueWithUnit(Sources.CarbDialog), ValueWithUnit(TemporaryTarget.Reason.EATING_SOON.text, Units.TherapyEvent), ValueWithUnit(eatingSoonTT, units) , ValueWithUnit(eatingSoonTTDuration, Units.M))
                             disposable += repository.runTransactionForResult(InsertTemporaryTargetAndCancelCurrentTransaction(
                                 timestamp = System.currentTimeMillis(),
                                 duration = TimeUnit.MINUTES.toMillis(eatingSoonTTDuration.toLong()),
@@ -256,7 +257,8 @@ class CarbsDialog : DialogFragmentWithDate() {
                         }
 
                         hypoSelected       -> {
-                            uel.log(Action.TT, ValueWithUnit(TemporaryTarget.Reason.HYPOGLYCEMIA.text, Units.TherapyEvent), ValueWithUnit(hypoTT, units), ValueWithUnit(hypoTTDuration, Units.M))
+                            //uel.log(Action.TT, XXXValueWithUnit.TherapyEventTTReason(TemporaryTarget.Reason.HYPOGLYCEMIA), XXXValueWithUnit.fromGlucoseUnit(hypoTT, units) , XXXValueWithUnit.Minute(hypoTTDuration))
+                            uel.log(Action.TT, ValueWithUnit(Sources.CarbDialog), ValueWithUnit(TemporaryTarget.Reason.HYPOGLYCEMIA.text, Units.TherapyEvent), ValueWithUnit(hypoTT, units) , ValueWithUnit(hypoTTDuration, Units.M))
                             disposable += repository.runTransactionForResult(InsertTemporaryTargetAndCancelCurrentTransaction(
                                 timestamp = System.currentTimeMillis(),
                                 duration = TimeUnit.MINUTES.toMillis(hypoTTDuration.toLong()),
@@ -279,12 +281,15 @@ class CarbsDialog : DialogFragmentWithDate() {
                         detailedBolusInfo.notes = notes
                         detailedBolusInfo.carbsDuration = T.mins(duration.toLong()).msecs()
                         detailedBolusInfo.carbsTimestamp = time
-                        uel.log(Action.CARBS, detailedBolusInfo.notes,
+                        uel.log(if (detailedBolusInfo.carbsDuration == 0) Action.CARBS else Action.EXTENDED_CARBS,
+                            detailedBolusInfo.notes,
+                            ValueWithUnit(Sources.CarbDialog),
                             ValueWithUnit(detailedBolusInfo.timestamp, Units.Timestamp),
                             ValueWithUnit(detailedBolusInfo.carbs, Units.G),
                             ValueWithUnit(detailedBolusInfo.carbTime, Units.M, detailedBolusInfo.carbTime != 0),
                             ValueWithUnit(detailedBolusInfo.carbsDuration, Units.H, detailedBolusInfo.carbsDuration != 0L)
                         )
+                        //uel.log(Action.CARBS, notes, XXXValueWithUnit.Timestamp(eventTime).takeIf { eventTimeChanged }, XXXValueWithUnit.Gram(carbsAfterConstraints), XXXValueWithUnit.Minute(timeOffset).takeIf { timeOffset != 0 }, XXXValueWithUnit.Hour(duration).takeIf { duration != 0 })
                         commandQueue.bolus(detailedBolusInfo, object : Callback() {
                             override fun run() {
                                 if (!result.success) {

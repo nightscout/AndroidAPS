@@ -15,10 +15,9 @@ import info.nightscout.androidaps.activities.ErrorHelperActivity
 import info.nightscout.androidaps.data.DetailedBolusInfo
 import info.nightscout.androidaps.data.Profile
 import info.nightscout.androidaps.database.AppRepository
+import info.nightscout.androidaps.database.entities.XXXValueWithUnit
 import info.nightscout.androidaps.database.entities.TemporaryTarget
-import info.nightscout.androidaps.database.entities.UserEntry.Action
-import info.nightscout.androidaps.database.entities.UserEntry.Units
-import info.nightscout.androidaps.database.entities.UserEntry.ValueWithUnit
+import info.nightscout.androidaps.database.entities.UserEntry.*
 import info.nightscout.androidaps.database.transactions.InsertTemporaryTargetAndCancelCurrentTransaction
 import info.nightscout.androidaps.databinding.DialogInsulinBinding
 import info.nightscout.androidaps.interfaces.ActivePluginProvider
@@ -189,7 +188,8 @@ class InsulinDialog : DialogFragmentWithDate() {
             activity?.let { activity ->
                 OKDialog.showConfirmation(activity, resourceHelper.gs(R.string.bolus), HtmlHelper.fromHtml(Joiner.on("<br/>").join(actions)), {
                     if (eatingSoonChecked) {
-                        uel.log(Action.TT, notes, ValueWithUnit(TemporaryTarget.Reason.EATING_SOON.text, Units.TherapyEvent), ValueWithUnit(eatingSoonTT, units), ValueWithUnit(eatingSoonTTDuration, Units.M))
+                        //uel.log(Action.TT, notes, XXXValueWithUnit.TherapyEventTTReason(TemporaryTarget.Reason.EATING_SOON), XXXValueWithUnit.fromGlucoseUnit(eatingSoonTT, units), XXXValueWithUnit.Minute(eatingSoonTTDuration))
+                        uel.log(Action.TT, notes, ValueWithUnit(Sources.InsulinDialog), ValueWithUnit(TemporaryTarget.Reason.EATING_SOON.text, Units.TherapyEvent), ValueWithUnit(eatingSoonTT, units), ValueWithUnit(eatingSoonTTDuration, Units.M))
                         disposable += repository.runTransactionForResult(InsertTemporaryTargetAndCancelCurrentTransaction(
                             timestamp = System.currentTimeMillis(),
                             duration = TimeUnit.MINUTES.toMillis(eatingSoonTTDuration.toLong()),
@@ -210,8 +210,10 @@ class InsulinDialog : DialogFragmentWithDate() {
                         detailedBolusInfo.context = context
                         detailedBolusInfo.notes = notes
                         detailedBolusInfo.timestamp = time
-                        uel.log(Action.BOLUS_RECORD, notes,
+                        //uel.log(Action.BOLUS_RECORD, notes, XXXValueWithUnit.Insulin(insulinAfterConstraints), XXXValueWithUnit.Minute(timeOffset).takeIf { timeOffset!= 0 })
+                        uel.log(Action.BOLUS, notes,
                             ValueWithUnit(detailedBolusInfo.timestamp, Units.Timestamp),
+                            , ValueWithUnit(R.string.record, Units.R_String, recordOnlyChecked),
                             ValueWithUnit(detailedBolusInfo.insulin, Units.U),
                             ValueWithUnit(timeOffset, Units.M, timeOffset != 0)
                         )

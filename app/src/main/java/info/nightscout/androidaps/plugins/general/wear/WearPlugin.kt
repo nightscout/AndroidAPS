@@ -34,7 +34,8 @@ class WearPlugin @Inject constructor(
     private val ctx: Context,
     private val fabricPrivacy: FabricPrivacy,
     private val loopPlugin: Lazy<LoopPlugin>,
-    private val rxBus: RxBusWrapper
+    private val rxBus: RxBusWrapper,
+    private val actionStringHandler: Lazy<ActionStringHandler>
 
 ) : PluginBase(PluginDescription()
     .mainType(PluginType.GENERAL)
@@ -126,11 +127,13 @@ class WearPlugin @Inject constructor(
                     ctx.startService(intent)
                 }
             }, fabricPrivacy::logException))
+        actionStringHandler.get().setup()
     }
 
     override fun onStop() {
         disposable.clear()
         super.onStop()
+        actionStringHandler.get().tearDown()
     }
 
     private fun sendDataToWatch(status: Boolean, basals: Boolean, bgValue: Boolean) {

@@ -10,10 +10,9 @@ import androidx.recyclerview.widget.RecyclerView
 import dagger.android.support.DaggerFragment
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.database.AppRepository
+import info.nightscout.androidaps.database.entities.XXXValueWithUnit
 import info.nightscout.androidaps.database.entities.TherapyEvent
-import info.nightscout.androidaps.database.entities.UserEntry.Action
-import info.nightscout.androidaps.database.entities.UserEntry.Units
-import info.nightscout.androidaps.database.entities.UserEntry.ValueWithUnit
+import info.nightscout.androidaps.database.entities.UserEntry.*
 import info.nightscout.androidaps.database.transactions.InvalidateAAPSStartedTherapyEventTransaction
 import info.nightscout.androidaps.database.transactions.InvalidateTherapyEventTransaction
 import info.nightscout.androidaps.databinding.TreatmentsCareportalFragmentBinding
@@ -77,7 +76,7 @@ class TreatmentsCareportalFragment : DaggerFragment() {
         binding.refreshFromNightscout.setOnClickListener {
             activity?.let { activity ->
                 OKDialog.showConfirmation(activity, resourceHelper.gs(R.string.careportal), resourceHelper.gs(R.string.refresheventsfromnightscout) + " ?", Runnable {
-                    uel.log(Action.CAREPORTAL_NS_REFRESH)
+                    uel.log(Action.CAREPORTAL_NS_REFRESH, ValueWithUnit(Sources.Treatments))
                     disposable += Completable.fromAction { repository.deleteAllTherapyEventsEntries() }
                         .subscribeOn(aapsSchedulers.io)
                         .observeOn(aapsSchedulers.main)
@@ -92,7 +91,7 @@ class TreatmentsCareportalFragment : DaggerFragment() {
         binding.removeAndroidapsStartedEvents.setOnClickListener {
             activity?.let { activity ->
                 OKDialog.showConfirmation(activity, resourceHelper.gs(R.string.careportal), resourceHelper.gs(R.string.careportal_removestartedevents), Runnable {
-                    uel.log(Action.RESTART_EVENTS_REMOVED)
+                    uel.log(Action.RESTART_EVENTS_REMOVED, ValueWithUnit(Sources.Treatments))
                     repository.runTransactionForResult(InvalidateAAPSStartedTherapyEventTransaction(resourceHelper.gs(R.string.androidaps_start)))
                         .subscribe(
                             { result -> result.invalidated.forEach { aapsLogger.debug(LTag.DATABASE, "Invalidated therapy event $it") } },
@@ -167,7 +166,7 @@ class TreatmentsCareportalFragment : DaggerFragment() {
             holder.binding.date.text = dateUtil.dateAndTimeString(therapyEvent.timestamp)
             holder.binding.duration.text = if (therapyEvent.duration == 0L) "" else DateUtil.niceTimeScalar(therapyEvent.duration, resourceHelper)
             holder.binding.note.text = therapyEvent.note
-            holder.binding.type.text = translator.translate(therapyEvent.type.text)
+            holder.binding.type.text = translator.translate(therapyEvent.type)
             holder.binding.remove.tag = therapyEvent
         }
 
@@ -188,7 +187,8 @@ class TreatmentsCareportalFragment : DaggerFragment() {
                             ?: "") + "\n" +
                             resourceHelper.gs(R.string.date) + ": " + dateUtil.dateAndTimeString(therapyEvent.timestamp)
                         OKDialog.showConfirmation(activity, resourceHelper.gs(R.string.removerecord), text, Runnable {
-                            uel.log(Action.CAREPORTAL_REMOVED, therapyEvent.note, ValueWithUnit(therapyEvent.timestamp, Units.Timestamp), ValueWithUnit(therapyEvent.type.text, Units.TherapyEvent))
+                            //uel.log(Action.CAREPORTAL_REMOVED, therapyEvent.note , XXXValueWithUnit.Timestamp(therapyEvent.timestamp), XXXValueWithUnit.TherapyEventType(therapyEvent.type))
+                            uel.log(Action.CAREPORTAL_REMOVED, therapyEvent.note, ValueWithUnit(Sources.Treatments), ValueWithUnit(therapyEvent.timestamp, Units.Timestamp), ValueWithUnit(therapyEvent.type.text, Units.TherapyEvent))
                             disposable += repository.runTransactionForResult(InvalidateTherapyEventTransaction(therapyEvent.id))
                                 .subscribe(
                                     { result -> result.invalidated.forEach { aapsLogger.debug(LTag.DATABASE, "Invalidated therapy event $it") } },
