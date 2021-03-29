@@ -1,10 +1,5 @@
 package info.nightscout.androidaps.plugins.pump.common.defs
 
-import info.nightscout.androidaps.plugins.pump.common.defs.PumpCapability
-
-/**
- * Created by andy on 03/05/2018.
- */
 enum class PumpCapability {
 
     Bolus,  // isBolusCapable
@@ -35,7 +30,10 @@ enum class PumpCapability {
 
     var children: ArrayList<PumpCapability> = ArrayList()
 
-    constructor() { children.add(this)}
+    constructor() {
+        children.add(this)
+    }
+
     constructor(list: Array<PumpCapability>) {
         children.addAll(list)
     }
