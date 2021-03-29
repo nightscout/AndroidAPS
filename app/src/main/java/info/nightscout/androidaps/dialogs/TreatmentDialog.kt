@@ -154,7 +154,7 @@ class TreatmentDialog : DialogFragmentWithDate() {
                         uel.log(action,
                             ValueWithUnit(Sources.TreatmentDialog),
                             ValueWithUnit(detailedBolusInfo.timestamp, Units.Timestamp, eventTimeChanged),
-                            ValueWithUnit(R.string.record, Units.R_String),
+                            ValueWithUnit(R.string.record, Units.R_String, insulin != 0.0),
                             ValueWithUnit(insulinAfterConstraints, Units.U, insulin != 0.0),
                             ValueWithUnit(carbsAfterConstraints, Units.G, carbs != 0))
                         if (detailedBolusInfo.insulin > 0)

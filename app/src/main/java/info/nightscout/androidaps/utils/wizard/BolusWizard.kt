@@ -63,6 +63,7 @@ class BolusWizard @Inject constructor(
     @Inject lateinit var carbTimer: CarbTimer
     @Inject lateinit var glucoseStatusProvider: GlucoseStatusProvider
     @Inject lateinit var repository: AppRepository
+    @Inject lateinit var quickWizard: QuickWizard
     @Inject lateinit var nsUpload: NSUpload
 
     private val disposable = CompositeDisposable()
@@ -415,8 +416,8 @@ class BolusWizard @Inject constructor(
                             carbs.equals(0.0)                   -> Action.BOLUS
                             else                                -> Action.TREATMENT
                         }
-                        uel.log(action, notes,
-                            ValueWithUnit(Sources.WizardDialog),
+                        uel.log(action, if (notes == resourceHelper.gs(R.string.key_quickwizard)) quickWizard.getActive()?.buttonText() else notes,
+                            ValueWithUnit(if (notes == resourceHelper.gs(R.string.key_quickwizard)) Sources.QuickWizard else Sources.WizardDialog),
                             ValueWithUnit(eventType.toDBbEventType().text, Units.TherapyEvent),
                             ValueWithUnit(insulinAfterConstraints, Units.U, insulinAfterConstraints != 0.0),
                             ValueWithUnit(this@BolusWizard.carbs, Units.G, this@BolusWizard.carbs != 0),
