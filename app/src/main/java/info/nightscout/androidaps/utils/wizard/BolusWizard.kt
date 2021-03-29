@@ -416,8 +416,8 @@ class BolusWizard @Inject constructor(
                             carbs.equals(0.0)                   -> Action.BOLUS
                             else                                -> Action.TREATMENT
                         }
-                        uel.log(action, if (notes == resourceHelper.gs(R.string.key_quickwizard)) quickWizard.getActive()?.buttonText() else notes,
-                            ValueWithUnit(if (notes == resourceHelper.gs(R.string.key_quickwizard)) Sources.QuickWizard else Sources.WizardDialog),
+                        uel.log(action, if (notes == resourceHelper.gs(R.string.ue_quickwizard_ID)) quickWizard.getActive()?.buttonText() else notes,   // ue_quickwizard_ID is complicated string impossible to write as note in WizardDialog
+                            ValueWithUnit(if (notes == resourceHelper.gs(R.string.ue_quickwizard_ID)) Sources.QuickWizard else Sources.WizardDialog),
                             ValueWithUnit(eventType.toDBbEventType().text, Units.TherapyEvent),
                             ValueWithUnit(insulinAfterConstraints, Units.U, insulinAfterConstraints != 0.0),
                             ValueWithUnit(this@BolusWizard.carbs, Units.G, this@BolusWizard.carbs != 0),

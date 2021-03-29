@@ -90,7 +90,7 @@ class TreatmentsBolusCarbsFragment : DaggerFragment() {
         binding.refreshFromNightscout.setOnClickListener {
             activity?.let { activity ->
                 OKDialog.showConfirmation(activity, resourceHelper.gs(R.string.refresheventsfromnightscout) + "?") {
-                    uel.log(Action.TREATMENTS_NS_REFRESH)
+                    uel.log(Action.TREATMENTS_NS_REFRESH, ValueWithUnit(Sources.Treatments))
                     disposable +=
                         Completable.fromAction {
                             repository.deleteAllBolusCalculatorResults()
@@ -110,7 +110,7 @@ class TreatmentsBolusCarbsFragment : DaggerFragment() {
         binding.deleteFutureTreatments.setOnClickListener {
             activity?.let { activity ->
                 OKDialog.showConfirmation(activity, resourceHelper.gs(R.string.overview_treatment_label), resourceHelper.gs(R.string.deletefuturetreatments) + "?", Runnable {
-                    uel.log(Action.DELETE_FUTURE_TREATMENTS)
+                    uel.log(Action.DELETE_FUTURE_TREATMENTS, ValueWithUnit(Sources.Treatments))
                     repository
                         .getBolusesDataFromTime(dateUtil._now(), false)
                         .observeOn(aapsSchedulers.main)
@@ -333,6 +333,7 @@ class TreatmentsBolusCarbsFragment : DaggerFragment() {
                         OKDialog.showConfirmation(activity, resourceHelper.gs(R.string.removerecord), text, Runnable {
                             uel.log(
                                 Action.TREATMENT_REMOVED,
+                                ValueWithUnit(Sources.Treatments),
                                 ValueWithUnit(bolus.timestamp, Units.Timestamp),
                                 ValueWithUnit(bolus.amount, Units.U)
                                 //              ValueWithUnit(mealLinkLoaded.carbs.toInt(), Units.G)
@@ -355,6 +356,7 @@ class TreatmentsBolusCarbsFragment : DaggerFragment() {
                         OKDialog.showConfirmation(activity, resourceHelper.gs(R.string.removerecord), text, Runnable {
                             uel.log(
                                 Action.TREATMENT_REMOVED,
+                                ValueWithUnit(Sources.Treatments),
                                 ValueWithUnit(carb.timestamp, Units.Timestamp),
                                 ValueWithUnit(carb.amount, Units.G)
                             )
