@@ -135,7 +135,8 @@ class OmnipodDashManagerImpl @Inject constructor(
 
     private fun observeProgramBasalCommand(basalProgram: BasalProgram): Observable<PodEvent> {
         return Observable.defer {
-            logger.debug(LTag.PUMPCOMM, "Programming basal. basalProgram={}", basalProgram)
+            val currentTime = Date()
+            logger.debug(LTag.PUMPCOMM, "Programming basal. currentTime={}, basalProgram={}", currentTime, basalProgram)
             bleManager.sendCommand(
                 ProgramBasalCommand.Builder()
                     .setUniqueId(podStateManager.uniqueId!!.toInt())
@@ -143,7 +144,7 @@ class OmnipodDashManagerImpl @Inject constructor(
                     .setNonce(1229869870) // TODO
                     .setProgramReminder(ProgramReminder(atStart = false, atEnd = false, atInterval = 0))
                     .setBasalProgram(basalProgram)
-                    .setCurrentTime(Date())
+                    .setCurrentTime(currentTime)
                     .build(),
                 DefaultStatusResponse::class
             )

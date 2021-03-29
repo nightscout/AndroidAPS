@@ -56,6 +56,7 @@ object ProgramBasalUtil {
 
     fun mapPulsesPerSlotToShortInsulinProgramElements(pulsesPerSlot: ShortArray?): List<ShortInsulinProgramElement> {
         require(pulsesPerSlot!!.size <= NUMBER_OF_BASAL_SLOTS) { "Basal program must contain at most 48 slots" }
+
         val elements: MutableList<ShortInsulinProgramElement> = ArrayList()
         var extraAlternatePulse = false
         var previousPulsesPerSlot: Short = 0
@@ -84,7 +85,7 @@ object ProgramBasalUtil {
                     extraAlternatePulse = false
                 }
                 currentTotalNumberOfSlots++
-            } else if (numberOfSlotsInCurrentElement.toInt() == 1 && pulsesPerSlot[currentTotalNumberOfSlots.toInt()].toInt() == previousPulsesPerSlot + 1) {
+            } else if (numberOfSlotsInCurrentElement.toInt() == 1 && !extraAlternatePulse && pulsesPerSlot[currentTotalNumberOfSlots.toInt()].toInt() == previousPulsesPerSlot + 1) {
                 // Second slot of segment with extra alternate pulse
                 var expectAlternatePulseForNextSegment = false
                 currentTotalNumberOfSlots++
@@ -94,10 +95,10 @@ object ProgramBasalUtil {
                     // Loop rest alternate pulse segment
                     if (pulsesPerSlot[currentTotalNumberOfSlots.toInt()].toInt() == previousPulsesPerSlot + (if (expectAlternatePulseForNextSegment) 1 else 0)) {
                         // Still in alternate pulse segment
-                        currentTotalNumberOfSlots++
                         expectAlternatePulseForNextSegment = !expectAlternatePulseForNextSegment
                         if (numberOfSlotsInCurrentElement < MAX_NUMBER_OF_SLOTS_IN_INSULIN_PROGRAM_ELEMENT) {
                             numberOfSlotsInCurrentElement++
+                            currentTotalNumberOfSlots++
                         } else {
                             // End of alternate pulse segment (no slots left in element)
                             elements.add(
@@ -110,6 +111,7 @@ object ProgramBasalUtil {
                             previousPulsesPerSlot = pulsesPerSlot[currentTotalNumberOfSlots.toInt()]
                             numberOfSlotsInCurrentElement = 1
                             extraAlternatePulse = false
+                            currentTotalNumberOfSlots++
                             break
                         }
                     } else {
@@ -193,6 +195,7 @@ object ProgramBasalUtil {
         val hourOfDay = instance[Calendar.HOUR_OF_DAY]
         val minuteOfHour = instance[Calendar.MINUTE]
         val secondOfMinute = instance[Calendar.SECOND]
+
         val index = ((hourOfDay * 60 + minuteOfHour) / 30).toByte()
         val secondOfDay = secondOfMinute + hourOfDay * 3600 + minuteOfHour * 60
         val secondsRemaining = ((index + 1) * 1800 - secondOfDay).toShort()

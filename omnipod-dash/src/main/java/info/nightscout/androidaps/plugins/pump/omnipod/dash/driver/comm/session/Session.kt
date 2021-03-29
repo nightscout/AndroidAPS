@@ -38,7 +38,10 @@ class Session(
     @Throws(CouldNotParseResponseException::class, UnsupportedOperationException::class)
     fun sendCommand(cmd: Command, responseType: KClass<out Response>): Response {
         sessionKeys.msgSequenceNumber++
-        aapsLogger.debug(LTag.PUMPBTCOMM, "Sending command: ${cmd.encoded.toHex()} in packet $cmd")
+        aapsLogger.debug(
+            LTag.PUMPBTCOMM,
+            "Sending command: ${cmd.javaClass.simpleName}: ${cmd.encoded.toHex()} in packet $cmd"
+        )
 
         val msg = getCmdMessage(cmd)
         aapsLogger.debug(LTag.PUMPBTCOMM, "Sending command(wrapped): ${msg.payload.toHex()}")

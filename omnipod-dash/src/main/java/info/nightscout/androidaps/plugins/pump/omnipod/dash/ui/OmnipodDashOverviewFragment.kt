@@ -295,7 +295,10 @@ class OmnipodDashOverviewFragment : DaggerFragment() {
             // total delivered
             podInfoBinding.totalDelivered.text =
                 if (podStateManager.isActivationCompleted && podStateManager.pulsesDelivered != null) {
-                    resourceHelper.gs(R.string.omnipod_common_overview_total_delivered_value, podStateManager.pulseRate)
+                    resourceHelper.gs(
+                        R.string.omnipod_common_overview_total_delivered_value,
+                        podStateManager.pulsesDelivered!! * 0.05
+                    )
                 } else {
                     PLACEHOLDER
                 }
@@ -313,7 +316,7 @@ class OmnipodDashOverviewFragment : DaggerFragment() {
 
                 podInfoBinding.reservoir.text = resourceHelper.gs(
                     R.string.omnipod_common_overview_reservoir_value,
-                    (podStateManager.pulsesRemaining!! / 20.0)
+                    (podStateManager.pulsesRemaining!! * 0.05)
                 )
                 podInfoBinding.reservoir.setTextColor(
                     if (podStateManager.pulsesRemaining!! < lowReservoirThreshold) {
