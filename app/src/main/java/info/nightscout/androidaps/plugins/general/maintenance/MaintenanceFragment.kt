@@ -11,6 +11,7 @@ import info.nightscout.androidaps.database.AppRepository
 import info.nightscout.androidaps.database.entities.UserEntry.Action
 import info.nightscout.androidaps.databinding.MaintenanceFragmentBinding
 import info.nightscout.androidaps.events.EventNewBG
+import info.nightscout.androidaps.interfaces.DataSyncSelector
 import info.nightscout.androidaps.interfaces.DatabaseHelperInterface
 import info.nightscout.androidaps.interfaces.ImportExportPrefsInterface
 import info.nightscout.androidaps.logging.AAPSLogger
@@ -36,6 +37,7 @@ class MaintenanceFragment : DaggerFragment() {
     @Inject lateinit var repository: AppRepository
     @Inject lateinit var databaseHelper: DatabaseHelperInterface
     @Inject lateinit var uel: UserEntryLogger
+    @Inject lateinit var dataSyncSelector: DataSyncSelector
 
     private val compositeDisposable = CompositeDisposable()
 
@@ -65,6 +67,7 @@ class MaintenanceFragment : DaggerFragment() {
                         fromAction {
                             databaseHelper.resetDatabases()
                             repository.clearDatabases()
+                            dataSyncSelector.resetToNextFullSync()
                         }
                             .subscribeOn(aapsSchedulers.io)
                             .observeOn(aapsSchedulers.main)

@@ -3,7 +3,6 @@ package info.nightscout.androidaps.danaRv2.comm
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.danar.R
 import info.nightscout.androidaps.danar.comm.MessageBase
-import info.nightscout.androidaps.data.DetailedBolusInfo
 import info.nightscout.androidaps.db.ExtendedBolus
 import info.nightscout.androidaps.db.Source
 import info.nightscout.androidaps.db.TemporaryBasal
@@ -91,26 +90,26 @@ class MsgHistoryEvents_v2 constructor(
 
             info.nightscout.androidaps.dana.DanaPump.BOLUS             -> {
                 val detailedBolusInfo = detailedBolusInfoStorage.findDetailedBolusInfo(datetime, param1 / 100.0)
-                    ?: DetailedBolusInfo()
-                detailedBolusInfo.bolusTimestamp = datetime
-                detailedBolusInfo.pumpType = PumpType.DANA_RV2
-                detailedBolusInfo.pumpSerial = danaPump.serialNumber
-                detailedBolusInfo.bolusPumpId = datetime
-                detailedBolusInfo.insulin = param1 / 100.0
-                val newRecord = activePlugin.activeTreatments.addToHistoryTreatment(detailedBolusInfo, false)
+                val newRecord = pumpSync.syncBolusWithPumpId(
+                    timestamp = datetime,
+                    amount = param1 / 100.0,
+                    type = detailedBolusInfo?.bolusType,
+                    pumpId = datetime,
+                    pumpType = PumpType.DANA_RV2,
+                    pumpSerial = danaPump.serialNumber)
                 aapsLogger.debug(LTag.PUMPBTCOMM, (if (newRecord) "**NEW** " else "") + "EVENT BOLUS (" + recordCode + ") " + dateUtil.dateAndTimeString(datetime) + " (" + datetime + ")" + " Bolus: " + param1 / 100.0 + "U Duration: " + param2 + "min")
                 status = "BOLUS " + dateUtil.timeString(datetime)
             }
 
             info.nightscout.androidaps.dana.DanaPump.DUALBOLUS         -> {
                 val detailedBolusInfo = detailedBolusInfoStorage.findDetailedBolusInfo(datetime, param1 / 100.0)
-                    ?: DetailedBolusInfo()
-                detailedBolusInfo.bolusTimestamp = datetime
-                detailedBolusInfo.pumpType = PumpType.DANA_RV2
-                detailedBolusInfo.pumpSerial = danaPump.serialNumber
-                detailedBolusInfo.bolusPumpId = datetime
-                detailedBolusInfo.insulin = param1 / 100.0
-                val newRecord = activePlugin.activeTreatments.addToHistoryTreatment(detailedBolusInfo, false)
+                val newRecord = pumpSync.syncBolusWithPumpId(
+                    timestamp = datetime,
+                    amount = param1 / 100.0,
+                    type = detailedBolusInfo?.bolusType,
+                    pumpId = datetime,
+                    pumpType = PumpType.DANA_RV2,
+                    pumpSerial = danaPump.serialNumber)
                 aapsLogger.debug(LTag.PUMPBTCOMM, (if (newRecord) "**NEW** " else "") + "EVENT DUALBOLUS (" + recordCode + ") " + dateUtil.dateAndTimeString(datetime) + " (" + datetime + ")" + " Bolus: " + param1 / 100.0 + "U Duration: " + param2 + "min")
                 status = "DUALBOLUS " + dateUtil.timeString(datetime)
             }
@@ -155,13 +154,12 @@ class MsgHistoryEvents_v2 constructor(
             }
 
             info.nightscout.androidaps.dana.DanaPump.CARBS             -> {
-                val emptyCarbsInfo = DetailedBolusInfo()
-                emptyCarbsInfo.carbs = param1.toDouble()
-                emptyCarbsInfo.carbsTimestamp = datetime
-                emptyCarbsInfo.pumpType = PumpType.DANA_RV2
-                emptyCarbsInfo.pumpSerial = danaPump.serialNumber
-                emptyCarbsInfo.carbsPumpId = datetime
-                val newRecord = activePlugin.activeTreatments.addToHistoryTreatment(emptyCarbsInfo, false)
+                val newRecord = pumpSync.syncCarbsWithTimestamp(
+                    timestamp = datetime,
+                    amount = param1.toDouble(),
+                    pumpId = datetime,
+                    pumpType = PumpType.DANA_RV2,
+                    pumpSerial = danaPump.serialNumber)
                 aapsLogger.debug(LTag.PUMPBTCOMM, (if (newRecord) "**NEW** " else "") + "EVENT CARBS (" + recordCode + ") " + dateUtil.dateAndTimeString(datetime) + " (" + datetime + ")" + " Carbs: " + param1 + "g")
                 status = "CARBS " + dateUtil.timeString(datetime)
             }

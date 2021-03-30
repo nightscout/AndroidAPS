@@ -24,6 +24,7 @@ import info.nightscout.androidaps.events.EventAppExit;
 import info.nightscout.androidaps.interfaces.ActivePluginProvider;
 import info.nightscout.androidaps.interfaces.CommandQueueProvider;
 import info.nightscout.androidaps.interfaces.Constraint;
+import info.nightscout.androidaps.interfaces.PumpSync;
 import info.nightscout.androidaps.logging.AAPSLogger;
 import info.nightscout.androidaps.logging.LTag;
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper;
@@ -69,9 +70,10 @@ public class DanaRv2Plugin extends AbstractDanaRPlugin {
             CommandQueueProvider commandQueue,
             DetailedBolusInfoStorage detailedBolusInfoStorage,
             DateUtil dateUtil,
-            FabricPrivacy fabricPrivacy
+            FabricPrivacy fabricPrivacy,
+            PumpSync pumpSync
     ) {
-        super(injector, danaPump, resourceHelper, constraintChecker, aapsLogger, aapsSchedulers, commandQueue, rxBus, activePlugin, sp, dateUtil);
+        super(injector, danaPump, resourceHelper, constraintChecker, aapsLogger, aapsSchedulers, commandQueue, rxBus, activePlugin, sp, dateUtil, pumpSync);
         this.aapsLogger = aapsLogger;
         this.context = context;
         this.resourceHelper = resourceHelper;

@@ -71,7 +71,7 @@ public class DanaRKoreanPlugin extends AbstractDanaRPlugin {
             PumpSync pumpSync,
             FabricPrivacy fabricPrivacy
     ) {
-        super(injector, danaPump, resourceHelper, constraintChecker, aapsLogger, aapsSchedulers, commandQueue, rxBus, activePlugin, sp, dateUtil);
+        super(injector, danaPump, resourceHelper, constraintChecker, aapsLogger, aapsSchedulers, commandQueue, rxBus, activePlugin, sp, dateUtil, pumpSync);
         this.aapsLogger = aapsLogger;
         this.context = context;
         this.resourceHelper = resourceHelper;
