@@ -126,7 +126,7 @@ class QuickWizardEntry @Inject constructor(private val injector: HasAndroidInjec
             trend = true
         }
         val percentage = sp.getInt(R.string.key_boluswizard_percentage, 100)
-        return BolusWizard(injector).doCalc(profile, profileName, tempTarget, carbs(), cob, bg, 0.0, percentage, true, useCOB() == YES, bolusIOB, basalIOB, superBolus, useTempTarget() == YES, trend, false, resourceHelper.gs(R.string.ue_quickwizard_ID)) // ue_quickwizard_ID is complicated string impossible to write as note in WizardDialog
+        return BolusWizard(injector).doCalc(profile, profileName, tempTarget, carbs(), cob, bg, 0.0, percentage, true, useCOB() == YES, bolusIOB, basalIOB, superBolus, useTempTarget() == YES, trend, false, buttonText(), quickWizard = true) // ue_quickwizard_ID is complicated string impossible to write as note in WizardDialog
     }
 
     fun buttonText(): String = safeGetString(storage, "buttonText", "")

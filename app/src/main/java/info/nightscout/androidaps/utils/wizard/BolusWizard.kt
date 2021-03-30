@@ -63,7 +63,6 @@ class BolusWizard @Inject constructor(
     @Inject lateinit var carbTimer: CarbTimer
     @Inject lateinit var glucoseStatusProvider: GlucoseStatusProvider
     @Inject lateinit var repository: AppRepository
-    @Inject lateinit var quickWizard: QuickWizard
     @Inject lateinit var nsUpload: NSUpload
 
     private val disposable = CompositeDisposable()
