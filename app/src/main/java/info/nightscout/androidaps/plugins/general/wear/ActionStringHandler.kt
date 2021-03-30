@@ -16,7 +16,10 @@ import info.nightscout.androidaps.data.Profile
 import info.nightscout.androidaps.database.AppRepository
 import info.nightscout.androidaps.database.ValueWrapper
 import info.nightscout.androidaps.database.entities.TemporaryTarget
-import info.nightscout.androidaps.database.entities.UserEntry.*
+import info.nightscout.androidaps.database.entities.UserEntry.Action
+import info.nightscout.androidaps.database.entities.UserEntry.Sources
+import info.nightscout.androidaps.database.entities.UserEntry.Units
+import info.nightscout.androidaps.database.entities.UserEntry.ValueWithUnit
 import info.nightscout.androidaps.database.interfaces.end
 import info.nightscout.androidaps.database.transactions.CancelCurrentTemporaryTargetIfAnyTransaction
 import info.nightscout.androidaps.database.transactions.InsertTemporaryTargetAndCancelCurrentTransaction
@@ -28,7 +31,6 @@ import info.nightscout.androidaps.logging.UserEntryLogger
 import info.nightscout.androidaps.plugins.aps.loop.LoopPlugin
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper
 import info.nightscout.androidaps.plugins.configBuilder.ConstraintChecker
-import info.nightscout.androidaps.plugins.general.nsclient.NSUpload
 import info.nightscout.androidaps.plugins.general.overview.events.EventDismissNotification
 import info.nightscout.androidaps.plugins.general.wear.events.EventWearConfirmAction
 import info.nightscout.androidaps.plugins.general.wear.events.EventWearInitiateAction
@@ -81,8 +83,7 @@ class ActionStringHandler @Inject constructor(
     private val config: Config,
     private val databaseHelper: DatabaseHelperInterface,
     private val repository: AppRepository,
-    private val uel: UserEntryLogger,
-    private val nsUpload: NSUpload
+    private val uel: UserEntryLogger
 ) {
 
     private val timeout = 65 * 1000
@@ -569,7 +570,10 @@ class ActionStringHandler @Inject constructor(
             return
         }
         //send profile to pump
-        uel.log(Action.PROFILE_SWITCH, ValueWithUnit(Sources.Wear), ValueWithUnit(percentage, Units.Percent), ValueWithUnit(timeshift, Units.H, timeshift != 0))
+        uel.log(Action.PROFILE_SWITCH,
+            ValueWithUnit(Sources.Wear),
+            ValueWithUnit(percentage, Units.Percent),
+            ValueWithUnit(timeshift, Units.H, timeshift != 0))
         activePlugin.activeTreatments.doProfileSwitch(0, percentage, timeshift)
     }
 
@@ -587,7 +591,9 @@ class ActionStringHandler @Inject constructor(
             }, {
                 aapsLogger.error(LTag.DATABASE, "Error while saving temporary target", it)
             })
-            uel.log(Action.TT, ValueWithUnit(Sources.Wear), ValueWithUnit(TemporaryTarget.Reason.WEAR.text, Units.TherapyEvent), ValueWithUnit(low, profileFunction.getUnits()), ValueWithUnit(high, profileFunction.getUnits(), low!=high), ValueWithUnit(duration, Units.M))
+            uel.log(Action.TT,
+                ValueWithUnit(Sources.Wear),
+                ValueWithUnit(TemporaryTarget.Reason.WEAR.text, Units.TherapyEvent), ValueWithUnit(low, profileFunction.getUnits()), ValueWithUnit(high, profileFunction.getUnits(), low!=high), ValueWithUnit(duration, Units.M))
         } else {
             disposable += repository.runTransactionForResult(CancelCurrentTemporaryTargetIfAnyTransaction(System.currentTimeMillis()))
                 .subscribe({ result ->
@@ -595,7 +601,9 @@ class ActionStringHandler @Inject constructor(
                 }, {
                     aapsLogger.error(LTag.DATABASE, "Error while saving temporary target", it)
                 })
-            uel.log(Action.CANCEL_TT, ValueWithUnit(Sources.Wear), ValueWithUnit(TemporaryTarget.Reason.WEAR.text, Units.TherapyEvent))
+            uel.log(Action.CANCEL_TT,
+                ValueWithUnit(Sources.Wear),
+                ValueWithUnit(TemporaryTarget.Reason.WEAR.text, Units.TherapyEvent))
         }
     }
 
@@ -626,15 +634,19 @@ class ActionStringHandler @Inject constructor(
         detailedBolusInfo.carbs = carbs.toDouble()
         detailedBolusInfo.bolusType = DetailedBolusInfo.BolusType.NORMAL
         detailedBolusInfo.carbsTimestamp = carbsTime
-        detailedBolusInfo.carbsDuration = carbsDuration.toLong()
-        val storesCarbs = activePlugin.activePump.pumpDescription.storesCarbInfo
-        if (detailedBolusInfo.insulin > 0 || (storesCarbs && carbsDuration == 0)) {
+        detailedBolusInfo.carbsDuration = T.hours(carbsDuration.toLong()).msecs()
+        if (detailedBolusInfo.insulin > 0 || detailedBolusInfo.carbs > 0) {
             val action = when {
-                amount.equals(0.0) -> Action.CARBS
-                carbs.equals(0)    -> Action.BOLUS
-                else               -> Action.TREATMENT
+                amount.equals(0.0)  -> Action.CARBS
+                carbs.equals(0)     -> Action.BOLUS
+                carbsDuration>0     -> Action.EXTENDED_CARBS
+                else                -> Action.TREATMENT
             }
-            uel.log(action, ValueWithUnit(Sources.Wear), ValueWithUnit(amount, Units.U, amount != 0.0), ValueWithUnit(carbs, Units.G, carbs != 0))
+            uel.log(action,
+                ValueWithUnit(Sources.Wear),
+                ValueWithUnit(amount, Units.U, amount != 0.0),
+                ValueWithUnit(carbs, Units.G, carbs != 0),
+                ValueWithUnit(carbsDuration, Units.H, carbsDuration != 0))
             commandQueue.bolus(detailedBolusInfo, object : Callback() {
                 override fun run() {
                     if (!result.success) {
@@ -644,8 +656,6 @@ class ActionStringHandler @Inject constructor(
                     }
                 }
             })
-        } else {
-            activePlugin.activeTreatments.addToHistoryTreatment(detailedBolusInfo, false)
         }
     }
 

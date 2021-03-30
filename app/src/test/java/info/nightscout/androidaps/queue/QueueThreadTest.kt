@@ -75,7 +75,7 @@ class QueueThreadTest : TestBaseWithProfile() {
         Mockito.`when`(lazyActivePlugin.get()).thenReturn(activePlugin)
         Mockito.`when`(activePlugin.activePump).thenReturn(pumpPlugin)
         Mockito.`when`(activePlugin.activeTreatments).thenReturn(treatmentsInterface)
-        Mockito.`when`(treatmentsInterface.lastBolusTime).thenReturn(Calendar.getInstance().also { it.set(2000, 0, 1) }.timeInMillis)
+//        Mockito.`when`(treatmentsInterface.lastBolusTime).thenReturn(Calendar.getInstance().also { it.set(2000, 0, 1) }.timeInMillis)
         Mockito.`when`(profileFunction.getProfile()).thenReturn(validProfile)
 
         val bolusConstraint = Constraint(0.0)

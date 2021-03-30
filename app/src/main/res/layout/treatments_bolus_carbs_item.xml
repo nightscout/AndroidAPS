@@ -79,27 +79,21 @@
                 tools:ignore="HardcodedText,RtlSymmetry" />
 
             <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="top"
-                android:layout_marginStart="10dp"
-                android:layout_marginEnd="10dp"
-                android:text="@string/treatments_insulin_label_string" />
-
-            <TextView
                 android:id="@+id/insulin"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
-                android:layout_marginEnd="30dp"
-                android:textStyle="bold" />
+                android:layout_marginStart="10dp"
+                android:text="1.00 U"
+                android:textStyle="bold"
+                tools:ignore="HardcodedText" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="top"
                 android:layout_marginStart="10dp"
-                android:layout_marginEnd="10dp"
+                android:layout_marginEnd="5dp"
                 android:text="@string/treatments_iob_label_string" />
 
             <TextView
@@ -107,13 +101,14 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
-                android:layout_marginEnd="10dp"
-                android:textStyle="bold" />
+                android:text="0.45U"
+                android:textStyle="bold"
+                tools:ignore="HardcodedText" />
 
             <TextView
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginEnd="10dp"
+                android:layout_marginEnd="5dp"
                 android:layout_weight="1"
                 android:text="" />
 
@@ -121,7 +116,6 @@
                 android:id="@+id/meal_or_correction"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginEnd="10dp"
                 android:text="Meal"
                 android:textAlignment="textEnd"
                 tools:ignore="HardcodedText" />
@@ -130,7 +124,7 @@
                 android:id="@+id/bolus_ns"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginEnd="10dp"
+                android:layout_marginStart="5dp"
                 android:text="NS"
                 android:textColor="@color/colorSetTempButton"
                 tools:ignore="HardcodedText" />
@@ -139,7 +133,7 @@
                 android:id="@+id/bolus_pump"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginEnd="10dp"
+                android:layout_marginStart="5dp"
                 android:text="PH"
                 android:textColor="@color/colorSetTempButton"
                 tools:ignore="HardcodedText" />
@@ -148,7 +142,7 @@
                 android:id="@+id/bolus_invalid"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginEnd="10dp"
+                android:layout_marginStart="5dp"
                 android:text="@string/invalid"
                 android:textColor="@android:color/holo_red_light" />
 
@@ -156,10 +150,15 @@
                 android:id="@+id/bolus_remove"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginEnd="10dp"
+                android:layout_marginStart="5dp"
                 android:text="@string/remove_button"
                 android:textAlignment="viewEnd"
                 android:textColor="@android:color/holo_orange_light" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="10dp" />
 
         </LinearLayout>
 
@@ -202,9 +201,16 @@
                 android:textStyle="bold" />
 
             <TextView
+                android:id="@+id/carbs_duration"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_marginStart="10dp"
+                android:textStyle="bold" />
+
+            <TextView
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginEnd="10dp"
                 android:layout_weight="1"
                 android:text="" />
 
@@ -212,7 +218,7 @@
                 android:id="@+id/carbs_ns"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginEnd="10dp"
+                android:layout_marginStart="5dp"
                 android:text="NS"
                 android:textColor="@color/colorSetTempButton"
                 tools:ignore="HardcodedText" />
@@ -221,7 +227,7 @@
                 android:id="@+id/carbs_pump"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginEnd="10dp"
+                android:layout_marginStart="5dp"
                 android:text="PH"
                 android:textColor="@color/colorSetTempButton"
                 tools:ignore="HardcodedText" />
@@ -230,7 +236,7 @@
                 android:id="@+id/carbs_invalid"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginEnd="10dp"
+                android:layout_marginStart="5dp"
                 android:text="@string/invalid"
                 android:textColor="@android:color/holo_red_light" />
 
@@ -238,20 +244,25 @@
                 android:id="@+id/carbs_remove"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginEnd="10dp"
+                android:layout_marginStart="5dp"
                 android:text="@string/remove_button"
                 android:textAlignment="viewEnd"
                 android:textColor="@android:color/holo_orange_light" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="10dp" />
 
         </LinearLayout>
 
         <View
             android:layout_width="fill_parent"
             android:layout_height="2dip"
-            android:layout_marginBottom="5dp"
             android:layout_marginLeft="5dp"
-            android:layout_marginRight="5dp"
             android:layout_marginTop="5dp"
+            android:layout_marginRight="5dp"
+            android:layout_marginBottom="5dp"
             android:background="@color/list_delimiter" />
 
     </LinearLayout>

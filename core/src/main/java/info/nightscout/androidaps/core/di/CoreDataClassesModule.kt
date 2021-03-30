@@ -2,10 +2,8 @@ package info.nightscout.androidaps.core.di
 
 import dagger.Module
 import dagger.android.ContributesAndroidInjector
-import info.nightscout.androidaps.data.GlucoseValueDataPoint
 import info.nightscout.androidaps.data.Profile
 import info.nightscout.androidaps.data.PumpEnactResult
-import info.nightscout.androidaps.data.TherapyEventDataPoint
 import info.nightscout.androidaps.db.ExtendedBolus
 import info.nightscout.androidaps.db.ProfileSwitch
 import info.nightscout.androidaps.db.TemporaryBasal
@@ -31,6 +29,4 @@ abstract class CoreDataClassesModule {
     @ContributesAndroidInjector abstract fun profileSwitchInjector(): ProfileSwitch
     @ContributesAndroidInjector abstract fun temporaryBasalInjector(): TemporaryBasal
     @ContributesAndroidInjector abstract fun extendedBolusInjector(): ExtendedBolus
-    @ContributesAndroidInjector abstract fun glucoseValueDataPointInjector(): GlucoseValueDataPoint
-    @ContributesAndroidInjector abstract fun therapyEventDataPointInjector(): TherapyEventDataPoint
 }

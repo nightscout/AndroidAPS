@@ -11,6 +11,7 @@ import info.nightscout.androidaps.TestPumpPlugin
 import info.nightscout.androidaps.core.R
 import info.nightscout.androidaps.data.DetailedBolusInfo
 import info.nightscout.androidaps.database.AppRepository
+import info.nightscout.androidaps.database.entities.Bolus
 import info.nightscout.androidaps.interfaces.ActivePluginProvider
 import info.nightscout.androidaps.interfaces.Constraint
 import info.nightscout.androidaps.interfaces.ProfileFunction
@@ -41,7 +42,8 @@ import java.util.*
 @RunWith(PowerMockRunner::class)
 @PrepareForTest(
     ConstraintChecker::class, VirtualPumpPlugin::class, ToastUtils::class, Context::class,
-    TreatmentsPlugin::class, FabricPrivacy::class, LoggerUtils::class, PowerManager::class)
+    TreatmentsPlugin::class, FabricPrivacy::class, LoggerUtils::class, PowerManager::class,
+    AppRepository::class)
 class CommandQueueTest : TestBaseWithProfile() {
 
     @Mock lateinit var constraintChecker: ConstraintChecker
@@ -113,7 +115,14 @@ class CommandQueueTest : TestBaseWithProfile() {
         `when`(lazyActivePlugin.get()).thenReturn(activePlugin)
         `when`(activePlugin.activePump).thenReturn(testPumpPlugin)
         `when`(activePlugin.activeTreatments).thenReturn(treatmentsInterface)
-        `when`(treatmentsInterface.lastBolusTime).thenReturn(Calendar.getInstance().also { it.set(2000, 0, 1) }.timeInMillis)
+        `when`(repository.getLastBolusRecord()).thenReturn(
+            Bolus(
+                timestamp = Calendar.getInstance().also { it.set(2000, 0, 1) }.timeInMillis,
+                type = Bolus.Type.NORMAL,
+                amount = 0.0,
+                isBasalInsulin = false
+            )
+        )
         `when`(profileFunction.getProfile()).thenReturn(validProfile)
 
         val bolusConstraint = Constraint(0.0)

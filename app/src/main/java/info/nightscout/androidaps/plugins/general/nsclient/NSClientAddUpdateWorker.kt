@@ -9,10 +9,14 @@ import info.nightscout.androidaps.database.AppRepository
 import info.nightscout.androidaps.database.entities.XXXValueWithUnit
 import info.nightscout.androidaps.database.entities.TherapyEvent
 import info.nightscout.androidaps.database.entities.UserEntry
-import info.nightscout.androidaps.database.entities.UserEntry.*
+import info.nightscout.androidaps.database.entities.UserEntry.Action
+import info.nightscout.androidaps.database.entities.UserEntry.Sources
+import info.nightscout.androidaps.database.entities.UserEntry.Units
+import info.nightscout.androidaps.database.entities.UserEntry.ValueWithUnit
+import info.nightscout.androidaps.database.transactions.SyncNsBolusTransaction
+import info.nightscout.androidaps.database.transactions.SyncNsCarbsTransaction
 import info.nightscout.androidaps.database.transactions.SyncNsTemporaryTargetTransaction
 import info.nightscout.androidaps.database.transactions.SyncNsTherapyEventTransaction
-import info.nightscout.androidaps.events.EventNsTreatment
 import info.nightscout.androidaps.interfaces.ConfigInterface
 import info.nightscout.androidaps.interfaces.DatabaseHelperInterface
 import info.nightscout.androidaps.logging.AAPSLogger
@@ -26,6 +30,8 @@ import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.JsonHelper
 import info.nightscout.androidaps.utils.JsonHelper.safeGetLong
 import info.nightscout.androidaps.utils.buildHelper.BuildHelper
+import info.nightscout.androidaps.utils.extensions.bolusFromJson
+import info.nightscout.androidaps.utils.extensions.carbsFromJson
 import info.nightscout.androidaps.utils.extensions.temporaryTargetFromJson
 import info.nightscout.androidaps.utils.extensions.therapyEventFromJson
 import info.nightscout.androidaps.utils.sharedPreferences.SP
@@ -75,9 +81,60 @@ class NSClientAddUpdateWorker(
             if (mills != 0L && mills < dateutil._now())
                 if (mills > latestDateInReceivedData) latestDateInReceivedData = mills
 
+            if (insulin > 0) {
+                bolusFromJson(json)?.let { bolus ->
+                    repository.runTransactionForResult(SyncNsBolusTransaction(bolus))
+                        .doOnError {
+                            aapsLogger.error(LTag.DATABASE, "Error while saving bolus", it)
+                            ret = Result.failure()
+                        }
+                        .blockingGet()
+                        .also { result ->
+                            result.inserted.forEach {
+                                uel.log(Action.CAREPORTAL,
+                                    ValueWithUnit(Sources.NSClient),
+                                    ValueWithUnit(it.timestamp, UserEntry.Units.Timestamp, true),
+                                    ValueWithUnit(it.amount, UserEntry.Units.U)
+                                )
+                            }
+                            result.invalidated.forEach {
+                                uel.log(Action.CAREPORTAL_REMOVED,
+                                    ValueWithUnit(Sources.NSClient),
+                                    ValueWithUnit(it.timestamp, UserEntry.Units.Timestamp, true),
+                                    ValueWithUnit(it.amount, UserEntry.Units.U)
+                                )
+                            }
+                        }
+                } ?: aapsLogger.error("Error parsing bolus json $json")
+            }
+            if (carbs > 0) {
+                carbsFromJson(json)?.let { carb ->
+                    repository.runTransactionForResult(SyncNsCarbsTransaction(carb))
+                        .doOnError {
+                            aapsLogger.error(LTag.DATABASE, "Error while saving carbs", it)
+                            ret = Result.failure()
+                        }
+                        .blockingGet()
+                        .also { result ->
+                            result.inserted.forEach {
+                                uel.log(Action.CAREPORTAL,
+                                    ValueWithUnit(Sources.NSClient),
+                                    ValueWithUnit(it.timestamp, Units.Timestamp, true),
+                                    ValueWithUnit(it.amount, Units.G)
+                                )
+                            }
+                            result.invalidated.forEach {
+                                uel.log(Action.CAREPORTAL,
+                                    ValueWithUnit(Sources.NSClient),
+                                    ValueWithUnit(it.timestamp, Units.Timestamp, true),
+                                    ValueWithUnit(it.amount, Units.G)
+                                )
+                            }
+                        }
+                } ?: aapsLogger.error("Error parsing bolus json $json")
+            }
             when {
-                insulin > 0 || carbs > 0                                    ->
-                    rxBus.send(EventNsTreatment(EventNsTreatment.ADD, json))
+                insulin > 0 || carbs > 0                                    -> Any()
                 eventType == TherapyEvent.Type.TEMPORARY_TARGET.text        ->
                     temporaryTargetFromJson(json)?.let { temporaryTarget ->
                         repository.runTransactionForResult(SyncNsTemporaryTargetTransaction(temporaryTarget))
@@ -94,7 +151,8 @@ class NSClientAddUpdateWorker(
                                         XXXValueWithUnit.Mgdl(tt.highTarget).takeIf { tt.lowTarget != tt.highTarget },
                                         XXXValueWithUnit.Minute(tt.duration.toInt() / 60000)*/
                                 result.inserted.forEach {
-                                    uel.log(Action.TT, ValueWithUnit(Sources.NSClient),
+                                    uel.log(Action.TT,
+                                        ValueWithUnit(Sources.NSClient),
                                         ValueWithUnit(it.reason.text, Units.TherapyEvent),
                                         ValueWithUnit(it.lowTarget, Units.Mg_Dl, true),
                                         ValueWithUnit(it.highTarget, Units.Mg_Dl, it.lowTarget != it.highTarget),
@@ -136,7 +194,6 @@ class NSClientAddUpdateWorker(
                     eventType == TherapyEvent.Type.INSULIN_CHANGE.text ||
                     eventType == TherapyEvent.Type.SENSOR_CHANGE.text ||
                     eventType == TherapyEvent.Type.FINGER_STICK_BG_VALUE.text ||
-                    eventType == TherapyEvent.Type.NOTE.text ||
                     eventType == TherapyEvent.Type.NONE.text ||
                     eventType == TherapyEvent.Type.ANNOUNCEMENT.text ||
                     eventType == TherapyEvent.Type.QUESTION.text ||

@@ -1,15 +1,13 @@
 package info.nightscout.androidaps.database.transactions
 
-import info.nightscout.androidaps.database.embedments.InsulinConfiguration
-import info.nightscout.androidaps.database.embedments.InterfaceIDs
 import info.nightscout.androidaps.database.entities.Bolus
-import java.lang.IllegalStateException
 
 /**
  * Creates or updates the Bolus from pump synchronization
  */
 class SyncPumpBolusTransaction(
     private val bolus: Bolus,
+    private val bolusType: Bolus.Type? // extra parameter because field is not nullable in Bolus.class
 ) : Transaction<SyncPumpBolusTransaction.TransactionResult>() {
 
     override fun run(): TransactionResult {
@@ -21,9 +19,11 @@ class SyncPumpBolusTransaction(
             database.bolusDao.insertNewEntry(bolus)
             result.inserted.add(bolus)
         } else {
-            bolus.isValid = current.isValid
-            database.bolusDao.updateExistingEntry(bolus)
-            result.updated.add(bolus)
+            current.timestamp = bolus.timestamp
+            current.amount = bolus.amount
+            current.type = bolusType ?: current.type
+            database.bolusDao.updateExistingEntry(current)
+            result.updated.add(current)
         }
         return result
     }

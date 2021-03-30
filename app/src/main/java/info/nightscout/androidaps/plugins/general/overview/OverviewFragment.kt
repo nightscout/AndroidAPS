@@ -47,10 +47,10 @@ import info.nightscout.androidaps.plugins.configBuilder.ConstraintChecker
 import info.nightscout.androidaps.plugins.general.nsclient.data.NSDeviceStatus
 import info.nightscout.androidaps.plugins.general.overview.activities.QuickWizardListActivity
 import info.nightscout.androidaps.plugins.general.overview.graphData.GraphData
+import info.nightscout.androidaps.plugins.general.overview.graphExtensions.GlucoseValueDataPoint
 import info.nightscout.androidaps.plugins.general.overview.notifications.NotificationStore
 import info.nightscout.androidaps.plugins.general.wear.events.EventWearInitiateAction
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.GlucoseStatusProvider
-import info.nightscout.androidaps.plugins.iob.iobCobCalculator.IobCobCalculatorPlugin
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.events.EventIobCalculationProgress
 import info.nightscout.androidaps.plugins.pump.common.defs.PumpType
 import info.nightscout.androidaps.plugins.source.DexcomPlugin
@@ -778,7 +778,9 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
         if (config.APS && lastRun?.constraintsProcessed != null) {
             if (lastRun.constraintsProcessed!!.carbsReq > 0) {
                 //only display carbsreq when carbs have not been entered recently
-                if (treatmentsPlugin.lastCarbTime < lastRun.lastAPSRun) {
+                    val lastCarb = repository.getLastCarbsRecordWrapped().blockingGet()
+                val lastCarbsTime = if (lastCarb is ValueWrapper.Existing) lastCarb.value.timestamp else 0L
+                if (lastCarbsTime < lastRun.lastAPSRun) {
                     cobText = cobText + " | " + lastRun.constraintsProcessed!!.carbsReq + " " + resourceHelper.gs(R.string.required)
                 }
                 binding.infoLayout.cob.text = cobText
@@ -861,7 +863,7 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
 
                 // **** BG ****
                 if (predictionsAvailable && menuChartSettings[0][OverviewMenus.CharType.PRE.ordinal])
-                    graphData.addBgReadings(fromTime, toTime, lowLine, highLine, apsResult?.predictions)
+                    graphData.addBgReadings(fromTime, toTime, lowLine, highLine, apsResult?.predictions?.map { bg-> GlucoseValueDataPoint(bg, defaultValueHelper, profileFunction, resourceHelper) }?.toMutableList())
                 else graphData.addBgReadings(fromTime, toTime, lowLine, highLine, null)
 
                 // Treatments

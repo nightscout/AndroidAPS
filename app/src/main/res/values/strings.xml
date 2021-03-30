@@ -1132,5 +1132,6 @@
     <string name="current_basal_value">Current basal value</string>
     <string name="profile_carbs_ratio_value">Profile carbs ratio value</string>
     <string name="full_sync">Full sync</string>
+    <string name="prime">Prime</string>
 
 </resources>

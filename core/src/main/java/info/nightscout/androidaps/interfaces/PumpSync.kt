@@ -4,8 +4,53 @@ import info.nightscout.androidaps.data.DetailedBolusInfo
 import info.nightscout.androidaps.plugins.pump.common.defs.PumpType
 
 interface PumpSync {
-    fun addBolusWithTempId(timestamp: Long, amount: Double, driverId: Long, pumpType: PumpType, pumpSerial: String)
-    fun syncBolusWithTempId(timestamp: Long, amount: Double, driverId: Long, pumpId: Long?, pumpType: PumpType, pumpSerial: String)
+    /**
+     * Create bolus with temporary id
+     *
+     * Search for combination of  temporaryId, PumpType, pumpSerial
+     *
+     * If db record doesn't exist, new record is created.
+     * If exists false is returned and data is ignored
+     *
+     * USAGE:
+     * Generate unique temporaryId
+     * Call before bolus when no pumpId is known (provide timestamp, amount, temporaryId, type, pumpType, pumpSerial)
+     * After reading record from history or completed bolus call syncBolusWithTempId with the same temporaryId provided
+     * If syncBolusWithTempId is not called afterwards record remains valid and is calculated towards iob
+     *
+     * @param timestamp     timestamp of event from pump history
+     * @param amount        amount of insulin
+     * @param temporaryId   temporary id generated when pump id in not know yet
+     * @param type          type of bolus (NORMAL, SMB, PRIME)
+     * @param pumpType      pump type like PumpType.ACCU_CHEK_COMBO
+     * @param pumpSerial    pump serial number
+     * @return true if new record is created
+     **/
+    fun addBolusWithTempId(timestamp: Long, amount: Double, temporaryId: Long, type: DetailedBolusInfo.BolusType, pumpType: PumpType, pumpSerial: String) : Boolean
+
+    /**
+     * Synchronization of boluses with temporary id
+     *
+     * Search for combination of  temporaryId, PumpType, pumpSerial
+     *
+     * If db record doesn't exist data is ignored and false returned.
+     * If exists, amount and timestamp is updated, type and pumpId only if provided
+     * isValid field is preserved
+     *
+     * USAGE:
+     * After reading record from history or completed bolus call syncBolusWithTempId and
+     * provide updated timestamp, amount, pumpId (if known), type (if change needed) with the same temporaryId, pumpType, pumpSerial
+     *
+     * @param timestamp     timestamp of event from pump history
+     * @param amount        amount of insulin
+     * @param temporaryId   temporary id generated when pump id in not know yet
+     * @param type          type of bolus (NORMAL, SMB, PRIME)
+     * @param pumpId        pump id from history
+     * @param pumpType      pump type like PumpType.ACCU_CHEK_COMBO
+     * @param pumpSerial    pump serial number
+     * @return true if record is successfully updated
+     **/
+    fun syncBolusWithTempId(timestamp: Long, amount: Double, temporaryId: Long, type: DetailedBolusInfo.BolusType?, pumpId: Long?, pumpType: PumpType, pumpSerial: String) : Boolean
 
     /**
      * Synchronization of boluses
@@ -13,17 +58,18 @@ interface PumpSync {
      * Search for combination of pumpId, PumpType, pumpSerial
      *
      * If db record doesn't exist, new record is created.
-     * If exists, data is updated
+     * If exists, amount, type (if provided) and timestamp is updated
      * isValid field is preserved
      *
      * @param timestamp     timestamp of event from pump history
      * @param amount        amount of insulin
-     * @param type          type of bolus (NORMAL, SMB, PRIME). Default is NORMAL
+     * @param type          type of bolus (NORMAL, SMB, PRIME)
      * @param pumpId        pump id from history
      * @param pumpType      pump type like PumpType.ACCU_CHEK_COMBO
      * @param pumpSerial    pump serial number
+     * @return true if new record is created
      **/
-    fun syncBolusWithPumpId(timestamp: Long, amount: Double, type: DetailedBolusInfo.BolusType = DetailedBolusInfo.BolusType.NORMAL, pumpId: Long, pumpType: PumpType, pumpSerial: String)
+    fun syncBolusWithPumpId(timestamp: Long, amount: Double, type: DetailedBolusInfo.BolusType?, pumpId: Long, pumpType: PumpType, pumpSerial: String) : Boolean
 
     /**
      * Synchronization of carbs
@@ -39,8 +85,9 @@ interface PumpSync {
      * @param pumpId        pump id from history if coming form pump history
      * @param pumpType      pump type like PumpType.ACCU_CHEK_COMBO
      * @param pumpSerial    pump serial number
+     * @return true if new record is created
      **/
-    fun syncCarbsWithTimestamp(timestamp: Long, amount: Double, pumpId: Long?, pumpType: PumpType, pumpSerial: String)
+    fun syncCarbsWithTimestamp(timestamp: Long, amount: Double, pumpId: Long?, pumpType: PumpType, pumpSerial: String) : Boolean
 
     /**
      * Synchronization of events like CANNULA_CHANGE

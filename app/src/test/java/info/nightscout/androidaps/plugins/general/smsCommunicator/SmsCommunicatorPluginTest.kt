@@ -468,36 +468,6 @@ class SmsCommunicatorPluginTest : TestBaseWithProfile() {
         Assert.assertEquals("LOOP BLABLA", smsCommunicatorPlugin.messages[0].text)
         Assert.assertEquals("Wrong format", smsCommunicatorPlugin.messages[1].text)
 
-        //TREATMENTS REFRESH
-        PowerMockito.`when`(loopPlugin.isEnabled(PluginType.LOOP)).thenReturn(true)
-        PowerMockito.`when`(loopPlugin.isSuspended).thenReturn(false)
-        smsCommunicatorPlugin.messages = ArrayList()
-        sms = Sms("1234", "TREATMENTS REFRESH")
-        smsCommunicatorPlugin.processSms(sms)
-        Assert.assertFalse(sms.ignored)
-        Assert.assertEquals("TREATMENTS REFRESH", smsCommunicatorPlugin.messages[0].text)
-        Assert.assertTrue(smsCommunicatorPlugin.messages[1].text.contains("TREATMENTS REFRESH"))
-
-        //TREATMENTS BLA BLA
-        PowerMockito.`when`(loopPlugin.isEnabled(PluginType.LOOP)).thenReturn(true)
-        PowerMockito.`when`(loopPlugin.isSuspended).thenReturn(false)
-        smsCommunicatorPlugin.messages = ArrayList()
-        sms = Sms("1234", "TREATMENTS BLA BLA")
-        smsCommunicatorPlugin.processSms(sms)
-        Assert.assertFalse(sms.ignored)
-        Assert.assertEquals("TREATMENTS BLA BLA", smsCommunicatorPlugin.messages[0].text)
-        Assert.assertEquals("Wrong format", smsCommunicatorPlugin.messages[1].text)
-
-        //TREATMENTS BLABLA
-        PowerMockito.`when`(loopPlugin.isEnabled(PluginType.LOOP)).thenReturn(true)
-        PowerMockito.`when`(loopPlugin.isSuspended).thenReturn(false)
-        smsCommunicatorPlugin.messages = ArrayList()
-        sms = Sms("1234", "TREATMENTS BLABLA")
-        smsCommunicatorPlugin.processSms(sms)
-        Assert.assertFalse(sms.ignored)
-        Assert.assertEquals("TREATMENTS BLABLA", smsCommunicatorPlugin.messages[0].text)
-        Assert.assertEquals("Wrong format", smsCommunicatorPlugin.messages[1].text)
-
         //NSCLIENT RESTART
         PowerMockito.`when`(loopPlugin.isEnabled(PluginType.LOOP)).thenReturn(true)
         PowerMockito.`when`(loopPlugin.isSuspended).thenReturn(false)

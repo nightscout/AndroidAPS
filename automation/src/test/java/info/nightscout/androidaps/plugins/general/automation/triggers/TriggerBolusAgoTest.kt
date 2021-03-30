@@ -2,6 +2,7 @@ package info.nightscout.androidaps.plugins.general.automation.triggers
 
 import com.google.common.base.Optional
 import info.nightscout.androidaps.automation.R
+import info.nightscout.androidaps.database.entities.Bolus
 import info.nightscout.androidaps.plugins.general.automation.elements.Comparator
 import info.nightscout.androidaps.utils.DateUtil
 import org.json.JSONException
@@ -29,8 +30,15 @@ class TriggerBolusAgoTest : TriggerTestBase() {
 
     @Test
     fun shouldRunTest() {
-        `when`(treatmentsInterface.getLastBolusTime(true)).thenReturn(now) // Set last bolus time to now
-        `when`(DateUtil.now()).thenReturn(now + 10 * 60 * 1000) // set current time to now + 10 min
+        `when`(repository.getLastBolusRecordOfType(Bolus.Type.NORMAL)).thenReturn(
+            Bolus(
+                timestamp = now,
+                amount = 0.0,
+                type = Bolus.Type.NORMAL,
+                isBasalInsulin = false
+            )
+        ) // Set last bolus time to now
+        `when`(dateUtil._now()).thenReturn(now + 10 * 60 * 1000) // set current time to now + 10 min
         var t = TriggerBolusAgo(injector).setValue(110).comparator(Comparator.Compare.IS_EQUAL)
         Assert.assertEquals(110, t.minutesAgo.value)
         Assert.assertEquals(Comparator.Compare.IS_EQUAL, t.comparator.value)
@@ -52,7 +60,14 @@ class TriggerBolusAgoTest : TriggerTestBase() {
         Assert.assertTrue(t.shouldRun())
         t = TriggerBolusAgo(injector).setValue(390).comparator(Comparator.Compare.IS_EQUAL_OR_LESSER)
         Assert.assertTrue(t.shouldRun())
-        PowerMockito.`when`(treatmentsInterface.getLastBolusTime(true)).thenReturn(0L) // Set last bolus time to 0
+        `when`(repository.getLastBolusRecordOfType(Bolus.Type.NORMAL)).thenReturn(
+            Bolus(
+                timestamp = 0L,
+                amount = 0.0,
+                type = Bolus.Type.NORMAL,
+                isBasalInsulin = false
+            )
+        ) // Set last bolus time to 0
         t = TriggerBolusAgo(injector).comparator(Comparator.Compare.IS_NOT_AVAILABLE)
         Assert.assertTrue(t.shouldRun())
     }

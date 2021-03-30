@@ -217,7 +217,8 @@ open class CommandQueue @Inject constructor(
                 aapsLogger.debug(LTag.PUMPQUEUE, "Rejecting SMB since a bolus is queue/running")
                 return false
             }
-            if (detailedBolusInfo.lastKnownBolusTime < activePlugin.get().activeTreatments.lastBolusTime) {
+            val lastBolusTime = repository.getLastBolusRecord()?.timestamp ?: 0L
+            if (detailedBolusInfo.lastKnownBolusTime < lastBolusTime) {
                 aapsLogger.debug(LTag.PUMPQUEUE, "Rejecting bolus, another bolus was issued since request time")
                 return false
             }

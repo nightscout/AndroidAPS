@@ -1,9 +1,7 @@
-package info.nightscout.androidaps.data
+package info.nightscout.androidaps.plugins.general.overview.graphExtensions
 
 import info.nightscout.androidaps.core.R
 import info.nightscout.androidaps.database.entities.Carbs
-import info.nightscout.androidaps.plugins.general.overview.graphExtensions.DataPointWithLabelInterface
-import info.nightscout.androidaps.plugins.general.overview.graphExtensions.PointsWithLabelGraphSeries
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 import javax.inject.Inject
 
@@ -20,7 +18,7 @@ class CarbsDataPoint @Inject constructor(
     override fun getDuration(): Long = 0
     override fun getSize(): Float = 2f
 
-    override fun getShape(): PointsWithLabelGraphSeries.Shape = PointsWithLabelGraphSeries.Shape.BOLUS
+    override fun getShape(): PointsWithLabelGraphSeries.Shape = PointsWithLabelGraphSeries.Shape.CARBS
 
     override fun getColor(): Int =
         if (data.isValid) resourceHelper.gc(R.color.carbs)

@@ -3,10 +3,7 @@ package info.nightscout.androidaps.database.daos
 import androidx.room.Dao
 import androidx.room.Query
 import info.nightscout.androidaps.database.TABLE_CARBS
-import info.nightscout.androidaps.database.TABLE_THERAPY_EVENTS
-import info.nightscout.androidaps.database.embedments.InterfaceIDs
 import info.nightscout.androidaps.database.entities.Carbs
-import info.nightscout.androidaps.database.entities.TherapyEvent
 import io.reactivex.Maybe
 import io.reactivex.Single
 
@@ -20,8 +17,17 @@ internal interface CarbsDao : TraceableDao<Carbs> {
     @Query("DELETE FROM $TABLE_CARBS")
     override fun deleteAllEntries()
 
+    @Query("SELECT * FROM $TABLE_CARBS WHERE nightscoutId = :nsId AND referenceId IS NULL")
+    fun findByNSId(nsId: String): Carbs?
+
     @Query("SELECT * FROM $TABLE_CARBS WHERE timestamp = :timestamp AND referenceId IS NULL")
     fun findByTimestamp(timestamp: Long): Carbs?
+
+    @Query("SELECT * FROM $TABLE_CARBS WHERE isValid = 1 AND referenceId IS NULL ORDER BY id DESC LIMIT 1")
+    fun getLastCarbsRecord(): Carbs?
+
+    @Query("SELECT * FROM $TABLE_CARBS WHERE isValid = 1 AND referenceId IS NULL ORDER BY id DESC LIMIT 1")
+    fun getLastCarbsRecordMaybe(): Maybe<Carbs>
 
     @Query("SELECT * FROM $TABLE_CARBS WHERE isValid = 1 AND referenceId IS NULL ORDER BY id ASC LIMIT 1")
     fun getOldestCarbsRecord(): Carbs?

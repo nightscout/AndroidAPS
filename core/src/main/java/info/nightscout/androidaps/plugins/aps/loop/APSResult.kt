@@ -3,7 +3,6 @@ package info.nightscout.androidaps.plugins.aps.loop
 import android.text.Spanned
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.core.R
-import info.nightscout.androidaps.data.GlucoseValueDataPoint
 import info.nightscout.androidaps.data.IobTotal
 import info.nightscout.androidaps.database.entities.GlucoseValue
 import info.nightscout.androidaps.interfaces.ActivePluginProvider
@@ -14,6 +13,7 @@ import info.nightscout.androidaps.interfaces.TreatmentsInterface
 import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.logging.LTag
 import info.nightscout.androidaps.plugins.configBuilder.ConstraintChecker
+import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.DecimalFormatter
 import info.nightscout.androidaps.utils.HtmlHelper.fromHtml
 import info.nightscout.androidaps.utils.resources.ResourceHelper
@@ -37,6 +37,7 @@ open class APSResult @Inject constructor(val injector: HasAndroidInjector) {
     @Inject lateinit var treatmentsPlugin: TreatmentsInterface
     @Inject lateinit var profileFunction: ProfileFunction
     @Inject lateinit var resourceHelper: ResourceHelper
+    @Inject lateinit var dateUtil: DateUtil
 
     var date: Long = 0
     var reason: String? = null
@@ -183,9 +184,9 @@ open class APSResult @Inject constructor(val injector: HasAndroidInjector) {
         return json
     }
 
-    val predictions: MutableList<GlucoseValueDataPoint>
+    val predictions: MutableList<GlucoseValue>
         get() {
-            val array: MutableList<GlucoseValueDataPoint> = ArrayList()
+            val array: MutableList<GlucoseValue> = ArrayList()
             val startTime = date
             json?.let { json ->
                 if (json.has("predBGs")) {
@@ -201,7 +202,7 @@ open class APSResult @Inject constructor(val injector: HasAndroidInjector) {
                                 sourceSensor = GlucoseValue.SourceSensor.IOB_PREDICTION,
                                 trendArrow = GlucoseValue.TrendArrow.NONE
                             )
-                            array.add(GlucoseValueDataPoint(injector, gv))
+                            array.add(gv)
                         }
                     }
                     if (predBGs.has("aCOB")) {
@@ -215,7 +216,7 @@ open class APSResult @Inject constructor(val injector: HasAndroidInjector) {
                                 sourceSensor = GlucoseValue.SourceSensor.aCOB_PREDICTION,
                                 trendArrow = GlucoseValue.TrendArrow.NONE
                             )
-                            array.add(GlucoseValueDataPoint(injector, gv))
+                            array.add(gv)
                         }
                     }
                     if (predBGs.has("COB")) {
@@ -229,7 +230,7 @@ open class APSResult @Inject constructor(val injector: HasAndroidInjector) {
                                 sourceSensor = GlucoseValue.SourceSensor.COB_PREDICTION,
                                 trendArrow = GlucoseValue.TrendArrow.NONE
                             )
-                            array.add(GlucoseValueDataPoint(injector, gv))
+                            array.add(gv)
                         }
                     }
                     if (predBGs.has("UAM")) {
@@ -243,7 +244,7 @@ open class APSResult @Inject constructor(val injector: HasAndroidInjector) {
                                 sourceSensor = GlucoseValue.SourceSensor.UAM_PREDICTION,
                                 trendArrow = GlucoseValue.TrendArrow.NONE
                             )
-                            array.add(GlucoseValueDataPoint(injector, gv))
+                            array.add(gv)
                         }
                     }
                     if (predBGs.has("ZT")) {
@@ -257,7 +258,7 @@ open class APSResult @Inject constructor(val injector: HasAndroidInjector) {
                                 sourceSensor = GlucoseValue.SourceSensor.ZT_PREDICTION,
                                 trendArrow = GlucoseValue.TrendArrow.NONE
                             )
-                            array.add(GlucoseValueDataPoint(injector, gv))
+                            array.add(gv)
                         }
                     }
                 }

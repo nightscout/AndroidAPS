@@ -115,14 +115,16 @@ class UploadChunk @Inject constructor(
 
     private fun getTreatments(start: Long, end: Long): List<BaseElement> {
         val result = LinkedList<BaseElement>()
-        val treatments = treatmentsPlugin.service.getTreatmentDataFromTime(start, end, true)
-        for (treatment in treatments) {
-            if (treatment.carbs > 0) {
-                result.add(WizardElement(treatment))
-            } else if (treatment.insulin > 0) {
-                result.add(BolusElement(treatment))
+        repository.getBolusesDataFromTimeToTime(start, end, true)
+            .blockingGet()
+            .forEach { bolus ->
+                result.add(BolusElement(bolus))
             }
-        }
+        repository.getCarbsDataFromTimeToTimeExpanded(start, end, true)
+            .blockingGet()
+            .forEach { carb ->
+                result.add(WizardElement(carb))
+            }
         return result
     }
 

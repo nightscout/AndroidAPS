@@ -14,13 +14,14 @@ import info.nightscout.androidaps.plugins.general.automation.AutomationPlugin
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.GlucoseStatusProvider
 import info.nightscout.androidaps.receivers.ReceiverStatusStore
 import info.nightscout.androidaps.services.LastLocationDataContainer
+import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.sharedPreferences.SP
 import org.junit.Before
 import org.mockito.Mock
 import org.mockito.Mockito.`when`
 import org.powermock.core.classloader.annotations.PrepareForTest
 
-@PrepareForTest(LastLocationDataContainer::class, AutomationPlugin::class, AppRepository::class)
+@PrepareForTest(LastLocationDataContainer::class, AutomationPlugin::class)
 open class TriggerTestBase : TestBaseWithProfile() {
 
     @Mock lateinit var sp: SP
@@ -29,11 +30,10 @@ open class TriggerTestBase : TestBaseWithProfile() {
     @Mock lateinit var iobCobCalculatorPlugin: IobCobCalculator
     @Mock lateinit var context: Context
     @Mock lateinit var automationPlugin: AutomationPlugin
-    @Mock lateinit var repository: AppRepository
 
     lateinit var receiverStatusStore: ReceiverStatusStore
     private val pluginDescription = PluginDescription()
-    lateinit var testPumpPlugin : TestPumpPlugin
+    lateinit var testPumpPlugin: TestPumpPlugin
 
     @Before
     fun prepareMock1() {
@@ -51,10 +51,11 @@ open class TriggerTestBase : TestBaseWithProfile() {
                 it.profileFunction = profileFunction
                 it.sp = sp
                 it.locationDataContainer = locationDataContainer
-                it.treatmentsInterface = treatmentsInterface
+                it.repository = repository
                 it.activePlugin = activePlugin
                 it.iobCobCalculatorPlugin = iobCobCalculatorPlugin
                 it.glucoseStatusProvider = GlucoseStatusProvider(aapsLogger, iobCobCalculatorPlugin)
+                it.dateUtil = dateUtil
             }
             if (it is TriggerBg) {
                 it.profileFunction = profileFunction

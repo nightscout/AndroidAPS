@@ -27,6 +27,7 @@ import info.nightscout.androidaps.plugins.treatments.TreatmentsPlugin
 import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.FabricPrivacy
 import info.nightscout.androidaps.utils.InstanceId.instanceId
+import info.nightscout.androidaps.utils.T
 import info.nightscout.androidaps.utils.TimeChangeType
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 import info.nightscout.androidaps.utils.rx.AapsSchedulers
@@ -205,11 +206,20 @@ open class VirtualPumpPlugin @Inject constructor(
         rxBus.send(EventVirtualPumpUpdateGui())
         lastDataTime = System.currentTimeMillis()
         if (detailedBolusInfo.insulin > 0)
-            pumpSync.syncBolusWithPumpId(dateUtil._now(), detailedBolusInfo.insulin, detailedBolusInfo.bolusType, dateUtil._now(), pumpType
-                ?: PumpType.GENERIC_AAPS, serialNumber())
+            pumpSync.syncBolusWithPumpId(
+                timestamp = detailedBolusInfo.timestamp,
+                amount = detailedBolusInfo.insulin,
+                type = detailedBolusInfo.bolusType,
+                pumpId = dateUtil._now(),
+                pumpType = pumpType ?: PumpType.GENERIC_AAPS,
+                pumpSerial = serialNumber())
         if (detailedBolusInfo.carbs > 0)
-            pumpSync.syncCarbsWithTimestamp(dateUtil._now(), detailedBolusInfo.carbs, dateUtil._now(), pumpType
-                ?: PumpType.GENERIC_AAPS, serialNumber())
+            pumpSync.syncCarbsWithTimestamp(
+                timestamp = detailedBolusInfo.timestamp + T.mins(detailedBolusInfo.carbTime.toLong()).msecs(),
+                amount = detailedBolusInfo.carbs,
+                pumpId = null,
+                pumpType = pumpType ?: PumpType.GENERIC_AAPS,
+                pumpSerial = serialNumber())
         return result
     }
 

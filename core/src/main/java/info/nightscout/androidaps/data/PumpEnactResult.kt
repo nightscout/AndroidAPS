@@ -31,11 +31,8 @@ class PumpEnactResult(injector: HasAndroidInjector) {
     var bolusDelivered = 0.0 // real value of delivered insulin
     var carbsDelivered = 0.0 // real value of delivered carbs
     var queued = false
-    fun success(success: Boolean): PumpEnactResult {
-        this.success = success
-        return this
-    }
 
+    fun success(success: Boolean): PumpEnactResult = this.also { this.success = success }
     fun enacted(enacted: Boolean): PumpEnactResult = this.also { it.enacted = enacted }
     fun comment(comment: String): PumpEnactResult = this.also { it.comment = comment }
     fun comment(comment: Int): PumpEnactResult = this.also { it.comment = resourceHelper.gs(comment) }

@@ -21,21 +21,23 @@ import info.nightscout.androidaps.data.Profile;
 import info.nightscout.androidaps.data.PumpEnactResult;
 import info.nightscout.androidaps.db.ExtendedBolus;
 import info.nightscout.androidaps.db.TemporaryBasal;
-import info.nightscout.androidaps.db.Treatment;
 import info.nightscout.androidaps.events.EventAppExit;
 import info.nightscout.androidaps.events.EventPreferenceChange;
 import info.nightscout.androidaps.interfaces.ActivePluginProvider;
 import info.nightscout.androidaps.interfaces.CommandQueueProvider;
 import info.nightscout.androidaps.interfaces.Constraint;
 import info.nightscout.androidaps.interfaces.PluginType;
+import info.nightscout.androidaps.interfaces.PumpSync;
 import info.nightscout.androidaps.logging.AAPSLogger;
 import info.nightscout.androidaps.logging.LTag;
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper;
 import info.nightscout.androidaps.plugins.configBuilder.ConstraintChecker;
+import info.nightscout.androidaps.plugins.general.overview.events.EventOverviewBolusProgress;
 import info.nightscout.androidaps.plugins.pump.common.defs.PumpType;
 import info.nightscout.androidaps.utils.DateUtil;
 import info.nightscout.androidaps.utils.FabricPrivacy;
 import info.nightscout.androidaps.utils.Round;
+import info.nightscout.androidaps.utils.T;
 import info.nightscout.androidaps.utils.resources.ResourceHelper;
 import info.nightscout.androidaps.utils.rx.AapsSchedulers;
 import info.nightscout.androidaps.utils.sharedPreferences.SP;
@@ -50,6 +52,7 @@ public class DanaRKoreanPlugin extends AbstractDanaRPlugin {
     private final ResourceHelper resourceHelper;
     private final ConstraintChecker constraintChecker;
     private final FabricPrivacy fabricPrivacy;
+    private final PumpSync pumpSync;
 
     @Inject
     public DanaRKoreanPlugin(
@@ -65,6 +68,7 @@ public class DanaRKoreanPlugin extends AbstractDanaRPlugin {
             SP sp,
             CommandQueueProvider commandQueue,
             DateUtil dateUtil,
+            PumpSync pumpSync,
             FabricPrivacy fabricPrivacy
     ) {
         super(injector, danaPump, resourceHelper, constraintChecker, aapsLogger, aapsSchedulers, commandQueue, rxBus, activePlugin, sp, dateUtil);
@@ -72,6 +76,7 @@ public class DanaRKoreanPlugin extends AbstractDanaRPlugin {
         this.context = context;
         this.resourceHelper = resourceHelper;
         this.constraintChecker = constraintChecker;
+        this.pumpSync = pumpSync;
         this.fabricPrivacy = fabricPrivacy;
         getPluginDescription().description(R.string.description_pump_dana_r_korean);
 
@@ -163,23 +168,40 @@ public class DanaRKoreanPlugin extends AbstractDanaRPlugin {
     public PumpEnactResult deliverTreatment(DetailedBolusInfo detailedBolusInfo) {
         detailedBolusInfo.insulin = constraintChecker.applyBolusConstraints(new Constraint<>(detailedBolusInfo.insulin)).value();
         if (detailedBolusInfo.insulin > 0 || detailedBolusInfo.carbs > 0) {
-            Treatment t = new Treatment();
-            t.isSMB = detailedBolusInfo.getBolusType() == DetailedBolusInfo.BolusType.SMB;
+            EventOverviewBolusProgress.Treatment treatment = new EventOverviewBolusProgress.Treatment(0, 0, detailedBolusInfo.getBolusType() == DetailedBolusInfo.BolusType.SMB);
             boolean connectionOK = false;
             if (detailedBolusInfo.insulin > 0 || detailedBolusInfo.carbs > 0)
-                connectionOK = sExecutionService.bolus(detailedBolusInfo.insulin, (int) detailedBolusInfo.carbs, detailedBolusInfo.carbTime, t);
+                connectionOK = sExecutionService.bolus(detailedBolusInfo.insulin, (int) detailedBolusInfo.carbs, detailedBolusInfo.carbTime, treatment);
             PumpEnactResult result = new PumpEnactResult(getInjector());
-            result.success(connectionOK && Math.abs(detailedBolusInfo.insulin - t.insulin) < pumpDescription.getBolusStep())
-                    .bolusDelivered(t.insulin)
+            result.success(connectionOK && Math.abs(detailedBolusInfo.insulin - treatment.insulin) < pumpDescription.getBolusStep())
+                    .bolusDelivered(treatment.insulin)
                     .carbsDelivered(detailedBolusInfo.carbs);
             if (!result.getSuccess())
-                result.comment(resourceHelper.gs(R.string.boluserrorcode, detailedBolusInfo.insulin, t.insulin, danaPump.getBolusStartErrorCode()));
+                result.comment(resourceHelper.gs(R.string.boluserrorcode, detailedBolusInfo.insulin, treatment.insulin, danaPump.getBolusStartErrorCode()));
             else
                 result.comment(R.string.ok);
             aapsLogger.debug(LTag.PUMP, "deliverTreatment: OK. Asked: " + detailedBolusInfo.insulin + " Delivered: " + result.getBolusDelivered());
-            detailedBolusInfo.insulin = t.insulin;
+            detailedBolusInfo.insulin = treatment.insulin;
             detailedBolusInfo.timestamp = System.currentTimeMillis();
-            activePlugin.getActiveTreatments().addToHistoryTreatment(detailedBolusInfo, false);
+
+            if (detailedBolusInfo.insulin > 0)
+                pumpSync.syncBolusWithPumpId(
+                        detailedBolusInfo.timestamp,
+                        detailedBolusInfo.insulin,
+                        detailedBolusInfo.getBolusType(),
+                        dateUtil._now(),
+                        PumpType.DANA_R_KOREAN,
+                        serialNumber()
+                );
+            if (detailedBolusInfo.carbs > 0)
+                pumpSync.syncCarbsWithTimestamp(
+                        detailedBolusInfo.timestamp + T.mins(detailedBolusInfo.carbTime).msecs(),
+                        detailedBolusInfo.carbs,
+                        null,
+                        PumpType.DANA_R_KOREAN,
+                        serialNumber()
+                );
+
             return result;
         } else {
             PumpEnactResult result = new PumpEnactResult(getInjector());

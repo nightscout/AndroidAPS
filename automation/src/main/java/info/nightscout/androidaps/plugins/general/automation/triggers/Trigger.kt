@@ -10,6 +10,7 @@ import androidx.appcompat.app.AppCompatActivity
 import com.google.common.base.Optional
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.automation.R
+import info.nightscout.androidaps.database.AppRepository
 import info.nightscout.androidaps.interfaces.ActivePluginProvider
 import info.nightscout.androidaps.interfaces.IobCobCalculator
 import info.nightscout.androidaps.interfaces.ProfileFunction
@@ -22,6 +23,7 @@ import info.nightscout.androidaps.plugins.general.automation.events.EventTrigger
 import info.nightscout.androidaps.plugins.general.automation.events.EventTriggerRemove
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.GlucoseStatusProvider
 import info.nightscout.androidaps.services.LastLocationDataContainer
+import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 import info.nightscout.androidaps.utils.sharedPreferences.SP
 import org.json.JSONException
@@ -37,10 +39,11 @@ abstract class Trigger(val injector: HasAndroidInjector) {
     @Inject lateinit var profileFunction: ProfileFunction
     @Inject lateinit var sp: SP
     @Inject lateinit var locationDataContainer: LastLocationDataContainer
-    @Inject lateinit var treatmentsInterface: TreatmentsInterface
+    @Inject lateinit var repository: AppRepository
     @Inject lateinit var activePlugin: ActivePluginProvider
     @Inject lateinit var iobCobCalculatorPlugin: IobCobCalculator
     @Inject lateinit var glucoseStatusProvider: GlucoseStatusProvider
+    @Inject lateinit var dateUtil: DateUtil
 
     init {
         injector.androidInjector().inject(this)

@@ -13,7 +13,7 @@ class DetermineBasalResultSMB private constructor(injector: HasAndroidInjector) 
     private var snoozeBG = 0.0
 
     internal constructor(injector: HasAndroidInjector, result: JSONObject) : this(injector) {
-        date = DateUtil.now()
+        date = dateUtil._now()
         json = result
         try {
             if (result.has("error")) {

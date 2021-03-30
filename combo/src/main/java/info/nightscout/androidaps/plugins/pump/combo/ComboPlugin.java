@@ -28,7 +28,6 @@ import info.nightscout.androidaps.data.PumpEnactResult;
 import info.nightscout.androidaps.db.Source;
 import info.nightscout.androidaps.db.TDD;
 import info.nightscout.androidaps.db.TemporaryBasal;
-import info.nightscout.androidaps.db.Treatment;
 import info.nightscout.androidaps.events.EventInitializationChanged;
 import info.nightscout.androidaps.events.EventRefreshOverview;
 import info.nightscout.androidaps.interfaces.CommandQueueProvider;
@@ -488,8 +487,7 @@ public class ComboPlugin extends PumpPluginBase implements PumpInterface, Constr
                 treatmentsPlugin.addToHistoryTreatment(detailedBolusInfo, false);
 
                 EventOverviewBolusProgress bolusingEvent = EventOverviewBolusProgress.INSTANCE;
-                bolusingEvent.setT(new Treatment());
-                bolusingEvent.getT().isSMB = detailedBolusInfo.getBolusType() == DetailedBolusInfo.BolusType.SMB;
+                bolusingEvent.setT(new EventOverviewBolusProgress.Treatment(0.0, 0, detailedBolusInfo.getBolusType() == DetailedBolusInfo.BolusType.SMB));
                 bolusingEvent.setPercent(100);
                 rxBus.send(bolusingEvent);
 
@@ -566,8 +564,7 @@ public class ComboPlugin extends PumpPluginBase implements PumpInterface, Constr
                 return new PumpEnactResult(getInjector()).success(true).enacted(false);
             }
 
-            Treatment treatment = new Treatment();
-            treatment.isSMB = detailedBolusInfo.getBolusType() == DetailedBolusInfo.BolusType.SMB;
+            EventOverviewBolusProgress.Treatment treatment = new EventOverviewBolusProgress.Treatment(0.0, 0, detailedBolusInfo.getBolusType() == DetailedBolusInfo.BolusType.SMB);
             EventOverviewBolusProgress.INSTANCE.setT(treatment);
 
             // start bolus delivery
