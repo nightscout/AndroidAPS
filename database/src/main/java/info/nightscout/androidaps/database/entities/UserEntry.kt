@@ -157,10 +157,13 @@ data class UserEntry(
         Announcement,
         Actions,            //From Actions plugin
         Automation,         //From Automation plugin
+        BG,                 // From BG plugin
         LocalProfile,       //From LocalProfile plugin
         Loop,               //From Loop plugin
         Maintenance,        //From Maintenance plugin
         NSClient,           //From NSClient plugin
+        NSProfile,          //From NSProfile plugin
+        Objectives,         //From Objectives plugin
         Pump,               //From Pump plugin
         SMS,                //From SMS plugin
         Treatments,         //From Treatments plugin

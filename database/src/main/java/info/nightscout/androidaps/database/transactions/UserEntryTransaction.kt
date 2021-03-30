@@ -1,7 +1,8 @@
 package info.nightscout.androidaps.database.transactions
 
 import info.nightscout.androidaps.database.entities.UserEntry
-import info.nightscout.androidaps.database.entities.UserEntry.*
+import info.nightscout.androidaps.database.entities.UserEntry.Action
+import info.nightscout.androidaps.database.entities.UserEntry.ValueWithUnit
 
 class UserEntryTransaction(
     val action: Action,

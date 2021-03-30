@@ -1,7 +1,7 @@
 package info.nightscout.androidaps;
 
 import info.nightscout.androidaps.utils.T;
-import info.nightscout.androidaps.database.entities.UserEntry.*;
+import info.nightscout.androidaps.database.entities.UserEntry.Units;
 
 /**
  * Created by mike on 07.06.2016.

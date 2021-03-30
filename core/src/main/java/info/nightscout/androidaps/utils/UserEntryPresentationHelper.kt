@@ -5,7 +5,10 @@ import dagger.Reusable
 import info.nightscout.androidaps.Constants
 import info.nightscout.androidaps.core.R
 import info.nightscout.androidaps.database.entities.UserEntry
-import info.nightscout.androidaps.database.entities.UserEntry.*
+import info.nightscout.androidaps.database.entities.UserEntry.Action
+import info.nightscout.androidaps.database.entities.UserEntry.Sources
+import info.nightscout.androidaps.database.entities.UserEntry.Units
+import info.nightscout.androidaps.database.entities.UserEntry.ColorGroup
 import info.nightscout.androidaps.database.entities.XXXValueWithUnit
 import info.nightscout.androidaps.interfaces.ProfileFunction
 import info.nightscout.androidaps.utils.resources.ResourceHelper
@@ -53,10 +56,13 @@ class UserEntryPresentationHelper @Inject constructor(
         Sources.Announcement        -> R.drawable.ic_cp_announcement
         Sources.Actions             -> R.drawable.ic_action
         Sources.Automation          -> R.drawable.ic_automation
+        Sources.BG                  -> R.drawable.ic_generic_cgm
         Sources.LocalProfile        -> R.drawable.ic_local_profile
         Sources.Loop                -> R.drawable.ic_loop_closed_white
         Sources.Maintenance         -> R.drawable.ic_maintenance
         Sources.NSClient            -> R.drawable.ic_nightscout_syncs
+        Sources.NSProfile           -> R.drawable.ic_nightscout_profile
+        Sources.Objectives          -> R.drawable.ic_graduation
         Sources.Pump                -> R.drawable.ic_generic_icon
         Sources.SMS                 -> R.drawable.ic_sms
         Sources.Treatments          -> R.drawable.ic_treatments

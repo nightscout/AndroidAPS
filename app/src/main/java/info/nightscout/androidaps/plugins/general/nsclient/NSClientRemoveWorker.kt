@@ -83,8 +83,8 @@ class NSClientRemoveWorker(
                     }
                     */
                     result.invalidated.forEach {
-                        uel.log(
-                            Action.TT_REMOVED, ValueWithUnit(Sources.NSClient),
+                        uel.log(Action.TT_REMOVED,
+                            ValueWithUnit(Sources.NSClient),
                             ValueWithUnit(it.reason.text, Units.TherapyEvent),
                             ValueWithUnit(it.lowTarget, Units.Mg_Dl, true),
                             ValueWithUnit(it.highTarget, Units.Mg_Dl, it.lowTarget != it.highTarget),
@@ -108,8 +108,7 @@ class NSClientRemoveWorker(
                             XXXValueWithUnit.Timestamp(it.timestamp),
                             XXXValueWithUnit.TherapyEventType(it.type))
                         */
-                        uel.log(
-                            Action.CAREPORTAL_REMOVED, (it.note ?: ""),
+                        uel.log(Action.CAREPORTAL_REMOVED, (it.note ?: ""),
                             ValueWithUnit(Sources.NSClient),
                             ValueWithUnit(it.timestamp, Units.Timestamp, true),
                             ValueWithUnit(it.type.text, Units.TherapyEvent))
@@ -127,8 +126,7 @@ class NSClientRemoveWorker(
                 .blockingGet()
                 .also { result ->
                     result.invalidated.forEach {
-                        uel.log(
-                            Action.CAREPORTAL_REMOVED,
+                        uel.log(Action.CAREPORTAL_REMOVED,
                             ValueWithUnit(Sources.NSClient),
                             ValueWithUnit(it.timestamp, Units.Timestamp, true),
                             ValueWithUnit(it.amount, Units.U))
@@ -145,8 +143,7 @@ class NSClientRemoveWorker(
                 .blockingGet()
                 .also { result ->
                     result.invalidated.forEach {
-                        uel.log(
-                            Action.CAREPORTAL_REMOVED,
+                        uel.log(Action.CAREPORTAL_REMOVED,
                             ValueWithUnit(Sources.NSClient),
                             ValueWithUnit(it.timestamp, Units.Timestamp, true),
                             ValueWithUnit(it.amount, Units.G))

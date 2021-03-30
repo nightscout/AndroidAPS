@@ -2,7 +2,7 @@ package info.nightscout.androidaps.activities
 
 import android.os.Bundle
 import info.nightscout.androidaps.R
-import info.nightscout.androidaps.database.entities.UserEntry.*
+import info.nightscout.androidaps.database.entities.UserEntry.Action
 import info.nightscout.androidaps.databinding.ActivityStatsBinding
 import info.nightscout.androidaps.logging.UserEntryLogger
 import info.nightscout.androidaps.utils.ActivityMonitor
