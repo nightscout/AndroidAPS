@@ -37,7 +37,6 @@ import info.nightscout.androidaps.db.InsightPumpID;
 import info.nightscout.androidaps.db.Source;
 import info.nightscout.androidaps.db.TDD;
 import info.nightscout.androidaps.db.TemporaryBasal;
-import info.nightscout.androidaps.db.Treatment;
 import info.nightscout.androidaps.events.EventInitializationChanged;
 import info.nightscout.androidaps.events.EventRefreshOverview;
 import info.nightscout.androidaps.insight.R;
@@ -591,8 +590,7 @@ public class LocalInsightPlugin extends PumpPluginBase implements PumpInterface,
                     bolusCancelled = false;
                 }
                 result.success(true).enacted(true);
-                Treatment t = new Treatment();
-                t.isSMB = detailedBolusInfo.getBolusType() == DetailedBolusInfo.BolusType.SMB;
+                EventOverviewBolusProgress.Treatment t = new EventOverviewBolusProgress.Treatment(0, 0, detailedBolusInfo.getBolusType() == DetailedBolusInfo.BolusType.SMB);
                 final EventOverviewBolusProgress bolusingEvent = EventOverviewBolusProgress.INSTANCE;
                 bolusingEvent.setT(t);
                 bolusingEvent.setStatus(resourceHelper.gs(R.string.insight_delivered, 0d, insulin));

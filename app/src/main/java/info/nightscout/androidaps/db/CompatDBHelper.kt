@@ -50,11 +50,11 @@ class CompatDBHelper @Inject constructor(
             }
             it.filterIsInstance<Carbs>().firstOrNull()?.let {
                 aapsLogger.debug(LTag.DATABASE, "Firing EventFoodDatabaseChanged")
-                rxBus.send(EventTreatmentChange(null))
+                rxBus.send(EventTreatmentChange())
             }
             it.filterIsInstance<Bolus>().firstOrNull()?.let {
                 aapsLogger.debug(LTag.DATABASE, "Firing EventFoodDatabaseChanged")
-                rxBus.send(EventTreatmentChange(null))
+                rxBus.send(EventTreatmentChange())
             }
         }
 }

@@ -13,13 +13,10 @@ import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.JsonHelper.safeGetInt
 import info.nightscout.androidaps.utils.MidnightTime
 import org.json.JSONObject
-import javax.inject.Inject
 
 // Trigger for time range ( from 10:00AM till 13:00PM )
 class TriggerTimeRange(injector: HasAndroidInjector) : Trigger(injector) {
 
-    @Inject lateinit var dateUtil: DateUtil
-    
     // in minutes since midnight 60 means 1AM
     var range = InputTimeRange(resourceHelper, dateUtil)
 
@@ -28,7 +25,8 @@ class TriggerTimeRange(injector: HasAndroidInjector) : Trigger(injector) {
         range.end = end
     }
 
-    @Suppress("unused") constructor(injector: HasAndroidInjector, triggerTimeRange: TriggerTimeRange) : this(injector) {
+    @Suppress("unused")
+    constructor(injector: HasAndroidInjector, triggerTimeRange: TriggerTimeRange) : this(injector) {
         range.start = triggerTimeRange.range.start
         range.end = triggerTimeRange.range.end
     }

@@ -1,6 +1,5 @@
 package info.nightscout.androidaps.database
 
-import info.nightscout.androidaps.database.embedments.InterfaceIDs
 import info.nightscout.androidaps.database.entities.*
 import info.nightscout.androidaps.database.interfaces.DBEntry
 import info.nightscout.androidaps.database.transactions.Transaction
@@ -263,7 +262,7 @@ open class AppRepository @Inject internal constructor(
       * It is a Maybe as there might be no next element.
       * */
     fun getNextSyncElementBolus(id: Long): Maybe<Pair<Bolus, Long>> =
-        database.bolusDao.getNextModifiedOrNewAfter(id)
+        database.bolusDao.getNextModifiedOrNewAfterExclude(id, Bolus.Type.PRIMING)
             .flatMap { nextIdElement ->
                 val nextIdElemReferenceId = nextIdElement.referenceId
                 if (nextIdElemReferenceId == null) {
@@ -278,8 +277,11 @@ open class AppRepository @Inject internal constructor(
         database.bolusDao.getModifiedFrom(lastId)
             .subscribeOn(Schedulers.io())
 
-    fun findBolusByPumpIds(pumpId: Long, pumpType: InterfaceIDs.PumpType, pumpSerial: String): Bolus? =
-        database.bolusDao.findByPumpIds(pumpId, pumpType, pumpSerial)
+    fun getLastBolusRecord(): Bolus? =
+        database.bolusDao.getLastBolusRecord()
+
+    fun getLastBolusRecordOfType(type: Bolus.Type): Bolus? =
+        database.bolusDao.getLastBolusRecordOfType(type)
 
     fun getOldestBolusRecord(): Bolus? =
         database.bolusDao.getOldestBolusRecord()
@@ -333,6 +335,9 @@ open class AppRepository @Inject internal constructor(
 
     fun getCarbsByTimestamp(timestamp: Long): Carbs? =
         database.carbsDao.findByTimestamp(timestamp)
+
+    fun getLastCarbsRecord(): Carbs? =
+        database.carbsDao.getLastCarbsRecord()
 
     fun getOldestCarbsRecord(): Carbs? =
         database.carbsDao.getOldestCarbsRecord()

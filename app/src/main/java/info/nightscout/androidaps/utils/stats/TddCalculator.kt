@@ -6,6 +6,7 @@ import android.util.LongSparseArray
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.database.AppRepository
+import info.nightscout.androidaps.database.entities.Bolus
 import info.nightscout.androidaps.db.TDD
 import info.nightscout.androidaps.interfaces.ActivePluginProvider
 import info.nightscout.androidaps.interfaces.DatabaseHelperInterface
@@ -56,7 +57,9 @@ class TddCalculator @Inject constructor(
         initializeData(range)
 
         val result = LongSparseArray<TDD>()
-        repository.getBolusesDataFromTimeToTime(startTime, endTime, true).blockingGet().forEach {  t->
+        repository.getBolusesDataFromTimeToTime(startTime, endTime, true).blockingGet()
+            .filter { it.type != Bolus.Type.PRIMING }
+            .forEach {  t->
             val midnight = MidnightTime.calc(t.timestamp)
             val tdd = result[midnight] ?: TDD(midnight, 0.0, 0.0, 0.0)
             tdd.bolus += t.amount

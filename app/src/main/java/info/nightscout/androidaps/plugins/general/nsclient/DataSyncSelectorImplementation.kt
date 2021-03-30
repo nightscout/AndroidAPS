@@ -40,9 +40,12 @@ class DataSyncSelectorImplementation @Inject constructor(
     // Prepared for v3 (returns all modified after)
     override fun changedBoluses(): List<Bolus> {
         val startId = sp.getLong(R.string.key_ns_bolus_last_synced_id, 0)
-        return appRepository.getModifiedBolusesDataFromId(startId).blockingGet().also {
-            aapsLogger.debug(LTag.NSCLIENT, "Loading Bolus data for sync from $startId. Records ${it.size}")
-        }
+        return appRepository.getModifiedBolusesDataFromId(startId)
+            .blockingGet()
+            .filter { it.type != Bolus.Type.PRIMING }
+            .also {
+                aapsLogger.debug(LTag.NSCLIENT, "Loading Bolus data for sync from $startId. Records ${it.size}")
+            }
     }
 
     override fun processChangedBolusesCompat(): Boolean {

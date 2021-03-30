@@ -1,10 +1,13 @@
 package info.nightscout.androidaps.database.embedments
 
+import info.nightscout.androidaps.database.entities.TherapyEvent
+
 data class InterfaceIDs(
     var nightscoutSystemId: String? = null,
     var nightscoutId: String? = null,
     var pumpType: PumpType? = null, // if == USER pumpSerial & pumpId can be null
     var pumpSerial: String? = null,
+    var temporaryId: Long? = null, // temporary id for pump synchronization, when pump id is not available
     var pumpId: Long? = null,
     var startId: Long? = null,
     var endId: Long? = null
@@ -40,6 +43,11 @@ data class InterfaceIDs(
         TANDEM_T_SLIM_X2,
         YPSOPUMP,
         MDI,
-        USER
+        USER;
+
+        companion object {
+
+            fun fromString(name: String?) = values().firstOrNull { it.name == name }
+        }
     }
 }

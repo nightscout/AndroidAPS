@@ -177,7 +177,7 @@ class InsulinDialog : DialogFragmentWithDate() {
             actions.add(resourceHelper.gs(R.string.temptargetshort) + ": " + (DecimalFormatter.to1Decimal(eatingSoonTT) + " " + unitLabel + " (" + resourceHelper.gs(R.string.format_mins, eatingSoonTTDuration) + ")").formatColor(resourceHelper, R.color.tempTargetConfirmation))
 
         val timeOffset = binding.time.value.toInt()
-        val time = DateUtil.now() + T.mins(timeOffset.toLong()).msecs()
+        val time = dateUtil._now() + T.mins(timeOffset.toLong()).msecs()
         if (timeOffset != 0)
             actions.add(resourceHelper.gs(R.string.time) + ": " + dateUtil.dateAndTimeString(time))
 

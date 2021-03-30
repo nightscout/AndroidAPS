@@ -7,6 +7,7 @@ import info.nightscout.androidaps.danars.DanaRSTestBase
 import info.nightscout.androidaps.db.Treatment
 import info.nightscout.androidaps.interfaces.ActivePluginProvider
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper
+import info.nightscout.androidaps.plugins.general.overview.events.EventOverviewBolusProgress
 import org.junit.Assert
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -42,7 +43,7 @@ class DanaRsPacketBolusSetStepBolusStopTest : DanaRSTestBase() {
     @Test fun runTest() {
         `when`(resourceHelper.gs(Mockito.anyInt())).thenReturn("SomeString")
 
-        danaPump.bolusingTreatment = Treatment(packetInjector)
+        danaPump.bolusingTreatment = EventOverviewBolusProgress.Treatment(0.0, 0, true)
         val testPacket = DanaRS_Packet_Bolus_Set_Step_Bolus_Stop(packetInjector)
         // test message decoding
         testPacket.handleMessage(byteArrayOf(0.toByte(), 0.toByte(), 0.toByte()))

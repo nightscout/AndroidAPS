@@ -43,18 +43,21 @@ public class NSUpload {
     private final SP sp;
     private final UploadQueueInterface uploadQueue;
     private final RunningConfiguration runningConfiguration;
+    private final DateUtil dateUtil;
 
     @Inject
     public NSUpload(
             AAPSLogger aapsLogger,
             SP sp,
             UploadQueueInterface uploadQueue,
-            RunningConfiguration runningConfiguration
+            RunningConfiguration runningConfiguration,
+            DateUtil dateUtil
     ) {
         this.aapsLogger = aapsLogger;
         this.sp = sp;
         this.uploadQueue = uploadQueue;
         this.runningConfiguration = runningConfiguration;
+        this.dateUtil = dateUtil;
     }
 
     public void uploadTempBasalStartAbsolute(TemporaryBasal temporaryBasal, Double originalExtendedAmount) {
@@ -208,7 +211,7 @@ public class NSUpload {
                 IobTotal[] iob = iobCobCalculatorPlugin.calculateIobArrayInDia(profile);
                 if (iob.length > 0) {
                     deviceStatus.iob = iob[0].json();
-                    deviceStatus.iob.put("time", DateUtil.toISOString(DateUtil.now()));
+                    deviceStatus.iob.put("time", DateUtil.toISOString(dateUtil._now()));
                 }
             }
             deviceStatus.device = "openaps://" + Build.MANUFACTURER + " " + Build.MODEL;

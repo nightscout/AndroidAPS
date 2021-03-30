@@ -10,15 +10,12 @@ import info.nightscout.androidaps.plugins.general.automation.elements.InputTime
 import info.nightscout.androidaps.plugins.general.automation.elements.InputWeekDay
 import info.nightscout.androidaps.plugins.general.automation.elements.LayoutBuilder
 import info.nightscout.androidaps.plugins.general.automation.elements.StaticLabel
-import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.JsonHelper
 import info.nightscout.androidaps.utils.MidnightTime
 import org.json.JSONObject
 import java.util.*
-import javax.inject.Inject
 
 class TriggerRecurringTime(injector: HasAndroidInjector) : Trigger(injector) {
-    @Inject lateinit var dateUtil: DateUtil
 
     val days = InputWeekDay()
     val time = InputTime(resourceHelper, dateUtil)
@@ -34,7 +31,7 @@ class TriggerRecurringTime(injector: HasAndroidInjector) : Trigger(injector) {
         return this
     }
 
-    override fun shouldRun() : Boolean {
+    override fun shouldRun(): Boolean {
         val currentMinSinceMidnight = getMinSinceMidnight(dateUtil._now())
         val scheduledDayOfWeek = Calendar.getInstance()[Calendar.DAY_OF_WEEK]
         if (days.isSet(Objects.requireNonNull(InputWeekDay.DayOfWeek.fromCalendarInt(scheduledDayOfWeek)))) {

@@ -10,6 +10,7 @@ import info.nightscout.androidaps.interfaces.ActivePluginProvider
 import info.nightscout.androidaps.interfaces.CommandQueueProvider
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper
 import info.nightscout.androidaps.plugins.configBuilder.ConstraintChecker
+import info.nightscout.androidaps.plugins.general.overview.events.EventOverviewBolusProgress
 import info.nightscout.androidaps.plugins.pump.common.bolusInfo.DetailedBolusInfoStorage
 import org.junit.Assert
 import org.junit.Before
@@ -69,6 +70,6 @@ class DanaRsPacketNotifyDeliveryRateDisplayTest : DanaRSTestBase() {
     @Before
     fun mock() {
         danaRSPlugin = DanaRSPlugin(packetInjector, aapsLogger, aapsSchedulers, rxBus, context, resourceHelper, constraintChecker, profileFunction, activePluginProvider, sp, commandQueue, danaPump, detailedBolusInfoStorage, fabricPrivacy, dateUtil)
-        danaPump.bolusingTreatment = Treatment(packetInjector)
+        danaPump.bolusingTreatment = EventOverviewBolusProgress.Treatment(0.0, 0, true)
     }
 }

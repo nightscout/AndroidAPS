@@ -8,10 +8,10 @@ import info.nightscout.androidaps.R
 import info.nightscout.androidaps.database.AppRepository
 import info.nightscout.androidaps.database.entities.UserEntry
 import info.nightscout.androidaps.database.entities.UserEntry.ValueWithUnit
+import info.nightscout.androidaps.database.transactions.SyncNsBolusTransaction
+import info.nightscout.androidaps.database.transactions.SyncNsCarbsTransaction
 import info.nightscout.androidaps.database.transactions.SyncNsTemporaryTargetTransaction
 import info.nightscout.androidaps.database.transactions.SyncNsTherapyEventTransaction
-import info.nightscout.androidaps.events.EventNsTreatment
-import info.nightscout.androidaps.events.EventNsTreatment.Companion.REMOVE
 import info.nightscout.androidaps.interfaces.ConfigInterface
 import info.nightscout.androidaps.interfaces.DatabaseHelperInterface
 import info.nightscout.androidaps.logging.AAPSLogger
@@ -21,6 +21,8 @@ import info.nightscout.androidaps.plugins.bus.RxBusWrapper
 import info.nightscout.androidaps.receivers.DataWorker
 import info.nightscout.androidaps.utils.JsonHelper
 import info.nightscout.androidaps.utils.buildHelper.BuildHelper
+import info.nightscout.androidaps.utils.extensions.bolusFromNsIdForInvalidating
+import info.nightscout.androidaps.utils.extensions.carbsFromNsIdForInvalidating
 import info.nightscout.androidaps.utils.extensions.temporaryTargetFromNsIdForInvalidating
 import info.nightscout.androidaps.utils.extensions.therapyEventFromNsIdForInvalidating
 import info.nightscout.androidaps.utils.sharedPreferences.SP
@@ -61,7 +63,7 @@ class NSClientRemoveWorker(
             val temporaryTarget = temporaryTargetFromNsIdForInvalidating(nsId)
             repository.runTransactionForResult(SyncNsTemporaryTargetTransaction(temporaryTarget))
                 .doOnError {
-                    aapsLogger.error(LTag.DATABASE, "Error while removing temporary target", it)
+                    aapsLogger.error(LTag.DATABASE, "Error while invalidating temporary target", it)
                     ret = Result.failure()
                 }
                 .blockingGet()
@@ -81,7 +83,7 @@ class NSClientRemoveWorker(
             val therapyEvent = therapyEventFromNsIdForInvalidating(nsId)
             repository.runTransactionForResult(SyncNsTherapyEventTransaction(therapyEvent))
                 .doOnError {
-                    aapsLogger.error(LTag.DATABASE, "Error while removing therapy event", it)
+                    aapsLogger.error(LTag.DATABASE, "Error while invalidating therapy event", it)
                     ret = Result.failure()
                 }
                 .blockingGet()
@@ -94,8 +96,40 @@ class NSClientRemoveWorker(
                     }
                 }
 
-            // Insulin, carbs
-            rxBus.send(EventNsTreatment(REMOVE, json))
+            // room  Bolus
+            val bolus = bolusFromNsIdForInvalidating(nsId)
+            repository.runTransactionForResult(SyncNsBolusTransaction(bolus))
+                .doOnError {
+                    aapsLogger.error(LTag.DATABASE, "Error while invalidating bolus", it)
+                    ret = Result.failure()
+                }
+                .blockingGet()
+                .also { result ->
+                    result.invalidated.forEach {
+                        uel.log(
+                            UserEntry.Action.CAREPORTAL_DELETED_FROM_NS,
+                            ValueWithUnit(it.timestamp, UserEntry.Units.Timestamp, true),
+                            ValueWithUnit(it.amount, UserEntry.Units.U))
+                    }
+                }
+
+            // room  Bolus
+            val carbs = carbsFromNsIdForInvalidating(nsId)
+            repository.runTransactionForResult(SyncNsCarbsTransaction(carbs))
+                .doOnError {
+                    aapsLogger.error(LTag.DATABASE, "Error while invalidating carbs", it)
+                    ret = Result.failure()
+                }
+                .blockingGet()
+                .also { result ->
+                    result.invalidated.forEach {
+                        uel.log(
+                            UserEntry.Action.CAREPORTAL_DELETED_FROM_NS,
+                            ValueWithUnit(it.timestamp, UserEntry.Units.Timestamp, true),
+                            ValueWithUnit(it.amount, UserEntry.Units.G))
+                    }
+                }
+
             // old DB model
             databaseHelper.deleteTempBasalById(nsId)
             databaseHelper.deleteExtendedBolusById(nsId)

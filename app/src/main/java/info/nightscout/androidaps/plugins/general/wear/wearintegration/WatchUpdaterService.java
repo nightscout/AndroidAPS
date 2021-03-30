@@ -527,6 +527,8 @@ public class WatchUpdaterService extends WearableListenerService implements Goog
         }
 
         repository.getBolusesIncludingInvalidFromTime(startTimeWindow, true).blockingGet()
+                .stream()
+                .filter(bolus -> bolus.getType() != Bolus.Type.PRIMING)
                 .forEach(bolus -> boluses.add(treatmentMap(bolus.getTimestamp(), bolus.getAmount(), 0, bolus.getType() == Bolus.Type.SMB, bolus.isValid())));
         repository.getCarbsIncludingInvalidFromTime(startTimeWindow, true).blockingGet()
                 .forEach(carb -> boluses.add(treatmentMap(carb.getTimestamp(), 0, carb.getAmount(), false, carb.isValid())));

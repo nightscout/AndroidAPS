@@ -297,14 +297,6 @@ public class Treatment implements DataPointWithLabelInterface, DbObjectBase {
 
     //  ----------------- DataPointInterface end --------------------
 
-    public Iob iobCalc(long time, double dia) {
-        if (!isValid)
-            return new Iob();
-
-        InsulinInterface insulinInterface = activePlugin.getActiveInsulin();
-        return insulinInterface.iobCalcForTreatment(this, time, dia);
-    }
-
     @Override
     public long getDate() {
         return this.date;

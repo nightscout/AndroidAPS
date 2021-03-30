@@ -14,6 +14,7 @@ import info.nightscout.androidaps.interfaces.TreatmentsInterface
 import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.logging.LTag
 import info.nightscout.androidaps.plugins.configBuilder.ConstraintChecker
+import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.DecimalFormatter
 import info.nightscout.androidaps.utils.HtmlHelper.fromHtml
 import info.nightscout.androidaps.utils.resources.ResourceHelper
@@ -37,6 +38,7 @@ open class APSResult @Inject constructor(val injector: HasAndroidInjector) {
     @Inject lateinit var treatmentsPlugin: TreatmentsInterface
     @Inject lateinit var profileFunction: ProfileFunction
     @Inject lateinit var resourceHelper: ResourceHelper
+    @Inject lateinit var dateUtil: DateUtil
 
     var date: Long = 0
     var reason: String? = null

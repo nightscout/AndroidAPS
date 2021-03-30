@@ -277,13 +277,13 @@ class CarbsDialog : DialogFragmentWithDate() {
                         detailedBolusInfo.carbs = carbsAfterConstraints.toDouble()
                         detailedBolusInfo.context = context
                         detailedBolusInfo.notes = notes
-                        detailedBolusInfo.carbsDuration = T.mins(duration.toLong()).msecs()
+                        detailedBolusInfo.carbsDuration = T.hours(duration.toLong()).msecs()
                         detailedBolusInfo.carbsTimestamp = time
                         uel.log(Action.CARBS, detailedBolusInfo.notes,
                             ValueWithUnit(detailedBolusInfo.timestamp, Units.Timestamp),
                             ValueWithUnit(detailedBolusInfo.carbs, Units.G),
                             ValueWithUnit(detailedBolusInfo.carbTime, Units.M, detailedBolusInfo.carbTime != 0),
-                            ValueWithUnit(detailedBolusInfo.carbsDuration, Units.H, detailedBolusInfo.carbsDuration != 0L)
+                            ValueWithUnit(T.msecs(detailedBolusInfo.carbsDuration).hours(), Units.H, detailedBolusInfo.carbsDuration != 0L)
                         )
                         commandQueue.bolus(detailedBolusInfo, object : Callback() {
                             override fun run() {

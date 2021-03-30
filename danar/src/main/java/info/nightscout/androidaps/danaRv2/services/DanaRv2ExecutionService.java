@@ -52,7 +52,6 @@ import info.nightscout.androidaps.danar.comm.MsgStatusBasic;
 import info.nightscout.androidaps.danar.services.AbstractDanaRExecutionService;
 import info.nightscout.androidaps.data.Profile;
 import info.nightscout.androidaps.data.PumpEnactResult;
-import info.nightscout.androidaps.db.Treatment;
 import info.nightscout.androidaps.dialogs.BolusProgressDialog;
 import info.nightscout.androidaps.events.EventInitializationChanged;
 import info.nightscout.androidaps.events.EventProfileNeedsUpdate;
@@ -338,7 +337,7 @@ public class DanaRv2ExecutionService extends AbstractDanaRExecutionService {
         return true;
     }
 
-    public boolean bolus(final double amount, int carbs, long carbtime, final Treatment t) {
+    public boolean bolus(final double amount, int carbs, long carbtime, final EventOverviewBolusProgress.Treatment t) {
         if (!isConnected()) return false;
         if (BolusProgressDialog.stopPressed) return false;
 

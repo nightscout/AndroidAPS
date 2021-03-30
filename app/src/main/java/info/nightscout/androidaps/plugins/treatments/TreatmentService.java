@@ -17,8 +17,6 @@ import com.j256.ormlite.table.TableUtils;
 
 import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.NotNull;
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -36,7 +34,6 @@ import info.nightscout.androidaps.db.ICallback;
 import info.nightscout.androidaps.db.Source;
 import info.nightscout.androidaps.db.Treatment;
 import info.nightscout.androidaps.events.Event;
-import info.nightscout.androidaps.events.EventNsTreatment;
 import info.nightscout.androidaps.events.EventReloadTreatmentData;
 import info.nightscout.androidaps.events.EventTreatmentChange;
 import info.nightscout.androidaps.interfaces.DatabaseHelperInterface;
@@ -49,11 +46,8 @@ import info.nightscout.androidaps.plugins.general.openhumans.OpenHumansUploader;
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.events.EventNewHistoryData;
 import info.nightscout.androidaps.plugins.pump.medtronic.MedtronicPumpPlugin;
 import info.nightscout.androidaps.plugins.pump.medtronic.data.MedtronicHistoryData;
-import info.nightscout.androidaps.utils.DateUtil;
 import info.nightscout.androidaps.utils.FabricPrivacy;
-import info.nightscout.androidaps.utils.JsonHelper;
 import info.nightscout.androidaps.utils.rx.AapsSchedulers;
-import io.reactivex.disposables.CompositeDisposable;
 
 
 /**
@@ -70,8 +64,6 @@ public class TreatmentService extends OrmLiteBaseService<DatabaseHelper> impleme
     @Inject OpenHumansUploader openHumansUploader;
     @Inject AapsSchedulers aapsSchedulers;
 
-    private final CompositeDisposable disposable = new CompositeDisposable();
-
     private static final ScheduledExecutorService treatmentEventWorker = Executors.newSingleThreadScheduledExecutor();
     private static ScheduledFuture<?> scheduledTreatmentEventPost = null;
 
@@ -79,20 +71,6 @@ public class TreatmentService extends OrmLiteBaseService<DatabaseHelper> impleme
         injector.androidInjector().inject(this);
         onCreate();
         dbInitialize();
-        disposable.add(rxBus
-                .toObservable(EventNsTreatment.class)
-                .observeOn(aapsSchedulers.getIo())
-                .subscribe(event -> {
-                    int mode = event.getMode();
-                    JSONObject payload = event.getPayload();
-
-                    if (mode == EventNsTreatment.Companion.getADD() || mode == EventNsTreatment.Companion.getUPDATE()) {
-                        this.createTreatmentFromJsonIfNotExists(payload);
-                    } else { // EventNsTreatment.REMOVE
-                        this.deleteNS(payload);
-                    }
-                }, fabricPrivacy::logException)
-        );
     }
 
     /**
@@ -215,18 +193,6 @@ public class TreatmentService extends OrmLiteBaseService<DatabaseHelper> impleme
         }
     }
 
-    public void resetTreatments() {
-        try {
-            TableUtils.dropTable(this.getConnectionSource(), Treatment.class, true);
-            TableUtils.createTableIfNotExists(this.getConnectionSource(), Treatment.class);
-            DatabaseHelper.updateEarliestDataChange(0);
-        } catch (SQLException e) {
-            aapsLogger.error("Unhandled exception", e);
-        }
-        scheduleTreatmentChange(null, true);
-    }
-
-
     /**
      * A place to centrally register events to be posted, if any data changed.
      * This should be implemented in an abstract service-class.
@@ -272,14 +238,14 @@ public class TreatmentService extends OrmLiteBaseService<DatabaseHelper> impleme
     public void scheduleTreatmentChange(@Nullable final Treatment treatment, boolean runImmediately) {
         if (runImmediately) {
             aapsLogger.debug(LTag.DATATREATMENTS, "Firing EventReloadTreatmentData");
-            rxBus.send(new EventReloadTreatmentData(new EventTreatmentChange(treatment)));
+            rxBus.send(new EventReloadTreatmentData(new EventTreatmentChange()));
             if (DatabaseHelper.earliestDataChange != null) {
                 aapsLogger.debug(LTag.DATATREATMENTS, "Firing EventNewHistoryData");
                 rxBus.send(new EventNewHistoryData(DatabaseHelper.earliestDataChange));
             }
             DatabaseHelper.earliestDataChange = null;
         } else {
-            this.scheduleEvent(new EventReloadTreatmentData(new EventTreatmentChange(treatment)), treatmentEventWorker, new ICallback() {
+            this.scheduleEvent(new EventReloadTreatmentData(new EventTreatmentChange()), treatmentEventWorker, new ICallback() {
                 @Override
                 public void setPost(ScheduledFuture<?> post) {
                     scheduledTreatmentEventPost = post;
@@ -291,16 +257,6 @@ public class TreatmentService extends OrmLiteBaseService<DatabaseHelper> impleme
                 }
             });
         }
-    }
-
-    public List<Treatment> getTreatmentData() {
-        try {
-            return this.getDao().queryForAll();
-        } catch (SQLException e) {
-            aapsLogger.error("Unhandled exception", e);
-        }
-
-        return new ArrayList<>();
     }
 
     public long count() {
@@ -326,26 +282,6 @@ public class TreatmentService extends OrmLiteBaseService<DatabaseHelper> impleme
         "unit": "ml"
     }
      */
-    public void createTreatmentFromJsonIfNotExists(JSONObject json) {
-        try {
-            Treatment treatment = Treatment.createFromJson(json);
-            if (treatment != null) {
-
-                if (MedtronicHistoryData.doubleBolusDebug)
-                    aapsLogger.debug(LTag.DATATREATMENTS, "DoubleBolusDebug: createTreatmentFromJsonIfNotExists:: medtronicPump={}", medtronicPumpPlugin.isEnabled());
-
-                if (!medtronicPumpPlugin.isEnabled())
-                    createOrUpdate(treatment);
-                else
-                    createOrUpdateMedtronic(treatment, true);
-            } else
-                aapsLogger.error("Date is null: " + treatment.toString());
-        } catch (JSONException e) {
-            aapsLogger.error("Unhandled exception", e);
-        }
-    }
-
-
     // return true if new record is created
     public UpdateReturn createOrUpdate(Treatment treatment) {
         if (treatment != null && treatment.source == Source.NONE) {
@@ -655,107 +591,6 @@ public class TreatmentService extends OrmLiteBaseService<DatabaseHelper> impleme
     }
 
     /**
-     * Returns the newest record with insulin > 0
-     */
-    @Nullable
-    public Treatment getLastBolus(boolean excludeSMB) {
-        try {
-            QueryBuilder<Treatment, Long> queryBuilder = getDao().queryBuilder();
-            Where where = queryBuilder.where();
-            where.gt("insulin", 0);
-            where.and().le("date", DateUtil.now());
-            where.and().eq("isValid", true);
-            if (excludeSMB) where.and().eq("isSMB", false);
-            queryBuilder.orderBy("date", false);
-            queryBuilder.limit(1L);
-
-            List<Treatment> result = getDao().query(queryBuilder.prepare());
-            if (result.isEmpty())
-                return null;
-            return result.get(0);
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    /**
-     * Returns the newest record with carbs > 0
-     */
-    @Nullable
-    public Treatment getLastCarb() {
-        try {
-            QueryBuilder<Treatment, Long> queryBuilder = getDao().queryBuilder();
-            Where where = queryBuilder.where();
-            where.gt("carbs", 0);
-            where.and().le("date", DateUtil.now());
-            where.and().eq("isValid", true);
-            queryBuilder.orderBy("date", false);
-            queryBuilder.limit(1L);
-
-            List<Treatment> result = getDao().query(queryBuilder.prepare());
-            if (result.isEmpty())
-                return null;
-            return result.get(0);
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    public void deleteNS(JSONObject json) {
-        String _id = JsonHelper.safeGetString(json, "_id");
-        if (_id != null && !_id.isEmpty())
-            this.deleteByNSId(_id);
-    }
-
-    /**
-     * deletes an entry by its NS Id.
-     * <p>
-     * Basically a convenience method for findByNSId and delete.
-     *
-     * @param _id
-     */
-    private void deleteByNSId(String _id) {
-        Treatment stored = findByNSId(_id);
-        if (stored != null) {
-            aapsLogger.debug(LTag.DATATREATMENTS, "Removing Treatment record from database: " + stored.toString());
-            try {
-                getDao().delete(stored);
-            } catch (SQLException e) {
-                aapsLogger.error("Unhandled exception", e);
-            }
-            DatabaseHelper.updateEarliestDataChange(stored.date);
-            this.scheduleTreatmentChange(stored, false);
-        }
-    }
-
-    /**
-     * deletes the treatment and sends the treatmentChange Event
-     * <p>
-     * should be moved ot a Service
-     *
-     * @param treatment
-     */
-    public void delete(Treatment treatment) {
-        try {
-            getDao().delete(treatment);
-            DatabaseHelper.updateEarliestDataChange(treatment.date);
-            this.scheduleTreatmentChange(treatment, true);
-        } catch (SQLException e) {
-            aapsLogger.error("Unhandled exception", e);
-        }
-    }
-
-    public void update(Treatment treatment) {
-        try {
-            getDao().update(treatment);
-            DatabaseHelper.updateEarliestDataChange(treatment.date);
-        } catch (SQLException e) {
-            aapsLogger.error("Unhandled exception", e);
-        }
-        scheduleTreatmentChange(treatment, true);
-    }
-
-    /**
      * finds treatment by its NS Id.
      *
      * @param _id
@@ -782,40 +617,6 @@ public class TreatmentService extends OrmLiteBaseService<DatabaseHelper> impleme
             aapsLogger.error("Unhandled exception", e);
         }
         return null;
-    }
-
-    public List<Treatment> getTreatmentDataFromTime(long mills, boolean ascending) {
-        try {
-            TreatmentDaoWrapper daoTreatments = getDao();
-            List<Treatment> treatments;
-            QueryBuilder<Treatment, Long> queryBuilder = daoTreatments.queryBuilder();
-            queryBuilder.orderBy("date", ascending);
-            Where where = queryBuilder.where();
-            where.ge("date", mills);
-            PreparedQuery<Treatment> preparedQuery = queryBuilder.prepare();
-            treatments = daoTreatments.query(preparedQuery);
-            return treatments;
-        } catch (SQLException e) {
-            aapsLogger.error("Unhandled exception", e);
-        }
-        return new ArrayList<>();
-    }
-
-    public List<Treatment> getTreatmentDataFromTime(long from, long to, boolean ascending) {
-        try {
-            TreatmentDaoWrapper daoTreatments = getDao();
-            List<Treatment> treatments;
-            QueryBuilder<Treatment, Long> queryBuilder = daoTreatments.queryBuilder();
-            queryBuilder.orderBy("date", ascending);
-            Where where = queryBuilder.where();
-            where.between("date", from, to);
-            PreparedQuery<Treatment> preparedQuery = queryBuilder.prepare();
-            treatments = daoTreatments.query(preparedQuery);
-            return treatments;
-        } catch (SQLException e) {
-            aapsLogger.error("Unhandled exception", e);
-        }
-        return new ArrayList<>();
     }
 
     @Nullable

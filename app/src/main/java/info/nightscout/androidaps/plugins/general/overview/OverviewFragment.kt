@@ -778,7 +778,8 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
         if (config.APS && lastRun?.constraintsProcessed != null) {
             if (lastRun.constraintsProcessed!!.carbsReq > 0) {
                 //only display carbsreq when carbs have not been entered recently
-                if (treatmentsPlugin.lastCarbTime < lastRun.lastAPSRun) {
+                val lastCarbsTime = repository.getLastBolusRecord()?.timestamp ?: 0L
+                if (lastCarbsTime < lastRun.lastAPSRun) {
                     cobText = cobText + " | " + lastRun.constraintsProcessed!!.carbsReq + " " + resourceHelper.gs(R.string.required)
                 }
                 binding.infoLayout.cob.text = cobText

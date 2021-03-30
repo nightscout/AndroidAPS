@@ -101,7 +101,7 @@ class TreatmentsBolusCarbsFragment : DaggerFragment() {
                             .observeOn(aapsSchedulers.main)
                             .subscribeBy(
                                 onError = { aapsLogger.error("Error removing entries", it) },
-                                onComplete = { rxBus.send(EventTreatmentChange(null)) }
+                                onComplete = { rxBus.send(EventTreatmentChange()) }
                             )
                     rxBus.send(EventNSClientRestart())
                 }
@@ -190,7 +190,7 @@ class TreatmentsBolusCarbsFragment : DaggerFragment() {
                 .zipWith(bolusMealLinksWithInvalid(now)) { first, second -> first + second }
                 .zipWith(calcResultMealLinksWithInvalid(now)) { first, second -> first + second }
                 .map { ml ->
-                    ml.sortedBy {
+                    ml.sortedByDescending {
                         it.carbs?.timestamp ?: it.bolus?.timestamp
                         ?: it.bolusCalculatorResult?.timestamp
                     }
@@ -205,7 +205,7 @@ class TreatmentsBolusCarbsFragment : DaggerFragment() {
                 .zipWith(bolusMealLinks(now)) { first, second -> first + second }
                 .zipWith(calcResultMealLinks(now)) { first, second -> first + second }
                 .map { ml ->
-                    ml.sortedBy {
+                    ml.sortedByDescending {
                         it.carbs?.timestamp ?: it.bolus?.timestamp
                         ?: it.bolusCalculatorResult?.timestamp
                     }
@@ -285,7 +285,7 @@ class TreatmentsBolusCarbsFragment : DaggerFragment() {
                     when (ml.bolus.type) {
                         Bolus.Type.SMB    -> "SMB"
                         Bolus.Type.NORMAL -> resourceHelper.gs(R.string.mealbolus)
-                        else              -> ""
+                        Bolus.Type.PRIMING -> resourceHelper.gs(R.string.prime)
                     }
             }
             // Carbs
@@ -293,6 +293,7 @@ class TreatmentsBolusCarbsFragment : DaggerFragment() {
             ml.carbs?.let { carbs ->
                 holder.binding.carbsDate.text = dateUtil.timeString(carbs.timestamp)
                 holder.binding.carbs.text = resourceHelper.gs(R.string.format_carbs, carbs.amount.toInt())
+                holder.binding.carbsDuration.text = resourceHelper.gs(R.string.format_mins, T.msecs(carbs.duration).mins().toInt())
                 holder.binding.carbsNs.visibility = (NSUpload.isIdValid(carbs.interfaceIDs.nightscoutId)).toVisibility()
                 holder.binding.carbsPump.visibility = (carbs.interfaceIDs.pumpId != null).toVisibility()
                 holder.binding.carbsInvalid.visibility = carbs.isValid.not().toVisibility()

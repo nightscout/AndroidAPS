@@ -28,6 +28,7 @@ import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.DecimalFormatter
 import info.nightscout.androidaps.utils.FabricPrivacy
 import info.nightscout.androidaps.utils.T
+import info.nightscout.androidaps.utils.extensions.expandCarbs
 import info.nightscout.androidaps.utils.extensions.iobCalc
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 import info.nightscout.androidaps.utils.rx.AapsSchedulers
@@ -531,7 +532,8 @@ open class IobCobCalculatorPlugin @Inject constructor(
         var displayCob: Double? = null
         var futureCarbs = 0.0
         val now = DateUtil.now()
-        val carbs = repository.getCarbsDataFromTime(now, true).blockingGet()
+        val carbs = repository.getCarbsDataFromTime(now, true)
+            .blockingGet()
         if (autosensData != null) {
             displayCob = autosensData.cob
             carbs.forEach { carb ->
@@ -601,12 +603,15 @@ open class IobCobCalculatorPlugin @Inject constructor(
                 sp.getDouble(R.string.key_absorption_cutoff, Constants.DEFAULT_MAX_ABSORPTION_TIME)
             }
             val absorptionTimeAgo = now - (maxAbsorptionHours * T.hours(1).msecs()).toLong()
-            repository.getCarbsDataFromTimeToTime(absorptionTimeAgo + 1, now, true).blockingGet().forEach {
-                if (it.amount > 0) {
-                    result.carbs += it.amount
-                    if (it.timestamp > result.lastCarbTime) result.lastCarbTime = it.timestamp
+            repository.getCarbsDataFromTimeToTime(absorptionTimeAgo + 1, now, true)
+                .map { it.map { c -> c.expandCarbs() }.flatten() }
+                .blockingGet()
+                .forEach {
+                    if (it.amount > 0) {
+                        result.carbs += it.amount
+                        if (it.timestamp > result.lastCarbTime) result.lastCarbTime = it.timestamp
+                    }
                 }
-            }
             val autosensData = getLastAutosensDataSynchronized("getMealData()")
             if (autosensData != null) {
                 result.mealCOB = autosensData.cob
@@ -614,7 +619,7 @@ open class IobCobCalculatorPlugin @Inject constructor(
                 result.slopeFromMaxDeviation = autosensData.slopeFromMaxDeviation
                 result.usedMinCarbsImpact = autosensData.usedMinCarbsImpact
             }
-            result.lastBolusTime = treatmentsPlugin.lastBolusTime
+            result.lastBolusTime = repository.getLastBolusRecord()?.timestamp ?: 0L
             return result
         }
 
@@ -778,6 +783,15 @@ open class IobCobCalculatorPlugin @Inject constructor(
         }
     }
 
+    /**
+     *  Time range to the past for IOB calculation
+     *  @return milliseconds
+     */
+    fun range(): Long {
+        val dia = profileFunction.getProfile()?.dia ?: Constants.defaultDIA
+        return (60 * 60 * 1000L * (24 + dia)).toLong()
+    }
+
     override fun calculateIobFromBolus(): IobTotal = calculateIobFromBolusToTime(dateUtil._now())
 
     override fun calculateIobFromBolusToTime(timestamp: Long): IobTotal {
@@ -786,7 +800,7 @@ open class IobCobCalculatorPlugin @Inject constructor(
         val dia = profile.dia
         val divisor = sp.getDouble(R.string.key_openapsama_bolussnooze_dia_divisor, 2.0)
 
-        val boluses = repository.getBolusesDataFromTime(timestamp, true).blockingGet()
+        val boluses = repository.getBolusesDataFromTime(timestamp - range(), true).blockingGet()
 
         boluses.forEach { t ->
             if (t.isValid && t.timestamp < timestamp) {

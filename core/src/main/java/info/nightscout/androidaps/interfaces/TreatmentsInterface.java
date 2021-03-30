@@ -31,10 +31,6 @@ public interface TreatmentsInterface {
     @Deprecated
     List<Treatment> getTreatmentsFromHistoryAfterTimestamp(long timestamp);
 
-    long getLastBolusTime();
-
-    long getLastBolusTime(boolean excludeSMB);
-
     // real basals (not faked by extended bolus)
     boolean isInHistoryRealTempBasalInProgress();
 

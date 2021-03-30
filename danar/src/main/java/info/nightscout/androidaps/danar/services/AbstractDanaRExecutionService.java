@@ -35,7 +35,6 @@ import info.nightscout.androidaps.danar.comm.MsgPCCommStart;
 import info.nightscout.androidaps.danar.comm.MsgPCCommStop;
 import info.nightscout.androidaps.data.Profile;
 import info.nightscout.androidaps.data.PumpEnactResult;
-import info.nightscout.androidaps.db.Treatment;
 import info.nightscout.androidaps.events.EventAppExit;
 import info.nightscout.androidaps.events.EventBTChange;
 import info.nightscout.androidaps.events.EventPumpStatusChanged;
@@ -43,6 +42,7 @@ import info.nightscout.androidaps.interfaces.DatabaseHelperInterface;
 import info.nightscout.androidaps.logging.AAPSLogger;
 import info.nightscout.androidaps.logging.LTag;
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper;
+import info.nightscout.androidaps.plugins.general.overview.events.EventOverviewBolusProgress;
 import info.nightscout.androidaps.utils.DateUtil;
 import info.nightscout.androidaps.utils.FabricPrivacy;
 import info.nightscout.androidaps.utils.ToastUtils;
@@ -95,7 +95,7 @@ public abstract class AbstractDanaRExecutionService extends DaggerService {
 
     public abstract PumpEnactResult loadEvents();
 
-    public abstract boolean bolus(double amount, int carbs, long carbtime, final Treatment t);
+    public abstract boolean bolus(double amount, int carbs, long carbtime, final EventOverviewBolusProgress.Treatment t);
 
     public abstract boolean highTempBasal(int percent, int durationInMinutes); // Rv2 only
 

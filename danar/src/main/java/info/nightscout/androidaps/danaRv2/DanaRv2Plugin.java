@@ -20,7 +20,6 @@ import info.nightscout.androidaps.data.DetailedBolusInfo;
 import info.nightscout.androidaps.data.Profile;
 import info.nightscout.androidaps.data.PumpEnactResult;
 import info.nightscout.androidaps.db.TemporaryBasal;
-import info.nightscout.androidaps.db.Treatment;
 import info.nightscout.androidaps.events.EventAppExit;
 import info.nightscout.androidaps.interfaces.ActivePluginProvider;
 import info.nightscout.androidaps.interfaces.CommandQueueProvider;
@@ -29,6 +28,7 @@ import info.nightscout.androidaps.logging.AAPSLogger;
 import info.nightscout.androidaps.logging.LTag;
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper;
 import info.nightscout.androidaps.plugins.configBuilder.ConstraintChecker;
+import info.nightscout.androidaps.plugins.general.overview.events.EventOverviewBolusProgress;
 import info.nightscout.androidaps.plugins.pump.common.bolusInfo.DetailedBolusInfoStorage;
 import info.nightscout.androidaps.plugins.pump.common.defs.PumpType;
 import info.nightscout.androidaps.utils.DateUtil;
@@ -182,8 +182,7 @@ public class DanaRv2Plugin extends AbstractDanaRPlugin {
 
             detailedBolusInfoStorage.add(detailedBolusInfo); // will be picked up on reading history
 
-            Treatment t = new Treatment();
-            t.isSMB = detailedBolusInfo.getBolusType() == DetailedBolusInfo.BolusType.SMB;
+            EventOverviewBolusProgress.Treatment t = new EventOverviewBolusProgress.Treatment(0, 0, detailedBolusInfo.getBolusType() == DetailedBolusInfo.BolusType.SMB);
             boolean connectionOK = false;
             if (detailedBolusInfo.insulin > 0 || carbs > 0)
                 connectionOK = sExecutionService.bolus(detailedBolusInfo.insulin, (int) carbs, DateUtil.now() + T.mins(carbTime).msecs(), t);

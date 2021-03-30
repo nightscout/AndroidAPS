@@ -98,7 +98,6 @@ class SmsCommunicatorPlugin @Inject constructor(
     val commands = mapOf(
         "BG" to "BG",
         "LOOP" to "LOOP STOP/DISABLE/START/ENABLE/RESUME/STATUS\nLOOP SUSPEND 20",
-        "TREATMENTS" to "TREATMENTS REFRESH",
         "NSCLIENT" to "NSCLIENT RESTART",
         "PUMP" to "PUMP\nPUMP CONNECT\nPUMP DISCONNECT 30\n",
         "BASAL" to "BASAL STOP/CANCEL\nBASAL 0.3\nBASAL 0.3 20\nBASAL 30%\nBASAL 30% 20\n",
@@ -245,61 +244,58 @@ class SmsCommunicatorPlugin @Inject constructor(
 
         if (divided.isNotEmpty() && isCommand(divided[0].toUpperCase(Locale.getDefault()), receivedSms.phoneNumber)) {
             when (divided[0].toUpperCase(Locale.getDefault())) {
-                "BG"         ->
+                "BG"       ->
                     if (divided.size == 1) processBG(receivedSms)
                     else sendSMS(Sms(receivedSms.phoneNumber, resourceHelper.gs(R.string.wrongformat)))
-                "LOOP"       ->
+                "LOOP"     ->
                     if (!remoteCommandsAllowed) sendSMS(Sms(receivedSms.phoneNumber, resourceHelper.gs(R.string.smscommunicator_remotecommandnotallowed)))
                     else if (divided.size == 2 || divided.size == 3) processLOOP(divided, receivedSms)
                     else sendSMS(Sms(receivedSms.phoneNumber, resourceHelper.gs(R.string.wrongformat)))
-                "TREATMENTS" ->
-                    if (divided.size == 2) processTREATMENTS(divided, receivedSms)
-                    else sendSMS(Sms(receivedSms.phoneNumber, resourceHelper.gs(R.string.wrongformat)))
-                "NSCLIENT"   ->
+                "NSCLIENT" ->
                     if (divided.size == 2) processNSCLIENT(divided, receivedSms)
                     else sendSMS(Sms(receivedSms.phoneNumber, resourceHelper.gs(R.string.wrongformat)))
-                "PUMP"       ->
+                "PUMP"     ->
                     if (!remoteCommandsAllowed && divided.size > 1) sendSMS(Sms(receivedSms.phoneNumber, resourceHelper.gs(R.string.smscommunicator_remotecommandnotallowed)))
                     else if (divided.size <= 3) processPUMP(divided, receivedSms)
                     else sendSMS(Sms(receivedSms.phoneNumber, resourceHelper.gs(R.string.wrongformat)))
-                "PROFILE"    ->
+                "PROFILE"  ->
                     if (!remoteCommandsAllowed) sendSMS(Sms(receivedSms.phoneNumber, resourceHelper.gs(R.string.smscommunicator_remotecommandnotallowed)))
                     else if (divided.size == 2 || divided.size == 3) processPROFILE(divided, receivedSms)
                     else sendSMS(Sms(receivedSms.phoneNumber, resourceHelper.gs(R.string.wrongformat)))
-                "BASAL"      ->
+                "BASAL"    ->
                     if (!remoteCommandsAllowed) sendSMS(Sms(receivedSms.phoneNumber, resourceHelper.gs(R.string.smscommunicator_remotecommandnotallowed)))
                     else if (divided.size == 2 || divided.size == 3) processBASAL(divided, receivedSms)
                     else sendSMS(Sms(receivedSms.phoneNumber, resourceHelper.gs(R.string.wrongformat)))
-                "EXTENDED"   ->
+                "EXTENDED" ->
                     if (!remoteCommandsAllowed) sendSMS(Sms(receivedSms.phoneNumber, resourceHelper.gs(R.string.smscommunicator_remotecommandnotallowed)))
                     else if (divided.size == 2 || divided.size == 3) processEXTENDED(divided, receivedSms)
                     else sendSMS(Sms(receivedSms.phoneNumber, resourceHelper.gs(R.string.wrongformat)))
-                "BOLUS"      ->
+                "BOLUS"    ->
                     if (!remoteCommandsAllowed) sendSMS(Sms(receivedSms.phoneNumber, resourceHelper.gs(R.string.smscommunicator_remotecommandnotallowed)))
                     else if (divided.size == 2 && DateUtil.now() - lastRemoteBolusTime < minDistance) sendSMS(Sms(receivedSms.phoneNumber, resourceHelper.gs(R.string.smscommunicator_remotebolusnotallowed)))
                     else if (divided.size == 2 && pump.isSuspended()) sendSMS(Sms(receivedSms.phoneNumber, resourceHelper.gs(R.string.pumpsuspended)))
                     else if (divided.size == 2 || divided.size == 3) processBOLUS(divided, receivedSms)
                     else sendSMS(Sms(receivedSms.phoneNumber, resourceHelper.gs(R.string.wrongformat)))
-                "CARBS"      ->
+                "CARBS"    ->
                     if (!remoteCommandsAllowed) sendSMS(Sms(receivedSms.phoneNumber, resourceHelper.gs(R.string.smscommunicator_remotecommandnotallowed)))
                     else if (divided.size == 2 || divided.size == 3) processCARBS(divided, receivedSms)
                     else sendSMS(Sms(receivedSms.phoneNumber, resourceHelper.gs(R.string.wrongformat)))
-                "CAL"        ->
+                "CAL"      ->
                     if (!remoteCommandsAllowed) sendSMS(Sms(receivedSms.phoneNumber, resourceHelper.gs(R.string.smscommunicator_remotecommandnotallowed)))
                     else if (divided.size == 2) processCAL(divided, receivedSms)
                     else sendSMS(Sms(receivedSms.phoneNumber, resourceHelper.gs(R.string.wrongformat)))
-                "TARGET"     ->
+                "TARGET"   ->
                     if (!remoteCommandsAllowed) sendSMS(Sms(receivedSms.phoneNumber, resourceHelper.gs(R.string.smscommunicator_remotecommandnotallowed)))
                     else if (divided.size == 2) processTARGET(divided, receivedSms)
                     else sendSMS(Sms(receivedSms.phoneNumber, resourceHelper.gs(R.string.wrongformat)))
-                "SMS"        ->
+                "SMS"      ->
                     if (!remoteCommandsAllowed) sendSMS(Sms(receivedSms.phoneNumber, resourceHelper.gs(R.string.smscommunicator_remotecommandnotallowed)))
                     else if (divided.size == 2) processSMS(divided, receivedSms)
                     else sendSMS(Sms(receivedSms.phoneNumber, resourceHelper.gs(R.string.wrongformat)))
-                "HELP"       ->
+                "HELP"     ->
                     if (divided.size == 1 || divided.size == 2) processHELP(divided, receivedSms)
                     else sendSMS(Sms(receivedSms.phoneNumber, resourceHelper.gs(R.string.wrongformat)))
-                else         ->
+                else       ->
                     if (messageToConfirm?.requester?.phoneNumber == receivedSms.phoneNumber) {
                         messageToConfirm?.action(divided[0])
                         messageToConfirm = null
@@ -451,16 +447,6 @@ class SmsCommunicatorPlugin @Inject constructor(
 
             else              -> sendSMS(Sms(receivedSms.phoneNumber, resourceHelper.gs(R.string.wrongformat)))
         }
-    }
-
-    private fun processTREATMENTS(divided: Array<String>, receivedSms: Sms) {
-        if (divided[1].toUpperCase(Locale.getDefault()) == "REFRESH") {
-            activePlugin.activeTreatments.service.resetTreatments()
-            rxBus.send(EventNSClientRestart())
-            sendSMS(Sms(receivedSms.phoneNumber, "TREATMENTS REFRESH SENT"))
-            receivedSms.processed = true
-        } else
-            sendSMS(Sms(receivedSms.phoneNumber, resourceHelper.gs(R.string.wrongformat)))
     }
 
     private fun processNSCLIENT(divided: Array<String>, receivedSms: Sms) {
@@ -870,32 +856,23 @@ class SmsCommunicatorPlugin @Inject constructor(
                     val detailedBolusInfo = DetailedBolusInfo()
                     detailedBolusInfo.carbs = anInteger().toDouble()
                     detailedBolusInfo.timestamp = secondLong()
-                    if (activePlugin.activePump.pumpDescription.storesCarbInfo) {
-                        commandQueue.bolus(detailedBolusInfo, object : Callback() {
-                            override fun run() {
-                                if (result.success) {
-                                    var replyText = String.format(resourceHelper.gs(R.string.smscommunicator_carbsset), anInteger)
-                                    replyText += "\n" + activePlugin.activePump.shortStatus(true)
-                                    sendSMSToAllNumbers(Sms(receivedSms.phoneNumber, replyText))
-                                    uel.log(Action.SMS_CARBS, activePlugin.activePump.shortStatus(true), ValueWithUnit(R.string.smscommunicator_carbsset, 1), ValueWithUnit(anInteger
-                                        ?: 0, Units.G))
-                                } else {
-                                    var replyText = resourceHelper.gs(R.string.smscommunicator_carbsfailed, anInteger)
-                                    replyText += "\n" + activePlugin.activePump.shortStatus(true)
-                                    sendSMS(Sms(receivedSms.phoneNumber, replyText))
-                                    uel.log(Action.SMS_CARBS, activePlugin.activePump.shortStatus(true), ValueWithUnit(R.string.smscommunicator_carbsfailed, 1), ValueWithUnit(anInteger
-                                        ?: 0, Units.G))
-                                }
+                    commandQueue.bolus(detailedBolusInfo, object : Callback() {
+                        override fun run() {
+                            if (result.success) {
+                                var replyText = String.format(resourceHelper.gs(R.string.smscommunicator_carbsset), anInteger)
+                                replyText += "\n" + activePlugin.activePump.shortStatus(true)
+                                sendSMSToAllNumbers(Sms(receivedSms.phoneNumber, replyText))
+                                uel.log(Action.SMS_CARBS, activePlugin.activePump.shortStatus(true), ValueWithUnit(R.string.smscommunicator_carbsset, 1), ValueWithUnit(anInteger
+                                    ?: 0, Units.G))
+                            } else {
+                                var replyText = resourceHelper.gs(R.string.smscommunicator_carbsfailed, anInteger)
+                                replyText += "\n" + activePlugin.activePump.shortStatus(true)
+                                sendSMS(Sms(receivedSms.phoneNumber, replyText))
+                                uel.log(Action.SMS_CARBS, activePlugin.activePump.shortStatus(true), ValueWithUnit(R.string.smscommunicator_carbsfailed, 1), ValueWithUnit(anInteger
+                                    ?: 0, Units.G))
                             }
-                        })
-                    } else {
-                        activePlugin.activeTreatments.addToHistoryTreatment(detailedBolusInfo, true)
-                        var replyText = String.format(resourceHelper.gs(R.string.smscommunicator_carbsset), anInteger)
-                        replyText += "\n" + activePlugin.activePump.shortStatus(true)
-                        sendSMSToAllNumbers(Sms(receivedSms.phoneNumber, replyText))
-                        uel.log(Action.SMS_CARBS, activePlugin.activePump.shortStatus(true), ValueWithUnit(R.string.smscommunicator_carbsset, 1), ValueWithUnit(anInteger
-                            ?: 0, Units.G))
-                    }
+                        }
+                    })
                 }
             })
         }

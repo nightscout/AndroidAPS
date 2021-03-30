@@ -40,6 +40,11 @@ data class Bolus(
     enum class Type {
         NORMAL,
         SMB,
-        PRIMING
+        PRIMING;
+
+        companion object {
+
+            fun fromString(name: String?) = values().firstOrNull { it.name == name } ?: NORMAL
+        }
     }
 }

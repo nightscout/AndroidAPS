@@ -18,7 +18,6 @@ import info.nightscout.androidaps.danars.R
 import info.nightscout.androidaps.danars.comm.*
 import info.nightscout.androidaps.data.Profile
 import info.nightscout.androidaps.data.PumpEnactResult
-import info.nightscout.androidaps.db.Treatment
 import info.nightscout.androidaps.dialogs.BolusProgressDialog
 import info.nightscout.androidaps.events.EventAppExit
 import info.nightscout.androidaps.events.EventInitializationChanged
@@ -247,7 +246,7 @@ class DanaRSService : DaggerService() {
         return PumpEnactResult(injector).success(message.success())
     }
 
-    fun bolus(insulin: Double, carbs: Int, carbTime: Long, t: Treatment): Boolean {
+    fun bolus(insulin: Double, carbs: Int, carbTime: Long, t: EventOverviewBolusProgress.Treatment): Boolean {
         if (!isConnected) return false
         if (BolusProgressDialog.stopPressed) return false
         rxBus.send(EventPumpStatusChanged(resourceHelper.gs(R.string.startingbolus)))

@@ -8,7 +8,6 @@ import androidx.annotation.Nullable;
 
 import com.google.firebase.analytics.FirebaseAnalytics;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -62,6 +61,7 @@ import info.nightscout.androidaps.plugins.pump.medtronic.data.MedtronicHistoryDa
 import info.nightscout.androidaps.utils.DateUtil;
 import info.nightscout.androidaps.utils.FabricPrivacy;
 import info.nightscout.androidaps.utils.T;
+import info.nightscout.androidaps.utils.extensions.BolusExtensionKt;
 import info.nightscout.androidaps.utils.resources.ResourceHelper;
 import info.nightscout.androidaps.utils.rx.AapsSchedulers;
 import info.nightscout.androidaps.utils.sharedPreferences.SP;
@@ -240,7 +240,7 @@ public class TreatmentsPlugin extends PluginBase implements TreatmentsInterface 
 
     /**
      * Returns all Treatments after specified timestamp. Also returns invalid entries (required to
-     * map "Fill Canula" entries to history (and not to add double bolus for it)
+     * map "Fill Cannula" entries to history (and not to add double bolus for it)
      *
      * @param fromTimestamp
      * @return
@@ -269,7 +269,7 @@ public class TreatmentsPlugin extends PluginBase implements TreatmentsInterface 
         }
 */
     }
-
+/*
     @Override
     public long getLastBolusTime() {
         Treatment last = getService().getLastBolus(false);
@@ -304,6 +304,8 @@ public class TreatmentsPlugin extends PluginBase implements TreatmentsInterface 
         }
     }
 
+
+ */
 
     @Override
     public boolean isInHistoryRealTempBasalInProgress() {
@@ -413,10 +415,21 @@ public class TreatmentsPlugin extends PluginBase implements TreatmentsInterface 
             if (runningTBR != null) {
                 running = runningTBR.tempBasalConvertedToAbsolute(i, profile);
             }
-            Treatment treatment = new Treatment(getInjector());
-            treatment.date = i;
-            treatment.insulin = running * 5.0 / 60.0; // 5 min chunk
-            Iob iob = treatment.iobCalc(time, profile.getDia());
+            Bolus bolus = new Bolus(
+                    0, // id
+                    0, // version
+                    0, //dateCreated
+                    true, // isValid
+                    null,
+                    null,
+                    i,
+                    0,
+                    running * 5.0 / 60.0,
+                    Bolus.Type.NORMAL,
+                    true,
+                    null
+            );
+            Iob iob = BolusExtensionKt.iobCalc(bolus, activePlugin, time, profile.getDia());
             total.basaliob += iob.getIobContrib();
             total.activity += iob.getActivityContrib();
         }

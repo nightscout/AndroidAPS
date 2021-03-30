@@ -26,7 +26,6 @@ import info.nightscout.androidaps.logging.LTag
 import info.nightscout.androidaps.plugins.aps.loop.LoopPlugin
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper
 import info.nightscout.androidaps.plugins.configBuilder.ConstraintChecker
-import info.nightscout.androidaps.plugins.general.nsclient.NSUpload
 import info.nightscout.androidaps.plugins.general.overview.events.EventDismissNotification
 import info.nightscout.androidaps.plugins.general.wear.events.EventWearConfirmAction
 import info.nightscout.androidaps.plugins.general.wear.events.EventWearInitiateAction
@@ -78,8 +77,7 @@ class ActionStringHandler @Inject constructor(
     private val dateUtil: DateUtil,
     private val config: Config,
     private val databaseHelper: DatabaseHelperInterface,
-    private val repository: AppRepository,
-    private val nsUpload: NSUpload
+    private val repository: AppRepository
 ) {
 
     private val timeout = 65 * 1000
@@ -613,9 +611,8 @@ class ActionStringHandler @Inject constructor(
         detailedBolusInfo.carbs = carbs.toDouble()
         detailedBolusInfo.bolusType = DetailedBolusInfo.BolusType.NORMAL
         detailedBolusInfo.carbsTimestamp = carbsTime
-        detailedBolusInfo.carbsDuration = carbsDuration.toLong()
-        val storesCarbs = activePlugin.activePump.pumpDescription.storesCarbInfo
-        if (detailedBolusInfo.insulin > 0 || (storesCarbs && carbsDuration == 0)) {
+        detailedBolusInfo.carbsDuration = T.hours(carbsDuration.toLong()).msecs()
+        if (detailedBolusInfo.insulin > 0 || detailedBolusInfo.carbs > 0) {
             commandQueue.bolus(detailedBolusInfo, object : Callback() {
                 override fun run() {
                     if (!result.success) {
@@ -625,8 +622,6 @@ class ActionStringHandler @Inject constructor(
                     }
                 }
             })
-        } else {
-            activePlugin.activeTreatments.addToHistoryTreatment(detailedBolusInfo, false)
         }
     }
 

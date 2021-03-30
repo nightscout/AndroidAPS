@@ -3,10 +3,10 @@ package info.nightscout.androidaps.dana
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.Constants
 import info.nightscout.androidaps.data.Profile
-import info.nightscout.androidaps.db.Treatment
 import info.nightscout.androidaps.interfaces.ProfileStore
 import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.logging.LTag
+import info.nightscout.androidaps.plugins.general.overview.events.EventOverviewBolusProgress
 import info.nightscout.androidaps.plugins.pump.common.defs.PumpType
 import info.nightscout.androidaps.utils.T
 import info.nightscout.androidaps.utils.sharedPreferences.SP
@@ -180,7 +180,7 @@ class DanaPump @Inject constructor(
 
     var bolusStartErrorCode: Int = 0 // last start bolus erroCode
     var historyDoneReceived: Boolean = false // true when last history message is received
-    var bolusingTreatment: Treatment? = null // actually delivered treatment
+    var bolusingTreatment: EventOverviewBolusProgress.Treatment? = null // actually delivered treatment
     var bolusAmountToBeDelivered = 0.0 // amount to be delivered
     var bolusProgressLastTimeStamp: Long = 0 // timestamp of last bolus progress message
     var bolusStopped = false // bolus finished
