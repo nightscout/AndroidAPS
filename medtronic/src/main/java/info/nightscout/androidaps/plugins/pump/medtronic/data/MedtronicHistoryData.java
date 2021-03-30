@@ -356,7 +356,7 @@ public class MedtronicHistoryData {
             boolean isSuspended = !(pumpHistoryEntryType == PumpHistoryEntryType.TempBasalCombined || //
                     pumpHistoryEntryType == PumpHistoryEntryType.BasalProfileStart || //
                     pumpHistoryEntryType == PumpHistoryEntryType.Bolus || //
-                    pumpHistoryEntryType == PumpHistoryEntryType.Resume || //
+                    pumpHistoryEntryType == PumpHistoryEntryType.ResumePump || //
                     pumpHistoryEntryType == PumpHistoryEntryType.BatteryChange || //
                     pumpHistoryEntryType == PumpHistoryEntryType.Prime);
 
@@ -395,8 +395,8 @@ public class MedtronicHistoryData {
                 PumpHistoryEntryType.Bolus, //
                 PumpHistoryEntryType.TempBasalCombined, //
                 PumpHistoryEntryType.Prime, //
-                PumpHistoryEntryType.Suspend, //
-                PumpHistoryEntryType.Resume, //
+                PumpHistoryEntryType.SuspendPump, //
+                PumpHistoryEntryType.ResumePump, //
                 PumpHistoryEntryType.Rewind, //
                 PumpHistoryEntryType.NoDeliveryAlarm, //
                 PumpHistoryEntryType.BatteryChange, //
@@ -1138,8 +1138,8 @@ public class MedtronicHistoryData {
 
     private List<TempBasalProcessDTO> getSuspendResumeRecords() {
         List<PumpHistoryEntry> filteredItems = getFilteredItems(this.newHistory, //
-                PumpHistoryEntryType.Suspend, //
-                PumpHistoryEntryType.Resume);
+                PumpHistoryEntryType.SuspendPump, //
+                PumpHistoryEntryType.ResumePump);
 
         List<TempBasalProcessDTO> outList = new ArrayList<>();
 
@@ -1147,14 +1147,14 @@ public class MedtronicHistoryData {
 
             List<PumpHistoryEntry> filtered2Items = new ArrayList<>();
 
-            if ((filteredItems.size() % 2 == 0) && (filteredItems.get(0).getEntryType() == PumpHistoryEntryType.Resume)) {
+            if ((filteredItems.size() % 2 == 0) && (filteredItems.get(0).getEntryType() == PumpHistoryEntryType.ResumePump)) {
                 // full resume suspends (S R S R)
                 filtered2Items.addAll(filteredItems);
-            } else if ((filteredItems.size() % 2 == 0) && (filteredItems.get(0).getEntryType() == PumpHistoryEntryType.Suspend)) {
+            } else if ((filteredItems.size() % 2 == 0) && (filteredItems.get(0).getEntryType() == PumpHistoryEntryType.SuspendPump)) {
                 // not full suspends, need to retrive one more record and discard first one (R S R S) -> ([S] R S R [xS])
                 filteredItems.remove(0);
 
-                PumpHistoryEntry oneMoreEntryFromHistory = getOneMoreEntryFromHistory(PumpHistoryEntryType.Suspend);
+                PumpHistoryEntry oneMoreEntryFromHistory = getOneMoreEntryFromHistory(PumpHistoryEntryType.SuspendPump);
                 if (oneMoreEntryFromHistory != null) {
                     filteredItems.add(oneMoreEntryFromHistory);
                 } else {
@@ -1163,10 +1163,10 @@ public class MedtronicHistoryData {
 
                 filtered2Items.addAll(filteredItems);
             } else {
-                if (filteredItems.get(0).getEntryType() == PumpHistoryEntryType.Resume) {
+                if (filteredItems.get(0).getEntryType() == PumpHistoryEntryType.ResumePump) {
                     // get one more from history (R S R) -> ([S] R S R)
 
-                    PumpHistoryEntry oneMoreEntryFromHistory = getOneMoreEntryFromHistory(PumpHistoryEntryType.Suspend);
+                    PumpHistoryEntry oneMoreEntryFromHistory = getOneMoreEntryFromHistory(PumpHistoryEntryType.SuspendPump);
                     if (oneMoreEntryFromHistory != null) {
                         filteredItems.add(oneMoreEntryFromHistory);
                     } else {
