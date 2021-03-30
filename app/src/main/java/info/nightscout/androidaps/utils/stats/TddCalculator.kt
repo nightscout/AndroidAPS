@@ -65,7 +65,7 @@ class TddCalculator @Inject constructor(
             tdd.bolus += t.amount
             result.put(midnight, tdd)
         }
-        repository.getCarbsDataFromTimeToTime(startTime, endTime, true).blockingGet().forEach {  t->
+        repository.getCarbsDataFromTimeToTimeExpanded(startTime, endTime, true).blockingGet().forEach {  t->
             val midnight = MidnightTime.calc(t.timestamp)
             val tdd = result[midnight] ?: TDD(midnight, 0.0, 0.0, 0.0)
             tdd.carbs += t.amount

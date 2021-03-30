@@ -24,6 +24,7 @@ import com.google.android.gms.wearable.WearableListenerService;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import javax.inject.Inject;
 
@@ -31,7 +32,7 @@ import dagger.android.AndroidInjection;
 import info.nightscout.androidaps.Config;
 import info.nightscout.androidaps.Constants;
 import info.nightscout.androidaps.R;
-import info.nightscout.androidaps.data.GlucoseValueDataPoint;
+import info.nightscout.androidaps.plugins.general.overview.graphExtensions.GlucoseValueDataPoint;
 import info.nightscout.androidaps.data.IobTotal;
 import info.nightscout.androidaps.data.Profile;
 import info.nightscout.androidaps.database.AppRepository;
@@ -530,12 +531,15 @@ public class WatchUpdaterService extends WearableListenerService implements Goog
                 .stream()
                 .filter(bolus -> bolus.getType() != Bolus.Type.PRIMING)
                 .forEach(bolus -> boluses.add(treatmentMap(bolus.getTimestamp(), bolus.getAmount(), 0, bolus.getType() == Bolus.Type.SMB, bolus.isValid())));
-        repository.getCarbsIncludingInvalidFromTime(startTimeWindow, true).blockingGet()
+        repository.getCarbsDataFromTimeExpanded(startTimeWindow, true).blockingGet()
                 .forEach(carb -> boluses.add(treatmentMap(carb.getTimestamp(), 0, carb.getAmount(), false, carb.isValid())));
 
         final LoopPlugin.LastRun finalLastRun = loopPlugin.getLastRun();
         if (sp.getBoolean("wear_predictions", true) && finalLastRun != null && finalLastRun.getRequest().getHasPredictions() && finalLastRun.getConstraintsProcessed() != null) {
-            List<GlucoseValueDataPoint> predArray = finalLastRun.getConstraintsProcessed().getPredictions();
+            List<GlucoseValueDataPoint> predArray =
+                    finalLastRun.getConstraintsProcessed().getPredictions()
+                            .stream().map( bg -> new GlucoseValueDataPoint(bg, defaultValueHelper, profileFunction, resourceHelper))
+                            .collect(Collectors.toList());
 
             if (!predArray.isEmpty()) {
                 final String units = profileFunction.getUnits();

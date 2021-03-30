@@ -293,7 +293,7 @@ class TreatmentsBolusCarbsFragment : DaggerFragment() {
             ml.carbs?.let { carbs ->
                 holder.binding.carbsDate.text = dateUtil.timeString(carbs.timestamp)
                 holder.binding.carbs.text = resourceHelper.gs(R.string.format_carbs, carbs.amount.toInt())
-                holder.binding.carbsDuration.text = resourceHelper.gs(R.string.format_mins, T.msecs(carbs.duration).mins().toInt())
+                holder.binding.carbsDuration.text = if (carbs.duration> 0) resourceHelper.gs(R.string.format_mins, T.msecs(carbs.duration).mins().toInt()) else ""
                 holder.binding.carbsNs.visibility = (NSUpload.isIdValid(carbs.interfaceIDs.nightscoutId)).toVisibility()
                 holder.binding.carbsPump.visibility = (carbs.interfaceIDs.pumpId != null).toVisibility()
                 holder.binding.carbsInvalid.visibility = carbs.isValid.not().toVisibility()

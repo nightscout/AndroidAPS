@@ -28,7 +28,6 @@ import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.DecimalFormatter
 import info.nightscout.androidaps.utils.FabricPrivacy
 import info.nightscout.androidaps.utils.T
-import info.nightscout.androidaps.utils.extensions.expandCarbs
 import info.nightscout.androidaps.utils.extensions.iobCalc
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 import info.nightscout.androidaps.utils.rx.AapsSchedulers
@@ -532,8 +531,7 @@ open class IobCobCalculatorPlugin @Inject constructor(
         var displayCob: Double? = null
         var futureCarbs = 0.0
         val now = DateUtil.now()
-        val carbs = repository.getCarbsDataFromTime(now, true)
-            .blockingGet()
+        val carbs = repository.getCarbsDataFromTimeExpanded(now, true).blockingGet()
         if (autosensData != null) {
             displayCob = autosensData.cob
             carbs.forEach { carb ->
@@ -603,8 +601,7 @@ open class IobCobCalculatorPlugin @Inject constructor(
                 sp.getDouble(R.string.key_absorption_cutoff, Constants.DEFAULT_MAX_ABSORPTION_TIME)
             }
             val absorptionTimeAgo = now - (maxAbsorptionHours * T.hours(1).msecs()).toLong()
-            repository.getCarbsDataFromTimeToTime(absorptionTimeAgo + 1, now, true)
-                .map { it.map { c -> c.expandCarbs() }.flatten() }
+            repository.getCarbsDataFromTimeToTimeExpanded(absorptionTimeAgo + 1, now, true)
                 .blockingGet()
                 .forEach {
                     if (it.amount > 0) {

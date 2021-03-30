@@ -11,7 +11,8 @@ import com.jjoe64.graphview.series.Series
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.Constants
 import info.nightscout.androidaps.R
-import info.nightscout.androidaps.data.*
+import info.nightscout.androidaps.data.IobTotal
+import info.nightscout.androidaps.data.Profile
 import info.nightscout.androidaps.database.AppRepository
 import info.nightscout.androidaps.database.ValueWrapper
 import info.nightscout.androidaps.database.entities.Bolus
@@ -22,11 +23,7 @@ import info.nightscout.androidaps.logging.LTag
 import info.nightscout.androidaps.plugins.aps.openAPSSMB.SMBDefaults
 import info.nightscout.androidaps.plugins.general.overview.graphExtensions.*
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.AutosensResult
-import info.nightscout.androidaps.utils.DateUtil
-import info.nightscout.androidaps.utils.DecimalFormatter
-import info.nightscout.androidaps.utils.DefaultValueHelper
-import info.nightscout.androidaps.utils.Round
-import info.nightscout.androidaps.utils.T
+import info.nightscout.androidaps.utils.*
 import info.nightscout.androidaps.utils.extensions.target
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 import java.util.*
@@ -51,6 +48,7 @@ class GraphData(
     @Inject lateinit var repository: AppRepository
     @Inject lateinit var dateUtil: DateUtil
     @Inject lateinit var defaultValueHelper: DefaultValueHelper
+    @Inject lateinit var translator: Translator
 
     var maxY = Double.MIN_VALUE
     private var minY = Double.MAX_VALUE
@@ -77,7 +75,7 @@ class GraphData(
         for (bg in bgReadingsArray!!) {
             if (bg.timestamp < fromTime || bg.timestamp > toTime) continue
             if (bg.value > maxBgValue) maxBgValue = bg.value
-            bgListArray.add(GlucoseValueDataPoint(injector, bg))
+            bgListArray.add(GlucoseValueDataPoint(bg, defaultValueHelper, profileFunction, resourceHelper))
         }
         if (predictions != null) {
             predictions.sortWith(Comparator { o1: GlucoseValueDataPoint, o2: GlucoseValueDataPoint -> o1.x.compareTo(o2.x) })
@@ -247,7 +245,7 @@ class GraphData(
                 it.y = getNearestBg(it.x.toLong())
                 filteredTreatments.add(it)
             }
-        repository.getCarbsIncludingInvalidFromTimeToTime(fromTime, endTime, true).blockingGet()
+        repository.getCarbsIncludingInvalidFromTimeToTimeExpanded(fromTime, endTime, true).blockingGet()
             .map { CarbsDataPoint(it, resourceHelper) }
             .forEach {
                 it.y = getNearestBg(it.x.toLong())
@@ -273,7 +271,7 @@ class GraphData(
         // Careportal
 //        databaseHelper.getCareportalEventsFromTime(fromTime - 6 * 60 * 60 * 1000, true)
         repository.compatGetTherapyEventDataFromToTime(fromTime - T.hours(6).msecs(), endTime).blockingGet()
-            .map { TherapyEventDataPoint(injector, it) }
+            .map { TherapyEventDataPoint(it, resourceHelper, profileFunction, translator) }
             .filterTimeframe(fromTime, endTime)
             .forEach {
                 if (it.y == 0.0) it.y = getNearestBg(it.x.toLong())

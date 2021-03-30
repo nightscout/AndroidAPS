@@ -12,6 +12,7 @@ import io.reactivex.subjects.PublishSubject
 import java.util.concurrent.Callable
 import javax.inject.Inject
 import javax.inject.Singleton
+import kotlin.math.roundToInt
 
 @Singleton
 open class AppRepository @Inject internal constructor(
@@ -310,6 +311,27 @@ open class AppRepository @Inject internal constructor(
         database.bolusDao.deleteAllEntries()
 
     // CARBS
+
+    val timeBackForExpand =  8 * 60 * 60 * 1000
+    private fun expandCarbs(carbs: Carbs): List<Carbs> =
+        if (carbs.duration == 0L) {
+            listOf(carbs)
+        } else {
+            var remainingCarbs = carbs.amount
+            val ticks = (carbs.duration / 1000 / 60 / 15).coerceAtLeast(1L)
+            (0 until ticks).map {
+                val carbTime = carbs.timestamp + it * 15 * 60 * 1000
+                val smallCarbAmount = (1.0 * remainingCarbs / (ticks - it)).roundToInt() //on last iteration (ticks-i) is 1 -> smallCarbAmount == remainingCarbs
+                remainingCarbs -= smallCarbAmount.toLong()
+                Carbs(timestamp = carbTime, amount = smallCarbAmount.toDouble(), duration = 0)
+            }.filter { it.amount != 0.0 }
+        }
+
+    private fun Single<List<Carbs>>.expand() = this.map { it.map(::expandCarbs).flatten() }
+    private fun Single<List<Carbs>>.filterOutExtended() = this.map { it.filter { c -> c.duration == 0L } }
+    private fun Single<List<Carbs>>.fromTo(from: Long, to: Long) = this.map { it.filter { c -> c.timestamp in from..to } }
+    private fun Single<List<Carbs>>.sort() = this.map { it.sortedBy { c -> c.timestamp } }
+
     /*
       * returns a Pair of the next entity to sync and the ID of the "update".
       * The update id might either be the entry id itself if it is a new entry - or the id
@@ -339,6 +361,11 @@ open class AppRepository @Inject internal constructor(
     fun getLastCarbsRecord(): Carbs? =
         database.carbsDao.getLastCarbsRecord()
 
+    fun getLastCarbsRecordWrapped(): Single<ValueWrapper<Carbs>> =
+        database.carbsDao.getLastCarbsRecordMaybe()
+            .subscribeOn(Schedulers.io())
+            .toWrappedSingle()
+
     fun getOldestCarbsRecord(): Carbs? =
         database.carbsDao.getOldestCarbsRecord()
 
@@ -347,18 +374,35 @@ open class AppRepository @Inject internal constructor(
             .map { if (!ascending) it.reversed() else it }
             .subscribeOn(Schedulers.io())
 
+    fun getCarbsDataFromTimeExpanded(timestamp: Long, ascending: Boolean): Single<List<Carbs>> =
+        database.carbsDao.getCarbsFromTime(timestamp - timeBackForExpand)
+            .expand()
+            .map { if (!ascending) it.reversed() else it }
+            .subscribeOn(Schedulers.io())
+
     fun getCarbsDataFromTimeToTime(from: Long, to: Long, ascending: Boolean): Single<List<Carbs>> =
         database.carbsDao.getCarbsFromTimeToTime(from, to)
             .map { if (!ascending) it.reversed() else it }
             .subscribeOn(Schedulers.io())
 
-    fun getCarbsIncludingInvalidFromTime(timestamp: Long, ascending: Boolean): Single<List<Carbs>> =
-        database.carbsDao.getCarbsIncludingInvalidFromTime(timestamp)
+    fun getCarbsDataFromTimeToTimeExpanded(from: Long, to: Long, ascending: Boolean): Single<List<Carbs>> =
+        database.carbsDao.getCarbsFromTimeToTime(from - timeBackForExpand, to)
+            .expand()
+            .fromTo(from, to)
+            .sort()
             .map { if (!ascending) it.reversed() else it }
             .subscribeOn(Schedulers.io())
 
-    fun getCarbsIncludingInvalidFromTimeToTime(from: Long, to: Long, ascending: Boolean): Single<List<Carbs>> =
-        database.carbsDao.getCarbsIncludingInvalidFromTimeToTime(from, to)
+    fun getCarbsIncludingInvalidFromTime(timestamp: Long, ascending: Boolean): Single<List<Carbs>> =
+        database.carbsDao.getCarbsIncludingInvalidFromTime(timestamp - timeBackForExpand)
+            .map { if (!ascending) it.reversed() else it }
+            .subscribeOn(Schedulers.io())
+
+    fun getCarbsIncludingInvalidFromTimeToTimeExpanded(from: Long, to: Long, ascending: Boolean): Single<List<Carbs>> =
+        database.carbsDao.getCarbsIncludingInvalidFromTimeToTime(from - timeBackForExpand, to)
+            .expand()
+            .fromTo(from, to)
+            .sort()
             .map { if (!ascending) it.reversed() else it }
             .subscribeOn(Schedulers.io())
 

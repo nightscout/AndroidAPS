@@ -188,7 +188,7 @@ class IobCobThread @Inject internal constructor(
                             aapsLogger.debug(LTag.AUTOSENS, ">>>>> bucketed_data.size()=" + bucketedData.size + " i=" + i + " hourAgoData=" + "null")
                         }
                     }
-                    val recentCarbTreatments = repository.getCarbsDataFromTimeToTime(bgTime - T.mins(5).msecs(), bgTime, true).blockingGet()
+                    val recentCarbTreatments = repository.getCarbsDataFromTimeToTimeExpanded(bgTime - T.mins(5).msecs(), bgTime, true).blockingGet()
                     for (recentCarbTreatment in recentCarbTreatments) {
                         autosensData.carbsFromBolus += recentCarbTreatment.amount
                         val isAAPSOrWeighted = sensitivityAAPSPlugin.isEnabled() || sensitivityWeightedAveragePlugin.isEnabled()

@@ -1,34 +1,24 @@
-package info.nightscout.androidaps.data
+package info.nightscout.androidaps.plugins.general.overview.graphExtensions
 
 import android.graphics.Color
-import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.Constants
 import info.nightscout.androidaps.core.R
+import info.nightscout.androidaps.data.Profile
 import info.nightscout.androidaps.database.entities.TherapyEvent
 import info.nightscout.androidaps.interfaces.Interval
 import info.nightscout.androidaps.interfaces.ProfileFunction
-import info.nightscout.androidaps.plugins.general.overview.graphExtensions.DataPointWithLabelInterface
-import info.nightscout.androidaps.plugins.general.overview.graphExtensions.PointsWithLabelGraphSeries
-import info.nightscout.androidaps.utils.DefaultValueHelper
 import info.nightscout.androidaps.utils.Translator
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 import javax.inject.Inject
 
 class TherapyEventDataPoint @Inject constructor(
-    val injector: HasAndroidInjector,
-    val data: TherapyEvent
+    val data: TherapyEvent,
+    private val resourceHelper: ResourceHelper,
+    private val profileFunction: ProfileFunction,
+    private val translator: Translator
 ) : DataPointWithLabelInterface, Interval {
 
-    @Inject lateinit var defaultValueHelper: DefaultValueHelper
-    @Inject lateinit var profileFunction: ProfileFunction
-    @Inject lateinit var resourceHelper: ResourceHelper
-    @Inject lateinit var translator: Translator
-
     private var yValue = 0.0
-
-    init {
-        injector.androidInjector().inject(this)
-    }
 
     override fun getX(): Double {
         return data.timestamp.toDouble()

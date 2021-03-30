@@ -120,7 +120,7 @@ class UploadChunk @Inject constructor(
             .forEach { bolus ->
                 result.add(BolusElement(bolus))
             }
-        repository.getCarbsDataFromTimeToTime(start, end, true)
+        repository.getCarbsDataFromTimeToTimeExpanded(start, end, true)
             .blockingGet()
             .forEach { carb ->
                 result.add(WizardElement(carb))
