@@ -182,7 +182,7 @@ class TreatmentsCareportalFragment : DaggerFragment() {
                 binding.remove.setOnClickListener { v: View ->
                     val therapyEvent = v.tag as TherapyEvent
                     activity?.let { activity ->
-                        val text = resourceHelper.gs(R.string.eventtype) + ": " + translator.translate(therapyEvent.type.text) + "\n" +
+                        val text = resourceHelper.gs(R.string.eventtype) + ": " + translator.translate(therapyEvent.type) + "\n" +
                             resourceHelper.gs(R.string.notes_label) + ": " + (therapyEvent.note
                             ?: "") + "\n" +
                             resourceHelper.gs(R.string.date) + ": " + dateUtil.dateAndTimeString(therapyEvent.timestamp)

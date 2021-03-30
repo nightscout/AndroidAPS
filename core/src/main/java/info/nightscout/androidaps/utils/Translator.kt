@@ -154,14 +154,14 @@ class Translator @Inject internal constructor(
     }
 
     fun translate(source: Sources): String = when(source) {
-            Sources.Automation                         -> resourceHelper.gs(R.string.automation)
-            Sources.Loop                               -> resourceHelper.gs(R.string.loop)
-            Sources.NSClient                           -> resourceHelper.gs(R.string.ns)
-            Sources.Pump                               -> resourceHelper.gs(R.string.pump)
-            Sources.SMS                                -> resourceHelper.gs(R.string.smb_shortname)
-            Sources.Wear                               -> resourceHelper.gs(R.string.wear)
-            Sources.Unknown                            -> resourceHelper.gs(R.string.unknown)
+        Sources.Automation                         -> resourceHelper.gs(R.string.automation)
+        Sources.Loop                               -> resourceHelper.gs(R.string.loop)
+        Sources.NSClient                           -> resourceHelper.gs(R.string.ns)
+        Sources.Pump                               -> resourceHelper.gs(R.string.pump)
+        Sources.SMS                                -> resourceHelper.gs(R.string.smb_shortname)
+        Sources.Wear                               -> resourceHelper.gs(R.string.wear)
+        Sources.Unknown                            -> resourceHelper.gs(R.string.unknown)
 
-            else                                       -> source.name
-        }
+        else                                       -> source.name
+    }
 }

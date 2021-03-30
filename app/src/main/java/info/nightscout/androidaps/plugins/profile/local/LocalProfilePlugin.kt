@@ -293,7 +293,6 @@ class LocalProfilePlugin @Inject constructor(
 
     fun cloneProfile() {
         val p = profiles[currentProfileIndex].deepClone()
-        val sourceName = p.name
         p.name = p.name + " copy"
         profiles.add(p)
         currentProfileIndex = profiles.size - 1
