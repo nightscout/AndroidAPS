@@ -312,7 +312,6 @@ open class AppRepository @Inject internal constructor(
 
     // CARBS
 
-    val timeBackForExpand =  8 * 60 * 60 * 1000
     private fun expandCarbs(carbs: Carbs): List<Carbs> =
         if (carbs.duration == 0L) {
             listOf(carbs)
@@ -377,8 +376,9 @@ open class AppRepository @Inject internal constructor(
             .subscribeOn(Schedulers.io())
 
     fun getCarbsDataFromTimeExpanded(timestamp: Long, ascending: Boolean): Single<List<Carbs>> =
-        database.carbsDao.getCarbsFromTime(timestamp - timeBackForExpand)
+        database.carbsDao.getCarbsFromTimeExpandable(timestamp)
             .expand()
+            .from(timestamp)
             .map { if (!ascending) it.reversed() else it }
             .subscribeOn(Schedulers.io())
 
@@ -396,7 +396,14 @@ open class AppRepository @Inject internal constructor(
             .subscribeOn(Schedulers.io())
 
     fun getCarbsIncludingInvalidFromTime(timestamp: Long, ascending: Boolean): Single<List<Carbs>> =
-        database.carbsDao.getCarbsIncludingInvalidFromTime(timestamp - timeBackForExpand)
+        database.carbsDao.getCarbsIncludingInvalidFromTime(timestamp)
+            .map { if (!ascending) it.reversed() else it }
+            .subscribeOn(Schedulers.io())
+
+    fun getCarbsIncludingInvalidFromTimeExpanded(timestamp: Long, ascending: Boolean): Single<List<Carbs>> =
+        database.carbsDao.getCarbsIncludingInvalidFromTimeExpandable(timestamp)
+            .expand()
+            .from(timestamp)
             .map { if (!ascending) it.reversed() else it }
             .subscribeOn(Schedulers.io())
 

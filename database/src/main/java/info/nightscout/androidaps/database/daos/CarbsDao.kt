@@ -35,6 +35,9 @@ internal interface CarbsDao : TraceableDao<Carbs> {
     @Query("SELECT * FROM $TABLE_CARBS WHERE isValid = 1 AND timestamp >= :timestamp AND referenceId IS NULL ORDER BY id DESC")
     fun getCarbsFromTime(timestamp: Long): Single<List<Carbs>>
 
+    @Query("SELECT * FROM $TABLE_CARBS WHERE isValid = 1 AND timestamp + duration >= :timestamp AND referenceId IS NULL ORDER BY id DESC")
+    fun getCarbsFromTimeExpandable(timestamp: Long): Single<List<Carbs>>
+
     @Query("SELECT * FROM $TABLE_CARBS WHERE isValid = 1 AND timestamp >= :from AND timestamp <= :to AND referenceId IS NULL ORDER BY id DESC")
     fun getCarbsFromTimeToTime(from: Long, to: Long): Single<List<Carbs>>
 
@@ -44,10 +47,13 @@ internal interface CarbsDao : TraceableDao<Carbs> {
     @Query("SELECT * FROM $TABLE_CARBS WHERE timestamp >= :timestamp AND referenceId IS NULL ORDER BY id DESC")
     fun getCarbsIncludingInvalidFromTime(timestamp: Long): Single<List<Carbs>>
 
+    @Query("SELECT * FROM $TABLE_CARBS WHERE timestamp + duration >= :timestamp AND referenceId IS NULL ORDER BY id DESC")
+    fun getCarbsIncludingInvalidFromTimeExpandable(timestamp: Long): Single<List<Carbs>>
+
     @Query("SELECT * FROM $TABLE_CARBS WHERE timestamp >= :from AND timestamp <= :to AND referenceId IS NULL ORDER BY id DESC")
     fun getCarbsIncludingInvalidFromTimeToTime(from: Long, to: Long): Single<List<Carbs>>
 
-    @Query("SELECT * FROM $TABLE_CARBS WHERE timestamp >= :from AND timestamp <= :to AND referenceId IS NULL ORDER BY id DESC")
+    @Query("SELECT * FROM $TABLE_CARBS WHERE timestamp + duration >= :from AND timestamp <= :to AND referenceId IS NULL ORDER BY id DESC")
     fun getCarbsIncludingInvalidFromTimeToTimeExpandable(from: Long, to: Long): Single<List<Carbs>>
 
     // This query will be used with v3 to get all changed records
