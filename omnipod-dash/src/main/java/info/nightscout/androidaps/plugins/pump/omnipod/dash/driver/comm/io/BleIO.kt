@@ -25,7 +25,7 @@ object BleSendSuccess : BleSendResult()
 data class BleSendErrorSending(val msg: String, val cause: Throwable? = null) : BleSendResult()
 data class BleSendErrorConfirming(val msg: String, val cause: Throwable? = null) : BleSendResult()
 
-abstract class BleIO(
+open class BleIO(
     private val aapsLogger: AAPSLogger,
     private val characteristic: BluetoothGattCharacteristic,
     private val incomingPackets: BlockingQueue<ByteArray>,
@@ -40,12 +40,12 @@ abstract class BleIO(
      * @return a byte array with the received data or error
      */
     fun receivePacket(timeoutMs: Long = DEFAULT_IO_TIMEOUT_MS): BleReceiveResult {
-        try {
-            val ret = incomingPackets.poll(timeoutMs, TimeUnit.MILLISECONDS)
-                ?: return BleReceiveError("Timeout")
-            return BleReceivePayload(ret)
+        return try {
+            val packet = incomingPackets.poll(timeoutMs, TimeUnit.MILLISECONDS)
+            if (packet == null) BleReceiveError("Timeout")
+            else BleReceivePayload(packet)
         } catch (e: InterruptedException) {
-            return BleReceiveError("Interrupted", cause = e)
+            BleReceiveError("Interrupted", cause = e)
         }
     }
 

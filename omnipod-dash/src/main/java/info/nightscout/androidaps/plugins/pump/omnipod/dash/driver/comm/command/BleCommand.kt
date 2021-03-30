@@ -71,8 +71,8 @@ sealed class BleCommand(val data: ByteArray) {
                 return BleCommandIncorrect("Incorrect command: empty payload", payload)
             }
 
-            try {
-                return when (BleCommandType.byValue(payload[0])) {
+            return try {
+                when (BleCommandType.byValue(payload[0])) {
                     BleCommandType.RTS ->
                         BleCommandRTS
                     BleCommandType.CTS ->
@@ -91,7 +91,7 @@ sealed class BleCommand(val data: ByteArray) {
                         BleCommandIncorrect("Incorrect command received", payload)
                 }
             } catch (e: IllegalArgumentException) {
-                return BleCommandIncorrect("Incorrect command payload", payload)
+                BleCommandIncorrect("Incorrect command payload", payload)
             }
         }
     }

@@ -60,7 +60,7 @@ class BleCommCallbacks(
     fun confirmWrite(expectedPayload: ByteArray, expectedUUID: String, timeoutMs: Long): WriteConfirmation {
         try {
             return when (val received = writeQueue.poll(timeoutMs, TimeUnit.MILLISECONDS)) {
-                null -> return WriteConfirmationError("Timeout waiting for writeConfirmation")
+                null -> WriteConfirmationError("Timeout waiting for writeConfirmation")
                 is WriteConfirmationSuccess ->
                     if (expectedPayload.contentEquals(received.payload) &&
                         expectedUUID == received.uuid

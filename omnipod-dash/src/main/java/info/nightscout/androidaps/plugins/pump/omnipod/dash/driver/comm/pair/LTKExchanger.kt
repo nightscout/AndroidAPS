@@ -65,7 +65,6 @@ internal class LTKExchanger(
         }
 
         // No exception throwing after this point. It is possible that the pod saved the LTK
-        //
         val p0 = msgIO.receiveMessage()
         if (p0 is MessageReceiveSuccess) {
             validateP0(p0.msg)

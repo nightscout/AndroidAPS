@@ -31,7 +31,10 @@ internal class PayloadSplitter(private val payload: ByteArray) {
         }
         val middleFragments = (payload.size - FirstBlePacket.CAPACITY_WITH_MIDDLE_PACKETS) / MiddleBlePacket.CAPACITY
         val rest =
-            ((payload.size - middleFragments * MiddleBlePacket.CAPACITY) - FirstBlePacket.CAPACITY_WITH_MIDDLE_PACKETS).toByte()
+            (
+                (payload.size - middleFragments * MiddleBlePacket.CAPACITY) -
+                    FirstBlePacket.CAPACITY_WITH_MIDDLE_PACKETS
+                ).toByte()
         ret.add(
             FirstBlePacket(
                 fullFragments = middleFragments + 1,
@@ -75,7 +78,9 @@ internal class PayloadSplitter(private val payload: ByteArray) {
                     index = (middleFragments + 2).toByte(),
                     size = (rest - LastBlePacket.CAPACITY).toByte(),
                     payload = payload.copyOfRange(
-                        middleFragments * MiddleBlePacket.CAPACITY + FirstBlePacket.CAPACITY_WITH_MIDDLE_PACKETS + LastBlePacket.CAPACITY,
+                        middleFragments * MiddleBlePacket.CAPACITY +
+                            FirstBlePacket.CAPACITY_WITH_MIDDLE_PACKETS +
+                            LastBlePacket.CAPACITY,
                         payload.size
                     )
                 )

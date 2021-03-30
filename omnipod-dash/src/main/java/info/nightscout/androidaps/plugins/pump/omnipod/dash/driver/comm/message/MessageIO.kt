@@ -143,9 +143,9 @@ class MessageIO(
             sendResult is BleSendSuccess ->
                 MessageSendSuccess
             index == packets.size - 1 && sendResult is BleSendErrorConfirming ->
-                return MessageSendErrorConfirming("Error confirming last DATA packet $sendResult")
+                MessageSendErrorConfirming("Error confirming last DATA packet $sendResult")
             else ->
-                return MessageSendErrorSending("Error sending DATA: $sendResult")
+                MessageSendErrorSending("Error sending DATA: $sendResult")
         }
     }
 
