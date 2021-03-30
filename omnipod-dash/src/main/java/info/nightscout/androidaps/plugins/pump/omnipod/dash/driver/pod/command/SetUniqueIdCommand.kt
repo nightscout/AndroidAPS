@@ -17,16 +17,16 @@ class SetUniqueIdCommand private constructor(
 
     override val encoded: ByteArray
         get() = appendCrc(
-            ByteBuffer.allocate(LENGTH + HEADER_LENGTH) //
-                .put(encodeHeader(DEFAULT_UNIQUE_ID, sequenceNumber, LENGTH, multiCommandFlag)) //
-                .put(commandType.value) //
-                .put(BODY_LENGTH) //
-                .putInt(uniqueId) //
+            ByteBuffer.allocate(LENGTH + HEADER_LENGTH)
+                .put(encodeHeader(DEFAULT_UNIQUE_ID, sequenceNumber, LENGTH, multiCommandFlag))
+                .put(commandType.value)
+                .put(BODY_LENGTH)
+                .putInt(uniqueId)
                 .put(0x14.toByte()) // FIXME ??
                 .put(0x04.toByte()) // FIXME ??
-                .put(encodeInitializationTime(initializationTime)) //
-                .putInt(lotNumber) //
-                .putInt(podSequenceNumber) //
+                .put(encodeInitializationTime(initializationTime))
+                .putInt(lotNumber)
+                .putInt(podSequenceNumber)
                 .array()
         )
 
@@ -86,12 +86,12 @@ class SetUniqueIdCommand private constructor(
         private fun encodeInitializationTime(date: Date): ByteArray {
             val instance = Calendar.getInstance()
             instance.time = date
-            return byteArrayOf( //
-                (instance[Calendar.MONTH] + 1).toByte(), //
-                instance[Calendar.DATE].toByte(), //
-                (instance[Calendar.YEAR] % 100).toByte(), //
-                instance[Calendar.HOUR_OF_DAY].toByte(), //
-                instance[Calendar.MINUTE].toByte() //
+            return byteArrayOf(
+                (instance[Calendar.MONTH] + 1).toByte(),
+                instance[Calendar.DATE].toByte(),
+                (instance[Calendar.YEAR] % 100).toByte(),
+                instance[Calendar.HOUR_OF_DAY].toByte(),
+                instance[Calendar.MINUTE].toByte()
             )
         }
     }

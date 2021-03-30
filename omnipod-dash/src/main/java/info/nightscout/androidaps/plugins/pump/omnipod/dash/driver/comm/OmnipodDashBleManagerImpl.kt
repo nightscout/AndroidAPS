@@ -119,7 +119,7 @@ class OmnipodDashBleManagerImpl @Inject constructor(
                     enDecrypt = enDecrypt
                 )
                 val response = session.sendCommand(cmd, responseType)
-                emitter.onNext(PodEvent.ResponseReceived(response))
+                emitter.onNext(PodEvent.ResponseReceived(cmd, response))
                 emitter.onComplete()
             } catch (ex: Exception) {
                 emitter.tryOnError(ex)

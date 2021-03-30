@@ -21,12 +21,12 @@ class ProgramBolusCommand private constructor(
 
     override val encoded: ByteArray
         get() {
-            val bolusCommand = ByteBuffer.allocate(LENGTH.toInt()) //
-                .put(commandType.value) //
-                .put(BODY_LENGTH) //
-                .put(programReminder.encoded) //
-                .putShort(numberOfTenthPulses) //
-                .putInt(delayUntilFirstTenthPulseInUsec) //
+            val bolusCommand = ByteBuffer.allocate(LENGTH.toInt())
+                .put(commandType.value)
+                .put(BODY_LENGTH)
+                .put(programReminder.encoded)
+                .putShort(numberOfTenthPulses)
+                .putInt(delayUntilFirstTenthPulseInUsec)
                 .putShort(0.toShort()) // Extended bolus pulses
                 .putInt(0) // Delay between tenth extended pulses in usec
                 .array()
@@ -38,10 +38,10 @@ class ProgramBolusCommand private constructor(
                 multiCommandFlag
             )
             return appendCrc(
-                ByteBuffer.allocate(header.size + interlockCommand.size + bolusCommand.size) //
-                    .put(header) //
-                    .put(interlockCommand) //
-                    .put(bolusCommand) //
+                ByteBuffer.allocate(header.size + interlockCommand.size + bolusCommand.size)
+                    .put(header)
+                    .put(interlockCommand)
+                    .put(bolusCommand)
                     .array()
             )
         }
@@ -120,11 +120,11 @@ class ProgramBolusCommand private constructor(
         private const val BODY_LENGTH: Byte = 13
         private fun calculateChecksum(numberOfSlots: Byte, byte10And11: Short, numberOfPulses: Short): Short {
             return MessageUtil.calculateChecksum(
-                ByteBuffer.allocate(7) //
-                    .put(numberOfSlots) //
-                    .putShort(byte10And11) //
-                    .putShort(numberOfPulses) //
-                    .putShort(numberOfPulses) //
+                ByteBuffer.allocate(7)
+                    .put(numberOfSlots)
+                    .putShort(byte10And11)
+                    .putShort(numberOfPulses)
+                    .putShort(numberOfPulses)
                     .array()
             )
         }

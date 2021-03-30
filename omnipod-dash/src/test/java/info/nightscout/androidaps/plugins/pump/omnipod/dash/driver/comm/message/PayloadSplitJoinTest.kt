@@ -7,6 +7,7 @@ import org.junit.Test
 import java.util.*
 
 class PayloadSplitJoinTest {
+
     private val random = Random(42)
 
     @Test fun testSplitAndJoinBack() {

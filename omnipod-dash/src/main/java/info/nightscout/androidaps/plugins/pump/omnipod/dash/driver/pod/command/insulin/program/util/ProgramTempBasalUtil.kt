@@ -53,9 +53,9 @@ object ProgramTempBasalUtil {
     }
 
     fun calculateChecksum(totalNumberOfSlots: Byte, pulsesInFirstSlot: Short, pulsesPerSlot: ShortArray?): Short {
-        val buffer = ByteBuffer.allocate(1 + 2 + 2 + 2 * pulsesPerSlot!!.size) //
-            .put(totalNumberOfSlots) //
-            .putShort(0x3840.toShort()) //
+        val buffer = ByteBuffer.allocate(1 + 2 + 2 + 2 * pulsesPerSlot!!.size)
+            .put(totalNumberOfSlots)
+            .putShort(0x3840.toShort())
             .putShort(pulsesInFirstSlot)
         for (pulses in pulsesPerSlot) {
             buffer.putShort(pulses)

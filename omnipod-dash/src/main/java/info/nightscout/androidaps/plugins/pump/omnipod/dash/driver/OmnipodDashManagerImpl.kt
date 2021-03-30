@@ -26,11 +26,17 @@ class OmnipodDashManagerImpl @Inject constructor(
     private val aapsSchedulers: AapsSchedulers
 ) : OmnipodDashManager {
 
+    companion object {
+
+        const val NONCE = 1229869870 // The Omnipod Dash seems to use a fixed nonce
+    }
+
     private val observePodReadyForActivationPart1: Observable<PodEvent>
         get() = Observable.defer {
             if (podStateManager.activationProgress.isBefore(ActivationProgress.PHASE_1_COMPLETED)) {
                 Observable.empty()
             } else {
+                // TODO introduce specialized Exception
                 Observable.error(IllegalStateException("Pod is in an incorrect state"))
             }
         }
@@ -42,6 +48,27 @@ class OmnipodDashManagerImpl @Inject constructor(
                 )) {
                 Observable.empty()
             } else {
+                // TODO introduce specialized Exception
+                Observable.error(IllegalStateException("Pod is in an incorrect state"))
+            }
+        }
+
+    private val observeUniqueIdSet: Observable<PodEvent>
+        get() = Observable.defer {
+            if (podStateManager.activationProgress.isAtLeast(ActivationProgress.SET_UNIQUE_ID)) {
+                Observable.empty()
+            } else {
+                // TODO introduce specialized Exception
+                Observable.error(IllegalStateException("Pod is in an incorrect state"))
+            }
+        }
+
+    private val observePodRunning: Observable<PodEvent>
+        get() = Observable.defer {
+            if (podStateManager.activationProgress == ActivationProgress.COMPLETED && podStateManager.podStatus!!.isRunning()) {
+                Observable.empty()
+            } else {
+                // TODO introduce specialized Exception
                 Observable.error(IllegalStateException("Pod is in an incorrect state"))
             }
         }
@@ -67,7 +94,7 @@ class OmnipodDashManagerImpl @Inject constructor(
                 ProgramBolusCommand.Builder()
                     .setUniqueId(podStateManager.uniqueId!!.toInt())
                     .setSequenceNumber(podStateManager.messageSequenceNumber)
-                    .setNonce(1229869870) // TODO
+                    .setNonce(NONCE)
                     .setNumberOfUnits(units)
                     .setDelayBetweenPulsesInEighthSeconds(rateInEighthPulsesPerSeconds)
                     .setProgramReminder(ProgramReminder(confirmationBeeps, completionBeeps, 0))
@@ -119,15 +146,16 @@ class OmnipodDashManagerImpl @Inject constructor(
                 ProgramAlertsCommand.Builder()
                     .setUniqueId(podStateManager.uniqueId!!.toInt())
                     .setSequenceNumber(podStateManager.messageSequenceNumber)
-                    .setNonce(1229869870) // TODO
+                    .setNonce(NONCE)
                     .setAlertConfigurations(alertConfigurations)
+                    .setMultiCommandFlag(multiCommandFlag)
                     .build(),
                 DefaultStatusResponse::class
             )
         }
     }
 
-    private fun observeProgramBasalCommand(basalProgram: BasalProgram): Observable<PodEvent> {
+    private fun observeSendProgramBasalCommand(basalProgram: BasalProgram): Observable<PodEvent> {
         return Observable.defer {
             val currentTime = Date()
             logger.debug(LTag.PUMPCOMM, "Programming basal. currentTime={}, basalProgram={}", currentTime, basalProgram)
@@ -135,7 +163,7 @@ class OmnipodDashManagerImpl @Inject constructor(
                 ProgramBasalCommand.Builder()
                     .setUniqueId(podStateManager.uniqueId!!.toInt())
                     .setSequenceNumber(podStateManager.messageSequenceNumber)
-                    .setNonce(1229869870) // TODO
+                    .setNonce(NONCE)
                     .setProgramReminder(ProgramReminder(atStart = false, atEnd = false, atInterval = 0))
                     .setBasalProgram(basalProgram)
                     .setCurrentTime(currentTime)
@@ -160,26 +188,26 @@ class OmnipodDashManagerImpl @Inject constructor(
     private val observeSendSetUniqueIdCommand: Observable<PodEvent>
         get() = Observable.defer {
             bleManager.sendCommand(
-                SetUniqueIdCommand.Builder() //
-                    .setSequenceNumber(podStateManager.messageSequenceNumber) //
-                    .setUniqueId(podStateManager.uniqueId!!.toInt()) //
-                    .setLotNumber(podStateManager.lotNumber!!.toInt()) //
+                SetUniqueIdCommand.Builder()
+                    .setSequenceNumber(podStateManager.messageSequenceNumber)
+                    .setUniqueId(podStateManager.uniqueId!!.toInt())
+                    .setLotNumber(podStateManager.lotNumber!!.toInt())
                     .setPodSequenceNumber(podStateManager.podSequenceNumber!!.toInt())
                     .setInitializationTime(Date())
                     .build(),
                 SetUniqueIdResponse::class
-            ) //
+            )
         }
 
     private val observeSendGetVersionCommand: Observable<PodEvent>
         get() = Observable.defer {
             bleManager.sendCommand(
-                GetVersionCommand.Builder() //
-                    .setSequenceNumber(podStateManager.messageSequenceNumber) //
-                    .setUniqueId(DEFAULT_UNIQUE_ID) //
+                GetVersionCommand.Builder()
+                    .setSequenceNumber(podStateManager.messageSequenceNumber)
+                    .setUniqueId(DEFAULT_UNIQUE_ID)
                     .build(),
                 VersionResponse::class
-            ) //
+            )
         }
 
     override fun activatePodPart1(lowReservoirAlertTrigger: AlertTrigger.ReservoirVolumeTrigger?): Observable<PodEvent> {
@@ -190,7 +218,7 @@ class OmnipodDashManagerImpl @Inject constructor(
             observeActivationPart1Commands(lowReservoirAlertTrigger)
         ).doOnComplete(ActivationProgressUpdater(ActivationProgress.PHASE_1_COMPLETED))
             // TODO these would be common for any observable returned in a public function in this class
-            .doOnNext(PodEventInterceptor()) //
+            .doOnNext(PodEventInterceptor())
             .doOnError(ErrorInterceptor())
             .subscribeOn(aapsSchedulers.io)
     }
@@ -225,10 +253,10 @@ class OmnipodDashManagerImpl @Inject constructor(
                         ProgramBolusCommand.Builder()
                             .setUniqueId(podStateManager.uniqueId!!.toInt())
                             .setSequenceNumber(podStateManager.messageSequenceNumber)
-                            .setNonce(1229869870) // TODO
+                            .setNonce(NONCE)
                             .setNumberOfUnits(podStateManager.firstPrimeBolusVolume!! * 0.05)
                             .setDelayBetweenPulsesInEighthSeconds(podStateManager.primePulseRate!!.toByte())
-                            .setProgramReminder(ProgramReminder(false, false, 0))
+                            .setProgramReminder(ProgramReminder(atStart = false, atEnd = false, atInterval = 0))
                             .build(),
                         DefaultStatusResponse::class
                     )
@@ -290,7 +318,7 @@ class OmnipodDashManagerImpl @Inject constructor(
             observeActivationPart2Commands(basalProgram)
         ).doOnComplete(ActivationProgressUpdater(ActivationProgress.COMPLETED))
             // TODO these would be common for any observable returned in a public function in this class
-            .doOnNext(PodEventInterceptor()) //
+            .doOnNext(PodEventInterceptor())
             .doOnError(ErrorInterceptor())
             .subscribeOn(aapsSchedulers.io)
     }
@@ -363,7 +391,7 @@ class OmnipodDashManagerImpl @Inject constructor(
         }
         if (podStateManager.activationProgress.isBefore(ActivationProgress.PROGRAMMED_BASAL)) {
             observables.add(
-                observeProgramBasalCommand(basalProgram)
+                observeSendProgramBasalCommand(basalProgram)
                     .doOnComplete(ActivationProgressUpdater(ActivationProgress.PROGRAMMED_BASAL))
             )
         }
@@ -371,70 +399,233 @@ class OmnipodDashManagerImpl @Inject constructor(
         return observables.reversed()
     }
 
-    override fun getStatus(): Observable<PodEvent> {
-        // TODO
-        return Observable.empty()
+    override fun getStatus(type: ResponseType.StatusResponseType): Observable<PodEvent> {
+        return Observable.concat(
+            observeUniqueIdSet,
+            observeConnectToPod,
+            observeSendGetPodStatusCommand(type)
+        )
+            // TODO these would be common for any observable returned in a public function in this class
+            .doOnNext(PodEventInterceptor())
+            .doOnError(ErrorInterceptor())
+            .subscribeOn(aapsSchedulers.io)
     }
 
-    override fun setBasalProgram(program: BasalProgram): Observable<PodEvent> {
-        // TODO
-        return Observable.empty()
+    override fun setBasalProgram(basalProgram: BasalProgram): Observable<PodEvent> {
+        return Observable.concat(
+            observePodRunning,
+            observeConnectToPod,
+            observeSendProgramBasalCommand(basalProgram)
+        )
+            // TODO these would be common for any observable returned in a public function in this class
+            .doOnNext(PodEventInterceptor())
+            .doOnError(ErrorInterceptor())
+            .subscribeOn(aapsSchedulers.io)
+    }
+
+    private fun observeSendStopDeliveryCommand(deliveryType: StopDeliveryCommand.DeliveryType): Observable<PodEvent> {
+        return Observable.defer {
+            bleManager.sendCommand(
+                StopDeliveryCommand.Builder()
+                    .setSequenceNumber(podStateManager.messageSequenceNumber)
+                    .setUniqueId(podStateManager.uniqueId!!.toInt())
+                    .setNonce(NONCE)
+                    .setDeliveryType(deliveryType)
+                    .build(),
+                DefaultStatusResponse::class
+            )
+        }
     }
 
     override fun suspendDelivery(): Observable<PodEvent> {
-        // TODO
-        return Observable.empty()
+        return Observable.concat(
+            observePodRunning,
+            observeConnectToPod,
+            observeSendStopDeliveryCommand(StopDeliveryCommand.DeliveryType.ALL)
+        )
+            // TODO these would be common for any observable returned in a public function in this class
+            .doOnNext(PodEventInterceptor())
+            .doOnError(ErrorInterceptor())
+            .subscribeOn(aapsSchedulers.io)
     }
 
     override fun setTime(): Observable<PodEvent> {
         // TODO
+        logger.error(LTag.PUMPCOMM, "NOT IMPLEMENTED: setTime()")
         return Observable.empty()
+    }
+
+    private fun observeSendProgramTempBasalCommand(rate: Double, durationInMinutes: Short): Observable<PodEvent> {
+        return Observable.defer {
+            // TODO cancel current temp basal (if active)
+            bleManager.sendCommand(
+                ProgramTempBasalCommand.Builder()
+                    .setSequenceNumber(podStateManager.messageSequenceNumber)
+                    .setUniqueId(podStateManager.uniqueId!!.toInt())
+                    .setNonce(NONCE)
+                    .setRateInUnitsPerHour(rate)
+                    .setDurationInMinutes(durationInMinutes)
+                    .build(),
+                DefaultStatusResponse::class
+            )
+        }
     }
 
     override fun setTempBasal(rate: Double, durationInMinutes: Short): Observable<PodEvent> {
-        // TODO
-        return Observable.empty()
+        return Observable.concat(
+            observePodRunning,
+            observeConnectToPod,
+            observeSendProgramTempBasalCommand(rate, durationInMinutes)
+        )
+            // TODO these would be common for any observable returned in a public function in this class
+            .doOnNext(PodEventInterceptor())
+            .doOnError(ErrorInterceptor())
+            .subscribeOn(aapsSchedulers.io)
     }
 
     override fun cancelTempBasal(): Observable<PodEvent> {
-        // TODO
-        return Observable.empty()
+        return Observable.concat(
+            observePodRunning,
+            observeConnectToPod,
+            observeSendStopDeliveryCommand(StopDeliveryCommand.DeliveryType.TEMP_BASAL)
+        )
+            // TODO these would be common for any observable returned in a public function in this class
+            .doOnNext(PodEventInterceptor())
+            .doOnError(ErrorInterceptor())
+            .subscribeOn(aapsSchedulers.io)
     }
 
-    override fun bolus(amount: Double): Observable<PodEvent> {
-        // TODO
-        return Observable.empty()
+    override fun bolus(units: Double, confirmationBeeps: Boolean, completionBeeps: Boolean): Observable<PodEvent> {
+        return Observable.concat(
+            observePodRunning,
+            observeConnectToPod,
+            observeSendProgramBolusCommand(
+                units,
+                podStateManager.pulseRate!!.toByte(),
+                confirmationBeeps,
+                completionBeeps
+            )
+        )
+            // TODO these would be common for any observable returned in a public function in this class
+            .doOnNext(PodEventInterceptor())
+            .doOnError(ErrorInterceptor())
+            .subscribeOn(aapsSchedulers.io)
     }
 
     override fun cancelBolus(): Observable<PodEvent> {
-        // TODO
-        return Observable.empty()
+        return Observable.concat(
+            observePodRunning,
+            observeConnectToPod,
+            observeSendStopDeliveryCommand(StopDeliveryCommand.DeliveryType.BOLUS)
+        )
+            // TODO these would be common for any observable returned in a public function in this class
+            .doOnNext(PodEventInterceptor())
+            .doOnError(ErrorInterceptor())
+            .subscribeOn(aapsSchedulers.io)
     }
 
-    override fun programBeeps(): Observable<PodEvent> {
-        // TODO
-        return Observable.empty()
+    private fun observeSendConfigureBeepsCommand(
+        basalReminder: ProgramReminder = ProgramReminder(atStart = false, atEnd = false, atInterval = 0),
+        tempBasalReminder: ProgramReminder = ProgramReminder(atStart = false, atEnd = false, atInterval = 0),
+        bolusReminder: ProgramReminder = ProgramReminder(atStart = false, atEnd = false, atInterval = 0),
+        immediateBeepType: BeepType = BeepType.SILENT
+    ): Observable<PodEvent> {
+        return Observable.defer {
+            bleManager.sendCommand(
+                ProgramBeepsCommand.Builder()
+                    .setSequenceNumber(podStateManager.messageSequenceNumber)
+                    .setUniqueId(podStateManager.uniqueId!!.toInt())
+                    .setBasalReminder(basalReminder)
+                    .setTempBasalReminder(tempBasalReminder)
+                    .setBolusReminder(bolusReminder)
+                    .setImmediateBeepType(immediateBeepType)
+                    .build(),
+                DefaultStatusResponse::class
+            )
+        }
+    }
+
+    override fun playBeep(beepType: BeepType): Observable<PodEvent> {
+        return Observable.concat(
+            observePodRunning,
+            observeConnectToPod,
+            observeSendConfigureBeepsCommand(immediateBeepType = beepType)
+        )
+            // TODO these would be common for any observable returned in a public function in this class
+            .doOnNext(PodEventInterceptor())
+            .doOnError(ErrorInterceptor())
+            .subscribeOn(aapsSchedulers.io)
     }
 
     override fun programAlerts(alertConfigurations: List<AlertConfiguration>): Observable<PodEvent> {
-        // TODO
-        return Observable.empty()
+        return Observable.concat(
+            observePodRunning,
+            observeConnectToPod,
+            observeSendProgramAlertsCommand(alertConfigurations)
+        )
+            // TODO these would be common for any observable returned in a public function in this class
+            .doOnNext(PodEventInterceptor())
+            .doOnError(ErrorInterceptor())
+            .subscribeOn(aapsSchedulers.io)
     }
 
-    override fun silenceAlerts(alerts: EnumSet<AlertType>): Observable<PodEvent> {
-        // TODO
-        return Observable.empty()
+    private fun observeSendSilenceAlertsCommand(alertTypes: EnumSet<AlertType>): Observable<PodEvent> {
+        return Observable.defer {
+            bleManager.sendCommand(
+                SilenceAlertsCommand.Builder()
+                    .setSequenceNumber(podStateManager.messageSequenceNumber)
+                    .setUniqueId(podStateManager.uniqueId!!.toInt())
+                    .setNonce(NONCE)
+                    .setAlertTypes(alertTypes)
+                    .build(),
+                DefaultStatusResponse::class
+            )
+        }
     }
+
+    override fun silenceAlerts(alertTypes: EnumSet<AlertType>): Observable<PodEvent> {
+        return Observable.concat(
+            observePodRunning,
+            observeConnectToPod,
+            observeSendSilenceAlertsCommand(alertTypes)
+        )
+            // TODO these would be common for any observable returned in a public function in this class
+            .doOnNext(PodEventInterceptor())
+            .doOnError(ErrorInterceptor())
+            .subscribeOn(aapsSchedulers.io)
+    }
+
+    private val observeSendDeactivateCommand: Observable<PodEvent>
+        get() = Observable.defer {
+            bleManager.sendCommand(
+                DeactivateCommand.Builder()
+                    .setSequenceNumber(podStateManager.messageSequenceNumber)
+                    .setUniqueId(podStateManager.uniqueId!!.toInt())
+                    .setNonce(NONCE)
+                    .build(),
+                DefaultStatusResponse::class
+            )
+        }
 
     override fun deactivatePod(): Observable<PodEvent> {
-        // TODO
-        return Observable.empty()
+        return Observable.concat(
+            observePodRunning,
+            observeConnectToPod,
+            observeSendDeactivateCommand
+        )
+            // TODO these would be common for any observable returned in a public function in this class
+            .doOnNext(PodEventInterceptor())
+            .doOnError(ErrorInterceptor())
+            .subscribeOn(aapsSchedulers.io)
+            //
+            .doOnComplete(podStateManager::reset)
     }
 
     inner class PodEventInterceptor : Consumer<PodEvent> {
 
         override fun accept(event: PodEvent) {
             logger.debug(LTag.PUMP, "Intercepted PodEvent in OmnipodDashManagerImpl: ${event.javaClass.simpleName}")
+
             when (event) {
                 is PodEvent.AlreadyConnected -> {
                     podStateManager.bluetoothAddress = event.bluetoothAddress

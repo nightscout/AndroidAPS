@@ -12,13 +12,13 @@ class BasalShortInsulinProgramElement(
     override val encoded: ByteArray
         get() {
             val firstByte = (
-                numberOfSlots - 1 and 0x0f shl 4 //
-                    or ((if (extraAlternatePulse) 1 else 0) shl 3) //
+                numberOfSlots - 1 and 0x0f shl 4
+                    or ((if (extraAlternatePulse) 1 else 0) shl 3)
                     or (pulsesPerSlot.toInt() ushr 8 and 0x03)
                 ).toByte()
-            return ByteBuffer.allocate(2) //
-                .put(firstByte) //
-                .put((pulsesPerSlot and 0xff).toByte()) //
+            return ByteBuffer.allocate(2)
+                .put(firstByte)
+                .put((pulsesPerSlot and 0xff).toByte())
                 .array()
         }
 

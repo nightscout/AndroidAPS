@@ -36,12 +36,12 @@ class ProgramBasalCommand private constructor(
 
     override val encoded: ByteArray
         get() {
-            val buffer = ByteBuffer.allocate(length.toInt()) //
-                .put(commandType.value) //
-                .put(bodyLength) //
-                .put(programReminder.encoded) //
-                .put(currentInsulinProgramElementIndex) //
-                .putShort(remainingTenthPulsesInCurrentInsulinProgramElement) //
+            val buffer = ByteBuffer.allocate(length.toInt())
+                .put(commandType.value)
+                .put(bodyLength)
+                .put(programReminder.encoded)
+                .put(currentInsulinProgramElementIndex)
+                .putShort(remainingTenthPulsesInCurrentInsulinProgramElement)
                 .putInt(delayUntilNextTenthPulseInUsec)
             for (insulinProgramElement in insulinProgramElements) {
                 buffer.put(insulinProgramElement.encoded)
@@ -55,10 +55,10 @@ class ProgramBasalCommand private constructor(
                 multiCommandFlag
             )
             return appendCrc(
-                ByteBuffer.allocate(basalCommand.size + interlockCommand.size + header.size) //
-                    .put(header) //
-                    .put(interlockCommand) //
-                    .put(basalCommand) //
+                ByteBuffer.allocate(basalCommand.size + interlockCommand.size + header.size)
+                    .put(header)
+                    .put(interlockCommand)
+                    .put(basalCommand)
                     .array()
             )
         }

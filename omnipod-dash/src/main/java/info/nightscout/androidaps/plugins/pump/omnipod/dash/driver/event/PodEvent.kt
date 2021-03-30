@@ -50,10 +50,14 @@ sealed class PodEvent {
         }
     }
 
-    class ResponseReceived(val response: Response) : PodEvent() {
+    class ResponseReceived(
+        val command: Command,
+        val response: Response
+    ) : PodEvent() {
 
         override fun toString(): String {
-            return "ResponseReceived(response=$response)"
+            return "ResponseReceived(command=$command, response=$response)"
         }
+
     }
 }

@@ -248,9 +248,9 @@ object ProgramBasalUtil {
     }
 
     fun calculateChecksum(pulsesPerSlot: ShortArray?, currentSlot: CurrentSlot): Short {
-        val buffer = ByteBuffer.allocate(1 + 2 + 2 + NUMBER_OF_BASAL_SLOTS * 2) //
-            .put(currentSlot.index) //
-            .putShort(currentSlot.pulsesRemaining) //
+        val buffer = ByteBuffer.allocate(1 + 2 + 2 + NUMBER_OF_BASAL_SLOTS * 2)
+            .put(currentSlot.index)
+            .putShort(currentSlot.pulsesRemaining)
             .putShort(currentSlot.eighthSecondsRemaining)
         for (pulses in pulsesPerSlot!!) {
             buffer.putShort(pulses)

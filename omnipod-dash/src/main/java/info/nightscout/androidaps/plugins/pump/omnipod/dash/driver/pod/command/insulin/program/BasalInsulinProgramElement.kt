@@ -12,9 +12,9 @@ open class BasalInsulinProgramElement(
 ) : Encodable, Serializable {
 
     override val encoded: ByteArray
-        get() = ByteBuffer.allocate(6) //
-            .putShort(totalTenthPulses) //
-            .putInt(if (totalTenthPulses.toInt() == 0) Int.MIN_VALUE or delayBetweenTenthPulsesInUsec else delayBetweenTenthPulsesInUsec) //
+        get() = ByteBuffer.allocate(6)
+            .putShort(totalTenthPulses)
+            .putInt(if (totalTenthPulses.toInt() == 0) Int.MIN_VALUE or delayBetweenTenthPulsesInUsec else delayBetweenTenthPulsesInUsec)
             .array()
     val durationInSeconds: Short
         get() = (numberOfSlots * 1800).toShort()

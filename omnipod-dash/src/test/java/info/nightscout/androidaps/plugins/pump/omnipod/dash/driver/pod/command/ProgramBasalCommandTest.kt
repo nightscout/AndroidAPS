@@ -17,14 +17,14 @@ class ProgramBasalCommandTest {
         val basalProgram = BasalProgram(segments)
         val date = Date(121, 1, 17, 14, 47, 43)
 
-        val encoded = ProgramBasalCommand.Builder() //
-            .setUniqueId(37879809) //
-            .setNonce(1229869870) //
-            .setSequenceNumber(10.toShort()) //
-            .setBasalProgram(basalProgram) //
-            .setCurrentTime(date) //
-            .setProgramReminder(ProgramReminder(false, true, 0.toByte())) //
-            .build() //
+        val encoded = ProgramBasalCommand.Builder()
+            .setUniqueId(37879809)
+            .setNonce(1229869870)
+            .setSequenceNumber(10.toShort())
+            .setBasalProgram(basalProgram)
+            .setCurrentTime(date)
+            .setProgramReminder(ProgramReminder(false, true, 0.toByte()))
+            .build()
             .encoded
 
         Assert.assertArrayEquals(
@@ -40,14 +40,14 @@ class ProgramBasalCommandTest {
         val basalProgram = BasalProgram(segments)
         val date = Date(121, 0, 30, 23, 21, 46)
 
-        val encoded = ProgramBasalCommand.Builder() //
-            .setUniqueId(4241) //
-            .setNonce(1229869870) //
-            .setSequenceNumber(12.toShort()) //
-            .setBasalProgram(basalProgram) //
-            .setCurrentTime(date) //
-            .setProgramReminder(ProgramReminder(atStart = false, atEnd = false, atInterval = 0.toByte())) //
-            .build() //
+        val encoded = ProgramBasalCommand.Builder()
+            .setUniqueId(4241)
+            .setNonce(1229869870)
+            .setSequenceNumber(12.toShort())
+            .setBasalProgram(basalProgram)
+            .setCurrentTime(date)
+            .setProgramReminder(ProgramReminder(atStart = false, atEnd = false, atInterval = 0.toByte()))
+            .build()
             .encoded
 
         Assert.assertArrayEquals(

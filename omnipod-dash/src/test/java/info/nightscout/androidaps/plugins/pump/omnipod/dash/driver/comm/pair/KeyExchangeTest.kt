@@ -2,11 +2,12 @@ package info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.pair
 
 import info.nightscout.androidaps.logging.AAPSLoggerTest
 import info.nightscout.androidaps.utils.extensions.toHex
-import org.junit.Assert.*
+import org.junit.Assert.assertEquals
 import org.junit.Test
 import org.spongycastle.util.encoders.Hex
 
 class KeyExchangeTest {
+
     @Test fun testLTK() {
         val aapsLogger = AAPSLoggerTest()
         val ke = KeyExchange(
