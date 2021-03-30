@@ -131,6 +131,7 @@ class BolusWizard @Inject constructor(
     private var useAlarm = false
     var notes: String = ""
     private var carbTime: Int = 0
+    private var quickWizard: Boolean = true
 
     @JvmOverloads
     fun doCalc(profile: Profile,
@@ -150,7 +151,8 @@ class BolusWizard @Inject constructor(
                useTrend: Boolean,
                useAlarm: Boolean,
                notes: String = "",
-               carbTime: Int = 0
+               carbTime: Int = 0,
+               quickWizard: Boolean = false
     ): BolusWizard {
 
         this.profile = profile
@@ -171,6 +173,7 @@ class BolusWizard @Inject constructor(
         this.useAlarm = useAlarm
         this.notes = notes
         this.carbTime = carbTime
+        this.quickWizard = quickWizard
 
         // Insulin from BG
         sens = Profile.fromMgdlToUnits(profile.isfMgdl, profileFunction.getUnits())
@@ -418,8 +421,8 @@ class BolusWizard @Inject constructor(
                             carbs.equals(0.0)                   -> Action.BOLUS
                             else                                -> Action.TREATMENT
                         }
-                        uel.log(action, if (notes == resourceHelper.gs(R.string.ue_quickwizard_ID)) quickWizard.getActive()?.buttonText() else notes,   // ue_quickwizard_ID is complicated string impossible to write as note in WizardDialog
-                            ValueWithUnit(if (notes == resourceHelper.gs(R.string.ue_quickwizard_ID)) Sources.QuickWizard else Sources.WizardDialog),
+                        uel.log(action, notes,
+                            ValueWithUnit(if (quickWizard) Sources.QuickWizard else Sources.WizardDialog),
                             ValueWithUnit(eventType.toDBbEventType().text, Units.TherapyEvent),
                             ValueWithUnit(insulinAfterConstraints, Units.U, insulinAfterConstraints != 0.0),
                             ValueWithUnit(this@BolusWizard.carbs, Units.G, this@BolusWizard.carbs != 0),
