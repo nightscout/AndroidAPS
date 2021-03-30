@@ -330,6 +330,8 @@ open class AppRepository @Inject internal constructor(
     private fun Single<List<Carbs>>.expand() = this.map { it.map(::expandCarbs).flatten() }
     private fun Single<List<Carbs>>.filterOutExtended() = this.map { it.filter { c -> c.duration == 0L } }
     private fun Single<List<Carbs>>.fromTo(from: Long, to: Long) = this.map { it.filter { c -> c.timestamp in from..to } }
+    private fun Single<List<Carbs>>.until(to: Long) = this.map { it.filter { c -> c.timestamp <= to } }
+    private fun Single<List<Carbs>>.from(start: Long) = this.map { it.filter { c -> c.timestamp >= start } }
     private fun Single<List<Carbs>>.sort() = this.map { it.sortedBy { c -> c.timestamp } }
 
     /*
@@ -386,7 +388,7 @@ open class AppRepository @Inject internal constructor(
             .subscribeOn(Schedulers.io())
 
     fun getCarbsDataFromTimeToTimeExpanded(from: Long, to: Long, ascending: Boolean): Single<List<Carbs>> =
-        database.carbsDao.getCarbsFromTimeToTime(from - timeBackForExpand, to)
+        database.carbsDao.getCarbsFromTimeToTimeExpandable(from, to)
             .expand()
             .fromTo(from, to)
             .sort()
@@ -399,7 +401,7 @@ open class AppRepository @Inject internal constructor(
             .subscribeOn(Schedulers.io())
 
     fun getCarbsIncludingInvalidFromTimeToTimeExpanded(from: Long, to: Long, ascending: Boolean): Single<List<Carbs>> =
-        database.carbsDao.getCarbsIncludingInvalidFromTimeToTime(from - timeBackForExpand, to)
+        database.carbsDao.getCarbsIncludingInvalidFromTimeToTimeExpandable(from, to)
             .expand()
             .fromTo(from, to)
             .sort()
