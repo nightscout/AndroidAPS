@@ -9,11 +9,10 @@ import info.nightscout.androidaps.plugins.pump.medtronic.util.MedtronicUtil;
  * Created by andy on 6/16/18.
  */
 //@RunWith(PowerMockRunner.class)
-//@PrepareForTest({ MainApp.class, DatabaseHelper.class, DateUtil.class, SP.class })
+//@PrepareForTest({ DatabaseHelper.class, DateUtil.class, SP.class })
 @Ignore
 public class BasalProfileUTest {
 /*
-    // MainApp mainApp = new MainApp();
     @Before
     public void initMocking() {
 
