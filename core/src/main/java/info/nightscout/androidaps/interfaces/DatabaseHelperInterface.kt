@@ -30,7 +30,7 @@ interface DatabaseHelperInterface {
     fun roundDateToSec(date: Long): Long
     fun createOrUpdateTDD(record: TDD)
     fun createOrUpdate(tempBasal: TemporaryBasal): Boolean
-    fun findTempBasalByPumpId(id: Long): TemporaryBasal
+    fun findTempBasalByPumpId(id: Long): TemporaryBasal?
     fun getTemporaryBasalsDataFromTime(mills: Long, ascending: Boolean): List<TemporaryBasal>
     fun getExtendedBolusDataFromTime(mills: Long, ascending: Boolean): List<ExtendedBolus>
     fun getProfileSwitchEventsFromTime(from: Long, to: Long, ascending: Boolean): List<ProfileSwitch>
