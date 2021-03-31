@@ -25,6 +25,7 @@ import info.nightscout.androidaps.interfaces.ActivePluginProvider;
 import info.nightscout.androidaps.interfaces.CommandQueueProvider;
 import info.nightscout.androidaps.interfaces.Constraint;
 import info.nightscout.androidaps.interfaces.PluginType;
+import info.nightscout.androidaps.interfaces.PumpSync;
 import info.nightscout.androidaps.logging.AAPSLogger;
 import info.nightscout.androidaps.logging.LTag;
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper;
@@ -34,6 +35,7 @@ import info.nightscout.androidaps.plugins.pump.common.defs.PumpType;
 import info.nightscout.androidaps.utils.DateUtil;
 import info.nightscout.androidaps.utils.FabricPrivacy;
 import info.nightscout.androidaps.utils.Round;
+import info.nightscout.androidaps.utils.T;
 import info.nightscout.androidaps.utils.resources.ResourceHelper;
 import info.nightscout.androidaps.utils.rx.AapsSchedulers;
 import info.nightscout.androidaps.utils.sharedPreferences.SP;
@@ -63,9 +65,10 @@ public class DanaRPlugin extends AbstractDanaRPlugin {
             CommandQueueProvider commandQueue,
             DanaPump danaPump,
             DateUtil dateUtil,
-            FabricPrivacy fabricPrivacy
+            FabricPrivacy fabricPrivacy,
+            PumpSync pumpSync
     ) {
-        super(injector, danaPump, resourceHelper, constraintChecker, aapsLogger, aapsSchedulers, commandQueue, rxBus, activePlugin, sp, dateUtil);
+        super(injector, danaPump, resourceHelper, constraintChecker, aapsLogger, aapsSchedulers, commandQueue, rxBus, activePlugin, sp, dateUtil, pumpSync);
         this.aapsLogger = aapsLogger;
         this.context = context;
         this.resourceHelper = resourceHelper;
@@ -176,7 +179,21 @@ public class DanaRPlugin extends AbstractDanaRPlugin {
             aapsLogger.debug(LTag.PUMP, "deliverTreatment: OK. Asked: " + detailedBolusInfo.insulin + " Delivered: " + result.getBolusDelivered());
             detailedBolusInfo.insulin = t.insulin;
             detailedBolusInfo.timestamp = System.currentTimeMillis();
-            activePlugin.getActiveTreatments().addToHistoryTreatment(detailedBolusInfo, false);
+            if (detailedBolusInfo.insulin > 0)
+                pumpSync.syncBolusWithPumpId(
+                        detailedBolusInfo.timestamp,
+                        detailedBolusInfo.insulin,
+                        detailedBolusInfo.getBolusType(),
+                        dateUtil._now(),
+                        PumpType.DANA_R,
+                        serialNumber());
+            if (detailedBolusInfo.carbs > 0)
+                pumpSync.syncCarbsWithTimestamp(
+                        detailedBolusInfo.timestamp + T.mins(detailedBolusInfo.carbTime).msecs(),
+                        detailedBolusInfo.carbs,
+                        null,
+                        PumpType.DANA_R,
+                        serialNumber());
             return result;
         } else {
             PumpEnactResult result = new PumpEnactResult(getInjector());

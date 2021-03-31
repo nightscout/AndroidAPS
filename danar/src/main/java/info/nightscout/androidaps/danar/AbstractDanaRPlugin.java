@@ -29,6 +29,7 @@ import info.nightscout.androidaps.interfaces.PluginType;
 import info.nightscout.androidaps.interfaces.PumpDescription;
 import info.nightscout.androidaps.interfaces.PumpInterface;
 import info.nightscout.androidaps.interfaces.PumpPluginBase;
+import info.nightscout.androidaps.interfaces.PumpSync;
 import info.nightscout.androidaps.logging.AAPSLogger;
 import info.nightscout.androidaps.logging.LTag;
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper;
@@ -64,6 +65,7 @@ public abstract class AbstractDanaRPlugin extends PumpPluginBase implements Pump
     protected SP sp;
     protected DateUtil dateUtil;
     protected AapsSchedulers aapsSchedulers;
+    protected PumpSync pumpSync;
 
     protected AbstractDanaRPlugin(
             HasAndroidInjector injector,
@@ -76,7 +78,8 @@ public abstract class AbstractDanaRPlugin extends PumpPluginBase implements Pump
             RxBusWrapper rxBus,
             ActivePluginProvider activePlugin,
             SP sp,
-            DateUtil dateUtil
+            DateUtil dateUtil,
+            PumpSync pumpSync
     ) {
         super(new PluginDescription()
                         .mainType(PluginType.PUMP)
@@ -95,6 +98,7 @@ public abstract class AbstractDanaRPlugin extends PumpPluginBase implements Pump
         this.sp = sp;
         this.dateUtil = dateUtil;
         this.aapsSchedulers = aapsSchedulers;
+        this.pumpSync = pumpSync;
     }
 
     @Override protected void onStart() {

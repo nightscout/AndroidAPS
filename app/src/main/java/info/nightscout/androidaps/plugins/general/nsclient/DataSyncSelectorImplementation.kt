@@ -2,6 +2,7 @@ package info.nightscout.androidaps.plugins.general.nsclient
 
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.database.AppRepository
+import info.nightscout.androidaps.database.entities.DeviceStatus
 import info.nightscout.androidaps.database.entities.*
 import info.nightscout.androidaps.interfaces.ActivePluginProvider
 import info.nightscout.androidaps.interfaces.DataSyncSelector
@@ -28,6 +29,7 @@ class DataSyncSelectorImplementation @Inject constructor(
         sp.remove(R.string.key_ns_bolus_last_synced_id)
         sp.remove(R.string.key_ns_carbs_last_synced_id)
         sp.remove(R.string.key_ns_bolus_calculator_result_last_synced_id)
+        sp.remove(R.string.key_ns_device_status_last_synced_id)
     }
 
     override fun confirmLastBolusIdIfGreater(lastSynced: Long) {
@@ -289,6 +291,36 @@ class DataSyncSelectorImplementation @Inject constructor(
                 tt.first.isValid && tt.first.interfaceIDs.nightscoutId != null  ->
                     nsClientPlugin.nsClientService?.dbUpdate("treatments", tt.first.interfaceIDs.nightscoutId, tt.first.toJson(), DataSyncSelector.PairTherapyEvent(tt.first, tt.second))
             }
+            return true
+        }
+        return false
+    }
+
+    override fun confirmLastDeviceStatusIdIfGreater(lastSynced: Long) {
+        if (lastSynced > sp.getLong(R.string.key_ns_device_status_last_synced_id, 0)) {
+            aapsLogger.debug(LTag.NSCLIENT, "Setting DeviceStatus data sync from $lastSynced")
+            sp.putLong(R.string.key_ns_device_status_last_synced_id, lastSynced)
+        }
+    }
+
+    override fun changedDeviceStatuses(): List<DeviceStatus> {
+        val startId = sp.getLong(R.string.key_ns_device_status_last_synced_id, 0)
+        return appRepository.getModifiedDeviceStatusDataFromId(startId).blockingGet().also {
+            aapsLogger.debug(LTag.NSCLIENT, "Loading DeviceStatus data for sync from $startId. Records ${it.size}")
+        }
+    }
+
+    override fun processChangedDeviceStatusesCompat(): Boolean {
+        val startId = sp.getLong(R.string.key_ns_device_status_last_synced_id, 0)
+        appRepository.getNextSyncElementDeviceStatus(startId).blockingGet()?.let { deviceStatus ->
+            aapsLogger.info(LTag.DATABASE, "Loading DeviceStatus data Start: $startId ID: ${deviceStatus.id}")
+            when {
+                // without nsId = create new
+                deviceStatus.interfaceIDs.nightscoutId == null  ->
+                    nsClientPlugin.nsClientService?.dbAdd("devicestatus", deviceStatus.toJson(), deviceStatus)
+                // with nsId = ignore
+                deviceStatus.interfaceIDs.nightscoutId != null  -> Any()
+             }
             return true
         }
         return false

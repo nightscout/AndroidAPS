@@ -32,10 +32,11 @@ import dagger.android.HasAndroidInjector;
 import info.nightscout.androidaps.Config;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.database.AppRepository;
-import info.nightscout.androidaps.database.entities.Carbs;
+import info.nightscout.androidaps.database.entities.DeviceStatus;
 import info.nightscout.androidaps.database.transactions.UpdateNsIdBolusCalculatorResultTransaction;
 import info.nightscout.androidaps.database.transactions.UpdateNsIdBolusTransaction;
 import info.nightscout.androidaps.database.transactions.UpdateNsIdCarbsTransaction;
+import info.nightscout.androidaps.database.transactions.UpdateNsIdDeviceStatusTransaction;
 import info.nightscout.androidaps.database.transactions.UpdateNsIdFoodTransaction;
 import info.nightscout.androidaps.database.transactions.UpdateNsIdGlucoseValueTransaction;
 import info.nightscout.androidaps.database.transactions.UpdateNsIdTemporaryTargetTransaction;
@@ -335,6 +336,22 @@ public class NSClientService extends DaggerService {
                     ));
             dataSyncSelector.confirmLastBolusCalculatorResultsIdIfGreater(pair.getUpdateRecordId());
             rxBus.send(new EventNSClientNewLog("DBADD", "Acked BolusCalculatorResult" + pair.getValue().getInterfaceIDs().getNightscoutId()));
+            // Send new if waiting
+            dataSyncSelector.processChangedBolusCalculatorResultsCompat();
+            return;
+        }
+        if (ack.getOriginalObject() instanceof DeviceStatus) {
+            DeviceStatus deviceStatus = (DeviceStatus) ack.getOriginalObject();
+            deviceStatus.getInterfaceIDs().setNightscoutId(ack.getId());
+
+            disposable.add(repository.runTransactionForResult(new UpdateNsIdDeviceStatusTransaction(deviceStatus))
+                    .observeOn(aapsSchedulers.getIo())
+                    .subscribe(
+                            result -> aapsLogger.debug(LTag.DATABASE, "Updated ns id of DeviceStatus " + deviceStatus),
+                            error -> aapsLogger.error(LTag.DATABASE, "Updated ns id of DeviceStatus failed", error)
+                    ));
+            dataSyncSelector.confirmLastDeviceStatusIdIfGreater(deviceStatus.getId());
+            rxBus.send(new EventNSClientNewLog("DBADD", "Acked DeviceStatus" + deviceStatus.getInterfaceIDs().getNightscoutId()));
             // Send new if waiting
             dataSyncSelector.processChangedBolusCalculatorResultsCompat();
             return;
@@ -977,6 +994,7 @@ public class NSClientService extends DaggerService {
             dataSyncSelector.processChangedTempTargetsCompat();
             dataSyncSelector.processChangedFoodsCompat();
             dataSyncSelector.processChangedTherapyEventsCompat();
+            dataSyncSelector.processChangedDeviceStatusesCompat();
 
             if (uploadQueue.size() == 0)
                 return;
