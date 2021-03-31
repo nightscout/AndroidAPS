@@ -26,11 +26,11 @@ interface OmnipodDashManager {
 
     fun setTempBasal(rate: Double, durationInMinutes: Short): Observable<PodEvent>
 
-    fun cancelTempBasal(): Observable<PodEvent>
+    fun stopTempBasal(): Observable<PodEvent>
 
     fun bolus(units: Double, confirmationBeeps: Boolean, completionBeeps: Boolean): Observable<PodEvent>
 
-    fun cancelBolus(): Observable<PodEvent>
+    fun stopBolus(): Observable<PodEvent>
 
     fun playBeep(beepType: BeepType): Observable<PodEvent>
 

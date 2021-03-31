@@ -47,7 +47,7 @@ interface OmnipodDashPodStateManager {
 
     val tempBasal: TempBasal?
     val tempBasalActive: Boolean
-    val basalProgram: BasalProgram?
+    var basalProgram: BasalProgram?
 
     fun increaseMessageSequenceNumber()
     fun increaseEapAkaSequenceNumber(): ByteArray

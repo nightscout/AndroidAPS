@@ -16,6 +16,7 @@ class KeyExchange(
     var pdmPrivate: ByteArray = X25519.generatePrivateKey(),
     val pdmNonce: ByteArray = ByteArray(NONCE_SIZE)
 ) {
+
     val pdmPublic = X25519.publicFromPrivate(pdmPrivate)
 
     var podPublic = ByteArray(PUBLIC_KEY_SIZE)

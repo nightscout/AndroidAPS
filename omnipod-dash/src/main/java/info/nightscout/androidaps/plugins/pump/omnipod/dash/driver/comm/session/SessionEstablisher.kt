@@ -86,7 +86,11 @@ class SessionEstablisher(
             aapsLogger.debug(LTag.PUMPBTCOMM, "EAP-AKA: got message: $eapMsg")
             if (eapMsg.attributes.size == 1 && eapMsg.attributes[0] is EapAkaAttributeClientErrorCode) {
                 // TODO: special exception for this
-                throw SessionEstablishmentException("Received CLIENT_ERROR_CODE for EAP-AKA challenge: ${eapMsg.attributes[0].toByteArray().toHex()}")
+                throw SessionEstablishmentException(
+                    "Received CLIENT_ERROR_CODE for EAP-AKA challenge: ${
+                        eapMsg.attributes[0].toByteArray().toHex()
+                    }"
+                )
             }
             throw SessionEstablishmentException("Expecting two attributes, got: ${eapMsg.attributes.size}")
         }

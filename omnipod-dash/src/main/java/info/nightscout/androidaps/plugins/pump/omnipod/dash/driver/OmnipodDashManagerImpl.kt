@@ -170,6 +170,8 @@ class OmnipodDashManagerImpl @Inject constructor(
                     .build(),
                 DefaultStatusResponse::class
             )
+        }.doOnComplete {
+            podStateManager.basalProgram = basalProgram
         }
     }
 
@@ -483,7 +485,7 @@ class OmnipodDashManagerImpl @Inject constructor(
             .subscribeOn(aapsSchedulers.io)
     }
 
-    override fun cancelTempBasal(): Observable<PodEvent> {
+    override fun stopTempBasal(): Observable<PodEvent> {
         return Observable.concat(
             observePodRunning,
             observeConnectToPod,
@@ -512,7 +514,7 @@ class OmnipodDashManagerImpl @Inject constructor(
             .subscribeOn(aapsSchedulers.io)
     }
 
-    override fun cancelBolus(): Observable<PodEvent> {
+    override fun stopBolus(): Observable<PodEvent> {
         return Observable.concat(
             observePodRunning,
             observeConnectToPod,
