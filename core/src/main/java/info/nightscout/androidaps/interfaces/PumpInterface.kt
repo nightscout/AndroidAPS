@@ -38,6 +38,12 @@ interface PumpInterface {
     val reservoirLevel: Double
     val batteryLevel: Int  // in percent as integer
 
+    /**
+     * Request a bolus to be delivered, carbs to be stored on pump or both.
+     *
+     * @param detailedBolusInfo it's the caller's responsibility to ensure the request can be satisfied by the pump,
+     *                          e.g. DBI will not contain carbs if the pump can't store carbs.
+     */
     fun deliverTreatment(detailedBolusInfo: DetailedBolusInfo): PumpEnactResult
     fun stopBolusDelivering()
     fun setTempBasalAbsolute(absoluteRate: Double, durationInMinutes: Int, profile: Profile, enforceNew: Boolean): PumpEnactResult
