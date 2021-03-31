@@ -1,10 +1,10 @@
 package info.nightscout.androidaps.db;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 import com.j256.ormlite.dao.CloseableIterator;
 
-import org.jetbrains.annotations.Nullable;
 import org.json.JSONObject;
 
 import java.sql.SQLException;
@@ -78,7 +78,7 @@ public class DatabaseHelperProvider implements DatabaseHelperInterface {
         return MainApp.Companion.getDbHelper().createOrUpdate(tempBasal);
     }
 
-    @NonNull @Override public TemporaryBasal findTempBasalByPumpId(long id) {
+    @Nullable @Override public TemporaryBasal findTempBasalByPumpId(long id) {
         return MainApp.Companion.getDbHelper().findTempBasalByPumpId(id);
     }
 
