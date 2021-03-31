@@ -33,13 +33,13 @@ class OmnipodDashPumpPlugin @Inject constructor(
 
     companion object {
 
-        private val pluginDescription = PluginDescription() //
-            .mainType(PluginType.PUMP) //
-            .fragmentClass(OmnipodDashOverviewFragment::class.java.name) //
+        private val pluginDescription = PluginDescription()
+            .mainType(PluginType.PUMP)
+            .fragmentClass(OmnipodDashOverviewFragment::class.java.name)
             .pluginIcon(R.drawable.ic_pod_128)
-            .pluginName(R.string.omnipod_dash_name) //
-            .shortName(R.string.omnipod_dash_name_short) //
-            .preferencesId(R.xml.omnipod_dash_preferences) //
+            .pluginName(R.string.omnipod_dash_name)
+            .shortName(R.string.omnipod_dash_name_short)
+            .preferencesId(R.xml.omnipod_dash_preferences)
             .description(R.string.omnipod_dash_pump_description)
 
         private val pumpDescription = PumpDescription(PumpType.Omnipod_Dash)

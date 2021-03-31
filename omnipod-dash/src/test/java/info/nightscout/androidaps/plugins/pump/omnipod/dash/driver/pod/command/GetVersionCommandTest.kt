@@ -8,10 +8,10 @@ import org.junit.Test
 class GetVersionCommandTest {
 
     @Test @Throws(DecoderException::class) fun testEncoding() {
-        val encoded = GetVersionCommand.Builder() //
-            .setSequenceNumber(0.toShort()) //
-            .setUniqueId(GetVersionCommand.DEFAULT_UNIQUE_ID) //
-            .build() //
+        val encoded = GetVersionCommand.Builder()
+            .setSequenceNumber(0.toShort())
+            .setUniqueId(GetVersionCommand.DEFAULT_UNIQUE_ID)
+            .build()
             .encoded
 
         Assert.assertArrayEquals(Hex.decodeHex("FFFFFFFF00060704FFFFFFFF82B2"), encoded)

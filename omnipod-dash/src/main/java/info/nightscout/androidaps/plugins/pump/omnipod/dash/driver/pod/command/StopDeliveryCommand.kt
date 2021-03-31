@@ -20,12 +20,12 @@ class StopDeliveryCommand private constructor(
     override val encoded: ByteArray
         get() {
             return appendCrc(
-                ByteBuffer.allocate(LENGTH + HEADER_LENGTH) //
-                    .put(encodeHeader(uniqueId, sequenceNumber, LENGTH, multiCommandFlag)) //
-                    .put(commandType.value) //
-                    .put(BODY_LENGTH) //
-                    .putInt(nonce) //
-                    .put((beepType.value.toInt() shl 4 or deliveryType.encoded[0].toInt()).toByte()) //
+                ByteBuffer.allocate(LENGTH + HEADER_LENGTH)
+                    .put(encodeHeader(uniqueId, sequenceNumber, LENGTH, multiCommandFlag))
+                    .put(commandType.value)
+                    .put(BODY_LENGTH)
+                    .putInt(nonce)
+                    .put((beepType.value.toInt() shl 4 or deliveryType.encoded[0].toInt()).toByte())
                     .array()
             )
         }

@@ -216,8 +216,8 @@ class OmnipodDashPodStateManagerImpl @Inject constructor(
     override fun updateFromSetUniqueIdResponse(response: SetUniqueIdResponse) {
         podState.pulseRate = response.pumpRate
         podState.primePulseRate = response.primePumpRate
-        podState.firstPrimeBolusVolume = response.numberOfPrimePulses
-        podState.secondPrimeBolusVolume = response.numberOfEngagingClutchDrivePulses
+        podState.firstPrimeBolusVolume = response.numberOfEngagingClutchDrivePulses
+        podState.secondPrimeBolusVolume = response.numberOfPrimePulses
         podState.podLifeInHours = response.podExpirationTimeInHours
         podState.bleVersion = SoftwareVersion(
             response.bleVersionMajor,

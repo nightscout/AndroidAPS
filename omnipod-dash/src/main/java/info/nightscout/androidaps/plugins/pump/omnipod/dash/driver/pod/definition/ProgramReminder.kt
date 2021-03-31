@@ -17,4 +17,8 @@ class ProgramReminder(
                     or ((atInterval and 0x3f).toInt())
                 ).toByte()
         )
+
+    override fun toString(): String {
+        return "ProgramReminder(atStart=$atStart, atEnd=$atEnd, atInterval=$atInterval)"
+    }
 }

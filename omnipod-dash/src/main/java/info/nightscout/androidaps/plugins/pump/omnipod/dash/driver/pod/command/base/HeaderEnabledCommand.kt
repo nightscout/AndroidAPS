@@ -13,9 +13,9 @@ abstract class HeaderEnabledCommand protected constructor(
     companion object {
 
         internal fun appendCrc(command: ByteArray): ByteArray =
-            ByteBuffer.allocate(command.size + 2) //
-                .put(command) //
-                .putShort(MessageUtil.createCrc(command)) //
+            ByteBuffer.allocate(command.size + 2)
+                .put(command)
+                .putShort(MessageUtil.createCrc(command))
                 .array()
 
         internal fun encodeHeader(
@@ -24,9 +24,9 @@ abstract class HeaderEnabledCommand protected constructor(
             length: Short,
             multiCommandFlag: Boolean
         ): ByteArray =
-            ByteBuffer.allocate(6) //
-                .putInt(uniqueId) //
-                .putShort((sequenceNumber.toInt() and 0x0f shl 10 or length.toInt() or ((if (multiCommandFlag) 1 else 0) shl 15)).toShort()) //
+            ByteBuffer.allocate(6)
+                .putInt(uniqueId)
+                .putShort((sequenceNumber.toInt() and 0x0f shl 10 or length.toInt() or ((if (multiCommandFlag) 1 else 0) shl 15)).toShort())
                 .array()
 
         internal const val HEADER_LENGTH: Short = 6

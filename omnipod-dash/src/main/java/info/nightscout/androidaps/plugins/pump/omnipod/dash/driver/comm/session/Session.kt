@@ -4,15 +4,21 @@ import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.logging.LTag
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.Id
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.endecrypt.EnDecrypt
+import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.exceptions.CouldNotParseResponseException
+import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.exceptions.IllegalResponseException
+import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.exceptions.NakResponseException
+import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.exceptions.PodAlarmException
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.message.MessageIO
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.message.MessagePacket
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.message.MessageType
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.message.StringLengthPrefixEncoding
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.message.StringLengthPrefixEncoding.Companion.parseKeys
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.command.base.Command
+import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.response.AlarmStatusResponse
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.response.NakResponse
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.response.Response
 import info.nightscout.androidaps.utils.extensions.toHex
+import kotlin.reflect.KClass
 
 class Session(
     private val aapsLogger: AAPSLogger,
@@ -29,9 +35,13 @@ class Session(
      *  <- response, ACK TODO: retries?
      *  -> ACK
      */
-    fun sendCommand(cmd: Command): Response {
+    @Throws(CouldNotParseResponseException::class, UnsupportedOperationException::class)
+    fun sendCommand(cmd: Command, responseType: KClass<out Response>): Response {
         sessionKeys.msgSequenceNumber++
-        aapsLogger.debug(LTag.PUMPBTCOMM, "Sending command: ${cmd.encoded.toHex()} in packet $cmd")
+        aapsLogger.debug(
+            LTag.PUMPBTCOMM,
+            "Sending command: ${cmd.javaClass.simpleName}: ${cmd.encoded.toHex()} in packet $cmd"
+        )
 
         val msg = getCmdMessage(cmd)
         aapsLogger.debug(LTag.PUMPBTCOMM, "Sending command(wrapped): ${msg.payload.toHex()}")
@@ -40,7 +50,18 @@ class Session(
         val responseMsg = msgIO.receiveMessage()
         val decrypted = enDecrypt.decrypt(responseMsg)
         aapsLogger.debug(LTag.PUMPBTCOMM, "Received response: $decrypted")
+
         val response = parseResponse(decrypted)
+
+        if (!responseType.isInstance(response)) {
+            if (response is AlarmStatusResponse) {
+                throw PodAlarmException(response)
+            }
+            if (response is NakResponse) {
+                throw NakResponseException(response)
+            }
+            throw IllegalResponseException(responseType, response)
+        }
 
         sessionKeys.msgSequenceNumber++
         val ack = getAck(responseMsg)
@@ -49,11 +70,22 @@ class Session(
         return response
     }
 
+    @Throws(CouldNotParseResponseException::class, UnsupportedOperationException::class)
     private fun parseResponse(decrypted: MessagePacket): Response {
 
-        val payload = parseKeys(arrayOf(RESPONSE_PREFIX), decrypted.payload)[0]
-        aapsLogger.info(LTag.PUMPBTCOMM, "Received decrypted response: ${payload.toHex()} in packet: $decrypted")
-        return NakResponse(payload)
+        val data = parseKeys(arrayOf(RESPONSE_PREFIX), decrypted.payload)[0]
+        aapsLogger.info(LTag.PUMPBTCOMM, "Received decrypted response: ${data.toHex()} in packet: $decrypted")
+
+        // TODO verify length
+
+        val uniqueId = data.copyOfRange(0, 4)
+        val lenghtAndSequenceNumber = data.copyOfRange(4, 6)
+        val payload = data.copyOfRange(6, data.size - 2)
+        val crc = data.copyOfRange(data.size - 2, data.size)
+
+        // TODO validate uniqueId, sequenceNumber and crc
+
+        return ResponseUtil.parseResponse(payload)
     }
 
     private fun getAck(response: MessagePacket): MessagePacket {

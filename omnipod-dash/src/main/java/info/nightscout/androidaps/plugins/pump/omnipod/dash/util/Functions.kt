@@ -41,7 +41,7 @@ fun mapProfileToBasalProgram(profile: Profile): BasalProgram {
         }
 
         if (entries.size == 0 && basalValue.timeAsSeconds != 0) {
-            throw java.lang.IllegalArgumentException("First basal segment start time should be 0")
+            throw IllegalArgumentException("First basal segment start time should be 0")
         }
 
         if (entries.size > 0 && entries[entries.size - 1].endSlotIndex != startSlotIndex) {

@@ -26,9 +26,9 @@ class AlertConfiguration(
                 firstByte = firstByte or (1 shl 1)
             }
             firstByte = firstByte or ((durationInMinutes.toInt() shr 8 and 0x01).toByte())
-            return ByteBuffer.allocate(6) //
+            return ByteBuffer.allocate(6)
                 .put(firstByte)
-                .put(durationInMinutes.toByte()) //
+                .put(durationInMinutes.toByte())
                 .putShort(
                     when (trigger) {
                         is AlertTrigger.ReservoirVolumeTrigger -> {
@@ -39,9 +39,9 @@ class AlertConfiguration(
                             trigger.offsetInMinutes
                         }
                     }
-                ) //
-                .put(beepRepetition.value) //
-                .put(beepType.value) //
+                )
+                .put(beepRepetition.value)
+                .put(beepType.value)
                 .array()
         }
 
