@@ -455,6 +455,26 @@ open class AppRepository @Inject internal constructor(
     fun deleteAllBolusCalculatorResults() =
         database.bolusCalculatorResultDao.deleteAllEntries()
 
+    // DEVICE STATUS
+    fun insert(deviceStatus: DeviceStatus) : Long =
+        database.deviceStatusDao.insert(deviceStatus)
+
+    /*
+       * returns a Pair of the next entity to sync and the ID of the "update".
+       * The update id might either be the entry id itself if it is a new entry - or the id
+       * of the update ("historic") entry. The sync counter should be incremented to that id if it was synced successfully.
+       *
+       * It is a Maybe as there might be no next element.
+       * */
+
+    fun getNextSyncElementDeviceStatus(id: Long): Maybe<DeviceStatus> =
+        database.deviceStatusDao.getNextModifiedOrNewAfter(id)
+            .subscribeOn(Schedulers.io())
+
+    fun getModifiedDeviceStatusDataFromId(lastId: Long): Single<List<DeviceStatus>> =
+        database.deviceStatusDao.getModifiedFrom(lastId)
+            .subscribeOn(Schedulers.io())
+
 }
 
 @Suppress("USELESS_CAST")

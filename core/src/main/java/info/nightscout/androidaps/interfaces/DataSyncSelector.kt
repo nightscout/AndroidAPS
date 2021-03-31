@@ -1,5 +1,6 @@
 package info.nightscout.androidaps.interfaces
 
+import info.nightscout.androidaps.database.entities.DeviceStatus
 import info.nightscout.androidaps.database.entities.*
 
 interface DataSyncSelector {
@@ -48,4 +49,9 @@ interface DataSyncSelector {
     fun changedFoods() : List<Food>
     // Until NS v3
     fun processChangedFoodsCompat(): Boolean
+
+    fun confirmLastDeviceStatusIdIfGreater(lastSynced: Long)
+    fun changedDeviceStatuses() : List<DeviceStatus>
+    // Until NS v3
+    fun processChangedDeviceStatusesCompat(): Boolean
 }

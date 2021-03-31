@@ -1,12 +1,88 @@
-package info.nightscout.androidaps.plugins.aps.loop;
+package info.nightscout.androidaps.utils.extensions
 
-import org.json.JSONException;
-import org.json.JSONObject;
-import org.slf4j.Logger;
+import android.os.Build
+import info.nightscout.androidaps.database.entities.DeviceStatus
+import info.nightscout.androidaps.interfaces.IobCobCalculator
+import info.nightscout.androidaps.interfaces.LoopInterface
+import info.nightscout.androidaps.interfaces.ProfileFunction
+import info.nightscout.androidaps.interfaces.PumpInterface
+import info.nightscout.androidaps.plugins.configBuilder.RunningConfiguration
+import info.nightscout.androidaps.receivers.ReceiverStatusStore
+import info.nightscout.androidaps.utils.DateUtil
+import org.json.JSONObject
 
-import info.nightscout.androidaps.logging.AAPSLogger;
-import info.nightscout.androidaps.logging.LTag;
-import info.nightscout.androidaps.logging.StacktraceLoggerWrapper;
+fun DeviceStatus.toJson(): JSONObject =
+    JSONObject()
+        .put("created_at", DateUtil.toISOString(timestamp))
+        .also {
+            if (device != null) it.put("device", device)
+            if (pump != null) it.put("pump", JSONObject(pump))
+            it.put("openaps", JSONObject().also { openaps ->
+                if (enacted != null) openaps.put("enacted", JSONObject(enacted))
+                if (suggested != null) openaps.put("suggested", JSONObject(suggested))
+                if (iob != null) openaps.put("iob", iob)
+            })
+            if (uploaderBattery != 0) it.put("uploaderBattery", uploaderBattery)
+            if (configuration != null) it.put("configuration", JSONObject(configuration))
+        }
+
+fun buildDeviceStatus(
+    dateUtil: DateUtil,
+    loopPlugin: LoopInterface,
+    iobCobCalculatorPlugin: IobCobCalculator,
+    profileFunction: ProfileFunction,
+    pumpInterface: PumpInterface,
+    receiverStatusStore: ReceiverStatusStore,
+    runningConfiguration: RunningConfiguration,
+    version: String
+): DeviceStatus? {
+    val profile = profileFunction.getProfile() ?: return null
+    val profileName = profileFunction.getProfileName() ?: return null
+
+    val lastRun = loopPlugin.lastRun
+    var apsResult: JSONObject? = null
+    var iob: JSONObject? = null
+    var enacted: JSONObject? = null
+    if (lastRun != null && lastRun.lastAPSRun > dateUtil._now() - 300 * 1000L) {
+        // do not send if result is older than 1 min
+        apsResult = lastRun.request?.json()?.also {
+            it.put("timestamp", DateUtil.toISOString(lastRun.lastAPSRun))
+        }
+        iob = lastRun.request?.iob?.json()?.also {
+            it.put("time", DateUtil.toISOString(lastRun.lastAPSRun))
+        }
+        val requested = JSONObject()
+        if (lastRun.tbrSetByPump?.enacted == true) { // enacted
+            enacted = lastRun.request?.json()?.also {
+                it.put("rate", lastRun.tbrSetByPump!!.json(profile)["rate"])
+                it.put("duration", lastRun.tbrSetByPump!!.json(profile)["duration"])
+                it.put("received", true)
+            }
+            requested.put("duration", lastRun.request?.duration)
+            requested.put("rate", lastRun.request?.rate)
+            requested.put("temp", "absolute")
+            requested.put("smb", lastRun.request?.smb)
+            enacted?.put("requested", requested)
+            enacted?.put("smb", lastRun.tbrSetByPump?.bolusDelivered)
+        }
+    } else {
+        val calcIob = iobCobCalculatorPlugin.calculateIobArrayInDia(profile)
+        if (calcIob.isNotEmpty()) {
+            iob = calcIob[0].json()
+            iob.put("time", DateUtil.toISOString(dateUtil._now()))
+        }
+    }
+    return DeviceStatus(
+        timestamp = dateUtil._now(),
+        suggested = apsResult?.toString(),
+        iob = iob?.toString(),
+        enacted = enacted?.toString(),
+        device = "openaps://" + Build.MANUFACTURER + " " + Build.MODEL,
+        pump = pumpInterface.getJSONStatus(profile, profileName, version).toString(),
+        uploaderBattery = receiverStatusStore.batteryLevel,
+        configuration = runningConfiguration.configuration().toString()
+    )
+}
 
 /*
 {
@@ -364,41 +440,3 @@ import info.nightscout.androidaps.logging.StacktraceLoggerWrapper;
         "created_at": "2016-06-24T09:27:49.230Z"
         }
 */
-
-public class DeviceStatus {
-    private final AAPSLogger aapsLogger;
-
-    public String device = null;
-    public JSONObject pump = null;
-    public JSONObject enacted = null;
-    public JSONObject suggested = null;
-    public JSONObject iob = null;
-    public int uploaderBattery = 0;
-    public String created_at = null;
-    public JSONObject configuration = null;
-
-    public DeviceStatus(AAPSLogger aapsLogger) {
-        this.aapsLogger = aapsLogger;
-    }
-
-    public JSONObject mongoRecord() {
-        JSONObject record = new JSONObject();
-
-        try {
-            if (device != null) record.put("device", device);
-            if (pump != null) record.put("pump", pump);
-            JSONObject openaps = new JSONObject();
-            if (enacted != null) openaps.put("enacted", enacted);
-            if (suggested != null) openaps.put("suggested", suggested);
-            if (iob != null) openaps.put("iob", iob);
-            record.put("openaps", openaps);
-            if (uploaderBattery != 0) record.put("uploaderBattery", uploaderBattery);
-            if (created_at != null) record.put("created_at", created_at);
-            if (configuration != null) record.put("configuration", configuration);
-        } catch (JSONException e) {
-            aapsLogger.error("Unhandled exception", e);
-        }
-        return record;
-    }
-
-}

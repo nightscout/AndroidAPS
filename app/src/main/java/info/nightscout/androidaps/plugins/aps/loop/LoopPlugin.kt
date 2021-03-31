@@ -32,6 +32,7 @@ import info.nightscout.androidaps.plugins.aps.loop.events.EventLoopUpdateGui
 import info.nightscout.androidaps.plugins.aps.loop.events.EventNewOpenLoopNotification
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper
 import info.nightscout.androidaps.plugins.configBuilder.ConstraintChecker
+import info.nightscout.androidaps.plugins.configBuilder.RunningConfiguration
 import info.nightscout.androidaps.plugins.general.nsclient.NSUpload
 import info.nightscout.androidaps.plugins.general.overview.events.EventDismissNotification
 import info.nightscout.androidaps.plugins.general.overview.events.EventNewNotification
@@ -48,6 +49,7 @@ import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.FabricPrivacy
 import info.nightscout.androidaps.utils.HardLimits
 import info.nightscout.androidaps.utils.T
+import info.nightscout.androidaps.utils.extensions.buildDeviceStatus
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 import info.nightscout.androidaps.utils.rx.AapsSchedulers
 import info.nightscout.androidaps.utils.sharedPreferences.SP
@@ -78,7 +80,8 @@ open class LoopPlugin @Inject constructor(
     private val fabricPrivacy: FabricPrivacy,
     private val nsUpload: NSUpload,
     private val dateUtil: DateUtil,
-    private val repository: AppRepository
+    private val repository: AppRepository,
+    private val runningConfiguration: RunningConfiguration
 ) : PluginBase(PluginDescription()
     .mainType(PluginType.LOOP)
     .fragmentClass(LoopFragment::class.java.name)
@@ -316,7 +319,12 @@ open class LoopPlugin @Inject constructor(
             lastRun!!.lastTBRRequest = 0
             lastRun!!.lastSMBEnact = 0
             lastRun!!.lastSMBRequest = 0
-            nsUpload.uploadDeviceStatus(this, iobCobCalculatorPlugin, profileFunction, activePlugin.activePump, receiverStatusStore, BuildConfig.VERSION_NAME + "-" + BuildConfig.BUILDVERSION)
+            buildDeviceStatus(dateUtil, this, iobCobCalculatorPlugin, profileFunction,
+                activePlugin.activePump, receiverStatusStore, runningConfiguration,
+                BuildConfig.VERSION_NAME + "-" + BuildConfig.BUILDVERSION)?.also {
+                repository.insert(it)
+            }
+
             if (isSuspended) {
                 aapsLogger.debug(LTag.APS, resourceHelper.gs(R.string.loopsuspended))
                 rxBus.send(EventLoopSetLastRunGui(resourceHelper.gs(R.string.loopsuspended)))
@@ -489,7 +497,6 @@ open class LoopPlugin @Inject constructor(
 
     fun acceptChangeRequest() {
         val profile = profileFunction.getProfile()
-        val lp = this
         applyTBRRequest(lastRun!!.constraintsProcessed, profile, object : Callback() {
             override fun run() {
                 if (result.enacted) {
@@ -497,7 +504,11 @@ open class LoopPlugin @Inject constructor(
                     lastRun!!.lastTBRRequest = lastRun!!.lastAPSRun
                     lastRun!!.lastTBREnact = DateUtil.now()
                     lastRun!!.lastOpenModeAccept = DateUtil.now()
-                    nsUpload.uploadDeviceStatus(lp, iobCobCalculatorPlugin, profileFunction, activePlugin.activePump, receiverStatusStore, BuildConfig.VERSION_NAME + "-" + BuildConfig.BUILDVERSION)
+                    buildDeviceStatus(dateUtil, this@LoopPlugin, iobCobCalculatorPlugin, profileFunction,
+                        activePlugin.activePump, receiverStatusStore, runningConfiguration,
+                        BuildConfig.VERSION_NAME + "-" + BuildConfig.BUILDVERSION)?.also {
+                        repository.insert(it)
+                    }
                     sp.incInt(R.string.key_ObjectivesmanualEnacts)
                 }
                 rxBus.send(EventAcceptOpenLoopChange())

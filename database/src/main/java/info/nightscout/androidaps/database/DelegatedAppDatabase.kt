@@ -24,5 +24,6 @@ internal class DelegatedAppDatabase(val changes: MutableList<DBEntry>, val datab
     val userEntryDao: UserEntryDao = DelegatedUserEntryDao(changes, database.userEntryDao)
     val preferenceChangeDao: PreferenceChangeDao = DelegatedPreferenceChangeDao(changes, database.preferenceChangeDao)
     val foodDao: FoodDao = DelegatedFoodDao(changes, database.foodDao)
+    val deviceStatusDao: DeviceStatusDao = DelegatedDeviceStatusDao(changes, database.deviceStatusDao)
     fun clearAllTables() = database.clearAllTables()
 }

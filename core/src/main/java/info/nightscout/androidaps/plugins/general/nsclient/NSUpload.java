@@ -1,35 +1,22 @@
 package info.nightscout.androidaps.plugins.general.nsclient;
 
-import android.os.Build;
-
 import org.json.JSONException;
 import org.json.JSONObject;
-
-import java.util.Date;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
 import info.nightscout.androidaps.core.R;
 import info.nightscout.androidaps.data.DetailedBolusInfo;
-import info.nightscout.androidaps.data.IobTotal;
 import info.nightscout.androidaps.data.Profile;
 import info.nightscout.androidaps.database.entities.TherapyEvent;
 import info.nightscout.androidaps.db.DbRequest;
 import info.nightscout.androidaps.db.ExtendedBolus;
 import info.nightscout.androidaps.db.ProfileSwitch;
 import info.nightscout.androidaps.db.TemporaryBasal;
-import info.nightscout.androidaps.interfaces.IobCobCalculator;
-import info.nightscout.androidaps.interfaces.LoopInterface;
-import info.nightscout.androidaps.interfaces.ProfileFunction;
-import info.nightscout.androidaps.interfaces.PumpInterface;
 import info.nightscout.androidaps.interfaces.UploadQueueInterface;
 import info.nightscout.androidaps.logging.AAPSLogger;
-import info.nightscout.androidaps.logging.LTag;
-import info.nightscout.androidaps.plugins.aps.loop.APSResult;
-import info.nightscout.androidaps.plugins.aps.loop.DeviceStatus;
 import info.nightscout.androidaps.plugins.configBuilder.RunningConfiguration;
-import info.nightscout.androidaps.receivers.ReceiverStatusStore;
 import info.nightscout.androidaps.utils.DateUtil;
 import info.nightscout.androidaps.utils.sharedPreferences.SP;
 
@@ -165,70 +152,6 @@ public class NSUpload {
         }
     }
 
-    public void uploadDeviceStatus(LoopInterface loopPlugin, IobCobCalculator iobCobCalculatorPlugin, ProfileFunction profileFunction, PumpInterface pumpInterface, ReceiverStatusStore receiverStatusStore, String version) {
-        Profile profile = profileFunction.getProfile();
-        String profileName = profileFunction.getProfileName();
-
-        if (profile == null) {
-            aapsLogger.error("Profile is null. Skipping upload");
-            return;
-        }
-
-        DeviceStatus deviceStatus = new DeviceStatus(aapsLogger);
-        try {
-            LoopInterface.LastRun lastRun = loopPlugin.getLastRun();
-            if (lastRun != null && lastRun.getLastAPSRun() > System.currentTimeMillis() - 300 * 1000L) {
-                // do not send if result is older than 1 min
-                APSResult apsResult = lastRun.getRequest();
-                apsResult.json().put("timestamp", DateUtil.toISOString(lastRun.getLastAPSRun()));
-                deviceStatus.suggested = apsResult.json();
-
-                deviceStatus.iob = lastRun.getRequest().getIob().json();
-                deviceStatus.iob.put("time", DateUtil.toISOString(lastRun.getLastAPSRun()));
-
-                JSONObject requested = new JSONObject();
-
-                if (lastRun.getTbrSetByPump() != null && lastRun.getTbrSetByPump().getEnacted()) { // enacted
-                    deviceStatus.enacted = lastRun.getRequest().json();
-                    deviceStatus.enacted.put("rate", lastRun.getTbrSetByPump().json(profile).get("rate"));
-                    deviceStatus.enacted.put("duration", lastRun.getTbrSetByPump().json(profile).get("duration"));
-                    deviceStatus.enacted.put("recieved", true);
-                    requested.put("duration", lastRun.getRequest().getDuration());
-                    requested.put("rate", lastRun.getRequest().getRate());
-                    requested.put("temp", "absolute");
-                    deviceStatus.enacted.put("requested", requested);
-                }
-                if (lastRun.getTbrSetByPump() != null && lastRun.getTbrSetByPump().getEnacted()) { // enacted
-                    if (deviceStatus.enacted == null) {
-                        deviceStatus.enacted = lastRun.getRequest().json();
-                    }
-                    deviceStatus.enacted.put("smb", lastRun.getTbrSetByPump().getBolusDelivered());
-                    requested.put("smb", lastRun.getRequest().getSmb());
-                    deviceStatus.enacted.put("requested", requested);
-                }
-            } else {
-                aapsLogger.debug(LTag.NSCLIENT, "OpenAPS data too old to upload, sending iob only");
-                IobTotal[] iob = iobCobCalculatorPlugin.calculateIobArrayInDia(profile);
-                if (iob.length > 0) {
-                    deviceStatus.iob = iob[0].json();
-                    deviceStatus.iob.put("time", DateUtil.toISOString(dateUtil._now()));
-                }
-            }
-            deviceStatus.device = "openaps://" + Build.MANUFACTURER + " " + Build.MODEL;
-            JSONObject pumpstatus = pumpInterface.getJSONStatus(profile, profileName, version);
-            deviceStatus.pump = pumpstatus;
-
-            deviceStatus.uploaderBattery = receiverStatusStore.getBatteryLevel();
-
-            deviceStatus.created_at = DateUtil.toISOString(new Date());
-
-            deviceStatus.configuration = runningConfiguration.configuration();
-
-            uploadQueue.add(new DbRequest("dbAdd", "devicestatus", deviceStatus.mongoRecord(), System.currentTimeMillis()));
-        } catch (JSONException e) {
-            aapsLogger.error("Unhandled exception", e);
-        }
-    }
 
     public void uploadTreatmentRecord(DetailedBolusInfo detailedBolusInfo) {
         throw new IllegalStateException("DO NOT USE");
