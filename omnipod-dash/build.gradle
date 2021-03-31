@@ -1,6 +1,7 @@
 apply plugin: 'com.android.library'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-kapt'
+apply plugin: 'kotlin-allopen'
 apply plugin: 'com.hiya.jacoco-android'
 apply plugin: "io.gitlab.arturbosch.detekt" // TODO move to `subprojects` section in global build.gradle
 apply plugin: "org.jlleitschuh.gradle.ktlint" // TODO move to `subprojects` section in global build.gradle
@@ -14,6 +15,10 @@ android {
         versionCode 1
         versionName "1.0"
     }
+}
+
+allOpen {
+    annotation 'info.nightscout.androidaps.plugins.pump.omnipod.dash.annotations.OpenClass'
 }
 
 detekt { // TODO move to `subprojects` section in global build.gradle
