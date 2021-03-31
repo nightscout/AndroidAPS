@@ -51,7 +51,6 @@ data class FirstBlePacket(
             }
             if (payload[0].toInt() != 0) {
                 // most likely we lost the first packet.
-                // TODO: try to recover with NACKs?
                 throw IncorrectPacketException(payload, 0)
             }
             val fullFragments = payload[1].toInt()

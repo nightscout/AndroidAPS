@@ -61,7 +61,7 @@ class OmnipodDashBleManagerImpl @Inject constructor(
                     emitter.onNext(PodEvent.CommandSendNotConfirmed(cmd))
             }
 
-            when (val readResult = session.readAndAckCommandResponse()) {
+            when (val readResult = session.readAndAckResponse()) {
                 is CommandReceiveSuccess ->
                     emitter.onNext(PodEvent.ResponseReceived(readResult.result))
 

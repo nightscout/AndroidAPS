@@ -69,7 +69,8 @@ class BleCommCallbacks(
                     } else {
                         aapsLogger.warn(
                             LTag.PUMPBTCOMM,
-                            "Could not confirm write. Got " + received.payload.toHex() + ".Excepted: " + expectedPayload.toHex()
+                            "Could not confirm write. Got " + received.payload.toHex() +
+                                ".Excepted: " + expectedPayload.toHex()
                         )
                         WriteConfirmationError("Received incorrect writeConfirmation")
                     }

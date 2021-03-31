@@ -75,7 +75,7 @@ class SessionEstablisher(
 
         val eapMsg = EapMessage(
             code = EapCode.REQUEST,
-            identifier = identifier, // TODO: find what value we need here, it's probably random
+            identifier = identifier,
             attributes = attributes
         )
         return MessagePacket(

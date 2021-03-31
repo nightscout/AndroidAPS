@@ -62,7 +62,7 @@ class Session(
             CommandSendErrorSending(errMsg)
     }
 
-    fun readAndAckCommandResponse(): CommandReceiveResult {
+    fun readAndAckResponse(): CommandReceiveResult {
         var responseMsgPacket: MessagePacket? = null
         for (i in 0..MAX_TRIES) {
             val responseMsg = msgIO.receiveMessage()
@@ -72,9 +72,9 @@ class Session(
             }
             responseMsgPacket = responseMsg.msg
         }
-        if (responseMsgPacket == null) {
-            return CommandReceiveError("Could not read response")
-        }
+
+        responseMsgPacket
+            ?: return CommandReceiveError("Could not read response")
 
         val decrypted = enDecrypt.decrypt(responseMsgPacket)
         aapsLogger.debug(LTag.PUMPBTCOMM, "Received response: $decrypted")

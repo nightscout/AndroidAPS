@@ -153,27 +153,27 @@ class MessageIO(
         val peekCmd = cmdBleIO.peekCommand()
             ?: return MessageSendSuccess
 
-        when (val receivedCmd = BleCommand.parse(peekCmd)) {
+        return when (val receivedCmd = BleCommand.parse(peekCmd)) {
             is BleCommandNack -> {
                 // // Consume NACK
                 val received = cmdBleIO.receivePacket()
                 if (received !is BleReceivePayload) {
-                    return MessageSendErrorSending(received.toString())
+                    MessageSendErrorSending(received.toString())
+                } else {
+                    val sendResult = dataBleIO.sendAndConfirmPacket(packets[receivedCmd.idx.toInt()].toByteArray())
+                    handleSendResult(sendResult, index, packets)
                 }
-
-                val sendResult = dataBleIO.sendAndConfirmPacket(packets[receivedCmd.idx.toInt()].toByteArray())
-                return handleSendResult(sendResult, index, packets)
             }
 
             BleCommandSuccess -> {
-                if (index != packets.size) {
-                    return MessageSendErrorSending("Received SUCCESS before sending all the data. $index")
-                }
-                return MessageSendSuccess
+                if (index != packets.size)
+                    MessageSendErrorSending("Received SUCCESS before sending all the data. $index")
+                else
+                    MessageSendSuccess
             }
 
             else ->
-                return MessageSendErrorSending("Received unexpected command: ${peekCmd.toHex()}")
+                MessageSendErrorSending("Received unexpected command: ${peekCmd.toHex()}")
         }
     }
 
