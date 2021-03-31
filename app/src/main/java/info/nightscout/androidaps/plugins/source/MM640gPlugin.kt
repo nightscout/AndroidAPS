@@ -3,6 +3,7 @@ package info.nightscout.androidaps.plugins.source
 import android.content.Context
 import androidx.work.Worker
 import androidx.work.WorkerParameters
+import androidx.work.workDataOf
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.database.AppRepository
@@ -60,8 +61,8 @@ class MM640gPlugin @Inject constructor(
         override fun doWork(): Result {
             var ret = Result.success()
 
-            if (!mM640gPlugin.isEnabled(PluginType.BGSOURCE)) return Result.failure()
-            val collection = inputData.getString("collection") ?: return Result.failure()
+            if (!mM640gPlugin.isEnabled(PluginType.BGSOURCE)) return Result.success()
+            val collection = inputData.getString("collection") ?: return Result.failure(workDataOf("Error" to "missing collection"))
             if (collection == "entries") {
                 val data = inputData.getString("data")
                 aapsLogger.debug(LTag.BGSOURCE, "Received MM640g Data: $data")
@@ -87,7 +88,7 @@ class MM640gPlugin @Inject constructor(
                         repository.runTransactionForResult(CgmSourceTransaction(glucoseValues, emptyList(), null))
                             .doOnError {
                                 aapsLogger.error(LTag.DATABASE, "Error while saving values from Eversense App", it)
-                                ret = Result.failure()
+                                ret = Result.failure(workDataOf("Error" to it))
                             }
                             .blockingGet()
                             .also { savedValues ->
@@ -98,7 +99,7 @@ class MM640gPlugin @Inject constructor(
                             }
                     } catch (e: JSONException) {
                         aapsLogger.error("Exception: ", e)
-                        ret = Result.failure()
+                        ret = Result.failure(workDataOf("Error" to e))
                     }
                 }
             }

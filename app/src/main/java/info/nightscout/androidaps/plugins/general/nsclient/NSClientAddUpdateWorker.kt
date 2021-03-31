@@ -1,8 +1,10 @@
 package info.nightscout.androidaps.plugins.general.nsclient
 
 import android.content.Context
+import androidx.work.Data
 import androidx.work.Worker
 import androidx.work.WorkerParameters
+import androidx.work.workDataOf
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.database.AppRepository
@@ -52,10 +54,10 @@ class NSClientAddUpdateWorker(
 
     override fun doWork(): Result {
         val acceptNSData = !sp.getBoolean(R.string.key_ns_upload_only, true) && buildHelper.isEngineeringMode() || config.NSCLIENT
-        if (!acceptNSData) return Result.failure()
+        if (!acceptNSData) return Result.success()
 
         val treatments = dataWorker.pickupJSONArray(inputData.getLong(DataWorker.STORE_KEY, -1))
-            ?: return Result.failure()
+            ?: return Result.failure(workDataOf("Error" to "missing input data"))
 
         var ret = Result.success()
         var latestDateInReceivedData = 0L
@@ -81,7 +83,7 @@ class NSClientAddUpdateWorker(
                     repository.runTransactionForResult(SyncNsBolusTransaction(bolus))
                         .doOnError {
                             aapsLogger.error(LTag.DATABASE, "Error while saving bolus", it)
-                            ret = Result.failure()
+                            ret = Result.failure(workDataOf("Error" to it))
                         }
                         .blockingGet()
                         .also { result ->
@@ -105,7 +107,7 @@ class NSClientAddUpdateWorker(
                     repository.runTransactionForResult(SyncNsCarbsTransaction(carb))
                         .doOnError {
                             aapsLogger.error(LTag.DATABASE, "Error while saving carbs", it)
-                            ret = Result.failure()
+                            ret = Result.failure(workDataOf("Error" to it))
                         }
                         .blockingGet()
                         .also { result ->
@@ -131,7 +133,7 @@ class NSClientAddUpdateWorker(
                         repository.runTransactionForResult(SyncNsTemporaryTargetTransaction(temporaryTarget))
                             .doOnError {
                                 aapsLogger.error(LTag.DATABASE, "Error while saving temporary target", it)
-                                ret = Result.failure()
+                                ret = Result.failure(workDataOf("Error" to it))
                             }
                             .blockingGet()
                             .also { result ->
@@ -175,7 +177,7 @@ class NSClientAddUpdateWorker(
                         repository.runTransactionForResult(SyncNsTherapyEventTransaction(therapyEvent))
                             .doOnError {
                                 aapsLogger.error(LTag.DATABASE, "Error while saving therapy event", it)
-                                ret = Result.failure()
+                                ret = Result.failure(workDataOf("Error" to it))
                             }
                             .blockingGet()
                             .also { result ->

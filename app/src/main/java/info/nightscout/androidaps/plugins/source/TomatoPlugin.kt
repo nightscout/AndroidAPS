@@ -3,6 +3,7 @@ package info.nightscout.androidaps.plugins.source
 import android.content.Context
 import androidx.work.Worker
 import androidx.work.WorkerParameters
+import androidx.work.workDataOf
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.database.AppRepository
@@ -60,7 +61,7 @@ class TomatoPlugin @Inject constructor(
         override fun doWork(): Result {
             var ret = Result.success()
 
-            if (!tomatoPlugin.isEnabled(PluginType.BGSOURCE)) return Result.failure()
+            if (!tomatoPlugin.isEnabled(PluginType.BGSOURCE)) return Result.success()
             val glucoseValues = mutableListOf<CgmSourceTransaction.TransactionGlucoseValue>()
             glucoseValues += CgmSourceTransaction.TransactionGlucoseValue(
                 timestamp = inputData.getLong("com.fanqies.tomatofn.Extras.Time", 0),
@@ -73,7 +74,7 @@ class TomatoPlugin @Inject constructor(
             repository.runTransactionForResult(CgmSourceTransaction(glucoseValues, emptyList(), null))
                 .doOnError {
                     aapsLogger.error(LTag.DATABASE, "Error while saving values from Tomato App", it)
-                    ret = Result.failure()
+                    ret = Result.failure(workDataOf("Error" to it))
                 }
                 .blockingGet()
                 .also { savedValues ->

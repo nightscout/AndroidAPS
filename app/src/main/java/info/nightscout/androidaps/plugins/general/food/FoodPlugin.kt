@@ -3,6 +3,7 @@ package info.nightscout.androidaps.plugins.general.food
 import android.content.Context
 import androidx.work.Worker
 import androidx.work.WorkerParameters
+import androidx.work.workDataOf
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.database.AppRepository
@@ -55,7 +56,7 @@ class FoodPlugin @Inject constructor(
 
         override fun doWork(): Result {
             val foods = dataWorker.pickupJSONArray(inputData.getLong(DataWorker.STORE_KEY, -1))
-                ?: return Result.failure()
+                ?: return Result.failure(workDataOf("Error" to "missing input data"))
             aapsLogger.debug(LTag.DATABASE, "Received Food Data: $foods")
 
             var ret = Result.success()
@@ -77,7 +78,7 @@ class FoodPlugin @Inject constructor(
                         repository.runTransactionForResult(SyncNsFoodTransaction(delFood))
                             .doOnError {
                                 aapsLogger.error(LTag.DATABASE, "Error while removing food", it)
-                                ret = Result.failure()
+                                ret = Result.failure(workDataOf("Error" to it))
                             }
                             .blockingGet()
                             .also {
@@ -91,7 +92,7 @@ class FoodPlugin @Inject constructor(
                             repository.runTransactionForResult(SyncNsFoodTransaction(food))
                                 .doOnError {
                                     aapsLogger.error(LTag.DATABASE, "Error while adding/updating food", it)
-                                    ret = Result.failure()
+                                    ret = Result.failure(workDataOf("Error" to it))
                                 }
                                 .blockingGet()
                                 .also { result ->
@@ -101,7 +102,7 @@ class FoodPlugin @Inject constructor(
                                 }
                         } else {
                             aapsLogger.error(LTag.DATABASE, "Error parsing food", jsonFood.toString())
-                            ret = Result.failure()
+                            ret = Result.failure(workDataOf("Error" to "Error parsing food"))
                         }
                     }
                 }
