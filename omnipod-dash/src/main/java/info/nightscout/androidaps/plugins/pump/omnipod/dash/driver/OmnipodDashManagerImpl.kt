@@ -43,9 +43,9 @@ class OmnipodDashManagerImpl @Inject constructor(
 
     private val observePodReadyForActivationPart2: Observable<PodEvent>
         get() = Observable.defer {
-            if (podStateManager.activationProgress.isAtLeast(ActivationProgress.PHASE_1_COMPLETED) && podStateManager.activationProgress.isBefore(
-                    ActivationProgress.COMPLETED
-                )) {
+            if (podStateManager.activationProgress.isAtLeast(ActivationProgress.PHASE_1_COMPLETED) &&
+                podStateManager.activationProgress.isBefore(ActivationProgress.COMPLETED)
+            ) {
                 Observable.empty()
             } else {
                 // TODO introduce specialized Exception

@@ -18,9 +18,9 @@ import info.nightscout.androidaps.plugins.general.overview.events.EventDismissNo
 import info.nightscout.androidaps.plugins.general.overview.notifications.Notification
 import info.nightscout.androidaps.plugins.pump.omnipod.common.databinding.OmnipodCommonOverviewButtonsBinding
 import info.nightscout.androidaps.plugins.pump.omnipod.common.databinding.OmnipodCommonOverviewPodInfoBinding
-import info.nightscout.androidaps.plugins.pump.omnipod.common.queue.command.CommandSilenceAlerts
 import info.nightscout.androidaps.plugins.pump.omnipod.common.queue.command.CommandHandleTimeChange
 import info.nightscout.androidaps.plugins.pump.omnipod.common.queue.command.CommandResumeDelivery
+import info.nightscout.androidaps.plugins.pump.omnipod.common.queue.command.CommandSilenceAlerts
 import info.nightscout.androidaps.plugins.pump.omnipod.common.queue.command.CommandSuspendDelivery
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.EventOmnipodDashPumpValuesChanged
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.OmnipodDashPumpPlugin
@@ -467,16 +467,15 @@ class OmnipodDashOverviewFragment : DaggerFragment() {
 
     private fun updateRefreshStatusButton() {
         buttonBinding.buttonRefreshStatus.isEnabled =
-            podStateManager.isUniqueIdSet && podStateManager.activationProgress.isAtLeast(
-                ActivationProgress.PHASE_1_COMPLETED
-            ) &&
+            podStateManager.isUniqueIdSet &&
+                podStateManager.activationProgress.isAtLeast(ActivationProgress.PHASE_1_COMPLETED) &&
                 isQueueEmpty()
     }
 
     private fun updateResumeDeliveryButton() {
-        if (podStateManager.isPodRunning && (podStateManager.isSuspended || commandQueue.isCustomCommandInQueue(
-                CommandResumeDelivery::class.java
-            ))) {
+        if (podStateManager.isPodRunning &&
+            (podStateManager.isSuspended || commandQueue.isCustomCommandInQueue(CommandResumeDelivery::class.java))
+        ) {
             buttonBinding.buttonResumeDelivery.visibility = View.VISIBLE
             buttonBinding.buttonResumeDelivery.isEnabled = isQueueEmpty()
         } else {
@@ -485,9 +484,12 @@ class OmnipodDashOverviewFragment : DaggerFragment() {
     }
 
     private fun updateSilenceAlertsButton() {
-        if (isAutomaticallySilenceAlertsEnabled() && podStateManager.isPodRunning && (podStateManager.activeAlerts!!.size > 0 || commandQueue.isCustomCommandInQueue(
-                CommandSilenceAlerts::class.java
-            ))) {
+        if (isAutomaticallySilenceAlertsEnabled() && podStateManager.isPodRunning &&
+            (
+                podStateManager.activeAlerts!!.size > 0 ||
+                    commandQueue.isCustomCommandInQueue(CommandSilenceAlerts::class.java)
+                )
+        ) {
             buttonBinding.buttonSilenceAlerts.visibility = View.VISIBLE
             buttonBinding.buttonSilenceAlerts.isEnabled = isQueueEmpty()
         } else {
@@ -497,9 +499,10 @@ class OmnipodDashOverviewFragment : DaggerFragment() {
 
     private fun updateSuspendDeliveryButton() {
         // If the Pod is currently suspended, we show the Resume delivery button instead.
-        if (isSuspendDeliveryButtonEnabled() && podStateManager.isPodRunning && (!podStateManager.isSuspended || commandQueue.isCustomCommandInQueue(
-                CommandSuspendDelivery::class.java
-            ))) {
+        if (isSuspendDeliveryButtonEnabled() &&
+            podStateManager.isPodRunning &&
+            (!podStateManager.isSuspended || commandQueue.isCustomCommandInQueue(CommandSuspendDelivery::class.java))
+        ) {
             buttonBinding.buttonSuspendDelivery.visibility = View.VISIBLE
             buttonBinding.buttonSuspendDelivery.isEnabled =
                 podStateManager.isPodRunning && !podStateManager.isSuspended && isQueueEmpty()
