@@ -74,29 +74,27 @@ open class VirtualPumpPlugin @Inject constructor(
     var pumpType: PumpType? = null
         private set
     private var lastDataTime: Long = 0
-    override val pumpDescription = PumpDescription()
-
-    init {
-        pumpDescription.isBolusCapable = true
-        pumpDescription.bolusStep = 0.1
-        pumpDescription.isExtendedBolusCapable = true
-        pumpDescription.extendedBolusStep = 0.05
-        pumpDescription.extendedBolusDurationStep = 30.0
-        pumpDescription.extendedBolusMaxDuration = 8 * 60.toDouble()
-        pumpDescription.isTempBasalCapable = true
-        pumpDescription.tempBasalStyle = PumpDescription.PERCENT or PumpDescription.ABSOLUTE
-        pumpDescription.maxTempPercent = 500
-        pumpDescription.tempPercentStep = 10
-        pumpDescription.tempDurationStep = 30
-        pumpDescription.tempDurationStep15mAllowed = true
-        pumpDescription.tempDurationStep30mAllowed = true
-        pumpDescription.tempMaxDuration = 24 * 60
-        pumpDescription.isSetBasalProfileCapable = true
-        pumpDescription.basalStep = 0.01
-        pumpDescription.basalMinimumRate = 0.01
-        pumpDescription.isRefillingCapable = true
-        pumpDescription.storesCarbInfo = false
-        pumpDescription.is30minBasalRatesCapable = true
+    override val pumpDescription = PumpDescription().also {
+        it.isBolusCapable = true
+        it.bolusStep = 0.1
+        it.isExtendedBolusCapable = true
+        it.extendedBolusStep = 0.05
+        it.extendedBolusDurationStep = 30.0
+        it.extendedBolusMaxDuration = 8 * 60.toDouble()
+        it.isTempBasalCapable = true
+        it.tempBasalStyle = PumpDescription.PERCENT or PumpDescription.ABSOLUTE
+        it.maxTempPercent = 500
+        it.tempPercentStep = 10
+        it.tempDurationStep = 30
+        it.tempDurationStep15mAllowed = true
+        it.tempDurationStep30mAllowed = true
+        it.tempMaxDuration = 24 * 60
+        it.isSetBasalProfileCapable = true
+        it.basalStep = 0.01
+        it.basalMinimumRate = 0.01
+        it.isRefillingCapable = true
+        it.storesCarbInfo = false
+        it.is30minBasalRatesCapable = true
     }
 
     fun getFakingStatus(): Boolean {
