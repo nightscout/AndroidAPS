@@ -10,31 +10,31 @@ sealed class XXXValueWithUnit {
 
     data class SimpleInt(val value: Int) : XXXValueWithUnit() // formerly one usage of None
 
-    class Mgdl(val value: Double) : XXXValueWithUnit()
+    data class Mgdl(val value: Double) : XXXValueWithUnit()
 
-    class Mmoll(val value: Double) : XXXValueWithUnit()
+    data class Mmoll(val value: Double) : XXXValueWithUnit()
 
-    class Timestamp(val value: Long) : XXXValueWithUnit()
+    data class Timestamp(val value: Long) : XXXValueWithUnit()
 
-    class Insulin(val value: Double) : XXXValueWithUnit()
+    data class Insulin(val value: Double) : XXXValueWithUnit()
 
-    class UnitPerHour(val value: Double) : XXXValueWithUnit()
+    data class UnitPerHour(val value: Double) : XXXValueWithUnit()
 
-    class Gram(val value: Int) : XXXValueWithUnit()
+    data class Gram(val value: Int) : XXXValueWithUnit()
 
-    class Minute(val value: Int) : XXXValueWithUnit()
+    data class Minute(val value: Int) : XXXValueWithUnit()
 
-    class Hour(val value: Int) : XXXValueWithUnit()
+    data class Hour(val value: Int) : XXXValueWithUnit()
 
-    class Percent(val value: Int) : XXXValueWithUnit()
+    data class Percent(val value: Int) : XXXValueWithUnit()
 
-    class TherapyEventType(val value: TherapyEvent.Type) : XXXValueWithUnit()
+    data class TherapyEventType(val value: TherapyEvent.Type) : XXXValueWithUnit()
 
-    class TherapyEventMeterType(val value: TherapyEvent.MeterType) : XXXValueWithUnit()
+    data class TherapyEventMeterType(val value: TherapyEvent.MeterType) : XXXValueWithUnit()
 
-    class TherapyEventTTReason(val value: TemporaryTarget.Reason) : XXXValueWithUnit()
+    data class TherapyEventTTReason(val value: TemporaryTarget.Reason) : XXXValueWithUnit()
 
-    class StringResource(@StringRes val value: Int, val params: List<XXXValueWithUnit> = listOf()) : XXXValueWithUnit()
+    data class StringResource(@StringRes val value: Int, val params: List<XXXValueWithUnit> = listOf()) : XXXValueWithUnit()
 
     companion object {
 

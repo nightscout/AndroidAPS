@@ -27,17 +27,18 @@ class UserEntryLogger @Inject constructor(
     }
 
     fun log(action: Action, source: Sources, note: String? ="", vararg listvalues: XXXValueWithUnit?) {
+        val filteredValues = listvalues.toList().filter { it != null}
         compositeDisposable += repository.runTransaction(UserEntryTransaction(
             action = action,
             source = source,
             note = note ?:"",
-            values = listvalues.toList()
+            values = filteredValues
         ))
             .subscribeOn(aapsSchedulers.io)
             .observeOn(aapsSchedulers.io)
             .subscribeBy(
-                onError = { aapsLogger.debug("ERRORED USER ENTRY: $action $source $note $listvalues") },
-                onComplete = { aapsLogger.debug("USER ENTRY: $action $source $note $listvalues") }
+                onError = { aapsLogger.debug("ERRORED USER ENTRY: $action $source $note $filteredValues") },
+                onComplete = { aapsLogger.debug("USER ENTRY: $action $source $note $filteredValues") }
             )
     }
 
@@ -46,17 +47,18 @@ class UserEntryLogger @Inject constructor(
     }
 
     fun log(action: Action, source: Sources, vararg listvalues: XXXValueWithUnit?) {
+        val filteredValues = listvalues.toList().filter { it != null}
         compositeDisposable += repository.runTransaction(UserEntryTransaction(
             action = action,
             source = source,
             note = "",
-            values = listvalues.toList()
+            values = filteredValues
         ))
             .subscribeOn(aapsSchedulers.io)
             .observeOn(aapsSchedulers.io)
             .subscribeBy(
-                onError = { aapsLogger.debug("ERRORED USER ENTRY: $action $source $listvalues") },
-                onComplete = { aapsLogger.debug("USER ENTRY: $action $source $listvalues") }
+                onError = { aapsLogger.debug("ERRORED USER ENTRY: $action $source $filteredValues") },
+                onComplete = { aapsLogger.debug("USER ENTRY: $action $source $filteredValues") }
             )
     }
 
@@ -68,7 +70,7 @@ class UserEntryLogger @Inject constructor(
             action = action,
             source = source,
             note = note  ?:"",
-            values = mutableListOf()
+            values = listOf()
         ))
             .subscribeOn(aapsSchedulers.io)
             .observeOn(aapsSchedulers.io)
@@ -81,18 +83,19 @@ class UserEntryLogger @Inject constructor(
     @Deprecated("Use XXXValueWithUnits")
     fun log(action: Action, s: String? = "",  values: MutableList<ValueWithUnit>) {}
 
-    fun log(action: Action, source: Sources, note: String? ="", values: MutableList<XXXValueWithUnit?>) {
+    fun log(action: Action, source: Sources, note: String? ="", listvalues: MutableList<XXXValueWithUnit?>) {
+        val filteredValues = listvalues.toList().filter { it != null}
         compositeDisposable += repository.runTransaction(UserEntryTransaction(
             action = action,
             source = source,
             note = note ?: "",
-            values = values
+            values = filteredValues
         ))
             .subscribeOn(aapsSchedulers.io)
             .observeOn(aapsSchedulers.io)
             .subscribeBy(
-                onError = { aapsLogger.debug("ERRORED USER ENTRY: $action $source $note $values") },
-                onComplete = { aapsLogger.debug("USER ENTRY: $action $source $note $values") }
+                onError = { aapsLogger.debug("ERRORED USER ENTRY: $action $source $note $filteredValues") },
+                onComplete = { aapsLogger.debug("USER ENTRY: $action $source $note $filteredValues") }
             )
     }
 }
