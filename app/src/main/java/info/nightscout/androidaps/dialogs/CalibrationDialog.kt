@@ -12,7 +12,6 @@ import info.nightscout.androidaps.data.Profile
 import info.nightscout.androidaps.database.entities.XXXValueWithUnit
 import info.nightscout.androidaps.database.entities.UserEntry.Action
 import info.nightscout.androidaps.database.entities.UserEntry.Sources
-import info.nightscout.androidaps.database.entities.UserEntry.ValueWithUnit
 import info.nightscout.androidaps.databinding.DialogCalibrationBinding
 import info.nightscout.androidaps.interfaces.ProfileFunction
 import info.nightscout.androidaps.logging.UserEntryLogger
@@ -82,8 +81,7 @@ class CalibrationDialog : DialogFragmentWithDate() {
         if (bg > 0) {
             activity?.let { activity ->
                 OKDialog.showConfirmation(activity, resourceHelper.gs(R.string.overview_calibration), HtmlHelper.fromHtml(Joiner.on("<br/>").join(actions)), {
-                    //uel.log(Action.CALIBRATION, XXXValueWithUnit.fromGlucoseUnit(bg, units))
-                    uel.log(Action.CALIBRATION, ValueWithUnit(Sources.CalibrationDialog), ValueWithUnit(bg, units))
+                    uel.log(Action.CALIBRATION, Sources.CalibrationDialog, XXXValueWithUnit.fromGlucoseUnit(bg, units))
                     xdripCalibrations.sendIntent(bg)
                 })
             }
