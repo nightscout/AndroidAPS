@@ -57,8 +57,7 @@ fun bolusFromJson(jsonObject: JSONObject): Bolus? {
         timestamp = timestamp,
         amount = amount,
         type = type,
-        isValid = isValid,
-        isBasalInsulin = false
+        isValid = isValid
     ).also {
         it.interfaceIDs.nightscoutId = id
         it.interfaceIDs.pumpId = pumpId

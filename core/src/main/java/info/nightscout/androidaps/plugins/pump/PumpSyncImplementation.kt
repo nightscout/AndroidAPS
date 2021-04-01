@@ -31,8 +31,7 @@ class PumpSyncImplementation @Inject constructor(
                 temporaryId = temporaryId,
                 pumpType = pumpType.toDbPumpType(),
                 pumpSerial = pumpSerial
-            ),
-            isBasalInsulin = false
+            )
         )
         repository.runTransactionForResult(InsertPumpBolusWithTempIdTransaction(bolus))
             .doOnError { aapsLogger.error(LTag.DATABASE, "Error while saving carbs", it) }
@@ -53,8 +52,7 @@ class PumpSyncImplementation @Inject constructor(
                 pumpId = pumpId,
                 pumpType = pumpType.toDbPumpType(),
                 pumpSerial = pumpSerial
-            ),
-            isBasalInsulin = false
+            )
         )
         repository.runTransactionForResult(SyncPumpBolusWithTempIdTransaction(bolus, type?.toDBbBolusType()))
             .doOnError { aapsLogger.error(LTag.DATABASE, "Error while saving carbs", it) }
@@ -74,8 +72,7 @@ class PumpSyncImplementation @Inject constructor(
                 pumpId = pumpId,
                 pumpType = pumpType.toDbPumpType(),
                 pumpSerial = pumpSerial
-            ),
-            isBasalInsulin = false
+            )
         )
         repository.runTransactionForResult(SyncPumpBolusTransaction(bolus, type?.toDBbBolusType()))
             .doOnError { aapsLogger.error(LTag.DATABASE, "Error while saving carbs", it) }

@@ -25,8 +25,7 @@ class ActivityGraph : GraphView {
         val bolus = Bolus(
             timestamp = 0,
             amount = 1.0,
-            type = Bolus.Type.NORMAL,
-            isBasalInsulin = false
+            type = Bolus.Type.NORMAL
         )
         val activityArray: MutableList<DataPoint> = ArrayList()
         val iobArray: MutableList<DataPoint> = ArrayList()

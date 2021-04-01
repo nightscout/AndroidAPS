@@ -4,7 +4,6 @@ import dagger.android.AndroidInjector
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.danars.DanaRSPlugin
 import info.nightscout.androidaps.danars.DanaRSTestBase
-import info.nightscout.androidaps.db.Treatment
 import info.nightscout.androidaps.interfaces.ActivePluginProvider
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper
 import info.nightscout.androidaps.plugins.general.overview.events.EventOverviewBolusProgress
@@ -31,12 +30,6 @@ class DanaRSPacketNotifyDeliveryCompleteTest : DanaRSTestBase() {
                 it.rxBus = rxBus
                 it.resourceHelper = resourceHelper
                 it.danaPump = danaPump
-            }
-            if (it is Treatment) {
-                it.defaultValueHelper = defaultValueHelper
-                it.resourceHelper = resourceHelper
-                it.profileFunction = profileFunction
-                it.activePlugin = activePlugin
             }
         }
     }
