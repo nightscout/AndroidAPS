@@ -115,7 +115,7 @@ class ClassicPrefsFormat @Inject constructor(
             var action = csvString(entry.action)
             var therapyEvent = ""
             var source = ""
-            var note = csvString(entry.s)
+            var note = csvString(entry.note)
             var formatedString = ""
             var timestamp = ""
             var bg = ""
@@ -126,7 +126,7 @@ class ClassicPrefsFormat @Inject constructor(
             var h = ""
             var m = ""
             var other = ""
-
+/*
             for (v in entry.values) {
                 when (v.unit) {
                     Units.Timestamp    -> timestamp = dateUtil.dateAndTimeAndSecondsString(v.lValue)
@@ -154,6 +154,7 @@ class ClassicPrefsFormat @Inject constructor(
                     else                -> other = if (other == "") v.value().toString() else other + " / " + v.value().toString()
                 }
             }
+ */
             therapyEvent = csvString(therapyEvent)
             formatedString = csvString(formatedString)
             other = csvString(other)

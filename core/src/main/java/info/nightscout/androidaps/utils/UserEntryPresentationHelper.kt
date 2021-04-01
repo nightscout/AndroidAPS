@@ -79,13 +79,13 @@ class UserEntryPresentationHelper @Inject constructor(
     private fun coloredAction(action: Action): String = "<font color='${resourceHelper.gc(colorId(action.colorGroup))}'>${translator.translate(action)}</font>"
 
     fun listToPresentationString(list: List<XXXValueWithUnit?>) =
-        list.joinToString(separator = " ", transform = this::toPresentationString)
+        list.joinToString(separator = "  ", transform = this::toPresentationString)
 
     private fun toPresentationString(valueWithUnit: XXXValueWithUnit?): String = when (valueWithUnit) {
-        is XXXValueWithUnit.Gram                  -> "${valueWithUnit.value} ${translator.translate(Units.G)}"
-        is XXXValueWithUnit.Hour                  -> "${valueWithUnit.value} ${translator.translate(Units.H)}"
-        is XXXValueWithUnit.Minute                -> "${valueWithUnit.value} ${translator.translate(Units.G)}"
-        is XXXValueWithUnit.Percent               -> "${valueWithUnit.value} ${translator.translate(Units.Percent)}"
+        is XXXValueWithUnit.Gram                  -> "${valueWithUnit.value}${translator.translate(Units.G)}"
+        is XXXValueWithUnit.Hour                  -> "${valueWithUnit.value}${translator.translate(Units.H)}"
+        is XXXValueWithUnit.Minute                -> "${valueWithUnit.value}${translator.translate(Units.M)}"
+        is XXXValueWithUnit.Percent               -> "${valueWithUnit.value}${translator.translate(Units.Percent)}"
         is XXXValueWithUnit.Insulin               -> DecimalFormatter.to2Decimal(valueWithUnit.value) + translator.translate(UserEntry.Units.U)
         is XXXValueWithUnit.UnitPerHour           -> DecimalFormatter.to2Decimal(valueWithUnit.value) + translator.translate(UserEntry.Units.U_H)
         is XXXValueWithUnit.SimpleInt             -> valueWithUnit.value.toString()

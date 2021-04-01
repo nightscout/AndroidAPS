@@ -62,4 +62,11 @@ open class DatabaseModule {
             database.execSQL("CREATE INDEX IF NOT EXISTS `index_mealLinks_noteId` ON mealLinks (`noteId`)")
         }
     }
+
+    private val migration10to11 = object : Migration(10,11) {
+        override fun migrate(database: SupportSQLiteDatabase) {
+            database.execSQL("DROP TABLE IF EXISTS userEntry")
+            database.execSQL("CREATE TABLE IF NOT EXISTS userEntry (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `timestamp` INTEGER NOT NULL, `utcOffset` INTEGER NOT NULL, `action` TEXT NOT NULL, `source` TEXT NOT NULL, `note` TEXT NOT NULL, `values` TEXT NOT NULL)")
+        }
+    }
 }
