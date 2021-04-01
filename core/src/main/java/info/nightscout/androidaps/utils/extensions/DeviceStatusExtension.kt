@@ -37,7 +37,7 @@ fun buildDeviceStatus(
     version: String
 ): DeviceStatus? {
     val profile = profileFunction.getProfile() ?: return null
-    val profileName = profileFunction.getProfileName() ?: return null
+    val profileName = profileFunction.getProfileName()
 
     val lastRun = loopPlugin.lastRun
     var apsResult: JSONObject? = null

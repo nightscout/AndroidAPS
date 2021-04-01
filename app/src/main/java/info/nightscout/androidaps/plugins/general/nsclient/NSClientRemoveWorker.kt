@@ -3,6 +3,7 @@ package info.nightscout.androidaps.plugins.general.nsclient
 import android.content.Context
 import androidx.work.Worker
 import androidx.work.WorkerParameters
+import androidx.work.workDataOf
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.database.AppRepository
@@ -52,12 +53,12 @@ class NSClientRemoveWorker(
 
     override fun doWork(): Result {
         val acceptNSData = !sp.getBoolean(R.string.key_ns_upload_only, true) && buildHelper.isEngineeringMode() || config.NSCLIENT
-        if (!acceptNSData) return Result.failure()
+        if (!acceptNSData) return Result.success()
 
         var ret = Result.success()
 
         val treatments = dataWorker.pickupJSONArray(inputData.getLong(DataWorker.STORE_KEY, -1))
-            ?: return Result.failure()
+            ?: return Result.failure(workDataOf("Error" to "missing input data"))
 
         for (i in 0 until treatments.length()) {
             val json = treatments.getJSONObject(i)
@@ -68,7 +69,7 @@ class NSClientRemoveWorker(
             repository.runTransactionForResult(SyncNsTemporaryTargetTransaction(temporaryTarget))
                 .doOnError {
                     aapsLogger.error(LTag.DATABASE, "Error while invalidating temporary target", it)
-                    ret = Result.failure()
+                    ret = Result.failure(workDataOf("Error" to it))
                 }
                 .blockingGet()
                 .also { result ->
@@ -98,7 +99,7 @@ class NSClientRemoveWorker(
             repository.runTransactionForResult(SyncNsTherapyEventTransaction(therapyEvent))
                 .doOnError {
                     aapsLogger.error(LTag.DATABASE, "Error while invalidating therapy event", it)
-                    ret = Result.failure()
+                    ret = Result.failure(workDataOf("Error" to it))
                 }
                 .blockingGet()
                 .also { result ->
@@ -121,7 +122,7 @@ class NSClientRemoveWorker(
             repository.runTransactionForResult(SyncNsBolusTransaction(bolus))
                 .doOnError {
                     aapsLogger.error(LTag.DATABASE, "Error while invalidating bolus", it)
-                    ret = Result.failure()
+                    ret = Result.failure(workDataOf("Error" to it))
                 }
                 .blockingGet()
                 .also { result ->
@@ -138,7 +139,7 @@ class NSClientRemoveWorker(
             repository.runTransactionForResult(SyncNsCarbsTransaction(carbs))
                 .doOnError {
                     aapsLogger.error(LTag.DATABASE, "Error while invalidating carbs", it)
-                    ret = Result.failure()
+                    ret = Result.failure(workDataOf("Error" to it))
                 }
                 .blockingGet()
                 .also { result ->

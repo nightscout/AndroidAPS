@@ -105,7 +105,6 @@ class ProfileTest : TestBaseWithProfile() {
         //Test basal profile below limit
         p = Profile(profileInjector, JSONObject(belowLimitValidProfile), 100, 0)
         p.isValid("Test")
-        //Assert.assertEquals(true, ((AAPSMocker.MockedBus) MainApp.bus()).notificationSent);
 
         // Test profile w/o units
         p = Profile(profileInjector, JSONObject(noUnitsValidProfile), 100, 0)
@@ -142,9 +141,7 @@ class ProfileTest : TestBaseWithProfile() {
 
         // Test hour alignment
         testPumpPlugin.pumpDescription.is30minBasalRatesCapable = false
-        //((AAPSMocker.MockedBus) MainApp.bus()).notificationSent = false;
         p = Profile(profileInjector, JSONObject(notAlignedBasalValidProfile), 100, 0)
         p.isValid("Test")
-        //Assert.assertEquals(true, ((AAPSMocker.MockedBus) MainApp.bus()).notificationSent);
     }
 }

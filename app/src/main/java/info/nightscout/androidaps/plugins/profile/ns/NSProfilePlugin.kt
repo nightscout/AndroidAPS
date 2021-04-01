@@ -3,6 +3,7 @@ package info.nightscout.androidaps.plugins.profile.ns
 import android.content.Context
 import androidx.work.Worker
 import androidx.work.WorkerParameters
+import androidx.work.workDataOf
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.Config
 import info.nightscout.androidaps.R
@@ -96,7 +97,7 @@ class NSProfilePlugin @Inject constructor(
 
         override fun doWork(): Result {
             val profileString = dataWorker.pickupJSONObject(inputData.getLong(DataWorker.STORE_KEY, -1))
-                ?: return Result.failure()
+                ?: return Result.failure(workDataOf("Error" to "missing input data"))
             nsProfilePlugin.profile = ProfileStore(injector, profileString)
             nsProfilePlugin.storeNSProfile()
             if (nsProfilePlugin.isEnabled()) {

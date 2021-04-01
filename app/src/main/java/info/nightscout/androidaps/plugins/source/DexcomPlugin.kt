@@ -6,6 +6,7 @@ import android.content.pm.PackageManager
 import androidx.core.content.ContextCompat
 import androidx.work.Worker
 import androidx.work.WorkerParameters
+import androidx.work.workDataOf
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.Config
 import info.nightscout.androidaps.R
@@ -97,9 +98,9 @@ class DexcomPlugin @Inject constructor(
         override fun doWork(): Result {
             var ret = Result.success()
 
-            if (!dexcomPlugin.isEnabled(PluginType.BGSOURCE)) return Result.failure()
+            if (!dexcomPlugin.isEnabled(PluginType.BGSOURCE)) return Result.success()
             val bundle = dataWorker.pickupBundle(inputData.getLong(DataWorker.STORE_KEY, -1))
-                ?: return Result.failure()
+                ?: return Result.failure(workDataOf("Error" to "missing input data"))
             try {
                 val sourceSensor = when (bundle.getString("sensorType") ?: "") {
                     "G6" -> GlucoseValue.SourceSensor.DEXCOM_G6_NATIVE
@@ -107,7 +108,7 @@ class DexcomPlugin @Inject constructor(
                     else -> GlucoseValue.SourceSensor.DEXCOM_NATIVE_UNKNOWN
                 }
                 val glucoseValuesBundle = bundle.getBundle("glucoseValues")
-                    ?: return Result.failure()
+                    ?: return Result.failure(workDataOf("Error" to "missing glucoseValues"))
                 val glucoseValues = mutableListOf<CgmSourceTransaction.TransactionGlucoseValue>()
                 for (i in 0 until glucoseValuesBundle.size()) {
                     val glucoseValueBundle = glucoseValuesBundle.getBundle(i.toString())!!
@@ -144,7 +145,7 @@ class DexcomPlugin @Inject constructor(
                 repository.runTransactionForResult(CgmSourceTransaction(glucoseValues, calibrations, sensorStartTime))
                     .doOnError {
                         aapsLogger.error(LTag.DATABASE, "Error while saving values from Dexcom App", it)
-                        ret = Result.failure()
+                        ret = Result.failure(workDataOf("Error" to it))
                     }
                     .blockingGet()
                     .also { result ->
@@ -161,7 +162,7 @@ class DexcomPlugin @Inject constructor(
                     }
             } catch (e: Exception) {
                 aapsLogger.error("Error while processing intent from Dexcom App", e)
-                ret = Result.failure()
+                ret = Result.failure(workDataOf("Error" to e))
             }
             return ret
         }

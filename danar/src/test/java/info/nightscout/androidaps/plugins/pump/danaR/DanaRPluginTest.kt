@@ -11,6 +11,7 @@ import info.nightscout.androidaps.danar.R
 import info.nightscout.androidaps.interfaces.CommandQueueProvider
 import info.nightscout.androidaps.interfaces.Constraint
 import info.nightscout.androidaps.interfaces.PluginType
+import info.nightscout.androidaps.interfaces.PumpSync
 import info.nightscout.androidaps.plugins.configBuilder.ConstraintChecker
 import info.nightscout.androidaps.utils.sharedPreferences.SP
 import org.junit.Assert
@@ -30,6 +31,7 @@ class DanaRPluginTest : TestBaseWithProfile() {
     @Mock lateinit var constraintChecker: ConstraintChecker
     @Mock lateinit var sp: SP
     @Mock lateinit var commandQueue: CommandQueueProvider
+    @Mock lateinit var pumpSync: PumpSync
 
     lateinit var danaPump: DanaPump
 
@@ -46,7 +48,7 @@ class DanaRPluginTest : TestBaseWithProfile() {
         `when`(resourceHelper.gs(R.string.limitingbasalratio)).thenReturn("Limiting max basal rate to %1\$.2f U/h because of %2\$s")
         `when`(resourceHelper.gs(R.string.limitingpercentrate)).thenReturn("Limiting max percent rate to %1\$d%% because of %2\$s")
         danaPump = DanaPump(aapsLogger, sp, injector)
-        danaRPlugin = DanaRPlugin(injector, aapsLogger, aapsSchedulers, rxBus, context, resourceHelper, constraintChecker, activePluginProvider, sp, commandQueue, danaPump, dateUtil, fabricPrivacy)
+        danaRPlugin = DanaRPlugin(injector, aapsLogger, aapsSchedulers, rxBus, context, resourceHelper, constraintChecker, activePluginProvider, sp, commandQueue, danaPump, dateUtil, fabricPrivacy, pumpSync)
     }
 
     @Test @Throws(Exception::class)

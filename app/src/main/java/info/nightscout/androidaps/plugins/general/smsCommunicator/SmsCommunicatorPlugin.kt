@@ -9,6 +9,7 @@ import androidx.preference.Preference
 import androidx.preference.PreferenceFragmentCompat
 import androidx.work.Worker
 import androidx.work.WorkerParameters
+import androidx.work.workDataOf
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.Config
 import info.nightscout.androidaps.Constants
@@ -182,8 +183,8 @@ class SmsCommunicatorPlugin @Inject constructor(
         @Suppress("SpellCheckingInspection")
         override fun doWork(): Result {
             val bundle = dataWorker.pickupBundle(inputData.getLong(DataWorker.STORE_KEY, -1))
-                ?: return Result.failure()
-            val format = bundle.getString("format") ?: return Result.failure()
+                ?: return Result.failure(workDataOf("Error" to "missing input data"))
+            val format = bundle.getString("format") ?: return Result.failure(workDataOf("Error" to "missing format in input data"))
             val pdus = bundle["pdus"] as Array<*>
             for (pdu in pdus) {
                 val message = SmsMessage.createFromPdu(pdu as ByteArray, format)
