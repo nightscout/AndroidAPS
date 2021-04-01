@@ -18,8 +18,6 @@ import info.nightscout.androidaps.database.entities.XXXValueWithUnit
 import info.nightscout.androidaps.database.entities.TherapyEvent
 import info.nightscout.androidaps.database.entities.UserEntry.Action
 import info.nightscout.androidaps.database.entities.UserEntry.Sources
-import info.nightscout.androidaps.database.entities.UserEntry.Units
-import info.nightscout.androidaps.database.entities.UserEntry.ValueWithUnit
 import info.nightscout.androidaps.database.transactions.InsertIfNewByTimestampTherapyEventTransaction
 import info.nightscout.androidaps.databinding.DialogCareBinding
 import info.nightscout.androidaps.interfaces.ProfileFunction
@@ -63,7 +61,7 @@ class CareDialog : DialogFragmentWithDate() {
 
     private var options: EventType = EventType.BGCHECK
     //private var valuesWithUnit = mutableListOf<XXXValueWithUnit?>()
-    private var valuesWithUnit = mutableListOf<ValueWithUnit>()
+    private var valuesWithUnit = mutableListOf<XXXValueWithUnit?>()
 
     @StringRes
     private var event: Int = R.string.none
@@ -205,16 +203,13 @@ class CareDialog : DialogFragmentWithDate() {
             actions.add(resourceHelper.gs(R.string.treatments_wizard_bg_label) + ": " + Profile.toCurrentUnitsString(profileFunction, binding.bg.value) + " " + resourceHelper.gs(unitResId))
             therapyEvent.glucoseType = meterType
             therapyEvent.glucose = binding.bg.value
-            //valuesWithUnit.add(XXXValueWithUnit.fromGlucoseUnit(binding.bg.value.toDouble(), profileFunction.getUnits()))
-            //valuesWithUnit.add(XXXValueWithUnit.TherapyEventMeterType(meterType))
-            valuesWithUnit.add(ValueWithUnit(binding.bg.value.toDouble(), profileFunction.getUnits()))
-            valuesWithUnit.add(ValueWithUnit(meterType.text, Units.TherapyEvent))
+            valuesWithUnit.add(XXXValueWithUnit.fromGlucoseUnit(binding.bg.value.toDouble(), profileFunction.getUnits()))
+            valuesWithUnit.add(XXXValueWithUnit.TherapyEventMeterType(meterType))
         }
         if (options == EventType.NOTE || options == EventType.EXERCISE) {
             actions.add(resourceHelper.gs(R.string.careportal_newnstreatment_duration_label) + ": " + resourceHelper.gs(R.string.format_mins, binding.duration.value.toInt()))
             therapyEvent.duration = T.mins(binding.duration.value.toLong()).msecs()
-            //valuesWithUnit.add(XXXValueWithUnit.Minute(binding.duration.value.toInt()).takeIf { !binding.duration.value.equals(0.0) })
-            valuesWithUnit.add(ValueWithUnit(binding.duration.value.toInt(), Units.M, !binding.duration.value.equals(0.0)))
+            valuesWithUnit.add(XXXValueWithUnit.Minute(binding.duration.value.toInt()).takeIf { !binding.duration.value.equals(0.0) } )
         }
         val notes = binding.notesLayout.notes.text.toString()
         if (notes.isNotEmpty()) {
@@ -235,7 +230,6 @@ class CareDialog : DialogFragmentWithDate() {
             EventType.QUESTION       -> Sources.Question
             EventType.ANNOUNCEMENT   -> Sources.Announcement
         }
-        valuesWithUnit.add(ValueWithUnit(source))
 
         activity?.let { activity ->
             OKDialog.showConfirmation(activity, resourceHelper.gs(event), HtmlHelper.fromHtml(Joiner.on("<br/>").join(actions)), {
@@ -244,11 +238,9 @@ class CareDialog : DialogFragmentWithDate() {
                         { result -> result.inserted.forEach { aapsLogger.debug(LTag.DATABASE, "Inserted therapy event $it") } },
                         { aapsLogger.error(LTag.DATABASE, "Error while saving therapy event", it) }
                     )
-                //valuesWithUnit.add(0, XXXValueWithUnit.Timestamp(eventTime).takeIf { eventTimeChanged })
-                //valuesWithUnit.add(1, XXXValueWithUnit.TherapyEventType(therapyEvent.type))
-                valuesWithUnit.add(0, ValueWithUnit(eventTime, Units.Timestamp, eventTimeChanged))
-                valuesWithUnit.add(1, ValueWithUnit(therapyEvent.type.text, Units.TherapyEvent))
-                uel.log(Action.CAREPORTAL, notes, valuesWithUnit)
+                valuesWithUnit.add(0, XXXValueWithUnit.Timestamp(eventTime).takeIf { eventTimeChanged })
+                valuesWithUnit.add(1, XXXValueWithUnit.TherapyEventType(therapyEvent.type))
+                uel.log(Action.CAREPORTAL, source, notes, valuesWithUnit)
             }, null)
         }
         return true

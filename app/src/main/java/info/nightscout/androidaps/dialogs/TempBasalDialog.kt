@@ -11,8 +11,6 @@ import info.nightscout.androidaps.activities.ErrorHelperActivity
 import info.nightscout.androidaps.database.entities.XXXValueWithUnit
 import info.nightscout.androidaps.database.entities.UserEntry.Action
 import info.nightscout.androidaps.database.entities.UserEntry.Sources
-import info.nightscout.androidaps.database.entities.UserEntry.Units
-import info.nightscout.androidaps.database.entities.UserEntry.ValueWithUnit
 import info.nightscout.androidaps.databinding.DialogTempbasalBinding
 import info.nightscout.androidaps.interfaces.ActivePluginProvider
 import info.nightscout.androidaps.interfaces.CommandQueueProvider
@@ -130,12 +128,14 @@ class TempBasalDialog : DialogFragmentWithDate() {
                     }
                 }
                 if (isPercentPump) {
-                    //uel.log(Action.TEMP_BASAL, XXXValueWithUnit.Percent(percent), XXXValueWithUnit.Minute(durationInMinutes))
-                    uel.log(Action.TEMP_BASAL, ValueWithUnit(Sources.TempBasalDialog), ValueWithUnit(percent, Units.Percent), ValueWithUnit(durationInMinutes, Units.M))
+                    uel.log(Action.TEMP_BASAL, Sources.TempBasalDialog,
+                        XXXValueWithUnit.Percent(percent),
+                        XXXValueWithUnit.Minute(durationInMinutes))
                     commandQueue.tempBasalPercent(percent, durationInMinutes, true, profile, callback)
                 } else {
-                    //uel.log(Action.TEMP_BASAL, XXXValueWithUnit.Insulin(absolute), XXXValueWithUnit.Minute(durationInMinutes))
-                    uel.log(Action.TEMP_BASAL, ValueWithUnit(Sources.TempBasalDialog), ValueWithUnit(absolute, Units.U), ValueWithUnit(durationInMinutes, Units.M))
+                    uel.log(Action.TEMP_BASAL, Sources.TempBasalDialog,
+                        XXXValueWithUnit.Insulin(absolute),
+                        XXXValueWithUnit.Minute(durationInMinutes))
                     commandQueue.tempBasalAbsolute(absolute, durationInMinutes, true, profile, callback)
                 }
             })
