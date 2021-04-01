@@ -11,6 +11,8 @@ import info.nightscout.androidaps.plugins.pump.common.defs.PumpType
  *  - for pumps that have a reliable history that can be read and which therefore issue a bolus on the pump,
  *    read the history back and add new bolus entries on the pump, the method [syncBolusWithPumpId]
  *    are used to inform AAPS-core of a new bolus.
+ *    [VirtualPumpPlugin](info.nightscout.androidaps.plugins.pump.virtual.VirtualPumpPlugin) is a pump driver that
+ *    takes this approach.
  *  - for pumps that don't support history or take rather long to complete a bolus, the methods
  *    [addBolusWithTempId] and [syncBolusWithTempId] provide a mechanism to notify AAPS-core of a started
  *    bolus, so AAPS-core can operate under the assumption the bolus will be delivered and effect IOB until delivery
