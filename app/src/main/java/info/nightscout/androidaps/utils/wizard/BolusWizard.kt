@@ -350,11 +350,10 @@ class BolusWizard @Inject constructor(
                 carbTime = 0
                 bolusCalculatorResult = createBolusCalculatorResult()
                 notes = this@BolusWizard.notes
-                //uel.log(Action.BOLUS_ADVISOR, notes, XXXValueWithUnit.TherapyEventType(eventType), XXXValueWithUnit.Insulin(insulinAfterConstraints))
-                uel.log(Action.BOLUS_ADVISOR, notes,
-                    ValueWithUnit(if (quickWizard) Sources.QuickWizard else Sources.WizardDialog),
-                    ValueWithUnit(eventType.toDBbEventType().text, Units.TherapyEvent),
-                    ValueWithUnit(insulinAfterConstraints, Units.U))
+                uel.log(Action.BOLUS_ADVISOR, if (quickWizard) Sources.QuickWizard else Sources.WizardDialog,
+                    notes,
+                    XXXValueWithUnit.TherapyEventType(eventType.toDBbEventType()),
+                    XXXValueWithUnit.Insulin(insulinAfterConstraints))
                 if (insulin > 0) {
                     commandQueue.bolus(this, object : Callback() {
                         override fun run() {
@@ -377,7 +376,7 @@ class BolusWizard @Inject constructor(
         OKDialog.showConfirmation(ctx, resourceHelper.gs(R.string.boluswizard), confirmMessage, {
             if (insulinAfterConstraints > 0 || carbs > 0) {
                 if (useSuperBolus) {
-                    uel.log(Action.SUPERBOLUS_TBR, ValueWithUnit(Sources.WizardDialog))
+                    uel.log(Action.SUPERBOLUS_TBR, Sources.WizardDialog)
                     if (loopPlugin.isEnabled(PluginType.LOOP)) {
                         loopPlugin.superBolusTo(System.currentTimeMillis() + 2 * 60L * 60 * 1000)
                         rxBus.send(EventRefreshOverview("WizardDialog"))
@@ -392,7 +391,6 @@ class BolusWizard @Inject constructor(
                             }
                         })
                     } else {
-
                         commandQueue.tempBasalPercent(0, 120, true, profile, object : Callback() {
                             override fun run() {
                                 if (!result.success) {
@@ -418,18 +416,17 @@ class BolusWizard @Inject constructor(
                     bolusCalculatorResult = createBolusCalculatorResult()
                     notes = this@BolusWizard.notes
                     if (insulin > 0 || carbs > 0) {
-                        //uel.log(Action.BOLUS, notes, XXXValueWithUnit.TherapyEventType(eventType), XXXValueWithUnit.Insulin(insulinAfterConstraints), XXXValueWithUnit.Gram(this@BolusWizard.carbs).takeIf { this@BolusWizard.carbs != 0 }, XXXValueWithUnit.Minute(carbTime).takeIf { carbTime != 0 })
-                        val action = when {
+                       val action = when {
                             insulinAfterConstraints.equals(0.0) -> Action.CARBS
                             carbs.equals(0.0)                   -> Action.BOLUS
                             else                                -> Action.TREATMENT
                         }
-                        uel.log(action, notes,
-                            ValueWithUnit(if (quickWizard) Sources.QuickWizard else Sources.WizardDialog),
-                            ValueWithUnit(eventType.toDBbEventType().text, Units.TherapyEvent),
-                            ValueWithUnit(insulinAfterConstraints, Units.U, insulinAfterConstraints != 0.0),
-                            ValueWithUnit(this@BolusWizard.carbs, Units.G, this@BolusWizard.carbs != 0),
-                            ValueWithUnit(carbTime, Units.M, carbTime != 0))
+                        uel.log(action, if (quickWizard) Sources.QuickWizard else Sources.WizardDialog,
+                            notes,
+                            XXXValueWithUnit.TherapyEventType(eventType.toDBbEventType()),
+                            XXXValueWithUnit.Insulin(insulinAfterConstraints).takeIf { insulinAfterConstraints != 0.0 },
+                            XXXValueWithUnit.Gram(this@BolusWizard.carbs).takeIf { this@BolusWizard.carbs != 0 },
+                            XXXValueWithUnit.Minute(carbTime).takeIf { carbTime != 0 })
                         commandQueue.bolus(this, object : Callback() {
                             override fun run() {
                                 if (!result.success) {
