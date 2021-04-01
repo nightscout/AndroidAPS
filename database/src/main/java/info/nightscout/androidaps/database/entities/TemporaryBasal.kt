@@ -22,6 +22,7 @@ data class TemporaryBasal(
     override var referenceId: Long? = null,
     @Embedded
         override var interfaceIDs_backing: InterfaceIDs? = InterfaceIDs(),
+    var endPumpId: Long? = null, // Some pumps provide separate start and end events in history. Even event pump id can be stored here
     override var timestamp: Long,
     override var utcOffset: Long = TimeZone.getDefault().getOffset(timestamp).toLong(),
     var type: Type,

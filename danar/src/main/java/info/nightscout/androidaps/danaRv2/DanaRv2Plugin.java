@@ -218,7 +218,7 @@ public class DanaRv2Plugin extends AbstractDanaRPlugin {
 
     // This is called from APS
     @NonNull @Override
-    public PumpEnactResult setTempBasalAbsolute(double absoluteRate, int durationInMinutes, @NonNull Profile profile, boolean enforceNew) {
+    public PumpEnactResult setTempBasalAbsolute(double absoluteRate, int durationInMinutes, @NonNull Profile profile, boolean enforceNew, @NonNull PumpSync.TemporaryBasalType tbrType) {
 
         PumpEnactResult result = new PumpEnactResult(getInjector());
 
@@ -262,7 +262,7 @@ public class DanaRv2Plugin extends AbstractDanaRPlugin {
             // Convert duration from minutes to hours
             aapsLogger.debug(LTag.PUMP, "setTempBasalAbsolute: Setting temp basal " + percentRate + "% for " + durationInMinutes + " minutes (doLowTemp || doHighTemp)");
             if (percentRate == 0 && durationInMinutes > 30) {
-                result = setTempBasalPercent(percentRate, durationInMinutes, profile, enforceNew);
+                result = setTempBasalPercent(percentRate, durationInMinutes, profile, enforceNew, tbrType);
             } else {
                 // use special APS temp basal call ... 100+/15min .... 100-/30min
                 result = setHighTempBasalPercent(percentRate, durationInMinutes);
@@ -281,7 +281,7 @@ public class DanaRv2Plugin extends AbstractDanaRPlugin {
     }
 
     @NonNull @Override
-    public PumpEnactResult setTempBasalPercent(int percent, int durationInMinutes, @NonNull Profile profile, boolean enforceNew) {
+    public PumpEnactResult setTempBasalPercent(int percent, int durationInMinutes, @NonNull Profile profile, boolean enforceNew, @NonNull PumpSync.TemporaryBasalType tbrType) {
         DanaPump pump = danaPump;
         PumpEnactResult result = new PumpEnactResult(getInjector());
         percent = constraintChecker.applyBasalPercentConstraints(new Constraint<>(percent), profile).value();

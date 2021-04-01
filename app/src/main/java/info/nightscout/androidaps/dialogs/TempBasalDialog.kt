@@ -10,11 +10,7 @@ import info.nightscout.androidaps.R
 import info.nightscout.androidaps.activities.ErrorHelperActivity
 import info.nightscout.androidaps.database.entities.UserEntry.*
 import info.nightscout.androidaps.databinding.DialogTempbasalBinding
-import info.nightscout.androidaps.interfaces.ActivePluginProvider
-import info.nightscout.androidaps.interfaces.CommandQueueProvider
-import info.nightscout.androidaps.interfaces.Constraint
-import info.nightscout.androidaps.interfaces.ProfileFunction
-import info.nightscout.androidaps.interfaces.PumpDescription
+import info.nightscout.androidaps.interfaces.*
 import info.nightscout.androidaps.logging.UserEntryLogger
 import info.nightscout.androidaps.plugins.configBuilder.ConstraintChecker
 import info.nightscout.androidaps.queue.Callback
@@ -127,10 +123,10 @@ class TempBasalDialog : DialogFragmentWithDate() {
                 }
                 if (isPercentPump) {
                     uel.log(Action.TEMP_BASAL, ValueWithUnit(percent, Units.Percent), ValueWithUnit(durationInMinutes, Units.M))
-                    commandQueue.tempBasalPercent(percent, durationInMinutes, true, profile, callback)
+                    commandQueue.tempBasalPercent(percent, durationInMinutes, true, profile, PumpSync.TemporaryBasalType.NORMAL, callback)
                 } else {
                     uel.log(Action.TEMP_BASAL, ValueWithUnit(absolute, Units.U), ValueWithUnit(durationInMinutes, Units.M))
-                    commandQueue.tempBasalAbsolute(absolute, durationInMinutes, true, profile, callback)
+                    commandQueue.tempBasalAbsolute(absolute, durationInMinutes, true, profile, PumpSync.TemporaryBasalType.NORMAL, callback)
                 }
             })
         }

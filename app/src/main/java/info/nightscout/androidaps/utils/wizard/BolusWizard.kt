@@ -373,7 +373,7 @@ class BolusWizard @Inject constructor(
                     }
 
                     if (pump.pumpDescription.tempBasalStyle == PumpDescription.ABSOLUTE) {
-                        commandQueue.tempBasalAbsolute(0.0, 120, true, profile, object : Callback() {
+                        commandQueue.tempBasalAbsolute(0.0, 120, true, profile, PumpSync.TemporaryBasalType.NORMAL, object : Callback() {
                             override fun run() {
                                 if (!result.success) {
                                     ErrorHelperActivity.runAlarm(ctx, result.comment, resourceHelper.gs(R.string.tempbasaldeliveryerror), R.raw.boluserror)
@@ -382,7 +382,7 @@ class BolusWizard @Inject constructor(
                         })
                     } else {
 
-                        commandQueue.tempBasalPercent(0, 120, true, profile, object : Callback() {
+                        commandQueue.tempBasalPercent(0, 120, true, profile, PumpSync.TemporaryBasalType.NORMAL, object : Callback() {
                             override fun run() {
                                 if (!result.success) {
                                     val i = Intent(ctx, ErrorHelperActivity::class.java)

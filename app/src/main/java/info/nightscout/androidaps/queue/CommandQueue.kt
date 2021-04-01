@@ -22,6 +22,7 @@ import info.nightscout.androidaps.interfaces.ActivePluginProvider
 import info.nightscout.androidaps.interfaces.CommandQueueProvider
 import info.nightscout.androidaps.interfaces.Constraint
 import info.nightscout.androidaps.interfaces.ProfileFunction
+import info.nightscout.androidaps.interfaces.PumpSync
 import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.logging.LTag
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper
@@ -280,7 +281,7 @@ open class CommandQueue @Inject constructor(
     }
 
     // returns true if command is queued
-    override fun tempBasalAbsolute(absoluteRate: Double, durationInMinutes: Int, enforceNew: Boolean, profile: Profile, callback: Callback?): Boolean {
+    override fun tempBasalAbsolute(absoluteRate: Double, durationInMinutes: Int, enforceNew: Boolean, profile: Profile, tbrType: PumpSync.TemporaryBasalType, callback: Callback?): Boolean {
         if (!enforceNew && isRunning(CommandType.TEMPBASAL)) {
             callback?.result(executingNowError())?.run()
             return false
@@ -289,13 +290,13 @@ open class CommandQueue @Inject constructor(
         removeAll(CommandType.TEMPBASAL)
         val rateAfterConstraints = constraintChecker.applyBasalConstraints(Constraint(absoluteRate), profile).value()
         // add new command to queue
-        add(CommandTempBasalAbsolute(injector, rateAfterConstraints, durationInMinutes, enforceNew, profile, callback))
+        add(CommandTempBasalAbsolute(injector, rateAfterConstraints, durationInMinutes, enforceNew, profile, tbrType, callback))
         notifyAboutNewCommand()
         return true
     }
 
     // returns true if command is queued
-    override fun tempBasalPercent(percent: Int, durationInMinutes: Int, enforceNew: Boolean, profile: Profile, callback: Callback?): Boolean {
+    override fun tempBasalPercent(percent: Int, durationInMinutes: Int, enforceNew: Boolean, profile: Profile, tbrType: PumpSync.TemporaryBasalType, callback: Callback?): Boolean {
         if (!enforceNew && isRunning(CommandType.TEMPBASAL)) {
             callback?.result(executingNowError())?.run()
             return false
@@ -304,7 +305,7 @@ open class CommandQueue @Inject constructor(
         removeAll(CommandType.TEMPBASAL)
         val percentAfterConstraints = constraintChecker.applyBasalPercentConstraints(Constraint(percent), profile).value()
         // add new command to queue
-        add(CommandTempBasalPercent(injector, percentAfterConstraints, durationInMinutes, enforceNew, profile, callback))
+        add(CommandTempBasalPercent(injector, percentAfterConstraints, durationInMinutes, enforceNew, profile, tbrType, callback))
         notifyAboutNewCommand()
         return true
     }
