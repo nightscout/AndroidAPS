@@ -12,6 +12,9 @@ import info.nightscout.androidaps.utils.TimeChangeType
 import org.json.JSONObject
 
 /**
+ * This interface defines the communication from AAPS-core to pump drivers.
+ * Pump drivers communicate data changes back to AAPS-core using {@link info.nightscout.androidaps.interfaces.PumpSync}.
+ *
  * Created by mike on 04.06.2016.
  */
 interface PumpInterface {

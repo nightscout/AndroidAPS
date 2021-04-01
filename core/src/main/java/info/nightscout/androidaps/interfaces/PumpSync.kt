@@ -3,6 +3,22 @@ package info.nightscout.androidaps.interfaces
 import info.nightscout.androidaps.data.DetailedBolusInfo
 import info.nightscout.androidaps.plugins.pump.common.defs.PumpType
 
+/**
+ * This interface allows pump drivers to push data changes (creation and update of treatments) back to AAPS-core.
+ *
+ * Intended use cases for handling bolus treatments:
+ *
+ *  - for pumps that have a reliable history that can be read and which therefore issue a bolus on the pump,
+ *    read the history back and add new bolus entries on the pump, the method [syncBolusWithPumpId]
+ *    are used to inform AAPS-core of a new bolus.
+ *    [VirtualPumpPlugin](info.nightscout.androidaps.plugins.pump.virtual.VirtualPumpPlugin) is a pump driver that
+ *    takes this approach.
+ *  - for pumps that don't support history or take rather long to complete a bolus, the methods
+ *    [addBolusWithTempId] and [syncBolusWithTempId] provide a mechanism to notify AAPS-core of a started
+ *    bolus, so AAPS-core can operate under the assumption the bolus will be delivered and effect IOB until delivery
+ *    completed. Upon completion, the pump driver will call the second method to turn a temporary bolus into a finished
+ *    bolus.
+ */
 interface PumpSync {
     /**
      * Create bolus with temporary id

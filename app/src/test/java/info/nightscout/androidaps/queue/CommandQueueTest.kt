@@ -119,8 +119,7 @@ class CommandQueueTest : TestBaseWithProfile() {
             Bolus(
                 timestamp = Calendar.getInstance().also { it.set(2000, 0, 1) }.timeInMillis,
                 type = Bolus.Type.NORMAL,
-                amount = 0.0,
-                isBasalInsulin = false
+                amount = 0.0
             )
         )
         `when`(profileFunction.getProfile()).thenReturn(validProfile)

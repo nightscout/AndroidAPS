@@ -34,8 +34,7 @@ class TriggerBolusAgoTest : TriggerTestBase() {
             Bolus(
                 timestamp = now,
                 amount = 0.0,
-                type = Bolus.Type.NORMAL,
-                isBasalInsulin = false
+                type = Bolus.Type.NORMAL
             )
         ) // Set last bolus time to now
         `when`(dateUtil._now()).thenReturn(now + 10 * 60 * 1000) // set current time to now + 10 min
@@ -64,8 +63,7 @@ class TriggerBolusAgoTest : TriggerTestBase() {
             Bolus(
                 timestamp = 0L,
                 amount = 0.0,
-                type = Bolus.Type.NORMAL,
-                isBasalInsulin = false
+                type = Bolus.Type.NORMAL
             )
         ) // Set last bolus time to 0
         t = TriggerBolusAgo(injector).comparator(Comparator.Compare.IS_NOT_AVAILABLE)

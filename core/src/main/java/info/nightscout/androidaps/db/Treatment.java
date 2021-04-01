@@ -32,6 +32,7 @@ import info.nightscout.androidaps.utils.DefaultValueHelper;
 import info.nightscout.androidaps.utils.JsonHelper;
 import info.nightscout.androidaps.utils.resources.ResourceHelper;
 
+@Deprecated
 @DatabaseTable(tableName = Treatment.TABLE_TREATMENTS)
 public class Treatment implements DataPointWithLabelInterface, DbObjectBase {
     @Inject public DefaultValueHelper defaultValueHelper;

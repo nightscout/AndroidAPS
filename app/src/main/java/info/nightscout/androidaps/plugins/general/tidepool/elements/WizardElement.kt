@@ -19,8 +19,7 @@ class WizardElement(carbs: Carbs)
         val fake = Bolus(
             amount = 0.0001,
             timestamp = carbs.timestamp,
-            type = Bolus.Type.NORMAL,
-            isBasalInsulin = false
+            type = Bolus.Type.NORMAL
         )
         bolus = BolusElement(fake) // fake insulin record
     }
