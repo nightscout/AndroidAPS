@@ -78,34 +78,35 @@ class UserEntryPresentationHelper @Inject constructor(
 
     private fun coloredAction(action: Action): String = "<font color='${resourceHelper.gc(colorId(action.colorGroup))}'>${translator.translate(action)}</font>"
 
-    fun listToPresentationString(list: List<XXXValueWithUnit>) =
+    fun listToPresentationString(list: List<XXXValueWithUnit?>) =
         list.joinToString(separator = " ", transform = this::toPresentationString)
 
-    private fun toPresentationString(valueWithUnit: XXXValueWithUnit): String = when (valueWithUnit) {
-        is XXXValueWithUnit.Gram -> "${valueWithUnit.value} ${translator.translate(Units.G)}"
-        is XXXValueWithUnit.Hour -> "${valueWithUnit.value} ${translator.translate(Units.H)}"
-        is XXXValueWithUnit.Minute -> "${valueWithUnit.value} ${translator.translate(Units.G)}"
-        is XXXValueWithUnit.Percent -> "${valueWithUnit.value} ${translator.translate(Units.Percent)}"
-        is XXXValueWithUnit.Insulin -> DecimalFormatter.to2Decimal(valueWithUnit.value) + translator.translate(UserEntry.Units.U)
-        is XXXValueWithUnit.UnitPerHour -> DecimalFormatter.to2Decimal(valueWithUnit.value) + translator.translate(UserEntry.Units.U_H)
-        is XXXValueWithUnit.SimpleInt -> valueWithUnit.value.toString()
-        is XXXValueWithUnit.SimpleString -> valueWithUnit.value
-        is XXXValueWithUnit.StringResource -> resourceHelper.gs(valueWithUnit.value, valueWithUnit.params.map(this::toPresentationString))
+    private fun toPresentationString(valueWithUnit: XXXValueWithUnit?): String = when (valueWithUnit) {
+        is XXXValueWithUnit.Gram                  -> "${valueWithUnit.value} ${translator.translate(Units.G)}"
+        is XXXValueWithUnit.Hour                  -> "${valueWithUnit.value} ${translator.translate(Units.H)}"
+        is XXXValueWithUnit.Minute                -> "${valueWithUnit.value} ${translator.translate(Units.G)}"
+        is XXXValueWithUnit.Percent               -> "${valueWithUnit.value} ${translator.translate(Units.Percent)}"
+        is XXXValueWithUnit.Insulin               -> DecimalFormatter.to2Decimal(valueWithUnit.value) + translator.translate(UserEntry.Units.U)
+        is XXXValueWithUnit.UnitPerHour           -> DecimalFormatter.to2Decimal(valueWithUnit.value) + translator.translate(UserEntry.Units.U_H)
+        is XXXValueWithUnit.SimpleInt             -> valueWithUnit.value.toString()
+        is XXXValueWithUnit.SimpleString          -> valueWithUnit.value
+        is XXXValueWithUnit.StringResource        -> resourceHelper.gs(valueWithUnit.value, valueWithUnit.params)
         is XXXValueWithUnit.TherapyEventMeterType -> translator.translate(valueWithUnit.value)
-        is XXXValueWithUnit.TherapyEventTTReason -> translator.translate(valueWithUnit.value)
-        is XXXValueWithUnit.TherapyEventType -> translator.translate(valueWithUnit.value)
-        is XXXValueWithUnit.Timestamp -> dateUtil.dateAndTimeAndSecondsString(valueWithUnit.value)
+        is XXXValueWithUnit.TherapyEventTTReason  -> translator.translate(valueWithUnit.value)
+        is XXXValueWithUnit.TherapyEventType      -> translator.translate(valueWithUnit.value)
+        is XXXValueWithUnit.Timestamp             -> dateUtil.dateAndTimeAndSecondsString(valueWithUnit.value)
 
-        is XXXValueWithUnit.Mgdl -> {
+        is XXXValueWithUnit.Mgdl                  -> {
             if (profileFunction.getUnits() == Constants.MGDL) DecimalFormatter.to0Decimal(valueWithUnit.value) + translator.translate(Units.Mg_Dl)
             else DecimalFormatter.to1Decimal(valueWithUnit.value / Constants.MMOLL_TO_MGDL) + translator.translate(Units.Mmol_L)
         }
 
-        is XXXValueWithUnit.Mmoll -> {
+        is XXXValueWithUnit.Mmoll                 -> {
             if (profileFunction.getUnits() == Constants.MGDL) DecimalFormatter.to0Decimal(valueWithUnit.value) + translator.translate(Units.Mmol_L)
             else DecimalFormatter.to1Decimal(valueWithUnit.value * Constants.MMOLL_TO_MGDL) + translator.translate(Units.Mg_Dl)
         }
 
-        XXXValueWithUnit.UNKNOWN -> ""
+        XXXValueWithUnit.UNKNOWN                  -> ""
+        null                                      -> ""
     }
 }

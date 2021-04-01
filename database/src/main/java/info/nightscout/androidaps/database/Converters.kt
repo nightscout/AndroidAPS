@@ -7,8 +7,11 @@ import info.nightscout.androidaps.database.data.TargetBlock
 import info.nightscout.androidaps.database.embedments.InterfaceIDs
 import info.nightscout.androidaps.database.entities.*
 import info.nightscout.androidaps.database.entities.UserEntry.Action
+import info.nightscout.androidaps.database.entities.UserEntry.Sources
 import info.nightscout.androidaps.database.entities.UserEntry.Units
 import info.nightscout.androidaps.database.entities.UserEntry.ValueWithUnit
+import info.nightscout.androidaps.database.serialisation.SealedClassHelper
+import info.nightscout.androidaps.database.serialisation.fromJson
 import org.json.JSONArray
 import org.json.JSONObject
 
@@ -19,6 +22,22 @@ class Converters {
 
     @TypeConverter
     fun toAction(action: String?) = action?.let { Action.fromString(it) }
+
+    @TypeConverter
+    fun fromSource(source: Sources?) = source?.name
+
+    @TypeConverter
+    fun toSource(source: String?) = source?.let { Sources.fromString(it) }
+
+    @TypeConverter
+    fun fromListOfXXXValueWithUnit(values: List<XXXValueWithUnit>): String = values.map(::ValueWithUnitWrapper)
+        .let(SealedClassHelper.gson::toJson)
+
+    @TypeConverter
+    fun toMutableListOfXXXValueWithUnit(string: String): List<XXXValueWithUnit> = SealedClassHelper.gson
+        .fromJson<List<ValueWithUnitWrapper>>(string).map { it.wrapped }
+
+    private class ValueWithUnitWrapper(val wrapped: XXXValueWithUnit)
 
     @TypeConverter
     fun fromMutableListOfValueWithUnit(values: MutableList<ValueWithUnit>): String {

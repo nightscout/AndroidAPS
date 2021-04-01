@@ -2,7 +2,6 @@ package info.nightscout.androidaps.database.entities
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import com.google.gson.annotations.SerializedName
 import info.nightscout.androidaps.database.TABLE_USER_ENTRY
 import info.nightscout.androidaps.database.interfaces.DBEntry
 import info.nightscout.androidaps.database.interfaces.DBEntryWithTime
@@ -15,9 +14,9 @@ data class UserEntry(
     override var timestamp: Long,
     override var utcOffset: Long = TimeZone.getDefault().getOffset(timestamp).toLong(),
     var action: Action,
-    var s: String,
-   // val sources: Sources,
-    var values: MutableList<ValueWithUnit>
+    var source: Sources,
+    var note: String,
+    var values: List<XXXValueWithUnit?>
 ) : DBEntry, DBEntryWithTime {
     enum class Action (val colorGroup: ColorGroup) {
         BOLUS (ColorGroup.InsulinTreatment),
@@ -186,13 +185,5 @@ data class UserEntry(
         Careportal,
         Pump,
         Aaps
-    }
-
-    fun isLoop(): Boolean {
-        var result = false
-        for (v in values) {
-            if (v.unit == Units.Source && Sources.fromString(v.sValue).equals(Sources.Loop)) result = true
-        }
-        return result
     }
 }
