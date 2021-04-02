@@ -9,12 +9,6 @@ import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.packet.P
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.packet.PayloadSplitter
 import info.nightscout.androidaps.utils.extensions.toHex
 
-sealed class MesssageReceiveResult
-data class MessageReceiveSuccess(val msg: MessagePacket) : MesssageReceiveResult()
-data class MessageReceiveError(val msg: String, val cause: Throwable? = null) : MesssageReceiveResult() {
-    constructor(e: PacketReceiveResult) : this("Could not read DATA packet: $e")
-}
-
 sealed class MessageSendResult
 object MessageSendSuccess : MessageSendResult()
 data class MessageSendErrorSending(val msg: String, val cause: Throwable? = null) : MessageSendResult() {
@@ -43,14 +37,13 @@ class MessageIO(
         cmdBleIO.flushIncomingQueue()
         dataBleIO.flushIncomingQueue()
 
-        val sendResult = cmdBleIO.sendAndConfirmPacket(BleCommandRTS.data)
-        if (sendResult is BleSendErrorSending) {
-            return MessageSendErrorSending(sendResult)
+        val rtsSendResult = cmdBleIO.sendAndConfirmPacket(BleCommandRTS.data)
+        if (rtsSendResult is BleSendErrorSending) {
+            return MessageSendErrorSending(rtsSendResult)
         }
-
         val expectCTS = cmdBleIO.expectCommandType(BleCommandCTS)
         if (expectCTS !is BleConfirmSuccess) {
-            return MessageSendErrorSending(sendResult)
+            return MessageSendErrorSending(expectCTS.toString())
         }
 
         val payload = msg.asByteArray()
@@ -90,19 +83,21 @@ class MessageIO(
         }
     }
 
-    fun receiveMessage(): MesssageReceiveResult {
+    fun receiveMessage(): MessagePacket? {
         cmdBleIO.expectCommandType(BleCommandRTS, MESSAGE_READ_TIMEOUT_MS)
 
         val sendResult = cmdBleIO.sendAndConfirmPacket(BleCommandCTS.data)
         if (sendResult !is BleSendSuccess) {
-            return MessageReceiveError("Error sending CTS: $sendResult")
+            aapsLogger.warn(LTag.PUMPBTCOMM, "Error sending CTS: $sendResult")
+            return null
         }
         readReset()
         var expected: Byte = 0
         try {
             val firstPacket = expectBlePacket(0)
             if (firstPacket !is PacketReceiveSuccess) {
-                return MessageReceiveError(firstPacket)
+                aapsLogger.warn(LTag.PUMPBTCOMM, "Error reading first packet:$firstPacket")
+                return null
             }
             val joiner = PayloadJoiner(firstPacket.payload)
             maxMessageReadTries = joiner.fullFragments * 2 + 2
@@ -110,7 +105,8 @@ class MessageIO(
                 expected++
                 val packet = expectBlePacket(expected)
                 if (packet !is PacketReceiveSuccess) {
-                    return MessageReceiveError(packet)
+                    aapsLogger.warn(LTag.PUMPBTCOMM, "Error reading packet:$packet")
+                    return null
                 }
                 joiner.accumulate(packet.payload)
             }
@@ -118,21 +114,22 @@ class MessageIO(
                 expected++
                 val packet = expectBlePacket(expected)
                 if (packet !is PacketReceiveSuccess) {
-                    return MessageReceiveError(packet)
+                    aapsLogger.warn(LTag.PUMPBTCOMM, "Error reading packet:$packet")
+                    return null
                 }
                 joiner.accumulate(packet.payload)
             }
             val fullPayload = joiner.finalize()
             cmdBleIO.sendAndConfirmPacket(BleCommandSuccess.data)
-            return MessageReceiveSuccess(MessagePacket.parse(fullPayload))
+            return MessagePacket.parse(fullPayload)
         } catch (e: IncorrectPacketException) {
-            aapsLogger.warn(LTag.PUMPBTCOMM, "Could not read message: $e")
+            aapsLogger.warn(LTag.PUMPBTCOMM, "Received incorrect packet: $e")
             cmdBleIO.sendAndConfirmPacket(BleCommandAbort.data)
-            return MessageReceiveError("Received incorrect packet: $e", cause = e)
+            return null
         } catch (e: CrcMismatchException) {
             aapsLogger.warn(LTag.PUMPBTCOMM, "CRC mismatch: $e")
             cmdBleIO.sendAndConfirmPacket(BleCommandFail.data)
-            return MessageReceiveError("CRC mismatch: $e", cause = e)
+            return null
         } finally {
             readReset()
         }
@@ -157,7 +154,7 @@ class MessageIO(
             is BleCommandNack -> {
                 // // Consume NACK
                 val received = cmdBleIO.receivePacket()
-                if (received !is BleReceivePayload) {
+                if (received == null) {
                     MessageSendErrorSending(received.toString())
                 } else {
                     val sendResult = dataBleIO.sendAndConfirmPacket(packets[receivedCmd.idx.toInt()].toByteArray())
@@ -185,29 +182,19 @@ class MessageIO(
         while (messageReadTries < maxMessageReadTries && packetTries < MAX_PACKET_READ_TRIES) {
             messageReadTries++
             packetTries++
-
-            when (val received = dataBleIO.receivePacket()) {
-                is BleReceiveError -> {
-                    if (nackOnTimeout)
-                        cmdBleIO.sendAndConfirmPacket(BleCommandNack(index).data)
-                    aapsLogger.info(LTag.PUMPBTCOMM, "Error receiving DATA packet: $received")
-                }
-
-                is BleReceivePayload -> {
-                    val payload = received.payload
-                    if (payload.isEmpty()) {
-                        aapsLogger.info(LTag.PUMPBTCOMM, "Received empty payload at index $index")
-                        continue
-                    }
-                    if (payload[0] == index) {
-                        return PacketReceiveSuccess(payload)
-                    }
-                    receivedOutOfOrder[payload[0]] = payload
+            val received = dataBleIO.receivePacket()
+            if (received == null || received.isEmpty()) {
+                if (nackOnTimeout)
                     cmdBleIO.sendAndConfirmPacket(BleCommandNack(index).data)
-                }
+                aapsLogger.info(LTag.PUMPBTCOMM, "Error reading index: $index. Received: $received")
+                continue
             }
+            if (received[0] == index) {
+                return PacketReceiveSuccess(received)
+            }
+            receivedOutOfOrder[received[0]] = received
+            cmdBleIO.sendAndConfirmPacket(BleCommandNack(index).data)
         }
-
         return PacketReceiveError("Reached the maximum number tries to read a packet")
     }
 

@@ -7,7 +7,6 @@ import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.endecryp
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.exceptions.SessionEstablishmentException
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.message.MessageIO
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.message.MessagePacket
-import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.message.MessageReceiveSuccess
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.message.MessageSendSuccess
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.message.MessageType
 import info.nightscout.androidaps.utils.extensions.toHex
@@ -46,11 +45,9 @@ class SessionEstablisher(
             throw SessionEstablishmentException("Could not send the EAP AKA challenge: $sendResult")
         }
         val challengeResponse = msgIO.receiveMessage()
-        if (challengeResponse !is MessageReceiveSuccess) {
-            throw SessionEstablishmentException("Could not establish session: $challengeResponse")
-        }
+            ?: throw SessionEstablishmentException("Could not establish session")
 
-        processChallengeResponse(challengeResponse.msg)
+        processChallengeResponse(challengeResponse)
 
         msgSeq++
         var success = eapSuccess()
@@ -101,7 +98,7 @@ class SessionEstablisher(
             if (eapMsg.attributes.size == 1 && eapMsg.attributes[0] is EapAkaAttributeClientErrorCode) {
                 throw SessionEstablishmentException(
                     "Received CLIENT_ERROR_CODE for EAP-AKA challenge: ${
-                        eapMsg.attributes[0].toByteArray().toHex()
+                    eapMsg.attributes[0].toByteArray().toHex()
                     }"
                 )
             }

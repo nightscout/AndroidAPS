@@ -13,7 +13,7 @@ sealed class BleConfirmResult
 
 object BleConfirmSuccess : BleConfirmResult()
 data class BleConfirmIncorrectData(val payload: ByteArray) : BleConfirmResult()
-data class BleConfirmError(val msg: String, val cause: Throwable? = null) : BleConfirmResult()
+data class BleConfirmError(val msg: String) : BleConfirmResult()
 
 class CmdBleIO(
     logger: AAPSLogger,
@@ -37,14 +37,12 @@ class CmdBleIO(
     fun hello() = sendAndConfirmPacket(BleCommandHello(OmnipodDashBleManagerImpl.CONTROLLER_ID).data)
 
     fun expectCommandType(expected: BleCommand, timeoutMs: Long = DEFAULT_IO_TIMEOUT_MS): BleConfirmResult {
-        return when (val actual = receivePacket(timeoutMs)) {
-            is BleReceiveError -> BleConfirmError(actual.toString())
-            is BleReceivePayload ->
-                if (actual.payload.isEmpty() || actual.payload[0] != expected.data[0]) {
-                    BleConfirmIncorrectData(actual.payload)
-                } else {
-                    BleConfirmSuccess
-                }
+        return receivePacket(timeoutMs)?.let {
+            if (it.isNotEmpty() && it[0] == expected.data[0])
+                BleConfirmSuccess
+            else
+                BleConfirmIncorrectData(it)
         }
+            ?: BleConfirmError("Error reading packet")
     }
 }

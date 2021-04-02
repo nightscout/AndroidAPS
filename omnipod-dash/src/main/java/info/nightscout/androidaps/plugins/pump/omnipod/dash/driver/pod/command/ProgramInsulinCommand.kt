@@ -13,7 +13,7 @@ class ProgramInsulinCommand internal constructor(
     multiCommandFlag: Boolean,
     nonce: Int,
     insulinProgramElements:
-    List<ShortInsulinProgramElement>,
+        List<ShortInsulinProgramElement>,
     private val checksum: Short,
     private val byte9: Byte,
     private val byte10And11: Short,

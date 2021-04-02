@@ -542,7 +542,6 @@ class OmnipodDashPumpPlugin @Inject constructor(
             "Time, Date and/or TimeZone changed. [timeChangeType=" + timeChangeType.name + ", eventHandlingEnabled=" + eventHandlingEnabled + "]"
         )
 
-
         if (timeChangeType == TimeChangeType.TimeChanged) {
             aapsLogger.info(LTag.PUMP, "Ignoring time change because it is not a DST or TZ change")
             return

@@ -15,10 +15,6 @@ import info.nightscout.androidaps.utils.extensions.toHex
 import java.util.concurrent.BlockingQueue
 import java.util.concurrent.TimeUnit
 
-sealed class BleReceiveResult
-data class BleReceivePayload(val payload: ByteArray) : BleReceiveResult()
-data class BleReceiveError(val msg: String, val cause: Throwable? = null) : BleReceiveResult()
-
 sealed class BleSendResult
 
 object BleSendSuccess : BleSendResult()
@@ -39,13 +35,16 @@ open class BleIO(
      * @param characteristic where to read from(CMD or DATA)
      * @return a byte array with the received data or error
      */
-    fun receivePacket(timeoutMs: Long = DEFAULT_IO_TIMEOUT_MS): BleReceiveResult {
+    fun receivePacket(timeoutMs: Long = DEFAULT_IO_TIMEOUT_MS): ByteArray? {
         return try {
             val packet = incomingPackets.poll(timeoutMs, TimeUnit.MILLISECONDS)
-            if (packet == null) BleReceiveError("Timeout")
-            else BleReceivePayload(packet)
+            if (packet == null) {
+                aapsLogger.debug(LTag.PUMPBTCOMM, "Timeout reading $type packet")
+            }
+            packet
         } catch (e: InterruptedException) {
-            BleReceiveError("Interrupted", cause = e)
+            aapsLogger.debug(LTag.PUMPBTCOMM, "Interrupted while reading packet: $e")
+            null
         }
     }
 

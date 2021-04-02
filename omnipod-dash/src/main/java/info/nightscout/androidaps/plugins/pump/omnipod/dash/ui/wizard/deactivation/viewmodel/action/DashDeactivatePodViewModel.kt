@@ -21,11 +21,14 @@ class DashDeactivatePodViewModel @Inject constructor(
 ) : DeactivatePodViewModel(injector, logger) {
 
     override fun doExecuteAction(): Single<PumpEnactResult> = Single.create { source ->
-        commandQueueProvider.customCommand(CommandDeactivatePod(), object : Callback() {
-            override fun run() {
-                source.onSuccess(result)
+        commandQueueProvider.customCommand(
+            CommandDeactivatePod(),
+            object : Callback() {
+                override fun run() {
+                    source.onSuccess(result)
+                }
             }
-        })
+        )
     }
 
     override fun discardPod() {

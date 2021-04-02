@@ -248,7 +248,8 @@ class OmnipodDashManagerImpl @Inject constructor(
                 Observable.defer {
                     Observable.timer(podStateManager.firstPrimeBolusVolume!!.toLong(), TimeUnit.SECONDS)
                         .flatMap { Observable.empty() }
-                })
+                }
+            )
             observables.add(
                 Observable.defer {
                     bleManager.sendCommand(
@@ -349,7 +350,8 @@ class OmnipodDashManagerImpl @Inject constructor(
                 Observable.defer {
                     Observable.timer(podStateManager.secondPrimeBolusVolume!!.toLong(), TimeUnit.SECONDS)
                         .flatMap { Observable.empty() }
-                })
+                }
+            )
             observables.add(
                 observeSendProgramBolusCommand(
                     podStateManager.secondPrimeBolusVolume!! * 0.05,

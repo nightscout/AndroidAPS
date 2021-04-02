@@ -9,6 +9,7 @@ import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.exceptio
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.exceptions.NakResponseException
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.exceptions.PodAlarmException
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.message.*
+import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.message.MessageType
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.message.StringLengthPrefixEncoding.Companion.parseKeys
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.command.base.Command
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.response.AlarmStatusResponse
@@ -73,11 +74,11 @@ class Session(
         var responseMsgPacket: MessagePacket? = null
         for (i in 0..MAX_TRIES) {
             val responseMsg = msgIO.receiveMessage()
-            if (responseMsg !is MessageReceiveSuccess) {
+            if (responseMsg == null) {
                 aapsLogger.debug(LTag.PUMPBTCOMM, "Error receiving response: $responseMsg")
                 continue
             }
-            responseMsgPacket = responseMsg.msg
+            responseMsgPacket = responseMsg
         }
 
         responseMsgPacket

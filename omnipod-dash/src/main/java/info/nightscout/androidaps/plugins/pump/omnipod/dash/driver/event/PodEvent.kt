@@ -64,6 +64,5 @@ sealed class PodEvent {
         override fun toString(): String {
             return "ResponseReceived(command=$command, response=$response)"
         }
-
     }
 }

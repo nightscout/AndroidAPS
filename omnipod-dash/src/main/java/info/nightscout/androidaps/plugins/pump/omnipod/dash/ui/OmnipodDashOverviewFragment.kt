@@ -468,8 +468,8 @@ class OmnipodDashOverviewFragment : DaggerFragment() {
     private fun updateRefreshStatusButton() {
         buttonBinding.buttonRefreshStatus.isEnabled =
             podStateManager.isUniqueIdSet &&
-                podStateManager.activationProgress.isAtLeast(ActivationProgress.PHASE_1_COMPLETED) &&
-                isQueueEmpty()
+            podStateManager.activationProgress.isAtLeast(ActivationProgress.PHASE_1_COMPLETED) &&
+            isQueueEmpty()
     }
 
     private fun updateResumeDeliveryButton() {
