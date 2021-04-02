@@ -109,4 +109,91 @@ class UserEntryPresentationHelper @Inject constructor(
         XXXValueWithUnit.UNKNOWN                  -> ""
         null                                      -> ""
     }
+
+    fun UserEntriesToCsv(userEntries: List<UserEntry>): String {
+        return getCsvHeader() + userEntries.joinToString("\n") { entry -> getCsvEntry(entry) }
+    }
+
+    private fun getCsvHeader() = resourceHelper.gs(R.string.ue_csv_header,
+        csvString(R.string.ue_timestamp),
+        csvString(R.string.date),
+        csvString(R.string.ue_utc_offset),
+        csvString(R.string.ue_action),
+        csvString(R.string.eventtype),
+        csvString(R.string.ue_source),
+        csvString(R.string.careportal_note),
+        csvString(R.string.ue_formated_string),
+        csvString(R.string.event_time_label),
+        csvString(Units.fromText(profileFunction.getUnits())),
+        csvString(Units.G),
+        csvString(Units.U),
+        csvString(Units.U_H),
+        csvString(Units.Percent),
+        csvString(Units.H),
+        csvString(Units.M),
+        csvString(R.string.ue_none)
+    ) + "\n"
+
+    private fun getCsvEntry(entry: UserEntry): String {
+        val fullvalueWithUnitList = ArrayList<XXXValueWithUnit?>(entry.values)
+        var timestampRec = "" + entry.timestamp
+        var dateTimestampRev = dateUtil.dateAndTimeAndSecondsString(entry.timestamp)
+        var utcOffset = dateUtil.timeString(entry.utcOffset)
+        var action = csvString(entry.action)
+        var therapyEvent = ""
+        var source = translator.translate(entry.source)
+        var note = csvString(entry.note)
+        var stringResource = ""
+        var timestamp = ""
+        var bg = ""
+        var gram = ""
+        var insulin = ""
+        var unitPerHour = ""
+        var percent = ""
+        var hour = ""
+        var minute = ""
+        var other = ""
+        for (valueWithUnit in entry.values) {
+            if (valueWithUnit is XXXValueWithUnit.StringResource) fullvalueWithUnitList.addAll(valueWithUnit.params)
+        }
+
+        for (valueWithUnit in fullvalueWithUnitList.filter { it != null }) {
+            when (valueWithUnit) {
+                is XXXValueWithUnit.Gram                  -> gram = valueWithUnit.value.toString()
+                is XXXValueWithUnit.Hour                  -> hour = valueWithUnit.value.toString()
+                is XXXValueWithUnit.Minute                -> minute = valueWithUnit.value.toString()
+                is XXXValueWithUnit.Percent               -> percent = valueWithUnit.value.toString()
+                is XXXValueWithUnit.Insulin               -> insulin = DecimalFormatter.to2Decimal(valueWithUnit.value)
+                is XXXValueWithUnit.UnitPerHour           -> unitPerHour = DecimalFormatter.to2Decimal(valueWithUnit.value)
+                is XXXValueWithUnit.SimpleInt             -> other = if (other == "") valueWithUnit.value.toString() else other + " / " + valueWithUnit.value.toString()
+                is XXXValueWithUnit.SimpleString          -> other = if (other == "") valueWithUnit.value else other + " / " + valueWithUnit.value
+                is XXXValueWithUnit.StringResource        -> stringResource = if (stringResource == "") resourceHelper.gs(valueWithUnit.value, valueWithUnit.params) else stringResource + " / " + resourceHelper.gs(valueWithUnit.value, valueWithUnit.params)
+                is XXXValueWithUnit.TherapyEventMeterType -> therapyEvent = if (therapyEvent == "") translator.translate(valueWithUnit.value) else therapyEvent + " / " + translator.translate(valueWithUnit.value)
+                is XXXValueWithUnit.TherapyEventTTReason  -> therapyEvent = if (therapyEvent == "") translator.translate(valueWithUnit.value) else therapyEvent + " / " + translator.translate(valueWithUnit.value)
+                is XXXValueWithUnit.TherapyEventType      -> therapyEvent = if (therapyEvent == "") translator.translate(valueWithUnit.value) else therapyEvent + " / " + translator.translate(valueWithUnit.value)
+                is XXXValueWithUnit.Timestamp             -> timestamp = dateUtil.dateAndTimeAndSecondsString(valueWithUnit.value)
+
+                is XXXValueWithUnit.Mgdl                  -> {
+                    bg = if (profileFunction.getUnits() == Constants.MGDL) DecimalFormatter.to0Decimal(valueWithUnit.value)
+                        else DecimalFormatter.to1Decimal(valueWithUnit.value / Constants.MMOLL_TO_MGDL)
+                }
+                is XXXValueWithUnit.Mmoll                 -> {
+                    bg = if (profileFunction.getUnits() == Constants.MGDL) DecimalFormatter.to0Decimal(valueWithUnit.value)
+                        else DecimalFormatter.to1Decimal(valueWithUnit.value * Constants.MMOLL_TO_MGDL)
+                }
+
+            }
+        }
+
+        therapyEvent = csvString(therapyEvent)
+        stringResource = csvString(stringResource)
+        other = csvString(other)
+        return timestampRec + ";" + dateTimestampRev + ";" + utcOffset + ";" + action + ";" + therapyEvent + ";" + source + ";" + note + ";" + stringResource + ";" + timestamp + ";" + bg + ";" + gram + ";" + insulin + ";" + unitPerHour + ";" + percent + ";" + hour + ";" + minute + ";" + other
+    }
+
+    private fun saveString(id: Int): String = if (id != 0) resourceHelper.gs(id) else ""
+    private fun csvString(action: Action): String = "\"" + translator.translate(action).replace("\"", "\"\"") + "\""
+    private fun csvString(unit: Units): String = "\"" + translator.translate(unit).replace("\"", "\"\"") + "\""
+    private fun csvString(id: Int): String = if (id != 0) "\"" + resourceHelper.gs(id).replace("\"", "\"\"") + "\"" else ""
+    private fun csvString(s: String): String = if (s != "") "\"" + s.replace("\"", "\"\"") + "\"" else ""
 }
