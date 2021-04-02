@@ -26,64 +26,18 @@ class UserEntryLogger @Inject constructor(
     fun log(action: Action, s: String? ="", vararg listvalues: ValueWithUnit) {
     }
 
-    fun log(action: Action, source: Sources, note: String? ="", vararg listvalues: XXXValueWithUnit?) {
-        val filteredValues = listvalues.toList().filter { it != null}
-        compositeDisposable += repository.runTransaction(UserEntryTransaction(
-            action = action,
-            source = source,
-            note = note ?:"",
-            values = filteredValues
-        ))
-            .subscribeOn(aapsSchedulers.io)
-            .observeOn(aapsSchedulers.io)
-            .subscribeBy(
-                onError = { aapsLogger.debug("ERRORED USER ENTRY: $action $source $note $filteredValues") },
-                onComplete = { aapsLogger.debug("USER ENTRY: $action $source $note $filteredValues") }
-            )
-    }
-
     @Deprecated("Use XXXValueWithUnits")
     fun log(action: Action, vararg listValues: ValueWithUnit) {
-    }
-
-    fun log(action: Action, source: Sources, vararg listvalues: XXXValueWithUnit?) {
-        val filteredValues = listvalues.toList().filter { it != null}
-        compositeDisposable += repository.runTransaction(UserEntryTransaction(
-            action = action,
-            source = source,
-            note = "",
-            values = filteredValues
-        ))
-            .subscribeOn(aapsSchedulers.io)
-            .observeOn(aapsSchedulers.io)
-            .subscribeBy(
-                onError = { aapsLogger.debug("ERRORED USER ENTRY: $action $source $filteredValues") },
-                onComplete = { aapsLogger.debug("USER ENTRY: $action $source $filteredValues") }
-            )
     }
 
     @Deprecated("Use XXXValueWithUnits")
     fun log(action: Action, s: String? = "") {}
 
-    fun log(action: Action, source: Sources, note: String? ="") {
-        compositeDisposable += repository.runTransaction(UserEntryTransaction(
-            action = action,
-            source = source,
-            note = note  ?:"",
-            values = listOf()
-        ))
-            .subscribeOn(aapsSchedulers.io)
-            .observeOn(aapsSchedulers.io)
-            .subscribeBy(
-                onError = { aapsLogger.debug("ERRORED USER ENTRY: $action $source $note") },
-                onComplete = { aapsLogger.debug("USER ENTRY: $action $source $note") }
-            )
-    }
+    fun log(action: Action, source: Sources, note: String? ="", vararg listvalues: XXXValueWithUnit?) = log(action, source, note, listvalues.toList())
 
-    @Deprecated("Use XXXValueWithUnits")
-    fun log(action: Action, s: String? = "",  values: MutableList<ValueWithUnit>) {}
+    fun log(action: Action, source: Sources, vararg listvalues: XXXValueWithUnit?) = log(action, source,"", listvalues.toList())
 
-    fun log(action: Action, source: Sources, note: String? ="", listvalues: MutableList<XXXValueWithUnit?>) {
+    fun log(action: Action, source: Sources, note: String? ="", listvalues: List<XXXValueWithUnit?> = listOf()) {
         val filteredValues = listvalues.toList().filter { it != null}
         compositeDisposable += repository.runTransaction(UserEntryTransaction(
             action = action,
