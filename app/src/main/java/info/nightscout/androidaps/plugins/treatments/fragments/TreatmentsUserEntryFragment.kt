@@ -23,6 +23,7 @@ import info.nightscout.androidaps.plugins.bus.RxBusWrapper
 import info.nightscout.androidaps.plugins.treatments.events.EventTreatmentUpdateGui
 import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.FabricPrivacy
+import info.nightscout.androidaps.utils.T
 import info.nightscout.androidaps.utils.Translator
 import info.nightscout.androidaps.utils.UserEntryPresentationHelper
 import info.nightscout.androidaps.utils.alertDialogs.OKDialog
@@ -47,6 +48,9 @@ class TreatmentsUserEntryFragment : DaggerFragment() {
     @Inject lateinit var userEntryPresentationHelper: UserEntryPresentationHelper
 
     private val disposable = CompositeDisposable()
+
+    private val millsToThePastFiltered = T.days(30).msecs()
+    private val millsToThePastUnFiltered = T.days(3).msecs()
 
     private var _binding: TreatmentsUserEntryFragmentBinding? = null
 
@@ -75,17 +79,18 @@ class TreatmentsUserEntryFragment : DaggerFragment() {
     }
 
     fun swapAdapter() {
+        val now = System.currentTimeMillis()
         if (binding.showLoop.isChecked)
             disposable.add( repository
-                .getAllUserEntries()
+                .getUserEntryDataFromTime(now - millsToThePastUnFiltered)
                 .observeOn(aapsSchedulers.main)
                 .subscribe { list -> binding.recyclerview.swapAdapter(UserEntryAdapter(list), true) }
             )
         else
             disposable.add( repository
-                .getAllUserEntries()
+                .getUserEntryFilteredDataFromTime(now - millsToThePastFiltered)
                 .observeOn(aapsSchedulers.main)
-                .subscribe { list -> binding.recyclerview.swapAdapter(UserEntryAdapter(filterUserEntries(list)), true) }
+                .subscribe { list -> binding.recyclerview.swapAdapter(UserEntryAdapter(list), true) }
             )
     }
 
@@ -145,11 +150,4 @@ class TreatmentsUserEntryFragment : DaggerFragment() {
         override fun getItemCount(): Int = entries.size
     }
 
-    fun filterUserEntries(list: List<UserEntry>): List<UserEntry> {
-        val filteredList = mutableListOf<UserEntry>()
-        for (ue in list) {
-            if (! ue.source.equals(Sources.Loop)) filteredList.add(ue)
-        }
-        return filteredList
-    }
 }
