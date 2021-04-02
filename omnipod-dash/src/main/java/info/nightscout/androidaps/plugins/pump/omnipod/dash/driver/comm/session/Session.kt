@@ -42,7 +42,6 @@ class Session(
     fun sendCommand(cmd: Command): CommandSendResult {
         sessionKeys.msgSequenceNumber++
         aapsLogger.debug(LTag.PUMPBTCOMM, "Sending command: ${cmd.encoded.toHex()} in packet $cmd")
-        var tries = 0
 
         val msg = getCmdMessage(cmd)
         var possiblyUnconfirmedCommand = false
