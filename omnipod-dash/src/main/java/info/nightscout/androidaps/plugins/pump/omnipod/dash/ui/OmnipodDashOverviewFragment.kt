@@ -18,9 +18,9 @@ import info.nightscout.androidaps.plugins.general.overview.events.EventDismissNo
 import info.nightscout.androidaps.plugins.general.overview.notifications.Notification
 import info.nightscout.androidaps.plugins.pump.omnipod.common.databinding.OmnipodCommonOverviewButtonsBinding
 import info.nightscout.androidaps.plugins.pump.omnipod.common.databinding.OmnipodCommonOverviewPodInfoBinding
-import info.nightscout.androidaps.plugins.pump.omnipod.common.queue.command.CommandAcknowledgeAlerts
 import info.nightscout.androidaps.plugins.pump.omnipod.common.queue.command.CommandHandleTimeChange
 import info.nightscout.androidaps.plugins.pump.omnipod.common.queue.command.CommandResumeDelivery
+import info.nightscout.androidaps.plugins.pump.omnipod.common.queue.command.CommandSilenceAlerts
 import info.nightscout.androidaps.plugins.pump.omnipod.common.queue.command.CommandSuspendDelivery
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.EventOmnipodDashPumpValuesChanged
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.OmnipodDashPumpPlugin
@@ -130,7 +130,7 @@ class OmnipodDashOverviewFragment : DaggerFragment() {
         buttonBinding.buttonSilenceAlerts.setOnClickListener {
             disablePodActionButtons()
             commandQueue.customCommand(
-                CommandAcknowledgeAlerts(),
+                CommandSilenceAlerts(),
                 DisplayResultDialogCallback(
                     resourceHelper.gs(R.string.omnipod_common_error_failed_to_silence_alerts),
                     false
@@ -295,7 +295,10 @@ class OmnipodDashOverviewFragment : DaggerFragment() {
             // total delivered
             podInfoBinding.totalDelivered.text =
                 if (podStateManager.isActivationCompleted && podStateManager.pulsesDelivered != null) {
-                    resourceHelper.gs(R.string.omnipod_common_overview_total_delivered_value, podStateManager.pulseRate)
+                    resourceHelper.gs(
+                        R.string.omnipod_common_overview_total_delivered_value,
+                        podStateManager.pulsesDelivered!! * 0.05
+                    )
                 } else {
                     PLACEHOLDER
                 }
@@ -313,7 +316,7 @@ class OmnipodDashOverviewFragment : DaggerFragment() {
 
                 podInfoBinding.reservoir.text = resourceHelper.gs(
                     R.string.omnipod_common_overview_reservoir_value,
-                    podStateManager.pulsesRemaining
+                    (podStateManager.pulsesRemaining!! * 0.05)
                 )
                 podInfoBinding.reservoir.setTextColor(
                     if (podStateManager.pulsesRemaining!! < lowReservoirThreshold) {
@@ -465,8 +468,8 @@ class OmnipodDashOverviewFragment : DaggerFragment() {
     private fun updateRefreshStatusButton() {
         buttonBinding.buttonRefreshStatus.isEnabled =
             podStateManager.isUniqueIdSet &&
-            podStateManager.activationProgress.isAtLeast(ActivationProgress.PHASE_1_COMPLETED) &&
-            isQueueEmpty()
+                podStateManager.activationProgress.isAtLeast(ActivationProgress.PHASE_1_COMPLETED) &&
+                isQueueEmpty()
     }
 
     private fun updateResumeDeliveryButton() {
@@ -484,7 +487,7 @@ class OmnipodDashOverviewFragment : DaggerFragment() {
         if (isAutomaticallySilenceAlertsEnabled() && podStateManager.isPodRunning &&
             (
                 podStateManager.activeAlerts!!.size > 0 ||
-                    commandQueue.isCustomCommandInQueue(CommandAcknowledgeAlerts::class.java)
+                    commandQueue.isCustomCommandInQueue(CommandSilenceAlerts::class.java)
                 )
         ) {
             buttonBinding.buttonSilenceAlerts.visibility = View.VISIBLE

@@ -101,7 +101,7 @@ class SessionEstablisher(
             if (eapMsg.attributes.size == 1 && eapMsg.attributes[0] is EapAkaAttributeClientErrorCode) {
                 throw SessionEstablishmentException(
                     "Received CLIENT_ERROR_CODE for EAP-AKA challenge: ${
-                    eapMsg.attributes[0].toByteArray().toHex()
+                        eapMsg.attributes[0].toByteArray().toHex()
                     }"
                 )
             }

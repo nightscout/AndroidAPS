@@ -47,7 +47,8 @@ abstract class WizardFragmentBase : DaggerFragment() {
 
         if (nextPage == null) {
             binding.navButtonsLayout.buttonNext.text = getString(R.string.omnipod_common_wizard_button_finish)
-            binding.navButtonsLayout.buttonNext.backgroundTintList = ColorStateList.valueOf(resources.getColor(R.color.omnipod_wizard_finish_button, context?.theme))
+            binding.navButtonsLayout.buttonNext.backgroundTintList =
+                ColorStateList.valueOf(resources.getColor(R.color.omnipod_wizard_finish_button, context?.theme))
         }
 
         updateProgressIndication()

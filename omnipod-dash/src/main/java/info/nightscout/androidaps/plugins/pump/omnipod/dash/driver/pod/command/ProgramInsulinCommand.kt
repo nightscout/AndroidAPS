@@ -13,7 +13,7 @@ class ProgramInsulinCommand internal constructor(
     multiCommandFlag: Boolean,
     nonce: Int,
     insulinProgramElements:
-        List<ShortInsulinProgramElement>,
+    List<ShortInsulinProgramElement>,
     private val checksum: Short,
     private val byte9: Byte,
     private val byte10And11: Short,
@@ -37,12 +37,12 @@ class ProgramInsulinCommand internal constructor(
 
     override val encoded: ByteArray
         get() {
-            val buffer = ByteBuffer.allocate(getLength().toInt()) //
-                .put(commandType.value) //
-                .put(getBodyLength()) //
-                .putInt(nonce) //
-                .put(deliveryType.getValue()) //
-                .putShort(checksum) //
+            val buffer = ByteBuffer.allocate(getLength().toInt())
+                .put(commandType.value)
+                .put(getBodyLength())
+                .putInt(nonce)
+                .put(deliveryType.getValue())
+                .putShort(checksum)
                 .put(byte9) // BASAL: currentSlot // BOLUS: number of ShortInsulinProgramElements
                 .putShort(byte10And11) // BASAL: remainingEighthSecondsInCurrentSlot // BOLUS: immediate pulses multiplied by delay between pulses in eighth seconds
                 .putShort(byte12And13) // BASAL: remainingPulsesInCurrentSlot // BOLUS: immediate pulses

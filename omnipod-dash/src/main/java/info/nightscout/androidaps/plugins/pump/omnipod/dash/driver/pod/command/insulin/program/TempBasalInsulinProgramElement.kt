@@ -13,10 +13,10 @@ class TempBasalInsulinProgramElement(
             val buffer = ByteBuffer.allocate(6)
             if (totalTenthPulses.toInt() == 0) {
                 val i = (durationInSeconds.toDouble() * 1000000.0 / numberOfSlots.toDouble()).toInt() or Int.MIN_VALUE
-                buffer.putShort(numberOfSlots.toShort()) //
+                buffer.putShort(numberOfSlots.toShort())
                     .putInt(i)
             } else {
-                buffer.putShort(totalTenthPulses) //
+                buffer.putShort(totalTenthPulses)
                     .putInt(delayBetweenTenthPulsesInUsec)
             }
             return buffer.array()

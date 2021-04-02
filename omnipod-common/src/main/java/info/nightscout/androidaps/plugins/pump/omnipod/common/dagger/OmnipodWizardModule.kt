@@ -23,7 +23,10 @@ abstract class OmnipodWizardModule {
 
         @Provides
         @OmnipodPluginQualifier
-        fun providesViewModelFactory(@OmnipodPluginQualifier viewModels: MutableMap<Class<out ViewModel>, @JvmSuppressWildcards Provider<ViewModel>>): ViewModelProvider.Factory {
+        fun providesViewModelFactory(
+            @OmnipodPluginQualifier
+            viewModels: MutableMap<Class<out ViewModel>, @JvmSuppressWildcards Provider<ViewModel>>
+        ): ViewModelProvider.Factory {
             return ViewModelFactory(viewModels)
         }
     }

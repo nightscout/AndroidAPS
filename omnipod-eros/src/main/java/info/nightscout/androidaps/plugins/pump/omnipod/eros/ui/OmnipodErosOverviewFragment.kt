@@ -24,7 +24,7 @@ import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.defs.RileyLin
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.service.RileyLinkServiceData
 import info.nightscout.androidaps.plugins.pump.omnipod.common.databinding.OmnipodCommonOverviewButtonsBinding
 import info.nightscout.androidaps.plugins.pump.omnipod.common.databinding.OmnipodCommonOverviewPodInfoBinding
-import info.nightscout.androidaps.plugins.pump.omnipod.common.queue.command.CommandAcknowledgeAlerts
+import info.nightscout.androidaps.plugins.pump.omnipod.common.queue.command.CommandSilenceAlerts
 import info.nightscout.androidaps.plugins.pump.omnipod.common.queue.command.CommandHandleTimeChange
 import info.nightscout.androidaps.plugins.pump.omnipod.common.queue.command.CommandResumeDelivery
 import info.nightscout.androidaps.plugins.pump.omnipod.common.queue.command.CommandSuspendDelivery
@@ -148,7 +148,8 @@ class OmnipodErosOverviewFragment : DaggerFragment() {
 
         buttonBinding.buttonSilenceAlerts.setOnClickListener {
             disablePodActionButtons()
-            commandQueue.customCommand(CommandAcknowledgeAlerts(),
+            commandQueue.customCommand(
+                CommandSilenceAlerts(),
                 DisplayResultDialogCallback(resourceHelper.gs(R.string.omnipod_common_error_failed_to_silence_alerts), false)
                     .messageOnSuccess(resourceHelper.gs(R.string.omnipod_common_confirmation_silenced_alerts))
                     .actionOnSuccess { rxBus.send(EventDismissNotification(Notification.OMNIPOD_POD_ALERTS)) })
@@ -513,7 +514,8 @@ class OmnipodErosOverviewFragment : DaggerFragment() {
     }
 
     private fun updateSilenceAlertsButton() {
-        if (!omnipodManager.isAutomaticallyAcknowledgeAlertsEnabled && podStateManager.isPodRunning && (podStateManager.hasActiveAlerts() || commandQueue.isCustomCommandInQueue(CommandAcknowledgeAlerts::class.java))) {
+        if (!omnipodManager.isAutomaticallyAcknowledgeAlertsEnabled && podStateManager.isPodRunning && (podStateManager.hasActiveAlerts() || commandQueue.isCustomCommandInQueue(
+                CommandSilenceAlerts::class.java))) {
             buttonBinding.buttonSilenceAlerts.visibility = View.VISIBLE
             buttonBinding.buttonSilenceAlerts.isEnabled = rileyLinkServiceData.rileyLinkServiceState.isReady && isQueueEmpty()
         } else {

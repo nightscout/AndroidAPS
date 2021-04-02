@@ -15,11 +15,11 @@ class GetStatusCommand private constructor(
 
     override val encoded: ByteArray
         get() = appendCrc(
-            ByteBuffer.allocate(LENGTH + HEADER_LENGTH) //
-                .put(encodeHeader(uniqueId, sequenceNumber, LENGTH, multiCommandFlag)) //
-                .put(commandType.value) //
-                .put(BODY_LENGTH) //
-                .put(statusResponseType.value) //
+            ByteBuffer.allocate(LENGTH + HEADER_LENGTH)
+                .put(encodeHeader(uniqueId, sequenceNumber, LENGTH, multiCommandFlag))
+                .put(commandType.value)
+                .put(BODY_LENGTH)
+                .put(statusResponseType.value)
                 .array()
         )
 

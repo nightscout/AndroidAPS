@@ -4,12 +4,18 @@ import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.logging.LTag
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.Id
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.endecrypt.EnDecrypt
+import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.exceptions.CouldNotParseResponseException
+import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.exceptions.IllegalResponseException
+import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.exceptions.NakResponseException
+import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.exceptions.PodAlarmException
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.message.*
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.message.StringLengthPrefixEncoding.Companion.parseKeys
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.command.base.Command
+import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.response.AlarmStatusResponse
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.response.NakResponse
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.response.Response
 import info.nightscout.androidaps.utils.extensions.toHex
+import kotlin.reflect.KClass
 
 sealed class CommandSendResult
 object CommandSendSuccess : CommandSendResult()
@@ -36,6 +42,7 @@ class Session(
         sessionKeys.msgSequenceNumber++
         aapsLogger.debug(LTag.PUMPBTCOMM, "Sending command: ${cmd.encoded.toHex()} in packet $cmd")
         var tries = 0
+
         val msg = getCmdMessage(cmd)
         var possiblyUnconfirmedCommand = false
         for (i in 0..MAX_TRIES) {
@@ -62,7 +69,7 @@ class Session(
             CommandSendErrorSending(errMsg)
     }
 
-    fun readAndAckResponse(): CommandReceiveResult {
+    fun readAndAckResponse(responseType: KClass<out Response>): CommandReceiveResult {
         var responseMsgPacket: MessagePacket? = null
         for (i in 0..MAX_TRIES) {
             val responseMsg = msgIO.receiveMessage()
@@ -78,7 +85,18 @@ class Session(
 
         val decrypted = enDecrypt.decrypt(responseMsgPacket)
         aapsLogger.debug(LTag.PUMPBTCOMM, "Received response: $decrypted")
+
         val response = parseResponse(decrypted)
+
+        if (!responseType.isInstance(response)) {
+            if (response is AlarmStatusResponse) {
+                throw PodAlarmException(response)
+            }
+            if (response is NakResponse) {
+                throw NakResponseException(response)
+            }
+            throw IllegalResponseException(responseType, response)
+        }
 
         sessionKeys.msgSequenceNumber++
         val ack = getAck(responseMsgPacket)
@@ -90,11 +108,22 @@ class Session(
         return CommandReceiveSuccess(response)
     }
 
+    @Throws(CouldNotParseResponseException::class, UnsupportedOperationException::class)
     private fun parseResponse(decrypted: MessagePacket): Response {
 
-        val payload = parseKeys(arrayOf(RESPONSE_PREFIX), decrypted.payload)[0]
-        aapsLogger.info(LTag.PUMPBTCOMM, "Received decrypted response: ${payload.toHex()} in packet: $decrypted")
-        return NakResponse(payload)
+        val data = parseKeys(arrayOf(RESPONSE_PREFIX), decrypted.payload)[0]
+        aapsLogger.info(LTag.PUMPBTCOMM, "Received decrypted response: ${data.toHex()} in packet: $decrypted")
+
+        // TODO verify length
+
+        val uniqueId = data.copyOfRange(0, 4)
+        val lenghtAndSequenceNumber = data.copyOfRange(4, 6)
+        val payload = data.copyOfRange(6, data.size - 2)
+        val crc = data.copyOfRange(data.size - 2, data.size)
+
+        // TODO validate uniqueId, sequenceNumber and crc
+
+        return ResponseUtil.parseResponse(payload)
     }
 
     private fun getAck(response: MessagePacket): MessagePacket {

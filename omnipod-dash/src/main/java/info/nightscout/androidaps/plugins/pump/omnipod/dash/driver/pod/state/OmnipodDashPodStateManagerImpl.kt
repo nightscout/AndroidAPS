@@ -35,8 +35,8 @@ class OmnipodDashPodStateManagerImpl @Inject constructor(
 
     override var activationProgress: ActivationProgress
         get() = podState.activationProgress
-        set(value) {
-            podState.activationProgress = value
+        set(activationProgress) {
+            podState.activationProgress = activationProgress
             store()
         }
 
@@ -55,8 +55,8 @@ class OmnipodDashPodStateManagerImpl @Inject constructor(
 
     override var lastConnection: Long
         get() = podState.lastConnection
-        set(value) {
-            podState.lastConnection = value
+        set(lastConnection) {
+            podState.lastConnection = lastConnection
             store()
         }
 
@@ -145,8 +145,12 @@ class OmnipodDashPodStateManagerImpl @Inject constructor(
     override val tempBasalActive: Boolean
         get() = tempBasal != null && tempBasal!!.startTime + tempBasal!!.durationInMinutes * 60 * 1000 > System.currentTimeMillis()
 
-    override val basalProgram: BasalProgram?
+    override var basalProgram: BasalProgram?
         get() = podState.basalProgram
+        set(basalProgram) {
+            podState.basalProgram = basalProgram
+            store()
+        }
 
     override fun increaseMessageSequenceNumber() {
         podState.messageSequenceNumber = ((podState.messageSequenceNumber.toInt() + 1) and 0x0f).toShort()
@@ -155,15 +159,15 @@ class OmnipodDashPodStateManagerImpl @Inject constructor(
 
     override var eapAkaSequenceNumber: Long
         get() = podState.eapAkaSequenceNumber
-        set(value) {
-            podState.eapAkaSequenceNumber = value
+        set(eapAkaSequenceNumber) {
+            podState.eapAkaSequenceNumber = eapAkaSequenceNumber
             store()
         }
 
     override var ltk: ByteArray?
         get() = podState.ltk
-        set(value) {
-            podState.ltk = value
+        set(ltk) {
+            podState.ltk = ltk
             store()
         }
 
@@ -183,7 +187,9 @@ class OmnipodDashPodStateManagerImpl @Inject constructor(
         podState.deliveryStatus = response.deliveryStatus
         podState.podStatus = response.podStatus
         podState.pulsesDelivered = response.totalPulsesDelivered
-        podState.pulsesRemaining = response.reservoirPulsesRemaining
+        if (response.reservoirPulsesRemaining < 1023) {
+            podState.pulsesRemaining = response.reservoirPulsesRemaining
+        }
         podState.sequenceNumberOfLastProgrammingCommand = response.sequenceNumberOfLastProgrammingCommand
         podState.minutesSinceActivation = response.minutesSinceActivation
         podState.activeAlerts = response.activeAlerts
@@ -216,8 +222,8 @@ class OmnipodDashPodStateManagerImpl @Inject constructor(
     override fun updateFromSetUniqueIdResponse(response: SetUniqueIdResponse) {
         podState.pulseRate = response.pumpRate
         podState.primePulseRate = response.primePumpRate
-        podState.firstPrimeBolusVolume = response.numberOfPrimePulses
-        podState.secondPrimeBolusVolume = response.numberOfEngagingClutchDrivePulses
+        podState.firstPrimeBolusVolume = response.numberOfEngagingClutchDrivePulses
+        podState.secondPrimeBolusVolume = response.numberOfPrimePulses
         podState.podLifeInHours = response.podExpirationTimeInHours
         podState.bleVersion = SoftwareVersion(
             response.bleVersionMajor,

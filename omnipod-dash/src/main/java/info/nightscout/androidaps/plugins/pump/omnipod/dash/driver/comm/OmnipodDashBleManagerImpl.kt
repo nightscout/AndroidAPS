@@ -13,12 +13,14 @@ import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.session.
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.status.ConnectionStatus
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.event.PodEvent
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.command.base.Command
+import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.response.Response
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.state.OmnipodDashPodStateManager
 import info.nightscout.androidaps.utils.extensions.toHex
 import io.reactivex.Observable
 import java.util.concurrent.atomic.AtomicBoolean
 import javax.inject.Inject
 import javax.inject.Singleton
+import kotlin.reflect.KClass
 
 @Singleton
 class OmnipodDashBleManagerImpl @Inject constructor(
@@ -38,49 +40,50 @@ class OmnipodDashBleManagerImpl @Inject constructor(
     private val podId = uniqueId?.let(Id::fromLong)
         ?: myId.increment() // pod not activated
 
-    override fun sendCommand(cmd: Command): Observable<PodEvent> = Observable.create { emitter ->
-        if (!busy.compareAndSet(false, true)) {
-            throw BusyException()
-        }
-        try {
-            val conn = connection ?: throw NotConnectedException("Not connected")
+    override fun sendCommand(cmd: Command, responseType: KClass<out Response>): Observable<PodEvent> =
+        Observable.create { emitter ->
+            if (!busy.compareAndSet(false, true)) {
+                throw BusyException()
+            }
+            try {
+                val conn = connection ?: throw NotConnectedException("Not connected")
 
-            val session = conn.session ?: throw NotConnectedException("Missing session")
+                val session = conn.session ?: throw NotConnectedException("Missing session")
 
-            emitter.onNext(PodEvent.CommandSending(cmd))
+                emitter.onNext(PodEvent.CommandSending(cmd))
+                when (session.sendCommand(cmd)) {
+                    is CommandSendErrorSending -> {
+                        emitter.tryOnError(CouldNotSendCommandException())
+                        return@create
+                    }
 
-            when (session.sendCommand(cmd)) {
-                is CommandSendErrorSending -> {
-                    emitter.tryOnError(CouldNotSendCommandException())
-                    return@create
+                    is CommandSendSuccess ->
+                        emitter.onNext(PodEvent.CommandSent(cmd))
+                    is CommandSendErrorConfirming ->
+                        emitter.onNext(PodEvent.CommandSendNotConfirmed(cmd))
                 }
 
-                is CommandSendSuccess ->
-                    emitter.onNext(PodEvent.CommandSent(cmd))
-                is CommandSendErrorConfirming ->
-                    emitter.onNext(PodEvent.CommandSendNotConfirmed(cmd))
-            }
+                when (val readResult = session.readAndAckResponse(responseType)) {
+                    is CommandReceiveSuccess ->
+                        emitter.onNext(PodEvent.ResponseReceived(cmd, readResult.result))
 
-            when (val readResult = session.readAndAckResponse()) {
-                is CommandReceiveSuccess ->
-                    emitter.onNext(PodEvent.ResponseReceived(readResult.result))
+                    is CommandAckError ->
+                        emitter.onNext(PodEvent.ResponseReceived(cmd, readResult.result))
 
-                is CommandAckError ->
-                    emitter.onNext(PodEvent.ResponseReceived(readResult.result))
-
-                is CommandReceiveError -> {
-                    emitter.tryOnError(MessageIOException("Could not read response: $readResult"))
-                    return@create
+                    is CommandReceiveError -> {
+                        emitter.tryOnError(MessageIOException("Could not read response: $readResult"))
+                        return@create
+                    }
                 }
+                emitter.onComplete()
+            } catch (ex: Exception) {
+                disconnect()
+                emitter.tryOnError(ex)
+            } finally {
+                busy.set(false)
             }
-            emitter.onComplete()
-        } catch (ex: Exception) {
-            disconnect()
-            emitter.tryOnError(ex)
-        } finally {
-            busy.set(false)
         }
-    }
+
 
     override fun getStatus(): ConnectionStatus {
         var s: ConnectionStatus

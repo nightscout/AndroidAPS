@@ -103,12 +103,12 @@ class ProgramTempBasalCommand private constructor(
                 delayUntilNextTenthPulseInUsec =
                     (firstProgramElement.numberOfSlots.toLong() * 1800.0 / remainingTenthPulsesInFirstElement * 1000000).toInt()
             }
-            val buffer = ByteBuffer.allocate(getLength().toInt()) //
-                .put(commandType.value) //
-                .put(getBodyLength()) //
-                .put(programReminder.encoded) //
+            val buffer = ByteBuffer.allocate(getLength().toInt())
+                .put(commandType.value)
+                .put(getBodyLength())
+                .put(programReminder.encoded)
                 .put(0x00.toByte()) // Current slot index
-                .putShort(remainingTenthPulsesInFirstElement) //
+                .putShort(remainingTenthPulsesInFirstElement)
                 .putInt(delayUntilNextTenthPulseInUsec)
             for (element in insulinProgramElements) {
                 buffer.put(element.encoded)
@@ -122,10 +122,10 @@ class ProgramTempBasalCommand private constructor(
                 multiCommandFlag
             )
             return appendCrc(
-                ByteBuffer.allocate(header.size + interlockCommand.size + tempBasalCommand.size) //
-                    .put(header) //
-                    .put(interlockCommand) //
-                    .put(tempBasalCommand) //
+                ByteBuffer.allocate(header.size + interlockCommand.size + tempBasalCommand.size)
+                    .put(header)
+                    .put(interlockCommand)
+                    .put(tempBasalCommand)
                     .array()
             )
         }

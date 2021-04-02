@@ -10,12 +10,12 @@ import java.util.*
 class SilenceAlertsCommandTest {
 
     @Test @Throws(DecoderException::class) fun testSilenceLowReservoirAlert() {
-        val encoded = SilenceAlertsCommand.Builder() //
-            .setUniqueId(37879811) //
-            .setSequenceNumber(1.toShort()) //
-            .setNonce(1229869870) //
-            .setAlertTypes(EnumSet.of(AlertType.LOW_RESERVOIR)) //
-            .build() //
+        val encoded = SilenceAlertsCommand.Builder()
+            .setUniqueId(37879811)
+            .setSequenceNumber(1.toShort())
+            .setNonce(1229869870)
+            .setAlertTypes(EnumSet.of(AlertType.LOW_RESERVOIR))
+            .build()
             .encoded
 
         Assert.assertArrayEquals(Hex.decodeHex("0242000304071105494E532E1081CE"), encoded)

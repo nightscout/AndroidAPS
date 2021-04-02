@@ -9,11 +9,11 @@ import org.junit.Test
 class GetStatusCommandTest {
 
     @Test @Throws(DecoderException::class) fun testGetDefaultStatusResponse() {
-        val encoded = GetStatusCommand.Builder() //
-            .setUniqueId(37879810) //
-            .setSequenceNumber(15.toShort()) //
-            .setStatusResponseType(ResponseType.StatusResponseType.DEFAULT_STATUS_RESPONSE) //
-            .build() //
+        val encoded = GetStatusCommand.Builder()
+            .setUniqueId(37879810)
+            .setSequenceNumber(15.toShort())
+            .setStatusResponseType(ResponseType.StatusResponseType.DEFAULT_STATUS_RESPONSE)
+            .build()
             .encoded
 
         Assert.assertArrayEquals(Hex.decodeHex("024200023C030E0100024C"), encoded)

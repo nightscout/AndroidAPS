@@ -27,10 +27,10 @@ class ProgramAlertsCommand private constructor(
 
     override val encoded: ByteArray
         get() {
-            val byteBuffer: ByteBuffer = ByteBuffer.allocate(getLength() + HEADER_LENGTH) //
-                .put(encodeHeader(uniqueId, sequenceNumber, getLength(), multiCommandFlag)) //
-                .put(commandType.value) //
-                .put(getBodyLength()) //
+            val byteBuffer: ByteBuffer = ByteBuffer.allocate(getLength() + HEADER_LENGTH)
+                .put(encodeHeader(uniqueId, sequenceNumber, getLength(), multiCommandFlag))
+                .put(commandType.value)
+                .put(getBodyLength())
                 .putInt(nonce)
             for (configuration in alertConfigurations) {
                 byteBuffer.put(configuration.encoded)

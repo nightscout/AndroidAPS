@@ -24,7 +24,8 @@ abstract class ActionFragmentBase : WizardFragmentBase() {
         binding.navButtonsLayout.buttonNext.isEnabled = false
         view.findViewById<TextView>(R.id.omnipod_wizard_action_page_text).setText(getTextId())
 
-        view.findViewById<Button>(R.id.omnipod_wizard_button_retry).setOnClickListener { actionViewModel.executeAction() }
+        view.findViewById<Button>(R.id.omnipod_wizard_button_retry)
+            .setOnClickListener { actionViewModel.executeAction() }
 
         actionViewModel.isActionExecutingLiveData.observe(viewLifecycleOwner, { isExecuting ->
             if (isExecuting) {
@@ -33,7 +34,8 @@ abstract class ActionFragmentBase : WizardFragmentBase() {
                 view.findViewById<Button>(R.id.omnipod_wizard_button_discard_pod).visibility = View.GONE
                 view.findViewById<Button>(R.id.omnipod_wizard_button_retry).visibility = View.GONE
             }
-            view.findViewById<ProgressBar>(R.id.omnipod_wizard_action_progress_indication).visibility = isExecuting.toVisibility()
+            view.findViewById<ProgressBar>(R.id.omnipod_wizard_action_progress_indication).visibility =
+                isExecuting.toVisibility()
             view.findViewById<Button>(R.id.button_cancel).isEnabled = !isExecuting
         })
 
@@ -42,9 +44,12 @@ abstract class ActionFragmentBase : WizardFragmentBase() {
                 val isExecuting = isActionExecuting()
 
                 view.findViewById<Button>(R.id.button_next).isEnabled = result.success
-                view.findViewById<ImageView>(R.id.omnipod_wizard_action_success).visibility = result.success.toVisibility()
-                view.findViewById<TextView>(R.id.omnipod_wizard_action_error).visibility = (!isExecuting && !result.success).toVisibility()
-                view.findViewById<Button>(R.id.omnipod_wizard_button_retry).visibility = (!isExecuting && !result.success).toVisibility()
+                view.findViewById<ImageView>(R.id.omnipod_wizard_action_success).visibility =
+                    result.success.toVisibility()
+                view.findViewById<TextView>(R.id.omnipod_wizard_action_error).visibility =
+                    (!isExecuting && !result.success).toVisibility()
+                view.findViewById<Button>(R.id.omnipod_wizard_button_retry).visibility =
+                    (!isExecuting && !result.success).toVisibility()
 
                 if (!result.success) {
                     view.findViewById<TextView>(R.id.omnipod_wizard_action_error).text = result.comment
