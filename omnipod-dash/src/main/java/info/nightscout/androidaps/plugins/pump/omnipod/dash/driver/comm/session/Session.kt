@@ -73,11 +73,11 @@ class Session(
         var responseMsgPacket: MessagePacket? = null
         for (i in 0..MAX_TRIES) {
             val responseMsg = msgIO.receiveMessage()
-            if (responseMsg == null) {
-                aapsLogger.debug(LTag.PUMPBTCOMM, "Error receiving response: $responseMsg")
-                continue
+            if (responseMsg != null) {
+                responseMsgPacket = responseMsg
+                break
             }
-            responseMsgPacket = responseMsg
+            aapsLogger.debug(LTag.PUMPBTCOMM, "Error receiving response: $responseMsg")
         }
 
         responseMsgPacket

@@ -26,7 +26,7 @@ sealed class ConnectionState
 object Connected : ConnectionState()
 object NotConnected : ConnectionState()
 
-class Connection(val podDevice: BluetoothDevice, private val aapsLogger: AAPSLogger, private val context: Context) {
+class Connection(val podDevice: BluetoothDevice, private val aapsLogger: AAPSLogger, context: Context) {
 
     private val incomingPackets = IncomingPackets()
     private val bleCommCallbacks = BleCommCallbacks(aapsLogger, incomingPackets)
@@ -77,6 +77,9 @@ class Connection(val podDevice: BluetoothDevice, private val aapsLogger: AAPSLog
     }
 
     fun connect() {
+        // forces reconnection
+        disconnect()
+
         if (!gattConnection.connect()) {
             throw FailedToConnectException("connect() returned false")
         }
@@ -86,10 +89,14 @@ class Connection(val podDevice: BluetoothDevice, private val aapsLogger: AAPSLog
         }
 
         cmdBleIO.hello()
+        cmdBleIO.readyToRead()
+        dataBleIO.readyToRead()
     }
 
     fun disconnect() {
+        bleCommCallbacks.resetConnection()
         gattConnection.disconnect()
+        session = null
     }
 
     private fun waitForConnection(): ConnectionState {

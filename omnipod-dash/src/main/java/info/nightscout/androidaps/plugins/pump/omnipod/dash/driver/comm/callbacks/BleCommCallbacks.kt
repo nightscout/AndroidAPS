@@ -22,7 +22,7 @@ class BleCommCallbacks(
 ) : BluetoothGattCallback() {
 
     private val serviceDiscoveryComplete: CountDownLatch = CountDownLatch(1)
-    private val connected: CountDownLatch = CountDownLatch(1)
+    private var connected: CountDownLatch = CountDownLatch(1)
     private val writeQueue: BlockingQueue<WriteConfirmation> = LinkedBlockingQueue(1)
 
     override fun onConnectionStateChange(gatt: BluetoothGatt, status: Int, newState: Int) {
@@ -98,7 +98,10 @@ class BleCommCallbacks(
                 payload.toHex()
         )
 
-        incomingPackets.byCharacteristicType(characteristicType).add(payload)
+        val insertResult = incomingPackets.byCharacteristicType(characteristicType).add(payload)
+        if (!insertResult) {
+            aapsLogger.warn(LTag.PUMPBTCOMM, "Could not insert read data to the incoming queue: ${characteristicType}")
+        }
     }
 
     override fun onDescriptorWrite(gatt: BluetoothGatt, descriptor: BluetoothGattDescriptor, status: Int) {
@@ -146,6 +149,11 @@ class BleCommCallbacks(
             )
             writeQueue.clear()
         }
+    }
+
+    fun resetConnection() {
+        connected = CountDownLatch(1)
+        flushConfirmationQueue()
     }
 
     companion object {

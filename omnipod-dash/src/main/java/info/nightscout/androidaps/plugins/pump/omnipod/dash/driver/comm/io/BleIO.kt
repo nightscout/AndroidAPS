@@ -54,7 +54,7 @@ open class BleIO(
      * @param payload the data to send
      */
     fun sendAndConfirmPacket(payload: ByteArray): BleSendResult {
-        aapsLogger.debug(LTag.PUMPBTCOMM, "BleIO: Sending data on ${payload.toHex()}")
+        aapsLogger.debug(LTag.PUMPBTCOMM, "BleIO: Sending on ${type.name}: ${payload.toHex()}")
         val set = characteristic.setValue(payload)
         if (!set) {
             return BleSendErrorSending("Could set setValue on ${type.name}")

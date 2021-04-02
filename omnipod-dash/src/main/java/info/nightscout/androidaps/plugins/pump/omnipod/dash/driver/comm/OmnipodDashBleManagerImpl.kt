@@ -108,7 +108,14 @@ class OmnipodDashBleManagerImpl @Inject constructor(
                 ?: Connection(podDevice, aapsLogger, context)
             connection = conn
             if (conn.connectionState() is Connected) {
-                emitter.onNext(PodEvent.Connected)
+                if (conn.session == null) {
+                    emitter.onNext(PodEvent.EstablishingSession)
+                    establishSession(1.toByte())
+                    emitter.onNext(PodEvent.Connected)
+
+                } else {
+                    emitter.onNext(PodEvent.AlreadyConnected(podAddress))
+                }
                 emitter.onComplete()
                 return@create
             }
