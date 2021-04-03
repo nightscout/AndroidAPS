@@ -22,13 +22,14 @@ class UserEntryPresentationHelper @Inject constructor(
 ) {
 
     fun colorId(colorGroup: ColorGroup): Int = when (colorGroup) {
-        ColorGroup.InsulinTreatment -> R.color.basal
+        ColorGroup.InsulinTreatment -> R.color.iob
+        ColorGroup.BasalTreatment   -> R.color.basal
         ColorGroup.CarbTreatment    -> R.color.carbs
         ColorGroup.TT               -> R.color.tempTargetConfirmation
         ColorGroup.Profile          -> R.color.white
         ColorGroup.Loop             -> R.color.loopClosed
         ColorGroup.Careportal       -> R.color.high
-        ColorGroup.Pump             -> R.color.iob
+        ColorGroup.Pump             -> R.color.loopDisconnected
         ColorGroup.Aaps             -> R.color.defaulttext
         else                        -> R.color.defaulttext
     }
