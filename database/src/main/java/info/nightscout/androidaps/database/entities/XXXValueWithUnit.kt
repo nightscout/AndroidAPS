@@ -38,59 +38,33 @@ sealed class XXXValueWithUnit {
 
     fun value(): Any? {
         return when(this) {
-            is Gram                  -> this.value
-            is Hour                  -> this.value
-            is Insulin               -> this.value
-            is Mgdl                  -> this.value
-            is Minute                -> this.value
-            is Mmoll                 -> this.value
-            is Percent               -> this.value
-            is SimpleInt             -> this.value
-            is SimpleString          -> this.value
-            is StringResource        -> this.value
+            is Gram -> this.value
+            is Hour -> this.value
+            is Insulin -> this.value
+            is Mgdl -> this.value
+            is Minute -> this.value
+            is Mmoll -> this.value
+            is Percent -> this.value
+            is SimpleInt -> this.value
+            is SimpleString -> this.value
+            is StringResource -> this.value
             is TherapyEventMeterType -> this.value
-            is TherapyEventTTReason  -> this.value
-            is TherapyEventType      -> this.value
-            is Timestamp             -> this.value
-            is UnitPerHour           -> this.value
-            UNKNOWN                  -> null
+            is TherapyEventTTReason -> this.value
+            is TherapyEventType -> this.value
+            is Timestamp -> this.value
+            is UnitPerHour -> this.value
+            UNKNOWN -> null
         }
     }
     companion object {
 
+        const val MGDL = "mg/dl" // This is Nightscout's representation
+        const val MMOL = "mmol"
+
         fun fromGlucoseUnit(value: Double, string: String): XXXValueWithUnit? = when (string) {
-            "mg/dl", "mgdl" -> Mgdl(value)
-            "mmol", "mmol/l" -> Mmoll(value)
-            else             -> null
+            MGDL, "mgdl"    -> Mgdl(value)
+            MMOL, "mmol/l"  -> Mmoll(value)
+            else            -> null
         }
     }
 }
-
-
-
-/***
- * Idea: Leverage sealed classes for units
- * Advantage: it is clear what type of data a Unit contains. Still we are exhaustive on when
- *
- * The condition "condition" that is used to check if an item should be logged can be replaced by .takeIf { condition }.
- * The value then would not have to be handled but the logging could simply discard null value.
- *
- * [x] new sealed classes
- * [x] use entry type directly, not String
- * [ ] database
- * [x] generate presentation string
- * [ ] update fragment
- * [ ] generate csv
- *
- */
-
-// just do develop in this file. Remove when done.
-/*
-interface Translator {
-
-    fun translate(units: UserEntry.Units): String
-    fun translate(meterType: TherapyEvent.MeterType): String
-    fun translate(type: TherapyEvent.Type): String
-    fun translate(reason: TemporaryTarget.Reason): String
-}
-*/
