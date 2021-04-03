@@ -91,7 +91,6 @@ class Connection(val podDevice: BluetoothDevice, private val aapsLogger: AAPSLog
         val discovered = discoverer.discoverServices()
         dataBleIO.characteristic =  discovered[CharacteristicType.DATA]!!
         cmdBleIO.characteristic =  discovered[CharacteristicType.CMD]!!
-
         cmdBleIO.hello()
         cmdBleIO.readyToRead()
         dataBleIO.readyToRead()

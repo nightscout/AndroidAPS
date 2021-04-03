@@ -84,7 +84,11 @@ class MessageIO(
     }
 
     fun receiveMessage(): MessagePacket? {
-        cmdBleIO.expectCommandType(BleCommandRTS, MESSAGE_READ_TIMEOUT_MS)
+        val expectRTS = cmdBleIO.expectCommandType(BleCommandRTS, MESSAGE_READ_TIMEOUT_MS)
+        if (expectRTS !is BleConfirmSuccess) {
+            aapsLogger.warn(LTag.PUMPBTCOMM, "Error reading RTS: $expectRTS")
+            return null
+        }
 
         val sendResult = cmdBleIO.sendAndConfirmPacket(BleCommandCTS.data)
         if (sendResult !is BleSendSuccess) {
