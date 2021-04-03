@@ -8,7 +8,7 @@ import android.view.ViewGroup
 import com.google.common.base.Joiner
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.activities.ErrorHelperActivity
-import info.nightscout.androidaps.database.entities.XXXValueWithUnit
+import info.nightscout.androidaps.database.entities.ValueWithUnit
 import info.nightscout.androidaps.database.entities.UserEntry.Action
 import info.nightscout.androidaps.database.entities.UserEntry.Sources
 import info.nightscout.androidaps.databinding.DialogExtendedbolusBinding
@@ -91,8 +91,8 @@ class ExtendedBolusDialog : DialogFragmentWithDate() {
         activity?.let { activity ->
             OKDialog.showConfirmation(activity, resourceHelper.gs(R.string.extended_bolus), HtmlHelper.fromHtml(Joiner.on("<br/>").join(actions)), {
                 uel.log(Action.EXTENDED_BOLUS, Sources.ExtendedBolusDialog,
-                    XXXValueWithUnit.Insulin(insulinAfterConstraint),
-                    XXXValueWithUnit.Minute(durationInMinutes))
+                    ValueWithUnit.Insulin(insulinAfterConstraint),
+                    ValueWithUnit.Minute(durationInMinutes))
                 commandQueue.extendedBolus(insulinAfterConstraint, durationInMinutes, object : Callback() {
                     override fun run() {
                         if (!result.success) {

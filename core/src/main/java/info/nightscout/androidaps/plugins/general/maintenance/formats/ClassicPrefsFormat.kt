@@ -78,7 +78,7 @@ class ClassicPrefsFormat @Inject constructor(
 
     fun saveCsv(file: File, userEntries: List<UserEntry>) {
         try {
-            val contents = userEntryPresentationHelper.UserEntriesToCsv(userEntries)
+            val contents = userEntryPresentationHelper.userEntriesToCsv(userEntries)
             storage.putFileContents(file, contents)
         } catch (e: FileNotFoundException) {
             throw PrefFileNotFoundError(file.absolutePath)

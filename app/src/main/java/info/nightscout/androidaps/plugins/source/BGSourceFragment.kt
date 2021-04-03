@@ -10,7 +10,7 @@ import androidx.recyclerview.widget.RecyclerView
 import dagger.android.support.DaggerFragment
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.database.AppRepository
-import info.nightscout.androidaps.database.entities.XXXValueWithUnit
+import info.nightscout.androidaps.database.entities.ValueWithUnit
 import info.nightscout.androidaps.database.entities.GlucoseValue
 import info.nightscout.androidaps.database.entities.UserEntry.Action
 import info.nightscout.androidaps.database.entities.UserEntry.Sources
@@ -133,7 +133,7 @@ class BGSourceFragment : DaggerFragment() {
                         OKDialog.showConfirmation(activity, resourceHelper.gs(R.string.removerecord), text, Runnable {
                             //uel.log(Action.BG_REMOVED, XXXValueWithUnit.Timestamp(glucoseValue.timestamp))
                             uel.log(Action.BG_REMOVED, Sources.BG,
-                                XXXValueWithUnit.Timestamp(glucoseValue.timestamp))
+                                ValueWithUnit.Timestamp(glucoseValue.timestamp))
                             disposable += repository.runTransaction(InvalidateGlucoseValueTransaction(glucoseValue.id)).subscribe()
                         })
                     }

@@ -11,7 +11,7 @@ import info.nightscout.androidaps.database.AppRepository
 import info.nightscout.androidaps.database.entities.TemporaryTarget
 import info.nightscout.androidaps.database.entities.UserEntry
 import info.nightscout.androidaps.database.entities.UserEntry.Sources
-import info.nightscout.androidaps.database.entities.XXXValueWithUnit
+import info.nightscout.androidaps.database.entities.ValueWithUnit
 import info.nightscout.androidaps.database.transactions.InsertTemporaryTargetAndCancelCurrentTransaction
 import info.nightscout.androidaps.interfaces.ActivePluginProvider
 import info.nightscout.androidaps.interfaces.ProfileFunction
@@ -62,10 +62,10 @@ class ActionStartTempTarget(injector: HasAndroidInjector) : Action(injector) {
                 result.inserted.forEach { aapsLogger.debug(LTag.DATABASE, "Inserted temp target $it") }
                 result.updated.forEach { aapsLogger.debug(LTag.DATABASE, "Updated temp target $it") }
                 uel.log(UserEntry.Action.TT, Sources.Automation, title,
-                    XXXValueWithUnit.TherapyEventTTReason(TemporaryTarget.Reason.AUTOMATION),
-                    XXXValueWithUnit.fromGlucoseUnit(tt().lowTarget, Constants.MGDL),
-                    XXXValueWithUnit.fromGlucoseUnit(tt().highTarget, Constants.MGDL).takeIf { tt().lowTarget != tt().highTarget },
-                    XXXValueWithUnit.Minute(TimeUnit.MILLISECONDS.toMinutes(tt().duration).toInt()))
+                    ValueWithUnit.TherapyEventTTReason(TemporaryTarget.Reason.AUTOMATION),
+                    ValueWithUnit.fromGlucoseUnit(tt().lowTarget, Constants.MGDL),
+                    ValueWithUnit.fromGlucoseUnit(tt().highTarget, Constants.MGDL).takeIf { tt().lowTarget != tt().highTarget },
+                    ValueWithUnit.Minute(TimeUnit.MILLISECONDS.toMinutes(tt().duration).toInt()))
                 callback.result(PumpEnactResult(injector).success(true).comment(R.string.ok))?.run()
             }, {
                 aapsLogger.error(LTag.DATABASE, "Error while saving temporary target", it)

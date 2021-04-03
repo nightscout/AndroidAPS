@@ -12,7 +12,7 @@ import info.nightscout.androidaps.data.DetailedBolusInfo
 import info.nightscout.androidaps.data.Profile
 import info.nightscout.androidaps.database.AppRepository
 import info.nightscout.androidaps.database.entities.BolusCalculatorResult
-import info.nightscout.androidaps.database.entities.XXXValueWithUnit
+import info.nightscout.androidaps.database.entities.ValueWithUnit
 import info.nightscout.androidaps.database.entities.TemporaryTarget
 import info.nightscout.androidaps.database.entities.UserEntry.Action
 import info.nightscout.androidaps.database.entities.UserEntry.Sources
@@ -350,8 +350,8 @@ class BolusWizard @Inject constructor(
                 notes = this@BolusWizard.notes
                 uel.log(Action.BOLUS_ADVISOR, if (quickWizard) Sources.QuickWizard else Sources.WizardDialog,
                     notes,
-                    XXXValueWithUnit.TherapyEventType(eventType.toDBbEventType()),
-                    XXXValueWithUnit.Insulin(insulinAfterConstraints))
+                    ValueWithUnit.TherapyEventType(eventType.toDBbEventType()),
+                    ValueWithUnit.Insulin(insulinAfterConstraints))
                 if (insulin > 0) {
                     commandQueue.bolus(this, object : Callback() {
                         override fun run() {
@@ -421,10 +421,10 @@ class BolusWizard @Inject constructor(
                         }
                         uel.log(action, if (quickWizard) Sources.QuickWizard else Sources.WizardDialog,
                             notes,
-                            XXXValueWithUnit.TherapyEventType(eventType.toDBbEventType()),
-                            XXXValueWithUnit.Insulin(insulinAfterConstraints).takeIf { insulinAfterConstraints != 0.0 },
-                            XXXValueWithUnit.Gram(this@BolusWizard.carbs).takeIf { this@BolusWizard.carbs != 0 },
-                            XXXValueWithUnit.Minute(carbTime).takeIf { carbTime != 0 })
+                            ValueWithUnit.TherapyEventType(eventType.toDBbEventType()),
+                            ValueWithUnit.Insulin(insulinAfterConstraints).takeIf { insulinAfterConstraints != 0.0 },
+                            ValueWithUnit.Gram(this@BolusWizard.carbs).takeIf { this@BolusWizard.carbs != 0 },
+                            ValueWithUnit.Minute(carbTime).takeIf { carbTime != 0 })
                         commandQueue.bolus(this, object : Callback() {
                             override fun run() {
                                 if (!result.success) {

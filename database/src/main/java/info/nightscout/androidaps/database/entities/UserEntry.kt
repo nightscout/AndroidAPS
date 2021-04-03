@@ -16,7 +16,7 @@ data class UserEntry(
     var action: Action,
     var source: Sources,
     var note: String,
-    var values: List<XXXValueWithUnit?>
+    var values: List<ValueWithUnit?>
 ) : DBEntry, DBEntryWithTime {
     enum class Action (val colorGroup: ColorGroup) {
         BOLUS (ColorGroup.InsulinTreatment),

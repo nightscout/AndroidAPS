@@ -8,7 +8,7 @@ import android.widget.ArrayAdapter
 import com.google.common.base.Joiner
 import info.nightscout.androidaps.Constants
 import info.nightscout.androidaps.R
-import info.nightscout.androidaps.database.entities.XXXValueWithUnit
+import info.nightscout.androidaps.database.entities.ValueWithUnit
 import info.nightscout.androidaps.database.entities.UserEntry.Action
 import info.nightscout.androidaps.database.entities.UserEntry.Sources
 import info.nightscout.androidaps.databinding.DialogProfileswitchBinding
@@ -130,11 +130,11 @@ class ProfileSwitchDialog : DialogFragmentWithDate() {
                 uel.log(Action.PROFILE_SWITCH,
                     Sources.ProfileSwitchDialog,
                     notes,
-                    XXXValueWithUnit.Timestamp(eventTime).takeIf { eventTimeChanged },
-                    XXXValueWithUnit.SimpleString(profile),
-                    XXXValueWithUnit.Percent(percent),
-                    XXXValueWithUnit.Hour(timeShift).takeIf { timeShift != 0 },
-                    XXXValueWithUnit.Minute(duration).takeIf { duration != 0 })
+                    ValueWithUnit.Timestamp(eventTime).takeIf { eventTimeChanged },
+                    ValueWithUnit.SimpleString(profile),
+                    ValueWithUnit.Percent(percent),
+                    ValueWithUnit.Hour(timeShift).takeIf { timeShift != 0 },
+                    ValueWithUnit.Minute(duration).takeIf { duration != 0 })
                 treatmentsPlugin.doProfileSwitch(profileStore, profile, duration, percent, timeShift, eventTime)
             })
         }

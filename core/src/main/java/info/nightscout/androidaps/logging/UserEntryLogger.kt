@@ -1,7 +1,7 @@
 package info.nightscout.androidaps.logging
 
 import info.nightscout.androidaps.database.AppRepository
-import info.nightscout.androidaps.database.entities.XXXValueWithUnit
+import info.nightscout.androidaps.database.entities.ValueWithUnit
 import info.nightscout.androidaps.database.entities.UserEntry.Action
 import info.nightscout.androidaps.database.entities.UserEntry.Sources
 import info.nightscout.androidaps.database.transactions.UserEntryTransaction
@@ -21,11 +21,11 @@ class UserEntryLogger @Inject constructor(
 
     private val compositeDisposable = CompositeDisposable()
 
-    fun log(action: Action, source: Sources, note: String? ="", vararg listvalues: XXXValueWithUnit?) = log(action, source, note, listvalues.toList())
+    fun log(action: Action, source: Sources, note: String? ="", vararg listvalues: ValueWithUnit?) = log(action, source, note, listvalues.toList())
 
-    fun log(action: Action, source: Sources, vararg listvalues: XXXValueWithUnit?) = log(action, source,"", listvalues.toList())
+    fun log(action: Action, source: Sources, vararg listvalues: ValueWithUnit?) = log(action, source,"", listvalues.toList())
 
-    fun log(action: Action, source: Sources, note: String? ="", listvalues: List<XXXValueWithUnit?> = listOf()) {
+    fun log(action: Action, source: Sources, note: String? ="", listvalues: List<ValueWithUnit?> = listOf()) {
         val filteredValues = listvalues.toList().filter { it != null}
         compositeDisposable += repository.runTransaction(UserEntryTransaction(
             action = action,

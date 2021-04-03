@@ -12,7 +12,7 @@ import dagger.android.support.DaggerFragment
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.data.Intervals
 import info.nightscout.androidaps.data.IobTotal
-import info.nightscout.androidaps.database.entities.XXXValueWithUnit
+import info.nightscout.androidaps.database.entities.ValueWithUnit
 import info.nightscout.androidaps.database.entities.UserEntry.Action
 import info.nightscout.androidaps.database.entities.UserEntry.Sources
 import info.nightscout.androidaps.databinding.TreatmentsTempbasalsFragmentBinding
@@ -167,7 +167,7 @@ class TreatmentsTemporaryBasalsFragment : DaggerFragment() {
                 """.trimIndent(),
                             { _: DialogInterface?, _: Int ->
                                 uel.log(Action.TT_REMOVED, Sources.Treatments,
-                                    XXXValueWithUnit.Timestamp(tempBasal.date))
+                                    ValueWithUnit.Timestamp(tempBasal.date))
                                 activePlugin.activeTreatments.removeTempBasal(tempBasal)
                             }, null)
                     }

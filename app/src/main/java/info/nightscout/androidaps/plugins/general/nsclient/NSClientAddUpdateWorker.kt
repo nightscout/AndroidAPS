@@ -1,7 +1,6 @@
 package info.nightscout.androidaps.plugins.general.nsclient
 
 import android.content.Context
-import androidx.work.Data
 import androidx.work.Worker
 import androidx.work.WorkerParameters
 import androidx.work.workDataOf
@@ -9,7 +8,7 @@ import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.Constants
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.database.AppRepository
-import info.nightscout.androidaps.database.entities.XXXValueWithUnit
+import info.nightscout.androidaps.database.entities.ValueWithUnit
 import info.nightscout.androidaps.database.entities.TherapyEvent
 import info.nightscout.androidaps.database.entities.UserEntry.Action
 import info.nightscout.androidaps.database.entities.UserEntry.Sources
@@ -92,14 +91,14 @@ class NSClientAddUpdateWorker(
                         .also { result ->
                             result.inserted.forEach {
                                 uel.log(Action.CAREPORTAL, Sources.NSClient,
-                                    XXXValueWithUnit.Timestamp(it.timestamp),
-                                    XXXValueWithUnit.Insulin(it.amount)
+                                    ValueWithUnit.Timestamp(it.timestamp),
+                                    ValueWithUnit.Insulin(it.amount)
                                 )
                             }
                             result.invalidated.forEach {
                                 uel.log(Action.CAREPORTAL_REMOVED, Sources.NSClient,
-                                    XXXValueWithUnit.Timestamp(it.timestamp),
-                                    XXXValueWithUnit.Insulin(it.amount)
+                                    ValueWithUnit.Timestamp(it.timestamp),
+                                    ValueWithUnit.Insulin(it.amount)
                                 )
                             }
                         }
@@ -116,14 +115,14 @@ class NSClientAddUpdateWorker(
                         .also { result ->
                             result.inserted.forEach {
                                 uel.log(Action.CAREPORTAL, Sources.NSClient,
-                                    XXXValueWithUnit.Timestamp(it.timestamp),
-                                    XXXValueWithUnit.Gram(it.amount.toInt())
+                                    ValueWithUnit.Timestamp(it.timestamp),
+                                    ValueWithUnit.Gram(it.amount.toInt())
                                 )
                             }
                             result.invalidated.forEach {
                                 uel.log(Action.CAREPORTAL, Sources.NSClient,
-                                    XXXValueWithUnit.Timestamp(it.timestamp),
-                                    XXXValueWithUnit.Gram(it.amount.toInt())
+                                    ValueWithUnit.Timestamp(it.timestamp),
+                                    ValueWithUnit.Gram(it.amount.toInt())
                                 )
                             }
                         }
@@ -142,26 +141,26 @@ class NSClientAddUpdateWorker(
                             .also { result ->
                                 result.inserted.forEach { tt ->
                                     uel.log(Action.TT, Sources.NSClient,
-                                        XXXValueWithUnit.TherapyEventTTReason(tt.reason),
-                                        XXXValueWithUnit.fromGlucoseUnit(tt.lowTarget, Constants.MGDL),
-                                        XXXValueWithUnit.fromGlucoseUnit(tt.highTarget, Constants.MGDL).takeIf { tt.lowTarget != tt.highTarget },
-                                        XXXValueWithUnit.Minute(TimeUnit.MILLISECONDS.toMinutes(tt.duration).toInt())
+                                        ValueWithUnit.TherapyEventTTReason(tt.reason),
+                                        ValueWithUnit.fromGlucoseUnit(tt.lowTarget, Constants.MGDL),
+                                        ValueWithUnit.fromGlucoseUnit(tt.highTarget, Constants.MGDL).takeIf { tt.lowTarget != tt.highTarget },
+                                        ValueWithUnit.Minute(TimeUnit.MILLISECONDS.toMinutes(tt.duration).toInt())
                                     )
                                 }
                                 result.invalidated.forEach { tt ->
                                     uel.log(Action.TT_REMOVED, Sources.NSClient,
-                                        XXXValueWithUnit.TherapyEventTTReason(tt.reason),
-                                        XXXValueWithUnit.Mgdl(tt.lowTarget),
-                                        XXXValueWithUnit.Mgdl(tt.highTarget).takeIf { tt.lowTarget != tt.highTarget },
-                                        XXXValueWithUnit.Minute(TimeUnit.MILLISECONDS.toMinutes(tt.duration).toInt())
+                                        ValueWithUnit.TherapyEventTTReason(tt.reason),
+                                        ValueWithUnit.Mgdl(tt.lowTarget),
+                                        ValueWithUnit.Mgdl(tt.highTarget).takeIf { tt.lowTarget != tt.highTarget },
+                                        ValueWithUnit.Minute(TimeUnit.MILLISECONDS.toMinutes(tt.duration).toInt())
                                     )
                                 }
                                 result.ended.forEach { tt ->
                                     uel.log(Action.CANCEL_TT, Sources.NSClient,
-                                        XXXValueWithUnit.TherapyEventTTReason(tt.reason),
-                                        XXXValueWithUnit.Mgdl(tt.lowTarget),
-                                        XXXValueWithUnit.Mgdl(tt.highTarget).takeIf { tt.lowTarget != tt.highTarget },
-                                        XXXValueWithUnit.Minute(TimeUnit.MILLISECONDS.toMinutes(tt.duration).toInt())
+                                        ValueWithUnit.TherapyEventTTReason(tt.reason),
+                                        ValueWithUnit.Mgdl(tt.lowTarget),
+                                        ValueWithUnit.Mgdl(tt.highTarget).takeIf { tt.lowTarget != tt.highTarget },
+                                        ValueWithUnit.Minute(TimeUnit.MILLISECONDS.toMinutes(tt.duration).toInt())
                                     )
                                 }
                             }
@@ -187,15 +186,15 @@ class NSClientAddUpdateWorker(
                                 result.inserted.forEach {
                                     uel.log(Action.CAREPORTAL, Sources.NSClient,
                                         it.note ?: "",
-                                        XXXValueWithUnit.Timestamp(it.timestamp),
-                                        XXXValueWithUnit.TherapyEventType(it.type)
+                                        ValueWithUnit.Timestamp(it.timestamp),
+                                        ValueWithUnit.TherapyEventType(it.type)
                                     )
                                 }
                                 result.invalidated.forEach {
                                     uel.log(Action.CAREPORTAL_REMOVED, Sources.NSClient,
                                         it.note ?: "",
-                                        XXXValueWithUnit.Timestamp(it.timestamp),
-                                        XXXValueWithUnit.TherapyEventType(it.type)
+                                        ValueWithUnit.Timestamp(it.timestamp),
+                                        ValueWithUnit.TherapyEventType(it.type)
                                     )
                                 }
                             }

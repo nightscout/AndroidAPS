@@ -5,7 +5,7 @@ import info.nightscout.androidaps.database.entities.TemporaryTarget
 import info.nightscout.androidaps.database.entities.TherapyEvent
 import info.nightscout.androidaps.database.entities.UserEntry.Action
 import info.nightscout.androidaps.database.entities.UserEntry.Sources
-import info.nightscout.androidaps.database.entities.XXXValueWithUnit
+import info.nightscout.androidaps.database.entities.ValueWithUnit
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -92,16 +92,16 @@ class Translator @Inject internal constructor(
         Action.UNKNOWN                             -> resourceHelper.gs(R.string.unknown)
     }
 
-    fun translate(units: XXXValueWithUnit?): String = when(units) {
-        is XXXValueWithUnit.Gram                   -> resourceHelper.gs(R.string.shortgram)
-        is XXXValueWithUnit.Hour                   -> resourceHelper.gs(R.string.shorthour)
-        is XXXValueWithUnit.Insulin                -> resourceHelper.gs(R.string.insulin_unit_shortname)
-        is XXXValueWithUnit.Mgdl                   -> resourceHelper.gs(R.string.mgdl)
-        is XXXValueWithUnit.Minute                 -> resourceHelper.gs(R.string.shortminute)
-        is XXXValueWithUnit.Mmoll                  -> resourceHelper.gs(R.string.mmol)
-        is XXXValueWithUnit.Percent                -> resourceHelper.gs(R.string.shortpercent)
-        is XXXValueWithUnit.UnitPerHour            -> resourceHelper.gs(R.string.profile_ins_units_per_hour)
-        else                                       -> ""
+    fun translate(units: ValueWithUnit?): String = when(units) {
+        is ValueWithUnit.Gram        -> resourceHelper.gs(R.string.shortgram)
+        is ValueWithUnit.Hour        -> resourceHelper.gs(R.string.shorthour)
+        is ValueWithUnit.Insulin     -> resourceHelper.gs(R.string.insulin_unit_shortname)
+        is ValueWithUnit.Mgdl        -> resourceHelper.gs(R.string.mgdl)
+        is ValueWithUnit.Minute      -> resourceHelper.gs(R.string.shortminute)
+        is ValueWithUnit.Mmoll       -> resourceHelper.gs(R.string.mmol)
+        is ValueWithUnit.Percent     -> resourceHelper.gs(R.string.shortpercent)
+        is ValueWithUnit.UnitPerHour -> resourceHelper.gs(R.string.profile_ins_units_per_hour)
+        else                         -> ""
     }
 
     fun translate(meterType: TherapyEvent.MeterType): String = when(meterType) {

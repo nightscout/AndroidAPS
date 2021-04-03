@@ -15,7 +15,7 @@ import info.nightscout.androidaps.activities.ErrorHelperActivity
 import info.nightscout.androidaps.data.DetailedBolusInfo
 import info.nightscout.androidaps.data.Profile
 import info.nightscout.androidaps.database.AppRepository
-import info.nightscout.androidaps.database.entities.XXXValueWithUnit
+import info.nightscout.androidaps.database.entities.ValueWithUnit
 import info.nightscout.androidaps.database.entities.TemporaryTarget
 import info.nightscout.androidaps.database.entities.UserEntry.Action
 import info.nightscout.androidaps.database.entities.UserEntry.Sources
@@ -191,9 +191,9 @@ class InsulinDialog : DialogFragmentWithDate() {
                     if (eatingSoonChecked) {
                         uel.log(Action.TT, Sources.InsulinDialog,
                             notes,
-                            XXXValueWithUnit.TherapyEventTTReason(TemporaryTarget.Reason.EATING_SOON),
-                            XXXValueWithUnit.fromGlucoseUnit(eatingSoonTT, units),
-                            XXXValueWithUnit.Minute(eatingSoonTTDuration))
+                            ValueWithUnit.TherapyEventTTReason(TemporaryTarget.Reason.EATING_SOON),
+                            ValueWithUnit.fromGlucoseUnit(eatingSoonTT, units),
+                            ValueWithUnit.Minute(eatingSoonTTDuration))
                         disposable += repository.runTransactionForResult(InsertTemporaryTargetAndCancelCurrentTransaction(
                             timestamp = System.currentTimeMillis(),
                             duration = TimeUnit.MINUTES.toMillis(eatingSoonTTDuration.toLong()),
@@ -217,9 +217,9 @@ class InsulinDialog : DialogFragmentWithDate() {
                         if (recordOnlyChecked) {
                             uel.log(Action.BOLUS, Sources.InsulinDialog,
                                 notes,
-                                XXXValueWithUnit.StringResource(R.string.record),
-                                XXXValueWithUnit.Insulin(insulinAfterConstraints),
-                                XXXValueWithUnit.Minute(timeOffset).takeIf { timeOffset!= 0 })
+                                ValueWithUnit.StringResource(R.string.record),
+                                ValueWithUnit.Insulin(insulinAfterConstraints),
+                                ValueWithUnit.Minute(timeOffset).takeIf { timeOffset!= 0 })
                             disposable += repository.runTransactionForResult(detailedBolusInfo.insertBolusTransaction())
                                 .subscribe(
                                     { result -> result.inserted.forEach { aapsLogger.debug(LTag.DATABASE, "Inserted bolus $it") } },
@@ -233,7 +233,7 @@ class InsulinDialog : DialogFragmentWithDate() {
                                     } else
                                         uel.log(Action.BOLUS, Sources.InsulinDialog,
                                             notes,
-                                            XXXValueWithUnit.Insulin(insulinAfterConstraints))
+                                            ValueWithUnit.Insulin(insulinAfterConstraints))
 
                                 }
                             })

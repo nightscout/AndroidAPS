@@ -1,6 +1,6 @@
 package info.nightscout.androidaps.utils.serialisation
 
-import info.nightscout.androidaps.database.entities.XXXValueWithUnit
+import info.nightscout.androidaps.database.entities.ValueWithUnit
 import org.junit.Assert
 import org.junit.Test
 
@@ -9,10 +9,10 @@ internal class ValueWithUnitSerialiserTest {
     @Test
     fun testSerialisationDeserization() {
 
-        val list = listOf<XXXValueWithUnit>(
-            XXXValueWithUnit.SimpleString("hello"),
-            XXXValueWithUnit.SimpleInt(5),
-            XXXValueWithUnit.UNKNOWN
+        val list = listOf<ValueWithUnit>(
+            ValueWithUnit.SimpleString("hello"),
+            ValueWithUnit.SimpleInt(5),
+            ValueWithUnit.UNKNOWN
         )
 
         val serialized = ValueWithUnitSerialiser.toSealedClassJson(list)
@@ -25,7 +25,7 @@ internal class ValueWithUnitSerialiserTest {
     @Test
     fun testEmptyList() {
 
-        val list = listOf<XXXValueWithUnit>()
+        val list = listOf<ValueWithUnit>()
 
         val serialized = ValueWithUnitSerialiser.toSealedClassJson(list)
         val deserialized = ValueWithUnitSerialiser.fromJson(serialized)

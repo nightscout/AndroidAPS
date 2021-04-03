@@ -14,7 +14,7 @@ import info.nightscout.androidaps.activities.ErrorHelperActivity
 import info.nightscout.androidaps.data.DetailedBolusInfo
 import info.nightscout.androidaps.data.Profile
 import info.nightscout.androidaps.database.AppRepository
-import info.nightscout.androidaps.database.entities.XXXValueWithUnit
+import info.nightscout.androidaps.database.entities.ValueWithUnit
 import info.nightscout.androidaps.database.entities.TemporaryTarget
 import info.nightscout.androidaps.database.entities.UserEntry.Action
 import info.nightscout.androidaps.database.entities.UserEntry.Sources
@@ -225,9 +225,9 @@ class CarbsDialog : DialogFragmentWithDate() {
                     when {
                         activitySelected   -> {
                             uel.log(Action.TT, Sources.CarbDialog,
-                                XXXValueWithUnit.TherapyEventTTReason(TemporaryTarget.Reason.ACTIVITY),
-                                XXXValueWithUnit.fromGlucoseUnit(activityTT, units) ,
-                                XXXValueWithUnit.Minute(activityTTDuration))
+                                ValueWithUnit.TherapyEventTTReason(TemporaryTarget.Reason.ACTIVITY),
+                                ValueWithUnit.fromGlucoseUnit(activityTT, units) ,
+                                ValueWithUnit.Minute(activityTTDuration))
                             disposable += repository.runTransactionForResult(InsertTemporaryTargetAndCancelCurrentTransaction(
                                 timestamp = System.currentTimeMillis(),
                                 duration = TimeUnit.MINUTES.toMillis(activityTTDuration.toLong()),
@@ -244,9 +244,9 @@ class CarbsDialog : DialogFragmentWithDate() {
 
                         eatingSoonSelected -> {
                             uel.log(Action.TT, Sources.CarbDialog,
-                                XXXValueWithUnit.TherapyEventTTReason(TemporaryTarget.Reason.EATING_SOON),
-                                XXXValueWithUnit.fromGlucoseUnit(eatingSoonTT, units) ,
-                                XXXValueWithUnit.Minute(eatingSoonTTDuration))
+                                ValueWithUnit.TherapyEventTTReason(TemporaryTarget.Reason.EATING_SOON),
+                                ValueWithUnit.fromGlucoseUnit(eatingSoonTT, units) ,
+                                ValueWithUnit.Minute(eatingSoonTTDuration))
                             disposable += repository.runTransactionForResult(InsertTemporaryTargetAndCancelCurrentTransaction(
                                 timestamp = System.currentTimeMillis(),
                                 duration = TimeUnit.MINUTES.toMillis(eatingSoonTTDuration.toLong()),
@@ -263,9 +263,9 @@ class CarbsDialog : DialogFragmentWithDate() {
 
                         hypoSelected       -> {
                             uel.log(Action.TT, Sources.CarbDialog,
-                                XXXValueWithUnit.TherapyEventTTReason(TemporaryTarget.Reason.HYPOGLYCEMIA),
-                                XXXValueWithUnit.fromGlucoseUnit(hypoTT, units) ,
-                                XXXValueWithUnit.Minute(hypoTTDuration))
+                                ValueWithUnit.TherapyEventTTReason(TemporaryTarget.Reason.HYPOGLYCEMIA),
+                                ValueWithUnit.fromGlucoseUnit(hypoTT, units) ,
+                                ValueWithUnit.Minute(hypoTTDuration))
                             disposable += repository.runTransactionForResult(InsertTemporaryTargetAndCancelCurrentTransaction(
                                 timestamp = System.currentTimeMillis(),
                                 duration = TimeUnit.MINUTES.toMillis(hypoTTDuration.toLong()),
@@ -290,10 +290,10 @@ class CarbsDialog : DialogFragmentWithDate() {
                         detailedBolusInfo.carbsTimestamp = time
                         uel.log(if (duration == 0) Action.CARBS else Action.EXTENDED_CARBS, Sources.CarbDialog,
                             notes,
-                            XXXValueWithUnit.Timestamp(eventTime).takeIf { eventTimeChanged },
-                            XXXValueWithUnit.Gram(carbsAfterConstraints),
-                            XXXValueWithUnit.Minute(timeOffset).takeIf { timeOffset != 0 },
-                            XXXValueWithUnit.Hour(duration).takeIf { duration != 0 })
+                            ValueWithUnit.Timestamp(eventTime).takeIf { eventTimeChanged },
+                            ValueWithUnit.Gram(carbsAfterConstraints),
+                            ValueWithUnit.Minute(timeOffset).takeIf { timeOffset != 0 },
+                            ValueWithUnit.Hour(duration).takeIf { duration != 0 })
                         commandQueue.bolus(detailedBolusInfo, object : Callback() {
                             override fun run() {
                                 if (!result.success) {

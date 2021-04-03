@@ -19,7 +19,7 @@ import info.nightscout.androidaps.database.AppRepository
 import info.nightscout.androidaps.database.entities.TherapyEvent
 import info.nightscout.androidaps.database.entities.UserEntry.Action
 import info.nightscout.androidaps.database.entities.UserEntry.Sources
-import info.nightscout.androidaps.database.entities.XXXValueWithUnit
+import info.nightscout.androidaps.database.entities.ValueWithUnit
 import info.nightscout.androidaps.database.transactions.InsertTherapyEventAnnouncementTransaction
 import info.nightscout.androidaps.database.transactions.InsertIfNewByTimestampTherapyEventTransaction
 import info.nightscout.androidaps.events.EventAcceptOpenLoopChange
@@ -564,8 +564,8 @@ open class LoopPlugin @Inject constructor(
             } else {
                 aapsLogger.debug(LTag.APS, "applyAPSRequest: tempBasalPercent()")
                 uel.log(Action.TEMP_BASAL, Sources.Loop,
-                    XXXValueWithUnit.Percent(request.percent),
-                    XXXValueWithUnit.Minute(request.duration))
+                    ValueWithUnit.Percent(request.percent),
+                    ValueWithUnit.Minute(request.duration))
                 commandQueue.tempBasalPercent(request.percent, request.duration, false, profile!!, callback)
             }
         } else {
@@ -587,8 +587,8 @@ open class LoopPlugin @Inject constructor(
             } else {
                 aapsLogger.debug(LTag.APS, "applyAPSRequest: setTempBasalAbsolute()")
                 uel.log(Action.TEMP_BASAL, Sources.Loop,
-                    XXXValueWithUnit.UnitPerHour(request.rate),
-                    XXXValueWithUnit.Minute(request.duration))
+                    ValueWithUnit.UnitPerHour(request.rate),
+                    ValueWithUnit.Minute(request.duration))
                 commandQueue.tempBasalAbsolute(request.rate, request.duration, false, profile!!, callback)
             }
         }
@@ -628,7 +628,7 @@ open class LoopPlugin @Inject constructor(
         detailedBolusInfo.deliverAtTheLatest = request.deliverAt
         aapsLogger.debug(LTag.APS, "applyAPSRequest: bolus()")
         if (request.smb > 0.0)
-            uel.log(Action.SMB, Sources.Loop, XXXValueWithUnit.Insulin(detailedBolusInfo.insulin))
+            uel.log(Action.SMB, Sources.Loop, ValueWithUnit.Insulin(detailedBolusInfo.insulin))
         commandQueue.bolus(detailedBolusInfo, callback)
     }
 

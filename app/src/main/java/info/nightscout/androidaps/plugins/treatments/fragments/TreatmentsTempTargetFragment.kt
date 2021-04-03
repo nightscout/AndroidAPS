@@ -13,7 +13,7 @@ import dagger.android.support.DaggerFragment
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.database.AppRepository
 import info.nightscout.androidaps.database.ValueWrapper
-import info.nightscout.androidaps.database.entities.XXXValueWithUnit
+import info.nightscout.androidaps.database.entities.ValueWithUnit
 import info.nightscout.androidaps.database.entities.TemporaryTarget
 import info.nightscout.androidaps.database.entities.UserEntry.Action
 import info.nightscout.androidaps.database.entities.UserEntry.Sources
@@ -197,11 +197,11 @@ class TreatmentsTempTargetFragment : DaggerFragment() {
                         """.trimIndent(),
                             { _: DialogInterface?, _: Int ->
                                 uel.log(Action.TT_REMOVED, Sources.Treatments,
-                                    XXXValueWithUnit.Timestamp(tempTarget.timestamp),
-                                    XXXValueWithUnit.TherapyEventTTReason(tempTarget.reason),
-                                    XXXValueWithUnit.Mgdl(tempTarget.lowTarget),
-                                    XXXValueWithUnit.Mgdl(tempTarget.highTarget).takeIf { tempTarget.lowTarget != tempTarget.highTarget },
-                                    XXXValueWithUnit.Minute(TimeUnit.MILLISECONDS.toMinutes(tempTarget.duration).toInt()))
+                                    ValueWithUnit.Timestamp(tempTarget.timestamp),
+                                    ValueWithUnit.TherapyEventTTReason(tempTarget.reason),
+                                    ValueWithUnit.Mgdl(tempTarget.lowTarget),
+                                    ValueWithUnit.Mgdl(tempTarget.highTarget).takeIf { tempTarget.lowTarget != tempTarget.highTarget },
+                                    ValueWithUnit.Minute(TimeUnit.MILLISECONDS.toMinutes(tempTarget.duration).toInt()))
                                 disposable += repository.runTransactionForResult(InvalidateTemporaryTargetTransaction(tempTarget.id))
                                     .subscribe(
                                         { aapsLogger.debug(LTag.DATABASE, "Removed temp target $tempTarget") },

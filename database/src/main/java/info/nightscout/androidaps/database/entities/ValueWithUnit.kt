@@ -2,39 +2,39 @@ package info.nightscout.androidaps.database.entities
 
 import androidx.annotation.StringRes
 
-sealed class XXXValueWithUnit {
+sealed class ValueWithUnit {
 
-    object UNKNOWN : XXXValueWithUnit() // formerly None used as fallback
+    object UNKNOWN : ValueWithUnit() // formerly None used as fallback
 
-    data class SimpleString(val value: String) : XXXValueWithUnit() // formerly one usage of None
+    data class SimpleString(val value: String) : ValueWithUnit() // formerly one usage of None
 
-    data class SimpleInt(val value: Int) : XXXValueWithUnit() // formerly one usage of None
+    data class SimpleInt(val value: Int) : ValueWithUnit() // formerly one usage of None
 
-    data class Mgdl(val value: Double) : XXXValueWithUnit()
+    data class Mgdl(val value: Double) : ValueWithUnit()
 
-    data class Mmoll(val value: Double) : XXXValueWithUnit()
+    data class Mmoll(val value: Double) : ValueWithUnit()
 
-    data class Timestamp(val value: Long) : XXXValueWithUnit()
+    data class Timestamp(val value: Long) : ValueWithUnit()
 
-    data class Insulin(val value: Double) : XXXValueWithUnit()
+    data class Insulin(val value: Double) : ValueWithUnit()
 
-    data class UnitPerHour(val value: Double) : XXXValueWithUnit()
+    data class UnitPerHour(val value: Double) : ValueWithUnit()
 
-    data class Gram(val value: Int) : XXXValueWithUnit()
+    data class Gram(val value: Int) : ValueWithUnit()
 
-    data class Minute(val value: Int) : XXXValueWithUnit()
+    data class Minute(val value: Int) : ValueWithUnit()
 
-    data class Hour(val value: Int) : XXXValueWithUnit()
+    data class Hour(val value: Int) : ValueWithUnit()
 
-    data class Percent(val value: Int) : XXXValueWithUnit()
+    data class Percent(val value: Int) : ValueWithUnit()
 
-    data class TherapyEventType(val value: TherapyEvent.Type) : XXXValueWithUnit()
+    data class TherapyEventType(val value: TherapyEvent.Type) : ValueWithUnit()
 
-    data class TherapyEventMeterType(val value: TherapyEvent.MeterType) : XXXValueWithUnit()
+    data class TherapyEventMeterType(val value: TherapyEvent.MeterType) : ValueWithUnit()
 
-    data class TherapyEventTTReason(val value: TemporaryTarget.Reason) : XXXValueWithUnit()
+    data class TherapyEventTTReason(val value: TemporaryTarget.Reason) : ValueWithUnit()
 
-    data class StringResource(@StringRes val value: Int, val params: List<XXXValueWithUnit> = listOf()) : XXXValueWithUnit()
+    data class StringResource(@StringRes val value: Int, val params: List<ValueWithUnit> = listOf()) : ValueWithUnit()
 
     fun value(): Any? {
         return when(this) {
@@ -58,7 +58,7 @@ sealed class XXXValueWithUnit {
     }
     companion object {
 
-        fun fromGlucoseUnit(value: Double, string: String): XXXValueWithUnit? = when (string) {
+        fun fromGlucoseUnit(value: Double, string: String): ValueWithUnit? = when (string) {
             "mg/dl", "mgdl" -> Mgdl(value)
             "mmol", "mmol/l" -> Mmoll(value)
             else             -> null

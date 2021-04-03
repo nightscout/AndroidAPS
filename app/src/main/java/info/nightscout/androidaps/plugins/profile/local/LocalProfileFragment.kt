@@ -14,7 +14,7 @@ import info.nightscout.androidaps.R
 import info.nightscout.androidaps.data.Profile
 import info.nightscout.androidaps.database.entities.UserEntry.Action
 import info.nightscout.androidaps.database.entities.UserEntry.Sources
-import info.nightscout.androidaps.database.entities.XXXValueWithUnit
+import info.nightscout.androidaps.database.entities.ValueWithUnit
 import info.nightscout.androidaps.databinding.LocalprofileFragmentBinding
 import info.nightscout.androidaps.dialogs.ProfileSwitchDialog
 import info.nightscout.androidaps.interfaces.ActivePluginProvider
@@ -175,7 +175,7 @@ class LocalProfileFragment : DaggerFragment() {
             if (localProfilePlugin.isEdited) {
                 activity?.let { OKDialog.show(it, "", resourceHelper.gs(R.string.saveorresetchangesfirst)) }
             } else {
-                uel.log(Action.CLONE_PROFILE, Sources.LocalProfile, XXXValueWithUnit.SimpleString(localProfilePlugin.currentProfile()?.name ?: ""))
+                uel.log(Action.CLONE_PROFILE, Sources.LocalProfile, ValueWithUnit.SimpleString(localProfilePlugin.currentProfile()?.name ?: ""))
                 localProfilePlugin.cloneProfile()
                 build()
             }
@@ -184,7 +184,7 @@ class LocalProfileFragment : DaggerFragment() {
         binding.profileRemove.setOnClickListener {
             activity?.let { activity ->
                 OKDialog.showConfirmation(activity, resourceHelper.gs(R.string.deletecurrentprofile), {
-                    uel.log(Action.PROFILE_REMOVED, Sources.LocalProfile, XXXValueWithUnit.SimpleString(localProfilePlugin.currentProfile()?.name ?: ""))
+                    uel.log(Action.PROFILE_REMOVED, Sources.LocalProfile, ValueWithUnit.SimpleString(localProfilePlugin.currentProfile()?.name ?: ""))
                     localProfilePlugin.removeCurrentProfile()
                     build()
                 }, null)
@@ -212,7 +212,7 @@ class LocalProfileFragment : DaggerFragment() {
             if (!localProfilePlugin.isValidEditState()) {
                 return@setOnClickListener  //Should not happen as saveButton should not be visible if not valid
             }
-            uel.log(Action.STORE_PROFILE, Sources.LocalProfile, XXXValueWithUnit.SimpleString(localProfilePlugin.currentProfile()?.name ?: ""))
+            uel.log(Action.STORE_PROFILE, Sources.LocalProfile, ValueWithUnit.SimpleString(localProfilePlugin.currentProfile()?.name ?: ""))
             localProfilePlugin.storeSettings(activity)
             build()
         }

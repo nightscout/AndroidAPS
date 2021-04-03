@@ -10,7 +10,7 @@ import androidx.recyclerview.widget.RecyclerView
 import dagger.android.support.DaggerFragment
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.database.AppRepository
-import info.nightscout.androidaps.database.entities.XXXValueWithUnit
+import info.nightscout.androidaps.database.entities.ValueWithUnit
 import info.nightscout.androidaps.database.entities.TherapyEvent
 import info.nightscout.androidaps.database.entities.UserEntry.Action
 import info.nightscout.androidaps.database.entities.UserEntry.Sources
@@ -189,8 +189,8 @@ class TreatmentsCareportalFragment : DaggerFragment() {
                             resourceHelper.gs(R.string.date) + ": " + dateUtil.dateAndTimeString(therapyEvent.timestamp)
                         OKDialog.showConfirmation(activity, resourceHelper.gs(R.string.removerecord), text, Runnable {
                             uel.log(Action.CAREPORTAL_REMOVED, Sources.Treatments, therapyEvent.note ,
-                                XXXValueWithUnit.Timestamp(therapyEvent.timestamp),
-                                XXXValueWithUnit.TherapyEventType(therapyEvent.type))
+                                ValueWithUnit.Timestamp(therapyEvent.timestamp),
+                                ValueWithUnit.TherapyEventType(therapyEvent.type))
                             disposable += repository.runTransactionForResult(InvalidateTherapyEventTransaction(therapyEvent.id))
                                 .subscribe(
                                     { result -> result.invalidated.forEach { aapsLogger.debug(LTag.DATABASE, "Invalidated therapy event $it") } },

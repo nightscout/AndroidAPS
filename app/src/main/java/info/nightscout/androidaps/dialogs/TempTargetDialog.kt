@@ -12,7 +12,7 @@ import info.nightscout.androidaps.R
 import info.nightscout.androidaps.data.Profile
 import info.nightscout.androidaps.database.AppRepository
 import info.nightscout.androidaps.database.ValueWrapper
-import info.nightscout.androidaps.database.entities.XXXValueWithUnit
+import info.nightscout.androidaps.database.entities.ValueWithUnit
 import info.nightscout.androidaps.database.entities.TemporaryTarget
 import info.nightscout.androidaps.database.entities.UserEntry.Action
 import info.nightscout.androidaps.database.entities.UserEntry.Sources
@@ -181,11 +181,11 @@ class TempTargetDialog : DialogFragmentWithDate() {
             OKDialog.showConfirmation(activity, resourceHelper.gs(R.string.careportal_temporarytarget), HtmlHelper.fromHtml(Joiner.on("<br/>").join(actions)), {
                 val units = profileFunction.getUnits()
                 when(reason) {
-                    resourceHelper.gs(R.string.eatingsoon)      -> uel.log(Action.TT, Sources.TTDialog, XXXValueWithUnit.Timestamp(eventTime).takeIf { eventTimeChanged }, XXXValueWithUnit.TherapyEventTTReason(TemporaryTarget.Reason.EATING_SOON), XXXValueWithUnit.fromGlucoseUnit(target, units), XXXValueWithUnit.Minute(duration))
-                    resourceHelper.gs(R.string.activity)        -> uel.log(Action.TT, Sources.TTDialog, XXXValueWithUnit.Timestamp(eventTime).takeIf { eventTimeChanged }, XXXValueWithUnit.TherapyEventTTReason(TemporaryTarget.Reason.ACTIVITY), XXXValueWithUnit.fromGlucoseUnit(target, units), XXXValueWithUnit.Minute(duration))
-                    resourceHelper.gs(R.string.hypo)            -> uel.log(Action.TT, Sources.TTDialog, XXXValueWithUnit.Timestamp(eventTime).takeIf { eventTimeChanged }, XXXValueWithUnit.TherapyEventTTReason(TemporaryTarget.Reason.HYPOGLYCEMIA), XXXValueWithUnit.fromGlucoseUnit(target, units), XXXValueWithUnit.Minute(duration))
-                    resourceHelper.gs(R.string.manual)          -> uel.log(Action.TT, Sources.TTDialog, XXXValueWithUnit.Timestamp(eventTime).takeIf { eventTimeChanged }, XXXValueWithUnit.TherapyEventTTReason(TemporaryTarget.Reason.CUSTOM), XXXValueWithUnit.fromGlucoseUnit(target, units), XXXValueWithUnit.Minute(duration))
-                    resourceHelper.gs(R.string.stoptemptarget) -> uel.log(Action.CANCEL_TT, Sources.TTDialog, XXXValueWithUnit.Timestamp(eventTime).takeIf { eventTimeChanged })
+                    resourceHelper.gs(R.string.eatingsoon)      -> uel.log(Action.TT, Sources.TTDialog, ValueWithUnit.Timestamp(eventTime).takeIf { eventTimeChanged }, ValueWithUnit.TherapyEventTTReason(TemporaryTarget.Reason.EATING_SOON), ValueWithUnit.fromGlucoseUnit(target, units), ValueWithUnit.Minute(duration))
+                    resourceHelper.gs(R.string.activity)        -> uel.log(Action.TT, Sources.TTDialog, ValueWithUnit.Timestamp(eventTime).takeIf { eventTimeChanged }, ValueWithUnit.TherapyEventTTReason(TemporaryTarget.Reason.ACTIVITY), ValueWithUnit.fromGlucoseUnit(target, units), ValueWithUnit.Minute(duration))
+                    resourceHelper.gs(R.string.hypo)            -> uel.log(Action.TT, Sources.TTDialog, ValueWithUnit.Timestamp(eventTime).takeIf { eventTimeChanged }, ValueWithUnit.TherapyEventTTReason(TemporaryTarget.Reason.HYPOGLYCEMIA), ValueWithUnit.fromGlucoseUnit(target, units), ValueWithUnit.Minute(duration))
+                    resourceHelper.gs(R.string.manual)          -> uel.log(Action.TT, Sources.TTDialog, ValueWithUnit.Timestamp(eventTime).takeIf { eventTimeChanged }, ValueWithUnit.TherapyEventTTReason(TemporaryTarget.Reason.CUSTOM), ValueWithUnit.fromGlucoseUnit(target, units), ValueWithUnit.Minute(duration))
+                    resourceHelper.gs(R.string.stoptemptarget) -> uel.log(Action.CANCEL_TT, Sources.TTDialog, ValueWithUnit.Timestamp(eventTime).takeIf { eventTimeChanged })
                 }
                 if (target == 0.0 || duration == 0) {
                     disposable += repository.runTransactionForResult(CancelCurrentTemporaryTargetIfAnyTransaction(eventTime))

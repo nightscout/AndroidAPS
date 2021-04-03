@@ -7,7 +7,7 @@ import androidx.work.workDataOf
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.database.AppRepository
-import info.nightscout.androidaps.database.entities.XXXValueWithUnit
+import info.nightscout.androidaps.database.entities.ValueWithUnit
 import info.nightscout.androidaps.database.entities.UserEntry.Action
 import info.nightscout.androidaps.database.entities.UserEntry.Sources
 import info.nightscout.androidaps.database.transactions.SyncNsBolusTransaction
@@ -74,10 +74,10 @@ class NSClientRemoveWorker(
                     result.invalidated.forEach { tt ->
                         uel.log(
                             Action.TT_REMOVED, Sources.NSClient,
-                            XXXValueWithUnit.TherapyEventTTReason(tt.reason),
-                            XXXValueWithUnit.Mgdl(tt.lowTarget),
-                            XXXValueWithUnit.Mgdl(tt.highTarget).takeIf { tt.lowTarget != tt.highTarget },
-                            XXXValueWithUnit.Minute(TimeUnit.MILLISECONDS.toMinutes(tt.duration).toInt()).takeIf { tt.duration != 0L }
+                            ValueWithUnit.TherapyEventTTReason(tt.reason),
+                            ValueWithUnit.Mgdl(tt.lowTarget),
+                            ValueWithUnit.Mgdl(tt.highTarget).takeIf { tt.lowTarget != tt.highTarget },
+                            ValueWithUnit.Minute(TimeUnit.MILLISECONDS.toMinutes(tt.duration).toInt()).takeIf { tt.duration != 0L }
                         )
                     }
                 }
@@ -94,8 +94,8 @@ class NSClientRemoveWorker(
                     result.invalidated.forEach {
                         uel.log(Action.CAREPORTAL_REMOVED, Sources.NSClient,
                             (it.note ?: ""),
-                            XXXValueWithUnit.Timestamp(it.timestamp),
-                            XXXValueWithUnit.TherapyEventType(it.type))
+                            ValueWithUnit.Timestamp(it.timestamp),
+                            ValueWithUnit.TherapyEventType(it.type))
                     }
                 }
 
@@ -110,8 +110,8 @@ class NSClientRemoveWorker(
                 .also { result ->
                     result.invalidated.forEach {
                         uel.log(Action.CAREPORTAL_REMOVED, Sources.NSClient,
-                            XXXValueWithUnit.Timestamp(it.timestamp),
-                            XXXValueWithUnit.Insulin(it.amount))
+                            ValueWithUnit.Timestamp(it.timestamp),
+                            ValueWithUnit.Insulin(it.amount))
                     }
                 }
 
@@ -126,8 +126,8 @@ class NSClientRemoveWorker(
                 .also { result ->
                     result.invalidated.forEach {
                         uel.log(Action.CAREPORTAL_REMOVED, Sources.NSClient,
-                            XXXValueWithUnit.Timestamp(it.timestamp),
-                            XXXValueWithUnit.Gram(it.amount.toInt()))
+                            ValueWithUnit.Timestamp(it.timestamp),
+                            ValueWithUnit.Gram(it.amount.toInt()))
                     }
                 }
 

@@ -15,7 +15,7 @@ import info.nightscout.androidaps.database.entities.BolusCalculatorResult
 import info.nightscout.androidaps.database.entities.Carbs
 import info.nightscout.androidaps.database.entities.UserEntry.Action
 import info.nightscout.androidaps.database.entities.UserEntry.Sources
-import info.nightscout.androidaps.database.entities.XXXValueWithUnit
+import info.nightscout.androidaps.database.entities.ValueWithUnit
 import info.nightscout.androidaps.database.transactions.InvalidateBolusCalculatorResultTransaction
 import info.nightscout.androidaps.database.transactions.InvalidateBolusTransaction
 import info.nightscout.androidaps.database.transactions.InvalidateCarbsTransaction
@@ -336,8 +336,8 @@ class TreatmentsBolusCarbsFragment : DaggerFragment() {
                         OKDialog.showConfirmation(activity, resourceHelper.gs(R.string.removerecord), text, Runnable {
                             uel.log(
                                 Action.TREATMENT_REMOVED, Sources.Treatments,
-                                XXXValueWithUnit.Timestamp(bolus.timestamp),
-                                XXXValueWithUnit.Insulin(bolus.amount)
+                                ValueWithUnit.Timestamp(bolus.timestamp),
+                                ValueWithUnit.Insulin(bolus.amount)
                                 //XXXValueWithUnit.Gram(mealLinkLoaded.carbs.toInt())
                             )
                             disposable += repository.runTransactionForResult(InvalidateBolusTransaction(bolus.id))
@@ -358,8 +358,8 @@ class TreatmentsBolusCarbsFragment : DaggerFragment() {
                         OKDialog.showConfirmation(activity, resourceHelper.gs(R.string.removerecord), text, Runnable {
                             uel.log(
                                 Action.TREATMENT_REMOVED, Sources.Treatments,
-                                XXXValueWithUnit.Timestamp(carb.timestamp),
-                                XXXValueWithUnit.Gram(carb.amount.toInt()))
+                                ValueWithUnit.Timestamp(carb.timestamp),
+                                ValueWithUnit.Gram(carb.amount.toInt()))
                             disposable += repository.runTransactionForResult(InvalidateCarbsTransaction(carb.id))
                                 .subscribe(
                                     { result -> result.invalidated.forEach { aapsLogger.debug(LTag.DATABASE, "Invalidated carbs $it") } },

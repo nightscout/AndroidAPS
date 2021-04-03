@@ -10,7 +10,7 @@ import info.nightscout.androidaps.R
 import info.nightscout.androidaps.activities.ErrorHelperActivity
 import info.nightscout.androidaps.data.DetailedBolusInfo
 import info.nightscout.androidaps.database.AppRepository
-import info.nightscout.androidaps.database.entities.XXXValueWithUnit
+import info.nightscout.androidaps.database.entities.ValueWithUnit
 import info.nightscout.androidaps.database.entities.TherapyEvent
 import info.nightscout.androidaps.database.entities.UserEntry.Action
 import info.nightscout.androidaps.database.entities.UserEntry.Sources
@@ -137,13 +137,13 @@ class FillDialog : DialogFragmentWithDate() {
                     if (insulinAfterConstraints > 0) {
                         uel.log(Action.PRIME_BOLUS, Sources.FillDialog,
                             notes,
-                            XXXValueWithUnit.Insulin(insulinAfterConstraints).takeIf { insulinAfterConstraints != 0.0 })
+                            ValueWithUnit.Insulin(insulinAfterConstraints).takeIf { insulinAfterConstraints != 0.0 })
                         requestPrimeBolus(insulinAfterConstraints, notes)
                     }
                     if (siteChange) {
                         uel.log(Action.CAREPORTAL, Sources.FillDialog,
                             notes,
-                            XXXValueWithUnit.TherapyEventType(TherapyEvent.Type.CANNULA_CHANGE))
+                            ValueWithUnit.TherapyEventType(TherapyEvent.Type.CANNULA_CHANGE))
                         disposable += repository.runTransactionForResult(InsertIfNewByTimestampTherapyEventTransaction(
                             timestamp = eventTime,
                             type = TherapyEvent.Type.CANNULA_CHANGE,
@@ -158,7 +158,7 @@ class FillDialog : DialogFragmentWithDate() {
                         // add a second for case of both checked
                         uel.log(Action.CAREPORTAL, Sources.FillDialog,
                             notes,
-                            XXXValueWithUnit.TherapyEventType(TherapyEvent.Type.INSULIN_CHANGE))
+                            ValueWithUnit.TherapyEventType(TherapyEvent.Type.INSULIN_CHANGE))
                         disposable += repository.runTransactionForResult(InsertIfNewByTimestampTherapyEventTransaction(
                             timestamp = eventTime + 1000,
                             type = TherapyEvent.Type.INSULIN_CHANGE,

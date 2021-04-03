@@ -18,7 +18,7 @@ import info.nightscout.androidaps.database.ValueWrapper
 import info.nightscout.androidaps.database.entities.TemporaryTarget
 import info.nightscout.androidaps.database.entities.UserEntry.Action
 import info.nightscout.androidaps.database.entities.UserEntry.Sources
-import info.nightscout.androidaps.database.entities.XXXValueWithUnit
+import info.nightscout.androidaps.database.entities.ValueWithUnit
 import info.nightscout.androidaps.database.interfaces.end
 import info.nightscout.androidaps.database.transactions.CancelCurrentTemporaryTargetIfAnyTransaction
 import info.nightscout.androidaps.database.transactions.InsertTemporaryTargetAndCancelCurrentTransaction
@@ -570,8 +570,8 @@ class ActionStringHandler @Inject constructor(
         }
         //send profile to pump
         uel.log(Action.PROFILE_SWITCH, Sources.Wear,
-            XXXValueWithUnit.Percent(percentage),
-            XXXValueWithUnit.Hour(timeshift).takeIf { timeshift != 0 })
+            ValueWithUnit.Percent(percentage),
+            ValueWithUnit.Hour(timeshift).takeIf { timeshift != 0 })
         activePlugin.activeTreatments.doProfileSwitch(0, percentage, timeshift)
     }
 
@@ -590,10 +590,10 @@ class ActionStringHandler @Inject constructor(
                 aapsLogger.error(LTag.DATABASE, "Error while saving temporary target", it)
             })
             uel.log(Action.TT, Sources.Wear,
-                XXXValueWithUnit.TherapyEventTTReason(TemporaryTarget.Reason.WEAR),
-                XXXValueWithUnit.fromGlucoseUnit(low, profileFunction.getUnits()),
-                XXXValueWithUnit.fromGlucoseUnit(high, profileFunction.getUnits()).takeIf { low != high },
-                XXXValueWithUnit.Minute(duration))
+                ValueWithUnit.TherapyEventTTReason(TemporaryTarget.Reason.WEAR),
+                ValueWithUnit.fromGlucoseUnit(low, profileFunction.getUnits()),
+                ValueWithUnit.fromGlucoseUnit(high, profileFunction.getUnits()).takeIf { low != high },
+                ValueWithUnit.Minute(duration))
         } else {
             disposable += repository.runTransactionForResult(CancelCurrentTemporaryTargetIfAnyTransaction(System.currentTimeMillis()))
                 .subscribe({ result ->
@@ -602,7 +602,7 @@ class ActionStringHandler @Inject constructor(
                     aapsLogger.error(LTag.DATABASE, "Error while saving temporary target", it)
                 })
             uel.log(Action.CANCEL_TT, Sources.Wear,
-                XXXValueWithUnit.TherapyEventTTReason(TemporaryTarget.Reason.WEAR))
+                ValueWithUnit.TherapyEventTTReason(TemporaryTarget.Reason.WEAR))
         }
     }
 
@@ -611,7 +611,7 @@ class ActionStringHandler @Inject constructor(
         detailedBolusInfo.insulin = amount
         detailedBolusInfo.bolusType = DetailedBolusInfo.BolusType.PRIMING
         uel.log(Action.PRIME_BOLUS, Sources.Wear,
-            XXXValueWithUnit.Insulin(amount).takeIf { amount != 0.0 })
+            ValueWithUnit.Insulin(amount).takeIf { amount != 0.0 })
         commandQueue.bolus(detailedBolusInfo, object : Callback() {
             override fun run() {
                 if (!result.success) {
@@ -625,9 +625,9 @@ class ActionStringHandler @Inject constructor(
 
     private fun doECarbs(carbs: Int, time: Long, duration: Int) {
         uel.log(if (duration==0) Action.CARBS else Action.EXTENDED_CARBS, Sources.Wear,
-            XXXValueWithUnit.Timestamp(time),
-            XXXValueWithUnit.Gram(carbs),
-            XXXValueWithUnit.Hour(duration).takeIf { duration !=0 })
+            ValueWithUnit.Timestamp(time),
+            ValueWithUnit.Gram(carbs),
+            ValueWithUnit.Hour(duration).takeIf { duration !=0 })
         doBolus(0.0, carbs, time, duration)
     }
 
@@ -646,9 +646,9 @@ class ActionStringHandler @Inject constructor(
                 else                -> Action.TREATMENT
             }
             uel.log(action, Sources.Wear,
-                XXXValueWithUnit.Insulin(amount).takeIf { amount != 0.0 },
-                XXXValueWithUnit.Gram(carbs).takeIf { carbs != 0 },
-                XXXValueWithUnit.Hour(carbsDuration).takeIf { carbsDuration != 0 })
+                ValueWithUnit.Insulin(amount).takeIf { amount != 0.0 },
+                ValueWithUnit.Gram(carbs).takeIf { carbs != 0 },
+                ValueWithUnit.Hour(carbsDuration).takeIf { carbsDuration != 0 })
             commandQueue.bolus(detailedBolusInfo, object : Callback() {
                 override fun run() {
                     if (!result.success) {

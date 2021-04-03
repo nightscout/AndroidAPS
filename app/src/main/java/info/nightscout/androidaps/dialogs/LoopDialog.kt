@@ -12,7 +12,7 @@ import androidx.fragment.app.FragmentManager
 import dagger.android.support.DaggerDialogFragment
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.activities.ErrorHelperActivity
-import info.nightscout.androidaps.database.entities.XXXValueWithUnit
+import info.nightscout.androidaps.database.entities.ValueWithUnit
 import info.nightscout.androidaps.database.entities.UserEntry.Action
 import info.nightscout.androidaps.database.entities.UserEntry.Sources
 import info.nightscout.androidaps.databinding.DialogLoopBinding
@@ -305,49 +305,49 @@ class LoopDialog : DaggerDialogFragment() {
             }
 
             R.id.overview_suspend_1h -> {
-                uel.log(Action.SUSPEND, Sources.LoopDialog, XXXValueWithUnit.Hour(1))
+                uel.log(Action.SUSPEND, Sources.LoopDialog, ValueWithUnit.Hour(1))
                 loopPlugin.suspendLoop(60)
                 rxBus.send(EventRefreshOverview("suspendmenu"))
                 return true
             }
 
             R.id.overview_suspend_2h -> {
-                uel.log(Action.SUSPEND, Sources.LoopDialog, XXXValueWithUnit.Hour(2))
+                uel.log(Action.SUSPEND, Sources.LoopDialog, ValueWithUnit.Hour(2))
                 loopPlugin.suspendLoop(120)
                 rxBus.send(EventRefreshOverview("suspendmenu"))
                 return true
             }
 
             R.id.overview_suspend_3h -> {
-                uel.log(Action.SUSPEND, Sources.LoopDialog, XXXValueWithUnit.Hour(3))
+                uel.log(Action.SUSPEND, Sources.LoopDialog, ValueWithUnit.Hour(3))
                 loopPlugin.suspendLoop(180)
                 rxBus.send(EventRefreshOverview("suspendmenu"))
                 return true
             }
 
             R.id.overview_suspend_10h -> {
-                uel.log(Action.SUSPEND, Sources.LoopDialog, XXXValueWithUnit.Hour(10))
+                uel.log(Action.SUSPEND, Sources.LoopDialog, ValueWithUnit.Hour(10))
                 loopPlugin.suspendLoop(600)
                 rxBus.send(EventRefreshOverview("suspendmenu"))
                 return true
             }
 
             R.id.overview_disconnect_15m -> {
-                uel.log(Action.DISCONNECT, Sources.LoopDialog, XXXValueWithUnit.Minute(15))
+                uel.log(Action.DISCONNECT, Sources.LoopDialog, ValueWithUnit.Minute(15))
                 loopPlugin.disconnectPump(15, profile)
                 rxBus.send(EventRefreshOverview("suspendmenu"))
                 return true
             }
 
             R.id.overview_disconnect_30m -> {
-                uel.log(Action.DISCONNECT, Sources.LoopDialog, XXXValueWithUnit.Minute(30))
+                uel.log(Action.DISCONNECT, Sources.LoopDialog, ValueWithUnit.Minute(30))
                 loopPlugin.disconnectPump(30, profile)
                 rxBus.send(EventRefreshOverview("suspendmenu"))
                 return true
             }
 
             R.id.overview_disconnect_1h -> {
-                uel.log(Action.DISCONNECT, Sources.LoopDialog, XXXValueWithUnit.Hour(1))
+                uel.log(Action.DISCONNECT, Sources.LoopDialog, ValueWithUnit.Hour(1))
                 loopPlugin.disconnectPump(60, profile)
                 sp.putBoolean(R.string.key_objectiveusedisconnect, true)
                 rxBus.send(EventRefreshOverview("suspendmenu"))
@@ -355,14 +355,14 @@ class LoopDialog : DaggerDialogFragment() {
             }
 
             R.id.overview_disconnect_2h -> {
-                uel.log(Action.DISCONNECT, Sources.LoopDialog, XXXValueWithUnit.Hour(2))
+                uel.log(Action.DISCONNECT, Sources.LoopDialog, ValueWithUnit.Hour(2))
                 loopPlugin.disconnectPump(120, profile)
                 rxBus.send(EventRefreshOverview("suspendmenu"))
                 return true
             }
 
             R.id.overview_disconnect_3h -> {
-                uel.log(Action.DISCONNECT, Sources.LoopDialog, XXXValueWithUnit.Hour(3))
+                uel.log(Action.DISCONNECT, Sources.LoopDialog, ValueWithUnit.Hour(3))
                 loopPlugin.disconnectPump(180, profile)
                 rxBus.send(EventRefreshOverview("suspendmenu"))
                 return true
