@@ -88,7 +88,10 @@ class Connection(val podDevice: BluetoothDevice, private val aapsLogger: AAPSLog
         if (waitForConnection() is NotConnected) {
             throw FailedToConnectException(podDevice.address)
         }
-        discoverer.discoverServices()
+        val discovered = discoverer.discoverServices()
+        dataBleIO.characteristic =  discovered[CharacteristicType.DATA]!!
+        cmdBleIO.characteristic =  discovered[CharacteristicType.CMD]!!
+
         cmdBleIO.hello()
         cmdBleIO.readyToRead()
         dataBleIO.readyToRead()

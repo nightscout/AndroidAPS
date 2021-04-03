@@ -26,16 +26,16 @@ class BleCommCallbacks(
     private val writeQueue: BlockingQueue<WriteConfirmation> = LinkedBlockingQueue(1)
 
     override fun onConnectionStateChange(gatt: BluetoothGatt, status: Int, newState: Int) {
-        super.onConnectionStateChange(gatt, status, newState)
         aapsLogger.debug(LTag.PUMPBTCOMM, "OnConnectionStateChange with status/state: $status/$newState")
+        super.onConnectionStateChange(gatt, status, newState)
         if (newState == BluetoothProfile.STATE_CONNECTED && status == BluetoothGatt.GATT_SUCCESS) {
             connected.countDown()
         }
     }
 
     override fun onServicesDiscovered(gatt: BluetoothGatt, status: Int) {
+        aapsLogger.debug(LTag.PUMPBTCOMM, "OnServicesDiscovered with status: $status")
         super.onServicesDiscovered(gatt, status)
-        aapsLogger.debug(LTag.PUMPBTCOMM, "OnServicesDiscovered with status$status")
         if (status == BluetoothGatt.GATT_SUCCESS) {
             serviceDiscoveryComplete.countDown()
         }
@@ -83,14 +83,23 @@ class BleCommCallbacks(
     }
 
     override fun onCharacteristicWrite(gatt: BluetoothGatt, characteristic: BluetoothGattCharacteristic, status: Int) {
+        aapsLogger.debug(
+            LTag.PUMPBTCOMM,
+            "OnCharacteristicWrite with char/status " +
+                "${characteristic.uuid} /" +
+                "$status"
+        )
         super.onCharacteristicWrite(gatt, characteristic, status)
+
         onWrite(status, characteristic.uuid, characteristic.value)
     }
 
     override fun onCharacteristicChanged(gatt: BluetoothGatt, characteristic: BluetoothGattCharacteristic) {
         super.onCharacteristicChanged(gatt, characteristic)
+
         val payload = characteristic.value
         val characteristicType = byValue(characteristic.uuid.toString())
+
         aapsLogger.debug(
             LTag.PUMPBTCOMM,
             "OnCharacteristicChanged with char/value " +
@@ -107,16 +116,44 @@ class BleCommCallbacks(
     override fun onDescriptorWrite(gatt: BluetoothGatt, descriptor: BluetoothGattDescriptor, status: Int) {
         super.onDescriptorWrite(gatt, descriptor, status)
 
+        aapsLogger.debug(
+            LTag.PUMPBTCOMM,
+            "OnDescriptorWrite with descriptor/status " +
+                descriptor.uuid.toString() + "/" +
+                status + "/"
+        )
+
         onWrite(status, descriptor.uuid, descriptor.value)
     }
 
+    override fun onMtuChanged(gatt: BluetoothGatt?, mtu: Int, status: Int) {
+        super.onMtuChanged(gatt, mtu, status)
+        aapsLogger.debug(
+            LTag.PUMPBTCOMM,
+            "onMtuChanged with MTU/status: $mtu/$status "
+        )
+    }
+
+    override fun onReadRemoteRssi(gatt: BluetoothGatt?, rssi: Int, status: Int) {
+        super.onReadRemoteRssi(gatt, rssi, status)
+        aapsLogger.debug(
+            LTag.PUMPBTCOMM,
+            "onReadRemoteRssi with rssi/status: $rssi/$status "
+        )
+    }
+
+    override fun onPhyUpdate(gatt: BluetoothGatt?, txPhy: Int, rxPhy: Int, status: Int) {
+        super.onPhyUpdate(gatt, txPhy, rxPhy, status)
+        aapsLogger.debug(
+            LTag.PUMPBTCOMM,
+            "onPhyUpdate with txPhy/rxPhy/status: $txPhy/$rxPhy/$status "
+        )
+    }
+
     private fun onWrite(status: Int, uuid: UUID?, value: ByteArray?) {
-        if (uuid == null || value == null) {
-            return
-        }
         val writeConfirmation = when {
             uuid == null || value == null ->
-                WriteConfirmationError("onWrite received Null: UUID=$uuid, value=${value.toHex()} status=$status")
+                WriteConfirmationError("onWrite received Null: UUID=$uuid, value=${value?.toHex()} status=$status")
 
             status == BluetoothGatt.GATT_SUCCESS -> {
                 aapsLogger.debug(LTag.PUMPBTCOMM, "OnWrite value " + value.toHex())

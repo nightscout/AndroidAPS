@@ -23,7 +23,7 @@ data class BleSendErrorConfirming(val msg: String, val cause: Throwable? = null)
 
 open class BleIO(
     private val aapsLogger: AAPSLogger,
-    private val characteristic: BluetoothGattCharacteristic,
+    var characteristic: BluetoothGattCharacteristic,
     private val incomingPackets: BlockingQueue<ByteArray>,
     private val gatt: BluetoothGatt,
     private val bleCommCallbacks: BleCommCallbacks,
