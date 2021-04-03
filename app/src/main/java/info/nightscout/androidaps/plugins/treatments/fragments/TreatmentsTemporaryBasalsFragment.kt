@@ -15,8 +15,6 @@ import info.nightscout.androidaps.data.IobTotal
 import info.nightscout.androidaps.database.entities.XXXValueWithUnit
 import info.nightscout.androidaps.database.entities.UserEntry.Action
 import info.nightscout.androidaps.database.entities.UserEntry.Sources
-import info.nightscout.androidaps.database.entities.UserEntry.Units
-import info.nightscout.androidaps.database.entities.UserEntry.ValueWithUnit
 import info.nightscout.androidaps.databinding.TreatmentsTempbasalsFragmentBinding
 import info.nightscout.androidaps.databinding.TreatmentsTempbasalsItemBinding
 import info.nightscout.androidaps.db.Source
@@ -168,8 +166,8 @@ class TreatmentsTemporaryBasalsFragment : DaggerFragment() {
                 ${resourceHelper.gs(R.string.date)}: ${dateUtil.dateAndTimeString(tempBasal.date)}
                 """.trimIndent(),
                             { _: DialogInterface?, _: Int ->
-                                //uel.log(Action.TT_REMOVED, XXXValueWithUnit.Timestamp(tempBasal.date))
-                                uel.log(Action.TT_REMOVED, ValueWithUnit(Sources.Treatments), ValueWithUnit(tempBasal.date, Units.Timestamp))
+                                uel.log(Action.TT_REMOVED, Sources.Treatments,
+                                    XXXValueWithUnit.Timestamp(tempBasal.date))
                                 activePlugin.activeTreatments.removeTempBasal(tempBasal)
                             }, null)
                     }

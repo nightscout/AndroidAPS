@@ -7,8 +7,7 @@ import info.nightscout.androidaps.automation.R
 import info.nightscout.androidaps.data.PumpEnactResult
 import info.nightscout.androidaps.database.entities.UserEntry
 import info.nightscout.androidaps.database.entities.UserEntry.Sources
-import info.nightscout.androidaps.database.entities.UserEntry.Units
-import info.nightscout.androidaps.database.entities.UserEntry.ValueWithUnit
+import info.nightscout.androidaps.database.entities.XXXValueWithUnit
 import info.nightscout.androidaps.interfaces.ActivePluginProvider
 import info.nightscout.androidaps.logging.LTag
 import info.nightscout.androidaps.interfaces.ProfileFunction
@@ -59,7 +58,9 @@ class ActionProfileSwitch(injector: HasAndroidInjector) : Action(injector) {
             callback.result(PumpEnactResult(injector).success(false).comment(R.string.notexists))?.run()
             return
         }
-        uel.log(UserEntry.Action.PROFILE_SWITCH, ValueWithUnit(Sources.Automation), ValueWithUnit(inputProfileName.value, Units.None), ValueWithUnit(100, Units.Percent))
+        uel.log(UserEntry.Action.PROFILE_SWITCH, Sources.Automation,
+            XXXValueWithUnit.SimpleString(inputProfileName.value),
+            XXXValueWithUnit.Percent(100))
         activePlugin.activeTreatments.doProfileSwitch(profileStore, inputProfileName.value, 0, 100, 0, DateUtil.now())
         callback.result(PumpEnactResult(injector).success(true).comment(R.string.ok))?.run()
     }

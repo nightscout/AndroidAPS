@@ -6,7 +6,6 @@ import info.nightscout.androidaps.data.PumpEnactResult
 import info.nightscout.androidaps.database.AppRepository
 import info.nightscout.androidaps.database.entities.UserEntry
 import info.nightscout.androidaps.database.entities.UserEntry.Sources
-import info.nightscout.androidaps.database.entities.UserEntry.ValueWithUnit
 import info.nightscout.androidaps.database.transactions.CancelCurrentTemporaryTargetIfAnyTransaction
 import info.nightscout.androidaps.logging.LTag
 import info.nightscout.androidaps.logging.UserEntryLogger
@@ -33,7 +32,7 @@ class ActionStopTempTarget(injector: HasAndroidInjector) : Action(injector) {
     override fun doAction(callback: Callback) {
         disposable += repository.runTransactionForResult(CancelCurrentTemporaryTargetIfAnyTransaction(dateUtil._now()))
             .subscribe({ result ->
-                uel.log(UserEntry.Action.CANCEL_TT, ValueWithUnit(Sources.Automation))
+                uel.log(UserEntry.Action.CANCEL_TT, Sources.Automation)
                 result.updated.forEach { aapsLogger.debug(LTag.DATABASE, "Updated temp target $it") }
             }, {
                 aapsLogger.error(LTag.DATABASE, "Error while saving temporary target", it)

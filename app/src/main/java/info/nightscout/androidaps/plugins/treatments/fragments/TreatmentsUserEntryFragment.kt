@@ -12,7 +12,6 @@ import info.nightscout.androidaps.database.AppRepository
 import info.nightscout.androidaps.database.entities.UserEntry
 import info.nightscout.androidaps.database.entities.UserEntry.Action
 import info.nightscout.androidaps.database.entities.UserEntry.Sources
-import info.nightscout.androidaps.database.entities.UserEntry.ValueWithUnit
 import info.nightscout.androidaps.databinding.TreatmentsUserEntryFragmentBinding
 import info.nightscout.androidaps.databinding.TreatmentsUserEntryItemBinding
 import info.nightscout.androidaps.events.EventPreferenceChange
@@ -68,7 +67,7 @@ class TreatmentsUserEntryFragment : DaggerFragment() {
         binding.ueExportToXml.setOnClickListener {
             activity?.let { activity ->
                 OKDialog.showConfirmation(activity, resourceHelper.gs(R.string.ue_export_to_csv) + "?") {
-                    uel.log(Action.EXPORT_CSV, ValueWithUnit(Sources.Treatments))
+                    uel.log(Action.EXPORT_CSV, Sources.Treatments)
                     importExportPrefs.exportUserEntriesCsv(activity, repository.getAllUserEntries())
                 }
             }

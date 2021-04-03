@@ -68,6 +68,9 @@ class UserEntryPresentationHelper @Inject constructor(
         Sources.Treatments          -> R.drawable.ic_treatments
         Sources.Wear                -> R.drawable.ic_watch
         Sources.Food                -> R.drawable.ic_food
+        Sources.Stats               -> R.drawable.ic_cp_stats
+        Sources.ConfigBuilder       -> R.drawable.ic_generic_icon
+        Sources.Overview            -> R.drawable.ic_generic_icon
         Sources.Unknown             -> R.drawable.ic_generic_icon
     }
 
@@ -90,7 +93,7 @@ class UserEntryPresentationHelper @Inject constructor(
         is XXXValueWithUnit.UnitPerHour           -> DecimalFormatter.to2Decimal(valueWithUnit.value) + translator.translate(UserEntry.Units.U_H)
         is XXXValueWithUnit.SimpleInt             -> valueWithUnit.value.toString()
         is XXXValueWithUnit.SimpleString          -> valueWithUnit.value
-        is XXXValueWithUnit.StringResource        -> resourceHelper.gs(valueWithUnit.value, valueWithUnit.params)
+        is XXXValueWithUnit.StringResource        -> resourceHelper.gs(valueWithUnit.value /*, valueWithUnit.params.map { it.value() }*/)
         is XXXValueWithUnit.TherapyEventMeterType -> translator.translate(valueWithUnit.value)
         is XXXValueWithUnit.TherapyEventTTReason  -> translator.translate(valueWithUnit.value)
         is XXXValueWithUnit.TherapyEventType      -> translator.translate(valueWithUnit.value)

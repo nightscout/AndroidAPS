@@ -7,8 +7,7 @@ import info.nightscout.androidaps.automation.R
 import info.nightscout.androidaps.data.PumpEnactResult
 import info.nightscout.androidaps.database.entities.UserEntry
 import info.nightscout.androidaps.database.entities.UserEntry.Sources
-import info.nightscout.androidaps.database.entities.UserEntry.Units
-import info.nightscout.androidaps.database.entities.UserEntry.ValueWithUnit
+import info.nightscout.androidaps.database.entities.XXXValueWithUnit
 import info.nightscout.androidaps.interfaces.ActivePluginProvider
 import info.nightscout.androidaps.logging.UserEntryLogger
 import info.nightscout.androidaps.plugins.general.automation.elements.Comparator
@@ -43,7 +42,9 @@ class ActionProfileSwitchPercent(injector: HasAndroidInjector) : Action(injector
     }
 
     override fun doAction(callback: Callback) {
-        uel.log(UserEntry.Action.PROFILE_SWITCH, ValueWithUnit(Sources.Automation), ValueWithUnit(pct.value.toInt(), Units.Percent), ValueWithUnit(duration.value, Units.M))
+        uel.log(UserEntry.Action.PROFILE_SWITCH, Sources.Automation,
+            if (duration.value == 0) XXXValueWithUnit.StringResource( R.string.startprofileforever, listOf(XXXValueWithUnit.Percent(pct.value.toInt())))
+            else XXXValueWithUnit.StringResource( R.string.startprofile, listOf(XXXValueWithUnit.Percent(pct.value.toInt()), XXXValueWithUnit.Minute(duration.value))))
         activePlugin.activeTreatments.doProfileSwitch(duration.value, pct.value.toInt(), 0)
         callback.result(PumpEnactResult(injector).success(true).comment(R.string.ok))?.run()
     }

@@ -36,6 +36,26 @@ sealed class XXXValueWithUnit {
 
     data class StringResource(@StringRes val value: Int, val params: List<XXXValueWithUnit> = listOf()) : XXXValueWithUnit()
 
+    fun value(): Any? {
+        return when(this) {
+            is Gram                  -> this.value
+            is Hour                  -> this.value
+            is Insulin               -> this.value
+            is Mgdl                  -> this.value
+            is Minute                -> this.value
+            is Mmoll                 -> this.value
+            is Percent               -> this.value
+            is SimpleInt             -> this.value
+            is SimpleString          -> this.value
+            is StringResource        -> this.value
+            is TherapyEventMeterType -> this.value
+            is TherapyEventTTReason  -> this.value
+            is TherapyEventType      -> this.value
+            is Timestamp             -> this.value
+            is UnitPerHour           -> this.value
+            UNKNOWN                  -> null
+        }
+    }
     companion object {
 
         fun fromGlucoseUnit(value: Double, string: String): XXXValueWithUnit? = when (string) {

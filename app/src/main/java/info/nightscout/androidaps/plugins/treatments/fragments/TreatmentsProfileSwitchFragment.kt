@@ -12,8 +12,6 @@ import info.nightscout.androidaps.R
 import info.nightscout.androidaps.database.entities.XXXValueWithUnit
 import info.nightscout.androidaps.database.entities.UserEntry.Action
 import info.nightscout.androidaps.database.entities.UserEntry.Sources
-import info.nightscout.androidaps.database.entities.UserEntry.Units
-import info.nightscout.androidaps.database.entities.UserEntry.ValueWithUnit
 import info.nightscout.androidaps.databinding.TreatmentsProfileswitchFragmentBinding
 import info.nightscout.androidaps.databinding.TreatmentsProfileswitchItemBinding
 import info.nightscout.androidaps.db.ProfileSwitch
@@ -75,7 +73,7 @@ class TreatmentsProfileSwitchFragment : DaggerFragment() {
 
         binding.refreshFromNightscout.setOnClickListener {
             activity?.let { activity ->
-                uel.log(Action.PROFILE_SWITCH_NS_REFRESH, ValueWithUnit(Sources.Treatments))
+                uel.log(Action.PROFILE_SWITCH_NS_REFRESH, Sources.Treatments)
                 OKDialog.showConfirmation(activity, resourceHelper.gs(R.string.refresheventsfromnightscout) + "?") {
                     databaseHelper.resetProfileSwitch()
                     rxBus.send(EventNSClientRestart())
@@ -152,8 +150,8 @@ class TreatmentsProfileSwitchFragment : DaggerFragment() {
                         OKDialog.showConfirmation(activity, resourceHelper.gs(R.string.removerecord),
                             resourceHelper.gs(R.string.careportal_profileswitch) + ": " + profileSwitch.profileName +
                                 "\n" + resourceHelper.gs(R.string.date) + ": " + dateUtil.dateAndTimeString(profileSwitch.date), Runnable {
-                            //uel.log(Action.PROFILE_SWITCH_REMOVED, profileSwitch.profileName, XXXValueWithUnit.Timestamp(profileSwitch.date))
-                            uel.log(Action.PROFILE_SWITCH_REMOVED, ValueWithUnit(Sources.Treatments), ValueWithUnit(profileSwitch.date, Units.Timestamp), ValueWithUnit(profileSwitch.profileName, Units.None))
+                            uel.log(Action.PROFILE_SWITCH_REMOVED, Sources.Treatments, profileSwitch.profileName,
+                                XXXValueWithUnit.Timestamp(profileSwitch.date))
                             val id = profileSwitch._id
                             if (NSUpload.isIdValid(id)) nsUpload.removeCareportalEntryFromNS(id)
                             else uploadQueue.removeByMongoId("dbAdd", id)
@@ -166,12 +164,10 @@ class TreatmentsProfileSwitchFragment : DaggerFragment() {
                         val profileSwitch = it.tag as ProfileSwitch
                         OKDialog.showConfirmation(activity, resourceHelper.gs(R.string.careportal_profileswitch), resourceHelper.gs(R.string.copytolocalprofile) + "\n" + profileSwitch.customizedName + "\n" + dateUtil.dateAndTimeString(profileSwitch.date), Runnable {
                             profileSwitch.profileObject?.let {
-                                //uel.log(Action.PROFILE_SWITCH_CLONED, XXXValueWithUnit.Timestamp(profileSwitch.date), XXXValueWithUnit.SimpleString(profileSwitch.profileName))
-                                uel.log(Action.PROFILE_SWITCH_CLONED,
+                                uel.log(Action.PROFILE_SWITCH_CLONED, Sources.Treatments,
                                     profileSwitch.customizedName + " " + dateUtil.dateAndTimeString(profileSwitch.date).replace(".", "_"),
-                                    ValueWithUnit(Sources.Treatments),
-                                    ValueWithUnit(profileSwitch.date, Units.Timestamp),
-                                    ValueWithUnit(profileSwitch.profileName, Units.None))
+                                    XXXValueWithUnit.Timestamp(profileSwitch.date),
+                                    XXXValueWithUnit.SimpleString(profileSwitch.profileName))
                                 val nonCustomized = it.convertToNonCustomizedProfile()
                                 if (nonCustomized.isValid(resourceHelper.gs(R.string.careportal_profileswitch, false))) {
                                     localProfilePlugin.addProfile(localProfilePlugin.copyFrom(nonCustomized, profileSwitch.customizedName + " " + dateUtil.dateAndTimeString(profileSwitch.date).replace(".", "_")))

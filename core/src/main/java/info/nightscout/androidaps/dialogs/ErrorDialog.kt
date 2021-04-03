@@ -13,8 +13,6 @@ import info.nightscout.androidaps.core.R
 import info.nightscout.androidaps.core.databinding.DialogErrorBinding
 import info.nightscout.androidaps.database.entities.UserEntry.Action
 import info.nightscout.androidaps.database.entities.UserEntry.Sources
-import info.nightscout.androidaps.database.entities.UserEntry.Units
-import info.nightscout.androidaps.database.entities.UserEntry.ValueWithUnit
 import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.logging.UserEntryLogger
 import info.nightscout.androidaps.services.AlarmSoundServiceHelper
@@ -63,15 +61,15 @@ class ErrorDialog : DaggerDialogFragment() {
 
         binding.title.text = title
         binding.ok.setOnClickListener {
-            uel.log(Action.ERROR_DIALOG_OK, ValueWithUnit(Sources.Maintenance))
+            uel.log(Action.ERROR_DIALOG_OK, Sources.Unknown)
             dismiss()
         }
         binding.mute.setOnClickListener {
-            uel.log(Action.ERROR_DIALOG_MUTE, ValueWithUnit(Sources.Maintenance))
+            uel.log(Action.ERROR_DIALOG_MUTE, Sources.Unknown)
             stopAlarm()
         }
         binding.mute5min.setOnClickListener {
-            uel.log(Action.ERROR_DIALOG_MUTE_5MIN, ValueWithUnit(Sources.Maintenance))
+            uel.log(Action.ERROR_DIALOG_MUTE_5MIN, Sources.Unknown)
             stopAlarm()
             loopHandler.postDelayed(this::startAlarm, T.mins(5).msecs())
         }

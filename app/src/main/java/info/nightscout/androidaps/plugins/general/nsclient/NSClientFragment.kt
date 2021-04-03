@@ -10,8 +10,6 @@ import dagger.android.support.DaggerFragment
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.database.entities.UserEntry.Action
 import info.nightscout.androidaps.database.entities.UserEntry.Sources
-import info.nightscout.androidaps.database.entities.UserEntry.Units
-import info.nightscout.androidaps.database.entities.UserEntry.ValueWithUnit
 import info.nightscout.androidaps.databinding.NsClientFragmentBinding
 import info.nightscout.androidaps.interfaces.DataSyncSelector
 import info.nightscout.androidaps.interfaces.UploadQueueAdminInterface
@@ -64,7 +62,7 @@ class NSClientFragment : DaggerFragment() {
 
         binding.paused.isChecked = nsClientPlugin.paused
         binding.paused.setOnCheckedChangeListener { _, isChecked ->
-            uel.log(if (isChecked) Action.NS_PAUSED else Action.NS_RESUME, ValueWithUnit(Sources.NSClient))
+            uel.log(if (isChecked) Action.NS_PAUSED else Action.NS_RESUME, Sources.NSClient)
             nsClientPlugin.pause(isChecked)
             updateGui()
         }
@@ -77,7 +75,7 @@ class NSClientFragment : DaggerFragment() {
         binding.clearQueue.setOnClickListener {
             context?.let { context ->
                 OKDialog.showConfirmation(context, resourceHelper.gs(R.string.nsclientinternal), resourceHelper.gs(R.string.clearqueueconfirm), Runnable {
-                    uel.log(Action.NS_QUEUE_CLEARED, ValueWithUnit(Sources.NSClient))
+                    uel.log(Action.NS_QUEUE_CLEARED, Sources.NSClient)
                     uploadQueue.clearQueue()
                     updateGui()
                 })

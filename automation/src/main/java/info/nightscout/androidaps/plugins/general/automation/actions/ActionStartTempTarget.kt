@@ -11,8 +11,7 @@ import info.nightscout.androidaps.database.AppRepository
 import info.nightscout.androidaps.database.entities.TemporaryTarget
 import info.nightscout.androidaps.database.entities.UserEntry
 import info.nightscout.androidaps.database.entities.UserEntry.Sources
-import info.nightscout.androidaps.database.entities.UserEntry.Units
-import info.nightscout.androidaps.database.entities.UserEntry.ValueWithUnit
+import info.nightscout.androidaps.database.entities.XXXValueWithUnit
 import info.nightscout.androidaps.database.transactions.InsertTemporaryTargetAndCancelCurrentTransaction
 import info.nightscout.androidaps.interfaces.ActivePluginProvider
 import info.nightscout.androidaps.interfaces.ProfileFunction
@@ -62,7 +61,11 @@ class ActionStartTempTarget(injector: HasAndroidInjector) : Action(injector) {
             .subscribe({ result ->
                 result.inserted.forEach { aapsLogger.debug(LTag.DATABASE, "Inserted temp target $it") }
                 result.updated.forEach { aapsLogger.debug(LTag.DATABASE, "Updated temp target $it") }
-                uel.log(UserEntry.Action.TT, ValueWithUnit(Sources.Automation), ValueWithUnit(TemporaryTarget.Reason.AUTOMATION.text, Units.TherapyEvent), ValueWithUnit(tt().lowTarget, Units.Mg_Dl), ValueWithUnit(tt().highTarget, Units.Mg_Dl, tt().lowTarget!=tt().highTarget), ValueWithUnit(TimeUnit.MILLISECONDS.toMinutes(tt().duration).toInt(), Units.M))
+                uel.log(UserEntry.Action.TT, Sources.Automation,
+                    XXXValueWithUnit.TherapyEventTTReason(TemporaryTarget.Reason.AUTOMATION),
+                    XXXValueWithUnit.fromGlucoseUnit(tt().lowTarget, Constants.MGDL),
+                    XXXValueWithUnit.fromGlucoseUnit(tt().highTarget, Constants.MGDL).takeIf { tt().lowTarget != tt().highTarget },
+                    XXXValueWithUnit.Minute(TimeUnit.MILLISECONDS.toMinutes(tt().duration).toInt()))
                 callback.result(PumpEnactResult(injector).success(true).comment(R.string.ok))?.run()
             }, {
                 aapsLogger.error(LTag.DATABASE, "Error while saving temporary target", it)

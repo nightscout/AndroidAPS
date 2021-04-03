@@ -76,7 +76,7 @@ class SmsCommunicatorOtpActivity : NoSplashAppCompatActivity() {
                 resourceHelper.gs(R.string.smscommunicator_otp_reset_title),
                 resourceHelper.gs(R.string.smscommunicator_otp_reset_prompt),
                 Runnable {
-                    uel.log(Action.OTP_RESET, ValueWithUnit(Sources.SMS))
+                    uel.log(Action.OTP_RESET, Sources.SMS)
                     otp.ensureKey(true)
                     updateGui()
                     ToastUtils.Long.infoToast(this, resourceHelper.gs(R.string.smscommunicator_otp_reset_successful))
@@ -92,7 +92,7 @@ class SmsCommunicatorOtpActivity : NoSplashAppCompatActivity() {
                     val clip = ClipData.newPlainText("OTP Secret", otp.provisioningSecret())
                     clipboard.primaryClip = clip
                     ToastUtils.Long.infoToast(this, resourceHelper.gs(R.string.smscommunicator_otp_export_successful))
-                    uel.log(Action.OTP_EXPORT, ValueWithUnit(Sources.SMS))
+                    uel.log(Action.OTP_EXPORT, Sources.SMS)
                 })
 
             true

@@ -7,8 +7,7 @@ import info.nightscout.androidaps.automation.R
 import info.nightscout.androidaps.data.PumpEnactResult
 import info.nightscout.androidaps.database.entities.UserEntry
 import info.nightscout.androidaps.database.entities.UserEntry.Sources
-import info.nightscout.androidaps.database.entities.UserEntry.Units
-import info.nightscout.androidaps.database.entities.UserEntry.ValueWithUnit
+import info.nightscout.androidaps.database.entities.XXXValueWithUnit
 import info.nightscout.androidaps.events.EventRefreshOverview
 import info.nightscout.androidaps.interfaces.LoopInterface
 import info.nightscout.androidaps.logging.UserEntryLogger
@@ -38,7 +37,8 @@ class ActionLoopSuspend(injector: HasAndroidInjector) : Action(injector) {
         if (!loopPlugin.isSuspended) {
             loopPlugin.suspendLoop(minutes.getMinutes())
             rxBus.send(EventRefreshOverview("ActionLoopSuspend"))
-            uel.log(UserEntry.Action.SUSPEND, ValueWithUnit(Sources.Automation), ValueWithUnit(minutes.getMinutes(), Units.M))
+            uel.log(UserEntry.Action.SUSPEND, Sources.Automation,
+                XXXValueWithUnit.StringResource(R.string.suspendloopforXmin, listOf(XXXValueWithUnit.Minute(minutes.getMinutes()))))
             callback.result(PumpEnactResult(injector).success(true).comment(R.string.ok))?.run()
         } else {
             callback.result(PumpEnactResult(injector).success(true).comment(R.string.alreadysuspended))?.run()

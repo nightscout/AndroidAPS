@@ -22,17 +22,6 @@ class UserEntryLogger @Inject constructor(
 
     private val compositeDisposable = CompositeDisposable()
 
-    @Deprecated("Use XXXValueWithUnits")
-    fun log(action: Action, s: String? ="", vararg listvalues: ValueWithUnit) {
-    }
-
-    @Deprecated("Use XXXValueWithUnits")
-    fun log(action: Action, vararg listValues: ValueWithUnit) {
-    }
-
-    @Deprecated("Use XXXValueWithUnits")
-    fun log(action: Action, s: String? = "") {}
-
     fun log(action: Action, source: Sources, note: String? ="", vararg listvalues: XXXValueWithUnit?) = log(action, source, note, listvalues.toList())
 
     fun log(action: Action, source: Sources, vararg listvalues: XXXValueWithUnit?) = log(action, source,"", listvalues.toList())

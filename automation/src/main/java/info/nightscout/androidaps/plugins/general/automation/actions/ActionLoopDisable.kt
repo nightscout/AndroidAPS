@@ -6,7 +6,6 @@ import info.nightscout.androidaps.automation.R
 import info.nightscout.androidaps.data.PumpEnactResult
 import info.nightscout.androidaps.database.entities.UserEntry
 import info.nightscout.androidaps.database.entities.UserEntry.Sources
-import info.nightscout.androidaps.database.entities.UserEntry.ValueWithUnit
 import info.nightscout.androidaps.events.EventRefreshOverview
 import info.nightscout.androidaps.interfaces.CommandQueueProvider
 import info.nightscout.androidaps.interfaces.ConfigBuilderInterface
@@ -35,7 +34,7 @@ class ActionLoopDisable(injector: HasAndroidInjector) : Action(injector) {
         if ((loopPlugin as PluginBase).isEnabled()) {
             (loopPlugin as PluginBase).setPluginEnabled(PluginType.LOOP, false)
             configBuilderPlugin.storeSettings("ActionLoopDisable")
-            uel.log(UserEntry.Action.LOOP_DISABLED, ValueWithUnit(Sources.Automation))
+            uel.log(UserEntry.Action.LOOP_DISABLED, Sources.Automation)
             commandQueue.cancelTempBasal(true, object : Callback() {
                 override fun run() {
                     rxBus.send(EventRefreshOverview("ActionLoopDisable"))

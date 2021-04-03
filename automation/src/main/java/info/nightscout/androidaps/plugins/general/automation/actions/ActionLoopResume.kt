@@ -6,7 +6,6 @@ import info.nightscout.androidaps.automation.R
 import info.nightscout.androidaps.data.PumpEnactResult
 import info.nightscout.androidaps.database.entities.UserEntry
 import info.nightscout.androidaps.database.entities.UserEntry.Sources
-import info.nightscout.androidaps.database.entities.UserEntry.ValueWithUnit
 import info.nightscout.androidaps.events.EventRefreshOverview
 import info.nightscout.androidaps.interfaces.ConfigBuilderInterface
 import info.nightscout.androidaps.interfaces.LoopInterface
@@ -33,7 +32,7 @@ class ActionLoopResume(injector: HasAndroidInjector) : Action(injector) {
             configBuilderPlugin.storeSettings("ActionLoopResume")
             loopPlugin.createOfflineEvent(0)
             rxBus.send(EventRefreshOverview("ActionLoopResume"))
-            uel.log(UserEntry.Action.RESUME, ValueWithUnit(Sources.Automation))
+            uel.log(UserEntry.Action.RESUME, Sources.Automation)
             callback.result(PumpEnactResult(injector).success(true).comment(R.string.ok))?.run()
         } else {
             callback.result(PumpEnactResult(injector).success(true).comment(R.string.notsuspended))?.run()

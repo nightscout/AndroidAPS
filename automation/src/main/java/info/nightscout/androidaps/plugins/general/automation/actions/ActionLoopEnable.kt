@@ -6,7 +6,6 @@ import info.nightscout.androidaps.automation.R
 import info.nightscout.androidaps.data.PumpEnactResult
 import info.nightscout.androidaps.database.entities.UserEntry
 import info.nightscout.androidaps.database.entities.UserEntry.Sources
-import info.nightscout.androidaps.database.entities.UserEntry.ValueWithUnit
 import info.nightscout.androidaps.events.EventRefreshOverview
 import info.nightscout.androidaps.interfaces.ConfigBuilderInterface
 import info.nightscout.androidaps.interfaces.LoopInterface
@@ -35,7 +34,7 @@ class ActionLoopEnable(injector: HasAndroidInjector) : Action(injector) {
             (loopPlugin as PluginBase).setPluginEnabled(PluginType.LOOP, true)
             configBuilderPlugin.storeSettings("ActionLoopEnable")
             rxBus.send(EventRefreshOverview("ActionLoopEnable"))
-            uel.log(UserEntry.Action.LOOP_ENABLED, ValueWithUnit(Sources.Automation))
+            uel.log(UserEntry.Action.LOOP_ENABLED, Sources.Automation)
             callback.result(PumpEnactResult(injector).success(true).comment(R.string.ok))?.run()
         } else {
             callback.result(PumpEnactResult(injector).success(true).comment(R.string.alreadyenabled))?.run()

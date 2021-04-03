@@ -156,18 +156,21 @@ data class UserEntry(
         Announcement,
         Actions,            //From Actions plugin
         Automation,         //From Automation plugin
-        BG,                 // From BG plugin
+        BG,                 //From BG plugin => Add One Source per BG Source for Calibration or Sensor Change
         LocalProfile,       //From LocalProfile plugin
         Loop,               //From Loop plugin
         Maintenance,        //From Maintenance plugin
         NSClient,           //From NSClient plugin
         NSProfile,          //From NSProfile plugin
         Objectives,         //From Objectives plugin
-        Pump,               //From Pump plugin
+        Pump,               //To update with one Source per pump
         SMS,                //From SMS plugin
         Treatments,         //From Treatments plugin
         Wear,               //From Wear plugin
         Food,               //From Food plugin
+        ConfigBuilder,      //From ConfigBuilder Plugin
+        Overview,           //From OverViewPlugin
+        Stats,               //From Stat Activity
         Unknown             //if necessary
         ;
 

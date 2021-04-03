@@ -17,8 +17,6 @@ import info.nightscout.androidaps.database.entities.XXXValueWithUnit
 import info.nightscout.androidaps.database.entities.TemporaryTarget
 import info.nightscout.androidaps.database.entities.UserEntry.Action
 import info.nightscout.androidaps.database.entities.UserEntry.Sources
-import info.nightscout.androidaps.database.entities.UserEntry.Units
-import info.nightscout.androidaps.database.entities.UserEntry.ValueWithUnit
 import info.nightscout.androidaps.database.interfaces.end
 import info.nightscout.androidaps.database.transactions.InvalidateTemporaryTargetTransaction
 import info.nightscout.androidaps.databinding.TreatmentsTemptargetFragmentBinding
@@ -88,7 +86,7 @@ class TreatmentsTempTargetFragment : DaggerFragment() {
         binding.refreshFromNightscout.setOnClickListener {
             context?.let { context ->
                 OKDialog.showConfirmation(context, resourceHelper.gs(R.string.refresheventsfromnightscout) + " ?", {
-                    uel.log(Action.TT_NS_REFRESH, ValueWithUnit(Sources.Treatments))
+                    uel.log(Action.TT_NS_REFRESH, Sources.Treatments)
                     disposable += Completable.fromAction { repository.deleteAllTempTargetEntries() }
                         .subscribeOn(aapsSchedulers.io)
                         .observeOn(aapsSchedulers.main)
@@ -198,8 +196,12 @@ class TreatmentsTempTargetFragment : DaggerFragment() {
                         ${dateUtil.dateAndTimeString(tempTarget.timestamp)}
                         """.trimIndent(),
                             { _: DialogInterface?, _: Int ->
-                                //uel.log(Action.TT_REMOVED, XXXValueWithUnit.Timestamp(tempTarget.timestamp), XXXValueWithUnit.TherapyEventTTReason(tempTarget.reason), XXXValueWithUnit.Mgdl(tempTarget.lowTarget), XXXValueWithUnit.Mgdl(tempTarget.highTarget).takeIf { tempTarget.lowTarget != tempTarget.highTarget }, XXXValueWithUnit.Minute(tempTarget.duration.toInt()))
-                                uel.log(Action.TT_REMOVED, ValueWithUnit(Sources.Treatments), ValueWithUnit(tempTarget.timestamp, Units.Timestamp), ValueWithUnit(tempTarget.reason.text, Units.TherapyEvent), ValueWithUnit(tempTarget.lowTarget, Units.Mg_Dl), ValueWithUnit(tempTarget.highTarget, Units.Mg_Dl, tempTarget.lowTarget != tempTarget.highTarget), ValueWithUnit(tempTarget.duration.toInt(), Units.M))
+                                uel.log(Action.TT_REMOVED, Sources.Treatments,
+                                    XXXValueWithUnit.Timestamp(tempTarget.timestamp),
+                                    XXXValueWithUnit.TherapyEventTTReason(tempTarget.reason),
+                                    XXXValueWithUnit.Mgdl(tempTarget.lowTarget),
+                                    XXXValueWithUnit.Mgdl(tempTarget.highTarget).takeIf { tempTarget.lowTarget != tempTarget.highTarget },
+                                    XXXValueWithUnit.Minute(tempTarget.duration.toInt()))
                                 disposable += repository.runTransactionForResult(InvalidateTemporaryTargetTransaction(tempTarget.id))
                                     .subscribe(
                                         { aapsLogger.debug(LTag.DATABASE, "Removed temp target $tempTarget") },
