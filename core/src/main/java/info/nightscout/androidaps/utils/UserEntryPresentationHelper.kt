@@ -7,7 +7,6 @@ import info.nightscout.androidaps.core.R
 import info.nightscout.androidaps.database.entities.UserEntry
 import info.nightscout.androidaps.database.entities.UserEntry.Action
 import info.nightscout.androidaps.database.entities.UserEntry.Sources
-import info.nightscout.androidaps.database.entities.UserEntry.Units
 import info.nightscout.androidaps.database.entities.UserEntry.ColorGroup
 import info.nightscout.androidaps.database.entities.XXXValueWithUnit
 import info.nightscout.androidaps.interfaces.ProfileFunction
@@ -85,12 +84,12 @@ class UserEntryPresentationHelper @Inject constructor(
         list.joinToString(separator = "  ", transform = this::toPresentationString)
 
     private fun toPresentationString(valueWithUnit: XXXValueWithUnit?): String = when (valueWithUnit) {
-        is XXXValueWithUnit.Gram                  -> "${valueWithUnit.value}${translator.translate(Units.G)}"
-        is XXXValueWithUnit.Hour                  -> "${valueWithUnit.value}${translator.translate(Units.H)}"
-        is XXXValueWithUnit.Minute                -> "${valueWithUnit.value}${translator.translate(Units.M)}"
-        is XXXValueWithUnit.Percent               -> "${valueWithUnit.value}${translator.translate(Units.Percent)}"
-        is XXXValueWithUnit.Insulin               -> DecimalFormatter.to2Decimal(valueWithUnit.value) + translator.translate(UserEntry.Units.U)
-        is XXXValueWithUnit.UnitPerHour           -> DecimalFormatter.to2Decimal(valueWithUnit.value) + translator.translate(UserEntry.Units.U_H)
+        is XXXValueWithUnit.Gram                  -> "${valueWithUnit.value}${translator.translate(valueWithUnit)}"
+        is XXXValueWithUnit.Hour                  -> "${valueWithUnit.value}${translator.translate(valueWithUnit)}"
+        is XXXValueWithUnit.Minute                -> "${valueWithUnit.value}${translator.translate(valueWithUnit)}"
+        is XXXValueWithUnit.Percent               -> "${valueWithUnit.value}${translator.translate(valueWithUnit)}"
+        is XXXValueWithUnit.Insulin               -> DecimalFormatter.to2Decimal(valueWithUnit.value) + translator.translate(valueWithUnit)
+        is XXXValueWithUnit.UnitPerHour           -> DecimalFormatter.to2Decimal(valueWithUnit.value) + translator.translate(valueWithUnit)
         is XXXValueWithUnit.SimpleInt             -> valueWithUnit.value.toString()
         is XXXValueWithUnit.SimpleString          -> valueWithUnit.value
 //        is XXXValueWithUnit.StringResource        -> resourceHelper.gs(valueWithUnit.value, valueWithUnit.params.map{ it.value() }.toTypedArray())      //Todo Fix StringResource with Param
@@ -101,13 +100,13 @@ class UserEntryPresentationHelper @Inject constructor(
         is XXXValueWithUnit.Timestamp             -> dateUtil.dateAndTimeAndSecondsString(valueWithUnit.value)
 
         is XXXValueWithUnit.Mgdl                  -> {
-            if (profileFunction.getUnits() == Constants.MGDL) DecimalFormatter.to0Decimal(valueWithUnit.value) + translator.translate(Units.Mg_Dl)
-            else DecimalFormatter.to1Decimal(valueWithUnit.value / Constants.MMOLL_TO_MGDL) + translator.translate(Units.Mmol_L)
+            if (profileFunction.getUnits() == Constants.MGDL) DecimalFormatter.to0Decimal(valueWithUnit.value) + translator.translate(valueWithUnit)
+            else DecimalFormatter.to1Decimal(valueWithUnit.value / Constants.MMOLL_TO_MGDL) + translator.translate(valueWithUnit)
         }
 
         is XXXValueWithUnit.Mmoll                 -> {
-            if (profileFunction.getUnits() == Constants.MGDL) DecimalFormatter.to0Decimal(valueWithUnit.value) + translator.translate(Units.Mmol_L)
-            else DecimalFormatter.to1Decimal(valueWithUnit.value * Constants.MMOLL_TO_MGDL) + translator.translate(Units.Mg_Dl)
+            if (profileFunction.getUnits() == Constants.MGDL) DecimalFormatter.to0Decimal(valueWithUnit.value) + translator.translate(valueWithUnit)
+            else DecimalFormatter.to1Decimal(valueWithUnit.value * Constants.MMOLL_TO_MGDL) + translator.translate(valueWithUnit)
         }
 
         XXXValueWithUnit.UNKNOWN                  -> ""
@@ -128,13 +127,13 @@ class UserEntryPresentationHelper @Inject constructor(
         csvString(R.string.careportal_note),
         csvString(R.string.ue_formated_string),
         csvString(R.string.event_time_label),
-        csvString(Units.fromText(profileFunction.getUnits())),
-        csvString(Units.G),
-        csvString(Units.U),
-        csvString(Units.U_H),
-        csvString(Units.Percent),
-        csvString(Units.H),
-        csvString(Units.M),
+        csvString(if (profileFunction.getUnits() == Constants.MGDL) R.string.mgdl else R.string.mmol ),
+        csvString(R.string.shortgram),
+        csvString(R.string.insulin_unit_shortname),
+        csvString(R.string.profile_ins_units_per_hour),
+        csvString(R.string.shortpercent),
+        csvString(R.string.shorthour),
+        csvString(R.string.shortminute),
         csvString(R.string.ue_none)
     ) + "\n"
 
@@ -198,7 +197,6 @@ class UserEntryPresentationHelper @Inject constructor(
 
     private fun saveString(id: Int): String = if (id != 0) resourceHelper.gs(id) else ""
     private fun csvString(action: Action): String = "\"" + translator.translate(action).replace("\"", "\"\"") + "\""
-    private fun csvString(unit: Units): String = "\"" + translator.translate(unit).replace("\"", "\"\"") + "\""
     private fun csvString(id: Int): String = if (id != 0) "\"" + resourceHelper.gs(id).replace("\"", "\"\"") + "\"" else ""
     private fun csvString(s: String): String = if (s != "") "\"" + s.replace("\"", "\"\"") + "\"" else ""
 }

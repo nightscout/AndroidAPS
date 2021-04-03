@@ -97,28 +97,6 @@ data class UserEntry(
         }
     }
 
-    enum class Units(val text: String) {
-        None (""),                              //Int or String
-        Mg_Dl ("mg/dl"),                        //Double
-        Mmol_L ("mmol"),                        //Double
-        Timestamp("Timestamp"),                 //long
-        U ("U"),                                //Double
-        U_H ("U/h"),                            //Double
-        G ("g"),                                //Int
-        M ("m"),                                //Int
-        H ("h"),                                //Int
-        Percent ("%"),                          //Int
-        TherapyEvent ("TherapyEvent"),          //String (All enum key translated by Translator function, mainly The
-        R_String ("R.string"),                  //Int
-        Source ("Source")                       //String
-
-        ;
-
-        companion object {
-            fun fromString(unit: String?) = values().firstOrNull { it.name == unit } ?: None
-            fun fromText(unit: String?) = values().firstOrNull { it.text == unit } ?: None
-        }
-    }
     enum class Sources() {
         TreatmentDialog,
         InsulinDialog,

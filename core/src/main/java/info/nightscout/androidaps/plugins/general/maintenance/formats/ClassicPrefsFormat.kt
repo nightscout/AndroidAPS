@@ -3,11 +3,8 @@ package info.nightscout.androidaps.plugins.general.maintenance.formats
 import info.nightscout.androidaps.Constants
 import info.nightscout.androidaps.core.R
 import info.nightscout.androidaps.database.entities.UserEntry
-import info.nightscout.androidaps.database.entities.UserEntry.Action
-import info.nightscout.androidaps.database.entities.UserEntry.Units
 import info.nightscout.androidaps.interfaces.ProfileFunction
 import info.nightscout.androidaps.utils.DateUtil
-import info.nightscout.androidaps.utils.DecimalFormatter
 import info.nightscout.androidaps.utils.Translator
 import info.nightscout.androidaps.utils.UserEntryPresentationHelper
 import info.nightscout.androidaps.utils.resources.ResourceHelper
