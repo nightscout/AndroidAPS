@@ -41,6 +41,7 @@ import info.nightscout.androidaps.utils.rx.AapsSchedulers
 import info.nightscout.androidaps.utils.sharedPreferences.SP
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.rxkotlin.plusAssign
+import io.reactivex.rxkotlin.subscribeBy
 import java.util.*
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -196,21 +197,29 @@ open class CommandQueue @Inject constructor(
         // Check if pump store carbs
         // If not, it's not necessary add command to the queue and initiate connection
         // Assuming carbs in the future and carbs with duration are NOT stores anyway
-        if (detailedBolusInfo.carbs > 0)
-            if (!activePlugin.get().activePump.pumpDescription.storesCarbInfo
-                || detailedBolusInfo.carbsDuration != 0L
-                || detailedBolusInfo.carbsTimestamp ?: detailedBolusInfo.timestamp > dateUtil._now()
-            ) {
-                disposable += repository.runTransactionForResult(detailedBolusInfo.insertCarbsTransaction())
-                    .subscribe(
-                        { result -> result.inserted.forEach { aapsLogger.debug(LTag.DATABASE, "Inserted carbs $it") } },
-                        { aapsLogger.error(LTag.DATABASE, "Error while saving carbs", it) }
-                    )
-                // Do not process carbs anymore
-                detailedBolusInfo.carbs = 0.0
-                // if no insulin just exit
-                if (detailedBolusInfo.insulin == 0.0) return true
-            }
+        if ((detailedBolusInfo.carbs > 0) &&
+            (!activePlugin.get().activePump.pumpDescription.storesCarbInfo ||
+                detailedBolusInfo.carbsDuration != 0L ||
+                (detailedBolusInfo.carbsTimestamp ?: detailedBolusInfo.timestamp) > dateUtil._now())
+        ) {
+            disposable += repository.runTransactionForResult(detailedBolusInfo.insertCarbsTransaction())
+                .subscribeBy(
+                    onSuccess = { result ->
+                        result.inserted.forEach { aapsLogger.debug(LTag.DATABASE, "Inserted carbs $it") }
+                        callback?.result(PumpEnactResult(injector).enacted(false).success(true))?.run()
+
+                    },
+                    onError = {
+                        aapsLogger.error(LTag.DATABASE, "Error while saving carbs", it)
+                        callback?.result(PumpEnactResult(injector).enacted(false).success(false))?.run()
+                    }
+                )
+            // Do not process carbs anymore
+            detailedBolusInfo.carbs = 0.0
+            // if no insulin just exit
+            if (detailedBolusInfo.insulin == 0.0) return true
+
+        }
         var type = if (detailedBolusInfo.bolusType == DetailedBolusInfo.BolusType.SMB) CommandType.SMB_BOLUS else CommandType.BOLUS
         if (type == CommandType.SMB_BOLUS) {
             if (isRunning(CommandType.BOLUS) || isRunning(CommandType.SMB_BOLUS) || bolusInQueue()) {
