@@ -64,6 +64,19 @@ class UserEntryPresentationHelper @Inject constructor(
         Sources.NSProfile           -> R.drawable.ic_nightscout_profile
         Sources.Objectives          -> R.drawable.ic_graduation
         Sources.Pump                -> R.drawable.ic_generic_icon
+        Sources.Dana                -> R.drawable.ic_danars_128
+        Sources.DanaR               -> R.drawable.ic_danars_128
+        Sources.DanaRC              -> R.drawable.ic_danars_128
+        Sources.DanaRv2             -> R.drawable.ic_danars_128
+        Sources.DanaRS              -> R.drawable.ic_danars_128
+        Sources.Insight             -> R.drawable.ic_insight_128
+        Sources.Combo               -> R.drawable.ic_combo_128
+        Sources.Medtronic           -> R.drawable.ic_veo_128
+        Sources.Omnipod             -> R.drawable.ic_pod_128
+        Sources.OmnipodEros         -> R.drawable.ic_pod_128
+        Sources.OmnipodDash         -> R.drawable.ic_pod_128
+        Sources.MDI                 -> R.drawable.ic_ict
+        Sources.VirtualPump         -> R.drawable.ic_virtual_pump
         Sources.SMS                 -> R.drawable.ic_sms
         Sources.Treatments          -> R.drawable.ic_treatments
         Sources.Wear                -> R.drawable.ic_watch

@@ -127,6 +127,19 @@ data class UserEntry(
         NSProfile,          //From NSProfile plugin
         Objectives,         //From Objectives plugin
         Pump,               //To update with one Source per pump
+        Dana,               //Only one UserEntry in Common module Dana
+        DanaR,              //No entry currently
+        DanaRC,             //No entry currently
+        DanaRv2,            //No entry currently
+        DanaRS,             //No entry currently
+        Insight,            //No entry currently
+        Combo,              //No entry currently
+        Medtronic,          //No entry currently
+        Omnipod,            //No entry currently
+        OmnipodEros,        //No entry currently
+        OmnipodDash,        //No entry currently
+        MDI,                //No entry currently
+        VirtualPump,        //No entry currently
         SMS,                //From SMS plugin
         Treatments,         //From Treatments plugin
         Wear,               //From Wear plugin
