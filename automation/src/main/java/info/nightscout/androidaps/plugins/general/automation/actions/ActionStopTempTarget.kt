@@ -32,7 +32,7 @@ class ActionStopTempTarget(injector: HasAndroidInjector) : Action(injector) {
     override fun doAction(callback: Callback) {
         disposable += repository.runTransactionForResult(CancelCurrentTemporaryTargetIfAnyTransaction(dateUtil._now()))
             .subscribe({ result ->
-                uel.log(UserEntry.Action.CANCEL_TT, Sources.Automation)
+                uel.log(UserEntry.Action.CANCEL_TT, Sources.Automation, title)
                 result.updated.forEach { aapsLogger.debug(LTag.DATABASE, "Updated temp target $it") }
             }, {
                 aapsLogger.error(LTag.DATABASE, "Error while saving temporary target", it)

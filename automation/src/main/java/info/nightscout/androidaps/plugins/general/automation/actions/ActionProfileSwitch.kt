@@ -58,7 +58,7 @@ class ActionProfileSwitch(injector: HasAndroidInjector) : Action(injector) {
             callback.result(PumpEnactResult(injector).success(false).comment(R.string.notexists))?.run()
             return
         }
-        uel.log(UserEntry.Action.PROFILE_SWITCH, Sources.Automation,
+        uel.log(UserEntry.Action.PROFILE_SWITCH, Sources.Automation, title,
             XXXValueWithUnit.SimpleString(inputProfileName.value),
             XXXValueWithUnit.Percent(100))
         activePlugin.activeTreatments.doProfileSwitch(profileStore, inputProfileName.value, 0, 100, 0, DateUtil.now())

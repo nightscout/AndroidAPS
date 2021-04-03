@@ -34,7 +34,7 @@ class ActionLoopEnable(injector: HasAndroidInjector) : Action(injector) {
             (loopPlugin as PluginBase).setPluginEnabled(PluginType.LOOP, true)
             configBuilderPlugin.storeSettings("ActionLoopEnable")
             rxBus.send(EventRefreshOverview("ActionLoopEnable"))
-            uel.log(UserEntry.Action.LOOP_ENABLED, Sources.Automation)
+            uel.log(UserEntry.Action.LOOP_ENABLED, Sources.Automation, title)
             callback.result(PumpEnactResult(injector).success(true).comment(R.string.ok))?.run()
         } else {
             callback.result(PumpEnactResult(injector).success(true).comment(R.string.alreadyenabled))?.run()

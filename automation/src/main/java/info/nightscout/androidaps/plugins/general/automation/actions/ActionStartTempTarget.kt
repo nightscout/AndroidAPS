@@ -61,7 +61,7 @@ class ActionStartTempTarget(injector: HasAndroidInjector) : Action(injector) {
             .subscribe({ result ->
                 result.inserted.forEach { aapsLogger.debug(LTag.DATABASE, "Inserted temp target $it") }
                 result.updated.forEach { aapsLogger.debug(LTag.DATABASE, "Updated temp target $it") }
-                uel.log(UserEntry.Action.TT, Sources.Automation,
+                uel.log(UserEntry.Action.TT, Sources.Automation, title,
                     XXXValueWithUnit.TherapyEventTTReason(TemporaryTarget.Reason.AUTOMATION),
                     XXXValueWithUnit.fromGlucoseUnit(tt().lowTarget, Constants.MGDL),
                     XXXValueWithUnit.fromGlucoseUnit(tt().highTarget, Constants.MGDL).takeIf { tt().lowTarget != tt().highTarget },

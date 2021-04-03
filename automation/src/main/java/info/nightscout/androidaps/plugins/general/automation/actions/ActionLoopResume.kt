@@ -32,7 +32,7 @@ class ActionLoopResume(injector: HasAndroidInjector) : Action(injector) {
             configBuilderPlugin.storeSettings("ActionLoopResume")
             loopPlugin.createOfflineEvent(0)
             rxBus.send(EventRefreshOverview("ActionLoopResume"))
-            uel.log(UserEntry.Action.RESUME, Sources.Automation)
+            uel.log(UserEntry.Action.RESUME, Sources.Automation, title)
             callback.result(PumpEnactResult(injector).success(true).comment(R.string.ok))?.run()
         } else {
             callback.result(PumpEnactResult(injector).success(true).comment(R.string.notsuspended))?.run()

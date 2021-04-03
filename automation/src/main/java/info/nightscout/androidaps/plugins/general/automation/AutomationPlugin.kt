@@ -203,6 +203,7 @@ class AutomationPlugin @Inject constructor(
                 if (event.systemAction || userEventsEnabled) {
                     val actions = event.actions
                     for (action in actions) {
+                        action.title = event.title
                         if (action.isValid())
                             action.doAction(object : Callback() {
                                 override fun run() {

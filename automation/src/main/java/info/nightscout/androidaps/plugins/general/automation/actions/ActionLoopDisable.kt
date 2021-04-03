@@ -34,7 +34,7 @@ class ActionLoopDisable(injector: HasAndroidInjector) : Action(injector) {
         if ((loopPlugin as PluginBase).isEnabled()) {
             (loopPlugin as PluginBase).setPluginEnabled(PluginType.LOOP, false)
             configBuilderPlugin.storeSettings("ActionLoopDisable")
-            uel.log(UserEntry.Action.LOOP_DISABLED, Sources.Automation)
+            uel.log(UserEntry.Action.LOOP_DISABLED, Sources.Automation, title)
             commandQueue.cancelTempBasal(true, object : Callback() {
                 override fun run() {
                     rxBus.send(EventRefreshOverview("ActionLoopDisable"))
