@@ -43,8 +43,7 @@ class ActionProfileSwitchPercent(injector: HasAndroidInjector) : Action(injector
 
     override fun doAction(callback: Callback) {
         uel.log(UserEntry.Action.PROFILE_SWITCH, Sources.Automation, title,
-            if (duration.value == 0) XXXValueWithUnit.StringResource( R.string.startprofileforever, listOf(XXXValueWithUnit.Percent(pct.value.toInt())))
-            else XXXValueWithUnit.StringResource( R.string.startprofile, listOf(XXXValueWithUnit.Percent(pct.value.toInt()), XXXValueWithUnit.Minute(duration.value))))
+            XXXValueWithUnit.StringResource( R.string.startprofile, listOf(XXXValueWithUnit.Percent(pct.value.toInt()), XXXValueWithUnit.Minute(duration.value))))
         activePlugin.activeTreatments.doProfileSwitch(duration.value, pct.value.toInt(), 0)
         callback.result(PumpEnactResult(injector).success(true).comment(R.string.ok))?.run()
     }

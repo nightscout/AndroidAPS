@@ -93,7 +93,8 @@ class UserEntryPresentationHelper @Inject constructor(
         is XXXValueWithUnit.UnitPerHour           -> DecimalFormatter.to2Decimal(valueWithUnit.value) + translator.translate(UserEntry.Units.U_H)
         is XXXValueWithUnit.SimpleInt             -> valueWithUnit.value.toString()
         is XXXValueWithUnit.SimpleString          -> valueWithUnit.value
-        is XXXValueWithUnit.StringResource        -> resourceHelper.gs(valueWithUnit.value /*, valueWithUnit.params.map { it.value() }*/)           //Todo Fix StringResource with Param
+//        is XXXValueWithUnit.StringResource        -> resourceHelper.gs(valueWithUnit.value, valueWithUnit.params.map{ it.value() }.toTypedArray())      //Todo Fix StringResource with Param
+        is XXXValueWithUnit.StringResource        -> if (valueWithUnit.params.size > 0 ) valueWithUnit.params.joinToString(separator = "  ") { value -> toPresentationString(value) }  else resourceHelper.gs(valueWithUnit.value)    //To help debugging
         is XXXValueWithUnit.TherapyEventMeterType -> translator.translate(valueWithUnit.value)
         is XXXValueWithUnit.TherapyEventTTReason  -> translator.translate(valueWithUnit.value)
         is XXXValueWithUnit.TherapyEventType      -> translator.translate(valueWithUnit.value)
@@ -170,7 +171,8 @@ class UserEntryPresentationHelper @Inject constructor(
                 is XXXValueWithUnit.UnitPerHour           -> unitPerHour = DecimalFormatter.to2Decimal(valueWithUnit.value)
                 is XXXValueWithUnit.SimpleInt             -> other = if (other == "") valueWithUnit.value.toString() else other + " / " + valueWithUnit.value.toString()
                 is XXXValueWithUnit.SimpleString          -> other = if (other == "") valueWithUnit.value else other + " / " + valueWithUnit.value
-                is XXXValueWithUnit.StringResource        -> stringResource = if (stringResource == "") resourceHelper.gs(valueWithUnit.value, valueWithUnit.params) else stringResource + " / " + resourceHelper.gs(valueWithUnit.value, valueWithUnit.params)
+//                is XXXValueWithUnit.StringResource        -> stringResource = if (stringResource == "") resourceHelper.gs(valueWithUnit.value, valueWithUnit.params.map { it.value() }.toTypedArray()) else stringResource + " / " + resourceHelper.gs(valueWithUnit.value, valueWithUnit.params.map { it.value() }.toTypedArray())
+                is XXXValueWithUnit.StringResource        -> if (valueWithUnit.params.size == 0) { stringResource = if (stringResource == "") resourceHelper.gs(valueWithUnit.value) else stringResource + " / " + resourceHelper.gs(valueWithUnit.value)}
                 is XXXValueWithUnit.TherapyEventMeterType -> therapyEvent = if (therapyEvent == "") translator.translate(valueWithUnit.value) else therapyEvent + " / " + translator.translate(valueWithUnit.value)
                 is XXXValueWithUnit.TherapyEventTTReason  -> therapyEvent = if (therapyEvent == "") translator.translate(valueWithUnit.value) else therapyEvent + " / " + translator.translate(valueWithUnit.value)
                 is XXXValueWithUnit.TherapyEventType      -> therapyEvent = if (therapyEvent == "") translator.translate(valueWithUnit.value) else therapyEvent + " / " + translator.translate(valueWithUnit.value)
