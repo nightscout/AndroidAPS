@@ -173,7 +173,7 @@ class Translator @Inject internal constructor(
         TemporaryTarget.Reason.AUTOMATION         -> resourceHelper.gs(R.string.automation)
         TemporaryTarget.Reason.WEAR               -> resourceHelper.gs(R.string.wear)
 
-        else                                           -> resourceHelper.gs(R.string.unknown)
+        else                                      -> resourceHelper.gs(R.string.unknown)
     }
 
     fun translate(source: Sources): String = when(source) {
@@ -206,6 +206,9 @@ class Translator @Inject internal constructor(
         Sources.Objectives                         -> TODO()
         Sources.Treatments                         -> TODO()
         Sources.Food                               -> TODO()
+        Sources.ConfigBuilder                      -> TODO()
+        Sources.Overview                           -> TODO()
+        Sources.Stats                              -> TODO()
         */
         Sources.Automation                         -> resourceHelper.gs(R.string.automation)
         Sources.Loop                               -> resourceHelper.gs(R.string.loop)

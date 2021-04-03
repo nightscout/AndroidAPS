@@ -93,7 +93,7 @@ class UserEntryPresentationHelper @Inject constructor(
         is XXXValueWithUnit.UnitPerHour           -> DecimalFormatter.to2Decimal(valueWithUnit.value) + translator.translate(UserEntry.Units.U_H)
         is XXXValueWithUnit.SimpleInt             -> valueWithUnit.value.toString()
         is XXXValueWithUnit.SimpleString          -> valueWithUnit.value
-        is XXXValueWithUnit.StringResource        -> resourceHelper.gs(valueWithUnit.value /*, valueWithUnit.params.map { it.value() }*/)
+        is XXXValueWithUnit.StringResource        -> resourceHelper.gs(valueWithUnit.value /*, valueWithUnit.params.map { it.value() }*/)           //Todo Fix StringResource with Param
         is XXXValueWithUnit.TherapyEventMeterType -> translator.translate(valueWithUnit.value)
         is XXXValueWithUnit.TherapyEventTTReason  -> translator.translate(valueWithUnit.value)
         is XXXValueWithUnit.TherapyEventType      -> translator.translate(valueWithUnit.value)
