@@ -16,8 +16,8 @@ import java.util.*
 class SessionEstablisher(
     private val aapsLogger: AAPSLogger,
     private val msgIO: MessageIO,
-    ltk: ByteArray,
-    eapSqn: ByteArray,
+    private val ltk: ByteArray,
+    private val eapSqn: ByteArray,
     private val myId: Id,
     private val podId: Id,
     private var msgSeq: Byte
@@ -37,7 +37,7 @@ class SessionEstablisher(
         random.nextBytes(controllerIV)
     }
 
-    fun negotiateSessionKeys(): SessionKeys {
+    fun negotiateSessionKeys(): SessionNegotiationResponse {
         msgSeq++
         var challenge = eapAkaChallenge()
         val sendResult = msgIO.sendMessage(challenge)
@@ -47,7 +47,13 @@ class SessionEstablisher(
         val challengeResponse = msgIO.receiveMessage()
             ?: throw SessionEstablishmentException("Could not establish session")
 
-        processChallengeResponse(challengeResponse)
+        val newSqn = processChallengeResponse(challengeResponse)
+        if (newSqn != null) {
+            return SessionNegotiationResynchronization(
+                syncronizedEapSqn = newSqn,
+                msgSequenceNumber = msgSeq
+            )
+        }
 
         msgSeq++
         var success = eapSuccess()
@@ -84,7 +90,7 @@ class SessionEstablisher(
         )
     }
 
-    private fun processChallengeResponse(challengeResponse: MessagePacket) {
+    private fun processChallengeResponse(challengeResponse: MessagePacket): EapSqn? {
         val eapMsg = EapMessage.parse(aapsLogger, challengeResponse.payload)
         if (eapMsg.identifier != identifier) {
             aapsLogger.debug(
@@ -93,22 +99,56 @@ class SessionEstablisher(
             )
             throw SessionEstablishmentException("Received incorrect EAP identifier: ${eapMsg.identifier}")
         }
+
+        if (eapMsg.subType == EapMessage.SUBTYPE_SYNCRONIZATION_FAILURE &&
+            eapMsg.attributes.size == 1 &&
+            eapMsg.attributes[0] is EapAkaAttributeAuts
+        ) {
+            val auts = eapMsg.attributes[0] as EapAkaAttributeAuts
+            val autsMilenage = Milenage(
+                aapsLogger = aapsLogger,
+                k = ltk,
+                sqn = eapSqn,
+                randParam = milenage.rand,
+                auts = auts.payload
+            )
+
+            val newSqnMilenage = Milenage(
+                aapsLogger = aapsLogger,
+                k = ltk,
+                sqn = autsMilenage.synchronizationSqn,
+                randParam = milenage.rand,
+                auts = auts.payload,
+                amf = Milenage.RESYNC_AMF,
+            )
+
+            if (!newSqnMilenage.macS.contentEquals(newSqnMilenage.receivedMacS)) {
+                throw SessionEstablishmentException(
+                    "MacS mismatch. " +
+                        "Expected: ${newSqnMilenage.macS.toHex()}. " +
+                        "Received: ${newSqnMilenage.receivedMacS.toHex()}"
+                )
+            }
+            return EapSqn(autsMilenage.synchronizationSqn)
+        }
+
         if (eapMsg.attributes.size != 2) {
             aapsLogger.debug(LTag.PUMPBTCOMM, "EAP-AKA: got message: $eapMsg")
             if (eapMsg.attributes.size == 1 && eapMsg.attributes[0] is EapAkaAttributeClientErrorCode) {
                 throw SessionEstablishmentException(
                     "Received CLIENT_ERROR_CODE for EAP-AKA challenge: ${
-                    eapMsg.attributes[0].toByteArray().toHex()
+                        eapMsg.attributes[0].toByteArray().toHex()
                     }"
                 )
             }
             throw SessionEstablishmentException("Expecting two attributes, got: ${eapMsg.attributes.size}")
         }
+
         for (attr in eapMsg.attributes) {
             when (attr) {
                 is EapAkaAttributeRes ->
                     if (!milenage.res.contentEquals(attr.payload)) {
-                        throw SessionEstablishmentException("RES missmatch. Expected: ${milenage.res.toHex()} Actual: ${attr.payload.toHex()} ")
+                        throw SessionEstablishmentException("RES mismatch. Expected: ${milenage.res.toHex()} Actual: ${attr.payload.toHex()} ")
                     }
                 is EapAkaAttributeCustomIV ->
                     nodeIV = attr.payload.copyOfRange(0, IV_SIZE)
@@ -116,6 +156,7 @@ class SessionEstablisher(
                     throw SessionEstablishmentException("Unknown attribute received: $attr")
             }
         }
+        return null
     }
 
     private fun eapSuccess(): MessagePacket {

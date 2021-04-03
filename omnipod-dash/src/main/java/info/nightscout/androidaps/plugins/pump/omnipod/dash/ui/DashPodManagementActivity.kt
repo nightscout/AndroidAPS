@@ -117,8 +117,7 @@ class DashPodManagementActivity : NoSplashAppCompatActivity() {
         // Only show the discard button to reset a cached unique ID before the unique ID has actually been set
         // Otherwise, users should use the Deactivate Pod Wizard. In case proper deactivation fails,
         // they will get an option to discard the Pod there
-        val discardButtonEnabled =
-            podStateManager.uniqueId != null && podStateManager.activationProgress.isBefore(ActivationProgress.SET_UNIQUE_ID)
+        val discardButtonEnabled = true
         binding.buttonDiscardPod.visibility = discardButtonEnabled.toVisibility()
 
         binding.buttonActivatePod.isEnabled = podStateManager.activationProgress.isBefore(ActivationProgress.COMPLETED)

@@ -21,7 +21,7 @@ class BleCommCallbacks(
     private val incomingPackets: IncomingPackets,
 ) : BluetoothGattCallback() {
 
-    private val serviceDiscoveryComplete: CountDownLatch = CountDownLatch(1)
+    private var serviceDiscoveryComplete: CountDownLatch = CountDownLatch(1)
     private var connected: CountDownLatch = CountDownLatch(1)
     private val writeQueue: BlockingQueue<WriteConfirmation> = LinkedBlockingQueue(1)
 
@@ -152,7 +152,9 @@ class BleCommCallbacks(
     }
 
     fun resetConnection() {
+        aapsLogger.debug(LTag.PUMPBTCOMM, "Reset connection")
         connected = CountDownLatch(1)
+        serviceDiscoveryComplete = CountDownLatch(1)
         flushConfirmationQueue()
     }
 

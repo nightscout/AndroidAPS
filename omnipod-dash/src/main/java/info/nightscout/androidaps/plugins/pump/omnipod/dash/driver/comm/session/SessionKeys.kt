@@ -2,8 +2,13 @@ package info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.session
 
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.endecrypt.Nonce
 
-data class SessionKeys(val ck: ByteArray, val nonce: Nonce, var msgSequenceNumber: Byte) {
+sealed class SessionNegotiationResponse
+
+data class SessionKeys(val ck: ByteArray, val nonce: Nonce, var msgSequenceNumber: Byte):SessionNegotiationResponse() {
     init {
         require(ck.size == 16) { "CK has to be 16 bytes long" }
     }
 }
+
+data class SessionNegotiationResynchronization(val syncronizedEapSqn: EapSqn?, val msgSequenceNumber: Byte)
+    :SessionNegotiationResponse()

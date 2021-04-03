@@ -54,15 +54,15 @@ open class BleIO(
      * @param payload the data to send
      */
     fun sendAndConfirmPacket(payload: ByteArray): BleSendResult {
-        aapsLogger.debug(LTag.PUMPBTCOMM, "BleIO: Sending on ${type.name}: ${payload.toHex()}")
+        aapsLogger.debug(LTag.PUMPBTCOMM, "BleIO: Sending on $type: ${payload.toHex()}")
         val set = characteristic.setValue(payload)
         if (!set) {
-            return BleSendErrorSending("Could set setValue on ${type.name}")
+            return BleSendErrorSending("Could set setValue on $type")
         }
         bleCommCallbacks.flushConfirmationQueue()
         val sent = gatt.writeCharacteristic(characteristic)
         if (!sent) {
-            return BleSendErrorSending("Could not writeCharacteristic on {$type.name}")
+            return BleSendErrorSending("Could not writeCharacteristic on $type")
         }
 
         return when (
@@ -111,6 +111,7 @@ open class BleIO(
         if (!wrote) {
             throw ConnectException("Could not enable indications on descriptor")
         }
+        aapsLogger.debug(LTag.PUMPBTCOMM, "Enabling indications for $type")
         val confirmation = bleCommCallbacks.confirmWrite(
             BluetoothGattDescriptor.ENABLE_INDICATION_VALUE,
             descriptor.uuid.toString(),

@@ -13,6 +13,7 @@ import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.ServiceD
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.callbacks.BleCommCallbacks
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.endecrypt.EnDecrypt
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.exceptions.FailedToConnectException
+import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.exceptions.SessionEstablishmentException
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.io.BleSendSuccess
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.io.CharacteristicType
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.io.CmdBleIO
@@ -87,13 +88,14 @@ class Connection(val podDevice: BluetoothDevice, private val aapsLogger: AAPSLog
         if (waitForConnection() is NotConnected) {
             throw FailedToConnectException(podDevice.address)
         }
-
+        discoverer.discoverServices()
         cmdBleIO.hello()
         cmdBleIO.readyToRead()
         dataBleIO.readyToRead()
     }
 
     fun disconnect() {
+        aapsLogger.debug(LTag.PUMPBTCOMM, "Disconnecting")
         bleCommCallbacks.resetConnection()
         gattConnection.disconnect()
         session = null
@@ -118,20 +120,27 @@ class Connection(val podDevice: BluetoothDevice, private val aapsLogger: AAPSLog
         return Connected
     }
 
-    fun establishSession(ltk: ByteArray, msgSeq: Byte, myId: Id, podID: Id, eapSqn: ByteArray) {
-        val eapAkaExchanger = SessionEstablisher(aapsLogger, msgIO, ltk, eapSqn, myId, podID, msgSeq)
-        val keys = eapAkaExchanger.negotiateSessionKeys()
-        if (BuildConfig.DEBUG) {
-            aapsLogger.info(LTag.PUMPCOMM, "CK: ${keys.ck.toHex()}")
-            aapsLogger.info(LTag.PUMPCOMM, "msgSequenceNumber: ${keys.msgSequenceNumber}")
-            aapsLogger.info(LTag.PUMPCOMM, "Nonce: ${keys.nonce}")
+    fun establishSession(ltk: ByteArray, msgSeq: Byte, myId: Id, podID: Id, eapSqn: ByteArray): EapSqn? {
+        var eapAkaExchanger = SessionEstablisher(aapsLogger, msgIO, ltk, eapSqn, myId, podID, msgSeq)
+        var keys = eapAkaExchanger.negotiateSessionKeys()
+        return when (keys) {
+            is SessionNegotiationResynchronization ->
+                keys.syncronizedEapSqn
+            is SessionKeys -> {
+                if (BuildConfig.DEBUG) {
+                    aapsLogger.info(LTag.PUMPCOMM, "CK: ${keys.ck.toHex()}")
+                    aapsLogger.info(LTag.PUMPCOMM, "msgSequenceNumber: ${keys.msgSequenceNumber}")
+                    aapsLogger.info(LTag.PUMPCOMM, "Nonce: ${keys.nonce}")
+                }
+                val enDecrypt = EnDecrypt(
+                    aapsLogger,
+                    keys.nonce,
+                    keys.ck
+                )
+                session = Session(aapsLogger, msgIO, myId, podID, sessionKeys = keys, enDecrypt = enDecrypt)
+                null
+            }
         }
-        val enDecrypt = EnDecrypt(
-            aapsLogger,
-            keys.nonce,
-            keys.ck
-        )
-        session = Session(aapsLogger, msgIO, myId, podID, sessionKeys = keys, enDecrypt = enDecrypt)
     }
 
     companion object {

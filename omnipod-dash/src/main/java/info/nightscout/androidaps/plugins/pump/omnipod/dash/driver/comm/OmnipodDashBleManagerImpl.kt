@@ -17,6 +17,7 @@ import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.response.
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.state.OmnipodDashPodStateManager
 import info.nightscout.androidaps.utils.extensions.toHex
 import io.reactivex.Observable
+import java.nio.ByteBuffer
 import java.util.concurrent.atomic.AtomicBoolean
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -142,8 +143,19 @@ class OmnipodDashBleManagerImpl @Inject constructor(
         val podId = uniqueId?.let { Id.fromLong(uniqueId) }
             ?: myId.increment() // pod not activated
 
-        val eapSqn = podState.increaseEapAkaSequenceNumber()
-        conn.establishSession(ltk, msgSeq, myId, podId, eapSqn)
+        var eapSqn = podState.increaseEapAkaSequenceNumber()
+
+        var newSqn = conn.establishSession(ltk, msgSeq, myId, podId, eapSqn)
+
+        if (newSqn != null) {
+            aapsLogger.info(LTag.PUMPBTCOMM, "Updating EAP SQN to: $newSqn")
+            podState.eapAkaSequenceNumber = newSqn.toLong()
+            var newSqn = conn.establishSession(ltk, msgSeq, myId, podId, podState.increaseEapAkaSequenceNumber())
+            if (newSqn != null) {
+                throw SessionEstablishmentException("Received resynchronization SQN for the second time")
+            }
+        }
+
         podState.commitEapAkaSequenceNumber()
     }
 

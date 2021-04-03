@@ -9,6 +9,7 @@ enum class EapAkaAttributeType(val type: Byte) {
     AT_RAND(1),
     AT_AUTN(2),
     AT_RES(3),
+    AT_AUTS(4),
     AT_CLIENT_ERROR_CODE(22),
     AT_CUSTOM_IV(126);
 
@@ -47,6 +48,8 @@ sealed class EapAkaAttribute {
                         ret.add(EapAkaAttributeCustomIV.parse(tail.copyOfRange(2, EapAkaAttributeCustomIV.SIZE)))
                     EapAkaAttributeType.AT_AUTN ->
                         ret.add(EapAkaAttributeAutn.parse(tail.copyOfRange(2, EapAkaAttributeAutn.SIZE)))
+                    EapAkaAttributeType.AT_AUTS ->
+                        ret.add(EapAkaAttributeAuts.parse(tail.copyOfRange(2, EapAkaAttributeAuts.SIZE)))
                     EapAkaAttributeType.AT_RAND ->
                         ret.add(EapAkaAttributeRand.parse(tail.copyOfRange(2, EapAkaAttributeRand.SIZE)))
                     EapAkaAttributeType.AT_CLIENT_ERROR_CODE ->
@@ -109,6 +112,29 @@ data class EapAkaAttributeAutn(val payload: ByteArray) : EapAkaAttribute() {
         }
 
         const val SIZE = 20 // type, size, 2 reserved bytes, payload=16
+    }
+}
+
+data class EapAkaAttributeAuts(val payload: ByteArray) : EapAkaAttribute() {
+
+    init {
+        require(payload.size == 14) { "AT_AUTS payload size has to be 14 bytes. Payload: ${payload.toHex()}" }
+    }
+
+    override fun toByteArray(): ByteArray {
+        return byteArrayOf(EapAkaAttributeType.AT_AUTS.type, (SIZE / SIZE_MULTIPLIER).toByte(), 0, 0) + payload
+    }
+
+    companion object {
+
+        fun parse(payload: ByteArray): EapAkaAttribute {
+            if (payload.size < SIZE-2) {
+                throw MessageIOException("Could not parse AUTS attribute: ${payload.toHex()}")
+            }
+            return EapAkaAttributeAuts(payload)
+        }
+
+        const val SIZE = 16 // type, size, 2 reserved bytes, payload=16
     }
 }
 

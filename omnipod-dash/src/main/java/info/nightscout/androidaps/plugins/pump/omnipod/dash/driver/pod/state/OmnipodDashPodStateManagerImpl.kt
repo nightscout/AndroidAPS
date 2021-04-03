@@ -8,6 +8,7 @@ import info.nightscout.androidaps.plugins.pump.omnipod.dash.EventOmnipodDashPump
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.R
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.Id
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.pair.PairResult
+import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.session.EapSqn
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.definition.*
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.response.AlarmStatusResponse
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.response.DefaultStatusResponse
@@ -173,10 +174,7 @@ class OmnipodDashPodStateManagerImpl @Inject constructor(
 
     override fun increaseEapAkaSequenceNumber(): ByteArray {
         podState.eapAkaSequenceNumber++
-        return ByteBuffer.allocate(8)
-            .putLong(podState.eapAkaSequenceNumber)
-            .array()
-            .copyOfRange(2, 8)
+        return EapSqn(podState.eapAkaSequenceNumber).value
     }
 
     override fun commitEapAkaSequenceNumber() {

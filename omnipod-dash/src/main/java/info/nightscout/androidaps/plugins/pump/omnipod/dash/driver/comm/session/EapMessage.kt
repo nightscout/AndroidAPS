@@ -23,6 +23,7 @@ enum class EapCode(val code: Byte) {
 data class EapMessage(
     val code: EapCode,
     val identifier: Byte,
+    val subType: Byte = 0,
     val attributes: Array<EapAkaAttribute>
 ) {
 
@@ -56,6 +57,8 @@ data class EapMessage(
 
         private const val HEADER_SIZE = 8
         private const val SUBTYPE_AKA_CHALLENGE = 1.toByte()
+        const val SUBTYPE_SYNCRONIZATION_FAILURE = 4.toByte()
+
         private const val AKA_PACKET_TYPE = 0x17.toByte()
 
         fun parse(aapsLogger: AAPSLogger, payload: ByteArray): EapMessage {
@@ -81,7 +84,8 @@ data class EapMessage(
             return EapMessage(
                 code = EapCode.byValue(payload[0]),
                 identifier = payload[1],
-                attributes = EapAkaAttribute.parseAttributes(aapsLogger, attributesPayload).toTypedArray()
+                attributes = EapAkaAttribute.parseAttributes(aapsLogger, attributesPayload).toTypedArray(),
+                subType = payload[5],
             )
         }
     }
