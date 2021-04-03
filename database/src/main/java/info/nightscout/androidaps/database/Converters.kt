@@ -1,15 +1,12 @@
 package info.nightscout.androidaps.database
 
 import androidx.room.TypeConverter
-import com.google.gson.JsonArray
 import info.nightscout.androidaps.database.data.Block
 import info.nightscout.androidaps.database.data.TargetBlock
 import info.nightscout.androidaps.database.embedments.InterfaceIDs
 import info.nightscout.androidaps.database.entities.*
 import info.nightscout.androidaps.database.entities.UserEntry.Action
 import info.nightscout.androidaps.database.entities.UserEntry.Sources
-import info.nightscout.androidaps.database.entities.UserEntry.Units
-import info.nightscout.androidaps.database.entities.UserEntry.ValueWithUnit
 import info.nightscout.androidaps.database.serialisation.SealedClassHelper
 import info.nightscout.androidaps.database.serialisation.fromJson
 import org.json.JSONArray
@@ -38,30 +35,6 @@ class Converters {
         .fromJson<List<ValueWithUnitWrapper>>(string).map { it.wrapped }
 
     private class ValueWithUnitWrapper(val wrapped: XXXValueWithUnit)
-
-    @TypeConverter
-    fun fromMutableListOfValueWithUnit(values: MutableList<ValueWithUnit>): String {
-        val jsonArray = JSONArray()
-        values.forEach {
-            if (it.condition) {
-                val jsonObject = JSONObject()
-                jsonObject.put("dValue", it.dValue).put("iValue", it.iValue).put("lValue", it.lValue).put("sValue", it.sValue).put("unit", it.unit.name)
-                jsonArray.put(jsonObject)
-            }
-        }
-        return jsonArray.toString()
-    }
-
-    @TypeConverter
-    fun toMutableListOfValueWithUnit(jsonString: String): MutableList<ValueWithUnit> {
-        val jsonArray = JSONArray(jsonString)
-        val list = mutableListOf<ValueWithUnit>()
-        for (i in 0 until jsonArray.length()) {
-            val jsonObject = jsonArray.getJSONObject(i)
-            list.add(ValueWithUnit(jsonObject.getDouble("dValue"), jsonObject.getInt("iValue"), jsonObject.getLong("lValue"), jsonObject.getString("sValue"), Units.fromString(jsonObject.getString("unit"))))
-        }
-        return list
-    }
 
     @TypeConverter
     fun fromBolusType(bolusType: Bolus.Type?) = bolusType?.name

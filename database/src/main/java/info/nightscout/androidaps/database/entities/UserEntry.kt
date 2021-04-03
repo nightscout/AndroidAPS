@@ -96,22 +96,7 @@ data class UserEntry(
             fun fromString(source: String?) = values().firstOrNull { it.name == source } ?: UNKNOWN
         }
     }
-    data class ValueWithUnit (val dValue: Double=0.0, val iValue: Int=0, val lValue: Long=0, val sValue: String="", val unit: Units=Units.None, val condition:Boolean=true){
-        constructor(dvalue: Double, unit: Units, condition:Boolean = true) : this(dvalue, 0, 0, "", unit, condition)
-        constructor(ivalue: Int, unit: Units, condition:Boolean = true) : this(0.0, ivalue, 0, "", unit, condition)
-        constructor(lvalue: Long, unit: Units, condition:Boolean = true) : this(0.0,0, lvalue, "", unit, condition)
-        constructor(svalue: String, unit:Units) : this(0.0,0, 0, svalue, unit, svalue != "")
-        constructor(source: Sources) : this(0.0,0, 0, source.name, Units.Source, true)
-        constructor(dvalue: Double, unit:String, condition:Boolean = true) : this(dvalue,0, 0, "", Units.fromText(unit), condition)
-        constructor(rStringRef: Int, nbParam: Long) : this(0.0, rStringRef, nbParam, "", Units.R_String, !rStringRef.equals(0))             // additionnal constructors for formated strings with additional values as parameters (define number of parameters as long
 
-        fun value() : Any {
-            if (sValue != "") return sValue
-            if (!dValue.equals(0.0)) return dValue
-            if (!iValue.equals(0)) return iValue
-            return lValue
-        }
-    }
     enum class Units(val text: String) {
         None (""),                              //Int or String
         Mg_Dl ("mg/dl"),                        //Double

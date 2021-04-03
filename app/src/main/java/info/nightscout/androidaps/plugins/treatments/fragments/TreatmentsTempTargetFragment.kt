@@ -201,7 +201,7 @@ class TreatmentsTempTargetFragment : DaggerFragment() {
                                     XXXValueWithUnit.TherapyEventTTReason(tempTarget.reason),
                                     XXXValueWithUnit.Mgdl(tempTarget.lowTarget),
                                     XXXValueWithUnit.Mgdl(tempTarget.highTarget).takeIf { tempTarget.lowTarget != tempTarget.highTarget },
-                                    XXXValueWithUnit.Minute(tempTarget.duration.toInt()))
+                                    XXXValueWithUnit.Minute(TimeUnit.MILLISECONDS.toMinutes(tempTarget.duration).toInt()))
                                 disposable += repository.runTransactionForResult(InvalidateTemporaryTargetTransaction(tempTarget.id))
                                     .subscribe(
                                         { aapsLogger.debug(LTag.DATABASE, "Removed temp target $tempTarget") },
