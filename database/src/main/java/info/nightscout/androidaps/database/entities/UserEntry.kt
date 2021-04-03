@@ -26,7 +26,7 @@ data class UserEntry(
         SUPERBOLUS_TBR (ColorGroup.InsulinTreatment),
         CARBS (ColorGroup.CarbTreatment),
         EXTENDED_CARBS (ColorGroup.CarbTreatment),
-        TEMP_BASAL (ColorGroup.InsulinTreatment),
+        TEMP_BASAL (ColorGroup.BasalTreatment),
         TT (ColorGroup.TT),
         NEW_PROFILE (ColorGroup.Profile),
         CLONE_PROFILE (ColorGroup.Profile),
@@ -44,8 +44,8 @@ data class UserEntry(
         SUSPEND (ColorGroup.Loop),
         HW_PUMP_ALLOWED (ColorGroup.Pump),
         CLEAR_PAIRING_KEYS (ColorGroup.Pump),
-        ACCEPTS_TEMP_BASAL (ColorGroup.InsulinTreatment),
-        CANCEL_TEMP_BASAL (ColorGroup.InsulinTreatment),
+        ACCEPTS_TEMP_BASAL (ColorGroup.BasalTreatment),
+        CANCEL_TEMP_BASAL (ColorGroup.BasalTreatment),
         CANCEL_EXTENDED_BOLUS (ColorGroup.InsulinTreatment),
         CANCEL_TT (ColorGroup.TT),
         CAREPORTAL (ColorGroup.Careportal),
@@ -60,7 +60,7 @@ data class UserEntry(
         BG_REMOVED (ColorGroup.Careportal),
         CAREPORTAL_REMOVED (ColorGroup.Careportal),
         EXTENDED_BOLUS_REMOVED (ColorGroup.InsulinTreatment),
-        FOOD_REMOVED (ColorGroup.Careportal),
+        FOOD_REMOVED (ColorGroup.CarbTreatment),
         PROFILE_REMOVED (ColorGroup.Profile),
         PROFILE_SWITCH_REMOVED (ColorGroup.Profile),
         RESTART_EVENTS_REMOVED (ColorGroup.Aaps),
@@ -87,7 +87,7 @@ data class UserEntry(
         OTP_EXPORT (ColorGroup.Aaps),
         OTP_RESET (ColorGroup.Aaps),
         STOP_SMS (ColorGroup.Aaps),
-        FOOD (ColorGroup.Careportal),
+        FOOD (ColorGroup.CarbTreatment),
         EXPORT_CSV (ColorGroup.Aaps),
         UNKNOWN (ColorGroup.Aaps)
         ;
@@ -127,6 +127,19 @@ data class UserEntry(
         NSProfile,          //From NSProfile plugin
         Objectives,         //From Objectives plugin
         Pump,               //To update with one Source per pump
+        Dana,               //Only one UserEntry in Common module Dana
+        DanaR,              //No entry currently
+        DanaRC,             //No entry currently
+        DanaRv2,            //No entry currently
+        DanaRS,             //No entry currently
+        Insight,            //No entry currently
+        Combo,              //No entry currently
+        Medtronic,          //No entry currently
+        Omnipod,            //No entry currently
+        OmnipodEros,        //No entry currently
+        OmnipodDash,        //No entry currently
+        MDI,                //No entry currently
+        VirtualPump,        //No entry currently
         SMS,                //From SMS plugin
         Treatments,         //From Treatments plugin
         Wear,               //From Wear plugin
@@ -144,6 +157,7 @@ data class UserEntry(
 
     enum class ColorGroup() {
         InsulinTreatment,
+        BasalTreatment,
         CarbTreatment,
         TT,
         Profile,

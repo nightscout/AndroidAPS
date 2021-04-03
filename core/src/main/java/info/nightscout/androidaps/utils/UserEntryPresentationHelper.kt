@@ -22,13 +22,14 @@ class UserEntryPresentationHelper @Inject constructor(
 ) {
 
     fun colorId(colorGroup: ColorGroup): Int = when (colorGroup) {
-        ColorGroup.InsulinTreatment -> R.color.basal
+        ColorGroup.InsulinTreatment -> R.color.iob
+        ColorGroup.BasalTreatment   -> R.color.basal
         ColorGroup.CarbTreatment -> R.color.carbs
         ColorGroup.TT -> R.color.tempTargetConfirmation
         ColorGroup.Profile -> R.color.white
         ColorGroup.Loop -> R.color.loopClosed
         ColorGroup.Careportal -> R.color.high
-        ColorGroup.Pump -> R.color.iob
+        ColorGroup.Pump -> R.color.loopDisconnected
         ColorGroup.Aaps -> R.color.defaulttext
         else                        -> R.color.defaulttext
     }
@@ -63,6 +64,19 @@ class UserEntryPresentationHelper @Inject constructor(
         Sources.NSProfile -> R.drawable.ic_nightscout_profile
         Sources.Objectives -> R.drawable.ic_graduation
         Sources.Pump -> R.drawable.ic_generic_icon
+        Sources.Dana                -> R.drawable.ic_danars_128
+        Sources.DanaR               -> R.drawable.ic_danars_128
+        Sources.DanaRC              -> R.drawable.ic_danars_128
+        Sources.DanaRv2             -> R.drawable.ic_danars_128
+        Sources.DanaRS              -> R.drawable.ic_danars_128
+        Sources.Insight             -> R.drawable.ic_insight_128
+        Sources.Combo               -> R.drawable.ic_combo_128
+        Sources.Medtronic           -> R.drawable.ic_veo_128
+        Sources.Omnipod             -> R.drawable.ic_pod_128
+        Sources.OmnipodEros         -> R.drawable.ic_pod_128
+        Sources.OmnipodDash         -> R.drawable.ic_pod_128
+        Sources.MDI                 -> R.drawable.ic_ict
+        Sources.VirtualPump         -> R.drawable.ic_virtual_pump
         Sources.SMS -> R.drawable.ic_sms
         Sources.Treatments -> R.drawable.ic_treatments
         Sources.Wear -> R.drawable.ic_watch
