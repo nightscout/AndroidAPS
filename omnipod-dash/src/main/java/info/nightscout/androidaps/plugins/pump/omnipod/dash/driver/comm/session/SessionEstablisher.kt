@@ -50,7 +50,7 @@ class SessionEstablisher(
         val newSqn = processChallengeResponse(challengeResponse)
         if (newSqn != null) {
             return SessionNegotiationResynchronization(
-                syncronizedEapSqn = newSqn,
+                synchronizedEapSqn = newSqn,
                 msgSequenceNumber = msgSeq
             )
         }

@@ -9,6 +9,7 @@ import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.logging.LTag
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.io.CharacteristicType.Companion.byValue
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.io.IncomingPackets
+import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.session.DisconnectHandler
 import info.nightscout.androidaps.utils.extensions.toHex
 import java.util.*
 import java.util.concurrent.BlockingQueue
@@ -19,17 +20,28 @@ import java.util.concurrent.TimeUnit
 class BleCommCallbacks(
     private val aapsLogger: AAPSLogger,
     private val incomingPackets: IncomingPackets,
+    private val disconnectHandler: DisconnectHandler,
 ) : BluetoothGattCallback() {
 
+    // Synchronized because they can be:
+    // - read from various callbacks
+    // - written from resetConnection that is called onConnectionLost
     private var serviceDiscoveryComplete: CountDownLatch = CountDownLatch(1)
+        @Synchronized get
+        @Synchronized set
     private var connected: CountDownLatch = CountDownLatch(1)
-    private val writeQueue: BlockingQueue<WriteConfirmation> = LinkedBlockingQueue(1)
+        @Synchronized get
+        @Synchronized set
+    private val writeQueue: BlockingQueue<WriteConfirmation> = LinkedBlockingQueue()
 
     override fun onConnectionStateChange(gatt: BluetoothGatt, status: Int, newState: Int) {
         aapsLogger.debug(LTag.PUMPBTCOMM, "OnConnectionStateChange with status/state: $status/$newState")
         super.onConnectionStateChange(gatt, status, newState)
         if (newState == BluetoothProfile.STATE_CONNECTED && status == BluetoothGatt.GATT_SUCCESS) {
             connected.countDown()
+        }
+        if (newState == BluetoothProfile.STATE_DISCONNECTED) {
+            disconnectHandler.onConnectionLost(status)
         }
     }
 

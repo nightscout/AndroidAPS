@@ -10,5 +10,5 @@ data class SessionKeys(val ck: ByteArray, val nonce: Nonce, var msgSequenceNumbe
     }
 }
 
-data class SessionNegotiationResynchronization(val syncronizedEapSqn: EapSqn?, val msgSequenceNumber: Byte)
-    :SessionNegotiationResponse()
+data class SessionNegotiationResynchronization(val synchronizedEapSqn: EapSqn, val msgSequenceNumber: Byte)
+    : SessionNegotiationResponse()

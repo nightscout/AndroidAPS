@@ -21,6 +21,10 @@ class EapSqn(val value: ByteArray) {
         ).long
     }
 
+    override fun toString(): String {
+        return "EapSqn(value=${toLong()})"
+    }
+
     companion object {
         private const val SIZE = 6
         private fun fromLong(v: Long): ByteArray {

@@ -87,6 +87,7 @@ class OmnipodDashBleManagerImpl @Inject constructor(
 
 
     override fun getStatus(): ConnectionStatus {
+        // TODO is this used?
         var s: ConnectionStatus
         synchronized(status) {
             s = status
@@ -113,7 +114,6 @@ class OmnipodDashBleManagerImpl @Inject constructor(
                     emitter.onNext(PodEvent.EstablishingSession)
                     establishSession(1.toByte())
                     emitter.onNext(PodEvent.Connected)
-
                 } else {
                     emitter.onNext(PodEvent.AlreadyConnected(podAddress))
                 }
@@ -217,10 +217,8 @@ class OmnipodDashBleManagerImpl @Inject constructor(
     }
 
     override fun disconnect() {
-        if (connection == null) {
-            aapsLogger.info(LTag.PUMPBTCOMM, "Trying to disconnect a null connection")
-        }
         connection?.disconnect()
+            ?: aapsLogger.info(LTag.PUMPBTCOMM, "Trying to disconnect a null connection")
     }
 
     companion object {
