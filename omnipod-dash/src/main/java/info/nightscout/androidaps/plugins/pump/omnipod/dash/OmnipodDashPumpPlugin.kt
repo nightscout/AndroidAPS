@@ -144,25 +144,16 @@ class OmnipodDashPumpPlugin @Inject constructor(
         }.blockingGet()
     }
 
-    override fun isThisProfileSet(profile: Profile): Boolean {
-        if (podStateManager.basalProgram == null) {
-            // We don't have an active Pod. Return true here because the next Pod will use the currently active profile
-            return true
-        }
-        return podStateManager.basalProgram!! == mapProfileToBasalProgram(profile)
-    }
+    override fun isThisProfileSet(profile: Profile): Boolean = podStateManager.basalProgram?.let {
+        it == mapProfileToBasalProgram(profile)
+    } ?: true
 
     override fun lastDataTime(): Long {
         return podStateManager.lastConnection
     }
 
     override val baseBasalRate: Double
-        get() {
-            if (podStateManager.basalProgram == null) {
-                return 0.0
-            }
-            return podStateManager.basalProgram!!.rateAt(Date())
-        }
+        get() = podStateManager.basalProgram?.rateAt(Date()) ?: 0.0
 
     override val reservoirLevel: Double
         get() {
@@ -369,36 +360,32 @@ class OmnipodDashPumpPlugin @Inject constructor(
     }
 
     override fun executeCustomCommand(customCommand: CustomCommand): PumpEnactResult? {
-        if (customCommand is CommandSilenceAlerts) {
-            return silenceAlerts()
-        }
-        if (customCommand is CommandSuspendDelivery) {
-            return suspendDelivery()
-        }
-        if (customCommand is CommandResumeDelivery) {
-            return resumeDelivery()
-        }
-        if (customCommand is CommandDeactivatePod) {
-            return deactivatePod()
-        }
-        if (customCommand is CommandHandleTimeChange) {
-            return handleTimeChange()
-        }
-        if (customCommand is CommandUpdateAlertConfiguration) {
-            return updateAlertConfiguration()
-        }
-        if (customCommand is CommandPlayTestBeep) {
-            return playTestBeep()
-        }
+        return when (customCommand) {
+            is CommandSilenceAlerts ->
+                silenceAlerts()
+            is CommandSuspendDelivery ->
+                suspendDelivery()
+            is CommandResumeDelivery ->
+                resumeDelivery()
+            is CommandDeactivatePod ->
+                deactivatePod()
+            is CommandHandleTimeChange ->
+                handleTimeChange()
+            is CommandUpdateAlertConfiguration ->
+                updateAlertConfiguration()
+            is CommandPlayTestBeep ->
+                playTestBeep()
 
-        aapsLogger.warn(LTag.PUMP, "Unsupported custom command: " + customCommand.javaClass.name)
-
-        return PumpEnactResult(injector).success(false).enacted(false).comment(
-            resourceHelper.gs(
-                R.string.omnipod_common_error_unsupported_custom_command,
-                customCommand.javaClass.name
-            )
-        )
+            else -> {
+                aapsLogger.warn(LTag.PUMP, "Unsupported custom command: " + customCommand.javaClass.name)
+                PumpEnactResult(injector).success(false).enacted(false).comment(
+                    resourceHelper.gs(
+                        R.string.omnipod_common_error_unsupported_custom_command,
+                        customCommand.javaClass.name
+                    )
+                )
+            }
+        }
     }
 
     private fun silenceAlerts(): PumpEnactResult {
