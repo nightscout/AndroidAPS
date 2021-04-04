@@ -3,6 +3,7 @@ package info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.session
 import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.logging.LTag
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.Id
+import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.Ids
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.endecrypt.EnDecrypt
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.exceptions.CouldNotParseResponseException
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.exceptions.IllegalResponseException
@@ -33,8 +34,7 @@ data class CommandAckError(val result: Response, val msg: String) : CommandRecei
 class Session(
     private val aapsLogger: AAPSLogger,
     private val msgIO: MessageIO,
-    private val myId: Id,
-    private val podId: Id,
+    private val ids: Ids,
     val sessionKeys: SessionKeys,
     val enDecrypt: EnDecrypt
 ) {
@@ -130,8 +130,8 @@ class Session(
         val msg = MessagePacket(
             type = MessageType.ENCRYPTED,
             sequenceNumber = sessionKeys.msgSequenceNumber,
-            source = myId,
-            destination = podId,
+            source = ids.myId,
+            destination = ids.podId,
             payload = ByteArray(0),
             eqos = 0,
             ack = true,
@@ -151,8 +151,8 @@ class Session(
         val msg = MessagePacket(
             type = MessageType.ENCRYPTED,
             sequenceNumber = sessionKeys.msgSequenceNumber,
-            source = myId,
-            destination = podId,
+            source = ids.myId,
+            destination = ids.podId,
             payload = wrapped,
             eqos = 1
         )

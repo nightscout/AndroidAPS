@@ -3,6 +3,7 @@ package info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm
 import info.nightscout.androidaps.utils.extensions.toHex
 import java.nio.ByteBuffer
 
+
 data class Id(val address: ByteArray) {
     init {
         require(address.size == 4)

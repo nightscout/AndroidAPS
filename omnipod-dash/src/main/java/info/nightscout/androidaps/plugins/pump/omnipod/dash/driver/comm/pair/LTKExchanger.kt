@@ -3,6 +3,7 @@ package info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.pair
 import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.logging.LTag
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.Id
+import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.Ids
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.exceptions.MessageIOException
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.exceptions.PairingException
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.message.MessageIO
@@ -19,11 +20,9 @@ import info.nightscout.androidaps.utils.extensions.toHex
 internal class LTKExchanger(
     private val aapsLogger: AAPSLogger,
     private val msgIO: MessageIO,
-    val myId: Id,
-    val podId: Id,
-    val podAddress: Id
+    private val ids: Ids,
 ) {
-
+    private val podAddress = Ids.notActivated()
     private val keyExchange = KeyExchange(aapsLogger, X25519KeyGenerator(), RandomByteGenerator())
     private var seq: Byte = 1
 
@@ -31,17 +30,17 @@ internal class LTKExchanger(
     fun negotiateLTK(): PairResult {
         val sp1sp2 = PairMessage(
             sequenceNumber = seq,
-            source = myId,
+            source = ids.myId,
             destination = podAddress,
             keys = arrayOf(SP1, SP2),
-            payloads = arrayOf(podId.address, sp2())
+            payloads = arrayOf(ids.podId.address, sp2())
         )
         throwOnSendError(sp1sp2.messagePacket, SP1+SP2)
 
         seq++
         val sps1 = PairMessage(
             sequenceNumber = seq,
-            source = myId,
+            source = ids.myId,
             destination = podAddress,
             keys = arrayOf(SPS1),
             payloads = arrayOf(keyExchange.pdmPublic + keyExchange.pdmNonce)
@@ -55,7 +54,7 @@ internal class LTKExchanger(
         seq++
         val sps2 = PairMessage(
             sequenceNumber = seq,
-            source = myId,
+            source = ids.myId,
             destination = podAddress,
             keys = arrayOf(SPS2),
             payloads = arrayOf(keyExchange.pdmConf)
@@ -70,7 +69,7 @@ internal class LTKExchanger(
         // send SP0GP0
         val sp0gp0 = PairMessage (
                 sequenceNumber = seq,
-                source = myId,
+                source = ids.myId,
                 destination = podAddress,
                 keys = arrayOf(SP0GP0),
                 payloads = arrayOf(ByteArray(0))

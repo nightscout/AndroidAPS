@@ -8,7 +8,7 @@ import android.content.Context
 import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.logging.LTag
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.BuildConfig
-import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.Id
+import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.Ids
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.ServiceDiscoverer
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.callbacks.BleCommCallbacks
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.endecrypt.EnDecrypt
@@ -132,8 +132,8 @@ class Connection(
         return Connected
     }
 
-    fun establishSession(ltk: ByteArray, msgSeq: Byte, myId: Id, podID: Id, eapSqn: ByteArray): EapSqn? {
-        val eapAkaExchanger = SessionEstablisher(aapsLogger, msgIO, ltk, eapSqn, myId, podID, msgSeq)
+    fun establishSession(ltk: ByteArray, msgSeq: Byte, ids: Ids, eapSqn: ByteArray): EapSqn? {
+        val eapAkaExchanger = SessionEstablisher(aapsLogger, msgIO, ltk, eapSqn, ids, msgSeq)
         return when (val keys = eapAkaExchanger.negotiateSessionKeys()) {
             is SessionNegotiationResynchronization -> {
                 if (BuildConfig.DEBUG) {
@@ -153,7 +153,7 @@ class Connection(
                     keys.nonce,
                     keys.ck
                 )
-                session = Session(aapsLogger, msgIO, myId, podID, sessionKeys = keys, enDecrypt = enDecrypt)
+                session = Session(aapsLogger, msgIO, ids, sessionKeys = keys, enDecrypt = enDecrypt)
                 null
             }
         }

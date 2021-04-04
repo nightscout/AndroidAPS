@@ -104,7 +104,6 @@ class OmnipodDashPumpPlugin @Inject constructor(
 
     override fun getPumpStatus(reason: String) {
         // TODO history
-
         omnipodManager.getStatus(ResponseType.StatusResponseType.DEFAULT_STATUS_RESPONSE).blockingSubscribeBy(
             onNext = { podEvent ->
                 aapsLogger.debug(

@@ -35,10 +35,7 @@ class OmnipodDashBleManagerImpl @Inject constructor(
     private val bluetoothAdapter: BluetoothAdapter = bluetoothManager.adapter
     private var connection: Connection? = null
     private var status: ConnectionStatus = ConnectionStatus.IDLE
-    private val myId = Id.fromInt(CONTROLLER_ID)
-    private val uniqueId = podState.uniqueId
-    private val podId = uniqueId?.let(Id::fromLong)
-        ?: myId.increment() // pod not activated
+    private val ids = Ids(podState)
 
     override fun sendCommand(cmd: Command, responseType: KClass<out Response>): Observable<PodEvent> =
         Observable.create { emitter ->
@@ -143,18 +140,14 @@ class OmnipodDashBleManagerImpl @Inject constructor(
 
         val ltk = assertPaired()
 
-        val uniqueId = podState.uniqueId
-        val podId = uniqueId?.let { Id.fromLong(uniqueId) }
-            ?: myId.increment() // pod not activated
-
         var eapSqn = podState.increaseEapAkaSequenceNumber()
 
-        var newSqn = conn.establishSession(ltk, msgSeq, myId, podId, eapSqn)
+        var newSqn = conn.establishSession(ltk, msgSeq, ids, eapSqn)
 
         if (newSqn != null) {
             aapsLogger.info(LTag.PUMPBTCOMM, "Updating EAP SQN to: $newSqn")
             podState.eapAkaSequenceNumber = newSqn.toLong()
-            newSqn = conn.establishSession(ltk, msgSeq, myId, podId, podState.increaseEapAkaSequenceNumber())
+            newSqn = conn.establishSession(ltk, msgSeq, ids, podState.increaseEapAkaSequenceNumber())
             if (newSqn != null) {
                 throw SessionEstablishmentException("Received resynchronization SQN for the second time")
             }
@@ -204,16 +197,11 @@ class OmnipodDashBleManagerImpl @Inject constructor(
             val ltkExchanger = LTKExchanger(
                 aapsLogger,
                 conn.msgIO,
-                myId,
-                podId,
-                Id.fromLong(
-                    PodScanner
-                        .POD_ID_NOT_ACTIVATED
-                )
+                ids,
             )
             val pairResult = ltkExchanger.negotiateLTK()
-            emitter.onNext(PodEvent.Paired(podId))
-            podState.updateFromPairing(podId, pairResult)
+            emitter.onNext(PodEvent.Paired(ids.podId))
+            podState.updateFromPairing(ids.podId, pairResult)
             if (BuildConfig.DEBUG) {
                 aapsLogger.info(LTag.PUMPCOMM, "Got LTK: ${pairResult.ltk.toHex()}")
             }

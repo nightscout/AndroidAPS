@@ -3,6 +3,7 @@ package info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.session
 import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.logging.LTag
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.Id
+import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.Ids
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.endecrypt.Nonce
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.exceptions.SessionEstablishmentException
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.message.MessageIO
@@ -18,8 +19,7 @@ class SessionEstablisher(
     private val msgIO: MessageIO,
     private val ltk: ByteArray,
     private val eapSqn: ByteArray,
-    private val myId: Id,
-    private val podId: Id,
+    private val ids: Ids,
     private var msgSeq: Byte
 ) {
 
@@ -84,8 +84,8 @@ class SessionEstablisher(
         return MessagePacket(
             type = MessageType.SESSION_ESTABLISHMENT,
             sequenceNumber = msgSeq,
-            source = myId,
-            destination = podId,
+            source = ids.myId,
+            destination = ids.podId,
             payload = eapMsg.toByteArray()
         )
     }
@@ -190,8 +190,8 @@ class SessionEstablisher(
         return MessagePacket(
             type = MessageType.SESSION_ESTABLISHMENT,
             sequenceNumber = msgSeq,
-            source = myId,
-            destination = podId,
+            source = ids.myId,
+            destination = ids.podId,
             payload = eapMsg.toByteArray()
         )
     }
