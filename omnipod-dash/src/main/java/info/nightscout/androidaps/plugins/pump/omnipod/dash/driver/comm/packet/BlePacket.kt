@@ -46,27 +46,24 @@ data class FirstBlePacket(
     companion object {
 
         fun parse(payload: ByteArray): FirstBlePacket {
-            if (payload.size < FirstBlePacket.HEADER_SIZE_WITH_MIDDLE_PACKETS) {
-                throw IncorrectPacketException(payload, 0)
-            }
+            payload.assertSizeAtLeast(HEADER_SIZE_WITH_MIDDLE_PACKETS, 0)
+
             if (payload[0].toInt() != 0) {
                 // most likely we lost the first packet.
                 throw IncorrectPacketException(payload, 0)
             }
             val fullFragments = payload[1].toInt()
             require(fullFragments < MAX_FRAGMENTS) { "Received more than $MAX_FRAGMENTS fragments" }
-            when {
-                // Without middle packets
-                payload.size < HEADER_SIZE_WITHOUT_MIDDLE_PACKETS ->
-                    throw IncorrectPacketException(payload, 0)
+
+            payload.assertSizeAtLeast(HEADER_SIZE_WITHOUT_MIDDLE_PACKETS, 0)
+
+            return when {
 
                 fullFragments == 0 -> {
                     val rest = payload[6]
                     val end = Integer.min(rest + HEADER_SIZE_WITHOUT_MIDDLE_PACKETS, payload.size)
-                    if (end > payload.size) {
-                        throw IncorrectPacketException(payload, 0)
-                    }
-                    return FirstBlePacket(
+                    payload.assertSizeAtLeast(end, 0)
+                    FirstBlePacket(
                         fullFragments = fullFragments,
                         payload = payload.copyOfRange(HEADER_SIZE_WITHOUT_MIDDLE_PACKETS, end),
                         crc32 = ByteBuffer.wrap(payload.copyOfRange(2, 6)).int.toUnsignedLong(),
@@ -76,11 +73,11 @@ data class FirstBlePacket(
                 }
 
                 // With middle packets
-                payload.size < BlePacket.MAX_SIZE ->
+                payload.size < MAX_SIZE ->
                     throw IncorrectPacketException(payload, 0)
 
                 else -> {
-                    return FirstBlePacket(
+                    FirstBlePacket(
                         fullFragments = fullFragments,
                         payload = payload.copyOfRange(HEADER_SIZE_WITH_MIDDLE_PACKETS, MAX_SIZE)
                     )
@@ -110,9 +107,7 @@ data class MiddleBlePacket(val index: Byte, override val payload: ByteArray) : B
     companion object {
 
         fun parse(payload: ByteArray): MiddleBlePacket {
-            if (payload.size < MAX_SIZE) {
-                throw IncorrectPacketException(payload, 0)
-            }
+            payload.assertSizeAtLeast(MAX_SIZE)
             return MiddleBlePacket(
                 index = payload[0],
                 payload.copyOfRange(1, MAX_SIZE)
@@ -148,14 +143,13 @@ data class LastBlePacket(
     companion object {
 
         fun parse(payload: ByteArray): LastBlePacket {
-            if (payload.size < HEADER_SIZE) {
-                throw IncorrectPacketException(payload, 0)
-            }
+            payload.assertSizeAtLeast(HEADER_SIZE)
+
             val rest = payload[1]
             val end = Integer.min(rest + HEADER_SIZE, payload.size)
-            if (payload.size < end) {
-                throw IncorrectPacketException(payload, 0)
-            }
+
+            payload.assertSizeAtLeast(end)
+
             return LastBlePacket(
                 index = payload[0],
                 crc32 = ByteBuffer.wrap(payload.copyOfRange(2, 6)).int.toUnsignedLong(),
@@ -183,10 +177,10 @@ data class LastOptionalPlusOneBlePacket(
     companion object {
 
         fun parse(payload: ByteArray): LastOptionalPlusOneBlePacket {
+            payload.assertSizeAtLeast(2)
             val size = payload[1].toInt()
-            if (payload.size < HEADER_SIZE + size) {
-                throw IncorrectPacketException(payload, 0)
-            }
+            payload.assertSizeAtLeast(HEADER_SIZE + size)
+
             return LastOptionalPlusOneBlePacket(
                 index = payload[0],
                 payload = payload.copyOfRange(
@@ -198,5 +192,12 @@ data class LastOptionalPlusOneBlePacket(
         }
 
         private const val HEADER_SIZE = 2
+    }
+}
+
+
+private fun ByteArray.assertSizeAtLeast(size: Int, index: Byte?=null) {
+    if (this.size < size) {
+        throw IncorrectPacketException(this, index)
     }
 }

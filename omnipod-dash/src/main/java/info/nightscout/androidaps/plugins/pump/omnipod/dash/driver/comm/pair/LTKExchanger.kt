@@ -27,19 +27,15 @@ internal class LTKExchanger(
     private val keyExchange = KeyExchange(aapsLogger, X25519KeyGenerator(), RandomByteGenerator())
     private var seq: Byte = 1
 
+    @Throws(PairingException::class)
     fun negotiateLTK(): PairResult {
         val sp1sp2 = sp1sp2(podId.address, sp2())
-        val sendSp1Sp2Result = msgIO.sendMessage(sp1sp2.messagePacket)
-        if (sendSp1Sp2Result !is MessageSendSuccess) {
-            throw PairingException("Could not send SP1SP2: $sendSp1Sp2Result")
-        }
+        throwOnSendError(sp1sp2.messagePacket, "SP1SP2")
 
         seq++
         val sps1 = sps1()
-        val sp1Result = msgIO.sendMessage(sps1.messagePacket)
-        if (sp1Result !is MessageSendSuccess) {
-            throw PairingException("Could not send SP1: $sp1Result")
-        }
+        throwOnSendError(sps1.messagePacket, "SP1")
+
 
         val podSps1 = msgIO.receiveMessage() ?: throw PairingException("Could not read SPS1")
         processSps1FromPod(podSps1)
@@ -47,20 +43,16 @@ internal class LTKExchanger(
 
         seq++
         val sps2 = sps2()
-        val sp2Result = msgIO.sendMessage(sps2.messagePacket)
-        if (sp2Result !is MessageSendSuccess) {
-            throw PairingException("Could not send sps2: $sp2Result")
-        }
+        throwOnSendError(sps2.messagePacket, "SPS2")
+
 
         val podSps2 = msgIO.receiveMessage() ?: throw PairingException("Could not read SPS2")
         validatePodSps2(podSps2)
 
         seq++
         // send SP0GP0
-        val sp0gp0Result = msgIO.sendMessage(sp0gp0().messagePacket)
-        if (sp0gp0Result is MessageSendErrorSending) {
-            throw PairingException("Could not send SP0GP0: $sp0gp0Result")
-        }
+        throwOnSendErrorSending(sp0gp0().messagePacket, "SP0GP0")
+
 
         // No exception throwing after this point. It is possible that the pod saved the LTK
         msgIO.receiveMessage()
@@ -71,6 +63,22 @@ internal class LTKExchanger(
             ltk = keyExchange.ltk,
             msgSeq = seq
         )
+    }
+
+    @Throws(PairingException::class)
+    private fun throwOnSendError(msg: MessagePacket, msgType: String) {
+        val result =  msgIO.sendMessage(msg)
+        if (result !is MessageSendSuccess) {
+            throw PairingException("Could not send or confirm $msgType: $result")
+        }
+    }
+
+    @Throws(PairingException::class)
+    private fun throwOnSendErrorSending(msg: MessagePacket, msgType: String) {
+        val result =  msgIO.sendMessage(msg)
+        if (result is MessageSendErrorSending) {
+            throw PairingException("Could not send $msgType: $result")
+        }
     }
 
     private fun sp1sp2(sp1: ByteArray, sp2: ByteArray): PairMessage {
@@ -160,7 +168,8 @@ internal class LTKExchanger(
     companion object {
 
         private const val GET_POD_STATUS_HEX_COMMAND =
-            "ffc32dbd08030e0100008a" // TODO for now we are assuming this command is build out of constant parameters, use a proper command builder for that.
+            "ffc32dbd08030e0100008a"
+        // This is the binary representation of "GetPodStatus command"
 
         private const val SP1 = "SP1="
         private const val SP2 = ",SP2="

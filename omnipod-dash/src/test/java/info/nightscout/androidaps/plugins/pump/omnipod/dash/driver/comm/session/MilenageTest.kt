@@ -39,7 +39,7 @@ class MilenageTest {
         val m = Milenage(
             aapsLogger = aapsLogger,
             k = Hex.decode("c0772899720972a314f557de66d571dd"),
-            //           byteArrayOf(0,0,0,0,0x01,0x5d), this is in logs. SQN has to be incremented.
+            //  byteArrayOf(0,0,0,0,0x01,0x5d), this is in logs. SQN has to be incremented.
             sqn = byteArrayOf(0, 0, 0, 0, 0x01, 0x5e),
             randParam = Hex.decode("d71cc44820e5419f42c62ae97c035988")
         )

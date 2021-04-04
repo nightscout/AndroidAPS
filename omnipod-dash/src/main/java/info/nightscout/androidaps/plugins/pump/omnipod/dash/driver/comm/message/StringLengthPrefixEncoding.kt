@@ -17,23 +17,19 @@ class StringLengthPrefixEncoding private constructor() {
             val ret = Array(keys.size) { ByteArray(0) }
             var remaining = payload
             for ((index, key) in keys.withIndex()) {
+                remaining.assertSizeAtLeast(key.length)
                 when {
-                    remaining.size < key.length ->
-                        throw MessageIOException("Payload too short: ${payload.toHex()} for key: $key")
-                    !(remaining.copyOfRange(0, key.length).decodeToString() == key) ->
+                    remaining.copyOfRange(0, key.length).decodeToString() != key ->
                         throw MessageIOException("Key not found: $key in ${payload.toHex()}")
                     // last key can be empty, no length
                     index == keys.size - 1 && remaining.size == key.length ->
                         return ret
-
-                    remaining.size < key.length + LENGTH_BYTES ->
-                        throw MessageIOException("Length not found: for $key in ${payload.toHex()}")
                 }
+                remaining.assertSizeAtLeast(key.length + LENGTH_BYTES)
+
                 remaining = remaining.copyOfRange(key.length, remaining.size)
                 val length = (remaining[0].toUnsignedInt() shl 1) or remaining[1].toUnsignedInt()
-                if (length > remaining.size) {
-                    throw MessageIOException("Payload too short, looking for length $length for $key in ${payload.toHex()}")
-                }
+                remaining.assertSizeAtLeast(length)
                 ret[index] = remaining.copyOfRange(LENGTH_BYTES, LENGTH_BYTES + length)
                 remaining = remaining.copyOfRange(LENGTH_BYTES + length, remaining.size)
             }
@@ -62,5 +58,11 @@ class StringLengthPrefixEncoding private constructor() {
 
             return ret
         }
+    }
+}
+
+private fun ByteArray.assertSizeAtLeast(size: Int) {
+    if (this.size < size) {
+        throw MessageIOException("Payload too short: ${this.toHex()}")
     }
 }
