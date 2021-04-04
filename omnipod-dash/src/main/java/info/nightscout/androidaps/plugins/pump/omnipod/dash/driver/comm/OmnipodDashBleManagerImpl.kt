@@ -137,6 +137,7 @@ class OmnipodDashBleManagerImpl @Inject constructor(
     private fun establishSession(msgSeq: Byte) {
         val conn = connection ?: throw FailedToConnectException("connection lost")
         val ltk: ByteArray = podState.ltk ?: throw FailedToConnectException("Missing LTK, activate the pod first")
+
         val uniqueId = podState.uniqueId
         val podId = uniqueId?.let { Id.fromLong(uniqueId) }
             ?: myId.increment() // pod not activated

@@ -62,13 +62,11 @@ data class EapMessage(
         private const val AKA_PACKET_TYPE = 0x17.toByte()
 
         fun parse(aapsLogger: AAPSLogger, payload: ByteArray): EapMessage {
-            if (payload.size < 4) {
-                throw MessageIOException("Invalid eap payload: ${payload.toHex()}")
-            }
+            payload.assertSizeAtLeast(4)
+
             val totalSize = (payload[2].toInt() shl 8) or payload[3].toInt()
-            if (totalSize > payload.size) {
-                throw MessageIOException("Invalid eap payload. Too short: ${payload.toHex()}")
-            }
+            payload.assertSizeAtLeast(totalSize)
+
             if (payload.size == 4) { // SUCCESS/FAILURE
                 return EapMessage(
                     code = EapCode.byValue(payload[0]),
@@ -88,5 +86,11 @@ data class EapMessage(
                 subType = payload[5],
             )
         }
+    }
+}
+
+private fun ByteArray.assertSizeAtLeast(size: Int) {
+    if (this.size < size) {
+        throw MessageIOException("Payload too short: ${this.toHex()}")
     }
 }

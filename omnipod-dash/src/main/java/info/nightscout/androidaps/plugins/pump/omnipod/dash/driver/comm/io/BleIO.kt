@@ -97,20 +97,18 @@ open class BleIO(
      * @return
      */
     fun readyToRead(): BleSendResult {
-        val notificationSet = gatt.setCharacteristicNotification(characteristic, true)
-        if (!notificationSet) {
-            throw ConnectException("Could not enable notifications")
-        }
+        gatt.setCharacteristicNotification(characteristic, true)
+            .assertTrue("enable notifications")
+
         val descriptors = characteristic.descriptors
         if (descriptors.size != 1) {
             throw ConnectException("Expecting one descriptor, found: ${descriptors.size}")
         }
         val descriptor = descriptors[0]
         descriptor.value = BluetoothGattDescriptor.ENABLE_INDICATION_VALUE
-        val wrote = gatt.writeDescriptor(descriptor)
-        if (!wrote) {
-            throw ConnectException("Could not enable indications on descriptor")
-        }
+        gatt.writeDescriptor(descriptor)
+            .assertTrue("enable indications on descriptor")
+
         aapsLogger.debug(LTag.PUMPBTCOMM, "Enabling indications for $type")
         val confirmation = bleCommCallbacks.confirmWrite(
             BluetoothGattDescriptor.ENABLE_INDICATION_VALUE,
@@ -128,5 +126,11 @@ open class BleIO(
     companion object {
 
         const val DEFAULT_IO_TIMEOUT_MS = 1000.toLong()
+    }
+}
+
+private fun Boolean.assertTrue(operation: String) {
+    if (!this) {
+        throw ConnectException("Could not $operation")
     }
 }

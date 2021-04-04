@@ -90,65 +90,35 @@ class SessionEstablisher(
         )
     }
 
-    private fun processChallengeResponse(challengeResponse: MessagePacket): EapSqn? {
-        val eapMsg = EapMessage.parse(aapsLogger, challengeResponse.payload)
-        if (eapMsg.identifier != identifier) {
+    private fun assertIdentifier(msg: EapMessage) {
+        if (msg.identifier != identifier) {
             aapsLogger.debug(
                 LTag.PUMPBTCOMM,
-                "EAP-AKA: got incorrect identifier ${eapMsg.identifier} expected: $identifier"
+                "EAP-AKA: got incorrect identifier ${msg.identifier} expected: $identifier"
             )
-            throw SessionEstablishmentException("Received incorrect EAP identifier: ${eapMsg.identifier}")
+            throw SessionEstablishmentException("Received incorrect EAP identifier: ${msg.identifier}")
+        }
+    }
+
+    private fun processChallengeResponse(challengeResponse: MessagePacket): EapSqn? {
+        val eapMsg = EapMessage.parse(aapsLogger, challengeResponse.payload)
+
+        assertIdentifier(eapMsg)
+
+        val eapSqn = isResynchronization(eapMsg)
+        if (eapSqn != null) {
+            return eapSqn
         }
 
-        if (eapMsg.subType == EapMessage.SUBTYPE_SYNCRONIZATION_FAILURE &&
-            eapMsg.attributes.size == 1 &&
-            eapMsg.attributes[0] is EapAkaAttributeAuts
-        ) {
-            val auts = eapMsg.attributes[0] as EapAkaAttributeAuts
-            val autsMilenage = Milenage(
-                aapsLogger = aapsLogger,
-                k = ltk,
-                sqn = eapSqn,
-                randParam = milenage.rand,
-                auts = auts.payload
-            )
-
-            val newSqnMilenage = Milenage(
-                aapsLogger = aapsLogger,
-                k = ltk,
-                sqn = autsMilenage.synchronizationSqn,
-                randParam = milenage.rand,
-                auts = auts.payload,
-                amf = Milenage.RESYNC_AMF,
-            )
-
-            if (!newSqnMilenage.macS.contentEquals(newSqnMilenage.receivedMacS)) {
-                throw SessionEstablishmentException(
-                    "MacS mismatch. " +
-                        "Expected: ${newSqnMilenage.macS.toHex()}. " +
-                        "Received: ${newSqnMilenage.receivedMacS.toHex()}"
-                )
-            }
-            return EapSqn(autsMilenage.synchronizationSqn)
-        }
-
-        if (eapMsg.attributes.size != 2) {
-            aapsLogger.debug(LTag.PUMPBTCOMM, "EAP-AKA: got message: $eapMsg")
-            if (eapMsg.attributes.size == 1 && eapMsg.attributes[0] is EapAkaAttributeClientErrorCode) {
-                throw SessionEstablishmentException(
-                    "Received CLIENT_ERROR_CODE for EAP-AKA challenge: ${
-                    eapMsg.attributes[0].toByteArray().toHex()
-                    }"
-                )
-            }
-            throw SessionEstablishmentException("Expecting two attributes, got: ${eapMsg.attributes.size}")
-        }
+        assertValidAkaMessage(eapMsg)
 
         for (attr in eapMsg.attributes) {
             when (attr) {
                 is EapAkaAttributeRes ->
                     if (!milenage.res.contentEquals(attr.payload)) {
-                        throw SessionEstablishmentException("RES mismatch. Expected: ${milenage.res.toHex()} Actual: ${attr.payload.toHex()} ")
+                        throw SessionEstablishmentException("RES mismatch." +
+                                                                "Expected: ${milenage.res.toHex()}." +
+                                                                "Actual: ${attr.payload.toHex()}.")
                     }
                 is EapAkaAttributeCustomIV ->
                     nodeIV = attr.payload.copyOfRange(0, IV_SIZE)
@@ -157,6 +127,55 @@ class SessionEstablisher(
             }
         }
         return null
+    }
+
+    private fun assertValidAkaMessage(eapMsg: EapMessage) {
+        if (eapMsg.attributes.size != 2) {
+            aapsLogger.debug(LTag.PUMPBTCOMM, "EAP-AKA: got incorrect: $eapMsg")
+            if (eapMsg.attributes.size == 1 && eapMsg.attributes[0] is EapAkaAttributeClientErrorCode) {
+                throw SessionEstablishmentException(
+                    "Received CLIENT_ERROR_CODE for EAP-AKA challenge: ${
+                        eapMsg.attributes[0].toByteArray().toHex()
+                    }"
+                )
+            }
+            throw SessionEstablishmentException("Expecting two attributes, got: ${eapMsg.attributes.size}")
+        }
+    }
+
+    private fun isResynchronization(eapMsg: EapMessage): EapSqn? {
+        if (eapMsg.subType != EapMessage.SUBTYPE_SYNCRONIZATION_FAILURE ||
+            eapMsg.attributes.size != 1 ||
+            eapMsg.attributes[0] !is EapAkaAttributeAuts)
+            return null
+
+        val auts = eapMsg.attributes[0] as EapAkaAttributeAuts
+        val autsMilenage = Milenage(
+            aapsLogger = aapsLogger,
+            k = ltk,
+            sqn = eapSqn,
+            randParam = milenage.rand,
+            auts = auts.payload
+        )
+
+        val newSqnMilenage = Milenage(
+            aapsLogger = aapsLogger,
+            k = ltk,
+            sqn = autsMilenage.synchronizationSqn,
+            randParam = milenage.rand,
+            auts = auts.payload,
+            amf = Milenage.RESYNC_AMF,
+        )
+
+        if (!newSqnMilenage.macS.contentEquals(newSqnMilenage.receivedMacS)) {
+            throw SessionEstablishmentException(
+                "MacS mismatch. " +
+                    "Expected: ${newSqnMilenage.macS.toHex()}. " +
+                    "Received: ${newSqnMilenage.receivedMacS.toHex()}"
+            )
+        }
+        return EapSqn(autsMilenage.synchronizationSqn)
+
     }
 
     private fun eapSuccess(): MessagePacket {
