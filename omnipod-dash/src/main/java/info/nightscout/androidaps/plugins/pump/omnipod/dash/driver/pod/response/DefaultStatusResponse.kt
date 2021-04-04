@@ -16,7 +16,8 @@ class DefaultStatusResponse(
     val deliveryStatus: DeliveryStatus = byValue((encoded[1].toInt() shr 4 and 0x0f).toByte(), DeliveryStatus.UNKNOWN)
     val podStatus: PodStatus = byValue((encoded[1] and 0x0f), PodStatus.UNKNOWN)
     val totalPulsesDelivered: Short =
-        ((encoded[2] and 0x0f shl 12 or (encoded[3].toInt() and 0xff shl 1) or (encoded[4].toInt() and 0xff ushr 7)).toShort())
+        (encoded[2] and 0x0f shl 9 or (encoded[3].toInt() and 0xff shl 1) or (encoded[4].toInt() and 0xff ushr 7)).toShort()
+
     val sequenceNumberOfLastProgrammingCommand: Short = (encoded[4] ushr 3 and 0x0f).toShort()
     val bolusPulsesRemaining: Short = ((encoded[4] and 0x07 shl 10 or (encoded[5].toInt() and 0xff) and 2047).toShort())
     val activeAlerts: EnumSet<AlertType> =
