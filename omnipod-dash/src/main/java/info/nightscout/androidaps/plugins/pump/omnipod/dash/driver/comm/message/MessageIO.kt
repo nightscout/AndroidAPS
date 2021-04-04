@@ -107,7 +107,7 @@ class MessageIO(
             maxMessageReadTries = joiner.fullFragments * 2 + 2
             for (i in 1 until joiner.fullFragments + 1) {
                 expected++
-                val nackOnTimeout = !joiner.oneExtraPacket && i==joiner.fullFragments // last packet
+                val nackOnTimeout = !joiner.oneExtraPacket && i == joiner.fullFragments // last packet
                 val packet = expectBlePacket(expected, nackOnTimeout)
                 if (packet !is PacketReceiveSuccess) {
                     aapsLogger.warn(LTag.PUMPBTCOMM, "Error reading packet:$packet")
@@ -191,8 +191,11 @@ class MessageIO(
             if (received == null || received.isEmpty()) {
                 if (nackOnTimeout)
                     cmdBleIO.sendAndConfirmPacket(BleCommandNack(index).data)
-                aapsLogger.info(LTag.PUMPBTCOMM, "Error reading index: $index. Received: $received. NackOnTimeout: " +
-                    "$nackOnTimeout")
+                aapsLogger.info(
+                    LTag.PUMPBTCOMM,
+                    "Error reading index: $index. Received: $received. NackOnTimeout: " +
+                        "$nackOnTimeout"
+                )
                 continue
             }
             if (received[0] == index) {

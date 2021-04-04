@@ -128,7 +128,7 @@ data class EapAkaAttributeAuts(val payload: ByteArray) : EapAkaAttribute() {
     companion object {
 
         fun parse(payload: ByteArray): EapAkaAttribute {
-            if (payload.size < SIZE-2) {
+            if (payload.size < SIZE - 2) {
                 throw MessageIOException("Could not parse AUTS attribute: ${payload.toHex()}")
             }
             return EapAkaAttributeAuts(payload)

@@ -20,9 +20,11 @@ class Milenage(
     init {
         require(k.size == KEY_SIZE) { "Milenage key has to be $KEY_SIZE bytes long. Received: ${k.toHex()}" }
         require(sqn.size == SQN) { "Milenage SQN has to be $SQN long. Received: ${sqn.toHex()}" }
-        require(auts.size == AUTS_SIZE) { "Milenage AUTS has to be $AUTS_SIZE long. Received: ${auts.toHex()}"}
-        require(amf.size == MILENAGE_AMF.size) { "Milenage AMF has to be ${MILENAGE_AMF.size} long." +
-            "Received: ${amf.toHex()}"}
+        require(auts.size == AUTS_SIZE) { "Milenage AUTS has to be $AUTS_SIZE long. Received: ${auts.toHex()}" }
+        require(amf.size == MILENAGE_AMF.size) {
+            "Milenage AMF has to be ${MILENAGE_AMF.size} long." +
+                "Received: ${amf.toHex()}"
+        }
     }
 
     private val secretKeySpec = SecretKeySpec(k, "AES")
@@ -84,12 +86,14 @@ class Milenage(
 
     // Used for re-synchronisation AUTS = SQN^AK || MAC-S
     private val akStarInput = ByteArray(KEY_SIZE)
+
     init {
         for (i in 0..15) {
             akStarInput[(i + 4) % 16] = randOpcEncryptedXorOpc[i]
         }
         akStarInput[15] = (akStarInput[15].toInt() xor 8).toByte()
     }
+
     private val akStarFull = cipher.doFinal(akStarInput) xor opc
     private val akStar = akStarFull.copyOfRange(0, 6)
 

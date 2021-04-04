@@ -5,7 +5,6 @@ import android.bluetooth.BluetoothGatt
 import android.bluetooth.BluetoothManager
 import android.bluetooth.BluetoothProfile
 import android.content.Context
-import android.provider.ContactsContract
 import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.logging.LTag
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.BuildConfig
@@ -27,8 +26,11 @@ sealed class ConnectionState
 object Connected : ConnectionState()
 object NotConnected : ConnectionState()
 
-class Connection(private val podDevice: BluetoothDevice, private val aapsLogger: AAPSLogger, context: Context)
-    : DisconnectHandler {
+class Connection(
+    private val podDevice: BluetoothDevice,
+    private val aapsLogger: AAPSLogger,
+    context: Context
+) : DisconnectHandler {
 
     private val incomingPackets = IncomingPackets()
     private val bleCommCallbacks = BleCommCallbacks(aapsLogger, incomingPackets, this)
@@ -36,6 +38,7 @@ class Connection(private val podDevice: BluetoothDevice, private val aapsLogger:
 
     private val bluetoothManager: BluetoothManager =
         context.getSystemService(Context.BLUETOOTH_SERVICE) as BluetoothManager
+
     // The session is Synchronized because we can lose the connection right when establishing it
     var session: Session? = null
         @Synchronized get
@@ -138,6 +141,7 @@ class Connection(private val podDevice: BluetoothDevice, private val aapsLogger:
                 }
                 keys.synchronizedEapSqn
             }
+
             is SessionKeys -> {
                 if (BuildConfig.DEBUG) {
                     aapsLogger.info(LTag.PUMPCOMM, "CK: ${keys.ck.toHex()}")

@@ -16,7 +16,6 @@ import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.response.
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.response.VersionResponse
 import info.nightscout.androidaps.utils.sharedPreferences.SP
 import java.io.Serializable
-import java.nio.ByteBuffer
 import java.util.*
 import javax.inject.Inject
 import javax.inject.Singleton

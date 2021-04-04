@@ -121,7 +121,7 @@ class BleCommCallbacks(
 
         val insertResult = incomingPackets.byCharacteristicType(characteristicType).add(payload)
         if (!insertResult) {
-            aapsLogger.warn(LTag.PUMPBTCOMM, "Could not insert read data to the incoming queue: ${characteristicType}")
+            aapsLogger.warn(LTag.PUMPBTCOMM, "Could not insert read data to the incoming queue: $characteristicType")
         }
     }
 

@@ -17,7 +17,6 @@ import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.response.
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.state.OmnipodDashPodStateManager
 import info.nightscout.androidaps.utils.extensions.toHex
 import io.reactivex.Observable
-import java.nio.ByteBuffer
 import java.util.concurrent.atomic.AtomicBoolean
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -84,7 +83,6 @@ class OmnipodDashBleManagerImpl @Inject constructor(
                 busy.set(false)
             }
         }
-
 
     override fun getStatus(): ConnectionStatus {
         // TODO is this used?
