@@ -36,7 +36,6 @@ internal class LTKExchanger(
         val sps1 = sps1()
         throwOnSendError(sps1.messagePacket, "SP1")
 
-
         val podSps1 = msgIO.receiveMessage() ?: throw PairingException("Could not read SPS1")
         processSps1FromPod(podSps1)
         // now we have all the data to generate: confPod, confPdm, ltk and noncePrefix
@@ -45,14 +44,12 @@ internal class LTKExchanger(
         val sps2 = sps2()
         throwOnSendError(sps2.messagePacket, "SPS2")
 
-
         val podSps2 = msgIO.receiveMessage() ?: throw PairingException("Could not read SPS2")
         validatePodSps2(podSps2)
 
         seq++
         // send SP0GP0
         throwOnSendErrorSending(sp0gp0().messagePacket, "SP0GP0")
-
 
         // No exception throwing after this point. It is possible that the pod saved the LTK
         msgIO.receiveMessage()
@@ -67,7 +64,7 @@ internal class LTKExchanger(
 
     @Throws(PairingException::class)
     private fun throwOnSendError(msg: MessagePacket, msgType: String) {
-        val result =  msgIO.sendMessage(msg)
+        val result = msgIO.sendMessage(msg)
         if (result !is MessageSendSuccess) {
             throw PairingException("Could not send or confirm $msgType: $result")
         }
@@ -75,7 +72,7 @@ internal class LTKExchanger(
 
     @Throws(PairingException::class)
     private fun throwOnSendErrorSending(msg: MessagePacket, msgType: String) {
-        val result =  msgIO.sendMessage(msg)
+        val result = msgIO.sendMessage(msg)
         if (result is MessageSendErrorSending) {
             throw PairingException("Could not send $msgType: $result")
         }

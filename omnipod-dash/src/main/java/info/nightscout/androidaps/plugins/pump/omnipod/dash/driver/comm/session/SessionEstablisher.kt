@@ -116,9 +116,11 @@ class SessionEstablisher(
             when (attr) {
                 is EapAkaAttributeRes ->
                     if (!milenage.res.contentEquals(attr.payload)) {
-                        throw SessionEstablishmentException("RES mismatch." +
-                                                                "Expected: ${milenage.res.toHex()}." +
-                                                                "Actual: ${attr.payload.toHex()}.")
+                        throw SessionEstablishmentException(
+                            "RES mismatch." +
+                                "Expected: ${milenage.res.toHex()}." +
+                                "Actual: ${attr.payload.toHex()}."
+                        )
                     }
                 is EapAkaAttributeCustomIV ->
                     nodeIV = attr.payload.copyOfRange(0, IV_SIZE)
@@ -135,7 +137,7 @@ class SessionEstablisher(
             if (eapMsg.attributes.size == 1 && eapMsg.attributes[0] is EapAkaAttributeClientErrorCode) {
                 throw SessionEstablishmentException(
                     "Received CLIENT_ERROR_CODE for EAP-AKA challenge: ${
-                        eapMsg.attributes[0].toByteArray().toHex()
+                    eapMsg.attributes[0].toByteArray().toHex()
                     }"
                 )
             }
@@ -146,7 +148,8 @@ class SessionEstablisher(
     private fun isResynchronization(eapMsg: EapMessage): EapSqn? {
         if (eapMsg.subType != EapMessage.SUBTYPE_SYNCRONIZATION_FAILURE ||
             eapMsg.attributes.size != 1 ||
-            eapMsg.attributes[0] !is EapAkaAttributeAuts)
+            eapMsg.attributes[0] !is EapAkaAttributeAuts
+        )
             return null
 
         val auts = eapMsg.attributes[0] as EapAkaAttributeAuts
@@ -175,7 +178,6 @@ class SessionEstablisher(
             )
         }
         return EapSqn(autsMilenage.synchronizationSqn)
-
     }
 
     private fun eapSuccess(): MessagePacket {

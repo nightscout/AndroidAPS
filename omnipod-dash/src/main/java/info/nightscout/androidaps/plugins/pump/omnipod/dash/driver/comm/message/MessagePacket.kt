@@ -2,7 +2,6 @@ package info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.message
 
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.Id
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.exceptions.CouldNotParseMessageException
-import retrofit2.http.HEAD
 import java.nio.ByteBuffer
 
 /***

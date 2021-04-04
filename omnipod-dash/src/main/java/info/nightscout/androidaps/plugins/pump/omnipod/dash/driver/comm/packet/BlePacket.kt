@@ -195,8 +195,7 @@ data class LastOptionalPlusOneBlePacket(
     }
 }
 
-
-private fun ByteArray.assertSizeAtLeast(size: Int, index: Byte?=null) {
+private fun ByteArray.assertSizeAtLeast(size: Int, index: Byte? = null) {
     if (this.size < size) {
         throw IncorrectPacketException(this, index)
     }
