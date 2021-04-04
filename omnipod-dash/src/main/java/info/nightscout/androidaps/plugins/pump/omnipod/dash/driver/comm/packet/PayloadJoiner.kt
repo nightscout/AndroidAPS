@@ -42,7 +42,7 @@ class PayloadJoiner(private val firstPacket: ByteArray) {
                 oneExtraPacket = lastPacket.oneExtraPacket
             }
 
-            idx > fullFragments && oneExtraPacket -> {
+            idx == fullFragments+1 && oneExtraPacket -> {
                 fragments.add(LastOptionalPlusOneBlePacket.parse(packet))
             }
 

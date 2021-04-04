@@ -29,29 +29,57 @@ internal class LTKExchanger(
 
     @Throws(PairingException::class)
     fun negotiateLTK(): PairResult {
-        val sp1sp2 = sp1sp2(podId.address, sp2())
-        throwOnSendError(sp1sp2.messagePacket, "SP1SP2")
+        val sp1sp2 = PairMessage(
+            sequenceNumber = seq,
+            source = myId,
+            destination = podAddress,
+            keys = arrayOf(SP1, SP2),
+            payloads = arrayOf(podId.address, sp2())
+        )
+        throwOnSendError(sp1sp2.messagePacket, SP1+SP2)
 
         seq++
-        val sps1 = sps1()
-        throwOnSendError(sps1.messagePacket, "SP1")
+        val sps1 = PairMessage(
+            sequenceNumber = seq,
+            source = myId,
+            destination = podAddress,
+            keys = arrayOf(SPS1),
+            payloads = arrayOf(keyExchange.pdmPublic + keyExchange.pdmNonce)
+        )
+        throwOnSendError(sps1.messagePacket, SPS1)
 
         val podSps1 = msgIO.receiveMessage() ?: throw PairingException("Could not read SPS1")
         processSps1FromPod(podSps1)
         // now we have all the data to generate: confPod, confPdm, ltk and noncePrefix
 
         seq++
-        val sps2 = sps2()
-        throwOnSendError(sps2.messagePacket, "SPS2")
+        val sps2 = PairMessage(
+            sequenceNumber = seq,
+            source = myId,
+            destination = podAddress,
+            keys = arrayOf(SPS2),
+            payloads = arrayOf(keyExchange.pdmConf)
+        )
+        throwOnSendError(sps2.messagePacket, SPS2)
 
         val podSps2 = msgIO.receiveMessage() ?: throw PairingException("Could not read SPS2")
         validatePodSps2(podSps2)
+        // No exception throwing after this point. It is possible that the pod saved the LTK
 
         seq++
         // send SP0GP0
-        throwOnSendErrorSending(sp0gp0().messagePacket, "SP0GP0")
+        val sp0gp0 = PairMessage (
+                sequenceNumber = seq,
+                source = myId,
+                destination = podAddress,
+                keys = arrayOf(SP0GP0),
+                payloads = arrayOf(ByteArray(0))
+            )
+        val result = msgIO.sendMessage(sp0gp0.messagePacket)
+        if (result !is MessageSendSuccess) {
+            aapsLogger.warn(LTag.PUMPBTCOMM,"Error sending SP0GP0: $result")
+        }
 
-        // No exception throwing after this point. It is possible that the pod saved the LTK
         msgIO.receiveMessage()
             ?.let { validateP0(it) }
             ?: aapsLogger.warn(LTag.PUMPBTCOMM, "Could not read P0")
@@ -70,58 +98,12 @@ internal class LTKExchanger(
         }
     }
 
-    @Throws(PairingException::class)
-    private fun throwOnSendErrorSending(msg: MessagePacket, msgType: String) {
-        val result = msgIO.sendMessage(msg)
-        if (result is MessageSendErrorSending) {
-            throw PairingException("Could not send $msgType: $result")
-        }
-    }
-
-    private fun sp1sp2(sp1: ByteArray, sp2: ByteArray): PairMessage {
-        val payload = StringLengthPrefixEncoding.formatKeys(
-            arrayOf(SP1, SP2),
-            arrayOf(sp1, sp2)
-        )
-        return PairMessage(
-            sequenceNumber = seq,
-            source = myId,
-            destination = podAddress,
-            payload = payload
-        )
-    }
-
-    private fun sps1(): PairMessage {
-        val payload = StringLengthPrefixEncoding.formatKeys(
-            arrayOf("SPS1="),
-            arrayOf(keyExchange.pdmPublic + keyExchange.pdmNonce)
-        )
-        return PairMessage(
-            sequenceNumber = seq,
-            source = myId,
-            destination = podAddress,
-            payload = payload
-        )
-    }
 
     private fun processSps1FromPod(msg: MessagePacket) {
         aapsLogger.debug(LTag.PUMPBTCOMM, "Received SPS1 from pod: ${msg.payload.toHex()}")
 
         val payload = parseKeys(arrayOf(SPS1), msg.payload)[0]
         keyExchange.updatePodPublicData(payload)
-    }
-
-    private fun sps2(): PairMessage {
-        val payload = StringLengthPrefixEncoding.formatKeys(
-            arrayOf(SPS2),
-            arrayOf(keyExchange.pdmConf)
-        )
-        return PairMessage(
-            sequenceNumber = seq,
-            source = myId,
-            destination = podAddress,
-            payload = payload
-        )
     }
 
     private fun validatePodSps2(msg: MessagePacket) {
@@ -140,16 +122,6 @@ internal class LTKExchanger(
         // This is GetPodStatus command, with page 0 parameter.
         // We could replace that in the future with the serialized GetPodStatus()
         return GET_POD_STATUS_HEX_COMMAND.hexStringToByteArray()
-    }
-
-    private fun sp0gp0(): PairMessage {
-        val payload = SP0GP0.toByteArray()
-        return PairMessage(
-            sequenceNumber = seq,
-            source = myId,
-            destination = podAddress,
-            payload = payload
-        )
     }
 
     private fun validateP0(msg: MessagePacket) {

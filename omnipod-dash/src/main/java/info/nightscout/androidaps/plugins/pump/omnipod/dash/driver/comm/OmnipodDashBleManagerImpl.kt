@@ -46,9 +46,7 @@ class OmnipodDashBleManagerImpl @Inject constructor(
                 throw BusyException()
             }
             try {
-                val conn = connection ?: throw NotConnectedException("Not connected")
-
-                val session = conn.session ?: throw NotConnectedException("Missing session")
+                val session = assertSessionEstablished()
 
                 emitter.onNext(PodEvent.CommandSending(cmd))
                 when (session.sendCommand(cmd)) {
@@ -83,6 +81,12 @@ class OmnipodDashBleManagerImpl @Inject constructor(
                 busy.set(false)
             }
         }
+
+    private fun assertSessionEstablished(): Session {
+        val conn = assertConnected()
+        return conn.session
+            ?: throw NotConnectedException("Missing session")
+   }
 
     override fun getStatus(): ConnectionStatus {
         // TODO is this used?
@@ -135,8 +139,9 @@ class OmnipodDashBleManagerImpl @Inject constructor(
     }
 
     private fun establishSession(msgSeq: Byte) {
-        val conn = connection ?: throw FailedToConnectException("connection lost")
-        val ltk: ByteArray = podState.ltk ?: throw FailedToConnectException("Missing LTK, activate the pod first")
+        val conn = assertConnected()
+
+        val ltk = assertPaired()
 
         val uniqueId = podState.uniqueId
         val podId = uniqueId?.let { Id.fromLong(uniqueId) }
@@ -149,13 +154,23 @@ class OmnipodDashBleManagerImpl @Inject constructor(
         if (newSqn != null) {
             aapsLogger.info(LTag.PUMPBTCOMM, "Updating EAP SQN to: $newSqn")
             podState.eapAkaSequenceNumber = newSqn.toLong()
-            var newSqn = conn.establishSession(ltk, msgSeq, myId, podId, podState.increaseEapAkaSequenceNumber())
+            newSqn = conn.establishSession(ltk, msgSeq, myId, podId, podState.increaseEapAkaSequenceNumber())
             if (newSqn != null) {
                 throw SessionEstablishmentException("Received resynchronization SQN for the second time")
             }
         }
 
         podState.commitEapAkaSequenceNumber()
+    }
+
+    private fun assertPaired(): ByteArray {
+        return podState.ltk
+            ?: throw FailedToConnectException("Missing LTK, activate the pod first")
+    }
+
+    private fun assertConnected(): Connection {
+        return connection
+            ?: throw FailedToConnectException("connection lost")
     }
 
     override fun pairNewPod(): Observable<PodEvent> = Observable.create { emitter ->

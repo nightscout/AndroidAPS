@@ -6,29 +6,11 @@ import java.util.zip.CRC32
 internal class PayloadSplitter(private val payload: ByteArray) {
 
     fun splitInPackets(): List<BlePacket> {
+        if (payload.size <= FirstBlePacket.CAPACITY_WITH_THE_OPTIONAL_PLUS_ONE_PACKET) {
+            return splitInOnePacket()
+        }
         val ret = ArrayList<BlePacket>()
         val crc32 = payload.crc32()
-        if (payload.size <= FirstBlePacket.CAPACITY_WITH_THE_OPTIONAL_PLUS_ONE_PACKET) {
-            val end = min(FirstBlePacket.CAPACITY_WITHOUT_MIDDLE_PACKETS, payload.size)
-            ret.add(
-                FirstBlePacket(
-                    fullFragments = 0,
-                    payload = payload.copyOfRange(0, end),
-                    size = payload.size.toByte(),
-                    crc32 = crc32
-                )
-            )
-            if (payload.size > FirstBlePacket.CAPACITY_WITHOUT_MIDDLE_PACKETS) {
-                ret.add(
-                    LastOptionalPlusOneBlePacket(
-                        index = 1,
-                        payload = payload.copyOfRange(end, payload.size),
-                        size = (payload.size - end).toByte()
-                    )
-                )
-            }
-            return ret
-        }
         val middleFragments = (payload.size - FirstBlePacket.CAPACITY_WITH_MIDDLE_PACKETS) / MiddleBlePacket.CAPACITY
         val rest =
             (
@@ -42,17 +24,10 @@ internal class PayloadSplitter(private val payload: ByteArray) {
             )
         )
         for (i in 1..middleFragments) {
-            val p = if (i == 1) {
-                payload.copyOfRange(
-                    FirstBlePacket.CAPACITY_WITH_MIDDLE_PACKETS,
-                    FirstBlePacket.CAPACITY_WITH_MIDDLE_PACKETS + MiddleBlePacket.CAPACITY
-                )
-            } else {
-                payload.copyOfRange(
-                    FirstBlePacket.CAPACITY_WITH_MIDDLE_PACKETS + (i - 1) * MiddleBlePacket.CAPACITY,
-                    FirstBlePacket.CAPACITY_WITH_MIDDLE_PACKETS + i * MiddleBlePacket.CAPACITY
-                )
-            }
+            val p = payload.copyOfRange(
+                FirstBlePacket.CAPACITY_WITH_MIDDLE_PACKETS + (i - 1) * MiddleBlePacket.CAPACITY,
+                FirstBlePacket.CAPACITY_WITH_MIDDLE_PACKETS + i * MiddleBlePacket.CAPACITY
+            )
             ret.add(
                 MiddleBlePacket(
                     index = i.toByte(),
@@ -83,6 +58,30 @@ internal class PayloadSplitter(private val payload: ByteArray) {
                             LastBlePacket.CAPACITY,
                         payload.size
                     )
+                )
+            )
+        }
+        return ret
+    }
+
+    private fun splitInOnePacket(): List<BlePacket> {
+        val ret = ArrayList<BlePacket>()
+        val crc32 = payload.crc32()
+        val end = min(FirstBlePacket.CAPACITY_WITHOUT_MIDDLE_PACKETS, payload.size)
+        ret.add(
+            FirstBlePacket(
+                fullFragments = 0,
+                payload = payload.copyOfRange(0, end),
+                size = payload.size.toByte(),
+                crc32 = crc32
+            )
+        )
+        if (payload.size > FirstBlePacket.CAPACITY_WITHOUT_MIDDLE_PACKETS) {
+            ret.add(
+                LastOptionalPlusOneBlePacket(
+                    index = 1,
+                    payload = payload.copyOfRange(end, payload.size),
+                    size = (payload.size - end).toByte()
                 )
             )
         }

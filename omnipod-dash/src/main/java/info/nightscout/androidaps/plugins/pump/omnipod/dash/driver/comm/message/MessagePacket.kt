@@ -15,7 +15,7 @@ data class MessagePacket(
     val sequenceNumber: Byte,
     val ack: Boolean = false,
     val ackNumber: Byte = 0.toByte(),
-    val eqos: Short = 0.toShort(), // TODO: understand. Seems to be set to 1 for commands
+    val eqos: Short = 0.toShort(),
     val priority: Boolean = false,
     val lastMessage: Boolean = false,
     val gateway: Boolean = false,
