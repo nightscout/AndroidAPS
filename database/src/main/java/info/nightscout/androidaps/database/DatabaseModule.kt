@@ -24,6 +24,7 @@ open class DatabaseModule {
  //           .addMigrations(migration5to6)
  //           .addMigrations(migration6to7)
  //           .addMigrations(migration7to8)
+ //           .addMigrations(migration11to12)
             .fallbackToDestructiveMigration()
             .build()
 
@@ -63,7 +64,7 @@ open class DatabaseModule {
         }
     }
 
-    private val migration10to11 = object : Migration(10,11) {
+    private val migration11to12 = object : Migration(11,12) {
         override fun migrate(database: SupportSQLiteDatabase) {
             database.execSQL("DROP TABLE IF EXISTS userEntry")
             database.execSQL("CREATE TABLE IF NOT EXISTS userEntry (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `timestamp` INTEGER NOT NULL, `utcOffset` INTEGER NOT NULL, `action` TEXT NOT NULL, `source` TEXT NOT NULL, `note` TEXT NOT NULL, `values` TEXT NOT NULL)")
