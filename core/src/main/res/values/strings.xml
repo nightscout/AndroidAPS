@@ -433,6 +433,8 @@
     <string name="uel_cancel_extended_bolus">CANCEL EXTENDED BOLUS</string>
     <string name="uel_cancel_tt">CANCEL TT</string>
     <string name="uel_careportal">CAREPORTAL</string>
+    <string name="uel_site_change">SITE CHANGE</string>
+    <string name="uel_reservoir_change">RESERVOIR CHANGE</string>
     <string name="uel_calibration">CALIBRATION</string>
     <string name="uel_prime_bolus">PRIME BOLUS</string>
     <string name="uel_treatment">TREATMENT</string>

@@ -49,6 +49,8 @@ class Translator @Inject internal constructor(
         Action.CANCEL_EXTENDED_BOLUS               -> resourceHelper.gs(R.string.uel_cancel_extended_bolus)
         Action.CANCEL_TT                           -> resourceHelper.gs(R.string.uel_cancel_tt)
         Action.CAREPORTAL                          -> resourceHelper.gs(R.string.uel_careportal)
+        Action.SITE_CHANGE                         -> resourceHelper.gs(R.string.uel_site_change)
+        Action.RESERVOIR_CHANGE                    -> resourceHelper.gs(R.string.uel_reservoir_change)
         Action.CALIBRATION                         -> resourceHelper.gs(R.string.uel_calibration)
         Action.PRIME_BOLUS                         -> resourceHelper.gs(R.string.uel_prime_bolus)
         Action.TREATMENT                           -> resourceHelper.gs(R.string.uel_treatment)

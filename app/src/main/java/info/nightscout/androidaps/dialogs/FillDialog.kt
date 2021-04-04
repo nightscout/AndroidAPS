@@ -141,8 +141,9 @@ class FillDialog : DialogFragmentWithDate() {
                         requestPrimeBolus(insulinAfterConstraints, notes)
                     }
                     if (siteChange) {
-                        uel.log(Action.CAREPORTAL, Sources.FillDialog,
+                        uel.log(Action.SITE_CHANGE, Sources.FillDialog,
                             notes,
+                            ValueWithUnit.Timestamp(eventTime).takeIf { eventTimeChanged },
                             ValueWithUnit.TherapyEventType(TherapyEvent.Type.CANNULA_CHANGE))
                         disposable += repository.runTransactionForResult(InsertIfNewByTimestampTherapyEventTransaction(
                             timestamp = eventTime,
@@ -156,8 +157,9 @@ class FillDialog : DialogFragmentWithDate() {
                     }
                     if (insulinChange) {
                         // add a second for case of both checked
-                        uel.log(Action.CAREPORTAL, Sources.FillDialog,
+                        uel.log(Action.RESERVOIR_CHANGE, Sources.FillDialog,
                             notes,
+                            ValueWithUnit.Timestamp(eventTime).takeIf { eventTimeChanged },
                             ValueWithUnit.TherapyEventType(TherapyEvent.Type.INSULIN_CHANGE))
                         disposable += repository.runTransactionForResult(InsertIfNewByTimestampTherapyEventTransaction(
                             timestamp = eventTime + 1000,
