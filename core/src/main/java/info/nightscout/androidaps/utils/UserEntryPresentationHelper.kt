@@ -184,10 +184,7 @@ class UserEntryPresentationHelper @Inject constructor(
                 is ValueWithUnit.UnitPerHour           -> unitPerHour = DecimalFormatter.to2Decimal(valueWithUnit.value)
                 is ValueWithUnit.SimpleInt             -> other = other.addWithSeparator(valueWithUnit.value)
                 is ValueWithUnit.SimpleString          -> other = other.addWithSeparator(valueWithUnit.value)
-//                is XXXValueWithUnit.StringResource        -> stringResource = if (stringResource == "") resourceHelper.gs(valueWithUnit.value, valueWithUnit.params.map { it.value() }.toTypedArray()) else stringResource + " / " + resourceHelper.gs(valueWithUnit.value, valueWithUnit.params.map { it.value() }.toTypedArray())
-                is ValueWithUnit.StringResource        -> if (valueWithUnit.params.isEmpty()) {
-                    stringResource = if (stringResource == "") resourceHelper.gs(valueWithUnit.value) else stringResource + " / " + resourceHelper.gs(valueWithUnit.value)
-                }
+                is ValueWithUnit.StringResource        -> stringResource = stringResource.addWithSeparator(resourceHelper.gs(valueWithUnit.value, *(valueWithUnit.params.map { it.value() }.toTypedArray())))
                 is ValueWithUnit.TherapyEventMeterType -> therapyEvent = therapyEvent.addWithSeparator(translator.translate(valueWithUnit.value))
                 is ValueWithUnit.TherapyEventTTReason  -> therapyEvent = therapyEvent.addWithSeparator(translator.translate(valueWithUnit.value))
                 is ValueWithUnit.TherapyEventType      -> therapyEvent = therapyEvent.addWithSeparator(translator.translate(valueWithUnit.value))
@@ -213,7 +210,6 @@ class UserEntryPresentationHelper @Inject constructor(
         return "$timestampRec;$dateTimestampRev;$utcOffset;$action;$therapyEvent;$source;$note;$stringResource;$timestamp;$bg;$gram;$insulin;$unitPerHour;$percent;$hour;$minute;$other"
     }
 
-    private fun saveString(id: Int): String = if (id != 0) resourceHelper.gs(id) else ""
     private fun csvString(action: Action): String = "\"" + translator.translate(action).replace("\"", "\"\"") + "\""
     private fun csvString(id: Int): String = if (id != 0) "\"" + resourceHelper.gs(id).replace("\"", "\"\"") + "\"" else ""
     private fun csvString(s: String): String = if (s != "") "\"" + s.replace("\"", "\"\"") + "\"" else ""
