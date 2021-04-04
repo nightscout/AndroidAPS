@@ -205,7 +205,7 @@ public class DanaRPlugin extends AbstractDanaRPlugin {
 
     // This is called from APS
     @NonNull @Override
-    public PumpEnactResult setTempBasalAbsolute(double absoluteRate, int durationInMinutes, @NonNull Profile profile, boolean enforceNew) {
+    public PumpEnactResult setTempBasalAbsolute(double absoluteRate, int durationInMinutes, @NonNull Profile profile, boolean enforceNew, @NonNull PumpSync.TemporaryBasalType tbrType) {
         // Recheck pump status if older than 30 min
         //This should not be needed while using queue because connection should be done before calling this
         PumpEnactResult result = new PumpEnactResult(getInjector());
@@ -273,7 +273,7 @@ public class DanaRPlugin extends AbstractDanaRPlugin {
             }
             // Convert duration from minutes to hours
             aapsLogger.debug(LTag.PUMP, "setTempBasalAbsolute: Setting temp basal " + percentRate + "% for " + durationInMinutes + " minutes (doLowTemp || doHighTemp)");
-            return setTempBasalPercent(percentRate, durationInMinutes, profile, false);
+            return setTempBasalPercent(percentRate, durationInMinutes, profile, false, tbrType);
         }
         if (doExtendedTemp) {
             // Check if some temp is already in progress

@@ -182,7 +182,8 @@ class SmsCommunicatorPlugin @Inject constructor(
         override fun doWork(): Result {
             val bundle = dataWorker.pickupBundle(inputData.getLong(DataWorker.STORE_KEY, -1))
                 ?: return Result.failure(workDataOf("Error" to "missing input data"))
-            val format = bundle.getString("format") ?: return Result.failure(workDataOf("Error" to "missing format in input data"))
+            val format = bundle.getString("format")
+                ?: return Result.failure(workDataOf("Error" to "missing format in input data"))
             val pdus = bundle["pdus"] as Array<*>
             for (pdu in pdus) {
                 val message = SmsMessage.createFromPdu(pdu as ByteArray, format)
@@ -636,7 +637,7 @@ class SmsCommunicatorPlugin @Inject constructor(
                 receivedSms.processed = true
                 messageToConfirm = AuthRequest(injector, receivedSms, reply, passCode, object : SmsAction(tempBasalPct, duration) {
                     override fun run() {
-                        commandQueue.tempBasalPercent(anInteger(), secondInteger(), true, profile, object : Callback() {
+                        commandQueue.tempBasalPercent(anInteger(), secondInteger(), true, profile, PumpSync.TemporaryBasalType.NORMAL, object : Callback() {
                             override fun run() {
                                 if (result.success) {
                                     var replyText = if (result.isPercent) String.format(resourceHelper.gs(R.string.smscommunicator_tempbasalset_percent), result.percent, result.duration) else String.format(resourceHelper.gs(R.string.smscommunicator_tempbasalset), result.absolute, result.duration)
@@ -678,7 +679,7 @@ class SmsCommunicatorPlugin @Inject constructor(
                 receivedSms.processed = true
                 messageToConfirm = AuthRequest(injector, receivedSms, reply, passCode, object : SmsAction(tempBasal, duration) {
                     override fun run() {
-                        commandQueue.tempBasalAbsolute(aDouble(), secondInteger(), true, profile, object : Callback() {
+                        commandQueue.tempBasalAbsolute(aDouble(), secondInteger(), true, profile, PumpSync.TemporaryBasalType.NORMAL, object : Callback() {
                             override fun run() {
                                 if (result.success) {
                                     var replyText = if (result.isPercent) String.format(resourceHelper.gs(R.string.smscommunicator_tempbasalset_percent), result.percent, result.duration)

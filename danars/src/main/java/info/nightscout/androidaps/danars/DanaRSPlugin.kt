@@ -278,7 +278,7 @@ class DanaRSPlugin @Inject constructor(
             if (carbTime == 0) carbTime-- // better set 1 min back to prevents clash with insulin
             detailedBolusInfo.carbTime = 0
             detailedBolusInfoStorage.add(detailedBolusInfo) // will be picked up on reading history
-            val t = EventOverviewBolusProgress.Treatment(0.0, 0, detailedBolusInfo.bolusType == DetailedBolusInfo.BolusType.SMB);
+            val t = EventOverviewBolusProgress.Treatment(0.0, 0, detailedBolusInfo.bolusType == DetailedBolusInfo.BolusType.SMB)
             var connectionOK = false
             if (detailedBolusInfo.insulin > 0 || carbs > 0) connectionOK = danaRSService?.bolus(detailedBolusInfo.insulin, carbs.toInt(), DateUtil.now() + T.mins(carbTime.toLong()).msecs(), t)
                 ?: false
@@ -315,7 +315,7 @@ class DanaRSPlugin @Inject constructor(
 
     // This is called from APS
     @Synchronized
-    override fun setTempBasalAbsolute(absoluteRate: Double, durationInMinutes: Int, profile: Profile, enforceNew: Boolean): PumpEnactResult {
+    override fun setTempBasalAbsolute(absoluteRate: Double, durationInMinutes: Int, profile: Profile, enforceNew: Boolean, tbrType: PumpSync.TemporaryBasalType): PumpEnactResult {
         var result = PumpEnactResult(injector)
         val absoluteAfterConstrain = constraintChecker.applyBasalConstraints(Constraint(absoluteRate), profile).value()
         val doTempOff = baseBasalRate - absoluteAfterConstrain == 0.0
@@ -367,7 +367,7 @@ class DanaRSPlugin @Inject constructor(
             // Convert duration from minutes to hours
             aapsLogger.debug(LTag.PUMP, "setTempBasalAbsolute: Setting temp basal $percentRate% for $durationInMinutes minutes (doLowTemp || doHighTemp)")
             result = if (percentRate == 0 && durationInMinutes > 30) {
-                setTempBasalPercent(percentRate, durationInMinutes, profile, enforceNew)
+                setTempBasalPercent(percentRate, durationInMinutes, profile, enforceNew, tbrType)
             } else {
                 // use special APS temp basal call ... 100+/15min .... 100-/30min
                 setHighTempBasalPercent(percentRate)
@@ -387,7 +387,7 @@ class DanaRSPlugin @Inject constructor(
     }
 
     @Synchronized
-    override fun setTempBasalPercent(percent: Int, durationInMinutes: Int, profile: Profile, enforceNew: Boolean): PumpEnactResult {
+    override fun setTempBasalPercent(percent: Int, durationInMinutes: Int, profile: Profile, enforceNew: Boolean, tbrType: PumpSync.TemporaryBasalType): PumpEnactResult {
         val result = PumpEnactResult(injector)
         var percentAfterConstraint = constraintChecker.applyBasalPercentConstraints(Constraint(percent), profile).value()
         if (percentAfterConstraint < 0) {

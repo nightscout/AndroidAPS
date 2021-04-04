@@ -40,6 +40,7 @@ import info.nightscout.androidaps.interfaces.ProfileFunction;
 import info.nightscout.androidaps.interfaces.PumpDescription;
 import info.nightscout.androidaps.interfaces.PumpInterface;
 import info.nightscout.androidaps.interfaces.PumpPluginBase;
+import info.nightscout.androidaps.interfaces.PumpSync;
 import info.nightscout.androidaps.interfaces.TreatmentsInterface;
 import info.nightscout.androidaps.logging.AAPSLogger;
 import info.nightscout.androidaps.logging.LTag;
@@ -711,7 +712,7 @@ public class ComboPlugin extends PumpPluginBase implements PumpInterface, Constr
      *              the new value (and thus still has the old duration of e.g. 1 min) expires?)
      */
     @NonNull @Override
-    public PumpEnactResult setTempBasalAbsolute(double absoluteRate, int durationInMinutes, @NonNull Profile profile, boolean force) {
+    public PumpEnactResult setTempBasalAbsolute(double absoluteRate, int durationInMinutes, @NonNull Profile profile, boolean force, PumpSync.TemporaryBasalType tbrType) {
         getAapsLogger().debug(LTag.PUMP, "setTempBasalAbsolute called with a rate of " + absoluteRate + " for " + durationInMinutes + " min.");
         int unroundedPercentage = Double.valueOf(absoluteRate / getBaseBasalRate() * 100).intValue();
         int roundedPercentage = (int) (Math.round(absoluteRate / getBaseBasalRate() * 10) * 10);
@@ -729,7 +730,7 @@ public class ComboPlugin extends PumpPluginBase implements PumpInterface, Constr
      *                 is or isn't running at the moment
      */
     @NonNull @Override
-    public PumpEnactResult setTempBasalPercent(int percent, int durationInMinutes, @NonNull Profile profile, boolean forceNew) {
+    public PumpEnactResult setTempBasalPercent(int percent, int durationInMinutes, @NonNull Profile profile, boolean forceNew, PumpSync.TemporaryBasalType tbrType) {
         return setTempBasalPercent(percent, durationInMinutes);
     }
 

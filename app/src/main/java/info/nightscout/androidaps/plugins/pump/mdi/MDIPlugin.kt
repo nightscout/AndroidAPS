@@ -93,7 +93,7 @@ class MDIPlugin @Inject constructor(
     }
 
     override fun stopBolusDelivering() {}
-    override fun setTempBasalAbsolute(absoluteRate: Double, durationInMinutes: Int, profile: Profile, enforceNew: Boolean): PumpEnactResult {
+    override fun setTempBasalAbsolute(absoluteRate: Double, durationInMinutes: Int, profile: Profile, enforceNew: Boolean, tbrType: PumpSync.TemporaryBasalType): PumpEnactResult {
         val result = PumpEnactResult(injector)
         result.success = false
         result.comment = resourceHelper.gs(R.string.pumperror)
@@ -101,7 +101,7 @@ class MDIPlugin @Inject constructor(
         return result
     }
 
-    override fun setTempBasalPercent(percent: Int, durationInMinutes: Int, profile: Profile, enforceNew: Boolean): PumpEnactResult {
+    override fun setTempBasalPercent(percent: Int, durationInMinutes: Int, profile: Profile, enforceNew: Boolean, tbrType: PumpSync.TemporaryBasalType): PumpEnactResult {
         val result = PumpEnactResult(injector)
         result.success = false
         result.comment = resourceHelper.gs(R.string.pumperror)

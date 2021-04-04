@@ -22,8 +22,8 @@ interface CommandQueueProvider {
     fun stopPump(callback: Callback?)
     fun startPump(callback: Callback?)
     fun setTBROverNotification(callback: Callback?, enable: Boolean)
-    fun tempBasalAbsolute(absoluteRate: Double, durationInMinutes: Int, enforceNew: Boolean, profile: Profile, callback: Callback?): Boolean
-    fun tempBasalPercent(percent: Int, durationInMinutes: Int, enforceNew: Boolean, profile: Profile, callback: Callback?): Boolean
+    fun tempBasalAbsolute(absoluteRate: Double, durationInMinutes: Int, enforceNew: Boolean, profile: Profile, tbrType: PumpSync.TemporaryBasalType, callback: Callback?): Boolean
+    fun tempBasalPercent(percent: Int, durationInMinutes: Int, enforceNew: Boolean, profile: Profile, tbrType: PumpSync.TemporaryBasalType, callback: Callback?): Boolean
     fun extendedBolus(insulin: Double, durationInMinutes: Int, callback: Callback?): Boolean
     fun cancelTempBasal(enforceNew: Boolean, callback: Callback?): Boolean
     fun cancelExtended(callback: Callback?): Boolean

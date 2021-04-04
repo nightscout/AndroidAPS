@@ -660,7 +660,7 @@ public class OmnipodErosPumpPlugin extends PumpPluginBase implements PumpInterfa
     // if false and the same rate is requested enacted=false and success=true is returned and TBR is not changed
     @Override
     @NonNull
-    public PumpEnactResult setTempBasalAbsolute(double absoluteRate, int durationInMinutes, @NonNull Profile profile, boolean enforceNew) {
+    public PumpEnactResult setTempBasalAbsolute(double absoluteRate, int durationInMinutes, @NonNull Profile profile, boolean enforceNew, @NonNull PumpSync.TemporaryBasalType tbrType) {
         aapsLogger.info(LTag.PUMP, "setTempBasalAbsolute: rate: {}, duration={}", absoluteRate, durationInMinutes);
 
         if (durationInMinutes <= 0 || durationInMinutes % BASAL_STEP_DURATION.getStandardMinutes() != 0) {
@@ -1026,14 +1026,14 @@ public class OmnipodErosPumpPlugin extends PumpPluginBase implements PumpInterfa
             aapsLogger.debug(LTag.PUMP, "stopConnecting [PumpPluginAbstract] - default (empty) implementation.");
     }
 
-    @NonNull @Override public PumpEnactResult setTempBasalPercent(int percent, int durationInMinutes, @NonNull Profile profile, boolean enforceNew) {
+    @NonNull @Override public PumpEnactResult setTempBasalPercent(int percent, int durationInMinutes, @NonNull Profile profile, boolean enforceNew, @NonNull PumpSync.TemporaryBasalType tbrType) {
         if (percent == 0) {
-            return setTempBasalAbsolute(0.0d, durationInMinutes, profile, enforceNew);
+            return setTempBasalAbsolute(0.0d, durationInMinutes, profile, enforceNew, tbrType);
         } else {
             double absoluteValue = profile.getBasal() * (percent / 100.0d);
             absoluteValue = pumpDescription.getPumpType().determineCorrectBasalSize(absoluteValue);
             aapsLogger.warn(LTag.PUMP, "setTempBasalPercent [OmnipodPumpPlugin] - You are trying to use setTempBasalPercent with percent other then 0% (" + percent + "). This will start setTempBasalAbsolute, with calculated value (" + absoluteValue + "). Result might not be 100% correct.");
-            return setTempBasalAbsolute(absoluteValue, durationInMinutes, profile, enforceNew);
+            return setTempBasalAbsolute(absoluteValue, durationInMinutes, profile, enforceNew, tbrType);
         }
     }
 

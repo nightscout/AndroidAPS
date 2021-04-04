@@ -222,7 +222,7 @@ open class VirtualPumpPlugin @Inject constructor(
     }
 
     override fun stopBolusDelivering() {}
-    override fun setTempBasalAbsolute(absoluteRate: Double, durationInMinutes: Int, profile: Profile, enforceNew: Boolean): PumpEnactResult {
+    override fun setTempBasalAbsolute(absoluteRate: Double, durationInMinutes: Int, profile: Profile, enforceNew: Boolean, tbrType: PumpSync.TemporaryBasalType): PumpEnactResult {
         val tempBasal = TemporaryBasal(injector)
             .date(System.currentTimeMillis())
             .absolute(absoluteRate)
@@ -242,7 +242,7 @@ open class VirtualPumpPlugin @Inject constructor(
         return result
     }
 
-    override fun setTempBasalPercent(percent: Int, durationInMinutes: Int, profile: Profile, enforceNew: Boolean): PumpEnactResult {
+    override fun setTempBasalPercent(percent: Int, durationInMinutes: Int, profile: Profile, enforceNew: Boolean, tbrType: PumpSync.TemporaryBasalType): PumpEnactResult {
         val tempBasal = TemporaryBasal(injector)
             .date(System.currentTimeMillis())
             .percent(percent)

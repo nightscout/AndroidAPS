@@ -694,7 +694,7 @@ public class LocalInsightPlugin extends PumpPluginBase implements PumpInterface,
     }
 
     @NonNull @Override
-    public PumpEnactResult setTempBasalAbsolute(double absoluteRate, int durationInMinutes, @NonNull Profile profile, boolean enforceNew) {
+    public PumpEnactResult setTempBasalAbsolute(double absoluteRate, int durationInMinutes, @NonNull Profile profile, boolean enforceNew, @NonNull PumpSync.TemporaryBasalType tbrType) {
         PumpEnactResult result = new PumpEnactResult(getInjector());
         if (activeBasalRate == null) return result;
         if (activeBasalRate.getActiveBasalRate() == 0) return result;
@@ -722,13 +722,13 @@ public class LocalInsightPlugin extends PumpPluginBase implements PumpInterface,
                         result.comment(cancelTBRResult.getComment());
                     }
                 } else {
-                    return setTempBasalPercent((int) Math.round(percent), durationInMinutes, profile, enforceNew);
+                    return setTempBasalPercent((int) Math.round(percent), durationInMinutes, profile, enforceNew, tbrType);
                 }
             } else {
                 result.comment(cancelEBResult.getComment());
             }
         } else {
-            return setTempBasalPercent((int) Math.round(percent), durationInMinutes, profile, enforceNew);
+            return setTempBasalPercent((int) Math.round(percent), durationInMinutes, profile, enforceNew, tbrType);
         }
         try {
             fetchStatus();
@@ -744,7 +744,7 @@ public class LocalInsightPlugin extends PumpPluginBase implements PumpInterface,
     }
 
     @NonNull @Override
-    public PumpEnactResult setTempBasalPercent(int percent, int durationInMinutes, @NonNull Profile profile, boolean enforceNew) {
+    public PumpEnactResult setTempBasalPercent(int percent, int durationInMinutes, @NonNull Profile profile, boolean enforceNew, @NonNull PumpSync.TemporaryBasalType tbrType) {
         PumpEnactResult result = new PumpEnactResult(getInjector());
         percent = (int) Math.round(((double) percent) / 10d) * 10;
         if (percent == 100) return cancelTempBasal(true);
