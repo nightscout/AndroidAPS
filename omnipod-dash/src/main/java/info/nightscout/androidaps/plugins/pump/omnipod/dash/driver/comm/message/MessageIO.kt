@@ -33,6 +33,7 @@ class MessageIO(
     var maxMessageReadTries = 3
     var messageReadTries = 0
 
+    @Suppress("ReturnCount")
     fun sendMessage(msg: MessagePacket): MessageSendResult {
         cmdBleIO.flushIncomingQueue()
         dataBleIO.flushIncomingQueue()
@@ -83,6 +84,7 @@ class MessageIO(
         }
     }
 
+    @Suppress("ReturnCount")
     fun receiveMessage(): MessagePacket? {
         val expectRTS = cmdBleIO.expectCommandType(BleCommandRTS, MESSAGE_READ_TIMEOUT_MS)
         if (expectRTS !is BleConfirmSuccess) {
@@ -179,6 +181,7 @@ class MessageIO(
         }
     }
 
+    @Suppress("ReturnCount")
     private fun expectBlePacket(index: Byte, nackOnTimeout: Boolean = false): PacketReceiveResult {
         receivedOutOfOrder[index]?.let {
             return PacketReceiveSuccess(it)

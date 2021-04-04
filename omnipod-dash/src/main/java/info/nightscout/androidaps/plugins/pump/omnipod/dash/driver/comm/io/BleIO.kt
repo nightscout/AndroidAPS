@@ -53,6 +53,7 @@ open class BleIO(
      * @param characteristic where to write to(CMD or DATA)
      * @param payload the data to send
      */
+    @Suppress("ReturnCount")
     fun sendAndConfirmPacket(payload: ByteArray): BleSendResult {
         aapsLogger.debug(LTag.PUMPBTCOMM, "BleIO: Sending on $type: ${payload.toHex()}")
         val set = characteristic.setValue(payload)

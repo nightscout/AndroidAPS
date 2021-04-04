@@ -69,6 +69,7 @@ class Session(
             CommandSendErrorSending(errMsg)
     }
 
+    @Suppress("ReturnCount")
     fun readAndAckResponse(responseType: KClass<out Response>): CommandReceiveResult {
         var responseMsgPacket: MessagePacket? = null
         for (i in 0..MAX_TRIES) {
