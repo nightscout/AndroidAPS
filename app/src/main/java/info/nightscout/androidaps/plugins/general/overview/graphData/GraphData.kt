@@ -571,9 +571,9 @@ class GraphData(
         var time = fromTime
         while (time <= toTime) {
             iobCobCalculatorPlugin.getAutosensData(time)?.let { autosensData ->
-                ratioArray.add(ScaledDataPoint(time, autosensData.autosensResult.ratio - 1, ratioScale))
-                maxRatioValueFound = max(maxRatioValueFound, autosensData.autosensResult.ratio - 1)
-                minRatioValueFound = min(minRatioValueFound, autosensData.autosensResult.ratio - 1)
+                ratioArray.add(ScaledDataPoint(time, 100.0 * (autosensData.autosensResult.ratio - 1), ratioScale))
+                maxRatioValueFound = max(maxRatioValueFound, 100.0 * (autosensData.autosensResult.ratio - 1))
+                minRatioValueFound = min(minRatioValueFound, 100.0 * (autosensData.autosensResult.ratio - 1))
             }
             time += 5 * 60 * 1000L
         }
