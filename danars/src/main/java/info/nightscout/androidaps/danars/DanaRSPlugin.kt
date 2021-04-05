@@ -28,8 +28,12 @@ import info.nightscout.androidaps.plugins.general.overview.events.EventNewNotifi
 import info.nightscout.androidaps.plugins.general.overview.events.EventOverviewBolusProgress
 import info.nightscout.androidaps.plugins.general.overview.notifications.Notification
 import info.nightscout.androidaps.plugins.pump.common.bolusInfo.DetailedBolusInfoStorage
+import info.nightscout.androidaps.plugins.pump.common.bolusInfo.TemporaryBasalStorage
 import info.nightscout.androidaps.plugins.pump.common.defs.PumpType
 import info.nightscout.androidaps.utils.*
+import info.nightscout.androidaps.utils.T.Companion.mins
+import info.nightscout.androidaps.extensions.convertedToAbsolute
+import info.nightscout.androidaps.extensions.plannedRemainingMinutes
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 import info.nightscout.androidaps.utils.rx.AapsSchedulers
 import info.nightscout.androidaps.utils.sharedPreferences.SP
@@ -51,11 +55,12 @@ class DanaRSPlugin @Inject constructor(
     resourceHelper: ResourceHelper,
     private val constraintChecker: ConstraintChecker,
     private val profileFunction: ProfileFunction,
-    private val activePluginProvider: ActivePluginProvider,
     private val sp: SP,
     commandQueue: CommandQueueProvider,
     private val danaPump: DanaPump,
+    private val pumpSync: PumpSync,
     private val detailedBolusInfoStorage: DetailedBolusInfoStorage,
+    private val temporaryBasalStorage: TemporaryBasalStorage,
     private val fabricPrivacy: FabricPrivacy,
     private val dateUtil: DateUtil
 ) : PumpPluginBase(PluginDescription()
@@ -323,7 +328,7 @@ class DanaRSPlugin @Inject constructor(
         val doHighTemp = absoluteAfterConstrain > baseBasalRate
         if (doTempOff) {
             // If temp in progress
-            if (activePluginProvider.activeTreatments.isTempBasalInProgress) {
+            if (danaPump.isTempBasalInProgress) {
                 aapsLogger.debug(LTag.PUMP, "setTempBasalAbsolute: Stopping temp basal (doTempOff)")
                 return cancelTempBasal(false)
             }
@@ -347,16 +352,15 @@ class DanaRSPlugin @Inject constructor(
             if (percentRate > 500) // Special high temp 500/15min
                 percentRate = 500
             // Check if some temp is already in progress
-            val activeTemp = activePluginProvider.activeTreatments.getTempBasalFromHistory(System.currentTimeMillis())
-            if (activeTemp != null) {
-                aapsLogger.debug(LTag.PUMP, "setTempBasalAbsolute: currently running: $activeTemp")
+            if (danaPump.isTempBasalInProgress) {
+                aapsLogger.debug(LTag.PUMP, "setTempBasalAbsolute: currently running")
                 // Correct basal already set ?
-                if (activeTemp.percentRate == percentRate && activeTemp.plannedRemainingMinutes > 4) {
+                if (danaPump.tempBasalPercent == percentRate && danaPump.tempBasalRemainingMin > 4) {
                     if (!enforceNew) {
                         result.success = true
                         result.percent = percentRate
                         result.enacted = false
-                        result.duration = activeTemp.plannedRemainingMinutes
+                        result.duration = danaPump.tempBasalRemainingMin
                         result.isPercent = true
                         result.isTempCancel = false
                         aapsLogger.debug(LTag.PUMP, "setTempBasalAbsolute: Correct temp basal already set (doLowTemp || doHighTemp)")
@@ -364,6 +368,7 @@ class DanaRSPlugin @Inject constructor(
                     }
                 }
             }
+            temporaryBasalStorage.add(PumpSync.PumpState.TemporaryBasal(dateUtil._now(), mins(durationInMinutes.toLong()).msecs(), percentRate.toDouble(), false, tbrType, 0L, 0L))
             // Convert duration from minutes to hours
             aapsLogger.debug(LTag.PUMP, "setTempBasalAbsolute: Setting temp basal $percentRate% for $durationInMinutes minutes (doLowTemp || doHighTemp)")
             result = if (percentRate == 0 && durationInMinutes > 30) {
@@ -399,9 +404,7 @@ class DanaRSPlugin @Inject constructor(
             return result
         }
         if (percentAfterConstraint > pumpDescription.maxTempPercent) percentAfterConstraint = pumpDescription.maxTempPercent
-        val now = System.currentTimeMillis()
-        val activeTemp = activePluginProvider.activeTreatments.getTempBasalFromHistory(now)
-        if (activeTemp != null && activeTemp.percentRate == percentAfterConstraint && activeTemp.plannedRemainingMinutes > 4 && !enforceNew) {
+        if (danaPump.isTempBasalInProgress && danaPump.tempBasalPercent == percentAfterConstraint && danaPump.tempBasalRemainingMin > 4 && !enforceNew) {
             result.enacted = false
             result.success = true
             result.isTempCancel = false
@@ -412,6 +415,7 @@ class DanaRSPlugin @Inject constructor(
             aapsLogger.debug(LTag.PUMP, "setTempBasalPercent: Correct value already set")
             return result
         }
+        temporaryBasalStorage.add(PumpSync.PumpState.TemporaryBasal(dateUtil._now(), mins(durationInMinutes.toLong()).msecs(), percent.toDouble(), false, tbrType, 0L, 0L))
         val connectionOK: Boolean = if (durationInMinutes == 15 || durationInMinutes == 30) {
             danaRSService?.tempBasalShortDuration(percentAfterConstraint, durationInMinutes)
                 ?: false
@@ -465,8 +469,7 @@ class DanaRSPlugin @Inject constructor(
         val durationInHalfHours = max(durationInMinutes / 30, 1)
         insulinAfterConstraint = Round.roundTo(insulinAfterConstraint, pumpDescription.extendedBolusStep)
         val result = PumpEnactResult(injector)
-        val runningEB = activePluginProvider.activeTreatments.getExtendedBolusFromHistory(System.currentTimeMillis())
-        if (runningEB != null && abs(runningEB.insulin - insulinAfterConstraint) < pumpDescription.extendedBolusStep) {
+        if (danaPump.isExtendedInProgress && abs(danaPump.extendedBolusAmount - insulinAfterConstraint) < pumpDescription.extendedBolusStep) {
             result.enacted = false
             result.success = true
             result.comment = resourceHelper.gs(R.string.ok)
@@ -479,7 +482,7 @@ class DanaRSPlugin @Inject constructor(
         }
         val connectionOK = danaRSService?.extendedBolus(insulinAfterConstraint, durationInHalfHours)
             ?: false
-        if (connectionOK && danaPump.isExtendedInProgress && abs(danaPump.extendedBolusAbsoluteRate - insulinAfterConstraint) < pumpDescription.extendedBolusStep) {
+        if (connectionOK && danaPump.isExtendedInProgress && abs(danaPump.extendedBolusAmount - insulinAfterConstraint) < pumpDescription.extendedBolusStep) {
             result.enacted = true
             result.success = true
             result.comment = resourceHelper.gs(R.string.ok)
@@ -501,46 +504,34 @@ class DanaRSPlugin @Inject constructor(
     @Synchronized
     override fun cancelTempBasal(enforceNew: Boolean): PumpEnactResult {
         val result = PumpEnactResult(injector)
-        val runningTB = activePluginProvider.activeTreatments.getTempBasalFromHistory(System.currentTimeMillis())
-        if (runningTB != null) {
+        if (danaPump.isTempBasalInProgress) {
             danaRSService?.tempBasalStop()
+            result.success = !danaPump.isTempBasalInProgress
             result.enacted = true
             result.isTempCancel = true
-        }
-        return if (!danaPump.isTempBasalInProgress) {
+        } else {
             result.success = true
+            result.enacted = false
             result.isTempCancel = true
             result.comment = resourceHelper.gs(R.string.ok)
             aapsLogger.debug(LTag.PUMP, "cancelRealTempBasal: OK")
-            result
-        } else {
-            result.success = false
-            result.comment = resourceHelper.gs(R.string.danar_valuenotsetproperly)
-            result.isTempCancel = true
-            aapsLogger.error("cancelRealTempBasal: Failed to cancel temp basal")
-            result
         }
+        return result
     }
 
     @Synchronized override fun cancelExtendedBolus(): PumpEnactResult {
         val result = PumpEnactResult(injector)
-        val runningEB = activePluginProvider.activeTreatments.getExtendedBolusFromHistory(System.currentTimeMillis())
-        if (runningEB != null) {
+        if (danaPump.isExtendedInProgress) {
             danaRSService?.extendedBolusStop()
+            result.success = !danaPump.isExtendedInProgress
             result.enacted = true
-            result.isTempCancel = true
-        }
-        return if (!danaPump.isExtendedInProgress) {
+        } else {
             result.success = true
+            result.enacted = false
             result.comment = resourceHelper.gs(R.string.ok)
             aapsLogger.debug(LTag.PUMP, "cancelExtendedBolus: OK")
-            result
-        } else {
-            result.success = false
-            result.comment = resourceHelper.gs(R.string.danar_valuenotsetproperly)
-            aapsLogger.error("cancelExtendedBolus: Failed to cancel extended bolus")
-            result
         }
+        return result
     }
 
     override fun getJSONStatus(profile: Profile, profileName: String, version: String): JSONObject {
@@ -561,16 +552,16 @@ class DanaRSPlugin @Inject constructor(
                 extended.put("LastBolus", dateUtil.dateAndTimeString(danaPump.lastBolusTime))
                 extended.put("LastBolusAmount", danaPump.lastBolusAmount)
             }
-            val tb = activePluginProvider.activeTreatments.getTempBasalFromHistory(now)
+            val tb = pumpSync.expectedPumpState().temporaryBasal
             if (tb != null) {
-                extended.put("TempBasalAbsoluteRate", tb.tempBasalConvertedToAbsolute(now, profile))
-                extended.put("TempBasalStart", dateUtil.dateAndTimeString(tb.date))
+                extended.put("TempBasalAbsoluteRate", tb.convertedToAbsolute(now, profile))
+                extended.put("TempBasalStart", dateUtil.dateAndTimeString(tb.timestamp))
                 extended.put("TempBasalRemaining", tb.plannedRemainingMinutes)
             }
-            val eb = activePluginProvider.activeTreatments.getExtendedBolusFromHistory(now)
+            val eb = pumpSync.expectedPumpState().extendedBolus
             if (eb != null) {
-                extended.put("ExtendedBolusAbsoluteRate", eb.absoluteRate())
-                extended.put("ExtendedBolusStart", dateUtil.dateAndTimeString(eb.date))
+                extended.put("ExtendedBolusAbsoluteRate", eb.rate)
+                extended.put("ExtendedBolusStart", dateUtil.dateAndTimeString(eb.timestamp))
                 extended.put("ExtendedBolusRemaining", eb.plannedRemainingMinutes)
             }
             extended.put("BaseBasalRate", baseBasalRate)
@@ -613,13 +604,11 @@ class DanaRSPlugin @Inject constructor(
         if (danaPump.lastBolusTime != 0L)
             ret += "LastBolus: ${DecimalFormatter.to2Decimal(danaPump.lastBolusAmount)}U @${DateFormat.format("HH:mm", danaPump.lastBolusTime)}"
 
-        val activeTemp = activePluginProvider.activeTreatments.getRealTempBasalFromHistory(System.currentTimeMillis())
-        if (activeTemp != null)
-            ret += "Temp: ${activeTemp.toStringFull()}"
+        if (danaPump.isTempBasalInProgress)
+            ret += "Temp: ${danaPump.temporaryBasalToString()}"
 
-        val activeExtendedBolus = activePluginProvider.activeTreatments.getExtendedBolusFromHistory(System.currentTimeMillis())
-        if (activeExtendedBolus != null)
-            ret += "Extended: $activeExtendedBolus\n"
+        if (danaPump.isExtendedInProgress)
+            ret += "Extended: ${danaPump.extendedBolusToString()}\n"
 
         if (!veryShort) {
             ret += "TDD: ${DecimalFormatter.to0Decimal(danaPump.dailyTotalUnits)} / ${danaPump.maxDailyTotalUnits} U"

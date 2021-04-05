@@ -31,7 +31,7 @@ import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.FabricPrivacy
 import info.nightscout.androidaps.utils.LocalAlertUtils
 import info.nightscout.androidaps.utils.T
-import info.nightscout.androidaps.utils.extensions.buildDeviceStatus
+import info.nightscout.androidaps.extensions.buildDeviceStatus
 import javax.inject.Inject
 import kotlin.math.abs
 

@@ -14,6 +14,8 @@ import info.nightscout.androidaps.interfaces.PluginType
 import info.nightscout.androidaps.interfaces.PumpSync
 import info.nightscout.androidaps.plugins.configBuilder.ConstraintChecker
 import info.nightscout.androidaps.plugins.pump.common.bolusInfo.DetailedBolusInfoStorage
+import info.nightscout.androidaps.plugins.pump.common.bolusInfo.TemporaryBasalStorage
+import info.nightscout.androidaps.utils.sharedPreferences.SP
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -28,9 +30,10 @@ class DanaRv2PluginTest : TestBaseWithProfile() {
 
     @Mock lateinit var context: Context
     @Mock lateinit var constraintChecker: ConstraintChecker
-    @Mock lateinit var sp: info.nightscout.androidaps.utils.sharedPreferences.SP
+    @Mock lateinit var sp: SP
     @Mock lateinit var commandQueue: CommandQueueProvider
     @Mock lateinit var detailedBolusInfoStorage: DetailedBolusInfoStorage
+    @Mock lateinit var temporaryBasalStorage: TemporaryBasalStorage
     @Mock lateinit var pumpSync: PumpSync
 
     lateinit var danaPump: DanaPump
@@ -47,8 +50,8 @@ class DanaRv2PluginTest : TestBaseWithProfile() {
         `when`(resourceHelper.gs(R.string.pumplimit)).thenReturn("pump limit")
         `when`(resourceHelper.gs(R.string.limitingbasalratio)).thenReturn("Limiting max basal rate to %1\$.2f U/h because of %2\$s")
         `when`(resourceHelper.gs(R.string.limitingpercentrate)).thenReturn("Limiting max percent rate to %1\$d%% because of %2\$s")
-        danaPump = DanaPump(aapsLogger, sp, injector)
-        danaRv2Plugin = DanaRv2Plugin(injector, aapsLogger, aapsSchedulers, rxBus, context, danaPump, resourceHelper, constraintChecker, activePluginProvider, sp, commandQueue, detailedBolusInfoStorage, dateUtil, fabricPrivacy, pumpSync)
+        danaPump = DanaPump(aapsLogger, sp, dateUtil, injector)
+        danaRv2Plugin = DanaRv2Plugin(injector, aapsLogger, aapsSchedulers, rxBus, context, danaPump, resourceHelper, constraintChecker, activePluginProvider, sp, commandQueue, detailedBolusInfoStorage, temporaryBasalStorage, dateUtil, fabricPrivacy, pumpSync)
     }
 
     @Test

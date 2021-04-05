@@ -8,7 +8,6 @@
     <string name="key_absorption_maxtime" translatable="false">absorption_maxtime</string>
     <string name="key_openapsama_min_5m_carbimpact" translatable="false">openapsama_min_5m_carbimpact</string>
     <string name="key_absorption_cutoff" translatable="false">absorption_cutoff</string>
-    <string name="key_danar_visualizeextendedaspercentage" translatable="false">danar_visualizeextendedaspercentage"</string>
     <string name="key_danar_useextended" translatable="false">danar_useextended</string>
     <string name="key_eatingsoon_duration" translatable="false">eatingsoon_duration</string>
     <string name="key_eatingsoon_target" translatable="false">eatingsoon_target</string>

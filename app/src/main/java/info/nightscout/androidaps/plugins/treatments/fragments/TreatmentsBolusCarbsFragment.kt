@@ -28,7 +28,6 @@ import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.logging.LTag
 import info.nightscout.androidaps.logging.UserEntryLogger
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper
-import info.nightscout.androidaps.plugins.general.nsclient.NSUpload
 import info.nightscout.androidaps.plugins.general.nsclient.events.EventNSClientRestart
 import info.nightscout.androidaps.plugins.treatments.events.EventTreatmentUpdateGui
 import info.nightscout.androidaps.utils.DateUtil
@@ -36,8 +35,8 @@ import info.nightscout.androidaps.utils.FabricPrivacy
 import info.nightscout.androidaps.utils.T
 import info.nightscout.androidaps.utils.alertDialogs.OKDialog
 import info.nightscout.androidaps.utils.buildHelper.BuildHelper
-import info.nightscout.androidaps.utils.extensions.iobCalc
-import info.nightscout.androidaps.utils.extensions.toVisibility
+import info.nightscout.androidaps.extensions.iobCalc
+import info.nightscout.androidaps.extensions.toVisibility
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 import info.nightscout.androidaps.utils.rx.AapsSchedulers
 import info.nightscout.androidaps.utils.sharedPreferences.SP
@@ -274,7 +273,7 @@ class TreatmentsBolusCarbsFragment : DaggerFragment() {
             ml.bolus?.let { bolus ->
                 holder.binding.bolusDate.text = dateUtil.timeString(bolus.timestamp)
                 holder.binding.insulin.text = resourceHelper.gs(R.string.formatinsulinunits, bolus.amount)
-                holder.binding.bolusNs.visibility = (NSUpload.isIdValid(bolus.interfaceIDs.nightscoutId)).toVisibility()
+                holder.binding.bolusNs.visibility = (bolus.interfaceIDs.nightscoutId != null).toVisibility()
                 holder.binding.bolusPump.visibility = (bolus.interfaceIDs.pumpId != null).toVisibility()
                 holder.binding.bolusInvalid.visibility = bolus.isValid.not().toVisibility()
                 val iob = bolus.iobCalc(activePlugin, System.currentTimeMillis(), profile.dia)
@@ -283,8 +282,8 @@ class TreatmentsBolusCarbsFragment : DaggerFragment() {
                 if (bolus.timestamp > dateUtil._now()) holder.binding.date.setTextColor(resourceHelper.gc(R.color.colorScheduled)) else holder.binding.date.setTextColor(holder.binding.carbs.currentTextColor)
                 holder.binding.mealOrCorrection.text =
                     when (ml.bolus.type) {
-                        Bolus.Type.SMB    -> "SMB"
-                        Bolus.Type.NORMAL -> resourceHelper.gs(R.string.mealbolus)
+                        Bolus.Type.SMB     -> "SMB"
+                        Bolus.Type.NORMAL  -> resourceHelper.gs(R.string.mealbolus)
                         Bolus.Type.PRIMING -> resourceHelper.gs(R.string.prime)
                     }
             }
@@ -293,8 +292,8 @@ class TreatmentsBolusCarbsFragment : DaggerFragment() {
             ml.carbs?.let { carbs ->
                 holder.binding.carbsDate.text = dateUtil.timeString(carbs.timestamp)
                 holder.binding.carbs.text = resourceHelper.gs(R.string.format_carbs, carbs.amount.toInt())
-                holder.binding.carbsDuration.text = if (carbs.duration> 0) resourceHelper.gs(R.string.format_mins, T.msecs(carbs.duration).mins().toInt()) else ""
-                holder.binding.carbsNs.visibility = (NSUpload.isIdValid(carbs.interfaceIDs.nightscoutId)).toVisibility()
+                holder.binding.carbsDuration.text = if (carbs.duration > 0) resourceHelper.gs(R.string.format_mins, T.msecs(carbs.duration).mins().toInt()) else ""
+                holder.binding.carbsNs.visibility = (carbs.interfaceIDs.nightscoutId != null).toVisibility()
                 holder.binding.carbsPump.visibility = (carbs.interfaceIDs.pumpId != null).toVisibility()
                 holder.binding.carbsInvalid.visibility = carbs.isValid.not().toVisibility()
             }

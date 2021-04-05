@@ -1,4 +1,4 @@
-package info.nightscout.androidaps.utils.extensions
+package info.nightscout.androidaps.extensions
 
 import java.util.*
 

@@ -4,6 +4,7 @@ import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.logging.LTag
 import info.nightscout.androidaps.dana.DanaPump
 import info.nightscout.androidaps.danars.encryption.BleEncryption
+import info.nightscout.androidaps.utils.T
 import javax.inject.Inject
 
 class DanaRS_Packet_Bolus_Get_Extended_Bolus_State(
@@ -23,26 +24,26 @@ class DanaRS_Packet_Bolus_Get_Extended_Bolus_State(
         val error = byteArrayToInt(getBytes(data, dataIndex, dataSize))
         dataIndex += dataSize
         dataSize = 1
-        danaPump.isExtendedInProgress = byteArrayToInt(getBytes(data, dataIndex, dataSize)) == 0x01
+        val isExtendedInProgress = byteArrayToInt(getBytes(data, dataIndex, dataSize)) == 0x01
         dataIndex += dataSize
         dataSize = 1
-        danaPump.extendedBolusMinutes = byteArrayToInt(getBytes(data, dataIndex, dataSize)) * 30
+        val extendedBolusDuration = T.mins(byteArrayToInt(getBytes(data, dataIndex, dataSize)) * 30L).msecs()
         dataIndex += dataSize
         dataSize = 2
-        danaPump.extendedBolusAbsoluteRate = byteArrayToInt(getBytes(data, dataIndex, dataSize)) / 100.0
+        val extendedBolusAbsoluteRate = byteArrayToInt(getBytes(data, dataIndex, dataSize)) / 100.0 // duration must be set first for recalculation to amount
         dataIndex += dataSize
         dataSize = 2
-        danaPump.extendedBolusSoFarInMinutes = byteArrayToInt(getBytes(data, dataIndex, dataSize))
+        val extendedBolusSoFarInMinutes = byteArrayToInt(getBytes(data, dataIndex, dataSize))
         dataIndex += dataSize
         dataSize = 2
-        danaPump.extendedBolusDeliveredSoFar = byteArrayToInt(getBytes(data, dataIndex, dataSize)) / 100.0
+        val extendedBolusDeliveredSoFar = byteArrayToInt(getBytes(data, dataIndex, dataSize)) / 100.0
         failed = error != 0
         aapsLogger.debug(LTag.PUMPCOMM, "Result: $error")
-        aapsLogger.debug(LTag.PUMPCOMM, "Is extended bolus running: " + danaPump.isExtendedInProgress)
-        aapsLogger.debug(LTag.PUMPCOMM, "Extended bolus running: " + danaPump.extendedBolusAbsoluteRate + " U/h")
-        aapsLogger.debug(LTag.PUMPCOMM, "Extended bolus duration: " + danaPump.extendedBolusMinutes + " min")
-        aapsLogger.debug(LTag.PUMPCOMM, "Extended bolus so far: " + danaPump.extendedBolusSoFarInMinutes + " min")
-        aapsLogger.debug(LTag.PUMPCOMM, "Extended bolus delivered so far: " + danaPump.extendedBolusDeliveredSoFar + " U")
+        aapsLogger.debug(LTag.PUMPCOMM, "Is extended bolus running: $isExtendedInProgress")
+        aapsLogger.debug(LTag.PUMPCOMM, "Extended bolus running: $extendedBolusAbsoluteRate U/h")
+        aapsLogger.debug(LTag.PUMPCOMM, "Extended bolus duration: " + T.msecs(extendedBolusDuration).mins() + " min")
+        aapsLogger.debug(LTag.PUMPCOMM, "Extended bolus so far: $extendedBolusSoFarInMinutes min")
+        aapsLogger.debug(LTag.PUMPCOMM, "Extended bolus delivered so far: $extendedBolusDeliveredSoFar U")
     }
 
     override fun getFriendlyName(): String {

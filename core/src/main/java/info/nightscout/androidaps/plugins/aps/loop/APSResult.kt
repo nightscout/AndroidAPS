@@ -7,15 +7,17 @@ import info.nightscout.androidaps.data.IobTotal
 import info.nightscout.androidaps.database.entities.GlucoseValue
 import info.nightscout.androidaps.interfaces.ActivePluginProvider
 import info.nightscout.androidaps.interfaces.Constraint
+import info.nightscout.androidaps.interfaces.IobCobCalculator
 import info.nightscout.androidaps.interfaces.ProfileFunction
 import info.nightscout.androidaps.interfaces.PumpDescription
-import info.nightscout.androidaps.interfaces.TreatmentsInterface
 import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.logging.LTag
 import info.nightscout.androidaps.plugins.configBuilder.ConstraintChecker
 import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.DecimalFormatter
 import info.nightscout.androidaps.utils.HtmlHelper.fromHtml
+import info.nightscout.androidaps.extensions.convertedToAbsolute
+import info.nightscout.androidaps.extensions.convertedToPercent
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 import info.nightscout.androidaps.utils.sharedPreferences.SP
 import org.json.JSONException
@@ -34,7 +36,7 @@ open class APSResult @Inject constructor(val injector: HasAndroidInjector) {
     @Inject lateinit var constraintChecker: ConstraintChecker
     @Inject lateinit var sp: SP
     @Inject lateinit var activePlugin: ActivePluginProvider
-    @Inject lateinit var treatmentsPlugin: TreatmentsInterface
+    @Inject lateinit var iobCobCalculator: IobCobCalculator
     @Inject lateinit var profileFunction: ProfileFunction
     @Inject lateinit var resourceHelper: ResourceHelper
     @Inject lateinit var dateUtil: DateUtil
@@ -316,7 +318,7 @@ open class APSResult @Inject constructor(val injector: HasAndroidInjector) {
                 return false
             }
             val now = System.currentTimeMillis()
-            val activeTemp = treatmentsPlugin.getTempBasalFromHistory(now)
+            val activeTemp = iobCobCalculator.getTempBasalIncludingConvertedExtended(now)
             val pump = activePlugin.activePump
             val profile = profileFunction.getProfile()
             if (profile == null) {
@@ -328,7 +330,7 @@ open class APSResult @Inject constructor(val injector: HasAndroidInjector) {
                     aapsLogger.debug(LTag.APS, "FALSE: No temp running, asking cancel temp")
                     return false
                 }
-                if (activeTemp != null && abs(percent - activeTemp.tempBasalConvertedToPercent(now, profile)) < pump.pumpDescription.basalStep) {
+                if (activeTemp != null && abs(percent - activeTemp.convertedToPercent(now, profile)) < pump.pumpDescription.basalStep) {
                     aapsLogger.debug(LTag.APS, "FALSE: Temp equal")
                     return false
                 }
@@ -351,7 +353,7 @@ open class APSResult @Inject constructor(val injector: HasAndroidInjector) {
                 val lowThreshold = 1 - percentMinChangeChange
                 val highThreshold = 1 + percentMinChangeChange
                 var change = percent / 100.0
-                if (activeTemp != null) change = percent / activeTemp.tempBasalConvertedToPercent(now, profile).toDouble()
+                if (activeTemp != null) change = percent / activeTemp.convertedToPercent(now, profile).toDouble()
                 if (change < lowThreshold || change > highThreshold) {
                     aapsLogger.debug(LTag.APS, "TRUE: Outside allowed range " + change * 100.0 + "%")
                     true
@@ -364,7 +366,7 @@ open class APSResult @Inject constructor(val injector: HasAndroidInjector) {
                     aapsLogger.debug(LTag.APS, "FALSE: No temp running, asking cancel temp")
                     return false
                 }
-                if (activeTemp != null && abs(rate - activeTemp.tempBasalConvertedToAbsolute(now, profile)) < pump.pumpDescription.basalStep) {
+                if (activeTemp != null && abs(rate - activeTemp.convertedToAbsolute(now, profile)) < pump.pumpDescription.basalStep) {
                     aapsLogger.debug(LTag.APS, "FALSE: Temp equal")
                     return false
                 }
@@ -387,7 +389,7 @@ open class APSResult @Inject constructor(val injector: HasAndroidInjector) {
                 val lowThreshold = 1 - percentMinChangeChange
                 val highThreshold = 1 + percentMinChangeChange
                 var change = rate / profile.basal
-                if (activeTemp != null) change = rate / activeTemp.tempBasalConvertedToAbsolute(now, profile)
+                if (activeTemp != null) change = rate / activeTemp.convertedToAbsolute(now, profile)
                 if (change < lowThreshold || change > highThreshold) {
                     aapsLogger.debug(LTag.APS, "TRUE: Outside allowed range " + change * 100.0 + "%")
                     true

@@ -1,5 +1,8 @@
 package info.nightscout.androidaps.plugins.pump.common;
 
+import static info.nightscout.androidaps.extensions.PumpStateExtensionKt.convertedToAbsolute;
+import static info.nightscout.androidaps.extensions.PumpStateExtensionKt.getPlannedRemainingMinutes;
+
 import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
@@ -16,10 +19,9 @@ import info.nightscout.androidaps.core.R;
 import info.nightscout.androidaps.data.DetailedBolusInfo;
 import info.nightscout.androidaps.data.Profile;
 import info.nightscout.androidaps.data.PumpEnactResult;
-import info.nightscout.androidaps.db.ExtendedBolus;
-import info.nightscout.androidaps.db.TemporaryBasal;
 import info.nightscout.androidaps.events.EventAppExit;
 import info.nightscout.androidaps.events.EventCustomActionsChanged;
+import info.nightscout.androidaps.extensions.PumpStateExtensionKt;
 import info.nightscout.androidaps.interfaces.ActivePluginProvider;
 import info.nightscout.androidaps.interfaces.CommandQueueProvider;
 import info.nightscout.androidaps.interfaces.ConstraintsInterface;
@@ -70,7 +72,7 @@ public abstract class PumpPluginAbstract extends PumpPluginBase implements PumpI
     protected boolean displayConnectionMessages = false;
     protected PumpType pumpType;
     protected AapsSchedulers aapsSchedulers;
-
+    protected PumpSync pumpSync;
 
     protected PumpPluginAbstract(
             PluginDescription pluginDescription,
@@ -85,7 +87,8 @@ public abstract class PumpPluginAbstract extends PumpPluginBase implements PumpI
             Context context,
             FabricPrivacy fabricPrivacy,
             DateUtil dateUtil,
-            AapsSchedulers aapsSchedulers
+            AapsSchedulers aapsSchedulers,
+            PumpSync pumpSync
     ) {
 
         super(pluginDescription, injector, aapsLogger, resourceHelper, commandQueue);
@@ -102,6 +105,7 @@ public abstract class PumpPluginAbstract extends PumpPluginBase implements PumpI
         this.pumpType = pumpType;
         this.dateUtil = dateUtil;
         this.aapsSchedulers = aapsSchedulers;
+        this.pumpSync = pumpSync;
     }
 
 
@@ -323,6 +327,7 @@ public abstract class PumpPluginAbstract extends PumpPluginBase implements PumpI
             return new JSONObject();
         }
 
+        long now = System.currentTimeMillis();
         JSONObject pump = new JSONObject();
         JSONObject battery = new JSONObject();
         JSONObject status = new JSONObject();
@@ -336,19 +341,18 @@ public abstract class PumpPluginAbstract extends PumpPluginBase implements PumpI
             } catch (Exception ignored) {
             }
 
-            TemporaryBasal tb = activePlugin.getActiveTreatments().getTempBasalFromHistory(System.currentTimeMillis());
+            PumpSync.PumpState.TemporaryBasal tb = pumpSync.expectedPumpState().getTemporaryBasal();
             if (tb != null) {
-                extended.put("TempBasalAbsoluteRate",
-                        tb.tempBasalConvertedToAbsolute(System.currentTimeMillis(), profile));
-                extended.put("TempBasalStart", dateUtil.dateAndTimeString(tb.date));
-                extended.put("TempBasalRemaining", tb.getPlannedRemainingMinutes());
+                extended.put("TempBasalAbsoluteRate", convertedToAbsolute(tb, now, profile));
+                extended.put("TempBasalStart", dateUtil.dateAndTimeString(tb.getTimestamp()));
+                extended.put("TempBasalRemaining", getPlannedRemainingMinutes(tb));
             }
 
-            ExtendedBolus eb = activePlugin.getActiveTreatments().getExtendedBolusFromHistory(System.currentTimeMillis());
+            PumpSync.PumpState.ExtendedBolus eb = pumpSync.expectedPumpState().getExtendedBolus();
             if (eb != null) {
-                extended.put("ExtendedBolusAbsoluteRate", eb.absoluteRate());
-                extended.put("ExtendedBolusStart", dateUtil.dateAndTimeString(eb.date));
-                extended.put("ExtendedBolusRemaining", eb.getPlannedRemainingMinutes());
+                extended.put("ExtendedBolusAbsoluteRate", eb.getRate());
+                extended.put("ExtendedBolusStart", dateUtil.dateAndTimeString(eb.getTimestamp()));
+                extended.put("ExtendedBolusRemaining", getPlannedRemainingMinutes(eb));
             }
 
             status.put("timestamp", DateUtil.toISOString(new Date()));
@@ -378,14 +382,13 @@ public abstract class PumpPluginAbstract extends PumpPluginBase implements PumpI
             ret += "LastBolus: " + DecimalFormatter.INSTANCE.to2Decimal(getPumpStatusData().lastBolusAmount) + "U @" + //
                     android.text.format.DateFormat.format("HH:mm", getPumpStatusData().lastBolusTime) + "\n";
         }
-        TemporaryBasal activeTemp = activePlugin.getActiveTreatments().getRealTempBasalFromHistory(System.currentTimeMillis());
+        PumpSync.PumpState.TemporaryBasal activeTemp = pumpSync.expectedPumpState().getTemporaryBasal();
         if (activeTemp != null) {
-            ret += "Temp: " + activeTemp.toStringFull() + "\n";
+            ret += "Temp: " + PumpStateExtensionKt.toStringFull(activeTemp, dateUtil) + "\n";
         }
-        ExtendedBolus activeExtendedBolus = activePlugin.getActiveTreatments().getExtendedBolusFromHistory(
-                System.currentTimeMillis());
+        PumpSync.PumpState.ExtendedBolus activeExtendedBolus = pumpSync.expectedPumpState().getExtendedBolus();
         if (activeExtendedBolus != null) {
-            ret += "Extended: " + activeExtendedBolus.toString() + "\n";
+            ret += "Extended: " + PumpStateExtensionKt.toStringFull(activeTemp, dateUtil) + "\n";
         }
         // if (!veryShort) {
         // ret += "TDD: " + DecimalFormatter.to0Decimal(pumpStatus.dailyTotalUnits) + " / "

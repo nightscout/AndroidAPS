@@ -21,7 +21,7 @@ import info.nightscout.androidaps.utils.FabricPrivacy
 import info.nightscout.androidaps.utils.HardLimits
 import info.nightscout.androidaps.utils.Profiler
 import info.nightscout.androidaps.utils.Round
-import info.nightscout.androidaps.utils.extensions.target
+import info.nightscout.androidaps.extensions.target
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 import org.json.JSONException
 import javax.inject.Inject
@@ -37,7 +37,6 @@ open class OpenAPSAMAPlugin @Inject constructor(
     private val profileFunction: ProfileFunction,
     private val context: Context,
     private val activePlugin: ActivePluginProvider,
-    private val treatmentsPlugin: TreatmentsInterface,
     private val iobCobCalculator: IobCobCalculator,
     private val hardLimits: HardLimits,
     private val profiler: Profiler,
@@ -161,7 +160,7 @@ open class OpenAPSAMAPlugin @Inject constructor(
             lastAPSResult = null
             lastAPSRun = 0
         } else {
-            if (determineBasalResultAMA.rate == 0.0 && determineBasalResultAMA.duration == 0 && !treatmentsPlugin.isTempBasalInProgress) determineBasalResultAMA.tempBasalRequested = false
+            if (determineBasalResultAMA.rate == 0.0 && determineBasalResultAMA.duration == 0 && iobCobCalculator.getTempBasalIncludingConvertedExtended(dateUtil._now()) == null) determineBasalResultAMA.tempBasalRequested = false
             determineBasalResultAMA.iob = iobArray[0]
             val now = System.currentTimeMillis()
             determineBasalResultAMA.json?.put("timestamp", DateUtil.toISOString(now))

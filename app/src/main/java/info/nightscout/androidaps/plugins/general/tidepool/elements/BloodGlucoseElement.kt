@@ -3,7 +3,7 @@ package info.nightscout.androidaps.plugins.general.tidepool.elements
 import com.google.gson.annotations.Expose
 import info.nightscout.androidaps.data.Profile
 import info.nightscout.androidaps.database.entities.TherapyEvent
-import info.nightscout.androidaps.utils.extensions.toConstant
+import info.nightscout.androidaps.extensions.toConstant
 import java.util.*
 
 class BloodGlucoseElement(therapyEvent: TherapyEvent)

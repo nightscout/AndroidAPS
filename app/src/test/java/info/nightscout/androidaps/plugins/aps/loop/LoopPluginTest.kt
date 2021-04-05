@@ -13,7 +13,6 @@ import info.nightscout.androidaps.plugins.bus.RxBusWrapper
 import info.nightscout.androidaps.plugins.configBuilder.ConstraintChecker
 import info.nightscout.androidaps.plugins.configBuilder.RunningConfiguration
 import info.nightscout.androidaps.plugins.general.nsclient.NSUpload
-import info.nightscout.androidaps.plugins.iob.iobCobCalculator.IobCobCalculatorPlugin
 import info.nightscout.androidaps.plugins.pump.virtual.VirtualPumpPlugin
 import info.nightscout.androidaps.plugins.treatments.TreatmentsPlugin
 import info.nightscout.androidaps.receivers.ReceiverStatusStore
@@ -44,10 +43,9 @@ class LoopPluginTest : TestBase() {
     @Mock lateinit var activePlugin: ActivePluginProvider
     @Mock lateinit var treatmentsPlugin: TreatmentsPlugin
     @Mock lateinit var virtualPumpPlugin: VirtualPumpPlugin
-    @Mock lateinit var iobCobCalculatorPlugin: IobCobCalculatorPlugin
+    @Mock lateinit var iobCobCalculator: IobCobCalculator
     @Mock lateinit var fabricPrivacy: FabricPrivacy
     @Mock lateinit var receiverStatusStore: ReceiverStatusStore
-    @Mock lateinit var nsUpload: NSUpload
     @Mock lateinit var notificationManager: NotificationManager
     @Mock lateinit var repository: AppRepository
     @Mock lateinit var dateUtil: DateUtil
@@ -58,7 +56,7 @@ class LoopPluginTest : TestBase() {
     val injector = HasAndroidInjector { AndroidInjector { } }
     @Before fun prepareMock() {
 
-        loopPlugin = LoopPlugin(injector, aapsLogger, aapsSchedulers, rxBus, sp, Config(), constraintChecker, resourceHelper, profileFunction, context, commandQueue, activePlugin, treatmentsPlugin, virtualPumpPlugin, iobCobCalculatorPlugin, receiverStatusStore, fabricPrivacy, nsUpload, dateUtil, repository, runningConfiguration)
+        loopPlugin = LoopPlugin(injector, aapsLogger, aapsSchedulers, rxBus, sp, Config(), constraintChecker, resourceHelper, profileFunction, context, commandQueue, activePlugin, virtualPumpPlugin, iobCobCalculator, receiverStatusStore, fabricPrivacy, dateUtil, repository, runningConfiguration)
         `when`(activePlugin.activePump).thenReturn(virtualPumpPlugin)
         `when`(context.getSystemService(Context.NOTIFICATION_SERVICE)).thenReturn(notificationManager)
     }

@@ -9,11 +9,13 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import dagger.android.support.DaggerFragment
+import info.nightscout.androidaps.extensions.toStringFull
 import info.nightscout.androidaps.events.EventExtendedBolusChange
 import info.nightscout.androidaps.events.EventPumpStatusChanged
 import info.nightscout.androidaps.events.EventTempBasalChange
 import info.nightscout.androidaps.interfaces.ActivePluginProvider
 import info.nightscout.androidaps.interfaces.CommandQueueProvider
+import info.nightscout.androidaps.interfaces.PumpSync
 import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.logging.LTag
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper
@@ -45,12 +47,15 @@ import info.nightscout.androidaps.utils.rx.AapsSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.rxkotlin.plusAssign
 import javax.inject.Inject
+import kotlin.math.min
+import kotlin.math.roundToInt
 
 class MedtronicFragment : DaggerFragment() {
 
     @Inject lateinit var aapsLogger: AAPSLogger
     @Inject lateinit var fabricPrivacy: FabricPrivacy
     @Inject lateinit var resourceHelper: ResourceHelper
+    @Inject lateinit var dateUtil: DateUtil
     @Inject lateinit var rxBus: RxBusWrapper
     @Inject lateinit var commandQueue: CommandQueueProvider
     @Inject lateinit var activePlugin: ActivePluginProvider
@@ -61,6 +66,7 @@ class MedtronicFragment : DaggerFragment() {
     @Inject lateinit var medtronicPumpStatus: MedtronicPumpStatus
     @Inject lateinit var rileyLinkServiceData: RileyLinkServiceData
     @Inject lateinit var aapsSchedulers: AapsSchedulers
+    @Inject lateinit var pumpSync: PumpSync
 
     private var disposable: CompositeDisposable = CompositeDisposable()
 
@@ -307,11 +313,12 @@ class MedtronicFragment : DaggerFragment() {
             binding.lastBolus.text = ""
         }
 
+        val pumpState = pumpSync.expectedPumpState()
         // base basal rate
         binding.baseBasalRate.text = ("(" + medtronicPumpStatus.activeProfileName + ")  "
             + resourceHelper.gs(R.string.pump_basebasalrate, medtronicPumpPlugin.baseBasalRate))
 
-        binding.tempBasal.text = activePlugin.activeTreatments.getTempBasalFromHistory(System.currentTimeMillis())?.toStringFull()
+        binding.tempBasal.text = pumpState.temporaryBasal?.toStringFull(dateUtil)
             ?: ""
 
         // battery
@@ -329,7 +336,7 @@ class MedtronicFragment : DaggerFragment() {
         medtronicPumpPlugin.rileyLinkService?.verifyConfiguration()
         binding.errors.text = medtronicPumpStatus.errorInfo
 
-        var showRileyLinkBatteryLevel: Boolean = rileyLinkServiceData.showBatteryLevel
+        val showRileyLinkBatteryLevel: Boolean = rileyLinkServiceData.showBatteryLevel
 
         if (showRileyLinkBatteryLevel) {
             binding.rlBatteryView.visibility = View.VISIBLE

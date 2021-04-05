@@ -66,6 +66,7 @@ data class UserEntry(
         @SerializedName("RESTART_EVENTS_REMOVED") RESTART_EVENTS_REMOVED (ColorGroup.Aaps),
         @SerializedName("TREATMENT_REMOVED") TREATMENT_REMOVED (ColorGroup.InsulinTreatment),
         @SerializedName("TT_REMOVED") TT_REMOVED (ColorGroup.TT),
+        @SerializedName("TB_REMOVED") TB_REMOVED (ColorGroup.TT),
         @SerializedName("NS_PAUSED") NS_PAUSED (ColorGroup.Aaps),
         @SerializedName("NS_RESUME") NS_RESUME (ColorGroup.Aaps),
         @SerializedName("NS_QUEUE_CLEARED") NS_QUEUE_CLEARED (ColorGroup.Aaps),

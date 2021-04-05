@@ -7,10 +7,12 @@ import info.nightscout.androidaps.danars.DanaRSPlugin
 import info.nightscout.androidaps.danars.DanaRSTestBase
 import info.nightscout.androidaps.interfaces.ActivePluginProvider
 import info.nightscout.androidaps.interfaces.CommandQueueProvider
+import info.nightscout.androidaps.interfaces.PumpSync
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper
 import info.nightscout.androidaps.plugins.configBuilder.ConstraintChecker
 import info.nightscout.androidaps.plugins.general.overview.events.EventOverviewBolusProgress
 import info.nightscout.androidaps.plugins.pump.common.bolusInfo.DetailedBolusInfoStorage
+import info.nightscout.androidaps.plugins.pump.common.bolusInfo.TemporaryBasalStorage
 import org.junit.Assert
 import org.junit.Before
 import org.junit.Test
@@ -30,6 +32,8 @@ class DanaRsPacketNotifyDeliveryRateDisplayTest : DanaRSTestBase() {
     @Mock lateinit var commandQueue: CommandQueueProvider
     @Mock lateinit var context: Context
     @Mock lateinit var detailedBolusInfoStorage: DetailedBolusInfoStorage
+    @Mock lateinit var temporaryBasalStorage: TemporaryBasalStorage
+    @Mock lateinit var pumpSync: PumpSync
 
     private lateinit var danaRSPlugin: DanaRSPlugin
 
@@ -62,7 +66,7 @@ class DanaRsPacketNotifyDeliveryRateDisplayTest : DanaRSTestBase() {
 
     @Before
     fun mock() {
-        danaRSPlugin = DanaRSPlugin(packetInjector, aapsLogger, aapsSchedulers, rxBus, context, resourceHelper, constraintChecker, profileFunction, activePluginProvider, sp, commandQueue, danaPump, detailedBolusInfoStorage, fabricPrivacy, dateUtil)
+        danaRSPlugin = DanaRSPlugin(packetInjector, aapsLogger, aapsSchedulers, rxBus, context, resourceHelper, constraintChecker, profileFunction, sp, commandQueue, danaPump, pumpSync, detailedBolusInfoStorage, temporaryBasalStorage, fabricPrivacy, dateUtil)
         danaPump.bolusingTreatment = EventOverviewBolusProgress.Treatment(0.0, 0, true)
     }
 }

@@ -271,7 +271,7 @@ public class DateUtil {
 
     public static boolean isCloseToNow(long date) {
         long diff = Math.abs(date - now());
-        return diff < T.mins(2).msecs();
+        return diff < T.mins(2L).msecs();
     }
 
     public static boolean isOlderThan(long date, long minutes) {

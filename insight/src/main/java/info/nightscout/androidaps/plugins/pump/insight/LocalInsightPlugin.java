@@ -1,5 +1,8 @@
 package info.nightscout.androidaps.plugins.pump.insight;
 
+import static info.nightscout.androidaps.extensions.PumpStateExtensionKt.convertedToAbsolute;
+import static info.nightscout.androidaps.extensions.PumpStateExtensionKt.getPlannedRemainingMinutes;
+
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.content.ComponentName;
@@ -987,17 +990,17 @@ public class LocalInsightPlugin extends PumpPluginBase implements PumpInterface,
             } catch (Exception e) {
                 e.printStackTrace();
             }
-            TemporaryBasal tb = treatmentsPlugin.getTempBasalFromHistory(now);
+            PumpSync.PumpState.TemporaryBasal tb = pumpSync.expectedPumpState().getTemporaryBasal();
             if (tb != null) {
-                extended.put("TempBasalAbsoluteRate", tb.tempBasalConvertedToAbsolute(now, profile));
-                extended.put("TempBasalStart", dateUtil.dateAndTimeString(tb.date));
-                extended.put("TempBasalRemaining", tb.getPlannedRemainingMinutes());
+                extended.put("TempBasalAbsoluteRate", convertedToAbsolute(tb, now, profile));
+                extended.put("TempBasalStart", dateUtil.dateAndTimeString(tb.getTimestamp()));
+                extended.put("TempBasalRemaining", getPlannedRemainingMinutes(tb));
             }
-            ExtendedBolus eb = treatmentsPlugin.getExtendedBolusFromHistory(now);
+            PumpSync.PumpState.ExtendedBolus eb = pumpSync.expectedPumpState().getExtendedBolus();
             if (eb != null) {
-                extended.put("ExtendedBolusAbsoluteRate", eb.absoluteRate());
-                extended.put("ExtendedBolusStart", dateUtil.dateAndTimeString(eb.date));
-                extended.put("ExtendedBolusRemaining", eb.getPlannedRemainingMinutes());
+                extended.put("ExtendedBolusAbsoluteRate", eb.getRate());
+                extended.put("ExtendedBolusStart", dateUtil.dateAndTimeString(eb.getTimestamp()));
+                extended.put("ExtendedBolusRemaining", getPlannedRemainingMinutes(eb));
             }
             extended.put("BaseBasalRate", getBaseBasalRate());
             status.put("timestamp", DateUtil.toISOString(now));

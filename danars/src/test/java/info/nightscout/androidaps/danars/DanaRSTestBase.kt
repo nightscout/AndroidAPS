@@ -64,6 +64,6 @@ open class DanaRSTestBase : TestBaseWithProfile() {
 
     @Before
     fun setup() {
-        danaPump = DanaPump(aapsLogger, sp, injector)
+        danaPump = DanaPump(aapsLogger, sp, dateUtil, injector)
     }
 }

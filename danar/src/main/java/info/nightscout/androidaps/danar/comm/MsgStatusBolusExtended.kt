@@ -1,9 +1,8 @@
 package info.nightscout.androidaps.danar.comm
 
 import dagger.android.HasAndroidInjector
-import info.nightscout.androidaps.db.ExtendedBolus
-import info.nightscout.androidaps.db.Source
 import info.nightscout.androidaps.logging.LTag
+import info.nightscout.androidaps.utils.T
 import kotlin.math.ceil
 
 class MsgStatusBolusExtended(
@@ -18,7 +17,7 @@ class MsgStatusBolusExtended(
     override fun handleMessage(bytes: ByteArray) {
         val isExtendedInProgress = intFromBuff(bytes, 0, 1) == 1
         val extendedBolusHalfHours = intFromBuff(bytes, 1, 1)
-        val extendedBolusMinutes = extendedBolusHalfHours * 30
+        val extendedBolusMinutes = extendedBolusHalfHours * 30L
         val extendedBolusAmount = intFromBuff(bytes, 2, 2) / 100.0
         val extendedBolusSoFarInSecs = intFromBuff(bytes, 4, 3)
         // This is available only on korean, but not needed now
@@ -28,14 +27,9 @@ class MsgStatusBolusExtended(
         val extendedBolusAbsoluteRate = if (isExtendedInProgress) extendedBolusAmount / extendedBolusMinutes * 60 else 0.0
         val extendedBolusStart = if (isExtendedInProgress) getDateFromSecAgo(extendedBolusSoFarInSecs) else 0
         val extendedBolusRemainingMinutes = extendedBolusMinutes - extendedBolusSoFarInMinutes
-        danaPump.isExtendedInProgress = isExtendedInProgress
-        danaPump.extendedBolusMinutes = extendedBolusMinutes
+        danaPump.extendedBolusDuration = T.mins(extendedBolusMinutes).msecs()
         danaPump.extendedBolusAmount = extendedBolusAmount
-        danaPump.extendedBolusSoFarInMinutes = extendedBolusSoFarInMinutes
-        danaPump.extendedBolusAbsoluteRate = extendedBolusAbsoluteRate
         danaPump.extendedBolusStart = extendedBolusStart
-        danaPump.extendedBolusRemainingMinutes = extendedBolusRemainingMinutes
-        updateExtendedBolusInDB()
         aapsLogger.debug(LTag.PUMPCOMM, "Is extended bolus running: $isExtendedInProgress")
         aapsLogger.debug(LTag.PUMPCOMM, "Extended bolus min: $extendedBolusMinutes")
         aapsLogger.debug(LTag.PUMPCOMM, "Extended bolus amount: $extendedBolusAmount")
@@ -47,40 +41,5 @@ class MsgStatusBolusExtended(
 
     private fun getDateFromSecAgo(tempBasalAgoSecs: Int): Long {
         return (ceil(System.currentTimeMillis() / 1000.0) - tempBasalAgoSecs).toLong() * 1000
-    }
-
-    private fun updateExtendedBolusInDB() {
-        val now = System.currentTimeMillis()
-        val extendedBolus = activePlugin.activeTreatments.getExtendedBolusFromHistory(System.currentTimeMillis())
-        if (extendedBolus != null) {
-            if (danaPump.isExtendedInProgress) {
-                if (extendedBolus.absoluteRate() != danaPump.extendedBolusAbsoluteRate) { // Close current extended
-                    val exStop = ExtendedBolus(injector, danaPump.extendedBolusStart - 1000)
-                    exStop.source = Source.USER
-                    activePlugin.activeTreatments.addToHistoryExtendedBolus(exStop)
-                    // Create new
-                    val newExtended = ExtendedBolus(injector)
-                        .date(danaPump.extendedBolusStart)
-                        .insulin(danaPump.extendedBolusAmount)
-                        .durationInMinutes(danaPump.extendedBolusMinutes)
-                        .source(Source.USER)
-                    activePlugin.activeTreatments.addToHistoryExtendedBolus(newExtended)
-                }
-            } else {
-                // Close current temp basal
-                val exStop = ExtendedBolus(injector, now)
-                    .source(Source.USER)
-                activePlugin.activeTreatments.addToHistoryExtendedBolus(exStop)
-            }
-        } else {
-            if (danaPump.isExtendedInProgress) { // Create new
-                val newExtended = ExtendedBolus(injector)
-                    .date(danaPump.extendedBolusStart)
-                    .insulin(danaPump.extendedBolusAmount)
-                    .durationInMinutes(danaPump.extendedBolusMinutes)
-                    .source(Source.USER)
-                activePlugin.activeTreatments.addToHistoryExtendedBolus(newExtended)
-            }
-        }
     }
 }

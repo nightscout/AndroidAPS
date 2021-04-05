@@ -37,10 +37,10 @@ import info.nightscout.androidaps.utils.T
 import info.nightscout.androidaps.utils.Translator
 import info.nightscout.androidaps.utils.alertDialogs.OKDialog
 import info.nightscout.androidaps.utils.buildHelper.BuildHelper
-import info.nightscout.androidaps.utils.extensions.friendlyDescription
-import info.nightscout.androidaps.utils.extensions.highValueToUnitsToString
-import info.nightscout.androidaps.utils.extensions.lowValueToUnitsToString
-import info.nightscout.androidaps.utils.extensions.toVisibility
+import info.nightscout.androidaps.extensions.friendlyDescription
+import info.nightscout.androidaps.extensions.highValueToUnitsToString
+import info.nightscout.androidaps.extensions.lowValueToUnitsToString
+import info.nightscout.androidaps.extensions.toVisibility
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 import info.nightscout.androidaps.utils.rx.AapsSchedulers
 import info.nightscout.androidaps.utils.sharedPreferences.SP
@@ -151,7 +151,7 @@ class TreatmentsTempTargetFragment : DaggerFragment() {
         _binding = null
     }
 
-    inner class RecyclerViewAdapter internal constructor(private var tempTargetList: List<TemporaryTarget>) : RecyclerView.Adapter<TempTargetsViewHolder>() {
+    private inner class RecyclerViewAdapter internal constructor(private var tempTargetList: List<TemporaryTarget>) : RecyclerView.Adapter<TempTargetsViewHolder>() {
 
         private val dbRecord = repository.getTemporaryTargetActiveAt(dateUtil._now()).blockingGet()
         private val currentlyActiveTarget = if (dbRecord is ValueWrapper.Existing) dbRecord.value else null

@@ -4,10 +4,12 @@ import android.content.Context
 import dagger.android.AndroidInjector
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.danars.DanaRSPlugin
+import info.nightscout.androidaps.danars.DanaRSTestBase
 import info.nightscout.androidaps.interfaces.ActivePluginProvider
+import info.nightscout.androidaps.interfaces.PumpSync
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper
 import info.nightscout.androidaps.plugins.pump.common.bolusInfo.DetailedBolusInfoStorage
-import info.nightscout.androidaps.danars.DanaRSTestBase
+import info.nightscout.androidaps.plugins.pump.common.bolusInfo.TemporaryBasalStorage
 import info.nightscout.androidaps.utils.DateUtil
 import org.junit.Assert
 import org.junit.Test
@@ -23,7 +25,9 @@ class DanaRsPacketApsHistoryEventsTest : DanaRSTestBase() {
 
     @Mock lateinit var context: Context
     @Mock lateinit var activePlugin: ActivePluginProvider
+    @Mock lateinit var pumpSync: PumpSync
     @Mock lateinit var detailedBolusInfoStorage: DetailedBolusInfoStorage
+    @Mock lateinit var temporaryBasalStorage: TemporaryBasalStorage
 
     private val packetInjector = HasAndroidInjector {
         AndroidInjector {
@@ -34,9 +38,10 @@ class DanaRsPacketApsHistoryEventsTest : DanaRSTestBase() {
             if (it is DanaRS_Packet_APS_History_Events) {
                 it.rxBus = rxBus
                 it.resourceHelper = resourceHelper
-                it.activePlugin = activePlugin
+                it.pumpSync = pumpSync
                 it.danaPump = danaPump
                 it.detailedBolusInfoStorage = detailedBolusInfoStorage
+                it.temporaryBasalStorage = temporaryBasalStorage
                 it.sp = sp
             }
         }

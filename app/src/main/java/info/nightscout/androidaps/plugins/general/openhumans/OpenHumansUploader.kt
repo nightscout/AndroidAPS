@@ -28,7 +28,7 @@ import info.nightscout.androidaps.interfaces.PluginType
 import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.logging.LTag
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper
-import info.nightscout.androidaps.utils.extensions.toConstant
+import info.nightscout.androidaps.extensions.toConstant
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 import info.nightscout.androidaps.utils.rx.AapsSchedulers
 import info.nightscout.androidaps.utils.sharedPreferences.SP
@@ -365,18 +365,18 @@ class OpenHumansUploader @Inject constructor(
             .andThen(Observable.defer { Observable.fromIterable(repository.compatGetTherapyEventDataFromTime(0, true).blockingGet()) })
             .map { enqueueTherapyEvent(it); increaseCounter() }
             .ignoreElements()
-            .andThen(Observable.defer { Observable.fromIterable(databaseHelper.getAllExtendedBoluses()) })
-            .map { enqueueExtendedBolus(it); increaseCounter() }
-            .ignoreElements()
+//            .andThen(Observable.defer { Observable.fromIterable(databaseHelper.getAllExtendedBoluses()) })
+//            .map { enqueueExtendedBolus(it); increaseCounter() }
+//            .ignoreElements()
             .andThen(Observable.defer { Observable.fromIterable(databaseHelper.getAllProfileSwitches()) })
             .map { enqueueProfileSwitch(it); increaseCounter() }
             .ignoreElements()
             .andThen(Observable.defer { Observable.fromIterable(databaseHelper.getAllTDDs()) })
             .map { enqueueTotalDailyDose(it); increaseCounter() }
             .ignoreElements()
-            .andThen(Observable.defer { Observable.fromIterable(databaseHelper.getAllTemporaryBasals()) })
-            .map { enqueueTemporaryBasal(it); increaseCounter() }
-            .ignoreElements()
+            // .andThen(Observable.defer { Observable.fromIterable(databaseHelper.getAllTemporaryBasals()) })
+            // .map { enqueueTemporaryBasal(it); increaseCounter() }
+            // .ignoreElements()
             .andThen(Observable.defer { Observable.fromIterable(repository.compatGetTemporaryTargetData().blockingGet()) })
             .map { enqueueTempTarget(it); increaseCounter() }
             .ignoreElements()

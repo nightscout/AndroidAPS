@@ -9,9 +9,6 @@ import info.nightscout.androidaps.R
 import info.nightscout.androidaps.data.DetailedBolusInfo
 import info.nightscout.androidaps.data.Profile
 import info.nightscout.androidaps.data.PumpEnactResult
-import info.nightscout.androidaps.db.ExtendedBolus
-import info.nightscout.androidaps.db.Source
-import info.nightscout.androidaps.db.TemporaryBasal
 import info.nightscout.androidaps.events.EventPreferenceChange
 import info.nightscout.androidaps.interfaces.*
 import info.nightscout.androidaps.logging.AAPSLogger
@@ -23,12 +20,13 @@ import info.nightscout.androidaps.plugins.general.overview.events.EventOverviewB
 import info.nightscout.androidaps.plugins.general.overview.notifications.Notification
 import info.nightscout.androidaps.plugins.pump.common.defs.PumpType
 import info.nightscout.androidaps.plugins.pump.virtual.events.EventVirtualPumpUpdateGui
-import info.nightscout.androidaps.plugins.treatments.TreatmentsPlugin
 import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.FabricPrivacy
 import info.nightscout.androidaps.utils.InstanceId.instanceId
 import info.nightscout.androidaps.utils.T
 import info.nightscout.androidaps.utils.TimeChangeType
+import info.nightscout.androidaps.extensions.convertedToAbsolute
+import info.nightscout.androidaps.extensions.plannedRemainingMinutes
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 import info.nightscout.androidaps.utils.rx.AapsSchedulers
 import info.nightscout.androidaps.utils.sharedPreferences.SP
@@ -50,7 +48,7 @@ open class VirtualPumpPlugin @Inject constructor(
     private val aapsSchedulers: AapsSchedulers,
     private val sp: SP,
     private val profileFunction: ProfileFunction,
-    private val treatmentsPlugin: TreatmentsPlugin,
+    private val iobCobCalculator: IobCobCalculator,
     commandQueue: CommandQueueProvider,
     private val pumpSync: PumpSync,
     private val config: Config,
@@ -223,11 +221,6 @@ open class VirtualPumpPlugin @Inject constructor(
 
     override fun stopBolusDelivering() {}
     override fun setTempBasalAbsolute(absoluteRate: Double, durationInMinutes: Int, profile: Profile, enforceNew: Boolean, tbrType: PumpSync.TemporaryBasalType): PumpEnactResult {
-        val tempBasal = TemporaryBasal(injector)
-            .date(System.currentTimeMillis())
-            .absolute(absoluteRate)
-            .duration(durationInMinutes)
-            .source(Source.USER)
         val result = PumpEnactResult(injector)
         result.success = true
         result.enacted = true
@@ -235,7 +228,16 @@ open class VirtualPumpPlugin @Inject constructor(
         result.absolute = absoluteRate
         result.duration = durationInMinutes
         result.comment = resourceHelper.gs(R.string.virtualpump_resultok)
-        treatmentsPlugin.addToHistoryTempBasal(tempBasal)
+        pumpSync.syncTemporaryBasalWithPumpId(
+            timestamp = dateUtil._now(),
+            rate = absoluteRate,
+            duration = T.mins(durationInMinutes.toLong()).msecs(),
+            isAbsolute = true,
+            type = tbrType,
+            pumpId = dateUtil._now(),
+            pumpType = pumpType ?: PumpType.GENERIC_AAPS,
+            pumpSerial = serialNumber()
+        )
         aapsLogger.debug(LTag.PUMP, "Setting temp basal absolute: $result")
         rxBus.send(EventVirtualPumpUpdateGui())
         lastDataTime = System.currentTimeMillis()
@@ -243,11 +245,6 @@ open class VirtualPumpPlugin @Inject constructor(
     }
 
     override fun setTempBasalPercent(percent: Int, durationInMinutes: Int, profile: Profile, enforceNew: Boolean, tbrType: PumpSync.TemporaryBasalType): PumpEnactResult {
-        val tempBasal = TemporaryBasal(injector)
-            .date(System.currentTimeMillis())
-            .percent(percent)
-            .duration(durationInMinutes)
-            .source(Source.USER)
         val result = PumpEnactResult(injector)
         result.success = true
         result.enacted = true
@@ -256,7 +253,16 @@ open class VirtualPumpPlugin @Inject constructor(
         result.isTempCancel = false
         result.duration = durationInMinutes
         result.comment = resourceHelper.gs(R.string.virtualpump_resultok)
-        treatmentsPlugin.addToHistoryTempBasal(tempBasal)
+        pumpSync.syncTemporaryBasalWithPumpId(
+            timestamp = dateUtil._now(),
+            rate = percent.toDouble(),
+            duration = T.mins(durationInMinutes.toLong()).msecs(),
+            isAbsolute = false,
+            type = tbrType,
+            pumpId = dateUtil._now(),
+            pumpType = pumpType ?: PumpType.GENERIC_AAPS,
+            pumpSerial = serialNumber()
+        )
         aapsLogger.debug(LTag.PUMP, "Settings temp basal percent: $result")
         rxBus.send(EventVirtualPumpUpdateGui())
         lastDataTime = System.currentTimeMillis()
@@ -266,18 +272,21 @@ open class VirtualPumpPlugin @Inject constructor(
     override fun setExtendedBolus(insulin: Double, durationInMinutes: Int): PumpEnactResult {
         val result = cancelExtendedBolus()
         if (!result.success) return result
-        val extendedBolus = ExtendedBolus(injector)
-            .date(System.currentTimeMillis())
-            .insulin(insulin)
-            .durationInMinutes(durationInMinutes)
-            .source(Source.USER)
         result.success = true
         result.enacted = true
         result.bolusDelivered = insulin
         result.isTempCancel = false
         result.duration = durationInMinutes
         result.comment = resourceHelper.gs(R.string.virtualpump_resultok)
-        treatmentsPlugin.addToHistoryExtendedBolus(extendedBolus)
+        pumpSync.syncExtendedBolusWithPumpId(
+            timestamp = dateUtil._now(),
+            amount = insulin,
+            duration = T.mins(durationInMinutes.toLong()).msecs(),
+            isEmulatingTB = false,
+            pumpId = dateUtil._now(),
+            pumpType = pumpType ?: PumpType.GENERIC_AAPS,
+            pumpSerial = serialNumber()
+        )
         aapsLogger.debug(LTag.PUMP, "Setting extended bolus: $result")
         rxBus.send(EventVirtualPumpUpdateGui())
         lastDataTime = System.currentTimeMillis()
@@ -289,11 +298,14 @@ open class VirtualPumpPlugin @Inject constructor(
         result.success = true
         result.isTempCancel = true
         result.comment = resourceHelper.gs(R.string.virtualpump_resultok)
-        if (treatmentsPlugin.isTempBasalInProgress) {
+        if (pumpSync.expectedPumpState().temporaryBasal != null) {
             result.enacted = true
-            val tempStop = TemporaryBasal(injector).date(System.currentTimeMillis()).source(Source.USER)
-            treatmentsPlugin.addToHistoryTempBasal(tempStop)
-            //tempBasal = null;
+            pumpSync.syncStopTemporaryBasalWithPumpId(
+                timestamp = dateUtil._now(),
+                endPumpId = dateUtil._now(),
+                pumpType = pumpType ?: PumpType.GENERIC_AAPS,
+                pumpSerial = serialNumber()
+            )
             aapsLogger.debug(LTag.PUMP, "Canceling temp basal: $result")
             rxBus.send(EventVirtualPumpUpdateGui())
         }
@@ -303,10 +315,13 @@ open class VirtualPumpPlugin @Inject constructor(
 
     override fun cancelExtendedBolus(): PumpEnactResult {
         val result = PumpEnactResult(injector)
-        if (treatmentsPlugin.isInHistoryExtendedBolusInProgress) {
-            val exStop = ExtendedBolus(injector, System.currentTimeMillis())
-            exStop.source = Source.USER
-            treatmentsPlugin.addToHistoryExtendedBolus(exStop)
+        if (pumpSync.expectedPumpState().extendedBolus != null) {
+            pumpSync.syncStopExtendedBolusWithPumpId(
+                timestamp = dateUtil._now(),
+                endPumpId = dateUtil._now(),
+                pumpType = pumpType ?: PumpType.GENERIC_AAPS,
+                pumpSerial = serialNumber()
+            )
         }
         result.success = true
         result.enacted = true
@@ -335,16 +350,16 @@ open class VirtualPumpPlugin @Inject constructor(
                 extended.put("ActiveProfile", profileName)
             } catch (ignored: Exception) {
             }
-            val tb = treatmentsPlugin.getTempBasalFromHistory(now)
+            val tb = iobCobCalculator.getTempBasal(now)
             if (tb != null) {
-                extended.put("TempBasalAbsoluteRate", tb.tempBasalConvertedToAbsolute(now, profile))
-                extended.put("TempBasalStart", dateUtil.dateAndTimeString(tb.date))
+                extended.put("TempBasalAbsoluteRate", tb.convertedToAbsolute(now, profile))
+                extended.put("TempBasalStart", dateUtil.dateAndTimeString(tb.timestamp))
                 extended.put("TempBasalRemaining", tb.plannedRemainingMinutes)
             }
-            val eb = treatmentsPlugin.getExtendedBolusFromHistory(now)
+            val eb = iobCobCalculator.getExtendedBolus(now)
             if (eb != null) {
-                extended.put("ExtendedBolusAbsoluteRate", eb.absoluteRate())
-                extended.put("ExtendedBolusStart", dateUtil.dateAndTimeString(eb.date))
+                extended.put("ExtendedBolusAbsoluteRate", eb.rate)
+                extended.put("ExtendedBolusStart", dateUtil.dateAndTimeString(eb.timestamp))
                 extended.put("ExtendedBolusRemaining", eb.plannedRemainingMinutes)
             }
             status.put("timestamp", DateUtil.toISOString(now))

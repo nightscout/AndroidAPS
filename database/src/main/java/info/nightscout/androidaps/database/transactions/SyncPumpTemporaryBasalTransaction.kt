@@ -12,17 +12,25 @@ class SyncPumpTemporaryBasalTransaction(
 ) : Transaction<SyncPumpTemporaryBasalTransaction.TransactionResult>() {
 
     override fun run(): TransactionResult {
-        temporaryBasal.interfaceIDs.pumpId ?: temporaryBasal.interfaceIDs.pumpType ?: temporaryBasal.interfaceIDs.pumpSerial ?:
-            throw IllegalStateException("Some pump ID is null")
+        temporaryBasal.interfaceIDs.pumpId ?: temporaryBasal.interfaceIDs.pumpType
+        ?: temporaryBasal.interfaceIDs.pumpSerial
+        ?: throw IllegalStateException("Some pump ID is null")
         val result = TransactionResult()
         val current = database.temporaryBasalDao.findByPumpIds(temporaryBasal.interfaceIDs.pumpId!!, temporaryBasal.interfaceIDs.pumpType!!, temporaryBasal.interfaceIDs.pumpSerial!!)
         if (current != null) {
-            current.timestamp = temporaryBasal.timestamp
-            current.rate = temporaryBasal.rate
-            current.duration = temporaryBasal.duration
-            current.type = type ?: current.type
-            database.temporaryBasalDao.updateExistingEntry(current)
-            result.updated.add(current)
+            if (
+                current.timestamp != temporaryBasal.timestamp ||
+                current.rate != temporaryBasal.rate ||
+                current.duration != temporaryBasal.duration  && current.interfaceIDs.endId == null ||
+                current.type != type ?: current.type
+            ) {
+                current.timestamp = temporaryBasal.timestamp
+                current.rate = temporaryBasal.rate
+                current.duration = temporaryBasal.duration
+                current.type = type ?: current.type
+                database.temporaryBasalDao.updateExistingEntry(current)
+                result.updated.add(current)
+            }
         } else {
             val running = database.temporaryBasalDao.getTemporaryBasalActiveAt(temporaryBasal.timestamp, temporaryBasal.interfaceIDs.pumpType!!, temporaryBasal.interfaceIDs.pumpSerial!!).blockingGet()
             if (running != null) {

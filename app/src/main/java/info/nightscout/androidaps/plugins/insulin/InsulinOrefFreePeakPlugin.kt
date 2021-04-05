@@ -6,8 +6,8 @@ import info.nightscout.androidaps.interfaces.InsulinInterface
 import info.nightscout.androidaps.interfaces.ProfileFunction
 import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper
-import info.nightscout.androidaps.utils.extensions.storeInt
-import info.nightscout.androidaps.utils.extensions.putInt
+import info.nightscout.androidaps.extensions.storeInt
+import info.nightscout.androidaps.extensions.putInt
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 import info.nightscout.androidaps.utils.sharedPreferences.SP
 import org.json.JSONObject

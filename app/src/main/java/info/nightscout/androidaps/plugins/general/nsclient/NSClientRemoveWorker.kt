@@ -9,10 +9,8 @@ import info.nightscout.androidaps.R
 import info.nightscout.androidaps.database.AppRepository
 import info.nightscout.androidaps.database.entities.UserEntry
 import info.nightscout.androidaps.database.entities.UserEntry.ValueWithUnit
-import info.nightscout.androidaps.database.transactions.SyncNsBolusTransaction
-import info.nightscout.androidaps.database.transactions.SyncNsCarbsTransaction
-import info.nightscout.androidaps.database.transactions.SyncNsTemporaryTargetTransaction
-import info.nightscout.androidaps.database.transactions.SyncNsTherapyEventTransaction
+import info.nightscout.androidaps.database.transactions.*
+import info.nightscout.androidaps.extensions.*
 import info.nightscout.androidaps.interfaces.ConfigInterface
 import info.nightscout.androidaps.interfaces.DatabaseHelperInterface
 import info.nightscout.androidaps.logging.AAPSLogger
@@ -22,10 +20,7 @@ import info.nightscout.androidaps.plugins.bus.RxBusWrapper
 import info.nightscout.androidaps.receivers.DataWorker
 import info.nightscout.androidaps.utils.JsonHelper
 import info.nightscout.androidaps.utils.buildHelper.BuildHelper
-import info.nightscout.androidaps.utils.extensions.bolusFromNsIdForInvalidating
-import info.nightscout.androidaps.utils.extensions.carbsFromNsIdForInvalidating
-import info.nightscout.androidaps.utils.extensions.temporaryTargetFromNsIdForInvalidating
-import info.nightscout.androidaps.utils.extensions.therapyEventFromNsIdForInvalidating
+import info.nightscout.androidaps.utils.extensions.*
 import info.nightscout.androidaps.utils.sharedPreferences.SP
 import javax.inject.Inject
 
@@ -114,7 +109,7 @@ class NSClientRemoveWorker(
                     }
                 }
 
-            // room  Bolus
+            // room  Carbs
             val carbs = carbsFromNsIdForInvalidating(nsId)
             repository.runTransactionForResult(SyncNsCarbsTransaction(carbs))
                 .doOnError {
@@ -131,9 +126,41 @@ class NSClientRemoveWorker(
                     }
                 }
 
+            // room  TemporaryBasal
+            val temporaryBasal = temporaryBasalFromNsIdForInvalidating(nsId)
+            repository.runTransactionForResult(SyncNsTemporaryBasalTransaction(temporaryBasal))
+                .doOnError {
+                    aapsLogger.error(LTag.DATABASE, "Error while invalidating temporary basal", it)
+                    ret = Result.failure(workDataOf("Error" to it))
+                }
+                .blockingGet()
+                .also { result ->
+                    result.invalidated.forEach {
+                        uel.log(
+                            UserEntry.Action.CAREPORTAL_DELETED_FROM_NS,
+                            ValueWithUnit(it.timestamp, UserEntry.Units.Timestamp, true),
+                            ValueWithUnit(it.rate, UserEntry.Units.U_H))
+                    }
+                }
+            // room  ExtendedBolus
+            val extendedBolus = extendedBolusFromNsIdForInvalidating(nsId)
+            repository.runTransactionForResult(SyncNsExtendedBolusTransaction(extendedBolus))
+                .doOnError {
+                    aapsLogger.error(LTag.DATABASE, "Error while invalidating extended bolus", it)
+                    ret = Result.failure(workDataOf("Error" to it))
+                }
+                .blockingGet()
+                .also { result ->
+                    result.invalidated.forEach {
+                        uel.log(
+                            UserEntry.Action.CAREPORTAL_DELETED_FROM_NS,
+                            ValueWithUnit(it.timestamp, UserEntry.Units.Timestamp, true),
+                            ValueWithUnit(it.amount, UserEntry.Units.U))
+                    }
+                }
+
+
             // old DB model
-            databaseHelper.deleteTempBasalById(nsId)
-            databaseHelper.deleteExtendedBolusById(nsId)
             databaseHelper.deleteProfileSwitchById(nsId)
         }
 

@@ -28,7 +28,7 @@ class ComboPluginTest : TestBase() {
     @Mock lateinit var profileFunction: ProfileFunction
     @Mock lateinit var activePlugin: ActivePluginProvider
     @Mock lateinit var commandQueue: CommandQueueProvider
-    @Mock lateinit var treatmentsPlugin: TreatmentsInterface
+    @Mock lateinit var pumpSync: PumpSync
     @Mock lateinit var sp: SP
     @Mock lateinit var context: Context
     @Mock lateinit var databaseHelper: DatabaseHelperInterface
@@ -47,7 +47,7 @@ class ComboPluginTest : TestBase() {
     fun prepareMocks() {
         `when`(resourceHelper.gs(R.string.novalidbasalrate)).thenReturn("No valid basal rate read from pump")
         `when`(resourceHelper.gs(R.string.combo_pump_unsupported_operation)).thenReturn("Requested operation not supported by pump")
-        comboPlugin = ComboPlugin(injector, aapsLogger, RxBusWrapper(aapsSchedulers), resourceHelper, profileFunction, treatmentsPlugin, sp, commandQueue, context, databaseHelper)
+        comboPlugin = ComboPlugin(injector, aapsLogger, RxBusWrapper(aapsSchedulers), resourceHelper, profileFunction, sp, commandQueue, context, databaseHelper, pumpSync)
     }
 
     @Test

@@ -211,6 +211,8 @@ public class DanaRExecutionService extends AbstractDanaRExecutionService {
                     lastApproachingDailyLimit = System.currentTimeMillis();
                 }
             }
+
+            doSanityCheck();
         } catch (Exception e) {
             aapsLogger.error("Unhandled exception", e);
         }

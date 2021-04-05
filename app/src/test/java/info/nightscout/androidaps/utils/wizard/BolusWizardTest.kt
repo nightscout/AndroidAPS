@@ -72,7 +72,7 @@ class BolusWizardTest : TestBase() {
         `when`(iobCobCalculator.dataLock).thenReturn(Any())
         `when`(activePlugin.activeTreatments).thenReturn(treatmentsPlugin)
         `when`(iobCobCalculator.calculateIobFromBolus()).thenReturn(IobTotal(System.currentTimeMillis()))
-        `when`(treatmentsPlugin.lastCalculationTempBasals).thenReturn(IobTotal(System.currentTimeMillis()))
+        `when`(iobCobCalculator.calculateIobFromTempBasalsIncludingConvertedExtended()).thenReturn(IobTotal(System.currentTimeMillis()))
         `when`(activePlugin.activePump).thenReturn(virtualPumpPlugin)
         val pumpDescription = PumpDescription()
         pumpDescription.bolusStep = pumpBolusStep

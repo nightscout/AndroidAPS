@@ -9,7 +9,7 @@ import info.nightscout.androidaps.interfaces.DataSyncSelector
 import info.nightscout.androidaps.interfaces.ProfileFunction
 import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.logging.LTag
-import info.nightscout.androidaps.utils.extensions.toJson
+import info.nightscout.androidaps.extensions.toJson
 import info.nightscout.androidaps.utils.sharedPreferences.SP
 import javax.inject.Inject
 
@@ -30,6 +30,8 @@ class DataSyncSelectorImplementation @Inject constructor(
         sp.remove(R.string.key_ns_carbs_last_synced_id)
         sp.remove(R.string.key_ns_bolus_calculator_result_last_synced_id)
         sp.remove(R.string.key_ns_device_status_last_synced_id)
+        sp.remove(R.string.key_ns_temporary_basal_last_synced_id)
+        sp.remove(R.string.key_ns_extended_bolus_last_synced_id)
     }
 
     override fun confirmLastBolusIdIfGreater(lastSynced: Long) {
@@ -326,4 +328,81 @@ class DataSyncSelectorImplementation @Inject constructor(
         return false
     }
 
+    override fun confirmLastTemporaryBasalIdIfGreater(lastSynced: Long) {
+        if (lastSynced > sp.getLong(R.string.key_ns_temporary_basal_last_synced_id, 0)) {
+            aapsLogger.debug(LTag.NSCLIENT, "Setting TemporaryBasal data sync from $lastSynced")
+            sp.putLong(R.string.key_ns_temporary_basal_last_synced_id, lastSynced)
+        }
+    }
+
+    // Prepared for v3 (returns all modified after)
+    override fun changedTemporaryBasals(): List<TemporaryBasal> {
+        val startId = sp.getLong(R.string.key_ns_temporary_basal_last_synced_id, 0)
+        return appRepository.getModifiedTemporaryBasalDataFromId(startId).blockingGet().also {
+            aapsLogger.debug(LTag.NSCLIENT, "Loading TemporaryBasal data for sync from $startId. Records ${it.size}")
+        }
+    }
+
+    override fun processChangedTemporaryBasalsCompat(): Boolean {
+        val startId = sp.getLong(R.string.key_ns_temporary_basal_last_synced_id, 0)
+        appRepository.getNextSyncElementTemporaryBasal(startId).blockingGet()?.let { tb ->
+            aapsLogger.info(LTag.DATABASE, "Loading TemporaryBasal data Start: $startId ID: ${tb.first.id} HistoryID: ${tb.second} ")
+            profileFunction.getProfile(tb.first.timestamp)?.let { profile ->
+                when {
+                    // removed and not uploaded yet = ignore
+                    !tb.first.isValid && tb.first.interfaceIDs.nightscoutId == null -> Any()
+                    // removed and already uploaded = send for removal
+                    !tb.first.isValid && tb.first.interfaceIDs.nightscoutId != null ->
+                        nsClientPlugin.nsClientService?.dbRemove("treatments", tb.first.interfaceIDs.nightscoutId, DataSyncSelector.PairTemporaryBasal(tb.first, tb.second))
+                    // existing without nsId = create new
+                    tb.first.isValid && tb.first.interfaceIDs.nightscoutId == null  ->
+                        nsClientPlugin.nsClientService?.dbAdd("treatments", tb.first.toJson(profile), DataSyncSelector.PairTemporaryBasal(tb.first, tb.second))
+                    // existing with nsId = update
+                    tb.first.isValid && tb.first.interfaceIDs.nightscoutId != null  ->
+                        nsClientPlugin.nsClientService?.dbUpdate("treatments", tb.first.interfaceIDs.nightscoutId, tb.first.toJson(profile), DataSyncSelector.PairTemporaryBasal(tb.first, tb.second))
+                }
+                return true
+            }
+        }
+        return false
+    }
+
+    override fun confirmLastExtendedBolusIdIfGreater(lastSynced: Long) {
+        if (lastSynced > sp.getLong(R.string.key_ns_extended_bolus_last_synced_id, 0)) {
+            aapsLogger.debug(LTag.NSCLIENT, "Setting ExtendedBolus data sync from $lastSynced")
+            sp.putLong(R.string.key_ns_extended_bolus_last_synced_id, lastSynced)
+        }
+    }
+
+    // Prepared for v3 (returns all modified after)
+    override fun changedExtendedBoluses(): List<ExtendedBolus> {
+        val startId = sp.getLong(R.string.key_ns_extended_bolus_last_synced_id, 0)
+        return appRepository.getModifiedExtendedBolusDataFromId(startId).blockingGet().also {
+            aapsLogger.debug(LTag.NSCLIENT, "Loading ExtendedBolus data for sync from $startId. Records ${it.size}")
+        }
+    }
+
+    override fun processChangedExtendedBolusesCompat(): Boolean {
+        val startId = sp.getLong(R.string.key_ns_extended_bolus_last_synced_id, 0)
+        appRepository.getNextSyncElementExtendedBolus(startId).blockingGet()?.let { eb ->
+            aapsLogger.info(LTag.DATABASE, "Loading ExtendedBolus data Start: $startId ID: ${eb.first.id} HistoryID: ${eb.second} ")
+            profileFunction.getProfile(eb.first.timestamp)?.let { profile ->
+                when {
+                    // removed and not uploaded yet = ignore
+                    !eb.first.isValid && eb.first.interfaceIDs.nightscoutId == null -> Any()
+                    // removed and already uploaded = send for removal
+                    !eb.first.isValid && eb.first.interfaceIDs.nightscoutId != null ->
+                        nsClientPlugin.nsClientService?.dbRemove("treatments", eb.first.interfaceIDs.nightscoutId, DataSyncSelector.PairExtendedBolus(eb.first, eb.second))
+                    // existing without nsId = create new
+                    eb.first.isValid && eb.first.interfaceIDs.nightscoutId == null  ->
+                        nsClientPlugin.nsClientService?.dbAdd("treatments", eb.first.toJson(profile), DataSyncSelector.PairExtendedBolus(eb.first, eb.second))
+                    // existing with nsId = update
+                    eb.first.isValid && eb.first.interfaceIDs.nightscoutId != null  ->
+                        nsClientPlugin.nsClientService?.dbUpdate("treatments", eb.first.interfaceIDs.nightscoutId, eb.first.toJson(profile), DataSyncSelector.PairExtendedBolus(eb.first, eb.second))
+                }
+                return true
+            }
+        }
+        return false
+    }
 }

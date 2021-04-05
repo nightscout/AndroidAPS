@@ -1,9 +1,8 @@
 package info.nightscout.androidaps.danar.comm
 
 import dagger.android.HasAndroidInjector
-import info.nightscout.androidaps.db.Source
-import info.nightscout.androidaps.db.TemporaryBasal
 import info.nightscout.androidaps.logging.LTag
+import kotlin.math.abs
 import kotlin.math.ceil
 
 class MsgStatusTempBasal(
@@ -24,53 +23,24 @@ class MsgStatusTempBasal(
         val tempBasalRunningSeconds = intFromBuff(bytes, 3, 3)
         val tempBasalRemainingMin = (tempBasalTotalSec - tempBasalRunningSeconds) / 60
         val tempBasalStart = if (isTempBasalInProgress) getDateFromTempBasalSecAgo(tempBasalRunningSeconds) else 0
-        danaPump.isTempBasalInProgress = isTempBasalInProgress
-        danaPump.tempBasalPercent = tempBasalPercent
-        danaPump.tempBasalRemainingMin = tempBasalRemainingMin
-        danaPump.tempBasalTotalSec = tempBasalTotalSec
-        danaPump.tempBasalStart = tempBasalStart
-        updateTempBasalInDB()
+        if (isTempBasalInProgress && !isWithin3Sec(tempBasalStart)) {
+            danaPump.tempBasalStart = tempBasalStart
+            danaPump.tempBasalPercent = tempBasalPercent
+            danaPump.tempBasalTotalSec = tempBasalTotalSec.toLong()
+        }
+        if (!isTempBasalInProgress) danaPump.isTempBasalInProgress = false
         aapsLogger.debug(LTag.PUMPCOMM, "Is temp basal running: $isTempBasalInProgress")
         aapsLogger.debug(LTag.PUMPCOMM, "Is APS temp basal running: $isAPSTempBasalInProgress")
         aapsLogger.debug(LTag.PUMPCOMM, "Current temp basal percent: $tempBasalPercent")
         aapsLogger.debug(LTag.PUMPCOMM, "Current temp basal remaining min: $tempBasalRemainingMin")
         aapsLogger.debug(LTag.PUMPCOMM, "Current temp basal total sec: $tempBasalTotalSec")
-        aapsLogger.debug(LTag.PUMPCOMM, "Current temp basal start: $tempBasalStart")
+        aapsLogger.debug(LTag.PUMPCOMM, "Current temp basal start: " + dateUtil.dateAndTimeString(tempBasalStart))
     }
 
     private fun getDateFromTempBasalSecAgo(tempBasalAgoSecs: Int): Long {
         return (ceil(System.currentTimeMillis() / 1000.0) - tempBasalAgoSecs).toLong() * 1000
     }
 
-    private fun updateTempBasalInDB() {
-        val now = System.currentTimeMillis()
-        if (activePlugin.activeTreatments.isInHistoryRealTempBasalInProgress) {
-            val tempBasal = activePlugin.activeTreatments.getRealTempBasalFromHistory(System.currentTimeMillis())
-            if (danaPump.isTempBasalInProgress) {
-                if (tempBasal.percentRate != danaPump.tempBasalPercent) { // Close current temp basal
-                    val tempStop = TemporaryBasal(injector).date(danaPump.tempBasalStart - 1000).source(Source.USER)
-                    activePlugin.activeTreatments.addToHistoryTempBasal(tempStop)
-                    // Create new
-                    val newTempBasal = TemporaryBasal(injector)
-                        .date(danaPump.tempBasalStart)
-                        .percent(danaPump.tempBasalPercent)
-                        .duration(danaPump.tempBasalTotalSec / 60)
-                        .source(Source.USER)
-                    activePlugin.activeTreatments.addToHistoryTempBasal(newTempBasal)
-                }
-            } else { // Close current temp basal
-                val tempStop = TemporaryBasal(injector).date(now).source(Source.USER)
-                activePlugin.activeTreatments.addToHistoryTempBasal(tempStop)
-            }
-        } else {
-            if (danaPump.isTempBasalInProgress) { // Create new
-                val newTempBasal = TemporaryBasal(injector)
-                    .date(danaPump.tempBasalStart)
-                    .percent(danaPump.tempBasalPercent)
-                    .duration(danaPump.tempBasalTotalSec / 60)
-                    .source(Source.USER)
-                activePlugin.activeTreatments.addToHistoryTempBasal(newTempBasal)
-            }
-        }
-    }
+    // because there is no fixed timestamp of start allow update of tbr only if tbr start differs more
+    private fun isWithin3Sec(newStart: Long) = abs(newStart - danaPump.tempBasalStart) < 3000
 }

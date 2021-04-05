@@ -1,4 +1,4 @@
-package info.nightscout.androidaps.utils.extensions
+package info.nightscout.androidaps.extensions
 
 import androidx.annotation.ColorRes
 import info.nightscout.androidaps.utils.resources.ResourceHelper

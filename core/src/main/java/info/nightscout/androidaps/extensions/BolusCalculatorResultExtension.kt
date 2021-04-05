@@ -1,4 +1,4 @@
-package info.nightscout.androidaps.utils.extensions
+package info.nightscout.androidaps.extensions
 
 import com.google.gson.Gson
 import info.nightscout.androidaps.Constants
@@ -9,7 +9,7 @@ import org.json.JSONObject
 
 fun BolusCalculatorResult.toJson(): JSONObject =
     JSONObject()
-        .put("eventType", TherapyEvent.Type.BOLUS_WIZARD)
+        .put("eventType", TherapyEvent.Type.BOLUS_WIZARD.text)
         .put("created_at", DateUtil.toISOString(timestamp))
         .put("bolusCalculatorResult", Gson().toJson(this))
         .put("date", timestamp)

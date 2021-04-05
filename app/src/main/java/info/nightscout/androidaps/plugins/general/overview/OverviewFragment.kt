@@ -36,6 +36,7 @@ import info.nightscout.androidaps.database.interfaces.end
 import info.nightscout.androidaps.databinding.OverviewFragmentBinding
 import info.nightscout.androidaps.dialogs.*
 import info.nightscout.androidaps.events.*
+import info.nightscout.androidaps.extensions.*
 import info.nightscout.androidaps.interfaces.*
 import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.logging.UserEntryLogger
@@ -61,10 +62,7 @@ import info.nightscout.androidaps.skins.SkinProvider
 import info.nightscout.androidaps.utils.*
 import info.nightscout.androidaps.utils.alertDialogs.OKDialog
 import info.nightscout.androidaps.utils.buildHelper.BuildHelper
-import info.nightscout.androidaps.utils.extensions.directionToIcon
-import info.nightscout.androidaps.utils.extensions.toVisibility
-import info.nightscout.androidaps.utils.extensions.valueToUnits
-import info.nightscout.androidaps.utils.extensions.valueToUnitsString
+import info.nightscout.androidaps.utils.extensions.*
 import info.nightscout.androidaps.utils.protection.ProtectionCheck
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 import info.nightscout.androidaps.utils.rx.AapsSchedulers
@@ -100,7 +98,7 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
     @Inject lateinit var configBuilderPlugin: ConfigBuilderPlugin
     @Inject lateinit var activePlugin: ActivePluginProvider
     @Inject lateinit var treatmentsPlugin: TreatmentsPlugin
-    @Inject lateinit var iobCobCalculatorPlugin: IobCobCalculator
+    @Inject lateinit var iobCobCalculator: IobCobCalculator
     @Inject lateinit var dexcomPlugin: DexcomPlugin
     @Inject lateinit var dexcomMediator: DexcomPlugin.DexcomMediator
     @Inject lateinit var xdripPlugin: XdripPlugin
@@ -412,7 +410,7 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
     }
 
     private fun onClickQuickWizard() {
-        val actualBg = iobCobCalculatorPlugin.actualBg()
+        val actualBg = iobCobCalculator.actualBg()
         val profile = profileFunction.getProfile()
         val profileName = profileFunction.getProfileName()
         val pump = activePlugin.activePump
@@ -447,11 +445,11 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
 
     @SuppressLint("SetTextI18n")
     private fun processButtonsVisibility() {
-        val lastBG = iobCobCalculatorPlugin.lastBg()
+        val lastBG = iobCobCalculator.lastBg()
         val pump = activePlugin.activePump
         val profile = profileFunction.getProfile()
         val profileName = profileFunction.getProfileName()
-        val actualBG = iobCobCalculatorPlugin.actualBg()
+        val actualBG = iobCobCalculator.actualBg()
 
         // QuickWizard button
         val quickWizardEntry = quickWizard.getActive()
@@ -563,8 +561,8 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
         binding.loopPumpStatusLayout.loopLayout.visibility = View.VISIBLE
 
         val profile = profileFunction.getProfile() ?: return
-        val actualBG = iobCobCalculatorPlugin.actualBg()
-        val lastBG = iobCobCalculatorPlugin.lastBg()
+        val actualBG = iobCobCalculator.actualBg()
+        val lastBG = iobCobCalculator.lastBg()
         val pump = activePlugin.activePump
         val units = profileFunction.getUnits()
         val lowLine = defaultValueHelper.determineLowLine()
@@ -703,13 +701,13 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
         }
 
         // Basal, TBR
-        val activeTemp = treatmentsPlugin.getTempBasalFromHistory(System.currentTimeMillis())
-        binding.infoLayout.baseBasal.text = activeTemp?.let { "T:" + activeTemp.toStringVeryShort() }
+        val activeTemp = iobCobCalculator.getTempBasalIncludingConvertedExtended(System.currentTimeMillis())
+        binding.infoLayout.baseBasal.text = activeTemp?.let { "T:" + activeTemp.toStringShort() }
             ?: resourceHelper.gs(R.string.pump_basebasalrate, profile.basal)
         binding.infoLayout.basalLayout.setOnClickListener {
             var fullText = "${resourceHelper.gs(R.string.basebasalrate_label)}: ${resourceHelper.gs(R.string.pump_basebasalrate, profile.basal)}"
             if (activeTemp != null)
-                fullText += "\n" + resourceHelper.gs(R.string.tempbasal_label) + ": " + activeTemp.toStringFull()
+                fullText += "\n" + resourceHelper.gs(R.string.tempbasal_label) + ": " + activeTemp.toStringFull(profile, dateUtil)
             activity?.let {
                 OKDialog.show(it, resourceHelper.gs(R.string.basal), fullText)
             }
@@ -718,23 +716,23 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
             ?: resourceHelper.gc(R.color.defaulttextcolor))
 
         binding.infoLayout.baseBasalIcon.setImageResource(R.drawable.ic_cp_basal_no_tbr)
-        val percentRate = activeTemp?.tempBasalConvertedToPercent(System.currentTimeMillis(), profile)
+        val percentRate = activeTemp?.convertedToPercent(System.currentTimeMillis(), profile)
             ?: 100
         if (percentRate > 100) binding.infoLayout.baseBasalIcon.setImageResource(R.drawable.ic_cp_basal_tbr_high)
         if (percentRate < 100) binding.infoLayout.baseBasalIcon.setImageResource(R.drawable.ic_cp_basal_tbr_low)
 
         // Extended bolus
-        val extendedBolus = treatmentsPlugin.getExtendedBolusFromHistory(System.currentTimeMillis())
+        val extendedBolus = repository.getExtendedBolusActiveAt(dateUtil._now()).blockingGet()
         binding.infoLayout.extendedBolus.text =
-            if (extendedBolus != null && !pump.isFakingTempsByExtendedBoluses)
-                resourceHelper.gs(R.string.pump_basebasalrate, extendedBolus.absoluteRate())
+            if (extendedBolus is ValueWrapper.Existing && !pump.isFakingTempsByExtendedBoluses)
+                resourceHelper.gs(R.string.pump_basebasalrate, extendedBolus.value.rate)
             else ""
         binding.infoLayout.extendedBolus.setOnClickListener {
-            if (extendedBolus != null) activity?.let {
-                OKDialog.show(it, resourceHelper.gs(R.string.extended_bolus), extendedBolus.toString())
+            if (extendedBolus is ValueWrapper.Existing) activity?.let {
+                OKDialog.show(it, resourceHelper.gs(R.string.extended_bolus), extendedBolus.value.toStringFull(dateUtil))
             }
         }
-        binding.infoLayout.extendedLayout.visibility = (extendedBolus != null && !pump.isFakingTempsByExtendedBoluses).toVisibility()
+        binding.infoLayout.extendedLayout.visibility = (extendedBolus is ValueWrapper.Existing && !pump.isFakingTempsByExtendedBoluses).toVisibility()
 
         // Active profile
         binding.loopPumpStatusLayout.activeProfile.text = profileFunction.getProfileNameWithDuration()
@@ -749,8 +747,8 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
         processButtonsVisibility()
 
         // iob
-        val bolusIob = iobCobCalculatorPlugin.calculateIobFromBolus().round()
-        val basalIob = treatmentsPlugin.lastCalculationTempBasals.round()
+        val bolusIob = iobCobCalculator.calculateIobFromBolus().round()
+        val basalIob = iobCobCalculator.calculateIobFromTempBasalsIncludingConvertedExtended().round()
         binding.infoLayout.iob.text = resourceHelper.gs(R.string.formatinsulinunits, bolusIob.iob + basalIob.basaliob)
 
         binding.infoLayout.iobLayout.setOnClickListener {
@@ -769,7 +767,7 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
 
         // cob
         var cobText: String = resourceHelper.gs(R.string.value_unavailable_short)
-        val cobInfo = iobCobCalculatorPlugin.getCobInfo(false, "Overview COB")
+        val cobInfo = iobCobCalculator.getCobInfo(false, "Overview COB")
         if (cobInfo.displayCob != null) {
             cobText = resourceHelper.gs(R.string.format_carbs, cobInfo.displayCob!!.toInt())
             if (cobInfo.futureCarbs > 0) cobText += "(" + DecimalFormatter.to0Decimal(cobInfo.futureCarbs) + ")"
@@ -813,7 +811,7 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
         }
 
         binding.infoLayout.sensitivity.text =
-            iobCobCalculatorPlugin.getLastAutosensData("Overview")?.let { autosensData ->
+            iobCobCalculator.getLastAutosensData("Overview")?.let { autosensData ->
                 String.format(Locale.ENGLISH, "%.0f%%", autosensData.autosensResult.ratio * 100)
             } ?: ""
     }
@@ -823,7 +821,7 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
             if (_binding == null) return@launch
             val menuChartSettings = overviewMenus.setting
             prepareGraphsIfNeeded(menuChartSettings.size)
-            val graphData = GraphData(injector, binding.graphsLayout.bgGraph, iobCobCalculatorPlugin, treatmentsPlugin)
+            val graphData = GraphData(injector, binding.graphsLayout.bgGraph, iobCobCalculator, treatmentsPlugin)
             val secondaryGraphsData: ArrayList<GraphData> = ArrayList()
 
             // do preparation in different thread
@@ -890,7 +888,7 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
                 // ------------------ 2nd graph
                 synchronized(graphLock) {
                     for (g in 0 until min(secondaryGraphs.size, menuChartSettings.size + 1)) {
-                        val secondGraphData = GraphData(injector, secondaryGraphs[g], iobCobCalculatorPlugin, treatmentsPlugin)
+                        val secondGraphData = GraphData(injector, secondaryGraphs[g], iobCobCalculator, treatmentsPlugin)
                         var useABSForScale = false
                         var useIobForScale = false
                         var useCobForScale = false

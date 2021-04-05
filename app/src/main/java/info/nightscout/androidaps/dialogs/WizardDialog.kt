@@ -27,7 +27,6 @@ import info.nightscout.androidaps.interfaces.ActivePluginProvider
 import info.nightscout.androidaps.interfaces.Constraint
 import info.nightscout.androidaps.interfaces.IobCobCalculator
 import info.nightscout.androidaps.interfaces.ProfileFunction
-import info.nightscout.androidaps.interfaces.TreatmentsInterface
 import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.logging.LTag
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper
@@ -37,8 +36,8 @@ import info.nightscout.androidaps.utils.DecimalFormatter
 import info.nightscout.androidaps.utils.FabricPrivacy
 import info.nightscout.androidaps.utils.SafeParse
 import info.nightscout.androidaps.utils.ToastUtils
-import info.nightscout.androidaps.utils.extensions.toVisibility
-import info.nightscout.androidaps.utils.extensions.valueToUnits
+import info.nightscout.androidaps.extensions.toVisibility
+import info.nightscout.androidaps.extensions.valueToUnits
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 import info.nightscout.androidaps.utils.rx.AapsSchedulers
 import info.nightscout.androidaps.utils.sharedPreferences.SP
@@ -64,7 +63,6 @@ class WizardDialog : DaggerDialogFragment() {
     @Inject lateinit var activePlugin: ActivePluginProvider
     @Inject lateinit var iobCobCalculator: IobCobCalculator
     @Inject lateinit var repository: AppRepository
-    @Inject lateinit var treatmentsPlugin: TreatmentsInterface
     @Inject lateinit var dateUtil: DateUtil
 
     private var wizard: BolusWizard? = null
@@ -274,7 +272,7 @@ class WizardDialog : DaggerDialogFragment() {
 
         // IOB calculation
         val bolusIob = iobCobCalculator.calculateIobFromBolus().round()
-        val basalIob = treatmentsPlugin.lastCalculationTempBasals.round()
+        val basalIob = iobCobCalculator.calculateIobFromTempBasalsIncludingConvertedExtended().round()
 
         binding.bolusiobinsulin.text = resourceHelper.gs(R.string.formatinsulinunits, -bolusIob.iob)
         binding.basaliobinsulin.text = resourceHelper.gs(R.string.formatinsulinunits, -basalIob.basaliob)

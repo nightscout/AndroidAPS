@@ -1,4 +1,4 @@
-package info.nightscout.androidaps.utils.extensions
+package info.nightscout.androidaps.extensions
 
 import info.nightscout.androidaps.data.Iob
 import info.nightscout.androidaps.database.embedments.InterfaceIDs
@@ -18,7 +18,7 @@ fun Bolus.iobCalc(activePlugin: ActivePluginProvider, time: Long, dia: Double): 
 
 fun Bolus.toJson(): JSONObject =
     JSONObject()
-        .put("eventType", if (type == Bolus.Type.SMB) TherapyEvent.Type.CORRECTION_BOLUS else TherapyEvent.Type.MEAL_BOLUS)
+        .put("eventType", if (type == Bolus.Type.SMB) TherapyEvent.Type.CORRECTION_BOLUS.text else TherapyEvent.Type.MEAL_BOLUS.text)
         .put("insulin", amount)
         .put("created_at", DateUtil.toISOString(timestamp))
         .put("date", timestamp)

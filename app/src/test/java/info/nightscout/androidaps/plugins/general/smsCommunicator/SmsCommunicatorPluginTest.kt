@@ -19,7 +19,6 @@ import info.nightscout.androidaps.interfaces.*
 import info.nightscout.androidaps.logging.UserEntryLogger
 import info.nightscout.androidaps.plugins.aps.loop.LoopPlugin
 import info.nightscout.androidaps.plugins.configBuilder.ConstraintChecker
-import info.nightscout.androidaps.plugins.general.nsclient.NSUpload
 import info.nightscout.androidaps.plugins.general.smsCommunicator.otp.OneTimePassword
 import info.nightscout.androidaps.plugins.general.smsCommunicator.otp.OneTimePasswordValidationResult
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.CobInfo
@@ -66,14 +65,12 @@ class SmsCommunicatorPluginTest : TestBaseWithProfile() {
     @Mock lateinit var activePlugin: ActivePluginProvider
     @Mock lateinit var commandQueue: CommandQueueProvider
     @Mock lateinit var loopPlugin: LoopPlugin
-    @Mock lateinit var iobCobCalculator: IobCobCalculator
     @Mock lateinit var virtualPumpPlugin: VirtualPumpPlugin
     @Mock lateinit var localProfilePlugin: LocalProfilePlugin
     @Mock lateinit var treatmentService: TreatmentService
     @Mock lateinit var otp: OneTimePassword
     @Mock lateinit var xdripCalibrations: XdripCalibrations
     @Mock lateinit var uel: UserEntryLogger
-    @Mock lateinit var nsUpload: NSUpload
     @Mock lateinit var repository: AppRepository
 
     var injector: HasAndroidInjector = HasAndroidInjector {
@@ -146,13 +143,13 @@ class SmsCommunicatorPluginTest : TestBaseWithProfile() {
             callback.result = PumpEnactResult(injector).success(true).isPercent(true).percent(invocation.getArgument(0)).duration(invocation.getArgument(1))
             callback.run()
             null
-        }.`when`(commandQueue).tempBasalPercent(ArgumentMatchers.anyInt(), ArgumentMatchers.anyInt(), ArgumentMatchers.anyBoolean(), anyObject(), ArgumentMatchers.any(Callback::class.java))
+        }.`when`(commandQueue).tempBasalPercent(ArgumentMatchers.anyInt(), ArgumentMatchers.anyInt(), ArgumentMatchers.anyBoolean(), anyObject(), ArgumentMatchers.any(PumpSync.TemporaryBasalType::class.java), ArgumentMatchers.any(Callback::class.java))
         Mockito.doAnswer { invocation: InvocationOnMock ->
             val callback = invocation.getArgument<Callback>(4)
             callback.result = PumpEnactResult(injector).success(true).isPercent(false).absolute(invocation.getArgument(0)).duration(invocation.getArgument(1))
             callback.run()
             null
-        }.`when`(commandQueue).tempBasalAbsolute(ArgumentMatchers.anyDouble(), ArgumentMatchers.anyInt(), ArgumentMatchers.anyBoolean(), anyObject(), ArgumentMatchers.any(Callback::class.java))
+        }.`when`(commandQueue).tempBasalAbsolute(ArgumentMatchers.anyDouble(), ArgumentMatchers.anyInt(), ArgumentMatchers.anyBoolean(), anyObject(), ArgumentMatchers.any(PumpSync.TemporaryBasalType::class.java), ArgumentMatchers.any(Callback::class.java))
         Mockito.doAnswer { invocation: InvocationOnMock ->
             val callback = invocation.getArgument<Callback>(2)
             callback.result = PumpEnactResult(injector).success(true).isPercent(false).absolute(invocation.getArgument(0)).duration(invocation.getArgument(1))
@@ -169,7 +166,7 @@ class SmsCommunicatorPluginTest : TestBaseWithProfile() {
         `when`(virtualPumpPlugin.model()).thenReturn(PumpType.GENERIC_AAPS)
 
         `when`(iobCobCalculator.calculateIobFromBolus()).thenReturn(IobTotal(0))
-        `when`(treatmentsInterface.lastCalculationTempBasals).thenReturn(IobTotal(0))
+        `when`(iobCobCalculator.calculateIobFromTempBasalsIncludingConvertedExtended()).thenReturn(IobTotal(0))
         `when`(treatmentsInterface.service).thenReturn(treatmentService)
 
         `when`(activePlugin.activeProfileInterface).thenReturn(localProfilePlugin)

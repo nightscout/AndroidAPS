@@ -43,7 +43,7 @@ public class Profile {
 
     private JSONObject json;
     private String units;
-    private double dia;
+    private double dia; // TODO change to insulinInterface link
     private TimeZone timeZone;
     private JSONArray isf;
     private LongSparseArray<Double> isf_v; // oldest at index 0

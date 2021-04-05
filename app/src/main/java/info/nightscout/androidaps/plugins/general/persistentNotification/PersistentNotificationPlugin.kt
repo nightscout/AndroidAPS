@@ -15,15 +15,14 @@ import info.nightscout.androidaps.events.*
 import info.nightscout.androidaps.interfaces.*
 import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper
-import info.nightscout.androidaps.plugins.iob.iobCobCalculator.GlucoseStatus
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.GlucoseStatusProvider
-import info.nightscout.androidaps.plugins.iob.iobCobCalculator.IobCobCalculatorPlugin
 import info.nightscout.androidaps.utils.DecimalFormatter
 import info.nightscout.androidaps.utils.FabricPrivacy
+import info.nightscout.androidaps.extensions.toStringShort
 import info.nightscout.androidaps.utils.resources.IconsProvider
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 import info.nightscout.androidaps.utils.rx.AapsSchedulers
-import info.nightscout.androidaps.utils.extensions.valueToUnitsString
+import info.nightscout.androidaps.extensions.valueToUnitsString
 import io.reactivex.disposables.CompositeDisposable
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -150,14 +149,14 @@ class PersistentNotificationPlugin @Inject constructor(
                 line1aa = resourceHelper.gs(R.string.missed_bg_readings)
                 line1 = line1aa
             }
-            val activeTemp = activePlugins.activeTreatments.getTempBasalFromHistory(System.currentTimeMillis())
+            val activeTemp = iobCobCalculator.getTempBasalIncludingConvertedExtended(System.currentTimeMillis())
             if (activeTemp != null) {
                 line1 += "  " + activeTemp.toStringShort()
                 line1aa += "  " + activeTemp.toStringShort() + "."
             }
             //IOB
             val bolusIob = iobCobCalculator.calculateIobFromBolus().round()
-            val basalIob = activePlugins.activeTreatments.lastCalculationTempBasals.round()
+            val basalIob = iobCobCalculator.calculateIobFromTempBasalsIncludingConvertedExtended().round()
             line2 = resourceHelper.gs(R.string.treatments_iob_label_string) + " " + DecimalFormatter.to2Decimal(bolusIob.iob + basalIob.basaliob) + "U " + resourceHelper.gs(R.string.cob) + ": " + iobCobCalculator.getCobInfo(false, "PersistentNotificationPlugin").generateCOBString()
             val line2aa = resourceHelper.gs(R.string.treatments_iob_label_string) + " " + DecimalFormatter.to2Decimal(bolusIob.iob + basalIob.basaliob) + "U. " + resourceHelper.gs(R.string.cob) + ": " + iobCobCalculator.getCobInfo(false, "PersistentNotificationPlugin").generateCOBString() + "."
             line3 = DecimalFormatter.to2Decimal(pump.baseBasalRate) + " U/h"

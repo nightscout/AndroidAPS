@@ -72,7 +72,7 @@ public class Constants {
     public static final int MIN_WATCHDOG_INTERVAL_IN_SECONDS = 12 * 60;
 
     //SMS Communicator
-    public static final long SMS_CONFIRM_TIMEOUT = T.mins(5).msecs();
+    public static final long SMS_CONFIRM_TIMEOUT = T.mins(5L).msecs();
 
     //Storage [MB]
     public static final long MINIMUM_FREE_SPACE = 200;

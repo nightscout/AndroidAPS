@@ -5,17 +5,15 @@ import info.nightscout.androidaps.dana.DanaPump
 import info.nightscout.androidaps.danars.R
 import info.nightscout.androidaps.danars.encryption.BleEncryption
 import info.nightscout.androidaps.data.DetailedBolusInfo
-import info.nightscout.androidaps.db.ExtendedBolus
-import info.nightscout.androidaps.db.Source
-import info.nightscout.androidaps.db.TemporaryBasal
 import info.nightscout.androidaps.events.EventPumpStatusChanged
-import info.nightscout.androidaps.interfaces.ActivePluginProvider
 import info.nightscout.androidaps.interfaces.PumpSync
 import info.nightscout.androidaps.logging.LTag
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper
 import info.nightscout.androidaps.plugins.pump.common.bolusInfo.DetailedBolusInfoStorage
+import info.nightscout.androidaps.plugins.pump.common.bolusInfo.TemporaryBasalStorage
 import info.nightscout.androidaps.plugins.pump.common.defs.PumpType
 import info.nightscout.androidaps.utils.DateUtil
+import info.nightscout.androidaps.utils.T
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 import info.nightscout.androidaps.utils.sharedPreferences.SP
 import org.joda.time.DateTime
@@ -29,11 +27,16 @@ open class DanaRS_Packet_APS_History_Events(
 
     @Inject lateinit var rxBus: RxBusWrapper
     @Inject lateinit var resourceHelper: ResourceHelper
-    @Inject lateinit var activePlugin: ActivePluginProvider
     @Inject lateinit var danaPump: DanaPump
     @Inject lateinit var detailedBolusInfoStorage: DetailedBolusInfoStorage
+    @Inject lateinit var temporaryBasalStorage: TemporaryBasalStorage
     @Inject lateinit var sp: SP
     @Inject lateinit var pumpSync: PumpSync
+
+    companion object {
+
+        var messageBuffer = arrayListOf<ByteArray>() // for reversing order of incoming messages
+    }
 
     init {
         opCode = BleEncryption.DANAR_PACKET__OPCODE__APS_HISTORY_EVENTS
@@ -43,6 +46,7 @@ open class DanaRS_Packet_APS_History_Events(
         }
         aapsLogger.debug(LTag.PUMPCOMM, "Loading event history from: " + dateUtil.dateAndTimeString(from))
         danaPump.historyDoneReceived = false
+        messageBuffer = arrayListOf()
     }
 
     override fun getRequestParams(): ByteArray {
@@ -69,11 +73,43 @@ open class DanaRS_Packet_APS_History_Events(
     }
 
     override fun handleMessage(data: ByteArray) {
+        val recordCode = intFromBuff(data, 0, 1).toByte()
+        // Last record
+        if (recordCode == 0xFF.toByte()) {
+            aapsLogger.debug(LTag.PUMPCOMM, "Last record received")
+
+            val array: Array<ByteArray> = messageBuffer.toTypedArray()
+            val sorted = array.sortedArrayWith { s1: ByteArray, s2: ByteArray -> (dateTime(s1) - dateTime(s2)).toInt() }
+            for (index in sorted.indices) {
+                val message = sorted[index]
+                // workaround for RS history bug
+                // sometimes TB is marked as canceled immediately
+                // but on pump is running
+                // at least on Model: 05 Protocol: 10 Code: 10
+                if (index > 0 && recordCode(message) == DanaPump.TEMPSTOP) {
+                    val previous = sorted[index-1]
+                    if (recordCode(previous) == DanaPump.TEMPSTART && dateTime(message) == dateTime(previous)) {
+                        aapsLogger.debug(LTag.PUMPCOMM, "SKIPPING EVENT TEMPSTOP (" + recordCode(message) + ") " + dateUtil.dateAndTimeString(dateTime(message)) + " (" + dateTime(message) + ")")
+                        continue
+                    }
+                }
+                processMessage(message)
+            }
+            danaPump.historyDoneReceived = true
+        } else messageBuffer.add(data)
+    }
+
+    fun dateTime(data: ByteArray): Long =
+        if (!danaPump.usingUTC) dateTimeSecFromBuff(data, 1) // 6 bytes
+        else intFromBuffMsbLsb(data, 3, 4) * 1000L
+
+    fun recordCode(data: ByteArray): Int =
+        intFromBuff(data, 0, 1).toInt()
+
+    fun processMessage(data: ByteArray) {
         var recordCode = intFromBuff(data, 0, 1).toByte()
         // Last record
         if (recordCode == 0xFF.toByte()) {
-            danaPump.historyDoneReceived = true
-            aapsLogger.debug(LTag.PUMPCOMM, "Last record received")
             return
         }
         val datetime: Long
@@ -90,35 +126,53 @@ open class DanaRS_Packet_APS_History_Events(
             id = intFromBuffMsbLsb(data, 0, 2) // range only 1-2000
             pumpId = datetime shl 16 + id
         }
-        val temporaryBasal = TemporaryBasal(injector).date(datetime).source(Source.PUMP).pumpId(pumpId)
-        val extendedBolus = ExtendedBolus(injector).date(datetime).source(Source.PUMP).pumpId(pumpId)
         val status: String
         when (recordCode.toInt()) {
             DanaPump.TEMPSTART         -> {
-                aapsLogger.debug(LTag.PUMPCOMM, "[" + id + "] " + "EVENT TEMPSTART (" + recordCode + ") " + dateUtil.dateAndTimeString(datetime) + " (" + datetime + ")" + " Ratio: " + param1 + "% Duration: " + param2 + "min")
-                temporaryBasal.percentRate = param1
-                temporaryBasal.durationInMinutes = param2
-                activePlugin.activeTreatments.addToHistoryTempBasal(temporaryBasal)
+                val temporaryBasalInfo = temporaryBasalStorage.findTemporaryBasal(datetime, param1.toDouble())
+                val newRecord = pumpSync.syncTemporaryBasalWithPumpId(
+                    timestamp = datetime,
+                    rate = param1.toDouble(),
+                    duration = T.mins(param2.toLong()).msecs(),
+                    isAbsolute = false,
+                    type = temporaryBasalInfo?.type,
+                    pumpId = pumpId,
+                    pumpType = PumpType.DANA_RS,
+                    pumpSerial = danaPump.serialNumber)
+                aapsLogger.debug(LTag.PUMPCOMM, "[" + id + "] " + (if (newRecord) "**NEW** " else "") + "EVENT TEMPSTART (" + recordCode + ") " + dateUtil.dateAndTimeString(datetime) + " (" + datetime + ")" + " Ratio: " + param1 + "% Duration: " + param2 + "min")
                 status = "TEMPSTART " + dateUtil.timeString(datetime)
             }
 
             DanaPump.TEMPSTOP          -> {
-                aapsLogger.debug(LTag.PUMPCOMM, "[" + id + "] " + "EVENT TEMPSTOP (" + recordCode + ") " + dateUtil.dateAndTimeString(datetime))
-                activePlugin.activeTreatments.addToHistoryTempBasal(temporaryBasal)
+                val newRecord = pumpSync.syncStopTemporaryBasalWithPumpId(
+                    timestamp = datetime,
+                    endPumpId = pumpId,
+                    pumpType = PumpType.DANA_RS,
+                    pumpSerial = danaPump.serialNumber)
+                aapsLogger.debug(LTag.PUMPCOMM, "[" + id + "] " + (if (newRecord) "**NEW** " else "") + "EVENT TEMPSTOP (" + recordCode + ") " + dateUtil.dateAndTimeString(datetime) + " (" + datetime + ")")
                 status = "TEMPSTOP " + dateUtil.timeString(datetime)
             }
 
             DanaPump.EXTENDEDSTART     -> {
-                aapsLogger.debug(LTag.PUMPCOMM, "[" + id + "] " + "EVENT EXTENDEDSTART (" + recordCode + ") " + dateUtil.dateAndTimeString(datetime) + " (" + datetime + ")" + " Amount: " + param1 / 100.0 + "U Duration: " + param2 + "min")
-                extendedBolus.insulin = param1 / 100.0
-                extendedBolus.durationInMinutes = param2
-                activePlugin.activeTreatments.addToHistoryExtendedBolus(extendedBolus)
+                val newRecord = pumpSync.syncExtendedBolusWithPumpId(
+                    timestamp = datetime,
+                    amount = param1 / 100.0,
+                    duration = T.mins(param2.toLong()).msecs(),
+                    isEmulatingTB = false,
+                    pumpId = pumpId,
+                    pumpType = PumpType.DANA_RS,
+                    pumpSerial = danaPump.serialNumber)
+                aapsLogger.debug(LTag.PUMPCOMM, "[" + id + "] " + (if (newRecord) "**NEW** " else "") + "EVENT EXTENDEDSTART (" + recordCode + ") " + dateUtil.dateAndTimeString(datetime) + " (" + datetime + ")" + " Amount: " + param1 / 100.0 + "U Duration: " + param2 + "min")
                 status = "EXTENDEDSTART " + dateUtil.timeString(datetime)
             }
 
             DanaPump.EXTENDEDSTOP      -> {
-                aapsLogger.debug(LTag.PUMPCOMM, "[" + id + "] " + "EVENT EXTENDEDSTOP (" + recordCode + ") " + dateUtil.dateAndTimeString(datetime) + " (" + datetime + ")" + " Delivered: " + param1 / 100.0 + "U RealDuration: " + param2 + "min")
-                activePlugin.activeTreatments.addToHistoryExtendedBolus(extendedBolus)
+                val newRecord = pumpSync.syncStopExtendedBolusWithPumpId(
+                    timestamp = datetime,
+                    endPumpId = pumpId,
+                    pumpType = PumpType.DANA_RS,
+                    pumpSerial = danaPump.serialNumber)
+                aapsLogger.debug(LTag.PUMPCOMM, "[" + id + "] " + (if (newRecord) "**NEW** " else "") + "EVENT EXTENDEDSTOP (" + recordCode + ") " + dateUtil.dateAndTimeString(datetime) + " (" + datetime + ")" + " Delivered: " + param1 / 100.0 + "U RealDuration: " + param2 + "min")
                 status = "EXTENDEDSTOP " + dateUtil.timeString(datetime)
             }
 
@@ -131,7 +185,7 @@ open class DanaRS_Packet_APS_History_Events(
                     pumpId = pumpId,
                     pumpType = PumpType.DANA_RS,
                     pumpSerial = danaPump.serialNumber)
-                aapsLogger.debug(LTag.PUMPCOMM, "[" + id + "] " + (if (newRecord) "**NEW** " else "") + "EVENT BOLUS (" + recordCode + ") " + dateUtil.dateAndTimeString(datetime) + " (" + datetime + ")" + " Bolus: " + param1 / 100.0 + "U Duration: " + param2 + "min")
+                aapsLogger.debug(LTag.PUMPCOMM, "[" + id + "] " + (if (newRecord) "**NEW** " else "") + "EVENT BOLUS (" + recordCode + ") " + dateUtil.dateAndTimeString(datetime) + " (" + datetime + ")" + " Bolus: " + param1 / 100.0 + "U ")
                 status = "BOLUS " + dateUtil.timeString(datetime)
             }
 
@@ -149,16 +203,25 @@ open class DanaRS_Packet_APS_History_Events(
             }
 
             DanaPump.DUALEXTENDEDSTART -> {
-                aapsLogger.debug(LTag.PUMPCOMM, "[" + id + "] " + "EVENT DUALEXTENDEDSTART (" + recordCode + ") " + dateUtil.dateAndTimeString(datetime) + " (" + datetime + ")" + " Amount: " + param1 / 100.0 + "U Duration: " + param2 + "min")
-                extendedBolus.insulin = param1 / 100.0
-                extendedBolus.durationInMinutes = param2
-                activePlugin.activeTreatments.addToHistoryExtendedBolus(extendedBolus)
+                val newRecord = pumpSync.syncExtendedBolusWithPumpId(
+                    timestamp = datetime,
+                    amount = param1 / 100.0,
+                    duration = T.mins(param2.toLong()).msecs(),
+                    isEmulatingTB = false,
+                    pumpId = pumpId,
+                    pumpType = PumpType.DANA_RS,
+                    pumpSerial = danaPump.serialNumber)
+                aapsLogger.debug(LTag.PUMPCOMM, "[" + id + "] " + (if (newRecord) "**NEW** " else "") + "EVENT DUALEXTENDEDSTART (" + recordCode + ") " + dateUtil.dateAndTimeString(datetime) + " (" + datetime + ")" + " Amount: " + param1 / 100.0 + "U Duration: " + param2 + "min")
                 status = "DUALEXTENDEDSTART " + dateUtil.timeString(datetime)
             }
 
             DanaPump.DUALEXTENDEDSTOP  -> {
-                aapsLogger.debug(LTag.PUMPCOMM, "[" + id + "] " + "EVENT DUALEXTENDEDSTOP (" + recordCode + ") " + dateUtil.dateAndTimeString(datetime) + " (" + datetime + ")" + " Delivered: " + param1 / 100.0 + "U RealDuration: " + param2 + "min")
-                activePlugin.activeTreatments.addToHistoryExtendedBolus(extendedBolus)
+                val newRecord = pumpSync.syncStopExtendedBolusWithPumpId(
+                    timestamp = datetime,
+                    endPumpId = pumpId,
+                    pumpType = PumpType.DANA_RS,
+                    pumpSerial = danaPump.serialNumber)
+                aapsLogger.debug(LTag.PUMPCOMM, "[" + id + "] " + (if (newRecord) "**NEW** " else "") + "EVENT DUALEXTENDEDSTOP (" + recordCode + ") " + dateUtil.dateAndTimeString(datetime) + " (" + datetime + ")" + " Delivered: " + param1 / 100.0 + "U RealDuration: " + param2 + "min")
                 status = "DUALEXTENDEDSTOP " + dateUtil.timeString(datetime)
             }
 
@@ -173,15 +236,16 @@ open class DanaRS_Packet_APS_History_Events(
             }
 
             DanaPump.REFILL            -> {
-                aapsLogger.debug(LTag.PUMPCOMM, "[" + id + "] " + "EVENT REFILL (" + recordCode + ") " + dateUtil.dateAndTimeString(datetime) + " (" + datetime + ")" + " Amount: " + param1 / 100.0 + "U")
-                if (sp.getBoolean(R.string.key_rs_loginsulinchange, true))
-                    pumpSync.insertTherapyEventIfNewWithTimestamp(
+                if (sp.getBoolean(R.string.key_rs_loginsulinchange, true)) {
+                    val newRecord = pumpSync.insertTherapyEventIfNewWithTimestamp(
                         timestamp = datetime,
                         type = DetailedBolusInfo.EventType.INSULIN_CHANGE,
                         pumpId = pumpId,
                         pumpType = danaPump.pumpType(),
                         pumpSerial = danaPump.serialNumber
                     )
+                    aapsLogger.debug(LTag.PUMPCOMM, "[" + id + "] " + (if (newRecord) "**NEW** " else "") + "EVENT REFILL (" + recordCode + ") " + dateUtil.dateAndTimeString(datetime) + " (" + datetime + ")" + " Amount: " + param1 / 100.0 + "U")
+                }
                 status = "REFILL " + dateUtil.timeString(datetime)
             }
 
@@ -207,15 +271,16 @@ open class DanaRS_Packet_APS_History_Events(
             }
 
             DanaPump.PRIMECANNULA      -> {
-                aapsLogger.debug(LTag.PUMPCOMM, "[" + id + "] " + "EVENT PRIMECANNULA(" + recordCode + ") " + dateUtil.dateAndTimeString(datetime) + " (" + datetime + ")" + " Amount: " + param1 / 100.0 + "U")
-                if (sp.getBoolean(R.string.key_rs_logcanulachange, true))
-                    pumpSync.insertTherapyEventIfNewWithTimestamp(
+                if (sp.getBoolean(R.string.key_rs_logcanulachange, true)) {
+                    val newRecord = pumpSync.insertTherapyEventIfNewWithTimestamp(
                         timestamp = datetime,
                         type = DetailedBolusInfo.EventType.CANNULA_CHANGE,
                         pumpId = pumpId,
                         pumpType = danaPump.pumpType(),
                         pumpSerial = danaPump.serialNumber
                     )
+                    aapsLogger.debug(LTag.PUMPCOMM, "[" + id + "] " + (if (newRecord) "**NEW** " else "") + "EVENT PRIMECANNULA(" + recordCode + ") " + dateUtil.dateAndTimeString(datetime) + " (" + datetime + ")" + " Amount: " + param1 / 100.0 + "U")
+                }
                 status = "PRIMECANNULA " + dateUtil.timeString(datetime)
             }
 

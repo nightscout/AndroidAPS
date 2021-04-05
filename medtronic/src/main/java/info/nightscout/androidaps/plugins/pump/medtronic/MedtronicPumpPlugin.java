@@ -137,7 +137,8 @@ public class MedtronicPumpPlugin extends PumpPluginAbstract implements PumpInter
             RileyLinkServiceData rileyLinkServiceData,
             ServiceTaskExecutor serviceTaskExecutor,
             DateUtil dateUtil,
-            AapsSchedulers aapsSchedulers
+            AapsSchedulers aapsSchedulers,
+            PumpSync pumpSync
     ) {
 
         super(new PluginDescription() //
@@ -149,7 +150,7 @@ public class MedtronicPumpPlugin extends PumpPluginAbstract implements PumpInter
                         .preferencesId(R.xml.pref_medtronic)
                         .description(R.string.description_pump_medtronic), //
                 PumpType.MEDTRONIC_522_722, // we default to most basic model, correct model from config is loaded later
-                injector, resourceHelper, aapsLogger, commandQueue, rxBus, activePlugin, sp, context, fabricPrivacy, dateUtil, aapsSchedulers
+                injector, resourceHelper, aapsLogger, commandQueue, rxBus, activePlugin, sp, context, fabricPrivacy, dateUtil, aapsSchedulers, pumpSync
         );
 
         this.medtronicUtil = medtronicUtil;

@@ -57,6 +57,9 @@ class RandomBgPlugin @Inject constructor(
     companion object {
 
         const val interval = 5L // minutes
+        const val min = 70 // mgdl
+        const val max = 190 // mgdl
+        const val period = 30.0 // minutes
     }
 
     init {
@@ -93,12 +96,10 @@ class RandomBgPlugin @Inject constructor(
 
     private fun handleNewData() {
         if (!isEnabled(PluginType.BGSOURCE)) return
-        val min = 70
-        val max = 190
 
         val cal = GregorianCalendar()
         val currentMinute = cal.get(Calendar.MINUTE) + (cal.get(Calendar.HOUR_OF_DAY) % 2) * 60
-        val bgMgdl = min + ((max - min) + (max - min) * sin(currentMinute / 120.0 * 2 * PI)) / 2
+        val bgMgdl = min + ((max - min) + (max - min) * sin(currentMinute / period * 2 * PI)) / 2
 
         val glucoseValues = mutableListOf<CgmSourceTransaction.TransactionGlucoseValue>()
         glucoseValues += CgmSourceTransaction.TransactionGlucoseValue(

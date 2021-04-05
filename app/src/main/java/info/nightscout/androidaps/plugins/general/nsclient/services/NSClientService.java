@@ -37,8 +37,10 @@ import info.nightscout.androidaps.database.transactions.UpdateNsIdBolusCalculato
 import info.nightscout.androidaps.database.transactions.UpdateNsIdBolusTransaction;
 import info.nightscout.androidaps.database.transactions.UpdateNsIdCarbsTransaction;
 import info.nightscout.androidaps.database.transactions.UpdateNsIdDeviceStatusTransaction;
+import info.nightscout.androidaps.database.transactions.UpdateNsIdExtendedBolusTransaction;
 import info.nightscout.androidaps.database.transactions.UpdateNsIdFoodTransaction;
 import info.nightscout.androidaps.database.transactions.UpdateNsIdGlucoseValueTransaction;
+import info.nightscout.androidaps.database.transactions.UpdateNsIdTemporaryBasalTransaction;
 import info.nightscout.androidaps.database.transactions.UpdateNsIdTemporaryTargetTransaction;
 import info.nightscout.androidaps.database.transactions.UpdateNsIdTherapyEventTransaction;
 import info.nightscout.androidaps.db.DbRequest;
@@ -139,7 +141,7 @@ public class NSClientService extends DaggerService {
     private final ArrayList<Long> reconnections = new ArrayList<>();
     private final int WATCHDOG_INTERVAL_MINUTES = 2;
     private final int WATCHDOG_RECONNECT_IN = 15;
-    private final int WATCHDOG_MAXCONNECTIONS = 5;
+    private final int WATCHDOG_MAX_CONNECTIONS = 5;
 
     public NSClientService() {
         super();
@@ -340,6 +342,38 @@ public class NSClientService extends DaggerService {
             dataSyncSelector.processChangedBolusCalculatorResultsCompat();
             return;
         }
+        if (ack.getOriginalObject() instanceof DataSyncSelector.PairTemporaryBasal) {
+            DataSyncSelector.PairTemporaryBasal pair = (DataSyncSelector.PairTemporaryBasal) ack.getOriginalObject();
+            pair.getValue().getInterfaceIDs().setNightscoutId(ack.getId());
+
+            disposable.add(repository.runTransactionForResult(new UpdateNsIdTemporaryBasalTransaction(pair.getValue()))
+                    .observeOn(aapsSchedulers.getIo())
+                    .subscribe(
+                            result -> aapsLogger.debug(LTag.DATABASE, "Updated ns id of TemporaryBasal " + pair.getValue()),
+                            error -> aapsLogger.error(LTag.DATABASE, "Updated ns id of TemporaryBasal failed", error)
+                    ));
+            dataSyncSelector.confirmLastTemporaryBasalIdIfGreater(pair.getUpdateRecordId());
+            rxBus.send(new EventNSClientNewLog("DBADD", "Acked TemporaryBasal" + pair.getValue().getInterfaceIDs().getNightscoutId()));
+            // Send new if waiting
+            dataSyncSelector.processChangedTemporaryBasalsCompat();
+            return;
+        }
+        if (ack.getOriginalObject() instanceof DataSyncSelector.PairExtendedBolus) {
+            DataSyncSelector.PairExtendedBolus pair = (DataSyncSelector.PairExtendedBolus) ack.getOriginalObject();
+            pair.getValue().getInterfaceIDs().setNightscoutId(ack.getId());
+
+            disposable.add(repository.runTransactionForResult(new UpdateNsIdExtendedBolusTransaction(pair.getValue()))
+                    .observeOn(aapsSchedulers.getIo())
+                    .subscribe(
+                            result -> aapsLogger.debug(LTag.DATABASE, "Updated ns id of ExtendedBolus " + pair.getValue()),
+                            error -> aapsLogger.error(LTag.DATABASE, "Updated ns id of ExtendedBolus failed", error)
+                    ));
+            dataSyncSelector.confirmLastExtendedBolusIdIfGreater(pair.getUpdateRecordId());
+            rxBus.send(new EventNSClientNewLog("DBADD", "Acked ExtendedBolus" + pair.getValue().getInterfaceIDs().getNightscoutId()));
+            // Send new if waiting
+            dataSyncSelector.processChangedTemporaryBasalsCompat();
+            return;
+        }
         if (ack.getOriginalObject() instanceof DeviceStatus) {
             DeviceStatus deviceStatus = (DeviceStatus) ack.getOriginalObject();
             deviceStatus.getInterfaceIDs().setNightscoutId(ack.getId());
@@ -422,6 +456,22 @@ public class NSClientService extends DaggerService {
             rxBus.send(new EventNSClientNewLog("DBUPDATE/DBREMOVE", "Acked BolusCalculatorResult " + ack.get_id()));
             // Send new if waiting
             dataSyncSelector.processChangedBolusCalculatorResultsCompat();
+            return;
+        }
+        if (ack.getOriginalObject() instanceof DataSyncSelector.PairTemporaryBasal) {
+            DataSyncSelector.PairTemporaryBasal pair = (DataSyncSelector.PairTemporaryBasal) ack.getOriginalObject();
+            dataSyncSelector.confirmLastTemporaryBasalIdIfGreater(pair.getUpdateRecordId());
+            rxBus.send(new EventNSClientNewLog("DBUPDATE/DBREMOVE", "Acked TemporaryBasal " + ack.get_id()));
+            // Send new if waiting
+            dataSyncSelector.processChangedTemporaryBasalsCompat();
+            return;
+        }
+        if (ack.getOriginalObject() instanceof DataSyncSelector.PairExtendedBolus) {
+            DataSyncSelector.PairExtendedBolus pair = (DataSyncSelector.PairExtendedBolus) ack.getOriginalObject();
+            dataSyncSelector.confirmLastExtendedBolusIdIfGreater(pair.getUpdateRecordId());
+            rxBus.send(new EventNSClientNewLog("DBUPDATE/DBREMOVE", "Acked ExtendedBolus " + ack.get_id()));
+            // Send new if waiting
+            dataSyncSelector.processChangedExtendedBolusesCompat();
             return;
         }
         // old way
@@ -549,8 +599,8 @@ public class NSClientService extends DaggerService {
                     reconnections.remove(r);
                 }
             }
-            rxBus.send(new EventNSClientNewLog("WATCHDOG", "connections in last " + WATCHDOG_INTERVAL_MINUTES + " mins: " + reconnections.size() + "/" + WATCHDOG_MAXCONNECTIONS));
-            if (reconnections.size() >= WATCHDOG_MAXCONNECTIONS) {
+            rxBus.send(new EventNSClientNewLog("WATCHDOG", "connections in last " + WATCHDOG_INTERVAL_MINUTES + " mins: " + reconnections.size() + "/" + WATCHDOG_MAX_CONNECTIONS));
+            if (reconnections.size() >= WATCHDOG_MAX_CONNECTIONS) {
                 Notification n = new Notification(Notification.NS_MALFUNCTION, resourceHelper.gs(R.string.nsmalfunction), Notification.URGENT);
                 rxBus.send(new EventNewNotification(n));
                 rxBus.send(new EventNSClientNewLog("WATCHDOG", "pausing for " + WATCHDOG_RECONNECT_IN + " mins"));
@@ -990,6 +1040,8 @@ public class NSClientService extends DaggerService {
             dataSyncSelector.processChangedBolusesCompat();
             dataSyncSelector.processChangedCarbsCompat();
             dataSyncSelector.processChangedBolusCalculatorResultsCompat();
+            dataSyncSelector.processChangedTemporaryBasalsCompat();
+            dataSyncSelector.processChangedExtendedBolusesCompat();
             dataSyncSelector.processChangedGlucoseValuesCompat();
             dataSyncSelector.processChangedTempTargetsCompat();
             dataSyncSelector.processChangedFoodsCompat();

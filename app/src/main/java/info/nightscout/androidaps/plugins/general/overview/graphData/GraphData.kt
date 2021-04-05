@@ -24,7 +24,7 @@ import info.nightscout.androidaps.plugins.aps.openAPSSMB.SMBDefaults
 import info.nightscout.androidaps.plugins.general.overview.graphExtensions.*
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.AutosensResult
 import info.nightscout.androidaps.utils.*
-import info.nightscout.androidaps.utils.extensions.target
+import info.nightscout.androidaps.extensions.target
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 import java.util.*
 import javax.inject.Inject
@@ -259,8 +259,8 @@ class GraphData(
 
         // Extended bolus
         if (!activePlugin.activePump.isFakingTempsByExtendedBoluses) {
-            treatmentsPlugin.extendedBolusesFromHistory.list
-                .filterTimeframe(fromTime, endTime)
+            repository.getExtendedBolusDataFromTimeToTime(fromTime, endTime, true).blockingGet()
+                .map { ExtendedBolusDataPoint(it) }
                 .filter { it.duration != 0L }
                 .forEach {
                     it.y = getNearestBg(it.x.toLong())
@@ -529,9 +529,9 @@ class GraphData(
         while (time <= toTime) {
             // if align Dev Scale with BGI scale, then calculate BGI value, else bgi = 0.0
             val bgi: Double = if (devBgiScale) {
-                val profile = profileFunction.getProfile(time)
+                val profile = profileFunction.getProfile(time) ?: continue
                 total = iobCobCalculator.calculateFromTreatmentsAndTempsSynchronized(time, profile)
-                total.activity * (profile?.getIsfMgdl(time) ?: 0.0) * 5.0
+                total.activity * profile.getIsfMgdl(time) * 5.0
             } else 0.0
 
             iobCobCalculator.getAutosensData(time)?.let { autosensData ->

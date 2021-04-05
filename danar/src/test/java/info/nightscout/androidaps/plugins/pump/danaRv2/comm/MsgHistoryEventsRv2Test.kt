@@ -21,10 +21,10 @@ class MsgHistoryEventsRv2Test : DanaRTestBase() {
 
         putByteToArray(array, 0, 0xFF.toByte())
         packet.handleMessage(array)
-        Assert.assertEquals(true, danaRv2Plugin.eventsLoadingDone)
+        Assert.assertEquals(true, danaPump.historyDoneReceived)
         // passing an bigger number
         putByteToArray(array, 0, 0x01.toByte())
         packet.handleMessage(array)
-        Assert.assertEquals(false, danaRv2Plugin.eventsLoadingDone)
+        Assert.assertEquals(false, danaPump.historyDoneReceived)
     }
 }

@@ -30,13 +30,12 @@ class QuickWizardTest : TestBase() {
     @Mock lateinit var profileFunction: ProfileFunction
     @Mock lateinit var treatmentsPlugin: TreatmentsPlugin
     @Mock lateinit var loopPlugin: LoopPlugin
-    @Mock lateinit var iobCobCalculatorPlugin: IobCobCalculatorPlugin
 
     private val data1 = "{\"buttonText\":\"Meal\",\"carbs\":36,\"validFrom\":0,\"validTo\":18000," +
         "\"useBG\":0,\"useCOB\":0,\"useBolusIOB\":0,\"useBasalIOB\":0,\"useTrend\":0,\"useSuperBolus\":0,\"useTemptarget\":0}"
     private val data2 = "{\"buttonText\":\"Lunch\",\"carbs\":18,\"validFrom\":36000,\"validTo\":39600," +
         "\"useBG\":0,\"useCOB\":0,\"useBolusIOB\":1,\"useBasalIOB\":2,\"useTrend\":0,\"useSuperBolus\":0,\"useTemptarget\":0}"
-    var array: JSONArray = JSONArray("[$data1,$data2]")
+    private var array: JSONArray = JSONArray("[$data1,$data2]")
 
     val injector = HasAndroidInjector {
         AndroidInjector {
@@ -44,9 +43,7 @@ class QuickWizardTest : TestBase() {
                 it.aapsLogger = aapsLogger
                 it.sp = sp
                 it.profileFunction = profileFunction
-                it.treatmentsPlugin = treatmentsPlugin
                 it.loopPlugin = loopPlugin
-                it.iobCobCalculatorPlugin = iobCobCalculatorPlugin
             }
         }
     }

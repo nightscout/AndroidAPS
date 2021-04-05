@@ -38,9 +38,7 @@ import info.nightscout.androidaps.plugins.general.overview.events.EventNewNotifi
 import info.nightscout.androidaps.plugins.general.overview.notifications.Notification
 import info.nightscout.androidaps.plugins.general.wear.events.EventWearConfirmAction
 import info.nightscout.androidaps.plugins.general.wear.events.EventWearInitiateAction
-import info.nightscout.androidaps.plugins.iob.iobCobCalculator.IobCobCalculatorPlugin
 import info.nightscout.androidaps.plugins.pump.virtual.VirtualPumpPlugin
-import info.nightscout.androidaps.plugins.treatments.TreatmentsPlugin
 import info.nightscout.androidaps.queue.Callback
 import info.nightscout.androidaps.queue.commands.Command
 import info.nightscout.androidaps.receivers.ReceiverStatusStore
@@ -48,7 +46,10 @@ import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.FabricPrivacy
 import info.nightscout.androidaps.utils.HardLimits
 import info.nightscout.androidaps.utils.T
-import info.nightscout.androidaps.utils.extensions.buildDeviceStatus
+import info.nightscout.androidaps.extensions.buildDeviceStatus
+import info.nightscout.androidaps.extensions.convertedToAbsolute
+import info.nightscout.androidaps.extensions.convertedToPercent
+import info.nightscout.androidaps.extensions.plannedRemainingMinutes
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 import info.nightscout.androidaps.utils.rx.AapsSchedulers
 import info.nightscout.androidaps.utils.sharedPreferences.SP
@@ -72,9 +73,8 @@ open class LoopPlugin @Inject constructor(
     private val context: Context,
     private val commandQueue: CommandQueueProvider,
     private val activePlugin: ActivePluginProvider,
-    private val treatmentsPlugin: TreatmentsPlugin,
     private val virtualPumpPlugin: VirtualPumpPlugin,
-    private val iobCobCalculatorPlugin: IobCobCalculatorPlugin,
+    private val iobCobCalculator: IobCobCalculator,
     private val receiverStatusStore: ReceiverStatusStore,
     private val fabricPrivacy: FabricPrivacy,
     private val dateUtil: DateUtil,
@@ -119,7 +119,7 @@ open class LoopPlugin @Inject constructor(
             .subscribe({ event: EventAutosensCalculationFinished ->
                 // Autosens calculation not triggered by a new BG
                 if (event.cause !is EventNewBG) return@subscribe
-                val glucoseValue = iobCobCalculatorPlugin.actualBg() ?: return@subscribe
+                val glucoseValue = iobCobCalculator.actualBg() ?: return@subscribe
                 // BG outdated
                 // already looped with that value
                 if (glucoseValue.timestamp <= lastBgTriggeredRun) return@subscribe
@@ -316,7 +316,7 @@ open class LoopPlugin @Inject constructor(
                 lastRun.lastTBRRequest = 0
                 lastRun.lastSMBEnact = 0
                 lastRun.lastSMBRequest = 0
-                buildDeviceStatus(dateUtil, this, iobCobCalculatorPlugin, profileFunction,
+                buildDeviceStatus(dateUtil, this, iobCobCalculator, profileFunction,
                     activePlugin.activePump, receiverStatusStore, runningConfiguration,
                     BuildConfig.VERSION_NAME + "-" + BuildConfig.BUILDVERSION)?.also {
                     repository.insert(it)
@@ -504,7 +504,7 @@ open class LoopPlugin @Inject constructor(
                             lastRun.lastTBRRequest = lastRun.lastAPSRun
                             lastRun.lastTBREnact = DateUtil.now()
                             lastRun.lastOpenModeAccept = DateUtil.now()
-                            buildDeviceStatus(dateUtil, this@LoopPlugin, iobCobCalculatorPlugin, profileFunction,
+                            buildDeviceStatus(dateUtil, this@LoopPlugin, iobCobCalculator, profileFunction,
                                 activePlugin.activePump, receiverStatusStore, runningConfiguration,
                                 BuildConfig.VERSION_NAME + "-" + BuildConfig.BUILDVERSION)?.also {
                                 repository.insert(it)
@@ -541,7 +541,7 @@ open class LoopPlugin @Inject constructor(
         }
         aapsLogger.debug(LTag.APS, "applyAPSRequest: $request")
         val now = System.currentTimeMillis()
-        val activeTemp = treatmentsPlugin.getTempBasalFromHistory(now)
+        val activeTemp = iobCobCalculator.getTempBasalIncludingConvertedExtended(now)
         if (request.usePercent && allowPercentage()) {
             if (request.percent == 100 && request.duration == 0) {
                 if (activeTemp != null) {
@@ -552,7 +552,7 @@ open class LoopPlugin @Inject constructor(
                     callback?.result(PumpEnactResult(injector).percent(request.percent).duration(0)
                         .enacted(false).success(true).comment(R.string.basal_set_correctly))?.run()
                 }
-            } else if (activeTemp != null && activeTemp.plannedRemainingMinutes > 5 && request.duration - activeTemp.plannedRemainingMinutes < 30 && request.percent == activeTemp.percentRate) {
+            } else if (activeTemp != null && activeTemp.plannedRemainingMinutes > 5 && request.duration - activeTemp.plannedRemainingMinutes < 30 && request.percent == activeTemp.convertedToPercent(now, profile)) {
                 aapsLogger.debug(LTag.APS, "applyAPSRequest: Temp basal set correctly")
                 callback?.result(PumpEnactResult(injector).percent(request.percent)
                     .enacted(false).success(true).duration(activeTemp.plannedRemainingMinutes)
@@ -571,9 +571,9 @@ open class LoopPlugin @Inject constructor(
                     callback?.result(PumpEnactResult(injector).absolute(request.rate).duration(0)
                         .enacted(false).success(true).comment(R.string.basal_set_correctly))?.run()
                 }
-            } else if (activeTemp != null && activeTemp.plannedRemainingMinutes > 5 && request.duration - activeTemp.plannedRemainingMinutes < 30 && abs(request.rate - activeTemp.tempBasalConvertedToAbsolute(now, profile)) < pump.pumpDescription.basalStep) {
+            } else if (activeTemp != null && activeTemp.plannedRemainingMinutes > 5 && request.duration - activeTemp.plannedRemainingMinutes < 30 && abs(request.rate - activeTemp.convertedToAbsolute(now, profile)) < pump.pumpDescription.basalStep) {
                 aapsLogger.debug(LTag.APS, "applyAPSRequest: Temp basal set correctly")
-                callback?.result(PumpEnactResult(injector).absolute(activeTemp.tempBasalConvertedToAbsolute(now, profile))
+                callback?.result(PumpEnactResult(injector).absolute(activeTemp.convertedToAbsolute(now, profile))
                     .enacted(false).success(true).duration(activeTemp.plannedRemainingMinutes)
                     .comment(R.string.let_temp_basal_run))?.run()
             } else {
@@ -643,7 +643,7 @@ open class LoopPlugin @Inject constructor(
                 }
             })
         }
-        if (pump.pumpDescription.isExtendedBolusCapable && treatmentsPlugin.isInHistoryExtendedBolusInProgress) {
+        if (pump.pumpDescription.isExtendedBolusCapable && iobCobCalculator.getExtendedBolus(dateUtil._now()) != null) {
             commandQueue.cancelExtended(object : Callback() {
                 override fun run() {
                     if (!result.success) {

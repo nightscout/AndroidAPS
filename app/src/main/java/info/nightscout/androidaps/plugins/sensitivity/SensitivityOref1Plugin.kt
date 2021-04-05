@@ -19,7 +19,7 @@ import info.nightscout.androidaps.plugins.aps.openAPSSMB.SMBDefaults
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.AutosensResult
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.IobCobCalculatorPlugin.Companion.percentile
 import info.nightscout.androidaps.utils.DateUtil
-import info.nightscout.androidaps.utils.extensions.isEvent5minBack
+import info.nightscout.androidaps.extensions.isEvent5minBack
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 import info.nightscout.androidaps.utils.sharedPreferences.SP
 import org.json.JSONException

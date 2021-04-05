@@ -35,6 +35,7 @@ import info.nightscout.androidaps.utils.Round;
  * Created by mike on 21.05.2017.
  */
 
+@Deprecated
 @DatabaseTable(tableName = "ExtendedBoluses")
 public class ExtendedBolus implements Interval, DataPointWithLabelInterface {
 
@@ -333,10 +334,6 @@ public class ExtendedBolus implements Interval, DataPointWithLabelInterface {
         return "E " + DecimalFormatter.INSTANCE.to2Decimal(absoluteRate()) + "U/h @" +
                 dateUtil.timeString(date) +
                 " " + getRealDuration() + "/" + durationInMinutes + "min";
-    }
-
-    public String toStringShort() {
-        return "E " + DecimalFormatter.INSTANCE.to2Decimal(absoluteRate()) + "U/h ";
     }
 
     public String toStringMedium() {

@@ -6,16 +6,15 @@ import info.nightscout.androidaps.data.Profile
 import info.nightscout.androidaps.database.AppRepository
 import info.nightscout.androidaps.database.ValueWrapper
 import info.nightscout.androidaps.database.entities.GlucoseValue
+import info.nightscout.androidaps.interfaces.IobCobCalculator
 import info.nightscout.androidaps.interfaces.ProfileFunction
 import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.plugins.aps.loop.LoopPlugin
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.GlucoseStatusProvider
-import info.nightscout.androidaps.plugins.iob.iobCobCalculator.IobCobCalculatorPlugin
-import info.nightscout.androidaps.plugins.treatments.TreatmentsPlugin
 import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.JsonHelper.safeGetInt
 import info.nightscout.androidaps.utils.JsonHelper.safeGetString
-import info.nightscout.androidaps.utils.extensions.valueToUnits
+import info.nightscout.androidaps.extensions.valueToUnits
 import info.nightscout.androidaps.utils.sharedPreferences.SP
 import org.json.JSONException
 import org.json.JSONObject
@@ -27,9 +26,8 @@ class QuickWizardEntry @Inject constructor(private val injector: HasAndroidInjec
     @Inject lateinit var aapsLogger: AAPSLogger
     @Inject lateinit var sp: SP
     @Inject lateinit var profileFunction: ProfileFunction
-    @Inject lateinit var treatmentsPlugin: TreatmentsPlugin
     @Inject lateinit var loopPlugin: LoopPlugin
-    @Inject lateinit var iobCobCalculatorPlugin: IobCobCalculatorPlugin
+    @Inject lateinit var iobCobCalculator: IobCobCalculator
     @Inject lateinit var repository: AppRepository
     @Inject lateinit var dateUtil: DateUtil
     @Inject lateinit var glucoseStatusProvider: GlucoseStatusProvider
@@ -89,7 +87,7 @@ class QuickWizardEntry @Inject constructor(private val injector: HasAndroidInjec
         // COB
         var cob = 0.0
         if (useCOB() == YES) {
-            val cobInfo = iobCobCalculatorPlugin.getCobInfo(_synchronized, "QuickWizard COB")
+            val cobInfo = iobCobCalculator.getCobInfo(_synchronized, "QuickWizard COB")
             if (cobInfo.displayCob != null) cob = cobInfo.displayCob!!
         }
         // Bolus IOB
@@ -98,7 +96,7 @@ class QuickWizardEntry @Inject constructor(private val injector: HasAndroidInjec
             bolusIOB = true
         }
         // Basal IOB
-        val basalIob = treatmentsPlugin.lastCalculationTempBasals.round()
+        val basalIob = iobCobCalculator.calculateIobFromTempBasalsIncludingConvertedExtended().round()
         var basalIOB = false
         if (useBasalIOB() == YES) {
             basalIOB = true

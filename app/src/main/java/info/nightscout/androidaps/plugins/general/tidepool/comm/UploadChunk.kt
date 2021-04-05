@@ -1,10 +1,9 @@
 package info.nightscout.androidaps.plugins.general.tidepool.comm
 
 import info.nightscout.androidaps.R
-import info.nightscout.androidaps.data.Intervals
 import info.nightscout.androidaps.database.AppRepository
+import info.nightscout.androidaps.database.entities.TemporaryBasal
 import info.nightscout.androidaps.db.ProfileSwitch
-import info.nightscout.androidaps.db.TemporaryBasal
 import info.nightscout.androidaps.interfaces.ActivePluginProvider
 import info.nightscout.androidaps.interfaces.DatabaseHelperInterface
 import info.nightscout.androidaps.interfaces.ProfileFunction
@@ -146,18 +145,19 @@ class UploadChunk @Inject constructor(
         return selection
     }
 
-    private fun fromTemporaryBasals(tbrList: Intervals<TemporaryBasal>, start: Long, end: Long): List<BasalElement> {
+    private fun fromTemporaryBasals(tbrList: List<TemporaryBasal>, start: Long, end: Long): List<BasalElement> {
         val results = LinkedList<BasalElement>()
-        for (tbr in tbrList.list) {
-            if (tbr.date in start..end && tbr.durationInMinutes != 0)
-                results.add(BasalElement(tbr, profileFunction))
+        for (tbr in tbrList) {
+            if (tbr.timestamp in start..end)
+                profileFunction.getProfile(tbr.timestamp)?.let {
+                    results.add(BasalElement(tbr, it))
+                }
         }
         return results
     }
 
     private fun getBasals(start: Long, end: Long): List<BasalElement> {
-        val temporaryBasals = treatmentsPlugin.temporaryBasalsFromHistory
-        temporaryBasals.merge()
+        val temporaryBasals = repository.getTemporaryBasalsDataFromTimeToTime(start, end, true).blockingGet()
         val selection = fromTemporaryBasals(temporaryBasals, start, end) // TODO do not upload running TBR
         if (selection.isNotEmpty())
             rxBus.send(EventTidepoolStatus("${selection.size} TBRs selected for upload"))

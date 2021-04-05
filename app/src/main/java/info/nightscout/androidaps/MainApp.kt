@@ -23,7 +23,6 @@ import info.nightscout.androidaps.logging.LTag
 import info.nightscout.androidaps.plugins.configBuilder.ConfigBuilderPlugin
 import info.nightscout.androidaps.plugins.configBuilder.PluginStore
 import info.nightscout.androidaps.plugins.constraints.versionChecker.VersionCheckerUtils
-import info.nightscout.androidaps.plugins.general.nsclient.NSUpload
 import info.nightscout.androidaps.receivers.BTReceiver
 import info.nightscout.androidaps.receivers.ChargingStateReceiver
 import info.nightscout.androidaps.receivers.KeepAliveReceiver.KeepAliveManager
@@ -47,7 +46,6 @@ class MainApp : DaggerApplication() {
     @Inject lateinit var activityMonitor: ActivityMonitor
     @Inject lateinit var versionCheckersUtils: VersionCheckerUtils
     @Inject lateinit var sp: SP
-    @Inject lateinit var nsUpload: NSUpload
     @Inject lateinit var config: Config
     @Inject lateinit var configBuilderPlugin: ConfigBuilderPlugin
     @Inject lateinit var keepAliveManager: KeepAliveManager

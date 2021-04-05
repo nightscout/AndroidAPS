@@ -11,11 +11,13 @@ import info.nightscout.androidaps.R
 import info.nightscout.androidaps.databinding.TreatmentsFragmentBinding
 import info.nightscout.androidaps.events.EventExtendedBolusChange
 import info.nightscout.androidaps.interfaces.ActivePluginProvider
+import info.nightscout.androidaps.interfaces.IobCobCalculator
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper
 import info.nightscout.androidaps.plugins.treatments.fragments.*
+import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.FabricPrivacy
 import info.nightscout.androidaps.utils.buildHelper.BuildHelper
-import info.nightscout.androidaps.utils.extensions.toVisibility
+import info.nightscout.androidaps.extensions.toVisibility
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 import info.nightscout.androidaps.utils.rx.AapsSchedulers
 import io.reactivex.disposables.CompositeDisposable
@@ -28,9 +30,10 @@ class TreatmentsFragment : DaggerFragment() {
     @Inject lateinit var resourceHelper: ResourceHelper
     @Inject lateinit var fabricPrivacy: FabricPrivacy
     @Inject lateinit var activePlugin: ActivePluginProvider
-    @Inject lateinit var treatmentsPlugin: TreatmentsPlugin
+    @Inject lateinit var iobCobCalculator: IobCobCalculator
     @Inject lateinit var aapsSchedulers: AapsSchedulers
     @Inject lateinit var buildHelper: BuildHelper
+    @Inject lateinit var dateUtil: DateUtil
 
     private val disposable = CompositeDisposable()
 
@@ -124,6 +127,6 @@ class TreatmentsFragment : DaggerFragment() {
 
     private fun updateGui() {
         if (_binding == null) return
-        binding.extendedBoluses.visibility = (activePlugin.activePump.pumpDescription.isExtendedBolusCapable || treatmentsPlugin.extendedBolusesFromHistory.size() > 0).toVisibility()
+        binding.extendedBoluses.visibility = (activePlugin.activePump.pumpDescription.isExtendedBolusCapable || iobCobCalculator.getExtendedBolus(dateUtil._now()) != null).toVisibility()
     }
 }

@@ -18,10 +18,13 @@ internal interface TemporaryBasalDao : TraceableDao<TemporaryBasal> {
     @Query("DELETE FROM $TABLE_TEMPORARY_BASALS")
     override fun deleteAllEntries()
 
+    @Query("SELECT * FROM $TABLE_TEMPORARY_BASALS WHERE timestamp = :timestamp AND referenceId IS NULL")
+    fun findByTimestamp(timestamp: Long): TemporaryBasal?
+
     @Query("SELECT * FROM $TABLE_TEMPORARY_BASALS WHERE pumpId = :pumpId AND pumpType = :pumpType AND pumpSerial = :pumpSerial AND referenceId IS NULL")
     fun findByPumpIds(pumpId: Long, pumpType: InterfaceIDs.PumpType, pumpSerial: String): TemporaryBasal?
 
-    @Query("SELECT * FROM $TABLE_TEMPORARY_BASALS WHERE endPumpId = :endPumpId AND pumpType = :pumpType AND pumpSerial = :pumpSerial AND referenceId IS NULL")
+    @Query("SELECT * FROM $TABLE_TEMPORARY_BASALS WHERE endId = :endPumpId AND pumpType = :pumpType AND pumpSerial = :pumpSerial AND referenceId IS NULL")
     fun findByPumpEndIds(endPumpId: Long, pumpType: InterfaceIDs.PumpType, pumpSerial: String): TemporaryBasal?
 
     @Query("SELECT * FROM $TABLE_TEMPORARY_BASALS WHERE nightscoutId = :nsId AND referenceId IS NULL")
@@ -36,8 +39,14 @@ internal interface TemporaryBasalDao : TraceableDao<TemporaryBasal> {
     @Query("SELECT * FROM $TABLE_TEMPORARY_BASALS WHERE timestamp >= :timestamp AND isValid = 1 AND referenceId IS NULL ORDER BY timestamp ASC")
     fun getTemporaryBasalDataFromTime(timestamp: Long): Single<List<TemporaryBasal>>
 
+    @Query("SELECT * FROM $TABLE_TEMPORARY_BASALS WHERE timestamp >= :from AND timestamp <= :to AND isValid = 1 AND referenceId IS NULL ORDER BY timestamp ASC")
+    fun getTemporaryBasalDataFromTimeToTime(from: Long, to: Long): Single<List<TemporaryBasal>>
+
     @Query("SELECT * FROM $TABLE_TEMPORARY_BASALS WHERE timestamp >= :timestamp AND referenceId IS NULL ORDER BY timestamp ASC")
     fun getTemporaryBasalDataIncludingInvalidFromTime(timestamp: Long): Single<List<TemporaryBasal>>
+
+    @Query("SELECT * FROM $TABLE_TEMPORARY_BASALS WHERE timestamp >= :from AND timestamp <= :to AND referenceId IS NULL ORDER BY timestamp ASC")
+    fun getTemporaryBasalDataIncludingInvalidFromTimeToTime(from: Long, to: Long): Single<List<TemporaryBasal>>
 
     @Query("SELECT * FROM $TABLE_TEMPORARY_BASALS WHERE isValid = 1 AND referenceId IS NULL ORDER BY timestamp ASC")
     fun getTemporaryBasalData(): Single<List<TemporaryBasal>>
@@ -56,4 +65,6 @@ internal interface TemporaryBasalDao : TraceableDao<TemporaryBasal> {
     @Query("SELECT * FROM $TABLE_TEMPORARY_BASALS WHERE id = :referenceId")
     fun getCurrentFromHistoric(referenceId: Long): Maybe<TemporaryBasal>
 
+    @Query("SELECT * FROM $TABLE_TEMPORARY_BASALS WHERE isValid = 1 AND referenceId IS NULL ORDER BY id ASC LIMIT 1")
+    fun getOldestRecord(): TemporaryBasal?
 }
