@@ -12,8 +12,10 @@ import info.nightscout.androidaps.data.DetailedBolusInfo
 import info.nightscout.androidaps.data.Profile
 import info.nightscout.androidaps.database.AppRepository
 import info.nightscout.androidaps.database.entities.BolusCalculatorResult
+import info.nightscout.androidaps.database.entities.ValueWithUnit
 import info.nightscout.androidaps.database.entities.TemporaryTarget
-import info.nightscout.androidaps.database.entities.UserEntry.*
+import info.nightscout.androidaps.database.entities.UserEntry.Action
+import info.nightscout.androidaps.database.entities.UserEntry.Sources
 import info.nightscout.androidaps.database.transactions.InsertOrUpdateBolusCalculatorResultTransaction
 import info.nightscout.androidaps.events.EventRefreshOverview
 import info.nightscout.androidaps.interfaces.*
@@ -130,6 +132,7 @@ class BolusWizard @Inject constructor(
     private var useAlarm = false
     var notes: String = ""
     private var carbTime: Int = 0
+    private var quickWizard: Boolean = true
 
     @JvmOverloads
     fun doCalc(profile: Profile,
@@ -149,7 +152,8 @@ class BolusWizard @Inject constructor(
                useTrend: Boolean,
                useAlarm: Boolean,
                notes: String = "",
-               carbTime: Int = 0
+               carbTime: Int = 0,
+               quickWizard: Boolean = false
     ): BolusWizard {
 
         this.profile = profile
@@ -170,6 +174,7 @@ class BolusWizard @Inject constructor(
         this.useAlarm = useAlarm
         this.notes = notes
         this.carbTime = carbTime
+        this.quickWizard = quickWizard
 
         // Insulin from BG
         sens = Profile.fromMgdlToUnits(profile.isfMgdl, profileFunction.getUnits())
@@ -343,7 +348,10 @@ class BolusWizard @Inject constructor(
                 carbTime = 0
                 bolusCalculatorResult = createBolusCalculatorResult()
                 notes = this@BolusWizard.notes
-                uel.log(Action.BOLUS_ADVISOR, notes, ValueWithUnit(eventType.toDBbEventType(), Units.TherapyEvent), ValueWithUnit(insulinAfterConstraints, Units.U))
+                uel.log(Action.BOLUS_ADVISOR, if (quickWizard) Sources.QuickWizard else Sources.WizardDialog,
+                    notes,
+                    ValueWithUnit.TherapyEventType(eventType.toDBbEventType()),
+                    ValueWithUnit.Insulin(insulinAfterConstraints))
                 if (insulin > 0) {
                     commandQueue.bolus(this, object : Callback() {
                         override fun run() {
@@ -366,7 +374,7 @@ class BolusWizard @Inject constructor(
         OKDialog.showConfirmation(ctx, resourceHelper.gs(R.string.boluswizard), confirmMessage, {
             if (insulinAfterConstraints > 0 || carbs > 0) {
                 if (useSuperBolus) {
-                    uel.log(Action.SUPERBOLUS_TBR)
+                    uel.log(Action.SUPERBOLUS_TBR, Sources.WizardDialog)
                     if (loopPlugin.isEnabled(PluginType.LOOP)) {
                         loopPlugin.superBolusTo(System.currentTimeMillis() + 2 * 60L * 60 * 1000)
                         rxBus.send(EventRefreshOverview("WizardDialog"))
@@ -381,7 +389,6 @@ class BolusWizard @Inject constructor(
                             }
                         })
                     } else {
-
                         commandQueue.tempBasalPercent(0, 120, true, profile, PumpSync.TemporaryBasalType.NORMAL, object : Callback() {
                             override fun run() {
                                 if (!result.success) {
@@ -406,13 +413,18 @@ class BolusWizard @Inject constructor(
                     carbTime = this@BolusWizard.carbTime
                     bolusCalculatorResult = createBolusCalculatorResult()
                     notes = this@BolusWizard.notes
-                    uel.log(Action.BOLUS, notes,
-                        ValueWithUnit(eventType.toDBbEventType(), Units.TherapyEvent),
-                        ValueWithUnit(insulinAfterConstraints, Units.U),
-                        ValueWithUnit(this@BolusWizard.carbs, Units.G, this@BolusWizard.carbs != 0),
-                        ValueWithUnit(carbTime, Units.M, carbTime != 0)
-                    )
                     if (insulin > 0 || carbs > 0) {
+                       val action = when {
+                            insulinAfterConstraints.equals(0.0) -> Action.CARBS
+                            carbs.equals(0.0)                   -> Action.BOLUS
+                            else                                -> Action.TREATMENT
+                        }
+                        uel.log(action, if (quickWizard) Sources.QuickWizard else Sources.WizardDialog,
+                            notes,
+                            ValueWithUnit.TherapyEventType(eventType.toDBbEventType()),
+                            ValueWithUnit.Insulin(insulinAfterConstraints).takeIf { insulinAfterConstraints != 0.0 },
+                            ValueWithUnit.Gram(this@BolusWizard.carbs).takeIf { this@BolusWizard.carbs != 0 },
+                            ValueWithUnit.Minute(carbTime).takeIf { carbTime != 0 })
                         commandQueue.bolus(this, object : Callback() {
                             override fun run() {
                                 if (!result.success) {

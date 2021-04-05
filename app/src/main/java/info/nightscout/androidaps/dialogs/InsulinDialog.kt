@@ -15,10 +15,10 @@ import info.nightscout.androidaps.activities.ErrorHelperActivity
 import info.nightscout.androidaps.data.DetailedBolusInfo
 import info.nightscout.androidaps.data.Profile
 import info.nightscout.androidaps.database.AppRepository
+import info.nightscout.androidaps.database.entities.ValueWithUnit
 import info.nightscout.androidaps.database.entities.TemporaryTarget
 import info.nightscout.androidaps.database.entities.UserEntry.Action
-import info.nightscout.androidaps.database.entities.UserEntry.Units
-import info.nightscout.androidaps.database.entities.UserEntry.ValueWithUnit
+import info.nightscout.androidaps.database.entities.UserEntry.Sources
 import info.nightscout.androidaps.database.transactions.InsertTemporaryTargetAndCancelCurrentTransaction
 import info.nightscout.androidaps.databinding.DialogInsulinBinding
 import info.nightscout.androidaps.interfaces.ActivePluginProvider
@@ -189,7 +189,11 @@ class InsulinDialog : DialogFragmentWithDate() {
             activity?.let { activity ->
                 OKDialog.showConfirmation(activity, resourceHelper.gs(R.string.bolus), HtmlHelper.fromHtml(Joiner.on("<br/>").join(actions)), {
                     if (eatingSoonChecked) {
-                        uel.log(Action.TT, notes, ValueWithUnit(TemporaryTarget.Reason.EATING_SOON.text, Units.TherapyEvent), ValueWithUnit(eatingSoonTT, units), ValueWithUnit(eatingSoonTTDuration, Units.M))
+                        uel.log(Action.TT, Sources.InsulinDialog,
+                            notes,
+                            ValueWithUnit.TherapyEventTTReason(TemporaryTarget.Reason.EATING_SOON),
+                            ValueWithUnit.fromGlucoseUnit(eatingSoonTT, units),
+                            ValueWithUnit.Minute(eatingSoonTTDuration))
                         disposable += repository.runTransactionForResult(InsertTemporaryTargetAndCancelCurrentTransaction(
                             timestamp = System.currentTimeMillis(),
                             duration = TimeUnit.MINUTES.toMillis(eatingSoonTTDuration.toLong()),
@@ -210,12 +214,12 @@ class InsulinDialog : DialogFragmentWithDate() {
                         detailedBolusInfo.context = context
                         detailedBolusInfo.notes = notes
                         detailedBolusInfo.timestamp = time
-                        uel.log(Action.BOLUS_RECORD, notes,
-                            ValueWithUnit(detailedBolusInfo.timestamp, Units.Timestamp),
-                            ValueWithUnit(detailedBolusInfo.insulin, Units.U),
-                            ValueWithUnit(timeOffset, Units.M, timeOffset != 0)
-                        )
                         if (recordOnlyChecked) {
+                            uel.log(Action.BOLUS, Sources.InsulinDialog,
+                                notes,
+                                ValueWithUnit.StringResource(R.string.record),
+                                ValueWithUnit.Insulin(insulinAfterConstraints),
+                                ValueWithUnit.Minute(timeOffset).takeIf { timeOffset!= 0 })
                             disposable += repository.runTransactionForResult(detailedBolusInfo.insertBolusTransaction())
                                 .subscribe(
                                     { result -> result.inserted.forEach { aapsLogger.debug(LTag.DATABASE, "Inserted bolus $it") } },
@@ -227,7 +231,9 @@ class InsulinDialog : DialogFragmentWithDate() {
                                     if (!result.success) {
                                         ErrorHelperActivity.runAlarm(ctx, result.comment, resourceHelper.gs(R.string.treatmentdeliveryerror), info.nightscout.androidaps.dana.R.raw.boluserror)
                                     } else
-                                        uel.log(Action.BOLUS, notes, ValueWithUnit(insulinAfterConstraints, Units.U))
+                                        uel.log(Action.BOLUS, Sources.InsulinDialog,
+                                            notes,
+                                            ValueWithUnit.Insulin(insulinAfterConstraints))
 
                                 }
                             })

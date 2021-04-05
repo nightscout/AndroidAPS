@@ -12,7 +12,8 @@ import androidx.recyclerview.widget.RecyclerView
 import dagger.android.support.DaggerFragment
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.data.Intervals
-import info.nightscout.androidaps.database.entities.UserEntry.*
+import info.nightscout.androidaps.database.entities.UserEntry.Action
+import info.nightscout.androidaps.database.entities.UserEntry.Sources
 import info.nightscout.androidaps.databinding.TreatmentsExtendedbolusFragmentBinding
 import info.nightscout.androidaps.databinding.TreatmentsExtendedbolusItemBinding
 import info.nightscout.androidaps.db.ExtendedBolus
@@ -123,7 +124,7 @@ class TreatmentsExtendedBolusesFragment : DaggerFragment() {
                 ${resourceHelper.gs(R.string.extended_bolus)}
                 ${resourceHelper.gs(R.string.date)}: ${dateUtil.dateAndTimeString(extendedBolus.date)}
                 """.trimIndent(), { _: DialogInterface, _: Int ->
-                            uel.log(Action.EXTENDED_BOLUS_REMOVED)
+                            uel.log(Action.EXTENDED_BOLUS_REMOVED, Sources.Treatments)
                             val id = extendedBolus._id
                             if (NSUpload.isIdValid(id)) nsUpload.removeCareportalEntryFromNS(id)
                             else uploadQueue.removeByMongoId("dbAdd", id)

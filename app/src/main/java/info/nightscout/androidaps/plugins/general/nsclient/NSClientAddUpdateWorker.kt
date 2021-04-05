@@ -1,16 +1,17 @@
 package info.nightscout.androidaps.plugins.general.nsclient
 
 import android.content.Context
-import androidx.work.Data
 import androidx.work.Worker
 import androidx.work.WorkerParameters
 import androidx.work.workDataOf
 import dagger.android.HasAndroidInjector
+import info.nightscout.androidaps.Constants
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.database.AppRepository
+import info.nightscout.androidaps.database.entities.ValueWithUnit
 import info.nightscout.androidaps.database.entities.TherapyEvent
-import info.nightscout.androidaps.database.entities.UserEntry
-import info.nightscout.androidaps.database.entities.UserEntry.ValueWithUnit
+import info.nightscout.androidaps.database.entities.UserEntry.Action
+import info.nightscout.androidaps.database.entities.UserEntry.Sources
 import info.nightscout.androidaps.database.transactions.SyncNsBolusTransaction
 import info.nightscout.androidaps.database.transactions.SyncNsCarbsTransaction
 import info.nightscout.androidaps.database.transactions.SyncNsTemporaryTargetTransaction
@@ -33,6 +34,7 @@ import info.nightscout.androidaps.utils.extensions.carbsFromJson
 import info.nightscout.androidaps.utils.extensions.temporaryTargetFromJson
 import info.nightscout.androidaps.utils.extensions.therapyEventFromJson
 import info.nightscout.androidaps.utils.sharedPreferences.SP
+import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
 class NSClientAddUpdateWorker(
@@ -88,15 +90,15 @@ class NSClientAddUpdateWorker(
                         .blockingGet()
                         .also { result ->
                             result.inserted.forEach {
-                                uel.log(UserEntry.Action.CAREPORTAL_FROM_NS,
-                                    ValueWithUnit(it.timestamp, UserEntry.Units.Timestamp, true),
-                                    ValueWithUnit(it.amount, UserEntry.Units.U)
+                                uel.log(Action.CAREPORTAL, Sources.NSClient,
+                                    ValueWithUnit.Timestamp(it.timestamp),
+                                    ValueWithUnit.Insulin(it.amount)
                                 )
                             }
                             result.invalidated.forEach {
-                                uel.log(UserEntry.Action.CAREPORTAL_DELETED_FROM_NS,
-                                    ValueWithUnit(it.timestamp, UserEntry.Units.Timestamp, true),
-                                    ValueWithUnit(it.amount, UserEntry.Units.U)
+                                uel.log(Action.CAREPORTAL_REMOVED, Sources.NSClient,
+                                    ValueWithUnit.Timestamp(it.timestamp),
+                                    ValueWithUnit.Insulin(it.amount)
                                 )
                             }
                         }
@@ -112,15 +114,15 @@ class NSClientAddUpdateWorker(
                         .blockingGet()
                         .also { result ->
                             result.inserted.forEach {
-                                uel.log(UserEntry.Action.CAREPORTAL_FROM_NS,
-                                    ValueWithUnit(it.timestamp, UserEntry.Units.Timestamp, true),
-                                    ValueWithUnit(it.amount, UserEntry.Units.G)
+                                uel.log(Action.CAREPORTAL, Sources.NSClient,
+                                    ValueWithUnit.Timestamp(it.timestamp),
+                                    ValueWithUnit.Gram(it.amount.toInt())
                                 )
                             }
                             result.invalidated.forEach {
-                                uel.log(UserEntry.Action.CAREPORTAL_DELETED_FROM_NS,
-                                    ValueWithUnit(it.timestamp, UserEntry.Units.Timestamp, true),
-                                    ValueWithUnit(it.amount, UserEntry.Units.G)
+                                uel.log(Action.CAREPORTAL, Sources.NSClient,
+                                    ValueWithUnit.Timestamp(it.timestamp),
+                                    ValueWithUnit.Gram(it.amount.toInt())
                                 )
                             }
                         }
@@ -137,28 +139,28 @@ class NSClientAddUpdateWorker(
                             }
                             .blockingGet()
                             .also { result ->
-                                result.inserted.forEach {
-                                    uel.log(UserEntry.Action.TT_FROM_NS,
-                                        ValueWithUnit(it.reason.text, UserEntry.Units.TherapyEvent),
-                                        ValueWithUnit(it.lowTarget, UserEntry.Units.Mg_Dl, true),
-                                        ValueWithUnit(it.highTarget, UserEntry.Units.Mg_Dl, it.lowTarget != it.highTarget),
-                                        ValueWithUnit(it.duration.toInt() / 60000, UserEntry.Units.M, true)
+                                result.inserted.forEach { tt ->
+                                    uel.log(Action.TT, Sources.NSClient,
+                                        ValueWithUnit.TherapyEventTTReason(tt.reason),
+                                        ValueWithUnit.fromGlucoseUnit(tt.lowTarget, Constants.MGDL),
+                                        ValueWithUnit.fromGlucoseUnit(tt.highTarget, Constants.MGDL).takeIf { tt.lowTarget != tt.highTarget },
+                                        ValueWithUnit.Minute(TimeUnit.MILLISECONDS.toMinutes(tt.duration).toInt())
                                     )
                                 }
-                                result.invalidated.forEach {
-                                    uel.log(UserEntry.Action.TT_DELETED_FROM_NS,
-                                        ValueWithUnit(it.reason.text, UserEntry.Units.TherapyEvent),
-                                        ValueWithUnit(it.lowTarget, UserEntry.Units.Mg_Dl, true),
-                                        ValueWithUnit(it.highTarget, UserEntry.Units.Mg_Dl, it.lowTarget != it.highTarget),
-                                        ValueWithUnit(it.duration.toInt() / 60000, UserEntry.Units.M, true)
+                                result.invalidated.forEach { tt ->
+                                    uel.log(Action.TT_REMOVED, Sources.NSClient,
+                                        ValueWithUnit.TherapyEventTTReason(tt.reason),
+                                        ValueWithUnit.Mgdl(tt.lowTarget),
+                                        ValueWithUnit.Mgdl(tt.highTarget).takeIf { tt.lowTarget != tt.highTarget },
+                                        ValueWithUnit.Minute(TimeUnit.MILLISECONDS.toMinutes(tt.duration).toInt())
                                     )
                                 }
-                                result.ended.forEach {
-                                    uel.log(UserEntry.Action.TT_CANCELED_FROM_NS,
-                                        ValueWithUnit(it.reason.text, UserEntry.Units.TherapyEvent),
-                                        ValueWithUnit(it.lowTarget, UserEntry.Units.Mg_Dl, true),
-                                        ValueWithUnit(it.highTarget, UserEntry.Units.Mg_Dl, it.lowTarget != it.highTarget),
-                                        ValueWithUnit(it.duration.toInt() / 60000, UserEntry.Units.M, true)
+                                result.ended.forEach { tt ->
+                                    uel.log(Action.CANCEL_TT, Sources.NSClient,
+                                        ValueWithUnit.TherapyEventTTReason(tt.reason),
+                                        ValueWithUnit.Mgdl(tt.lowTarget),
+                                        ValueWithUnit.Mgdl(tt.highTarget).takeIf { tt.lowTarget != tt.highTarget },
+                                        ValueWithUnit.Minute(TimeUnit.MILLISECONDS.toMinutes(tt.duration).toInt())
                                     )
                                 }
                             }
@@ -182,17 +184,17 @@ class NSClientAddUpdateWorker(
                             .blockingGet()
                             .also { result ->
                                 result.inserted.forEach {
-                                    uel.log(UserEntry.Action.CAREPORTAL_FROM_NS,
+                                    uel.log(Action.CAREPORTAL, Sources.NSClient,
                                         it.note ?: "",
-                                        ValueWithUnit(it.timestamp, UserEntry.Units.Timestamp, true),
-                                        ValueWithUnit(it.type.text, UserEntry.Units.TherapyEvent)
+                                        ValueWithUnit.Timestamp(it.timestamp),
+                                        ValueWithUnit.TherapyEventType(it.type)
                                     )
                                 }
                                 result.invalidated.forEach {
-                                    uel.log(UserEntry.Action.CAREPORTAL_DELETED_FROM_NS,
+                                    uel.log(Action.CAREPORTAL_REMOVED, Sources.NSClient,
                                         it.note ?: "",
-                                        ValueWithUnit(it.timestamp, UserEntry.Units.Timestamp, true),
-                                        ValueWithUnit(it.type.text, UserEntry.Units.TherapyEvent)
+                                        ValueWithUnit.Timestamp(it.timestamp),
+                                        ValueWithUnit.TherapyEventType(it.type)
                                     )
                                 }
                             }

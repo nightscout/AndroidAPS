@@ -23,6 +23,8 @@ abstract class Action(val injector: HasAndroidInjector) {
     abstract fun isValid(): Boolean
     @DrawableRes abstract fun icon(): Int
 
+    var title = ""
+
     init {
         injector.androidInjector().inject(this)
     }

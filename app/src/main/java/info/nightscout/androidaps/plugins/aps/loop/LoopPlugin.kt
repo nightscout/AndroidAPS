@@ -17,6 +17,9 @@ import info.nightscout.androidaps.data.Profile
 import info.nightscout.androidaps.data.PumpEnactResult
 import info.nightscout.androidaps.database.AppRepository
 import info.nightscout.androidaps.database.entities.TherapyEvent
+import info.nightscout.androidaps.database.entities.UserEntry.Action
+import info.nightscout.androidaps.database.entities.UserEntry.Sources
+import info.nightscout.androidaps.database.entities.ValueWithUnit
 import info.nightscout.androidaps.database.transactions.InsertIfNewByTimestampTherapyEventTransaction
 import info.nightscout.androidaps.database.transactions.InsertTherapyEventAnnouncementTransaction
 import info.nightscout.androidaps.events.EventAcceptOpenLoopChange
@@ -27,6 +30,7 @@ import info.nightscout.androidaps.interfaces.*
 import info.nightscout.androidaps.interfaces.LoopInterface.LastRun
 import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.logging.LTag
+import info.nightscout.androidaps.logging.UserEntryLogger
 import info.nightscout.androidaps.plugins.aps.loop.events.EventLoopSetLastRunGui
 import info.nightscout.androidaps.plugins.aps.loop.events.EventLoopUpdateGui
 import info.nightscout.androidaps.plugins.aps.loop.events.EventNewOpenLoopNotification
@@ -78,6 +82,7 @@ open class LoopPlugin @Inject constructor(
     private val receiverStatusStore: ReceiverStatusStore,
     private val fabricPrivacy: FabricPrivacy,
     private val dateUtil: DateUtil,
+    private val uel: UserEntryLogger,
     private val repository: AppRepository,
     private val runningConfiguration: RunningConfiguration
 ) : PluginBase(PluginDescription()
@@ -546,6 +551,7 @@ open class LoopPlugin @Inject constructor(
             if (request.percent == 100 && request.duration == 0) {
                 if (activeTemp != null) {
                     aapsLogger.debug(LTag.APS, "applyAPSRequest: cancelTempBasal()")
+                    uel.log(Action.CANCEL_TEMP_BASAL, Sources.Loop)
                     commandQueue.cancelTempBasal(false, callback)
                 } else {
                     aapsLogger.debug(LTag.APS, "applyAPSRequest: Basal set correctly")
@@ -559,12 +565,16 @@ open class LoopPlugin @Inject constructor(
                     .comment(R.string.let_temp_basal_run))?.run()
             } else {
                 aapsLogger.debug(LTag.APS, "applyAPSRequest: tempBasalPercent()")
+                uel.log(Action.TEMP_BASAL, Sources.Loop,
+                    ValueWithUnit.Percent(request.percent),
+                    ValueWithUnit.Minute(request.duration))
                 commandQueue.tempBasalPercent(request.percent, request.duration, false, profile, PumpSync.TemporaryBasalType.NORMAL, callback)
             }
         } else {
             if (request.rate == 0.0 && request.duration == 0 || abs(request.rate - pump.baseBasalRate) < pump.pumpDescription.basalStep) {
                 if (activeTemp != null) {
                     aapsLogger.debug(LTag.APS, "applyAPSRequest: cancelTempBasal()")
+                    uel.log(Action.CANCEL_TEMP_BASAL, Sources.Loop)
                     commandQueue.cancelTempBasal(false, callback)
                 } else {
                     aapsLogger.debug(LTag.APS, "applyAPSRequest: Basal set correctly")
@@ -578,6 +588,9 @@ open class LoopPlugin @Inject constructor(
                     .comment(R.string.let_temp_basal_run))?.run()
             } else {
                 aapsLogger.debug(LTag.APS, "applyAPSRequest: setTempBasalAbsolute()")
+                uel.log(Action.TEMP_BASAL, Sources.Loop,
+                    ValueWithUnit.UnitPerHour(request.rate),
+                    ValueWithUnit.Minute(request.duration))
                 commandQueue.tempBasalAbsolute(request.rate, request.duration, false, profile, PumpSync.TemporaryBasalType.NORMAL, callback)
             }
         }
@@ -616,6 +629,8 @@ open class LoopPlugin @Inject constructor(
         detailedBolusInfo.bolusType = DetailedBolusInfo.BolusType.SMB
         detailedBolusInfo.deliverAtTheLatest = request.deliverAt
         aapsLogger.debug(LTag.APS, "applyAPSRequest: bolus()")
+        if (request.smb > 0.0)
+            uel.log(Action.SMB, Sources.Loop, ValueWithUnit.Insulin(detailedBolusInfo.insulin))
         commandQueue.bolus(detailedBolusInfo, callback)
     }
 

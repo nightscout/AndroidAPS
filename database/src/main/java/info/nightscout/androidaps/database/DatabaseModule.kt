@@ -24,6 +24,7 @@ open class DatabaseModule {
  //           .addMigrations(migration5to6)
  //           .addMigrations(migration6to7)
  //           .addMigrations(migration7to8)
+ //           .addMigrations(migration11to12)
             .fallbackToDestructiveMigration()
             .build()
 
@@ -60,6 +61,13 @@ open class DatabaseModule {
             database.execSQL("CREATE INDEX IF NOT EXISTS `index_mealLinks_bolusCalcResultId` ON mealLinks (`bolusCalcResultId`)")
             database.execSQL("CREATE INDEX IF NOT EXISTS `index_mealLinks_superbolusTempBasalId` ON mealLinks (`superbolusTempBasalId`)")
             database.execSQL("CREATE INDEX IF NOT EXISTS `index_mealLinks_noteId` ON mealLinks (`noteId`)")
+        }
+    }
+
+    private val migration11to12 = object : Migration(11,12) {
+        override fun migrate(database: SupportSQLiteDatabase) {
+            database.execSQL("DROP TABLE IF EXISTS userEntry")
+            database.execSQL("CREATE TABLE IF NOT EXISTS userEntry (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `timestamp` INTEGER NOT NULL, `utcOffset` INTEGER NOT NULL, `action` TEXT NOT NULL, `source` TEXT NOT NULL, `note` TEXT NOT NULL, `values` TEXT NOT NULL)")
         }
     }
 }

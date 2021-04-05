@@ -13,10 +13,10 @@ import dagger.android.support.DaggerFragment
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.database.AppRepository
 import info.nightscout.androidaps.database.ValueWrapper
+import info.nightscout.androidaps.database.entities.ValueWithUnit
 import info.nightscout.androidaps.database.entities.TemporaryTarget
 import info.nightscout.androidaps.database.entities.UserEntry.Action
-import info.nightscout.androidaps.database.entities.UserEntry.Units
-import info.nightscout.androidaps.database.entities.UserEntry.ValueWithUnit
+import info.nightscout.androidaps.database.entities.UserEntry.Sources
 import info.nightscout.androidaps.database.interfaces.end
 import info.nightscout.androidaps.database.transactions.InvalidateTemporaryTargetTransaction
 import info.nightscout.androidaps.databinding.TreatmentsTemptargetFragmentBinding
@@ -86,7 +86,7 @@ class TreatmentsTempTargetFragment : DaggerFragment() {
         binding.refreshFromNightscout.setOnClickListener {
             context?.let { context ->
                 OKDialog.showConfirmation(context, resourceHelper.gs(R.string.refresheventsfromnightscout) + " ?", {
-                    uel.log(Action.TT_NS_REFRESH)
+                    uel.log(Action.TT_NS_REFRESH, Sources.Treatments)
                     disposable += Completable.fromAction { repository.deleteAllTempTargetEntries() }
                         .subscribeOn(aapsSchedulers.io)
                         .observeOn(aapsSchedulers.main)
@@ -170,7 +170,7 @@ class TreatmentsTempTargetFragment : DaggerFragment() {
             holder.binding.duration.text = resourceHelper.gs(R.string.format_mins, T.msecs(tempTarget.duration).mins())
             holder.binding.low.text = tempTarget.lowValueToUnitsToString(units)
             holder.binding.high.text = tempTarget.highValueToUnitsToString(units)
-            holder.binding.reason.text = translator.translate(tempTarget.reason.text)
+            holder.binding.reason.text = translator.translate(tempTarget.reason)
             holder.binding.date.setTextColor(
                 when {
                     tempTarget.id == currentlyActiveTarget?.id -> resourceHelper.gc(R.color.colorActive)
@@ -196,7 +196,12 @@ class TreatmentsTempTargetFragment : DaggerFragment() {
                         ${dateUtil.dateAndTimeString(tempTarget.timestamp)}
                         """.trimIndent(),
                             { _: DialogInterface?, _: Int ->
-                                uel.log(Action.TT_REMOVED, ValueWithUnit(tempTarget.timestamp, Units.Timestamp), ValueWithUnit(tempTarget.reason.text, Units.TherapyEvent), ValueWithUnit(tempTarget.lowTarget, Units.Mg_Dl), ValueWithUnit(tempTarget.highTarget, Units.Mg_Dl, tempTarget.lowTarget != tempTarget.highTarget), ValueWithUnit(tempTarget.duration.toInt(), Units.M))
+                                uel.log(Action.TT_REMOVED, Sources.Treatments,
+                                    ValueWithUnit.Timestamp(tempTarget.timestamp),
+                                    ValueWithUnit.TherapyEventTTReason(tempTarget.reason),
+                                    ValueWithUnit.Mgdl(tempTarget.lowTarget),
+                                    ValueWithUnit.Mgdl(tempTarget.highTarget).takeIf { tempTarget.lowTarget != tempTarget.highTarget },
+                                    ValueWithUnit.Minute(TimeUnit.MILLISECONDS.toMinutes(tempTarget.duration).toInt()))
                                 disposable += repository.runTransactionForResult(InvalidateTemporaryTargetTransaction(tempTarget.id))
                                     .subscribe(
                                         { aapsLogger.debug(LTag.DATABASE, "Removed temp target $tempTarget") },

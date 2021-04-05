@@ -13,9 +13,9 @@ import info.nightscout.androidaps.R
 import info.nightscout.androidaps.activities.ErrorHelperActivity
 import info.nightscout.androidaps.data.DetailedBolusInfo
 import info.nightscout.androidaps.database.AppRepository
+import info.nightscout.androidaps.database.entities.ValueWithUnit
 import info.nightscout.androidaps.database.entities.UserEntry.Action
-import info.nightscout.androidaps.database.entities.UserEntry.Units
-import info.nightscout.androidaps.database.entities.UserEntry.ValueWithUnit
+import info.nightscout.androidaps.database.entities.UserEntry.Sources
 import info.nightscout.androidaps.databinding.DialogTreatmentBinding
 import info.nightscout.androidaps.interfaces.ActivePluginProvider
 import info.nightscout.androidaps.interfaces.CommandQueueProvider
@@ -139,18 +139,23 @@ class TreatmentDialog : DialogFragmentWithDate() {
         if (insulinAfterConstraints > 0 || carbsAfterConstraints > 0) {
             activity?.let { activity ->
                 OKDialog.showConfirmation(activity, resourceHelper.gs(R.string.overview_treatment_label), HtmlHelper.fromHtml(Joiner.on("<br/>").join(actions)), {
+                    val action = when {
+                        insulinAfterConstraints.equals(0.0) -> Action.CARBS
+                        carbsAfterConstraints.equals(0)     -> Action.BOLUS
+                        else                                -> Action.TREATMENT
+                    }
                     val detailedBolusInfo = DetailedBolusInfo()
                     if (insulinAfterConstraints == 0.0) detailedBolusInfo.eventType = DetailedBolusInfo.EventType.CARBS_CORRECTION
                     if (carbsAfterConstraints == 0) detailedBolusInfo.eventType = DetailedBolusInfo.EventType.CORRECTION_BOLUS
                     detailedBolusInfo.insulin = insulinAfterConstraints
                     detailedBolusInfo.carbs = carbsAfterConstraints.toDouble()
                     detailedBolusInfo.context = context
-                    uel.log(Action.TREATMENT,
-                        ValueWithUnit(detailedBolusInfo.timestamp, Units.Timestamp),
-                        ValueWithUnit(insulin, Units.U, insulin != 0.0),
-                        ValueWithUnit(carbs, Units.G, carbs != 0)
-                    )
                     if (recordOnlyChecked) {
+                        uel.log(action, Sources.TreatmentDialog,
+                            ValueWithUnit.Timestamp(detailedBolusInfo.timestamp).takeIf { eventTimeChanged },
+                            ValueWithUnit.StringResource(R.string.record).takeIf { insulinAfterConstraints != 0.0 },
+                            ValueWithUnit.Insulin(insulinAfterConstraints).takeIf { insulinAfterConstraints != 0.0 },
+                            ValueWithUnit.Gram(carbsAfterConstraints).takeIf { carbsAfterConstraints != 0 })
                         if (detailedBolusInfo.insulin > 0)
                             disposable += repository.runTransactionForResult(detailedBolusInfo.insertBolusTransaction())
                                 .subscribe(
@@ -164,13 +169,20 @@ class TreatmentDialog : DialogFragmentWithDate() {
                                     { aapsLogger.error(LTag.DATABASE, "Error while saving carbs", it) }
                                 )
                     } else {
-                        commandQueue.bolus(detailedBolusInfo, object : Callback() {
-                            override fun run() {
-                                if (!result.success) {
-                                    ErrorHelperActivity.runAlarm(ctx, result.comment, resourceHelper.gs(R.string.treatmentdeliveryerror), info.nightscout.androidaps.dana.R.raw.boluserror)
+                        if (detailedBolusInfo.insulin > 0)
+                            commandQueue.bolus(detailedBolusInfo, object : Callback() {
+                                override fun run() {
+                                    if (!result.success) {
+                                        ErrorHelperActivity.runAlarm(ctx, result.comment, resourceHelper.gs(R.string.treatmentdeliveryerror), info.nightscout.androidaps.dana.R.raw.boluserror)
+                                    } else
+                                        uel.log(action, Sources.TreatmentDialog,
+                                            ValueWithUnit.Insulin(insulinAfterConstraints),
+                                            ValueWithUnit.Gram(carbsAfterConstraints).takeIf { carbsAfterConstraints != 0 })
                                 }
-                            }
-                        })
+                            })
+                        else
+                            uel.log(action, Sources.TreatmentDialog,
+                                ValueWithUnit.Gram(carbsAfterConstraints).takeIf { carbs != 0 })
                     }
                 })
             }

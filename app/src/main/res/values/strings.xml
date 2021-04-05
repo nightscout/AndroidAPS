@@ -142,7 +142,6 @@
     <string name="configbuilder_constraints_description">Which constraints are applied?</string>
     <string name="constraints">Constraints</string>
 
-    <string name="loop">Loop</string>
     <string name="configbuilder_loop">Loop</string>
     <string name="configbuilder_loop_description">Use this to activate AndroidAPS\' loop integration.</string>
     <string name="loop_aps_label">APS</string>
@@ -519,7 +518,6 @@
     <string name="openapsama_autosens_period_summary">Amount of hours in the past for sensitivity detection (carbs absorption time is excluded)</string>
     <string name="key_openapsama_autosens_period" translatable="false">openapsama_autosens_period</string>
     <string name="key_nsclient_localbroadcasts" translatable="false">nsclient_localbroadcasts</string>
-    <string name="pump">Pump</string>
     <string name="openaps">OpenAPS</string>
     <string name="uploader">Uploader</string>
     <string name="configbuilder_sensitivity">Sensitivity detection</string>
