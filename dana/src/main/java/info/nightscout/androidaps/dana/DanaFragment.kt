@@ -10,7 +10,8 @@ import android.view.ViewGroup
 import dagger.android.support.DaggerFragment
 import info.nightscout.androidaps.activities.TDDStatsActivity
 import info.nightscout.androidaps.dana.databinding.DanarFragmentBinding
-import info.nightscout.androidaps.database.entities.UserEntry
+import info.nightscout.androidaps.database.entities.UserEntry.Action
+import info.nightscout.androidaps.database.entities.UserEntry.Sources
 import info.nightscout.androidaps.dialogs.ProfileViewerDialog
 import info.nightscout.androidaps.events.EventExtendedBolusChange
 import info.nightscout.androidaps.events.EventInitializationChanged
@@ -109,7 +110,7 @@ class DanaFragment : DaggerFragment() {
             binding.btconnection.setOnLongClickListener {
                 activity?.let {
                     OKDialog.showConfirmation(it, resourceHelper.gs(R.string.resetpairing)) {
-                        uel.log(UserEntry.Action.CLEAR_PAIRING_KEYS)
+                        uel.log(Action.CLEAR_PAIRING_KEYS, Sources.Dana)
                         (activePlugin.activePump as DanaPumpInterface).clearPairing()
                     }
                 }

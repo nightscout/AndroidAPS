@@ -14,11 +14,15 @@ import info.nightscout.androidaps.R
 import info.nightscout.androidaps.database.AppRepository
 import info.nightscout.androidaps.database.entities.ExtendedBolus
 import info.nightscout.androidaps.database.entities.UserEntry.Action
+import info.nightscout.androidaps.database.entities.UserEntry.Sources
 import info.nightscout.androidaps.database.interfaces.end
 import info.nightscout.androidaps.database.transactions.InvalidateExtendedBolusTransaction
 import info.nightscout.androidaps.databinding.TreatmentsExtendedbolusFragmentBinding
 import info.nightscout.androidaps.databinding.TreatmentsExtendedbolusItemBinding
 import info.nightscout.androidaps.events.EventExtendedBolusChange
+import info.nightscout.androidaps.extensions.iobCalc
+import info.nightscout.androidaps.extensions.isInProgress
+import info.nightscout.androidaps.extensions.toVisibility
 import info.nightscout.androidaps.interfaces.ActivePluginProvider
 import info.nightscout.androidaps.interfaces.ProfileFunction
 import info.nightscout.androidaps.logging.AAPSLogger
@@ -30,10 +34,6 @@ import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.FabricPrivacy
 import info.nightscout.androidaps.utils.T
 import info.nightscout.androidaps.utils.alertDialogs.OKDialog
-import info.nightscout.androidaps.extensions.getPassedDurationToTimeInMinutes
-import info.nightscout.androidaps.extensions.iobCalc
-import info.nightscout.androidaps.extensions.isInProgress
-import info.nightscout.androidaps.extensions.toVisibility
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 import info.nightscout.androidaps.utils.rx.AapsSchedulers
 import io.reactivex.disposables.CompositeDisposable
@@ -156,7 +156,7 @@ class TreatmentsExtendedBolusesFragment : DaggerFragment() {
                 ${resourceHelper.gs(R.string.extended_bolus)}
                 ${resourceHelper.gs(R.string.date)}: ${dateUtil.dateAndTimeString(extendedBolus.timestamp)}
                 """.trimIndent(), { _: DialogInterface, _: Int ->
-                            uel.log(Action.EXTENDED_BOLUS_REMOVED)
+                            uel.log(Action.EXTENDED_BOLUS_REMOVED, Sources.Treatments)
                             disposable += repository.runTransactionForResult(InvalidateExtendedBolusTransaction(extendedBolus.id))
                                 .subscribe(
                                     { aapsLogger.debug(LTag.DATABASE, "Removed extended bolus $extendedBolus") },

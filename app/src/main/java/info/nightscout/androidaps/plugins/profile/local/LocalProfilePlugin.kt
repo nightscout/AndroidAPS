@@ -5,7 +5,6 @@ import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.Constants
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.data.Profile
-import info.nightscout.androidaps.database.entities.UserEntry.*
 import info.nightscout.androidaps.events.EventProfileStoreChanged
 import info.nightscout.androidaps.interfaces.*
 import info.nightscout.androidaps.logging.AAPSLogger
@@ -116,7 +115,6 @@ class LocalProfilePlugin @Inject constructor(
         createAndStoreConvertedProfile()
         isEdited = false
         aapsLogger.debug(LTag.PROFILE, "Storing settings: " + rawProfile?.data.toString())
-        uel.log(Action.STORE_PROFILE)
         rxBus.send(EventProfileStoreChanged())
         var namesOK = true
         profiles.forEach {

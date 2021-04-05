@@ -7,7 +7,8 @@ import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.BuildConfig
 import info.nightscout.androidaps.Config
 import info.nightscout.androidaps.R
-import info.nightscout.androidaps.database.entities.UserEntry.*
+import info.nightscout.androidaps.database.entities.UserEntry.Action
+import info.nightscout.androidaps.database.entities.UserEntry.Sources
 import info.nightscout.androidaps.interfaces.*
 import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.logging.UserEntryLogger
@@ -143,7 +144,7 @@ class ObjectivesPlugin @Inject constructor(
             sp.putLong("Objectives_" + "auto" + "_accomplished", DateUtil.now())
             setupObjectives()
             OKDialog.show(activity, resourceHelper.gs(R.string.objectives), resourceHelper.gs(R.string.codeaccepted))
-            uel.log(Action.OBJECTIVES_SKIPPED)
+            uel.log(Action.OBJECTIVES_SKIPPED, Sources.Objectives)
         } else {
             OKDialog.show(activity, resourceHelper.gs(R.string.objectives), resourceHelper.gs(R.string.codeinvalid))
         }

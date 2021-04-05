@@ -216,6 +216,7 @@
 
     <!--    ProfileFunction-->
     <string name="noprofileselected">No profile selected</string>
+    <string name="startprofile">Start profile %1$d%% for %2$d min</string>
 
     <!--    PumpType-->
     <string name="def_extended_note">* Only discrete values no ranges are supported as granularity for basal/bolus in virtual pump.</string>
@@ -275,6 +276,10 @@
     <string name="wear">Wear</string>
     <string name="automation">Automation</string>
     <string name="custom">Custom</string>
+    <string name="pump">Pump</string>
+    <string name="loop">Loop</string>
+    <string name="ns">NS</string>
+    <string name="record">Record</string>
 
     <!--    Command-->
     <string name="connectiontimedout">Connection timed out</string>
@@ -400,7 +405,6 @@
     <!-- User Entry -->
     <string name="uel_bolus">BOLUS</string>
     <string name="uel_bolus_advisor">BOLUS ADVISOR</string>
-    <string name="uel_bolus_record">BOLUS RECORD</string>
     <string name="uel_extended_bolus">EXTENDED BOLUS</string>
     <string name="uel_superbolus_tbr">SUPERBOLUS TBR</string>
     <string name="uel_carbs">CARBS</string>
@@ -428,6 +432,8 @@
     <string name="uel_cancel_extended_bolus">CANCEL EXTENDED BOLUS</string>
     <string name="uel_cancel_tt">CANCEL TT</string>
     <string name="uel_careportal">CAREPORTAL</string>
+    <string name="uel_site_change">SITE CHANGE</string>
+    <string name="uel_reservoir_change">RESERVOIR CHANGE</string>
     <string name="uel_calibration">CALIBRATION</string>
     <string name="uel_prime_bolus">PRIME BOLUS</string>
     <string name="uel_treatment">TREATMENT</string>
@@ -439,6 +445,7 @@
     <string name="uel_bg_removed">BG REMOVED</string>
     <string name="uel_careportal_removed">CAREPORTAL REMOVED</string>
     <string name="uel_extended_bolus_removed">EXTENDED BOLUS REMOVED</string>
+    <string name="uel_food">FOOD</string>
     <string name="uel_food_removed">FOOD REMOVED</string>
     <string name="uel_profile_removed">PROFILE REMOVED</string>
     <string name="uel_profile_switch_removed">PROFILE SWITCH REMOVED</string>
@@ -465,30 +472,17 @@
     <string name="uel_import_databases">IMPORT DATABASES</string>
     <string name="uel_otp_export">OTP EXPORT</string>
     <string name="uel_otp_reset">OTP RESET</string>
-    <string name="uel_sms_basal">SMS BASAL</string>
-    <string name="uel_sms_bolus">SMS BOLUS</string>
-    <string name="uel_sms_cal">SMS CAL</string>
-    <string name="uel_sms_carbs">SMS CARBS</string>
-    <string name="uel_sms_extended_bolus">SMS EXTENDED BOLUS</string>
-    <string name="uel_sms_loop_disabled">SMS LOOP DISABLED</string>
-    <string name="uel_sms_loop_enabled">SMS LOOP ENABLED</string>
-    <string name="uel_sms_loop_resume">SMS LOOP RESUME</string>
-    <string name="uel_sms_loop_suspend">SMS LOOP SUSPEND</string>
-    <string name="uel_sms_profile">SMS PROFILE</string>
-    <string name="uel_sms_pump_connect">SMS PUMP CONNECT</string>
-    <string name="uel_sms_pump_disconnect">SMS PUMP DISCONNECT</string>
-    <string name="uel_sms_sms">SMS SMS</string>
-    <string name="uel_sms_tt">SMS TT</string>
-    <string name="uel_tt_deleted_from_ns">TT DELETED FROM NS</string>
-    <string name="uel_careportal_deleted_from_ns">CAREPORTAL DELETED FROM NS</string>
-    <string name="uel_careportal_from_ns">CAREPORTAL FROM NS</string>
-    <string name="uel_tt_from_ns">TT FROM NS</string>
-    <string name="uel_tt_canceleted_from_ns">TT CANCELED FROM NS</string>
+    <string name="uel_stop_sms">STOP SMS</string>
     <string name="uel_export_csv">EXPORT USER ENTRIES</string>
     <string name="uel_unknown">UNKNOWN</string>
-    <string name="formated_string">Formated string</string>
+    <string name="ue_formated_string">Formated string</string>
+    <string name="ue_source">Source</string>
+    <string name="ue_utc_offset">UTC Offset</string>
+    <string name="ue_action">Action</string>
+    <string name="ue_timestamp">Timestamp</string>
+    <string name="ue_none">No Unit</string>
     <string name="ue_export_to_csv">Export User Entries to Excel (csv)</string>
-    <string name="ue_csv_header">"Timestamp;Date;UTC Offset;Action;Note;Value;Unit"</string>
+    <string name="ue_csv_header" translatable="false">"%1$s;%2$s;%3$s;%4$s;%5$s;%6$s;%7$s;%8$s;%9$s;%10$s;%11$s;%12$s;%13$s;%14$s;%15$s;%16$s;%17$s"</string>
 
     <plurals name="days">
         <item quantity="one">%1$d day</item>

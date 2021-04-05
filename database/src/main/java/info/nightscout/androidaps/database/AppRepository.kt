@@ -157,6 +157,14 @@ open class AppRepository @Inject internal constructor(
         database.userEntryDao.getAll()
             .subscribeOn(Schedulers.io())
 
+    fun getUserEntryDataFromTime(timestamp: Long): Single<List<UserEntry>> =
+        database.userEntryDao.getUserEntryDataFromTime(timestamp)
+            .subscribeOn(Schedulers.io())
+
+    fun getUserEntryFilteredDataFromTime(timestamp: Long): Single<List<UserEntry>> =
+        database.userEntryDao.getUserEntryFilteredDataFromTime(UserEntry.Sources.Loop, timestamp)
+            .subscribeOn(Schedulers.io())
+
     fun insert(word: UserEntry) {
         database.userEntryDao.insert(word)
     }

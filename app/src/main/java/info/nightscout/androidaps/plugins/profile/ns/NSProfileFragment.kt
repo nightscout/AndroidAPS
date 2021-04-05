@@ -8,7 +8,9 @@ import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import dagger.android.support.DaggerFragment
 import info.nightscout.androidaps.R
-import info.nightscout.androidaps.database.entities.UserEntry.*
+import info.nightscout.androidaps.database.entities.ValueWithUnit
+import info.nightscout.androidaps.database.entities.UserEntry.Action
+import info.nightscout.androidaps.database.entities.UserEntry.Sources
 import info.nightscout.androidaps.databinding.NsprofileFragmentBinding
 import info.nightscout.androidaps.interfaces.ProfileFunction
 import info.nightscout.androidaps.logging.UserEntryLogger
@@ -62,7 +64,9 @@ class NSProfileFragment : DaggerFragment() {
                     activity?.let { activity ->
                         OKDialog.showConfirmation(activity, resourceHelper.gs(R.string.nsprofile),
                             resourceHelper.gs(R.string.activate_profile) + ": " + name + " ?", Runnable {
-                            uel.log(Action.PROFILE_SWITCH, ValueWithUnit(name, Units.None), ValueWithUnit(100.toInt(), Units.Percent))
+                            uel.log(Action.PROFILE_SWITCH, Sources.NSProfile,
+                                ValueWithUnit.SimpleString(name),
+                                ValueWithUnit.Percent(100))
                             treatmentsPlugin.doProfileSwitch(store, name, 0, 100, 0, DateUtil.now())
                         })
                     }

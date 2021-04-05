@@ -10,8 +10,10 @@ import androidx.recyclerview.widget.RecyclerView
 import dagger.android.support.DaggerFragment
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.database.AppRepository
+import info.nightscout.androidaps.database.entities.ValueWithUnit
 import info.nightscout.androidaps.database.entities.GlucoseValue
-import info.nightscout.androidaps.database.entities.UserEntry.*
+import info.nightscout.androidaps.database.entities.UserEntry.Action
+import info.nightscout.androidaps.database.entities.UserEntry.Sources
 import info.nightscout.androidaps.database.transactions.InvalidateGlucoseValueTransaction
 import info.nightscout.androidaps.databinding.BgsourceFragmentBinding
 import info.nightscout.androidaps.databinding.BgsourceItemBinding
@@ -129,7 +131,9 @@ class BGSourceFragment : DaggerFragment() {
                     activity?.let { activity ->
                         val text = dateUtil.dateAndTimeString(glucoseValue.timestamp) + "\n" + glucoseValue.valueToUnitsString(profileFunction.getUnits())
                         OKDialog.showConfirmation(activity, resourceHelper.gs(R.string.removerecord), text, Runnable {
-                            uel.log(Action.BG_REMOVED, ValueWithUnit(glucoseValue.timestamp, Units.Timestamp))
+                            //uel.log(Action.BG_REMOVED, XXXValueWithUnit.Timestamp(glucoseValue.timestamp))
+                            uel.log(Action.BG_REMOVED, Sources.BG,
+                                ValueWithUnit.Timestamp(glucoseValue.timestamp))
                             disposable += repository.runTransaction(InvalidateGlucoseValueTransaction(glucoseValue.id)).subscribe()
                         })
                     }

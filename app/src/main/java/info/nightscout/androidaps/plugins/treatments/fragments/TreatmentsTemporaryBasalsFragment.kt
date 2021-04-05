@@ -14,12 +14,18 @@ import info.nightscout.androidaps.data.IobTotal
 import info.nightscout.androidaps.database.AppRepository
 import info.nightscout.androidaps.database.entities.TemporaryBasal
 import info.nightscout.androidaps.database.entities.UserEntry.*
+import info.nightscout.androidaps.database.entities.UserEntry.Action
+import info.nightscout.androidaps.database.entities.UserEntry.Sources
+import info.nightscout.androidaps.database.entities.ValueWithUnit
 import info.nightscout.androidaps.database.interfaces.end
 import info.nightscout.androidaps.database.transactions.InvalidateTemporaryBasalTransaction
 import info.nightscout.androidaps.databinding.TreatmentsTempbasalsFragmentBinding
 import info.nightscout.androidaps.databinding.TreatmentsTempbasalsItemBinding
 import info.nightscout.androidaps.events.EventAutosensCalculationFinished
 import info.nightscout.androidaps.events.EventTempBasalChange
+import info.nightscout.androidaps.extensions.iobCalc
+import info.nightscout.androidaps.extensions.toStringFull
+import info.nightscout.androidaps.extensions.toVisibility
 import info.nightscout.androidaps.interfaces.ActivePluginProvider
 import info.nightscout.androidaps.interfaces.ProfileFunction
 import info.nightscout.androidaps.logging.AAPSLogger
@@ -31,10 +37,6 @@ import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.FabricPrivacy
 import info.nightscout.androidaps.utils.T
 import info.nightscout.androidaps.utils.alertDialogs.OKDialog
-import info.nightscout.androidaps.extensions.getPassedDurationToTimeInMinutes
-import info.nightscout.androidaps.extensions.iobCalc
-import info.nightscout.androidaps.extensions.toStringFull
-import info.nightscout.androidaps.extensions.toVisibility
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 import info.nightscout.androidaps.utils.rx.AapsSchedulers
 import io.reactivex.disposables.CompositeDisposable
@@ -168,7 +170,8 @@ class TreatmentsTemporaryBasalsFragment : DaggerFragment() {
                 ${resourceHelper.gs(R.string.date)}: ${dateUtil.dateAndTimeString(tempBasal.timestamp)}
                 """.trimIndent(),
                             { _: DialogInterface?, _: Int ->
-                                uel.log(Action.TB_REMOVED, ValueWithUnit(tempBasal.timestamp, Units.Timestamp))
+                                uel.log(Action.TT_REMOVED, Sources.Treatments,
+                                    ValueWithUnit.Timestamp(tempBasal.timestamp))
                                 disposable += repository.runTransactionForResult(InvalidateTemporaryBasalTransaction(tempBasal.id))
                                     .subscribe(
                                         { aapsLogger.debug(LTag.DATABASE, "Removed temporary basal $tempBasal") },

@@ -9,6 +9,7 @@ import dagger.android.support.DaggerFragment
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.database.AppRepository
 import info.nightscout.androidaps.database.entities.UserEntry.Action
+import info.nightscout.androidaps.database.entities.UserEntry.Sources
 import info.nightscout.androidaps.databinding.MaintenanceFragmentBinding
 import info.nightscout.androidaps.events.EventNewBG
 import info.nightscout.androidaps.interfaces.DataSyncSelector
@@ -56,13 +57,12 @@ class MaintenanceFragment : DaggerFragment() {
         super.onViewCreated(view, savedInstanceState)
         binding.logSend.setOnClickListener { maintenancePlugin.sendLogs() }
         binding.logDelete.setOnClickListener {
-            uel.log(Action.DELETE_LOGS)
+            uel.log(Action.DELETE_LOGS, Sources.Maintenance)
             maintenancePlugin.deleteLogs()
         }
         binding.navResetdb.setOnClickListener {
             activity?.let { activity ->
                 OKDialog.showConfirmation(activity, resourceHelper.gs(R.string.maintenance), resourceHelper.gs(R.string.reset_db_confirm), Runnable {
-                    uel.log(Action.RESET_DATABASES)
                     compositeDisposable.add(
                         fromAction {
                             databaseHelper.resetDatabases()
@@ -76,18 +76,19 @@ class MaintenanceFragment : DaggerFragment() {
                                 onComplete = { rxBus.send(EventNewBG(null)) }
                             )
                     )
+                    uel.log(Action.RESET_DATABASES, Sources.Maintenance)
                 })
             }
         }
         binding.navExport.setOnClickListener {
-            uel.log(Action.EXPORT_SETTINGS)
+            uel.log(Action.EXPORT_SETTINGS, Sources.Maintenance)
             // start activity for checking permissions...
             importExportPrefs.verifyStoragePermissions(this) {
                 importExportPrefs.exportSharedPreferences(this)
             }
         }
         binding.navImport.setOnClickListener {
-            uel.log(Action.IMPORT_SETTINGS)
+            uel.log(Action.IMPORT_SETTINGS, Sources.Maintenance)
             // start activity for checking permissions...
             importExportPrefs.verifyStoragePermissions(this) {
                 importExportPrefs.importSharedPreferences(this)
@@ -97,7 +98,7 @@ class MaintenanceFragment : DaggerFragment() {
         binding.exportCsv.setOnClickListener {
             activity?.let { activity ->
                 OKDialog.showConfirmation(activity, resourceHelper.gs(R.string.ue_export_to_csv) + "?") {
-                    uel.log(Action.EXPORT_CSV)
+                    uel.log(Action.EXPORT_CSV, Sources.Maintenance)
                     importExportPrefs.exportUserEntriesCsv(activity, repository.getAllUserEntries())
                 }
             }

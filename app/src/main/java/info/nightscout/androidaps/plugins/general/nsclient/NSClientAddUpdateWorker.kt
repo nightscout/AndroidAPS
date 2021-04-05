@@ -5,11 +5,13 @@ import androidx.work.Worker
 import androidx.work.WorkerParameters
 import androidx.work.workDataOf
 import dagger.android.HasAndroidInjector
+import info.nightscout.androidaps.Constants
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.database.AppRepository
 import info.nightscout.androidaps.database.entities.TherapyEvent
-import info.nightscout.androidaps.database.entities.UserEntry
-import info.nightscout.androidaps.database.entities.UserEntry.ValueWithUnit
+import info.nightscout.androidaps.database.entities.UserEntry.Action
+import info.nightscout.androidaps.database.entities.UserEntry.Sources
+import info.nightscout.androidaps.database.entities.ValueWithUnit
 import info.nightscout.androidaps.database.transactions.*
 import info.nightscout.androidaps.extensions.*
 import info.nightscout.androidaps.interfaces.ConfigInterface
@@ -27,6 +29,7 @@ import info.nightscout.androidaps.utils.JsonHelper.safeGetLong
 import info.nightscout.androidaps.utils.buildHelper.BuildHelper
 import info.nightscout.androidaps.utils.extensions.*
 import info.nightscout.androidaps.utils.sharedPreferences.SP
+import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
 class NSClientAddUpdateWorker(
@@ -82,21 +85,21 @@ class NSClientAddUpdateWorker(
                         .blockingGet()
                         .also { result ->
                             result.inserted.forEach {
-                                uel.log(UserEntry.Action.CAREPORTAL_FROM_NS,
-                                    ValueWithUnit(it.timestamp, UserEntry.Units.Timestamp, true),
-                                    ValueWithUnit(it.amount, UserEntry.Units.U)
+                                uel.log(Action.CAREPORTAL, Sources.NSClient,
+                                    ValueWithUnit.Timestamp(it.timestamp),
+                                    ValueWithUnit.Insulin(it.amount)
                                 )
                                 aapsLogger.debug(LTag.DATABASE, "Inserted bolus $it")
                             }
                             result.invalidated.forEach {
-                                uel.log(UserEntry.Action.CAREPORTAL_DELETED_FROM_NS,
-                                    ValueWithUnit(it.timestamp, UserEntry.Units.Timestamp, true),
-                                    ValueWithUnit(it.amount, UserEntry.Units.U)
+                                uel.log(Action.CAREPORTAL_REMOVED, Sources.NSClient,
+                                    ValueWithUnit.Timestamp(it.timestamp),
+                                    ValueWithUnit.Insulin(it.amount)
                                 )
                                 aapsLogger.debug(LTag.DATABASE, "Invalidated bolus $it")
                             }
                             result.updatedNsId.forEach {
-                                aapsLogger.debug(LTag.DATABASE, "Updated bolus $it")
+                                aapsLogger.debug(LTag.DATABASE, "Updated nsId bolus $it")
                             }
                         }
                 } ?: aapsLogger.error("Error parsing bolus json $json")
@@ -111,21 +114,21 @@ class NSClientAddUpdateWorker(
                         .blockingGet()
                         .also { result ->
                             result.inserted.forEach {
-                                uel.log(UserEntry.Action.CAREPORTAL_FROM_NS,
-                                    ValueWithUnit(it.timestamp, UserEntry.Units.Timestamp, true),
-                                    ValueWithUnit(it.amount, UserEntry.Units.G)
+                                uel.log(Action.CAREPORTAL, Sources.NSClient,
+                                    ValueWithUnit.Timestamp(it.timestamp),
+                                    ValueWithUnit.Gram(it.amount.toInt())
                                 )
                                 aapsLogger.debug(LTag.DATABASE, "Inserted carbs $it")
                             }
                             result.invalidated.forEach {
-                                uel.log(UserEntry.Action.CAREPORTAL_DELETED_FROM_NS,
-                                    ValueWithUnit(it.timestamp, UserEntry.Units.Timestamp, true),
-                                    ValueWithUnit(it.amount, UserEntry.Units.G)
+                                uel.log(Action.CAREPORTAL, Sources.NSClient,
+                                    ValueWithUnit.Timestamp(it.timestamp),
+                                    ValueWithUnit.Gram(it.amount.toInt())
                                 )
                                 aapsLogger.debug(LTag.DATABASE, "Invalidated carbs $it")
                             }
                             result.updatedNsId.forEach {
-                                aapsLogger.debug(LTag.DATABASE, "Updated carbs $it")
+                                aapsLogger.debug(LTag.DATABASE, "Updated nsId carbs $it")
                             }
                         }
                 } ?: aapsLogger.error("Error parsing bolus json $json")
@@ -141,35 +144,35 @@ class NSClientAddUpdateWorker(
                             }
                             .blockingGet()
                             .also { result ->
-                                result.inserted.forEach {
-                                    uel.log(UserEntry.Action.TT_FROM_NS,
-                                        ValueWithUnit(it.reason.text, UserEntry.Units.TherapyEvent),
-                                        ValueWithUnit(it.lowTarget, UserEntry.Units.Mg_Dl, true),
-                                        ValueWithUnit(it.highTarget, UserEntry.Units.Mg_Dl, it.lowTarget != it.highTarget),
-                                        ValueWithUnit(it.duration.toInt() / 60000, UserEntry.Units.M, true)
+                                result.inserted.forEach { tt ->
+                                    uel.log(Action.TT, Sources.NSClient,
+                                        ValueWithUnit.TherapyEventTTReason(tt.reason),
+                                        ValueWithUnit.fromGlucoseUnit(tt.lowTarget, Constants.MGDL),
+                                        ValueWithUnit.fromGlucoseUnit(tt.highTarget, Constants.MGDL).takeIf { tt.lowTarget != tt.highTarget },
+                                        ValueWithUnit.Minute(TimeUnit.MILLISECONDS.toMinutes(tt.duration).toInt())
                                     )
-                                    aapsLogger.debug(LTag.DATABASE, "Inserted TemporaryTarget $it")
+                                    aapsLogger.debug(LTag.DATABASE, "Inserted TemporaryTarget $tt")
                                 }
-                                result.invalidated.forEach {
-                                    uel.log(UserEntry.Action.TT_DELETED_FROM_NS,
-                                        ValueWithUnit(it.reason.text, UserEntry.Units.TherapyEvent),
-                                        ValueWithUnit(it.lowTarget, UserEntry.Units.Mg_Dl, true),
-                                        ValueWithUnit(it.highTarget, UserEntry.Units.Mg_Dl, it.lowTarget != it.highTarget),
-                                        ValueWithUnit(it.duration.toInt() / 60000, UserEntry.Units.M, true)
+                                result.invalidated.forEach { tt ->
+                                    uel.log(Action.TT_REMOVED, Sources.NSClient,
+                                        ValueWithUnit.TherapyEventTTReason(tt.reason),
+                                        ValueWithUnit.Mgdl(tt.lowTarget),
+                                        ValueWithUnit.Mgdl(tt.highTarget).takeIf { tt.lowTarget != tt.highTarget },
+                                        ValueWithUnit.Minute(TimeUnit.MILLISECONDS.toMinutes(tt.duration).toInt())
                                     )
-                                    aapsLogger.debug(LTag.DATABASE, "Invalidated TemporaryTarget $it")
+                                    aapsLogger.debug(LTag.DATABASE, "Invalidated TemporaryTarget $tt")
                                 }
-                                result.ended.forEach {
-                                    uel.log(UserEntry.Action.TT_CANCELED_FROM_NS,
-                                        ValueWithUnit(it.reason.text, UserEntry.Units.TherapyEvent),
-                                        ValueWithUnit(it.lowTarget, UserEntry.Units.Mg_Dl, true),
-                                        ValueWithUnit(it.highTarget, UserEntry.Units.Mg_Dl, it.lowTarget != it.highTarget),
-                                        ValueWithUnit(it.duration.toInt() / 60000, UserEntry.Units.M, true)
+                                result.ended.forEach { tt ->
+                                    uel.log(Action.CANCEL_TT, Sources.NSClient,
+                                        ValueWithUnit.TherapyEventTTReason(tt.reason),
+                                        ValueWithUnit.Mgdl(tt.lowTarget),
+                                        ValueWithUnit.Mgdl(tt.highTarget).takeIf { tt.lowTarget != tt.highTarget },
+                                        ValueWithUnit.Minute(TimeUnit.MILLISECONDS.toMinutes(tt.duration).toInt())
                                     )
-                                    aapsLogger.debug(LTag.DATABASE, "Updated TemporaryTarget $it")
+                                    aapsLogger.debug(LTag.DATABASE, "Updated TemporaryTarget $tt")
                                 }
                                 result.updatedNsId.forEach {
-                                    aapsLogger.debug(LTag.DATABASE, "Updated TemporaryTarget $it")
+                                    aapsLogger.debug(LTag.DATABASE, "Updated nsId TemporaryTarget $it")
                                 }
                             }
                     } ?: aapsLogger.error("Error parsing TT json $json")
@@ -192,23 +195,23 @@ class NSClientAddUpdateWorker(
                             .blockingGet()
                             .also { result ->
                                 result.inserted.forEach {
-                                    uel.log(UserEntry.Action.CAREPORTAL_FROM_NS,
+                                    uel.log(Action.CAREPORTAL, Sources.NSClient,
                                         it.note ?: "",
-                                        ValueWithUnit(it.timestamp, UserEntry.Units.Timestamp, true),
-                                        ValueWithUnit(it.type.text, UserEntry.Units.TherapyEvent)
+                                        ValueWithUnit.Timestamp(it.timestamp),
+                                        ValueWithUnit.TherapyEventType(it.type)
                                     )
                                     aapsLogger.debug(LTag.DATABASE, "Inserted TherapyEvent $it")
                                 }
                                 result.invalidated.forEach {
-                                    uel.log(UserEntry.Action.CAREPORTAL_DELETED_FROM_NS,
+                                    uel.log(Action.CAREPORTAL_REMOVED, Sources.NSClient,
                                         it.note ?: "",
-                                        ValueWithUnit(it.timestamp, UserEntry.Units.Timestamp, true),
-                                        ValueWithUnit(it.type.text, UserEntry.Units.TherapyEvent)
+                                        ValueWithUnit.Timestamp(it.timestamp),
+                                        ValueWithUnit.TherapyEventType(it.type)
                                     )
                                     aapsLogger.debug(LTag.DATABASE, "Invalidated TherapyEvent $it")
                                 }
                                 result.updatedNsId.forEach {
-                                    aapsLogger.debug(LTag.DATABASE, "Updated TherapyEvent $it")
+                                    aapsLogger.debug(LTag.DATABASE, "Updated nsId TherapyEvent $it")
                                 }
                             }
                     } ?: aapsLogger.error("Error parsing TherapyEvent json $json")
@@ -222,28 +225,31 @@ class NSClientAddUpdateWorker(
                             .blockingGet()
                             .also { result ->
                                 result.inserted.forEach {
-                                    uel.log(UserEntry.Action.CAREPORTAL_FROM_NS,
-                                        ValueWithUnit(it.timestamp, UserEntry.Units.Timestamp, true),
-                                        ValueWithUnit(it.rate, UserEntry.Units.U_H)
+                                    uel.log(Action.CAREPORTAL, Sources.NSClient,
+                                        ValueWithUnit.Timestamp(it.timestamp),
+                                        ValueWithUnit.UnitPerHour(it.rate),
+                                        ValueWithUnit.Minute(TimeUnit.MILLISECONDS.toMinutes(it.duration).toInt())
                                     )
                                     aapsLogger.debug(LTag.DATABASE, "Inserted TemporaryBasal $it")
                                 }
                                 result.invalidated.forEach {
-                                    uel.log(UserEntry.Action.CAREPORTAL_FROM_NS,
-                                        ValueWithUnit(it.timestamp, UserEntry.Units.Timestamp, true),
-                                        ValueWithUnit(it.rate, UserEntry.Units.U_H)
+                                    uel.log(Action.CAREPORTAL, Sources.NSClient,
+                                        ValueWithUnit.Timestamp(it.timestamp),
+                                        ValueWithUnit.UnitPerHour(it.rate),
+                                        ValueWithUnit.Minute(TimeUnit.MILLISECONDS.toMinutes(it.duration).toInt())
                                     )
                                     aapsLogger.debug(LTag.DATABASE, "Invalidated TemporaryBasal $it")
                                 }
                                 result.ended.forEach {
-                                    uel.log(UserEntry.Action.CAREPORTAL_FROM_NS,
-                                        ValueWithUnit(it.timestamp, UserEntry.Units.Timestamp, true),
-                                        ValueWithUnit(it.rate, UserEntry.Units.U_H)
+                                    uel.log(Action.CAREPORTAL, Sources.NSClient,
+                                        ValueWithUnit.Timestamp(it.timestamp),
+                                        ValueWithUnit.UnitPerHour(it.rate),
+                                        ValueWithUnit.Minute(TimeUnit.MILLISECONDS.toMinutes(it.duration).toInt())
                                     )
                                     aapsLogger.debug(LTag.DATABASE, "Updated TemporaryBasal $it")
                                 }
                                 result.updatedNsId.forEach {
-                                    aapsLogger.debug(LTag.DATABASE, "Updated TemporaryBasal $it")
+                                    aapsLogger.debug(LTag.DATABASE, "Updated nsId TemporaryBasal $it")
                                 }
                             }
                     } ?: aapsLogger.error("Error parsing TemporaryBasal json $json")
@@ -257,28 +263,31 @@ class NSClientAddUpdateWorker(
                             .blockingGet()
                             .also { result ->
                                 result.inserted.forEach {
-                                    uel.log(UserEntry.Action.CAREPORTAL_FROM_NS,
-                                        ValueWithUnit(it.timestamp, UserEntry.Units.Timestamp, true),
-                                        ValueWithUnit(it.rate, UserEntry.Units.U_H)
+                                    uel.log(Action.CAREPORTAL, Sources.NSClient,
+                                        ValueWithUnit.Timestamp(it.timestamp),
+                                        ValueWithUnit.UnitPerHour(it.rate),
+                                        ValueWithUnit.Minute(TimeUnit.MILLISECONDS.toMinutes(it.duration).toInt())
                                     )
                                     aapsLogger.debug(LTag.DATABASE, "Inserted ExtendedBolus $it")
                                 }
                                 result.invalidated.forEach {
-                                    uel.log(UserEntry.Action.CAREPORTAL_FROM_NS,
-                                        ValueWithUnit(it.timestamp, UserEntry.Units.Timestamp, true),
-                                        ValueWithUnit(it.rate, UserEntry.Units.U_H)
+                                    uel.log(Action.CAREPORTAL, Sources.NSClient,
+                                        ValueWithUnit.Timestamp(it.timestamp),
+                                        ValueWithUnit.UnitPerHour(it.rate),
+                                        ValueWithUnit.Minute(TimeUnit.MILLISECONDS.toMinutes(it.duration).toInt())
                                     )
                                     aapsLogger.debug(LTag.DATABASE, "Invalidated ExtendedBolus $it")
                                 }
                                 result.ended.forEach {
-                                    uel.log(UserEntry.Action.CAREPORTAL_FROM_NS,
-                                        ValueWithUnit(it.timestamp, UserEntry.Units.Timestamp, true),
-                                        ValueWithUnit(it.rate, UserEntry.Units.U_H)
+                                    uel.log(Action.CAREPORTAL, Sources.NSClient,
+                                        ValueWithUnit.Timestamp(it.timestamp),
+                                        ValueWithUnit.UnitPerHour(it.rate),
+                                        ValueWithUnit.Minute(TimeUnit.MILLISECONDS.toMinutes(it.duration).toInt())
                                     )
                                     aapsLogger.debug(LTag.DATABASE, "Updated ExtendedBolus $it")
                                 }
                                 result.updatedNsId.forEach {
-                                    aapsLogger.debug(LTag.DATABASE, "Updated ExtendedBolus $it")
+                                    aapsLogger.debug(LTag.DATABASE, "Updated nsId ExtendedBolus $it")
                                 }
                             }
                     } ?: aapsLogger.error("Error parsing ExtendedBolus json $json")

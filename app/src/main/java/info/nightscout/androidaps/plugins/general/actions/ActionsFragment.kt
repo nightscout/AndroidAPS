@@ -18,9 +18,13 @@ import info.nightscout.androidaps.activities.ErrorHelperActivity
 import info.nightscout.androidaps.activities.TDDStatsActivity
 import info.nightscout.androidaps.database.AppRepository
 import info.nightscout.androidaps.database.ValueWrapper
-import info.nightscout.androidaps.database.entities.UserEntry.*
+import info.nightscout.androidaps.database.entities.UserEntry.Action
+import info.nightscout.androidaps.database.entities.UserEntry.Sources
 import info.nightscout.androidaps.dialogs.*
 import info.nightscout.androidaps.events.*
+import info.nightscout.androidaps.extensions.toStringMedium
+import info.nightscout.androidaps.extensions.toStringShort
+import info.nightscout.androidaps.extensions.toVisibility
 import info.nightscout.androidaps.historyBrowser.HistoryBrowseActivity
 import info.nightscout.androidaps.interfaces.ActivePluginProvider
 import info.nightscout.androidaps.interfaces.CommandQueueProvider
@@ -38,9 +42,6 @@ import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.FabricPrivacy
 import info.nightscout.androidaps.utils.alertDialogs.OKDialog
 import info.nightscout.androidaps.utils.buildHelper.BuildHelper
-import info.nightscout.androidaps.extensions.toStringMedium
-import info.nightscout.androidaps.extensions.toStringShort
-import info.nightscout.androidaps.extensions.toVisibility
 import info.nightscout.androidaps.utils.protection.ProtectionCheck
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 import info.nightscout.androidaps.utils.rx.AapsSchedulers
@@ -164,7 +165,7 @@ class ActionsFragment : DaggerFragment() {
         }
         extendedBolusCancel?.setOnClickListener {
             if (iobCobCalculator.getExtendedBolus(dateUtil._now()) != null) {
-                uel.log(Action.CANCEL_EXTENDED_BOLUS)
+                uel.log(Action.CANCEL_EXTENDED_BOLUS, Sources.Actions)
                 commandQueue.cancelExtended(object : Callback() {
                     override fun run() {
                         if (!result.success) {
@@ -179,7 +180,7 @@ class ActionsFragment : DaggerFragment() {
         }
         cancelTempBasal?.setOnClickListener {
             if (iobCobCalculator.getTempBasalIncludingConvertedExtended(dateUtil._now()) != null) {
-                uel.log(Action.CANCEL_TEMP_BASAL)
+                uel.log(Action.CANCEL_TEMP_BASAL, Sources.Actions)
                 commandQueue.cancelTempBasal(true, object : Callback() {
                     override fun run() {
                         if (!result.success) {
@@ -274,7 +275,7 @@ class ActionsFragment : DaggerFragment() {
             extendedBolusCancel?.visibility = View.GONE
         } else {
             val activeExtendedBolus = repository.getExtendedBolusActiveAt(dateUtil._now()).blockingGet()
-            if (activeExtendedBolus is  ValueWrapper.Existing) {
+            if (activeExtendedBolus is ValueWrapper.Existing) {
                 extendedBolus?.visibility = View.GONE
                 extendedBolusCancel?.visibility = View.VISIBLE
                 @Suppress("SetTextI18n")
