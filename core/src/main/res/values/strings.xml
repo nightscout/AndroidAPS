@@ -444,6 +444,9 @@
     <string name="uel_automation_removed">AUTOMATION REMOVED</string>
     <string name="uel_bg_removed">BG REMOVED</string>
     <string name="uel_careportal_removed">CAREPORTAL REMOVED</string>
+    <string name="uel_bolus_removed">BOLUS REMOVED</string>
+    <string name="uel_carbs_removed">CARBS REMOVED</string>
+    <string name="uel_temp_basal_removed">TEMP BASAL REMOVED</string>
     <string name="uel_extended_bolus_removed">EXTENDED BOLUS REMOVED</string>
     <string name="uel_food">FOOD</string>
     <string name="uel_food_removed">FOOD REMOVED</string>

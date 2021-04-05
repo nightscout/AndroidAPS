@@ -85,14 +85,14 @@ class NSClientAddUpdateWorker(
                         .blockingGet()
                         .also { result ->
                             result.inserted.forEach {
-                                uel.log(Action.CAREPORTAL, Sources.NSClient,
+                                uel.log(Action.BOLUS, Sources.NSClient,
                                     ValueWithUnit.Timestamp(it.timestamp),
                                     ValueWithUnit.Insulin(it.amount)
                                 )
                                 aapsLogger.debug(LTag.DATABASE, "Inserted bolus $it")
                             }
                             result.invalidated.forEach {
-                                uel.log(Action.CAREPORTAL_REMOVED, Sources.NSClient,
+                                uel.log(Action.BOLUS_REMOVED, Sources.NSClient,
                                     ValueWithUnit.Timestamp(it.timestamp),
                                     ValueWithUnit.Insulin(it.amount)
                                 )
@@ -114,14 +114,14 @@ class NSClientAddUpdateWorker(
                         .blockingGet()
                         .also { result ->
                             result.inserted.forEach {
-                                uel.log(Action.CAREPORTAL, Sources.NSClient,
+                                uel.log(Action.CARBS, Sources.NSClient,
                                     ValueWithUnit.Timestamp(it.timestamp),
                                     ValueWithUnit.Gram(it.amount.toInt())
                                 )
                                 aapsLogger.debug(LTag.DATABASE, "Inserted carbs $it")
                             }
                             result.invalidated.forEach {
-                                uel.log(Action.CAREPORTAL, Sources.NSClient,
+                                uel.log(Action.CARBS_REMOVED, Sources.NSClient,
                                     ValueWithUnit.Timestamp(it.timestamp),
                                     ValueWithUnit.Gram(it.amount.toInt())
                                 )
@@ -194,8 +194,13 @@ class NSClientAddUpdateWorker(
                             }
                             .blockingGet()
                             .also { result ->
+                                val action = when (eventType) {
+                                    TherapyEvent.Type.CANNULA_CHANGE.text   -> Action.SITE_CHANGE
+                                    TherapyEvent.Type.INSULIN_CHANGE.text   -> Action.RESERVOIR_CHANGE
+                                    else                                    -> Action.CAREPORTAL
+                                }
                                 result.inserted.forEach {
-                                    uel.log(Action.CAREPORTAL, Sources.NSClient,
+                                    uel.log(action, Sources.NSClient,
                                         it.note ?: "",
                                         ValueWithUnit.Timestamp(it.timestamp),
                                         ValueWithUnit.TherapyEventType(it.type)
@@ -225,7 +230,7 @@ class NSClientAddUpdateWorker(
                             .blockingGet()
                             .also { result ->
                                 result.inserted.forEach {
-                                    uel.log(Action.CAREPORTAL, Sources.NSClient,
+                                    uel.log(Action.TEMP_BASAL, Sources.NSClient,
                                         ValueWithUnit.Timestamp(it.timestamp),
                                         ValueWithUnit.UnitPerHour(it.rate),
                                         ValueWithUnit.Minute(TimeUnit.MILLISECONDS.toMinutes(it.duration).toInt())
@@ -233,7 +238,7 @@ class NSClientAddUpdateWorker(
                                     aapsLogger.debug(LTag.DATABASE, "Inserted TemporaryBasal $it")
                                 }
                                 result.invalidated.forEach {
-                                    uel.log(Action.CAREPORTAL, Sources.NSClient,
+                                    uel.log(Action.TEMP_BASAL_REMOVED, Sources.NSClient,
                                         ValueWithUnit.Timestamp(it.timestamp),
                                         ValueWithUnit.UnitPerHour(it.rate),
                                         ValueWithUnit.Minute(TimeUnit.MILLISECONDS.toMinutes(it.duration).toInt())
@@ -241,7 +246,7 @@ class NSClientAddUpdateWorker(
                                     aapsLogger.debug(LTag.DATABASE, "Invalidated TemporaryBasal $it")
                                 }
                                 result.ended.forEach {
-                                    uel.log(Action.CAREPORTAL, Sources.NSClient,
+                                    uel.log(Action.CANCEL_TEMP_BASAL, Sources.NSClient,
                                         ValueWithUnit.Timestamp(it.timestamp),
                                         ValueWithUnit.UnitPerHour(it.rate),
                                         ValueWithUnit.Minute(TimeUnit.MILLISECONDS.toMinutes(it.duration).toInt())
@@ -263,24 +268,27 @@ class NSClientAddUpdateWorker(
                             .blockingGet()
                             .also { result ->
                                 result.inserted.forEach {
-                                    uel.log(Action.CAREPORTAL, Sources.NSClient,
+                                    uel.log(Action.EXTENDED_BOLUS, Sources.NSClient,
                                         ValueWithUnit.Timestamp(it.timestamp),
+                                        ValueWithUnit.Insulin(it.amount),
                                         ValueWithUnit.UnitPerHour(it.rate),
                                         ValueWithUnit.Minute(TimeUnit.MILLISECONDS.toMinutes(it.duration).toInt())
                                     )
                                     aapsLogger.debug(LTag.DATABASE, "Inserted ExtendedBolus $it")
                                 }
                                 result.invalidated.forEach {
-                                    uel.log(Action.CAREPORTAL, Sources.NSClient,
+                                    uel.log(Action.EXTENDED_BOLUS_REMOVED, Sources.NSClient,
                                         ValueWithUnit.Timestamp(it.timestamp),
+                                        ValueWithUnit.Insulin(it.amount),
                                         ValueWithUnit.UnitPerHour(it.rate),
                                         ValueWithUnit.Minute(TimeUnit.MILLISECONDS.toMinutes(it.duration).toInt())
                                     )
                                     aapsLogger.debug(LTag.DATABASE, "Invalidated ExtendedBolus $it")
                                 }
                                 result.ended.forEach {
-                                    uel.log(Action.CAREPORTAL, Sources.NSClient,
+                                    uel.log(Action.CANCEL_EXTENDED_BOLUS, Sources.NSClient,
                                         ValueWithUnit.Timestamp(it.timestamp),
+                                        ValueWithUnit.Insulin(it.amount),
                                         ValueWithUnit.UnitPerHour(it.rate),
                                         ValueWithUnit.Minute(TimeUnit.MILLISECONDS.toMinutes(it.duration).toInt())
                                     )

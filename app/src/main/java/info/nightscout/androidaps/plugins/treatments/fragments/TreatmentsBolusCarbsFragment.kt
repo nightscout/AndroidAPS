@@ -334,10 +334,10 @@ class TreatmentsBolusCarbsFragment : DaggerFragment() {
                             resourceHelper.gs(R.string.date) + ": " + dateUtil.dateAndTimeString(bolus.timestamp)
                         OKDialog.showConfirmation(activity, resourceHelper.gs(R.string.removerecord), text, Runnable {
                             uel.log(
-                                Action.TREATMENT_REMOVED, Sources.Treatments,
+                                Action.BOLUS_REMOVED, Sources.Treatments,
                                 ValueWithUnit.Timestamp(bolus.timestamp),
                                 ValueWithUnit.Insulin(bolus.amount)
-                                //XXXValueWithUnit.Gram(mealLinkLoaded.carbs.toInt())
+                                //ValueWithUnit.Gram(mealLinkLoaded.carbs.toInt())
                             )
                             disposable += repository.runTransactionForResult(InvalidateBolusTransaction(bolus.id))
                                 .subscribe(
@@ -356,7 +356,7 @@ class TreatmentsBolusCarbsFragment : DaggerFragment() {
                             resourceHelper.gs(R.string.date) + ": " + dateUtil.dateAndTimeString(carb.timestamp)
                         OKDialog.showConfirmation(activity, resourceHelper.gs(R.string.removerecord), text, Runnable {
                             uel.log(
-                                Action.TREATMENT_REMOVED, Sources.Treatments,
+                                Action.CARBS_REMOVED, Sources.Treatments,
                                 ValueWithUnit.Timestamp(carb.timestamp),
                                 ValueWithUnit.Gram(carb.amount.toInt()))
                             disposable += repository.runTransactionForResult(InvalidateCarbsTransaction(carb.id))
