@@ -3,9 +3,6 @@ package info.nightscout.androidaps.plugins.general.maintenance.formats
 import info.nightscout.androidaps.Constants
 import info.nightscout.androidaps.core.R
 import info.nightscout.androidaps.database.entities.UserEntry
-import info.nightscout.androidaps.interfaces.ProfileFunction
-import info.nightscout.androidaps.utils.DateUtil
-import info.nightscout.androidaps.utils.Translator
 import info.nightscout.androidaps.utils.userEntry.UserEntryPresentationHelper
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 import info.nightscout.androidaps.utils.storage.Storage
@@ -18,9 +15,6 @@ import javax.inject.Singleton
 @Singleton
 class ClassicPrefsFormat @Inject constructor(
     private var resourceHelper: ResourceHelper,
-    private var dateUtil: DateUtil,
-    private var translator: Translator,
-    private var profileFunction: ProfileFunction,
     private var userEntryPresentationHelper: UserEntryPresentationHelper,
     private var storage: Storage
 ) : PrefsFormat {
