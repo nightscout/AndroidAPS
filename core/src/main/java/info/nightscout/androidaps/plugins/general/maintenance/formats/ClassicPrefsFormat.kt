@@ -6,7 +6,7 @@ import info.nightscout.androidaps.database.entities.UserEntry
 import info.nightscout.androidaps.interfaces.ProfileFunction
 import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.Translator
-import info.nightscout.androidaps.utils.UserEntryPresentationHelper
+import info.nightscout.androidaps.utils.userEntry.UserEntryPresentationHelper
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 import info.nightscout.androidaps.utils.storage.Storage
 import java.io.File

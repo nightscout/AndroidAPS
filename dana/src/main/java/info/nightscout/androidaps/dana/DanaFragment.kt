@@ -10,8 +10,6 @@ import android.view.ViewGroup
 import dagger.android.support.DaggerFragment
 import info.nightscout.androidaps.activities.TDDStatsActivity
 import info.nightscout.androidaps.dana.databinding.DanarFragmentBinding
-import info.nightscout.androidaps.database.entities.UserEntry.Action
-import info.nightscout.androidaps.database.entities.UserEntry.Sources
 import info.nightscout.androidaps.dialogs.ProfileViewerDialog
 import info.nightscout.androidaps.events.EventExtendedBolusChange
 import info.nightscout.androidaps.events.EventInitializationChanged
@@ -29,6 +27,8 @@ import info.nightscout.androidaps.queue.events.EventQueueChanged
 import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.FabricPrivacy
 import info.nightscout.androidaps.utils.T
+import info.nightscout.androidaps.utils.userEntry.UserEntryMapper.Action
+import info.nightscout.androidaps.utils.userEntry.UserEntryMapper.Sources
 import info.nightscout.androidaps.utils.WarnColors
 import info.nightscout.androidaps.utils.alertDialogs.OKDialog
 import info.nightscout.androidaps.extensions.toVisibility

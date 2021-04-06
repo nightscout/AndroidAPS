@@ -4,7 +4,7 @@ import info.nightscout.androidaps.TestBase
 import info.nightscout.androidaps.interfaces.ProfileFunction
 import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.Translator
-import info.nightscout.androidaps.utils.UserEntryPresentationHelper
+import info.nightscout.androidaps.utils.userEntry.UserEntryPresentationHelper
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 import org.junit.Assert
 import org.junit.Test
