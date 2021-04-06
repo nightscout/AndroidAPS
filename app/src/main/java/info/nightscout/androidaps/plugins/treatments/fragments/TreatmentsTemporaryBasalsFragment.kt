@@ -170,7 +170,7 @@ class TreatmentsTemporaryBasalsFragment : DaggerFragment() {
                 ${resourceHelper.gs(R.string.date)}: ${dateUtil.dateAndTimeString(tempBasal.timestamp)}
                 """.trimIndent(),
                             { _: DialogInterface?, _: Int ->
-                                uel.log(Action.TT_REMOVED, Sources.Treatments,
+                                uel.log(Action.TEMP_BASAL_REMOVED, Sources.Treatments,
                                     ValueWithUnit.Timestamp(tempBasal.timestamp))
                                 disposable += repository.runTransactionForResult(InvalidateTemporaryBasalTransaction(tempBasal.id))
                                     .subscribe(
