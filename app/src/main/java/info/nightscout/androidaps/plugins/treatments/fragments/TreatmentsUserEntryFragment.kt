@@ -15,7 +15,6 @@ import info.nightscout.androidaps.database.entities.UserEntry.Sources
 import info.nightscout.androidaps.databinding.TreatmentsUserEntryFragmentBinding
 import info.nightscout.androidaps.databinding.TreatmentsUserEntryItemBinding
 import info.nightscout.androidaps.events.EventPreferenceChange
-import info.nightscout.androidaps.extensions.colorId
 import info.nightscout.androidaps.interfaces.ImportExportPrefsInterface
 import info.nightscout.androidaps.interfaces.ProfileFunction
 import info.nightscout.androidaps.logging.UserEntryLogger
@@ -25,7 +24,7 @@ import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.FabricPrivacy
 import info.nightscout.androidaps.utils.T
 import info.nightscout.androidaps.utils.Translator
-import info.nightscout.androidaps.utils.UserEntryPresentationHelper
+import info.nightscout.androidaps.utils.userEntry.UserEntryPresentationHelper
 import info.nightscout.androidaps.utils.alertDialogs.OKDialog
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 import info.nightscout.androidaps.utils.rx.AapsSchedulers

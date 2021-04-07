@@ -6,6 +6,8 @@ import info.nightscout.androidaps.database.entities.UserEntry.Action
 import info.nightscout.androidaps.database.entities.UserEntry.Sources
 import info.nightscout.androidaps.database.transactions.UserEntryTransaction
 import info.nightscout.androidaps.utils.rx.AapsSchedulers
+import info.nightscout.androidaps.utils.userEntry.UserEntryMapper
+import info.nightscout.androidaps.utils.userEntry.ValueWithUnitMapper
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.rxkotlin.plusAssign
 import io.reactivex.rxkotlin.subscribeBy
@@ -40,4 +42,11 @@ class UserEntryLogger @Inject constructor(
                 onComplete = { aapsLogger.debug("USER ENTRY: $action $source $note $filteredValues") }
             )
     }
+
+    fun log(action: UserEntryMapper.Action, source: UserEntryMapper.Sources, note: String? ="", vararg listvalues: ValueWithUnitMapper?) = log(action.db, source.db, note, listvalues.toList().map {it?.db()})
+
+    fun log(action: UserEntryMapper.Action, source: UserEntryMapper.Sources, vararg listvalues: ValueWithUnitMapper?) = log(action.db, source.db, "", listvalues.toList().map {it?.db()})
+
+    fun log(action: UserEntryMapper.Action, source: UserEntryMapper.Sources, note: String? ="", listvalues: List<ValueWithUnitMapper?> = listOf()) = log(action.db, source.db, note, listvalues.map {it?.db()})
+
 }

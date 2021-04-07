@@ -1,10 +1,7 @@
 package info.nightscout.androidaps.plugins.general.maintenance.formats
 
 import info.nightscout.androidaps.TestBase
-import info.nightscout.androidaps.interfaces.ProfileFunction
-import info.nightscout.androidaps.utils.DateUtil
-import info.nightscout.androidaps.utils.Translator
-import info.nightscout.androidaps.utils.UserEntryPresentationHelper
+import info.nightscout.androidaps.utils.userEntry.UserEntryPresentationHelper
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 import org.junit.Assert
 import org.junit.Test
@@ -16,13 +13,10 @@ import org.powermock.modules.junit4.PowerMockRunner
 import java.io.File
 
 @RunWith(PowerMockRunner::class)
-@PrepareForTest(File::class, Translator::class)
+@PrepareForTest(File::class, UserEntryPresentationHelper::class)
 class ClassicPrefsFormatTest : TestBase() {
 
     @Mock lateinit var resourceHelper: ResourceHelper
-    @Mock lateinit var dateUtil: DateUtil
-    @Mock lateinit var translator: Translator
-    @Mock lateinit var profileFunction: ProfileFunction
     @Mock lateinit var userEntryPresentationHelper: UserEntryPresentationHelper
     @Mock lateinit var file: MockedFile
 
@@ -30,7 +24,7 @@ class ClassicPrefsFormatTest : TestBase() {
     fun preferenceLoadingTest() {
         val test = "key1::val1\nkeyB::valB"
 
-        val classicFormat = ClassicPrefsFormat(resourceHelper, dateUtil, translator, profileFunction, userEntryPresentationHelper, SingleStringStorage(test))
+        val classicFormat = ClassicPrefsFormat(resourceHelper, userEntryPresentationHelper, SingleStringStorage(test))
         val prefs = classicFormat.loadPreferences(getMockedFile(), "")
 
         Assert.assertEquals(prefs.values.size, 2)
@@ -42,7 +36,7 @@ class ClassicPrefsFormatTest : TestBase() {
     @Test
     fun preferenceSavingTest() {
         val storage = SingleStringStorage("")
-        val classicFormat = ClassicPrefsFormat(resourceHelper, dateUtil, translator, profileFunction, userEntryPresentationHelper, storage)
+        val classicFormat = ClassicPrefsFormat(resourceHelper, userEntryPresentationHelper, storage)
         val prefs = Prefs(
             mapOf(
                 "key1" to "A",

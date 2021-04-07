@@ -1,4 +1,4 @@
-package info.nightscout.androidaps.utils
+package info.nightscout.androidaps.utils.userEntry
 
 import android.text.Spanned
 import dagger.Reusable
@@ -10,6 +10,10 @@ import info.nightscout.androidaps.database.entities.UserEntry.ColorGroup
 import info.nightscout.androidaps.database.entities.UserEntry.Sources
 import info.nightscout.androidaps.database.entities.ValueWithUnit
 import info.nightscout.androidaps.interfaces.ProfileFunction
+import info.nightscout.androidaps.utils.DateUtil
+import info.nightscout.androidaps.utils.DecimalFormatter
+import info.nightscout.androidaps.utils.HtmlHelper
+import info.nightscout.androidaps.utils.Translator
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 import javax.inject.Inject
 
