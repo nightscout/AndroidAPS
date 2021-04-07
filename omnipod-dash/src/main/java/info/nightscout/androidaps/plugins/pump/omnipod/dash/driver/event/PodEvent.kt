@@ -50,6 +50,12 @@ sealed class PodEvent {
         }
     }
 
+    class CommandSendNotConfirmed(val command: Command) : PodEvent() {
+        override fun toString(): String {
+            return "CommandSentNotConfirmed(command=$command)"
+        }
+    }
+
     class ResponseReceived(
         val command: Command,
         val response: Response
@@ -58,6 +64,5 @@ sealed class PodEvent {
         override fun toString(): String {
             return "ResponseReceived(command=$command, response=$response)"
         }
-
     }
 }

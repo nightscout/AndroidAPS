@@ -23,6 +23,7 @@ enum class EapCode(val code: Byte) {
 data class EapMessage(
     val code: EapCode,
     val identifier: Byte,
+    val subType: Byte = 0,
     val attributes: Array<EapAkaAttribute>
 ) {
 
@@ -56,16 +57,16 @@ data class EapMessage(
 
         private const val HEADER_SIZE = 8
         private const val SUBTYPE_AKA_CHALLENGE = 1.toByte()
+        const val SUBTYPE_SYNCRONIZATION_FAILURE = 4.toByte()
+
         private const val AKA_PACKET_TYPE = 0x17.toByte()
 
         fun parse(aapsLogger: AAPSLogger, payload: ByteArray): EapMessage {
-            if (payload.size < 4) {
-                throw MessageIOException("Invalid eap payload: ${payload.toHex()}")
-            }
+            payload.assertSizeAtLeast(4)
+
             val totalSize = (payload[2].toInt() shl 8) or payload[3].toInt()
-            if (totalSize > payload.size) {
-                throw MessageIOException("Invalid eap payload. Too short: ${payload.toHex()}")
-            }
+            payload.assertSizeAtLeast(totalSize)
+
             if (payload.size == 4) { // SUCCESS/FAILURE
                 return EapMessage(
                     code = EapCode.byValue(payload[0]),
@@ -81,8 +82,15 @@ data class EapMessage(
             return EapMessage(
                 code = EapCode.byValue(payload[0]),
                 identifier = payload[1],
-                attributes = EapAkaAttribute.parseAttributes(aapsLogger, attributesPayload).toTypedArray()
+                attributes = EapAkaAttribute.parseAttributes(aapsLogger, attributesPayload).toTypedArray(),
+                subType = payload[5],
             )
         }
+    }
+}
+
+private fun ByteArray.assertSizeAtLeast(size: Int) {
+    if (this.size < size) {
+        throw MessageIOException("Payload too short: ${this.toHex()}")
     }
 }

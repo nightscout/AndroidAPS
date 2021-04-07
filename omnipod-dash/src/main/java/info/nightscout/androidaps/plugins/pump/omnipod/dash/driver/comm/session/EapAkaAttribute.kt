@@ -9,6 +9,7 @@ enum class EapAkaAttributeType(val type: Byte) {
     AT_RAND(1),
     AT_AUTN(2),
     AT_RES(3),
+    AT_AUTS(4),
     AT_CLIENT_ERROR_CODE(22),
     AT_CUSTOM_IV(126);
 
@@ -47,10 +48,19 @@ sealed class EapAkaAttribute {
                         ret.add(EapAkaAttributeCustomIV.parse(tail.copyOfRange(2, EapAkaAttributeCustomIV.SIZE)))
                     EapAkaAttributeType.AT_AUTN ->
                         ret.add(EapAkaAttributeAutn.parse(tail.copyOfRange(2, EapAkaAttributeAutn.SIZE)))
+                    EapAkaAttributeType.AT_AUTS ->
+                        ret.add(EapAkaAttributeAuts.parse(tail.copyOfRange(2, EapAkaAttributeAuts.SIZE)))
                     EapAkaAttributeType.AT_RAND ->
                         ret.add(EapAkaAttributeRand.parse(tail.copyOfRange(2, EapAkaAttributeRand.SIZE)))
                     EapAkaAttributeType.AT_CLIENT_ERROR_CODE ->
-                        ret.add(EapAkaAttributeClientErrorCode.parse(tail.copyOfRange(2, EapAkaAttributeClientErrorCode.SIZE)))
+                        ret.add(
+                            EapAkaAttributeClientErrorCode.parse(
+                                tail.copyOfRange(
+                                    2,
+                                    EapAkaAttributeClientErrorCode.SIZE
+                                )
+                            )
+                        )
                 }
                 tail = tail.copyOfRange(size, tail.size)
             }
@@ -70,12 +80,14 @@ data class EapAkaAttributeRand(val payload: ByteArray) : EapAkaAttribute() {
     }
 
     companion object {
+
         fun parse(payload: ByteArray): EapAkaAttribute {
             if (payload.size < 2 + 16) {
                 throw MessageIOException("Could not parse RAND attribute: ${payload.toHex()}")
             }
             return EapAkaAttributeRand(payload.copyOfRange(2, 2 + 16))
         }
+
         const val SIZE = 20 // type, size, 2 reserved bytes, payload=16
     }
 }
@@ -103,6 +115,29 @@ data class EapAkaAttributeAutn(val payload: ByteArray) : EapAkaAttribute() {
     }
 }
 
+data class EapAkaAttributeAuts(val payload: ByteArray) : EapAkaAttribute() {
+
+    init {
+        require(payload.size == 14) { "AT_AUTS payload size has to be 14 bytes. Payload: ${payload.toHex()}" }
+    }
+
+    override fun toByteArray(): ByteArray {
+        return byteArrayOf(EapAkaAttributeType.AT_AUTS.type, (SIZE / SIZE_MULTIPLIER).toByte(), 0, 0) + payload
+    }
+
+    companion object {
+
+        fun parse(payload: ByteArray): EapAkaAttribute {
+            if (payload.size < SIZE - 2) {
+                throw MessageIOException("Could not parse AUTS attribute: ${payload.toHex()}")
+            }
+            return EapAkaAttributeAuts(payload)
+        }
+
+        const val SIZE = 16 // type, size, 2 reserved bytes, payload=16
+    }
+}
+
 data class EapAkaAttributeRes(val payload: ByteArray) : EapAkaAttribute() {
 
     init {
@@ -110,7 +145,12 @@ data class EapAkaAttributeRes(val payload: ByteArray) : EapAkaAttribute() {
     }
 
     override fun toByteArray(): ByteArray {
-        return byteArrayOf(EapAkaAttributeType.AT_RES.type, (SIZE / SIZE_MULTIPLIER).toByte(), 0, PAYLOAD_SIZE_BITS) + payload
+        return byteArrayOf(
+            EapAkaAttributeType.AT_RES.type,
+            (SIZE / SIZE_MULTIPLIER).toByte(),
+            0,
+            PAYLOAD_SIZE_BITS
+        ) + payload
     }
 
     companion object {
@@ -145,6 +185,7 @@ data class EapAkaAttributeCustomIV(val payload: ByteArray) : EapAkaAttribute() {
             }
             return EapAkaAttributeCustomIV(payload.copyOfRange(2, 2 + 4))
         }
+
         const val SIZE = 8 // type, size, 2 reserved bytes, payload=4
     }
 }
@@ -156,7 +197,12 @@ data class EapAkaAttributeClientErrorCode(val payload: ByteArray) : EapAkaAttrib
     }
 
     override fun toByteArray(): ByteArray {
-        return byteArrayOf(EapAkaAttributeType.AT_CLIENT_ERROR_CODE.type, (SIZE / SIZE_MULTIPLIER).toByte(), 0, 0) + payload
+        return byteArrayOf(
+            EapAkaAttributeType.AT_CLIENT_ERROR_CODE.type,
+            (SIZE / SIZE_MULTIPLIER).toByte(),
+            0,
+            0
+        ) + payload
     }
 
     companion object {

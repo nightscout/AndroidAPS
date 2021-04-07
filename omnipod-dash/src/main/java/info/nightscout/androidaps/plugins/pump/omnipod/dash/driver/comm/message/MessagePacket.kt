@@ -15,7 +15,7 @@ data class MessagePacket(
     val sequenceNumber: Byte,
     val ack: Boolean = false,
     val ackNumber: Byte = 0.toByte(),
-    val eqos: Short = 0.toShort(), // TODO: understand. Seems to be set to 1 for commands
+    val eqos: Short = 0.toShort(),
     val priority: Boolean = false,
     val lastMessage: Boolean = false,
     val gateway: Boolean = false,
@@ -75,9 +75,8 @@ data class MessagePacket(
         private const val HEADER_SIZE = 16
 
         fun parse(payload: ByteArray): MessagePacket {
-            if (payload.size < HEADER_SIZE) {
-                throw CouldNotParseMessageException(payload)
-            }
+            payload.assertSizeAtLeast(HEADER_SIZE)
+
             if (payload.copyOfRange(0, 2).decodeToString() != MAGIC_PATTERN) {
                 throw CouldNotParseMessageException(payload)
             }
@@ -100,9 +99,8 @@ data class MessagePacket(
             val sequenceNumber = payload[4]
             val ackNumber = payload[5]
             val size = (payload[6].toInt() shl 3) or (payload[7].toUnsignedInt() ushr 5)
-            if (size + HEADER_SIZE > payload.size) {
-                throw CouldNotParseMessageException(payload)
-            }
+            payload.assertSizeAtLeast(size + HEADER_SIZE)
+
             val payloadEnd = 16 + size +
                 if (type == MessageType.ENCRYPTED) 8 // TAG
                 else 0
@@ -146,3 +144,9 @@ private class Flag(var value: Int = 0) {
 }
 
 internal fun Byte.toUnsignedInt() = this.toInt() and 0xff
+
+private fun ByteArray.assertSizeAtLeast(size: Int) {
+    if (this.size < size) {
+        throw CouldNotParseMessageException(this)
+    }
+}

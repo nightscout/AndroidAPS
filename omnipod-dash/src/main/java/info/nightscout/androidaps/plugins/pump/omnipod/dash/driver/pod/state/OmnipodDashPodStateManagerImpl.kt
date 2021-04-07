@@ -8,6 +8,7 @@ import info.nightscout.androidaps.plugins.pump.omnipod.dash.EventOmnipodDashPump
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.R
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.Id
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.pair.PairResult
+import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.session.EapSqn
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.definition.*
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.response.AlarmStatusResponse
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.response.DefaultStatusResponse
@@ -15,7 +16,6 @@ import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.response.
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.response.VersionResponse
 import info.nightscout.androidaps.utils.sharedPreferences.SP
 import java.io.Serializable
-import java.nio.ByteBuffer
 import java.util.*
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -35,8 +35,8 @@ class OmnipodDashPodStateManagerImpl @Inject constructor(
 
     override var activationProgress: ActivationProgress
         get() = podState.activationProgress
-        set(value) {
-            podState.activationProgress = value
+        set(activationProgress) {
+            podState.activationProgress = activationProgress
             store()
         }
 
@@ -55,8 +55,8 @@ class OmnipodDashPodStateManagerImpl @Inject constructor(
 
     override var lastConnection: Long
         get() = podState.lastConnection
-        set(value) {
-            podState.lastConnection = value
+        set(lastConnection) {
+            podState.lastConnection = lastConnection
             store()
         }
 
@@ -145,8 +145,12 @@ class OmnipodDashPodStateManagerImpl @Inject constructor(
     override val tempBasalActive: Boolean
         get() = tempBasal != null && tempBasal!!.startTime + tempBasal!!.durationInMinutes * 60 * 1000 > System.currentTimeMillis()
 
-    override val basalProgram: BasalProgram?
+    override var basalProgram: BasalProgram?
         get() = podState.basalProgram
+        set(basalProgram) {
+            podState.basalProgram = basalProgram
+            store()
+        }
 
     override fun increaseMessageSequenceNumber() {
         podState.messageSequenceNumber = ((podState.messageSequenceNumber.toInt() + 1) and 0x0f).toShort()
@@ -155,24 +159,21 @@ class OmnipodDashPodStateManagerImpl @Inject constructor(
 
     override var eapAkaSequenceNumber: Long
         get() = podState.eapAkaSequenceNumber
-        set(value) {
-            podState.eapAkaSequenceNumber = value
+        set(eapAkaSequenceNumber) {
+            podState.eapAkaSequenceNumber = eapAkaSequenceNumber
             store()
         }
 
     override var ltk: ByteArray?
         get() = podState.ltk
-        set(value) {
-            podState.ltk = value
+        set(ltk) {
+            podState.ltk = ltk
             store()
         }
 
     override fun increaseEapAkaSequenceNumber(): ByteArray {
         podState.eapAkaSequenceNumber++
-        return ByteBuffer.allocate(8)
-            .putLong(podState.eapAkaSequenceNumber)
-            .array()
-            .copyOfRange(2, 8)
+        return EapSqn(podState.eapAkaSequenceNumber).value
     }
 
     override fun commitEapAkaSequenceNumber() {
@@ -183,7 +184,9 @@ class OmnipodDashPodStateManagerImpl @Inject constructor(
         podState.deliveryStatus = response.deliveryStatus
         podState.podStatus = response.podStatus
         podState.pulsesDelivered = response.totalPulsesDelivered
-        podState.pulsesRemaining = response.reservoirPulsesRemaining
+        if (response.reservoirPulsesRemaining < 1023) {
+            podState.pulsesRemaining = response.reservoirPulsesRemaining
+        }
         podState.sequenceNumberOfLastProgrammingCommand = response.sequenceNumberOfLastProgrammingCommand
         podState.minutesSinceActivation = response.minutesSinceActivation
         podState.activeAlerts = response.activeAlerts

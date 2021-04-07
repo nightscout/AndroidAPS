@@ -3,15 +3,14 @@ package info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.session
 import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.logging.LTag
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.Id
+import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.Ids
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.endecrypt.EnDecrypt
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.exceptions.CouldNotParseResponseException
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.exceptions.IllegalResponseException
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.exceptions.NakResponseException
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.exceptions.PodAlarmException
-import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.message.MessageIO
-import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.message.MessagePacket
+import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.message.*
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.message.MessageType
-import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.message.StringLengthPrefixEncoding
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.message.StringLengthPrefixEncoding.Companion.parseKeys
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.command.base.Command
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.response.AlarmStatusResponse
@@ -20,35 +19,72 @@ import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.response.
 import info.nightscout.androidaps.utils.extensions.toHex
 import kotlin.reflect.KClass
 
+sealed class CommandSendResult
+object CommandSendSuccess : CommandSendResult()
+data class CommandSendErrorSending(val msg: String) : CommandSendResult()
+
+// This error marks the undefined state
+data class CommandSendErrorConfirming(val msg: String) : CommandSendResult()
+
+sealed class CommandReceiveResult
+data class CommandReceiveSuccess(val result: Response) : CommandReceiveResult()
+data class CommandReceiveError(val msg: String) : CommandReceiveResult()
+data class CommandAckError(val result: Response, val msg: String) : CommandReceiveResult()
+
 class Session(
     private val aapsLogger: AAPSLogger,
     private val msgIO: MessageIO,
-    private val myId: Id,
-    private val podId: Id,
+    private val ids: Ids,
     val sessionKeys: SessionKeys,
     val enDecrypt: EnDecrypt
 ) {
 
-    /**
-     * Used for commands:
-     *  -> command with retries
-     *  <- response, ACK TODO: retries?
-     *  -> ACK
-     */
-    @Throws(CouldNotParseResponseException::class, UnsupportedOperationException::class)
-    fun sendCommand(cmd: Command, responseType: KClass<out Response>): Response {
+    fun sendCommand(cmd: Command): CommandSendResult {
         sessionKeys.msgSequenceNumber++
-        aapsLogger.debug(
-            LTag.PUMPBTCOMM,
-            "Sending command: ${cmd.javaClass.simpleName}: ${cmd.encoded.toHex()} in packet $cmd"
-        )
+        aapsLogger.debug(LTag.PUMPBTCOMM, "Sending command: ${cmd.encoded.toHex()} in packet $cmd")
 
         val msg = getCmdMessage(cmd)
-        aapsLogger.debug(LTag.PUMPBTCOMM, "Sending command(wrapped): ${msg.payload.toHex()}")
-        msgIO.sendMessage(msg)
+        var possiblyUnconfirmedCommand = false
+        for (i in 0..MAX_TRIES) {
+            aapsLogger.debug(LTag.PUMPBTCOMM, "Sending command(wrapped): ${msg.payload.toHex()}")
 
-        val responseMsg = msgIO.receiveMessage()
-        val decrypted = enDecrypt.decrypt(responseMsg)
+            when (val sendResult = msgIO.sendMessage(msg)) {
+                is MessageSendSuccess ->
+                    return CommandSendSuccess
+
+                is MessageSendErrorConfirming -> {
+                    possiblyUnconfirmedCommand = true
+                    aapsLogger.debug(LTag.PUMPBTCOMM, "Error confirming command: $sendResult")
+                }
+
+                is MessageSendErrorSending ->
+                    aapsLogger.debug(LTag.PUMPBTCOMM, "Error sending command: $sendResult")
+            }
+        }
+
+        val errMsg = "Maximum number of tries reached. Could not send command\""
+        return if (possiblyUnconfirmedCommand)
+            CommandSendErrorConfirming(errMsg)
+        else
+            CommandSendErrorSending(errMsg)
+    }
+
+    @Suppress("ReturnCount")
+    fun readAndAckResponse(responseType: KClass<out Response>): CommandReceiveResult {
+        var responseMsgPacket: MessagePacket? = null
+        for (i in 0..MAX_TRIES) {
+            val responseMsg = msgIO.receiveMessage()
+            if (responseMsg != null) {
+                responseMsgPacket = responseMsg
+                break
+            }
+            aapsLogger.debug(LTag.PUMPBTCOMM, "Error receiving response: $responseMsg")
+        }
+
+        responseMsgPacket
+            ?: return CommandReceiveError("Could not read response")
+
+        val decrypted = enDecrypt.decrypt(responseMsgPacket)
         aapsLogger.debug(LTag.PUMPBTCOMM, "Received response: $decrypted")
 
         val response = parseResponse(decrypted)
@@ -64,10 +100,13 @@ class Session(
         }
 
         sessionKeys.msgSequenceNumber++
-        val ack = getAck(responseMsg)
+        val ack = getAck(responseMsgPacket)
         aapsLogger.debug(LTag.PUMPBTCOMM, "Sending ACK: ${ack.payload.toHex()} in packet $ack")
-        msgIO.sendMessage(ack)
-        return response
+        val sendResult = msgIO.sendMessage(ack)
+        if (sendResult !is MessageSendSuccess) {
+            return CommandAckError(response, "Could not ACK the response: $sendResult")
+        }
+        return CommandReceiveSuccess(response)
     }
 
     @Throws(CouldNotParseResponseException::class, UnsupportedOperationException::class)
@@ -92,8 +131,8 @@ class Session(
         val msg = MessagePacket(
             type = MessageType.ENCRYPTED,
             sequenceNumber = sessionKeys.msgSequenceNumber,
-            source = myId,
-            destination = podId,
+            source = ids.myId,
+            destination = ids.podId,
             payload = ByteArray(0),
             eqos = 0,
             ack = true,
@@ -113,8 +152,8 @@ class Session(
         val msg = MessagePacket(
             type = MessageType.ENCRYPTED,
             sequenceNumber = sessionKeys.msgSequenceNumber,
-            source = myId,
-            destination = podId,
+            source = ids.myId,
+            destination = ids.podId,
             payload = wrapped,
             eqos = 1
         )
@@ -127,5 +166,7 @@ class Session(
         private const val COMMAND_PREFIX = "S0.0="
         private const val COMMAND_SUFFIX = ",G0.0"
         private const val RESPONSE_PREFIX = "0.0="
+
+        private const val MAX_TRIES = 4
     }
 }

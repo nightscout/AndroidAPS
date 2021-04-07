@@ -55,5 +55,4 @@ class ProgramBasalCommandTest {
             encoded
         )
     }
-
 }

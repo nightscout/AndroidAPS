@@ -18,9 +18,9 @@ import info.nightscout.androidaps.plugins.general.overview.events.EventDismissNo
 import info.nightscout.androidaps.plugins.general.overview.notifications.Notification
 import info.nightscout.androidaps.plugins.pump.omnipod.common.databinding.OmnipodCommonOverviewButtonsBinding
 import info.nightscout.androidaps.plugins.pump.omnipod.common.databinding.OmnipodCommonOverviewPodInfoBinding
-import info.nightscout.androidaps.plugins.pump.omnipod.common.queue.command.CommandAcknowledgeAlerts
 import info.nightscout.androidaps.plugins.pump.omnipod.common.queue.command.CommandHandleTimeChange
 import info.nightscout.androidaps.plugins.pump.omnipod.common.queue.command.CommandResumeDelivery
+import info.nightscout.androidaps.plugins.pump.omnipod.common.queue.command.CommandSilenceAlerts
 import info.nightscout.androidaps.plugins.pump.omnipod.common.queue.command.CommandSuspendDelivery
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.EventOmnipodDashPumpValuesChanged
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.OmnipodDashPumpPlugin
@@ -130,7 +130,7 @@ class OmnipodDashOverviewFragment : DaggerFragment() {
         buttonBinding.buttonSilenceAlerts.setOnClickListener {
             disablePodActionButtons()
             commandQueue.customCommand(
-                CommandAcknowledgeAlerts(),
+                CommandSilenceAlerts(),
                 DisplayResultDialogCallback(
                     resourceHelper.gs(R.string.omnipod_common_error_failed_to_silence_alerts),
                     false
@@ -487,7 +487,7 @@ class OmnipodDashOverviewFragment : DaggerFragment() {
         if (isAutomaticallySilenceAlertsEnabled() && podStateManager.isPodRunning &&
             (
                 podStateManager.activeAlerts!!.size > 0 ||
-                    commandQueue.isCustomCommandInQueue(CommandAcknowledgeAlerts::class.java)
+                    commandQueue.isCustomCommandInQueue(CommandSilenceAlerts::class.java)
                 )
         ) {
             buttonBinding.buttonSilenceAlerts.visibility = View.VISIBLE

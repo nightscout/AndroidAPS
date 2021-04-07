@@ -4,7 +4,7 @@ import org.jetbrains.annotations.NotNull;
 
 import info.nightscout.androidaps.queue.commands.CustomCommand;
 
-public final class CommandAcknowledgeAlerts implements CustomCommand {
+public final class CommandSilenceAlerts implements CustomCommand {
     @NotNull @Override public String getStatusDescription() {
         return "ACKNOWLEDGE ALERTS";
     }

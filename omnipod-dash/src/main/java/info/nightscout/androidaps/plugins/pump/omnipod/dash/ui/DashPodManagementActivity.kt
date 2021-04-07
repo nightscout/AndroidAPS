@@ -20,6 +20,7 @@ import info.nightscout.androidaps.queue.Callback
 import info.nightscout.androidaps.queue.events.EventQueueChanged
 import info.nightscout.androidaps.utils.FabricPrivacy
 import info.nightscout.androidaps.utils.alertDialogs.OKDialog
+import info.nightscout.androidaps.utils.extensions.toVisibility
 import info.nightscout.androidaps.utils.rx.AapsSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.rxkotlin.plusAssign
@@ -73,7 +74,6 @@ class DashPodManagementActivity : NoSplashAppCompatActivity() {
         }
 
         binding.buttonPlayTestBeep.setOnClickListener {
-            // TODO
             binding.buttonPlayTestBeep.isEnabled = false
             binding.buttonPlayTestBeep.setText(R.string.omnipod_common_pod_management_button_playing_test_beep)
 
@@ -114,7 +114,34 @@ class DashPodManagementActivity : NoSplashAppCompatActivity() {
     }
 
     private fun refreshButtons() {
-        // TODO update button state from Pod state
+        // Only show the discard button to reset a cached unique ID before the unique ID has actually been set
+        // Otherwise, users should use the Deactivate Pod Wizard. In case proper deactivation fails,
+        // they will get an option to discard the Pod there
+        val discardButtonEnabled =
+            podStateManager.uniqueId != null &&
+                podStateManager.activationProgress.isBefore(ActivationProgress.SET_UNIQUE_ID)
+        binding.buttonDiscardPod.visibility = discardButtonEnabled.toVisibility()
+
+        binding.buttonActivatePod.isEnabled = podStateManager.activationProgress.isBefore(ActivationProgress.COMPLETED)
+        binding.buttonDeactivatePod.isEnabled =
+            podStateManager.activationProgress.isAtLeast(ActivationProgress.PHASE_1_COMPLETED)
+
+        if (podStateManager.activationProgress.isAtLeast(ActivationProgress.PHASE_1_COMPLETED)) {
+            if (commandQueue.isCustomCommandInQueue(CommandPlayTestBeep::class.java)) {
+                binding.buttonPlayTestBeep.isEnabled = false
+                binding.buttonPlayTestBeep.setText(R.string.omnipod_common_pod_management_button_playing_test_beep)
+            } else {
+                binding.buttonPlayTestBeep.isEnabled = true
+                binding.buttonPlayTestBeep.setText(R.string.omnipod_common_pod_management_button_play_test_beep)
+            }
+        } else {
+            binding.buttonPlayTestBeep.isEnabled = false
+            binding.buttonPlayTestBeep.setText(R.string.omnipod_common_pod_management_button_play_test_beep)
+        }
+
+        if (discardButtonEnabled) {
+            binding.buttonDiscardPod.isEnabled = true
+        }
     }
 
     private fun displayErrorDialog(title: String, message: String, @Suppress("SameParameterValue") withSound: Boolean) {

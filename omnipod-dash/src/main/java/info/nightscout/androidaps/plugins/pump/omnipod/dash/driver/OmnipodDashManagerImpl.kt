@@ -170,6 +170,8 @@ class OmnipodDashManagerImpl @Inject constructor(
                     .build(),
                 DefaultStatusResponse::class
             )
+        }.doOnComplete {
+            podStateManager.basalProgram = basalProgram
         }
     }
 
@@ -246,7 +248,8 @@ class OmnipodDashManagerImpl @Inject constructor(
                 Observable.defer {
                     Observable.timer(podStateManager.firstPrimeBolusVolume!!.toLong(), TimeUnit.SECONDS)
                         .flatMap { Observable.empty() }
-                })
+                }
+            )
             observables.add(
                 Observable.defer {
                     bleManager.sendCommand(
@@ -347,7 +350,8 @@ class OmnipodDashManagerImpl @Inject constructor(
                 Observable.defer {
                     Observable.timer(podStateManager.secondPrimeBolusVolume!!.toLong(), TimeUnit.SECONDS)
                         .flatMap { Observable.empty() }
-                })
+                }
+            )
             observables.add(
                 observeSendProgramBolusCommand(
                     podStateManager.secondPrimeBolusVolume!! * 0.05,
@@ -483,7 +487,7 @@ class OmnipodDashManagerImpl @Inject constructor(
             .subscribeOn(aapsSchedulers.io)
     }
 
-    override fun cancelTempBasal(): Observable<PodEvent> {
+    override fun stopTempBasal(): Observable<PodEvent> {
         return Observable.concat(
             observePodRunning,
             observeConnectToPod,
@@ -512,7 +516,7 @@ class OmnipodDashManagerImpl @Inject constructor(
             .subscribeOn(aapsSchedulers.io)
     }
 
-    override fun cancelBolus(): Observable<PodEvent> {
+    override fun stopBolus(): Observable<PodEvent> {
         return Observable.concat(
             observePodRunning,
             observeConnectToPod,
