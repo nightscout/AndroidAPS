@@ -29,6 +29,8 @@ import info.nightscout.androidaps.utils.alertDialogs.OKDialog
 import info.nightscout.androidaps.extensions.directionToIcon
 import info.nightscout.androidaps.extensions.toVisibility
 import info.nightscout.androidaps.extensions.valueToUnitsString
+import info.nightscout.androidaps.interfaces.ActivePluginProvider
+import info.nightscout.androidaps.interfaces.PluginBase
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 import info.nightscout.androidaps.utils.rx.AapsSchedulers
 import io.reactivex.disposables.CompositeDisposable
@@ -47,6 +49,7 @@ class BGSourceFragment : DaggerFragment() {
     @Inject lateinit var repository: AppRepository
     @Inject lateinit var aapsSchedulers: AapsSchedulers
     @Inject lateinit var uel: UserEntryLogger
+    @Inject lateinit var activePlugin: ActivePluginProvider
 
     private val disposable = CompositeDisposable()
     private val millsToThePast = T.hours(12).msecs()
@@ -131,7 +134,17 @@ class BGSourceFragment : DaggerFragment() {
                     activity?.let { activity ->
                         val text = dateUtil.dateAndTimeString(glucoseValue.timestamp) + "\n" + glucoseValue.valueToUnitsString(profileFunction.getUnits())
                         OKDialog.showConfirmation(activity, resourceHelper.gs(R.string.removerecord), text, Runnable {
-                            val source = Sources.BG         //Todo Replace Sources.BG by Active BG Source plugin
+                            val source = when((activePlugin.activeBgSource as PluginBase).pluginDescription.pluginName) {
+                                R.string.dexcom_app_patched -> Sources.Dexcom
+                                R.string.eversense          -> Sources.Eversense
+                                R.string.Glimp              -> Sources.Glimp
+                                R.string.MM640g             -> Sources.MM640g
+                                R.string.nsclientbg         -> Sources.NSClientSource
+                                R.string.poctech            -> Sources.PocTech
+                                R.string.tomato             -> Sources.Tomato
+                                R.string.xdrip              -> Sources.Xdrip
+                                else                        -> Sources.Unknown
+                            }
                             uel.log(Action.BG_REMOVED, source,
                                 ValueWithUnit.Timestamp(glucoseValue.timestamp))
                             disposable += repository.runTransaction(InvalidateGlucoseValueTransaction(glucoseValue.id)).subscribe()
