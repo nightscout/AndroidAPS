@@ -131,8 +131,8 @@ class BGSourceFragment : DaggerFragment() {
                     activity?.let { activity ->
                         val text = dateUtil.dateAndTimeString(glucoseValue.timestamp) + "\n" + glucoseValue.valueToUnitsString(profileFunction.getUnits())
                         OKDialog.showConfirmation(activity, resourceHelper.gs(R.string.removerecord), text, Runnable {
-                            //uel.log(Action.BG_REMOVED, XXXValueWithUnit.Timestamp(glucoseValue.timestamp))
-                            uel.log(Action.BG_REMOVED, Sources.BG,
+                            val source = Sources.BG         //Todo Replace Sources.BG by Active BG Source plugin
+                            uel.log(Action.BG_REMOVED, source,
                                 ValueWithUnit.Timestamp(glucoseValue.timestamp))
                             disposable += repository.runTransaction(InvalidateGlucoseValueTransaction(glucoseValue.id)).subscribe()
                         })

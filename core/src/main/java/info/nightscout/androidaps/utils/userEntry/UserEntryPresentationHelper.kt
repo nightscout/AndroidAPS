@@ -39,35 +39,43 @@ class UserEntryPresentationHelper @Inject constructor(
     }
 
     fun iconId(source: Sources): Int = when (source) {
-        Sources.TreatmentDialog -> R.drawable.icon_insulin_carbs
-        Sources.InsulinDialog -> R.drawable.ic_bolus
-        Sources.CarbDialog -> R.drawable.ic_cp_bolus_carbs
-        Sources.WizardDialog -> R.drawable.ic_calculator
-        Sources.QuickWizard -> R.drawable.ic_quick_wizard
+        Sources.TreatmentDialog     -> R.drawable.icon_insulin_carbs
+        Sources.InsulinDialog       -> R.drawable.ic_bolus
+        Sources.CarbDialog          -> R.drawable.ic_cp_bolus_carbs
+        Sources.WizardDialog        -> R.drawable.ic_calculator
+        Sources.QuickWizard         -> R.drawable.ic_quick_wizard
         Sources.ExtendedBolusDialog -> R.drawable.ic_actions_startextbolus
-        Sources.TTDialog -> R.drawable.ic_temptarget_high
+        Sources.TTDialog            -> R.drawable.ic_temptarget_high
         Sources.ProfileSwitchDialog -> R.drawable.ic_actions_profileswitch
-        Sources.LoopDialog -> R.drawable.ic_loop_closed
-        Sources.TempBasalDialog -> R.drawable.ic_actions_starttempbasal
-        Sources.CalibrationDialog -> R.drawable.ic_calibration
-        Sources.FillDialog -> R.drawable.ic_cp_pump_canula
-        Sources.BgCheck -> R.drawable.ic_cp_bgcheck
-        Sources.SensorInsert -> R.drawable.ic_cp_cgm_insert
-        Sources.BatteryChange -> R.drawable.ic_cp_pump_battery
-        Sources.Note -> R.drawable.ic_cp_note
-        Sources.Exercise -> R.drawable.ic_cp_exercise
-        Sources.Question -> R.drawable.ic_cp_question
-        Sources.Announcement -> R.drawable.ic_cp_announcement
-        Sources.Actions -> R.drawable.ic_action
-        Sources.Automation -> R.drawable.ic_automation
-        Sources.BG -> R.drawable.ic_generic_cgm
-        Sources.LocalProfile -> R.drawable.ic_local_profile
-        Sources.Loop -> R.drawable.ic_loop_closed_white
-        Sources.Maintenance -> R.drawable.ic_maintenance
-        Sources.NSClient -> R.drawable.ic_nightscout_syncs
-        Sources.NSProfile -> R.drawable.ic_nightscout_profile
-        Sources.Objectives -> R.drawable.ic_graduation
-        Sources.Pump -> R.drawable.ic_generic_icon
+        Sources.LoopDialog          -> R.drawable.ic_loop_closed
+        Sources.TempBasalDialog     -> R.drawable.ic_actions_starttempbasal
+        Sources.CalibrationDialog   -> R.drawable.ic_calibration
+        Sources.FillDialog          -> R.drawable.ic_cp_pump_canula
+        Sources.BgCheck             -> R.drawable.ic_cp_bgcheck
+        Sources.SensorInsert        -> R.drawable.ic_cp_cgm_insert
+        Sources.BatteryChange       -> R.drawable.ic_cp_pump_battery
+        Sources.Note                -> R.drawable.ic_cp_note
+        Sources.Exercise            -> R.drawable.ic_cp_exercise
+        Sources.Question            -> R.drawable.ic_cp_question
+        Sources.Announcement        -> R.drawable.ic_cp_announcement
+        Sources.Actions             -> R.drawable.ic_action
+        Sources.Automation          -> R.drawable.ic_automation
+        Sources.BG                  -> R.drawable.ic_generic_cgm
+        Sources.Dexcom              -> R.drawable.ic_dexcom_g6
+        Sources.Eversense           -> R.drawable.ic_eversense
+        Sources.Glimp               -> R.drawable.ic_glimp
+        Sources.MM640g              -> R.drawable.ic_generic_cgm
+        Sources.NSClientSource      -> R.drawable.ic_nsclient_bg
+        Sources.PocTech             -> R.drawable.ic_poctech
+        Sources.Tomato              -> R.drawable.ic_sensor
+        Sources.Xdrip               -> R.drawable.ic_blooddrop_48
+        Sources.LocalProfile        -> R.drawable.ic_local_profile
+        Sources.Loop                -> R.drawable.ic_loop_closed_white
+        Sources.Maintenance         -> R.drawable.ic_maintenance
+        Sources.NSClient            -> R.drawable.ic_nightscout_syncs
+        Sources.NSProfile           -> R.drawable.ic_nightscout_profile
+        Sources.Objectives          -> R.drawable.ic_graduation
+        Sources.Pump                -> R.drawable.ic_generic_icon
         Sources.Dana                -> R.drawable.ic_danars_128
         Sources.DanaR               -> R.drawable.ic_danars_128
         Sources.DanaRC              -> R.drawable.ic_danars_128
