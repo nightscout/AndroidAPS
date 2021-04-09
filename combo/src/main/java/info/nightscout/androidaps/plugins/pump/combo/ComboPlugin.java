@@ -96,7 +96,7 @@ public class ComboPlugin extends PumpPluginBase implements PumpInterface, Constr
      */
     private volatile boolean scripterIsBolusing;
     /**
-     * This is set to true to request a bolus cancellation. {@link #deliverBolus(DetailedBolusInfo)}
+     * This is set to true to request a bolus cancellation. {@link #deliverTreatment(DetailedBolusInfo)} (DetailedBolusInfo)}
      * will reset this flag.
      */
     private volatile boolean cancelBolus;
@@ -105,7 +105,7 @@ public class ComboPlugin extends PumpPluginBase implements PumpInterface, Constr
      * This is set (in {@link #checkHistory()} whenever a connection to the pump is made and
      * indicates if new history records on the pump have been found. This effectively blocks
      * high temps ({@link #setTempBasalPercent(Integer, Integer, PumpSync.TemporaryBasalType)} and boluses
-     * ({@link #deliverBolus(DetailedBolusInfo)} till the queue is empty and the connection
+     * ({@link #deliverTreatment(DetailedBolusInfo)} till the queue is empty and the connection
      * is shut down.
      * {@link #initializePump()} resets this since on startup the history is allowed to have
      * changed (and the user can't possible have already calculated anything with out of date IOB).
@@ -120,7 +120,7 @@ public class ComboPlugin extends PumpPluginBase implements PumpInterface, Constr
     /**
      * Cache of the last <=2 boluses on the pump. Used to detect changes in pump history,
      * requiring reading more pump history. This is read/set in {@link #checkHistory()} when changed
-     * pump history was detected and was read, as well as in {@link #deliverBolus(DetailedBolusInfo)}
+     * pump history was detected and was read, as well as in {@link #deliverTreatment(DetailedBolusInfo)}
      * after bolus delivery. Newest record is the first one.
      */
     private volatile List<Bolus> recentBoluses = new ArrayList<>(0);
@@ -474,41 +474,9 @@ public class ComboPlugin extends PumpPluginBase implements PumpInterface, Constr
      */
     @NonNull @Override
     public PumpEnactResult deliverTreatment(DetailedBolusInfo detailedBolusInfo) {
-        try {
-            if (detailedBolusInfo.insulin == 0 && detailedBolusInfo.carbs == 0) {
-                // neither carbs nor bolus requested
-                getAapsLogger().error("deliverTreatment: Invalid input");
-                return new PumpEnactResult(getInjector()).success(false).enacted(false)
-                        .bolusDelivered(0d).carbsDelivered(0d)
-                        .comment(R.string.invalidinput);
-//            } else if (detailedBolusInfo.insulin > 0) {
-            } else {
-                // bolus needed, ask pump to deliver it
-                return deliverBolus(detailedBolusInfo);
-            }
-/*    This should not happen anymore
-            else {
-                // no bolus required, carb only treatment
-                treatmentsPlugin.addToHistoryTreatment(detailedBolusInfo, false);
-
-                EventOverviewBolusProgress bolusingEvent = EventOverviewBolusProgress.INSTANCE;
-                bolusingEvent.setT(new EventOverviewBolusProgress.Treatment(0.0, 0, detailedBolusInfo.getBolusType() == DetailedBolusInfo.BolusType.SMB));
-                bolusingEvent.setPercent(100);
-                rxBus.send(bolusingEvent);
-
-                return new PumpEnactResult(getInjector()).success(true).enacted(true)
-                        .bolusDelivered(0d).carbsDelivered(detailedBolusInfo.carbs)
-                        .comment(R.string.virtualpump_resultok);
-            }
-
- */
-        } finally {
-            rxBus.send(new EventComboPumpUpdateGUI());
+        if (detailedBolusInfo.insulin == 0 || detailedBolusInfo.carbs > 0) {
+            throw new IllegalArgumentException(detailedBolusInfo.toString());
         }
-    }
-
-    @NonNull
-    private PumpEnactResult deliverBolus(final DetailedBolusInfo detailedBolusInfo) {
         try {
             pump.activity = getResourceHelper().gs(R.string.combo_pump_action_bolusing, detailedBolusInfo.insulin);
             rxBus.send(new EventComboPumpUpdateGUI());
@@ -668,39 +636,18 @@ public class ComboPlugin extends PumpPluginBase implements PumpInterface, Constr
      * Creates a treatment record based on the request in DetailBolusInfo and the delivered bolus.
      */
     private boolean addBolusToTreatments(DetailedBolusInfo detailedBolusInfo, Bolus lastPumpBolus) {
-        DetailedBolusInfo bolusInfo = detailedBolusInfo.copy();
-        bolusInfo.setBolusTimestamp(calculateFakeBolusDate(lastPumpBolus));
-        bolusInfo.setPumpType(PumpType.ACCU_CHEK_COMBO);
-        bolusInfo.setPumpSerial(serialNumber());
-        bolusInfo.setBolusPumpId(bolusInfo.timestamp);
-        bolusInfo.insulin = lastPumpBolus.amount;
         try {
-/* this should not happen
-            if (bolusInfo.carbs > 0 && bolusInfo.carbTime != 0) {
-                // split out a separate carbs record without a pumpId
-                DetailedBolusInfo carbInfo = new DetailedBolusInfo();
-                carbInfo.timestamp = bolusInfo.timestamp + bolusInfo.carbTime * 60L * 1000L;
-                carbInfo.carbs = bolusInfo.carbs;
-                carbInfo.setPumpType(PumpType.USER);
-                treatmentsPlugin.addToHistoryTreatment(carbInfo, true);
-
-                // remove carbs from bolusInfo to not trigger any unwanted code paths in
-                // TreatmentsPlugin.addToHistoryTreatment() method
-                bolusInfo.carbTime = 0;
-                bolusInfo.carbs = 0;
-            }
- */
             pumpSync.syncBolusWithPumpId(
                     calculateFakeBolusDate(lastPumpBolus),
                     lastPumpBolus.amount,
                     detailedBolusInfo.getBolusType(),
-                    bolusInfo.timestamp,
+                    detailedBolusInfo.timestamp,
                     PumpType.ACCU_CHEK_COMBO,
                     serialNumber()
             );
         } catch (Exception e) {
             getAapsLogger().error("Adding treatment record failed", e);
-            if (bolusInfo.getBolusType() == DetailedBolusInfo.BolusType.SMB) {
+            if (detailedBolusInfo.getBolusType() == DetailedBolusInfo.BolusType.SMB) {
                 Notification notification = new Notification(Notification.COMBO_PUMP_ALARM, getResourceHelper().gs(R.string.combo_error_updating_treatment_record), Notification.URGENT);
                 rxBus.send(new EventNewNotification(notification));
             }
@@ -820,7 +767,6 @@ public class ComboPlugin extends PumpPluginBase implements PumpInterface, Constr
     @NonNull @Override
     public PumpEnactResult cancelTempBasal(boolean enforceNew) {
         getAapsLogger().debug(LTag.PUMP, "cancelTempBasal called");
-        //final TemporaryBasal activeTemp = treatmentsPlugin.getTempBasalFromHistoryIncludingConvertedExtended(System.currentTimeMillis());
         PumpSync.PumpState pumpSate = pumpSync.expectedPumpState();
         final PumpSync.PumpState.TemporaryBasal activeTemp = pumpSate.getTemporaryBasal();
         if (enforceNew) {
