@@ -121,7 +121,8 @@ class TreatmentsExtendedBolusesFragment : DaggerFragment() {
 
         override fun onBindViewHolder(holder: ExtendedBolusesViewHolder, position: Int) {
             val extendedBolus = extendedBolusList[position]
-            holder.binding.ph.visibility = (extendedBolus.interfaceIDs.nightscoutId != null).toVisibility()
+            holder.binding.ns.visibility = (extendedBolus.interfaceIDs.nightscoutId != null).toVisibility()
+            holder.binding.ph.visibility = (extendedBolus.interfaceIDs.pumpId != null).toVisibility()
             holder.binding.invalid.visibility = extendedBolus.isValid.not().toVisibility()
             @SuppressLint("SetTextI18n")
             if (extendedBolus.isInProgress(dateUtil)) {

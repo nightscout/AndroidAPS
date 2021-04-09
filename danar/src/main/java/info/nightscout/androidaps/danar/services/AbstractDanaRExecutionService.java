@@ -295,7 +295,7 @@ public abstract class AbstractDanaRExecutionService extends DaggerService {
         if (pumpState.getTemporaryBasal() != null) {
             if (danaPump.isTempBasalInProgress()) {
                 if (pumpState.getTemporaryBasal().getRate() != danaPump.getTempBasalPercent()
-                        || pumpState.getTemporaryBasal().getTimestamp() != danaPump.getTempBasalStart()
+                        || Math.abs(pumpState.getTemporaryBasal().getTimestamp() - danaPump.getTempBasalStart()) > 10000
                 ) { // Close current temp basal
                     Notification notification = new Notification(Notification.UNSUPPORTED_ACTION_IN_PUMP, resourceHelper.gs(R.string.unsupported_action_in_pump), Notification.URGENT);
                     rxBus.send(new EventNewNotification(notification));
@@ -341,7 +341,8 @@ public abstract class AbstractDanaRExecutionService extends DaggerService {
         if (pumpState.getExtendedBolus() != null) {
             if (danaPump.isExtendedInProgress()) {
                 if (pumpState.getExtendedBolus().getRate() != danaPump.getExtendedBolusAbsoluteRate()
-                        || pumpState.getExtendedBolus().getTimestamp() != danaPump.getExtendedBolusStart()) { // Close current extended
+                        || Math.abs(pumpState.getExtendedBolus().getTimestamp() - danaPump.getExtendedBolusStart()) > 10000
+                ) { // Close current extended
                     Notification notification = new Notification(Notification.UNSUPPORTED_ACTION_IN_PUMP, resourceHelper.gs(R.string.unsupported_action_in_pump), Notification.URGENT);
                     rxBus.send(new EventNewNotification(notification));
                     aapsLogger.error(LTag.PUMP, "Different extended bolus found running AAPS: " + (pumpState.getExtendedBolus() + " DanaPump " + danaPump.extendedBolusToString()));

@@ -57,6 +57,8 @@ fun temporaryTargetFromJson(jsonObject: JSONObject): TemporaryTarget? {
     val id = JsonHelper.safeGetStringAllowNull(jsonObject, "_id", null) ?: return null
     val isValid = JsonHelper.safeGetBoolean(jsonObject, "isValid", true)
 
+    if (timestamp == 0L) return null
+
     if (duration > 0L) {
         // not ending event
         if (units == Constants.MMOL) {

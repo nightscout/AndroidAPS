@@ -25,6 +25,7 @@ import info.nightscout.androidaps.events.EventAutosensCalculationFinished
 import info.nightscout.androidaps.events.EventTempBasalChange
 import info.nightscout.androidaps.extensions.iobCalc
 import info.nightscout.androidaps.extensions.toStringFull
+import info.nightscout.androidaps.extensions.toTemporaryBasal
 import info.nightscout.androidaps.extensions.toVisibility
 import info.nightscout.androidaps.interfaces.ActivePluginProvider
 import info.nightscout.androidaps.interfaces.ProfileFunction
@@ -76,18 +77,49 @@ class TreatmentsTemporaryBasalsFragment : DaggerFragment() {
         binding.recyclerview.layoutManager = LinearLayoutManager(view.context)
     }
 
+    private fun tempBasalsWithInvalid(now: Long) = repository
+        .getTemporaryBasalsDataIncludingInvalidFromTime(now - millsToThePast, false)
+
+    private fun tempBasals(now: Long) = repository
+        .getTemporaryBasalsDataFromTime(now - millsToThePast, false)
+
+    private fun extendedBolusesWithInvalid(now: Long) = repository
+        .getExtendedBolusDataIncludingInvalidFromTime(now - millsToThePast, false)
+        .map { eb -> eb.map { profileFunction.getProfile(it.timestamp)?.let { profile -> it.toTemporaryBasal(profile) } } }
+
+    private fun extendedBoluses(now: Long) = repository
+        .getExtendedBolusDataFromTime(now - millsToThePast, false)
+        .map { eb -> eb.map { profileFunction.getProfile(it.timestamp)?.let { profile -> it.toTemporaryBasal(profile) } } }
+
     fun swapAdapter() {
         val now = System.currentTimeMillis()
-        if (binding.showInvalidated.isChecked)
-            repository
-                .getTemporaryBasalsDataIncludingInvalidFromTime(now - millsToThePast, false)
-                .observeOn(aapsSchedulers.main)
-                .subscribe { list -> binding.recyclerview.swapAdapter(RecyclerViewAdapter(list), true) }
-        else
-            repository
-                .getTemporaryBasalsDataFromTime(now - millsToThePast, false)
-                .observeOn(aapsSchedulers.main)
-                .subscribe { list -> binding.recyclerview.swapAdapter(RecyclerViewAdapter(list), true) }
+        disposable +=
+            if (activePlugin.activePump.isFakingTempsByExtendedBoluses) {
+                if (binding.showInvalidated.isChecked)
+                    tempBasalsWithInvalid(now)
+                        .zipWith(extendedBolusesWithInvalid(now)) { first, second -> first + second }
+                        .map { list -> list.filterNotNull() }
+                        .map { list -> list.sortedByDescending { it.timestamp } }
+                        .observeOn(aapsSchedulers.main)
+                        .subscribe { list -> binding.recyclerview.swapAdapter(RecyclerViewAdapter(list), true) }
+                else
+                    tempBasals(now)
+                        .zipWith(extendedBoluses(now)) { first, second -> first + second }
+                        .map { list -> list.filterNotNull() }
+                        .map { list -> list.sortedByDescending { it.timestamp } }
+                        .observeOn(aapsSchedulers.main)
+                        .subscribe { list -> binding.recyclerview.swapAdapter(RecyclerViewAdapter(list), true) }
+            } else {
+                if (binding.showInvalidated.isChecked)
+                    tempBasalsWithInvalid(now)
+                        .observeOn(aapsSchedulers.main)
+                        .subscribe { list -> binding.recyclerview.swapAdapter(RecyclerViewAdapter(list), true) }
+                else
+                    tempBasals(now)
+                        .observeOn(aapsSchedulers.main)
+                        .subscribe { list -> binding.recyclerview.swapAdapter(RecyclerViewAdapter(list), true) }
+            }
+
     }
 
     @Synchronized
@@ -95,16 +127,15 @@ class TreatmentsTemporaryBasalsFragment : DaggerFragment() {
         super.onResume()
         swapAdapter()
 
-        disposable.add(rxBus
+        disposable += rxBus
             .toObservable(EventTempBasalChange::class.java)
             .observeOn(aapsSchedulers.main)
             .subscribe({ swapAdapter() }, fabricPrivacy::logException)
-        )
-        disposable.add(rxBus
+
+        disposable += rxBus
             .toObservable(EventAutosensCalculationFinished::class.java)
             .observeOn(aapsSchedulers.main)
             .subscribe({ swapAdapter() }, fabricPrivacy::logException)
-        )
     }
 
     @Synchronized
@@ -146,8 +177,10 @@ class TreatmentsTemporaryBasalsFragment : DaggerFragment() {
             if (profile != null) iob = tempBasal.iobCalc(now, profile, activePlugin.activeInsulin)
             holder.binding.iob.text = resourceHelper.gs(R.string.formatinsulinunits, iob.basaliob)
             holder.binding.extendedFlag.visibility = (tempBasal.type == TemporaryBasal.Type.FAKE_EXTENDED).toVisibility()
+            holder.binding.suspendFlag.visibility = (tempBasal.type == TemporaryBasal.Type.PUMP_SUSPEND).toVisibility()
+            holder.binding.emulatedSuspendFlag.visibility = (tempBasal.type == TemporaryBasal.Type.EMULATED_PUMP_SUSPEND).toVisibility()
+            holder.binding.superBolusFlag.visibility = (tempBasal.type == TemporaryBasal.Type.SUPERBOLUS).toVisibility()
             if (abs(iob.basaliob) > 0.01) holder.binding.iob.setTextColor(resourceHelper.gc(R.color.colorActive)) else holder.binding.iob.setTextColor(holder.binding.duration.currentTextColor)
-            holder.binding.type.text = tempBasal.type.toString()
             holder.binding.remove.tag = tempBasal
         }
 

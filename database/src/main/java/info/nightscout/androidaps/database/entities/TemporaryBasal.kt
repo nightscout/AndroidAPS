@@ -34,6 +34,11 @@ data class TemporaryBasal(
     override var duration: Long
 ) : TraceableDBEntry, DBEntryWithTimeAndDuration {
 
+    init {
+        if (duration <= 0)
+            require(duration > 0)
+    }
+
     enum class Type {
         NORMAL,
         EMULATED_PUMP_SUSPEND,

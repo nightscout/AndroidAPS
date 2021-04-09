@@ -23,7 +23,7 @@ class DanaRS_Packet_Bolus_Get_Extended_Menu_Option_State(
         val extendedMenuOption = byteArrayToInt(getBytes(data, dataIndex, dataSize))
         dataIndex += dataSize
         dataSize = 1
-        danaPump.isExtendedInProgress = byteArrayToInt(getBytes(data, dataIndex, dataSize)) == 0x01
+        val isExtendedInProgress = byteArrayToInt(getBytes(data, dataIndex, dataSize)) == 0x01
         aapsLogger.debug(LTag.PUMPCOMM, "extendedMenuOption: $extendedMenuOption")
     }
 

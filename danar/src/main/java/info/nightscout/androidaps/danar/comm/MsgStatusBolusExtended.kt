@@ -3,7 +3,8 @@ package info.nightscout.androidaps.danar.comm
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.logging.LTag
 import info.nightscout.androidaps.utils.T
-import kotlin.math.ceil
+import kotlin.math.abs
+import kotlin.math.floor
 
 class MsgStatusBolusExtended(
     injector: HasAndroidInjector
@@ -27,9 +28,17 @@ class MsgStatusBolusExtended(
         val extendedBolusAbsoluteRate = if (isExtendedInProgress) extendedBolusAmount / extendedBolusMinutes * 60 else 0.0
         val extendedBolusStart = if (isExtendedInProgress) getDateFromSecAgo(extendedBolusSoFarInSecs) else 0
         val extendedBolusRemainingMinutes = extendedBolusMinutes - extendedBolusSoFarInMinutes
-        danaPump.extendedBolusDuration = T.mins(extendedBolusMinutes).msecs()
-        danaPump.extendedBolusAmount = extendedBolusAmount
-        danaPump.extendedBolusStart = extendedBolusStart
+        if (isExtendedInProgress && !isWithin3Sec(extendedBolusStart)) {
+            danaPump.extendedBolusDuration = T.mins(extendedBolusMinutes).msecs()
+            danaPump.extendedBolusAmount = extendedBolusAmount
+            danaPump.extendedBolusStart = extendedBolusStart
+            aapsLogger.debug(LTag.PUMPCOMM, "New extended bolus detected")
+        } else if (!isExtendedInProgress) {
+            aapsLogger.debug(LTag.PUMPCOMM, "Extended bolus stopped. Previous state: ${danaPump.isExtendedInProgress}")
+            danaPump.isExtendedInProgress = false
+        } else {
+            aapsLogger.debug(LTag.PUMPCOMM, "No change in extended bolus. Current state: ${danaPump.isExtendedInProgress}")
+        }
         aapsLogger.debug(LTag.PUMPCOMM, "Is extended bolus running: $isExtendedInProgress")
         aapsLogger.debug(LTag.PUMPCOMM, "Extended bolus min: $extendedBolusMinutes")
         aapsLogger.debug(LTag.PUMPCOMM, "Extended bolus amount: $extendedBolusAmount")
@@ -40,6 +49,9 @@ class MsgStatusBolusExtended(
     }
 
     private fun getDateFromSecAgo(tempBasalAgoSecs: Int): Long {
-        return (ceil(System.currentTimeMillis() / 1000.0) - tempBasalAgoSecs).toLong() * 1000
+        return (floor(System.currentTimeMillis() / 1000.0) - tempBasalAgoSecs).toLong() * 1000
     }
+
+    // because there is no fixed timestamp of start allow update of tbr only if tbr start differs more
+    private fun isWithin3Sec(newStart: Long) = abs(newStart - danaPump.tempBasalStart) < 3000
 }

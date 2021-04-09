@@ -9,7 +9,6 @@ import android.text.format.DateFormat
 import androidx.preference.Preference
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.dana.DanaPump
-import info.nightscout.androidaps.dana.DanaPumpInterface
 import info.nightscout.androidaps.danars.events.EventDanaRSDeviceChange
 import info.nightscout.androidaps.danars.services.DanaRSService
 import info.nightscout.androidaps.data.DetailedBolusInfo
@@ -72,7 +71,7 @@ class DanaRSPlugin @Inject constructor(
     .preferencesId(R.xml.pref_danars)
     .description(R.string.description_pump_dana_rs),
     injector, aapsLogger, resourceHelper, commandQueue
-), PumpInterface, DanaRInterface, ConstraintsInterface, DanaPumpInterface {
+), PumpInterface, DanaRInterface, ConstraintsInterface {
 
     private val disposable = CompositeDisposable()
     private var danaRSService: DanaRSService? = null

@@ -53,8 +53,8 @@ class FoodFragment : DaggerFragment() {
     @Inject lateinit var uel: UserEntryLogger
 
     private val disposable = CompositeDisposable()
-    private lateinit var unfiltered: List<Food>
-    private lateinit var filtered: MutableList<Food>
+    private var unfiltered: List<Food> = arrayListOf()
+    private var filtered: MutableList<Food> = arrayListOf()
 
     private var _binding: FoodFragmentBinding? = null
 

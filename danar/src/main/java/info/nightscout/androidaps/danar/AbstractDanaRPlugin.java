@@ -10,7 +10,6 @@ import java.util.Date;
 import dagger.android.HasAndroidInjector;
 import info.nightscout.androidaps.dana.DanaFragment;
 import info.nightscout.androidaps.dana.DanaPump;
-import info.nightscout.androidaps.dana.DanaPumpInterface;
 import info.nightscout.androidaps.dana.comm.RecordTypes;
 import info.nightscout.androidaps.danar.services.AbstractDanaRExecutionService;
 import info.nightscout.androidaps.data.Profile;
@@ -49,7 +48,7 @@ import io.reactivex.disposables.CompositeDisposable;
  * Created by mike on 28.01.2018.
  */
 
-public abstract class AbstractDanaRPlugin extends PumpPluginBase implements PumpInterface, DanaRInterface, ConstraintsInterface, DanaPumpInterface {
+public abstract class AbstractDanaRPlugin extends PumpPluginBase implements PumpInterface, DanaRInterface, ConstraintsInterface {
     protected AbstractDanaRExecutionService sExecutionService;
 
     protected CompositeDisposable disposable = new CompositeDisposable();
@@ -283,6 +282,14 @@ public abstract class AbstractDanaRPlugin extends PumpPluginBase implements Pump
             getAapsLogger().debug(LTag.PUMP, "setExtendedBolus: Correct extended bolus already set. Current: " + danaPump.getExtendedBolusAmount() + " Asked: " + insulin);
             return result;
         }
+        if (danaPump.isExtendedInProgress()) {
+            cancelExtendedBolus();
+            if (danaPump.isExtendedInProgress()) {
+                result.enacted(false).success(false);
+                getAapsLogger().debug(LTag.PUMP, "cancelExtendedBolus failed. aborting setExtendedBolus");
+                return result;
+            }
+        }
         boolean connectionOK = sExecutionService.extendedBolus(insulin, durationInHalfHours);
         if (connectionOK && danaPump.isExtendedInProgress() && Math.abs(danaPump.getExtendedBolusAmount() - insulin) < getPumpDescription().getExtendedBolusStep()) {
             result.enacted(true)
@@ -294,11 +301,21 @@ public abstract class AbstractDanaRPlugin extends PumpPluginBase implements Pump
                     .isPercent(false);
             if (!sp.getBoolean("danar_useextended", false))
                 result.bolusDelivered(danaPump.getExtendedBolusAmount());
+            pumpSync.syncExtendedBolusWithPumpId(
+                    danaPump.getExtendedBolusStart(),
+                    danaPump.getExtendedBolusAmount(),
+                    danaPump.getExtendedBolusDuration(),
+                    sp.getBoolean("danar_useextended", false),
+                    danaPump.getExtendedBolusStart(),
+                    getPumpDescription().getPumpType(),
+                    serialNumber()
+            );
             getAapsLogger().debug(LTag.PUMP, "setExtendedBolus: OK");
             return result;
         }
         result.enacted(false).success(false).comment(R.string.danar_valuenotsetproperly);
         getAapsLogger().error("setExtendedBolus: Failed to extended bolus");
+        getAapsLogger().error("inProgress: " + danaPump.isExtendedInProgress() + " start: " + danaPump.getExtendedBolusStart() + " amount: " + danaPump.getExtendedBolusAmount() + " duration: " + danaPump.getExtendedBolusDuration());
         return result;
     }
 
@@ -307,9 +324,18 @@ public abstract class AbstractDanaRPlugin extends PumpPluginBase implements Pump
         PumpEnactResult result = new PumpEnactResult(getInjector());
         if (danaPump.isExtendedInProgress()) {
             sExecutionService.extendedBolusStop();
-            result.enacted(true).isTempCancel(true);
+            if (!danaPump.isExtendedInProgress()) {
+                result.success(true).enacted(true).isTempCancel(true);
+                pumpSync.syncStopExtendedBolusWithPumpId(
+                        dateUtil._now(),
+                        dateUtil._now(),
+                        getPumpDescription().getPumpType(),
+                        serialNumber()
+                );
+            } else
+                result.success(false).enacted(false).isTempCancel(true);
         } else {
-            result.success(true).comment(R.string.ok);
+            result.success(true).comment(R.string.ok).isTempCancel(true);
             getAapsLogger().debug(LTag.PUMP, "cancelExtendedBolus: OK");
         }
         return result;

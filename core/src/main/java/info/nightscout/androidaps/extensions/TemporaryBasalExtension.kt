@@ -87,8 +87,8 @@ fun temporaryBasalFromNsIdForInvalidating(nsId: String): TemporaryBasal =
     temporaryBasalFromJson(
         JSONObject()
             .put("mills", 1)
-            .put("absolute", -1.0)
-            .put("duration", -1.0)
+            .put("absolute", 1.0)
+            .put("duration", 1.0)
             .put("_id", nsId)
             .put("isValid", false)
     )!!
@@ -106,15 +106,16 @@ fun temporaryBasalFromJson(jsonObject: JSONObject): TemporaryBasal? {
     val pumpType = InterfaceIDs.PumpType.fromString(JsonHelper.safeGetStringAllowNull(jsonObject, "pumpType", null))
     val pumpSerial = JsonHelper.safeGetStringAllowNull(jsonObject, "pumpSerial", null)
 
-    val rate = if (percent != null) percent + 100
-    else absolute ?: return null
+    val rate = if (percent != null) percent + 100 else absolute ?: return null
+    if (duration == 0L) return null
+    if (timestamp == 0L) return null
 
     return TemporaryBasal(
         timestamp = timestamp,
         rate = rate,
-        duration = duration,
+        duration = T.mins(duration).msecs(),
         type = type,
-        isAbsolute = absolute != null,
+        isAbsolute = percent == null,
         isValid = isValid
     ).also {
         it.interfaceIDs.nightscoutId = id

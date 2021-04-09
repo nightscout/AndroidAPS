@@ -59,7 +59,7 @@ class RandomBgPlugin @Inject constructor(
         const val interval = 5L // minutes
         const val min = 70 // mgdl
         const val max = 190 // mgdl
-        const val period = 30.0 // minutes
+        const val period = 90.0 // minutes
     }
 
     init {
