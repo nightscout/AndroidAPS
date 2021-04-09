@@ -637,7 +637,8 @@ open class IobCobCalculatorPlugin @Inject constructor(
                 result.slopeFromMaxDeviation = autosensData.slopeFromMaxDeviation
                 result.usedMinCarbsImpact = autosensData.usedMinCarbsImpact
             }
-            result.lastBolusTime = repository.getLastBolusRecord()?.timestamp ?: 0L
+            val lastBolus = repository.getLastBolusRecordWrapped().blockingGet()
+            result.lastBolusTime = if (lastBolus is ValueWrapper.Existing) lastBolus.value.timestamp else 0L
             return result
         }
 

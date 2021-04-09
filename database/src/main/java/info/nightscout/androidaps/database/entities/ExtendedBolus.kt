@@ -33,6 +33,10 @@ data class ExtendedBolus(
     var isEmulatingTempBasal: Boolean = false
 ) : TraceableDBEntry, DBEntryWithTimeAndDuration {
 
+    init {
+        require(duration > 0)
+    }
+
     val rate: Double // in U/h
         get() = amount * (60 * 60 * 1000.0) / duration
 }

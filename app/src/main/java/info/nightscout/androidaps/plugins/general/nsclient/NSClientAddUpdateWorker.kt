@@ -27,7 +27,6 @@ import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.JsonHelper
 import info.nightscout.androidaps.utils.JsonHelper.safeGetLong
 import info.nightscout.androidaps.utils.buildHelper.BuildHelper
-import info.nightscout.androidaps.utils.extensions.*
 import info.nightscout.androidaps.utils.sharedPreferences.SP
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
@@ -60,7 +59,7 @@ class NSClientAddUpdateWorker(
         var latestDateInReceivedData = 0L
 
         for (i in 0 until treatments.length()) {
-            val json = treatments.getJSONObject(i)
+            var json = treatments.getJSONObject(i)
             // new DB model
             val insulin = JsonHelper.safeGetDouble(json, "insulin")
             val carbs = JsonHelper.safeGetDouble(json, "carbs")
@@ -133,6 +132,13 @@ class NSClientAddUpdateWorker(
                         }
                 } ?: aapsLogger.error("Error parsing bolus json $json")
             }
+            // Convert back emulated TBR -> EB
+            if (eventType == TherapyEvent.Type.TEMPORARY_BASAL.text && json.has("extendedEmulated")) {
+                val ebJson = json.getJSONObject("extendedEmulated")
+                ebJson.put("_id", json.getString("_id"))
+                ebJson.put("isValid", json.getBoolean("isValid"))
+                json = ebJson
+            }
             when {
                 insulin > 0 || carbs > 0                                    -> Any()
                 eventType == TherapyEvent.Type.TEMPORARY_TARGET.text        ->
@@ -195,9 +201,9 @@ class NSClientAddUpdateWorker(
                             .blockingGet()
                             .also { result ->
                                 val action = when (eventType) {
-                                    TherapyEvent.Type.CANNULA_CHANGE.text   -> Action.SITE_CHANGE
-                                    TherapyEvent.Type.INSULIN_CHANGE.text   -> Action.RESERVOIR_CHANGE
-                                    else                                    -> Action.CAREPORTAL
+                                    TherapyEvent.Type.CANNULA_CHANGE.text -> Action.SITE_CHANGE
+                                    TherapyEvent.Type.INSULIN_CHANGE.text -> Action.RESERVOIR_CHANGE
+                                    else                                  -> Action.CAREPORTAL
                                 }
                                 result.inserted.forEach {
                                     uel.log(action, Sources.NSClient,
@@ -220,44 +226,6 @@ class NSClientAddUpdateWorker(
                                 }
                             }
                     } ?: aapsLogger.error("Error parsing TherapyEvent json $json")
-                eventType == TherapyEvent.Type.TEMPORARY_BASAL.text         ->
-                    temporaryBasalFromJson(json)?.let { temporaryBasal ->
-                        repository.runTransactionForResult(SyncNsTemporaryBasalTransaction(temporaryBasal))
-                            .doOnError {
-                                aapsLogger.error(LTag.DATABASE, "Error while saving temporary basal", it)
-                                ret = Result.failure(workDataOf("Error" to it))
-                            }
-                            .blockingGet()
-                            .also { result ->
-                                result.inserted.forEach {
-                                    uel.log(Action.TEMP_BASAL, Sources.NSClient,
-                                        ValueWithUnit.Timestamp(it.timestamp),
-                                        ValueWithUnit.UnitPerHour(it.rate),
-                                        ValueWithUnit.Minute(TimeUnit.MILLISECONDS.toMinutes(it.duration).toInt())
-                                    )
-                                    aapsLogger.debug(LTag.DATABASE, "Inserted TemporaryBasal $it")
-                                }
-                                result.invalidated.forEach {
-                                    uel.log(Action.TEMP_BASAL_REMOVED, Sources.NSClient,
-                                        ValueWithUnit.Timestamp(it.timestamp),
-                                        ValueWithUnit.UnitPerHour(it.rate),
-                                        ValueWithUnit.Minute(TimeUnit.MILLISECONDS.toMinutes(it.duration).toInt())
-                                    )
-                                    aapsLogger.debug(LTag.DATABASE, "Invalidated TemporaryBasal $it")
-                                }
-                                result.ended.forEach {
-                                    uel.log(Action.CANCEL_TEMP_BASAL, Sources.NSClient,
-                                        ValueWithUnit.Timestamp(it.timestamp),
-                                        ValueWithUnit.UnitPerHour(it.rate),
-                                        ValueWithUnit.Minute(TimeUnit.MILLISECONDS.toMinutes(it.duration).toInt())
-                                    )
-                                    aapsLogger.debug(LTag.DATABASE, "Updated TemporaryBasal $it")
-                                }
-                                result.updatedNsId.forEach {
-                                    aapsLogger.debug(LTag.DATABASE, "Updated nsId TemporaryBasal $it")
-                                }
-                            }
-                    } ?: aapsLogger.error("Error parsing TemporaryBasal json $json")
                 eventType == TherapyEvent.Type.COMBO_BOLUS.text             ->
                     extendedBolusFromJson(json)?.let { extendedBolus ->
                         repository.runTransactionForResult(SyncNsExtendedBolusTransaction(extendedBolus))
@@ -299,6 +267,44 @@ class NSClientAddUpdateWorker(
                                 }
                             }
                     } ?: aapsLogger.error("Error parsing ExtendedBolus json $json")
+                eventType == TherapyEvent.Type.TEMPORARY_BASAL.text         ->
+                    temporaryBasalFromJson(json)?.let { temporaryBasal ->
+                        repository.runTransactionForResult(SyncNsTemporaryBasalTransaction(temporaryBasal))
+                            .doOnError {
+                                aapsLogger.error(LTag.DATABASE, "Error while saving temporary basal", it)
+                                ret = Result.failure(workDataOf("Error" to it))
+                            }
+                            .blockingGet()
+                            .also { result ->
+                                result.inserted.forEach {
+                                    uel.log(Action.TEMP_BASAL, Sources.NSClient,
+                                        ValueWithUnit.Timestamp(it.timestamp),
+                                        ValueWithUnit.UnitPerHour(it.rate),
+                                        ValueWithUnit.Minute(TimeUnit.MILLISECONDS.toMinutes(it.duration).toInt())
+                                    )
+                                    aapsLogger.debug(LTag.DATABASE, "Inserted TemporaryBasal $it")
+                                }
+                                result.invalidated.forEach {
+                                    uel.log(Action.TEMP_BASAL_REMOVED, Sources.NSClient,
+                                        ValueWithUnit.Timestamp(it.timestamp),
+                                        ValueWithUnit.UnitPerHour(it.rate),
+                                        ValueWithUnit.Minute(TimeUnit.MILLISECONDS.toMinutes(it.duration).toInt())
+                                    )
+                                    aapsLogger.debug(LTag.DATABASE, "Invalidated TemporaryBasal $it")
+                                }
+                                result.ended.forEach {
+                                    uel.log(Action.CANCEL_TEMP_BASAL, Sources.NSClient,
+                                        ValueWithUnit.Timestamp(it.timestamp),
+                                        ValueWithUnit.UnitPerHour(it.rate),
+                                        ValueWithUnit.Minute(TimeUnit.MILLISECONDS.toMinutes(it.duration).toInt())
+                                    )
+                                    aapsLogger.debug(LTag.DATABASE, "Ended TemporaryBasal $it")
+                                }
+                                result.updatedNsId.forEach {
+                                    aapsLogger.debug(LTag.DATABASE, "Updated nsId TemporaryBasal $it")
+                                }
+                            }
+                    } ?: aapsLogger.error("Error parsing TemporaryBasal json $json")
                 eventType == TherapyEvent.Type.PROFILE_SWITCH.text          ->
                     databaseHelper.createProfileSwitchFromJsonIfNotExists(json)
             }

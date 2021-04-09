@@ -105,10 +105,14 @@ fun extendedBolusFromJson(jsonObject: JSONObject): ExtendedBolus? {
     val pumpType = InterfaceIDs.PumpType.fromString(JsonHelper.safeGetStringAllowNull(jsonObject, "pumpType", null))
     val pumpSerial = JsonHelper.safeGetStringAllowNull(jsonObject, "pumpSerial", null)
 
+    if (timestamp == 0L) return null
+    if (duration == 0L) return null
+    if (amount == 0.0) return null
+
     return ExtendedBolus(
         timestamp = timestamp,
         amount = amount,
-        duration = duration,
+        duration = T.mins(duration).msecs(),
         isEmulatingTempBasal = isEmulatingTempBasal,
         isValid = isValid
     ).also {

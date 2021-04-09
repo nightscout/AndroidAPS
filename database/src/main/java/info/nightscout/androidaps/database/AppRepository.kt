@@ -286,8 +286,13 @@ open class AppRepository @Inject internal constructor(
         database.bolusDao.getModifiedFrom(lastId)
             .subscribeOn(Schedulers.io())
 
-    fun getLastBolusRecord(): Bolus? =
+    fun getLastBolusRecord():Bolus? =
         database.bolusDao.getLastBolusRecord()
+
+    fun getLastBolusRecordWrapped():Single<ValueWrapper<Bolus>> =
+        database.bolusDao.getLastBolusRecordMaybe()
+            .subscribeOn(Schedulers.io())
+            .toWrappedSingle()
 
     fun getLastBolusRecordOfType(type: Bolus.Type): Bolus? =
         database.bolusDao.getLastBolusRecordOfType(type)

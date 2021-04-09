@@ -71,6 +71,8 @@ fun therapyEventFromJson(jsonObject: JSONObject): TherapyEvent? {
     val id = JsonHelper.safeGetStringAllowNull(jsonObject, "_id", null) ?: return null
     val isValid = JsonHelper.safeGetBoolean(jsonObject, "isValid", true)
 
+    if (timestamp == 0L) return null
+
     val te = TherapyEvent(
         timestamp = timestamp,
         duration = TimeUnit.MINUTES.toMillis(duration),

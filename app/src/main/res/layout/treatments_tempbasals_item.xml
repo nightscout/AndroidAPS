@@ -70,6 +70,33 @@
                 tools:ignore="HardcodedText,RtlSymmetry" />
 
             <TextView
+                android:id="@+id/suspend_flag"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="5dp"
+                android:text="S"
+                android:textColor="@color/colorSetExtendedButton"
+                tools:ignore="HardcodedText,RtlSymmetry" />
+
+            <TextView
+                android:id="@+id/emulated_suspend_flag"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="5dp"
+                android:text="ES"
+                android:textColor="@color/colorSetExtendedButton"
+                tools:ignore="HardcodedText,RtlSymmetry" />
+
+            <TextView
+                android:id="@+id/super_bolus_flag"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="5dp"
+                android:text="SB"
+                android:textColor="@color/colorSetExtendedButton"
+                tools:ignore="HardcodedText,RtlSymmetry" />
+
+            <TextView
                 android:id="@+id/ph"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -123,15 +150,6 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1" />
-
-            <TextView
-                android:id="@+id/type"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="5dp"
-                android:text="NORMAL"
-                android:textColor="@color/colorSetTempButton"
-                tools:ignore="HardcodedText" />
 
             <TextView
                 android:id="@+id/invalid"

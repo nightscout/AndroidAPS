@@ -50,7 +50,6 @@ public class DanaRKoreanPlugin extends AbstractDanaRPlugin {
     private final ResourceHelper resourceHelper;
     private final ConstraintChecker constraintChecker;
     private final FabricPrivacy fabricPrivacy;
-    private final PumpSync pumpSync;
 
     @Inject
     public DanaRKoreanPlugin(
@@ -58,23 +57,22 @@ public class DanaRKoreanPlugin extends AbstractDanaRPlugin {
             AAPSLogger aapsLogger,
             AapsSchedulers aapsSchedulers,
             RxBusWrapper rxBus,
-            DanaPump danaPump,
             Context context,
             ResourceHelper resourceHelper,
             ConstraintChecker constraintChecker,
             ActivePluginProvider activePlugin,
             SP sp,
             CommandQueueProvider commandQueue,
+            DanaPump danaPump,
             DateUtil dateUtil,
-            PumpSync pumpSync,
-            FabricPrivacy fabricPrivacy
+            FabricPrivacy fabricPrivacy,
+            PumpSync pumpSync
     ) {
         super(injector, danaPump, resourceHelper, constraintChecker, aapsLogger, aapsSchedulers, commandQueue, rxBus, activePlugin, sp, dateUtil, pumpSync);
         this.aapsLogger = aapsLogger;
         this.context = context;
         this.resourceHelper = resourceHelper;
         this.constraintChecker = constraintChecker;
-        this.pumpSync = pumpSync;
         this.fabricPrivacy = fabricPrivacy;
         getPluginDescription().description(R.string.description_pump_dana_r_korean);
 
@@ -111,6 +109,7 @@ public class DanaRKoreanPlugin extends AbstractDanaRPlugin {
     @Override
     protected void onStop() {
         context.unbindService(mConnection);
+
         disposable.clear();
         super.onStop();
     }
@@ -166,22 +165,21 @@ public class DanaRKoreanPlugin extends AbstractDanaRPlugin {
     public PumpEnactResult deliverTreatment(DetailedBolusInfo detailedBolusInfo) {
         detailedBolusInfo.insulin = constraintChecker.applyBolusConstraints(new Constraint<>(detailedBolusInfo.insulin)).value();
         if (detailedBolusInfo.insulin > 0 || detailedBolusInfo.carbs > 0) {
-            EventOverviewBolusProgress.Treatment treatment = new EventOverviewBolusProgress.Treatment(0, 0, detailedBolusInfo.getBolusType() == DetailedBolusInfo.BolusType.SMB);
+            EventOverviewBolusProgress.Treatment t = new EventOverviewBolusProgress.Treatment(0, 0, detailedBolusInfo.getBolusType() == DetailedBolusInfo.BolusType.SMB);
             boolean connectionOK = false;
             if (detailedBolusInfo.insulin > 0 || detailedBolusInfo.carbs > 0)
-                connectionOK = sExecutionService.bolus(detailedBolusInfo.insulin, (int) detailedBolusInfo.carbs, detailedBolusInfo.carbTime, treatment);
+                connectionOK = sExecutionService.bolus(detailedBolusInfo.insulin, (int) detailedBolusInfo.carbs, detailedBolusInfo.carbTime, t);
             PumpEnactResult result = new PumpEnactResult(getInjector());
-            result.success(connectionOK && Math.abs(detailedBolusInfo.insulin - treatment.insulin) < pumpDescription.getBolusStep())
-                    .bolusDelivered(treatment.insulin)
+            result.success(connectionOK && Math.abs(detailedBolusInfo.insulin - t.insulin) < pumpDescription.getBolusStep())
+                    .bolusDelivered(t.insulin)
                     .carbsDelivered(detailedBolusInfo.carbs);
             if (!result.getSuccess())
-                result.comment(resourceHelper.gs(R.string.boluserrorcode, detailedBolusInfo.insulin, treatment.insulin, danaPump.getBolusStartErrorCode()));
+                result.comment(resourceHelper.gs(R.string.boluserrorcode, detailedBolusInfo.insulin, t.insulin, danaPump.getBolusStartErrorCode()));
             else
                 result.comment(R.string.ok);
             aapsLogger.debug(LTag.PUMP, "deliverTreatment: OK. Asked: " + detailedBolusInfo.insulin + " Delivered: " + result.getBolusDelivered());
-            detailedBolusInfo.insulin = treatment.insulin;
+            detailedBolusInfo.insulin = t.insulin;
             detailedBolusInfo.timestamp = System.currentTimeMillis();
-
             if (detailedBolusInfo.insulin > 0)
                 pumpSync.syncBolusWithPumpId(
                         detailedBolusInfo.timestamp,
@@ -262,7 +260,7 @@ public class DanaRKoreanPlugin extends AbstractDanaRPlugin {
             // Check if some temp is already in progress
             if (danaPump.isTempBasalInProgress()) {
                 // Correct basal already set ?
-                aapsLogger.debug(LTag.PUMP, "setTempBasalAbsolute: currently running: " + danaPump.getTempBasalPercent() + "%");
+                aapsLogger.debug(LTag.PUMP, "setTempBasalAbsolute: currently running: " + danaPump.temporaryBasalToString());
                 if (danaPump.getTempBasalPercent() == percentRate && danaPump.getTempBasalRemainingMin() > 4) {
                     if (enforceNew) {
                         cancelTempBasal(true);
@@ -348,7 +346,16 @@ public class DanaRKoreanPlugin extends AbstractDanaRPlugin {
         PumpEnactResult result = new PumpEnactResult(getInjector());
         if (danaPump.isTempBasalInProgress()) {
             sExecutionService.tempBasalStop();
-            result.enacted(true).isTempCancel(true);
+            if (!danaPump.isTempBasalInProgress()) {
+                pumpSync.syncStopTemporaryBasalWithPumpId(
+                        dateUtil._now(),
+                        dateUtil._now(),
+                        getPumpDescription().getPumpType(),
+                        serialNumber()
+                );
+                result.success(true).enacted(true).isTempCancel(true);
+            } else
+                result.success(false).enacted(false).isTempCancel(true);
         } else {
             result.success(true).isTempCancel(true).comment(R.string.ok);
             aapsLogger.debug(LTag.PUMP, "cancelRealTempBasal: OK");

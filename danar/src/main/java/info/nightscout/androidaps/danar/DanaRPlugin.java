@@ -340,7 +340,16 @@ public class DanaRPlugin extends AbstractDanaRPlugin {
         PumpEnactResult result = new PumpEnactResult(getInjector());
         if (danaPump.isTempBasalInProgress()) {
             sExecutionService.tempBasalStop();
-            result.enacted(true).isTempCancel(true);
+            if (!danaPump.isTempBasalInProgress()) {
+                pumpSync.syncStopTemporaryBasalWithPumpId(
+                        dateUtil._now(),
+                        dateUtil._now(),
+                        getPumpDescription().getPumpType(),
+                        serialNumber()
+                );
+                result.success(true).enacted(true).isTempCancel(true);
+            } else
+                result.success(false).enacted(false).isTempCancel(true);
         } else {
             result.success(true).isTempCancel(true).comment(R.string.ok);
             aapsLogger.debug(LTag.PUMP, "cancelRealTempBasal: OK");
