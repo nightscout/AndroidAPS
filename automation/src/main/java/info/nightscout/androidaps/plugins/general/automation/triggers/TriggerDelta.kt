@@ -13,7 +13,6 @@ import info.nightscout.androidaps.plugins.general.automation.elements.InputDelta
 import info.nightscout.androidaps.plugins.general.automation.elements.LabelWithElement
 import info.nightscout.androidaps.plugins.general.automation.elements.LayoutBuilder
 import info.nightscout.androidaps.plugins.general.automation.elements.StaticLabel
-import info.nightscout.androidaps.plugins.iob.iobCobCalculator.GlucoseStatus
 import info.nightscout.androidaps.utils.JsonHelper
 import org.json.JSONObject
 import java.text.DecimalFormat
@@ -25,6 +24,7 @@ class TriggerDelta(injector: HasAndroidInjector) : Trigger(injector) {
     var comparator: Comparator = Comparator(resourceHelper)
 
     companion object {
+
         private const val MMOL_MAX = 4.0
         private const val MGDL_MAX = 72.0
     }
@@ -85,17 +85,12 @@ class TriggerDelta(injector: HasAndroidInjector) : Trigger(injector) {
         return false
     }
 
-    override fun toJSON(): String {
-        val data = JSONObject()
+    override fun dataJSON(): JSONObject =
+        JSONObject()
             .put("value", delta.value)
             .put("units", units)
             .put("deltaType", delta.deltaType)
             .put("comparator", comparator.value.toString())
-        return JSONObject()
-            .put("type", this::class.java.name)
-            .put("data", data)
-            .toString()
-    }
 
     override fun fromJSON(data: String): Trigger {
         val d = JSONObject(data)

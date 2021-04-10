@@ -16,8 +16,10 @@ class MsgStatusTempBasal(
         aapsLogger.debug(LTag.PUMPCOMM, "New message")
     }
 
+    var isTempBasalInProgress = false
+
     override fun handleMessage(bytes: ByteArray) {
-        val isTempBasalInProgress = intFromBuff(bytes, 0, 1) and 0x01 == 0x01
+        isTempBasalInProgress = intFromBuff(bytes, 0, 1) and 0x01 == 0x01
         val isAPSTempBasalInProgress = intFromBuff(bytes, 0, 1) and 0x02 == 0x02
         var tempBasalPercent = intFromBuff(bytes, 1, 1)
         if (tempBasalPercent > 200) tempBasalPercent = (tempBasalPercent - 200) * 10
@@ -47,7 +49,7 @@ class MsgStatusTempBasal(
     }
 
     private fun getDateFromSecAgo(tempBasalAgoSecs: Int): Long {
-        return (floor(System.currentTimeMillis() / 1000.0) - tempBasalAgoSecs).toLong() * 1000
+        return (floor(dateUtil._now() / 1000.0) - tempBasalAgoSecs).toLong() * 1000
     }
 
     // because there is no fixed timestamp of start allow update of tbr only if tbr start differs more

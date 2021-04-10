@@ -54,7 +54,7 @@ class TriggerCOBTest : TriggerTestBase() {
         Assert.assertEquals(Comparator.Compare.IS_EQUAL_OR_LESSER, t.comparator.value)
     }
 
-    private var bgJson = "{\"data\":{\"comparator\":\"IS_EQUAL\",\"carbs\":4},\"type\":\"info.nightscout.androidaps.plugins.general.automation.triggers.TriggerCOB\"}"
+    private var bgJson = "{\"data\":{\"comparator\":\"IS_EQUAL\",\"carbs\":4},\"type\":\"TriggerCOB\"}"
     @Test fun toJSONTest() {
         val t: TriggerCOB = TriggerCOB(injector).setValue(4.0).comparator(Comparator.Compare.IS_EQUAL)
         Assert.assertEquals(bgJson, t.toJSON())

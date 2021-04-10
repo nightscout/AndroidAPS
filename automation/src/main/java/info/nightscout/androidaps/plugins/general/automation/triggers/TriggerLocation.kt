@@ -12,6 +12,7 @@ import org.json.JSONObject
 import java.text.DecimalFormat
 
 class TriggerLocation(injector: HasAndroidInjector) : Trigger(injector) {
+
     var latitude = InputDouble(0.0, -90.0, +90.0, 0.000001, DecimalFormat("0.000000"))
     var longitude = InputDouble(0.0, -180.0, +180.0, 0.000001, DecimalFormat("0.000000"))
     var distance = InputDouble(200.0, 0.0, 100000.0, 10.0, DecimalFormat("0"))
@@ -56,18 +57,13 @@ class TriggerLocation(injector: HasAndroidInjector) : Trigger(injector) {
         return false
     }
 
-    override fun toJSON(): String {
-        val data = JSONObject()
+    override fun dataJSON(): JSONObject =
+        JSONObject()
             .put("latitude", latitude.value)
             .put("longitude", longitude.value)
             .put("distance", distance.value)
             .put("name", name.value)
             .put("mode", modeSelected.value)
-        return JSONObject()
-            .put("type", this::class.java.name)
-            .put("data", data)
-            .toString()
-    }
 
     override fun fromJSON(data: String): Trigger {
         val d = JSONObject(data)

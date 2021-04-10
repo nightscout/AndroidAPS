@@ -46,15 +46,10 @@ class TriggerAutosensValue(injector: HasAndroidInjector) : Trigger(injector) {
         return false
     }
 
-    override fun toJSON(): String {
-        val data = JSONObject()
+    override fun dataJSON(): JSONObject =
+        JSONObject()
             .put("value", autosens.value)
             .put("comparator", comparator.value.toString())
-        return JSONObject()
-            .put("type", this::class.java.name)
-            .put("data", data)
-            .toString()
-    }
 
     override fun fromJSON(data: String): Trigger {
         val d = JSONObject(data)

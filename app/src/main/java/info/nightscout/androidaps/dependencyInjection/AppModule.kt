@@ -79,7 +79,7 @@ open class AppModule {
         @Binds fun bindCommandQueueProvider(commandQueue: CommandQueue): CommandQueueProvider
         @Binds fun bindConfigInterface(config: Config): ConfigInterface
         @Binds fun bindConfigBuilderInterface(configBuilderPlugin: ConfigBuilderPlugin): ConfigBuilderInterface
-        @Binds fun bindTreatmentInterface(treatmentsPlugin: TreatmentsPlugin): TreatmentsInterface
+        @Binds fun bindTreatmentsInterface(treatmentsPlugin: TreatmentsPlugin): TreatmentsInterface
         @Binds fun bindDatabaseHelperInterface(databaseHelperProvider: DatabaseHelperProvider): DatabaseHelperInterface
         @Binds fun bindNotificationHolderInterface(notificationHolder: NotificationHolder): NotificationHolderInterface
         @Binds fun bindImportExportPrefsInterface(importExportPrefs: ImportExportPrefs): ImportExportPrefsInterface

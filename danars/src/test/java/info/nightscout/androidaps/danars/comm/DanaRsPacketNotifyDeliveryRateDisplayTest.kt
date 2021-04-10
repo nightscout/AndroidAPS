@@ -24,7 +24,7 @@ import org.powermock.core.classloader.annotations.PrepareForTest
 import org.powermock.modules.junit4.PowerMockRunner
 
 @RunWith(PowerMockRunner::class)
-@PrepareForTest(ConstraintChecker::class, RxBusWrapper::class, DetailedBolusInfoStorage::class)
+@PrepareForTest(ConstraintChecker::class, RxBusWrapper::class, DetailedBolusInfoStorage::class, TemporaryBasalStorage::class)
 class DanaRsPacketNotifyDeliveryRateDisplayTest : DanaRSTestBase() {
 
     @Mock lateinit var activePlugin: ActivePluginProvider

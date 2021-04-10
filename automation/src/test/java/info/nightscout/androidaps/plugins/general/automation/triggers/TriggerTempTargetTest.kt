@@ -43,7 +43,7 @@ class TriggerTempTargetTest : TriggerTestBase() {
         Assert.assertEquals(ComparatorExists.Compare.NOT_EXISTS, t1.comparator.value)
     }
 
-    private var ttJson = "{\"data\":{\"comparator\":\"EXISTS\"},\"type\":\"info.nightscout.androidaps.plugins.general.automation.triggers.TriggerTempTarget\"}"
+    private var ttJson = "{\"data\":{\"comparator\":\"EXISTS\"},\"type\":\"TriggerTempTarget\"}"
     @Test fun toJSONTest() {
         val t: TriggerTempTarget = TriggerTempTarget(injector).comparator(ComparatorExists.Compare.EXISTS)
         Assert.assertEquals(ttJson, t.toJSON())

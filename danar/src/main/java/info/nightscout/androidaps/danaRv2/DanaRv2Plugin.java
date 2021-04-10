@@ -345,6 +345,58 @@ public class DanaRv2Plugin extends AbstractDanaRPlugin {
     }
 
     @NonNull @Override
+    public PumpEnactResult setExtendedBolus(double insulin, int durationInMinutes) {
+        DanaPump pump = danaPump;
+        insulin = constraintChecker.applyExtendedBolusConstraints(new Constraint<>(insulin)).value();
+        // needs to be rounded
+        int durationInHalfHours = Math.max(durationInMinutes / 30, 1);
+        insulin = Round.roundTo(insulin, getPumpDescription().getExtendedBolusStep());
+
+        PumpEnactResult result = new PumpEnactResult(getInjector());
+        if (danaPump.isExtendedInProgress() && Math.abs(danaPump.getExtendedBolusAmount() - insulin) < pumpDescription.getExtendedBolusStep()) {
+            result.enacted(false)
+                    .success(true)
+                    .comment(R.string.ok)
+                    .duration(pump.getExtendedBolusRemainingMinutes())
+                    .absolute(pump.getExtendedBolusAbsoluteRate())
+                    .isPercent(false)
+                    .isTempCancel(false);
+            getAapsLogger().debug(LTag.PUMP, "setExtendedBolus: Correct extended bolus already set. Current: " + pump.getExtendedBolusAmount() + " Asked: " + insulin);
+            return result;
+        }
+        boolean connectionOK = sExecutionService.extendedBolus(insulin, durationInHalfHours);
+        if (connectionOK && pump.isExtendedInProgress() && Math.abs(pump.getExtendedBolusAmount() - insulin) < getPumpDescription().getExtendedBolusStep()) {
+            result.enacted(true)
+                    .success(true)
+                    .comment(R.string.ok)
+                    .isTempCancel(false)
+                    .duration(pump.getExtendedBolusRemainingMinutes())
+                    .absolute(pump.getExtendedBolusAbsoluteRate())
+                    .isPercent(false);
+            if (!sp.getBoolean("danar_useextended", false))
+                result.bolusDelivered(pump.getExtendedBolusAmount());
+            getAapsLogger().debug(LTag.PUMP, "setExtendedBolus: OK");
+            return result;
+        }
+        result.enacted(false).success(false).comment(R.string.danar_valuenotsetproperly);
+        getAapsLogger().error("setExtendedBolus: Failed to extended bolus");
+        return result;
+    }
+
+    @NonNull @Override
+    public PumpEnactResult cancelExtendedBolus() {
+        PumpEnactResult result = new PumpEnactResult(getInjector());
+        if (danaPump.isExtendedInProgress()) {
+            sExecutionService.extendedBolusStop();
+            result.enacted(true).success(!danaPump.isExtendedInProgress()).isTempCancel(true);
+        } else  {
+            result.success(true).enacted(false).comment(R.string.ok);
+            getAapsLogger().debug(LTag.PUMP, "cancelExtendedBolus: OK");
+        }
+        return result;
+    }
+
+    @NonNull @Override
     public PumpType model() {
         return PumpType.DANA_RV2;
     }

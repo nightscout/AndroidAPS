@@ -25,7 +25,7 @@ import org.powermock.core.classloader.annotations.PrepareForTest
 import org.powermock.modules.junit4.PowerMockRunner
 
 @RunWith(PowerMockRunner::class)
-@PrepareForTest(ConstraintChecker::class, DetailedBolusInfoStorage::class)
+@PrepareForTest(ConstraintChecker::class, DetailedBolusInfoStorage::class, TemporaryBasalStorage::class)
 class DanaRv2PluginTest : TestBaseWithProfile() {
 
     @Mock lateinit var context: Context
@@ -51,7 +51,7 @@ class DanaRv2PluginTest : TestBaseWithProfile() {
         `when`(resourceHelper.gs(R.string.limitingbasalratio)).thenReturn("Limiting max basal rate to %1\$.2f U/h because of %2\$s")
         `when`(resourceHelper.gs(R.string.limitingpercentrate)).thenReturn("Limiting max percent rate to %1\$d%% because of %2\$s")
         danaPump = DanaPump(aapsLogger, sp, dateUtil, injector)
-        danaRv2Plugin = DanaRv2Plugin(injector, aapsLogger, aapsSchedulers, rxBus, context, danaPump, resourceHelper, constraintChecker, activePluginProvider, sp, commandQueue, detailedBolusInfoStorage, temporaryBasalStorage, dateUtil, fabricPrivacy, pumpSync)
+        danaRv2Plugin = DanaRv2Plugin(injector, aapsLogger, aapsSchedulers, rxBus, context, resourceHelper, constraintChecker, activePluginProvider, sp, commandQueue, danaPump,detailedBolusInfoStorage, temporaryBasalStorage, dateUtil, fabricPrivacy, pumpSync)
     }
 
     @Test

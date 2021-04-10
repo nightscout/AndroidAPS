@@ -55,6 +55,9 @@
     <string name="key_insight_local_settings" translatable="false">insight_local_settings</string>
     <string name="key_data_choices_settings" translatable="false">data_choices_settings</string>
     <string name="key_dexcom_settings" translatable="false">dexcom_settings</string>
+    <string name="key_active_pump_change_timestamp" translatable="false">active_pump_change_timestamp</string>
+    <string name="key_active_pump_type" translatable="false">active_pump_type</string>
+    <string name="key_active_pump_serial_number" translatable="false">active_pump_serial_number</string>
 
     <!--    General-->
     <string name="refresh">Refresh</string>
@@ -160,6 +163,7 @@
     <string name="notes_label">Notes</string>
     <string name="remove_button">Remove</string>
     <string name="addnew">Add new</string>
+    <string name="wrong_pump_data">Data is coming from different pump. Change pump driver to reset pump state.</string>
 
     <!--    Constraints-->
     <string name="limitingbasalratio">Limiting max basal rate to %1$.2f U/h because of %2$s</string>

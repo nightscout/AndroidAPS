@@ -19,12 +19,12 @@ class MsgHistoryEventsRv2Test : DanaRTestBase() {
         // test message decoding
         val array = createArray(100, 2)
 
-        putByteToArray(array, 0, 0xFF.toByte())
-        packet.handleMessage(array)
-        Assert.assertEquals(true, danaPump.historyDoneReceived)
-        // passing an bigger number
         putByteToArray(array, 0, 0x01.toByte())
         packet.handleMessage(array)
         Assert.assertEquals(false, danaPump.historyDoneReceived)
+
+        putByteToArray(array, 0, 0xFF.toByte())
+        packet.handleMessage(array)
+        Assert.assertEquals(true, danaPump.historyDoneReceived)
     }
 }

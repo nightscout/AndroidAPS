@@ -23,7 +23,7 @@ import org.powermock.modules.junit4.PowerMockRunner
 
 @Suppress("SpellCheckingInspection")
 @RunWith(PowerMockRunner::class)
-@PrepareForTest(ConstraintChecker::class, RxBusWrapper::class, DetailedBolusInfoStorage::class)
+@PrepareForTest(ConstraintChecker::class, RxBusWrapper::class, DetailedBolusInfoStorage::class, TemporaryBasalStorage::class)
 class DanaRSPluginTest : DanaRSTestBase() {
 
     @Mock lateinit var context: Context

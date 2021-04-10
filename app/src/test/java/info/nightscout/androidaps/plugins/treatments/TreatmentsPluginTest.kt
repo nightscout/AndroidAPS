@@ -48,6 +48,8 @@ class TreatmentsPluginTest : TestBaseWithProfile() {
             }
         }
     }
+
+    @Test fun dumy() {}
 /*
     private lateinit var insulinOrefRapidActingPlugin: InsulinOrefRapidActingPlugin
     private lateinit var sot: TreatmentsPlugin

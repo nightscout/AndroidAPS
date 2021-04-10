@@ -88,7 +88,7 @@ class TriggerAutosensValueTest : TriggerTestBase() {
         Assert.assertEquals(Comparator.Compare.IS_EQUAL_OR_LESSER, t.comparator.value)
     }
 
-    private var asJson = "{\"data\":{\"comparator\":\"IS_EQUAL\",\"value\":410},\"type\":\"info.nightscout.androidaps.plugins.general.automation.triggers.TriggerAutosensValue\"}"
+    private var asJson = "{\"data\":{\"comparator\":\"IS_EQUAL\",\"value\":410},\"type\":\"TriggerAutosensValue\"}"
 
     @Test
     fun toJSONTest() {

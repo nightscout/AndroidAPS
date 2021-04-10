@@ -16,6 +16,7 @@ import info.nightscout.androidaps.utils.JsonHelper.safeGetString
 import org.json.JSONObject
 
 class TriggerPumpLastConnection(injector: HasAndroidInjector) : Trigger(injector) {
+
     var minutesAgo = InputDuration()
     var comparator = Comparator(resourceHelper)
 
@@ -56,15 +57,10 @@ class TriggerPumpLastConnection(injector: HasAndroidInjector) : Trigger(injector
         return false
     }
 
-    override fun toJSON(): String {
-        val data = JSONObject()
+    override fun dataJSON(): JSONObject =
+        JSONObject()
             .put("minutesAgo", minutesAgo.value)
             .put("comparator", comparator.value.toString())
-        return JSONObject()
-            .put("type", this::class.java.name)
-            .put("data", data)
-            .toString()
-    }
 
     override fun fromJSON(data: String): Trigger {
         val d = JSONObject(data)

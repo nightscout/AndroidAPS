@@ -30,7 +30,8 @@ class ConfigBuilderPlugin @Inject constructor(
     private val sp: SP,
     private val rxBus: RxBusWrapper,
     private val activePlugin: ActivePluginProvider,
-    private val uel: UserEntryLogger
+    private val uel: UserEntryLogger,
+    private val pumpSync: PumpSync
 ) : PluginBase(PluginDescription()
     .mainType(PluginType.GENERAL)
     .fragmentClass(ConfigBuilderFragment::class.java.name)
@@ -141,14 +142,16 @@ class ConfigBuilderPlugin @Inject constructor(
         val allowHardwarePump = sp.getBoolean("allow_hardware_pump", false)
         if (allowHardwarePump || activity == null) {
             performPluginSwitch(changedPlugin, newState, type)
+            pumpSync.connectNewPump()
         } else {
-            OKDialog.showConfirmation(activity, resourceHelper.gs(R.string.allow_hardware_pump_text), Runnable {
+            OKDialog.showConfirmation(activity, resourceHelper.gs(R.string.allow_hardware_pump_text), {
                 performPluginSwitch(changedPlugin, newState, type)
+                pumpSync.connectNewPump()
                 sp.putBoolean("allow_hardware_pump", true)
                 uel.log(Action.HW_PUMP_ALLOWED, Sources.ConfigBuilder,
                     ValueWithUnit.StringResource(changedPlugin.pluginDescription.pluginName))
                 aapsLogger.debug(LTag.PUMP, "First time HW pump allowed!")
-            }, Runnable {
+            }, {
                 rxBus.send(EventConfigBuilderUpdateGui())
                 aapsLogger.debug(LTag.PUMP, "User does not allow switching to HW pump!")
             })

@@ -53,7 +53,7 @@ import java.util.*
 @PrepareForTest(
     ConfigBuilderPlugin::class, ConstraintChecker::class, SP::class, Context::class,
     OpenAPSAMAPlugin::class, OpenAPSSMBPlugin::class, TreatmentsPlugin::class, TreatmentService::class,
-    VirtualPumpPlugin::class, DetailedBolusInfoStorage::class, GlimpPlugin::class, Profiler::class,
+    VirtualPumpPlugin::class, DetailedBolusInfoStorage::class, TemporaryBasalStorage::class, GlimpPlugin::class, Profiler::class,
     UserEntryLogger::class, IobCobCalculatorPlugin::class, LoggerUtils::class, AppRepository::class)
 class ConstraintsCheckerTest : TestBaseWithProfile() {
 

@@ -17,13 +17,15 @@ class DanaRS_Packet_Bolus_Get_Extended_Menu_Option_State(
         aapsLogger.debug(LTag.PUMPCOMM, "New message")
     }
 
+    var isExtendedInProgress: Boolean = false
+
     override fun handleMessage(data: ByteArray) {
         var dataIndex = DATA_START
         var dataSize = 1
         val extendedMenuOption = byteArrayToInt(getBytes(data, dataIndex, dataSize))
         dataIndex += dataSize
         dataSize = 1
-        val isExtendedInProgress = byteArrayToInt(getBytes(data, dataIndex, dataSize)) == 0x01
+        isExtendedInProgress = byteArrayToInt(getBytes(data, dataIndex, dataSize)) == 0x01
         aapsLogger.debug(LTag.PUMPCOMM, "extendedMenuOption: $extendedMenuOption")
     }
 

@@ -139,17 +139,17 @@ class SmsCommunicatorPluginTest : TestBaseWithProfile() {
             null
         }.`when`(commandQueue).bolus(anyObject(), ArgumentMatchers.any(Callback::class.java))
         Mockito.doAnswer { invocation: InvocationOnMock ->
-            val callback = invocation.getArgument<Callback>(4)
+            val callback = invocation.getArgument<Callback>(5)
             callback.result = PumpEnactResult(injector).success(true).isPercent(true).percent(invocation.getArgument(0)).duration(invocation.getArgument(1))
             callback.run()
             null
-        }.`when`(commandQueue).tempBasalPercent(ArgumentMatchers.anyInt(), ArgumentMatchers.anyInt(), ArgumentMatchers.anyBoolean(), anyObject(), ArgumentMatchers.any(PumpSync.TemporaryBasalType::class.java), ArgumentMatchers.any(Callback::class.java))
+        }.`when`(commandQueue).tempBasalPercent(ArgumentMatchers.anyInt(), ArgumentMatchers.anyInt(), ArgumentMatchers.anyBoolean(), anyObject(), anyObject(), ArgumentMatchers.any(Callback::class.java))
         Mockito.doAnswer { invocation: InvocationOnMock ->
-            val callback = invocation.getArgument<Callback>(4)
+            val callback = invocation.getArgument<Callback>(5)
             callback.result = PumpEnactResult(injector).success(true).isPercent(false).absolute(invocation.getArgument(0)).duration(invocation.getArgument(1))
             callback.run()
             null
-        }.`when`(commandQueue).tempBasalAbsolute(ArgumentMatchers.anyDouble(), ArgumentMatchers.anyInt(), ArgumentMatchers.anyBoolean(), anyObject(), ArgumentMatchers.any(PumpSync.TemporaryBasalType::class.java), ArgumentMatchers.any(Callback::class.java))
+        }.`when`(commandQueue).tempBasalAbsolute(ArgumentMatchers.anyDouble(), ArgumentMatchers.anyInt(), ArgumentMatchers.anyBoolean(), anyObject(), anyObject(), ArgumentMatchers.any(Callback::class.java))
         Mockito.doAnswer { invocation: InvocationOnMock ->
             val callback = invocation.getArgument<Callback>(2)
             callback.result = PumpEnactResult(injector).success(true).isPercent(false).absolute(invocation.getArgument(0)).duration(invocation.getArgument(1))

@@ -68,9 +68,10 @@ public class OmnipodErosPumpPluginTest {
         OmnipodErosPumpPlugin plugin = new OmnipodErosPumpPlugin(injector, aapsLogger, new TestAapsSchedulers(), rxBusWrapper, null,
                 resourceHelper, activePluginProvider, null, null, aapsOmnipodErosManager, commandQueueProvider,
                 null, null, null, null,
-                rileyLinkUtil, null, null, null
+                rileyLinkUtil, null, null, pumpSync
         );
-        when(pumpSync.expectedPumpState().getTemporaryBasal()).thenReturn(null);
+        PumpSync.PumpState pumpState = new PumpSync.PumpState(null, null, null, null);
+        when(pumpSync.expectedPumpState()).thenReturn(pumpState);
         when(rileyLinkUtil.getRileyLinkHistory()).thenReturn(new ArrayList<>());
         when(injector.androidInjector()).thenReturn(instance -> {
         });

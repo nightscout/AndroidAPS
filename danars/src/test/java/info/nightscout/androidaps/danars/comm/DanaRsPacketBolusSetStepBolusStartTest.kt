@@ -21,7 +21,7 @@ import org.powermock.core.classloader.annotations.PrepareForTest
 import org.powermock.modules.junit4.PowerMockRunner
 
 @RunWith(PowerMockRunner::class)
-@PrepareForTest(ConstraintChecker::class, DetailedBolusInfoStorage::class)
+@PrepareForTest(ConstraintChecker::class, DetailedBolusInfoStorage::class, TemporaryBasalStorage::class)
 class DanaRsPacketBolusSetStepBolusStartTest : DanaRSTestBase() {
 
     @Mock lateinit var constraintChecker: ConstraintChecker

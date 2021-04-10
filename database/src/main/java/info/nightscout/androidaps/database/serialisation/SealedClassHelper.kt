@@ -33,6 +33,7 @@ object SealedClassHelper {
             val x = gson.fromJson<T>(jsonReader, innerClass.javaObjectType)
             jsonReader.endObject()
             // if there a static object, actually return that
+            @Suppress("UNCHECKED_CAST")
             return innerClass.objectInstance as T? ?: x
         }
 

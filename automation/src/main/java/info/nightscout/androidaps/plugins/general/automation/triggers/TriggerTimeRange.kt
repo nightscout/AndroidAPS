@@ -50,15 +50,10 @@ class TriggerTimeRange(injector: HasAndroidInjector) : Trigger(injector) {
         return false
     }
 
-    override fun toJSON(): String {
-        val data = JSONObject()
+    override fun dataJSON(): JSONObject =
+        JSONObject()
             .put("start", range.start)
             .put("end", range.end)
-        return JSONObject()
-            .put("type", this::class.java.name)
-            .put("data", data)
-            .toString()
-    }
 
     override fun fromJSON(data: String): TriggerTimeRange {
         val o = JSONObject(data)

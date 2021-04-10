@@ -53,7 +53,7 @@ class TriggerPumpLastConnectionTest : TriggerTestBase() {
         Assert.assertEquals(Comparator.Compare.IS_EQUAL_OR_LESSER, t.comparator.value)
     }
 
-    private var lbJson = "{\"data\":{\"comparator\":\"IS_EQUAL\",\"minutesAgo\":410},\"type\":\"info.nightscout.androidaps.plugins.general.automation.triggers.TriggerPumpLastConnection\"}"
+    private var lbJson = "{\"data\":{\"comparator\":\"IS_EQUAL\",\"minutesAgo\":410},\"type\":\"TriggerPumpLastConnection\"}"
     @Test fun toJSONTest() {
         val t: TriggerPumpLastConnection = TriggerPumpLastConnection(injector).setValue(410).comparator(Comparator.Compare.IS_EQUAL)
         Assert.assertEquals(lbJson, t.toJSON())
