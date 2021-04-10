@@ -94,6 +94,8 @@ data class UserEntry(
         STOP_SMS (ColorGroup.Aaps),
         FOOD (ColorGroup.CarbTreatment),
         EXPORT_CSV (ColorGroup.Aaps),
+        START_AAPS (ColorGroup.Aaps),
+        EXIT_AAPS (ColorGroup.Aaps),
         UNKNOWN (ColorGroup.Aaps)
         ;
 
@@ -125,6 +127,14 @@ data class UserEntry(
         Actions,            //From Actions plugin
         Automation,         //From Automation plugin
         BG,                 //From BG plugin => Add One Source per BG Source for Calibration or Sensor Change
+        Dexcom,
+        Eversense,
+        Glimp,
+        MM640g,
+        NSClientSource,
+        PocTech,
+        Tomato,
+        Xdrip,
         LocalProfile,       //From LocalProfile plugin
         Loop,               //From Loop plugin
         Maintenance,        //From Maintenance plugin
@@ -152,6 +162,7 @@ data class UserEntry(
         ConfigBuilder,      //From ConfigBuilder Plugin
         Overview,           //From OverViewPlugin
         Stats,               //From Stat Activity
+        Aaps,               // MainApp
         Unknown             //if necessary
         ;
 
