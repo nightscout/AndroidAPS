@@ -94,6 +94,8 @@ class Translator @Inject internal constructor(
         Action.OTP_RESET                           -> resourceHelper.gs(R.string.uel_otp_reset)
         Action.EXPORT_CSV                          -> resourceHelper.gs(R.string.uel_export_csv)
         Action.STOP_SMS                            -> resourceHelper.gs(R.string.uel_stop_sms)
+        Action.START_AAPS                          -> resourceHelper.gs(R.string.uel_start_aaps)
+        Action.EXIT_AAPS                           -> resourceHelper.gs(R.string.uel_exit_aaps)
         Action.UNKNOWN                             -> resourceHelper.gs(R.string.unknown)
     }
 
@@ -263,6 +265,7 @@ class Translator @Inject internal constructor(
         Sources.ConfigBuilder                      -> TODO()
         Sources.Overview                           -> TODO()
         Sources.Stats                              -> TODO()
+        Sources.Aaps                               -> TODO()
         */
         Sources.Automation                         -> resourceHelper.gs(R.string.automation)
         Sources.Loop                               -> resourceHelper.gs(R.string.loop)

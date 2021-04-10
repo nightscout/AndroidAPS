@@ -28,13 +28,13 @@ class UserEntryPresentationHelper @Inject constructor(
     fun colorId(colorGroup: ColorGroup): Int = when (colorGroup) {
         ColorGroup.InsulinTreatment -> R.color.iob
         ColorGroup.BasalTreatment   -> R.color.basal
-        ColorGroup.CarbTreatment -> R.color.carbs
-        ColorGroup.TT -> R.color.tempTargetConfirmation
-        ColorGroup.Profile -> R.color.white
-        ColorGroup.Loop -> R.color.loopClosed
-        ColorGroup.Careportal -> R.color.high
-        ColorGroup.Pump -> R.color.loopDisconnected
-        ColorGroup.Aaps -> R.color.defaulttext
+        ColorGroup.CarbTreatment    -> R.color.carbs
+        ColorGroup.TT               -> R.color.tempTargetConfirmation
+        ColorGroup.Profile          -> R.color.white
+        ColorGroup.Loop             -> R.color.loopClosed
+        ColorGroup.Careportal       -> R.color.high
+        ColorGroup.Pump             -> R.color.loopDisconnected
+        ColorGroup.Aaps             -> R.color.defaulttext
         else                        -> R.color.defaulttext
     }
 
@@ -89,14 +89,15 @@ class UserEntryPresentationHelper @Inject constructor(
         Sources.OmnipodDash         -> R.drawable.ic_pod_128
         Sources.MDI                 -> R.drawable.ic_ict
         Sources.VirtualPump         -> R.drawable.ic_virtual_pump
-        Sources.SMS -> R.drawable.ic_sms
-        Sources.Treatments -> R.drawable.ic_treatments
-        Sources.Wear -> R.drawable.ic_watch
-        Sources.Food -> R.drawable.ic_food
-        Sources.Stats -> R.drawable.ic_cp_stats
-        Sources.ConfigBuilder -> R.drawable.ic_generic_icon
-        Sources.Overview -> R.drawable.ic_generic_icon
-        Sources.Unknown -> R.drawable.ic_generic_icon
+        Sources.SMS                 -> R.drawable.ic_sms
+        Sources.Treatments          -> R.drawable.ic_treatments
+        Sources.Wear                -> R.drawable.ic_watch
+        Sources.Food                -> R.drawable.ic_food
+        Sources.Stats               -> R.drawable.ic_cp_stats
+        Sources.ConfigBuilder       -> R.drawable.ic_cogs
+        Sources.Overview            -> R.drawable.ic_notif_aaps
+        Sources.Aaps                -> R.drawable.ic_notif_aaps
+        Sources.Unknown             -> R.drawable.ic_generic_icon
     }
 
     fun actionToColoredString(action: Action): Spanned = when (action) {
