@@ -34,9 +34,9 @@ class DanaRsPacketBasalGetTemporaryBasalStateTest : DanaRSTestBase() {
         putIntToArray(array, 4, 1)
         packet.handleMessage(array)
         Assert.assertTrue(packet.failed)
-        Assert.assertTrue(danaPump.isTempBasalInProgress)
-        Assert.assertEquals(300, danaPump.tempBasalPercent)
-        Assert.assertEquals(15 * 60, danaPump.tempBasalTotalSec)
+        Assert.assertTrue(packet.isTempBasalInProgress)
+        Assert.assertEquals(300, packet.tempBasalPercent)
+        Assert.assertEquals(15 * 60, packet.tempBasalTotalSec)
         Assert.assertEquals("BASAL__TEMPORARY_BASAL_STATE", packet.friendlyName)
     }
 }

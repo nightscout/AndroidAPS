@@ -32,7 +32,6 @@ open class DanaRTestBase : TestBase() {
     @Mock lateinit var activePluginProvider: ActivePluginProvider
     @Mock lateinit var dateUtil: DateUtil
     @Mock lateinit var databaseHelper: DatabaseHelperInterface
-    @Mock lateinit var treatmentsInterface: TreatmentsInterface
     @Mock lateinit var danaRPlugin: DanaRPlugin
     @Mock lateinit var danaRKoreanPlugin: DanaRKoreanPlugin
     @Mock lateinit var danaRv2Plugin: DanaRv2Plugin
@@ -49,7 +48,6 @@ open class DanaRTestBase : TestBase() {
     fun setup() {
         danaPump = DanaPump(aapsLogger, sp, dateUtil, injector)
         testPumpPlugin = TestPumpPlugin(injector)
-        `when`(activePluginProvider.activeTreatments).thenReturn(treatmentsInterface)
         `when`(activePluginProvider.activePump).thenReturn(testPumpPlugin)
         doNothing().`when`(danaRKoreanPlugin).setPluginEnabled(anyObject(), anyBoolean())
         doNothing().`when`(danaRPlugin).setPluginEnabled(anyObject(), anyBoolean())

@@ -33,7 +33,6 @@ class DanaRsPacketBolusGetDualBolusTest : DanaRSTestBase() {
         packet.handleMessage(array)
         Assert.assertTrue(packet.failed)
         Assert.assertEquals(1.0, danaPump.bolusStep, 0.0)
-        Assert.assertEquals(0.55, danaPump.extendedBolusAbsoluteRate, 0.0)
         Assert.assertEquals(40.0, danaPump.maxBolus, 0.0)
 
         Assert.assertEquals("BOLUS__GET_DUAL_BOLUS", packet.friendlyName)

@@ -20,7 +20,7 @@ import org.powermock.modules.junit4.PowerMockRunner
 import java.util.*
 
 @RunWith(PowerMockRunner::class)
-@PrepareForTest(RxBusWrapper::class, DetailedBolusInfoStorage::class, DanaRSPlugin::class)
+@PrepareForTest(RxBusWrapper::class, DetailedBolusInfoStorage::class, TemporaryBasalStorage::class, DanaRSPlugin::class)
 class DanaRsPacketApsHistoryEventsTest : DanaRSTestBase() {
 
     @Mock lateinit var context: Context

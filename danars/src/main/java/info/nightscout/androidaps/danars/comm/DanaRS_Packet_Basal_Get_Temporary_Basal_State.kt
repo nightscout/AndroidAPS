@@ -19,14 +19,18 @@ class DanaRS_Packet_Basal_Get_Temporary_Basal_State(
         aapsLogger.debug(LTag.PUMPCOMM, "Requesting temporary basal status")
     }
 
+    var isTempBasalInProgress: Boolean = false
+    var tempBasalTotalSec: Int = 0
+    var tempBasalPercent: Int = 0
+
     override fun handleMessage(data: ByteArray) {
         val error = byteArrayToInt(getBytes(data, DATA_START, 1))
-        val isTempBasalInProgress = byteArrayToInt(getBytes(data, DATA_START + 1, 1)) == 0x01
+        isTempBasalInProgress = byteArrayToInt(getBytes(data, DATA_START + 1, 1)) == 0x01
         val isAPSTempBasalInProgress = byteArrayToInt(getBytes(data, DATA_START + 1, 1)) == 0x02
-        var tempBasalPercent = byteArrayToInt(getBytes(data, DATA_START + 2, 1))
+        tempBasalPercent = byteArrayToInt(getBytes(data, DATA_START + 2, 1))
         if (tempBasalPercent > 200) tempBasalPercent = (tempBasalPercent - 200) * 10
         val durationHour = byteArrayToInt(getBytes(data, DATA_START + 3, 1))
-        val tempBasalTotalSec: Int = if (durationHour == 150) 15 * 60 else if (durationHour == 160) 30 * 60 else durationHour * 60 * 60
+        tempBasalTotalSec = if (durationHour == 150) 15 * 60 else if (durationHour == 160) 30 * 60 else durationHour * 60 * 60
         val runningMin = byteArrayToInt(getBytes(data, DATA_START + 4, 2))
         if (error != 0) failed = true
         val tempBasalRemainingMin = (danaPump.tempBasalTotalSec - runningMin * 60) / 60
