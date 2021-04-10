@@ -167,18 +167,18 @@ class TreatmentDialog : DialogFragmentWithDate() {
                                     { aapsLogger.error(LTag.DATABASE, "Error while saving carbs", it) }
                                 )
                     } else {
-                        if (detailedBolusInfo.insulin > 0)
+                        if (detailedBolusInfo.insulin > 0) {
+                            uel.log(action, Sources.TreatmentDialog,
+                                ValueWithUnit.Insulin(insulinAfterConstraints),
+                                ValueWithUnit.Gram(carbsAfterConstraints).takeIf { carbsAfterConstraints != 0 })
                             commandQueue.bolus(detailedBolusInfo, object : Callback() {
                                 override fun run() {
                                     if (!result.success) {
                                         ErrorHelperActivity.runAlarm(ctx, result.comment, resourceHelper.gs(R.string.treatmentdeliveryerror), info.nightscout.androidaps.dana.R.raw.boluserror)
-                                    } else
-                                        uel.log(action, Sources.TreatmentDialog,
-                                            ValueWithUnit.Insulin(insulinAfterConstraints),
-                                            ValueWithUnit.Gram(carbsAfterConstraints).takeIf { carbsAfterConstraints != 0 })
+                                    }
                                 }
                             })
-                        else
+                        } else
                             uel.log(action, Sources.TreatmentDialog,
                                 ValueWithUnit.Gram(carbsAfterConstraints).takeIf { carbs != 0 })
                     }
