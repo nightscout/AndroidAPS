@@ -44,15 +44,10 @@ class TriggerIob(injector: HasAndroidInjector) : Trigger(injector) {
         return false
     }
 
-    @Synchronized override fun toJSON(): String {
-        val data = JSONObject()
+    override fun dataJSON(): JSONObject =
+        JSONObject()
             .put("insulin", insulin.value)
             .put("comparator", comparator.value.toString())
-        return JSONObject()
-            .put("type", this::class.java.name)
-            .put("data", data)
-            .toString()
-    }
 
     override fun fromJSON(data: String): Trigger {
         val d = JSONObject(data)

@@ -72,7 +72,7 @@ class TriggerDeltaTest : TriggerTestBase() {
         Assert.assertEquals(Comparator.Compare.IS_EQUAL_OR_LESSER, t.comparator.value)
     }
 
-    private var deltaJson = "{\"data\":{\"comparator\":\"IS_EQUAL\",\"deltaType\":\"DELTA\",\"units\":\"mg/dl\",\"value\":4.1},\"type\":\"info.nightscout.androidaps.plugins.general.automation.triggers.TriggerDelta\"}"
+    private var deltaJson = "{\"data\":{\"comparator\":\"IS_EQUAL\",\"deltaType\":\"DELTA\",\"units\":\"mg/dl\",\"value\":4.1},\"type\":\"TriggerDelta\"}"
 
     @Test
     fun toJSONTest() {

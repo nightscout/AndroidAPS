@@ -121,7 +121,7 @@ class IobCobCalculatorPluginTest : TestBase() {
     }
 
     @Test
-    fun createBucketedData5minTest() {
+    fun createBucketedData5minTest1() {
         val bgReadingList: MutableList<GlucoseValue> = ArrayList()
 
         // Super data should not be touched
@@ -205,6 +205,11 @@ class IobCobCalculatorPluginTest : TestBase() {
         Assert.assertEquals(90.0, iobCobCalculatorPlugin.bucketedData!![1].value, 1.0)
         Assert.assertEquals(50.0, iobCobCalculatorPlugin.bucketedData!![5].value, 1.0)
         Assert.assertEquals(40.0, iobCobCalculatorPlugin.bucketedData!![6].value, 1.0)
+    }
+
+    @Test
+    fun createBucketedData5minTest2() {
+        val bgReadingList: MutableList<GlucoseValue> = ArrayList()
 
         //bucketed data should be null if no bg data available
         iobCobCalculatorPlugin.bgReadings = ArrayList()

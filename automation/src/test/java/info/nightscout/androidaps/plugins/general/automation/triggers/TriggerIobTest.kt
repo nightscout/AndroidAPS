@@ -57,7 +57,7 @@ class TriggerIobTest : TriggerTestBase() {
         Assert.assertEquals(Comparator.Compare.IS_EQUAL_OR_LESSER, t.comparator.value)
     }
 
-    private var bgJson = "{\"data\":{\"comparator\":\"IS_EQUAL\",\"insulin\":4.1},\"type\":\"info.nightscout.androidaps.plugins.general.automation.triggers.TriggerIob\"}"
+    private var bgJson = "{\"data\":{\"comparator\":\"IS_EQUAL\",\"insulin\":4.1},\"type\":\"TriggerIob\"}"
     @Test fun toJSONTest() {
         val t: TriggerIob = TriggerIob(injector).setValue(4.1).comparator(Comparator.Compare.IS_EQUAL)
         Assert.assertEquals(bgJson, t.toJSON())

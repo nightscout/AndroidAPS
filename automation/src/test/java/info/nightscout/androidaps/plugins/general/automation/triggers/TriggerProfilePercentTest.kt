@@ -55,7 +55,7 @@ class TriggerProfilePercentTest : TriggerTestBase() {
         Assert.assertEquals(Comparator.Compare.IS_EQUAL_OR_LESSER, t.comparator.value)
     }
 
-    private val bgJson = "{\"data\":{\"comparator\":\"IS_EQUAL\",\"percentage\":110},\"type\":\"info.nightscout.androidaps.plugins.general.automation.triggers.TriggerProfilePercent\"}"
+    private val bgJson = "{\"data\":{\"comparator\":\"IS_EQUAL\",\"percentage\":110},\"type\":\"TriggerProfilePercent\"}"
     @Test fun toJSONTest() {
         val t: TriggerProfilePercent = TriggerProfilePercent(injector).setValue(110.0).comparator(Comparator.Compare.IS_EQUAL)
         Assert.assertEquals(bgJson, t.toJSON())
