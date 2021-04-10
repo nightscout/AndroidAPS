@@ -67,6 +67,7 @@ fun ExtendedBolus.toRealJson(): JSONObject =
         .put("splitExt", 100)
         .put("enteredinsulin", amount)
         .put("relative", rate)
+        .put("isValid", isValid)
         .put("isEmulatingTempBasal", isEmulatingTempBasal)
         .also {
             if (interfaceIDs.pumpId != null) it.put("pumpId", interfaceIDs.pumpId)

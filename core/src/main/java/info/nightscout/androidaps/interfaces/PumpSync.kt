@@ -23,6 +23,14 @@ import info.nightscout.androidaps.plugins.pump.common.defs.PumpType
  */
 interface PumpSync {
 
+    /**
+     *  Reset stored identification of last used pump
+     *
+     *  Call this function when new pump is paired to accept data from new pump
+     *  to prevent overlapping pump histories
+     */
+    fun connectNewPump()
+
     /*
      *   GENERAL STATUS
      */
