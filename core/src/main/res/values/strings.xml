@@ -479,6 +479,8 @@
     <string name="uel_export_csv">EXPORT USER ENTRIES</string>
     <string name="uel_start_aaps">START AAPS</string>
     <string name="uel_exit_aaps">EXIT AAPS</string>
+    <string name="uel_plugin_enabled">PLUGIN ENABLED</string>
+    <string name="uel_plugin_disabled">PLUGIN DISABLED</string>
     <string name="uel_unknown">UNKNOWN</string>
     <string name="ue_formated_string">Formated string</string>
     <string name="ue_source">Source</string>
