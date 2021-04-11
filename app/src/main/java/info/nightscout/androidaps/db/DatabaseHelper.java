@@ -52,6 +52,7 @@ import info.nightscout.androidaps.plugins.general.nsclient.NSUpload;
 import info.nightscout.androidaps.plugins.general.openhumans.OpenHumansUploader;
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.events.EventNewHistoryData;
 import info.nightscout.androidaps.plugins.pump.virtual.VirtualPumpPlugin;
+import info.nightscout.androidaps.utils.DateUtil;
 import info.nightscout.androidaps.utils.PercentageSplitter;
 
 /**
@@ -69,6 +70,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
     @Inject OpenHumansUploader openHumansUploader;
     @Inject ActivePluginProvider activePlugin;
     @Inject NSUpload nsUpload;
+    @Inject DateUtil dateUtil;
 
     public static final String DATABASE_NAME = "AndroidAPSDb";
     public static final String DATABASE_EXTENDEDBOLUSES = "ExtendedBoluses";
@@ -886,7 +888,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
                         profileSwitch.profileJson = profile.getData().toString();
                         aapsLogger.debug(LTag.DATABASE, "Profile switch prefilled with JSON from local store");
                         // Update data in NS
-                        nsUpload.updateProfileSwitch(profileSwitch);
+                        nsUpload.updateProfileSwitch(profileSwitch, dateUtil);
                     } else {
                         aapsLogger.debug(LTag.DATABASE, "JSON for profile switch doesn't exist. Ignoring: " + trJson.toString());
                         return;

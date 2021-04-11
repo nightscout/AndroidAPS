@@ -63,7 +63,7 @@ abstract class DialogFragmentWithDate : DaggerDialogFragment() {
         eventTime = savedInstanceState?.getLong("eventTime") ?: dateUtil.nowWithoutMilliseconds()
         eventTimeChanged = savedInstanceState?.getBoolean("eventTimeChanged") ?: false
 
-        eventDateView?.text = DateUtil.dateString(eventTime)
+        eventDateView?.text = dateUtil.dateString(eventTime)
         eventTimeView?.text = dateUtil.timeString(eventTime)
 
         // create an OnDateSetListener
@@ -75,7 +75,7 @@ abstract class DialogFragmentWithDate : DaggerDialogFragment() {
             cal.set(Calendar.DAY_OF_MONTH, dayOfMonth)
             eventTime = cal.timeInMillis
             eventTimeChanged = true
-            eventDateView?.text = DateUtil.dateString(eventTime)
+            eventDateView?.text = dateUtil.dateString(eventTime)
         }
 
         eventDateView?.setOnClickListener {

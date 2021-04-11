@@ -48,7 +48,8 @@ class BLEComm @Inject internal constructor(
     private val danaPump: DanaPump,
     private val danaRSPlugin: DanaRSPlugin,
     private val bleEncryption: BleEncryption,
-    private val pumpSync: PumpSync
+    private val pumpSync: PumpSync,
+    private val dateUtil: DateUtil
 ) {
 
     companion object {
@@ -140,7 +141,7 @@ class BLEComm @Inject internal constructor(
             // there was no response from pump after started encryption
             // assume pairing keys are invalid
             val lastClearRequest = sp.getLong(R.string.key_rs_last_clear_key_request, 0)
-            if (lastClearRequest != 0L && DateUtil.isOlderThan(lastClearRequest, 5)) {
+            if (lastClearRequest != 0L && dateUtil.isOlderThan(lastClearRequest, 5)) {
                 aapsLogger.error("Clearing pairing keys !!!")
                 sp.remove(resourceHelper.gs(R.string.key_danars_v3_randompairingkey) + danaRSPlugin.mDeviceName)
                 sp.remove(resourceHelper.gs(R.string.key_danars_v3_pairingkey) + danaRSPlugin.mDeviceName)
@@ -149,7 +150,7 @@ class BLEComm @Inject internal constructor(
                 danaRSPlugin.changePump()
             } else if (lastClearRequest == 0L) {
                 aapsLogger.error("Clearing pairing keys postponed")
-                sp.putLong(R.string.key_rs_last_clear_key_request, DateUtil.now())
+                sp.putLong(R.string.key_rs_last_clear_key_request, dateUtil.now())
             }
         }
         // cancel previous scheduled disconnection to prevent closing upcoming connection

@@ -72,6 +72,7 @@ public class DanaRKoreanExecutionService extends AbstractDanaRExecutionService {
     @Inject ActivePluginProvider activePlugin;
     @Inject ProfileFunction profileFunction;
     @Inject PumpSync pumpSync;
+    @Inject DateUtil dateUtil;
 
     public DanaRKoreanExecutionService() {
     }
@@ -183,7 +184,7 @@ public class DanaRKoreanExecutionService extends AbstractDanaRExecutionService {
                 if (Math.abs(timeDiff) > 10) {
                     waitForWholeMinute(); // Dana can set only whole minute
                     // add 10sec to be sure we are over minute (will be cut off anyway)
-                    mSerialIOThread.sendMessage(new MsgSetTime(injector, DateUtil.now() + T.secs(10).msecs()));
+                    mSerialIOThread.sendMessage(new MsgSetTime(injector, dateUtil.now() + T.secs(10).msecs()));
                     mSerialIOThread.sendMessage(new MsgSettingPumpTime(injector));
                     timeDiff = (danaPump.getPumpTime() - System.currentTimeMillis()) / 1000L;
                     aapsLogger.debug(LTag.PUMP, "Pump time difference: " + timeDiff + " seconds");

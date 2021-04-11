@@ -70,7 +70,7 @@ class SafetyPlugin @Inject constructor(
             value[aapsLogger, false, resourceHelper.gs(R.string.closed_loop_disabled_on_dev_branch)] = this
         }
         val pump = activePlugin.activePump
-        if (!pump.isFakingTempsByExtendedBoluses && iobCobCalculator.getExtendedBolus(dateUtil._now()) != null) {
+        if (!pump.isFakingTempsByExtendedBoluses && iobCobCalculator.getExtendedBolus(dateUtil.now()) != null) {
             value[aapsLogger, false, resourceHelper.gs(R.string.closed_loop_disabled_with_eb)] = this
         }
         return value

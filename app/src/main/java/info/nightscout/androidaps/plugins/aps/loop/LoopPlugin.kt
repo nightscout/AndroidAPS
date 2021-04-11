@@ -313,7 +313,7 @@ open class LoopPlugin @Inject constructor(
             lastRun = (lastRun ?: LastRun()).also { lastRun ->
                 lastRun.request = apsResult
                 lastRun.constraintsProcessed = resultAfterConstraints
-                lastRun.lastAPSRun = DateUtil.now()
+                lastRun.lastAPSRun = dateUtil.now()
                 lastRun.source = (usedAPS as PluginBase).name
                 lastRun.tbrSetByPump = null
                 lastRun.smbSetByPump = null
@@ -378,6 +378,8 @@ open class LoopPlugin @Inject constructor(
 
                                 // mId allows you to update the notification later on.
                                 mNotificationManager.notify(Constants.notificationID, builder.build())
+                                uel.log(Action.CAREPORTAL, Sources.Loop,
+                                    ValueWithUnit.StringResource(info.nightscout.androidaps.core.R.string.carbsreq, listOf(ValueWithUnit.Gram(resultAfterConstraints.carbsReq), ValueWithUnit.Minute(resultAfterConstraints.carbsReqWithin))))
                                 rxBus.send(EventNewOpenLoopNotification())
 
                                 //only send to wear if Native notifications are turned off
@@ -408,7 +410,7 @@ open class LoopPlugin @Inject constructor(
                                 if (result.enacted || result.success) {
                                     lastRun.tbrSetByPump = result
                                     lastRun.lastTBRRequest = lastRun.lastAPSRun
-                                    lastRun.lastTBREnact = DateUtil.now()
+                                    lastRun.lastTBREnact = dateUtil.now()
                                     rxBus.send(EventLoopUpdateGui())
                                     applySMBRequest(resultAfterConstraints, object : Callback() {
                                         override fun run() {
@@ -416,7 +418,7 @@ open class LoopPlugin @Inject constructor(
                                             if (result.enacted || result.success) {
                                                 lastRun.smbSetByPump = result
                                                 lastRun.lastSMBRequest = lastRun.lastAPSRun
-                                                lastRun.lastSMBEnact = DateUtil.now()
+                                                lastRun.lastSMBEnact = dateUtil.now()
                                             } else {
                                                 Thread {
                                                     SystemClock.sleep(1000)
@@ -507,8 +509,8 @@ open class LoopPlugin @Inject constructor(
                         if (result.enacted) {
                             lastRun.tbrSetByPump = result
                             lastRun.lastTBRRequest = lastRun.lastAPSRun
-                            lastRun.lastTBREnact = DateUtil.now()
-                            lastRun.lastOpenModeAccept = DateUtil.now()
+                            lastRun.lastTBREnact = dateUtil.now()
+                            lastRun.lastOpenModeAccept = dateUtil.now()
                             buildDeviceStatus(dateUtil, this@LoopPlugin, iobCobCalculator, profileFunction,
                                 activePlugin.activePump, receiverStatusStore, runningConfiguration,
                                 BuildConfig.VERSION_NAME + "-" + BuildConfig.BUILDVERSION)?.also {
@@ -658,7 +660,7 @@ open class LoopPlugin @Inject constructor(
                 }
             })
         }
-        if (pump.pumpDescription.isExtendedBolusCapable && iobCobCalculator.getExtendedBolus(dateUtil._now()) != null) {
+        if (pump.pumpDescription.isExtendedBolusCapable && iobCobCalculator.getExtendedBolus(dateUtil.now()) != null) {
             commandQueue.cancelExtended(object : Callback() {
                 override fun run() {
                     if (!result.success) {
@@ -684,7 +686,7 @@ open class LoopPlugin @Inject constructor(
 
     override fun createOfflineEvent(durationInMinutes: Int) {
         disposable += repository.runTransactionForResult(InsertIfNewByTimestampTherapyEventTransaction(
-            timestamp = dateUtil._now(),
+            timestamp = dateUtil.now(),
             type = TherapyEvent.Type.APS_OFFLINE,
             duration = T.mins(durationInMinutes.toLong()).msecs(),
             enteredBy = "openaps://" + "AndroidAPS",

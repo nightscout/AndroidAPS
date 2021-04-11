@@ -45,26 +45,26 @@ fun TemporaryBasal.toStringFull(profile: Profile, dateUtil: DateUtil): String {
         type == TemporaryBasal.Type.FAKE_EXTENDED -> {
             to2Decimal(rate) + "U/h (" + to2Decimal(netExtendedRate(profile)) + "E) @" +
                 dateUtil.timeString(timestamp) +
-                " " + getPassedDurationToTimeInMinutes(dateUtil._now()) + "/" + durationInMinutes + "'"
+                " " + getPassedDurationToTimeInMinutes(dateUtil.now()) + "/" + durationInMinutes + "'"
         }
 
         isAbsolute                                -> {
             to2Decimal(rate) + "U/h @" +
                 dateUtil.timeString(timestamp) +
-                " " + getPassedDurationToTimeInMinutes(dateUtil._now()) + "/" + durationInMinutes + "'"
+                " " + getPassedDurationToTimeInMinutes(dateUtil.now()) + "/" + durationInMinutes + "'"
         }
 
         else                                      -> { // percent
             rate.toString() + "% @" +
                 dateUtil.timeString(timestamp) +
-                " " + getPassedDurationToTimeInMinutes(dateUtil._now()) + "/" + durationInMinutes + "'"
+                " " + getPassedDurationToTimeInMinutes(dateUtil.now()) + "/" + durationInMinutes + "'"
         }
     }
 }
 
-fun TemporaryBasal.toJson(profile: Profile): JSONObject =
+fun TemporaryBasal.toJson(profile: Profile, dateUtil: DateUtil): JSONObject =
     JSONObject()
-        .put("created_at", DateUtil.toISOString(timestamp))
+        .put("created_at", dateUtil.toISOString(timestamp))
         .put("enteredBy", "openaps://" + "AndroidAPS")
         .put("eventType", TherapyEvent.Type.TEMPORARY_BASAL.text)
         .put("duration", T.msecs(duration).mins())

@@ -151,7 +151,7 @@ class TidepoolUploader @Inject constructor(
                 if (session.datasetReply == null) {
                     rxBus.send(EventTidepoolStatus(("Creating new dataset")))
                     val call = session.service.openDataSet(session.token!!, session.authReply!!.userid!!,
-                        OpenDatasetRequestMessage(activePlugin.activePump.serialNumber()).getBody())
+                        OpenDatasetRequestMessage(activePlugin.activePump.serialNumber(), dateUtil).getBody())
                     call.enqueue(TidepoolCallback<DatasetReplyMessage>(aapsLogger, rxBus, session, "Open New Dataset", {
                         connectionStatus = ConnectionStatus.CONNECTED
                         rxBus.send(EventTidepoolStatus(("New dataset OK")))
@@ -232,7 +232,7 @@ class TidepoolUploader @Inject constructor(
     }
 
     private fun uploadNext() {
-        if (uploadChunk.getLastEnd() < DateUtil.now() - T.mins(1).msecs()) {
+        if (uploadChunk.getLastEnd() < dateUtil.now() - T.mins(1).msecs()) {
             SystemClock.sleep(3000)
             aapsLogger.debug(LTag.TIDEPOOL, "Restarting doUpload. Last: " + dateUtil.dateAndTimeString(uploadChunk.getLastEnd()))
             doUpload()

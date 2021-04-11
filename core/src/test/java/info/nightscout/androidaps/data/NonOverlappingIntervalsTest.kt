@@ -4,7 +4,6 @@ import dagger.android.AndroidInjector
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.TestBase
 import info.nightscout.androidaps.db.TemporaryBasal
-import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.T
 import org.junit.Assert
 import org.junit.Test
@@ -14,7 +13,7 @@ import org.powermock.modules.junit4.PowerMockRunner
 @RunWith(PowerMockRunner::class)
 class NonOverlappingIntervalsTest : TestBase() {
 
-    private val startDate = DateUtil.now()
+    private val startDate = System.currentTimeMillis()
     var list = NonOverlappingIntervals<TemporaryBasal>()
 
     val injector = HasAndroidInjector { AndroidInjector {} }

@@ -7,6 +7,7 @@ import info.nightscout.androidaps.data.Profile
 import info.nightscout.androidaps.database.AppRepository
 import info.nightscout.androidaps.database.entities.TherapyEvent
 import info.nightscout.androidaps.db.ProfileSwitch
+import info.nightscout.androidaps.extensions.isEvent5minBack
 import info.nightscout.androidaps.interfaces.DatabaseHelperInterface
 import info.nightscout.androidaps.interfaces.IobCobCalculator
 import info.nightscout.androidaps.interfaces.PluginDescription
@@ -17,9 +18,8 @@ import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.logging.LTag
 import info.nightscout.androidaps.plugins.aps.openAPSSMB.SMBDefaults
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.AutosensResult
-import info.nightscout.androidaps.plugins.iob.iobCobCalculator.IobCobCalculatorPlugin.Companion.percentile
+import info.nightscout.androidaps.plugins.iob.iobCobCalculator.IobCobCalculatorPlugin
 import info.nightscout.androidaps.utils.DateUtil
-import info.nightscout.androidaps.extensions.isEvent5minBack
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 import info.nightscout.androidaps.utils.sharedPreferences.SP
 import org.json.JSONException
@@ -163,8 +163,8 @@ open class SensitivityOref1Plugin @Inject constructor(
             val sens = profile.isfMgdl
             aapsLogger.debug(LTag.AUTOSENS, "Records: $index   $pastSensitivity")
             Arrays.sort(deviations)
-            val pSensitive = percentile(deviations, 0.50)
-            val pResistant = percentile(deviations, 0.50)
+            val pSensitive = IobCobCalculatorPlugin.percentile(deviations, 0.50)
+            val pResistant = IobCobCalculatorPlugin.percentile(deviations, 0.50)
             var basalOff = 0.0
             when {
                 pSensitive < 0 -> { // sensitive

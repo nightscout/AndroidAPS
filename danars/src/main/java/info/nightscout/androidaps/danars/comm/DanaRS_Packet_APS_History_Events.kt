@@ -12,7 +12,6 @@ import info.nightscout.androidaps.plugins.bus.RxBusWrapper
 import info.nightscout.androidaps.plugins.pump.common.bolusInfo.DetailedBolusInfoStorage
 import info.nightscout.androidaps.plugins.pump.common.bolusInfo.TemporaryBasalStorage
 import info.nightscout.androidaps.plugins.pump.common.defs.PumpType
-import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.T
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 import info.nightscout.androidaps.utils.sharedPreferences.SP
@@ -40,7 +39,7 @@ open class DanaRS_Packet_APS_History_Events(
 
     init {
         opCode = BleEncryption.DANAR_PACKET__OPCODE__APS_HISTORY_EVENTS
-        if (from > DateUtil.now()) {
+        if (from > dateUtil.now()) {
             aapsLogger.debug(LTag.PUMPCOMM, "Asked to load from the future")
             from = 0
         }

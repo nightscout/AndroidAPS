@@ -175,7 +175,7 @@ public class DanaRv2Plugin extends AbstractDanaRPlugin {
                     speed = 60;
                     break;
             }
-            detailedBolusInfo.timestamp = DateUtil.now() + (long) (speed * detailedBolusInfo.insulin * 1000);
+            detailedBolusInfo.timestamp = dateUtil.now() + (long) (speed * detailedBolusInfo.insulin * 1000);
             // clean carbs to prevent counting them as twice because they will picked up as another record
             // I don't think it's necessary to copy DetailedBolusInfo right now for carbs records
             double carbs = detailedBolusInfo.carbs;
@@ -189,7 +189,7 @@ public class DanaRv2Plugin extends AbstractDanaRPlugin {
             EventOverviewBolusProgress.Treatment t = new EventOverviewBolusProgress.Treatment(0, 0, detailedBolusInfo.getBolusType() == DetailedBolusInfo.BolusType.SMB);
             boolean connectionOK = false;
             if (detailedBolusInfo.insulin > 0 || carbs > 0)
-                connectionOK = sExecutionService.bolus(detailedBolusInfo.insulin, (int) carbs, DateUtil.now() + T.mins(carbTime).msecs(), t);
+                connectionOK = sExecutionService.bolus(detailedBolusInfo.insulin, (int) carbs, dateUtil.now() + T.mins(carbTime).msecs(), t);
             PumpEnactResult result = new PumpEnactResult(getInjector());
             result.success(connectionOK && Math.abs(detailedBolusInfo.insulin - t.insulin) < pumpDescription.getBolusStep())
                     .bolusDelivered(t.insulin)
@@ -260,7 +260,7 @@ public class DanaRv2Plugin extends AbstractDanaRPlugin {
                     }
                 }
             }
-            temporaryBasalStorage.add(new PumpSync.PumpState.TemporaryBasal(dateUtil._now(), T.mins(durationInMinutes).msecs(), percentRate, false, tbrType, 0L, 0L));
+            temporaryBasalStorage.add(new PumpSync.PumpState.TemporaryBasal(dateUtil.now(), T.mins(durationInMinutes).msecs(), percentRate, false, tbrType, 0L, 0L));
             // Convert duration from minutes to hours
             aapsLogger.debug(LTag.PUMP, "setTempBasalAbsolute: Setting temp basal " + percentRate + "% for " + durationInMinutes + " minutes (doLowTemp || doHighTemp)");
             if (percentRate == 0 && durationInMinutes > 30) {
@@ -299,7 +299,7 @@ public class DanaRv2Plugin extends AbstractDanaRPlugin {
             aapsLogger.debug(LTag.PUMP, "setTempBasalPercent: Correct value already set");
             return result;
         }
-        temporaryBasalStorage.add(new PumpSync.PumpState.TemporaryBasal(dateUtil._now(), T.mins(durationInMinutes).msecs(), percent, false, tbrType, 0L, 0L));
+        temporaryBasalStorage.add(new PumpSync.PumpState.TemporaryBasal(dateUtil.now(), T.mins(durationInMinutes).msecs(), percent, false, tbrType, 0L, 0L));
         boolean connectionOK;
         if (durationInMinutes == 15 || durationInMinutes == 30) {
             connectionOK = sExecutionService.tempBasalShortDuration(percent, durationInMinutes);

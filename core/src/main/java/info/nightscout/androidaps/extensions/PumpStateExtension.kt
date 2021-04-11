@@ -35,13 +35,13 @@ fun PumpSync.PumpState.TemporaryBasal.toStringFull(dateUtil: DateUtil): String {
         isAbsolute -> {
             DecimalFormatter.to2Decimal(rate) + "U/h @" +
                 dateUtil.timeString(timestamp) +
-                " " + getPassedDurationToTimeInMinutes(dateUtil._now()) + "/" + durationInMinutes + "'"
+                " " + getPassedDurationToTimeInMinutes(dateUtil.now()) + "/" + durationInMinutes + "'"
         }
 
         else       -> { // percent
             rate.toString() + "% @" +
                 dateUtil.timeString(timestamp) +
-                " " + getPassedDurationToTimeInMinutes(dateUtil._now()) + "/" + durationInMinutes + "'"
+                " " + getPassedDurationToTimeInMinutes(dateUtil.now()) + "/" + durationInMinutes + "'"
         }
     }
 }
@@ -58,5 +58,5 @@ fun PumpSync.PumpState.ExtendedBolus.getPassedDurationToTimeInMinutes(time: Long
 fun PumpSync.PumpState.ExtendedBolus.toStringFull(dateUtil: DateUtil): String =
     "E " + to2Decimal(rate) + "U/h @" +
         dateUtil.timeString(timestamp) +
-        " " + getPassedDurationToTimeInMinutes(dateUtil._now()) + "/" + T.msecs(duration).mins() + "min"
+        " " + getPassedDurationToTimeInMinutes(dateUtil.now()) + "/" + T.msecs(duration).mins() + "min"
 

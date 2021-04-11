@@ -2,7 +2,6 @@
 
 package info.nightscout.androidaps.plugins.general.smsCommunicator
 
-import android.content.Context
 import android.telephony.SmsManager
 import dagger.android.AndroidInjector
 import dagger.android.HasAndroidInjector
@@ -44,6 +43,7 @@ import org.mockito.ArgumentMatchers
 import org.mockito.Mock
 import org.mockito.Mockito
 import org.mockito.Mockito.`when`
+import org.mockito.Mockito.anyLong
 import org.mockito.invocation.InvocationOnMock
 import org.mockito.stubbing.Answer
 import org.powermock.api.mockito.PowerMockito
@@ -56,10 +56,9 @@ import java.util.*
     ConstraintChecker::class, FabricPrivacy::class, VirtualPumpPlugin::class, XdripCalibrations::class,
     SmsManager::class, CommandQueue::class, LocalProfilePlugin::class, DateUtil::class,
     IobCobCalculatorPlugin::class, OneTimePassword::class, UserEntryLogger::class, LoopPlugin::class,
-    AppRepository::class)
+    AppRepository::class, DateUtil::class)
 class SmsCommunicatorPluginTest : TestBaseWithProfile() {
 
-    @Mock lateinit var context: Context
     @Mock lateinit var sp: SP
     @Mock lateinit var constraintChecker: ConstraintChecker
     @Mock lateinit var activePlugin: ActivePluginProvider
@@ -72,6 +71,7 @@ class SmsCommunicatorPluginTest : TestBaseWithProfile() {
     @Mock lateinit var xdripCalibrations: XdripCalibrations
     @Mock lateinit var uel: UserEntryLogger
     @Mock lateinit var repository: AppRepository
+    @Mock lateinit var dateUtilMocked: DateUtil
 
     var injector: HasAndroidInjector = HasAndroidInjector {
         AndroidInjector {
@@ -83,6 +83,7 @@ class SmsCommunicatorPluginTest : TestBaseWithProfile() {
                 it.smsCommunicatorPlugin = smsCommunicatorPlugin
                 it.resourceHelper = resourceHelper
                 it.otp = otp
+                it.dateUtil = dateUtil
             }
         }
     }
@@ -100,7 +101,6 @@ class SmsCommunicatorPluginTest : TestBaseWithProfile() {
         `when`(iobCobCalculator.getCobInfo(false, "SMS COB")).thenReturn(CobInfo(10.0, 2.0))
         `when`(iobCobCalculator.lastBg()).thenReturn(reading)
 
-        PowerMockito.spy(DateUtil::class.java)
         PowerMockito.mockStatic(SmsManager::class.java)
         val smsManager = PowerMockito.mock(SmsManager::class.java)
         `when`(SmsManager.getDefault()).thenReturn(smsManager)
@@ -110,9 +110,9 @@ class SmsCommunicatorPluginTest : TestBaseWithProfile() {
             repository.runTransactionForResult(anyObject<InsertTemporaryTargetAndCancelCurrentTransaction>())
         ).thenReturn(Single.just(InsertTemporaryTargetAndCancelCurrentTransaction.TransactionResult().apply {
         }))
-        val glucoseStatusProvider = GlucoseStatusProvider(aapsLogger = aapsLogger, iobCobCalculator = iobCobCalculator)
+        val glucoseStatusProvider = GlucoseStatusProvider(aapsLogger = aapsLogger, iobCobCalculator = iobCobCalculator, dateUtil = dateUtilMocked)
 
-        smsCommunicatorPlugin = SmsCommunicatorPlugin(injector, aapsLogger, resourceHelper, aapsSchedulers, sp, constraintChecker, rxBus, profileFunction, fabricPrivacy, activePlugin, commandQueue, loopPlugin, iobCobCalculator, xdripCalibrations, otp, Config(), DateUtil(context), uel, glucoseStatusProvider, repository)
+        smsCommunicatorPlugin = SmsCommunicatorPlugin(injector, aapsLogger, resourceHelper, aapsSchedulers, sp, constraintChecker, rxBus, profileFunction, fabricPrivacy, activePlugin, commandQueue, loopPlugin, iobCobCalculator, xdripCalibrations, otp, Config(), dateUtilMocked, uel, glucoseStatusProvider, repository)
         smsCommunicatorPlugin.setPluginEnabled(PluginType.GENERAL, true)
         Mockito.doAnswer { invocation: InvocationOnMock ->
             val callback = invocation.getArgument<Callback>(1)
@@ -764,7 +764,7 @@ class SmsCommunicatorPluginTest : TestBaseWithProfile() {
         smsCommunicatorPlugin.processSms(sms)
         Assert.assertEquals("BASAL 20% 20", smsCommunicatorPlugin.messages[0].text)
         Assert.assertEquals("TBR duration must be a multiple of 30 minutes and greater than 0.", smsCommunicatorPlugin.messages[1].text)
-        `when`(constraintChecker.applyBasalPercentConstraints(anyObject(), anyObject())).thenReturn(Constraint<Int>(20))
+        `when`(constraintChecker.applyBasalPercentConstraints(anyObject(), anyObject())).thenReturn(Constraint(20))
 
         //BASAL 20% 30
         smsCommunicatorPlugin.messages = ArrayList()
@@ -884,7 +884,7 @@ class SmsCommunicatorPluginTest : TestBaseWithProfile() {
         Assert.assertEquals("BOLUS", smsCommunicatorPlugin.messages[0].text)
         Assert.assertEquals("Wrong format", smsCommunicatorPlugin.messages[1].text)
         `when`(constraintChecker.applyBolusConstraints(anyObject())).thenReturn(Constraint(1.0))
-        PowerMockito.`when`(DateUtil.now()).thenReturn(1000L)
+        PowerMockito.`when`(dateUtilMocked.now()).thenReturn(1000L)
         `when`(sp.getLong(R.string.key_smscommunicator_remotebolusmindistance, T.msecs(Constants.remoteBolusMinDistance).mins())).thenReturn(15L)
         //BOLUS 1
         smsCommunicatorPlugin.messages = ArrayList()
@@ -893,7 +893,7 @@ class SmsCommunicatorPluginTest : TestBaseWithProfile() {
         Assert.assertEquals("BOLUS 1", smsCommunicatorPlugin.messages[0].text)
         Assert.assertEquals("Remote bolus not available. Try again later.", smsCommunicatorPlugin.messages[1].text)
         `when`(constraintChecker.applyBolusConstraints(anyObject())).thenReturn(Constraint(0.0))
-        PowerMockito.`when`(DateUtil.now()).thenReturn(Constants.remoteBolusMinDistance + 1002L)
+        PowerMockito.`when`(dateUtilMocked.now()).thenReturn(Constants.remoteBolusMinDistance + 1002L)
 
         //BOLUS 0
         smsCommunicatorPlugin.messages = ArrayList()
@@ -989,7 +989,7 @@ class SmsCommunicatorPluginTest : TestBaseWithProfile() {
     }
 
     @Test fun processCarbsTest() {
-        PowerMockito.`when`(DateUtil.now()).thenReturn(1000000L)
+        PowerMockito.`when`(dateUtilMocked.now()).thenReturn(1000000L)
         `when`(sp.getBoolean(R.string.key_smscommunicator_remotecommandsallowed, false)).thenReturn(false)
         //CAL
         smsCommunicatorPlugin.messages = ArrayList()
@@ -1005,7 +1005,7 @@ class SmsCommunicatorPluginTest : TestBaseWithProfile() {
         smsCommunicatorPlugin.processSms(sms)
         Assert.assertEquals("CARBS", smsCommunicatorPlugin.messages[0].text)
         Assert.assertEquals("Wrong format", smsCommunicatorPlugin.messages[1].text)
-        `when`(constraintChecker.applyCarbsConstraints(anyObject())).thenReturn(Constraint<Int>(0))
+        `when`(constraintChecker.applyCarbsConstraints(anyObject())).thenReturn(Constraint(0))
 
         //CARBS 0
         smsCommunicatorPlugin.messages = ArrayList()
@@ -1013,7 +1013,7 @@ class SmsCommunicatorPluginTest : TestBaseWithProfile() {
         smsCommunicatorPlugin.processSms(sms)
         Assert.assertEquals("CARBS 0", smsCommunicatorPlugin.messages[0].text)
         Assert.assertEquals("Wrong format", smsCommunicatorPlugin.messages[1].text)
-        `when`(constraintChecker.applyCarbsConstraints(anyObject())).thenReturn(Constraint<Int>(1))
+        `when`(constraintChecker.applyCarbsConstraints(anyObject())).thenReturn(Constraint(1))
 
         //CARBS 1
         smsCommunicatorPlugin.messages = ArrayList()
@@ -1041,6 +1041,7 @@ class SmsCommunicatorPluginTest : TestBaseWithProfile() {
         Assert.assertTrue(smsCommunicatorPlugin.messages[1].text.contains("Wrong format"))
 
         //CARBS 1 12:01
+        `when`(dateUtilMocked.timeString(anyLong())).thenReturn("12:01PM")
         smsCommunicatorPlugin.messages = ArrayList()
         sms = Sms("1234", "CARBS 1 12:01")
         smsCommunicatorPlugin.processSms(sms)
@@ -1052,6 +1053,7 @@ class SmsCommunicatorPluginTest : TestBaseWithProfile() {
         Assert.assertTrue(smsCommunicatorPlugin.messages[3].text.startsWith("Carbs 1g entered successfully"))
 
         //CARBS 1 3:01AM
+        `when`(dateUtilMocked.timeString(anyLong())).thenReturn("03:01AM")
         smsCommunicatorPlugin.messages = ArrayList()
         sms = Sms("1234", "CARBS 1 3:01AM")
         smsCommunicatorPlugin.processSms(sms)

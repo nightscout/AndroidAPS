@@ -16,11 +16,11 @@ fun Bolus.iobCalc(activePlugin: ActivePluginProvider, time: Long, dia: Double): 
     return insulinInterface.iobCalcForTreatment(this, time, dia)
 }
 
-fun Bolus.toJson(): JSONObject =
+fun Bolus.toJson(dateUtil: DateUtil): JSONObject =
     JSONObject()
         .put("eventType", if (type == Bolus.Type.SMB) TherapyEvent.Type.CORRECTION_BOLUS.text else TherapyEvent.Type.MEAL_BOLUS.text)
         .put("insulin", amount)
-        .put("created_at", DateUtil.toISOString(timestamp))
+        .put("created_at", dateUtil.toISOString(timestamp))
         .put("date", timestamp)
         .put("type", type.name)
         .put("isValid", isValid)

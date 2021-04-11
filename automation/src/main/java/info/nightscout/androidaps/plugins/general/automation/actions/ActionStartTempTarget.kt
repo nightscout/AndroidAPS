@@ -41,6 +41,7 @@ class ActionStartTempTarget(injector: HasAndroidInjector) : Action(injector) {
     @Inject lateinit var activePlugin: ActivePluginProvider
     @Inject lateinit var repository: AppRepository
     @Inject lateinit var profileFunction: ProfileFunction
+    @Inject lateinit var dateUtil: DateUtil
     @Inject lateinit var uel: UserEntryLogger
 
     private val disposable = CompositeDisposable()
@@ -105,7 +106,7 @@ class ActionStartTempTarget(injector: HasAndroidInjector) : Action(injector) {
     }
 
     fun tt() = TemporaryTarget(
-        timestamp = DateUtil.now(),
+        timestamp = dateUtil.now(),
         duration = TimeUnit.MINUTES.toMillis(duration.getMinutes().toLong()),
         reason = TemporaryTarget.Reason.AUTOMATION,
         lowTarget = Profile.toMgdl(value.value, value.units),

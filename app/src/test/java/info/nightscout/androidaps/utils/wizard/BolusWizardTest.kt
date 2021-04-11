@@ -15,6 +15,7 @@ import info.nightscout.androidaps.plugins.iob.iobCobCalculator.GlucoseStatusProv
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.IobCobCalculatorPlugin
 import info.nightscout.androidaps.plugins.pump.virtual.VirtualPumpPlugin
 import info.nightscout.androidaps.plugins.treatments.TreatmentsPlugin
+import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 import org.junit.Assert
 import org.junit.Test
@@ -27,7 +28,7 @@ import org.powermock.core.classloader.annotations.PrepareForTest
 import org.powermock.modules.junit4.PowerMockRunner
 
 @RunWith(PowerMockRunner::class)
-@PrepareForTest(ConstraintChecker::class, VirtualPumpPlugin::class, IobCobCalculatorPlugin::class)
+@PrepareForTest(ConstraintChecker::class, VirtualPumpPlugin::class, IobCobCalculatorPlugin::class, DateUtil::class)
 class BolusWizardTest : TestBase() {
 
     private val pumpBolusStep = 0.1
@@ -42,6 +43,7 @@ class BolusWizardTest : TestBase() {
     @Mock lateinit var iobCobCalculator: IobCobCalculator
     @Mock lateinit var treatmentsPlugin: TreatmentsPlugin
     @Mock lateinit var virtualPumpPlugin: VirtualPumpPlugin
+    @Mock lateinit var dateUtil: DateUtil
 
     val injector = HasAndroidInjector {
         AndroidInjector {
@@ -55,7 +57,7 @@ class BolusWizardTest : TestBase() {
                 it.commandQueue = commandQueue
                 it.loopPlugin = loopPlugin
                 it.iobCobCalculator = iobCobCalculator
-                it.glucoseStatusProvider = GlucoseStatusProvider(aapsLogger = aapsLogger, iobCobCalculator = iobCobCalculator)
+                it.glucoseStatusProvider = GlucoseStatusProvider(aapsLogger = aapsLogger, iobCobCalculator = iobCobCalculator, dateUtil = dateUtil)
             }
         }
     }

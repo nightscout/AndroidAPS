@@ -25,9 +25,7 @@ import info.nightscout.androidaps.combo.R;
 import info.nightscout.androidaps.data.DetailedBolusInfo;
 import info.nightscout.androidaps.data.Profile;
 import info.nightscout.androidaps.data.PumpEnactResult;
-import info.nightscout.androidaps.db.Source;
 import info.nightscout.androidaps.db.TDD;
-import info.nightscout.androidaps.db.TemporaryBasal;
 import info.nightscout.androidaps.events.EventInitializationChanged;
 import info.nightscout.androidaps.events.EventRefreshOverview;
 import info.nightscout.androidaps.interfaces.CommandQueueProvider;
@@ -41,7 +39,6 @@ import info.nightscout.androidaps.interfaces.PumpDescription;
 import info.nightscout.androidaps.interfaces.PumpInterface;
 import info.nightscout.androidaps.interfaces.PumpPluginBase;
 import info.nightscout.androidaps.interfaces.PumpSync;
-import info.nightscout.androidaps.interfaces.TreatmentsInterface;
 import info.nightscout.androidaps.logging.AAPSLogger;
 import info.nightscout.androidaps.logging.LTag;
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper;
@@ -66,7 +63,6 @@ import info.nightscout.androidaps.plugins.pump.combo.ruffyscripter.history.Tdd;
 import info.nightscout.androidaps.plugins.pump.common.defs.PumpType;
 import info.nightscout.androidaps.utils.DateUtil;
 import info.nightscout.androidaps.utils.InstanceId;
-
 import info.nightscout.androidaps.utils.T;
 import info.nightscout.androidaps.utils.resources.ResourceHelper;
 import info.nightscout.androidaps.utils.sharedPreferences.SP;
@@ -86,6 +82,7 @@ public class ComboPlugin extends PumpPluginBase implements PumpInterface, Constr
     private final Context context;
     private final DatabaseHelperInterface databaseHelper;
     private final PumpSync pumpSync;
+    private final DateUtil dateUtil;
 
     private final static PumpDescription pumpDescription = new PumpDescription();
 
@@ -141,7 +138,8 @@ public class ComboPlugin extends PumpPluginBase implements PumpInterface, Constr
             CommandQueueProvider commandQueue,
             Context context,
             DatabaseHelperInterface databaseHelper,
-            PumpSync pumpSync
+            PumpSync pumpSync,
+            DateUtil dateUtil
     ) {
         super(new PluginDescription()
                         .mainType(PluginType.PUMP)
@@ -159,6 +157,7 @@ public class ComboPlugin extends PumpPluginBase implements PumpInterface, Constr
         this.context = context;
         this.databaseHelper = databaseHelper;
         this.pumpSync = pumpSync;
+        this.dateUtil = dateUtil;
 
         pumpDescription.setPumpDescription(PumpType.ACCU_CHEK_COMBO);
     }
@@ -970,7 +969,7 @@ public class ComboPlugin extends PumpPluginBase implements PumpInterface, Constr
                 // so update the var with it, so the check routines below can work on it
                 preCheckResult = alertConfirmationResult;
             } else if (activeAlert.errorCode != null) {
-                Notification notification = new Notification(Notification.COMBO_PUMP_ALARM, DateUtil.now(), getResourceHelper().gs(R.string.combo_is_in_error_state, activeAlert.errorCode, activeAlert.message), Notification.URGENT, 0);
+                Notification notification = new Notification(Notification.COMBO_PUMP_ALARM, dateUtil.now(), getResourceHelper().gs(R.string.combo_is_in_error_state, activeAlert.errorCode, activeAlert.message), Notification.URGENT, 0);
                 rxBus.send(new EventNewNotification(notification));
                 return preCheckResult.success(false);
             }
@@ -1068,7 +1067,7 @@ public class ComboPlugin extends PumpPluginBase implements PumpInterface, Constr
             throw new IllegalArgumentException(activeAlert.toString());
         }
         Notification notification = new Notification();
-        notification.setDate(DateUtil.now());
+        notification.setDate(dateUtil.now());
         notification.setId(Notification.COMBO_PUMP_ALARM);
         notification.setLevel(Notification.NORMAL);
         if (activeAlert.warningCode == PumpWarningCodes.CARTRIDGE_LOW) {
@@ -1295,7 +1294,7 @@ public class ComboPlugin extends PumpPluginBase implements PumpInterface, Constr
 
         try {
             JSONObject pumpJson = new JSONObject();
-            pumpJson.put("clock", DateUtil.toISOString(pump.lastSuccessfulCmdTime));
+            pumpJson.put("clock", dateUtil.toISOString(pump.lastSuccessfulCmdTime));
 
             int level;
             if (pump.reservoirLevel != -1) level = pump.reservoirLevel;

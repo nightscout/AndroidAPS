@@ -24,8 +24,7 @@ class TriggerBolusAgoTest : TriggerTestBase() {
 
     @Before
     fun mock() {
-        PowerMockito.mockStatic(DateUtil::class.java)
-        PowerMockito.`when`(DateUtil.now()).thenReturn(now)
+        PowerMockito.`when`(dateUtil.now()).thenReturn(now)
     }
 
     @Test
@@ -37,7 +36,7 @@ class TriggerBolusAgoTest : TriggerTestBase() {
                 type = Bolus.Type.NORMAL
             )
         ) // Set last bolus time to now
-        `when`(dateUtil._now()).thenReturn(now + 10 * 60 * 1000) // set current time to now + 10 min
+        `when`(dateUtil.now()).thenReturn(now + 10 * 60 * 1000) // set current time to now + 10 min
         var t = TriggerBolusAgo(injector).setValue(110).comparator(Comparator.Compare.IS_EQUAL)
         Assert.assertEquals(110, t.minutesAgo.value)
         Assert.assertEquals(Comparator.Compare.IS_EQUAL, t.comparator.value)

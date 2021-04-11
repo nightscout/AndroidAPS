@@ -88,7 +88,7 @@ class TempTargetDialog : DialogFragmentWithDate() {
 
         // temp target
         context?.let { context ->
-            if (repository.getTemporaryTargetActiveAt(dateUtil._now()).blockingGet() is ValueWrapper.Existing)
+            if (repository.getTemporaryTargetActiveAt(dateUtil.now()).blockingGet() is ValueWrapper.Existing)
                 binding.targetCancel.visibility = View.VISIBLE
             else
                 binding.targetCancel.visibility = View.GONE

@@ -11,6 +11,7 @@ import dagger.android.AndroidInjector
 import dagger.android.DaggerApplication
 import info.nightscout.androidaps.database.AppRepository
 import info.nightscout.androidaps.database.entities.TherapyEvent
+import info.nightscout.androidaps.database.entities.UserEntry
 import info.nightscout.androidaps.database.transactions.InsertIfNewByTimestampTherapyEventTransaction
 import info.nightscout.androidaps.database.transactions.VersionChangeTransaction
 import info.nightscout.androidaps.db.CompatDBHelper
@@ -20,6 +21,7 @@ import info.nightscout.androidaps.dependencyInjection.DaggerAppComponent
 import info.nightscout.androidaps.interfaces.PluginBase
 import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.logging.LTag
+import info.nightscout.androidaps.logging.UserEntryLogger
 import info.nightscout.androidaps.plugins.configBuilder.ConfigBuilderPlugin
 import info.nightscout.androidaps.plugins.configBuilder.PluginStore
 import info.nightscout.androidaps.plugins.constraints.versionChecker.VersionCheckerUtils
@@ -54,6 +56,7 @@ class MainApp : DaggerApplication() {
     @Inject lateinit var repository: AppRepository
     @Inject lateinit var dateUtil: DateUtil
     @Inject lateinit var staticInjector: StaticInjector// TODO avoid , here fake only to initialize
+    @Inject lateinit var uel: UserEntryLogger
 
     override fun onCreate() {
         super.onCreate()
@@ -68,7 +71,7 @@ class MainApp : DaggerApplication() {
             commitHash = null
         }
         disposable += repository.runTransaction(VersionChangeTransaction(BuildConfig.VERSION_NAME, BuildConfig.VERSION_CODE, gitRemote, commitHash)).subscribe()
-        disposable += repository.runTransaction(InsertIfNewByTimestampTherapyEventTransaction(timestamp = dateUtil._now(), type = TherapyEvent.Type.NOTE, note = getString(info.nightscout.androidaps.core.R.string.androidaps_start).toString() + " - " + Build.MANUFACTURER + " " + Build.MODEL, glucoseUnit = TherapyEvent.GlucoseUnit.MGDL)).subscribe()
+        disposable += repository.runTransaction(InsertIfNewByTimestampTherapyEventTransaction(timestamp = dateUtil.now(), type = TherapyEvent.Type.NOTE, note = getString(info.nightscout.androidaps.core.R.string.androidaps_start).toString() + " - " + Build.MANUFACTURER + " " + Build.MODEL, glucoseUnit = TherapyEvent.GlucoseUnit.MGDL)).subscribe()
         disposable += compatDBHelper.dbChangeDisposable()
         registerActivityLifecycleCallbacks(activityMonitor)
         JodaTimeAndroid.init(this)
@@ -85,6 +88,7 @@ class MainApp : DaggerApplication() {
         configBuilderPlugin.initialize()
         keepAliveManager.setAlarm(this)
         doMigrations()
+        uel.log(UserEntry.Action.START_AAPS, UserEntry.Sources.Aaps)
     }
 
     private fun doMigrations() {

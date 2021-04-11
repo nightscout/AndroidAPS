@@ -30,7 +30,7 @@ class TriggerTempTarget(injector: HasAndroidInjector) : Trigger(injector) {
     }
 
     override fun shouldRun(): Boolean {
-        val tt = repository.getTemporaryTargetActiveAt(dateUtil._now()).blockingGet()
+        val tt = repository.getTemporaryTargetActiveAt(dateUtil.now()).blockingGet()
         if (tt is ValueWrapper.Absent && comparator.value == ComparatorExists.Compare.NOT_EXISTS) {
             aapsLogger.debug(LTag.AUTOMATION, "Ready for execution: " + friendlyDescription())
             return true

@@ -415,7 +415,7 @@ class GraphData(
         if (showPrediction) {
             val autosensData = iobCobCalculator.getLastAutosensDataSynchronized("GraphData")
             val lastAutosensResult = autosensData?.autosensResult ?: AutosensResult()
-            val isTempTarget = repository.getTemporaryTargetActiveAt(dateUtil._now()).blockingGet() is ValueWrapper.Existing
+            val isTempTarget = repository.getTemporaryTargetActiveAt(dateUtil.now()).blockingGet() is ValueWrapper.Existing
             val iobPrediction: MutableList<DataPointWithLabelInterface> = ArrayList()
             val iobPredictionArray = iobCobCalculator.calculateIobArrayForSMB(lastAutosensResult, SMBDefaults.exercise_mode, SMBDefaults.half_basal_exercise_target, isTempTarget)
             for (i in iobPredictionArray) {

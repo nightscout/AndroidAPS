@@ -22,17 +22,17 @@ import kotlin.math.round
 import kotlin.math.roundToInt
 
 fun ExtendedBolus.isInProgress(dateUtil: DateUtil): Boolean =
-    dateUtil._now() in timestamp..timestamp + duration
+    dateUtil.now() in timestamp..timestamp + duration
 
 val ExtendedBolus.plannedRemainingMinutes: Int
     get() = max(round((end - System.currentTimeMillis()) / 1000.0 / 60).toInt(), 0)
 
 fun ExtendedBolus.toStringFull(dateUtil: DateUtil): String =
     "E " + to2Decimal(rate) + "U/h @" + dateUtil.timeString(timestamp) +
-        " " + getPassedDurationToTimeInMinutes(dateUtil._now()) + "/" + T.msecs(duration).mins() + "min"
+        " " + getPassedDurationToTimeInMinutes(dateUtil.now()) + "/" + T.msecs(duration).mins() + "min"
 
 fun ExtendedBolus.toStringMedium(dateUtil: DateUtil): String =
-    to2Decimal(rate) + "U/h " + getPassedDurationToTimeInMinutes(dateUtil._now()) + "/" + T.msecs(duration).mins() + "'"
+    to2Decimal(rate) + "U/h " + getPassedDurationToTimeInMinutes(dateUtil.now()) + "/" + T.msecs(duration).mins() + "'"
 
 fun ExtendedBolus.toStringTotal(): String = "${to2Decimal(amount)}U ( ${to2Decimal(rate)} U/h )"
 
@@ -50,16 +50,16 @@ fun ExtendedBolus.toTemporaryBasal(profile: Profile): TemporaryBasal =
         type = TemporaryBasal.Type.FAKE_EXTENDED
     )
 
-fun ExtendedBolus.toJson(profile: Profile): JSONObject =
+fun ExtendedBolus.toJson(profile: Profile, dateUtil: DateUtil): JSONObject =
     if (isEmulatingTempBasal)
         toTemporaryBasal(profile)
-            .toJson(profile)
-            .put("extendedEmulated", toRealJson())
-    else toRealJson()
+            .toJson(profile, dateUtil)
+            .put("extendedEmulated", toRealJson(dateUtil))
+    else toRealJson(dateUtil)
 
-fun ExtendedBolus.toRealJson(): JSONObject =
+fun ExtendedBolus.toRealJson(dateUtil: DateUtil): JSONObject =
     JSONObject()
-        .put("created_at", DateUtil.toISOString(timestamp))
+        .put("created_at", dateUtil.toISOString(timestamp))
         .put("enteredBy", "openaps://" + "AndroidAPS")
         .put("eventType", TherapyEvent.Type.COMBO_BOLUS.text)
         .put("duration", T.msecs(duration).mins())

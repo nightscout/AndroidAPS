@@ -201,7 +201,7 @@ open class CommandQueue @Inject constructor(
         if ((detailedBolusInfo.carbs > 0) &&
             (!activePlugin.get().activePump.pumpDescription.storesCarbInfo ||
                 detailedBolusInfo.carbsDuration != 0L ||
-                (detailedBolusInfo.carbsTimestamp ?: detailedBolusInfo.timestamp) > dateUtil._now())
+                (detailedBolusInfo.carbsTimestamp ?: detailedBolusInfo.timestamp) > dateUtil.now())
         ) {
             disposable += repository.runTransactionForResult(detailedBolusInfo.insertCarbsTransaction())
                 .subscribeBy(

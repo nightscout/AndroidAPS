@@ -13,7 +13,6 @@ import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.Mockito.`when`
-import org.powermock.api.mockito.PowerMockito
 import org.powermock.core.classloader.annotations.PrepareForTest
 import org.powermock.modules.junit4.PowerMockRunner
 import java.util.*
@@ -28,8 +27,7 @@ class TriggerBgTest : TriggerTestBase() {
     fun prepare() {
         `when`(profileFunction.getUnits()).thenReturn(Constants.MGDL)
         `when`(iobCobCalculatorPlugin.dataLock).thenReturn(Any())
-        PowerMockito.mockStatic(DateUtil::class.java)
-        `when`(DateUtil.now()).thenReturn(now)
+        `when`(dateUtil.now()).thenReturn(now)
     }
 
     @Test

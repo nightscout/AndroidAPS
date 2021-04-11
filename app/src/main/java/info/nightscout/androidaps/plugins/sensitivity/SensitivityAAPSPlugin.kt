@@ -7,6 +7,7 @@ import info.nightscout.androidaps.data.Profile
 import info.nightscout.androidaps.database.AppRepository
 import info.nightscout.androidaps.database.entities.TherapyEvent
 import info.nightscout.androidaps.db.ProfileSwitch
+import info.nightscout.androidaps.extensions.isEvent5minBack
 import info.nightscout.androidaps.interfaces.DatabaseHelperInterface
 import info.nightscout.androidaps.interfaces.IobCobCalculator
 import info.nightscout.androidaps.interfaces.PluginDescription
@@ -16,9 +17,8 @@ import info.nightscout.androidaps.interfaces.SensitivityInterface.SensitivityTyp
 import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.logging.LTag
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.AutosensResult
-import info.nightscout.androidaps.plugins.iob.iobCobCalculator.IobCobCalculatorPlugin.Companion.percentile
+import info.nightscout.androidaps.plugins.iob.iobCobCalculator.IobCobCalculatorPlugin
 import info.nightscout.androidaps.utils.DateUtil
-import info.nightscout.androidaps.extensions.isEvent5minBack
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 import info.nightscout.androidaps.utils.sharedPreferences.SP
 import org.json.JSONException
@@ -30,10 +30,10 @@ import kotlin.math.roundToInt
 
 @Singleton
 open class SensitivityAAPSPlugin @Inject constructor(
-    injector: HasAndroidInjector?,
-    aapsLogger: AAPSLogger?,
-    resourceHelper: ResourceHelper?,
-    sp: SP?,
+    injector: HasAndroidInjector,
+    aapsLogger: AAPSLogger,
+    resourceHelper: ResourceHelper,
+    sp: SP,
     private val profileFunction: ProfileFunction,
     private val dateUtil: DateUtil,
     private val databaseHelper: DatabaseHelperInterface,
@@ -45,7 +45,7 @@ open class SensitivityAAPSPlugin @Inject constructor(
     .shortName(R.string.sensitivity_shortname)
     .preferencesId(R.xml.pref_absorption_aaps)
     .description(R.string.description_sensitivity_aaps),
-    injector!!, aapsLogger!!, resourceHelper!!, sp!!
+    injector, aapsLogger, resourceHelper, sp
 ) {
 
     override fun detectSensitivity(plugin: IobCobCalculator, fromTime: Long, toTime: Long): AutosensResult {
@@ -116,7 +116,7 @@ open class SensitivityAAPSPlugin @Inject constructor(
         val sensResult: String
         aapsLogger.debug(LTag.AUTOSENS, "Records: $index   $pastSensitivity")
         Arrays.sort(deviations)
-        val percentile = percentile(deviations, 0.50)
+        val percentile = IobCobCalculatorPlugin.percentile(deviations, 0.50)
         val basalOff = percentile * (60.0 / 5.0) / sens
         val ratio = 1 + basalOff / profile.maxDailyBasal
         sensResult = when {

@@ -89,7 +89,7 @@ class RealPumpTest {
         localProfilePlugin.numOfProfiles = 0
         val singleProfile = LocalProfilePlugin.SingleProfile().copyFrom(localProfilePlugin.rawProfile, profile, "TestProfile")
         localProfilePlugin.addProfile(singleProfile)
-        val profileSwitch = profileFunction.prepareProfileSwitch(localProfilePlugin.createProfileStore(), "TestProfile", 0, 100, 0, DateUtil.now())
+        val profileSwitch = profileFunction.prepareProfileSwitch(localProfilePlugin.createProfileStore(), "TestProfile", 0, 100, 0, dateUtil._now())
         treatmentsPlugin.addToHistoryProfileSwitch(profileSwitch)
         // Insulin
         configBuilderPlugin.performPluginSwitch(insulinOrefUltraRapidActingPlugin, true, PluginType.INSULIN)

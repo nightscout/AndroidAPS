@@ -87,12 +87,12 @@ fun temporaryTargetFromJson(jsonObject: JSONObject): TemporaryTarget? {
     return tt
 }
 
-fun TemporaryTarget.toJson(units: String): JSONObject =
+fun TemporaryTarget.toJson(units: String, dateUtil: DateUtil): JSONObject =
     JSONObject()
         .put("eventType", TherapyEvent.Type.TEMPORARY_TARGET.text)
         .put("duration", T.msecs(duration).mins())
         .put("isValid", isValid)
-        .put("created_at", DateUtil.toISOString(timestamp))
+        .put("created_at", dateUtil.toISOString(timestamp))
         .put("enteredBy", "AndroidAPS").also {
             if (lowTarget > 0) it
                 .put("reason", reason.text)

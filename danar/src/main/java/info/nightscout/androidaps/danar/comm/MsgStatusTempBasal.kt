@@ -4,7 +4,6 @@ import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.logging.LTag
 import info.nightscout.androidaps.utils.T
 import kotlin.math.abs
-import kotlin.math.ceil
 import kotlin.math.floor
 
 class MsgStatusTempBasal(
@@ -49,7 +48,7 @@ class MsgStatusTempBasal(
     }
 
     private fun getDateFromSecAgo(tempBasalAgoSecs: Int): Long {
-        return (floor(dateUtil._now() / 1000.0) - tempBasalAgoSecs).toLong() * 1000
+        return (floor(dateUtil.now() / 1000.0) - tempBasalAgoSecs).toLong() * 1000
     }
 
     // because there is no fixed timestamp of start allow update of tbr only if tbr start differs more

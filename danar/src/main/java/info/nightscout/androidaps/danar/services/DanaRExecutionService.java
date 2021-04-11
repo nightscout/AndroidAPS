@@ -61,7 +61,6 @@ import info.nightscout.androidaps.plugins.general.overview.notifications.Notific
 import info.nightscout.androidaps.plugins.pump.common.defs.PumpType;
 import info.nightscout.androidaps.queue.Callback;
 import info.nightscout.androidaps.queue.commands.Command;
-import info.nightscout.androidaps.utils.DateUtil;
 import info.nightscout.androidaps.utils.resources.ResourceHelper;
 import info.nightscout.androidaps.utils.sharedPreferences.SP;
 
@@ -191,7 +190,7 @@ public class DanaRExecutionService extends AbstractDanaRExecutionService {
                 long timeDiff = (danaPump.getPumpTime() - System.currentTimeMillis()) / 1000L;
                 aapsLogger.debug(LTag.PUMP, "Pump time difference: " + timeDiff + " seconds");
                 if (Math.abs(timeDiff) > 10) {
-                    mSerialIOThread.sendMessage(new MsgSetTime(injector, DateUtil.now()));
+                    mSerialIOThread.sendMessage(new MsgSetTime(injector, dateUtil.now()));
                     mSerialIOThread.sendMessage(new MsgSettingPumpTime(injector));
                     timeDiff = (danaPump.getPumpTime() - System.currentTimeMillis()) / 1000L;
                     aapsLogger.debug(LTag.PUMP, "Pump time difference: " + timeDiff + " seconds");
