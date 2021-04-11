@@ -6,6 +6,7 @@ import android.os.SystemClock;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import info.nightscout.androidaps.extensions.PumpStateExtensionKt;
 import org.joda.time.DateTime;
 import org.json.JSONObject;
 
@@ -738,7 +739,12 @@ public class ComboPlugin extends PumpPluginBase implements PumpInterface, Constr
                     T.mins(state.tbrRemainingDuration).msecs(),
                     false,
                     tbrType,
-                    state.timestamp, // no pumpId available ????
+                    // There are no IDs for TBRs on the pump and none is calculated (in contrast to boluses).
+                    // The current time is used here as an ID, which has no meaning and does not allow identifying
+                    // the record on the pump (which isn't needed), but only needs to be unique.
+                    // Generally, TBR records are created when a TBR is set by AAPS or when a change on the pump has
+                    // been detected, rather than checking the pumps history of TBRs.
+                    state.timestamp,
                     PumpType.ACCU_CHEK_COMBO,
                     serialNumber()
             );
@@ -767,8 +773,7 @@ public class ComboPlugin extends PumpPluginBase implements PumpInterface, Constr
     @NonNull @Override
     public PumpEnactResult cancelTempBasal(boolean enforceNew) {
         getAapsLogger().debug(LTag.PUMP, "cancelTempBasal called");
-        PumpSync.PumpState pumpSate = pumpSync.expectedPumpState();
-        final PumpSync.PumpState.TemporaryBasal activeTemp = pumpSate.getTemporaryBasal();
+        final PumpSync.PumpState.TemporaryBasal activeTemp = pumpSync.expectedPumpState().getTemporaryBasal();
         if (enforceNew) {
             CommandResult stateResult = runCommand(getResourceHelper().gs(R.string.combo_pump_action_refreshing), 2, ruffyScripter::readPumpState);
             if (!stateResult.success) {
@@ -785,6 +790,7 @@ public class ComboPlugin extends PumpPluginBase implements PumpInterface, Constr
             if (!cancelResult.state.tbrActive) {
                 pumpSync.syncStopTemporaryBasalWithPumpId(
                         cancelResult.state.timestamp,
+                        // Combo doesn't have nor uses IDs for TBRs, see note in #setTempBasalPercent
                         cancelResult.state.timestamp,
                         PumpType.ACCU_CHEK_COMBO,
                         serialNumber()
@@ -795,15 +801,16 @@ public class ComboPlugin extends PumpPluginBase implements PumpInterface, Constr
             }
         } else if (activeTemp == null) {
             return new PumpEnactResult(getInjector()).success(true).enacted(false);
-        } else if ((activeTemp.getRate() >= 90 && activeTemp.getRate() <= 110) && info.nightscout.androidaps.extensions.PumpStateExtensionKt.getPlannedRemainingMinutes(activeTemp) <= 15) {
+        } else if ((activeTemp.getRate() >= 90 && activeTemp.getRate() <= 110)
+                && PumpStateExtensionKt.getPlannedRemainingMinutes(activeTemp) <= 15) {
             // Let fake neutral temp keep run (see below)
             // Note that since this runs on the queue a connection is opened regardless, but this
             // case doesn't occur all that often, so it's not worth optimizing (1.3k SetTBR vs 4 cancelTBR).
-            getAapsLogger().debug(LTag.PUMP, "cancelTempBasal: skipping changing tbr since it already is at " + activeTemp.getRate() + "% and running for another " + info.nightscout.androidaps.extensions.PumpStateExtensionKt.getPlannedRemainingMinutes(activeTemp) + " mins.");
+            getAapsLogger().debug(LTag.PUMP, "cancelTempBasal: skipping changing tbr since it already is at " + activeTemp.getRate() + "% and running for another " + PumpStateExtensionKt.getPlannedRemainingMinutes(activeTemp) + " mins.");
             return new PumpEnactResult(getInjector()).success(true).enacted(true)
                     .comment("cancelTempBasal skipping changing tbr since it already is at "
                             + activeTemp.getRate() + "% and running for another "
-                            + info.nightscout.androidaps.extensions.PumpStateExtensionKt.getPlannedRemainingMinutes(activeTemp) + " mins.");
+                            + PumpStateExtensionKt.getPlannedRemainingMinutes(activeTemp) + " mins.");
         } else {
             // Set a fake neutral temp to avoid TBR cancel alert. Decide 90% vs 110% based on
             // on whether the TBR we're cancelling is above or below 100%.
@@ -938,7 +945,8 @@ public class ComboPlugin extends PumpPluginBase implements PumpInterface, Constr
                         T.mins(15).msecs(),
                         false,
                         PumpSync.TemporaryBasalType.PUMP_SUSPEND,
-                        now, // no pumpId available ????
+                        // Combo doesn't have nor uses IDs for TBRs, see note in #setTempBasalPercent
+                        now,
                         PumpType.ACCU_CHEK_COMBO,
                         serialNumber()
                 );
@@ -1059,6 +1067,8 @@ public class ComboPlugin extends PumpPluginBase implements PumpInterface, Constr
     private void checkAndResolveTbrMismatch(PumpState state) {
         // compare with: info.nightscout.androidaps.plugins.PumpDanaR.comm.MsgStatusTempBasal.updateTempBasalInDB()
         long now = System.currentTimeMillis();
+        // Combo doesn't have nor uses IDs for TBRs, see note in #setTempBasalPercent
+        long tbrId = now;
         //TemporaryBasal aapsTbr = treatmentsPlugin.getTempBasalFromHistoryIncludingConvertedExtended(now);
         PumpSync.PumpState.TemporaryBasal aapsTbr = pumpSync.expectedPumpState().getTemporaryBasal();
         if (aapsTbr == null && state.tbrActive && state.tbrRemainingDuration > 2) {
@@ -1069,36 +1079,40 @@ public class ComboPlugin extends PumpPluginBase implements PumpInterface, Constr
                     T.mins(state.tbrRemainingDuration).msecs(),
                     false,
                     PumpSync.TemporaryBasalType.NORMAL,
-                    now, // no pumpId available ????
+                    tbrId,
                     PumpType.ACCU_CHEK_COMBO,
                     serialNumber()
             );
-        } else if (aapsTbr != null && info.nightscout.androidaps.extensions.PumpStateExtensionKt.getPlannedRemainingMinutes(aapsTbr) > 2 && !state.tbrActive) {
+        } else if (aapsTbr != null && PumpStateExtensionKt.getPlannedRemainingMinutes(aapsTbr) > 2 && !state.tbrActive) {
             getAapsLogger().debug(LTag.PUMP, "Ending AAPS-TBR since pump has no TBR active");
             pumpSync.syncStopTemporaryBasalWithPumpId(
                     now,
-                    now,
+                    tbrId,
                     PumpType.ACCU_CHEK_COMBO,
                     serialNumber()
             );
         } else if (aapsTbr != null && state.tbrActive
                 && (aapsTbr.getRate() != state.tbrPercent ||
-                Math.abs(info.nightscout.androidaps.extensions.PumpStateExtensionKt.getPlannedRemainingMinutes(aapsTbr) - state.tbrRemainingDuration) > 2)) {
+                Math.abs(PumpStateExtensionKt.getPlannedRemainingMinutes(aapsTbr) - state.tbrRemainingDuration) > 2)) {
             getAapsLogger().debug(LTag.PUMP, "AAPSs and pump-TBR differ; ending AAPS-TBR and creating new TBR based on pump TBR");
+
+            // crate TBR end record a second ago
             pumpSync.syncStopTemporaryBasalWithPumpId(
                     now - 1000,
-                    now - 1000,
+                    // fake a unique ID that doesn't clash with the record below
+                    tbrId - 1000,
                     PumpType.ACCU_CHEK_COMBO,
                     serialNumber()
             );
 
+            // Create TBR start record, starting now
             pumpSync.syncTemporaryBasalWithPumpId(
                     now,
                     state.tbrPercent,
                     T.mins(state.tbrRemainingDuration).msecs(),
                     false,
                     PumpSync.TemporaryBasalType.NORMAL,
-                    now, // no pumpId available ????
+                    tbrId,
                     PumpType.ACCU_CHEK_COMBO,
                     serialNumber()
             );
