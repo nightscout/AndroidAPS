@@ -44,6 +44,7 @@ import javax.inject.Singleton
 import kotlin.math.abs
 import kotlin.math.floor
 import kotlin.math.max
+import kotlin.math.min
 import kotlin.math.roundToLong
 
 @Singleton
@@ -380,16 +381,16 @@ open class IobCobCalculatorPlugin @Inject constructor(
         bucketedData = bData
     }
 
-    fun oldestDataAvailable(): Long {
+    private fun oldestDataAvailable(): Long {
         var oldestTime = System.currentTimeMillis()
         val oldestTempBasal = repository.getOldestTemporaryBasalRecord()
-        if (oldestTempBasal != null) oldestTime = Math.min(oldestTime, oldestTempBasal.timestamp)
+        if (oldestTempBasal != null) oldestTime = min(oldestTime, oldestTempBasal.timestamp)
         val oldestExtendedBolus = repository.getOldestExtendedBolusRecord()
-        if (oldestExtendedBolus != null) oldestTime = Math.min(oldestTime, oldestExtendedBolus.timestamp)
+        if (oldestExtendedBolus != null) oldestTime = min(oldestTime, oldestExtendedBolus.timestamp)
         val oldestBolus = repository.getOldestBolusRecord()
-        if (oldestBolus != null) oldestTime = Math.min(oldestTime, oldestBolus.timestamp)
+        if (oldestBolus != null) oldestTime = min(oldestTime, oldestBolus.timestamp)
         val oldestCarbs = repository.getOldestCarbsRecord()
-        if (oldestCarbs != null) oldestTime = Math.min(oldestTime, oldestCarbs.timestamp)
+        if (oldestCarbs != null) oldestTime = min(oldestTime, oldestCarbs.timestamp)
         oldestTime -= 15 * 60 * 1000L // allow 15 min before
         return oldestTime
     }

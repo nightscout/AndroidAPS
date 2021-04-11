@@ -137,12 +137,12 @@ class DanaRKoreanPlugin @Inject constructor(
             if (!result.success) result.comment(resourceHelper.gs(R.string.boluserrorcode, detailedBolusInfo.insulin, t.insulin, danaPump.bolusStartErrorCode)) else result.comment(R.string.ok)
             aapsLogger.debug(LTag.PUMP, "deliverTreatment: OK. Asked: " + detailedBolusInfo.insulin + " Delivered: " + result.bolusDelivered)
             detailedBolusInfo.insulin = t.insulin
-            detailedBolusInfo.timestamp = dateUtil._now()
+            detailedBolusInfo.timestamp = dateUtil.now()
             if (detailedBolusInfo.insulin > 0) pumpSync.syncBolusWithPumpId(
                 detailedBolusInfo.timestamp,
                 detailedBolusInfo.insulin,
                 detailedBolusInfo.bolusType,
-                dateUtil._now(),
+                dateUtil.now(),
                 PumpType.DANA_R_KOREAN,
                 serialNumber()
             )
@@ -285,8 +285,8 @@ class DanaRKoreanPlugin @Inject constructor(
             sExecutionService.tempBasalStop()
             if (!danaPump.isTempBasalInProgress) {
                 pumpSync.syncStopTemporaryBasalWithPumpId(
-                    dateUtil._now(),
-                    dateUtil._now(),
+                    dateUtil.now(),
+                    dateUtil.now(),
                     pumpDescription.pumpType,
                     serialNumber()
                 )
