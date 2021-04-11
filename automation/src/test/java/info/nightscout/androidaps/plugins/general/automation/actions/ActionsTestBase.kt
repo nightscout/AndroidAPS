@@ -66,6 +66,7 @@ open class ActionsTestBase : TestBaseWithProfile() {
                 it.repository = repository
                 it.profileFunction = profileFunction
                 it.uel = uel
+                it.dateUtil = dateUtil
             }
             if (it is ActionSendSMS) {
                 it.aapsLogger = aapsLogger
@@ -78,6 +79,7 @@ open class ActionsTestBase : TestBaseWithProfile() {
                 it.activePlugin = activePlugin
                 it.profileFunction = profileFunction
                 it.uel = uel
+                it.dateUtil = dateUtil
             }
             if (it is ActionProfileSwitchPercent) {
                 it.resourceHelper = resourceHelper

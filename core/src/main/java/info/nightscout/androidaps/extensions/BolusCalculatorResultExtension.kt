@@ -7,10 +7,10 @@ import info.nightscout.androidaps.database.entities.TherapyEvent
 import info.nightscout.androidaps.utils.DateUtil
 import org.json.JSONObject
 
-fun BolusCalculatorResult.toJson(): JSONObject =
+fun BolusCalculatorResult.toJson(dateUtil: DateUtil): JSONObject =
     JSONObject()
         .put("eventType", TherapyEvent.Type.BOLUS_WIZARD.text)
-        .put("created_at", DateUtil.toISOString(timestamp))
+        .put("created_at", dateUtil.toISOString(timestamp))
         .put("bolusCalculatorResult", Gson().toJson(this))
         .put("date", timestamp)
         .put("glucose", glucoseValue)

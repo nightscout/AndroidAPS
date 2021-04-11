@@ -91,7 +91,7 @@ class DanaFragment : DaggerFragment() {
             val profileName = danaPump.createConvertedProfile()?.getDefaultProfileName()
                 ?: return@setOnClickListener
             val args = Bundle()
-            args.putLong("time", DateUtil.now())
+            args.putLong("time", dateUtil.now())
             args.putInt("mode", ProfileViewerDialog.Mode.CUSTOM_PROFILE.ordinal)
             args.putString("customProfile", profile.data.toString())
             args.putString("customProfileUnits", profile.units)
@@ -201,7 +201,7 @@ class DanaFragment : DaggerFragment() {
             val agoHours = agoMsec.toDouble() / 60.0 / 60.0 / 1000.0
             if (agoHours < 6)
             // max 6h back
-                binding.lastbolus.text = dateUtil.timeString(pump.lastBolusTime) + " " + DateUtil.sinceString(pump.lastBolusTime, resourceHelper) + " " + resourceHelper.gs(R.string.formatinsulinunits, pump.lastBolusAmount)
+                binding.lastbolus.text = dateUtil.timeString(pump.lastBolusTime) + " " + dateUtil.sinceString(pump.lastBolusTime, resourceHelper) + " " + resourceHelper.gs(R.string.formatinsulinunits, pump.lastBolusAmount)
             else
                 binding.lastbolus.text = ""
         }

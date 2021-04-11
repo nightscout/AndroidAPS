@@ -69,7 +69,7 @@ class TreatmentsProfileSwitchFragment : DaggerFragment() {
         super.onViewCreated(view, savedInstanceState)
         binding.recyclerview.setHasFixedSize(true)
         binding.recyclerview.layoutManager = LinearLayoutManager(view.context)
-        binding.recyclerview.adapter = RecyclerProfileViewAdapter(databaseHelper.getProfileSwitchData(DateUtil.now() - T.days(30).msecs(), false))
+        binding.recyclerview.adapter = RecyclerProfileViewAdapter(databaseHelper.getProfileSwitchData(dateUtil.now() - T.days(30).msecs(), false))
 
         binding.refreshFromNightscout.setOnClickListener {
             activity?.let { activity ->
@@ -108,7 +108,7 @@ class TreatmentsProfileSwitchFragment : DaggerFragment() {
 
     fun updateGUI() {
         if (_binding == null) return
-        binding.recyclerview.swapAdapter(RecyclerProfileViewAdapter(databaseHelper.getProfileSwitchData(DateUtil.now() - T.days(30).msecs(), false)), false)
+        binding.recyclerview.swapAdapter(RecyclerProfileViewAdapter(databaseHelper.getProfileSwitchData(dateUtil.now() - T.days(30).msecs(), false)), false)
     }
 
     inner class RecyclerProfileViewAdapter(private var profileSwitchList: List<ProfileSwitch>) : RecyclerView.Adapter<ProfileSwitchViewHolder>() {

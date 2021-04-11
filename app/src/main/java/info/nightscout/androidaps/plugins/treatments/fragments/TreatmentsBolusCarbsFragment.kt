@@ -113,7 +113,7 @@ class TreatmentsBolusCarbsFragment : DaggerFragment() {
                 OKDialog.showConfirmation(activity, resourceHelper.gs(R.string.overview_treatment_label), resourceHelper.gs(R.string.deletefuturetreatments) + "?", Runnable {
                     uel.log(Action.DELETE_FUTURE_TREATMENTS, Sources.Treatments)
                     repository
-                        .getBolusesDataFromTime(dateUtil._now(), false)
+                        .getBolusesDataFromTime(dateUtil.now(), false)
                         .observeOn(aapsSchedulers.main)
                         .subscribe { list ->
                             list.forEach { bolus ->
@@ -125,7 +125,7 @@ class TreatmentsBolusCarbsFragment : DaggerFragment() {
                             }
                         }
                     repository
-                        .getCarbsDataFromTime(dateUtil._now(), false)
+                        .getCarbsDataFromTime(dateUtil.now(), false)
                         .observeOn(aapsSchedulers.main)
                         .subscribe { list ->
                             list.forEach { carb ->
@@ -137,7 +137,7 @@ class TreatmentsBolusCarbsFragment : DaggerFragment() {
                             }
                         }
                     repository
-                        .getBolusCalculatorResultsDataFromTime(dateUtil._now(), false)
+                        .getBolusCalculatorResultsDataFromTime(dateUtil.now(), false)
                         .observeOn(aapsSchedulers.main)
                         .subscribe { list ->
                             list.forEach { bolusCalc ->
@@ -281,7 +281,7 @@ class TreatmentsBolusCarbsFragment : DaggerFragment() {
                 val iob = bolus.iobCalc(activePlugin, System.currentTimeMillis(), profile.dia)
                 holder.binding.iob.text = resourceHelper.gs(R.string.formatinsulinunits, iob.iobContrib)
                 if (iob.iobContrib != 0.0) holder.binding.iob.setTextColor(resourceHelper.gc(R.color.colorActive)) else holder.binding.iob.setTextColor(holder.binding.carbs.currentTextColor)
-                if (bolus.timestamp > dateUtil._now()) holder.binding.date.setTextColor(resourceHelper.gc(R.color.colorScheduled)) else holder.binding.date.setTextColor(holder.binding.carbs.currentTextColor)
+                if (bolus.timestamp > dateUtil.now()) holder.binding.date.setTextColor(resourceHelper.gc(R.color.colorScheduled)) else holder.binding.date.setTextColor(holder.binding.carbs.currentTextColor)
                 holder.binding.mealOrCorrection.text =
                     when (ml.bolus.type) {
                         Bolus.Type.SMB     -> "SMB"

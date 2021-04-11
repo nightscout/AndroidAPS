@@ -50,7 +50,6 @@ class CommandQueueTest : TestBaseWithProfile() {
     @Mock lateinit var constraintChecker: ConstraintChecker
     @Mock lateinit var lazyActivePlugin: Lazy<ActivePluginProvider>
     @Mock lateinit var activePlugin: ActivePluginProvider
-    @Mock lateinit var context: Context
     @Mock lateinit var sp: SP
     @Mock lateinit var loggerUtils: LoggerUtils
     @Mock lateinit var powerManager: PowerManager
@@ -226,7 +225,7 @@ class CommandQueueTest : TestBaseWithProfile() {
         // given
         Assert.assertEquals(0, commandQueue.size())
         val smb = DetailedBolusInfo()
-        smb.lastKnownBolusTime = DateUtil.now()
+        smb.lastKnownBolusTime = System.currentTimeMillis()
         smb.bolusType = DetailedBolusInfo.BolusType.SMB
         commandQueue.bolus(smb, null)
         commandQueue.bolus(DetailedBolusInfo(), null)

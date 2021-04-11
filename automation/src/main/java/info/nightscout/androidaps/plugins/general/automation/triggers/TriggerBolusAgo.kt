@@ -45,7 +45,7 @@ class TriggerBolusAgo(injector: HasAndroidInjector) : Trigger(injector) {
                 aapsLogger.debug(LTag.AUTOMATION, "NOT ready for execution: " + friendlyDescription())
                 false
             }
-        val last = (dateUtil._now() - lastBolusTime).toDouble() / (60 * 1000)
+        val last = (dateUtil.now() - lastBolusTime).toDouble() / (60 * 1000)
         aapsLogger.debug(LTag.AUTOMATION, "LastBolus min ago: $minutesAgo")
         val doRun = comparator.value.check(last.toInt(), minutesAgo.getMinutes())
         if (doRun) {

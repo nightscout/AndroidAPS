@@ -1,5 +1,6 @@
 package info.nightscout.androidaps.plugins.iob.iobCobCalculator
 
+import android.content.Context
 import dagger.android.AndroidInjector
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.TestBase
@@ -38,9 +39,10 @@ class IobCobCalculatorPluginTest : TestBase() {
     @Mock lateinit var sensitivityAAPSPlugin: SensitivityAAPSPlugin
     @Mock lateinit var sensitivityWeightedAveragePlugin: SensitivityWeightedAveragePlugin
     @Mock lateinit var fabricPrivacy: FabricPrivacy
-    @Mock lateinit var dateUtil: DateUtil
     @Mock lateinit var repository: AppRepository
+    @Mock lateinit var context: Context
 
+    lateinit var dateUtil: DateUtil
     lateinit var iobCobCalculatorPlugin: IobCobCalculatorPlugin
 
     val injector = HasAndroidInjector {
@@ -50,6 +52,7 @@ class IobCobCalculatorPluginTest : TestBase() {
 
     @Before
     fun mock() {
+        dateUtil = DateUtil(context)
         iobCobCalculatorPlugin = IobCobCalculatorPlugin(injector, aapsLogger, aapsSchedulers, rxBus, sp, resourceHelper, profileFunction, activePlugin, sensitivityOref1Plugin, sensitivityAAPSPlugin, sensitivityWeightedAveragePlugin, fabricPrivacy, dateUtil, repository)
     }
 
@@ -218,64 +221,64 @@ class IobCobCalculatorPluginTest : TestBase() {
 
         // real data gap test
         bgReadingList.clear()
-        bgReadingList.add(GlucoseValue(raw = 0.0, noise = 0.0, value = 100.0, timestamp = DateUtil.fromISODateString("2018-09-05T13:34:55Z").time, sourceSensor = GlucoseValue.SourceSensor.UNKNOWN, trendArrow = GlucoseValue.TrendArrow.FLAT))
-        bgReadingList.add(GlucoseValue(raw = 0.0, noise = 0.0, value = 100.0, timestamp = DateUtil.fromISODateString("2018-09-05T13:14:55Z").time, sourceSensor = GlucoseValue.SourceSensor.UNKNOWN, trendArrow = GlucoseValue.TrendArrow.FLAT))
-        bgReadingList.add(GlucoseValue(raw = 0.0, noise = 0.0, value = 100.0, timestamp = DateUtil.fromISODateString("2018-09-05T13:09:55Z").time, sourceSensor = GlucoseValue.SourceSensor.UNKNOWN, trendArrow = GlucoseValue.TrendArrow.FLAT))
-        bgReadingList.add(GlucoseValue(raw = 0.0, noise = 0.0, value = 100.0, timestamp = DateUtil.fromISODateString("2018-09-05T13:04:55Z").time, sourceSensor = GlucoseValue.SourceSensor.UNKNOWN, trendArrow = GlucoseValue.TrendArrow.FLAT))
-        bgReadingList.add(GlucoseValue(raw = 0.0, noise = 0.0, value = 100.0, timestamp = DateUtil.fromISODateString("2018-09-05T12:59:55Z").time, sourceSensor = GlucoseValue.SourceSensor.UNKNOWN, trendArrow = GlucoseValue.TrendArrow.FLAT))
-        bgReadingList.add(GlucoseValue(raw = 0.0, noise = 0.0, value = 100.0, timestamp = DateUtil.fromISODateString("2018-09-05T12:54:55Z").time, sourceSensor = GlucoseValue.SourceSensor.UNKNOWN, trendArrow = GlucoseValue.TrendArrow.FLAT))
-        bgReadingList.add(GlucoseValue(raw = 0.0, noise = 0.0, value = 100.0, timestamp = DateUtil.fromISODateString("2018-09-05T12:49:55Z").time, sourceSensor = GlucoseValue.SourceSensor.UNKNOWN, trendArrow = GlucoseValue.TrendArrow.FLAT))
-        bgReadingList.add(GlucoseValue(raw = 0.0, noise = 0.0, value = 100.0, timestamp = DateUtil.fromISODateString("2018-09-05T12:44:55Z").time, sourceSensor = GlucoseValue.SourceSensor.UNKNOWN, trendArrow = GlucoseValue.TrendArrow.FLAT))
-        bgReadingList.add(GlucoseValue(raw = 0.0, noise = 0.0, value = 100.0, timestamp = DateUtil.fromISODateString("2018-09-05T12:39:55Z").time, sourceSensor = GlucoseValue.SourceSensor.UNKNOWN, trendArrow = GlucoseValue.TrendArrow.FLAT))
-        bgReadingList.add(GlucoseValue(raw = 0.0, noise = 0.0, value = 100.0, timestamp = DateUtil.fromISODateString("2018-09-05T12:34:55Z").time, sourceSensor = GlucoseValue.SourceSensor.UNKNOWN, trendArrow = GlucoseValue.TrendArrow.FLAT))
-        bgReadingList.add(GlucoseValue(raw = 0.0, noise = 0.0, value = 100.0, timestamp = DateUtil.fromISODateString("2018-09-05T12:29:56Z").time, sourceSensor = GlucoseValue.SourceSensor.UNKNOWN, trendArrow = GlucoseValue.TrendArrow.FLAT))
-        bgReadingList.add(GlucoseValue(raw = 0.0, noise = 0.0, value = 100.0, timestamp = DateUtil.fromISODateString("2018-09-05T12:24:55Z").time, sourceSensor = GlucoseValue.SourceSensor.UNKNOWN, trendArrow = GlucoseValue.TrendArrow.FLAT))
-        bgReadingList.add(GlucoseValue(raw = 0.0, noise = 0.0, value = 100.0, timestamp = DateUtil.fromISODateString("2018-09-05T12:19:56Z").time, sourceSensor = GlucoseValue.SourceSensor.UNKNOWN, trendArrow = GlucoseValue.TrendArrow.FLAT))
-        bgReadingList.add(GlucoseValue(raw = 0.0, noise = 0.0, value = 100.0, timestamp = DateUtil.fromISODateString("2018-09-05T12:14:56Z").time, sourceSensor = GlucoseValue.SourceSensor.UNKNOWN, trendArrow = GlucoseValue.TrendArrow.FLAT))
-        bgReadingList.add(GlucoseValue(raw = 0.0, noise = 0.0, value = 100.0, timestamp = DateUtil.fromISODateString("2018-09-05T12:09:56Z").time, sourceSensor = GlucoseValue.SourceSensor.UNKNOWN, trendArrow = GlucoseValue.TrendArrow.FLAT))
-        bgReadingList.add(GlucoseValue(raw = 0.0, noise = 0.0, value = 100.0, timestamp = DateUtil.fromISODateString("2018-09-05T12:04:56Z").time, sourceSensor = GlucoseValue.SourceSensor.UNKNOWN, trendArrow = GlucoseValue.TrendArrow.FLAT))
-        bgReadingList.add(GlucoseValue(raw = 0.0, noise = 0.0, value = 100.0, timestamp = DateUtil.fromISODateString("2018-09-05T11:59:55Z").time, sourceSensor = GlucoseValue.SourceSensor.UNKNOWN, trendArrow = GlucoseValue.TrendArrow.FLAT))
+        bgReadingList.add(GlucoseValue(raw = 0.0, noise = 0.0, value = 100.0, timestamp = dateUtil.fromISODateString("2018-09-05T13:34:55Z"), sourceSensor = GlucoseValue.SourceSensor.UNKNOWN, trendArrow = GlucoseValue.TrendArrow.FLAT))
+        bgReadingList.add(GlucoseValue(raw = 0.0, noise = 0.0, value = 100.0, timestamp = dateUtil.fromISODateString("2018-09-05T13:14:55Z"), sourceSensor = GlucoseValue.SourceSensor.UNKNOWN, trendArrow = GlucoseValue.TrendArrow.FLAT))
+        bgReadingList.add(GlucoseValue(raw = 0.0, noise = 0.0, value = 100.0, timestamp = dateUtil.fromISODateString("2018-09-05T13:09:55Z"), sourceSensor = GlucoseValue.SourceSensor.UNKNOWN, trendArrow = GlucoseValue.TrendArrow.FLAT))
+        bgReadingList.add(GlucoseValue(raw = 0.0, noise = 0.0, value = 100.0, timestamp = dateUtil.fromISODateString("2018-09-05T13:04:55Z"), sourceSensor = GlucoseValue.SourceSensor.UNKNOWN, trendArrow = GlucoseValue.TrendArrow.FLAT))
+        bgReadingList.add(GlucoseValue(raw = 0.0, noise = 0.0, value = 100.0, timestamp = dateUtil.fromISODateString("2018-09-05T12:59:55Z"), sourceSensor = GlucoseValue.SourceSensor.UNKNOWN, trendArrow = GlucoseValue.TrendArrow.FLAT))
+        bgReadingList.add(GlucoseValue(raw = 0.0, noise = 0.0, value = 100.0, timestamp = dateUtil.fromISODateString("2018-09-05T12:54:55Z"), sourceSensor = GlucoseValue.SourceSensor.UNKNOWN, trendArrow = GlucoseValue.TrendArrow.FLAT))
+        bgReadingList.add(GlucoseValue(raw = 0.0, noise = 0.0, value = 100.0, timestamp = dateUtil.fromISODateString("2018-09-05T12:49:55Z"), sourceSensor = GlucoseValue.SourceSensor.UNKNOWN, trendArrow = GlucoseValue.TrendArrow.FLAT))
+        bgReadingList.add(GlucoseValue(raw = 0.0, noise = 0.0, value = 100.0, timestamp = dateUtil.fromISODateString("2018-09-05T12:44:55Z"), sourceSensor = GlucoseValue.SourceSensor.UNKNOWN, trendArrow = GlucoseValue.TrendArrow.FLAT))
+        bgReadingList.add(GlucoseValue(raw = 0.0, noise = 0.0, value = 100.0, timestamp = dateUtil.fromISODateString("2018-09-05T12:39:55Z"), sourceSensor = GlucoseValue.SourceSensor.UNKNOWN, trendArrow = GlucoseValue.TrendArrow.FLAT))
+        bgReadingList.add(GlucoseValue(raw = 0.0, noise = 0.0, value = 100.0, timestamp = dateUtil.fromISODateString("2018-09-05T12:34:55Z"), sourceSensor = GlucoseValue.SourceSensor.UNKNOWN, trendArrow = GlucoseValue.TrendArrow.FLAT))
+        bgReadingList.add(GlucoseValue(raw = 0.0, noise = 0.0, value = 100.0, timestamp = dateUtil.fromISODateString("2018-09-05T12:29:56Z"), sourceSensor = GlucoseValue.SourceSensor.UNKNOWN, trendArrow = GlucoseValue.TrendArrow.FLAT))
+        bgReadingList.add(GlucoseValue(raw = 0.0, noise = 0.0, value = 100.0, timestamp = dateUtil.fromISODateString("2018-09-05T12:24:55Z"), sourceSensor = GlucoseValue.SourceSensor.UNKNOWN, trendArrow = GlucoseValue.TrendArrow.FLAT))
+        bgReadingList.add(GlucoseValue(raw = 0.0, noise = 0.0, value = 100.0, timestamp = dateUtil.fromISODateString("2018-09-05T12:19:56Z"), sourceSensor = GlucoseValue.SourceSensor.UNKNOWN, trendArrow = GlucoseValue.TrendArrow.FLAT))
+        bgReadingList.add(GlucoseValue(raw = 0.0, noise = 0.0, value = 100.0, timestamp = dateUtil.fromISODateString("2018-09-05T12:14:56Z"), sourceSensor = GlucoseValue.SourceSensor.UNKNOWN, trendArrow = GlucoseValue.TrendArrow.FLAT))
+        bgReadingList.add(GlucoseValue(raw = 0.0, noise = 0.0, value = 100.0, timestamp = dateUtil.fromISODateString("2018-09-05T12:09:56Z"), sourceSensor = GlucoseValue.SourceSensor.UNKNOWN, trendArrow = GlucoseValue.TrendArrow.FLAT))
+        bgReadingList.add(GlucoseValue(raw = 0.0, noise = 0.0, value = 100.0, timestamp = dateUtil.fromISODateString("2018-09-05T12:04:56Z"), sourceSensor = GlucoseValue.SourceSensor.UNKNOWN, trendArrow = GlucoseValue.TrendArrow.FLAT))
+        bgReadingList.add(GlucoseValue(raw = 0.0, noise = 0.0, value = 100.0, timestamp = dateUtil.fromISODateString("2018-09-05T11:59:55Z"), sourceSensor = GlucoseValue.SourceSensor.UNKNOWN, trendArrow = GlucoseValue.TrendArrow.FLAT))
 
-        bgReadingList.add(GlucoseValue(raw = 0.0, noise = 0.0, value = 100.0, timestamp = DateUtil.fromISODateString("2018-09-05T04:29:57Z").time, sourceSensor = GlucoseValue.SourceSensor.UNKNOWN, trendArrow = GlucoseValue.TrendArrow.FLAT))
-        bgReadingList.add(GlucoseValue(raw = 0.0, noise = 0.0, value = 100.0, timestamp = DateUtil.fromISODateString("2018-09-05T04:24:56Z").time, sourceSensor = GlucoseValue.SourceSensor.UNKNOWN, trendArrow = GlucoseValue.TrendArrow.FLAT))
-        bgReadingList.add(GlucoseValue(raw = 0.0, noise = 0.0, value = 100.0, timestamp = DateUtil.fromISODateString("2018-09-05T04:19:57Z").time, sourceSensor = GlucoseValue.SourceSensor.UNKNOWN, trendArrow = GlucoseValue.TrendArrow.FLAT))
-        bgReadingList.add(GlucoseValue(raw = 0.0, noise = 0.0, value = 100.0, timestamp = DateUtil.fromISODateString("2018-09-05T04:14:57Z").time, sourceSensor = GlucoseValue.SourceSensor.UNKNOWN, trendArrow = GlucoseValue.TrendArrow.FLAT))
-        bgReadingList.add(GlucoseValue(raw = 0.0, noise = 0.0, value = 100.0, timestamp = DateUtil.fromISODateString("2018-09-05T04:10:03Z").time, sourceSensor = GlucoseValue.SourceSensor.UNKNOWN, trendArrow = GlucoseValue.TrendArrow.FLAT))
-        bgReadingList.add(GlucoseValue(raw = 0.0, noise = 0.0, value = 100.0, timestamp = DateUtil.fromISODateString("2018-09-05T04:04:56Z").time, sourceSensor = GlucoseValue.SourceSensor.UNKNOWN, trendArrow = GlucoseValue.TrendArrow.FLAT))
-        bgReadingList.add(GlucoseValue(raw = 0.0, noise = 0.0, value = 100.0, timestamp = DateUtil.fromISODateString("2018-09-05T03:59:56Z").time, sourceSensor = GlucoseValue.SourceSensor.UNKNOWN, trendArrow = GlucoseValue.TrendArrow.FLAT))
-        bgReadingList.add(GlucoseValue(raw = 0.0, noise = 0.0, value = 100.0, timestamp = DateUtil.fromISODateString("2018-09-05T03:54:56Z").time, sourceSensor = GlucoseValue.SourceSensor.UNKNOWN, trendArrow = GlucoseValue.TrendArrow.FLAT))
-        bgReadingList.add(GlucoseValue(raw = 0.0, noise = 0.0, value = 100.0, timestamp = DateUtil.fromISODateString("2018-09-05T03:50:03Z").time, sourceSensor = GlucoseValue.SourceSensor.UNKNOWN, trendArrow = GlucoseValue.TrendArrow.FLAT))
-        bgReadingList.add(GlucoseValue(raw = 0.0, noise = 0.0, value = 100.0, timestamp = DateUtil.fromISODateString("2018-09-05T03:44:57Z").time, sourceSensor = GlucoseValue.SourceSensor.UNKNOWN, trendArrow = GlucoseValue.TrendArrow.FLAT))
+        bgReadingList.add(GlucoseValue(raw = 0.0, noise = 0.0, value = 100.0, timestamp = dateUtil.fromISODateString("2018-09-05T04:29:57Z"), sourceSensor = GlucoseValue.SourceSensor.UNKNOWN, trendArrow = GlucoseValue.TrendArrow.FLAT))
+        bgReadingList.add(GlucoseValue(raw = 0.0, noise = 0.0, value = 100.0, timestamp = dateUtil.fromISODateString("2018-09-05T04:24:56Z"), sourceSensor = GlucoseValue.SourceSensor.UNKNOWN, trendArrow = GlucoseValue.TrendArrow.FLAT))
+        bgReadingList.add(GlucoseValue(raw = 0.0, noise = 0.0, value = 100.0, timestamp = dateUtil.fromISODateString("2018-09-05T04:19:57Z"), sourceSensor = GlucoseValue.SourceSensor.UNKNOWN, trendArrow = GlucoseValue.TrendArrow.FLAT))
+        bgReadingList.add(GlucoseValue(raw = 0.0, noise = 0.0, value = 100.0, timestamp = dateUtil.fromISODateString("2018-09-05T04:14:57Z"), sourceSensor = GlucoseValue.SourceSensor.UNKNOWN, trendArrow = GlucoseValue.TrendArrow.FLAT))
+        bgReadingList.add(GlucoseValue(raw = 0.0, noise = 0.0, value = 100.0, timestamp = dateUtil.fromISODateString("2018-09-05T04:10:03Z"), sourceSensor = GlucoseValue.SourceSensor.UNKNOWN, trendArrow = GlucoseValue.TrendArrow.FLAT))
+        bgReadingList.add(GlucoseValue(raw = 0.0, noise = 0.0, value = 100.0, timestamp = dateUtil.fromISODateString("2018-09-05T04:04:56Z"), sourceSensor = GlucoseValue.SourceSensor.UNKNOWN, trendArrow = GlucoseValue.TrendArrow.FLAT))
+        bgReadingList.add(GlucoseValue(raw = 0.0, noise = 0.0, value = 100.0, timestamp = dateUtil.fromISODateString("2018-09-05T03:59:56Z"), sourceSensor = GlucoseValue.SourceSensor.UNKNOWN, trendArrow = GlucoseValue.TrendArrow.FLAT))
+        bgReadingList.add(GlucoseValue(raw = 0.0, noise = 0.0, value = 100.0, timestamp = dateUtil.fromISODateString("2018-09-05T03:54:56Z"), sourceSensor = GlucoseValue.SourceSensor.UNKNOWN, trendArrow = GlucoseValue.TrendArrow.FLAT))
+        bgReadingList.add(GlucoseValue(raw = 0.0, noise = 0.0, value = 100.0, timestamp = dateUtil.fromISODateString("2018-09-05T03:50:03Z"), sourceSensor = GlucoseValue.SourceSensor.UNKNOWN, trendArrow = GlucoseValue.TrendArrow.FLAT))
+        bgReadingList.add(GlucoseValue(raw = 0.0, noise = 0.0, value = 100.0, timestamp = dateUtil.fromISODateString("2018-09-05T03:44:57Z"), sourceSensor = GlucoseValue.SourceSensor.UNKNOWN, trendArrow = GlucoseValue.TrendArrow.FLAT))
         iobCobCalculatorPlugin.bgReadings = bgReadingList
         iobCobCalculatorPlugin.referenceTime = -1
         Assert.assertEquals(true, iobCobCalculatorPlugin.isAbout5minData)
         iobCobCalculatorPlugin.createBucketedData()
-        Assert.assertEquals(DateUtil.fromISODateString("2018-09-05T13:34:57Z").time, iobCobCalculatorPlugin.bucketedData!![0].timestamp)
-        Assert.assertEquals(DateUtil.fromISODateString("2018-09-05T03:44:57Z").time, iobCobCalculatorPlugin.bucketedData!![iobCobCalculatorPlugin.bucketedData!!.size - 1].timestamp)
+        Assert.assertEquals(dateUtil.fromISODateString("2018-09-05T13:34:57Z"), iobCobCalculatorPlugin.bucketedData!![0].timestamp)
+        Assert.assertEquals(dateUtil.fromISODateString("2018-09-05T03:44:57Z"), iobCobCalculatorPlugin.bucketedData!![iobCobCalculatorPlugin.bucketedData!!.size - 1].timestamp)
 
         // 5min 4sec data
         bgReadingList.clear()
-        bgReadingList.add(GlucoseValue(raw = 0.0, noise = 0.0, value = 100.0, timestamp = DateUtil.fromISODateString("2018-10-05T06:33:40Z").time, sourceSensor = GlucoseValue.SourceSensor.UNKNOWN, trendArrow = GlucoseValue.TrendArrow.FLAT))
-        bgReadingList.add(GlucoseValue(raw = 0.0, noise = 0.0, value = 100.0, timestamp = DateUtil.fromISODateString("2018-10-05T06:28:36Z").time, sourceSensor = GlucoseValue.SourceSensor.UNKNOWN, trendArrow = GlucoseValue.TrendArrow.FLAT))
-        bgReadingList.add(GlucoseValue(raw = 0.0, noise = 0.0, value = 100.0, timestamp = DateUtil.fromISODateString("2018-10-05T06:23:32Z").time, sourceSensor = GlucoseValue.SourceSensor.UNKNOWN, trendArrow = GlucoseValue.TrendArrow.FLAT))
-        bgReadingList.add(GlucoseValue(raw = 0.0, noise = 0.0, value = 100.0, timestamp = DateUtil.fromISODateString("2018-10-05T06:18:28Z").time, sourceSensor = GlucoseValue.SourceSensor.UNKNOWN, trendArrow = GlucoseValue.TrendArrow.FLAT))
-        bgReadingList.add(GlucoseValue(raw = 0.0, noise = 0.0, value = 100.0, timestamp = DateUtil.fromISODateString("2018-10-05T06:13:24Z").time, sourceSensor = GlucoseValue.SourceSensor.UNKNOWN, trendArrow = GlucoseValue.TrendArrow.FLAT))
-        bgReadingList.add(GlucoseValue(raw = 0.0, noise = 0.0, value = 100.0, timestamp = DateUtil.fromISODateString("2018-10-05T06:08:19Z").time, sourceSensor = GlucoseValue.SourceSensor.UNKNOWN, trendArrow = GlucoseValue.TrendArrow.FLAT))
-        bgReadingList.add(GlucoseValue(raw = 0.0, noise = 0.0, value = 100.0, timestamp = DateUtil.fromISODateString("2018-10-05T06:03:16Z").time, sourceSensor = GlucoseValue.SourceSensor.UNKNOWN, trendArrow = GlucoseValue.TrendArrow.FLAT))
-        bgReadingList.add(GlucoseValue(raw = 0.0, noise = 0.0, value = 100.0, timestamp = DateUtil.fromISODateString("2018-10-05T05:58:11Z").time, sourceSensor = GlucoseValue.SourceSensor.UNKNOWN, trendArrow = GlucoseValue.TrendArrow.FLAT))
-        bgReadingList.add(GlucoseValue(raw = 0.0, noise = 0.0, value = 100.0, timestamp = DateUtil.fromISODateString("2018-10-05T05:53:07Z").time, sourceSensor = GlucoseValue.SourceSensor.UNKNOWN, trendArrow = GlucoseValue.TrendArrow.FLAT))
-        bgReadingList.add(GlucoseValue(raw = 0.0, noise = 0.0, value = 100.0, timestamp = DateUtil.fromISODateString("2018-10-05T05:48:03Z").time, sourceSensor = GlucoseValue.SourceSensor.UNKNOWN, trendArrow = GlucoseValue.TrendArrow.FLAT))
-        bgReadingList.add(GlucoseValue(raw = 0.0, noise = 0.0, value = 100.0, timestamp = DateUtil.fromISODateString("2018-10-05T05:42:58Z").time, sourceSensor = GlucoseValue.SourceSensor.UNKNOWN, trendArrow = GlucoseValue.TrendArrow.FLAT))
-        bgReadingList.add(GlucoseValue(raw = 0.0, noise = 0.0, value = 100.0, timestamp = DateUtil.fromISODateString("2018-10-05T05:37:54Z").time, sourceSensor = GlucoseValue.SourceSensor.UNKNOWN, trendArrow = GlucoseValue.TrendArrow.FLAT))
-        bgReadingList.add(GlucoseValue(raw = 0.0, noise = 0.0, value = 100.0, timestamp = DateUtil.fromISODateString("2018-10-05T05:32:51Z").time, sourceSensor = GlucoseValue.SourceSensor.UNKNOWN, trendArrow = GlucoseValue.TrendArrow.FLAT))
-        bgReadingList.add(GlucoseValue(raw = 0.0, noise = 0.0, value = 100.0, timestamp = DateUtil.fromISODateString("2018-10-05T05:27:46Z").time, sourceSensor = GlucoseValue.SourceSensor.UNKNOWN, trendArrow = GlucoseValue.TrendArrow.FLAT))
-        bgReadingList.add(GlucoseValue(raw = 0.0, noise = 0.0, value = 100.0, timestamp = DateUtil.fromISODateString("2018-10-05T05:22:42Z").time, sourceSensor = GlucoseValue.SourceSensor.UNKNOWN, trendArrow = GlucoseValue.TrendArrow.FLAT))
-        bgReadingList.add(GlucoseValue(raw = 0.0, noise = 0.0, value = 100.0, timestamp = DateUtil.fromISODateString("2018-10-05T05:17:38Z").time, sourceSensor = GlucoseValue.SourceSensor.UNKNOWN, trendArrow = GlucoseValue.TrendArrow.FLAT))
-        bgReadingList.add(GlucoseValue(raw = 0.0, noise = 0.0, value = 100.0, timestamp = DateUtil.fromISODateString("2018-10-05T05:12:33Z").time, sourceSensor = GlucoseValue.SourceSensor.UNKNOWN, trendArrow = GlucoseValue.TrendArrow.FLAT))
-        bgReadingList.add(GlucoseValue(raw = 0.0, noise = 0.0, value = 100.0, timestamp = DateUtil.fromISODateString("2018-10-05T05:07:29Z").time, sourceSensor = GlucoseValue.SourceSensor.UNKNOWN, trendArrow = GlucoseValue.TrendArrow.FLAT))
-        bgReadingList.add(GlucoseValue(raw = 0.0, noise = 0.0, value = 100.0, timestamp = DateUtil.fromISODateString("2018-10-05T05:02:26Z").time, sourceSensor = GlucoseValue.SourceSensor.UNKNOWN, trendArrow = GlucoseValue.TrendArrow.FLAT))
-        bgReadingList.add(GlucoseValue(raw = 0.0, noise = 0.0, value = 100.0, timestamp = DateUtil.fromISODateString("2018-10-05T04:57:21Z").time, sourceSensor = GlucoseValue.SourceSensor.UNKNOWN, trendArrow = GlucoseValue.TrendArrow.FLAT))
-        bgReadingList.add(GlucoseValue(raw = 0.0, noise = 0.0, value = 100.0, timestamp = DateUtil.fromISODateString("2018-10-05T04:52:17Z").time, sourceSensor = GlucoseValue.SourceSensor.UNKNOWN, trendArrow = GlucoseValue.TrendArrow.FLAT))
+        bgReadingList.add(GlucoseValue(raw = 0.0, noise = 0.0, value = 100.0, timestamp = dateUtil.fromISODateString("2018-10-05T06:33:40Z"), sourceSensor = GlucoseValue.SourceSensor.UNKNOWN, trendArrow = GlucoseValue.TrendArrow.FLAT))
+        bgReadingList.add(GlucoseValue(raw = 0.0, noise = 0.0, value = 100.0, timestamp = dateUtil.fromISODateString("2018-10-05T06:28:36Z"), sourceSensor = GlucoseValue.SourceSensor.UNKNOWN, trendArrow = GlucoseValue.TrendArrow.FLAT))
+        bgReadingList.add(GlucoseValue(raw = 0.0, noise = 0.0, value = 100.0, timestamp = dateUtil.fromISODateString("2018-10-05T06:23:32Z"), sourceSensor = GlucoseValue.SourceSensor.UNKNOWN, trendArrow = GlucoseValue.TrendArrow.FLAT))
+        bgReadingList.add(GlucoseValue(raw = 0.0, noise = 0.0, value = 100.0, timestamp = dateUtil.fromISODateString("2018-10-05T06:18:28Z"), sourceSensor = GlucoseValue.SourceSensor.UNKNOWN, trendArrow = GlucoseValue.TrendArrow.FLAT))
+        bgReadingList.add(GlucoseValue(raw = 0.0, noise = 0.0, value = 100.0, timestamp = dateUtil.fromISODateString("2018-10-05T06:13:24Z"), sourceSensor = GlucoseValue.SourceSensor.UNKNOWN, trendArrow = GlucoseValue.TrendArrow.FLAT))
+        bgReadingList.add(GlucoseValue(raw = 0.0, noise = 0.0, value = 100.0, timestamp = dateUtil.fromISODateString("2018-10-05T06:08:19Z"), sourceSensor = GlucoseValue.SourceSensor.UNKNOWN, trendArrow = GlucoseValue.TrendArrow.FLAT))
+        bgReadingList.add(GlucoseValue(raw = 0.0, noise = 0.0, value = 100.0, timestamp = dateUtil.fromISODateString("2018-10-05T06:03:16Z"), sourceSensor = GlucoseValue.SourceSensor.UNKNOWN, trendArrow = GlucoseValue.TrendArrow.FLAT))
+        bgReadingList.add(GlucoseValue(raw = 0.0, noise = 0.0, value = 100.0, timestamp = dateUtil.fromISODateString("2018-10-05T05:58:11Z"), sourceSensor = GlucoseValue.SourceSensor.UNKNOWN, trendArrow = GlucoseValue.TrendArrow.FLAT))
+        bgReadingList.add(GlucoseValue(raw = 0.0, noise = 0.0, value = 100.0, timestamp = dateUtil.fromISODateString("2018-10-05T05:53:07Z"), sourceSensor = GlucoseValue.SourceSensor.UNKNOWN, trendArrow = GlucoseValue.TrendArrow.FLAT))
+        bgReadingList.add(GlucoseValue(raw = 0.0, noise = 0.0, value = 100.0, timestamp = dateUtil.fromISODateString("2018-10-05T05:48:03Z"), sourceSensor = GlucoseValue.SourceSensor.UNKNOWN, trendArrow = GlucoseValue.TrendArrow.FLAT))
+        bgReadingList.add(GlucoseValue(raw = 0.0, noise = 0.0, value = 100.0, timestamp = dateUtil.fromISODateString("2018-10-05T05:42:58Z"), sourceSensor = GlucoseValue.SourceSensor.UNKNOWN, trendArrow = GlucoseValue.TrendArrow.FLAT))
+        bgReadingList.add(GlucoseValue(raw = 0.0, noise = 0.0, value = 100.0, timestamp = dateUtil.fromISODateString("2018-10-05T05:37:54Z"), sourceSensor = GlucoseValue.SourceSensor.UNKNOWN, trendArrow = GlucoseValue.TrendArrow.FLAT))
+        bgReadingList.add(GlucoseValue(raw = 0.0, noise = 0.0, value = 100.0, timestamp = dateUtil.fromISODateString("2018-10-05T05:32:51Z"), sourceSensor = GlucoseValue.SourceSensor.UNKNOWN, trendArrow = GlucoseValue.TrendArrow.FLAT))
+        bgReadingList.add(GlucoseValue(raw = 0.0, noise = 0.0, value = 100.0, timestamp = dateUtil.fromISODateString("2018-10-05T05:27:46Z"), sourceSensor = GlucoseValue.SourceSensor.UNKNOWN, trendArrow = GlucoseValue.TrendArrow.FLAT))
+        bgReadingList.add(GlucoseValue(raw = 0.0, noise = 0.0, value = 100.0, timestamp = dateUtil.fromISODateString("2018-10-05T05:22:42Z"), sourceSensor = GlucoseValue.SourceSensor.UNKNOWN, trendArrow = GlucoseValue.TrendArrow.FLAT))
+        bgReadingList.add(GlucoseValue(raw = 0.0, noise = 0.0, value = 100.0, timestamp = dateUtil.fromISODateString("2018-10-05T05:17:38Z"), sourceSensor = GlucoseValue.SourceSensor.UNKNOWN, trendArrow = GlucoseValue.TrendArrow.FLAT))
+        bgReadingList.add(GlucoseValue(raw = 0.0, noise = 0.0, value = 100.0, timestamp = dateUtil.fromISODateString("2018-10-05T05:12:33Z"), sourceSensor = GlucoseValue.SourceSensor.UNKNOWN, trendArrow = GlucoseValue.TrendArrow.FLAT))
+        bgReadingList.add(GlucoseValue(raw = 0.0, noise = 0.0, value = 100.0, timestamp = dateUtil.fromISODateString("2018-10-05T05:07:29Z"), sourceSensor = GlucoseValue.SourceSensor.UNKNOWN, trendArrow = GlucoseValue.TrendArrow.FLAT))
+        bgReadingList.add(GlucoseValue(raw = 0.0, noise = 0.0, value = 100.0, timestamp = dateUtil.fromISODateString("2018-10-05T05:02:26Z"), sourceSensor = GlucoseValue.SourceSensor.UNKNOWN, trendArrow = GlucoseValue.TrendArrow.FLAT))
+        bgReadingList.add(GlucoseValue(raw = 0.0, noise = 0.0, value = 100.0, timestamp = dateUtil.fromISODateString("2018-10-05T04:57:21Z"), sourceSensor = GlucoseValue.SourceSensor.UNKNOWN, trendArrow = GlucoseValue.TrendArrow.FLAT))
+        bgReadingList.add(GlucoseValue(raw = 0.0, noise = 0.0, value = 100.0, timestamp = dateUtil.fromISODateString("2018-10-05T04:52:17Z"), sourceSensor = GlucoseValue.SourceSensor.UNKNOWN, trendArrow = GlucoseValue.TrendArrow.FLAT))
         iobCobCalculatorPlugin.bgReadings = bgReadingList
         Assert.assertEquals(false, iobCobCalculatorPlugin.isAbout5minData)
     }
@@ -289,7 +292,7 @@ class IobCobCalculatorPluginTest : TestBase() {
 
     @Test
     fun roundUpTimeTest() {
-        Assert.assertEquals(T.mins(3).msecs(), IobCobCalculatorPlugin.roundUpTime(T.secs(155).msecs()))
+        Assert.assertEquals(T.mins(3).msecs(), iobCobCalculatorPlugin.roundUpTime(T.secs(155).msecs()))
     }
 
     @Test

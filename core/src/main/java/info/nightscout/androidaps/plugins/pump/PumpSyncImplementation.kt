@@ -63,8 +63,8 @@ class PumpSyncImplementation @Inject constructor(
             aapsLogger.debug(LTag.PUMP, "Registering new pump ${type.description} $serialNumber")
             sp.putString(R.string.key_active_pump_type, type.description)
             sp.putString(R.string.key_active_pump_serial_number, serialNumber)
-            sp.putLong(R.string.key_active_pump_change_timestamp, dateUtil._now()) // allow only data newer than register time (ie. ignore older history)
-            return timestamp > dateUtil._now() - T.mins(1).msecs() // allow first record to be 1 min old
+            sp.putLong(R.string.key_active_pump_change_timestamp, dateUtil.now()) // allow only data newer than register time (ie. ignore older history)
+            return timestamp > dateUtil.now() - T.mins(1).msecs() // allow first record to be 1 min old
         }
 
         if (type.description == storedType && serialNumber == storedSerial && timestamp >= storedTimestamp) {
@@ -80,8 +80,8 @@ class PumpSyncImplementation @Inject constructor(
 
     override fun expectedPumpState(): PumpSync.PumpState {
         val bolus = repository.getLastBolusRecord()
-        val temporaryBasal = repository.getTemporaryBasalActiveAt(dateUtil._now()).blockingGet()
-        val extendedBolus = repository.getExtendedBolusActiveAt(dateUtil._now()).blockingGet()
+        val temporaryBasal = repository.getTemporaryBasalActiveAt(dateUtil.now()).blockingGet()
+        val extendedBolus = repository.getExtendedBolusActiveAt(dateUtil.now()).blockingGet()
 
         return PumpSync.PumpState(
             temporaryBasal =
@@ -229,7 +229,7 @@ class PumpSyncImplementation @Inject constructor(
     }
 
     override fun insertAnnouncement(error: String, pumpId: Long?, pumpType: PumpType, pumpSerial: String) {
-        if (!confirmActivePump(dateUtil._now(), pumpType, pumpSerial)) return
+        if (!confirmActivePump(dateUtil.now(), pumpType, pumpSerial)) return
         disposable += repository.runTransaction(InsertTherapyEventAnnouncementTransaction(error, pumpId, pumpType.toDbPumpType(), pumpSerial))
             .subscribe()
     }

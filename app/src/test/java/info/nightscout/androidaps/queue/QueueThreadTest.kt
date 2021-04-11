@@ -41,7 +41,6 @@ class QueueThreadTest : TestBaseWithProfile() {
     @Mock lateinit var constraintChecker: ConstraintChecker
     @Mock lateinit var lazyActivePlugin: Lazy<ActivePluginProvider>
     @Mock lateinit var activePlugin: ActivePluginProvider
-    @Mock lateinit var context: Context
     @Mock lateinit var sp: SP
     @Mock lateinit var loggerUtils: LoggerUtils
     @Mock lateinit var powerManager: PowerManager

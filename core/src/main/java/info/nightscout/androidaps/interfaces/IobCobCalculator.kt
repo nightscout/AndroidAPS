@@ -11,6 +11,7 @@ import info.nightscout.androidaps.plugins.iob.iobCobCalculator.AutosensResult
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.BasalData
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.CobInfo
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.data.AutosensData
+import org.json.JSONArray
 
 interface IobCobCalculator {
 
@@ -30,6 +31,7 @@ interface IobCobCalculator {
     fun calculateIobArrayForSMB(lastAutosensResult: AutosensResult, exercise_mode: Boolean, half_basal_exercise_target: Int, isTempTarget: Boolean): Array<IobTotal>
     fun iobArrayToString(array: Array<IobTotal>): String
     fun slowAbsorptionPercentage(timeInMinutes: Int): Double
+    fun convertToJSONArray(iobArray: Array<IobTotal>): JSONArray
 
     /**
      * Return last valid (>39) GlucoseValue from database or null if db is empty

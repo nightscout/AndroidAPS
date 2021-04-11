@@ -1,6 +1,5 @@
 package info.nightscout.androidaps.plugins.constraints.safety
 
-import android.content.Context
 import dagger.android.AndroidInjector
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.Config
@@ -42,7 +41,6 @@ class SafetyPluginTest : TestBaseWithProfile() {
     @Mock lateinit var buildHelper: BuildHelper
     @Mock lateinit var virtualPumpPlugin: VirtualPumpPlugin
     @Mock lateinit var glimpPlugin: GlimpPlugin
-    @Mock lateinit var context: Context
     @Mock lateinit var repository: AppRepository
 
     private lateinit var hardLimits: HardLimits

@@ -42,7 +42,7 @@ class GlucoseStatusTest : TestBase() {
 
     @Test fun calculateValidGlucoseStatus() {
         PowerMockito.`when`(iobCobCalculatorPlugin.bgReadings).thenReturn(generateValidBgData())
-        val glucoseStatus = GlucoseStatusProvider(aapsLogger, iobCobCalculatorPlugin).glucoseStatusData!!
+        val glucoseStatus = GlucoseStatusProvider(aapsLogger, iobCobCalculatorPlugin, dateUtil).glucoseStatusData!!
         Assert.assertEquals(214.0, glucoseStatus.glucose, 0.001)
         Assert.assertEquals(-2.0, glucoseStatus.delta, 0.001)
         Assert.assertEquals(-2.5, glucoseStatus.shortAvgDelta, 0.001) // -2 -2.5 -3 deltas are relative to current value
@@ -52,7 +52,7 @@ class GlucoseStatusTest : TestBase() {
 
     @Test fun calculateMostRecentGlucoseStatus() {
         PowerMockito.`when`(iobCobCalculatorPlugin.bgReadings).thenReturn(generateMostRecentBgData())
-        val glucoseStatus: GlucoseStatus = GlucoseStatusProvider(aapsLogger, iobCobCalculatorPlugin).glucoseStatusData!!
+        val glucoseStatus: GlucoseStatus = GlucoseStatusProvider(aapsLogger, iobCobCalculatorPlugin, dateUtil).glucoseStatusData!!
         Assert.assertEquals(215.0, glucoseStatus.glucose, 0.001) // (214+216) / 2
         Assert.assertEquals(-1.0, glucoseStatus.delta, 0.001)
         Assert.assertEquals(-1.0, glucoseStatus.shortAvgDelta, 0.001)
@@ -62,7 +62,7 @@ class GlucoseStatusTest : TestBase() {
 
     @Test fun oneRecordShouldProduceZeroDeltas() {
         PowerMockito.`when`(iobCobCalculatorPlugin.bgReadings).thenReturn(generateOneCurrentRecordBgData())
-        val glucoseStatus: GlucoseStatus = GlucoseStatusProvider(aapsLogger, iobCobCalculatorPlugin).glucoseStatusData!!
+        val glucoseStatus: GlucoseStatus = GlucoseStatusProvider(aapsLogger, iobCobCalculatorPlugin, dateUtil).glucoseStatusData!!
         Assert.assertEquals(214.0, glucoseStatus.glucose, 0.001)
         Assert.assertEquals(0.0, glucoseStatus.delta, 0.001)
         Assert.assertEquals(0.0, glucoseStatus.shortAvgDelta, 0.001) // -2 -2.5 -3 deltas are relative to current value
@@ -72,19 +72,19 @@ class GlucoseStatusTest : TestBase() {
 
     @Test fun insufficientDataShouldReturnNull() {
         PowerMockito.`when`(iobCobCalculatorPlugin.bgReadings).thenReturn(generateInsufficientBgData())
-        val glucoseStatus: GlucoseStatus? = GlucoseStatusProvider(aapsLogger, iobCobCalculatorPlugin).glucoseStatusData
+        val glucoseStatus: GlucoseStatus? = GlucoseStatusProvider(aapsLogger, iobCobCalculatorPlugin, dateUtil).glucoseStatusData
         Assert.assertEquals(null, glucoseStatus)
     }
 
     @Test fun oldDataShouldReturnNull() {
         PowerMockito.`when`(iobCobCalculatorPlugin.bgReadings).thenReturn(generateOldBgData())
-        val glucoseStatus: GlucoseStatus? = GlucoseStatusProvider(aapsLogger, iobCobCalculatorPlugin).glucoseStatusData
+        val glucoseStatus: GlucoseStatus? = GlucoseStatusProvider(aapsLogger, iobCobCalculatorPlugin, dateUtil).glucoseStatusData
         Assert.assertEquals(null, glucoseStatus)
     }
 
     @Test fun returnOldDataIfAllowed() {
         PowerMockito.`when`(iobCobCalculatorPlugin.bgReadings).thenReturn(generateOldBgData())
-        val glucoseStatus: GlucoseStatus? = GlucoseStatusProvider(aapsLogger, iobCobCalculatorPlugin).getGlucoseStatusData(true)
+        val glucoseStatus: GlucoseStatus? = GlucoseStatusProvider(aapsLogger, iobCobCalculatorPlugin, dateUtil).getGlucoseStatusData(true)
         Assert.assertNotEquals(null, glucoseStatus)
     }
 
@@ -94,7 +94,7 @@ class GlucoseStatusTest : TestBase() {
 
     @Test fun calculateGlucoseStatusForLibreTestBgData() {
         PowerMockito.`when`(iobCobCalculatorPlugin.bgReadings).thenReturn(generateLibreTestData())
-        val glucoseStatus: GlucoseStatus = GlucoseStatusProvider(aapsLogger, iobCobCalculatorPlugin).glucoseStatusData!!
+        val glucoseStatus: GlucoseStatus = GlucoseStatusProvider(aapsLogger, iobCobCalculatorPlugin, dateUtil).glucoseStatusData!!
         Assert.assertEquals(100.0, glucoseStatus.glucose, 0.001) //
         Assert.assertEquals(-10.0, glucoseStatus.delta, 0.001)
         Assert.assertEquals(-10.0, glucoseStatus.shortAvgDelta, 0.001)
@@ -104,8 +104,7 @@ class GlucoseStatusTest : TestBase() {
 
     @Before
     fun initMocking() {
-        PowerMockito.mockStatic(DateUtil::class.java)
-        PowerMockito.`when`(DateUtil.now()).thenReturn(1514766900000L + T.mins(1).msecs())
+        PowerMockito.`when`(dateUtil.now()).thenReturn(1514766900000L + T.mins(1).msecs())
         `when`(iobCobCalculatorPlugin.dataLock).thenReturn(Any())
     }
 

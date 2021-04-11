@@ -17,6 +17,7 @@ import javax.inject.Inject
 class AutomationEvent(private val injector: HasAndroidInjector) {
 
     @Inject lateinit var aapsLogger: AAPSLogger
+    @Inject lateinit var dateUtil: DateUtil
 
     var title: String = ""
     var isEnabled = true
@@ -83,6 +84,6 @@ class AutomationEvent(private val injector: HasAndroidInjector) {
     }
 
     fun shouldRun(): Boolean {
-        return lastRun <= DateUtil.now() - T.mins(5).msecs()
+        return lastRun <= dateUtil.now() - T.mins(5).msecs()
     }
 }

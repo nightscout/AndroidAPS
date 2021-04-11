@@ -279,7 +279,7 @@ public abstract class AbstractDanaRExecutionService extends DaggerService {
 
     protected void waitForWholeMinute() {
         while (true) {
-            long time = DateUtil.now();
+            long time = dateUtil.now();
             long timeToWholeMinute = (60000 - time % 60000);
             if (timeToWholeMinute > 59800 || timeToWholeMinute < 3000)
                 break;
@@ -312,8 +312,8 @@ public abstract class AbstractDanaRExecutionService extends DaggerService {
                 }
             } else {
                 pumpSync.syncStopTemporaryBasalWithPumpId(
-                        dateUtil._now(),
-                        dateUtil._now(),
+                        dateUtil.now(),
+                        dateUtil.now(),
                         activePlugin.getActivePump().model(),
                         activePlugin.getActivePump().serialNumber()
                 );
@@ -358,8 +358,8 @@ public abstract class AbstractDanaRExecutionService extends DaggerService {
                 }
             } else {
                 pumpSync.syncStopExtendedBolusWithPumpId(
-                        dateUtil._now(),
-                        dateUtil._now(),
+                        dateUtil.now(),
+                        dateUtil.now(),
                         activePlugin.getActivePump().model(),
                         activePlugin.getActivePump().serialNumber()
                 );

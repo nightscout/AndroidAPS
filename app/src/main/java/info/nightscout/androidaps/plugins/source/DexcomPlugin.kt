@@ -84,6 +84,7 @@ class DexcomPlugin @Inject constructor(
         @Inject lateinit var injector: HasAndroidInjector
         @Inject lateinit var dexcomPlugin: DexcomPlugin
         @Inject lateinit var sp: SP
+        @Inject lateinit var dateUtil: DateUtil
         @Inject lateinit var dataWorker: DataWorker
         @Inject lateinit var broadcastToXDrip: XDripBroadcast
         @Inject lateinit var repository: AppRepository
@@ -124,7 +125,7 @@ class DexcomPlugin @Inject constructor(
                     for (i in 0 until meters.size()) {
                         meters.getBundle(i.toString())?.let {
                             val timestamp = it.getLong("timestamp") * 1000
-                            val now = DateUtil.now()
+                            val now = dateUtil.now()
                             if (timestamp > now - T.months(1).msecs() && timestamp < now) {
                                 calibrations.add(CgmSourceTransaction.Calibration(
                                     timestamp = it.getLong("timestamp") * 1000,

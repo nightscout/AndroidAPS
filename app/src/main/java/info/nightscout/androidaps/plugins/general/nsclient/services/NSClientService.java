@@ -228,7 +228,7 @@ public class NSClientService extends DaggerService {
     }
 
     public void processAddAck(NSAddAck ack) {
-        lastAckTime = dateUtil._now();
+        lastAckTime = dateUtil.now();
         // new room way
         if (ack.getOriginalObject() instanceof DataSyncSelector.PairTemporaryTarget) {
             DataSyncSelector.PairTemporaryTarget pair = (DataSyncSelector.PairTemporaryTarget) ack.getOriginalObject();
@@ -400,7 +400,7 @@ public class NSClientService extends DaggerService {
     }
 
     public void processUpdateAck(NSUpdateAck ack) {
-        lastAckTime = dateUtil._now();
+        lastAckTime = dateUtil.now();
         // new room way
         if (ack.getOriginalObject() instanceof DataSyncSelector.PairTemporaryTarget) {
             DataSyncSelector.PairTemporaryTarget pair = (DataSyncSelector.PairTemporaryTarget) ack.getOriginalObject();
@@ -591,7 +591,7 @@ public class NSClientService extends DaggerService {
 
     void watchdog() {
         synchronized (reconnections) {
-            long now = DateUtil.now();
+            long now = dateUtil.now();
             reconnections.add(now);
             for (int i = 0; i < reconnections.size(); i++) {
                 Long r = reconnections.get(i);
@@ -833,7 +833,7 @@ public class NSClientService extends DaggerService {
                                 if (action == null) addedOrUpdatedTreatments.put(jsonTreatment);
                                 else if (action.equals("update"))
                                     addedOrUpdatedTreatments.put(jsonTreatment);
-                                else if (action.equals("remove") && mills > dateUtil._now() - T.days(1).msecs()) // handle 1 day old deletions only
+                                else if (action.equals("remove") && mills > dateUtil.now() - T.days(1).msecs()) // handle 1 day old deletions only
                                     removedTreatments.put(jsonTreatment);
                             }
                             if (removedTreatments.length() > 0) {

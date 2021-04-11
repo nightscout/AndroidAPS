@@ -24,7 +24,7 @@ import org.powermock.core.classloader.annotations.PrepareForTest
 import org.powermock.modules.junit4.PowerMockRunner
 
 @RunWith(PowerMockRunner::class)
-@PrepareForTest(FabricPrivacy::class)
+@PrepareForTest(FabricPrivacy::class, DateUtil::class)
 class VirtualPumpPluginUTest : TestBase() {
 
     private val rxBus = RxBusWrapper(aapsSchedulers)

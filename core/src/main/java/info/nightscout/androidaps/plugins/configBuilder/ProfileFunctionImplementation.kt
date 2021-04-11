@@ -28,7 +28,8 @@ class ProfileFunctionImplementation @Inject constructor(
     private val sp: SP,
     private val resourceHelper: ResourceHelper,
     private val activePlugin: ActivePluginProvider,
-    private val fabricPrivacy: FabricPrivacy
+    private val fabricPrivacy: FabricPrivacy,
+    private val dateUtil: DateUtil
 ) : ProfileFunction {
 
     override fun getProfileName(): String =
@@ -56,7 +57,7 @@ class ProfileFunctionImplementation @Inject constructor(
             }
 
             if (showRemainingTime && profileSwitch.durationInMinutes != 0) {
-                profileName += DateUtil.untilString(profileSwitch.originalEnd(), resourceHelper)
+                profileName += dateUtil.untilString(profileSwitch.originalEnd(), resourceHelper)
             }
         }
         return profileName

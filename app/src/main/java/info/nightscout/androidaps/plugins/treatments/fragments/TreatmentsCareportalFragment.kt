@@ -165,7 +165,7 @@ class TreatmentsCareportalFragment : DaggerFragment() {
             holder.binding.ns.visibility = (therapyEvent.interfaceIDs.nightscoutId != null).toVisibility()
             holder.binding.invalid.visibility = therapyEvent.isValid.not().toVisibility()
             holder.binding.date.text = dateUtil.dateAndTimeString(therapyEvent.timestamp)
-            holder.binding.duration.text = if (therapyEvent.duration == 0L) "" else DateUtil.niceTimeScalar(therapyEvent.duration, resourceHelper)
+            holder.binding.duration.text = if (therapyEvent.duration == 0L) "" else dateUtil.niceTimeScalar(therapyEvent.duration, resourceHelper)
             holder.binding.note.text = therapyEvent.note
             holder.binding.type.text = translator.translate(therapyEvent.type)
             holder.binding.remove.tag = therapyEvent

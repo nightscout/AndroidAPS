@@ -983,7 +983,7 @@ public class LocalInsightPlugin extends PumpPluginBase implements PumpInterface,
         final JSONObject status = new JSONObject();
         final JSONObject extended = new JSONObject();
         try {
-            status.put("timestamp", DateUtil.toISOString(connectionService.getLastConnected()));
+            status.put("timestamp", dateUtil.toISOString(connectionService.getLastConnected()));
             extended.put("Version", version);
             try {
                 extended.put("ActiveProfile", profileFunction.getProfileName());
@@ -1003,7 +1003,7 @@ public class LocalInsightPlugin extends PumpPluginBase implements PumpInterface,
                 extended.put("ExtendedBolusRemaining", getPlannedRemainingMinutes(eb));
             }
             extended.put("BaseBasalRate", getBaseBasalRate());
-            status.put("timestamp", DateUtil.toISOString(now));
+            status.put("timestamp", dateUtil.toISOString(now));
 
             pump.put("extended", extended);
             if (statusLoaded) {
@@ -1013,7 +1013,7 @@ public class LocalInsightPlugin extends PumpPluginBase implements PumpInterface,
                 pump.put("battery", battery);
                 pump.put("reservoir", cartridgeStatus.getRemainingAmount());
             }
-            pump.put("clock", DateUtil.toISOString(now));
+            pump.put("clock", dateUtil.toISOString(now));
         } catch (JSONException e) {
             aapsLogger.error("Unhandled exception", e);
         }

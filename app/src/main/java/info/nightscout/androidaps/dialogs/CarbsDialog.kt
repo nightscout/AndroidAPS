@@ -303,7 +303,7 @@ class CarbsDialog : DialogFragmentWithDate() {
                         })
                     }
                     if (useAlarm && carbs > 0 && timeOffset > 0) {
-                        carbTimer.scheduleReminder(dateUtil._now() + T.mins(timeOffset.toLong()).msecs())
+                        carbTimer.scheduleReminder(dateUtil.now() + T.mins(timeOffset.toLong()).msecs())
                     }
                 }, null)
             }

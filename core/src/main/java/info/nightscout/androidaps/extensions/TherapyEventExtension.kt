@@ -11,8 +11,8 @@ import info.nightscout.androidaps.utils.resources.ResourceHelper
 import org.json.JSONObject
 import java.util.concurrent.TimeUnit
 
-fun TherapyEvent.age(useShortText: Boolean, resourceHelper: ResourceHelper): String {
-    val diff = DateUtil.computeDiff(timestamp, System.currentTimeMillis())
+fun TherapyEvent.age(useShortText: Boolean, resourceHelper: ResourceHelper, dateUtil: DateUtil): String {
+    val diff = dateUtil.computeDiff(timestamp, System.currentTimeMillis())
     var days = " " + resourceHelper.gs(R.string.days) + " "
     var hours = " " + resourceHelper.gs(R.string.hours) + " "
     if (useShortText) {

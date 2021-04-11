@@ -6,7 +6,6 @@ import info.nightscout.androidaps.danar.comm.MessageBase
 import info.nightscout.androidaps.events.EventPumpStatusChanged
 import info.nightscout.androidaps.logging.LTag
 import info.nightscout.androidaps.plugins.pump.common.defs.PumpType
-import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.T
 import java.util.*
 
@@ -22,7 +21,7 @@ class MsgHistoryEvents_v2 constructor(
 
     init {
         SetCommand(0xE003)
-        if (from > DateUtil.now()) {
+        if (from > dateUtil.now()) {
             aapsLogger.error("Asked to load from the future")
             from = 0
         }

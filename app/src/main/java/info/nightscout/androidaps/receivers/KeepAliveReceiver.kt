@@ -104,9 +104,9 @@ class KeepAliveReceiver : DaggerBroadcastReceiver() {
             if (config.PUMPCONTROL) shouldUploadStatus = true
             else if (!loopPlugin.isEnabled() || iobCobCalculatorPlugin.actualBg() == null)
                 shouldUploadStatus = true
-            else if (DateUtil.isOlderThan(activePlugin.activeAPS.lastAPSRun, 5)) shouldUploadStatus = true
-            if (DateUtil.isOlderThan(lastIobUpload, IOB_UPDATE_FREQUENCY_IN_MINUTES) && shouldUploadStatus) {
-                lastIobUpload = dateUtil._now()
+            else if (dateUtil.isOlderThan(activePlugin.activeAPS.lastAPSRun, 5)) shouldUploadStatus = true
+            if (dateUtil.isOlderThan(lastIobUpload, IOB_UPDATE_FREQUENCY_IN_MINUTES) && shouldUploadStatus) {
+                lastIobUpload = dateUtil.now()
                 buildDeviceStatus(dateUtil, loopPlugin, iobCobCalculatorPlugin, profileFunction,
                     activePlugin.activePump, receiverStatusStore, runningConfiguration,
                     BuildConfig.VERSION_NAME + "-" + BuildConfig.BUILDVERSION)?.also {

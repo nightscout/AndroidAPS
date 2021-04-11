@@ -4,11 +4,12 @@ import com.google.gson.annotations.Expose
 import info.nightscout.androidaps.data.Profile
 import info.nightscout.androidaps.db.ProfileSwitch
 import info.nightscout.androidaps.plugins.general.tidepool.comm.TidepoolUploader
+import info.nightscout.androidaps.utils.DateUtil
 import java.util.*
 import kotlin.collections.ArrayList
 
-class ProfileElement(ps: ProfileSwitch, serialNumber: String)
-    : BaseElement(ps.date, UUID.nameUUIDFromBytes(("AAPS-profile" + ps.date).toByteArray()).toString()) {
+class ProfileElement(ps: ProfileSwitch, serialNumber: String, dateUtil: DateUtil)
+    : BaseElement(ps.date, UUID.nameUUIDFromBytes(("AAPS-profile" + ps.date).toByteArray()).toString(), dateUtil) {
 
     @Expose
     internal var activeSchedule = "Normal"

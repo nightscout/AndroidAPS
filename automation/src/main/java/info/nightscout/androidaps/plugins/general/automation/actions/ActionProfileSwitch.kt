@@ -26,6 +26,7 @@ class ActionProfileSwitch(injector: HasAndroidInjector) : Action(injector) {
     @Inject lateinit var resourceHelper: ResourceHelper
     @Inject lateinit var activePlugin: ActivePluginProvider
     @Inject lateinit var profileFunction: ProfileFunction
+    @Inject lateinit var dateUtil: DateUtil
     @Inject lateinit var uel: UserEntryLogger
 
     var inputProfileName: InputProfileName = InputProfileName(resourceHelper, activePlugin, "")
@@ -61,7 +62,7 @@ class ActionProfileSwitch(injector: HasAndroidInjector) : Action(injector) {
         uel.log(UserEntry.Action.PROFILE_SWITCH, Sources.Automation, title,
             ValueWithUnit.SimpleString(inputProfileName.value),
             ValueWithUnit.Percent(100))
-        activePlugin.activeTreatments.doProfileSwitch(profileStore, inputProfileName.value, 0, 100, 0, DateUtil.now())
+        activePlugin.activeTreatments.doProfileSwitch(profileStore, inputProfileName.value, 0, 100, 0, dateUtil.now())
         callback.result(PumpEnactResult(injector).success(true).comment(R.string.ok))?.run()
     }
 

@@ -12,8 +12,6 @@ import androidx.annotation.NonNull;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.util.Date;
-
 import dagger.android.HasAndroidInjector;
 import info.nightscout.androidaps.core.R;
 import info.nightscout.androidaps.data.DetailedBolusInfo;
@@ -355,13 +353,13 @@ public abstract class PumpPluginAbstract extends PumpPluginBase implements PumpI
                 extended.put("ExtendedBolusRemaining", getPlannedRemainingMinutes(eb));
             }
 
-            status.put("timestamp", DateUtil.toISOString(new Date()));
+            status.put("timestamp", dateUtil.toISOString(dateUtil.now()));
 
             pump.put("battery", battery);
             pump.put("status", status);
             pump.put("extended", extended);
             pump.put("reservoir", getPumpStatusData().reservoirRemainingUnits);
-            pump.put("clock", DateUtil.toISOString(new Date()));
+            pump.put("clock", dateUtil.toISOString(dateUtil.now()));
         } catch (JSONException e) {
             aapsLogger.error("Unhandled exception", e);
         }
@@ -388,7 +386,7 @@ public abstract class PumpPluginAbstract extends PumpPluginBase implements PumpI
         }
         PumpSync.PumpState.ExtendedBolus activeExtendedBolus = pumpSync.expectedPumpState().getExtendedBolus();
         if (activeExtendedBolus != null) {
-            ret += "Extended: " + PumpStateExtensionKt.toStringFull(activeTemp, dateUtil) + "\n";
+            ret += "Extended: " + PumpStateExtensionKt.toStringFull(activeExtendedBolus, dateUtil) + "\n";
         }
         // if (!veryShort) {
         // ret += "TDD: " + DecimalFormatter.to0Decimal(pumpStatus.dailyTotalUnits) + " / "

@@ -237,7 +237,7 @@ class DetermineBasalAdapterSMBJS internal constructor(private val scriptReader: 
         // as we have non default temps longer than 30 mintues
         if (tb != null) currentTemp.put("minutesrunning", tb.getPassedDurationToTimeInMinutes(now))
 
-        iobData = IobCobCalculatorPlugin.convertToJSONArray(iobArray)
+        iobData = iobCobCalculator.convertToJSONArray(iobArray)
         mGlucoseStatus.put("glucose", glucoseStatus.glucose)
         mGlucoseStatus.put("noise", glucoseStatus.noise)
         if (sp.getBoolean(R.string.key_always_use_shortavg, false)) {
