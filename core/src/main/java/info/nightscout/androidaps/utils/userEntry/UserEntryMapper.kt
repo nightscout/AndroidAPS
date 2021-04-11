@@ -79,6 +79,8 @@ class UserEntryMapper {
         STOP_SMS (UserEntry.Action.STOP_SMS),
         FOOD (UserEntry.Action.FOOD),
         EXPORT_CSV (UserEntry.Action.EXPORT_CSV),
+        START_AAPS (UserEntry.Action.START_AAPS),
+        EXIT_AAPS (UserEntry.Action.EXIT_AAPS),
         UNKNOWN (UserEntry.Action.UNKNOWN)
         ;
     }
@@ -106,6 +108,14 @@ class UserEntryMapper {
         Actions (UserEntry.Sources.Actions),
         Automation (UserEntry.Sources.Automation),
         BG (UserEntry.Sources.BG),
+        Dexcom (UserEntry.Sources.Dexcom),
+        Eversense (UserEntry.Sources.Eversense),
+        Glimp (UserEntry.Sources.Glimp),
+        MM640g (UserEntry.Sources.MM640g),
+        NSClientSource (UserEntry.Sources.BG),
+        PocTech (UserEntry.Sources.PocTech),
+        Tomato (UserEntry.Sources.Tomato),
+        Xdrip (UserEntry.Sources.Xdrip),
         LocalProfile (UserEntry.Sources.LocalProfile),
         Loop (UserEntry.Sources.Loop),
         Maintenance (UserEntry.Sources.Maintenance),
@@ -133,6 +143,7 @@ class UserEntryMapper {
         ConfigBuilder (UserEntry.Sources.ConfigBuilder),
         Overview (UserEntry.Sources.Overview),
         Stats (UserEntry.Sources.Stats),
+        Aaps (UserEntry.Sources.Aaps),
         Unknown(UserEntry.Sources.Unknown)
         ;
     }
