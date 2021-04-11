@@ -49,9 +49,11 @@ import info.nightscout.androidaps.utils.textValidator.ValidatingEditTextPreferen
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.rxkotlin.plusAssign
 import org.apache.commons.lang3.StringUtils
+import org.joda.time.DateTime
 import java.text.Normalizer
 import java.util.*
 import java.util.concurrent.TimeUnit
+import java.util.regex.Pattern
 import javax.inject.Inject
 import javax.inject.Singleton
 import kotlin.math.max
@@ -274,7 +276,7 @@ class SmsCommunicatorPlugin @Inject constructor(
                     else sendSMS(Sms(receivedSms.phoneNumber, resourceHelper.gs(R.string.wrongformat)))
                 "BOLUS"    ->
                     if (!remoteCommandsAllowed) sendSMS(Sms(receivedSms.phoneNumber, resourceHelper.gs(R.string.smscommunicator_remotecommandnotallowed)))
-                    else if (divided.size == 2 && DateUtil.now() - lastRemoteBolusTime < minDistance) sendSMS(Sms(receivedSms.phoneNumber, resourceHelper.gs(R.string.smscommunicator_remotebolusnotallowed)))
+                    else if (divided.size == 2 && dateUtil._now() - lastRemoteBolusTime < minDistance) sendSMS(Sms(receivedSms.phoneNumber, resourceHelper.gs(R.string.smscommunicator_remotebolusnotallowed)))
                     else if (divided.size == 2 && pump.isSuspended()) sendSMS(Sms(receivedSms.phoneNumber, resourceHelper.gs(R.string.pumpsuspended)))
                     else if (divided.size == 2 || divided.size == 3) processBOLUS(divided, receivedSms)
                     else sendSMS(Sms(receivedSms.phoneNumber, resourceHelper.gs(R.string.wrongformat)))
@@ -315,7 +317,7 @@ class SmsCommunicatorPlugin @Inject constructor(
         if (actualBG != null) {
             reply = resourceHelper.gs(R.string.sms_actualbg) + " " + actualBG.valueToUnitsString(units) + ", "
         } else if (lastBG != null) {
-            val agoMilliseconds = System.currentTimeMillis() - lastBG.timestamp
+            val agoMilliseconds = dateUtil._now() - lastBG.timestamp
             val agoMin = (agoMilliseconds / 60.0 / 1000.0).toInt()
             reply = resourceHelper.gs(R.string.sms_lastbg) + " " + lastBG.valueToUnitsString(units) + " " + String.format(resourceHelper.gs(R.string.sms_minago), agoMin) + ", "
         }
@@ -429,7 +431,7 @@ class SmsCommunicatorPlugin @Inject constructor(
                             commandQueue.cancelTempBasal(true, object : Callback() {
                                 override fun run() {
                                     if (result.success) {
-                                        loopPlugin.suspendTo(System.currentTimeMillis() + anInteger() * 60L * 1000)
+                                            loopPlugin.suspendTo(dateUtil._now() + anInteger() * 60L * 1000)
                                         loopPlugin.createOfflineEvent(anInteger() * 60)
                                         rxBus.send(EventRefreshOverview("SMS_LOOP_SUSPENDED"))
                                         val replyText = resourceHelper.gs(R.string.smscommunicator_loopsuspended) + " " +
@@ -582,7 +584,7 @@ class SmsCommunicatorPlugin @Inject constructor(
                     val finalPercentage = percentage
                     messageToConfirm = AuthRequest(injector, receivedSms, reply, passCode, object : SmsAction(list[pIndex - 1] as String, finalPercentage) {
                         override fun run() {
-                            activePlugin.activeTreatments.doProfileSwitch(store, list[pIndex - 1] as String, 0, finalPercentage, 0, DateUtil.now())
+                            activePlugin.activeTreatments.doProfileSwitch(store, list[pIndex - 1] as String, 0, finalPercentage, 0, dateUtil._now())
                             val replyText = resourceHelper.gs(R.string.profileswitchcreated)
                             sendSMS(Sms(receivedSms.phoneNumber, replyText))
                             uel.log(Action.PROFILE_SWITCH, Sources.SMS,
@@ -802,7 +804,7 @@ class SmsCommunicatorPlugin @Inject constructor(
                                         else
                                             String.format(resourceHelper.gs(R.string.smscommunicator_bolusdelivered), resultBolusDelivered)
                                         replyText += "\n" + activePlugin.activePump.shortStatus(true)
-                                        lastRemoteBolusTime = DateUtil.now()
+                                        lastRemoteBolusTime = dateUtil._now()
                                         if (isMeal) {
                                             profileFunction.getProfile()?.let { currentProfile ->
                                                 var eatingSoonTTDuration = sp.getInt(R.string.key_eatingsoon_duration, Constants.defaultEatingSoonTTDuration)
@@ -817,7 +819,7 @@ class SmsCommunicatorPlugin @Inject constructor(
                                                         else                                   -> Constants.defaultEatingSoonTTmgdl
                                                     }
                                                 disposable += repository.runTransactionForResult(InsertTemporaryTargetAndCancelCurrentTransaction(
-                                                    timestamp = System.currentTimeMillis(),
+                                                    timestamp = dateUtil._now(),
                                                     duration = TimeUnit.MINUTES.toMillis(eatingSoonTTDuration.toLong()),
                                                     reason = TemporaryTarget.Reason.EATING_SOON,
                                                     lowTarget = Profile.toMgdl(eatingSoonTT, profileFunction.getUnits()),
@@ -852,11 +854,30 @@ class SmsCommunicatorPlugin @Inject constructor(
         } else sendSMS(Sms(receivedSms.phoneNumber, resourceHelper.gs(R.string.wrongformat)))
     }
 
+    fun toTodayTime(hh_colon_mm: String): Long {
+        val p = Pattern.compile("(\\d+):(\\d+)( a.m.| p.m.| AM| PM|AM|PM|)")
+        val m = p.matcher(hh_colon_mm)
+        var retval: Long = 0
+        if (m.find()) {
+            var hours = SafeParse.stringToInt(m.group(1))
+            val minutes = SafeParse.stringToInt(m.group(2))
+            if ((m.group(3) == " a.m." || m.group(3) == " AM" || m.group(3) == "AM") && m.group(1) == "12") hours -= 12
+            if ((m.group(3) == " p.m." || m.group(3) == " PM" || m.group(3) == "PM") && m.group(1) != "12") hours += 12
+            val t = DateTime()
+                .withHourOfDay(hours)
+                .withMinuteOfHour(minutes)
+                .withSecondOfMinute(0)
+                .withMillisOfSecond(0)
+            retval = t.millis
+        }
+        return retval
+    }
+
     private fun processCARBS(divided: Array<String>, receivedSms: Sms) {
         var grams = SafeParse.stringToInt(divided[1])
-        var time = DateUtil.now()
+        var time = dateUtil._now()
         if (divided.size > 2) {
-            time = DateUtil.toTodayTime(divided[2].toUpperCase(Locale.getDefault()))
+            time = toTodayTime(divided[2].toUpperCase(Locale.getDefault()))
             if (time == 0L) {
                 sendSMS(Sms(receivedSms.phoneNumber, resourceHelper.gs(R.string.wrongformat)))
                 return
@@ -943,7 +964,7 @@ class SmsCommunicatorPlugin @Inject constructor(
                     tt = Profile.toCurrentUnits(profileFunction, tt)
                     tt = if (tt > 0) tt else if (units == Constants.MMOL) defaultTargetMMOL else defaultTargetMGDL
                     disposable += repository.runTransactionForResult(InsertTemporaryTargetAndCancelCurrentTransaction(
-                        timestamp = System.currentTimeMillis(),
+                        timestamp = dateUtil._now(),
                         duration = TimeUnit.MINUTES.toMillis(ttDuration.toLong()),
                         reason = TemporaryTarget.Reason.EATING_SOON,
                         lowTarget = Profile.toMgdl(tt, profileFunction.getUnits()),

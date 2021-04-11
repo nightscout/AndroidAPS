@@ -15,7 +15,7 @@ import java.util.*
 
 class InputTime(private val resourceHelper: ResourceHelper, private val dateUtil: DateUtil) : Element() {
 
-    var value: Int = getMinSinceMidnight(DateUtil.now())
+    var value: Int = getMinSinceMidnight(dateUtil._now())
 
     override fun addToLayout(root: LinearLayout) {
         val label = TextView(root.context)

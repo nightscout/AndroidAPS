@@ -4,10 +4,11 @@ import com.google.gson.annotations.Expose
 import info.nightscout.androidaps.data.Profile
 import info.nightscout.androidaps.database.entities.TemporaryBasal
 import info.nightscout.androidaps.extensions.convertedToAbsolute
+import info.nightscout.androidaps.utils.DateUtil
 import java.util.*
 
-class BasalElement(tbr: TemporaryBasal, private val profile: Profile)
-    : BaseElement(tbr.timestamp, UUID.nameUUIDFromBytes(("AAPS-basal" + tbr.timestamp).toByteArray()).toString()) {
+class BasalElement(tbr: TemporaryBasal, private val profile: Profile, dateUtil: DateUtil)
+    : BaseElement(tbr.timestamp, UUID.nameUUIDFromBytes(("AAPS-basal" + tbr.timestamp).toByteArray()).toString(), dateUtil) {
 
     internal var timestamp: Long = 0 // not exposed
 

@@ -208,7 +208,7 @@ class AutomationPlugin @Inject constructor(
                             action.doAction(object : Callback() {
                                 override fun run() {
                                     val sb = StringBuilder()
-                                    sb.append(dateUtil.timeString(DateUtil.now()))
+                                    sb.append(dateUtil.timeString(dateUtil._now()))
                                     sb.append(" ")
                                     sb.append(if (result.success) "☺" else "▼")
                                     sb.append(" <b>")
@@ -229,7 +229,7 @@ class AutomationPlugin @Inject constructor(
                         }
                     }
                     SystemClock.sleep(1100)
-                    event.lastRun = DateUtil.now()
+                    event.lastRun = dateUtil._now()
                     if (event.autoRemove) automationEvents.remove(event)
                 }
             }

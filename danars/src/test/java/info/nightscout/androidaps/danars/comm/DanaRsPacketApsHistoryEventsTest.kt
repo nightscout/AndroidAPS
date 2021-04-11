@@ -48,7 +48,7 @@ class DanaRsPacketApsHistoryEventsTest : DanaRSTestBase() {
     }
 
     @Test fun runTest() {
-        val now = DateUtil.now()
+        val now = dateUtil._now()
 
         val testPacket = DanaRS_Packet_APS_History_Events(packetInjector, now)
         // test getRequestedParams

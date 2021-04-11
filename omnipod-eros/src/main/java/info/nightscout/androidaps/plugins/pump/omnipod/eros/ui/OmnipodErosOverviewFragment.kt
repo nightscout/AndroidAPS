@@ -567,13 +567,13 @@ class OmnipodErosOverviewFragment : DaggerFragment() {
         val timeAsJavaData = time.toLocalDateTime().toDate()
         val timeZone = podStateManager.timeZone.toTimeZone()
         if (timeZone == TimeZone.getDefault()) {
-            return dateUtil.dateAndTimeString(timeAsJavaData)
+            return dateUtil.dateAndTimeString(timeAsJavaData.time)
         }
 
         val isDaylightTime = timeZone.inDaylightTime(timeAsJavaData)
         val locale = resources.configuration.locales.get(0)
         val timeZoneDisplayName = timeZone.getDisplayName(isDaylightTime, TimeZone.SHORT, locale) + " " + timeZone.getDisplayName(isDaylightTime, TimeZone.LONG, locale)
-        return resourceHelper.gs(R.string.omnipod_common_time_with_timezone, dateUtil.dateAndTimeString(timeAsJavaData), timeZoneDisplayName)
+        return resourceHelper.gs(R.string.omnipod_common_time_with_timezone, dateUtil.dateAndTimeString(timeAsJavaData.time), timeZoneDisplayName)
     }
 
     private fun readableDuration(dateTime: DateTime): String {

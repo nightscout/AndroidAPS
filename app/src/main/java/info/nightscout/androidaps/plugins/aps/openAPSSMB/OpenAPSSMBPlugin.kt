@@ -189,7 +189,7 @@ open class OpenAPSSMBPlugin @Inject constructor(
                 // Fix bug determine basal
                 if (determineBasalResultSMB.rate == 0.0 && determineBasalResultSMB.duration == 0 && iobCobCalculator.getTempBasalIncludingConvertedExtended(dateUtil._now()) == null) determineBasalResultSMB.tempBasalRequested = false
                 determineBasalResultSMB.iob = iobArray[0]
-                determineBasalResultSMB.json?.put("timestamp", DateUtil.toISOString(now))
+                determineBasalResultSMB.json?.put("timestamp", dateUtil.toISOString(now))
                 determineBasalResultSMB.inputConstraints = inputConstraints
                 lastDetermineBasalAdapterSMBJS = determineBasalAdapterSMBJS
                 lastAPSResult = determineBasalResultSMB

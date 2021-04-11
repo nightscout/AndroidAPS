@@ -34,6 +34,7 @@ class LocalProfilePlugin @Inject constructor(
     private val sp: SP,
     private val profileFunction: ProfileFunction,
     private val nsUpload: NSUpload,
+    private val dateUtil: DateUtil,
     private val uel: UserEntryLogger
 ) : PluginBase(PluginDescription()
     .mainType(PluginType.PROFILE)
@@ -203,7 +204,7 @@ class LocalProfilePlugin @Inject constructor(
     fun copyFrom(profile: Profile, newName: String): SingleProfile {
         var verifiedName = newName
         if (rawProfile?.getSpecificProfile(newName) != null) {
-            verifiedName += " " + DateUtil.now().toString()
+            verifiedName += " " + dateUtil._now().toString()
         }
         val sp = SingleProfile()
         sp.name = verifiedName
@@ -340,7 +341,7 @@ class LocalProfilePlugin @Inject constructor(
                 }
             }
             if (numOfProfiles > 0) json.put("defaultProfile", currentProfile()?.name)
-            json.put("startDate", DateUtil.toISOAsUTC(DateUtil.now()))
+            json.put("startDate", dateUtil.toISOAsUTC(dateUtil._now()))
             json.put("store", store)
         } catch (e: JSONException) {
             aapsLogger.error("Unhandled exception", e)

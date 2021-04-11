@@ -36,9 +36,9 @@ public class NSUpload {
         this.uploadQueue = uploadQueue;
     }
 
-    public void uploadProfileSwitch(ProfileSwitch profileSwitch, long nsClientId) {
+    public void uploadProfileSwitch(ProfileSwitch profileSwitch, long nsClientId, DateUtil dateUtil) {
         try {
-            JSONObject data = getJson(profileSwitch);
+            JSONObject data = getJson(profileSwitch, dateUtil);
             DbRequest dbr = new DbRequest("dbAdd", "treatments", data, nsClientId);
             aapsLogger.debug("Prepared: " + dbr.log());
             uploadQueue.add(dbr);
@@ -47,9 +47,9 @@ public class NSUpload {
         }
     }
 
-    public void updateProfileSwitch(ProfileSwitch profileSwitch) {
+    public void updateProfileSwitch(ProfileSwitch profileSwitch, DateUtil dateUtil) {
         try {
-            JSONObject data = getJson(profileSwitch);
+            JSONObject data = getJson(profileSwitch, dateUtil);
             if (profileSwitch._id != null) {
                 uploadQueue.add(new DbRequest("dbUpdate", "treatments", profileSwitch._id, data, profileSwitch.date));
             }
@@ -58,7 +58,7 @@ public class NSUpload {
         }
     }
 
-    private static JSONObject getJson(ProfileSwitch profileSwitch) throws JSONException {
+    private static JSONObject getJson(ProfileSwitch profileSwitch, DateUtil dateUtil) throws JSONException {
         JSONObject data = new JSONObject();
         data.put("eventType", TherapyEvent.Type.PROFILE_SWITCH.getText());
         data.put("duration", profileSwitch.durationInMinutes);
@@ -70,7 +70,7 @@ public class NSUpload {
             data.put("timeshift", profileSwitch.timeshift);
             data.put("percentage", profileSwitch.percentage);
         }
-        data.put("created_at", DateUtil.toISOString(profileSwitch.date));
+        data.put("created_at", dateUtil.toISOString(profileSwitch.date));
         data.put("enteredBy", "AndroidAPS");
 
         return data;

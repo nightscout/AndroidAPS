@@ -185,7 +185,7 @@ class DanaHistoryActivity : NoSplashAppCompatActivity() {
                     holder.dailyBasal.text = resourceHelper.gs(R.string.formatinsulinunits, record.recordDailyBasal)
                     holder.dailyBolus.text = resourceHelper.gs(R.string.formatinsulinunits, record.recordDailyBolus)
                     holder.dailyTotal.text = resourceHelper.gs(R.string.formatinsulinunits, record.recordDailyBolus + record.recordDailyBasal)
-                    holder.time.text = DateUtil.dateString(record.recordDate)
+                    holder.time.text = dateUtil.dateString(record.recordDate)
                     holder.time.visibility = View.VISIBLE
                     holder.value.visibility = View.GONE
                     holder.stringValue.visibility = View.GONE

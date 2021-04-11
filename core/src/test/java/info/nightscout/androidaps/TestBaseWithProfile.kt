@@ -43,6 +43,7 @@ open class TestBaseWithProfile : TestBase() {
                 it.rxBus = rxBus
                 it.fabricPrivacy = fabricPrivacy
                 it.configInterface = configInterface
+                it.dateUtil = dateUtil
             }
             if (it is ProfileSwitch) {
                 it.treatmentsPlugin = treatmentsInterface

@@ -1,5 +1,6 @@
 package info.nightscout.androidaps
 
+import android.content.Context
 import dagger.android.AndroidInjector
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.data.Profile
@@ -25,10 +26,10 @@ open class TestBaseWithProfile : TestBase() {
     @Mock lateinit var iobCobCalculator: IobCobCalculator
     @Mock lateinit var fabricPrivacy: FabricPrivacy
     @Mock lateinit var profileFunction: ProfileFunction
-    @Mock lateinit var defaultValueHelper: DefaultValueHelper
-    @Mock lateinit var dateUtil: DateUtil
     @Mock lateinit var configInterface: ConfigInterface
+    @Mock lateinit var context: Context
 
+    lateinit var dateUtil: DateUtil
     val rxBus = RxBusWrapper(aapsSchedulers)
 
     val profileInjector = HasAndroidInjector {
@@ -40,6 +41,7 @@ open class TestBaseWithProfile : TestBase() {
                 it.rxBus = rxBus
                 it.fabricPrivacy = fabricPrivacy
                 it.configInterface = configInterface
+                it.dateUtil = dateUtil
             }
             if (it is ProfileSwitch) {
                 it.treatmentsPlugin = treatmentsInterface
@@ -58,6 +60,7 @@ open class TestBaseWithProfile : TestBase() {
     @Before
     fun prepareMock() {
         validProfileJSON = "{\"dia\":\"3\",\"carbratio\":[{\"time\":\"00:00\",\"value\":\"30\"}],\"carbs_hr\":\"20\",\"delay\":\"20\",\"sens\":[{\"time\":\"00:00\",\"value\":\"100\"},{\"time\":\"2:00\",\"value\":\"110\"}],\"timezone\":\"UTC\",\"basal\":[{\"time\":\"00:00\",\"value\":\"1\"}],\"target_low\":[{\"time\":\"00:00\",\"value\":\"4\"}],\"target_high\":[{\"time\":\"00:00\",\"value\":\"5\"}],\"startDate\":\"1970-01-01T00:00:00.000Z\",\"units\":\"mmol\"}"
+        dateUtil = DateUtil(context)
         validProfile = Profile(profileInjector, JSONObject(validProfileJSON), Constants.MGDL)
     }
 

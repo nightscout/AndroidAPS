@@ -191,7 +191,7 @@ public class DanaRExecutionService extends AbstractDanaRExecutionService {
                 long timeDiff = (danaPump.getPumpTime() - System.currentTimeMillis()) / 1000L;
                 aapsLogger.debug(LTag.PUMP, "Pump time difference: " + timeDiff + " seconds");
                 if (Math.abs(timeDiff) > 10) {
-                    mSerialIOThread.sendMessage(new MsgSetTime(injector, DateUtil.now()));
+                    mSerialIOThread.sendMessage(new MsgSetTime(injector, dateUtil._now()));
                     mSerialIOThread.sendMessage(new MsgSettingPumpTime(injector));
                     timeDiff = (danaPump.getPumpTime() - System.currentTimeMillis()) / 1000L;
                     aapsLogger.debug(LTag.PUMP, "Pump time difference: " + timeDiff + " seconds");

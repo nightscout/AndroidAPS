@@ -31,7 +31,7 @@ import org.powermock.core.classloader.annotations.PrepareForTest
 import org.powermock.modules.junit4.PowerMockRunner
 
 @RunWith(PowerMockRunner::class)
-@PrepareForTest(ConstraintChecker::class, ReceiverStatusStore::class, RunningConfiguration::class, UserEntryLogger::class)
+@PrepareForTest(ConstraintChecker::class, ReceiverStatusStore::class, RunningConfiguration::class, UserEntryLogger::class, DateUtil::class)
 class LoopPluginTest : TestBase() {
 
     @Mock lateinit var sp: SP

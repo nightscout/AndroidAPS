@@ -9,10 +9,10 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import dagger.android.support.DaggerFragment
-import info.nightscout.androidaps.extensions.toStringFull
 import info.nightscout.androidaps.events.EventExtendedBolusChange
 import info.nightscout.androidaps.events.EventPumpStatusChanged
 import info.nightscout.androidaps.events.EventTempBasalChange
+import info.nightscout.androidaps.extensions.toStringFull
 import info.nightscout.androidaps.interfaces.ActivePluginProvider
 import info.nightscout.androidaps.interfaces.CommandQueueProvider
 import info.nightscout.androidaps.interfaces.PumpSync
@@ -47,8 +47,6 @@ import info.nightscout.androidaps.utils.rx.AapsSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.rxkotlin.plusAssign
 import javax.inject.Inject
-import kotlin.math.min
-import kotlin.math.roundToInt
 
 class MedtronicFragment : DaggerFragment() {
 
@@ -269,7 +267,7 @@ class MedtronicFragment : DaggerFragment() {
 
         // last connection
         if (medtronicPumpStatus.lastConnection != 0L) {
-            val minAgo = DateUtil.minAgo(resourceHelper, medtronicPumpStatus.lastConnection)
+            val minAgo = dateUtil.minAgo(resourceHelper, medtronicPumpStatus.lastConnection)
             val min = (System.currentTimeMillis() - medtronicPumpStatus.lastConnection) / 1000 / 60
             if (medtronicPumpStatus.lastConnection + 60 * 1000 > System.currentTimeMillis()) {
                 binding.lastConnection.setText(R.string.medtronic_pump_connected_now)
@@ -305,8 +303,8 @@ class MedtronicFragment : DaggerFragment() {
             val unit = resourceHelper.gs(R.string.insulin_unit_shortname)
             val ago = when {
                 agoMsc < 60 * 1000 -> resourceHelper.gs(R.string.medtronic_pump_connected_now)
-                bolusMinAgo < 60   -> DateUtil.minAgo(resourceHelper, medtronicPumpStatus.lastBolusTime.time)
-                else               -> DateUtil.hourAgo(medtronicPumpStatus.lastBolusTime.time, resourceHelper)
+                bolusMinAgo < 60   -> dateUtil.minAgo(resourceHelper, medtronicPumpStatus.lastBolusTime.time)
+                else               -> dateUtil.hourAgo(medtronicPumpStatus.lastBolusTime.time, resourceHelper)
             }
             binding.lastBolus.text = resourceHelper.gs(R.string.mdt_last_bolus, bolus, unit, ago)
         } else {

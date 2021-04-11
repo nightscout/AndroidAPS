@@ -591,7 +591,7 @@ public class NSClientService extends DaggerService {
 
     void watchdog() {
         synchronized (reconnections) {
-            long now = DateUtil.now();
+            long now = dateUtil._now();
             reconnections.add(now);
             for (int i = 0; i < reconnections.size(); i++) {
                 Long r = reconnections.get(i);

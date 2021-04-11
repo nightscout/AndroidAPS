@@ -394,7 +394,7 @@ public abstract class AbstractDanaRPlugin extends PumpPluginBase implements Pump
         try {
             battery.put("percent", pump.getBatteryRemaining());
             status.put("status", pump.getPumpSuspended() ? "suspended" : "normal");
-            status.put("timestamp", DateUtil.toISOString(pump.getLastConnection()));
+            status.put("timestamp", dateUtil.toISOString(pump.getLastConnection()));
             extended.put("Version", version);
             if (pump.getLastBolusTime() != 0) {
                 extended.put("LastBolus", dateUtil.dateAndTimeString(pump.getLastBolusTime()));
@@ -421,7 +421,7 @@ public abstract class AbstractDanaRPlugin extends PumpPluginBase implements Pump
             pumpJson.put("status", status);
             pumpJson.put("extended", extended);
             pumpJson.put("reservoir", (int) pump.getReservoirRemainingUnits());
-            pumpJson.put("clock", DateUtil.toISOString(new Date()));
+            pumpJson.put("clock", dateUtil.toISOString(dateUtil._now()));
         } catch (JSONException e) {
             getAapsLogger().error("Unhandled exception", e);
         }

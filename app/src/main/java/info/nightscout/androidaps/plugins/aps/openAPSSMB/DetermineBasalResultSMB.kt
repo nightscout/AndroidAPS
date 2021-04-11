@@ -47,7 +47,7 @@ class DetermineBasalResultSMB private constructor(injector: HasAndroidInjector) 
             if (result.has("deliverAt")) {
                 val date = result.getString("deliverAt")
                 try {
-                    deliverAt = DateUtil.fromISODateString(date).time
+                    deliverAt = dateUtil.fromISODateString(date)
                 } catch (e: Exception) {
                     aapsLogger.error(LTag.APS, "Error parsing 'deliverAt' date: $date", e)
                 }

@@ -279,7 +279,7 @@ public abstract class AbstractDanaRExecutionService extends DaggerService {
 
     protected void waitForWholeMinute() {
         while (true) {
-            long time = DateUtil.now();
+            long time = dateUtil._now();
             long timeToWholeMinute = (60000 - time % 60000);
             if (timeToWholeMinute > 59800 || timeToWholeMinute < 3000)
                 break;

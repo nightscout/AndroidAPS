@@ -11,9 +11,9 @@ import info.nightscout.androidaps.receivers.ReceiverStatusStore
 import info.nightscout.androidaps.utils.DateUtil
 import org.json.JSONObject
 
-fun DeviceStatus.toJson(): JSONObject =
+fun DeviceStatus.toJson(dateUtil: DateUtil): JSONObject =
     JSONObject()
-        .put("created_at", DateUtil.toISOString(timestamp))
+        .put("created_at", dateUtil.toISOString(timestamp))
         .also {
             if (device != null) it.put("device", device)
             if (pump != null) it.put("pump", JSONObject(pump))
@@ -46,10 +46,10 @@ fun buildDeviceStatus(
     if (lastRun != null && lastRun.lastAPSRun > dateUtil._now() - 300 * 1000L) {
         // do not send if result is older than 1 min
         apsResult = lastRun.request?.json()?.also {
-            it.put("timestamp", DateUtil.toISOString(lastRun.lastAPSRun))
+            it.put("timestamp", dateUtil.toISOString(lastRun.lastAPSRun))
         }
-        iob = lastRun.request?.iob?.json()?.also {
-            it.put("time", DateUtil.toISOString(lastRun.lastAPSRun))
+        iob = lastRun.request?.iob?.json(dateUtil)?.also {
+            it.put("time", dateUtil.toISOString(lastRun.lastAPSRun))
         }
         val requested = JSONObject()
         if (lastRun.tbrSetByPump?.enacted == true) { // enacted
@@ -68,8 +68,8 @@ fun buildDeviceStatus(
     } else {
         val calcIob = iobCobCalculatorPlugin.calculateIobArrayInDia(profile)
         if (calcIob.isNotEmpty()) {
-            iob = calcIob[0].json()
-            iob.put("time", DateUtil.toISOString(dateUtil._now()))
+            iob = calcIob[0].json(dateUtil)
+            iob.put("time", dateUtil.toISOString(dateUtil._now()))
         }
     }
     return DeviceStatus(

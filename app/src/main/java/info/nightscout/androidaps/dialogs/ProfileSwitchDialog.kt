@@ -83,7 +83,7 @@ class ProfileSwitchDialog : DialogFragmentWithDate() {
                         binding.profile.setSelection(p)
         } ?: return
 
-        treatmentsPlugin.getProfileSwitchFromHistory(DateUtil.now())?.let { ps ->
+        treatmentsPlugin.getProfileSwitchFromHistory(dateUtil._now())?.let { ps ->
             if (ps.isCPP) {
                 binding.reuselayout.visibility = View.VISIBLE
                 binding.reusebutton.text = resourceHelper.gs(R.string.reuse_profile_pct_hours, ps.percentage, ps.timeshift)

@@ -10,7 +10,11 @@ import javax.inject.Inject
 import kotlin.math.roundToLong
 
 @Reusable
-class GlucoseStatusProvider @Inject constructor(private val aapsLogger: AAPSLogger, private val iobCobCalculator: IobCobCalculator) {
+class GlucoseStatusProvider @Inject constructor(
+    private val aapsLogger: AAPSLogger,
+    private val iobCobCalculator: IobCobCalculator,
+    private val dateUtil: DateUtil
+) {
 
     val glucoseStatusData: GlucoseStatus?
         get() = getGlucoseStatusData()
@@ -23,7 +27,7 @@ class GlucoseStatusProvider @Inject constructor(private val aapsLogger: AAPSLogg
                 aapsLogger.debug(LTag.GLUCOSE, "sizeRecords==0")
                 return null
             }
-            if (data[0].timestamp < DateUtil.now() - 7 * 60 * 1000L && !allowOldData) {
+            if (data[0].timestamp < dateUtil._now() - 7 * 60 * 1000L && !allowOldData) {
                 aapsLogger.debug(LTag.GLUCOSE, "oldData")
                 return null
             }

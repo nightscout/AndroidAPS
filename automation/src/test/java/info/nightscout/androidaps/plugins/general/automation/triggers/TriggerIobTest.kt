@@ -24,8 +24,7 @@ class TriggerIobTest : TriggerTestBase() {
     var now = 1514766900000L
 
     @Before fun mock() {
-        PowerMockito.mockStatic(DateUtil::class.java)
-        `when`(DateUtil.now()).thenReturn(now)
+        `when`(dateUtil._now()).thenReturn(now)
         `when`(profileFunction.getProfile()).thenReturn(validProfile)
     }
 

@@ -147,7 +147,7 @@ public class TreatmentsPlugin extends PluginBase implements TreatmentsInterface 
     private void initializeProfileSwitchData(long range) {
         getAapsLogger().debug(LTag.DATATREATMENTS, "initializeProfileSwitchData");
         synchronized (profiles) {
-            profiles.reset().add(databaseHelper.getProfileSwitchData(DateUtil.now() - range, false));
+            profiles.reset().add(databaseHelper.getProfileSwitchData(dateUtil._now() - range, false));
         }
     }
 
@@ -360,7 +360,7 @@ public class TreatmentsPlugin extends PluginBase implements TreatmentsInterface 
         //log.debug("Adding new TemporaryBasal record" + profileSwitch.log());
         rxBus.send(new EventDismissNotification(Notification.PROFILE_SWITCH_MISSING));
         databaseHelper.createOrUpdate(profileSwitch);
-        nsUpload.uploadProfileSwitch(profileSwitch, profileSwitch.date);
+        nsUpload.uploadProfileSwitch(profileSwitch, profileSwitch.date, dateUtil);
     }
 
     @Override

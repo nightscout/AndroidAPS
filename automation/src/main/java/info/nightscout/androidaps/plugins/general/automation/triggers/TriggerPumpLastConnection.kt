@@ -47,7 +47,7 @@ class TriggerPumpLastConnection(injector: HasAndroidInjector) : Trigger(injector
             aapsLogger.debug(LTag.AUTOMATION, "Ready for execution: " + friendlyDescription())
             return true
         }
-        val connectionAgo = (DateUtil.now() - lastConnection) / (60 * 1000)
+        val connectionAgo = (dateUtil._now() - lastConnection) / (60 * 1000)
         aapsLogger.debug(LTag.AUTOMATION, "Last connection min ago: $connectionAgo")
         if (comparator.value.check(connectionAgo.toInt(), minutesAgo.value)) {
             aapsLogger.debug(LTag.AUTOMATION, "Ready for execution: " + friendlyDescription())

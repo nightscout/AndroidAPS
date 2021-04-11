@@ -179,7 +179,7 @@ class NSDeviceStatus @Inject constructor(
             if (fields.contains("reservoir")) string.append(pumpData.reservoir.toInt()).append("U ")
             if (fields.contains("battery") && pumpData.isPercent) string.append(pumpData.percent).append("% ")
             if (fields.contains("battery") && !pumpData.isPercent) string.append(Round.roundTo(pumpData.voltage, 0.001)).append(" ")
-            if (fields.contains("clock")) string.append(DateUtil.minAgo(resourceHelper, pumpData.clock)).append(" ")
+            if (fields.contains("clock")) string.append(dateUtil.minAgo(resourceHelper, pumpData.clock)).append(" ")
             if (fields.contains("status")) string.append(pumpData.status).append(" ")
             if (fields.contains("device")) string.append(device).append(" ")
             string.append("</span>") // color
@@ -201,7 +201,7 @@ class NSDeviceStatus @Inject constructor(
         try {
             val data = this.data ?: return
             val pump = if (data.has("pump")) data.getJSONObject("pump") else JSONObject()
-            val clock = if (pump.has("clock")) DateUtil.fromISODateString(pump.getString("clock")).time else 0L
+            val clock = if (pump.has("clock")) dateUtil.fromISODateString(pump.getString("clock")) else 0L
             // check if this is new data
             if (clock == 0L || deviceStatusPumpData != null && clock < deviceStatusPumpData!!.clock) return
 
@@ -247,13 +247,13 @@ class NSDeviceStatus @Inject constructor(
             val openAps = if (jsonObject.has("openaps")) jsonObject.getJSONObject("openaps") else JSONObject()
             val suggested = if (openAps.has("suggested")) openAps.getJSONObject("suggested") else JSONObject()
             val enacted = if (openAps.has("enacted")) openAps.getJSONObject("enacted") else JSONObject()
-            var clock = if (suggested.has("timestamp")) DateUtil.fromISODateString(suggested.getString("timestamp")).time else 0L
+            var clock = if (suggested.has("timestamp")) dateUtil.fromISODateString(suggested.getString("timestamp")) else 0L
             // check if this is new data
             if (clock != 0L && clock > deviceStatusOpenAPSData.clockSuggested) {
                 deviceStatusOpenAPSData.suggested = suggested
                 deviceStatusOpenAPSData.clockSuggested = clock
             }
-            clock = if (enacted.has("timestamp")) DateUtil.fromISODateString(enacted.getString("timestamp")).time else 0L
+            clock = if (enacted.has("timestamp")) dateUtil.fromISODateString(enacted.getString("timestamp")) else 0L
             // check if this is new data
             if (clock != 0L && clock > deviceStatusOpenAPSData.clockEnacted) {
                 deviceStatusOpenAPSData.enacted = enacted
@@ -278,7 +278,7 @@ class NSDeviceStatus @Inject constructor(
                 else                                                                                                                                  -> Levels.INFO
             }
             string.append("<span style=\"color:${level.toColor()}\">")
-            if (deviceStatusOpenAPSData.clockSuggested != 0L) string.append(DateUtil.minAgo(resourceHelper, deviceStatusOpenAPSData.clockSuggested)).append(" ")
+            if (deviceStatusOpenAPSData.clockSuggested != 0L) string.append(dateUtil.minAgo(resourceHelper, deviceStatusOpenAPSData.clockSuggested)).append(" ")
             string.append("</span>") // color
             return fromHtml(string.toString())
         }
@@ -287,8 +287,8 @@ class NSDeviceStatus @Inject constructor(
         get() {
             val string = StringBuilder()
             try {
-                if (deviceStatusOpenAPSData.enacted != null && deviceStatusOpenAPSData.clockEnacted != deviceStatusOpenAPSData.clockSuggested) string.append("<b>").append(DateUtil.minAgo(resourceHelper, deviceStatusOpenAPSData.clockEnacted)).append("</b> ").append(deviceStatusOpenAPSData.enacted!!.getString("reason")).append("<br>")
-                if (deviceStatusOpenAPSData.suggested != null) string.append("<b>").append(DateUtil.minAgo(resourceHelper, deviceStatusOpenAPSData.clockSuggested)).append("</b> ").append(deviceStatusOpenAPSData.suggested!!.getString("reason")).append("<br>")
+                if (deviceStatusOpenAPSData.enacted != null && deviceStatusOpenAPSData.clockEnacted != deviceStatusOpenAPSData.clockSuggested) string.append("<b>").append(dateUtil.minAgo(resourceHelper, deviceStatusOpenAPSData.clockEnacted)).append("</b> ").append(deviceStatusOpenAPSData.enacted!!.getString("reason")).append("<br>")
+                if (deviceStatusOpenAPSData.suggested != null) string.append("<b>").append(dateUtil.minAgo(resourceHelper, deviceStatusOpenAPSData.clockSuggested)).append("</b> ").append(deviceStatusOpenAPSData.suggested!!.getString("reason")).append("<br>")
                 return fromHtml(string.toString())
             } catch (e: JSONException) {
                 aapsLogger.error("Unhandled exception", e)
@@ -307,7 +307,7 @@ class NSDeviceStatus @Inject constructor(
             val clock =
                 when {
                     jsonObject.has("mills")      -> jsonObject.getLong("mills")
-                    jsonObject.has("created_at") -> DateUtil.fromISODateString(jsonObject.getString("created_at")).time
+                    jsonObject.has("created_at") -> dateUtil.fromISODateString(jsonObject.getString("created_at"))
                     else                         -> 0L
                 }
             val device = device

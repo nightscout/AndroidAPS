@@ -10,7 +10,6 @@ import info.nightscout.androidaps.plugins.general.nsclient.NSClientPlugin
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.IobCobCalculatorPlugin
 import info.nightscout.androidaps.plugins.pump.virtual.VirtualPumpPlugin
 import info.nightscout.androidaps.plugins.treatments.TreatmentsPlugin
-import info.nightscout.androidaps.utils.DateUtil
 import javax.inject.Inject
 
 class Objective0(injector: HasAndroidInjector) : Objective(injector, "config", R.string.objectives_0_objective, R.string.objectives_0_gate) {
@@ -65,7 +64,7 @@ class Objective0(injector: HasAndroidInjector) : Objective(injector, "config", R
         })
         tasks.add(object : Task(this, R.string.activate_profile) {
             override fun isCompleted(): Boolean {
-                return treatmentsPlugin.getProfileSwitchFromHistory(DateUtil.now()) != null
+                return treatmentsPlugin.getProfileSwitchFromHistory(dateUtil._now()) != null
             }
         })
     }

@@ -203,7 +203,7 @@ public class DanaRv2ExecutionService extends AbstractDanaRExecutionService {
                 } else {
                     waitForWholeMinute(); // Dana can set only whole minute
                     // add 10sec to be sure we are over minute (will be cutted off anyway)
-                    mSerialIOThread.sendMessage(new MsgSetTime(injector, DateUtil.now() + T.secs(10).msecs()));
+                    mSerialIOThread.sendMessage(new MsgSetTime(injector, dateUtil._now() + T.secs(10).msecs()));
                     mSerialIOThread.sendMessage(new MsgSettingPumpTime(injector));
                     timeDiff = (danaPump.getPumpTime() - System.currentTimeMillis()) / 1000L;
                     aapsLogger.debug(LTag.PUMP, "Pump time difference: " + timeDiff + " seconds");

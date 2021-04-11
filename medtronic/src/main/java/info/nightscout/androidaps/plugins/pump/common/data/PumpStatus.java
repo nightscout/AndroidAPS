@@ -62,7 +62,7 @@ public abstract class PumpStatus {
     public abstract void initSettings();
 
     public void setLastCommunicationToNow() {
-        this.lastDataTime = DateUtil.now();
+        this.lastDataTime = System.currentTimeMillis();
         this.lastConnection = System.currentTimeMillis();
     }
 

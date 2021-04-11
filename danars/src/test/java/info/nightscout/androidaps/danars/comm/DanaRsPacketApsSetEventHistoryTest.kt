@@ -25,7 +25,7 @@ class DanaRsPacketApsSetEventHistoryTest : DanaRSTestBase() {
     }
 
     @Test fun runTest() { // test for negative carbs
-        val now = DateUtil.now()
+        val now = dateUtil._now()
         var historyTest = DanaRS_Packet_APS_Set_Event_History(packetInjector, info.nightscout.androidaps.dana.DanaPump.CARBS, now, -1, 0)
         var testParams = historyTest.requestParams
         Assert.assertEquals(0.toByte(), testParams[8])

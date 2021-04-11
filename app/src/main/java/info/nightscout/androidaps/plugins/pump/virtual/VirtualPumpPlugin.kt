@@ -362,12 +362,12 @@ open class VirtualPumpPlugin @Inject constructor(
                 extended.put("ExtendedBolusStart", dateUtil.dateAndTimeString(eb.timestamp))
                 extended.put("ExtendedBolusRemaining", eb.plannedRemainingMinutes)
             }
-            status.put("timestamp", DateUtil.toISOString(now))
+            status.put("timestamp", dateUtil.toISOString(now))
             pump.put("battery", battery)
             pump.put("status", status)
             pump.put("extended", extended)
             pump.put("reservoir", reservoirInUnits)
-            pump.put("clock", DateUtil.toISOString(now))
+            pump.put("clock", dateUtil.toISOString(now))
         } catch (e: JSONException) {
             aapsLogger.error("Unhandled exception", e)
         }

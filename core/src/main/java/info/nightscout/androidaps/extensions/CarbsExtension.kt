@@ -7,11 +7,11 @@ import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.JsonHelper
 import org.json.JSONObject
 
-fun Carbs.toJson(): JSONObject =
+fun Carbs.toJson(dateUtil: DateUtil): JSONObject =
     JSONObject()
         .put("eventType", if (amount < 12) TherapyEvent.Type.CARBS_CORRECTION.text else TherapyEvent.Type.MEAL_BOLUS.text)
         .put("carbs", amount)
-        .put("created_at", DateUtil.toISOString(timestamp))
+        .put("created_at", dateUtil.toISOString(timestamp))
         .put("date", timestamp).also {
             if (duration != 0L) it.put("duration", duration)
             if (interfaceIDs.pumpId != null) it.put("pumpId", interfaceIDs.pumpId)

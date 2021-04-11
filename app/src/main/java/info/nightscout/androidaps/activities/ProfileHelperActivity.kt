@@ -210,7 +210,7 @@ class ProfileHelperActivity : NoSplashAppCompatActivity() {
                 getProfile(ageUsed[1], tddUsed[1], weightUsed[1], pctUsed[1] / 100.0, 1)?.let { profile1 ->
                     ProfileViewerDialog().also { pvd ->
                         pvd.arguments = Bundle().also {
-                            it.putLong("time", DateUtil.now())
+                            it.putLong("time", dateUtil._now())
                             it.putInt("mode", ProfileViewerDialog.Mode.PROFILE_COMPARE.ordinal)
                             it.putString("customProfile", profile0.data.toString())
                             it.putString("customProfile2", profile1.data.toString())

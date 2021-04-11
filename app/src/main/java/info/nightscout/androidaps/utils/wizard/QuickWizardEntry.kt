@@ -129,9 +129,9 @@ class QuickWizardEntry @Inject constructor(private val injector: HasAndroidInjec
 
     fun carbs(): Int = safeGetInt(storage, "carbs")
 
-    fun validFromDate(): Date = DateUtil.toDate(validFrom())
+    fun validFromDate(): Long = dateUtil.secondsOfTheDayToMilliseconds(validFrom())
 
-    fun validToDate(): Date = DateUtil.toDate(validTo())
+    fun validToDate(): Long = dateUtil.secondsOfTheDayToMilliseconds(validTo())
 
     fun validFrom(): Int = safeGetInt(storage, "validFrom")
 

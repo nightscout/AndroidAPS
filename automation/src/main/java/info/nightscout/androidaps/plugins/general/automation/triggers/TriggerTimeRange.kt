@@ -38,7 +38,7 @@ class TriggerTimeRange(injector: HasAndroidInjector) : Trigger(injector) {
     }
 
     override fun shouldRun(): Boolean {
-        val currentMinSinceMidnight = getMinSinceMidnight(DateUtil.now())
+        val currentMinSinceMidnight = getMinSinceMidnight(dateUtil._now())
         var doRun = false
         if (range.start < range.end && range.start < currentMinSinceMidnight && currentMinSinceMidnight < range.end) doRun = true
         else if (range.start > range.end && (range.start < currentMinSinceMidnight || currentMinSinceMidnight < range.end)) doRun = true

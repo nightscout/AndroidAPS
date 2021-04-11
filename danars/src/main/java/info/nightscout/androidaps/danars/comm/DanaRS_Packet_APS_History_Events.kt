@@ -40,7 +40,7 @@ open class DanaRS_Packet_APS_History_Events(
 
     init {
         opCode = BleEncryption.DANAR_PACKET__OPCODE__APS_HISTORY_EVENTS
-        if (from > DateUtil.now()) {
+        if (from > dateUtil._now()) {
             aapsLogger.debug(LTag.PUMPCOMM, "Asked to load from the future")
             from = 0
         }

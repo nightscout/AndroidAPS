@@ -17,7 +17,6 @@ import info.nightscout.androidaps.plugins.aps.openAPSSMB.SMBDefaults
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper
 import info.nightscout.androidaps.plugins.general.overview.events.EventNewNotification
 import info.nightscout.androidaps.plugins.general.overview.notifications.Notification
-import info.nightscout.androidaps.plugins.iob.iobCobCalculator.IobCobCalculatorPlugin.Companion.roundUpTime
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.data.AutosensData
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.events.EventAutosensBgLoaded
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.events.EventIobCalculationProgress
@@ -67,7 +66,7 @@ class IobCobOref1Thread internal constructor(
     }
 
     override fun run() {
-        val start = DateUtil.now()
+        val start = dateUtil._now()
         mWakeLock?.acquire(T.mins(10).msecs())
         try {
             aapsLogger.debug(LTag.AUTOSENS, "AUTOSENSDATA thread started: $from")
@@ -89,7 +88,7 @@ class IobCobOref1Thread internal constructor(
                     aapsLogger.debug(LTag.AUTOSENS, "Aborting calculation thread (No bucketed data available): $from")
                     return
                 }
-                val prevDataTime = roundUpTime(bucketedData[bucketedData.size - 3].timestamp)
+                val prevDataTime = iobCobCalculatorPlugin.roundUpTime(bucketedData[bucketedData.size - 3].timestamp)
                 aapsLogger.debug(LTag.AUTOSENS, "Prev data time: " + dateUtil.dateAndTimeString(prevDataTime))
                 var previous = autosensDataTable[prevDataTime]
                 // start from oldest to be able sub cob
@@ -103,8 +102,8 @@ class IobCobOref1Thread internal constructor(
                     }
                     // check if data already exists
                     var bgTime = bucketedData[i].timestamp
-                    bgTime = roundUpTime(bgTime)
-                    if (bgTime > roundUpTime(DateUtil.now())) continue
+                    bgTime = iobCobCalculatorPlugin.roundUpTime(bgTime)
+                    if (bgTime > iobCobCalculatorPlugin.roundUpTime(dateUtil._now())) continue
                     var existing: AutosensData?
                     if (autosensDataTable[bgTime].also { existing = it } != null) {
                         previous = existing
@@ -307,7 +306,7 @@ class IobCobOref1Thread internal constructor(
                     val hours = calendar[Calendar.HOUR_OF_DAY]
                     if (min in 0..4 && hours % 2 == 0) autosensData.extraDeviation.add(0.0)
                     previous = autosensData
-                    if (bgTime < DateUtil.now()) autosensDataTable.put(bgTime, autosensData)
+                    if (bgTime < dateUtil._now()) autosensDataTable.put(bgTime, autosensData)
                     aapsLogger.debug(LTag.AUTOSENS, "Running detectSensitivity from: " + dateUtil.dateAndTimeString(oldestTimeWithData) + " to: " + dateUtil.dateAndTimeString(bgTime) + " lastDataTime:" + iobCobCalculatorPlugin.lastDataTime())
                     val sensitivity = iobCobCalculatorPlugin.detectSensitivityWithLock(oldestTimeWithData, bgTime)
                     aapsLogger.debug(LTag.AUTOSENS, "Sensitivity result: $sensitivity")

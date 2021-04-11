@@ -194,7 +194,7 @@ class DetermineBasalAdapterAMAJS internal constructor(scriptReader: ScriptReader
         // as we have non default temps longer than 30 minutes
         if (tb != null) currentTemp.put("minutesrunning", tb.getPassedDurationToTimeInMinutes(now))
 
-        iobData = IobCobCalculatorPlugin.convertToJSONArray(iobArray)
+        iobData = iobCobCalculator.convertToJSONArray(iobArray)
         this.glucoseStatus = JSONObject()
         this.glucoseStatus.put("glucose", glucoseStatus.glucose)
         if (sp.getBoolean(R.string.key_always_use_shortavg, false)) {

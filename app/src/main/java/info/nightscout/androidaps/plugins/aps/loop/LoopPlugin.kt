@@ -313,7 +313,7 @@ open class LoopPlugin @Inject constructor(
             lastRun = (lastRun ?: LastRun()).also { lastRun ->
                 lastRun.request = apsResult
                 lastRun.constraintsProcessed = resultAfterConstraints
-                lastRun.lastAPSRun = DateUtil.now()
+                lastRun.lastAPSRun = dateUtil._now()
                 lastRun.source = (usedAPS as PluginBase).name
                 lastRun.tbrSetByPump = null
                 lastRun.smbSetByPump = null
@@ -408,7 +408,7 @@ open class LoopPlugin @Inject constructor(
                                 if (result.enacted || result.success) {
                                     lastRun.tbrSetByPump = result
                                     lastRun.lastTBRRequest = lastRun.lastAPSRun
-                                    lastRun.lastTBREnact = DateUtil.now()
+                                    lastRun.lastTBREnact = dateUtil._now()
                                     rxBus.send(EventLoopUpdateGui())
                                     applySMBRequest(resultAfterConstraints, object : Callback() {
                                         override fun run() {
@@ -416,7 +416,7 @@ open class LoopPlugin @Inject constructor(
                                             if (result.enacted || result.success) {
                                                 lastRun.smbSetByPump = result
                                                 lastRun.lastSMBRequest = lastRun.lastAPSRun
-                                                lastRun.lastSMBEnact = DateUtil.now()
+                                                lastRun.lastSMBEnact = dateUtil._now()
                                             } else {
                                                 Thread {
                                                     SystemClock.sleep(1000)
@@ -507,8 +507,8 @@ open class LoopPlugin @Inject constructor(
                         if (result.enacted) {
                             lastRun.tbrSetByPump = result
                             lastRun.lastTBRRequest = lastRun.lastAPSRun
-                            lastRun.lastTBREnact = DateUtil.now()
-                            lastRun.lastOpenModeAccept = DateUtil.now()
+                            lastRun.lastTBREnact = dateUtil._now()
+                            lastRun.lastOpenModeAccept = dateUtil._now()
                             buildDeviceStatus(dateUtil, this@LoopPlugin, iobCobCalculator, profileFunction,
                                 activePlugin.activePump, receiverStatusStore, runningConfiguration,
                                 BuildConfig.VERSION_NAME + "-" + BuildConfig.BUILDVERSION)?.also {

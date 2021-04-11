@@ -171,7 +171,7 @@ class TreatmentsTemporaryBasalsFragment : DaggerFragment() {
             holder.binding.duration.text = resourceHelper.gs(R.string.format_mins, T.msecs(tempBasal.duration).mins())
             if (tempBasal.isAbsolute) holder.binding.rate.text = resourceHelper.gs(R.string.pump_basebasalrate, tempBasal.rate)
             else holder.binding.rate.text = resourceHelper.gs(R.string.format_percent, tempBasal.rate.toInt())
-            val now = DateUtil.now()
+            val now = dateUtil._now()
             var iob = IobTotal(now)
             val profile = profileFunction.getProfile(now)
             if (profile != null) iob = tempBasal.iobCalc(now, profile, activePlugin.activeInsulin)

@@ -17,7 +17,7 @@ public class BasalProfileUTest {
     public void initMocking() {
 
         PowerMockito.mockStatic(DateUtil.class);
-        when(DateUtil.now()).thenReturn(1514766900000L + T.mins(1).msecs());
+        when(dateUtil._now()).thenReturn(1514766900000L + T.mins(1).msecs());
     }
 
 

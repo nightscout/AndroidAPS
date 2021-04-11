@@ -24,8 +24,7 @@ class TriggerBolusAgoTest : TriggerTestBase() {
 
     @Before
     fun mock() {
-        PowerMockito.mockStatic(DateUtil::class.java)
-        PowerMockito.`when`(DateUtil.now()).thenReturn(now)
+        PowerMockito.`when`(dateUtil._now()).thenReturn(now)
     }
 
     @Test

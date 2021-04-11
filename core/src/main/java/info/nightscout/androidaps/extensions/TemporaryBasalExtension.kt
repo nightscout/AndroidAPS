@@ -62,9 +62,9 @@ fun TemporaryBasal.toStringFull(profile: Profile, dateUtil: DateUtil): String {
     }
 }
 
-fun TemporaryBasal.toJson(profile: Profile): JSONObject =
+fun TemporaryBasal.toJson(profile: Profile, dateUtil: DateUtil): JSONObject =
     JSONObject()
-        .put("created_at", DateUtil.toISOString(timestamp))
+        .put("created_at", dateUtil.toISOString(timestamp))
         .put("enteredBy", "openaps://" + "AndroidAPS")
         .put("eventType", TherapyEvent.Type.TEMPORARY_BASAL.text)
         .put("duration", T.msecs(duration).mins())

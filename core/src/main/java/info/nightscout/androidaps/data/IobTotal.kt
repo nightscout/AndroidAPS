@@ -64,19 +64,19 @@ class IobTotal(var time: Long) : DataPointWithLabelInterface {
         return this
     }
 
-    fun json(): JSONObject {
+    fun json(dateUtil: DateUtil): JSONObject {
         val json = JSONObject()
         try {
             json.put("iob", iob)
             json.put("basaliob", basaliob)
             json.put("activity", activity)
-            json.put("time", DateUtil.toISOString(Date()))
+            json.put("time", dateUtil.toISOString(time))
         } catch (ignored: JSONException) {
         }
         return json
     }
 
-    fun determineBasalJson(): JSONObject {
+    fun determineBasalJson(dateUtil: DateUtil): JSONObject {
         val json = JSONObject()
         try {
             json.put("iob", iob)
@@ -84,7 +84,7 @@ class IobTotal(var time: Long) : DataPointWithLabelInterface {
             json.put("bolussnooze", bolussnooze)
             json.put("activity", activity)
             json.put("lastBolusTime", lastBolusTime)
-            json.put("time", DateUtil.toISOString(Date(time)))
+            json.put("time", dateUtil.toISOString(time))
             /*
 
             This is requested by SMB determine_basal but by based on Scott's info
@@ -98,7 +98,7 @@ class IobTotal(var time: Long) : DataPointWithLabelInterface {
             json.put("lastTemp", lastTemp);
             */
             if (iobWithZeroTemp != null) {
-                val iwzt = iobWithZeroTemp!!.determineBasalJson()
+                val iwzt = iobWithZeroTemp!!.determineBasalJson(dateUtil)
                 json.put("iobWithZeroTemp", iwzt)
             }
         } catch (ignored: JSONException) {

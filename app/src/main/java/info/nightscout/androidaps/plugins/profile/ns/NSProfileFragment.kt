@@ -36,6 +36,7 @@ class NSProfileFragment : DaggerFragment() {
     @Inject lateinit var profileFunction: ProfileFunction
     @Inject lateinit var nsProfilePlugin: NSProfilePlugin
     @Inject lateinit var aapsSchedulers: AapsSchedulers
+    @Inject lateinit var dateUtil: DateUtil
     @Inject lateinit var uel: UserEntryLogger
 
     private var disposable: CompositeDisposable = CompositeDisposable()
@@ -67,7 +68,7 @@ class NSProfileFragment : DaggerFragment() {
                             uel.log(Action.PROFILE_SWITCH, Sources.NSProfile,
                                 ValueWithUnit.SimpleString(name),
                                 ValueWithUnit.Percent(100))
-                            treatmentsPlugin.doProfileSwitch(store, name, 0, 100, 0, DateUtil.now())
+                            treatmentsPlugin.doProfileSwitch(store, name, 0, 100, 0, dateUtil._now())
                         })
                     }
                 }

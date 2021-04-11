@@ -163,7 +163,7 @@ open class OpenAPSAMAPlugin @Inject constructor(
             if (determineBasalResultAMA.rate == 0.0 && determineBasalResultAMA.duration == 0 && iobCobCalculator.getTempBasalIncludingConvertedExtended(dateUtil._now()) == null) determineBasalResultAMA.tempBasalRequested = false
             determineBasalResultAMA.iob = iobArray[0]
             val now = System.currentTimeMillis()
-            determineBasalResultAMA.json?.put("timestamp", DateUtil.toISOString(now))
+            determineBasalResultAMA.json?.put("timestamp", dateUtil.toISOString(now))
             determineBasalResultAMA.inputConstraints = inputConstraints
             lastDetermineBasalAdapterAMAJS = determineBasalAdapterAMAJS
             lastAPSResult = determineBasalResultAMA

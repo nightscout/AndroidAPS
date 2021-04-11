@@ -22,7 +22,7 @@ class MsgHistoryEvents_v2 constructor(
 
     init {
         SetCommand(0xE003)
-        if (from > DateUtil.now()) {
+        if (from > dateUtil._now()) {
             aapsLogger.error("Asked to load from the future")
             from = 0
         }

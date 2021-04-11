@@ -274,7 +274,7 @@ class DanaRSPlugin @Inject constructor(
             }
             // RS stores end time for bolus, we need to adjust time
             // default delivery speed is 12 sec/U
-            detailedBolusInfo.timestamp = DateUtil.now() + (speed * detailedBolusInfo.insulin * 1000).toLong()
+            detailedBolusInfo.timestamp = dateUtil._now() + (speed * detailedBolusInfo.insulin * 1000).toLong()
             // clean carbs to prevent counting them as twice because they will picked up as another record
             // I don't think it's necessary to copy DetailedBolusInfo right now for carbs records
             val carbs = detailedBolusInfo.carbs
@@ -285,7 +285,7 @@ class DanaRSPlugin @Inject constructor(
             detailedBolusInfoStorage.add(detailedBolusInfo) // will be picked up on reading history
             val t = EventOverviewBolusProgress.Treatment(0.0, 0, detailedBolusInfo.bolusType == DetailedBolusInfo.BolusType.SMB)
             var connectionOK = false
-            if (detailedBolusInfo.insulin > 0 || carbs > 0) connectionOK = danaRSService?.bolus(detailedBolusInfo.insulin, carbs.toInt(), DateUtil.now() + T.mins(carbTime.toLong()).msecs(), t)
+            if (detailedBolusInfo.insulin > 0 || carbs > 0) connectionOK = danaRSService?.bolus(detailedBolusInfo.insulin, carbs.toInt(), dateUtil._now() + T.mins(carbTime.toLong()).msecs(), t)
                 ?: false
             val result = PumpEnactResult(injector)
             result.success = connectionOK && abs(detailedBolusInfo.insulin - t.insulin) < pumpDescription.bolusStep
@@ -546,7 +546,7 @@ class DanaRSPlugin @Inject constructor(
         try {
             battery.put("percent", danaPump.batteryRemaining)
             status.put("status", if (danaPump.pumpSuspended) "suspended" else "normal")
-            status.put("timestamp", DateUtil.toISOString(danaPump.lastConnection))
+            status.put("timestamp", dateUtil.toISOString(danaPump.lastConnection))
             extended.put("Version", version)
             if (danaPump.lastBolusTime != 0L) {
                 extended.put("LastBolus", dateUtil.dateAndTimeString(danaPump.lastBolusTime))
@@ -574,7 +574,7 @@ class DanaRSPlugin @Inject constructor(
             pumpJson.put("status", status)
             pumpJson.put("extended", extended)
             pumpJson.put("reservoir", danaPump.reservoirRemainingUnits.toInt())
-            pumpJson.put("clock", DateUtil.toISOString(now))
+            pumpJson.put("clock", dateUtil.toISOString(now))
         } catch (e: JSONException) {
             aapsLogger.error("Unhandled exception", e)
         }

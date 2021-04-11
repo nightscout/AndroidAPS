@@ -726,7 +726,7 @@ public class OmnipodErosPumpPlugin extends PumpPluginBase implements PumpInterfa
         JSONObject extended = new JSONObject();
         try {
             status.put("status", podStateManager.isPodRunning() ? (podStateManager.isSuspended() ? "suspended" : "normal") : "no active Pod");
-            status.put("timestamp", DateUtil.toISOString(new Date()));
+            status.put("timestamp", dateUtil.toISOString(dateUtil._now()));
 
             battery.put("percent", getBatteryLevel());
 
@@ -749,7 +749,7 @@ public class OmnipodErosPumpPlugin extends PumpPluginBase implements PumpInterfa
                 extended.put("ExtendedBolusRemaining", getPlannedRemainingMinutes(eb));
             }
 
-            status.put("timestamp", DateUtil.toISOString(new Date()));
+            status.put("timestamp", dateUtil.toISOString(dateUtil._now()));
 
             if (isUseRileyLinkBatteryLevel()) {
                 pump.put("battery", battery);
@@ -766,7 +766,7 @@ public class OmnipodErosPumpPlugin extends PumpPluginBase implements PumpInterfa
                 pump.put("reservoir", reservoirLevel);
             }
 
-            pump.put("clock", DateUtil.toISOString(podStateManager.getTime().toDate()));
+            pump.put("clock", dateUtil.toISOString(podStateManager.getTime().getMillis()));
         } catch (JSONException e) {
             aapsLogger.error(LTag.PUMP, "Unhandled exception", e);
         }

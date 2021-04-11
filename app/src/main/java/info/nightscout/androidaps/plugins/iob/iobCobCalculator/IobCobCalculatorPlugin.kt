@@ -192,7 +192,7 @@ open class IobCobCalculatorPlugin @Inject constructor(
         var dia = Constants.defaultDIA
         if (profile != null) dia = profile.dia
         val start = to - T.hours((24 + dia).toLong()).msecs()
-        if (DateUtil.isCloseToNow(to)) {
+        if (dateUtil.isCloseToNow(to)) {
             // if close to now expect there can be some readings with time in close future (caused by wrong time setting)
             // so read all records
             bgReadings = repository.compatGetBgReadingsDataFromTime(start, false).blockingGet()
@@ -309,7 +309,7 @@ open class IobCobCalculatorPlugin @Inject constructor(
         }
         val bData: MutableList<InMemoryGlucoseValue> = ArrayList()
         bData.add(InMemoryGlucoseValue(bgReadings[0]))
-        aapsLogger.debug(LTag.AUTOSENS, "Adding. bgTime: " + DateUtil.toISOString(bgReadings[0].timestamp) + " lastBgTime: " + "none-first-value" + " " + bgReadings[0].toString())
+        aapsLogger.debug(LTag.AUTOSENS, "Adding. bgTime: " + dateUtil.toISOString(bgReadings[0].timestamp) + " lastBgTime: " + "none-first-value" + " " + bgReadings[0].toString())
         var j = 0
         for (i in 1 until bgReadings.size) {
             val bgTime = bgReadings[i].timestamp
@@ -333,7 +333,7 @@ open class IobCobCalculatorPlugin @Inject constructor(
                         val newBgReading = InMemoryGlucoseValue(nextBgTime, nextBg.roundToLong().toDouble(), true)
                         //console.error("Interpolated", bData[j]);
                         bData.add(newBgReading)
-                        aapsLogger.debug(LTag.AUTOSENS, "Adding. bgTime: " + DateUtil.toISOString(bgTime) + " lastBgTime: " + DateUtil.toISOString(lastBgTime) + " " + newBgReading.toString())
+                        aapsLogger.debug(LTag.AUTOSENS, "Adding. bgTime: " + dateUtil.toISOString(bgTime) + " lastBgTime: " + dateUtil.toISOString(lastBgTime) + " " + newBgReading.toString())
                         elapsedMinutes -= 5
                         lastBg = nextBg
                         lastBgTime = nextBgTime
@@ -341,14 +341,14 @@ open class IobCobCalculatorPlugin @Inject constructor(
                     j++
                     val newBgReading = InMemoryGlucoseValue(bgTime, bgReadings[i].value)
                     bData.add(newBgReading)
-                    aapsLogger.debug(LTag.AUTOSENS, "Adding. bgTime: " + DateUtil.toISOString(bgTime) + " lastBgTime: " + DateUtil.toISOString(lastBgTime) + " " + newBgReading.toString())
+                    aapsLogger.debug(LTag.AUTOSENS, "Adding. bgTime: " + dateUtil.toISOString(bgTime) + " lastBgTime: " + dateUtil.toISOString(lastBgTime) + " " + newBgReading.toString())
                 }
 
                 abs(elapsedMinutes) > 2 -> {
                     j++
                     val newBgReading = InMemoryGlucoseValue(bgTime, bgReadings[i].value)
                     bData.add(newBgReading)
-                    aapsLogger.debug(LTag.AUTOSENS, "Adding. bgTime: " + DateUtil.toISOString(bgTime) + " lastBgTime: " + DateUtil.toISOString(lastBgTime) + " " + newBgReading.toString())
+                    aapsLogger.debug(LTag.AUTOSENS, "Adding. bgTime: " + dateUtil.toISOString(bgTime) + " lastBgTime: " + dateUtil.toISOString(lastBgTime) + " " + newBgReading.toString())
                 }
 
                 else                    -> {
@@ -466,7 +466,7 @@ open class IobCobCalculatorPlugin @Inject constructor(
     }
 
     private fun calculateFromTreatmentsAndTemps(time: Long, lastAutosensResult: AutosensResult, exercise_mode: Boolean, half_basal_exercise_target: Int, isTempTarget: Boolean): IobTotal {
-        val now = DateUtil.now()
+        val now = dateUtil._now()
         val bolusIob = calculateIobFromBolusToTime(time).round()
         val basalIob = getCalculationToTimeTempBasals(time, lastAutosensResult, exercise_mode, half_basal_exercise_target, isTempTarget).round()
         // OpenAPSSMB only
@@ -551,7 +551,7 @@ open class IobCobCalculatorPlugin @Inject constructor(
         val autosensData = if (_synchronized) getLastAutosensDataSynchronized(reason) else getLastAutosensData(reason)
         var displayCob: Double? = null
         var futureCarbs = 0.0
-        val now = DateUtil.now()
+        val now = dateUtil._now()
         val carbs = repository.getCarbsDataFromTimeExpanded(now, true).blockingGet()
         if (autosensData != null) {
             displayCob = autosensData.cob
@@ -658,7 +658,7 @@ open class IobCobCalculatorPlugin @Inject constructor(
 
     override fun calculateIobArrayForSMB(lastAutosensResult: AutosensResult, exercise_mode: Boolean, half_basal_exercise_target: Int, isTempTarget: Boolean): Array<IobTotal> {
         // predict IOB out to DIA plus 30m
-        val now = DateUtil.now()
+        val now = dateUtil._now()
         val len = 4 * 60 / 5
         val array = Array(len) { IobTotal(0) }
         for ((pos, i) in (0 until len).withIndex()) {
@@ -772,20 +772,20 @@ open class IobCobCalculatorPlugin @Inject constructor(
         return if (lastBg.timestamp > System.currentTimeMillis() - T.mins(9).msecs()) lastBg else null
     }
 
+    // roundup to whole minute
+    fun roundUpTime(time: Long): Long {
+        return if (time % 60000 == 0L) time else (time / 60000 + 1) * 60000
+    }
+
+    override fun convertToJSONArray(iobArray: Array<IobTotal>): JSONArray {
+        val array = JSONArray()
+        for (i in iobArray.indices) {
+            array.put(iobArray[i].determineBasalJson(dateUtil))
+        }
+        return array
+    }
+
     companion object {
-
-        // roundup to whole minute
-        fun roundUpTime(time: Long): Long {
-            return if (time % 60000 == 0L) time else (time / 60000 + 1) * 60000
-        }
-
-        fun convertToJSONArray(iobArray: Array<IobTotal>): JSONArray {
-            val array = JSONArray()
-            for (i in iobArray.indices) {
-                array.put(iobArray[i].determineBasalJson())
-            }
-            return array
-        }
 
         // From https://gist.github.com/IceCreamYou/6ffa1b18c4c8f6aeaad2
         // Returns the value at a given percentile in a sorted numeric array.

@@ -309,7 +309,7 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
                 R.id.active_profile -> {
                     ProfileViewerDialog().also { pvd ->
                         pvd.arguments = Bundle().also {
-                            it.putLong("time", DateUtil.now())
+                            it.putLong("time", dateUtil._now())
                             it.putInt("mode", ProfileViewerDialog.Mode.RUNNING_PROFILE.ordinal)
                         }
                     }.show(childFragmentManager, "ProfileViewDialog")
@@ -549,7 +549,7 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
         if (_binding == null) return
         aapsLogger.debug("UpdateGUI from $from")
 
-        binding.infoLayout.time.text = dateUtil.timeString(Date())
+        binding.infoLayout.time.text = dateUtil.timeString(dateUtil._now())
 
         if (!profileFunction.isProfileValid("Overview")) {
             binding.loopPumpStatusLayout.pumpStatus.setText(R.string.noprofileset)
@@ -612,8 +612,8 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
                 } else flag and Paint.STRIKE_THRU_TEXT_FLAG.inv()
                 overview_bg.paintFlags = flag
             }
-            binding.infoLayout.timeAgo.text = DateUtil.minAgo(resourceHelper, lastBG.timestamp)
-            binding.infoLayout.timeAgoShort.text = "(" + DateUtil.minAgoShort(lastBG.timestamp) + ")"
+            binding.infoLayout.timeAgo.text = dateUtil.minAgo(resourceHelper, lastBG.timestamp)
+            binding.infoLayout.timeAgoShort.text = "(" + dateUtil.minAgoShort(lastBG.timestamp) + ")"
 
         }
         val closedLoopEnabled = constraintChecker.isClosedLoopAllowed()
@@ -625,19 +625,19 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
             when {
                 loopPlugin.isEnabled() && loopPlugin.isSuperBolus                       -> {
                     binding.infoLayout.apsMode.setImageResource(R.drawable.ic_loop_superbolus)
-                    binding.infoLayout.apsModeText.text = DateUtil.age(loopPlugin.minutesToEndOfSuspend() * 60000L, true, resourceHelper)
+                    binding.infoLayout.apsModeText.text = dateUtil.age(loopPlugin.minutesToEndOfSuspend() * 60000L, true, resourceHelper)
                     binding.infoLayout.apsModeText.visibility = View.VISIBLE
                 }
 
                 loopPlugin.isDisconnected                                               -> {
                     binding.infoLayout.apsMode.setImageResource(R.drawable.ic_loop_disconnected)
-                    binding.infoLayout.apsModeText.text = DateUtil.age(loopPlugin.minutesToEndOfSuspend() * 60000L, true, resourceHelper)
+                    binding.infoLayout.apsModeText.text = dateUtil.age(loopPlugin.minutesToEndOfSuspend() * 60000L, true, resourceHelper)
                     binding.infoLayout.apsModeText.visibility = View.VISIBLE
                 }
 
                 loopPlugin.isEnabled() && loopPlugin.isSuspended                        -> {
                     binding.infoLayout.apsMode.setImageResource(R.drawable.ic_loop_paused)
-                    binding.infoLayout.apsModeText.text = DateUtil.age(loopPlugin.minutesToEndOfSuspend() * 60000L, true, resourceHelper)
+                    binding.infoLayout.apsModeText.text = dateUtil.age(loopPlugin.minutesToEndOfSuspend() * 60000L, true, resourceHelper)
                     binding.infoLayout.apsModeText.visibility = View.VISIBLE
                 }
 
@@ -684,7 +684,7 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
         if (tempTarget is ValueWrapper.Existing) {
             binding.loopPumpStatusLayout.tempTarget.setTextColor(resourceHelper.gc(R.color.ribbonTextWarning))
             binding.loopPumpStatusLayout.tempTarget.setBackgroundColor(resourceHelper.gc(R.color.ribbonWarning))
-            binding.loopPumpStatusLayout.tempTarget.text = Profile.toTargetRangeString(tempTarget.value.lowTarget, tempTarget.value.highTarget, Constants.MGDL, units) + " " + DateUtil.untilString(tempTarget.value.end, resourceHelper)
+            binding.loopPumpStatusLayout.tempTarget.text = Profile.toTargetRangeString(tempTarget.value.lowTarget, tempTarget.value.highTarget, Constants.MGDL, units) + " " + dateUtil.untilString(tempTarget.value.end, resourceHelper)
         } else {
             // If the target is not the same as set in the profile then oref has overridden it
             val targetUsed = lastRun?.constraintsProcessed?.targetBG ?: 0.0
