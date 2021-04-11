@@ -96,6 +96,8 @@ data class UserEntry(
         EXPORT_CSV (ColorGroup.Aaps),
         START_AAPS (ColorGroup.Aaps),
         EXIT_AAPS (ColorGroup.Aaps),
+        PLUGIN_ENABLED (ColorGroup.Aaps),
+        PLUGIN_DISABLED (ColorGroup.Aaps),
         UNKNOWN (ColorGroup.Aaps)
         ;
 

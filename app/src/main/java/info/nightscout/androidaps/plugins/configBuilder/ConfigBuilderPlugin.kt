@@ -5,6 +5,7 @@ import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.database.entities.UserEntry.Action
 import info.nightscout.androidaps.database.entities.UserEntry.Sources
+import info.nightscout.androidaps.database.entities.ValueWithUnit
 import info.nightscout.androidaps.events.EventAppInitialized
 import info.nightscout.androidaps.events.EventConfigBuilderChange
 import info.nightscout.androidaps.events.EventRebuildTabs
@@ -147,7 +148,8 @@ class ConfigBuilderPlugin @Inject constructor(
                 performPluginSwitch(changedPlugin, newState, type)
                 pumpSync.connectNewPump()
                 sp.putBoolean("allow_hardware_pump", true)
-                uel.log(Action.HW_PUMP_ALLOWED, Sources.ConfigBuilder)
+                uel.log(Action.HW_PUMP_ALLOWED, Sources.ConfigBuilder,
+                    ValueWithUnit.StringResource(changedPlugin.pluginDescription.pluginName))
                 aapsLogger.debug(LTag.PUMP, "First time HW pump allowed!")
             }, {
                 rxBus.send(EventConfigBuilderUpdateGui())
@@ -157,6 +159,14 @@ class ConfigBuilderPlugin @Inject constructor(
     }
 
     override fun performPluginSwitch(changedPlugin: PluginBase, enabled: Boolean, type: PluginType) {
+        if(enabled && !changedPlugin.isEnabled()) {
+            uel.log(Action.PLUGIN_ENABLED, Sources.ConfigBuilder,
+                ValueWithUnit.StringResource(changedPlugin.pluginDescription.pluginName))
+        }
+        else if(!enabled) {
+            uel.log(Action.PLUGIN_DISABLED, Sources.ConfigBuilder,
+                ValueWithUnit.StringResource(changedPlugin.pluginDescription.pluginName))
+        }
         changedPlugin.setPluginEnabled(type, enabled)
         changedPlugin.setFragmentVisible(type, enabled)
         processOnEnabledCategoryChanged(changedPlugin, type)

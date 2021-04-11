@@ -96,6 +96,8 @@ class Translator @Inject internal constructor(
         Action.STOP_SMS                            -> resourceHelper.gs(R.string.uel_stop_sms)
         Action.START_AAPS                          -> resourceHelper.gs(R.string.uel_start_aaps)
         Action.EXIT_AAPS                           -> resourceHelper.gs(R.string.uel_exit_aaps)
+        Action.PLUGIN_ENABLED                      -> resourceHelper.gs(R.string.uel_plugin_enabled)
+        Action.PLUGIN_DISABLED                     -> resourceHelper.gs(R.string.uel_plugin_disabled)
         Action.UNKNOWN                             -> resourceHelper.gs(R.string.unknown)
     }
 
