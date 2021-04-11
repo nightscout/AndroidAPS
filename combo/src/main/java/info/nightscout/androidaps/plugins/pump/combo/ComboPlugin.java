@@ -639,10 +639,10 @@ public class ComboPlugin extends PumpPluginBase implements PumpInterface, Constr
     private boolean addBolusToTreatments(DetailedBolusInfo detailedBolusInfo, Bolus lastPumpBolus) {
         try {
             pumpSync.syncBolusWithPumpId(
-                    calculateFakeBolusDate(lastPumpBolus),
+                    lastPumpBolus.timestamp,
                     lastPumpBolus.amount,
                     detailedBolusInfo.getBolusType(),
-                    detailedBolusInfo.timestamp,
+                    generatePumpBolusId(lastPumpBolus),
                     PumpType.ACCU_CHEK_COMBO,
                     serialNumber()
             );
@@ -1149,10 +1149,10 @@ public class ComboPlugin extends PumpPluginBase implements PumpInterface, Constr
         boolean updated = false;
         for (Bolus pumpBolus : history.bolusHistory) {
             if (pumpSync.syncBolusWithPumpId(
-                    calculateFakeBolusDate(pumpBolus),
+                    pumpBolus.timestamp,
                     pumpBolus.amount,
                     DetailedBolusInfo.BolusType.NORMAL,
-                    System.currentTimeMillis(),
+                    generatePumpBolusId(pumpBolus),
                     PumpType.ACCU_CHEK_COMBO,
                     serialNumber()
             )) {
@@ -1169,7 +1169,7 @@ public class ComboPlugin extends PumpPluginBase implements PumpInterface, Constr
      * Should be good enough, even with command mode, it's a challenge to create that situation
      * and most time clashes will be around SMBs which are covered.
      */
-    long calculateFakeBolusDate(Bolus pumpBolus) {
+    long generatePumpBolusId(Bolus pumpBolus) {
         double bolus = pumpBolus.amount - 0.1;
         int secondsFromBolus = (int) (bolus * 10 * 1000);
         return pumpBolus.timestamp + Math.min(secondsFromBolus, 59 * 1000);
