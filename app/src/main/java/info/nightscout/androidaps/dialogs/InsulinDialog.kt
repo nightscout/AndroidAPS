@@ -224,15 +224,14 @@ class InsulinDialog : DialogFragmentWithDate() {
                                     { aapsLogger.error(LTag.DATABASE, "Error while saving bolus", it) }
                                 )
                         } else {
+                            uel.log(Action.BOLUS, Sources.InsulinDialog,
+                                notes,
+                                ValueWithUnit.Insulin(insulinAfterConstraints))
                             commandQueue.bolus(detailedBolusInfo, object : Callback() {
                                 override fun run() {
                                     if (!result.success) {
                                         ErrorHelperActivity.runAlarm(ctx, result.comment, resourceHelper.gs(R.string.treatmentdeliveryerror), info.nightscout.androidaps.dana.R.raw.boluserror)
-                                    } else
-                                        uel.log(Action.BOLUS, Sources.InsulinDialog,
-                                            notes,
-                                            ValueWithUnit.Insulin(insulinAfterConstraints))
-
+                                    }
                                 }
                             })
                         }
