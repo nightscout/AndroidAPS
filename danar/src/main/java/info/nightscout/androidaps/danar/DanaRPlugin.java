@@ -182,7 +182,7 @@ public class DanaRPlugin extends AbstractDanaRPlugin {
                         detailedBolusInfo.timestamp,
                         detailedBolusInfo.insulin,
                         detailedBolusInfo.getBolusType(),
-                        dateUtil._now(),
+                        dateUtil.now(),
                         PumpType.DANA_R,
                         serialNumber());
             if (detailedBolusInfo.carbs > 0)
@@ -342,8 +342,8 @@ public class DanaRPlugin extends AbstractDanaRPlugin {
             sExecutionService.tempBasalStop();
             if (!danaPump.isTempBasalInProgress()) {
                 pumpSync.syncStopTemporaryBasalWithPumpId(
-                        dateUtil._now(),
-                        dateUtil._now(),
+                        dateUtil.now(),
+                        dateUtil.now(),
                         getPumpDescription().getPumpType(),
                         serialNumber()
                 );

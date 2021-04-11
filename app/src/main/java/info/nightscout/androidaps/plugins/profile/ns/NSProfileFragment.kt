@@ -68,7 +68,7 @@ class NSProfileFragment : DaggerFragment() {
                             uel.log(Action.PROFILE_SWITCH, Sources.NSProfile,
                                 ValueWithUnit.SimpleString(name),
                                 ValueWithUnit.Percent(100))
-                            treatmentsPlugin.doProfileSwitch(store, name, 0, 100, 0, dateUtil._now())
+                            treatmentsPlugin.doProfileSwitch(store, name, 0, 100, 0, dateUtil.now())
                         })
                     }
                 }

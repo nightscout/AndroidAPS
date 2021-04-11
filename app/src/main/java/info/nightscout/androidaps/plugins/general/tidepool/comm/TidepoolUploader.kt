@@ -232,7 +232,7 @@ class TidepoolUploader @Inject constructor(
     }
 
     private fun uploadNext() {
-        if (uploadChunk.getLastEnd() < dateUtil._now() - T.mins(1).msecs()) {
+        if (uploadChunk.getLastEnd() < dateUtil.now() - T.mins(1).msecs()) {
             SystemClock.sleep(3000)
             aapsLogger.debug(LTag.TIDEPOOL, "Restarting doUpload. Last: " + dateUtil.dateAndTimeString(uploadChunk.getLastEnd()))
             doUpload()

@@ -27,7 +27,7 @@ class GlucoseStatusProvider @Inject constructor(
                 aapsLogger.debug(LTag.GLUCOSE, "sizeRecords==0")
                 return null
             }
-            if (data[0].timestamp < dateUtil._now() - 7 * 60 * 1000L && !allowOldData) {
+            if (data[0].timestamp < dateUtil.now() - 7 * 60 * 1000L && !allowOldData) {
                 aapsLogger.debug(LTag.GLUCOSE, "oldData")
                 return null
             }

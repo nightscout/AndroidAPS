@@ -134,17 +134,17 @@ open class DateUtil @Inject constructor(private val context: Context) {
     }
 
     fun minAgo(resourceHelper: ResourceHelper, time: Long): String {
-        val mins = ((_now() - time) / 1000 / 60).toInt()
+        val mins = ((now() - time) / 1000 / 60).toInt()
         return resourceHelper.gs(R.string.minago, mins)
     }
 
     fun minAgoShort(time: Long): String {
-        val mins = ((time - _now()) / 1000 / 60).toInt()
+        val mins = ((time - now()) / 1000 / 60).toInt()
         return (if (mins > 0) "+" else "") + mins
     }
 
     fun hourAgo(time: Long, resourceHelper: ResourceHelper): String {
-        val hours = (_now() - time) / 1000.0 / 60 / 60
+        val hours = (now() - time) / 1000.0 / 60 / 60
         return resourceHelper.gs(R.string.hoursago, hours)
     }
 
@@ -171,7 +171,7 @@ open class DateUtil @Inject constructor(private val context: Context) {
         return timeFrameString(timestamp - System.currentTimeMillis(), resourceHelper)
     }
 
-    fun _now(): Long {
+    fun now(): Long {
         return System.currentTimeMillis()
     }
 
@@ -182,12 +182,12 @@ open class DateUtil @Inject constructor(private val context: Context) {
     }
 
     fun isCloseToNow(date: Long): Boolean {
-        val diff = abs(date - _now())
+        val diff = abs(date - now())
         return diff < T.mins(2L).msecs()
     }
 
     fun isOlderThan(date: Long, minutes: Long): Boolean {
-        val diff = _now() - date
+        val diff = now() - date
         return diff > T.mins(minutes).msecs()
     }
 

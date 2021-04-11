@@ -55,7 +55,7 @@ class ObjectivesPluginTest : TestBase() {
         c = objectivesPlugin.isLoopInvocationAllowed(c)
         Assert.assertEquals("Objectives: Objective 1 not started", c.getReasons(aapsLogger))
         Assert.assertEquals(false, c.value())
-        objectivesPlugin.objectives[ObjectivesPlugin.FIRST_OBJECTIVE].startedOn = dateUtil._now()
+        objectivesPlugin.objectives[ObjectivesPlugin.FIRST_OBJECTIVE].startedOn = dateUtil.now()
     }
 
     @Test fun notStartedObjective6ShouldLimitClosedLoop() {

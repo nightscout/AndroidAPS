@@ -86,7 +86,7 @@ class OneTimePassword @Inject constructor(
             return OneTimePasswordValidationResult.ERROR_WRONG_PIN
         }
 
-        val counter: Long = dateUtil._now() / 30000L
+        val counter: Long = dateUtil.now() / 30000L
 
         val acceptableTokens: MutableList<String> = mutableListOf(generateOneTimePassword(counter))
         for (i in 0 until Constants.OTP_ACCEPT_OLD_TOKENS_COUNT) {

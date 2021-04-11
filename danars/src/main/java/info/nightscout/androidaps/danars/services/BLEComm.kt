@@ -150,7 +150,7 @@ class BLEComm @Inject internal constructor(
                 danaRSPlugin.changePump()
             } else if (lastClearRequest == 0L) {
                 aapsLogger.error("Clearing pairing keys postponed")
-                sp.putLong(R.string.key_rs_last_clear_key_request, dateUtil._now())
+                sp.putLong(R.string.key_rs_last_clear_key_request, dateUtil.now())
             }
         }
         // cancel previous scheduled disconnection to prevent closing upcoming connection

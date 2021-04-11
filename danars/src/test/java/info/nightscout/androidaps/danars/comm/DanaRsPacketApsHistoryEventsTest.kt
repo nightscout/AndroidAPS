@@ -10,7 +10,6 @@ import info.nightscout.androidaps.interfaces.PumpSync
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper
 import info.nightscout.androidaps.plugins.pump.common.bolusInfo.DetailedBolusInfoStorage
 import info.nightscout.androidaps.plugins.pump.common.bolusInfo.TemporaryBasalStorage
-import info.nightscout.androidaps.utils.DateUtil
 import org.junit.Assert
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -48,7 +47,7 @@ class DanaRsPacketApsHistoryEventsTest : DanaRSTestBase() {
     }
 
     @Test fun runTest() {
-        val now = dateUtil._now()
+        val now = dateUtil.now()
 
         val testPacket = DanaRS_Packet_APS_History_Events(packetInjector, now)
         // test getRequestedParams

@@ -26,8 +26,8 @@ class TirCalculator @Inject constructor(
     fun calculate(days: Long, lowMgdl: Double, highMgdl: Double): LongSparseArray<TIR> {
         if (lowMgdl < 39) throw RuntimeException("Low below 39")
         if (lowMgdl > highMgdl) throw RuntimeException("Low > High")
-        val startTime = MidnightTime.calc(dateUtil._now() - T.days(days).msecs())
-        val endTime = MidnightTime.calc(dateUtil._now())
+        val startTime = MidnightTime.calc(dateUtil.now() - T.days(days).msecs())
+        val endTime = MidnightTime.calc(dateUtil.now())
 
         val bgReadings = repository.compatGetBgReadingsDataFromTime(startTime, endTime, true).blockingGet()
         val result = LongSparseArray<TIR>()

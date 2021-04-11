@@ -20,7 +20,7 @@ class TriggerTempTargetTest : TriggerTestBase() {
     var now = 1514766900000L
 
     @Before fun mock() {
-        PowerMockito.`when`(dateUtil._now()).thenReturn(now)
+        PowerMockito.`when`(dateUtil.now()).thenReturn(now)
     }
 /*
     @Test fun shouldRunTest() {

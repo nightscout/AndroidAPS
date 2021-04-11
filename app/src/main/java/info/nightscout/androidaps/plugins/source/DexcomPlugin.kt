@@ -120,7 +120,7 @@ class DexcomPlugin @Inject constructor(
                     for (i in 0 until meters.size()) {
                         meters.getBundle(i.toString())?.let {
                             val timestamp = it.getLong("timestamp") * 1000
-                            val now = dateUtil._now()
+                            val now = dateUtil.now()
                             if (timestamp > now - T.months(1).msecs() && timestamp < now) {
                                 calibrations.add(CgmSourceTransaction.Calibration(
                                     timestamp = it.getLong("timestamp") * 1000,

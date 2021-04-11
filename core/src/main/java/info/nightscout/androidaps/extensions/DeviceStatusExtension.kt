@@ -43,7 +43,7 @@ fun buildDeviceStatus(
     var apsResult: JSONObject? = null
     var iob: JSONObject? = null
     var enacted: JSONObject? = null
-    if (lastRun != null && lastRun.lastAPSRun > dateUtil._now() - 300 * 1000L) {
+    if (lastRun != null && lastRun.lastAPSRun > dateUtil.now() - 300 * 1000L) {
         // do not send if result is older than 1 min
         apsResult = lastRun.request?.json()?.also {
             it.put("timestamp", dateUtil.toISOString(lastRun.lastAPSRun))
@@ -69,11 +69,11 @@ fun buildDeviceStatus(
         val calcIob = iobCobCalculatorPlugin.calculateIobArrayInDia(profile)
         if (calcIob.isNotEmpty()) {
             iob = calcIob[0].json(dateUtil)
-            iob.put("time", dateUtil.toISOString(dateUtil._now()))
+            iob.put("time", dateUtil.toISOString(dateUtil.now()))
         }
     }
     return DeviceStatus(
-        timestamp = dateUtil._now(),
+        timestamp = dateUtil.now(),
         suggested = apsResult?.toString(),
         iob = iob?.toString(),
         enacted = enacted?.toString(),

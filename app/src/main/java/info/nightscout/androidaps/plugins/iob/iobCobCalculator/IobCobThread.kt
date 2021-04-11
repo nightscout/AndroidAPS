@@ -65,7 +65,7 @@ class IobCobThread @Inject internal constructor(
     }
 
     override fun run() {
-        val start = dateUtil._now()
+        val start = dateUtil.now()
         mWakeLock?.acquire(T.mins(10).msecs())
         try {
             aapsLogger.debug(LTag.AUTOSENS, "AUTOSENSDATA thread started: $from")
@@ -102,7 +102,7 @@ class IobCobThread @Inject internal constructor(
                     // check if data already exists
                     var bgTime = bucketedData[i].timestamp
                     bgTime = iobCobCalculatorPlugin.roundUpTime(bgTime)
-                    if (bgTime > iobCobCalculatorPlugin.roundUpTime(dateUtil._now())) continue
+                    if (bgTime > iobCobCalculatorPlugin.roundUpTime(dateUtil.now())) continue
                     var existing: AutosensData?
                     if (autosensDataTable[bgTime].also { existing = it } != null) {
                         previous = existing
@@ -253,7 +253,7 @@ class IobCobThread @Inject internal constructor(
                         autosensData.pastSensitivity += "C"
                     }
                     previous = autosensData
-                    if (bgTime < dateUtil._now()) autosensDataTable.put(bgTime, autosensData)
+                    if (bgTime < dateUtil.now()) autosensDataTable.put(bgTime, autosensData)
                     aapsLogger.debug(LTag.AUTOSENS, "Running detectSensitivity from: " + dateUtil.dateAndTimeString(oldestTimeWithData) + " to: " + dateUtil.dateAndTimeString(bgTime) + " lastDataTime:" + iobCobCalculatorPlugin.lastDataTime())
                     val sensitivity = iobCobCalculatorPlugin.detectSensitivityWithLock(oldestTimeWithData, bgTime)
                     aapsLogger.debug(LTag.AUTOSENS, "Sensitivity result: $sensitivity")

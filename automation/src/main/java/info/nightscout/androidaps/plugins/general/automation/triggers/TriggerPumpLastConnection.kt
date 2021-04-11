@@ -10,7 +10,6 @@ import info.nightscout.androidaps.plugins.general.automation.elements.InputDurat
 import info.nightscout.androidaps.plugins.general.automation.elements.LabelWithElement
 import info.nightscout.androidaps.plugins.general.automation.elements.LayoutBuilder
 import info.nightscout.androidaps.plugins.general.automation.elements.StaticLabel
-import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.JsonHelper.safeGetInt
 import info.nightscout.androidaps.utils.JsonHelper.safeGetString
 import org.json.JSONObject
@@ -47,7 +46,7 @@ class TriggerPumpLastConnection(injector: HasAndroidInjector) : Trigger(injector
             aapsLogger.debug(LTag.AUTOMATION, "Ready for execution: " + friendlyDescription())
             return true
         }
-        val connectionAgo = (dateUtil._now() - lastConnection) / (60 * 1000)
+        val connectionAgo = (dateUtil.now() - lastConnection) / (60 * 1000)
         aapsLogger.debug(LTag.AUTOMATION, "Last connection min ago: $connectionAgo")
         if (comparator.value.check(connectionAgo.toInt(), minutesAgo.value)) {
             aapsLogger.debug(LTag.AUTOMATION, "Ready for execution: " + friendlyDescription())

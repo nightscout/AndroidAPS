@@ -12,7 +12,7 @@ import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 import java.util.*
 
-class InputDateTime(private val resourceHelper: ResourceHelper, private val dateUtil: DateUtil, var value: Long = dateUtil._now()) : Element() {
+class InputDateTime(private val resourceHelper: ResourceHelper, private val dateUtil: DateUtil, var value: Long = dateUtil.now()) : Element() {
 
     override fun addToLayout(root: LinearLayout) {
         val label = TextView(root.context)

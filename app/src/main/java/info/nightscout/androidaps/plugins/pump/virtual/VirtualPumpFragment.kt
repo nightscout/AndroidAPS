@@ -95,9 +95,9 @@ class VirtualPumpFragment : DaggerFragment() {
         if (_binding == null) return
         val profile = profileFunction.getProfile() ?: return
         binding.basabasalrate.text = resourceHelper.gs(R.string.pump_basebasalrate, virtualPumpPlugin.baseBasalRate)
-        binding.tempbasal.text = iobCobCalculator.getTempBasal(dateUtil._now())?.toStringFull(profile, dateUtil)
+        binding.tempbasal.text = iobCobCalculator.getTempBasal(dateUtil.now())?.toStringFull(profile, dateUtil)
             ?: ""
-        binding.extendedbolus.text = iobCobCalculator.getExtendedBolus(dateUtil._now())?.toStringFull(dateUtil)
+        binding.extendedbolus.text = iobCobCalculator.getExtendedBolus(dateUtil.now())?.toStringFull(dateUtil)
             ?: ""
         binding.battery.text = resourceHelper.gs(R.string.format_percent, virtualPumpPlugin.batteryPercent)
         binding.reservoir.text = resourceHelper.gs(R.string.formatinsulinunits, virtualPumpPlugin.reservoirInUnits.toDouble())

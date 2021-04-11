@@ -45,19 +45,19 @@ fun TemporaryBasal.toStringFull(profile: Profile, dateUtil: DateUtil): String {
         type == TemporaryBasal.Type.FAKE_EXTENDED -> {
             to2Decimal(rate) + "U/h (" + to2Decimal(netExtendedRate(profile)) + "E) @" +
                 dateUtil.timeString(timestamp) +
-                " " + getPassedDurationToTimeInMinutes(dateUtil._now()) + "/" + durationInMinutes + "'"
+                " " + getPassedDurationToTimeInMinutes(dateUtil.now()) + "/" + durationInMinutes + "'"
         }
 
         isAbsolute                                -> {
             to2Decimal(rate) + "U/h @" +
                 dateUtil.timeString(timestamp) +
-                " " + getPassedDurationToTimeInMinutes(dateUtil._now()) + "/" + durationInMinutes + "'"
+                " " + getPassedDurationToTimeInMinutes(dateUtil.now()) + "/" + durationInMinutes + "'"
         }
 
         else                                      -> { // percent
             rate.toString() + "% @" +
                 dateUtil.timeString(timestamp) +
-                " " + getPassedDurationToTimeInMinutes(dateUtil._now()) + "/" + durationInMinutes + "'"
+                " " + getPassedDurationToTimeInMinutes(dateUtil.now()) + "/" + durationInMinutes + "'"
         }
     }
 }

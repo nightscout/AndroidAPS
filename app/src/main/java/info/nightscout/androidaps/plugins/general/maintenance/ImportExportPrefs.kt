@@ -41,7 +41,6 @@ import io.reactivex.Single
 import java.io.File
 import java.io.FileNotFoundException
 import java.io.IOException
-import java.util.*
 import javax.inject.Inject
 import javax.inject.Singleton
 import kotlin.system.exitProcess
@@ -96,7 +95,7 @@ class ImportExportPrefs @Inject constructor(
         val metadata: MutableMap<PrefsMetadataKey, PrefMetadata> = mutableMapOf()
 
         metadata[PrefsMetadataKey.DEVICE_NAME] = PrefMetadata(detectUserName(context), PrefsStatus.OK)
-        metadata[PrefsMetadataKey.CREATED_AT] = PrefMetadata(dateUtil.toISOString(dateUtil._now()), PrefsStatus.OK)
+        metadata[PrefsMetadataKey.CREATED_AT] = PrefMetadata(dateUtil.toISOString(dateUtil.now()), PrefsStatus.OK)
         metadata[PrefsMetadataKey.AAPS_VERSION] = PrefMetadata(BuildConfig.VERSION_NAME, PrefsStatus.OK)
         metadata[PrefsMetadataKey.AAPS_FLAVOUR] = PrefMetadata(BuildConfig.FLAVOR, PrefsStatus.OK)
         metadata[PrefsMetadataKey.DEVICE_MODEL] = PrefMetadata(config.currentDeviceModelString, PrefsStatus.OK)

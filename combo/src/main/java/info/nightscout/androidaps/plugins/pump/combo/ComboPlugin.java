@@ -969,7 +969,7 @@ public class ComboPlugin extends PumpPluginBase implements PumpInterface, Constr
                 // so update the var with it, so the check routines below can work on it
                 preCheckResult = alertConfirmationResult;
             } else if (activeAlert.errorCode != null) {
-                Notification notification = new Notification(Notification.COMBO_PUMP_ALARM, dateUtil._now(), getResourceHelper().gs(R.string.combo_is_in_error_state, activeAlert.errorCode, activeAlert.message), Notification.URGENT, 0);
+                Notification notification = new Notification(Notification.COMBO_PUMP_ALARM, dateUtil.now(), getResourceHelper().gs(R.string.combo_is_in_error_state, activeAlert.errorCode, activeAlert.message), Notification.URGENT, 0);
                 rxBus.send(new EventNewNotification(notification));
                 return preCheckResult.success(false);
             }
@@ -1067,7 +1067,7 @@ public class ComboPlugin extends PumpPluginBase implements PumpInterface, Constr
             throw new IllegalArgumentException(activeAlert.toString());
         }
         Notification notification = new Notification();
-        notification.setDate(dateUtil._now());
+        notification.setDate(dateUtil.now());
         notification.setId(Notification.COMBO_PUMP_ALARM);
         notification.setLevel(Notification.NORMAL);
         if (activeAlert.warningCode == PumpWarningCodes.CARTRIDGE_LOW) {

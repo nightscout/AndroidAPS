@@ -23,7 +23,7 @@ class TriggerProfilePercentTest : TriggerTestBase() {
 
     @Before fun mock() {
         `when`(profileFunction.getProfile()).thenReturn(validProfile)
-        PowerMockito.`when`(dateUtil._now()).thenReturn(now)
+        PowerMockito.`when`(dateUtil.now()).thenReturn(now)
     }
 
     @Test fun shouldRunTest() {

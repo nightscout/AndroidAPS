@@ -164,7 +164,7 @@ class ActionsFragment : DaggerFragment() {
             }
         }
         extendedBolusCancel?.setOnClickListener {
-            if (iobCobCalculator.getExtendedBolus(dateUtil._now()) != null) {
+            if (iobCobCalculator.getExtendedBolus(dateUtil.now()) != null) {
                 uel.log(Action.CANCEL_EXTENDED_BOLUS, Sources.Actions)
                 commandQueue.cancelExtended(object : Callback() {
                     override fun run() {
@@ -179,7 +179,7 @@ class ActionsFragment : DaggerFragment() {
             TempBasalDialog().show(childFragmentManager, "Actions")
         }
         cancelTempBasal?.setOnClickListener {
-            if (iobCobCalculator.getTempBasalIncludingConvertedExtended(dateUtil._now()) != null) {
+            if (iobCobCalculator.getTempBasalIncludingConvertedExtended(dateUtil.now()) != null) {
                 uel.log(Action.CANCEL_TEMP_BASAL, Sources.Actions)
                 commandQueue.cancelTempBasal(true, object : Callback() {
                     override fun run() {
@@ -274,7 +274,7 @@ class ActionsFragment : DaggerFragment() {
             extendedBolus?.visibility = View.GONE
             extendedBolusCancel?.visibility = View.GONE
         } else {
-            val activeExtendedBolus = repository.getExtendedBolusActiveAt(dateUtil._now()).blockingGet()
+            val activeExtendedBolus = repository.getExtendedBolusActiveAt(dateUtil.now()).blockingGet()
             if (activeExtendedBolus is ValueWrapper.Existing) {
                 extendedBolus?.visibility = View.GONE
                 extendedBolusCancel?.visibility = View.VISIBLE

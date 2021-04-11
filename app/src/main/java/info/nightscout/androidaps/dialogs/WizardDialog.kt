@@ -210,7 +210,7 @@ class WizardDialog : DaggerDialogFragment() {
 
     private fun onCheckedChanged(buttonView: CompoundButton, @Suppress("UNUSED_PARAMETER") state: Boolean) {
         saveCheckedStates()
-        binding.ttcheckbox.isEnabled = binding.bgcheckbox.isChecked && repository.getTemporaryTargetActiveAt(dateUtil._now()).blockingGet() is ValueWrapper.Existing
+        binding.ttcheckbox.isEnabled = binding.bgcheckbox.isChecked && repository.getTemporaryTargetActiveAt(dateUtil.now()).blockingGet() is ValueWrapper.Existing
         if (buttonView.id == binding.cobcheckbox.id)
             processCobCheckBox()
         calculateInsulin()
@@ -268,7 +268,7 @@ class WizardDialog : DaggerDialogFragment() {
 
         // Set BG if not old
         binding.bgInput.value = iobCobCalculator.actualBg()?.valueToUnits(units) ?: 0.0
-        binding.ttcheckbox.isEnabled = repository.getTemporaryTargetActiveAt(dateUtil._now()).blockingGet() is ValueWrapper.Existing
+        binding.ttcheckbox.isEnabled = repository.getTemporaryTargetActiveAt(dateUtil.now()).blockingGet() is ValueWrapper.Existing
 
         // IOB calculation
         val bolusIob = iobCobCalculator.calculateIobFromBolus().round()
@@ -308,7 +308,7 @@ class WizardDialog : DaggerDialogFragment() {
         }
 
         bg = if (binding.bgcheckbox.isChecked) bg else 0.0
-        val dbRecord = repository.getTemporaryTargetActiveAt(dateUtil._now()).blockingGet()
+        val dbRecord = repository.getTemporaryTargetActiveAt(dateUtil.now()).blockingGet()
         val tempTarget = if (binding.ttcheckbox.isChecked && dbRecord is ValueWrapper.Existing) dbRecord.value else null
 
         // COB

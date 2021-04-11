@@ -23,7 +23,6 @@ import org.joda.time.Duration;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -726,7 +725,7 @@ public class OmnipodErosPumpPlugin extends PumpPluginBase implements PumpInterfa
         JSONObject extended = new JSONObject();
         try {
             status.put("status", podStateManager.isPodRunning() ? (podStateManager.isSuspended() ? "suspended" : "normal") : "no active Pod");
-            status.put("timestamp", dateUtil.toISOString(dateUtil._now()));
+            status.put("timestamp", dateUtil.toISOString(dateUtil.now()));
 
             battery.put("percent", getBatteryLevel());
 
@@ -749,7 +748,7 @@ public class OmnipodErosPumpPlugin extends PumpPluginBase implements PumpInterfa
                 extended.put("ExtendedBolusRemaining", getPlannedRemainingMinutes(eb));
             }
 
-            status.put("timestamp", dateUtil.toISOString(dateUtil._now()));
+            status.put("timestamp", dateUtil.toISOString(dateUtil.now()));
 
             if (isUseRileyLinkBatteryLevel()) {
                 pump.put("battery", battery);

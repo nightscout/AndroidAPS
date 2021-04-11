@@ -3,7 +3,6 @@ package info.nightscout.androidaps.danars.comm
 import dagger.android.AndroidInjector
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.danars.DanaRSTestBase
-import info.nightscout.androidaps.utils.DateUtil
 import org.junit.Assert
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -25,7 +24,7 @@ class DanaRsPacketApsSetEventHistoryTest : DanaRSTestBase() {
     }
 
     @Test fun runTest() { // test for negative carbs
-        val now = dateUtil._now()
+        val now = dateUtil.now()
         var historyTest = DanaRS_Packet_APS_Set_Event_History(packetInjector, info.nightscout.androidaps.dana.DanaPump.CARBS, now, -1, 0)
         var testParams = historyTest.requestParams
         Assert.assertEquals(0.toByte(), testParams[8])

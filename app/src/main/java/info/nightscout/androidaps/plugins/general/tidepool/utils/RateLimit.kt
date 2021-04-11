@@ -21,13 +21,13 @@ class RateLimit @Inject constructor(
     fun rateLimit(name: String, seconds: Int): Boolean {
         // check if over limit
         rateLimits[name]?.let {
-            if (dateUtil._now() - it < T.secs(seconds.toLong()).msecs()) {
+            if (dateUtil.now() - it < T.secs(seconds.toLong()).msecs()) {
                 aapsLogger.debug(LTag.TIDEPOOL, "$name rate limited: $seconds seconds")
                 return false
             }
         }
         // not over limit
-        rateLimits[name] = dateUtil._now()
+        rateLimits[name] = dateUtil.now()
         return true
     }
 }

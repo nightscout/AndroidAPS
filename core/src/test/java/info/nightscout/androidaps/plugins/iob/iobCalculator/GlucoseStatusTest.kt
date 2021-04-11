@@ -104,7 +104,7 @@ class GlucoseStatusTest : TestBase() {
 
     @Before
     fun initMocking() {
-        PowerMockito.`when`(dateUtil._now()).thenReturn(1514766900000L + T.mins(1).msecs())
+        PowerMockito.`when`(dateUtil.now()).thenReturn(1514766900000L + T.mins(1).msecs())
         `when`(iobCobCalculatorPlugin.dataLock).thenReturn(Any())
     }
 

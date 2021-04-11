@@ -24,7 +24,7 @@ class TriggerWifiSsidTest : TriggerTestBase() {
 
     @Before fun mock() {
         PowerMockito.mockStatic(NetworkChangeReceiver::class.java)
-        PowerMockito.`when`(dateUtil._now()).thenReturn(now)
+        PowerMockito.`when`(dateUtil.now()).thenReturn(now)
     }
 
     @Test fun shouldRunTest() {

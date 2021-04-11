@@ -22,7 +22,7 @@ class TriggerCOBTest : TriggerTestBase() {
     var now = 1514766900000L
 
     @Before fun mock() {
-        PowerMockito.`when`(dateUtil._now()).thenReturn(now)
+        PowerMockito.`when`(dateUtil.now()).thenReturn(now)
         PowerMockito.`when`(sp.getInt(ArgumentMatchers.anyInt(), ArgumentMatchers.anyInt())).thenReturn(48)
     }
 

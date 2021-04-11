@@ -3,7 +3,6 @@ package info.nightscout.androidaps.plugins.general.automation.triggers
 import com.google.common.base.Optional
 import info.nightscout.androidaps.automation.R
 import info.nightscout.androidaps.data.IobTotal
-import info.nightscout.androidaps.data.Profile
 import info.nightscout.androidaps.plugins.general.automation.elements.Comparator
 import info.nightscout.androidaps.utils.DateUtil
 import org.json.JSONObject
@@ -13,7 +12,6 @@ import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.ArgumentMatchers
 import org.mockito.Mockito.`when`
-import org.powermock.api.mockito.PowerMockito
 import org.powermock.core.classloader.annotations.PrepareForTest
 import org.powermock.modules.junit4.PowerMockRunner
 
@@ -24,7 +22,7 @@ class TriggerIobTest : TriggerTestBase() {
     var now = 1514766900000L
 
     @Before fun mock() {
-        `when`(dateUtil._now()).thenReturn(now)
+        `when`(dateUtil.now()).thenReturn(now)
         `when`(profileFunction.getProfile()).thenReturn(validProfile)
     }
 

@@ -21,7 +21,7 @@ class IobTotalTest {
     @Before
     fun prepare() {
         dateUtil = DateUtil(context)
-        now = dateUtil._now()
+        now = dateUtil.now()
     }
 
     @Test fun copyTest() {

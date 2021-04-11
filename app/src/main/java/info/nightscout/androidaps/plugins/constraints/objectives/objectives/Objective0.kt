@@ -64,7 +64,7 @@ class Objective0(injector: HasAndroidInjector) : Objective(injector, "config", R
         })
         tasks.add(object : Task(this, R.string.activate_profile) {
             override fun isCompleted(): Boolean {
-                return treatmentsPlugin.getProfileSwitchFromHistory(dateUtil._now()) != null
+                return treatmentsPlugin.getProfileSwitchFromHistory(dateUtil.now()) != null
             }
         })
     }

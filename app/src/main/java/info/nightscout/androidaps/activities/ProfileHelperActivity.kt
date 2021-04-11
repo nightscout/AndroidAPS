@@ -114,7 +114,7 @@ class ProfileHelperActivity : NoSplashAppCompatActivity() {
         }
 
         // Profile switch
-        profileSwitch = databaseHelper.getProfileSwitchData(dateUtil._now() - T.months(2).msecs(), true)
+        profileSwitch = databaseHelper.getProfileSwitchData(dateUtil.now() - T.months(2).msecs(), true)
 
         binding.profileswitchList.setOnClickListener {
             PopupMenu(this, binding.profileswitchList).apply {
@@ -141,7 +141,7 @@ class ProfileHelperActivity : NoSplashAppCompatActivity() {
             profile?.let {
                 OKDialog.showConfirmation(this, resourceHelper.gs(R.string.careportal_profileswitch), resourceHelper.gs(R.string.copytolocalprofile), Runnable {
                     localProfilePlugin.addProfile(localProfilePlugin.copyFrom(it, "DefaultProfile " +
-                        dateUtil.dateAndTimeAndSecondsString(dateUtil._now())
+                        dateUtil.dateAndTimeAndSecondsString(dateUtil.now())
                             .replace(".", "/")
                     ))
                     rxBus.send(EventLocalProfileChanged())
@@ -210,7 +210,7 @@ class ProfileHelperActivity : NoSplashAppCompatActivity() {
                 getProfile(ageUsed[1], tddUsed[1], weightUsed[1], pctUsed[1] / 100.0, 1)?.let { profile1 ->
                     ProfileViewerDialog().also { pvd ->
                         pvd.arguments = Bundle().also {
-                            it.putLong("time", dateUtil._now())
+                            it.putLong("time", dateUtil.now())
                             it.putInt("mode", ProfileViewerDialog.Mode.PROFILE_COMPARE.ordinal)
                             it.putString("customProfile", profile0.data.toString())
                             it.putString("customProfile2", profile1.data.toString())

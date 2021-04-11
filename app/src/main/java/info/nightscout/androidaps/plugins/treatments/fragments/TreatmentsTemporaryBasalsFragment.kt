@@ -171,7 +171,7 @@ class TreatmentsTemporaryBasalsFragment : DaggerFragment() {
             holder.binding.duration.text = resourceHelper.gs(R.string.format_mins, T.msecs(tempBasal.duration).mins())
             if (tempBasal.isAbsolute) holder.binding.rate.text = resourceHelper.gs(R.string.pump_basebasalrate, tempBasal.rate)
             else holder.binding.rate.text = resourceHelper.gs(R.string.format_percent, tempBasal.rate.toInt())
-            val now = dateUtil._now()
+            val now = dateUtil.now()
             var iob = IobTotal(now)
             val profile = profileFunction.getProfile(now)
             if (profile != null) iob = tempBasal.iobCalc(now, profile, activePlugin.activeInsulin)
@@ -194,7 +194,7 @@ class TreatmentsTemporaryBasalsFragment : DaggerFragment() {
             init {
                 binding.remove.setOnClickListener { v: View ->
                     val tempBasal = v.tag as TemporaryBasal
-                    val profile = profileFunction.getProfile(dateUtil._now())
+                    val profile = profileFunction.getProfile(dateUtil.now())
                         ?: return@setOnClickListener
                     context?.let {
                         OKDialog.showConfirmation(it, resourceHelper.gs(R.string.removerecord),

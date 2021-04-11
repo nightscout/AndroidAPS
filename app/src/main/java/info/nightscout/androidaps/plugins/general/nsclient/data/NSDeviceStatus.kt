@@ -164,12 +164,12 @@ class NSDeviceStatus @Inject constructor(
 
             // test warning level
             val level = when {
-                pumpData.clock + nsSettingsStatus.extendedPumpSettings("urgentClock") * 60 * 1000L < dateUtil._now() -> Levels.URGENT
-                pumpData.reservoir < nsSettingsStatus.extendedPumpSettings("urgentRes")                              -> Levels.URGENT
+                pumpData.clock + nsSettingsStatus.extendedPumpSettings("urgentClock") * 60 * 1000L < dateUtil.now() -> Levels.URGENT
+                pumpData.reservoir < nsSettingsStatus.extendedPumpSettings("urgentRes")                             -> Levels.URGENT
                 pumpData.isPercent && pumpData.percent < nsSettingsStatus.extendedPumpSettings("urgentBattP")        -> Levels.URGENT
-                !pumpData.isPercent && pumpData.voltage < nsSettingsStatus.extendedPumpSettings("urgentBattV")       -> Levels.URGENT
-                pumpData.clock + nsSettingsStatus.extendedPumpSettings("warnClock") * 60 * 1000L < dateUtil._now()   -> Levels.WARN
-                pumpData.reservoir < nsSettingsStatus.extendedPumpSettings("warnRes")                                -> Levels.WARN
+                !pumpData.isPercent && pumpData.voltage < nsSettingsStatus.extendedPumpSettings("urgentBattV")      -> Levels.URGENT
+                pumpData.clock + nsSettingsStatus.extendedPumpSettings("warnClock") * 60 * 1000L < dateUtil.now()   -> Levels.WARN
+                pumpData.reservoir < nsSettingsStatus.extendedPumpSettings("warnRes")                               -> Levels.WARN
                 pumpData.isPercent && pumpData.percent < nsSettingsStatus.extendedPumpSettings("warnBattP")          -> Levels.WARN
                 !pumpData.isPercent && pumpData.voltage < nsSettingsStatus.extendedPumpSettings("warnBattV")         -> Levels.WARN
                 else                                                                                                 -> Levels.INFO
@@ -273,9 +273,9 @@ class NSDeviceStatus @Inject constructor(
 
             // test warning level
             val level = when {
-                deviceStatusOpenAPSData.clockSuggested + T.mins(sp.getLong(R.string.key_nsalarm_urgent_staledatavalue, 31)).msecs() < dateUtil._now() -> Levels.URGENT
-                deviceStatusOpenAPSData.clockSuggested + T.mins(sp.getLong(R.string.key_nsalarm_staledatavalue, 16)).msecs() < dateUtil._now()        -> Levels.WARN
-                else                                                                                                                                  -> Levels.INFO
+                deviceStatusOpenAPSData.clockSuggested + T.mins(sp.getLong(R.string.key_nsalarm_urgent_staledatavalue, 31)).msecs() < dateUtil.now() -> Levels.URGENT
+                deviceStatusOpenAPSData.clockSuggested + T.mins(sp.getLong(R.string.key_nsalarm_staledatavalue, 16)).msecs() < dateUtil.now()        -> Levels.WARN
+                else                                                                                                                                 -> Levels.INFO
             }
             string.append("<span style=\"color:${level.toColor()}\">")
             if (deviceStatusOpenAPSData.clockSuggested != 0L) string.append(dateUtil.minAgo(resourceHelper, deviceStatusOpenAPSData.clockSuggested)).append(" ")

@@ -71,7 +71,7 @@ class NSClientAddUpdateWorker(
 
             //Find latest date in treatment
             val mills = safeGetLong(json, "mills")
-            if (mills != 0L && mills < dateutil._now())
+            if (mills != 0L && mills < dateutil.now())
                 if (mills > latestDateInReceivedData) latestDateInReceivedData = mills
 
             if (insulin > 0) {

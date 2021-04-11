@@ -18,7 +18,6 @@ import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.T
 import info.nightscout.androidaps.utils.XDripBroadcast
 import info.nightscout.androidaps.utils.buildHelper.BuildHelper
-import info.nightscout.androidaps.utils.extensions.isRunningTest
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 import info.nightscout.androidaps.utils.sharedPreferences.SP
 import io.reactivex.disposables.CompositeDisposable
@@ -103,7 +102,7 @@ class RandomBgPlugin @Inject constructor(
 
         val glucoseValues = mutableListOf<CgmSourceTransaction.TransactionGlucoseValue>()
         glucoseValues += CgmSourceTransaction.TransactionGlucoseValue(
-            timestamp = dateUtil._now(),
+            timestamp = dateUtil.now(),
             value = bgMgdl,
             raw = 0.0,
             noise = null,

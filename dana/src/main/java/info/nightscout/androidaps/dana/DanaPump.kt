@@ -132,7 +132,7 @@ class DanaPump @Inject constructor(
         }
         get() = T.msecs(tempBasalDuration).mins()
     var isTempBasalInProgress: Boolean
-        get() = tempBasalStart != 0L && dateUtil._now() in tempBasalStart..tempBasalStart + tempBasalDuration
+        get() = tempBasalStart != 0L && dateUtil.now() in tempBasalStart..tempBasalStart + tempBasalDuration
         set(isRunning) {
             if (isRunning) throw IllegalArgumentException("Use to cancel TBR only")
             else {
@@ -142,12 +142,12 @@ class DanaPump @Inject constructor(
             }
         }
     val tempBasalRemainingMin: Int
-        get() = max(T.msecs(tempBasalStart + tempBasalDuration - dateUtil._now()).mins().toInt(), 0)
+        get() = max(T.msecs(tempBasalStart + tempBasalDuration - dateUtil.now()).mins().toInt(), 0)
 
     fun temporaryBasalToString(): String {
         if (!isTempBasalInProgress) return ""
 
-        val passedMin = ((min(dateUtil._now(), tempBasalStart + tempBasalDuration) - tempBasalStart) / 60.0 / 1000).roundToInt()
+        val passedMin = ((min(dateUtil.now(), tempBasalStart + tempBasalDuration) - tempBasalStart) / 60.0 / 1000).roundToInt()
         return tempBasalPercent.toString() + "% @" +
             dateUtil.timeString(tempBasalStart) +
             " " + passedMin + "/" + T.msecs(tempBasalDuration).mins() + "'"
@@ -174,7 +174,7 @@ class DanaPump @Inject constructor(
     var extendedBolusAmount = 0.0
 
     var isExtendedInProgress: Boolean
-        get() = extendedBolusStart != 0L && dateUtil._now() in extendedBolusStart..extendedBolusStart + extendedBolusDuration
+        get() = extendedBolusStart != 0L && dateUtil.now() in extendedBolusStart..extendedBolusStart + extendedBolusDuration
         set(isRunning) {
             if (isRunning) throw IllegalArgumentException("Use to cancel EB only")
             else {
@@ -184,9 +184,9 @@ class DanaPump @Inject constructor(
             }
         }
     val extendedBolusPassedMinutes: Int
-        get() = T.msecs(max(0, dateUtil._now() - extendedBolusStart)).mins().toInt()
+        get() = T.msecs(max(0, dateUtil.now() - extendedBolusStart)).mins().toInt()
     val extendedBolusRemainingMinutes: Int
-        get() = max(T.msecs(extendedBolusStart + extendedBolusDuration - dateUtil._now()).mins().toInt(), 0)
+        get() = max(T.msecs(extendedBolusStart + extendedBolusDuration - dateUtil.now()).mins().toInt(), 0)
     private val extendedBolusDurationInMinutes: Int
         get() = T.msecs(extendedBolusDuration).mins().toInt()
     var extendedBolusAbsoluteRate: Double

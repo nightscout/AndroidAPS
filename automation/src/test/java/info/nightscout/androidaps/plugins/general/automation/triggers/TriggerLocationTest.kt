@@ -25,7 +25,7 @@ class TriggerLocationTest : TriggerTestBase() {
 
     @Before fun mock() {
         PowerMockito.mockStatic(LocationService::class.java)
-        `when`(dateUtil._now()).thenReturn(now)
+        `when`(dateUtil.now()).thenReturn(now)
         PowerMockito.spy(LocationService::class.java)
         `when`(locationDataContainer.lastLocation).thenReturn(mockedLocation())
     }

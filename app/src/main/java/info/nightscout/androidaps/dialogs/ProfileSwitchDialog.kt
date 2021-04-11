@@ -16,7 +16,6 @@ import info.nightscout.androidaps.interfaces.ActivePluginProvider
 import info.nightscout.androidaps.interfaces.ProfileFunction
 import info.nightscout.androidaps.logging.UserEntryLogger
 import info.nightscout.androidaps.plugins.treatments.TreatmentsPlugin
-import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.HtmlHelper
 import info.nightscout.androidaps.utils.alertDialogs.OKDialog
 import info.nightscout.androidaps.utils.resources.ResourceHelper
@@ -83,7 +82,7 @@ class ProfileSwitchDialog : DialogFragmentWithDate() {
                         binding.profile.setSelection(p)
         } ?: return
 
-        treatmentsPlugin.getProfileSwitchFromHistory(dateUtil._now())?.let { ps ->
+        treatmentsPlugin.getProfileSwitchFromHistory(dateUtil.now())?.let { ps ->
             if (ps.isCPP) {
                 binding.reuselayout.visibility = View.VISIBLE
                 binding.reusebutton.text = resourceHelper.gs(R.string.reuse_profile_pct_hours, ps.percentage, ps.timeshift)

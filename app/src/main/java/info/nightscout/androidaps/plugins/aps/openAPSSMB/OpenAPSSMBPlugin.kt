@@ -122,7 +122,7 @@ open class OpenAPSSMBPlugin @Inject constructor(
         var maxBg = hardLimits.verifyHardLimits(Round.roundTo(profile.targetHighMgdl, 0.1), R.string.profile_high_target, HardLimits.VERY_HARD_LIMIT_MAX_BG[0].toDouble(), HardLimits.VERY_HARD_LIMIT_MAX_BG[1].toDouble())
         var targetBg = hardLimits.verifyHardLimits(profile.targetMgdl, R.string.temp_target_value, HardLimits.VERY_HARD_LIMIT_TARGET_BG[0].toDouble(), HardLimits.VERY_HARD_LIMIT_TARGET_BG[1].toDouble())
         var isTempTarget = false
-        val tempTarget = repository.getTemporaryTargetActiveAt(dateUtil._now()).blockingGet()
+        val tempTarget = repository.getTemporaryTargetActiveAt(dateUtil.now()).blockingGet()
         if (tempTarget is ValueWrapper.Existing) {
             isTempTarget = true
             minBg = hardLimits.verifyHardLimits(tempTarget.value.lowTarget, R.string.temp_target_low_target, HardLimits.VERY_HARD_LIMIT_TEMP_MIN_BG[0].toDouble(), HardLimits.VERY_HARD_LIMIT_TEMP_MIN_BG[1].toDouble())
@@ -187,7 +187,7 @@ open class OpenAPSSMBPlugin @Inject constructor(
             } else {
                 // TODO still needed with oref1?
                 // Fix bug determine basal
-                if (determineBasalResultSMB.rate == 0.0 && determineBasalResultSMB.duration == 0 && iobCobCalculator.getTempBasalIncludingConvertedExtended(dateUtil._now()) == null) determineBasalResultSMB.tempBasalRequested = false
+                if (determineBasalResultSMB.rate == 0.0 && determineBasalResultSMB.duration == 0 && iobCobCalculator.getTempBasalIncludingConvertedExtended(dateUtil.now()) == null) determineBasalResultSMB.tempBasalRequested = false
                 determineBasalResultSMB.iob = iobArray[0]
                 determineBasalResultSMB.json?.put("timestamp", dateUtil.toISOString(now))
                 determineBasalResultSMB.inputConstraints = inputConstraints

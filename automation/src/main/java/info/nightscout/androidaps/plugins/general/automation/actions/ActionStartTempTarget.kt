@@ -106,7 +106,7 @@ class ActionStartTempTarget(injector: HasAndroidInjector) : Action(injector) {
     }
 
     fun tt() = TemporaryTarget(
-        timestamp = dateUtil._now(),
+        timestamp = dateUtil.now(),
         duration = TimeUnit.MINUTES.toMillis(duration.getMinutes().toLong()),
         reason = TemporaryTarget.Reason.AUTOMATION,
         lowTarget = Profile.toMgdl(value.value, value.units),

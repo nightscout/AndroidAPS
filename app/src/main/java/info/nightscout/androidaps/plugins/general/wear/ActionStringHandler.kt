@@ -220,7 +220,7 @@ class ActionStringHandler @Inject constructor(
             }
             val format = DecimalFormat("0.00")
             val formatInt = DecimalFormat("0")
-            val dbRecord = repository.getTemporaryTargetActiveAt(dateUtil._now()).blockingGet()
+            val dbRecord = repository.getTemporaryTargetActiveAt(dateUtil.now()).blockingGet()
             val tempTarget = if (dbRecord is ValueWrapper.Existing) dbRecord.value else null
 
             val bolusWizard = BolusWizard(injector).doCalc(profile, profileName, tempTarget,
@@ -457,7 +457,7 @@ class ActionStringHandler @Inject constructor(
             }
             val profile = profileFunction.getProfile() ?: return "No profile set :("
             //Check for Temp-Target:
-            val tempTarget = repository.getTemporaryTargetActiveAt(dateUtil._now()).blockingGet()
+            val tempTarget = repository.getTemporaryTargetActiveAt(dateUtil.now()).blockingGet()
             if (tempTarget is ValueWrapper.Existing) {
                 ret += "Temp Target: " + Profile.toTargetRangeString(tempTarget.value.lowTarget, tempTarget.value.lowTarget, Constants.MGDL, profileFunction.getUnits())
                 ret += "\nuntil: " + dateUtil.timeString(tempTarget.value.end)

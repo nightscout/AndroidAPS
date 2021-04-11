@@ -309,7 +309,7 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
                 R.id.active_profile -> {
                     ProfileViewerDialog().also { pvd ->
                         pvd.arguments = Bundle().also {
-                            it.putLong("time", dateUtil._now())
+                            it.putLong("time", dateUtil.now())
                             it.putInt("mode", ProfileViewerDialog.Mode.RUNNING_PROFILE.ordinal)
                         }
                     }.show(childFragmentManager, "ProfileViewDialog")
@@ -549,7 +549,7 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
         if (_binding == null) return
         aapsLogger.debug("UpdateGUI from $from")
 
-        binding.infoLayout.time.text = dateUtil.timeString(dateUtil._now())
+        binding.infoLayout.time.text = dateUtil.timeString(dateUtil.now())
 
         if (!profileFunction.isProfileValid("Overview")) {
             binding.loopPumpStatusLayout.pumpStatus.setText(R.string.noprofileset)
@@ -680,7 +680,7 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
         }
 
         // temp target
-        val tempTarget: ValueWrapper<TemporaryTarget> = repository.getTemporaryTargetActiveAt(dateUtil._now()).blockingGet()
+        val tempTarget: ValueWrapper<TemporaryTarget> = repository.getTemporaryTargetActiveAt(dateUtil.now()).blockingGet()
         if (tempTarget is ValueWrapper.Existing) {
             binding.loopPumpStatusLayout.tempTarget.setTextColor(resourceHelper.gc(R.color.ribbonTextWarning))
             binding.loopPumpStatusLayout.tempTarget.setBackgroundColor(resourceHelper.gc(R.color.ribbonWarning))
@@ -723,7 +723,7 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
         if (percentRate < 100) binding.infoLayout.baseBasalIcon.setImageResource(R.drawable.ic_cp_basal_tbr_low)
 
         // Extended bolus
-        val extendedBolus = repository.getExtendedBolusActiveAt(dateUtil._now()).blockingGet()
+        val extendedBolus = repository.getExtendedBolusActiveAt(dateUtil.now()).blockingGet()
         binding.infoLayout.extendedBolus.text =
             if (extendedBolus is ValueWrapper.Existing && !pump.isFakingTempsByExtendedBoluses)
                 resourceHelper.gs(R.string.pump_basebasalrate, extendedBolus.value.rate)

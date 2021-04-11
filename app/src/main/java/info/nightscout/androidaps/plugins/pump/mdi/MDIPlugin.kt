@@ -79,7 +79,7 @@ class MDIPlugin @Inject constructor(
                 timestamp = detailedBolusInfo.timestamp,
                 amount = detailedBolusInfo.insulin,
                 type = detailedBolusInfo.bolusType,
-                pumpId = dateUtil._now(),
+                pumpId = dateUtil.now(),
                 pumpType = PumpType.MDI,
                 pumpSerial = serialNumber())
         if (detailedBolusInfo.carbs > 0)

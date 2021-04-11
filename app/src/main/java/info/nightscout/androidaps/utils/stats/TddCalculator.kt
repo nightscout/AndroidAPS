@@ -30,8 +30,8 @@ class TddCalculator @Inject constructor(
 ) {
 
     fun calculate(days: Long): LongSparseArray<TDD> {
-        val startTime = MidnightTime.calc(dateUtil._now() - T.days(days).msecs())
-        val endTime = MidnightTime.calc(dateUtil._now())
+        val startTime = MidnightTime.calc(dateUtil.now() - T.days(days).msecs())
+        val endTime = MidnightTime.calc(dateUtil.now())
 
         val result = LongSparseArray<TDD>()
         repository.getBolusesDataFromTimeToTime(startTime, endTime, true).blockingGet()

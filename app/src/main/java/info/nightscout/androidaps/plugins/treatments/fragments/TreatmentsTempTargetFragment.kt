@@ -153,7 +153,7 @@ class TreatmentsTempTargetFragment : DaggerFragment() {
 
     private inner class RecyclerViewAdapter internal constructor(private var tempTargetList: List<TemporaryTarget>) : RecyclerView.Adapter<TempTargetsViewHolder>() {
 
-        private val dbRecord = repository.getTemporaryTargetActiveAt(dateUtil._now()).blockingGet()
+        private val dbRecord = repository.getTemporaryTargetActiveAt(dateUtil.now()).blockingGet()
         private val currentlyActiveTarget = if (dbRecord is ValueWrapper.Existing) dbRecord.value else null
 
         override fun onCreateViewHolder(viewGroup: ViewGroup, viewType: Int): TempTargetsViewHolder =
@@ -174,7 +174,7 @@ class TreatmentsTempTargetFragment : DaggerFragment() {
             holder.binding.date.setTextColor(
                 when {
                     tempTarget.id == currentlyActiveTarget?.id -> resourceHelper.gc(R.color.colorActive)
-                    tempTarget.timestamp > dateUtil._now()      -> resourceHelper.gc(R.color.colorScheduled)
+                    tempTarget.timestamp > dateUtil.now()      -> resourceHelper.gc(R.color.colorScheduled)
                     else                                       -> holder.binding.reasonColon.currentTextColor
                 })
             holder.binding.remove.tag = tempTarget

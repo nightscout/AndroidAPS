@@ -29,7 +29,7 @@ class AuthRequest internal constructor(
 
     init {
         injector.androidInjector().inject(this)
-        date = dateUtil._now()
+        date = dateUtil.now()
         smsCommunicatorPlugin.sendSMS(Sms(requester.phoneNumber, requestText))
     }
 
@@ -47,7 +47,7 @@ class AuthRequest internal constructor(
             smsCommunicatorPlugin.sendSMS(Sms(requester.phoneNumber, resourceHelper.gs(R.string.sms_wrongcode)))
             return
         }
-        if (dateUtil._now() - date < Constants.SMS_CONFIRM_TIMEOUT) {
+        if (dateUtil.now() - date < Constants.SMS_CONFIRM_TIMEOUT) {
             processed = true
             aapsLogger.debug(LTag.SMS, "Processing confirmed SMS: " + requester.text)
             action.run()

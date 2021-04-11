@@ -18,7 +18,6 @@ import info.nightscout.androidaps.extensions.valueToUnits
 import info.nightscout.androidaps.utils.sharedPreferences.SP
 import org.json.JSONException
 import org.json.JSONObject
-import java.util.*
 import javax.inject.Inject
 
 class QuickWizardEntry @Inject constructor(private val injector: HasAndroidInjector) {
@@ -77,7 +76,7 @@ class QuickWizardEntry @Inject constructor(private val injector: HasAndroidInjec
     fun isActive(): Boolean = Profile.secondsFromMidnight() >= validFrom() && Profile.secondsFromMidnight() <= validTo()
 
     fun doCalc(profile: Profile, profileName: String, lastBG: GlucoseValue, _synchronized: Boolean): BolusWizard {
-        val dbRecord = repository.getTemporaryTargetActiveAt(dateUtil._now()).blockingGet()
+        val dbRecord = repository.getTemporaryTargetActiveAt(dateUtil.now()).blockingGet()
         val tempTarget = if (dbRecord is ValueWrapper.Existing) dbRecord.value else null
         //BG
         var bg = 0.0

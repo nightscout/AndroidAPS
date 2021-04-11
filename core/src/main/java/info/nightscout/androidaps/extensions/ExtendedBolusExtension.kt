@@ -22,17 +22,17 @@ import kotlin.math.round
 import kotlin.math.roundToInt
 
 fun ExtendedBolus.isInProgress(dateUtil: DateUtil): Boolean =
-    dateUtil._now() in timestamp..timestamp + duration
+    dateUtil.now() in timestamp..timestamp + duration
 
 val ExtendedBolus.plannedRemainingMinutes: Int
     get() = max(round((end - System.currentTimeMillis()) / 1000.0 / 60).toInt(), 0)
 
 fun ExtendedBolus.toStringFull(dateUtil: DateUtil): String =
     "E " + to2Decimal(rate) + "U/h @" + dateUtil.timeString(timestamp) +
-        " " + getPassedDurationToTimeInMinutes(dateUtil._now()) + "/" + T.msecs(duration).mins() + "min"
+        " " + getPassedDurationToTimeInMinutes(dateUtil.now()) + "/" + T.msecs(duration).mins() + "min"
 
 fun ExtendedBolus.toStringMedium(dateUtil: DateUtil): String =
-    to2Decimal(rate) + "U/h " + getPassedDurationToTimeInMinutes(dateUtil._now()) + "/" + T.msecs(duration).mins() + "'"
+    to2Decimal(rate) + "U/h " + getPassedDurationToTimeInMinutes(dateUtil.now()) + "/" + T.msecs(duration).mins() + "'"
 
 fun ExtendedBolus.toStringTotal(): String = "${to2Decimal(amount)}U ( ${to2Decimal(rate)} U/h )"
 

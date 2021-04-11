@@ -41,7 +41,7 @@ class UploadChunk @Inject constructor(
             return null
 
         session.start = getLastEnd()
-        session.end = min(session.start + maxUploadSize, dateUtil._now())
+        session.end = min(session.start + maxUploadSize, dateUtil.now())
 
         val result = get(session.start, session.end)
         if (result.length < 3) {
@@ -81,7 +81,7 @@ class UploadChunk @Inject constructor(
 
     fun getLastEnd(): Long {
         val result = sp.getLong(R.string.key_tidepool_last_end, 0)
-        return max(result, dateUtil._now() - T.months(2).msecs())
+        return max(result, dateUtil.now() - T.months(2).msecs())
     }
 
     fun setLastEnd(time: Long) {
@@ -101,7 +101,7 @@ class UploadChunk @Inject constructor(
         // TODO we could make sure we include records older than the first bg record for completeness
 
         val start: Long = 0
-        val end = dateUtil._now()
+        val end = dateUtil.now()
 
         val bgReadingList = repository.compatGetBgReadingsDataFromTime(start, end, true)
             .blockingGet()

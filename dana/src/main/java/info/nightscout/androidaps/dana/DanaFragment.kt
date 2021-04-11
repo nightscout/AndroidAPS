@@ -91,7 +91,7 @@ class DanaFragment : DaggerFragment() {
             val profileName = danaPump.createConvertedProfile()?.getDefaultProfileName()
                 ?: return@setOnClickListener
             val args = Bundle()
-            args.putLong("time", dateUtil._now())
+            args.putLong("time", dateUtil.now())
             args.putInt("mode", ProfileViewerDialog.Mode.CUSTOM_PROFILE.ordinal)
             args.putString("customProfile", profile.data.toString())
             args.putString("customProfileUnits", profile.units)

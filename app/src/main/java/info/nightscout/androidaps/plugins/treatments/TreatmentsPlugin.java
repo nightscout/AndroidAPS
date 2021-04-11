@@ -147,7 +147,7 @@ public class TreatmentsPlugin extends PluginBase implements TreatmentsInterface 
     private void initializeProfileSwitchData(long range) {
         getAapsLogger().debug(LTag.DATATREATMENTS, "initializeProfileSwitchData");
         synchronized (profiles) {
-            profiles.reset().add(databaseHelper.getProfileSwitchData(dateUtil._now() - range, false));
+            profiles.reset().add(databaseHelper.getProfileSwitchData(dateUtil.now() - range, false));
         }
     }
 
@@ -161,7 +161,7 @@ public class TreatmentsPlugin extends PluginBase implements TreatmentsInterface 
     @Deprecated
     @Override
     public List<Treatment> getTreatmentsFromHistoryAfterTimestamp(long fromTimestamp) {
-        return repository.getBolusesIncludingInvalidFromTimeToTime(fromTimestamp, dateUtil._now(), true)
+        return repository.getBolusesIncludingInvalidFromTimeToTime(fromTimestamp, dateUtil.now(), true)
                 .blockingGet()
                 .stream()
                 .map(bolus -> new Treatment(getInjector(), bolus))

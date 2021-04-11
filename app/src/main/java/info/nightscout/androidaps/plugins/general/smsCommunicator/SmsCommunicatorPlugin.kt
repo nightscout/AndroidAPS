@@ -276,7 +276,7 @@ class SmsCommunicatorPlugin @Inject constructor(
                     else sendSMS(Sms(receivedSms.phoneNumber, resourceHelper.gs(R.string.wrongformat)))
                 "BOLUS"    ->
                     if (!remoteCommandsAllowed) sendSMS(Sms(receivedSms.phoneNumber, resourceHelper.gs(R.string.smscommunicator_remotecommandnotallowed)))
-                    else if (divided.size == 2 && dateUtil._now() - lastRemoteBolusTime < minDistance) sendSMS(Sms(receivedSms.phoneNumber, resourceHelper.gs(R.string.smscommunicator_remotebolusnotallowed)))
+                    else if (divided.size == 2 && dateUtil.now() - lastRemoteBolusTime < minDistance) sendSMS(Sms(receivedSms.phoneNumber, resourceHelper.gs(R.string.smscommunicator_remotebolusnotallowed)))
                     else if (divided.size == 2 && pump.isSuspended()) sendSMS(Sms(receivedSms.phoneNumber, resourceHelper.gs(R.string.pumpsuspended)))
                     else if (divided.size == 2 || divided.size == 3) processBOLUS(divided, receivedSms)
                     else sendSMS(Sms(receivedSms.phoneNumber, resourceHelper.gs(R.string.wrongformat)))
@@ -317,7 +317,7 @@ class SmsCommunicatorPlugin @Inject constructor(
         if (actualBG != null) {
             reply = resourceHelper.gs(R.string.sms_actualbg) + " " + actualBG.valueToUnitsString(units) + ", "
         } else if (lastBG != null) {
-            val agoMilliseconds = dateUtil._now() - lastBG.timestamp
+            val agoMilliseconds = dateUtil.now() - lastBG.timestamp
             val agoMin = (agoMilliseconds / 60.0 / 1000.0).toInt()
             reply = resourceHelper.gs(R.string.sms_lastbg) + " " + lastBG.valueToUnitsString(units) + " " + String.format(resourceHelper.gs(R.string.sms_minago), agoMin) + ", "
         }
@@ -431,7 +431,7 @@ class SmsCommunicatorPlugin @Inject constructor(
                             commandQueue.cancelTempBasal(true, object : Callback() {
                                 override fun run() {
                                     if (result.success) {
-                                            loopPlugin.suspendTo(dateUtil._now() + anInteger() * 60L * 1000)
+                                            loopPlugin.suspendTo(dateUtil.now() + anInteger() * 60L * 1000)
                                         loopPlugin.createOfflineEvent(anInteger() * 60)
                                         rxBus.send(EventRefreshOverview("SMS_LOOP_SUSPENDED"))
                                         val replyText = resourceHelper.gs(R.string.smscommunicator_loopsuspended) + " " +
@@ -584,7 +584,7 @@ class SmsCommunicatorPlugin @Inject constructor(
                     val finalPercentage = percentage
                     messageToConfirm = AuthRequest(injector, receivedSms, reply, passCode, object : SmsAction(list[pIndex - 1] as String, finalPercentage) {
                         override fun run() {
-                            activePlugin.activeTreatments.doProfileSwitch(store, list[pIndex - 1] as String, 0, finalPercentage, 0, dateUtil._now())
+                            activePlugin.activeTreatments.doProfileSwitch(store, list[pIndex - 1] as String, 0, finalPercentage, 0, dateUtil.now())
                             val replyText = resourceHelper.gs(R.string.profileswitchcreated)
                             sendSMS(Sms(receivedSms.phoneNumber, replyText))
                             uel.log(Action.PROFILE_SWITCH, Sources.SMS,
@@ -804,7 +804,7 @@ class SmsCommunicatorPlugin @Inject constructor(
                                         else
                                             String.format(resourceHelper.gs(R.string.smscommunicator_bolusdelivered), resultBolusDelivered)
                                         replyText += "\n" + activePlugin.activePump.shortStatus(true)
-                                        lastRemoteBolusTime = dateUtil._now()
+                                        lastRemoteBolusTime = dateUtil.now()
                                         if (isMeal) {
                                             profileFunction.getProfile()?.let { currentProfile ->
                                                 var eatingSoonTTDuration = sp.getInt(R.string.key_eatingsoon_duration, Constants.defaultEatingSoonTTDuration)
@@ -819,7 +819,7 @@ class SmsCommunicatorPlugin @Inject constructor(
                                                         else                                   -> Constants.defaultEatingSoonTTmgdl
                                                     }
                                                 disposable += repository.runTransactionForResult(InsertTemporaryTargetAndCancelCurrentTransaction(
-                                                    timestamp = dateUtil._now(),
+                                                    timestamp = dateUtil.now(),
                                                     duration = TimeUnit.MINUTES.toMillis(eatingSoonTTDuration.toLong()),
                                                     reason = TemporaryTarget.Reason.EATING_SOON,
                                                     lowTarget = Profile.toMgdl(eatingSoonTT, profileFunction.getUnits()),
@@ -875,7 +875,7 @@ class SmsCommunicatorPlugin @Inject constructor(
 
     private fun processCARBS(divided: Array<String>, receivedSms: Sms) {
         var grams = SafeParse.stringToInt(divided[1])
-        var time = dateUtil._now()
+        var time = dateUtil.now()
         if (divided.size > 2) {
             time = toTodayTime(divided[2].toUpperCase(Locale.getDefault()))
             if (time == 0L) {
@@ -964,7 +964,7 @@ class SmsCommunicatorPlugin @Inject constructor(
                     tt = Profile.toCurrentUnits(profileFunction, tt)
                     tt = if (tt > 0) tt else if (units == Constants.MMOL) defaultTargetMMOL else defaultTargetMGDL
                     disposable += repository.runTransactionForResult(InsertTemporaryTargetAndCancelCurrentTransaction(
-                        timestamp = dateUtil._now(),
+                        timestamp = dateUtil.now(),
                         duration = TimeUnit.MINUTES.toMillis(ttDuration.toLong()),
                         reason = TemporaryTarget.Reason.EATING_SOON,
                         lowTarget = Profile.toMgdl(tt, profileFunction.getUnits()),
@@ -989,7 +989,7 @@ class SmsCommunicatorPlugin @Inject constructor(
             receivedSms.processed = true
             messageToConfirm = AuthRequest(injector, receivedSms, reply, passCode, object : SmsAction() {
                 override fun run() {
-                    disposable += repository.runTransactionForResult(CancelCurrentTemporaryTargetIfAnyTransaction(dateUtil._now()))
+                    disposable += repository.runTransactionForResult(CancelCurrentTemporaryTargetIfAnyTransaction(dateUtil.now()))
                         .subscribe({ result ->
                             result.updated.forEach { aapsLogger.debug(LTag.DATABASE, "Updated temp target $it") }
                         }, {

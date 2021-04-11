@@ -466,7 +466,7 @@ open class IobCobCalculatorPlugin @Inject constructor(
     }
 
     private fun calculateFromTreatmentsAndTemps(time: Long, lastAutosensResult: AutosensResult, exercise_mode: Boolean, half_basal_exercise_target: Int, isTempTarget: Boolean): IobTotal {
-        val now = dateUtil._now()
+        val now = dateUtil.now()
         val bolusIob = calculateIobFromBolusToTime(time).round()
         val basalIob = getCalculationToTimeTempBasals(time, lastAutosensResult, exercise_mode, half_basal_exercise_target, isTempTarget).round()
         // OpenAPSSMB only
@@ -551,7 +551,7 @@ open class IobCobCalculatorPlugin @Inject constructor(
         val autosensData = if (_synchronized) getLastAutosensDataSynchronized(reason) else getLastAutosensData(reason)
         var displayCob: Double? = null
         var futureCarbs = 0.0
-        val now = dateUtil._now()
+        val now = dateUtil.now()
         val carbs = repository.getCarbsDataFromTimeExpanded(now, true).blockingGet()
         if (autosensData != null) {
             displayCob = autosensData.cob
@@ -658,7 +658,7 @@ open class IobCobCalculatorPlugin @Inject constructor(
 
     override fun calculateIobArrayForSMB(lastAutosensResult: AutosensResult, exercise_mode: Boolean, half_basal_exercise_target: Int, isTempTarget: Boolean): Array<IobTotal> {
         // predict IOB out to DIA plus 30m
-        val now = dateUtil._now()
+        val now = dateUtil.now()
         val len = 4 * 60 / 5
         val array = Array(len) { IobTotal(0) }
         for ((pos, i) in (0 until len).withIndex()) {
@@ -809,7 +809,7 @@ open class IobCobCalculatorPlugin @Inject constructor(
     fun range(): Long = ((profileFunction.getProfile()?.dia
         ?: Constants.defaultDIA) * 60 * 60 * 1000).toLong()
 
-    override fun calculateIobFromBolus(): IobTotal = calculateIobFromBolusToTime(dateUtil._now())
+    override fun calculateIobFromBolus(): IobTotal = calculateIobFromBolusToTime(dateUtil.now())
 
     override fun calculateIobFromBolusToTime(toTime: Long): IobTotal {
         val total = IobTotal(toTime)
@@ -842,7 +842,7 @@ open class IobCobCalculatorPlugin @Inject constructor(
 
     private fun calculateIobToTimeFromExtendedBoluses(toTime: Long): IobTotal {
         val total = IobTotal(toTime)
-        val now = dateUtil._now()
+        val now = dateUtil.now()
         val pumpInterface = activePlugin.activePump
         if (!pumpInterface.isFakingTempsByExtendedBoluses) {
             val extendedBoluses = repository.getExtendedBolusDataFromTimeToTime(toTime - range(), toTime, true).blockingGet()
@@ -906,11 +906,11 @@ open class IobCobCalculatorPlugin @Inject constructor(
     }
 
     override fun calculateIobFromTempBasalsIncludingConvertedExtended(): IobTotal =
-        calculateIobToTimeFromTempBasalsIncludingConvertedExtended(dateUtil._now())
+        calculateIobToTimeFromTempBasalsIncludingConvertedExtended(dateUtil.now())
 
     override fun calculateIobToTimeFromTempBasalsIncludingConvertedExtended(toTime: Long): IobTotal {
         val total = IobTotal(toTime)
-        val now = dateUtil._now()
+        val now = dateUtil.now()
         val pumpInterface = activePlugin.activePump
 
         val temporaryBasals = repository.getTemporaryBasalsDataFromTimeToTime(toTime - range(), toTime, true).blockingGet()
@@ -947,7 +947,7 @@ open class IobCobCalculatorPlugin @Inject constructor(
     open fun getCalculationToTimeTempBasals(toTime: Long, lastAutosensResult: AutosensResult, exercise_mode: Boolean, half_basal_exercise_target: Int, isTempTarget: Boolean): IobTotal {
         val total = IobTotal(toTime)
         val pumpInterface = activePlugin.activePump
-        val now = dateUtil._now()
+        val now = dateUtil.now()
         val temporaryBasals = repository.getTemporaryBasalsDataFromTimeToTime(toTime - range(), toTime, true).blockingGet()
         for (pos in temporaryBasals.indices) {
             val t = temporaryBasals[pos]

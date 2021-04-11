@@ -127,12 +127,12 @@ class NSClientSourcePlugin @Inject constructor(
                 val glucoseValues = mutableListOf<CgmSourceTransaction.TransactionGlucoseValue>()
                 for (i in 0 until sgvs.length()) {
                     val sgv = toGv(sgvs.getJSONObject(i)) ?: continue
-                    if (sgv.timestamp < dateUtil._now() && sgv.timestamp > latestDateInReceivedData) latestDateInReceivedData = sgv.timestamp
+                    if (sgv.timestamp < dateUtil.now() && sgv.timestamp > latestDateInReceivedData) latestDateInReceivedData = sgv.timestamp
                     glucoseValues += sgv
 
                 }
                 // Was that sgv more less 5 mins ago ?
-                if (T.msecs(dateUtil._now() - latestDateInReceivedData).mins() < 5L) {
+                if (T.msecs(dateUtil.now() - latestDateInReceivedData).mins() < 5L) {
                     rxBus.send(EventDismissNotification(Notification.NS_ALARM))
                     rxBus.send(EventDismissNotification(Notification.NS_URGENT_ALARM))
                 }

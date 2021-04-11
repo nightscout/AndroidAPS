@@ -2,7 +2,6 @@
 
 package info.nightscout.androidaps.plugins.general.smsCommunicator
 
-import android.content.Context
 import android.telephony.SmsManager
 import dagger.android.AndroidInjector
 import dagger.android.HasAndroidInjector
@@ -885,7 +884,7 @@ class SmsCommunicatorPluginTest : TestBaseWithProfile() {
         Assert.assertEquals("BOLUS", smsCommunicatorPlugin.messages[0].text)
         Assert.assertEquals("Wrong format", smsCommunicatorPlugin.messages[1].text)
         `when`(constraintChecker.applyBolusConstraints(anyObject())).thenReturn(Constraint(1.0))
-        PowerMockito.`when`(dateUtilMocked._now()).thenReturn(1000L)
+        PowerMockito.`when`(dateUtilMocked.now()).thenReturn(1000L)
         `when`(sp.getLong(R.string.key_smscommunicator_remotebolusmindistance, T.msecs(Constants.remoteBolusMinDistance).mins())).thenReturn(15L)
         //BOLUS 1
         smsCommunicatorPlugin.messages = ArrayList()
@@ -894,7 +893,7 @@ class SmsCommunicatorPluginTest : TestBaseWithProfile() {
         Assert.assertEquals("BOLUS 1", smsCommunicatorPlugin.messages[0].text)
         Assert.assertEquals("Remote bolus not available. Try again later.", smsCommunicatorPlugin.messages[1].text)
         `when`(constraintChecker.applyBolusConstraints(anyObject())).thenReturn(Constraint(0.0))
-        PowerMockito.`when`(dateUtilMocked._now()).thenReturn(Constants.remoteBolusMinDistance + 1002L)
+        PowerMockito.`when`(dateUtilMocked.now()).thenReturn(Constants.remoteBolusMinDistance + 1002L)
 
         //BOLUS 0
         smsCommunicatorPlugin.messages = ArrayList()
@@ -990,7 +989,7 @@ class SmsCommunicatorPluginTest : TestBaseWithProfile() {
     }
 
     @Test fun processCarbsTest() {
-        PowerMockito.`when`(dateUtilMocked._now()).thenReturn(1000000L)
+        PowerMockito.`when`(dateUtilMocked.now()).thenReturn(1000000L)
         `when`(sp.getBoolean(R.string.key_smscommunicator_remotecommandsallowed, false)).thenReturn(false)
         //CAL
         smsCommunicatorPlugin.messages = ArrayList()

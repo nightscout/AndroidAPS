@@ -127,6 +127,6 @@ class TreatmentsFragment : DaggerFragment() {
 
     private fun updateGui() {
         if (_binding == null) return
-        binding.extendedBoluses.visibility = (activePlugin.activePump.pumpDescription.isExtendedBolusCapable || iobCobCalculator.getExtendedBolus(dateUtil._now()) != null).toVisibility()
+        binding.extendedBoluses.visibility = (activePlugin.activePump.pumpDescription.isExtendedBolusCapable || iobCobCalculator.getExtendedBolus(dateUtil.now()) != null).toVisibility()
     }
 }

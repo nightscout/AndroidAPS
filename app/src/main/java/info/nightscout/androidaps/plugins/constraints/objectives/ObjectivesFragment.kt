@@ -237,7 +237,7 @@ class ObjectivesFragment : DaggerFragment() {
             holder.binding.verify.setOnClickListener {
                 receiverStatusStore.updateNetworkStatus()
                 if (binding.fake.isChecked) {
-                    objective.accomplishedOn = dateUtil._now()
+                    objective.accomplishedOn = dateUtil.now()
                     scrollToCurrentObjective()
                     startUpdateTimer()
                     rxBus.send(EventObjectivesUpdateGui())
@@ -249,7 +249,7 @@ class ObjectivesFragment : DaggerFragment() {
                         rxBus.send(EventNtpStatus(resourceHelper.gs(R.string.timedetection), 0))
                         sntpClient.ntpTime(object : SntpClient.Callback() {
                             override fun run() {
-                                aapsLogger.debug("NTP time: $time System time: ${dateUtil._now()}")
+                                aapsLogger.debug("NTP time: $time System time: ${dateUtil.now()}")
                                 SystemClock.sleep(300)
                                 if (!networkConnected) {
                                     rxBus.send(EventNtpStatus(resourceHelper.gs(R.string.notconnected), 99))
@@ -276,7 +276,7 @@ class ObjectivesFragment : DaggerFragment() {
             holder.binding.start.setOnClickListener {
                 receiverStatusStore.updateNetworkStatus()
                 if (binding.fake.isChecked) {
-                    objective.startedOn = dateUtil._now()
+                    objective.startedOn = dateUtil.now()
                     scrollToCurrentObjective()
                     startUpdateTimer()
                     rxBus.send(EventObjectivesUpdateGui())
@@ -288,7 +288,7 @@ class ObjectivesFragment : DaggerFragment() {
                         rxBus.send(EventNtpStatus(resourceHelper.gs(R.string.timedetection), 0))
                         sntpClient.ntpTime(object : SntpClient.Callback() {
                             override fun run() {
-                                aapsLogger.debug("NTP time: $time System time: ${dateUtil._now()}")
+                                aapsLogger.debug("NTP time: $time System time: ${dateUtil.now()}")
                                 SystemClock.sleep(300)
                                 if (!networkConnected) {
                                     rxBus.send(EventNtpStatus(resourceHelper.gs(R.string.notconnected), 99))

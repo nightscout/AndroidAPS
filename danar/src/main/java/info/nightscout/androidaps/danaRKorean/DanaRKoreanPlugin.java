@@ -185,7 +185,7 @@ public class DanaRKoreanPlugin extends AbstractDanaRPlugin {
                         detailedBolusInfo.timestamp,
                         detailedBolusInfo.insulin,
                         detailedBolusInfo.getBolusType(),
-                        dateUtil._now(),
+                        dateUtil.now(),
                         PumpType.DANA_R_KOREAN,
                         serialNumber()
                 );
@@ -348,8 +348,8 @@ public class DanaRKoreanPlugin extends AbstractDanaRPlugin {
             sExecutionService.tempBasalStop();
             if (!danaPump.isTempBasalInProgress()) {
                 pumpSync.syncStopTemporaryBasalWithPumpId(
-                        dateUtil._now(),
-                        dateUtil._now(),
+                        dateUtil.now(),
+                        dateUtil.now(),
                         getPumpDescription().getPumpType(),
                         serialNumber()
                 );

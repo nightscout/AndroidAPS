@@ -171,17 +171,17 @@ class DanaRSService : DaggerService() {
                 } else {
                     when {
                         danaPump.usingUTC      -> {
-                            sendMessage(DanaRS_Packet_Option_Set_Pump_UTC_And_TimeZone(injector, dateUtil._now(), offset))
+                            sendMessage(DanaRS_Packet_Option_Set_Pump_UTC_And_TimeZone(injector, dateUtil.now(), offset))
                         }
 
                         danaPump.protocol >= 6 -> { // can set seconds
-                            sendMessage(DanaRS_Packet_Option_Set_Pump_Time(injector, dateUtil._now()))
+                            sendMessage(DanaRS_Packet_Option_Set_Pump_Time(injector, dateUtil.now()))
                         }
 
                         else                   -> {
                             waitForWholeMinute() // Dana can set only whole minute
                             // add 10sec to be sure we are over minute (will be cut off anyway)
-                            sendMessage(DanaRS_Packet_Option_Set_Pump_Time(injector, dateUtil._now() + T.secs(10).msecs()))
+                            sendMessage(DanaRS_Packet_Option_Set_Pump_Time(injector, dateUtil.now() + T.secs(10).msecs()))
                         }
                     }
                     if (danaPump.usingUTC) sendMessage(DanaRS_Packet_Option_Get_Pump_UTC_And_TimeZone(injector))
@@ -255,7 +255,7 @@ class DanaRSService : DaggerService() {
         danaPump.bolusAmountToBeDelivered = insulin
         danaPump.bolusStopped = false
         danaPump.bolusStopForced = false
-        danaPump.bolusProgressLastTimeStamp = dateUtil._now()
+        danaPump.bolusProgressLastTimeStamp = dateUtil.now()
         val start = DanaRS_Packet_Bolus_Set_Step_Bolus_Start(injector, insulin, preferencesSpeed)
         if (carbs > 0) {
 //            MsgSetCarbsEntry msg = new MsgSetCarbsEntry(carbTime, carbs); ####
@@ -481,7 +481,7 @@ class DanaRSService : DaggerService() {
 
     private fun waitForWholeMinute() {
         while (true) {
-            val time = dateUtil._now()
+            val time = dateUtil.now()
             val timeToWholeMinute = 60000 - time % 60000
             if (timeToWholeMinute > 59800 || timeToWholeMinute < 300) break
             rxBus.send(EventPumpStatusChanged(resourceHelper.gs(R.string.waitingfortimesynchronization, (timeToWholeMinute / 1000).toInt())))

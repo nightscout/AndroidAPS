@@ -3,7 +3,6 @@ package info.nightscout.androidaps.plugins.aps.openAPSSMB
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.logging.LTag
 import info.nightscout.androidaps.plugins.aps.loop.APSResult
-import info.nightscout.androidaps.utils.DateUtil
 import org.json.JSONException
 import org.json.JSONObject
 
@@ -13,7 +12,7 @@ class DetermineBasalResultSMB private constructor(injector: HasAndroidInjector) 
     private var snoozeBG = 0.0
 
     internal constructor(injector: HasAndroidInjector, result: JSONObject) : this(injector) {
-        date = dateUtil._now()
+        date = dateUtil.now()
         json = result
         try {
             if (result.has("error")) {

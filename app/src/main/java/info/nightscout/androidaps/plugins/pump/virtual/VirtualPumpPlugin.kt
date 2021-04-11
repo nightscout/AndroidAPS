@@ -206,7 +206,7 @@ open class VirtualPumpPlugin @Inject constructor(
                 timestamp = detailedBolusInfo.timestamp,
                 amount = detailedBolusInfo.insulin,
                 type = detailedBolusInfo.bolusType,
-                pumpId = dateUtil._now(),
+                pumpId = dateUtil.now(),
                 pumpType = pumpType ?: PumpType.GENERIC_AAPS,
                 pumpSerial = serialNumber())
         if (detailedBolusInfo.carbs > 0)
@@ -229,12 +229,12 @@ open class VirtualPumpPlugin @Inject constructor(
         result.duration = durationInMinutes
         result.comment = resourceHelper.gs(R.string.virtualpump_resultok)
         pumpSync.syncTemporaryBasalWithPumpId(
-            timestamp = dateUtil._now(),
+            timestamp = dateUtil.now(),
             rate = absoluteRate,
             duration = T.mins(durationInMinutes.toLong()).msecs(),
             isAbsolute = true,
             type = tbrType,
-            pumpId = dateUtil._now(),
+            pumpId = dateUtil.now(),
             pumpType = pumpType ?: PumpType.GENERIC_AAPS,
             pumpSerial = serialNumber()
         )
@@ -254,12 +254,12 @@ open class VirtualPumpPlugin @Inject constructor(
         result.duration = durationInMinutes
         result.comment = resourceHelper.gs(R.string.virtualpump_resultok)
         pumpSync.syncTemporaryBasalWithPumpId(
-            timestamp = dateUtil._now(),
+            timestamp = dateUtil.now(),
             rate = percent.toDouble(),
             duration = T.mins(durationInMinutes.toLong()).msecs(),
             isAbsolute = false,
             type = tbrType,
-            pumpId = dateUtil._now(),
+            pumpId = dateUtil.now(),
             pumpType = pumpType ?: PumpType.GENERIC_AAPS,
             pumpSerial = serialNumber()
         )
@@ -279,11 +279,11 @@ open class VirtualPumpPlugin @Inject constructor(
         result.duration = durationInMinutes
         result.comment = resourceHelper.gs(R.string.virtualpump_resultok)
         pumpSync.syncExtendedBolusWithPumpId(
-            timestamp = dateUtil._now(),
+            timestamp = dateUtil.now(),
             amount = insulin,
             duration = T.mins(durationInMinutes.toLong()).msecs(),
             isEmulatingTB = false,
-            pumpId = dateUtil._now(),
+            pumpId = dateUtil.now(),
             pumpType = pumpType ?: PumpType.GENERIC_AAPS,
             pumpSerial = serialNumber()
         )
@@ -301,8 +301,8 @@ open class VirtualPumpPlugin @Inject constructor(
         if (pumpSync.expectedPumpState().temporaryBasal != null) {
             result.enacted = true
             pumpSync.syncStopTemporaryBasalWithPumpId(
-                timestamp = dateUtil._now(),
-                endPumpId = dateUtil._now(),
+                timestamp = dateUtil.now(),
+                endPumpId = dateUtil.now(),
                 pumpType = pumpType ?: PumpType.GENERIC_AAPS,
                 pumpSerial = serialNumber()
             )
@@ -317,8 +317,8 @@ open class VirtualPumpPlugin @Inject constructor(
         val result = PumpEnactResult(injector)
         if (pumpSync.expectedPumpState().extendedBolus != null) {
             pumpSync.syncStopExtendedBolusWithPumpId(
-                timestamp = dateUtil._now(),
-                endPumpId = dateUtil._now(),
+                timestamp = dateUtil.now(),
+                endPumpId = dateUtil.now(),
                 pumpType = pumpType ?: PumpType.GENERIC_AAPS,
                 pumpSerial = serialNumber()
             )

@@ -84,6 +84,6 @@ class AutomationEvent(private val injector: HasAndroidInjector) {
     }
 
     fun shouldRun(): Boolean {
-        return lastRun <= dateUtil._now() - T.mins(5).msecs()
+        return lastRun <= dateUtil.now() - T.mins(5).msecs()
     }
 }

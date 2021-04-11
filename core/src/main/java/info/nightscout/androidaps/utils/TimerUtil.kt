@@ -17,7 +17,7 @@ class TimerUtil @Inject constructor(
 
     fun scheduleReminder(time: Long, text: String? = null) {
         Intent(AlarmClock.ACTION_SET_TIMER).apply {
-            val length: Int = ((time - dateUtil._now()) / 1000).toInt()
+            val length: Int = ((time - dateUtil.now()) / 1000).toInt()
             flags = flags or Intent.FLAG_ACTIVITY_NEW_TASK
             putExtra(AlarmClock.EXTRA_LENGTH, length)
             putExtra(AlarmClock.EXTRA_SKIP_UI, true)

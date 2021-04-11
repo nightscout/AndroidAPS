@@ -235,7 +235,7 @@ public class ProfileSwitch implements Interval, DataPointWithLabelInterface {
     @Override
     public boolean isValid() {
         boolean isValid = getProfileObject() != null && getProfileObject().isValid(dateUtil.dateAndTimeString(date));
-        ProfileSwitch active = treatmentsPlugin.getProfileSwitchFromHistory(dateUtil._now());
+        ProfileSwitch active = treatmentsPlugin.getProfileSwitchFromHistory(dateUtil.now());
         long activeProfileSwitchDate = active != null ? active.date : -1L;
         if (!isValid && date == activeProfileSwitchDate)
             createNotificationInvalidProfile(dateUtil.dateAndTimeString(date));
