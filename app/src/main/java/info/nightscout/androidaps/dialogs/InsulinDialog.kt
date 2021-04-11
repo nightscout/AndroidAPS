@@ -214,8 +214,8 @@ class InsulinDialog : DialogFragmentWithDate() {
                         detailedBolusInfo.timestamp = time
                         if (recordOnlyChecked) {
                             uel.log(Action.BOLUS, Sources.InsulinDialog,
-                                notes,
-                                ValueWithUnit.StringResource(R.string.record),
+                                resourceHelper.gs(R.string.record) + if (notes.isNotEmpty()) ": " + notes else "",
+                                ValueWithUnit.SimpleString(resourceHelper.gsNotLocalised(R.string.record)),
                                 ValueWithUnit.Insulin(insulinAfterConstraints),
                                 ValueWithUnit.Minute(timeOffset).takeIf { timeOffset!= 0 })
                             disposable += repository.runTransactionForResult(detailedBolusInfo.insertBolusTransaction())

@@ -148,8 +148,8 @@ class ConfigBuilderPlugin @Inject constructor(
                 performPluginSwitch(changedPlugin, newState, type)
                 pumpSync.connectNewPump()
                 sp.putBoolean("allow_hardware_pump", true)
-                uel.log(Action.HW_PUMP_ALLOWED, Sources.ConfigBuilder,
-                    ValueWithUnit.StringResource(changedPlugin.pluginDescription.pluginName))
+                uel.log(Action.HW_PUMP_ALLOWED, Sources.ConfigBuilder, resourceHelper.gs(changedPlugin.pluginDescription.pluginName),
+                    ValueWithUnit.SimpleString(resourceHelper.gsNotLocalised(changedPlugin.pluginDescription.pluginName)))
                 aapsLogger.debug(LTag.PUMP, "First time HW pump allowed!")
             }, {
                 rxBus.send(EventConfigBuilderUpdateGui())
@@ -160,12 +160,12 @@ class ConfigBuilderPlugin @Inject constructor(
 
     override fun performPluginSwitch(changedPlugin: PluginBase, enabled: Boolean, type: PluginType) {
         if(enabled && !changedPlugin.isEnabled()) {
-            uel.log(Action.PLUGIN_ENABLED, Sources.ConfigBuilder,
-                ValueWithUnit.StringResource(changedPlugin.pluginDescription.pluginName))
+            uel.log(Action.PLUGIN_ENABLED, Sources.ConfigBuilder, resourceHelper.gs(changedPlugin.pluginDescription.pluginName),
+                ValueWithUnit.SimpleString(resourceHelper.gsNotLocalised(changedPlugin.pluginDescription.pluginName)))
         }
         else if(!enabled) {
-            uel.log(Action.PLUGIN_DISABLED, Sources.ConfigBuilder,
-                ValueWithUnit.StringResource(changedPlugin.pluginDescription.pluginName))
+            uel.log(Action.PLUGIN_DISABLED, Sources.ConfigBuilder, resourceHelper.gs(changedPlugin.pluginDescription.pluginName),
+                ValueWithUnit.SimpleString(resourceHelper.gsNotLocalised(changedPlugin.pluginDescription.pluginName)))
         }
         changedPlugin.setPluginEnabled(type, enabled)
         changedPlugin.setFragmentVisible(type, enabled)
