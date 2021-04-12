@@ -7,7 +7,7 @@ import kotlin.math.abs
 /**
  * Sync the Extended bolus from NS
  */
-class SyncNsExtendedBolusTransaction(private val extendedBolus: ExtendedBolus) : Transaction<SyncNsExtendedBolusTransaction.TransactionResult>() {
+class SyncNsExtendedBolusTransaction(private val extendedBolus: ExtendedBolus, private val invalidateByNsOnly: Boolean) : Transaction<SyncNsExtendedBolusTransaction.TransactionResult>() {
 
     override fun run(): TransactionResult {
         val result = TransactionResult()
@@ -28,6 +28,8 @@ class SyncNsExtendedBolusTransaction(private val extendedBolus: ExtendedBolus) :
                 }
                 return result
             }
+
+            if (invalidateByNsOnly) return result
 
             // not known nsId
             val running = database.extendedBolusDao.getExtendedBolusActiveAt(extendedBolus.timestamp).blockingGet()

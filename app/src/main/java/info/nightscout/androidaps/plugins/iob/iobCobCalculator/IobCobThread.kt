@@ -18,7 +18,6 @@ import info.nightscout.androidaps.plugins.bus.RxBusWrapper
 import info.nightscout.androidaps.plugins.general.overview.events.EventNewNotification
 import info.nightscout.androidaps.plugins.general.overview.notifications.Notification
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.data.AutosensData
-import info.nightscout.androidaps.plugins.iob.iobCobCalculator.events.EventAutosensBgLoaded
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.events.EventIobCalculationProgress
 import info.nightscout.androidaps.plugins.sensitivity.SensitivityAAPSPlugin
 import info.nightscout.androidaps.plugins.sensitivity.SensitivityWeightedAveragePlugin
@@ -40,7 +39,7 @@ class IobCobThread @Inject internal constructor(
     private val end: Long,
     private val bgDataReload: Boolean,
     private val limitDataToOldestAvailable: Boolean,
-    private val cause: Event
+    private val cause: Event?
 ) : Thread() {
 
     @Inject lateinit var aapsLogger: AAPSLogger
@@ -79,7 +78,6 @@ class IobCobThread @Inject internal constructor(
                 if (bgDataReload) {
                     iobCobCalculatorPlugin.loadBgData(end)
                     iobCobCalculatorPlugin.createBucketedData()
-                    rxBus.send(EventAutosensBgLoaded(cause))
                 }
                 val bucketedData = iobCobCalculatorPlugin.bucketedData
                 val autosensDataTable = iobCobCalculatorPlugin.getAutosensDataTable()

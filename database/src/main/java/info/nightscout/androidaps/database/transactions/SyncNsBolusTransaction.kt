@@ -5,7 +5,7 @@ import info.nightscout.androidaps.database.entities.Bolus
 /**
  * Sync the Bolus from NS
  */
-class SyncNsBolusTransaction(private val bolus: Bolus) : Transaction<SyncNsBolusTransaction.TransactionResult>() {
+class SyncNsBolusTransaction(private val bolus: Bolus, private val invalidateByNsOnly: Boolean) : Transaction<SyncNsBolusTransaction.TransactionResult>() {
 
     override fun run(): TransactionResult {
         val result = TransactionResult()
@@ -24,6 +24,8 @@ class SyncNsBolusTransaction(private val bolus: Bolus) : Transaction<SyncNsBolus
             }
             return result
         }
+
+        if (invalidateByNsOnly) return result
 
         // not known nsId
         val existing = database.bolusDao.findByTimestamp(bolus.timestamp)

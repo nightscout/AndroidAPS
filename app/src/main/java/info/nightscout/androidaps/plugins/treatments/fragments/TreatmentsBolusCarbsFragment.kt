@@ -39,6 +39,7 @@ import info.nightscout.androidaps.utils.alertDialogs.OKDialog
 import info.nightscout.androidaps.utils.buildHelper.BuildHelper
 import info.nightscout.androidaps.extensions.iobCalc
 import info.nightscout.androidaps.extensions.toVisibility
+import info.nightscout.androidaps.plugins.iob.iobCobCalculator.events.EventNewHistoryData
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 import info.nightscout.androidaps.utils.rx.AapsSchedulers
 import info.nightscout.androidaps.utils.sharedPreferences.SP
@@ -102,7 +103,9 @@ class TreatmentsBolusCarbsFragment : DaggerFragment() {
                             .observeOn(aapsSchedulers.main)
                             .subscribeBy(
                                 onError = { aapsLogger.error("Error removing entries", it) },
-                                onComplete = { rxBus.send(EventTreatmentChange()) }
+                                onComplete = {
+                                    rxBus.send(EventTreatmentChange())
+                                    rxBus.send(EventNewHistoryData(0, false))                                }
                             )
                     rxBus.send(EventNSClientRestart())
                 }

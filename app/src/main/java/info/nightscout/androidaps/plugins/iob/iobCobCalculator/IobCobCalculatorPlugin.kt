@@ -16,12 +16,14 @@ import info.nightscout.androidaps.database.entities.GlucoseValue
 import info.nightscout.androidaps.database.entities.TemporaryBasal
 import info.nightscout.androidaps.database.interfaces.end
 import info.nightscout.androidaps.events.*
+import info.nightscout.androidaps.extensions.convertedToAbsolute
+import info.nightscout.androidaps.extensions.iobCalc
+import info.nightscout.androidaps.extensions.toTemporaryBasal
 import info.nightscout.androidaps.interfaces.*
 import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.logging.LTag
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.data.AutosensData
-import info.nightscout.androidaps.plugins.iob.iobCobCalculator.events.EventNewHistoryBgData
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.events.EventNewHistoryData
 import info.nightscout.androidaps.plugins.sensitivity.SensitivityAAPSPlugin
 import info.nightscout.androidaps.plugins.sensitivity.SensitivityOref1Plugin
@@ -30,15 +32,12 @@ import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.DecimalFormatter
 import info.nightscout.androidaps.utils.FabricPrivacy
 import info.nightscout.androidaps.utils.T
-import info.nightscout.androidaps.extensions.convertedToAbsolute
-import info.nightscout.androidaps.extensions.iobCalc
-import info.nightscout.androidaps.extensions.toTemporaryBasal
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 import info.nightscout.androidaps.utils.rx.AapsSchedulers
 import info.nightscout.androidaps.utils.sharedPreferences.SP
 import io.reactivex.disposables.CompositeDisposable
+import io.reactivex.rxkotlin.plusAssign
 import org.json.JSONArray
-import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 import javax.inject.Singleton
 import kotlin.math.abs
@@ -73,8 +72,9 @@ open class IobCobCalculatorPlugin @Inject constructor(
 ), IobCobCalculator {
 
     private val disposable = CompositeDisposable()
-    private var iobTable = LongSparseArray<IobTotal?>() // oldest at index 0
-    private var absIobTable = LongSparseArray<IobTotal?>() // oldest at index 0, absolute insulin in the body
+
+    private var iobTable = LongSparseArray<IobTotal>() // oldest at index 0
+    private var absIobTable = LongSparseArray<IobTotal>() // oldest at index 0, absolute insulin in the body
     private var autosensDataTable = LongSparseArray<AutosensData>() // oldest at index 0
     private var basalDataTable = LongSparseArray<BasalData>() // oldest at index 0
     @Volatile override var bgReadings: List<GlucoseValue> = listOf() // newest at index 0
@@ -91,43 +91,17 @@ open class IobCobCalculatorPlugin @Inject constructor(
     override fun onStart() {
         super.onStart()
         // EventConfigBuilderChange
-        disposable.add(rxBus
+        disposable += rxBus
             .toObservable(EventConfigBuilderChange::class.java)
             .observeOn(aapsSchedulers.io)
-            .subscribe({ event ->
-                stopCalculation("onEventConfigBuilderChange")
-                synchronized(dataLock) {
-                    aapsLogger.debug(LTag.AUTOSENS, "Invalidating cached data because of configuration change.")
-                    resetData()
-                }
-                runCalculation("onEventConfigBuilderChange", System.currentTimeMillis(), bgDataReload = false, limitDataToOldestAvailable = true, cause = event)
-            }, fabricPrivacy::logException)
-        )
+            .subscribe({ event -> resetData("onEventConfigBuilderChange", event) }, fabricPrivacy::logException)
         // EventNewBasalProfile
-        disposable.add(rxBus
+        disposable += rxBus
             .toObservable(EventNewBasalProfile::class.java)
             .observeOn(aapsSchedulers.io)
-            .subscribe({ event ->
-                stopCalculation("onNewProfile")
-                synchronized(dataLock) {
-                    aapsLogger.debug(LTag.AUTOSENS, "Invalidating cached data because of new profile.")
-                    resetData()
-                }
-                runCalculation("onNewProfile", System.currentTimeMillis(), bgDataReload = false, limitDataToOldestAvailable = true, cause = event)
-            }, fabricPrivacy::logException)
-        )
-        // EventNewBG .... cannot be used for invalidating because only event with last BG is fired
-        disposable.add(rxBus
-            .toObservable(EventNewBG::class.java)
-            .observeOn(aapsSchedulers.io)
-            .debounce(1L, TimeUnit.SECONDS)
-            .subscribe({ event ->
-                stopCalculation("onEventNewBG")
-                runCalculation("onEventNewBG", System.currentTimeMillis(), bgDataReload = true, limitDataToOldestAvailable = true, cause = event)
-            }, fabricPrivacy::logException)
-        )
+            .subscribe({ event -> resetData("onNewProfile", event) }, fabricPrivacy::logException)
         // EventPreferenceChange
-        disposable.add(rxBus
+        disposable += rxBus
             .toObservable(EventPreferenceChange::class.java)
             .observeOn(aapsSchedulers.io)
             .subscribe({ event ->
@@ -139,33 +113,19 @@ open class IobCobCalculatorPlugin @Inject constructor(
                     event.isChanged(resourceHelper, R.string.key_openapsama_autosens_max) ||
                     event.isChanged(resourceHelper, R.string.key_openapsama_autosens_min) ||
                     event.isChanged(resourceHelper, R.string.key_insulin_oref_peak)) {
-                    stopCalculation("onEventPreferenceChange")
-                    synchronized(dataLock) {
-                        aapsLogger.debug(LTag.AUTOSENS, "Invalidating cached data because of preference change.")
-                        resetData()
-                    }
-                    runCalculation("onEventPreferenceChange", System.currentTimeMillis(), bgDataReload = false, limitDataToOldestAvailable = true, cause = event)
+                    resetData("onEventPreferenceChange", event)
                 }
             }, fabricPrivacy::logException)
-        )
         // EventAppInitialized
-        disposable.add(rxBus
+        disposable += rxBus
             .toObservable(EventAppInitialized::class.java)
             .observeOn(aapsSchedulers.io)
             .subscribe({ event -> runCalculation("onEventAppInitialized", System.currentTimeMillis(), bgDataReload = true, limitDataToOldestAvailable = true, cause = event) }, fabricPrivacy::logException)
-        )
         // EventNewHistoryData
-        disposable.add(rxBus
+        disposable += rxBus
             .toObservable(EventNewHistoryData::class.java)
             .observeOn(aapsSchedulers.io)
-            .subscribe({ event -> newHistoryData(event, false) }, fabricPrivacy::logException)
-        )
-        // EventNewHistoryBgData
-        disposable.add(rxBus
-            .toObservable(EventNewHistoryBgData::class.java)
-            .observeOn(aapsSchedulers.io)
-            .subscribe({ event -> newHistoryData(EventNewHistoryData(event.timestamp), true) }, fabricPrivacy::logException)
-        )
+            .subscribe({ event -> newHistoryData(event.oldDataTimestamp, event.reloadBgData, if (event.newestGlucoseValue != null) EventNewBG(event.newestGlucoseValue) else event) }, fabricPrivacy::logException)
     }
 
     override fun onStop() {
@@ -230,13 +190,18 @@ open class IobCobCalculatorPlugin @Inject constructor(
             }
         }
 
-    private fun resetData() {
+    private fun resetData(reason: String, event: Event?) {
+        stopCalculation(reason)
         synchronized(dataLock) {
-            iobTable = LongSparseArray()
-            autosensDataTable = LongSparseArray()
-            basalDataTable = LongSparseArray()
-            absIobTable = LongSparseArray()
+            aapsLogger.debug(LTag.AUTOSENS, "Invalidating cached data because of $reason.")
+            synchronized(dataLock) {
+                iobTable = LongSparseArray()
+                autosensDataTable = LongSparseArray()
+                basalDataTable = LongSparseArray()
+                absIobTable = LongSparseArray()
+            }
         }
+        runCalculation(reason, System.currentTimeMillis(), bgDataReload = false, limitDataToOldestAvailable = true, cause = event)
     }
 
     fun createBucketedData() {
@@ -244,7 +209,7 @@ open class IobCobCalculatorPlugin @Inject constructor(
         if (lastUsed5minCalculation != null && lastUsed5minCalculation != fiveMinData) {
             // changing mode => clear cache
             aapsLogger.debug("Invalidating cached data because of changed mode.")
-            resetData()
+            resetData("changed mode", null)
         }
         lastUsed5minCalculation = fiveMinData
         if (isAbout5minData) createBucketedData5min() else createBucketedDataRecalculated()
@@ -696,22 +661,25 @@ open class IobCobCalculatorPlugin @Inject constructor(
         }
     }
 
-    fun runCalculation(from: String, end: Long, bgDataReload: Boolean, limitDataToOldestAvailable: Boolean, cause: Event) {
+    fun runCalculation(from: String, end: Long, bgDataReload: Boolean, limitDataToOldestAvailable: Boolean, cause: Event?) {
         aapsLogger.debug(LTag.AUTOSENS, "Starting calculation thread: " + from + " to " + dateUtil.dateAndTimeAndSecondsString(end))
         if (thread == null || thread?.state == Thread.State.TERMINATED) {
-            thread = if (sensitivityOref1Plugin.isEnabled()) IobCobOref1Thread(injector, this, from, end, bgDataReload, limitDataToOldestAvailable, cause) else IobCobThread(injector, this, from, end, bgDataReload, limitDataToOldestAvailable, cause)
+            thread =
+                if (sensitivityOref1Plugin.isEnabled()) IobCobOref1Thread(injector, this, from, end, bgDataReload, limitDataToOldestAvailable, cause)
+                else IobCobThread(injector, this, from, end, bgDataReload, limitDataToOldestAvailable, cause)
             thread?.start()
         }
     }
 
     // When historical data is changed (coming from NS etc) finished calculations after this date must be invalidated
-    private fun newHistoryData(ev: EventNewHistoryData, bgDataReload: Boolean) {
+    private fun newHistoryData(oldDataTimestamp: Long, bgDataReload: Boolean, event: Event) {
         //log.debug("Locking onNewHistoryData");
+        aapsLogger.debug("XXXXXXXXXXXXX onEventNewHistoryData $oldDataTimestamp")
         stopCalculation("onEventNewHistoryData")
         synchronized(dataLock) {
 
             // clear up 5 min back for proper COB calculation
-            val time = ev.time - 5 * 60 * 1000L
+            val time = oldDataTimestamp - 5 * 60 * 1000L
             aapsLogger.debug(LTag.AUTOSENS, "Invalidating cached data to: " + dateUtil.dateAndTimeAndSecondsString(time))
             for (index in iobTable.size() - 1 downTo 0) {
                 if (iobTable.keyAt(index) > time) {
@@ -746,7 +714,7 @@ open class IobCobCalculatorPlugin @Inject constructor(
                 }
             }
         }
-        runCalculation("onEventNewHistoryData", System.currentTimeMillis(), bgDataReload, true, ev)
+        runCalculation("onEventNewHistoryData", System.currentTimeMillis(), bgDataReload, true, event)
         //log.debug("Releasing onNewHistoryData");
     }
 
@@ -921,7 +889,7 @@ open class IobCobCalculatorPlugin @Inject constructor(
             val profile = profileFunction.getProfile(t.timestamp) ?: continue
             if (t.end > now) t.end = now
             val calc = t.iobCalc(toTime, profile, activePlugin.activeInsulin)
-            //log.debug("BasalIOB " + new Date(time) + " >>> " + calc.basaliob);
+            //log.debug("BasalIOB " + new Date(time) + " >>> " + calc.basalIob);
             total.plus(calc)
         }
         if (pumpInterface.isFakingTempsByExtendedBoluses) {
@@ -956,7 +924,7 @@ open class IobCobCalculatorPlugin @Inject constructor(
             val profile = profileFunction.getProfile(t.timestamp) ?: continue
             if (t.end > now) t.end = now
             val calc = t.iobCalc(toTime, profile, lastAutosensResult, exercise_mode, half_basal_exercise_target, isTempTarget, activePlugin.activeInsulin)
-            //log.debug("BasalIOB " + new Date(time) + " >>> " + calc.basaliob);
+            //log.debug("BasalIOB " + new Date(time) + " >>> " + calc.basalIob);
             total.plus(calc)
         }
         if (pumpInterface.isFakingTempsByExtendedBoluses) {

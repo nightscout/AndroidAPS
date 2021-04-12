@@ -58,7 +58,7 @@ class NSClientRemoveWorker(
 
             // room  Temporary target
             val temporaryTarget = temporaryTargetFromNsIdForInvalidating(nsId)
-            repository.runTransactionForResult(SyncNsTemporaryTargetTransaction(temporaryTarget))
+            repository.runTransactionForResult(SyncNsTemporaryTargetTransaction(temporaryTarget, invalidateByNsOnly = true))
                 .doOnError {
                     aapsLogger.error(LTag.DATABASE, "Error while invalidating temporary target", it)
                     ret = Result.failure(workDataOf("Error" to it))
@@ -78,7 +78,7 @@ class NSClientRemoveWorker(
 
             // room  Therapy Event
             val therapyEvent = therapyEventFromNsIdForInvalidating(nsId)
-            repository.runTransactionForResult(SyncNsTherapyEventTransaction(therapyEvent))
+            repository.runTransactionForResult(SyncNsTherapyEventTransaction(therapyEvent, invalidateByNsOnly = true))
                 .doOnError {
                     aapsLogger.error(LTag.DATABASE, "Error while invalidating therapy event", it)
                     ret = Result.failure(workDataOf("Error" to it))
@@ -95,7 +95,7 @@ class NSClientRemoveWorker(
 
             // room  Bolus
             val bolus = bolusFromNsIdForInvalidating(nsId)
-            repository.runTransactionForResult(SyncNsBolusTransaction(bolus))
+            repository.runTransactionForResult(SyncNsBolusTransaction(bolus, invalidateByNsOnly = true))
                 .doOnError {
                     aapsLogger.error(LTag.DATABASE, "Error while invalidating bolus", it)
                     ret = Result.failure(workDataOf("Error" to it))
@@ -111,7 +111,7 @@ class NSClientRemoveWorker(
 
             // room  Carbs
             val carbs = carbsFromNsIdForInvalidating(nsId)
-            repository.runTransactionForResult(SyncNsCarbsTransaction(carbs))
+            repository.runTransactionForResult(SyncNsCarbsTransaction(carbs, invalidateByNsOnly = true))
                 .doOnError {
                     aapsLogger.error(LTag.DATABASE, "Error while invalidating carbs", it)
                     ret = Result.failure(workDataOf("Error" to it))
@@ -127,7 +127,7 @@ class NSClientRemoveWorker(
 
             // room  TemporaryBasal
             val temporaryBasal = temporaryBasalFromNsIdForInvalidating(nsId)
-            repository.runTransactionForResult(SyncNsTemporaryBasalTransaction(temporaryBasal))
+            repository.runTransactionForResult(SyncNsTemporaryBasalTransaction(temporaryBasal, invalidateByNsOnly = true))
                 .doOnError {
                     aapsLogger.error(LTag.DATABASE, "Error while invalidating temporary basal", it)
                     ret = Result.failure(workDataOf("Error" to it))
@@ -143,7 +143,7 @@ class NSClientRemoveWorker(
                 }
             // room  ExtendedBolus
             val extendedBolus = extendedBolusFromNsIdForInvalidating(nsId)
-            repository.runTransactionForResult(SyncNsExtendedBolusTransaction(extendedBolus))
+            repository.runTransactionForResult(SyncNsExtendedBolusTransaction(extendedBolus, invalidateByNsOnly = true))
                 .doOnError {
                     aapsLogger.error(LTag.DATABASE, "Error while invalidating extended bolus", it)
                     ret = Result.failure(workDataOf("Error" to it))

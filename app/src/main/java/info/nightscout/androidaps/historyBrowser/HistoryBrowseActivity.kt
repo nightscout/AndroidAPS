@@ -23,7 +23,6 @@ import info.nightscout.androidaps.logging.LTag
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper
 import info.nightscout.androidaps.plugins.general.overview.OverviewMenus
 import info.nightscout.androidaps.plugins.general.overview.graphData.GraphData
-import info.nightscout.androidaps.plugins.iob.iobCobCalculator.events.EventAutosensBgLoaded
 import info.nightscout.androidaps.events.EventAutosensCalculationFinished
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.events.EventIobCalculationProgress
 import info.nightscout.androidaps.utils.DateUtil
@@ -178,16 +177,6 @@ class HistoryBrowseActivity : NoSplashAppCompatActivity() {
                 // catch only events from iobCobCalculatorPluginHistory
                 if (it.cause is EventCustomCalculationFinished) {
                     updateGUI("EventAutosensCalculationFinished", bgOnly = false)
-                }
-            }, fabricPrivacy::logException)
-        )
-        disposable.add(rxBus
-            .toObservable(EventAutosensBgLoaded::class.java)
-            .observeOn(aapsSchedulers.io)
-            .subscribe({
-                // catch only events from iobCobCalculatorPluginHistory
-                if (it.cause is EventCustomCalculationFinished) {
-                    updateGUI("EventAutosensCalculationFinished", bgOnly = true)
                 }
             }, fabricPrivacy::logException)
         )

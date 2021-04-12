@@ -5,7 +5,7 @@ import info.nightscout.androidaps.database.entities.Carbs
 class InvalidateCarbsTransaction(val id: Long) : Transaction<InvalidateCarbsTransaction.TransactionResult>() {
 
     override fun run(): TransactionResult {
-        val result = InvalidateCarbsTransaction.TransactionResult()
+        val result = TransactionResult()
         val carbs = database.carbsDao.findById(id)
             ?: throw IllegalArgumentException("There is no such Carbs with the specified ID.")
         carbs.isValid = false

@@ -41,7 +41,7 @@ class NSClientAddUpdateWorker(
     @Inject lateinit var aapsLogger: AAPSLogger
     @Inject lateinit var buildHelper: BuildHelper
     @Inject lateinit var sp: SP
-    @Inject lateinit var dateutil: DateUtil
+    @Inject lateinit var dateUtil: DateUtil
     @Inject lateinit var config: ConfigInterface
     @Inject lateinit var repository: AppRepository
     @Inject lateinit var databaseHelper: DatabaseHelperInterface
@@ -71,12 +71,12 @@ class NSClientAddUpdateWorker(
 
             //Find latest date in treatment
             val mills = safeGetLong(json, "mills")
-            if (mills != 0L && mills < dateutil.now())
+            if (mills != 0L && mills < dateUtil.now())
                 if (mills > latestDateInReceivedData) latestDateInReceivedData = mills
 
             if (insulin > 0) {
                 bolusFromJson(json)?.let { bolus ->
-                    repository.runTransactionForResult(SyncNsBolusTransaction(bolus))
+                    repository.runTransactionForResult(SyncNsBolusTransaction(bolus, invalidateByNsOnly = false))
                         .doOnError {
                             aapsLogger.error(LTag.DATABASE, "Error while saving bolus", it)
                             ret = Result.failure(workDataOf("Error" to it))
@@ -105,7 +105,7 @@ class NSClientAddUpdateWorker(
             }
             if (carbs > 0) {
                 carbsFromJson(json)?.let { carb ->
-                    repository.runTransactionForResult(SyncNsCarbsTransaction(carb))
+                    repository.runTransactionForResult(SyncNsCarbsTransaction(carb, invalidateByNsOnly = false))
                         .doOnError {
                             aapsLogger.error(LTag.DATABASE, "Error while saving carbs", it)
                             ret = Result.failure(workDataOf("Error" to it))
@@ -143,7 +143,7 @@ class NSClientAddUpdateWorker(
                 insulin > 0 || carbs > 0                                    -> Any()
                 eventType == TherapyEvent.Type.TEMPORARY_TARGET.text        ->
                     temporaryTargetFromJson(json)?.let { temporaryTarget ->
-                        repository.runTransactionForResult(SyncNsTemporaryTargetTransaction(temporaryTarget))
+                        repository.runTransactionForResult(SyncNsTemporaryTargetTransaction(temporaryTarget, invalidateByNsOnly = false))
                             .doOnError {
                                 aapsLogger.error(LTag.DATABASE, "Error while saving temporary target", it)
                                 ret = Result.failure(workDataOf("Error" to it))
@@ -193,7 +193,7 @@ class NSClientAddUpdateWorker(
                     eventType == TherapyEvent.Type.APS_OFFLINE.text ||
                     eventType == TherapyEvent.Type.PUMP_BATTERY_CHANGE.text ->
                     therapyEventFromJson(json)?.let { therapyEvent ->
-                        repository.runTransactionForResult(SyncNsTherapyEventTransaction(therapyEvent))
+                        repository.runTransactionForResult(SyncNsTherapyEventTransaction(therapyEvent, invalidateByNsOnly = false))
                             .doOnError {
                                 aapsLogger.error(LTag.DATABASE, "Error while saving therapy event", it)
                                 ret = Result.failure(workDataOf("Error" to it))
@@ -228,7 +228,7 @@ class NSClientAddUpdateWorker(
                     } ?: aapsLogger.error("Error parsing TherapyEvent json $json")
                 eventType == TherapyEvent.Type.COMBO_BOLUS.text             ->
                     extendedBolusFromJson(json)?.let { extendedBolus ->
-                        repository.runTransactionForResult(SyncNsExtendedBolusTransaction(extendedBolus))
+                        repository.runTransactionForResult(SyncNsExtendedBolusTransaction(extendedBolus, invalidateByNsOnly = false))
                             .doOnError {
                                 aapsLogger.error(LTag.DATABASE, "Error while saving extended bolus", it)
                                 ret = Result.failure(workDataOf("Error" to it))
@@ -269,7 +269,7 @@ class NSClientAddUpdateWorker(
                     } ?: aapsLogger.error("Error parsing ExtendedBolus json $json")
                 eventType == TherapyEvent.Type.TEMPORARY_BASAL.text         ->
                     temporaryBasalFromJson(json)?.let { temporaryBasal ->
-                        repository.runTransactionForResult(SyncNsTemporaryBasalTransaction(temporaryBasal))
+                        repository.runTransactionForResult(SyncNsTemporaryBasalTransaction(temporaryBasal, invalidateByNsOnly = false))
                             .doOnError {
                                 aapsLogger.error(LTag.DATABASE, "Error while saving temporary basal", it)
                                 ret = Result.failure(workDataOf("Error" to it))

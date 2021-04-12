@@ -34,13 +34,9 @@ import javax.inject.Inject;
 
 import info.nightscout.androidaps.dana.comm.RecordTypes;
 import info.nightscout.androidaps.data.Profile;
-import info.nightscout.androidaps.events.EventExtendedBolusChange;
 import info.nightscout.androidaps.events.EventProfileNeedsUpdate;
 import info.nightscout.androidaps.events.EventRefreshOverview;
 import info.nightscout.androidaps.events.EventReloadProfileSwitchData;
-import info.nightscout.androidaps.events.EventReloadTempBasalData;
-import info.nightscout.androidaps.events.EventReloadTreatmentData;
-import info.nightscout.androidaps.events.EventTempBasalChange;
 import info.nightscout.androidaps.interfaces.ActivePluginProvider;
 import info.nightscout.androidaps.interfaces.DatabaseHelperInterface;
 import info.nightscout.androidaps.interfaces.ProfileInterface;
@@ -50,7 +46,6 @@ import info.nightscout.androidaps.logging.LTag;
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper;
 import info.nightscout.androidaps.plugins.general.nsclient.NSUpload;
 import info.nightscout.androidaps.plugins.general.openhumans.OpenHumansUploader;
-import info.nightscout.androidaps.plugins.iob.iobCobCalculator.events.EventNewHistoryData;
 import info.nightscout.androidaps.plugins.pump.virtual.VirtualPumpPlugin;
 import info.nightscout.androidaps.utils.DateUtil;
 import info.nightscout.androidaps.utils.PercentageSplitter;
@@ -73,10 +68,8 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
     @Inject DateUtil dateUtil;
 
     public static final String DATABASE_NAME = "AndroidAPSDb";
-    public static final String DATABASE_EXTENDEDBOLUSES = "ExtendedBoluses";
     public static final String DATABASE_DANARHISTORY = "DanaRHistory";
     public static final String DATABASE_DBREQUESTS = "DBRequests";
-    public static final String DATABASE_TDDS = "TDDs";
 
     private static final int DATABASE_VERSION = 13;
 
