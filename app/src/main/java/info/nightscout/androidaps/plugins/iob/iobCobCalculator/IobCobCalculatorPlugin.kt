@@ -5,6 +5,7 @@ import androidx.collection.LongSparseArray
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.Constants
 import info.nightscout.androidaps.R
+import info.nightscout.androidaps.data.InMemoryGlucoseValue
 import info.nightscout.androidaps.data.IobTotal
 import info.nightscout.androidaps.data.MealData
 import info.nightscout.androidaps.data.Profile
@@ -77,8 +78,9 @@ open class IobCobCalculatorPlugin @Inject constructor(
     private var absIobTable = LongSparseArray<IobTotal>() // oldest at index 0, absolute insulin in the body
     private var autosensDataTable = LongSparseArray<AutosensData>() // oldest at index 0
     private var basalDataTable = LongSparseArray<BasalData>() // oldest at index 0
-    @Volatile override var bgReadings: List<GlucoseValue> = listOf() // newest at index 0
-    @Volatile var bucketedData: MutableList<InMemoryGlucoseValue>? = null
+    override var bgReadings: List<GlucoseValue> = listOf() // newest at index 0
+
+    @Volatile override var bucketedData: MutableList<InMemoryGlucoseValue>? = null
 
     // we need to make sure that bucketed_data will always have the same timestamp for correct use of cached values
     // once referenceTime != null all bucketed data should be (x * 5min) from referenceTime
@@ -780,7 +782,16 @@ open class IobCobCalculatorPlugin @Inject constructor(
 
     override fun calculateIobFromBolus(): IobTotal = calculateIobFromBolusToTime(dateUtil.now())
 
-    override fun calculateIobFromBolusToTime(toTime: Long): IobTotal {
+    /**
+     * Calculate IobTotal from boluses and extended to provided timestamp.
+     * NOTE: Only isValid == true boluses are included
+     * NOTE: if faking by TBR by extended boluses is enabled, extended boluses are not included
+     *  and are calculated towards temporary basals
+     *
+     * @param toTime timestamp in milliseconds
+     * @return calculated iob
+     */
+    private fun calculateIobFromBolusToTime(toTime: Long): IobTotal {
         val total = IobTotal(toTime)
         val profile = profileFunction.getProfile() ?: return total
         val dia = profile.dia

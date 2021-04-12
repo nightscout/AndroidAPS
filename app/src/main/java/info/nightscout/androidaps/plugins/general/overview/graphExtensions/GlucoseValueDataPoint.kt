@@ -51,9 +51,9 @@ class GlucoseValueDataPoint @Inject constructor(
         get() {
             return when (data.sourceSensor) {
                 GlucoseValue.SourceSensor.IOB_PREDICTION  -> resourceHelper.gc(R.color.iob)
-                GlucoseValue.SourceSensor.COB_PREDICTION  -> resourceHelper.gc(R.color.cob)
-                GlucoseValue.SourceSensor.aCOB_PREDICTION -> -0x7f000001 and resourceHelper.gc(R.color.cob)
-                GlucoseValue.SourceSensor.UAM_PREDICTION  -> resourceHelper.gc(R.color.uam)
+                GlucoseValue.SourceSensor.COB_PREDICTION   -> resourceHelper.gc(R.color.cob)
+                GlucoseValue.SourceSensor.A_COB_PREDICTION -> -0x7f000001 and resourceHelper.gc(R.color.cob)
+                GlucoseValue.SourceSensor.UAM_PREDICTION   -> resourceHelper.gc(R.color.uam)
                 GlucoseValue.SourceSensor.ZT_PREDICTION   -> resourceHelper.gc(R.color.zt)
                 else                                      -> R.color.white
             }
@@ -62,7 +62,7 @@ class GlucoseValueDataPoint @Inject constructor(
     private val isPrediction: Boolean
         get() = data.sourceSensor == GlucoseValue.SourceSensor.IOB_PREDICTION ||
             data.sourceSensor == GlucoseValue.SourceSensor.COB_PREDICTION ||
-            data.sourceSensor == GlucoseValue.SourceSensor.aCOB_PREDICTION ||
+            data.sourceSensor == GlucoseValue.SourceSensor.A_COB_PREDICTION ||
             data.sourceSensor == GlucoseValue.SourceSensor.UAM_PREDICTION ||
             data.sourceSensor == GlucoseValue.SourceSensor.ZT_PREDICTION
 

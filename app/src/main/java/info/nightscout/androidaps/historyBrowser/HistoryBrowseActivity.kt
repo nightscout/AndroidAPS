@@ -295,7 +295,8 @@ class HistoryBrowseActivity : NoSplashAppCompatActivity() {
                 graphData.addInRangeArea(fromTime, toTime, lowLine, highLine)
 
                 // **** BG ****
-                graphData.addBgReadings(fromTime, toTime, lowLine, highLine, null)
+                graphData.addBgReadings(fromTime, toTime, highLine, null)
+                if (buildHelper.isDev()) graphData.addBucketedData(fromTime, toTime)
 
                 // add target line
                 graphData.addTargetLine(fromTime, toTime, profile, null)

@@ -862,8 +862,9 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
 
                 // **** BG ****
                 if (predictionsAvailable && menuChartSettings[0][OverviewMenus.CharType.PRE.ordinal])
-                    graphData.addBgReadings(fromTime, toTime, lowLine, highLine, apsResult?.predictions?.map { bg-> GlucoseValueDataPoint(bg, defaultValueHelper, profileFunction, resourceHelper) }?.toMutableList())
-                else graphData.addBgReadings(fromTime, toTime, lowLine, highLine, null)
+                    graphData.addBgReadings(fromTime, toTime, highLine, apsResult?.predictions?.map { bg-> GlucoseValueDataPoint(bg, defaultValueHelper, profileFunction, resourceHelper) }?.toMutableList())
+                else graphData.addBgReadings(fromTime, toTime, highLine, null)
+                if (buildHelper.isDev()) graphData.addBucketedData(fromTime, toTime)
 
                 // Treatments
                 graphData.addTreatments(fromTime, endTime)

@@ -1,6 +1,7 @@
 package info.nightscout.androidaps.interfaces
 
 import androidx.collection.LongSparseArray
+import info.nightscout.androidaps.data.InMemoryGlucoseValue
 import info.nightscout.androidaps.data.IobTotal
 import info.nightscout.androidaps.data.MealData
 import info.nightscout.androidaps.data.Profile
@@ -17,6 +18,7 @@ interface IobCobCalculator {
 
     val dataLock: Any
     var bgReadings: List<GlucoseValue>
+    var bucketedData: MutableList<InMemoryGlucoseValue>?
 
     val mealData: MealData
     fun getAutosensDataTable(): LongSparseArray<AutosensData>
@@ -32,6 +34,7 @@ interface IobCobCalculator {
     fun iobArrayToString(array: Array<IobTotal>): String
     fun slowAbsorptionPercentage(timeInMinutes: Int): Double
     fun convertToJSONArray(iobArray: Array<IobTotal>): JSONArray
+
 
     /**
      * Return last valid (>39) GlucoseValue from database or null if db is empty
@@ -65,17 +68,6 @@ interface IobCobCalculator {
      * @return calculated iob
      */
     fun calculateIobFromBolus(): IobTotal
-
-    /**
-     * Calculate IobTotal from boluses and extended to provided timestamp.
-     * NOTE: Only isValid == true boluses are included
-     * NOTE: if faking by TBR by extended boluses is enabled, extended boluses are not included
-     *  and are calculated towards temporary basals
-     *
-     * @param timestamp timestamp in milliseconds
-     * @return calculated iob
-     */
-    fun calculateIobFromBolusToTime(toTime: Long): IobTotal
 
     /**
      * Get running temporary basal at time

@@ -215,7 +215,7 @@ open class APSResult @Inject constructor(val injector: HasAndroidInjector) {
                                 noise = 0.0,
                                 value = iob.getInt(i).toDouble(),
                                 timestamp = startTime + i * 5 * 60 * 1000L,
-                                sourceSensor = GlucoseValue.SourceSensor.aCOB_PREDICTION,
+                                sourceSensor = GlucoseValue.SourceSensor.A_COB_PREDICTION,
                                 trendArrow = GlucoseValue.TrendArrow.NONE
                             )
                             array.add(gv)

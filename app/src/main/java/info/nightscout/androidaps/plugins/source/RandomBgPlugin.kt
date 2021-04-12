@@ -63,8 +63,8 @@ class RandomBgPlugin @Inject constructor(
 
     init {
         refreshLoop = Runnable {
-            handleNewData()
             loopHandler.postDelayed(refreshLoop, T.mins(interval).msecs())
+            handleNewData()
         }
     }
 

@@ -61,10 +61,23 @@ class GraphData(
         units = profileFunction.getUnits()
     }
 
-    @Suppress("UNUSED_PARAMETER")
-    fun addBgReadings(fromTime: Long, toTime: Long, lowLine: Double, highLine: Double, predictions: MutableList<GlucoseValueDataPoint>?) {
+    fun addBucketedData(fromTime: Long, toTime: Long) {
+        val bucketedData = iobCobCalculator.bucketedData ?: return
+        if (bucketedData.isEmpty()) {
+            aapsLogger.debug("No bucketed data.")
+            return
+        }
+        val bucketedListArray: MutableList<DataPointWithLabelInterface> = ArrayList()
+        for (inMemoryGlucoseValue in bucketedData) {
+            if (inMemoryGlucoseValue.timestamp < fromTime || inMemoryGlucoseValue.timestamp > toTime) continue
+            bucketedListArray.add(InMemoryGlucoseValueDataPoint(inMemoryGlucoseValue, qgiprofileFunction, resourceHelper))
+        }
+        addSeries(PointsWithLabelGraphSeries(Array(bucketedListArray.size) { i -> bucketedListArray[i] }))
+    }
+
+    fun addBgReadings(fromTime: Long, toTime: Long, highLine: Double, predictions: MutableList<GlucoseValueDataPoint>?) {
         var maxBgValue = Double.MIN_VALUE
-        bgReadingsArray = iobCobCalculator.bgReadings
+        bgReadingsArray = repository.compatGetBgReadingsDataFromTime(fromTime, toTime, true).blockingGet()
         if (bgReadingsArray?.isEmpty() != false) {
             aapsLogger.debug("No BG data.")
             maxY = if (units == Constants.MGDL) 180.0 else 10.0
