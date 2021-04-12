@@ -20,7 +20,7 @@ import org.powermock.modules.junit4.PowerMockRunner
 import java.util.*
 
 @RunWith(PowerMockRunner::class)
-@PrepareForTest(DateUtil::class,  ProfileFunction::class)
+@PrepareForTest(DateUtil::class, ProfileFunction::class)
 class TriggerDeltaTest : TriggerTestBase() {
 
     var now = 1514766900000L
@@ -28,12 +28,11 @@ class TriggerDeltaTest : TriggerTestBase() {
     @Before
     fun mock() {
         PowerMockito.`when`(dateUtil.now()).thenReturn(now)
-        `when`(iobCobCalculatorPlugin.dataLock).thenReturn(Any())
         `when`(profileFunction.getUnits()).thenReturn(Constants.MGDL)
     }
 
     @Test fun shouldRunTest() {
-        `when`(iobCobCalculatorPlugin.bgReadings).thenReturn(generateValidBgData())
+        `when`(iobCobCalculator.getBgReadingsDataTableCopy()).thenReturn(generateValidBgData())
         var t = TriggerDelta(injector).units(Constants.MGDL).setValue(73.0, DeltaType.LONG_AVERAGE).comparator(Comparator.Compare.IS_EQUAL)
         Assert.assertFalse(t.shouldRun())
         Assert.assertEquals(DeltaType.LONG_AVERAGE, t.delta.deltaType)
@@ -55,7 +54,7 @@ class TriggerDeltaTest : TriggerTestBase() {
         Assert.assertFalse(t.shouldRun())
         t = TriggerDelta(injector).units(Constants.MGDL).setValue(-0.2, DeltaType.LONG_AVERAGE).comparator(Comparator.Compare.IS_EQUAL_OR_LESSER)
         Assert.assertTrue(t.shouldRun())
-        `when`(iobCobCalculatorPlugin.bgReadings).thenReturn(ArrayList())
+        `when`(iobCobCalculator.getBgReadingsDataTableCopy()).thenReturn(ArrayList())
         t = TriggerDelta(injector).units(Constants.MGDL).setValue(213.0, DeltaType.DELTA).comparator(Comparator.Compare.IS_EQUAL_OR_LESSER)
         Assert.assertFalse(t.shouldRun())
         t = TriggerDelta(injector).comparator(Comparator.Compare.IS_NOT_AVAILABLE)

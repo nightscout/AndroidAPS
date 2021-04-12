@@ -12,7 +12,6 @@ import info.nightscout.androidaps.plugins.aps.loop.LoopPlugin
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper
 import info.nightscout.androidaps.plugins.configBuilder.ConstraintChecker
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.GlucoseStatusProvider
-import info.nightscout.androidaps.plugins.iob.iobCobCalculator.IobCobCalculatorPlugin
 import info.nightscout.androidaps.plugins.pump.virtual.VirtualPumpPlugin
 import info.nightscout.androidaps.plugins.treatments.TreatmentsPlugin
 import info.nightscout.androidaps.utils.DateUtil
@@ -28,7 +27,7 @@ import org.powermock.core.classloader.annotations.PrepareForTest
 import org.powermock.modules.junit4.PowerMockRunner
 
 @RunWith(PowerMockRunner::class)
-@PrepareForTest(ConstraintChecker::class, VirtualPumpPlugin::class, IobCobCalculatorPlugin::class, DateUtil::class)
+@PrepareForTest(ConstraintChecker::class, VirtualPumpPlugin::class, DateUtil::class)
 class BolusWizardTest : TestBase() {
 
     private val pumpBolusStep = 0.1
@@ -71,7 +70,6 @@ class BolusWizardTest : TestBase() {
         `when`(profile.ic).thenReturn(insulinToCarbRatio)
 
         `when`(profileFunction.getUnits()).thenReturn(Constants.MGDL)
-        `when`(iobCobCalculator.dataLock).thenReturn(Any())
         `when`(activePlugin.activeTreatments).thenReturn(treatmentsPlugin)
         `when`(iobCobCalculator.calculateIobFromBolus()).thenReturn(IobTotal(System.currentTimeMillis()))
         `when`(iobCobCalculator.calculateIobFromTempBasalsIncludingConvertedExtended()).thenReturn(IobTotal(System.currentTimeMillis()))

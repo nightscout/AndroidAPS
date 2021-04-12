@@ -1,6 +1,7 @@
 package info.nightscout.androidaps.plugins.iob.iobCobCalculator
 
 import android.content.Context
+import android.os.PowerManager
 import dagger.android.AndroidInjector
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.TestBase
@@ -22,6 +23,7 @@ import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.Mock
+import org.mockito.Mockito.`when`
 import org.powermock.core.classloader.annotations.PrepareForTest
 import org.powermock.modules.junit4.PowerMockRunner
 import java.util.*
@@ -41,18 +43,25 @@ class IobCobCalculatorPluginTest : TestBase() {
     @Mock lateinit var fabricPrivacy: FabricPrivacy
     @Mock lateinit var repository: AppRepository
     @Mock lateinit var context: Context
+    @Mock lateinit var powerManager: PowerManager
 
     lateinit var dateUtil: DateUtil
-    lateinit var iobCobCalculatorPlugin: IobCobCalculatorPlugin
+    private lateinit var iobCobCalculatorPlugin: IobCobCalculatorPlugin
 
     val injector = HasAndroidInjector {
         AndroidInjector {
+            if (it is IobCobThread) {
+                it.context = context
+                it.resourceHelper = resourceHelper
+            }
         }
     }
 
     @Before
     fun mock() {
         dateUtil = DateUtil(context)
+        `when`(context.applicationContext).thenReturn(context)
+        `when`(context.getSystemService(anyObject())).thenReturn(powerManager)
         iobCobCalculatorPlugin = IobCobCalculatorPlugin(injector, aapsLogger, aapsSchedulers, rxBus, sp, resourceHelper, profileFunction, activePlugin, sensitivityOref1Plugin, sensitivityAAPSPlugin, sensitivityWeightedAveragePlugin, fabricPrivacy, dateUtil, repository)
     }
 

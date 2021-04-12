@@ -14,7 +14,11 @@ import info.nightscout.androidaps.data.PumpEnactResult
 import info.nightscout.androidaps.database.AppRepository
 import info.nightscout.androidaps.database.entities.GlucoseValue
 import info.nightscout.androidaps.database.transactions.InsertTemporaryTargetAndCancelCurrentTransaction
-import info.nightscout.androidaps.interfaces.*
+import info.nightscout.androidaps.interfaces.ActivePluginProvider
+import info.nightscout.androidaps.interfaces.CommandQueueProvider
+import info.nightscout.androidaps.interfaces.Constraint
+import info.nightscout.androidaps.interfaces.PluginType
+import info.nightscout.androidaps.interfaces.PumpDescription
 import info.nightscout.androidaps.logging.UserEntryLogger
 import info.nightscout.androidaps.plugins.aps.loop.LoopPlugin
 import info.nightscout.androidaps.plugins.configBuilder.ConstraintChecker
@@ -22,7 +26,6 @@ import info.nightscout.androidaps.plugins.general.smsCommunicator.otp.OneTimePas
 import info.nightscout.androidaps.plugins.general.smsCommunicator.otp.OneTimePasswordValidationResult
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.CobInfo
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.GlucoseStatusProvider
-import info.nightscout.androidaps.plugins.iob.iobCobCalculator.IobCobCalculatorPlugin
 import info.nightscout.androidaps.plugins.profile.local.LocalProfilePlugin
 import info.nightscout.androidaps.plugins.pump.common.defs.PumpType
 import info.nightscout.androidaps.plugins.pump.virtual.VirtualPumpPlugin
@@ -55,7 +58,7 @@ import java.util.*
 @PrepareForTest(
     ConstraintChecker::class, FabricPrivacy::class, VirtualPumpPlugin::class, XdripCalibrations::class,
     SmsManager::class, CommandQueue::class, LocalProfilePlugin::class, DateUtil::class,
-    IobCobCalculatorPlugin::class, OneTimePassword::class, UserEntryLogger::class, LoopPlugin::class,
+    OneTimePassword::class, UserEntryLogger::class, LoopPlugin::class,
     AppRepository::class, DateUtil::class)
 class SmsCommunicatorPluginTest : TestBaseWithProfile() {
 
@@ -96,8 +99,6 @@ class SmsCommunicatorPluginTest : TestBaseWithProfile() {
         val bgList: MutableList<GlucoseValue> = ArrayList()
         bgList.add(reading)
 
-        `when`(iobCobCalculator.dataLock).thenReturn(Any())
-        `when`(iobCobCalculator.bgReadings).thenReturn(bgList)
         `when`(iobCobCalculator.getCobInfo(false, "SMS COB")).thenReturn(CobInfo(10.0, 2.0))
         `when`(iobCobCalculator.lastBg()).thenReturn(reading)
 

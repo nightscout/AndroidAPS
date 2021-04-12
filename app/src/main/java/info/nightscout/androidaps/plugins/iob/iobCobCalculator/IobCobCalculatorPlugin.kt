@@ -78,9 +78,9 @@ open class IobCobCalculatorPlugin @Inject constructor(
     private var absIobTable = LongSparseArray<IobTotal>() // oldest at index 0, absolute insulin in the body
     private var autosensDataTable = LongSparseArray<AutosensData>() // oldest at index 0
     private var basalDataTable = LongSparseArray<BasalData>() // oldest at index 0
-    override var bgReadings: List<GlucoseValue> = listOf() // newest at index 0
+    internal var bgReadings: List<GlucoseValue> = listOf() // newest at index 0
 
-    @Volatile override var bucketedData: MutableList<InMemoryGlucoseValue>? = null
+    internal var bucketedData: MutableList<InMemoryGlucoseValue>? = null
 
     // we need to make sure that bucketed_data will always have the same timestamp for correct use of cached values
     // once referenceTime != null all bucketed data should be (x * 5min) from referenceTime
@@ -135,9 +135,9 @@ open class IobCobCalculatorPlugin @Inject constructor(
         super.onStop()
     }
 
-    override fun getAutosensDataTable(): LongSparseArray<AutosensData> {
-        return autosensDataTable
-    }
+    override fun getBgReadingsDataTableCopy(): List<GlucoseValue> = bgReadings.toList()
+    override fun getBucketedDataTableCopy(): MutableList<InMemoryGlucoseValue>? = bucketedData?.toMutableList()
+    override fun getAutosensDataTable(): LongSparseArray<AutosensData> = autosensDataTable
 
     private fun adjustToReferenceTime(someTime: Long): Long {
         if (referenceTime == -1L) {
@@ -503,7 +503,7 @@ open class IobCobCalculatorPlugin @Inject constructor(
         }
     }
 
-    override fun getLastAutosensDataSynchronized(reason: String): AutosensData? {
+    override fun getLastAutosensDataWithWaitForCalculationFinish(reason: String): AutosensData? {
         if (thread?.isAlive == true) {
             aapsLogger.debug(LTag.AUTOSENS, "AUTOSENSDATA is waiting for calculation thread: $reason")
             try {
@@ -515,8 +515,10 @@ open class IobCobCalculatorPlugin @Inject constructor(
         synchronized(dataLock) { return getLastAutosensData(reason) }
     }
 
-    override fun getCobInfo(_synchronized: Boolean, reason: String): CobInfo {
-        val autosensData = if (_synchronized) getLastAutosensDataSynchronized(reason) else getLastAutosensData(reason)
+    override fun getCobInfo(waitForCalculationFinish: Boolean, reason: String): CobInfo {
+        val autosensData =
+            if (waitForCalculationFinish) getLastAutosensDataWithWaitForCalculationFinish(reason)
+            else getLastAutosensData(reason)
         var displayCob: Double? = null
         var futureCarbs = 0.0
         val now = dateUtil.now()
@@ -576,39 +578,38 @@ open class IobCobCalculatorPlugin @Inject constructor(
         }
     }
 
-    override fun lastDataTime(): String {
-        return if (autosensDataTable.size() > 0) dateUtil.dateAndTimeAndSecondsString(autosensDataTable.valueAt(autosensDataTable.size() - 1).time) else "autosensDataTable empty"
-    }
+    override fun lastDataTime(): String =
+        if (autosensDataTable.size() > 0) dateUtil.dateAndTimeAndSecondsString(autosensDataTable.valueAt(autosensDataTable.size() - 1).time)
+        else "autosensDataTable empty"
 
-    override val mealData: MealData
-        get() {
-            val result = MealData()
-            val now = System.currentTimeMillis()
-            val maxAbsorptionHours: Double = if (sensitivityAAPSPlugin.isEnabled() || sensitivityWeightedAveragePlugin.isEnabled()) {
-                sp.getDouble(R.string.key_absorption_maxtime, Constants.DEFAULT_MAX_ABSORPTION_TIME)
-            } else {
-                sp.getDouble(R.string.key_absorption_cutoff, Constants.DEFAULT_MAX_ABSORPTION_TIME)
-            }
-            val absorptionTimeAgo = now - (maxAbsorptionHours * T.hours(1).msecs()).toLong()
-            repository.getCarbsDataFromTimeToTimeExpanded(absorptionTimeAgo + 1, now, true)
-                .blockingGet()
-                .forEach {
-                    if (it.amount > 0) {
-                        result.carbs += it.amount
-                        if (it.timestamp > result.lastCarbTime) result.lastCarbTime = it.timestamp
-                    }
-                }
-            val autosensData = getLastAutosensDataSynchronized("getMealData()")
-            if (autosensData != null) {
-                result.mealCOB = autosensData.cob
-                result.slopeFromMinDeviation = autosensData.slopeFromMinDeviation
-                result.slopeFromMaxDeviation = autosensData.slopeFromMaxDeviation
-                result.usedMinCarbsImpact = autosensData.usedMinCarbsImpact
-            }
-            val lastBolus = repository.getLastBolusRecordWrapped().blockingGet()
-            result.lastBolusTime = if (lastBolus is ValueWrapper.Existing) lastBolus.value.timestamp else 0L
-            return result
+    override fun getMealDataWithWaitingForCalculationFinish(): MealData {
+        val result = MealData()
+        val now = System.currentTimeMillis()
+        val maxAbsorptionHours: Double = if (sensitivityAAPSPlugin.isEnabled() || sensitivityWeightedAveragePlugin.isEnabled()) {
+            sp.getDouble(R.string.key_absorption_maxtime, Constants.DEFAULT_MAX_ABSORPTION_TIME)
+        } else {
+            sp.getDouble(R.string.key_absorption_cutoff, Constants.DEFAULT_MAX_ABSORPTION_TIME)
         }
+        val absorptionTimeAgo = now - (maxAbsorptionHours * T.hours(1).msecs()).toLong()
+        repository.getCarbsDataFromTimeToTimeExpanded(absorptionTimeAgo + 1, now, true)
+            .blockingGet()
+            .forEach {
+                if (it.amount > 0) {
+                    result.carbs += it.amount
+                    if (it.timestamp > result.lastCarbTime) result.lastCarbTime = it.timestamp
+                }
+            }
+        val autosensData = getLastAutosensDataWithWaitForCalculationFinish("getMealData()")
+        if (autosensData != null) {
+            result.mealCOB = autosensData.cob
+            result.slopeFromMinDeviation = autosensData.slopeFromMinDeviation
+            result.slopeFromMaxDeviation = autosensData.slopeFromMaxDeviation
+            result.usedMinCarbsImpact = autosensData.usedMinCarbsImpact
+        }
+        val lastBolus = repository.getLastBolusRecordWrapped().blockingGet()
+        result.lastBolusTime = if (lastBolus is ValueWrapper.Existing) lastBolus.value.timestamp else 0L
+        return result
+    }
 
     override fun calculateIobArrayInDia(profile: Profile): Array<IobTotal> {
         // predict IOB out to DIA plus 30m
@@ -656,7 +657,7 @@ open class IobCobCalculatorPlugin @Inject constructor(
         if (thread?.state != Thread.State.TERMINATED) {
             stopCalculationTrigger = true
             aapsLogger.debug(LTag.AUTOSENS, "Stopping calculation thread: $from")
-            while (thread?.state != Thread.State.TERMINATED) {
+            while (thread != null && thread?.state != Thread.State.TERMINATED) {
                 SystemClock.sleep(100)
             }
             aapsLogger.debug(LTag.AUTOSENS, "Calculation thread stopped: $from")

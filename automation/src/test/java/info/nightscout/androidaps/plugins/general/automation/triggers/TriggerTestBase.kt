@@ -5,7 +5,6 @@ import dagger.android.AndroidInjector
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.TestBaseWithProfile
 import info.nightscout.androidaps.TestPumpPlugin
-import info.nightscout.androidaps.database.AppRepository
 import info.nightscout.androidaps.interfaces.ActivePluginProvider
 import info.nightscout.androidaps.interfaces.IobCobCalculator
 import info.nightscout.androidaps.interfaces.PluginDescription
@@ -14,7 +13,6 @@ import info.nightscout.androidaps.plugins.general.automation.AutomationPlugin
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.GlucoseStatusProvider
 import info.nightscout.androidaps.receivers.ReceiverStatusStore
 import info.nightscout.androidaps.services.LastLocationDataContainer
-import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.sharedPreferences.SP
 import org.junit.Before
 import org.mockito.Mock
@@ -27,7 +25,7 @@ open class TriggerTestBase : TestBaseWithProfile() {
     @Mock lateinit var sp: SP
     @Mock lateinit var locationDataContainer: LastLocationDataContainer
     @Mock lateinit var activePlugin: ActivePluginProvider
-    @Mock lateinit var iobCobCalculatorPlugin: IobCobCalculator
+    @Mock lateinit var iobCobCalculator: IobCobCalculator
     @Mock lateinit var context: Context
     @Mock lateinit var automationPlugin: AutomationPlugin
 
@@ -53,8 +51,8 @@ open class TriggerTestBase : TestBaseWithProfile() {
                 it.locationDataContainer = locationDataContainer
                 it.repository = repository
                 it.activePlugin = activePlugin
-                it.iobCobCalculatorPlugin = iobCobCalculatorPlugin
-                it.glucoseStatusProvider = GlucoseStatusProvider(aapsLogger, iobCobCalculatorPlugin, dateUtil)
+                it.iobCobCalculator = iobCobCalculator
+                it.glucoseStatusProvider = GlucoseStatusProvider(aapsLogger, iobCobCalculator, dateUtil)
                 it.dateUtil = dateUtil
             }
             if (it is TriggerBg) {

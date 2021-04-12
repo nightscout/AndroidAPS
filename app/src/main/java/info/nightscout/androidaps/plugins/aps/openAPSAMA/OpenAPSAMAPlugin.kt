@@ -107,7 +107,7 @@ open class OpenAPSAMAPlugin @Inject constructor(
         val iobArray = iobCobCalculator.calculateIobArrayInDia(profile)
         profiler.log(LTag.APS, "calculateIobArrayInDia()", startPart)
         startPart = System.currentTimeMillis()
-        val mealData = iobCobCalculator.mealData
+        val mealData = iobCobCalculator.getMealDataWithWaitingForCalculationFinish()
         profiler.log(LTag.APS, "getMealData()", startPart)
         val maxIob = constraintChecker.getMaxIOBAllowed().also { maxIOBAllowedConstraint ->
             inputConstraints.copyReasons(maxIOBAllowedConstraint)
@@ -130,7 +130,7 @@ open class OpenAPSAMAPlugin @Inject constructor(
         if (!hardLimits.checkOnlyHardLimits(pump.baseBasalRate, R.string.current_basal_value, 0.01, hardLimits.maxBasal())) return
         startPart = System.currentTimeMillis()
         if (constraintChecker.isAutosensModeEnabled().value()) {
-            val autosensData = iobCobCalculator.getLastAutosensDataSynchronized("OpenAPSPlugin")
+            val autosensData = iobCobCalculator.getLastAutosensDataWithWaitForCalculationFinish("OpenAPSPlugin")
             if (autosensData == null) {
                 rxBus.send(EventOpenAPSUpdateResultGui(resourceHelper.gs(R.string.openaps_noasdata)))
                 return

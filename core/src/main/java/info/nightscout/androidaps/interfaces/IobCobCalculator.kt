@@ -17,24 +17,27 @@ import org.json.JSONArray
 interface IobCobCalculator {
 
     val dataLock: Any
-    var bgReadings: List<GlucoseValue>
-    var bucketedData: MutableList<InMemoryGlucoseValue>?
 
-    val mealData: MealData
+    fun getBgReadingsDataTableCopy(): List<GlucoseValue>
+    fun getBucketedDataTableCopy(): MutableList<InMemoryGlucoseValue>?
     fun getAutosensDataTable(): LongSparseArray<AutosensData>
-    fun calculateIobArrayInDia(profile: Profile): Array<IobTotal>
+
+
+    fun getMealDataWithWaitingForCalculationFinish(): MealData
     fun lastDataTime(): String
     fun getAutosensData(fromTime: Long): AutosensData?
     fun getLastAutosensData(reason: String): AutosensData?
-    fun getLastAutosensDataSynchronized(reason: String): AutosensData?
+    fun getLastAutosensDataWithWaitForCalculationFinish(reason: String): AutosensData?
+
+    fun calculateIobArrayInDia(profile: Profile): Array<IobTotal>
     fun calculateAbsInsulinFromTreatmentsAndTempsSynchronized(fromTime: Long): IobTotal
     fun calculateFromTreatmentsAndTempsSynchronized(time: Long, profile: Profile): IobTotal
+
     fun getBasalData(profile: Profile, fromTime: Long): BasalData
     fun calculateIobArrayForSMB(lastAutosensResult: AutosensResult, exercise_mode: Boolean, half_basal_exercise_target: Int, isTempTarget: Boolean): Array<IobTotal>
     fun iobArrayToString(array: Array<IobTotal>): String
     fun slowAbsorptionPercentage(timeInMinutes: Int): Double
     fun convertToJSONArray(iobArray: Array<IobTotal>): JSONArray
-
 
     /**
      * Return last valid (>39) GlucoseValue from database or null if db is empty
@@ -46,11 +49,11 @@ interface IobCobCalculator {
     /**
      *  Calculate CobInfo to now()
      *
-     *  @param _synchronized access autosens data synchronized (wait for result if calculation is running)
+     *  @param waitForCalculationFinish access autosens data synchronized (wait for result if calculation is running)
      *  @param reason caller identification
      *  @return CobInfo
      */
-    fun getCobInfo(_synchronized: Boolean, reason: String): CobInfo
+    fun getCobInfo(waitForCalculationFinish: Boolean, reason: String): CobInfo
 
     /**
      * Provide last GlucoseValue or null if none exists withing last 9 minutes
@@ -97,7 +100,7 @@ interface IobCobCalculator {
      *
      *  Running basal is added to the IOB !!!
      *
-     *  @param  timestamp
+     *  @param  toTime
      *  @return IobTotal
      */
     fun calculateAbsoluteIobTempBasals(toTime: Long): IobTotal
@@ -105,7 +108,7 @@ interface IobCobCalculator {
     /**
      *  Calculate IOB from Temporary basals and Extended boluses (if emulation is enabled) to the the time specified
      *
-     *  @param  time    time to calculate to
+     *  @param  toTime    time to calculate to
      *  @return IobTotal
      */
     fun calculateIobToTimeFromTempBasalsIncludingConvertedExtended(toTime: Long): IobTotal

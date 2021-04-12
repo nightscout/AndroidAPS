@@ -38,7 +38,7 @@ abstract class Trigger(val injector: HasAndroidInjector) {
     @Inject lateinit var locationDataContainer: LastLocationDataContainer
     @Inject lateinit var repository: AppRepository
     @Inject lateinit var activePlugin: ActivePluginProvider
-    @Inject lateinit var iobCobCalculatorPlugin: IobCobCalculator
+    @Inject lateinit var iobCobCalculator: IobCobCalculator
     @Inject lateinit var glucoseStatusProvider: GlucoseStatusProvider
     @Inject lateinit var dateUtil: DateUtil
 

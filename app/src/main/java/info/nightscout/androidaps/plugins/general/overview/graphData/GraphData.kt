@@ -62,7 +62,7 @@ class GraphData(
     }
 
     fun addBucketedData(fromTime: Long, toTime: Long) {
-        val bucketedData = iobCobCalculator.bucketedData ?: return
+        val bucketedData = iobCobCalculator.getBucketedDataTableCopy() ?: return
         if (bucketedData.isEmpty()) {
             aapsLogger.debug("No bucketed data.")
             return
@@ -70,7 +70,7 @@ class GraphData(
         val bucketedListArray: MutableList<DataPointWithLabelInterface> = ArrayList()
         for (inMemoryGlucoseValue in bucketedData) {
             if (inMemoryGlucoseValue.timestamp < fromTime || inMemoryGlucoseValue.timestamp > toTime) continue
-            bucketedListArray.add(InMemoryGlucoseValueDataPoint(inMemoryGlucoseValue, qgiprofileFunction, resourceHelper))
+            bucketedListArray.add(InMemoryGlucoseValueDataPoint(inMemoryGlucoseValue, profileFunction, resourceHelper))
         }
         addSeries(PointsWithLabelGraphSeries(Array(bucketedListArray.size) { i -> bucketedListArray[i] }))
     }
@@ -426,7 +426,7 @@ class GraphData(
             it.thickness = 3
         }
         if (showPrediction) {
-            val autosensData = iobCobCalculator.getLastAutosensDataSynchronized("GraphData")
+            val autosensData = iobCobCalculator.getLastAutosensDataWithWaitForCalculationFinish("GraphData")
             val lastAutosensResult = autosensData?.autosensResult ?: AutosensResult()
             val isTempTarget = repository.getTemporaryTargetActiveAt(dateUtil.now()).blockingGet() is ValueWrapper.Existing
             val iobPrediction: MutableList<DataPointWithLabelInterface> = ArrayList()

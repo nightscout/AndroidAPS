@@ -6,6 +6,7 @@ import info.nightscout.androidaps.R
 import info.nightscout.androidaps.database.AppRepository
 import info.nightscout.androidaps.database.transactions.InsertTherapyEventAnnouncementTransaction
 import info.nightscout.androidaps.interfaces.ActivePluginProvider
+import info.nightscout.androidaps.interfaces.IobCobCalculator
 import info.nightscout.androidaps.interfaces.ProfileFunction
 import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.logging.LTag
@@ -14,7 +15,6 @@ import info.nightscout.androidaps.plugins.general.overview.events.EventDismissNo
 import info.nightscout.androidaps.plugins.general.overview.events.EventNewNotification
 import info.nightscout.androidaps.plugins.general.overview.notifications.Notification
 import info.nightscout.androidaps.plugins.general.smsCommunicator.SmsCommunicatorPlugin
-import info.nightscout.androidaps.plugins.iob.iobCobCalculator.IobCobCalculatorPlugin
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 import info.nightscout.androidaps.utils.sharedPreferences.SP
 import io.reactivex.disposables.CompositeDisposable
@@ -34,7 +34,7 @@ class LocalAlertUtils @Inject constructor(
     private val resourceHelper: ResourceHelper,
     private val activePlugin: ActivePluginProvider,
     private val profileFunction: ProfileFunction,
-    private val iobCobCalculatorPlugin: IobCobCalculatorPlugin,
+    private val iobCobCalculator: IobCobCalculator,
     private val smsCommunicatorPlugin: SmsCommunicatorPlugin,
     private val config: Config,
     private val repository: AppRepository,
@@ -110,7 +110,7 @@ class LocalAlertUtils @Inject constructor(
     }
 
     fun checkStaleBGAlert() {
-        val bgReading = iobCobCalculatorPlugin.lastBg()
+        val bgReading = iobCobCalculator.lastBg()
         if (sp.getBoolean(R.string.key_enable_missed_bg_readings_alert, false)
             && bgReading != null && bgReading.timestamp + missedReadingsThreshold() < System.currentTimeMillis() && sp.getLong("nextMissedReadingsAlarm", 0L) < System.currentTimeMillis()) {
             val n = Notification(Notification.BG_READINGS_MISSED, resourceHelper.gs(R.string.missed_bg_readings), Notification.URGENT)

@@ -79,7 +79,7 @@ class IobCobThread @Inject internal constructor(
                     iobCobCalculatorPlugin.loadBgData(end)
                     iobCobCalculatorPlugin.createBucketedData()
                 }
-                val bucketedData = iobCobCalculatorPlugin.bucketedData
+                val bucketedData = iobCobCalculatorPlugin.getBucketedDataTableCopy()
                 val autosensDataTable = iobCobCalculatorPlugin.getAutosensDataTable()
                 if (bucketedData == null || bucketedData.size < 3) {
                     aapsLogger.debug(LTag.AUTOSENS, "Aborting calculation thread (No bucketed data available): $from")
@@ -152,7 +152,7 @@ class IobCobThread @Inject internal constructor(
                                     if (ad == null) {
                                         aapsLogger.debug(LTag.AUTOSENS, autosensDataTable.toString())
                                         aapsLogger.debug(LTag.AUTOSENS, bucketedData.toString())
-                                        aapsLogger.debug(LTag.AUTOSENS, iobCobCalculatorPlugin.bgReadings.toString())
+                                        //aapsLogger.debug(LTag.AUTOSENS, iobCobCalculatorPlugin.getBgReadingsDataTable().toString())
                                         val notification = Notification(Notification.SEND_LOGFILES, resourceHelper.gs(R.string.sendlogfiles), Notification.LOW)
                                         rxBus.send(EventNewNotification(notification))
                                         sp.putBoolean("log_AUTOSENS", true)
@@ -175,7 +175,7 @@ class IobCobThread @Inject internal constructor(
                                 fabricPrivacy.logException(e)
                                 aapsLogger.debug(autosensDataTable.toString())
                                 aapsLogger.debug(bucketedData.toString())
-                                aapsLogger.debug(iobCobCalculatorPlugin.bgReadings.toString())
+                                //aapsLogger.debug(iobCobCalculatorPlugin.getBgReadingsDataTable().toString())
                                 val notification = Notification(Notification.SEND_LOGFILES, resourceHelper.gs(R.string.sendlogfiles), Notification.LOW)
                                 rxBus.send(EventNewNotification(notification))
                                 sp.putBoolean("log_AUTOSENS", true)

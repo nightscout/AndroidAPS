@@ -25,7 +25,7 @@ class TriggerAutosensValueTest : TriggerTestBase() {
     @Test fun shouldRunTest() {
         `when`(sp.getDouble(Mockito.eq(R.string.key_openapsama_autosens_max), ArgumentMatchers.anyDouble())).thenReturn(1.2)
         `when`(sp.getDouble(Mockito.eq(R.string.key_openapsama_autosens_min), ArgumentMatchers.anyDouble())).thenReturn(0.7)
-        `when`(iobCobCalculatorPlugin.getLastAutosensData("Automation trigger")).thenReturn(generateAutosensData())
+        `when`(iobCobCalculator.getLastAutosensData("Automation trigger")).thenReturn(generateAutosensData())
         var t = TriggerAutosensValue(injector)
         t.autosens.value = 110.0
         t.comparator.value = Comparator.Compare.IS_EQUAL
@@ -65,14 +65,14 @@ class TriggerAutosensValueTest : TriggerTestBase() {
         t.autosens.value = 390.0
         t.comparator.value = Comparator.Compare.IS_EQUAL_OR_LESSER
         Assert.assertTrue(t.shouldRun())
-        PowerMockito.`when`(iobCobCalculatorPlugin.getLastAutosensData("Automation trigger")).thenReturn(AutosensData(injector))
+        PowerMockito.`when`(iobCobCalculator.getLastAutosensData("Automation trigger")).thenReturn(AutosensData(injector))
         t = TriggerAutosensValue(injector)
         t.autosens.value = 80.0
         t.comparator.value = Comparator.Compare.IS_EQUAL_OR_LESSER
         Assert.assertFalse(t.shouldRun())
 
         // Test autosensData == null and Comparator == IS_NOT_AVAILABLE
-        PowerMockito.`when`(iobCobCalculatorPlugin.getLastAutosensData("Automation trigger")).thenReturn(null)
+        PowerMockito.`when`(iobCobCalculator.getLastAutosensData("Automation trigger")).thenReturn(null)
         t = TriggerAutosensValue(injector)
         t.comparator.value = Comparator.Compare.IS_NOT_AVAILABLE
         Assert.assertTrue(t.shouldRun())

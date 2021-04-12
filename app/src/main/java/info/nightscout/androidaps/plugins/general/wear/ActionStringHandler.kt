@@ -23,6 +23,7 @@ import info.nightscout.androidaps.database.interfaces.end
 import info.nightscout.androidaps.database.transactions.CancelCurrentTemporaryTargetIfAnyTransaction
 import info.nightscout.androidaps.database.transactions.InsertTemporaryTargetAndCancelCurrentTransaction
 import info.nightscout.androidaps.db.TDD
+import info.nightscout.androidaps.extensions.valueToUnits
 import info.nightscout.androidaps.interfaces.*
 import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.logging.LTag
@@ -33,11 +34,9 @@ import info.nightscout.androidaps.plugins.configBuilder.ConstraintChecker
 import info.nightscout.androidaps.plugins.general.overview.events.EventDismissNotification
 import info.nightscout.androidaps.plugins.general.wear.events.EventWearConfirmAction
 import info.nightscout.androidaps.plugins.general.wear.events.EventWearInitiateAction
-import info.nightscout.androidaps.plugins.iob.iobCobCalculator.IobCobCalculatorPlugin
 import info.nightscout.androidaps.plugins.pump.insight.LocalInsightPlugin
 import info.nightscout.androidaps.queue.Callback
 import info.nightscout.androidaps.utils.*
-import info.nightscout.androidaps.extensions.valueToUnits
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 import info.nightscout.androidaps.utils.rx.AapsSchedulers
 import info.nightscout.androidaps.utils.sharedPreferences.SP
@@ -71,7 +70,7 @@ class ActionStringHandler @Inject constructor(
     private val fabricPrivacy: FabricPrivacy,
     private val commandQueue: CommandQueueProvider,
     private val activePlugin: ActivePluginProvider,
-    private val iobCobCalculatorPlugin: IobCobCalculatorPlugin,
+    private val iobCobCalculator: IobCobCalculator,
     private val localInsightPlugin: LocalInsightPlugin,
     private val danaRPlugin: DanaRPlugin,
     private val danaRKoreanPlugin: DanaRKoreanPlugin,
@@ -104,7 +103,7 @@ class ActionStringHandler @Inject constructor(
             .subscribe({ handleConfirmation(it.action) }, fabricPrivacy::logException)
     }
 
-    fun tearDown(){
+    fun tearDown() {
         disposable.clear()
     }
 
@@ -208,12 +207,12 @@ class ActionStringHandler @Inject constructor(
                 sendError("No profile found!")
                 return
             }
-            val bgReading = iobCobCalculatorPlugin.actualBg()
+            val bgReading = iobCobCalculator.actualBg()
             if (bgReading == null) {
                 sendError("No recent BG to base calculation on!")
                 return
             }
-            val cobInfo = iobCobCalculatorPlugin.getCobInfo(false, "Wizard wear")
+            val cobInfo = iobCobCalculator.getCobInfo(false, "Wizard wear")
             if (cobInfo.displayCob == null) {
                 sendError("Unknown COB! BG reading missing or recent app restart?")
                 return
@@ -624,10 +623,10 @@ class ActionStringHandler @Inject constructor(
     }
 
     private fun doECarbs(carbs: Int, time: Long, duration: Int) {
-        uel.log(if (duration==0) Action.CARBS else Action.EXTENDED_CARBS, Sources.Wear,
+        uel.log(if (duration == 0) Action.CARBS else Action.EXTENDED_CARBS, Sources.Wear,
             ValueWithUnit.Timestamp(time),
             ValueWithUnit.Gram(carbs),
-            ValueWithUnit.Hour(duration).takeIf { duration !=0 })
+            ValueWithUnit.Hour(duration).takeIf { duration != 0 })
         doBolus(0.0, carbs, time, duration)
     }
 
@@ -640,10 +639,10 @@ class ActionStringHandler @Inject constructor(
         detailedBolusInfo.carbsDuration = T.hours(carbsDuration.toLong()).msecs()
         if (detailedBolusInfo.insulin > 0 || detailedBolusInfo.carbs > 0) {
             val action = when {
-                amount.equals(0.0)  -> Action.CARBS
-                carbs.equals(0)     -> Action.BOLUS
-                carbsDuration>0     -> Action.EXTENDED_CARBS
-                else                -> Action.TREATMENT
+                amount.equals(0.0) -> Action.CARBS
+                carbs.equals(0)    -> Action.BOLUS
+                carbsDuration > 0  -> Action.EXTENDED_CARBS
+                else               -> Action.TREATMENT
             }
             uel.log(action, Sources.Wear,
                 ValueWithUnit.Insulin(amount).takeIf { amount != 0.0 },

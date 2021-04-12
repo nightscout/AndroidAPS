@@ -31,10 +31,10 @@ import kotlin.math.roundToInt
 
 @Singleton
 open class SensitivityOref1Plugin @Inject constructor(
-    injector: HasAndroidInjector?,
-    aapsLogger: AAPSLogger?,
-    resourceHelper: ResourceHelper?,
-    sp: SP?,
+    injector: HasAndroidInjector,
+    aapsLogger: AAPSLogger,
+    resourceHelper: ResourceHelper,
+    sp: SP,
     private val profileFunction: ProfileFunction,
     private val dateUtil: DateUtil,
     private val databaseHelper: DatabaseHelperInterface,
@@ -48,7 +48,7 @@ open class SensitivityOref1Plugin @Inject constructor(
     .preferencesId(R.xml.pref_absorption_oref1)
     .description(R.string.description_sensitivity_oref1)
     .setDefault(),
-    injector!!, aapsLogger!!, resourceHelper!!, sp!!
+    injector, aapsLogger, resourceHelper, sp
 ) {
 
     override fun detectSensitivity(plugin: IobCobCalculator, fromTime: Long, toTime: Long): AutosensResult {

@@ -17,21 +17,21 @@ import info.nightscout.androidaps.BuildConfig
 import info.nightscout.androidaps.Config
 import info.nightscout.androidaps.database.AppRepository
 import info.nightscout.androidaps.events.EventProfileNeedsUpdate
+import info.nightscout.androidaps.extensions.buildDeviceStatus
 import info.nightscout.androidaps.interfaces.ActivePluginProvider
 import info.nightscout.androidaps.interfaces.CommandQueueProvider
+import info.nightscout.androidaps.interfaces.IobCobCalculator
 import info.nightscout.androidaps.interfaces.ProfileFunction
 import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.logging.LTag
 import info.nightscout.androidaps.plugins.aps.loop.LoopPlugin
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper
 import info.nightscout.androidaps.plugins.configBuilder.RunningConfiguration
-import info.nightscout.androidaps.plugins.iob.iobCobCalculator.IobCobCalculatorPlugin
 import info.nightscout.androidaps.queue.commands.Command
 import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.FabricPrivacy
 import info.nightscout.androidaps.utils.LocalAlertUtils
 import info.nightscout.androidaps.utils.T
-import info.nightscout.androidaps.extensions.buildDeviceStatus
 import javax.inject.Inject
 import kotlin.math.abs
 
@@ -61,7 +61,7 @@ class KeepAliveReceiver : DaggerBroadcastReceiver() {
         @Inject lateinit var localAlertUtils: LocalAlertUtils
         @Inject lateinit var repository: AppRepository
         @Inject lateinit var config: Config
-        @Inject lateinit var iobCobCalculatorPlugin: IobCobCalculatorPlugin
+        @Inject lateinit var iobCobCalculator: IobCobCalculator
         @Inject lateinit var loopPlugin: LoopPlugin
         @Inject lateinit var dateUtil: DateUtil
         @Inject lateinit var activePlugin: ActivePluginProvider
@@ -102,12 +102,12 @@ class KeepAliveReceiver : DaggerBroadcastReceiver() {
             var shouldUploadStatus = false
             if (config.NSCLIENT) return
             if (config.PUMPCONTROL) shouldUploadStatus = true
-            else if (!loopPlugin.isEnabled() || iobCobCalculatorPlugin.actualBg() == null)
+            else if (!loopPlugin.isEnabled() || iobCobCalculator.actualBg() == null)
                 shouldUploadStatus = true
             else if (dateUtil.isOlderThan(activePlugin.activeAPS.lastAPSRun, 5)) shouldUploadStatus = true
             if (dateUtil.isOlderThan(lastIobUpload, IOB_UPDATE_FREQUENCY_IN_MINUTES) && shouldUploadStatus) {
                 lastIobUpload = dateUtil.now()
-                buildDeviceStatus(dateUtil, loopPlugin, iobCobCalculatorPlugin, profileFunction,
+                buildDeviceStatus(dateUtil, loopPlugin, iobCobCalculator, profileFunction,
                     activePlugin.activePump, receiverStatusStore, runningConfiguration,
                     BuildConfig.VERSION_NAME + "-" + BuildConfig.BUILDVERSION)?.also {
                     repository.insert(it)
