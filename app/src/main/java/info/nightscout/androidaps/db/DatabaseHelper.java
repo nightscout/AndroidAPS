@@ -795,7 +795,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
                     }
                 }
                 // look for already added percentage from NS
-                profileSwitch.profileName = PercentageSplitter.pureName(profileSwitch.profileName);
+                profileSwitch.profileName = PercentageSplitter.INSTANCE.pureName(profileSwitch.profileName);
                 getDaoProfileSwitch().create(profileSwitch);
                 aapsLogger.debug(LTag.DATABASE, "PROFILESWITCH: New record from: " + Source.getString(profileSwitch.source) + " " + profileSwitch.toString());
                 openHumansUploader.enqueueProfileSwitch(profileSwitch);
