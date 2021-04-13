@@ -245,6 +245,12 @@ class SmsCommunicatorPluginTest : TestBaseWithProfile() {
         `when`(resourceHelper.gs(R.string.smscommunicator_pumpdisconnected)).thenReturn("Pump disconnected")
         `when`(resourceHelper.gs(R.string.smscommunicator_code_from_authenticator_for)).thenReturn("from Authenticator app for: %1\$s followed by PIN")
         `when`(resourceHelper.gs(R.string.patient_name_default)).thenReturn("User")
+        `when`(resourceHelper.gsNotLocalised(R.string.loopsuspended)).thenReturn("Loop suspended")
+        `when`(resourceHelper.gsNotLocalised(R.string.smscommunicator_stoppedsms)).thenReturn("SMS Remote Service stopped. To reactivate it, use AAPS on master smartphone.")
+        `when`(resourceHelper.gsNotLocalised(R.string.profileswitchcreated)).thenReturn("Profile switch created")
+        `when`(resourceHelper.gsNotLocalised(R.string.smscommunicator_tempbasalcanceled)).thenReturn("Temp basal canceled")
+        `when`(resourceHelper.gsNotLocalised(R.string.smscommunicator_calibrationsent)).thenReturn("Calibration sent. Receiving must be enabled in xDrip+.")
+        `when`(resourceHelper.gsNotLocalised(R.string.smscommunicator_tt_canceled)).thenReturn("Temp Target canceled successfully")
 
     }
 
