@@ -378,8 +378,9 @@ open class LoopPlugin @Inject constructor(
 
                                 // mId allows you to update the notification later on.
                                 mNotificationManager.notify(Constants.notificationID, builder.build())
-                                uel.log(Action.CAREPORTAL, Sources.Loop,
-                                    ValueWithUnit.StringResource(info.nightscout.androidaps.core.R.string.carbsreq, listOf(ValueWithUnit.Gram(resultAfterConstraints.carbsReq), ValueWithUnit.Minute(resultAfterConstraints.carbsReqWithin))))
+                                uel.log(Action.CAREPORTAL, Sources.Loop, resourceHelper.gs(R.string.carbsreq, resultAfterConstraints.carbsReq, resultAfterConstraints.carbsReqWithin),
+                                    ValueWithUnit.Gram(resultAfterConstraints.carbsReq),
+                                    ValueWithUnit.Minute(resultAfterConstraints.carbsReqWithin))
                                 rxBus.send(EventNewOpenLoopNotification())
 
                                 //only send to wear if Native notifications are turned off

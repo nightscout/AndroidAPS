@@ -64,22 +64,22 @@ class ComboPluginTest : TestBase() {
     }
 
     @Test
-    fun calculateFakePumpTimestamp() {
+    fun `generate bolus ID from timestamp and amount`() {
         val now = System.currentTimeMillis()
         val pumpTimestamp = now - now % 1000
         // same timestamp, different bolus leads to different fake timestamp
         Assert.assertNotEquals(
-            comboPlugin.calculateFakeBolusDate(Bolus(pumpTimestamp, 0.1, true)),
-            comboPlugin.calculateFakeBolusDate(Bolus(pumpTimestamp, 0.3, true))
+            comboPlugin.generatePumpBolusId(Bolus(pumpTimestamp, 0.1, true)),
+            comboPlugin.generatePumpBolusId(Bolus(pumpTimestamp, 0.3, true))
         )
         // different timestamp, same bolus leads to different fake timestamp
         Assert.assertNotEquals(
-            comboPlugin.calculateFakeBolusDate(Bolus(pumpTimestamp, 0.3, true)),
-            comboPlugin.calculateFakeBolusDate(Bolus(pumpTimestamp + 60 * 1000, 0.3, true))
+            comboPlugin.generatePumpBolusId(Bolus(pumpTimestamp, 0.3, true)),
+            comboPlugin.generatePumpBolusId(Bolus(pumpTimestamp + 60 * 1000, 0.3, true))
         )
         // generated timestamp has second-precision
         val bolus = Bolus(pumpTimestamp, 0.2, true)
-        val calculatedTimestamp = comboPlugin.calculateFakeBolusDate(bolus)
+        val calculatedTimestamp = comboPlugin.generatePumpBolusId(bolus)
         Assert.assertEquals(calculatedTimestamp, calculatedTimestamp - calculatedTimestamp % 1000)
     }
 }

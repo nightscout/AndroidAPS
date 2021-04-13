@@ -119,7 +119,6 @@ class UserEntryPresentationHelper @Inject constructor(
         is ValueWithUnit.UnitPerHour           -> DecimalFormatter.to2Decimal(valueWithUnit.value) + translator.translate(valueWithUnit)
         is ValueWithUnit.SimpleInt             -> valueWithUnit.value.toString()
         is ValueWithUnit.SimpleString          -> valueWithUnit.value
-        is ValueWithUnit.StringResource        -> resourceHelper.gs(valueWithUnit.value, *(valueWithUnit.params.map { it.value() }.toTypedArray()))
         is ValueWithUnit.TherapyEventMeterType -> translator.translate(valueWithUnit.value)
         is ValueWithUnit.TherapyEventTTReason  -> translator.translate(valueWithUnit.value)
         is ValueWithUnit.TherapyEventType      -> translator.translate(valueWithUnit.value)
@@ -182,9 +181,6 @@ class UserEntryPresentationHelper @Inject constructor(
         var hour = ""
         var minute = ""
         var other = ""
-        for (valueWithUnit in entry.values) {
-            if (valueWithUnit is ValueWithUnit.StringResource) fullvalueWithUnitList.addAll(valueWithUnit.params)
-        }
 
         for (valueWithUnit in fullvalueWithUnitList.filterNotNull()) {
             when (valueWithUnit) {
@@ -196,7 +192,6 @@ class UserEntryPresentationHelper @Inject constructor(
                 is ValueWithUnit.UnitPerHour           -> unitPerHour = DecimalFormatter.to2Decimal(valueWithUnit.value)
                 is ValueWithUnit.SimpleInt             -> other = other.addWithSeparator(valueWithUnit.value)
                 is ValueWithUnit.SimpleString          -> other = other.addWithSeparator(valueWithUnit.value)
-                is ValueWithUnit.StringResource        -> stringResource = stringResource.addWithSeparator(resourceHelper.gs(valueWithUnit.value, *(valueWithUnit.params.map { it.value() }.toTypedArray())))
                 is ValueWithUnit.TherapyEventMeterType -> therapyEvent = therapyEvent.addWithSeparator(translator.translate(valueWithUnit.value))
                 is ValueWithUnit.TherapyEventTTReason  -> therapyEvent = therapyEvent.addWithSeparator(translator.translate(valueWithUnit.value))
                 is ValueWithUnit.TherapyEventType      -> therapyEvent = therapyEvent.addWithSeparator(translator.translate(valueWithUnit.value))
@@ -222,9 +217,9 @@ class UserEntryPresentationHelper @Inject constructor(
         return "$timestampRec;$dateTimestampRev;$utcOffset;$action;$therapyEvent;$source;$note;$stringResource;$timestamp;$bg;$gram;$insulin;$unitPerHour;$percent;$hour;$minute;$other"
     }
 
-    private fun csvString(action: Action): String = "\"" + translator.translate(action).replace("\"", "\"\"") + "\""
-    private fun csvString(id: Int): String = if (id != 0) "\"" + resourceHelper.gs(id).replace("\"", "\"\"") + "\"" else ""
-    private fun csvString(s: String): String = if (s != "") "\"" + s.replace("\"", "\"\"") + "\"" else ""
+    private fun csvString(action: Action): String = "\"" + translator.translate(action).replace("\"", "\"\"").replace("\n"," / ") + "\""
+    private fun csvString(id: Int): String = if (id != 0) "\"" + resourceHelper.gs(id).replace("\"", "\"\"").replace("\n"," / ") + "\"" else ""
+    private fun csvString(s: String): String = if (s != "") "\"" + s.replace("\"", "\"\"").replace("\n"," / ") + "\"" else ""
 
     private fun String.addWithSeparator(add: Any) =
         this + (if (this.isBlank()) "" else " / ") + add.toString()

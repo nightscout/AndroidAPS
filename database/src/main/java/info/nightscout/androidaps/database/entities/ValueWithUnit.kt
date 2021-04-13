@@ -34,8 +34,6 @@ sealed class ValueWithUnit {
 
     data class TherapyEventTTReason(val value: TemporaryTarget.Reason) : ValueWithUnit()
 
-    data class StringResource(@StringRes val value: Int, val params: List<ValueWithUnit> = listOf()) : ValueWithUnit()
-
     fun value(): Any? {
         return when(this) {
             is Gram -> this.value
@@ -47,7 +45,6 @@ sealed class ValueWithUnit {
             is Percent -> this.value
             is SimpleInt -> this.value
             is SimpleString -> this.value
-            is StringResource -> this.value
             is TherapyEventMeterType -> this.value
             is TherapyEventTTReason -> this.value
             is TherapyEventType -> this.value
