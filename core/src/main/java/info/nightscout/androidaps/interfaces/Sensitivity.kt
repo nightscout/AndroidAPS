@@ -3,7 +3,7 @@ package info.nightscout.androidaps.interfaces
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.AutosensDataStore
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.AutosensResult
 
-interface SensitivityInterface : ConfigExportImportInterface {
+interface Sensitivity : ConfigExportImport {
 
     enum class SensitivityType(val value: Int) {
         UNKNOWN(-1),

@@ -2,7 +2,7 @@ package info.nightscout.androidaps.plugins.constraints.objectives.objectives
 
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.R
-import info.nightscout.androidaps.interfaces.ActivePluginProvider
+import info.nightscout.androidaps.interfaces.ActivePlugin
 import info.nightscout.androidaps.interfaces.IobCobCalculator
 import info.nightscout.androidaps.interfaces.PluginBase
 import info.nightscout.androidaps.interfaces.PluginType
@@ -14,7 +14,7 @@ import javax.inject.Inject
 
 class Objective0(injector: HasAndroidInjector) : Objective(injector, "config", R.string.objectives_0_objective, R.string.objectives_0_gate) {
 
-    @Inject lateinit var activePlugin: ActivePluginProvider
+    @Inject lateinit var activePlugin: ActivePlugin
     @Inject lateinit var virtualPumpPlugin: VirtualPumpPlugin
     @Inject lateinit var treatmentsPlugin: TreatmentsPlugin
     @Inject lateinit var loopPlugin: LoopPlugin

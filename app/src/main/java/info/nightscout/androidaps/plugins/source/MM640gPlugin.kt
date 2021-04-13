@@ -9,7 +9,7 @@ import info.nightscout.androidaps.R
 import info.nightscout.androidaps.database.AppRepository
 import info.nightscout.androidaps.database.entities.GlucoseValue
 import info.nightscout.androidaps.database.transactions.CgmSourceTransaction
-import info.nightscout.androidaps.interfaces.BgSourceInterface
+import info.nightscout.androidaps.interfaces.BgSource
 import info.nightscout.androidaps.interfaces.PluginBase
 import info.nightscout.androidaps.interfaces.PluginDescription
 import info.nightscout.androidaps.interfaces.PluginType
@@ -38,7 +38,7 @@ class MM640gPlugin @Inject constructor(
     .pluginName(R.string.MM640g)
     .description(R.string.description_source_mm640g),
     aapsLogger, resourceHelper, injector
-), BgSourceInterface {
+), BgSource {
 
     // cannot be inner class because of needed injection
     class MM640gWorker(
@@ -107,7 +107,7 @@ class MM640gPlugin @Inject constructor(
         }
     }
 
-    override fun uploadToNs(glucoseValue: GlucoseValue): Boolean =
+    override fun shouldUploadToNs(glucoseValue: GlucoseValue): Boolean =
         glucoseValue.sourceSensor == GlucoseValue.SourceSensor.MM_600_SERIES && sp.getBoolean(R.string.key_dexcomg5_nsupload, false)
 
 }

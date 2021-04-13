@@ -9,7 +9,7 @@ import info.nightscout.androidaps.R
 import info.nightscout.androidaps.database.AppRepository
 import info.nightscout.androidaps.database.entities.GlucoseValue
 import info.nightscout.androidaps.database.transactions.CgmSourceTransaction
-import info.nightscout.androidaps.interfaces.BgSourceInterface
+import info.nightscout.androidaps.interfaces.BgSource
 import info.nightscout.androidaps.interfaces.PluginBase
 import info.nightscout.androidaps.interfaces.PluginDescription
 import info.nightscout.androidaps.interfaces.PluginType
@@ -36,7 +36,7 @@ class TomatoPlugin @Inject constructor(
     .shortName(R.string.tomato_short)
     .description(R.string.description_source_tomato),
     aapsLogger, resourceHelper, injector
-), BgSourceInterface {
+), BgSource {
 
     // cannot be inner class because of needed injection
     class TomatoWorker(
@@ -85,7 +85,7 @@ class TomatoPlugin @Inject constructor(
         }
     }
 
-    override fun uploadToNs(glucoseValue: GlucoseValue): Boolean =
+    override fun shouldUploadToNs(glucoseValue: GlucoseValue): Boolean =
         glucoseValue.sourceSensor == GlucoseValue.SourceSensor.LIBRE_1_TOMATO && sp.getBoolean(R.string.key_dexcomg5_nsupload, false)
 
 }

@@ -18,7 +18,7 @@ import info.nightscout.androidaps.dialogs.BolusProgressDialog
 import info.nightscout.androidaps.events.EventBolusRequested
 import info.nightscout.androidaps.events.EventNewBasalProfile
 import info.nightscout.androidaps.events.EventProfileNeedsUpdate
-import info.nightscout.androidaps.interfaces.ActivePluginProvider
+import info.nightscout.androidaps.interfaces.ActivePlugin
 import info.nightscout.androidaps.interfaces.CommandQueueProvider
 import info.nightscout.androidaps.interfaces.Constraint
 import info.nightscout.androidaps.interfaces.ProfileFunction
@@ -56,7 +56,7 @@ open class CommandQueue @Inject constructor(
     private val resourceHelper: ResourceHelper,
     private val constraintChecker: ConstraintChecker,
     private val profileFunction: ProfileFunction,
-    private val activePlugin: Lazy<ActivePluginProvider>,
+    private val activePlugin: Lazy<ActivePlugin>,
     private val context: Context,
     private val sp: SP,
     private val buildHelper: BuildHelper,

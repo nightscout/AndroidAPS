@@ -15,7 +15,7 @@ import info.nightscout.androidaps.data.PumpEnactResult;
 import info.nightscout.androidaps.events.EventConfigBuilderChange;
 import info.nightscout.androidaps.events.EventPreferenceChange;
 import info.nightscout.androidaps.extensions.PumpStateExtensionKt;
-import info.nightscout.androidaps.interfaces.ActivePluginProvider;
+import info.nightscout.androidaps.interfaces.ActivePlugin;
 import info.nightscout.androidaps.interfaces.CommandQueueProvider;
 import info.nightscout.androidaps.interfaces.Constraint;
 import info.nightscout.androidaps.interfaces.ConstraintsInterface;
@@ -57,7 +57,7 @@ public abstract class AbstractDanaRPlugin extends PumpPluginBase implements Pump
     protected DanaPump danaPump;
     protected ConstraintChecker constraintChecker;
     protected RxBusWrapper rxBus;
-    protected ActivePluginProvider activePlugin;
+    protected ActivePlugin activePlugin;
     protected SP sp;
     protected DateUtil dateUtil;
     protected AapsSchedulers aapsSchedulers;
@@ -72,7 +72,7 @@ public abstract class AbstractDanaRPlugin extends PumpPluginBase implements Pump
             AapsSchedulers aapsSchedulers,
             CommandQueueProvider commandQueue,
             RxBusWrapper rxBus,
-            ActivePluginProvider activePlugin,
+            ActivePlugin activePlugin,
             SP sp,
             DateUtil dateUtil,
             PumpSync pumpSync

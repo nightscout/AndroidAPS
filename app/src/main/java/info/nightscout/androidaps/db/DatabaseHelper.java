@@ -37,7 +37,7 @@ import info.nightscout.androidaps.data.Profile;
 import info.nightscout.androidaps.events.EventProfileNeedsUpdate;
 import info.nightscout.androidaps.events.EventRefreshOverview;
 import info.nightscout.androidaps.events.EventReloadProfileSwitchData;
-import info.nightscout.androidaps.interfaces.ActivePluginProvider;
+import info.nightscout.androidaps.interfaces.ActivePlugin;
 import info.nightscout.androidaps.interfaces.DatabaseHelperInterface;
 import info.nightscout.androidaps.interfaces.ProfileInterface;
 import info.nightscout.androidaps.interfaces.ProfileStore;
@@ -63,7 +63,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
     @Inject RxBusWrapper rxBus;
     @Inject VirtualPumpPlugin virtualPumpPlugin;
     @Inject OpenHumansUploader openHumansUploader;
-    @Inject ActivePluginProvider activePlugin;
+    @Inject ActivePlugin activePlugin;
     @Inject NSUpload nsUpload;
     @Inject DateUtil dateUtil;
 

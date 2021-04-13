@@ -24,7 +24,7 @@ import info.nightscout.androidaps.databinding.TreatmentsBolusCarbsItemBinding
 import info.nightscout.androidaps.dialogs.WizardInfoDialog
 import info.nightscout.androidaps.events.EventAutosensCalculationFinished
 import info.nightscout.androidaps.events.EventTreatmentChange
-import info.nightscout.androidaps.interfaces.ActivePluginProvider
+import info.nightscout.androidaps.interfaces.ActivePlugin
 import info.nightscout.androidaps.interfaces.ProfileFunction
 import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.logging.LTag
@@ -63,7 +63,7 @@ class TreatmentsBolusCarbsFragment : DaggerFragment() {
     @Inject lateinit var aapsSchedulers: AapsSchedulers
     @Inject lateinit var uel: UserEntryLogger
     @Inject lateinit var repository: AppRepository
-    @Inject lateinit var activePlugin: ActivePluginProvider
+    @Inject lateinit var activePlugin: ActivePlugin
 
     class MealLink(
         val bolus: Bolus? = null,

@@ -4,7 +4,7 @@ import dagger.android.AndroidInjector
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.danars.DanaRSPlugin
 import info.nightscout.androidaps.danars.DanaRSTestBase
-import info.nightscout.androidaps.interfaces.ActivePluginProvider
+import info.nightscout.androidaps.interfaces.ActivePlugin
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper
 import info.nightscout.androidaps.plugins.general.overview.events.EventOverviewBolusProgress
 import org.junit.Assert
@@ -21,7 +21,7 @@ import org.powermock.modules.junit4.PowerMockRunner
 @PrepareForTest(RxBusWrapper::class, DanaRSPlugin::class)
 class DanaRSPacketNotifyDeliveryCompleteTest : DanaRSTestBase() {
 
-    @Mock lateinit var activePlugin: ActivePluginProvider
+    @Mock lateinit var activePlugin: ActivePlugin
 
     private val packetInjector = HasAndroidInjector {
         AndroidInjector {

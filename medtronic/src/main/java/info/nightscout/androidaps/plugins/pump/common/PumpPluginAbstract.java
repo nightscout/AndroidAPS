@@ -20,7 +20,7 @@ import info.nightscout.androidaps.data.PumpEnactResult;
 import info.nightscout.androidaps.events.EventAppExit;
 import info.nightscout.androidaps.events.EventCustomActionsChanged;
 import info.nightscout.androidaps.extensions.PumpStateExtensionKt;
-import info.nightscout.androidaps.interfaces.ActivePluginProvider;
+import info.nightscout.androidaps.interfaces.ActivePlugin;
 import info.nightscout.androidaps.interfaces.CommandQueueProvider;
 import info.nightscout.androidaps.interfaces.ConstraintsInterface;
 import info.nightscout.androidaps.interfaces.PluginDescription;
@@ -56,7 +56,7 @@ public abstract class PumpPluginAbstract extends PumpPluginBase implements PumpI
     protected HasAndroidInjector injector;
     protected AAPSLogger aapsLogger;
     protected RxBusWrapper rxBus;
-    protected ActivePluginProvider activePlugin;
+    protected ActivePlugin activePlugin;
     protected Context context;
     protected FabricPrivacy fabricPrivacy;
     protected ResourceHelper resourceHelper;
@@ -80,7 +80,7 @@ public abstract class PumpPluginAbstract extends PumpPluginBase implements PumpI
             AAPSLogger aapsLogger,
             CommandQueueProvider commandQueue,
             RxBusWrapper rxBus,
-            ActivePluginProvider activePlugin,
+            ActivePlugin activePlugin,
             SP sp,
             Context context,
             FabricPrivacy fabricPrivacy,

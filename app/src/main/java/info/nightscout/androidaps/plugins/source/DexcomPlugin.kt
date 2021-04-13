@@ -18,7 +18,7 @@ import info.nightscout.androidaps.database.entities.UserEntry.Action
 import info.nightscout.androidaps.database.entities.UserEntry.Sources
 import info.nightscout.androidaps.database.entities.ValueWithUnit
 import info.nightscout.androidaps.database.transactions.CgmSourceTransaction
-import info.nightscout.androidaps.interfaces.BgSourceInterface
+import info.nightscout.androidaps.interfaces.BgSource
 import info.nightscout.androidaps.interfaces.PluginBase
 import info.nightscout.androidaps.interfaces.PluginDescription
 import info.nightscout.androidaps.interfaces.PluginType
@@ -51,7 +51,7 @@ class DexcomPlugin @Inject constructor(
     .preferencesId(R.xml.pref_bgsourcedexcom)
     .description(R.string.description_source_dexcom),
     aapsLogger, resourceHelper, injector
-), BgSourceInterface {
+), BgSource {
 
     init {
         if (!config.NSCLIENT) {
@@ -63,7 +63,7 @@ class DexcomPlugin @Inject constructor(
         return true
     }
 
-    override fun uploadToNs(glucoseValue: GlucoseValue): Boolean =
+    override fun shouldUploadToNs(glucoseValue: GlucoseValue): Boolean =
         (glucoseValue.sourceSensor == GlucoseValue.SourceSensor.DEXCOM_G6_NATIVE ||
             glucoseValue.sourceSensor == GlucoseValue.SourceSensor.DEXCOM_G5_NATIVE ||
             glucoseValue.sourceSensor == GlucoseValue.SourceSensor.DEXCOM_NATIVE_UNKNOWN)

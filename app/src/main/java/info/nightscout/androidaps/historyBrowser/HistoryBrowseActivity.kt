@@ -16,7 +16,7 @@ import info.nightscout.androidaps.activities.NoSplashAppCompatActivity
 import info.nightscout.androidaps.databinding.ActivityHistorybrowseBinding
 import info.nightscout.androidaps.events.EventCustomCalculationFinished
 import info.nightscout.androidaps.events.EventRefreshOverview
-import info.nightscout.androidaps.interfaces.ActivePluginProvider
+import info.nightscout.androidaps.interfaces.ActivePlugin
 import info.nightscout.androidaps.interfaces.ProfileFunction
 import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.logging.LTag
@@ -51,7 +51,7 @@ class HistoryBrowseActivity : NoSplashAppCompatActivity() {
     @Inject lateinit var defaultValueHelper: DefaultValueHelper
     @Inject lateinit var iobCobCalculatorPluginHistory: IobCobCalculatorPluginHistory
     @Inject lateinit var treatmentsPluginHistory: TreatmentsPluginHistory
-    @Inject lateinit var activePlugin: ActivePluginProvider
+    @Inject lateinit var activePlugin: ActivePlugin
     @Inject lateinit var buildHelper: BuildHelper
     @Inject lateinit var fabricPrivacy: FabricPrivacy
     @Inject lateinit var overviewMenus: OverviewMenus

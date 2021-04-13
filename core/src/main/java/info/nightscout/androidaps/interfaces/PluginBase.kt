@@ -36,7 +36,7 @@ abstract class PluginBase(
         get() {
             if (pluginDescription.shortName == -1) return name
             val translatedName = resourceHelper.gs(pluginDescription.shortName)
-            return if (!translatedName.trim { it <= ' ' }.isEmpty()) translatedName else name
+            return if (translatedName.trim { it <= ' ' }.isNotEmpty()) translatedName else name
             // use long name as fallback
         }
 
@@ -68,7 +68,7 @@ abstract class PluginBase(
     /**
      * So far plugin can have it's main type + ConstraintInterface + ProfileInterface
      * ConstraintInterface is enabled if main plugin is enabled
-     * ProfileInterface can be enabled only  if main iterface is enable
+     * ProfileInterface can be enabled only  if main interface is enable
      */
     fun setPluginEnabled(type: PluginType, newState: Boolean) {
         if (type == pluginDescription.mainType) {
@@ -103,7 +103,7 @@ abstract class PluginBase(
 
     fun showInList(type: PluginType): Boolean {
         if (pluginDescription.mainType == type) return pluginDescription.showInList && specialShowInListCondition()
-        return if (type == PluginType.PROFILE && pluginDescription.mainType == PluginType.PUMP) isEnabled(PluginType.PUMP) else false
+        return false
     }
 
     open fun specialEnableCondition(): Boolean {

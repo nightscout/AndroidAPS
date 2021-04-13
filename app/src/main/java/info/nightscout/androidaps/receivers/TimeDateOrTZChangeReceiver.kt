@@ -4,7 +4,7 @@ import android.content.Context
 import android.content.Intent
 import com.google.gson.Gson
 import dagger.android.DaggerBroadcastReceiver
-import info.nightscout.androidaps.interfaces.ActivePluginProvider
+import info.nightscout.androidaps.interfaces.ActivePlugin
 import info.nightscout.androidaps.interfaces.PumpInterface
 import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.logging.BundleLogger
@@ -15,7 +15,7 @@ import javax.inject.Inject
 
 class TimeDateOrTZChangeReceiver : DaggerBroadcastReceiver() {
     @Inject lateinit var aapsLogger: AAPSLogger
-    @Inject lateinit var activePlugin: ActivePluginProvider
+    @Inject lateinit var activePlugin: ActivePlugin
     val gson: Gson = Gson()
 
     private var isDST = false

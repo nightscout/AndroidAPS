@@ -4,15 +4,15 @@ import info.nightscout.androidaps.data.Iob
 import info.nightscout.androidaps.database.embedments.InterfaceIDs
 import info.nightscout.androidaps.database.entities.Bolus
 import info.nightscout.androidaps.database.entities.TherapyEvent
-import info.nightscout.androidaps.interfaces.ActivePluginProvider
-import info.nightscout.androidaps.interfaces.InsulinInterface
+import info.nightscout.androidaps.interfaces.ActivePlugin
+import info.nightscout.androidaps.interfaces.Insulin
 import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.JsonHelper
 import org.json.JSONObject
 
-fun Bolus.iobCalc(activePlugin: ActivePluginProvider, time: Long, dia: Double): Iob {
+fun Bolus.iobCalc(activePlugin: ActivePlugin, time: Long, dia: Double): Iob {
     if (!isValid  || type == Bolus.Type.PRIMING ) return Iob()
-    val insulinInterface: InsulinInterface = activePlugin.activeInsulin
+    val insulinInterface: Insulin = activePlugin.activeInsulin
     return insulinInterface.iobCalcForTreatment(this, time, dia)
 }
 

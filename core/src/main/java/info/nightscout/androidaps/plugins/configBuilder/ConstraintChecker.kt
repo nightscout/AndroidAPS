@@ -2,7 +2,7 @@ package info.nightscout.androidaps.plugins.configBuilder
 
 import info.nightscout.androidaps.Constants
 import info.nightscout.androidaps.data.Profile
-import info.nightscout.androidaps.interfaces.ActivePluginProvider
+import info.nightscout.androidaps.interfaces.ActivePlugin
 import info.nightscout.androidaps.interfaces.Constraint
 import info.nightscout.androidaps.interfaces.ConstraintsInterface
 import info.nightscout.androidaps.interfaces.PluginType
@@ -10,7 +10,7 @@ import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-class ConstraintChecker @Inject constructor(private val activePlugin: ActivePluginProvider) : ConstraintsInterface {
+class ConstraintChecker @Inject constructor(private val activePlugin: ActivePlugin) : ConstraintsInterface {
 
     fun isLoopInvocationAllowed(): Constraint<Boolean> =
         isLoopInvocationAllowed(Constraint(true))

@@ -43,7 +43,7 @@ class GraphData(
     @Inject lateinit var aapsLogger: AAPSLogger
     @Inject lateinit var profileFunction: ProfileFunction
     @Inject lateinit var resourceHelper: ResourceHelper
-    @Inject lateinit var activePlugin: ActivePluginProvider
+    @Inject lateinit var activePlugin: ActivePlugin
     @Inject lateinit var databaseHelper: DatabaseHelperInterface
     @Inject lateinit var repository: AppRepository
     @Inject lateinit var dateUtil: DateUtil

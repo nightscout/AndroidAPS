@@ -31,7 +31,7 @@ class StatusLinePlugin @Inject constructor(
     private val aapsSchedulers: AapsSchedulers,
     private val context: Context,
     private val fabricPrivacy: FabricPrivacy,
-    private val activePlugin: ActivePluginProvider,
+    private val activePlugin: ActivePlugin,
     private val loopPlugin: LoopPlugin,
     private val iobCobCalculator: IobCobCalculator,
     private val rxBus: RxBusWrapper,

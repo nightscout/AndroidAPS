@@ -35,7 +35,7 @@ class SafetyPlugin @Inject constructor(
     private val openAPSAMAPlugin: OpenAPSAMAPlugin,
     private val openAPSSMBPlugin: OpenAPSSMBPlugin,
     private val sensitivityOref1Plugin: SensitivityOref1Plugin,
-    private val activePlugin: ActivePluginProvider,
+    private val activePlugin: ActivePlugin,
     private val hardLimits: HardLimits,
     private val buildHelper: BuildHelper,
     private val iobCobCalculator: IobCobCalculator,

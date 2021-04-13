@@ -7,7 +7,7 @@ import com.jjoe64.graphview.GraphView
 import com.jjoe64.graphview.series.DataPoint
 import com.jjoe64.graphview.series.LineGraphSeries
 import info.nightscout.androidaps.database.entities.Bolus
-import info.nightscout.androidaps.interfaces.InsulinInterface
+import info.nightscout.androidaps.interfaces.Insulin
 import info.nightscout.androidaps.utils.T
 import java.util.*
 import kotlin.math.floor
@@ -18,7 +18,7 @@ class ActivityGraph : GraphView {
 
     constructor(context: Context, attrs: AttributeSet?) : super(context, attrs)
 
-    fun show(insulin: InsulinInterface) {
+    fun show(insulin: Insulin) {
         removeAllSeries()
         mSecondScale = null
         val hours = floor(insulin.dia + 1).toLong()

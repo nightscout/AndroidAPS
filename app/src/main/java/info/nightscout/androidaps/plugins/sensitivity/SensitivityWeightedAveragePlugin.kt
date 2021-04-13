@@ -13,7 +13,7 @@ import info.nightscout.androidaps.interfaces.DatabaseHelperInterface
 import info.nightscout.androidaps.interfaces.PluginDescription
 import info.nightscout.androidaps.interfaces.PluginType
 import info.nightscout.androidaps.interfaces.ProfileFunction
-import info.nightscout.androidaps.interfaces.SensitivityInterface.SensitivityType
+import info.nightscout.androidaps.interfaces.Sensitivity.SensitivityType
 import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.logging.LTag
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.AutosensDataStore

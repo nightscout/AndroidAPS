@@ -29,7 +29,7 @@ open class DanaRTestBase : TestBase() {
 
     @Mock lateinit var sp: SP
     @Mock lateinit var profileFunction: ProfileFunction
-    @Mock lateinit var activePluginProvider: ActivePluginProvider
+    @Mock lateinit var activePlugin: ActivePlugin
     @Mock lateinit var dateUtil: DateUtil
     @Mock lateinit var databaseHelper: DatabaseHelperInterface
     @Mock lateinit var danaRPlugin: DanaRPlugin
@@ -48,7 +48,7 @@ open class DanaRTestBase : TestBase() {
     fun setup() {
         danaPump = DanaPump(aapsLogger, sp, dateUtil, injector)
         testPumpPlugin = TestPumpPlugin(injector)
-        `when`(activePluginProvider.activePump).thenReturn(testPumpPlugin)
+        `when`(activePlugin.activePump).thenReturn(testPumpPlugin)
         doNothing().`when`(danaRKoreanPlugin).setPluginEnabled(anyObject(), anyBoolean())
         doNothing().`when`(danaRPlugin).setPluginEnabled(anyObject(), anyBoolean())
         `when`(resourceHelper.gs(ArgumentMatchers.anyInt())).thenReturn("")
@@ -65,7 +65,7 @@ open class DanaRTestBase : TestBase() {
                 it.danaRv2Plugin = danaRv2Plugin
                 it.rxBus = RxBusWrapper(aapsSchedulers)
                 it.resourceHelper = resourceHelper
-                it.activePlugin = activePluginProvider
+                it.activePlugin = activePlugin
                 it.configBuilder = configBuilder
                 it.detailedBolusInfoStorage = detailedBolusInfoStorage
                 it.constraintChecker = constraintChecker

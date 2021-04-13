@@ -9,7 +9,7 @@ import info.nightscout.androidaps.Config
 import info.nightscout.androidaps.TestBaseWithProfile
 import info.nightscout.androidaps.TestPumpPlugin
 import info.nightscout.androidaps.database.AppRepository
-import info.nightscout.androidaps.interfaces.ActivePluginProvider
+import info.nightscout.androidaps.interfaces.ActivePlugin
 import info.nightscout.androidaps.interfaces.Constraint
 import info.nightscout.androidaps.interfaces.PumpDescription
 import info.nightscout.androidaps.interfaces.PumpSync
@@ -39,8 +39,8 @@ import org.powermock.modules.junit4.PowerMockRunner
 class QueueThreadTest : TestBaseWithProfile() {
 
     @Mock lateinit var constraintChecker: ConstraintChecker
-    @Mock lateinit var lazyActivePlugin: Lazy<ActivePluginProvider>
-    @Mock lateinit var activePlugin: ActivePluginProvider
+    @Mock lateinit var lazyActivePlugin: Lazy<ActivePlugin>
+    @Mock lateinit var activePlugin: ActivePlugin
     @Mock lateinit var sp: SP
     @Mock lateinit var loggerUtils: LoggerUtils
     @Mock lateinit var powerManager: PowerManager

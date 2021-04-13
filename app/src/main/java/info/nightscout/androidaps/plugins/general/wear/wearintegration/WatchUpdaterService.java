@@ -40,7 +40,7 @@ import info.nightscout.androidaps.database.entities.GlucoseValue;
 import info.nightscout.androidaps.database.entities.TemporaryBasal;
 import info.nightscout.androidaps.extensions.GlucoseValueExtensionKt;
 import info.nightscout.androidaps.extensions.TemporaryBasalExtensionKt;
-import info.nightscout.androidaps.interfaces.ActivePluginProvider;
+import info.nightscout.androidaps.interfaces.ActivePlugin;
 import info.nightscout.androidaps.interfaces.IobCobCalculator;
 import info.nightscout.androidaps.interfaces.PluginType;
 import info.nightscout.androidaps.interfaces.ProfileFunction;
@@ -72,7 +72,7 @@ public class WatchUpdaterService extends WearableListenerService implements Goog
     @Inject public ProfileFunction profileFunction;
     @Inject public DefaultValueHelper defaultValueHelper;
     @Inject public NSDeviceStatus nsDeviceStatus;
-    @Inject public ActivePluginProvider activePlugin;
+    @Inject public ActivePlugin activePlugin;
     @Inject public LoopPlugin loopPlugin;
     @Inject public IobCobCalculator iobCobCalculator;
     @Inject public AppRepository repository;

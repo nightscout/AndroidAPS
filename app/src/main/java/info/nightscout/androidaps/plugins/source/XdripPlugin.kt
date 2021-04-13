@@ -9,7 +9,7 @@ import info.nightscout.androidaps.R
 import info.nightscout.androidaps.database.AppRepository
 import info.nightscout.androidaps.database.entities.GlucoseValue
 import info.nightscout.androidaps.database.transactions.CgmSourceTransaction
-import info.nightscout.androidaps.interfaces.BgSourceInterface
+import info.nightscout.androidaps.interfaces.BgSource
 import info.nightscout.androidaps.interfaces.PluginBase
 import info.nightscout.androidaps.interfaces.PluginDescription
 import info.nightscout.androidaps.interfaces.PluginType
@@ -33,12 +33,12 @@ class XdripPlugin @Inject constructor(
     .pluginName(R.string.xdrip)
     .description(R.string.description_source_xdrip),
     aapsLogger, resourceHelper, injector
-), BgSourceInterface {
+), BgSource {
 
     private var advancedFiltering = false
     override var sensorBatteryLevel = -1
 
-    override fun uploadToNs(glucoseValue: GlucoseValue): Boolean  = false
+    override fun shouldUploadToNs(glucoseValue: GlucoseValue): Boolean  = false
 
     override fun advancedFilteringSupported(): Boolean {
         return advancedFiltering

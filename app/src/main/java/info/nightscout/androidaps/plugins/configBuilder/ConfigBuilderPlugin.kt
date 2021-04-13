@@ -29,7 +29,7 @@ class ConfigBuilderPlugin @Inject constructor(
     resourceHelper: ResourceHelper,
     private val sp: SP,
     private val rxBus: RxBusWrapper,
-    private val activePlugin: ActivePluginProvider,
+    private val activePlugin: ActivePlugin,
     private val uel: UserEntryLogger,
     private val pumpSync: PumpSync
 ) : PluginBase(PluginDescription()
@@ -180,11 +180,11 @@ class ConfigBuilderPlugin @Inject constructor(
     fun processOnEnabledCategoryChanged(changedPlugin: PluginBase, type: PluginType?) {
         var pluginsInCategory: ArrayList<PluginBase>? = null
         when (type) {
-            PluginType.INSULIN     -> pluginsInCategory = activePlugin.getSpecificPluginsListByInterface(InsulinInterface::class.java)
-            PluginType.SENSITIVITY -> pluginsInCategory = activePlugin.getSpecificPluginsListByInterface(SensitivityInterface::class.java)
-            PluginType.APS         -> pluginsInCategory = activePlugin.getSpecificPluginsListByInterface(APSInterface::class.java)
+            PluginType.INSULIN     -> pluginsInCategory = activePlugin.getSpecificPluginsListByInterface(Insulin::class.java)
+            PluginType.SENSITIVITY -> pluginsInCategory = activePlugin.getSpecificPluginsListByInterface(Sensitivity::class.java)
+            PluginType.APS         -> pluginsInCategory = activePlugin.getSpecificPluginsListByInterface(APS::class.java)
             PluginType.PROFILE     -> pluginsInCategory = activePlugin.getSpecificPluginsListByInterface(ProfileInterface::class.java)
-            PluginType.BGSOURCE    -> pluginsInCategory = activePlugin.getSpecificPluginsListByInterface(BgSourceInterface::class.java)
+            PluginType.BGSOURCE    -> pluginsInCategory = activePlugin.getSpecificPluginsListByInterface(BgSource::class.java)
             PluginType.TREATMENT   -> pluginsInCategory = activePlugin.getSpecificPluginsListByInterface(TreatmentsInterface::class.java)
             PluginType.PUMP        -> pluginsInCategory = activePlugin.getSpecificPluginsListByInterface(PumpInterface::class.java)
 

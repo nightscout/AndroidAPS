@@ -23,7 +23,7 @@ import info.nightscout.androidaps.db.Source;
 import info.nightscout.androidaps.db.TemporaryBasal;
 import info.nightscout.androidaps.db.Treatment;
 import info.nightscout.androidaps.events.EventReloadProfileSwitchData;
-import info.nightscout.androidaps.interfaces.ActivePluginProvider;
+import info.nightscout.androidaps.interfaces.ActivePlugin;
 import info.nightscout.androidaps.interfaces.DatabaseHelperInterface;
 import info.nightscout.androidaps.interfaces.PluginBase;
 import info.nightscout.androidaps.interfaces.PluginDescription;
@@ -54,7 +54,7 @@ public class TreatmentsPlugin extends PluginBase implements TreatmentsInterface 
     private final RxBusWrapper rxBus;
     private final ResourceHelper resourceHelper;
     private final ProfileFunction profileFunction;
-    private final ActivePluginProvider activePlugin;
+    private final ActivePlugin activePlugin;
     private final NSUpload nsUpload;
     private final FabricPrivacy fabricPrivacy;
     private final DateUtil dateUtil;
@@ -77,7 +77,7 @@ public class TreatmentsPlugin extends PluginBase implements TreatmentsInterface 
             Context context,
             SP sp,
             ProfileFunction profileFunction,
-            ActivePluginProvider activePlugin,
+            ActivePlugin activePlugin,
             NSUpload nsUpload,
             FabricPrivacy fabricPrivacy,
             DateUtil dateUtil,

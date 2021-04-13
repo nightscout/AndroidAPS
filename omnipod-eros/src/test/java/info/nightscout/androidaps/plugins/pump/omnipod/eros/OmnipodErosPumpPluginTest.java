@@ -25,7 +25,7 @@ import java.util.ArrayList;
 import dagger.android.HasAndroidInjector;
 import info.nightscout.androidaps.data.Profile;
 import info.nightscout.androidaps.data.PumpEnactResult;
-import info.nightscout.androidaps.interfaces.ActivePluginProvider;
+import info.nightscout.androidaps.interfaces.ActivePlugin;
 import info.nightscout.androidaps.interfaces.CommandQueueProvider;
 import info.nightscout.androidaps.interfaces.PumpSync;
 import info.nightscout.androidaps.logging.AAPSLogger;
@@ -46,7 +46,7 @@ public class OmnipodErosPumpPluginTest {
     AAPSLogger aapsLogger = new AAPSLoggerTest();
     RxBusWrapper rxBusWrapper = new RxBusWrapper(new TestAapsSchedulers());
     @Mock ResourceHelper resourceHelper;
-    @Mock(answer = Answers.RETURNS_DEEP_STUBS) ActivePluginProvider activePluginProvider;
+    @Mock(answer = Answers.RETURNS_DEEP_STUBS) ActivePlugin activePlugin;
     @Mock AapsOmnipodErosManager aapsOmnipodErosManager;
     @Mock CommandQueueProvider commandQueueProvider;
     @Mock RileyLinkUtil rileyLinkUtil;
@@ -66,7 +66,7 @@ public class OmnipodErosPumpPluginTest {
         // mock all the things
         PowerMockito.mockStatic(Looper.class);
         OmnipodErosPumpPlugin plugin = new OmnipodErosPumpPlugin(injector, aapsLogger, new TestAapsSchedulers(), rxBusWrapper, null,
-                resourceHelper, activePluginProvider, null, null, aapsOmnipodErosManager, commandQueueProvider,
+                resourceHelper, activePlugin, null, null, aapsOmnipodErosManager, commandQueueProvider,
                 null, null, null, null,
                 rileyLinkUtil, null, null, pumpSync
         );

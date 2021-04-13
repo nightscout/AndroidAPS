@@ -47,7 +47,7 @@ class SWDefinition @Inject constructor(
     private val sp: SP,
     private val profileFunction: ProfileFunction,
     private val localProfilePlugin: LocalProfilePlugin,
-    private val activePlugin: ActivePluginProvider,
+    private val activePlugin: ActivePlugin,
     private val commandQueue: CommandQueueProvider,
     private val objectivesPlugin: ObjectivesPlugin,
     private val configBuilder: ConfigBuilder,
@@ -269,13 +269,13 @@ class SWDefinition @Inject constructor(
         .add(SWFragment(injector, this)
             .add(NSProfileFragment()))
         .validator { nsProfilePlugin.profile != null && nsProfilePlugin.profile!!.getDefaultProfile() != null && nsProfilePlugin.profile!!.getDefaultProfile()!!.isValid("StartupWizard") }
-        .visibility { nsProfilePlugin.isEnabled(PluginType.PROFILE) }
+        .visibility { nsProfilePlugin.isEnabled() }
     private val screenLocalProfile = SWScreen(injector, R.string.localprofile)
         .skippable(false)
         .add(SWFragment(injector, this)
             .add(LocalProfileFragment()))
         .validator { localProfilePlugin.profile?.getDefaultProfile()?.isValid("StartupWizard") == true }
-        .visibility { localProfilePlugin.isEnabled(PluginType.PROFILE) }
+        .visibility { localProfilePlugin.isEnabled() }
     private val screenProfileSwitch = SWScreen(injector, R.string.careportal_profileswitch)
         .skippable(false)
         .add(SWInfoText(injector)

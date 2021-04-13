@@ -16,7 +16,7 @@ import javax.inject.Inject;
 import dagger.android.HasAndroidInjector;
 import info.nightscout.androidaps.Constants;
 import info.nightscout.androidaps.core.R;
-import info.nightscout.androidaps.interfaces.ActivePluginProvider;
+import info.nightscout.androidaps.interfaces.ActivePlugin;
 import info.nightscout.androidaps.interfaces.ConfigInterface;
 import info.nightscout.androidaps.interfaces.ProfileFunction;
 import info.nightscout.androidaps.interfaces.PumpDescription;
@@ -33,7 +33,7 @@ import info.nightscout.androidaps.utils.resources.ResourceHelper;
 
 public class Profile {
     @Inject public AAPSLogger aapsLogger;
-    @Inject public ActivePluginProvider activePlugin;
+    @Inject public ActivePlugin activePlugin;
     @Inject public ResourceHelper resourceHelper;
     @Inject public RxBusWrapper rxBus;
     @Inject public FabricPrivacy fabricPrivacy;

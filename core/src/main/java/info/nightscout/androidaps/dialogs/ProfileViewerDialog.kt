@@ -13,7 +13,7 @@ import info.nightscout.androidaps.Constants
 import info.nightscout.androidaps.core.R
 import info.nightscout.androidaps.core.databinding.DialogProfileviewerBinding
 import info.nightscout.androidaps.data.Profile
-import info.nightscout.androidaps.interfaces.ActivePluginProvider
+import info.nightscout.androidaps.interfaces.ActivePlugin
 import info.nightscout.androidaps.interfaces.DatabaseHelperInterface
 import info.nightscout.androidaps.interfaces.ProfileFunction
 import info.nightscout.androidaps.utils.DateUtil
@@ -27,7 +27,7 @@ class ProfileViewerDialog : DaggerDialogFragment() {
 
     @Inject lateinit var injector: HasAndroidInjector
     @Inject lateinit var resourceHelper: ResourceHelper
-    @Inject lateinit var activePlugin: ActivePluginProvider
+    @Inject lateinit var activePlugin: ActivePlugin
     @Inject lateinit var dateUtil: DateUtil
     @Inject lateinit var profileFunction: ProfileFunction
     @Inject lateinit var databaseHelper: DatabaseHelperInterface

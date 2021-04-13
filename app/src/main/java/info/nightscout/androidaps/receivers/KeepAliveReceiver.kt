@@ -18,7 +18,7 @@ import info.nightscout.androidaps.Config
 import info.nightscout.androidaps.database.AppRepository
 import info.nightscout.androidaps.events.EventProfileNeedsUpdate
 import info.nightscout.androidaps.extensions.buildDeviceStatus
-import info.nightscout.androidaps.interfaces.ActivePluginProvider
+import info.nightscout.androidaps.interfaces.ActivePlugin
 import info.nightscout.androidaps.interfaces.CommandQueueProvider
 import info.nightscout.androidaps.interfaces.IobCobCalculator
 import info.nightscout.androidaps.interfaces.ProfileFunction
@@ -64,7 +64,7 @@ class KeepAliveReceiver : DaggerBroadcastReceiver() {
         @Inject lateinit var iobCobCalculator: IobCobCalculator
         @Inject lateinit var loopPlugin: LoopPlugin
         @Inject lateinit var dateUtil: DateUtil
-        @Inject lateinit var activePlugin: ActivePluginProvider
+        @Inject lateinit var activePlugin: ActivePlugin
         @Inject lateinit var profileFunction: ProfileFunction
         @Inject lateinit var runningConfiguration: RunningConfiguration
         @Inject lateinit var receiverStatusStore: ReceiverStatusStore

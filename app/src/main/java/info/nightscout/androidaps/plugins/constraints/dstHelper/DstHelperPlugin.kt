@@ -24,7 +24,7 @@ class DstHelperPlugin @Inject constructor(
     private var rxBus: RxBusWrapper,
     resourceHelper: ResourceHelper,
     private var sp: SP,
-    private var activePlugin: ActivePluginProvider,
+    private var activePlugin: ActivePlugin,
     private var loopPlugin: LoopPlugin
 ) : PluginBase(PluginDescription()
     .mainType(PluginType.CONSTRAINTS)

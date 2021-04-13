@@ -70,7 +70,7 @@ class SmsCommunicatorPlugin @Inject constructor(
     private val rxBus: RxBusWrapper,
     private val profileFunction: ProfileFunction,
     private val fabricPrivacy: FabricPrivacy,
-    private val activePlugin: ActivePluginProvider,
+    private val activePlugin: ActivePlugin,
     private val commandQueue: CommandQueueProvider,
     private val loopPlugin: LoopPlugin,
     private val iobCobCalculator: IobCobCalculator,

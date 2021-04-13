@@ -8,7 +8,7 @@ import info.nightscout.androidaps.database.entities.ExtendedBolus
 import info.nightscout.androidaps.database.entities.TemporaryBasal
 import info.nightscout.androidaps.database.entities.TherapyEvent
 import info.nightscout.androidaps.database.interfaces.end
-import info.nightscout.androidaps.interfaces.InsulinInterface
+import info.nightscout.androidaps.interfaces.Insulin
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.AutosensResult
 import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.DecimalFormatter.to2Decimal
@@ -125,7 +125,7 @@ fun extendedBolusFromJson(jsonObject: JSONObject): ExtendedBolus? {
     }
 }
 
-fun ExtendedBolus.iobCalc(time: Long, profile: Profile, insulinInterface: InsulinInterface): IobTotal {
+fun ExtendedBolus.iobCalc(time: Long, profile: Profile, insulinInterface: Insulin): IobTotal {
     val result = IobTotal(time)
     val realDuration = getPassedDurationToTimeInMinutes(time)
     if (realDuration > 0) {
@@ -153,7 +153,7 @@ fun ExtendedBolus.iobCalc(time: Long, profile: Profile, insulinInterface: Insuli
     return result
 }
 
-fun ExtendedBolus.iobCalc(time: Long, profile: Profile, lastAutosensResult: AutosensResult, exercise_mode: Boolean, half_basal_exercise_target: Int, isTempTarget: Boolean, insulinInterface: InsulinInterface): IobTotal {
+fun ExtendedBolus.iobCalc(time: Long, profile: Profile, lastAutosensResult: AutosensResult, exercise_mode: Boolean, half_basal_exercise_target: Int, isTempTarget: Boolean, insulinInterface: Insulin): IobTotal {
     val result = IobTotal(time)
     val realDuration = getPassedDurationToTimeInMinutes(time)
     var sensitivityRatio = lastAutosensResult.ratio

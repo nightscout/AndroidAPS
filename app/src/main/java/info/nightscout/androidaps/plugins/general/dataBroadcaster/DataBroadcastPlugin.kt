@@ -45,7 +45,7 @@ class DataBroadcastPlugin @Inject constructor(
     private val defaultValueHelper: DefaultValueHelper,
     private val nsDeviceStatus: NSDeviceStatus,
     private val loopPlugin: LoopPlugin,
-    private val activePlugin: ActivePluginProvider,
+    private val activePlugin: ActivePlugin,
     private var receiverStatusStore: ReceiverStatusStore,
     private val config: Config,
     private val glucoseStatusProvider: GlucoseStatusProvider

@@ -41,7 +41,7 @@ open class ActionsTestBase : TestBaseWithProfile() {
     @Mock lateinit var sp: SP
     @Mock lateinit var commandQueue: CommandQueueProvider
     @Mock lateinit var configBuilder: ConfigBuilder
-    @Mock lateinit var activePlugin: ActivePluginProvider
+    @Mock lateinit var activePlugin: ActivePlugin
     @Mock lateinit var profilePlugin: ProfileInterface
     @Mock lateinit var smsCommunicatorPlugin: SmsCommunicatorInterface
     @Mock lateinit var loopPlugin: TestLoopPlugin

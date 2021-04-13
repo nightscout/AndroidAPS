@@ -3,7 +3,7 @@ package info.nightscout.androidaps.danars.comm
 import dagger.android.AndroidInjector
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.danars.encryption.BleEncryption
-import info.nightscout.androidaps.interfaces.ActivePluginProvider
+import info.nightscout.androidaps.interfaces.ActivePlugin
 import info.nightscout.androidaps.interfaces.Constraint
 import info.nightscout.androidaps.plugins.configBuilder.ConstraintChecker
 import info.nightscout.androidaps.plugins.pump.common.bolusInfo.DetailedBolusInfoStorage
@@ -20,7 +20,7 @@ import org.powermock.modules.junit4.PowerMockRunner
 @PrepareForTest(ConstraintChecker::class, DetailedBolusInfoStorage::class)
 class DanaRsMessageHashTableTest : DanaRSTestBase() {
 
-    @Mock lateinit var activePlugin: ActivePluginProvider
+    @Mock lateinit var activePlugin: ActivePlugin
     @Mock lateinit var constraintChecker: ConstraintChecker
     @Mock lateinit var detailedBolusInfoStorage: DetailedBolusInfoStorage
 

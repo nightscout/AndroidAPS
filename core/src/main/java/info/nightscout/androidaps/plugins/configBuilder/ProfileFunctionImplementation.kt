@@ -9,7 +9,7 @@ import info.nightscout.androidaps.data.Profile
 import info.nightscout.androidaps.db.ProfileSwitch
 import info.nightscout.androidaps.db.Source
 import info.nightscout.androidaps.interfaces.ProfileStore
-import info.nightscout.androidaps.interfaces.ActivePluginProvider
+import info.nightscout.androidaps.interfaces.ActivePlugin
 import info.nightscout.androidaps.interfaces.ProfileFunction
 import info.nightscout.androidaps.interfaces.TreatmentsInterface
 import info.nightscout.androidaps.logging.AAPSLogger
@@ -27,7 +27,7 @@ class ProfileFunctionImplementation @Inject constructor(
     private val aapsLogger: AAPSLogger,
     private val sp: SP,
     private val resourceHelper: ResourceHelper,
-    private val activePlugin: ActivePluginProvider,
+    private val activePlugin: ActivePlugin,
     private val fabricPrivacy: FabricPrivacy,
     private val dateUtil: DateUtil
 ) : ProfileFunction {

@@ -26,7 +26,7 @@ class ObjectivesPlugin @Inject constructor(
     injector: HasAndroidInjector,
     aapsLogger: AAPSLogger,
     resourceHelper: ResourceHelper,
-    private val activePlugin: ActivePluginProvider,
+    private val activePlugin: ActivePlugin,
     private val sp: SP,
     config: Config,
     private val dateUtil: DateUtil,

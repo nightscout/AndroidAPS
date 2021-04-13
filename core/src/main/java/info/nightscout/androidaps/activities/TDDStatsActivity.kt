@@ -20,7 +20,7 @@ import info.nightscout.androidaps.core.databinding.ActivityTddStatsBinding
 import info.nightscout.androidaps.db.TDD
 import info.nightscout.androidaps.events.EventDanaRSyncStatus
 import info.nightscout.androidaps.events.EventPumpStatusChanged
-import info.nightscout.androidaps.interfaces.ActivePluginProvider
+import info.nightscout.androidaps.interfaces.ActivePlugin
 import info.nightscout.androidaps.interfaces.CommandQueueProvider
 import info.nightscout.androidaps.interfaces.DatabaseHelperInterface
 import info.nightscout.androidaps.interfaces.ProfileFunction
@@ -47,7 +47,7 @@ class TDDStatsActivity : NoSplashAppCompatActivity() {
     @Inject lateinit var rxBus: RxBusWrapper
     @Inject lateinit var sp: SP
     @Inject lateinit var profileFunction: ProfileFunction
-    @Inject lateinit var activePlugin: ActivePluginProvider
+    @Inject lateinit var activePlugin: ActivePlugin
     @Inject lateinit var commandQueue: CommandQueueProvider
     @Inject lateinit var databaseHelper: DatabaseHelperInterface
     @Inject lateinit var fabricPrivacy: FabricPrivacy

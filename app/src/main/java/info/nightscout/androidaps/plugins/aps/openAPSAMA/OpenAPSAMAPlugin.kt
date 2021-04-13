@@ -36,7 +36,7 @@ open class OpenAPSAMAPlugin @Inject constructor(
     resourceHelper: ResourceHelper,
     private val profileFunction: ProfileFunction,
     private val context: Context,
-    private val activePlugin: ActivePluginProvider,
+    private val activePlugin: ActivePlugin,
     private val iobCobCalculator: IobCobCalculator,
     private val hardLimits: HardLimits,
     private val profiler: Profiler,
@@ -53,7 +53,7 @@ open class OpenAPSAMAPlugin @Inject constructor(
     .preferencesId(R.xml.pref_openapsama)
     .description(R.string.description_ama),
     aapsLogger, resourceHelper, injector
-), APSInterface {
+), APS {
 
     // last values
     override var lastAPSRun: Long = 0

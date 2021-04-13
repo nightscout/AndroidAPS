@@ -5,7 +5,7 @@ import dagger.android.AndroidInjector
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.danars.DanaRSPlugin
 import info.nightscout.androidaps.danars.DanaRSTestBase
-import info.nightscout.androidaps.interfaces.ActivePluginProvider
+import info.nightscout.androidaps.interfaces.ActivePlugin
 import info.nightscout.androidaps.interfaces.CommandQueueProvider
 import info.nightscout.androidaps.interfaces.PumpSync
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper
@@ -27,7 +27,7 @@ import org.powermock.modules.junit4.PowerMockRunner
 @PrepareForTest(ConstraintChecker::class, RxBusWrapper::class, DetailedBolusInfoStorage::class, TemporaryBasalStorage::class)
 class DanaRsPacketNotifyDeliveryRateDisplayTest : DanaRSTestBase() {
 
-    @Mock lateinit var activePlugin: ActivePluginProvider
+    @Mock lateinit var activePlugin: ActivePlugin
     @Mock lateinit var constraintChecker: ConstraintChecker
     @Mock lateinit var commandQueue: CommandQueueProvider
     @Mock lateinit var context: Context

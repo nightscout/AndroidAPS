@@ -35,7 +35,7 @@ import info.nightscout.androidaps.data.PumpEnactResult;
 import info.nightscout.androidaps.db.Source;
 import info.nightscout.androidaps.db.TemporaryBasal;
 import info.nightscout.androidaps.events.EventRefreshOverview;
-import info.nightscout.androidaps.interfaces.ActivePluginProvider;
+import info.nightscout.androidaps.interfaces.ActivePlugin;
 import info.nightscout.androidaps.interfaces.CommandQueueProvider;
 import info.nightscout.androidaps.interfaces.PluginDescription;
 import info.nightscout.androidaps.interfaces.PluginType;
@@ -127,7 +127,7 @@ public class MedtronicPumpPlugin extends PumpPluginAbstract implements PumpInter
             RxBusWrapper rxBus,
             Context context,
             ResourceHelper resourceHelper,
-            ActivePluginProvider activePlugin,
+            ActivePlugin activePlugin,
             SP sp,
             CommandQueueProvider commandQueue,
             FabricPrivacy fabricPrivacy,

@@ -75,7 +75,7 @@ open class AppModule {
     interface AppBindings {
         @Binds fun bindContext(mainApp: MainApp): Context
         @Binds fun bindInjector(mainApp: MainApp): HasAndroidInjector
-        @Binds fun bindActivePluginProvider(pluginStore: PluginStore): ActivePluginProvider
+        @Binds fun bindActivePluginProvider(pluginStore: PluginStore): ActivePlugin
         @Binds fun bindCommandQueueProvider(commandQueue: CommandQueue): CommandQueueProvider
         @Binds fun bindConfigInterface(config: Config): ConfigInterface
         @Binds fun bindConfigBuilderInterface(configBuilderPlugin: ConfigBuilderPlugin): ConfigBuilder

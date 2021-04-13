@@ -95,7 +95,7 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
     @Inject lateinit var statusLightHandler: StatusLightHandler
     @Inject lateinit var nsDeviceStatus: NSDeviceStatus
     @Inject lateinit var loopPlugin: LoopPlugin
-    @Inject lateinit var activePlugin: ActivePluginProvider
+    @Inject lateinit var activePlugin: ActivePlugin
     @Inject lateinit var treatmentsPlugin: TreatmentsPlugin
     @Inject lateinit var iobCobCalculator: IobCobCalculator
     @Inject lateinit var dexcomPlugin: DexcomPlugin

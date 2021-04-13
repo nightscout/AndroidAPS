@@ -15,7 +15,7 @@ import info.nightscout.androidaps.data.Profile
 import info.nightscout.androidaps.data.PumpEnactResult
 import info.nightscout.androidaps.events.EventAppExit
 import info.nightscout.androidaps.events.EventPreferenceChange
-import info.nightscout.androidaps.interfaces.ActivePluginProvider
+import info.nightscout.androidaps.interfaces.ActivePlugin
 import info.nightscout.androidaps.interfaces.CommandQueueProvider
 import info.nightscout.androidaps.interfaces.Constraint
 import info.nightscout.androidaps.interfaces.PluginType
@@ -48,7 +48,7 @@ class DanaRKoreanPlugin @Inject constructor(
     private val context: Context,
     resourceHelper: ResourceHelper,
     constraintChecker: ConstraintChecker,
-    activePlugin: ActivePluginProvider,
+    activePlugin: ActivePlugin,
     sp: SP,
     commandQueue: CommandQueueProvider,
     danaPump: DanaPump,

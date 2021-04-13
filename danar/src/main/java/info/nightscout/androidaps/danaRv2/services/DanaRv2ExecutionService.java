@@ -55,7 +55,7 @@ import info.nightscout.androidaps.dialogs.BolusProgressDialog;
 import info.nightscout.androidaps.events.EventInitializationChanged;
 import info.nightscout.androidaps.events.EventProfileNeedsUpdate;
 import info.nightscout.androidaps.events.EventPumpStatusChanged;
-import info.nightscout.androidaps.interfaces.ActivePluginProvider;
+import info.nightscout.androidaps.interfaces.ActivePlugin;
 import info.nightscout.androidaps.interfaces.CommandQueueProvider;
 import info.nightscout.androidaps.interfaces.ProfileFunction;
 import info.nightscout.androidaps.interfaces.PumpInterface;
@@ -82,7 +82,7 @@ public class DanaRv2ExecutionService extends AbstractDanaRExecutionService {
     @Inject DanaPump danaPump;
     @Inject DanaRKoreanPlugin danaRKoreanPlugin;
     @Inject DanaRv2Plugin danaRv2Plugin;
-    @Inject ActivePluginProvider activePlugin;
+    @Inject ActivePlugin activePlugin;
     @Inject CommandQueueProvider commandQueue;
     @Inject Context context;
     @Inject MessageHashTableRv2 messageHashTableRv2;

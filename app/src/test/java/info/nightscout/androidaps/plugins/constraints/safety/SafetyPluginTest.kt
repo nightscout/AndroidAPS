@@ -7,7 +7,7 @@ import info.nightscout.androidaps.Constants
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.TestBaseWithProfile
 import info.nightscout.androidaps.database.AppRepository
-import info.nightscout.androidaps.interfaces.ActivePluginProvider
+import info.nightscout.androidaps.interfaces.ActivePlugin
 import info.nightscout.androidaps.interfaces.Constraint
 import info.nightscout.androidaps.interfaces.PumpDescription
 import info.nightscout.androidaps.plugins.aps.openAPSAMA.OpenAPSAMAPlugin
@@ -37,7 +37,7 @@ class SafetyPluginTest : TestBaseWithProfile() {
     @Mock lateinit var openAPSAMAPlugin: OpenAPSAMAPlugin
     @Mock lateinit var openAPSSMBPlugin: OpenAPSSMBPlugin
     @Mock lateinit var sensitivityOref1Plugin: SensitivityOref1Plugin
-    @Mock lateinit var activePlugin: ActivePluginProvider
+    @Mock lateinit var activePlugin: ActivePlugin
     @Mock lateinit var buildHelper: BuildHelper
     @Mock lateinit var virtualPumpPlugin: VirtualPumpPlugin
     @Mock lateinit var glimpPlugin: GlimpPlugin

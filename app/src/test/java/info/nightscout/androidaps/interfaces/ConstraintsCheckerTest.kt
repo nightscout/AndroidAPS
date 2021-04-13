@@ -55,7 +55,7 @@ import java.util.*
     UserEntryLogger::class, LoggerUtils::class, AppRepository::class)
 class ConstraintsCheckerTest : TestBaseWithProfile() {
 
-    @Mock lateinit var activePlugin: ActivePluginProvider
+    @Mock lateinit var activePlugin: ActivePlugin
     @Mock lateinit var virtualPumpPlugin: VirtualPumpPlugin
     @Mock lateinit var sp: SP
     @Mock lateinit var commandQueue: CommandQueueProvider

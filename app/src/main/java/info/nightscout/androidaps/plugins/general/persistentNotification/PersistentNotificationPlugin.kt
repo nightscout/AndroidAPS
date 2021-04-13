@@ -35,7 +35,7 @@ class PersistentNotificationPlugin @Inject constructor(
     private val aapsSchedulers: AapsSchedulers,
     private val profileFunction: ProfileFunction,
     private val fabricPrivacy: FabricPrivacy,
-    private val activePlugins: ActivePluginProvider,
+    private val activePlugins: ActivePlugin,
     private val iobCobCalculator: IobCobCalculator,
     private val rxBus: RxBusWrapper,
     private val context: Context,
