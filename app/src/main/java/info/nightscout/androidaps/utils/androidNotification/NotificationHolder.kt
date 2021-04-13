@@ -9,7 +9,7 @@ import androidx.core.app.NotificationCompat
 import androidx.core.app.TaskStackBuilder
 import info.nightscout.androidaps.MainActivity
 import info.nightscout.androidaps.core.R
-import info.nightscout.androidaps.interfaces.IconsProviderInterface
+import info.nightscout.androidaps.interfaces.IconsProvider
 import info.nightscout.androidaps.interfaces.NotificationHolderInterface
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 import javax.inject.Inject
@@ -19,7 +19,7 @@ import javax.inject.Singleton
 class NotificationHolder @Inject constructor(
     resourceHelper: ResourceHelper,
     context: Context,
-    iconsProvider: IconsProviderInterface
+    iconsProvider: IconsProvider
 ) : NotificationHolderInterface {
 
     override val channelID = "AndroidAPS-Ongoing"

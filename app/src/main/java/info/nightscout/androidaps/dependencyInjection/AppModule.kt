@@ -24,7 +24,7 @@ import info.nightscout.androidaps.plugins.pump.PumpSyncImplementation
 import info.nightscout.androidaps.plugins.treatments.TreatmentsPlugin
 import info.nightscout.androidaps.queue.CommandQueue
 import info.nightscout.androidaps.utils.androidNotification.NotificationHolder
-import info.nightscout.androidaps.utils.resources.IconsProvider
+import info.nightscout.androidaps.utils.resources.IconsProviderImplementation
 import info.nightscout.androidaps.utils.rx.AapsSchedulers
 import info.nightscout.androidaps.utils.rx.DefaultAapsSchedulers
 import info.nightscout.androidaps.utils.sharedPreferences.SP
@@ -83,7 +83,7 @@ open class AppModule {
         @Binds fun bindDatabaseHelperInterface(databaseHelperProvider: DatabaseHelperProvider): DatabaseHelperInterface
         @Binds fun bindNotificationHolderInterface(notificationHolder: NotificationHolder): NotificationHolderInterface
         @Binds fun bindImportExportPrefsInterface(importExportPrefs: ImportExportPrefs): ImportExportPrefsInterface
-        @Binds fun bindIconsProviderInterface(iconsProvider: IconsProvider): IconsProviderInterface
+        @Binds fun bindIconsProviderInterface(iconsProvider: IconsProviderImplementation): IconsProvider
         @Binds fun bindLoopInterface(loopPlugin: LoopPlugin): LoopInterface
         @Binds fun bindIobCobCalculatorInterface(iobCobCalculatorPlugin: IobCobCalculatorPlugin): IobCobCalculator
         @Binds fun bindSmsCommunicatorInterface(smsCommunicatorPlugin: SmsCommunicatorPlugin): SmsCommunicatorInterface
