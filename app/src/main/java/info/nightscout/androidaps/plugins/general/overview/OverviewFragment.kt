@@ -44,7 +44,6 @@ import info.nightscout.androidaps.logging.UserEntryLogger
 import info.nightscout.androidaps.plugins.aps.loop.LoopPlugin
 import info.nightscout.androidaps.plugins.aps.loop.events.EventNewOpenLoopNotification
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper
-import info.nightscout.androidaps.plugins.configBuilder.ConfigBuilderPlugin
 import info.nightscout.androidaps.plugins.configBuilder.ConstraintChecker
 import info.nightscout.androidaps.plugins.general.nsclient.data.NSDeviceStatus
 import info.nightscout.androidaps.plugins.general.overview.activities.QuickWizardListActivity
@@ -96,7 +95,6 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
     @Inject lateinit var statusLightHandler: StatusLightHandler
     @Inject lateinit var nsDeviceStatus: NSDeviceStatus
     @Inject lateinit var loopPlugin: LoopPlugin
-    @Inject lateinit var configBuilderPlugin: ConfigBuilderPlugin
     @Inject lateinit var activePlugin: ActivePluginProvider
     @Inject lateinit var treatmentsPlugin: TreatmentsPlugin
     @Inject lateinit var iobCobCalculator: IobCobCalculator

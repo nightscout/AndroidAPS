@@ -45,7 +45,7 @@ class ActionLoopEnableTest : ActionsTestBase() {
             override fun run() {}
         })
         Mockito.verify(loopPlugin, Mockito.times(1)).setPluginEnabled(PluginType.LOOP, true)
-        Mockito.verify(configBuilderPlugin, Mockito.times(1)).storeSettings("ActionLoopEnable")
+        Mockito.verify(configBuilder, Mockito.times(1)).storeSettings("ActionLoopEnable")
 
         `when`(loopPlugin.isEnabled()).thenReturn(true)
 
@@ -54,6 +54,6 @@ class ActionLoopEnableTest : ActionsTestBase() {
             override fun run() {}
         })
         Mockito.verify(loopPlugin, Mockito.times(1)).setPluginEnabled(PluginType.LOOP, true)
-        Mockito.verify(configBuilderPlugin, Mockito.times(1)).storeSettings("ActionLoopEnable")
+        Mockito.verify(configBuilder, Mockito.times(1)).storeSettings("ActionLoopEnable")
     }
 }

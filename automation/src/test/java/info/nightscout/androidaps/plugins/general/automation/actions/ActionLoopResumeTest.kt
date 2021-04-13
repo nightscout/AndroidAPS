@@ -42,7 +42,7 @@ class ActionLoopResumeTest : ActionsTestBase() {
             override fun run() {}
         })
         Mockito.verify(loopPlugin, Mockito.times(1)).suspendTo(0)
-        Mockito.verify(configBuilderPlugin, Mockito.times(1)).storeSettings("ActionLoopResume")
+        Mockito.verify(configBuilder, Mockito.times(1)).storeSettings("ActionLoopResume")
         Mockito.verify(loopPlugin, Mockito.times(1)).createOfflineEvent(0)
 
         // another call should keep it resumed, , no new invocation
@@ -51,7 +51,7 @@ class ActionLoopResumeTest : ActionsTestBase() {
             override fun run() {}
         })
         Mockito.verify(loopPlugin, Mockito.times(1)).suspendTo(0)
-        Mockito.verify(configBuilderPlugin, Mockito.times(1)).storeSettings("ActionLoopResume")
+        Mockito.verify(configBuilder, Mockito.times(1)).storeSettings("ActionLoopResume")
         Mockito.verify(loopPlugin, Mockito.times(1)).createOfflineEvent(0)
     }
 }

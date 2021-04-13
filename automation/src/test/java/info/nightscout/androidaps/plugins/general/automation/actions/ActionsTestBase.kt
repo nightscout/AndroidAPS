@@ -40,7 +40,7 @@ open class ActionsTestBase : TestBaseWithProfile() {
 
     @Mock lateinit var sp: SP
     @Mock lateinit var commandQueue: CommandQueueProvider
-    @Mock lateinit var configBuilderPlugin: ConfigBuilderInterface
+    @Mock lateinit var configBuilder: ConfigBuilder
     @Mock lateinit var activePlugin: ActivePluginProvider
     @Mock lateinit var profilePlugin: ProfileInterface
     @Mock lateinit var smsCommunicatorPlugin: SmsCommunicatorInterface
@@ -99,21 +99,21 @@ open class ActionsTestBase : TestBaseWithProfile() {
             if (it is ActionLoopResume) {
                 it.loopPlugin = loopPlugin
                 it.resourceHelper = resourceHelper
-                it.configBuilderPlugin = configBuilderPlugin
+                it.configBuilder = configBuilder
                 it.rxBus = rxBus
                 it.uel = uel
             }
             if (it is ActionLoopEnable) {
                 it.loopPlugin = loopPlugin
                 it.resourceHelper = resourceHelper
-                it.configBuilderPlugin = configBuilderPlugin
+                it.configBuilder = configBuilder
                 it.rxBus = rxBus
                 it.uel = uel
             }
             if (it is ActionLoopDisable) {
                 it.loopPlugin = loopPlugin
                 it.resourceHelper = resourceHelper
-                it.configBuilderPlugin = configBuilderPlugin
+                it.configBuilder = configBuilder
                 it.commandQueue = commandQueue
                 it.rxBus = rxBus
                 it.uel = uel

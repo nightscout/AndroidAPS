@@ -12,14 +12,9 @@ import info.nightscout.androidaps.Constants
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.dialogs.ProfileSwitchDialog
 import info.nightscout.androidaps.events.EventPumpStatusChanged
-import info.nightscout.androidaps.interfaces.ActivePluginProvider
-import info.nightscout.androidaps.interfaces.CommandQueueProvider
-import info.nightscout.androidaps.interfaces.ImportExportPrefsInterface
-import info.nightscout.androidaps.interfaces.PluginType
-import info.nightscout.androidaps.interfaces.ProfileFunction
+import info.nightscout.androidaps.interfaces.*
 import info.nightscout.androidaps.plugins.aps.loop.LoopPlugin
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper
-import info.nightscout.androidaps.plugins.configBuilder.ConfigBuilderPlugin
 import info.nightscout.androidaps.plugins.constraints.objectives.ObjectivesFragment
 import info.nightscout.androidaps.plugins.constraints.objectives.ObjectivesPlugin
 import info.nightscout.androidaps.plugins.general.nsclient.NSClientPlugin
@@ -55,7 +50,7 @@ class SWDefinition @Inject constructor(
     private val activePlugin: ActivePluginProvider,
     private val commandQueue: CommandQueueProvider,
     private val objectivesPlugin: ObjectivesPlugin,
-    private val configBuilderPlugin: ConfigBuilderPlugin,
+    private val configBuilder: ConfigBuilder,
     private val loopPlugin: LoopPlugin,
     private val nsClientPlugin: NSClientPlugin,
     private val nsProfilePlugin: NSProfilePlugin,
@@ -174,7 +169,7 @@ class SWDefinition @Inject constructor(
         .add(SWButton(injector)
             .text(R.string.enable_nsclient)
             .action {
-                configBuilderPlugin.performPluginSwitch(nsClientPlugin, true, PluginType.GENERAL)
+                configBuilder.performPluginSwitch(nsClientPlugin, true, PluginType.GENERAL)
                 rxBus.send(EventSWUpdate(true))
             }
             .visibility { !nsClientPlugin.isEnabled(PluginType.GENERAL) })
@@ -360,7 +355,7 @@ class SWDefinition @Inject constructor(
         .add(SWButton(injector)
             .text(R.string.enableloop)
             .action {
-                configBuilderPlugin.performPluginSwitch(loopPlugin, true, PluginType.LOOP)
+                configBuilder.performPluginSwitch(loopPlugin, true, PluginType.LOOP)
                 rxBus.send(EventSWUpdate(true))
             }
             .visibility { !loopPlugin.isEnabled(PluginType.LOOP) })

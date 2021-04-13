@@ -2,7 +2,7 @@ package info.nightscout.androidaps.plugins.configBuilder
 
 import info.nightscout.androidaps.core.R
 import info.nightscout.androidaps.interfaces.ActivePluginProvider
-import info.nightscout.androidaps.interfaces.ConfigBuilderInterface
+import info.nightscout.androidaps.interfaces.ConfigBuilder
 import info.nightscout.androidaps.interfaces.InsulinInterface
 import info.nightscout.androidaps.interfaces.PluginType
 import info.nightscout.androidaps.interfaces.SensitivityInterface
@@ -19,7 +19,7 @@ import javax.inject.Singleton
 @Singleton
 class RunningConfiguration @Inject constructor(
     private val activePlugin: ActivePluginProvider,
-    private val configBuilder: ConfigBuilderInterface,
+    private val configBuilder: ConfigBuilder,
     private val sp: SP,
     private val aapsLogger: AAPSLogger
 ) {

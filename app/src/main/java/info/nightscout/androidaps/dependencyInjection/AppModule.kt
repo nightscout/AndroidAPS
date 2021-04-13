@@ -78,7 +78,7 @@ open class AppModule {
         @Binds fun bindActivePluginProvider(pluginStore: PluginStore): ActivePluginProvider
         @Binds fun bindCommandQueueProvider(commandQueue: CommandQueue): CommandQueueProvider
         @Binds fun bindConfigInterface(config: Config): ConfigInterface
-        @Binds fun bindConfigBuilderInterface(configBuilderPlugin: ConfigBuilderPlugin): ConfigBuilderInterface
+        @Binds fun bindConfigBuilderInterface(configBuilderPlugin: ConfigBuilderPlugin): ConfigBuilder
         @Binds fun bindTreatmentsInterface(treatmentsPlugin: TreatmentsPlugin): TreatmentsInterface
         @Binds fun bindDatabaseHelperInterface(databaseHelperProvider: DatabaseHelperProvider): DatabaseHelperInterface
         @Binds fun bindNotificationHolderInterface(notificationHolder: NotificationHolder): NotificationHolderInterface

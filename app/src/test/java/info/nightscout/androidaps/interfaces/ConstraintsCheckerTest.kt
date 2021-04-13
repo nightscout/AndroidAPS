@@ -14,7 +14,6 @@ import info.nightscout.androidaps.database.AppRepository
 import info.nightscout.androidaps.logging.UserEntryLogger
 import info.nightscout.androidaps.plugins.aps.openAPSAMA.OpenAPSAMAPlugin
 import info.nightscout.androidaps.plugins.aps.openAPSSMB.OpenAPSSMBPlugin
-import info.nightscout.androidaps.plugins.configBuilder.ConfigBuilderPlugin
 import info.nightscout.androidaps.plugins.configBuilder.ConstraintChecker
 import info.nightscout.androidaps.plugins.constraints.objectives.ObjectivesPlugin
 import info.nightscout.androidaps.plugins.constraints.objectives.objectives.Objective
@@ -50,7 +49,7 @@ import java.util.*
  */
 @RunWith(PowerMockRunner::class)
 @PrepareForTest(
-    ConfigBuilderPlugin::class, ConstraintChecker::class, SP::class, Context::class,
+    ConstraintChecker::class, SP::class, Context::class,
     OpenAPSAMAPlugin::class, OpenAPSSMBPlugin::class, TreatmentsPlugin::class, TreatmentService::class,
     VirtualPumpPlugin::class, DetailedBolusInfoStorage::class, TemporaryBasalStorage::class, GlimpPlugin::class, Profiler::class,
     UserEntryLogger::class, LoggerUtils::class, AppRepository::class)

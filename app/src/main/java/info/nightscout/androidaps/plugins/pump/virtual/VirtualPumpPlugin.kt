@@ -152,7 +152,7 @@ open class VirtualPumpPlugin @Inject constructor(
 
     override fun setNewBasalProfile(profile: Profile): PumpEnactResult {
         lastDataTime = System.currentTimeMillis()
-        // Do nothing here. we are using ConfigBuilderPlugin.getPlugin().getActiveProfile().getProfile();
+        // Do nothing here. we are using database profile
         val result = PumpEnactResult(injector)
         result.success = true
         val notification = Notification(Notification.PROFILE_SET_OK, resourceHelper.gs(R.string.profile_set_ok), Notification.INFO, 60)

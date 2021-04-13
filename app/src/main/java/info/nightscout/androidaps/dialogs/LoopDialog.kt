@@ -23,7 +23,6 @@ import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.logging.UserEntryLogger
 import info.nightscout.androidaps.plugins.aps.loop.LoopPlugin
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper
-import info.nightscout.androidaps.plugins.configBuilder.ConfigBuilderPlugin
 import info.nightscout.androidaps.plugins.configBuilder.ConstraintChecker
 import info.nightscout.androidaps.queue.Callback
 import info.nightscout.androidaps.utils.FabricPrivacy
@@ -47,7 +46,7 @@ class LoopDialog : DaggerDialogFragment() {
     @Inject lateinit var activePlugin: ActivePluginProvider
     @Inject lateinit var constraintChecker: ConstraintChecker
     @Inject lateinit var commandQueue: CommandQueueProvider
-    @Inject lateinit var configBuilderPlugin: ConfigBuilderPlugin
+    @Inject lateinit var configBuilder: ConfigBuilder
     @Inject lateinit var uel: UserEntryLogger
 
     private var showOkCancel: Boolean = true
@@ -265,7 +264,7 @@ class LoopDialog : DaggerDialogFragment() {
                 uel.log(Action.LOOP_DISABLED, Sources.LoopDialog)
                 loopPlugin.setPluginEnabled(PluginType.LOOP, false)
                 loopPlugin.setFragmentVisible(PluginType.LOOP, false)
-                configBuilderPlugin.storeSettings("DisablingLoop")
+                configBuilder.storeSettings("DisablingLoop")
                 rxBus.send(EventRefreshOverview("suspendmenu"))
                 commandQueue.cancelTempBasal(true, object : Callback() {
                     override fun run() {
@@ -282,7 +281,7 @@ class LoopDialog : DaggerDialogFragment() {
                 uel.log(Action.LOOP_ENABLED, Sources.LoopDialog)
                 loopPlugin.setPluginEnabled(PluginType.LOOP, true)
                 loopPlugin.setFragmentVisible(PluginType.LOOP, true)
-                configBuilderPlugin.storeSettings("EnablingLoop")
+                configBuilder.storeSettings("EnablingLoop")
                 rxBus.send(EventRefreshOverview("suspendmenu"))
                 loopPlugin.createOfflineEvent(0)
                 return true

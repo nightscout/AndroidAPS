@@ -19,7 +19,7 @@ import info.nightscout.androidaps.danaRv2.DanaRv2Plugin;
 import info.nightscout.androidaps.danar.DanaRPlugin;
 import info.nightscout.androidaps.interfaces.ActivePluginProvider;
 import info.nightscout.androidaps.interfaces.CommandQueueProvider;
-import info.nightscout.androidaps.interfaces.ConfigBuilderInterface;
+import info.nightscout.androidaps.interfaces.ConfigBuilder;
 import info.nightscout.androidaps.interfaces.DatabaseHelperInterface;
 import info.nightscout.androidaps.interfaces.PumpSync;
 import info.nightscout.androidaps.logging.AAPSLogger;
@@ -48,7 +48,7 @@ public class MessageBase {
     @Inject public RxBusWrapper rxBus;
     @Inject public ResourceHelper resourceHelper;
     @Inject public ActivePluginProvider activePlugin;
-    @Inject public ConfigBuilderInterface configBuilder;
+    @Inject public ConfigBuilder configBuilder;
     @Inject public CommandQueueProvider commandQueue;
     @Inject public DetailedBolusInfoStorage detailedBolusInfoStorage;
     @Inject public TemporaryBasalStorage temporaryBasalStorage;

@@ -43,9 +43,9 @@ class ConfigBuilderPlugin @Inject constructor(
     .shortName(R.string.configbuilder_shortname)
     .description(R.string.description_config_builder),
     aapsLogger, resourceHelper, injector
-), ConfigBuilderInterface {
+), ConfigBuilder {
 
-    fun initialize() {
+    override fun initialize() {
         (activePlugin as PluginStore).loadDefaults()
         loadSettings()
         setAlwaysEnabledPluginsEnabled()

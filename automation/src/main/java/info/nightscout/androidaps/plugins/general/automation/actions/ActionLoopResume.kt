@@ -7,7 +7,7 @@ import info.nightscout.androidaps.data.PumpEnactResult
 import info.nightscout.androidaps.database.entities.UserEntry
 import info.nightscout.androidaps.database.entities.UserEntry.Sources
 import info.nightscout.androidaps.events.EventRefreshOverview
-import info.nightscout.androidaps.interfaces.ConfigBuilderInterface
+import info.nightscout.androidaps.interfaces.ConfigBuilder
 import info.nightscout.androidaps.interfaces.LoopInterface
 import info.nightscout.androidaps.logging.UserEntryLogger
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper
@@ -18,7 +18,7 @@ import javax.inject.Inject
 class ActionLoopResume(injector: HasAndroidInjector) : Action(injector) {
     @Inject lateinit var resourceHelper: ResourceHelper
     @Inject lateinit var loopPlugin: LoopInterface
-    @Inject lateinit var configBuilderPlugin: ConfigBuilderInterface
+    @Inject lateinit var configBuilder: ConfigBuilder
     @Inject lateinit var rxBus: RxBusWrapper
     @Inject lateinit var uel: UserEntryLogger
 
@@ -29,7 +29,7 @@ class ActionLoopResume(injector: HasAndroidInjector) : Action(injector) {
     override fun doAction(callback: Callback) {
         if (loopPlugin.isSuspended) {
             loopPlugin.suspendTo(0)
-            configBuilderPlugin.storeSettings("ActionLoopResume")
+            configBuilder.storeSettings("ActionLoopResume")
             loopPlugin.createOfflineEvent(0)
             rxBus.send(EventRefreshOverview("ActionLoopResume"))
             uel.log(UserEntry.Action.RESUME, Sources.Automation, title)

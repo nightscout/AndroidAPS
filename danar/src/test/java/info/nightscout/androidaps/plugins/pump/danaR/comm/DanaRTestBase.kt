@@ -36,7 +36,7 @@ open class DanaRTestBase : TestBase() {
     @Mock lateinit var danaRKoreanPlugin: DanaRKoreanPlugin
     @Mock lateinit var danaRv2Plugin: DanaRv2Plugin
     @Mock lateinit var resourceHelper: ResourceHelper
-    @Mock lateinit var configBuilder: ConfigBuilderInterface
+    @Mock lateinit var configBuilder: ConfigBuilder
     @Mock lateinit var commandQueue: CommandQueueProvider
     @Mock lateinit var detailedBolusInfoStorage: DetailedBolusInfoStorage
     @Mock lateinit var constraintChecker: ConstraintChecker
