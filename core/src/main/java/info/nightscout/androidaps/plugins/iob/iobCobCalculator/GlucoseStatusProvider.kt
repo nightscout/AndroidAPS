@@ -20,7 +20,7 @@ class GlucoseStatusProvider @Inject constructor(
         get() = getGlucoseStatusData()
 
     fun getGlucoseStatusData(allowOldData: Boolean = false): GlucoseStatus? {
-        val data = iobCobCalculator.getBgReadingsDataTableCopy()
+        val data = iobCobCalculator.ads.getBgReadingsDataTableCopy()
         val sizeRecords = data.size
         if (sizeRecords == 0) {
             aapsLogger.debug(LTag.GLUCOSE, "sizeRecords==0")

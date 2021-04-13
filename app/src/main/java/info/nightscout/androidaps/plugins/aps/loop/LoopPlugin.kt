@@ -124,7 +124,7 @@ open class LoopPlugin @Inject constructor(
             .subscribe({ event: EventAutosensCalculationFinished ->
                 // Autosens calculation not triggered by a new BG
                 if (event.cause !is EventNewBG) return@subscribe
-                val glucoseValue = iobCobCalculator.actualBg() ?: return@subscribe
+                val glucoseValue = iobCobCalculator.ads.actualBg() ?: return@subscribe
                 // BG outdated
                 // already looped with that value
                 if (glucoseValue.timestamp <= lastBgTriggeredRun) return@subscribe

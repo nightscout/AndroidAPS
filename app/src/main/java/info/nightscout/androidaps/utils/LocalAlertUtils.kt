@@ -110,7 +110,7 @@ class LocalAlertUtils @Inject constructor(
     }
 
     fun checkStaleBGAlert() {
-        val bgReading = iobCobCalculator.lastBg()
+        val bgReading = iobCobCalculator.ads.lastBg()
         if (sp.getBoolean(R.string.key_enable_missed_bg_readings_alert, false)
             && bgReading != null && bgReading.timestamp + missedReadingsThreshold() < System.currentTimeMillis() && sp.getLong("nextMissedReadingsAlarm", 0L) < System.currentTimeMillis()) {
             val n = Notification(Notification.BG_READINGS_MISSED, resourceHelper.gs(R.string.missed_bg_readings), Notification.URGENT)

@@ -1,68 +1,27 @@
 package info.nightscout.androidaps.plugins.iob.iobCobCalculator
 
 import android.content.Context
-import android.os.PowerManager
-import dagger.android.AndroidInjector
-import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.TestBase
-import info.nightscout.androidaps.database.AppRepository
 import info.nightscout.androidaps.database.entities.GlucoseValue
-import info.nightscout.androidaps.interfaces.ActivePluginProvider
-import info.nightscout.androidaps.interfaces.ProfileFunction
-import info.nightscout.androidaps.plugins.bus.RxBusWrapper
-import info.nightscout.androidaps.plugins.sensitivity.SensitivityAAPSPlugin
-import info.nightscout.androidaps.plugins.sensitivity.SensitivityOref1Plugin
-import info.nightscout.androidaps.plugins.sensitivity.SensitivityWeightedAveragePlugin
 import info.nightscout.androidaps.utils.DateUtil
-import info.nightscout.androidaps.utils.FabricPrivacy
 import info.nightscout.androidaps.utils.T
-import info.nightscout.androidaps.utils.resources.ResourceHelper
-import info.nightscout.androidaps.utils.sharedPreferences.SP
 import org.junit.Assert
 import org.junit.Before
 import org.junit.Test
-import org.junit.runner.RunWith
 import org.mockito.Mock
-import org.mockito.Mockito.`when`
-import org.powermock.core.classloader.annotations.PrepareForTest
-import org.powermock.modules.junit4.PowerMockRunner
 import java.util.*
 
-@RunWith(PowerMockRunner::class)
-@PrepareForTest(FabricPrivacy::class, AppRepository::class)
-class IobCobCalculatorPluginTest : TestBase() {
+class AutosensDataStoreTest : TestBase() {
 
-    @Mock lateinit var sp: SP
-    private val rxBus = RxBusWrapper(aapsSchedulers)
-    @Mock lateinit var resourceHelper: ResourceHelper
-    @Mock lateinit var profileFunction: ProfileFunction
-    @Mock lateinit var activePlugin: ActivePluginProvider
-    @Mock lateinit var sensitivityOref1Plugin: SensitivityOref1Plugin
-    @Mock lateinit var sensitivityAAPSPlugin: SensitivityAAPSPlugin
-    @Mock lateinit var sensitivityWeightedAveragePlugin: SensitivityWeightedAveragePlugin
-    @Mock lateinit var fabricPrivacy: FabricPrivacy
-    @Mock lateinit var repository: AppRepository
     @Mock lateinit var context: Context
-    @Mock lateinit var powerManager: PowerManager
 
     lateinit var dateUtil: DateUtil
-    private lateinit var iobCobCalculatorPlugin: IobCobCalculatorPlugin
 
-    val injector = HasAndroidInjector {
-        AndroidInjector {
-            if (it is IobCobThread) {
-                it.context = context
-                it.resourceHelper = resourceHelper
-            }
-        }
-    }
+    private val autosensDataStore = AutosensDataStore()
 
     @Before
     fun mock() {
         dateUtil = DateUtil(context)
-        `when`(context.applicationContext).thenReturn(context)
-        `when`(context.getSystemService(anyObject())).thenReturn(powerManager)
-        iobCobCalculatorPlugin = IobCobCalculatorPlugin(injector, aapsLogger, aapsSchedulers, rxBus, sp, resourceHelper, profileFunction, activePlugin, sensitivityOref1Plugin, sensitivityAAPSPlugin, sensitivityWeightedAveragePlugin, fabricPrivacy, dateUtil, repository)
     }
 
     @Test
@@ -75,8 +34,8 @@ class IobCobCalculatorPluginTest : TestBase() {
         bgReadingList.add(GlucoseValue(raw = 0.0, noise = 0.0, value = 100.0, timestamp = T.mins(15).msecs(), sourceSensor = GlucoseValue.SourceSensor.UNKNOWN, trendArrow = GlucoseValue.TrendArrow.FLAT))
         bgReadingList.add(GlucoseValue(raw = 0.0, noise = 0.0, value = 100.0, timestamp = T.mins(10).msecs(), sourceSensor = GlucoseValue.SourceSensor.UNKNOWN, trendArrow = GlucoseValue.TrendArrow.FLAT))
         bgReadingList.add(GlucoseValue(raw = 0.0, noise = 0.0, value = 100.0, timestamp = T.mins(5).msecs(), sourceSensor = GlucoseValue.SourceSensor.UNKNOWN, trendArrow = GlucoseValue.TrendArrow.FLAT))
-        iobCobCalculatorPlugin.bgReadings = bgReadingList
-        Assert.assertEquals(true, iobCobCalculatorPlugin.isAbout5minData)
+        autosensDataStore.bgReadings = bgReadingList
+        Assert.assertEquals(true, autosensDataStore.isAbout5minData(aapsLogger))
 
         // too much shifted data should return false
         bgReadingList.clear()
@@ -84,16 +43,16 @@ class IobCobCalculatorPluginTest : TestBase() {
         bgReadingList.add(GlucoseValue(raw = 0.0, noise = 0.0, value = 100.0, timestamp = T.mins(15).msecs(), sourceSensor = GlucoseValue.SourceSensor.UNKNOWN, trendArrow = GlucoseValue.TrendArrow.FLAT))
         bgReadingList.add(GlucoseValue(raw = 0.0, noise = 0.0, value = 100.0, timestamp = T.mins(9).msecs(), sourceSensor = GlucoseValue.SourceSensor.UNKNOWN, trendArrow = GlucoseValue.TrendArrow.FLAT))
         bgReadingList.add(GlucoseValue(raw = 0.0, noise = 0.0, value = 100.0, timestamp = T.mins(5).msecs(), sourceSensor = GlucoseValue.SourceSensor.UNKNOWN, trendArrow = GlucoseValue.TrendArrow.FLAT))
-        iobCobCalculatorPlugin.bgReadings = bgReadingList
-        Assert.assertEquals(false, iobCobCalculatorPlugin.isAbout5minData)
+        autosensDataStore.bgReadings = bgReadingList
+        Assert.assertEquals(false, autosensDataStore.isAbout5minData(aapsLogger))
 
         // too much shifted and missing data should return false
         bgReadingList.clear()
         bgReadingList.add(GlucoseValue(raw = 0.0, noise = 0.0, value = 100.0, timestamp = T.mins(20).msecs(), sourceSensor = GlucoseValue.SourceSensor.UNKNOWN, trendArrow = GlucoseValue.TrendArrow.FLAT))
         bgReadingList.add(GlucoseValue(raw = 0.0, noise = 0.0, value = 100.0, timestamp = T.mins(9).msecs(), sourceSensor = GlucoseValue.SourceSensor.UNKNOWN, trendArrow = GlucoseValue.TrendArrow.FLAT))
         bgReadingList.add(GlucoseValue(raw = 0.0, noise = 0.0, value = 100.0, timestamp = T.mins(5).msecs(), sourceSensor = GlucoseValue.SourceSensor.UNKNOWN, trendArrow = GlucoseValue.TrendArrow.FLAT))
-        iobCobCalculatorPlugin.bgReadings = bgReadingList
-        Assert.assertEquals(false, iobCobCalculatorPlugin.isAbout5minData)
+        autosensDataStore.bgReadings = bgReadingList
+        Assert.assertEquals(false, autosensDataStore.isAbout5minData(aapsLogger))
 
         // too much shifted and missing data should return false
         bgReadingList.clear()
@@ -111,8 +70,8 @@ class IobCobCalculatorPluginTest : TestBase() {
         bgReadingList.add(GlucoseValue(raw = 0.0, noise = 0.0, value = 100.0, timestamp = T.mins(28).plus(T.secs(0)).msecs(), sourceSensor = GlucoseValue.SourceSensor.UNKNOWN, trendArrow = GlucoseValue.TrendArrow.FLAT))
         bgReadingList.add(GlucoseValue(raw = 0.0, noise = 0.0, value = 100.0, timestamp = T.mins(23).plus(T.secs(0)).msecs(), sourceSensor = GlucoseValue.SourceSensor.UNKNOWN, trendArrow = GlucoseValue.TrendArrow.FLAT))
         bgReadingList.add(GlucoseValue(raw = 0.0, noise = 0.0, value = 100.0, timestamp = T.mins(16).plus(T.secs(36)).msecs(), sourceSensor = GlucoseValue.SourceSensor.UNKNOWN, trendArrow = GlucoseValue.TrendArrow.FLAT))
-        iobCobCalculatorPlugin.bgReadings = bgReadingList
-        Assert.assertEquals(false, iobCobCalculatorPlugin.isAbout5minData)
+        autosensDataStore.bgReadings = bgReadingList
+        Assert.assertEquals(false, autosensDataStore.isAbout5minData(aapsLogger))
 
         // slightly shifted data should return true
         bgReadingList.clear()
@@ -120,16 +79,16 @@ class IobCobCalculatorPluginTest : TestBase() {
         bgReadingList.add(GlucoseValue(raw = 0.0, noise = 0.0, value = 100.0, timestamp = T.mins(15).msecs(), sourceSensor = GlucoseValue.SourceSensor.UNKNOWN, trendArrow = GlucoseValue.TrendArrow.FLAT))
         bgReadingList.add(GlucoseValue(raw = 0.0, noise = 0.0, value = 100.0, timestamp = T.mins(10).plus(T.secs(10)).msecs(), sourceSensor = GlucoseValue.SourceSensor.UNKNOWN, trendArrow = GlucoseValue.TrendArrow.FLAT))
         bgReadingList.add(GlucoseValue(raw = 0.0, noise = 0.0, value = 100.0, timestamp = T.mins(5).msecs(), sourceSensor = GlucoseValue.SourceSensor.UNKNOWN, trendArrow = GlucoseValue.TrendArrow.FLAT))
-        iobCobCalculatorPlugin.bgReadings = bgReadingList
-        Assert.assertEquals(true, iobCobCalculatorPlugin.isAbout5minData)
+        autosensDataStore.bgReadings = bgReadingList
+        Assert.assertEquals(true, autosensDataStore.isAbout5minData(aapsLogger))
 
         // slightly shifted and missing data should return true
         bgReadingList.clear()
         bgReadingList.add(GlucoseValue(raw = 0.0, noise = 0.0, value = 100.0, timestamp = T.mins(20).msecs(), sourceSensor = GlucoseValue.SourceSensor.UNKNOWN, trendArrow = GlucoseValue.TrendArrow.FLAT))
         bgReadingList.add(GlucoseValue(raw = 0.0, noise = 0.0, value = 100.0, timestamp = T.mins(10).plus(T.secs(10)).msecs(), sourceSensor = GlucoseValue.SourceSensor.UNKNOWN, trendArrow = GlucoseValue.TrendArrow.FLAT))
         bgReadingList.add(GlucoseValue(raw = 0.0, noise = 0.0, value = 100.0, timestamp = T.mins(5).msecs(), sourceSensor = GlucoseValue.SourceSensor.UNKNOWN, trendArrow = GlucoseValue.TrendArrow.FLAT))
-        iobCobCalculatorPlugin.bgReadings = bgReadingList
-        Assert.assertEquals(true, iobCobCalculatorPlugin.isAbout5minData)
+        autosensDataStore.bgReadings = bgReadingList
+        Assert.assertEquals(true, autosensDataStore.isAbout5minData(aapsLogger))
     }
 
     @Test
@@ -142,24 +101,24 @@ class IobCobCalculatorPluginTest : TestBase() {
         bgReadingList.add(GlucoseValue(raw = 0.0, noise = 0.0, value = 100.0, timestamp = T.mins(15).msecs(), sourceSensor = GlucoseValue.SourceSensor.UNKNOWN, trendArrow = GlucoseValue.TrendArrow.FLAT))
         bgReadingList.add(GlucoseValue(raw = 0.0, noise = 0.0, value = 100.0, timestamp = T.mins(10).msecs(), sourceSensor = GlucoseValue.SourceSensor.UNKNOWN, trendArrow = GlucoseValue.TrendArrow.FLAT))
         bgReadingList.add(GlucoseValue(raw = 0.0, noise = 0.0, value = 100.0, timestamp = T.mins(5).msecs(), sourceSensor = GlucoseValue.SourceSensor.UNKNOWN, trendArrow = GlucoseValue.TrendArrow.FLAT))
-        iobCobCalculatorPlugin.bgReadings = bgReadingList
-        Assert.assertEquals(true, iobCobCalculatorPlugin.isAbout5minData)
-        iobCobCalculatorPlugin.createBucketedData()
-        Assert.assertEquals(bgReadingList[0].timestamp, iobCobCalculatorPlugin.bucketedData!![0].timestamp)
-        Assert.assertEquals(bgReadingList[3].timestamp, iobCobCalculatorPlugin.bucketedData!![3].timestamp)
-        Assert.assertEquals(bgReadingList.size.toLong(), iobCobCalculatorPlugin.bucketedData!!.size.toLong())
+        autosensDataStore.bgReadings = bgReadingList
+        Assert.assertEquals(true, autosensDataStore.isAbout5minData(aapsLogger))
+        autosensDataStore.createBucketedData(aapsLogger, dateUtil)
+        Assert.assertEquals(bgReadingList[0].timestamp, autosensDataStore.bucketedData!![0].timestamp)
+        Assert.assertEquals(bgReadingList[3].timestamp, autosensDataStore.bucketedData!![3].timestamp)
+        Assert.assertEquals(bgReadingList.size.toLong(), autosensDataStore.bucketedData!!.size.toLong())
 
         // Missing value should be replaced
         bgReadingList.clear()
         bgReadingList.add(GlucoseValue(raw = 0.0, noise = 0.0, value = 100.0, timestamp = T.mins(20).msecs(), sourceSensor = GlucoseValue.SourceSensor.UNKNOWN, trendArrow = GlucoseValue.TrendArrow.FLAT))
         bgReadingList.add(GlucoseValue(raw = 0.0, noise = 0.0, value = 100.0, timestamp = T.mins(10).plus(T.secs(10)).msecs(), sourceSensor = GlucoseValue.SourceSensor.UNKNOWN, trendArrow = GlucoseValue.TrendArrow.FLAT))
         bgReadingList.add(GlucoseValue(raw = 0.0, noise = 0.0, value = 100.0, timestamp = T.mins(5).msecs(), sourceSensor = GlucoseValue.SourceSensor.UNKNOWN, trendArrow = GlucoseValue.TrendArrow.FLAT))
-        iobCobCalculatorPlugin.bgReadings = bgReadingList
-        Assert.assertEquals(true, iobCobCalculatorPlugin.isAbout5minData)
-        iobCobCalculatorPlugin.createBucketedData()
-        Assert.assertEquals(bgReadingList[0].timestamp, iobCobCalculatorPlugin.bucketedData!![0].timestamp)
-        Assert.assertEquals(bgReadingList[2].timestamp, iobCobCalculatorPlugin.bucketedData!![3].timestamp)
-        Assert.assertEquals(bgReadingList.size + 1.toLong(), iobCobCalculatorPlugin.bucketedData!!.size.toLong())
+        autosensDataStore.bgReadings = bgReadingList
+        Assert.assertEquals(true, autosensDataStore.isAbout5minData(aapsLogger))
+        autosensDataStore.createBucketedData(aapsLogger, dateUtil)
+        Assert.assertEquals(bgReadingList[0].timestamp, autosensDataStore.bucketedData!![0].timestamp)
+        Assert.assertEquals(bgReadingList[2].timestamp, autosensDataStore.bucketedData!![3].timestamp)
+        Assert.assertEquals(bgReadingList.size + 1.toLong(), autosensDataStore.bucketedData!!.size.toLong())
 
         // drift should be cleared
         bgReadingList.clear()
@@ -168,55 +127,55 @@ class IobCobCalculatorPluginTest : TestBase() {
         bgReadingList.add(GlucoseValue(raw = 0.0, noise = 0.0, value = 100.0, timestamp = T.mins(10).msecs() + T.secs(10).msecs(), sourceSensor = GlucoseValue.SourceSensor.UNKNOWN, trendArrow = GlucoseValue.TrendArrow.FLAT))
         bgReadingList.add(GlucoseValue(raw = 0.0, noise = 0.0, value = 100.0, timestamp = T.mins(5).msecs() + T.secs(10).msecs(), sourceSensor = GlucoseValue.SourceSensor.UNKNOWN, trendArrow = GlucoseValue.TrendArrow.FLAT))
         bgReadingList.add(GlucoseValue(raw = 0.0, noise = 0.0, value = 100.0, timestamp = T.mins(0).msecs(), sourceSensor = GlucoseValue.SourceSensor.UNKNOWN, trendArrow = GlucoseValue.TrendArrow.FLAT))
-        iobCobCalculatorPlugin.bgReadings = bgReadingList
-        Assert.assertEquals(true, iobCobCalculatorPlugin.isAbout5minData)
-        iobCobCalculatorPlugin.createBucketedData()
-        Assert.assertEquals(T.mins(20).msecs(), iobCobCalculatorPlugin.bucketedData!![0].timestamp)
-        Assert.assertEquals(T.mins(15).msecs(), iobCobCalculatorPlugin.bucketedData!![1].timestamp)
-        Assert.assertEquals(T.mins(10).msecs(), iobCobCalculatorPlugin.bucketedData!![2].timestamp)
-        Assert.assertEquals(T.mins(5).msecs(), iobCobCalculatorPlugin.bucketedData!![3].timestamp)
-        Assert.assertEquals(bgReadingList.size.toLong(), iobCobCalculatorPlugin.bucketedData!!.size.toLong())
+        autosensDataStore.bgReadings = bgReadingList
+        Assert.assertEquals(true, autosensDataStore.isAbout5minData(aapsLogger))
+        autosensDataStore.createBucketedData(aapsLogger, dateUtil)
+        Assert.assertEquals(T.mins(20).msecs(), autosensDataStore.bucketedData!![0].timestamp)
+        Assert.assertEquals(T.mins(15).msecs(), autosensDataStore.bucketedData!![1].timestamp)
+        Assert.assertEquals(T.mins(10).msecs(), autosensDataStore.bucketedData!![2].timestamp)
+        Assert.assertEquals(T.mins(5).msecs(), autosensDataStore.bucketedData!![3].timestamp)
+        Assert.assertEquals(bgReadingList.size.toLong(), autosensDataStore.bucketedData!!.size.toLong())
 
         // bucketed data should return null if not enough bg data
         bgReadingList.clear()
         bgReadingList.add(GlucoseValue(raw = 0.0, noise = 0.0, value = 100.0, timestamp = T.mins(30).msecs(), sourceSensor = GlucoseValue.SourceSensor.UNKNOWN, trendArrow = GlucoseValue.TrendArrow.FLAT))
         bgReadingList.add(GlucoseValue(raw = 0.0, noise = 0.0, value = 100.0, timestamp = T.mins(5).msecs(), sourceSensor = GlucoseValue.SourceSensor.UNKNOWN, trendArrow = GlucoseValue.TrendArrow.FLAT))
-        iobCobCalculatorPlugin.bgReadings = bgReadingList
-        Assert.assertEquals(true, iobCobCalculatorPlugin.isAbout5minData)
-        iobCobCalculatorPlugin.createBucketedData()
-        Assert.assertEquals(null, iobCobCalculatorPlugin.bucketedData)
+        autosensDataStore.bgReadings = bgReadingList
+        Assert.assertEquals(true, autosensDataStore.isAbout5minData(aapsLogger))
+        autosensDataStore.createBucketedData(aapsLogger, dateUtil)
+        Assert.assertEquals(null, autosensDataStore.bucketedData)
 
         // data should be reconstructed
         bgReadingList.clear()
         bgReadingList.add(GlucoseValue(raw = 0.0, noise = 0.0, value = 100.0, timestamp = T.mins(50).msecs(), sourceSensor = GlucoseValue.SourceSensor.UNKNOWN, trendArrow = GlucoseValue.TrendArrow.FLAT))
         bgReadingList.add(GlucoseValue(raw = 0.0, noise = 0.0, value = 90.0, timestamp = T.mins(45).msecs(), sourceSensor = GlucoseValue.SourceSensor.UNKNOWN, trendArrow = GlucoseValue.TrendArrow.FLAT))
         bgReadingList.add(GlucoseValue(raw = 0.0, noise = 0.0, value = 40.0, timestamp = T.mins(20).msecs(), sourceSensor = GlucoseValue.SourceSensor.UNKNOWN, trendArrow = GlucoseValue.TrendArrow.FLAT))
-        iobCobCalculatorPlugin.bgReadings = bgReadingList
-        Assert.assertEquals(true, iobCobCalculatorPlugin.isAbout5minData)
-        iobCobCalculatorPlugin.createBucketedData()
-        Assert.assertEquals(T.mins(50).msecs(), iobCobCalculatorPlugin.bucketedData!![0].timestamp)
-        Assert.assertEquals(T.mins(20).msecs(), iobCobCalculatorPlugin.bucketedData!![6].timestamp)
-        Assert.assertEquals(7, iobCobCalculatorPlugin.bucketedData!!.size.toLong())
-        Assert.assertEquals(100.0, iobCobCalculatorPlugin.bucketedData!![0].value, 1.0)
-        Assert.assertEquals(90.0, iobCobCalculatorPlugin.bucketedData!![1].value, 1.0)
-        Assert.assertEquals(50.0, iobCobCalculatorPlugin.bucketedData!![5].value, 1.0)
-        Assert.assertEquals(40.0, iobCobCalculatorPlugin.bucketedData!![6].value, 1.0)
+        autosensDataStore.bgReadings = bgReadingList
+        Assert.assertEquals(true, autosensDataStore.isAbout5minData(aapsLogger))
+        autosensDataStore.createBucketedData(aapsLogger, dateUtil)
+        Assert.assertEquals(T.mins(50).msecs(), autosensDataStore.bucketedData!![0].timestamp)
+        Assert.assertEquals(T.mins(20).msecs(), autosensDataStore.bucketedData!![6].timestamp)
+        Assert.assertEquals(7, autosensDataStore.bucketedData!!.size.toLong())
+        Assert.assertEquals(100.0, autosensDataStore.bucketedData!![0].value, 1.0)
+        Assert.assertEquals(90.0, autosensDataStore.bucketedData!![1].value, 1.0)
+        Assert.assertEquals(50.0, autosensDataStore.bucketedData!![5].value, 1.0)
+        Assert.assertEquals(40.0, autosensDataStore.bucketedData!![6].value, 1.0)
 
         // non 5min data should be reconstructed
         bgReadingList.clear()
         bgReadingList.add(GlucoseValue(raw = 0.0, noise = 0.0, value = 100.0, timestamp = T.mins(50).msecs(), sourceSensor = GlucoseValue.SourceSensor.UNKNOWN, trendArrow = GlucoseValue.TrendArrow.FLAT))
         bgReadingList.add(GlucoseValue(raw = 0.0, noise = 0.0, value = 96.0, timestamp = T.mins(48).msecs(), sourceSensor = GlucoseValue.SourceSensor.UNKNOWN, trendArrow = GlucoseValue.TrendArrow.FLAT))
         bgReadingList.add(GlucoseValue(raw = 0.0, noise = 0.0, value = 40.0, timestamp = T.mins(20).msecs(), sourceSensor = GlucoseValue.SourceSensor.UNKNOWN, trendArrow = GlucoseValue.TrendArrow.FLAT))
-        iobCobCalculatorPlugin.bgReadings = bgReadingList
-        Assert.assertEquals(false, iobCobCalculatorPlugin.isAbout5minData)
-        iobCobCalculatorPlugin.createBucketedData()
-        Assert.assertEquals(T.mins(50).msecs(), iobCobCalculatorPlugin.bucketedData!![0].timestamp)
-        Assert.assertEquals(T.mins(20).msecs(), iobCobCalculatorPlugin.bucketedData!![6].timestamp)
-        Assert.assertEquals(7, iobCobCalculatorPlugin.bucketedData!!.size.toLong())
-        Assert.assertEquals(100.0, iobCobCalculatorPlugin.bucketedData!![0].value, 1.0)
-        Assert.assertEquals(90.0, iobCobCalculatorPlugin.bucketedData!![1].value, 1.0)
-        Assert.assertEquals(50.0, iobCobCalculatorPlugin.bucketedData!![5].value, 1.0)
-        Assert.assertEquals(40.0, iobCobCalculatorPlugin.bucketedData!![6].value, 1.0)
+        autosensDataStore.bgReadings = bgReadingList
+        Assert.assertEquals(false, autosensDataStore.isAbout5minData(aapsLogger))
+        autosensDataStore.createBucketedData(aapsLogger, dateUtil)
+        Assert.assertEquals(T.mins(50).msecs(), autosensDataStore.bucketedData!![0].timestamp)
+        Assert.assertEquals(T.mins(20).msecs(), autosensDataStore.bucketedData!![6].timestamp)
+        Assert.assertEquals(7, autosensDataStore.bucketedData!!.size.toLong())
+        Assert.assertEquals(100.0, autosensDataStore.bucketedData!![0].value, 1.0)
+        Assert.assertEquals(90.0, autosensDataStore.bucketedData!![1].value, 1.0)
+        Assert.assertEquals(50.0, autosensDataStore.bucketedData!![5].value, 1.0)
+        Assert.assertEquals(40.0, autosensDataStore.bucketedData!![6].value, 1.0)
     }
 
     @Test
@@ -224,9 +183,9 @@ class IobCobCalculatorPluginTest : TestBase() {
         val bgReadingList: MutableList<GlucoseValue> = ArrayList()
 
         //bucketed data should be null if no bg data available
-        iobCobCalculatorPlugin.bgReadings = ArrayList()
-        iobCobCalculatorPlugin.createBucketedData()
-        Assert.assertEquals(null, iobCobCalculatorPlugin.bucketedData)
+        autosensDataStore.bgReadings = ArrayList()
+        autosensDataStore.createBucketedData(aapsLogger, dateUtil)
+        Assert.assertEquals(null, autosensDataStore.bucketedData)
 
         // real data gap test
         bgReadingList.clear()
@@ -258,12 +217,12 @@ class IobCobCalculatorPluginTest : TestBase() {
         bgReadingList.add(GlucoseValue(raw = 0.0, noise = 0.0, value = 100.0, timestamp = dateUtil.fromISODateString("2018-09-05T03:54:56Z"), sourceSensor = GlucoseValue.SourceSensor.UNKNOWN, trendArrow = GlucoseValue.TrendArrow.FLAT))
         bgReadingList.add(GlucoseValue(raw = 0.0, noise = 0.0, value = 100.0, timestamp = dateUtil.fromISODateString("2018-09-05T03:50:03Z"), sourceSensor = GlucoseValue.SourceSensor.UNKNOWN, trendArrow = GlucoseValue.TrendArrow.FLAT))
         bgReadingList.add(GlucoseValue(raw = 0.0, noise = 0.0, value = 100.0, timestamp = dateUtil.fromISODateString("2018-09-05T03:44:57Z"), sourceSensor = GlucoseValue.SourceSensor.UNKNOWN, trendArrow = GlucoseValue.TrendArrow.FLAT))
-        iobCobCalculatorPlugin.bgReadings = bgReadingList
-        iobCobCalculatorPlugin.referenceTime = -1
-        Assert.assertEquals(true, iobCobCalculatorPlugin.isAbout5minData)
-        iobCobCalculatorPlugin.createBucketedData()
-        Assert.assertEquals(dateUtil.fromISODateString("2018-09-05T13:34:57Z"), iobCobCalculatorPlugin.bucketedData!![0].timestamp)
-        Assert.assertEquals(dateUtil.fromISODateString("2018-09-05T03:44:57Z"), iobCobCalculatorPlugin.bucketedData!![iobCobCalculatorPlugin.bucketedData!!.size - 1].timestamp)
+        autosensDataStore.bgReadings = bgReadingList
+        autosensDataStore.referenceTime = -1
+        Assert.assertEquals(true, autosensDataStore.isAbout5minData(aapsLogger))
+        autosensDataStore.createBucketedData(aapsLogger, dateUtil)
+        Assert.assertEquals(dateUtil.fromISODateString("2018-09-05T13:34:57Z"), autosensDataStore.bucketedData!![0].timestamp)
+        Assert.assertEquals(dateUtil.fromISODateString("2018-09-05T03:44:57Z"), autosensDataStore.bucketedData!![autosensDataStore.bucketedData!!.size - 1].timestamp)
 
         // 5min 4sec data
         bgReadingList.clear()
@@ -288,20 +247,20 @@ class IobCobCalculatorPluginTest : TestBase() {
         bgReadingList.add(GlucoseValue(raw = 0.0, noise = 0.0, value = 100.0, timestamp = dateUtil.fromISODateString("2018-10-05T05:02:26Z"), sourceSensor = GlucoseValue.SourceSensor.UNKNOWN, trendArrow = GlucoseValue.TrendArrow.FLAT))
         bgReadingList.add(GlucoseValue(raw = 0.0, noise = 0.0, value = 100.0, timestamp = dateUtil.fromISODateString("2018-10-05T04:57:21Z"), sourceSensor = GlucoseValue.SourceSensor.UNKNOWN, trendArrow = GlucoseValue.TrendArrow.FLAT))
         bgReadingList.add(GlucoseValue(raw = 0.0, noise = 0.0, value = 100.0, timestamp = dateUtil.fromISODateString("2018-10-05T04:52:17Z"), sourceSensor = GlucoseValue.SourceSensor.UNKNOWN, trendArrow = GlucoseValue.TrendArrow.FLAT))
-        iobCobCalculatorPlugin.bgReadings = bgReadingList
-        Assert.assertEquals(false, iobCobCalculatorPlugin.isAbout5minData)
+        autosensDataStore.bgReadings = bgReadingList
+        Assert.assertEquals(false, autosensDataStore.isAbout5minData(aapsLogger))
     }
 
     @Test
     fun bgReadingsTest() {
         val bgReadingList: List<GlucoseValue> = ArrayList()
-        iobCobCalculatorPlugin.bgReadings = bgReadingList
-        Assert.assertEquals(bgReadingList, iobCobCalculatorPlugin.bgReadings)
+        autosensDataStore.bgReadings = bgReadingList
+        Assert.assertEquals(bgReadingList, autosensDataStore.bgReadings)
     }
 
     @Test
     fun roundUpTimeTest() {
-        Assert.assertEquals(T.mins(3).msecs(), iobCobCalculatorPlugin.roundUpTime(T.secs(155).msecs()))
+        Assert.assertEquals(T.mins(3).msecs(), autosensDataStore.roundUpTime(T.secs(155).msecs()))
     }
 
     @Test
@@ -311,12 +270,12 @@ class IobCobCalculatorPluginTest : TestBase() {
         bgReadingList.add(GlucoseValue(raw = 0.0, noise = 0.0, value = 100.0, timestamp = T.mins(15).msecs(), sourceSensor = GlucoseValue.SourceSensor.UNKNOWN, trendArrow = GlucoseValue.TrendArrow.FLAT))
         bgReadingList.add(GlucoseValue(raw = 0.0, noise = 0.0, value = 100.0, timestamp = T.mins(10).msecs(), sourceSensor = GlucoseValue.SourceSensor.UNKNOWN, trendArrow = GlucoseValue.TrendArrow.FLAT))
         bgReadingList.add(GlucoseValue(raw = 0.0, noise = 0.0, value = 100.0, timestamp = T.mins(5).msecs(), sourceSensor = GlucoseValue.SourceSensor.UNKNOWN, trendArrow = GlucoseValue.TrendArrow.FLAT))
-        iobCobCalculatorPlugin.bgReadings = bgReadingList
-        Assert.assertEquals(T.mins(10).msecs(), iobCobCalculatorPlugin.findNewer(T.mins(8).msecs())!!.timestamp)
-        Assert.assertEquals(T.mins(5).msecs(), iobCobCalculatorPlugin.findNewer(T.mins(5).msecs())!!.timestamp)
-        Assert.assertEquals(T.mins(10).msecs(), iobCobCalculatorPlugin.findNewer(T.mins(10).msecs())!!.timestamp)
-        Assert.assertEquals(T.mins(20).msecs(), iobCobCalculatorPlugin.findNewer(T.mins(20).msecs())!!.timestamp)
-        Assert.assertEquals(null, iobCobCalculatorPlugin.findNewer(T.mins(22).msecs()))
+        autosensDataStore.bgReadings = bgReadingList
+        Assert.assertEquals(T.mins(10).msecs(), autosensDataStore.findNewer(T.mins(8).msecs())!!.timestamp)
+        Assert.assertEquals(T.mins(5).msecs(), autosensDataStore.findNewer(T.mins(5).msecs())!!.timestamp)
+        Assert.assertEquals(T.mins(10).msecs(), autosensDataStore.findNewer(T.mins(10).msecs())!!.timestamp)
+        Assert.assertEquals(T.mins(20).msecs(), autosensDataStore.findNewer(T.mins(20).msecs())!!.timestamp)
+        Assert.assertEquals(null, autosensDataStore.findNewer(T.mins(22).msecs()))
     }
 
     @Test
@@ -326,20 +285,20 @@ class IobCobCalculatorPluginTest : TestBase() {
         bgReadingList.add(GlucoseValue(raw = 0.0, noise = 0.0, value = 100.0, timestamp = T.mins(15).msecs(), sourceSensor = GlucoseValue.SourceSensor.UNKNOWN, trendArrow = GlucoseValue.TrendArrow.FLAT))
         bgReadingList.add(GlucoseValue(raw = 0.0, noise = 0.0, value = 100.0, timestamp = T.mins(10).msecs(), sourceSensor = GlucoseValue.SourceSensor.UNKNOWN, trendArrow = GlucoseValue.TrendArrow.FLAT))
         bgReadingList.add(GlucoseValue(raw = 0.0, noise = 0.0, value = 100.0, timestamp = T.mins(5).msecs(), sourceSensor = GlucoseValue.SourceSensor.UNKNOWN, trendArrow = GlucoseValue.TrendArrow.FLAT))
-        iobCobCalculatorPlugin.bgReadings = bgReadingList
-        Assert.assertEquals(T.mins(5).msecs(), iobCobCalculatorPlugin.findOlder(T.mins(8).msecs())!!.timestamp)
-        Assert.assertEquals(T.mins(5).msecs(), iobCobCalculatorPlugin.findOlder(T.mins(5).msecs())!!.timestamp)
-        Assert.assertEquals(T.mins(10).msecs(), iobCobCalculatorPlugin.findOlder(T.mins(10).msecs())!!.timestamp)
-        Assert.assertEquals(T.mins(20).msecs(), iobCobCalculatorPlugin.findOlder(T.mins(20).msecs())!!.timestamp)
-        Assert.assertEquals(null, iobCobCalculatorPlugin.findOlder(T.mins(4).msecs()))
+        autosensDataStore.bgReadings = bgReadingList
+        Assert.assertEquals(T.mins(5).msecs(), autosensDataStore.findOlder(T.mins(8).msecs())!!.timestamp)
+        Assert.assertEquals(T.mins(5).msecs(), autosensDataStore.findOlder(T.mins(5).msecs())!!.timestamp)
+        Assert.assertEquals(T.mins(10).msecs(), autosensDataStore.findOlder(T.mins(10).msecs())!!.timestamp)
+        Assert.assertEquals(T.mins(20).msecs(), autosensDataStore.findOlder(T.mins(20).msecs())!!.timestamp)
+        Assert.assertEquals(null, autosensDataStore.findOlder(T.mins(4).msecs()))
     }
 
     @Test
     fun findPreviousTimeFromBucketedDataTest() {
         val bgReadingList: MutableList<GlucoseValue> = ArrayList()
-        iobCobCalculatorPlugin.bgReadings = bgReadingList
-        iobCobCalculatorPlugin.createBucketedData()
-        Assert.assertEquals(null, iobCobCalculatorPlugin.findPreviousTimeFromBucketedData(1000))
+        autosensDataStore.bgReadings = bgReadingList
+        autosensDataStore.createBucketedData(aapsLogger, dateUtil)
+        Assert.assertEquals(null, autosensDataStore.findPreviousTimeFromBucketedData(1000))
 
         // Super data should not be touched
         bgReadingList.clear()
@@ -347,11 +306,11 @@ class IobCobCalculatorPluginTest : TestBase() {
         bgReadingList.add(GlucoseValue(raw = 0.0, noise = 0.0, value = 100.0, timestamp = T.mins(15).msecs(), sourceSensor = GlucoseValue.SourceSensor.UNKNOWN, trendArrow = GlucoseValue.TrendArrow.FLAT))
         bgReadingList.add(GlucoseValue(raw = 0.0, noise = 0.0, value = 100.0, timestamp = T.mins(10).msecs(), sourceSensor = GlucoseValue.SourceSensor.UNKNOWN, trendArrow = GlucoseValue.TrendArrow.FLAT))
         bgReadingList.add(GlucoseValue(raw = 0.0, noise = 0.0, value = 100.0, timestamp = T.mins(5).msecs(), sourceSensor = GlucoseValue.SourceSensor.UNKNOWN, trendArrow = GlucoseValue.TrendArrow.FLAT))
-        iobCobCalculatorPlugin.bgReadings = bgReadingList
-        iobCobCalculatorPlugin.createBucketedData()
-        Assert.assertEquals(null, iobCobCalculatorPlugin.findPreviousTimeFromBucketedData(T.mins(4).msecs()))
-        Assert.assertEquals(T.mins(5).msecs(), iobCobCalculatorPlugin.findPreviousTimeFromBucketedData(T.mins(6).msecs()))
-        Assert.assertEquals(T.mins(20).msecs(), iobCobCalculatorPlugin.findPreviousTimeFromBucketedData(T.mins(20).msecs()))
-        Assert.assertEquals(T.mins(20).msecs(), iobCobCalculatorPlugin.findPreviousTimeFromBucketedData(T.mins(25).msecs()))
+        autosensDataStore.bgReadings = bgReadingList
+        autosensDataStore.createBucketedData(aapsLogger, dateUtil)
+        Assert.assertEquals(null, autosensDataStore.findPreviousTimeFromBucketedData(T.mins(4).msecs()))
+        Assert.assertEquals(T.mins(5).msecs(), autosensDataStore.findPreviousTimeFromBucketedData(T.mins(6).msecs()))
+        Assert.assertEquals(T.mins(20).msecs(), autosensDataStore.findPreviousTimeFromBucketedData(T.mins(20).msecs()))
+        Assert.assertEquals(T.mins(20).msecs(), autosensDataStore.findPreviousTimeFromBucketedData(T.mins(25).msecs()))
     }
 }

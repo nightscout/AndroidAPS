@@ -9,7 +9,6 @@ import info.nightscout.androidaps.database.entities.TherapyEvent
 import info.nightscout.androidaps.db.ProfileSwitch
 import info.nightscout.androidaps.extensions.isEvent5minBack
 import info.nightscout.androidaps.interfaces.DatabaseHelperInterface
-import info.nightscout.androidaps.interfaces.IobCobCalculator
 import info.nightscout.androidaps.interfaces.PluginDescription
 import info.nightscout.androidaps.interfaces.PluginType
 import info.nightscout.androidaps.interfaces.ProfileFunction
@@ -17,6 +16,7 @@ import info.nightscout.androidaps.interfaces.SensitivityInterface.SensitivityTyp
 import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.logging.LTag
 import info.nightscout.androidaps.plugins.aps.openAPSSMB.SMBDefaults
+import info.nightscout.androidaps.plugins.iob.iobCobCalculator.AutosensDataStore
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.AutosensResult
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.IobCobCalculatorPlugin
 import info.nightscout.androidaps.utils.DateUtil
@@ -51,24 +51,23 @@ open class SensitivityOref1Plugin @Inject constructor(
     injector, aapsLogger, resourceHelper, sp
 ) {
 
-    override fun detectSensitivity(plugin: IobCobCalculator, fromTime: Long, toTime: Long): AutosensResult {
+    override fun detectSensitivity(ads: AutosensDataStore, fromTime: Long, toTime: Long): AutosensResult {
         // todo this method is called from the IobCobCalculatorPlugin, which leads to a circular
         // dependency, this should be avoided
-        val autosensDataTable = plugin.getAutosensDataTable()
         val profile = profileFunction.getProfile()
         if (profile == null) {
             aapsLogger.error("No profile")
             return AutosensResult()
         }
-        if (autosensDataTable.size() < 4) {
-            aapsLogger.debug(LTag.AUTOSENS, "No autosens data available. lastDataTime=" + plugin.lastDataTime())
+        if (ads.autosensDataTable.size() < 4) {
+            aapsLogger.debug(LTag.AUTOSENS, "No autosens data available. lastDataTime=" + ads.lastDataTime(dateUtil))
             return AutosensResult()
         }
 
         // the current
-        val current = plugin.getAutosensData(toTime) // this is running inside lock already
+        val current = ads.getAutosensDataAtTime(toTime) // this is running inside lock already
         if (current == null) {
-            aapsLogger.debug(LTag.AUTOSENS, "No autosens data available. toTime: " + dateUtil.dateAndTimeString(toTime) + " lastDataTime: " + plugin.lastDataTime())
+            aapsLogger.debug(LTag.AUTOSENS, "No autosens data available. toTime: " + dateUtil.dateAndTimeString(toTime) + " lastDataTime: " + ads.lastDataTime(dateUtil))
             return AutosensResult()
         }
         val siteChanges = repository.getTherapyEventDataFromTime(fromTime, TherapyEvent.Type.CANNULA_CHANGE, true).blockingGet()
@@ -85,8 +84,8 @@ open class SensitivityOref1Plugin @Inject constructor(
         val ratioLimitArray = mutableListOf("", "")
         val hoursDetection = listOf(8.0, 24.0)
         var index = 0
-        while (index < autosensDataTable.size()) {
-            val autosensData = autosensDataTable.valueAt(index)
+        while (index < ads.autosensDataTable.size()) {
+            val autosensData = ads.autosensDataTable.valueAt(index)
             if (autosensData.time < fromTime) {
                 index++
                 continue

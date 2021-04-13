@@ -10,6 +10,7 @@ import info.nightscout.androidaps.interfaces.IobCobCalculator
 import info.nightscout.androidaps.interfaces.PluginDescription
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper
 import info.nightscout.androidaps.plugins.general.automation.AutomationPlugin
+import info.nightscout.androidaps.plugins.iob.iobCobCalculator.AutosensDataStore
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.GlucoseStatusProvider
 import info.nightscout.androidaps.receivers.ReceiverStatusStore
 import info.nightscout.androidaps.services.LastLocationDataContainer
@@ -19,13 +20,14 @@ import org.mockito.Mock
 import org.mockito.Mockito.`when`
 import org.powermock.core.classloader.annotations.PrepareForTest
 
-@PrepareForTest(LastLocationDataContainer::class, AutomationPlugin::class)
+@PrepareForTest(LastLocationDataContainer::class, AutomationPlugin::class, AutosensDataStore::class)
 open class TriggerTestBase : TestBaseWithProfile() {
 
     @Mock lateinit var sp: SP
     @Mock lateinit var locationDataContainer: LastLocationDataContainer
     @Mock lateinit var activePlugin: ActivePluginProvider
     @Mock lateinit var iobCobCalculator: IobCobCalculator
+    @Mock lateinit var autosensDataStore: AutosensDataStore
     @Mock lateinit var context: Context
     @Mock lateinit var automationPlugin: AutomationPlugin
 
@@ -38,6 +40,7 @@ open class TriggerTestBase : TestBaseWithProfile() {
         receiverStatusStore = ReceiverStatusStore(context, rxBus)
         testPumpPlugin = TestPumpPlugin(pluginDescription, aapsLogger, resourceHelper, injector)
         `when`(activePlugin.activePump).thenReturn(testPumpPlugin)
+        `when`(iobCobCalculator.ads).thenReturn(autosensDataStore)
     }
 
     var injector: HasAndroidInjector = HasAndroidInjector {

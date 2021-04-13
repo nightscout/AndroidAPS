@@ -5,7 +5,6 @@ import androidx.collection.LongSparseArray
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.Constants
 import info.nightscout.androidaps.R
-import info.nightscout.androidaps.data.InMemoryGlucoseValue
 import info.nightscout.androidaps.data.IobTotal
 import info.nightscout.androidaps.data.MealData
 import info.nightscout.androidaps.data.Profile
@@ -13,7 +12,6 @@ import info.nightscout.androidaps.database.AppRepository
 import info.nightscout.androidaps.database.ValueWrapper
 import info.nightscout.androidaps.database.entities.Bolus
 import info.nightscout.androidaps.database.entities.ExtendedBolus
-import info.nightscout.androidaps.database.entities.GlucoseValue
 import info.nightscout.androidaps.database.entities.TemporaryBasal
 import info.nightscout.androidaps.database.interfaces.end
 import info.nightscout.androidaps.events.*
@@ -41,11 +39,9 @@ import io.reactivex.rxkotlin.plusAssign
 import org.json.JSONArray
 import javax.inject.Inject
 import javax.inject.Singleton
-import kotlin.math.abs
 import kotlin.math.floor
 import kotlin.math.max
 import kotlin.math.min
-import kotlin.math.roundToLong
 
 @Singleton
 open class IobCobCalculatorPlugin @Inject constructor(
@@ -76,17 +72,11 @@ open class IobCobCalculatorPlugin @Inject constructor(
 
     private var iobTable = LongSparseArray<IobTotal>() // oldest at index 0
     private var absIobTable = LongSparseArray<IobTotal>() // oldest at index 0, absolute insulin in the body
-    private var autosensDataTable = LongSparseArray<AutosensData>() // oldest at index 0
     private var basalDataTable = LongSparseArray<BasalData>() // oldest at index 0
-    internal var bgReadings: List<GlucoseValue> = listOf() // newest at index 0
 
-    internal var bucketedData: MutableList<InMemoryGlucoseValue>? = null
+    override var ads: AutosensDataStore = AutosensDataStore()
 
-    // we need to make sure that bucketed_data will always have the same timestamp for correct use of cached values
-    // once referenceTime != null all bucketed data should be (x * 5min) from referenceTime
-    var referenceTime: Long = -1
-    private var lastUsed5minCalculation: Boolean? = null // true if used 5min bucketed data
-    override val dataLock = Any()
+    private val dataLock = Any()
     var stopCalculationTrigger = false
     private var thread: Thread? = null
 
@@ -96,12 +86,12 @@ open class IobCobCalculatorPlugin @Inject constructor(
         disposable += rxBus
             .toObservable(EventConfigBuilderChange::class.java)
             .observeOn(aapsSchedulers.io)
-            .subscribe({ event -> resetData("onEventConfigBuilderChange", event) }, fabricPrivacy::logException)
+            .subscribe({ event -> resetDataAndRunCalculation("onEventConfigBuilderChange", event) }, fabricPrivacy::logException)
         // EventNewBasalProfile
         disposable += rxBus
             .toObservable(EventNewBasalProfile::class.java)
             .observeOn(aapsSchedulers.io)
-            .subscribe({ event -> resetData("onNewProfile", event) }, fabricPrivacy::logException)
+            .subscribe({ event -> resetDataAndRunCalculation("onNewProfile", event) }, fabricPrivacy::logException)
         // EventPreferenceChange
         disposable += rxBus
             .toObservable(EventPreferenceChange::class.java)
@@ -115,7 +105,7 @@ open class IobCobCalculatorPlugin @Inject constructor(
                     event.isChanged(resourceHelper, R.string.key_openapsama_autosens_max) ||
                     event.isChanged(resourceHelper, R.string.key_openapsama_autosens_min) ||
                     event.isChanged(resourceHelper, R.string.key_insulin_oref_peak)) {
-                    resetData("onEventPreferenceChange", event)
+                    resetDataAndRunCalculation("onEventPreferenceChange", event)
                 }
             }, fabricPrivacy::logException)
         // EventAppInitialized
@@ -135,217 +125,19 @@ open class IobCobCalculatorPlugin @Inject constructor(
         super.onStop()
     }
 
-    override fun getBgReadingsDataTableCopy(): List<GlucoseValue> = bgReadings.toList()
-    override fun getBucketedDataTableCopy(): MutableList<InMemoryGlucoseValue>? = bucketedData?.toMutableList()
-    override fun getAutosensDataTable(): LongSparseArray<AutosensData> = autosensDataTable
-
-    private fun adjustToReferenceTime(someTime: Long): Long {
-        if (referenceTime == -1L) {
-            referenceTime = someTime
-            return someTime
-        }
-        var diff = abs(someTime - referenceTime)
-        diff %= T.mins(5).msecs()
-        if (diff > T.mins(2).plus(T.secs(30)).msecs()) diff -= T.mins(5).msecs()
-        return someTime + diff
-    }
-
-    fun loadBgData(to: Long) {
-        val profile = profileFunction.getProfile(to)
-        var dia = Constants.defaultDIA
-        if (profile != null) dia = profile.dia
-        val start = to - T.hours((24 + dia).toLong()).msecs()
-        if (dateUtil.isCloseToNow(to)) {
-            // if close to now expect there can be some readings with time in close future (caused by wrong time setting)
-            // so read all records
-            bgReadings = repository.compatGetBgReadingsDataFromTime(start, false).blockingGet()
-            aapsLogger.debug(LTag.AUTOSENS, "BG data loaded. Size: " + bgReadings.size + " Start date: " + dateUtil.dateAndTimeString(start))
-        } else {
-            bgReadings = repository.compatGetBgReadingsDataFromTime(start, to, false).blockingGet()
-            aapsLogger.debug(LTag.AUTOSENS, "BG data loaded. Size: " + bgReadings.size + " Start date: " + dateUtil.dateAndTimeString(start) + " End date: " + dateUtil.dateAndTimeString(to))
-        }
-    }
-
-    val isAbout5minData: Boolean
-        get() {
-            synchronized(dataLock) {
-                if (bgReadings.size < 3) return true
-
-                var totalDiff: Long = 0
-                for (i in 1 until bgReadings.size) {
-                    val bgTime = bgReadings[i].timestamp
-                    val lastBgTime = bgReadings[i - 1].timestamp
-                    var diff = lastBgTime - bgTime
-                    diff %= T.mins(5).msecs()
-                    if (diff > T.mins(2).plus(T.secs(30)).msecs()) diff -= T.mins(5).msecs()
-                    totalDiff += diff
-                    diff = abs(diff)
-                    if (diff > T.secs(30).msecs()) {
-                        aapsLogger.debug(LTag.AUTOSENS, "Interval detection: values: " + bgReadings.size + " diff: " + diff / 1000 + "[s] is5minData: " + false)
-                        return false
-                    }
-                }
-                val averageDiff = totalDiff / bgReadings.size / 1000
-                val is5minData = averageDiff < 1
-                aapsLogger.debug(LTag.AUTOSENS, "Interval detection: values: " + bgReadings.size + " averageDiff: " + averageDiff + "[s] is5minData: " + is5minData)
-                return is5minData
-            }
-        }
-
-    private fun resetData(reason: String, event: Event?) {
+    private fun resetDataAndRunCalculation(reason: String, event: Event?) {
         stopCalculation(reason)
-        synchronized(dataLock) {
-            aapsLogger.debug(LTag.AUTOSENS, "Invalidating cached data because of $reason.")
-            synchronized(dataLock) {
-                iobTable = LongSparseArray()
-                autosensDataTable = LongSparseArray()
-                basalDataTable = LongSparseArray()
-                absIobTable = LongSparseArray()
-            }
-        }
+        clearCache()
+        ads.reset()
         runCalculation(reason, System.currentTimeMillis(), bgDataReload = false, limitDataToOldestAvailable = true, cause = event)
     }
 
-    fun createBucketedData() {
-        val fiveMinData = isAbout5minData
-        if (lastUsed5minCalculation != null && lastUsed5minCalculation != fiveMinData) {
-            // changing mode => clear cache
-            aapsLogger.debug("Invalidating cached data because of changed mode.")
-            resetData("changed mode", null)
+    fun clearCache() {
+        synchronized(dataLock) {
+            aapsLogger.debug(LTag.AUTOSENS, "Clearing cached data.")
+            iobTable = LongSparseArray()
+            basalDataTable = LongSparseArray()
         }
-        lastUsed5minCalculation = fiveMinData
-        if (isAbout5minData) createBucketedData5min() else createBucketedDataRecalculated()
-    }
-
-    fun findNewer(time: Long): GlucoseValue? {
-        var lastFound = bgReadings[0]
-        if (lastFound.timestamp < time) return null
-        for (i in 1 until bgReadings.size) {
-            if (bgReadings[i].timestamp == time) return bgReadings[i]
-            if (bgReadings[i].timestamp > time) continue
-            lastFound = bgReadings[i - 1]
-            if (bgReadings[i].timestamp < time) break
-        }
-        return lastFound
-    }
-
-    fun findOlder(time: Long): GlucoseValue? {
-        var lastFound = bgReadings[bgReadings.size - 1]
-        if (lastFound.timestamp > time) return null
-        for (i in bgReadings.size - 2 downTo 0) {
-            if (bgReadings[i].timestamp == time) return bgReadings[i]
-            if (bgReadings[i].timestamp < time) continue
-            lastFound = bgReadings[i + 1]
-            if (bgReadings[i].timestamp > time) break
-        }
-        return lastFound
-    }
-
-    private fun createBucketedDataRecalculated() {
-        if (bgReadings.size < 3) {
-            bucketedData = null
-            return
-        }
-        bucketedData = ArrayList()
-        var currentTime = bgReadings[0].timestamp - bgReadings[0].timestamp % T.mins(5).msecs()
-        currentTime = adjustToReferenceTime(currentTime)
-        aapsLogger.debug("Adjusted time " + dateUtil.dateAndTimeAndSecondsString(currentTime))
-        //log.debug("First reading: " + new Date(currentTime).toLocaleString());
-        while (true) {
-            // test if current value is older than current time
-            val newer = findNewer(currentTime)
-            val older = findOlder(currentTime)
-            if (newer == null || older == null) break
-            if (older.timestamp == newer.timestamp) { // direct hit
-                bucketedData?.add(InMemoryGlucoseValue(newer))
-            } else {
-                val bgDelta = newer.value - older.value
-                val timeDiffToNew = newer.timestamp - currentTime
-                val currentBg = newer.value - timeDiffToNew.toDouble() / (newer.timestamp - older.timestamp) * bgDelta
-                val newBgReading = InMemoryGlucoseValue(currentTime, currentBg.roundToLong().toDouble(), true)
-                bucketedData?.add(newBgReading)
-                //log.debug("BG: " + newBgReading.value + " (" + new Date(newBgReading.date).toLocaleString() + ") Prev: " + older.value + " (" + new Date(older.date).toLocaleString() + ") Newer: " + newer.value + " (" + new Date(newer.date).toLocaleString() + ")");
-            }
-            currentTime -= T.mins(5).msecs()
-        }
-    }
-
-    private fun createBucketedData5min() {
-        if (bgReadings.size < 3) {
-            bucketedData = null
-            return
-        }
-        val bData: MutableList<InMemoryGlucoseValue> = ArrayList()
-        bData.add(InMemoryGlucoseValue(bgReadings[0]))
-        aapsLogger.debug(LTag.AUTOSENS, "Adding. bgTime: " + dateUtil.toISOString(bgReadings[0].timestamp) + " lastBgTime: " + "none-first-value" + " " + bgReadings[0].toString())
-        var j = 0
-        for (i in 1 until bgReadings.size) {
-            val bgTime = bgReadings[i].timestamp
-            var lastBgTime = bgReadings[i - 1].timestamp
-            //log.error("Processing " + i + ": " + new Date(bgTime).toString() + " " + bgReadings.get(i).value + "   Previous: " + new Date(lastBgTime).toString() + " " + bgReadings.get(i - 1).value);
-            check(!(bgReadings[i].value < 39 || bgReadings[i - 1].value < 39)) { "<39" }
-            var elapsedMinutes = (bgTime - lastBgTime) / (60 * 1000)
-            when {
-                abs(elapsedMinutes) > 8 -> {
-                    // interpolate missing data points
-                    var lastBg = bgReadings[i - 1].value
-                    elapsedMinutes = abs(elapsedMinutes)
-                    //console.error(elapsed_minutes);
-                    var nextBgTime: Long
-                    while (elapsedMinutes > 5) {
-                        nextBgTime = lastBgTime - 5 * 60 * 1000
-                        j++
-                        val gapDelta = bgReadings[i].value - lastBg
-                        //console.error(gapDelta, lastBg, elapsed_minutes);
-                        val nextBg = lastBg + 5.0 / elapsedMinutes * gapDelta
-                        val newBgReading = InMemoryGlucoseValue(nextBgTime, nextBg.roundToLong().toDouble(), true)
-                        //console.error("Interpolated", bData[j]);
-                        bData.add(newBgReading)
-                        aapsLogger.debug(LTag.AUTOSENS, "Adding. bgTime: " + dateUtil.toISOString(bgTime) + " lastBgTime: " + dateUtil.toISOString(lastBgTime) + " " + newBgReading.toString())
-                        elapsedMinutes -= 5
-                        lastBg = nextBg
-                        lastBgTime = nextBgTime
-                    }
-                    j++
-                    val newBgReading = InMemoryGlucoseValue(bgTime, bgReadings[i].value)
-                    bData.add(newBgReading)
-                    aapsLogger.debug(LTag.AUTOSENS, "Adding. bgTime: " + dateUtil.toISOString(bgTime) + " lastBgTime: " + dateUtil.toISOString(lastBgTime) + " " + newBgReading.toString())
-                }
-
-                abs(elapsedMinutes) > 2 -> {
-                    j++
-                    val newBgReading = InMemoryGlucoseValue(bgTime, bgReadings[i].value)
-                    bData.add(newBgReading)
-                    aapsLogger.debug(LTag.AUTOSENS, "Adding. bgTime: " + dateUtil.toISOString(bgTime) + " lastBgTime: " + dateUtil.toISOString(lastBgTime) + " " + newBgReading.toString())
-                }
-
-                else                    -> {
-                    bData[j].value = (bData[j].value + bgReadings[i].value) / 2
-                    //log.error("***** Average");
-                }
-            }
-        }
-
-        // Normalize bucketed data
-        val oldest = bData[bData.size - 1]
-        oldest.timestamp = adjustToReferenceTime(oldest.timestamp)
-        aapsLogger.debug("Adjusted time " + dateUtil.dateAndTimeAndSecondsString(oldest.timestamp))
-        for (i in bData.size - 2 downTo 0) {
-            val current = bData[i]
-            val previous = bData[i + 1]
-            val mSecDiff = current.timestamp - previous.timestamp
-            val adjusted = (mSecDiff - T.mins(5).msecs()) / 1000
-            aapsLogger.debug(LTag.AUTOSENS, "Adjusting bucketed data time. Current: " + dateUtil.dateAndTimeAndSecondsString(current.timestamp) + " to: " + dateUtil.dateAndTimeAndSecondsString(previous.timestamp + T.mins(5).msecs()) + " by " + adjusted + " sec")
-            if (abs(adjusted) > 90) {
-                // too big adjustment, fallback to non 5 min data
-                aapsLogger.debug(LTag.AUTOSENS, "Fallback to non 5 min data")
-                createBucketedDataRecalculated()
-                return
-            }
-            current.timestamp = previous.timestamp + T.mins(5).msecs()
-        }
-        aapsLogger.debug(LTag.AUTOSENS, "Bucketed data created. Size: " + bData.size)
-        bucketedData = bData
     }
 
     private fun oldestDataAvailable(): Long {
@@ -375,17 +167,9 @@ open class IobCobCalculatorPlugin @Inject constructor(
         return getBGDataFrom
     }
 
-    override fun calculateFromTreatmentsAndTempsSynchronized(time: Long, profile: Profile): IobTotal {
-        synchronized(dataLock) { return calculateFromTreatmentsAndTemps(time, profile) }
-    }
-
-    private fun calculateFromTreatmentsAndTempsSynchronized(time: Long, lastAutosensResult: AutosensResult, exercise_mode: Boolean, half_basal_exercise_target: Int, isTempTarget: Boolean): IobTotal {
-        synchronized(dataLock) { return calculateFromTreatmentsAndTemps(time, lastAutosensResult, exercise_mode, half_basal_exercise_target, isTempTarget) }
-    }
-
-    fun calculateFromTreatmentsAndTemps(fromTime: Long, profile: Profile): IobTotal {
+    override fun calculateFromTreatmentsAndTemps(fromTime: Long, profile: Profile): IobTotal {
         val now = System.currentTimeMillis()
-        val time = roundUpTime(fromTime)
+        val time = ads.roundUpTime(fromTime)
         val cacheHit = iobTable[time]
         if (time < now && cacheHit != null) {
             //og.debug(">>> calculateFromTreatmentsAndTemps Cache hit " + new Date(time).toLocaleString());
@@ -414,10 +198,10 @@ open class IobCobCalculatorPlugin @Inject constructor(
         return iobTotal
     }
 
-    override fun calculateAbsInsulinFromTreatmentsAndTempsSynchronized(fromTime: Long): IobTotal {
+    override fun calculateAbsInsulinFromTreatmentsAndTemps(fromTime: Long): IobTotal {
         synchronized(dataLock) {
             val now = System.currentTimeMillis()
-            val time = roundUpTime(fromTime)
+            val time = ads.roundUpTime(fromTime)
             val cacheHit = absIobTable[time]
             if (time < now && cacheHit != null) {
                 //log.debug(">>> calculateFromTreatmentsAndTemps Cache hit " + new Date(time).toLocaleString());
@@ -457,18 +241,10 @@ open class IobCobCalculatorPlugin @Inject constructor(
         return IobTotal.combine(bolusIob, basalIob).round()
     }
 
-    fun findPreviousTimeFromBucketedData(time: Long): Long? {
-        val bData = bucketedData ?: return null
-        for (index in bData.indices) {
-            if (bData[index].timestamp <= time) return bData[index].timestamp
-        }
-        return null
-    }
-
     override fun getBasalData(profile: Profile, fromTime: Long): BasalData {
         synchronized(dataLock) {
             val now = System.currentTimeMillis()
-            val time = roundUpTime(fromTime)
+            val time = ads.roundUpTime(fromTime)
             var retVal = basalDataTable[time]
             if (retVal == null) {
                 //log.debug(">>> getBasalData Cache miss " + new Date(time).toLocaleString());
@@ -490,19 +266,6 @@ open class IobCobCalculatorPlugin @Inject constructor(
         }
     }
 
-    override fun getAutosensData(fromTime: Long): AutosensData? {
-        var time = fromTime
-        synchronized(dataLock) {
-            val now = System.currentTimeMillis()
-            if (time > now) {
-                return null
-            }
-            val previous = findPreviousTimeFromBucketedData(time) ?: return null
-            time = roundUpTime(previous)
-            return autosensDataTable[time]
-        }
-    }
-
     override fun getLastAutosensDataWithWaitForCalculationFinish(reason: String): AutosensData? {
         if (thread?.isAlive == true) {
             aapsLogger.debug(LTag.AUTOSENS, "AUTOSENSDATA is waiting for calculation thread: $reason")
@@ -512,13 +275,13 @@ open class IobCobCalculatorPlugin @Inject constructor(
             }
             aapsLogger.debug(LTag.AUTOSENS, "AUTOSENSDATA finished waiting for calculation thread: $reason")
         }
-        synchronized(dataLock) { return getLastAutosensData(reason) }
+        return ads.getLastAutosensData(reason, aapsLogger, dateUtil)
     }
 
     override fun getCobInfo(waitForCalculationFinish: Boolean, reason: String): CobInfo {
         val autosensData =
             if (waitForCalculationFinish) getLastAutosensDataWithWaitForCalculationFinish(reason)
-            else getLastAutosensData(reason)
+            else ads.getLastAutosensData(reason, aapsLogger, dateUtil)
         var displayCob: Double? = null
         var futureCarbs = 0.0
         val now = dateUtil.now()
@@ -526,7 +289,7 @@ open class IobCobCalculatorPlugin @Inject constructor(
         if (autosensData != null) {
             displayCob = autosensData.cob
             carbs.forEach { carb ->
-                if (roundUpTime(carb.timestamp) > roundUpTime(autosensData.time) && carb.timestamp <= now) {
+                if (ads.roundUpTime(carb.timestamp) > ads.roundUpTime(autosensData.time) && carb.timestamp <= now) {
                     displayCob += carb.amount
                 }
             }
@@ -535,52 +298,6 @@ open class IobCobCalculatorPlugin @Inject constructor(
         carbs.forEach { carb -> if (carb.timestamp > now) futureCarbs += carb.amount }
         return CobInfo(displayCob, futureCarbs)
     }
-
-    override fun slowAbsorptionPercentage(timeInMinutes: Int): Double {
-        var sum = 0.0
-        var count = 0
-        val valuesToProcess = timeInMinutes / 5
-        synchronized(dataLock) {
-            var i = autosensDataTable.size() - 1
-            while (i >= 0 && count < valuesToProcess) {
-                if (autosensDataTable.valueAt(i).failoverToMinAbsorbtionRate) sum++
-                count++
-                i--
-            }
-        }
-        return sum / count
-    }
-
-    override fun getLastAutosensData(reason: String): AutosensData? {
-        if (autosensDataTable.size() < 1) {
-            aapsLogger.debug(LTag.AUTOSENS, "AUTOSENSDATA null: autosensDataTable empty ($reason)")
-            return null
-        }
-        val data: AutosensData? = try {
-            autosensDataTable.valueAt(autosensDataTable.size() - 1)
-        } catch (e: Exception) {
-            // data can be processed on the background
-            // in this rare case better return null and do not block UI
-            // APS plugin should use getLastAutosensDataSynchronized where the blocking is not an issue
-            aapsLogger.error("AUTOSENSDATA null: Exception caught ($reason)")
-            return null
-        }
-        if (data == null) {
-            aapsLogger.error("AUTOSENSDATA null: data==null")
-            return null
-        }
-        return if (data.time < System.currentTimeMillis() - 11 * 60 * 1000) {
-            aapsLogger.debug(LTag.AUTOSENS, "AUTOSENSDATA null: data is old (" + reason + ") size()=" + autosensDataTable.size() + " lastData=" + dateUtil.dateAndTimeAndSecondsString(data.time))
-            null
-        } else {
-            aapsLogger.debug(LTag.AUTOSENS, "AUTOSENSDATA ($reason) $data")
-            data
-        }
-    }
-
-    override fun lastDataTime(): String =
-        if (autosensDataTable.size() > 0) dateUtil.dateAndTimeAndSecondsString(autosensDataTable.valueAt(autosensDataTable.size() - 1).time)
-        else "autosensDataTable empty"
 
     override fun getMealDataWithWaitingForCalculationFinish(): MealData {
         val result = MealData()
@@ -614,12 +331,12 @@ open class IobCobCalculatorPlugin @Inject constructor(
     override fun calculateIobArrayInDia(profile: Profile): Array<IobTotal> {
         // predict IOB out to DIA plus 30m
         var time = System.currentTimeMillis()
-        time = roundUpTime(time)
+        time = ads.roundUpTime(time)
         val len = ((profile.dia * 60 + 30) / 5).toInt()
         val array = Array(len) { IobTotal(0) }
         for ((pos, i) in (0 until len).withIndex()) {
             val t = time + i * 5 * 60000
-            val iob = calculateFromTreatmentsAndTempsSynchronized(t, profile)
+            val iob = calculateFromTreatmentsAndTemps(t, profile)
             array[pos] = iob
         }
         return array
@@ -632,7 +349,7 @@ open class IobCobCalculatorPlugin @Inject constructor(
         val array = Array(len) { IobTotal(0) }
         for ((pos, i) in (0 until len).withIndex()) {
             val t = now + i * 5 * 60000
-            val iob = calculateFromTreatmentsAndTempsSynchronized(t, lastAutosensResult, exercise_mode, half_basal_exercise_target, isTempTarget)
+            val iob = calculateFromTreatmentsAndTemps(t, lastAutosensResult, exercise_mode, half_basal_exercise_target, isTempTarget)
             array[pos] = iob
         }
         return array
@@ -647,10 +364,6 @@ open class IobCobCalculatorPlugin @Inject constructor(
         }
         sb.append("]")
         return sb.toString()
-    }
-
-    fun detectSensitivityWithLock(fromTime: Long, toTime: Long): AutosensResult {
-        synchronized(dataLock) { return activePlugin.activeSensitivity.detectSensitivity(this, fromTime, toTime) }
     }
 
     fun stopCalculation(from: String) {
@@ -700,14 +413,6 @@ open class IobCobCalculatorPlugin @Inject constructor(
                     break
                 }
             }
-            for (index in autosensDataTable.size() - 1 downTo 0) {
-                if (autosensDataTable.keyAt(index) > time) {
-                    aapsLogger.debug(LTag.AUTOSENS, "Removing from autosensDataTable: " + dateUtil.dateAndTimeAndSecondsString(autosensDataTable.keyAt(index)))
-                    autosensDataTable.removeAt(index)
-                } else {
-                    break
-                }
-            }
             for (index in basalDataTable.size() - 1 downTo 0) {
                 if (basalDataTable.keyAt(index) > time) {
                     aapsLogger.debug(LTag.AUTOSENS, "Removing from basalDataTable: " + dateUtil.dateAndTimeAndSecondsString(basalDataTable.keyAt(index)))
@@ -716,37 +421,10 @@ open class IobCobCalculatorPlugin @Inject constructor(
                     break
                 }
             }
+            ads.newHistoryData(time, aapsLogger, dateUtil)
         }
         runCalculation("onEventNewHistoryData", System.currentTimeMillis(), bgDataReload, true, event)
         //log.debug("Releasing onNewHistoryData");
-    }
-
-    fun clearCache() {
-        synchronized(dataLock) {
-            aapsLogger.debug(LTag.AUTOSENS, "Clearing cached data.")
-            iobTable = LongSparseArray()
-            autosensDataTable = LongSparseArray()
-            basalDataTable = LongSparseArray()
-        }
-    }
-
-    /*
-     * Return last BgReading from database or null if db is empty
-     */
-    override fun lastBg(): GlucoseValue? {
-        val bgList = bgReadings
-        for (i in bgList.indices) if (bgList[i].value >= 39) return bgList[i]
-        return null
-    }
-
-    override fun actualBg(): GlucoseValue? {
-        val lastBg = lastBg() ?: return null
-        return if (lastBg.timestamp > System.currentTimeMillis() - T.mins(9).msecs()) lastBg else null
-    }
-
-    // roundup to whole minute
-    fun roundUpTime(time: Long): Long {
-        return if (time % 60000 == 0L) time else (time / 60000 + 1) * 60000
     }
 
     override fun convertToJSONArray(iobArray: Array<IobTotal>): JSONArray {

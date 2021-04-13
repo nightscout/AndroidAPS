@@ -102,7 +102,7 @@ class KeepAliveReceiver : DaggerBroadcastReceiver() {
             var shouldUploadStatus = false
             if (config.NSCLIENT) return
             if (config.PUMPCONTROL) shouldUploadStatus = true
-            else if (!loopPlugin.isEnabled() || iobCobCalculator.actualBg() == null)
+            else if (!loopPlugin.isEnabled() || iobCobCalculator.ads.actualBg() == null)
                 shouldUploadStatus = true
             else if (dateUtil.isOlderThan(activePlugin.activeAPS.lastAPSRun, 5)) shouldUploadStatus = true
             if (dateUtil.isOlderThan(lastIobUpload, IOB_UPDATE_FREQUENCY_IN_MINUTES) && shouldUploadStatus) {

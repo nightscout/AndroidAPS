@@ -31,7 +31,7 @@ class TriggerBgTest : TriggerTestBase() {
 
     @Test
     fun shouldRunTest() {
-        `when`(iobCobCalculator.getBgReadingsDataTableCopy()).thenReturn(generateOneCurrentRecordBgData())
+        `when`(autosensDataStore.getBgReadingsDataTableCopy()).thenReturn(generateOneCurrentRecordBgData())
         var t: TriggerBg = TriggerBg(injector).setUnits(Constants.MMOL).setValue(4.1).comparator(Comparator.Compare.IS_EQUAL)
         Assert.assertFalse(t.shouldRun())
         t = TriggerBg(injector).setUnits(Constants.MGDL).setValue(214.0).comparator(Comparator.Compare.IS_EQUAL)
@@ -50,7 +50,7 @@ class TriggerBgTest : TriggerTestBase() {
         Assert.assertTrue(t.shouldRun())
         t = TriggerBg(injector).setUnits(Constants.MGDL).setValue(213.0).comparator(Comparator.Compare.IS_EQUAL_OR_LESSER)
         Assert.assertFalse(t.shouldRun())
-        `when`(iobCobCalculator.getBgReadingsDataTableCopy()).thenReturn(ArrayList())
+        `when`(autosensDataStore.getBgReadingsDataTableCopy()).thenReturn(ArrayList())
         t = TriggerBg(injector).setUnits(Constants.MGDL).setValue(213.0).comparator(Comparator.Compare.IS_EQUAL_OR_LESSER)
         Assert.assertFalse(t.shouldRun())
         t = TriggerBg(injector).comparator(Comparator.Compare.IS_NOT_AVAILABLE)

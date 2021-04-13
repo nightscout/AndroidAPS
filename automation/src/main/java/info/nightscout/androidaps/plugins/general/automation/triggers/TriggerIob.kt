@@ -34,7 +34,7 @@ class TriggerIob(injector: HasAndroidInjector) : Trigger(injector) {
 
     override fun shouldRun(): Boolean {
         val profile = profileFunction.getProfile() ?: return false
-        val iob = iobCobCalculator.calculateFromTreatmentsAndTempsSynchronized(dateUtil.now(), profile)
+        val iob = iobCobCalculator.calculateFromTreatmentsAndTemps(dateUtil.now(), profile)
         if (comparator.value.check(iob.iob, insulin.value)) {
             aapsLogger.debug(LTag.AUTOMATION, "Ready for execution: " + friendlyDescription())
             return true

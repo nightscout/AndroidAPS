@@ -24,6 +24,7 @@ import info.nightscout.androidaps.plugins.aps.loop.LoopPlugin
 import info.nightscout.androidaps.plugins.configBuilder.ConstraintChecker
 import info.nightscout.androidaps.plugins.general.smsCommunicator.otp.OneTimePassword
 import info.nightscout.androidaps.plugins.general.smsCommunicator.otp.OneTimePasswordValidationResult
+import info.nightscout.androidaps.plugins.iob.iobCobCalculator.AutosensDataStore
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.CobInfo
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.GlucoseStatusProvider
 import info.nightscout.androidaps.plugins.profile.local.LocalProfilePlugin
@@ -59,7 +60,7 @@ import java.util.*
     ConstraintChecker::class, FabricPrivacy::class, VirtualPumpPlugin::class, XdripCalibrations::class,
     SmsManager::class, CommandQueue::class, LocalProfilePlugin::class, DateUtil::class,
     OneTimePassword::class, UserEntryLogger::class, LoopPlugin::class,
-    AppRepository::class, DateUtil::class)
+    AppRepository::class, DateUtil::class, AutosensDataStore::class)
 class SmsCommunicatorPluginTest : TestBaseWithProfile() {
 
     @Mock lateinit var sp: SP
@@ -75,6 +76,7 @@ class SmsCommunicatorPluginTest : TestBaseWithProfile() {
     @Mock lateinit var uel: UserEntryLogger
     @Mock lateinit var repository: AppRepository
     @Mock lateinit var dateUtilMocked: DateUtil
+    @Mock lateinit var autosensDataStore: AutosensDataStore
 
     var injector: HasAndroidInjector = HasAndroidInjector {
         AndroidInjector {
@@ -100,7 +102,8 @@ class SmsCommunicatorPluginTest : TestBaseWithProfile() {
         bgList.add(reading)
 
         `when`(iobCobCalculator.getCobInfo(false, "SMS COB")).thenReturn(CobInfo(10.0, 2.0))
-        `when`(iobCobCalculator.lastBg()).thenReturn(reading)
+        `when`(iobCobCalculator.ads).thenReturn(autosensDataStore)
+        `when`(autosensDataStore.lastBg()).thenReturn(reading)
 
         PowerMockito.mockStatic(SmsManager::class.java)
         val smsManager = PowerMockito.mock(SmsManager::class.java)

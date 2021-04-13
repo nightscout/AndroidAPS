@@ -267,7 +267,7 @@ class WizardDialog : DaggerDialogFragment() {
             binding.bgInput.setStep(0.1)
 
         // Set BG if not old
-        binding.bgInput.value = iobCobCalculator.actualBg()?.valueToUnits(units) ?: 0.0
+        binding.bgInput.value = iobCobCalculator.ads.actualBg()?.valueToUnits(units) ?: 0.0
         binding.ttcheckbox.isEnabled = repository.getTemporaryTargetActiveAt(dateUtil.now()).blockingGet() is ValueWrapper.Existing
 
         // IOB calculation

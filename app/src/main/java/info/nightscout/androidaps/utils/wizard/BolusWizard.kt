@@ -299,7 +299,7 @@ class BolusWizard @Inject constructor(
         }
         if (insulinFromCOB > 0) {
             actions.add(resourceHelper.gs(R.string.cobvsiob) + ": " + resourceHelper.gs(R.string.formatsignedinsulinunits, insulinFromBolusIOB + insulinFromBasalIOB + insulinFromCOB + insulinFromBG).formatColor(resourceHelper, R.color.cobAlert))
-            val absorptionRate = iobCobCalculator.slowAbsorptionPercentage(60)
+            val absorptionRate = iobCobCalculator.ads.slowAbsorptionPercentage(60)
             if (absorptionRate > .25)
                 actions.add(resourceHelper.gs(R.string.slowabsorptiondetected, resourceHelper.gc(R.color.cobAlert), (absorptionRate * 100).toInt()))
         }

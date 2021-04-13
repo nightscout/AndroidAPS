@@ -119,7 +119,7 @@ class DataBroadcastPlugin @Inject constructor(
     }
 
     private fun bgStatus(bundle: Bundle) {
-        val lastBG = iobCobCalculator.lastBg() ?: return
+        val lastBG = iobCobCalculator.ads.lastBg() ?: return
         val glucoseStatus = glucoseStatusProvider.glucoseStatusData ?: return
 
         bundle.putDouble("glucoseMgdl", lastBG.value)   // last BG in mgdl

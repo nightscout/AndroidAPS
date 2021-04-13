@@ -48,7 +48,7 @@ class Objective0(injector: HasAndroidInjector) : Objective(injector, "config", R
         })
         tasks.add(object : Task(this, R.string.hasbgdata) {
             override fun isCompleted(): Boolean {
-                return iobCobCalculator.lastBg() != null
+                return iobCobCalculator.ads.lastBg() != null
             }
         })
         tasks.add(object : Task(this, R.string.loopenabled) {

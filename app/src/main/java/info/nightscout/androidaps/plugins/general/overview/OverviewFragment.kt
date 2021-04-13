@@ -411,7 +411,7 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
     }
 
     private fun onClickQuickWizard() {
-        val actualBg = iobCobCalculator.actualBg()
+        val actualBg = iobCobCalculator.ads.actualBg()
         val profile = profileFunction.getProfile()
         val profileName = profileFunction.getProfileName()
         val pump = activePlugin.activePump
@@ -446,11 +446,11 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
 
     @SuppressLint("SetTextI18n")
     private fun processButtonsVisibility() {
-        val lastBG = iobCobCalculator.lastBg()
+        val lastBG = iobCobCalculator.ads.lastBg()
         val pump = activePlugin.activePump
         val profile = profileFunction.getProfile()
         val profileName = profileFunction.getProfileName()
-        val actualBG = iobCobCalculator.actualBg()
+        val actualBG = iobCobCalculator.ads.actualBg()
 
         // QuickWizard button
         val quickWizardEntry = quickWizard.getActive()
@@ -562,8 +562,8 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
         binding.loopPumpStatusLayout.loopLayout.visibility = View.VISIBLE
 
         val profile = profileFunction.getProfile() ?: return
-        val actualBG = iobCobCalculator.actualBg()
-        val lastBG = iobCobCalculator.lastBg()
+        val actualBG = iobCobCalculator.ads.actualBg()
+        val lastBG = iobCobCalculator.ads.lastBg()
         val pump = activePlugin.activePump
         val units = profileFunction.getUnits()
         val lowLine = defaultValueHelper.determineLowLine()
@@ -812,7 +812,7 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
         }
 
         binding.infoLayout.sensitivity.text =
-            iobCobCalculator.getLastAutosensData("Overview")?.let { autosensData ->
+            iobCobCalculator.ads.getLastAutosensData("Overview", aapsLogger, dateUtil)?.let { autosensData ->
                 String.format(Locale.ENGLISH, "%.0f%%", autosensData.autosensResult.ratio * 100)
             } ?: ""
     }

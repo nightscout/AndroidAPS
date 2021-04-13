@@ -207,7 +207,7 @@ class ActionStringHandler @Inject constructor(
                 sendError("No profile found!")
                 return
             }
-            val bgReading = iobCobCalculator.actualBg()
+            val bgReading = iobCobCalculator.ads.actualBg()
             if (bgReading == null) {
                 sendError("No recent BG to base calculation on!")
                 return

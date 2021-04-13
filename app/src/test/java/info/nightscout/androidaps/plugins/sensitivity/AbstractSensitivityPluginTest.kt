@@ -3,10 +3,10 @@ package info.nightscout.androidaps.plugins.sensitivity
 import dagger.android.AndroidInjector
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.TestBase
-import info.nightscout.androidaps.interfaces.IobCobCalculator
 import info.nightscout.androidaps.interfaces.PluginDescription
 import info.nightscout.androidaps.interfaces.SensitivityInterface
 import info.nightscout.androidaps.logging.AAPSLogger
+import info.nightscout.androidaps.plugins.iob.iobCobCalculator.AutosensDataStore
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.AutosensResult
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 import info.nightscout.androidaps.utils.sharedPreferences.SP
@@ -26,7 +26,7 @@ class AbstractSensitivityPluginTest : TestBase() {
 
     private inner class SensitivityTestClass(pluginDescription: PluginDescription, aapsLogger: AAPSLogger, resourceHelper: ResourceHelper, sp: SP) : AbstractSensitivityPlugin(pluginDescription, HasAndroidInjector { AndroidInjector { } }, aapsLogger, resourceHelper, sp) {
 
-        override fun detectSensitivity(plugin: IobCobCalculator, fromTime: Long, toTime: Long): AutosensResult {
+        override fun detectSensitivity(ads: AutosensDataStore, fromTime: Long, toTime: Long): AutosensResult {
             return AutosensResult()
         }
 
@@ -35,7 +35,7 @@ class AbstractSensitivityPluginTest : TestBase() {
 
         override fun configuration(): JSONObject = JSONObject()
 
-        override fun applyConfiguration(configuration: JSONObject) { }
+        override fun applyConfiguration(configuration: JSONObject) {}
     }
 
     @Test

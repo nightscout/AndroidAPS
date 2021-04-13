@@ -11,6 +11,7 @@ import info.nightscout.androidaps.interfaces.*
 import info.nightscout.androidaps.plugins.aps.loop.LoopPlugin
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper
 import info.nightscout.androidaps.plugins.configBuilder.ConstraintChecker
+import info.nightscout.androidaps.plugins.iob.iobCobCalculator.AutosensDataStore
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.GlucoseStatusProvider
 import info.nightscout.androidaps.plugins.pump.virtual.VirtualPumpPlugin
 import info.nightscout.androidaps.plugins.treatments.TreatmentsPlugin
@@ -27,7 +28,7 @@ import org.powermock.core.classloader.annotations.PrepareForTest
 import org.powermock.modules.junit4.PowerMockRunner
 
 @RunWith(PowerMockRunner::class)
-@PrepareForTest(ConstraintChecker::class, VirtualPumpPlugin::class, DateUtil::class)
+@PrepareForTest(ConstraintChecker::class, VirtualPumpPlugin::class, DateUtil::class, AutosensDataStore::class)
 class BolusWizardTest : TestBase() {
 
     private val pumpBolusStep = 0.1
@@ -43,6 +44,7 @@ class BolusWizardTest : TestBase() {
     @Mock lateinit var treatmentsPlugin: TreatmentsPlugin
     @Mock lateinit var virtualPumpPlugin: VirtualPumpPlugin
     @Mock lateinit var dateUtil: DateUtil
+    @Mock lateinit var autosensDataStore: AutosensDataStore
 
     val injector = HasAndroidInjector {
         AndroidInjector {
@@ -77,6 +79,7 @@ class BolusWizardTest : TestBase() {
         val pumpDescription = PumpDescription()
         pumpDescription.bolusStep = pumpBolusStep
         `when`(virtualPumpPlugin.pumpDescription).thenReturn(pumpDescription)
+        `when`(iobCobCalculator.ads).thenReturn(autosensDataStore)
 
         Mockito.doAnswer { invocation: InvocationOnMock ->
             invocation.getArgument<Constraint<Double>>(0)

@@ -310,8 +310,8 @@ class SmsCommunicatorPlugin @Inject constructor(
     }
 
     private fun processBG(receivedSms: Sms) {
-        val actualBG = iobCobCalculator.actualBg()
-        val lastBG = iobCobCalculator.lastBg()
+        val actualBG = iobCobCalculator.ads.actualBg()
+        val lastBG = iobCobCalculator.ads.lastBg()
         var reply = ""
         val units = profileFunction.getUnits()
         if (actualBG != null) {
@@ -854,7 +854,7 @@ class SmsCommunicatorPlugin @Inject constructor(
         } else sendSMS(Sms(receivedSms.phoneNumber, resourceHelper.gs(R.string.wrongformat)))
     }
 
-    fun toTodayTime(hh_colon_mm: String): Long {
+    private fun toTodayTime(hh_colon_mm: String): Long {
         val p = Pattern.compile("(\\d+):(\\d+)( a.m.| p.m.| AM| PM|AM|PM|)")
         val m = p.matcher(hh_colon_mm)
         var retval: Long = 0

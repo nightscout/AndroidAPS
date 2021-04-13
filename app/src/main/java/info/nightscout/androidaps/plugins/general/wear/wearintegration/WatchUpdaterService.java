@@ -279,7 +279,7 @@ public class WatchUpdaterService extends WearableListenerService implements Goog
 
     private void sendData() {
 
-        GlucoseValue lastBG = iobCobCalculator.lastBg();
+        GlucoseValue lastBG = iobCobCalculator.getAds().lastBg();
         // Log.d(TAG, logPrefix + "LastBg=" + lastBG);
         if (lastBG != null) {
             GlucoseStatus glucoseStatus = glucoseStatusProvider.getGlucoseStatusData();
@@ -381,7 +381,7 @@ public class WatchUpdaterService extends WearableListenerService implements Goog
             googleApiConnect();
         }
         long startTime = System.currentTimeMillis() - (long) (60000 * 60 * 5.5);
-        GlucoseValue last_bg = iobCobCalculator.lastBg();
+        GlucoseValue last_bg = iobCobCalculator.getAds().lastBg();
 
         if (last_bg == null) return;
 

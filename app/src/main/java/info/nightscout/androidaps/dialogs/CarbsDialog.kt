@@ -144,7 +144,7 @@ class CarbsDialog : DialogFragmentWithDate() {
             validateInputs()
         }
 
-        iobCobCalculator.actualBg()?.let { bgReading ->
+        iobCobCalculator.ads.actualBg()?.let { bgReading ->
             if (bgReading.value < 72)
                 binding.hypoTt.isChecked = true
         }
