@@ -401,36 +401,11 @@ public abstract class PumpPluginAbstract extends PumpPluginBase implements PumpI
 
     @NonNull @Override
     public PumpEnactResult deliverTreatment(DetailedBolusInfo detailedBolusInfo) {
-
-        try {
-            if (detailedBolusInfo.insulin == 0 && detailedBolusInfo.carbs == 0) {
-                // neither carbs nor bolus requested
-                aapsLogger.error("deliverTreatment: Invalid input");
-                return new PumpEnactResult(getInjector()).success(false).enacted(false).bolusDelivered(0d).carbsDelivered(0d)
-                        .comment(R.string.invalidinput);
-            } else if (detailedBolusInfo.insulin > 0) {
-                // bolus needed, ask pump to deliver it
-                return deliverBolus(detailedBolusInfo);
-            } else {
-                //if (MedtronicHistoryData.doubleBolusDebug)
-                //    aapsLogger.debug("DoubleBolusDebug: deliverTreatment::(carb only entry)");
-
-                // no bolus required, carb only treatment
-                activePlugin.getActiveTreatments().addToHistoryTreatment(detailedBolusInfo, true);
-
-                EventOverviewBolusProgress bolusingEvent = EventOverviewBolusProgress.INSTANCE;
-                bolusingEvent.setT(new EventOverviewBolusProgress.Treatment(0, 0, detailedBolusInfo.getBolusType() == DetailedBolusInfo.BolusType.SMB));
-                bolusingEvent.setPercent(100);
-                rxBus.send(bolusingEvent);
-
-                aapsLogger.debug(LTag.PUMP, "deliverTreatment: Carb only treatment.");
-
-                return new PumpEnactResult(getInjector()).success(true).enacted(true).bolusDelivered(0d)
-                        .carbsDelivered(detailedBolusInfo.carbs).comment(R.string.common_resultok);
-            }
-        } finally {
-            triggerUIChange();
+        if (detailedBolusInfo.insulin == 0 || detailedBolusInfo.carbs > 0) {
+            throw new IllegalArgumentException(detailedBolusInfo.toString());
         }
+
+        return deliverBolus(detailedBolusInfo);
 
     }
 
