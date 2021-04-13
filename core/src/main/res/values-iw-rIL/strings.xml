@@ -183,7 +183,7 @@
     <string name="careportal_cgmsensorstart">התחלת סנסור חדש</string>
     <string name="careportal_cgm_sensor_stop">עצירת סנסור</string>
     <string name="careportal_dad_alert">התראת D.A.D</string>
-    <string name="careportal_insulincartridgechange">החלפת מחסנית אינסולין</string>
+    <string name="careportal_insulincartridgechange">החלפת מכל אינסולין</string>
     <string name="careportal_profileswitch">החלפת פרופיל</string>
     <string name="careportal_snackbolus">בולוס חטיף</string>
     <string name="careportal_mealbolus">בולוס ארוחה</string>
