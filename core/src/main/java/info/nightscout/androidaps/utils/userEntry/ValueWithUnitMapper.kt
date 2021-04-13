@@ -38,8 +38,6 @@ sealed class ValueWithUnitMapper {          //I use a sealed class because of St
 
     data class TherapyEventTTReason(val value: TemporaryTarget.Reason) : ValueWithUnitMapper()
 
-    data class StringResource(@StringRes val value: Int, val params: List<ValueWithUnitMapper> = listOf()) : ValueWithUnitMapper()
-
     fun db(): ValueWithUnit? {
         return when(this) {
             is Gram                  -> ValueWithUnit.Gram(this.value)
@@ -51,7 +49,6 @@ sealed class ValueWithUnitMapper {          //I use a sealed class because of St
             is Percent               -> ValueWithUnit.Percent(this.value)
             is SimpleInt             -> ValueWithUnit.SimpleInt(this.value)
             is SimpleString          -> ValueWithUnit.SimpleString(this.value)
-            is StringResource        -> ValueWithUnit.StringResource(this.value, this.params.map {it.db()}.filterNotNull())
             is TherapyEventMeterType -> ValueWithUnit.TherapyEventMeterType(this.value)
             is TherapyEventTTReason  -> ValueWithUnit.TherapyEventTTReason(this.value)
             is TherapyEventType      -> ValueWithUnit.TherapyEventType(this.value)
@@ -72,7 +69,6 @@ sealed class ValueWithUnitMapper {          //I use a sealed class because of St
             is Percent               -> this.value
             is SimpleInt             -> this.value
             is SimpleString          -> this.value
-            is StringResource        -> this.value
             is TherapyEventMeterType -> this.value
             is TherapyEventTTReason  -> this.value
             is TherapyEventType      -> this.value

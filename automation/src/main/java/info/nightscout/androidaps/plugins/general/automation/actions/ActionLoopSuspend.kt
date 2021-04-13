@@ -37,8 +37,8 @@ class ActionLoopSuspend(injector: HasAndroidInjector) : Action(injector) {
         if (!loopPlugin.isSuspended) {
             loopPlugin.suspendLoop(minutes.getMinutes())
             rxBus.send(EventRefreshOverview("ActionLoopSuspend"))
-            uel.log(UserEntry.Action.SUSPEND, Sources.Automation, title,
-                ValueWithUnit.StringResource(R.string.suspendloopforXmin, listOf(ValueWithUnit.Minute(minutes.getMinutes()))))
+            uel.log(UserEntry.Action.SUSPEND, Sources.Automation, title + ": " + resourceHelper.gs(R.string.suspendloopforXmin, minutes.getMinutes()),
+                ValueWithUnit.Minute(minutes.getMinutes()))
             callback.result(PumpEnactResult(injector).success(true).comment(R.string.ok))?.run()
         } else {
             callback.result(PumpEnactResult(injector).success(true).comment(R.string.alreadysuspended))?.run()

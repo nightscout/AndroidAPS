@@ -214,8 +214,8 @@ class InsulinDialog : DialogFragmentWithDate() {
                         detailedBolusInfo.timestamp = time
                         if (recordOnlyChecked) {
                             uel.log(Action.BOLUS, Sources.InsulinDialog,
-                                notes,
-                                ValueWithUnit.StringResource(R.string.record),
+                                resourceHelper.gs(R.string.record) + if (notes.isNotEmpty()) ": " + notes else "",
+                                ValueWithUnit.SimpleString(resourceHelper.gsNotLocalised(R.string.record)),
                                 ValueWithUnit.Insulin(insulinAfterConstraints),
                                 ValueWithUnit.Minute(timeOffset).takeIf { timeOffset!= 0 })
                             disposable += repository.runTransactionForResult(detailedBolusInfo.insertBolusTransaction())
@@ -224,15 +224,14 @@ class InsulinDialog : DialogFragmentWithDate() {
                                     { aapsLogger.error(LTag.DATABASE, "Error while saving bolus", it) }
                                 )
                         } else {
+                            uel.log(Action.BOLUS, Sources.InsulinDialog,
+                                notes,
+                                ValueWithUnit.Insulin(insulinAfterConstraints))
                             commandQueue.bolus(detailedBolusInfo, object : Callback() {
                                 override fun run() {
                                     if (!result.success) {
                                         ErrorHelperActivity.runAlarm(ctx, result.comment, resourceHelper.gs(R.string.treatmentdeliveryerror), info.nightscout.androidaps.dana.R.raw.boluserror)
-                                    } else
-                                        uel.log(Action.BOLUS, Sources.InsulinDialog,
-                                            notes,
-                                            ValueWithUnit.Insulin(insulinAfterConstraints))
-
+                                    }
                                 }
                             })
                         }

@@ -149,9 +149,9 @@ class TreatmentDialog : DialogFragmentWithDate() {
                     detailedBolusInfo.carbs = carbsAfterConstraints.toDouble()
                     detailedBolusInfo.context = context
                     if (recordOnlyChecked) {
-                        uel.log(action, Sources.TreatmentDialog,
+                        uel.log(action, Sources.TreatmentDialog, if (insulinAfterConstraints != 0.0) resourceHelper.gs(R.string.record) else "",
                             ValueWithUnit.Timestamp(detailedBolusInfo.timestamp).takeIf { eventTimeChanged },
-                            ValueWithUnit.StringResource(R.string.record).takeIf { insulinAfterConstraints != 0.0 },
+                            ValueWithUnit.SimpleString(resourceHelper.gsNotLocalised(R.string.record)).takeIf { insulinAfterConstraints != 0.0 },
                             ValueWithUnit.Insulin(insulinAfterConstraints).takeIf { insulinAfterConstraints != 0.0 },
                             ValueWithUnit.Gram(carbsAfterConstraints).takeIf { carbsAfterConstraints != 0 })
                         if (detailedBolusInfo.insulin > 0)
