@@ -390,7 +390,6 @@ open class IobCobCalculatorPlugin @Inject constructor(
     // When historical data is changed (coming from NS etc) finished calculations after this date must be invalidated
     private fun newHistoryData(oldDataTimestamp: Long, bgDataReload: Boolean, event: Event) {
         //log.debug("Locking onNewHistoryData");
-        aapsLogger.debug("XXXXXXXXXXXXX onEventNewHistoryData $oldDataTimestamp")
         stopCalculation("onEventNewHistoryData")
         synchronized(dataLock) {
 

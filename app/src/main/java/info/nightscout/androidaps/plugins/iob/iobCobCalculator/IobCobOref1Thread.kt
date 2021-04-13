@@ -81,7 +81,6 @@ class IobCobOref1Thread internal constructor(
             }
             //log.debug("Locking calculateSensitivityData");
             val oldestTimeWithData = iobCobCalculatorPlugin.calculateDetectionStart(end, limitDataToOldestAvailable)
-            aapsLogger.debug("XXXXXXXXXXXXX START $from")
             if (bgDataReload) {
                 iobCobCalculatorPlugin.ads.loadBgData(end, repository, aapsLogger, dateUtil)
                 iobCobCalculatorPlugin.clearCache()
@@ -104,7 +103,6 @@ class IobCobOref1Thread internal constructor(
                 if (iobCobCalculatorPlugin.stopCalculationTrigger) {
                     iobCobCalculatorPlugin.stopCalculationTrigger = false
                     aapsLogger.debug(LTag.AUTOSENS, "Aborting calculation thread (trigger): $from")
-                    aapsLogger.debug("XXXXXXXXXXXXX STOP")
                     return
                 }
                 // check if data already exists
@@ -121,7 +119,6 @@ class IobCobOref1Thread internal constructor(
                     aapsLogger.debug(LTag.AUTOSENS, "Aborting calculation thread (no profile): $from")
                     return  // profile not set yet
                 }
-                aapsLogger.debug("XXXXXXXXXXXXX FOR $bgTime ${dateUtil.dateAndTimeString(bgTime)}")
                 aapsLogger.debug(LTag.AUTOSENS, "Processing calculation thread: " + from + " (" + i + "/" + bucketedData.size + ")")
                 val sens = profile.getIsfMgdl(bgTime)
                 val autosensData = AutosensData(injector)
@@ -198,7 +195,6 @@ class IobCobOref1Thread internal constructor(
                 }
                 val recentCarbTreatments = repository.getCarbsDataFromTimeToTimeExpanded(bgTime - T.mins(5).msecs(), bgTime, true).blockingGet()
                 for (recentCarbTreatment in recentCarbTreatments) {
-                    aapsLogger.debug("XXXXXXXXXXXXX $bgTime ${dateUtil.dateAndTimeString(bgTime)} $recentCarbTreatment")
                     autosensData.carbsFromBolus += recentCarbTreatment.amount
                     val isAAPSOrWeighted = sensitivityAAPSPlugin.isEnabled() || sensitivityWeightedAveragePlugin.isEnabled()
                     autosensData.activeCarbsList.add(autosensData.CarbsInPast(recentCarbTreatment, isAAPSOrWeighted))
