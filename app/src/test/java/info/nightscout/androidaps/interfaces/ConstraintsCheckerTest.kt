@@ -156,7 +156,7 @@ class ConstraintsCheckerTest : TestBaseWithProfile() {
         constraintsPluginsList.add(danaRSPlugin)
         constraintsPluginsList.add(insightPlugin)
         constraintsPluginsList.add(openAPSSMBPlugin)
-        `when`(activePlugin.getSpecificPluginsListByInterface(ConstraintsInterface::class.java)).thenReturn(constraintsPluginsList)
+        `when`(activePlugin.getSpecificPluginsListByInterface(Constraints::class.java)).thenReturn(constraintsPluginsList)
         objectivesPlugin.onStart()
     }
 

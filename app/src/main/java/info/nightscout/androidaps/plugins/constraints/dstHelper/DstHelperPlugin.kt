@@ -33,7 +33,7 @@ class DstHelperPlugin @Inject constructor(
     .showInList(false)
     .pluginName(R.string.dst_plugin_name),
     aapsLogger, resourceHelper, injector
-), ConstraintsInterface {
+), Constraints {
 
     companion object {
         private const val DISABLE_TIME_FRAME_HOURS = -3

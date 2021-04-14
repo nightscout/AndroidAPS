@@ -41,7 +41,7 @@ class ObjectivesPlugin @Inject constructor(
     .shortName(R.string.objectives_shortname)
     .description(R.string.description_objectives),
     aapsLogger, resourceHelper, injector
-), ConstraintsInterface {
+), Constraints {
 
     var objectives: MutableList<Objective> = ArrayList()
 

@@ -55,7 +55,7 @@ open class OpenAPSSMBPlugin @Inject constructor(
     .description(R.string.description_smb)
     .setDefault(),
     aapsLogger, resourceHelper, injector
-), APS, ConstraintsInterface {
+), APS, Constraints {
 
     // last values
     override var lastAPSRun: Long = 0

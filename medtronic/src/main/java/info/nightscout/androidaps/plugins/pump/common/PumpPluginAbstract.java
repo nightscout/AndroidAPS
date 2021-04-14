@@ -22,7 +22,7 @@ import info.nightscout.androidaps.events.EventCustomActionsChanged;
 import info.nightscout.androidaps.extensions.PumpStateExtensionKt;
 import info.nightscout.androidaps.interfaces.ActivePlugin;
 import info.nightscout.androidaps.interfaces.CommandQueueProvider;
-import info.nightscout.androidaps.interfaces.ConstraintsInterface;
+import info.nightscout.androidaps.interfaces.Constraints;
 import info.nightscout.androidaps.interfaces.PluginDescription;
 import info.nightscout.androidaps.interfaces.PumpDescription;
 import info.nightscout.androidaps.interfaces.PumpInterface;
@@ -50,7 +50,7 @@ import io.reactivex.disposables.CompositeDisposable;
 
 // When using this class, make sure that your first step is to create mConnection (see MedtronicPumpPlugin)
 
-public abstract class PumpPluginAbstract extends PumpPluginBase implements PumpInterface, ConstraintsInterface {
+public abstract class PumpPluginAbstract extends PumpPluginBase implements PumpInterface, Constraints {
     private final CompositeDisposable disposable = new CompositeDisposable();
 
     protected HasAndroidInjector injector;

@@ -49,7 +49,7 @@ class SafetyPlugin @Inject constructor(
     .pluginName(R.string.safety)
     .preferencesId(R.xml.pref_safety),
     aapsLogger, resourceHelper, injector
-), ConstraintsInterface {
+), Constraints {
 
     /**
      * Constraints interface
