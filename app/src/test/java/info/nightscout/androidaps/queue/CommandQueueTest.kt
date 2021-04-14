@@ -5,7 +5,7 @@ import android.os.PowerManager
 import dagger.Lazy
 import dagger.android.AndroidInjector
 import dagger.android.HasAndroidInjector
-import info.nightscout.androidaps.Config
+import info.nightscout.androidaps.utils.buildHelper.ConfigImpl
 import info.nightscout.androidaps.TestBaseWithProfile
 import info.nightscout.androidaps.TestPumpPlugin
 import info.nightscout.androidaps.core.R
@@ -106,7 +106,7 @@ class CommandQueueTest : TestBaseWithProfile() {
 
     @Before
     fun prepare() {
-        commandQueue = CommandQueueMocked(injector, aapsLogger, rxBus, aapsSchedulers, resourceHelper, constraintChecker, profileFunction, lazyActivePlugin, context, sp, BuildHelper(Config(), loggerUtils), dateUtil, repository, fabricPrivacy)
+        commandQueue = CommandQueueMocked(injector, aapsLogger, rxBus, aapsSchedulers, resourceHelper, constraintChecker, profileFunction, lazyActivePlugin, context, sp, BuildHelper(ConfigImpl(), loggerUtils), dateUtil, repository, fabricPrivacy)
         testPumpPlugin = TestPumpPlugin(injector)
 
         testPumpPlugin.pumpDescription.basalMinimumRate = 0.1
@@ -138,7 +138,7 @@ class CommandQueueTest : TestBaseWithProfile() {
 
     @Test
     fun commandIsPickedUp() {
-        val commandQueue = CommandQueue(injector, aapsLogger, rxBus, aapsSchedulers, resourceHelper, constraintChecker, profileFunction, lazyActivePlugin, context, sp, BuildHelper(Config(), loggerUtils), dateUtil, repository, fabricPrivacy)
+        val commandQueue = CommandQueue(injector, aapsLogger, rxBus, aapsSchedulers, resourceHelper, constraintChecker, profileFunction, lazyActivePlugin, context, sp, BuildHelper(ConfigImpl(), loggerUtils), dateUtil, repository, fabricPrivacy)
         // start with empty queue
         Assert.assertEquals(0, commandQueue.size())
 

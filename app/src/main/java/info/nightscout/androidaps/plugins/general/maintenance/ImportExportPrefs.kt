@@ -19,7 +19,7 @@ import info.nightscout.androidaps.database.entities.UserEntry
 import info.nightscout.androidaps.database.entities.UserEntry.Action
 import info.nightscout.androidaps.database.entities.UserEntry.Sources
 import info.nightscout.androidaps.events.EventAppExit
-import info.nightscout.androidaps.interfaces.ConfigInterface
+import info.nightscout.androidaps.interfaces.Config
 import info.nightscout.androidaps.interfaces.ImportExportPrefsInterface
 import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.logging.LTag
@@ -57,7 +57,7 @@ class ImportExportPrefs @Inject constructor(
     private val buildHelper: BuildHelper,
     private val rxBus: RxBusWrapper,
     private val passwordCheck: PasswordCheck,
-    private val config: ConfigInterface,
+    private val config: Config,
     private val androidPermission: AndroidPermission,
     private val classicPrefsFormat: ClassicPrefsFormat,
     private val encryptedPrefsFormat: EncryptedPrefsFormat,

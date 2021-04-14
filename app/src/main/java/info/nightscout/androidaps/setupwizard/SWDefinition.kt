@@ -7,7 +7,6 @@ import android.net.Uri
 import android.provider.Settings
 import androidx.appcompat.app.AppCompatActivity
 import dagger.android.HasAndroidInjector
-import info.nightscout.androidaps.Config
 import info.nightscout.androidaps.Constants
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.dialogs.ProfileSwitchDialog
@@ -31,6 +30,7 @@ import info.nightscout.androidaps.setupwizard.elements.*
 import info.nightscout.androidaps.setupwizard.events.EventSWUpdate
 import info.nightscout.androidaps.utils.AndroidPermission
 import info.nightscout.androidaps.utils.CryptoUtil
+import info.nightscout.androidaps.utils.buildHelper.ConfigImpl
 import info.nightscout.androidaps.utils.extensions.isRunningTest
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 import info.nightscout.androidaps.utils.sharedPreferences.SP
@@ -57,7 +57,7 @@ class SWDefinition @Inject constructor(
     private val importExportPrefs: ImportExportPrefsInterface,
     private val androidPermission: AndroidPermission,
     private val cryptoUtil: CryptoUtil,
-    private val config: Config
+    private val config: ConfigImpl
 ) {
 
     lateinit var activity: AppCompatActivity

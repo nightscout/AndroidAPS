@@ -1,6 +1,7 @@
 package info.nightscout.androidaps.interfaces
 
-interface ConfigInterface {
+@Suppress("PropertyName")
+interface Config {
     val SUPPORTEDNSVERSION: Int
     val APS: Boolean
     val NSCLIENT: Boolean

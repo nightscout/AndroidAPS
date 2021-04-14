@@ -1,7 +1,7 @@
 package info.nightscout.androidaps.utils.buildHelper
 
 import info.nightscout.androidaps.BuildConfig
-import info.nightscout.androidaps.Config
+import info.nightscout.androidaps.interfaces.Config
 import info.nightscout.androidaps.plugins.general.maintenance.LoggerUtils
 import java.io.File
 import javax.inject.Inject

@@ -1,6 +1,6 @@
 package info.nightscout.androidaps.utils
 
-import info.nightscout.androidaps.Config
+import info.nightscout.androidaps.interfaces.Config
 import info.nightscout.androidaps.Constants
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.database.AppRepository

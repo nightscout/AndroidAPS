@@ -3,7 +3,7 @@ package info.nightscout.androidaps.plugins.general.overview
 import androidx.preference.PreferenceFragmentCompat
 import androidx.preference.SwitchPreference
 import dagger.android.HasAndroidInjector
-import info.nightscout.androidaps.Config
+import info.nightscout.androidaps.interfaces.Config
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.events.EventRefreshOverview
 import info.nightscout.androidaps.extensions.*

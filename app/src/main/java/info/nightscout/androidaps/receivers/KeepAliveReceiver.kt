@@ -14,7 +14,7 @@ import androidx.work.WorkerParameters
 import dagger.android.DaggerBroadcastReceiver
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.BuildConfig
-import info.nightscout.androidaps.Config
+import info.nightscout.androidaps.interfaces.Config
 import info.nightscout.androidaps.database.AppRepository
 import info.nightscout.androidaps.events.EventProfileNeedsUpdate
 import info.nightscout.androidaps.extensions.buildDeviceStatus

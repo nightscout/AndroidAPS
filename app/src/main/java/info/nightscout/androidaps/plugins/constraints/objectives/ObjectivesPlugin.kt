@@ -5,7 +5,6 @@ import com.google.common.base.Charsets
 import com.google.common.hash.Hashing
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.BuildConfig
-import info.nightscout.androidaps.Config
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.database.entities.UserEntry.Action
 import info.nightscout.androidaps.database.entities.UserEntry.Sources
@@ -15,6 +14,7 @@ import info.nightscout.androidaps.logging.UserEntryLogger
 import info.nightscout.androidaps.plugins.constraints.objectives.objectives.*
 import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.alertDialogs.OKDialog
+import info.nightscout.androidaps.utils.buildHelper.ConfigImpl
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 import info.nightscout.androidaps.utils.sharedPreferences.SP
 import java.util.*
@@ -28,7 +28,7 @@ class ObjectivesPlugin @Inject constructor(
     resourceHelper: ResourceHelper,
     private val activePlugin: ActivePlugin,
     private val sp: SP,
-    config: Config,
+    config: ConfigImpl,
     private val dateUtil: DateUtil,
     private val uel: UserEntryLogger
 ) : PluginBase(PluginDescription()

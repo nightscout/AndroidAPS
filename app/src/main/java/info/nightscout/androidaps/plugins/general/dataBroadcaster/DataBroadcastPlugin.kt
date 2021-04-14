@@ -5,7 +5,7 @@ import android.content.Intent
 import android.content.pm.ResolveInfo
 import android.os.Bundle
 import dagger.android.HasAndroidInjector
-import info.nightscout.androidaps.Config
+import info.nightscout.androidaps.interfaces.Config
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.events.*
 import info.nightscout.androidaps.interfaces.*

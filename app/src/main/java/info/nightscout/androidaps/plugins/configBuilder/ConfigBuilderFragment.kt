@@ -9,7 +9,7 @@ import android.widget.*
 import androidx.annotation.StringRes
 import androidx.core.content.ContextCompat
 import dagger.android.support.DaggerFragment
-import info.nightscout.androidaps.Config
+import info.nightscout.androidaps.interfaces.Config
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.activities.PreferencesActivity
 import info.nightscout.androidaps.databinding.ConfigbuilderFragmentBinding

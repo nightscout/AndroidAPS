@@ -25,7 +25,7 @@ open class TestBaseWithProfile : TestBase() {
     @Mock lateinit var iobCobCalculator: IobCobCalculator
     @Mock lateinit var fabricPrivacy: FabricPrivacy
     @Mock lateinit var profileFunction: ProfileFunction
-    @Mock lateinit var configInterface: ConfigInterface
+    @Mock lateinit var config: Config
     @Mock lateinit var context: Context
 
     lateinit var dateUtil: DateUtil
@@ -39,7 +39,7 @@ open class TestBaseWithProfile : TestBase() {
                 it.resourceHelper = resourceHelper
                 it.rxBus = rxBus
                 it.fabricPrivacy = fabricPrivacy
-                it.configInterface = configInterface
+                it.config = config
                 it.dateUtil = dateUtil
             }
             if (it is ProfileSwitch) {

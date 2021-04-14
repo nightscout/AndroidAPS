@@ -5,7 +5,7 @@ import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.data.Profile
 import info.nightscout.androidaps.db.ProfileSwitch
 import info.nightscout.androidaps.interfaces.ActivePlugin
-import info.nightscout.androidaps.interfaces.ConfigInterface
+import info.nightscout.androidaps.interfaces.Config
 import info.nightscout.androidaps.interfaces.ProfileFunction
 import info.nightscout.androidaps.interfaces.ProfileStore
 import info.nightscout.androidaps.interfaces.TreatmentsInterface
@@ -30,7 +30,7 @@ open class TestBaseWithProfile : TestBase() {
     @Mock lateinit var profileFunction: ProfileFunction
     @Mock lateinit var defaultValueHelper: DefaultValueHelper
     @Mock lateinit var dateUtil: DateUtil
-    @Mock lateinit var configInterface: ConfigInterface
+    @Mock lateinit var config: Config
 
     val rxBus = RxBusWrapper(aapsSchedulers)
 
@@ -42,7 +42,7 @@ open class TestBaseWithProfile : TestBase() {
                 it.resourceHelper = resourceHelper
                 it.rxBus = rxBus
                 it.fabricPrivacy = fabricPrivacy
-                it.configInterface = configInterface
+                it.config = config
             }
             if (it is ProfileSwitch) {
                 it.treatmentsPlugin = treatmentsInterface

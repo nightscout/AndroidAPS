@@ -4,7 +4,7 @@ import android.app.NotificationManager
 import android.content.Context
 import dagger.android.AndroidInjector
 import dagger.android.HasAndroidInjector
-import info.nightscout.androidaps.Config
+import info.nightscout.androidaps.utils.buildHelper.ConfigImpl
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.TestBase
 import info.nightscout.androidaps.database.AppRepository
@@ -57,7 +57,7 @@ class LoopPluginTest : TestBase() {
     val injector = HasAndroidInjector { AndroidInjector { } }
     @Before fun prepareMock() {
 
-        loopPlugin = LoopPlugin(injector, aapsLogger, aapsSchedulers, rxBus, sp, Config(), constraintChecker, resourceHelper, profileFunction, context, commandQueue, activePlugin, virtualPumpPlugin, iobCobCalculator, receiverStatusStore, fabricPrivacy, dateUtil, uel, repository, runningConfiguration)
+        loopPlugin = LoopPlugin(injector, aapsLogger, aapsSchedulers, rxBus, sp, ConfigImpl(), constraintChecker, resourceHelper, profileFunction, context, commandQueue, activePlugin, virtualPumpPlugin, iobCobCalculator, receiverStatusStore, fabricPrivacy, dateUtil, uel, repository, runningConfiguration)
         `when`(activePlugin.activePump).thenReturn(virtualPumpPlugin)
         `when`(context.getSystemService(Context.NOTIFICATION_SERVICE)).thenReturn(notificationManager)
     }

@@ -44,7 +44,7 @@ import info.nightscout.androidaps.events.EventInitializationChanged;
 import info.nightscout.androidaps.events.EventRefreshOverview;
 import info.nightscout.androidaps.insight.R;
 import info.nightscout.androidaps.interfaces.CommandQueueProvider;
-import info.nightscout.androidaps.interfaces.ConfigInterface;
+import info.nightscout.androidaps.interfaces.Config;
 import info.nightscout.androidaps.interfaces.Constraint;
 import info.nightscout.androidaps.interfaces.ConstraintsInterface;
 import info.nightscout.androidaps.interfaces.DatabaseHelperInterface;
@@ -211,7 +211,7 @@ public class LocalInsightPlugin extends PumpPluginBase implements PumpInterface,
             NSUpload nsUpload,
             Context context,
             UploadQueueInterface uploadQueue,
-            ConfigInterface config,
+            Config config,
             DateUtil dateUtil,
             DatabaseHelperInterface databaseHelper,
             PumpSync pumpSync

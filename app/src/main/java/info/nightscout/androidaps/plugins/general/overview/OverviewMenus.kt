@@ -9,7 +9,7 @@ import androidx.annotation.ColorRes
 import androidx.annotation.StringRes
 import androidx.appcompat.widget.PopupMenu
 import com.google.gson.Gson
-import info.nightscout.androidaps.Config
+import info.nightscout.androidaps.interfaces.Config
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.events.EventRefreshOverview
 import info.nightscout.androidaps.logging.AAPSLogger

@@ -17,7 +17,7 @@ import dagger.android.HasAndroidInjector;
 import info.nightscout.androidaps.Constants;
 import info.nightscout.androidaps.core.R;
 import info.nightscout.androidaps.interfaces.ActivePlugin;
-import info.nightscout.androidaps.interfaces.ConfigInterface;
+import info.nightscout.androidaps.interfaces.Config;
 import info.nightscout.androidaps.interfaces.ProfileFunction;
 import info.nightscout.androidaps.interfaces.PumpDescription;
 import info.nightscout.androidaps.interfaces.PumpInterface;
@@ -37,7 +37,7 @@ public class Profile {
     @Inject public ResourceHelper resourceHelper;
     @Inject public RxBusWrapper rxBus;
     @Inject public FabricPrivacy fabricPrivacy;
-    @Inject public ConfigInterface configInterface;
+    @Inject public Config config;
     @Inject public DateUtil dateUtil;
 
     private final HasAndroidInjector injector;
@@ -250,7 +250,7 @@ public class Profile {
                 for (int index = 0; index < basal_v.size(); index++) {
                     long secondsFromMidnight = basal_v.keyAt(index);
                     if (notify && secondsFromMidnight % 3600 != 0) {
-                        if (configInterface.getAPS()) {
+                        if (config.getAPS()) {
                             Notification notification = new Notification(Notification.BASAL_PROFILE_NOT_ALIGNED_TO_HOURS, resourceHelper.gs(R.string.basalprofilenotaligned, from), Notification.NORMAL);
                             rxBus.send(new EventNewNotification(notification));
                         }

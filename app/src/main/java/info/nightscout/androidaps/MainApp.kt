@@ -19,6 +19,7 @@ import info.nightscout.androidaps.db.DatabaseHelper
 import info.nightscout.androidaps.db.StaticInjector
 import info.nightscout.androidaps.dependencyInjection.DaggerAppComponent
 import info.nightscout.androidaps.interfaces.ConfigBuilder
+import info.nightscout.androidaps.interfaces.Config
 import info.nightscout.androidaps.interfaces.PluginBase
 import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.logging.LTag
