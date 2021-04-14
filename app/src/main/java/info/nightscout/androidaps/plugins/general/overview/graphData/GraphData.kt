@@ -565,13 +565,13 @@ class GraphData(
     // scale in % of vertical size (like 0.3)
     fun addRatio(fromTime: Long, toTime: Long, useForScale: Boolean, scale: Double) {
         val ratioArray: MutableList<ScaledDataPoint> = ArrayList()
-        var maxRatioValueFound = Double.MIN_VALUE
-        var minRatioValueFound = Double.MAX_VALUE
+        var maxRatioValueFound = 5.0                    //even if sens data equals 0 for all the period, minimum scale is between 95% and 105%
+        var minRatioValueFound = - maxRatioValueFound
         val ratioScale = Scale()
         var time = fromTime
         while (time <= toTime) {
             iobCobCalculatorPlugin.getAutosensData(time)?.let { autosensData ->
-                ratioArray.add(ScaledDataPoint(time, 100.0 * (autosensData.autosensResult.ratio - 1), ratioScale))
+                ratioArray.add(ScaledDataPoint(time, 100.0 * (autosensData.autosensResult.ratio), ratioScale))
                 maxRatioValueFound = max(maxRatioValueFound, 100.0 * (autosensData.autosensResult.ratio - 1))
                 minRatioValueFound = min(minRatioValueFound, 100.0 * (autosensData.autosensResult.ratio - 1))
             }
@@ -584,8 +584,8 @@ class GraphData(
             it.thickness = 3
         })
         if (useForScale) {
-            maxY = max(maxRatioValueFound, abs(minRatioValueFound))
-            minY = -maxY
+            maxY = 100.0 + max(maxRatioValueFound, abs(minRatioValueFound))
+            minY = 100.0 - max(maxRatioValueFound, abs(minRatioValueFound))
         }
         ratioScale.setMultiplier(maxY * scale / max(maxRatioValueFound, abs(minRatioValueFound)))
     }
