@@ -39,7 +39,7 @@ class PersistentNotificationPlugin @Inject constructor(
     private val iobCobCalculator: IobCobCalculator,
     private val rxBus: RxBusWrapper,
     private val context: Context,
-    private val notificationHolder: NotificationHolderInterface,
+    private val notificationHolder: NotificationHolder,
     private val dummyServiceHelper: DummyServiceHelper,
     private val iconsProvider: IconsProvider,
     private val glucoseStatusProvider: GlucoseStatusProvider

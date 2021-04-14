@@ -10,17 +10,17 @@ import androidx.core.app.TaskStackBuilder
 import info.nightscout.androidaps.MainActivity
 import info.nightscout.androidaps.core.R
 import info.nightscout.androidaps.interfaces.IconsProvider
-import info.nightscout.androidaps.interfaces.NotificationHolderInterface
+import info.nightscout.androidaps.interfaces.NotificationHolder
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-class NotificationHolder @Inject constructor(
+class NotificationHolderImpl @Inject constructor(
     resourceHelper: ResourceHelper,
     context: Context,
     iconsProvider: IconsProvider
-) : NotificationHolderInterface {
+) : NotificationHolder {
 
     override val channelID = "AndroidAPS-Ongoing"
     override val notificationID = 4711

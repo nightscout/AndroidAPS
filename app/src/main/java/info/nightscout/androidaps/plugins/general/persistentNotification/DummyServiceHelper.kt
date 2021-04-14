@@ -5,7 +5,7 @@ import android.content.Context
 import android.content.Intent
 import android.content.ServiceConnection
 import android.os.IBinder
-import info.nightscout.androidaps.interfaces.NotificationHolderInterface
+import info.nightscout.androidaps.interfaces.NotificationHolder
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -21,7 +21,7 @@ import javax.inject.Singleton
  */
 @Singleton
 class DummyServiceHelper @Inject constructor(
-    private val notificationHolder: NotificationHolderInterface
+    private val notificationHolder: NotificationHolder
 ) {
 
     fun startService(context: Context) {
