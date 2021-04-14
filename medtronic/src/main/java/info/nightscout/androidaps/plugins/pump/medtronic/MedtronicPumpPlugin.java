@@ -40,6 +40,7 @@ import info.nightscout.androidaps.interfaces.CommandQueueProvider;
 import info.nightscout.androidaps.interfaces.PluginDescription;
 import info.nightscout.androidaps.interfaces.PluginType;
 import info.nightscout.androidaps.interfaces.PumpInterface;
+import info.nightscout.androidaps.interfaces.PumpSync;
 import info.nightscout.androidaps.logging.AAPSLogger;
 import info.nightscout.androidaps.logging.LTag;
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper;
@@ -98,7 +99,6 @@ import info.nightscout.androidaps.utils.sharedPreferences.SP;
 @Singleton
 public class MedtronicPumpPlugin extends PumpPluginAbstract implements PumpInterface, RileyLinkPumpDevice {
 
-    private final SP sp;
     private final MedtronicUtil medtronicUtil;
     private final MedtronicPumpStatus medtronicPumpStatus;
     private final MedtronicHistoryData medtronicHistoryData;
@@ -117,7 +117,7 @@ public class MedtronicPumpPlugin extends PumpPluginAbstract implements PumpInter
     public static boolean isBusy = false;
     private final List<Long> busyTimestamps = new ArrayList<>();
     private boolean hasTimeDateOrTimeZoneChanged = false;
-
+    private boolean usePumpSync = false;
 
     @Inject
     public MedtronicPumpPlugin(
@@ -136,7 +136,8 @@ public class MedtronicPumpPlugin extends PumpPluginAbstract implements PumpInter
             RileyLinkServiceData rileyLinkServiceData,
             ServiceTaskExecutor serviceTaskExecutor,
             DateUtil dateUtil,
-            AapsSchedulers aapsSchedulers
+            AapsSchedulers aapsSchedulers,
+            PumpSync pumpSync
     ) {
 
         super(new PluginDescription() //
@@ -148,11 +149,10 @@ public class MedtronicPumpPlugin extends PumpPluginAbstract implements PumpInter
                         .preferencesId(R.xml.pref_medtronic)
                         .description(R.string.description_pump_medtronic), //
                 PumpType.MEDTRONIC_522_722, // we default to most basic model, correct model from config is loaded later
-                injector, resourceHelper, aapsLogger, commandQueue, rxBus, activePlugin, sp, context, fabricPrivacy, dateUtil, aapsSchedulers
+                injector, resourceHelper, aapsLogger, commandQueue, rxBus, activePlugin, sp, context, fabricPrivacy, dateUtil, aapsSchedulers, pumpSync
         );
 
         this.medtronicUtil = medtronicUtil;
-        this.sp = sp;
         this.medtronicPumpStatus = medtronicPumpStatus;
         this.medtronicHistoryData = medtronicHistoryData;
         this.rileyLinkServiceData = rileyLinkServiceData;
@@ -733,6 +733,14 @@ public class MedtronicPumpPlugin extends PumpPluginAbstract implements PumpInter
         rxBus.send(new EventMedtronicPumpValuesChanged());
     }
 
+    @Override public long generateTempId(long timeMillis) {
+        return 0;
+    }
+
+    @Override public String getSerial() {
+        return null;
+    }
+
     private BolusDeliveryType bolusDeliveryType = BolusDeliveryType.Idle;
 
     private enum BolusDeliveryType {
@@ -878,7 +886,12 @@ public class MedtronicPumpPlugin extends PumpPluginAbstract implements PumpInter
                 detailedBolusInfo.timestamp = now;
                 detailedBolusInfo.deliverAtTheLatest = now; // not sure about that one
 
-                activePlugin.getActiveTreatments().addToHistoryTreatment(detailedBolusInfo, true);
+                // TODO fix
+                if (usePumpSync) {
+                    addBolusWithTempId(detailedBolusInfo, true);
+                } else {
+                    activePlugin.getActiveTreatments().addToHistoryTreatment(detailedBolusInfo, true);
+                }
 
                 // we subtract insulin, exact amount will be visible with next remainingInsulin update.
                 medtronicPumpStatus.reservoirRemainingUnits -= detailedBolusInfo.insulin;
@@ -1044,6 +1057,7 @@ public class MedtronicPumpPlugin extends PumpPluginAbstract implements PumpInter
                     .absolute(absoluteRate) //
                     .source(Source.USER);
 
+            // TODO fix
             activePlugin.getActiveTreatments().addToHistoryTempBasal(tempStart);
 
             incrementStatistics(MedtronicConst.Statistics.TBRsSet);
@@ -1391,6 +1405,7 @@ public class MedtronicPumpPlugin extends PumpPluginAbstract implements PumpInter
                     .duration(0) //
                     .source(Source.USER);
 
+            // TODO fix
             activePlugin.getActiveTreatments().addToHistoryTempBasal(tempBasal);
 
             return new PumpEnactResult(getInjector()).success(true).enacted(true) //

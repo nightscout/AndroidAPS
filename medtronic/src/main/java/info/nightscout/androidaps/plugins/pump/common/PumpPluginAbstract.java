@@ -10,6 +10,8 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 import dagger.android.HasAndroidInjector;
 import info.nightscout.androidaps.core.R;
@@ -27,11 +29,13 @@ import info.nightscout.androidaps.interfaces.PluginDescription;
 import info.nightscout.androidaps.interfaces.PumpDescription;
 import info.nightscout.androidaps.interfaces.PumpInterface;
 import info.nightscout.androidaps.interfaces.PumpPluginBase;
+import info.nightscout.androidaps.interfaces.PumpSync;
 import info.nightscout.androidaps.logging.AAPSLogger;
 import info.nightscout.androidaps.logging.LTag;
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper;
 import info.nightscout.androidaps.plugins.common.ManufacturerType;
 import info.nightscout.androidaps.plugins.general.overview.events.EventOverviewBolusProgress;
+import info.nightscout.androidaps.plugins.pump.common.data.PumpDbEntry;
 import info.nightscout.androidaps.plugins.pump.common.data.PumpStatus;
 import info.nightscout.androidaps.plugins.pump.common.defs.PumpDriverState;
 import info.nightscout.androidaps.plugins.pump.common.defs.PumpType;
@@ -69,6 +73,7 @@ public abstract class PumpPluginAbstract extends PumpPluginBase implements PumpI
     protected boolean displayConnectionMessages = false;
     protected PumpType pumpType;
     protected AapsSchedulers aapsSchedulers;
+    protected PumpSync pumpSync;
 
 
     protected PumpPluginAbstract(
@@ -84,7 +89,8 @@ public abstract class PumpPluginAbstract extends PumpPluginBase implements PumpI
             Context context,
             FabricPrivacy fabricPrivacy,
             DateUtil dateUtil,
-            AapsSchedulers aapsSchedulers
+            AapsSchedulers aapsSchedulers,
+            PumpSync pumpSync
     ) {
 
         super(pluginDescription, injector, aapsLogger, resourceHelper, commandQueue);
@@ -101,6 +107,7 @@ public abstract class PumpPluginAbstract extends PumpPluginBase implements PumpI
         this.pumpType = pumpType;
         this.dateUtil = dateUtil;
         this.aapsSchedulers = aapsSchedulers;
+        this.pumpSync = pumpSync;
     }
 
 
@@ -335,6 +342,7 @@ public abstract class PumpPluginAbstract extends PumpPluginBase implements PumpI
             } catch (Exception ignored) {
             }
 
+            // TODO fix
             TemporaryBasal tb = activePlugin.getActiveTreatments().getTempBasalFromHistory(System.currentTimeMillis());
             if (tb != null) {
                 extended.put("TempBasalAbsoluteRate",
@@ -343,6 +351,7 @@ public abstract class PumpPluginAbstract extends PumpPluginBase implements PumpI
                 extended.put("TempBasalRemaining", tb.getPlannedRemainingMinutes());
             }
 
+            // TODO fix
             ExtendedBolus eb = activePlugin.getActiveTreatments().getExtendedBolusFromHistory(System.currentTimeMillis());
             if (eb != null) {
                 extended.put("ExtendedBolusAbsoluteRate", eb.absoluteRate());
@@ -377,10 +386,12 @@ public abstract class PumpPluginAbstract extends PumpPluginBase implements PumpI
             ret += "LastBolus: " + DecimalFormatter.INSTANCE.to2Decimal(getPumpStatusData().lastBolusAmount) + "U @" + //
                     android.text.format.DateFormat.format("HH:mm", getPumpStatusData().lastBolusTime) + "\n";
         }
+        // TODO fix
         TemporaryBasal activeTemp = activePlugin.getActiveTreatments().getRealTempBasalFromHistory(System.currentTimeMillis());
         if (activeTemp != null) {
             ret += "Temp: " + activeTemp.toStringFull() + "\n";
         }
+        // TODO fix
         ExtendedBolus activeExtendedBolus = activePlugin.getActiveTreatments().getExtendedBolusFromHistory(
                 System.currentTimeMillis());
         if (activeExtendedBolus != null) {
@@ -413,6 +424,7 @@ public abstract class PumpPluginAbstract extends PumpPluginBase implements PumpI
                 //if (MedtronicHistoryData.doubleBolusDebug)
                 //    aapsLogger.debug("DoubleBolusDebug: deliverTreatment::(carb only entry)");
 
+                // TODO fix
                 // no bolus required, carb only treatment
                 activePlugin.getActiveTreatments().addToHistoryTreatment(detailedBolusInfo, true);
 
@@ -471,4 +483,29 @@ public abstract class PumpPluginAbstract extends PumpPluginBase implements PumpI
     private PumpEnactResult getOperationNotSupportedWithCustomText(int resourceId) {
         return new PumpEnactResult(getInjector()).success(false).enacted(false).comment(resourceId);
     }
+
+    // PumpSync
+
+    Map<Long, PumpDbEntry> driverHistory = new HashMap<>();
+
+    public abstract long generateTempId(long timeMillis);
+
+    public boolean addBolusWithTempId(DetailedBolusInfo detailedBolusInfo, boolean writeToInternalHistory) {
+        long temporaryId = generateTempId(detailedBolusInfo.timestamp);
+        boolean response = pumpSync.addBolusWithTempId(detailedBolusInfo.timestamp, detailedBolusInfo.insulin,
+                generateTempId(detailedBolusInfo.timestamp), detailedBolusInfo.getBolusType(),
+                getPumpType(), serialNumber());
+
+        if (response && writeToInternalHistory) {
+            driverHistory.put(temporaryId, new PumpDbEntry(temporaryId, model(), serialNumber(), detailedBolusInfo));
+        }
+
+        return response;
+    }
+
+    public void removeTemporaryId(long temporaryId) {
+        driverHistory.remove(temporaryId);
+    }
+
+
 }
