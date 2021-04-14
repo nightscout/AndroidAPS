@@ -32,7 +32,7 @@ import info.nightscout.androidaps.utils.userEntry.UserEntryMapper.Sources
 import info.nightscout.androidaps.utils.WarnColors
 import info.nightscout.androidaps.utils.alertDialogs.OKDialog
 import info.nightscout.androidaps.extensions.toVisibility
-import info.nightscout.androidaps.interfaces.DanaRInterface
+import info.nightscout.androidaps.interfaces.Dana
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 import info.nightscout.androidaps.utils.rx.AapsSchedulers
 import info.nightscout.androidaps.utils.sharedPreferences.SP
@@ -112,7 +112,7 @@ class DanaFragment : DaggerFragment() {
                 activity?.let {
                     OKDialog.showConfirmation(it, resourceHelper.gs(R.string.resetpairing)) {
                         uel.log(Action.CLEAR_PAIRING_KEYS, Sources.Dana)
-                        (activePlugin.activePump as DanaRInterface).clearPairing()
+                        (activePlugin.activePump as Dana).clearPairing()
                     }
                 }
                 true
