@@ -6,7 +6,7 @@ import info.nightscout.androidaps.database.entities.UserEntry
 import info.nightscout.androidaps.plugins.general.maintenance.PrefsFile
 import io.reactivex.Single
 
-interface ImportExportPrefsInterface {
+interface ImportExportPrefs {
 
     fun importSharedPreferences(activity: FragmentActivity, importFile: PrefsFile)
     fun importSharedPreferences(activity: FragmentActivity)

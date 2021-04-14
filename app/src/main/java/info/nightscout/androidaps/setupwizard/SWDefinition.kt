@@ -54,7 +54,7 @@ class SWDefinition @Inject constructor(
     private val loopPlugin: LoopPlugin,
     private val nsClientPlugin: NSClientPlugin,
     private val nsProfilePlugin: NSProfilePlugin,
-    private val importExportPrefs: ImportExportPrefsInterface,
+    private val importExportPrefs: ImportExportPrefs,
     private val androidPermission: AndroidPermission,
     private val cryptoUtil: CryptoUtil,
     private val config: ConfigImpl

@@ -15,7 +15,7 @@ import info.nightscout.androidaps.database.entities.UserEntry.Sources
 import info.nightscout.androidaps.databinding.TreatmentsUserEntryFragmentBinding
 import info.nightscout.androidaps.databinding.TreatmentsUserEntryItemBinding
 import info.nightscout.androidaps.events.EventPreferenceChange
-import info.nightscout.androidaps.interfaces.ImportExportPrefsInterface
+import info.nightscout.androidaps.interfaces.ImportExportPrefs
 import info.nightscout.androidaps.interfaces.ProfileFunction
 import info.nightscout.androidaps.logging.UserEntryLogger
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper
@@ -42,7 +42,7 @@ class TreatmentsUserEntryFragment : DaggerFragment() {
     @Inject lateinit var fabricPrivacy: FabricPrivacy
     @Inject lateinit var rxBus: RxBusWrapper
     @Inject lateinit var translator: Translator
-    @Inject lateinit var importExportPrefs: ImportExportPrefsInterface
+    @Inject lateinit var importExportPrefs: ImportExportPrefs
     @Inject lateinit var uel: UserEntryLogger
     @Inject lateinit var userEntryPresentationHelper: UserEntryPresentationHelper
 
