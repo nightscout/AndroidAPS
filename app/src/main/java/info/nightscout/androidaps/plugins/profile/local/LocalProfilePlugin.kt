@@ -9,7 +9,6 @@ import info.nightscout.androidaps.events.EventProfileStoreChanged
 import info.nightscout.androidaps.interfaces.*
 import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.logging.LTag
-import info.nightscout.androidaps.logging.UserEntryLogger
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper
 import info.nightscout.androidaps.plugins.general.nsclient.NSUpload
 import info.nightscout.androidaps.utils.DateUtil
@@ -34,8 +33,7 @@ class LocalProfilePlugin @Inject constructor(
     private val sp: SP,
     private val profileFunction: ProfileFunction,
     private val nsUpload: NSUpload,
-    private val dateUtil: DateUtil,
-    private val uel: UserEntryLogger
+    private val dateUtil: DateUtil
 ) : PluginBase(PluginDescription()
     .mainType(PluginType.PROFILE)
     .fragmentClass(LocalProfileFragment::class.java.name)
