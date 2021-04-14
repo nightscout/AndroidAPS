@@ -903,8 +903,8 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
                             menuChartSettings[g + 1][OverviewMenus.CharType.IOB.ordinal]      -> useIobForScale = true
                             menuChartSettings[g + 1][OverviewMenus.CharType.COB.ordinal]      -> useCobForScale = true
                             menuChartSettings[g + 1][OverviewMenus.CharType.DEV.ordinal]      -> useDevForScale = true
-                            menuChartSettings[g + 1][OverviewMenus.CharType.SEN.ordinal]      -> useRatioForScale = true
                             menuChartSettings[g + 1][OverviewMenus.CharType.BGI.ordinal]      -> useBGIForScale = true
+                            menuChartSettings[g + 1][OverviewMenus.CharType.SEN.ordinal]      -> useRatioForScale = true
                             menuChartSettings[g + 1][OverviewMenus.CharType.DEVSLOPE.ordinal] -> useDSForScale = true
                         }
                         val alignIobScale = menuChartSettings[g + 1][OverviewMenus.CharType.ABS.ordinal] && menuChartSettings[g + 1][OverviewMenus.CharType.IOB.ordinal]
@@ -935,8 +935,8 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
                             menuChartSettings[g + 1][OverviewMenus.CharType.IOB.ordinal] ||
                             menuChartSettings[g + 1][OverviewMenus.CharType.COB.ordinal] ||
                             menuChartSettings[g + 1][OverviewMenus.CharType.DEV.ordinal] ||
-                            menuChartSettings[g + 1][OverviewMenus.CharType.SEN.ordinal] ||
                             menuChartSettings[g + 1][OverviewMenus.CharType.BGI.ordinal] ||
+                            menuChartSettings[g + 1][OverviewMenus.CharType.SEN.ordinal] ||
                             menuChartSettings[g + 1][OverviewMenus.CharType.DEVSLOPE.ordinal]
                         ).toVisibility()
                     secondaryGraphsData[g].performUpdate()
