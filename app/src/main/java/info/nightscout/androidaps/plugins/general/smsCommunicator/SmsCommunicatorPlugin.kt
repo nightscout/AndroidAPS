@@ -90,7 +90,7 @@ class SmsCommunicatorPlugin @Inject constructor(
     .preferencesId(R.xml.pref_smscommunicator)
     .description(R.string.description_sms_communicator),
     aapsLogger, resourceHelper, injector
-), SmsCommunicatorInterface {
+), SmsCommunicator {
 
     private val disposable = CompositeDisposable()
     var allowedNumbers: MutableList<String> = ArrayList()

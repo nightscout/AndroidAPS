@@ -4,7 +4,7 @@ import android.widget.LinearLayout
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.automation.R
 import info.nightscout.androidaps.data.PumpEnactResult
-import info.nightscout.androidaps.interfaces.SmsCommunicatorInterface
+import info.nightscout.androidaps.interfaces.SmsCommunicator
 import info.nightscout.androidaps.plugins.general.automation.elements.InputString
 import info.nightscout.androidaps.plugins.general.automation.elements.LabelWithElement
 import info.nightscout.androidaps.plugins.general.automation.elements.LayoutBuilder
@@ -17,7 +17,7 @@ import javax.inject.Inject
 class ActionSendSMS(injector: HasAndroidInjector) : Action(injector) {
 
     @Inject lateinit var resourceHelper: ResourceHelper
-    @Inject lateinit var smsCommunicatorPlugin: SmsCommunicatorInterface
+    @Inject lateinit var smsCommunicatorPlugin: SmsCommunicator
 
     var text = InputString()
 
