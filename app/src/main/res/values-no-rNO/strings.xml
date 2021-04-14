@@ -138,6 +138,7 @@
     <string name="configbuilder_nightscoutversion_label">Nightscout versjon:</string>
     <string name="missing_carbs">Mangler %1$d g</string>
     <string name="exported">Innstillinger lagret</string>
+    <string name="ue_exported">Brukeroppføringer er eksportert</string>
     <string name="export_to">Eksporter innstillinger til</string>
     <string name="import_from">Importer innstillinger fra</string>
     <string name="setting_imported">Innstillinger importert</string>
@@ -269,6 +270,7 @@
     <string name="openapsma_autosensdata_label">Autosens data</string>
     <string name="openapsma_scriptdebugdata_label">Script feilsøking</string>
     <string name="openapsama_useautosens">Bruk Autosens funksjon</string>
+    <string name="refresheventsfromnightscout">Gjenoppfrisk fra NS</string>
     <string name="deletefuturetreatments">Slett behandlinger i fremtiden</string>
     <string name="actions_shortname">ACT</string>
     <string name="configbuilder_shortname">KONF</string>
