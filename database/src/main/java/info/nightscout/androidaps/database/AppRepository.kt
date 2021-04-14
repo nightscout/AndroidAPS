@@ -157,6 +157,14 @@ open class AppRepository @Inject internal constructor(
         database.userEntryDao.getAll()
             .subscribeOn(Schedulers.io())
 
+    fun getUserEntryDataFromTime(timestamp: Long): Single<List<UserEntry>> =
+        database.userEntryDao.getUserEntryDataFromTime(timestamp)
+            .subscribeOn(Schedulers.io())
+
+    fun getUserEntryFilteredDataFromTime(timestamp: Long): Single<List<UserEntry>> =
+        database.userEntryDao.getUserEntryFilteredDataFromTime(UserEntry.Sources.Loop, timestamp)
+            .subscribeOn(Schedulers.io())
+
     fun insert(word: UserEntry) {
         database.userEntryDao.insert(word)
     }
@@ -278,8 +286,13 @@ open class AppRepository @Inject internal constructor(
         database.bolusDao.getModifiedFrom(lastId)
             .subscribeOn(Schedulers.io())
 
-    fun getLastBolusRecord(): Bolus? =
+    fun getLastBolusRecord():Bolus? =
         database.bolusDao.getLastBolusRecord()
+
+    fun getLastBolusRecordWrapped():Single<ValueWrapper<Bolus>> =
+        database.bolusDao.getLastBolusRecordMaybe()
+            .subscribeOn(Schedulers.io())
+            .toWrappedSingle()
 
     fun getLastBolusRecordOfType(type: Bolus.Type): Bolus? =
         database.bolusDao.getLastBolusRecordOfType(type)
@@ -454,6 +467,136 @@ open class AppRepository @Inject internal constructor(
 
     fun deleteAllBolusCalculatorResults() =
         database.bolusCalculatorResultDao.deleteAllEntries()
+
+    // DEVICE STATUS
+    fun insert(deviceStatus: DeviceStatus): Long =
+        database.deviceStatusDao.insert(deviceStatus)
+
+    /*
+       * returns a Pair of the next entity to sync and the ID of the "update".
+       * The update id might either be the entry id itself if it is a new entry - or the id
+       * of the update ("historic") entry. The sync counter should be incremented to that id if it was synced successfully.
+       *
+       * It is a Maybe as there might be no next element.
+       * */
+
+    fun getNextSyncElementDeviceStatus(id: Long): Maybe<DeviceStatus> =
+        database.deviceStatusDao.getNextModifiedOrNewAfter(id)
+            .subscribeOn(Schedulers.io())
+
+    fun getModifiedDeviceStatusDataFromId(lastId: Long): Single<List<DeviceStatus>> =
+        database.deviceStatusDao.getModifiedFrom(lastId)
+            .subscribeOn(Schedulers.io())
+
+    // TEMPORARY BASAL
+    /*
+       * returns a Pair of the next entity to sync and the ID of the "update".
+       * The update id might either be the entry id itself if it is a new entry - or the id
+       * of the update ("historic") entry. The sync counter should be incremented to that id if it was synced successfully.
+       *
+       * It is a Maybe as there might be no next element.
+       * */
+
+    fun getNextSyncElementTemporaryBasal(id: Long): Maybe<Pair<TemporaryBasal, Long>> =
+        database.temporaryBasalDao.getNextModifiedOrNewAfter(id)
+            .flatMap { nextIdElement ->
+                val nextIdElemReferenceId = nextIdElement.referenceId
+                if (nextIdElemReferenceId == null) {
+                    Maybe.just(nextIdElement to nextIdElement.id)
+                } else {
+                    database.temporaryBasalDao.getCurrentFromHistoric(nextIdElemReferenceId)
+                        .map { it to nextIdElement.id }
+                }
+            }
+
+    fun getModifiedTemporaryBasalDataFromId(lastId: Long): Single<List<TemporaryBasal>> =
+        database.temporaryBasalDao.getModifiedFrom(lastId)
+            .subscribeOn(Schedulers.io())
+
+    fun getTemporaryBasalsData(): Single<List<TemporaryBasal>> =
+        database.temporaryBasalDao.getTemporaryBasalData()
+            .subscribeOn(Schedulers.io())
+
+    fun getTemporaryBasalActiveAt(timestamp: Long): Single<ValueWrapper<TemporaryBasal>> =
+        database.temporaryBasalDao.getTemporaryBasalActiveAt(timestamp)
+            .subscribeOn(Schedulers.io())
+            .toWrappedSingle()
+
+    fun getTemporaryBasalsDataFromTime(timestamp: Long, ascending: Boolean): Single<List<TemporaryBasal>> =
+        database.temporaryBasalDao.getTemporaryBasalDataFromTime(timestamp)
+            .map { if (!ascending) it.reversed() else it }
+            .subscribeOn(Schedulers.io())
+
+    fun getTemporaryBasalsDataFromTimeToTime(from: Long, to: Long, ascending: Boolean): Single<List<TemporaryBasal>> =
+        database.temporaryBasalDao.getTemporaryBasalDataFromTimeToTime(from, to)
+            .map { if (!ascending) it.reversed() else it }
+            .subscribeOn(Schedulers.io())
+
+    fun getTemporaryBasalsDataIncludingInvalidFromTime(timestamp: Long, ascending: Boolean): Single<List<TemporaryBasal>> =
+        database.temporaryBasalDao.getTemporaryBasalDataIncludingInvalidFromTime(timestamp)
+            .map { if (!ascending) it.reversed() else it }
+            .subscribeOn(Schedulers.io())
+
+    fun getTemporaryBasalsDataIncludingInvalidFromTimeToTime(from: Long, to: Long, ascending: Boolean): Single<List<TemporaryBasal>> =
+        database.temporaryBasalDao.getTemporaryBasalDataIncludingInvalidFromTimeToTime(from, to)
+            .map { if (!ascending) it.reversed() else it }
+            .subscribeOn(Schedulers.io())
+
+    fun getOldestTemporaryBasalRecord(): TemporaryBasal? =
+        database.temporaryBasalDao.getOldestRecord()
+
+    // EXTENDED BOLUS
+    /*
+      * returns a Pair of the next entity to sync and the ID of the "update".
+      * The update id might either be the entry id itself if it is a new entry - or the id
+      * of the update ("historic") entry. The sync counter should be incremented to that id if it was synced successfully.
+      *
+      * It is a Maybe as there might be no next element.
+      * */
+
+    fun getNextSyncElementExtendedBolus(id: Long): Maybe<Pair<ExtendedBolus, Long>> =
+        database.extendedBolusDao.getNextModifiedOrNewAfter(id)
+            .flatMap { nextIdElement ->
+                val nextIdElemReferenceId = nextIdElement.referenceId
+                if (nextIdElemReferenceId == null) {
+                    Maybe.just(nextIdElement to nextIdElement.id)
+                } else {
+                    database.extendedBolusDao.getCurrentFromHistoric(nextIdElemReferenceId)
+                        .map { it to nextIdElement.id }
+                }
+            }
+
+    fun getModifiedExtendedBolusDataFromId(lastId: Long): Single<List<ExtendedBolus>> =
+        database.extendedBolusDao.getModifiedFrom(lastId)
+            .subscribeOn(Schedulers.io())
+
+    fun getExtendedBolusActiveAt(timestamp: Long): Single<ValueWrapper<ExtendedBolus>> =
+        database.extendedBolusDao.getExtendedBolusActiveAt(timestamp)
+            .subscribeOn(Schedulers.io())
+            .toWrappedSingle()
+
+    fun getExtendedBolusDataFromTime(timestamp: Long, ascending: Boolean): Single<List<ExtendedBolus>> =
+        database.extendedBolusDao.getExtendedBolusDataFromTime(timestamp)
+            .map { if (!ascending) it.reversed() else it }
+            .subscribeOn(Schedulers.io())
+
+    fun getExtendedBolusDataFromTimeToTime(start: Long, end: Long, ascending: Boolean): Single<List<ExtendedBolus>> =
+        database.extendedBolusDao.getExtendedBolusDataFromTimeToTime(start, end)
+            .map { if (!ascending) it.reversed() else it }
+            .subscribeOn(Schedulers.io())
+
+    fun getExtendedBolusDataIncludingInvalidFromTime(timestamp: Long, ascending: Boolean): Single<List<ExtendedBolus>> =
+        database.extendedBolusDao.getExtendedBolusDataIncludingInvalidFromTime(timestamp)
+            .map { if (!ascending) it.reversed() else it }
+            .subscribeOn(Schedulers.io())
+
+    fun getExtendedBolusDataIncludingInvalidFromTimeToTime(start: Long, end: Long, ascending: Boolean): Single<List<ExtendedBolus>> =
+        database.extendedBolusDao.getExtendedBolusDataIncludingInvalidFromTimeToTime(start, end)
+            .map { if (!ascending) it.reversed() else it }
+            .subscribeOn(Schedulers.io())
+
+    fun getOldestExtendedBolusRecord(): ExtendedBolus? =
+        database.extendedBolusDao.getOldestRecord()
 
 }
 

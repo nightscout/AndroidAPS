@@ -3,6 +3,7 @@ package info.nightscout.androidaps.plugins.source
 import android.content.Context
 import androidx.work.Worker
 import androidx.work.WorkerParameters
+import androidx.work.workDataOf
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.Constants
 import info.nightscout.androidaps.R
@@ -59,7 +60,7 @@ class PoctechPlugin @Inject constructor(
         override fun doWork(): Result {
             var ret = Result.success()
 
-            if (!poctechPlugin.isEnabled(PluginType.BGSOURCE)) return Result.failure()
+            if (!poctechPlugin.isEnabled(PluginType.BGSOURCE)) return Result.success()
             aapsLogger.debug(LTag.BGSOURCE, "Received Poctech Data $inputData")
             try {
                 val glucoseValues = mutableListOf<CgmSourceTransaction.TransactionGlucoseValue>()
@@ -80,7 +81,7 @@ class PoctechPlugin @Inject constructor(
                 repository.runTransactionForResult(CgmSourceTransaction(glucoseValues, emptyList(), null))
                     .doOnError {
                         aapsLogger.error(LTag.DATABASE, "Error while saving values from Poctech App", it)
-                        ret = Result.failure()
+                        ret = Result.failure(workDataOf("Error" to it))
                     }
                     .blockingGet()
                     .also { savedValues ->
@@ -91,7 +92,7 @@ class PoctechPlugin @Inject constructor(
                     }
             } catch (e: JSONException) {
                 aapsLogger.error("Exception: ", e)
-                ret = Result.failure()
+                ret = Result.failure(workDataOf("Error" to e))
             }
             return ret
         }

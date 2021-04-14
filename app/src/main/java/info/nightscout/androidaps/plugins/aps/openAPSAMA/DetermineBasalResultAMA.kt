@@ -13,7 +13,7 @@ class DetermineBasalResultAMA private constructor(injector: HasAndroidInjector) 
     private var snoozeBG = 0.0
 
     internal constructor(injector: HasAndroidInjector, result: NativeObject, j: JSONObject) : this(injector) {
-        date = dateUtil._now()
+        date = dateUtil.now()
         json = j
         if (result.containsKey("error")) {
             reason = result["error"].toString()

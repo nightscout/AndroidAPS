@@ -3,6 +3,7 @@ package info.nightscout.androidaps.plugins.source
 import android.content.Context
 import androidx.work.Worker
 import androidx.work.WorkerParameters
+import androidx.work.workDataOf
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.Config
 import info.nightscout.androidaps.R
@@ -117,7 +118,7 @@ class NSClientSourcePlugin @Inject constructor(
             if (!nsClientSourcePlugin.isEnabled() && !sp.getBoolean(R.string.key_ns_autobackfill, true) && !dexcomPlugin.isEnabled()) return Result.success()
 
             val sgvs = dataWorker.pickupJSONArray(inputData.getLong(DataWorker.STORE_KEY, -1))
-                ?: return Result.failure()
+                ?: return Result.failure(workDataOf("Error" to "missing input data"))
 
             try {
                 var latestDateInReceivedData: Long = 0
@@ -126,12 +127,12 @@ class NSClientSourcePlugin @Inject constructor(
                 val glucoseValues = mutableListOf<CgmSourceTransaction.TransactionGlucoseValue>()
                 for (i in 0 until sgvs.length()) {
                     val sgv = toGv(sgvs.getJSONObject(i)) ?: continue
-                    if (sgv.timestamp < dateUtil._now() && sgv.timestamp > latestDateInReceivedData) latestDateInReceivedData = sgv.timestamp
+                    if (sgv.timestamp < dateUtil.now() && sgv.timestamp > latestDateInReceivedData) latestDateInReceivedData = sgv.timestamp
                     glucoseValues += sgv
 
                 }
                 // Was that sgv more less 5 mins ago ?
-                if (T.msecs(dateUtil._now() - latestDateInReceivedData).mins() < 5L) {
+                if (T.msecs(dateUtil.now() - latestDateInReceivedData).mins() < 5L) {
                     rxBus.send(EventDismissNotification(Notification.NS_ALARM))
                     rxBus.send(EventDismissNotification(Notification.NS_URGENT_ALARM))
                 }
@@ -141,7 +142,7 @@ class NSClientSourcePlugin @Inject constructor(
                 repository.runTransactionForResult(CgmSourceTransaction(glucoseValues, emptyList(), null, !nsClientSourcePlugin.isEnabled()))
                     .doOnError {
                         aapsLogger.error(LTag.DATABASE, "Error while saving values from NSClient App", it)
-                        ret = Result.failure()
+                        ret = Result.failure(workDataOf("Error" to it))
                     }
                     .blockingGet()
                     .also { result ->
@@ -158,7 +159,7 @@ class NSClientSourcePlugin @Inject constructor(
                     }
             } catch (e: Exception) {
                 aapsLogger.error("Unhandled exception", e)
-                ret = Result.failure()
+                ret = Result.failure(workDataOf("Error" to e))
             }
             // Objectives 0
             sp.putBoolean(R.string.key_ObjectivesbgIsAvailableInNS, true)

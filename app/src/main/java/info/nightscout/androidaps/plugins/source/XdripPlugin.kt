@@ -3,6 +3,7 @@ package info.nightscout.androidaps.plugins.source
 import android.content.Context
 import androidx.work.Worker
 import androidx.work.WorkerParameters
+import androidx.work.workDataOf
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.database.AppRepository
@@ -72,9 +73,9 @@ class XdripPlugin @Inject constructor(
         override fun doWork(): Result {
             var ret = Result.success()
 
-            if (!xdripPlugin.isEnabled(PluginType.BGSOURCE)) return Result.failure()
+            if (!xdripPlugin.isEnabled(PluginType.BGSOURCE)) return Result.success()
             val bundle = dataWorker.pickupBundle(inputData.getLong(DataWorker.STORE_KEY, -1))
-                ?: return Result.failure()
+                ?: return Result.failure(workDataOf("Error" to "missing input data"))
 
             aapsLogger.debug(LTag.BGSOURCE, "Received xDrip data: $bundle")
             val glucoseValues = mutableListOf<CgmSourceTransaction.TransactionGlucoseValue>()
@@ -90,7 +91,7 @@ class XdripPlugin @Inject constructor(
             repository.runTransactionForResult(CgmSourceTransaction(glucoseValues, emptyList(), null))
                 .doOnError {
                     aapsLogger.error(LTag.DATABASE, "Error while saving values from Xdrip", it)
-                    ret = Result.failure()
+                    ret = Result.failure(workDataOf("Error" to it))
                 }
                 .blockingGet()
                 .also { savedValues ->

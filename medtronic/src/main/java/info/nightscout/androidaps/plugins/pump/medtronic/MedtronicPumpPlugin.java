@@ -737,9 +737,9 @@ public class MedtronicPumpPlugin extends PumpPluginAbstract implements PumpInter
         return 0;
     }
 
-    @Override public String getSerial() {
-        return null;
-    }
+//    @Override public String getSerial() {
+//        return null;
+//    }
 
     private BolusDeliveryType bolusDeliveryType = BolusDeliveryType.Idle;
 
@@ -965,8 +965,7 @@ public class MedtronicPumpPlugin extends PumpPluginAbstract implements PumpInter
     // if enforceNew===true current temp basal is canceled and new TBR set (duration is prolonged),
     // if false and the same rate is requested enacted=false and success=true is returned and TBR is not changed
     @NonNull @Override
-    public PumpEnactResult setTempBasalAbsolute(double absoluteRate, int durationInMinutes, Profile profile,
-                                                boolean enforceNew) {
+    public PumpEnactResult setTempBasalAbsolute(double absoluteRate, int durationInMinutes, Profile profile, boolean enforceNew, @NonNull PumpSync.TemporaryBasalType tbrType) {
 
         setRefreshButtonEnabled(false);
 
@@ -1058,7 +1057,12 @@ public class MedtronicPumpPlugin extends PumpPluginAbstract implements PumpInter
                     .source(Source.USER);
 
             // TODO fix
-            activePlugin.getActiveTreatments().addToHistoryTempBasal(tempStart);
+            if (usePumpSync) {
+                addTemporaryBasalRateWithTempId(tempStart, true);
+            } else {
+                activePlugin.getActiveTreatments().addToHistoryTempBasal(tempStart);
+            }
+
 
             incrementStatistics(MedtronicConst.Statistics.TBRsSet);
 
@@ -1078,14 +1082,14 @@ public class MedtronicPumpPlugin extends PumpPluginAbstract implements PumpInter
 
 
     @NonNull @Override
-    public PumpEnactResult setTempBasalPercent(int percent, int durationInMinutes, @NonNull Profile profile, boolean enforceNew) {
+    public PumpEnactResult setTempBasalPercent(int percent, int durationInMinutes, @NonNull Profile profile, boolean enforceNew, @NonNull PumpSync.TemporaryBasalType tbrType) {
         if (percent == 0) {
-            return setTempBasalAbsolute(0.0d, durationInMinutes, profile, enforceNew);
+            return setTempBasalAbsolute(0.0d, durationInMinutes, profile, enforceNew, tbrType);
         } else {
             double absoluteValue = profile.getBasal() * (percent / 100.0d);
             absoluteValue = pumpDescription.getPumpType().determineCorrectBasalSize(absoluteValue);
             aapsLogger.warn(LTag.PUMP, "setTempBasalPercent [MedtronicPumpPlugin] - You are trying to use setTempBasalPercent with percent other then 0% (" + percent + "). This will start setTempBasalAbsolute, with calculated value (" + absoluteValue + "). Result might not be 100% correct.");
-            return setTempBasalAbsolute(absoluteValue, durationInMinutes, profile, enforceNew);
+            return setTempBasalAbsolute(absoluteValue, durationInMinutes, profile, enforceNew, tbrType);
         }
     }
 

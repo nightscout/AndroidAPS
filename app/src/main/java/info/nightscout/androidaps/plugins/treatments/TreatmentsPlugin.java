@@ -1,12 +1,9 @@
 package info.nightscout.androidaps.plugins.treatments;
 
 import android.content.Context;
-import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-
-import com.google.firebase.analytics.FirebaseAnalytics;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -17,25 +14,15 @@ import javax.inject.Singleton;
 import dagger.android.HasAndroidInjector;
 import info.nightscout.androidaps.Constants;
 import info.nightscout.androidaps.R;
-import info.nightscout.androidaps.activities.ErrorHelperActivity;
 import info.nightscout.androidaps.data.DetailedBolusInfo;
-import info.nightscout.androidaps.data.Intervals;
-import info.nightscout.androidaps.data.Iob;
-import info.nightscout.androidaps.data.IobTotal;
-import info.nightscout.androidaps.data.NonOverlappingIntervals;
-import info.nightscout.androidaps.data.Profile;
 import info.nightscout.androidaps.data.ProfileIntervals;
 import info.nightscout.androidaps.database.AppRepository;
-import info.nightscout.androidaps.database.entities.Bolus;
-import info.nightscout.androidaps.database.entities.Carbs;
 import info.nightscout.androidaps.db.ExtendedBolus;
 import info.nightscout.androidaps.db.ProfileSwitch;
 import info.nightscout.androidaps.db.Source;
 import info.nightscout.androidaps.db.TemporaryBasal;
 import info.nightscout.androidaps.db.Treatment;
 import info.nightscout.androidaps.events.EventReloadProfileSwitchData;
-import info.nightscout.androidaps.events.EventReloadTempBasalData;
-import info.nightscout.androidaps.events.EventReloadTreatmentData;
 import info.nightscout.androidaps.interfaces.ActivePluginProvider;
 import info.nightscout.androidaps.interfaces.DatabaseHelperInterface;
 import info.nightscout.androidaps.interfaces.PluginBase;
@@ -43,25 +30,16 @@ import info.nightscout.androidaps.interfaces.PluginDescription;
 import info.nightscout.androidaps.interfaces.PluginType;
 import info.nightscout.androidaps.interfaces.ProfileFunction;
 import info.nightscout.androidaps.interfaces.ProfileStore;
-import info.nightscout.androidaps.interfaces.PumpInterface;
 import info.nightscout.androidaps.interfaces.TreatmentServiceInterface;
 import info.nightscout.androidaps.interfaces.TreatmentsInterface;
-import info.nightscout.androidaps.interfaces.UpdateReturn;
-import info.nightscout.androidaps.interfaces.UploadQueueInterface;
 import info.nightscout.androidaps.logging.AAPSLogger;
 import info.nightscout.androidaps.logging.LTag;
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper;
 import info.nightscout.androidaps.plugins.general.nsclient.NSUpload;
 import info.nightscout.androidaps.plugins.general.overview.events.EventDismissNotification;
 import info.nightscout.androidaps.plugins.general.overview.notifications.Notification;
-import info.nightscout.androidaps.plugins.iob.iobCobCalculator.AutosensResult;
-import info.nightscout.androidaps.plugins.pump.common.defs.PumpType;
-import info.nightscout.androidaps.plugins.pump.medtronic.MedtronicPumpPlugin;
-import info.nightscout.androidaps.plugins.pump.medtronic.data.MedtronicHistoryData;
 import info.nightscout.androidaps.utils.DateUtil;
 import info.nightscout.androidaps.utils.FabricPrivacy;
-import info.nightscout.androidaps.utils.T;
-import info.nightscout.androidaps.utils.extensions.BolusExtensionKt;
 import info.nightscout.androidaps.utils.resources.ResourceHelper;
 import info.nightscout.androidaps.utils.rx.AapsSchedulers;
 import info.nightscout.androidaps.utils.sharedPreferences.SP;
@@ -78,7 +56,6 @@ public class TreatmentsPlugin extends PluginBase implements TreatmentsInterface 
     private final ProfileFunction profileFunction;
     private final ActivePluginProvider activePlugin;
     private final NSUpload nsUpload;
-    private final UploadQueueInterface uploadQueue;
     private final FabricPrivacy fabricPrivacy;
     private final DateUtil dateUtil;
     private final DatabaseHelperInterface databaseHelper;
@@ -88,8 +65,6 @@ public class TreatmentsPlugin extends PluginBase implements TreatmentsInterface 
 
     protected TreatmentServiceInterface service;
 
-    private final Intervals<TemporaryBasal> tempBasals = new NonOverlappingIntervals<>();
-    private final Intervals<ExtendedBolus> extendedBoluses = new NonOverlappingIntervals<>();
     private final ProfileIntervals<ProfileSwitch> profiles = new ProfileIntervals<>();
 
     @Inject
@@ -106,7 +81,6 @@ public class TreatmentsPlugin extends PluginBase implements TreatmentsInterface 
             NSUpload nsUpload,
             FabricPrivacy fabricPrivacy,
             DateUtil dateUtil,
-            UploadQueueInterface uploadQueue,
             DatabaseHelperInterface databaseHelper,
             AppRepository repository
     ) {
@@ -131,7 +105,6 @@ public class TreatmentsPlugin extends PluginBase implements TreatmentsInterface 
         this.fabricPrivacy = fabricPrivacy;
         this.dateUtil = dateUtil;
         this.nsUpload = nsUpload;
-        this.uploadQueue = uploadQueue;
         this.databaseHelper = databaseHelper;
         this.repository = repository;
     }
@@ -142,29 +115,9 @@ public class TreatmentsPlugin extends PluginBase implements TreatmentsInterface 
         initializeData(range());
         super.onStart();
         disposable.add(rxBus
-                .toObservable(EventReloadTreatmentData.class)
-                .observeOn(aapsSchedulers.getIo())
-                .subscribe(event -> {
-                            getAapsLogger().debug(LTag.DATATREATMENTS, "EventReloadTreatmentData");
-                            //initializeTreatmentData(range());
-                            initializeExtendedBolusData(range());
-                            rxBus.send(event.getNext());
-                        },
-                        fabricPrivacy::logException
-                ));
-        disposable.add(rxBus
                 .toObservable(EventReloadProfileSwitchData.class)
                 .observeOn(aapsSchedulers.getIo())
                 .subscribe(event -> initializeProfileSwitchData(range()),
-                        fabricPrivacy::logException
-                ));
-        disposable.add(rxBus
-                .toObservable(EventReloadTempBasalData.class)
-                .observeOn(aapsSchedulers.getIo())
-                .subscribe(event -> {
-                            getAapsLogger().debug(LTag.DATATREATMENTS, "EventReloadTempBasalData");
-                            initializeTempBasalData(range());
-                        },
                         fabricPrivacy::logException
                 ));
     }
@@ -188,54 +141,14 @@ public class TreatmentsPlugin extends PluginBase implements TreatmentsInterface 
     }
 
     public void initializeData(long range) {
-        initializeTempBasalData(range);
-        initializeExtendedBolusData(range);
         initializeProfileSwitchData(range);
-    }
-
-    private void initializeTempBasalData(long range) {
-        getAapsLogger().debug(LTag.DATATREATMENTS, "initializeTempBasalData");
-        synchronized (tempBasals) {
-            tempBasals.reset().add(databaseHelper.getTemporaryBasalsDataFromTime(DateUtil.now() - range, false));
-        }
-
-    }
-
-    private void initializeExtendedBolusData(long range) {
-        getAapsLogger().debug(LTag.DATATREATMENTS, "initializeExtendedBolusData");
-        synchronized (extendedBoluses) {
-            extendedBoluses.reset().add(databaseHelper.getExtendedBolusDataFromTime(DateUtil.now() - range, false));
-        }
-
     }
 
     private void initializeProfileSwitchData(long range) {
         getAapsLogger().debug(LTag.DATATREATMENTS, "initializeProfileSwitchData");
         synchronized (profiles) {
-            profiles.reset().add(databaseHelper.getProfileSwitchData(DateUtil.now() - range, false));
+            profiles.reset().add(databaseHelper.getProfileSwitchData(dateUtil.now() - range, false));
         }
-    }
-
-    @Override
-    public IobTotal getCalculationToTimeExtendedBoluses(long time) {
-        IobTotal total = new IobTotal(time);
-
-        Profile profile = profileFunction.getProfile();
-        if (profile == null)
-            return total;
-
-        PumpInterface pumpInterface = activePlugin.getActivePump();
-
-        if (!pumpInterface.isFakingTempsByExtendedBoluses())
-            synchronized (extendedBoluses) {
-                for (int pos = 0; pos < extendedBoluses.size(); pos++) {
-                    ExtendedBolus e = extendedBoluses.get(pos);
-                    if (e.date > time) continue;
-                    IobTotal calc = e.iobCalc(time, profile);
-                    total.plus(calc);
-                }
-            }
-        return total;
     }
 
     /**
@@ -248,7 +161,7 @@ public class TreatmentsPlugin extends PluginBase implements TreatmentsInterface 
     @Deprecated
     @Override
     public List<Treatment> getTreatmentsFromHistoryAfterTimestamp(long fromTimestamp) {
-        return repository.getBolusesIncludingInvalidFromTimeToTime(fromTimestamp, dateUtil._now(), true)
+        return repository.getBolusesIncludingInvalidFromTimeToTime(fromTimestamp, dateUtil.now(), true)
                 .blockingGet()
                 .stream()
                 .map(bolus -> new Treatment(getInjector(), bolus))
@@ -307,211 +220,12 @@ public class TreatmentsPlugin extends PluginBase implements TreatmentsInterface 
 
  */
 
-    @Override
-    public boolean isInHistoryRealTempBasalInProgress() {
-        return getRealTempBasalFromHistory(System.currentTimeMillis()) != null;
-    }
-
-    @Override
-    public TemporaryBasal getRealTempBasalFromHistory(long time) {
-        synchronized (tempBasals) {
-            return tempBasals.getValueByInterval(time);
-        }
-    }
-
-    @Override
-    public boolean isTempBasalInProgress() {
-        return getTempBasalFromHistory(System.currentTimeMillis()) != null;
-    }
-
-    @Override public void removeTempBasal(TemporaryBasal tempBasal) {
-        String tempBasalId = tempBasal._id;
-        if (NSUpload.isIdValid(tempBasalId)) {
-            nsUpload.removeCareportalEntryFromNS(tempBasalId);
-        } else {
-            uploadQueue.removeByMongoId("dbAdd", tempBasalId);
-        }
-        databaseHelper.delete(tempBasal);
-    }
-
-    @Override
-    public boolean isInHistoryExtendedBolusInProgress() {
-        return getExtendedBolusFromHistory(System.currentTimeMillis()) != null; //TODO:  crosscheck here
-    }
-
-    @Override
-    public IobTotal getLastCalculationTempBasals() {
-        return getCalculationToTimeTempBasals(DateUtil.now());
-    }
-
-    @Override
-    public IobTotal getCalculationToTimeTempBasals(long time) {
-        return getCalculationToTimeTempBasals(time, false, 0);
-    }
-
-    public IobTotal getCalculationToTimeTempBasals(long time, boolean truncate, long truncateTime) {
-        IobTotal total = new IobTotal(time);
-
-        PumpInterface pumpInterface = activePlugin.getActivePump();
-
-        synchronized (tempBasals) {
-            for (int pos = 0; pos < tempBasals.size(); pos++) {
-                TemporaryBasal t = tempBasals.get(pos);
-                if (t.date > time) continue;
-                IobTotal calc;
-                Profile profile = profileFunction.getProfile(t.date);
-                if (profile == null) continue;
-                if (truncate && t.end() > truncateTime) {
-                    TemporaryBasal dummyTemp = new TemporaryBasal(getInjector());
-                    dummyTemp.copyFrom(t);
-                    dummyTemp.cutEndTo(truncateTime);
-                    calc = dummyTemp.iobCalc(time, profile);
-                } else {
-                    calc = t.iobCalc(time, profile);
-                }
-                //log.debug("BasalIOB " + new Date(time) + " >>> " + calc.basaliob);
-                total.plus(calc);
-            }
-        }
-        if (pumpInterface.isFakingTempsByExtendedBoluses()) {
-            IobTotal totalExt = new IobTotal(time);
-            synchronized (extendedBoluses) {
-                for (int pos = 0; pos < extendedBoluses.size(); pos++) {
-                    ExtendedBolus e = extendedBoluses.get(pos);
-                    if (e.date > time) continue;
-                    IobTotal calc;
-                    Profile profile = profileFunction.getProfile(e.date);
-                    if (profile == null) continue;
-                    if (truncate && e.end() > truncateTime) {
-                        ExtendedBolus dummyExt = new ExtendedBolus(getInjector());
-                        dummyExt.copyFrom(e);
-                        dummyExt.cutEndTo(truncateTime);
-                        calc = dummyExt.iobCalc(time, profile);
-                    } else {
-                        calc = e.iobCalc(time, profile);
-                    }
-                    totalExt.plus(calc);
-                }
-            }
-            // Convert to basal iob
-            totalExt.basaliob = totalExt.iob;
-            totalExt.iob = 0d;
-            totalExt.netbasalinsulin = totalExt.extendedBolusInsulin;
-            totalExt.hightempinsulin = totalExt.extendedBolusInsulin;
-            total.plus(totalExt);
-        }
-        return total;
-    }
-
-    public IobTotal getAbsoluteIOBTempBasals(long time) {
-        IobTotal total = new IobTotal(time);
-
-        for (long i = time - range(); i < time; i += T.mins(5).msecs()) {
-            Profile profile = profileFunction.getProfile(i);
-            if (profile == null) continue;
-            double basal = profile.getBasal(i);
-            TemporaryBasal runningTBR = getTempBasalFromHistory(i);
-            double running = basal;
-            if (runningTBR != null) {
-                running = runningTBR.tempBasalConvertedToAbsolute(i, profile);
-            }
-            Bolus bolus = new Bolus(
-                    0, // id
-                    0, // version
-                    0, //dateCreated
-                    true, // isValid
-                    null,
-                    null,
-                    i,
-                    0,
-                    running * 5.0 / 60.0,
-                    Bolus.Type.NORMAL,
-                    true,
-                    null
-            );
-            Iob iob = BolusExtensionKt.iobCalc(bolus, activePlugin, time, profile.getDia());
-            total.basaliob += iob.getIobContrib();
-            total.activity += iob.getActivityContrib();
-        }
-        return total;
-    }
-
-    public IobTotal getCalculationToTimeTempBasals(long time, long truncateTime, AutosensResult lastAutosensResult, boolean exercise_mode, int half_basal_exercise_target, boolean isTempTarget) {
-        IobTotal total = new IobTotal(time);
-
-        PumpInterface pumpInterface = activePlugin.getActivePump();
-
-        synchronized (tempBasals) {
-            for (int pos = 0; pos < tempBasals.size(); pos++) {
-                TemporaryBasal t = tempBasals.get(pos);
-                if (t.date > time) continue;
-                IobTotal calc;
-                Profile profile = profileFunction.getProfile(t.date);
-                if (profile == null) continue;
-                if (t.end() > truncateTime) {
-                    TemporaryBasal dummyTemp = new TemporaryBasal(getInjector());
-                    dummyTemp.copyFrom(t);
-                    dummyTemp.cutEndTo(truncateTime);
-                    calc = dummyTemp.iobCalc(time, profile, lastAutosensResult, exercise_mode, half_basal_exercise_target, isTempTarget);
-                } else {
-                    calc = t.iobCalc(time, profile, lastAutosensResult, exercise_mode, half_basal_exercise_target, isTempTarget);
-                }
-                //log.debug("BasalIOB " + new Date(time) + " >>> " + calc.basaliob);
-                total.plus(calc);
-            }
-        }
-        if (pumpInterface.isFakingTempsByExtendedBoluses()) {
-            IobTotal totalExt = new IobTotal(time);
-            synchronized (extendedBoluses) {
-                for (int pos = 0; pos < extendedBoluses.size(); pos++) {
-                    ExtendedBolus e = extendedBoluses.get(pos);
-                    if (e.date > time) continue;
-                    IobTotal calc;
-                    Profile profile = profileFunction.getProfile(e.date);
-                    if (profile == null) continue;
-                    if (e.end() > truncateTime) {
-                        ExtendedBolus dummyExt = new ExtendedBolus(getInjector());
-                        dummyExt.copyFrom(e);
-                        dummyExt.cutEndTo(truncateTime);
-                        calc = dummyExt.iobCalc(time, profile, lastAutosensResult, exercise_mode, half_basal_exercise_target, isTempTarget);
-                    } else {
-                        calc = e.iobCalc(time, profile, lastAutosensResult, exercise_mode, half_basal_exercise_target, isTempTarget);
-                    }
-                    totalExt.plus(calc);
-                }
-            }
-            // Convert to basal iob
-            totalExt.basaliob = totalExt.iob;
-            totalExt.iob = 0d;
-            totalExt.netbasalinsulin = totalExt.extendedBolusInsulin;
-            totalExt.hightempinsulin = totalExt.extendedBolusInsulin;
-            total.plus(totalExt);
-        }
-        return total;
-    }
-
-    @Nullable
-    @Override
-    public TemporaryBasal getTempBasalFromHistory(long time) {
-        TemporaryBasal tb = getRealTempBasalFromHistory(time);
-        if (tb != null)
-            return tb;
-        ExtendedBolus eb = getExtendedBolusFromHistory(time);
-        if (eb != null && activePlugin.getActivePump().isFakingTempsByExtendedBoluses())
-            return new TemporaryBasal(eb);
-        return null;
-    }
-
-    @Override
-    public ExtendedBolus getExtendedBolusFromHistory(long time) {
-        synchronized (extendedBoluses) {
-            return extendedBoluses.getValueByInterval(time);
-        }
-    }
-
+    @Deprecated
     @Override
     public boolean addToHistoryExtendedBolus(ExtendedBolus extendedBolus) {
+        throw new IllegalStateException("Migrate to new DB");
         //log.debug("Adding new ExtentedBolus record" + extendedBolus.log());
+        /*
         boolean newRecordCreated = databaseHelper.createOrUpdate(extendedBolus);
         if (newRecordCreated) {
             if (extendedBolus.durationInMinutes == 0) {
@@ -525,26 +239,14 @@ public class TreatmentsPlugin extends PluginBase implements TreatmentsInterface 
                 nsUpload.uploadExtendedBolus(extendedBolus);
         }
         return newRecordCreated;
+         */
     }
 
-    @Override
-    @NonNull
-    public Intervals<ExtendedBolus> getExtendedBolusesFromHistory() {
-        synchronized (extendedBoluses) {
-            return new NonOverlappingIntervals<>(extendedBoluses);
-        }
-    }
-
-    @Override
-    @NonNull
-    public NonOverlappingIntervals<TemporaryBasal> getTemporaryBasalsFromHistory() {
-        synchronized (tempBasals) {
-            return new NonOverlappingIntervals<>(tempBasals);
-        }
-    }
-
+    @Deprecated
     @Override
     public boolean addToHistoryTempBasal(TemporaryBasal tempBasal) {
+        throw new IllegalStateException("Migrate to new DB");
+/*
         //log.debug("Adding new TemporaryBasal record" + tempBasal.toString());
         boolean newRecordCreated = databaseHelper.createOrUpdate(tempBasal);
         if (newRecordCreated) {
@@ -556,17 +258,25 @@ public class TreatmentsPlugin extends PluginBase implements TreatmentsInterface 
                 nsUpload.uploadTempBasalStartPercent(tempBasal, profileFunction.getProfile(tempBasal.date));
         }
         return newRecordCreated;
+ */
     }
 
+    @Deprecated
     public TreatmentUpdateReturn createOrUpdateMedtronic(Treatment treatment, boolean fromNightScout) {
+        throw new IllegalStateException("Migrate to new DB");
+/*
         UpdateReturn resultRecord = getService().createOrUpdateMedtronic(treatment, fromNightScout);
 
         return new TreatmentUpdateReturn(resultRecord.getSuccess(), resultRecord.getNewRecord());
+ */
     }
 
     // return true if new record is created
+    @Deprecated
     @Override
     public boolean addToHistoryTreatment(DetailedBolusInfo detailedBolusInfo, boolean allowUpdate) {
+        throw new IllegalStateException("Migrate to new DB");
+/*
         boolean medtronicPump = activePlugin.getActivePump() instanceof MedtronicPumpPlugin;
 
         getAapsLogger().debug(MedtronicHistoryData.doubleBolusDebug, LTag.DATATREATMENTS, "DoubleBolusDebug: addToHistoryTreatment::isMedtronicPump={} " + medtronicPump);
@@ -627,27 +337,7 @@ public class TreatmentsPlugin extends PluginBase implements TreatmentsInterface 
         }
 
         return newRecordCreated;
-    }
-
-    @Override
-    public long oldestDataAvailable() {
-        long oldestTime = System.currentTimeMillis();
-        synchronized (tempBasals) {
-            if (tempBasals.size() > 0)
-                oldestTime = Math.min(oldestTime, tempBasals.get(0).date);
-        }
-        synchronized (extendedBoluses) {
-            if (extendedBoluses.size() > 0)
-                oldestTime = Math.min(oldestTime, extendedBoluses.get(0).date);
-        }
-        Bolus oldestBolus = repository.getOldestBolusRecord();
-        if (oldestBolus != null)
-            oldestTime = Math.min(oldestTime, oldestBolus.getTimestamp());
-        Carbs oldestCarbs = repository.getOldestCarbsRecord();
-        if (oldestCarbs != null)
-            oldestTime = Math.min(oldestTime, oldestCarbs.getTimestamp());
-        oldestTime -= 15 * 60 * 1000L; // allow 15 min before
-        return oldestTime;
+ */
     }
 
     @Override
@@ -670,7 +360,7 @@ public class TreatmentsPlugin extends PluginBase implements TreatmentsInterface 
         //log.debug("Adding new TemporaryBasal record" + profileSwitch.log());
         rxBus.send(new EventDismissNotification(Notification.PROFILE_SWITCH_MISSING));
         databaseHelper.createOrUpdate(profileSwitch);
-        nsUpload.uploadProfileSwitch(profileSwitch, profileSwitch.date);
+        nsUpload.uploadProfileSwitch(profileSwitch, profileSwitch.date, dateUtil);
     }
 
     @Override

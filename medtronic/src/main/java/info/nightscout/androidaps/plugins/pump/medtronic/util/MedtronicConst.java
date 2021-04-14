@@ -34,6 +34,7 @@ public class MedtronicConst {
         public static final String LastPumpHistoryEntry = StatsPrefix + "pump_history_entry";
         public static final String LastPrime = StatsPrefix + "last_sent_prime";
         public static final String LastRewind = StatsPrefix + "last_sent_rewind";
+        public static final String InternalTemporaryDatabase = StatsPrefix + "temporary_entries";
     }
 
 }

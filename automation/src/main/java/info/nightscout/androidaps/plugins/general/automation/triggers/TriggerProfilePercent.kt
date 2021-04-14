@@ -14,11 +14,12 @@ import info.nightscout.androidaps.utils.JsonHelper
 import org.json.JSONObject
 
 class TriggerProfilePercent(injector: HasAndroidInjector) : Trigger(injector) {
+
     var pct = InputPercent()
     var comparator = Comparator(resourceHelper)
 
     constructor(injector: HasAndroidInjector, value: Double, compare: Comparator.Compare) : this(injector) {
-        pct = InputPercent( value)
+        pct = InputPercent(value)
         comparator = Comparator(resourceHelper, compare)
     }
 
@@ -55,15 +56,10 @@ class TriggerProfilePercent(injector: HasAndroidInjector) : Trigger(injector) {
         return false
     }
 
-    @Synchronized override fun toJSON(): String {
-        val data = JSONObject()
+    override fun dataJSON(): JSONObject =
+        JSONObject()
             .put("percentage", pct.value)
             .put("comparator", comparator.value.toString())
-        return JSONObject()
-            .put("type", this::class.java.name)
-            .put("data", data)
-            .toString()
-    }
 
     override fun fromJSON(data: String): Trigger {
         val d = JSONObject(data)

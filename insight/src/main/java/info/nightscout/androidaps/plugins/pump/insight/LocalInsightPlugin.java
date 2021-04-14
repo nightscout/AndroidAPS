@@ -1,5 +1,8 @@
 package info.nightscout.androidaps.plugins.pump.insight;
 
+import static info.nightscout.androidaps.extensions.PumpStateExtensionKt.convertedToAbsolute;
+import static info.nightscout.androidaps.extensions.PumpStateExtensionKt.getPlannedRemainingMinutes;
+
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.content.ComponentName;
@@ -694,7 +697,7 @@ public class LocalInsightPlugin extends PumpPluginBase implements PumpInterface,
     }
 
     @NonNull @Override
-    public PumpEnactResult setTempBasalAbsolute(double absoluteRate, int durationInMinutes, @NonNull Profile profile, boolean enforceNew) {
+    public PumpEnactResult setTempBasalAbsolute(double absoluteRate, int durationInMinutes, @NonNull Profile profile, boolean enforceNew, @NonNull PumpSync.TemporaryBasalType tbrType) {
         PumpEnactResult result = new PumpEnactResult(getInjector());
         if (activeBasalRate == null) return result;
         if (activeBasalRate.getActiveBasalRate() == 0) return result;
@@ -722,13 +725,13 @@ public class LocalInsightPlugin extends PumpPluginBase implements PumpInterface,
                         result.comment(cancelTBRResult.getComment());
                     }
                 } else {
-                    return setTempBasalPercent((int) Math.round(percent), durationInMinutes, profile, enforceNew);
+                    return setTempBasalPercent((int) Math.round(percent), durationInMinutes, profile, enforceNew, tbrType);
                 }
             } else {
                 result.comment(cancelEBResult.getComment());
             }
         } else {
-            return setTempBasalPercent((int) Math.round(percent), durationInMinutes, profile, enforceNew);
+            return setTempBasalPercent((int) Math.round(percent), durationInMinutes, profile, enforceNew, tbrType);
         }
         try {
             fetchStatus();
@@ -744,7 +747,7 @@ public class LocalInsightPlugin extends PumpPluginBase implements PumpInterface,
     }
 
     @NonNull @Override
-    public PumpEnactResult setTempBasalPercent(int percent, int durationInMinutes, @NonNull Profile profile, boolean enforceNew) {
+    public PumpEnactResult setTempBasalPercent(int percent, int durationInMinutes, @NonNull Profile profile, boolean enforceNew, @NonNull PumpSync.TemporaryBasalType tbrType) {
         PumpEnactResult result = new PumpEnactResult(getInjector());
         percent = (int) Math.round(((double) percent) / 10d) * 10;
         if (percent == 100) return cancelTempBasal(true);
@@ -980,27 +983,27 @@ public class LocalInsightPlugin extends PumpPluginBase implements PumpInterface,
         final JSONObject status = new JSONObject();
         final JSONObject extended = new JSONObject();
         try {
-            status.put("timestamp", DateUtil.toISOString(connectionService.getLastConnected()));
+            status.put("timestamp", dateUtil.toISOString(connectionService.getLastConnected()));
             extended.put("Version", version);
             try {
                 extended.put("ActiveProfile", profileFunction.getProfileName());
             } catch (Exception e) {
                 e.printStackTrace();
             }
-            TemporaryBasal tb = treatmentsPlugin.getTempBasalFromHistory(now);
+            PumpSync.PumpState.TemporaryBasal tb = pumpSync.expectedPumpState().getTemporaryBasal();
             if (tb != null) {
-                extended.put("TempBasalAbsoluteRate", tb.tempBasalConvertedToAbsolute(now, profile));
-                extended.put("TempBasalStart", dateUtil.dateAndTimeString(tb.date));
-                extended.put("TempBasalRemaining", tb.getPlannedRemainingMinutes());
+                extended.put("TempBasalAbsoluteRate", convertedToAbsolute(tb, now, profile));
+                extended.put("TempBasalStart", dateUtil.dateAndTimeString(tb.getTimestamp()));
+                extended.put("TempBasalRemaining", getPlannedRemainingMinutes(tb));
             }
-            ExtendedBolus eb = treatmentsPlugin.getExtendedBolusFromHistory(now);
+            PumpSync.PumpState.ExtendedBolus eb = pumpSync.expectedPumpState().getExtendedBolus();
             if (eb != null) {
-                extended.put("ExtendedBolusAbsoluteRate", eb.absoluteRate());
-                extended.put("ExtendedBolusStart", dateUtil.dateAndTimeString(eb.date));
-                extended.put("ExtendedBolusRemaining", eb.getPlannedRemainingMinutes());
+                extended.put("ExtendedBolusAbsoluteRate", eb.getRate());
+                extended.put("ExtendedBolusStart", dateUtil.dateAndTimeString(eb.getTimestamp()));
+                extended.put("ExtendedBolusRemaining", getPlannedRemainingMinutes(eb));
             }
             extended.put("BaseBasalRate", getBaseBasalRate());
-            status.put("timestamp", DateUtil.toISOString(now));
+            status.put("timestamp", dateUtil.toISOString(now));
 
             pump.put("extended", extended);
             if (statusLoaded) {
@@ -1010,7 +1013,7 @@ public class LocalInsightPlugin extends PumpPluginBase implements PumpInterface,
                 pump.put("battery", battery);
                 pump.put("reservoir", cartridgeStatus.getRemainingAmount());
             }
-            pump.put("clock", DateUtil.toISOString(now));
+            pump.put("clock", dateUtil.toISOString(now));
         } catch (JSONException e) {
             aapsLogger.error("Unhandled exception", e);
         }

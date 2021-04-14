@@ -5,7 +5,6 @@ import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.Constants
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.data.Profile
-import info.nightscout.androidaps.database.entities.UserEntry.*
 import info.nightscout.androidaps.events.EventProfileStoreChanged
 import info.nightscout.androidaps.interfaces.*
 import info.nightscout.androidaps.logging.AAPSLogger
@@ -35,6 +34,7 @@ class LocalProfilePlugin @Inject constructor(
     private val sp: SP,
     private val profileFunction: ProfileFunction,
     private val nsUpload: NSUpload,
+    private val dateUtil: DateUtil,
     private val uel: UserEntryLogger
 ) : PluginBase(PluginDescription()
     .mainType(PluginType.PROFILE)
@@ -116,7 +116,6 @@ class LocalProfilePlugin @Inject constructor(
         createAndStoreConvertedProfile()
         isEdited = false
         aapsLogger.debug(LTag.PROFILE, "Storing settings: " + rawProfile?.data.toString())
-        uel.log(Action.STORE_PROFILE)
         rxBus.send(EventProfileStoreChanged())
         var namesOK = true
         profiles.forEach {
@@ -205,7 +204,7 @@ class LocalProfilePlugin @Inject constructor(
     fun copyFrom(profile: Profile, newName: String): SingleProfile {
         var verifiedName = newName
         if (rawProfile?.getSpecificProfile(newName) != null) {
-            verifiedName += " " + DateUtil.now().toString()
+            verifiedName += " " + dateUtil.now().toString()
         }
         val sp = SingleProfile()
         sp.name = verifiedName
@@ -342,7 +341,7 @@ class LocalProfilePlugin @Inject constructor(
                 }
             }
             if (numOfProfiles > 0) json.put("defaultProfile", currentProfile()?.name)
-            json.put("startDate", DateUtil.toISOAsUTC(DateUtil.now()))
+            json.put("startDate", dateUtil.toISOAsUTC(dateUtil.now()))
             json.put("store", store)
         } catch (e: JSONException) {
             aapsLogger.error("Unhandled exception", e)

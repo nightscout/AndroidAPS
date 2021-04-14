@@ -72,6 +72,7 @@ public class DanaRKoreanExecutionService extends AbstractDanaRExecutionService {
     @Inject ActivePluginProvider activePlugin;
     @Inject ProfileFunction profileFunction;
     @Inject PumpSync pumpSync;
+    @Inject DateUtil dateUtil;
 
     public DanaRKoreanExecutionService() {
     }
@@ -171,7 +172,7 @@ public class DanaRKoreanExecutionService extends AbstractDanaRExecutionService {
                 rxBus.send(new EventPumpStatusChanged(resourceHelper.gs(R.string.gettingpumptime)));
                 mSerialIOThread.sendMessage(new MsgSettingPumpTime(injector));
                 if (danaPump.getPumpTime() == 0) {
-                    // initial handshake was not successfull
+                    // initial handshake was not successful
                     // deinitialize pump
                     danaPump.reset();
                     rxBus.send(new EventDanaRNewStatus());
@@ -182,8 +183,8 @@ public class DanaRKoreanExecutionService extends AbstractDanaRExecutionService {
                 aapsLogger.debug(LTag.PUMP, "Pump time difference: " + timeDiff + " seconds");
                 if (Math.abs(timeDiff) > 10) {
                     waitForWholeMinute(); // Dana can set only whole minute
-                    // add 10sec to be sure we are over minute (will be cutted off anyway)
-                    mSerialIOThread.sendMessage(new MsgSetTime(injector, DateUtil.now() + T.secs(10).msecs()));
+                    // add 10sec to be sure we are over minute (will be cut off anyway)
+                    mSerialIOThread.sendMessage(new MsgSetTime(injector, dateUtil.now() + T.secs(10).msecs()));
                     mSerialIOThread.sendMessage(new MsgSettingPumpTime(injector));
                     timeDiff = (danaPump.getPumpTime() - System.currentTimeMillis()) / 1000L;
                     aapsLogger.debug(LTag.PUMP, "Pump time difference: " + timeDiff + " seconds");
@@ -203,6 +204,8 @@ public class DanaRKoreanExecutionService extends AbstractDanaRExecutionService {
                     lastApproachingDailyLimit = System.currentTimeMillis();
                 }
             }
+
+            doSanityCheck();
         } catch (Exception e) {
             aapsLogger.error("Unhandled exception", e);
         }

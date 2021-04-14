@@ -3,11 +3,13 @@ package info.nightscout.androidaps.plugins.general.food
 import android.content.Context
 import androidx.work.Worker
 import androidx.work.WorkerParameters
+import androidx.work.workDataOf
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.database.AppRepository
 import info.nightscout.androidaps.database.entities.Food
 import info.nightscout.androidaps.database.transactions.SyncNsFoodTransaction
+import info.nightscout.androidaps.extensions.foodFromJson
 import info.nightscout.androidaps.interfaces.PluginBase
 import info.nightscout.androidaps.interfaces.PluginDescription
 import info.nightscout.androidaps.interfaces.PluginType
@@ -15,7 +17,6 @@ import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.logging.LTag
 import info.nightscout.androidaps.receivers.DataWorker
 import info.nightscout.androidaps.utils.JsonHelper
-import info.nightscout.androidaps.utils.extensions.foodFromJson
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 import info.nightscout.androidaps.utils.sharedPreferences.SP
 import org.json.JSONObject
@@ -55,7 +56,7 @@ class FoodPlugin @Inject constructor(
 
         override fun doWork(): Result {
             val foods = dataWorker.pickupJSONArray(inputData.getLong(DataWorker.STORE_KEY, -1))
-                ?: return Result.failure()
+                ?: return Result.failure(workDataOf("Error" to "missing input data"))
             aapsLogger.debug(LTag.DATABASE, "Received Food Data: $foods")
 
             var ret = Result.success()
@@ -74,10 +75,10 @@ class FoodPlugin @Inject constructor(
                             isValid = false
                         ).also { it.interfaceIDs.nightscoutId = JsonHelper.safeGetString(jsonFood, "_id") }
 
-                        repository.runTransactionForResult(SyncNsFoodTransaction(delFood))
+                        repository.runTransactionForResult(SyncNsFoodTransaction(delFood, true))
                             .doOnError {
                                 aapsLogger.error(LTag.DATABASE, "Error while removing food", it)
-                                ret = Result.failure()
+                                ret = Result.failure(workDataOf("Error" to it))
                             }
                             .blockingGet()
                             .also {
@@ -88,10 +89,10 @@ class FoodPlugin @Inject constructor(
                     else     -> {
                         val food = foodFromJson(jsonFood)
                         if (food != null) {
-                            repository.runTransactionForResult(SyncNsFoodTransaction(food))
+                            repository.runTransactionForResult(SyncNsFoodTransaction(food, false))
                                 .doOnError {
                                     aapsLogger.error(LTag.DATABASE, "Error while adding/updating food", it)
-                                    ret = Result.failure()
+                                    ret = Result.failure(workDataOf("Error" to it))
                                 }
                                 .blockingGet()
                                 .also { result ->
@@ -101,7 +102,7 @@ class FoodPlugin @Inject constructor(
                                 }
                         } else {
                             aapsLogger.error(LTag.DATABASE, "Error parsing food", jsonFood.toString())
-                            ret = Result.failure()
+                            ret = Result.failure(workDataOf("Error" to "Error parsing food"))
                         }
                     }
                 }

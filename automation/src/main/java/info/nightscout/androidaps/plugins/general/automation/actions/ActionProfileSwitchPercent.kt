@@ -5,7 +5,11 @@ import androidx.annotation.DrawableRes
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.automation.R
 import info.nightscout.androidaps.data.PumpEnactResult
+import info.nightscout.androidaps.database.entities.UserEntry
+import info.nightscout.androidaps.database.entities.UserEntry.Sources
+import info.nightscout.androidaps.database.entities.ValueWithUnit
 import info.nightscout.androidaps.interfaces.ActivePluginProvider
+import info.nightscout.androidaps.logging.UserEntryLogger
 import info.nightscout.androidaps.plugins.general.automation.elements.Comparator
 import info.nightscout.androidaps.plugins.general.automation.elements.InputDuration
 import info.nightscout.androidaps.plugins.general.automation.elements.InputPercent
@@ -21,6 +25,7 @@ import javax.inject.Inject
 class ActionProfileSwitchPercent(injector: HasAndroidInjector) : Action(injector) {
     @Inject lateinit var resourceHelper: ResourceHelper
     @Inject lateinit var activePlugin: ActivePluginProvider
+    @Inject lateinit var uel: UserEntryLogger
 
     var pct = InputPercent()
     var duration = InputDuration(30, InputDuration.TimeUnit.MINUTES)
@@ -37,6 +42,9 @@ class ActionProfileSwitchPercent(injector: HasAndroidInjector) : Action(injector
     }
 
     override fun doAction(callback: Callback) {
+        uel.log(UserEntry.Action.PROFILE_SWITCH, Sources.Automation, title + ": " + resourceHelper.gs(R.string.startprofile, pct.value.toInt(), duration.value),
+            ValueWithUnit.Percent(pct.value.toInt()),
+            ValueWithUnit.Minute(duration.value))
         activePlugin.activeTreatments.doProfileSwitch(duration.value, pct.value.toInt(), 0)
         callback.result(PumpEnactResult(injector).success(true).comment(R.string.ok))?.run()
     }

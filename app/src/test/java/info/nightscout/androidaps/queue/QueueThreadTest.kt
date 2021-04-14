@@ -12,6 +12,7 @@ import info.nightscout.androidaps.database.AppRepository
 import info.nightscout.androidaps.interfaces.ActivePluginProvider
 import info.nightscout.androidaps.interfaces.Constraint
 import info.nightscout.androidaps.interfaces.PumpDescription
+import info.nightscout.androidaps.interfaces.PumpSync
 import info.nightscout.androidaps.plugins.configBuilder.ConstraintChecker
 import info.nightscout.androidaps.plugins.general.maintenance.LoggerUtils
 import info.nightscout.androidaps.plugins.pump.virtual.VirtualPumpPlugin
@@ -30,7 +31,6 @@ import org.mockito.Mock
 import org.mockito.Mockito
 import org.powermock.core.classloader.annotations.PrepareForTest
 import org.powermock.modules.junit4.PowerMockRunner
-import java.util.*
 
 @RunWith(PowerMockRunner::class)
 @PrepareForTest(
@@ -41,7 +41,6 @@ class QueueThreadTest : TestBaseWithProfile() {
     @Mock lateinit var constraintChecker: ConstraintChecker
     @Mock lateinit var lazyActivePlugin: Lazy<ActivePluginProvider>
     @Mock lateinit var activePlugin: ActivePluginProvider
-    @Mock lateinit var context: Context
     @Mock lateinit var sp: SP
     @Mock lateinit var loggerUtils: LoggerUtils
     @Mock lateinit var powerManager: PowerManager
@@ -93,7 +92,7 @@ class QueueThreadTest : TestBaseWithProfile() {
 
     @Test
     fun commandIsPickedUp() {
-        commandQueue.tempBasalAbsolute(2.0, 60, true, validProfile, null)
+        commandQueue.tempBasalAbsolute(2.0, 60, true, validProfile, PumpSync.TemporaryBasalType.NORMAL, null)
         sut.run()
         Assert.assertEquals(0, commandQueue.size())
     }

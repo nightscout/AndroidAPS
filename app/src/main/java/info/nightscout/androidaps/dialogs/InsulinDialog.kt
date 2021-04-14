@@ -15,10 +15,10 @@ import info.nightscout.androidaps.activities.ErrorHelperActivity
 import info.nightscout.androidaps.data.DetailedBolusInfo
 import info.nightscout.androidaps.data.Profile
 import info.nightscout.androidaps.database.AppRepository
+import info.nightscout.androidaps.database.entities.ValueWithUnit
 import info.nightscout.androidaps.database.entities.TemporaryTarget
 import info.nightscout.androidaps.database.entities.UserEntry.Action
-import info.nightscout.androidaps.database.entities.UserEntry.Units
-import info.nightscout.androidaps.database.entities.UserEntry.ValueWithUnit
+import info.nightscout.androidaps.database.entities.UserEntry.Sources
 import info.nightscout.androidaps.database.transactions.InsertTemporaryTargetAndCancelCurrentTransaction
 import info.nightscout.androidaps.databinding.DialogInsulinBinding
 import info.nightscout.androidaps.interfaces.ActivePluginProvider
@@ -28,13 +28,12 @@ import info.nightscout.androidaps.interfaces.ProfileFunction
 import info.nightscout.androidaps.logging.LTag
 import info.nightscout.androidaps.logging.UserEntryLogger
 import info.nightscout.androidaps.plugins.configBuilder.ConstraintChecker
-import info.nightscout.androidaps.plugins.general.nsclient.NSUpload
 import info.nightscout.androidaps.queue.Callback
 import info.nightscout.androidaps.utils.*
 import info.nightscout.androidaps.utils.alertDialogs.OKDialog
-import info.nightscout.androidaps.utils.extensions.formatColor
+import info.nightscout.androidaps.extensions.formatColor
 import info.nightscout.androidaps.utils.extensions.toSignedString
-import info.nightscout.androidaps.utils.extensions.toVisibility
+import info.nightscout.androidaps.extensions.toVisibility
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.rxkotlin.plusAssign
@@ -57,7 +56,6 @@ class InsulinDialog : DialogFragmentWithDate() {
     @Inject lateinit var repository: AppRepository
     @Inject lateinit var config: Config
     @Inject lateinit var uel: UserEntryLogger
-    @Inject lateinit var nsUpload: NSUpload
 
     companion object {
 
@@ -177,7 +175,7 @@ class InsulinDialog : DialogFragmentWithDate() {
             actions.add(resourceHelper.gs(R.string.temptargetshort) + ": " + (DecimalFormatter.to1Decimal(eatingSoonTT) + " " + unitLabel + " (" + resourceHelper.gs(R.string.format_mins, eatingSoonTTDuration) + ")").formatColor(resourceHelper, R.color.tempTargetConfirmation))
 
         val timeOffset = binding.time.value.toInt()
-        val time = dateUtil._now() + T.mins(timeOffset.toLong()).msecs()
+        val time = dateUtil.now() + T.mins(timeOffset.toLong()).msecs()
         if (timeOffset != 0)
             actions.add(resourceHelper.gs(R.string.time) + ": " + dateUtil.dateAndTimeString(time))
 
@@ -189,7 +187,11 @@ class InsulinDialog : DialogFragmentWithDate() {
             activity?.let { activity ->
                 OKDialog.showConfirmation(activity, resourceHelper.gs(R.string.bolus), HtmlHelper.fromHtml(Joiner.on("<br/>").join(actions)), {
                     if (eatingSoonChecked) {
-                        uel.log(Action.TT, notes, ValueWithUnit(TemporaryTarget.Reason.EATING_SOON.text, Units.TherapyEvent), ValueWithUnit(eatingSoonTT, units), ValueWithUnit(eatingSoonTTDuration, Units.M))
+                        uel.log(Action.TT, Sources.InsulinDialog,
+                            notes,
+                            ValueWithUnit.TherapyEventTTReason(TemporaryTarget.Reason.EATING_SOON),
+                            ValueWithUnit.fromGlucoseUnit(eatingSoonTT, units),
+                            ValueWithUnit.Minute(eatingSoonTTDuration))
                         disposable += repository.runTransactionForResult(InsertTemporaryTargetAndCancelCurrentTransaction(
                             timestamp = System.currentTimeMillis(),
                             duration = TimeUnit.MINUTES.toMillis(eatingSoonTTDuration.toLong()),
@@ -210,25 +212,26 @@ class InsulinDialog : DialogFragmentWithDate() {
                         detailedBolusInfo.context = context
                         detailedBolusInfo.notes = notes
                         detailedBolusInfo.timestamp = time
-                        uel.log(Action.BOLUS_RECORD, notes,
-                            ValueWithUnit(detailedBolusInfo.timestamp, Units.Timestamp),
-                            ValueWithUnit(detailedBolusInfo.insulin, Units.U),
-                            ValueWithUnit(timeOffset, Units.M, timeOffset != 0)
-                        )
                         if (recordOnlyChecked) {
+                            uel.log(Action.BOLUS, Sources.InsulinDialog,
+                                resourceHelper.gs(R.string.record) + if (notes.isNotEmpty()) ": " + notes else "",
+                                ValueWithUnit.SimpleString(resourceHelper.gsNotLocalised(R.string.record)),
+                                ValueWithUnit.Insulin(insulinAfterConstraints),
+                                ValueWithUnit.Minute(timeOffset).takeIf { timeOffset!= 0 })
                             disposable += repository.runTransactionForResult(detailedBolusInfo.insertBolusTransaction())
                                 .subscribe(
                                     { result -> result.inserted.forEach { aapsLogger.debug(LTag.DATABASE, "Inserted bolus $it") } },
                                     { aapsLogger.error(LTag.DATABASE, "Error while saving bolus", it) }
                                 )
                         } else {
+                            uel.log(Action.BOLUS, Sources.InsulinDialog,
+                                notes,
+                                ValueWithUnit.Insulin(insulinAfterConstraints))
                             commandQueue.bolus(detailedBolusInfo, object : Callback() {
                                 override fun run() {
                                     if (!result.success) {
                                         ErrorHelperActivity.runAlarm(ctx, result.comment, resourceHelper.gs(R.string.treatmentdeliveryerror), info.nightscout.androidaps.dana.R.raw.boluserror)
-                                    } else
-                                        uel.log(Action.BOLUS, notes, ValueWithUnit(insulinAfterConstraints, Units.U))
-
+                                    }
                                 }
                             })
                         }

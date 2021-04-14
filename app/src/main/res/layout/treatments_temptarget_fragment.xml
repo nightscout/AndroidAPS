@@ -38,7 +38,6 @@
             android:contentDescription="@string/show_removed"
             app:srcCompat="@drawable/ic_visibility" />
 
-
     </LinearLayout>
 
     <androidx.recyclerview.widget.RecyclerView

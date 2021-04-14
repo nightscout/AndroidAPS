@@ -32,7 +32,7 @@ data class Bolus(
     override var utcOffset: Long = TimeZone.getDefault().getOffset(timestamp).toLong(),
     var amount: Double,
     var type: Type,
-    var isBasalInsulin: Boolean,
+    var isBasalInsulin: Boolean = false,
     @Embedded
     var insulinConfiguration: InsulinConfiguration? = null
 ) : TraceableDBEntry, DBEntryWithTime {

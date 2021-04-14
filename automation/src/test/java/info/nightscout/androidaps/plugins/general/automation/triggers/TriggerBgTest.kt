@@ -13,7 +13,6 @@ import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.Mockito.`when`
-import org.powermock.api.mockito.PowerMockito
 import org.powermock.core.classloader.annotations.PrepareForTest
 import org.powermock.modules.junit4.PowerMockRunner
 import java.util.*
@@ -27,14 +26,12 @@ class TriggerBgTest : TriggerTestBase() {
     @Before
     fun prepare() {
         `when`(profileFunction.getUnits()).thenReturn(Constants.MGDL)
-        `when`(iobCobCalculatorPlugin.dataLock).thenReturn(Any())
-        PowerMockito.mockStatic(DateUtil::class.java)
-        `when`(DateUtil.now()).thenReturn(now)
+        `when`(dateUtil.now()).thenReturn(now)
     }
 
     @Test
     fun shouldRunTest() {
-        `when`(iobCobCalculatorPlugin.bgReadings).thenReturn(generateOneCurrentRecordBgData())
+        `when`(autosensDataStore.getBgReadingsDataTableCopy()).thenReturn(generateOneCurrentRecordBgData())
         var t: TriggerBg = TriggerBg(injector).setUnits(Constants.MMOL).setValue(4.1).comparator(Comparator.Compare.IS_EQUAL)
         Assert.assertFalse(t.shouldRun())
         t = TriggerBg(injector).setUnits(Constants.MGDL).setValue(214.0).comparator(Comparator.Compare.IS_EQUAL)
@@ -53,7 +50,7 @@ class TriggerBgTest : TriggerTestBase() {
         Assert.assertTrue(t.shouldRun())
         t = TriggerBg(injector).setUnits(Constants.MGDL).setValue(213.0).comparator(Comparator.Compare.IS_EQUAL_OR_LESSER)
         Assert.assertFalse(t.shouldRun())
-        `when`(iobCobCalculatorPlugin.bgReadings).thenReturn(ArrayList())
+        `when`(autosensDataStore.getBgReadingsDataTableCopy()).thenReturn(ArrayList())
         t = TriggerBg(injector).setUnits(Constants.MGDL).setValue(213.0).comparator(Comparator.Compare.IS_EQUAL_OR_LESSER)
         Assert.assertFalse(t.shouldRun())
         t = TriggerBg(injector).comparator(Comparator.Compare.IS_NOT_AVAILABLE)
@@ -69,7 +66,7 @@ class TriggerBgTest : TriggerTestBase() {
         Assert.assertEquals(Comparator.Compare.IS_EQUAL_OR_LESSER, t.comparator.value)
     }
 
-    private var bgJson = "{\"data\":{\"comparator\":\"IS_EQUAL\",\"bg\":4.1,\"units\":\"mmol\"},\"type\":\"info.nightscout.androidaps.plugins.general.automation.triggers.TriggerBg\"}"
+    private var bgJson = "{\"data\":{\"comparator\":\"IS_EQUAL\",\"bg\":4.1,\"units\":\"mmol\"},\"type\":\"TriggerBg\"}"
 
     @Test
     fun toJSONTest() {

@@ -1,5 +1,6 @@
 package info.nightscout.androidaps.interfaces
 
+import info.nightscout.androidaps.plugins.iob.iobCobCalculator.AutosensDataStore
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.AutosensResult
 
 interface SensitivityInterface : ConfigExportImportInterface {
@@ -11,15 +12,17 @@ interface SensitivityInterface : ConfigExportImportInterface {
         SENSITIVITY_OREF1(2);
 
         companion object {
+
             private val map = values().associateBy(SensitivityType::value)
             fun fromInt(type: Int) = map[type]
         }
     }
 
     val id: SensitivityType
-    fun detectSensitivity(plugin: IobCobCalculator, fromTime: Long, toTime: Long): AutosensResult
+    fun detectSensitivity(ads: AutosensDataStore, fromTime: Long, toTime: Long): AutosensResult
 
     companion object {
+
         const val MIN_HOURS = 1.0
         const val MIN_HOURS_FULL_AUTOSENS = 4.0
     }

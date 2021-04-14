@@ -27,7 +27,7 @@ class DetailedBolusInfoStorage @Inject constructor(
         // Look for info with bolus
         for (i in store.indices) {
             val d = store[i]
-            aapsLogger.debug(LTag.PUMP, "Existing bolus info: " + store[i])
+            //aapsLogger.debug(LTag.PUMP, "Existing bolus info: " + store[i])
             if (bolusTime > d.timestamp - T.mins(1).msecs() && bolusTime < d.timestamp + T.mins(1).msecs() && abs(store[i].insulin - bolus) < 0.01) {
                 aapsLogger.debug(LTag.PUMP, "Using & removing bolus info: ${store[i]}")
                 store.removeAt(i)
@@ -53,7 +53,7 @@ class DetailedBolusInfoStorage @Inject constructor(
             }
         }
         //Not found
-        aapsLogger.debug(LTag.PUMP, "Bolus info not found")
+        //aapsLogger.debug(LTag.PUMP, "Bolus info not found")
         return null
     }
 }

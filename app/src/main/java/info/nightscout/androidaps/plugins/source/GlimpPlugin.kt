@@ -3,6 +3,7 @@ package info.nightscout.androidaps.plugins.source
 import android.content.Context
 import androidx.work.Worker
 import androidx.work.WorkerParameters
+import androidx.work.workDataOf
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.database.AppRepository
@@ -55,7 +56,7 @@ class GlimpPlugin @Inject constructor(
         override fun doWork(): Result {
             var ret = Result.success()
 
-            if (!glimpPlugin.isEnabled(PluginType.BGSOURCE)) return Result.failure()
+            if (!glimpPlugin.isEnabled(PluginType.BGSOURCE)) return Result.success()
             aapsLogger.debug(LTag.BGSOURCE, "Received Glimp Data: $inputData}")
             val glucoseValues = mutableListOf<CgmSourceTransaction.TransactionGlucoseValue>()
             glucoseValues += CgmSourceTransaction.TransactionGlucoseValue(
@@ -69,7 +70,7 @@ class GlimpPlugin @Inject constructor(
             repository.runTransactionForResult(CgmSourceTransaction(glucoseValues, emptyList(), null))
                 .doOnError {
                     aapsLogger.error(LTag.DATABASE, "Error while saving values from Glimp App", it)
-                    ret = Result.failure()
+                    ret = Result.failure(workDataOf("Error" to it))
                 }
                 .blockingGet()
                 .also { savedValues ->

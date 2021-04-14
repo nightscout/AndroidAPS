@@ -24,8 +24,7 @@ class TriggerBolusAgoTest : TriggerTestBase() {
 
     @Before
     fun mock() {
-        PowerMockito.mockStatic(DateUtil::class.java)
-        PowerMockito.`when`(DateUtil.now()).thenReturn(now)
+        PowerMockito.`when`(dateUtil.now()).thenReturn(now)
     }
 
     @Test
@@ -34,11 +33,10 @@ class TriggerBolusAgoTest : TriggerTestBase() {
             Bolus(
                 timestamp = now,
                 amount = 0.0,
-                type = Bolus.Type.NORMAL,
-                isBasalInsulin = false
+                type = Bolus.Type.NORMAL
             )
         ) // Set last bolus time to now
-        `when`(dateUtil._now()).thenReturn(now + 10 * 60 * 1000) // set current time to now + 10 min
+        `when`(dateUtil.now()).thenReturn(now + 10 * 60 * 1000) // set current time to now + 10 min
         var t = TriggerBolusAgo(injector).setValue(110).comparator(Comparator.Compare.IS_EQUAL)
         Assert.assertEquals(110, t.minutesAgo.value)
         Assert.assertEquals(Comparator.Compare.IS_EQUAL, t.comparator.value)
@@ -64,8 +62,7 @@ class TriggerBolusAgoTest : TriggerTestBase() {
             Bolus(
                 timestamp = 0L,
                 amount = 0.0,
-                type = Bolus.Type.NORMAL,
-                isBasalInsulin = false
+                type = Bolus.Type.NORMAL
             )
         ) // Set last bolus time to 0
         t = TriggerBolusAgo(injector).comparator(Comparator.Compare.IS_NOT_AVAILABLE)
@@ -79,7 +76,7 @@ class TriggerBolusAgoTest : TriggerTestBase() {
         Assert.assertEquals(Comparator.Compare.IS_EQUAL_OR_LESSER, t.comparator.value)
     }
 
-    private var lbJson = "{\"data\":{\"comparator\":\"IS_EQUAL\",\"minutesAgo\":410},\"type\":\"info.nightscout.androidaps.plugins.general.automation.triggers.TriggerBolusAgo\"}"
+    private var lbJson = "{\"data\":{\"comparator\":\"IS_EQUAL\",\"minutesAgo\":410},\"type\":\"TriggerBolusAgo\"}"
     @Test fun toJSONTest() {
         val t: TriggerBolusAgo = TriggerBolusAgo(injector).setValue(410).comparator(Comparator.Compare.IS_EQUAL)
         Assert.assertEquals(lbJson, t.toJSON())

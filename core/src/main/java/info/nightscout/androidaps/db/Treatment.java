@@ -32,6 +32,7 @@ import info.nightscout.androidaps.utils.DefaultValueHelper;
 import info.nightscout.androidaps.utils.JsonHelper;
 import info.nightscout.androidaps.utils.resources.ResourceHelper;
 
+@Deprecated
 @DatabaseTable(tableName = Treatment.TABLE_TREATMENTS)
 public class Treatment implements DataPointWithLabelInterface, DbObjectBase {
     @Inject public DefaultValueHelper defaultValueHelper;
@@ -89,33 +90,6 @@ public class Treatment implements DataPointWithLabelInterface, DbObjectBase {
         _id = bolus.getInterfaceIDs().getNightscoutId();
         insulin = bolus.getAmount();
         isSMB = bolus.getType() == Bolus.Type.SMB;
-    }
-
-    public static Treatment createFromJson(JSONObject json) throws JSONException {
-        Treatment treatment = new Treatment();
-        treatment.source = Source.NIGHTSCOUT;
-        treatment.date = DateUtil.roundDateToSec(JsonHelper.safeGetLong(json, "mills"));
-        if (treatment.date == 0L)
-            return null;
-        treatment.carbs = JsonHelper.safeGetDouble(json, "carbs");
-        treatment.insulin = JsonHelper.safeGetDouble(json, "insulin");
-        treatment.pumpId = JsonHelper.safeGetLong(json, "pumpId");
-        treatment._id = json.getString("_id");
-        treatment.isSMB = JsonHelper.safeGetBoolean(json, "isSMB");
-        if (json.has("eventType")) {
-            treatment.mealBolus = !json.get("eventType").equals("Correction Bolus");
-            double carbs = treatment.carbs;
-            if (json.has("boluscalc")) {
-                JSONObject boluscalc = json.getJSONObject("boluscalc");
-                treatment.boluscalc = boluscalc.toString();
-                if (boluscalc.has("carbs")) {
-                    carbs = Math.max(boluscalc.getDouble("carbs"), carbs);
-                }
-            }
-            if (carbs <= 0)
-                treatment.mealBolus = false;
-        }
-        return treatment;
     }
 
     @NonNull public String toString() {

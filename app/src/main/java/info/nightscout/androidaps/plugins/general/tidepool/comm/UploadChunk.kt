@@ -1,10 +1,9 @@
 package info.nightscout.androidaps.plugins.general.tidepool.comm
 
 import info.nightscout.androidaps.R
-import info.nightscout.androidaps.data.Intervals
 import info.nightscout.androidaps.database.AppRepository
+import info.nightscout.androidaps.database.entities.TemporaryBasal
 import info.nightscout.androidaps.db.ProfileSwitch
-import info.nightscout.androidaps.db.TemporaryBasal
 import info.nightscout.androidaps.interfaces.ActivePluginProvider
 import info.nightscout.androidaps.interfaces.DatabaseHelperInterface
 import info.nightscout.androidaps.interfaces.ProfileFunction
@@ -14,7 +13,6 @@ import info.nightscout.androidaps.plugins.bus.RxBusWrapper
 import info.nightscout.androidaps.plugins.general.tidepool.elements.*
 import info.nightscout.androidaps.plugins.general.tidepool.events.EventTidepoolStatus
 import info.nightscout.androidaps.plugins.general.tidepool.utils.GsonInstance
-import info.nightscout.androidaps.plugins.treatments.TreatmentsPlugin
 import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.T
 import info.nightscout.androidaps.utils.sharedPreferences.SP
@@ -30,7 +28,6 @@ class UploadChunk @Inject constructor(
     private val rxBus: RxBusWrapper,
     private val aapsLogger: AAPSLogger,
     private val profileFunction: ProfileFunction,
-    private val treatmentsPlugin: TreatmentsPlugin,
     private val activePlugin: ActivePluginProvider,
     private val databaseHelper: DatabaseHelperInterface,
     private val repository: AppRepository,
@@ -44,7 +41,7 @@ class UploadChunk @Inject constructor(
             return null
 
         session.start = getLastEnd()
-        session.end = min(session.start + maxUploadSize, DateUtil.now())
+        session.end = min(session.start + maxUploadSize, dateUtil.now())
 
         val result = get(session.start, session.end)
         if (result.length < 3) {
@@ -84,7 +81,7 @@ class UploadChunk @Inject constructor(
 
     fun getLastEnd(): Long {
         val result = sp.getLong(R.string.key_tidepool_last_end, 0)
-        return max(result, DateUtil.now() - T.months(2).msecs())
+        return max(result, dateUtil.now() - T.months(2).msecs())
     }
 
     fun setLastEnd(time: Long) {
@@ -104,7 +101,7 @@ class UploadChunk @Inject constructor(
         // TODO we could make sure we include records older than the first bg record for completeness
 
         val start: Long = 0
-        val end = DateUtil.now()
+        val end = dateUtil.now()
 
         val bgReadingList = repository.compatGetBgReadingsDataFromTime(start, end, true)
             .blockingGet()
@@ -118,19 +115,19 @@ class UploadChunk @Inject constructor(
         repository.getBolusesDataFromTimeToTime(start, end, true)
             .blockingGet()
             .forEach { bolus ->
-                result.add(BolusElement(bolus))
+                result.add(BolusElement(bolus, dateUtil))
             }
         repository.getCarbsDataFromTimeToTimeExpanded(start, end, true)
             .blockingGet()
             .forEach { carb ->
-                result.add(WizardElement(carb))
+                result.add(WizardElement(carb, dateUtil))
             }
         return result
     }
 
     private fun getBloodTests(start: Long, end: Long): List<BloodGlucoseElement> {
         val readings = repository.compatGetTherapyEventDataFromToTime(start, end).blockingGet()
-        val selection = BloodGlucoseElement.fromCareportalEvents(readings)
+        val selection = BloodGlucoseElement.fromCareportalEvents(readings, dateUtil)
         if (selection.isNotEmpty())
             rxBus.send(EventTidepoolStatus("${selection.size} BGs selected for upload"))
         return selection
@@ -140,24 +137,25 @@ class UploadChunk @Inject constructor(
     private fun getBgReadings(start: Long, end: Long): List<SensorGlucoseElement> {
         val readings = repository.compatGetBgReadingsDataFromTime(start, end, true)
             .blockingGet()
-        val selection = SensorGlucoseElement.fromBgReadings(readings)
+        val selection = SensorGlucoseElement.fromBgReadings(readings, dateUtil)
         if (selection.isNotEmpty())
             rxBus.send(EventTidepoolStatus("${selection.size} CGMs selected for upload"))
         return selection
     }
 
-    private fun fromTemporaryBasals(tbrList: Intervals<TemporaryBasal>, start: Long, end: Long): List<BasalElement> {
+    private fun fromTemporaryBasals(tbrList: List<TemporaryBasal>, start: Long, end: Long): List<BasalElement> {
         val results = LinkedList<BasalElement>()
-        for (tbr in tbrList.list) {
-            if (tbr.date in start..end && tbr.durationInMinutes != 0)
-                results.add(BasalElement(tbr, profileFunction))
+        for (tbr in tbrList) {
+            if (tbr.timestamp in start..end)
+                profileFunction.getProfile(tbr.timestamp)?.let {
+                    results.add(BasalElement(tbr, it, dateUtil))
+                }
         }
         return results
     }
 
     private fun getBasals(start: Long, end: Long): List<BasalElement> {
-        val temporaryBasals = treatmentsPlugin.temporaryBasalsFromHistory
-        temporaryBasals.merge()
+        val temporaryBasals = repository.getTemporaryBasalsDataFromTimeToTime(start, end, true).blockingGet()
         val selection = fromTemporaryBasals(temporaryBasals, start, end) // TODO do not upload running TBR
         if (selection.isNotEmpty())
             rxBus.send(EventTidepoolStatus("${selection.size} TBRs selected for upload"))
@@ -165,7 +163,7 @@ class UploadChunk @Inject constructor(
     }
 
     private fun newInstanceOrNull(ps: ProfileSwitch): ProfileElement? = try {
-        ProfileElement(ps, activePlugin.activePump.serialNumber())
+        ProfileElement(ps, activePlugin.activePump.serialNumber(), dateUtil)
     } catch (e: Throwable) {
         null
     }

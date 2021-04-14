@@ -16,7 +16,8 @@ import info.nightscout.androidaps.R
 import info.nightscout.androidaps.activities.DaggerAppCompatActivityWithResult
 import info.nightscout.androidaps.activities.PreferencesActivity
 import info.nightscout.androidaps.database.entities.UserEntry
-import info.nightscout.androidaps.database.entities.UserEntry.*
+import info.nightscout.androidaps.database.entities.UserEntry.Action
+import info.nightscout.androidaps.database.entities.UserEntry.Sources
 import info.nightscout.androidaps.events.EventAppExit
 import info.nightscout.androidaps.interfaces.ConfigInterface
 import info.nightscout.androidaps.interfaces.ImportExportPrefsInterface
@@ -40,7 +41,6 @@ import io.reactivex.Single
 import java.io.File
 import java.io.FileNotFoundException
 import java.io.IOException
-import java.util.*
 import javax.inject.Inject
 import javax.inject.Singleton
 import kotlin.system.exitProcess
@@ -62,7 +62,8 @@ class ImportExportPrefs @Inject constructor(
     private val classicPrefsFormat: ClassicPrefsFormat,
     private val encryptedPrefsFormat: EncryptedPrefsFormat,
     private val prefFileList: PrefFileListProvider,
-    private val uel: UserEntryLogger
+    private val uel: UserEntryLogger,
+    private val dateUtil: DateUtil
 ) : ImportExportPrefsInterface {
 
     override fun prefsFileExists(): Boolean {
@@ -94,7 +95,7 @@ class ImportExportPrefs @Inject constructor(
         val metadata: MutableMap<PrefsMetadataKey, PrefMetadata> = mutableMapOf()
 
         metadata[PrefsMetadataKey.DEVICE_NAME] = PrefMetadata(detectUserName(context), PrefsStatus.OK)
-        metadata[PrefsMetadataKey.CREATED_AT] = PrefMetadata(DateUtil.toISOString(Date()), PrefsStatus.OK)
+        metadata[PrefsMetadataKey.CREATED_AT] = PrefMetadata(dateUtil.toISOString(dateUtil.now()), PrefsStatus.OK)
         metadata[PrefsMetadataKey.AAPS_VERSION] = PrefMetadata(BuildConfig.VERSION_NAME, PrefsStatus.OK)
         metadata[PrefsMetadataKey.AAPS_FLAVOUR] = PrefMetadata(BuildConfig.FLAVOR, PrefsStatus.OK)
         metadata[PrefsMetadataKey.DEVICE_MODEL] = PrefMetadata(config.currentDeviceModelString, PrefsStatus.OK)
@@ -348,7 +349,7 @@ class ImportExportPrefs @Inject constructor(
     private fun restartAppAfterImport(context: Context) {
         sp.putBoolean(R.string.key_setupwizard_processed, true)
         OKDialog.show(context, resourceHelper.gs(R.string.setting_imported), resourceHelper.gs(R.string.restartingapp)) {
-            uel.log(Action.IMPORT_SETTINGS)
+            uel.log(Action.IMPORT_SETTINGS, Sources.Maintenance)
             log.debug(LTag.CORE, "Exiting")
             rxBus.send(EventAppExit())
             if (context is AppCompatActivity) {

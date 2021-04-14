@@ -5,11 +5,11 @@ import info.nightscout.androidaps.Config
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.TestBase
 import info.nightscout.androidaps.interfaces.CommandQueueProvider
+import info.nightscout.androidaps.interfaces.IobCobCalculator
 import info.nightscout.androidaps.interfaces.ProfileFunction
 import info.nightscout.androidaps.interfaces.PumpSync
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper
 import info.nightscout.androidaps.plugins.pump.common.defs.PumpType
-import info.nightscout.androidaps.plugins.treatments.TreatmentsPlugin
 import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.FabricPrivacy
 import info.nightscout.androidaps.utils.resources.ResourceHelper
@@ -24,7 +24,7 @@ import org.powermock.core.classloader.annotations.PrepareForTest
 import org.powermock.modules.junit4.PowerMockRunner
 
 @RunWith(PowerMockRunner::class)
-@PrepareForTest(FabricPrivacy::class)
+@PrepareForTest(FabricPrivacy::class, DateUtil::class)
 class VirtualPumpPluginUTest : TestBase() {
 
     private val rxBus = RxBusWrapper(aapsSchedulers)
@@ -32,7 +32,7 @@ class VirtualPumpPluginUTest : TestBase() {
     @Mock lateinit var resourceHelper: ResourceHelper
     @Mock lateinit var sp: SP
     @Mock lateinit var profileFunction: ProfileFunction
-    @Mock lateinit var treatmentsPlugin: TreatmentsPlugin
+    @Mock lateinit var iobCobCalculator: IobCobCalculator
     @Mock lateinit var commandQueue: CommandQueueProvider
     @Mock lateinit var dateUtil: DateUtil
     @Mock lateinit var pumpSync: PumpSync
@@ -41,7 +41,7 @@ class VirtualPumpPluginUTest : TestBase() {
 
     @Before
     fun prepareMocks() {
-        virtualPumpPlugin = VirtualPumpPlugin({ AndroidInjector { } }, aapsLogger, rxBus, fabricPrivacy, resourceHelper, aapsSchedulers, sp, profileFunction, treatmentsPlugin, commandQueue, pumpSync, Config(), dateUtil)
+        virtualPumpPlugin = VirtualPumpPlugin({ AndroidInjector { } }, aapsLogger, rxBus, fabricPrivacy, resourceHelper, aapsSchedulers, sp, profileFunction, iobCobCalculator, commandQueue, pumpSync, Config(), dateUtil)
     }
 
     @Test

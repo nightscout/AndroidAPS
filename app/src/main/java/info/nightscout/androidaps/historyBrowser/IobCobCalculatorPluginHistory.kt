@@ -28,7 +28,6 @@ class IobCobCalculatorPluginHistory @Inject constructor(
     resourceHelper: ResourceHelper,
     profileFunction: ProfileFunction,
     activePlugin: ActivePluginProvider,
-    treatmentsPluginHistory: TreatmentsPluginHistory,
     sensitivityOref1Plugin: SensitivityOref1Plugin,
     sensitivityAAPSPlugin: SensitivityAAPSPlugin,
     sensitivityWeightedAveragePlugin: SensitivityWeightedAveragePlugin,
@@ -36,7 +35,7 @@ class IobCobCalculatorPluginHistory @Inject constructor(
     dateUtil: DateUtil,
     repository: AppRepository
 ) : IobCobCalculatorPlugin(injector, aapsLogger, aapsSchedulers, rxBus, sp, resourceHelper, profileFunction,
-    activePlugin, treatmentsPluginHistory, sensitivityOref1Plugin, sensitivityAAPSPlugin, sensitivityWeightedAveragePlugin, fabricPrivacy, dateUtil, repository) {
+    activePlugin, sensitivityOref1Plugin, sensitivityAAPSPlugin, sensitivityWeightedAveragePlugin, fabricPrivacy, dateUtil, repository) {
 
     override fun onStart() { // do not attach to rxbus
     }

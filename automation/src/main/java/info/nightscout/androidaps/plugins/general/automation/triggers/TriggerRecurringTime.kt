@@ -32,7 +32,7 @@ class TriggerRecurringTime(injector: HasAndroidInjector) : Trigger(injector) {
     }
 
     override fun shouldRun(): Boolean {
-        val currentMinSinceMidnight = getMinSinceMidnight(dateUtil._now())
+        val currentMinSinceMidnight = getMinSinceMidnight(dateUtil.now())
         val scheduledDayOfWeek = Calendar.getInstance()[Calendar.DAY_OF_WEEK]
         if (days.isSet(Objects.requireNonNull(InputWeekDay.DayOfWeek.fromCalendarInt(scheduledDayOfWeek)))) {
             if (currentMinSinceMidnight >= time.value && currentMinSinceMidnight - time.value < 5) {
@@ -44,16 +44,13 @@ class TriggerRecurringTime(injector: HasAndroidInjector) : Trigger(injector) {
         return false
     }
 
-    override fun toJSON(): String {
+    override fun dataJSON(): JSONObject {
         val data = JSONObject()
             .put("time", time.value)
         for (i in days.weekdays.indices) {
             data.put(InputWeekDay.DayOfWeek.values()[i].name, days.weekdays[i])
         }
-        return JSONObject()
-            .put("type", TriggerRecurringTime::class.java.name)
-            .put("data", data)
-            .toString()
+        return data
     }
 
     override fun fromJSON(data: String): Trigger {

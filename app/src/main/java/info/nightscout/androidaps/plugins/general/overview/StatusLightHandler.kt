@@ -14,7 +14,8 @@ import info.nightscout.androidaps.plugins.pump.omnipod.eros.OmnipodErosPumpPlugi
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.driver.definition.OmnipodConstants
 import info.nightscout.androidaps.utils.DecimalFormatter
 import info.nightscout.androidaps.utils.WarnColors
-import info.nightscout.androidaps.utils.extensions.age
+import info.nightscout.androidaps.extensions.age
+import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 import info.nightscout.androidaps.utils.sharedPreferences.SP
 import javax.inject.Inject
@@ -24,6 +25,7 @@ import javax.inject.Singleton
 class StatusLightHandler @Inject constructor(
     private val resourceHelper: ResourceHelper,
     private val sp: SP,
+    private val dateUtil: DateUtil,
     private val activePlugin: ActivePluginProvider,
     private val warnColors: WarnColors,
     private val config: Config,
@@ -75,7 +77,7 @@ class StatusLightHandler @Inject constructor(
         val therapyEvent = repository.getLastTherapyRecord(type).blockingGet()
         if (therapyEvent is ValueWrapper.Existing) {
             warnColors.setColorByAge(view, therapyEvent.value, warn, urgent)
-            view?.text = therapyEvent.value.age(resourceHelper.shortTextMode(), resourceHelper)
+            view?.text = therapyEvent.value.age(resourceHelper.shortTextMode(), resourceHelper, dateUtil)
         } else {
             view?.text = if (resourceHelper.shortTextMode()) "-" else resourceHelper.gs(R.string.notavailable)
         }

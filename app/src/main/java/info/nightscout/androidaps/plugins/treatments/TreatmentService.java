@@ -19,23 +19,17 @@ import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.NotNull;
 
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
-import java.util.concurrent.TimeUnit;
 
 import javax.inject.Inject;
 
 import dagger.android.HasAndroidInjector;
 import info.nightscout.androidaps.db.DatabaseHelper;
-import info.nightscout.androidaps.db.ICallback;
 import info.nightscout.androidaps.db.Source;
 import info.nightscout.androidaps.db.Treatment;
-import info.nightscout.androidaps.events.Event;
-import info.nightscout.androidaps.events.EventReloadTreatmentData;
-import info.nightscout.androidaps.events.EventTreatmentChange;
 import info.nightscout.androidaps.interfaces.DatabaseHelperInterface;
 import info.nightscout.androidaps.interfaces.TreatmentServiceInterface;
 import info.nightscout.androidaps.interfaces.UpdateReturn;
@@ -43,9 +37,7 @@ import info.nightscout.androidaps.logging.AAPSLogger;
 import info.nightscout.androidaps.logging.LTag;
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper;
 import info.nightscout.androidaps.plugins.general.openhumans.OpenHumansUploader;
-import info.nightscout.androidaps.plugins.iob.iobCobCalculator.events.EventNewHistoryData;
 import info.nightscout.androidaps.plugins.pump.medtronic.MedtronicPumpPlugin;
-import info.nightscout.androidaps.plugins.pump.medtronic.data.MedtronicHistoryData;
 import info.nightscout.androidaps.utils.FabricPrivacy;
 import info.nightscout.androidaps.utils.rx.AapsSchedulers;
 
@@ -63,9 +55,6 @@ public class TreatmentService extends OrmLiteBaseService<DatabaseHelper> impleme
     @Inject DatabaseHelperInterface databaseHelper;
     @Inject OpenHumansUploader openHumansUploader;
     @Inject AapsSchedulers aapsSchedulers;
-
-    private static final ScheduledExecutorService treatmentEventWorker = Executors.newSingleThreadScheduledExecutor();
-    private static ScheduledFuture<?> scheduledTreatmentEventPost = null;
 
     public TreatmentService(HasAndroidInjector injector) {
         injector.androidInjector().inject(this);
@@ -193,72 +182,6 @@ public class TreatmentService extends OrmLiteBaseService<DatabaseHelper> impleme
         }
     }
 
-    /**
-     * A place to centrally register events to be posted, if any data changed.
-     * This should be implemented in an abstract service-class.
-     * <p>
-     * We do need to make sure, that ICallback is extended to be able to handle multiple
-     * events, or handle a list of events.
-     * <p>
-     * on some methods the earliestDataChange event is handled separatly, in that it is checked if it is
-     * set to null by another event already (eg. scheduleExtendedBolusChange).
-     *
-     * @param event
-     * @param eventWorker
-     * @param callback
-     */
-    private void scheduleEvent(final Event event, ScheduledExecutorService eventWorker,
-                               final ICallback callback) {
-
-        class PostRunnable implements Runnable {
-            public void run() {
-                aapsLogger.debug(LTag.DATATREATMENTS, "Firing EventReloadTreatmentData");
-                rxBus.send(event);
-                if (DatabaseHelper.earliestDataChange != null) {
-                    aapsLogger.debug(LTag.DATATREATMENTS, "Firing EventNewHistoryData");
-                    rxBus.send(new EventNewHistoryData(DatabaseHelper.earliestDataChange));
-                }
-                DatabaseHelper.earliestDataChange = null;
-                callback.setPost(null);
-            }
-        }
-        // prepare task for execution in 1 sec
-        // cancel waiting task to prevent sending multiple posts
-        ScheduledFuture<?> scheduledFuture = callback.getPost();
-        if (scheduledFuture != null)
-            scheduledFuture.cancel(false);
-        Runnable task = new PostRunnable();
-        final int sec = 1;
-        callback.setPost(eventWorker.schedule(task, sec, TimeUnit.SECONDS));
-    }
-
-    /**
-     * Schedule a foodChange Event.
-     */
-    public void scheduleTreatmentChange(@Nullable final Treatment treatment, boolean runImmediately) {
-        if (runImmediately) {
-            aapsLogger.debug(LTag.DATATREATMENTS, "Firing EventReloadTreatmentData");
-            rxBus.send(new EventReloadTreatmentData(new EventTreatmentChange()));
-            if (DatabaseHelper.earliestDataChange != null) {
-                aapsLogger.debug(LTag.DATATREATMENTS, "Firing EventNewHistoryData");
-                rxBus.send(new EventNewHistoryData(DatabaseHelper.earliestDataChange));
-            }
-            DatabaseHelper.earliestDataChange = null;
-        } else {
-            this.scheduleEvent(new EventReloadTreatmentData(new EventTreatmentChange()), treatmentEventWorker, new ICallback() {
-                @Override
-                public void setPost(ScheduledFuture<?> post) {
-                    scheduledTreatmentEventPost = post;
-                }
-
-                @Override
-                public ScheduledFuture<?> getPost() {
-                    return scheduledTreatmentEventPost;
-                }
-            });
-        }
-    }
-
     public long count() {
         try {
             return this.getDao().countOf();
@@ -284,6 +207,7 @@ public class TreatmentService extends OrmLiteBaseService<DatabaseHelper> impleme
      */
     // return true if new record is created
     public UpdateReturn createOrUpdate(Treatment treatment) {
+        /*
         if (treatment != null && treatment.source == Source.NONE) {
             aapsLogger.error("Coder error: source is not set for treatment: " + treatment, new Exception());
             //FabricPrivacy.logException(new Exception("Coder error: source is not set for treatment: " + treatment));
@@ -406,12 +330,13 @@ public class TreatmentService extends OrmLiteBaseService<DatabaseHelper> impleme
         } catch (SQLException e) {
             aapsLogger.error("Unhandled exception", e);
         }
+         */
         return new UpdateReturn(false, false);
     }
 
 
     @NotNull public UpdateReturn createOrUpdateMedtronic(@NotNull Treatment treatment, boolean fromNightScout) {
-
+/*
         if (MedtronicHistoryData.doubleBolusDebug)
             aapsLogger.debug(LTag.DATATREATMENTS, "DoubleBolusDebug: createOrUpdateMedtronic:: originalTreatment={}, fromNightScout={}", treatment, fromNightScout);
 
@@ -460,6 +385,8 @@ public class TreatmentService extends OrmLiteBaseService<DatabaseHelper> impleme
         } catch (SQLException e) {
             aapsLogger.error("Unhandled SQL exception: {}", e.getMessage(), e);
         }
+
+ */
         return new UpdateReturn(false, false);
     }
 

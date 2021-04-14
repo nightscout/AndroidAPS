@@ -9,6 +9,7 @@ import androidx.preference.Preference
 import androidx.preference.PreferenceFragmentCompat
 import androidx.work.Worker
 import androidx.work.WorkerParameters
+import androidx.work.workDataOf
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.Config
 import info.nightscout.androidaps.Constants
@@ -16,10 +17,10 @@ import info.nightscout.androidaps.R
 import info.nightscout.androidaps.data.DetailedBolusInfo
 import info.nightscout.androidaps.data.Profile
 import info.nightscout.androidaps.database.AppRepository
+import info.nightscout.androidaps.database.entities.ValueWithUnit
 import info.nightscout.androidaps.database.entities.TemporaryTarget
 import info.nightscout.androidaps.database.entities.UserEntry.Action
-import info.nightscout.androidaps.database.entities.UserEntry.Units
-import info.nightscout.androidaps.database.entities.UserEntry.ValueWithUnit
+import info.nightscout.androidaps.database.entities.UserEntry.Sources
 import info.nightscout.androidaps.database.transactions.CancelCurrentTemporaryTargetIfAnyTransaction
 import info.nightscout.androidaps.database.transactions.InsertTemporaryTargetAndCancelCurrentTransaction
 import info.nightscout.androidaps.events.EventPreferenceChange
@@ -40,7 +41,7 @@ import info.nightscout.androidaps.plugins.iob.iobCobCalculator.GlucoseStatusProv
 import info.nightscout.androidaps.queue.Callback
 import info.nightscout.androidaps.receivers.DataWorker
 import info.nightscout.androidaps.utils.*
-import info.nightscout.androidaps.utils.extensions.valueToUnitsString
+import info.nightscout.androidaps.extensions.valueToUnitsString
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 import info.nightscout.androidaps.utils.rx.AapsSchedulers
 import info.nightscout.androidaps.utils.sharedPreferences.SP
@@ -48,9 +49,11 @@ import info.nightscout.androidaps.utils.textValidator.ValidatingEditTextPreferen
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.rxkotlin.plusAssign
 import org.apache.commons.lang3.StringUtils
+import org.joda.time.DateTime
 import java.text.Normalizer
 import java.util.*
 import java.util.concurrent.TimeUnit
+import java.util.regex.Pattern
 import javax.inject.Inject
 import javax.inject.Singleton
 import kotlin.math.max
@@ -180,8 +183,9 @@ class SmsCommunicatorPlugin @Inject constructor(
         @Suppress("SpellCheckingInspection")
         override fun doWork(): Result {
             val bundle = dataWorker.pickupBundle(inputData.getLong(DataWorker.STORE_KEY, -1))
-                ?: return Result.failure()
-            val format = bundle.getString("format") ?: return Result.failure()
+                ?: return Result.failure(workDataOf("Error" to "missing input data"))
+            val format = bundle.getString("format")
+                ?: return Result.failure(workDataOf("Error" to "missing format in input data"))
             val pdus = bundle["pdus"] as Array<*>
             for (pdu in pdus) {
                 val message = SmsMessage.createFromPdu(pdu as ByteArray, format)
@@ -272,7 +276,7 @@ class SmsCommunicatorPlugin @Inject constructor(
                     else sendSMS(Sms(receivedSms.phoneNumber, resourceHelper.gs(R.string.wrongformat)))
                 "BOLUS"    ->
                     if (!remoteCommandsAllowed) sendSMS(Sms(receivedSms.phoneNumber, resourceHelper.gs(R.string.smscommunicator_remotecommandnotallowed)))
-                    else if (divided.size == 2 && DateUtil.now() - lastRemoteBolusTime < minDistance) sendSMS(Sms(receivedSms.phoneNumber, resourceHelper.gs(R.string.smscommunicator_remotebolusnotallowed)))
+                    else if (divided.size == 2 && dateUtil.now() - lastRemoteBolusTime < minDistance) sendSMS(Sms(receivedSms.phoneNumber, resourceHelper.gs(R.string.smscommunicator_remotebolusnotallowed)))
                     else if (divided.size == 2 && pump.isSuspended()) sendSMS(Sms(receivedSms.phoneNumber, resourceHelper.gs(R.string.pumpsuspended)))
                     else if (divided.size == 2 || divided.size == 3) processBOLUS(divided, receivedSms)
                     else sendSMS(Sms(receivedSms.phoneNumber, resourceHelper.gs(R.string.wrongformat)))
@@ -306,21 +310,21 @@ class SmsCommunicatorPlugin @Inject constructor(
     }
 
     private fun processBG(receivedSms: Sms) {
-        val actualBG = iobCobCalculator.actualBg()
-        val lastBG = iobCobCalculator.lastBg()
+        val actualBG = iobCobCalculator.ads.actualBg()
+        val lastBG = iobCobCalculator.ads.lastBg()
         var reply = ""
         val units = profileFunction.getUnits()
         if (actualBG != null) {
             reply = resourceHelper.gs(R.string.sms_actualbg) + " " + actualBG.valueToUnitsString(units) + ", "
         } else if (lastBG != null) {
-            val agoMilliseconds = System.currentTimeMillis() - lastBG.timestamp
+            val agoMilliseconds = dateUtil.now() - lastBG.timestamp
             val agoMin = (agoMilliseconds / 60.0 / 1000.0).toInt()
             reply = resourceHelper.gs(R.string.sms_lastbg) + " " + lastBG.valueToUnitsString(units) + " " + String.format(resourceHelper.gs(R.string.sms_minago), agoMin) + ", "
         }
         val glucoseStatus = glucoseStatusProvider.glucoseStatusData
         if (glucoseStatus != null) reply += resourceHelper.gs(R.string.sms_delta) + " " + Profile.toUnitsString(glucoseStatus.delta, glucoseStatus.delta * Constants.MGDL_TO_MMOLL, units) + " " + units + ", "
         val bolusIob = iobCobCalculator.calculateIobFromBolus().round()
-        val basalIob = activePlugin.activeTreatments.lastCalculationTempBasals.round()
+        val basalIob = iobCobCalculator.calculateIobFromTempBasalsIncludingConvertedExtended().round()
         val cobInfo = iobCobCalculator.getCobInfo(false, "SMS COB")
         reply += (resourceHelper.gs(R.string.sms_iob) + " " + DecimalFormatter.to2Decimal(bolusIob.iob + basalIob.basaliob) + "U ("
             + resourceHelper.gs(R.string.sms_bolus) + " " + DecimalFormatter.to2Decimal(bolusIob.iob) + "U "
@@ -339,7 +343,7 @@ class SmsCommunicatorPlugin @Inject constructor(
                     receivedSms.processed = true
                     messageToConfirm = AuthRequest(injector, receivedSms, reply, passCode, object : SmsAction() {
                         override fun run() {
-                            uel.log(Action.SMS_LOOP_DISABLED)
+                            uel.log(Action.LOOP_DISABLED, Sources.SMS)
                             loopPlugin.setPluginEnabled(PluginType.LOOP, false)
                             commandQueue.cancelTempBasal(true, object : Callback() {
                                 override fun run() {
@@ -363,7 +367,7 @@ class SmsCommunicatorPlugin @Inject constructor(
                     receivedSms.processed = true
                     messageToConfirm = AuthRequest(injector, receivedSms, reply, passCode, object : SmsAction() {
                         override fun run() {
-                            uel.log(Action.SMS_LOOP_ENABLED)
+                            uel.log(Action.LOOP_ENABLED, Sources.SMS)
                             loopPlugin.setPluginEnabled(PluginType.LOOP, true)
                             sendSMS(Sms(receivedSms.phoneNumber, resourceHelper.gs(R.string.smscommunicator_loophasbeenenabled)))
                             rxBus.send(EventRefreshOverview("SMS_LOOP_START"))
@@ -390,7 +394,7 @@ class SmsCommunicatorPlugin @Inject constructor(
                 receivedSms.processed = true
                 messageToConfirm = AuthRequest(injector, receivedSms, reply, passCode, object : SmsAction() {
                     override fun run() {
-                        uel.log(Action.SMS_LOOP_RESUME)
+                        uel.log(Action.RESUME, Sources.SMS)
                         loopPlugin.suspendTo(0L)
                         rxBus.send(EventRefreshOverview("SMS_LOOP_RESUME"))
                         commandQueue.cancelTempBasal(true, object : Callback() {
@@ -423,11 +427,11 @@ class SmsCommunicatorPlugin @Inject constructor(
                     receivedSms.processed = true
                     messageToConfirm = AuthRequest(injector, receivedSms, reply, passCode, object : SmsAction(duration) {
                         override fun run() {
-                            uel.log(Action.SMS_LOOP_SUSPEND)
+                            uel.log(Action.SUSPEND, Sources.SMS)
                             commandQueue.cancelTempBasal(true, object : Callback() {
                                 override fun run() {
                                     if (result.success) {
-                                        loopPlugin.suspendTo(System.currentTimeMillis() + anInteger() * 60L * 1000)
+                                            loopPlugin.suspendTo(dateUtil.now() + anInteger() * 60L * 1000)
                                         loopPlugin.createOfflineEvent(anInteger() * 60)
                                         rxBus.send(EventRefreshOverview("SMS_LOOP_SUSPENDED"))
                                         val replyText = resourceHelper.gs(R.string.smscommunicator_loopsuspended) + " " +
@@ -497,7 +501,7 @@ class SmsCommunicatorPlugin @Inject constructor(
             receivedSms.processed = true
             messageToConfirm = AuthRequest(injector, receivedSms, reply, passCode, object : SmsAction() {
                 override fun run() {
-                    uel.log(Action.SMS_PUMP_CONNECT)
+                    uel.log(Action.RECONNECT, Sources.SMS)
                     commandQueue.cancelTempBasal(true, object : Callback() {
                         override fun run() {
                             if (!result.success) {
@@ -526,7 +530,7 @@ class SmsCommunicatorPlugin @Inject constructor(
                 receivedSms.processed = true
                 messageToConfirm = AuthRequest(injector, receivedSms, reply, passCode, object : SmsAction() {
                     override fun run() {
-                        uel.log(Action.SMS_PUMP_DISCONNECT)
+                        uel.log(Action.DISCONNECT, Sources.SMS)
                         val profile = profileFunction.getProfile()
                         loopPlugin.disconnectPump(duration, profile)
                         rxBus.send(EventRefreshOverview("SMS_PUMP_DISCONNECT"))
@@ -580,10 +584,11 @@ class SmsCommunicatorPlugin @Inject constructor(
                     val finalPercentage = percentage
                     messageToConfirm = AuthRequest(injector, receivedSms, reply, passCode, object : SmsAction(list[pIndex - 1] as String, finalPercentage) {
                         override fun run() {
-                            activePlugin.activeTreatments.doProfileSwitch(store, list[pIndex - 1] as String, 0, finalPercentage, 0, DateUtil.now())
+                            activePlugin.activeTreatments.doProfileSwitch(store, list[pIndex - 1] as String, 0, finalPercentage, 0, dateUtil.now())
                             val replyText = resourceHelper.gs(R.string.profileswitchcreated)
                             sendSMS(Sms(receivedSms.phoneNumber, replyText))
-                            uel.log(Action.SMS_PROFILE, ValueWithUnit(R.string.profileswitchcreated, Units.R_String))
+                            uel.log(Action.PROFILE_SWITCH, Sources.SMS, resourceHelper.gs(R.string.profileswitchcreated),
+                                ValueWithUnit.SimpleString(resourceHelper.gsNotLocalised(R.string.profileswitchcreated)))
                         }
                     })
                 }
@@ -605,12 +610,14 @@ class SmsCommunicatorPlugin @Inject constructor(
                                 var replyText = resourceHelper.gs(R.string.smscommunicator_tempbasalcanceled)
                                 replyText += "\n" + activePlugin.activePump.shortStatus(true)
                                 sendSMSToAllNumbers(Sms(receivedSms.phoneNumber, replyText))
-                                uel.log(Action.SMS_BASAL, activePlugin.activePump.shortStatus(true), ValueWithUnit(R.string.smscommunicator_tempbasalcanceled, Units.R_String))
+                                uel.log(Action.TEMP_BASAL, Sources.SMS, activePlugin.activePump.shortStatus(true) + "\n" + resourceHelper.gs(R.string.smscommunicator_tempbasalcanceled),
+                                    ValueWithUnit.SimpleString(resourceHelper.gsNotLocalised(R.string.smscommunicator_tempbasalcanceled)))
                             } else {
                                 var replyText = resourceHelper.gs(R.string.smscommunicator_tempbasalcancelfailed)
                                 replyText += "\n" + activePlugin.activePump.shortStatus(true)
                                 sendSMS(Sms(receivedSms.phoneNumber, replyText))
-                                uel.log(Action.SMS_BASAL, activePlugin.activePump.shortStatus(true), ValueWithUnit(R.string.smscommunicator_tempbasalcancelfailed, Units.R_String))
+                                uel.log(Action.TEMP_BASAL, Sources.SMS, activePlugin.activePump.shortStatus(true) + "\n" + resourceHelper.gs(R.string.smscommunicator_tempbasalcancelfailed),
+                                    ValueWithUnit.SimpleString(resourceHelper.gsNotLocalised(R.string.smscommunicator_tempbasalcancelfailed)))
                             }
                         }
                     })
@@ -632,21 +639,28 @@ class SmsCommunicatorPlugin @Inject constructor(
                 receivedSms.processed = true
                 messageToConfirm = AuthRequest(injector, receivedSms, reply, passCode, object : SmsAction(tempBasalPct, duration) {
                     override fun run() {
-                        commandQueue.tempBasalPercent(anInteger(), secondInteger(), true, profile, object : Callback() {
+                        commandQueue.tempBasalPercent(anInteger(), secondInteger(), true, profile, PumpSync.TemporaryBasalType.NORMAL, object : Callback() {
                             override fun run() {
                                 if (result.success) {
                                     var replyText = if (result.isPercent) String.format(resourceHelper.gs(R.string.smscommunicator_tempbasalset_percent), result.percent, result.duration) else String.format(resourceHelper.gs(R.string.smscommunicator_tempbasalset), result.absolute, result.duration)
                                     replyText += "\n" + activePlugin.activePump.shortStatus(true)
                                     sendSMSToAllNumbers(Sms(receivedSms.phoneNumber, replyText))
                                     if (result.isPercent)
-                                        uel.log(Action.SMS_BASAL, activePlugin.activePump.shortStatus(true), ValueWithUnit(R.string.smscommunicator_tempbasalset_percent, 2), ValueWithUnit(result.percent, Units.Percent), ValueWithUnit(result.duration, Units.M))
+                                        uel.log(Action.TEMP_BASAL, Sources.SMS,
+                                            activePlugin.activePump.shortStatus(true) + "\n" + resourceHelper.gs(R.string.smscommunicator_tempbasalset_percent, result.percent, result.duration),
+                                            ValueWithUnit.Percent(result.percent),
+                                            ValueWithUnit.Minute(result.duration))
                                     else
-                                        uel.log(Action.SMS_BASAL, activePlugin.activePump.shortStatus(true), ValueWithUnit(R.string.smscommunicator_tempbasalset, 2), ValueWithUnit(result.absolute, Units.U_H), ValueWithUnit(result.duration, Units.M))
+                                        uel.log(Action.TEMP_BASAL, Sources.SMS,
+                                            activePlugin.activePump.shortStatus(true) + "\n" + resourceHelper.gs(R.string.smscommunicator_tempbasalset, result.absolute, result.duration),
+                                            ValueWithUnit.UnitPerHour(result.absolute),
+                                            ValueWithUnit.Minute(result.duration))
                                 } else {
                                     var replyText = resourceHelper.gs(R.string.smscommunicator_tempbasalfailed)
                                     replyText += "\n" + activePlugin.activePump.shortStatus(true)
                                     sendSMS(Sms(receivedSms.phoneNumber, replyText))
-                                    uel.log(Action.SMS_BASAL, activePlugin.activePump.shortStatus(true), ValueWithUnit(R.string.smscommunicator_tempbasalfailed, Units.R_String))
+                                    uel.log(Action.TEMP_BASAL, Sources.SMS, activePlugin.activePump.shortStatus(true) + "\n" + resourceHelper.gs(R.string.smscommunicator_tempbasalfailed),
+                                        ValueWithUnit.SimpleString(resourceHelper.gsNotLocalised(R.string.smscommunicator_tempbasalfailed)))
                                 }
                             }
                         })
@@ -669,7 +683,7 @@ class SmsCommunicatorPlugin @Inject constructor(
                 receivedSms.processed = true
                 messageToConfirm = AuthRequest(injector, receivedSms, reply, passCode, object : SmsAction(tempBasal, duration) {
                     override fun run() {
-                        commandQueue.tempBasalAbsolute(aDouble(), secondInteger(), true, profile, object : Callback() {
+                        commandQueue.tempBasalAbsolute(aDouble(), secondInteger(), true, profile, PumpSync.TemporaryBasalType.NORMAL, object : Callback() {
                             override fun run() {
                                 if (result.success) {
                                     var replyText = if (result.isPercent) String.format(resourceHelper.gs(R.string.smscommunicator_tempbasalset_percent), result.percent, result.duration)
@@ -677,14 +691,19 @@ class SmsCommunicatorPlugin @Inject constructor(
                                     replyText += "\n" + activePlugin.activePump.shortStatus(true)
                                     sendSMSToAllNumbers(Sms(receivedSms.phoneNumber, replyText))
                                     if (result.isPercent)
-                                        uel.log(Action.SMS_BASAL, activePlugin.activePump.shortStatus(true), ValueWithUnit(R.string.smscommunicator_tempbasalset_percent, 2), ValueWithUnit(result.percent, Units.Percent), ValueWithUnit(result.duration, Units.M))
+                                        uel.log(Action.TEMP_BASAL, Sources.SMS, activePlugin.activePump.shortStatus(true) + "\n" + resourceHelper.gs(R.string.smscommunicator_tempbasalset_percent, result.percent, result.duration),
+                                            ValueWithUnit.Percent(result.percent),
+                                            ValueWithUnit.Minute(result.duration))
                                     else
-                                        uel.log(Action.SMS_BASAL, activePlugin.activePump.shortStatus(true), ValueWithUnit(R.string.smscommunicator_tempbasalset, 2), ValueWithUnit(result.absolute, Units.U_H), ValueWithUnit(result.duration, Units.M))
+                                        uel.log(Action.TEMP_BASAL, Sources.SMS, activePlugin.activePump.shortStatus(true) + "\n" + resourceHelper.gs(R.string.smscommunicator_tempbasalset, result.absolute, result.duration),
+                                            ValueWithUnit.UnitPerHour(result.absolute),
+                                            ValueWithUnit.Minute(result.duration))
                                 } else {
                                     var replyText = resourceHelper.gs(R.string.smscommunicator_tempbasalfailed)
                                     replyText += "\n" + activePlugin.activePump.shortStatus(true)
                                     sendSMS(Sms(receivedSms.phoneNumber, replyText))
-                                    uel.log(Action.SMS_BASAL, activePlugin.activePump.shortStatus(true), ValueWithUnit(R.string.smscommunicator_tempbasalfailed, Units.R_String))
+                                    uel.log(Action.TEMP_BASAL, Sources.SMS, activePlugin.activePump.shortStatus(true) + "\n" + resourceHelper.gs(R.string.smscommunicator_tempbasalfailed),
+                                        ValueWithUnit.SimpleString(resourceHelper.gsNotLocalised(R.string.smscommunicator_tempbasalfailed)))
                                 }
                             }
                         })
@@ -711,7 +730,8 @@ class SmsCommunicatorPlugin @Inject constructor(
                                 var replyText = resourceHelper.gs(R.string.smscommunicator_extendedcancelfailed)
                                 replyText += "\n" + activePlugin.activePump.shortStatus(true)
                                 sendSMS(Sms(receivedSms.phoneNumber, replyText))
-                                uel.log(Action.SMS_EXTENDED_BOLUS, activePlugin.activePump.shortStatus(true), ValueWithUnit(R.string.smscommunicator_extendedcanceled, Units.R_String))
+                                uel.log(Action.EXTENDED_BOLUS, Sources.SMS, activePlugin.activePump.shortStatus(true) + "\n" + resourceHelper.gs(R.string.smscommunicator_extendedcanceled),
+                                    ValueWithUnit.SimpleString(resourceHelper.gsNotLocalised(R.string.smscommunicator_extendedcanceled)))
                             }
                         }
                     })
@@ -738,16 +758,20 @@ class SmsCommunicatorPlugin @Inject constructor(
                                     replyText += "\n" + activePlugin.activePump.shortStatus(true)
                                     sendSMSToAllNumbers(Sms(receivedSms.phoneNumber, replyText))
                                     if (config.APS)
-                                        uel.log(Action.SMS_EXTENDED_BOLUS, activePlugin.activePump.shortStatus(true), ValueWithUnit(R.string.smscommunicator_extendedset, 2), ValueWithUnit(aDouble
-                                            ?: 0.0, Units.U), ValueWithUnit(duration, Units.M), ValueWithUnit(R.string.loopsuspended, Units.R_String))
+                                        uel.log(Action.EXTENDED_BOLUS, Sources.SMS, activePlugin.activePump.shortStatus(true) + "\n" + resourceHelper.gs(R.string.smscommunicator_extendedset, aDouble, duration) + " / " + resourceHelper.gs(R.string.loopsuspended),
+                                            ValueWithUnit.Insulin(aDouble ?: 0.0),
+                                            ValueWithUnit.Minute(duration),
+                                            ValueWithUnit.SimpleString(resourceHelper.gsNotLocalised(R.string.loopsuspended)))
                                     else
-                                        uel.log(Action.SMS_EXTENDED_BOLUS, activePlugin.activePump.shortStatus(true), ValueWithUnit(R.string.smscommunicator_extendedset, 2), ValueWithUnit(aDouble
-                                            ?: 0.0, Units.U), ValueWithUnit(duration, Units.M))
+                                        uel.log(Action.EXTENDED_BOLUS, Sources.SMS, activePlugin.activePump.shortStatus(true) + "\n" + resourceHelper.gs(R.string.smscommunicator_extendedset, aDouble, duration),
+                                            ValueWithUnit.Insulin(aDouble ?: 0.0),
+                                            ValueWithUnit.Minute(duration))
                                 } else {
                                     var replyText = resourceHelper.gs(R.string.smscommunicator_extendedfailed)
                                     replyText += "\n" + activePlugin.activePump.shortStatus(true)
                                     sendSMS(Sms(receivedSms.phoneNumber, replyText))
-                                    uel.log(Action.SMS_EXTENDED_BOLUS, activePlugin.activePump.shortStatus(true), ValueWithUnit(R.string.smscommunicator_extendedfailed, Units.R_String))
+                                    uel.log(Action.EXTENDED_BOLUS, Sources.SMS, activePlugin.activePump.shortStatus(true) + "\n" + resourceHelper.gs(R.string.smscommunicator_extendedfailed),
+                                        ValueWithUnit.SimpleString(resourceHelper.gsNotLocalised(R.string.smscommunicator_extendedfailed)))
                                 }
                             }
                         })
@@ -786,7 +810,7 @@ class SmsCommunicatorPlugin @Inject constructor(
                                         else
                                             String.format(resourceHelper.gs(R.string.smscommunicator_bolusdelivered), resultBolusDelivered)
                                         replyText += "\n" + activePlugin.activePump.shortStatus(true)
-                                        lastRemoteBolusTime = DateUtil.now()
+                                        lastRemoteBolusTime = dateUtil.now()
                                         if (isMeal) {
                                             profileFunction.getProfile()?.let { currentProfile ->
                                                 var eatingSoonTTDuration = sp.getInt(R.string.key_eatingsoon_duration, Constants.defaultEatingSoonTTDuration)
@@ -801,7 +825,7 @@ class SmsCommunicatorPlugin @Inject constructor(
                                                         else                                   -> Constants.defaultEatingSoonTTmgdl
                                                     }
                                                 disposable += repository.runTransactionForResult(InsertTemporaryTargetAndCancelCurrentTransaction(
-                                                    timestamp = System.currentTimeMillis(),
+                                                    timestamp = dateUtil.now(),
                                                     duration = TimeUnit.MINUTES.toMillis(eatingSoonTTDuration.toLong()),
                                                     reason = TemporaryTarget.Reason.EATING_SOON,
                                                     lowTarget = Profile.toMgdl(eatingSoonTT, profileFunction.getUnits()),
@@ -819,12 +843,13 @@ class SmsCommunicatorPlugin @Inject constructor(
                                             }
                                         }
                                         sendSMSToAllNumbers(Sms(receivedSms.phoneNumber, replyText))
-                                        uel.log(Action.SMS_BOLUS, replyText)
+                                        uel.log(Action.BOLUS, Sources.SMS, replyText)
                                     } else {
                                         var replyText = resourceHelper.gs(R.string.smscommunicator_bolusfailed)
                                         replyText += "\n" + activePlugin.activePump.shortStatus(true)
                                         sendSMS(Sms(receivedSms.phoneNumber, replyText))
-                                        uel.log(Action.SMS_BOLUS, activePlugin.activePump.shortStatus(true), ValueWithUnit(R.string.smscommunicator_bolusfailed, Units.R_String))
+                                        uel.log(Action.BOLUS, Sources.SMS, activePlugin.activePump.shortStatus(true) + "\n" + resourceHelper.gs(R.string.smscommunicator_bolusfailed),
+                                            ValueWithUnit.SimpleString(resourceHelper.gsNotLocalised(R.string.smscommunicator_bolusfailed)))
                                     }
                                 }
                             })
@@ -835,11 +860,30 @@ class SmsCommunicatorPlugin @Inject constructor(
         } else sendSMS(Sms(receivedSms.phoneNumber, resourceHelper.gs(R.string.wrongformat)))
     }
 
+    private fun toTodayTime(hh_colon_mm: String): Long {
+        val p = Pattern.compile("(\\d+):(\\d+)( a.m.| p.m.| AM| PM|AM|PM|)")
+        val m = p.matcher(hh_colon_mm)
+        var retval: Long = 0
+        if (m.find()) {
+            var hours = SafeParse.stringToInt(m.group(1))
+            val minutes = SafeParse.stringToInt(m.group(2))
+            if ((m.group(3) == " a.m." || m.group(3) == " AM" || m.group(3) == "AM") && m.group(1) == "12") hours -= 12
+            if ((m.group(3) == " p.m." || m.group(3) == " PM" || m.group(3) == "PM") && m.group(1) != "12") hours += 12
+            val t = DateTime()
+                .withHourOfDay(hours)
+                .withMinuteOfHour(minutes)
+                .withSecondOfMinute(0)
+                .withMillisOfSecond(0)
+            retval = t.millis
+        }
+        return retval
+    }
+
     private fun processCARBS(divided: Array<String>, receivedSms: Sms) {
         var grams = SafeParse.stringToInt(divided[1])
-        var time = DateUtil.now()
+        var time = dateUtil.now()
         if (divided.size > 2) {
-            time = DateUtil.toTodayTime(divided[2].toUpperCase(Locale.getDefault()))
+            time = toTodayTime(divided[2].toUpperCase(Locale.getDefault()))
             if (time == 0L) {
                 sendSMS(Sms(receivedSms.phoneNumber, resourceHelper.gs(R.string.wrongformat)))
                 return
@@ -862,14 +906,14 @@ class SmsCommunicatorPlugin @Inject constructor(
                                 var replyText = String.format(resourceHelper.gs(R.string.smscommunicator_carbsset), anInteger)
                                 replyText += "\n" + activePlugin.activePump.shortStatus(true)
                                 sendSMSToAllNumbers(Sms(receivedSms.phoneNumber, replyText))
-                                uel.log(Action.SMS_CARBS, activePlugin.activePump.shortStatus(true), ValueWithUnit(R.string.smscommunicator_carbsset, 1), ValueWithUnit(anInteger
-                                    ?: 0, Units.G))
+                                uel.log(Action.CARBS, Sources.SMS, activePlugin.activePump.shortStatus(true) + ": " + resourceHelper.gs(R.string.smscommunicator_carbsset, anInteger),
+                                    ValueWithUnit.Gram(anInteger ?: 0))
                             } else {
                                 var replyText = resourceHelper.gs(R.string.smscommunicator_carbsfailed, anInteger)
                                 replyText += "\n" + activePlugin.activePump.shortStatus(true)
                                 sendSMS(Sms(receivedSms.phoneNumber, replyText))
-                                uel.log(Action.SMS_CARBS, activePlugin.activePump.shortStatus(true), ValueWithUnit(R.string.smscommunicator_carbsfailed, 1), ValueWithUnit(anInteger
-                                    ?: 0, Units.G))
+                                uel.log(Action.CARBS, Sources.SMS, activePlugin.activePump.shortStatus(true) + ": " + resourceHelper.gs(R.string.smscommunicator_carbsfailed, anInteger),
+                                    ValueWithUnit.Gram(anInteger ?: 0))
                             }
                         }
                     })
@@ -926,7 +970,7 @@ class SmsCommunicatorPlugin @Inject constructor(
                     tt = Profile.toCurrentUnits(profileFunction, tt)
                     tt = if (tt > 0) tt else if (units == Constants.MMOL) defaultTargetMMOL else defaultTargetMGDL
                     disposable += repository.runTransactionForResult(InsertTemporaryTargetAndCancelCurrentTransaction(
-                        timestamp = System.currentTimeMillis(),
+                        timestamp = dateUtil.now(),
                         duration = TimeUnit.MINUTES.toMillis(ttDuration.toLong()),
                         reason = TemporaryTarget.Reason.EATING_SOON,
                         lowTarget = Profile.toMgdl(tt, profileFunction.getUnits()),
@@ -940,8 +984,9 @@ class SmsCommunicatorPlugin @Inject constructor(
                     val ttString = if (units == Constants.MMOL) DecimalFormatter.to1Decimal(tt) else DecimalFormatter.to0Decimal(tt)
                     val replyText = String.format(resourceHelper.gs(R.string.smscommunicator_tt_set), ttString, ttDuration)
                     sendSMSToAllNumbers(Sms(receivedSms.phoneNumber, replyText))
-                    //uel.log(Action.SMS_TT, ValueWithUnit(R.string.smscommunicator_tt_set, 2), ValueWithUnit(tt, units), ValueWithUnit(ttDuration, Units.M))
-                    uel.log(Action.SMS_TT, ValueWithUnit(tt, units), ValueWithUnit(ttDuration, Units.M))
+                    uel.log(Action.TT, Sources.SMS,
+                        ValueWithUnit.fromGlucoseUnit(tt, units),
+                        ValueWithUnit.Minute(ttDuration))
                 }
             })
         } else if (isStop) {
@@ -950,7 +995,7 @@ class SmsCommunicatorPlugin @Inject constructor(
             receivedSms.processed = true
             messageToConfirm = AuthRequest(injector, receivedSms, reply, passCode, object : SmsAction() {
                 override fun run() {
-                    disposable += repository.runTransactionForResult(CancelCurrentTemporaryTargetIfAnyTransaction(dateUtil._now()))
+                    disposable += repository.runTransactionForResult(CancelCurrentTemporaryTargetIfAnyTransaction(dateUtil.now()))
                         .subscribe({ result ->
                             result.updated.forEach { aapsLogger.debug(LTag.DATABASE, "Updated temp target $it") }
                         }, {
@@ -958,7 +1003,8 @@ class SmsCommunicatorPlugin @Inject constructor(
                         })
                     val replyText = String.format(resourceHelper.gs(R.string.smscommunicator_tt_canceled))
                     sendSMSToAllNumbers(Sms(receivedSms.phoneNumber, replyText))
-                    uel.log(Action.SMS_TT, ValueWithUnit(R.string.smscommunicator_tt_canceled, Units.R_String))
+                    uel.log(Action.CANCEL_TT, Sources.SMS, resourceHelper.gs(R.string.smscommunicator_tt_canceled),
+                        ValueWithUnit.SimpleString(resourceHelper.gsNotLocalised(R.string.smscommunicator_tt_canceled)))
                 }
             })
         } else
@@ -977,7 +1023,8 @@ class SmsCommunicatorPlugin @Inject constructor(
                     sp.putBoolean(R.string.key_smscommunicator_remotecommandsallowed, false)
                     val replyText = String.format(resourceHelper.gs(R.string.smscommunicator_stoppedsms))
                     sendSMSToAllNumbers(Sms(receivedSms.phoneNumber, replyText))
-                    uel.log(Action.SMS_SMS, ValueWithUnit(R.string.smscommunicator_stoppedsms, Units.R_String))
+                    uel.log(Action.STOP_SMS, Sources.SMS, resourceHelper.gs(R.string.smscommunicator_stoppedsms),
+                        ValueWithUnit.SimpleString(resourceHelper.gsNotLocalised(R.string.smscommunicator_stoppedsms)))
                 }
             })
         } else sendSMS(Sms(receivedSms.phoneNumber, resourceHelper.gs(R.string.wrongformat)))
@@ -996,9 +1043,11 @@ class SmsCommunicatorPlugin @Inject constructor(
                         if (result) resourceHelper.gs(R.string.smscommunicator_calibrationsent) else resourceHelper.gs(R.string.smscommunicator_calibrationfailed)
                     sendSMSToAllNumbers(Sms(receivedSms.phoneNumber, replyText))
                     if (result)
-                        uel.log(Action.SMS_CAL, ValueWithUnit(R.string.smscommunicator_calibrationsent, Units.R_String))
+                        uel.log(Action.CALIBRATION, Sources.SMS, resourceHelper.gs(R.string.smscommunicator_calibrationsent),
+                            ValueWithUnit.SimpleString(resourceHelper.gsNotLocalised(R.string.smscommunicator_calibrationsent)))
                     else
-                        uel.log(Action.SMS_CAL, ValueWithUnit(R.string.smscommunicator_calibrationfailed, Units.R_String))
+                        uel.log(Action.CALIBRATION, Sources.SMS, resourceHelper.gs(R.string.smscommunicator_calibrationfailed),
+                            ValueWithUnit.SimpleString(resourceHelper.gsNotLocalised(R.string.smscommunicator_calibrationfailed)))
                 }
             })
         } else sendSMS(Sms(receivedSms.phoneNumber, resourceHelper.gs(R.string.wrongformat)))

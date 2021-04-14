@@ -10,10 +10,10 @@ import info.nightscout.androidaps.R
 import info.nightscout.androidaps.activities.ErrorHelperActivity
 import info.nightscout.androidaps.data.DetailedBolusInfo
 import info.nightscout.androidaps.database.AppRepository
+import info.nightscout.androidaps.database.entities.ValueWithUnit
 import info.nightscout.androidaps.database.entities.TherapyEvent
 import info.nightscout.androidaps.database.entities.UserEntry.Action
-import info.nightscout.androidaps.database.entities.UserEntry.Units
-import info.nightscout.androidaps.database.entities.UserEntry.ValueWithUnit
+import info.nightscout.androidaps.database.entities.UserEntry.Sources
 import info.nightscout.androidaps.database.transactions.InsertIfNewByTimestampTherapyEventTransaction
 import info.nightscout.androidaps.databinding.DialogFillBinding
 import info.nightscout.androidaps.interfaces.ActivePluginProvider
@@ -27,7 +27,7 @@ import info.nightscout.androidaps.utils.DecimalFormatter
 import info.nightscout.androidaps.utils.HtmlHelper
 import info.nightscout.androidaps.utils.SafeParse
 import info.nightscout.androidaps.utils.alertDialogs.OKDialog
-import info.nightscout.androidaps.utils.extensions.formatColor
+import info.nightscout.androidaps.extensions.formatColor
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.rxkotlin.plusAssign
@@ -123,7 +123,7 @@ class FillDialog : DialogFragmentWithDate() {
         val insulinChange = binding.fillCartridgeChange.isChecked
         if (insulinChange)
             actions.add(resourceHelper.gs(R.string.record_insulin_cartridge_change).formatColor(resourceHelper, R.color.actionsConfirm))
-        val notes = binding.notesLayout.notes.text.toString()
+        val notes: String = binding.notesLayout.notes.text.toString()
         if (notes.isNotEmpty())
             actions.add(resourceHelper.gs(R.string.notes_label) + ": " + notes)
         eventTime -= eventTime % 1000
@@ -135,11 +135,16 @@ class FillDialog : DialogFragmentWithDate() {
             activity?.let { activity ->
                 OKDialog.showConfirmation(activity, resourceHelper.gs(R.string.primefill), HtmlHelper.fromHtml(Joiner.on("<br/>").join(actions)), {
                     if (insulinAfterConstraints > 0) {
-                        uel.log(Action.PRIME_BOLUS, notes, ValueWithUnit(insulinAfterConstraints, Units.U, insulinAfterConstraints != 0.0))
+                        uel.log(Action.PRIME_BOLUS, Sources.FillDialog,
+                            notes,
+                            ValueWithUnit.Insulin(insulinAfterConstraints).takeIf { insulinAfterConstraints != 0.0 })
                         requestPrimeBolus(insulinAfterConstraints, notes)
                     }
                     if (siteChange) {
-                        uel.log(Action.CAREPORTAL, notes, ValueWithUnit(TherapyEvent.Type.CANNULA_CHANGE.text, Units.TherapyEvent))
+                        uel.log(Action.SITE_CHANGE, Sources.FillDialog,
+                            notes,
+                            ValueWithUnit.Timestamp(eventTime).takeIf { eventTimeChanged },
+                            ValueWithUnit.TherapyEventType(TherapyEvent.Type.CANNULA_CHANGE))
                         disposable += repository.runTransactionForResult(InsertIfNewByTimestampTherapyEventTransaction(
                             timestamp = eventTime,
                             type = TherapyEvent.Type.CANNULA_CHANGE,
@@ -152,7 +157,10 @@ class FillDialog : DialogFragmentWithDate() {
                     }
                     if (insulinChange) {
                         // add a second for case of both checked
-                        uel.log(Action.CAREPORTAL, notes, ValueWithUnit(TherapyEvent.Type.INSULIN_CHANGE.text, Units.TherapyEvent))
+                        uel.log(Action.RESERVOIR_CHANGE, Sources.FillDialog,
+                            notes,
+                            ValueWithUnit.Timestamp(eventTime).takeIf { eventTimeChanged },
+                            ValueWithUnit.TherapyEventType(TherapyEvent.Type.INSULIN_CHANGE))
                         disposable += repository.runTransactionForResult(InsertIfNewByTimestampTherapyEventTransaction(
                             timestamp = eventTime + 1000,
                             type = TherapyEvent.Type.INSULIN_CHANGE,

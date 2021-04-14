@@ -26,8 +26,8 @@ class DanaRS_Packet_General_Get_More_Information(
         }
         danaPump.iob = intFromBuff(data, 0, 2) / 100.0
         danaPump.dailyTotalUnits = intFromBuff(data, 2, 2) / 100.0
-        danaPump.isExtendedInProgress = intFromBuff(data, 4, 1) == 0x01
-        danaPump.extendedBolusRemainingMinutes = intFromBuff(data, 5, 2)
+        val isExtendedInProgress = intFromBuff(data, 4, 1) == 0x01
+        val extendedBolusRemainingMinutes = intFromBuff(data, 5, 2)
         // val remainRate = intFromBuff(data, 7, 2) / 100.0
         val hours = intFromBuff(data, 9, 1)
         val minutes = intFromBuff(data, 10, 1)
@@ -37,8 +37,8 @@ class DanaRS_Packet_General_Get_More_Information(
         // On DanaRS DailyUnits can't be more than 160
         if (danaPump.dailyTotalUnits > 160) failed = true
         aapsLogger.debug(LTag.PUMPCOMM, "Daily total units: " + danaPump.dailyTotalUnits.toString() + " U")
-        aapsLogger.debug(LTag.PUMPCOMM, "Is extended in progress: " + danaPump.isExtendedInProgress)
-        aapsLogger.debug(LTag.PUMPCOMM, "Extended bolus remaining minutes: " + danaPump.extendedBolusRemainingMinutes)
+        aapsLogger.debug(LTag.PUMPCOMM, "Is extended in progress: $isExtendedInProgress")
+        aapsLogger.debug(LTag.PUMPCOMM, "Extended bolus remaining minutes: $extendedBolusRemainingMinutes")
         aapsLogger.debug(LTag.PUMPCOMM, "Last bolus time: " + dateUtil.dateAndTimeAndSecondsString(danaPump.lastBolusTime))
         aapsLogger.debug(LTag.PUMPCOMM, "Last bolus amount: " + danaPump.lastBolusAmount)
     }

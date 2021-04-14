@@ -3,7 +3,9 @@ package info.nightscout.androidaps.plugins.configBuilder
 import androidx.fragment.app.FragmentActivity
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.R
-import info.nightscout.androidaps.database.entities.UserEntry.*
+import info.nightscout.androidaps.database.entities.UserEntry.Action
+import info.nightscout.androidaps.database.entities.UserEntry.Sources
+import info.nightscout.androidaps.database.entities.ValueWithUnit
 import info.nightscout.androidaps.events.EventAppInitialized
 import info.nightscout.androidaps.events.EventConfigBuilderChange
 import info.nightscout.androidaps.events.EventRebuildTabs
@@ -28,7 +30,8 @@ class ConfigBuilderPlugin @Inject constructor(
     private val sp: SP,
     private val rxBus: RxBusWrapper,
     private val activePlugin: ActivePluginProvider,
-    private val uel: UserEntryLogger
+    private val uel: UserEntryLogger,
+    private val pumpSync: PumpSync
 ) : PluginBase(PluginDescription()
     .mainType(PluginType.GENERAL)
     .fragmentClass(ConfigBuilderFragment::class.java.name)
@@ -139,13 +142,16 @@ class ConfigBuilderPlugin @Inject constructor(
         val allowHardwarePump = sp.getBoolean("allow_hardware_pump", false)
         if (allowHardwarePump || activity == null) {
             performPluginSwitch(changedPlugin, newState, type)
+            pumpSync.connectNewPump()
         } else {
-            OKDialog.showConfirmation(activity, resourceHelper.gs(R.string.allow_hardware_pump_text), Runnable {
+            OKDialog.showConfirmation(activity, resourceHelper.gs(R.string.allow_hardware_pump_text), {
                 performPluginSwitch(changedPlugin, newState, type)
+                pumpSync.connectNewPump()
                 sp.putBoolean("allow_hardware_pump", true)
-                uel.log(Action.HW_PUMP_ALLOWED)
+                uel.log(Action.HW_PUMP_ALLOWED, Sources.ConfigBuilder, resourceHelper.gs(changedPlugin.pluginDescription.pluginName),
+                    ValueWithUnit.SimpleString(resourceHelper.gsNotLocalised(changedPlugin.pluginDescription.pluginName)))
                 aapsLogger.debug(LTag.PUMP, "First time HW pump allowed!")
-            }, Runnable {
+            }, {
                 rxBus.send(EventConfigBuilderUpdateGui())
                 aapsLogger.debug(LTag.PUMP, "User does not allow switching to HW pump!")
             })
@@ -153,6 +159,14 @@ class ConfigBuilderPlugin @Inject constructor(
     }
 
     override fun performPluginSwitch(changedPlugin: PluginBase, enabled: Boolean, type: PluginType) {
+        if(enabled && !changedPlugin.isEnabled()) {
+            uel.log(Action.PLUGIN_ENABLED, Sources.ConfigBuilder, resourceHelper.gs(changedPlugin.pluginDescription.pluginName),
+                ValueWithUnit.SimpleString(resourceHelper.gsNotLocalised(changedPlugin.pluginDescription.pluginName)))
+        }
+        else if(!enabled) {
+            uel.log(Action.PLUGIN_DISABLED, Sources.ConfigBuilder, resourceHelper.gs(changedPlugin.pluginDescription.pluginName),
+                ValueWithUnit.SimpleString(resourceHelper.gsNotLocalised(changedPlugin.pluginDescription.pluginName)))
+        }
         changedPlugin.setPluginEnabled(type, enabled)
         changedPlugin.setFragmentVisible(type, enabled)
         processOnEnabledCategoryChanged(changedPlugin, type)

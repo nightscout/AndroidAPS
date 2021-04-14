@@ -3,6 +3,7 @@ package info.nightscout.androidaps.plugins.general.nsclient
 import android.content.Context
 import androidx.work.Worker
 import androidx.work.WorkerParameters
+import androidx.work.workDataOf
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.database.AppRepository
@@ -13,7 +14,7 @@ import info.nightscout.androidaps.logging.LTag
 import info.nightscout.androidaps.plugins.general.nsclient.data.NSMbg
 import info.nightscout.androidaps.receivers.DataWorker
 import info.nightscout.androidaps.utils.buildHelper.BuildHelper
-import info.nightscout.androidaps.utils.extensions.therapyEventFromNsMbg
+import info.nightscout.androidaps.extensions.therapyEventFromNsMbg
 import info.nightscout.androidaps.utils.sharedPreferences.SP
 import javax.inject.Inject
 
@@ -36,14 +37,14 @@ class NSClientMbgWorker(
         if (!acceptNSData) return ret
 
         val mbgArray = dataWorker.pickupJSONArray(inputData.getLong(DataWorker.STORE_KEY, -1))
-            ?: return Result.failure()
+            ?: return Result.failure(workDataOf("Error" to "missing input data"))
         for (i in 0 until mbgArray.length()) {
             val nsMbg = NSMbg(mbgArray.getJSONObject(i))
             if (!nsMbg.isValid()) continue
-            repository.runTransactionForResult(SyncNsTherapyEventTransaction(therapyEventFromNsMbg(nsMbg)))
+            repository.runTransactionForResult(SyncNsTherapyEventTransaction(therapyEventFromNsMbg(nsMbg), false))
                 .doOnError {
                     aapsLogger.error("Error while saving therapy event", it)
-                    ret = Result.failure()
+                    ret = Result.failure(workDataOf("Error" to it))
                 }
                 .blockingGet()
                 .also {

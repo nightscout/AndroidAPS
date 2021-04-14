@@ -1,9 +1,70 @@
 package info.nightscout.androidaps.interfaces
 
 import info.nightscout.androidaps.data.DetailedBolusInfo
+import info.nightscout.androidaps.data.Profile
+import info.nightscout.androidaps.database.entities.TemporaryBasal
 import info.nightscout.androidaps.plugins.pump.common.defs.PumpType
 
+/**
+ * This interface allows pump drivers to push data changes (creation and update of treatments, temporary basals and extended boluses) back to AAPS-core.
+ *
+ * Intended use cases for handling bolus treatments:
+ *
+ *  - for pumps that have a reliable history that can be read and which therefore issue a bolus on the pump,
+ *    read the history back and add new bolus entries on the pump, the method [syncBolusWithPumpId]
+ *    are used to inform AAPS-core of a new bolus.
+ *    [info.nightscout.androidaps.danars.DanaRSPlugin] is a pump driver that
+ *    takes this approach.
+ *  - for pumps that don't support history or take rather long to complete a bolus, the methods
+ *    [addBolusWithTempId] and [syncBolusWithTempId] provide a mechanism to notify AAPS-core of a started
+ *    bolus, so AAPS-core can operate under the assumption the bolus will be delivered and effect IOB until delivery
+ *    completed. Upon completion, the pump driver will call the second method to turn a temporary bolus into a finished
+ *    bolus.
+ */
 interface PumpSync {
+
+    /**
+     *  Reset stored identification of last used pump
+     *
+     *  Call this function when new pump is paired to accept data from new pump
+     *  to prevent overlapping pump histories
+     */
+    fun connectNewPump()
+
+    /*
+     *   GENERAL STATUS
+     */
+
+    /**
+     *  Query expected pump state
+     *
+     *  Driver may query AAPS for expecting state of the pump and use it for sanity check
+     *  or generation of status for NS
+     *
+     *  TemporaryBasal
+     *  duration in milliseconds
+     *  rate in U/h or % where 100% is equal to no TBR
+     *
+     *  ExtendedBolus
+     *  duration in milliseconds
+     *  amount in U
+     *  rate in U/h (synthetic only)
+     *
+     *  @return         data from database.
+     *                  temporaryBasal (and extendedBolus) is null if there is no record in progress based on data in database
+     *                  bolus is null when there is no record in database
+     */
+    data class PumpState(val temporaryBasal: TemporaryBasal?, val extendedBolus: ExtendedBolus?, val bolus: Bolus?, val profile: Profile?) {
+        data class TemporaryBasal(val timestamp: Long, val duration: Long, val rate: Double, val isAbsolute: Boolean, val type: TemporaryBasalType, val id: Long, val pumpId: Long?)
+        data class ExtendedBolus(val timestamp: Long, val duration: Long, val amount: Double, val rate: Double)
+        data class Bolus(val timestamp: Long, val amount: Double)
+    }
+    fun expectedPumpState(): PumpState
+
+    /*
+     *   BOLUSES & CARBS
+     */
+
     /**
      * Create bolus with temporary id
      *
@@ -26,7 +87,7 @@ interface PumpSync {
      * @param pumpSerial    pump serial number
      * @return true if new record is created
      **/
-    fun addBolusWithTempId(timestamp: Long, amount: Double, temporaryId: Long, type: DetailedBolusInfo.BolusType, pumpType: PumpType, pumpSerial: String) : Boolean
+    fun addBolusWithTempId(timestamp: Long, amount: Double, temporaryId: Long, type: DetailedBolusInfo.BolusType, pumpType: PumpType, pumpSerial: String): Boolean
 
     /**
      * Synchronization of boluses with temporary id
@@ -50,7 +111,7 @@ interface PumpSync {
      * @param pumpSerial    pump serial number
      * @return true if record is successfully updated
      **/
-    fun syncBolusWithTempId(timestamp: Long, amount: Double, temporaryId: Long, type: DetailedBolusInfo.BolusType?, pumpId: Long?, pumpType: PumpType, pumpSerial: String) : Boolean
+    fun syncBolusWithTempId(timestamp: Long, amount: Double, temporaryId: Long, type: DetailedBolusInfo.BolusType?, pumpId: Long?, pumpType: PumpType, pumpSerial: String): Boolean
 
     /**
      * Synchronization of boluses
@@ -69,7 +130,7 @@ interface PumpSync {
      * @param pumpSerial    pump serial number
      * @return true if new record is created
      **/
-    fun syncBolusWithPumpId(timestamp: Long, amount: Double, type: DetailedBolusInfo.BolusType?, pumpId: Long, pumpType: PumpType, pumpSerial: String) : Boolean
+    fun syncBolusWithPumpId(timestamp: Long, amount: Double, type: DetailedBolusInfo.BolusType?, pumpId: Long, pumpType: PumpType, pumpSerial: String): Boolean
 
     /**
      * Synchronization of carbs
@@ -87,7 +148,11 @@ interface PumpSync {
      * @param pumpSerial    pump serial number
      * @return true if new record is created
      **/
-    fun syncCarbsWithTimestamp(timestamp: Long, amount: Double, pumpId: Long?, pumpType: PumpType, pumpSerial: String) : Boolean
+    fun syncCarbsWithTimestamp(timestamp: Long, amount: Double, pumpId: Long?, pumpType: PumpType, pumpSerial: String): Boolean
+
+    /*
+     *   THERAPY EVENTS
+     */
 
     /**
      * Synchronization of events like CANNULA_CHANGE
@@ -104,8 +169,9 @@ interface PumpSync {
      * @param pumpId        pump id from history if available
      * @param pumpType      pump type like PumpType.ACCU_CHEK_COMBO
      * @param pumpSerial    pump serial number
+     * @return true if new record is created
      **/
-    fun insertTherapyEventIfNewWithTimestamp(timestamp: Long, type: DetailedBolusInfo.EventType, note: String? = null, pumpId: Long? = null, pumpType: PumpType, pumpSerial: String)
+    fun insertTherapyEventIfNewWithTimestamp(timestamp: Long, type: DetailedBolusInfo.EventType, note: String? = null, pumpId: Long? = null, pumpType: PumpType, pumpSerial: String) :  Boolean
 
     /**
      * Create an announcement
@@ -123,4 +189,151 @@ interface PumpSync {
      * @param pumpSerial    pump serial number
      **/
     fun insertAnnouncement(error: String, pumpId: Long? = null, pumpType: PumpType, pumpSerial: String)
+
+    /*
+     *   TEMPORARY BASALS
+     */
+
+    enum class TemporaryBasalType {
+        NORMAL,
+        EMULATED_PUMP_SUSPEND,  // Initiated by AAPS as zero TBR
+        PUMP_SUSPEND,           // Initiated on PUMP
+        SUPERBOLUS;
+
+        fun toDbType(): TemporaryBasal.Type =
+            when (this) {
+                NORMAL                -> TemporaryBasal.Type.NORMAL
+                EMULATED_PUMP_SUSPEND -> TemporaryBasal.Type.EMULATED_PUMP_SUSPEND
+                PUMP_SUSPEND          -> TemporaryBasal.Type.PUMP_SUSPEND
+                SUPERBOLUS            -> TemporaryBasal.Type.SUPERBOLUS
+            }
+
+        companion object {
+
+            fun fromDbType(dbType: TemporaryBasal.Type) = values().firstOrNull { it.name == dbType.name } ?: NORMAL
+        }
+
+    }
+
+    /**
+     * Synchronization of temporary basals
+     *
+     * Search for combination of pumpId, PumpType, pumpSerial
+     *
+     * If exists, timestamp, duration, rate and type (if provided) is updated
+     * If db record doesn't exist, new record is created.
+     *      If overlap another running TBR, running is cut off
+     * isValid field is preserved
+     *
+     * if driver does cut of ended TBR by itself use only [syncTemporaryBasalWithPumpId]
+     * if driver send another [syncTemporaryBasalWithPumpId] to cut previous by AAPS it's necessary
+     *      to send [syncTemporaryBasalWithPumpId] sorted by timestamp for proper cutting
+     *
+     * if driver use combination of start [syncTemporaryBasalWithPumpId] and end [syncStopTemporaryBasalWithPumpId]
+     *      events AAPS does the cutting itself. Events must be sorted by timestamp
+     * if db record already has endPumpId assigned by [syncStopTemporaryBasalWithPumpId] other updates
+     *      are ignored
+     *
+     * see [info.nightscout.androidaps.database.transactions.SyncPumpTemporaryBasalTransaction]
+     *
+     * @param timestamp     timestamp of event from pump history
+     * @param rate          TBR rate in U/h or % (value of 100% is equal to no TBR)
+     * @param duration      duration in milliseconds
+     * @param isAbsolute    is TBR in U/h or % ?
+     * @param type          type of TBR, from request sent to the driver
+     * @param pumpId        pump id from history
+     * @param pumpType      pump type like PumpType.ACCU_CHEK_COMBO
+     * @param pumpSerial    pump serial number
+     * @return true if new record is created
+     **/
+
+    fun syncTemporaryBasalWithPumpId(timestamp: Long, rate: Double, duration: Long, isAbsolute: Boolean, type: TemporaryBasalType?, pumpId: Long, pumpType: PumpType, pumpSerial: String): Boolean
+
+    /**
+     * Synchronization of temporary basals end event
+     * (for pumps having separate event for end of TBR or not having history)
+     * (not useful for pump modifying duration in history log)
+     *
+     * Search first for a TBR with combination of endPumpId, pumpType, pumpSerial
+     *      if found assume, some running TBR has been already cut off and ignore data. False is returned
+     *
+     * Search for running TBR with combination of pumpType, pumpSerial
+     *
+     * If exists,
+     *      currently running record is cut off by provided timestamp (ie duration is adjusted)
+     *      endPumpId is stored to running record
+     * If db record doesn't exist data is ignored and false returned
+     *
+     * see [info.nightscout.androidaps.database.transactions.SyncPumpCancelTemporaryBasalIfAnyTransaction]
+     *
+     * @param timestamp     timestamp of event from pump history
+     * @param endPumpId     pump id of ending event from history
+     * @param pumpType      pump type like PumpType.ACCU_CHEK_COMBO
+     * @param pumpSerial    pump serial number
+     * @return true if running record is found and ended by changing duration
+     **/
+    fun syncStopTemporaryBasalWithPumpId(timestamp: Long, endPumpId: Long, pumpType: PumpType, pumpSerial: String): Boolean
+
+   /**
+     * Invalidate of temporary basals that failed to start
+     * EROS specific, replace by setting duration to zero ????
+     *
+     * If exists, isValid is set false
+     * If db record doesn't exist data is ignored and false returned
+     *
+     *
+     * @param pumpId     pump id of ending event from history
+     * @param pumpType      pump type like PumpType.ACCU_CHEK_COMBO
+     * @param pumpSerial    pump serial number
+     * @return true if running record is found and invalidated
+     **/
+    fun invalidateTemporaryBasal(id: Long): Boolean
+
+    /**
+     * Synchronization of extended bolus
+     *
+     * Search for combination of pumpId, PumpType, pumpSerial
+     *
+     * If exists and endId is null (ie. has not been cut off), timestamp, duration, amount is updated
+     * If overlap another running EB, running is cut off and new record is created
+     * If db record doesn't exist, new record is created.
+     * isValid field is preserved
+     *
+     * see [info.nightscout.androidaps.database.transactions.SyncPumpExtendedBolusTransaction]
+     *
+     * @param timestamp     timestamp of event from pump history
+     * @param amount        EB total amount in U
+     * @param duration      duration in milliseconds
+     * @param pumpId        pump id from history
+     * @param pumpType      pump type like PumpType.ACCU_CHEK_COMBO
+     * @param pumpSerial    pump serial number
+     * @return true if new record is created
+     **/
+
+    fun syncExtendedBolusWithPumpId(timestamp: Long, amount: Double, duration: Long, isEmulatingTB: Boolean, pumpId: Long, pumpType: PumpType, pumpSerial: String): Boolean
+
+    /**
+     * Synchronization of extended bolus end event
+     * (for pumps having separate event for end of EB or not having history)
+     * (not useful for pump modifying duration in history log)
+     *
+     * Search first for a TBR with combination of endPumpId, pumpType, pumpSerial
+     *      if found assume, some running EB has been already cut off and ignore data. False is returned
+     *
+     * Search for running EB with combination of pumpType, pumpSerial
+     *
+     * If exists,
+     *      currently running record is cut off by provided timestamp (ie duration and amount is adjusted)
+     *      endPumpId is stored to running record
+     * If db record doesn't exist data is ignored and false returned
+     *
+     * see [info.nightscout.androidaps.database.transactions.SyncPumpCancelExtendedBolusIfAnyTransaction]
+     *
+     * @param timestamp     timestamp of event from pump history
+     * @param endPumpId     pump id of ending event from history
+     * @param pumpType      pump type like PumpType.ACCU_CHEK_COMBO
+     * @param pumpSerial    pump serial number
+     * @return true if running record is found and ended by changing duration
+     **/
+    fun syncStopExtendedBolusWithPumpId(timestamp: Long, endPumpId: Long, pumpType: PumpType, pumpSerial: String): Boolean
 }

@@ -13,7 +13,9 @@ import info.nightscout.androidaps.database.AppRepository
 import info.nightscout.androidaps.database.entities.Bolus
 import info.nightscout.androidaps.database.entities.BolusCalculatorResult
 import info.nightscout.androidaps.database.entities.Carbs
-import info.nightscout.androidaps.database.entities.UserEntry.*
+import info.nightscout.androidaps.database.entities.UserEntry.Action
+import info.nightscout.androidaps.database.entities.UserEntry.Sources
+import info.nightscout.androidaps.database.entities.ValueWithUnit
 import info.nightscout.androidaps.database.transactions.InvalidateBolusCalculatorResultTransaction
 import info.nightscout.androidaps.database.transactions.InvalidateBolusTransaction
 import info.nightscout.androidaps.database.transactions.InvalidateCarbsTransaction
@@ -28,7 +30,6 @@ import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.logging.LTag
 import info.nightscout.androidaps.logging.UserEntryLogger
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper
-import info.nightscout.androidaps.plugins.general.nsclient.NSUpload
 import info.nightscout.androidaps.plugins.general.nsclient.events.EventNSClientRestart
 import info.nightscout.androidaps.plugins.treatments.events.EventTreatmentUpdateGui
 import info.nightscout.androidaps.utils.DateUtil
@@ -36,8 +37,9 @@ import info.nightscout.androidaps.utils.FabricPrivacy
 import info.nightscout.androidaps.utils.T
 import info.nightscout.androidaps.utils.alertDialogs.OKDialog
 import info.nightscout.androidaps.utils.buildHelper.BuildHelper
-import info.nightscout.androidaps.utils.extensions.iobCalc
-import info.nightscout.androidaps.utils.extensions.toVisibility
+import info.nightscout.androidaps.extensions.iobCalc
+import info.nightscout.androidaps.extensions.toVisibility
+import info.nightscout.androidaps.plugins.iob.iobCobCalculator.events.EventNewHistoryData
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 import info.nightscout.androidaps.utils.rx.AapsSchedulers
 import info.nightscout.androidaps.utils.sharedPreferences.SP
@@ -90,7 +92,7 @@ class TreatmentsBolusCarbsFragment : DaggerFragment() {
         binding.refreshFromNightscout.setOnClickListener {
             activity?.let { activity ->
                 OKDialog.showConfirmation(activity, resourceHelper.gs(R.string.refresheventsfromnightscout) + "?") {
-                    uel.log(Action.TREATMENTS_NS_REFRESH)
+                    uel.log(Action.TREATMENTS_NS_REFRESH, Sources.Treatments)
                     disposable +=
                         Completable.fromAction {
                             repository.deleteAllBolusCalculatorResults()
@@ -101,7 +103,9 @@ class TreatmentsBolusCarbsFragment : DaggerFragment() {
                             .observeOn(aapsSchedulers.main)
                             .subscribeBy(
                                 onError = { aapsLogger.error("Error removing entries", it) },
-                                onComplete = { rxBus.send(EventTreatmentChange()) }
+                                onComplete = {
+                                    rxBus.send(EventTreatmentChange())
+                                    rxBus.send(EventNewHistoryData(0, false))                                }
                             )
                     rxBus.send(EventNSClientRestart())
                 }
@@ -110,9 +114,9 @@ class TreatmentsBolusCarbsFragment : DaggerFragment() {
         binding.deleteFutureTreatments.setOnClickListener {
             activity?.let { activity ->
                 OKDialog.showConfirmation(activity, resourceHelper.gs(R.string.overview_treatment_label), resourceHelper.gs(R.string.deletefuturetreatments) + "?", Runnable {
-                    uel.log(Action.DELETE_FUTURE_TREATMENTS)
+                    uel.log(Action.DELETE_FUTURE_TREATMENTS, Sources.Treatments)
                     repository
-                        .getBolusesDataFromTime(dateUtil._now(), false)
+                        .getBolusesDataFromTime(dateUtil.now(), false)
                         .observeOn(aapsSchedulers.main)
                         .subscribe { list ->
                             list.forEach { bolus ->
@@ -124,7 +128,7 @@ class TreatmentsBolusCarbsFragment : DaggerFragment() {
                             }
                         }
                     repository
-                        .getCarbsDataFromTime(dateUtil._now(), false)
+                        .getCarbsDataFromTime(dateUtil.now(), false)
                         .observeOn(aapsSchedulers.main)
                         .subscribe { list ->
                             list.forEach { carb ->
@@ -136,7 +140,7 @@ class TreatmentsBolusCarbsFragment : DaggerFragment() {
                             }
                         }
                     repository
-                        .getBolusCalculatorResultsDataFromTime(dateUtil._now(), false)
+                        .getBolusCalculatorResultsDataFromTime(dateUtil.now(), false)
                         .observeOn(aapsSchedulers.main)
                         .subscribe { list ->
                             list.forEach { bolusCalc ->
@@ -274,17 +278,17 @@ class TreatmentsBolusCarbsFragment : DaggerFragment() {
             ml.bolus?.let { bolus ->
                 holder.binding.bolusDate.text = dateUtil.timeString(bolus.timestamp)
                 holder.binding.insulin.text = resourceHelper.gs(R.string.formatinsulinunits, bolus.amount)
-                holder.binding.bolusNs.visibility = (NSUpload.isIdValid(bolus.interfaceIDs.nightscoutId)).toVisibility()
+                holder.binding.bolusNs.visibility = (bolus.interfaceIDs.nightscoutId != null).toVisibility()
                 holder.binding.bolusPump.visibility = (bolus.interfaceIDs.pumpId != null).toVisibility()
                 holder.binding.bolusInvalid.visibility = bolus.isValid.not().toVisibility()
                 val iob = bolus.iobCalc(activePlugin, System.currentTimeMillis(), profile.dia)
                 holder.binding.iob.text = resourceHelper.gs(R.string.formatinsulinunits, iob.iobContrib)
                 if (iob.iobContrib != 0.0) holder.binding.iob.setTextColor(resourceHelper.gc(R.color.colorActive)) else holder.binding.iob.setTextColor(holder.binding.carbs.currentTextColor)
-                if (bolus.timestamp > dateUtil._now()) holder.binding.date.setTextColor(resourceHelper.gc(R.color.colorScheduled)) else holder.binding.date.setTextColor(holder.binding.carbs.currentTextColor)
+                if (bolus.timestamp > dateUtil.now()) holder.binding.date.setTextColor(resourceHelper.gc(R.color.colorScheduled)) else holder.binding.date.setTextColor(holder.binding.carbs.currentTextColor)
                 holder.binding.mealOrCorrection.text =
                     when (ml.bolus.type) {
-                        Bolus.Type.SMB    -> "SMB"
-                        Bolus.Type.NORMAL -> resourceHelper.gs(R.string.mealbolus)
+                        Bolus.Type.SMB     -> "SMB"
+                        Bolus.Type.NORMAL  -> resourceHelper.gs(R.string.mealbolus)
                         Bolus.Type.PRIMING -> resourceHelper.gs(R.string.prime)
                     }
             }
@@ -293,8 +297,8 @@ class TreatmentsBolusCarbsFragment : DaggerFragment() {
             ml.carbs?.let { carbs ->
                 holder.binding.carbsDate.text = dateUtil.timeString(carbs.timestamp)
                 holder.binding.carbs.text = resourceHelper.gs(R.string.format_carbs, carbs.amount.toInt())
-                holder.binding.carbsDuration.text = if (carbs.duration> 0) resourceHelper.gs(R.string.format_mins, T.msecs(carbs.duration).mins().toInt()) else ""
-                holder.binding.carbsNs.visibility = (NSUpload.isIdValid(carbs.interfaceIDs.nightscoutId)).toVisibility()
+                holder.binding.carbsDuration.text = if (carbs.duration > 0) resourceHelper.gs(R.string.format_mins, T.msecs(carbs.duration).mins().toInt()) else ""
+                holder.binding.carbsNs.visibility = (carbs.interfaceIDs.nightscoutId != null).toVisibility()
                 holder.binding.carbsPump.visibility = (carbs.interfaceIDs.pumpId != null).toVisibility()
                 holder.binding.carbsInvalid.visibility = carbs.isValid.not().toVisibility()
             }
@@ -333,10 +337,10 @@ class TreatmentsBolusCarbsFragment : DaggerFragment() {
                             resourceHelper.gs(R.string.date) + ": " + dateUtil.dateAndTimeString(bolus.timestamp)
                         OKDialog.showConfirmation(activity, resourceHelper.gs(R.string.removerecord), text, Runnable {
                             uel.log(
-                                Action.TREATMENT_REMOVED,
-                                ValueWithUnit(bolus.timestamp, Units.Timestamp),
-                                ValueWithUnit(bolus.amount, Units.U)
-                                //              ValueWithUnit(mealLinkLoaded.carbs.toInt(), Units.G)
+                                Action.BOLUS_REMOVED, Sources.Treatments,
+                                ValueWithUnit.Timestamp(bolus.timestamp),
+                                ValueWithUnit.Insulin(bolus.amount)
+                                //ValueWithUnit.Gram(mealLinkLoaded.carbs.toInt())
                             )
                             disposable += repository.runTransactionForResult(InvalidateBolusTransaction(bolus.id))
                                 .subscribe(
@@ -355,10 +359,9 @@ class TreatmentsBolusCarbsFragment : DaggerFragment() {
                             resourceHelper.gs(R.string.date) + ": " + dateUtil.dateAndTimeString(carb.timestamp)
                         OKDialog.showConfirmation(activity, resourceHelper.gs(R.string.removerecord), text, Runnable {
                             uel.log(
-                                Action.TREATMENT_REMOVED,
-                                ValueWithUnit(carb.timestamp, Units.Timestamp),
-                                ValueWithUnit(carb.amount, Units.G)
-                            )
+                                Action.CARBS_REMOVED, Sources.Treatments,
+                                ValueWithUnit.Timestamp(carb.timestamp),
+                                ValueWithUnit.Gram(carb.amount.toInt()))
                             disposable += repository.runTransactionForResult(InvalidateCarbsTransaction(carb.id))
                                 .subscribe(
                                     { result -> result.invalidated.forEach { aapsLogger.debug(LTag.DATABASE, "Invalidated carbs $it") } },

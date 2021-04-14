@@ -30,6 +30,7 @@ class SurveyActivity : NoSplashAppCompatActivity() {
     @Inject lateinit var profileFunction: ProfileFunction
     @Inject lateinit var activityMonitor: ActivityMonitor
     @Inject lateinit var defaultProfile: DefaultProfile
+    @Inject lateinit var dateUtil: DateUtil
 
     private lateinit var binding: ActivitySurveyBinding
 
@@ -68,7 +69,7 @@ class SurveyActivity : NoSplashAppCompatActivity() {
                 defaultProfile.profile(age, tdd, weight, profileFunction.getUnits())?.let { profile ->
                     ProfileViewerDialog().also { pvd ->
                         pvd.arguments = Bundle().also {
-                            it.putLong("time", DateUtil.now())
+                            it.putLong("time", dateUtil.now())
                             it.putInt("mode", ProfileViewerDialog.Mode.PROFILE_COMPARE.ordinal)
                             it.putString("customProfile", runningProfile.data.toString())
                             it.putString("customProfile2", profile.data.toString())

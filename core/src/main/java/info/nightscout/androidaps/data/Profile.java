@@ -38,12 +38,13 @@ public class Profile {
     @Inject public RxBusWrapper rxBus;
     @Inject public FabricPrivacy fabricPrivacy;
     @Inject public ConfigInterface configInterface;
+    @Inject public DateUtil dateUtil;
 
     private final HasAndroidInjector injector;
 
     private JSONObject json;
     private String units;
-    private double dia;
+    private double dia; // TODO change to insulinInterface link
     private TimeZone timeZone;
     private JSONArray isf;
     private LongSparseArray<Double> isf_v; // oldest at index 0
@@ -188,7 +189,7 @@ public class Profile {
                 long tas;
                 try {
                     String time = o.getString("time");
-                    tas = getShitfTimeSecs(DateUtil.toSeconds(time));
+                    tas = getShitfTimeSecs(dateUtil.toSeconds(time));
                 } catch (JSONException e) {
                     //log.debug(">>>>>>>>>>>> Used recalculated timeAsSecons: " + time + " " + tas);
                     tas = getShitfTimeSecs((int) o.getLong("timeAsSeconds"));
@@ -628,7 +629,7 @@ public class Profile {
     }
 
     public static int secondsFromMidnight() {
-        // long passed = DateUtil.now() - MidnightTime.calc();
+        // long passed = dateUtil._now() - MidnightTime.calc();
         long passed = new DateTime().getMillisOfDay();
         return (int) (passed / 1000);
     }

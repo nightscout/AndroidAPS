@@ -70,7 +70,8 @@ public class PointsWithLabelGraphSeries<E extends DataPointWithLabelInterface> e
         GENERAL,
         GENERALWITHDURATION,
         COBFAILOVER,
-        IOBPREDICTION
+        IOBPREDICTION,
+        BUCKETED_BG
     }
 
     /**
@@ -200,7 +201,7 @@ public class PointsWithLabelGraphSeries<E extends DataPointWithLabelInterface> e
                     mPaint.setStyle(Paint.Style.FILL);
                     mPaint.setStrokeWidth(0);
                     canvas.drawCircle(endX, endY, value.getSize() * scaledPxSize, mPaint);
-                } else if (value.getShape() == Shape.BG || value.getShape() == Shape.IOBPREDICTION) {
+                } else if (value.getShape() == Shape.BG || value.getShape() == Shape.IOBPREDICTION || value.getShape() == Shape.BUCKETED_BG) {
                     mPaint.setColor(value.getColor());
                     mPaint.setStyle(Paint.Style.FILL);
                     mPaint.setStrokeWidth(0);

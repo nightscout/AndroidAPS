@@ -3,6 +3,7 @@ package info.nightscout.androidaps.plugins.source
 import android.content.Context
 import androidx.work.Worker
 import androidx.work.WorkerParameters
+import androidx.work.workDataOf
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.database.AppRepository
@@ -68,9 +69,9 @@ class EversensePlugin @Inject constructor(
         override fun doWork(): Result {
             var ret = Result.success()
 
-            if (!eversensePlugin.isEnabled(PluginType.BGSOURCE)) return Result.failure()
+            if (!eversensePlugin.isEnabled(PluginType.BGSOURCE)) return Result.success()
             val bundle = dataWorker.pickupBundle(inputData.getLong(DataWorker.STORE_KEY, -1))
-                ?: return Result.failure()
+                ?: return Result.failure(workDataOf("Error" to "missing input data"))
             if (bundle.containsKey("currentCalibrationPhase")) aapsLogger.debug(LTag.BGSOURCE, "currentCalibrationPhase: " + bundle.getString("currentCalibrationPhase"))
             if (bundle.containsKey("placementModeInProgress")) aapsLogger.debug(LTag.BGSOURCE, "placementModeInProgress: " + bundle.getBoolean("placementModeInProgress"))
             if (bundle.containsKey("glucoseLevel")) aapsLogger.debug(LTag.BGSOURCE, "glucoseLevel: " + bundle.getInt("glucoseLevel"))
@@ -111,7 +112,7 @@ class EversensePlugin @Inject constructor(
                     repository.runTransactionForResult(CgmSourceTransaction(glucoseValues, emptyList(), null))
                         .doOnError {
                             aapsLogger.error(LTag.DATABASE, "Error while saving values from Eversense App", it)
-                            ret = Result.failure()
+                            ret = Result.failure(workDataOf("Error" to it))
                         }
                         .blockingGet()
                         .also { savedValues ->
@@ -141,7 +142,7 @@ class EversensePlugin @Inject constructor(
                         ))
                             .doOnError {
                                 aapsLogger.error(LTag.DATABASE, "Error while saving therapy event", it)
-                                ret = Result.failure()
+                                ret = Result.failure(workDataOf("Error" to it))
                             }
                             .blockingGet()
                             .also { result ->

@@ -27,6 +27,7 @@ import info.nightscout.androidaps.logging.LTag;
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper;
 import info.nightscout.androidaps.plugins.configBuilder.ConstraintChecker;
 import info.nightscout.androidaps.plugins.pump.common.bolusInfo.DetailedBolusInfoStorage;
+import info.nightscout.androidaps.plugins.pump.common.bolusInfo.TemporaryBasalStorage;
 import info.nightscout.androidaps.utils.CRC;
 import info.nightscout.androidaps.utils.DateUtil;
 import info.nightscout.androidaps.utils.resources.ResourceHelper;
@@ -50,6 +51,7 @@ public class MessageBase {
     @Inject public ConfigBuilderInterface configBuilder;
     @Inject public CommandQueueProvider commandQueue;
     @Inject public DetailedBolusInfoStorage detailedBolusInfoStorage;
+    @Inject public TemporaryBasalStorage temporaryBasalStorage;
     @Inject public ConstraintChecker constraintChecker;
     @Inject public PumpSync pumpSync;
     @Inject public DatabaseHelperInterface databaseHelper;

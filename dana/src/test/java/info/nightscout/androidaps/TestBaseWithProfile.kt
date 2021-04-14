@@ -4,7 +4,6 @@ import dagger.android.AndroidInjector
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.data.Profile
 import info.nightscout.androidaps.db.ProfileSwitch
-import info.nightscout.androidaps.db.Treatment
 import info.nightscout.androidaps.interfaces.ActivePluginProvider
 import info.nightscout.androidaps.interfaces.ConfigInterface
 import info.nightscout.androidaps.interfaces.ProfileFunction
@@ -51,12 +50,6 @@ open class TestBaseWithProfile : TestBase() {
                 it.rxBus = rxBus
                 it.resourceHelper = resourceHelper
                 it.dateUtil = dateUtil
-            }
-            if (it is Treatment) {
-                it.activePlugin = activePluginProvider
-                it.profileFunction = profileFunction
-                it.defaultValueHelper = defaultValueHelper
-                it.resourceHelper = resourceHelper
             }
         }
     }

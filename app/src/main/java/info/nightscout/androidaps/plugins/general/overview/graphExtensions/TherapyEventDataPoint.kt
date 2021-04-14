@@ -49,7 +49,7 @@ class TherapyEventDataPoint @Inject constructor(
 
     override fun getLabel(): String? =
         if (data.note != null) data.note
-        else translator.translate(data.type.text)
+        else translator.translate(data.type)
 
     override fun getDuration(): Long = end() - start()
     override fun getShape(): PointsWithLabelGraphSeries.Shape =

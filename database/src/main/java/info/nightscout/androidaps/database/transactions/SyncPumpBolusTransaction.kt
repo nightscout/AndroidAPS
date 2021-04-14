@@ -19,11 +19,17 @@ class SyncPumpBolusTransaction(
             database.bolusDao.insertNewEntry(bolus)
             result.inserted.add(bolus)
         } else {
-            current.timestamp = bolus.timestamp
-            current.amount = bolus.amount
-            current.type = bolusType ?: current.type
-            database.bolusDao.updateExistingEntry(current)
-            result.updated.add(current)
+            if (
+                current.timestamp != bolus.timestamp ||
+                current.amount != bolus.amount ||
+                current.type != bolusType ?: current.type
+            ) {
+                current.timestamp = bolus.timestamp
+                current.amount = bolus.amount
+                current.type = bolusType ?: current.type
+                database.bolusDao.updateExistingEntry(current)
+                result.updated.add(current)
+            }
         }
         return result
     }

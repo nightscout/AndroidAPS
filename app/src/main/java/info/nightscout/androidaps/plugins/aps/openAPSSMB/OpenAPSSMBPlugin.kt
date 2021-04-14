@@ -22,7 +22,7 @@ import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.HardLimits
 import info.nightscout.androidaps.utils.Profiler
 import info.nightscout.androidaps.utils.Round
-import info.nightscout.androidaps.utils.extensions.target
+import info.nightscout.androidaps.extensions.target
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 import info.nightscout.androidaps.utils.sharedPreferences.SP
 import javax.inject.Inject
@@ -38,7 +38,6 @@ open class OpenAPSSMBPlugin @Inject constructor(
     private val profileFunction: ProfileFunction,
     private val context: Context,
     private val activePlugin: ActivePluginProvider,
-    private val treatmentsPlugin: TreatmentsInterface,
     private val iobCobCalculator: IobCobCalculator,
     private val hardLimits: HardLimits,
     private val profiler: Profiler,
@@ -123,7 +122,7 @@ open class OpenAPSSMBPlugin @Inject constructor(
         var maxBg = hardLimits.verifyHardLimits(Round.roundTo(profile.targetHighMgdl, 0.1), R.string.profile_high_target, HardLimits.VERY_HARD_LIMIT_MAX_BG[0].toDouble(), HardLimits.VERY_HARD_LIMIT_MAX_BG[1].toDouble())
         var targetBg = hardLimits.verifyHardLimits(profile.targetMgdl, R.string.temp_target_value, HardLimits.VERY_HARD_LIMIT_TARGET_BG[0].toDouble(), HardLimits.VERY_HARD_LIMIT_TARGET_BG[1].toDouble())
         var isTempTarget = false
-        val tempTarget = repository.getTemporaryTargetActiveAt(dateUtil._now()).blockingGet()
+        val tempTarget = repository.getTemporaryTargetActiveAt(dateUtil.now()).blockingGet()
         if (tempTarget is ValueWrapper.Existing) {
             isTempTarget = true
             minBg = hardLimits.verifyHardLimits(tempTarget.value.lowTarget, R.string.temp_target_low_target, HardLimits.VERY_HARD_LIMIT_TEMP_MIN_BG[0].toDouble(), HardLimits.VERY_HARD_LIMIT_TEMP_MIN_BG[1].toDouble())
@@ -137,7 +136,7 @@ open class OpenAPSSMBPlugin @Inject constructor(
         if (!hardLimits.checkOnlyHardLimits(pump.baseBasalRate, R.string.current_basal_value, 0.01, hardLimits.maxBasal())) return
         startPart = System.currentTimeMillis()
         if (constraintChecker.isAutosensModeEnabled().value()) {
-            val autosensData = iobCobCalculator.getLastAutosensDataSynchronized("OpenAPSPlugin")
+            val autosensData = iobCobCalculator.getLastAutosensDataWithWaitForCalculationFinish("OpenAPSPlugin")
             if (autosensData == null) {
                 rxBus.send(EventOpenAPSUpdateResultGui(resourceHelper.gs(R.string.openaps_noasdata)))
                 return
@@ -170,7 +169,7 @@ open class OpenAPSSMBPlugin @Inject constructor(
                 activePlugin.activePump.baseBasalRate,
                 iobArray,
                 glucoseStatus,
-                iobCobCalculator.mealData,
+                iobCobCalculator.getMealDataWithWaitingForCalculationFinish(),
                 lastAutosensResult.ratio,
                 isTempTarget,
                 smbAllowed.value(),
@@ -188,9 +187,9 @@ open class OpenAPSSMBPlugin @Inject constructor(
             } else {
                 // TODO still needed with oref1?
                 // Fix bug determine basal
-                if (determineBasalResultSMB.rate == 0.0 && determineBasalResultSMB.duration == 0 && !treatmentsPlugin.isTempBasalInProgress) determineBasalResultSMB.tempBasalRequested = false
+                if (determineBasalResultSMB.rate == 0.0 && determineBasalResultSMB.duration == 0 && iobCobCalculator.getTempBasalIncludingConvertedExtended(dateUtil.now()) == null) determineBasalResultSMB.tempBasalRequested = false
                 determineBasalResultSMB.iob = iobArray[0]
-                determineBasalResultSMB.json?.put("timestamp", DateUtil.toISOString(now))
+                determineBasalResultSMB.json?.put("timestamp", dateUtil.toISOString(now))
                 determineBasalResultSMB.inputConstraints = inputConstraints
                 lastDetermineBasalAdapterSMBJS = determineBasalAdapterSMBJS
                 lastAPSResult = determineBasalResultSMB

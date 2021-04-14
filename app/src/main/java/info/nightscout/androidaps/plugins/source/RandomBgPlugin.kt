@@ -18,7 +18,6 @@ import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.T
 import info.nightscout.androidaps.utils.XDripBroadcast
 import info.nightscout.androidaps.utils.buildHelper.BuildHelper
-import info.nightscout.androidaps.utils.extensions.isRunningTest
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 import info.nightscout.androidaps.utils.sharedPreferences.SP
 import io.reactivex.disposables.CompositeDisposable
@@ -57,12 +56,15 @@ class RandomBgPlugin @Inject constructor(
     companion object {
 
         const val interval = 5L // minutes
+        const val min = 70 // mgdl
+        const val max = 190 // mgdl
+        const val period = 90.0 // minutes
     }
 
     init {
         refreshLoop = Runnable {
-            handleNewData()
             loopHandler.postDelayed(refreshLoop, T.mins(interval).msecs())
+            handleNewData()
         }
     }
 
@@ -93,16 +95,14 @@ class RandomBgPlugin @Inject constructor(
 
     private fun handleNewData() {
         if (!isEnabled(PluginType.BGSOURCE)) return
-        val min = 70
-        val max = 190
 
         val cal = GregorianCalendar()
         val currentMinute = cal.get(Calendar.MINUTE) + (cal.get(Calendar.HOUR_OF_DAY) % 2) * 60
-        val bgMgdl = min + ((max - min) + (max - min) * sin(currentMinute / 120.0 * 2 * PI)) / 2
+        val bgMgdl = min + ((max - min) + (max - min) * sin(currentMinute / period * 2 * PI)) / 2
 
         val glucoseValues = mutableListOf<CgmSourceTransaction.TransactionGlucoseValue>()
         glucoseValues += CgmSourceTransaction.TransactionGlucoseValue(
-            timestamp = dateUtil._now(),
+            timestamp = dateUtil.now(),
             value = bgMgdl,
             raw = 0.0,
             noise = null,

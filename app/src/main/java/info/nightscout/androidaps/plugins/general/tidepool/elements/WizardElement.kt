@@ -3,10 +3,11 @@ package info.nightscout.androidaps.plugins.general.tidepool.elements
 import com.google.gson.annotations.Expose
 import info.nightscout.androidaps.database.entities.Bolus
 import info.nightscout.androidaps.database.entities.Carbs
+import info.nightscout.androidaps.utils.DateUtil
 import java.util.*
 
-class WizardElement(carbs: Carbs)
-    : BaseElement(carbs.timestamp, UUID.nameUUIDFromBytes(("AAPS-wizard" + carbs.timestamp).toByteArray()).toString()) {
+class WizardElement(carbs: Carbs, dateUtil: DateUtil)
+    : BaseElement(carbs.timestamp, UUID.nameUUIDFromBytes(("AAPS-wizard" + carbs.timestamp).toByteArray()).toString(), dateUtil) {
 
     @Expose var units = "mg/dL"
     @Expose var carbInput: Double = 0.toDouble()
@@ -19,10 +20,9 @@ class WizardElement(carbs: Carbs)
         val fake = Bolus(
             amount = 0.0001,
             timestamp = carbs.timestamp,
-            type = Bolus.Type.NORMAL,
-            isBasalInsulin = false
+            type = Bolus.Type.NORMAL
         )
-        bolus = BolusElement(fake) // fake insulin record
+        bolus = BolusElement(fake, dateUtil) // fake insulin record
     }
 }
 

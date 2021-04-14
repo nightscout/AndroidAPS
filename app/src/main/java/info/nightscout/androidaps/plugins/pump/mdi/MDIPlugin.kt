@@ -79,7 +79,7 @@ class MDIPlugin @Inject constructor(
                 timestamp = detailedBolusInfo.timestamp,
                 amount = detailedBolusInfo.insulin,
                 type = detailedBolusInfo.bolusType,
-                pumpId = dateUtil._now(),
+                pumpId = dateUtil.now(),
                 pumpType = PumpType.MDI,
                 pumpSerial = serialNumber())
         if (detailedBolusInfo.carbs > 0)
@@ -93,7 +93,7 @@ class MDIPlugin @Inject constructor(
     }
 
     override fun stopBolusDelivering() {}
-    override fun setTempBasalAbsolute(absoluteRate: Double, durationInMinutes: Int, profile: Profile, enforceNew: Boolean): PumpEnactResult {
+    override fun setTempBasalAbsolute(absoluteRate: Double, durationInMinutes: Int, profile: Profile, enforceNew: Boolean, tbrType: PumpSync.TemporaryBasalType): PumpEnactResult {
         val result = PumpEnactResult(injector)
         result.success = false
         result.comment = resourceHelper.gs(R.string.pumperror)
@@ -101,7 +101,7 @@ class MDIPlugin @Inject constructor(
         return result
     }
 
-    override fun setTempBasalPercent(percent: Int, durationInMinutes: Int, profile: Profile, enforceNew: Boolean): PumpEnactResult {
+    override fun setTempBasalPercent(percent: Int, durationInMinutes: Int, profile: Profile, enforceNew: Boolean, tbrType: PumpSync.TemporaryBasalType): PumpEnactResult {
         val result = PumpEnactResult(injector)
         result.success = false
         result.comment = resourceHelper.gs(R.string.pumperror)
@@ -142,10 +142,10 @@ class MDIPlugin @Inject constructor(
             status.put("status", "normal")
             extended.put("Version", version)
             extended.put("ActiveProfile", profileName)
-            status.put("timestamp", DateUtil.toISOString(now))
+            status.put("timestamp", dateUtil.toISOString(now))
             pump.put("status", status)
             pump.put("extended", extended)
-            pump.put("clock", DateUtil.toISOString(now))
+            pump.put("clock", dateUtil.toISOString(now))
         } catch (e: JSONException) {
             aapsLogger.error("Exception: ", e)
         }

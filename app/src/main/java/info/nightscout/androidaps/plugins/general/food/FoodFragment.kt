@@ -17,6 +17,8 @@ import info.nightscout.androidaps.R
 import info.nightscout.androidaps.database.AppRepository
 import info.nightscout.androidaps.database.entities.Food
 import info.nightscout.androidaps.database.entities.UserEntry.Action
+import info.nightscout.androidaps.database.entities.UserEntry.Sources
+import info.nightscout.androidaps.database.entities.ValueWithUnit
 import info.nightscout.androidaps.database.transactions.InvalidateFoodTransaction
 import info.nightscout.androidaps.databinding.FoodFragmentBinding
 import info.nightscout.androidaps.databinding.FoodItemBinding
@@ -28,7 +30,7 @@ import info.nightscout.androidaps.plugins.bus.RxBusWrapper
 import info.nightscout.androidaps.plugins.general.nsclient.events.EventNSClientRestart
 import info.nightscout.androidaps.utils.FabricPrivacy
 import info.nightscout.androidaps.utils.alertDialogs.OKDialog
-import info.nightscout.androidaps.utils.extensions.toVisibility
+import info.nightscout.androidaps.extensions.toVisibility
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 import info.nightscout.androidaps.utils.rx.AapsSchedulers
 import io.reactivex.Completable
@@ -51,8 +53,8 @@ class FoodFragment : DaggerFragment() {
     @Inject lateinit var uel: UserEntryLogger
 
     private val disposable = CompositeDisposable()
-    private lateinit var unfiltered: List<Food>
-    private lateinit var filtered: MutableList<Food>
+    private var unfiltered: List<Food> = arrayListOf()
+    private var filtered: MutableList<Food> = arrayListOf()
 
     private var _binding: FoodFragmentBinding? = null
 
@@ -74,7 +76,8 @@ class FoodFragment : DaggerFragment() {
         binding.refreshFromNightscout.setOnClickListener {
             context?.let { context ->
                 OKDialog.showConfirmation(context, resourceHelper.gs(R.string.refresheventsfromnightscout) + " ?", {
-                    uel.log(Action.FOOD_FROM_NS)
+                    uel.log(Action.FOOD, Sources.Food, resourceHelper.gs(R.string.refresheventsfromnightscout),
+                        ValueWithUnit.SimpleString(resourceHelper.gsNotLocalised(R.string.refresheventsfromnightscout)))
                     disposable += Completable.fromAction { repository.deleteAllFoods() }
                         .subscribeOn(aapsSchedulers.io)
                         .observeOn(aapsSchedulers.main)
@@ -250,7 +253,7 @@ class FoodFragment : DaggerFragment() {
                     val food = v.tag as Food
                     activity?.let { activity ->
                         OKDialog.showConfirmation(activity, resourceHelper.gs(R.string.removerecord) + "\n" + food.name, {
-                            uel.log(Action.FOOD_REMOVED, food.name)
+                            uel.log(Action.FOOD_REMOVED, Sources.Food, food.name)
                             disposable += repository.runTransactionForResult(InvalidateFoodTransaction(food.id))
                                 .subscribe(
                                     { aapsLogger.error(LTag.DATABASE, "Invalidated food $it") },

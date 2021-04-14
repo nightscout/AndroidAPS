@@ -16,24 +16,27 @@ import info.nightscout.androidaps.data.Profile
 import info.nightscout.androidaps.database.AppRepository
 import info.nightscout.androidaps.database.ValueWrapper
 import info.nightscout.androidaps.database.entities.TemporaryTarget
+import info.nightscout.androidaps.database.entities.UserEntry.Action
+import info.nightscout.androidaps.database.entities.UserEntry.Sources
+import info.nightscout.androidaps.database.entities.ValueWithUnit
 import info.nightscout.androidaps.database.interfaces.end
 import info.nightscout.androidaps.database.transactions.CancelCurrentTemporaryTargetIfAnyTransaction
 import info.nightscout.androidaps.database.transactions.InsertTemporaryTargetAndCancelCurrentTransaction
 import info.nightscout.androidaps.db.TDD
+import info.nightscout.androidaps.extensions.valueToUnits
 import info.nightscout.androidaps.interfaces.*
 import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.logging.LTag
+import info.nightscout.androidaps.logging.UserEntryLogger
 import info.nightscout.androidaps.plugins.aps.loop.LoopPlugin
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper
 import info.nightscout.androidaps.plugins.configBuilder.ConstraintChecker
 import info.nightscout.androidaps.plugins.general.overview.events.EventDismissNotification
 import info.nightscout.androidaps.plugins.general.wear.events.EventWearConfirmAction
 import info.nightscout.androidaps.plugins.general.wear.events.EventWearInitiateAction
-import info.nightscout.androidaps.plugins.iob.iobCobCalculator.IobCobCalculatorPlugin
 import info.nightscout.androidaps.plugins.pump.insight.LocalInsightPlugin
 import info.nightscout.androidaps.queue.Callback
 import info.nightscout.androidaps.utils.*
-import info.nightscout.androidaps.utils.extensions.valueToUnits
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 import info.nightscout.androidaps.utils.rx.AapsSchedulers
 import info.nightscout.androidaps.utils.sharedPreferences.SP
@@ -67,7 +70,7 @@ class ActionStringHandler @Inject constructor(
     private val fabricPrivacy: FabricPrivacy,
     private val commandQueue: CommandQueueProvider,
     private val activePlugin: ActivePluginProvider,
-    private val iobCobCalculatorPlugin: IobCobCalculatorPlugin,
+    private val iobCobCalculator: IobCobCalculator,
     private val localInsightPlugin: LocalInsightPlugin,
     private val danaRPlugin: DanaRPlugin,
     private val danaRKoreanPlugin: DanaRKoreanPlugin,
@@ -77,7 +80,8 @@ class ActionStringHandler @Inject constructor(
     private val dateUtil: DateUtil,
     private val config: Config,
     private val databaseHelper: DatabaseHelperInterface,
-    private val repository: AppRepository
+    private val repository: AppRepository,
+    private val uel: UserEntryLogger
 ) {
 
     private val timeout = 65 * 1000
@@ -99,7 +103,7 @@ class ActionStringHandler @Inject constructor(
             .subscribe({ handleConfirmation(it.action) }, fabricPrivacy::logException)
     }
 
-    fun tearDown(){
+    fun tearDown() {
         disposable.clear()
     }
 
@@ -203,19 +207,19 @@ class ActionStringHandler @Inject constructor(
                 sendError("No profile found!")
                 return
             }
-            val bgReading = iobCobCalculatorPlugin.actualBg()
+            val bgReading = iobCobCalculator.ads.actualBg()
             if (bgReading == null) {
                 sendError("No recent BG to base calculation on!")
                 return
             }
-            val cobInfo = iobCobCalculatorPlugin.getCobInfo(false, "Wizard wear")
+            val cobInfo = iobCobCalculator.getCobInfo(false, "Wizard wear")
             if (cobInfo.displayCob == null) {
                 sendError("Unknown COB! BG reading missing or recent app restart?")
                 return
             }
             val format = DecimalFormat("0.00")
             val formatInt = DecimalFormat("0")
-            val dbRecord = repository.getTemporaryTargetActiveAt(dateUtil._now()).blockingGet()
+            val dbRecord = repository.getTemporaryTargetActiveAt(dateUtil.now()).blockingGet()
             val tempTarget = if (dbRecord is ValueWrapper.Existing) dbRecord.value else null
 
             val bolusWizard = BolusWizard(injector).doCalc(profile, profileName, tempTarget,
@@ -452,7 +456,7 @@ class ActionStringHandler @Inject constructor(
             }
             val profile = profileFunction.getProfile() ?: return "No profile set :("
             //Check for Temp-Target:
-            val tempTarget = repository.getTemporaryTargetActiveAt(dateUtil._now()).blockingGet()
+            val tempTarget = repository.getTemporaryTargetActiveAt(dateUtil.now()).blockingGet()
             if (tempTarget is ValueWrapper.Existing) {
                 ret += "Temp Target: " + Profile.toTargetRangeString(tempTarget.value.lowTarget, tempTarget.value.lowTarget, Constants.MGDL, profileFunction.getUnits())
                 ret += "\nuntil: " + dateUtil.timeString(tempTarget.value.end)
@@ -564,11 +568,14 @@ class ActionStringHandler @Inject constructor(
             return
         }
         //send profile to pump
+        uel.log(Action.PROFILE_SWITCH, Sources.Wear,
+            ValueWithUnit.Percent(percentage),
+            ValueWithUnit.Hour(timeshift).takeIf { timeshift != 0 })
         activePlugin.activeTreatments.doProfileSwitch(0, percentage, timeshift)
     }
 
     private fun generateTempTarget(duration: Int, low: Double, high: Double) {
-        if (duration != 0)
+        if (duration != 0) {
             disposable += repository.runTransactionForResult(InsertTemporaryTargetAndCancelCurrentTransaction(
                 timestamp = System.currentTimeMillis(),
                 duration = TimeUnit.MINUTES.toMillis(duration.toLong()),
@@ -581,19 +588,29 @@ class ActionStringHandler @Inject constructor(
             }, {
                 aapsLogger.error(LTag.DATABASE, "Error while saving temporary target", it)
             })
-        else
+            uel.log(Action.TT, Sources.Wear,
+                ValueWithUnit.TherapyEventTTReason(TemporaryTarget.Reason.WEAR),
+                ValueWithUnit.fromGlucoseUnit(low, profileFunction.getUnits()),
+                ValueWithUnit.fromGlucoseUnit(high, profileFunction.getUnits()).takeIf { low != high },
+                ValueWithUnit.Minute(duration))
+        } else {
             disposable += repository.runTransactionForResult(CancelCurrentTemporaryTargetIfAnyTransaction(System.currentTimeMillis()))
                 .subscribe({ result ->
                     result.updated.forEach { aapsLogger.debug(LTag.DATABASE, "Updated temp target $it") }
                 }, {
                     aapsLogger.error(LTag.DATABASE, "Error while saving temporary target", it)
                 })
+            uel.log(Action.CANCEL_TT, Sources.Wear,
+                ValueWithUnit.TherapyEventTTReason(TemporaryTarget.Reason.WEAR))
+        }
     }
 
     private fun doFillBolus(amount: Double) {
         val detailedBolusInfo = DetailedBolusInfo()
         detailedBolusInfo.insulin = amount
         detailedBolusInfo.bolusType = DetailedBolusInfo.BolusType.PRIMING
+        uel.log(Action.PRIME_BOLUS, Sources.Wear,
+            ValueWithUnit.Insulin(amount).takeIf { amount != 0.0 })
         commandQueue.bolus(detailedBolusInfo, object : Callback() {
             override fun run() {
                 if (!result.success) {
@@ -606,6 +623,10 @@ class ActionStringHandler @Inject constructor(
     }
 
     private fun doECarbs(carbs: Int, time: Long, duration: Int) {
+        uel.log(if (duration == 0) Action.CARBS else Action.EXTENDED_CARBS, Sources.Wear,
+            ValueWithUnit.Timestamp(time),
+            ValueWithUnit.Gram(carbs),
+            ValueWithUnit.Hour(duration).takeIf { duration != 0 })
         doBolus(0.0, carbs, time, duration)
     }
 
@@ -617,6 +638,16 @@ class ActionStringHandler @Inject constructor(
         detailedBolusInfo.carbsTimestamp = carbsTime
         detailedBolusInfo.carbsDuration = T.hours(carbsDuration.toLong()).msecs()
         if (detailedBolusInfo.insulin > 0 || detailedBolusInfo.carbs > 0) {
+            val action = when {
+                amount.equals(0.0) -> Action.CARBS
+                carbs.equals(0)    -> Action.BOLUS
+                carbsDuration > 0  -> Action.EXTENDED_CARBS
+                else               -> Action.TREATMENT
+            }
+            uel.log(action, Sources.Wear,
+                ValueWithUnit.Insulin(amount).takeIf { amount != 0.0 },
+                ValueWithUnit.Gram(carbs).takeIf { carbs != 0 },
+                ValueWithUnit.Hour(carbsDuration).takeIf { carbsDuration != 0 })
             commandQueue.bolus(detailedBolusInfo, object : Callback() {
                 override fun run() {
                     if (!result.success) {

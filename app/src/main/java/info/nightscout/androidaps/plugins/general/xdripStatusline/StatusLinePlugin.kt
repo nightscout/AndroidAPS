@@ -13,6 +13,7 @@ import info.nightscout.androidaps.plugins.aps.loop.LoopPlugin
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper
 import info.nightscout.androidaps.utils.DecimalFormatter
 import info.nightscout.androidaps.utils.FabricPrivacy
+import info.nightscout.androidaps.extensions.toStringShort
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 import info.nightscout.androidaps.utils.rx.AapsSchedulers
 import info.nightscout.androidaps.utils.sharedPreferences.SP
@@ -121,13 +122,13 @@ class StatusLinePlugin @Inject constructor(
             lastLoopStatus = true
         }
         //Temp basal
-        val activeTemp = activePlugin.activeTreatments.getTempBasalFromHistory(System.currentTimeMillis())
+        val activeTemp = iobCobCalculator.getTempBasalIncludingConvertedExtended(System.currentTimeMillis())
         if (activeTemp != null) {
             status += activeTemp.toStringShort() + " "
         }
         //IOB
         val bolusIob = iobCobCalculator.calculateIobFromBolus().round()
-        val basalIob = activePlugin.activeTreatments.lastCalculationTempBasals.round()
+        val basalIob = iobCobCalculator.calculateIobFromTempBasalsIncludingConvertedExtended().round()
         status += DecimalFormatter.to2Decimal(bolusIob.iob + basalIob.basaliob) + "U"
         if (sp.getBoolean(R.string.key_xdripstatus_detailediob, true)) {
             status += ("("

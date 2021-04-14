@@ -32,13 +32,14 @@ import dagger.android.AndroidInjection;
 import info.nightscout.androidaps.Config;
 import info.nightscout.androidaps.Constants;
 import info.nightscout.androidaps.R;
-import info.nightscout.androidaps.plugins.general.overview.graphExtensions.GlucoseValueDataPoint;
 import info.nightscout.androidaps.data.IobTotal;
 import info.nightscout.androidaps.data.Profile;
 import info.nightscout.androidaps.database.AppRepository;
 import info.nightscout.androidaps.database.entities.Bolus;
 import info.nightscout.androidaps.database.entities.GlucoseValue;
-import info.nightscout.androidaps.db.TemporaryBasal;
+import info.nightscout.androidaps.database.entities.TemporaryBasal;
+import info.nightscout.androidaps.extensions.GlucoseValueExtensionKt;
+import info.nightscout.androidaps.extensions.TemporaryBasalExtensionKt;
 import info.nightscout.androidaps.interfaces.ActivePluginProvider;
 import info.nightscout.androidaps.interfaces.IobCobCalculator;
 import info.nightscout.androidaps.interfaces.PluginType;
@@ -48,17 +49,16 @@ import info.nightscout.androidaps.logging.LTag;
 import info.nightscout.androidaps.plugins.aps.loop.LoopPlugin;
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper;
 import info.nightscout.androidaps.plugins.general.nsclient.data.NSDeviceStatus;
+import info.nightscout.androidaps.plugins.general.overview.graphExtensions.GlucoseValueDataPoint;
 import info.nightscout.androidaps.plugins.general.wear.WearPlugin;
 import info.nightscout.androidaps.plugins.general.wear.events.EventWearConfirmAction;
 import info.nightscout.androidaps.plugins.general.wear.events.EventWearInitiateAction;
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.GlucoseStatus;
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.GlucoseStatusProvider;
-import info.nightscout.androidaps.plugins.treatments.TreatmentsPlugin;
 import info.nightscout.androidaps.receivers.ReceiverStatusStore;
 import info.nightscout.androidaps.utils.DecimalFormatter;
 import info.nightscout.androidaps.utils.DefaultValueHelper;
 import info.nightscout.androidaps.utils.ToastUtils;
-import info.nightscout.androidaps.utils.extensions.GlucoseValueExtensionKt;
 import info.nightscout.androidaps.utils.resources.ResourceHelper;
 import info.nightscout.androidaps.utils.sharedPreferences.SP;
 
@@ -75,7 +75,6 @@ public class WatchUpdaterService extends WearableListenerService implements Goog
     @Inject public ActivePluginProvider activePlugin;
     @Inject public LoopPlugin loopPlugin;
     @Inject public IobCobCalculator iobCobCalculator;
-    @Inject public TreatmentsPlugin treatmentsPlugin;
     @Inject public AppRepository repository;
     @Inject ReceiverStatusStore receiverStatusStore;
     @Inject Config config;
@@ -280,7 +279,7 @@ public class WatchUpdaterService extends WearableListenerService implements Goog
 
     private void sendData() {
 
-        GlucoseValue lastBG = iobCobCalculator.lastBg();
+        GlucoseValue lastBG = iobCobCalculator.getAds().lastBg();
         // Log.d(TAG, logPrefix + "LastBg=" + lastBG);
         if (lastBG != null) {
             GlucoseStatus glucoseStatus = glucoseStatusProvider.getGlucoseStatusData();
@@ -382,7 +381,7 @@ public class WatchUpdaterService extends WearableListenerService implements Goog
             googleApiConnect();
         }
         long startTime = System.currentTimeMillis() - (long) (60000 * 60 * 5.5);
-        GlucoseValue last_bg = iobCobCalculator.lastBg();
+        GlucoseValue last_bg = iobCobCalculator.getAds().lastBg();
 
         if (last_bg == null) return;
 
@@ -437,8 +436,8 @@ public class WatchUpdaterService extends WearableListenerService implements Goog
         double beginBasalValue = profile.getBasal(beginBasalSegmentTime);
         double endBasalValue = beginBasalValue;
 
-        TemporaryBasal tb1 = treatmentsPlugin.getTempBasalFromHistory(runningTime);
-        TemporaryBasal tb2 = treatmentsPlugin.getTempBasalFromHistory(runningTime); //TODO for Adrian ... what's the meaning?
+        TemporaryBasal tb1 = iobCobCalculator.getTempBasalIncludingConvertedExtended(runningTime);
+        TemporaryBasal tb2 = iobCobCalculator.getTempBasalIncludingConvertedExtended(runningTime); //TODO for Adrian ... what's the meaning?
         double tb_before = beginBasalValue;
         double tb_amount = beginBasalValue;
         long tb_start = runningTime;
@@ -447,7 +446,7 @@ public class WatchUpdaterService extends WearableListenerService implements Goog
             tb_before = beginBasalValue;
             Profile profileTB = profileFunction.getProfile(runningTime);
             if (profileTB != null) {
-                tb_amount = tb1.tempBasalConvertedToAbsolute(runningTime, profileTB);
+                tb_amount = TemporaryBasalExtensionKt.convertedToAbsolute(tb1, runningTime, profileTB);
                 tb_start = runningTime;
             }
         }
@@ -469,7 +468,7 @@ public class WatchUpdaterService extends WearableListenerService implements Goog
             }
 
             //temps
-            tb2 = treatmentsPlugin.getTempBasalFromHistory(runningTime);
+            tb2 = iobCobCalculator.getTempBasalIncludingConvertedExtended(runningTime);
 
             if (tb1 == null && tb2 == null) {
                 //no temp stays no temp
@@ -484,10 +483,10 @@ public class WatchUpdaterService extends WearableListenerService implements Goog
                 tb1 = tb2;
                 tb_start = runningTime;
                 tb_before = endBasalValue;
-                tb_amount = tb1.tempBasalConvertedToAbsolute(runningTime, profileTB);
+                tb_amount = TemporaryBasalExtensionKt.convertedToAbsolute(tb1, runningTime, profileTB);
 
             } else if (tb1 != null && tb2 != null) {
-                double currentAmount = tb2.tempBasalConvertedToAbsolute(runningTime, profileTB);
+                double currentAmount = TemporaryBasalExtensionKt.convertedToAbsolute(tb2, runningTime, profileTB);
                 if (currentAmount != tb_amount) {
                     temps.add(tempDatamap(tb_start, tb_before, runningTime, currentAmount, tb_amount));
                     tb_start = runningTime;
@@ -502,14 +501,14 @@ public class WatchUpdaterService extends WearableListenerService implements Goog
             basals.add(basalMap(beginBasalSegmentTime, runningTime, beginBasalValue));
         }
         if (tb1 != null) {
-            tb2 = treatmentsPlugin.getTempBasalFromHistory(now); //use "now" to express current situation
+            tb2 = iobCobCalculator.getTempBasalIncludingConvertedExtended(now); //use "now" to express current situation
             if (tb2 == null) {
                 //express the cancelled temp by painting it down one minute early
                 temps.add(tempDatamap(tb_start, tb_before, now - 1 * 60 * 1000, endBasalValue, tb_amount));
             } else {
                 //express currently running temp by painting it a bit into the future
                 Profile profileNow = profileFunction.getProfile(now);
-                double currentAmount = tb2.tempBasalConvertedToAbsolute(now, profileNow);
+                double currentAmount = TemporaryBasalExtensionKt.convertedToAbsolute(tb2, now, profileNow);
                 if (currentAmount != tb_amount) {
                     temps.add(tempDatamap(tb_start, tb_before, now, tb_amount, tb_amount));
                     temps.add(tempDatamap(now, tb_amount, runningTime + 5 * 60 * 1000, currentAmount, currentAmount));
@@ -518,11 +517,11 @@ public class WatchUpdaterService extends WearableListenerService implements Goog
                 }
             }
         } else {
-            tb2 = treatmentsPlugin.getTempBasalFromHistory(now); //use "now" to express current situation
+            tb2 = iobCobCalculator.getTempBasalIncludingConvertedExtended(now); //use "now" to express current situation
             if (tb2 != null) {
                 //onset at the end
                 Profile profileTB = profileFunction.getProfile(runningTime);
-                double currentAmount = tb2.tempBasalConvertedToAbsolute(runningTime, profileTB);
+                double currentAmount = TemporaryBasalExtensionKt.convertedToAbsolute(tb2, runningTime, profileTB);
                 temps.add(tempDatamap(now - 1 * 60 * 1000, endBasalValue, runningTime + 5 * 60 * 1000, currentAmount, currentAmount));
             }
         }
@@ -538,7 +537,7 @@ public class WatchUpdaterService extends WearableListenerService implements Goog
         if (sp.getBoolean("wear_predictions", true) && finalLastRun != null && finalLastRun.getRequest().getHasPredictions() && finalLastRun.getConstraintsProcessed() != null) {
             List<GlucoseValueDataPoint> predArray =
                     finalLastRun.getConstraintsProcessed().getPredictions()
-                            .stream().map( bg -> new GlucoseValueDataPoint(bg, defaultValueHelper, profileFunction, resourceHelper))
+                            .stream().map(bg -> new GlucoseValueDataPoint(bg, defaultValueHelper, profileFunction, resourceHelper))
                             .collect(Collectors.toList());
 
             if (!predArray.isEmpty()) {
@@ -688,7 +687,7 @@ public class WatchUpdaterService extends WearableListenerService implements Goog
             iobSum = iobDetail = cobString = currentBasal = bgiString = "";
             if (profile != null) {
                 IobTotal bolusIob = iobCobCalculator.calculateIobFromBolus().round();
-                IobTotal basalIob = treatmentsPlugin.getLastCalculationTempBasals().round();
+                IobTotal basalIob = iobCobCalculator.calculateIobFromTempBasalsIncludingConvertedExtended().round();
 
                 iobSum = DecimalFormatter.INSTANCE.to2Decimal(bolusIob.iob + basalIob.basaliob);
                 iobDetail = "(" + DecimalFormatter.INSTANCE.to2Decimal(bolusIob.iob) + "|" + DecimalFormatter.INSTANCE.to2Decimal(basalIob.basaliob) + ")";
@@ -798,15 +797,11 @@ public class WatchUpdaterService extends WearableListenerService implements Goog
         if (profile == null)
             return "";
 
-        TemporaryBasal activeTemp = treatmentsPlugin.getTempBasalFromHistory(System.currentTimeMillis());
+        TemporaryBasal activeTemp = iobCobCalculator.getTempBasalIncludingConvertedExtended(System.currentTimeMillis());
         if (activeTemp != null) {
-            basalStringResult = activeTemp.toStringShort();
+            basalStringResult = TemporaryBasalExtensionKt.toStringShort(activeTemp);
         } else {
-            if (sp.getBoolean(R.string.key_danar_visualizeextendedaspercentage, false)) {
-                basalStringResult = "100%";
-            } else {
-                basalStringResult = DecimalFormatter.INSTANCE.to2Decimal(profile.getBasal()) + "U/h";
-            }
+            basalStringResult = DecimalFormatter.INSTANCE.to2Decimal(profile.getBasal()) + "U/h";
         }
         return basalStringResult;
     }

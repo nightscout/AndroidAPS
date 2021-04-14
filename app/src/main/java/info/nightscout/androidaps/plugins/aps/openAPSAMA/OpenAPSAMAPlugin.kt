@@ -21,7 +21,7 @@ import info.nightscout.androidaps.utils.FabricPrivacy
 import info.nightscout.androidaps.utils.HardLimits
 import info.nightscout.androidaps.utils.Profiler
 import info.nightscout.androidaps.utils.Round
-import info.nightscout.androidaps.utils.extensions.target
+import info.nightscout.androidaps.extensions.target
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 import org.json.JSONException
 import javax.inject.Inject
@@ -37,7 +37,6 @@ open class OpenAPSAMAPlugin @Inject constructor(
     private val profileFunction: ProfileFunction,
     private val context: Context,
     private val activePlugin: ActivePluginProvider,
-    private val treatmentsPlugin: TreatmentsInterface,
     private val iobCobCalculator: IobCobCalculator,
     private val hardLimits: HardLimits,
     private val profiler: Profiler,
@@ -108,7 +107,7 @@ open class OpenAPSAMAPlugin @Inject constructor(
         val iobArray = iobCobCalculator.calculateIobArrayInDia(profile)
         profiler.log(LTag.APS, "calculateIobArrayInDia()", startPart)
         startPart = System.currentTimeMillis()
-        val mealData = iobCobCalculator.mealData
+        val mealData = iobCobCalculator.getMealDataWithWaitingForCalculationFinish()
         profiler.log(LTag.APS, "getMealData()", startPart)
         val maxIob = constraintChecker.getMaxIOBAllowed().also { maxIOBAllowedConstraint ->
             inputConstraints.copyReasons(maxIOBAllowedConstraint)
@@ -117,7 +116,7 @@ open class OpenAPSAMAPlugin @Inject constructor(
         var maxBg = hardLimits.verifyHardLimits(Round.roundTo(profile.targetHighMgdl, 0.1), R.string.profile_high_target, HardLimits.VERY_HARD_LIMIT_MAX_BG[0].toDouble(), HardLimits.VERY_HARD_LIMIT_MAX_BG[1].toDouble())
         var targetBg = hardLimits.verifyHardLimits(profile.targetMgdl, R.string.temp_target_value, HardLimits.VERY_HARD_LIMIT_TARGET_BG[0].toDouble(), HardLimits.VERY_HARD_LIMIT_TARGET_BG[1].toDouble())
         var isTempTarget = false
-        val tempTarget = repository.getTemporaryTargetActiveAt(dateUtil._now()).blockingGet()
+        val tempTarget = repository.getTemporaryTargetActiveAt(dateUtil.now()).blockingGet()
         if (tempTarget is ValueWrapper.Existing) {
             isTempTarget = true
             minBg = hardLimits.verifyHardLimits(tempTarget.value.lowTarget, R.string.temp_target_low_target, HardLimits.VERY_HARD_LIMIT_TEMP_MIN_BG[0].toDouble(), HardLimits.VERY_HARD_LIMIT_TEMP_MIN_BG[1].toDouble())
@@ -131,7 +130,7 @@ open class OpenAPSAMAPlugin @Inject constructor(
         if (!hardLimits.checkOnlyHardLimits(pump.baseBasalRate, R.string.current_basal_value, 0.01, hardLimits.maxBasal())) return
         startPart = System.currentTimeMillis()
         if (constraintChecker.isAutosensModeEnabled().value()) {
-            val autosensData = iobCobCalculator.getLastAutosensDataSynchronized("OpenAPSPlugin")
+            val autosensData = iobCobCalculator.getLastAutosensDataWithWaitForCalculationFinish("OpenAPSPlugin")
             if (autosensData == null) {
                 rxBus.send(EventOpenAPSUpdateResultGui(resourceHelper.gs(R.string.openaps_noasdata)))
                 return
@@ -161,10 +160,10 @@ open class OpenAPSAMAPlugin @Inject constructor(
             lastAPSResult = null
             lastAPSRun = 0
         } else {
-            if (determineBasalResultAMA.rate == 0.0 && determineBasalResultAMA.duration == 0 && !treatmentsPlugin.isTempBasalInProgress) determineBasalResultAMA.tempBasalRequested = false
+            if (determineBasalResultAMA.rate == 0.0 && determineBasalResultAMA.duration == 0 && iobCobCalculator.getTempBasalIncludingConvertedExtended(dateUtil.now()) == null) determineBasalResultAMA.tempBasalRequested = false
             determineBasalResultAMA.iob = iobArray[0]
             val now = System.currentTimeMillis()
-            determineBasalResultAMA.json?.put("timestamp", DateUtil.toISOString(now))
+            determineBasalResultAMA.json?.put("timestamp", dateUtil.toISOString(now))
             determineBasalResultAMA.inputConstraints = inputConstraints
             lastDetermineBasalAdapterAMAJS = determineBasalAdapterAMAJS
             lastAPSResult = determineBasalResultAMA

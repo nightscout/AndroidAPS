@@ -26,6 +26,7 @@ import info.nightscout.androidaps.utils.sharedPreferences.SP;
  * Created by mike on 21.05.2017.
  */
 
+@Deprecated
 @DatabaseTable(tableName = "TemporaryBasals")
 public class TemporaryBasal implements Interval, DbObjectBase {
 
@@ -431,7 +432,7 @@ public class TemporaryBasal implements Interval, DbObjectBase {
                 return "null";
             Double currentBasalRate = profile.getBasal();
             double rate = currentBasalRate + netExtendedRate;
-            return getCalcuatedPercentageIfNeeded() + DecimalFormatter.INSTANCE.to2Decimal(rate) + "U/h (" + DecimalFormatter.INSTANCE.to2Decimal(netExtendedRate) + "E) @" +
+            return DecimalFormatter.INSTANCE.to2Decimal(rate) + "U/h (" + DecimalFormatter.INSTANCE.to2Decimal(netExtendedRate) + "E) @" +
                     dateUtil.timeString(date) +
                     " " + getRealDuration() + "/" + durationInMinutes + "'";
         } else if (isAbsolute) {
@@ -459,45 +460,10 @@ public class TemporaryBasal implements Interval, DbObjectBase {
                 rate = absoluteRate;
             }
 
-            if (sp.getBoolean(R.string.key_danar_visualizeextendedaspercentage, false) && sp.getBoolean(R.string.key_danar_useextended, false)) {
-                Profile profile = profileFunction.getProfile();
-                if (profile != null) {
-                    double basal = profile.getBasal();
-                    if (basal != 0) {
-                        return Math.round(rate * 100d / basal) + "%";
-                    }
-                }
-            }
             return DecimalFormatter.INSTANCE.to2Decimal(rate) + "U/h";
         } else { // percent
             return percentRate + "%";
         }
-    }
-
-    private String getCalcuatedPercentageIfNeeded() {
-        Profile profile = profileFunction.getProfile();
-
-        if (profile == null)
-            return "null";
-
-        if (isAbsolute || isFakeExtended) {
-
-            double rate;
-            if (isFakeExtended) {
-                double currentBasalRate = profile.getBasal();
-                rate = currentBasalRate + netExtendedRate;
-            } else {
-                rate = absoluteRate;
-            }
-
-            if (sp.getBoolean(R.string.key_danar_visualizeextendedaspercentage, false) && sp.getBoolean(R.string.key_danar_useextended, false)) {
-                double basal = profile.getBasal();
-                if (basal != 0) {
-                    return Math.round(rate * 100d / basal) + "% ";
-                }
-            }
-        }
-        return "";
     }
 
     public String toStringVeryShort() {

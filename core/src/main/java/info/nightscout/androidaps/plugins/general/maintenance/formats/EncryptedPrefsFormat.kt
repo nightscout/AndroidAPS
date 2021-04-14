@@ -2,8 +2,8 @@ package info.nightscout.androidaps.plugins.general.maintenance.formats
 
 import info.nightscout.androidaps.core.R
 import info.nightscout.androidaps.utils.CryptoUtil
-import info.nightscout.androidaps.utils.extensions.hexStringToByteArray
-import info.nightscout.androidaps.utils.extensions.toHex
+import info.nightscout.androidaps.extensions.hexStringToByteArray
+import info.nightscout.androidaps.extensions.toHex
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 import info.nightscout.androidaps.utils.storage.Storage
 import org.json.JSONException
