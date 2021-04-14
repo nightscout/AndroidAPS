@@ -5,7 +5,7 @@ import android.content.Intent
 import com.google.gson.Gson
 import dagger.android.DaggerBroadcastReceiver
 import info.nightscout.androidaps.interfaces.ActivePlugin
-import info.nightscout.androidaps.interfaces.PumpInterface
+import info.nightscout.androidaps.interfaces.Pump
 import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.logging.BundleLogger
 import info.nightscout.androidaps.logging.LTag
@@ -37,7 +37,7 @@ class TimeDateOrTZChangeReceiver : DaggerBroadcastReceiver() {
     override fun onReceive(context: Context, intent: Intent) {
         super.onReceive(context, intent)
         val action = intent.action
-        val activePump: PumpInterface = activePlugin.activePump
+        val activePump: Pump = activePlugin.activePump
 
         aapsLogger.debug(LTag.PUMP, "TimeDateOrTZChangeReceiver::Date, Time and/or TimeZone changed. [action={}]", action)
         aapsLogger.debug(LTag.PUMP, "TimeDateOrTZChangeReceiver::Intent::{}", BundleLogger.log(intent.extras))

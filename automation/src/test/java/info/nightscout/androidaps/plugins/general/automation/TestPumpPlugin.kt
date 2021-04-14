@@ -7,7 +7,7 @@ import info.nightscout.androidaps.data.PumpEnactResult
 import info.nightscout.androidaps.interfaces.PluginBase
 import info.nightscout.androidaps.interfaces.PluginDescription
 import info.nightscout.androidaps.interfaces.PumpDescription
-import info.nightscout.androidaps.interfaces.PumpInterface
+import info.nightscout.androidaps.interfaces.Pump
 import info.nightscout.androidaps.interfaces.PumpSync
 import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.plugins.common.ManufacturerType
@@ -23,7 +23,7 @@ class TestPumpPlugin(pluginDescription: PluginDescription,
                      injector: HasAndroidInjector
 ) : PluginBase(
     pluginDescription, aapsLogger, resourceHelper, injector
-), PumpInterface {
+), Pump {
 
     var connected = false
     var isProfileSet = true

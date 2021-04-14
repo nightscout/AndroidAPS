@@ -186,7 +186,7 @@ class ConfigBuilderPlugin @Inject constructor(
             PluginType.PROFILE     -> pluginsInCategory = activePlugin.getSpecificPluginsListByInterface(ProfileInterface::class.java)
             PluginType.BGSOURCE    -> pluginsInCategory = activePlugin.getSpecificPluginsListByInterface(BgSource::class.java)
             PluginType.TREATMENT   -> pluginsInCategory = activePlugin.getSpecificPluginsListByInterface(TreatmentsInterface::class.java)
-            PluginType.PUMP        -> pluginsInCategory = activePlugin.getSpecificPluginsListByInterface(PumpInterface::class.java)
+            PluginType.PUMP        -> pluginsInCategory = activePlugin.getSpecificPluginsListByInterface(Pump::class.java)
 
             else                   -> {
             }

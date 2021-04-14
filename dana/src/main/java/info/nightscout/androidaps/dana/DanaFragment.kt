@@ -17,7 +17,7 @@ import info.nightscout.androidaps.events.EventPumpStatusChanged
 import info.nightscout.androidaps.events.EventTempBasalChange
 import info.nightscout.androidaps.interfaces.ActivePlugin
 import info.nightscout.androidaps.interfaces.CommandQueueProvider
-import info.nightscout.androidaps.interfaces.PumpInterface
+import info.nightscout.androidaps.interfaces.Pump
 import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.logging.LTag
 import info.nightscout.androidaps.logging.UserEntryLogger
@@ -189,7 +189,7 @@ class DanaFragment : DaggerFragment() {
     fun updateGUI() {
         if (_binding == null) return
         val pump = danaPump
-        val plugin: PumpInterface = activePlugin.activePump
+        val plugin: Pump = activePlugin.activePump
         if (pump.lastConnection != 0L) {
             val agoMsec = System.currentTimeMillis() - pump.lastConnection
             val agoMin = (agoMsec.toDouble() / 60.0 / 1000.0).toInt()

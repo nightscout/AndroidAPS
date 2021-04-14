@@ -20,7 +20,7 @@ import info.nightscout.androidaps.interfaces.ActivePlugin;
 import info.nightscout.androidaps.interfaces.Config;
 import info.nightscout.androidaps.interfaces.ProfileFunction;
 import info.nightscout.androidaps.interfaces.PumpDescription;
-import info.nightscout.androidaps.interfaces.PumpInterface;
+import info.nightscout.androidaps.interfaces.Pump;
 import info.nightscout.androidaps.logging.AAPSLogger;
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper;
 import info.nightscout.androidaps.plugins.general.overview.events.EventNewNotification;
@@ -245,7 +245,7 @@ public class Profile {
 
         if (isValid) {
             // Check for hours alignment
-            PumpInterface pump = activePlugin.getActivePump();
+            Pump pump = activePlugin.getActivePump();
             if (!pump.getPumpDescription().is30minBasalRatesCapable()) {
                 for (int index = 0; index < basal_v.size(); index++) {
                     long secondsFromMidnight = basal_v.keyAt(index);

@@ -32,7 +32,7 @@ interface ActivePlugin {
      *  Currently selected Pump plugin
      *  Default VirtualPump
      */
-    val activePump: PumpInterface
+    val activePump: Pump
 
     /**
      *  Currently selected Sensitivity plugin

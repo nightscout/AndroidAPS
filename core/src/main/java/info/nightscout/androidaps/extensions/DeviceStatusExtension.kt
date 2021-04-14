@@ -5,7 +5,7 @@ import info.nightscout.androidaps.database.entities.DeviceStatus
 import info.nightscout.androidaps.interfaces.IobCobCalculator
 import info.nightscout.androidaps.interfaces.LoopInterface
 import info.nightscout.androidaps.interfaces.ProfileFunction
-import info.nightscout.androidaps.interfaces.PumpInterface
+import info.nightscout.androidaps.interfaces.Pump
 import info.nightscout.androidaps.plugins.configBuilder.RunningConfiguration
 import info.nightscout.androidaps.receivers.ReceiverStatusStore
 import info.nightscout.androidaps.utils.DateUtil
@@ -31,7 +31,7 @@ fun buildDeviceStatus(
     loopPlugin: LoopInterface,
     iobCobCalculatorPlugin: IobCobCalculator,
     profileFunction: ProfileFunction,
-    pumpInterface: PumpInterface,
+    pump: Pump,
     receiverStatusStore: ReceiverStatusStore,
     runningConfiguration: RunningConfiguration,
     version: String
@@ -78,7 +78,7 @@ fun buildDeviceStatus(
         iob = iob?.toString(),
         enacted = enacted?.toString(),
         device = "openaps://" + Build.MANUFACTURER + " " + Build.MODEL,
-        pump = pumpInterface.getJSONStatus(profile, profileName, version).toString(),
+        pump = pump.getJSONStatus(profile, profileName, version).toString(),
         uploaderBattery = receiverStatusStore.batteryLevel,
         configuration = runningConfiguration.configuration().toString()
     )

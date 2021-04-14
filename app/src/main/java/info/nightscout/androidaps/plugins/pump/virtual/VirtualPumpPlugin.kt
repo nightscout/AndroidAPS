@@ -63,7 +63,7 @@ open class VirtualPumpPlugin @Inject constructor(
     .description(R.string.description_pump_virtual)
     .setDefault(),
     injector, aapsLogger, resourceHelper, commandQueue
-), PumpInterface {
+), Pump {
 
     private val disposable = CompositeDisposable()
     var batteryPercent = 50

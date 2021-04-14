@@ -815,7 +815,7 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
             } ?: ""
     }
 
-    private fun updateGraph(lastRun: LoopInterface.LastRun?, predictionsAvailable: Boolean, lowLine: Double, highLine: Double, pump: PumpInterface, profile: Profile) {
+    private fun updateGraph(lastRun: LoopInterface.LastRun?, predictionsAvailable: Boolean, lowLine: Double, highLine: Double, pump: Pump, profile: Profile) {
         viewLifecycleOwner.lifecycleScope.launch(Dispatchers.Main) {
             if (_binding == null) return@launch
             val menuChartSettings = overviewMenus.setting

@@ -16,7 +16,7 @@ class PluginStore @Inject constructor(
     lateinit var plugins: List<@JvmSuppressWildcards PluginBase>
 
     private var activeBgSourceStore: BgSource? = null
-    private var activePumpStore: PumpInterface? = null
+    private var activePumpStore: Pump? = null
     private var activeProfile: ProfileInterface? = null
     private var activeAPSStore: APS? = null
     private var activeInsulinStore: Insulin? = null
@@ -114,9 +114,9 @@ class PluginStore @Inject constructor(
 
         // PluginType.PUMP
         pluginsInCategory = getSpecificPluginsList(PluginType.PUMP)
-        activePumpStore = getTheOneEnabledInArray(pluginsInCategory, PluginType.PUMP) as PumpInterface?
+        activePumpStore = getTheOneEnabledInArray(pluginsInCategory, PluginType.PUMP) as Pump?
         if (activePumpStore == null) {
-            activePumpStore = getDefaultPlugin(PluginType.PUMP) as PumpInterface
+            activePumpStore = getDefaultPlugin(PluginType.PUMP) as Pump
             (activePumpStore as PluginBase).setPluginEnabled(PluginType.PUMP, true)
             aapsLogger.debug(LTag.CONFIGBUILDER, "Defaulting PumpInterface")
         }
@@ -168,7 +168,7 @@ class PluginStore @Inject constructor(
     override val activeAPS: APS
         get() = activeAPSStore ?: checkNotNull(activeAPSStore) { "No APS selected" }
 
-    override val activePump: PumpInterface
+    override val activePump: Pump
         get() = activePumpStore ?: checkNotNull(activePumpStore) { "No pump selected" }
 
     override val activeSensitivity: Sensitivity

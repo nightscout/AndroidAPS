@@ -17,29 +17,104 @@ import org.json.JSONObject
  *
  * Created by mike on 04.06.2016.
  */
-interface PumpInterface {
+interface Pump {
 
-    fun isInitialized(): Boolean      // true if pump status has been read and is ready to accept commands
-    fun isSuspended(): Boolean        // true if suspended (not delivering insulin)
-    fun isBusy(): Boolean             // if true pump is not ready to accept commands right now
-    fun isConnected(): Boolean        // true if BT connection is established
-    fun isConnecting(): Boolean       // true if BT connection is in progress
-    fun isHandshakeInProgress(): Boolean      // true if BT is connected but initial handshake is still in progress
-    @JvmDefault fun finishHandshaking() {}  // set initial handshake completed
+    /**
+     * @return true if pump status has been read and is ready to accept commands
+     */
+    fun isInitialized(): Boolean
+
+    /**
+     * @return true if suspended (not delivering insulin)
+     */
+    fun isSuspended(): Boolean
+
+    /**
+     * @return true if pump is not ready to accept commands right now
+     */
+    fun isBusy(): Boolean
+
+    /**
+     * @return true if BT connection is established
+     */
+    fun isConnected(): Boolean
+
+    /**
+     * @return true if BT connection is in progress
+     */
+    fun isConnecting(): Boolean
+
+    /**
+     * @return true if BT is connected but initial handshake is still in progress
+     */
+    fun isHandshakeInProgress(): Boolean
+
+    /**
+     * set initial handshake completed (moved to connected state)
+     */
+    @JvmDefault fun finishHandshaking() {}
+
+    /**
+     * Perform BT connect, there is new command waiting in queue
+     * @param reason originator identification
+     */
     fun connect(reason: String)
+
+    /**
+     * Perform BT disconnect, there is NO command waiting in queue
+     * @param reason originator identification
+     */
     fun disconnect(reason: String)
-    @JvmDefault fun waitForDisconnectionInSeconds(): Int = 5 // wait [x] second after last command before sending disconnect
+
+    /**
+     * @return # of second to wait before [disconnect] is send after last command
+     */
+    @JvmDefault fun waitForDisconnectionInSeconds(): Int = 5
+
+    /**
+     * Stop connection process
+     */
     fun stopConnecting()
+
+    /**
+     * Force reading of full pump status
+     * @param reason originator identification
+     */
     fun getPumpStatus(reason: String)
 
-    // Upload to pump new basal profile
+    /**
+     *  Upload to pump new basal profile (and IC/ISF if supported by pump)
+     *
+     *  @param profile new profile
+     */
     fun setNewBasalProfile(profile: Profile): PumpEnactResult
+
+    /**
+     * @param profile profile to check
+     *
+     * @return true if pump is running the same profile as in param
+     */
     fun isThisProfileSet(profile: Profile): Boolean
+
+    /**
+     * @return timestamp of last connection to the pump
+     */
     fun lastDataTime(): Long
 
-    val baseBasalRate: Double  // base basal rate, not temp basal
+    /**
+     * Currently running base basal rate [U/h]
+     */
+    val baseBasalRate: Double
+
+    /**
+     * Reservoir level at time of last connection [Units of insulin]
+     */
     val reservoirLevel: Double
-    val batteryLevel: Int  // in percent as integer
+
+    /**
+     * Battery level at time of last connection [%]
+     */
+    val batteryLevel: Int
 
     /**
      * Request a bolus to be delivered, carbs to be stored on pump or both.
@@ -137,13 +212,30 @@ interface PumpInterface {
      */
     fun serialNumber(): String
 
-    // Pump capabilities
+    /**
+     * Pump capabilities
+     */
     val pumpDescription: PumpDescription
 
-    // Short info for SMS, Wear etc
+    /**
+     * Short info for SMS, Wear etc
+     */
     fun shortStatus(veryShort: Boolean): String
+
+    /**
+     * @return true if pump is currently emulating temporary basals by extended boluses (usually to bypass 200% limit)
+     */
     val isFakingTempsByExtendedBoluses: Boolean
+
+    /**
+     * Load TDDs and store them to the database
+     */
     fun loadTDDs(): PumpEnactResult
+
+    /**
+     * @return true if pump handles DST changes by it self. In this case it's not necessary stop the loop
+     *                  after DST change
+     */
     fun canHandleDST(): Boolean
 
     /**
@@ -176,9 +268,14 @@ interface PumpInterface {
      */
     @JvmDefault fun timezoneOrDSTChanged(timeChangeType: TimeChangeType) {}
 
-    /* Only used for pump types where hasCustomUnreachableAlertCheck=true */
+    /**
+     * Only used for pump types where hasCustomUnreachableAlertCheck=true
+     */
     @JvmDefault
     fun isUnreachableAlertTimeoutExceeded(alertTimeoutMilliseconds: Long): Boolean = false
 
+    /**
+     * if true APS set 100% basal before full hour to avoid pump beeping
+     */
     @JvmDefault fun setNeutralTempAtFullHour(): Boolean = false
 }

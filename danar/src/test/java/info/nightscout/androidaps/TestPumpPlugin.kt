@@ -5,7 +5,7 @@ import info.nightscout.androidaps.data.DetailedBolusInfo
 import info.nightscout.androidaps.data.Profile
 import info.nightscout.androidaps.data.PumpEnactResult
 import info.nightscout.androidaps.interfaces.PumpDescription
-import info.nightscout.androidaps.interfaces.PumpInterface
+import info.nightscout.androidaps.interfaces.Pump
 import info.nightscout.androidaps.interfaces.PumpSync
 import info.nightscout.androidaps.plugins.common.ManufacturerType
 import info.nightscout.androidaps.plugins.pump.common.defs.PumpType
@@ -13,7 +13,7 @@ import info.nightscout.androidaps.utils.TimeChangeType
 import org.json.JSONObject
 
 @Suppress("MemberVisibilityCanBePrivate")
-class TestPumpPlugin(val injector: HasAndroidInjector) : PumpInterface {
+class TestPumpPlugin(val injector: HasAndroidInjector) : Pump {
 
     var connected = false
     var isProfileSet = true
