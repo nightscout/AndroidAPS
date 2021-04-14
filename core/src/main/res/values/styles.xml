@@ -131,7 +131,7 @@
         <!---Loop Closed Icon Color-->
         <item name="loopClosed" >@color/loopGreen</item>
         <!---Loop Disabled Icon Color-->
-        <item name="loopDisabled" >@color/gray</item>
+        <item name="loopDisabled" >@color/sandGray</item>
         <!---Loop Disconnected Icon Color-->
         <item name="loopDisconnected" >@color/red</item>
         <!---Loop Opened Icon Color-->

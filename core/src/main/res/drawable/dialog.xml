@@ -11,8 +11,8 @@ android:top="8dp"
     <padding
         android:top="0dp"
         android:bottom="0dp"
-        android:left="10dp"
-        android:right="10dp"
+        android:left="8dp"
+        android:right="8dp"
         />
     <solid android:color="#303030" />
     <corners android:radius="10dp" />
