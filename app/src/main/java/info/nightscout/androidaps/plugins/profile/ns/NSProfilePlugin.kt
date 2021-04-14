@@ -11,7 +11,7 @@ import info.nightscout.androidaps.events.EventProfileStoreChanged
 import info.nightscout.androidaps.interfaces.PluginBase
 import info.nightscout.androidaps.interfaces.PluginDescription
 import info.nightscout.androidaps.interfaces.PluginType
-import info.nightscout.androidaps.interfaces.ProfileInterface
+import info.nightscout.androidaps.interfaces.ProfileSource
 import info.nightscout.androidaps.interfaces.ProfileStore
 import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.logging.LTag
@@ -44,9 +44,12 @@ class NSProfilePlugin @Inject constructor(
     .showInList(!config.NSCLIENT)
     .description(R.string.description_profile_nightscout),
     aapsLogger, resourceHelper, injector
-), ProfileInterface {
+), ProfileSource {
 
-    private var profile: ProfileStore? = null
+    override var profile: ProfileStore? = null
+
+    override val profileName: String?
+        get() = profile?.getDefaultProfileName()
 
     override fun onStart() {
         super.onStart()
@@ -71,13 +74,6 @@ class NSProfilePlugin @Inject constructor(
         }
     }
 
-    override fun getProfile(): ProfileStore? {
-        return profile
-    }
-
-    override fun getProfileName(): String {
-        return profile!!.getDefaultProfileName()!!
-    }
 
     // cannot be inner class because of needed injection
     class NSProfileWorker(

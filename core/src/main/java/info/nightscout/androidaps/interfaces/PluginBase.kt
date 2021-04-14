@@ -66,9 +66,8 @@ abstract class PluginBase(
     fun isDefault() = pluginDescription.defaultPlugin
 
     /**
-     * So far plugin can have it's main type + ConstraintInterface + ProfileInterface
+     * So far plugin can have it's main type + ConstraintInterface
      * ConstraintInterface is enabled if main plugin is enabled
-     * ProfileInterface can be enabled only  if main interface is enable
      */
     fun setPluginEnabled(type: PluginType, newState: Boolean) {
         if (type == pluginDescription.mainType) {

@@ -69,7 +69,7 @@ class ConfigBuilderPlugin @Inject constructor(
             if (p.pluginDescription.alwaysEnabled && p.pluginDescription.neverVisible) continue
             savePref(p, type, true)
             if (type == PluginType.PUMP) {
-                if (p is ProfileInterface) { // Store state of optional Profile interface
+                if (p is ProfileSource) { // Store state of optional Profile interface
                     savePref(p, PluginType.PROFILE, false)
                 }
             }
@@ -93,7 +93,7 @@ class ConfigBuilderPlugin @Inject constructor(
             val type = p.getType()
             loadPref(p, type, true)
             if (p.getType() == PluginType.PUMP) {
-                if (p is ProfileInterface) {
+                if (p is ProfileSource) {
                     loadPref(p, PluginType.PROFILE, false)
                 }
             }
@@ -183,7 +183,7 @@ class ConfigBuilderPlugin @Inject constructor(
             PluginType.INSULIN     -> pluginsInCategory = activePlugin.getSpecificPluginsListByInterface(Insulin::class.java)
             PluginType.SENSITIVITY -> pluginsInCategory = activePlugin.getSpecificPluginsListByInterface(Sensitivity::class.java)
             PluginType.APS         -> pluginsInCategory = activePlugin.getSpecificPluginsListByInterface(APS::class.java)
-            PluginType.PROFILE     -> pluginsInCategory = activePlugin.getSpecificPluginsListByInterface(ProfileInterface::class.java)
+            PluginType.PROFILE     -> pluginsInCategory = activePlugin.getSpecificPluginsListByInterface(ProfileSource::class.java)
             PluginType.BGSOURCE    -> pluginsInCategory = activePlugin.getSpecificPluginsListByInterface(BgSource::class.java)
             PluginType.TREATMENT   -> pluginsInCategory = activePlugin.getSpecificPluginsListByInterface(TreatmentsInterface::class.java)
             PluginType.PUMP        -> pluginsInCategory = activePlugin.getSpecificPluginsListByInterface(Pump::class.java)

@@ -98,7 +98,7 @@ class ProfileHelperActivity : NoSplashAppCompatActivity() {
         }
 
         // Active profile
-        profileList = activePlugin.activeProfileInterface.profile?.getProfileList() ?: ArrayList()
+        profileList = activePlugin.activeProfileSource.profile?.getProfileList() ?: ArrayList()
 
         binding.availableProfileList.setOnClickListener {
             PopupMenu(this, binding.availableProfileList).apply {
@@ -233,7 +233,7 @@ class ProfileHelperActivity : NoSplashAppCompatActivity() {
                 ProfileType.MOTOL_DEFAULT -> defaultProfile.profile(age, tdd, weight, profileFunction.getUnits())
                 ProfileType.DPV_DEFAULT -> defaultProfileDPV.profile(age, tdd, basalPct, profileFunction.getUnits())
                 ProfileType.CURRENT -> profileFunction.getProfile()?.convertToNonCustomizedProfile()
-                ProfileType.AVAILABLE_PROFILE -> activePlugin.activeProfileInterface.profile?.getSpecificProfile(profileList[profileUsed[tab]].toString())
+                ProfileType.AVAILABLE_PROFILE -> activePlugin.activeProfileSource.profile?.getSpecificProfile(profileList[profileUsed[tab]].toString())
                 ProfileType.PROFILE_SWITCH -> profileSwitch[profileSwitchUsed[tab]].profileObject?.convertToNonCustomizedProfile()
             }
         } catch (e: Exception) {

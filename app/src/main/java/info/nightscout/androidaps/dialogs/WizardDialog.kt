@@ -244,7 +244,7 @@ class WizardDialog : DaggerDialogFragment() {
 
     private fun initDialog() {
         val profile = profileFunction.getProfile()
-        val profileStore = activePlugin.activeProfileInterface.profile
+        val profileStore = activePlugin.activeProfileSource.profile
 
         if (profile == null || profileStore == null) {
             ToastUtils.showToastInUiThread(ctx, resourceHelper.gs(R.string.noprofile))
@@ -283,7 +283,7 @@ class WizardDialog : DaggerDialogFragment() {
     }
 
     private fun calculateInsulin() {
-        val profileStore = activePlugin.activeProfileInterface.profile
+        val profileStore = activePlugin.activeProfileSource.profile
         if (binding.profile.selectedItem == null || profileStore == null)
             return  // not initialized yet
         var profileName = binding.profile.selectedItem.toString()

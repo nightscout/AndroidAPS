@@ -14,7 +14,7 @@ interface ActivePlugin {
      *  Currently selected Profile plugin
      *  Default LocalProfile
      */
-    val activeProfileInterface: ProfileInterface
+    val activeProfileSource: ProfileSource
 
     /**
      *  Currently selected Insulin plugin

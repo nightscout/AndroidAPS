@@ -17,7 +17,7 @@ class PluginStore @Inject constructor(
 
     private var activeBgSourceStore: BgSource? = null
     private var activePumpStore: Pump? = null
-    private var activeProfile: ProfileInterface? = null
+    private var activeProfile: ProfileSource? = null
     private var activeAPSStore: APS? = null
     private var activeInsulinStore: Insulin? = null
     private var activeSensitivityStore: Sensitivity? = null
@@ -94,9 +94,9 @@ class PluginStore @Inject constructor(
 
         // PluginType.PROFILE
         pluginsInCategory = getSpecificPluginsList(PluginType.PROFILE)
-        activeProfile = getTheOneEnabledInArray(pluginsInCategory, PluginType.PROFILE) as ProfileInterface?
+        activeProfile = getTheOneEnabledInArray(pluginsInCategory, PluginType.PROFILE) as ProfileSource?
         if (activeProfile == null) {
-            activeProfile = getDefaultPlugin(PluginType.PROFILE) as ProfileInterface
+            activeProfile = getDefaultPlugin(PluginType.PROFILE) as ProfileSource
             (activeProfile as PluginBase).setPluginEnabled(PluginType.PROFILE, true)
             aapsLogger.debug(LTag.CONFIGBUILDER, "Defaulting ProfileInterface")
         }
@@ -159,7 +159,7 @@ class PluginStore @Inject constructor(
     override val activeBgSource: BgSource
         get() = activeBgSourceStore ?: checkNotNull(activeBgSourceStore) { "No bg source selected" }
 
-    override val activeProfileInterface: ProfileInterface
+    override val activeProfileSource: ProfileSource
         get() = activeProfile ?: checkNotNull(activeProfile) { "No profile selected" }
 
     override val activeInsulin: Insulin

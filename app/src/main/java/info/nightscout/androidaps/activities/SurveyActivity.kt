@@ -41,7 +41,7 @@ class SurveyActivity : NoSplashAppCompatActivity() {
 
         binding.id.text = InstanceId.instanceId()
 
-        val profileStore = activePlugin.activeProfileInterface.profile
+        val profileStore = activePlugin.activeProfileSource.profile
         val profileList = profileStore?.getProfileList() ?: return
         binding.spinner.adapter = ArrayAdapter(this, R.layout.spinner_centered, profileList)
 

@@ -380,7 +380,7 @@ public class TreatmentsPlugin extends PluginBase implements TreatmentsInterface 
             profileSwitch.source = Source.USER;
             profileSwitch.profileName = profileFunction.getProfileName(System.currentTimeMillis(), false, false);
             profileSwitch.profileJson = profileFunction.getProfile().getData().toString();
-            profileSwitch.profilePlugin = activePlugin.getActiveProfileInterface().getClass().getName();
+            profileSwitch.profilePlugin = activePlugin.getActiveProfileSource().getClass().getName();
             profileSwitch.durationInMinutes = duration;
             profileSwitch.isCPP = percentage != 100 || timeShift != 0;
             profileSwitch.timeshift = timeShift;

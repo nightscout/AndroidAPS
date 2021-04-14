@@ -42,7 +42,7 @@ open class ActionsTestBase : TestBaseWithProfile() {
     @Mock lateinit var commandQueue: CommandQueueProvider
     @Mock lateinit var configBuilder: ConfigBuilder
     @Mock lateinit var activePlugin: ActivePlugin
-    @Mock lateinit var profilePlugin: ProfileInterface
+    @Mock lateinit var profilePlugin: ProfileSource
     @Mock lateinit var smsCommunicatorPlugin: SmsCommunicator
     @Mock lateinit var loopPlugin: TestLoopPlugin
     @Mock lateinit var uel: UserEntryLogger
@@ -133,7 +133,7 @@ open class ActionsTestBase : TestBaseWithProfile() {
         testPumpPlugin = TestPumpPlugin(pluginDescription, aapsLogger, resourceHelper, injector)
         `when`(activePlugin.activePump).thenReturn(testPumpPlugin)
         `when`(profileFunction.getUnits()).thenReturn(Constants.MGDL)
-        `when`(activePlugin.activeProfileInterface).thenReturn(profilePlugin)
+        `when`(activePlugin.activeProfileSource).thenReturn(profilePlugin)
         `when`(profilePlugin.profile).thenReturn(getValidProfileStore())
     }
 }

@@ -545,7 +545,7 @@ class SmsCommunicatorPlugin @Inject constructor(
     }
 
     private fun processPROFILE(divided: Array<String>, receivedSms: Sms) { // load profiles
-        val anInterface = activePlugin.activeProfileInterface
+        val anInterface = activePlugin.activeProfileSource
         val store = anInterface.profile
         if (store == null) {
             sendSMS(Sms(receivedSms.phoneNumber, resourceHelper.gs(R.string.notconfigured)))

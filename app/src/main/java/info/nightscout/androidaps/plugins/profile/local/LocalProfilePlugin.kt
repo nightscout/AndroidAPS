@@ -46,7 +46,7 @@ class LocalProfilePlugin @Inject constructor(
     .description(R.string.description_profile_local)
     .setDefault(),
     aapsLogger, resourceHelper, injector
-), ProfileInterface {
+), ProfileSource {
 
     private var rawProfile: ProfileStore? = null
 
@@ -58,6 +58,7 @@ class LocalProfilePlugin @Inject constructor(
     }
 
     class SingleProfile {
+
         internal var name: String? = null
         internal var mgdl: Boolean = false
         internal var dia: Double = Constants.defaultDIA
@@ -350,12 +351,10 @@ class LocalProfilePlugin @Inject constructor(
         return ProfileStore(injector, json)
     }
 
-    override fun getProfile(): ProfileStore? {
-        return rawProfile
-    }
+    override val profile: ProfileStore?
+        get() = rawProfile
 
-    override fun getProfileName(): String {
-        return DecimalFormatter.to2Decimal(rawProfile?.getDefaultProfile()?.percentageBasalSum()
+    override val profileName: String
+        get() = DecimalFormatter.to2Decimal(rawProfile?.getDefaultProfile()?.percentageBasalSum()
             ?: 0.0) + "U "
-    }
 }

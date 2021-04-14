@@ -42,7 +42,7 @@ class ProfileFunctionImplementation @Inject constructor(
         var profileName = resourceHelper.gs(R.string.noprofileselected)
 
         val activeTreatments = activePlugin.activeTreatments
-        val activeProfile = activePlugin.activeProfileInterface
+        val activeProfile = activePlugin.activeProfileSource
 
         val profileSwitch = activeTreatments.getProfileSwitchFromHistory(time)
         if (profileSwitch != null) {
@@ -75,7 +75,7 @@ class ProfileFunctionImplementation @Inject constructor(
     override fun getProfile(time: Long): Profile? = getProfile(time, activePlugin.activeTreatments)
 
     override fun getProfile(time: Long, activeTreatments: TreatmentsInterface): Profile? {
-        val activeProfile = activePlugin.activeProfileInterface
+        val activeProfile = activePlugin.activeProfileSource
 
         //log.debug("Profile for: " + new Date(time).toLocaleString() + " : " + getProfileName(time));
         val profileSwitch = activeTreatments.getProfileSwitchFromHistory(time)

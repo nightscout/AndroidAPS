@@ -53,7 +53,7 @@ class ActionProfileSwitch(injector: HasAndroidInjector) : Action(injector) {
             callback.result(PumpEnactResult(injector).success(true).comment(R.string.alreadyset))?.run()
             return
         }
-        val profileStore = activePlugin.activeProfileInterface.profile ?: return
+        val profileStore = activePlugin.activeProfileSource.profile ?: return
         if (profileStore.getSpecificProfile(inputProfileName.value) == null) {
             aapsLogger.error(LTag.AUTOMATION, "Selected profile does not exist! - ${inputProfileName.value}")
             callback.result(PumpEnactResult(injector).success(false).comment(R.string.notexists))?.run()
@@ -88,5 +88,5 @@ class ActionProfileSwitch(injector: HasAndroidInjector) : Action(injector) {
         return this
     }
 
-    override fun isValid(): Boolean = activePlugin.activeProfileInterface.profile?.getSpecificProfile(inputProfileName.value) != null
+    override fun isValid(): Boolean = activePlugin.activeProfileSource.profile?.getSpecificProfile(inputProfileName.value) != null
 }

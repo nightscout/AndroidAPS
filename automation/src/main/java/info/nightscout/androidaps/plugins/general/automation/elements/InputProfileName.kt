@@ -15,7 +15,7 @@ class InputProfileName(private val resourceHelper: ResourceHelper, private val a
     var value: String = name
 
     override fun addToLayout(root: LinearLayout) {
-        val profileStore = activePlugin.activeProfileInterface.profile ?: return
+        val profileStore = activePlugin.activeProfileSource.profile ?: return
         val profileList = profileStore.getProfileList()
         val adapter = ArrayAdapter(root.context, R.layout.spinner_centered, profileList)
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)

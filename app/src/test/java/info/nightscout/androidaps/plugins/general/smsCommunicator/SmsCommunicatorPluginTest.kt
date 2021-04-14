@@ -173,7 +173,7 @@ class SmsCommunicatorPluginTest : TestBaseWithProfile() {
         `when`(iobCobCalculator.calculateIobFromTempBasalsIncludingConvertedExtended()).thenReturn(IobTotal(0))
         `when`(treatmentsInterface.service).thenReturn(treatmentService)
 
-        `when`(activePlugin.activeProfileInterface).thenReturn(localProfilePlugin)
+        `when`(activePlugin.activeProfileSource).thenReturn(localProfilePlugin)
 
         `when`(profileFunction.getUnits()).thenReturn(Constants.MGDL)
 

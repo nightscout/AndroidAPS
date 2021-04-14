@@ -265,7 +265,7 @@ class ActionsFragment : DaggerFragment() {
         val pump = activePlugin.activePump
 
         profileSwitch?.visibility = (
-            activePlugin.activeProfileInterface.profile != null &&
+            activePlugin.activeProfileSource.profile != null &&
                 pump.pumpDescription.isSetBasalProfileCapable &&
                 pump.isInitialized() &&
                 !pump.isSuspended()).toVisibility()

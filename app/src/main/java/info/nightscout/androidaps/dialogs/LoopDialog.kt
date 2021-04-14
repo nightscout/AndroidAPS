@@ -198,7 +198,7 @@ class LoopDialog : DaggerDialogFragment() {
             }
         }
         val profile = profileFunction.getProfile()
-        val profileStore = activePlugin.activeProfileInterface.profile
+        val profileStore = activePlugin.activeProfileSource.profile
 
         if (profile == null || profileStore == null) {
             ToastUtils.showToastInUiThread(ctx, resourceHelper.gs(R.string.noprofile))
