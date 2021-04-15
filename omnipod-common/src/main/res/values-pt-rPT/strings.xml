@@ -57,7 +57,7 @@
     <string name="omnipod_common_overview_last_connection">Última Ligação</string>
     <string name="omnipod_common_overview_last_bolus">Último Bólus</string>
     <string name="omnipod_common_overview_temp_basal_rate">Taxa Basal Temp</string>
-    <string name="omnipod_common_overview_base_basal_rate">Taxa Basal de Base</string>
+    <string name="omnipod_common_overview_base_basal_rate">Taxa Basal do Perfil</string>
     <string name="omnipod_common_overview_reservoir">Reservatório</string>
     <string name="omnipod_common_overview_pod_active_alerts">Alertas Pod Activos</string>
     <string name="omnipod_common_overview_firmware_version">Versão do Firmware</string>
