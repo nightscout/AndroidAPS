@@ -2,10 +2,10 @@
 <resources>
     <string name="automation_short">Auto</string>
     <string name="automation">Automatização</string>
-    <string name="automation_description">Tarefas de automação definidas pelo utilizador</string>
+    <string name="automation_description">Tarefas de automatização definidas pelo utilizador</string>
     <string name="automation_missing_task_name">Insira um nome da tarefa.</string>
-    <string name="automation_missing_trigger">Especifique pelo menos um gatilho.</string>
-    <string name="automation_missing_action">Especifique pelo menos uma acção.</string>
+    <string name="automation_missing_trigger">Especifique pelo menos uma condição.</string>
+    <string name="automation_missing_action">Especifique pelo menos uma ação.</string>
     <string name="alarm_message">Alarme: %1$s</string>
     <string name="alarm_short">Alarme:</string>
     <string name="message_short">Mnsg:</string>
@@ -40,7 +40,7 @@
     <string name="glucosecomparedmgdl">Glicose %1$s %2$.0f %3$s</string>
     <string name="glucosecomparedmmol">Glicose %1$s %2$.1f %3$s</string>
     <string name="percentagecompared">Percentagem Perfil  %1$s %2$d</string>
-    <string name="iobcompared">IOB %1$s %2$.1f</string>
+    <string name="iobcompared">IA %1$s %2$.1f</string>
     <string name="and">E</string>
     <string name="or">Ou</string>
     <string name="xor">Exclusivo ou</string>
@@ -89,9 +89,9 @@
     <string name="glucose_u">Glicose [%1$s]:</string>
     <string name="lastboluslabel">Último bolus atrás</string>
     <string name="lastboluscompared">Última vez do bolus %1$s %2$s atrás</string>
-    <string name="triggercoblabel">COB</string>
-    <string name="cobcompared">COB %1$s %2$.0f</string>
-    <string name="iob_u">IOB [U]:</string>
+    <string name="triggercoblabel">HCA</string>
+    <string name="cobcompared">HCA %1$s %2$.0f</string>
+    <string name="iob_u">IA [U]:</string>
     <string name="distance_short">Dist [m]:</string>
     <string name="recurringTime">Tempo recorrente</string>
     <string name="every">Todo</string>
@@ -101,10 +101,10 @@
     <string name="taskname">Nome da Tarefa</string>
     <string name="edit_short">EDITAR</string>
     <string name="please_choose_an_action_type">Escolha um tipo de acção</string>
-    <string name="please_choose_a_trigger_type">Escolha um tipo de gatilho</string>
-    <string name="triggers">Gatilhos:</string>
+    <string name="please_choose_a_trigger_type">Escolha um tipo de condição</string>
+    <string name="triggers">Condições:</string>
     <string name="remove_label">REMOVER</string>
     <string name="preconditions">Precondições:</string>
-    <string name="automation_event">Evento de automação</string>
+    <string name="automation_event">Evento de automatização</string>
     <string name="reorder_label">Reordenar</string>
 </resources>
