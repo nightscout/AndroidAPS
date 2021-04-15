@@ -208,11 +208,7 @@
     <string name="openapsma_autosensdata_label">Autosens data</string>
     <string name="openapsma_scriptdebugdata_label">Skrip foutopspoor</string>
     <string name="openapsama_useautosens">Gebruik autosens kenmerk</string>
-    <string name="refresheventsfromnightscout">Verfris gebeure van NS</string>
     <string name="deletefuturetreatments">Skrap behandelings in die toekoms</string>
-    <string name="eatingsoon">Eet binnekort</string>
-    <string name="hypo">Hipo</string>
-    <string name="activity">Aktiwiteit</string>
     <string name="actions_shortname">ACT</string>
     <string name="configbuilder_shortname">CONF</string>
     <string name="loop_shortname">LUS</string>
@@ -601,7 +597,6 @@
     <string name="format_carbs_ic">%1$.0fg IC: %2$.1f</string>
     <string name="format_cob_ic">%1$.1fg IC: %2$.1f</string>
     <string name="format_percent">%1$d%%</string>
-    <string name="boluswizard">Bolus slimjan</string>
     <string name="unit_minute_short">min</string>
     <!-- SMS Communicator & OTP Authenticator -->
 </resources>
