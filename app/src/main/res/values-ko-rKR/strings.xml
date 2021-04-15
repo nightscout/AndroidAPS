@@ -226,11 +226,7 @@
     <string name="openapsma_autosensdata_label">Autosens 정보</string>
     <string name="openapsma_scriptdebugdata_label">스크립트 디버그</string>
     <string name="openapsama_useautosens">Autosens 기능 사용</string>
-    <string name="refresheventsfromnightscout">NS에서 이벤트 새로고침</string>
     <string name="deletefuturetreatments">미래시점의 관리 삭제</string>
-    <string name="eatingsoon">식사직전</string>
-    <string name="hypo">저혈당</string>
-    <string name="activity">활동</string>
     <string name="actions_shortname">ACT</string>
     <string name="configbuilder_shortname">CONF</string>
     <string name="loop_shortname">LOOP</string>
@@ -629,7 +625,6 @@
     <string name="format_carbs_ic">%1$.0fg IC: %2$.1f</string>
     <string name="format_cob_ic">%1$.1fg IC: %2$.1f</string>
     <string name="format_percent">%1$d%%</string>
-    <string name="boluswizard">Bolus 마법사</string>
     <string name="unit_minute_short">분</string>
     <string name="profile_name">프로파일명:</string>
     <string name="selected_profile">선택:</string>
