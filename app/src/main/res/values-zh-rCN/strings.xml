@@ -207,11 +207,7 @@
     <string name="openapsma_autosensdata_label">Autosens 数据</string>
     <string name="openapsma_scriptdebugdata_label">脚本调试</string>
     <string name="openapsama_useautosens">使用Autosens功能</string>
-    <string name="refresheventsfromnightscout">从 NS 刷新事件</string>
     <string name="deletefuturetreatments">删除未来的治疗项</string>
-    <string name="eatingsoon">很快吃饭</string>
-    <string name="hypo">低</string>
-    <string name="activity">活动</string>
     <string name="actions_shortname">操作</string>
     <string name="configbuilder_shortname">配置</string>
     <string name="loop_shortname">闭环</string>
