@@ -24,6 +24,8 @@
     <string name="medtronic_pump_battery_nizn">NiZn (vue étendue)</string>
     <string name="medtronic_pump_battery_nimh">NiMH (vue Étendue)</string>
     <string name="medtronic_bolus_debugging">Débogage de Bolus/Traitements</string>
+    <!-- MDT Fragment -->
+    <string name="rl_battery_label">Batterie RileyLink</string>
     <!-- MDT Errors -->
     <string name="medtronic_errors">Erreurs</string>
     <string name="medtronic_error_serial_not_set">Numéro de série non défini.</string>
