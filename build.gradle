@@ -8,7 +8,7 @@ buildscript {
         rxandroid_version = '2.1.1'
         rxkotlin_version = '2.4.0'
         room_version = '2.2.6'
-        lifecycle_version = '2.3.0'
+        lifecycle_version = '2.3.1'
         dagger_version = '2.34.1'
         coroutinesVersion = '1.4.1'
         activityVersion = '1.2.0'
@@ -30,7 +30,7 @@ buildscript {
         dexmakerVersion = "1.2"
         retrofit2Version = '2.9.0'
         okhttp3Version = '4.9.0'
-        byteBuddyVersion = '1.10.21'
+        byteBuddyVersion = '1.10.22'
 
         androidx_junit = '1.1.2'
         androidx_rules = '1.4.0-alpha04'
