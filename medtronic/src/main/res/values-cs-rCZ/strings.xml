@@ -24,6 +24,8 @@
     <string name="medtronic_pump_battery_nizn">NiZn (Rozšířené)</string>
     <string name="medtronic_pump_battery_nimh">NiMH (Rozšířené)</string>
     <string name="medtronic_bolus_debugging">Bolus/Ošetření ladění</string>
+    <!-- MDT Fragment -->
+    <string name="rl_battery_label">Baterie RileyLink</string>
     <!-- MDT Errors -->
     <string name="medtronic_errors">Chyby</string>
     <string name="medtronic_error_serial_not_set">Sériové číslo nenastaveno.</string>
