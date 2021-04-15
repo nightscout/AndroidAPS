@@ -23,6 +23,7 @@
     <string name="medtronic_pump_battery_lithium">锂(扩展视图)</string>
     <string name="medtronic_pump_battery_nizn">锂(扩展视图)</string>
     <string name="medtronic_bolus_debugging">大剂量/治疗调试</string>
+    <!-- MDT Fragment -->
     <!-- MDT Errors -->
     <string name="medtronic_error_serial_not_set">未设置序列号。</string>
     <string name="medtronic_error_serial_invalid">序列号无效。</string>
