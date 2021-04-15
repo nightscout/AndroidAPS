@@ -138,6 +138,7 @@
     <string name="configbuilder_nightscoutversion_label">Verzia Nightscoutu:</string>
     <string name="missing_carbs">Chýba %1$d g</string>
     <string name="exported">Nastavenie exportované</string>
+    <string name="ue_exported">Užívateľské záznamy exportované</string>
     <string name="export_to">Exportovať nastavenia do</string>
     <string name="import_from">Importovať nastavenia z</string>
     <string name="setting_imported">Nastavenia importované</string>
@@ -194,6 +195,7 @@
     <string name="smscommunicator_loophasbeenenabled">Uzavretý okruh bol aktivovaný</string>
     <string name="smscommunicator_loopisenabled">Uzavretý okruh je aktivovaný</string>
     <string name="valuelimitedto">%1$.2f obmedzené na %2$.2f</string>
+    <string name="valueoutofrange">»%1$s« je mimo pevne nastavené limity</string>
     <string name="smscommunicator_pumpconnectwithcode">Ak chcete pripojiť pumpu, odpovedzte pomocou SMS s kódom %1$s</string>
     <string name="smscommunicator_pumpconnectfail">Pripojenie k pumpe zlyhalo</string>
     <string name="smscommunicator_pumpdisconnectwithcode">Ak chcete odpojiť pumpu na %1$d minút, odpovedzte pomocou SMS s kódom %2$s</string>
@@ -268,11 +270,8 @@
     <string name="openapsma_autosensdata_label">Dáta detekcie citlivosti</string>
     <string name="openapsma_scriptdebugdata_label">Ladenie skriptu</string>
     <string name="openapsama_useautosens">Použi automatickú detekciu citlivosti</string>
-    <string name="refresheventsfromnightscout">Aktualizuj udalosti z NS</string>
+    <string name="refresheventsfromnightscout">Aktualizovať z NS</string>
     <string name="deletefuturetreatments">Zmazať ošetrenia v budúcnosti</string>
-    <string name="eatingsoon">Pred jedlom</string>
-    <string name="hypo">Hypoglykémia</string>
-    <string name="activity">Aktivita</string>
     <string name="actions_shortname">AKCIA</string>
     <string name="configbuilder_shortname">KONF</string>
     <string name="loop_shortname">OKRUH</string>
@@ -750,7 +749,6 @@
     <string name="format_carbs_ic">%1$.0fg IC: %2$.1f</string>
     <string name="format_cob_ic">%1$.1fg IC: %2$.1f</string>
     <string name="format_percent">%1$d%%</string>
-    <string name="boluswizard">Bolusová kalkulačka</string>
     <string name="unit_minute_short">min</string>
     <string name="profile_name">Názov profilu:</string>
     <string name="selected_profile">Vybrané:</string>
@@ -903,4 +901,14 @@
     <string name="email_address">Emailová adresa</string>
     <string name="privacy_settings">Nastavenia súkromia</string>
     <string name="privacy_summary">Pokiaľ chcete byť upozornení na zlyhanie aplikácie, môžete zadať voliteľne e-mailovú adresu. Toto nie je automatizovaná služba. Vývojári vás budú kontaktovať v nebezpečných situáciách.</string>
+    <string name="profile_low_target">Dolný cieľ profilu</string>
+    <string name="profile_high_target">Horný cieľ profilu</string>
+    <string name="temp_target_low_target">Dolná hodnota dočasného cieľa</string>
+    <string name="temp_target_high_target">Horná hodnota dočasného cieľa</string>
+    <string name="temp_target_value">Hodnota dočasného cieľa</string>
+    <string name="profile_dia">Profilová hodnota DIA</string>
+    <string name="profile_sensitivity_value">Profilová hodnota citlivosti</string>
+    <string name="profile_max_daily_basal_value">Profilová maximálna hodnota bazálu</string>
+    <string name="current_basal_value">Aktuálna hodnota bazálu</string>
+    <string name="profile_carbs_ratio_value">Profilový inzulino-sacharidový pomer</string>
 </resources>

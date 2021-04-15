@@ -138,6 +138,7 @@
     <string name="configbuilder_nightscoutversion_label">Version Nightscout :</string>
     <string name="missing_carbs">%1$d g manquants</string>
     <string name="exported">Préférences exportées</string>
+    <string name="ue_exported">Entrées utilisateur exportées</string>
     <string name="export_to">Exporter les paramètres au</string>
     <string name="import_from">Importer les paramètres depuis</string>
     <string name="setting_imported">Paramètres importés</string>
@@ -270,11 +271,8 @@ L\'ENSEMBLE DES RISQUES LIÉS À LA QUALITÉ ET À LA PERFORMANCE DU PROGRAMME S
     <string name="openapsma_autosensdata_label">Données Autosens</string>
     <string name="openapsma_scriptdebugdata_label">Débogage du Script</string>
     <string name="openapsama_useautosens">Utiliser la fonction Autosens</string>
-    <string name="refresheventsfromnightscout">Actualiser les événements depuis NS</string>
+    <string name="refresheventsfromnightscout">Actualiser depuis NS</string>
     <string name="deletefuturetreatments">Supprimer les futurs traitements</string>
-    <string name="eatingsoon">Repas imminent</string>
-    <string name="hypo">Hypo</string>
-    <string name="activity">Activité</string>
     <string name="actions_shortname">ACT</string>
     <string name="configbuilder_shortname">CONF</string>
     <string name="loop_shortname">BOUCLE</string>
@@ -293,7 +291,7 @@ L\'ENSEMBLE DES RISQUES LIÉS À LA QUALITÉ ET À LA PERFORMANCE DU PROGRAMME S
     <string name="profile">Profil</string>
     <string name="openapsama_max_daily_safety_multiplier_summary">Valeur par défaut : 3 Ceci est un paramètre important de sécurité de l’OpenAPS. Ceci va limiter vos débits basal à 3 fois votre débit Basal maximum. Il est probable que vous n’aurez pas besoin de changer cela, mais vous devez être conscient de ce qui est discuté pour les limites de sécurité dans “3x max daily; 4x current”.</string>
     <string name="openapsama_current_basal_safety_multiplier_summary">Valeur par défaut : 4 Ceci est l’autre moitié des paramètres de sécurité limitant l’OpenAPS, et l’autre moitié de “3x max daily, 4x current” des paramètres de sécurité. Quel que soit le basal maximum prédéfini dans votre pompe, il ne pourra pas être plus haut que ce nombre multiplié par le Basal actuel. Ceci est fait pour ne pas mettre l’utilisateur en danger en programmant des débits Basal maximum trop élevés avant de comprendre comment l’algorithme fonctionne. Encore une fois, la valeur par défaut est 4x, la plupart des gens n’auront jamais besoin d’ajuster ce paramètre, plutôt ils auront tendance à ajuster d’autres paramètres s’ils voient qu’ils atteignent ce paramètre de limite de sécurité.</string>
-    <string name="openapsama_autosens_max_summary">Valeur par défaut: 1.2\nCeci est la limite du multiplicateur utilisé par Autosens (et bientôt Autotune) pour définir +20%% en limite maximale du ratio Autosens. En consequence, ceci dit va définir la valeur maximale du Basal pour Autosens, la valeur minimale de la Sensibilité à l\'Insuline (SI, ISF), et la valeur minimale de la cible glycémique.</string>
+    <string name="openapsama_autosens_max_summary">Valeur par défaut: 1.2\nCeci est la limite du multiplicateur utilisé par Autosens (et bientôt Autotune) pour définir +20% en limite maximale du ratio Autosens. En consequence, ceci va définir la valeur maximale du Basal pour Autosens, la valeur minimale de la Sensibilité à l\'Insuline (SI), et la valeur minimale de la cible glycémique.</string>
     <string name="openapsama_autosens_min_summary">Valeur par défaut: 0,7\nL\'autre volet des limites de sécurité de l\'autosens, c\'est de définir une limite basse sur l\'ajustement des débits de basal et une limite haute sur l\'ajustement de la SI et des cibles GLY effectués par l\'autosens.</string>
     <string name="openapsama_autosens_adjusttargets">Autosens ajuste aussi les cibles</string>
     <string name="openapsama_autosens_adjusttargets_summary">Valeur par défaut : true\nCeci est utilisé pour autoriser Autosens à ajuster les cibles de glycémie en plus de SI et les basals.</string>
@@ -643,7 +641,7 @@ L\'ENSEMBLE DES RISQUES LIÉS À LA QUALITÉ ET À LA PERFORMANCE DU PROGRAMME S
     <string name="welcometosetupwizard">Bienvenue à l\'assistant de configuration. Je vais vous guider à travers le processus de configuration\n</string>
     <string name="readstatus">Statut de lecture</string>
     <string name="adjustprofileinns">Des modifications doivent être effectuées dans NS</string>
-    <string name="exitwizard">Passer l\'Assistant de configuration</string>
+    <string name="exitwizard">Ignorer l\'assistant de configuration</string>
     <string name="setupwizard_loop_description">Appuyez sur le bouton ci-dessous pour autoriser AndroidAPS à suggérer/faire des changements de basal</string>
     <string name="setupwizard_sensitivity_description">Le plugin de Sensibilité est utilisé pour la détection de la Sensibilité et de calcul de glucides actifs. Pour plus d’informations visitez :</string>
     <string name="setupwizard_sensitivity_url">https://github.com/MilosKozak/AndroidAPS/wiki/Sensitivity-detection-and-COB</string>
@@ -752,7 +750,6 @@ L\'ENSEMBLE DES RISQUES LIÉS À LA QUALITÉ ET À LA PERFORMANCE DU PROGRAMME S
     <string name="format_carbs_ic">%1$.0fg G/I: %2$.1f</string>
     <string name="format_cob_ic">%1$.1fg G/I: %2$.1f</string>
     <string name="format_percent">%1$d%%</string>
-    <string name="boluswizard">Assistant Bolus</string>
     <string name="unit_minute_short">min</string>
     <string name="profile_name">Nom du profil :</string>
     <string name="selected_profile">Sélectionné :</string>
