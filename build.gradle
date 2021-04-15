@@ -38,11 +38,6 @@ buildscript {
     repositories {
         google()
         mavenCentral()
-        jcenter() {
-            content {
-                includeModule("org.jetbrains.trove4j", "trove4j")
-            }
-        }
         maven { url "https://plugins.gradle.org/m2/" } // jacoco 0.2
     }
     dependencies {
@@ -55,6 +50,11 @@ buildscript {
 
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
         classpath 'com.hiya:jacoco-android:0.2'
+        modules {
+            module("org.jetbrains.trove4j:trove4j") {
+                replacedBy("org.jetbrains.intellij.deps:trove4j")
+            }
+        }
     }
 }
 
@@ -62,20 +62,13 @@ allprojects {
     repositories {
         google()
         mavenCentral()
-        maven {
-            url "https://maven.google.com"
-        }
+        maven { url "https://maven.google.com" }
+        maven { url 'https://jitpack.io' }
+        maven { url "https://google.bintray.com/flexbox-layout" }
         ivy {
             url 'https://github.com/'
             patternLayout {
                 artifact '/[organisation]/[module]/archive/[revision].[ext]'
-            }
-        }
-        maven { url 'https://jitpack.io' }
-        jcenter() {
-            content {
-                includeModule("com.google.android", "flexbox")
-                includeModule("org.jetbrains.trove4j", "trove4j")
             }
         }
     }
