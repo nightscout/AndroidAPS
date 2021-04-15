@@ -24,6 +24,8 @@
     <string name="medtronic_pump_battery_nizn">NiZn (תצוגה מורחבת)</string>
     <string name="medtronic_pump_battery_nimh">NiMH (תצוגה מורחבת)</string>
     <string name="medtronic_bolus_debugging">איתור באגים בבולוס או טיפולים</string>
+    <!-- MDT Fragment -->
+    <string name="rl_battery_label">סוללת ריילילינק</string>
     <!-- MDT Errors -->
     <string name="medtronic_errors">שגיאות</string>
     <string name="medtronic_error_serial_not_set">מס\' סידורי לא הוגדר.</string>

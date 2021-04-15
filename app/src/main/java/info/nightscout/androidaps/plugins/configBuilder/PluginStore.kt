@@ -110,7 +110,7 @@ class PluginStore @Inject constructor(
             (activeBgSourceStore as PluginBase).setPluginEnabled(PluginType.BGSOURCE, true)
             aapsLogger.debug(LTag.CONFIGBUILDER, "Defaulting BgInterface")
         }
-        setFragmentVisibilities((activeBgSourceStore as PluginBase).name, pluginsInCategory, PluginType.PUMP)
+        setFragmentVisibilities((activeBgSourceStore as PluginBase).name, pluginsInCategory, PluginType.BGSOURCE)
 
         // PluginType.PUMP
         pluginsInCategory = getSpecificPluginsList(PluginType.PUMP)
