@@ -38,10 +38,10 @@ class OverviewMenus @Inject constructor(
         ABS(R.string.overview_show_absinsulin, R.color.iob, primary = false, secondary = true,shortnameId = R.string.abs_insulin_shortname),
         IOB(R.string.overview_show_iob, R.color.iob, primary = false, secondary = true,shortnameId = R.string.iob),
         COB(R.string.overview_show_cob, R.color.cob, primary = false, secondary = true,shortnameId = R.string.cob),
-        DEV(R.string.overview_show_deviations, R.color.deviations, primary = false, secondary = true,shortnameId = R.string.deviation_shortname),
+        DEV(R.string.overview_show_deviations, R.color.bgi, primary = false, secondary = true,shortnameId = R.string.deviation_shortname),
+        BGI(R.string.overview_show_bgi, R.color.bgi, primary = false, secondary = true,shortnameId = R.string.bgi_shortname),
         SEN(R.string.overview_show_sensitivity, R.color.ratio, primary = false, secondary = true,shortnameId = R.string.sensitivity_shortname),
         ACT(R.string.overview_show_activity, R.color.activity, primary = true, secondary = false,shortnameId = R.string.activity_shortname),
-        BGI(R.string.overview_show_bgi, R.color.bgi, primary = false, secondary = true,shortnameId = R.string.bgi_shortname),
         DEVSLOPE(R.string.overview_show_deviationslope, R.color.devslopepos, primary = false, secondary = true,shortnameId = R.string.devslope_shortname)
     }
 
