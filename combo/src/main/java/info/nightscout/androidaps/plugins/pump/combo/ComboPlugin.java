@@ -1092,6 +1092,9 @@ public class ComboPlugin extends PumpPluginBase implements Pump, Constraints {
                     PumpType.ACCU_CHEK_COMBO,
                     serialNumber()
             );
+            uel.log(Action.TEMP_BASAL, Sources.Combo,
+                    new ValueWithUnitMapper.Percent(state.tbrPercent),
+                    new ValueWithUnitMapper.Minute(state.tbrRemainingDuration));
         } else if (aapsTbr != null && PumpStateExtensionKt.getPlannedRemainingMinutes(aapsTbr) > 2 && !state.tbrActive) {
             getAapsLogger().debug(LTag.PUMP, "Ending AAPS-TBR since pump has no TBR active");
             pumpSync.syncStopTemporaryBasalWithPumpId(
@@ -1100,6 +1103,7 @@ public class ComboPlugin extends PumpPluginBase implements Pump, Constraints {
                     PumpType.ACCU_CHEK_COMBO,
                     serialNumber()
             );
+            uel.log(Action.CANCEL_TEMP_BASAL, Sources.Combo);
         } else if (aapsTbr != null && state.tbrActive
                 && (aapsTbr.getRate() != state.tbrPercent ||
                 Math.abs(PumpStateExtensionKt.getPlannedRemainingMinutes(aapsTbr) - state.tbrRemainingDuration) > 2)) {
@@ -1113,7 +1117,7 @@ public class ComboPlugin extends PumpPluginBase implements Pump, Constraints {
                     PumpType.ACCU_CHEK_COMBO,
                     serialNumber()
             );
-
+            uel.log(Action.CANCEL_TEMP_BASAL, Sources.Combo);
             // Create TBR start record, starting now
             pumpSync.syncTemporaryBasalWithPumpId(
                     now,
@@ -1125,6 +1129,9 @@ public class ComboPlugin extends PumpPluginBase implements Pump, Constraints {
                     PumpType.ACCU_CHEK_COMBO,
                     serialNumber()
             );
+            uel.log(Action.TEMP_BASAL, Sources.Combo,
+                    new ValueWithUnitMapper.Percent(state.tbrPercent),
+                    new ValueWithUnitMapper.Minute(state.tbrRemainingDuration));
         }
     }
 
