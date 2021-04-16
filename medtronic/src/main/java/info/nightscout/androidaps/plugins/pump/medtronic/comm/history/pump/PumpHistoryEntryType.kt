@@ -12,7 +12,7 @@ import java.util.*
  * Author: Andy {andy.rozman@gmail.com}
  */
 enum class PumpHistoryEntryType // implements CodeEnum
-@JvmOverloads constructor(opCode: Byte, name: String?, group: PumpHistoryEntryGroup, head: Int = 2, date: Int = 5, body: Int = 0) {
+    constructor(opCode: Byte, name: String?, group: PumpHistoryEntryGroup, head: Int = 2, date: Int = 5, body: Int = 0) {
 
     // all commented out are probably not the real items
     None(0, "None", PumpHistoryEntryGroup.Unknown, 1, 0, 0), Bolus(0x01, "Bolus", PumpHistoryEntryGroup.Bolus, 4, 5, 0),  // 523+[H=8] 9/13
@@ -40,15 +40,12 @@ enum class PumpHistoryEntryType // implements CodeEnum
     ClearSettings(0x22, "Clear Settings", PumpHistoryEntryGroup.Configuration),  //
     ChangeChildBlockEnable(0x23, "Change Child Block Enable", PumpHistoryEntryGroup.Configuration),  //
     ChangeMaxBolus(0x24, "Change Max Bolus", PumpHistoryEntryGroup.Configuration),  //
-
     //    /**/EventUnknown_MM522_0x25(0x25, "Unknown Event 0x25", PumpHistoryEntryGroup.Unknown), // 8?
     EnableDisableRemote(0x26, "Enable/Disable Remote", PumpHistoryEntryGroup.Configuration, 2, 5, 14),  // 2, 5, 14 V6:2,5,14
     ChangeRemoteId(0x27, "Change Remote ID", PumpHistoryEntryGroup.Configuration),  // ??
     ChangeMaxBasal(0x2c, "Change Max Basal", PumpHistoryEntryGroup.Configuration),  //
     BolusWizardEnabled(0x2d, "Bolus Wizard Enabled", PumpHistoryEntryGroup.Configuration),  // V3 ?
-
-    /* TODO */
-    EventUnknown_MM512_0x2e(0x2e, "Unknown Event 0x2e", PumpHistoryEntryGroup.Unknown, 2, 5, 100),  //
+    /* TODO */ EventUnknown_MM512_0x2e(0x2e, "Unknown Event 0x2e", PumpHistoryEntryGroup.Unknown, 2, 5, 100),  //
     BolusWizard512(0x2f, "Bolus Wizard (512)", PumpHistoryEntryGroup.Bolus, 2, 5, 12),  //
     UnabsorbedInsulin512(0x30, "Unabsorbed Insulin (512)", PumpHistoryEntryGroup.Statistic, 5, 0, 0),  // FIXME
     ChangeBGReminderOffset(0x31, "Change BG Reminder Offset", PumpHistoryEntryGroup.Configuration),  //
@@ -57,13 +54,10 @@ enum class PumpHistoryEntryType // implements CodeEnum
     LowReservoir(0x34, "Low Reservoir", PumpHistoryEntryGroup.Notification),  //
     ChangeAlarmClock(0x35, "Change Alarm Clock", PumpHistoryEntryGroup.Configuration),  //
     ChangeMeterId(0x36, "Change Meter ID", PumpHistoryEntryGroup.Configuration),  //
-
     //    /**/EventUnknown_MM512_0x37(0x37, "Unknown Event 0x37", PumpHistoryEntryGroup.Unknown), // V:MM512
     //    /**/EventUnknown_MM512_0x38(0x38, "Unknown Event 0x38", PumpHistoryEntryGroup.Unknown), //
     BGReceived512(0x39, "BG Received (512)", PumpHistoryEntryGroup.Glucose, 2, 5, 3),  //
-
-    /* TODO */
-    ConfirmInsulinChange(0x3a, "Confirm Insulin Change", PumpHistoryEntryGroup.Unknown),  //
+    /* TODO */ ConfirmInsulinChange(0x3a, "Confirm Insulin Change", PumpHistoryEntryGroup.Unknown),  //
     SensorStatus(0x3b, "Sensor Status", PumpHistoryEntryGroup.Glucose),  //
     ChangeParadigmID(0x3c, "Change Paradigm ID", PumpHistoryEntryGroup.Configuration, 2, 5, 14),  // V3 ? V6: 2,5,14 ?? is it this length or just 7
 
@@ -73,9 +67,8 @@ enum class PumpHistoryEntryType // implements CodeEnum
     JournalEntryMealMarker(0x40, "Meal Marker", PumpHistoryEntryGroup.Bolus, 2, 5, 2),  // is size just 7??? V6
     JournalEntryExerciseMarker(0x41, "Exercise Marker", PumpHistoryEntryGroup.Bolus, 2, 5, 1),  // ??
     JournalEntryInsulinMarker(0x42, "Insulin Marker", PumpHistoryEntryGroup.Bolus, 2, 5, 0),  // V6 = body(0)/was=1
-    JournalEntryOtherMarker(0x43, "Other Marker", PumpHistoryEntryGroup.Bolus, 2, 5, 1),  // V6 = body(1)/was=0
+    JournalEntryOtherMarker(0x43, "Other Marker", PumpHistoryEntryGroup.Bolus, 2, 5, 1),  // V6 = body(1) was=0
     EnableSensorAutoCal(0x44, "Enable Sensor AutoCal", PumpHistoryEntryGroup.Glucose),  //
-
     //    /**/EventUnknown_MM522_0x45(0x45, "Unknown Event 0x45", PumpHistoryEntryGroup.Unknown, 2, 5, 1), //
     //    /**/EventUnknown_MM522_0x46(0x46, "Unknown Event 0x46", PumpHistoryEntryGroup.Unknown, 2, 5, 1), //
     //    /**/EventUnknown_MM522_0x47(0x47, "Unknown Event 0x47", PumpHistoryEntryGroup.Unknown, 2, 5, 1), //
@@ -89,18 +82,11 @@ enum class PumpHistoryEntryType // implements CodeEnum
     BolusWizardSetup512(0x4f, "Bolus Wizard Setup (512)", PumpHistoryEntryGroup.Configuration, 2, 5, 32),  //
     ChangeSensorSetup2(0x50, "Sensor Setup2", PumpHistoryEntryGroup.Configuration, 2, 5, 30),  // Ian50
 
-    /* TODO */
-    Sensor_0x51(0x51, "Unknown Event 0x51", PumpHistoryEntryGroup.Unknown),  //
-
-    /* TODO */
-    Sensor_0x52(0x52, "Unknown Event 0x52", PumpHistoryEntryGroup.Unknown),  //
+    /* TODO */ Sensor_0x51(0x51, "Unknown Event 0x51", PumpHistoryEntryGroup.Unknown),  //
+    /* TODO */ Sensor_0x52(0x52, "Unknown Event 0x52", PumpHistoryEntryGroup.Unknown),  //
     ChangeSensorAlarmSilenceConfig(0x53, "Sensor Alarm Silence Config", PumpHistoryEntryGroup.Configuration, 2, 5, 1),  // 8
-
-    /* TODO */
-    Sensor_0x54(0x54, "Unknown Event 0x54", PumpHistoryEntryGroup.Unknown),  // Ian54
-
-    /* TODO */
-    Sensor_0x55(0x55, "Unknown Event 0x55", PumpHistoryEntryGroup.Unknown),  //
+    /* TODO */ Sensor_0x54(0x54, "Unknown Event 0x54", PumpHistoryEntryGroup.Unknown),  // Ian54
+    /* TODO */ Sensor_0x55(0x55, "Unknown Event 0x55", PumpHistoryEntryGroup.Unknown),  //
     ChangeSensorRateOfChangeAlertSetup(0x56, "Sensor Rate Of Change Alert Setup", PumpHistoryEntryGroup.Configuration, 2, 5, 5),  // 12
     ChangeBolusScrollStepSize(0x57, "Change Bolus Scroll Step Size", PumpHistoryEntryGroup.Configuration),  //
     BolusWizardSetup(0x5a, "Bolus Wizard Setup (522)", PumpHistoryEntryGroup.Configuration, 2, 5, 117),  // V2: 522+[B=143]; V6: 124, v6: 137, v7: 117/137 [523]
@@ -124,7 +110,6 @@ enum class PumpHistoryEntryType // implements CodeEnum
     DailyTotals522(0x6d, "Daily Totals (522)", PumpHistoryEntryGroup.Statistic, 1, 2, 41),  //
     DailyTotals523(0x6e, "Daily Totals (523)", PumpHistoryEntryGroup.Statistic, 1, 2, 49),  // 1102014-03-17T00:00:00
     ChangeCarbUnits(0x6f.toByte(), "Change Carb Units", PumpHistoryEntryGroup.Configuration),  //
-
     //    /**/EventUnknown_MM522_0x70((byte) 0x70, "Unknown Event 0x70", PumpHistoryEntryGroup.Unknown, 2, 5, 1), //
     BasalProfileStart(0x7b, "Basal Profile Start", PumpHistoryEntryGroup.Basal, 2, 5, 3),  // // 722
     ChangeWatchdogEnable(0x7c, "Change Watchdog Enable", PumpHistoryEntryGroup.Configuration),  //
@@ -158,7 +143,7 @@ enum class PumpHistoryEntryType // implements CodeEnum
             ChangeSensorSetup2.addSpecialRuleBody(SpecialRule(MedtronicDeviceType.Medtronic_523andHigher, 34))
         }
 
-        @JvmStatic fun getByCode(opCode: Byte): PumpHistoryEntryType? {
+        fun getByCode(opCode: Byte): PumpHistoryEntryType? {
             return if (opCodeMap.containsKey(opCode)) {
                 opCodeMap[opCode]
             } else {
@@ -166,18 +151,6 @@ enum class PumpHistoryEntryType // implements CodeEnum
             }
         }
 
-        //
-        // private PumpHistoryEntryType(int opCode, String name, int head, int date,
-        // int body)
-        // {
-        // this.opCode = (byte) opCode;
-        // this.description = name;
-        // this.headLength = head;
-        // this.dateLength = date;
-        // this.bodyLength = body;
-        // this.totalLength = (head + date + body);
-        // }
-        //
         fun isAAPSRelevantEntry(entryType: PumpHistoryEntryType): Boolean {
             return entryType == Bolus || // Treatments
                 entryType == TempBasalRate || //
@@ -215,8 +188,11 @@ enum class PumpHistoryEntryType // implements CodeEnum
     }
 
     val code: Byte
-    private val description: String?
-    private val headLength: Int
+
+    val description: String?
+        get() = field
+
+    val headLength: Int
     val dateLength: Int
 
     // private MinimedDeviceType deviceType;
@@ -228,22 +204,25 @@ enum class PumpHistoryEntryType // implements CodeEnum
     private var specialRulesHead: MutableList<SpecialRule>? = null
     private var specialRulesBody: MutableList<SpecialRule>? = null
     private var hasSpecialRules = false
+        get() = field
+
     val group: PumpHistoryEntryGroup
+        get() = field
 
     private constructor(opCode: Byte, group: PumpHistoryEntryGroup) : this(opCode, null, group, 2, 5, 0) {}
     private constructor(opCode: Byte, group: PumpHistoryEntryGroup, head: Int, date: Int, body: Int) : this(opCode, null, group, head, date, body) {}
 
     fun getTotalLength(medtronicDeviceType: MedtronicDeviceType?): Int {
-        return if (hasSpecialRules()) {
+        return if (hasSpecialRules) {
             getHeadLength(medtronicDeviceType) + getBodyLength(medtronicDeviceType) + dateLength
         } else {
             totalLength
         }
     }
 
-    private fun hasSpecialRules(): Boolean {
-        return hasSpecialRules
-    }
+    // private fun hasSpecialRules(): Boolean {
+    //     return hasSpecialRules
+    // }
 
     fun addSpecialRuleHead(rule: SpecialRule) {
         if (isEmpty(specialRulesHead)) {
@@ -261,9 +240,9 @@ enum class PumpHistoryEntryType // implements CodeEnum
         hasSpecialRules = true
     }
 
-    fun getDescription(): String {
-        return description ?: name
-    }
+    // fun getDescription(): String {
+    //     return description ?: name
+    // }
 
     fun getHeadLength(medtronicDeviceType: MedtronicDeviceType?): Int {
         return if (hasSpecialRules) {

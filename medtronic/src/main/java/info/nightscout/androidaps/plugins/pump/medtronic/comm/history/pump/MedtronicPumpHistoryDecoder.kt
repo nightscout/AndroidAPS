@@ -19,6 +19,7 @@ import info.nightscout.androidaps.plugins.pump.medtronic.util.MedtronicUtil
 import java.util.*
 import javax.inject.Inject
 import javax.inject.Singleton
+import kotlin.experimental.and
 
 /**
  * This file was taken from GGC - GNU Gluco Control (ggc.sourceforge.net), application for diabetes
@@ -29,12 +30,13 @@ import javax.inject.Singleton
  */
 @Singleton
 class MedtronicPumpHistoryDecoder @Inject constructor(
-    aapsLogger: AAPSLogger?,
-    medtronicUtil: MedtronicUtil?
+    aapsLogger: AAPSLogger,
+    medtronicUtil: MedtronicUtil
 ) : MedtronicHistoryDecoder<PumpHistoryEntry>() {
 
     private var tbrPreviousRecord: PumpHistoryEntry? = null
     private var changeTimeRecord: PumpHistoryEntry? = null
+
     override fun createRecords(dataClear: List<Byte>): List<PumpHistoryEntry> {
         prepareStatistics()
         var counter = 0
@@ -42,8 +44,8 @@ class MedtronicPumpHistoryDecoder @Inject constructor(
         var incompletePacket: Boolean
         val outList: MutableList<PumpHistoryEntry> = ArrayList()
         var skipped: String? = null
-        if (dataClear!!.size == 0) {
-            aapsLogger!!.error(LTag.PUMPBTCOMM, "Empty page.")
+        if (dataClear.size == 0) {
+            aapsLogger.error(LTag.PUMPBTCOMM, "Empty page.")
             return outList
         }
         do {
@@ -57,13 +59,13 @@ class MedtronicPumpHistoryDecoder @Inject constructor(
                 continue
             } else {
                 if (skipped != null) {
-                    aapsLogger!!.warn(LTag.PUMPBTCOMM, " ... Skipped $skipped")
+                    aapsLogger.warn(LTag.PUMPBTCOMM, " ... Skipped $skipped")
                     skipped = null
                     skippedRecords = true
                 }
             }
             if (skippedRecords) {
-                aapsLogger!!.error(LTag.PUMPBTCOMM, "We had some skipped bytes, which might indicate error in pump history. Please report this problem.")
+                aapsLogger.error(LTag.PUMPBTCOMM, "We had some skipped bytes, which might indicate error in pump history. Please report this problem.")
             }
             val entryType = getByCode(opCode.toByte())
             val pe = PumpHistoryEntry()
@@ -89,12 +91,12 @@ class MedtronicPumpHistoryDecoder @Inject constructor(
                 }
                 special = true
             } else {
-                for (j in 0 until entryType.getTotalLength(medtronicUtil!!.medtronicPumpModel) - 1) {
+                for (j in 0 until entryType.getTotalLength(medtronicUtil.medtronicPumpModel) - 1) {
                     try {
                         listRawData.add(dataClear[counter])
                         counter++
                     } catch (ex: Exception) {
-                        aapsLogger!!.error(LTag.PUMPBTCOMM, "OpCode: " + ByteUtil.shortHexString(opCode.toByte()) + ", Invalid package: "
+                        aapsLogger.error(LTag.PUMPBTCOMM, "OpCode: " + ByteUtil.shortHexString(opCode.toByte()) + ", Invalid package: "
                             + ByteUtil.getHex(listRawData))
                         // throw ex;
                         incompletePacket = true
@@ -115,7 +117,7 @@ class MedtronicPumpHistoryDecoder @Inject constructor(
                 if (decoded === RecordDecodeStatus.OK || decoded === RecordDecodeStatus.Ignored) {
                     //Log.i(TAG, "#" + record + " " + decoded.getDescription() + " " + pe);
                 } else {
-                    aapsLogger!!.warn(LTag.PUMPBTCOMM, "#" + record + " " + decoded!!.description + "  " + pe)
+                    aapsLogger.warn(LTag.PUMPBTCOMM, "#" + record + " " + decoded!!.description + "  " + pe)
                 }
                 addToStatistics(pe, decoded, null)
                 record++
@@ -132,7 +134,8 @@ class MedtronicPumpHistoryDecoder @Inject constructor(
         return try {
             decodeRecord(record, false)
         } catch (ex: Exception) {
-            aapsLogger!!.error(LTag.PUMPBTCOMM, String.format(Locale.ENGLISH, "     Error decoding: type=%s, ex=%s", record.entryType!!.name, ex.message, ex))
+            aapsLogger.error(LTag.PUMPBTCOMM, String.format(Locale.ENGLISH, "     Error decoding: type=%s, ex=%s", record.entryType!!.name, ex.message, ex))
+            //ex.printStackTrace()
             RecordDecodeStatus.Error
         }
     }
@@ -145,17 +148,7 @@ class MedtronicPumpHistoryDecoder @Inject constructor(
             PumpHistoryEntryType.ChangeBasalPattern, PumpHistoryEntryType.CalBGForPH, PumpHistoryEntryType.ChangeRemoteId, PumpHistoryEntryType.ClearAlarm, PumpHistoryEntryType.ChangeAlarmNotifyMode, PumpHistoryEntryType.EnableDisableRemote, PumpHistoryEntryType.BGReceived, PumpHistoryEntryType.SensorAlert, PumpHistoryEntryType.ChangeTimeFormat, PumpHistoryEntryType.ChangeReservoirWarningTime, PumpHistoryEntryType.ChangeBolusReminderEnable, PumpHistoryEntryType.SetBolusReminderTime, PumpHistoryEntryType.ChangeChildBlockEnable, PumpHistoryEntryType.BolusWizardEnabled, PumpHistoryEntryType.ChangeBGReminderOffset, PumpHistoryEntryType.ChangeAlarmClockTime, PumpHistoryEntryType.ChangeMeterId, PumpHistoryEntryType.ChangeParadigmID, PumpHistoryEntryType.JournalEntryMealMarker, PumpHistoryEntryType.JournalEntryExerciseMarker, PumpHistoryEntryType.DeleteBolusReminderTime, PumpHistoryEntryType.SetAutoOff, PumpHistoryEntryType.SelfTest, PumpHistoryEntryType.JournalEntryInsulinMarker, PumpHistoryEntryType.JournalEntryOtherMarker, PumpHistoryEntryType.BolusWizardSetup512, PumpHistoryEntryType.ChangeSensorSetup2, PumpHistoryEntryType.ChangeSensorAlarmSilenceConfig, PumpHistoryEntryType.ChangeSensorRateOfChangeAlertSetup, PumpHistoryEntryType.ChangeBolusScrollStepSize, PumpHistoryEntryType.BolusWizardSetup, PumpHistoryEntryType.ChangeVariableBolus, PumpHistoryEntryType.ChangeAudioBolus, PumpHistoryEntryType.ChangeBGReminderEnable, PumpHistoryEntryType.ChangeAlarmClockEnable, PumpHistoryEntryType.BolusReminder, PumpHistoryEntryType.DeleteAlarmClockTime, PumpHistoryEntryType.ChangeCarbUnits, PumpHistoryEntryType.ChangeWatchdogEnable, PumpHistoryEntryType.ChangeOtherDeviceID, PumpHistoryEntryType.ReadOtherDevicesIDs, PumpHistoryEntryType.BGReceived512, PumpHistoryEntryType.SensorStatus, PumpHistoryEntryType.ReadCaptureEventEnabled, PumpHistoryEntryType.ChangeCaptureEventEnable, PumpHistoryEntryType.ReadOtherDevicesStatus -> RecordDecodeStatus.OK
 
             PumpHistoryEntryType.Sensor_0x54, PumpHistoryEntryType.Sensor_0x55, PumpHistoryEntryType.Sensor_0x51, PumpHistoryEntryType.Sensor_0x52, PumpHistoryEntryType.EventUnknown_MM512_0x2e                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               -> {
-                //            case EventUnknown_MM512_0x37:
-//            case EventUnknown_MM512_0x38:
-//            case EventUnknown_MM512_0x4e:
-//            case EventUnknown_MM522_0x70:
-//            case EventUnknown_MM512_0x88:
-//            case EventUnknown_MM512_0x94:
-//            case EventUnknown_MM522_0xE8:
-//            case EventUnknown_0x4d:
-//            case EventUnknown_MM522_0x25:
-//            case EventUnknown_MM522_0x05:
-                aapsLogger!!.debug(LTag.PUMPBTCOMM, " -- ignored Unknown Pump Entry: $entry")
+                aapsLogger.debug(LTag.PUMPBTCOMM, " -- ignored Unknown Pump Entry: $entry")
                 RecordDecodeStatus.Ignored
             }
 
@@ -207,12 +200,10 @@ class MedtronicPumpHistoryDecoder @Inject constructor(
             PumpHistoryEntryType.None, PumpHistoryEntryType.UnknownBasePacket                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  -> RecordDecodeStatus.Error
 
             else                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               -> {
-                aapsLogger!!.debug(LTag.PUMPBTCOMM, "Not supported: " + entry.entryType)
+                aapsLogger.debug(LTag.PUMPBTCOMM, "Not supported: " + entry.entryType)
                 RecordDecodeStatus.NotSupported
             }
         }
-
-        // return RecordDecodeStatus.Error;
     }
 
     private fun decodeDailyTotals(entry: PumpHistoryEntry): RecordDecodeStatus {
@@ -223,12 +214,8 @@ class MedtronicPumpHistoryDecoder @Inject constructor(
     }
 
     private fun decodeBasalProfile(entry: PumpHistoryEntry): RecordDecodeStatus {
-
-        // LOG.debug("decodeBasalProfile: {}", entry);
         val basalProfile = BasalProfile(aapsLogger)
         basalProfile.setRawDataFromHistory(entry.body)
-
-        // LOG.debug("decodeBasalProfile BasalProfile: {}", basalProfile);
         entry.addDecodedData("Object", basalProfile)
         return RecordDecodeStatus.OK
     }
@@ -240,24 +227,21 @@ class MedtronicPumpHistoryDecoder @Inject constructor(
     }
 
     private fun decodeBatteryActivity(entry: PumpHistoryEntry) {
-        // this.writeData(PumpBaseType.Event, entry.getHead()[0] == 0 ? PumpEventType.BatteryRemoved :
-        // PumpEventType.BatteryReplaced, entry.getATechDate());
         entry.displayableValue = if (entry.head!![0] == 0.toByte()) "Battery Removed" else "Battery Replaced"
     }
 
     private fun decodeBasalProfileStart(entry: PumpHistoryEntry): RecordDecodeStatus {
         val body = entry.body
-        // int bodyOffset = headerSize + timestampSize;
         val offset = body!![0] * 1000 * 30 * 60
         var rate: Float? = null
         val index = entry.head!![0].toInt()
-        if (MedtronicDeviceType.isSameDevice(medtronicUtil!!.medtronicPumpModel, MedtronicDeviceType.Medtronic_523andHigher)) {
+        if (MedtronicDeviceType.isSameDevice(medtronicUtil.medtronicPumpModel, MedtronicDeviceType.Medtronic_523andHigher)) {
             rate = body[1] * 0.025f
         }
 
         //LOG.info("Basal Profile Start: offset={}, rate={}, index={}, body_raw={}", offset, rate, index, body);
         return if (rate == null) {
-            aapsLogger!!.warn(LTag.PUMPBTCOMM, String.format(Locale.ENGLISH, "Basal Profile Start (ERROR): offset=%d, rate=%.3f, index=%d, body_raw=%s", offset, rate, index, ByteUtil.getHex(body)))
+            aapsLogger.warn(LTag.PUMPBTCOMM, String.format(Locale.ENGLISH, "Basal Profile Start (ERROR): offset=%d, rate=%.3f, index=%d, body_raw=%s", offset, rate, index, ByteUtil.getHex(body)))
             RecordDecodeStatus.Error
         } else {
             entry.addDecodedData("Value", getFormattedFloat(rate, 3))
@@ -267,26 +251,26 @@ class MedtronicPumpHistoryDecoder @Inject constructor(
     }
 
     private fun decodeBolusWizard(entry: PumpHistoryEntry): RecordDecodeStatus {
-        val body = entry.body as IntArray
+        val body = entry.body!!
         val dto = BolusWizardDTO()
         var bolusStrokes = 10.0f
         if (MedtronicDeviceType.isSameDevice(medtronicUtil!!.medtronicPumpModel, MedtronicDeviceType.Medtronic_523andHigher)) {
             // https://github.com/ps2/minimed_rf/blob/master/lib/minimed_rf/log_entries/bolus_wizard.rb#L102
             bolusStrokes = 40.0f
-            dto.carbs = (body[1] and 0x0c shl 6) + body[0]
-            dto.bloodGlucose = (body[1] and 0x03 shl 8) + entry.head!![0]
+            dto.carbs = ((body[1] and 0x0c.toByte()).toInt() shl 6) + body[0]
+            dto.bloodGlucose = ((body[1] and 0x03).toInt() shl 8) + entry.head!![0]
             dto.carbRatio = body[1] / 10.0f
             // carb_ratio (?) = (((self.body[2] & 0x07) << 8) + self.body[3]) /
             // 10.0s
             dto.insulinSensitivity = body[4].toFloat()
             dto.bgTargetLow = body[5] as Int
             dto.bgTargetHigh = body[14] as Int
-            dto.correctionEstimate = ((body[9] and 0x38 shl 5) + body[6]) / bolusStrokes
-            dto.foodEstimate = ((body[7] shl 8) + body[8]) / bolusStrokes
-            dto.unabsorbedInsulin = ((body[10] shl 8) + body[11]) / bolusStrokes
-            dto.bolusTotal = ((body[12] shl 8) + body[13]) / bolusStrokes
+            dto.correctionEstimate = (((body[9] and 0x38).toInt() shl 5) + body[6]) / bolusStrokes
+            dto.foodEstimate = ((body[7].toInt() shl 8) + body[8]) / bolusStrokes
+            dto.unabsorbedInsulin = ((body[10].toInt() shl 8) + body[11]) / bolusStrokes
+            dto.bolusTotal = ((body[12].toInt() shl 8) + body[13]) / bolusStrokes
         } else {
-            dto.bloodGlucose = body.get(1) and 0x0F shl 8 or entry.head!!.get(0).toInt()
+            dto.bloodGlucose = (body.get(1) and 0x0F).toInt() shl 8 or entry.head!!.get(0).toInt()
             dto.carbs = body.get(0) as Int
             dto.carbRatio = body.get(2).toFloat()
             dto.insulinSensitivity = body.get(3).toFloat()
@@ -308,14 +292,14 @@ class MedtronicPumpHistoryDecoder @Inject constructor(
     }
 
     private fun decodeBolusWizard512(entry: PumpHistoryEntry): RecordDecodeStatus {
-        val body = entry.body as IntArray
+        val body = entry.body!!
         val dto = BolusWizardDTO()
         val bolusStrokes = 10.0f
-        dto.bloodGlucose = body.get(1) and 0x03 shl 8 or entry.head!!.get(0).toInt()
-        dto.carbs = body!!.get(1).toInt() and 0xC shl 6 or body.get(0).toInt() // (int)body[0];
-        dto.carbRatio = body!!.get(2).toFloat()
-        dto.insulinSensitivity = body!!.get(3).toFloat()
-        dto.bgTargetLow = body.get(4)
+        dto.bloodGlucose = (body.get(1) and 0x03).toInt() shl 8 or entry.head!!.get(0).toInt()
+        dto.carbs = body.get(1).toInt() and 0xC shl 6 or body.get(0).toInt() // (int)body[0];
+        dto.carbRatio = body.get(2).toFloat()
+        dto.insulinSensitivity = body.get(3).toFloat()
+        dto.bgTargetLow = body.get(4).toInt()
         dto.foodEstimate = body.get(6) / 10.0f
         dto.correctionEstimate = (body.get(7) + (body.get(5) and 0x0F)) / bolusStrokes
         dto.unabsorbedInsulin = body.get(9) / bolusStrokes
@@ -374,8 +358,8 @@ class MedtronicPumpHistoryDecoder @Inject constructor(
 
     private fun decodeBolus(entry: PumpHistoryEntry) {
         val bolus = BolusDTO()
-        val data = entry.head as IntArray
-        if (MedtronicDeviceType.isSameDevice(medtronicUtil!!.getMedtronicPumpModel(), MedtronicDeviceType.Medtronic_523andHigher)) {
+        val data = entry.head!!
+        if (MedtronicDeviceType.isSameDevice(medtronicUtil.getMedtronicPumpModel(), MedtronicDeviceType.Medtronic_523andHigher)) {
             bolus.requestedAmount = ByteUtil.toInt(data.get(0), data.get(1)) / 40.0
             bolus.deliveredAmount = ByteUtil.toInt(data.get(2), data.get(3)) / 40.0
             bolus.insulinOnBoard = ByteUtil.toInt(data.get(4), data.get(5)) / 40.0
@@ -433,18 +417,18 @@ class MedtronicPumpHistoryDecoder @Inject constructor(
     }
 
     private fun decodeDateTime(entry: PumpHistoryEntry) {
-        val dt = entry.datetime as IntArray
-        if (dt == null) {
-            aapsLogger!!.warn(LTag.PUMPBTCOMM, "DateTime not set.")
+        if (entry.datetime==null) {
+            aapsLogger.warn(LTag.PUMPBTCOMM, "DateTime not set.")
         }
+        val dt = entry.datetime!!
         if (entry.dateTimeLength == 5) {
-            val seconds: Int = (dt!!.get(0) and 0x3F).toInt()
-            val minutes: Int = (dt!!.get(1) and 0x3F).toInt()
+            val seconds: Int = (dt.get(0) and 0x3F.toByte()).toInt()
+            val minutes: Int = (dt.get(1) and 0x3F.toByte()).toInt()
             val hour: Int = (dt.get(2) and 0x1F).toInt()
-            val month: Int = (dt.get(0) shr 4 and 0x0c) + (dt.get(1) shr 6 and 0x03)
+            val month: Int = (dt.get(0).toInt() shr 4 and 0x0c) + (dt.get(1).toInt() shr 6 and 0x03)
             // ((dt[0] & 0xC0) >> 6) | ((dt[1] & 0xC0) >> 4);
-            val dayOfMonth: Int = dt.get(3) and 0x1F
-            val year = fix2DigitYear(dt.get(4) and 0x3F) // Assuming this is correct, need to verify. Otherwise this will be
+            val dayOfMonth: Int = (dt.get(3) and 0x1F).toInt()
+            val year = fix2DigitYear((dt.get(4) and 0x3F.toByte()).toInt()) // Assuming this is correct, need to verify. Otherwise this will be
             // a problem in 2016.
             entry.setAtechDateTime(DateTimeUtil.toATechDate(year, month, dayOfMonth, hour, minutes, seconds))
         } else if (entry.dateTimeLength == 2) {
@@ -453,7 +437,7 @@ class MedtronicPumpHistoryDecoder @Inject constructor(
             val mlow = ByteUtil.asUINT8(dt.get(1)) and 0x80 shr 7
             val month = mhigh + mlow
             // int dayOfMonth = low + 1;
-            val dayOfMonth: Int = dt.get(0) and 0x1F
+            val dayOfMonth: Int = (dt.get(0) and 0x1F).toInt()
             val year = 2000 + (ByteUtil.asUINT8(dt.get(1)) and 0x7F)
             var hour = 0
             var minutes = 0
@@ -461,7 +445,7 @@ class MedtronicPumpHistoryDecoder @Inject constructor(
 
             //LOG.debug("DT: {} {} {}", year, month, dayOfMonth);
             if (dayOfMonth == 32) {
-                aapsLogger!!.warn(LTag.PUMPBTCOMM, String.format(Locale.ENGLISH, "Entry: Day 32 %s = [%s] %s", entry.entryType!!.name,
+                aapsLogger.warn(LTag.PUMPBTCOMM, String.format(Locale.ENGLISH, "Entry: Day 32 %s = [%s] %s", entry.entryType!!.name,
                     ByteUtil.getHex(entry.rawData), entry))
             }
             if (isEndResults(entry.entryType)) {
@@ -471,7 +455,7 @@ class MedtronicPumpHistoryDecoder @Inject constructor(
             }
             entry.setAtechDateTime(DateTimeUtil.toATechDate(year, month, dayOfMonth, hour, minutes, seconds))
         } else {
-            aapsLogger!!.warn(LTag.PUMPBTCOMM, "Unknown datetime format: " + entry.dateTimeLength)
+            aapsLogger.warn(LTag.PUMPBTCOMM, "Unknown datetime format: " + entry.dateTimeLength)
         }
     }
 

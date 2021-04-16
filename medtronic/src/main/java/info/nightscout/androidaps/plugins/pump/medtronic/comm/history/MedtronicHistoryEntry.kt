@@ -16,30 +16,41 @@ import java.util.*
  */
 abstract class MedtronicHistoryEntry : MedtronicHistoryEntryInterface {
 
-    @JvmField var rawData: List<Byte>? = null
-    @JvmField protected var sizes = IntArray(3)
+    var rawData: List<Byte>? = null
+        get() = field
+
+    protected var sizes = IntArray(3)
+        get() = field
+
     var head: ByteArray? = null
+        get() = field
+
     var datetime: ByteArray? = null
     var body: ByteArray? = null
-
-    // protected LocalDateTime dateTime;
-    @JvmField var id: Long = 0
-
-    @JvmField @Expose
-    var DT: String? = null
-
-    @JvmField @Expose
-    var atechDateTime: Long? = null
+    var id: Long = 0
+        set(value) {
+            field = value
+        }
 
     @Expose
-    protected var decodedData: MutableMap<String, Any?>? = null
-    var phoneDateTime // time on phone
-        : Long = 0
+    var DT: String? = null
+        get() = field
+
+    @Expose
+    var atechDateTime: Long? = null
+        get() = field
+        set(value) {
+            field = value
+        }
+
+    @Expose
+    var decodedData: MutableMap<String, Any?>? = null
+        get() = field
 
     /**
      * Pump id that will be used with AAPS object (time * 1000 + historyType (max is FF = 255)
      */
-    protected open var pumpId: Long? = null
+    open var pumpId: Long? = null
 
     /**
      * if history object is already linked to AAPS object (either Treatment, TempBasal or TDD (tdd's
@@ -52,7 +63,7 @@ abstract class MedtronicHistoryEntry : MedtronicHistoryEntryInterface {
      * Linked object, see linked
      */
     var linkedObject: Any? = null
-        get() = field //= linkedObject
+        get() = field
         set(value) {
             linked = true
             field = value
@@ -63,7 +74,7 @@ abstract class MedtronicHistoryEntry : MedtronicHistoryEntryInterface {
     //     this.linkedObject = linkedObject
     // }
 
-    override fun setData(listRawData: List<Byte>?, doNotProcess: Boolean) {
+    override fun setData(listRawData: List<Byte>, doNotProcess: Boolean) {
         rawData = listRawData
 
         // System.out.println("Head: " + sizes[0] + ", dates: " + sizes[1] +
@@ -78,7 +89,7 @@ abstract class MedtronicHistoryEntry : MedtronicHistoryEntryInterface {
                 var i = headLength
                 var j = 0
                 while (j < dateTimeLength) {
-                    datetime!![j] = listRawData!![i]!!
+                    datetime!![j] = listRawData[i]
                     i++
                     j++
                 }

@@ -17,7 +17,8 @@ import java.util.*
  */
 class PumpHistoryEntry : MedtronicHistoryEntry() {
 
-    @Expose var entryType: PumpHistoryEntryType? = null
+    @Expose
+    var entryType: PumpHistoryEntryType? = null
         private set
 
     override var opCode: Byte? = null
@@ -27,16 +28,12 @@ class PumpHistoryEntry : MedtronicHistoryEntry() {
             field = value
         }
 
-    // // override fun getOpCode(): Int {
-    // //     return
-    // // }
-    //
-    // fun setOpCode(opCode: Int?) {
-    //     this.opCode = opCode
-    // }
-
     var offset = 0
     var displayableValue = ""
+        get() = field
+        set(value) {
+            field = value
+        }
 
     fun setEntryType(medtronicDeviceType: MedtronicDeviceType?, entryType: PumpHistoryEntryType) {
         this.entryType = entryType

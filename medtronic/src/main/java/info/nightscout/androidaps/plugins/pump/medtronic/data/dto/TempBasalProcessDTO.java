@@ -15,7 +15,7 @@ public class TempBasalProcessDTO {
             TempBasalPair tbr = (TempBasalPair) itemOne.getDecodedDataEntry("Object");
             return tbr.getDurationMinutes();
         } else {
-            int difference = DateTimeUtil.getATechDateDiferenceAsMinutes(itemOne.atechDateTime, itemTwo.atechDateTime);
+            int difference = DateTimeUtil.getATechDateDiferenceAsMinutes(itemOne.getAtechDateTime(), itemTwo.getAtechDateTime());
             return difference;
         }
     }

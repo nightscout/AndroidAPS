@@ -19,16 +19,13 @@ import kotlin.jvm.Throws
  */
 abstract class MedtronicHistoryDecoder<T : MedtronicHistoryEntry?> : MedtronicHistoryDecoderInterface<T> {
 
-    @JvmField @Inject
-    var aapsLogger: AAPSLogger? = null
-
-    @JvmField @Inject
-    var medtronicUtil: MedtronicUtil? = null
-    protected var bitUtils: ByteUtil? = null
+    @Inject lateinit var aapsLogger: AAPSLogger
+    @Inject lateinit var medtronicUtil: MedtronicUtil
+    @Inject lateinit var bitUtils: ByteUtil
 
     // STATISTICS (remove at later time or not)
     protected var statisticsEnabled = true
-    @JvmField protected var unknownOpCodes: MutableMap<Int, Int?>? = null
+    protected var unknownOpCodes: MutableMap<Int, Int?>? = null
     protected var mapStatistics: MutableMap<RecordDecodeStatus, MutableMap<String, String>>? = null
 
     // public abstract <E extends MedtronicHistoryEntry> Class<E> getHistoryEntryClass();

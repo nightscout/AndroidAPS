@@ -204,7 +204,7 @@ public class MedtronicHistoryData {
                     } else {
 
                         if (type == PumpHistoryEntryType.EndResultTotals) {
-                            if (!DateTimeUtil.isSameDay(atechDate, pumpHistoryEntry.atechDateTime)) {
+                            if (!DateTimeUtil.isSameDay(atechDate, pumpHistoryEntry.getAtechDateTime())) {
                                 newHistory2.add(pumpHistoryEntry);
                             }
                         } else {
@@ -239,7 +239,7 @@ public class MedtronicHistoryData {
 
         for (PumpHistoryEntry bolusEstimate : bolusEstimates) {
             for (PumpHistoryEntry bolus : boluses) {
-                if (bolusEstimate.atechDateTime.equals(bolus.atechDateTime)) {
+                if (bolusEstimate.getAtechDateTime().equals(bolus.getAtechDateTime())) {
                     bolus.addDecodedData("Estimate", bolusEstimate.getDecodedData().get("Object"));
                 }
             }
@@ -256,7 +256,7 @@ public class MedtronicHistoryData {
 
         // find last entry
         for (PumpHistoryEntry pumpHistoryEntry : newHistory) {
-            if (pumpHistoryEntry.atechDateTime != null && pumpHistoryEntry.isAfter(pheLast.atechDateTime)) {
+            if (pumpHistoryEntry.getAtechDateTime() != null && pumpHistoryEntry.isAfter(pheLast.getAtechDateTime())) {
                 pheLast = pumpHistoryEntry;
             }
         }
@@ -268,7 +268,7 @@ public class MedtronicHistoryData {
 
             if (!this.allHistory.contains(pumpHistoryEntry)) {
                 lastIdUsed++;
-                pumpHistoryEntry.id = lastIdUsed;
+                pumpHistoryEntry.setId(lastIdUsed);
                 this.allHistory.add(pumpHistoryEntry);
             }
 
@@ -278,13 +278,13 @@ public class MedtronicHistoryData {
         if (pheLast == null) // if we don't have any valid record we don't do the filtering and setting
             return;
 
-        this.setLastHistoryRecordTime(pheLast.atechDateTime);
-        sp.putLong(MedtronicConst.Statistics.LastPumpHistoryEntry, pheLast.atechDateTime);
+        this.setLastHistoryRecordTime(pheLast.getAtechDateTime());
+        sp.putLong(MedtronicConst.Statistics.LastPumpHistoryEntry, pheLast.getAtechDateTime());
 
         LocalDateTime dt = null;
 
         try {
-            dt = DateTimeUtil.toLocalDateTime(pheLast.atechDateTime);
+            dt = DateTimeUtil.toLocalDateTime(pheLast.getAtechDateTime());
         } catch (Exception ex) {
             aapsLogger.error("Problem decoding date from last record: " + pheLast);
         }
@@ -537,9 +537,9 @@ public class MedtronicHistoryData {
                 continue;
             }
 
-            if (primeRecord.atechDateTime > maxAllowedTimeInPast) {
-                if (lastPrimeRecord < primeRecord.atechDateTime) {
-                    lastPrimeRecord = primeRecord.atechDateTime;
+            if (primeRecord.getAtechDateTime() > maxAllowedTimeInPast) {
+                if (lastPrimeRecord < primeRecord.getAtechDateTime()) {
+                    lastPrimeRecord = primeRecord.getAtechDateTime();
                 }
             }
         }
@@ -560,9 +560,9 @@ public class MedtronicHistoryData {
         long lastRewindRecord = 0L;
 
         for (PumpHistoryEntry rewindRecord : rewindRecords) {
-            if (rewindRecord.atechDateTime > maxAllowedTimeInPast) {
-                if (lastRewindRecord < rewindRecord.atechDateTime) {
-                    lastRewindRecord = rewindRecord.atechDateTime;
+            if (rewindRecord.getAtechDateTime() > maxAllowedTimeInPast) {
+                if (lastRewindRecord < rewindRecord.getAtechDateTime()) {
+                    lastRewindRecord = rewindRecord.getAtechDateTime();
                 }
             }
         }
@@ -593,7 +593,7 @@ public class MedtronicHistoryData {
 
         for (PumpHistoryEntry tdd : tdds) {
 
-            TDD tddDbEntry = findTDD(tdd.atechDateTime, tddsDb);
+            TDD tddDbEntry = findTDD(tdd.getAtechDateTime(), tddsDb);
 
             DailyTotalsDTO totalsDTO = (DailyTotalsDTO) tdd.getDecodedData().get("Object");
 
@@ -839,7 +839,7 @@ public class MedtronicHistoryData {
      */
     private DbObjectBase findDbEntry(PumpHistoryEntry treatment, List<? extends DbObjectBase> entriesFromHistory) {
 
-        long proposedTime = DateTimeUtil.toMillisFromATD(treatment.atechDateTime);
+        long proposedTime = DateTimeUtil.toMillisFromATD(treatment.getAtechDateTime());
 
         //proposedTime += (this.pumpTime.timeDifference * 1000);
 
@@ -856,10 +856,10 @@ public class MedtronicHistoryData {
 
             // TODO: Fix db code
             // if difference is bigger than 2 minutes we discard entry
-            long maxMillisAllowed = DateTimeUtil.getMillisFromATDWithAddedMinutes(treatment.atechDateTime, 2);
+            long maxMillisAllowed = DateTimeUtil.getMillisFromATDWithAddedMinutes(treatment.getAtechDateTime(), 2);
 
             if (doubleBolusDebug)
-                aapsLogger.debug(LTag.PUMP, String.format(Locale.ENGLISH, "DoubleBolusDebug: findDbEntry maxMillisAllowed=%d, AtechDateTime=%d (add 2 minutes). ", maxMillisAllowed, treatment.atechDateTime));
+                aapsLogger.debug(LTag.PUMP, String.format(Locale.ENGLISH, "DoubleBolusDebug: findDbEntry maxMillisAllowed=%d, AtechDateTime=%d (add 2 minutes). ", maxMillisAllowed, treatment.getAtechDateTime()));
 
             if (entriesFromHistory.get(0).getDate() > maxMillisAllowed) {
                 if (doubleBolusDebug)
@@ -970,7 +970,7 @@ public class MedtronicHistoryData {
                 case Normal: {
                     DetailedBolusInfo detailedBolusInfo = new DetailedBolusInfo();
 
-                    detailedBolusInfo.setBolusTimestamp(tryToGetByLocalTime(bolus.atechDateTime));
+                    detailedBolusInfo.setBolusTimestamp(tryToGetByLocalTime(bolus.getAtechDateTime()));
                     detailedBolusInfo.setPumpType(PumpType.MEDTRONIC_512_712); // TODO grab real model
                     detailedBolusInfo.setPumpSerial(medtronicPumpStatus.serialNumber);
                     detailedBolusInfo.setBolusPumpId(bolus.getPumpId());
@@ -993,7 +993,7 @@ public class MedtronicHistoryData {
                 case Audio:
                 case Extended: {
                     ExtendedBolus extendedBolus = new ExtendedBolus(injector);
-                    extendedBolus.date = tryToGetByLocalTime(bolus.atechDateTime);
+                    extendedBolus.date = tryToGetByLocalTime(bolus.getAtechDateTime());
                     extendedBolus.source = Source.PUMP;
                     extendedBolus.insulin = bolusDTO.getDeliveredAmount();
                     extendedBolus.pumpId = bolus.getPumpId();
@@ -1060,7 +1060,7 @@ public class MedtronicHistoryData {
 
         if (temporaryBasalDb == null) {
             temporaryBasalDb = new TemporaryBasal(injector);
-            temporaryBasalDb.date = tryToGetByLocalTime(treatment.atechDateTime);
+            temporaryBasalDb.date = tryToGetByLocalTime(treatment.getAtechDateTime());
 
             operation = "addTBR";
         }
@@ -1094,7 +1094,7 @@ public class MedtronicHistoryData {
             if (tempBasal == null) {
                 // add
                 tempBasal = new TemporaryBasal(injector);
-                tempBasal.date = tryToGetByLocalTime(tempBasalProcess.itemOne.atechDateTime);
+                tempBasal.date = tryToGetByLocalTime(tempBasalProcess.itemOne.getAtechDateTime());
 
                 tempBasal.source = Source.PUMP;
                 tempBasal.pumpId = tempBasalProcess.itemOne.getPumpId();
@@ -1346,8 +1346,8 @@ public class MedtronicHistoryData {
 
         for (PumpHistoryEntry treatment : treatments) {
 
-            if (treatment.atechDateTime < dt) {
-                dt = treatment.atechDateTime;
+            if (treatment.getAtechDateTime() < dt) {
+                dt = treatment.getAtechDateTime();
                 currentTreatment = treatment;
             }
         }
@@ -1386,8 +1386,8 @@ public class MedtronicHistoryData {
 
         for (PumpHistoryEntry treatment : treatments) {
 
-            if (treatment.atechDateTime < dt) {
-                dt = treatment.atechDateTime;
+            if (treatment.getAtechDateTime() < dt) {
+                dt = treatment.getAtechDateTime();
                 currentTreatment = treatment;
             }
         }
@@ -1469,9 +1469,9 @@ public class MedtronicHistoryData {
 
             for (PumpHistoryEntry filteredItem : filteredItems) {
 
-                if (lastDate == null || lastDate < filteredItem.atechDateTime) {
+                if (lastDate == null || lastDate < filteredItem.getAtechDateTime()) {
                     newProfile = filteredItem;
-                    lastDate = newProfile.atechDateTime;
+                    lastDate = newProfile.getAtechDateTime();
                 }
             }
         }
@@ -1517,13 +1517,13 @@ public class MedtronicHistoryData {
         Map<String, PumpHistoryEntry> map = new HashMap<>();
 
         for (PumpHistoryEntry pumpHistoryEntry : TBRs_Input) {
-            if (map.containsKey(pumpHistoryEntry.DT)) {
-                medtronicPumpHistoryDecoder.decodeTempBasal(map.get(pumpHistoryEntry.DT), pumpHistoryEntry);
+            if (map.containsKey(pumpHistoryEntry.getDT())) {
+                medtronicPumpHistoryDecoder.decodeTempBasal(map.get(pumpHistoryEntry.getDT()), pumpHistoryEntry);
                 pumpHistoryEntry.setEntryType(medtronicUtil.getMedtronicPumpModel(), PumpHistoryEntryType.TempBasalCombined);
                 TBRs.add(pumpHistoryEntry);
-                map.remove(pumpHistoryEntry.DT);
+                map.remove(pumpHistoryEntry.getDT());
             } else {
-                map.put(pumpHistoryEntry.DT, pumpHistoryEntry);
+                map.put(pumpHistoryEntry.getDT(), pumpHistoryEntry);
             }
         }
 

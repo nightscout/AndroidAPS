@@ -1,7 +1,9 @@
 package info.nightscout.androidaps.plugins.pump.medtronic.di
 
 import dagger.Module
+import dagger.Provides
 import dagger.android.ContributesAndroidInjector
+import info.nightscout.androidaps.plugins.pump.common.utils.ByteUtil
 import info.nightscout.androidaps.plugins.pump.medtronic.MedtronicFragment
 import info.nightscout.androidaps.plugins.pump.medtronic.comm.MedtronicCommunicationManager
 import info.nightscout.androidaps.plugins.pump.medtronic.comm.ui.MedtronicUITask
@@ -20,4 +22,9 @@ abstract class MedtronicModule {
     @ContributesAndroidInjector abstract fun medtronicCommunicationManagerProvider(): MedtronicCommunicationManager
     @ContributesAndroidInjector abstract fun medtronicUITaskProvider(): MedtronicUITask
     @ContributesAndroidInjector abstract fun contributesRileyLinkStatusDeviceMedtronic(): RileyLinkStatusDeviceMedtronic
+
+    companion object {
+        @Provides
+        fun byteUtilProvider(): ByteUtil = ByteUtil();
+    }
 }

@@ -30,7 +30,7 @@ class CGMSHistoryEntry : MedtronicHistoryEntry() {
     override val entryTypeName: String
         get() = entryType!!.name
 
-    override fun setData(listRawData: List<Byte>?, doNotProcess: Boolean) {
+    override fun setData(listRawData: List<Byte>, doNotProcess: Boolean) {
         if (entryType!!.schemaSet) {
             super.setData(listRawData, doNotProcess)
         } else {

@@ -1223,7 +1223,7 @@ public class MedtronicPumpPlugin extends PumpPluginAbstract implements PumpInter
             return;
 
         this.lastPumpHistoryEntry = latestEntry;
-        sp.putLong(MedtronicConst.Statistics.LastPumpHistoryEntry, latestEntry.atechDateTime);
+        sp.putLong(MedtronicConst.Statistics.LastPumpHistoryEntry, latestEntry.getAtechDateTime());
 
         if (debugHistory)
             aapsLogger.debug(LTag.PUMP, "HST: History: valid=" + historyResult.validEntries.size() + ", unprocessed=" + historyResult.unprocessedEntries.size());

@@ -237,10 +237,10 @@ public class MedtronicCommunicationManager extends RileyLinkCommunicationManager
             aapsLogger.debug(LTag.PUMPCOMM, "Run command with Args: ");
 
         PumpMessage rval;
-        PumpMessage shortMessage = makePumpMessage(msg.commandType, new CarelinkShortMessageBody(new byte[]{0}));
+        PumpMessage shortMessage = makePumpMessage(msg.getCommandType(), new CarelinkShortMessageBody(new byte[]{0}));
         // look for ack from short message
         PumpMessage shortResponse = sendAndListen(shortMessage);
-        if (shortResponse.commandType == MedtronicCommandType.CommandACK) {
+        if (shortResponse.getCommandType() == MedtronicCommandType.CommandACK) {
             if (debugSetCommands)
                 aapsLogger.debug(LTag.PUMPCOMM, "Run command with Args: Got ACK response");
 
@@ -266,7 +266,7 @@ public class MedtronicCommunicationManager extends RileyLinkCommunicationManager
         // look for ack from short message
         PumpMessage shortResponse = sendAndListen(shortMessage);
 
-        if (shortResponse.commandType != MedtronicCommandType.CommandACK) {
+        if (shortResponse.getCommandType() != MedtronicCommandType.CommandACK) {
             aapsLogger.error(LTag.PUMPCOMM, "runCommandWithFrames: Pump did not ack Attention packet");
 
             return new PumpMessage(aapsLogger, "No ACK after start message.");
@@ -288,7 +288,7 @@ public class MedtronicCommunicationManager extends RileyLinkCommunicationManager
 
             // aapsLogger.debug(LTag.PUMPCOMM,"PumpResponse: " + rval);
 
-            if (rval.commandType != MedtronicCommandType.CommandACK) {
+            if (rval.getCommandType() != MedtronicCommandType.CommandACK) {
                 aapsLogger.error(LTag.PUMPCOMM, "runCommandWithFrames: Pump did not ACK frame #" + frameNr);
 
                 aapsLogger.error(LTag.PUMPCOMM, String.format(Locale.ENGLISH, "Run command with Frames FAILED (command=%s, response=%s)", commandType.name(),
@@ -356,8 +356,7 @@ public class MedtronicCommunicationManager extends RileyLinkCommunicationManager
             // aapsLogger.info(LTag.PUMPCOMM,"getPumpHistoryPage("+pageNumber+"): " + ByteUtil.shortHexString(firstResponse.getContents()));
 
             PumpMessage ackMsg = makePumpMessage(MedtronicCommandType.CommandACK, new PumpAckMessageBody());
-            GetHistoryPageCarelinkMessageBody currentResponse = new GetHistoryPageCarelinkMessageBody(firstResponse
-                    .getMessageBody().getTxData());
+            GetHistoryPageCarelinkMessageBody currentResponse = new GetHistoryPageCarelinkMessageBody(firstResponse.getMessageBody().getTxData());
             int expectedFrameNum = 1;
             boolean done = false;
             // while (expectedFrameNum == currentResponse.getFrameNumber()) {
@@ -861,7 +860,7 @@ public class MedtronicCommunicationManager extends RileyLinkCommunicationManager
                 if (debugSetCommands)
                     aapsLogger.debug(LTag.PUMPCOMM, String.format(Locale.ENGLISH, "%s: %s", commandType.getCommandDescription(), pumpMessage.getResponseContent()));
 
-                if (pumpMessage.commandType == MedtronicCommandType.CommandACK) {
+                if (pumpMessage.getCommandType() == MedtronicCommandType.CommandACK) {
                     return true;
                 } else {
                     aapsLogger.warn(LTag.PUMPCOMM, "We received non-ACK response from pump: " + pumpMessage.getResponseContent());
@@ -900,7 +899,7 @@ public class MedtronicCommunicationManager extends RileyLinkCommunicationManager
                 responseMessage = runCommandWithFrames(MedtronicCommandType.SetBasalProfileSTD,
                         basalProfileFrames);
 
-                if (responseMessage.commandType == MedtronicCommandType.CommandACK)
+                if (responseMessage.getCommandType() == MedtronicCommandType.CommandACK)
                     return true;
 
             } catch (RileyLinkCommunicationException e) {
@@ -908,7 +907,7 @@ public class MedtronicCommunicationManager extends RileyLinkCommunicationManager
             }
 
             if (responseMessage != null)
-                aapsLogger.warn(LTag.PUMPCOMM, String.format(Locale.ENGLISH, "Set Basal Profile: Invalid response: commandType=%s,rawData=%s", responseMessage.commandType, ByteUtil.shortHexString(responseMessage.getRawContent())));
+                aapsLogger.warn(LTag.PUMPCOMM, String.format(Locale.ENGLISH, "Set Basal Profile: Invalid response: commandType=%s,rawData=%s", responseMessage.getCommandType(), ByteUtil.shortHexString(responseMessage.getRawContent())));
             else
                 aapsLogger.warn(LTag.PUMPCOMM, "Set Basal Profile: Null response.");
         }
