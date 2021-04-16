@@ -43,10 +43,10 @@ class UserEntryLogger @Inject constructor(
             )
     }
 
-    fun log(action: UserEntryMapper.Action, source: UserEntryMapper.Sources, note: String? ="", vararg listvalues: ValueWithUnitMapper?) = log(action.db, source.db, note, listvalues.toList().map {it?.db()})
+    fun logMapper(action: UserEntryMapper.Action, source: UserEntryMapper.Sources, note: String? ="", vararg listvalues: ValueWithUnitMapper?) = log(action.db, source.db, note, listvalues.toList().map {it?.db()})
 
-    fun log(action: UserEntryMapper.Action, source: UserEntryMapper.Sources, vararg listvalues: ValueWithUnitMapper?) = log(action.db, source.db, "", listvalues.toList().map {it?.db()})
+    fun logMapper(action: UserEntryMapper.Action, source: UserEntryMapper.Sources, vararg listvalues: ValueWithUnitMapper?) = log(action.db, source.db, "", listvalues.toList().map {it?.db()})
 
-    fun log(action: UserEntryMapper.Action, source: UserEntryMapper.Sources, note: String? ="", listvalues: List<ValueWithUnitMapper?> = listOf()) = log(action.db, source.db, note, listvalues.map {it?.db()})
+    fun logMapper(action: UserEntryMapper.Action, source: UserEntryMapper.Sources, note: String? ="", listvalues: List<ValueWithUnitMapper?> = listOf()) = log(action.db, source.db, note, listvalues.map {it?.db()})
 
 }

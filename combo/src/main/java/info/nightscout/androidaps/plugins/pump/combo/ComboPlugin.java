@@ -1060,7 +1060,7 @@ public class ComboPlugin extends PumpPluginBase implements Pump, Constraints {
                 Notification n = new Notification(Notification.COMBO_PUMP_ALARM,
                         getResourceHelper().gs(R.string.combo_low_suspend_forced_notification),
                         Notification.URGENT);
-                uel.log(Action.CAREPORTAL, Sources.Combo, getResourceHelper().gs(R.string.combo_low_suspend_forced_notification),
+                uel.logMapper(Action.CAREPORTAL, Sources.Combo, getResourceHelper().gs(R.string.combo_low_suspend_forced_notification),
                         new ValueWithUnitMapper.SimpleString(getResourceHelper().gsNotLocalised(R.string.combo_low_suspend_forced_notification)));
                 n.setSoundId(R.raw.alarm);
                 rxBus.send(new EventNewNotification(n));
@@ -1092,7 +1092,7 @@ public class ComboPlugin extends PumpPluginBase implements Pump, Constraints {
                     PumpType.ACCU_CHEK_COMBO,
                     serialNumber()
             );
-            uel.log(Action.TEMP_BASAL, Sources.Combo,
+            uel.logMapper(Action.TEMP_BASAL, Sources.Combo,
                     new ValueWithUnitMapper.Percent(state.tbrPercent),
                     new ValueWithUnitMapper.Minute(state.tbrRemainingDuration));
         } else if (aapsTbr != null && PumpStateExtensionKt.getPlannedRemainingMinutes(aapsTbr) > 2 && !state.tbrActive) {
@@ -1103,7 +1103,7 @@ public class ComboPlugin extends PumpPluginBase implements Pump, Constraints {
                     PumpType.ACCU_CHEK_COMBO,
                     serialNumber()
             );
-            uel.log(Action.CANCEL_TEMP_BASAL, Sources.Combo);
+            uel.logMapper(Action.CANCEL_TEMP_BASAL, Sources.Combo);
         } else if (aapsTbr != null && state.tbrActive
                 && (aapsTbr.getRate() != state.tbrPercent ||
                 Math.abs(PumpStateExtensionKt.getPlannedRemainingMinutes(aapsTbr) - state.tbrRemainingDuration) > 2)) {
@@ -1117,7 +1117,7 @@ public class ComboPlugin extends PumpPluginBase implements Pump, Constraints {
                     PumpType.ACCU_CHEK_COMBO,
                     serialNumber()
             );
-            uel.log(Action.CANCEL_TEMP_BASAL, Sources.Combo);
+            uel.logMapper(Action.CANCEL_TEMP_BASAL, Sources.Combo);
             // Create TBR start record, starting now
             pumpSync.syncTemporaryBasalWithPumpId(
                     now,
@@ -1129,7 +1129,7 @@ public class ComboPlugin extends PumpPluginBase implements Pump, Constraints {
                     PumpType.ACCU_CHEK_COMBO,
                     serialNumber()
             );
-            uel.log(Action.TEMP_BASAL, Sources.Combo,
+            uel.logMapper(Action.TEMP_BASAL, Sources.Combo,
                     new ValueWithUnitMapper.Percent(state.tbrPercent),
                     new ValueWithUnitMapper.Minute(state.tbrRemainingDuration));
         }
@@ -1172,7 +1172,7 @@ public class ComboPlugin extends PumpPluginBase implements Pump, Constraints {
                     PumpType.ACCU_CHEK_COMBO,
                     serialNumber()
             )) {
-                uel.log(Action.BOLUS, Sources.Combo,
+                uel.logMapper(Action.BOLUS, Sources.Combo,
                         new ValueWithUnitMapper.Timestamp(pumpBolus.timestamp),
                         new ValueWithUnitMapper.Insulin(pumpBolus.amount));
                 updated = true;
