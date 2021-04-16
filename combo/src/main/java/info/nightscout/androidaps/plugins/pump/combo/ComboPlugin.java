@@ -42,6 +42,7 @@ import info.nightscout.androidaps.interfaces.PumpPluginBase;
 import info.nightscout.androidaps.interfaces.PumpSync;
 import info.nightscout.androidaps.logging.AAPSLogger;
 import info.nightscout.androidaps.logging.LTag;
+import info.nightscout.androidaps.logging.UserEntryLogger;
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper;
 import info.nightscout.androidaps.plugins.common.ManufacturerType;
 import info.nightscout.androidaps.plugins.general.overview.events.EventDismissNotification;
@@ -65,6 +66,9 @@ import info.nightscout.androidaps.plugins.pump.common.defs.PumpType;
 import info.nightscout.androidaps.utils.DateUtil;
 import info.nightscout.androidaps.utils.InstanceId;
 import info.nightscout.androidaps.utils.T;
+import info.nightscout.androidaps.utils.userEntry.UserEntryMapper.Action;
+import info.nightscout.androidaps.utils.userEntry.UserEntryMapper.Sources;
+import info.nightscout.androidaps.utils.userEntry.ValueWithUnitMapper;
 import info.nightscout.androidaps.utils.resources.ResourceHelper;
 import info.nightscout.androidaps.utils.sharedPreferences.SP;
 
@@ -84,6 +88,7 @@ public class ComboPlugin extends PumpPluginBase implements Pump, Constraints {
     private final DatabaseHelperInterface databaseHelper;
     private final PumpSync pumpSync;
     private final DateUtil dateUtil;
+    private final UserEntryLogger uel;
 
     private final static PumpDescription pumpDescription = new PumpDescription();
 
@@ -140,7 +145,8 @@ public class ComboPlugin extends PumpPluginBase implements Pump, Constraints {
             Context context,
             DatabaseHelperInterface databaseHelper,
             PumpSync pumpSync,
-            DateUtil dateUtil
+            DateUtil dateUtil,
+            UserEntryLogger uel
     ) {
         super(new PluginDescription()
                         .mainType(PluginType.PUMP)
@@ -159,6 +165,7 @@ public class ComboPlugin extends PumpPluginBase implements Pump, Constraints {
         this.databaseHelper = databaseHelper;
         this.pumpSync = pumpSync;
         this.dateUtil = dateUtil;
+        this.uel = uel;
 
         pumpDescription.setPumpDescription(PumpType.ACCU_CHEK_COMBO);
     }
@@ -1053,6 +1060,8 @@ public class ComboPlugin extends PumpPluginBase implements Pump, Constraints {
                 Notification n = new Notification(Notification.COMBO_PUMP_ALARM,
                         getResourceHelper().gs(R.string.combo_low_suspend_forced_notification),
                         Notification.URGENT);
+                uel.log(Action.CAREPORTAL, Sources.Combo, getResourceHelper().gs(R.string.combo_low_suspend_forced_notification),
+                        new ValueWithUnitMapper.SimpleString(getResourceHelper().gsNotLocalised(R.string.combo_low_suspend_forced_notification)));
                 n.setSoundId(R.raw.alarm);
                 rxBus.send(new EventNewNotification(n));
                 violationWarningRaisedForBolusAt = lowSuspendOnlyLoopEnforcedUntil;
@@ -1156,6 +1165,9 @@ public class ComboPlugin extends PumpPluginBase implements Pump, Constraints {
                     PumpType.ACCU_CHEK_COMBO,
                     serialNumber()
             )) {
+                uel.log(Action.BOLUS, Sources.Combo,
+                        new ValueWithUnitMapper.Timestamp(pumpBolus.timestamp),
+                        new ValueWithUnitMapper.Insulin(pumpBolus.amount));
                 updated = true;
             }
         }
