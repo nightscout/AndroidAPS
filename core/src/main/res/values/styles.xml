@@ -98,7 +98,7 @@
         <item name="treatmentSheduled" >@color/squash</item>
         <item name="treatmentActive" >@color/emerald</item>
         <!-- filling dialog -->
-        <item name="actionsConfirm" >@color/lightyellow</item>
+        <item name="actionsConfirm" >@color/midyellow</item>
         <!-- local profil dialog -->
         <item name="errorBackground" >@color/lightPastelRed</item>
         <item name="okBackground" >@color/gray</item>
@@ -209,7 +209,7 @@
         <item name="therapyeventDefault" >@color/gray</item>
         <!---SMS Communicator -->
         <item name="smsCommunicatorOK" >@color/lightGreen</item>
-        <item name="smsCommunicatorWrongLength" >@color/lightyellow</item>
+        <item name="smsCommunicatorWrongLength" >@color/midyellow</item>
         <item name="smsCommunicatorWrongPin" >@color/red</item>
         <item name="smsCommunicatorOtp" >@color/red</item>
         <!---Misc -->

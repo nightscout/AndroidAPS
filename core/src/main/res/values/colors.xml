@@ -74,6 +74,7 @@
 
     <!-- Yellow Colors -->
     <color name="lightyellow">#FFFF00</color>
+    <color name="midyellow">#EBEB00</color>
     <color name="devslopepos">#E5E500</color>
     <color name="ribbonWarning">#f4d700</color>
 
