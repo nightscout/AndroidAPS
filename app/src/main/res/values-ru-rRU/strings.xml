@@ -138,6 +138,7 @@
     <string name="configbuilder_nightscoutversion_label">версия Nightscout:</string>
     <string name="missing_carbs">Не хватает %1$d г</string>
     <string name="exported">настройки экспортированы</string>
+    <string name="ue_exported">Записи пользователя экспортированы</string>
     <string name="export_to">экспортировать настройки в</string>
     <string name="import_from">импортировать настройки из</string>
     <string name="setting_imported">настройки импортированы</string>
@@ -269,11 +270,8 @@
     <string name="openapsma_autosensdata_label">данные autosens</string>
     <string name="openapsma_scriptdebugdata_label">отладка скрипта</string>
     <string name="openapsama_useautosens">Пользоваться функцией Autosens</string>
-    <string name="refresheventsfromnightscout">обновить данные из NS</string>
+    <string name="refresheventsfromnightscout">Обновить из NS</string>
     <string name="deletefuturetreatments">Удалить назначения из будущего</string>
-    <string name="eatingsoon">Ожидаемый прием пищи</string>
-    <string name="hypo">Гипо</string>
-    <string name="activity">Нагрузка</string>
     <string name="actions_shortname">ДЕЙСТВ</string>
     <string name="configbuilder_shortname">КОНФ</string>
     <string name="loop_shortname">ЗЦ</string>
@@ -753,7 +751,6 @@ Context | Edit Context</string>
     <string name="format_carbs_ic">%1$.0fg IC: %2$.1f</string>
     <string name="format_cob_ic">%1$.1fg IC: %2$.1f</string>
     <string name="format_percent">%1$d%%</string>
-    <string name="boluswizard">Мастер Болюса</string>
     <string name="unit_minute_short">мин</string>
     <string name="profile_name">Название профиля:</string>
     <string name="selected_profile">Выбрано:</string>

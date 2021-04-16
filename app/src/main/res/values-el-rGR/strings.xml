@@ -210,11 +210,7 @@
     <string name="openapsma_autosensdata_label">Δεδομένα Autosens</string>
     <string name="openapsma_scriptdebugdata_label">Εντοπισμός σφαλμάτων δέσμης ενεργειών</string>
     <string name="openapsama_useautosens">Χρήση του Autosens</string>
-    <string name="refresheventsfromnightscout">Ανανέωσε συμβάντα από NS</string>
     <string name="deletefuturetreatments">Διαγραφή συμβάντων στο μέλλον</string>
-    <string name="eatingsoon">Γεύμα Σύντομα</string>
-    <string name="hypo">Υπογλυκαιμία</string>
-    <string name="activity">Άσκηση</string>
     <string name="actions_shortname">ΔΡΑΣΗ</string>
     <string name="configbuilder_shortname">Διαμόρφωση</string>
     <string name="loop_shortname">ΚΥΚΛΩΜΑ</string>
@@ -608,7 +604,6 @@
     <string name="format_carbs_ic">%1$.0fg IC: %2$.1f</string>
     <string name="format_cob_ic">%1$.1fg IC: %2$.1f</string>
     <string name="format_percent">%1$d%%</string>
-    <string name="boluswizard">Οδηγός Bolus</string>
     <string name="unit_minute_short">min</string>
     <!-- SMS Communicator & OTP Authenticator -->
 </resources>

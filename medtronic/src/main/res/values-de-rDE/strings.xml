@@ -24,6 +24,8 @@
     <string name="medtronic_pump_battery_nizn">Nickel-Zink-Akku (erweiterte Ansicht)</string>
     <string name="medtronic_pump_battery_nimh">Nickel-Zink-Akku (erweiterte Ansicht)</string>
     <string name="medtronic_bolus_debugging">Fehlersuche Bolus/Behandlungen</string>
+    <!-- MDT Fragment -->
+    <string name="rl_battery_label">RileyLink-Batterie</string>
     <!-- MDT Errors -->
     <string name="medtronic_errors">Fehler</string>
     <string name="medtronic_error_serial_not_set">Seriennummer nicht angegeben.</string>

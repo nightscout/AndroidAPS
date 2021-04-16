@@ -8,7 +8,7 @@
     <string name="maximum_number_of_bolus_type_already_running">Número máximo de bólus tipo já em execução</string>
     <string name="no_active_tbr_to_cancel">Sem DBT para cancelar</string>
     <string name="no_active_tbr_to_change">Sem DBT para alterar</string>
-    <string name="no_such_bolus_to_cancel">Sem bolus para cancelar</string>
+    <string name="no_such_bolus_to_cancel">Sem bólus para cancelar</string>
     <string name="pump_already_in_that_state_exception">A bomba já está nesse estado</string>
     <string name="run_mode_not_allowed">Modo executar não autorizado</string>
 </resources>

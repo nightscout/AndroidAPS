@@ -264,11 +264,7 @@
     <string name="openapsma_autosensdata_label">Autosens duomenys</string>
     <string name="openapsma_scriptdebugdata_label">Scenarijų derinimas</string>
     <string name="openapsama_useautosens">Naudoti Autosens funkciją</string>
-    <string name="refresheventsfromnightscout">Atnaujinti įvykius iš NS</string>
     <string name="deletefuturetreatments">Ištrinti ateities įrašus</string>
-    <string name="eatingsoon">Netrukus valgysiu</string>
-    <string name="hypo">Hipo</string>
-    <string name="activity">Aktyvumas</string>
     <string name="actions_shortname">VEIKS</string>
     <string name="configbuilder_shortname">KONF</string>
     <string name="loop_shortname">CIKLAS</string>
@@ -732,7 +728,6 @@
     <string name="format_carbs_ic">%1$.0fg IA: %2$.1f</string>
     <string name="format_cob_ic">%1$.1fg IA: %2$.1f</string>
     <string name="format_percent">%1$d%%</string>
-    <string name="boluswizard">Boluso patarėjas</string>
     <string name="unit_minute_short">min.</string>
     <string name="profile_name">Profilio pavadinimas:</string>
     <string name="selected_profile">Parinkta:</string>

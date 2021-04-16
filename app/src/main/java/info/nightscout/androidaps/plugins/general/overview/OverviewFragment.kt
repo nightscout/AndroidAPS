@@ -921,20 +921,20 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
                             menuChartSettings[g + 1][OverviewMenus.CharType.IOB.ordinal]      -> useIobForScale = true
                             menuChartSettings[g + 1][OverviewMenus.CharType.COB.ordinal]      -> useCobForScale = true
                             menuChartSettings[g + 1][OverviewMenus.CharType.DEV.ordinal]      -> useDevForScale = true
-                            menuChartSettings[g + 1][OverviewMenus.CharType.SEN.ordinal]      -> useRatioForScale = true
                             menuChartSettings[g + 1][OverviewMenus.CharType.BGI.ordinal]      -> useBGIForScale = true
+                            menuChartSettings[g + 1][OverviewMenus.CharType.SEN.ordinal]      -> useRatioForScale = true
                             menuChartSettings[g + 1][OverviewMenus.CharType.DEVSLOPE.ordinal] -> useDSForScale = true
                         }
                         val alignIobScale = menuChartSettings[g + 1][OverviewMenus.CharType.ABS.ordinal] && menuChartSettings[g + 1][OverviewMenus.CharType.IOB.ordinal]
                         val alignDevBgiScale = menuChartSettings[g + 1][OverviewMenus.CharType.DEV.ordinal] && menuChartSettings[g + 1][OverviewMenus.CharType.BGI.ordinal]
 
-                        if (menuChartSettings[g + 1][OverviewMenus.CharType.ABS.ordinal]) context?.let { secondGraphData.addAbsIob(fromTime, now, useABSForScale, 1.0, it) }
-                        if (menuChartSettings[g + 1][OverviewMenus.CharType.IOB.ordinal]) context?.let { secondGraphData.addIob(fromTime, now, useIobForScale, 1.0, menuChartSettings[g + 1][OverviewMenus.CharType.PRE.ordinal], alignIobScale, it) }
-                        if (menuChartSettings[g + 1][OverviewMenus.CharType.COB.ordinal]) context?.let { secondGraphData.addCob(fromTime, now, useCobForScale, if (useCobForScale) 1.0 else 0.5, it) }
-                        if (menuChartSettings[g + 1][OverviewMenus.CharType.DEV.ordinal]) context?.let { secondGraphData.addDeviations(fromTime, now, useDevForScale, 1.0, alignDevBgiScale, it) }
-                        if (menuChartSettings[g + 1][OverviewMenus.CharType.SEN.ordinal]) context?.let { secondGraphData.addRatio(fromTime, now, useRatioForScale, 1.0, it) }
-                        if (menuChartSettings[g + 1][OverviewMenus.CharType.BGI.ordinal]) context?.let { secondGraphData.addMinusBGI(fromTime, endTime, useBGIForScale, if (alignDevBgiScale) 1.0 else 0.8, alignDevBgiScale, it) }
-                        if (menuChartSettings[g + 1][OverviewMenus.CharType.DEVSLOPE.ordinal] && buildHelper.isDev()) context?.let { secondGraphData.addDeviationSlope(fromTime, now, useDSForScale, 1.0, it) }
+                        if (menuChartSettings[g + 1][OverviewMenus.CharType.ABS.ordinal]) secondGraphData.addAbsIob(fromTime, now, useABSForScale, 1.0)
+                        if (menuChartSettings[g + 1][OverviewMenus.CharType.IOB.ordinal]) secondGraphData.addIob(fromTime, now, useIobForScale, 1.0, menuChartSettings[g + 1][OverviewMenus.CharType.PRE.ordinal], alignIobScale)
+                        if (menuChartSettings[g + 1][OverviewMenus.CharType.COB.ordinal]) secondGraphData.addCob(fromTime, now, useCobForScale, if (useCobForScale) 1.0 else 0.5)
+                        if (menuChartSettings[g + 1][OverviewMenus.CharType.DEV.ordinal]) secondGraphData.addDeviations(fromTime, now, useDevForScale, 1.0, alignDevBgiScale)
+                        if (menuChartSettings[g + 1][OverviewMenus.CharType.BGI.ordinal]) secondGraphData.addMinusBGI(fromTime, endTime, useBGIForScale, if (alignDevBgiScale) 1.0 else 0.8, alignDevBgiScale)
+                        if (menuChartSettings[g + 1][OverviewMenus.CharType.SEN.ordinal]) secondGraphData.addRatio(fromTime, now, useRatioForScale, if (useRatioForScale) 1.0 else 0.8)
+                        if (menuChartSettings[g + 1][OverviewMenus.CharType.DEVSLOPE.ordinal] && buildHelper.isDev()) secondGraphData.addDeviationSlope(fromTime, now, useDSForScale, 1.0)
 
                         // set manual x bounds to have nice steps
                         secondGraphData.formatAxis(fromTime, endTime)
@@ -953,8 +953,8 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
                             menuChartSettings[g + 1][OverviewMenus.CharType.IOB.ordinal] ||
                             menuChartSettings[g + 1][OverviewMenus.CharType.COB.ordinal] ||
                             menuChartSettings[g + 1][OverviewMenus.CharType.DEV.ordinal] ||
-                            menuChartSettings[g + 1][OverviewMenus.CharType.SEN.ordinal] ||
                             menuChartSettings[g + 1][OverviewMenus.CharType.BGI.ordinal] ||
+                            menuChartSettings[g + 1][OverviewMenus.CharType.SEN.ordinal] ||
                             menuChartSettings[g + 1][OverviewMenus.CharType.DEVSLOPE.ordinal]
                         ).toVisibility()
                     secondaryGraphsData[g].performUpdate()

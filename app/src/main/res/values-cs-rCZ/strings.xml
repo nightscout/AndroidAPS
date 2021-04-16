@@ -138,6 +138,7 @@
     <string name="configbuilder_nightscoutversion_label">Verze Nightscoutu:</string>
     <string name="missing_carbs">Chybí %1$d g</string>
     <string name="exported">Nastavení exportováno</string>
+    <string name="ue_exported">Uživatelské záznamy exportovány</string>
     <string name="export_to">Exportovat nastavení do</string>
     <string name="import_from">Importovat nastavení z</string>
     <string name="setting_imported">Nastavení importováno</string>
@@ -269,11 +270,8 @@
     <string name="openapsma_autosensdata_label">Data detekce senzitivity</string>
     <string name="openapsma_scriptdebugdata_label">Ladící informace</string>
     <string name="openapsama_useautosens">Používat autodetekci senzitivity</string>
-    <string name="refresheventsfromnightscout">Obnovit události z NS</string>
+    <string name="refresheventsfromnightscout">Aktualizovat z NS</string>
     <string name="deletefuturetreatments">Smazat události v budoucnosti</string>
-    <string name="eatingsoon">Před jídlem</string>
-    <string name="hypo">Hypoglykémie</string>
-    <string name="activity">Aktivita</string>
     <string name="actions_shortname">AKCE</string>
     <string name="configbuilder_shortname">KONF</string>
     <string name="loop_shortname">SMYČ</string>
@@ -465,8 +463,8 @@
     <string name="careportal_newnstreatment_percentage_label">% změna</string>
     <string name="careportal_newnstreatment_timeshift_label">Posun času</string>
     <string name="default_temptargets">Výchozí nastavení dočasných cílů</string>
-    <string name="eatingsoon_duration">Trvání \"blížícího se jídla\"</string>
-    <string name="eatingsoon_target">Cíl pro \"blížící se jídlo\"</string>
+    <string name="eatingsoon_duration">Trvání „Před jídlem“</string>
+    <string name="eatingsoon_target">Cíl „Před jídlem“</string>
     <string name="activity_duration">Trvání aktivity</string>
     <string name="activity_target">Cíl při aktivitě</string>
     <string name="hypo_duration">Trvání dočasného cíle při hypoglykémii</string>
@@ -530,7 +528,7 @@
     <string name="enablesmbwithcob">Povolit SMB se sacharidy</string>
     <string name="enablesmbwithcob_summary">Povolit SMB, pokud zbývají aktivní sacharidy.</string>
     <string name="enablesmbwithtemptarget">Povolit SMB s dočasnými cíli</string>
-    <string name="enablesmbwithtemptarget_summary">Povolit SMB, pokud je aktivní dočasný cíl (aktivita, blížící se jídlo)</string>
+    <string name="enablesmbwithtemptarget_summary">Povolit SMB, pokud je aktivní dočasný cíl (aktivita, před jídlem)</string>
     <string name="enablesmbwithhightemptarget">Povolit SMB s vysokými dočasnými cíli</string>
     <string name="enablesmbwithhightemptarget_summary">Povolit SMB, je-li aktivní vysoký cíl (cvičení, vyšší než 100 mg/dl nebo 5,5 mmol/l)</string>
     <string name="overview_insulin_label">Inzulín</string>
@@ -751,7 +749,6 @@
     <string name="format_carbs_ic">%1$.0fg IC: %2$.1f</string>
     <string name="format_cob_ic">%1$.1fg IC: %2$.1f</string>
     <string name="format_percent">%1$d%%</string>
-    <string name="boluswizard">Bolusová kalkulačka</string>
     <string name="unit_minute_short">min</string>
     <string name="profile_name">Jméno profilu:</string>
     <string name="selected_profile">Vybráno:</string>
