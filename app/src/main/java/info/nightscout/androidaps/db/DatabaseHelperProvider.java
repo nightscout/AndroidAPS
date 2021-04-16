@@ -1,10 +1,10 @@
 package info.nightscout.androidaps.db;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 import com.j256.ormlite.dao.CloseableIterator;
 
-import org.jetbrains.annotations.Nullable;
 import org.json.JSONObject;
 
 import java.sql.SQLException;
@@ -16,6 +16,7 @@ import javax.inject.Singleton;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.interfaces.DatabaseHelperInterface;
 
+@Deprecated
 @Singleton
 public class DatabaseHelperProvider implements DatabaseHelperInterface {
 
@@ -78,10 +79,11 @@ public class DatabaseHelperProvider implements DatabaseHelperInterface {
         return MainApp.Companion.getDbHelper().createOrUpdate(tempBasal);
     }
 
-    @NonNull @Override public TemporaryBasal findTempBasalByPumpId(long id) {
+    @Nullable @Override public TemporaryBasal findTempBasalByPumpId(long id) {
         return MainApp.Companion.getDbHelper().findTempBasalByPumpId(id);
     }
 
+    @Deprecated
     @NonNull @Override public List<TemporaryBasal> getTemporaryBasalsDataFromTime(long mills, boolean ascending) {
         return MainApp.Companion.getDbHelper().getTemporaryBasalsDataFromTime(mills, ascending);
     }
@@ -134,40 +136,12 @@ public class DatabaseHelperProvider implements DatabaseHelperInterface {
         return MainApp.Companion.getDbHelper().getPumpStoppedEvent(pumpSerial, before);
     }
 
-    @Override public boolean createOrUpdate(@NonNull ExtendedBolus extendedBolus) {
-        return MainApp.Companion.getDbHelper().createOrUpdate(extendedBolus);
-    }
-
     @Override public void createOrUpdate(@NonNull ProfileSwitch profileSwitch) {
         MainApp.Companion.getDbHelper().createOrUpdate(profileSwitch);
     }
 
-    @Override public void delete(@NonNull TemporaryBasal tempBasal) {
-        MainApp.Companion.getDbHelper().delete(tempBasal);
-    }
-
-    @NonNull @Override public List<ExtendedBolus> getExtendedBolusDataFromTime(long mills, boolean ascending) {
-        return MainApp.Companion.getDbHelper().getExtendedBolusDataFromTime(mills, ascending);
-    }
-
-    @Override public void deleteTempBasalById(@NonNull String _id) {
-        MainApp.Companion.getDbHelper().deleteTempBasalById(_id);
-    }
-
-    @Override public void deleteExtendedBolusById(@NonNull String _id) {
-        MainApp.Companion.getDbHelper().deleteExtendedBolusById(_id);
-    }
-
     @Override public void deleteProfileSwitchById(@NonNull String _id) {
         MainApp.Companion.getDbHelper().deleteProfileSwitchById(_id);
-    }
-
-    @Override public void createTempBasalFromJsonIfNotExists(@NonNull JSONObject json) {
-        MainApp.Companion.getDbHelper().createTempBasalFromJsonIfNotExists(json);
-    }
-
-    @Override public void createExtendedBolusFromJsonIfNotExists(@NonNull JSONObject json) {
-        MainApp.Companion.getDbHelper().createExtendedBolusFromJsonIfNotExists(json);
     }
 
     @Override public void createProfileSwitchFromJsonIfNotExists(@NonNull JSONObject trJson) {
@@ -194,20 +168,12 @@ public class DatabaseHelperProvider implements DatabaseHelperInterface {
         return MainApp.Companion.getDbHelper().getProfileSwitchEventsFromTime(mills, ascending);
     }
 
-    @NonNull @Override public List<ExtendedBolus> getAllExtendedBoluses() {
-        return MainApp.Companion.getDbHelper().getAllExtendedBoluses();
-    }
-
     @NonNull @Override public List<ProfileSwitch> getAllProfileSwitches() {
         return MainApp.Companion.getDbHelper().getAllProfileSwitches();
     }
 
     @NonNull @Override public List<TDD> getAllTDDs() {
         return MainApp.Companion.getDbHelper().getAllTDDs();
-    }
-
-    @NonNull @Override public List<TemporaryBasal> getAllTemporaryBasals() {
-        return MainApp.Companion.getDbHelper().getAllTemporaryBasals();
     }
 
     @NonNull @Override public List<OHQueueItem> getAllOHQueueItems(long maxEntries) {

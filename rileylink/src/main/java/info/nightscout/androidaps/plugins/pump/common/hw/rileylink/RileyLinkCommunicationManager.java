@@ -5,7 +5,7 @@ import java.util.Locale;
 import javax.inject.Inject;
 
 import dagger.android.HasAndroidInjector;
-import info.nightscout.androidaps.interfaces.ActivePluginProvider;
+import info.nightscout.androidaps.interfaces.ActivePlugin;
 import info.nightscout.androidaps.logging.AAPSLogger;
 import info.nightscout.androidaps.logging.LTag;
 import info.nightscout.androidaps.plugins.pump.common.defs.PumpDeviceState;
@@ -39,7 +39,7 @@ public abstract class RileyLinkCommunicationManager<T extends RLMessage> {
     @Inject protected ServiceTaskExecutor serviceTaskExecutor;
     @Inject protected RFSpy rfspy;
     @Inject protected HasAndroidInjector injector;
-    @Inject protected ActivePluginProvider activePluginProvider;
+    @Inject protected ActivePlugin activePlugin;
 
     private final int SCAN_TIMEOUT = 1500;
     private final int ALLOWED_PUMP_UNREACHABLE = 10 * 60 * 1000; // 10 minutes
@@ -427,7 +427,7 @@ public abstract class RileyLinkCommunicationManager<T extends RLMessage> {
     }
 
     private RileyLinkPumpDevice getPumpDevice() {
-        return (RileyLinkPumpDevice) activePluginProvider.getActivePump();
+        return (RileyLinkPumpDevice) activePlugin.getActivePump();
     }
 
     public abstract boolean isDeviceReachable();

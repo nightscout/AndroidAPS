@@ -12,13 +12,13 @@ import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 import java.util.*
 
-class InputDateTime(private val resourceHelper: ResourceHelper, private val dateUtil: DateUtil, var value: Long = DateUtil.now()) : Element() {
+class InputDateTime(private val resourceHelper: ResourceHelper, private val dateUtil: DateUtil, var value: Long = dateUtil.now()) : Element() {
 
     override fun addToLayout(root: LinearLayout) {
         val label = TextView(root.context)
         val dateButton = TextView(root.context)
         val timeButton = TextView(root.context)
-        dateButton.text = DateUtil.dateString(value)
+        dateButton.text = dateUtil.dateString(value)
         timeButton.text = dateUtil.timeString(value)
 
         // create an OnDateSetListener
@@ -29,7 +29,7 @@ class InputDateTime(private val resourceHelper: ResourceHelper, private val date
             cal.set(Calendar.MONTH, monthOfYear)
             cal.set(Calendar.DAY_OF_MONTH, dayOfMonth)
             value = cal.timeInMillis
-            dateButton.text = DateUtil.dateString(value)
+            dateButton.text = dateUtil.dateString(value)
         }
 
         dateButton.setOnClickListener {

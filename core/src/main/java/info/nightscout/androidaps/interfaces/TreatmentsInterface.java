@@ -22,49 +22,10 @@ public interface TreatmentsInterface {
 
     TreatmentServiceInterface getService();
 
-    void updateTotalIOBTreatments();
-
-    void updateTotalIOBTempBasals();
-
-    IobTotal getLastCalculationTreatments();
-
-    IobTotal getCalculationToTimeTreatments(long time);
-
-    IobTotal getLastCalculationTempBasals();
-
-    IobTotal getCalculationToTimeTempBasals(long time);
-
-    List<Treatment> getTreatmentsFromHistory();
-
-    List<Treatment> getCarbTreatments5MinBackFromHistory(long time);
-
+    @Deprecated
     List<Treatment> getTreatmentsFromHistoryAfterTimestamp(long timestamp);
 
-    long getLastBolusTime();
-
-    long getLastBolusTime(boolean excludeSMB);
-
-    // real basals (not faked by extended bolus)
-    boolean isInHistoryRealTempBasalInProgress();
-
-    TemporaryBasal getRealTempBasalFromHistory(long time);
-
     boolean addToHistoryTempBasal(TemporaryBasal tempBasal);
-
-    // basal that can be faked by extended boluses
-    boolean isTempBasalInProgress();
-
-    TemporaryBasal getTempBasalFromHistory(long time);
-
-    NonOverlappingIntervals<TemporaryBasal> getTemporaryBasalsFromHistory();
-
-    void removeTempBasal(TemporaryBasal temporaryBasal);
-
-    boolean isInHistoryExtendedBolusInProgress();
-
-    ExtendedBolus getExtendedBolusFromHistory(long time);
-
-    Intervals<ExtendedBolus> getExtendedBolusesFromHistory();
 
     boolean addToHistoryExtendedBolus(ExtendedBolus extendedBolus);
 
@@ -79,8 +40,6 @@ public interface TreatmentsInterface {
     void doProfileSwitch(@NonNull final ProfileStore profileStore, @NonNull final String profileName, final int duration, final int percentage, final int timeShift, final long date);
 
     void doProfileSwitch(final int duration, final int percentage, final int timeShift);
-
-    long oldestDataAvailable();
 
     TreatmentUpdateReturn createOrUpdateMedtronic(Treatment treatment, boolean fromNightScout);
 

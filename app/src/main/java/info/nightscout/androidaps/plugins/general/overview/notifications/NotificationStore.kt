@@ -14,14 +14,14 @@ import androidx.core.app.NotificationCompat
 import androidx.recyclerview.widget.RecyclerView
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.databinding.OverviewNotificationItemBinding
-import info.nightscout.androidaps.interfaces.NotificationHolderInterface
+import info.nightscout.androidaps.interfaces.IconsProvider
+import info.nightscout.androidaps.interfaces.NotificationHolder
 import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.logging.LTag
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper
 import info.nightscout.androidaps.plugins.general.overview.events.EventDismissNotification
 import info.nightscout.androidaps.services.AlarmSoundServiceHelper
 import info.nightscout.androidaps.utils.DateUtil
-import info.nightscout.androidaps.utils.resources.IconsProvider
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 import info.nightscout.androidaps.utils.sharedPreferences.SP
 import java.util.*
@@ -38,7 +38,7 @@ class NotificationStore @Inject constructor(
     private val iconsProvider: IconsProvider,
     private val alarmSoundServiceHelper: AlarmSoundServiceHelper,
     private val dateUtil: DateUtil,
-    private val notificationHolder: NotificationHolderInterface
+    private val notificationHolder: NotificationHolder
 ) {
 
     private var store: MutableList<Notification> = ArrayList()

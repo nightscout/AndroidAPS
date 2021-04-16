@@ -28,8 +28,7 @@ import info.nightscout.androidaps.interfaces.PluginType
 import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.logging.LTag
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper
-import info.nightscout.androidaps.plugins.treatments.TreatmentsPlugin
-import info.nightscout.androidaps.utils.extensions.toConstant
+import info.nightscout.androidaps.extensions.toConstant
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 import info.nightscout.androidaps.utils.rx.AapsSchedulers
 import info.nightscout.androidaps.utils.sharedPreferences.SP
@@ -61,7 +60,6 @@ class OpenHumansUploader @Inject constructor(
     private val sp: SP,
     private val rxBus: RxBusWrapper,
     private val context: Context,
-    private val treatmentsPlugin: TreatmentsPlugin,
     private val databaseHelper: DatabaseHelperInterface,
     val repository: AppRepository
 ) : PluginBase(
@@ -356,29 +354,29 @@ class OpenHumansUploader @Inject constructor(
             if (currentProgress % 1000L == 0L) showOngoingNotification(maxProgress, currentProgress)
         }
         copyDisposable = Completable.fromCallable { databaseHelper.clearOpenHumansQueue() }
-            .andThen(Single.defer { Single.just(databaseHelper.getCountOfAllRows() + treatmentsPlugin.service.count()) })
-            .doOnSuccess { maxProgress = it }
-            .flatMapObservable { Observable.defer { Observable.fromIterable(treatmentsPlugin.service.getTreatmentData()) } }
-            .map { enqueueTreatment(it); increaseCounter() }
-            .ignoreElements()
+//            .andThen(Single.defer { Single.just(databaseHelper.getCountOfAllRows() + treatmentsPlugin.service.count()) })
+//            .doOnSuccess { maxProgress = it }
+//            .flatMapObservable { Observable.defer { Observable.fromIterable(treatmentsPlugin.service.getTreatmentData()) } }
+//            .map { enqueueTreatment(it); increaseCounter() }
+//            .ignoreElements()
             .andThen(Observable.defer { Observable.fromIterable(repository.compatGetBgReadingsDataFromTime(0, true).blockingGet()) })
             .map { enqueueBGReading(it); increaseCounter() }
             .ignoreElements()
             .andThen(Observable.defer { Observable.fromIterable(repository.compatGetTherapyEventDataFromTime(0, true).blockingGet()) })
             .map { enqueueTherapyEvent(it); increaseCounter() }
             .ignoreElements()
-            .andThen(Observable.defer { Observable.fromIterable(databaseHelper.getAllExtendedBoluses()) })
-            .map { enqueueExtendedBolus(it); increaseCounter() }
-            .ignoreElements()
+//            .andThen(Observable.defer { Observable.fromIterable(databaseHelper.getAllExtendedBoluses()) })
+//            .map { enqueueExtendedBolus(it); increaseCounter() }
+//            .ignoreElements()
             .andThen(Observable.defer { Observable.fromIterable(databaseHelper.getAllProfileSwitches()) })
             .map { enqueueProfileSwitch(it); increaseCounter() }
             .ignoreElements()
             .andThen(Observable.defer { Observable.fromIterable(databaseHelper.getAllTDDs()) })
             .map { enqueueTotalDailyDose(it); increaseCounter() }
             .ignoreElements()
-            .andThen(Observable.defer { Observable.fromIterable(databaseHelper.getAllTemporaryBasals()) })
-            .map { enqueueTemporaryBasal(it); increaseCounter() }
-            .ignoreElements()
+            // .andThen(Observable.defer { Observable.fromIterable(databaseHelper.getAllTemporaryBasals()) })
+            // .map { enqueueTemporaryBasal(it); increaseCounter() }
+            // .ignoreElements()
             .andThen(Observable.defer { Observable.fromIterable(repository.compatGetTemporaryTargetData().blockingGet()) })
             .map { enqueueTempTarget(it); increaseCounter() }
             .ignoreElements()

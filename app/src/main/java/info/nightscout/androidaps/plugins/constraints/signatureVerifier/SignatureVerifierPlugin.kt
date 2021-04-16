@@ -5,7 +5,7 @@ import android.content.pm.PackageManager
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.interfaces.Constraint
-import info.nightscout.androidaps.interfaces.ConstraintsInterface
+import info.nightscout.androidaps.interfaces.Constraints
 import info.nightscout.androidaps.interfaces.PluginBase
 import info.nightscout.androidaps.interfaces.PluginDescription
 import info.nightscout.androidaps.interfaces.PluginType
@@ -46,7 +46,7 @@ class SignatureVerifierPlugin @Inject constructor(
     .showInList(false)
     .pluginName(R.string.signature_verifier),
     aapsLogger, resourceHelper, injector
-), ConstraintsInterface {
+), Constraints {
 
     private val REVOKED_CERTS_URL = "https://raw.githubusercontent.com/nightscout/AndroidAPS/master/app/src/main/assets/revoked_certs.txt"
     private val UPDATE_INTERVAL = TimeUnit.DAYS.toMillis(1)

@@ -5,14 +5,17 @@ import android.os.PowerManager
 import dagger.Lazy
 import dagger.android.AndroidInjector
 import dagger.android.HasAndroidInjector
-import info.nightscout.androidaps.Config
+import info.nightscout.androidaps.utils.buildHelper.ConfigImpl
 import info.nightscout.androidaps.TestBaseWithProfile
 import info.nightscout.androidaps.TestPumpPlugin
 import info.nightscout.androidaps.core.R
 import info.nightscout.androidaps.data.DetailedBolusInfo
-import info.nightscout.androidaps.interfaces.ActivePluginProvider
+import info.nightscout.androidaps.database.AppRepository
+import info.nightscout.androidaps.database.entities.Bolus
+import info.nightscout.androidaps.interfaces.ActivePlugin
 import info.nightscout.androidaps.interfaces.Constraint
 import info.nightscout.androidaps.interfaces.ProfileFunction
+import info.nightscout.androidaps.interfaces.PumpSync
 import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper
 import info.nightscout.androidaps.plugins.configBuilder.ConstraintChecker
@@ -40,16 +43,17 @@ import java.util.*
 @RunWith(PowerMockRunner::class)
 @PrepareForTest(
     ConstraintChecker::class, VirtualPumpPlugin::class, ToastUtils::class, Context::class,
-    TreatmentsPlugin::class, FabricPrivacy::class, LoggerUtils::class, PowerManager::class)
+    TreatmentsPlugin::class, FabricPrivacy::class, LoggerUtils::class, PowerManager::class,
+    AppRepository::class)
 class CommandQueueTest : TestBaseWithProfile() {
 
     @Mock lateinit var constraintChecker: ConstraintChecker
-    @Mock lateinit var lazyActivePlugin: Lazy<ActivePluginProvider>
-    @Mock lateinit var activePlugin: ActivePluginProvider
-    @Mock lateinit var context: Context
+    @Mock lateinit var lazyActivePlugin: Lazy<ActivePlugin>
+    @Mock lateinit var activePlugin: ActivePlugin
     @Mock lateinit var sp: SP
     @Mock lateinit var loggerUtils: LoggerUtils
     @Mock lateinit var powerManager: PowerManager
+    @Mock lateinit var repository: AppRepository
 
     class CommandQueueMocked(
         injector: HasAndroidInjector,
@@ -59,12 +63,14 @@ class CommandQueueTest : TestBaseWithProfile() {
         resourceHelper: ResourceHelper,
         constraintChecker: ConstraintChecker,
         profileFunction: ProfileFunction,
-        activePlugin: Lazy<ActivePluginProvider>,
+        activePlugin: Lazy<ActivePlugin>,
         context: Context,
         sp: SP,
         buildHelper: BuildHelper,
+        dateUtil: DateUtil,
+        repository: AppRepository,
         fabricPrivacy: FabricPrivacy
-    ) : CommandQueue(injector, aapsLogger, rxBus, aapsSchedulers, resourceHelper, constraintChecker, profileFunction, activePlugin, context, sp, buildHelper, fabricPrivacy) {
+    ) : CommandQueue(injector, aapsLogger, rxBus, aapsSchedulers, resourceHelper, constraintChecker, profileFunction, activePlugin, context, sp, buildHelper, dateUtil, repository, fabricPrivacy) {
 
         override fun notifyAboutNewCommand() {}
 
@@ -95,12 +101,12 @@ class CommandQueueTest : TestBaseWithProfile() {
         }
     }
 
-    lateinit var commandQueue: CommandQueue
-    lateinit var testPumpPlugin: TestPumpPlugin
+    private lateinit var commandQueue: CommandQueue
+    private lateinit var testPumpPlugin: TestPumpPlugin
 
     @Before
     fun prepare() {
-        commandQueue = CommandQueueMocked(injector, aapsLogger, rxBus, aapsSchedulers, resourceHelper, constraintChecker, profileFunction, lazyActivePlugin, context, sp, BuildHelper(Config(), loggerUtils), fabricPrivacy)
+        commandQueue = CommandQueueMocked(injector, aapsLogger, rxBus, aapsSchedulers, resourceHelper, constraintChecker, profileFunction, lazyActivePlugin, context, sp, BuildHelper(ConfigImpl(), loggerUtils), dateUtil, repository, fabricPrivacy)
         testPumpPlugin = TestPumpPlugin(injector)
 
         testPumpPlugin.pumpDescription.basalMinimumRate = 0.1
@@ -109,7 +115,13 @@ class CommandQueueTest : TestBaseWithProfile() {
         `when`(lazyActivePlugin.get()).thenReturn(activePlugin)
         `when`(activePlugin.activePump).thenReturn(testPumpPlugin)
         `when`(activePlugin.activeTreatments).thenReturn(treatmentsInterface)
-        `when`(treatmentsInterface.lastBolusTime).thenReturn(Calendar.getInstance().also { it.set(2000, 0, 1) }.timeInMillis)
+        `when`(repository.getLastBolusRecord()).thenReturn(
+            Bolus(
+                timestamp = Calendar.getInstance().also { it.set(2000, 0, 1) }.timeInMillis,
+                type = Bolus.Type.NORMAL,
+                amount = 0.0
+            )
+        )
         `when`(profileFunction.getProfile()).thenReturn(validProfile)
 
         val bolusConstraint = Constraint(0.0)
@@ -126,7 +138,7 @@ class CommandQueueTest : TestBaseWithProfile() {
 
     @Test
     fun commandIsPickedUp() {
-        val commandQueue = CommandQueue(injector, aapsLogger, rxBus, aapsSchedulers, resourceHelper, constraintChecker, profileFunction, lazyActivePlugin, context, sp, BuildHelper(Config(), loggerUtils), fabricPrivacy)
+        val commandQueue = CommandQueue(injector, aapsLogger, rxBus, aapsSchedulers, resourceHelper, constraintChecker, profileFunction, lazyActivePlugin, context, sp, BuildHelper(ConfigImpl(), loggerUtils), dateUtil, repository, fabricPrivacy)
         // start with empty queue
         Assert.assertEquals(0, commandQueue.size())
 
@@ -163,11 +175,11 @@ class CommandQueueTest : TestBaseWithProfile() {
         Assert.assertEquals(0, commandQueue.size())
 
         // add tempbasal
-        commandQueue.tempBasalAbsolute(0.0, 30, true, validProfile, null)
+        commandQueue.tempBasalAbsolute(0.0, 30, true, validProfile, PumpSync.TemporaryBasalType.NORMAL, null)
         Assert.assertEquals(1, commandQueue.size())
 
         // add tempbasal percent. it should replace previous TEMPBASAL
-        commandQueue.tempBasalPercent(0, 30, true, validProfile, null)
+        commandQueue.tempBasalPercent(0, 30, true, validProfile, PumpSync.TemporaryBasalType.NORMAL, null)
         Assert.assertEquals(1, commandQueue.size())
 
         // cancel tempbasal it should replace previous TEMPBASAL
@@ -199,7 +211,7 @@ class CommandQueueTest : TestBaseWithProfile() {
         commandQueue.loadEvents(null)
         Assert.assertEquals(4, commandQueue.size())
         commandQueue.clear()
-        commandQueue.tempBasalAbsolute(0.0, 30, true, validProfile, null)
+        commandQueue.tempBasalAbsolute(0.0, 30, true, validProfile, PumpSync.TemporaryBasalType.NORMAL, null)
         commandQueue.pickup()
         Assert.assertEquals(0, commandQueue.size())
         Assert.assertNotNull(commandQueue.performing)
@@ -213,8 +225,8 @@ class CommandQueueTest : TestBaseWithProfile() {
         // given
         Assert.assertEquals(0, commandQueue.size())
         val smb = DetailedBolusInfo()
-        smb.lastKnownBolusTime = DateUtil.now()
-        smb.isSMB = true
+        smb.lastKnownBolusTime = System.currentTimeMillis()
+        smb.bolusType = DetailedBolusInfo.BolusType.SMB
         commandQueue.bolus(smb, null)
         commandQueue.bolus(DetailedBolusInfo(), null)
         Assert.assertEquals(2, commandQueue.size())
@@ -234,7 +246,7 @@ class CommandQueueTest : TestBaseWithProfile() {
         // when
         commandQueue.bolus(DetailedBolusInfo(), null)
         val smb = DetailedBolusInfo()
-        smb.isSMB = true
+        smb.bolusType = DetailedBolusInfo.BolusType.SMB
         val queued: Boolean = commandQueue.bolus(smb, null)
 
         // then
@@ -249,7 +261,7 @@ class CommandQueueTest : TestBaseWithProfile() {
 
         // when
         val bolus = DetailedBolusInfo()
-        bolus.isSMB = true
+        bolus.bolusType = DetailedBolusInfo.BolusType.SMB
         bolus.lastKnownBolusTime = 0
         val queued: Boolean = commandQueue.bolus(bolus, null)
 

@@ -9,7 +9,7 @@ import info.nightscout.androidaps.data.Profile
 import info.nightscout.androidaps.db.ProfileSwitch
 import info.nightscout.androidaps.db.Source
 import info.nightscout.androidaps.interfaces.ProfileStore
-import info.nightscout.androidaps.interfaces.ActivePluginProvider
+import info.nightscout.androidaps.interfaces.ActivePlugin
 import info.nightscout.androidaps.interfaces.ProfileFunction
 import info.nightscout.androidaps.interfaces.TreatmentsInterface
 import info.nightscout.androidaps.logging.AAPSLogger
@@ -27,8 +27,9 @@ class ProfileFunctionImplementation @Inject constructor(
     private val aapsLogger: AAPSLogger,
     private val sp: SP,
     private val resourceHelper: ResourceHelper,
-    private val activePlugin: ActivePluginProvider,
-    private val fabricPrivacy: FabricPrivacy
+    private val activePlugin: ActivePlugin,
+    private val fabricPrivacy: FabricPrivacy,
+    private val dateUtil: DateUtil
 ) : ProfileFunction {
 
     override fun getProfileName(): String =
@@ -41,7 +42,7 @@ class ProfileFunctionImplementation @Inject constructor(
         var profileName = resourceHelper.gs(R.string.noprofileselected)
 
         val activeTreatments = activePlugin.activeTreatments
-        val activeProfile = activePlugin.activeProfileInterface
+        val activeProfile = activePlugin.activeProfileSource
 
         val profileSwitch = activeTreatments.getProfileSwitchFromHistory(time)
         if (profileSwitch != null) {
@@ -56,7 +57,7 @@ class ProfileFunctionImplementation @Inject constructor(
             }
 
             if (showRemainingTime && profileSwitch.durationInMinutes != 0) {
-                profileName += DateUtil.untilString(profileSwitch.originalEnd(), resourceHelper)
+                profileName += dateUtil.untilString(profileSwitch.originalEnd(), resourceHelper)
             }
         }
         return profileName
@@ -74,7 +75,7 @@ class ProfileFunctionImplementation @Inject constructor(
     override fun getProfile(time: Long): Profile? = getProfile(time, activePlugin.activeTreatments)
 
     override fun getProfile(time: Long, activeTreatments: TreatmentsInterface): Profile? {
-        val activeProfile = activePlugin.activeProfileInterface
+        val activeProfile = activePlugin.activeProfileSource
 
         //log.debug("Profile for: " + new Date(time).toLocaleString() + " : " + getProfileName(time));
         val profileSwitch = activeTreatments.getProfileSwitchFromHistory(time)

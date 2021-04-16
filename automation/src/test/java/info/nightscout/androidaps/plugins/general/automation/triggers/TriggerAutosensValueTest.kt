@@ -25,7 +25,7 @@ class TriggerAutosensValueTest : TriggerTestBase() {
     @Test fun shouldRunTest() {
         `when`(sp.getDouble(Mockito.eq(R.string.key_openapsama_autosens_max), ArgumentMatchers.anyDouble())).thenReturn(1.2)
         `when`(sp.getDouble(Mockito.eq(R.string.key_openapsama_autosens_min), ArgumentMatchers.anyDouble())).thenReturn(0.7)
-        `when`(iobCobCalculatorPlugin.getLastAutosensData("Automation trigger")).thenReturn(generateAutosensData())
+        `when`(autosensDataStore.getLastAutosensData(anyObject(), anyObject(), anyObject())).thenReturn(generateAutosensData())
         var t = TriggerAutosensValue(injector)
         t.autosens.value = 110.0
         t.comparator.value = Comparator.Compare.IS_EQUAL
@@ -65,14 +65,14 @@ class TriggerAutosensValueTest : TriggerTestBase() {
         t.autosens.value = 390.0
         t.comparator.value = Comparator.Compare.IS_EQUAL_OR_LESSER
         Assert.assertTrue(t.shouldRun())
-        PowerMockito.`when`(iobCobCalculatorPlugin.getLastAutosensData("Automation trigger")).thenReturn(AutosensData(injector))
+        PowerMockito.`when`(autosensDataStore.getLastAutosensData(anyObject(), anyObject(), anyObject())).thenReturn(AutosensData(injector))
         t = TriggerAutosensValue(injector)
         t.autosens.value = 80.0
         t.comparator.value = Comparator.Compare.IS_EQUAL_OR_LESSER
         Assert.assertFalse(t.shouldRun())
 
         // Test autosensData == null and Comparator == IS_NOT_AVAILABLE
-        PowerMockito.`when`(iobCobCalculatorPlugin.getLastAutosensData("Automation trigger")).thenReturn(null)
+        PowerMockito.`when`(autosensDataStore.getLastAutosensData(anyObject(), anyObject(), anyObject())).thenReturn(null)
         t = TriggerAutosensValue(injector)
         t.comparator.value = Comparator.Compare.IS_NOT_AVAILABLE
         Assert.assertTrue(t.shouldRun())
@@ -88,7 +88,7 @@ class TriggerAutosensValueTest : TriggerTestBase() {
         Assert.assertEquals(Comparator.Compare.IS_EQUAL_OR_LESSER, t.comparator.value)
     }
 
-    private var asJson = "{\"data\":{\"comparator\":\"IS_EQUAL\",\"value\":410},\"type\":\"info.nightscout.androidaps.plugins.general.automation.triggers.TriggerAutosensValue\"}"
+    private var asJson = "{\"data\":{\"comparator\":\"IS_EQUAL\",\"value\":410},\"type\":\"TriggerAutosensValue\"}"
 
     @Test
     fun toJSONTest() {
@@ -109,13 +109,12 @@ class TriggerAutosensValueTest : TriggerTestBase() {
     }
 
     @Test fun iconTest() {
-        Assert.assertEquals(Optional.of(R.drawable.`ic_as`), TriggerAutosensValue(injector).icon())
+        Assert.assertEquals(Optional.of(R.drawable.ic_as), TriggerAutosensValue(injector).icon())
     }
 
     @Before
     fun mock() {
-        PowerMockito.mockStatic(DateUtil::class.java)
-        PowerMockito.`when`(DateUtil.now()).thenReturn(now)
+        PowerMockito.`when`(dateUtil.now()).thenReturn(now)
     }
 
     private fun generateAutosensData(): AutosensData {

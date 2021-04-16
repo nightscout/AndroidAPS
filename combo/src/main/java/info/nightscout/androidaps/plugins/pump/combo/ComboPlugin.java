@@ -6,6 +6,7 @@ import android.os.SystemClock;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import info.nightscout.androidaps.extensions.PumpStateExtensionKt;
 import org.joda.time.DateTime;
 import org.json.JSONObject;
 
@@ -25,24 +26,20 @@ import info.nightscout.androidaps.combo.R;
 import info.nightscout.androidaps.data.DetailedBolusInfo;
 import info.nightscout.androidaps.data.Profile;
 import info.nightscout.androidaps.data.PumpEnactResult;
-import info.nightscout.androidaps.database.entities.TherapyEvent;
-import info.nightscout.androidaps.db.Source;
 import info.nightscout.androidaps.db.TDD;
-import info.nightscout.androidaps.db.TemporaryBasal;
-import info.nightscout.androidaps.db.Treatment;
 import info.nightscout.androidaps.events.EventInitializationChanged;
 import info.nightscout.androidaps.events.EventRefreshOverview;
 import info.nightscout.androidaps.interfaces.CommandQueueProvider;
 import info.nightscout.androidaps.interfaces.Constraint;
-import info.nightscout.androidaps.interfaces.ConstraintsInterface;
+import info.nightscout.androidaps.interfaces.Constraints;
 import info.nightscout.androidaps.interfaces.DatabaseHelperInterface;
 import info.nightscout.androidaps.interfaces.PluginDescription;
 import info.nightscout.androidaps.interfaces.PluginType;
 import info.nightscout.androidaps.interfaces.ProfileFunction;
 import info.nightscout.androidaps.interfaces.PumpDescription;
-import info.nightscout.androidaps.interfaces.PumpInterface;
+import info.nightscout.androidaps.interfaces.Pump;
 import info.nightscout.androidaps.interfaces.PumpPluginBase;
-import info.nightscout.androidaps.interfaces.TreatmentsInterface;
+import info.nightscout.androidaps.interfaces.PumpSync;
 import info.nightscout.androidaps.logging.AAPSLogger;
 import info.nightscout.androidaps.logging.LTag;
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper;
@@ -67,6 +64,7 @@ import info.nightscout.androidaps.plugins.pump.combo.ruffyscripter.history.Tdd;
 import info.nightscout.androidaps.plugins.pump.common.defs.PumpType;
 import info.nightscout.androidaps.utils.DateUtil;
 import info.nightscout.androidaps.utils.InstanceId;
+import info.nightscout.androidaps.utils.T;
 import info.nightscout.androidaps.utils.resources.ResourceHelper;
 import info.nightscout.androidaps.utils.sharedPreferences.SP;
 
@@ -74,17 +72,18 @@ import info.nightscout.androidaps.utils.sharedPreferences.SP;
  * Created by mike on 05.08.2016.
  */
 @Singleton
-public class ComboPlugin extends PumpPluginBase implements PumpInterface, ConstraintsInterface {
+public class ComboPlugin extends PumpPluginBase implements Pump, Constraints {
     static final String COMBO_TBRS_SET = "combo_tbrs_set";
     static final String COMBO_BOLUSES_DELIVERED = "combo_boluses_delivered";
 
     private final ProfileFunction profileFunction;
-    private final TreatmentsInterface treatmentsPlugin;
-    private final info.nightscout.androidaps.utils.sharedPreferences.SP sp;
+    private final SP sp;
     private RxBusWrapper rxBus;
     private final CommandQueueProvider commandQueue;
     private final Context context;
     private final DatabaseHelperInterface databaseHelper;
+    private final PumpSync pumpSync;
+    private final DateUtil dateUtil;
 
     private final static PumpDescription pumpDescription = new PumpDescription();
 
@@ -98,7 +97,7 @@ public class ComboPlugin extends PumpPluginBase implements PumpInterface, Constr
      */
     private volatile boolean scripterIsBolusing;
     /**
-     * This is set to true to request a bolus cancellation. {@link #deliverBolus(DetailedBolusInfo)}
+     * This is set to true to request a bolus cancellation. {@link #deliverTreatment(DetailedBolusInfo)} (DetailedBolusInfo)}
      * will reset this flag.
      */
     private volatile boolean cancelBolus;
@@ -106,8 +105,8 @@ public class ComboPlugin extends PumpPluginBase implements PumpInterface, Constr
     /**
      * This is set (in {@link #checkHistory()} whenever a connection to the pump is made and
      * indicates if new history records on the pump have been found. This effectively blocks
-     * high temps ({@link #setTempBasalPercent(Integer, Integer)} and boluses
-     * ({@link #deliverBolus(DetailedBolusInfo)} till the queue is empty and the connection
+     * high temps ({@link #setTempBasalPercent(Integer, Integer, PumpSync.TemporaryBasalType)} and boluses
+     * ({@link #deliverTreatment(DetailedBolusInfo)} till the queue is empty and the connection
      * is shut down.
      * {@link #initializePump()} resets this since on startup the history is allowed to have
      * changed (and the user can't possible have already calculated anything with out of date IOB).
@@ -122,7 +121,7 @@ public class ComboPlugin extends PumpPluginBase implements PumpInterface, Constr
     /**
      * Cache of the last <=2 boluses on the pump. Used to detect changes in pump history,
      * requiring reading more pump history. This is read/set in {@link #checkHistory()} when changed
-     * pump history was detected and was read, as well as in {@link #deliverBolus(DetailedBolusInfo)}
+     * pump history was detected and was read, as well as in {@link #deliverTreatment(DetailedBolusInfo)}
      * after bolus delivery. Newest record is the first one.
      */
     private volatile List<Bolus> recentBoluses = new ArrayList<>(0);
@@ -136,11 +135,12 @@ public class ComboPlugin extends PumpPluginBase implements PumpInterface, Constr
             RxBusWrapper rxBus,
             ResourceHelper resourceHelper,
             ProfileFunction profileFunction,
-            TreatmentsInterface treatmentsPlugin,
             SP sp,
             CommandQueueProvider commandQueue,
             Context context,
-            DatabaseHelperInterface databaseHelper
+            DatabaseHelperInterface databaseHelper,
+            PumpSync pumpSync,
+            DateUtil dateUtil
     ) {
         super(new PluginDescription()
                         .mainType(PluginType.PUMP)
@@ -153,13 +153,14 @@ public class ComboPlugin extends PumpPluginBase implements PumpInterface, Constr
         );
         this.rxBus = rxBus;
         this.profileFunction = profileFunction;
-        this.treatmentsPlugin = treatmentsPlugin;
         this.sp = sp;
         this.commandQueue = commandQueue;
         this.context = context;
         this.databaseHelper = databaseHelper;
+        this.pumpSync = pumpSync;
+        this.dateUtil = dateUtil;
 
-        pumpDescription.setPumpDescription(PumpType.AccuChekCombo);
+        pumpDescription.setPumpDescription(PumpType.ACCU_CHEK_COMBO);
     }
 
     @Override protected void onStart() {
@@ -474,37 +475,9 @@ public class ComboPlugin extends PumpPluginBase implements PumpInterface, Constr
      */
     @NonNull @Override
     public PumpEnactResult deliverTreatment(DetailedBolusInfo detailedBolusInfo) {
-        try {
-            if (detailedBolusInfo.insulin == 0 && detailedBolusInfo.carbs == 0) {
-                // neither carbs nor bolus requested
-                getAapsLogger().error("deliverTreatment: Invalid input");
-                return new PumpEnactResult(getInjector()).success(false).enacted(false)
-                        .bolusDelivered(0d).carbsDelivered(0d)
-                        .comment(R.string.invalidinput);
-            } else if (detailedBolusInfo.insulin > 0) {
-                // bolus needed, ask pump to deliver it
-                return deliverBolus(detailedBolusInfo);
-            } else {
-                // no bolus required, carb only treatment
-                treatmentsPlugin.addToHistoryTreatment(detailedBolusInfo, false);
-
-                EventOverviewBolusProgress bolusingEvent = EventOverviewBolusProgress.INSTANCE;
-                bolusingEvent.setT(new Treatment());
-                bolusingEvent.getT().isSMB = detailedBolusInfo.isSMB;
-                bolusingEvent.setPercent(100);
-                rxBus.send(bolusingEvent);
-
-                return new PumpEnactResult(getInjector()).success(true).enacted(true)
-                        .bolusDelivered(0d).carbsDelivered(detailedBolusInfo.carbs)
-                        .comment(R.string.virtualpump_resultok);
-            }
-        } finally {
-            rxBus.send(new EventComboPumpUpdateGUI());
+        if (detailedBolusInfo.insulin == 0 || detailedBolusInfo.carbs > 0) {
+            throw new IllegalArgumentException(detailedBolusInfo.toString());
         }
-    }
-
-    @NonNull
-    private PumpEnactResult deliverBolus(final DetailedBolusInfo detailedBolusInfo) {
         try {
             pump.activity = getResourceHelper().gs(R.string.combo_pump_action_bolusing, detailedBolusInfo.insulin);
             rxBus.send(new EventComboPumpUpdateGUI());
@@ -567,8 +540,7 @@ public class ComboPlugin extends PumpPluginBase implements PumpInterface, Constr
                 return new PumpEnactResult(getInjector()).success(true).enacted(false);
             }
 
-            Treatment treatment = new Treatment();
-            treatment.isSMB = detailedBolusInfo.isSMB;
+            EventOverviewBolusProgress.Treatment treatment = new EventOverviewBolusProgress.Treatment(0.0, 0, detailedBolusInfo.getBolusType() == DetailedBolusInfo.BolusType.SMB);
             EventOverviewBolusProgress.INSTANCE.setT(treatment);
 
             // start bolus delivery
@@ -665,29 +637,18 @@ public class ComboPlugin extends PumpPluginBase implements PumpInterface, Constr
      * Creates a treatment record based on the request in DetailBolusInfo and the delivered bolus.
      */
     private boolean addBolusToTreatments(DetailedBolusInfo detailedBolusInfo, Bolus lastPumpBolus) {
-        DetailedBolusInfo bolusInfo = detailedBolusInfo.copy();
-        bolusInfo.date = calculateFakeBolusDate(lastPumpBolus);
-        bolusInfo.pumpId = bolusInfo.date;
-        bolusInfo.source = Source.PUMP;
-        bolusInfo.insulin = lastPumpBolus.amount;
         try {
-            if (bolusInfo.carbs > 0 && bolusInfo.carbTime != 0) {
-                // split out a separate carbs record without a pumpId
-                DetailedBolusInfo carbInfo = new DetailedBolusInfo();
-                carbInfo.date = bolusInfo.date + bolusInfo.carbTime * 60L * 1000L;
-                carbInfo.carbs = bolusInfo.carbs;
-                carbInfo.source = Source.USER;
-                treatmentsPlugin.addToHistoryTreatment(carbInfo, true);
-
-                // remove carbs from bolusInfo to not trigger any unwanted code paths in
-                // TreatmentsPlugin.addToHistoryTreatment() method
-                bolusInfo.carbTime = 0;
-                bolusInfo.carbs = 0;
-            }
-            treatmentsPlugin.addToHistoryTreatment(bolusInfo, true);
+            pumpSync.syncBolusWithPumpId(
+                    lastPumpBolus.timestamp,
+                    lastPumpBolus.amount,
+                    detailedBolusInfo.getBolusType(),
+                    generatePumpBolusId(lastPumpBolus),
+                    PumpType.ACCU_CHEK_COMBO,
+                    serialNumber()
+            );
         } catch (Exception e) {
             getAapsLogger().error("Adding treatment record failed", e);
-            if (bolusInfo.isSMB) {
+            if (detailedBolusInfo.getBolusType() == DetailedBolusInfo.BolusType.SMB) {
                 Notification notification = new Notification(Notification.COMBO_PUMP_ALARM, getResourceHelper().gs(R.string.combo_error_updating_treatment_record), Notification.URGENT);
                 rxBus.send(new EventNewNotification(notification));
             }
@@ -714,7 +675,7 @@ public class ComboPlugin extends PumpPluginBase implements PumpInterface, Constr
      *              the new value (and thus still has the old duration of e.g. 1 min) expires?)
      */
     @NonNull @Override
-    public PumpEnactResult setTempBasalAbsolute(double absoluteRate, int durationInMinutes, @NonNull Profile profile, boolean force) {
+    public PumpEnactResult setTempBasalAbsolute(double absoluteRate, int durationInMinutes, @NonNull Profile profile, boolean force, @NonNull PumpSync.TemporaryBasalType tbrType) {
         getAapsLogger().debug(LTag.PUMP, "setTempBasalAbsolute called with a rate of " + absoluteRate + " for " + durationInMinutes + " min.");
         int unroundedPercentage = Double.valueOf(absoluteRate / getBaseBasalRate() * 100).intValue();
         int roundedPercentage = (int) (Math.round(absoluteRate / getBaseBasalRate() * 10) * 10);
@@ -722,7 +683,7 @@ public class ComboPlugin extends PumpPluginBase implements PumpInterface, Constr
             getAapsLogger().debug(LTag.PUMP, "Rounded requested rate " + unroundedPercentage + "% -> " + roundedPercentage + "%");
         }
 
-        return setTempBasalPercent(roundedPercentage, durationInMinutes);
+        return setTempBasalPercent(roundedPercentage, durationInMinutes, tbrType);
     }
 
     /**
@@ -732,11 +693,11 @@ public class ComboPlugin extends PumpPluginBase implements PumpInterface, Constr
      *                 is or isn't running at the moment
      */
     @NonNull @Override
-    public PumpEnactResult setTempBasalPercent(int percent, int durationInMinutes, @NonNull Profile profile, boolean forceNew) {
-        return setTempBasalPercent(percent, durationInMinutes);
+    public PumpEnactResult setTempBasalPercent(int percent, int durationInMinutes, @NonNull Profile profile, boolean forceNew, @NonNull PumpSync.TemporaryBasalType tbrType) {
+        return setTempBasalPercent(percent, durationInMinutes, tbrType);
     }
 
-    private PumpEnactResult setTempBasalPercent(Integer percent, final Integer durationInMinutes) {
+    private PumpEnactResult setTempBasalPercent(Integer percent, final Integer durationInMinutes, @NonNull PumpSync.TemporaryBasalType tbrType) {
         getAapsLogger().debug(LTag.PUMP, "setTempBasalPercent called with " + percent + "% for " + durationInMinutes + "min");
 
         if (pumpHistoryChanged && percent > 110) {
@@ -772,12 +733,21 @@ public class ComboPlugin extends PumpPluginBase implements PumpInterface, Constr
         PumpState state = commandResult.state;
         if (state.tbrActive && state.tbrPercent == adjustedPercent
                 && (state.tbrRemainingDuration == durationInMinutes || state.tbrRemainingDuration == durationInMinutes - 1)) {
-            TemporaryBasal tempStart = new TemporaryBasal(getInjector())
-                    .date(state.timestamp)
-                    .duration(state.tbrRemainingDuration)
-                    .percent(state.tbrPercent)
-                    .source(Source.USER);
-            treatmentsPlugin.addToHistoryTempBasal(tempStart);
+            pumpSync.syncTemporaryBasalWithPumpId(
+                    state.timestamp,
+                    state.tbrPercent,
+                    T.mins(state.tbrRemainingDuration).msecs(),
+                    false,
+                    tbrType,
+                    // There are no IDs for TBRs on the pump and none is calculated (in contrast to boluses).
+                    // The current time is used here as an ID, which has no meaning and does not allow identifying
+                    // the record on the pump (which isn't needed), but only needs to be unique.
+                    // Generally, TBR records are created when a TBR is set by AAPS or when a change on the pump has
+                    // been detected, rather than checking the pumps history of TBRs.
+                    state.timestamp,
+                    PumpType.ACCU_CHEK_COMBO,
+                    serialNumber()
+            );
 
             rxBus.send(new EventComboPumpUpdateGUI());
         }
@@ -803,7 +773,7 @@ public class ComboPlugin extends PumpPluginBase implements PumpInterface, Constr
     @NonNull @Override
     public PumpEnactResult cancelTempBasal(boolean enforceNew) {
         getAapsLogger().debug(LTag.PUMP, "cancelTempBasal called");
-        final TemporaryBasal activeTemp = treatmentsPlugin.getTempBasalFromHistory(System.currentTimeMillis());
+        final PumpSync.PumpState.TemporaryBasal activeTemp = pumpSync.expectedPumpState().getTemporaryBasal();
         if (enforceNew) {
             CommandResult stateResult = runCommand(getResourceHelper().gs(R.string.combo_pump_action_refreshing), 2, ruffyScripter::readPumpState);
             if (!stateResult.success) {
@@ -818,32 +788,35 @@ public class ComboPlugin extends PumpPluginBase implements PumpInterface, Constr
                 return new PumpEnactResult(getInjector()).success(false).enacted(false);
             }
             if (!cancelResult.state.tbrActive) {
-                TemporaryBasal tempBasal = new TemporaryBasal(getInjector())
-                        .date(cancelResult.state.timestamp)
-                        .duration(0)
-                        .source(Source.USER);
-                treatmentsPlugin.addToHistoryTempBasal(tempBasal);
+                pumpSync.syncStopTemporaryBasalWithPumpId(
+                        cancelResult.state.timestamp,
+                        // Combo doesn't have nor uses IDs for TBRs, see note in #setTempBasalPercent
+                        cancelResult.state.timestamp,
+                        PumpType.ACCU_CHEK_COMBO,
+                        serialNumber()
+                );
                 return new PumpEnactResult(getInjector()).isTempCancel(true).success(true).enacted(true);
             } else {
                 return new PumpEnactResult(getInjector()).success(false).enacted(false);
             }
         } else if (activeTemp == null) {
             return new PumpEnactResult(getInjector()).success(true).enacted(false);
-        } else if ((activeTemp.percentRate >= 90 && activeTemp.percentRate <= 110) && activeTemp.getPlannedRemainingMinutes() <= 15) {
+        } else if ((activeTemp.getRate() >= 90 && activeTemp.getRate() <= 110)
+                && PumpStateExtensionKt.getPlannedRemainingMinutes(activeTemp) <= 15) {
             // Let fake neutral temp keep run (see below)
             // Note that since this runs on the queue a connection is opened regardless, but this
             // case doesn't occur all that often, so it's not worth optimizing (1.3k SetTBR vs 4 cancelTBR).
-            getAapsLogger().debug(LTag.PUMP, "cancelTempBasal: skipping changing tbr since it already is at " + activeTemp.percentRate + "% and running for another " + activeTemp.getPlannedRemainingMinutes() + " mins.");
+            getAapsLogger().debug(LTag.PUMP, "cancelTempBasal: skipping changing tbr since it already is at " + activeTemp.getRate() + "% and running for another " + PumpStateExtensionKt.getPlannedRemainingMinutes(activeTemp) + " mins.");
             return new PumpEnactResult(getInjector()).success(true).enacted(true)
                     .comment("cancelTempBasal skipping changing tbr since it already is at "
-                            + activeTemp.percentRate + "% and running for another "
-                            + activeTemp.getPlannedRemainingMinutes() + " mins.");
+                            + activeTemp.getRate() + "% and running for another "
+                            + PumpStateExtensionKt.getPlannedRemainingMinutes(activeTemp) + " mins.");
         } else {
             // Set a fake neutral temp to avoid TBR cancel alert. Decide 90% vs 110% based on
             // on whether the TBR we're cancelling is above or below 100%.
-            final int percentage = (activeTemp.percentRate > 100) ? 110 : 90;
+            final int percentage = (activeTemp.getRate() > 100) ? 110 : 90;
             getAapsLogger().debug(LTag.PUMP, "cancelTempBasal: changing TBR to " + percentage + "% for 15 mins.");
-            return setTempBasalPercent(percentage, 15);
+            return setTempBasalPercent(percentage, 15, PumpSync.TemporaryBasalType.NORMAL);
         }
     }
 
@@ -949,7 +922,7 @@ public class ComboPlugin extends PumpPluginBase implements PumpInterface, Constr
                 // so update the var with it, so the check routines below can work on it
                 preCheckResult = alertConfirmationResult;
             } else if (activeAlert.errorCode != null) {
-                Notification notification = new Notification(Notification.COMBO_PUMP_ALARM, DateUtil.now(), getResourceHelper().gs(R.string.combo_is_in_error_state, activeAlert.errorCode, activeAlert.message), Notification.URGENT, 0);
+                Notification notification = new Notification(Notification.COMBO_PUMP_ALARM, dateUtil.now(), getResourceHelper().gs(R.string.combo_is_in_error_state, activeAlert.errorCode, activeAlert.message), Notification.URGENT, 0);
                 rxBus.send(new EventNewNotification(notification));
                 return preCheckResult.success(false);
             }
@@ -963,15 +936,20 @@ public class ComboPlugin extends PumpPluginBase implements PumpInterface, Constr
             return checkHistory();
         } else {
             long now = System.currentTimeMillis();
-            TemporaryBasal aapsTbr = treatmentsPlugin.getTempBasalFromHistory(now);
-            if (aapsTbr == null || aapsTbr.percentRate != 0) {
+            PumpSync.PumpState.TemporaryBasal aapsTbr = pumpSync.expectedPumpState().getTemporaryBasal();
+            if (aapsTbr == null || aapsTbr.getRate() != 0) {
                 getAapsLogger().debug(LTag.PUMP, "Creating 15m zero temp since pump is suspended");
-                TemporaryBasal newTempBasal = new TemporaryBasal(getInjector())
-                        .date(now)
-                        .percent(0)
-                        .duration(15)
-                        .source(Source.USER);
-                treatmentsPlugin.addToHistoryTempBasal(newTempBasal);
+                pumpSync.syncTemporaryBasalWithPumpId(
+                        now,
+                        0.0,
+                        T.mins(15).msecs(),
+                        false,
+                        PumpSync.TemporaryBasalType.PUMP_SUSPEND,
+                        // Combo doesn't have nor uses IDs for TBRs, see note in #setTempBasalPercent
+                        now,
+                        PumpType.ACCU_CHEK_COMBO,
+                        serialNumber()
+                );
             }
         }
 
@@ -1043,7 +1021,7 @@ public class ComboPlugin extends PumpPluginBase implements PumpInterface, Constr
             throw new IllegalArgumentException(activeAlert.toString());
         }
         Notification notification = new Notification();
-        notification.setDate(DateUtil.now());
+        notification.setDate(dateUtil.now());
         notification.setId(Notification.COMBO_PUMP_ALARM);
         notification.setLevel(Notification.NORMAL);
         if (activeAlert.warningCode == PumpWarningCodes.CARTRIDGE_LOW) {
@@ -1089,38 +1067,55 @@ public class ComboPlugin extends PumpPluginBase implements PumpInterface, Constr
     private void checkAndResolveTbrMismatch(PumpState state) {
         // compare with: info.nightscout.androidaps.plugins.PumpDanaR.comm.MsgStatusTempBasal.updateTempBasalInDB()
         long now = System.currentTimeMillis();
-        TemporaryBasal aapsTbr = treatmentsPlugin.getTempBasalFromHistory(now);
+        // Combo doesn't have nor uses IDs for TBRs, see note in #setTempBasalPercent
+        long tbrId = now;
+        //TemporaryBasal aapsTbr = treatmentsPlugin.getTempBasalFromHistoryIncludingConvertedExtended(now);
+        PumpSync.PumpState.TemporaryBasal aapsTbr = pumpSync.expectedPumpState().getTemporaryBasal();
         if (aapsTbr == null && state.tbrActive && state.tbrRemainingDuration > 2) {
             getAapsLogger().debug(LTag.PUMP, "Creating temp basal from pump TBR");
-            TemporaryBasal newTempBasal = new TemporaryBasal(getInjector())
-                    .date(now)
-                    .percent(state.tbrPercent)
-                    .duration(state.tbrRemainingDuration)
-                    .source(Source.USER);
-            treatmentsPlugin.addToHistoryTempBasal(newTempBasal);
-        } else if (aapsTbr != null && aapsTbr.getPlannedRemainingMinutes() > 2 && !state.tbrActive) {
+            pumpSync.syncTemporaryBasalWithPumpId(
+                    now,
+                    state.tbrPercent,
+                    T.mins(state.tbrRemainingDuration).msecs(),
+                    false,
+                    PumpSync.TemporaryBasalType.NORMAL,
+                    tbrId,
+                    PumpType.ACCU_CHEK_COMBO,
+                    serialNumber()
+            );
+        } else if (aapsTbr != null && PumpStateExtensionKt.getPlannedRemainingMinutes(aapsTbr) > 2 && !state.tbrActive) {
             getAapsLogger().debug(LTag.PUMP, "Ending AAPS-TBR since pump has no TBR active");
-            TemporaryBasal tempStop = new TemporaryBasal(getInjector())
-                    .date(now)
-                    .duration(0)
-                    .source(Source.USER);
-            treatmentsPlugin.addToHistoryTempBasal(tempStop);
+            pumpSync.syncStopTemporaryBasalWithPumpId(
+                    now,
+                    tbrId,
+                    PumpType.ACCU_CHEK_COMBO,
+                    serialNumber()
+            );
         } else if (aapsTbr != null && state.tbrActive
-                && (aapsTbr.percentRate != state.tbrPercent ||
-                Math.abs(aapsTbr.getPlannedRemainingMinutes() - state.tbrRemainingDuration) > 2)) {
+                && (aapsTbr.getRate() != state.tbrPercent ||
+                Math.abs(PumpStateExtensionKt.getPlannedRemainingMinutes(aapsTbr) - state.tbrRemainingDuration) > 2)) {
             getAapsLogger().debug(LTag.PUMP, "AAPSs and pump-TBR differ; ending AAPS-TBR and creating new TBR based on pump TBR");
-            TemporaryBasal tempStop = new TemporaryBasal(getInjector())
-                    .date(now - 1000)
-                    .duration(0)
-                    .source(Source.USER);
-            treatmentsPlugin.addToHistoryTempBasal(tempStop);
 
-            TemporaryBasal newTempBasal = new TemporaryBasal(getInjector())
-                    .date(now)
-                    .percent(state.tbrPercent)
-                    .duration(state.tbrRemainingDuration)
-                    .source(Source.USER);
-            treatmentsPlugin.addToHistoryTempBasal(newTempBasal);
+            // crate TBR end record a second ago
+            pumpSync.syncStopTemporaryBasalWithPumpId(
+                    now - 1000,
+                    // fake a unique ID that doesn't clash with the record below
+                    tbrId - 1000,
+                    PumpType.ACCU_CHEK_COMBO,
+                    serialNumber()
+            );
+
+            // Create TBR start record, starting now
+            pumpSync.syncTemporaryBasalWithPumpId(
+                    now,
+                    state.tbrPercent,
+                    T.mins(state.tbrRemainingDuration).msecs(),
+                    false,
+                    PumpSync.TemporaryBasalType.NORMAL,
+                    tbrId,
+                    PumpType.ACCU_CHEK_COMBO,
+                    serialNumber()
+            );
         }
     }
 
@@ -1153,13 +1148,14 @@ public class ComboPlugin extends PumpPluginBase implements PumpInterface, Constr
     private boolean updateDbFromPumpHistory(@NonNull PumpHistory history) {
         boolean updated = false;
         for (Bolus pumpBolus : history.bolusHistory) {
-            DetailedBolusInfo dbi = new DetailedBolusInfo();
-            dbi.date = calculateFakeBolusDate(pumpBolus);
-            dbi.pumpId = dbi.date;
-            dbi.source = Source.PUMP;
-            dbi.insulin = pumpBolus.amount;
-            dbi.eventType = TherapyEvent.Type.CORRECTION_BOLUS.getText();
-            if (treatmentsPlugin.addToHistoryTreatment(dbi, true)) {
+            if (pumpSync.syncBolusWithPumpId(
+                    pumpBolus.timestamp,
+                    pumpBolus.amount,
+                    DetailedBolusInfo.BolusType.NORMAL,
+                    generatePumpBolusId(pumpBolus),
+                    PumpType.ACCU_CHEK_COMBO,
+                    serialNumber()
+            )) {
                 updated = true;
             }
         }
@@ -1173,7 +1169,7 @@ public class ComboPlugin extends PumpPluginBase implements PumpInterface, Constr
      * Should be good enough, even with command mode, it's a challenge to create that situation
      * and most time clashes will be around SMBs which are covered.
      */
-    long calculateFakeBolusDate(Bolus pumpBolus) {
+    long generatePumpBolusId(Bolus pumpBolus) {
         double bolus = pumpBolus.amount - 0.1;
         int secondsFromBolus = (int) (bolus * 10 * 1000);
         return pumpBolus.timestamp + Math.min(secondsFromBolus, 59 * 1000);
@@ -1258,7 +1254,7 @@ public class ComboPlugin extends PumpPluginBase implements PumpInterface, Constr
 
         try {
             JSONObject pumpJson = new JSONObject();
-            pumpJson.put("clock", DateUtil.toISOString(pump.lastSuccessfulCmdTime));
+            pumpJson.put("clock", dateUtil.toISOString(pump.lastSuccessfulCmdTime));
 
             int level;
             if (pump.reservoirLevel != -1) level = pump.reservoirLevel;
@@ -1308,7 +1304,7 @@ public class ComboPlugin extends PumpPluginBase implements PumpInterface, Constr
 
     @NonNull @Override
     public PumpType model() {
-        return PumpType.AccuChekCombo;
+        return PumpType.ACCU_CHEK_COMBO;
     }
 
     @NonNull @Override

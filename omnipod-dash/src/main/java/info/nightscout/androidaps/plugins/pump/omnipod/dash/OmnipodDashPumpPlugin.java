@@ -1,5 +1,6 @@
 package info.nightscout.androidaps.plugins.pump.omnipod.dash;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import org.jetbrains.annotations.NotNull;
@@ -19,8 +20,9 @@ import info.nightscout.androidaps.interfaces.CommandQueueProvider;
 import info.nightscout.androidaps.interfaces.PluginDescription;
 import info.nightscout.androidaps.interfaces.PluginType;
 import info.nightscout.androidaps.interfaces.PumpDescription;
-import info.nightscout.androidaps.interfaces.PumpInterface;
+import info.nightscout.androidaps.interfaces.Pump;
 import info.nightscout.androidaps.interfaces.PumpPluginBase;
+import info.nightscout.androidaps.interfaces.PumpSync;
 import info.nightscout.androidaps.logging.AAPSLogger;
 import info.nightscout.androidaps.logging.LTag;
 import info.nightscout.androidaps.plugins.common.ManufacturerType;
@@ -33,8 +35,8 @@ import info.nightscout.androidaps.utils.TimeChangeType;
 import info.nightscout.androidaps.utils.resources.ResourceHelper;
 
 @Singleton
-public class OmnipodDashPumpPlugin extends PumpPluginBase implements PumpInterface {
-    private static final PumpDescription PUMP_DESCRIPTION = new PumpDescription(PumpType.Omnipod_Dash);
+public class OmnipodDashPumpPlugin extends PumpPluginBase implements Pump {
+    private static final PumpDescription PUMP_DESCRIPTION = new PumpDescription(PumpType.OMNIPOD_DASH);
 
     private final AAPSLogger aapsLogger;
     private final ResourceHelper resourceHelper;
@@ -131,11 +133,11 @@ public class OmnipodDashPumpPlugin extends PumpPluginBase implements PumpInterfa
 
     }
 
-    @NotNull @Override public PumpEnactResult setTempBasalAbsolute(double absoluteRate, int durationInMinutes, @NotNull Profile profile, boolean enforceNew) {
+    @NotNull @Override public PumpEnactResult setTempBasalAbsolute(double absoluteRate, int durationInMinutes, @NotNull Profile profile, boolean enforceNew, @NonNull PumpSync.TemporaryBasalType tbrType) {
         return null;
     }
 
-    @NotNull @Override public PumpEnactResult setTempBasalPercent(int percent, int durationInMinutes, @NotNull Profile profile, boolean enforceNew) {
+    @NotNull @Override public PumpEnactResult setTempBasalPercent(int percent, int durationInMinutes, @NotNull Profile profile, boolean enforceNew, @NonNull PumpSync.TemporaryBasalType tbrType) {
         return null;
     }
 

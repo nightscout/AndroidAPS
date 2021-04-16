@@ -6,7 +6,8 @@ import info.nightscout.androidaps.R
 import info.nightscout.androidaps.data.IobTotal
 import info.nightscout.androidaps.data.MealData
 import info.nightscout.androidaps.data.Profile
-import info.nightscout.androidaps.interfaces.ActivePluginProvider
+import info.nightscout.androidaps.interfaces.ActivePlugin
+import info.nightscout.androidaps.interfaces.IobCobCalculator
 import info.nightscout.androidaps.interfaces.ProfileFunction
 import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.logging.LTag
@@ -15,9 +16,10 @@ import info.nightscout.androidaps.plugins.aps.loop.ScriptReader
 import info.nightscout.androidaps.plugins.configBuilder.ConstraintChecker
 import info.nightscout.androidaps.plugins.general.openhumans.OpenHumansUploader
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.GlucoseStatus
-import info.nightscout.androidaps.plugins.iob.iobCobCalculator.IobCobCalculatorPlugin
-import info.nightscout.androidaps.plugins.treatments.TreatmentsPlugin
 import info.nightscout.androidaps.utils.SafeParse
+import info.nightscout.androidaps.extensions.convertedToAbsolute
+import info.nightscout.androidaps.extensions.getPassedDurationToTimeInMinutes
+import info.nightscout.androidaps.extensions.plannedRemainingMinutes
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 import info.nightscout.androidaps.utils.sharedPreferences.SP
 import org.json.JSONArray
@@ -37,8 +39,8 @@ class DetermineBasalAdapterSMBJS internal constructor(private val scriptReader: 
     @Inject lateinit var sp: SP
     @Inject lateinit var resourceHelper: ResourceHelper
     @Inject lateinit var profileFunction: ProfileFunction
-    @Inject lateinit var treatmentsPlugin: TreatmentsPlugin
-    @Inject lateinit var activePluginProvider: ActivePluginProvider
+    @Inject lateinit var iobCobCalculator: IobCobCalculator
+    @Inject lateinit var activePlugin: ActivePlugin
     @Inject lateinit var openHumansUploader: OpenHumansUploader
 
     private var profile = JSONObject()
@@ -173,7 +175,7 @@ class DetermineBasalAdapterSMBJS internal constructor(private val scriptReader: 
                                                      advancedFiltering: Boolean,
                                                      isSaveCgmSource: Boolean
     ) {
-        val pump = activePluginProvider.activePump
+        val pump = activePlugin.activePump
         val pumpBolusStep = pump.pumpDescription.bolusStep
         this.profile.put("max_iob", maxIob)
         //mProfile.put("dia", profile.getDia());
@@ -227,17 +229,14 @@ class DetermineBasalAdapterSMBJS internal constructor(private val scriptReader: 
             this.profile.put("out_units", "mmol/L")
         }
         val now = System.currentTimeMillis()
-        val tb = treatmentsPlugin.getTempBasalFromHistory(now)
+        val tb = iobCobCalculator.getTempBasalIncludingConvertedExtended(now)
         currentTemp.put("temp", "absolute")
         currentTemp.put("duration", tb?.plannedRemainingMinutes ?: 0)
-        currentTemp.put("rate", tb?.tempBasalConvertedToAbsolute(now, profile) ?: 0.0)
-
+        currentTemp.put("rate", tb?.convertedToAbsolute(now, profile) ?: 0.0)
         // as we have non default temps longer than 30 mintues
-        val tempBasal = treatmentsPlugin.getTempBasalFromHistory(System.currentTimeMillis())
-        if (tempBasal != null) {
-            currentTemp.put("minutesrunning", tempBasal.realDuration)
-        }
-        iobData = IobCobCalculatorPlugin.convertToJSONArray(iobArray)
+        if (tb != null) currentTemp.put("minutesrunning", tb.getPassedDurationToTimeInMinutes(now))
+
+        iobData = iobCobCalculator.convertToJSONArray(iobArray)
         mGlucoseStatus.put("glucose", glucoseStatus.glucose)
         mGlucoseStatus.put("noise", glucoseStatus.noise)
         if (sp.getBoolean(R.string.key_always_use_shortavg, false)) {
@@ -249,7 +248,6 @@ class DetermineBasalAdapterSMBJS internal constructor(private val scriptReader: 
         mGlucoseStatus.put("long_avgdelta", glucoseStatus.longAvgDelta)
         mGlucoseStatus.put("date", glucoseStatus.date)
         this.mealData.put("carbs", mealData.carbs)
-        this.mealData.put("boluses", mealData.boluses)
         this.mealData.put("mealCOB", mealData.mealCOB)
         this.mealData.put("slopeFromMaxDeviation", mealData.slopeFromMaxDeviation)
         this.mealData.put("slopeFromMinDeviation", mealData.slopeFromMinDeviation)

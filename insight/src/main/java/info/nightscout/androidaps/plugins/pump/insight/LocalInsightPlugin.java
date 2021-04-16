@@ -1,5 +1,8 @@
 package info.nightscout.androidaps.plugins.pump.insight;
 
+import static info.nightscout.androidaps.extensions.PumpStateExtensionKt.convertedToAbsolute;
+import static info.nightscout.androidaps.extensions.PumpStateExtensionKt.getPlannedRemainingMinutes;
+
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.content.ComponentName;
@@ -30,9 +33,6 @@ import dagger.android.HasAndroidInjector;
 import info.nightscout.androidaps.data.DetailedBolusInfo;
 import info.nightscout.androidaps.data.Profile;
 import info.nightscout.androidaps.data.PumpEnactResult;
-import info.nightscout.androidaps.database.AppRepository;
-import info.nightscout.androidaps.database.entities.TherapyEvent;
-import info.nightscout.androidaps.database.transactions.InsertTherapyEventIfNewTransaction;
 import info.nightscout.androidaps.db.ExtendedBolus;
 import info.nightscout.androidaps.db.InsightBolusID;
 import info.nightscout.androidaps.db.InsightHistoryOffset;
@@ -40,21 +40,21 @@ import info.nightscout.androidaps.db.InsightPumpID;
 import info.nightscout.androidaps.db.Source;
 import info.nightscout.androidaps.db.TDD;
 import info.nightscout.androidaps.db.TemporaryBasal;
-import info.nightscout.androidaps.db.Treatment;
 import info.nightscout.androidaps.events.EventInitializationChanged;
 import info.nightscout.androidaps.events.EventRefreshOverview;
 import info.nightscout.androidaps.insight.R;
 import info.nightscout.androidaps.interfaces.CommandQueueProvider;
-import info.nightscout.androidaps.interfaces.ConfigInterface;
+import info.nightscout.androidaps.interfaces.Config;
 import info.nightscout.androidaps.interfaces.Constraint;
-import info.nightscout.androidaps.interfaces.ConstraintsInterface;
+import info.nightscout.androidaps.interfaces.Constraints;
 import info.nightscout.androidaps.interfaces.DatabaseHelperInterface;
 import info.nightscout.androidaps.interfaces.PluginDescription;
 import info.nightscout.androidaps.interfaces.PluginType;
 import info.nightscout.androidaps.interfaces.ProfileFunction;
 import info.nightscout.androidaps.interfaces.PumpDescription;
-import info.nightscout.androidaps.interfaces.PumpInterface;
+import info.nightscout.androidaps.interfaces.Pump;
 import info.nightscout.androidaps.interfaces.PumpPluginBase;
+import info.nightscout.androidaps.interfaces.PumpSync;
 import info.nightscout.androidaps.interfaces.TreatmentsInterface;
 import info.nightscout.androidaps.interfaces.UploadQueueInterface;
 import info.nightscout.androidaps.logging.AAPSLogger;
@@ -136,10 +136,9 @@ import info.nightscout.androidaps.plugins.pump.insight.utils.ParameterBlockUtil;
 import info.nightscout.androidaps.utils.DateUtil;
 import info.nightscout.androidaps.utils.resources.ResourceHelper;
 import info.nightscout.androidaps.utils.sharedPreferences.SP;
-import io.reactivex.disposables.CompositeDisposable;
 
 @Singleton
-public class LocalInsightPlugin extends PumpPluginBase implements PumpInterface, ConstraintsInterface, InsightConnectionService.StateCallback {
+public class LocalInsightPlugin extends PumpPluginBase implements Pump, Constraints, InsightConnectionService.StateCallback {
 
     private final AAPSLogger aapsLogger;
     private final RxBusWrapper rxBus;
@@ -153,7 +152,7 @@ public class LocalInsightPlugin extends PumpPluginBase implements PumpInterface,
     private final UploadQueueInterface uploadQueue;
     private final DateUtil dateUtil;
     private final DatabaseHelperInterface databaseHelper;
-    private final AppRepository repository;
+    private final PumpSync pumpSync;
 
     public static final String ALERT_CHANNEL_ID = "AndroidAPS-InsightAlert";
 
@@ -199,8 +198,6 @@ public class LocalInsightPlugin extends PumpPluginBase implements PumpInterface,
     private boolean statusLoaded;
     private TBROverNotificationBlock tbrOverNotificationBlock;
 
-    private final CompositeDisposable disposable = new CompositeDisposable();
-
     @Inject
     public LocalInsightPlugin(
             HasAndroidInjector injector,
@@ -214,10 +211,10 @@ public class LocalInsightPlugin extends PumpPluginBase implements PumpInterface,
             NSUpload nsUpload,
             Context context,
             UploadQueueInterface uploadQueue,
-            ConfigInterface config,
+            Config config,
             DateUtil dateUtil,
             DatabaseHelperInterface databaseHelper,
-            AppRepository repository
+            PumpSync pumpSync
     ) {
         super(new PluginDescription()
                         .pluginIcon(R.drawable.ic_insight_128)
@@ -242,10 +239,10 @@ public class LocalInsightPlugin extends PumpPluginBase implements PumpInterface,
         this.uploadQueue = uploadQueue;
         this.dateUtil = dateUtil;
         this.databaseHelper = databaseHelper;
-        this.repository = repository;
+        this.pumpSync = pumpSync;
 
         pumpDescription = new PumpDescription();
-        pumpDescription.setPumpDescription(PumpType.AccuChekInsightBluetooth);
+        pumpDescription.setPumpDescription(PumpType.ACCU_CHEK_INSIGHT_BLUETOOTH);
     }
 
     public TBROverNotificationBlock getTBROverNotificationBlock() {
@@ -591,13 +588,12 @@ public class LocalInsightPlugin extends PumpPluginBase implements PumpInterface,
                     bolusMessage.setDuration(0);
                     bolusMessage.setExtendedAmount(0);
                     bolusMessage.setImmediateAmount(insulin);
-                    bolusMessage.setVibration(sp.getBoolean(detailedBolusInfo.isSMB ? R.string.key_disable_vibration_auto : R.string.key_disable_vibration, false));
+                    bolusMessage.setVibration(sp.getBoolean(detailedBolusInfo.getBolusType() == DetailedBolusInfo.BolusType.SMB ? R.string.key_disable_vibration_auto : R.string.key_disable_vibration, false));
                     bolusID = connectionService.requestMessage(bolusMessage).await().getBolusId();
                     bolusCancelled = false;
                 }
                 result.success(true).enacted(true);
-                Treatment t = new Treatment();
-                t.isSMB = detailedBolusInfo.isSMB;
+                EventOverviewBolusProgress.Treatment t = new EventOverviewBolusProgress.Treatment(0, 0, detailedBolusInfo.getBolusType() == DetailedBolusInfo.BolusType.SMB);
                 final EventOverviewBolusProgress bolusingEvent = EventOverviewBolusProgress.INSTANCE;
                 bolusingEvent.setT(t);
                 bolusingEvent.setStatus(resourceHelper.gs(R.string.insight_delivered, 0d, insulin));
@@ -609,14 +605,15 @@ public class LocalInsightPlugin extends PumpPluginBase implements PumpInterface,
                 insightBolusID.timestamp = System.currentTimeMillis();
                 insightBolusID.pumpSerial = connectionService.getPumpSystemIdentification().getSerialNumber();
                 databaseHelper.createOrUpdate(insightBolusID);
-                detailedBolusInfo.date = insightBolusID.timestamp;
-                detailedBolusInfo.source = Source.PUMP;
-                detailedBolusInfo.pumpId = insightBolusID.id;
+                detailedBolusInfo.setBolusTimestamp(insightBolusID.timestamp);
+                detailedBolusInfo.setPumpType(PumpType.ACCU_CHEK_INSIGHT);
+                detailedBolusInfo.setPumpSerial(serialNumber());
+                detailedBolusInfo.setBolusPumpId(insightBolusID.id);
                 if (detailedBolusInfo.carbs > 0 && detailedBolusInfo.carbTime != 0) {
                     DetailedBolusInfo carbInfo = new DetailedBolusInfo();
                     carbInfo.carbs = detailedBolusInfo.carbs;
-                    carbInfo.date = detailedBolusInfo.date + detailedBolusInfo.carbTime * 60L * 1000L;
-                    carbInfo.source = Source.USER;
+                    carbInfo.setCarbsTimestamp(detailedBolusInfo.timestamp + detailedBolusInfo.carbTime * 60L * 1000L);
+                    carbInfo.setPumpType(PumpType.USER);
                     treatmentsPlugin.addToHistoryTreatment(carbInfo, false);
                     detailedBolusInfo.carbTime = 0;
                     detailedBolusInfo.carbs = 0;
@@ -700,7 +697,7 @@ public class LocalInsightPlugin extends PumpPluginBase implements PumpInterface,
     }
 
     @NonNull @Override
-    public PumpEnactResult setTempBasalAbsolute(double absoluteRate, int durationInMinutes, @NonNull Profile profile, boolean enforceNew) {
+    public PumpEnactResult setTempBasalAbsolute(double absoluteRate, int durationInMinutes, @NonNull Profile profile, boolean enforceNew, @NonNull PumpSync.TemporaryBasalType tbrType) {
         PumpEnactResult result = new PumpEnactResult(getInjector());
         if (activeBasalRate == null) return result;
         if (activeBasalRate.getActiveBasalRate() == 0) return result;
@@ -728,13 +725,13 @@ public class LocalInsightPlugin extends PumpPluginBase implements PumpInterface,
                         result.comment(cancelTBRResult.getComment());
                     }
                 } else {
-                    return setTempBasalPercent((int) Math.round(percent), durationInMinutes, profile, enforceNew);
+                    return setTempBasalPercent((int) Math.round(percent), durationInMinutes, profile, enforceNew, tbrType);
                 }
             } else {
                 result.comment(cancelEBResult.getComment());
             }
         } else {
-            return setTempBasalPercent((int) Math.round(percent), durationInMinutes, profile, enforceNew);
+            return setTempBasalPercent((int) Math.round(percent), durationInMinutes, profile, enforceNew, tbrType);
         }
         try {
             fetchStatus();
@@ -750,7 +747,7 @@ public class LocalInsightPlugin extends PumpPluginBase implements PumpInterface,
     }
 
     @NonNull @Override
-    public PumpEnactResult setTempBasalPercent(int percent, int durationInMinutes, @NonNull Profile profile, boolean enforceNew) {
+    public PumpEnactResult setTempBasalPercent(int percent, int durationInMinutes, @NonNull Profile profile, boolean enforceNew, @NonNull PumpSync.TemporaryBasalType tbrType) {
         PumpEnactResult result = new PumpEnactResult(getInjector());
         percent = (int) Math.round(((double) percent) / 10d) * 10;
         if (percent == 100) return cancelTempBasal(true);
@@ -986,27 +983,27 @@ public class LocalInsightPlugin extends PumpPluginBase implements PumpInterface,
         final JSONObject status = new JSONObject();
         final JSONObject extended = new JSONObject();
         try {
-            status.put("timestamp", DateUtil.toISOString(connectionService.getLastConnected()));
+            status.put("timestamp", dateUtil.toISOString(connectionService.getLastConnected()));
             extended.put("Version", version);
             try {
                 extended.put("ActiveProfile", profileFunction.getProfileName());
             } catch (Exception e) {
                 e.printStackTrace();
             }
-            TemporaryBasal tb = treatmentsPlugin.getTempBasalFromHistory(now);
+            PumpSync.PumpState.TemporaryBasal tb = pumpSync.expectedPumpState().getTemporaryBasal();
             if (tb != null) {
-                extended.put("TempBasalAbsoluteRate", tb.tempBasalConvertedToAbsolute(now, profile));
-                extended.put("TempBasalStart", dateUtil.dateAndTimeString(tb.date));
-                extended.put("TempBasalRemaining", tb.getPlannedRemainingMinutes());
+                extended.put("TempBasalAbsoluteRate", convertedToAbsolute(tb, now, profile));
+                extended.put("TempBasalStart", dateUtil.dateAndTimeString(tb.getTimestamp()));
+                extended.put("TempBasalRemaining", getPlannedRemainingMinutes(tb));
             }
-            ExtendedBolus eb = treatmentsPlugin.getExtendedBolusFromHistory(now);
+            PumpSync.PumpState.ExtendedBolus eb = pumpSync.expectedPumpState().getExtendedBolus();
             if (eb != null) {
-                extended.put("ExtendedBolusAbsoluteRate", eb.absoluteRate());
-                extended.put("ExtendedBolusStart", dateUtil.dateAndTimeString(eb.date));
-                extended.put("ExtendedBolusRemaining", eb.getPlannedRemainingMinutes());
+                extended.put("ExtendedBolusAbsoluteRate", eb.getRate());
+                extended.put("ExtendedBolusStart", dateUtil.dateAndTimeString(eb.getTimestamp()));
+                extended.put("ExtendedBolusRemaining", getPlannedRemainingMinutes(eb));
             }
             extended.put("BaseBasalRate", getBaseBasalRate());
-            status.put("timestamp", DateUtil.toISOString(now));
+            status.put("timestamp", dateUtil.toISOString(now));
 
             pump.put("extended", extended);
             if (statusLoaded) {
@@ -1016,7 +1013,7 @@ public class LocalInsightPlugin extends PumpPluginBase implements PumpInterface,
                 pump.put("battery", battery);
                 pump.put("reservoir", cartridgeStatus.getRemainingAmount());
             }
-            pump.put("clock", DateUtil.toISOString(now));
+            pump.put("clock", dateUtil.toISOString(now));
         } catch (JSONException e) {
             aapsLogger.error("Unhandled exception", e);
         }
@@ -1030,7 +1027,7 @@ public class LocalInsightPlugin extends PumpPluginBase implements PumpInterface,
 
     @NonNull @Override
     public PumpType model() {
-        return PumpType.AccuChekInsightBluetooth;
+        return PumpType.ACCU_CHEK_INSIGHT_BLUETOOTH;
     }
 
     @NonNull @Override
@@ -1269,7 +1266,7 @@ public class LocalInsightPlugin extends PumpPluginBase implements PumpInterface,
         if (!sp.getBoolean("insight_log_site_changes", false)) return;
         long timestamp = parseDate(event.getEventYear(), event.getEventMonth(), event.getEventDay(),
                 event.getEventHour(), event.getEventMinute(), event.getEventSecond()) + timeOffset;
-        uploadCareportalEvent(timestamp, TherapyEvent.Type.CANNULA_CHANGE);
+        uploadCareportalEvent(timestamp, DetailedBolusInfo.EventType.CANNULA_CHANGE);
     }
 
     private void processTotalDailyDoseEvent(TotalDailyDoseEvent event) {
@@ -1297,14 +1294,14 @@ public class LocalInsightPlugin extends PumpPluginBase implements PumpInterface,
         if (!sp.getBoolean("insight_log_reservoir_changes", false)) return;
         long timestamp = parseDate(event.getEventYear(), event.getEventMonth(), event.getEventDay(),
                 event.getEventHour(), event.getEventMinute(), event.getEventSecond()) + timeOffset;
-        uploadCareportalEvent(timestamp, TherapyEvent.Type.INSULIN_CHANGE);
+        uploadCareportalEvent(timestamp, DetailedBolusInfo.EventType.INSULIN_CHANGE);
     }
 
     private void processPowerUpEvent(PowerUpEvent event) {
         if (!sp.getBoolean("insight_log_battery_changes", false)) return;
         long timestamp = parseDate(event.getEventYear(), event.getEventMonth(), event.getEventDay(),
                 event.getEventHour(), event.getEventMinute(), event.getEventSecond()) + timeOffset;
-        uploadCareportalEvent(timestamp, TherapyEvent.Type.PUMP_BATTERY_CHANGE);
+        uploadCareportalEvent(timestamp, DetailedBolusInfo.EventType.PUMP_BATTERY_CHANGE);
     }
 
     private void processOperatingModeChangedEvent(String serial, List<InsightPumpID> pumpStartedEvents, OperatingModeChangedEvent event) {
@@ -1390,9 +1387,10 @@ public class LocalInsightPlugin extends PumpPluginBase implements PumpInterface,
         databaseHelper.createOrUpdate(bolusID);
         if (event.getBolusType() == BolusType.STANDARD || event.getBolusType() == BolusType.MULTIWAVE) {
             DetailedBolusInfo detailedBolusInfo = new DetailedBolusInfo();
-            detailedBolusInfo.date = bolusID.timestamp;
-            detailedBolusInfo.source = Source.PUMP;
-            detailedBolusInfo.pumpId = bolusID.id;
+            detailedBolusInfo.timestamp = bolusID.timestamp;
+            detailedBolusInfo.setPumpType(PumpType.ACCU_CHEK_INSIGHT);
+            detailedBolusInfo.setPumpSerial(serialNumber());
+            detailedBolusInfo.setBolusPumpId(bolusID.id);
             detailedBolusInfo.insulin = event.getImmediateAmount();
             treatmentsPlugin.addToHistoryTreatment(detailedBolusInfo, true);
         }
@@ -1424,9 +1422,10 @@ public class LocalInsightPlugin extends PumpPluginBase implements PumpInterface,
         databaseHelper.createOrUpdate(bolusID);
         if (event.getBolusType() == BolusType.STANDARD || event.getBolusType() == BolusType.MULTIWAVE) {
             DetailedBolusInfo detailedBolusInfo = new DetailedBolusInfo();
-            detailedBolusInfo.date = bolusID.timestamp;
-            detailedBolusInfo.source = Source.PUMP;
-            detailedBolusInfo.pumpId = bolusID.id;
+            detailedBolusInfo.setBolusTimestamp(bolusID.timestamp);
+            detailedBolusInfo.setPumpType(PumpType.ACCU_CHEK_INSIGHT);
+            detailedBolusInfo.setPumpSerial(serialNumber());
+            detailedBolusInfo.setBolusPumpId(bolusID.id);
             detailedBolusInfo.insulin = event.getImmediateAmount();
             treatmentsPlugin.addToHistoryTreatment(detailedBolusInfo, true);
         }
@@ -1552,12 +1551,7 @@ public class LocalInsightPlugin extends PumpPluginBase implements PumpInterface,
     }
 
     private void logNote(long date, String note) {
-        if (repository.getTherapyEventByTimestamp(TherapyEvent.Type.NOTE, date) != null) return;
-        disposable.add(repository.runTransactionForResult(new InsertTherapyEventIfNewTransaction(date, TherapyEvent.Type.NOTE, 0, note, sp.getString("careportal_enteredby", "AndroidAPS"), null, null, null))
-                .subscribe(
-                        result -> result.getInserted().forEach(nsUpload::uploadEvent),
-                        error -> aapsLogger.error(LTag.DATABASE, "Error while saving therapy event", error)
-                ));
+        pumpSync.insertTherapyEventIfNewWithTimestamp(date, DetailedBolusInfo.EventType.NOTE, note, null, PumpType.ACCU_CHEK_INSIGHT, serialNumber());
     }
 
     private long parseRelativeDate(int year, int month, int day, int hour, int minute, int second, int relativeHour, int relativeMinute, int relativeSecond) {
@@ -1573,13 +1567,8 @@ public class LocalInsightPlugin extends PumpPluginBase implements PumpInterface,
         return calendar.getTimeInMillis();
     }
 
-    private void uploadCareportalEvent(long date, TherapyEvent.Type event) {
-        if (repository.getTherapyEventByTimestamp(event, date) != null) return;
-        disposable.add(repository.runTransactionForResult(new InsertTherapyEventIfNewTransaction(date, event, 0, null, sp.getString("careportal_enteredby", "AndroidAPS"), null, null, null))
-                .subscribe(
-                        result -> result.getInserted().forEach(nsUpload::uploadEvent),
-                        error -> aapsLogger.error(LTag.DATABASE, "Error while saving therapy event", error)
-                ));
+    private void uploadCareportalEvent(long date, DetailedBolusInfo.EventType event) {
+        pumpSync.insertTherapyEventIfNewWithTimestamp(date, event, null, null, PumpType.ACCU_CHEK_INSIGHT, serialNumber());
     }
 
     @NonNull @Override

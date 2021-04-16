@@ -8,17 +8,17 @@ import info.nightscout.androidaps.data.Profile
 import info.nightscout.androidaps.database.AppRepository
 import info.nightscout.androidaps.database.entities.TherapyEvent
 import info.nightscout.androidaps.db.ProfileSwitch
+import info.nightscout.androidaps.extensions.isEvent5minBack
 import info.nightscout.androidaps.interfaces.DatabaseHelperInterface
-import info.nightscout.androidaps.interfaces.IobCobCalculatorInterface
 import info.nightscout.androidaps.interfaces.PluginDescription
 import info.nightscout.androidaps.interfaces.PluginType
 import info.nightscout.androidaps.interfaces.ProfileFunction
-import info.nightscout.androidaps.interfaces.SensitivityInterface.SensitivityType
+import info.nightscout.androidaps.interfaces.Sensitivity.SensitivityType
 import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.logging.LTag
+import info.nightscout.androidaps.plugins.iob.iobCobCalculator.AutosensDataStore
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.AutosensResult
 import info.nightscout.androidaps.utils.DateUtil
-import info.nightscout.androidaps.utils.extensions.isEvent5minBack
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 import info.nightscout.androidaps.utils.sharedPreferences.SP
 import org.json.JSONException
@@ -47,21 +47,20 @@ open class SensitivityWeightedAveragePlugin @Inject constructor(
     injector, aapsLogger, resourceHelper, sp
 ) {
 
-    override fun detectSensitivity(plugin: IobCobCalculatorInterface, fromTime: Long, toTime: Long): AutosensResult {
-        val autosensDataTable = plugin.getAutosensDataTable()
+    override fun detectSensitivity(ads: AutosensDataStore, fromTime: Long, toTime: Long): AutosensResult {
         val age = sp.getString(R.string.key_age, "")
         var defaultHours = 24
         if (age == resourceHelper.gs(R.string.key_adult)) defaultHours = 24
         if (age == resourceHelper.gs(R.string.key_teenage)) defaultHours = 4
         if (age == resourceHelper.gs(R.string.key_child)) defaultHours = 4
         val hoursForDetection = sp.getInt(R.string.key_openapsama_autosens_period, defaultHours)
-        if (autosensDataTable.size() < 4) {
-            aapsLogger.debug(LTag.AUTOSENS, "No autosens data available. lastDataTime=" + plugin.lastDataTime())
+        if (ads.autosensDataTable.size() < 4) {
+            aapsLogger.debug(LTag.AUTOSENS, "No autosens data available. lastDataTime=" + ads.lastDataTime(dateUtil))
             return AutosensResult()
         }
-        val current = plugin.getAutosensData(toTime) // this is running inside lock already
+        val current = ads.getAutosensDataAtTime(toTime) // this is running inside lock already
         if (current == null) {
-            aapsLogger.debug(LTag.AUTOSENS, "No autosens data available. toTime: " + dateUtil.dateAndTimeString(toTime) + " lastDataTime: " + plugin.lastDataTime())
+            aapsLogger.debug(LTag.AUTOSENS, "No autosens data available. toTime: " + dateUtil.dateAndTimeString(toTime) + " lastDataTime: " + ads.lastDataTime(dateUtil))
             return AutosensResult()
         }
         val profile = profileFunction.getProfile()
@@ -74,8 +73,8 @@ open class SensitivityWeightedAveragePlugin @Inject constructor(
         var pastSensitivity = ""
         var index = 0
         val data = LongSparseArray<Double>()
-        while (index < autosensDataTable.size()) {
-            val autosensData = autosensDataTable.valueAt(index)
+        while (index < ads.autosensDataTable.size()) {
+            val autosensData = ads.autosensDataTable.valueAt(index)
             if (autosensData.time < fromTime) {
                 index++
                 continue

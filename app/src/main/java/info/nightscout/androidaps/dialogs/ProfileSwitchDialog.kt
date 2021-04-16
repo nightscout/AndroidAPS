@@ -8,13 +8,14 @@ import android.widget.ArrayAdapter
 import com.google.common.base.Joiner
 import info.nightscout.androidaps.Constants
 import info.nightscout.androidaps.R
-import info.nightscout.androidaps.database.entities.UserEntry.*
+import info.nightscout.androidaps.database.entities.ValueWithUnit
+import info.nightscout.androidaps.database.entities.UserEntry.Action
+import info.nightscout.androidaps.database.entities.UserEntry.Sources
 import info.nightscout.androidaps.databinding.DialogProfileswitchBinding
-import info.nightscout.androidaps.interfaces.ActivePluginProvider
+import info.nightscout.androidaps.interfaces.ActivePlugin
 import info.nightscout.androidaps.interfaces.ProfileFunction
 import info.nightscout.androidaps.logging.UserEntryLogger
 import info.nightscout.androidaps.plugins.treatments.TreatmentsPlugin
-import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.HtmlHelper
 import info.nightscout.androidaps.utils.alertDialogs.OKDialog
 import info.nightscout.androidaps.utils.resources.ResourceHelper
@@ -27,7 +28,7 @@ class ProfileSwitchDialog : DialogFragmentWithDate() {
     @Inject lateinit var resourceHelper: ResourceHelper
     @Inject lateinit var profileFunction: ProfileFunction
     @Inject lateinit var treatmentsPlugin: TreatmentsPlugin
-    @Inject lateinit var activePlugin: ActivePluginProvider
+    @Inject lateinit var activePlugin: ActivePlugin
     @Inject lateinit var uel: UserEntryLogger
 
     private var profileIndex: Int? = null
@@ -67,7 +68,7 @@ class ProfileSwitchDialog : DialogFragmentWithDate() {
 
         // profile
         context?.let { context ->
-            val profileStore = activePlugin.activeProfileInterface.profile
+            val profileStore = activePlugin.activeProfileSource.profile
                 ?: return
             val profileList = profileStore.getProfileList()
             val adapter = ArrayAdapter(context, R.layout.spinner_centered, profileList)
@@ -81,7 +82,7 @@ class ProfileSwitchDialog : DialogFragmentWithDate() {
                         binding.profile.setSelection(p)
         } ?: return
 
-        treatmentsPlugin.getProfileSwitchFromHistory(DateUtil.now())?.let { ps ->
+        treatmentsPlugin.getProfileSwitchFromHistory(dateUtil.now())?.let { ps ->
             if (ps.isCPP) {
                 binding.reuselayout.visibility = View.VISIBLE
                 binding.reusebutton.text = resourceHelper.gs(R.string.reuse_profile_pct_hours, ps.percentage, ps.timeshift)
@@ -102,7 +103,7 @@ class ProfileSwitchDialog : DialogFragmentWithDate() {
 
     override fun submit(): Boolean {
         if (_binding == null) return false
-        val profileStore = activePlugin.activeProfileInterface.profile
+        val profileStore = activePlugin.activeProfileSource.profile
             ?: return false
 
         val actions: LinkedList<String> = LinkedList()
@@ -125,7 +126,14 @@ class ProfileSwitchDialog : DialogFragmentWithDate() {
 
         activity?.let { activity ->
             OKDialog.showConfirmation(activity, resourceHelper.gs(R.string.careportal_profileswitch), HtmlHelper.fromHtml(Joiner.on("<br/>").join(actions)), {
-                uel.log(Action.PROFILE_SWITCH, notes, ValueWithUnit(eventTime, Units.Timestamp, eventTimeChanged), ValueWithUnit(profile, Units.None), ValueWithUnit(percent, Units.Percent), ValueWithUnit(timeShift, Units.H, timeShift != 0), ValueWithUnit(duration, Units.M, duration != 0))
+                uel.log(Action.PROFILE_SWITCH,
+                    Sources.ProfileSwitchDialog,
+                    notes,
+                    ValueWithUnit.Timestamp(eventTime).takeIf { eventTimeChanged },
+                    ValueWithUnit.SimpleString(profile),
+                    ValueWithUnit.Percent(percent),
+                    ValueWithUnit.Hour(timeShift).takeIf { timeShift != 0 },
+                    ValueWithUnit.Minute(duration).takeIf { duration != 0 })
                 treatmentsPlugin.doProfileSwitch(profileStore, profile, duration, percent, timeShift, eventTime)
             })
         }

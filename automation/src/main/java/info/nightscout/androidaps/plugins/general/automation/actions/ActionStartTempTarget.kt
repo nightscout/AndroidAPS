@@ -9,22 +9,25 @@ import info.nightscout.androidaps.data.Profile
 import info.nightscout.androidaps.data.PumpEnactResult
 import info.nightscout.androidaps.database.AppRepository
 import info.nightscout.androidaps.database.entities.TemporaryTarget
+import info.nightscout.androidaps.database.entities.UserEntry
+import info.nightscout.androidaps.database.entities.UserEntry.Sources
+import info.nightscout.androidaps.database.entities.ValueWithUnit
 import info.nightscout.androidaps.database.transactions.InsertTemporaryTargetAndCancelCurrentTransaction
-import info.nightscout.androidaps.interfaces.ActivePluginProvider
+import info.nightscout.androidaps.interfaces.ActivePlugin
 import info.nightscout.androidaps.interfaces.ProfileFunction
 import info.nightscout.androidaps.logging.LTag
+import info.nightscout.androidaps.logging.UserEntryLogger
 import info.nightscout.androidaps.plugins.general.automation.elements.ComparatorExists
 import info.nightscout.androidaps.plugins.general.automation.elements.InputDuration
 import info.nightscout.androidaps.plugins.general.automation.elements.InputTempTarget
 import info.nightscout.androidaps.plugins.general.automation.elements.LabelWithElement
 import info.nightscout.androidaps.plugins.general.automation.elements.LayoutBuilder
 import info.nightscout.androidaps.plugins.general.automation.triggers.TriggerTempTarget
-import info.nightscout.androidaps.plugins.general.nsclient.NSUpload
 import info.nightscout.androidaps.queue.Callback
 import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.JsonHelper
 import info.nightscout.androidaps.utils.JsonHelper.safeGetDouble
-import info.nightscout.androidaps.utils.extensions.friendlyDescription
+import info.nightscout.androidaps.extensions.friendlyDescription
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.rxkotlin.plusAssign
@@ -35,10 +38,11 @@ import javax.inject.Inject
 class ActionStartTempTarget(injector: HasAndroidInjector) : Action(injector) {
 
     @Inject lateinit var resourceHelper: ResourceHelper
-    @Inject lateinit var activePlugin: ActivePluginProvider
+    @Inject lateinit var activePlugin: ActivePlugin
     @Inject lateinit var repository: AppRepository
-    @Inject lateinit var nsUpload: NSUpload
     @Inject lateinit var profileFunction: ProfileFunction
+    @Inject lateinit var dateUtil: DateUtil
+    @Inject lateinit var uel: UserEntryLogger
 
     private val disposable = CompositeDisposable()
 
@@ -56,11 +60,16 @@ class ActionStartTempTarget(injector: HasAndroidInjector) : Action(injector) {
     override fun doAction(callback: Callback) {
         disposable += repository.runTransactionForResult(InsertTemporaryTargetAndCancelCurrentTransaction(tt()))
             .subscribe({ result ->
-                result.inserted.forEach { nsUpload.uploadTempTarget(it) }
-                result.updated.forEach { nsUpload.updateTempTarget(it) }
+                result.inserted.forEach { aapsLogger.debug(LTag.DATABASE, "Inserted temp target $it") }
+                result.updated.forEach { aapsLogger.debug(LTag.DATABASE, "Updated temp target $it") }
+                uel.log(UserEntry.Action.TT, Sources.Automation, title,
+                    ValueWithUnit.TherapyEventTTReason(TemporaryTarget.Reason.AUTOMATION),
+                    ValueWithUnit.fromGlucoseUnit(tt().lowTarget, Constants.MGDL),
+                    ValueWithUnit.fromGlucoseUnit(tt().highTarget, Constants.MGDL).takeIf { tt().lowTarget != tt().highTarget },
+                    ValueWithUnit.Minute(TimeUnit.MILLISECONDS.toMinutes(tt().duration).toInt()))
                 callback.result(PumpEnactResult(injector).success(true).comment(R.string.ok))?.run()
             }, {
-                aapsLogger.error(LTag.BGSOURCE, "Error while saving temporary target", it)
+                aapsLogger.error(LTag.DATABASE, "Error while saving temporary target", it)
                 callback.result(PumpEnactResult(injector).success(false).comment(R.string.error))?.run()
             })
     }
@@ -97,7 +106,7 @@ class ActionStartTempTarget(injector: HasAndroidInjector) : Action(injector) {
     }
 
     fun tt() = TemporaryTarget(
-        timestamp = DateUtil.now(),
+        timestamp = dateUtil.now(),
         duration = TimeUnit.MINUTES.toMillis(duration.getMinutes().toLong()),
         reason = TemporaryTarget.Reason.AUTOMATION,
         lowTarget = Profile.toMgdl(value.value, value.units),

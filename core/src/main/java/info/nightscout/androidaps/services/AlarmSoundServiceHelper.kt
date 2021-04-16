@@ -6,7 +6,7 @@ import android.content.Intent
 import android.content.ServiceConnection
 import android.os.IBinder
 import info.nightscout.androidaps.activities.ErrorHelperActivity
-import info.nightscout.androidaps.interfaces.NotificationHolderInterface
+import info.nightscout.androidaps.interfaces.NotificationHolder
 import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.logging.LTag
 import javax.inject.Inject
@@ -25,7 +25,7 @@ import javax.inject.Singleton
 @Singleton
 class AlarmSoundServiceHelper @Inject constructor(
     private val aapsLogger: AAPSLogger,
-    private val notificationHolder: NotificationHolderInterface
+    private val notificationHolder: NotificationHolder
 ) {
 
     fun startAlarm(context: Context, sound: Int) {

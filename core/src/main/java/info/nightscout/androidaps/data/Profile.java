@@ -16,11 +16,11 @@ import javax.inject.Inject;
 import dagger.android.HasAndroidInjector;
 import info.nightscout.androidaps.Constants;
 import info.nightscout.androidaps.core.R;
-import info.nightscout.androidaps.interfaces.ActivePluginProvider;
-import info.nightscout.androidaps.interfaces.ConfigInterface;
+import info.nightscout.androidaps.interfaces.ActivePlugin;
+import info.nightscout.androidaps.interfaces.Config;
 import info.nightscout.androidaps.interfaces.ProfileFunction;
 import info.nightscout.androidaps.interfaces.PumpDescription;
-import info.nightscout.androidaps.interfaces.PumpInterface;
+import info.nightscout.androidaps.interfaces.Pump;
 import info.nightscout.androidaps.logging.AAPSLogger;
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper;
 import info.nightscout.androidaps.plugins.general.overview.events.EventNewNotification;
@@ -33,17 +33,18 @@ import info.nightscout.androidaps.utils.resources.ResourceHelper;
 
 public class Profile {
     @Inject public AAPSLogger aapsLogger;
-    @Inject public ActivePluginProvider activePlugin;
+    @Inject public ActivePlugin activePlugin;
     @Inject public ResourceHelper resourceHelper;
     @Inject public RxBusWrapper rxBus;
     @Inject public FabricPrivacy fabricPrivacy;
-    @Inject public ConfigInterface configInterface;
+    @Inject public Config config;
+    @Inject public DateUtil dateUtil;
 
     private final HasAndroidInjector injector;
 
     private JSONObject json;
     private String units;
-    private double dia;
+    private double dia; // TODO change to insulinInterface link
     private TimeZone timeZone;
     private JSONArray isf;
     private LongSparseArray<Double> isf_v; // oldest at index 0
@@ -188,7 +189,7 @@ public class Profile {
                 long tas;
                 try {
                     String time = o.getString("time");
-                    tas = getShitfTimeSecs(DateUtil.toSeconds(time));
+                    tas = getShitfTimeSecs(dateUtil.toSeconds(time));
                 } catch (JSONException e) {
                     //log.debug(">>>>>>>>>>>> Used recalculated timeAsSecons: " + time + " " + tas);
                     tas = getShitfTimeSecs((int) o.getLong("timeAsSeconds"));
@@ -244,12 +245,12 @@ public class Profile {
 
         if (isValid) {
             // Check for hours alignment
-            PumpInterface pump = activePlugin.getActivePump();
+            Pump pump = activePlugin.getActivePump();
             if (!pump.getPumpDescription().is30minBasalRatesCapable()) {
                 for (int index = 0; index < basal_v.size(); index++) {
                     long secondsFromMidnight = basal_v.keyAt(index);
                     if (notify && secondsFromMidnight % 3600 != 0) {
-                        if (configInterface.getAPS()) {
+                        if (config.getAPS()) {
                             Notification notification = new Notification(Notification.BASAL_PROFILE_NOT_ALIGNED_TO_HOURS, resourceHelper.gs(R.string.basalprofilenotaligned, from), Notification.NORMAL);
                             rxBus.send(new EventNewNotification(notification));
                         }
@@ -628,7 +629,7 @@ public class Profile {
     }
 
     public static int secondsFromMidnight() {
-        // long passed = DateUtil.now() - MidnightTime.calc();
+        // long passed = dateUtil._now() - MidnightTime.calc();
         long passed = new DateTime().getMillisOfDay();
         return (int) (passed / 1000);
     }

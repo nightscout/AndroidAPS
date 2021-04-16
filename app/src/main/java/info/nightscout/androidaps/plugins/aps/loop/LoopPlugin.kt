@@ -17,8 +17,11 @@ import info.nightscout.androidaps.data.Profile
 import info.nightscout.androidaps.data.PumpEnactResult
 import info.nightscout.androidaps.database.AppRepository
 import info.nightscout.androidaps.database.entities.TherapyEvent
-import info.nightscout.androidaps.database.transactions.InsertTherapyEventIfNewTransaction
-import info.nightscout.androidaps.db.Source
+import info.nightscout.androidaps.database.entities.UserEntry.Action
+import info.nightscout.androidaps.database.entities.UserEntry.Sources
+import info.nightscout.androidaps.database.entities.ValueWithUnit
+import info.nightscout.androidaps.database.transactions.InsertIfNewByTimestampTherapyEventTransaction
+import info.nightscout.androidaps.database.transactions.InsertTherapyEventAnnouncementTransaction
 import info.nightscout.androidaps.events.EventAcceptOpenLoopChange
 import info.nightscout.androidaps.events.EventAutosensCalculationFinished
 import info.nightscout.androidaps.events.EventNewBG
@@ -27,20 +30,19 @@ import info.nightscout.androidaps.interfaces.*
 import info.nightscout.androidaps.interfaces.LoopInterface.LastRun
 import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.logging.LTag
+import info.nightscout.androidaps.logging.UserEntryLogger
 import info.nightscout.androidaps.plugins.aps.loop.events.EventLoopSetLastRunGui
 import info.nightscout.androidaps.plugins.aps.loop.events.EventLoopUpdateGui
 import info.nightscout.androidaps.plugins.aps.loop.events.EventNewOpenLoopNotification
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper
 import info.nightscout.androidaps.plugins.configBuilder.ConstraintChecker
-import info.nightscout.androidaps.plugins.general.nsclient.NSUpload
+import info.nightscout.androidaps.plugins.configBuilder.RunningConfiguration
 import info.nightscout.androidaps.plugins.general.overview.events.EventDismissNotification
 import info.nightscout.androidaps.plugins.general.overview.events.EventNewNotification
 import info.nightscout.androidaps.plugins.general.overview.notifications.Notification
 import info.nightscout.androidaps.plugins.general.wear.events.EventWearConfirmAction
 import info.nightscout.androidaps.plugins.general.wear.events.EventWearInitiateAction
-import info.nightscout.androidaps.plugins.iob.iobCobCalculator.IobCobCalculatorPlugin
 import info.nightscout.androidaps.plugins.pump.virtual.VirtualPumpPlugin
-import info.nightscout.androidaps.plugins.treatments.TreatmentsPlugin
 import info.nightscout.androidaps.queue.Callback
 import info.nightscout.androidaps.queue.commands.Command
 import info.nightscout.androidaps.receivers.ReceiverStatusStore
@@ -48,6 +50,10 @@ import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.FabricPrivacy
 import info.nightscout.androidaps.utils.HardLimits
 import info.nightscout.androidaps.utils.T
+import info.nightscout.androidaps.extensions.buildDeviceStatus
+import info.nightscout.androidaps.extensions.convertedToAbsolute
+import info.nightscout.androidaps.extensions.convertedToPercent
+import info.nightscout.androidaps.extensions.plannedRemainingMinutes
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 import info.nightscout.androidaps.utils.rx.AapsSchedulers
 import info.nightscout.androidaps.utils.sharedPreferences.SP
@@ -70,15 +76,15 @@ open class LoopPlugin @Inject constructor(
     private val profileFunction: ProfileFunction,
     private val context: Context,
     private val commandQueue: CommandQueueProvider,
-    private val activePlugin: ActivePluginProvider,
-    private val treatmentsPlugin: TreatmentsPlugin,
+    private val activePlugin: ActivePlugin,
     private val virtualPumpPlugin: VirtualPumpPlugin,
-    private val iobCobCalculatorPlugin: IobCobCalculatorPlugin,
+    private val iobCobCalculator: IobCobCalculator,
     private val receiverStatusStore: ReceiverStatusStore,
     private val fabricPrivacy: FabricPrivacy,
-    private val nsUpload: NSUpload,
     private val dateUtil: DateUtil,
-    private val repository: AppRepository
+    private val uel: UserEntryLogger,
+    private val repository: AppRepository,
+    private val runningConfiguration: RunningConfiguration
 ) : PluginBase(PluginDescription()
     .mainType(PluginType.LOOP)
     .fragmentClass(LoopFragment::class.java.name)
@@ -96,6 +102,7 @@ open class LoopPlugin @Inject constructor(
     private var carbsSuggestionsSuspendedUntil: Long = 0
     private var prevCarbsreq = 0
     override var lastRun: LastRun? = null
+
     override fun onStart() {
         createNotificationChannel()
         super.onStart()
@@ -117,7 +124,7 @@ open class LoopPlugin @Inject constructor(
             .subscribe({ event: EventAutosensCalculationFinished ->
                 // Autosens calculation not triggered by a new BG
                 if (event.cause !is EventNewBG) return@subscribe
-                val glucoseValue = iobCobCalculatorPlugin.actualBg() ?: return@subscribe
+                val glucoseValue = iobCobCalculator.ads.actualBg() ?: return@subscribe
                 // BG outdated
                 // already looped with that value
                 if (glucoseValue.timestamp <= lastBgTriggeredRun) return@subscribe
@@ -233,7 +240,9 @@ open class LoopPlugin @Inject constructor(
     private fun treatmentTimeThreshold(durationMinutes: Int): Boolean {
         val threshold = System.currentTimeMillis() + durationMinutes * 60 * 1000
         var bool = false
-        if (treatmentsPlugin.lastBolusTime > threshold || treatmentsPlugin.lastCarbTime > threshold) bool = true
+        val lastBolusTime = repository.getLastBolusRecord()?.timestamp ?: 0L
+        val lastCarbsTime = repository.getLastCarbsRecord()?.timestamp ?: 0L
+        if (lastBolusTime > threshold || lastCarbsTime > threshold) bool = true
         return bool
     }
 
@@ -295,155 +304,162 @@ open class LoopPlugin @Inject constructor(
             resultAfterConstraints.smb = constraintChecker.applyBolusConstraints(resultAfterConstraints.smbConstraint!!).value()
 
             // safety check for multiple SMBs
-            val lastBolusTime = treatmentsPlugin.lastBolusTime
+            val lastBolusTime = repository.getLastBolusRecord()?.timestamp ?: 0L
             if (lastBolusTime != 0L && lastBolusTime + T.mins(3).msecs() > System.currentTimeMillis()) {
                 aapsLogger.debug(LTag.APS, "SMB requested but still in 3 min interval")
                 resultAfterConstraints.smb = 0.0
             }
-            if (lastRun != null && lastRun!!.constraintsProcessed != null) {
-                prevCarbsreq = lastRun!!.constraintsProcessed!!.carbsReq
-            }
-            if (lastRun == null) lastRun = LastRun()
-            lastRun!!.request = apsResult
-            lastRun!!.constraintsProcessed = resultAfterConstraints
-            lastRun!!.lastAPSRun = DateUtil.now()
-            lastRun!!.source = (usedAPS as PluginBase).name
-            lastRun!!.tbrSetByPump = null
-            lastRun!!.smbSetByPump = null
-            lastRun!!.lastTBREnact = 0
-            lastRun!!.lastTBRRequest = 0
-            lastRun!!.lastSMBEnact = 0
-            lastRun!!.lastSMBRequest = 0
-            nsUpload.uploadDeviceStatus(this, iobCobCalculatorPlugin, profileFunction, activePlugin.activePump, receiverStatusStore, BuildConfig.VERSION_NAME + "-" + BuildConfig.BUILDVERSION)
-            if (isSuspended) {
-                aapsLogger.debug(LTag.APS, resourceHelper.gs(R.string.loopsuspended))
-                rxBus.send(EventLoopSetLastRunGui(resourceHelper.gs(R.string.loopsuspended)))
-                return
-            }
-            if (pump.isSuspended()) {
-                aapsLogger.debug(LTag.APS, resourceHelper.gs(R.string.pumpsuspended))
-                rxBus.send(EventLoopSetLastRunGui(resourceHelper.gs(R.string.pumpsuspended)))
-                return
-            }
-            val closedLoopEnabled = constraintChecker.isClosedLoopAllowed()
-            if (closedLoopEnabled.value()) {
-                if (allowNotification) {
-                    if (resultAfterConstraints.isCarbsRequired
-                        && resultAfterConstraints.carbsReq >= sp.getInt(R.string.key_smb_enable_carbs_suggestions_threshold, 0) && carbsSuggestionsSuspendedUntil < System.currentTimeMillis() && !treatmentTimeThreshold(-15)) {
-                        if (sp.getBoolean(R.string.key_enable_carbs_required_alert_local, true) && !sp.getBoolean(R.string.key_raise_notifications_as_android_notifications, true)) {
-                            val carbReqLocal = Notification(Notification.CARBS_REQUIRED, resultAfterConstraints.carbsRequiredText, Notification.NORMAL)
-                            rxBus.send(EventNewNotification(carbReqLocal))
-                        }
-                        if (sp.getBoolean(R.string.key_ns_create_announcements_from_carbs_req, false)) {
-                            nsUpload.uploadError(resultAfterConstraints.carbsRequiredText)
-                        }
-                        if (sp.getBoolean(R.string.key_enable_carbs_required_alert_local, true) && sp.getBoolean(R.string.key_raise_notifications_as_android_notifications, true)) {
-                            val intentAction5m = Intent(context, CarbSuggestionReceiver::class.java)
-                            intentAction5m.putExtra("ignoreDuration", 5)
-                            val pendingIntent5m = PendingIntent.getBroadcast(context, 1, intentAction5m, PendingIntent.FLAG_UPDATE_CURRENT)
-                            val actionIgnore5m = NotificationCompat.Action(R.drawable.ic_notif_aaps, resourceHelper.gs(R.string.ignore5m, "Ignore 5m"), pendingIntent5m)
-                            val intentAction15m = Intent(context, CarbSuggestionReceiver::class.java)
-                            intentAction15m.putExtra("ignoreDuration", 15)
-                            val pendingIntent15m = PendingIntent.getBroadcast(context, 1, intentAction15m, PendingIntent.FLAG_UPDATE_CURRENT)
-                            val actionIgnore15m = NotificationCompat.Action(R.drawable.ic_notif_aaps, resourceHelper.gs(R.string.ignore15m, "Ignore 15m"), pendingIntent15m)
-                            val intentAction30m = Intent(context, CarbSuggestionReceiver::class.java)
-                            intentAction30m.putExtra("ignoreDuration", 30)
-                            val pendingIntent30m = PendingIntent.getBroadcast(context, 1, intentAction30m, PendingIntent.FLAG_UPDATE_CURRENT)
-                            val actionIgnore30m = NotificationCompat.Action(R.drawable.ic_notif_aaps, resourceHelper.gs(R.string.ignore30m, "Ignore 30m"), pendingIntent30m)
-                            val builder = NotificationCompat.Builder(context, CHANNEL_ID)
-                            builder.setSmallIcon(R.drawable.notif_icon)
-                                .setContentTitle(resourceHelper.gs(R.string.carbssuggestion))
-                                .setContentText(resultAfterConstraints.carbsRequiredText)
-                                .setAutoCancel(true)
-                                .setPriority(Notification.IMPORTANCE_HIGH)
-                                .setCategory(Notification.CATEGORY_ALARM)
-                                .addAction(actionIgnore5m)
-                                .addAction(actionIgnore15m)
-                                .addAction(actionIgnore30m)
-                                .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
-                                .setVibrate(longArrayOf(1000, 1000, 1000, 1000, 1000))
-                            val mNotificationManager = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+            prevCarbsreq = lastRun?.constraintsProcessed?.carbsReq ?: prevCarbsreq
+            lastRun = (lastRun ?: LastRun()).also { lastRun ->
+                lastRun.request = apsResult
+                lastRun.constraintsProcessed = resultAfterConstraints
+                lastRun.lastAPSRun = dateUtil.now()
+                lastRun.source = (usedAPS as PluginBase).name
+                lastRun.tbrSetByPump = null
+                lastRun.smbSetByPump = null
+                lastRun.lastTBREnact = 0
+                lastRun.lastTBRRequest = 0
+                lastRun.lastSMBEnact = 0
+                lastRun.lastSMBRequest = 0
+                buildDeviceStatus(dateUtil, this, iobCobCalculator, profileFunction,
+                    activePlugin.activePump, receiverStatusStore, runningConfiguration,
+                    BuildConfig.VERSION_NAME + "-" + BuildConfig.BUILDVERSION)?.also {
+                    repository.insert(it)
+                }
 
-                            // mId allows you to update the notification later on.
-                            mNotificationManager.notify(Constants.notificationID, builder.build())
-                            rxBus.send(EventNewOpenLoopNotification())
+                if (isSuspended) {
+                    aapsLogger.debug(LTag.APS, resourceHelper.gs(R.string.loopsuspended))
+                    rxBus.send(EventLoopSetLastRunGui(resourceHelper.gs(R.string.loopsuspended)))
+                    return
+                }
+                if (pump.isSuspended()) {
+                    aapsLogger.debug(LTag.APS, resourceHelper.gs(R.string.pumpsuspended))
+                    rxBus.send(EventLoopSetLastRunGui(resourceHelper.gs(R.string.pumpsuspended)))
+                    return
+                }
+                val closedLoopEnabled = constraintChecker.isClosedLoopAllowed()
+                if (closedLoopEnabled.value()) {
+                    if (allowNotification) {
+                        if (resultAfterConstraints.isCarbsRequired
+                            && resultAfterConstraints.carbsReq >= sp.getInt(R.string.key_smb_enable_carbs_suggestions_threshold, 0) && carbsSuggestionsSuspendedUntil < System.currentTimeMillis() && !treatmentTimeThreshold(-15)) {
+                            if (sp.getBoolean(R.string.key_enable_carbs_required_alert_local, true) && !sp.getBoolean(R.string.key_raise_notifications_as_android_notifications, true)) {
+                                val carbReqLocal = Notification(Notification.CARBS_REQUIRED, resultAfterConstraints.carbsRequiredText, Notification.NORMAL)
+                                rxBus.send(EventNewNotification(carbReqLocal))
+                            }
+                            if (sp.getBoolean(R.string.key_ns_create_announcements_from_carbs_req, false)) {
+                                disposable += repository.runTransaction(InsertTherapyEventAnnouncementTransaction(resultAfterConstraints.carbsRequiredText)).subscribe()
+                            }
+                            if (sp.getBoolean(R.string.key_enable_carbs_required_alert_local, true) && sp.getBoolean(R.string.key_raise_notifications_as_android_notifications, true)) {
+                                val intentAction5m = Intent(context, CarbSuggestionReceiver::class.java)
+                                intentAction5m.putExtra("ignoreDuration", 5)
+                                val pendingIntent5m = PendingIntent.getBroadcast(context, 1, intentAction5m, PendingIntent.FLAG_UPDATE_CURRENT)
+                                val actionIgnore5m = NotificationCompat.Action(R.drawable.ic_notif_aaps, resourceHelper.gs(R.string.ignore5m, "Ignore 5m"), pendingIntent5m)
+                                val intentAction15m = Intent(context, CarbSuggestionReceiver::class.java)
+                                intentAction15m.putExtra("ignoreDuration", 15)
+                                val pendingIntent15m = PendingIntent.getBroadcast(context, 1, intentAction15m, PendingIntent.FLAG_UPDATE_CURRENT)
+                                val actionIgnore15m = NotificationCompat.Action(R.drawable.ic_notif_aaps, resourceHelper.gs(R.string.ignore15m, "Ignore 15m"), pendingIntent15m)
+                                val intentAction30m = Intent(context, CarbSuggestionReceiver::class.java)
+                                intentAction30m.putExtra("ignoreDuration", 30)
+                                val pendingIntent30m = PendingIntent.getBroadcast(context, 1, intentAction30m, PendingIntent.FLAG_UPDATE_CURRENT)
+                                val actionIgnore30m = NotificationCompat.Action(R.drawable.ic_notif_aaps, resourceHelper.gs(R.string.ignore30m, "Ignore 30m"), pendingIntent30m)
+                                val builder = NotificationCompat.Builder(context, CHANNEL_ID)
+                                builder.setSmallIcon(R.drawable.notif_icon)
+                                    .setContentTitle(resourceHelper.gs(R.string.carbssuggestion))
+                                    .setContentText(resultAfterConstraints.carbsRequiredText)
+                                    .setAutoCancel(true)
+                                    .setPriority(Notification.IMPORTANCE_HIGH)
+                                    .setCategory(Notification.CATEGORY_ALARM)
+                                    .addAction(actionIgnore5m)
+                                    .addAction(actionIgnore15m)
+                                    .addAction(actionIgnore30m)
+                                    .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
+                                    .setVibrate(longArrayOf(1000, 1000, 1000, 1000, 1000))
+                                val mNotificationManager = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
 
-                            //only send to wear if Native notifications are turned off
-                            if (!sp.getBoolean(R.string.key_raise_notifications_as_android_notifications, true)) {
-                                // Send to Wear
-                                rxBus.send(EventWearInitiateAction("changeRequest"))
+                                // mId allows you to update the notification later on.
+                                mNotificationManager.notify(Constants.notificationID, builder.build())
+                                uel.log(Action.CAREPORTAL, Sources.Loop, resourceHelper.gs(R.string.carbsreq, resultAfterConstraints.carbsReq, resultAfterConstraints.carbsReqWithin),
+                                    ValueWithUnit.Gram(resultAfterConstraints.carbsReq),
+                                    ValueWithUnit.Minute(resultAfterConstraints.carbsReqWithin))
+                                rxBus.send(EventNewOpenLoopNotification())
+
+                                //only send to wear if Native notifications are turned off
+                                if (!sp.getBoolean(R.string.key_raise_notifications_as_android_notifications, true)) {
+                                    // Send to Wear
+                                    rxBus.send(EventWearInitiateAction("changeRequest"))
+                                }
+                            }
+                        } else {
+                            //If carbs were required previously, but are no longer needed, dismiss notifications
+                            if (prevCarbsreq > 0) {
+                                dismissSuggestion()
+                                rxBus.send(EventDismissNotification(Notification.CARBS_REQUIRED))
                             }
                         }
-                    } else {
-                        //If carbs were required previously, but are no longer needed, dismiss notifications
-                        if (prevCarbsreq > 0) {
-                            dismissSuggestion()
-                            rxBus.send(EventDismissNotification(Notification.CARBS_REQUIRED))
-                        }
                     }
-                }
-                if (resultAfterConstraints.isChangeRequested
-                    && !commandQueue.bolusInQueue()
-                    && !commandQueue.isRunning(Command.CommandType.BOLUS)) {
-                    val waiting = PumpEnactResult(injector)
-                    waiting.queued = true
-                    if (resultAfterConstraints.tempBasalRequested) lastRun!!.tbrSetByPump = waiting
-                    if (resultAfterConstraints.bolusRequested) lastRun!!.smbSetByPump = waiting
-                    rxBus.send(EventLoopUpdateGui())
-                    fabricPrivacy.logCustom("APSRequest")
-                    applyTBRRequest(resultAfterConstraints, profile, object : Callback() {
-                        override fun run() {
-                            if (result.enacted || result.success) {
-                                lastRun!!.tbrSetByPump = result
-                                lastRun!!.lastTBRRequest = lastRun!!.lastAPSRun
-                                lastRun!!.lastTBREnact = DateUtil.now()
-                                rxBus.send(EventLoopUpdateGui())
-                                applySMBRequest(resultAfterConstraints, object : Callback() {
-                                    override fun run() {
-                                        // Callback is only called if a bolus was actually requested
-                                        if (result.enacted || result.success) {
-                                            lastRun!!.smbSetByPump = result
-                                            lastRun!!.lastSMBRequest = lastRun!!.lastAPSRun
-                                            lastRun!!.lastSMBEnact = DateUtil.now()
-                                        } else {
-                                            Thread {
-                                                SystemClock.sleep(1000)
-                                                invoke("tempBasalFallback", allowNotification, true)
-                                            }.start()
+                    if (resultAfterConstraints.isChangeRequested
+                        && !commandQueue.bolusInQueue()
+                        && !commandQueue.isRunning(Command.CommandType.BOLUS)) {
+                        val waiting = PumpEnactResult(injector)
+                        waiting.queued = true
+                        if (resultAfterConstraints.tempBasalRequested) lastRun.tbrSetByPump = waiting
+                        if (resultAfterConstraints.bolusRequested) lastRun.smbSetByPump = waiting
+                        rxBus.send(EventLoopUpdateGui())
+                        fabricPrivacy.logCustom("APSRequest")
+                        applyTBRRequest(resultAfterConstraints, profile, object : Callback() {
+                            override fun run() {
+                                if (result.enacted || result.success) {
+                                    lastRun.tbrSetByPump = result
+                                    lastRun.lastTBRRequest = lastRun.lastAPSRun
+                                    lastRun.lastTBREnact = dateUtil.now()
+                                    rxBus.send(EventLoopUpdateGui())
+                                    applySMBRequest(resultAfterConstraints, object : Callback() {
+                                        override fun run() {
+                                            // Callback is only called if a bolus was actually requested
+                                            if (result.enacted || result.success) {
+                                                lastRun.smbSetByPump = result
+                                                lastRun.lastSMBRequest = lastRun.lastAPSRun
+                                                lastRun.lastSMBEnact = dateUtil.now()
+                                            } else {
+                                                Thread {
+                                                    SystemClock.sleep(1000)
+                                                    invoke("tempBasalFallback", allowNotification, true)
+                                                }.start()
+                                            }
+                                            rxBus.send(EventLoopUpdateGui())
                                         }
-                                        rxBus.send(EventLoopUpdateGui())
-                                    }
-                                })
-                            } else {
-                                lastRun!!.tbrSetByPump = result
-                                lastRun!!.lastTBRRequest = lastRun!!.lastAPSRun
+                                    })
+                                } else {
+                                    lastRun.tbrSetByPump = result
+                                    lastRun.lastTBRRequest = lastRun.lastAPSRun
+                                }
+                                rxBus.send(EventLoopUpdateGui())
                             }
-                            rxBus.send(EventLoopUpdateGui())
-                        }
-                    })
-                } else {
-                    lastRun!!.tbrSetByPump = null
-                    lastRun!!.smbSetByPump = null
-                }
-            } else {
-                if (resultAfterConstraints.isChangeRequested && allowNotification) {
-                    val builder = NotificationCompat.Builder(context, CHANNEL_ID)
-                    builder.setSmallIcon(R.drawable.notif_icon)
-                        .setContentTitle(resourceHelper.gs(R.string.openloop_newsuggestion))
-                        .setContentText(resultAfterConstraints.toString())
-                        .setAutoCancel(true)
-                        .setPriority(Notification.IMPORTANCE_HIGH)
-                        .setCategory(Notification.CATEGORY_ALARM)
-                        .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
-                    if (sp.getBoolean(R.string.key_wear_control, false)) {
-                        builder.setLocalOnly(true)
+                        })
+                    } else {
+                        lastRun.tbrSetByPump = null
+                        lastRun.smbSetByPump = null
                     }
-                    presentSuggestion(builder)
-                } else if (allowNotification) {
-                    dismissSuggestion()
+                } else {
+                    if (resultAfterConstraints.isChangeRequested && allowNotification) {
+                        val builder = NotificationCompat.Builder(context, CHANNEL_ID)
+                        builder.setSmallIcon(R.drawable.notif_icon)
+                            .setContentTitle(resourceHelper.gs(R.string.openloop_newsuggestion))
+                            .setContentText(resultAfterConstraints.toString())
+                            .setAutoCancel(true)
+                            .setPriority(Notification.IMPORTANCE_HIGH)
+                            .setCategory(Notification.CATEGORY_ALARM)
+                            .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
+                        if (sp.getBoolean(R.string.key_wear_control, false)) {
+                            builder.setLocalOnly(true)
+                        }
+                        presentSuggestion(builder)
+                    } else if (allowNotification) {
+                        dismissSuggestion()
+                    }
                 }
+                rxBus.send(EventLoopUpdateGui())
             }
-            rxBus.send(EventLoopUpdateGui())
         } finally {
             aapsLogger.debug(LTag.APS, "invoke end")
         }
@@ -486,21 +502,28 @@ open class LoopPlugin @Inject constructor(
     }
 
     fun acceptChangeRequest() {
-        val profile = profileFunction.getProfile()
-        val lp = this
-        applyTBRRequest(lastRun!!.constraintsProcessed, profile, object : Callback() {
-            override fun run() {
-                if (result.enacted) {
-                    lastRun!!.tbrSetByPump = result
-                    lastRun!!.lastTBRRequest = lastRun!!.lastAPSRun
-                    lastRun!!.lastTBREnact = DateUtil.now()
-                    lastRun!!.lastOpenModeAccept = DateUtil.now()
-                    nsUpload.uploadDeviceStatus(lp, iobCobCalculatorPlugin, profileFunction, activePlugin.activePump, receiverStatusStore, BuildConfig.VERSION_NAME + "-" + BuildConfig.BUILDVERSION)
-                    sp.incInt(R.string.key_ObjectivesmanualEnacts)
-                }
-                rxBus.send(EventAcceptOpenLoopChange())
+        val profile = profileFunction.getProfile() ?: return
+        lastRun?.let { lastRun ->
+            lastRun.constraintsProcessed?.let { constraintsProcessed ->
+                applyTBRRequest(constraintsProcessed, profile, object : Callback() {
+                    override fun run() {
+                        if (result.enacted) {
+                            lastRun.tbrSetByPump = result
+                            lastRun.lastTBRRequest = lastRun.lastAPSRun
+                            lastRun.lastTBREnact = dateUtil.now()
+                            lastRun.lastOpenModeAccept = dateUtil.now()
+                            buildDeviceStatus(dateUtil, this@LoopPlugin, iobCobCalculator, profileFunction,
+                                activePlugin.activePump, receiverStatusStore, runningConfiguration,
+                                BuildConfig.VERSION_NAME + "-" + BuildConfig.BUILDVERSION)?.also {
+                                repository.insert(it)
+                            }
+                            sp.incInt(R.string.key_ObjectivesmanualEnacts)
+                        }
+                        rxBus.send(EventAcceptOpenLoopChange())
+                    }
+                })
             }
-        })
+        }
         fabricPrivacy.logCustom("AcceptTemp")
     }
 
@@ -508,8 +531,8 @@ open class LoopPlugin @Inject constructor(
      * expect absolute request and allow both absolute and percent response based on pump capabilities
      * TODO: update pump drivers to support APS request in %
      */
-    private fun applyTBRRequest(request: APSResult?, profile: Profile?, callback: Callback?) {
-        if (!request!!.tempBasalRequested) {
+    private fun applyTBRRequest(request: APSResult, profile: Profile, callback: Callback?) {
+        if (!request.tempBasalRequested) {
             callback?.result(PumpEnactResult(injector).enacted(false).success(true).comment(R.string.nochangerequested))?.run()
             return
         }
@@ -526,44 +549,52 @@ open class LoopPlugin @Inject constructor(
         }
         aapsLogger.debug(LTag.APS, "applyAPSRequest: $request")
         val now = System.currentTimeMillis()
-        val activeTemp = treatmentsPlugin.getTempBasalFromHistory(now)
+        val activeTemp = iobCobCalculator.getTempBasalIncludingConvertedExtended(now)
         if (request.usePercent && allowPercentage()) {
             if (request.percent == 100 && request.duration == 0) {
                 if (activeTemp != null) {
                     aapsLogger.debug(LTag.APS, "applyAPSRequest: cancelTempBasal()")
+                    uel.log(Action.CANCEL_TEMP_BASAL, Sources.Loop)
                     commandQueue.cancelTempBasal(false, callback)
                 } else {
                     aapsLogger.debug(LTag.APS, "applyAPSRequest: Basal set correctly")
                     callback?.result(PumpEnactResult(injector).percent(request.percent).duration(0)
                         .enacted(false).success(true).comment(R.string.basal_set_correctly))?.run()
                 }
-            } else if (activeTemp != null && activeTemp.plannedRemainingMinutes > 5 && request.duration - activeTemp.plannedRemainingMinutes < 30 && request.percent == activeTemp.percentRate) {
+            } else if (activeTemp != null && activeTemp.plannedRemainingMinutes > 5 && request.duration - activeTemp.plannedRemainingMinutes < 30 && request.percent == activeTemp.convertedToPercent(now, profile)) {
                 aapsLogger.debug(LTag.APS, "applyAPSRequest: Temp basal set correctly")
                 callback?.result(PumpEnactResult(injector).percent(request.percent)
                     .enacted(false).success(true).duration(activeTemp.plannedRemainingMinutes)
                     .comment(R.string.let_temp_basal_run))?.run()
             } else {
                 aapsLogger.debug(LTag.APS, "applyAPSRequest: tempBasalPercent()")
-                commandQueue.tempBasalPercent(request.percent, request.duration, false, profile!!, callback)
+                uel.log(Action.TEMP_BASAL, Sources.Loop,
+                    ValueWithUnit.Percent(request.percent),
+                    ValueWithUnit.Minute(request.duration))
+                commandQueue.tempBasalPercent(request.percent, request.duration, false, profile, PumpSync.TemporaryBasalType.NORMAL, callback)
             }
         } else {
             if (request.rate == 0.0 && request.duration == 0 || abs(request.rate - pump.baseBasalRate) < pump.pumpDescription.basalStep) {
                 if (activeTemp != null) {
                     aapsLogger.debug(LTag.APS, "applyAPSRequest: cancelTempBasal()")
+                    uel.log(Action.CANCEL_TEMP_BASAL, Sources.Loop)
                     commandQueue.cancelTempBasal(false, callback)
                 } else {
                     aapsLogger.debug(LTag.APS, "applyAPSRequest: Basal set correctly")
                     callback?.result(PumpEnactResult(injector).absolute(request.rate).duration(0)
                         .enacted(false).success(true).comment(R.string.basal_set_correctly))?.run()
                 }
-            } else if (activeTemp != null && activeTemp.plannedRemainingMinutes > 5 && request.duration - activeTemp.plannedRemainingMinutes < 30 && abs(request.rate - activeTemp.tempBasalConvertedToAbsolute(now, profile)) < pump.pumpDescription.basalStep) {
+            } else if (activeTemp != null && activeTemp.plannedRemainingMinutes > 5 && request.duration - activeTemp.plannedRemainingMinutes < 30 && abs(request.rate - activeTemp.convertedToAbsolute(now, profile)) < pump.pumpDescription.basalStep) {
                 aapsLogger.debug(LTag.APS, "applyAPSRequest: Temp basal set correctly")
-                callback?.result(PumpEnactResult(injector).absolute(activeTemp.tempBasalConvertedToAbsolute(now, profile))
+                callback?.result(PumpEnactResult(injector).absolute(activeTemp.convertedToAbsolute(now, profile))
                     .enacted(false).success(true).duration(activeTemp.plannedRemainingMinutes)
                     .comment(R.string.let_temp_basal_run))?.run()
             } else {
                 aapsLogger.debug(LTag.APS, "applyAPSRequest: setTempBasalAbsolute()")
-                commandQueue.tempBasalAbsolute(request.rate, request.duration, false, profile!!, callback)
+                uel.log(Action.TEMP_BASAL, Sources.Loop,
+                    ValueWithUnit.UnitPerHour(request.rate),
+                    ValueWithUnit.Minute(request.duration))
+                commandQueue.tempBasalAbsolute(request.rate, request.duration, false, profile, PumpSync.TemporaryBasalType.NORMAL, callback)
             }
         }
     }
@@ -573,7 +604,7 @@ open class LoopPlugin @Inject constructor(
             return
         }
         val pump = activePlugin.activePump
-        val lastBolusTime = treatmentsPlugin.lastBolusTime
+        val lastBolusTime = repository.getLastBolusRecord()?.timestamp ?: 0L
         if (lastBolusTime != 0L && lastBolusTime + 3 * 60 * 1000 > System.currentTimeMillis()) {
             aapsLogger.debug(LTag.APS, "SMB requested but still in 3 min interval")
             callback?.result(PumpEnactResult(injector)
@@ -595,13 +626,14 @@ open class LoopPlugin @Inject constructor(
 
         // deliver SMB
         val detailedBolusInfo = DetailedBolusInfo()
-        detailedBolusInfo.lastKnownBolusTime = treatmentsPlugin.lastBolusTime
-        detailedBolusInfo.eventType = TherapyEvent.Type.CORRECTION_BOLUS.text
+        detailedBolusInfo.lastKnownBolusTime = repository.getLastBolusRecord()?.timestamp ?: 0L
+        detailedBolusInfo.eventType = DetailedBolusInfo.EventType.CORRECTION_BOLUS
         detailedBolusInfo.insulin = request.smb
-        detailedBolusInfo.isSMB = true
-        detailedBolusInfo.source = Source.USER
-        detailedBolusInfo.deliverAt = request.deliverAt
+        detailedBolusInfo.bolusType = DetailedBolusInfo.BolusType.SMB
+        detailedBolusInfo.deliverAtTheLatest = request.deliverAt
         aapsLogger.debug(LTag.APS, "applyAPSRequest: bolus()")
+        if (request.smb > 0.0)
+            uel.log(Action.SMB, Sources.Loop, ValueWithUnit.Insulin(detailedBolusInfo.insulin))
         commandQueue.bolus(detailedBolusInfo, callback)
     }
 
@@ -613,7 +645,7 @@ open class LoopPlugin @Inject constructor(
         val pump = activePlugin.activePump
         disconnectTo(System.currentTimeMillis() + durationInMinutes * 60 * 1000L)
         if (pump.pumpDescription.tempBasalStyle == PumpDescription.ABSOLUTE) {
-            commandQueue.tempBasalAbsolute(0.0, durationInMinutes, true, profile!!, object : Callback() {
+            commandQueue.tempBasalAbsolute(0.0, durationInMinutes, true, profile!!, PumpSync.TemporaryBasalType.EMULATED_PUMP_SUSPEND, object : Callback() {
                 override fun run() {
                     if (!result.success) {
                         ErrorHelperActivity.runAlarm(context, result.comment, resourceHelper.gs(R.string.tempbasaldeliveryerror), info.nightscout.androidaps.dana.R.raw.boluserror)
@@ -621,7 +653,7 @@ open class LoopPlugin @Inject constructor(
                 }
             })
         } else {
-            commandQueue.tempBasalPercent(0, durationInMinutes, true, profile!!, object : Callback() {
+            commandQueue.tempBasalPercent(0, durationInMinutes, true, profile!!, PumpSync.TemporaryBasalType.EMULATED_PUMP_SUSPEND, object : Callback() {
                 override fun run() {
                     if (!result.success) {
                         ErrorHelperActivity.runAlarm(context, result.comment, resourceHelper.gs(R.string.tempbasaldeliveryerror), info.nightscout.androidaps.dana.R.raw.boluserror)
@@ -629,7 +661,7 @@ open class LoopPlugin @Inject constructor(
                 }
             })
         }
-        if (pump.pumpDescription.isExtendedBolusCapable && treatmentsPlugin.isInHistoryExtendedBolusInProgress) {
+        if (pump.pumpDescription.isExtendedBolusCapable && iobCobCalculator.getExtendedBolus(dateUtil.now()) != null) {
             commandQueue.cancelExtended(object : Callback() {
                 override fun run() {
                     if (!result.success) {
@@ -654,17 +686,16 @@ open class LoopPlugin @Inject constructor(
     }
 
     override fun createOfflineEvent(durationInMinutes: Int) {
-        disposable += repository.runTransactionForResult(InsertTherapyEventIfNewTransaction(
-            timestamp = dateUtil._now(),
+        disposable += repository.runTransactionForResult(InsertIfNewByTimestampTherapyEventTransaction(
+            timestamp = dateUtil.now(),
             type = TherapyEvent.Type.APS_OFFLINE,
             duration = T.mins(durationInMinutes.toLong()).msecs(),
             enteredBy = "openaps://" + "AndroidAPS",
             glucoseUnit = TherapyEvent.GlucoseUnit.MGDL
-        )).subscribe({ result ->
-            result.inserted.forEach { nsUpload.uploadEvent(it) }
-        }, {
-            aapsLogger.error(LTag.BGSOURCE, "Error while saving therapy event", it)
-        })
+        )).subscribe(
+            { result -> result.inserted.forEach { aapsLogger.debug(LTag.DATABASE, "Inserted therapy event $it") } },
+            { aapsLogger.error(LTag.DATABASE, "Error while saving therapy event", it) }
+        )
     }
 
     companion object {

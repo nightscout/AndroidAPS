@@ -120,7 +120,6 @@
     <string name="danars_password_title">Pump password (v1 only)</string>
     <string name="danar_password_title">Pump password</string>
     <string name="danar_useextended_title">Use extended boluses for >200%%</string>
-    <string name="danar_visualizeextendedaspercentage_title">Visualize extended bolus as %%</string>
     <string name="bolusspeed">Bolus speed</string>
     <string name="selectedpump">Selected pump</string>
     <string name="rs_loginsulinchange_title">Log reservoir change</string>

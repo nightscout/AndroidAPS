@@ -11,28 +11,20 @@ import com.jjoe64.graphview.series.Series
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.Constants
 import info.nightscout.androidaps.R
-import info.nightscout.androidaps.data.GlucoseValueDataPoint
 import info.nightscout.androidaps.data.IobTotal
 import info.nightscout.androidaps.data.Profile
-import info.nightscout.androidaps.data.TherapyEventDataPoint
 import info.nightscout.androidaps.database.AppRepository
 import info.nightscout.androidaps.database.ValueWrapper
+import info.nightscout.androidaps.database.entities.Bolus
 import info.nightscout.androidaps.database.entities.GlucoseValue
-import info.nightscout.androidaps.interfaces.ActivePluginProvider
-import info.nightscout.androidaps.interfaces.DatabaseHelperInterface
-import info.nightscout.androidaps.interfaces.LoopInterface
-import info.nightscout.androidaps.interfaces.ProfileFunction
-import info.nightscout.androidaps.interfaces.TreatmentsInterface
+import info.nightscout.androidaps.interfaces.*
 import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.logging.LTag
 import info.nightscout.androidaps.plugins.aps.openAPSSMB.SMBDefaults
 import info.nightscout.androidaps.plugins.general.overview.graphExtensions.*
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.AutosensResult
-import info.nightscout.androidaps.plugins.iob.iobCobCalculator.IobCobCalculatorPlugin
-import info.nightscout.androidaps.utils.DateUtil
-import info.nightscout.androidaps.utils.DecimalFormatter
-import info.nightscout.androidaps.utils.Round
-import info.nightscout.androidaps.utils.extensions.target
+import info.nightscout.androidaps.utils.*
+import info.nightscout.androidaps.extensions.target
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 import java.util.*
 import javax.inject.Inject
@@ -43,7 +35,7 @@ import kotlin.math.min
 class GraphData(
     private val injector: HasAndroidInjector,
     private val graph: GraphView,
-    private val iobCobCalculatorPlugin: IobCobCalculatorPlugin,
+    private val iobCobCalculator: IobCobCalculator,
     private val treatmentsPlugin: TreatmentsInterface
 ) {
 
@@ -51,10 +43,12 @@ class GraphData(
     @Inject lateinit var aapsLogger: AAPSLogger
     @Inject lateinit var profileFunction: ProfileFunction
     @Inject lateinit var resourceHelper: ResourceHelper
-    @Inject lateinit var activePlugin: ActivePluginProvider
+    @Inject lateinit var activePlugin: ActivePlugin
     @Inject lateinit var databaseHelper: DatabaseHelperInterface
     @Inject lateinit var repository: AppRepository
     @Inject lateinit var dateUtil: DateUtil
+    @Inject lateinit var defaultValueHelper: DefaultValueHelper
+    @Inject lateinit var translator: Translator
 
     var maxY = Double.MIN_VALUE
     private var minY = Double.MAX_VALUE
@@ -67,10 +61,23 @@ class GraphData(
         units = profileFunction.getUnits()
     }
 
-    @Suppress("UNUSED_PARAMETER")
-    fun addBgReadings(fromTime: Long, toTime: Long, lowLine: Double, highLine: Double, predictions: MutableList<GlucoseValueDataPoint>?) {
+    fun addBucketedData(fromTime: Long, toTime: Long) {
+        val bucketedData = iobCobCalculator.ads.getBucketedDataTableCopy() ?: return
+        if (bucketedData.isEmpty()) {
+            aapsLogger.debug("No bucketed data.")
+            return
+        }
+        val bucketedListArray: MutableList<DataPointWithLabelInterface> = ArrayList()
+        for (inMemoryGlucoseValue in bucketedData) {
+            if (inMemoryGlucoseValue.timestamp < fromTime || inMemoryGlucoseValue.timestamp > toTime) continue
+            bucketedListArray.add(InMemoryGlucoseValueDataPoint(inMemoryGlucoseValue, profileFunction, resourceHelper))
+        }
+        addSeries(PointsWithLabelGraphSeries(Array(bucketedListArray.size) { i -> bucketedListArray[i] }))
+    }
+
+    fun addBgReadings(fromTime: Long, toTime: Long, highLine: Double, predictions: MutableList<GlucoseValueDataPoint>?) {
         var maxBgValue = Double.MIN_VALUE
-        bgReadingsArray = iobCobCalculatorPlugin.bgReadings
+        bgReadingsArray = repository.compatGetBgReadingsDataFromTime(fromTime, toTime, false).blockingGet()
         if (bgReadingsArray?.isEmpty() != false) {
             aapsLogger.debug("No BG data.")
             maxY = if (units == Constants.MGDL) 180.0 else 10.0
@@ -81,7 +88,7 @@ class GraphData(
         for (bg in bgReadingsArray!!) {
             if (bg.timestamp < fromTime || bg.timestamp > toTime) continue
             if (bg.value > maxBgValue) maxBgValue = bg.value
-            bgListArray.add(GlucoseValueDataPoint(injector, bg))
+            bgListArray.add(GlucoseValueDataPoint(bg, defaultValueHelper, profileFunction, resourceHelper))
         }
         if (predictions != null) {
             predictions.sortWith(Comparator { o1: GlucoseValueDataPoint, o2: GlucoseValueDataPoint -> o1.x.compareTo(o2.x) })
@@ -134,7 +141,7 @@ class GraphData(
                 time += 60 * 1000L
                 continue
             }
-            val basalData = iobCobCalculatorPlugin.getBasalData(profile, time)
+            val basalData = iobCobCalculator.getBasalData(profile, time)
             val baseBasalValue = basalData.basal
             var absoluteLineValue = baseBasalValue
             var tempBasalValue = 0.0
@@ -244,9 +251,15 @@ class GraphData(
 
     fun addTreatments(fromTime: Long, endTime: Long) {
         val filteredTreatments: MutableList<DataPointWithLabelInterface> = ArrayList()
-        treatmentsPlugin.treatmentsFromHistory
-            .filterTimeframe(fromTime, endTime)
-            .filter { !it.isSMB || it.isValid }
+        repository.getBolusesIncludingInvalidFromTimeToTime(fromTime, endTime, true).blockingGet()
+            .map { BolusDataPoint(it, resourceHelper, activePlugin, defaultValueHelper) }
+            .filter { it.data.type != Bolus.Type.SMB || it.data.isValid }
+            .forEach {
+                it.y = getNearestBg(it.x.toLong())
+                filteredTreatments.add(it)
+            }
+        repository.getCarbsIncludingInvalidFromTimeToTimeExpanded(fromTime, endTime, true).blockingGet()
+            .map { CarbsDataPoint(it, resourceHelper) }
             .forEach {
                 it.y = getNearestBg(it.x.toLong())
                 filteredTreatments.add(it)
@@ -259,8 +272,8 @@ class GraphData(
 
         // Extended bolus
         if (!activePlugin.activePump.isFakingTempsByExtendedBoluses) {
-            treatmentsPlugin.extendedBolusesFromHistory.list
-                .filterTimeframe(fromTime, endTime)
+            repository.getExtendedBolusDataFromTimeToTime(fromTime, endTime, true).blockingGet()
+                .map { ExtendedBolusDataPoint(it) }
                 .filter { it.duration != 0L }
                 .forEach {
                     it.y = getNearestBg(it.x.toLong())
@@ -270,8 +283,8 @@ class GraphData(
 
         // Careportal
 //        databaseHelper.getCareportalEventsFromTime(fromTime - 6 * 60 * 60 * 1000, true)
-        repository.compatGetTherapyEventDataFromToTime(fromTime - 6 * 60 * 60 * 1000, endTime).blockingGet()
-            .map { TherapyEventDataPoint(injector, it) }
+        repository.compatGetTherapyEventDataFromToTime(fromTime - T.hours(6).msecs(), endTime).blockingGet()
+            .map { TherapyEventDataPoint(it, resourceHelper, profileFunction, translator) }
             .filterTimeframe(fromTime, endTime)
             .forEach {
                 if (it.y == 0.0) it.y = getNearestBg(it.x.toLong())
@@ -289,8 +302,7 @@ class GraphData(
 
     private fun getNearestBg(date: Long): Double {
         bgReadingsArray?.let { bgReadingsArray ->
-            for (r in bgReadingsArray.indices) {
-                val reading = bgReadingsArray[r]
+            for (reading in bgReadingsArray) {
                 if (reading.timestamp > date) continue
                 return Profile.fromMgdlToUnits(reading.value, units)
             }
@@ -312,7 +324,7 @@ class GraphData(
                 time += 5 * 60 * 1000L
                 continue
             }
-            total = iobCobCalculatorPlugin.calculateFromTreatmentsAndTempsSynchronized(time, profile)
+            total = iobCobCalculator.calculateFromTreatmentsAndTemps(time, profile)
             val act: Double = total.activity
             if (time <= now) actArrayHist.add(ScaledDataPoint(time, act, actScale)) else actArrayPrediction.add(ScaledDataPoint(time, act, actScale))
             maxIAValue = max(maxIAValue, abs(act))
@@ -353,10 +365,10 @@ class GraphData(
                 time += 5 * 60 * 1000L
                 continue
             }
-            val deviation = if (devBgiScale) iobCobCalculatorPlugin.getAutosensData(time)?.deviation
+            val deviation = if (devBgiScale) iobCobCalculator.ads.getAutosensDataAtTime(time)?.deviation
                 ?: 0.0 else 0.0
 
-            total = iobCobCalculatorPlugin.calculateFromTreatmentsAndTempsSynchronized(time, profile)
+            total = iobCobCalculator.calculateFromTreatmentsAndTemps(time, profile)
             val bgi: Double = total.activity * profile.getIsfMgdl(time) * 5.0
             if (time <= now) bgiArrayHist.add(ScaledDataPoint(time, bgi, bgiScale)) else bgiArrayPrediction.add(ScaledDataPoint(time, bgi, bgiScale))
             maxBGIValue = max(maxBGIValue, max(abs(bgi), deviation))
@@ -395,8 +407,8 @@ class GraphData(
             var iob = 0.0
             var absIob = 0.0
             if (profile != null) {
-                iob = iobCobCalculatorPlugin.calculateFromTreatmentsAndTempsSynchronized(time, profile).iob
-                if (absScale) absIob = iobCobCalculatorPlugin.calculateAbsInsulinFromTreatmentsAndTempsSynchronized(time).iob
+                iob = iobCobCalculator.calculateFromTreatmentsAndTemps(time, profile).iob
+                if (absScale) absIob = iobCobCalculator.calculateAbsInsulinFromTreatmentsAndTemps(time).iob
             }
             if (abs(lastIob - iob) > 0.02) {
                 if (abs(lastIob - iob) > 0.2) iobArray.add(ScaledDataPoint(time, lastIob, iobScale))
@@ -413,25 +425,25 @@ class GraphData(
             it.thickness = 3
         }
         if (showPrediction) {
-            val autosensData = iobCobCalculatorPlugin.getLastAutosensDataSynchronized("GraphData")
+            val autosensData = iobCobCalculator.getLastAutosensDataWithWaitForCalculationFinish("GraphData")
             val lastAutosensResult = autosensData?.autosensResult ?: AutosensResult()
-            val isTempTarget = repository.getTemporaryTargetActiveAt(dateUtil._now()).blockingGet() is ValueWrapper.Existing
+            val isTempTarget = repository.getTemporaryTargetActiveAt(dateUtil.now()).blockingGet() is ValueWrapper.Existing
             val iobPrediction: MutableList<DataPointWithLabelInterface> = ArrayList()
-            val iobPredictionArray = iobCobCalculatorPlugin.calculateIobArrayForSMB(lastAutosensResult, SMBDefaults.exercise_mode, SMBDefaults.half_basal_exercise_target, isTempTarget)
+            val iobPredictionArray = iobCobCalculator.calculateIobArrayForSMB(lastAutosensResult, SMBDefaults.exercise_mode, SMBDefaults.half_basal_exercise_target, isTempTarget)
             for (i in iobPredictionArray) {
                 iobPrediction.add(i.setColor(resourceHelper.gc(R.color.iobPredAS)))
                 maxIobValueFound = max(maxIobValueFound, abs(i.iob))
             }
             addSeries(PointsWithLabelGraphSeries(Array(iobPrediction.size) { i -> iobPrediction[i] }))
             val iobPrediction2: MutableList<DataPointWithLabelInterface> = ArrayList()
-            val iobPredictionArray2 = iobCobCalculatorPlugin.calculateIobArrayForSMB(AutosensResult(), SMBDefaults.exercise_mode, SMBDefaults.half_basal_exercise_target, isTempTarget)
+            val iobPredictionArray2 = iobCobCalculator.calculateIobArrayForSMB(AutosensResult(), SMBDefaults.exercise_mode, SMBDefaults.half_basal_exercise_target, isTempTarget)
             for (i in iobPredictionArray2) {
                 iobPrediction2.add(i.setColor(resourceHelper.gc(R.color.iobPred)))
                 maxIobValueFound = max(maxIobValueFound, abs(i.iob))
             }
             addSeries(PointsWithLabelGraphSeries(Array(iobPrediction2.size) { i -> iobPrediction2[i] }))
-            aapsLogger.debug(LTag.AUTOSENS, "IOB prediction for AS=" + DecimalFormatter.to2Decimal(lastAutosensResult.ratio) + ": " + iobCobCalculatorPlugin.iobArrayToString(iobPredictionArray))
-            aapsLogger.debug(LTag.AUTOSENS, "IOB prediction for AS=" + DecimalFormatter.to2Decimal(1.0) + ": " + iobCobCalculatorPlugin.iobArrayToString(iobPredictionArray2))
+            aapsLogger.debug(LTag.AUTOSENS, "IOB prediction for AS=" + DecimalFormatter.to2Decimal(lastAutosensResult.ratio) + ": " + iobCobCalculator.iobArrayToString(iobPredictionArray))
+            aapsLogger.debug(LTag.AUTOSENS, "IOB prediction for AS=" + DecimalFormatter.to2Decimal(1.0) + ": " + iobCobCalculator.iobArrayToString(iobPredictionArray2))
         }
         if (useForScale) {
             maxY = maxIobValueFound
@@ -452,7 +464,7 @@ class GraphData(
         while (time <= toTime) {
             val profile = profileFunction.getProfile(time)
             var iob = 0.0
-            if (profile != null) iob = iobCobCalculatorPlugin.calculateAbsInsulinFromTreatmentsAndTempsSynchronized(time).iob
+            if (profile != null) iob = iobCobCalculator.calculateAbsInsulinFromTreatmentsAndTemps(time).iob
             if (abs(lastIob - iob) > 0.02) {
                 if (abs(lastIob - iob) > 0.2) iobArray.add(ScaledDataPoint(time, lastIob, iobScale))
                 iobArray.add(ScaledDataPoint(time, iob, iobScale))
@@ -484,7 +496,7 @@ class GraphData(
         val cobScale = Scale()
         var time = fromTime
         while (time <= toTime) {
-            iobCobCalculatorPlugin.getAutosensData(time)?.let { autosensData ->
+            iobCobCalculator.ads.getAutosensDataAtTime(time)?.let { autosensData ->
                 val cob = autosensData.cob.toInt()
                 if (cob != lastCob) {
                     if (autosensData.carbsFromBolus > 0) cobArray.add(ScaledDataPoint(time, lastCob.toDouble(), cobScale))
@@ -529,12 +541,12 @@ class GraphData(
         while (time <= toTime) {
             // if align Dev Scale with BGI scale, then calculate BGI value, else bgi = 0.0
             val bgi: Double = if (devBgiScale) {
-                val profile = profileFunction.getProfile(time)
-                total = iobCobCalculatorPlugin.calculateFromTreatmentsAndTempsSynchronized(time, profile)
-                total.activity * (profile?.getIsfMgdl(time) ?: 0.0) * 5.0
+                val profile = profileFunction.getProfile(time) ?: continue
+                total = iobCobCalculator.calculateFromTreatmentsAndTemps(time, profile)
+                total.activity * profile.getIsfMgdl(time) * 5.0
             } else 0.0
 
-            iobCobCalculatorPlugin.getAutosensData(time)?.let { autosensData ->
+            iobCobCalculator.ads.getAutosensDataAtTime(time)?.let { autosensData ->
                 var color = resourceHelper.gc(R.color.deviationblack) // "="
                 if (autosensData.type == "" || autosensData.type == "non-meal") {
                     if (autosensData.pastSensitivity == "C") color = resourceHelper.gc(R.color.deviationgrey)
@@ -565,15 +577,15 @@ class GraphData(
     // scale in % of vertical size (like 0.3)
     fun addRatio(fromTime: Long, toTime: Long, useForScale: Boolean, scale: Double) {
         val ratioArray: MutableList<ScaledDataPoint> = ArrayList()
-        var maxRatioValueFound = 5.0                    //even if sens data equals 0 for all the period, minimum scale is between 95% and 105%
-        var minRatioValueFound = - maxRatioValueFound
-        val ratioScale = if (useForScale) Scale(100.0) else Scale()
+        var maxRatioValueFound = Double.MIN_VALUE
+        var minRatioValueFound = Double.MAX_VALUE
+        val ratioScale = Scale()
         var time = fromTime
         while (time <= toTime) {
-            iobCobCalculatorPlugin.getAutosensData(time)?.let { autosensData ->
-                ratioArray.add(ScaledDataPoint(time, 100.0 * (autosensData.autosensResult.ratio - 1 ), ratioScale))
-                maxRatioValueFound = max(maxRatioValueFound, 100.0 * (autosensData.autosensResult.ratio - 1))
-                minRatioValueFound = min(minRatioValueFound, 100.0 * (autosensData.autosensResult.ratio - 1))
+            iobCobCalculator.ads.getAutosensDataAtTime(time)?.let { autosensData ->
+                ratioArray.add(ScaledDataPoint(time, autosensData.autosensResult.ratio - 1, ratioScale))
+                maxRatioValueFound = max(maxRatioValueFound, autosensData.autosensResult.ratio - 1)
+                minRatioValueFound = min(minRatioValueFound, autosensData.autosensResult.ratio - 1)
             }
             time += 5 * 60 * 1000L
         }
@@ -584,11 +596,10 @@ class GraphData(
             it.thickness = 3
         })
         if (useForScale) {
-            maxY = 100.0 + max(maxRatioValueFound, abs(minRatioValueFound))
-            minY = 100.0 - max(maxRatioValueFound, abs(minRatioValueFound))
-            ratioScale.setMultiplier(1.0)
-        } else
-            ratioScale.setMultiplier(maxY * scale / max(maxRatioValueFound, abs(minRatioValueFound)))
+            maxY = max(maxRatioValueFound, abs(minRatioValueFound))
+            minY = -maxY
+        }
+        ratioScale.setMultiplier(maxY * scale / max(maxRatioValueFound, abs(minRatioValueFound)))
     }
 
     // scale in % of vertical size (like 0.3)
@@ -601,7 +612,7 @@ class GraphData(
         val dsMinScale = Scale()
         var time = fromTime
         while (time <= toTime) {
-            iobCobCalculatorPlugin.getAutosensData(time)?.let { autosensData ->
+            iobCobCalculator.ads.getAutosensDataAtTime(time)?.let { autosensData ->
                 dsMaxArray.add(ScaledDataPoint(time, autosensData.slopeFromMaxDeviation, dsMaxScale))
                 dsMinArray.add(ScaledDataPoint(time, autosensData.slopeFromMinDeviation, dsMinScale))
                 maxFromMaxValueFound = max(maxFromMaxValueFound, abs(autosensData.slopeFromMaxDeviation))

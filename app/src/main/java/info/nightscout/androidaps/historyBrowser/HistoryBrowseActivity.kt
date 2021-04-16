@@ -16,14 +16,13 @@ import info.nightscout.androidaps.activities.NoSplashAppCompatActivity
 import info.nightscout.androidaps.databinding.ActivityHistorybrowseBinding
 import info.nightscout.androidaps.events.EventCustomCalculationFinished
 import info.nightscout.androidaps.events.EventRefreshOverview
-import info.nightscout.androidaps.interfaces.ActivePluginProvider
+import info.nightscout.androidaps.interfaces.ActivePlugin
 import info.nightscout.androidaps.interfaces.ProfileFunction
 import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.logging.LTag
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper
 import info.nightscout.androidaps.plugins.general.overview.OverviewMenus
 import info.nightscout.androidaps.plugins.general.overview.graphData.GraphData
-import info.nightscout.androidaps.plugins.iob.iobCobCalculator.events.EventAutosensBgLoaded
 import info.nightscout.androidaps.events.EventAutosensCalculationFinished
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.events.EventIobCalculationProgress
 import info.nightscout.androidaps.utils.DateUtil
@@ -31,7 +30,7 @@ import info.nightscout.androidaps.utils.DefaultValueHelper
 import info.nightscout.androidaps.utils.FabricPrivacy
 import info.nightscout.androidaps.utils.T
 import info.nightscout.androidaps.utils.buildHelper.BuildHelper
-import info.nightscout.androidaps.utils.extensions.toVisibility
+import info.nightscout.androidaps.extensions.toVisibility
 import info.nightscout.androidaps.utils.rx.AapsSchedulers
 import info.nightscout.androidaps.utils.sharedPreferences.SP
 import io.reactivex.disposables.CompositeDisposable
@@ -52,7 +51,7 @@ class HistoryBrowseActivity : NoSplashAppCompatActivity() {
     @Inject lateinit var defaultValueHelper: DefaultValueHelper
     @Inject lateinit var iobCobCalculatorPluginHistory: IobCobCalculatorPluginHistory
     @Inject lateinit var treatmentsPluginHistory: TreatmentsPluginHistory
-    @Inject lateinit var activePlugin: ActivePluginProvider
+    @Inject lateinit var activePlugin: ActivePlugin
     @Inject lateinit var buildHelper: BuildHelper
     @Inject lateinit var fabricPrivacy: FabricPrivacy
     @Inject lateinit var overviewMenus: OverviewMenus
@@ -182,16 +181,6 @@ class HistoryBrowseActivity : NoSplashAppCompatActivity() {
             }, fabricPrivacy::logException)
         )
         disposable.add(rxBus
-            .toObservable(EventAutosensBgLoaded::class.java)
-            .observeOn(aapsSchedulers.io)
-            .subscribe({
-                // catch only events from iobCobCalculatorPluginHistory
-                if (it.cause is EventCustomCalculationFinished) {
-                    updateGUI("EventAutosensCalculationFinished", bgOnly = true)
-                }
-            }, fabricPrivacy::logException)
-        )
-        disposable.add(rxBus
             .toObservable(EventIobCalculationProgress::class.java)
             .observeOn(aapsSchedulers.main)
             .subscribe({ binding.overviewIobcalculationprogess.text = it.progress }, fabricPrivacy::logException)
@@ -306,7 +295,8 @@ class HistoryBrowseActivity : NoSplashAppCompatActivity() {
                 graphData.addInRangeArea(fromTime, toTime, lowLine, highLine)
 
                 // **** BG ****
-                graphData.addBgReadings(fromTime, toTime, lowLine, highLine, null)
+                graphData.addBgReadings(fromTime, toTime, highLine, null)
+                if (buildHelper.isDev()) graphData.addBucketedData(fromTime, toTime)
 
                 // add target line
                 graphData.addTargetLine(fromTime, toTime, profile, null)

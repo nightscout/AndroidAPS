@@ -18,30 +18,25 @@ import info.nightscout.androidaps.activities.ErrorHelperActivity;
 import info.nightscout.androidaps.data.DetailedBolusInfo;
 import info.nightscout.androidaps.data.Profile;
 import info.nightscout.androidaps.data.PumpEnactResult;
-import info.nightscout.androidaps.database.AppRepository;
-import info.nightscout.androidaps.database.entities.TherapyEvent;
-import info.nightscout.androidaps.database.transactions.InsertTherapyEventIfNewTransaction;
 import info.nightscout.androidaps.db.OmnipodHistoryRecord;
-import info.nightscout.androidaps.db.Source;
-import info.nightscout.androidaps.db.TemporaryBasal;
 import info.nightscout.androidaps.events.Event;
 import info.nightscout.androidaps.events.EventRefreshOverview;
-import info.nightscout.androidaps.interfaces.ActivePluginProvider;
+import info.nightscout.androidaps.extensions.PumpStateExtensionKt;
+import info.nightscout.androidaps.interfaces.ActivePlugin;
 import info.nightscout.androidaps.interfaces.DatabaseHelperInterface;
+import info.nightscout.androidaps.interfaces.PumpSync;
 import info.nightscout.androidaps.logging.AAPSLogger;
 import info.nightscout.androidaps.logging.LTag;
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper;
-import info.nightscout.androidaps.plugins.general.nsclient.NSUpload;
 import info.nightscout.androidaps.plugins.general.overview.events.EventDismissNotification;
 import info.nightscout.androidaps.plugins.general.overview.events.EventNewNotification;
 import info.nightscout.androidaps.plugins.general.overview.events.EventOverviewBolusProgress;
 import info.nightscout.androidaps.plugins.general.overview.notifications.Notification;
-import info.nightscout.androidaps.plugins.pump.common.data.TempBasalPair;
 import info.nightscout.androidaps.plugins.pump.common.defs.PumpType;
+import info.nightscout.androidaps.plugins.pump.common.defs.TempBasalPair;
 import info.nightscout.androidaps.plugins.pump.common.utils.ByteUtil;
 import info.nightscout.androidaps.plugins.pump.omnipod.common.definition.OmnipodCommandType;
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.R;
-import info.nightscout.androidaps.plugins.pump.omnipod.eros.data.ActiveBolus;
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.definition.OmnipodErosStorageKeys;
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.definition.PodHistoryEntryType;
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.driver.communication.message.response.StatusResponse;
@@ -84,10 +79,10 @@ import info.nightscout.androidaps.plugins.pump.omnipod.eros.event.EventOmnipodEr
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.rileylink.manager.OmnipodRileyLinkCommunicationManager;
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.util.AapsOmnipodUtil;
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.util.OmnipodAlertUtil;
+import info.nightscout.androidaps.utils.T;
 import info.nightscout.androidaps.utils.resources.ResourceHelper;
 import info.nightscout.androidaps.utils.rx.AapsSchedulers;
 import info.nightscout.androidaps.utils.sharedPreferences.SP;
-import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.subjects.SingleSubject;
 
 @Singleton
@@ -99,14 +94,13 @@ public class AapsOmnipodErosManager {
     private final RxBusWrapper rxBus;
     private final ResourceHelper resourceHelper;
     private final HasAndroidInjector injector;
-    private final ActivePluginProvider activePlugin;
+    private final ActivePlugin activePlugin;
     private final SP sp;
     private final OmnipodManager delegate;
     private final DatabaseHelperInterface databaseHelper;
     private final OmnipodAlertUtil omnipodAlertUtil;
-    private final NSUpload nsUpload;
     private final Context context;
-    private final AppRepository repository;
+    private final PumpSync pumpSync;
 
     private boolean basalBeepsEnabled;
     private boolean bolusBeepsEnabled;
@@ -123,9 +117,6 @@ public class AapsOmnipodErosManager {
     private boolean showRileyLinkBatteryLevel;
     private boolean batteryChangeLoggingEnabled;
 
-    private final CompositeDisposable disposable = new CompositeDisposable();
-    private boolean aBoolean;
-
     @Inject
     public AapsOmnipodErosManager(OmnipodRileyLinkCommunicationManager communicationService,
                                   PodStateManager podStateManager,
@@ -136,12 +127,11 @@ public class AapsOmnipodErosManager {
                                   SP sp,
                                   ResourceHelper resourceHelper,
                                   HasAndroidInjector injector,
-                                  ActivePluginProvider activePlugin,
+                                  ActivePlugin activePlugin,
                                   DatabaseHelperInterface databaseHelper,
                                   OmnipodAlertUtil omnipodAlertUtil,
-                                  NSUpload nsUpload,
                                   Context context,
-                                  AppRepository repository) {
+                                  PumpSync pumpSync) {
 
         this.podStateManager = podStateManager;
         this.aapsOmnipodUtil = aapsOmnipodUtil;
@@ -153,9 +143,8 @@ public class AapsOmnipodErosManager {
         this.activePlugin = activePlugin;
         this.databaseHelper = databaseHelper;
         this.omnipodAlertUtil = omnipodAlertUtil;
-        this.nsUpload = nsUpload;
         this.context = context;
-        this.repository = repository;
+        this.pumpSync = pumpSync;
 
         delegate = new OmnipodManager(aapsLogger, aapsSchedulers, communicationService, podStateManager);
 
@@ -224,8 +213,8 @@ public class AapsOmnipodErosManager {
         addToHistory(System.currentTimeMillis(), PodHistoryEntryType.INSERT_CANNULA, result.getComment(), result.getSuccess());
 
         if (result.getSuccess()) {
-            uploadCareportalEvent(System.currentTimeMillis() - 1000, TherapyEvent.Type.INSULIN_CHANGE);
-            uploadCareportalEvent(System.currentTimeMillis(), TherapyEvent.Type.CANNULA_CHANGE);
+            uploadCareportalEvent(System.currentTimeMillis() - 1000, DetailedBolusInfo.EventType.INSULIN_CHANGE);
+            uploadCareportalEvent(System.currentTimeMillis(), DetailedBolusInfo.EventType.CANNULA_CHANGE);
 
             dismissNotification(Notification.OMNIPOD_POD_NOT_ATTACHED);
 
@@ -374,11 +363,11 @@ public class AapsOmnipodErosManager {
     public PumpEnactResult bolus(DetailedBolusInfo detailedBolusInfo) {
         OmnipodManager.BolusCommandResult bolusCommandResult;
 
-        boolean beepsEnabled = detailedBolusInfo.isSMB ? isSmbBeepsEnabled() : isBolusBeepsEnabled();
+        boolean beepsEnabled = detailedBolusInfo.getBolusType() == DetailedBolusInfo.BolusType.SMB ? isSmbBeepsEnabled() : isBolusBeepsEnabled();
 
         Date bolusStarted;
         try {
-            bolusCommandResult = executeCommand(() -> delegate.bolus(PumpType.Omnipod_Eros.determineCorrectBolusSize(detailedBolusInfo.insulin), beepsEnabled, beepsEnabled, detailedBolusInfo.isSMB ? null :
+            bolusCommandResult = executeCommand(() -> delegate.bolus(PumpType.OMNIPOD_EROS.determineCorrectBolusSize(detailedBolusInfo.insulin), beepsEnabled, beepsEnabled, detailedBolusInfo.getBolusType() == DetailedBolusInfo.BolusType.SMB ? null :
                     (estimatedUnitsDelivered, percentage) -> {
                         EventOverviewBolusProgress progressUpdateEvent = EventOverviewBolusProgress.INSTANCE;
                         progressUpdateEvent.setStatus(getStringResource(R.string.bolusdelivering, detailedBolusInfo.insulin));
@@ -395,15 +384,16 @@ public class AapsOmnipodErosManager {
 
         if (OmnipodManager.CommandDeliveryStatus.UNCERTAIN_FAILURE.equals(bolusCommandResult.getCommandDeliveryStatus())) {
             // For safety reasons, we treat this as a bolus that has successfully been delivered, in order to prevent insulin overdose
-            if (detailedBolusInfo.isSMB) {
+            if (detailedBolusInfo.getBolusType() == DetailedBolusInfo.BolusType.SMB) {
                 showNotification(Notification.OMNIPOD_UNCERTAIN_SMB, getStringResource(R.string.omnipod_eros_error_bolus_failed_uncertain_smb, detailedBolusInfo.insulin), Notification.URGENT, isNotificationUncertainSmbSoundEnabled() ? R.raw.boluserror : null);
             } else {
                 showErrorDialog(getStringResource(R.string.omnipod_eros_error_bolus_failed_uncertain), isNotificationUncertainBolusSoundEnabled() ? R.raw.boluserror : null);
             }
         }
 
-        detailedBolusInfo.date = bolusStarted.getTime();
-        detailedBolusInfo.source = Source.PUMP;
+        detailedBolusInfo.timestamp = bolusStarted.getTime();
+        detailedBolusInfo.setPumpType(PumpType.OMNIPOD_EROS);
+        detailedBolusInfo.setPumpSerial(serialNumber());
 
         // Store the current bolus for in case the app crashes, gets killed, the phone dies or whatever before the bolus finishes
         // If we have a stored value for the current bolus on startup, we'll create a Treatment for it
@@ -423,8 +413,7 @@ public class AapsOmnipodErosManager {
         //
         // I discussed this with the AAPS team but nobody seems to care so we're stuck with this ugly workaround for now
         try {
-            ActiveBolus activeBolus = ActiveBolus.fromDetailedBolusInfo(detailedBolusInfo);
-            sp.putString(OmnipodErosStorageKeys.Preferences.ACTIVE_BOLUS, aapsOmnipodUtil.getGsonInstance().toJson(activeBolus));
+            sp.putString(OmnipodErosStorageKeys.Preferences.ACTIVE_BOLUS, detailedBolusInfo.toJsonString());
             aapsLogger.debug(LTag.PUMP, "Stored active bolus to SP for recovery");
         } catch (Exception ex) {
             aapsLogger.error(LTag.PUMP, "Failed to store active bolus to SP", ex);
@@ -490,7 +479,7 @@ public class AapsOmnipodErosManager {
     public PumpEnactResult setTemporaryBasal(TempBasalPair tempBasalPair) {
         boolean beepsEnabled = isTbrBeepsEnabled();
         try {
-            executeCommand(() -> delegate.setTemporaryBasal(PumpType.Omnipod_Eros.determineCorrectBasalSize(tempBasalPair.getInsulinRate()), Duration.standardMinutes(tempBasalPair.getDurationMinutes()), beepsEnabled, beepsEnabled));
+            executeCommand(() -> delegate.setTemporaryBasal(PumpType.OMNIPOD_EROS.determineCorrectBasalSize(tempBasalPair.getInsulinRate()), Duration.standardMinutes(tempBasalPair.getDurationMinutes()), beepsEnabled, beepsEnabled));
         } catch (CommandFailedAfterChangingDeliveryStatusException ex) {
             String errorMessage = translateException(ex.getCause());
             addFailureToHistory(PodHistoryEntryType.SET_TEMPORARY_BASAL, errorMessage);
@@ -532,7 +521,7 @@ public class AapsOmnipodErosManager {
 
         return new PumpEnactResult(injector)
                 .duration(tempBasalPair.getDurationMinutes())
-                .absolute(PumpType.Omnipod_Eros.determineCorrectBasalSize(tempBasalPair.getInsulinRate()))
+                .absolute(PumpType.OMNIPOD_EROS.determineCorrectBasalSize(tempBasalPair.getInsulinRate()))
                 .success(true).enacted(true);
     }
 
@@ -552,13 +541,12 @@ public class AapsOmnipodErosManager {
 
         long pumpId = addSuccessToHistory(PodHistoryEntryType.CANCEL_TEMPORARY_BASAL, null);
 
-        TemporaryBasal tempBasal = new TemporaryBasal(injector) //
-                .date(System.currentTimeMillis()) //
-                .duration(0) //
-                .pumpId(pumpId) //
-                .source(Source.PUMP);
-
-        activePlugin.getActiveTreatments().addToHistoryTempBasal(tempBasal);
+        pumpSync.syncStopTemporaryBasalWithPumpId(
+                System.currentTimeMillis(),
+                pumpId,
+                PumpType.OMNIPOD_EROS,
+                serialNumber()
+        );
 
         sendEvent(new EventDismissNotification(Notification.OMNIPOD_TBR_ALERTS));
 
@@ -705,14 +693,17 @@ public class AapsOmnipodErosManager {
     public void addBolusToHistory(DetailedBolusInfo originalDetailedBolusInfo) {
         DetailedBolusInfo detailedBolusInfo = originalDetailedBolusInfo.copy();
 
-        detailedBolusInfo.pumpId = addSuccessToHistory(detailedBolusInfo.date, PodHistoryEntryType.SET_BOLUS, detailedBolusInfo.insulin + ";" + detailedBolusInfo.carbs);
+        detailedBolusInfo.setBolusTimestamp(detailedBolusInfo.timestamp);
+        detailedBolusInfo.setPumpType(PumpType.OMNIPOD_EROS);
+        detailedBolusInfo.setPumpSerial(serialNumber());
+        detailedBolusInfo.setBolusPumpId(addSuccessToHistory(detailedBolusInfo.timestamp, PodHistoryEntryType.SET_BOLUS, detailedBolusInfo.insulin + ";" + detailedBolusInfo.carbs));
 
         if (detailedBolusInfo.carbs > 0 && detailedBolusInfo.carbTime > 0) {
             // split out a separate carbs record without a pumpId
             DetailedBolusInfo carbInfo = new DetailedBolusInfo();
-            carbInfo.date = detailedBolusInfo.date + detailedBolusInfo.carbTime * 60L * 1000L;
+            carbInfo.setCarbsTimestamp(detailedBolusInfo.timestamp + detailedBolusInfo.carbTime * 60L * 1000L);
             carbInfo.carbs = detailedBolusInfo.carbs;
-            carbInfo.source = Source.USER;
+            carbInfo.setPumpType(PumpType.USER);
             activePlugin.getActiveTreatments().addToHistoryTreatment(carbInfo, false);
 
             // remove carbs from bolusInfo to not trigger any unwanted code paths in
@@ -729,14 +720,16 @@ public class AapsOmnipodErosManager {
 
             long pumpId = addSuccessToHistory(System.currentTimeMillis(), PodHistoryEntryType.SET_FAKE_SUSPENDED_TEMPORARY_BASAL, null);
 
-            TemporaryBasal temporaryBasal = new TemporaryBasal(injector) //
-                    .date(System.currentTimeMillis()) //
-                    .absolute(0.0) //
-                    .duration((int) OmnipodConstants.SERVICE_DURATION.getStandardMinutes()) //
-                    .source(Source.PUMP) //
-                    .pumpId(pumpId);
-
-            activePlugin.getActiveTreatments().addToHistoryTempBasal(temporaryBasal);
+            pumpSync.syncTemporaryBasalWithPumpId(
+                    System.currentTimeMillis(),
+                    0.0,
+                    OmnipodConstants.SERVICE_DURATION.getMillis(),
+                    true,
+                    PumpSync.TemporaryBasalType.EMULATED_PUMP_SUSPEND,
+                    pumpId,
+                    PumpType.OMNIPOD_EROS,
+                    serialNumber()
+            );
         }
     }
 
@@ -745,20 +738,19 @@ public class AapsOmnipodErosManager {
             aapsLogger.debug(LTag.PUMP, "Cancelling fake suspended TBR");
             long pumpId = addSuccessToHistory(System.currentTimeMillis(), PodHistoryEntryType.CANCEL_FAKE_SUSPENDED_TEMPORARY_BASAL, null);
 
-            TemporaryBasal temporaryBasal = new TemporaryBasal(injector) //
-                    .date(System.currentTimeMillis()) //
-                    .duration(0) //
-                    .source(Source.PUMP) //
-                    .pumpId(pumpId);
-
-            activePlugin.getActiveTreatments().addToHistoryTempBasal(temporaryBasal);
+            pumpSync.syncStopTemporaryBasalWithPumpId(
+                    System.currentTimeMillis(),
+                    pumpId,
+                    PumpType.OMNIPOD_EROS,
+                    serialNumber()
+            );
         }
     }
 
     public boolean hasSuspendedFakeTbr() {
-        if (activePlugin.getActiveTreatments().isTempBasalInProgress()) {
-            TemporaryBasal tempBasal = activePlugin.getActiveTreatments().getTempBasalFromHistory(System.currentTimeMillis());
-            OmnipodHistoryRecord historyRecord = databaseHelper.findOmnipodHistoryRecordByPumpId(tempBasal.pumpId);
+        PumpSync.PumpState pumpState = pumpSync.expectedPumpState();
+        if (pumpState.getTemporaryBasal() != null && pumpState.getTemporaryBasal().getPumpId() != null) {
+            OmnipodHistoryRecord historyRecord = databaseHelper.findOmnipodHistoryRecordByPumpId(pumpState.getTemporaryBasal().getPumpId());
             return historyRecord != null && PodHistoryEntryType.getByCode(historyRecord.getPodEntryTypeCode()).equals(PodHistoryEntryType.SET_FAKE_SUSPENDED_TEMPORARY_BASAL);
         }
         return false;
@@ -773,13 +765,12 @@ public class AapsOmnipodErosManager {
 
         long pumpId = addSuccessToHistory(PodHistoryEntryType.CANCEL_TEMPORARY_BASAL_BY_DRIVER, null);
 
-        TemporaryBasal temporaryBasal = new TemporaryBasal(injector) //
-                .date(time) //
-                .duration(0) //
-                .source(Source.PUMP) //
-                .pumpId(pumpId);
-
-        activePlugin.getActiveTreatments().addToHistoryTempBasal(temporaryBasal);
+        pumpSync.syncStopTemporaryBasalWithPumpId(
+                time,
+                pumpId,
+                PumpType.OMNIPOD_EROS,
+                serialNumber()
+        );
 
         sendEvent(new EventRefreshOverview("AapsOmnipodManager.reportCancelledTbr()", false));
     }
@@ -790,39 +781,44 @@ public class AapsOmnipodErosManager {
 
     // Cancels current TBR and adds a new TBR for the remaining duration
     private void splitActiveTbr() {
-        TemporaryBasal previouslyRunningTempBasal = activePlugin.getActiveTreatments().getTempBasalFromHistory(System.currentTimeMillis());
+        PumpSync.PumpState pumpState = pumpSync.expectedPumpState();
+        PumpSync.PumpState.TemporaryBasal previouslyRunningTempBasal = pumpSync.expectedPumpState().getTemporaryBasal();
         if (previouslyRunningTempBasal != null) {
             // Cancel the previously running TBR and start a NEW TBR here for the remaining duration,
             // so that we only cancel the remaining part when recovering from an uncertain failure in the cancellation
-            int minutesRemaining = previouslyRunningTempBasal.getPlannedRemainingMinutesRoundedUp();
+            int minutesRemaining = PumpStateExtensionKt.getPlannedRemainingMinutesRoundedUp(previouslyRunningTempBasal);
 
             if (minutesRemaining > 0) {
                 reportCancelledTbr(System.currentTimeMillis() - 1000);
 
-                TempBasalPair newTempBasalPair = new TempBasalPair(previouslyRunningTempBasal.absoluteRate, false, minutesRemaining);
+                TempBasalPair newTempBasalPair = new TempBasalPair(previouslyRunningTempBasal.getRate(), false, minutesRemaining);
                 long pumpId = addSuccessToHistory(PodHistoryEntryType.SPLIT_TEMPORARY_BASAL, newTempBasalPair);
 
-                TemporaryBasal tempBasal = new TemporaryBasal(injector) //
-                        .date(System.currentTimeMillis()) //
-                        .absolute(previouslyRunningTempBasal.absoluteRate)
-                        .duration(minutesRemaining) //
-                        .pumpId(pumpId) //
-                        .source(Source.PUMP);
-
-                activePlugin.getActiveTreatments().addToHistoryTempBasal(tempBasal);
+                pumpSync.syncTemporaryBasalWithPumpId(
+                        System.currentTimeMillis(),
+                        previouslyRunningTempBasal.getRate(),
+                        minutesRemaining,
+                        true,
+                        PumpSync.TemporaryBasalType.NORMAL,
+                        pumpId,
+                        PumpType.OMNIPOD_EROS,
+                        serialNumber()
+                );
             }
         }
     }
 
     private void addTempBasalTreatment(long time, long pumpId, TempBasalPair tempBasalPair) {
-        TemporaryBasal tempStart = new TemporaryBasal(injector) //
-                .date(time) //
-                .duration(tempBasalPair.getDurationMinutes()) //
-                .absolute(tempBasalPair.getInsulinRate()) //
-                .pumpId(pumpId) //
-                .source(Source.PUMP);
-
-        activePlugin.getActiveTreatments().addToHistoryTempBasal(tempStart);
+        pumpSync.syncTemporaryBasalWithPumpId(
+                time,
+                tempBasalPair.getInsulinRate(),
+                T.mins(tempBasalPair.getDurationMinutes()).msecs(),
+                true,
+                PumpSync.TemporaryBasalType.NORMAL,
+                pumpId,
+                PumpType.OMNIPOD_EROS,
+                serialNumber()
+        );
     }
 
     private long addSuccessToHistory(PodHistoryEntryType entryType, Object data) {
@@ -995,19 +991,18 @@ public class AapsOmnipodErosManager {
         }
         List<BasalScheduleEntry> entries = new ArrayList<>();
         for (Profile.ProfileValue basalValue : basalValues) {
-            entries.add(new BasalScheduleEntry(PumpType.Omnipod_Eros.determineCorrectBasalSize(basalValue.value),
+            entries.add(new BasalScheduleEntry(PumpType.OMNIPOD_EROS.determineCorrectBasalSize(basalValue.value),
                     Duration.standardSeconds(basalValue.timeAsSeconds)));
         }
 
         return new BasalSchedule(entries);
     }
 
-    private void uploadCareportalEvent(long date, TherapyEvent.Type event) {
-        if (repository.getTherapyEventByTimestamp(event, date) != null) return;
-        disposable.add(repository.runTransactionForResult(new InsertTherapyEventIfNewTransaction(date, event, 0, null, sp.getString("careportal_enteredby", "AndroidAPS"), null, null, TherapyEvent.GlucoseUnit.MGDL))
-                .subscribe(
-                        result -> result.getInserted().forEach(nsUpload::uploadEvent),
-                        error -> aapsLogger.error(LTag.DATABASE, "Error while saving therapy event", error)
-                ));
+    private void uploadCareportalEvent(long date, DetailedBolusInfo.EventType event) {
+        pumpSync.insertTherapyEventIfNewWithTimestamp(date, event, null, null, PumpType.OMNIPOD_EROS, Integer.toString(podStateManager.getAddress()));
+    }
+
+    public String serialNumber() {
+        return podStateManager.isPodInitialized() ? String.valueOf(podStateManager.getAddress()) : "-";
     }
 }

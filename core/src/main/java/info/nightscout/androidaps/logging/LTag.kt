@@ -9,8 +9,6 @@ enum class LTag(val tag: String, val defaultValue : Boolean = true, val requires
     CONFIGBUILDER("CONFIGBUILDER"),
     CONSTRAINTS("CONSTRAINTS"),
     DATABASE("DATABASE"),
-    DATAFOOD("DATAFOOD", defaultValue = false),
-    DATASERVICE("DATASERVICE"),
     DATATREATMENTS("DATATREATMENTS"),
     EVENTS("EVENTS", defaultValue = false, requiresRestart = true),
     GLUCOSE("GLUCOSE", defaultValue = false),

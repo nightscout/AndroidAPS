@@ -17,7 +17,9 @@ import androidx.recyclerview.widget.LinearSmoothScroller
 import androidx.recyclerview.widget.RecyclerView
 import dagger.android.support.DaggerFragment
 import info.nightscout.androidaps.R
-import info.nightscout.androidaps.database.entities.UserEntry.*
+import info.nightscout.androidaps.database.entities.UserEntry.Action
+import info.nightscout.androidaps.database.entities.UserEntry.Sources
+import info.nightscout.androidaps.database.entities.ValueWithUnit
 import info.nightscout.androidaps.databinding.ObjectivesFragmentBinding
 import info.nightscout.androidaps.databinding.ObjectivesItemBinding
 import info.nightscout.androidaps.dialogs.NtpProgressDialog
@@ -235,7 +237,7 @@ class ObjectivesFragment : DaggerFragment() {
             holder.binding.verify.setOnClickListener {
                 receiverStatusStore.updateNetworkStatus()
                 if (binding.fake.isChecked) {
-                    objective.accomplishedOn = DateUtil.now()
+                    objective.accomplishedOn = dateUtil.now()
                     scrollToCurrentObjective()
                     startUpdateTimer()
                     rxBus.send(EventObjectivesUpdateGui())
@@ -247,7 +249,7 @@ class ObjectivesFragment : DaggerFragment() {
                         rxBus.send(EventNtpStatus(resourceHelper.gs(R.string.timedetection), 0))
                         sntpClient.ntpTime(object : SntpClient.Callback() {
                             override fun run() {
-                                aapsLogger.debug("NTP time: $time System time: ${DateUtil.now()}")
+                                aapsLogger.debug("NTP time: $time System time: ${dateUtil.now()}")
                                 SystemClock.sleep(300)
                                 if (!networkConnected) {
                                     rxBus.send(EventNtpStatus(resourceHelper.gs(R.string.notconnected), 99))
@@ -274,7 +276,7 @@ class ObjectivesFragment : DaggerFragment() {
             holder.binding.start.setOnClickListener {
                 receiverStatusStore.updateNetworkStatus()
                 if (binding.fake.isChecked) {
-                    objective.startedOn = DateUtil.now()
+                    objective.startedOn = dateUtil.now()
                     scrollToCurrentObjective()
                     startUpdateTimer()
                     rxBus.send(EventObjectivesUpdateGui())
@@ -286,7 +288,7 @@ class ObjectivesFragment : DaggerFragment() {
                         rxBus.send(EventNtpStatus(resourceHelper.gs(R.string.timedetection), 0))
                         sntpClient.ntpTime(object : SntpClient.Callback() {
                             override fun run() {
-                                aapsLogger.debug("NTP time: $time System time: ${DateUtil.now()}")
+                                aapsLogger.debug("NTP time: $time System time: ${dateUtil.now()}")
                                 SystemClock.sleep(300)
                                 if (!networkConnected) {
                                     rxBus.send(EventNtpStatus(resourceHelper.gs(R.string.notconnected), 99))
@@ -308,7 +310,8 @@ class ObjectivesFragment : DaggerFragment() {
             holder.binding.unstart.setOnClickListener {
                 activity?.let { activity ->
                     OKDialog.showConfirmation(activity, resourceHelper.gs(R.string.objectives), resourceHelper.gs(R.string.doyouwantresetstart), Runnable {
-                        uel.log(Action.OBJECTIVE_UNSTARTED, ValueWithUnit(position + 1, Units.None))
+                        uel.log(Action.OBJECTIVE_UNSTARTED, Sources.Objectives,
+                            ValueWithUnit.SimpleInt(position + 1))
                         objective.startedOn = 0
                         scrollToCurrentObjective()
                         rxBus.send(EventObjectivesUpdateGui())

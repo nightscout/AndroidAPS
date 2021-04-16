@@ -7,19 +7,13 @@ import android.net.Uri
 import android.provider.Settings
 import androidx.appcompat.app.AppCompatActivity
 import dagger.android.HasAndroidInjector
-import info.nightscout.androidaps.Config
 import info.nightscout.androidaps.Constants
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.dialogs.ProfileSwitchDialog
 import info.nightscout.androidaps.events.EventPumpStatusChanged
-import info.nightscout.androidaps.interfaces.ActivePluginProvider
-import info.nightscout.androidaps.interfaces.CommandQueueProvider
-import info.nightscout.androidaps.interfaces.ImportExportPrefsInterface
-import info.nightscout.androidaps.interfaces.PluginType
-import info.nightscout.androidaps.interfaces.ProfileFunction
+import info.nightscout.androidaps.interfaces.*
 import info.nightscout.androidaps.plugins.aps.loop.LoopPlugin
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper
-import info.nightscout.androidaps.plugins.configBuilder.ConfigBuilderPlugin
 import info.nightscout.androidaps.plugins.constraints.objectives.ObjectivesFragment
 import info.nightscout.androidaps.plugins.constraints.objectives.ObjectivesPlugin
 import info.nightscout.androidaps.plugins.general.nsclient.NSClientPlugin
@@ -36,6 +30,7 @@ import info.nightscout.androidaps.setupwizard.elements.*
 import info.nightscout.androidaps.setupwizard.events.EventSWUpdate
 import info.nightscout.androidaps.utils.AndroidPermission
 import info.nightscout.androidaps.utils.CryptoUtil
+import info.nightscout.androidaps.utils.buildHelper.ConfigImpl
 import info.nightscout.androidaps.utils.extensions.isRunningTest
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 import info.nightscout.androidaps.utils.sharedPreferences.SP
@@ -52,17 +47,17 @@ class SWDefinition @Inject constructor(
     private val sp: SP,
     private val profileFunction: ProfileFunction,
     private val localProfilePlugin: LocalProfilePlugin,
-    private val activePlugin: ActivePluginProvider,
+    private val activePlugin: ActivePlugin,
     private val commandQueue: CommandQueueProvider,
     private val objectivesPlugin: ObjectivesPlugin,
-    private val configBuilderPlugin: ConfigBuilderPlugin,
+    private val configBuilder: ConfigBuilder,
     private val loopPlugin: LoopPlugin,
     private val nsClientPlugin: NSClientPlugin,
     private val nsProfilePlugin: NSProfilePlugin,
-    private val importExportPrefs: ImportExportPrefsInterface,
+    private val importExportPrefs: ImportExportPrefs,
     private val androidPermission: AndroidPermission,
     private val cryptoUtil: CryptoUtil,
-    private val config: Config
+    private val config: ConfigImpl
 ) {
 
     lateinit var activity: AppCompatActivity
@@ -174,7 +169,7 @@ class SWDefinition @Inject constructor(
         .add(SWButton(injector)
             .text(R.string.enable_nsclient)
             .action {
-                configBuilderPlugin.performPluginSwitch(nsClientPlugin, true, PluginType.GENERAL)
+                configBuilder.performPluginSwitch(nsClientPlugin, true, PluginType.GENERAL)
                 rxBus.send(EventSWUpdate(true))
             }
             .visibility { !nsClientPlugin.isEnabled(PluginType.GENERAL) })
@@ -274,13 +269,13 @@ class SWDefinition @Inject constructor(
         .add(SWFragment(injector, this)
             .add(NSProfileFragment()))
         .validator { nsProfilePlugin.profile != null && nsProfilePlugin.profile!!.getDefaultProfile() != null && nsProfilePlugin.profile!!.getDefaultProfile()!!.isValid("StartupWizard") }
-        .visibility { nsProfilePlugin.isEnabled(PluginType.PROFILE) }
+        .visibility { nsProfilePlugin.isEnabled() }
     private val screenLocalProfile = SWScreen(injector, R.string.localprofile)
         .skippable(false)
         .add(SWFragment(injector, this)
             .add(LocalProfileFragment()))
         .validator { localProfilePlugin.profile?.getDefaultProfile()?.isValid("StartupWizard") == true }
-        .visibility { localProfilePlugin.isEnabled(PluginType.PROFILE) }
+        .visibility { localProfilePlugin.isEnabled() }
     private val screenProfileSwitch = SWScreen(injector, R.string.careportal_profileswitch)
         .skippable(false)
         .add(SWInfoText(injector)
@@ -360,7 +355,7 @@ class SWDefinition @Inject constructor(
         .add(SWButton(injector)
             .text(R.string.enableloop)
             .action {
-                configBuilderPlugin.performPluginSwitch(loopPlugin, true, PluginType.LOOP)
+                configBuilder.performPluginSwitch(loopPlugin, true, PluginType.LOOP)
                 rxBus.send(EventSWUpdate(true))
             }
             .visibility { !loopPlugin.isEnabled(PluginType.LOOP) })

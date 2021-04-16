@@ -18,7 +18,7 @@ import info.nightscout.androidaps.data.Profile
 import info.nightscout.androidaps.db.DanaRHistoryRecord
 import info.nightscout.androidaps.events.EventDanaRSyncStatus
 import info.nightscout.androidaps.events.EventPumpStatusChanged
-import info.nightscout.androidaps.interfaces.ActivePluginProvider
+import info.nightscout.androidaps.interfaces.ActivePlugin
 import info.nightscout.androidaps.interfaces.CommandQueueProvider
 import info.nightscout.androidaps.interfaces.DatabaseHelperInterface
 import info.nightscout.androidaps.interfaces.ProfileFunction
@@ -42,7 +42,7 @@ class DanaHistoryActivity : NoSplashAppCompatActivity() {
     @Inject lateinit var aapsLogger: AAPSLogger
     @Inject lateinit var profileFunction: ProfileFunction
     @Inject lateinit var fabricPrivacy: FabricPrivacy
-    @Inject lateinit var activePlugin: ActivePluginProvider
+    @Inject lateinit var activePlugin: ActivePlugin
     @Inject lateinit var commandQueue: CommandQueueProvider
     @Inject lateinit var databaseHelper: DatabaseHelperInterface
     @Inject lateinit var dateUtil: DateUtil
@@ -91,8 +91,8 @@ class DanaHistoryActivity : NoSplashAppCompatActivity() {
         binding.status.visibility = View.GONE
 
         val pump = activePlugin.activePump
-        val isKorean = pump.pumpDescription.pumpType == PumpType.DanaRKorean
-        val isRS = pump.pumpDescription.pumpType == PumpType.DanaRS
+        val isKorean = pump.pumpDescription.pumpType == PumpType.DANA_R_KOREAN
+        val isRS = pump.pumpDescription.pumpType == PumpType.DANA_RS
 
         // Types
         val typeList = ArrayList<TypeList>()
@@ -185,7 +185,7 @@ class DanaHistoryActivity : NoSplashAppCompatActivity() {
                     holder.dailyBasal.text = resourceHelper.gs(R.string.formatinsulinunits, record.recordDailyBasal)
                     holder.dailyBolus.text = resourceHelper.gs(R.string.formatinsulinunits, record.recordDailyBolus)
                     holder.dailyTotal.text = resourceHelper.gs(R.string.formatinsulinunits, record.recordDailyBolus + record.recordDailyBasal)
-                    holder.time.text = DateUtil.dateString(record.recordDate)
+                    holder.time.text = dateUtil.dateString(record.recordDate)
                     holder.time.visibility = View.VISIBLE
                     holder.value.visibility = View.GONE
                     holder.stringValue.visibility = View.GONE

@@ -14,7 +14,7 @@ abstract class DataClassesModule {
 
     @ContributesAndroidInjector abstract fun glucoseStatusInjector(): GlucoseStatus
 
-    @ContributesAndroidInjector abstract fun DatabaseHelperInjector(): DatabaseHelper
+    @ContributesAndroidInjector abstract fun databaseHelperInjector(): DatabaseHelper
     @ContributesAndroidInjector abstract fun treatmentServiceInjector(): TreatmentService
 
     @ContributesAndroidInjector abstract fun bolusWizardInjector(): BolusWizard

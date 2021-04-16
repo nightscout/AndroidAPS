@@ -10,7 +10,6 @@ import android.os.IBinder;
 import android.os.PowerManager;
 import android.os.SystemClock;
 
-import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 import androidx.work.OneTimeWorkRequest;
 
 import com.google.common.base.Charsets;
@@ -30,12 +29,14 @@ import javax.inject.Inject;
 
 import dagger.android.DaggerService;
 import dagger.android.HasAndroidInjector;
-import info.nightscout.androidaps.Config;
+import info.nightscout.androidaps.interfaces.Config;
 import info.nightscout.androidaps.R;
+import info.nightscout.androidaps.database.AppRepository;
 import info.nightscout.androidaps.db.DbRequest;
 import info.nightscout.androidaps.events.EventAppExit;
 import info.nightscout.androidaps.events.EventConfigBuilderChange;
 import info.nightscout.androidaps.events.EventPreferenceChange;
+import info.nightscout.androidaps.interfaces.DataSyncSelector;
 import info.nightscout.androidaps.interfaces.DatabaseHelperInterface;
 import info.nightscout.androidaps.interfaces.PluginType;
 import info.nightscout.androidaps.interfaces.UploadQueueInterface;
@@ -43,10 +44,12 @@ import info.nightscout.androidaps.logging.AAPSLogger;
 import info.nightscout.androidaps.logging.LTag;
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper;
 import info.nightscout.androidaps.plugins.general.food.FoodPlugin;
+import info.nightscout.androidaps.plugins.general.nsclient.NSClientAddAckWorker;
 import info.nightscout.androidaps.plugins.general.nsclient.NSClientAddUpdateWorker;
 import info.nightscout.androidaps.plugins.general.nsclient.NSClientMbgWorker;
 import info.nightscout.androidaps.plugins.general.nsclient.NSClientPlugin;
 import info.nightscout.androidaps.plugins.general.nsclient.NSClientRemoveWorker;
+import info.nightscout.androidaps.plugins.general.nsclient.NSClientUpdateRemoveAckWorker;
 import info.nightscout.androidaps.plugins.general.nsclient.acks.NSAddAck;
 import info.nightscout.androidaps.plugins.general.nsclient.acks.NSAuthAck;
 import info.nightscout.androidaps.plugins.general.nsclient.acks.NSUpdateAck;
@@ -96,6 +99,8 @@ public class NSClientService extends DaggerService {
     @Inject DateUtil dateUtil;
     @Inject UploadQueueInterface uploadQueue;
     @Inject DataWorker dataWorker;
+    @Inject DataSyncSelector dataSyncSelector;
+    @Inject AppRepository repository;
 
     private final CompositeDisposable disposable = new CompositeDisposable();
 
@@ -118,6 +123,7 @@ public class NSClientService extends DaggerService {
     private final Integer nsHours = 48;
 
     public long lastResendTime = 0;
+    public long lastAckTime = 0;
 
     public long latestDateInReceivedData = 0;
 
@@ -126,7 +132,7 @@ public class NSClientService extends DaggerService {
     private final ArrayList<Long> reconnections = new ArrayList<>();
     private final int WATCHDOG_INTERVAL_MINUTES = 2;
     private final int WATCHDOG_RECONNECT_IN = 15;
-    private final int WATCHDOG_MAXCONNECTIONS = 5;
+    private final int WATCHDOG_MAX_CONNECTIONS = 5;
 
     public NSClientService() {
         super();
@@ -213,6 +219,14 @@ public class NSClientService extends DaggerService {
     }
 
     public void processAddAck(NSAddAck ack) {
+        lastAckTime = dateUtil.now();
+        // new room way
+        dataWorker.enqueue(
+                new OneTimeWorkRequest.Builder(NSClientAddAckWorker.class)
+                        .setInputData(dataWorker.storeInputData(ack, null))
+                        .build());
+
+        // old way
         if (ack.nsClientID != null) {
             uploadQueue.removeByNsClientIdIfExists(ack.json);
             rxBus.send(new EventNSClientNewLog("DBADD", "Acked " + ack.nsClientID));
@@ -222,9 +236,17 @@ public class NSClientService extends DaggerService {
     }
 
     public void processUpdateAck(NSUpdateAck ack) {
-        if (ack.result) {
-            uploadQueue.removeByMongoId(ack.action, ack._id);
-            rxBus.send(new EventNSClientNewLog("DBUPDATE/DBREMOVE", "Acked " + ack._id));
+        lastAckTime = dateUtil.now();
+        // new room way
+        dataWorker.enqueue(
+                new OneTimeWorkRequest.Builder(NSClientUpdateRemoveAckWorker.class)
+                        .setInputData(dataWorker.storeInputData(ack, null))
+                        .build());
+
+        // old way
+        if (ack.getResult()) {
+            uploadQueue.removeByMongoId(ack.getAction(), ack.get_id());
+            rxBus.send(new EventNSClientNewLog("DBUPDATE/DBREMOVE", "Acked " + ack.get_id()));
         } else {
             rxBus.send(new EventNSClientNewLog("ERROR", "DBUPDATE/DBREMOVE Unknown response"));
         }
@@ -258,6 +280,7 @@ public class NSClientService extends DaggerService {
         public NSClientService getServiceInstance() {
             return NSClientService.this;
         }
+
     }
 
     @Override
@@ -337,7 +360,7 @@ public class NSClientService extends DaggerService {
 
     void watchdog() {
         synchronized (reconnections) {
-            long now = DateUtil.now();
+            long now = dateUtil.now();
             reconnections.add(now);
             for (int i = 0; i < reconnections.size(); i++) {
                 Long r = reconnections.get(i);
@@ -345,8 +368,8 @@ public class NSClientService extends DaggerService {
                     reconnections.remove(r);
                 }
             }
-            rxBus.send(new EventNSClientNewLog("WATCHDOG", "connections in last " + WATCHDOG_INTERVAL_MINUTES + " mins: " + reconnections.size() + "/" + WATCHDOG_MAXCONNECTIONS));
-            if (reconnections.size() >= WATCHDOG_MAXCONNECTIONS) {
+            rxBus.send(new EventNSClientNewLog("WATCHDOG", "connections in last " + WATCHDOG_INTERVAL_MINUTES + " mins: " + reconnections.size() + "/" + WATCHDOG_MAX_CONNECTIONS));
+            if (reconnections.size() >= WATCHDOG_MAX_CONNECTIONS) {
                 Notification n = new Notification(Notification.NS_MALFUNCTION, resourceHelper.gs(R.string.nsmalfunction), Notification.URGENT);
                 rxBus.send(new EventNewNotification(n));
                 rxBus.send(new EventNSClientNewLog("WATCHDOG", "pausing for " + WATCHDOG_RECONNECT_IN + " mins"));
@@ -579,7 +602,7 @@ public class NSClientService extends DaggerService {
                                 if (action == null) addedOrUpdatedTreatments.put(jsonTreatment);
                                 else if (action.equals("update"))
                                     addedOrUpdatedTreatments.put(jsonTreatment);
-                                else if (action.equals("remove") && mills > dateUtil._now() - T.days(1).msecs()) // handle 1 day old deletions only
+                                else if (action.equals("remove") && mills > dateUtil.now() - T.days(1).msecs()) // handle 1 day old deletions only
                                     removedTreatments.put(jsonTreatment);
                             }
                             if (removedTreatments.length() > 0) {
@@ -698,15 +721,15 @@ public class NSClientService extends DaggerService {
         }
     }
 
-    public void dbUpdateUnset(DbRequest dbr, NSUpdateAck ack) {
+    public void dbUpdate(String collection, String _id, JSONObject data, Object originalObject) {
         try {
             if (!isConnected || !hasWriteAuth) return;
             JSONObject message = new JSONObject();
-            message.put("collection", dbr.collection);
-            message.put("_id", dbr._id);
-            message.put("data", new JSONObject(dbr.data));
-            mSocket.emit("dbUpdateUnset", message, ack);
-            rxBus.send(new EventNSClientNewLog("DBUPDATEUNSET " + dbr.collection, "Sent " + dbr._id));
+            message.put("collection", collection);
+            message.put("_id", _id);
+            message.put("data", data);
+            mSocket.emit("dbUpdate", message, new NSUpdateAck("dbUpdate", _id, aapsLogger, rxBus, originalObject));
+            rxBus.send(new EventNSClientNewLog("DBUPDATE " + collection, "Sent " + originalObject.getClass().getSimpleName() + " " + _id));
         } catch (JSONException e) {
             aapsLogger.error("Unhandled exception", e);
         }
@@ -725,6 +748,19 @@ public class NSClientService extends DaggerService {
         }
     }
 
+    public void dbRemove(String collection, String _id, Object originalObject) {
+        try {
+            if (!isConnected || !hasWriteAuth) return;
+            JSONObject message = new JSONObject();
+            message.put("collection", collection);
+            message.put("_id", _id);
+            mSocket.emit("dbRemove", message, new NSUpdateAck("dbRemove", _id, aapsLogger, rxBus, originalObject));
+            rxBus.send(new EventNSClientNewLog("DBREMOVE " + collection, "Sent " + originalObject.getClass().getSimpleName() + " " + _id));
+        } catch (JSONException e) {
+            aapsLogger.error("Unhandled exception", e);
+        }
+    }
+
     public void dbAdd(DbRequest dbr, NSAddAck ack) {
         try {
             if (!isConnected || !hasWriteAuth) return;
@@ -738,6 +774,19 @@ public class NSClientService extends DaggerService {
         }
     }
 
+    public void dbAdd(String collection, JSONObject data, Object originalObject) {
+        try {
+            if (!isConnected || !hasWriteAuth) return;
+            JSONObject message = new JSONObject();
+            message.put("collection", collection);
+            message.put("data", data);
+            mSocket.emit("dbAdd", message, new NSAddAck(aapsLogger, rxBus, originalObject));
+            rxBus.send(new EventNSClientNewLog("DBADD " + collection, "Sent " + originalObject.getClass().getSimpleName() + " " + data));
+        } catch (JSONException e) {
+            aapsLogger.error("Unhandled exception", e);
+        }
+    }
+
     public void sendAlarmAck(AlarmAck alarmAck) {
         if (!isConnected || !hasWriteAuth) return;
         mSocket.emit("ack", alarmAck.level, alarmAck.group, alarmAck.silenceTime);
@@ -745,21 +794,37 @@ public class NSClientService extends DaggerService {
     }
 
     public void resend(final String reason) {
-        if (uploadQueue.size() == 0)
-            return;
-
         if (!isConnected || !hasWriteAuth) return;
 
         handler.post(() -> {
             if (mSocket == null || !mSocket.connected()) return;
+
+            rxBus.send(new EventNSClientNewLog("QUEUE", "Resend started: " + reason));
+
+            if (lastAckTime > System.currentTimeMillis() - 10 * 1000L) {
+                aapsLogger.debug(LTag.NSCLIENT, "Skipping resend by lastAckTime: " + ((System.currentTimeMillis() - lastAckTime) / 1000L) + " sec");
+                return;
+            }
+
+            dataSyncSelector.processChangedBolusesCompat();
+            dataSyncSelector.processChangedCarbsCompat();
+            dataSyncSelector.processChangedBolusCalculatorResultsCompat();
+            dataSyncSelector.processChangedTemporaryBasalsCompat();
+            dataSyncSelector.processChangedExtendedBolusesCompat();
+            dataSyncSelector.processChangedGlucoseValuesCompat();
+            dataSyncSelector.processChangedTempTargetsCompat();
+            dataSyncSelector.processChangedFoodsCompat();
+            dataSyncSelector.processChangedTherapyEventsCompat();
+            dataSyncSelector.processChangedDeviceStatusesCompat();
+
+            if (uploadQueue.size() == 0)
+                return;
 
             if (lastResendTime > System.currentTimeMillis() - 10 * 1000L) {
                 aapsLogger.debug(LTag.NSCLIENT, "Skipping resend by lastResendTime: " + ((System.currentTimeMillis() - lastResendTime) / 1000L) + " sec");
                 return;
             }
             lastResendTime = System.currentTimeMillis();
-
-            rxBus.send(new EventNSClientNewLog("QUEUE", "Resend started: " + reason));
 
             CloseableIterator<DbRequest> iterator;
             int maxcount = 30;
@@ -769,17 +834,14 @@ public class NSClientService extends DaggerService {
                     while (iterator.hasNext() && maxcount > 0) {
                         DbRequest dbr = iterator.next();
                         if (dbr.action.equals("dbAdd")) {
-                            NSAddAck addAck = new NSAddAck(aapsLogger, rxBus);
+                            NSAddAck addAck = new NSAddAck(aapsLogger, rxBus, null);
                             dbAdd(dbr, addAck);
                         } else if (dbr.action.equals("dbRemove")) {
-                            NSUpdateAck removeAck = new NSUpdateAck(dbr.action, dbr._id, aapsLogger, rxBus);
+                            NSUpdateAck removeAck = new NSUpdateAck("dbRemove", dbr._id, aapsLogger, rxBus, null);
                             dbRemove(dbr, removeAck);
                         } else if (dbr.action.equals("dbUpdate")) {
-                            NSUpdateAck updateAck = new NSUpdateAck(dbr.action, dbr._id, aapsLogger, rxBus);
+                            NSUpdateAck updateAck = new NSUpdateAck("dbUpdate", dbr._id, aapsLogger, rxBus, null);
                             dbUpdate(dbr, updateAck);
-                        } else if (dbr.action.equals("dbUpdateUnset")) {
-                            NSUpdateAck updateUnsetAck = new NSUpdateAck(dbr.action, dbr._id, aapsLogger, rxBus);
-                            dbUpdateUnset(dbr, updateUnsetAck);
                         }
                         maxcount--;
                     }
@@ -835,32 +897,6 @@ public class NSClientService extends DaggerService {
             }
             rxBus.send(new EventNSClientNewLog("URGENTALARM", JsonHelper.safeGetString(alarm, "message", "received")));
             aapsLogger.debug(LTag.NSCLIENT, alarm.toString());
-        }
-    }
-
-    public void handleNewTreatment(JSONArray treatments, boolean isDelta) {
-        List<JSONArray> splitted = splitArray(treatments);
-        for (JSONArray part : splitted) {
-            Bundle bundle = new Bundle();
-            bundle.putString("treatments", part.toString());
-            bundle.putBoolean("delta", isDelta);
-            Intent intent = new Intent(Intents.ACTION_NEW_TREATMENT);
-            intent.putExtras(bundle);
-            intent.addFlags(Intent.FLAG_INCLUDE_STOPPED_PACKAGES);
-            LocalBroadcastManager.getInstance(this).sendBroadcast(intent);
-        }
-
-        if (sp.getBoolean(R.string.key_nsclient_localbroadcasts, false)) {
-            splitted = splitArray(treatments);
-            for (JSONArray part : splitted) {
-                Bundle bundle = new Bundle();
-                bundle.putString("treatments", part.toString());
-                bundle.putBoolean("delta", isDelta);
-                Intent intent = new Intent(Intents.ACTION_NEW_TREATMENT);
-                intent.putExtras(bundle);
-                intent.addFlags(Intent.FLAG_INCLUDE_STOPPED_PACKAGES);
-                this.getApplicationContext().sendBroadcast(intent);
-            }
         }
     }
 

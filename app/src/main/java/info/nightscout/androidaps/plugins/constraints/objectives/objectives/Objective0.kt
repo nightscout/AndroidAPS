@@ -2,25 +2,24 @@ package info.nightscout.androidaps.plugins.constraints.objectives.objectives
 
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.R
-import info.nightscout.androidaps.interfaces.ActivePluginProvider
+import info.nightscout.androidaps.interfaces.ActivePlugin
+import info.nightscout.androidaps.interfaces.IobCobCalculator
 import info.nightscout.androidaps.interfaces.PluginBase
 import info.nightscout.androidaps.interfaces.PluginType
 import info.nightscout.androidaps.plugins.aps.loop.LoopPlugin
 import info.nightscout.androidaps.plugins.general.nsclient.NSClientPlugin
-import info.nightscout.androidaps.plugins.iob.iobCobCalculator.IobCobCalculatorPlugin
 import info.nightscout.androidaps.plugins.pump.virtual.VirtualPumpPlugin
 import info.nightscout.androidaps.plugins.treatments.TreatmentsPlugin
-import info.nightscout.androidaps.utils.DateUtil
 import javax.inject.Inject
 
 class Objective0(injector: HasAndroidInjector) : Objective(injector, "config", R.string.objectives_0_objective, R.string.objectives_0_gate) {
 
-    @Inject lateinit var activePlugin: ActivePluginProvider
+    @Inject lateinit var activePlugin: ActivePlugin
     @Inject lateinit var virtualPumpPlugin: VirtualPumpPlugin
     @Inject lateinit var treatmentsPlugin: TreatmentsPlugin
     @Inject lateinit var loopPlugin: LoopPlugin
     @Inject lateinit var nsClientPlugin: NSClientPlugin
-    @Inject lateinit var iobCobCalculatorPlugin: IobCobCalculatorPlugin
+    @Inject lateinit var iobCobCalculator: IobCobCalculator
 
     init {
         tasks.add(object : Task(this, R.string.objectives_bgavailableinns) {
@@ -49,7 +48,7 @@ class Objective0(injector: HasAndroidInjector) : Objective(injector, "config", R
         })
         tasks.add(object : Task(this, R.string.hasbgdata) {
             override fun isCompleted(): Boolean {
-                return iobCobCalculatorPlugin.lastBg() != null
+                return iobCobCalculator.ads.lastBg() != null
             }
         })
         tasks.add(object : Task(this, R.string.loopenabled) {
@@ -65,7 +64,7 @@ class Objective0(injector: HasAndroidInjector) : Objective(injector, "config", R
         })
         tasks.add(object : Task(this, R.string.activate_profile) {
             override fun isCompleted(): Boolean {
-                return treatmentsPlugin.getProfileSwitchFromHistory(DateUtil.now()) != null
+                return treatmentsPlugin.getProfileSwitchFromHistory(dateUtil.now()) != null
             }
         })
     }

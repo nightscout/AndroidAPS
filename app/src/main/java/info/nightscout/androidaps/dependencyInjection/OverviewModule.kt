@@ -3,6 +3,8 @@ package info.nightscout.androidaps.dependencyInjection
 import dagger.Module
 import dagger.android.ContributesAndroidInjector
 import info.nightscout.androidaps.plugins.general.overview.graphData.GraphData
+import info.nightscout.androidaps.plugins.general.overview.graphExtensions.GlucoseValueDataPoint
+import info.nightscout.androidaps.plugins.general.overview.graphExtensions.TherapyEventDataPoint
 import info.nightscout.androidaps.plugins.general.overview.notifications.NotificationWithAction
 
 @Module

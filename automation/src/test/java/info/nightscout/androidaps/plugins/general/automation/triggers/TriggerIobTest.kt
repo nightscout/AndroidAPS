@@ -3,7 +3,6 @@ package info.nightscout.androidaps.plugins.general.automation.triggers
 import com.google.common.base.Optional
 import info.nightscout.androidaps.automation.R
 import info.nightscout.androidaps.data.IobTotal
-import info.nightscout.androidaps.data.Profile
 import info.nightscout.androidaps.plugins.general.automation.elements.Comparator
 import info.nightscout.androidaps.utils.DateUtil
 import org.json.JSONObject
@@ -13,7 +12,6 @@ import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.ArgumentMatchers
 import org.mockito.Mockito.`when`
-import org.powermock.api.mockito.PowerMockito
 import org.powermock.core.classloader.annotations.PrepareForTest
 import org.powermock.modules.junit4.PowerMockRunner
 
@@ -24,13 +22,12 @@ class TriggerIobTest : TriggerTestBase() {
     var now = 1514766900000L
 
     @Before fun mock() {
-        PowerMockito.mockStatic(DateUtil::class.java)
-        `when`(DateUtil.now()).thenReturn(now)
+        `when`(dateUtil.now()).thenReturn(now)
         `when`(profileFunction.getProfile()).thenReturn(validProfile)
     }
 
     @Test fun shouldRunTest() {
-        `when`(iobCobCalculatorPlugin.calculateFromTreatmentsAndTempsSynchronized(ArgumentMatchers.anyLong(), ArgumentMatchers.any(Profile::class.java))).thenReturn(generateIobRecordData())
+        `when`(iobCobCalculator.calculateFromTreatmentsAndTemps(ArgumentMatchers.anyLong(), anyObject())).thenReturn(generateIobRecordData())
         var t: TriggerIob = TriggerIob(injector).setValue(1.1).comparator(Comparator.Compare.IS_EQUAL)
         Assert.assertFalse(t.shouldRun())
         t = TriggerIob(injector).setValue(1.0).comparator(Comparator.Compare.IS_EQUAL)
@@ -57,7 +54,7 @@ class TriggerIobTest : TriggerTestBase() {
         Assert.assertEquals(Comparator.Compare.IS_EQUAL_OR_LESSER, t.comparator.value)
     }
 
-    private var bgJson = "{\"data\":{\"comparator\":\"IS_EQUAL\",\"insulin\":4.1},\"type\":\"info.nightscout.androidaps.plugins.general.automation.triggers.TriggerIob\"}"
+    private var bgJson = "{\"data\":{\"comparator\":\"IS_EQUAL\",\"insulin\":4.1},\"type\":\"TriggerIob\"}"
     @Test fun toJSONTest() {
         val t: TriggerIob = TriggerIob(injector).setValue(4.1).comparator(Comparator.Compare.IS_EQUAL)
         Assert.assertEquals(bgJson, t.toJSON())

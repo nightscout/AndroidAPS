@@ -3,8 +3,8 @@ package info.nightscout.androidaps.plugins.insulin
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.data.Iob
-import info.nightscout.androidaps.db.Treatment
-import info.nightscout.androidaps.interfaces.InsulinInterface
+import info.nightscout.androidaps.database.entities.Bolus
+import info.nightscout.androidaps.interfaces.Insulin
 import info.nightscout.androidaps.interfaces.PluginBase
 import info.nightscout.androidaps.interfaces.PluginDescription
 import info.nightscout.androidaps.interfaces.PluginType
@@ -14,6 +14,8 @@ import info.nightscout.androidaps.plugins.bus.RxBusWrapper
 import info.nightscout.androidaps.plugins.general.overview.events.EventNewNotification
 import info.nightscout.androidaps.plugins.general.overview.notifications.Notification
 import info.nightscout.androidaps.utils.resources.ResourceHelper
+import kotlin.math.exp
+import kotlin.math.pow
 
 /**
  * Created by adrian on 13.08.2017.
@@ -33,7 +35,7 @@ abstract class InsulinOrefBasePlugin(
     .shortName(R.string.insulin_shortname)
     .visibleByDefault(false),
     aapsLogger, resourceHelper, injector
-), InsulinInterface {
+), Insulin {
 
     private var lastWarned: Long = 0
     override val dia
@@ -64,11 +66,11 @@ abstract class InsulinOrefBasePlugin(
             return profile?.dia ?: MIN_DIA
         }
 
-    override fun iobCalcForTreatment(treatment: Treatment, time: Long, dia: Double): Iob {
+    override fun iobCalcForTreatment(bolus: Bolus, time: Long, dia: Double): Iob {
         val result = Iob()
         val peak = peak
-        if (treatment.insulin != 0.0) {
-            val bolusTime = treatment.date
+        if (bolus.amount != 0.0) {
+            val bolusTime = bolus.timestamp
             val t = (time - bolusTime) / 1000.0 / 60.0
             val td = dia * 60 //getDIA() always >= MIN_DIA
             val tp = peak.toDouble()
@@ -76,9 +78,9 @@ abstract class InsulinOrefBasePlugin(
             if (t < td) {
                 val tau = tp * (1 - tp / td) / (1 - 2 * tp / td)
                 val a = 2 * tau / td
-                val S = 1 / (1 - a + (1 + a) * Math.exp(-td / tau))
-                result.activityContrib = treatment.insulin * (S / Math.pow(tau, 2.0)) * t * (1 - t / td) * Math.exp(-t / tau)
-                result.iobContrib = treatment.insulin * (1 - S * (1 - a) * ((Math.pow(t, 2.0) / (tau * td * (1 - a)) - t / tau - 1) * Math.exp(-t / tau) + 1))
+                val S = 1 / (1 - a + (1 + a) * exp(-td / tau))
+                result.activityContrib = bolus.amount * (S / tau.pow(2.0)) * t * (1 - t / td) * exp(-t / tau)
+                result.iobContrib = bolus.amount * (1 - S * (1 - a) * ((t.pow(2.0) / (tau * td * (1 - a)) - t / tau - 1) * Math.exp(-t / tau) + 1))
             }
         }
         return result

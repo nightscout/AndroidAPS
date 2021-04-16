@@ -1,6 +1,5 @@
 package info.nightscout.androidaps.data
 
-import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.T
 import org.junit.Assert
 import org.junit.Test
@@ -11,7 +10,7 @@ import java.util.*
 @RunWith(PowerMockRunner::class)
 class OverlappingIntervalsTest {
 
-    private val startDate = DateUtil.now()
+    private val startDate = System.currentTimeMillis()
     private var list = OverlappingIntervals<TempTargetTest>()
     @Test fun doTests() {
         // create one 10h interval and test value in and out

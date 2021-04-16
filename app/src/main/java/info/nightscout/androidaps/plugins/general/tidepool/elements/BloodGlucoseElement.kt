@@ -3,11 +3,12 @@ package info.nightscout.androidaps.plugins.general.tidepool.elements
 import com.google.gson.annotations.Expose
 import info.nightscout.androidaps.data.Profile
 import info.nightscout.androidaps.database.entities.TherapyEvent
-import info.nightscout.androidaps.utils.extensions.toConstant
+import info.nightscout.androidaps.extensions.toConstant
+import info.nightscout.androidaps.utils.DateUtil
 import java.util.*
 
-class BloodGlucoseElement(therapyEvent: TherapyEvent)
-    : BaseElement(therapyEvent.timestamp, UUID.nameUUIDFromBytes(("AAPS-bg" + therapyEvent.timestamp).toByteArray()).toString()) {
+class BloodGlucoseElement(therapyEvent: TherapyEvent, dateUtil: DateUtil)
+    : BaseElement(therapyEvent.timestamp, UUID.nameUUIDFromBytes(("AAPS-bg" + therapyEvent.timestamp).toByteArray()).toString(), dateUtil) {
 
     @Expose
     var subType: String = "manual"
@@ -28,13 +29,13 @@ class BloodGlucoseElement(therapyEvent: TherapyEvent)
 
     companion object {
 
-        fun fromCareportalEvents(careportalList: List<TherapyEvent>): List<BloodGlucoseElement> {
+        fun fromCareportalEvents(careportalList: List<TherapyEvent>, dateUtil: DateUtil): List<BloodGlucoseElement> {
             val results = LinkedList<BloodGlucoseElement>()
             for (bt in careportalList) {
                 if (bt.type == TherapyEvent.Type.NS_MBG || bt.type == TherapyEvent.Type.FINGER_STICK_BG_VALUE) {
-                    val bge = BloodGlucoseElement(bt)
+                    val bge = BloodGlucoseElement(bt, dateUtil)
                     if (bge.value > 0)
-                        results.add(BloodGlucoseElement(bt))
+                        results.add(BloodGlucoseElement(bt, dateUtil))
                 }
             }
             return results

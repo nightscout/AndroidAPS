@@ -24,8 +24,7 @@ class TriggerWifiSsidTest : TriggerTestBase() {
 
     @Before fun mock() {
         PowerMockito.mockStatic(NetworkChangeReceiver::class.java)
-        PowerMockito.mockStatic(DateUtil::class.java)
-        PowerMockito.`when`(DateUtil.now()).thenReturn(now)
+        PowerMockito.`when`(dateUtil.now()).thenReturn(now)
     }
 
     @Test fun shouldRunTest() {
@@ -56,7 +55,7 @@ class TriggerWifiSsidTest : TriggerTestBase() {
         Assert.assertEquals(Comparator.Compare.IS_EQUAL_OR_LESSER, t.comparator.value)
     }
 
-    var json = "{\"data\":{\"comparator\":\"IS_EQUAL\",\"ssid\":\"aSSID\"},\"type\":\"info.nightscout.androidaps.plugins.general.automation.triggers.TriggerWifiSsid\"}"
+    var json = "{\"data\":{\"comparator\":\"IS_EQUAL\",\"ssid\":\"aSSID\"},\"type\":\"TriggerWifiSsid\"}"
     @Test fun toJSONTest() {
         val t: TriggerWifiSsid = TriggerWifiSsid(injector).setValue("aSSID").comparator(Comparator.Compare.IS_EQUAL)
         Assert.assertEquals(json, t.toJSON())
