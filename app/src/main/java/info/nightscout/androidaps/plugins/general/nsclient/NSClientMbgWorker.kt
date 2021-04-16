@@ -8,7 +8,7 @@ import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.database.AppRepository
 import info.nightscout.androidaps.database.transactions.SyncNsTherapyEventTransaction
-import info.nightscout.androidaps.interfaces.ConfigInterface
+import info.nightscout.androidaps.interfaces.Config
 import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.logging.LTag
 import info.nightscout.androidaps.plugins.general.nsclient.data.NSMbg
@@ -28,7 +28,7 @@ class NSClientMbgWorker(
     @Inject lateinit var aapsLogger: AAPSLogger
     @Inject lateinit var sp: SP
     @Inject lateinit var buildHelper: BuildHelper
-    @Inject lateinit var config: ConfigInterface
+    @Inject lateinit var config: Config
 
     override fun doWork(): Result {
         var ret = Result.success()

@@ -20,7 +20,7 @@ import info.nightscout.androidaps.interfaces.CommandQueueProvider;
 import info.nightscout.androidaps.interfaces.PluginDescription;
 import info.nightscout.androidaps.interfaces.PluginType;
 import info.nightscout.androidaps.interfaces.PumpDescription;
-import info.nightscout.androidaps.interfaces.PumpInterface;
+import info.nightscout.androidaps.interfaces.Pump;
 import info.nightscout.androidaps.interfaces.PumpPluginBase;
 import info.nightscout.androidaps.interfaces.PumpSync;
 import info.nightscout.androidaps.logging.AAPSLogger;
@@ -35,7 +35,7 @@ import info.nightscout.androidaps.utils.TimeChangeType;
 import info.nightscout.androidaps.utils.resources.ResourceHelper;
 
 @Singleton
-public class OmnipodDashPumpPlugin extends PumpPluginBase implements PumpInterface {
+public class OmnipodDashPumpPlugin extends PumpPluginBase implements Pump {
     private static final PumpDescription PUMP_DESCRIPTION = new PumpDescription(PumpType.OMNIPOD_DASH);
 
     private final AAPSLogger aapsLogger;

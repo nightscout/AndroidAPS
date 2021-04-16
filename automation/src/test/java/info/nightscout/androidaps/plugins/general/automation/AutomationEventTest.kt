@@ -3,7 +3,7 @@ package info.nightscout.androidaps.plugins.general.automation
 import dagger.android.AndroidInjector
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.TestBase
-import info.nightscout.androidaps.interfaces.ConfigBuilderInterface
+import info.nightscout.androidaps.interfaces.ConfigBuilder
 import info.nightscout.androidaps.interfaces.LoopInterface
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper
 import info.nightscout.androidaps.plugins.general.automation.actions.ActionLoopEnable
@@ -22,7 +22,7 @@ class AutomationEventTest : TestBase() {
 
     @Mock lateinit var loopPlugin: LoopInterface
     @Mock lateinit var resourceHelper: ResourceHelper
-    @Mock lateinit var configBuilderPlugin: ConfigBuilderInterface
+    @Mock lateinit var configBuilder: ConfigBuilder
 
     var injector: HasAndroidInjector = HasAndroidInjector {
         AndroidInjector {
@@ -32,7 +32,7 @@ class AutomationEventTest : TestBase() {
             if (it is ActionLoopEnable) {
                 it.loopPlugin = loopPlugin
                 it.resourceHelper = resourceHelper
-                it.configBuilderPlugin = configBuilderPlugin
+                it.configBuilder = configBuilder
                 it.rxBus = RxBusWrapper(aapsSchedulers)
             }
         }

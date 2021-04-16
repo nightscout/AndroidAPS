@@ -11,7 +11,7 @@ import androidx.work.Worker
 import androidx.work.WorkerParameters
 import androidx.work.workDataOf
 import dagger.android.HasAndroidInjector
-import info.nightscout.androidaps.Config
+import info.nightscout.androidaps.interfaces.Config
 import info.nightscout.androidaps.Constants
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.data.DetailedBolusInfo
@@ -70,7 +70,7 @@ class SmsCommunicatorPlugin @Inject constructor(
     private val rxBus: RxBusWrapper,
     private val profileFunction: ProfileFunction,
     private val fabricPrivacy: FabricPrivacy,
-    private val activePlugin: ActivePluginProvider,
+    private val activePlugin: ActivePlugin,
     private val commandQueue: CommandQueueProvider,
     private val loopPlugin: LoopPlugin,
     private val iobCobCalculator: IobCobCalculator,
@@ -90,7 +90,7 @@ class SmsCommunicatorPlugin @Inject constructor(
     .preferencesId(R.xml.pref_smscommunicator)
     .description(R.string.description_sms_communicator),
     aapsLogger, resourceHelper, injector
-), SmsCommunicatorInterface {
+), SmsCommunicator {
 
     private val disposable = CompositeDisposable()
     var allowedNumbers: MutableList<String> = ArrayList()
@@ -545,7 +545,7 @@ class SmsCommunicatorPlugin @Inject constructor(
     }
 
     private fun processPROFILE(divided: Array<String>, receivedSms: Sms) { // load profiles
-        val anInterface = activePlugin.activeProfileInterface
+        val anInterface = activePlugin.activeProfileSource
         val store = anInterface.profile
         if (store == null) {
             sendSMS(Sms(receivedSms.phoneNumber, resourceHelper.gs(R.string.notconfigured)))

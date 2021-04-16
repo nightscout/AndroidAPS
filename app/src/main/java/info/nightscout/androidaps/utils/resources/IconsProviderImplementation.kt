@@ -1,13 +1,13 @@
 package info.nightscout.androidaps.utils.resources
 
 import info.nightscout.androidaps.R
-import info.nightscout.androidaps.interfaces.ConfigInterface
-import info.nightscout.androidaps.interfaces.IconsProviderInterface
+import info.nightscout.androidaps.interfaces.Config
+import info.nightscout.androidaps.interfaces.IconsProvider
 import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-class IconsProvider @Inject constructor(private val config: ConfigInterface) : IconsProviderInterface {
+class IconsProviderImplementation @Inject constructor(private val config: Config) : IconsProvider {
 
     override fun getIcon(): Int =
         when {

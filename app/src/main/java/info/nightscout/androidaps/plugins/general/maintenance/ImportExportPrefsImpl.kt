@@ -19,8 +19,8 @@ import info.nightscout.androidaps.database.entities.UserEntry
 import info.nightscout.androidaps.database.entities.UserEntry.Action
 import info.nightscout.androidaps.database.entities.UserEntry.Sources
 import info.nightscout.androidaps.events.EventAppExit
-import info.nightscout.androidaps.interfaces.ConfigInterface
-import info.nightscout.androidaps.interfaces.ImportExportPrefsInterface
+import info.nightscout.androidaps.interfaces.Config
+import info.nightscout.androidaps.interfaces.ImportExportPrefs
 import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.logging.LTag
 import info.nightscout.androidaps.logging.UserEntryLogger
@@ -50,21 +50,21 @@ import kotlin.system.exitProcess
  */
 
 @Singleton
-class ImportExportPrefs @Inject constructor(
+class ImportExportPrefsImpl @Inject constructor(
     private var log: AAPSLogger,
     private val resourceHelper: ResourceHelper,
     private val sp: SP,
     private val buildHelper: BuildHelper,
     private val rxBus: RxBusWrapper,
     private val passwordCheck: PasswordCheck,
-    private val config: ConfigInterface,
+    private val config: Config,
     private val androidPermission: AndroidPermission,
     private val classicPrefsFormat: ClassicPrefsFormat,
     private val encryptedPrefsFormat: EncryptedPrefsFormat,
     private val prefFileList: PrefFileListProvider,
     private val uel: UserEntryLogger,
     private val dateUtil: DateUtil
-) : ImportExportPrefsInterface {
+) : ImportExportPrefs {
 
     override fun prefsFileExists(): Boolean {
         return prefFileList.listPreferenceFiles().size > 0

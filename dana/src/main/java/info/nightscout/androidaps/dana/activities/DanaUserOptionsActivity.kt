@@ -9,7 +9,7 @@ import info.nightscout.androidaps.dana.DanaPump
 import info.nightscout.androidaps.dana.R
 import info.nightscout.androidaps.dana.databinding.DanarUserOptionsActivityBinding
 import info.nightscout.androidaps.events.EventInitializationChanged
-import info.nightscout.androidaps.interfaces.ActivePluginProvider
+import info.nightscout.androidaps.interfaces.ActivePlugin
 import info.nightscout.androidaps.interfaces.CommandQueueProvider
 import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.logging.LTag
@@ -32,7 +32,7 @@ class DanaUserOptionsActivity : NoSplashAppCompatActivity() {
     @Inject lateinit var fabricPrivacy: FabricPrivacy
     @Inject lateinit var context: Context
     @Inject lateinit var danaPump: DanaPump
-    @Inject lateinit var activePlugin: ActivePluginProvider
+    @Inject lateinit var activePlugin: ActivePlugin
     @Inject lateinit var commandQueue: CommandQueueProvider
     @Inject lateinit var aapsSchedulers: AapsSchedulers
 

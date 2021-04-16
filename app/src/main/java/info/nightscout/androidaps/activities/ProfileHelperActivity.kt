@@ -13,7 +13,7 @@ import info.nightscout.androidaps.data.defaultProfile.DefaultProfileDPV
 import info.nightscout.androidaps.databinding.ActivityProfilehelperBinding
 import info.nightscout.androidaps.db.ProfileSwitch
 import info.nightscout.androidaps.dialogs.ProfileViewerDialog
-import info.nightscout.androidaps.interfaces.ActivePluginProvider
+import info.nightscout.androidaps.interfaces.ActivePlugin
 import info.nightscout.androidaps.interfaces.DatabaseHelperInterface
 import info.nightscout.androidaps.interfaces.ProfileFunction
 import info.nightscout.androidaps.logging.AAPSLogger
@@ -39,7 +39,7 @@ class ProfileHelperActivity : NoSplashAppCompatActivity() {
     @Inject lateinit var localProfilePlugin: LocalProfilePlugin
     @Inject lateinit var rxBus: RxBusWrapper
     @Inject lateinit var dateUtil: DateUtil
-    @Inject lateinit var activePlugin: ActivePluginProvider
+    @Inject lateinit var activePlugin: ActivePlugin
     @Inject lateinit var databaseHelper: DatabaseHelperInterface
 
     enum class ProfileType {
@@ -98,7 +98,7 @@ class ProfileHelperActivity : NoSplashAppCompatActivity() {
         }
 
         // Active profile
-        profileList = activePlugin.activeProfileInterface.profile?.getProfileList() ?: ArrayList()
+        profileList = activePlugin.activeProfileSource.profile?.getProfileList() ?: ArrayList()
 
         binding.availableProfileList.setOnClickListener {
             PopupMenu(this, binding.availableProfileList).apply {
@@ -233,7 +233,7 @@ class ProfileHelperActivity : NoSplashAppCompatActivity() {
                 ProfileType.MOTOL_DEFAULT -> defaultProfile.profile(age, tdd, weight, profileFunction.getUnits())
                 ProfileType.DPV_DEFAULT -> defaultProfileDPV.profile(age, tdd, basalPct, profileFunction.getUnits())
                 ProfileType.CURRENT -> profileFunction.getProfile()?.convertToNonCustomizedProfile()
-                ProfileType.AVAILABLE_PROFILE -> activePlugin.activeProfileInterface.profile?.getSpecificProfile(profileList[profileUsed[tab]].toString())
+                ProfileType.AVAILABLE_PROFILE -> activePlugin.activeProfileSource.profile?.getSpecificProfile(profileList[profileUsed[tab]].toString())
                 ProfileType.PROFILE_SWITCH -> profileSwitch[profileSwitchUsed[tab]].profileObject?.convertToNonCustomizedProfile()
             }
         } catch (e: Exception) {

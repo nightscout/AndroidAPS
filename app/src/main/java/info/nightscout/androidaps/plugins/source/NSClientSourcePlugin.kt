@@ -5,12 +5,12 @@ import androidx.work.Worker
 import androidx.work.WorkerParameters
 import androidx.work.workDataOf
 import dagger.android.HasAndroidInjector
-import info.nightscout.androidaps.Config
+import info.nightscout.androidaps.interfaces.Config
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.database.AppRepository
 import info.nightscout.androidaps.database.entities.GlucoseValue
 import info.nightscout.androidaps.database.transactions.CgmSourceTransaction
-import info.nightscout.androidaps.interfaces.BgSourceInterface
+import info.nightscout.androidaps.interfaces.BgSource
 import info.nightscout.androidaps.interfaces.PluginBase
 import info.nightscout.androidaps.interfaces.PluginDescription
 import info.nightscout.androidaps.interfaces.PluginType
@@ -44,7 +44,7 @@ class NSClientSourcePlugin @Inject constructor(
     .pluginName(R.string.nsclientbg)
     .description(R.string.description_source_ns_client),
     aapsLogger, resourceHelper, injector
-), BgSourceInterface {
+), BgSource {
 
     private var lastBGTimeStamp: Long = 0
     private var isAdvancedFilteringEnabled = false
@@ -61,7 +61,7 @@ class NSClientSourcePlugin @Inject constructor(
         return isAdvancedFilteringEnabled
     }
 
-    override fun uploadToNs(glucoseValue: GlucoseValue): Boolean = false
+    override fun shouldUploadToNs(glucoseValue: GlucoseValue): Boolean = false
 
     private fun detectSource(glucoseValue: GlucoseValue) {
         if (glucoseValue.timestamp > lastBGTimeStamp) {

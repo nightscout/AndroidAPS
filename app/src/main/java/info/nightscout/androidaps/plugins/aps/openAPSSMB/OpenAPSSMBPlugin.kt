@@ -37,7 +37,7 @@ open class OpenAPSSMBPlugin @Inject constructor(
     resourceHelper: ResourceHelper,
     private val profileFunction: ProfileFunction,
     private val context: Context,
-    private val activePlugin: ActivePluginProvider,
+    private val activePlugin: ActivePlugin,
     private val iobCobCalculator: IobCobCalculator,
     private val hardLimits: HardLimits,
     private val profiler: Profiler,
@@ -55,7 +55,7 @@ open class OpenAPSSMBPlugin @Inject constructor(
     .description(R.string.description_smb)
     .setDefault(),
     aapsLogger, resourceHelper, injector
-), APSInterface, ConstraintsInterface {
+), APS, Constraints {
 
     // last values
     override var lastAPSRun: Long = 0

@@ -12,7 +12,7 @@ import info.nightscout.androidaps.database.entities.ValueWithUnit
 import info.nightscout.androidaps.database.entities.UserEntry.Action
 import info.nightscout.androidaps.database.entities.UserEntry.Sources
 import info.nightscout.androidaps.databinding.DialogProfileswitchBinding
-import info.nightscout.androidaps.interfaces.ActivePluginProvider
+import info.nightscout.androidaps.interfaces.ActivePlugin
 import info.nightscout.androidaps.interfaces.ProfileFunction
 import info.nightscout.androidaps.logging.UserEntryLogger
 import info.nightscout.androidaps.plugins.treatments.TreatmentsPlugin
@@ -28,7 +28,7 @@ class ProfileSwitchDialog : DialogFragmentWithDate() {
     @Inject lateinit var resourceHelper: ResourceHelper
     @Inject lateinit var profileFunction: ProfileFunction
     @Inject lateinit var treatmentsPlugin: TreatmentsPlugin
-    @Inject lateinit var activePlugin: ActivePluginProvider
+    @Inject lateinit var activePlugin: ActivePlugin
     @Inject lateinit var uel: UserEntryLogger
 
     private var profileIndex: Int? = null
@@ -68,7 +68,7 @@ class ProfileSwitchDialog : DialogFragmentWithDate() {
 
         // profile
         context?.let { context ->
-            val profileStore = activePlugin.activeProfileInterface.profile
+            val profileStore = activePlugin.activeProfileSource.profile
                 ?: return
             val profileList = profileStore.getProfileList()
             val adapter = ArrayAdapter(context, R.layout.spinner_centered, profileList)
@@ -103,7 +103,7 @@ class ProfileSwitchDialog : DialogFragmentWithDate() {
 
     override fun submit(): Boolean {
         if (_binding == null) return false
-        val profileStore = activePlugin.activeProfileInterface.profile
+        val profileStore = activePlugin.activeProfileSource.profile
             ?: return false
 
         val actions: LinkedList<String> = LinkedList()

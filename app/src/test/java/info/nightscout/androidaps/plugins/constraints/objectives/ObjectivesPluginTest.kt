@@ -2,10 +2,10 @@ package info.nightscout.androidaps.plugins.constraints.objectives
 
 import dagger.android.AndroidInjector
 import dagger.android.HasAndroidInjector
-import info.nightscout.androidaps.Config
+import info.nightscout.androidaps.utils.buildHelper.ConfigImpl
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.TestBase
-import info.nightscout.androidaps.interfaces.ActivePluginProvider
+import info.nightscout.androidaps.interfaces.ActivePlugin
 import info.nightscout.androidaps.interfaces.Constraint
 import info.nightscout.androidaps.logging.UserEntryLogger
 import info.nightscout.androidaps.plugins.constraints.objectives.objectives.Objective
@@ -26,7 +26,7 @@ import org.powermock.modules.junit4.PowerMockRunner
 class ObjectivesPluginTest : TestBase() {
 
     @Mock lateinit var resourceHelper: ResourceHelper
-    @Mock lateinit var activePlugin: ActivePluginProvider
+    @Mock lateinit var activePlugin: ActivePlugin
     @Mock lateinit var sp: SP
     @Mock lateinit var dateUtil: DateUtil
     @Mock lateinit var uel: UserEntryLogger
@@ -44,7 +44,7 @@ class ObjectivesPluginTest : TestBase() {
     }
 
     @Before fun prepareMock() {
-        objectivesPlugin = ObjectivesPlugin(injector, aapsLogger, resourceHelper, activePlugin, sp, Config(), dateUtil, uel)
+        objectivesPlugin = ObjectivesPlugin(injector, aapsLogger, resourceHelper, activePlugin, sp, ConfigImpl(), dateUtil, uel)
         objectivesPlugin.onStart()
         `when`(resourceHelper.gs(R.string.objectivenotstarted)).thenReturn("Objective %1\$d not started")
     }

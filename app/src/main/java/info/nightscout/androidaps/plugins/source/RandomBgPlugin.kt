@@ -7,7 +7,7 @@ import info.nightscout.androidaps.R
 import info.nightscout.androidaps.database.AppRepository
 import info.nightscout.androidaps.database.entities.GlucoseValue
 import info.nightscout.androidaps.database.transactions.CgmSourceTransaction
-import info.nightscout.androidaps.interfaces.BgSourceInterface
+import info.nightscout.androidaps.interfaces.BgSource
 import info.nightscout.androidaps.interfaces.PluginBase
 import info.nightscout.androidaps.interfaces.PluginDescription
 import info.nightscout.androidaps.interfaces.PluginType
@@ -48,7 +48,7 @@ class RandomBgPlugin @Inject constructor(
     .preferencesId(R.xml.pref_bgsource)
     .description(R.string.description_source_randombg),
     aapsLogger, resourceHelper, injector
-), BgSourceInterface {
+), BgSource {
 
     private val loopHandler: Handler = Handler(HandlerThread(RandomBgPlugin::class.java.simpleName + "Handler").also { it.start() }.looper)
     private lateinit var refreshLoop: Runnable
@@ -74,7 +74,7 @@ class RandomBgPlugin @Inject constructor(
         return true
     }
 
-    override fun uploadToNs(glucoseValue: GlucoseValue): Boolean =
+    override fun shouldUploadToNs(glucoseValue: GlucoseValue): Boolean =
         glucoseValue.sourceSensor == GlucoseValue.SourceSensor.RANDOM && sp.getBoolean(R.string.key_dexcomg5_nsupload, false)
 
     override fun onStart() {

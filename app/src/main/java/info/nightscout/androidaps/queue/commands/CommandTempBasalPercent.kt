@@ -2,7 +2,7 @@ package info.nightscout.androidaps.queue.commands
 
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.data.Profile
-import info.nightscout.androidaps.interfaces.ActivePluginProvider
+import info.nightscout.androidaps.interfaces.ActivePlugin
 import info.nightscout.androidaps.interfaces.PumpSync
 import info.nightscout.androidaps.logging.LTag
 import info.nightscout.androidaps.queue.Callback
@@ -18,7 +18,7 @@ class CommandTempBasalPercent(
     callback: Callback?
 ) : Command(injector, CommandType.TEMPBASAL, callback) {
 
-    @Inject lateinit var activePlugin: ActivePluginProvider
+    @Inject lateinit var activePlugin: ActivePlugin
 
     override fun execute() {
         val r = activePlugin.activePump.setTempBasalPercent(percent, durationInMinutes, profile, enforceNew, tbrType)

@@ -31,13 +31,13 @@ import info.nightscout.androidaps.events.EventInitializationChanged;
 import info.nightscout.androidaps.events.EventRefreshOverview;
 import info.nightscout.androidaps.interfaces.CommandQueueProvider;
 import info.nightscout.androidaps.interfaces.Constraint;
-import info.nightscout.androidaps.interfaces.ConstraintsInterface;
+import info.nightscout.androidaps.interfaces.Constraints;
 import info.nightscout.androidaps.interfaces.DatabaseHelperInterface;
 import info.nightscout.androidaps.interfaces.PluginDescription;
 import info.nightscout.androidaps.interfaces.PluginType;
 import info.nightscout.androidaps.interfaces.ProfileFunction;
 import info.nightscout.androidaps.interfaces.PumpDescription;
-import info.nightscout.androidaps.interfaces.PumpInterface;
+import info.nightscout.androidaps.interfaces.Pump;
 import info.nightscout.androidaps.interfaces.PumpPluginBase;
 import info.nightscout.androidaps.interfaces.PumpSync;
 import info.nightscout.androidaps.logging.AAPSLogger;
@@ -72,7 +72,7 @@ import info.nightscout.androidaps.utils.sharedPreferences.SP;
  * Created by mike on 05.08.2016.
  */
 @Singleton
-public class ComboPlugin extends PumpPluginBase implements PumpInterface, ConstraintsInterface {
+public class ComboPlugin extends PumpPluginBase implements Pump, Constraints {
     static final String COMBO_TBRS_SET = "combo_tbrs_set";
     static final String COMBO_BOLUSES_DELIVERED = "combo_boluses_delivered";
 

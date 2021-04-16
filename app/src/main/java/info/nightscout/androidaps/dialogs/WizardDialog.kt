@@ -23,7 +23,7 @@ import info.nightscout.androidaps.database.AppRepository
 import info.nightscout.androidaps.database.ValueWrapper
 import info.nightscout.androidaps.databinding.DialogWizardBinding
 import info.nightscout.androidaps.events.EventAutosensCalculationFinished
-import info.nightscout.androidaps.interfaces.ActivePluginProvider
+import info.nightscout.androidaps.interfaces.ActivePlugin
 import info.nightscout.androidaps.interfaces.Constraint
 import info.nightscout.androidaps.interfaces.IobCobCalculator
 import info.nightscout.androidaps.interfaces.ProfileFunction
@@ -60,7 +60,7 @@ class WizardDialog : DaggerDialogFragment() {
     @Inject lateinit var fabricPrivacy: FabricPrivacy
     @Inject lateinit var resourceHelper: ResourceHelper
     @Inject lateinit var profileFunction: ProfileFunction
-    @Inject lateinit var activePlugin: ActivePluginProvider
+    @Inject lateinit var activePlugin: ActivePlugin
     @Inject lateinit var iobCobCalculator: IobCobCalculator
     @Inject lateinit var repository: AppRepository
     @Inject lateinit var dateUtil: DateUtil
@@ -244,7 +244,7 @@ class WizardDialog : DaggerDialogFragment() {
 
     private fun initDialog() {
         val profile = profileFunction.getProfile()
-        val profileStore = activePlugin.activeProfileInterface.profile
+        val profileStore = activePlugin.activeProfileSource.profile
 
         if (profile == null || profileStore == null) {
             ToastUtils.showToastInUiThread(ctx, resourceHelper.gs(R.string.noprofile))
@@ -283,7 +283,7 @@ class WizardDialog : DaggerDialogFragment() {
     }
 
     private fun calculateInsulin() {
-        val profileStore = activePlugin.activeProfileInterface.profile
+        val profileStore = activePlugin.activeProfileSource.profile
         if (binding.profile.selectedItem == null || profileStore == null)
             return  // not initialized yet
         var profileName = binding.profile.selectedItem.toString()

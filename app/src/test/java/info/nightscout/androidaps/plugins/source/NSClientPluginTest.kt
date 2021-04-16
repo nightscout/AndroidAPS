@@ -1,7 +1,7 @@
 package info.nightscout.androidaps.plugins.source
 
 import dagger.android.AndroidInjector
-import info.nightscout.androidaps.Config
+import info.nightscout.androidaps.utils.buildHelper.ConfigImpl
 import info.nightscout.androidaps.TestBase
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 import info.nightscout.androidaps.utils.sharedPreferences.SP
@@ -22,7 +22,7 @@ class NSClientPluginTest : TestBase() {
 
     @Before
     fun setup() {
-        nsClientSourcePlugin = NSClientSourcePlugin({ AndroidInjector { } }, resourceHelper, aapsLogger, Config())
+        nsClientSourcePlugin = NSClientSourcePlugin({ AndroidInjector { } }, resourceHelper, aapsLogger, ConfigImpl())
     }
 
     @Test fun advancedFilteringSupported() {

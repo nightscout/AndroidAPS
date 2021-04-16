@@ -55,10 +55,10 @@ import info.nightscout.androidaps.dialogs.BolusProgressDialog;
 import info.nightscout.androidaps.events.EventInitializationChanged;
 import info.nightscout.androidaps.events.EventProfileNeedsUpdate;
 import info.nightscout.androidaps.events.EventPumpStatusChanged;
-import info.nightscout.androidaps.interfaces.ActivePluginProvider;
+import info.nightscout.androidaps.interfaces.ActivePlugin;
 import info.nightscout.androidaps.interfaces.CommandQueueProvider;
 import info.nightscout.androidaps.interfaces.ProfileFunction;
-import info.nightscout.androidaps.interfaces.PumpInterface;
+import info.nightscout.androidaps.interfaces.Pump;
 import info.nightscout.androidaps.interfaces.PumpSync;
 import info.nightscout.androidaps.logging.AAPSLogger;
 import info.nightscout.androidaps.logging.LTag;
@@ -82,7 +82,7 @@ public class DanaRv2ExecutionService extends AbstractDanaRExecutionService {
     @Inject DanaPump danaPump;
     @Inject DanaRKoreanPlugin danaRKoreanPlugin;
     @Inject DanaRv2Plugin danaRv2Plugin;
-    @Inject ActivePluginProvider activePlugin;
+    @Inject ActivePlugin activePlugin;
     @Inject CommandQueueProvider commandQueue;
     @Inject Context context;
     @Inject MessageHashTableRv2 messageHashTableRv2;
@@ -168,7 +168,7 @@ public class DanaRv2ExecutionService extends AbstractDanaRExecutionService {
             danaPump.setLastConnection(System.currentTimeMillis());
 
             Profile profile = profileFunction.getProfile();
-            PumpInterface pump = activePlugin.getActivePump();
+            Pump pump = activePlugin.getActivePump();
             if (profile != null && Math.abs(danaPump.getCurrentBasal() - profile.getBasal()) >= pump.getPumpDescription().getBasalStep()) {
                 rxBus.send(new EventPumpStatusChanged(resourceHelper.gs(R.string.gettingpumpsettings)));
                 mSerialIOThread.sendMessage(new MsgSettingBasal(injector));

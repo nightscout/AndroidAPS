@@ -14,7 +14,7 @@ import info.nightscout.androidaps.databinding.MaintenanceFragmentBinding
 import info.nightscout.androidaps.events.EventNewBG
 import info.nightscout.androidaps.interfaces.DataSyncSelector
 import info.nightscout.androidaps.interfaces.DatabaseHelperInterface
-import info.nightscout.androidaps.interfaces.ImportExportPrefsInterface
+import info.nightscout.androidaps.interfaces.ImportExportPrefs
 import info.nightscout.androidaps.interfaces.PumpSync
 import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.logging.UserEntryLogger
@@ -35,7 +35,7 @@ class MaintenanceFragment : DaggerFragment() {
     @Inject lateinit var maintenancePlugin: MaintenancePlugin
     @Inject lateinit var rxBus: RxBusWrapper
     @Inject lateinit var resourceHelper: ResourceHelper
-    @Inject lateinit var importExportPrefs: ImportExportPrefsInterface
+    @Inject lateinit var importExportPrefs: ImportExportPrefs
     @Inject lateinit var aapsSchedulers: AapsSchedulers
     @Inject lateinit var repository: AppRepository
     @Inject lateinit var databaseHelper: DatabaseHelperInterface

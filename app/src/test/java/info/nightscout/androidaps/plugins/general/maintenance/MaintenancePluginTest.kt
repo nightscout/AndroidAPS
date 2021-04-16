@@ -2,7 +2,7 @@ package info.nightscout.androidaps.plugins.general.maintenance
 
 import android.content.Context
 import dagger.android.HasAndroidInjector
-import info.nightscout.androidaps.Config
+import info.nightscout.androidaps.utils.buildHelper.ConfigImpl
 import info.nightscout.androidaps.TestBase
 import info.nightscout.androidaps.plugins.general.nsclient.data.NSSettingsStatus
 import info.nightscout.androidaps.utils.buildHelper.BuildHelper
@@ -34,7 +34,7 @@ class MaintenancePluginTest : TestBase() {
 
     @Before
     fun mock() {
-        sut = MaintenancePlugin(injector, context, resourceHelper, sp, nsSettingsStatus, aapsLogger, buildHelper, Config(), loggerUtils)
+        sut = MaintenancePlugin(injector, context, resourceHelper, sp, nsSettingsStatus, aapsLogger, buildHelper, ConfigImpl(), loggerUtils)
         `when`(loggerUtils.suffix).thenReturn(".log.zip")
         `when`(loggerUtils.logDirectory).thenReturn("src/test/res/logger")
     }

@@ -4,7 +4,7 @@ import info.nightscout.androidaps.R
 import info.nightscout.androidaps.database.AppRepository
 import info.nightscout.androidaps.database.entities.DeviceStatus
 import info.nightscout.androidaps.database.entities.*
-import info.nightscout.androidaps.interfaces.ActivePluginProvider
+import info.nightscout.androidaps.interfaces.ActivePlugin
 import info.nightscout.androidaps.interfaces.DataSyncSelector
 import info.nightscout.androidaps.interfaces.ProfileFunction
 import info.nightscout.androidaps.logging.AAPSLogger
@@ -20,7 +20,7 @@ class DataSyncSelectorImplementation @Inject constructor(
     private val dateUtil: DateUtil,
     private val profileFunction: ProfileFunction,
     private val nsClientPlugin: NSClientPlugin,
-    private val activePlugin: ActivePluginProvider,
+    private val activePlugin: ActivePlugin,
     private val appRepository: AppRepository
 ) : DataSyncSelector {
 
@@ -244,7 +244,7 @@ class DataSyncSelectorImplementation @Inject constructor(
         val startId = sp.getLong(R.string.key_ns_glucose_value_last_synced_id, 0)
         appRepository.getNextSyncElementGlucoseValue(startId).blockingGet()?.let { gv ->
             aapsLogger.info(LTag.DATABASE, "Loading GlucoseValue data Start: $startId ID: ${gv.first.id} HistoryID: ${gv.second} ")
-            if (activePlugin.activeBgSource.uploadToNs(gv.first)) {
+            if (activePlugin.activeBgSource.shouldUploadToNs(gv.first)) {
                 when {
                     // removed and not uploaded yet = ignore
                     !gv.first.isValid && gv.first.interfaceIDs.nightscoutId == null -> Any()

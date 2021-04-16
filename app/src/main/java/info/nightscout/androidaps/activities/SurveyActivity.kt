@@ -8,7 +8,7 @@ import info.nightscout.androidaps.R
 import info.nightscout.androidaps.data.defaultProfile.DefaultProfile
 import info.nightscout.androidaps.databinding.ActivitySurveyBinding
 import info.nightscout.androidaps.dialogs.ProfileViewerDialog
-import info.nightscout.androidaps.interfaces.ActivePluginProvider
+import info.nightscout.androidaps.interfaces.ActivePlugin
 import info.nightscout.androidaps.interfaces.ProfileFunction
 import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.logging.LTag
@@ -24,7 +24,7 @@ import javax.inject.Inject
 class SurveyActivity : NoSplashAppCompatActivity() {
 
     @Inject lateinit var aapsLogger: AAPSLogger
-    @Inject lateinit var activePlugin: ActivePluginProvider
+    @Inject lateinit var activePlugin: ActivePlugin
     @Inject lateinit var tddCalculator: TddCalculator
     @Inject lateinit var tirCalculator: TirCalculator
     @Inject lateinit var profileFunction: ProfileFunction
@@ -41,7 +41,7 @@ class SurveyActivity : NoSplashAppCompatActivity() {
 
         binding.id.text = InstanceId.instanceId()
 
-        val profileStore = activePlugin.activeProfileInterface.profile
+        val profileStore = activePlugin.activeProfileSource.profile
         val profileList = profileStore?.getProfileList() ?: return
         binding.spinner.adapter = ArrayAdapter(this, R.layout.spinner_centered, profileList)
 

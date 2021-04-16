@@ -4,7 +4,7 @@ import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.data.DetailedBolusInfo
 import info.nightscout.androidaps.data.PumpEnactResult
-import info.nightscout.androidaps.interfaces.ActivePluginProvider
+import info.nightscout.androidaps.interfaces.ActivePlugin
 import info.nightscout.androidaps.logging.LTag
 import info.nightscout.androidaps.queue.Callback
 import info.nightscout.androidaps.utils.DateUtil
@@ -18,7 +18,7 @@ class CommandSMBBolus(
 ) : Command(injector, CommandType.SMB_BOLUS, callback) {
 
     @Inject lateinit var dateUtil: DateUtil
-    @Inject lateinit var activePlugin: ActivePluginProvider
+    @Inject lateinit var activePlugin: ActivePlugin
 
     override fun execute() {
         val r: PumpEnactResult

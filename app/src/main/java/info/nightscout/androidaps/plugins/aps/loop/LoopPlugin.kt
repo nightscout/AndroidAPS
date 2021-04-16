@@ -76,7 +76,7 @@ open class LoopPlugin @Inject constructor(
     private val profileFunction: ProfileFunction,
     private val context: Context,
     private val commandQueue: CommandQueueProvider,
-    private val activePlugin: ActivePluginProvider,
+    private val activePlugin: ActivePlugin,
     private val virtualPumpPlugin: VirtualPumpPlugin,
     private val iobCobCalculator: IobCobCalculator,
     private val receiverStatusStore: ReceiverStatusStore,

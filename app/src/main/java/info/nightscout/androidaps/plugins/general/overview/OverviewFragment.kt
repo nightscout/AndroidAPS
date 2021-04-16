@@ -24,7 +24,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.jjoe64.graphview.GraphView
 import dagger.android.HasAndroidInjector
 import dagger.android.support.DaggerFragment
-import info.nightscout.androidaps.Config
+import info.nightscout.androidaps.interfaces.Config
 import info.nightscout.androidaps.Constants
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.data.Profile
@@ -44,7 +44,6 @@ import info.nightscout.androidaps.logging.UserEntryLogger
 import info.nightscout.androidaps.plugins.aps.loop.LoopPlugin
 import info.nightscout.androidaps.plugins.aps.loop.events.EventNewOpenLoopNotification
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper
-import info.nightscout.androidaps.plugins.configBuilder.ConfigBuilderPlugin
 import info.nightscout.androidaps.plugins.configBuilder.ConstraintChecker
 import info.nightscout.androidaps.plugins.general.nsclient.data.NSDeviceStatus
 import info.nightscout.androidaps.plugins.general.overview.activities.QuickWizardListActivity
@@ -96,8 +95,7 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
     @Inject lateinit var statusLightHandler: StatusLightHandler
     @Inject lateinit var nsDeviceStatus: NSDeviceStatus
     @Inject lateinit var loopPlugin: LoopPlugin
-    @Inject lateinit var configBuilderPlugin: ConfigBuilderPlugin
-    @Inject lateinit var activePlugin: ActivePluginProvider
+    @Inject lateinit var activePlugin: ActivePlugin
     @Inject lateinit var treatmentsPlugin: TreatmentsPlugin
     @Inject lateinit var iobCobCalculator: IobCobCalculator
     @Inject lateinit var dexcomPlugin: DexcomPlugin
@@ -817,7 +815,7 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
             } ?: ""
     }
 
-    private fun updateGraph(lastRun: LoopInterface.LastRun?, predictionsAvailable: Boolean, lowLine: Double, highLine: Double, pump: PumpInterface, profile: Profile) {
+    private fun updateGraph(lastRun: LoopInterface.LastRun?, predictionsAvailable: Boolean, lowLine: Double, highLine: Double, pump: Pump, profile: Profile) {
         viewLifecycleOwner.lifecycleScope.launch(Dispatchers.Main) {
             if (_binding == null) return@launch
             val menuChartSettings = overviewMenus.setting
@@ -903,8 +901,8 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
                             menuChartSettings[g + 1][OverviewMenus.CharType.IOB.ordinal]      -> useIobForScale = true
                             menuChartSettings[g + 1][OverviewMenus.CharType.COB.ordinal]      -> useCobForScale = true
                             menuChartSettings[g + 1][OverviewMenus.CharType.DEV.ordinal]      -> useDevForScale = true
-                            menuChartSettings[g + 1][OverviewMenus.CharType.SEN.ordinal]      -> useRatioForScale = true
                             menuChartSettings[g + 1][OverviewMenus.CharType.BGI.ordinal]      -> useBGIForScale = true
+                            menuChartSettings[g + 1][OverviewMenus.CharType.SEN.ordinal]      -> useRatioForScale = true
                             menuChartSettings[g + 1][OverviewMenus.CharType.DEVSLOPE.ordinal] -> useDSForScale = true
                         }
                         val alignIobScale = menuChartSettings[g + 1][OverviewMenus.CharType.ABS.ordinal] && menuChartSettings[g + 1][OverviewMenus.CharType.IOB.ordinal]
@@ -914,8 +912,8 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
                         if (menuChartSettings[g + 1][OverviewMenus.CharType.IOB.ordinal]) secondGraphData.addIob(fromTime, now, useIobForScale, 1.0, menuChartSettings[g + 1][OverviewMenus.CharType.PRE.ordinal], alignIobScale)
                         if (menuChartSettings[g + 1][OverviewMenus.CharType.COB.ordinal]) secondGraphData.addCob(fromTime, now, useCobForScale, if (useCobForScale) 1.0 else 0.5)
                         if (menuChartSettings[g + 1][OverviewMenus.CharType.DEV.ordinal]) secondGraphData.addDeviations(fromTime, now, useDevForScale, 1.0, alignDevBgiScale)
-                        if (menuChartSettings[g + 1][OverviewMenus.CharType.SEN.ordinal]) secondGraphData.addRatio(fromTime, now, useRatioForScale, 1.0)
                         if (menuChartSettings[g + 1][OverviewMenus.CharType.BGI.ordinal]) secondGraphData.addMinusBGI(fromTime, endTime, useBGIForScale, if (alignDevBgiScale) 1.0 else 0.8, alignDevBgiScale)
+                        if (menuChartSettings[g + 1][OverviewMenus.CharType.SEN.ordinal]) secondGraphData.addRatio(fromTime, now, useRatioForScale, if (useRatioForScale) 1.0 else 0.8)
                         if (menuChartSettings[g + 1][OverviewMenus.CharType.DEVSLOPE.ordinal] && buildHelper.isDev()) secondGraphData.addDeviationSlope(fromTime, now, useDSForScale, 1.0)
 
                         // set manual x bounds to have nice steps
@@ -935,8 +933,8 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
                             menuChartSettings[g + 1][OverviewMenus.CharType.IOB.ordinal] ||
                             menuChartSettings[g + 1][OverviewMenus.CharType.COB.ordinal] ||
                             menuChartSettings[g + 1][OverviewMenus.CharType.DEV.ordinal] ||
-                            menuChartSettings[g + 1][OverviewMenus.CharType.SEN.ordinal] ||
                             menuChartSettings[g + 1][OverviewMenus.CharType.BGI.ordinal] ||
+                            menuChartSettings[g + 1][OverviewMenus.CharType.SEN.ordinal] ||
                             menuChartSettings[g + 1][OverviewMenus.CharType.DEVSLOPE.ordinal]
                         ).toVisibility()
                     secondaryGraphsData[g].performUpdate()

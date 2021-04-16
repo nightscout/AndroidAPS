@@ -2,12 +2,12 @@ package info.nightscout.androidaps.plugins.constraints.safety
 
 import dagger.android.AndroidInjector
 import dagger.android.HasAndroidInjector
-import info.nightscout.androidaps.Config
+import info.nightscout.androidaps.utils.buildHelper.ConfigImpl
 import info.nightscout.androidaps.Constants
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.TestBaseWithProfile
 import info.nightscout.androidaps.database.AppRepository
-import info.nightscout.androidaps.interfaces.ActivePluginProvider
+import info.nightscout.androidaps.interfaces.ActivePlugin
 import info.nightscout.androidaps.interfaces.Constraint
 import info.nightscout.androidaps.interfaces.PumpDescription
 import info.nightscout.androidaps.plugins.aps.openAPSAMA.OpenAPSAMAPlugin
@@ -37,7 +37,7 @@ class SafetyPluginTest : TestBaseWithProfile() {
     @Mock lateinit var openAPSAMAPlugin: OpenAPSAMAPlugin
     @Mock lateinit var openAPSSMBPlugin: OpenAPSSMBPlugin
     @Mock lateinit var sensitivityOref1Plugin: SensitivityOref1Plugin
-    @Mock lateinit var activePlugin: ActivePluginProvider
+    @Mock lateinit var activePlugin: ActivePlugin
     @Mock lateinit var buildHelper: BuildHelper
     @Mock lateinit var virtualPumpPlugin: VirtualPumpPlugin
     @Mock lateinit var glimpPlugin: GlimpPlugin
@@ -74,7 +74,7 @@ class SafetyPluginTest : TestBaseWithProfile() {
         `when`(activePlugin.activePump).thenReturn(virtualPumpPlugin)
         `when`(virtualPumpPlugin.pumpDescription).thenReturn(pumpDescription)
         hardLimits = HardLimits(aapsLogger, rxBus, sp, resourceHelper, context, repository)
-        safetyPlugin = SafetyPlugin(injector, aapsLogger, resourceHelper, sp, rxBus, constraintChecker, openAPSAMAPlugin, openAPSSMBPlugin, sensitivityOref1Plugin, activePlugin, hardLimits, buildHelper, iobCobCalculator, Config(), dateUtil)
+        safetyPlugin = SafetyPlugin(injector, aapsLogger, resourceHelper, sp, rxBus, constraintChecker, openAPSAMAPlugin, openAPSSMBPlugin, sensitivityOref1Plugin, activePlugin, hardLimits, buildHelper, iobCobCalculator, ConfigImpl(), dateUtil)
     }
 
     @Test fun pumpDescriptionShouldLimitLoopInvocation() {

@@ -17,15 +17,11 @@ import javax.inject.Inject;
 
 import dagger.android.HasAndroidInjector;
 import info.nightscout.androidaps.Constants;
-import info.nightscout.androidaps.data.Iob;
-import info.nightscout.androidaps.data.IobTotal;
-import info.nightscout.androidaps.data.Profile;
-import info.nightscout.androidaps.interfaces.ActivePluginProvider;
-import info.nightscout.androidaps.interfaces.InsulinInterface;
+import info.nightscout.androidaps.interfaces.ActivePlugin;
+import info.nightscout.androidaps.interfaces.Insulin;
 import info.nightscout.androidaps.interfaces.Interval;
 import info.nightscout.androidaps.plugins.general.overview.graphExtensions.DataPointWithLabelInterface;
 import info.nightscout.androidaps.plugins.general.overview.graphExtensions.PointsWithLabelGraphSeries;
-import info.nightscout.androidaps.plugins.iob.iobCobCalculator.AutosensResult;
 import info.nightscout.androidaps.utils.DateUtil;
 import info.nightscout.androidaps.utils.DecimalFormatter;
 import info.nightscout.androidaps.utils.JsonHelper;
@@ -39,7 +35,7 @@ import info.nightscout.androidaps.utils.Round;
 @DatabaseTable(tableName = "ExtendedBoluses")
 public class ExtendedBolus implements Interval, DataPointWithLabelInterface {
 
-    @Inject ActivePluginProvider activePlugin;
+    @Inject ActivePlugin activePlugin;
     @Inject DateUtil dateUtil;
 
     private HasAndroidInjector injector;
@@ -64,7 +60,7 @@ public class ExtendedBolus implements Interval, DataPointWithLabelInterface {
     public int durationInMinutes = 0; // duration == 0 means end of extended bolus
 
     @DatabaseField
-    public int insulinInterfaceID = InsulinInterface.InsulinType.OREF_RAPID_ACTING.getValue();
+    public int insulinInterfaceID = Insulin.InsulinType.OREF_RAPID_ACTING.getValue();
 
     @DatabaseField
     public double dia = Constants.defaultDIA;
@@ -229,90 +225,6 @@ public class ExtendedBolus implements Interval, DataPointWithLabelInterface {
 
     public double insulinSoFar() {
         return absoluteRate() * getRealDuration() / 60d;
-    }
-
-    public IobTotal iobCalc(long time, Profile profile) {
-        IobTotal result = new IobTotal(time);
-        InsulinInterface insulinInterface = activePlugin.getActiveInsulin();
-
-        double realDuration = getDurationToTime(time);
-
-        if (realDuration > 0) {
-            double dia = profile.getDia();
-            double dia_ago = time - dia * 60 * 60 * 1000;
-            int aboutFiveMinIntervals = (int) Math.ceil(realDuration / 5d);
-            double spacing = realDuration / aboutFiveMinIntervals;
-
-            for (long j = 0L; j < aboutFiveMinIntervals; j++) {
-                // find middle of the interval
-                long calcdate = (long) (date + j * spacing * 60 * 1000 + 0.5d * spacing * 60 * 1000);
-
-                if (calcdate > dia_ago && calcdate <= time) {
-                    double tempBolusSize = absoluteRate() * spacing / 60d;
-
-                    Treatment tempBolusPart = new Treatment();
-                    tempBolusPart.insulin = tempBolusSize;
-                    tempBolusPart.date = calcdate;
-
-                    Iob aIOB = insulinInterface.iobCalcForTreatment(tempBolusPart, time, dia);
-                    result.iob += aIOB.getIobContrib();
-                    result.activity += aIOB.getActivityContrib();
-                    result.extendedBolusInsulin += tempBolusPart.insulin;
-                }
-            }
-        }
-        return result;
-    }
-
-    public IobTotal iobCalc(long time, Profile profile, AutosensResult lastAutosensResult, boolean exercise_mode, int half_basal_exercise_target, boolean isTempTarget) {
-        IobTotal result = new IobTotal(time);
-        InsulinInterface insulinInterface = activePlugin.getActiveInsulin();
-
-        double realDuration = getDurationToTime(time);
-        double netBasalAmount = 0d;
-
-        double sensitivityRatio = lastAutosensResult.ratio;
-        double normalTarget = 100;
-
-        if (exercise_mode && isTempTarget && profile.getTargetMgdl() >= normalTarget + 5) {
-            // w/ target 100, temp target 110 = .89, 120 = 0.8, 140 = 0.67, 160 = .57, and 200 = .44
-            // e.g.: Sensitivity ratio set to 0.8 based on temp target of 120; Adjusting basal from 1.65 to 1.35; ISF from 58.9 to 73.6
-            double c = half_basal_exercise_target - normalTarget;
-            sensitivityRatio = c / (c + profile.getTargetMgdl() - normalTarget);
-        }
-
-        if (realDuration > 0) {
-            double netBasalRate;
-            double dia = profile.getDia();
-            double dia_ago = time - dia * 60 * 60 * 1000;
-            int aboutFiveMinIntervals = (int) Math.ceil(realDuration / 5d);
-            double spacing = realDuration / aboutFiveMinIntervals;
-
-            for (long j = 0L; j < aboutFiveMinIntervals; j++) {
-                // find middle of the interval
-                long calcdate = (long) (date + j * spacing * 60 * 1000 + 0.5d * spacing * 60 * 1000);
-
-                double basalRate = profile.getBasal(calcdate);
-                double basalRateCorrection = basalRate * (sensitivityRatio - 1);
-
-
-                netBasalRate = absoluteRate() - basalRateCorrection;
-
-                if (calcdate > dia_ago && calcdate <= time) {
-                    double tempBolusSize = netBasalRate * spacing / 60d;
-
-                    Treatment tempBolusPart = new Treatment();
-                    tempBolusPart.insulin = tempBolusSize;
-                    tempBolusPart.date = calcdate;
-
-                    Iob aIOB = insulinInterface.iobCalcForTreatment(tempBolusPart, time, dia);
-                    result.iob += aIOB.getIobContrib();
-                    result.activity += aIOB.getActivityContrib();
-                    result.extendedBolusInsulin += tempBolusPart.insulin;
-                }
-            }
-        }
-        return result;
     }
 
     public int getRealDuration() {

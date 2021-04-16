@@ -3,7 +3,7 @@ package info.nightscout.androidaps.plugins.general.nsclient.data
 import android.text.Spanned
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.R
-import info.nightscout.androidaps.interfaces.ConfigInterface
+import info.nightscout.androidaps.interfaces.Config
 import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.logging.LTag
 import info.nightscout.androidaps.plugins.aps.loop.APSResult
@@ -78,7 +78,7 @@ class NSDeviceStatus @Inject constructor(
     private val sp: SP,
     private val resourceHelper: ResourceHelper,
     private val nsSettingsStatus: NSSettingsStatus,
-    private val config: ConfigInterface,
+    private val config: Config,
     private val dateUtil: DateUtil,
     private val runningConfiguration: RunningConfiguration
 ) {

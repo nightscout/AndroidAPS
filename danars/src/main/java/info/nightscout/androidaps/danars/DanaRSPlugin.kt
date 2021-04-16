@@ -71,7 +71,7 @@ class DanaRSPlugin @Inject constructor(
     .preferencesId(R.xml.pref_danars)
     .description(R.string.description_pump_dana_rs),
     injector, aapsLogger, resourceHelper, commandQueue
-), PumpInterface, DanaRInterface, ConstraintsInterface {
+), Pump, Dana, Constraints {
 
     private val disposable = CompositeDisposable()
     private var danaRSService: DanaRSService? = null

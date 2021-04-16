@@ -13,7 +13,7 @@ import java.util.Optional;
 import javax.inject.Inject;
 
 import dagger.android.support.DaggerFragment;
-import info.nightscout.androidaps.interfaces.ActivePluginProvider;
+import info.nightscout.androidaps.interfaces.ActivePlugin;
 import info.nightscout.androidaps.logging.AAPSLogger;
 import info.nightscout.androidaps.plugins.pump.common.R;
 import info.nightscout.androidaps.plugins.pump.common.dialog.RefreshableInterface;
@@ -35,7 +35,7 @@ public class RileyLinkStatusGeneralFragment extends DaggerFragment implements Re
 
     private static final String PLACEHOLDER = "-";
 
-    @Inject ActivePluginProvider activePlugin;
+    @Inject ActivePlugin activePlugin;
     @Inject ResourceHelper resourceHelper;
     @Inject AAPSLogger aapsLogger;
     @Inject RileyLinkServiceData rileyLinkServiceData;

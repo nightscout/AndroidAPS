@@ -5,7 +5,7 @@ import dagger.android.AndroidInjector
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.TestBaseWithProfile
 import info.nightscout.androidaps.TestPumpPlugin
-import info.nightscout.androidaps.interfaces.ActivePluginProvider
+import info.nightscout.androidaps.interfaces.ActivePlugin
 import info.nightscout.androidaps.interfaces.IobCobCalculator
 import info.nightscout.androidaps.interfaces.PluginDescription
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper
@@ -25,7 +25,7 @@ open class TriggerTestBase : TestBaseWithProfile() {
 
     @Mock lateinit var sp: SP
     @Mock lateinit var locationDataContainer: LastLocationDataContainer
-    @Mock lateinit var activePlugin: ActivePluginProvider
+    @Mock lateinit var activePlugin: ActivePlugin
     @Mock lateinit var iobCobCalculator: IobCobCalculator
     @Mock lateinit var autosensDataStore: AutosensDataStore
     @Mock lateinit var context: Context

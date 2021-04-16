@@ -29,7 +29,7 @@ class ConfigBuilderPlugin @Inject constructor(
     resourceHelper: ResourceHelper,
     private val sp: SP,
     private val rxBus: RxBusWrapper,
-    private val activePlugin: ActivePluginProvider,
+    private val activePlugin: ActivePlugin,
     private val uel: UserEntryLogger,
     private val pumpSync: PumpSync
 ) : PluginBase(PluginDescription()
@@ -43,9 +43,9 @@ class ConfigBuilderPlugin @Inject constructor(
     .shortName(R.string.configbuilder_shortname)
     .description(R.string.description_config_builder),
     aapsLogger, resourceHelper, injector
-), ConfigBuilderInterface {
+), ConfigBuilder {
 
-    fun initialize() {
+    override fun initialize() {
         (activePlugin as PluginStore).loadDefaults()
         loadSettings()
         setAlwaysEnabledPluginsEnabled()
@@ -69,7 +69,7 @@ class ConfigBuilderPlugin @Inject constructor(
             if (p.pluginDescription.alwaysEnabled && p.pluginDescription.neverVisible) continue
             savePref(p, type, true)
             if (type == PluginType.PUMP) {
-                if (p is ProfileInterface) { // Store state of optional Profile interface
+                if (p is ProfileSource) { // Store state of optional Profile interface
                     savePref(p, PluginType.PROFILE, false)
                 }
             }
@@ -93,7 +93,7 @@ class ConfigBuilderPlugin @Inject constructor(
             val type = p.getType()
             loadPref(p, type, true)
             if (p.getType() == PluginType.PUMP) {
-                if (p is ProfileInterface) {
+                if (p is ProfileSource) {
                     loadPref(p, PluginType.PROFILE, false)
                 }
             }
@@ -180,13 +180,13 @@ class ConfigBuilderPlugin @Inject constructor(
     fun processOnEnabledCategoryChanged(changedPlugin: PluginBase, type: PluginType?) {
         var pluginsInCategory: ArrayList<PluginBase>? = null
         when (type) {
-            PluginType.INSULIN     -> pluginsInCategory = activePlugin.getSpecificPluginsListByInterface(InsulinInterface::class.java)
-            PluginType.SENSITIVITY -> pluginsInCategory = activePlugin.getSpecificPluginsListByInterface(SensitivityInterface::class.java)
-            PluginType.APS         -> pluginsInCategory = activePlugin.getSpecificPluginsListByInterface(APSInterface::class.java)
-            PluginType.PROFILE     -> pluginsInCategory = activePlugin.getSpecificPluginsListByInterface(ProfileInterface::class.java)
-            PluginType.BGSOURCE    -> pluginsInCategory = activePlugin.getSpecificPluginsListByInterface(BgSourceInterface::class.java)
+            PluginType.INSULIN     -> pluginsInCategory = activePlugin.getSpecificPluginsListByInterface(Insulin::class.java)
+            PluginType.SENSITIVITY -> pluginsInCategory = activePlugin.getSpecificPluginsListByInterface(Sensitivity::class.java)
+            PluginType.APS         -> pluginsInCategory = activePlugin.getSpecificPluginsListByInterface(APS::class.java)
+            PluginType.PROFILE     -> pluginsInCategory = activePlugin.getSpecificPluginsListByInterface(ProfileSource::class.java)
+            PluginType.BGSOURCE    -> pluginsInCategory = activePlugin.getSpecificPluginsListByInterface(BgSource::class.java)
             PluginType.TREATMENT   -> pluginsInCategory = activePlugin.getSpecificPluginsListByInterface(TreatmentsInterface::class.java)
-            PluginType.PUMP        -> pluginsInCategory = activePlugin.getSpecificPluginsListByInterface(PumpInterface::class.java)
+            PluginType.PUMP        -> pluginsInCategory = activePlugin.getSpecificPluginsListByInterface(Pump::class.java)
 
             else                   -> {
             }

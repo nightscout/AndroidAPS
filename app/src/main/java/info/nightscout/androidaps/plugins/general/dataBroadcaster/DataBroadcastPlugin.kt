@@ -5,7 +5,7 @@ import android.content.Intent
 import android.content.pm.ResolveInfo
 import android.os.Bundle
 import dagger.android.HasAndroidInjector
-import info.nightscout.androidaps.Config
+import info.nightscout.androidaps.interfaces.Config
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.events.*
 import info.nightscout.androidaps.interfaces.*
@@ -45,7 +45,7 @@ class DataBroadcastPlugin @Inject constructor(
     private val defaultValueHelper: DefaultValueHelper,
     private val nsDeviceStatus: NSDeviceStatus,
     private val loopPlugin: LoopPlugin,
-    private val activePlugin: ActivePluginProvider,
+    private val activePlugin: ActivePlugin,
     private var receiverStatusStore: ReceiverStatusStore,
     private val config: Config,
     private val glucoseStatusProvider: GlucoseStatusProvider

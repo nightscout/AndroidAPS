@@ -40,13 +40,13 @@ import info.nightscout.androidaps.events.EventAppExit;
 import info.nightscout.androidaps.events.EventAppInitialized;
 import info.nightscout.androidaps.events.EventPreferenceChange;
 import info.nightscout.androidaps.events.EventRefreshOverview;
-import info.nightscout.androidaps.interfaces.ActivePluginProvider;
+import info.nightscout.androidaps.interfaces.ActivePlugin;
 import info.nightscout.androidaps.interfaces.CommandQueueProvider;
 import info.nightscout.androidaps.interfaces.PluginDescription;
 import info.nightscout.androidaps.interfaces.PluginType;
 import info.nightscout.androidaps.interfaces.ProfileFunction;
 import info.nightscout.androidaps.interfaces.PumpDescription;
-import info.nightscout.androidaps.interfaces.PumpInterface;
+import info.nightscout.androidaps.interfaces.Pump;
 import info.nightscout.androidaps.interfaces.PumpPluginBase;
 import info.nightscout.androidaps.interfaces.PumpSync;
 import info.nightscout.androidaps.logging.AAPSLogger;
@@ -116,7 +116,7 @@ import io.reactivex.disposables.CompositeDisposable;
  * @author Andy Rozman (andy.rozman@gmail.com)
  */
 @Singleton
-public class OmnipodErosPumpPlugin extends PumpPluginBase implements PumpInterface, RileyLinkPumpDevice {
+public class OmnipodErosPumpPlugin extends PumpPluginBase implements Pump, RileyLinkPumpDevice {
     private static final long RILEY_LINK_CONNECT_TIMEOUT_MILLIS = 3 * 60 * 1_000L; // 3 minutes
     private static final long STATUS_CHECK_INTERVAL_MILLIS = 60 * 1_000L; // 1 minute
     public static final int STARTUP_STATUS_REQUEST_TRIES = 2;
@@ -132,7 +132,7 @@ public class OmnipodErosPumpPlugin extends PumpPluginBase implements PumpInterfa
     private final AAPSLogger aapsLogger;
     private final AapsSchedulers aapsSchedulers;
     private final RxBusWrapper rxBus;
-    private final ActivePluginProvider activePlugin;
+    private final ActivePlugin activePlugin;
     private final Context context;
     private final FabricPrivacy fabricPrivacy;
     private final ResourceHelper resourceHelper;
@@ -166,7 +166,7 @@ public class OmnipodErosPumpPlugin extends PumpPluginBase implements PumpInterfa
             RxBusWrapper rxBus,
             Context context,
             ResourceHelper resourceHelper,
-            ActivePluginProvider activePlugin,
+            ActivePlugin activePlugin,
             SP sp,
             PodStateManager podStateManager,
             AapsOmnipodErosManager aapsOmnipodErosManager,

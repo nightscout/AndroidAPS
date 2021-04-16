@@ -18,11 +18,10 @@ import javax.inject.Inject;
 import dagger.android.HasAndroidInjector;
 import info.nightscout.androidaps.Constants;
 import info.nightscout.androidaps.core.R;
-import info.nightscout.androidaps.data.Iob;
 import info.nightscout.androidaps.data.Profile;
 import info.nightscout.androidaps.database.entities.Bolus;
-import info.nightscout.androidaps.interfaces.ActivePluginProvider;
-import info.nightscout.androidaps.interfaces.InsulinInterface;
+import info.nightscout.androidaps.interfaces.ActivePlugin;
+import info.nightscout.androidaps.interfaces.Insulin;
 import info.nightscout.androidaps.interfaces.ProfileFunction;
 import info.nightscout.androidaps.plugins.general.overview.graphExtensions.DataPointWithLabelInterface;
 import info.nightscout.androidaps.plugins.general.overview.graphExtensions.PointsWithLabelGraphSeries;
@@ -38,7 +37,7 @@ public class Treatment implements DataPointWithLabelInterface, DbObjectBase {
     @Inject public DefaultValueHelper defaultValueHelper;
     @Inject public ResourceHelper resourceHelper;
     @Inject public ProfileFunction profileFunction;
-    @Inject public ActivePluginProvider activePlugin;
+    @Inject public ActivePlugin activePlugin;
     @Inject public DateUtil dateUtil;
 
     public static final String TABLE_TREATMENTS = "Treatments";
@@ -67,7 +66,7 @@ public class Treatment implements DataPointWithLabelInterface, DbObjectBase {
     public boolean isSMB = false;
 
     @DatabaseField
-    public int insulinInterfaceID = InsulinInterface.InsulinType.OREF_RAPID_ACTING.getValue(); // currently unused, will be used in the future
+    public int insulinInterfaceID = Insulin.InsulinType.OREF_RAPID_ACTING.getValue(); // currently unused, will be used in the future
     @DatabaseField
     public double dia = Constants.defaultDIA; // currently unused, will be used in the future
     @DatabaseField

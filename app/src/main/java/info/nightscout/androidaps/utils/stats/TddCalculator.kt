@@ -6,7 +6,7 @@ import info.nightscout.androidaps.R
 import info.nightscout.androidaps.database.AppRepository
 import info.nightscout.androidaps.database.entities.Bolus
 import info.nightscout.androidaps.db.TDD
-import info.nightscout.androidaps.interfaces.ActivePluginProvider
+import info.nightscout.androidaps.interfaces.ActivePlugin
 import info.nightscout.androidaps.interfaces.IobCobCalculator
 import info.nightscout.androidaps.interfaces.ProfileFunction
 import info.nightscout.androidaps.logging.AAPSLogger
@@ -22,7 +22,7 @@ import javax.inject.Inject
 class TddCalculator @Inject constructor(
     private val aapsLogger: AAPSLogger,
     private val resourceHelper: ResourceHelper,
-    private val activePlugin: ActivePluginProvider,
+    private val activePlugin: ActivePlugin,
     private val profileFunction: ProfileFunction,
     private val dateUtil: DateUtil,
     private val iobCobCalculator: IobCobCalculator,

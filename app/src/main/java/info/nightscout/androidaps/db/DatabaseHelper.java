@@ -37,9 +37,9 @@ import info.nightscout.androidaps.data.Profile;
 import info.nightscout.androidaps.events.EventProfileNeedsUpdate;
 import info.nightscout.androidaps.events.EventRefreshOverview;
 import info.nightscout.androidaps.events.EventReloadProfileSwitchData;
-import info.nightscout.androidaps.interfaces.ActivePluginProvider;
+import info.nightscout.androidaps.interfaces.ActivePlugin;
 import info.nightscout.androidaps.interfaces.DatabaseHelperInterface;
-import info.nightscout.androidaps.interfaces.ProfileInterface;
+import info.nightscout.androidaps.interfaces.ProfileSource;
 import info.nightscout.androidaps.interfaces.ProfileStore;
 import info.nightscout.androidaps.logging.AAPSLogger;
 import info.nightscout.androidaps.logging.LTag;
@@ -63,7 +63,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
     @Inject RxBusWrapper rxBus;
     @Inject VirtualPumpPlugin virtualPumpPlugin;
     @Inject OpenHumansUploader openHumansUploader;
-    @Inject ActivePluginProvider activePlugin;
+    @Inject ActivePlugin activePlugin;
     @Inject NSUpload nsUpload;
     @Inject DateUtil dateUtil;
 
@@ -795,7 +795,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
                     }
                 }
                 // look for already added percentage from NS
-                profileSwitch.profileName = PercentageSplitter.pureName(profileSwitch.profileName);
+                profileSwitch.profileName = PercentageSplitter.INSTANCE.pureName(profileSwitch.profileName);
                 getDaoProfileSwitch().create(profileSwitch);
                 aapsLogger.debug(LTag.DATABASE, "PROFILESWITCH: New record from: " + Source.getString(profileSwitch.source) + " " + profileSwitch.toString());
                 openHumansUploader.enqueueProfileSwitch(profileSwitch);
@@ -873,8 +873,8 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
             if (trJson.has("profileJson"))
                 profileSwitch.profileJson = trJson.getString("profileJson");
             else {
-                ProfileInterface profileInterface = activePlugin.getActiveProfileInterface();
-                ProfileStore store = profileInterface.getProfile();
+                ProfileSource profileSource = activePlugin.getActiveProfileSource();
+                ProfileStore store = profileSource.getProfile();
                 if (store != null) {
                     Profile profile = store.getSpecificProfile(profileSwitch.profileName);
                     if (profile != null) {

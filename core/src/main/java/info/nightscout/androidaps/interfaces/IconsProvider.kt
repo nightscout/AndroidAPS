@@ -1,6 +1,6 @@
 package info.nightscout.androidaps.interfaces
 
-interface IconsProviderInterface {
+interface IconsProvider {
     fun getIcon(): Int
     fun getNotificationIcon(): Int
 }

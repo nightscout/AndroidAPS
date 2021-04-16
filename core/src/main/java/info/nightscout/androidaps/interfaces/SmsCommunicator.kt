@@ -1,6 +1,6 @@
 package info.nightscout.androidaps.interfaces
 
-interface SmsCommunicatorInterface {
+interface SmsCommunicator {
 
     fun sendNotificationToAllNumbers(text: String): Boolean
 }

@@ -8,7 +8,7 @@ import info.nightscout.androidaps.database.entities.TemporaryBasal
 import info.nightscout.androidaps.database.entities.TemporaryBasal.Type.Companion.fromString
 import info.nightscout.androidaps.database.entities.TherapyEvent
 import info.nightscout.androidaps.database.interfaces.end
-import info.nightscout.androidaps.interfaces.InsulinInterface
+import info.nightscout.androidaps.interfaces.Insulin
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.AutosensResult
 import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.DecimalFormatter.to0Decimal
@@ -130,7 +130,7 @@ fun TemporaryBasal.toStringShort(): String =
     if (isAbsolute || type == TemporaryBasal.Type.FAKE_EXTENDED) to2Decimal(rate) + "U/h"
     else "${to0Decimal(rate)}%"
 
-fun TemporaryBasal.iobCalc(time: Long, profile: Profile, insulinInterface: InsulinInterface): IobTotal {
+fun TemporaryBasal.iobCalc(time: Long, profile: Profile, insulinInterface: Insulin): IobTotal {
     val result = IobTotal(time)
     val realDuration: Int = getPassedDurationToTimeInMinutes(time)
     var netBasalAmount = 0.0
@@ -172,7 +172,7 @@ fun TemporaryBasal.iobCalc(time: Long, profile: Profile, insulinInterface: Insul
     return result
 }
 
-fun TemporaryBasal.iobCalc(time: Long, profile: Profile, lastAutosensResult: AutosensResult, exercise_mode: Boolean, half_basal_exercise_target: Int, isTempTarget: Boolean, insulinInterface: InsulinInterface): IobTotal {
+fun TemporaryBasal.iobCalc(time: Long, profile: Profile, lastAutosensResult: AutosensResult, exercise_mode: Boolean, half_basal_exercise_target: Int, isTempTarget: Boolean, insulinInterface: Insulin): IobTotal {
     val result = IobTotal(time)
     val realDuration: Double = getPassedDurationToTimeInMinutes(time).toDouble()
     var netBasalAmount = 0.0

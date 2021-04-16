@@ -2,7 +2,7 @@ package info.nightscout.androidaps.interfaces
 
 import info.nightscout.androidaps.plugins.aps.loop.APSResult
 
-interface APSInterface {
+interface APS {
 
     val lastAPSResult: APSResult?
     val lastAPSRun: Long

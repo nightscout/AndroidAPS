@@ -8,7 +8,7 @@ import android.os.Bundle
 import androidx.annotation.XmlRes
 import androidx.preference.*
 import dagger.android.support.AndroidSupportInjection
-import info.nightscout.androidaps.Config
+import info.nightscout.androidaps.interfaces.Config
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.danaRKorean.DanaRKoreanPlugin
 import info.nightscout.androidaps.danaRv2.DanaRv2Plugin

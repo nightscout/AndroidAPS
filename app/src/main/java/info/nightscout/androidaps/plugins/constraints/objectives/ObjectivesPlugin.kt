@@ -5,7 +5,6 @@ import com.google.common.base.Charsets
 import com.google.common.hash.Hashing
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.BuildConfig
-import info.nightscout.androidaps.Config
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.database.entities.UserEntry.Action
 import info.nightscout.androidaps.database.entities.UserEntry.Sources
@@ -15,6 +14,7 @@ import info.nightscout.androidaps.logging.UserEntryLogger
 import info.nightscout.androidaps.plugins.constraints.objectives.objectives.*
 import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.alertDialogs.OKDialog
+import info.nightscout.androidaps.utils.buildHelper.ConfigImpl
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 import info.nightscout.androidaps.utils.sharedPreferences.SP
 import java.util.*
@@ -26,9 +26,9 @@ class ObjectivesPlugin @Inject constructor(
     injector: HasAndroidInjector,
     aapsLogger: AAPSLogger,
     resourceHelper: ResourceHelper,
-    private val activePlugin: ActivePluginProvider,
+    private val activePlugin: ActivePlugin,
     private val sp: SP,
-    config: Config,
+    config: ConfigImpl,
     private val dateUtil: DateUtil,
     private val uel: UserEntryLogger
 ) : PluginBase(PluginDescription()
@@ -41,7 +41,7 @@ class ObjectivesPlugin @Inject constructor(
     .shortName(R.string.objectives_shortname)
     .description(R.string.description_objectives),
     aapsLogger, resourceHelper, injector
-), ConstraintsInterface {
+), Constraints {
 
     var objectives: MutableList<Objective> = ArrayList()
 

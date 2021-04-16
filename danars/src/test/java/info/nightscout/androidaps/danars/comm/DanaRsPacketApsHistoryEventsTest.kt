@@ -5,7 +5,7 @@ import dagger.android.AndroidInjector
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.danars.DanaRSPlugin
 import info.nightscout.androidaps.danars.DanaRSTestBase
-import info.nightscout.androidaps.interfaces.ActivePluginProvider
+import info.nightscout.androidaps.interfaces.ActivePlugin
 import info.nightscout.androidaps.interfaces.PumpSync
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper
 import info.nightscout.androidaps.plugins.pump.common.bolusInfo.DetailedBolusInfoStorage
@@ -23,7 +23,7 @@ import java.util.*
 class DanaRsPacketApsHistoryEventsTest : DanaRSTestBase() {
 
     @Mock lateinit var context: Context
-    @Mock lateinit var activePlugin: ActivePluginProvider
+    @Mock lateinit var activePlugin: ActivePlugin
     @Mock lateinit var pumpSync: PumpSync
     @Mock lateinit var detailedBolusInfoStorage: DetailedBolusInfoStorage
     @Mock lateinit var temporaryBasalStorage: TemporaryBasalStorage

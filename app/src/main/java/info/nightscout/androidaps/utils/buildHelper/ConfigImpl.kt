@@ -1,12 +1,13 @@
-package info.nightscout.androidaps
+package info.nightscout.androidaps.utils.buildHelper
 
 import android.os.Build
-import info.nightscout.androidaps.interfaces.ConfigInterface
+import info.nightscout.androidaps.BuildConfig
+import info.nightscout.androidaps.interfaces.Config
 import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-class Config @Inject constructor() : ConfigInterface {
+class ConfigImpl @Inject constructor() : Config {
 
     override val SUPPORTEDNSVERSION = 1002 // 0.10.00
     override val APS = BuildConfig.FLAVOR == "full"

@@ -268,11 +268,7 @@
     <string name="openapsma_autosensdata_label">Date Autosens</string>
     <string name="openapsma_scriptdebugdata_label">Depanare script</string>
     <string name="openapsama_useautosens">Folosește opțiunea de autosensibilitate</string>
-    <string name="refresheventsfromnightscout">Sincronizează cu NS</string>
     <string name="deletefuturetreatments">Ștergerea tratamentelor înregistrate în viitor</string>
-    <string name="eatingsoon">Mănânc în curând</string>
-    <string name="hypo">Hipo</string>
-    <string name="activity">Activitate</string>
     <string name="actions_shortname">ACT</string>
     <string name="configbuilder_shortname">CONF</string>
     <string name="loop_shortname">BUCL</string>
@@ -750,7 +746,6 @@
     <string name="format_carbs_ic">%1$.0fg IC: %2$.1f</string>
     <string name="format_cob_ic">%1$.1fg IC: %2$.1f</string>
     <string name="format_percent">%1$d%%</string>
-    <string name="boluswizard">Asistent bolusare</string>
     <string name="unit_minute_short">min</string>
     <string name="profile_name">Nume profil:</string>
     <string name="selected_profile">Selectat:</string>

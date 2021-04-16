@@ -9,7 +9,6 @@ import info.nightscout.androidaps.events.EventProfileStoreChanged
 import info.nightscout.androidaps.interfaces.*
 import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.logging.LTag
-import info.nightscout.androidaps.logging.UserEntryLogger
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper
 import info.nightscout.androidaps.plugins.general.nsclient.NSUpload
 import info.nightscout.androidaps.utils.DateUtil
@@ -34,8 +33,7 @@ class LocalProfilePlugin @Inject constructor(
     private val sp: SP,
     private val profileFunction: ProfileFunction,
     private val nsUpload: NSUpload,
-    private val dateUtil: DateUtil,
-    private val uel: UserEntryLogger
+    private val dateUtil: DateUtil
 ) : PluginBase(PluginDescription()
     .mainType(PluginType.PROFILE)
     .fragmentClass(LocalProfileFragment::class.java.name)
@@ -46,7 +44,7 @@ class LocalProfilePlugin @Inject constructor(
     .description(R.string.description_profile_local)
     .setDefault(),
     aapsLogger, resourceHelper, injector
-), ProfileInterface {
+), ProfileSource {
 
     private var rawProfile: ProfileStore? = null
 
@@ -58,6 +56,7 @@ class LocalProfilePlugin @Inject constructor(
     }
 
     class SingleProfile {
+
         internal var name: String? = null
         internal var mgdl: Boolean = false
         internal var dia: Double = Constants.defaultDIA
@@ -350,12 +349,10 @@ class LocalProfilePlugin @Inject constructor(
         return ProfileStore(injector, json)
     }
 
-    override fun getProfile(): ProfileStore? {
-        return rawProfile
-    }
+    override val profile: ProfileStore?
+        get() = rawProfile
 
-    override fun getProfileName(): String {
-        return DecimalFormatter.to2Decimal(rawProfile?.getDefaultProfile()?.percentageBasalSum()
+    override val profileName: String
+        get() = DecimalFormatter.to2Decimal(rawProfile?.getDefaultProfile()?.percentageBasalSum()
             ?: 0.0) + "U "
-    }
 }

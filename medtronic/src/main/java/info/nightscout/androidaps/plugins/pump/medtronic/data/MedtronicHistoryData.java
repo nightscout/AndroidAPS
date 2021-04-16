@@ -27,7 +27,7 @@ import info.nightscout.androidaps.db.Source;
 import info.nightscout.androidaps.db.TDD;
 import info.nightscout.androidaps.db.TemporaryBasal;
 import info.nightscout.androidaps.db.Treatment;
-import info.nightscout.androidaps.interfaces.ActivePluginProvider;
+import info.nightscout.androidaps.interfaces.ActivePlugin;
 import info.nightscout.androidaps.interfaces.DatabaseHelperInterface;
 import info.nightscout.androidaps.interfaces.PumpSync;
 import info.nightscout.androidaps.logging.AAPSLogger;
@@ -72,7 +72,7 @@ public class MedtronicHistoryData {
     private final HasAndroidInjector injector;
     private final AAPSLogger aapsLogger;
     private final SP sp;
-    private final ActivePluginProvider activePlugin;
+    private final ActivePlugin activePlugin;
     private final MedtronicUtil medtronicUtil;
     private final MedtronicPumpHistoryDecoder medtronicPumpHistoryDecoder;
     private final MedtronicPumpStatus medtronicPumpStatus;
@@ -105,7 +105,7 @@ public class MedtronicHistoryData {
             HasAndroidInjector injector,
             AAPSLogger aapsLogger,
             SP sp,
-            ActivePluginProvider activePlugin,
+            ActivePlugin activePlugin,
             MedtronicUtil medtronicUtil,
             MedtronicPumpHistoryDecoder medtronicPumpHistoryDecoder,
             MedtronicPumpStatus medtronicPumpStatus,

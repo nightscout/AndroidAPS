@@ -5,8 +5,8 @@ import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.Constants
 import info.nightscout.androidaps.data.Iob
 import info.nightscout.androidaps.database.entities.Bolus
-import info.nightscout.androidaps.interfaces.ActivePluginProvider
-import info.nightscout.androidaps.interfaces.InsulinInterface
+import info.nightscout.androidaps.interfaces.ActivePlugin
+import info.nightscout.androidaps.interfaces.Insulin
 import info.nightscout.androidaps.interfaces.ProfileFunction
 import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper
@@ -49,7 +49,7 @@ class InsulinOrefBasePluginTest {
             get() = testPeak
 
         override fun commentStandardText(): String = ""
-        override val id get(): InsulinInterface.InsulinType = InsulinInterface.InsulinType.UNKNOWN
+        override val id get(): Insulin.InsulinType = Insulin.InsulinType.UNKNOWN
         override val friendlyName get(): String = ""
         override fun configuration(): JSONObject = JSONObject()
         override fun applyConfiguration(configuration: JSONObject) {}
@@ -65,7 +65,7 @@ class InsulinOrefBasePluginTest {
     @Mock lateinit var profileFunction: ProfileFunction
     @Mock lateinit var rxBus: RxBusWrapper
     @Mock lateinit var aapsLogger: AAPSLogger
-    @Mock lateinit var activePlugin: ActivePluginProvider
+    @Mock lateinit var activePlugin: ActivePlugin
 
     private var injector: HasAndroidInjector = HasAndroidInjector {
         AndroidInjector {

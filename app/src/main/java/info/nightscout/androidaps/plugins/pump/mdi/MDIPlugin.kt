@@ -33,7 +33,7 @@ class MDIPlugin @Inject constructor(
     .pluginName(R.string.mdi)
     .description(R.string.description_pump_mdi),
     injector, aapsLogger, resourceHelper, commandQueue
-), PumpInterface {
+), Pump {
 
     override val pumpDescription = PumpDescription()
 

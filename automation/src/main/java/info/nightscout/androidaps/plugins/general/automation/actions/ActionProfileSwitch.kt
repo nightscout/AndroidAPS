@@ -8,7 +8,7 @@ import info.nightscout.androidaps.data.PumpEnactResult
 import info.nightscout.androidaps.database.entities.UserEntry
 import info.nightscout.androidaps.database.entities.UserEntry.Sources
 import info.nightscout.androidaps.database.entities.ValueWithUnit
-import info.nightscout.androidaps.interfaces.ActivePluginProvider
+import info.nightscout.androidaps.interfaces.ActivePlugin
 import info.nightscout.androidaps.logging.LTag
 import info.nightscout.androidaps.interfaces.ProfileFunction
 import info.nightscout.androidaps.logging.UserEntryLogger
@@ -24,7 +24,7 @@ import javax.inject.Inject
 
 class ActionProfileSwitch(injector: HasAndroidInjector) : Action(injector) {
     @Inject lateinit var resourceHelper: ResourceHelper
-    @Inject lateinit var activePlugin: ActivePluginProvider
+    @Inject lateinit var activePlugin: ActivePlugin
     @Inject lateinit var profileFunction: ProfileFunction
     @Inject lateinit var dateUtil: DateUtil
     @Inject lateinit var uel: UserEntryLogger
@@ -53,7 +53,7 @@ class ActionProfileSwitch(injector: HasAndroidInjector) : Action(injector) {
             callback.result(PumpEnactResult(injector).success(true).comment(R.string.alreadyset))?.run()
             return
         }
-        val profileStore = activePlugin.activeProfileInterface.profile ?: return
+        val profileStore = activePlugin.activeProfileSource.profile ?: return
         if (profileStore.getSpecificProfile(inputProfileName.value) == null) {
             aapsLogger.error(LTag.AUTOMATION, "Selected profile does not exist! - ${inputProfileName.value}")
             callback.result(PumpEnactResult(injector).success(false).comment(R.string.notexists))?.run()
@@ -88,5 +88,5 @@ class ActionProfileSwitch(injector: HasAndroidInjector) : Action(injector) {
         return this
     }
 
-    override fun isValid(): Boolean = activePlugin.activeProfileInterface.profile?.getSpecificProfile(inputProfileName.value) != null
+    override fun isValid(): Boolean = activePlugin.activeProfileSource.profile?.getSpecificProfile(inputProfileName.value) != null
 }

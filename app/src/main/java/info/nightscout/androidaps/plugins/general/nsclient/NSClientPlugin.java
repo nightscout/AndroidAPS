@@ -21,7 +21,7 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 
 import dagger.android.HasAndroidInjector;
-import info.nightscout.androidaps.Config;
+import info.nightscout.androidaps.interfaces.Config;
 import info.nightscout.androidaps.Constants;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.events.EventAppExit;

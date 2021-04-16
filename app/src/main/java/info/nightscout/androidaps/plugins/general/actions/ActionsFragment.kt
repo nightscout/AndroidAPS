@@ -11,7 +11,7 @@ import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.core.content.ContextCompat
 import dagger.android.support.DaggerFragment
-import info.nightscout.androidaps.Config
+import info.nightscout.androidaps.interfaces.Config
 import info.nightscout.androidaps.Constants
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.activities.ErrorHelperActivity
@@ -26,7 +26,7 @@ import info.nightscout.androidaps.extensions.toStringMedium
 import info.nightscout.androidaps.extensions.toStringShort
 import info.nightscout.androidaps.extensions.toVisibility
 import info.nightscout.androidaps.historyBrowser.HistoryBrowseActivity
-import info.nightscout.androidaps.interfaces.ActivePluginProvider
+import info.nightscout.androidaps.interfaces.ActivePlugin
 import info.nightscout.androidaps.interfaces.CommandQueueProvider
 import info.nightscout.androidaps.interfaces.IobCobCalculator
 import info.nightscout.androidaps.interfaces.ProfileFunction
@@ -65,7 +65,7 @@ class ActionsFragment : DaggerFragment() {
     @Inject lateinit var resourceHelper: ResourceHelper
     @Inject lateinit var statusLightHandler: StatusLightHandler
     @Inject lateinit var fabricPrivacy: FabricPrivacy
-    @Inject lateinit var activePlugin: ActivePluginProvider
+    @Inject lateinit var activePlugin: ActivePlugin
     @Inject lateinit var iobCobCalculator: IobCobCalculator
     @Inject lateinit var commandQueue: CommandQueueProvider
     @Inject lateinit var buildHelper: BuildHelper
@@ -265,7 +265,7 @@ class ActionsFragment : DaggerFragment() {
         val pump = activePlugin.activePump
 
         profileSwitch?.visibility = (
-            activePlugin.activeProfileInterface.profile != null &&
+            activePlugin.activeProfileSource.profile != null &&
                 pump.pumpDescription.isSetBasalProfileCapable &&
                 pump.isInitialized() &&
                 !pump.isSuspended()).toVisibility()

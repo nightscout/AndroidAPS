@@ -19,7 +19,6 @@ import info.nightscout.androidaps.plugins.iob.iobCobCalculator.GlucoseStatusProv
 import info.nightscout.androidaps.utils.DecimalFormatter
 import info.nightscout.androidaps.utils.FabricPrivacy
 import info.nightscout.androidaps.extensions.toStringShort
-import info.nightscout.androidaps.utils.resources.IconsProvider
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 import info.nightscout.androidaps.utils.rx.AapsSchedulers
 import info.nightscout.androidaps.extensions.valueToUnitsString
@@ -36,11 +35,11 @@ class PersistentNotificationPlugin @Inject constructor(
     private val aapsSchedulers: AapsSchedulers,
     private val profileFunction: ProfileFunction,
     private val fabricPrivacy: FabricPrivacy,
-    private val activePlugins: ActivePluginProvider,
+    private val activePlugins: ActivePlugin,
     private val iobCobCalculator: IobCobCalculator,
     private val rxBus: RxBusWrapper,
     private val context: Context,
-    private val notificationHolder: NotificationHolderInterface,
+    private val notificationHolder: NotificationHolder,
     private val dummyServiceHelper: DummyServiceHelper,
     private val iconsProvider: IconsProvider,
     private val glucoseStatusProvider: GlucoseStatusProvider

@@ -4,7 +4,7 @@ import android.app.Notification
 import android.app.PendingIntent
 import android.content.Context
 
-interface NotificationHolderInterface {
+interface NotificationHolder {
     val channelID : String
     val notificationID : Int
     var notification: Notification

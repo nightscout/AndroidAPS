@@ -15,9 +15,9 @@ import info.nightscout.androidaps.events.EventExtendedBolusChange
 import info.nightscout.androidaps.events.EventInitializationChanged
 import info.nightscout.androidaps.events.EventPumpStatusChanged
 import info.nightscout.androidaps.events.EventTempBasalChange
-import info.nightscout.androidaps.interfaces.ActivePluginProvider
+import info.nightscout.androidaps.interfaces.ActivePlugin
 import info.nightscout.androidaps.interfaces.CommandQueueProvider
-import info.nightscout.androidaps.interfaces.PumpInterface
+import info.nightscout.androidaps.interfaces.Pump
 import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.logging.LTag
 import info.nightscout.androidaps.logging.UserEntryLogger
@@ -32,7 +32,7 @@ import info.nightscout.androidaps.utils.userEntry.UserEntryMapper.Sources
 import info.nightscout.androidaps.utils.WarnColors
 import info.nightscout.androidaps.utils.alertDialogs.OKDialog
 import info.nightscout.androidaps.extensions.toVisibility
-import info.nightscout.androidaps.interfaces.DanaRInterface
+import info.nightscout.androidaps.interfaces.Dana
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 import info.nightscout.androidaps.utils.rx.AapsSchedulers
 import info.nightscout.androidaps.utils.sharedPreferences.SP
@@ -46,7 +46,7 @@ class DanaFragment : DaggerFragment() {
     @Inject lateinit var aapsLogger: AAPSLogger
     @Inject lateinit var fabricPrivacy: FabricPrivacy
     @Inject lateinit var commandQueue: CommandQueueProvider
-    @Inject lateinit var activePlugin: ActivePluginProvider
+    @Inject lateinit var activePlugin: ActivePlugin
     @Inject lateinit var danaPump: DanaPump
     @Inject lateinit var resourceHelper: ResourceHelper
     @Inject lateinit var sp: SP
@@ -112,7 +112,7 @@ class DanaFragment : DaggerFragment() {
                 activity?.let {
                     OKDialog.showConfirmation(it, resourceHelper.gs(R.string.resetpairing)) {
                         uel.log(Action.CLEAR_PAIRING_KEYS, Sources.Dana)
-                        (activePlugin.activePump as DanaRInterface).clearPairing()
+                        (activePlugin.activePump as Dana).clearPairing()
                     }
                 }
                 true
@@ -189,7 +189,7 @@ class DanaFragment : DaggerFragment() {
     fun updateGUI() {
         if (_binding == null) return
         val pump = danaPump
-        val plugin: PumpInterface = activePlugin.activePump
+        val plugin: Pump = activePlugin.activePump
         if (pump.lastConnection != 0L) {
             val agoMsec = System.currentTimeMillis() - pump.lastConnection
             val agoMin = (agoMsec.toDouble() / 60.0 / 1000.0).toInt()

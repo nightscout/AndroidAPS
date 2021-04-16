@@ -39,7 +39,9 @@ import info.nightscout.androidaps.events.EventAppExit
 import info.nightscout.androidaps.events.EventPreferenceChange
 import info.nightscout.androidaps.events.EventRebuildTabs
 import info.nightscout.androidaps.historyBrowser.HistoryBrowseActivity
-import info.nightscout.androidaps.interfaces.ActivePluginProvider
+import info.nightscout.androidaps.interfaces.ActivePlugin
+import info.nightscout.androidaps.interfaces.Config
+import info.nightscout.androidaps.interfaces.IconsProvider
 import info.nightscout.androidaps.interfaces.PluginType
 import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.logging.LTag
@@ -59,7 +61,6 @@ import info.nightscout.androidaps.utils.buildHelper.BuildHelper
 import info.nightscout.androidaps.utils.extensions.isRunningRealPumpTest
 import info.nightscout.androidaps.utils.locale.LocaleHelper
 import info.nightscout.androidaps.utils.protection.ProtectionCheck
-import info.nightscout.androidaps.utils.resources.IconsProvider
 import info.nightscout.androidaps.utils.rx.AapsSchedulers
 import info.nightscout.androidaps.utils.sharedPreferences.SP
 import info.nightscout.androidaps.utils.tabs.TabPageAdapter
@@ -83,7 +84,7 @@ class MainActivity : NoSplashAppCompatActivity() {
     @Inject lateinit var loopPlugin: LoopPlugin
     @Inject lateinit var nsSettingsStatus: NSSettingsStatus
     @Inject lateinit var buildHelper: BuildHelper
-    @Inject lateinit var activePlugin: ActivePluginProvider
+    @Inject lateinit var activePlugin: ActivePlugin
     @Inject lateinit var fabricPrivacy: FabricPrivacy
     @Inject lateinit var protectionCheck: ProtectionCheck
     @Inject lateinit var iconsProvider: IconsProvider
@@ -380,7 +381,7 @@ class MainActivity : NoSplashAppCompatActivity() {
         if (!config.NSCLIENT && !config.PUMPCONTROL)
             activePlugin.activeAPS.let { fabricPrivacy.firebaseAnalytics.setUserProperty("Aps", it::class.java.simpleName) }
         activePlugin.activeBgSource.let { fabricPrivacy.firebaseAnalytics.setUserProperty("BgSource", it::class.java.simpleName) }
-        fabricPrivacy.firebaseAnalytics.setUserProperty("Profile", activePlugin.activeProfileInterface.javaClass.simpleName)
+        fabricPrivacy.firebaseAnalytics.setUserProperty("Profile", activePlugin.activeProfileSource.javaClass.simpleName)
         activePlugin.activeSensitivity.let { fabricPrivacy.firebaseAnalytics.setUserProperty("Sensitivity", it::class.java.simpleName) }
         activePlugin.activeInsulin.let { fabricPrivacy.firebaseAnalytics.setUserProperty("Insulin", it::class.java.simpleName) }
         // Add to crash log too

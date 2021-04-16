@@ -23,7 +23,7 @@ import info.nightscout.androidaps.events.EventAppExit
 import info.nightscout.androidaps.events.EventInitializationChanged
 import info.nightscout.androidaps.events.EventProfileNeedsUpdate
 import info.nightscout.androidaps.events.EventPumpStatusChanged
-import info.nightscout.androidaps.interfaces.ActivePluginProvider
+import info.nightscout.androidaps.interfaces.ActivePlugin
 import info.nightscout.androidaps.interfaces.CommandQueueProvider
 import info.nightscout.androidaps.interfaces.ProfileFunction
 import info.nightscout.androidaps.interfaces.PumpSync
@@ -65,7 +65,7 @@ class DanaRSService : DaggerService() {
     @Inject lateinit var danaRSPlugin: DanaRSPlugin
     @Inject lateinit var danaPump: DanaPump
     @Inject lateinit var danaRSMessageHashTable: DanaRSMessageHashTable
-    @Inject lateinit var activePlugin: ActivePluginProvider
+    @Inject lateinit var activePlugin: ActivePlugin
     @Inject lateinit var constraintChecker: ConstraintChecker
     @Inject lateinit var detailedBolusInfoStorage: DetailedBolusInfoStorage
     @Inject lateinit var bleComm: BLEComm

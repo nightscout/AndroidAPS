@@ -13,7 +13,7 @@ import info.nightscout.androidaps.events.EventExtendedBolusChange
 import info.nightscout.androidaps.events.EventPumpStatusChanged
 import info.nightscout.androidaps.events.EventTempBasalChange
 import info.nightscout.androidaps.extensions.toStringFull
-import info.nightscout.androidaps.interfaces.ActivePluginProvider
+import info.nightscout.androidaps.interfaces.ActivePlugin
 import info.nightscout.androidaps.interfaces.CommandQueueProvider
 import info.nightscout.androidaps.interfaces.PumpSync
 import info.nightscout.androidaps.logging.AAPSLogger
@@ -56,7 +56,7 @@ class MedtronicFragment : DaggerFragment() {
     @Inject lateinit var dateUtil: DateUtil
     @Inject lateinit var rxBus: RxBusWrapper
     @Inject lateinit var commandQueue: CommandQueueProvider
-    @Inject lateinit var activePlugin: ActivePluginProvider
+    @Inject lateinit var activePlugin: ActivePlugin
     @Inject lateinit var medtronicPumpPlugin: MedtronicPumpPlugin
     @Inject lateinit var warnColors: WarnColors
     @Inject lateinit var rileyLinkUtil: RileyLinkUtil

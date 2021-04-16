@@ -269,11 +269,8 @@
     <string name="openapsma_autosensdata_label">Autosens-Daten</string>
     <string name="openapsma_scriptdebugdata_label">Skript Debug</string>
     <string name="openapsama_useautosens">Nutze Autosens</string>
-    <string name="refresheventsfromnightscout">Aktualisiere Einträge von Nightscout</string>
+    <string name="refresheventsfromnightscout">Mit NIghtscout-Daten aktualisieren</string>
     <string name="deletefuturetreatments">Lösche Behandlungen in der Zukunft</string>
-    <string name="eatingsoon">Bald essen</string>
-    <string name="hypo">Hypo</string>
-    <string name="activity">Aktivität</string>
     <string name="actions_shortname">AKT</string>
     <string name="configbuilder_shortname">KONF</string>
     <string name="loop_shortname">LOOP</string>
@@ -752,7 +749,6 @@ Unerwartetes Verhalten.</string>
     <string name="format_carbs_ic">%1$.0fg IC: %2$.1f</string>
     <string name="format_cob_ic">%1$.1fg IC: %2$.1f</string>
     <string name="format_percent">%1$d%%</string>
-    <string name="boluswizard">Bolus-Rechner</string>
     <string name="unit_minute_short">Min.</string>
     <string name="profile_name">Profilname:</string>
     <string name="selected_profile">Ausgewählt:</string>

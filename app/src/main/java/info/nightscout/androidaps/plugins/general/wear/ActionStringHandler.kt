@@ -3,7 +3,7 @@ package info.nightscout.androidaps.plugins.general.wear
 import android.app.NotificationManager
 import android.content.Context
 import dagger.android.HasAndroidInjector
-import info.nightscout.androidaps.Config
+import info.nightscout.androidaps.interfaces.Config
 import info.nightscout.androidaps.Constants
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.dana.DanaPump
@@ -69,7 +69,7 @@ class ActionStringHandler @Inject constructor(
     private val wearPlugin: WearPlugin,
     private val fabricPrivacy: FabricPrivacy,
     private val commandQueue: CommandQueueProvider,
-    private val activePlugin: ActivePluginProvider,
+    private val activePlugin: ActivePlugin,
     private val iobCobCalculator: IobCobCalculator,
     private val localInsightPlugin: LocalInsightPlugin,
     private val danaRPlugin: DanaRPlugin,

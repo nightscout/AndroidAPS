@@ -29,20 +29,9 @@ import javax.inject.Inject;
 
 import dagger.android.DaggerService;
 import dagger.android.HasAndroidInjector;
-import info.nightscout.androidaps.Config;
+import info.nightscout.androidaps.interfaces.Config;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.database.AppRepository;
-import info.nightscout.androidaps.database.entities.DeviceStatus;
-import info.nightscout.androidaps.database.transactions.UpdateNsIdBolusCalculatorResultTransaction;
-import info.nightscout.androidaps.database.transactions.UpdateNsIdBolusTransaction;
-import info.nightscout.androidaps.database.transactions.UpdateNsIdCarbsTransaction;
-import info.nightscout.androidaps.database.transactions.UpdateNsIdDeviceStatusTransaction;
-import info.nightscout.androidaps.database.transactions.UpdateNsIdExtendedBolusTransaction;
-import info.nightscout.androidaps.database.transactions.UpdateNsIdFoodTransaction;
-import info.nightscout.androidaps.database.transactions.UpdateNsIdGlucoseValueTransaction;
-import info.nightscout.androidaps.database.transactions.UpdateNsIdTemporaryBasalTransaction;
-import info.nightscout.androidaps.database.transactions.UpdateNsIdTemporaryTargetTransaction;
-import info.nightscout.androidaps.database.transactions.UpdateNsIdTherapyEventTransaction;
 import info.nightscout.androidaps.db.DbRequest;
 import info.nightscout.androidaps.events.EventAppExit;
 import info.nightscout.androidaps.events.EventConfigBuilderChange;
@@ -55,10 +44,12 @@ import info.nightscout.androidaps.logging.AAPSLogger;
 import info.nightscout.androidaps.logging.LTag;
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper;
 import info.nightscout.androidaps.plugins.general.food.FoodPlugin;
+import info.nightscout.androidaps.plugins.general.nsclient.NSClientAddAckWorker;
 import info.nightscout.androidaps.plugins.general.nsclient.NSClientAddUpdateWorker;
 import info.nightscout.androidaps.plugins.general.nsclient.NSClientMbgWorker;
 import info.nightscout.androidaps.plugins.general.nsclient.NSClientPlugin;
 import info.nightscout.androidaps.plugins.general.nsclient.NSClientRemoveWorker;
+import info.nightscout.androidaps.plugins.general.nsclient.NSClientUpdateRemoveAckWorker;
 import info.nightscout.androidaps.plugins.general.nsclient.acks.NSAddAck;
 import info.nightscout.androidaps.plugins.general.nsclient.acks.NSAuthAck;
 import info.nightscout.androidaps.plugins.general.nsclient.acks.NSUpdateAck;
@@ -230,166 +221,11 @@ public class NSClientService extends DaggerService {
     public void processAddAck(NSAddAck ack) {
         lastAckTime = dateUtil.now();
         // new room way
-        if (ack.getOriginalObject() instanceof DataSyncSelector.PairTemporaryTarget) {
-            DataSyncSelector.PairTemporaryTarget pair = (DataSyncSelector.PairTemporaryTarget) ack.getOriginalObject();
-            pair.getValue().getInterfaceIDs().setNightscoutId(ack.getId());
+        dataWorker.enqueue(
+                new OneTimeWorkRequest.Builder(NSClientAddAckWorker.class)
+                        .setInputData(dataWorker.storeInputData(ack, null))
+                        .build());
 
-            disposable.add(repository.runTransactionForResult(new UpdateNsIdTemporaryTargetTransaction((pair.getValue())))
-                    .observeOn(aapsSchedulers.getIo())
-                    .subscribe(
-                            result -> aapsLogger.debug(LTag.DATABASE, "Updated ns id of temporary target " + pair.getValue()),
-                            error -> aapsLogger.error(LTag.DATABASE, "Updated ns id of temporary target failed")
-                    ));
-            dataSyncSelector.confirmLastTempTargetsIdIfGreater(pair.getUpdateRecordId());
-            rxBus.send(new EventNSClientNewLog("DBADD", "Acked TemporaryTarget " + pair.getValue().getInterfaceIDs().getNightscoutId()));
-            // Send new if waiting
-            dataSyncSelector.processChangedTempTargetsCompat();
-            return;
-        }
-        if (ack.getOriginalObject() instanceof DataSyncSelector.PairGlucoseValue) {
-            DataSyncSelector.PairGlucoseValue pair = (DataSyncSelector.PairGlucoseValue) ack.getOriginalObject();
-            pair.getValue().getInterfaceIDs().setNightscoutId(ack.getId());
-
-            disposable.add(repository.runTransactionForResult(new UpdateNsIdGlucoseValueTransaction(pair.getValue()))
-                    .observeOn(aapsSchedulers.getIo())
-                    .subscribe(
-                            result -> aapsLogger.debug(LTag.DATABASE, "Updated ns id of glucose value " + pair.getValue()),
-                            error -> aapsLogger.error(LTag.DATABASE, "Updated ns id of glucose value failed", error)
-                    ));
-            dataSyncSelector.confirmLastGlucoseValueIdIfGreater(pair.getUpdateRecordId());
-            rxBus.send(new EventNSClientNewLog("DBADD", "Acked GlucoseValue " + pair.getValue().getInterfaceIDs().getNightscoutId()));
-            // Send new if waiting
-            dataSyncSelector.processChangedGlucoseValuesCompat();
-            return;
-        }
-        if (ack.getOriginalObject() instanceof DataSyncSelector.PairFood) {
-            DataSyncSelector.PairFood pair = (DataSyncSelector.PairFood) ack.getOriginalObject();
-            pair.getValue().getInterfaceIDs().setNightscoutId(ack.getId());
-
-            disposable.add(repository.runTransactionForResult(new UpdateNsIdFoodTransaction(pair.getValue()))
-                    .observeOn(aapsSchedulers.getIo())
-                    .subscribe(
-                            result -> aapsLogger.debug(LTag.DATABASE, "Updated ns id of food " + pair.getValue()),
-                            error -> aapsLogger.error(LTag.DATABASE, "Updated ns id of food failed", error)
-                    ));
-            dataSyncSelector.confirmLastFoodIdIfGreater(pair.getUpdateRecordId());
-            rxBus.send(new EventNSClientNewLog("DBADD", "Acked Food " + pair.getValue().getInterfaceIDs().getNightscoutId()));
-            // Send new if waiting
-            dataSyncSelector.processChangedFoodsCompat();
-            return;
-        }
-        if (ack.getOriginalObject() instanceof DataSyncSelector.PairTherapyEvent) {
-            DataSyncSelector.PairTherapyEvent pair = (DataSyncSelector.PairTherapyEvent) ack.getOriginalObject();
-            pair.getValue().getInterfaceIDs().setNightscoutId(ack.getId());
-
-            disposable.add(repository.runTransactionForResult(new UpdateNsIdTherapyEventTransaction(pair.getValue()))
-                    .observeOn(aapsSchedulers.getIo())
-                    .subscribe(
-                            result -> aapsLogger.debug(LTag.DATABASE, "Updated ns id of therapy event " + pair.getValue()),
-                            error -> aapsLogger.error(LTag.DATABASE, "Updated ns id of therapy event failed", error)
-                    ));
-            dataSyncSelector.confirmLastTherapyEventIdIfGreater(pair.getUpdateRecordId());
-            rxBus.send(new EventNSClientNewLog("DBADD", "Acked TherapyEvent " + pair.getValue().getInterfaceIDs().getNightscoutId()));
-            // Send new if waiting
-            dataSyncSelector.processChangedTherapyEventsCompat();
-            return;
-        }
-        if (ack.getOriginalObject() instanceof DataSyncSelector.PairBolus) {
-            DataSyncSelector.PairBolus pair = (DataSyncSelector.PairBolus) ack.getOriginalObject();
-            pair.getValue().getInterfaceIDs().setNightscoutId(ack.getId());
-
-            disposable.add(repository.runTransactionForResult(new UpdateNsIdBolusTransaction(pair.getValue()))
-                    .observeOn(aapsSchedulers.getIo())
-                    .subscribe(
-                            result -> aapsLogger.debug(LTag.DATABASE, "Updated ns id of bolus " + pair.getValue()),
-                            error -> aapsLogger.error(LTag.DATABASE, "Updated ns id of bolus failed", error)
-                    ));
-            dataSyncSelector.confirmLastBolusIdIfGreater(pair.getUpdateRecordId());
-            rxBus.send(new EventNSClientNewLog("DBADD", "Acked Bolus " + pair.getValue().getInterfaceIDs().getNightscoutId()));
-            // Send new if waiting
-            dataSyncSelector.processChangedBolusesCompat();
-            return;
-        }
-        if (ack.getOriginalObject() instanceof DataSyncSelector.PairCarbs) {
-            DataSyncSelector.PairCarbs pair = (DataSyncSelector.PairCarbs) ack.getOriginalObject();
-            pair.getValue().getInterfaceIDs().setNightscoutId(ack.getId());
-
-            disposable.add(repository.runTransactionForResult(new UpdateNsIdCarbsTransaction(pair.getValue()))
-                    .observeOn(aapsSchedulers.getIo())
-                    .subscribe(
-                            result -> aapsLogger.debug(LTag.DATABASE, "Updated ns id of carbs " + pair.getValue()),
-                            error -> aapsLogger.error(LTag.DATABASE, "Updated ns id of carbs failed", error)
-                    ));
-            dataSyncSelector.confirmLastCarbsIdIfGreater(pair.getUpdateRecordId());
-            rxBus.send(new EventNSClientNewLog("DBADD", "Acked Carbs" + pair.getValue().getInterfaceIDs().getNightscoutId()));
-            // Send new if waiting
-            dataSyncSelector.processChangedCarbsCompat();
-            return;
-        }
-        if (ack.getOriginalObject() instanceof DataSyncSelector.PairBolusCalculatorResult) {
-            DataSyncSelector.PairBolusCalculatorResult pair = (DataSyncSelector.PairBolusCalculatorResult) ack.getOriginalObject();
-            pair.getValue().getInterfaceIDs().setNightscoutId(ack.getId());
-
-            disposable.add(repository.runTransactionForResult(new UpdateNsIdBolusCalculatorResultTransaction(pair.getValue()))
-                    .observeOn(aapsSchedulers.getIo())
-                    .subscribe(
-                            result -> aapsLogger.debug(LTag.DATABASE, "Updated ns id of BolusCalculatorResult " + pair.getValue()),
-                            error -> aapsLogger.error(LTag.DATABASE, "Updated ns id of BolusCalculatorResult failed", error)
-                    ));
-            dataSyncSelector.confirmLastBolusCalculatorResultsIdIfGreater(pair.getUpdateRecordId());
-            rxBus.send(new EventNSClientNewLog("DBADD", "Acked BolusCalculatorResult" + pair.getValue().getInterfaceIDs().getNightscoutId()));
-            // Send new if waiting
-            dataSyncSelector.processChangedBolusCalculatorResultsCompat();
-            return;
-        }
-        if (ack.getOriginalObject() instanceof DataSyncSelector.PairTemporaryBasal) {
-            DataSyncSelector.PairTemporaryBasal pair = (DataSyncSelector.PairTemporaryBasal) ack.getOriginalObject();
-            pair.getValue().getInterfaceIDs().setNightscoutId(ack.getId());
-
-            disposable.add(repository.runTransactionForResult(new UpdateNsIdTemporaryBasalTransaction(pair.getValue()))
-                    .observeOn(aapsSchedulers.getIo())
-                    .subscribe(
-                            result -> aapsLogger.debug(LTag.DATABASE, "Updated ns id of TemporaryBasal " + pair.getValue()),
-                            error -> aapsLogger.error(LTag.DATABASE, "Updated ns id of TemporaryBasal failed", error)
-                    ));
-            dataSyncSelector.confirmLastTemporaryBasalIdIfGreater(pair.getUpdateRecordId());
-            rxBus.send(new EventNSClientNewLog("DBADD", "Acked TemporaryBasal" + pair.getValue().getInterfaceIDs().getNightscoutId()));
-            // Send new if waiting
-            dataSyncSelector.processChangedTemporaryBasalsCompat();
-            return;
-        }
-        if (ack.getOriginalObject() instanceof DataSyncSelector.PairExtendedBolus) {
-            DataSyncSelector.PairExtendedBolus pair = (DataSyncSelector.PairExtendedBolus) ack.getOriginalObject();
-            pair.getValue().getInterfaceIDs().setNightscoutId(ack.getId());
-
-            disposable.add(repository.runTransactionForResult(new UpdateNsIdExtendedBolusTransaction(pair.getValue()))
-                    .observeOn(aapsSchedulers.getIo())
-                    .subscribe(
-                            result -> aapsLogger.debug(LTag.DATABASE, "Updated ns id of ExtendedBolus " + pair.getValue()),
-                            error -> aapsLogger.error(LTag.DATABASE, "Updated ns id of ExtendedBolus failed", error)
-                    ));
-            dataSyncSelector.confirmLastExtendedBolusIdIfGreater(pair.getUpdateRecordId());
-            rxBus.send(new EventNSClientNewLog("DBADD", "Acked ExtendedBolus" + pair.getValue().getInterfaceIDs().getNightscoutId()));
-            // Send new if waiting
-            dataSyncSelector.processChangedTemporaryBasalsCompat();
-            return;
-        }
-        if (ack.getOriginalObject() instanceof DeviceStatus) {
-            DeviceStatus deviceStatus = (DeviceStatus) ack.getOriginalObject();
-            deviceStatus.getInterfaceIDs().setNightscoutId(ack.getId());
-
-            disposable.add(repository.runTransactionForResult(new UpdateNsIdDeviceStatusTransaction(deviceStatus))
-                    .observeOn(aapsSchedulers.getIo())
-                    .subscribe(
-                            result -> aapsLogger.debug(LTag.DATABASE, "Updated ns id of DeviceStatus " + deviceStatus),
-                            error -> aapsLogger.error(LTag.DATABASE, "Updated ns id of DeviceStatus failed", error)
-                    ));
-            dataSyncSelector.confirmLastDeviceStatusIdIfGreater(deviceStatus.getId());
-            rxBus.send(new EventNSClientNewLog("DBADD", "Acked DeviceStatus" + deviceStatus.getInterfaceIDs().getNightscoutId()));
-            // Send new if waiting
-            dataSyncSelector.processChangedBolusCalculatorResultsCompat();
-            return;
-        }
         // old way
         if (ack.nsClientID != null) {
             uploadQueue.removeByNsClientIdIfExists(ack.json);
@@ -402,78 +238,11 @@ public class NSClientService extends DaggerService {
     public void processUpdateAck(NSUpdateAck ack) {
         lastAckTime = dateUtil.now();
         // new room way
-        if (ack.getOriginalObject() instanceof DataSyncSelector.PairTemporaryTarget) {
-            DataSyncSelector.PairTemporaryTarget pair = (DataSyncSelector.PairTemporaryTarget) ack.getOriginalObject();
-            dataSyncSelector.confirmLastTempTargetsIdIfGreater(pair.getUpdateRecordId());
-            rxBus.send(new EventNSClientNewLog("DBUPDATE/DBREMOVE", "Acked TemporaryTarget" + ack.get_id()));
-            // Send new if waiting
-            dataSyncSelector.processChangedTempTargetsCompat();
-            return;
-        }
-        if (ack.getOriginalObject() instanceof DataSyncSelector.PairGlucoseValue) {
-            DataSyncSelector.PairGlucoseValue pair = (DataSyncSelector.PairGlucoseValue) ack.getOriginalObject();
-            dataSyncSelector.confirmLastGlucoseValueIdIfGreater(pair.getUpdateRecordId());
-            rxBus.send(new EventNSClientNewLog("DBUPDATE/DBREMOVE", "Acked GlucoseValue " + ack.get_id()));
-            // Send new if waiting
-            dataSyncSelector.processChangedGlucoseValuesCompat();
-            return;
-        }
-        if (ack.getOriginalObject() instanceof DataSyncSelector.PairFood) {
-            DataSyncSelector.PairFood pair = (DataSyncSelector.PairFood) ack.getOriginalObject();
-            dataSyncSelector.confirmLastFoodIdIfGreater(pair.getUpdateRecordId());
-            rxBus.send(new EventNSClientNewLog("DBUPDATE/DBREMOVE", "Acked Food " + ack.get_id()));
-            // Send new if waiting
-            dataSyncSelector.processChangedFoodsCompat();
-            return;
-        }
-        if (ack.getOriginalObject() instanceof DataSyncSelector.PairTherapyEvent) {
-            DataSyncSelector.PairTherapyEvent pair = (DataSyncSelector.PairTherapyEvent) ack.getOriginalObject();
-            dataSyncSelector.confirmLastTherapyEventIdIfGreater(pair.getUpdateRecordId());
-            rxBus.send(new EventNSClientNewLog("DBUPDATE/DBREMOVE", "Acked TherapyEvent " + ack.get_id()));
-            // Send new if waiting
-            dataSyncSelector.processChangedTherapyEventsCompat();
-            return;
-        }
-        if (ack.getOriginalObject() instanceof DataSyncSelector.PairBolus) {
-            DataSyncSelector.PairBolus pair = (DataSyncSelector.PairBolus) ack.getOriginalObject();
-            dataSyncSelector.confirmLastBolusIdIfGreater(pair.getUpdateRecordId());
-            rxBus.send(new EventNSClientNewLog("DBUPDATE/DBREMOVE", "Acked Bolus " + ack.get_id()));
-            // Send new if waiting
-            dataSyncSelector.processChangedBolusesCompat();
-            return;
-        }
-        if (ack.getOriginalObject() instanceof DataSyncSelector.PairCarbs) {
-            DataSyncSelector.PairCarbs pair = (DataSyncSelector.PairCarbs) ack.getOriginalObject();
-            dataSyncSelector.confirmLastCarbsIdIfGreater(pair.getUpdateRecordId());
-            rxBus.send(new EventNSClientNewLog("DBUPDATE/DBREMOVE", "Acked Carbs " + ack.get_id()));
-            // Send new if waiting
-            dataSyncSelector.processChangedCarbsCompat();
-            return;
-        }
-        if (ack.getOriginalObject() instanceof DataSyncSelector.PairBolusCalculatorResult) {
-            DataSyncSelector.PairBolusCalculatorResult pair = (DataSyncSelector.PairBolusCalculatorResult) ack.getOriginalObject();
-            dataSyncSelector.confirmLastBolusCalculatorResultsIdIfGreater(pair.getUpdateRecordId());
-            rxBus.send(new EventNSClientNewLog("DBUPDATE/DBREMOVE", "Acked BolusCalculatorResult " + ack.get_id()));
-            // Send new if waiting
-            dataSyncSelector.processChangedBolusCalculatorResultsCompat();
-            return;
-        }
-        if (ack.getOriginalObject() instanceof DataSyncSelector.PairTemporaryBasal) {
-            DataSyncSelector.PairTemporaryBasal pair = (DataSyncSelector.PairTemporaryBasal) ack.getOriginalObject();
-            dataSyncSelector.confirmLastTemporaryBasalIdIfGreater(pair.getUpdateRecordId());
-            rxBus.send(new EventNSClientNewLog("DBUPDATE/DBREMOVE", "Acked TemporaryBasal " + ack.get_id()));
-            // Send new if waiting
-            dataSyncSelector.processChangedTemporaryBasalsCompat();
-            return;
-        }
-        if (ack.getOriginalObject() instanceof DataSyncSelector.PairExtendedBolus) {
-            DataSyncSelector.PairExtendedBolus pair = (DataSyncSelector.PairExtendedBolus) ack.getOriginalObject();
-            dataSyncSelector.confirmLastExtendedBolusIdIfGreater(pair.getUpdateRecordId());
-            rxBus.send(new EventNSClientNewLog("DBUPDATE/DBREMOVE", "Acked ExtendedBolus " + ack.get_id()));
-            // Send new if waiting
-            dataSyncSelector.processChangedExtendedBolusesCompat();
-            return;
-        }
+        dataWorker.enqueue(
+                new OneTimeWorkRequest.Builder(NSClientUpdateRemoveAckWorker.class)
+                        .setInputData(dataWorker.storeInputData(ack, null))
+                        .build());
+
         // old way
         if (ack.getResult()) {
             uploadQueue.removeByMongoId(ack.getAction(), ack.get_id());

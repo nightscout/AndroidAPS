@@ -23,7 +23,7 @@ import info.nightscout.androidaps.events.EventExtendedBolusChange
 import info.nightscout.androidaps.extensions.iobCalc
 import info.nightscout.androidaps.extensions.isInProgress
 import info.nightscout.androidaps.extensions.toVisibility
-import info.nightscout.androidaps.interfaces.ActivePluginProvider
+import info.nightscout.androidaps.interfaces.ActivePlugin
 import info.nightscout.androidaps.interfaces.ProfileFunction
 import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.logging.LTag
@@ -47,7 +47,7 @@ class TreatmentsExtendedBolusesFragment : DaggerFragment() {
 
     private val millsToThePast = T.days(30).msecs()
 
-    @Inject lateinit var activePlugin: ActivePluginProvider
+    @Inject lateinit var activePlugin: ActivePlugin
     @Inject lateinit var rxBus: RxBusWrapper
     @Inject lateinit var resourceHelper: ResourceHelper
     @Inject lateinit var aapsLogger: AAPSLogger

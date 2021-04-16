@@ -52,7 +52,7 @@ open class IobCobCalculatorPlugin @Inject constructor(
     private val sp: SP,
     resourceHelper: ResourceHelper,
     private val profileFunction: ProfileFunction,
-    private val activePlugin: ActivePluginProvider,
+    private val activePlugin: ActivePlugin,
     private val sensitivityOref1Plugin: SensitivityOref1Plugin,
     private val sensitivityAAPSPlugin: SensitivityAAPSPlugin,
     private val sensitivityWeightedAveragePlugin: SensitivityWeightedAveragePlugin,

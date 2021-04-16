@@ -5,7 +5,7 @@ import android.content.Intent
 import android.text.Spanned
 import com.google.common.base.Joiner
 import dagger.android.HasAndroidInjector
-import info.nightscout.androidaps.Config
+import info.nightscout.androidaps.interfaces.Config
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.activities.ErrorHelperActivity
 import info.nightscout.androidaps.data.DetailedBolusInfo
@@ -53,7 +53,7 @@ class BolusWizard @Inject constructor(
     @Inject lateinit var sp: SP
     @Inject lateinit var profileFunction: ProfileFunction
     @Inject lateinit var constraintChecker: ConstraintChecker
-    @Inject lateinit var activePlugin: ActivePluginProvider
+    @Inject lateinit var activePlugin: ActivePlugin
     @Inject lateinit var commandQueue: CommandQueueProvider
     @Inject lateinit var loopPlugin: LoopPlugin
     @Inject lateinit var iobCobCalculator: IobCobCalculator

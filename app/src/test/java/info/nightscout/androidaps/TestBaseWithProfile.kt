@@ -8,7 +8,6 @@ import info.nightscout.androidaps.db.ProfileSwitch
 import info.nightscout.androidaps.interfaces.*
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper
 import info.nightscout.androidaps.utils.DateUtil
-import info.nightscout.androidaps.utils.DefaultValueHelper
 import info.nightscout.androidaps.utils.FabricPrivacy
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 import org.json.JSONObject
@@ -20,13 +19,13 @@ import org.powermock.core.classloader.annotations.PrepareForTest
 @PrepareForTest(FabricPrivacy::class)
 open class TestBaseWithProfile : TestBase() {
 
-    @Mock lateinit var activePluginProvider: ActivePluginProvider
+    @Mock lateinit var activePluginProvider: ActivePlugin
     @Mock lateinit var resourceHelper: ResourceHelper
     @Mock lateinit var treatmentsInterface: TreatmentsInterface
     @Mock lateinit var iobCobCalculator: IobCobCalculator
     @Mock lateinit var fabricPrivacy: FabricPrivacy
     @Mock lateinit var profileFunction: ProfileFunction
-    @Mock lateinit var configInterface: ConfigInterface
+    @Mock lateinit var config: Config
     @Mock lateinit var context: Context
 
     lateinit var dateUtil: DateUtil
@@ -40,7 +39,7 @@ open class TestBaseWithProfile : TestBase() {
                 it.resourceHelper = resourceHelper
                 it.rxBus = rxBus
                 it.fabricPrivacy = fabricPrivacy
-                it.configInterface = configInterface
+                it.config = config
                 it.dateUtil = dateUtil
             }
             if (it is ProfileSwitch) {

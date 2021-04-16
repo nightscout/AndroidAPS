@@ -24,12 +24,12 @@ import info.nightscout.androidaps.db.TemporaryBasal;
 import info.nightscout.androidaps.events.EventAppExit;
 import info.nightscout.androidaps.events.EventCustomActionsChanged;
 import info.nightscout.androidaps.extensions.PumpStateExtensionKt;
-import info.nightscout.androidaps.interfaces.ActivePluginProvider;
+import info.nightscout.androidaps.interfaces.ActivePlugin;
 import info.nightscout.androidaps.interfaces.CommandQueueProvider;
-import info.nightscout.androidaps.interfaces.ConstraintsInterface;
+import info.nightscout.androidaps.interfaces.Constraints;
 import info.nightscout.androidaps.interfaces.PluginDescription;
 import info.nightscout.androidaps.interfaces.PumpDescription;
-import info.nightscout.androidaps.interfaces.PumpInterface;
+import info.nightscout.androidaps.interfaces.Pump;
 import info.nightscout.androidaps.interfaces.PumpPluginBase;
 import info.nightscout.androidaps.interfaces.PumpSync;
 import info.nightscout.androidaps.logging.AAPSLogger;
@@ -59,13 +59,13 @@ import static info.nightscout.androidaps.extensions.PumpStateExtensionKt.getPlan
 
 // When using this class, make sure that your first step is to create mConnection (see MedtronicPumpPlugin)
 
-public abstract class PumpPluginAbstract extends PumpPluginBase implements PumpInterface, ConstraintsInterface {
+public abstract class PumpPluginAbstract extends PumpPluginBase implements Pump, Constraints {
     private final CompositeDisposable disposable = new CompositeDisposable();
 
     protected HasAndroidInjector injector;
     protected AAPSLogger aapsLogger;
     protected RxBusWrapper rxBus;
-    protected ActivePluginProvider activePlugin;
+    protected ActivePlugin activePlugin;
     protected Context context;
     protected FabricPrivacy fabricPrivacy;
     protected ResourceHelper resourceHelper;
@@ -90,7 +90,7 @@ public abstract class PumpPluginAbstract extends PumpPluginBase implements PumpI
             AAPSLogger aapsLogger,
             CommandQueueProvider commandQueue,
             RxBusWrapper rxBus,
-            ActivePluginProvider activePlugin,
+            ActivePlugin activePlugin,
             SP sp,
             Context context,
             FabricPrivacy fabricPrivacy,

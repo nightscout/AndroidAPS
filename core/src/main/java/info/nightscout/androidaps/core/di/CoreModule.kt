@@ -5,7 +5,7 @@ import android.preference.PreferenceManager
 import dagger.Module
 import dagger.Provides
 import dagger.android.HasAndroidInjector
-import info.nightscout.androidaps.interfaces.ActivePluginProvider
+import info.nightscout.androidaps.interfaces.ActivePlugin
 import info.nightscout.androidaps.interfaces.ProfileFunction
 import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.logging.AAPSLoggerProduction
@@ -28,7 +28,7 @@ open class CoreModule {
 
     @Provides
     @Singleton
-    fun provideProfileFunction(injector: HasAndroidInjector, aapsLogger: AAPSLogger, sp: SP, resourceHelper: ResourceHelper, activePlugin: ActivePluginProvider, fabricPrivacy: FabricPrivacy, dateUtil: DateUtil): ProfileFunction {
+    fun provideProfileFunction(injector: HasAndroidInjector, aapsLogger: AAPSLogger, sp: SP, resourceHelper: ResourceHelper, activePlugin: ActivePlugin, fabricPrivacy: FabricPrivacy, dateUtil: DateUtil): ProfileFunction {
         return ProfileFunctionImplementation(injector, aapsLogger, sp, resourceHelper, activePlugin, fabricPrivacy, dateUtil)
     }
 

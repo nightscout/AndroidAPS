@@ -8,7 +8,7 @@ import info.nightscout.androidaps.data.PumpEnactResult
 import info.nightscout.androidaps.database.entities.UserEntry
 import info.nightscout.androidaps.database.entities.UserEntry.Sources
 import info.nightscout.androidaps.database.entities.ValueWithUnit
-import info.nightscout.androidaps.interfaces.ActivePluginProvider
+import info.nightscout.androidaps.interfaces.ActivePlugin
 import info.nightscout.androidaps.logging.UserEntryLogger
 import info.nightscout.androidaps.plugins.general.automation.elements.Comparator
 import info.nightscout.androidaps.plugins.general.automation.elements.InputDuration
@@ -24,7 +24,7 @@ import javax.inject.Inject
 
 class ActionProfileSwitchPercent(injector: HasAndroidInjector) : Action(injector) {
     @Inject lateinit var resourceHelper: ResourceHelper
-    @Inject lateinit var activePlugin: ActivePluginProvider
+    @Inject lateinit var activePlugin: ActivePlugin
     @Inject lateinit var uel: UserEntryLogger
 
     var pct = InputPercent()

@@ -5,7 +5,7 @@ package info.nightscout.androidaps.plugins.general.smsCommunicator
 import android.telephony.SmsManager
 import dagger.android.AndroidInjector
 import dagger.android.HasAndroidInjector
-import info.nightscout.androidaps.Config
+import info.nightscout.androidaps.utils.buildHelper.ConfigImpl
 import info.nightscout.androidaps.Constants
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.TestBaseWithProfile
@@ -14,7 +14,7 @@ import info.nightscout.androidaps.data.PumpEnactResult
 import info.nightscout.androidaps.database.AppRepository
 import info.nightscout.androidaps.database.entities.GlucoseValue
 import info.nightscout.androidaps.database.transactions.InsertTemporaryTargetAndCancelCurrentTransaction
-import info.nightscout.androidaps.interfaces.ActivePluginProvider
+import info.nightscout.androidaps.interfaces.ActivePlugin
 import info.nightscout.androidaps.interfaces.CommandQueueProvider
 import info.nightscout.androidaps.interfaces.Constraint
 import info.nightscout.androidaps.interfaces.PluginType
@@ -65,7 +65,7 @@ class SmsCommunicatorPluginTest : TestBaseWithProfile() {
 
     @Mock lateinit var sp: SP
     @Mock lateinit var constraintChecker: ConstraintChecker
-    @Mock lateinit var activePlugin: ActivePluginProvider
+    @Mock lateinit var activePlugin: ActivePlugin
     @Mock lateinit var commandQueue: CommandQueueProvider
     @Mock lateinit var loopPlugin: LoopPlugin
     @Mock lateinit var virtualPumpPlugin: VirtualPumpPlugin
@@ -116,7 +116,7 @@ class SmsCommunicatorPluginTest : TestBaseWithProfile() {
         }))
         val glucoseStatusProvider = GlucoseStatusProvider(aapsLogger = aapsLogger, iobCobCalculator = iobCobCalculator, dateUtil = dateUtilMocked)
 
-        smsCommunicatorPlugin = SmsCommunicatorPlugin(injector, aapsLogger, resourceHelper, aapsSchedulers, sp, constraintChecker, rxBus, profileFunction, fabricPrivacy, activePlugin, commandQueue, loopPlugin, iobCobCalculator, xdripCalibrations, otp, Config(), dateUtilMocked, uel, glucoseStatusProvider, repository)
+        smsCommunicatorPlugin = SmsCommunicatorPlugin(injector, aapsLogger, resourceHelper, aapsSchedulers, sp, constraintChecker, rxBus, profileFunction, fabricPrivacy, activePlugin, commandQueue, loopPlugin, iobCobCalculator, xdripCalibrations, otp, ConfigImpl(), dateUtilMocked, uel, glucoseStatusProvider, repository)
         smsCommunicatorPlugin.setPluginEnabled(PluginType.GENERAL, true)
         Mockito.doAnswer { invocation: InvocationOnMock ->
             val callback = invocation.getArgument<Callback>(1)
@@ -173,7 +173,7 @@ class SmsCommunicatorPluginTest : TestBaseWithProfile() {
         `when`(iobCobCalculator.calculateIobFromTempBasalsIncludingConvertedExtended()).thenReturn(IobTotal(0))
         `when`(treatmentsInterface.service).thenReturn(treatmentService)
 
-        `when`(activePlugin.activeProfileInterface).thenReturn(localProfilePlugin)
+        `when`(activePlugin.activeProfileSource).thenReturn(localProfilePlugin)
 
         `when`(profileFunction.getUnits()).thenReturn(Constants.MGDL)
 
@@ -245,6 +245,12 @@ class SmsCommunicatorPluginTest : TestBaseWithProfile() {
         `when`(resourceHelper.gs(R.string.smscommunicator_pumpdisconnected)).thenReturn("Pump disconnected")
         `when`(resourceHelper.gs(R.string.smscommunicator_code_from_authenticator_for)).thenReturn("from Authenticator app for: %1\$s followed by PIN")
         `when`(resourceHelper.gs(R.string.patient_name_default)).thenReturn("User")
+        `when`(resourceHelper.gsNotLocalised(R.string.loopsuspended)).thenReturn("Loop suspended")
+        `when`(resourceHelper.gsNotLocalised(R.string.smscommunicator_stoppedsms)).thenReturn("SMS Remote Service stopped. To reactivate it, use AAPS on master smartphone.")
+        `when`(resourceHelper.gsNotLocalised(R.string.profileswitchcreated)).thenReturn("Profile switch created")
+        `when`(resourceHelper.gsNotLocalised(R.string.smscommunicator_tempbasalcanceled)).thenReturn("Temp basal canceled")
+        `when`(resourceHelper.gsNotLocalised(R.string.smscommunicator_calibrationsent)).thenReturn("Calibration sent. Receiving must be enabled in xDrip+.")
+        `when`(resourceHelper.gsNotLocalised(R.string.smscommunicator_tt_canceled)).thenReturn("Temp Target canceled successfully")
 
     }
 

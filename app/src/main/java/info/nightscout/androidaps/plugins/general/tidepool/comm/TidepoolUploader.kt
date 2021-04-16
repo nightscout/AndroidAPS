@@ -5,7 +5,7 @@ import android.os.PowerManager
 import android.os.SystemClock
 import info.nightscout.androidaps.BuildConfig
 import info.nightscout.androidaps.R
-import info.nightscout.androidaps.interfaces.ActivePluginProvider
+import info.nightscout.androidaps.interfaces.ActivePlugin
 import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.logging.LTag
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper
@@ -37,7 +37,7 @@ class TidepoolUploader @Inject constructor(
     private val resourceHelper: ResourceHelper,
     private val sp: SP,
     private val uploadChunk: UploadChunk,
-    private val activePlugin: ActivePluginProvider,
+    private val activePlugin: ActivePlugin,
     private val dateUtil: DateUtil
 ) {
 

@@ -3,9 +3,17 @@ package info.nightscout.androidaps.interfaces
 import info.nightscout.androidaps.data.Profile
 
 /**
- * Created by mike on 15.06.2016.
+ * Constraints interface
+ *
+ * Every function has a param from previous chained call
+ * Function can limit the value even more and add another reason of restriction
+ *
+ * see [info.nightscout.androidaps.plugins.configBuilder.ConstraintChecker]
+ * which iterates over all registered plugins with [Constraints] implemented
+ *
+ * @return updated parameter
  */
-interface ConstraintsInterface {
+interface Constraints {
 
     @JvmDefault fun isLoopInvocationAllowed(value: Constraint<Boolean>): Constraint<Boolean> = value
     @JvmDefault fun isClosedLoopAllowed(value: Constraint<Boolean>): Constraint<Boolean> = value

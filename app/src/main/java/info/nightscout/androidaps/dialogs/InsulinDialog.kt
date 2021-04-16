@@ -8,7 +8,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.google.common.base.Joiner
-import info.nightscout.androidaps.Config
+import info.nightscout.androidaps.interfaces.Config
 import info.nightscout.androidaps.Constants
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.activities.ErrorHelperActivity
@@ -21,7 +21,7 @@ import info.nightscout.androidaps.database.entities.UserEntry.Action
 import info.nightscout.androidaps.database.entities.UserEntry.Sources
 import info.nightscout.androidaps.database.transactions.InsertTemporaryTargetAndCancelCurrentTransaction
 import info.nightscout.androidaps.databinding.DialogInsulinBinding
-import info.nightscout.androidaps.interfaces.ActivePluginProvider
+import info.nightscout.androidaps.interfaces.ActivePlugin
 import info.nightscout.androidaps.interfaces.CommandQueueProvider
 import info.nightscout.androidaps.interfaces.Constraint
 import info.nightscout.androidaps.interfaces.ProfileFunction
@@ -51,7 +51,7 @@ class InsulinDialog : DialogFragmentWithDate() {
     @Inject lateinit var defaultValueHelper: DefaultValueHelper
     @Inject lateinit var profileFunction: ProfileFunction
     @Inject lateinit var commandQueue: CommandQueueProvider
-    @Inject lateinit var activePlugin: ActivePluginProvider
+    @Inject lateinit var activePlugin: ActivePlugin
     @Inject lateinit var ctx: Context
     @Inject lateinit var repository: AppRepository
     @Inject lateinit var config: Config

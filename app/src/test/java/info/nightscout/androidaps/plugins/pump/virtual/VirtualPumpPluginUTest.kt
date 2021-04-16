@@ -1,7 +1,7 @@
 package info.nightscout.androidaps.plugins.pump.virtual
 
 import dagger.android.AndroidInjector
-import info.nightscout.androidaps.Config
+import info.nightscout.androidaps.utils.buildHelper.ConfigImpl
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.TestBase
 import info.nightscout.androidaps.interfaces.CommandQueueProvider
@@ -41,7 +41,7 @@ class VirtualPumpPluginUTest : TestBase() {
 
     @Before
     fun prepareMocks() {
-        virtualPumpPlugin = VirtualPumpPlugin({ AndroidInjector { } }, aapsLogger, rxBus, fabricPrivacy, resourceHelper, aapsSchedulers, sp, profileFunction, iobCobCalculator, commandQueue, pumpSync, Config(), dateUtil)
+        virtualPumpPlugin = VirtualPumpPlugin({ AndroidInjector { } }, aapsLogger, rxBus, fabricPrivacy, resourceHelper, aapsSchedulers, sp, profileFunction, iobCobCalculator, commandQueue, pumpSync, ConfigImpl(), dateUtil)
     }
 
     @Test

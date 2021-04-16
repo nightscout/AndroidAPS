@@ -44,15 +44,15 @@ import info.nightscout.androidaps.events.EventInitializationChanged;
 import info.nightscout.androidaps.events.EventRefreshOverview;
 import info.nightscout.androidaps.insight.R;
 import info.nightscout.androidaps.interfaces.CommandQueueProvider;
-import info.nightscout.androidaps.interfaces.ConfigInterface;
+import info.nightscout.androidaps.interfaces.Config;
 import info.nightscout.androidaps.interfaces.Constraint;
-import info.nightscout.androidaps.interfaces.ConstraintsInterface;
+import info.nightscout.androidaps.interfaces.Constraints;
 import info.nightscout.androidaps.interfaces.DatabaseHelperInterface;
 import info.nightscout.androidaps.interfaces.PluginDescription;
 import info.nightscout.androidaps.interfaces.PluginType;
 import info.nightscout.androidaps.interfaces.ProfileFunction;
 import info.nightscout.androidaps.interfaces.PumpDescription;
-import info.nightscout.androidaps.interfaces.PumpInterface;
+import info.nightscout.androidaps.interfaces.Pump;
 import info.nightscout.androidaps.interfaces.PumpPluginBase;
 import info.nightscout.androidaps.interfaces.PumpSync;
 import info.nightscout.androidaps.interfaces.TreatmentsInterface;
@@ -138,7 +138,7 @@ import info.nightscout.androidaps.utils.resources.ResourceHelper;
 import info.nightscout.androidaps.utils.sharedPreferences.SP;
 
 @Singleton
-public class LocalInsightPlugin extends PumpPluginBase implements PumpInterface, ConstraintsInterface, InsightConnectionService.StateCallback {
+public class LocalInsightPlugin extends PumpPluginBase implements Pump, Constraints, InsightConnectionService.StateCallback {
 
     private final AAPSLogger aapsLogger;
     private final RxBusWrapper rxBus;
@@ -211,7 +211,7 @@ public class LocalInsightPlugin extends PumpPluginBase implements PumpInterface,
             NSUpload nsUpload,
             Context context,
             UploadQueueInterface uploadQueue,
-            ConfigInterface config,
+            Config config,
             DateUtil dateUtil,
             DatabaseHelperInterface databaseHelper,
             PumpSync pumpSync

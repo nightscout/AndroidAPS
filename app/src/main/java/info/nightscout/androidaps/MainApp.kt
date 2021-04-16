@@ -18,11 +18,12 @@ import info.nightscout.androidaps.db.CompatDBHelper
 import info.nightscout.androidaps.db.DatabaseHelper
 import info.nightscout.androidaps.db.StaticInjector
 import info.nightscout.androidaps.dependencyInjection.DaggerAppComponent
+import info.nightscout.androidaps.interfaces.ConfigBuilder
+import info.nightscout.androidaps.interfaces.Config
 import info.nightscout.androidaps.interfaces.PluginBase
 import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.logging.LTag
 import info.nightscout.androidaps.logging.UserEntryLogger
-import info.nightscout.androidaps.plugins.configBuilder.ConfigBuilderPlugin
 import info.nightscout.androidaps.plugins.configBuilder.PluginStore
 import info.nightscout.androidaps.plugins.constraints.versionChecker.VersionCheckerUtils
 import info.nightscout.androidaps.receivers.BTReceiver
@@ -49,7 +50,7 @@ class MainApp : DaggerApplication() {
     @Inject lateinit var versionCheckersUtils: VersionCheckerUtils
     @Inject lateinit var sp: SP
     @Inject lateinit var config: Config
-    @Inject lateinit var configBuilderPlugin: ConfigBuilderPlugin
+    @Inject lateinit var configBuilder: ConfigBuilder
     @Inject lateinit var keepAliveManager: KeepAliveManager
     @Inject lateinit var plugins: List<@JvmSuppressWildcards PluginBase>
     @Inject lateinit var compatDBHelper: CompatDBHelper
@@ -85,7 +86,7 @@ class MainApp : DaggerApplication() {
 
         // Register all tabs in app here
         pluginStore.plugins = plugins
-        configBuilderPlugin.initialize()
+        configBuilder.initialize()
         keepAliveManager.setAlarm(this)
         doMigrations()
         uel.log(UserEntry.Action.START_AAPS, UserEntry.Sources.Aaps)

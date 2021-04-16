@@ -22,7 +22,7 @@ import info.nightscout.androidaps.db.OmnipodHistoryRecord;
 import info.nightscout.androidaps.events.Event;
 import info.nightscout.androidaps.events.EventRefreshOverview;
 import info.nightscout.androidaps.extensions.PumpStateExtensionKt;
-import info.nightscout.androidaps.interfaces.ActivePluginProvider;
+import info.nightscout.androidaps.interfaces.ActivePlugin;
 import info.nightscout.androidaps.interfaces.DatabaseHelperInterface;
 import info.nightscout.androidaps.interfaces.PumpSync;
 import info.nightscout.androidaps.logging.AAPSLogger;
@@ -94,7 +94,7 @@ public class AapsOmnipodErosManager {
     private final RxBusWrapper rxBus;
     private final ResourceHelper resourceHelper;
     private final HasAndroidInjector injector;
-    private final ActivePluginProvider activePlugin;
+    private final ActivePlugin activePlugin;
     private final SP sp;
     private final OmnipodManager delegate;
     private final DatabaseHelperInterface databaseHelper;
@@ -127,7 +127,7 @@ public class AapsOmnipodErosManager {
                                   SP sp,
                                   ResourceHelper resourceHelper,
                                   HasAndroidInjector injector,
-                                  ActivePluginProvider activePlugin,
+                                  ActivePlugin activePlugin,
                                   DatabaseHelperInterface databaseHelper,
                                   OmnipodAlertUtil omnipodAlertUtil,
                                   Context context,

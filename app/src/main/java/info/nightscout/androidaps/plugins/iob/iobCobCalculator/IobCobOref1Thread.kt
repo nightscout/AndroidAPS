@@ -11,7 +11,7 @@ import info.nightscout.androidaps.database.ValueWrapper
 import info.nightscout.androidaps.events.Event
 import info.nightscout.androidaps.events.EventAutosensCalculationFinished
 import info.nightscout.androidaps.extensions.target
-import info.nightscout.androidaps.interfaces.ActivePluginProvider
+import info.nightscout.androidaps.interfaces.ActivePlugin
 import info.nightscout.androidaps.interfaces.ProfileFunction
 import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.logging.LTag
@@ -56,7 +56,7 @@ class IobCobOref1Thread internal constructor(
     @Inject lateinit var context: Context
     @Inject lateinit var sensitivityAAPSPlugin: SensitivityAAPSPlugin
     @Inject lateinit var sensitivityWeightedAveragePlugin: SensitivityWeightedAveragePlugin
-    @Inject lateinit var activePlugin: ActivePluginProvider
+    @Inject lateinit var activePlugin: ActivePlugin
     @Inject lateinit var buildHelper: BuildHelper
     @Inject lateinit var profiler: Profiler
     @Inject lateinit var fabricPrivacy: FabricPrivacy

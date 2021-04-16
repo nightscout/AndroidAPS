@@ -4,7 +4,7 @@ import android.os.SystemClock
 import androidx.preference.PreferenceFragmentCompat
 import androidx.preference.SwitchPreference
 import dagger.android.HasAndroidInjector
-import info.nightscout.androidaps.Config
+import info.nightscout.androidaps.interfaces.Config
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.data.DetailedBolusInfo
 import info.nightscout.androidaps.data.Profile
@@ -63,7 +63,7 @@ open class VirtualPumpPlugin @Inject constructor(
     .description(R.string.description_pump_virtual)
     .setDefault(),
     injector, aapsLogger, resourceHelper, commandQueue
-), PumpInterface {
+), Pump {
 
     private val disposable = CompositeDisposable()
     var batteryPercent = 50
@@ -152,7 +152,7 @@ open class VirtualPumpPlugin @Inject constructor(
 
     override fun setNewBasalProfile(profile: Profile): PumpEnactResult {
         lastDataTime = System.currentTimeMillis()
-        // Do nothing here. we are using ConfigBuilderPlugin.getPlugin().getActiveProfile().getProfile();
+        // Do nothing here. we are using database profile
         val result = PumpEnactResult(injector)
         result.success = true
         val notification = Notification(Notification.PROFILE_SET_OK, resourceHelper.gs(R.string.profile_set_ok), Notification.INFO, 60)

@@ -9,7 +9,7 @@ import info.nightscout.androidaps.R
 import info.nightscout.androidaps.database.AppRepository
 import info.nightscout.androidaps.database.entities.GlucoseValue
 import info.nightscout.androidaps.database.transactions.CgmSourceTransaction
-import info.nightscout.androidaps.interfaces.BgSourceInterface
+import info.nightscout.androidaps.interfaces.BgSource
 import info.nightscout.androidaps.interfaces.PluginBase
 import info.nightscout.androidaps.interfaces.PluginDescription
 import info.nightscout.androidaps.interfaces.PluginType
@@ -35,7 +35,7 @@ class GlimpPlugin @Inject constructor(
     .preferencesId(R.xml.pref_bgsource)
     .description(R.string.description_source_glimp),
     aapsLogger, resourceHelper, injector
-), BgSourceInterface {
+), BgSource {
 
     // cannot be inner class because of needed injection
     class GlimpWorker(
@@ -83,7 +83,7 @@ class GlimpPlugin @Inject constructor(
         }
     }
 
-    override fun uploadToNs(glucoseValue: GlucoseValue): Boolean =
+    override fun shouldUploadToNs(glucoseValue: GlucoseValue): Boolean =
         glucoseValue.sourceSensor == GlucoseValue.SourceSensor.GLIMP && sp.getBoolean(R.string.key_dexcomg5_nsupload, false)
 
 }

@@ -3,7 +3,7 @@ package info.nightscout.androidaps.plugins.general.overview.graphExtensions
 import android.graphics.Color
 import info.nightscout.androidaps.core.R
 import info.nightscout.androidaps.database.entities.Bolus
-import info.nightscout.androidaps.interfaces.ActivePluginProvider
+import info.nightscout.androidaps.interfaces.ActivePlugin
 import info.nightscout.androidaps.utils.DecimalFormatter
 import info.nightscout.androidaps.utils.DefaultValueHelper
 import info.nightscout.androidaps.utils.resources.ResourceHelper
@@ -12,7 +12,7 @@ import javax.inject.Inject
 class BolusDataPoint @Inject constructor(
     val data: Bolus,
     private val resourceHelper: ResourceHelper,
-    private val activePlugin: ActivePluginProvider,
+    private val activePlugin: ActivePlugin,
     private val defaultValueHelper: DefaultValueHelper
 ) : DataPointWithLabelInterface {
 

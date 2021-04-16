@@ -1,7 +1,7 @@
 package info.nightscout.androidaps.plugins.constraints.safety
 
 import dagger.android.HasAndroidInjector
-import info.nightscout.androidaps.Config
+import info.nightscout.androidaps.interfaces.Config
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.data.Profile
 import info.nightscout.androidaps.interfaces.*
@@ -35,7 +35,7 @@ class SafetyPlugin @Inject constructor(
     private val openAPSAMAPlugin: OpenAPSAMAPlugin,
     private val openAPSSMBPlugin: OpenAPSSMBPlugin,
     private val sensitivityOref1Plugin: SensitivityOref1Plugin,
-    private val activePlugin: ActivePluginProvider,
+    private val activePlugin: ActivePlugin,
     private val hardLimits: HardLimits,
     private val buildHelper: BuildHelper,
     private val iobCobCalculator: IobCobCalculator,
@@ -49,7 +49,7 @@ class SafetyPlugin @Inject constructor(
     .pluginName(R.string.safety)
     .preferencesId(R.xml.pref_safety),
     aapsLogger, resourceHelper, injector
-), ConstraintsInterface {
+), Constraints {
 
     /**
      * Constraints interface

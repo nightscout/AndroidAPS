@@ -38,7 +38,7 @@ import info.nightscout.androidaps.data.PumpEnactResult;
 import info.nightscout.androidaps.events.EventAppExit;
 import info.nightscout.androidaps.events.EventBTChange;
 import info.nightscout.androidaps.events.EventPumpStatusChanged;
-import info.nightscout.androidaps.interfaces.ActivePluginProvider;
+import info.nightscout.androidaps.interfaces.ActivePlugin;
 import info.nightscout.androidaps.interfaces.DatabaseHelperInterface;
 import info.nightscout.androidaps.interfaces.PumpSync;
 import info.nightscout.androidaps.logging.AAPSLogger;
@@ -72,7 +72,7 @@ public abstract class AbstractDanaRExecutionService extends DaggerService {
     @Inject DatabaseHelperInterface databaseHelper;
     @Inject AapsSchedulers aapsSchedulers;
     @Inject PumpSync pumpSync;
-    @Inject ActivePluginProvider activePlugin;
+    @Inject ActivePlugin activePlugin;
 
     private final CompositeDisposable disposable = new CompositeDisposable();
 

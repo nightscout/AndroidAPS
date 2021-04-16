@@ -4,7 +4,7 @@ import android.app.NotificationManager
 import android.content.Context
 import dagger.android.AndroidInjector
 import dagger.android.HasAndroidInjector
-import info.nightscout.androidaps.Config
+import info.nightscout.androidaps.utils.buildHelper.ConfigImpl
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.TestBase
 import info.nightscout.androidaps.database.AppRepository
@@ -13,7 +13,6 @@ import info.nightscout.androidaps.logging.UserEntryLogger
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper
 import info.nightscout.androidaps.plugins.configBuilder.ConstraintChecker
 import info.nightscout.androidaps.plugins.configBuilder.RunningConfiguration
-import info.nightscout.androidaps.plugins.general.nsclient.NSUpload
 import info.nightscout.androidaps.plugins.pump.virtual.VirtualPumpPlugin
 import info.nightscout.androidaps.plugins.treatments.TreatmentsPlugin
 import info.nightscout.androidaps.receivers.ReceiverStatusStore
@@ -41,7 +40,7 @@ class LoopPluginTest : TestBase() {
     @Mock lateinit var profileFunction: ProfileFunction
     @Mock lateinit var context: Context
     @Mock lateinit var commandQueue: CommandQueueProvider
-    @Mock lateinit var activePlugin: ActivePluginProvider
+    @Mock lateinit var activePlugin: ActivePlugin
     @Mock lateinit var treatmentsPlugin: TreatmentsPlugin
     @Mock lateinit var virtualPumpPlugin: VirtualPumpPlugin
     @Mock lateinit var iobCobCalculator: IobCobCalculator
@@ -58,7 +57,7 @@ class LoopPluginTest : TestBase() {
     val injector = HasAndroidInjector { AndroidInjector { } }
     @Before fun prepareMock() {
 
-        loopPlugin = LoopPlugin(injector, aapsLogger, aapsSchedulers, rxBus, sp, Config(), constraintChecker, resourceHelper, profileFunction, context, commandQueue, activePlugin, virtualPumpPlugin, iobCobCalculator, receiverStatusStore, fabricPrivacy, dateUtil, uel, repository, runningConfiguration)
+        loopPlugin = LoopPlugin(injector, aapsLogger, aapsSchedulers, rxBus, sp, ConfigImpl(), constraintChecker, resourceHelper, profileFunction, context, commandQueue, activePlugin, virtualPumpPlugin, iobCobCalculator, receiverStatusStore, fabricPrivacy, dateUtil, uel, repository, runningConfiguration)
         `when`(activePlugin.activePump).thenReturn(virtualPumpPlugin)
         `when`(context.getSystemService(Context.NOTIFICATION_SERVICE)).thenReturn(notificationManager)
     }

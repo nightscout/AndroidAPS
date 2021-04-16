@@ -40,10 +40,10 @@ open class ActionsTestBase : TestBaseWithProfile() {
 
     @Mock lateinit var sp: SP
     @Mock lateinit var commandQueue: CommandQueueProvider
-    @Mock lateinit var configBuilderPlugin: ConfigBuilderInterface
-    @Mock lateinit var activePlugin: ActivePluginProvider
-    @Mock lateinit var profilePlugin: ProfileInterface
-    @Mock lateinit var smsCommunicatorPlugin: SmsCommunicatorInterface
+    @Mock lateinit var configBuilder: ConfigBuilder
+    @Mock lateinit var activePlugin: ActivePlugin
+    @Mock lateinit var profilePlugin: ProfileSource
+    @Mock lateinit var smsCommunicatorPlugin: SmsCommunicator
     @Mock lateinit var loopPlugin: TestLoopPlugin
     @Mock lateinit var uel: UserEntryLogger
 
@@ -99,21 +99,21 @@ open class ActionsTestBase : TestBaseWithProfile() {
             if (it is ActionLoopResume) {
                 it.loopPlugin = loopPlugin
                 it.resourceHelper = resourceHelper
-                it.configBuilderPlugin = configBuilderPlugin
+                it.configBuilder = configBuilder
                 it.rxBus = rxBus
                 it.uel = uel
             }
             if (it is ActionLoopEnable) {
                 it.loopPlugin = loopPlugin
                 it.resourceHelper = resourceHelper
-                it.configBuilderPlugin = configBuilderPlugin
+                it.configBuilder = configBuilder
                 it.rxBus = rxBus
                 it.uel = uel
             }
             if (it is ActionLoopDisable) {
                 it.loopPlugin = loopPlugin
                 it.resourceHelper = resourceHelper
-                it.configBuilderPlugin = configBuilderPlugin
+                it.configBuilder = configBuilder
                 it.commandQueue = commandQueue
                 it.rxBus = rxBus
                 it.uel = uel
@@ -133,7 +133,7 @@ open class ActionsTestBase : TestBaseWithProfile() {
         testPumpPlugin = TestPumpPlugin(pluginDescription, aapsLogger, resourceHelper, injector)
         `when`(activePlugin.activePump).thenReturn(testPumpPlugin)
         `when`(profileFunction.getUnits()).thenReturn(Constants.MGDL)
-        `when`(activePlugin.activeProfileInterface).thenReturn(profilePlugin)
+        `when`(activePlugin.activeProfileSource).thenReturn(profilePlugin)
         `when`(profilePlugin.profile).thenReturn(getValidProfileStore())
     }
 }
