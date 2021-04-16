@@ -215,32 +215,6 @@ public enum MedtronicCommandType implements Serializable // , MinimedCommandType
     }
 
 
-    //    MedtronicCommandType(int code, String description, MedtronicDeviceType devices,
-//            MinimedCommandParameterType parameterType) {
-//        this(code, description, devices, parameterType, 64, 1, 0, 0, 0, 0);
-//    }
-//
-//
-//    MedtronicCommandType(int code, String description, MedtronicDeviceType devices,
-//            MinimedCommandParameterType parameterType, int expectedLength) {
-//        this(code, description, devices, parameterType, 64, 1, 0, 0, 0, expectedLength);
-//    }
-//
-//
-//    MedtronicCommandType(int code, String description, MedtronicDeviceType devices,
-//            MinimedCommandParameterType parameterType, int recordLength, int maxRecords, int commandType) {
-//        this(code, description, devices, parameterType, recordLength, maxRecords, 0, 0, commandType, 0);
-//    }
-//
-//
-//    MedtronicCommandType(int code, String description, MedtronicDeviceType devices,
-//            MinimedCommandParameterType parameterType, int recordLength, int maxRecords, int commandType,
-//            int expectedLength) {
-//        this(code, description, devices, parameterType, recordLength, maxRecords, 0, 0, commandType,
-//            expectedLength);
-//    }
-//
-//
     MedtronicCommandType(int code, String description, MedtronicDeviceType devices,
                          MinimedCommandParameterType parameterType, byte[] cmd_params) {
         this(code, description, devices, parameterType, 0, 1, 0, 0, 11, 0);
@@ -255,14 +229,6 @@ public enum MedtronicCommandType implements Serializable // , MinimedCommandType
 
         this(code, description, devices, parameterType, 64, 1, 0, null);
     }
-
-
-    // NEW
-    MedtronicCommandType(int code, String description, MedtronicDeviceType devices,
-                         MinimedCommandParameterType parameterType, int recordLength, int maxRecords, int commandType) {
-        this(code, description, devices, parameterType, recordLength, maxRecords, 0, null);
-    }
-
 
     // NEW
     MedtronicCommandType(int code, String description, MedtronicDeviceType devices, //
@@ -390,22 +356,6 @@ public enum MedtronicCommandType implements Serializable // , MinimedCommandType
     }
 
 
-    public boolean canReturnData() {
-        System.out.println("CanReturnData: ]id=" + this.name() + "max=" + this.maxRecords + "recLen=" + recordLength);
-        return (this.maxRecords * this.recordLength) > 0;
-    }
-
-
-    public int getRecordLength() {
-        return recordLength;
-    }
-
-
-    public int getMaxRecords() {
-        return maxRecords;
-    }
-
-
     public byte getCommandCode() {
         return commandCode;
     }
@@ -417,16 +367,6 @@ public enum MedtronicCommandType implements Serializable // , MinimedCommandType
         } else {
             return this.commandParameters.length;
         }
-    }
-
-
-    public byte[] getCommandParameters() {
-        return commandParameters;
-    }
-
-
-    public boolean hasCommandParameters() {
-        return (getCommandParametersCount() > 0);
     }
 
 

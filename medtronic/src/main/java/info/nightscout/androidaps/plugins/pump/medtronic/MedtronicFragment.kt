@@ -311,13 +311,21 @@ class MedtronicFragment : DaggerFragment() {
             binding.lastBolus.text = ""
         }
 
-        val pumpState = pumpSync.expectedPumpState()
-        // base basal rate
-        binding.baseBasalRate.text = ("(" + medtronicPumpStatus.activeProfileName + ")  "
-            + resourceHelper.gs(R.string.pump_basebasalrate, medtronicPumpPlugin.baseBasalRate))
+        if (true) {
+            // base basal rate
+            binding.baseBasalRate.text = ("(" + medtronicPumpStatus.activeProfileName + ")  "
+                + resourceHelper.gs(R.string.pump_basebasalrate, medtronicPumpPlugin.baseBasalRate))
 
-        binding.tempBasal.text = pumpState.temporaryBasal?.toStringFull(dateUtil)
-            ?: ""
+            binding.tempBasal.text = "??"
+        } else {
+            val pumpState = pumpSync.expectedPumpState()
+            // base basal rate
+            binding.baseBasalRate.text = ("(" + medtronicPumpStatus.activeProfileName + ")  "
+                + resourceHelper.gs(R.string.pump_basebasalrate, medtronicPumpPlugin.baseBasalRate))
+
+            binding.tempBasal.text = pumpState.temporaryBasal?.toStringFull(dateUtil)
+                ?: ""
+        }
 
         // battery
         if (medtronicPumpStatus.batteryType == BatteryType.None || medtronicPumpStatus.batteryVoltage == null) {

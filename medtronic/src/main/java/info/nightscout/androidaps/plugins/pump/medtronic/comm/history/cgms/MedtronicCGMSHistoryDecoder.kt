@@ -10,7 +10,9 @@ import info.nightscout.androidaps.plugins.pump.medtronic.comm.history.cgms.CGMSH
 import okhttp3.internal.and
 import org.joda.time.LocalDateTime
 import org.slf4j.Logger
+import org.slf4j.LoggerFactory
 import java.util.*
+import org.slf4j.LoggerFactory.getLogger as getLogger1
 
 /**
  * This file was taken from GGC - GNU Gluco Control (ggc.sourceforge.net), application for diabetes
@@ -264,6 +266,6 @@ class MedtronicCGMSHistoryDecoder : MedtronicHistoryDecoder<CGMSHistoryEntry>() 
     }
 
     companion object {
-        private val LOG: Logger = getLogger(LTag.PUMPCOMM)
+        private val LOG: Logger = getLogger1("MedtronicCGMSHistoryDecoder")
     }
 }

@@ -1499,10 +1499,10 @@ public class MedtronicPumpPlugin extends PumpPluginAbstract implements Pump, Ril
 
         for (BasalProfileEntry profileEntry : basalProfile.getEntries()) {
 
-            if (profileEntry.rate > medtronicPumpStatus.maxBasal) {
-                stringBuilder.append(profileEntry.startTime.toString("HH:mm"));
+            if (profileEntry.getRate() > medtronicPumpStatus.maxBasal) {
+                stringBuilder.append(profileEntry.getStartTime().toString("HH:mm"));
                 stringBuilder.append("=");
-                stringBuilder.append(profileEntry.rate);
+                stringBuilder.append(profileEntry.getRate());
             }
         }
 
