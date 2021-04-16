@@ -24,6 +24,8 @@
     <string name="medtronic_pump_battery_nizn">NiZn (Подробный вид)</string>
     <string name="medtronic_pump_battery_nimh">Никель-металлогидридная (подробно)</string>
     <string name="medtronic_bolus_debugging">Отладка Болюс/Назначения</string>
+    <!-- MDT Fragment -->
+    <string name="rl_battery_label">Батарея RileyLink</string>
     <!-- MDT Errors -->
     <string name="medtronic_errors">Ошибки</string>
     <string name="medtronic_error_serial_not_set">Серийный # не задан.</string>

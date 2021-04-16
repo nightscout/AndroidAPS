@@ -138,6 +138,7 @@
     <string name="configbuilder_nightscoutversion_label">Versione Nightscout:</string>
     <string name="missing_carbs">Mancanti %1$d g</string>
     <string name="exported">Preferenze esportate</string>
+    <string name="ue_exported">Voci utente esportate</string>
     <string name="export_to">Esportare impostazioni su</string>
     <string name="import_from">Importare impostazioni da</string>
     <string name="setting_imported">Impostazioni importate</string>
@@ -269,11 +270,8 @@
     <string name="openapsma_autosensdata_label">Dati autosens</string>
     <string name="openapsma_scriptdebugdata_label">Script debug</string>
     <string name="openapsama_useautosens">Usa la funzione Autosens</string>
-    <string name="refresheventsfromnightscout">Aggiorna eventi da NS</string>
+    <string name="refresheventsfromnightscout">Aggiornamento da NS</string>
     <string name="deletefuturetreatments">Elimina trattamenti nel futuro</string>
-    <string name="eatingsoon">Pasto a breve</string>
-    <string name="hypo">Ipoglicemia</string>
-    <string name="activity">Attività fisica</string>
     <string name="actions_shortname">AZN</string>
     <string name="configbuilder_shortname">CONF</string>
     <string name="loop_shortname">LOOP</string>
@@ -751,7 +749,6 @@
     <string name="format_carbs_ic">%1$.0fg IC: %2$.1f</string>
     <string name="format_cob_ic">%1$.1fg IC: %2$.1f</string>
     <string name="format_percent">%1$d%%</string>
-    <string name="boluswizard">Calcolatore</string>
     <string name="unit_minute_short">min</string>
     <string name="profile_name">Nome profilo:</string>
     <string name="selected_profile">Selezionato:</string>

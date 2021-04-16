@@ -195,7 +195,7 @@
     <string name="profileswitchtime_iwant">Pokud se probudíte o 2h dříve než obvykle, jak byste měli oznámit AndroidAPS tuto změnu?</string>
     <string name="profileswitchtime_2">Proveďte přepnutí profilu s posunem času 2</string>
     <string name="profileswitchtime__2">Proveďte přepnutí profilu s posunem času -2</string>
-    <string name="profileswitchtime_tt">Nastavte dočasný cíl pro blížící se jídlo.</string>
+    <string name="profileswitchtime_tt">Nastavte dočasný cíl Před jídlem.</string>
     <string name="profileswitchtime_100">Přepněte profil na více než 100%. </string>
     <string name="profileswitchtime_hint1">https://androidaps.readthedocs.io/en/latest/CROWDIN/cs/Usage/Profiles.html#posun-casu</string>
     <string name="profileswitch4_label">Změna profilu</string>

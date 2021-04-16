@@ -268,11 +268,7 @@
     <string name="openapsma_autosensdata_label">Autosens данни</string>
     <string name="openapsma_scriptdebugdata_label">От скрипта</string>
     <string name="openapsama_useautosens">Използвайте функцията за Autosens</string>
-    <string name="refresheventsfromnightscout">Обнови от NS</string>
     <string name="deletefuturetreatments">Изтрий записите в бъдещето</string>
-    <string name="eatingsoon">Преди хранене</string>
-    <string name="hypo">Хипоглекимия</string>
-    <string name="activity">Физ.активност</string>
     <string name="actions_shortname">ДЕЙСТВ</string>
     <string name="configbuilder_shortname">КОНФ</string>
     <string name="loop_shortname">ЦИК</string>
@@ -748,7 +744,6 @@
     <string name="format_carbs_ic">%1$.0fгр Чувств: %2$.1f</string>
     <string name="format_cob_ic">%1$.1fгр Чувств: %2$.1f</string>
     <string name="format_percent">%1$d %%</string>
-    <string name="boluswizard">Болус калкулатор</string>
     <string name="unit_minute_short">мин</string>
     <string name="profile_name">Име на профила:</string>
     <string name="selected_profile">Избрано:</string>

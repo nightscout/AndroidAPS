@@ -104,7 +104,7 @@ public enum PumpHistoryEntryType // implements CodeEnum
     ChangeAlarmNotifyMode(0x63, "Change Alarm Notify Mode", PumpHistoryEntryGroup.Configuration), //
     ChangeTimeFormat(0x64, "Change Time Format", PumpHistoryEntryGroup.Configuration), //
     ChangeReservoirWarningTime((byte) 0x65, "Change Reservoir Warning Time", PumpHistoryEntryGroup.Configuration), //
-    ChangeBolusReminderEnable(0x66, "Change Bolus Reminder Enable", PumpHistoryEntryGroup.Configuration, 2, 5, 2), // 9
+    ChangeBolusReminderEnable(0x66, "Change Bolus Reminder Enable", PumpHistoryEntryGroup.Configuration), // 9 -> 7
     SetBolusReminderTime((byte) 0x67, "Change Bolus Reminder Time", PumpHistoryEntryGroup.Configuration, 2, 5, 2), // 9
     DeleteBolusReminderTime((byte) 0x68, "Delete Bolus Reminder Time", PumpHistoryEntryGroup.Configuration, 2, 5, 2), // 9
     BolusReminder(0x69, "Bolus Reminder", PumpHistoryEntryGroup.Configuration, 2, 5, 0), // Ian69

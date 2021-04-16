@@ -268,11 +268,7 @@
     <string name="openapsma_autosensdata_label">Datos Autosens</string>
     <string name="openapsma_scriptdebugdata_label">Depurar script</string>
     <string name="openapsama_useautosens">Usar función Autosens</string>
-    <string name="refresheventsfromnightscout">Renovar datos desde NS</string>
     <string name="deletefuturetreatments">Borrar tratamientos en el futuro</string>
-    <string name="eatingsoon">ComidendoPronto</string>
-    <string name="hypo">Hipo</string>
-    <string name="activity">Actividad</string>
     <string name="actions_shortname">ACC</string>
     <string name="configbuilder_shortname">CONF</string>
     <string name="loop_shortname">LAZO</string>
@@ -748,7 +744,6 @@
     <string name="format_carbs_ic">%1$.0fg IC: %2$.1f</string>
     <string name="format_cob_ic">%1$.1fg IC: %2$.1f</string>
     <string name="format_percent">%1$d%%</string>
-    <string name="boluswizard">Asistente Bolus</string>
     <string name="unit_minute_short">min</string>
     <string name="profile_name">Nombre del perfil:</string>
     <string name="selected_profile">Seleccionado:</string>
