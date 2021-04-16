@@ -74,15 +74,15 @@ public class DailyTotalsDTO {
                 break;
 
             case DailyTotals515:
-                decodeDailyTotals515(entry.getBody());
+                decodeDailyTotals515(entry.body);
                 break;
 
             case DailyTotals522:
-                decodeDailyTotals522(entry.getBody());
+                decodeDailyTotals522(entry.body);
                 break;
 
             case DailyTotals523:
-                decodeDailyTotals523(entry.getBody());
+                decodeDailyTotals523(entry.body);
                 break;
 
             default:
@@ -96,18 +96,18 @@ public class DailyTotalsDTO {
     private void setDisplayable() {
 
         if (this.insulinBasal == null) {
-            this.entry.setDisplayableValue("Total Insulin: " + StringUtil.getFormatedValueUS(this.insulinTotal, 2));
+            this.entry.displayableValue = "Total Insulin: " + StringUtil.getFormatedValueUS(this.insulinTotal, 2);
         } else {
-            this.entry.setDisplayableValue("Basal Insulin: " + StringUtil.getFormatedValueUS(this.insulinBasal, 2)
-                    + ", Total Insulin: " + StringUtil.getFormatedValueUS(this.insulinTotal, 2));
+            this.entry.displayableValue = "Basal Insulin: " + StringUtil.getFormatedValueUS(this.insulinBasal, 2)
+                    + ", Total Insulin: " + StringUtil.getFormatedValueUS(this.insulinTotal, 2);
         }
 
     }
 
 
     private void decodeEndResultsTotals(PumpHistoryEntry entry) {
-        double totals = ByteUtil.toInt((int) entry.getHead()[0], (int) entry.getHead()[1], (int) entry.getHead()[2],
-                (int) entry.getHead()[3], ByteUtil.BitConversion.BIG_ENDIAN) * 0.025d;
+        double totals = ByteUtil.toInt((int) entry.head[0], (int) entry.head[1], (int) entry.head[2],
+                (int) entry.head[3], ByteUtil.BitConversion.BIG_ENDIAN) * 0.025d;
 
         this.insulinTotal = totals;
 

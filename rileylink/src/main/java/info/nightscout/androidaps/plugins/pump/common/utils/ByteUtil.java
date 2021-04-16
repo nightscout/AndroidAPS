@@ -29,9 +29,13 @@ public class ByteUtil {
         return (b < 0) ? b + 256 : b;
     }
 
+    public static int asUINT8(Integer b) {
+        return (b < 0) ? b + 256 : b;
+    }
+
     public static byte[] getBytesFromInt16(int value) {
         byte[] array = getBytesFromInt(value);
-        return new byte[] {array[2], array[3]};
+        return new byte[]{array[2], array[3]};
     }
 
     public static byte[] getBytesFromInt(int value) {
@@ -283,7 +287,51 @@ public class ByteUtil {
     }
 
 
+    /**
+     * Converts 4 (or less) ints into int. (Shorts are objects, so you can send null if you have less parameters)
+     *
+     * @param b1   short 1
+     * @param b2   short 2
+     * @param b3   short 3
+     * @param b4   short 4
+     * @param flag Conversion Flag (Big Endian, Little endian)
+     * @return int value
+     */
+    public static int toInt(Byte b1, Byte b2, Byte b3, Byte b4, BitConversion flag) {
+        switch (flag) {
+            case LITTLE_ENDIAN: {
+                if (b4 != null) {
+                    return (b4 & 0xff) << 24 | (b3 & 0xff) << 16 | (b2 & 0xff) << 8 | b1 & 0xff;
+                } else if (b3 != null) {
+                    return (b3 & 0xff) << 16 | (b2 & 0xff) << 8 | b1 & 0xff;
+                } else if (b2 != null) {
+                    return (b2 & 0xff) << 8 | b1 & 0xff;
+                } else {
+                    return b1 & 0xff;
+                }
+            }
+
+            default:
+            case BIG_ENDIAN: {
+                if (b4 != null) {
+                    return (b1 & 0xff) << 24 | (b2 & 0xff) << 16 | (b3 & 0xff) << 8 | b4 & 0xff;
+                } else if (b3 != null) {
+                    return (b1 & 0xff) << 16 | (b2 & 0xff) << 8 | b3 & 0xff;
+                } else if (b2 != null) {
+                    return (b1 & 0xff) << 8 | b2 & 0xff;
+                } else {
+                    return b1 & 0xff;
+                }
+            }
+        }
+    }
+
+
     public static int toInt(int b1, int b2) {
+        return toInt(b1, b2, null, null, BitConversion.BIG_ENDIAN);
+    }
+
+    public static int toInt(Byte b1, Byte b2) {
         return toInt(b1, b2, null, null, BitConversion.BIG_ENDIAN);
     }
 
@@ -311,6 +359,25 @@ public class ByteUtil {
      * @return the correct hex value
      */
     public static String getCorrectHexValue(int inp) {
+        String hx = Integer.toHexString((char) inp);
+
+        if (hx.length() == 0)
+            return "00";
+        else if (hx.length() == 1)
+            return "0" + hx;
+        else if (hx.length() == 2)
+            return hx;
+        else if (hx.length() == 4)
+            return hx.substring(2);
+        else {
+            System.out.println("Hex Error: " + inp);
+        }
+
+        return null;
+    }
+
+
+    public static String getCorrectHexValue(byte inp) {
         String hx = Integer.toHexString((char) inp);
 
         if (hx.length() == 0)

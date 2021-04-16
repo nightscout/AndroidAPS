@@ -59,7 +59,7 @@ public class MedtronicHistoryActivity extends NoSplashAppCompatActivity {
             this.filteredHistoryList.addAll(list);
         } else {
             for (PumpHistoryEntry pumpHistoryEntry : list) {
-                if (pumpHistoryEntry.getEntryType().getGroup() == group) {
+                if (pumpHistoryEntry.getEntryType().group == group) {
                     this.filteredHistoryList.add(pumpHistoryEntry);
                 }
             }
@@ -214,7 +214,7 @@ public class MedtronicHistoryActivity extends NoSplashAppCompatActivity {
             if (record != null) {
                 holder.timeView.setText(record.getDateTimeString());
                 holder.typeView.setText(record.getEntryType().getDescription());
-                holder.valueView.setText(record.getDisplayableValue());
+                holder.valueView.setText(record.displayableValue);
             }
         }
 
