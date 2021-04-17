@@ -7,6 +7,9 @@ import info.nightscout.androidaps.events.EventPumpStatusChanged
 import info.nightscout.androidaps.logging.LTag
 import info.nightscout.androidaps.plugins.pump.common.defs.PumpType
 import info.nightscout.androidaps.utils.T
+import info.nightscout.androidaps.utils.userEntry.UserEntryMapper.Action
+import info.nightscout.androidaps.utils.userEntry.UserEntryMapper.Sources
+import info.nightscout.androidaps.utils.userEntry.ValueWithUnitMapper
 import java.util.*
 
 class MsgHistoryEvents_v2 constructor(
@@ -70,9 +73,8 @@ class MsgHistoryEvents_v2 constructor(
         val status: String
         when (recordCode.toInt()) {
             info.nightscout.androidaps.dana.DanaPump.TEMPSTART         -> {
-                aapsLogger.debug(LTag.PUMPBTCOMM, "EVENT TEMPSTART (" + recordCode + ") " + dateUtil.dateAndTimeString(datetime) + " (" + datetime + ")" + " Ratio: " + param1 + "% Duration: " + param2 + "min")
                 val temporaryBasalInfo = temporaryBasalStorage.findTemporaryBasal(datetime, param1.toDouble())
-                pumpSync.syncTemporaryBasalWithPumpId(
+                val newRecord = pumpSync.syncTemporaryBasalWithPumpId(
                     timestamp = datetime,
                     rate = param1.toDouble(),
                     duration = T.mins(param2.toLong()).msecs(),
@@ -81,17 +83,26 @@ class MsgHistoryEvents_v2 constructor(
                     pumpId = datetime,
                     pumpType = PumpType.DANA_RV2,
                     pumpSerial = danaPump.serialNumber)
+                aapsLogger.debug(LTag.PUMPBTCOMM, (if (newRecord) "**NEW** " else "") + "EVENT TEMPSTART (" + recordCode + ") " + dateUtil.dateAndTimeString(datetime) + " (" + datetime + ")" + " Ratio: " + param1 + "% Duration: " + param2 + "min")
                 status = "TEMPSTART " + dateUtil.timeString(datetime)
+                if (newRecord)
+                    uel.logMapper(Action.TEMP_BASAL, Sources.DanaRv2,
+                        ValueWithUnitMapper.Timestamp(datetime),
+                        ValueWithUnitMapper.Percent(param1),
+                        ValueWithUnitMapper.Minute(param2))
             }
 
             info.nightscout.androidaps.dana.DanaPump.TEMPSTOP          -> {
-                aapsLogger.debug(LTag.PUMPBTCOMM, "EVENT TEMPSTOP (" + recordCode + ") " + dateUtil.dateAndTimeString(datetime))
-                pumpSync.syncStopTemporaryBasalWithPumpId(
+                val newRecord = pumpSync.syncStopTemporaryBasalWithPumpId(
                     timestamp = datetime,
                     endPumpId = datetime,
                     pumpType = PumpType.DANA_RV2,
                     pumpSerial = danaPump.serialNumber)
+                aapsLogger.debug(LTag.PUMPBTCOMM, (if (newRecord) "**NEW** " else "") + "EVENT TEMPSTOP (" + recordCode + ") " + dateUtil.dateAndTimeString(datetime))
                 status = "TEMPSTOP " + dateUtil.timeString(datetime)
+                if (newRecord)
+                    uel.logMapper(Action.CANCEL_TEMP_BASAL, Sources.DanaRv2,
+                        ValueWithUnitMapper.Timestamp(datetime))
             }
 
             info.nightscout.androidaps.dana.DanaPump.EXTENDEDSTART     -> {
@@ -105,6 +116,11 @@ class MsgHistoryEvents_v2 constructor(
                     pumpSerial = danaPump.serialNumber)
                 aapsLogger.debug(LTag.PUMPBTCOMM, (if (newRecord) "**NEW** " else "") + "EVENT EXTENDEDSTART (" + recordCode + ") " + dateUtil.dateAndTimeString(datetime) + " (" + datetime + ")" + " Amount: " + param1 / 100.0 + "U Duration: " + param2 + "min")
                 status = "EXTENDEDSTART " + dateUtil.timeString(datetime)
+                if (newRecord)
+                    uel.logMapper(Action.EXTENDED_BOLUS, Sources.DanaRv2,
+                        ValueWithUnitMapper.Timestamp(datetime),
+                        ValueWithUnitMapper.Insulin(param1 / 100.0),
+                        ValueWithUnitMapper.Minute(param2))
             }
 
             info.nightscout.androidaps.dana.DanaPump.EXTENDEDSTOP      -> {
@@ -115,6 +131,11 @@ class MsgHistoryEvents_v2 constructor(
                     pumpSerial = danaPump.serialNumber)
                 aapsLogger.debug(LTag.PUMPBTCOMM, (if (newRecord) "**NEW** " else "") + "EVENT EXTENDEDSTOP (" + recordCode + ") " + dateUtil.dateAndTimeString(datetime) + " (" + datetime + ")" + " Delivered: " + param1 / 100.0 + "U RealDuration: " + param2 + "min")
                 status = "EXTENDEDSTOP " + dateUtil.timeString(datetime)
+                if (newRecord)
+                    uel.logMapper(Action.CANCEL_EXTENDED_BOLUS, Sources.DanaRv2,
+                        ValueWithUnitMapper.Timestamp(datetime),
+                        ValueWithUnitMapper.Insulin(param1 / 100.0),
+                        ValueWithUnitMapper.Minute(param2))
             }
 
             info.nightscout.androidaps.dana.DanaPump.BOLUS             -> {
@@ -128,6 +149,11 @@ class MsgHistoryEvents_v2 constructor(
                     pumpSerial = danaPump.serialNumber)
                 aapsLogger.debug(LTag.PUMPBTCOMM, (if (newRecord) "**NEW** " else "") + "EVENT BOLUS (" + recordCode + ") " + dateUtil.dateAndTimeString(datetime) + " (" + datetime + ")" + " Bolus: " + param1 / 100.0 + "U Duration: " + param2 + "min")
                 status = "BOLUS " + dateUtil.timeString(datetime)
+                if (newRecord)
+                    uel.logMapper(Action.BOLUS, Sources.DanaRv2,
+                        ValueWithUnitMapper.Timestamp(datetime),
+                        ValueWithUnitMapper.Insulin(param1 / 100.0),
+                        ValueWithUnitMapper.Minute(param2))
             }
 
             info.nightscout.androidaps.dana.DanaPump.DUALBOLUS         -> {
@@ -141,6 +167,11 @@ class MsgHistoryEvents_v2 constructor(
                     pumpSerial = danaPump.serialNumber)
                 aapsLogger.debug(LTag.PUMPBTCOMM, (if (newRecord) "**NEW** " else "") + "EVENT DUALBOLUS (" + recordCode + ") " + dateUtil.dateAndTimeString(datetime) + " (" + datetime + ")" + " Bolus: " + param1 / 100.0 + "U Duration: " + param2 + "min")
                 status = "DUALBOLUS " + dateUtil.timeString(datetime)
+                if (newRecord)
+                    uel.logMapper(Action.BOLUS, Sources.DanaRv2,                //I'm not sure to understand what is a Dual Bolus (I put it in BOLUS with Amount and Duration...)
+                        ValueWithUnitMapper.Timestamp(datetime),
+                        ValueWithUnitMapper.Insulin(param1 / 100.0),
+                        ValueWithUnitMapper.Minute(param2))
             }
 
             info.nightscout.androidaps.dana.DanaPump.DUALEXTENDEDSTART -> {
@@ -154,6 +185,11 @@ class MsgHistoryEvents_v2 constructor(
                     pumpSerial = danaPump.serialNumber)
                 aapsLogger.debug(LTag.PUMPBTCOMM, (if (newRecord) "**NEW** " else "") + "EVENT DUALEXTENDEDSTART (" + recordCode + ") " + dateUtil.dateAndTimeString(datetime) + " (" + datetime + ")" + " Amount: " + param1 / 100.0 + "U Duration: " + param2 + "min")
                 status = "DUALEXTENDEDSTART " + dateUtil.timeString(datetime)
+                if (newRecord)
+                    uel.logMapper(Action.EXTENDED_BOLUS, Sources.DanaRv2,                //I'm not sure to understand what is a Extended Dual Bolus (I put it in EXTENDED BOLUS with Amount and Duration...)
+                        ValueWithUnitMapper.Timestamp(datetime),
+                        ValueWithUnitMapper.Insulin(param1 / 100.0),
+                        ValueWithUnitMapper.Minute(param2))
             }
 
             info.nightscout.androidaps.dana.DanaPump.DUALEXTENDEDSTOP  -> {
@@ -164,6 +200,11 @@ class MsgHistoryEvents_v2 constructor(
                     pumpSerial = danaPump.serialNumber)
                 aapsLogger.debug(LTag.PUMPBTCOMM, (if (newRecord) "**NEW** " else "") + "EVENT DUALEXTENDEDSTOP (" + recordCode + ") " + dateUtil.dateAndTimeString(datetime) + " (" + datetime + ")" + " Delivered: " + param1 / 100.0 + "U RealDuration: " + param2 + "min")
                 status = "DUALEXTENDEDSTOP " + dateUtil.timeString(datetime)
+                if (newRecord)
+                    uel.logMapper(Action.CANCEL_EXTENDED_BOLUS, Sources.DanaRv2,                //I'm not sure to understand what is a Extended Dual Bolus (I put it in CANCEL EXTENDED BOLUS, with values shown in aapsLogger...)
+                        ValueWithUnitMapper.Timestamp(datetime),
+                        ValueWithUnitMapper.Insulin(param1 / 100.0),
+                        ValueWithUnitMapper.Minute(param2))
             }
 
             info.nightscout.androidaps.dana.DanaPump.SUSPENDON         -> {
@@ -200,6 +241,10 @@ class MsgHistoryEvents_v2 constructor(
                     pumpSerial = danaPump.serialNumber)
                 aapsLogger.debug(LTag.PUMPBTCOMM, (if (newRecord) "**NEW** " else "") + "EVENT CARBS (" + recordCode + ") " + dateUtil.dateAndTimeString(datetime) + " (" + datetime + ")" + " Carbs: " + param1 + "g")
                 status = "CARBS " + dateUtil.timeString(datetime)
+                if (newRecord)
+                    uel.logMapper(Action.CARBS, Sources.DanaRv2,
+                        ValueWithUnitMapper.Timestamp(datetime),
+                        ValueWithUnitMapper.Gram(param1))
             }
 
             else                                                       -> {

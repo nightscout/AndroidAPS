@@ -24,6 +24,7 @@ import info.nightscout.androidaps.interfaces.DatabaseHelperInterface;
 import info.nightscout.androidaps.interfaces.PumpSync;
 import info.nightscout.androidaps.logging.AAPSLogger;
 import info.nightscout.androidaps.logging.LTag;
+import info.nightscout.androidaps.logging.UserEntryLogger;
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper;
 import info.nightscout.androidaps.plugins.configBuilder.ConstraintChecker;
 import info.nightscout.androidaps.plugins.pump.common.bolusInfo.DetailedBolusInfoStorage;
@@ -55,6 +56,7 @@ public class MessageBase {
     @Inject public ConstraintChecker constraintChecker;
     @Inject public PumpSync pumpSync;
     @Inject public DatabaseHelperInterface databaseHelper;
+    @Inject public UserEntryLogger uel;
     HasAndroidInjector injector;
 
     public byte[] buffer = new byte[512];
