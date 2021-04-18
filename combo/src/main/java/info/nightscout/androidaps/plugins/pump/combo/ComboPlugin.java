@@ -73,9 +73,12 @@ import info.nightscout.androidaps.utils.sharedPreferences.SP;
  */
 @Singleton
 public class ComboPlugin extends PumpPluginBase implements Pump, Constraints {
+    // TODO clean up?
+    static final String COMBO_PUMP_SERIAL = "combo_pump_serial";
     static final String COMBO_TBRS_SET = "combo_tbrs_set";
     static final String COMBO_BOLUSES_DELIVERED = "combo_boluses_delivered";
 
+    // collaborators
     private final ProfileFunction profileFunction;
     private final SP sp;
     private RxBusWrapper rxBus;
@@ -401,6 +404,17 @@ public class ComboPlugin extends PumpPluginBase implements Pump, Constraints {
                 Notification notification = new Notification(Notification.COMBO_PUMP_ALARM, getResourceHelper().gs(R.string.combo_check_date), Notification.URGENT);
                 rxBus.send(new EventNewNotification(notification));
             }
+        }
+
+        // read pump BT mac address and use it as the pump's serial
+        String macAddress = ruffyScripter.getMacAddress();
+        if (macAddress != null) {
+            String lastKnownSN = serialNumber();
+            if (!lastKnownSN.equals(fakeSerialNumber()) && !lastKnownSN.equals(macAddress)) {
+                getAapsLogger().info(LTag.PUMP, "Pump serial number changed " + lastKnownSN + " -> " + macAddress);
+                pumpSync.connectNewPump();
+            }
+            sp.putString(COMBO_PUMP_SERIAL, macAddress);
         }
 
         // ComboFragment updates state fully only after the pump has initialized,
@@ -1309,7 +1323,11 @@ public class ComboPlugin extends PumpPluginBase implements Pump, Constraints {
 
     @NonNull @Override
     public String serialNumber() {
-        return InstanceId.INSTANCE.instanceId(); // TODO replace by real serial
+        return sp.getString(COMBO_PUMP_SERIAL, fakeSerialNumber());
+    }
+
+    private String fakeSerialNumber() {
+        return InstanceId.INSTANCE.instanceId();
     }
 
     @NonNull @Override
