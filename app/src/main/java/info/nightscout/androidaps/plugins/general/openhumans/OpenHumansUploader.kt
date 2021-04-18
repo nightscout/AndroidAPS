@@ -237,12 +237,12 @@ class OpenHumansUploader @Inject constructor(
         put("isDeletion", deleted)
     }
 
-    fun enqueueTotalDailyDose(tdd: TDD) = insertQueueItem("TotalDailyDoses") {
-        put("double", tdd.date)
-        put("double", tdd.bolus)
-        put("double", tdd.basal)
-        put("double", tdd.total)
-    }
+    // fun enqueueTotalDailyDose(tdd: TDD) = insertQueueItem("TotalDailyDoses") {
+    //     put("double", tdd.date)
+    //     put("double", tdd.bolus)
+    //     put("double", tdd.basal)
+    //     put("double", tdd.total)
+    // }
 
     @JvmOverloads
     fun enqueueTemporaryBasal(temporaryBasal: TemporaryBasal?, deleted: Boolean = false) = temporaryBasal?.let {
@@ -371,9 +371,9 @@ class OpenHumansUploader @Inject constructor(
             .andThen(Observable.defer { Observable.fromIterable(databaseHelper.getAllProfileSwitches()) })
             .map { enqueueProfileSwitch(it); increaseCounter() }
             .ignoreElements()
-            .andThen(Observable.defer { Observable.fromIterable(databaseHelper.getAllTDDs()) })
-            .map { enqueueTotalDailyDose(it); increaseCounter() }
-            .ignoreElements()
+            // .andThen(Observable.defer { Observable.fromIterable(databaseHelper.getAllTDDs()) })
+            // .map { enqueueTotalDailyDose(it); increaseCounter() }
+            // .ignoreElements()
             // .andThen(Observable.defer { Observable.fromIterable(databaseHelper.getAllTemporaryBasals()) })
             // .map { enqueueTemporaryBasal(it); increaseCounter() }
             // .ignoreElements()

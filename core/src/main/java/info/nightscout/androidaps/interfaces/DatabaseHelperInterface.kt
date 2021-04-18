@@ -17,7 +17,6 @@ interface DatabaseHelperInterface {
     fun createOrUpdate(record: OHQueueItem)
     fun create(record: DbRequest)
     fun getDanaRHistoryRecordsByType(type: Byte): List<DanaRHistoryRecord>
-    fun getTDDs(): List<TDD>
     fun size(table: String): Long
     fun deleteAllDbRequests()
     fun deleteDbRequest(id: String): Int
@@ -26,7 +25,6 @@ interface DatabaseHelperInterface {
     fun deleteDbRequestbyMongoId(action: String, _id: String)
     fun getDbRequestIterator(): CloseableIterator<DbRequest>
     fun roundDateToSec(date: Long): Long
-    fun createOrUpdateTDD(record: TDD)
     fun createOrUpdate(tempBasal: TemporaryBasal): Boolean
     @Deprecated("Use new DB")
     fun findTempBasalByPumpId(id: Long): TemporaryBasal?
@@ -36,12 +34,10 @@ interface DatabaseHelperInterface {
     fun getProfileSwitchEventsFromTime(mills: Long, ascending: Boolean): List<ProfileSwitch>
     fun getAllOmnipodHistoryRecordsFromTimestamp(timestamp: Long, ascending: Boolean): List<OmnipodHistoryRecord>
     fun findOmnipodHistoryRecordByPumpId(pumpId: Long): OmnipodHistoryRecord?
-    fun getTDDsForLastXDays(days: Int): List<TDD>
     fun getProfileSwitchData(from: Long, ascending: Boolean): List<ProfileSwitch>
     @Deprecated("Use new DB")
     fun getExtendedBolusByPumpId(pumpId: Long): ExtendedBolus?
     fun getAllProfileSwitches(): List<ProfileSwitch>
-    fun getAllTDDs(): List<TDD>
     fun getAllOHQueueItems(maxEntries: Long): List<OHQueueItem>
     fun resetProfileSwitch()
 

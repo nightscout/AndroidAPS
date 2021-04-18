@@ -24,7 +24,6 @@ import info.nightscout.androidaps.data.DetailedBolusInfo;
 import info.nightscout.androidaps.db.DbObjectBase;
 import info.nightscout.androidaps.db.ExtendedBolus;
 import info.nightscout.androidaps.db.Source;
-import info.nightscout.androidaps.db.TDD;
 import info.nightscout.androidaps.db.TemporaryBasal;
 import info.nightscout.androidaps.db.Treatment;
 import info.nightscout.androidaps.interfaces.ActivePlugin;
@@ -589,6 +588,21 @@ public class MedtronicHistoryData {
 
         aapsLogger.debug(LTag.PUMP, String.format(Locale.ENGLISH, getLogPrefix() + "TDDs found: %d.\n%s", tdds.size(), gson().toJson(tdds)));
 
+
+        for (PumpHistoryEntry tdd : tdds) {
+            DailyTotalsDTO totalsDTO = (DailyTotalsDTO) tdd.getDecodedData().get("Object");
+            Boolean result = pumpSync.createOrUpdateTotalDailyDose(
+                    totalsDTO.timestamp(),
+                    totalsDTO.insulinBasal(),
+                    totalsDTO.insulinBolus(),
+                    totalsDTO.insulinTotal(),
+                    null,
+                    medtronicPumpStatus.pumpType,
+                    medtronicPumpStatus.serialNumber
+            );
+            if (result) aapsLogger.debug(LTag.PUMP, "TDD Added/Updated: " + totalsDTO);
+        }
+/*
         List<TDD> tddsDb = databaseHelper.getTDDsForLastXDays(3);
 
         for (PumpHistoryEntry tdd : tdds) {
@@ -618,6 +632,8 @@ public class MedtronicHistoryData {
                 }
             }
         }
+
+ */
     }
 
 
@@ -1317,7 +1333,7 @@ public class MedtronicHistoryData {
         return tddsOut.size() == 0 ? tdds : tddsOut;
     }
 
-
+/*
     private TDD findTDD(long atechDateTime, List<TDD> tddsDb) {
 
         for (TDD tdd : tddsDb) {
@@ -1329,7 +1345,7 @@ public class MedtronicHistoryData {
 
         return null;
     }
-
+*/
     private long tryToGetByLocalTime(long atechDateTime) {
         return DateTimeUtil.toMillisFromATD(atechDateTime);
     }
