@@ -578,6 +578,9 @@ public class LocalInsightPlugin extends PumpPluginBase implements Pump, Constrai
 
     @NonNull @Override
     public PumpEnactResult deliverTreatment(DetailedBolusInfo detailedBolusInfo) {
+        if (detailedBolusInfo.insulin == 0 || detailedBolusInfo.carbs > 0) {
+            throw new IllegalArgumentException(detailedBolusInfo.toString());
+        }
         PumpEnactResult result = new PumpEnactResult(getInjector());
         double insulin = Math.round(detailedBolusInfo.insulin / 0.01) * 0.01;
         if (insulin > 0) {
@@ -609,15 +612,6 @@ public class LocalInsightPlugin extends PumpPluginBase implements Pump, Constrai
                 detailedBolusInfo.setPumpType(PumpType.ACCU_CHEK_INSIGHT);
                 detailedBolusInfo.setPumpSerial(serialNumber());
                 detailedBolusInfo.setBolusPumpId(insightBolusID.id);
-                if (detailedBolusInfo.carbs > 0 && detailedBolusInfo.carbTime != 0) {
-                    DetailedBolusInfo carbInfo = new DetailedBolusInfo();
-                    carbInfo.carbs = detailedBolusInfo.carbs;
-                    carbInfo.setCarbsTimestamp(detailedBolusInfo.timestamp + detailedBolusInfo.carbTime * 60L * 1000L);
-                    carbInfo.setPumpType(PumpType.USER);
-                    treatmentsPlugin.addToHistoryTreatment(carbInfo, false);
-                    detailedBolusInfo.carbTime = 0;
-                    detailedBolusInfo.carbs = 0;
-                }
                 treatmentsPlugin.addToHistoryTreatment(detailedBolusInfo, true);
                 while (true) {
                     synchronized ($bolusLock) {
@@ -666,10 +660,8 @@ public class LocalInsightPlugin extends PumpPluginBase implements Pump, Constrai
                 aapsLogger.error("Exception while delivering bolus", e);
                 result.comment(ExceptionTranslator.getString(context, e));
             }
-        } else if (detailedBolusInfo.carbs > 0) {
-            result.success(true).enacted(true);
+            result.bolusDelivered(insulin);
         }
-        result.carbsDelivered(detailedBolusInfo.carbs).bolusDelivered(insulin);
         return result;
     }
 

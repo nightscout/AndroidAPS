@@ -638,21 +638,20 @@ public class OmnipodErosPumpPlugin extends PumpPluginBase implements Pump, Riley
 
     @NonNull @Override
     public PumpEnactResult deliverTreatment(DetailedBolusInfo detailedBolusInfo) {
-        if (detailedBolusInfo.insulin == 0 && detailedBolusInfo.carbs == 0) {
-            // neither carbs nor bolus requested
-            aapsLogger.error("deliverTreatment: Invalid input: neither carbs nor insulin are set in treatment");
-            return new PumpEnactResult(getInjector()).success(false).enacted(false).bolusDelivered(0d).carbsDelivered(0d)
-                    .comment(info.nightscout.androidaps.core.R.string.invalidinput);
-        } else if (detailedBolusInfo.insulin > 0) {
-            // bolus needed, ask pump to deliver it
-            return deliverBolus(detailedBolusInfo);
-        } else {
-            // no bolus required, carb only treatment
-            activePlugin.getActiveTreatments().addToHistoryTreatment(detailedBolusInfo, true);
-
-            return new PumpEnactResult(getInjector()).success(true).enacted(true).bolusDelivered(0d)
-                    .carbsDelivered(detailedBolusInfo.carbs).comment(info.nightscout.androidaps.core.R.string.common_resultok);
+        if (detailedBolusInfo.insulin == 0 || detailedBolusInfo.carbs > 0) {
+            throw new IllegalArgumentException(detailedBolusInfo.toString());
         }
+
+        PumpEnactResult result = executeCommand(OmnipodCommandType.SET_BOLUS, () -> aapsOmnipodErosManager.bolus(detailedBolusInfo));
+
+        if (result.getSuccess()) {
+            incrementStatistics(detailedBolusInfo.getBolusType() == DetailedBolusInfo.BolusType.SMB ? OmnipodErosStorageKeys.Statistics.SMB_BOLUSES_DELIVERED
+                    : OmnipodErosStorageKeys.Statistics.STANDARD_BOLUSES_DELIVERED);
+
+            result.carbsDelivered(detailedBolusInfo.carbs);
+        }
+
+        return result;
     }
 
     @Override
@@ -1081,19 +1080,6 @@ public class OmnipodErosPumpPlugin extends PumpPluginBase implements Pump, Riley
         }
 
         fabricPrivacy.logCustom("OmnipodPumpInit");
-    }
-
-    @NonNull private PumpEnactResult deliverBolus(final DetailedBolusInfo detailedBolusInfo) {
-        PumpEnactResult result = executeCommand(OmnipodCommandType.SET_BOLUS, () -> aapsOmnipodErosManager.bolus(detailedBolusInfo));
-
-        if (result.getSuccess()) {
-            incrementStatistics(detailedBolusInfo.getBolusType() == DetailedBolusInfo.BolusType.SMB ? OmnipodErosStorageKeys.Statistics.SMB_BOLUSES_DELIVERED
-                    : OmnipodErosStorageKeys.Statistics.STANDARD_BOLUSES_DELIVERED);
-
-            result.carbsDelivered(detailedBolusInfo.carbs);
-        }
-
-        return result;
     }
 
     private <T> T executeCommand(OmnipodCommandType commandType, Supplier<T> supplier) {
