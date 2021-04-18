@@ -55,7 +55,7 @@ import info.nightscout.androidaps.interfaces.PumpDescription;
 import info.nightscout.androidaps.interfaces.Pump;
 import info.nightscout.androidaps.interfaces.PumpPluginBase;
 import info.nightscout.androidaps.interfaces.PumpSync;
-import info.nightscout.androidaps.interfaces.TreatmentsInterface;
+import info.nightscout.androidaps.interfaces.TreatmentsInterface;               //TODO()
 import info.nightscout.androidaps.interfaces.UploadQueueInterface;
 import info.nightscout.androidaps.logging.AAPSLogger;
 import info.nightscout.androidaps.logging.LTag;
@@ -134,6 +134,7 @@ import info.nightscout.androidaps.plugins.pump.insight.exceptions.app_layer_erro
 import info.nightscout.androidaps.plugins.pump.insight.utils.ExceptionTranslator;
 import info.nightscout.androidaps.plugins.pump.insight.utils.ParameterBlockUtil;
 import info.nightscout.androidaps.utils.DateUtil;
+import info.nightscout.androidaps.utils.T;                          //ADDED
 import info.nightscout.androidaps.utils.resources.ResourceHelper;
 import info.nightscout.androidaps.utils.sharedPreferences.SP;
 
@@ -143,7 +144,7 @@ public class LocalInsightPlugin extends PumpPluginBase implements Pump, Constrai
     private final AAPSLogger aapsLogger;
     private final RxBusWrapper rxBus;
     private final ResourceHelper resourceHelper;
-    private final TreatmentsInterface treatmentsPlugin;
+    private final TreatmentsInterface treatmentsPlugin;             //TODO()
     private final SP sp;
     private final CommandQueueProvider commandQueue;
     private final ProfileFunction profileFunction;
@@ -204,7 +205,7 @@ public class LocalInsightPlugin extends PumpPluginBase implements Pump, Constrai
             AAPSLogger aapsLogger,
             RxBusWrapper rxBus,
             ResourceHelper resourceHelper,
-            TreatmentsInterface treatmentsPlugin,
+            TreatmentsInterface treatmentsPlugin,       //TODO()
             SP sp,
             CommandQueueProvider commandQueue,
             ProfileFunction profileFunction,
@@ -230,7 +231,7 @@ public class LocalInsightPlugin extends PumpPluginBase implements Pump, Constrai
         this.aapsLogger = aapsLogger;
         this.rxBus = rxBus;
         this.resourceHelper = resourceHelper;
-        this.treatmentsPlugin = treatmentsPlugin;
+        this.treatmentsPlugin = treatmentsPlugin;           //TODO()
         this.sp = sp;
         this.commandQueue = commandQueue;
         this.profileFunction = profileFunction;
@@ -612,7 +613,16 @@ public class LocalInsightPlugin extends PumpPluginBase implements Pump, Constrai
                 detailedBolusInfo.setPumpType(PumpType.ACCU_CHEK_INSIGHT);
                 detailedBolusInfo.setPumpSerial(serialNumber());
                 detailedBolusInfo.setBolusPumpId(insightBolusID.id);
-                treatmentsPlugin.addToHistoryTreatment(detailedBolusInfo, true);
+                //treatmentsPlugin.addToHistoryTreatment(detailedBolusInfo, true);    //TODO()
+                //TOCHECK
+                pumpSync.syncBolusWithPumpId(
+                        detailedBolusInfo.timestamp,
+                        detailedBolusInfo.insulin,
+                        detailedBolusInfo.getBolusType(),
+                        detailedBolusInfo.getBolusPumpId(),
+                        detailedBolusInfo.getPumpType(),
+                        detailedBolusInfo.getPumpSerial());
+                //End TOCHECK
                 while (true) {
                     synchronized ($bolusLock) {
                         if (bolusCancelled) break;
@@ -756,6 +766,23 @@ public class LocalInsightPlugin extends PumpPluginBase implements Pump, Constrai
                 message.setPercentage(percent);
                 connectionService.requestMessage(message);
             }
+            /*TOCHECK
+            pumpSync.syncTemporaryBasalWithPumpId(
+                    state.timestamp,
+                    percent,
+                    T.mins(durationInMinutes).msecs(),
+                    false,
+                    tbrType,
+                    // There are no IDs for TBRs on the pump and none is calculated (in contrast to boluses).
+                    // The current time is used here as an ID, which has no meaning and does not allow identifying
+                    // the record on the pump (which isn't needed), but only needs to be unique.
+                    // Generally, TBR records are created when a TBR is set by AAPS or when a change on the pump has
+                    // been detected, rather than checking the pumps history of TBRs.
+                    state.timestamp,
+                    PumpType.ACCU_CHEK_INSIGHT,
+                    serialNumber()
+            );
+            //EndTOCHECK */
             result.isPercent(true)
                     .percent(percent)
                     .duration(durationInMinutes)
@@ -911,6 +938,7 @@ public class LocalInsightPlugin extends PumpPluginBase implements Pump, Constrai
                             activeBolus.getBolusID(), System.currentTimeMillis());
                     if (insightBolusID != null) {
                         ExtendedBolus extendedBolus = databaseHelper.getExtendedBolusByPumpId(insightBolusID.id);
+                        //PumpSync.PumpState.ExtendedBolus extendedBolus = pumpSync.expectedPumpState().getExtendedBolus()                  //TODO()
                         if (extendedBolus != null) {
                             extendedBolus.durationInMinutes = (int) ((System.currentTimeMillis() - extendedBolus.date) / 60000);
                             if (extendedBolus.durationInMinutes <= 0) {
@@ -1145,7 +1173,7 @@ public class LocalInsightPlugin extends PumpPluginBase implements Pump, Constrai
             String pumpSerial = connectionService.getPumpSystemIdentification().getSerialNumber();
             timeOffset = Calendar.getInstance(TimeZone.getTimeZone("UTC")).getTimeInMillis() - parseDate(pumpTime.getYear(),
                     pumpTime.getMonth(), pumpTime.getDay(), pumpTime.getHour(), pumpTime.getMinute(), pumpTime.getSecond());
-            InsightHistoryOffset historyOffset = databaseHelper.getInsightHistoryOffset(pumpSerial);
+            InsightHistoryOffset historyOffset = databaseHelper.getInsightHistoryOffset(pumpSerial);                                        //TODO()
             try {
                 List<HistoryEvent> historyEvents = new ArrayList<>();
                 if (historyOffset == null) {
@@ -1197,7 +1225,7 @@ public class LocalInsightPlugin extends PumpPluginBase implements Pump, Constrai
     }
 
     private void processHistoryEvents(String serial, List<HistoryEvent> historyEvents) {
-        List<TemporaryBasal> temporaryBasals = new ArrayList<>();
+        List<PumpSync.PumpState.TemporaryBasal> temporaryBasals = new ArrayList<>();
         List<InsightPumpID> pumpStartedEvents = new ArrayList<>();
         for (HistoryEvent historyEvent : historyEvents)
             if (!processHistoryEvent(serial, temporaryBasals, pumpStartedEvents, historyEvent))
@@ -1207,21 +1235,37 @@ public class LocalInsightPlugin extends PumpPluginBase implements Pump, Constrai
             InsightPumpID stoppedEvent = databaseHelper.getPumpStoppedEvent(pumpID.pumpSerial, pumpID.timestamp);
             if (stoppedEvent == null || stoppedEvent.eventType.equals("PumpPaused")) continue;
             long tbrStart = stoppedEvent.timestamp + 10000;
-            TemporaryBasal temporaryBasal = new TemporaryBasal(getInjector());
+            PumpSync.PumpState.TemporaryBasal temporaryBasal = new PumpSync.PumpState.TemporaryBasal(
+                    tbrStart,
+                    pumpID.timestamp - tbrStart,
+                    0,
+                    false,
+                    PumpSync.TemporaryBasalType.NORMAL,
+                    tbrStart,
+                    pumpID.id
+            );
+            /*
             temporaryBasal.durationInMinutes = (int) ((pumpID.timestamp - tbrStart) / 60000);
             temporaryBasal.date = tbrStart;
             temporaryBasal.source = Source.PUMP;
             temporaryBasal.pumpId = pumpID.id;
             temporaryBasal.percentRate = 0;
             temporaryBasal.isAbsolute = false;
+            */
             temporaryBasals.add(temporaryBasal);
         }
-        temporaryBasals.sort((o1, o2) -> (int) (o1.date - o2.date));
-        for (TemporaryBasal temporaryBasal : temporaryBasals)
-            treatmentsPlugin.addToHistoryTempBasal(temporaryBasal);
+        temporaryBasals.sort((o1, o2) -> (int) (o1.getTimestamp() - o2.getTimestamp()));
+        for (PumpSync.PumpState.TemporaryBasal temporaryBasal : temporaryBasals)
+            pumpSync.syncStopTemporaryBasalWithPumpId(
+                    temporaryBasal.getTimestamp(),
+                    temporaryBasal.getId(),
+                    PumpType.ACCU_CHEK_INSIGHT,
+                    serialNumber()
+            );
+            //treatmentsPlugin.addToHistoryTempBasal(temporaryBasal);
     }
 
-    private boolean processHistoryEvent(String serial, List<TemporaryBasal> temporaryBasals, List<InsightPumpID> pumpStartedEvents, HistoryEvent event) {
+    private boolean processHistoryEvent(String serial, List<PumpSync.PumpState.TemporaryBasal> temporaryBasals, List<InsightPumpID> pumpStartedEvents, HistoryEvent event) {
         if (event instanceof DefaultDateTimeSetEvent) return false;
         else if (event instanceof DateTimeChangedEvent)
             processDateTimeChangedEvent((DateTimeChangedEvent) event);
@@ -1324,7 +1368,7 @@ public class LocalInsightPlugin extends PumpPluginBase implements Pump, Constrai
         databaseHelper.createOrUpdate(pumpID);
     }
 
-    private void processStartOfTBREvent(String serial, List<TemporaryBasal> temporaryBasals, StartOfTBREvent event) {
+    private void processStartOfTBREvent(String serial, List<PumpSync.PumpState.TemporaryBasal> temporaryBasals, StartOfTBREvent event) {
         long timestamp = parseDate(event.getEventYear(), event.getEventMonth(), event.getEventDay(),
                 event.getEventHour(), event.getEventMinute(), event.getEventSecond()) + timeOffset;
         InsightPumpID pumpID = new InsightPumpID();
@@ -1332,6 +1376,17 @@ public class LocalInsightPlugin extends PumpPluginBase implements Pump, Constrai
         pumpID.pumpSerial = serial;
         pumpID.timestamp = timestamp;
         pumpID.eventType = "StartOfTBR";
+        pumpSync.syncTemporaryBasalWithPumpId(
+                timestamp,
+                event.getAmount(),
+                T.mins(event.getDuration()).msecs(),
+                false,
+                PumpSync.TemporaryBasalType.NORMAL,
+                pumpID.id,
+                PumpType.ACCU_CHEK_INSIGHT,
+                serialNumber()
+        );
+        /*
         databaseHelper.createOrUpdate(pumpID);
         TemporaryBasal temporaryBasal = new TemporaryBasal(getInjector());
         temporaryBasal.durationInMinutes = event.getDuration();
@@ -1340,7 +1395,7 @@ public class LocalInsightPlugin extends PumpPluginBase implements Pump, Constrai
         temporaryBasal.percentRate = event.getAmount();
         temporaryBasal.isAbsolute = false;
         temporaryBasal.date = timestamp;
-        temporaryBasals.add(temporaryBasal);
+        temporaryBasals.add(temporaryBasal);*/
     }
 
     private void processEndOfTBREvent(String serial, List<TemporaryBasal> temporaryBasals, EndOfTBREvent event) {
