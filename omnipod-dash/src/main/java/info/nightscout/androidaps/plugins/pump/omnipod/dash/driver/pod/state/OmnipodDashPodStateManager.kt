@@ -2,11 +2,14 @@ package info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.state
 
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.Id
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.pair.PairResult
+import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.event.PodEvent
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.definition.*
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.response.AlarmStatusResponse
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.response.DefaultStatusResponse
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.response.SetUniqueIdResponse
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.response.VersionResponse
+import io.reactivex.Completable
+import io.reactivex.Maybe
 import java.io.Serializable
 import java.util.*
 
@@ -18,7 +21,10 @@ interface OmnipodDashPodStateManager {
     val isSuspended: Boolean
     val isPodRunning: Boolean
     var lastConnection: Long
-    val lastUpdated: Long
+
+    val lastUpdatedSystem: Long // System.currentTimeMillis()
+    // TODO: set lastUpdatedRealtime to 0 on boot
+    val lastStatusResponseReceived: Long
 
     val messageSequenceNumber: Short
     val sequenceNumberOfLastProgrammingCommand: Short?
@@ -48,6 +54,7 @@ interface OmnipodDashPodStateManager {
     val tempBasal: TempBasal?
     val tempBasalActive: Boolean
     var basalProgram: BasalProgram?
+    val activeCommand: ActiveCommand?
 
     fun increaseMessageSequenceNumber()
     fun increaseEapAkaSequenceNumber(): ByteArray
@@ -59,5 +66,15 @@ interface OmnipodDashPodStateManager {
     fun updateFromPairing(uniqueId: Id, pairResult: PairResult)
     fun reset()
 
+    fun createActiveCommand(historyId: String): Completable
+    fun updateActiveCommand(): Maybe<PodEvent>
+
+    data class ActiveCommand(
+        val sequence: Short,
+        val createdRealtime: Long,
+        var sentRealtime: Long = 0,
+        val historyId: String
+    )
+    // TODO: set created to "now" on boot
     data class TempBasal(val startTime: Long, val rate: Double, val durationInMinutes: Short) : Serializable
 }

@@ -28,25 +28,25 @@ class DefaultStatusResponseTest {
 
     /**
      * response (hex) 08202EAA0C0A1D1905281000004387D3039A
-    Status response: 29
-    Pod status: RUNNING_BELOW_MIN_VOLUME
-    Basal active: true
-    Temp Basal active: false
-    Immediate bolus active: false
-    Extended bolus active: false
-    Bolus pulses remaining: 0
-    sequence number of last programing command: 2
-    Total full pulses delivered: 2640
-    Full reservoir pulses remaining: 979
-    Time since activation: 4321
-    Alert 1 is InActive
-    Alert 2 is InActive
-    Alert 3 is InActive
-    Alert 4 is InActive
-    Alert 5 is InActive
-    Alert 6 is InActive
-    Alert 7 is InActive
-    Occlusion alert active false
+     Status response: 29
+     Pod status: RUNNING_BELOW_MIN_VOLUME
+     Basal active: true
+     Temp Basal active: false
+     Immediate bolus active: false
+     Extended bolus active: false
+     Bolus pulses remaining: 0
+     sequence number of last programing command: 2
+     Total full pulses delivered: 2640
+     Full reservoir pulses remaining: 979
+     Time since activation: 4321
+     Alert 1 is InActive
+     Alert 2 is InActive
+     Alert 3 is InActive
+     Alert 4 is InActive
+     Alert 5 is InActive
+     Alert 6 is InActive
+     Alert 7 is InActive
+     Occlusion alert active false
      */
     @Test @Throws(DecoderException::class) fun testValidResponseBelowMin() {
         val encoded = Hex.decodeHex("1D1905281000004387D3039A")
@@ -67,25 +67,25 @@ class DefaultStatusResponseTest {
 
     /**
      * response (hex) 08202EAA080A1D180519C00E0039A7FF8085
-    Status response: 29
-    Pod status: RUNNING_ABOVE_MIN_VOLUME
-    Basal active: true
-    Temp Basal active: false
-    Immediate bolus active: false
-    Extended bolus active: false
-    Bolus pulses remaining: 14
-    sequence number of last programing command: 8
-    Total full pulses delivered: 2611
-    Full reservoir pulses remaining: 1023
-    Time since activation: 3689
-    Alert 1 is InActive
-    Alert 2 is InActive
-    Alert 3 is InActive
-    Alert 4 is InActive
-    Alert 5 is InActive
-    Alert 6 is InActive
-    Alert 7 is InActive
-    Occlusion alert active false
+     Status response: 29
+     Pod status: RUNNING_ABOVE_MIN_VOLUME
+     Basal active: true
+     Temp Basal active: false
+     Immediate bolus active: false
+     Extended bolus active: false
+     Bolus pulses remaining: 14
+     sequence number of last programing command: 8
+     Total full pulses delivered: 2611
+     Full reservoir pulses remaining: 1023
+     Time since activation: 3689
+     Alert 1 is InActive
+     Alert 2 is InActive
+     Alert 3 is InActive
+     Alert 4 is InActive
+     Alert 5 is InActive
+     Alert 6 is InActive
+     Alert 7 is InActive
+     Occlusion alert active false
      */
     @Test @Throws(DecoderException::class) fun testValidResponseBolusPulsesRemaining() {
         val encoded = Hex.decodeHex("1D180519C00E0039A7FF8085")

@@ -83,7 +83,7 @@ class OmnipodDashBleManagerImpl @Inject constructor(
         val conn = assertConnected()
         return conn.session
             ?: throw NotConnectedException("Missing session")
-   }
+    }
 
     override fun getStatus(): ConnectionStatus {
         // TODO is this used?

@@ -11,18 +11,23 @@ import info.nightscout.androidaps.plugins.common.ManufacturerType
 import info.nightscout.androidaps.plugins.general.actions.defs.CustomAction
 import info.nightscout.androidaps.plugins.general.actions.defs.CustomActionType
 import info.nightscout.androidaps.plugins.pump.common.defs.PumpType
+import info.nightscout.androidaps.plugins.pump.omnipod.common.definition.OmnipodCommandType
 import info.nightscout.androidaps.plugins.pump.omnipod.common.queue.command.*
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.OmnipodDashManager
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.definition.ActivationProgress
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.definition.BeepType
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.response.ResponseType
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.state.OmnipodDashPodStateManager
+import info.nightscout.androidaps.plugins.pump.omnipod.dash.history.DashHistory
+import info.nightscout.androidaps.plugins.pump.omnipod.dash.history.data.BolusRecord
+import info.nightscout.androidaps.plugins.pump.omnipod.dash.history.data.BolusType
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.ui.OmnipodDashOverviewFragment
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.util.mapProfileToBasalProgram
 import info.nightscout.androidaps.queue.commands.CustomCommand
 import info.nightscout.androidaps.utils.TimeChangeType
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 import info.nightscout.androidaps.utils.sharedPreferences.SP
+import io.reactivex.Observable
 import io.reactivex.Single
 import io.reactivex.rxkotlin.blockingSubscribeBy
 import io.reactivex.rxkotlin.subscribeBy
@@ -37,6 +42,7 @@ class OmnipodDashPumpPlugin @Inject constructor(
     private val podStateManager: OmnipodDashPodStateManager,
     private val sp: SP,
     private val profileFunction: ProfileFunction,
+    private val history: DashHistory,
     injector: HasAndroidInjector,
     aapsLogger: AAPSLogger,
     resourceHelper: ResourceHelper,
@@ -147,7 +153,6 @@ class OmnipodDashPumpPlugin @Inject constructor(
         it == mapProfileToBasalProgram(profile)
     } ?: true
 
-
     override fun lastDataTime(): Long {
         return podStateManager.lastConnection
     }
@@ -172,7 +177,6 @@ class OmnipodDashPumpPlugin @Inject constructor(
         get() = 0
 
     override fun deliverTreatment(detailedBolusInfo: DetailedBolusInfo): PumpEnactResult {
-        // TODO history
         // TODO update Treatments (?)
         // TODO bolus progress
         // TODO report actual delivered amount after Pod Alarm and bolus cancellation
@@ -180,29 +184,44 @@ class OmnipodDashPumpPlugin @Inject constructor(
         return Single.create<PumpEnactResult> { source ->
             val bolusBeeps = sp.getBoolean(R.string.key_omnipod_common_bolus_beeps_enabled, false)
 
-            omnipodManager.bolus(
-                detailedBolusInfo.insulin,
-                bolusBeeps,
-                bolusBeeps
-            ).subscribeBy(
-                onNext = { podEvent ->
-                    aapsLogger.debug(
-                        LTag.PUMP,
-                        "Received PodEvent in deliverTreatment: $podEvent"
-                    )
+            Observable.concat(
+                history.createRecord(
+                    commandType = OmnipodCommandType.SET_BOLUS,
+                    bolusRecord = BolusRecord(
+                        detailedBolusInfo.insulin,
+                        if (detailedBolusInfo.isSMB) BolusType.SMB else BolusType.DEFAULT
+                    ),
+                ).flatMapObservable {
+                    recordId ->
+                    podStateManager.createActiveCommand(recordId).toObservable()
                 },
-                onError = { throwable ->
-                    aapsLogger.error(LTag.PUMP, "Error in deliverTreatment", throwable)
-                    source.onSuccess(PumpEnactResult(injector).success(false).enacted(false).comment(throwable.message))
-                },
-                onComplete = {
-                    aapsLogger.debug("deliverTreatment completed")
-                    source.onSuccess(
-                        PumpEnactResult(injector).success(true).enacted(true).bolusDelivered(detailedBolusInfo.insulin)
-                            .carbsDelivered(detailedBolusInfo.carbs)
-                    )
-                }
+                omnipodManager.bolus(
+                    detailedBolusInfo.insulin,
+                    bolusBeeps,
+                    bolusBeeps
+                ),
+                history.updateFromState(podStateManager).toObservable(),
+                podStateManager.updateActiveCommand().toObservable(),
             )
+                .subscribeBy(
+                    onNext = { podEvent ->
+                        aapsLogger.debug(
+                            LTag.PUMP,
+                            "Received PodEvent in deliverTreatment: $podEvent"
+                        )
+                    },
+                    onError = { throwable ->
+                        aapsLogger.error(LTag.PUMP, "Error in deliverTreatment", throwable)
+                        source.onSuccess(PumpEnactResult(injector).success(false).enacted(false).comment(throwable.message))
+                    },
+                    onComplete = {
+                        aapsLogger.debug("deliverTreatment completed")
+                        source.onSuccess(
+                            PumpEnactResult(injector).success(true).enacted(true).bolusDelivered(detailedBolusInfo.insulin)
+                                .carbsDelivered(detailedBolusInfo.carbs)
+                        )
+                    }
+                )
         }.blockingGet()
     }
 

@@ -1,5 +1,6 @@
 package info.nightscout.androidaps.plugins.pump.omnipod.dash.driver
 
+import android.os.SystemClock
 import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.logging.LTag
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.OmnipodDashBleManager
@@ -643,6 +644,11 @@ class OmnipodDashManagerImpl @Inject constructor(
                 }
 
                 is PodEvent.CommandSent -> {
+                    podStateManager.activeCommand?.let {
+                        if (it.sequence == event.command.sequenceNumber) {
+                            it.sentRealtime = SystemClock.elapsedRealtime()
+                        }
+                    }
                     podStateManager.increaseMessageSequenceNumber()
                 }
 
