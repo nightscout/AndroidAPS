@@ -580,7 +580,8 @@ public class MedtronicHistoryData {
 
 
     private void uploadCareportalEvent(long date, DetailedBolusInfo.EventType event) {
-        pumpSync.insertTherapyEventIfNewWithTimestamp(date, event, null, null, medtronicPumpStatus.pumpType, medtronicPumpStatus.serialNumber);
+        pumpSync.insertTherapyEventIfNewWithTimestamp(date, event, null, null,
+                medtronicPumpStatus.getPumpType(), medtronicPumpStatus.getSerialNumber());
     }
 
     private void processTDDs(List<PumpHistoryEntry> tddsIn) {
@@ -972,7 +973,7 @@ public class MedtronicHistoryData {
 
                     detailedBolusInfo.setBolusTimestamp(tryToGetByLocalTime(bolus.getAtechDateTime()));
                     detailedBolusInfo.setPumpType(PumpType.MEDTRONIC_512_712); // TODO grab real model
-                    detailedBolusInfo.setPumpSerial(medtronicPumpStatus.serialNumber);
+                    detailedBolusInfo.setPumpSerial(medtronicPumpStatus.getSerialNumber());
                     detailedBolusInfo.setBolusPumpId(bolus.getPumpId());
                     detailedBolusInfo.insulin = bolusDTO.getDeliveredAmount();
 
@@ -1046,7 +1047,7 @@ public class MedtronicHistoryData {
             if (doubleBolusDebug)
                 aapsLogger.debug(LTag.PUMP, String.format(Locale.ENGLISH, "DoubleBolusDebug: addCarbsFromEstimate: Bolus=%s, BolusWizardDTO=%s", bolus, bolusWizard));
 
-            detailedBolusInfo.carbs = bolusWizard.carbs;
+            detailedBolusInfo.carbs = bolusWizard.getCarbs();
         }
     }
 
@@ -1373,7 +1374,7 @@ public class MedtronicHistoryData {
 
         // returns oldest time in history, with calculated time difference between pump and phone, minus 5 minutes
         aapsLogger.debug(LTag.PUMP, String.format(Locale.ENGLISH, "Oldest entry: %d, pumpTimeDifference=%d, newDt=%s, currentTime=%s, differenceMin=%d", dt,
-                this.pumpTime.timeDifference, oldestEntryTime, now, minutes.getMinutes()));
+                this.pumpTime.getTimeDifference(), oldestEntryTime, now, minutes.getMinutes()));
 
         return minutes.getMinutes();
     }
@@ -1480,7 +1481,7 @@ public class MedtronicHistoryData {
             aapsLogger.debug(LTag.PUMP, "processLastBasalProfileChange. item found, setting new basalProfileLocally: " + newProfile);
             BasalProfile basalProfile = (BasalProfile) newProfile.getDecodedData().get("Object");
 
-            mdtPumpStatus.basalsByHour = basalProfile.getProfilesByHour(pumpType);
+            mdtPumpStatus.setBasalsByHour( basalProfile.getProfilesByHour(pumpType));
         }
     }
 

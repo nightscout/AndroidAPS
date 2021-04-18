@@ -55,18 +55,18 @@ class BasalProfile {
     }
 
     private fun setRawData(data: ByteArray): Boolean {
-        var data: ByteArray? = data
-        if (data == null) {
+        var dataInternal: ByteArray? = data
+        if (dataInternal == null) {
             aapsLogger.error(LTag.PUMPCOMM, "setRawData: buffer is null!")
             return false
         }
 
         // if we have just one entry through all day it looks like just length 1
-        if (data.size == 1) {
-            data = MedtronicUtil.createByteArray(data[0], 0.toByte(), 0.toByte())
+        if (dataInternal.size == 1) {
+            dataInternal = byteArrayOf(dataInternal[0], 0, 0)
         }
-        if (data!!.size == MAX_RAW_DATA_SIZE) {
-            rawData = data
+        if (dataInternal.size == MAX_RAW_DATA_SIZE) {
+            rawData = dataInternal
         } else {
             val len = Math.min(MAX_RAW_DATA_SIZE, data.size)
             rawData = ByteArray(MAX_RAW_DATA_SIZE)
@@ -233,10 +233,10 @@ class BasalProfile {
         // return this.mRawData;
     }
 
-    fun getProfilesByHour(pumpType: PumpType?): Array<Double?> {
-        var entries: List<BasalProfileEntry>? = null
+    fun getProfilesByHour(pumpType: PumpType): Array<Double> {
+        var entriesCopy: List<BasalProfileEntry>? = null
         try {
-            entries = entries
+            entriesCopy = entries
         } catch (ex: Exception) {
             aapsLogger.error(LTag.PUMPCOMM, "=============================================================================")
             aapsLogger.error(LTag.PUMPCOMM, "  Error generating entries. Ex.: $ex", ex)
@@ -245,40 +245,43 @@ class BasalProfile {
 
             //FabricUtil.createEvent("MedtronicBasalProfileGetByHourError", null);
         }
-        if (entries == null || entries.size == 0) {
+        if (entriesCopy == null || entriesCopy.size == 0) {
             val basalByHour = arrayOfNulls<Double>(24)
             for (i in 0..23) {
                 basalByHour[i] = 0.0
             }
-            return basalByHour
+            return basalByHour as Array<Double>
         }
         val basalByHour = arrayOfNulls<Double>(24)
-        for (i in entries.indices) {
-            val current = entries[i]
+        for (i in entriesCopy.indices) {
+            val current = entriesCopy[i]
             var currentTime = if (current.startTime_raw % 2 == 0) current.startTime_raw.toInt() else current.startTime_raw - 1
             currentTime = currentTime * 30 / 60
             var lastHour: Int
-            lastHour = if (i + 1 == entries.size) {
+            lastHour = if (i + 1 == entriesCopy.size) {
                 24
             } else {
-                val basalProfileEntry = entries[i + 1]
+                val basalProfileEntry = entriesCopy[i + 1]
                 val rawTime = if (basalProfileEntry.startTime_raw % 2 == 0) basalProfileEntry.startTime_raw.toInt() else basalProfileEntry.startTime_raw - 1
                 rawTime * 30 / 60
             }
 
             // System.out.println("Current time: " + currentTime + " Next Time: " + lastHour);
             for (j in currentTime until lastHour) {
-                if (pumpType == null) basalByHour[j] = current.rate else basalByHour[j] = pumpType.determineCorrectBasalSize(current.rate)
+                if (pumpType == null)
+                    basalByHour[j] = current.rate
+                else
+                    basalByHour[j] = pumpType.determineCorrectBasalSize(current.rate)
             }
         }
-        return basalByHour
+        return basalByHour as Array<Double>
     }
 
     override fun toString(): String {
         return basalProfileToString()
     }
 
-    fun verify(pumpType: PumpType?): Boolean {
+    fun verify(pumpType: PumpType): Boolean {
         try {
             entries
         } catch (ex: Exception) {

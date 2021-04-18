@@ -212,17 +212,13 @@ enum class PumpHistoryEntryType // implements CodeEnum
     private constructor(opCode: Byte, group: PumpHistoryEntryGroup) : this(opCode, null, group, 2, 5, 0) {}
     private constructor(opCode: Byte, group: PumpHistoryEntryGroup, head: Int, date: Int, body: Int) : this(opCode, null, group, head, date, body) {}
 
-    fun getTotalLength(medtronicDeviceType: MedtronicDeviceType?): Int {
+    fun getTotalLength(medtronicDeviceType: MedtronicDeviceType): Int {
         return if (hasSpecialRules) {
             getHeadLength(medtronicDeviceType) + getBodyLength(medtronicDeviceType) + dateLength
         } else {
             totalLength
         }
     }
-
-    // private fun hasSpecialRules(): Boolean {
-    //     return hasSpecialRules
-    // }
 
     fun addSpecialRuleHead(rule: SpecialRule) {
         if (isEmpty(specialRulesHead)) {
@@ -244,7 +240,7 @@ enum class PumpHistoryEntryType // implements CodeEnum
     //     return description ?: name
     // }
 
-    fun getHeadLength(medtronicDeviceType: MedtronicDeviceType?): Int {
+    fun getHeadLength(medtronicDeviceType: MedtronicDeviceType): Int {
         return if (hasSpecialRules) {
             if (isNotEmpty(specialRulesHead)) {
                 determineSizeByRule(medtronicDeviceType, headLength, specialRulesHead)
@@ -256,7 +252,7 @@ enum class PumpHistoryEntryType // implements CodeEnum
         }
     }
 
-    fun getBodyLength(medtronicDeviceType: MedtronicDeviceType?): Int {
+    fun getBodyLength(medtronicDeviceType: MedtronicDeviceType): Int {
         return if (hasSpecialRules) {
             if (isNotEmpty(specialRulesBody)) {
                 determineSizeByRule(medtronicDeviceType, bodyLength, specialRulesBody)
@@ -277,7 +273,7 @@ enum class PumpHistoryEntryType // implements CodeEnum
     }
 
     // byte[] dh = { 2, 3 };
-    private fun determineSizeByRule(medtronicDeviceType: MedtronicDeviceType?, defaultValue: Int, rules: List<SpecialRule>?): Int {
+    private fun determineSizeByRule(medtronicDeviceType: MedtronicDeviceType, defaultValue: Int, rules: List<SpecialRule>?): Int {
         var size = defaultValue
         for (rule in rules!!) {
             if (MedtronicDeviceType.isSameDevice(medtronicDeviceType, rule.deviceType)) {

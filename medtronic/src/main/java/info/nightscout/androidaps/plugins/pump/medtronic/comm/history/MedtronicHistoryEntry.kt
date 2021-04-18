@@ -82,7 +82,7 @@ abstract class MedtronicHistoryEntry : MedtronicHistoryEntryInterface {
         if (!doNotProcess) {
             head = ByteArray(headLength - 1)
             for (i in 1 until headLength) {
-                head!![i - 1] = listRawData!![i]!!
+                head!![i - 1] = listRawData[i]
             }
             if (dateTimeLength > 0) {
                 datetime = ByteArray(dateTimeLength)
@@ -99,7 +99,7 @@ abstract class MedtronicHistoryEntry : MedtronicHistoryEntryInterface {
                 var i = headLength + dateTimeLength
                 var j = 0
                 while (j < bodyLength) {
-                    body!![j] = listRawData!![i]!!
+                    body!![j] = listRawData[i]
                     i++
                     j++
                 }

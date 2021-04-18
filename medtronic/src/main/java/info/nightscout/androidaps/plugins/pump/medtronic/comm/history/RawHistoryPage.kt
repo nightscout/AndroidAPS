@@ -37,7 +37,7 @@ class RawHistoryPage(private val aapsLogger: AAPSLogger) {
                 aapsLogger.error(LTag.PUMPBTCOMM, String.format(Locale.ENGLISH, "Stored CRC (%d) is different than calculated (%d), but ignored for now.", crcStored,
                     crcCalculated))
             } else {
-                if (MedtronicUtil.isLowLevelDebug()) aapsLogger.debug(LTag.PUMPBTCOMM, "CRC ok.")
+                if (MedtronicUtil.isLowLevelDebug) aapsLogger.debug(LTag.PUMPBTCOMM, "CRC ok.")
             }
             return crcCalculated == crcStored
         }

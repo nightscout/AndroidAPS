@@ -35,16 +35,16 @@ class PumpHistoryEntry : MedtronicHistoryEntry() {
             field = value
         }
 
-    fun setEntryType(medtronicDeviceType: MedtronicDeviceType?, entryType: PumpHistoryEntryType) {
+    fun setEntryType(medtronicDeviceType: MedtronicDeviceType, entryType: PumpHistoryEntryType) {
         this.entryType = entryType
         sizes[0] = entryType.getHeadLength(medtronicDeviceType)
         sizes[1] = entryType.dateLength
         sizes[2] = entryType.getBodyLength(medtronicDeviceType)
-        if (this.entryType != null && atechDateTime != null) setPumpId()
+        if (this.entryType != null && atechDateTime != null) generatePumpId()
     }
 
-    private fun setPumpId() {
-        pumpId = entryType!!.code + atechDateTime!! * 1000L
+    private fun generatePumpId() : Long {
+        return entryType!!.code + atechDateTime!! * 1000L
     }
 
     override val toStringStart: String
@@ -105,7 +105,7 @@ class PumpHistoryEntry : MedtronicHistoryEntry() {
 
     override var pumpId: Long? = null
         get() {
-            setPumpId()
+            field = generatePumpId()
             return field
         }
         set(pumpId) {

@@ -244,7 +244,7 @@ public abstract class PumpPluginAbstract extends PumpPluginBase implements Pump,
 
     public long lastDataTime() {
         aapsLogger.debug(LTag.PUMP, "lastDataTime [PumpPluginAbstract].");
-        return getPumpStatusData().lastConnection;
+        return getPumpStatusData().getLastConnection();
     }
 
 
@@ -308,7 +308,8 @@ public abstract class PumpPluginAbstract extends PumpPluginBase implements Pump,
 
     // Pump capabilities
 
-    @NonNull public PumpDescription getPumpDescription() {
+
+    public PumpDescription getPumpDescription() {
         return pumpDescription;
     }
 
@@ -331,7 +332,7 @@ public abstract class PumpPluginAbstract extends PumpPluginBase implements Pump,
     @NonNull @Override
     public JSONObject getJSONStatus(@NonNull Profile profile, @NonNull String profileName, @NonNull String version) {
 
-        if ((getPumpStatusData().lastConnection + 60 * 60 * 1000L) < System.currentTimeMillis()) {
+        if ((getPumpStatusData().getLastConnection() + 60 * 60 * 1000L) < System.currentTimeMillis()) {
             return new JSONObject();
         }
 
@@ -341,8 +342,8 @@ public abstract class PumpPluginAbstract extends PumpPluginBase implements Pump,
         JSONObject status = new JSONObject();
         JSONObject extended = new JSONObject();
         try {
-            battery.put("percent", getPumpStatusData().batteryRemaining);
-            status.put("status", getPumpStatusData().pumpStatusType != null ? getPumpStatusData().pumpStatusType.getStatus() : "normal");
+            battery.put("percent", getPumpStatusData().getBatteryRemaining());
+            status.put("status", getPumpStatusData().getPumpStatusType() != null ? getPumpStatusData().getPumpStatusType().getStatus() : "normal");
             extended.put("Version", version);
             try {
                 extended.put("ActiveProfile", profileName);
@@ -368,7 +369,7 @@ public abstract class PumpPluginAbstract extends PumpPluginBase implements Pump,
             pump.put("battery", battery);
             pump.put("status", status);
             pump.put("extended", extended);
-            pump.put("reservoir", getPumpStatusData().reservoirRemainingUnits);
+            pump.put("reservoir", getPumpStatusData().getReservoirRemainingUnits());
             pump.put("clock", dateUtil.toISOString(dateUtil.now()));
         } catch (JSONException e) {
             aapsLogger.error("Unhandled exception", e);
@@ -381,14 +382,14 @@ public abstract class PumpPluginAbstract extends PumpPluginBase implements Pump,
     @NonNull @Override
     public String shortStatus(boolean veryShort) {
         String ret = "";
-        if (getPumpStatusData().lastConnection != 0) {
-            long agoMsec = System.currentTimeMillis() - getPumpStatusData().lastConnection;
+        if (getPumpStatusData().getLastConnection() != 0) {
+            long agoMsec = System.currentTimeMillis() - getPumpStatusData().getLastConnection();
             int agoMin = (int) (agoMsec / 60d / 1000d);
             ret += "LastConn: " + agoMin + " min ago\n";
         }
-        if (getPumpStatusData().lastBolusTime != null && getPumpStatusData().lastBolusTime.getTime() != 0) {
-            ret += "LastBolus: " + DecimalFormatter.INSTANCE.to2Decimal(getPumpStatusData().lastBolusAmount) + "U @" + //
-                    android.text.format.DateFormat.format("HH:mm", getPumpStatusData().lastBolusTime) + "\n";
+        if (getPumpStatusData().getLastBolusTime() != null && getPumpStatusData().getLastBolusTime().getTime() != 0) {
+            ret += "LastBolus: " + DecimalFormatter.INSTANCE.to2Decimal(getPumpStatusData().getLastBolusAmount()) + "U @" + //
+                    android.text.format.DateFormat.format("HH:mm", getPumpStatusData().getLastBolusTime()) + "\n";
         }
         PumpSync.PumpState.TemporaryBasal activeTemp = pumpSync.expectedPumpState().getTemporaryBasal();
         if (activeTemp != null) {
@@ -402,9 +403,9 @@ public abstract class PumpPluginAbstract extends PumpPluginBase implements Pump,
         // ret += "TDD: " + DecimalFormatter.to0Decimal(pumpStatus.dailyTotalUnits) + " / "
         // + pumpStatus.maxDailyTotalUnits + " U\n";
         // }
-        ret += "IOB: " + getPumpStatusData().iob + "U\n";
-        ret += "Reserv: " + DecimalFormatter.INSTANCE.to0Decimal(getPumpStatusData().reservoirRemainingUnits) + "U\n";
-        ret += "Batt: " + getPumpStatusData().batteryRemaining + "\n";
+        ret += "IOB: " + getPumpStatusData().getIob() + "U\n";
+        ret += "Reserv: " + DecimalFormatter.INSTANCE.to0Decimal(getPumpStatusData().getReservoirRemainingUnits()) + "U\n";
+        ret += "Batt: " + getPumpStatusData().getBatteryRemaining() + "\n";
         return ret;
     }
 

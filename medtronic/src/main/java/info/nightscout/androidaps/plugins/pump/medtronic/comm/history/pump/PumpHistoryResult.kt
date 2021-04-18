@@ -4,6 +4,7 @@ import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.logging.LTag
 import info.nightscout.androidaps.plugins.pump.common.utils.DateTimeUtil
 import java.util.*
+import kotlin.collections.ArrayList
 
 /**
  * History page contains data, sorted from newest to oldest (0=newest..n=oldest)
@@ -18,9 +19,11 @@ class PumpHistoryResult(private val aapsLogger: AAPSLogger, searchEntry: PumpHis
     private val searchEntry: PumpHistoryEntry? = null
     private var searchDate: Long? = null
     private var searchType = SearchType.None
-    @JvmField var unprocessedEntries: List<PumpHistoryEntry?>? = null
-    @JvmField var validEntries: MutableList<PumpHistoryEntry?>?
-    fun addHistoryEntries(entries: List<PumpHistoryEntry?>?, page: Int) {
+    var unprocessedEntries: List<PumpHistoryEntry> = ArrayList()
+    var validEntries: MutableList<PumpHistoryEntry> = ArrayList()
+
+
+    fun addHistoryEntries(entries: List<PumpHistoryEntry>, page: Int) {
         unprocessedEntries = entries
         //aapsLogger.debug(LTag.PUMPCOMM,"PumpHistoryResult. Unprocessed entries: {}", MedtronicUtil.getGsonInstance().toJson(entries));
         processEntries()
@@ -32,7 +35,7 @@ class PumpHistoryResult(private val aapsLogger: AAPSLogger, searchEntry: PumpHis
         Collections.reverse(unprocessedEntries)
         when (searchType) {
             SearchType.None      ->                 //aapsLogger.debug(LTag.PUMPCOMM,"PE. None search");
-                validEntries!!.addAll(unprocessedEntries!!)
+                validEntries.addAll(unprocessedEntries)
 
             SearchType.LastEntry -> {
                 aapsLogger.debug(LTag.PUMPCOMM, "PE. Last entry search")
@@ -40,27 +43,27 @@ class PumpHistoryResult(private val aapsLogger: AAPSLogger, searchEntry: PumpHis
                 //Collections.sort(this.unprocessedEntries, new PumpHistoryEntry.Comparator());
                 aapsLogger.debug(LTag.PUMPCOMM, "PE. PumpHistoryResult. Search entry date: " + searchEntry!!.atechDateTime)
                 val date = searchEntry.atechDateTime
-                for (unprocessedEntry in unprocessedEntries!!) {
-                    if (unprocessedEntry!!.equals(searchEntry)) {
+                for (unprocessedEntry in unprocessedEntries) {
+                    if (unprocessedEntry.equals(searchEntry)) {
                         //aapsLogger.debug(LTag.PUMPCOMM,"PE. Item found {}.", unprocessedEntry);
                         isSearchFinished = true
                         break
                     }
 
                     //aapsLogger.debug(LTag.PUMPCOMM,"PE. Entry {} added.", unprocessedEntry);
-                    validEntries!!.add(unprocessedEntry)
+                    validEntries.add(unprocessedEntry)
                 }
             }
 
             SearchType.Date      -> {
                 aapsLogger.debug(LTag.PUMPCOMM, "PE. Date search: Search date: " + searchDate)
-                for (unprocessedEntry in unprocessedEntries!!) {
-                    if (unprocessedEntry!!.atechDateTime == null || unprocessedEntry.atechDateTime == 0L) {
+                for (unprocessedEntry in unprocessedEntries) {
+                    if (unprocessedEntry.atechDateTime == null || unprocessedEntry.atechDateTime == 0L) {
                         aapsLogger.debug(LTag.PUMPCOMM, "PE. PumpHistoryResult. Search entry date: Entry with no date: $unprocessedEntry")
                         continue
                     }
                     if (unprocessedEntry.isAfter(searchDate!!)) {
-                        validEntries!!.add(unprocessedEntry)
+                        validEntries.add(unprocessedEntry)
                     } else {
 //                        aapsLogger.debug(LTag.PUMPCOMM,"PE. PumpHistoryResult. Not after.. Unprocessed Entry [year={},entry={}]",
 //                                DateTimeUtil.getYear(unprocessedEntry.atechDateTime), unprocessedEntry);
@@ -85,35 +88,19 @@ class PumpHistoryResult(private val aapsLogger: AAPSLogger, searchEntry: PumpHis
             ", searchType=" + searchType +  //
             ", searchFinished=" + isSearchFinished +  //
             "]"
-    }// PumpHistoryEntry pumpHistoryEntry = this.validEntries.get(0);
-    //
-    // if (pumpHistoryEntry.getEntryType() == PumpHistoryEntryType.EndResultTotals)
-    // return pumpHistoryEntry;
-    // else
-    // return this.validEntries.get(1);
+    }
 
     /**
      * Return latest entry (entry with highest date time)
-     *
      * @return
      */
     val latestEntry: PumpHistoryEntry?
-        get() = if (validEntries == null || validEntries!!.size == 0) null else {
-            validEntries!![0]
-            // PumpHistoryEntry pumpHistoryEntry = this.validEntries.get(0);
-            //
-            // if (pumpHistoryEntry.getEntryType() == PumpHistoryEntryType.EndResultTotals)
-            // return pumpHistoryEntry;
-            // else
-            // return this.validEntries.get(1);
-        }
+        get() = if (validEntries.size == 0) null else validEntries[0]
 
-    val isSearchRequired: Boolean
-        get() = searchType != SearchType.None
 
-    fun getValidEntries(): List<PumpHistoryEntry?>? {
-        return validEntries
-    }
+    // val isSearchRequired: Boolean
+    //     get() = searchType != SearchType.None
+
 
     internal enum class SearchType {
         None,  //
@@ -139,6 +126,6 @@ class PumpHistoryResult(private val aapsLogger: AAPSLogger, searchEntry: PumpHis
         }
 
         // this.unprocessedEntries = new ArrayList<>();
-        validEntries = ArrayList()
+        //validEntries = ArrayList()
     }
 }

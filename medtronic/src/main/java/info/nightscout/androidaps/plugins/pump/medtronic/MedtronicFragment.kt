@@ -220,12 +220,12 @@ class MedtronicFragment : DaggerFragment() {
             PumpDeviceState.InvalidConfiguration -> binding.pumpStatusIcon.text = " " + resourceHelper.gs(medtronicPumpStatus.pumpDeviceState.resourceId)
 
             PumpDeviceState.Active               -> {
-                val cmd = medtronicUtil.currentCommand
+                val cmd = medtronicUtil.getCurrentCommand()
                 if (cmd == null)
                     binding.pumpStatusIcon.text = " " + resourceHelper.gs(medtronicPumpStatus.pumpDeviceState.resourceId)
                 else {
                     aapsLogger.debug(LTag.PUMP, "Command: $cmd")
-                    val cmdResourceId = cmd.resourceId
+                    val cmdResourceId = cmd.resourceId!!
                     if (cmd == MedtronicCommandType.GetHistoryData) {
                         binding.pumpStatusIcon.text = medtronicUtil.frameNumber?.let {
                             resourceHelper.gs(cmdResourceId, medtronicUtil.pageNumber, medtronicUtil.frameNumber)
@@ -233,7 +233,7 @@ class MedtronicFragment : DaggerFragment() {
                             ?: resourceHelper.gs(R.string.medtronic_cmd_desc_get_history_request, medtronicUtil.pageNumber)
                     } else {
                         binding.pumpStatusIcon.text = " " + (cmdResourceId?.let { resourceHelper.gs(it) }
-                            ?: cmd.getCommandDescription())
+                            ?: cmd.commandDescription)
                     }
                 }
             }
@@ -298,34 +298,31 @@ class MedtronicFragment : DaggerFragment() {
         val bolus = medtronicPumpStatus.lastBolusAmount
         val bolusTime = medtronicPumpStatus.lastBolusTime
         if (bolus != null && bolusTime != null) {
-            val agoMsc = System.currentTimeMillis() - medtronicPumpStatus.lastBolusTime.time
+            val agoMsc = System.currentTimeMillis() - medtronicPumpStatus.lastBolusTime!!.time
             val bolusMinAgo = agoMsc.toDouble() / 60.0 / 1000.0
             val unit = resourceHelper.gs(R.string.insulin_unit_shortname)
             val ago = when {
                 agoMsc < 60 * 1000 -> resourceHelper.gs(R.string.medtronic_pump_connected_now)
-                bolusMinAgo < 60   -> dateUtil.minAgo(resourceHelper, medtronicPumpStatus.lastBolusTime.time)
-                else               -> dateUtil.hourAgo(medtronicPumpStatus.lastBolusTime.time, resourceHelper)
+                bolusMinAgo < 60   -> dateUtil.minAgo(resourceHelper, medtronicPumpStatus.lastBolusTime!!.time)
+                else               -> dateUtil.hourAgo(medtronicPumpStatus.lastBolusTime!!.time, resourceHelper)
             }
             binding.lastBolus.text = resourceHelper.gs(R.string.mdt_last_bolus, bolus, unit, ago)
         } else {
             binding.lastBolus.text = ""
         }
 
-        if (true) {
-            // base basal rate
-            binding.baseBasalRate.text = ("(" + medtronicPumpStatus.activeProfileName + ")  "
-                + resourceHelper.gs(R.string.pump_basebasalrate, medtronicPumpPlugin.baseBasalRate))
+        // base basal rate
+        binding.baseBasalRate.text = ("(" + medtronicPumpStatus.activeProfileName + ")  "
+            + resourceHelper.gs(R.string.pump_basebasalrate, medtronicPumpPlugin.baseBasalRate))
 
-            binding.tempBasal.text = "??"
-        } else {
-            val pumpState = pumpSync.expectedPumpState()
-            // base basal rate
-            binding.baseBasalRate.text = ("(" + medtronicPumpStatus.activeProfileName + ")  "
-                + resourceHelper.gs(R.string.pump_basebasalrate, medtronicPumpPlugin.baseBasalRate))
+        // TBR
+        var tbrStr = ""
+        var tbrRemainingTime: Int? = medtronicPumpStatus.tbrRemainingTime
 
-            binding.tempBasal.text = pumpState.temporaryBasal?.toStringFull(dateUtil)
-                ?: ""
+        if (tbrRemainingTime!=null) {
+            tbrStr = resourceHelper.gs(R.string.mdt_tbr_remaining, medtronicPumpStatus.tempBasalAmount, tbrRemainingTime);
         }
+        binding.tempBasal.text = tbrStr
 
         // battery
         if (medtronicPumpStatus.batteryType == BatteryType.None || medtronicPumpStatus.batteryVoltage == null) {

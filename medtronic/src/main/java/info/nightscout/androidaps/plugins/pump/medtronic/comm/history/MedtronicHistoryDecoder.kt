@@ -38,8 +38,8 @@ abstract class MedtronicHistoryDecoder<T : MedtronicHistoryEntry?> : MedtronicHi
     private fun checkPage(page: RawHistoryPage, partial: Boolean): List<Byte> {
         val byteList: List<Byte> = ArrayList()
 
-        if (medtronicUtil!!.medtronicPumpModel == null) {
-            aapsLogger!!.error(LTag.PUMPCOMM, "Device Type is not defined.")
+        if (medtronicUtil.medtronicPumpModel == null) {
+            aapsLogger.error(LTag.PUMPCOMM, "Device Type is not defined.")
             return byteList
         }
         return if (page.data.size != 1024) {
@@ -82,9 +82,9 @@ abstract class MedtronicHistoryDecoder<T : MedtronicHistoryEntry?> : MedtronicHi
         for ((key) in unknownOpCodes!!) {
             StringUtil.appendToStringBuilder(sb, "" + key, ", ")
         }
-        aapsLogger!!.info(LTag.PUMPCOMM, "STATISTICS OF PUMP DECODE")
+        aapsLogger.info(LTag.PUMPCOMM, "STATISTICS OF PUMP DECODE")
         if (unknownOpCodes!!.size > 0) {
-            aapsLogger!!.warn(LTag.PUMPCOMM, "Unknown Op Codes: $sb")
+            aapsLogger.warn(LTag.PUMPCOMM, "Unknown Op Codes: $sb")
         }
         for ((key, value) in mapStatistics!!) {
             sb = StringBuilder()
@@ -94,9 +94,9 @@ abstract class MedtronicHistoryDecoder<T : MedtronicHistoryEntry?> : MedtronicHi
                     StringUtil.appendToStringBuilder(sb, key1, ", ")
                 }
                 val spaces = StringUtils.repeat(" ", 14 - key.name.length)
-                aapsLogger!!.info(LTag.PUMPCOMM, String.format(Locale.ENGLISH, "    %s%s - %d. Elements: %s", key.name, spaces, value.size, sb.toString()))
+                aapsLogger.info(LTag.PUMPCOMM, String.format(Locale.ENGLISH, "    %s%s - %d. Elements: %s", key.name, spaces, value.size, sb.toString()))
             } else {
-                aapsLogger!!.info(LTag.PUMPCOMM, String.format(Locale.ENGLISH, "    %s             - %d", key.name, value.size))
+                aapsLogger.info(LTag.PUMPCOMM, String.format(Locale.ENGLISH, "    %s             - %d", key.name, value.size))
             }
         }
     }

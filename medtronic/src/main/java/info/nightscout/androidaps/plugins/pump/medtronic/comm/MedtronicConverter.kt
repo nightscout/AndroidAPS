@@ -58,7 +58,7 @@ class MedtronicConverter @Inject constructor(
             }
 
             MedtronicCommandType.ReadTemporaryBasal                                                                               -> {
-                TempBasalPair(aapsLogger, rawContent) // 5
+                TempBasalPair(aapsLogger, rawContent!!) // 5
             }
 
             MedtronicCommandType.Settings_512                                                                                     -> {
@@ -112,7 +112,7 @@ class MedtronicConverter @Inject constructor(
             batteryStatus.batteryStatusType = BatteryStatusDTO.BatteryStatusType.Unknown
         }
         if (rawData.size > 1) {
-            var d: Double? = null
+            var d: Double? //= null
 
             // if response in 3 bytes then we add additional information
             d = if (rawData.size == 2) {
@@ -126,7 +126,7 @@ class MedtronicConverter @Inject constructor(
         return batteryStatus
     }
 
-    private fun decodeRemainingInsulin(rawData: ByteArray?): Float {
+    private fun decodeRemainingInsulin(rawData: ByteArray?): Double {
         var startIdx = 0
         val pumpModel = medtronicUtil.medtronicPumpModel
         val strokes = pumpModel?.bolusStrokes ?: 10
@@ -134,11 +134,11 @@ class MedtronicConverter @Inject constructor(
             startIdx = 2
         }
         val reqLength = startIdx + 1
-        var value = 0f
+        var value = 0.0
         value = if (reqLength >= rawData!!.size) {
-            rawData[startIdx] / (1.0f * strokes)
+            rawData[startIdx] / (1.0 * strokes)
         } else {
-            ByteUtil.toInt(rawData[startIdx], rawData[startIdx + 1]) / (1.0f * strokes)
+            ByteUtil.toInt(rawData[startIdx], rawData[startIdx + 1]) / (1.0 * strokes)
         }
         aapsLogger.debug(LTag.PUMPCOMM, "Remaining insulin: $value")
         return value
@@ -208,7 +208,7 @@ class MedtronicConverter @Inject constructor(
             rd[settingIndexMaxBasal + 1].toInt())), PumpConfigurationGroup.Basal, map)
         addSettingToMap("CFG_BASE_CLOCK_MODE", if (rd[settingIndexTimeDisplayFormat].toInt() == 0) "12h" else "24h",
             PumpConfigurationGroup.General, map)
-        if (MedtronicDeviceType.isSameDevice(medtronicUtil.medtronicPumpModel, MedtronicDeviceType.Medtronic_523andHigher)) {
+        if (MedtronicDeviceType.isSameDevice(medtronicUtil.medtronicPumpModel!!, MedtronicDeviceType.Medtronic_523andHigher)) {
             addSettingToMap("PCFG_INSULIN_CONCENTRATION", "" + if (rd[9].toInt() == 0) 50 else 100, PumpConfigurationGroup.Insulin,
                 map)
             //            LOG.debug("Insulin concentration: " + rd[9]);
@@ -249,7 +249,7 @@ class MedtronicConverter @Inject constructor(
         addSettingToMap("PCFG_MM_SRESERVOIR_WARNING_POINT", "" + ByteUtil.asUINT8(rd[19]),
             PumpConfigurationGroup.Other, map)
         addSettingToMap("CFG_MM_KEYPAD_LOCKED", parseResultEnable(rd[20].toInt()), PumpConfigurationGroup.Other, map)
-        if (MedtronicDeviceType.isSameDevice(medtronicUtil.medtronicPumpModel, MedtronicDeviceType.Medtronic_523andHigher)) {
+        if (MedtronicDeviceType.isSameDevice(medtronicUtil.medtronicPumpModel!!, MedtronicDeviceType.Medtronic_523andHigher)) {
             addSettingToMap("PCFG_BOLUS_SCROLL_STEP_SIZE", "" + rd[21], PumpConfigurationGroup.Bolus, map)
             addSettingToMap("PCFG_CAPTURE_EVENT_ENABLE", parseResultEnable(rd[22].toInt()), PumpConfigurationGroup.Other, map)
             addSettingToMap("PCFG_OTHER_DEVICE_ENABLE", parseResultEnable(rd[23].toInt()), PumpConfigurationGroup.Other, map)
@@ -273,7 +273,7 @@ class MedtronicConverter @Inject constructor(
 
     // 512
     private fun decodeInsulinActionSetting(ai: ByteArray, map: MutableMap<String, PumpSettingDTO>) {
-        if (MedtronicDeviceType.isSameDevice(medtronicUtil.medtronicPumpModel, MedtronicDeviceType.Medtronic_512_712)) {
+        if (MedtronicDeviceType.isSameDevice(medtronicUtil.medtronicPumpModel!!, MedtronicDeviceType.Medtronic_512_712)) {
             addSettingToMap("PCFG_INSULIN_ACTION_TYPE", if (ai[17].toInt() != 0) "Regular" else "Fast",
                 PumpConfigurationGroup.Insulin, map)
         } else {
@@ -297,10 +297,10 @@ class MedtronicConverter @Inject constructor(
     }
 
     private val settingIndexMaxBasal: Int
-        private get() = if (is523orHigher()) 7 else 6
+        get() = if (is523orHigher()) 7 else 6
 
     private val settingIndexTimeDisplayFormat: Int
-        private get() = if (is523orHigher()) 9 else 8
+        get() = if (is523orHigher()) 9 else 8
 
     private fun decodeMaxBolus(ai: ByteArray?): Double {
         return if (is523orHigher()) decodeBolusInsulin(ByteUtil.toInt(ai!![5], ai[6])) else decodeBolusInsulin(ByteUtil
@@ -308,7 +308,7 @@ class MedtronicConverter @Inject constructor(
     }
 
     private fun is523orHigher(): Boolean {
-        return MedtronicDeviceType.isSameDevice(medtronicUtil.medtronicPumpModel, MedtronicDeviceType.Medtronic_523andHigher)
+        return MedtronicDeviceType.isSameDevice(medtronicUtil.medtronicPumpModel!!, MedtronicDeviceType.Medtronic_523andHigher)
     }
 
 }

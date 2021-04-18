@@ -67,13 +67,13 @@ class PumpMessage : RLMessage {
 
     override fun getTxData(): ByteArray {
         var rval = ByteUtil.concat(byteArrayOf(packetType!!.value), address)
-        rval = ByteUtil.concat(rval, commandType!!.getCommandCode())
+        rval = ByteUtil.concat(rval, commandType!!.commandCode)
         rval = ByteUtil.concat(rval, messageBody!!.txData)
         return rval
     }
 
     val contents: ByteArray
-        get() = ByteUtil.concat(byteArrayOf(commandType!!.getCommandCode()), messageBody!!.txData)// length is not always correct so, we check whole array if we have
+        get() = ByteUtil.concat(byteArrayOf(commandType!!.commandCode), messageBody!!.txData)// length is not always correct so, we check whole array if we have
     // data, after length
 
     // check if displayed length is invalid
@@ -91,7 +91,7 @@ class PumpMessage : RLMessage {
             val data = messageBody!!.txData
             var length = ByteUtil.asUINT8(data!![0]) // length is not always correct so, we check whole array if we have
             // data, after length
-            val originalLength = length
+            //val originalLength = length
 
             // check if displayed length is invalid
             if (length > data.size - 1) {

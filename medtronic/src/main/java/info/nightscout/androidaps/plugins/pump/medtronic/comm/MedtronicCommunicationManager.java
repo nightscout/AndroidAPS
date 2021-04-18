@@ -80,8 +80,8 @@ public class MedtronicCommunicationManager extends RileyLinkCommunicationManager
     @Inject
     public void onInit() {
         // we can't do this in the constructor, as sp only gets injected after the constructor has returned
-        medtronicPumpStatus.previousConnection = sp.getLong(
-                RileyLinkConst.Prefs.LastGoodDeviceCommunicationTime, 0L);
+        medtronicPumpStatus.setPreviousConnection(sp.getLong(
+                RileyLinkConst.Prefs.LastGoodDeviceCommunicationTime, 0L));
     }
 
     @Override
@@ -136,7 +136,7 @@ public class MedtronicCommunicationManager extends RileyLinkCommunicationManager
 
         if (!canPreventTuneUp) {
 
-            long diff = System.currentTimeMillis() - medtronicPumpStatus.lastConnection;
+            long diff = System.currentTimeMillis() - medtronicPumpStatus.getLastConnection();
 
             if (diff > RILEYLINK_TIMEOUT) {
                 serviceTaskExecutor.startTask(new WakeAndTuneTask(injector));
@@ -278,7 +278,7 @@ public class MedtronicCommunicationManager extends RileyLinkCommunicationManager
 
         for (List<Byte> frame : frames) {
 
-            byte[] frameData = MedtronicUtil.createByteArray(frame);
+            byte[] frameData = medtronicUtil.createByteArray(frame);
 
             // aapsLogger.debug(LTag.PUMPCOMM,"Frame {} data:\n{}", frameNr, ByteUtil.getCompactString(frameData));
 
@@ -570,7 +570,7 @@ public class MedtronicCommunicationManager extends RileyLinkCommunicationManager
             try {
                 PumpMessage response = sendAndGetResponse(commandType, bodyData, DEFAULT_TIMEOUT + (DEFAULT_TIMEOUT * retries));
 
-                String check = checkResponseContent(response, commandType.commandDescription, commandType.expectedLength);
+                String check = checkResponseContent(response, commandType.getCommandDescription(), commandType.getExpectedLength());
 
                 if (check == null) {
 
@@ -632,11 +632,11 @@ public class MedtronicCommunicationManager extends RileyLinkCommunicationManager
 
     // PUMP SPECIFIC COMMANDS
 
-    public Float getRemainingInsulin() {
+    public Double getRemainingInsulin() {
 
         Object responseObject = sendAndGetResponseWithCheck(MedtronicCommandType.GetRemainingInsulin);
 
-        return responseObject == null ? null : (Float) responseObject;
+        return responseObject == null ? null : (Double) responseObject;
     }
 
 
@@ -677,7 +677,7 @@ public class MedtronicCommunicationManager extends RileyLinkCommunicationManager
 //                aapsLogger.debug(LTag.PUMPCOMM,"1st Response: " + HexDump.toHexStringDisplayable(response.getRawContent()));
 //                aapsLogger.debug(LTag.PUMPCOMM,"1st Response: " + HexDump.toHexStringDisplayable(response.getMessageBody().getTxData()));
 
-                String check = checkResponseContent(response, commandType.commandDescription, 1);
+                String check = checkResponseContent(response, commandType.getCommandDescription(), 1);
 
                 byte[] data = null;
 
@@ -695,7 +695,7 @@ public class MedtronicCommunicationManager extends RileyLinkCommunicationManager
 //                        aapsLogger.debug(LTag.PUMPCOMM,"{} Response: {}", runs,
 //                            HexDump.toHexStringDisplayable(response2.getMessageBody().getTxData()));
 
-                        String check2 = checkResponseContent(response, commandType.commandDescription, 1);
+                        String check2 = checkResponseContent(response, commandType.getCommandDescription(), 1);
 
                         if (check2 == null) {
 
@@ -765,12 +765,12 @@ public class MedtronicCommunicationManager extends RileyLinkCommunicationManager
     public ClockDTO getPumpTime() {
 
         ClockDTO clockDTO = new ClockDTO();
-        clockDTO.localDeviceTime = new LocalDateTime();
+        clockDTO.setLocalDeviceTime(new LocalDateTime());
 
         Object responseObject = sendAndGetResponseWithCheck(MedtronicCommandType.GetRealTimeClock);
 
         if (responseObject != null) {
-            clockDTO.pumpTime = (LocalDateTime) responseObject;
+            clockDTO.setPumpTime((LocalDateTime) responseObject);
             return clockDTO;
         }
 
