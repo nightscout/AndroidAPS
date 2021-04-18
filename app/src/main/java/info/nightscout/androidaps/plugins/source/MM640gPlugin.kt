@@ -88,7 +88,7 @@ class MM640gPlugin @Inject constructor(
                         repository.runTransactionForResult(CgmSourceTransaction(glucoseValues, emptyList(), null))
                             .doOnError {
                                 aapsLogger.error(LTag.DATABASE, "Error while saving values from Eversense App", it)
-                                ret = Result.failure(workDataOf("Error" to it))
+                                ret = Result.failure(workDataOf("Error" to it.toString()))
                             }
                             .blockingGet()
                             .also { savedValues ->
@@ -99,7 +99,7 @@ class MM640gPlugin @Inject constructor(
                             }
                     } catch (e: JSONException) {
                         aapsLogger.error("Exception: ", e)
-                        ret = Result.failure(workDataOf("Error" to e))
+                        ret = Result.failure(workDataOf("Error" to e.toString()))
                     }
                 }
             }

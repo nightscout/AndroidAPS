@@ -61,7 +61,7 @@ class NSClientRemoveWorker(
             repository.runTransactionForResult(SyncNsTemporaryTargetTransaction(temporaryTarget, invalidateByNsOnly = true))
                 .doOnError {
                     aapsLogger.error(LTag.DATABASE, "Error while invalidating temporary target", it)
-                    ret = Result.failure(workDataOf("Error" to it))
+                    ret = Result.failure(workDataOf("Error" to it.toString()))
                 }
                 .blockingGet()
                 .also { result ->
@@ -81,7 +81,7 @@ class NSClientRemoveWorker(
             repository.runTransactionForResult(SyncNsTherapyEventTransaction(therapyEvent, invalidateByNsOnly = true))
                 .doOnError {
                     aapsLogger.error(LTag.DATABASE, "Error while invalidating therapy event", it)
-                    ret = Result.failure(workDataOf("Error" to it))
+                    ret = Result.failure(workDataOf("Error" to it.toString()))
                 }
                 .blockingGet()
                 .also { result ->
@@ -98,7 +98,7 @@ class NSClientRemoveWorker(
             repository.runTransactionForResult(SyncNsBolusTransaction(bolus, invalidateByNsOnly = true))
                 .doOnError {
                     aapsLogger.error(LTag.DATABASE, "Error while invalidating bolus", it)
-                    ret = Result.failure(workDataOf("Error" to it))
+                    ret = Result.failure(workDataOf("Error" to it.toString()))
                 }
                 .blockingGet()
                 .also { result ->
@@ -114,7 +114,7 @@ class NSClientRemoveWorker(
             repository.runTransactionForResult(SyncNsCarbsTransaction(carbs, invalidateByNsOnly = true))
                 .doOnError {
                     aapsLogger.error(LTag.DATABASE, "Error while invalidating carbs", it)
-                    ret = Result.failure(workDataOf("Error" to it))
+                    ret = Result.failure(workDataOf("Error" to it.toString()))
                 }
                 .blockingGet()
                 .also { result ->
@@ -130,7 +130,7 @@ class NSClientRemoveWorker(
             repository.runTransactionForResult(SyncNsTemporaryBasalTransaction(temporaryBasal, invalidateByNsOnly = true))
                 .doOnError {
                     aapsLogger.error(LTag.DATABASE, "Error while invalidating temporary basal", it)
-                    ret = Result.failure(workDataOf("Error" to it))
+                    ret = Result.failure(workDataOf("Error" to it.toString()))
                 }
                 .blockingGet()
                 .also { result ->
@@ -146,7 +146,7 @@ class NSClientRemoveWorker(
             repository.runTransactionForResult(SyncNsExtendedBolusTransaction(extendedBolus, invalidateByNsOnly = true))
                 .doOnError {
                     aapsLogger.error(LTag.DATABASE, "Error while invalidating extended bolus", it)
-                    ret = Result.failure(workDataOf("Error" to it))
+                    ret = Result.failure(workDataOf("Error" to it.toString()))
                 }
                 .blockingGet()
                 .also { result ->
