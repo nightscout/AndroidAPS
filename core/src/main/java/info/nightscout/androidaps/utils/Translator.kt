@@ -46,6 +46,7 @@ class Translator @Inject internal constructor(
         Action.CLEAR_PAIRING_KEYS                  -> resourceHelper.gs(R.string.uel_clear_pairing_keys)
         Action.ACCEPTS_TEMP_BASAL                  -> resourceHelper.gs(R.string.uel_accepts_temp_basal)
         Action.CANCEL_TEMP_BASAL                   -> resourceHelper.gs(R.string.uel_cancel_temp_basal)
+        Action.CANCEL_BOLUS                        -> resourceHelper.gs(R.string.uel_cancel_bolus)
         Action.CANCEL_EXTENDED_BOLUS               -> resourceHelper.gs(R.string.uel_cancel_extended_bolus)
         Action.CANCEL_TT                           -> resourceHelper.gs(R.string.uel_cancel_tt)
         Action.CAREPORTAL                          -> resourceHelper.gs(R.string.uel_careportal)

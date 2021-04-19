@@ -31,6 +31,7 @@ class UserEntryMapper {
         CLEAR_PAIRING_KEYS (UserEntry.Action.CLEAR_PAIRING_KEYS),
         ACCEPTS_TEMP_BASAL (UserEntry.Action.ACCEPTS_TEMP_BASAL),
         CANCEL_TEMP_BASAL (UserEntry.Action.CANCEL_TEMP_BASAL),
+        CANCEL_BOLUS (UserEntry.Action.CANCEL_BOLUS),
         CANCEL_EXTENDED_BOLUS (UserEntry.Action.CANCEL_EXTENDED_BOLUS),
         CANCEL_TT (UserEntry.Action.CANCEL_TT),
         CAREPORTAL (UserEntry.Action.CAREPORTAL),
