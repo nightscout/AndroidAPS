@@ -97,7 +97,6 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
             TableUtils.createTableIfNotExists(connectionSource, TemporaryBasal.class);
             TableUtils.createTableIfNotExists(connectionSource, ExtendedBolus.class);
             TableUtils.createTableIfNotExists(connectionSource, ProfileSwitch.class);
-            TableUtils.createTableIfNotExists(connectionSource, TDD.class);
             TableUtils.createTableIfNotExists(connectionSource, InsightHistoryOffset.class);
             TableUtils.createTableIfNotExists(connectionSource, InsightBolusID.class);
             TableUtils.createTableIfNotExists(connectionSource, InsightPumpID.class);
@@ -173,14 +172,12 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
             TableUtils.dropTable(connectionSource, TemporaryBasal.class, true);
             TableUtils.dropTable(connectionSource, ExtendedBolus.class, true);
             TableUtils.dropTable(connectionSource, ProfileSwitch.class, true);
-            TableUtils.dropTable(connectionSource, TDD.class, true);
             TableUtils.dropTable(connectionSource, OmnipodHistoryRecord.class, true);
             TableUtils.createTableIfNotExists(connectionSource, DanaRHistoryRecord.class);
             TableUtils.createTableIfNotExists(connectionSource, DbRequest.class);
             TableUtils.createTableIfNotExists(connectionSource, TemporaryBasal.class);
             TableUtils.createTableIfNotExists(connectionSource, ExtendedBolus.class);
             TableUtils.createTableIfNotExists(connectionSource, ProfileSwitch.class);
-            TableUtils.createTableIfNotExists(connectionSource, TDD.class);
             TableUtils.createTableIfNotExists(connectionSource, OmnipodHistoryRecord.class);
             updateEarliestDataChange(0);
         } catch (SQLException e) {
@@ -209,23 +206,10 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
         scheduleProfileSwitchChange();
     }
 
-    public void resetTDDs() {
-        try {
-            TableUtils.dropTable(connectionSource, TDD.class, true);
-            TableUtils.createTableIfNotExists(connectionSource, TDD.class);
-        } catch (SQLException e) {
-            aapsLogger.error("Unhandled exception", e);
-        }
-    }
-
     // ------------------ getDao -------------------------------------------
 
     private Dao<DanaRHistoryRecord, String> getDaoDanaRHistory() throws SQLException {
         return getDao(DanaRHistoryRecord.class);
-    }
-
-    private Dao<TDD, String> getDaoTDD() throws SQLException {
-        return getDao(TDD.class);
     }
 
     private Dao<DbRequest, String> getDaoDbRequest() throws SQLException {
@@ -269,60 +253,6 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
         if (rounded != date)
             aapsLogger.debug(LTag.DATABASE, "Rounding " + date + " to " + rounded);
         return rounded;
-    }
-
-    // -------------------  TDD handling -----------------------
-    public void createOrUpdateTDD(TDD tdd) {
-        try {
-            Dao<TDD, String> dao = getDaoTDD();
-            dao.createOrUpdate(tdd);
-            openHumansUploader.enqueueTotalDailyDose(tdd);
-        } catch (SQLException e) {
-            aapsLogger.error("Unhandled exception", e);
-        }
-    }
-
-    public List<TDD> getTDDs() {
-        List<TDD> tddList;
-        try {
-            QueryBuilder<TDD, String> queryBuilder = getDaoTDD().queryBuilder();
-            queryBuilder.orderBy("date", false);
-            queryBuilder.limit(10L);
-            PreparedQuery<TDD> preparedQuery = queryBuilder.prepare();
-            tddList = getDaoTDD().query(preparedQuery);
-        } catch (SQLException e) {
-            aapsLogger.error("Unhandled exception", e);
-            tddList = new ArrayList<>();
-        }
-        return tddList;
-    }
-
-    public List<TDD> getAllTDDs() {
-        try {
-            return getDaoTDD().queryForAll();
-        } catch (SQLException e) {
-            aapsLogger.error("Unhandled exception", e);
-        }
-        return Collections.emptyList();
-    }
-
-    public List<TDD> getTDDsForLastXDays(int days) {
-        List<TDD> tddList;
-        GregorianCalendar gc = new GregorianCalendar();
-        gc.add(Calendar.DAY_OF_YEAR, (-1) * days);
-
-        try {
-            QueryBuilder<TDD, String> queryBuilder = getDaoTDD().queryBuilder();
-            queryBuilder.orderBy("date", false);
-            Where<TDD, String> where = queryBuilder.where();
-            where.ge("date", gc.getTimeInMillis());
-            PreparedQuery<TDD> preparedQuery = queryBuilder.prepare();
-            tddList = getDaoTDD().query(preparedQuery);
-        } catch (SQLException e) {
-            aapsLogger.error("Unhandled exception", e);
-            tddList = new ArrayList<>();
-        }
-        return tddList;
     }
 
     // ------------- DbRequests handling -------------------
@@ -403,12 +333,6 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
     public void createOrUpdate(DanaRHistoryRecord record) {
         try {
             getDaoDanaRHistory().createOrUpdate(record);
-
-            //If it is a TDD, store it for stats also.
-            if (record.recordCode == RecordTypes.RECORD_TYPE_DAILY) {
-                createOrUpdateTDD(new TDD(record.recordDate, record.recordDailyBolus, record.recordDailyBasal, 0));
-            }
-
         } catch (SQLException e) {
             aapsLogger.error("Unhandled exception", e);
         }
@@ -1136,7 +1060,6 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
         try {
             return getDaoExtendedBolus().countOf()
                     + getDaoProfileSwitch().countOf()
-                    + getDaoTDD().countOf()
                     + getDaoTemporaryBasal().countOf();
         } catch (SQLException e) {
             aapsLogger.error("Unhandled exception", e);

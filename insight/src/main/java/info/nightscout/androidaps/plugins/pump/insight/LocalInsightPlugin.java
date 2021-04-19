@@ -38,7 +38,6 @@ import info.nightscout.androidaps.db.InsightBolusID;
 import info.nightscout.androidaps.db.InsightHistoryOffset;
 import info.nightscout.androidaps.db.InsightPumpID;
 import info.nightscout.androidaps.db.Source;
-import info.nightscout.androidaps.db.TDD;
 import info.nightscout.androidaps.db.TemporaryBasal;
 import info.nightscout.androidaps.events.EventInitializationChanged;
 import info.nightscout.androidaps.events.EventRefreshOverview;
@@ -51,8 +50,8 @@ import info.nightscout.androidaps.interfaces.DatabaseHelperInterface;
 import info.nightscout.androidaps.interfaces.PluginDescription;
 import info.nightscout.androidaps.interfaces.PluginType;
 import info.nightscout.androidaps.interfaces.ProfileFunction;
-import info.nightscout.androidaps.interfaces.PumpDescription;
 import info.nightscout.androidaps.interfaces.Pump;
+import info.nightscout.androidaps.interfaces.PumpDescription;
 import info.nightscout.androidaps.interfaces.PumpPluginBase;
 import info.nightscout.androidaps.interfaces.PumpSync;
 import info.nightscout.androidaps.interfaces.TreatmentsInterface;               //TODO()
@@ -1311,12 +1310,15 @@ public class LocalInsightPlugin extends PumpPluginBase implements Pump, Constrai
         calendar.set(Calendar.YEAR, event.getTotalYear());
         calendar.set(Calendar.MONTH, event.getTotalMonth() - 1);
         calendar.set(Calendar.DAY_OF_MONTH, event.getTotalDay());
-        TDD tdd = new TDD();
-        tdd.basal = event.getBasalTotal();
-        tdd.bolus = event.getBolusTotal();
-        tdd.total = tdd.basal + tdd.bolus;
-        tdd.date = calendar.getTimeInMillis();
-        databaseHelper.createOrUpdateTDD(tdd);
+        pumpSync.createOrUpdateTotalDailyDose(
+                calendar.getTimeInMillis(),
+                event.getBolusTotal(),
+                event.getBasalTotal(),
+                0.0, // will be calculated automatically
+                null,
+                PumpType.ACCU_CHEK_INSIGHT,
+                serialNumber()
+        );
     }
 
     private void processTubeFilledEvent(TubeFilledEvent event) {

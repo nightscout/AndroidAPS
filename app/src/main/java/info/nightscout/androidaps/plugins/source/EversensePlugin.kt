@@ -112,7 +112,7 @@ class EversensePlugin @Inject constructor(
                     repository.runTransactionForResult(CgmSourceTransaction(glucoseValues, emptyList(), null))
                         .doOnError {
                             aapsLogger.error(LTag.DATABASE, "Error while saving values from Eversense App", it)
-                            ret = Result.failure(workDataOf("Error" to it))
+                            ret = Result.failure(workDataOf("Error" to it.toString()))
                         }
                         .blockingGet()
                         .also { savedValues ->
@@ -142,7 +142,7 @@ class EversensePlugin @Inject constructor(
                         ))
                             .doOnError {
                                 aapsLogger.error(LTag.DATABASE, "Error while saving therapy event", it)
-                                ret = Result.failure(workDataOf("Error" to it))
+                                ret = Result.failure(workDataOf("Error" to it.toString()))
                             }
                             .blockingGet()
                             .also { result ->

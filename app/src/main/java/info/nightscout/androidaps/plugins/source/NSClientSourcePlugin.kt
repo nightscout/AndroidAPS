@@ -142,7 +142,7 @@ class NSClientSourcePlugin @Inject constructor(
                 repository.runTransactionForResult(CgmSourceTransaction(glucoseValues, emptyList(), null, !nsClientSourcePlugin.isEnabled()))
                     .doOnError {
                         aapsLogger.error(LTag.DATABASE, "Error while saving values from NSClient App", it)
-                        ret = Result.failure(workDataOf("Error" to it))
+                        ret = Result.failure(workDataOf("Error" to it.toString()))
                     }
                     .blockingGet()
                     .also { result ->
@@ -159,7 +159,7 @@ class NSClientSourcePlugin @Inject constructor(
                     }
             } catch (e: Exception) {
                 aapsLogger.error("Unhandled exception", e)
-                ret = Result.failure(workDataOf("Error" to e))
+                ret = Result.failure(workDataOf("Error" to e.toString()))
             }
             // Objectives 0
             sp.putBoolean(R.string.key_ObjectivesbgIsAvailableInNS, true)

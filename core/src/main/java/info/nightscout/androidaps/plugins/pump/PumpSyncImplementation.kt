@@ -5,11 +5,7 @@ import info.nightscout.androidaps.data.DetailedBolusInfo
 import info.nightscout.androidaps.database.AppRepository
 import info.nightscout.androidaps.database.ValueWrapper
 import info.nightscout.androidaps.database.embedments.InterfaceIDs
-import info.nightscout.androidaps.database.entities.Bolus
-import info.nightscout.androidaps.database.entities.Carbs
-import info.nightscout.androidaps.database.entities.ExtendedBolus
-import info.nightscout.androidaps.database.entities.TemporaryBasal
-import info.nightscout.androidaps.database.entities.TherapyEvent
+import info.nightscout.androidaps.database.entities.*
 import info.nightscout.androidaps.database.transactions.*
 import info.nightscout.androidaps.interfaces.ProfileFunction
 import info.nightscout.androidaps.interfaces.PumpSync
@@ -53,7 +49,7 @@ class PumpSyncImplementation @Inject constructor(
      * @param serialNumber  serial number  of of pump
      * @return true if data is allowed
      */
-    private fun confirmActivePump(timestamp: Long, type: PumpType, serialNumber: String) : Boolean {
+    private fun confirmActivePump(timestamp: Long, type: PumpType, serialNumber: String): Boolean {
         val storedType = sp.getString(R.string.key_active_pump_type, "")
         val storedSerial = sp.getString(R.string.key_active_pump_serial_number, "")
         val storedTimestamp = sp.getLong(R.string.key_active_pump_change_timestamp, 0L)
@@ -74,7 +70,7 @@ class PumpSyncImplementation @Inject constructor(
 
         if (type.description != storedType || serialNumber != storedSerial)
             rxBus.send(EventNewNotification(Notification(Notification.WRONG_PUMP_DATA, resourceHelper.gs(R.string.wrong_pump_data), Notification.URGENT)))
-        aapsLogger.error(LTag.PUMP, "Ignoring pump history record $timestamp ${type.description} $serialNumber. Registered pump: $storedType $storedSerial")
+        aapsLogger.error(LTag.PUMP, "Ignoring pump history record  Allowed: ${dateUtil.dateAndTimeAndSecondsString(storedTimestamp)} $storedType $storedSerial Received: $timestamp ${dateUtil.dateAndTimeAndSecondsString(timestamp)}${type.description} $serialNumber")
         return false
     }
 
@@ -320,6 +316,29 @@ class PumpSyncImplementation @Inject constructor(
                     aapsLogger.debug(LTag.DATABASE, "Updated extended bolus $it")
                 }
                 return result.updated.size > 0
+            }
+    }
+
+    override fun createOrUpdateTotalDailyDose(timestamp: Long, bolusAmount: Double, basalAmount: Double, totalAmount: Double, pumpId: Long?, pumpType: PumpType, pumpSerial: String): Boolean {
+        if (!confirmActivePump(timestamp, pumpType, pumpSerial)) return false
+        val tdd = TotalDailyDose(
+            timestamp = timestamp,
+            bolusAmount = bolusAmount,
+            basalAmount = basalAmount,
+            totalAmount = totalAmount,
+            interfaceIDs_backing = InterfaceIDs(
+                pumpId = pumpId,
+                pumpType = pumpType.toDbPumpType(),
+                pumpSerial = pumpSerial
+            )
+        )
+        repository.runTransactionForResult(SyncPumpTotalDailyDoseTransaction(tdd))
+            .doOnError { aapsLogger.error(LTag.DATABASE, "Error while saving TotalDailyDose", it) }
+            .blockingGet()
+            .also { result ->
+                result.inserted.forEach { aapsLogger.debug(LTag.DATABASE, "Inserted TotalDailyDose $it") }
+                result.updated.forEach { aapsLogger.debug(LTag.DATABASE, "Updated TotalDailyDose $it") }
+                return result.inserted.size > 0
             }
     }
 

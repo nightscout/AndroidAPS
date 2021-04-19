@@ -299,6 +299,7 @@
     <string name="friday_short">П</string>
     <string name="saturday_short">С</string>
     <string name="sunday_short">Н</string>
+    <!-- User Entry -->
     <plurals name="minutes">
         <item quantity="one">%1$d минутa</item>
         <item quantity="other">%1$d минути</item>

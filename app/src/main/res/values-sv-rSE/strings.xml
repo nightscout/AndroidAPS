@@ -270,11 +270,7 @@ Eversense-appen.</string>
     <string name="openapsma_autosensdata_label">Autosensdata</string>
     <string name="openapsma_scriptdebugdata_label">Debug</string>
     <string name="openapsama_useautosens">Använd autosens</string>
-    <string name="refresheventsfromnightscout">Uppdatera från Nightscout</string>
     <string name="deletefuturetreatments">Ta bort behandlingar från framtiden</string>
-    <string name="eatingsoon">Äta snart</string>
-    <string name="hypo">Hypo</string>
-    <string name="activity">Träning</string>
     <string name="actions_shortname">Act</string>
     <string name="configbuilder_shortname">Konf</string>
     <string name="loop_shortname">Loop</string>
@@ -752,7 +748,6 @@ Eversense-appen.</string>
     <string name="format_carbs_ic">%1$.0fg IC: %2$.1f</string>
     <string name="format_cob_ic">%1$.1fg IC: %2$.1f</string>
     <string name="format_percent">%1$d%%</string>
-    <string name="boluswizard">Kalkylator</string>
     <string name="unit_minute_short">min</string>
     <string name="profile_name">Profilnamn:</string>
     <string name="selected_profile">Valt:</string>

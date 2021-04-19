@@ -55,10 +55,12 @@ interface PumpSync {
      *                  bolus is null when there is no record in database
      */
     data class PumpState(val temporaryBasal: TemporaryBasal?, val extendedBolus: ExtendedBolus?, val bolus: Bolus?, val profile: Profile?) {
+
         data class TemporaryBasal(val timestamp: Long, val duration: Long, val rate: Double, val isAbsolute: Boolean, val type: TemporaryBasalType, val id: Long, val pumpId: Long?)
         data class ExtendedBolus(val timestamp: Long, val duration: Long, val amount: Double, val rate: Double)
         data class Bolus(val timestamp: Long, val amount: Double)
     }
+
     fun expectedPumpState(): PumpState
 
     /*
@@ -171,7 +173,7 @@ interface PumpSync {
      * @param pumpSerial    pump serial number
      * @return true if new record is created
      **/
-    fun insertTherapyEventIfNewWithTimestamp(timestamp: Long, type: DetailedBolusInfo.EventType, note: String? = null, pumpId: Long? = null, pumpType: PumpType, pumpSerial: String) :  Boolean
+    fun insertTherapyEventIfNewWithTimestamp(timestamp: Long, type: DetailedBolusInfo.EventType, note: String? = null, pumpId: Long? = null, pumpType: PumpType, pumpSerial: String): Boolean
 
     /**
      * Create an announcement
@@ -210,7 +212,8 @@ interface PumpSync {
 
         companion object {
 
-            fun fromDbType(dbType: TemporaryBasal.Type) = values().firstOrNull { it.name == dbType.name } ?: NORMAL
+            fun fromDbType(dbType: TemporaryBasal.Type) = values().firstOrNull { it.name == dbType.name }
+                ?: NORMAL
         }
 
     }
@@ -274,7 +277,7 @@ interface PumpSync {
      **/
     fun syncStopTemporaryBasalWithPumpId(timestamp: Long, endPumpId: Long, pumpType: PumpType, pumpSerial: String): Boolean
 
-   /**
+    /**
      * Invalidate of temporary basals that failed to start
      * EROS specific, replace by setting duration to zero ????
      *
@@ -336,4 +339,34 @@ interface PumpSync {
      * @return true if running record is found and ended by changing duration
      **/
     fun syncStopExtendedBolusWithPumpId(timestamp: Long, endPumpId: Long, pumpType: PumpType, pumpSerial: String): Boolean
+
+    /*
+    *   TOTAL DAILY DOSE
+    */
+
+    /**
+     * Synchronization of TDD
+     *
+     * Search for existing record following way
+     *      1. pumpId, pumpType, pumpSerial (only if pumpId is provided)
+     *      2. timestamp, pumpType, pumpSerial
+     *
+     * If record is found data is updated
+     *      isValid field is preserved
+     * If db record doesn't exist, new record is created.
+     *
+     * see [info.nightscout.androidaps.database.transactions.SyncPumpTotalDailyDoseTransaction]
+     *
+     * @param timestamp     timestamp of event from pump history
+     * @param bolusAmount   bolus part
+     * @param basalAmount   basal part
+     * @param totalAmount   if > 0, this value is used as total. Otherwise it's calculated as basal + bolus
+     * @param pumpId        pump id from history
+     * @param pumpType      pump type like PumpType.ACCU_CHEK_COMBO
+     * @param pumpSerial    pump serial number
+     * @return true if new record is created
+     **/
+
+    fun createOrUpdateTotalDailyDose(timestamp: Long, bolusAmount: Double, basalAmount: Double, totalAmount: Double, pumpId: Long?, pumpType: PumpType, pumpSerial: String): Boolean
+
 }

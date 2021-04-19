@@ -8,7 +8,6 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 
 import java.util.Locale;
 
-import info.nightscout.androidaps.db.TDD;
 import info.nightscout.androidaps.plugins.pump.common.utils.ByteUtil;
 import info.nightscout.androidaps.plugins.pump.common.utils.DateTimeUtil;
 import info.nightscout.androidaps.plugins.pump.common.utils.StringUtil;
@@ -240,16 +239,20 @@ public class DailyTotalsDTO {
                 .toString();
     }
 
-    public void setTDD(TDD tdd) {
-        tdd.date = DateTimeUtil.toMillisFromATD(this.entry.atechDateTime);
-        tdd.basal = insulinBasal;
-        tdd.bolus = insulinBolus;
-        tdd.total = insulinTotal;
+    public long timestamp() {
+        return DateTimeUtil.toMillisFromATD(this.entry.atechDateTime);
     }
 
-
-    public boolean doesEqual(TDD tdd) {
-        return tdd.total == this.insulinTotal && tdd.bolus == this.insulinBolus && tdd.basal == this.insulinBasal;
+    public double insulinBasal() {
+        return insulinBasal;
     }
+
+    public double insulinBolus() {
+        return insulinBolus;
+    }
+    public double insulinTotal() {
+        return insulinTotal;
+    }
+
 
 }

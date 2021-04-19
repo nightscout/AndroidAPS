@@ -7,6 +7,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import info.nightscout.androidaps.extensions.PumpStateExtensionKt;
+
 import org.joda.time.DateTime;
 import org.json.JSONObject;
 
@@ -26,7 +27,6 @@ import info.nightscout.androidaps.combo.R;
 import info.nightscout.androidaps.data.DetailedBolusInfo;
 import info.nightscout.androidaps.data.Profile;
 import info.nightscout.androidaps.data.PumpEnactResult;
-import info.nightscout.androidaps.db.TDD;
 import info.nightscout.androidaps.events.EventInitializationChanged;
 import info.nightscout.androidaps.events.EventRefreshOverview;
 import info.nightscout.androidaps.interfaces.CommandQueueProvider;
@@ -81,7 +81,6 @@ public class ComboPlugin extends PumpPluginBase implements Pump, Constraints {
     private RxBusWrapper rxBus;
     private final CommandQueueProvider commandQueue;
     private final Context context;
-    private final DatabaseHelperInterface databaseHelper;
     private final PumpSync pumpSync;
     private final DateUtil dateUtil;
 
@@ -156,7 +155,6 @@ public class ComboPlugin extends PumpPluginBase implements Pump, Constraints {
         this.sp = sp;
         this.commandQueue = commandQueue;
         this.context = context;
-        this.databaseHelper = databaseHelper;
         this.pumpSync = pumpSync;
         this.dateUtil = dateUtil;
 
@@ -1334,24 +1332,32 @@ public class ComboPlugin extends PumpPluginBase implements Pump, Constraints {
         if (result.getSuccess()) {
             List<Tdd> tdds = pump.tddHistory;
             if (tdds != null) {
-                HashMap<Long, TDD> map = new HashMap<>();
+                HashMap<Long, Tdd> map = new HashMap<>();
                 for (int i = 0; i < tdds.size(); i++) {
                     Tdd currTdd = tdds.get(i);
                     if (currTdd.total < 1)
                         continue; //cases where dummy days are introduced (e.g. Battery change with date loss)
                     if (map.containsKey(currTdd.timestamp)) {
                         //duplicate days on time changes
-                        TDD existing = map.get(currTdd.timestamp);
+                        Tdd existing = map.get(currTdd.timestamp);
                         existing.total += currTdd.total;
                     } else {
-                        map.put(currTdd.timestamp, new TDD(currTdd.timestamp, 0d, 0d, currTdd.total));
+                        map.put(currTdd.timestamp, currTdd);
                     }
                 }
 
-                Collection<TDD> uniqueColl = map.values();
+                Collection<Tdd> uniqueColl = map.values();
 
-                for (TDD currTdd : uniqueColl) {
-                    databaseHelper.createOrUpdateTDD(currTdd);
+                for (Tdd currTdd : uniqueColl) {
+                    pumpSync.createOrUpdateTotalDailyDose(
+                            currTdd.timestamp,
+                            0.0,
+                            0.0,
+                            currTdd.total,
+                            null,
+                            PumpType.ACCU_CHEK_COMBO,
+                            serialNumber()
+                    );
                 }
             }
         }

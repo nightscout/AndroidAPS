@@ -20,5 +20,5 @@
     <string name="error_mustbe8hexadidits">Deve ter 8 caracteres de ABCDEF0123456789</string>
     <string name="error_mustbe4hexadidits">Deve ter 4 caracteres de ABCDEF0123456789</string>
     <string name="error_not_a_minimum_length">Não tem o tamanho mínimo</string>
-    <string name="error_pin_not_valid">Pino deve ser de 3 a 6 dígitos, não iguais ou em série</string>
+    <string name="error_pin_not_valid">Pin deve ser de 3 a 6 dígitos, não iguais ou em série</string>
 </resources>

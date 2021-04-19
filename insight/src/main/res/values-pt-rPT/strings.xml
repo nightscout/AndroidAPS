@@ -32,7 +32,7 @@
     <string name="insightpump_shortname">Visão</string>
     <string name="insight_alert_notification_channel">Alertas Bomba Insight</string>
     <string name="disable_vibration">Desactivar vibrações na entrega manual de bólus</string>
-    <string name="disable_vibration_summary">Para bólus e bólus estendidos (só disponível com o firmware Insight 3.x)</string>
+    <string name="disable_vibration_summary">Para bólus e bólus prolongados (só disponível com o firmware Insight 3.x)</string>
     <string name="disable_vibration_auto">Desactivar vibrações na entrega automática de bólus</string>
     <string name="disable_vibration_auto_summary">Para SMB e Basal Temporária com emulação DBT (só disponível com firmware Insight 3.x)</string>
     <string name="timeout_during_handshake">Tempo de operação excedido - reinicar bluetooth</string>
