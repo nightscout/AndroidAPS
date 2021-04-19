@@ -3,7 +3,7 @@ package info.nightscout.androidaps.plugins.sensitivity
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.Constants
 import info.nightscout.androidaps.R
-import info.nightscout.androidaps.data.Profile
+import info.nightscout.androidaps.interfaces.Profile
 import info.nightscout.androidaps.database.AppRepository
 import info.nightscout.androidaps.database.entities.TherapyEvent
 import info.nightscout.androidaps.db.ProfileSwitch
@@ -159,7 +159,7 @@ open class SensitivityOref1Plugin @Inject constructor(
             if (hourUsed == 1) sensResult = "(24 hours) "
             val ratioLimit = ""
             val deviations: Array<Double> = Array(deviationsArray.size) { i -> deviationsArray[i] }
-            val sens = profile.isfMgdl
+            val sens = profile.getIsfMgdl()
             aapsLogger.debug(LTag.AUTOSENS, "Records: $index   $pastSensitivity")
             Arrays.sort(deviations)
             val pSensitive = IobCobCalculatorPlugin.percentile(deviations, 0.50)
@@ -179,7 +179,7 @@ open class SensitivityOref1Plugin @Inject constructor(
                 else           -> sensResult += "Sensitivity normal"
             }
             aapsLogger.debug(LTag.AUTOSENS, sensResult)
-            val ratio = 1 + basalOff / profile.maxDailyBasal
+            val ratio = 1 + basalOff / profile.getMaxDailyBasal()
 
             //Update the data back to the parent
             sensResultArray[hourUsed] = sensResult

@@ -6,7 +6,7 @@ import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.Constants
 import info.nightscout.androidaps.TestBase
 import info.nightscout.androidaps.data.IobTotal
-import info.nightscout.androidaps.data.Profile
+import info.nightscout.androidaps.interfaces.Profile
 import info.nightscout.androidaps.interfaces.*
 import info.nightscout.androidaps.plugins.aps.loop.LoopPlugin
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper

@@ -4,7 +4,7 @@ import androidx.fragment.app.FragmentActivity
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.Constants
 import info.nightscout.androidaps.R
-import info.nightscout.androidaps.data.Profile
+import info.nightscout.androidaps.interfaces.Profile
 import info.nightscout.androidaps.events.EventProfileStoreChanged
 import info.nightscout.androidaps.interfaces.*
 import info.nightscout.androidaps.logging.AAPSLogger
@@ -207,13 +207,13 @@ class LocalProfilePlugin @Inject constructor(
         }
         val sp = SingleProfile()
         sp.name = verifiedName
-        sp.mgdl = profile.units == Constants.MGDL
+        sp.mgdl = profile.units == GlucoseUnit.MGDL
         sp.dia = profile.dia
-        sp.ic = JSONArray(profile.data.getJSONArray("carbratio").toString())
-        sp.isf = JSONArray(profile.data.getJSONArray("sens").toString())
-        sp.basal = JSONArray(profile.data.getJSONArray("basal").toString())
-        sp.targetLow = JSONArray(profile.data.getJSONArray("target_low").toString())
-        sp.targetHigh = JSONArray(profile.data.getJSONArray("target_high").toString())
+        sp.ic = JSONArray(profile.toNsJson().getJSONArray("carbratio").toString())
+        sp.isf = JSONArray(profile.toNsJson().getJSONArray("sens").toString())
+        sp.basal = JSONArray(profile.toNsJson().getJSONArray("basal").toString())
+        sp.targetLow = JSONArray(profile.toNsJson().getJSONArray("target_low").toString())
+        sp.targetHigh = JSONArray(profile.toNsJson().getJSONArray("target_high").toString())
         return sp
     }
 
@@ -276,7 +276,7 @@ class LocalProfilePlugin @Inject constructor(
         }
         val p = SingleProfile()
         p.name = Constants.LOCAL_PROFILE + free
-        p.mgdl = profileFunction.getUnits() == Constants.MGDL
+        p.mgdl = profileFunction.getUnits() == GlucoseUnit.MGDL
         p.dia = Constants.defaultDIA
         p.ic = JSONArray(defaultArray)
         p.isf = JSONArray(defaultArray)

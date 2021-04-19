@@ -2,7 +2,7 @@ package info.nightscout.androidaps.utils.wizard
 
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.R
-import info.nightscout.androidaps.data.Profile
+import info.nightscout.androidaps.interfaces.Profile
 import info.nightscout.androidaps.database.AppRepository
 import info.nightscout.androidaps.database.ValueWrapper
 import info.nightscout.androidaps.database.entities.GlucoseValue

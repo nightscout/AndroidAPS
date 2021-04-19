@@ -1,7 +1,7 @@
 package info.nightscout.androidaps.plugins.general.tidepool.elements
 
 import com.google.gson.annotations.Expose
-import info.nightscout.androidaps.data.Profile
+import info.nightscout.androidaps.interfaces.Profile
 import info.nightscout.androidaps.db.ProfileSwitch
 import info.nightscout.androidaps.plugins.general.tidepool.comm.TidepoolUploader
 import info.nightscout.androidaps.utils.DateUtil
@@ -36,13 +36,13 @@ class ProfileElement(ps: ProfileSwitch, serialNumber: String, dateUtil: DateUtil
         type = "pumpSettings"
         val profile: Profile? = ps.profileObject
         checkNotNull(profile)
-        for (br in profile.basalValues)
+        for (br in profile.getBasalValues())
             basalSchedules.Normal.add(BasalRate(br.timeAsSeconds * 1000, br.value))
-        for (target in profile.singleTargetsMgdl)
+        for (target in profile.getSingleTargetsMgdl())
             bgTargets.Normal.add(Target(target.timeAsSeconds * 1000, target.value))
-        for (ic in profile.ics)
+        for (ic in profile.getIcs())
             carbRatios.Normal.add(Ratio(ic.timeAsSeconds * 1000, ic.value))
-        for (isf in profile.isfsMgdl)
+        for (isf in profile.getIsfsMgdl())
             insulinSensitivities.Normal.add(Ratio(isf.timeAsSeconds * 1000, isf.value))
     }
 

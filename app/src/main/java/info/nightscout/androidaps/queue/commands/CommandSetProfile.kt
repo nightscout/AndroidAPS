@@ -2,7 +2,7 @@ package info.nightscout.androidaps.queue.commands
 
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.R
-import info.nightscout.androidaps.data.Profile
+import info.nightscout.androidaps.interfaces.Profile
 import info.nightscout.androidaps.data.PumpEnactResult
 import info.nightscout.androidaps.db.Source
 import info.nightscout.androidaps.interfaces.ActivePlugin

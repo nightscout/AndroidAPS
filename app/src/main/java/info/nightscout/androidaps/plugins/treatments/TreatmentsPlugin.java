@@ -48,11 +48,9 @@ import io.reactivex.disposables.CompositeDisposable;
 @Singleton
 public class TreatmentsPlugin extends PluginBase implements TreatmentsInterface {
 
-    private final Context context;
     private final AapsSchedulers aapsSchedulers;
     private final SP sp;
     private final RxBusWrapper rxBus;
-    private final ResourceHelper resourceHelper;
     private final ProfileFunction profileFunction;
     private final ActivePlugin activePlugin;
     private final NSUpload nsUpload;
@@ -95,8 +93,6 @@ public class TreatmentsPlugin extends PluginBase implements TreatmentsInterface 
                         .setDefault(),
                 aapsLogger, resourceHelper, injector
         );
-        this.resourceHelper = resourceHelper;
-        this.context = context;
         this.rxBus = rxBus;
         this.aapsSchedulers = aapsSchedulers;
         this.sp = sp;
@@ -379,7 +375,7 @@ public class TreatmentsPlugin extends PluginBase implements TreatmentsInterface 
             profileSwitch.date = System.currentTimeMillis();
             profileSwitch.source = Source.USER;
             profileSwitch.profileName = profileFunction.getProfileName(System.currentTimeMillis(), false, false);
-            profileSwitch.profileJson = profileFunction.getProfile().getData().toString();
+            profileSwitch.profileJson = profileFunction.getProfile().toNsJson().toString();
             profileSwitch.profilePlugin = activePlugin.getActiveProfileSource().getClass().getName();
             profileSwitch.durationInMinutes = duration;
             profileSwitch.isCPP = percentage != 100 || timeShift != 0;

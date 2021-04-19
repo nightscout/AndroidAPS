@@ -3,8 +3,9 @@ package info.nightscout.androidaps.plugins.general.overview.graphExtensions
 import android.graphics.Color
 import info.nightscout.androidaps.Constants
 import info.nightscout.androidaps.core.R
-import info.nightscout.androidaps.data.Profile
+import info.nightscout.androidaps.interfaces.Profile
 import info.nightscout.androidaps.database.entities.TherapyEvent
+import info.nightscout.androidaps.interfaces.GlucoseUnit
 import info.nightscout.androidaps.interfaces.Interval
 import info.nightscout.androidaps.interfaces.ProfileFunction
 import info.nightscout.androidaps.utils.Translator
@@ -30,11 +31,11 @@ class TherapyEventDataPoint @Inject constructor(
         if (data.glucose != null && data.glucose != 0.0) {
             var mmol = 0.0
             var mgdl = 0.0
-            if (units == Constants.MGDL) {
+            if (units == GlucoseUnit.MGDL) {
                 mgdl = data.glucose!!
                 mmol = data.glucose!! * Constants.MGDL_TO_MMOLL
             }
-            if (units == Constants.MMOL) {
+            if (units == GlucoseUnit.MMOL) {
                 mmol = data.glucose!!
                 mgdl = data.glucose!! * Constants.MMOLL_TO_MGDL
             }

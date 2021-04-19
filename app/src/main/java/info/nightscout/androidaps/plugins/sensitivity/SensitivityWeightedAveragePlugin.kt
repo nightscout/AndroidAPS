@@ -4,7 +4,7 @@ import androidx.collection.LongSparseArray
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.Constants
 import info.nightscout.androidaps.R
-import info.nightscout.androidaps.data.Profile
+import info.nightscout.androidaps.interfaces.Profile
 import info.nightscout.androidaps.database.AppRepository
 import info.nightscout.androidaps.database.entities.TherapyEvent
 import info.nightscout.androidaps.db.ProfileSwitch
@@ -133,13 +133,13 @@ open class SensitivityWeightedAveragePlugin @Inject constructor(
         if (weights == 0.0) {
             return AutosensResult()
         }
-        val sens = profile.isfMgdl
+        val sens = profile.getIsfMgdl()
         val ratioLimit = ""
         val sensResult: String
         aapsLogger.debug(LTag.AUTOSENS, "Records: $index   $pastSensitivity")
         val average = weightedSum / weights
         val basalOff = average * (60 / 5.0) / sens
-        val ratio = 1 + basalOff / profile.maxDailyBasal
+        val ratio = 1 + basalOff / profile.getMaxDailyBasal()
         sensResult = when {
             average < 0 -> "Excess insulin sensitivity detected"
             average > 0 -> "Excess insulin resistance detected"

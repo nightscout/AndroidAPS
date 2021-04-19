@@ -2,7 +2,7 @@ package info.nightscout.androidaps.interfaces
 
 import androidx.collection.ArrayMap
 import dagger.android.HasAndroidInjector
-import info.nightscout.androidaps.data.Profile
+import info.nightscout.androidaps.data.ProfileImplOld
 import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.utils.JsonHelper
 import org.json.JSONException
@@ -11,6 +11,7 @@ import java.util.*
 import javax.inject.Inject
 
 class ProfileStore(val injector: HasAndroidInjector, val data: JSONObject) {
+
     @Inject lateinit var aapsLogger: AAPSLogger
 
     init {
@@ -55,7 +56,7 @@ class ProfileStore(val injector: HasAndroidInjector, val data: JSONObject) {
                     JsonHelper.safeGetJSONObject(store, profileName, null)?.let { profileObject ->
                         // take units from profile and if N/A from store
                         JsonHelper.safeGetStringAllowNull(profileObject, "units", JsonHelper.safeGetString(data, "units"))?.let { units ->
-                            profile = Profile(injector, profileObject, units)
+                            profile = ProfileImplOld(injector, profileObject, GlucoseUnit.fromText(units))
                             cachedObjects[profileName] = profile
                         }
                     }

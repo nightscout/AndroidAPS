@@ -7,7 +7,7 @@ import android.text.TextWatcher
 import android.view.Menu
 import android.widget.PopupMenu
 import info.nightscout.androidaps.R
-import info.nightscout.androidaps.data.Profile
+import info.nightscout.androidaps.interfaces.Profile
 import info.nightscout.androidaps.data.defaultProfile.DefaultProfile
 import info.nightscout.androidaps.data.defaultProfile.DefaultProfileDPV
 import info.nightscout.androidaps.databinding.ActivityProfilehelperBinding
@@ -212,9 +212,9 @@ class ProfileHelperActivity : NoSplashAppCompatActivity() {
                         pvd.arguments = Bundle().also {
                             it.putLong("time", dateUtil.now())
                             it.putInt("mode", ProfileViewerDialog.Mode.PROFILE_COMPARE.ordinal)
-                            it.putString("customProfile", profile0.data.toString())
-                            it.putString("customProfile2", profile1.data.toString())
-                            it.putString("customProfileUnits", profileFunction.getUnits())
+                            it.putString("customProfile", profile0.toNsJson().toString())
+                            it.putString("customProfile2", profile1.toNsJson().toString())
+                            it.putString("customProfileUnits", profileFunction.getUnits().asText)
                             it.putString("customProfileName", getProfileName(ageUsed[0], tddUsed[0], weightUsed[0], pctUsed[0] / 100.0, 0) + "\n" + getProfileName(ageUsed[1], tddUsed[1], weightUsed[1], pctUsed[1] / 100.0, 1))
                         }
                     }.show(supportFragmentManager, "ProfileViewDialog")

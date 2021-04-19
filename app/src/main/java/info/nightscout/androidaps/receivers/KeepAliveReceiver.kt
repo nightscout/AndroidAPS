@@ -120,7 +120,7 @@ class KeepAliveReceiver : DaggerBroadcastReceiver() {
             val profile = profileFunction.getProfile() ?: return
             val lastConnection = pump.lastDataTime()
             val isStatusOutdated = lastConnection + STATUS_UPDATE_FREQUENCY < System.currentTimeMillis()
-            val isBasalOutdated = abs(profile.basal - pump.baseBasalRate) > pump.pumpDescription.basalStep
+            val isBasalOutdated = abs(profile.getBasal() - pump.baseBasalRate) > pump.pumpDescription.basalStep
             aapsLogger.debug(LTag.CORE, "Last connection: " + dateUtil.dateAndTimeString(lastConnection))
             // sometimes keep alive broadcast stops
             // as as workaround test if readStatus was requested before an alarm is generated

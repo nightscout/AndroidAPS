@@ -18,8 +18,9 @@ import javax.inject.Inject;
 import dagger.android.HasAndroidInjector;
 import info.nightscout.androidaps.Constants;
 import info.nightscout.androidaps.core.R;
-import info.nightscout.androidaps.data.Profile;
+import info.nightscout.androidaps.data.ProfileImplOld;
 import info.nightscout.androidaps.interfaces.Interval;
+import info.nightscout.androidaps.interfaces.Profile;
 import info.nightscout.androidaps.interfaces.TreatmentsInterface;
 import info.nightscout.androidaps.logging.AAPSLogger;
 import info.nightscout.androidaps.logging.LTag;
@@ -114,7 +115,7 @@ public class ProfileSwitch implements Interval, DataPointWithLabelInterface {
     public Profile getProfileObject() {
         if (profile == null)
             try {
-                profile = new Profile(injector, new JSONObject(profileJson), percentage, timeshift);
+                profile = new ProfileImplOld(injector, new JSONObject(profileJson), percentage, timeshift);
             } catch (Exception e) {
                 aapsLogger.error("Unhandled exception", e);
                 aapsLogger.error("Unhandled exception: " + profileJson);

@@ -10,7 +10,7 @@ import androidx.core.app.RemoteInput
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.Constants
 import info.nightscout.androidaps.R
-import info.nightscout.androidaps.data.Profile
+import info.nightscout.androidaps.interfaces.Profile
 import info.nightscout.androidaps.events.*
 import info.nightscout.androidaps.interfaces.*
 import info.nightscout.androidaps.logging.AAPSLogger

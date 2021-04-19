@@ -16,7 +16,7 @@ import javax.inject.Singleton;
 import dagger.android.HasAndroidInjector;
 import info.nightscout.androidaps.activities.ErrorHelperActivity;
 import info.nightscout.androidaps.data.DetailedBolusInfo;
-import info.nightscout.androidaps.data.Profile;
+import info.nightscout.androidaps.interfaces.Profile;
 import info.nightscout.androidaps.data.PumpEnactResult;
 import info.nightscout.androidaps.db.OmnipodHistoryRecord;
 import info.nightscout.androidaps.events.Event;
@@ -991,8 +991,8 @@ public class AapsOmnipodErosManager {
         }
         List<BasalScheduleEntry> entries = new ArrayList<>();
         for (Profile.ProfileValue basalValue : basalValues) {
-            entries.add(new BasalScheduleEntry(PumpType.OMNIPOD_EROS.determineCorrectBasalSize(basalValue.value),
-                    Duration.standardSeconds(basalValue.timeAsSeconds)));
+            entries.add(new BasalScheduleEntry(PumpType.OMNIPOD_EROS.determineCorrectBasalSize(basalValue.getValue()),
+                    Duration.standardSeconds(basalValue.getTimeAsSeconds())));
         }
 
         return new BasalSchedule(entries);

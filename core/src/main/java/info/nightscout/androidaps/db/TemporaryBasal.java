@@ -8,9 +8,9 @@ import java.util.Objects;
 import javax.inject.Inject;
 
 import dagger.android.HasAndroidInjector;
-import info.nightscout.androidaps.data.Profile;
 import info.nightscout.androidaps.interfaces.ActivePlugin;
 import info.nightscout.androidaps.interfaces.Interval;
+import info.nightscout.androidaps.interfaces.Profile;
 import info.nightscout.androidaps.interfaces.ProfileFunction;
 import info.nightscout.androidaps.logging.AAPSLogger;
 import info.nightscout.androidaps.utils.DateUtil;

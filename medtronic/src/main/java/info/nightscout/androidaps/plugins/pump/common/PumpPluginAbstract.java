@@ -15,7 +15,7 @@ import org.json.JSONObject;
 import dagger.android.HasAndroidInjector;
 import info.nightscout.androidaps.core.R;
 import info.nightscout.androidaps.data.DetailedBolusInfo;
-import info.nightscout.androidaps.data.Profile;
+import info.nightscout.androidaps.interfaces.Profile;
 import info.nightscout.androidaps.data.PumpEnactResult;
 import info.nightscout.androidaps.events.EventAppExit;
 import info.nightscout.androidaps.events.EventCustomActionsChanged;

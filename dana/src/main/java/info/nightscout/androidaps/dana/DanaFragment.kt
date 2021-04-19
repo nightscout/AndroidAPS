@@ -93,8 +93,8 @@ class DanaFragment : DaggerFragment() {
             val args = Bundle()
             args.putLong("time", dateUtil.now())
             args.putInt("mode", ProfileViewerDialog.Mode.CUSTOM_PROFILE.ordinal)
-            args.putString("customProfile", profile.data.toString())
-            args.putString("customProfileUnits", profile.units)
+            args.putString("customProfile", profile.toNsJson().toString())
+            args.putString("customProfileUnits", profile.units.asText)
             args.putString("customProfileName", profileName)
             val pvd = ProfileViewerDialog()
             pvd.arguments = args

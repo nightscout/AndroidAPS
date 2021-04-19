@@ -1,7 +1,7 @@
 package info.nightscout.androidaps.plugins.configBuilder
 
 import info.nightscout.androidaps.Constants
-import info.nightscout.androidaps.data.Profile
+import info.nightscout.androidaps.interfaces.Profile
 import info.nightscout.androidaps.interfaces.ActivePlugin
 import info.nightscout.androidaps.interfaces.Constraint
 import info.nightscout.androidaps.interfaces.Constraints

@@ -7,7 +7,7 @@ import android.view.ViewGroup
 import android.widget.LinearLayout
 import android.widget.TextView
 import info.nightscout.androidaps.automation.R
-import info.nightscout.androidaps.data.Profile
+import info.nightscout.androidaps.interfaces.Profile
 import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.MidnightTime
 import info.nightscout.androidaps.utils.resources.ResourceHelper

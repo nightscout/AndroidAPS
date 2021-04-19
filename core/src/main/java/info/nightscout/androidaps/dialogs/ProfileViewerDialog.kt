@@ -12,9 +12,11 @@ import dagger.android.support.DaggerDialogFragment
 import info.nightscout.androidaps.Constants
 import info.nightscout.androidaps.core.R
 import info.nightscout.androidaps.core.databinding.DialogProfileviewerBinding
-import info.nightscout.androidaps.data.Profile
+import info.nightscout.androidaps.data.ProfileImplOld
+import info.nightscout.androidaps.interfaces.Profile
 import info.nightscout.androidaps.interfaces.ActivePlugin
 import info.nightscout.androidaps.interfaces.DatabaseHelperInterface
+import info.nightscout.androidaps.interfaces.GlucoseUnit
 import info.nightscout.androidaps.interfaces.ProfileFunction
 import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.HtmlHelper
@@ -45,7 +47,7 @@ class ProfileViewerDialog : DaggerDialogFragment() {
     private var customProfileJson: String = ""
     private var customProfileJson2: String = ""
     private var customProfileName: String = ""
-    private var customProfileUnits: String = Constants.MGDL
+    private var customProfileUnits: GlucoseUnit = GlucoseUnit.MGDL
 
     private var _binding: DialogProfileviewerBinding? = null
 
@@ -60,7 +62,7 @@ class ProfileViewerDialog : DaggerDialogFragment() {
             time = bundle.getLong("time", 0)
             mode = Mode.values()[bundle.getInt("mode", Mode.RUNNING_PROFILE.ordinal)]
             customProfileJson = bundle.getString("customProfile", "")
-            customProfileUnits = bundle.getString("customProfileUnits", Constants.MGDL)
+            customProfileUnits = GlucoseUnit.fromText(bundle.getString("customProfileUnits", Constants.MGDL))
             customProfileName = bundle.getString("customProfileName", "")
             if (mode == Mode.PROFILE_COMPARE)
                 customProfileJson2 = bundle.getString("customProfile2", "")
@@ -95,7 +97,7 @@ class ProfileViewerDialog : DaggerDialogFragment() {
             }
 
             Mode.CUSTOM_PROFILE -> {
-                profile = Profile(injector, JSONObject(customProfileJson), customProfileUnits)
+                profile = ProfileImplOld(injector, JSONObject(customProfileJson), customProfileUnits)
                 profile2 = null
                 profileName = customProfileName
                 date = ""
@@ -103,8 +105,8 @@ class ProfileViewerDialog : DaggerDialogFragment() {
             }
 
             Mode.PROFILE_COMPARE -> {
-                profile = Profile(injector, JSONObject(customProfileJson), customProfileUnits)
-                profile2 = Profile(injector, JSONObject(customProfileJson2), customProfileUnits)
+                profile = ProfileImplOld(injector, JSONObject(customProfileJson), customProfileUnits)
+                profile2 = ProfileImplOld(injector, JSONObject(customProfileJson2), customProfileUnits)
                 profileName = customProfileName
                 binding.headerIcon.setImageResource(R.drawable.ic_compare_profiles)
                 date = ""
@@ -125,7 +127,7 @@ class ProfileViewerDialog : DaggerDialogFragment() {
         if (mode == Mode.PROFILE_COMPARE)
             profile?.let { profile1 ->
                 profile2?.let { profile2 ->
-                    binding.units.text = profileFunction.getUnits()
+                    binding.units.text = profileFunction.getUnits().asText
                     binding.dia.text = HtmlHelper.fromHtml(formatColors("", profile1.dia, profile2.dia, DecimalFormat("0.00"), resourceHelper.gs(R.string.shorthour)))
                     val profileNames = profileName!!.split("\n").toTypedArray()
                     binding.activeprofile.text = HtmlHelper.fromHtml(formatColors(profileNames[0], profileNames[1]))
@@ -142,7 +144,7 @@ class ProfileViewerDialog : DaggerDialogFragment() {
             }
         else
             profile?.let {
-                binding.units.text = it.units
+                binding.units.text = it.units.asText
                 binding.dia.text = resourceHelper.gs(R.string.format_hours, it.dia)
                 binding.activeprofile.text = profileName
                 binding.date.text = date
@@ -168,7 +170,7 @@ class ProfileViewerDialog : DaggerDialogFragment() {
         bundle.putInt("mode", mode.ordinal)
         bundle.putString("customProfile", customProfileJson)
         bundle.putString("customProfileName", customProfileName)
-        bundle.putString("customProfileUnits", customProfileUnits)
+        bundle.putString("customProfileUnits", customProfileUnits.asText)
         if (mode == Mode.PROFILE_COMPARE)
             bundle.putString("customProfile2", customProfileJson2)
     }
@@ -208,7 +210,7 @@ class ProfileViewerDialog : DaggerDialogFragment() {
             val val1 = profile1.getBasalTimeFromMidnight(hour * 60 * 60)
             val val2 = profile2.getBasalTimeFromMidnight(hour * 60 * 60)
             if (val1 != prev1 || val2 != prev2) {
-                s.append(formatColors(Profile.format_HH_MM(hour * 60 * 60), val1, val2, DecimalFormat("0.00"), " " + resourceHelper.gs(R.string.profile_ins_units_per_hour)))
+                s.append(formatColors(dateUtil.format_HH_MM(hour * 60 * 60), val1, val2, DecimalFormat("0.00"), " " + resourceHelper.gs(R.string.profile_ins_units_per_hour)))
                 s.append("<br>")
             }
             prev1 = val1
@@ -231,7 +233,7 @@ class ProfileViewerDialog : DaggerDialogFragment() {
             val val1 = profile1.getIcTimeFromMidnight(hour * 60 * 60)
             val val2 = profile2.getIcTimeFromMidnight(hour * 60 * 60)
             if (val1 != prev1 || val2 != prev2) {
-                s.append(formatColors(Profile.format_HH_MM(hour * 60 * 60), val1, val2, DecimalFormat("0.0"), " " + resourceHelper.gs(R.string.profile_carbs_per_unit)))
+                s.append(formatColors(dateUtil.format_HH_MM(hour * 60 * 60), val1, val2, DecimalFormat("0.0"), " " + resourceHelper.gs(R.string.profile_carbs_per_unit)))
                 s.append("<br>")
             }
             prev1 = val1
@@ -249,7 +251,7 @@ class ProfileViewerDialog : DaggerDialogFragment() {
             val val1 = Profile.fromMgdlToUnits(profile1.getIsfMgdlTimeFromMidnight(hour * 60 * 60), units)
             val val2 = Profile.fromMgdlToUnits(profile2.getIsfMgdlTimeFromMidnight(hour * 60 * 60), units)
             if (val1 != prev1 || val2 != prev2) {
-                s.append(formatColors(Profile.format_HH_MM(hour * 60 * 60), val1, val2, DecimalFormat("0.0"), units + " " + resourceHelper.gs(R.string.profile_per_unit)))
+                s.append(formatColors(dateUtil.format_HH_MM(hour * 60 * 60), val1, val2, DecimalFormat("0.0"), units.asText + " " + resourceHelper.gs(R.string.profile_per_unit)))
                 s.append("<br>")
             }
             prev1 = val1
@@ -270,8 +272,8 @@ class ProfileViewerDialog : DaggerDialogFragment() {
             val val1h = profile1.getTargetHighMgdlTimeFromMidnight(hour * 60 * 60)
             val val2l = profile2.getTargetLowMgdlTimeFromMidnight(hour * 60 * 60)
             val val2h = profile2.getTargetHighMgdlTimeFromMidnight(hour * 60 * 60)
-            val txt1 = Profile.format_HH_MM(hour * 60 * 60) + " " + Profile.toUnitsString(val1l, val1l * Constants.MGDL_TO_MMOLL, units) + " - " + Profile.toUnitsString(val1h, val1h * Constants.MGDL_TO_MMOLL, units) + " " + units
-            val txt2 = Profile.format_HH_MM(hour * 60 * 60) + " " + Profile.toUnitsString(val2l, val2l * Constants.MGDL_TO_MMOLL, units) + " - " + Profile.toUnitsString(val2h, val2h * Constants.MGDL_TO_MMOLL, units) + " " + units
+            val txt1 = dateUtil.format_HH_MM(hour * 60 * 60) + " " + Profile.toUnitsString(val1l, val1l * Constants.MGDL_TO_MMOLL, units) + " - " + Profile.toUnitsString(val1h, val1h * Constants.MGDL_TO_MMOLL, units) + " " + units
+            val txt2 = dateUtil.format_HH_MM(hour * 60 * 60) + " " + Profile.toUnitsString(val2l, val2l * Constants.MGDL_TO_MMOLL, units) + " - " + Profile.toUnitsString(val2h, val2h * Constants.MGDL_TO_MMOLL, units) + " " + units
             if (val1l != prev1l || val1h != prev1h || val2l != prev2l || val2h != prev2h) {
                 s.append(formatColors(txt1, txt2))
                 s.append("<br>")

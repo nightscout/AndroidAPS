@@ -16,7 +16,7 @@ import info.nightscout.androidaps.dana.events.EventDanaRNewStatus
 import info.nightscout.androidaps.danars.DanaRSPlugin
 import info.nightscout.androidaps.danars.R
 import info.nightscout.androidaps.danars.comm.*
-import info.nightscout.androidaps.data.Profile
+import info.nightscout.androidaps.interfaces.Profile
 import info.nightscout.androidaps.data.PumpEnactResult
 import info.nightscout.androidaps.dialogs.BolusProgressDialog
 import info.nightscout.androidaps.events.EventAppExit
@@ -133,7 +133,7 @@ class DanaRSService : DaggerService() {
             sendMessage(DanaRS_Packet_Bolus_Get_Step_Bolus_Information(injector)) // last bolus, bolusStep, maxBolus
             danaPump.lastConnection = System.currentTimeMillis()
             val profile = profileFunction.getProfile()
-            if (profile != null && abs(danaPump.currentBasal - profile.basal) >= pump.pumpDescription.basalStep) {
+            if (profile != null && abs(danaPump.currentBasal - profile.getBasal()) >= pump.pumpDescription.basalStep) {
                 rxBus.send(EventPumpStatusChanged(resourceHelper.gs(R.string.gettingpumpsettings)))
                 if (!pump.isThisProfileSet(profile) && !commandQueue.isRunning(Command.CommandType.BASAL_PROFILE)) {
                     rxBus.send(EventProfileNeedsUpdate())

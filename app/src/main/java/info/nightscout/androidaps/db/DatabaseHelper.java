@@ -21,9 +21,7 @@ import org.json.JSONObject;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Collections;
-import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
@@ -32,13 +30,12 @@ import java.util.concurrent.TimeUnit;
 
 import javax.inject.Inject;
 
-import info.nightscout.androidaps.dana.comm.RecordTypes;
-import info.nightscout.androidaps.data.Profile;
 import info.nightscout.androidaps.events.EventProfileNeedsUpdate;
 import info.nightscout.androidaps.events.EventRefreshOverview;
 import info.nightscout.androidaps.events.EventReloadProfileSwitchData;
 import info.nightscout.androidaps.interfaces.ActivePlugin;
 import info.nightscout.androidaps.interfaces.DatabaseHelperInterface;
+import info.nightscout.androidaps.interfaces.Profile;
 import info.nightscout.androidaps.interfaces.ProfileSource;
 import info.nightscout.androidaps.interfaces.ProfileStore;
 import info.nightscout.androidaps.logging.AAPSLogger;
@@ -802,7 +799,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
                 if (store != null) {
                     Profile profile = store.getSpecificProfile(profileSwitch.profileName);
                     if (profile != null) {
-                        profileSwitch.profileJson = profile.getData().toString();
+                        profileSwitch.profileJson = profile.toNsJson().toString();
                         aapsLogger.debug(LTag.DATABASE, "Profile switch prefilled with JSON from local store");
                         // Update data in NS
                         nsUpload.updateProfileSwitch(profileSwitch, dateUtil);

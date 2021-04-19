@@ -100,7 +100,7 @@ class NSProfileFragment : DaggerFragment() {
                 nsProfilePlugin.profile?.let { store ->
                     store.getSpecificProfile(name)?.let { profile ->
                         if (_binding == null) return
-                        binding.profileviewer.units.text = profile.units
+                        binding.profileviewer.units.text = profile.units.asText
                         binding.profileviewer.dia.text = resourceHelper.gs(R.string.format_hours, profile.dia)
                         binding.profileviewer.activeprofile.text = name
                         binding.profileviewer.ic.text = profile.icList

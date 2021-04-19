@@ -23,7 +23,7 @@ import org.powermock.modules.junit4.PowerMockRunner;
 import java.util.ArrayList;
 
 import dagger.android.HasAndroidInjector;
-import info.nightscout.androidaps.data.Profile;
+import info.nightscout.androidaps.interfaces.Profile;
 import info.nightscout.androidaps.data.PumpEnactResult;
 import info.nightscout.androidaps.interfaces.ActivePlugin;
 import info.nightscout.androidaps.interfaces.CommandQueueProvider;

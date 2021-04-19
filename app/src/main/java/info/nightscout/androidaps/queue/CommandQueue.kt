@@ -11,7 +11,7 @@ import info.nightscout.androidaps.R
 import info.nightscout.androidaps.activities.BolusProgressHelperActivity
 import info.nightscout.androidaps.activities.ErrorHelperActivity
 import info.nightscout.androidaps.data.DetailedBolusInfo
-import info.nightscout.androidaps.data.Profile
+import info.nightscout.androidaps.interfaces.Profile
 import info.nightscout.androidaps.data.PumpEnactResult
 import info.nightscout.androidaps.database.AppRepository
 import info.nightscout.androidaps.dialogs.BolusProgressDialog
@@ -378,7 +378,7 @@ open class CommandQueue @Inject constructor(
         }
         */
         // Compare with pump limits
-        val basalValues = profile.basalValues
+        val basalValues = profile.getBasalValues()
         for (basalValue in basalValues) {
             if (basalValue.value < activePlugin.get().activePump.pumpDescription.basalMinimumRate) {
                 val notification = Notification(Notification.BASAL_VALUE_BELOW_MINIMUM, resourceHelper.gs(R.string.basalvaluebelowminimum), Notification.URGENT)

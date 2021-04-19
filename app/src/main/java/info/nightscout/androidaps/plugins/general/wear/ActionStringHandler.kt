@@ -12,7 +12,7 @@ import info.nightscout.androidaps.danaRv2.DanaRv2Plugin
 import info.nightscout.androidaps.danar.DanaRPlugin
 import info.nightscout.androidaps.danars.DanaRSPlugin
 import info.nightscout.androidaps.data.DetailedBolusInfo
-import info.nightscout.androidaps.data.Profile
+import info.nightscout.androidaps.interfaces.Profile
 import info.nightscout.androidaps.database.AppRepository
 import info.nightscout.androidaps.database.ValueWrapper
 import info.nightscout.androidaps.database.entities.TemporaryTarget
@@ -146,7 +146,7 @@ class ActionStringHandler @Inject constructor(
             rAction += "bolus $insulinAfterConstraints $carbsAfterConstraints"
         } else if ("temptarget" == act[0]) { ///////////////////////////////////////////////////////// TEMPTARGET
             val isMGDL = java.lang.Boolean.parseBoolean(act[1])
-            if (profileFunction.getUnits() == Constants.MGDL != isMGDL) {
+            if (profileFunction.getUnits() == GlucoseUnit.MGDL != isMGDL) {
                 sendError("Different units used on watch and phone!")
                 return
             }
@@ -456,13 +456,13 @@ class ActionStringHandler @Inject constructor(
             //Check for Temp-Target:
             val tempTarget = repository.getTemporaryTargetActiveAt(dateUtil.now()).blockingGet()
             if (tempTarget is ValueWrapper.Existing) {
-                ret += "Temp Target: " + Profile.toTargetRangeString(tempTarget.value.lowTarget, tempTarget.value.lowTarget, Constants.MGDL, profileFunction.getUnits())
+                ret += "Temp Target: " + Profile.toTargetRangeString(tempTarget.value.lowTarget, tempTarget.value.lowTarget, GlucoseUnit.MGDL, profileFunction.getUnits())
                 ret += "\nuntil: " + dateUtil.timeString(tempTarget.value.end)
                 ret += "\n\n"
             }
             ret += "DEFAULT RANGE: "
-            ret += Profile.fromMgdlToUnits(profile.targetLowMgdl, profileFunction.getUnits()).toString() + " - " + Profile.fromMgdlToUnits(profile.targetHighMgdl, profileFunction.getUnits())
-            ret += " target: " + Profile.fromMgdlToUnits(profile.targetMgdl, profileFunction.getUnits())
+            ret += Profile.fromMgdlToUnits(profile.getTargetLowMgdl(), profileFunction.getUnits()).toString() + " - " + Profile.fromMgdlToUnits(profile.getTargetHighMgdl(), profileFunction.getUnits())
+            ret += " target: " + Profile.fromMgdlToUnits(profile.getTargetMgdl(), profileFunction.getUnits())
             return ret
         }
 
@@ -588,8 +588,8 @@ class ActionStringHandler @Inject constructor(
             })
             uel.log(Action.TT, Sources.Wear,
                 ValueWithUnit.TherapyEventTTReason(TemporaryTarget.Reason.WEAR),
-                ValueWithUnit.fromGlucoseUnit(low, profileFunction.getUnits()),
-                ValueWithUnit.fromGlucoseUnit(high, profileFunction.getUnits()).takeIf { low != high },
+                ValueWithUnit.fromGlucoseUnit(low, profileFunction.getUnits().asText),
+                ValueWithUnit.fromGlucoseUnit(high, profileFunction.getUnits().asText).takeIf { low != high },
                 ValueWithUnit.Minute(duration))
         } else {
             disposable += repository.runTransactionForResult(CancelCurrentTemporaryTargetIfAnyTransaction(System.currentTimeMillis()))

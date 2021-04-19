@@ -1,10 +1,10 @@
 package info.nightscout.androidaps.danars.comm
 
 import dagger.android.HasAndroidInjector
-import info.nightscout.androidaps.Constants
 import info.nightscout.androidaps.dana.DanaPump
 import info.nightscout.androidaps.danars.encryption.BleEncryption
-import info.nightscout.androidaps.data.Profile
+import info.nightscout.androidaps.interfaces.GlucoseUnit
+import info.nightscout.androidaps.interfaces.Profile
 import info.nightscout.androidaps.logging.LTag
 import javax.inject.Inject
 import kotlin.math.round
@@ -28,7 +28,7 @@ class DanaRS_Packet_Bolus_Set_24_CIR_CF_Array(
         for (i in 0..23) {
             var isf = profile.getIsfMgdlTimeFromMidnight(i * 3600)
             if (danaPump.units == DanaPump.UNITS_MMOL) {
-                isf = Profile.fromMgdlToUnits(isf, Constants.MMOL)
+                isf = Profile.fromMgdlToUnits(isf, GlucoseUnit.MMOL)
                 isf *= 100
             }
             val ic = profile.getIcTimeFromMidnight(i * 3600)

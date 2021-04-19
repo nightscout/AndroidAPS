@@ -1,9 +1,8 @@
 package info.nightscout.androidaps.data;
 
+import androidx.annotation.NonNull;
 import androidx.collection.LongSparseArray;
 
-import androidx.annotation.NonNull;
-import org.joda.time.DateTime;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -18,20 +17,19 @@ import info.nightscout.androidaps.Constants;
 import info.nightscout.androidaps.core.R;
 import info.nightscout.androidaps.interfaces.ActivePlugin;
 import info.nightscout.androidaps.interfaces.Config;
-import info.nightscout.androidaps.interfaces.ProfileFunction;
-import info.nightscout.androidaps.interfaces.PumpDescription;
+import info.nightscout.androidaps.interfaces.GlucoseUnit;
+import info.nightscout.androidaps.interfaces.Profile;
 import info.nightscout.androidaps.interfaces.Pump;
+import info.nightscout.androidaps.interfaces.PumpDescription;
 import info.nightscout.androidaps.logging.AAPSLogger;
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper;
 import info.nightscout.androidaps.plugins.general.overview.events.EventNewNotification;
 import info.nightscout.androidaps.plugins.general.overview.notifications.Notification;
 import info.nightscout.androidaps.utils.DateUtil;
-import info.nightscout.androidaps.utils.DecimalFormatter;
 import info.nightscout.androidaps.utils.FabricPrivacy;
-import info.nightscout.androidaps.utils.Round;
 import info.nightscout.androidaps.utils.resources.ResourceHelper;
 
-public class Profile {
+public class ProfileImplOld implements Profile {
     @Inject public AAPSLogger aapsLogger;
     @Inject public ActivePlugin activePlugin;
     @Inject public ResourceHelper resourceHelper;
@@ -43,7 +41,7 @@ public class Profile {
     private final HasAndroidInjector injector;
 
     private JSONObject json;
-    private String units;
+    private String jsonUnits;
     private double dia; // TODO change to insulinInterface link
     private TimeZone timeZone;
     private JSONArray isf;
@@ -63,7 +61,7 @@ public class Profile {
     protected boolean isValid;
     protected boolean isValidated;
 
-    protected Profile(HasAndroidInjector injector) {
+    protected ProfileImplOld(HasAndroidInjector injector) {
         injector.androidInjector().inject(this);
         this.injector = injector;
     }
@@ -77,33 +75,33 @@ public class Profile {
     }
 
     // Constructor from profileStore JSON
-    public Profile(HasAndroidInjector injector, JSONObject json, String units) {
+    public ProfileImplOld(HasAndroidInjector injector, JSONObject json, GlucoseUnit units) {
         this(injector);
         init(json, 100, 0);
-        if (this.units == null) {
+        if (this.jsonUnits == null) {
             if (units != null)
-                this.units = units;
+                this.jsonUnits = units.getAsText();
             else {
                 fabricPrivacy.logCustom("Profile failover failed too");
-                this.units = Constants.MGDL;
+                this.jsonUnits = Constants.MGDL;
             }
         }
     }
 
     // Constructor from profileStore JSON
-    public Profile(HasAndroidInjector injector, JSONObject json) {
+    public ProfileImplOld(HasAndroidInjector injector, JSONObject json) {
         this(injector);
         init(json, 100, 0);
     }
 
-    public Profile(HasAndroidInjector injector, JSONObject json, int percentage, int timeshift) {
+    public ProfileImplOld(HasAndroidInjector injector, JSONObject json, int percentage, int timeshift) {
         this(injector);
         init(json, percentage, timeshift);
     }
 
     protected void init(JSONObject json, int percentage, int timeshift) {
         if (json == null) return;
-        units = null;
+        jsonUnits = null;
         dia = Constants.defaultDIA;
         timeZone = TimeZone.getDefault();
         isf_v = null;
@@ -120,7 +118,7 @@ public class Profile {
         this.json = json;
         try {
             if (json.has("units"))
-                units = json.getString("units").toLowerCase();
+                jsonUnits = json.getString("units").toLowerCase();
             if (json.has("dia"))
                 dia = json.getDouble("dia");
             if (json.has("timezone"))
@@ -150,7 +148,7 @@ public class Profile {
     public JSONObject getData() {
         if (!json.has("units"))
             try {
-                json.put("units", units);
+                json.put("units", jsonUnits);
             } catch (JSONException e) {
                 aapsLogger.error("Unhandled exception", e);
             }
@@ -163,11 +161,12 @@ public class Profile {
 
     // mmol or mg/dl
     public void setUnits(String units) {
-        this.units = units;
+        this.jsonUnits = units;
     }
 
-    public String getUnits() {
-        return units;
+    public GlucoseUnit getUnits() {
+        if (jsonUnits.equals(Constants.MMOL)) return GlucoseUnit.MMOL;
+        else return GlucoseUnit.MGDL;
     }
 
     TimeZone getTimeZone() {
@@ -372,20 +371,11 @@ public class Profile {
         return lastValue;
     }
 
-    public static String format_HH_MM(Integer timeAsSeconds) {
-        String time;
-        int hour = timeAsSeconds / 60 / 60;
-        int minutes = (timeAsSeconds - hour * 60 * 60) / 60;
-        DecimalFormat df = new DecimalFormat("00");
-        time = df.format(hour) + ":" + df.format(minutes);
-        return time;
-    }
-
     private String getValuesList(LongSparseArray<Double> array, LongSparseArray<Double> array2, DecimalFormat format, String units) {
         String retValue = "";
 
         for (Integer index = 0; index < array.size(); index++) {
-            retValue += format_HH_MM((int) array.keyAt(index));
+            retValue += dateUtil.format_HH_MM((int) array.keyAt(index));
             retValue += "    ";
             retValue += format.format(array.valueAt(index));
             if (array2 != null) {
@@ -400,15 +390,15 @@ public class Profile {
     }
 
     public double getIsfMgdl() {
-        return toMgdl(getIsfTimeFromMidnight(secondsFromMidnight()), units);
+        return info.nightscout.androidaps.interfaces.Profile.Companion.toMgdl(getIsfTimeFromMidnight(info.nightscout.androidaps.interfaces.Profile.Companion.secondsFromMidnight()), getUnits());
     }
 
     public double getIsfMgdl(long time) {
-        return toMgdl(getIsfTimeFromMidnight(secondsFromMidnight(time)), units);
+        return info.nightscout.androidaps.interfaces.Profile.Companion.toMgdl(getIsfTimeFromMidnight(info.nightscout.androidaps.interfaces.Profile.Companion.secondsFromMidnight(time)), getUnits());
     }
 
     public double getIsfMgdlTimeFromMidnight(int timeAsSeconds) {
-        return toMgdl(getIsfTimeFromMidnight(timeAsSeconds), units);
+        return info.nightscout.androidaps.interfaces.Profile.Companion.toMgdl(getIsfTimeFromMidnight(timeAsSeconds), getUnits());
     }
 
     public double getIsfTimeFromMidnight(int timeAsSeconds) {
@@ -431,17 +421,17 @@ public class Profile {
         for (int index = 0; index < isf_v.size(); index++) {
             int tas = (int) isf_v.keyAt(index);
             double value = isf_v.valueAt(index);
-            ret[index] = new ProfileValue(tas, toMgdl(value, units));
+            ret[index] = new ProfileValue(tas, info.nightscout.androidaps.interfaces.Profile.Companion.toMgdl(value, getUnits()));
         }
         return ret;
     }
 
     public double getIc() {
-        return getIcTimeFromMidnight(secondsFromMidnight());
+        return getIcTimeFromMidnight(info.nightscout.androidaps.interfaces.Profile.Companion.secondsFromMidnight());
     }
 
     public double getIc(long time) {
-        return getIcTimeFromMidnight(secondsFromMidnight(time));
+        return getIcTimeFromMidnight(info.nightscout.androidaps.interfaces.Profile.Companion.secondsFromMidnight(time));
     }
 
     public double getIcTimeFromMidnight(int timeAsSeconds) {
@@ -470,11 +460,11 @@ public class Profile {
     }
 
     public double getBasal() {
-        return getBasalTimeFromMidnight(secondsFromMidnight());
+        return getBasalTimeFromMidnight(info.nightscout.androidaps.interfaces.Profile.Companion.secondsFromMidnight());
     }
 
     public double getBasal(long time) {
-        return getBasalTimeFromMidnight(secondsFromMidnight(time));
+        return getBasalTimeFromMidnight(info.nightscout.androidaps.interfaces.Profile.Companion.secondsFromMidnight(time));
     }
 
     public synchronized double getBasalTimeFromMidnight(int timeAsSeconds) {
@@ -490,26 +480,8 @@ public class Profile {
         return getValuesList(basal_v, null, new DecimalFormat("0.00"), resourceHelper.gs(R.string.profile_ins_units_per_hour));
     }
 
-    public static class ProfileValue {
-        public ProfileValue(int timeAsSeconds, double value) {
-            this.timeAsSeconds = timeAsSeconds;
-            this.value = value;
-        }
-
-        public int timeAsSeconds;
-        public double value;
-
-
-        public boolean equals(Object otherObject) {
-            if (!(otherObject instanceof ProfileValue)) {
-                return false;
-            }
-
-            ProfileValue otherProfileValue = (ProfileValue) otherObject;
-
-            return (timeAsSeconds == otherProfileValue.timeAsSeconds) && Round.isSame(value, otherProfileValue.value);
-
-        }
+    @NonNull @Override public JSONObject toNsJson() {
+        return getData();
     }
 
     public synchronized ProfileValue[] getBasalValues() {
@@ -526,18 +498,19 @@ public class Profile {
     }
 
     public double getTargetMgdl() {
-        return getTargetMgdl(secondsFromMidnight());
+        return getTargetMgdl(info.nightscout.androidaps.interfaces.Profile.Companion.secondsFromMidnight());
     }
 
     public double getTargetMgdl(int timeAsSeconds) {
-        return toMgdl((getTargetLowTimeFromMidnight(timeAsSeconds) + getTargetHighTimeFromMidnight(timeAsSeconds)) / 2, units);
+        return info.nightscout.androidaps.interfaces.Profile.Companion.toMgdl((getTargetLowTimeFromMidnight(timeAsSeconds) + getTargetHighTimeFromMidnight(timeAsSeconds)) / 2, getUnits());
     }
+
     public double getTargetLowMgdl() {
-        return toMgdl(getTargetLowTimeFromMidnight(secondsFromMidnight()), units);
+        return info.nightscout.androidaps.interfaces.Profile.Companion.toMgdl(getTargetLowTimeFromMidnight(info.nightscout.androidaps.interfaces.Profile.Companion.secondsFromMidnight()), getUnits());
     }
 
     public double getTargetLowMgdl(long time) {
-        return toMgdl(getTargetLowTimeFromMidnight(secondsFromMidnight(time)), units);
+        return info.nightscout.androidaps.interfaces.Profile.Companion.toMgdl(getTargetLowTimeFromMidnight(info.nightscout.androidaps.interfaces.Profile.Companion.secondsFromMidnight(time)), getUnits());
     }
 
     double getTargetLowTimeFromMidnight(int timeAsSeconds) {
@@ -547,25 +520,25 @@ public class Profile {
     }
 
     public double getTargetLowMgdlTimeFromMidnight(int timeAsSeconds) {
-        return toMgdl(getTargetLowTimeFromMidnight(timeAsSeconds), units);
+        return info.nightscout.androidaps.interfaces.Profile.Companion.toMgdl(getTargetLowTimeFromMidnight(timeAsSeconds), getUnits());
     }
 
     public double getTargetHighMgdl() {
-        return toMgdl(getTargetHighTimeFromMidnight(secondsFromMidnight()), units);
+        return info.nightscout.androidaps.interfaces.Profile.Companion.toMgdl(getTargetHighTimeFromMidnight(info.nightscout.androidaps.interfaces.Profile.Companion.secondsFromMidnight()), getUnits());
     }
 
     public double getTargetHighMgdl(long time) {
-        return toMgdl(getTargetHighTimeFromMidnight(secondsFromMidnight(time)), units);
+        return info.nightscout.androidaps.interfaces.Profile.Companion.toMgdl(getTargetHighTimeFromMidnight(info.nightscout.androidaps.interfaces.Profile.Companion.secondsFromMidnight(time)), getUnits());
     }
 
-    double getTargetHighTimeFromMidnight(int timeAsSeconds) {
+    public double getTargetHighTimeFromMidnight(int timeAsSeconds) {
         if (targetHigh_v == null)
             targetHigh_v = convertToSparseArray(targetHigh);
         return getValueToTime(targetHigh_v, timeAsSeconds);
     }
 
     public double getTargetHighMgdlTimeFromMidnight(int timeAsSeconds) {
-        return toMgdl(getTargetHighTimeFromMidnight(timeAsSeconds), units);
+        return info.nightscout.androidaps.interfaces.Profile.Companion.toMgdl(getTargetHighTimeFromMidnight(timeAsSeconds), getUnits());
     }
 
     public static class TargetValue {
@@ -606,17 +579,17 @@ public class Profile {
         for (int index = 0; index < targetLow_v.size(); index++) {
             int tas = (int) targetLow_v.keyAt(index);
             double target = (targetLow_v.valueAt(index) + targetHigh_v.valueAt(index)) / 2;
-            ret[index] = new ProfileValue(tas, toMgdl(target, units));
+            ret[index] = new ProfileValue(tas, info.nightscout.androidaps.interfaces.Profile.Companion.toMgdl(target, getUnits()));
         }
         return ret;
     }
 
-    public String getTargetList() {
+    @NonNull public String getTargetList() {
         if (targetLow_v == null)
             targetLow_v = convertToSparseArray(targetLow);
         if (targetHigh_v == null)
             targetHigh_v = convertToSparseArray(targetHigh);
-        return getValuesList(targetLow_v, targetHigh_v, new DecimalFormat("0.0"), getUnits());
+        return getValuesList(targetLow_v, targetHigh_v, new DecimalFormat("0.0"), getUnits().getAsText());
     }
 
     public double getMaxDailyBasal() {
@@ -626,85 +599,6 @@ public class Profile {
             if (value > max) max = value;
         }
         return max;
-    }
-
-    public static int secondsFromMidnight() {
-        // long passed = dateUtil._now() - MidnightTime.calc();
-        long passed = new DateTime().getMillisOfDay();
-        return (int) (passed / 1000);
-    }
-
-    public static int secondsFromMidnight(long date) {
-        //long midnight = MidnightTime.calc(date);
-        //long passed = date - midnight;
-        long passed = new DateTime(date).getMillisOfDay();
-        return (int) (passed / 1000);
-    }
-
-    public static double toMgdl(double value, String units) {
-        if (units.equals(Constants.MGDL)) return value;
-        else return value * Constants.MMOLL_TO_MGDL;
-    }
-
-    public static double toMmol(double value, String units) {
-        if (units.equals(Constants.MGDL)) return value * Constants.MGDL_TO_MMOLL;
-        else return value;
-    }
-
-    public static double fromMgdlToUnits(double value, String units) {
-        if (units.equals(Constants.MGDL)) return value;
-        else return value * Constants.MGDL_TO_MMOLL;
-    }
-
-    public static double fromMmolToUnits(double value, String units) {
-        if (units.equals(Constants.MMOL)) return value;
-        else return value * Constants.MMOLL_TO_MGDL;
-    }
-
-    public static double toUnits(double valueInMgdl, double valueInMmol, String units) {
-        if (units.equals(Constants.MGDL)) return valueInMgdl;
-        else return valueInMmol;
-    }
-
-    public static String toUnitsString(double valueInMgdl, double valueInMmol, String units) {
-        if (units.equals(Constants.MGDL)) return DecimalFormatter.INSTANCE.to0Decimal(valueInMgdl);
-        else return DecimalFormatter.INSTANCE.to1Decimal(valueInMmol);
-    }
-
-    public static String toSignedUnitsString(double valueInMgdl, double valueInMmol, String units) {
-        if (units.equals(Constants.MGDL))
-            return (valueInMgdl > 0 ? "+" : "") + DecimalFormatter.INSTANCE.to0Decimal(valueInMgdl);
-        else return (valueInMmol > 0 ? "+" : "") + DecimalFormatter.INSTANCE.to1Decimal(valueInMmol);
-    }
-
-    public static double toCurrentUnits(ProfileFunction profileFunction, double anyBg) {
-        if (anyBg < 32) return fromMmolToUnits(anyBg, profileFunction.getUnits());
-        else return fromMgdlToUnits(anyBg, profileFunction.getUnits());
-    }
-
-    public static double toCurrentUnits(String units, double anyBg) {
-        if (anyBg < 32) return fromMmolToUnits(anyBg, units);
-        else return fromMgdlToUnits(anyBg, units);
-    }
-
-    public static String toCurrentUnitsString(ProfileFunction profileFunction, double anyBg) {
-        if (anyBg < 32)
-            return toUnitsString(anyBg * Constants.MMOLL_TO_MGDL, anyBg, profileFunction.getUnits());
-        else
-            return toUnitsString(anyBg, anyBg * Constants.MGDL_TO_MMOLL, profileFunction.getUnits());
-    }
-
-    // targets are stored in mg/dl but profile vary
-    public static String toTargetRangeString(double low, double high, String sourceUnits, String units) {
-        double lowMgdl = toMgdl(low, sourceUnits);
-        double highMgdl = toMgdl(high, sourceUnits);
-        double lowMmol = toMmol(low, sourceUnits);
-        double highMmol = toMmol(high, sourceUnits);
-        if (low == high)
-            return toUnitsString(lowMgdl, lowMmol, units);
-        else
-            return toUnitsString(lowMgdl, lowMmol, units) + " - " + toUnitsString(highMgdl, highMmol, units);
-
     }
 
     public double percentageBasalSum() {
@@ -735,7 +629,7 @@ public class Profile {
     public Profile convertToNonCustomizedProfile() {
         JSONObject o = new JSONObject();
         try {
-            o.put("units", units);
+            o.put("units", jsonUnits);
             o.put("dia", dia);
             o.put("timezone", timeZone.getID());
             // SENS
@@ -837,28 +731,6 @@ public class Profile {
         } catch (JSONException e) {
             aapsLogger.error("Unhandled exception" + e);
         }
-        return new Profile(injector, o);
+        return new ProfileImplOld(injector, o);
     }
-
-
-    public boolean areProfileBasalPatternsSame(Profile otherProfile) {
-
-        if (!Round.isSame(this.baseBasalSum(), otherProfile.baseBasalSum()))
-            return false;
-
-        ProfileValue[] basalValues = this.getBasalValues();
-        ProfileValue[] otherBasalValues = otherProfile.getBasalValues();
-
-        if (basalValues.length != otherBasalValues.length)
-            return false;
-
-        for (int i = 0; i < basalValues.length; i++) {
-            if (!basalValues[i].equals(otherBasalValues[i])) {
-                return false;
-            }
-        }
-
-        return true;
-    }
-
 }

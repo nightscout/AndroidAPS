@@ -5,13 +5,9 @@ import com.google.firebase.analytics.FirebaseAnalytics
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.Constants
 import info.nightscout.androidaps.core.R
-import info.nightscout.androidaps.data.Profile
 import info.nightscout.androidaps.db.ProfileSwitch
 import info.nightscout.androidaps.db.Source
-import info.nightscout.androidaps.interfaces.ProfileStore
-import info.nightscout.androidaps.interfaces.ActivePlugin
-import info.nightscout.androidaps.interfaces.ProfileFunction
-import info.nightscout.androidaps.interfaces.TreatmentsInterface
+import info.nightscout.androidaps.interfaces.*
 import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.FabricPrivacy
@@ -74,7 +70,7 @@ class ProfileFunctionImplementation @Inject constructor(
 
     override fun getProfile(time: Long): Profile? = getProfile(time, activePlugin.activeTreatments)
 
-    override fun getProfile(time: Long, activeTreatments: TreatmentsInterface): Profile? {
+    fun getProfile(time: Long, activeTreatments: TreatmentsInterface): Profile? {
         val activeProfile = activePlugin.activeProfileSource
 
         //log.debug("Profile for: " + new Date(time).toLocaleString() + " : " + getProfileName(time));
@@ -98,8 +94,9 @@ class ProfileFunctionImplementation @Inject constructor(
         return null
     }
 
-    override fun getUnits(): String =
-        sp.getString(R.string.key_units, Constants.MGDL)
+    override fun getUnits(): GlucoseUnit =
+        if (sp.getString(R.string.key_units, Constants.MGDL) == Constants.MGDL) GlucoseUnit.MGDL
+        else GlucoseUnit.MMOL
 
     override fun prepareProfileSwitch(profileStore: ProfileStore, profileName: String, duration: Int, percentage: Int, timeShift: Int, date: Long): ProfileSwitch {
         val profile = profileStore.getSpecificProfile(profileName)
@@ -108,7 +105,7 @@ class ProfileFunctionImplementation @Inject constructor(
         profileSwitch.date = date
         profileSwitch.source = Source.USER
         profileSwitch.profileName = profileName
-        profileSwitch.profileJson = profile.data.toString()
+        profileSwitch.profileJson = profile.toNsJson().toString()
         profileSwitch.durationInMinutes = duration
         profileSwitch.isCPP = percentage != 100 || timeShift != 0
         profileSwitch.timeshift = timeShift

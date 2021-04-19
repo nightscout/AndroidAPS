@@ -7,7 +7,7 @@ import info.nightscout.androidaps.Constants
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.data.IobTotal
 import info.nightscout.androidaps.data.MealData
-import info.nightscout.androidaps.data.Profile
+import info.nightscout.androidaps.interfaces.Profile
 import info.nightscout.androidaps.database.AppRepository
 import info.nightscout.androidaps.database.ValueWrapper
 import info.nightscout.androidaps.database.entities.Bolus

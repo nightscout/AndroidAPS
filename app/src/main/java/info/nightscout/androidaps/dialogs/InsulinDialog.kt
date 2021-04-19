@@ -8,12 +8,10 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.google.common.base.Joiner
-import info.nightscout.androidaps.interfaces.Config
 import info.nightscout.androidaps.Constants
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.activities.ErrorHelperActivity
 import info.nightscout.androidaps.data.DetailedBolusInfo
-import info.nightscout.androidaps.data.Profile
 import info.nightscout.androidaps.database.AppRepository
 import info.nightscout.androidaps.database.entities.ValueWithUnit
 import info.nightscout.androidaps.database.entities.TemporaryTarget
@@ -21,10 +19,6 @@ import info.nightscout.androidaps.database.entities.UserEntry.Action
 import info.nightscout.androidaps.database.entities.UserEntry.Sources
 import info.nightscout.androidaps.database.transactions.InsertTemporaryTargetAndCancelCurrentTransaction
 import info.nightscout.androidaps.databinding.DialogInsulinBinding
-import info.nightscout.androidaps.interfaces.ActivePlugin
-import info.nightscout.androidaps.interfaces.CommandQueueProvider
-import info.nightscout.androidaps.interfaces.Constraint
-import info.nightscout.androidaps.interfaces.ProfileFunction
 import info.nightscout.androidaps.logging.LTag
 import info.nightscout.androidaps.logging.UserEntryLogger
 import info.nightscout.androidaps.plugins.configBuilder.ConstraintChecker
@@ -34,6 +28,7 @@ import info.nightscout.androidaps.utils.alertDialogs.OKDialog
 import info.nightscout.androidaps.extensions.formatColor
 import info.nightscout.androidaps.utils.extensions.toSignedString
 import info.nightscout.androidaps.extensions.toVisibility
+import info.nightscout.androidaps.interfaces.*
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.rxkotlin.plusAssign
@@ -158,7 +153,7 @@ class InsulinDialog : DialogFragmentWithDate() {
         val insulinAfterConstraints = constraintChecker.applyBolusConstraints(Constraint(insulin)).value()
         val actions: LinkedList<String?> = LinkedList()
         val units = profileFunction.getUnits()
-        val unitLabel = if (units == Constants.MMOL) resourceHelper.gs(R.string.mmol) else resourceHelper.gs(R.string.mgdl)
+        val unitLabel = if (units == GlucoseUnit.MMOL) resourceHelper.gs(R.string.mmol) else resourceHelper.gs(R.string.mgdl)
         val recordOnlyChecked = binding.recordOnly.isChecked
         val eatingSoonChecked = binding.startEatingSoonTt.isChecked
 
@@ -190,7 +185,7 @@ class InsulinDialog : DialogFragmentWithDate() {
                         uel.log(Action.TT, Sources.InsulinDialog,
                             notes,
                             ValueWithUnit.TherapyEventTTReason(TemporaryTarget.Reason.EATING_SOON),
-                            ValueWithUnit.fromGlucoseUnit(eatingSoonTT, units),
+                            ValueWithUnit.fromGlucoseUnit(eatingSoonTT, units.asText),
                             ValueWithUnit.Minute(eatingSoonTTDuration))
                         disposable += repository.runTransactionForResult(InsertTemporaryTargetAndCancelCurrentTransaction(
                             timestamp = System.currentTimeMillis(),

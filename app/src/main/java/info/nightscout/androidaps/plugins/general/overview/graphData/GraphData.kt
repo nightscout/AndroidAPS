@@ -12,7 +12,7 @@ import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.Constants
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.data.IobTotal
-import info.nightscout.androidaps.data.Profile
+import info.nightscout.androidaps.interfaces.Profile
 import info.nightscout.androidaps.database.AppRepository
 import info.nightscout.androidaps.database.ValueWrapper
 import info.nightscout.androidaps.database.entities.Bolus
@@ -53,7 +53,7 @@ class GraphData(
     var maxY = Double.MIN_VALUE
     private var minY = Double.MAX_VALUE
     private var bgReadingsArray: List<GlucoseValue>? = null
-    private val units: String
+    private val units: GlucoseUnit
     private val series: MutableList<Series<*>> = ArrayList()
 
     init {
@@ -80,7 +80,7 @@ class GraphData(
         bgReadingsArray = repository.compatGetBgReadingsDataFromTime(fromTime, toTime, false).blockingGet()
         if (bgReadingsArray?.isEmpty() != false) {
             aapsLogger.debug("No BG data.")
-            maxY = if (units == Constants.MGDL) 180.0 else 10.0
+            maxY = if (units == GlucoseUnit.MGDL) 180.0 else 10.0
             minY = 0.0
             return
         }
@@ -103,11 +103,11 @@ class GraphData(
     }
 
     internal fun setNumVerticalLabels() {
-        graph.gridLabelRenderer.numVerticalLabels = if (units == Constants.MGDL) (maxY / 40 + 1).toInt() else (maxY / 2 + 1).toInt()
+        graph.gridLabelRenderer.numVerticalLabels = if (units == GlucoseUnit.MGDL) (maxY / 40 + 1).toInt() else (maxY / 2 + 1).toInt()
     }
 
     private fun addUpperChartMargin(maxBgValue: Double) =
-        if (units == Constants.MGDL) Round.roundTo(maxBgValue, 40.0) + 80 else Round.roundTo(maxBgValue, 2.0) + 4
+        if (units == GlucoseUnit.MGDL) Round.roundTo(maxBgValue, 40.0) + 80 else Round.roundTo(maxBgValue, 2.0) + 4
 
     fun addInRangeArea(fromTime: Long, toTime: Long, lowLine: Double, highLine: Double) {
         val inRangeAreaSeries: AreaGraphSeries<DoubleDataPoint>

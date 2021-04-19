@@ -293,6 +293,13 @@ open class DateUtil @Inject constructor(private val context: Context) {
         return thisDf.format(x)
     }
 
+    fun format_HH_MM(timeAsSeconds: Int): String {
+        val hour = timeAsSeconds / 60 / 60
+        val minutes = (timeAsSeconds - hour * 60 * 60) / 60
+        val df = DecimalFormat("00")
+        return df.format(hour.toLong()) + ":" + df.format(minutes.toLong())
+    }
+
     companion object {
 
         private val timeStrings = LongSparseArray<String>()

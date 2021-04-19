@@ -1,7 +1,9 @@
 package info.nightscout.androidaps.data.defaultProfile
 
 import dagger.android.HasAndroidInjector
-import info.nightscout.androidaps.data.Profile
+import info.nightscout.androidaps.data.ProfileImplOld
+import info.nightscout.androidaps.interfaces.GlucoseUnit
+import info.nightscout.androidaps.interfaces.Profile
 import info.nightscout.androidaps.utils.Round
 import org.json.JSONArray
 import org.json.JSONObject
@@ -17,7 +19,7 @@ class DefaultProfile @Inject constructor(val injector: HasAndroidInjector) {
     var twelveToSeventeen: TreeMap<Double, Array<Double>> = TreeMap()
     var eighteenToTwentyfor: TreeMap<Double, Array<Double>> = TreeMap()
 
-    fun profile(age: Double, tdd: Double, weight: Double, units: String): Profile? {
+    fun profile(age: Double, tdd: Double, weight: Double, units: GlucoseUnit): Profile? {
         val profile = JSONObject()
         if (age >= 1 && age < 6) {
             val _tdd = if (tdd == 0.0) 0.6 * weight else tdd
@@ -50,7 +52,7 @@ class DefaultProfile @Inject constructor(val injector: HasAndroidInjector) {
         profile.put("target_high", JSONArray().put(JSONObject().put("time", "00:00").put("value", Profile.fromMgdlToUnits(108.0, units))))
         profile.put("target_low", JSONArray().put(JSONObject().put("time", "00:00").put("value", Profile.fromMgdlToUnits(108.0, units))))
         profile.put("units", units)
-        return Profile(injector, profile, units)
+        return ProfileImplOld(injector, profile, units)
     }
 
     init {
@@ -148,7 +150,7 @@ class DefaultProfile @Inject constructor(val injector: HasAndroidInjector) {
         return array
     }
 
-    private fun singleValueArrayFromMmolToUnits(value: Double, sample: Array<Double>, units: String): JSONArray {
+    private fun singleValueArrayFromMmolToUnits(value: Double, sample: Array<Double>, units: GlucoseUnit): JSONArray {
         val array = JSONArray()
         array.put(JSONObject().put("time", "00:00").put("value", Profile.fromMmolToUnits(value + sample[0],units)).put("timeAsSeconds", 0 * 3600))
         array.put(JSONObject().put("time", "06:00").put("value", Profile.fromMmolToUnits(value + sample[1],units)).put("timeAsSeconds", 6 * 3600))

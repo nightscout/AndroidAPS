@@ -5,15 +5,14 @@ import android.content.Intent
 import android.os.Bundle
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.R
-import info.nightscout.androidaps.data.Profile
 import info.nightscout.androidaps.events.*
+import info.nightscout.androidaps.extensions.toStringShort
 import info.nightscout.androidaps.interfaces.*
 import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.plugins.aps.loop.LoopPlugin
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper
 import info.nightscout.androidaps.utils.DecimalFormatter
 import info.nightscout.androidaps.utils.FabricPrivacy
-import info.nightscout.androidaps.extensions.toStringShort
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 import info.nightscout.androidaps.utils.rx.AapsSchedulers
 import info.nightscout.androidaps.utils.sharedPreferences.SP
@@ -31,7 +30,6 @@ class StatusLinePlugin @Inject constructor(
     private val aapsSchedulers: AapsSchedulers,
     private val context: Context,
     private val fabricPrivacy: FabricPrivacy,
-    private val activePlugin: ActivePlugin,
     private val loopPlugin: LoopPlugin,
     private val iobCobCalculator: IobCobCalculator,
     private val rxBus: RxBusWrapper,
@@ -136,7 +134,7 @@ class StatusLinePlugin @Inject constructor(
                 + DecimalFormatter.to2Decimal(basalIob.basaliob) + ")")
         }
         if (sp.getBoolean(R.string.key_xdripstatus_showbgi, true)) {
-            val bgi = -(bolusIob.activity + basalIob.activity) * 5 * Profile.fromMgdlToUnits(profile.isfMgdl, profileFunction.getUnits())
+            val bgi = -(bolusIob.activity + basalIob.activity) * 5 * Profile.fromMgdlToUnits(profile.getIsfMgdl(), profileFunction.getUnits())
             status += " " + (if (bgi >= 0) "+" else "") + DecimalFormatter.to2Decimal(bgi)
         }
         // COB

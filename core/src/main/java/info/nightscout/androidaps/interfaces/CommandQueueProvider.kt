@@ -2,7 +2,7 @@ package info.nightscout.androidaps.interfaces
 
 import android.text.Spanned
 import info.nightscout.androidaps.data.DetailedBolusInfo
-import info.nightscout.androidaps.data.Profile
+import info.nightscout.androidaps.interfaces.Profile
 import info.nightscout.androidaps.queue.commands.CustomCommand
 import info.nightscout.androidaps.queue.Callback
 import info.nightscout.androidaps.queue.commands.Command

@@ -7,7 +7,7 @@ import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.interfaces.Config
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.data.DetailedBolusInfo
-import info.nightscout.androidaps.data.Profile
+import info.nightscout.androidaps.interfaces.Profile
 import info.nightscout.androidaps.data.PumpEnactResult
 import info.nightscout.androidaps.events.EventPreferenceChange
 import info.nightscout.androidaps.interfaces.*
@@ -169,7 +169,7 @@ open class VirtualPumpPlugin @Inject constructor(
     }
 
     override val baseBasalRate: Double
-        get() = profileFunction.getProfile()?.basal ?: 0.0
+        get() = profileFunction.getProfile()?.getBasal() ?: 0.0
 
     override val reservoirLevel: Double
         get() = reservoirInUnits.toDouble()

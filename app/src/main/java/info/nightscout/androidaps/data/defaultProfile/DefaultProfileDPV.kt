@@ -1,8 +1,9 @@
 package info.nightscout.androidaps.data.defaultProfile
 
 import dagger.android.HasAndroidInjector
-import info.nightscout.androidaps.data.Profile
-import info.nightscout.androidaps.utils.Round
+import info.nightscout.androidaps.data.ProfileImplOld
+import info.nightscout.androidaps.interfaces.GlucoseUnit
+import info.nightscout.androidaps.interfaces.Profile
 import org.json.JSONArray
 import org.json.JSONObject
 import java.util.*
@@ -16,7 +17,7 @@ class DefaultProfileDPV @Inject constructor(val injector: HasAndroidInjector) {
     var sixToEleven = arrayOf(4.20, 4.27, 4.41, 4.62, 4.92, 5.09, 5.01, 4.47, 3.89, 3.33, 3.10, 2.91, 2.97, 3.08, 3.36, 3.93, 4.52, 4.76, 4.69, 4.63, 4.63, 4.47, 4.47, 4.31)
     var twelveToEighteen = arrayOf(3.47, 3.80, 4.31, 4.95, 5.59, 6.11, 5.89, 5.11, 4.31, 3.78, 3.55, 3.39, 3.35, 3.39, 3.64, 3.97, 4.53, 4.59, 4.50, 4.00, 3.69, 3.39, 3.35, 3.35)
 
-    fun profile(age: Double, tdd: Double, basalSumPct: Double, units: String): Profile? {
+    fun profile(age: Double, tdd: Double, basalSumPct: Double, units: GlucoseUnit): Profile? {
         val basalSum = tdd * basalSumPct
         val profile = JSONObject()
         if (age >= 1 && age < 6) {
@@ -41,7 +42,7 @@ class DefaultProfileDPV @Inject constructor(val injector: HasAndroidInjector) {
         profile.put("target_high", JSONArray().put(JSONObject().put("time", "00:00").put("value", Profile.fromMgdlToUnits(108.0, units))))
         profile.put("target_low", JSONArray().put(JSONObject().put("time", "00:00").put("value", Profile.fromMgdlToUnits(108.0, units))))
         profile.put("units", units)
-        return Profile(injector, profile, units)
+        return ProfileImplOld(injector, profile, units)
     }
 
     private fun arrayToJson(b: Array<Double>, basalSum: Double): JSONArray {
@@ -59,7 +60,7 @@ class DefaultProfileDPV @Inject constructor(val injector: HasAndroidInjector) {
         return array
     }
 
-    private fun singleValueArrayFromMmolToUnits(value: Double, units: String): JSONArray {
+    private fun singleValueArrayFromMmolToUnits(value: Double, units: GlucoseUnit): JSONArray {
         val array = JSONArray()
         array.put(JSONObject().put("time", "00:00").put("value", Profile.fromMmolToUnits(value, units)).put("timeAsSeconds", 0 * 3600))
         return array

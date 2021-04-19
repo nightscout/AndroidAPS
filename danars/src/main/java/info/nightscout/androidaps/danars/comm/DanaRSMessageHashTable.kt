@@ -1,7 +1,6 @@
 package info.nightscout.androidaps.danars.comm
 
 import dagger.android.HasAndroidInjector
-import info.nightscout.androidaps.data.Profile
 import java.util.*
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -47,7 +46,7 @@ class DanaRSMessageHashTable @Inject constructor(
         put(DanaRS_Packet_Bolus_Set_Bolus_Option(injector))
         put(DanaRS_Packet_Bolus_Set_Initial_Bolus(injector))
         put(DanaRS_Packet_Bolus_Set_CIR_CF_Array(injector))
-        put(DanaRS_Packet_Bolus_Set_24_CIR_CF_Array(injector, Profile(injector, null)))
+        put(DanaRS_Packet_Bolus_Set_24_CIR_CF_Array(injector, null))
         put(DanaRS_Packet_Bolus_Set_Dual_Bolus(injector))
         put(DanaRS_Packet_Bolus_Set_Extended_Bolus(injector))
         put(DanaRS_Packet_Bolus_Set_Extended_Bolus_Cancel(injector))

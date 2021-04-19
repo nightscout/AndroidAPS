@@ -36,7 +36,7 @@ import info.nightscout.androidaps.danar.comm.MsgSettingShippingInfo;
 import info.nightscout.androidaps.danar.comm.MsgStatusBolusExtended;
 import info.nightscout.androidaps.danar.comm.MsgStatusTempBasal;
 import info.nightscout.androidaps.danar.services.AbstractDanaRExecutionService;
-import info.nightscout.androidaps.data.Profile;
+import info.nightscout.androidaps.interfaces.Profile;
 import info.nightscout.androidaps.data.PumpEnactResult;
 import info.nightscout.androidaps.dialogs.BolusProgressDialog;
 import info.nightscout.androidaps.events.EventInitializationChanged;
