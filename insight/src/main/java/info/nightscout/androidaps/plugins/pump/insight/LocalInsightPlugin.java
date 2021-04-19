@@ -615,12 +615,12 @@ public class LocalInsightPlugin extends PumpPluginBase implements Pump, Constrai
                 //treatmentsPlugin.addToHistoryTreatment(detailedBolusInfo, true);    //TODO()
                 //TOCHECK
                 pumpSync.syncBolusWithPumpId(
-                        detailedBolusInfo.timestamp,
+                        insightBolusID.timestamp,
                         detailedBolusInfo.insulin,
                         detailedBolusInfo.getBolusType(),
-                        detailedBolusInfo.getBolusPumpId(),
-                        detailedBolusInfo.getPumpType(),
-                        detailedBolusInfo.getPumpSerial());
+                        insightBolusID.bolusID,
+                        PumpType.ACCU_CHEK_INSIGHT,
+                        serialNumber());
                 //End TOCHECK
                 while (true) {
                     synchronized ($bolusLock) {
@@ -1400,7 +1400,7 @@ public class LocalInsightPlugin extends PumpPluginBase implements Pump, Constrai
         temporaryBasals.add(temporaryBasal);*/
     }
 
-    private void processEndOfTBREvent(String serial, List<TemporaryBasal> temporaryBasals, EndOfTBREvent event) {
+    private void processEndOfTBREvent(String serial, List<PumpSync.PumpState.TemporaryBasal> temporaryBasals, EndOfTBREvent event) {
         long timestamp = parseDate(event.getEventYear(), event.getEventMonth(), event.getEventDay(),
                 event.getEventHour(), event.getEventMinute(), event.getEventSecond()) + timeOffset;
         InsightPumpID pumpID = new InsightPumpID();
@@ -1409,11 +1409,16 @@ public class LocalInsightPlugin extends PumpPluginBase implements Pump, Constrai
         pumpID.eventType = "EndOfTBR";
         pumpID.timestamp = timestamp;
         databaseHelper.createOrUpdate(pumpID);
-        TemporaryBasal temporaryBasal = new TemporaryBasal(getInjector());
-        temporaryBasal.durationInMinutes = 0;
-        temporaryBasal.source = Source.PUMP;
-        temporaryBasal.pumpId = pumpID.id;
-        temporaryBasal.date = timestamp - 1500L;
+        // TOCHECK
+        PumpSync.PumpState.TemporaryBasal temporaryBasal = new PumpSync.PumpState.TemporaryBasal(
+                timestamp,
+                0L,
+                0.0,
+                false,
+                PumpSync.TemporaryBasalType.NORMAL,
+                pumpID.eventID,
+                pumpID.id
+        );
         temporaryBasals.add(temporaryBasal);
     }
 
