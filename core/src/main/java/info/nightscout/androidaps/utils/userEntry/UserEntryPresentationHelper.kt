@@ -95,7 +95,7 @@ class UserEntryPresentationHelper @Inject constructor(
         Sources.Food                -> R.drawable.ic_food
         Sources.Stats               -> R.drawable.ic_cp_stats
         Sources.ConfigBuilder       -> R.drawable.ic_cogs
-        Sources.Overview            -> R.drawable.ic_notif_aaps
+        Sources.Overview            -> R.drawable.ic_home
         Sources.Aaps                -> R.drawable.ic_notif_aaps
         Sources.Unknown             -> R.drawable.ic_generic_icon
     }
