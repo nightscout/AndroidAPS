@@ -52,7 +52,6 @@ import info.nightscout.androidaps.interfaces.Pump;
 import info.nightscout.androidaps.interfaces.PumpDescription;
 import info.nightscout.androidaps.interfaces.PumpPluginBase;
 import info.nightscout.androidaps.interfaces.PumpSync;
-import info.nightscout.androidaps.interfaces.TreatmentsInterface;               //TODO()
 import info.nightscout.androidaps.interfaces.UploadQueueInterface;
 import info.nightscout.androidaps.logging.AAPSLogger;
 import info.nightscout.androidaps.logging.LTag;
@@ -131,7 +130,7 @@ import info.nightscout.androidaps.plugins.pump.insight.exceptions.app_layer_erro
 import info.nightscout.androidaps.plugins.pump.insight.utils.ExceptionTranslator;
 import info.nightscout.androidaps.plugins.pump.insight.utils.ParameterBlockUtil;
 import info.nightscout.androidaps.utils.DateUtil;
-import info.nightscout.androidaps.utils.T;                          //ADDED
+import info.nightscout.androidaps.utils.T;
 import info.nightscout.androidaps.utils.resources.ResourceHelper;
 import info.nightscout.androidaps.utils.sharedPreferences.SP;
 
@@ -141,7 +140,6 @@ public class LocalInsightPlugin extends PumpPluginBase implements Pump, Constrai
     private final AAPSLogger aapsLogger;
     private final RxBusWrapper rxBus;
     private final ResourceHelper resourceHelper;
-    private final TreatmentsInterface treatmentsPlugin;             //TODO()
     private final SP sp;
     private final CommandQueueProvider commandQueue;
     private final ProfileFunction profileFunction;
@@ -202,7 +200,6 @@ public class LocalInsightPlugin extends PumpPluginBase implements Pump, Constrai
             AAPSLogger aapsLogger,
             RxBusWrapper rxBus,
             ResourceHelper resourceHelper,
-            TreatmentsInterface treatmentsPlugin,       //TODO()
             SP sp,
             CommandQueueProvider commandQueue,
             ProfileFunction profileFunction,
@@ -228,7 +225,6 @@ public class LocalInsightPlugin extends PumpPluginBase implements Pump, Constrai
         this.aapsLogger = aapsLogger;
         this.rxBus = rxBus;
         this.resourceHelper = resourceHelper;
-        this.treatmentsPlugin = treatmentsPlugin;           //TODO()
         this.sp = sp;
         this.commandQueue = commandQueue;
         this.profileFunction = profileFunction;
@@ -801,18 +797,15 @@ public class LocalInsightPlugin extends PumpPluginBase implements Pump, Constrai
             bolusMessage.setImmediateAmount(0);
             bolusMessage.setVibration(disableVibration);
             int bolusID = connectionService.requestMessage(bolusMessage).await().getBolusId();
-            InsightBolusID insightBolusID = new InsightBolusID();
-            insightBolusID.bolusID = bolusID;
-            insightBolusID.timestamp = System.currentTimeMillis();
-            insightBolusID.pumpSerial = connectionService.getPumpSystemIdentification().getSerialNumber();
-            databaseHelper.createOrUpdate(insightBolusID);
-            ExtendedBolus extendedBolus = new ExtendedBolus(getInjector());
-            extendedBolus.date = insightBolusID.timestamp;
-            extendedBolus.source = Source.PUMP;
-            extendedBolus.durationInMinutes = durationInMinutes;
-            extendedBolus.insulin = insulin;
-            extendedBolus.pumpId = insightBolusID.id;
-            treatmentsPlugin.addToHistoryExtendedBolus(extendedBolus);
+            long timestamp = System.currentTimeMillis();
+            pumpSync.syncExtendedBolusWithPumpId(
+                    timestamp,
+                    insulin,
+                    T.mins(durationInMinutes).msecs(),
+                    true,
+                    bolusID,
+                    PumpType.ACCU_CHEK_INSIGHT,
+                    serialNumber());
             result.success(true).enacted(true).comment(R.string.virtualpump_resultok);
         } catch (AppLayerErrorException e) {
             aapsLogger.info(LTag.PUMP, "Exception while delivering extended bolus: " + e.getClass().getCanonicalName() + " (" + e.getErrorCode() + ")");
@@ -903,10 +896,22 @@ public class LocalInsightPlugin extends PumpPluginBase implements Pump, Constrai
                     connectionService.requestMessage(cancelBolusMessage).await();
                     confirmAlert(AlertType.WARNING_38);
                     alertService.ignore(null);
+                    PumpSync.PumpState.ExtendedBolus eb = pumpSync.expectedPumpState().getExtendedBolus();
+                    if (eb != null) {
+                        long timestamp = System.currentTimeMillis();
+                        pumpSync.syncStopExtendedBolusWithPumpId(
+                                timestamp,
+                                eb.getTimestamp(),                          //TOCHECK EndID ???
+                                PumpType.ACCU_CHEK_INSIGHT,
+                                serialNumber());
+                        result.enacted(true).success(true);
+                    }
+                    /*
                     InsightBolusID insightBolusID = databaseHelper.getInsightBolusID(connectionService.getPumpSystemIdentification().getSerialNumber(),
                             activeBolus.getBolusID(), System.currentTimeMillis());
                     if (insightBolusID != null) {
-                        ExtendedBolus extendedBolus = databaseHelper.getExtendedBolusByPumpId(insightBolusID.id);
+                        // extendedBolus = databaseHelper.getExtendedBolusByPumpId(insightBolusID.id);
+
                         //PumpSync.PumpState.ExtendedBolus extendedBolus = pumpSync.expectedPumpState().getExtendedBolus()                  //TODO()
                         if (extendedBolus != null) {
                             extendedBolus.durationInMinutes = (int) ((System.currentTimeMillis() - extendedBolus.date) / 60000);
@@ -917,10 +922,13 @@ public class LocalInsightPlugin extends PumpPluginBase implements Pump, Constrai
                                 else uploadQueue.removeByMongoId("dbAdd", _id);
                                 databaseHelper.delete(extendedBolus);
                             } else
+
                                 treatmentsPlugin.addToHistoryExtendedBolus(extendedBolus);
                         }
                         result.enacted(true).success(true);
                     }
+
+                     */
                 }
             }
             result.success(true).comment(R.string.virtualpump_resultok);
