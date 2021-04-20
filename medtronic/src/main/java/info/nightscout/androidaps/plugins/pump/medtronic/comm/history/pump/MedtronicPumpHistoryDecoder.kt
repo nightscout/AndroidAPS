@@ -79,7 +79,7 @@ class MedtronicPumpHistoryDecoder @Inject constructor(
             listRawData.add(opCode.toByte())
             if (entryType === PumpHistoryEntryType.UnabsorbedInsulin
                 || entryType === PumpHistoryEntryType.UnabsorbedInsulin512) {
-                val elements: Int = dataClear[counter]!!.toInt()
+                val elements: Int = dataClear[counter].toInt()
                 listRawData.add(elements.toByte())
                 counter++
                 val els = getUnsignedInt(elements)
@@ -106,12 +106,12 @@ class MedtronicPumpHistoryDecoder @Inject constructor(
                 if (incompletePacket) break
             }
             if (entryType === PumpHistoryEntryType.None) {
-                aapsLogger!!.error(LTag.PUMPBTCOMM, "Error in code. We should have not come into this branch.")
+                aapsLogger.error(LTag.PUMPBTCOMM, "Error in code. We should have not come into this branch.")
             } else {
                 if (pe.entryType === PumpHistoryEntryType.UnknownBasePacket) {
                     pe.opCode = opCode.toByte()
                 }
-                if (entryType.getHeadLength(medtronicUtil!!.medtronicPumpModel!!) == 0) special = true
+                if (entryType.getHeadLength(medtronicUtil.medtronicPumpModel!!) == 0) special = true
                 pe.setData(listRawData as List<Byte>, special)
                 val decoded = decodeRecord(pe)
                 if (decoded === RecordDecodeStatus.OK || decoded === RecordDecodeStatus.Ignored) {
@@ -132,7 +132,7 @@ class MedtronicPumpHistoryDecoder @Inject constructor(
 
     override fun decodeRecord(record: PumpHistoryEntry): RecordDecodeStatus? {
         return try {
-            decodeRecord(record, false)
+            decodeRecordInternal(record)
         } catch (ex: Exception) {
             aapsLogger.error(LTag.PUMPBTCOMM, String.format(Locale.ENGLISH, "     Error decoding: type=%s, ex=%s", record.entryType!!.name, ex.message, ex))
             //ex.printStackTrace()
@@ -140,7 +140,7 @@ class MedtronicPumpHistoryDecoder @Inject constructor(
         }
     }
 
-    private fun decodeRecord(entry: PumpHistoryEntry, x: Boolean): RecordDecodeStatus {
+    private fun decodeRecordInternal(entry: PumpHistoryEntry): RecordDecodeStatus {
         if (entry.dateTimeLength > 0) {
             decodeDateTime(entry)
         }
@@ -169,6 +169,7 @@ class MedtronicPumpHistoryDecoder @Inject constructor(
 
             PumpHistoryEntryType.TempBasalDuration                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             ->                 // decodeTempBasal(entry);
                 RecordDecodeStatus.OK
+
             PumpHistoryEntryType.TempBasalRate                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 ->                 // decodeTempBasal(entry);
                 RecordDecodeStatus.OK
 
@@ -254,7 +255,7 @@ class MedtronicPumpHistoryDecoder @Inject constructor(
         val body = entry.body!!
         val dto = BolusWizardDTO()
         var bolusStrokes = 10.0f
-        if (MedtronicDeviceType.isSameDevice(medtronicUtil!!.medtronicPumpModel!!, MedtronicDeviceType.Medtronic_523andHigher)) {
+        if (MedtronicDeviceType.isSameDevice(medtronicUtil.medtronicPumpModel!!, MedtronicDeviceType.Medtronic_523andHigher)) {
             // https://github.com/ps2/minimed_rf/blob/master/lib/minimed_rf/log_entries/bolus_wizard.rb#L102
             bolusStrokes = 40.0f
             dto.carbs = ((body[1] and 0x0c.toByte()).toInt() shl 6) + body[0]

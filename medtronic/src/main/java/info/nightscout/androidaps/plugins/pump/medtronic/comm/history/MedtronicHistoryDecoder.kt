@@ -51,7 +51,7 @@ abstract class MedtronicHistoryDecoder<T : MedtronicHistoryEntry?> : MedtronicHi
         }
     }
 
-    fun processPageAndCreateRecords(rawHistoryPage: RawHistoryPage): List<T?>? {
+    fun processPageAndCreateRecords(rawHistoryPage: RawHistoryPage): List<T> {
         return processPageAndCreateRecords(rawHistoryPage, false)
     }
 
@@ -120,7 +120,7 @@ abstract class MedtronicHistoryDecoder<T : MedtronicHistoryEntry?> : MedtronicHi
     private fun processPageAndCreateRecords(rawHistoryPage: RawHistoryPage, partial: Boolean): List<T> {
         val dataClear = checkPage(rawHistoryPage, partial)
         val records: List<T> = createRecords(dataClear)
-        for (record in records!!) {
+        for (record in records) {
             decodeRecord(record)
         }
         runPostDecodeTasks()

@@ -53,19 +53,19 @@ class MedtronicUITask {
         aapsLogger.debug(LTag.PUMP, "MedtronicUITask: @@@ In execute. $commandType")
         when (commandType) {
             MedtronicCommandType.PumpModel                                                 -> {
-                result = communicationManager.pumpModel
+                result = communicationManager.getPumpModel()
             }
 
             MedtronicCommandType.GetBasalProfileSTD                                        -> {
-                result = communicationManager.basalProfile
+                result = communicationManager.getBasalProfile()
             }
 
             MedtronicCommandType.GetRemainingInsulin                                       -> {
-                result = communicationManager.remainingInsulin
+                result = communicationManager.getRemainingInsulin()
             }
 
             MedtronicCommandType.GetRealTimeClock                                          -> {
-                result = communicationManager.pumpTime
+                result = communicationManager.getPumpTime()
                 medtronicUtil.pumpTime = null
             }
 
@@ -74,22 +74,22 @@ class MedtronicUITask {
             }
 
             MedtronicCommandType.GetBatteryStatus                                          -> {
-                result = communicationManager.remainingBattery
+                result = communicationManager.getRemainingBattery()
             }
 
             MedtronicCommandType.SetTemporaryBasal                                         -> {
-                val tbr = tBRSettings
+                val tbr = getTbrSettings()
                 if (tbr != null) {
-                    result = communicationManager.setTBR(tbr)
+                    result = communicationManager.setTemporaryBasal(tbr)
                 }
             }
 
             MedtronicCommandType.ReadTemporaryBasal                                        -> {
-                result = communicationManager.temporaryBasal
+                result = communicationManager.getTemporaryBasal()
             }
 
             MedtronicCommandType.Settings, MedtronicCommandType.Settings_512               -> {
-                result = communicationManager.pumpSettings
+                result = communicationManager.getPumpSettings()
             }
 
             MedtronicCommandType.SetBolus                                                  -> {
@@ -127,12 +127,11 @@ class MedtronicUITask {
         }
     }
 
-    //
-    //
-    private val tBRSettings: TempBasalPair
-        private get() = TempBasalPair(getDoubleFromParameters(0),  //
+    private fun getTbrSettings(): TempBasalPair? {
+        return TempBasalPair(getDoubleFromParameters(0),  //
             false,  //
             getIntegerFromParameters(1))
+    }
 
     private fun getFloatFromParameters(index: Int): Float {
         return parameters!![index] as Float

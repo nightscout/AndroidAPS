@@ -25,14 +25,14 @@ class MedtronicCGMSHistoryDecoder : MedtronicHistoryDecoder<CGMSHistoryEntry>() 
 
     override fun decodeRecord(record: CGMSHistoryEntry): RecordDecodeStatus? {
         return try {
-            decodeRecord(record, false)
+            decodeRecordInternal(record)
         } catch (ex: Exception) {
             LOG.error("     Error decoding: type={}, ex={}", record.entryType!!.name, ex.message, ex)
             RecordDecodeStatus.Error
         }
     }
 
-    fun decodeRecord(entry: CGMSHistoryEntry, ignore: Boolean): RecordDecodeStatus {
+    fun decodeRecordInternal(entry: CGMSHistoryEntry): RecordDecodeStatus {
         if (entry.dateTimeLength > 0) {
             parseDate(entry)
         }
@@ -62,6 +62,7 @@ class MedtronicCGMSHistoryDecoder : MedtronicHistoryDecoder<CGMSHistoryEntry>() 
     }
 
     override fun postProcess() {}
+
     override fun createRecords(dataClearInput: List<Byte>): List<CGMSHistoryEntry> {
         val dataClear = reverseList(dataClearInput, Byte::class.java)
         prepareStatistics()

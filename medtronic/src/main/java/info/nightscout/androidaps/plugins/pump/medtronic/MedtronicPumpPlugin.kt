@@ -98,7 +98,7 @@ class MedtronicPumpPlugin @Inject constructor(
     .preferencesId(R.xml.pref_medtronic)
     .description(R.string.description_pump_medtronic),  //
     PumpType.MEDTRONIC_522_722,  // we default to most basic model, correct model from config is loaded later
-    injector, resourceHelper, aapsLogger, commandQueue, rxBus, activePlugin, sp, context, fabricPrivacy, dateUtil, aapsSchedulers!!, pumpSync!!
+    injector, resourceHelper, aapsLogger, commandQueue, rxBus, activePlugin, sp, context, fabricPrivacy, dateUtil, aapsSchedulers, pumpSync
 ), Pump, RileyLinkPumpDevice {
 
     private var rileyLinkMedtronicService: RileyLinkMedtronicService? = null
@@ -149,7 +149,7 @@ class MedtronicPumpPlugin @Inject constructor(
     }
 
     private val logPrefix: String
-        private get() = "MedtronicPumpPlugin::"
+        get() = "MedtronicPumpPlugin::"
 
     override fun initPumpStatusData() {
         medtronicPumpStatus.lastConnection = sp.getLong(RileyLinkConst.Prefs.LastGoodDeviceCommunicationTime, 0L)
@@ -225,7 +225,7 @@ class MedtronicPumpPlugin @Inject constructor(
 
     // Pump Plugin
     private val isServiceSet: Boolean
-        private get() = rileyLinkMedtronicService != null
+        get() = rileyLinkMedtronicService != null
 
     override fun getRileyLinkService(): RileyLinkMedtronicService? {
         return rileyLinkMedtronicService
@@ -313,7 +313,7 @@ class MedtronicPumpPlugin @Inject constructor(
     }//
 
     private val isPumpNotReachable: Boolean
-        private get() {
+        get() {
             val rileyLinkServiceState = rileyLinkServiceData.rileyLinkServiceState
             if (rileyLinkServiceState == null) {
                 aapsLogger.debug(LTag.PUMP, "RileyLink unreachable. RileyLinkServiceState is null.")
@@ -908,7 +908,7 @@ class MedtronicPumpPlugin @Inject constructor(
     }
 
     private val lastPumpEntryTime: Long
-        private get() {
+        get() {
             val lastPumpEntryTime = sp.getLong(MedtronicConst.Statistics.LastPumpHistoryEntry, 0L)
             return try {
                 val localDateTime = DateTimeUtil.toLocalDateTime(lastPumpEntryTime)
@@ -1085,7 +1085,7 @@ class MedtronicPumpPlugin @Inject constructor(
     private fun isProfileValid(basalProfile: BasalProfile): String? {
         val stringBuilder = StringBuilder()
         if (medtronicPumpStatus.maxBasal == null) return null
-        for (profileEntry in basalProfile.entries) {
+        for (profileEntry in basalProfile.getEntries()) {
             if (profileEntry.rate > medtronicPumpStatus.maxBasal!!) {
                 stringBuilder.append(profileEntry.startTime!!.toString("HH:mm"))
                 stringBuilder.append("=")
@@ -1099,7 +1099,7 @@ class MedtronicPumpPlugin @Inject constructor(
         val basalProfile = BasalProfile(aapsLogger)
         for (i in 0..23) {
             val rate = profile.getBasalTimeFromMidnight(i * 60 * 60)
-            val v = pumpDescription.pumpType.determineCorrectBasalSize(rate)
+            val v = pumpType.determineCorrectBasalSize(rate)
             val basalEntry = BasalProfileEntry(v, i, 0)
             basalProfile.addEntry(basalEntry)
         }

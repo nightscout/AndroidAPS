@@ -164,6 +164,7 @@ class RileyLinkMedtronicService  // This empty constructor must be kept, otherwi
                 } else {
                     val pumpType = medtronicPumpStatus.medtronicPumpMap[pumpTypePart]
                     medtronicPumpStatus.medtronicDeviceType = medtronicPumpStatus.medtronicDeviceTypeMap[pumpTypePart]
+                    medtronicPumpStatus.pumpType = pumpType!!
                     medtronicPumpPlugin.pumpType = pumpType
                     if (pumpTypePart.startsWith("7")) medtronicPumpStatus.reservoirFullUnits = 300 else medtronicPumpStatus.reservoirFullUnits = 176
                 }

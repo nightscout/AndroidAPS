@@ -1,9 +1,12 @@
 package info.nightscout.androidaps.plugins.treatments;
 
 import android.content.Context;
+import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+
+import com.google.firebase.analytics.FirebaseAnalytics;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -14,9 +17,11 @@ import javax.inject.Singleton;
 import dagger.android.HasAndroidInjector;
 import info.nightscout.androidaps.Constants;
 import info.nightscout.androidaps.R;
+import info.nightscout.androidaps.activities.ErrorHelperActivity;
 import info.nightscout.androidaps.data.DetailedBolusInfo;
 import info.nightscout.androidaps.data.ProfileIntervals;
 import info.nightscout.androidaps.database.AppRepository;
+import info.nightscout.androidaps.database.embedments.InterfaceIDs;
 import info.nightscout.androidaps.db.ExtendedBolus;
 import info.nightscout.androidaps.db.ProfileSwitch;
 import info.nightscout.androidaps.db.Source;
@@ -32,12 +37,16 @@ import info.nightscout.androidaps.interfaces.ProfileFunction;
 import info.nightscout.androidaps.interfaces.ProfileStore;
 import info.nightscout.androidaps.interfaces.TreatmentServiceInterface;
 import info.nightscout.androidaps.interfaces.TreatmentsInterface;
+import info.nightscout.androidaps.interfaces.UpdateReturn;
 import info.nightscout.androidaps.logging.AAPSLogger;
 import info.nightscout.androidaps.logging.LTag;
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper;
 import info.nightscout.androidaps.plugins.general.nsclient.NSUpload;
 import info.nightscout.androidaps.plugins.general.overview.events.EventDismissNotification;
 import info.nightscout.androidaps.plugins.general.overview.notifications.Notification;
+import info.nightscout.androidaps.plugins.pump.common.defs.PumpType;
+import info.nightscout.androidaps.plugins.pump.medtronic.MedtronicPumpPlugin;
+import info.nightscout.androidaps.plugins.pump.medtronic.data.MedtronicHistoryData;
 import info.nightscout.androidaps.utils.DateUtil;
 import info.nightscout.androidaps.utils.FabricPrivacy;
 import info.nightscout.androidaps.utils.resources.ResourceHelper;
@@ -66,6 +75,10 @@ public class TreatmentsPlugin extends PluginBase implements TreatmentsInterface 
     protected TreatmentServiceInterface service;
 
     private final ProfileIntervals<ProfileSwitch> profiles = new ProfileIntervals<>();
+
+    private final boolean useNewPumpSync = false;
+
+
 
     @Inject
     public TreatmentsPlugin(
@@ -245,38 +258,48 @@ public class TreatmentsPlugin extends PluginBase implements TreatmentsInterface 
     @Deprecated
     @Override
     public boolean addToHistoryTempBasal(TemporaryBasal tempBasal) {
-        throw new IllegalStateException("Migrate to new DB");
-/*
+        if (useNewPumpSync) {
+            throw new IllegalStateException("Migrate to new DB");
+        } else {
+            getAapsLogger().error("!!! addToHistoryTempBasal: Need to migrate to new DB");
+        }
+
         //log.debug("Adding new TemporaryBasal record" + tempBasal.toString());
         boolean newRecordCreated = databaseHelper.createOrUpdate(tempBasal);
         if (newRecordCreated) {
-            if (tempBasal.durationInMinutes == 0)
-                nsUpload.uploadTempBasalEnd(tempBasal.date, false, tempBasal.pumpId);
-            else if (tempBasal.isAbsolute)
-                nsUpload.uploadTempBasalStartAbsolute(tempBasal, null);
-            else
-                nsUpload.uploadTempBasalStartPercent(tempBasal, profileFunction.getProfile(tempBasal.date));
+//            if (tempBasal.durationInMinutes == 0)
+//                nsUpload.uploadTempBasalEnd(tempBasal.date, false, tempBasal.pumpId);
+//            else if (tempBasal.isAbsolute)
+//                nsUpload.uploadTempBasalStartAbsolute(tempBasal, null);
+//            else
+//                nsUpload.uploadTempBasalStartPercent(tempBasal, profileFunction.getProfile(tempBasal.date));
         }
         return newRecordCreated;
- */
     }
 
     @Deprecated
     public TreatmentUpdateReturn createOrUpdateMedtronic(Treatment treatment, boolean fromNightScout) {
-        throw new IllegalStateException("Migrate to new DB");
-/*
+        if (useNewPumpSync) {
+            throw new IllegalStateException("Migrate to new DB");
+        } else {
+            getAapsLogger().error("!!! createOrUpdateMedtronic: Need to migrate to new DB");
+        }
+
         UpdateReturn resultRecord = getService().createOrUpdateMedtronic(treatment, fromNightScout);
 
         return new TreatmentUpdateReturn(resultRecord.getSuccess(), resultRecord.getNewRecord());
- */
     }
 
     // return true if new record is created
     @Deprecated
     @Override
     public boolean addToHistoryTreatment(DetailedBolusInfo detailedBolusInfo, boolean allowUpdate) {
-        throw new IllegalStateException("Migrate to new DB");
-/*
+        if (useNewPumpSync) {
+            throw new IllegalStateException("Migrate to new DB");
+        } else {
+            getAapsLogger().error("!!! addToHistoryTreatment: Need to migrate to new DB");
+        }
+
         boolean medtronicPump = activePlugin.getActivePump() instanceof MedtronicPumpPlugin;
 
         getAapsLogger().debug(MedtronicHistoryData.doubleBolusDebug, LTag.DATATREATMENTS, "DoubleBolusDebug: addToHistoryTreatment::isMedtronicPump={} " + medtronicPump);
@@ -320,8 +343,8 @@ public class TreatmentsPlugin extends PluginBase implements TreatmentsInterface 
                 getService().createOrUpdateMedtronic(carbsTreatment, false);
             //log.debug("Adding new Treatment record" + carbsTreatment);
         }
-        if (newRecordCreated && detailedBolusInfo.getBolusType() != DetailedBolusInfo.BolusType.PRIMING)
-            nsUpload.uploadTreatmentRecord(detailedBolusInfo);
+//        if (newRecordCreated && detailedBolusInfo.getBolusType() != DetailedBolusInfo.BolusType.PRIMING)
+//            nsUpload.uploadTreatmentRecord(detailedBolusInfo);
 
         if (!allowUpdate && !creatOrUpdateResult.getSuccess()) {
             getAapsLogger().error("Treatment could not be added to DB", new Exception());
@@ -337,7 +360,7 @@ public class TreatmentsPlugin extends PluginBase implements TreatmentsInterface 
         }
 
         return newRecordCreated;
- */
+
     }
 
     @Override

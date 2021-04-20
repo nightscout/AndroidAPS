@@ -108,8 +108,8 @@ class RileyLinkStatusDeviceMedtronic : DaggerFragment(), RefreshableInterface {
             return i.toLong()
         }
 
-        override fun getView(i: Int, view: View, viewGroup: ViewGroup): View {
-            var view = view
+        override fun getView(i: Int, viewIn: View, viewGroup: ViewGroup): View {
+            var view = viewIn
             val viewHolder: ViewHolder
             // General ListView optimization code.
             if (view == null) {

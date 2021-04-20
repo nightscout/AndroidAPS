@@ -210,7 +210,6 @@ class MedtronicFragment : DaggerFragment() {
             } ?: "-"
 
         when (medtronicPumpStatus.pumpDeviceState) {
-            null,
             PumpDeviceState.Sleeping             -> binding.pumpStatusIcon.text = "{fa-bed}   " // + pumpStatus.pumpDeviceState.name());
             PumpDeviceState.NeverContacted,
             PumpDeviceState.WakingUp,

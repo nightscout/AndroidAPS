@@ -74,11 +74,11 @@ abstract class PumpPluginAbstract protected constructor(
     @JvmField protected var pumpState = PumpDriverState.NotInitialized
     @JvmField protected var displayConnectionMessages = false
 
-    var pumpType: PumpType? = null
+    var pumpType: PumpType = PumpType.GENERIC_AAPS
         get() = field
         set(value) {
             field = value
-            pumpDescription.setPumpDescription(value!!)
+            pumpDescription.setPumpDescription(value)
         }
 
 
@@ -366,11 +366,11 @@ abstract class PumpPluginAbstract protected constructor(
     }
 
     override fun manufacturer(): ManufacturerType {
-        return pumpType!!.manufacturer!!
+        return pumpType.manufacturer!!
     }
 
     override fun model(): PumpType {
-        return pumpType!!
+        return pumpType
     }
 
 
@@ -395,7 +395,7 @@ abstract class PumpPluginAbstract protected constructor(
         val temporaryId = generateTempId(detailedBolusInfo.timestamp)
         val response = pumpSync.addBolusWithTempId(detailedBolusInfo.timestamp, detailedBolusInfo.insulin,
             temporaryId, detailedBolusInfo.bolusType,
-            pumpType!!, serialNumber())
+            pumpType, serialNumber())
         if (response && writeToInternalHistory) {
             driverHistory[temporaryId] = PumpDbEntry(temporaryId, model(), serialNumber(), detailedBolusInfo)
             sp.putString(MedtronicConst.Statistics.InternalTemporaryDatabase, gson.toJson(driverHistory))
@@ -403,6 +403,7 @@ abstract class PumpPluginAbstract protected constructor(
         return response
     }
 
+    // TODO
     protected fun addTemporaryBasalRateWithTempId(temporaryBasal: TemporaryBasal?, b: Boolean) {
 //        long temporaryId = generateTempId(temporaryBasal.timestamp);
 //        boolean response = pumpSync.addBolusWithTempId(temporaryBasal.timestamp, detailedBolusInfo.insulin,

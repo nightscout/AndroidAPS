@@ -38,14 +38,14 @@ class MedtronicHistoryActivity : DaggerActivity() {
     var manualChange = false
     var typeListFull: List<TypeList>? = null
 
-    private var _binding: MedtronicHistoryActivityBinding? = null
+    //private var _binding: MedtronicHistoryActivityBinding? = null
 
     //@Inject
     //var fragmentInjector: DispatchingAndroidInjector<Fragment>? = null
 
     // This property is only valid between onCreateView and
     // onDestroyView.
-    private val binding get() = _binding!!
+    //private val binding get() = _binding!!
 
     private fun filterHistory(group: PumpHistoryEntryGroup) {
         filteredHistoryList.clear()
@@ -93,20 +93,17 @@ class MedtronicHistoryActivity : DaggerActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        //setContentView(R.layout.medtronic_history_activity)
-
-        _binding = MedtronicHistoryActivityBinding.inflate(getLayoutInflater())  //(inflater, container, false)
-
-        historyTypeSpinner = binding.medtronicHistorytype //findViewById(R.id.medtronic_historytype)
-        statusView = binding.medtronicHistorystatus //findViewById(R.id.medtronic_historystatus)
-        recyclerView = binding.medtronicHistoryRecyclerview //findViewById(R.id.medtronic_history_recyclerview)
+        setContentView(R.layout.medtronic_history_activity)
+        historyTypeSpinner = findViewById(R.id.medtronic_historytype)
+        statusView = findViewById(R.id.medtronic_historystatus)
+        recyclerView = findViewById(R.id.medtronic_history_recyclerview)
         recyclerView.setHasFixedSize(true)
         llm = LinearLayoutManager(this)
         recyclerView.setLayoutManager(llm)
         recyclerViewAdapter = RecyclerViewAdapter(filteredHistoryList)
         recyclerView.setAdapter(recyclerViewAdapter)
         statusView.setVisibility(View.GONE)
-        typeListFull = getTypeList(getTranslatedList(resourceHelper!!))
+        typeListFull = getTypeList(PumpHistoryEntryGroup.getTranslatedList(resourceHelper))
         val spinnerAdapter = ArrayAdapter(this, R.layout.spinner_centered, typeListFull)
         historyTypeSpinner.setAdapter(spinnerAdapter)
         historyTypeSpinner.setOnItemSelectedListener(object : AdapterView.OnItemSelectedListener {
@@ -163,11 +160,11 @@ class MedtronicHistoryActivity : DaggerActivity() {
 
         override fun onBindViewHolder(holder: HistoryViewHolder, position: Int) {
             val record = historyList[position]
-            if (record != null) {
+            //if (record != null) {
                 holder.timeView.text = record.dateTimeString
                 holder.typeView.text = record.entryType!!.description
                 holder.valueView.text = record.displayableValue
-            }
+            //}
         }
 
         override fun getItemCount(): Int {

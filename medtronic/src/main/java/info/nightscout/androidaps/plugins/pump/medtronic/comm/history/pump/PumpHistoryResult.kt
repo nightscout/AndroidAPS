@@ -81,8 +81,8 @@ class PumpHistoryResult(private val aapsLogger: AAPSLogger, searchEntry: PumpHis
     }
 
     override fun toString(): String {
-        return "PumpHistoryResult [unprocessed=" + (if (unprocessedEntries != null) "" + unprocessedEntries!!.size else "0") +  //
-            ", valid=" + (if (validEntries != null) "" + validEntries!!.size else "0") +  //
+        return "PumpHistoryResult [unprocessed=" + unprocessedEntries.size  +  //
+            ", valid=" + validEntries.size +  //
             ", searchEntry=" + searchEntry +  //
             ", searchDate=" + searchDate +  //
             ", searchType=" + searchType +  //

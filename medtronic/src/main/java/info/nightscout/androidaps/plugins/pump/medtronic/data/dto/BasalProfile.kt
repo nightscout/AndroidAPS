@@ -96,7 +96,7 @@ class BasalProfile {
 
     fun dumpBasalProfile() {
         aapsLogger.debug(LTag.PUMPCOMM, "Basal Profile entries:")
-        val entries = entries
+        val entries = getEntries()
         for (i in entries.indices) {
             val entry = entries[i]
             val startString = entry.startTime!!.toString("HH:mm")
@@ -109,7 +109,7 @@ class BasalProfile {
     val basalProfileAsString: String
         get() {
             val sb = StringBuffer("Basal Profile entries:\n")
-            val entries = entries
+            val entries = getEntries()
             for (i in entries.indices) {
                 val entry = entries[i]
                 val startString = entry.startTime!!.toString("HH:mm")
@@ -124,7 +124,7 @@ class BasalProfile {
 
     fun basalProfileToString(): String {
         val sb = StringBuffer("Basal Profile [")
-        val entries = entries
+        val entries = getEntries()
         for (i in entries.indices) {
             val entry = entries[i]
             val startString = entry.startTime!!.toString("HH:mm")
@@ -138,7 +138,7 @@ class BasalProfile {
     // and changes to the profiles themselves.
     fun getEntryForTime(`when`: Instant): BasalProfileEntry {
         var rval = BasalProfileEntry()
-        val entries = entries
+        val entries = getEntries()
         if (entries.size == 0) {
             aapsLogger.warn(LTag.PUMPCOMM, String.format(Locale.ENGLISH, "getEntryForTime(%s): table is empty",
                 `when`.toDateTime().toLocalTime().toString("HH:mm")))
@@ -181,31 +181,30 @@ class BasalProfile {
     }// readUnsignedByte(mRawData[i]);
 
     // an empty list
-    val entries: List<BasalProfileEntry>
-        get() {
-            val entries: MutableList<BasalProfileEntry> = ArrayList()
-            if (rawData == null || rawData!![2] == 0x3f.toByte()) {
-                aapsLogger.warn(LTag.PUMPCOMM, "Raw Data is empty.")
-                return entries // an empty list
-            }
-            var r: Int
-            var st: Int
-            var i = 0
-            while (i < rawData!!.size - 2) {
-                if (rawData!![i] == 0.toByte() && rawData!![i + 1] == 0.toByte() && rawData!![i + 2] == 0.toByte()) break
-                if (rawData!![i] == 0.toByte() && rawData!![i + 1] == 0.toByte() && rawData!![i + 2] == 0x3f.toByte()) break
-                r = MedtronicUtil.makeUnsignedShort(rawData!![i + 1].toInt(), rawData!![i].toInt()) // readUnsignedByte(mRawData[i]);
-                st = readUnsignedByte(rawData!![i + 2])
-                try {
-                    entries.add(BasalProfileEntry(aapsLogger, r, st))
-                } catch (ex: Exception) {
-                    aapsLogger.error(LTag.PUMPCOMM, "Error decoding basal profile from bytes: " + ByteUtil.shortHexString(rawData))
-                    throw ex
-                }
-                i += 3
-            }
-            return entries
+    fun getEntries(): List<BasalProfileEntry> {
+        val entries: MutableList<BasalProfileEntry> = ArrayList()
+        if (rawData[2] == 0x3f.toByte()) {
+            aapsLogger.warn(LTag.PUMPCOMM, "Raw Data is empty.")
+            return entries // an empty list
         }
+        var r: Int
+        var st: Int
+        var i = 0
+        while (i < rawData.size - 2) {
+            if (rawData[i] == 0.toByte() && rawData[i + 1] == 0.toByte() && rawData[i + 2] == 0.toByte()) break
+            if (rawData[i] == 0.toByte() && rawData[i + 1] == 0.toByte() && rawData[i + 2] == 0x3f.toByte()) break
+            r = MedtronicUtil.makeUnsignedShort(rawData[i + 1].toInt(), rawData[i].toInt()) // readUnsignedByte(mRawData[i]);
+            st = readUnsignedByte(rawData[i + 2])
+            try {
+                entries.add(BasalProfileEntry(aapsLogger, r, st))
+            } catch (ex: Exception) {
+                aapsLogger.error(LTag.PUMPCOMM, "Error decoding basal profile from bytes: " + ByteUtil.shortHexString(rawData))
+                throw ex
+            }
+            i += 3
+        }
+        return entries
+    }
 
     /**
      * This is used to prepare new profile
@@ -233,7 +232,7 @@ class BasalProfile {
     fun getProfilesByHour(pumpType: PumpType): Array<Double> {
         var entriesCopy: List<BasalProfileEntry>? = null
         try {
-            entriesCopy = entries
+            entriesCopy = getEntries()
         } catch (ex: Exception) {
             aapsLogger.error(LTag.PUMPCOMM, "=============================================================================")
             aapsLogger.error(LTag.PUMPCOMM, "  Error generating entries. Ex.: $ex", ex)
@@ -280,7 +279,7 @@ class BasalProfile {
 
     fun verify(pumpType: PumpType): Boolean {
         try {
-            entries
+            getEntries()
         } catch (ex: Exception) {
             return false
         }

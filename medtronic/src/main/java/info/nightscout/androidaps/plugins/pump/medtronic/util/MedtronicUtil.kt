@@ -291,10 +291,10 @@ class MedtronicUtil @Inject constructor(
         }
 
         fun getStrokesInt(amount: Double, strokesPerUnit: Int): Int {
-            var length = 1
+            //var length = 1
             var scrollRate = 1
             if (strokesPerUnit >= 40) {
-                length = 2
+            //    length = 2
 
                 // 40-stroke pumps scroll faster for higher unit values
                 if (amount > 10) scrollRate = 4 else if (amount > 1) scrollRate = 2
