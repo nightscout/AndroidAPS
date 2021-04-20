@@ -599,6 +599,44 @@ public class MedtronicCommunicationManager extends RileyLinkCommunicationManager
     }
 
 
+    private <T> T sendAndGetResponseWithCheck(MedtronicCommandType commandType, byte[] bodyData, Class<T> clazz) {
+
+        aapsLogger.debug(LTag.PUMPCOMM, "getDataFromPump: " + commandType);
+
+        for (int retries = 0; retries < MAX_COMMAND_TRIES; retries++) {
+
+            try {
+                PumpMessage response = sendAndGetResponse(commandType, bodyData, DEFAULT_TIMEOUT + (DEFAULT_TIMEOUT * retries));
+
+                String check = checkResponseContent(response, commandType.getCommandDescription(), commandType.getExpectedLength());
+
+                if (check == null) {
+
+                    T dataResponse = (T)medtronicConverter.convertResponse(medtronicPumpPlugin.getPumpDescription().getPumpType(), commandType, response.getRawContent());
+
+                    if (dataResponse != null) {
+                        this.errorMessage = null;
+                        aapsLogger.debug(LTag.PUMPCOMM, String.format(Locale.ENGLISH, "Converted response for %s is %s.", commandType.name(), dataResponse));
+
+                        return dataResponse;
+                    } else {
+                        this.errorMessage = "Error decoding response.";
+                    }
+                } else {
+                    this.errorMessage = check;
+                    // return null;
+                }
+
+            } catch (RileyLinkCommunicationException e) {
+                aapsLogger.warn(LTag.PUMPCOMM, String.format(Locale.ENGLISH, "Error getting response from RileyLink (error=%s, retry=%d)", e.getMessage(), retries + 1));
+            }
+
+        }
+
+        return null;
+    }
+
+
     private String checkResponseContent(PumpMessage response, String method, int expectedLength) {
 
         if (!response.isValid()) {

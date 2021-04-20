@@ -49,6 +49,7 @@ class RileyLinkMedtronicService  // This empty constructor must be kept, otherwi
     private var encodingType: RileyLinkEncodingType? = null
     private var encodingChanged = false
     private var inPreInit = true
+
     override fun onCreate() {
         super.onCreate()
         aapsLogger.debug(LTag.PUMPCOMM, "RileyLinkMedtronicService newly created")
@@ -267,19 +268,19 @@ class RileyLinkMedtronicService  // This empty constructor must be kept, otherwi
     }
 
     private fun checkParameterValue(key: Int, defaultValue: String, defaultValueDouble: Double): Double {
-        var `val`: Double
+        var valueDouble: Double
         val value = sp.getString(key, defaultValue)
-        `val` = try {
+        valueDouble = try {
             value.toDouble()
         } catch (ex: Exception) {
             aapsLogger.error("Error parsing setting: %s, value found %s", key, value)
             defaultValueDouble
         }
-        if (`val` > defaultValueDouble) {
+        if (valueDouble > defaultValueDouble) {
             sp.putString(key, defaultValue)
-            `val` = defaultValueDouble
+            valueDouble = defaultValueDouble
         }
-        return `val`
+        return valueDouble
     }
 
     fun setNotInPreInit(): Boolean {

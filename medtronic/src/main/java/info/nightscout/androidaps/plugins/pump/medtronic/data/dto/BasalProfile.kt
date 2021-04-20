@@ -32,7 +32,8 @@ class BasalProfile {
 
     private val aapsLogger: AAPSLogger
 
-    @Expose var rawData  : ByteArray? = null // store as byte array to make transport (via parcel) easier
+    @Expose
+    lateinit var rawData  : ByteArray // store as byte array to make transport (via parcel) easier
         private set
 
     private var listEntries: MutableList<BasalProfileEntry>? = null
@@ -48,14 +49,11 @@ class BasalProfile {
     }
 
     fun init() {
-        rawData = ByteArray(MAX_RAW_DATA_SIZE)
-        rawData!![0] = 0
-        rawData!![1] = 0
-        rawData!![2] = 0x3f
+        rawData = byteArrayOf(0,0,0x3f)
     }
 
     private fun setRawData(data: ByteArray): Boolean {
-        var dataInternal: ByteArray? = data
+        var dataInternal: ByteArray = data
         if (dataInternal == null) {
             aapsLogger.error(LTag.PUMPCOMM, "setRawData: buffer is null!")
             return false
@@ -81,17 +79,16 @@ class BasalProfile {
             return false
         }
         rawData = ByteArray(MAX_RAW_DATA_SIZE)
-        val item = 0
         var i = 0
         while (i < data.size - 2) {
             if (data[i] == 0.toByte() && data[i + 1] == 0.toByte() && data[i + 2] == 0.toByte()) {
-                rawData!![i] = 0
-                rawData!![i + 1] = 0
-                rawData!![i + 2] = 0
+                rawData[i] = 0
+                rawData[i + 1] = 0
+                rawData[i + 2] = 0
             }
-            rawData!![i] = data[i + 1]
-            rawData!![i + 1] = data[i + 2]
-            rawData!![i + 2] = data[i]
+            rawData[i] = data[i + 1]
+            rawData[i + 1] = data[i + 2]
+            rawData[i + 2] = data[i]
             i += 3
         }
         return true
@@ -306,7 +303,7 @@ class BasalProfile {
         }
 
         @JvmStatic
-        fun getProfilesByHourToString(data: Array<Double?>): String {
+        fun getProfilesByHourToString(data: Array<Double>): String {
             val stringBuilder = StringBuilder()
             for (value in data) {
                 stringBuilder.append(String.format("%.3f", value))
