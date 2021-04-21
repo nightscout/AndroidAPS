@@ -466,6 +466,9 @@ class OmnipodDashPumpPlugin @Inject constructor(
                 },
                 onError = { throwable ->
                     aapsLogger.error(LTag.PUMP, "Error executing command", throwable)
+                    // Here we assume that onError will be called only BEFORE we manage to send a command
+                    // If it gets called later, we will have the command as "not sent" in history and will not try to
+                    // get it's final status, even if it was send
                     podStateManager.resetActiveCommand()
                     source.onSuccess(
                         PumpEnactResult(injector).success(false).enacted(false).comment(throwable.message)
