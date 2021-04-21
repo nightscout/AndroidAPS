@@ -40,7 +40,6 @@ import info.nightscout.androidaps.interfaces.CommandQueueProvider;
 import info.nightscout.androidaps.interfaces.Config;
 import info.nightscout.androidaps.interfaces.Constraint;
 import info.nightscout.androidaps.interfaces.Constraints;
-import info.nightscout.androidaps.interfaces.DatabaseHelperInterface;
 import info.nightscout.androidaps.interfaces.PluginDescription;
 import info.nightscout.androidaps.interfaces.PluginType;
 import info.nightscout.androidaps.interfaces.ProfileFunction;
@@ -48,12 +47,10 @@ import info.nightscout.androidaps.interfaces.Pump;
 import info.nightscout.androidaps.interfaces.PumpDescription;
 import info.nightscout.androidaps.interfaces.PumpPluginBase;
 import info.nightscout.androidaps.interfaces.PumpSync;
-import info.nightscout.androidaps.interfaces.UploadQueueInterface;
 import info.nightscout.androidaps.logging.AAPSLogger;
 import info.nightscout.androidaps.logging.LTag;
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper;
 import info.nightscout.androidaps.plugins.common.ManufacturerType;
-import info.nightscout.androidaps.plugins.general.nsclient.NSUpload;
 import info.nightscout.androidaps.plugins.general.overview.events.EventDismissNotification;
 import info.nightscout.androidaps.plugins.general.overview.events.EventNewNotification;
 import info.nightscout.androidaps.plugins.general.overview.events.EventOverviewBolusProgress;
@@ -196,12 +193,9 @@ public class LocalInsightPlugin extends PumpPluginBase implements Pump, Constrai
             SP sp,
             CommandQueueProvider commandQueue,
             ProfileFunction profileFunction,
-            NSUpload nsUpload,
             Context context,
-            UploadQueueInterface uploadQueue,
             Config config,
             DateUtil dateUtil,
-            DatabaseHelperInterface databaseHelper,
             PumpSync pumpSync
     ) {
         super(new PluginDescription()
@@ -891,34 +885,11 @@ public class LocalInsightPlugin extends PumpPluginBase implements Pump, Constrai
                         long timestamp = System.currentTimeMillis();
                         pumpSync.syncStopExtendedBolusWithPumpId(
                                 timestamp,
-                                eb.getTimestamp(),                          //TOCHECK EndID ???
+                                eb.getTimestamp(),
                                 PumpType.ACCU_CHEK_INSIGHT,
                                 serialNumber());
                         result.enacted(true).success(true);
                     }
-                    /*
-                    InsightBolusID insightBolusID = databaseHelper.getInsightBolusID(connectionService.getPumpSystemIdentification().getSerialNumber(),
-                            activeBolus.getBolusID(), System.currentTimeMillis());
-                    if (insightBolusID != null) {
-                        // extendedBolus = databaseHelper.getExtendedBolusByPumpId(insightBolusID.id);
-
-                        //PumpSync.PumpState.ExtendedBolus extendedBolus = pumpSync.expectedPumpState().getExtendedBolus()                  //TODO()
-                        if (extendedBolus != null) {
-                            extendedBolus.durationInMinutes = (int) ((System.currentTimeMillis() - extendedBolus.date) / 60000);
-                            if (extendedBolus.durationInMinutes <= 0) {
-                                final String _id = extendedBolus._id;
-                                if (NSUpload.isIdValid(_id))
-                                    nsUpload.removeCareportalEntryFromNS(_id);
-                                else uploadQueue.removeByMongoId("dbAdd", _id);
-                                databaseHelper.delete(extendedBolus);
-                            } else
-
-                                treatmentsPlugin.addToHistoryExtendedBolus(extendedBolus);
-                        }
-                        result.enacted(true).success(true);
-                    }
-
-                     */
                 }
             }
             result.success(true).comment(R.string.virtualpump_resultok);
@@ -1443,26 +1414,15 @@ public class LocalInsightPlugin extends PumpPluginBase implements Pump, Constrai
                     serial);
         }
         if (event.getBolusType() == BolusType.EXTENDED || event.getBolusType() == BolusType.MULTIWAVE) {
-            if (event.getDuration() == 0) {
-                /* TODO()    => Search if an extendedBolus exist in database and disable it
-                ExtendedBolus extendedBolus = databaseHelper.getExtendedBolusByPumpId(bolusID.id);
-                if (extendedBolus != null) {
-                    final String _id = extendedBolus._id;
-                    databaseHelper.delete(extendedBolus);
-                }
-                */
-            } else {
-                if (profileFunction.getProfile(startTimestamp) != null)
-                    pumpSync.syncExtendedBolusWithPumpId(
-                            startTimestamp,
-                            event.getExtendedAmount(),
-                            T.mins(event.getDuration()).msecs(),
-                            true,
-                            event.getBolusID(),
-                            PumpType.ACCU_CHEK_INSIGHT,
-                            serial);
-                //fun syncExtendedBolusWithPumpId(timestamp: Long, amount: Double, duration: Long, isEmulatingTB: Boolean, pumpId: Long, pumpType: PumpType, pumpSerial: String): Boolean
-            }
+            if (profileFunction.getProfile(startTimestamp) != null)
+                pumpSync.syncExtendedBolusWithPumpId(
+                        startTimestamp,
+                        event.getExtendedAmount(),
+                        T.mins(event.getDuration()).msecs(),
+                        true,
+                        event.getBolusID(),
+                        PumpType.ACCU_CHEK_INSIGHT,
+                        serial);
         }
     }
 
