@@ -166,7 +166,7 @@ class UserEntryPresentationHelper @Inject constructor(
         val fullvalueWithUnitList = ArrayList<ValueWithUnit?>(entry.values)
         var timestampRec = "" + entry.timestamp
         var dateTimestampRev = dateUtil.dateAndTimeAndSecondsString(entry.timestamp)
-        var utcOffset = dateUtil.timeString(entry.utcOffset)
+        var utcOffset = dateUtil.timeStringFromSeconds((entry.utcOffset/1000).toInt())
         var action = csvString(entry.action)
         var therapyEvent = ""
         var source = translator.translate(entry.source)
