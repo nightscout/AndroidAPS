@@ -33,6 +33,7 @@ import io.reactivex.Observable
 import io.reactivex.Single
 import io.reactivex.rxkotlin.blockingSubscribeBy
 import io.reactivex.rxkotlin.subscribeBy
+import io.reactivex.rxkotlin.toCompletable
 import org.json.JSONObject
 import java.util.*
 import javax.inject.Inject
@@ -81,7 +82,7 @@ class OmnipodDashPumpPlugin @Inject constructor(
 
     override fun isConnected(): Boolean {
         // TODO
-        return true
+        return podStateManager.activeCommand == null
     }
 
     override fun isConnecting(): Boolean {
@@ -99,7 +100,10 @@ class OmnipodDashPumpPlugin @Inject constructor(
     }
 
     override fun connect(reason: String) {
-        // TODO
+        if (podStateManager.activeCommand == null) {
+            return
+        }
+        getPumpStatus("unconfirmed command")
     }
 
     override fun disconnect(reason: String) {
@@ -414,33 +418,10 @@ class OmnipodDashPumpPlugin @Inject constructor(
     }
 
     private fun playTestBeep(): PumpEnactResult {
-
-        return Single.create<PumpEnactResult> { source ->
-            Observable.concat(
-                omnipodManager.playBeep(BeepType.LONG_SINGLE_BEEP),
-                history.updateFromState(podStateManager).toObservable(),
-                podStateManager.updateActiveCommand().toObservable(),
-            ).subscribeBy(
-                onNext = { podEvent ->
-                    aapsLogger.debug(
-                        LTag.PUMP,
-                        "Received PodEvent in playTestBeep: $podEvent"
-                    )
-                },
-                onError = { throwable ->
-                    aapsLogger.error(LTag.PUMP, "Error in playTestBeep", throwable)
-                    source.onSuccess(
-                        PumpEnactResult(injector).success(false).enacted(false).comment(throwable.message)
-                    )
-                },
-                onComplete = {
-                    aapsLogger.debug("playTestBeep completed")
-                    source.onSuccess(
-                        PumpEnactResult(injector).success(true).enacted(true)
-                    )
-                }
-            )
-        }.blockingGet()
+        return executeProgrammingCommand(
+            history.createRecord(OmnipodCommandType.PLAY_TEST_BEEP),
+            omnipodManager.playBeep(BeepType.LONG_SINGLE_BEEP)
+        )
     }
 
     override fun timezoneOrDSTChanged(timeChangeType: TimeChangeType) {

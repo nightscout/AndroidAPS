@@ -74,8 +74,8 @@ class DashHistory @Inject constructor(
 
     fun getRecordsAfter(time: Long): Single<List<HistoryRecordEntity>> = dao.allSince(time)
 
-    fun updateFromState(podState: OmnipodDashPodStateManager): Completable {
-        return podState.activeCommand?.run {
+    fun updateFromState(podState: OmnipodDashPodStateManager) = Completable.defer {
+        podState.activeCommand?.run {
             when {
 
                 createdRealtime <= podState.lastStatusResponseReceived &&

@@ -2,6 +2,7 @@ package info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.state
 
 import android.os.SystemClock
 import com.google.gson.Gson
+import info.nightscout.androidaps.data.PumpEnactResult
 import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.logging.LTag
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper
@@ -19,6 +20,7 @@ import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.response.
 import info.nightscout.androidaps.utils.sharedPreferences.SP
 import io.reactivex.Completable
 import io.reactivex.Maybe
+import io.reactivex.Single
 import java.io.Serializable
 import java.util.*
 import javax.inject.Inject
@@ -201,16 +203,24 @@ class OmnipodDashPodStateManagerImpl @Inject constructor(
     }
 
     @Synchronized
-    override fun updateActiveCommand(): Maybe<PodEvent> {
-        return podState.activeCommand?.run {
+    override fun updateActiveCommand() = Maybe.create<PodEvent> { source ->
+        podState.activeCommand?.run {
+            logger.debug(
+                "Trying to confirm active command with parameters: $activeCommand " +
+                    "lastResponse=$lastStatusResponseReceived " +
+                    "$sequenceNumberOfLastProgrammingCommand $historyId"
+            )
             if (createdRealtime >= lastStatusResponseReceived)
-                Maybe.empty()
-            else if (sequenceNumberOfLastProgrammingCommand == sequence)
-                Maybe.just(PodEvent.CommandConfirmed(historyId))
-            else
-                Maybe.just(PodEvent.CommandDenied(historyId))
+                source.onComplete()
+            else {
+                podState.activeCommand = null
+                if (sequenceNumberOfLastProgrammingCommand == sequence)
+                    source.onSuccess(PodEvent.CommandConfirmed(historyId))
+                else
+                    source.onSuccess(PodEvent.CommandDenied(historyId))
+            }
         }
-            ?: Maybe.empty() // no active programming command
+            ?: source.onComplete() // no active programming command
     }
 
     override fun increaseEapAkaSequenceNumber(): ByteArray {
