@@ -652,6 +652,17 @@ class OmnipodDashManagerImpl @Inject constructor(
                     podStateManager.increaseMessageSequenceNumber()
                 }
 
+                is PodEvent.CommandSendNotConfirmed -> {
+                    podStateManager.activeCommand?.let {
+                        if (it.sequence == event.command.sequenceNumber) {
+                            it.sentRealtime = SystemClock.elapsedRealtime()
+                        }
+                    }
+                    podStateManager.increaseMessageSequenceNumber()
+                    // TODO: is it bad if we increment this sequence number when we failed to send the command?
+                }
+
+
                 is PodEvent.ResponseReceived -> {
                     podStateManager.increaseMessageSequenceNumber()
                     handleResponse(event.response)
