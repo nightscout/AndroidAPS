@@ -86,7 +86,7 @@ class Connection(
     val msgIO = MessageIO(aapsLogger, cmdBleIO, dataBleIO)
 
     fun connect() {
-        if (session!=null) {
+        if (session != null) {
             disconnect()
         }
         aapsLogger.debug("Connecting")

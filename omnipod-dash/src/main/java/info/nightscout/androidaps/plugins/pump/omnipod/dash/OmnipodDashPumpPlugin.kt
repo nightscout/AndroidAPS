@@ -33,7 +33,6 @@ import io.reactivex.Observable
 import io.reactivex.Single
 import io.reactivex.rxkotlin.blockingSubscribeBy
 import io.reactivex.rxkotlin.subscribeBy
-import io.reactivex.rxkotlin.toCompletable
 import org.json.JSONObject
 import java.util.*
 import javax.inject.Inject

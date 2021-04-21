@@ -39,7 +39,7 @@ class DashHistory @Inject constructor(
     fun createRecord(
         commandType: OmnipodCommandType,
         date: Long = System.currentTimeMillis(),
-        initialResult: InitialResult = InitialResult.CREATED,
+        initialResult: InitialResult = InitialResult.NOT_SENT,
         tempBasalRecord: TempBasalRecord? = null,
         bolusRecord: BolusRecord? = null,
         resolveResult: ResolvedResult? = null,

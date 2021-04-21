@@ -2,7 +2,6 @@ package info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.state
 
 import android.os.SystemClock
 import com.google.gson.Gson
-import info.nightscout.androidaps.data.PumpEnactResult
 import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.logging.LTag
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper
@@ -20,7 +19,6 @@ import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.response.
 import info.nightscout.androidaps.utils.sharedPreferences.SP
 import io.reactivex.Completable
 import io.reactivex.Maybe
-import io.reactivex.Single
 import java.io.Serializable
 import java.util.*
 import javax.inject.Inject

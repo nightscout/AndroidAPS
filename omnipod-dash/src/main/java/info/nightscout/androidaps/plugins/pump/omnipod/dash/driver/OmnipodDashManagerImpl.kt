@@ -662,7 +662,6 @@ class OmnipodDashManagerImpl @Inject constructor(
                     // TODO: is it bad if we increment this sequence number when we failed to send the command?
                 }
 
-
                 is PodEvent.ResponseReceived -> {
                     podStateManager.increaseMessageSequenceNumber()
                     handleResponse(event.response)
