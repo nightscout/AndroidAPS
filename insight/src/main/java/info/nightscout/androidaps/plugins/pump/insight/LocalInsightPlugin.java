@@ -1146,7 +1146,7 @@ public class LocalInsightPlugin extends PumpPluginBase implements Pump, Constrai
         for (HistoryEvent historyEvent : historyEvents)
             if (!processHistoryEvent(serial, temporaryBasals, historyEvent))
                 break;
-        temporaryBasals.sort((o1, o2) -> (int) (o2.getTimestamp() - o1.getTimestamp()));
+        temporaryBasals.sort((o1, o2) -> (int) (o1.getTimestamp() - o2.getTimestamp()));
         for (PumpSync.PumpState.TemporaryBasal temporaryBasal : temporaryBasals)
             if (temporaryBasal.getDuration() == 0)
                 pumpSync.syncStopTemporaryBasalWithPumpId(
@@ -1332,71 +1332,8 @@ public class LocalInsightPlugin extends PumpPluginBase implements Pump, Constrai
     private void processBolusProgrammedEvent(BolusProgrammedEvent event) {
         long timestamp = parseDate(event.getEventYear(), event.getEventMonth(), event.getEventDay(),
                 event.getEventHour(), event.getEventMinute(), event.getEventSecond()) + timeOffset;
-        /*
-        InsightBolusID bolusID = databaseHelper.getInsightBolusID(serial, event.getBolusID(), timestamp);
-        if (bolusID != null && bolusID.endID != null) {
-            bolusID.startID = event.getEventPosition();
-            return;
-        }
-        if (bolusID == null || bolusID.startID != null) {
-            bolusID = new InsightBolusID();
-            bolusID.timestamp = timestamp;
-            bolusID.bolusID = event.getBolusID();
-            bolusID.pumpSerial = serial;
-        }
-        bolusID.startID = event.getEventPosition();
-        // Bloc disabled (with new database treated after processBolusDeliveredEvent so delivered treatment is replaced by programmed treatment
-        databaseHelper.createOrUpdate(bolusID);
-        if (event.getBolusType() == BolusType.STANDARD || event.getBolusType() == BolusType.MULTIWAVE) {
-            DetailedBolusInfo detailedBolusInfo = new DetailedBolusInfo();
-            detailedBolusInfo.timestamp = bolusID.timestamp;
-            detailedBolusInfo.setPumpType(PumpType.ACCU_CHEK_INSIGHT);
-            detailedBolusInfo.setPumpSerial(serialNumber());
-            detailedBolusInfo.setBolusPumpId(bolusID.id);
-            detailedBolusInfo.insulin = event.getImmediateAmount();
-            treatmentsPlugin.addToHistoryTreatment(detailedBolusInfo, true);
-        }
-        if ((event.getBolusType() == BolusType.EXTENDED || event.getBolusType() == BolusType.MULTIWAVE)) {
-            ExtendedBolus extendedBolus = new ExtendedBolus(getInjector());
-            extendedBolus.date = bolusID.timestamp;
-            extendedBolus.source = Source.PUMP;
-            extendedBolus.durationInMinutes = event.getDuration();
-            extendedBolus.insulin = event.getExtendedAmount();
-            extendedBolus.pumpId = bolusID.id;
-            if (profileFunction.getProfile(extendedBolus.date) != null)
-                treatmentsPlugin.addToHistoryExtendedBolus(extendedBolus);
-        }
-        if (event.getBolusType() == BolusType.STANDARD || event.getBolusType() == BolusType.MULTIWAVE) {
-            pumpSync.syncBolusWithPumpId(
-                    timestamp,
-                    event.getImmediateAmount(),
-                    null,
-                    event.getBolusID(),
-                    PumpType.ACCU_CHEK_INSIGHT,
-                    serial);
-        }
-        if (event.getBolusType() == BolusType.EXTENDED || event.getBolusType() == BolusType.MULTIWAVE) {
-            if (event.getDuration() == 0) {
-                // TODO()    => Search if an extendedBolus exist in database and disable it
-                ExtendedBolus extendedBolus = databaseHelper.getExtendedBolusByPumpId(bolusID.id);
-                if (extendedBolus != null) {
-                    final String _id = extendedBolus._id;
-                    databaseHelper.delete(extendedBolus);
-                }
-    } else {
-        if (profileFunction.getProfile(startTimestamp) != null)
-            pumpSync.syncExtendedBolusWithPumpId(
-                    timestamp,
-                    event.getExtendedAmount(),
-                    T.mins(event.getDuration()).msecs(),
-                    true,
-                    event.getBolusID(),
-                    PumpType.ACCU_CHEK_INSIGHT,
-                    serial);
-        //fun syncExtendedBolusWithPumpId(timestamp: Long, amount: Double, duration: Long, isEmulatingTB: Boolean, pumpId: Long, pumpType: PumpType, pumpSerial: String): Boolean
-    }
-}
-        */
+        aapsLogger.debug("XXXXX BolusID: " + event.getBolusID() + " immediat amount: " + event.getImmediateAmount() + " extendedamount: " + event.getExtendedAmount() + " Duration: " + event.getDuration() + " timestamp: " + timestamp);
+
     }
 
     private void processBolusDeliveredEvent(String serial, BolusDeliveredEvent event) {
@@ -1404,6 +1341,8 @@ public class LocalInsightPlugin extends PumpPluginBase implements Pump, Constrai
                 event.getEventHour(), event.getEventMinute(), event.getEventSecond()) + timeOffset;
         long startTimestamp = parseRelativeDate(event.getEventYear(), event.getEventMonth(), event.getEventDay(), event.getEventHour(),
                 event.getEventMinute(), event.getEventSecond(), event.getStartHour(), event.getStartMinute(), event.getStartSecond()) + timeOffset;
+        aapsLogger.debug("XXXXX BolusID: " + event.getBolusID() + " immediat amount: " + event.getImmediateAmount() + " extendedamount: " + event.getExtendedAmount() + " Duration: " + event.getDuration() + " timestamp: " + timestamp + " startts: " + startTimestamp);
+
         if (event.getBolusType() == BolusType.STANDARD || event.getBolusType() == BolusType.MULTIWAVE) {
             pumpSync.syncBolusWithPumpId(
                     startTimestamp,
