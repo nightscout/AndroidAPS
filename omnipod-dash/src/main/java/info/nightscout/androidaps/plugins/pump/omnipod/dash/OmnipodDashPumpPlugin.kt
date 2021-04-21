@@ -466,6 +466,7 @@ class OmnipodDashPumpPlugin @Inject constructor(
                 },
                 onError = { throwable ->
                     aapsLogger.error(LTag.PUMP, "Error executing command", throwable)
+                    podStateManager.resetActiveCommand()
                     source.onSuccess(
                         PumpEnactResult(injector).success(false).enacted(false).comment(throwable.message)
                     )

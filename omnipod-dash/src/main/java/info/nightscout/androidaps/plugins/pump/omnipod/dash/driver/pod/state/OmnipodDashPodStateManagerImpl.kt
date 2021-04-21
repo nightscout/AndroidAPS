@@ -203,6 +203,11 @@ class OmnipodDashPodStateManagerImpl @Inject constructor(
     }
 
     @Synchronized
+    override fun resetActiveCommand() {
+        podState.activeCommand = null
+    }
+
+    @Synchronized
     override fun updateActiveCommand() = Maybe.create<PodEvent> { source ->
         podState.activeCommand?.run {
             logger.debug(

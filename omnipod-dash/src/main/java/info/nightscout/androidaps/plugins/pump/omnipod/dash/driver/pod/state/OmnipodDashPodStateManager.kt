@@ -68,6 +68,7 @@ interface OmnipodDashPodStateManager {
 
     fun createActiveCommand(historyId: String): Completable
     fun updateActiveCommand(): Maybe<PodEvent>
+    fun resetActiveCommand()
 
     data class ActiveCommand(
         val sequence: Short,
