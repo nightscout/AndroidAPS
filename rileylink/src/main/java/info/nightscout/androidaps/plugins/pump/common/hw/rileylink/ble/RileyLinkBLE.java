@@ -614,10 +614,7 @@ public class RileyLinkBLE {
 
     private List<ScanFilter> buildScanFilters() {
         ArrayList scanFilterList = new ArrayList<>();
-        // 通过服务 uuid 过滤自己要连接的设备   过滤器搜索GATT服务UUID
         ScanFilter.Builder scanFilterBuilder = new ScanFilter.Builder();
-//        ParcelUuid parcelUuid = ParcelUuid.fromString(Bubble.NRF_UART_NOTF);
-//        scanFilterBuilder.setServiceUuid(parcelUuidMask, parcelUuid);
         scanFilterBuilder.setDeviceAddress(macAddress);
         scanFilterList.add(scanFilterBuilder.build());
         return scanFilterList;
@@ -626,13 +623,8 @@ public class RileyLinkBLE {
     @TargetApi(Build.VERSION_CODES.M)
     private ScanSettings buildScanSettings() {
         ScanSettings.Builder scanSettingBuilder = new ScanSettings.Builder();
-        //设置蓝牙LE扫描的扫描模式。
-        //使用最高占空比进行扫描。建议只在应用程序处于此模式时使用此模式在前台运行
         scanSettingBuilder.setScanMode(ScanSettings.SCAN_MODE_LOW_LATENCY);
-        //在主动模式下，即使信号强度较弱，hw也会更快地确定匹配.在一段时间内很少有目击/匹配。
         scanSettingBuilder.setMatchMode(ScanSettings.MATCH_MODE_AGGRESSIVE);
-        //设置蓝牙LE扫描的回调类型
-        //为每一个匹配过滤条件的蓝牙广告触发一个回调。如果没有过滤器是活动的，所有的广告包被报告
         scanSettingBuilder.setCallbackType(ScanSettings.CALLBACK_TYPE_ALL_MATCHES);
         return scanSettingBuilder.build();
     }
