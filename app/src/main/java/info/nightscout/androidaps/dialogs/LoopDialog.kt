@@ -195,6 +195,7 @@ class LoopDialog : DaggerDialogFragment() {
                 binding.overviewDisconnectButtons.visibility = View.GONE
                 binding.overviewReconnect.visibility = View.VISIBLE
             }
+            binding.overviewLoop.visibility = (!loopPlugin.isSuspended && !loopPlugin.isDisconnected).toVisibility()
         }
         val profile = profileFunction.getProfile()
         val profileStore = activePlugin.activeProfileInterface.profile
