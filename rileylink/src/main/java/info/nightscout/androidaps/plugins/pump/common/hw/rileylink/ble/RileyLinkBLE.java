@@ -687,7 +687,6 @@ public class RileyLinkBLE {
                         rileyLinkDevice = device;
                         connectGatt();
                     }
-//                    }
                 }
             }, 1);
         }
