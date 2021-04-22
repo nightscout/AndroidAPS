@@ -502,7 +502,7 @@ public class RileyLinkBLE {
     // call from main
     BLECommOperationResult writeCharacteristic_blocking(UUID serviceUUID, UUID charaUUID, byte[] value) {
         BLECommOperationResult rval = new BLECommOperationResult();
-        aapsLogger.error(LTag.PUMPBTCOMM, "mIsConnected====="+mIsConnected);
+        aapsLogger.error(LTag.PUMPBTCOMM, "mIsConnected=====" + mIsConnected);
         if (bluetoothConnectionGatt != null && mIsConnected) {
             rval.value = value;
             try {
@@ -551,7 +551,7 @@ public class RileyLinkBLE {
 
     BLECommOperationResult readCharacteristic_blocking(UUID serviceUUID, UUID charaUUID) {
         BLECommOperationResult rval = new BLECommOperationResult();
-        aapsLogger.error(LTag.PUMPBTCOMM, "mIsConnected====="+mIsConnected);
+        aapsLogger.error(LTag.PUMPBTCOMM, "mIsConnected=====" + mIsConnected);
         if (bluetoothConnectionGatt != null && mIsConnected) {
             try {
                 gattOperationSema.acquire();
@@ -629,16 +629,9 @@ public class RileyLinkBLE {
         return scanSettingBuilder.build();
     }
 
-    public static int startScan;
-
     public void startScan() {
         try {
-            if (startScan >= 10) {
-                startScan = 0;
-                return;
-            }
             stopScan();
-            startScan++;
             aapsLogger.debug(LTag.PUMPBTCOMM, "startScan");
             handler.sendEmptyMessageDelayed(TIME_OUT_WHAT, TIME_OUT);
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
@@ -662,10 +655,8 @@ public class RileyLinkBLE {
         @Override
         public void onScanResult(int callbackType, ScanResult result) {
             super.onScanResult(callbackType, result);
-//            UserError.Log.e(TAG, "onScanResult");
             String name = result.getDevice().getName();
             String address = result.getDevice().getAddress();
-//            if (!TextUtils.isEmpty(name)) {//&& rssi > -60
             if (macAddress.equals(address)) {
                 stopScan();
                 rileyLinkDevice = result.getDevice();
@@ -683,7 +674,6 @@ public class RileyLinkBLE {
         public void onScanFailed(int errorCode) {
             super.onScanFailed(errorCode);
             stopScan();
-            startScan = startScan + 1;
         }
     };
     private BluetoothAdapter.LeScanCallback mLeScanCallback = new BluetoothAdapter.LeScanCallback() {
@@ -692,7 +682,6 @@ public class RileyLinkBLE {
             Platform.get().postDelayedMain(new Runnable() {
                 @Override
                 public void run() {
-
                     if (macAddress.equals(device.getAddress())) {
                         stopScan();
                         rileyLinkDevice = device;
