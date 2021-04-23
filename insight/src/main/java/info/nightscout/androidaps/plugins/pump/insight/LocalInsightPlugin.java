@@ -780,16 +780,7 @@ public class LocalInsightPlugin extends PumpPluginBase implements Pump, Constrai
             bolusMessage.setExtendedAmount(insulin);
             bolusMessage.setImmediateAmount(0);
             bolusMessage.setVibration(disableVibration);
-            int bolusID = connectionService.requestMessage(bolusMessage).await().getBolusId();
-            long timestamp = dateUtil.now();
-            pumpSync.syncExtendedBolusWithPumpId(
-                    timestamp,
-                    insulin,
-                    T.mins(durationInMinutes).msecs(),
-                    true,
-                    bolusID,
-                    PumpType.ACCU_CHEK_INSIGHT,
-                    serialNumber());
+            connectionService.requestMessage(bolusMessage).await().getBolusId();
             result.success(true).enacted(true).comment(R.string.virtualpump_resultok);
         } catch (AppLayerErrorException e) {
             aapsLogger.info(LTag.PUMP, "Exception while delivering extended bolus: " + e.getClass().getCanonicalName() + " (" + e.getErrorCode() + ")");
@@ -887,16 +878,7 @@ public class LocalInsightPlugin extends PumpPluginBase implements Pump, Constrai
                     connectionService.requestMessage(cancelBolusMessage).await();
                     confirmAlert(AlertType.WARNING_38);
                     alertService.ignore(null);
-                    PumpSync.PumpState.ExtendedBolus eb = pumpSync.expectedPumpState().getExtendedBolus();
-                    if (eb != null) {
-                        long timestamp = dateUtil.now();
-                        pumpSync.syncStopExtendedBolusWithPumpId(
-                                timestamp,
-                                eb.getTimestamp(),
-                                PumpType.ACCU_CHEK_INSIGHT,
-                                serialNumber());
-                        result.enacted(true).success(true);
-                    }
+                    result.enacted(true).success(true);
                 }
             }
             result.success(true).comment(R.string.virtualpump_resultok);
@@ -1118,20 +1100,25 @@ public class LocalInsightPlugin extends PumpPluginBase implements Pump, Constrai
             timeOffset = Calendar.getInstance(TimeZone.getTimeZone("UTC")).getTimeInMillis() - parseDate(pumpTime.getYear(),
                     pumpTime.getMonth(), pumpTime.getDay(), pumpTime.getHour(), pumpTime.getMinute(), pumpTime.getSecond());
             aapsLogger.debug("XXXX Start History Ref Timestamp Now: " + dateUtil.dateAndTimeAndSecondsString(dateUtil.now()));
+            PumpSync.PumpState.TemporaryBasal tbr = pumpSync.expectedPumpState().getTemporaryBasal();
+            if (tbr != null)
+                aapsLogger.debug("XXXX start history tbr found in database " + dateUtil.dateAndTimeAndSecondsString(tbr.getTimestamp()) + " Duration: " + tbr.getDuration()/60000 + " Rate: " + tbr.getRate());
+            else
+                aapsLogger.debug("XXXX start history no tbr found in database ");
             try {
                 StartReadingHistoryMessage startMessage = new StartReadingHistoryMessage();
-                startMessage.setDirection(HistoryReadingDirection.BACKWARD); // TODO() Simplify history read Forward and
+                startMessage.setDirection(HistoryReadingDirection.BACKWARD);
                 startMessage.setOffset(0xFFFFFFFF);
                 connectionService.requestMessage(startMessage).await();
                 List<HistoryEvent> historyEvents = connectionService.requestMessage(new ReadHistoryEventsMessage()).await().getHistoryEvents();
                 Collections.sort(historyEvents);
-                Collections.reverse(historyEvents);
+                //Collections.reverse(historyEvents);   //Backward for event
                 if (historyEvents.size() > 0) processHistoryEvents(serialNumber(), historyEvents);
-                PumpSync.PumpState.TemporaryBasal tbr = pumpSync.expectedPumpState().getTemporaryBasal();
+                tbr = pumpSync.expectedPumpState().getTemporaryBasal();
                 if (tbr != null)
-                    aapsLogger.debug("XXXX End history tbr found in database " + dateUtil.dateAndTimeAndSecondsString(tbr.getTimestamp()) + " Duration: " + tbr.getDuration()/60000 + " Rate: " + tbr.getRate());
+                    aapsLogger.debug("XXXX End history tbr found in database " + dateUtil.dateAndTimeAndSecondsString(tbr.getTimestamp()) + " Duration: " + tbr.getDuration()/60000 + " Rate: " + tbr.getRate() + " HistorySize: " + historyEvents.size());
                 else
-                    aapsLogger.debug("XXXX End history no tbr found in database ");
+                    aapsLogger.debug("XXXX End history no tbr found in database " + " HistorySize: " + historyEvents.size());
             } catch (AppLayerErrorException e) {
                 aapsLogger.info(LTag.PUMP, "Exception while reading history: " + e.getClass().getCanonicalName() + " (" + e.getErrorCode() + ")");
             } catch (InsightException e) {
@@ -1204,7 +1191,7 @@ public class LocalInsightPlugin extends PumpPluginBase implements Pump, Constrai
         else if (event instanceof EndOfTBREvent)
             processEndOfTBREvent(temporaryBasals, (EndOfTBREvent) event);
         else if (event instanceof BolusProgrammedEvent)
-            processBolusProgrammedEvent((BolusProgrammedEvent) event);
+            processBolusProgrammedEvent(serial, (BolusProgrammedEvent) event);
         else if (event instanceof BolusDeliveredEvent)
             processBolusDeliveredEvent(serial, (BolusDeliveredEvent) event);
         else if (event instanceof OccurrenceOfAlertEvent)
@@ -1348,11 +1335,31 @@ public class LocalInsightPlugin extends PumpPluginBase implements Pump, Constrai
         temporaryBasals.add(temporaryBasal);
     }
 
-    private void processBolusProgrammedEvent(BolusProgrammedEvent event) {
+    private void processBolusProgrammedEvent(String serial, BolusProgrammedEvent event) {
         long timestamp = parseDate(event.getEventYear(), event.getEventMonth(), event.getEventDay(),
                 event.getEventHour(), event.getEventMinute(), event.getEventSecond()) + timeOffset;
-        //aapsLogger.debug("XXXXX BolusID: " + event.getBolusID() + " immediat amount: " + event.getImmediateAmount() + " extendedamount: " + event.getExtendedAmount() + " Duration: " + event.getDuration() + " timestamp: " + timestamp);
+        aapsLogger.debug("XXXXX only log BolusID: " + event.getBolusID() + " immediat amount: " + event.getImmediateAmount() + " extendedamount: " + event.getExtendedAmount() + " Duration: " + event.getDuration() + " timestamp: " + timestamp);
 
+        if (event.getBolusType() == BolusType.STANDARD || event.getBolusType() == BolusType.MULTIWAVE) {
+            pumpSync.syncBolusWithPumpId(
+                    timestamp,
+                    event.getImmediateAmount(),
+                    null,
+                    event.getBolusID(),
+                    PumpType.ACCU_CHEK_INSIGHT,
+                    serial);
+        }
+        if (event.getBolusType() == BolusType.EXTENDED || event.getBolusType() == BolusType.MULTIWAVE) {
+            if (profileFunction.getProfile(timestamp) != null)
+                pumpSync.syncExtendedBolusWithPumpId(
+                        timestamp,
+                        event.getExtendedAmount(),
+                        T.mins(event.getDuration()).msecs(),
+                        true,
+                        event.getBolusID(),
+                        PumpType.ACCU_CHEK_INSIGHT,
+                        serial);
+        }
     }
 
     private void processBolusDeliveredEvent(String serial, BolusDeliveredEvent event) {
