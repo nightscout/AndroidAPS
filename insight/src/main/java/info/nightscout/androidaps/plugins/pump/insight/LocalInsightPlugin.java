@@ -1148,7 +1148,7 @@ public class LocalInsightPlugin extends PumpPluginBase implements Pump, Constrai
                 break;
         temporaryBasals.sort((o1, o2) -> (int) (o1.getTimestamp() - o2.getTimestamp()));
         for (PumpSync.PumpState.TemporaryBasal temporaryBasal : temporaryBasals)
-            if (temporaryBasal.getDuration() == 0) {
+            if (temporaryBasal.getRate() == 100.0) {
                 Boolean resultdb = pumpSync.syncStopTemporaryBasalWithPumpId(
                         temporaryBasal.getTimestamp(),
                         temporaryBasal.getPumpId(),
@@ -1277,23 +1277,30 @@ public class LocalInsightPlugin extends PumpPluginBase implements Pump, Constrai
     private void processOperatingModeChangedEvent(List<PumpSync.PumpState.TemporaryBasal> temporaryBasals, OperatingModeChangedEvent event) {
         long timestamp = parseDate(event.getEventYear(), event.getEventMonth(), event.getEventDay(),
                 event.getEventHour(), event.getEventMinute(), event.getEventSecond()) + timeOffset;
-        //TemporaryBasal with null Duration is a stop event
-        PumpSync.PumpState.TemporaryBasal temporaryBasal = new PumpSync.PumpState.TemporaryBasal(
-                timestamp + 10000L,
-                0L,
-                0.0,
-                false,
-                PumpSync.TemporaryBasalType.NORMAL,
-                timestamp + 10000L,
-                timestamp + 10000L);
         switch (event.getNewValue()) {
-            case STARTED:
-                temporaryBasals.add(temporaryBasal);
+            case STARTED:                                           // TODO() remove cancel TBR and replace by duration between Stop and start event
+                PumpSync.PumpState.TemporaryBasal stopTbr = new PumpSync.PumpState.TemporaryBasal(
+                        timestamp + 10000L,
+                        0L,
+                        100.0,
+                        false,
+                        PumpSync.TemporaryBasalType.NORMAL,
+                        timestamp + 10000L,
+                        timestamp + 10000L);
+                temporaryBasals.add(stopTbr);
                 if (sp.getBoolean("insight_log_operating_mode_changes", false))
                     logNote(timestamp, resourceHelper.gs(R.string.pump_started));
                 break;
             case STOPPED:
-                temporaryBasals.add(temporaryBasal);
+                PumpSync.PumpState.TemporaryBasal setTbr = new PumpSync.PumpState.TemporaryBasal(
+                        timestamp + 10000L,
+                        T.hours(10).msecs(),                        // TODO() replace 10 hours with duration between Stopped and next start event
+                        0.0,
+                        false,
+                        PumpSync.TemporaryBasalType.NORMAL,
+                        timestamp + 10000L,
+                        timestamp + 10000L);
+                temporaryBasals.add(setTbr);
                 if (sp.getBoolean("insight_log_operating_mode_changes", false))
                     logNote(timestamp, resourceHelper.gs(R.string.pump_stopped));
                 break;
@@ -1327,7 +1334,7 @@ public class LocalInsightPlugin extends PumpPluginBase implements Pump, Constrai
         PumpSync.PumpState.TemporaryBasal temporaryBasal = new PumpSync.PumpState.TemporaryBasal(
                 timestamp - 1500L,
                 0L,
-                0.0,
+                100.0,
                 false,
                 PumpSync.TemporaryBasalType.NORMAL,
                 timestamp - 1500L,
