@@ -363,7 +363,7 @@ public class LocalInsightPlugin extends PumpPluginBase implements Pump, Constrai
         calendar.set(Calendar.HOUR_OF_DAY, pumpTime.getHour());
         calendar.set(Calendar.MINUTE, pumpTime.getMinute());
         calendar.set(Calendar.SECOND, pumpTime.getSecond());
-        if (calendar.get(Calendar.HOUR_OF_DAY) != pumpTime.getHour() || Math.abs(calendar.getTimeInMillis() - System.currentTimeMillis()) > 10000) {
+        if (calendar.get(Calendar.HOUR_OF_DAY) != pumpTime.getHour() || Math.abs(calendar.getTimeInMillis() - dateUtil.now()) > 10000) {
             calendar.setTime(new Date());
             pumpTime.setYear(calendar.get(Calendar.YEAR));
             pumpTime.setMonth(calendar.get(Calendar.MONTH) + 1);
@@ -531,7 +531,7 @@ public class LocalInsightPlugin extends PumpPluginBase implements Pump, Constrai
 
     @Override
     public long lastDataTime() {
-        if (connectionService == null || alertService == null) return System.currentTimeMillis();
+        if (connectionService == null || alertService == null) return dateUtil.now();
         return connectionService.getLastDataTime();
     }
 
@@ -581,7 +581,7 @@ public class LocalInsightPlugin extends PumpPluginBase implements Pump, Constrai
                 bolusingEvent.setPercent(0);
                 rxBus.send(bolusingEvent);
                 int trials = 0;
-                long timestamp = System.currentTimeMillis();
+                long timestamp = dateUtil.now();
                 pumpSync.syncBolusWithPumpId(
                         timestamp,
                         detailedBolusInfo.insulin,
@@ -781,7 +781,7 @@ public class LocalInsightPlugin extends PumpPluginBase implements Pump, Constrai
             bolusMessage.setImmediateAmount(0);
             bolusMessage.setVibration(disableVibration);
             int bolusID = connectionService.requestMessage(bolusMessage).await().getBolusId();
-            long timestamp = System.currentTimeMillis();
+            long timestamp = dateUtil.now();
             pumpSync.syncExtendedBolusWithPumpId(
                     timestamp,
                     insulin,
@@ -836,6 +836,13 @@ public class LocalInsightPlugin extends PumpPluginBase implements Pump, Constrai
                     .isTempCancel(true);
             confirmAlert(AlertType.WARNING_36);
             alertService.ignore(null);
+            PumpSync.PumpState.TemporaryBasal tbr = pumpSync.expectedPumpState().getTemporaryBasal();
+            aapsLogger.debug("XXXX Search for running tbr in database");
+            if (tbr != null) {
+                aapsLogger.debug("XXXX running tbr found : " + dateUtil.dateAndTimeAndSecondsString(tbr.getTimestamp()) + " duration: " + tbr.getDuration()/60000 + " id: " + tbr.getId() + " pumpId: " + tbr.getPumpId() + " rate: " + tbr.getRate() + " type: " + tbr.getType() /*+ " result: " + resultdb*/);
+            } else
+                aapsLogger.debug("XXXX running tbr not found");
+            aapsLogger.debug("XXXX Cancel TBR enacted in pump : " + dateUtil.dateAndTimeAndSecondsString(dateUtil.now()));
             result.comment(R.string.virtualpump_resultok);
         } catch (NoActiveTBRToCanceLException e) {
             result.success(true);
@@ -882,7 +889,7 @@ public class LocalInsightPlugin extends PumpPluginBase implements Pump, Constrai
                     alertService.ignore(null);
                     PumpSync.PumpState.ExtendedBolus eb = pumpSync.expectedPumpState().getExtendedBolus();
                     if (eb != null) {
-                        long timestamp = System.currentTimeMillis();
+                        long timestamp = dateUtil.now();
                         pumpSync.syncStopExtendedBolusWithPumpId(
                                 timestamp,
                                 eb.getTimestamp(),
@@ -908,8 +915,8 @@ public class LocalInsightPlugin extends PumpPluginBase implements Pump, Constrai
 
     private void confirmAlert(AlertType alertType) {
         try {
-            long started = System.currentTimeMillis();
-            while (System.currentTimeMillis() - started < 10000) {
+            long started = dateUtil.now();
+            while (dateUtil.now() - started < 10000) {
                 GetActiveAlertMessage activeAlertMessage = connectionService.requestMessage(new GetActiveAlertMessage()).await();
                 if (activeAlertMessage.getAlert() != null) {
                     if (activeAlertMessage.getAlert().getAlertType() == alertType) {
@@ -930,9 +937,9 @@ public class LocalInsightPlugin extends PumpPluginBase implements Pump, Constrai
 
     @NonNull @Override
     public JSONObject getJSONStatus(@NonNull Profile profile, @NonNull String profileName, @NonNull String version) {
-        long now = System.currentTimeMillis();
+        long now = dateUtil.now();
         if (connectionService == null) return new JSONObject();
-        if (System.currentTimeMillis() - connectionService.getLastConnected() > (60 * 60 * 1000)) {
+        if (dateUtil.now() - connectionService.getLastConnected() > (60 * 60 * 1000)) {
             return new JSONObject();
         }
 
@@ -1070,7 +1077,7 @@ public class LocalInsightPlugin extends PumpPluginBase implements Pump, Constrai
     public String shortStatus(boolean veryShort) {
         StringBuilder ret = new StringBuilder();
         if (connectionService.getLastConnected() != 0) {
-            long agoMsec = System.currentTimeMillis() - connectionService.getLastConnected();
+            long agoMsec = dateUtil.now() - connectionService.getLastConnected();
             int agoMin = (int) (agoMsec / 60d / 1000d);
             ret.append(resourceHelper.gs(R.string.short_status_last_connected, agoMin)).append("\n");
         }
@@ -1110,15 +1117,21 @@ public class LocalInsightPlugin extends PumpPluginBase implements Pump, Constrai
             PumpTime pumpTime = connectionService.requestMessage(new GetDateTimeMessage()).await().getPumpTime();
             timeOffset = Calendar.getInstance(TimeZone.getTimeZone("UTC")).getTimeInMillis() - parseDate(pumpTime.getYear(),
                     pumpTime.getMonth(), pumpTime.getDay(), pumpTime.getHour(), pumpTime.getMinute(), pumpTime.getSecond());
+            aapsLogger.debug("XXXX Start History Ref Timestamp Now: " + dateUtil.dateAndTimeAndSecondsString(dateUtil.now()));
             try {
                 StartReadingHistoryMessage startMessage = new StartReadingHistoryMessage();
-                startMessage.setDirection(HistoryReadingDirection.BACKWARD); // TODO() Check if we can change to FORWARD, remove setOffset and see if it's still ok
+                startMessage.setDirection(HistoryReadingDirection.BACKWARD); // TODO() Simplify history read Forward and
                 startMessage.setOffset(0xFFFFFFFF);
                 connectionService.requestMessage(startMessage).await();
                 List<HistoryEvent> historyEvents = connectionService.requestMessage(new ReadHistoryEventsMessage()).await().getHistoryEvents();
                 Collections.sort(historyEvents);
                 Collections.reverse(historyEvents);
                 if (historyEvents.size() > 0) processHistoryEvents(serialNumber(), historyEvents);
+                PumpSync.PumpState.TemporaryBasal tbr = pumpSync.expectedPumpState().getTemporaryBasal();
+                if (tbr != null)
+                    aapsLogger.debug("XXXX End history tbr found in database " + dateUtil.dateAndTimeAndSecondsString(tbr.getTimestamp()) + " Duration: " + tbr.getDuration()/60000 + " Rate: " + tbr.getRate());
+                else
+                    aapsLogger.debug("XXXX End history no tbr found in database ");
             } catch (AppLayerErrorException e) {
                 aapsLogger.info(LTag.PUMP, "Exception while reading history: " + e.getClass().getCanonicalName() + " (" + e.getErrorCode() + ")");
             } catch (InsightException e) {
@@ -1148,15 +1161,17 @@ public class LocalInsightPlugin extends PumpPluginBase implements Pump, Constrai
                 break;
         temporaryBasals.sort((o1, o2) -> (int) (o1.getTimestamp() - o2.getTimestamp()));
         for (PumpSync.PumpState.TemporaryBasal temporaryBasal : temporaryBasals)
-            if (temporaryBasal.getDuration() == 0)
-                pumpSync.syncStopTemporaryBasalWithPumpId(
+            if (temporaryBasal.getDuration() == 0) {
+                Boolean resultdb = pumpSync.syncStopTemporaryBasalWithPumpId(
                         temporaryBasal.getTimestamp(),
                         temporaryBasal.getPumpId(),
                         PumpType.ACCU_CHEK_INSIGHT,
                         serialNumber());
+                aapsLogger.debug("XXXX sync stoptbr: " + temporaryBasal.getTimestamp() + " date: " + dateUtil.dateAndTimeAndSecondsString(temporaryBasal.getTimestamp()) + " id: " + temporaryBasal.getId() + " pumpId: " + temporaryBasal.getPumpId() + " resultdb: " + resultdb);
+            }
             //fun syncStopTemporaryBasalWithPumpId(timestamp: Long, endPumpId: Long, pumpType: PumpType, pumpSerial: String): Boolean
-            else
-                pumpSync.syncTemporaryBasalWithPumpId(
+            else {
+                Boolean resultdb = pumpSync.syncTemporaryBasalWithPumpId(
                         temporaryBasal.getTimestamp(),
                         temporaryBasal.getRate(),
                         temporaryBasal.getDuration(),
@@ -1165,6 +1180,8 @@ public class LocalInsightPlugin extends PumpPluginBase implements Pump, Constrai
                         temporaryBasal.getPumpId(),
                         PumpType.ACCU_CHEK_INSIGHT,
                         serial);
+                aapsLogger.debug("XXXX sync starttbr: " + temporaryBasal.getTimestamp() + " date: " + dateUtil.dateAndTimeAndSecondsString(temporaryBasal.getTimestamp()) + " duration: " + temporaryBasal.getDuration()/60000 + " id: " + temporaryBasal.getId() + " pumpId: " + temporaryBasal.getPumpId() + " rate: " + temporaryBasal.getRate() + " type: " + temporaryBasal.getType() + " resultdb: " + resultdb);
+            }
             //fun syncTemporaryBasalWithPumpId(timestamp: Long, rate: Double, duration: Long, isAbsolute: Boolean, type: TemporaryBasalType?, pumpId: Long, pumpType: PumpType, pumpSerial: String): Boolean
     }
 
@@ -1304,6 +1321,7 @@ public class LocalInsightPlugin extends PumpPluginBase implements Pump, Constrai
     private void processStartOfTBREvent(List<PumpSync.PumpState.TemporaryBasal> temporaryBasals, StartOfTBREvent event) {
         long timestamp = parseDate(event.getEventYear(), event.getEventMonth(), event.getEventDay(),
                 event.getEventHour(), event.getEventMinute(), event.getEventSecond()) + timeOffset;
+        aapsLogger.debug("XXXX event StartTbr history rec Timestamp: " + timestamp + " date: " + dateUtil.dateAndTimeAndSecondsString(timestamp) + " duration: " + event.getDuration()/60000 + " rate: " + event.getAmount() + " TimeOffset: " + timeOffset);
         PumpSync.PumpState.TemporaryBasal temporaryBasal = new PumpSync.PumpState.TemporaryBasal(
                 timestamp,
                 T.mins(event.getDuration()).msecs(),
@@ -1318,6 +1336,7 @@ public class LocalInsightPlugin extends PumpPluginBase implements Pump, Constrai
     private void processEndOfTBREvent(List<PumpSync.PumpState.TemporaryBasal> temporaryBasals, EndOfTBREvent event) {
         long timestamp = parseDate(event.getEventYear(), event.getEventMonth(), event.getEventDay(),
                 event.getEventHour(), event.getEventMinute(), event.getEventSecond()) + timeOffset;
+        aapsLogger.debug("XXXX event StopTbr history rec Timestamp: " + timestamp + " date: " + dateUtil.dateAndTimeAndSecondsString(timestamp) + " TimeOffset: " + timeOffset);
         PumpSync.PumpState.TemporaryBasal temporaryBasal = new PumpSync.PumpState.TemporaryBasal(
                 timestamp - 1500L,
                 0L,
@@ -1332,7 +1351,7 @@ public class LocalInsightPlugin extends PumpPluginBase implements Pump, Constrai
     private void processBolusProgrammedEvent(BolusProgrammedEvent event) {
         long timestamp = parseDate(event.getEventYear(), event.getEventMonth(), event.getEventDay(),
                 event.getEventHour(), event.getEventMinute(), event.getEventSecond()) + timeOffset;
-        aapsLogger.debug("XXXXX BolusID: " + event.getBolusID() + " immediat amount: " + event.getImmediateAmount() + " extendedamount: " + event.getExtendedAmount() + " Duration: " + event.getDuration() + " timestamp: " + timestamp);
+        //aapsLogger.debug("XXXXX BolusID: " + event.getBolusID() + " immediat amount: " + event.getImmediateAmount() + " extendedamount: " + event.getExtendedAmount() + " Duration: " + event.getDuration() + " timestamp: " + timestamp);
 
     }
 
@@ -1341,7 +1360,7 @@ public class LocalInsightPlugin extends PumpPluginBase implements Pump, Constrai
                 event.getEventHour(), event.getEventMinute(), event.getEventSecond()) + timeOffset;
         long startTimestamp = parseRelativeDate(event.getEventYear(), event.getEventMonth(), event.getEventDay(), event.getEventHour(),
                 event.getEventMinute(), event.getEventSecond(), event.getStartHour(), event.getStartMinute(), event.getStartSecond()) + timeOffset;
-        aapsLogger.debug("XXXXX BolusID: " + event.getBolusID() + " immediat amount: " + event.getImmediateAmount() + " extendedamount: " + event.getExtendedAmount() + " Duration: " + event.getDuration() + " timestamp: " + timestamp + " startts: " + startTimestamp);
+        aapsLogger.debug("XXXXX BolusID: " + event.getBolusID() + " immediat amount: " + event.getImmediateAmount() + " extendedamount: " + event.getExtendedAmount() + " Duration: " + event.getDuration()/60000 + " timestamp: " + timestamp + " startts: " + startTimestamp);
 
         if (event.getBolusType() == BolusType.STANDARD || event.getBolusType() == BolusType.MULTIWAVE) {
             pumpSync.syncBolusWithPumpId(
