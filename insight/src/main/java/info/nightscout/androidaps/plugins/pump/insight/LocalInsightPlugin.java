@@ -141,7 +141,6 @@ public class LocalInsightPlugin extends PumpPluginBase implements Pump, Constrai
     private final Context context;
     private final DateUtil dateUtil;
     private final PumpSync pumpSync;
-    private final TemporaryBasalStorage temporaryBasalStorage;
 
     public static final String ALERT_CHANNEL_ID = "AndroidAPS-InsightAlert";
 
@@ -202,8 +201,7 @@ public class LocalInsightPlugin extends PumpPluginBase implements Pump, Constrai
             Context context,
             Config config,
             DateUtil dateUtil,
-            PumpSync pumpSync,
-            TemporaryBasalStorage temporaryBasalStorage
+            PumpSync pumpSync
     ) {
         super(new PluginDescription()
                         .pluginIcon(R.drawable.ic_insight_128)
@@ -225,7 +223,6 @@ public class LocalInsightPlugin extends PumpPluginBase implements Pump, Constrai
         this.context = context;
         this.dateUtil = dateUtil;
         this.pumpSync = pumpSync;
-        this.temporaryBasalStorage = temporaryBasalStorage;
 
         pumpDescription = new PumpDescription();
         pumpDescription.setPumpDescription(PumpType.ACCU_CHEK_INSIGHT_BLUETOOTH);
@@ -1118,10 +1115,9 @@ public class LocalInsightPlugin extends PumpPluginBase implements Pump, Constrai
                 if (historyEvents.size() > 0) processHistoryEvents(serialNumber(), historyEvents);
                 tbr = pumpSync.expectedPumpState().getTemporaryBasal();
                 if (tbr != null) {
-                    temporaryBasalStorage.add(tbr);
-                    aapsLogger.debug("XXXX End history tbr found in database " + dateUtil.dateAndTimeAndSecondsString(tbr.getTimestamp()) + " Duration: " + tbr.getDuration() / 60000 + " DurationL: " + tbr.getDuration() + " Rate: " + tbr.getRate() + " HistorySize: " + historyEvents.size() + " tempStorageSize: " + temporaryBasalStorage.getStore().size());
+                    aapsLogger.debug("XXXX End history tbr found in database " + dateUtil.dateAndTimeAndSecondsString(tbr.getTimestamp()) + " Duration: " + tbr.getDuration() / 60000 + " DurationL: " + tbr.getDuration() + " Rate: " + tbr.getRate() + " HistorySize: " + historyEvents.size());
                 } else
-                    aapsLogger.debug("XXXX End history no tbr found in database " + " HistorySize: " + historyEvents.size() + " tempStorageSize: " + temporaryBasalStorage.getStore().size());
+                    aapsLogger.debug("XXXX End history no tbr found in database " + " HistorySize: " + historyEvents.size());
             } catch (AppLayerErrorException e) {
                 aapsLogger.info(LTag.PUMP, "Exception while reading history: " + e.getClass().getCanonicalName() + " (" + e.getErrorCode() + ")");
             } catch (InsightException e) {
@@ -1152,46 +1148,38 @@ public class LocalInsightPlugin extends PumpPluginBase implements Pump, Constrai
         temporaryBasals.sort((o1, o2) -> (int) (o1.getTimestamp() - o2.getTimestamp()));
         aapsLogger.debug("XXXX tbr size :" + temporaryBasals.size());
         for (TemporaryBasal temporaryBasal : temporaryBasals) {
-            TemporaryBasal temporaryBasalInfo = null;
             long newDuration = 0;
-            if (lastTbr != null) {
-                temporaryBasalInfo = temporaryBasalStorage.findTemporaryBasal(lastTbr.getTimestamp(), lastTbr.getRate());
-                newDuration = temporaryBasalInfo != null ? temporaryBasal.getTimestamp() - temporaryBasalInfo.getTimestamp() : lastTbr.getDuration();
-            }
+            if (lastTbr != null)
+                newDuration = temporaryBasal.getTimestamp() - lastTbr.getTimestamp();
 
-            if (temporaryBasal.getRate() == 100.0 && temporaryBasalInfo != null && lastTbr != null) {                    // for Stop TBR event 100.0
+            if (temporaryBasal.getRate() == 100.0 && lastTbr != null) {                    // for Stop TBR event 100.0
                 if (newDuration < lastTbr.getDuration() && newDuration > 0) {
                     Boolean resultdb = pumpSync.syncTemporaryBasalWithPumpId(
-                            temporaryBasalInfo.getTimestamp(),
-                            temporaryBasalInfo.getRate(),
+                            lastTbr.getTimestamp(),
+                            lastTbr.getRate(),
                             newDuration,
-                            temporaryBasalInfo.isAbsolute(),
-                            temporaryBasalInfo.getType(),
-                            pumpId(temporaryBasalInfo.getTimestamp(),temporaryBasalInfo.getRate()),
+                            lastTbr.isAbsolute(),
+                            lastTbr.getType(),
+                            lastTbr.getPumpId(),
                             PumpType.ACCU_CHEK_INSIGHT,
                             serial);
-                    aapsLogger.debug("XXXX sync updateTbr: " + temporaryBasalInfo.getTimestamp() + " date: " + dateUtil.dateAndTimeAndSecondsString(temporaryBasalInfo.getTimestamp()) + " duration: " + newDuration / 60000 + " durationL: " + newDuration + " pumpId: " + pumpId(temporaryBasalInfo.getTimestamp(),temporaryBasalInfo.getRate()) + " rate: " + temporaryBasalInfo.getRate() + " type: " + temporaryBasalInfo.getType() + " resultdb: " + resultdb);
+                    aapsLogger.debug("XXXX sync updateTbr: " + lastTbr.getTimestamp() + " date: " + dateUtil.dateAndTimeAndSecondsString(lastTbr.getTimestamp()) + " duration: " + newDuration / 60000 + " durationL: " + newDuration + " pumpId: " + lastTbr.getPumpId() + " rate: " + lastTbr.getRate() + " type: " + lastTbr.getType() + " resultdb: " + resultdb);
                 }
             }
             if (temporaryBasal.getRate() != 100.0 && temporaryBasal.getDuration() >= T.mins(1).msecs()){
-                temporaryBasalInfo = temporaryBasalStorage.findTemporaryBasal(temporaryBasal.getTimestamp(), temporaryBasal.getRate());
-                long timestamp = temporaryBasalInfo != null ? temporaryBasalInfo.getTimestamp() : temporaryBasal.getTimestamp();
-
                 Boolean resultdb = pumpSync.syncTemporaryBasalWithPumpId(
-                        timestamp,
+                        temporaryBasal.getTimestamp(),
                         temporaryBasal.getRate(),
                         temporaryBasal.getDuration(),
                         temporaryBasal.isAbsolute(),
                         temporaryBasal.getType(),
-                        pumpId(timestamp, temporaryBasal.getRate()),
+                        temporaryBasal.getPumpId(),
                         PumpType.ACCU_CHEK_INSIGHT,
                         serial);
-                temporaryBasalStorage.add(temporaryBasal);
                 lastTbr = temporaryBasal;
-                aapsLogger.debug("XXXX sync starttbr: " + timestamp + " date: " + dateUtil.dateAndTimeAndSecondsString(temporaryBasal.getTimestamp()) + " duration: " + temporaryBasal.getDuration() / 60000 + " durationL: " + temporaryBasal.getDuration() + " pumpId: " + pumpId(temporaryBasalInfo.getTimestamp(),temporaryBasalInfo.getRate()) + " rate: " + temporaryBasal.getRate() + " type: " + temporaryBasal.getType() + " resultdb: " + resultdb);
+                aapsLogger.debug("XXXX sync starttbr: " + temporaryBasal.getTimestamp() + " date: " + dateUtil.dateAndTimeAndSecondsString(temporaryBasal.getTimestamp()) + " duration: " + temporaryBasal.getDuration() / 60000 + " durationL: " + temporaryBasal.getDuration() + " pumpId: " + temporaryBasal.getPumpId() + " rate: " + temporaryBasal.getRate() + " type: " + temporaryBasal.getType() + " resultdb: " + resultdb);
             }
         }
-            //fun syncTemporaryBasalWithPumpId(timestamp: Long, rate: Double, duration: Long, isAbsolute: Boolean, type: TemporaryBasalType?, pumpId: Long, pumpType: PumpType, pumpSerial: String): Boolean
     }
 
     private boolean processHistoryEvent(String serial, List<TemporaryBasal> temporaryBasals, HistoryEvent event) {
@@ -1239,7 +1227,6 @@ public class LocalInsightPlugin extends PumpPluginBase implements Pump, Constrai
                 null,
                 PumpType.ACCU_CHEK_INSIGHT,
                 serial);
-        // fun insertTherapyEventIfNewWithTimestamp(timestamp: Long, type: DetailedBolusInfo.EventType, note: String? = null, pumpId: Long? = null, pumpType: PumpType, pumpSerial: String): Boolean
     }
 
     private void processTotalDailyDoseEvent(String serial, TotalDailyDoseEvent event) {
@@ -1270,7 +1257,6 @@ public class LocalInsightPlugin extends PumpPluginBase implements Pump, Constrai
                 null,
                 PumpType.ACCU_CHEK_INSIGHT,
                 serial);
-        // fun insertTherapyEventIfNewWithTimestamp(timestamp: Long, type: DetailedBolusInfo.EventType, note: String? = null, pumpId: Long? = null, pumpType: PumpType, pumpSerial: String): Boolean
     }
 
     private void processSniffingDoneEvent(SniffingDoneEvent event) {
@@ -1292,8 +1278,6 @@ public class LocalInsightPlugin extends PumpPluginBase implements Pump, Constrai
                 null,
                 PumpType.ACCU_CHEK_INSIGHT,
                 serial);
-        // fun insertTherapyEventIfNewWithTimestamp(timestamp: Long, type: DetailedBolusInfo.EventType, note: String? = null, pumpId: Long? = null, pumpType: PumpType, pumpSerial: String): Boolean
-
     }
 
     private void processOperatingModeChangedEvent(List<TemporaryBasal> temporaryBasals, OperatingModeChangedEvent event) {
@@ -1304,9 +1288,10 @@ public class LocalInsightPlugin extends PumpPluginBase implements Pump, Constrai
                 lastStartEvent = timestamp + 10000L;                        // I don't now the reason of 10s offset, so I keep it as it was in original Insight Driver
                 if (sp.getBoolean("insight_log_operating_mode_changes", false))
                     logNote(timestamp, resourceHelper.gs(R.string.pump_started));
+                aapsLogger.debug("XXXX START Event TimeStamp: " + lastStartEvent + " HMS: " + dateUtil.dateAndTimeAndSecondsString(lastStartEvent));
                 break;
             case STOPPED:
-                TemporaryBasal setTbr = new TemporaryBasal(
+                TemporaryBasal temporaryBasal = new TemporaryBasal(
                         timestamp,
                         lastStartEvent - timestamp,                 // event are in Backward order
                         0.0,
@@ -1314,7 +1299,8 @@ public class LocalInsightPlugin extends PumpPluginBase implements Pump, Constrai
                         PumpSync.TemporaryBasalType.NORMAL,
                         timestamp,
                         timestamp);
-                temporaryBasals.add(setTbr);
+                temporaryBasals.add(temporaryBasal);
+                aapsLogger.debug("XXXX STOP: " + timestamp + " HMS: " + dateUtil.dateAndTimeAndSecondsString(timestamp) + " ZeroTemp Duration (min): " + (lastStartEvent - timestamp)/60000);
                 if (sp.getBoolean("insight_log_operating_mode_changes", false))
                     logNote(timestamp, resourceHelper.gs(R.string.pump_stopped));
                 break;
@@ -1326,27 +1312,25 @@ public class LocalInsightPlugin extends PumpPluginBase implements Pump, Constrai
     }
 
     private void processStartOfTBREvent(List<PumpSync.PumpState.TemporaryBasal> temporaryBasals, StartOfTBREvent event) {
-        long eventtimestamp = parseDate(event.getEventYear(), event.getEventMonth(), event.getEventDay(),
+        long timestamp = parseDate(event.getEventYear(), event.getEventMonth(), event.getEventDay(),
                 event.getEventHour(), event.getEventMinute(), event.getEventSecond()) + timeOffset;
-        aapsLogger.debug("XXXX event StartTbr history rec Timestamp: " + eventtimestamp + " date: " + dateUtil.dateAndTimeAndSecondsString(eventtimestamp) + " duration: " + event.getDuration() + " durationL: " + T.mins(event.getDuration()).msecs() + " rate: " + event.getAmount() + " TimeOffset: " + timeOffset);
-        TemporaryBasal temporaryBasalInfo = temporaryBasalStorage.findTemporaryBasal(eventtimestamp, event.getAmount());
-        long timestamp = temporaryBasalInfo != null ? temporaryBasalInfo.getTimestamp() : eventtimestamp;
-        PumpSync.PumpState.TemporaryBasal temporaryBasal = new PumpSync.PumpState.TemporaryBasal(
+
+        //aapsLogger.debug("XXXX event StartTbr history rec Timestamp: " + timestamp + " date: " + dateUtil.dateAndTimeAndSecondsString(timestamp) + " duration: " + event.getDuration() + " durationL: " + T.mins(event.getDuration()).msecs() + " rate: " + event.getAmount() + " TimeOffset: " + timeOffset);
+        TemporaryBasal temporaryBasal = new TemporaryBasal(
                 timestamp,
                 T.mins(event.getDuration()).msecs(),
                 event.getAmount(),
                 false,
                 PumpSync.TemporaryBasalType.NORMAL,
-                timestamp,
-                timestamp);
+                pumpId(event),
+                pumpId(event));
         temporaryBasals.add(temporaryBasal);
-        temporaryBasalStorage.add(temporaryBasal);
     }
 
     private void processEndOfTBREvent(List<PumpSync.PumpState.TemporaryBasal> temporaryBasals, EndOfTBREvent event) {
         long timestamp = parseDate(event.getEventYear(), event.getEventMonth(), event.getEventDay(),
                 event.getEventHour(), event.getEventMinute(), event.getEventSecond()) + timeOffset;
-        aapsLogger.debug("XXXX event StopTbr history rec Timestamp: " + timestamp + " date: " + dateUtil.dateAndTimeAndSecondsString(timestamp) + " TimeOffset: " + timeOffset);
+        //aapsLogger.debug("XXXX event StopTbr history rec Timestamp: " + timestamp + " date: " + dateUtil.dateAndTimeAndSecondsString(timestamp) + " TimeOffset: " + timeOffset);
         PumpSync.PumpState.TemporaryBasal temporaryBasal = new PumpSync.PumpState.TemporaryBasal(
                 timestamp - 1500L,
                 0L,
@@ -1410,10 +1394,10 @@ public class LocalInsightPlugin extends PumpPluginBase implements Pump, Constrai
         }
     }
 
-    private long pumpId(long timestamp, double rate) {
-        long pumpId = 1000 * ((timestamp + 500)/1000) + (long) rate;
-        aapsLogger.debug("XXXX pumpId: " + pumpId + " timestamp: " + timestamp + " rate: " + rate);
-        return pumpId;
+    private long pumpId(StartOfTBREvent event) {
+        long timestamp = parseDate(event.getEventYear(), event.getEventMonth(), event.getEventDay(),
+                event.getEventHour(), event.getEventMinute(), event.getEventSecond()) - TimeZone.getDefault().getOffset(dateUtil.now());
+        return 1000 * ((timestamp + 500)/1000) + event.getAmount();
     }
 
     private void processOccurrenceOfAlertEvent(OccurrenceOfAlertEvent event) {
