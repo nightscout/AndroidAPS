@@ -35,10 +35,6 @@ public class DatabaseHelperProvider implements DatabaseHelperInterface {
         return MainApp.Companion.getDbHelper().getDanaRHistoryRecordsByType(type);
     }
 
-    @NonNull @Override public List<TDD> getTDDs() {
-        return MainApp.Companion.getDbHelper().getTDDs();
-    }
-
     @Override public long size(@NonNull String table) {
         return MainApp.Companion.getDbHelper().size(table);
     }
@@ -71,10 +67,6 @@ public class DatabaseHelperProvider implements DatabaseHelperInterface {
         return MainApp.Companion.getDbHelper().roundDateToSec(date);
     }
 
-    @Override public void createOrUpdateTDD(@NonNull TDD record) {
-        MainApp.Companion.getDbHelper().createOrUpdateTDD(record);
-    }
-
     @Override public boolean createOrUpdate(@NonNull TemporaryBasal tempBasal) {
         return MainApp.Companion.getDbHelper().createOrUpdate(tempBasal);
     }
@@ -94,10 +86,6 @@ public class DatabaseHelperProvider implements DatabaseHelperInterface {
 
     @Nullable @Override public OmnipodHistoryRecord findOmnipodHistoryRecordByPumpId(long pumpId) {
         return MainApp.Companion.getDbHelper().findOmnipodHistoryRecordByPumpId(pumpId);
-    }
-
-    @NonNull @Override public List<TDD> getTDDsForLastXDays(int days) {
-        return MainApp.Companion.getDbHelper().getTDDsForLastXDays(days);
     }
 
     @NonNull @Override public List<ProfileSwitch> getProfileSwitchData(long from, boolean ascending) {
@@ -170,10 +158,6 @@ public class DatabaseHelperProvider implements DatabaseHelperInterface {
 
     @NonNull @Override public List<ProfileSwitch> getAllProfileSwitches() {
         return MainApp.Companion.getDbHelper().getAllProfileSwitches();
-    }
-
-    @NonNull @Override public List<TDD> getAllTDDs() {
-        return MainApp.Companion.getDbHelper().getAllTDDs();
     }
 
     @NonNull @Override public List<OHQueueItem> getAllOHQueueItems(long maxEntries) {

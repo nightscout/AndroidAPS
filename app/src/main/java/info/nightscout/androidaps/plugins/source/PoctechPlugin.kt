@@ -81,7 +81,7 @@ class PoctechPlugin @Inject constructor(
                 repository.runTransactionForResult(CgmSourceTransaction(glucoseValues, emptyList(), null))
                     .doOnError {
                         aapsLogger.error(LTag.DATABASE, "Error while saving values from Poctech App", it)
-                        ret = Result.failure(workDataOf("Error" to it))
+                        ret = Result.failure(workDataOf("Error" to it.toString()))
                     }
                     .blockingGet()
                     .also { savedValues ->
@@ -92,7 +92,7 @@ class PoctechPlugin @Inject constructor(
                     }
             } catch (e: JSONException) {
                 aapsLogger.error("Exception: ", e)
-                ret = Result.failure(workDataOf("Error" to e))
+                ret = Result.failure(workDataOf("Error" to e.toString()))
             }
             return ret
         }

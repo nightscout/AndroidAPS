@@ -44,7 +44,7 @@ class NSClientAddAckWorker(
                 repository.runTransactionForResult(UpdateNsIdTemporaryTargetTransaction(pair.value))
                     .doOnError { error ->
                         aapsLogger.error(LTag.DATABASE, "Updated ns id of TemporaryTarget failed", error)
-                        ret = Result.failure((workDataOf("Error" to error)))
+                        ret = Result.failure((workDataOf("Error" to error.toString())))
                     }
                     .doOnSuccess {
                         ret = Result.success(workDataOf("ProcessedData" to pair.toString()))
@@ -63,7 +63,7 @@ class NSClientAddAckWorker(
                 repository.runTransactionForResult(UpdateNsIdGlucoseValueTransaction(pair.value))
                     .doOnError { error ->
                         aapsLogger.error(LTag.DATABASE, "Updated ns id of GlucoseValue failed", error)
-                        ret = Result.failure((workDataOf("Error" to error)))
+                        ret = Result.failure((workDataOf("Error" to error.toString())))
                     }
                     .doOnSuccess {
                         ret = Result.success(workDataOf("ProcessedData" to pair.toString()))
@@ -82,7 +82,7 @@ class NSClientAddAckWorker(
                 repository.runTransactionForResult(UpdateNsIdFoodTransaction(pair.value))
                     .doOnError { error ->
                         aapsLogger.error(LTag.DATABASE, "Updated ns id of Food failed", error)
-                        ret = Result.failure((workDataOf("Error" to error)))
+                        ret = Result.failure((workDataOf("Error" to error.toString())))
                     }
                     .doOnSuccess {
                         ret = Result.success(workDataOf("ProcessedData" to pair.toString()))
@@ -101,7 +101,7 @@ class NSClientAddAckWorker(
                 repository.runTransactionForResult(UpdateNsIdTherapyEventTransaction(pair.value))
                     .doOnError { error ->
                         aapsLogger.error(LTag.DATABASE, "Updated ns id of TherapyEvent failed", error)
-                        ret = Result.failure((workDataOf("Error" to error)))
+                        ret = Result.failure((workDataOf("Error" to error.toString())))
                     }
                     .doOnSuccess {
                         ret = Result.success(workDataOf("ProcessedData" to pair.toString()))
@@ -120,7 +120,7 @@ class NSClientAddAckWorker(
                 repository.runTransactionForResult(UpdateNsIdBolusTransaction(pair.value))
                     .doOnError { error ->
                         aapsLogger.error(LTag.DATABASE, "Updated ns id of Bolus failed", error)
-                        ret = Result.failure((workDataOf("Error" to error)))
+                        ret = Result.failure((workDataOf("Error" to error.toString())))
                     }
                     .doOnSuccess {
                         ret = Result.success(workDataOf("ProcessedData" to pair.toString()))
@@ -139,7 +139,7 @@ class NSClientAddAckWorker(
                 repository.runTransactionForResult(UpdateNsIdCarbsTransaction(pair.value))
                     .doOnError { error ->
                         aapsLogger.error(LTag.DATABASE, "Updated ns id of Carbs failed", error)
-                        ret = Result.failure((workDataOf("Error" to error)))
+                        ret = Result.failure((workDataOf("Error" to error.toString())))
                     }
                     .doOnSuccess {
                         ret = Result.success(workDataOf("ProcessedData" to pair.toString()))
@@ -158,7 +158,7 @@ class NSClientAddAckWorker(
                 repository.runTransactionForResult(UpdateNsIdBolusCalculatorResultTransaction(pair.value))
                     .doOnError { error ->
                         aapsLogger.error(LTag.DATABASE, "Updated ns id of BolusCalculatorResult failed", error)
-                        ret = Result.failure((workDataOf("Error" to error)))
+                        ret = Result.failure((workDataOf("Error" to error.toString())))
                     }
                     .doOnSuccess {
                         ret = Result.success(workDataOf("ProcessedData" to pair.toString()))
@@ -177,7 +177,7 @@ class NSClientAddAckWorker(
                 repository.runTransactionForResult(UpdateNsIdTemporaryBasalTransaction(pair.value))
                     .doOnError { error ->
                         aapsLogger.error(LTag.DATABASE, "Updated ns id of TemporaryBasal failed", error)
-                        ret = Result.failure((workDataOf("Error" to error)))
+                        ret = Result.failure((workDataOf("Error" to error.toString())))
                     }
                     .doOnSuccess {
                         ret = Result.success(workDataOf("ProcessedData" to pair.toString()))
@@ -196,7 +196,7 @@ class NSClientAddAckWorker(
                 repository.runTransactionForResult(UpdateNsIdExtendedBolusTransaction(pair.value))
                     .doOnError { error ->
                         aapsLogger.error(LTag.DATABASE, "Updated ns id of ExtendedBolus failed", error)
-                        ret = Result.failure((workDataOf("Error" to error)))
+                        ret = Result.failure((workDataOf("Error" to error.toString())))
                     }
                     .doOnSuccess {
                         ret = Result.success(workDataOf("ProcessedData" to pair.toString()))
@@ -215,17 +215,17 @@ class NSClientAddAckWorker(
                 repository.runTransactionForResult(UpdateNsIdDeviceStatusTransaction(deviceStatus))
                     .doOnError { error ->
                         aapsLogger.error(LTag.DATABASE, "Updated ns id of DeviceStatus failed", error)
-                        ret = Result.failure((workDataOf("Error" to error)))
+                        ret = Result.failure((workDataOf("Error" to error.toString())))
                     }
                     .doOnSuccess {
-                        ret = Result.success(workDataOf("ProcessedData" to deviceStatus))
+                        ret = Result.success(workDataOf("ProcessedData" to deviceStatus.toString()))
                         aapsLogger.debug(LTag.DATABASE, "Updated ns id of DeviceStatus $deviceStatus")
                         dataSyncSelector.confirmLastDeviceStatusIdIfGreater(deviceStatus.id)
                     }
                     .blockingGet()
                 rxBus.send(EventNSClientNewLog("DBADD", "Acked DeviceStatus" + deviceStatus.interfaceIDs.nightscoutId))
                 // Send new if waiting
-                dataSyncSelector.processChangedBolusCalculatorResultsCompat()
+                dataSyncSelector.processChangedDeviceStatusesCompat()
             }
         }
         return ret

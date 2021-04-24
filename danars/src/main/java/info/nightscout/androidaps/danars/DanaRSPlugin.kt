@@ -106,7 +106,11 @@ class DanaRSPlugin @Inject constructor(
         disposable.add(rxBus
             .toObservable(EventDanaRSDeviceChange::class.java)
             .observeOn(aapsSchedulers.io)
-            .subscribe({ changePump() }, fabricPrivacy::logException)
+            .subscribe({
+                pumpSync.connectNewPump()
+                changePump()
+
+            }, fabricPrivacy::logException)
         )
         changePump() // load device name
     }
@@ -134,7 +138,6 @@ class DanaRSPlugin @Inject constructor(
         mDeviceAddress = sp.getString(R.string.key_danars_address, "")
         mDeviceName = sp.getString(R.string.key_danars_name, "")
         danaPump.reset()
-        pumpSync.connectNewPump()
         commandQueue.readStatus("DeviceChanged", null)
     }
 

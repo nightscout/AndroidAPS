@@ -33,7 +33,7 @@ import kotlin.math.max
 import kotlin.math.min
 
 class GraphData(
-    private val injector: HasAndroidInjector,
+    injector: HasAndroidInjector,
     private val graph: GraphView,
     private val iobCobCalculator: IobCobCalculator,
     private val treatmentsPlugin: TreatmentsInterface
@@ -577,15 +577,22 @@ class GraphData(
     // scale in % of vertical size (like 0.3)
     fun addRatio(fromTime: Long, toTime: Long, useForScale: Boolean, scale: Double) {
         val ratioArray: MutableList<ScaledDataPoint> = ArrayList()
-        var maxRatioValueFound = Double.MIN_VALUE
-        var minRatioValueFound = Double.MAX_VALUE
-        val ratioScale = Scale()
+        var maxRatioValueFound = 5.0                    //even if sens data equals 0 for all the period, minimum scale is between 95% and 105%
+        var minRatioValueFound = - maxRatioValueFound
+        val ratioScale = if (useForScale) Scale(100.0) else Scale()
         var time = fromTime
         while (time <= toTime) {
+<<<<<<<<< Temporary merge branch 1
             iobCobCalculator.ads.getAutosensDataAtTime(time)?.let { autosensData ->
                 ratioArray.add(ScaledDataPoint(time, autosensData.autosensResult.ratio - 1, ratioScale))
                 maxRatioValueFound = max(maxRatioValueFound, autosensData.autosensResult.ratio - 1)
                 minRatioValueFound = min(minRatioValueFound, autosensData.autosensResult.ratio - 1)
+=========
+            iobCobCalculatorPlugin.getAutosensData(time)?.let { autosensData ->
+                ratioArray.add(ScaledDataPoint(time, 100.0 * (autosensData.autosensResult.ratio - 1 ), ratioScale))
+                maxRatioValueFound = max(maxRatioValueFound, 100.0 * (autosensData.autosensResult.ratio - 1))
+                minRatioValueFound = min(minRatioValueFound, 100.0 * (autosensData.autosensResult.ratio - 1))
+>>>>>>>>> Temporary merge branch 2
             }
             time += 5 * 60 * 1000L
         }
@@ -596,10 +603,11 @@ class GraphData(
             it.thickness = 3
         })
         if (useForScale) {
-            maxY = max(maxRatioValueFound, abs(minRatioValueFound))
-            minY = -maxY
-        }
-        ratioScale.setMultiplier(maxY * scale / max(maxRatioValueFound, abs(minRatioValueFound)))
+            maxY = 100.0 + max(maxRatioValueFound, abs(minRatioValueFound))
+            minY = 100.0 - max(maxRatioValueFound, abs(minRatioValueFound))
+            ratioScale.setMultiplier(1.0)
+        } else
+            ratioScale.setMultiplier(maxY * scale / max(maxRatioValueFound, abs(minRatioValueFound)))
     }
 
     // scale in % of vertical size (like 0.3)

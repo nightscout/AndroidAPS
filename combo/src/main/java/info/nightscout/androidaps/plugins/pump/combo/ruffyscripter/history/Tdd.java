@@ -1,10 +1,12 @@
 package info.nightscout.androidaps.plugins.pump.combo.ruffyscripter.history;
 
+import androidx.annotation.NonNull;
+
 import java.util.Date;
 
 /** Total daily dosage; amount of insulin delivered over a full day. */
 public class Tdd extends HistoryRecord {
-    public final double total;
+    public double total;
 
     public Tdd(long timestamp, double total) {
         super(timestamp);
@@ -32,7 +34,7 @@ public class Tdd extends HistoryRecord {
         return result;
     }
 
-    @Override
+    @NonNull @Override
     public String toString() {
         return "Tdd{" +
                 "timestamp=" + timestamp + "(" + new Date(timestamp) + ")" +

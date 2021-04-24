@@ -70,7 +70,7 @@ class GlimpPlugin @Inject constructor(
             repository.runTransactionForResult(CgmSourceTransaction(glucoseValues, emptyList(), null))
                 .doOnError {
                     aapsLogger.error(LTag.DATABASE, "Error while saving values from Glimp App", it)
-                    ret = Result.failure(workDataOf("Error" to it))
+                    ret = Result.failure(workDataOf("Error" to it.toString()))
                 }
                 .blockingGet()
                 .also { savedValues ->

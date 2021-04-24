@@ -1,12 +1,15 @@
 package info.nightscout.androidaps.danars.comm
 
 import dagger.android.HasAndroidInjector
+import info.nightscout.androidaps.dana.DanaPump
 import info.nightscout.androidaps.dana.comm.RecordTypes
 import info.nightscout.androidaps.db.DanaRHistoryRecord
 import info.nightscout.androidaps.events.EventDanaRSyncStatus
 import info.nightscout.androidaps.interfaces.DatabaseHelperInterface
+import info.nightscout.androidaps.interfaces.PumpSync
 import info.nightscout.androidaps.logging.LTag
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper
+import info.nightscout.androidaps.plugins.pump.common.defs.PumpType
 import org.joda.time.DateTime
 import java.util.*
 import javax.inject.Inject
@@ -18,6 +21,8 @@ abstract class DanaRS_Packet_History_(
 
     @Inject lateinit var rxBus: RxBusWrapper
     @Inject lateinit var databaseHelper: DatabaseHelperInterface
+    @Inject lateinit var pumpSync: PumpSync
+    @Inject lateinit var danaPump: DanaPump
 
     protected var year = 0
     protected var month = 0
@@ -220,6 +225,18 @@ abstract class DanaRS_Packet_History_(
                 }
             }
             databaseHelper.createOrUpdate(danaRHistoryRecord)
+            //If it is a TDD, store it for stats also.
+            if (danaRHistoryRecord.recordCode == RecordTypes.RECORD_TYPE_DAILY) {
+                pumpSync.createOrUpdateTotalDailyDose(
+                    timestamp = danaRHistoryRecord.recordDate,
+                    bolusAmount = danaRHistoryRecord.recordDailyBolus,
+                    basalAmount = danaRHistoryRecord.recordDailyBasal,
+                    totalAmount = 0.0,
+                    pumpId = null,
+                    pumpType = PumpType.DANA_RS,
+                    danaPump.serialNumber
+                )
+            }
             rxBus.send(EventDanaRSyncStatus(dateUtil.dateAndTimeString(danaRHistoryRecord.recordDate) + " " + messageType))
         }
     }

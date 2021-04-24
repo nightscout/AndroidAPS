@@ -598,6 +598,18 @@ open class AppRepository @Inject internal constructor(
     fun getOldestExtendedBolusRecord(): ExtendedBolus? =
         database.extendedBolusDao.getOldestRecord()
 
+    // TotalDailyDose
+    fun getAllTotalDailyDoses(ascending: Boolean): Single<List<TotalDailyDose>> =
+        database.totalDailyDoseDao.getAllTotalDailyDoses()
+            .map { if (!ascending) it.reversed() else it }
+            .subscribeOn(Schedulers.io())
+
+    fun getLastTotalDailyDoses(count: Int, ascending: Boolean): Single<List<TotalDailyDose>> =
+        database.totalDailyDoseDao.getLastTotalDailyDoses(count)
+            .map { if (!ascending) it.reversed() else it }
+            .subscribeOn(Schedulers.io())
+
+
 }
 
 @Suppress("USELESS_CAST")
