@@ -54,6 +54,7 @@ public class ComboFragment extends DaggerFragment {
     private Button refreshButton;
     private TextView bolusCount;
     private TextView tbrCount;
+    private TextView serialNumber;
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
@@ -70,6 +71,7 @@ public class ComboFragment extends DaggerFragment {
         tempBasalText = view.findViewById(R.id.combo_temp_basal);
         bolusCount = view.findViewById(R.id.combo_bolus_count);
         tbrCount = view.findViewById(R.id.combo_tbr_count);
+        serialNumber= view.findViewById(R.id.combo_serial_number);
 
         refreshButton = view.findViewById(R.id.combo_refresh_button);
         refreshButton.setOnClickListener(v -> {
@@ -242,6 +244,7 @@ public class ComboFragment extends DaggerFragment {
             // stats
             bolusCount.setText(String.valueOf(sp.getLong(ComboPlugin.COMBO_BOLUSES_DELIVERED, 0L)));
             tbrCount.setText(String.valueOf(sp.getLong(ComboPlugin.COMBO_TBRS_SET, 0L)));
+            serialNumber.setText(comboPlugin.serialNumber());
         }
     }
 }

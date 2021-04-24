@@ -54,4 +54,5 @@
     <string name="combo_tbr_count">TBR count</string>
     <string name="bolusstopped">Bolus stopped</string>
     <string name="bolusstopping">Stopping bolus</string>
+    <string name="combo_serial_number">Pump identifier</string>
 </resources>
