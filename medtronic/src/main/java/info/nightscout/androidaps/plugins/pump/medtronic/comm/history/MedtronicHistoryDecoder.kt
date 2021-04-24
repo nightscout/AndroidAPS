@@ -35,19 +35,19 @@ abstract class MedtronicHistoryDecoder<T : MedtronicHistoryEntry?> : MedtronicHi
 
     // TODO_ extend this to also use bigger pages (for now we support only 1024 pages)
     @Throws(RuntimeException::class)
-    private fun checkPage(page: RawHistoryPage, partial: Boolean): List<Byte> {
-        val byteList: List<Byte> = ArrayList()
+    private fun checkPage(page: RawHistoryPage, partial: Boolean): MutableList<Byte> {
+        //val byteList: MutableList<Byte> = mutableListOf()
 
         if (medtronicUtil.medtronicPumpModel == null) {
             aapsLogger.error(LTag.PUMPCOMM, "Device Type is not defined.")
-            return byteList
+            return mutableListOf()
         }
         return if (page.data.size != 1024) {
-            ByteUtil.getListFromByteArray(page.data)
+            page.data.toMutableList()
         } else if (page.isChecksumOK) {
-            ByteUtil.getListFromByteArray(page.onlyData)
+            page.onlyData.toMutableList()
         } else {
-            byteList
+            mutableListOf()
         }
     }
 
@@ -117,9 +117,9 @@ abstract class MedtronicHistoryDecoder<T : MedtronicHistoryEntry?> : MedtronicHi
         return StringUtil.getFormatedValueUS(value, decimals)
     }
 
-    private fun processPageAndCreateRecords(rawHistoryPage: RawHistoryPage, partial: Boolean): List<T> {
+    private fun processPageAndCreateRecords(rawHistoryPage: RawHistoryPage, partial: Boolean): MutableList<T> {
         val dataClear = checkPage(rawHistoryPage, partial)
-        val records: List<T> = createRecords(dataClear)
+        val records: MutableList<T> = createRecords(dataClear)
         for (record in records) {
             decodeRecord(record)
         }

@@ -6,5 +6,5 @@ package info.nightscout.androidaps.plugins.pump.medtronic.comm.history
 interface MedtronicHistoryDecoderInterface<T> {
 
     fun decodeRecord(record: T): RecordDecodeStatus?
-    fun createRecords(dataClear: List<Byte>): List<T>
+    fun createRecords(dataClear: MutableList<Byte>): MutableList<T>
 }

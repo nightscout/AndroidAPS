@@ -3,6 +3,7 @@ package info.nightscout.androidaps.plugins.pump.medtronic.comm
 import android.os.SystemClock
 import info.nightscout.androidaps.logging.LTag
 import info.nightscout.androidaps.plugins.pump.common.defs.PumpDeviceState
+import info.nightscout.androidaps.plugins.pump.common.defs.PumpType
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.RileyLinkCommunicationManager
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.RileyLinkConst
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.ble.RileyLinkCommunicationException
@@ -64,7 +65,7 @@ class MedtronicCommunicationManager  // This empty constructor must be kept, oth
     private var doWakeUpBeforeCommand = true
 
     @Inject
-    open fun onInit(): Unit {
+    fun onInit(): Unit {
         // we can't do this in the constructor, as sp only gets injected after the constructor has returned
         medtronicPumpStatus.previousConnection = sp.getLong(
             RileyLinkConst.Prefs.LastGoodDeviceCommunicationTime, 0L)
@@ -133,8 +134,7 @@ class MedtronicCommunicationManager  // This empty constructor must be kept, oth
                     } else {
 
                         // radioResponse.rssi;
-                        val dataResponse = medtronicConverter!!.convertResponse(medtronicPumpStatus.pumpType, MedtronicCommandType.PumpModel,
-                            pumpResponse.rawContent)
+                        val dataResponse = medtronicConverter.decodeModel(pumpResponse.rawContent)
                         val pumpModel = dataResponse as MedtronicDeviceType?
                         val valid = pumpModel !== MedtronicDeviceType.Unknown_Device
                         if (medtronicUtil.medtronicPumpModel == null && valid) {
@@ -350,11 +350,11 @@ class MedtronicCommunicationManager  // This empty constructor must be kept, oth
         return when (type) {
             RLMessageType.PowerOn        -> medtronicUtil.buildCommandPayload(rileyLinkServiceData, MedtronicCommandType.RFPowerOn, byteArrayOf(2, 1, receiverDeviceAwakeForMinutes.toByte())) // maybe this is better FIXME
             RLMessageType.ReadSimpleData -> medtronicUtil.buildCommandPayload(rileyLinkServiceData, MedtronicCommandType.PumpModel, null)
+            else -> ByteArray(0)
         }
-        return ByteArray(0)
     }
 
-    private fun makePumpMessage(messageType: MedtronicCommandType, body: ByteArray? = null as ByteArray?): PumpMessage {
+    private fun makePumpMessage(messageType: MedtronicCommandType, body: ByteArray? = null): PumpMessage {
         return makePumpMessage(messageType, body?.let { CarelinkShortMessageBody(it) }
             ?: CarelinkShortMessageBody())
     }
@@ -400,14 +400,21 @@ class MedtronicCommunicationManager  // This empty constructor must be kept, oth
         return super.sendAndListen(msg, timeout_ms)!!
     }
 
-    private fun sendAndGetResponseWithCheck(commandType: MedtronicCommandType, bodyData: ByteArray? = null): Any? {
+    private inline fun <reified T> sendAndGetResponseWithCheck(
+        commandType: MedtronicCommandType,
+        bodyData: ByteArray? = null,
+        decode: (pumpType: PumpType, commandType: MedtronicCommandType, rawContent: ByteArray?) -> T
+    ): T? {
         aapsLogger.debug(LTag.PUMPCOMM, "getDataFromPump: $commandType")
         for (retries in 0 until MAX_COMMAND_TRIES) {
             try {
                 val response = sendAndGetResponse(commandType, bodyData, DEFAULT_TIMEOUT + DEFAULT_TIMEOUT * retries)
                 val check = checkResponseContent(response, commandType.commandDescription, commandType.expectedLength)
                 if (check == null) {
-                    val dataResponse = medtronicConverter.convertResponse(medtronicPumpStatus.pumpType, commandType, response.rawContent)
+
+                    checkResponseRawContent(response.rawContent, commandType) { return@sendAndGetResponseWithCheck null }
+
+                    val dataResponse = decode(medtronicPumpStatus.pumpType, commandType, response.rawContent)
                     if (dataResponse != null) {
                         errorResponse = null
                         aapsLogger.debug(LTag.PUMPCOMM, String.format(Locale.ENGLISH, "Converted response for %s is %s.", commandType.name, dataResponse))
@@ -424,6 +431,16 @@ class MedtronicCommunicationManager  // This empty constructor must be kept, oth
             }
         }
         return null
+    }
+
+    private inline fun checkResponseRawContent(rawContent: ByteArray?, commandType: MedtronicCommandType, errorCase: () -> Unit) {
+        if (rawContent?.isEmpty() != false && commandType != MedtronicCommandType.PumpModel) {
+            aapsLogger.warn(LTag.PUMPCOMM, String.format(Locale.ENGLISH, "Content is empty or too short, no data to convert (type=%s,isNull=%b,length=%s)",
+                commandType.name, rawContent == null, rawContent?.size ?: "-"))
+            errorCase.invoke()
+        } else {
+            aapsLogger.debug(LTag.PUMPCOMM, "Raw response before convert: " + ByteUtil.shortHexString(rawContent))
+        }
     }
 
     // private fun <T> sendAndGetResponseWithCheck(commandType: MedtronicCommandType, bodyData: ByteArray, clazz: Class<T>): T? {
@@ -479,13 +496,15 @@ class MedtronicCommunicationManager  // This empty constructor must be kept, oth
 
     // PUMP SPECIFIC COMMANDS
     fun getRemainingInsulin(): Double? {
-        val responseObject = sendAndGetResponseWithCheck(MedtronicCommandType.GetRemainingInsulin)
-        return if (responseObject == null) null else responseObject as Double?
+        return sendAndGetResponseWithCheck(MedtronicCommandType.GetRemainingInsulin) { _, _, rawContent ->
+            medtronicConverter.decodeRemainingInsulin(rawContent)
+        }
     }
 
     fun getPumpModel(): MedtronicDeviceType? {
-        val responseObject = sendAndGetResponseWithCheck(MedtronicCommandType.PumpModel)
-        return if (responseObject == null) null else responseObject as MedtronicDeviceType?
+        return sendAndGetResponseWithCheck(MedtronicCommandType.PumpModel) { _, _, rawContent ->
+            medtronicConverter.decodeModel(rawContent)
+        }
     }
 
 
@@ -531,7 +550,12 @@ class MedtronicCommunicationManager  // This empty constructor must be kept, oth
                 } else {
                     errorResponse = check
                 }
-                val basalProfile = medtronicConverter.convertResponse(medtronicPumpPlugin.pumpType, commandType, data) as BasalProfile?
+
+                var basalProfile: BasalProfile? = null
+                checkResponseRawContent(data, commandType) {
+                    basalProfile = medtronicConverter.decodeBasalProfile(medtronicPumpPlugin.pumpDescription.pumpType, data)
+                }
+
                 if (basalProfile != null) {
                     aapsLogger.debug(LTag.PUMPCOMM, String.format(Locale.ENGLISH, "Converted response for %s is %s.", commandType.name, basalProfile))
                     medtronicUtil.setCurrentCommand(null)
@@ -568,22 +592,24 @@ class MedtronicCommunicationManager  // This empty constructor must be kept, oth
     fun getPumpTime(): ClockDTO? {
         val clockDTO = ClockDTO()
         clockDTO.localDeviceTime = LocalDateTime()
-        val responseObject = sendAndGetResponseWithCheck(MedtronicCommandType.GetRealTimeClock)
+        val responseObject = sendAndGetResponseWithCheck(MedtronicCommandType.GetRealTimeClock) { _, _, rawContent ->
+            medtronicConverter.decodeTime(rawContent)
+        }
         if (responseObject != null) {
-            clockDTO.pumpTime = responseObject as LocalDateTime?
+            clockDTO.pumpTime = responseObject
             return clockDTO
         }
         return null
     }
 
     fun getTemporaryBasal(): TempBasalPair? {
-        val responseObject = sendAndGetResponseWithCheck(MedtronicCommandType.ReadTemporaryBasal)
-        return if (responseObject == null) null else responseObject as TempBasalPair?
+        return sendAndGetResponseWithCheck(MedtronicCommandType.ReadTemporaryBasal) { _, _, rawContent ->
+            TempBasalPair(aapsLogger, rawContent!!) }
     }
 
     fun getPumpSettings(): Map<String, PumpSettingDTO>? {
-        val responseObject = sendAndGetResponseWithCheck(getSettings(medtronicUtil.medtronicPumpModel))
-        return if (responseObject == null) null else responseObject as Map<String, PumpSettingDTO>?
+        return sendAndGetResponseWithCheck(getSettings(medtronicUtil.medtronicPumpModel)) { _, _, rawContent ->
+            medtronicConverter.decodeSettingsLoop(rawContent) }
     }
 
     fun setBolus(units: Double): Boolean {
@@ -600,20 +626,32 @@ class MedtronicCommunicationManager  // This empty constructor must be kept, oth
         val gc = GregorianCalendar()
         gc.add(Calendar.SECOND, 5)
         aapsLogger.info(LTag.PUMPCOMM, "setPumpTime: " + DateTimeUtil.toString(gc))
-        val i = 1
-        val data = ByteArray(8)
-        data[0] = 7
-        data[i] = gc[Calendar.HOUR_OF_DAY].toByte()
-        data[i + 1] = gc[Calendar.MINUTE].toByte()
-        data[i + 2] = gc[Calendar.SECOND].toByte()
         val yearByte = getByteArrayFromUnsignedShort(gc[Calendar.YEAR], true)
-        data[i + 3] = yearByte[0]
-        data[i + 4] = yearByte[1]
-        data[i + 5] = (gc[Calendar.MONTH] + 1).toByte()
-        data[i + 6] = gc[Calendar.DAY_OF_MONTH].toByte()
+        // val i = 1
+        // val data = ByteArray(8)
+        // data[0] = 7
+        // data[i] = gc[Calendar.HOUR_OF_DAY].toByte()
+        // data[i + 1] = gc[Calendar.MINUTE].toByte()
+        // data[i + 2] = gc[Calendar.SECOND].toByte()
+        // val yearByte = getByteArrayFromUnsignedShort(gc[Calendar.YEAR], true)
+        // data[i + 3] = yearByte[0]
+        // data[i + 4] = yearByte[1]
+        // data[i + 5] = (gc[Calendar.MONTH] + 1).toByte()
+        // data[i + 6] = gc[Calendar.DAY_OF_MONTH].toByte()
+
+        val timeData = byteArrayOf(
+            7,
+            gc[Calendar.HOUR_OF_DAY].toByte(),
+            gc[Calendar.MINUTE].toByte(),
+            gc[Calendar.SECOND].toByte(),
+            yearByte[0],
+            yearByte[1],
+            (gc[Calendar.MONTH] + 1).toByte(),
+            gc[Calendar.DAY_OF_MONTH].toByte()
+        )
 
         //aapsLogger.info(LTag.PUMPCOMM,"setPumpTime: Body:  " + ByteUtil.getHex(data));
-        return setCommand(MedtronicCommandType.SetRealTimeClock, data)
+        return setCommand(MedtronicCommandType.SetRealTimeClock, timeData)
     }
 
     private fun setCommand(commandType: MedtronicCommandType, body: ByteArray): Boolean {
@@ -642,8 +680,9 @@ class MedtronicCommunicationManager  // This empty constructor must be kept, oth
     }
 
     fun getRemainingBattery(): BatteryStatusDTO? {
-        val responseObject = sendAndGetResponseWithCheck(MedtronicCommandType.GetBatteryStatus)
-        return if (responseObject == null) null else responseObject as BatteryStatusDTO?
+        return sendAndGetResponseWithCheck(MedtronicCommandType.GetBatteryStatus) { _, _, rawContent ->
+            medtronicConverter.decodeBatteryStatus(rawContent)
+        }
     }
 
     fun setBasalProfile(basalProfile: BasalProfile): Boolean {

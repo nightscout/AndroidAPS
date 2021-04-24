@@ -63,11 +63,12 @@ class MedtronicCGMSHistoryDecoder : MedtronicHistoryDecoder<CGMSHistoryEntry>() 
 
     override fun postProcess() {}
 
-    override fun createRecords(dataClearInput: List<Byte>): List<CGMSHistoryEntry> {
-        val dataClear = reverseList(dataClearInput, Byte::class.java)
+    override fun createRecords(dataClearInput: MutableList<Byte>): MutableList<CGMSHistoryEntry> {
+        dataClearInput.reverse()
+        val dataClear = dataClearInput //reverseList(dataClearInput, Byte::class.java)
         prepareStatistics()
         var counter = 0
-        val outList: MutableList<CGMSHistoryEntry> = ArrayList()
+        val outList: MutableList<CGMSHistoryEntry> = mutableListOf()
 
         // create CGMS entries (without dates)
         do {
@@ -109,7 +110,8 @@ class MedtronicCGMSHistoryDecoder : MedtronicHistoryDecoder<CGMSHistoryEntry>() 
                 outList.add(pe)
             }
         } while (counter < dataClear.size)
-        val reversedOutList = reverseList(outList, CGMSHistoryEntry::class.java)
+        outList.reverse()
+        val reversedOutList =  outList  // reverseList(outList, CGMSHistoryEntry::class.java)
         var timeStamp: Long? = null
         var dateTime: LocalDateTime? = null
         var getIndex = 0
@@ -119,7 +121,7 @@ class MedtronicCGMSHistoryDecoder : MedtronicHistoryDecoder<CGMSHistoryEntry>() 
                 timeStamp = entry.atechDateTime
                 dateTime = DateTimeUtil.toLocalDateTime(timeStamp!!)
                 getIndex = 0
-            } else if (entry.entryType === CGMSHistoryEntryType.GlucoseSensorData) {
+            } else if (entry.entryType == CGMSHistoryEntryType.GlucoseSensorData) {
                 getIndex++
                 if (dateTime != null) entry.setDateTime(dateTime, getIndex)
             } else {
@@ -130,13 +132,13 @@ class MedtronicCGMSHistoryDecoder : MedtronicHistoryDecoder<CGMSHistoryEntry>() 
         return reversedOutList
     }
 
-    private fun <E> reverseList(dataClearInput: List<E>, clazz: Class<E>): List<E> {
-        val outList: MutableList<E> = ArrayList()
-        for (i in dataClearInput.size - 1 downTo 1) {
-            outList.add(dataClearInput[i])
-        }
-        return outList
-    }
+    // private fun <E> reverseList(dataClearInput: List<E>, clazz: Class<E>): List<E> {
+    //     val outList: MutableList<E> = ArrayList()
+    //     for (i in dataClearInput.size - 1 downTo 1) {
+    //         outList.add(dataClearInput[i])
+    //     }
+    //     return outList
+    // }
 
     private fun parseMinutes(one: Int): Int {
         return one and "0111111".toInt(2)

@@ -17,9 +17,7 @@ import info.nightscout.androidaps.plugins.pump.medtronic.MedtronicPumpPlugin
 import info.nightscout.androidaps.plugins.pump.medtronic.R
 import info.nightscout.androidaps.plugins.pump.medtronic.comm.MedtronicCommunicationManager
 import info.nightscout.androidaps.plugins.pump.medtronic.comm.ui.MedtronicUIComm
-import info.nightscout.androidaps.plugins.pump.medtronic.comm.ui.MedtronicUIPostprocessor
 import info.nightscout.androidaps.plugins.pump.medtronic.driver.MedtronicPumpStatus
-import info.nightscout.androidaps.plugins.pump.medtronic.service.RileyLinkMedtronicService
 import info.nightscout.androidaps.plugins.pump.medtronic.util.MedtronicConst
 import info.nightscout.androidaps.plugins.pump.medtronic.util.MedtronicUtil
 import javax.inject.Inject
@@ -34,13 +32,11 @@ class RileyLinkMedtronicService  // This empty constructor must be kept, otherwi
 
     @Inject lateinit var medtronicPumpPlugin: MedtronicPumpPlugin
     @Inject lateinit var medtronicUtil: MedtronicUtil
-    @Inject lateinit var medtronicUIPostprocessor: MedtronicUIPostprocessor
     @Inject lateinit var medtronicPumpStatus: MedtronicPumpStatus
     @Inject lateinit var rfSpy: RFSpy
     @Inject lateinit var medtronicCommunicationManager: MedtronicCommunicationManager
+    @Inject lateinit var medtronicUIComm: MedtronicUIComm
 
-    var medtronicUIComm: MedtronicUIComm? = null
-        private set
     private val mBinder: IBinder = LocalBinder()
     private var serialChanged = false
     private var frequencies: Array<String?>? = null
@@ -82,7 +78,6 @@ class RileyLinkMedtronicService  // This empty constructor must be kept, otherwi
         rileyLinkServiceData.rileyLinkAddress = sp.getString(RileyLinkConst.Prefs.RileyLinkAddress, "")
         rileyLinkServiceData.rileyLinkName = sp.getString(RileyLinkConst.Prefs.RileyLinkName, "")
         rfspy.startReader()
-        medtronicUIComm = MedtronicUIComm(injector, aapsLogger, medtronicUtil, medtronicUIPostprocessor, medtronicCommunicationManager)
         aapsLogger.debug(LTag.PUMPCOMM, "RileyLinkMedtronicService newly constructed")
     }
 

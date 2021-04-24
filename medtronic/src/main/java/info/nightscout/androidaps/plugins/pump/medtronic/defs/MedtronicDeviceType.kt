@@ -16,28 +16,28 @@ enum class MedtronicDeviceType {
     Medtronic_511("511"),  //
     Medtronic_512("512"),  //
     Medtronic_712("712"),  //
-    Medtronic_512_712(Medtronic_512, Medtronic_712),  //
+    Medtronic_512_712(listOf(Medtronic_512, Medtronic_712)),  //
     Medtronic_515("515"),  //
     Medtronic_715("715"),  //
-    Medtronic_515_715(Medtronic_515, Medtronic_715),  //
+    Medtronic_515_715(listOf(Medtronic_515, Medtronic_715)),  //
     Medtronic_522("522"),  //
     Medtronic_722("722"),  //
-    Medtronic_522_722(Medtronic_522, Medtronic_722),  //
+    Medtronic_522_722(listOf(Medtronic_522, Medtronic_722)),  //
     Medtronic_523_Revel("523"),  //
     Medtronic_723_Revel("723"),  //
     Medtronic_554_Veo("554"),  //
     Medtronic_754_Veo("754"),  //
-    Medtronic_512andHigher(Medtronic_512, Medtronic_712, Medtronic_515, Medtronic_715, Medtronic_522, Medtronic_722, Medtronic_523_Revel, Medtronic_723_Revel, Medtronic_554_Veo, Medtronic_754_Veo),  //
-    Medtronic_515andHigher(Medtronic_515, Medtronic_715, Medtronic_522, Medtronic_722, Medtronic_523_Revel, Medtronic_723_Revel, Medtronic_554_Veo, Medtronic_754_Veo),  //
-    Medtronic_522andHigher(Medtronic_522, Medtronic_722, Medtronic_523_Revel, Medtronic_723_Revel, Medtronic_554_Veo, Medtronic_754_Veo),  //
-    Medtronic_523andHigher(Medtronic_523_Revel, Medtronic_723_Revel, Medtronic_554_Veo, Medtronic_754_Veo),  //
-    Medtronic_554andHigher(Medtronic_554_Veo, Medtronic_754_Veo),  //
+    Medtronic_512andHigher(listOf(Medtronic_512, Medtronic_712, Medtronic_515, Medtronic_715, Medtronic_522, Medtronic_722, Medtronic_523_Revel, Medtronic_723_Revel, Medtronic_554_Veo, Medtronic_754_Veo)),  //
+    Medtronic_515andHigher(listOf(Medtronic_515, Medtronic_715, Medtronic_522, Medtronic_722, Medtronic_523_Revel, Medtronic_723_Revel, Medtronic_554_Veo, Medtronic_754_Veo)),  //
+    Medtronic_522andHigher(listOf(Medtronic_522, Medtronic_722, Medtronic_523_Revel, Medtronic_723_Revel, Medtronic_554_Veo, Medtronic_754_Veo)),  //
+    Medtronic_523andHigher(listOf(Medtronic_523_Revel, Medtronic_723_Revel, Medtronic_554_Veo, Medtronic_754_Veo)),  //
+    Medtronic_554andHigher(listOf(Medtronic_554_Veo, Medtronic_754_Veo)),  //
 
     //
     All;
 
     companion object {
-        var mapByDescription: MutableMap<String, MedtronicDeviceType>? = null
+        var mapByDescription: MutableMap<String, MedtronicDeviceType> = mutableMapOf()
 
         @JvmStatic
         fun isSameDevice(deviceWeCheck: MedtronicDeviceType, deviceSources: MedtronicDeviceType): Boolean {
@@ -52,20 +52,17 @@ enum class MedtronicDeviceType {
         }
 
         fun getByDescription(desc: String): MedtronicDeviceType {
-            return if (mapByDescription==null) {
-                Unknown_Device
-            } else if (mapByDescription!!.containsKey(desc)) {
-                mapByDescription!![desc]!!
+            return if (mapByDescription.containsKey(desc)) {
+                mapByDescription[desc]!!
             } else {
                 Unknown_Device
             }
         }
 
         init {
-            mapByDescription = HashMap()
             for (minimedDeviceType in values()) {
-                if (!minimedDeviceType.isFamily) {
-                    mapByDescription!![minimedDeviceType.pumpModel!!] = minimedDeviceType
+                if (!minimedDeviceType.isFamily && minimedDeviceType.pumpModel!=null) {
+                    mapByDescription[minimedDeviceType.pumpModel!!] = minimedDeviceType
                 }
             }
         }
@@ -78,16 +75,20 @@ enum class MedtronicDeviceType {
     //        return isSameDevice(model, Medtronic_523andHigher);
     //    }
     val isFamily: Boolean
-    var familyMembers: Array<MedtronicDeviceType>? = null
+    var familyMembers: List<MedtronicDeviceType>? = null
         private set
+
+    constructor() {
+        isFamily = false
+    }
 
     constructor(pumpModel: String?) {
         isFamily = false
         this.pumpModel = pumpModel
     }
 
-    constructor(vararg familyMembers: MedtronicDeviceType) {
-        this.familyMembers = familyMembers as Array<MedtronicDeviceType>?
+    constructor(familyMembers: List<MedtronicDeviceType>) {
+        this.familyMembers = familyMembers
         isFamily = true
     }
 

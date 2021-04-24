@@ -364,13 +364,13 @@ class MedtronicPumpPlugin @Inject constructor(
                     }
 
                     MedtronicStatusRefreshType.BatteryStatus, MedtronicStatusRefreshType.RemainingInsulin -> {
-                        rileyLinkMedtronicService!!.medtronicUIComm!!.executeCommand(key.getCommandType(medtronicUtil.medtronicPumpModel)!!)
+                        rileyLinkMedtronicService!!.medtronicUIComm.executeCommand(key.getCommandType(medtronicUtil.medtronicPumpModel)!!)
                         refreshTypesNeededToReschedule.add(key)
                         resetTime = true
                     }
 
                     MedtronicStatusRefreshType.Configuration                                              -> {
-                        rileyLinkMedtronicService!!.medtronicUIComm!!.executeCommand(key.getCommandType(medtronicUtil.medtronicPumpModel)!!)
+                        rileyLinkMedtronicService!!.medtronicUIComm.executeCommand(key.getCommandType(medtronicUtil.medtronicPumpModel)!!)
                         resetTime = true
                     }
                 }
@@ -415,7 +415,7 @@ class MedtronicPumpPlugin @Inject constructor(
 
         // model (once)
         if (medtronicUtil.medtronicPumpModel == null) {
-            rileyLinkMedtronicService!!.medtronicUIComm!!.executeCommand(MedtronicCommandType.PumpModel)
+            rileyLinkMedtronicService!!.medtronicUIComm.executeCommand(MedtronicCommandType.PumpModel)
         } else {
             if (medtronicPumpStatus.medtronicDeviceType !== medtronicUtil.medtronicPumpModel) {
                 aapsLogger.warn(LTag.PUMP, logPrefix + "Configured pump is not the same as one detected.")
@@ -429,19 +429,19 @@ class MedtronicPumpPlugin @Inject constructor(
         readPumpHistory()
 
         // remaining insulin (>50 = 4h; 50-20 = 1h; 15m)
-        rileyLinkMedtronicService!!.medtronicUIComm!!.executeCommand(MedtronicCommandType.GetRemainingInsulin)
+        rileyLinkMedtronicService!!.medtronicUIComm.executeCommand(MedtronicCommandType.GetRemainingInsulin)
         scheduleNextRefresh(MedtronicStatusRefreshType.RemainingInsulin, 10)
 
         // remaining power (1h)
-        rileyLinkMedtronicService!!.medtronicUIComm!!.executeCommand(MedtronicCommandType.GetBatteryStatus)
+        rileyLinkMedtronicService!!.medtronicUIComm.executeCommand(MedtronicCommandType.GetBatteryStatus)
         scheduleNextRefresh(MedtronicStatusRefreshType.BatteryStatus, 20)
 
         // configuration (once and then if history shows config changes)
-        rileyLinkMedtronicService!!.medtronicUIComm!!.executeCommand(getSettings(medtronicUtil.medtronicPumpModel))
+        rileyLinkMedtronicService!!.medtronicUIComm.executeCommand(getSettings(medtronicUtil.medtronicPumpModel))
 
         // read profile (once, later its controlled by isThisProfileSet method)
         basalProfiles
-        val errorCount = rileyLinkMedtronicService!!.medtronicUIComm!!.invalidResponsesCount
+        val errorCount = rileyLinkMedtronicService!!.medtronicUIComm.invalidResponsesCount
         if (errorCount >= 5) {
             aapsLogger.error("Number of error counts was 5 or more. Starting tunning.")
             setRefreshButtonEnabled(true)
@@ -461,9 +461,9 @@ class MedtronicPumpPlugin @Inject constructor(
 
     private val basalProfiles: Unit
         private get() {
-            val medtronicUITask = rileyLinkMedtronicService!!.medtronicUIComm!!.executeCommand(MedtronicCommandType.GetBasalProfileSTD)
+            val medtronicUITask = rileyLinkMedtronicService!!.medtronicUIComm.executeCommand(MedtronicCommandType.GetBasalProfileSTD)
             if (medtronicUITask.responseType === MedtronicUIResponseType.Error) {
-                rileyLinkMedtronicService!!.medtronicUIComm!!.executeCommand(MedtronicCommandType.GetBasalProfileSTD)
+                rileyLinkMedtronicService!!.medtronicUIComm.executeCommand(MedtronicCommandType.GetBasalProfileSTD)
             }
         }
 
@@ -492,7 +492,7 @@ class MedtronicPumpPlugin @Inject constructor(
         for (basalValue in profile.basalValues) {
             val basalValueValue = pumpDescription.pumpType.determineCorrectBasalSize(basalValue.value)
             val hour = basalValue.timeAsSeconds / (60 * 60)
-            if (!isSame(basalsByHour[hour]!!, basalValueValue)) {
+            if (!isSame(basalsByHour[hour], basalValueValue)) {
                 invalid = true
             }
             stringBuilder.append(String.format(Locale.ENGLISH, "%.3f", basalValueValue))
@@ -551,10 +551,10 @@ class MedtronicPumpPlugin @Inject constructor(
             return
         }
         medtronicUtil.dismissNotification(MedtronicNotificationType.PumpUnreachable, rxBus)
-        rileyLinkMedtronicService!!.medtronicUIComm!!.executeCommand(MedtronicCommandType.GetRealTimeClock)
+        rileyLinkMedtronicService!!.medtronicUIComm.executeCommand(MedtronicCommandType.GetRealTimeClock)
         var clock = medtronicUtil.pumpTime
         if (clock == null) { // retry
-            rileyLinkMedtronicService!!.medtronicUIComm!!.executeCommand(MedtronicCommandType.GetRealTimeClock)
+            rileyLinkMedtronicService!!.medtronicUIComm.executeCommand(MedtronicCommandType.GetRealTimeClock)
             clock = medtronicUtil.pumpTime
         }
         if (clock == null) return
@@ -562,7 +562,7 @@ class MedtronicPumpPlugin @Inject constructor(
         if (timeDiff > 20) {
             if (clock.localDeviceTime!!.year <= 2015 || timeDiff <= 24 * 60 * 60) {
                 aapsLogger.info(LTag.PUMP, String.format(Locale.ENGLISH, "MedtronicPumpPlugin::checkTimeAndOptionallySetTime - Time difference is %d s. Set time on pump.", timeDiff))
-                rileyLinkMedtronicService!!.medtronicUIComm!!.executeCommand(MedtronicCommandType.SetRealTimeClock)
+                rileyLinkMedtronicService!!.medtronicUIComm.executeCommand(MedtronicCommandType.SetRealTimeClock)
                 if (clock.timeDifference == 0) {
                     val notification = Notification(Notification.INSIGHT_DATE_TIME_UPDATED, resourceHelper.gs(R.string.pump_time_updated), Notification.INFO, 60)
                     rxBus.send(EventNewNotification(notification))
@@ -611,8 +611,8 @@ class MedtronicPumpPlugin @Inject constructor(
             bolusDeliveryType = BolusDeliveryType.Delivering
 
             // LOG.debug("MedtronicPumpPlugin::deliverBolus - Start delivery");
-            val responseTask = rileyLinkMedtronicService!!.medtronicUIComm!!.executeCommand(MedtronicCommandType.SetBolus,
-                Arrays.asList(detailedBolusInfo.insulin))
+            val responseTask = rileyLinkMedtronicService!!.medtronicUIComm.executeCommand(MedtronicCommandType.SetBolus,
+                arrayListOf(detailedBolusInfo.insulin))
             val response = responseTask.result as Boolean?
             setRefreshButtonEnabled(true)
 
@@ -621,12 +621,7 @@ class MedtronicPumpPlugin @Inject constructor(
                 if (bolusDeliveryType == BolusDeliveryType.CancelDelivery) {
                     // LOG.debug("MedtronicPumpPlugin::deliverBolus - Delivery Canceled after Bolus started.");
                     Thread(Runnable {
-
-                        // Looper.prepare();
-                        // LOG.debug("MedtronicPumpPlugin::deliverBolus - Show dialog - before");
                         SystemClock.sleep(2000)
-                        // LOG.debug("MedtronicPumpPlugin::deliverBolus - Show dialog. Context: "
-                        // + MainApp.instance().getApplicationContext());
                         runAlarm(context, resourceHelper.gs(R.string.medtronic_cmd_cancel_bolus_not_supported), resourceHelper.gs(R.string.medtronic_warning), R.raw.boluserror)
                     }).start()
                 }
@@ -743,7 +738,7 @@ class MedtronicPumpPlugin @Inject constructor(
             aapsLogger.info(LTag.PUMP, logPrefix + "setTempBasalAbsolute - TBR running - so canceling it.")
 
             // CANCEL
-            val responseTask2 = rileyLinkMedtronicService!!.medtronicUIComm!!.executeCommand(MedtronicCommandType.CancelTBR)
+            val responseTask2 = rileyLinkMedtronicService!!.medtronicUIComm.executeCommand(MedtronicCommandType.CancelTBR)
             val response = responseTask2.result as Boolean?
             if (response!!) {
                 aapsLogger.info(LTag.PUMP, logPrefix + "setTempBasalAbsolute - Current TBR cancelled.")
@@ -756,8 +751,8 @@ class MedtronicPumpPlugin @Inject constructor(
         }
 
         // now start new TBR
-        val responseTask = rileyLinkMedtronicService!!.medtronicUIComm!!.executeCommand(MedtronicCommandType.SetTemporaryBasal,
-            Arrays.asList(absoluteRate, durationInMinutes))
+        val responseTask = rileyLinkMedtronicService!!.medtronicUIComm.executeCommand(MedtronicCommandType.SetTemporaryBasal,
+            arrayListOf(absoluteRate, durationInMinutes))
         val response = responseTask.result as Boolean?
         aapsLogger.info(LTag.PUMP, logPrefix + "setTempBasalAbsolute - setTBR. Response: " + response)
         return if (response!!) {
@@ -853,7 +848,7 @@ class MedtronicPumpPlugin @Inject constructor(
             } else {
                 // LocalDateTime lastHistoryRecordTime = DateTimeUtil.toLocalDateTime(lastPumpHistoryEntryTime);
                 if (debugHistory) aapsLogger.debug(LTag.PUMP, logPrefix + "readPumpHistoryLogic(): lastPumpHistoryEntryTime: " + lastPumpHistoryEntryTime + " - targetDate: " + targetDate)
-                medtronicHistoryData.setLastHistoryRecordTime(lastPumpHistoryEntryTime)
+                //medtronicHistoryData.setLastHistoryRecordTime(lastPumpHistoryEntryTime)
                 var lastHistoryRecordTime = DateTimeUtil.toLocalDateTime(lastPumpHistoryEntryTime)
                 lastHistoryRecordTime = lastHistoryRecordTime.minusHours(12) // we get last 12 hours of history to
                 // determine pump state
@@ -873,8 +868,8 @@ class MedtronicPumpPlugin @Inject constructor(
         }
 
         //aapsLogger.debug(LTag.PUMP, "HST: Target Date: " + targetDate);
-        val responseTask2 = rileyLinkMedtronicService!!.medtronicUIComm!!.executeCommand(MedtronicCommandType.GetHistoryData,
-            Arrays.asList(lastPumpHistoryEntry, targetDate) as List<Any>?)
+        val responseTask2 = rileyLinkMedtronicService!!.medtronicUIComm.executeCommand(MedtronicCommandType.GetHistoryData,
+            arrayListOf(lastPumpHistoryEntry, targetDate) as ArrayList<Any>?)
         if (debugHistory) aapsLogger.debug(LTag.PUMP, "HST: After task")
         val historyResult = responseTask2.result as PumpHistoryResult?
         if (debugHistory) aapsLogger.debug(LTag.PUMP, "HST: History Result: " + historyResult.toString())
@@ -971,7 +966,7 @@ class MedtronicPumpPlugin @Inject constructor(
     }
 
     private fun readTBR(): TempBasalPair? {
-        val responseTask = rileyLinkMedtronicService!!.medtronicUIComm!!.executeCommand(MedtronicCommandType.ReadTemporaryBasal)
+        val responseTask = rileyLinkMedtronicService!!.medtronicUIComm.executeCommand(MedtronicCommandType.ReadTemporaryBasal)
         return if (responseTask.hasData()) {
             val tbr = responseTask.result as TempBasalPair?
 
@@ -1009,7 +1004,7 @@ class MedtronicPumpPlugin @Inject constructor(
             return PumpEnactResult(injector).success(false).enacted(false)
                 .comment(R.string.medtronic_cmd_cant_read_tbr)
         }
-        val responseTask2 = rileyLinkMedtronicService!!.medtronicUIComm!!.executeCommand(MedtronicCommandType.CancelTBR)
+        val responseTask2 = rileyLinkMedtronicService!!.medtronicUIComm.executeCommand(MedtronicCommandType.CancelTBR)
         val response = responseTask2.result as Boolean?
         finishAction("TBR")
         return if (response!!) {
@@ -1070,8 +1065,8 @@ class MedtronicPumpPlugin @Inject constructor(
                 .enacted(false) //
                 .comment(resourceHelper.gs(R.string.medtronic_cmd_set_profile_pattern_overflow, profileInvalid))
         }
-        val responseTask = rileyLinkMedtronicService!!.medtronicUIComm!!.executeCommand(MedtronicCommandType.SetBasalProfileSTD,
-            Arrays.asList(basalProfile))
+        val responseTask = rileyLinkMedtronicService!!.medtronicUIComm.executeCommand(MedtronicCommandType.SetBasalProfileSTD,
+            arrayListOf(basalProfile))
         val response = responseTask.result as Boolean?
         aapsLogger.info(LTag.PUMP, logPrefix + "Basal Profile was set: " + response)
         return if (response!!) {

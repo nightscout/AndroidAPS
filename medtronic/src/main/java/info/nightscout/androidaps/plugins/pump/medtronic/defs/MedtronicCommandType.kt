@@ -4,9 +4,7 @@ import info.nightscout.androidaps.plugins.pump.medtronic.R
 import info.nightscout.androidaps.plugins.pump.medtronic.comm.message.MessageBody
 import info.nightscout.androidaps.plugins.pump.medtronic.comm.message.PumpAckMessageBody
 import info.nightscout.androidaps.plugins.pump.medtronic.comm.message.UnknownMessageBody
-import info.nightscout.androidaps.plugins.pump.medtronic.defs.MedtronicDeviceType
 import info.nightscout.androidaps.plugins.pump.medtronic.defs.MedtronicDeviceType.Companion.isSameDevice
-import java.io.Serializable
 import java.util.*
 
 /**
@@ -136,34 +134,13 @@ enum class MedtronicCommandType
     companion object {
         var mapByCode: MutableMap<Byte, MedtronicCommandType> = HashMap()
 
-        private fun getDeviceTypesArray(vararg types: MedtronicDeviceType): HashMap<MedtronicDeviceType, String?> {
-            val hashMap = HashMap<MedtronicDeviceType, String?>()
-            for (type in types) {
-                hashMap[type] = null
-            }
-            return hashMap
-        }
-
-        // @JvmStatic
-        // fun getByteArray(vararg data: Int): ByteArray {
-        //     val array = ByteArray(data.size)
-        //     for (i in 0 until data.size) {
-        //         array[i] = data[i].toByte()
+        // private fun getDeviceTypesArray(vararg types: MedtronicDeviceType): HashMap<MedtronicDeviceType, String?> {
+        //     val hashMap = HashMap<MedtronicDeviceType, String?>()
+        //     for (type in types) {
+        //         hashMap[type] = null
         //     }
-        //     return array
+        //     return hashMap
         // }
-
-        // private fun getByteArray(vararg data: Int): ByteArray {
-        //     val array = ByteArray(data.size)
-        //     for (i in 0 until data.size) {
-        //         array[i] = data[i].toByte()
-        //     }
-        //     return array
-        // }
-
-        private fun getIntArray(vararg data: Int): IntArray {
-            return data
-        }
 
         fun getByCode(code: Byte): MedtronicCommandType? {
             return if (mapByCode.containsKey(code)) {
@@ -203,7 +180,6 @@ enum class MedtronicCommandType
     var maxRecords = 1
     var resourceId: Int? = null
         private set
-    var command_type = 0
     var allowedRetries = 2
     var maxAllowedTime = 2000
     var parameterType: MinimedCommandParameterType? = null
@@ -217,7 +193,7 @@ enum class MedtronicCommandType
     }
 
     constructor(code: Int, description: String, devices: MedtronicDeviceType?,
-                         parameterType: MinimedCommandParameterType?, cmd_params: ByteArray) : this(code, description, devices, parameterType, 0, 1, 0, 0, 11, 0) {
+                         parameterType: MinimedCommandParameterType?, cmd_params: ByteArray) : this(code, description, devices, parameterType) {
         commandParameters = cmd_params
         commandParametersCount = cmd_params.size
     }
@@ -233,10 +209,14 @@ enum class MedtronicCommandType
     }
 
     // NEW
-    constructor(code: Int, description: String,
-                         devices: MedtronicDeviceType?,  //
-                         parameterType: MinimedCommandParameterType?, recordLength: Int = 64, max_recs: Int = 1, expectedLength: Int = 0,
-                         resourceId: Int? = null) {
+    constructor(code: Int,
+                description: String,
+                devices: MedtronicDeviceType?,  //
+                parameterType: MinimedCommandParameterType?,
+                recordLength: Int = 64,
+                max_recs: Int = 1,
+                expectedLength: Int = 0,
+                resourceId: Int? = null) {
         commandCode = code.toByte()
         commandDescription = description
         this.devices = devices
@@ -252,25 +232,25 @@ enum class MedtronicCommandType
         }
     }
 
-    @Deprecated("")
-    constructor(code: Int, description: String, devices: MedtronicDeviceType?,  //
-                         parameterType: MinimedCommandParameterType?, recordLength: Int, max_recs: Int, addy: Int,  //
-                         addy_len: Int, cmd_type: Int, expectedLength: Int) {
-        commandCode = code.toByte()
-        commandDescription = description
-        //this.targetType = targetType;
-        this.devices = devices
-        this.recordLength = recordLength
-        maxRecords = max_recs
-        command_type = cmd_type
-        commandParametersCount = 0
-        allowedRetries = 2
-        this.parameterType = parameterType
-        this.expectedLength = expectedLength
-        if (this.parameterType == MinimedCommandParameterType.SubCommands) {
-            minimalBufferSizeToStartReading = 200
-        }
-    }
+    // @Deprecated("")
+    // constructor(code: Int, description: String, devices: MedtronicDeviceType?,  //
+    //                      parameterType: MinimedCommandParameterType?, recordLength: Int, max_recs: Int, addy: Int,  //
+    //                      addy_len: Int, cmd_type: Int, expectedLength: Int) {
+    //     commandCode = code.toByte()
+    //     commandDescription = description
+    //     //this.targetType = targetType;
+    //     this.devices = devices
+    //     this.recordLength = recordLength
+    //     maxRecords = max_recs
+    //     command_type = cmd_type
+    //     commandParametersCount = 0
+    //     allowedRetries = 2
+    //     this.parameterType = parameterType
+    //     this.expectedLength = expectedLength
+    //     if (this.parameterType == MinimedCommandParameterType.SubCommands) {
+    //         minimalBufferSizeToStartReading = 200
+    //     }
+    // }
 
 
     override fun toString(): String {

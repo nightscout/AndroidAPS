@@ -54,10 +54,10 @@ class BasalProfile {
 
     private fun setRawData(data: ByteArray): Boolean {
         var dataInternal: ByteArray = data
-        if (dataInternal == null) {
-            aapsLogger.error(LTag.PUMPCOMM, "setRawData: buffer is null!")
-            return false
-        }
+        // if (dataInternal == null) {
+        //     aapsLogger.error(LTag.PUMPCOMM, "setRawData: buffer is null!")
+        //     return false
+        // }
 
         // if we have just one entry through all day it looks like just length 1
         if (dataInternal.size == 1) {
@@ -219,7 +219,7 @@ class BasalProfile {
     fun generateRawDataFromEntries() {
         val outData: MutableList<Byte> = ArrayList()
         for (profileEntry in listEntries!!) {
-            val strokes = MedtronicUtil.getBasalStrokes(profileEntry.rate, true)
+            //val strokes = MedtronicUtil.getBasalStrokes(profileEntry.rate, true)
             outData.add(profileEntry.rate_raw[0])
             outData.add(profileEntry.rate_raw[1])
             outData.add(profileEntry.startTime_raw)
@@ -238,17 +238,17 @@ class BasalProfile {
             aapsLogger.error(LTag.PUMPCOMM, "  Error generating entries. Ex.: $ex", ex)
             aapsLogger.error(LTag.PUMPCOMM, "  rawBasalValues: " + ByteUtil.shortHexString(rawData))
             aapsLogger.error(LTag.PUMPCOMM, "=============================================================================")
-
             //FabricUtil.createEvent("MedtronicBasalProfileGetByHourError", null);
         }
+
+        val basalByHour = arrayOf<Double>()
+
         if (entriesCopy == null || entriesCopy.size == 0) {
-            val basalByHour = arrayOfNulls<Double>(24)
             for (i in 0..23) {
                 basalByHour[i] = 0.0
             }
-            return basalByHour as Array<Double>
+            return basalByHour
         }
-        val basalByHour = arrayOfNulls<Double>(24)
         for (i in entriesCopy.indices) {
             val current = entriesCopy[i]
             var currentTime = if (current.startTime_raw % 2 == 0) current.startTime_raw.toInt() else current.startTime_raw - 1
@@ -264,13 +264,13 @@ class BasalProfile {
 
             // System.out.println("Current time: " + currentTime + " Next Time: " + lastHour);
             for (j in currentTime until lastHour) {
-                if (pumpType == null)
-                    basalByHour[j] = current.rate
-                else
+                // if (pumpType == null)
+                //     basalByHour[j] = current.rate
+                // else
                     basalByHour[j] = pumpType.determineCorrectBasalSize(current.rate)
             }
         }
-        return basalByHour as Array<Double>
+        return basalByHour
     }
 
     override fun toString(): String {
@@ -285,7 +285,7 @@ class BasalProfile {
         }
         val profilesByHour = getProfilesByHour(pumpType)
         for (aDouble in profilesByHour) {
-            if (aDouble!! > 35.0) return false
+            if (aDouble > 35.0) return false
         }
         return true
     }
@@ -296,7 +296,6 @@ class BasalProfile {
         const val MAX_RAW_DATA_SIZE = 48 * 3 + 1
         private const val DEBUG_BASALPROFILE = false
 
-        // this asUINT8 should be combined with Record.asUINT8, and placed in a new util class.
         private fun readUnsignedByte(b: Byte): Int {
             return if (b < 0) b + 256 else b.toInt()
         }

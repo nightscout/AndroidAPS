@@ -37,12 +37,12 @@ class MedtronicPumpHistoryDecoder @Inject constructor(
     private var tbrPreviousRecord: PumpHistoryEntry? = null
     private var changeTimeRecord: PumpHistoryEntry? = null
 
-    override fun createRecords(dataClear: List<Byte>): List<PumpHistoryEntry> {
+    override fun createRecords(dataClear: MutableList<Byte>): MutableList<PumpHistoryEntry> {
         prepareStatistics()
         var counter = 0
         var record = 0
         var incompletePacket: Boolean
-        val outList: MutableList<PumpHistoryEntry> = ArrayList()
+        val outList: MutableList<PumpHistoryEntry> = mutableListOf()
         var skipped: String? = null
         if (dataClear.size == 0) {
             aapsLogger.error(LTag.PUMPBTCOMM, "Empty page.")
