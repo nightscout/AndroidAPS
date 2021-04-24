@@ -79,7 +79,7 @@ class NSClientAddUpdateWorker(
                     repository.runTransactionForResult(SyncNsBolusTransaction(bolus, invalidateByNsOnly = false))
                         .doOnError {
                             aapsLogger.error(LTag.DATABASE, "Error while saving bolus", it)
-                            ret = Result.failure(workDataOf("Error" to it))
+                            ret = Result.failure(workDataOf("Error" to it.toString()))
                         }
                         .blockingGet()
                         .also { result ->
@@ -108,7 +108,7 @@ class NSClientAddUpdateWorker(
                     repository.runTransactionForResult(SyncNsCarbsTransaction(carb, invalidateByNsOnly = false))
                         .doOnError {
                             aapsLogger.error(LTag.DATABASE, "Error while saving carbs", it)
-                            ret = Result.failure(workDataOf("Error" to it))
+                            ret = Result.failure(workDataOf("Error" to it.toString()))
                         }
                         .blockingGet()
                         .also { result ->
@@ -146,7 +146,7 @@ class NSClientAddUpdateWorker(
                         repository.runTransactionForResult(SyncNsTemporaryTargetTransaction(temporaryTarget, invalidateByNsOnly = false))
                             .doOnError {
                                 aapsLogger.error(LTag.DATABASE, "Error while saving temporary target", it)
-                                ret = Result.failure(workDataOf("Error" to it))
+                                ret = Result.failure(workDataOf("Error" to it.toString()))
                             }
                             .blockingGet()
                             .also { result ->
@@ -196,7 +196,7 @@ class NSClientAddUpdateWorker(
                         repository.runTransactionForResult(SyncNsTherapyEventTransaction(therapyEvent, invalidateByNsOnly = false))
                             .doOnError {
                                 aapsLogger.error(LTag.DATABASE, "Error while saving therapy event", it)
-                                ret = Result.failure(workDataOf("Error" to it))
+                                ret = Result.failure(workDataOf("Error" to it.toString()))
                             }
                             .blockingGet()
                             .also { result ->
@@ -231,7 +231,7 @@ class NSClientAddUpdateWorker(
                         repository.runTransactionForResult(SyncNsExtendedBolusTransaction(extendedBolus, invalidateByNsOnly = false))
                             .doOnError {
                                 aapsLogger.error(LTag.DATABASE, "Error while saving extended bolus", it)
-                                ret = Result.failure(workDataOf("Error" to it))
+                                ret = Result.failure(workDataOf("Error" to it.toString()))
                             }
                             .blockingGet()
                             .also { result ->
@@ -272,7 +272,7 @@ class NSClientAddUpdateWorker(
                         repository.runTransactionForResult(SyncNsTemporaryBasalTransaction(temporaryBasal, invalidateByNsOnly = false))
                             .doOnError {
                                 aapsLogger.error(LTag.DATABASE, "Error while saving temporary basal", it)
-                                ret = Result.failure(workDataOf("Error" to it))
+                                ret = Result.failure(workDataOf("Error" to it.toString()))
                             }
                             .blockingGet()
                             .also { result ->

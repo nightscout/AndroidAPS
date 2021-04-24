@@ -44,7 +44,7 @@ class NSClientMbgWorker(
             repository.runTransactionForResult(SyncNsTherapyEventTransaction(therapyEventFromNsMbg(nsMbg), false))
                 .doOnError {
                     aapsLogger.error("Error while saving therapy event", it)
-                    ret = Result.failure(workDataOf("Error" to it))
+                    ret = Result.failure(workDataOf("Error" to it.toString()))
                 }
                 .blockingGet()
                 .also {

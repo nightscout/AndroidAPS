@@ -144,7 +144,7 @@ class DexcomPlugin @Inject constructor(
                 repository.runTransactionForResult(CgmSourceTransaction(glucoseValues, calibrations, sensorStartTime))
                     .doOnError {
                         aapsLogger.error(LTag.DATABASE, "Error while saving values from Dexcom App", it)
-                        ret = Result.failure(workDataOf("Error" to it))
+                        ret = Result.failure(workDataOf("Error" to it.toString()))
                     }
                     .blockingGet()
                     .also { result ->
@@ -173,7 +173,7 @@ class DexcomPlugin @Inject constructor(
                     }
             } catch (e: Exception) {
                 aapsLogger.error("Error while processing intent from Dexcom App", e)
-                ret = Result.failure(workDataOf("Error" to e))
+                ret = Result.failure(workDataOf("Error" to e.toString()))
             }
             return ret
         }

@@ -16,13 +16,14 @@ import info.nightscout.androidaps.data.Profile
 import info.nightscout.androidaps.database.AppRepository
 import info.nightscout.androidaps.database.ValueWrapper
 import info.nightscout.androidaps.database.entities.TemporaryTarget
+import info.nightscout.androidaps.database.entities.TotalDailyDose
 import info.nightscout.androidaps.database.entities.UserEntry.Action
 import info.nightscout.androidaps.database.entities.UserEntry.Sources
 import info.nightscout.androidaps.database.entities.ValueWithUnit
 import info.nightscout.androidaps.database.interfaces.end
 import info.nightscout.androidaps.database.transactions.CancelCurrentTemporaryTargetIfAnyTransaction
 import info.nightscout.androidaps.database.transactions.InsertTemporaryTargetAndCancelCurrentTransaction
-import info.nightscout.androidaps.db.TDD
+import info.nightscout.androidaps.extensions.total
 import info.nightscout.androidaps.extensions.valueToUnits
 import info.nightscout.androidaps.interfaces.*
 import info.nightscout.androidaps.logging.AAPSLogger
@@ -79,7 +80,6 @@ class ActionStringHandler @Inject constructor(
     private val danaPump: DanaPump,
     private val dateUtil: DateUtil,
     private val config: Config,
-    private val databaseHelper: DatabaseHelperInterface,
     private val repository: AppRepository,
     private val uel: UserEntryLogger
 ) {
@@ -274,7 +274,7 @@ class ActionStringHandler @Inject constructor(
         } else if ("tddstats" == act[0]) {
             val activePump = activePlugin.activePump
             // check if DB up to date
-            val dummies: MutableList<TDD> = LinkedList()
+            val dummies: MutableList<TotalDailyDose> = LinkedList()
             val historyList = getTDDList(dummies)
             if (isOldData(historyList)) {
                 rTitle = "TDD"
@@ -287,7 +287,7 @@ class ActionStringHandler @Inject constructor(
                     rMessage += "trying to fetch data from pump."
                     commandQueue.loadTDDs(object : Callback() {
                         override fun run() {
-                            val dummies1: MutableList<TDD> = LinkedList()
+                            val dummies1: MutableList<TotalDailyDose> = LinkedList()
                             val historyList1 = getTDDList(dummies1)
                             if (isOldData(historyList1)) {
                                 sendStatusMessage("TDD: Still old data! Cannot load from pump.\n" + generateTDDMessage(historyList1, dummies1))
@@ -340,7 +340,7 @@ class ActionStringHandler @Inject constructor(
         lastConfirmActionString = rAction
     }
 
-    private fun generateTDDMessage(historyList: MutableList<TDD>, dummies: MutableList<TDD>): String {
+    private fun generateTDDMessage(historyList: MutableList<TotalDailyDose>, dummies: MutableList<TotalDailyDose>): String {
         val profile = profileFunction.getProfile() ?: return "No profile loaded :("
         if (historyList.isEmpty()) {
             return "No history data!"
@@ -349,8 +349,8 @@ class ActionStringHandler @Inject constructor(
         var message = ""
         val refTDD = profile.baseBasalSum() * 2
         val pump = activePlugin.activePump
-        if (df.format(Date(historyList[0].date)) == df.format(Date())) {
-            val tdd = historyList[0].getTotal()
+        if (df.format(Date(historyList[0].timestamp)) == df.format(Date())) {
+            val tdd = historyList[0].total
             historyList.removeAt(0)
             message += "Today: " + DecimalFormatter.to2Decimal(tdd) + "U " + (DecimalFormatter.to0Decimal(100 * tdd / refTDD) + "%") + "\n"
             message += "\n"
@@ -364,7 +364,7 @@ class ActionStringHandler @Inject constructor(
         var weighted07 = 0.0
         historyList.reverse()
         for ((i, record) in historyList.withIndex()) {
-            val tdd = record.getTotal()
+            val tdd = record.total
             if (i == 0) {
                 weighted03 = tdd
                 weighted05 = tdd
@@ -383,40 +383,38 @@ class ActionStringHandler @Inject constructor(
         historyList.reverse()
         //add TDDs:
         for (record in historyList) {
-            val tdd = record.getTotal()
-            message += df.format(Date(record.date)) + " " + DecimalFormatter.to2Decimal(tdd) + "U " + (DecimalFormatter.to0Decimal(100 * tdd / refTDD) + "%") + (if (dummies.contains(record)) "x" else "") + "\n"
+            val tdd = record.total
+            message += df.format(Date(record.timestamp)) + " " + DecimalFormatter.to2Decimal(tdd) + "U " + (DecimalFormatter.to0Decimal(100 * tdd / refTDD) + "%") + (if (dummies.contains(record)) "x" else "") + "\n"
         }
         return message
     }
 
-    private fun isOldData(historyList: List<TDD>): Boolean {
+    private fun isOldData(historyList: List<TotalDailyDose>): Boolean {
         val activePump = activePlugin.activePump
         val startsYesterday = activePump === danaRPlugin || activePump === danaRSPlugin || activePump === danaRv2Plugin || activePump === danaRKoreanPlugin || activePump === localInsightPlugin
         val df: DateFormat = SimpleDateFormat("dd.MM.", Locale.getDefault())
-        return historyList.size < 3 || df.format(Date(historyList[0].date)) != df.format(Date(System.currentTimeMillis() - if (startsYesterday) 1000 * 60 * 60 * 24 else 0))
+        return historyList.size < 3 || df.format(Date(historyList[0].timestamp)) != df.format(Date(System.currentTimeMillis() - if (startsYesterday) 1000 * 60 * 60 * 24 else 0))
     }
 
-    private fun getTDDList(returnDummies: MutableList<TDD>): MutableList<TDD> {
-        var historyList = databaseHelper.getTDDs().toMutableList()
+    private fun getTDDList(returnDummies: MutableList<TotalDailyDose>): MutableList<TotalDailyDose> {
+        var historyList = repository.getLastTotalDailyDoses(10, false).blockingGet().toMutableList()
+        //var historyList = databaseHelper.getTDDs().toMutableList()
         historyList = historyList.subList(0, min(10, historyList.size))
         //fill single gaps - only needed for Dana*R data
-        val dummies: MutableList<TDD> = returnDummies
+        val dummies: MutableList<TotalDailyDose> = returnDummies
         val df: DateFormat = SimpleDateFormat("dd.MM.", Locale.getDefault())
         for (i in 0 until historyList.size - 1) {
             val elem1 = historyList[i]
             val elem2 = historyList[i + 1]
-            if (df.format(Date(elem1.date)) != df.format(Date(elem2.date + 25 * 60 * 60 * 1000))) {
-                val dummy = TDD()
-                dummy.date = elem1.date - 24 * 60 * 60 * 1000
-                dummy.basal = elem1.basal / 2
-                dummy.bolus = elem1.bolus / 2
+            if (df.format(Date(elem1.timestamp)) != df.format(Date(elem2.timestamp + 25 * 60 * 60 * 1000))) {
+                val dummy = TotalDailyDose(timestamp = elem1.timestamp - T.hours(24).msecs(), bolusAmount = elem1.bolusAmount / 2, basalAmount = elem1.basalAmount / 2)
                 dummies.add(dummy)
-                elem1.basal /= 2.0
-                elem1.bolus /= 2.0
+                elem1.basalAmount /= 2.0
+                elem1.bolusAmount /= 2.0
             }
         }
         historyList.addAll(dummies)
-        historyList.sortWith { lhs, rhs -> (rhs.date - lhs.date).toInt() }
+        historyList.sortWith { lhs, rhs -> (rhs.timestamp - lhs.timestamp).toInt() }
         return historyList
     }
 

@@ -78,7 +78,7 @@ class FoodPlugin @Inject constructor(
                         repository.runTransactionForResult(SyncNsFoodTransaction(delFood, true))
                             .doOnError {
                                 aapsLogger.error(LTag.DATABASE, "Error while removing food", it)
-                                ret = Result.failure(workDataOf("Error" to it))
+                                ret = Result.failure(workDataOf("Error" to it.toString()))
                             }
                             .blockingGet()
                             .also {
@@ -92,7 +92,7 @@ class FoodPlugin @Inject constructor(
                             repository.runTransactionForResult(SyncNsFoodTransaction(food, false))
                                 .doOnError {
                                     aapsLogger.error(LTag.DATABASE, "Error while adding/updating food", it)
-                                    ret = Result.failure(workDataOf("Error" to it))
+                                    ret = Result.failure(workDataOf("Error" to it.toString()))
                                 }
                                 .blockingGet()
                                 .also { result ->
