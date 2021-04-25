@@ -379,15 +379,27 @@ public class RileyLinkBLE {
         aapsLogger.debug(LTag.PUMPBTCOMM, "RileyLink address: " + RileyLinkAddress);
         // Must verify that this is a valid MAC, or crash.
         macAddress = RileyLinkAddress;
-        startScan();
-//        rileyLinkDevice = bluetoothAdapter.getRemoteDevice(RileyLinkAddress);
-//        // if this succeeds, we get a connection state change callback?
-//
-//        if (rileyLinkDevice != null) {
-//            connectGatt();
-//        } else {
-//            aapsLogger.error(LTag.PUMPBTCOMM, "RileyLink device not found with address: " + RileyLinkAddress);
-//        }
+        String RileyLinkName = sp.getString(RileyLinkConst.Prefs.RileyLinkName, "");
+        if (RileyLinkName.equals("Orange")) {
+            startScan();
+        } else {
+            rileyLinkDevice = bluetoothAdapter.getRemoteDevice(RileyLinkAddress);
+            // if this succeeds, we get a connection state change callback?
+            if (rileyLinkDevice != null) {
+                connectGatt();
+            } else {
+                aapsLogger.error(LTag.PUMPBTCOMM, "RileyLink device not found with address: " + RileyLinkAddress);
+            }
+        }
+    }
+
+    public void connectGattCheckOrange() {
+        String RileyLinkName = sp.getString(RileyLinkConst.Prefs.RileyLinkName, "");
+        if (RileyLinkName.equals("Orange")) {
+            startScan();
+        } else {
+            connectGatt();
+        }
     }
 
 
