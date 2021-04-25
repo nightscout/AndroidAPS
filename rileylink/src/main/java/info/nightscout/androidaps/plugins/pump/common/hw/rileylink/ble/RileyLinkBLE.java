@@ -1,6 +1,5 @@
 package info.nightscout.androidaps.plugins.pump.common.hw.rileylink.ble;
 
-import android.annotation.TargetApi;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothGatt;
@@ -15,7 +14,6 @@ import android.bluetooth.le.ScanFilter;
 import android.bluetooth.le.ScanResult;
 import android.bluetooth.le.ScanSettings;
 import android.content.Context;
-import android.os.Build;
 import android.os.Handler;
 import android.os.Message;
 import android.os.SystemClock;
@@ -32,7 +30,6 @@ import javax.inject.Singleton;
 
 import info.nightscout.androidaps.logging.AAPSLogger;
 import info.nightscout.androidaps.logging.LTag;
-import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.Platform;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.RileyLinkConst;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.RileyLinkUtil;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.ble.data.GattAttributes;
@@ -620,7 +617,6 @@ public class RileyLinkBLE {
         return scanFilterList;
     }
 
-    @TargetApi(Build.VERSION_CODES.M)
     private ScanSettings buildScanSettings() {
         ScanSettings.Builder scanSettingBuilder = new ScanSettings.Builder();
         scanSettingBuilder.setScanMode(ScanSettings.SCAN_MODE_LOW_LATENCY);
@@ -634,18 +630,15 @@ public class RileyLinkBLE {
             stopScan();
             aapsLogger.debug(LTag.PUMPBTCOMM, "startScan");
             handler.sendEmptyMessageDelayed(TIME_OUT_WHAT, TIME_OUT);
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                BluetoothLeScanner bluetoothLeScanner = bluetoothAdapter.getBluetoothLeScanner();
-                if (bluetoothLeScanner == null) {
-                    bluetoothAdapter.startLeScan(mLeScanCallback);
-                    return;
-                }
-                bluetoothLeScanner.startScan(buildScanFilters(), buildScanSettings(), scanCallback);
-            } else {
+            BluetoothLeScanner bluetoothLeScanner = bluetoothAdapter.getBluetoothLeScanner();
+            if (bluetoothLeScanner == null) {
                 bluetoothAdapter.startLeScan(mLeScanCallback);
+                return;
             }
+            bluetoothLeScanner.startScan(buildScanFilters(), buildScanSettings(), scanCallback);
         } catch (Exception e) {
             e.printStackTrace();
+            aapsLogger.error(LTag.PUMPBTCOMM, e.getMessage());
         }
 
 
@@ -679,16 +672,11 @@ public class RileyLinkBLE {
     private BluetoothAdapter.LeScanCallback mLeScanCallback = new BluetoothAdapter.LeScanCallback() {
         public void onLeScan(final BluetoothDevice device, final int rssi,
                              final byte[] scanRecord) {
-            Platform.get().postDelayedMain(new Runnable() {
-                @Override
-                public void run() {
-                    if (macAddress.equals(device.getAddress())) {
-                        stopScan();
-                        rileyLinkDevice = device;
-                        connectGatt();
-                    }
-                }
-            }, 1);
+            if (macAddress.equals(device.getAddress())) {
+                stopScan();
+                rileyLinkDevice = device;
+                connectGatt();
+            }
         }
     };
     public static final int TIME_OUT = 90 * 1000;
@@ -711,24 +699,19 @@ public class RileyLinkBLE {
             return;
         }
         try {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                BluetoothLeScanner bluetoothLeScanner = bluetoothAdapter.getBluetoothLeScanner();
-                if (bluetoothLeScanner == null) {
-                    if (isBluetoothAvailable()) {
-                        bluetoothAdapter.stopLeScan(mLeScanCallback);
-                    }
-                    return;
-                }
-                if (isBluetoothAvailable()) {
-                    bluetoothLeScanner.stopScan(scanCallback);
-                }
-            } else {
+            BluetoothLeScanner bluetoothLeScanner = bluetoothAdapter.getBluetoothLeScanner();
+            if (bluetoothLeScanner == null) {
                 if (isBluetoothAvailable()) {
                     bluetoothAdapter.stopLeScan(mLeScanCallback);
                 }
+                return;
+            }
+            if (isBluetoothAvailable()) {
+                bluetoothLeScanner.stopScan(scanCallback);
             }
         } catch (Exception e) {
             e.printStackTrace();
+            aapsLogger.error(LTag.PUMPBTCOMM, e.getMessage());
         }
 
     }
