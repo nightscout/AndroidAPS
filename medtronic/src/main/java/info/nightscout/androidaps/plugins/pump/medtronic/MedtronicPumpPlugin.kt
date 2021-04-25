@@ -756,7 +756,6 @@ class MedtronicPumpPlugin @Inject constructor(
         val response = responseTask.result as Boolean?
         aapsLogger.info(LTag.PUMP, logPrefix + "setTempBasalAbsolute - setTBR. Response: " + response)
         return if (response!!) {
-            // FIXME put this into UIPostProcessor
             medtronicPumpStatus.tempBasalStart = Date()
             medtronicPumpStatus.tempBasalAmount = absoluteRate
             medtronicPumpStatus.tempBasalLength = durationInMinutes
@@ -1015,7 +1014,11 @@ class MedtronicPumpPlugin @Inject constructor(
                 .source(Source.USER)
 
             // TODO fix
-            activePlugin.activeTreatments.addToHistoryTempBasal(tempBasal)
+            if (usePumpSync) {
+                addTemporaryBasalRateWithTempId(tempBasal, true)
+            } else {
+                activePlugin.activeTreatments.addToHistoryTempBasal(tempBasal)
+            }
             PumpEnactResult(injector).success(true).enacted(true) //
                 .isTempCancel(true)
         } else {

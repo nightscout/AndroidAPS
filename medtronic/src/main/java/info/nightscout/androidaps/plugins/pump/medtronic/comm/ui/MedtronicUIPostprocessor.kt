@@ -133,18 +133,6 @@ class MedtronicUIPostprocessor @Inject constructor(
         medtronicUtil.pumpTime = clockDTO
         aapsLogger.debug(LTag.PUMP, "Pump Time: " + clockDTO.localDeviceTime + ", DeviceTime=" + clockDTO.pumpTime +  //
             ", diff: " + dur.standardSeconds + " s")
-
-//        if (dur.getStandardMinutes() >= 10) {
-//            if (isLogEnabled())
-//                LOG.warn("Pump clock needs update, pump time: " + clockDTO.pumpTime.toString("HH:mm:ss") + " (difference: "
-//                        + dur.getStandardSeconds() + " s)");
-//            sendNotification(MedtronicNotificationType.PumpWrongTimeUrgent);
-//        } else if (dur.getStandardMinutes() >= 4) {
-//            if (isLogEnabled())
-//                LOG.warn("Pump clock needs update, pump time: " + clockDTO.pumpTime.toString("HH:mm:ss") + " (difference: "
-//                        + dur.getStandardSeconds() + " s)");
-//            sendNotification(MedtronicNotificationType.PumpWrongTimeNormal);
-//        }
     }
 
     private fun postProcessSettings(uiTask: MedtronicUITask) {

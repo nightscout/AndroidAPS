@@ -348,7 +348,7 @@ class MedtronicCommunicationManager  // This empty constructor must be kept, oth
 
     override fun createPumpMessageContent(type: RLMessageType): ByteArray {
         return when (type) {
-            RLMessageType.PowerOn        -> medtronicUtil.buildCommandPayload(rileyLinkServiceData, MedtronicCommandType.RFPowerOn, byteArrayOf(2, 1, receiverDeviceAwakeForMinutes.toByte())) // maybe this is better FIXME
+            RLMessageType.PowerOn        -> medtronicUtil.buildCommandPayload(rileyLinkServiceData, MedtronicCommandType.RFPowerOn, byteArrayOf(2, 1, receiverDeviceAwakeForMinutes.toByte()))
             RLMessageType.ReadSimpleData -> medtronicUtil.buildCommandPayload(rileyLinkServiceData, MedtronicCommandType.PumpModel, null)
             else -> ByteArray(0)
         }

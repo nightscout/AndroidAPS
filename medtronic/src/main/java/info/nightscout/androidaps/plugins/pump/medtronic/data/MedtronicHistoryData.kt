@@ -40,7 +40,6 @@ import javax.inject.Singleton
 //  needs to include not returning any records if TZ goes into -x area. To fully support this AAPS would need to take note of
 //  all times that time changed (TZ, DST, etc.). Data needs to be returned in batches (time_changed batches, so that we can
 //  handle it. It would help to assign sort_ids to items (from oldest (1) to newest (x)
-// All things marked with "TODO: Fix db code" needs to be updated in new 2.5 database code
 @Suppress("DEPRECATION")
 @Singleton
 class MedtronicHistoryData @Inject constructor(
@@ -278,7 +277,6 @@ class MedtronicHistoryData @Inject constructor(
      */
     fun processNewHistoryData() {
 
-        // TODO: Fix db code
         // Prime (for reseting autosense)
         val primeRecords: MutableList<PumpHistoryEntry> = getFilteredItems(PumpHistoryEntryType.Prime)
         aapsLogger.debug(LTag.PUMP, String.format(Locale.ENGLISH, "ProcessHistoryData: Prime [count=%d, items=%s]", primeRecords.size, gson.toJson(primeRecords)))
@@ -416,24 +414,37 @@ class MedtronicHistoryData @Inject constructor(
      ${logPrefix}TDDs found: %d.
      %s
      """.trimIndent(), tdds.size, gson.toJson(tdds)))
-        val tddsDb = databaseHelper.getTDDsForLastXDays(3)
+        //val tddsDb = databaseHelper.getTDDsForLastXDays(3)
         for (tdd in tdds) {
-            val tddDbEntry = findTDD(tdd.atechDateTime!!, tddsDb)
-            val totalsDTO = tdd.decodedData!!["Object"] as DailyTotalsDTO?
+            //val tddDbEntry = findTDD(tdd.atechDateTime!!, tddsDb)
+            val totalsDTO = tdd.decodedData!!["Object"] as DailyTotalsDTO
+
+            pumpSync.createOrUpdateTotalDailyDose(
+                DateTimeUtil.toMillisFromATD(tdd.atechDateTime!!),
+                totalsDTO.insulinBolus,
+                totalsDTO.insulinBasal!!,
+                totalsDTO.insulinTotal,
+                tdd.pumpId,
+                medtronicPumpStatus.pumpType,
+                medtronicPumpStatus.serialNumber!!
+            )
+
+            // timestamp: Long, bolusAmount: Double, basalAmount: Double, totalAmount: Double,
+            // pumpId: Long?, pumpType: PumpType, pumpSerial: String
 
             //aapsLogger.debug(LTag.PUMP, "DailyTotals: {}", totalsDTO);
-            if (tddDbEntry == null) {
-                val tddNew = TDD()
-                totalsDTO!!.setTDD(tddNew)
-                aapsLogger.debug(LTag.PUMP, "TDD Add: $tddNew")
-                databaseHelper.createOrUpdateTDD(tddNew)
-            } else {
-                if (!totalsDTO!!.doesEqual(tddDbEntry)) {
-                    totalsDTO.setTDD(tddDbEntry)
-                    aapsLogger.debug(LTag.PUMP, "TDD Edit: $tddDbEntry")
-                    databaseHelper.createOrUpdateTDD(tddDbEntry)
-                }
-            }
+            // if (tddDbEntry == null) {
+            //     val tddNew = TDD()
+            //     totalsDTO!!.setTDD(tddNew)
+            //     aapsLogger.debug(LTag.PUMP, "TDD Add: $tddNew")
+            //     databaseHelper.createOrUpdateTDD(tddNew)
+            // } else {
+            //     if (!totalsDTO!!.doesEqual(tddDbEntry)) {
+            //         totalsDTO.setTDD(tddDbEntry)
+            //         aapsLogger.debug(LTag.PUMP, "TDD Edit: $tddDbEntry")
+            //         databaseHelper.createOrUpdateTDD(tddDbEntry)
+            //     }
+            // }
         }
     }
 
@@ -534,6 +545,7 @@ class MedtronicHistoryData @Inject constructor(
                     val tempBasal = findTempBasalWithPumpId(tempBasalProcessDTO.itemOne!!.pumpId!!, entriesFromHistory)
                     if (tempBasal != null) {
                         tempBasal.durationInMinutes = tempBasalProcessDTO.duration
+                        // TODO pumpSync - createOrUpdate(tempBasal)
                         databaseHelper.createOrUpdate(tempBasal)
                         aapsLogger.debug(LTag.PUMP, String.format(Locale.ENGLISH, "Edit " + ProcessHistoryRecord.TBR.description + " - (entryFromDb=%s) ", tempBasal))
                     } else {
@@ -568,6 +580,7 @@ class MedtronicHistoryData @Inject constructor(
                 return tbr
             }
         }
+        // TODO pumpSync - findTempBasalByPumpId
         return databaseHelper.findTempBasalByPumpId(pumpId)
     }
 
@@ -591,7 +604,6 @@ class MedtronicHistoryData @Inject constructor(
         } else if (entriesFromHistory.size == 1) {
             if (doubleBolusDebug) aapsLogger.debug(LTag.PUMP, String.format(Locale.ENGLISH, "DoubleBolusDebug: findDbEntry Treatment=%s, FromDb=%s. Type=SingleEntry", treatment, entriesFromHistory[0]))
 
-            // TODO: Fix db code
             // if difference is bigger than 2 minutes we discard entry
             val maxMillisAllowed = DateTimeUtil.getMillisFromATDWithAddedMinutes(treatment.atechDateTime!!, 2)
             if (doubleBolusDebug) aapsLogger.debug(LTag.PUMP, String.format(Locale.ENGLISH, "DoubleBolusDebug: findDbEntry maxMillisAllowed=%d, AtechDateTime=%d (add 2 minutes). ", maxMillisAllowed, treatment.atechDateTime))
@@ -636,10 +648,10 @@ class MedtronicHistoryData @Inject constructor(
         var outList: MutableList<DbObjectBase> = mutableListOf()
 
         if (processHistoryRecord == ProcessHistoryRecord.Bolus) {
-            // TODO pumpSync
+            // TODO pumpSync - activeTreatments.getTreatmentsFromHistoryAfterTimestamp
             outList.addAll(activePlugin.activeTreatments.getTreatmentsFromHistoryAfterTimestamp(startTimestamp))
         } else {
-            // TODO pumpSync
+            // TODO pumpSync - databaseHelper.getTemporaryBasalsDataFromTime(startTimestamp, true)
             outList.addAll(databaseHelper.getTemporaryBasalsDataFromTime(startTimestamp, true))
         }
 
@@ -689,7 +701,7 @@ class MedtronicHistoryData @Inject constructor(
                     detailedBolusInfo.insulin = bolusDTO.deliveredAmount!!
                     addCarbsFromEstimate(detailedBolusInfo, bolus)
                     if (doubleBolusDebug) aapsLogger.debug(LTag.PUMP, "DoubleBolusDebug: addBolus(tretament==null): DetailedBolusInfo=$detailedBolusInfo")
-                    // TODO pumpSync
+                    // TODO pumpSync - activeTreatments.addToHistoryTreatment
                     val newRecord = activePlugin.activeTreatments.addToHistoryTreatment(detailedBolusInfo, false)
                     bolus.linkedObject = detailedBolusInfo
                     aapsLogger.debug(LTag.PUMP, String.format(Locale.ENGLISH, "addBolus - [date=%d,pumpId=%d, insulin=%.2f, newRecord=%b]", detailedBolusInfo.timestamp,
@@ -706,7 +718,7 @@ class MedtronicHistoryData @Inject constructor(
                     extendedBolus.durationInMinutes = bolusDTO.duration!!
                     bolus.linkedObject = extendedBolus
                     if (doubleBolusDebug) aapsLogger.debug(LTag.PUMP, "DoubleBolusDebug: addBolus(tretament==null): ExtendedBolus=$extendedBolus")
-                    // TODO pumpSync
+                    // TODO pumpSync - activeTreatments.addToHistoryExtendedBolus
                     activePlugin.activeTreatments.addToHistoryExtendedBolus(extendedBolus)
                     aapsLogger.debug(LTag.PUMP, String.format(Locale.ENGLISH, "addBolus - Extended [date=%d,pumpId=%d, insulin=%.3f, duration=%d]", extendedBolus.date,
                         extendedBolus.pumpId, extendedBolus.insulin, extendedBolus.durationInMinutes))
@@ -717,7 +729,7 @@ class MedtronicHistoryData @Inject constructor(
             treatment.source = Source.PUMP
             treatment.pumpId = bolus.pumpId!!
             treatment.insulin = bolusDTO!!.deliveredAmount!!
-            // TODO pumpSync
+            // TODO pumpSync - activeTreatments.createOrUpdateMedtronic(treatment)
             val updateReturn = activePlugin.activeTreatments.createOrUpdateMedtronic(treatment, false)
             if (doubleBolusDebug) aapsLogger.debug(LTag.PUMP, String.format(Locale.ENGLISH, "DoubleBolusDebug: addBolus(tretament!=null): NewTreatment=%s, UpdateReturn=%s", treatment, updateReturn))
             aapsLogger.debug(LTag.PUMP, String.format(Locale.ENGLISH, "editBolus - [date=%d,pumpId=%d, insulin=%.3f, newRecord=%s]", treatment.date,
@@ -730,6 +742,7 @@ class MedtronicHistoryData @Inject constructor(
         if (bolus!!.containsDecodedData("Estimate")) {
             val bolusWizard = bolus.decodedData!!["Estimate"] as BolusWizardDTO?
             if (doubleBolusDebug) aapsLogger.debug(LTag.PUMP, String.format(Locale.ENGLISH, "DoubleBolusDebug: addCarbsFromEstimate: Bolus=%s, BolusWizardDTO=%s", bolus, bolusWizard))
+            // TODO pumpSync - Carbs
             detailedBolusInfo.carbs = bolusWizard!!.carbs.toDouble()
         }
     }
@@ -749,6 +762,7 @@ class MedtronicHistoryData @Inject constructor(
         temporaryBasalDb.absoluteRate = tbr.insulinRate
         temporaryBasalDb.isAbsolute = !tbr.isPercent
         treatment.linkedObject = temporaryBasalDb
+        // TODO pumpSync - databaseHelper.createOrUpdate(tbr)
         databaseHelper.createOrUpdate(temporaryBasalDb)
         aapsLogger.debug(LTag.PUMP, String.format(Locale.ENGLISH, "$operation - [date=%d,pumpId=%d, rate=%s %s, duration=%d]",  //
             temporaryBasalDb.getDate(),  //
@@ -760,6 +774,7 @@ class MedtronicHistoryData @Inject constructor(
 
     private fun processSuspends(tempBasalProcessList: List<TempBasalProcessDTO>) {
         for (tempBasalProcess in tempBasalProcessList) {
+            // TODO pumpSync - databaseHelper.findTempBasalByPumpId
             var tempBasal = databaseHelper.findTempBasalByPumpId(tempBasalProcess.itemOne!!.pumpId!!)
             if (tempBasal == null) {
                 // add
@@ -772,6 +787,7 @@ class MedtronicHistoryData @Inject constructor(
                 tempBasal.isAbsolute = true
                 tempBasalProcess.itemOne!!.linkedObject = tempBasal
                 tempBasalProcess.itemTwo!!.linkedObject = tempBasal
+                // TODO pumpSync -databaseHelper.createOrUpdate(tbr-suspebd(
                 databaseHelper.createOrUpdate(tempBasal)
             }
         }
@@ -928,51 +944,18 @@ class MedtronicHistoryData @Inject constructor(
         return if (tddsOut.size == 0) tdds else tddsOut
     }
 
-    private fun findTDD(atechDateTime: Long, tddsDb: List<TDD>): TDD? {
-        for (tdd in tddsDb) {
-            if (DateTimeUtil.isSameDayATDAndMillis(atechDateTime, tdd.date)) {
-                return tdd
-            }
-        }
-        return null
-    }
+    // private fun findTDD(atechDateTime: Long, tddsDb: List<TDD>): TDD? {
+    //     for (tdd in tddsDb) {
+    //         if (DateTimeUtil.isSameDayATDAndMillis(atechDateTime, tdd.date)) {
+    //             return tdd
+    //         }
+    //     }
+    //     return null
+    // }
 
     private fun tryToGetByLocalTime(atechDateTime: Long): Long {
         return DateTimeUtil.toMillisFromATD(atechDateTime)
     }
-
-//     private fun getOldestDateDifference(treatments: List<PumpHistoryEntry>): Int {
-//         var dt = Long.MAX_VALUE
-//         var currentTreatment: PumpHistoryEntry? = null
-//         if (isCollectionEmpty(treatments)) {
-//             return 8 // default return of 6 (5 for diif on history reading + 2 for max allowed difference) minutes
-//         }
-//         for (treatment in treatments) {
-//             if (treatment.atechDateTime!! < dt) {
-//                 dt = treatment.atechDateTime!!
-//                 currentTreatment = treatment
-//             }
-//         }
-//         var oldestEntryTime: LocalDateTime
-//         try {
-//             oldestEntryTime = DateTimeUtil.toLocalDateTime(dt)
-//             oldestEntryTime = oldestEntryTime.minusMinutes(3)
-//
-// //            if (this.pumpTime.timeDifference < 0) {
-// //                oldestEntryTime = oldestEntryTime.plusSeconds(this.pumpTime.timeDifference);
-// //            }
-//         } catch (ex: Exception) {
-//             aapsLogger.error("Problem decoding date from last record: $currentTreatment")
-//             return 8 // default return of 6 minutes
-//         }
-//         val now = LocalDateTime()
-//         val minutes = Minutes.minutesBetween(oldestEntryTime, now)
-//
-//         // returns oldest time in history, with calculated time difference between pump and phone, minus 5 minutes
-//         aapsLogger.debug(LTag.PUMP, String.format(Locale.ENGLISH, "Oldest entry: %d, pumpTimeDifference=%d, newDt=%s, currentTime=%s, differenceMin=%d", dt,
-//             pumpTime!!.timeDifference, oldestEntryTime, now, minutes.minutes))
-//         return minutes.minutes
-//     }
 
     private fun getOldestTimestamp(treatments: List<PumpHistoryEntry?>): Long {
         var dt = Long.MAX_VALUE

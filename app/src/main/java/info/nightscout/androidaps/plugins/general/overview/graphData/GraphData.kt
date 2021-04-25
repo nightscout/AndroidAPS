@@ -582,17 +582,10 @@ class GraphData(
         val ratioScale = if (useForScale) Scale(100.0) else Scale()
         var time = fromTime
         while (time <= toTime) {
-<<<<<<<<< Temporary merge branch 1
             iobCobCalculator.ads.getAutosensDataAtTime(time)?.let { autosensData ->
-                ratioArray.add(ScaledDataPoint(time, autosensData.autosensResult.ratio - 1, ratioScale))
-                maxRatioValueFound = max(maxRatioValueFound, autosensData.autosensResult.ratio - 1)
-                minRatioValueFound = min(minRatioValueFound, autosensData.autosensResult.ratio - 1)
-=========
-            iobCobCalculatorPlugin.getAutosensData(time)?.let { autosensData ->
                 ratioArray.add(ScaledDataPoint(time, 100.0 * (autosensData.autosensResult.ratio - 1 ), ratioScale))
                 maxRatioValueFound = max(maxRatioValueFound, 100.0 * (autosensData.autosensResult.ratio - 1))
                 minRatioValueFound = min(minRatioValueFound, 100.0 * (autosensData.autosensResult.ratio - 1))
->>>>>>>>> Temporary merge branch 2
             }
             time += 5 * 60 * 1000L
         }

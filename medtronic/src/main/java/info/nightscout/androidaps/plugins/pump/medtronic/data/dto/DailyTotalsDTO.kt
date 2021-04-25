@@ -1,7 +1,7 @@
 package info.nightscout.androidaps.plugins.pump.medtronic.data.dto
 
 import com.google.gson.annotations.Expose
-import info.nightscout.androidaps.db.TDD
+//import info.nightscout.androidaps.db.TDD
 import info.nightscout.androidaps.plugins.pump.common.utils.ByteUtil
 import info.nightscout.androidaps.plugins.pump.common.utils.DateTimeUtil
 import info.nightscout.androidaps.plugins.pump.common.utils.StringUtil
@@ -34,13 +34,13 @@ class DailyTotalsDTO(var entry: PumpHistoryEntry) {
     private val sensorDataCount: Int? = null
 
     @Expose
-    private var insulinTotal = 0.0
+    var insulinTotal = 0.0
 
     @Expose
-    private var insulinBasal: Double? = 0.0
+    var insulinBasal: Double? = 0.0
 
     @Expose
-    private var insulinBolus = 0.0
+    var insulinBolus = 0.0
     private var insulinCarbs: Double? = null
     private var bolusTotal: Double? = null
     private var bolusFood: Double? = null
@@ -177,16 +177,16 @@ class DailyTotalsDTO(var entry: PumpHistoryEntry) {
             .toString()
     }
 
-    fun setTDD(tdd: TDD) {
-        tdd.date = DateTimeUtil.toMillisFromATD(entry.atechDateTime!!)
-        tdd.basal = insulinBasal!!
-        tdd.bolus = insulinBolus
-        tdd.total = insulinTotal
-    }
-
-    fun doesEqual(tdd: TDD): Boolean {
-        return tdd.total == insulinTotal && tdd.bolus == insulinBolus && tdd.basal == insulinBasal
-    }
+    // fun setTDD(tdd: TDD) {
+    //     tdd.date = DateTimeUtil.toMillisFromATD(entry.atechDateTime!!)
+    //     tdd.basal = insulinBasal!!
+    //     tdd.bolus = insulinBolus
+    //     tdd.total = insulinTotal
+    // }
+    //
+    // fun doesEqual(tdd: TDD): Boolean {
+    //     return tdd.total == insulinTotal && tdd.bolus == insulinBolus && tdd.basal == insulinBasal
+    // }
 
     init {
         when (entry.entryType) {

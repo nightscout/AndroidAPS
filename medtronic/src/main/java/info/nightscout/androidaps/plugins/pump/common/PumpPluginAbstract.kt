@@ -404,18 +404,19 @@ abstract class PumpPluginAbstract protected constructor(
     }
 
     // TODO
-    protected fun addTemporaryBasalRateWithTempId(temporaryBasal: TemporaryBasal?, b: Boolean) {
-//        long temporaryId = generateTempId(temporaryBasal.timestamp);
-//        boolean response = pumpSync.addBolusWithTempId(temporaryBasal.timestamp, detailedBolusInfo.insulin,
-//                generateTempId(detailedBolusInfo.timestamp), detailedBolusInfo.getBolusType(),
-//                getPumpType(), serialNumber());
-//
-//        if (response && writeToInternalHistory) {
-//            driverHistory.put(temporaryId, new PumpDbEntry(temporaryId, model(), serialNumber(), detailedBolusInfo));
-//            sp.putString(MedtronicConst.Statistics.InternalTemporaryDatabase, gson.toJson(driverHistory));
-//        }
-//
-//        return response;
+    protected fun addTemporaryBasalRateWithTempId(temporaryBasal: TemporaryBasal, b: Boolean) {
+        val temporaryId = generateTempId(temporaryBasal.date)
+        val response = pumpSync.addBolusWithTempId(temporaryBasal.timestamp, detailedBolusInfo.insulin,
+        generateTempId(detailedBolusInfo.timestamp), detailedBolusInfo.getBolusType(),
+        getPumpType(), serialNumber());
+
+        if (response && writeToInternalHistory) {
+            driverHistory.put(temporaryId, new PumpDbEntry(temporaryId, model(), serialNumber(), detailedBolusInfo));
+            sp.putString(MedtronicConst.Statistics.InternalTemporaryDatabase, gson.toJson(driverHistory));
+        }
+
+        return response;
+
     }
 
     fun removeTemporaryId(temporaryId: Long) {
