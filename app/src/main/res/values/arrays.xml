@@ -141,4 +141,16 @@
         <item>3</item>
     </string-array>
 
+    <string-array name="darkMode">
+        <item>@string/dark_theme</item>
+        <item>@string/light_theme</item>
+        <item>@string/follow_system_theme</item>
+    </string-array>
+
+    <string-array name="darkModeValues">
+        <item>dark</item>
+        <item>light</item>
+        <item>system</item>
+    </string-array>
+
 </resources>
