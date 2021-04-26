@@ -201,7 +201,7 @@ class OmnipodDashPodStateManagerImpl @Inject constructor(
     }
 
     @Synchronized
-    override fun markActiveCommandFailed() {
+    override fun maybeMarkActiveCommandFailed() {
         podState.activeCommand?.run {
             if (sentRealtime < createdRealtime) {
                 // command was not sent

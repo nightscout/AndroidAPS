@@ -475,7 +475,7 @@ class OmnipodDashPumpPlugin @Inject constructor(
                     // If it gets called later, we will have the command as "not sent" in history and will not try to
                     // get it's final status, even if it was send
 
-                    podStateManager.markActiveCommandFailed()
+                    podStateManager.maybeMarkActiveCommandFailed()
                     source.onSuccess(
                         PumpEnactResult(injector).success(false).enacted(false).comment(throwable.message)
                     )
