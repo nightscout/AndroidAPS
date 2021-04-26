@@ -56,4 +56,19 @@ class TemporaryBasalStorage @Inject constructor(
         //aapsLogger.debug(LTag.PUMP, "Temporary basal info not found")
         return null
     }
+
+    @Synchronized
+    fun lastTbr(time: Long): PumpSync.PumpState.TemporaryBasal? {
+        var lastTbr : PumpSync.PumpState.TemporaryBasal? = null
+        var lastTimestamp = 0L
+        for (i in store.indices) {
+            val d = store[i]
+            if (time > d.timestamp &&  d.timestamp > lastTimestamp) {
+                lastTbr = d
+                lastTimestamp = d.timestamp
+                store.removeAt(store.size - 1)
+            }
+        }
+        return lastTbr
+    }
 }
