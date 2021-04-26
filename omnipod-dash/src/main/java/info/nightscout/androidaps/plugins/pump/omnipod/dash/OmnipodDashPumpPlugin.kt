@@ -236,6 +236,12 @@ class OmnipodDashPumpPlugin @Inject constructor(
     ): PumpEnactResult {
         // TODO update Treatments
         // TODO check for existing basal
+        // check existing basal(locally and maybe? get status)
+        //   if enforceNew -> cancel it()
+        //   else -> return error that existing basal is running
+        //  set new temp basal
+        // update treatments
+        // profit
         return executeProgrammingCommand(
             history.createRecord(
                 commandType = OmnipodCommandType.SET_TEMPORARY_BASAL,
@@ -468,7 +474,8 @@ class OmnipodDashPumpPlugin @Inject constructor(
                     // Here we assume that onError will be called only BEFORE we manage to send a command
                     // If it gets called later, we will have the command as "not sent" in history and will not try to
                     // get it's final status, even if it was send
-                    podStateManager.resetActiveCommand()
+
+                    podStateManager.markActiveCommandFailed()
                     source.onSuccess(
                         PumpEnactResult(injector).success(false).enacted(false).comment(throwable.message)
                     )

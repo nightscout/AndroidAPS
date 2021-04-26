@@ -201,8 +201,13 @@ class OmnipodDashPodStateManagerImpl @Inject constructor(
     }
 
     @Synchronized
-    override fun resetActiveCommand() {
-        podState.activeCommand = null
+    override fun markActiveCommandFailed() {
+        podState.activeCommand?.run {
+            if (sentRealtime < createdRealtime) {
+                // command was not sent
+                podState.activeCommand = null
+            }
+         }
     }
 
     @Synchronized
@@ -214,6 +219,7 @@ class OmnipodDashPodStateManagerImpl @Inject constructor(
                     "$sequenceNumberOfLastProgrammingCommand $historyId"
             )
             if (createdRealtime >= lastStatusResponseReceived)
+                // we did not receive a valid response yet
                 source.onComplete()
             else {
                 podState.activeCommand = null
