@@ -129,6 +129,9 @@ import info.nightscout.androidaps.utils.T;
 import info.nightscout.androidaps.utils.resources.ResourceHelper;
 import info.nightscout.androidaps.utils.sharedPreferences.SP;
 
+// TODO() remove this comment and all aapsLogger with "XXXX" used to debug and analyse this driver for database update before merge
+// remove comment before throw new IllegalArgumentException(detailedBolusInfo.toString(), new Exception()); at the beginning of deliverTreatment
+
 @Singleton
 public class LocalInsightPlugin extends PumpPluginBase implements Pump, Constraints, InsightConnectionService.StateCallback {
 
@@ -563,7 +566,6 @@ public class LocalInsightPlugin extends PumpPluginBase implements Pump, Constrai
     @NonNull @Override
     public PumpEnactResult deliverTreatment(DetailedBolusInfo detailedBolusInfo) {
         if (detailedBolusInfo.insulin == 0 || detailedBolusInfo.carbs > 0) {
-            aapsLogger.debug("XXXX Illegal argument : Insulin: " + detailedBolusInfo.insulin + " Carbs: " + detailedBolusInfo.carbs);
             //throw new IllegalArgumentException(detailedBolusInfo.toString(), new Exception());
         }
         PumpEnactResult result = new PumpEnactResult(getInjector());
@@ -745,6 +747,27 @@ public class LocalInsightPlugin extends PumpPluginBase implements Pump, Constrai
                     .success(true)
                     .enacted(true)
                     .comment(R.string.virtualpump_resultok);
+            long now = dateUtil.now();
+            pumpSync.syncTemporaryBasalWithPumpId(
+                    now,
+                    percent,
+                    T.mins(durationInMinutes).msecs(),
+                    false,
+                    PumpSync.TemporaryBasalType.NORMAL,
+                    now + 2000,
+                    PumpType.ACCU_CHEK_INSIGHT,
+                    serialNumber()
+            );
+            lastTbr = new PumpSync.PumpState.TemporaryBasal(
+                    now,
+                    T.mins(durationInMinutes).msecs(),
+                    percent,
+                    false,
+                    PumpSync.TemporaryBasalType.NORMAL,
+                    now,
+                    now + 2000                   // Offset +1500msec (I saw that we could have about 1s offset between time of action and time in history)
+            );
+            aapsLogger.debug("XXXX Set Temp Basal timestamp: " + dateUtil.now() + " rate: " + percent + " duration: " + durationInMinutes);
             readHistory();
             fetchStatus();
         } catch (AppLayerErrorException e) {
@@ -835,6 +858,22 @@ public class LocalInsightPlugin extends PumpPluginBase implements Pump, Constrai
             confirmAlert(AlertType.WARNING_36);
             alertService.ignore(null);
             result.comment(R.string.virtualpump_resultok);
+            long now = dateUtil.now();
+            pumpSync.syncStopTemporaryBasalWithPumpId(
+                    now,
+                    now,
+                    PumpType.ACCU_CHEK_INSIGHT,
+                    serialNumber()
+            );
+            lastTbr = new PumpSync.PumpState.TemporaryBasal(
+                    now,
+                    0L,
+                    100.0,
+                    false,
+                    PumpSync.TemporaryBasalType.NORMAL,
+                    now,
+                    now + 2000);
+            aapsLogger.debug("XXXX cancel Temp Basal timestamp: " + dateUtil.now());
         } catch (NoActiveTBRToCanceLException e) {
             result.success(true);
             result.comment(R.string.virtualpump_resultok);
@@ -1142,8 +1181,9 @@ public class LocalInsightPlugin extends PumpPluginBase implements Pump, Constrai
         aapsLogger.debug("XXXX tbr size :" + temporaryBasals.size());
         if (lastTbr == null) lastTbr = pumpSync.expectedPumpState().getTemporaryBasal();
         if (lastTbr == null) lastTbr = new TemporaryBasal(dateUtil.now() - 10000L, 0, 100, false, PumpSync.TemporaryBasalType.NORMAL, 0, 0L);
+        // Bloc below is only to include manual TBR done directly in pump since last action enacted by AAPS (on AAPS start history is ignored, only a resync is done with checkAndResolveTbrMismatch)
         for (TemporaryBasal temporaryBasal : temporaryBasals) {
-            if (temporaryBasal.getRate() == 100.0 && temporaryBasal.getTimestamp() > lastTbr.getTimestamp()) {                    // for Stop TBR event rate = 100.0
+            if (temporaryBasal.getRate() == 100.0 && temporaryBasal.getTimestamp() > lastTbr.getPumpId()) {                    // for Stop TBR event rate = 100.0
                 if (temporaryBasal.getTimestamp() > currentTimestamp) {
                     pumpSync.syncStopTemporaryBasalWithPumpId(
                             temporaryBasal.getTimestamp(),
@@ -1154,7 +1194,7 @@ public class LocalInsightPlugin extends PumpPluginBase implements Pump, Constrai
                 aapsLogger.debug("XXXX Sync Stop " + temporaryBasal.getTimestamp() + " date: " + dateUtil.dateAndTimeAndSecondsString(temporaryBasal.getTimestamp()) + " pumpId: " + temporaryBasal.getPumpId());
                 lastTbr = temporaryBasal;
             }
-            if (temporaryBasal.getRate() != 100.0 &&  temporaryBasal.getTimestamp() > lastTbr.getTimestamp()){
+            if (temporaryBasal.getRate() != 100.0 &&  temporaryBasal.getTimestamp() > lastTbr.getPumpId()){          // 1 s marging added (timestamp of same event from history could vary)
                 Boolean resultdb = pumpSync.syncTemporaryBasalWithPumpId(
                         temporaryBasal.getTimestamp(),
                         temporaryBasal.getRate(),
@@ -1179,7 +1219,8 @@ public class LocalInsightPlugin extends PumpPluginBase implements Pump, Constrai
             else if (activeTBR.getPercentage() != activeDbTBR.getRate())
                 aapsLogger.debug("XXXX INCONCISTENCY TBR Not the same %: " + activeDbTBR.getRate() + "% in AAPS ("+ (dateUtil.now() - activeDbTBR.getTimestamp())/1000 + "s ago) " + activeTBR.getPercentage() + "% in pump (" + (activeTBR.getInitialDuration() - activeTBR.getRemainingDuration()) + "min ago Duration (min):" + activeTBR.getInitialDuration());
         }
-        checkAndResolveTbrMismatch(serial);           // on start use to resynchro AAPS with current TBR in pump
+        // end of bloc to remove
+        checkAndResolveTbrMismatch(serial);           // on AAPS Start use to resynchro AAPS with current TBR running in pump
     }
 
     private boolean processHistoryEvent(String serial, List<TemporaryBasal> temporaryBasals, HistoryEvent event) {
@@ -1328,7 +1369,7 @@ public class LocalInsightPlugin extends PumpPluginBase implements Pump, Constrai
                 false,
                 PumpSync.TemporaryBasalType.NORMAL,
                 timestamp,
-                timestamp);
+                timestamp + 1000L);             // margin added because on several reeadHistory, timestamp could vary
         temporaryBasals.add(temporaryBasal);
     }
 
@@ -1343,7 +1384,7 @@ public class LocalInsightPlugin extends PumpPluginBase implements Pump, Constrai
                     false,
                     PumpSync.TemporaryBasalType.NORMAL,
                     timestamp - 1500L,
-                    timestamp - 1500L);
+                    timestamp - 500L);
             temporaryBasals.add(temporaryBasal);
     }
 
