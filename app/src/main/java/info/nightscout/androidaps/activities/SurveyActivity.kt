@@ -71,9 +71,8 @@ class SurveyActivity : NoSplashAppCompatActivity() {
                         pvd.arguments = Bundle().also {
                             it.putLong("time", dateUtil.now())
                             it.putInt("mode", ProfileViewerDialog.Mode.PROFILE_COMPARE.ordinal)
-                            it.putString("customProfile", runningProfile.toNsJson().toString())
-                            it.putString("customProfile2", profile.toNsJson().toString())
-                            it.putString("customProfileUnits", profile.units.asText)
+                            it.putString("customProfile", runningProfile.toPureNsJson(dateUtil).toString())
+                            it.putString("customProfile2",  profile.jsonObject.toString())
                             it.putString("customProfileName", "Age: $age TDD: $tdd Weight: $weight")
                         }
                     }.show(supportFragmentManager, "ProfileViewDialog")

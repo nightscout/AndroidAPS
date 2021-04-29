@@ -1,18 +1,14 @@
 package info.nightscout.androidaps.plugins.general.nsclient;
 
-import org.json.JSONException;
 import org.json.JSONObject;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
 import info.nightscout.androidaps.core.R;
-import info.nightscout.androidaps.database.entities.TherapyEvent;
 import info.nightscout.androidaps.db.DbRequest;
-import info.nightscout.androidaps.db.ProfileSwitch;
 import info.nightscout.androidaps.interfaces.UploadQueueInterface;
 import info.nightscout.androidaps.logging.AAPSLogger;
-import info.nightscout.androidaps.utils.DateUtil;
 import info.nightscout.androidaps.utils.sharedPreferences.SP;
 
 /**
@@ -35,7 +31,7 @@ public class NSUpload {
         this.sp = sp;
         this.uploadQueue = uploadQueue;
     }
-
+/*
     public void uploadProfileSwitch(ProfileSwitch profileSwitch, long nsClientId, DateUtil dateUtil) {
         try {
             JSONObject data = getJson(profileSwitch, dateUtil);
@@ -75,7 +71,7 @@ public class NSUpload {
 
         return data;
     }
-
+*/
     // TODO replace with setting isValid = false
     public void removeCareportalEntryFromNS(String _id) {
         uploadQueue.add(new DbRequest("dbRemove", "treatments", _id, System.currentTimeMillis()));

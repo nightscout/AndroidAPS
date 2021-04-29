@@ -305,8 +305,8 @@ class NSClientAddUpdateWorker(
                                 }
                             }
                     } ?: aapsLogger.error("Error parsing TemporaryBasal json $json")
-                eventType == TherapyEvent.Type.PROFILE_SWITCH.text          ->
-                    databaseHelper.createProfileSwitchFromJsonIfNotExists(json)
+                eventType == TherapyEvent.Type.PROFILE_SWITCH.text          -> Any()
+//                    TODO("databaseHelper.createProfileSwitchFromJsonIfNotExists(json)")
             }
             if (eventType == TherapyEvent.Type.ANNOUNCEMENT.text) {
                 val date = safeGetLong(json, "mills")

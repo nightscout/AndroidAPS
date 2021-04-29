@@ -345,7 +345,7 @@ class DanaPump @Inject constructor(
             } catch (e: Exception) {
                 return null
             }
-            return ProfileStore(injector, json)
+            return ProfileStore(injector, json, dateUtil)
         }
         return null
     }

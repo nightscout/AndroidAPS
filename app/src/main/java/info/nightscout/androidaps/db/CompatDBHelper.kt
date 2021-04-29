@@ -32,7 +32,7 @@ class CompatDBHelper @Inject constructor(
              * Thus we need to collect both
              *
              */
-            var newestGlucoseValue : GlucoseValue? = null
+            var newestGlucoseValue: GlucoseValue? = null
             it.filterIsInstance<GlucoseValue>().lastOrNull()?.let { gv ->
                 aapsLogger.debug(LTag.DATABASE, "Firing EventNewBg")
                 rxBus.send(EventNewBG(gv))
@@ -73,6 +73,14 @@ class CompatDBHelper @Inject constructor(
             it.filterIsInstance<Food>().firstOrNull()?.let {
                 aapsLogger.debug(LTag.DATABASE, "Firing EventFoodDatabaseChanged")
                 rxBus.send(EventFoodDatabaseChanged())
+            }
+            it.filterIsInstance<ProfileSwitch>().firstOrNull()?.let {
+                aapsLogger.debug(LTag.DATABASE, "Firing EventProfileNeedsUpdate")
+                rxBus.send(EventProfileSwitchChanged())
+            }
+            it.filterIsInstance<EffectiveProfileSwitch>().firstOrNull()?.let {
+                aapsLogger.debug(LTag.DATABASE, "Firing EventProfileNeedsUpdate")
+                rxBus.send(EventProfileSwitchChanged())
             }
         }
 }

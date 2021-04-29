@@ -27,7 +27,7 @@ fun TemporaryTarget.target(): Double =
 
 fun TemporaryTarget.friendlyDescription(units: GlucoseUnit, resourceHelper: ResourceHelper): String =
     Profile.toTargetRangeString(lowTarget, highTarget, GlucoseUnit.MGDL, units) +
-        units +
+        units.asText +
         "@" + resourceHelper.gs(R.string.format_mins, TimeUnit.MILLISECONDS.toMinutes(duration)) + "(" + reason.text + ")"
 
 /*
@@ -99,6 +99,6 @@ fun TemporaryTarget.toJson(units: GlucoseUnit, dateUtil: DateUtil): JSONObject =
                 .put("reason", reason.text)
                 .put("targetBottom", Profile.fromMgdlToUnits(lowTarget, units))
                 .put("targetTop", Profile.fromMgdlToUnits(highTarget, units))
-                .put("units", units)
+                .put("units", units.asText)
             if (interfaceIDs.nightscoutId != null) it.put("_id", interfaceIDs.nightscoutId)
         }

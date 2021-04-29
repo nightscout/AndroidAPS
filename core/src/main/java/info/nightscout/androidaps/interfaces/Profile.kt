@@ -1,17 +1,19 @@
 package info.nightscout.androidaps.interfaces
 
 import info.nightscout.androidaps.Constants
-import info.nightscout.androidaps.interfaces.Profile.ProfileValue
+import info.nightscout.androidaps.data.PureProfile
+import info.nightscout.androidaps.plugins.bus.RxBusWrapper
+import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.DecimalFormatter.to0Decimal
 import info.nightscout.androidaps.utils.DecimalFormatter.to1Decimal
 import info.nightscout.androidaps.utils.Round
+import info.nightscout.androidaps.utils.resources.ResourceHelper
 import org.joda.time.DateTime
 import org.json.JSONObject
 
 interface Profile {
 
-    fun isValid(from: String): Boolean
-    fun isValid(from: String, notify: Boolean): Boolean
+    fun isValid(from: String, pump: Pump, config: Config, resourceHelper: ResourceHelper, rxBus: RxBusWrapper): Boolean
 
     /**
      * Units used for ISF & target
@@ -21,9 +23,11 @@ interface Profile {
     //@Deprecated("Replace in favor of accessing InsulinProfile")
     val dia: Double
 
-    @Deprecated("????why here")
     val percentage: Int
-    @Deprecated("????why here")
+
+    /**
+     * Timeshift modifier of base profile in hours
+     */
     val timeshift: Int
 
     /**
@@ -85,32 +89,27 @@ interface Profile {
     fun getTargetLowMgdlTimeFromMidnight(timeAsSeconds: Int): Double
 
     /**
-     * High target value according to elapsed seconds from midnight
-     */
-    fun getTargetHighTimeFromMidnight(timeAsSeconds: Int): Double
-
-    /**
      * High target value according to elapsed seconds from midnight in MGDL
      */
     fun getTargetHighMgdlTimeFromMidnight(timeAsSeconds: Int): Double
 
-    val icList: String
-    val isfList: String
-    val basalList: String
-    val targetList: String
+    fun getIcList(resourceHelper: ResourceHelper, dateUtil: DateUtil): String
+    fun getIsfList(resourceHelper: ResourceHelper, dateUtil: DateUtil): String
+    fun getBasalList(resourceHelper: ResourceHelper, dateUtil: DateUtil): String
+    fun getTargetList(resourceHelper: ResourceHelper, dateUtil: DateUtil): String
 
-    fun convertToNonCustomizedProfile(): Profile
-    fun toNsJson(): JSONObject
+    fun convertToNonCustomizedProfile(dateUtil: DateUtil): PureProfile
+    fun toPureNsJson(dateUtil: DateUtil): JSONObject
     fun getMaxDailyBasal(): Double
     fun baseBasalSum(): Double
     fun percentageBasalSum(): Double
 
     fun getBasalValues(): Array<ProfileValue>
-    fun getIcs(): Array<ProfileValue>
-    fun getIsfsMgdl(): Array<ProfileValue>
+    fun getIcsValues(): Array<ProfileValue>
+    fun getIsfsMgdlValues(): Array<ProfileValue>
     fun getSingleTargetsMgdl(): Array<ProfileValue>
 
-    class ProfileValue(var timeAsSeconds: Int, var value: Double) {
+    open class ProfileValue(var timeAsSeconds: Int, var value: Double) {
 
         override fun equals(other: Any?): Boolean {
             if (other !is ProfileValue) {

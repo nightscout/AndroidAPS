@@ -95,7 +95,7 @@ open class VirtualPumpPlugin @Inject constructor(
         it.is30minBasalRatesCapable = true
     }
 
-    fun getFakingStatus(): Boolean {
+    private fun getFakingStatus(): Boolean {
         return sp.getBoolean(R.string.key_fromNSAreCommingFakedExtendedBoluses, false)
     }
 

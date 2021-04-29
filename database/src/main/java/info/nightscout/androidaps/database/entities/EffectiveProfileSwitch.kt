@@ -31,11 +31,24 @@ data class EffectiveProfileSwitch(
     override var interfaceIDs_backing: InterfaceIDs? = null,
     override var timestamp: Long,
     override var utcOffset: Long = TimeZone.getDefault().getOffset(timestamp).toLong(),
-    var glucoseUnit: ProfileSwitch.GlucoseUnit,
     var basalBlocks: List<Block>,
     var isfBlocks: List<Block>,
     var icBlocks: List<Block>,
     var targetBlocks: List<TargetBlock>,
+    var glucoseUnit: GlucoseUnit,
+    // Previous values from PS request
+    var originalProfileName: String,
+    var originalCustomizedName: String,
+    var originalTimeshift: Long,  // [milliseconds]
+    var originalPercentage: Int, // 1 ~ XXX [%]
+    var originalDuration: Long, // [milliseconds]
+    var originalEnd: Long,
     @Embedded
-    var insulinConfiguration: InsulinConfiguration? = null
-) : TraceableDBEntry, DBEntryWithTime
+    var insulinConfiguration: InsulinConfiguration
+) : TraceableDBEntry, DBEntryWithTime{
+
+    enum class GlucoseUnit {
+        MGDL,
+        MMOL
+    }
+}

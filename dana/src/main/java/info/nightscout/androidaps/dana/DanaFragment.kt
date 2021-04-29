@@ -86,19 +86,19 @@ class DanaFragment : DaggerFragment() {
 
         binding.history.setOnClickListener { startActivity(Intent(context, info.nightscout.androidaps.dana.activities.DanaHistoryActivity::class.java)) }
         binding.viewprofile.setOnClickListener {
-            val profile = danaPump.createConvertedProfile()?.getDefaultProfile()
+            val profile = danaPump.createConvertedProfile()?.getDefaultProfileJson()
                 ?: return@setOnClickListener
             val profileName = danaPump.createConvertedProfile()?.getDefaultProfileName()
                 ?: return@setOnClickListener
-            val args = Bundle()
-            args.putLong("time", dateUtil.now())
-            args.putInt("mode", ProfileViewerDialog.Mode.CUSTOM_PROFILE.ordinal)
-            args.putString("customProfile", profile.toNsJson().toString())
-            args.putString("customProfileUnits", profile.units.asText)
-            args.putString("customProfileName", profileName)
-            val pvd = ProfileViewerDialog()
-            pvd.arguments = args
-            pvd.show(childFragmentManager, "ProfileViewDialog")
+            ProfileViewerDialog().also { pvd ->
+                pvd.arguments = Bundle().also { args ->
+                    args.putLong("time", dateUtil.now())
+                    args.putInt("mode", ProfileViewerDialog.Mode.CUSTOM_PROFILE.ordinal)
+                    args.putString("customProfile", profile.toString())
+                    args.putString("customProfileName", profileName)
+                }
+
+            }.show(childFragmentManager, "ProfileViewDialog")
         }
         binding.stats.setOnClickListener { startActivity(Intent(context, TDDStatsActivity::class.java)) }
         binding.userOptions.setOnClickListener { startActivity(Intent(context, info.nightscout.androidaps.dana.activities.DanaUserOptionsActivity::class.java)) }

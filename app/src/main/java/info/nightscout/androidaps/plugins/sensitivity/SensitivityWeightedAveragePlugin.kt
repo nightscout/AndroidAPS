@@ -4,14 +4,13 @@ import androidx.collection.LongSparseArray
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.Constants
 import info.nightscout.androidaps.R
-import info.nightscout.androidaps.interfaces.Profile
 import info.nightscout.androidaps.database.AppRepository
 import info.nightscout.androidaps.database.entities.TherapyEvent
-import info.nightscout.androidaps.db.ProfileSwitch
-import info.nightscout.androidaps.extensions.isEvent5minBack
-import info.nightscout.androidaps.interfaces.DatabaseHelperInterface
+import info.nightscout.androidaps.extensions.isEPSEvent5minBack
+import info.nightscout.androidaps.extensions.isTherapyEventEvent5minBack
 import info.nightscout.androidaps.interfaces.PluginDescription
 import info.nightscout.androidaps.interfaces.PluginType
+import info.nightscout.androidaps.interfaces.Profile
 import info.nightscout.androidaps.interfaces.ProfileFunction
 import info.nightscout.androidaps.interfaces.Sensitivity.SensitivityType
 import info.nightscout.androidaps.logging.AAPSLogger
@@ -35,7 +34,6 @@ open class SensitivityWeightedAveragePlugin @Inject constructor(
     sp: SP,
     private val profileFunction: ProfileFunction,
     private val dateUtil: DateUtil,
-    private val databaseHelper: DatabaseHelperInterface,
     private val repository: AppRepository
 ) : AbstractSensitivityPlugin(PluginDescription()
     .mainType(PluginType.SENSITIVITY)
@@ -69,7 +67,7 @@ open class SensitivityWeightedAveragePlugin @Inject constructor(
             return AutosensResult()
         }
         val siteChanges = repository.getTherapyEventDataFromTime(fromTime, TherapyEvent.Type.CANNULA_CHANGE, true).blockingGet()
-        val profileSwitches = databaseHelper.getProfileSwitchEventsFromTime(fromTime, true)
+        val profileSwitches = repository.getEffectiveProfileSwitchDataFromTime(fromTime, true).blockingGet()
         var pastSensitivity = ""
         var index = 0
         val data = LongSparseArray<Double>()
@@ -89,13 +87,13 @@ open class SensitivityWeightedAveragePlugin @Inject constructor(
             }
 
             // reset deviations after site change
-            if (isEvent5minBack(siteChanges, autosensData.time)) {
+            if (siteChanges.isTherapyEventEvent5minBack(autosensData.time)) {
                 data.clear()
                 pastSensitivity += "(SITECHANGE)"
             }
 
             // reset deviations after profile switch
-            if (ProfileSwitch(injector).isEvent5minBack(profileSwitches, autosensData.time, true)) {
+            if (profileSwitches.isEPSEvent5minBack(autosensData.time)) {
                 data.clear()
                 pastSensitivity += "(PROFILESWITCH)"
             }

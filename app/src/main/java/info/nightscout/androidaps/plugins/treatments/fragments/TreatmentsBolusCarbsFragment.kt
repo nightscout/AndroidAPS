@@ -105,7 +105,8 @@ class TreatmentsBolusCarbsFragment : DaggerFragment() {
                                 onError = { aapsLogger.error("Error removing entries", it) },
                                 onComplete = {
                                     rxBus.send(EventTreatmentChange())
-                                    rxBus.send(EventNewHistoryData(0, false))                                }
+                                    rxBus.send(EventNewHistoryData(0, false))
+                                }
                             )
                     rxBus.send(EventNSClientRestart())
                 }
@@ -258,10 +259,8 @@ class TreatmentsBolusCarbsFragment : DaggerFragment() {
 
     inner class RecyclerViewAdapter internal constructor(var mealLinks: List<MealLink>) : RecyclerView.Adapter<RecyclerViewAdapter.MealLinkLoadedViewHolder>() {
 
-        override fun onCreateViewHolder(viewGroup: ViewGroup, viewType: Int): MealLinkLoadedViewHolder {
-            val v = LayoutInflater.from(viewGroup.context).inflate(R.layout.treatments_bolus_carbs_item, viewGroup, false)
-            return MealLinkLoadedViewHolder(v)
-        }
+        override fun onCreateViewHolder(viewGroup: ViewGroup, viewType: Int): MealLinkLoadedViewHolder =
+            MealLinkLoadedViewHolder(LayoutInflater.from(viewGroup.context).inflate(R.layout.treatments_bolus_carbs_item, viewGroup, false))
 
         override fun onBindViewHolder(holder: MealLinkLoadedViewHolder, position: Int) {
             val profile = profileFunction.getProfile() ?: return
@@ -283,7 +282,8 @@ class TreatmentsBolusCarbsFragment : DaggerFragment() {
                 holder.binding.bolusInvalid.visibility = bolus.isValid.not().toVisibility()
                 val iob = bolus.iobCalc(activePlugin, System.currentTimeMillis(), profile.dia)
                 holder.binding.iob.text = resourceHelper.gs(R.string.formatinsulinunits, iob.iobContrib)
-                if (iob.iobContrib != 0.0) holder.binding.iob.setTextColor(resourceHelper.gc(R.color.colorActive)) else holder.binding.iob.setTextColor(holder.binding.carbs.currentTextColor)
+                holder.binding.iobLabel.visibility = (iob.iobContrib != 0.0).toVisibility()
+                holder.binding.iob.visibility = (iob.iobContrib != 0.0).toVisibility()
                 if (bolus.timestamp > dateUtil.now()) holder.binding.date.setTextColor(resourceHelper.gc(R.color.colorScheduled)) else holder.binding.date.setTextColor(holder.binding.carbs.currentTextColor)
                 holder.binding.mealOrCorrection.text =
                     when (ml.bolus.type) {

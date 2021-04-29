@@ -27,7 +27,7 @@ interface CommandQueueProvider {
     fun extendedBolus(insulin: Double, durationInMinutes: Int, callback: Callback?): Boolean
     fun cancelTempBasal(enforceNew: Boolean, callback: Callback?): Boolean
     fun cancelExtended(callback: Callback?): Boolean
-    fun setProfile(profile: Profile, callback: Callback?): Boolean
+    fun setProfile(profile: Profile, hasNsId: Boolean, callback: Callback?): Boolean
     fun readStatus(reason: String, callback: Callback?): Boolean
     fun statusInQueue(): Boolean
     fun loadHistory(type: Byte, callback: Callback?): Boolean

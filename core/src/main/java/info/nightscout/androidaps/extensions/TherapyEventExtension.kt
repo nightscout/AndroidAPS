@@ -112,9 +112,8 @@ fun TherapyEvent.toJson(): JSONObject =
             if (type == TherapyEvent.Type.ANNOUNCEMENT) it.put("isAnnouncement", true)
         }
 
-fun isEvent5minBack(list: List<TherapyEvent>, time: Long): Boolean {
-    for (i in list.indices) {
-        val event = list[i]
+fun List<TherapyEvent>.isTherapyEventEvent5minBack(time: Long): Boolean {
+    for (event in this) {
         if (event.timestamp <= time && event.timestamp > time - T.mins(5).msecs()) {
             return true
         }

@@ -1,5 +1,7 @@
 package info.nightscout.androidaps.data;
 
+import static info.nightscout.androidaps.extensions.ProfileSwitchExtensionKt.pureProfileFromJson;
+
 import androidx.annotation.NonNull;
 import androidx.collection.LongSparseArray;
 
@@ -86,12 +88,6 @@ public class ProfileImplOld implements Profile {
                 this.jsonUnits = Constants.MGDL;
             }
         }
-    }
-
-    // Constructor from profileStore JSON
-    public ProfileImplOld(HasAndroidInjector injector, JSONObject json) {
-        this(injector);
-        init(json, 100, 0);
     }
 
     public ProfileImplOld(HasAndroidInjector injector, JSONObject json, int percentage, int timeshift) {
@@ -190,7 +186,7 @@ public class ProfileImplOld implements Profile {
                     String time = o.getString("time");
                     tas = getShitfTimeSecs(dateUtil.toSeconds(time));
                 } catch (JSONException e) {
-                    //log.debug(">>>>>>>>>>>> Used recalculated timeAsSecons: " + time + " " + tas);
+                    //log.debug(">>>>>>>>>>>> Used recalculated timeAsSeconds: " + time + " " + tas);
                     tas = getShitfTimeSecs((int) o.getLong("timeAsSeconds"));
                 }
                 double value = o.getDouble("value") * multiplier;
@@ -210,11 +206,7 @@ public class ProfileImplOld implements Profile {
         return sparse;
     }
 
-    public synchronized boolean isValid(String from) {
-        return isValid(from, true);
-    }
-
-    public synchronized boolean isValid(String from, boolean notify) {
+    public synchronized boolean isValid(String from, Pump pump, Config config, ResourceHelper resourceHelper, RxBusWrapper rxBus) {
         if (!isValid)
             return false;
         if (!isValidated) {
@@ -242,9 +234,9 @@ public class ProfileImplOld implements Profile {
             isValidated = true;
         }
 
+        boolean notify = true;
         if (isValid) {
             // Check for hours alignment
-            Pump pump = activePlugin.getActivePump();
             if (!pump.getPumpDescription().is30minBasalRatesCapable()) {
                 for (int index = 0; index < basal_v.size(); index++) {
                     long secondsFromMidnight = basal_v.keyAt(index);
@@ -407,13 +399,13 @@ public class ProfileImplOld implements Profile {
         return getValueToTime(isf_v, timeAsSeconds);
     }
 
-    public String getIsfList() {
+    public String getIsfList(ResourceHelper resourceHelper, DateUtil dateUtil) {
         if (isf_v == null)
             isf_v = convertToSparseArray(isf);
-        return getValuesList(isf_v, null, new DecimalFormat("0.0"), getUnits() + resourceHelper.gs(R.string.profile_per_unit));
+        return getValuesList(isf_v, null, new DecimalFormat("0.0"), getUnits().getAsText() + resourceHelper.gs(R.string.profile_per_unit));
     }
 
-    public ProfileValue[] getIsfsMgdl() {
+    public ProfileValue[] getIsfsMgdlValues() {
         if (isf_v == null)
             isf_v = convertToSparseArray(ic);
         ProfileValue[] ret = new ProfileValue[isf_v.size()];
@@ -440,13 +432,13 @@ public class ProfileImplOld implements Profile {
         return getValueToTime(ic_v, timeAsSeconds);
     }
 
-    public String getIcList() {
+    public String getIcList(ResourceHelper resourceHelper, DateUtil dateUtil) {
         if (ic_v == null)
             ic_v = convertToSparseArray(ic);
         return getValuesList(ic_v, null, new DecimalFormat("0.0"), resourceHelper.gs(R.string.profile_carbs_per_unit));
     }
 
-    public ProfileValue[] getIcs() {
+    public ProfileValue[] getIcsValues() {
         if (ic_v == null)
             ic_v = convertToSparseArray(ic);
         ProfileValue[] ret = new ProfileValue[ic_v.size()];
@@ -474,13 +466,13 @@ public class ProfileImplOld implements Profile {
         return getValueToTime(basal_v, timeAsSeconds);
     }
 
-    public String getBasalList() {
+    public String getBasalList(ResourceHelper resourceHelper, DateUtil dateUtil) {
         if (basal_v == null)
             basal_v = convertToSparseArray(basal);
         return getValuesList(basal_v, null, new DecimalFormat("0.00"), resourceHelper.gs(R.string.profile_ins_units_per_hour));
     }
 
-    @NonNull @Override public JSONObject toNsJson() {
+    @NonNull @Override public JSONObject toPureNsJson(DateUtil dateUtil) {
         return getData();
     }
 
@@ -584,7 +576,7 @@ public class ProfileImplOld implements Profile {
         return ret;
     }
 
-    @NonNull public String getTargetList() {
+    @NonNull public String getTargetList(ResourceHelper resourceHelper, DateUtil dateUtil) {
         if (targetLow_v == null)
             targetLow_v = convertToSparseArray(targetLow);
         if (targetHigh_v == null)
@@ -626,7 +618,7 @@ public class ProfileImplOld implements Profile {
         return timeshift;
     }
 
-    public Profile convertToNonCustomizedProfile() {
+    public PureProfile convertToNonCustomizedProfile(DateUtil dateUtil) {
         JSONObject o = new JSONObject();
         try {
             o.put("units", jsonUnits);
@@ -731,6 +723,6 @@ public class ProfileImplOld implements Profile {
         } catch (JSONException e) {
             aapsLogger.error("Unhandled exception" + e);
         }
-        return new ProfileImplOld(injector, o);
+        return pureProfileFromJson(o, dateUtil);
     }
 }

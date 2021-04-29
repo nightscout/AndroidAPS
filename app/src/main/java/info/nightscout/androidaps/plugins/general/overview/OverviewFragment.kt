@@ -256,7 +256,7 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
             .observeOn(aapsSchedulers.io)
             .subscribe({ scheduleUpdateGUI("EventAutosensCalculationFinished") }, fabricPrivacy::logException))
         disposable.add(rxBus
-            .toObservable(EventProfileNeedsUpdate::class.java)
+            .toObservable(EventProfileSwitchChanged::class.java)
             .observeOn(aapsSchedulers.io)
             .subscribe({ scheduleUpdateGUI("EventProfileNeedsUpdate") }, fabricPrivacy::logException))
         disposable.add(rxBus
@@ -734,7 +734,7 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
         binding.infoLayout.extendedLayout.visibility = (extendedBolus is ValueWrapper.Existing && !pump.isFakingTempsByExtendedBoluses).toVisibility()
 
         // Active profile
-        binding.loopPumpStatusLayout.activeProfile.text = profileFunction.getProfileNameWithDuration()
+        binding.loopPumpStatusLayout.activeProfile.text = profileFunction.getProfileNameWithRemainingTime()
         if (profile.percentage != 100 || profile.timeshift != 0) {
             binding.loopPumpStatusLayout.activeProfile.setBackgroundColor(resourceHelper.gc(R.color.ribbonWarning))
             binding.loopPumpStatusLayout.activeProfile.setTextColor(resourceHelper.gc(R.color.ribbonTextWarning))
@@ -820,7 +820,7 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
             if (_binding == null) return@launch
             val menuChartSettings = overviewMenus.setting
             prepareGraphsIfNeeded(menuChartSettings.size)
-            val graphData = GraphData(injector, binding.graphsLayout.bgGraph, iobCobCalculator, treatmentsPlugin)
+            val graphData = GraphData(injector, binding.graphsLayout.bgGraph, iobCobCalculator)
             val secondaryGraphsData: ArrayList<GraphData> = ArrayList()
 
             // do preparation in different thread
@@ -888,7 +888,7 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
                 // ------------------ 2nd graph
                 synchronized(graphLock) {
                     for (g in 0 until min(secondaryGraphs.size, menuChartSettings.size + 1)) {
-                        val secondGraphData = GraphData(injector, secondaryGraphs[g], iobCobCalculator, treatmentsPlugin)
+                        val secondGraphData = GraphData(injector, secondaryGraphs[g], iobCobCalculator)
                         var useABSForScale = false
                         var useIobForScale = false
                         var useCobForScale = false

@@ -21,7 +21,7 @@ import info.nightscout.androidaps.data.PumpEnactResult
 import info.nightscout.androidaps.dialogs.BolusProgressDialog
 import info.nightscout.androidaps.events.EventAppExit
 import info.nightscout.androidaps.events.EventInitializationChanged
-import info.nightscout.androidaps.events.EventProfileNeedsUpdate
+import info.nightscout.androidaps.events.EventProfileSwitchChanged
 import info.nightscout.androidaps.events.EventPumpStatusChanged
 import info.nightscout.androidaps.interfaces.ActivePlugin
 import info.nightscout.androidaps.interfaces.CommandQueueProvider
@@ -136,7 +136,7 @@ class DanaRSService : DaggerService() {
             if (profile != null && abs(danaPump.currentBasal - profile.getBasal()) >= pump.pumpDescription.basalStep) {
                 rxBus.send(EventPumpStatusChanged(resourceHelper.gs(R.string.gettingpumpsettings)))
                 if (!pump.isThisProfileSet(profile) && !commandQueue.isRunning(Command.CommandType.BASAL_PROFILE)) {
-                    rxBus.send(EventProfileNeedsUpdate())
+                    rxBus.send(EventProfileSwitchChanged())
                 }
             }
             rxBus.send(EventPumpStatusChanged(resourceHelper.gs(R.string.gettingpumptime)))

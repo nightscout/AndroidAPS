@@ -31,21 +31,22 @@ data class ProfileSwitch(
     override var interfaceIDs_backing: InterfaceIDs? = InterfaceIDs(),
     override var timestamp: Long,
     override var utcOffset: Long = TimeZone.getDefault().getOffset(timestamp).toLong(),
-    var profileName: String,
-    var glucoseUnit: GlucoseUnit,
     var basalBlocks: List<Block>,
     var isfBlocks: List<Block>,
     var icBlocks: List<Block>,
     var targetBlocks: List<TargetBlock>,
-    var timeshift: Int,  // [milliseconds]
+    var glucoseUnit: GlucoseUnit,
+    var profileName: String,
+    var timeshift: Long,  // [milliseconds]
     var percentage: Int, // 1 ~ XXX [%]
     override var duration: Long, // [milliseconds]
     @Embedded
-    var insulinConfiguration: InsulinConfiguration? = null
+    var insulinConfiguration: InsulinConfiguration
 ) : TraceableDBEntry, DBEntryWithTimeAndDuration {
 
     enum class GlucoseUnit {
         MGDL,
-        MMOL
+        MMOL;
+        companion object {}
     }
 }

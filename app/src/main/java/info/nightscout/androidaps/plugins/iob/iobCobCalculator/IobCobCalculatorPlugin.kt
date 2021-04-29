@@ -150,6 +150,8 @@ open class IobCobCalculatorPlugin @Inject constructor(
         if (oldestBolus != null) oldestTime = min(oldestTime, oldestBolus.timestamp)
         val oldestCarbs = repository.getOldestCarbsRecord()
         if (oldestCarbs != null) oldestTime = min(oldestTime, oldestCarbs.timestamp)
+        val oldestPs = repository.getOldestEffectiveProfileSwitchRecord()
+        if (oldestPs != null) oldestTime = min(oldestTime, oldestPs.timestamp)
         oldestTime -= 15 * 60 * 1000L // allow 15 min before
         return oldestTime
     }

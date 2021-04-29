@@ -11,6 +11,7 @@ import android.widget.ArrayAdapter
 import dagger.android.support.DaggerFragment
 import info.nightscout.androidaps.Constants
 import info.nightscout.androidaps.R
+import info.nightscout.androidaps.data.ProfileSealed
 import info.nightscout.androidaps.database.entities.UserEntry.Action
 import info.nightscout.androidaps.database.entities.UserEntry.Sources
 import info.nightscout.androidaps.database.entities.ValueWithUnit
@@ -67,7 +68,7 @@ class LocalProfileFragment : DaggerFragment() {
 
     private fun sumLabel(): String {
         val profile = localProfilePlugin.createProfileStore().getDefaultProfile()
-        val sum = profile?.baseBasalSum() ?: 0.0
+        val sum = profile?.let { ProfileSealed.Pure(profile).baseBasalSum() } ?: 0.0
         return " ∑" + DecimalFormatter.to2Decimal(sum) + resourceHelper.gs(R.string.insulin_unit_shortname)
     }
 

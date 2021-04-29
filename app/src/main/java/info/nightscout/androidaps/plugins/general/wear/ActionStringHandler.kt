@@ -3,7 +3,6 @@ package info.nightscout.androidaps.plugins.general.wear
 import android.app.NotificationManager
 import android.content.Context
 import dagger.android.HasAndroidInjector
-import info.nightscout.androidaps.interfaces.Config
 import info.nightscout.androidaps.Constants
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.dana.DanaPump
@@ -12,7 +11,6 @@ import info.nightscout.androidaps.danaRv2.DanaRv2Plugin
 import info.nightscout.androidaps.danar.DanaRPlugin
 import info.nightscout.androidaps.danars.DanaRSPlugin
 import info.nightscout.androidaps.data.DetailedBolusInfo
-import info.nightscout.androidaps.interfaces.Profile
 import info.nightscout.androidaps.database.AppRepository
 import info.nightscout.androidaps.database.ValueWrapper
 import info.nightscout.androidaps.database.entities.TemporaryTarget
@@ -251,25 +249,25 @@ class ActionStringHandler @Inject constructor(
             }
             lastBolusWizard = bolusWizard
         } else if ("opencpp" == act[0]) {
-            val activeProfileSwitch = activePlugin.activeTreatments.getProfileSwitchFromHistory(System.currentTimeMillis())
-            if (activeProfileSwitch == null) {
-                sendError("No active profile switch!")
-                return
-            } else { // read CPP values
+            val activeProfileSwitch = repository.getEffectiveProfileSwitchActiveAt(dateUtil.now()).blockingGet()
+            if (activeProfileSwitch is ValueWrapper.Existing) { // read CPP values
                 rTitle = "opencpp"
                 rMessage = "opencpp"
-                rAction = "opencpp" + " " + activeProfileSwitch.percentage + " " + activeProfileSwitch.timeshift
-            }
-        } else if ("cppset" == act[0]) {
-            val activeProfileSwitch = activePlugin.activeTreatments.getProfileSwitchFromHistory(System.currentTimeMillis())
-            if (activeProfileSwitch == null) {
+                rAction = "opencpp" + " " + activeProfileSwitch.value.originalPercentage + " " + activeProfileSwitch.value.originalTimeshift
+            } else {
                 sendError("No active profile switch!")
                 return
-            } else { // read CPP values
+            }
+        } else if ("cppset" == act[0]) {
+            val activeProfileSwitch = repository.getEffectiveProfileSwitchActiveAt(dateUtil.now()).blockingGet()
+            if (activeProfileSwitch is ValueWrapper.Existing) {
                 rMessage = "CPP:" + "\n\n" +
                     "Timeshift: " + act[1] + "\n" +
                     "Percentage: " + act[2] + "%"
                 rAction = actionString
+            } else { // read CPP values
+                sendError("No active profile switch!")
+                return
             }
         } else if ("tddstats" == act[0]) {
             val activePump = activePlugin.activePump
@@ -569,7 +567,7 @@ class ActionStringHandler @Inject constructor(
         uel.log(Action.PROFILE_SWITCH, Sources.Wear,
             ValueWithUnit.Percent(percentage),
             ValueWithUnit.Hour(timeshift).takeIf { timeshift != 0 })
-        activePlugin.activeTreatments.doProfileSwitch(0, percentage, timeshift)
+        profileFunction.createProfileSwitch(0, percentage, timeshift)
     }
 
     private fun generateTempTarget(duration: Int, low: Double, high: Double) {
