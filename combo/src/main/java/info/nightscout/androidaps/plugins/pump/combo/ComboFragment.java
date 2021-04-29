@@ -242,8 +242,8 @@ public class ComboFragment extends DaggerFragment {
             tempBasalText.setText(tbrStr);
 
             // stats
-            bolusCount.setText(String.valueOf(sp.getLong(ComboPlugin.COMBO_BOLUSES_DELIVERED, 0L)));
-            tbrCount.setText(String.valueOf(sp.getLong(ComboPlugin.COMBO_TBRS_SET, 0L)));
+            bolusCount.setText(String.valueOf(comboPlugin.getBolusesDelivered()));
+            tbrCount.setText(String.valueOf(comboPlugin.getTbrsSet()));
             serialNumber.setText(comboPlugin.serialNumber());
         }
     }
