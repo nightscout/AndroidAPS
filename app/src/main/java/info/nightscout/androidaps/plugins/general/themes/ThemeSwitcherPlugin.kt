@@ -40,12 +40,12 @@ class ThemeSwitcherPlugin @Inject constructor(
 
     override fun onStart() {
         compositeDisposable.add(rxBusWrapper.toObservable(EventPreferenceChange::class.java).subscribe {
-            if (it.isChanged(resourceHelper, id = R.string.key_use_darkmode)) switchTheme()
+            if (it.isChanged(resourceHelper, id = R.string.key_useDarkmode)) switchTheme()
         })
     }
 
     private fun switchTheme() {
-        when(sp.getString(R.string.key_use_darkmode, "system")) {
+        when(sp.getString(R.string.key_useDarkmode, "system")) {
             "dark" -> AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
             "light" -> AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
             else -> AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM);

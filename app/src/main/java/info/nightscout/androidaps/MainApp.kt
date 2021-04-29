@@ -87,7 +87,7 @@ class MainApp : DaggerApplication() {
     }
 
     private fun selectThemeMode() {
-        when(sp.getString(R.string.key_use_darkmode, "system")) {
+        when(sp.getString(R.string.key_useDarkmode, "system")) {
             "dark" -> AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
             "light" -> AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
             else -> AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM);
