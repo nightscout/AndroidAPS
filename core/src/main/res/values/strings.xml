@@ -433,6 +433,7 @@
     <string name="uel_clear_pairing_keys">CLEAR PAIRING KEYS</string>
     <string name="uel_accepts_temp_basal">ACCEPTS TEMP BASAL</string>
     <string name="uel_cancel_temp_basal">CANCEL TEMP BASAL</string>
+    <string name="uel_cancel_bolus">CANCEL BOLUS</string>
     <string name="uel_cancel_extended_bolus">CANCEL EXTENDED BOLUS</string>
     <string name="uel_cancel_tt">CANCEL TT</string>
     <string name="uel_careportal">CAREPORTAL</string>
