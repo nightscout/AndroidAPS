@@ -97,7 +97,7 @@ class UserEntryPresentationHelper @Inject constructor(
         Sources.Food                -> R.drawable.ic_food
         Sources.Stats               -> R.drawable.ic_cp_stats
         Sources.ConfigBuilder       -> R.drawable.ic_cogs
-        Sources.Overview            -> R.drawable.ic_notif_aaps
+        Sources.Overview            -> R.drawable.ic_home
         Sources.Aaps                -> R.drawable.ic_notif_aaps
         Sources.Unknown             -> R.drawable.ic_generic_icon
     }
@@ -168,7 +168,7 @@ class UserEntryPresentationHelper @Inject constructor(
         val fullvalueWithUnitList = ArrayList<ValueWithUnit?>(entry.values)
         var timestampRec = "" + entry.timestamp
         var dateTimestampRev = dateUtil.dateAndTimeAndSecondsString(entry.timestamp)
-        var utcOffset = dateUtil.timeString(entry.utcOffset)
+        var utcOffset = dateUtil.timeStringFromSeconds((entry.utcOffset/1000).toInt())
         var action = csvString(entry.action)
         var therapyEvent = ""
         var source = translator.translate(entry.source)
