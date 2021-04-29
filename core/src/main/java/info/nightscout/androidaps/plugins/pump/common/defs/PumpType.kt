@@ -77,7 +77,7 @@ enum class PumpType {
         baseBasalStep = 0.01,
         baseBasalSpecialSteps = null,
         pumpCapability = PumpCapability.InsightCapabilities),
-    ACCU_CHEK_INSIGHT_BLUETOOTH(description = "Accu-Chek Insight",
+    ACCU_CHEK_INSIGHT(description = "Accu-Chek Insight",
         manufacturer = ManufacturerType.Roche,
         model = "Insight",
         bolusSize = 0.01,
@@ -418,9 +418,9 @@ enum class PumpType {
             CELLNOVO                    -> InterfaceIDs.PumpType.CELLNOVO
             ACCU_CHEK_COMBO             -> InterfaceIDs.PumpType.ACCU_CHEK_COMBO
             ACCU_CHEK_SPIRIT            -> InterfaceIDs.PumpType.ACCU_CHEK_SPIRIT
-            ACCU_CHEK_INSIGHT_VIRTUAL   -> InterfaceIDs.PumpType.ACCU_CHEK_INSIGHT
-            ACCU_CHEK_INSIGHT_BLUETOOTH -> InterfaceIDs.PumpType.ACCU_CHEK_INSIGHT_BLUETOOTH
-            ACCU_CHEK_SOLO              -> InterfaceIDs.PumpType.ACCU_CHEK_SOLO
+            ACCU_CHEK_INSIGHT_VIRTUAL -> InterfaceIDs.PumpType.ACCU_CHEK_INSIGHT
+            ACCU_CHEK_INSIGHT         -> InterfaceIDs.PumpType.ACCU_CHEK_INSIGHT_BLUETOOTH
+            ACCU_CHEK_SOLO            -> InterfaceIDs.PumpType.ACCU_CHEK_SOLO
             ANIMAS_VIBE                 -> InterfaceIDs.PumpType.ANIMAS_VIBE
             ANIMAS_PING                 -> InterfaceIDs.PumpType.ANIMAS_PING
             DANA_R                      -> InterfaceIDs.PumpType.DANA_R

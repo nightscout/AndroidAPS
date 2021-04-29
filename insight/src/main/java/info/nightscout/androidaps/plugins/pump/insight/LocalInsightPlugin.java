@@ -242,7 +242,7 @@ public class LocalInsightPlugin extends PumpPluginBase implements Pump, Constrai
         this.pumpSync = pumpSync;
 
         pumpDescription = new PumpDescription();
-        pumpDescription.fillFor(PumpType.ACCU_CHEK_INSIGHT_BLUETOOTH);
+        pumpDescription.fillFor(PumpType.ACCU_CHEK_INSIGHT);
     }
 
     public TBROverNotificationBlock getTBROverNotificationBlock() {
@@ -606,7 +606,7 @@ public class LocalInsightPlugin extends PumpPluginBase implements Pump, Constrai
                 insightBolusID.pumpSerial = connectionService.getPumpSystemIdentification().getSerialNumber();
                 databaseHelper.createOrUpdate(insightBolusID);
                 detailedBolusInfo.setBolusTimestamp(insightBolusID.timestamp);
-                detailedBolusInfo.setPumpType(PumpType.ACCU_CHEK_INSIGHT_BLUETOOTH);
+                detailedBolusInfo.setPumpType(PumpType.ACCU_CHEK_INSIGHT);
                 detailedBolusInfo.setPumpSerial(serialNumber());
                 detailedBolusInfo.setBolusPumpId(insightBolusID.id);
                 if (detailedBolusInfo.carbs > 0 && detailedBolusInfo.carbTime != 0) {
@@ -1027,7 +1027,7 @@ public class LocalInsightPlugin extends PumpPluginBase implements Pump, Constrai
 
     @NonNull @Override
     public PumpType model() {
-        return PumpType.ACCU_CHEK_INSIGHT_BLUETOOTH;
+        return PumpType.ACCU_CHEK_INSIGHT;
     }
 
     @NonNull @Override
@@ -1388,7 +1388,7 @@ public class LocalInsightPlugin extends PumpPluginBase implements Pump, Constrai
         if (event.getBolusType() == BolusType.STANDARD || event.getBolusType() == BolusType.MULTIWAVE) {
             DetailedBolusInfo detailedBolusInfo = new DetailedBolusInfo();
             detailedBolusInfo.timestamp = bolusID.timestamp;
-            detailedBolusInfo.setPumpType(PumpType.ACCU_CHEK_INSIGHT_BLUETOOTH);
+            detailedBolusInfo.setPumpType(PumpType.ACCU_CHEK_INSIGHT);
             detailedBolusInfo.setPumpSerial(serialNumber());
             detailedBolusInfo.setBolusPumpId(bolusID.id);
             detailedBolusInfo.insulin = event.getImmediateAmount();
@@ -1423,7 +1423,7 @@ public class LocalInsightPlugin extends PumpPluginBase implements Pump, Constrai
         if (event.getBolusType() == BolusType.STANDARD || event.getBolusType() == BolusType.MULTIWAVE) {
             DetailedBolusInfo detailedBolusInfo = new DetailedBolusInfo();
             detailedBolusInfo.setBolusTimestamp(bolusID.timestamp);
-            detailedBolusInfo.setPumpType(PumpType.ACCU_CHEK_INSIGHT_BLUETOOTH);
+            detailedBolusInfo.setPumpType(PumpType.ACCU_CHEK_INSIGHT);
             detailedBolusInfo.setPumpSerial(serialNumber());
             detailedBolusInfo.setBolusPumpId(bolusID.id);
             detailedBolusInfo.insulin = event.getImmediateAmount();
@@ -1551,7 +1551,7 @@ public class LocalInsightPlugin extends PumpPluginBase implements Pump, Constrai
     }
 
     private void logNote(long date, String note) {
-        pumpSync.insertTherapyEventIfNewWithTimestamp(date, DetailedBolusInfo.EventType.NOTE, note, null, PumpType.ACCU_CHEK_INSIGHT_BLUETOOTH, serialNumber());
+        pumpSync.insertTherapyEventIfNewWithTimestamp(date, DetailedBolusInfo.EventType.NOTE, note, null, PumpType.ACCU_CHEK_INSIGHT, serialNumber());
     }
 
     private long parseRelativeDate(int year, int month, int day, int hour, int minute, int second, int relativeHour, int relativeMinute, int relativeSecond) {
@@ -1568,7 +1568,7 @@ public class LocalInsightPlugin extends PumpPluginBase implements Pump, Constrai
     }
 
     private void uploadCareportalEvent(long date, DetailedBolusInfo.EventType event) {
-        pumpSync.insertTherapyEventIfNewWithTimestamp(date, event, null, null, PumpType.ACCU_CHEK_INSIGHT_BLUETOOTH, serialNumber());
+        pumpSync.insertTherapyEventIfNewWithTimestamp(date, event, null, null, PumpType.ACCU_CHEK_INSIGHT, serialNumber());
     }
 
     @NonNull @Override
