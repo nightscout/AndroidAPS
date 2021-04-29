@@ -89,7 +89,7 @@ enum class PumpType {
         baseBasalMinValue = 0.02,
         baseBasalMaxValue = null,
         baseBasalStep = 0.01,
-        baseBasalSpecialSteps = DoseStepSize.InsightBolus,
+        baseBasalSpecialSteps = DoseStepSize.InsightBasal,
         pumpCapability = PumpCapability.InsightCapabilities),
     ACCU_CHEK_SOLO(description = "Accu-Chek Solo",
         manufacturer = ManufacturerType.Roche,
