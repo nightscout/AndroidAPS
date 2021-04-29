@@ -1102,11 +1102,10 @@ public class ComboPlugin extends PumpPluginBase implements Pump, Constraints {
      * Checks the main screen to determine if TBR on pump matches app state.
      */
     private void checkAndResolveTbrMismatch(PumpState state) {
-        // compare with: info.nightscout.androidaps.plugins.PumpDanaR.comm.MsgStatusTempBasal.updateTempBasalInDB()
         long now = System.currentTimeMillis();
         // Combo doesn't have nor uses IDs for TBRs, see note in #setTempBasalPercent
+        //noinspection UnnecessaryLocalVariable
         long tbrId = now;
-        //TemporaryBasal aapsTbr = treatmentsPlugin.getTempBasalFromHistoryIncludingConvertedExtended(now);
         PumpSync.PumpState.TemporaryBasal aapsTbr = pumpSync.expectedPumpState().getTemporaryBasal();
         if (aapsTbr == null && state.tbrActive && state.tbrRemainingDuration > 2) {
             getAapsLogger().debug(LTag.PUMP, "Creating temp basal from pump TBR");
