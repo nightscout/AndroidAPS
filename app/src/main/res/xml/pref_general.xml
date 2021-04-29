@@ -78,11 +78,13 @@
             android:key="@string/key_skin"
             android:title="@string/skin" />
 
-        <SwitchPreference
-            android:defaultValue="true"
+        <ListPreference
+            android:defaultValue="system"
+            android:entries="@array/darkMode"
+            android:entryValues="@array/darkModeValues"
             android:key="@string/key_use_darkmode"
             android:summary="@string/theme_switcher_summary"
-            android:title="@string/use_dark_mode" />
+            android:title="@string/app_color_scheme" />
 
     </PreferenceCategory>
 

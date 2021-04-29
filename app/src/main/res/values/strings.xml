@@ -1110,8 +1110,11 @@
     <string name="trend_arrow">Trend arrow</string>
     <string name="cannula">Cannula</string>
     <string name="userentry">User entry</string>
-    <string name="theme_switcher_summary">In order to take effect please restart the app.</string>
-    <string name="use_dark_mode">Use dark mode</string>
+    <string name="theme_switcher_summary">Choose dark, light, or to follow the system theme</string>
+    <string name="app_color_scheme">App Color Scheme</string>
+    <string name="dark_theme">Dark theme</string>
+    <string name="light_theme">Light theme</string>
+    <string name="follow_system_theme">Use device theme</string>
     <string name="common_values">Use values of your largest food you usually eat\n</string>
     <string name="summary_email_for_crash_report">This email address will attached to crash reports so we can contact you in urgent cases. It\'s optional.</string>
     <string name="email_address">Email address</string>
