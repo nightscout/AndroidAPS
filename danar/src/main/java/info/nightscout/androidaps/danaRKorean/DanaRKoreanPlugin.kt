@@ -60,7 +60,7 @@ class DanaRKoreanPlugin @Inject constructor(
     init {
         pluginDescription.description(R.string.description_pump_dana_r_korean)
         useExtendedBoluses = sp.getBoolean(R.string.key_danar_useextended, false)
-        pumpDescription.setPumpDescription(PumpType.DANA_R_KOREAN)
+        pumpDescription.fillFor(PumpType.DANA_R_KOREAN)
     }
 
     override fun onStart() {

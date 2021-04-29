@@ -99,7 +99,7 @@ public abstract class PumpPluginAbstract extends PumpPluginBase implements Pump,
         this.sp = sp;
         this.commandQueue = commandQueue;
 
-        pumpDescription.setPumpDescription(pumpType);
+        pumpDescription.fillFor(pumpType);
         this.pumpType = pumpType;
         this.dateUtil = dateUtil;
         this.aapsSchedulers = aapsSchedulers;
@@ -457,7 +457,7 @@ public abstract class PumpPluginAbstract extends PumpPluginBase implements Pump,
 
     public void setPumpType(PumpType pumpType) {
         this.pumpType = pumpType;
-        this.pumpDescription.setPumpDescription(pumpType);
+        this.pumpDescription.fillFor(pumpType);
     }
 
 

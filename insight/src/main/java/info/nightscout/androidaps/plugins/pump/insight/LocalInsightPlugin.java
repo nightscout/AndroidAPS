@@ -242,7 +242,7 @@ public class LocalInsightPlugin extends PumpPluginBase implements Pump, Constrai
         this.pumpSync = pumpSync;
 
         pumpDescription = new PumpDescription();
-        pumpDescription.setPumpDescription(PumpType.ACCU_CHEK_INSIGHT_BLUETOOTH);
+        pumpDescription.fillFor(PumpType.ACCU_CHEK_INSIGHT_BLUETOOTH);
     }
 
     public TBROverNotificationBlock getTBROverNotificationBlock() {

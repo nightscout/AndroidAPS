@@ -85,7 +85,7 @@ public class DanaRv2Plugin extends AbstractDanaRPlugin {
         getPluginDescription().description(R.string.description_pump_dana_r_v2);
 
         useExtendedBoluses = false;
-        pumpDescription.setPumpDescription(PumpType.DANA_RV2);
+        pumpDescription.fillFor(PumpType.DANA_RV2);
     }
 
     @Override

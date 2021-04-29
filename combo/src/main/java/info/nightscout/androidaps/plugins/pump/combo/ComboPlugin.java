@@ -160,7 +160,7 @@ public class ComboPlugin extends PumpPluginBase implements Pump, Constraints {
         this.pumpSync = pumpSync;
         this.dateUtil = dateUtil;
 
-        pumpDescription.setPumpDescription(PumpType.ACCU_CHEK_COMBO);
+        pumpDescription.fillFor(PumpType.ACCU_CHEK_COMBO);
     }
 
     @Override protected void onStart() {

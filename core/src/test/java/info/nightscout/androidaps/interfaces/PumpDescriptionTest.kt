@@ -10,7 +10,7 @@ class PumpDescriptionTest {
 
     @Test fun setPumpDescription() {
         val pumpDescription = PumpDescription()
-        pumpDescription.setPumpDescription(PumpType.ACCU_CHEK_COMBO)
+        pumpDescription.fillFor(PumpType.ACCU_CHEK_COMBO)
         Assert.assertEquals(pumpDescription.bolusStep, PumpType.ACCU_CHEK_COMBO.bolusSize, 0.1)
         Assert.assertEquals(pumpDescription.basalMinimumRate, PumpType.ACCU_CHEK_COMBO.baseBasalStep, 0.1)
         Assert.assertEquals(pumpDescription.basalStep, PumpType.ACCU_CHEK_COMBO.baseBasalStep, 0.1)

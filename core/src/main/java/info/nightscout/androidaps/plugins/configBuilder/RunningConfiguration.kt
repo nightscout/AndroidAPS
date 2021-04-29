@@ -82,7 +82,7 @@ class RunningConfiguration @Inject constructor(
         if (configuration.has("pump")) {
             val pumpType = JsonHelper.safeGetString(configuration, "pump", PumpType.GENERIC_AAPS.description)
             sp.putString(R.string.key_virtualpump_type, pumpType)
-            activePlugin.activePump.pumpDescription.setPumpDescription(PumpType.getByDescription(pumpType))
+            activePlugin.activePump.pumpDescription.fillFor(PumpType.getByDescription(pumpType))
             aapsLogger.debug(LTag.CORE, "Changing pump type to $pumpType")
         }
 
