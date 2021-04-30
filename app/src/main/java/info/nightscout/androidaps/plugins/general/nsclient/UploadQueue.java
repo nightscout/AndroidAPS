@@ -87,28 +87,6 @@ public class UploadQueue implements UploadQueueAdminInterface {
     }
 
     @Override
-    public void removeByNsClientIdIfExists(final JSONObject record) {
-        startService();
-        if (NSClientService.handler != null) {
-            NSClientService.handler.post(() -> {
-                try {
-                    String id;
-                    if (record.has("NSCLIENT_ID")) {
-                        id = record.getString("NSCLIENT_ID");
-                    } else {
-                        return;
-                    }
-                    if (databaseHelper.deleteDbRequest(id) == 1) {
-                        aapsLogger.debug(LTag.NSCLIENT, "Removed item from UploadQueue. " + status());
-                    }
-                } catch (JSONException e) {
-                    aapsLogger.error("Unhandled exception", e);
-                }
-            });
-        }
-    }
-
-    @Override
     public void removeByMongoId(final String action, final String _id) {
         if (_id == null || _id.equals(""))
             return;

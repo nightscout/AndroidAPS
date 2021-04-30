@@ -14,6 +14,7 @@ interface DataSyncSelector {
     data class PairBolusCalculatorResult(val value: BolusCalculatorResult, val updateRecordId: Long)
     data class PairTemporaryBasal(val value: TemporaryBasal, val updateRecordId: Long)
     data class PairExtendedBolus(val value: ExtendedBolus, val updateRecordId: Long)
+    data class PairProfileSwitch(val value: ProfileSwitch, val updateRecordId: Long)
 
     fun resetToNextFullSync()
 
@@ -66,4 +67,9 @@ interface DataSyncSelector {
     fun changedExtendedBoluses() : List<ExtendedBolus>
     // Until NS v3
     fun processChangedExtendedBolusesCompat(): Boolean
+
+    fun confirmLastProfileSwitchIdIfGreater(lastSynced: Long)
+    fun changedProfileSwitch() : List<ProfileSwitch>
+    // Until NS v3
+    fun processChangedProfileSwitchesCompat(): Boolean
 }

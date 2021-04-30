@@ -209,6 +209,25 @@ class NSClientAddAckWorker(
                 dataSyncSelector.processChangedTemporaryBasalsCompat()
             }
 
+            is PairProfileSwitch         -> {
+                val pair = ack.originalObject
+                pair.value.interfaceIDs.nightscoutId = ack.id
+                repository.runTransactionForResult(UpdateNsIdProfileSwitchTransaction(pair.value))
+                    .doOnError { error ->
+                        aapsLogger.error(LTag.DATABASE, "Updated ns id of ProfileSwitch failed", error)
+                        ret = Result.failure((workDataOf("Error" to error.toString())))
+                    }
+                    .doOnSuccess {
+                        ret = Result.success(workDataOf("ProcessedData" to pair.toString()))
+                        aapsLogger.debug(LTag.DATABASE, "Updated ns id of ProfileSwitch " + pair.value)
+                        dataSyncSelector.confirmLastProfileSwitchIdIfGreater(pair.updateRecordId)
+                    }
+                    .blockingGet()
+                rxBus.send(EventNSClientNewLog("DBADD", "Acked ProfileSwitch" + pair.value.interfaceIDs.nightscoutId))
+                // Send new if waiting
+                dataSyncSelector.processChangedTemporaryBasalsCompat()
+            }
+
             is DeviceStatus              -> {
                 val deviceStatus = ack.originalObject
                 deviceStatus.interfaceIDs.nightscoutId = ack.id
