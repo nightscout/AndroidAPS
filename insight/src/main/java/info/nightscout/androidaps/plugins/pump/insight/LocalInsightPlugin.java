@@ -1341,9 +1341,9 @@ public class LocalInsightPlugin extends PumpPluginBase implements Pump, Constrai
                 aapsLogger.debug("XXXX START Event TimeStamp: " + lastStartEvent + " HMS: " + dateUtil.dateAndTimeAndSecondsString(lastStartEvent));
                 break;
             case STOPPED:
-                lastStopEvent = Math.abs(lastStopEvent - timestamp) < 10000 ? lastStopEvent : timestamp;                          // timestamp could vary between 2 readhistory, always keep first value
-                long duration = lastStartEvent != 0 ? lastStartEvent - lastStopEvent : dateUtil.now() - lastStopEvent;            // record zero temp only if duration is more than 1 min
-                if (duration > T.mins(1).msecs())                                                                                 // set a zero temp if pump is stopped more than 1 min
+                lastStopEvent = Math.abs(lastStopEvent - timestamp) < 10000 ? lastStopEvent : timestamp;                                            // timestamp could vary between 2 readhistory, always keep first value
+                long duration = lastStartEvent != 0 ? lastStartEvent - lastStopEvent : dateUtil.now() + T.mins(15).msecs() - lastStopEvent;         // record 15 min zero temp only if duration is more than 1 min
+                if (duration > T.mins(1).msecs())                                                                                                   // set a zero temp if pump is stopped more than 1 min
                     pumpSync.syncTemporaryBasalWithPumpId(
                             lastStopEvent,
                             0.0,
@@ -1401,9 +1401,8 @@ public class LocalInsightPlugin extends PumpPluginBase implements Pump, Constrai
      * Checks the main screen to determine if TBR on pump matches app state.
      */
     private void checkAndResolveTbrMismatch(String serial) throws Exception {
-        // compare with: info.nightscout.androidaps.plugins.PumpDanaR.comm.MsgStatusTempBasal.updateTempBasalInDB()
-        long now = dateUtil.now();
-        //activeBoluses;
+       long now = dateUtil.now();
+        //Compoare only for TBR thats have no pumpId in pump
         PumpSync.PumpState.TemporaryBasal aapsTbr = pumpSync.expectedPumpState().getTemporaryBasal();
         if (aapsTbr == null && activeTBR != null && activeTBR.getRemainingDuration() > 1) {
             aapsLogger.debug(LTag.PUMP, "XXXX Creating temp basal from pump TBR estimated timestamp: " + now + " duration: " + activeTBR.getInitialDuration() + " rate: " + activeTBR.getPercentage());
