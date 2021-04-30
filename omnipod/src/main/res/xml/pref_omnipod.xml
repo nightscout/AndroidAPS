@@ -10,7 +10,11 @@
             android:title="@string/omnipod_config_riley_link_configuration">
             <intent android:action="info.nightscout.androidaps.plugins.PumpCommon.dialog.RileyLinkBLEConfigActivity" />
         </Preference>
-
+        <SwitchPreference
+            android:defaultValue="false"
+            android:key="@string/key_orange_use_scanning"
+            android:summary="@string/orange_use_scanning_level_summary"
+            android:title="@string/orange_use_scanning_level" />
         <SwitchPreference
             android:defaultValue="false"
             android:key="@string/key_riley_link_show_battery_level"
