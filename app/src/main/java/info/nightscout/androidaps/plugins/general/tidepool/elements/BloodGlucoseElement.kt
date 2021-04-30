@@ -1,9 +1,10 @@
 package info.nightscout.androidaps.plugins.general.tidepool.elements
 
 import com.google.gson.annotations.Expose
-import info.nightscout.androidaps.data.Profile
+import info.nightscout.androidaps.interfaces.Profile
 import info.nightscout.androidaps.database.entities.TherapyEvent
 import info.nightscout.androidaps.extensions.toConstant
+import info.nightscout.androidaps.extensions.toMainUnit
 import info.nightscout.androidaps.utils.DateUtil
 import java.util.*
 
@@ -23,7 +24,7 @@ class BloodGlucoseElement(therapyEvent: TherapyEvent, dateUtil: DateUtil)
         type = "cbg"
         subType = "manual" // TODO
         value = if (therapyEvent.glucose != null)
-            Profile.toMgdl(therapyEvent.glucose!!, therapyEvent.glucoseUnit.toConstant()).toInt()
+            Profile.toMgdl(therapyEvent.glucose!!, therapyEvent.glucoseUnit.toMainUnit()).toInt()
         else 0
     }
 

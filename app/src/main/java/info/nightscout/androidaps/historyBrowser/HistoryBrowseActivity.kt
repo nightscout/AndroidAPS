@@ -14,8 +14,10 @@ import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.activities.NoSplashAppCompatActivity
 import info.nightscout.androidaps.databinding.ActivityHistorybrowseBinding
+import info.nightscout.androidaps.events.EventAutosensCalculationFinished
 import info.nightscout.androidaps.events.EventCustomCalculationFinished
 import info.nightscout.androidaps.events.EventRefreshOverview
+import info.nightscout.androidaps.extensions.toVisibility
 import info.nightscout.androidaps.interfaces.ActivePlugin
 import info.nightscout.androidaps.interfaces.ProfileFunction
 import info.nightscout.androidaps.logging.AAPSLogger
@@ -23,14 +25,12 @@ import info.nightscout.androidaps.logging.LTag
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper
 import info.nightscout.androidaps.plugins.general.overview.OverviewMenus
 import info.nightscout.androidaps.plugins.general.overview.graphData.GraphData
-import info.nightscout.androidaps.events.EventAutosensCalculationFinished
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.events.EventIobCalculationProgress
 import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.DefaultValueHelper
 import info.nightscout.androidaps.utils.FabricPrivacy
 import info.nightscout.androidaps.utils.T
 import info.nightscout.androidaps.utils.buildHelper.BuildHelper
-import info.nightscout.androidaps.extensions.toVisibility
 import info.nightscout.androidaps.utils.rx.AapsSchedulers
 import info.nightscout.androidaps.utils.sharedPreferences.SP
 import io.reactivex.disposables.CompositeDisposable
@@ -50,7 +50,6 @@ class HistoryBrowseActivity : NoSplashAppCompatActivity() {
     @Inject lateinit var profileFunction: ProfileFunction
     @Inject lateinit var defaultValueHelper: DefaultValueHelper
     @Inject lateinit var iobCobCalculatorPluginHistory: IobCobCalculatorPluginHistory
-    @Inject lateinit var treatmentsPluginHistory: TreatmentsPluginHistory
     @Inject lateinit var activePlugin: ActivePlugin
     @Inject lateinit var buildHelper: BuildHelper
     @Inject lateinit var fabricPrivacy: FabricPrivacy
@@ -255,7 +254,6 @@ class HistoryBrowseActivity : NoSplashAppCompatActivity() {
 
     private fun runCalculation(from: String) {
         lifecycleScope.launch(Dispatchers.Default) {
-            treatmentsPluginHistory.initializeData(start - T.hours(8).msecs())
             val end = start + T.hours(rangeToDisplay.toLong()).msecs()
             iobCobCalculatorPluginHistory.stopCalculation(from)
             iobCobCalculatorPluginHistory.clearCache()
@@ -281,7 +279,7 @@ class HistoryBrowseActivity : NoSplashAppCompatActivity() {
             if (destroyed) return@launch
             binding.date.text = dateUtil.dateAndTimeString(start)
             binding.zoom.text = rangeToDisplay.toString()
-            val graphData = GraphData(injector, binding.bggraph, iobCobCalculatorPluginHistory, treatmentsPluginHistory)
+            val graphData = GraphData(injector, binding.bggraph, iobCobCalculatorPluginHistory)
             val secondaryGraphsData: ArrayList<GraphData> = ArrayList()
 
             // do preparation in different thread
@@ -317,7 +315,7 @@ class HistoryBrowseActivity : NoSplashAppCompatActivity() {
                     // ------------------ 2nd graph
                     synchronized(graphLock) {
                         for (g in 0 until secondaryGraphs.size) {
-                            val secondGraphData = GraphData(injector, secondaryGraphs[g], iobCobCalculatorPluginHistory, treatmentsPluginHistory)
+                            val secondGraphData = GraphData(injector, secondaryGraphs[g], iobCobCalculatorPluginHistory)
                             var useIobForScale = false
                             var useCobForScale = false
                             var useDevForScale = false

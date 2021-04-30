@@ -7,7 +7,7 @@ import info.nightscout.androidaps.Constants
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.data.IobTotal
 import info.nightscout.androidaps.data.MealData
-import info.nightscout.androidaps.data.Profile
+import info.nightscout.androidaps.interfaces.Profile
 import info.nightscout.androidaps.database.AppRepository
 import info.nightscout.androidaps.database.ValueWrapper
 import info.nightscout.androidaps.database.entities.Bolus
@@ -150,6 +150,8 @@ open class IobCobCalculatorPlugin @Inject constructor(
         if (oldestBolus != null) oldestTime = min(oldestTime, oldestBolus.timestamp)
         val oldestCarbs = repository.getOldestCarbsRecord()
         if (oldestCarbs != null) oldestTime = min(oldestTime, oldestCarbs.timestamp)
+        val oldestPs = repository.getOldestEffectiveProfileSwitchRecord()
+        if (oldestPs != null) oldestTime = min(oldestTime, oldestPs.timestamp)
         oldestTime -= 15 * 60 * 1000L // allow 15 min before
         return oldestTime
     }

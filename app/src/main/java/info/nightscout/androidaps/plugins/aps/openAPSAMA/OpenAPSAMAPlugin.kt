@@ -3,7 +3,7 @@ package info.nightscout.androidaps.plugins.aps.openAPSAMA
 import android.content.Context
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.R
-import info.nightscout.androidaps.data.Profile
+import info.nightscout.androidaps.interfaces.Profile
 import info.nightscout.androidaps.database.AppRepository
 import info.nightscout.androidaps.database.ValueWrapper
 import info.nightscout.androidaps.interfaces.*
@@ -112,9 +112,9 @@ open class OpenAPSAMAPlugin @Inject constructor(
         val maxIob = constraintChecker.getMaxIOBAllowed().also { maxIOBAllowedConstraint ->
             inputConstraints.copyReasons(maxIOBAllowedConstraint)
         }.value()
-        var minBg = hardLimits.verifyHardLimits(Round.roundTo(profile.targetLowMgdl, 0.1), R.string.profile_low_target, HardLimits.VERY_HARD_LIMIT_MIN_BG[0].toDouble(), HardLimits.VERY_HARD_LIMIT_MIN_BG[1].toDouble())
-        var maxBg = hardLimits.verifyHardLimits(Round.roundTo(profile.targetHighMgdl, 0.1), R.string.profile_high_target, HardLimits.VERY_HARD_LIMIT_MAX_BG[0].toDouble(), HardLimits.VERY_HARD_LIMIT_MAX_BG[1].toDouble())
-        var targetBg = hardLimits.verifyHardLimits(profile.targetMgdl, R.string.temp_target_value, HardLimits.VERY_HARD_LIMIT_TARGET_BG[0].toDouble(), HardLimits.VERY_HARD_LIMIT_TARGET_BG[1].toDouble())
+        var minBg = hardLimits.verifyHardLimits(Round.roundTo(profile.getTargetLowMgdl(), 0.1), R.string.profile_low_target, HardLimits.VERY_HARD_LIMIT_MIN_BG[0].toDouble(), HardLimits.VERY_HARD_LIMIT_MIN_BG[1].toDouble())
+        var maxBg = hardLimits.verifyHardLimits(Round.roundTo(profile.getTargetHighMgdl(), 0.1), R.string.profile_high_target, HardLimits.VERY_HARD_LIMIT_MAX_BG[0].toDouble(), HardLimits.VERY_HARD_LIMIT_MAX_BG[1].toDouble())
+        var targetBg = hardLimits.verifyHardLimits(profile.getTargetMgdl(), R.string.temp_target_value, HardLimits.VERY_HARD_LIMIT_TARGET_BG[0].toDouble(), HardLimits.VERY_HARD_LIMIT_TARGET_BG[1].toDouble())
         var isTempTarget = false
         val tempTarget = repository.getTemporaryTargetActiveAt(dateUtil.now()).blockingGet()
         if (tempTarget is ValueWrapper.Existing) {
@@ -125,8 +125,8 @@ open class OpenAPSAMAPlugin @Inject constructor(
         }
         if (!hardLimits.checkOnlyHardLimits(profile.dia, R.string.profile_dia, hardLimits.minDia(), hardLimits.maxDia())) return
         if (!hardLimits.checkOnlyHardLimits(profile.getIcTimeFromMidnight(Profile.secondsFromMidnight()), R.string.profile_carbs_ratio_value, hardLimits.minIC(), hardLimits.maxIC())) return
-        if (!hardLimits.checkOnlyHardLimits(profile.isfMgdl, R.string.profile_sensitivity_value, HardLimits.MIN_ISF, HardLimits.MAX_ISF)) return
-        if (!hardLimits.checkOnlyHardLimits(profile.maxDailyBasal, R.string.profile_max_daily_basal_value, 0.02, hardLimits.maxBasal())) return
+        if (!hardLimits.checkOnlyHardLimits(profile.getIsfMgdl(), R.string.profile_sensitivity_value, HardLimits.MIN_ISF, HardLimits.MAX_ISF)) return
+        if (!hardLimits.checkOnlyHardLimits(profile.getMaxDailyBasal(), R.string.profile_max_daily_basal_value, 0.02, hardLimits.maxBasal())) return
         if (!hardLimits.checkOnlyHardLimits(pump.baseBasalRate, R.string.current_basal_value, 0.01, hardLimits.maxBasal())) return
         startPart = System.currentTimeMillis()
         if (constraintChecker.isAutosensModeEnabled().value()) {

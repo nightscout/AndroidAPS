@@ -2,15 +2,14 @@ package info.nightscout.androidaps.queue
 
 import android.content.Context
 import android.os.PowerManager
-import dagger.Lazy
 import dagger.android.AndroidInjector
 import dagger.android.HasAndroidInjector
-import info.nightscout.androidaps.utils.buildHelper.ConfigImpl
 import info.nightscout.androidaps.TestBaseWithProfile
 import info.nightscout.androidaps.TestPumpPlugin
 import info.nightscout.androidaps.core.R
 import info.nightscout.androidaps.data.DetailedBolusInfo
 import info.nightscout.androidaps.database.AppRepository
+import info.nightscout.androidaps.database.ValueWrapper
 import info.nightscout.androidaps.database.entities.Bolus
 import info.nightscout.androidaps.interfaces.ActivePlugin
 import info.nightscout.androidaps.interfaces.Constraint
@@ -27,15 +26,18 @@ import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.FabricPrivacy
 import info.nightscout.androidaps.utils.ToastUtils
 import info.nightscout.androidaps.utils.buildHelper.BuildHelper
+import info.nightscout.androidaps.utils.buildHelper.ConfigImpl
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 import info.nightscout.androidaps.utils.rx.AapsSchedulers
 import info.nightscout.androidaps.utils.sharedPreferences.SP
+import io.reactivex.Single
 import org.junit.Assert
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.Mock
 import org.mockito.Mockito.`when`
+import org.mockito.Mockito.anyLong
 import org.powermock.core.classloader.annotations.PrepareForTest
 import org.powermock.modules.junit4.PowerMockRunner
 import java.util.*
@@ -48,7 +50,6 @@ import java.util.*
 class CommandQueueTest : TestBaseWithProfile() {
 
     @Mock lateinit var constraintChecker: ConstraintChecker
-    @Mock lateinit var lazyActivePlugin: Lazy<ActivePlugin>
     @Mock lateinit var activePlugin: ActivePlugin
     @Mock lateinit var sp: SP
     @Mock lateinit var loggerUtils: LoggerUtils
@@ -63,7 +64,7 @@ class CommandQueueTest : TestBaseWithProfile() {
         resourceHelper: ResourceHelper,
         constraintChecker: ConstraintChecker,
         profileFunction: ProfileFunction,
-        activePlugin: Lazy<ActivePlugin>,
+        activePlugin: ActivePlugin,
         context: Context,
         sp: SP,
         buildHelper: BuildHelper,
@@ -106,15 +107,14 @@ class CommandQueueTest : TestBaseWithProfile() {
 
     @Before
     fun prepare() {
-        commandQueue = CommandQueueMocked(injector, aapsLogger, rxBus, aapsSchedulers, resourceHelper, constraintChecker, profileFunction, lazyActivePlugin, context, sp, BuildHelper(ConfigImpl(), loggerUtils), dateUtil, repository, fabricPrivacy)
+        commandQueue = CommandQueueMocked(injector, aapsLogger, rxBus, aapsSchedulers, resourceHelper, constraintChecker, profileFunction, activePlugin, context, sp, BuildHelper(ConfigImpl(), loggerUtils), dateUtil, repository, fabricPrivacy)
         testPumpPlugin = TestPumpPlugin(injector)
 
         testPumpPlugin.pumpDescription.basalMinimumRate = 0.1
 
         `when`(context.getSystemService(Context.POWER_SERVICE)).thenReturn(powerManager)
-        `when`(lazyActivePlugin.get()).thenReturn(activePlugin)
         `when`(activePlugin.activePump).thenReturn(testPumpPlugin)
-        `when`(activePlugin.activeTreatments).thenReturn(treatmentsInterface)
+        `when`(repository.getEffectiveProfileSwitchActiveAt(anyLong())).thenReturn(Single.just(ValueWrapper.Existing(effectiveProfileSwitch)))
         `when`(repository.getLastBolusRecord()).thenReturn(
             Bolus(
                 timestamp = Calendar.getInstance().also { it.set(2000, 0, 1) }.timeInMillis,
@@ -138,7 +138,7 @@ class CommandQueueTest : TestBaseWithProfile() {
 
     @Test
     fun commandIsPickedUp() {
-        val commandQueue = CommandQueue(injector, aapsLogger, rxBus, aapsSchedulers, resourceHelper, constraintChecker, profileFunction, lazyActivePlugin, context, sp, BuildHelper(ConfigImpl(), loggerUtils), dateUtil, repository, fabricPrivacy)
+        val commandQueue = CommandQueue(injector, aapsLogger, rxBus, aapsSchedulers, resourceHelper, constraintChecker, profileFunction, activePlugin, context, sp, BuildHelper(ConfigImpl(), loggerUtils), dateUtil, repository, fabricPrivacy)
         // start with empty queue
         Assert.assertEquals(0, commandQueue.size())
 
@@ -365,7 +365,7 @@ class CommandQueueTest : TestBaseWithProfile() {
 
         // when
         testPumpPlugin.isProfileSet = true
-        commandQueue.setProfile(validProfile, object : Callback() {
+        commandQueue.setProfile(validProfile, false, object : Callback() {
             override fun run() {
                 Assert.assertTrue(result.success)
                 Assert.assertFalse(result.enacted)
@@ -377,7 +377,7 @@ class CommandQueueTest : TestBaseWithProfile() {
         Assert.assertEquals(0, commandQueue.size())
         // different should be added
         testPumpPlugin.isProfileSet = false
-        commandQueue.setProfile(validProfile, object : Callback() {
+        commandQueue.setProfile(validProfile, false, object : Callback() {
             override fun run() {
                 Assert.assertTrue(result.success)
                 Assert.assertTrue(result.enacted)
@@ -385,7 +385,7 @@ class CommandQueueTest : TestBaseWithProfile() {
         })
         Assert.assertEquals(1, commandQueue.size())
         // next should be ignored
-        commandQueue.setProfile(validProfile, object : Callback() {
+        commandQueue.setProfile(validProfile, false, object : Callback() {
             override fun run() {
                 Assert.assertTrue(result.success)
             }

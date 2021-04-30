@@ -7,6 +7,8 @@ import io.reactivex.Completable
 import io.reactivex.Maybe
 import io.reactivex.Observable
 import io.reactivex.Single
+import io.reactivex.internal.operators.maybe.MaybeJust
+import io.reactivex.rxkotlin.subscribeBy
 import io.reactivex.schedulers.Schedulers
 import io.reactivex.subjects.PublishSubject
 import java.util.concurrent.Callable
@@ -141,9 +143,6 @@ open class AppRepository @Inject internal constructor(
         database.temporaryTargetDao.getModifiedFrom(lastId)
             .subscribeOn(Schedulers.io())
 
-    fun getTemporaryTargetsCorrespondingLastHistoryRecord(lastId: Long): TemporaryTarget? =
-        database.temporaryTargetDao.getLastHistoryRecord(lastId)
-
     fun getTemporaryTargetActiveAt(timestamp: Long): Single<ValueWrapper<TemporaryTarget>> =
         database.temporaryTargetDao.getTemporaryTargetActiveAt(timestamp)
             .subscribeOn(Schedulers.io())
@@ -168,6 +167,89 @@ open class AppRepository @Inject internal constructor(
     fun insert(word: UserEntry) {
         database.userEntryDao.insert(word)
     }
+
+    // PROFILE SWITCH
+
+    fun getActiveProfileSwitch(timestamp: Long): ProfileSwitch? {
+        val tps = database.profileSwitchDao.getTemporaryProfileSwitchActiveAt(timestamp)
+            .subscribeOn(Schedulers.io())
+            .blockingGet()
+        val ps = database.profileSwitchDao.getPermanentProfileSwitchActiveAt(timestamp)
+            .subscribeOn(Schedulers.io())
+            .blockingGet()
+        if (tps != null && ps != null)
+            return if (ps.timestamp > tps.timestamp) ps else tps
+        if (ps == null) return tps
+        if (tps == null) return ps
+        return null
+    }
+
+    fun getAllProfileSwitches(): Single<List<ProfileSwitch>> =
+        database.profileSwitchDao.getAllProfileSwitches()
+            .subscribeOn(Schedulers.io())
+
+    fun deleteAllProfileSwitches() =
+        database.profileSwitchDao.deleteAllEntries()
+
+    fun getProfileSwitchDataFromTime(timestamp: Long, ascending: Boolean): Single<List<ProfileSwitch>> =
+        database.profileSwitchDao.getProfileSwitchDataFromTime(timestamp)
+            .map { if (!ascending) it.reversed() else it }
+            .subscribeOn(Schedulers.io())
+
+    fun getProfileSwitchDataIncludingInvalidFromTime(timestamp: Long, ascending: Boolean): Single<List<ProfileSwitch>> =
+        database.profileSwitchDao.getProfileSwitchDataIncludingInvalidFromTime(timestamp)
+            .map { if (!ascending) it.reversed() else it }
+            .subscribeOn(Schedulers.io())
+
+    // EFFECTIVE PROFILE SWITCH
+    /*
+       * returns a Pair of the next entity to sync and the ID of the "update".
+       * The update id might either be the entry id itself if it is a new entry - or the id
+       * of the update ("historic") entry. The sync counter should be incremented to that id if it was synced successfully.
+       *
+       * It is a Maybe as there might be no next element.
+       * */
+    fun getNextSyncElementEffectiveProfileSwitch(id: Long): Maybe<Pair<EffectiveProfileSwitch, Long>> =
+        database.effectiveProfileSwitchDao.getNextModifiedOrNewAfter(id)
+            .flatMap { nextIdElement ->
+                val nextIdElemReferenceId = nextIdElement.referenceId
+                if (nextIdElemReferenceId == null) {
+                    Maybe.just(nextIdElement to nextIdElement.id)
+                } else {
+                    database.effectiveProfileSwitchDao.getCurrentFromHistoric(nextIdElemReferenceId)
+                        .map { it to nextIdElement.id }
+                }
+            }
+
+    fun createEffectiveProfileSwitch(profileSwitch: EffectiveProfileSwitch) {
+        database.effectiveProfileSwitchDao.insert(profileSwitch)
+    }
+
+    fun getOldestEffectiveProfileSwitchRecord(): EffectiveProfileSwitch? =
+        database.effectiveProfileSwitchDao.getOldestEffectiveProfileSwitchRecord()
+
+    fun getEffectiveProfileSwitchActiveAt(timestamp: Long): Single<ValueWrapper<EffectiveProfileSwitch>> =
+        database.effectiveProfileSwitchDao.getEffectiveProfileSwitchActiveAt(timestamp)
+            .subscribeOn(Schedulers.io())
+            .toWrappedSingle()
+
+    fun getEffectiveProfileSwitchDataFromTime(timestamp: Long, ascending: Boolean): Single<List<EffectiveProfileSwitch>> =
+        database.effectiveProfileSwitchDao.getEffectiveProfileSwitchDataFromTime(timestamp)
+            .map { if (!ascending) it.reversed() else it }
+            .subscribeOn(Schedulers.io())
+
+    fun getEffectiveProfileSwitchDataIncludingInvalidFromTime(timestamp: Long, ascending: Boolean): Single<List<EffectiveProfileSwitch>> =
+        database.effectiveProfileSwitchDao.getEffectiveProfileSwitchDataIncludingInvalidFromTime(timestamp)
+            .map { if (!ascending) it.reversed() else it }
+            .subscribeOn(Schedulers.io())
+
+    fun getEffectiveProfileSwitchDataFromTimeToTime(start: Long, end: Long, ascending: Boolean): Single<List<EffectiveProfileSwitch>> =
+        database.effectiveProfileSwitchDao.getEffectiveProfileSwitchDataFromTimeToTime(start, end)
+            .map { if (!ascending) it.reversed() else it }
+            .subscribeOn(Schedulers.io())
+
+    fun deleteAllEffectiveProfileSwitches() =
+        database.effectiveProfileSwitchDao.deleteAllEntries()
 
     // THERAPY EVENT
     /*
@@ -286,10 +368,10 @@ open class AppRepository @Inject internal constructor(
         database.bolusDao.getModifiedFrom(lastId)
             .subscribeOn(Schedulers.io())
 
-    fun getLastBolusRecord():Bolus? =
+    fun getLastBolusRecord(): Bolus? =
         database.bolusDao.getLastBolusRecord()
 
-    fun getLastBolusRecordWrapped():Single<ValueWrapper<Bolus>> =
+    fun getLastBolusRecordWrapped(): Single<ValueWrapper<Bolus>> =
         database.bolusDao.getLastBolusRecordMaybe()
             .subscribeOn(Schedulers.io())
             .toWrappedSingle()
@@ -608,7 +690,6 @@ open class AppRepository @Inject internal constructor(
         database.totalDailyDoseDao.getLastTotalDailyDoses(count)
             .map { if (!ascending) it.reversed() else it }
             .subscribeOn(Schedulers.io())
-
 
 }
 

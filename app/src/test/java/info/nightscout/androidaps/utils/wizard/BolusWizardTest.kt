@@ -3,11 +3,10 @@ package info.nightscout.androidaps.utils.wizard
 import android.content.Context
 import dagger.android.AndroidInjector
 import dagger.android.HasAndroidInjector
-import info.nightscout.androidaps.Constants
 import info.nightscout.androidaps.TestBase
 import info.nightscout.androidaps.data.IobTotal
-import info.nightscout.androidaps.data.Profile
 import info.nightscout.androidaps.interfaces.*
+import info.nightscout.androidaps.interfaces.Profile
 import info.nightscout.androidaps.plugins.aps.loop.LoopPlugin
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper
 import info.nightscout.androidaps.plugins.configBuilder.ConstraintChecker
@@ -66,12 +65,12 @@ class BolusWizardTest : TestBase() {
     @Suppress("SameParameterValue")
     private fun setupProfile(targetLow: Double, targetHigh: Double, insulinSensitivityFactor: Double, insulinToCarbRatio: Double): Profile {
         val profile = Mockito.mock(Profile::class.java)
-        `when`(profile.targetLowMgdl).thenReturn(targetLow)
-        `when`(profile.targetHighMgdl).thenReturn(targetHigh)
-        `when`(profile.isfMgdl).thenReturn(insulinSensitivityFactor)
-        `when`(profile.ic).thenReturn(insulinToCarbRatio)
+        `when`(profile.getTargetLowMgdl()).thenReturn(targetLow)
+        `when`(profile.getTargetLowMgdl()).thenReturn(targetHigh)
+        `when`(profile.getIsfMgdl()).thenReturn(insulinSensitivityFactor)
+        `when`(profile.getIc()).thenReturn(insulinToCarbRatio)
 
-        `when`(profileFunction.getUnits()).thenReturn(Constants.MGDL)
+        `when`(profileFunction.getUnits()).thenReturn(GlucoseUnit.MGDL)
         `when`(activePlugin.activeTreatments).thenReturn(treatmentsPlugin)
         `when`(iobCobCalculator.calculateIobFromBolus()).thenReturn(IobTotal(System.currentTimeMillis()))
         `when`(iobCobCalculator.calculateIobFromTempBasalsIncludingConvertedExtended()).thenReturn(IobTotal(System.currentTimeMillis()))

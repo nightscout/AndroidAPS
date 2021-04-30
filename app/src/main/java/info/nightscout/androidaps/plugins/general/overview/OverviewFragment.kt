@@ -27,7 +27,7 @@ import dagger.android.support.DaggerFragment
 import info.nightscout.androidaps.interfaces.Config
 import info.nightscout.androidaps.Constants
 import info.nightscout.androidaps.R
-import info.nightscout.androidaps.data.Profile
+import info.nightscout.androidaps.interfaces.Profile
 import info.nightscout.androidaps.database.AppRepository
 import info.nightscout.androidaps.database.ValueWrapper
 import info.nightscout.androidaps.database.entities.TemporaryTarget
@@ -256,7 +256,7 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
             .observeOn(aapsSchedulers.io)
             .subscribe({ scheduleUpdateGUI("EventAutosensCalculationFinished") }, fabricPrivacy::logException))
         disposable.add(rxBus
-            .toObservable(EventProfileNeedsUpdate::class.java)
+            .toObservable(EventProfileSwitchChanged::class.java)
             .observeOn(aapsSchedulers.io)
             .subscribe({ scheduleUpdateGUI("EventProfileNeedsUpdate") }, fabricPrivacy::logException))
         disposable.add(rxBus
@@ -682,29 +682,29 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
         if (tempTarget is ValueWrapper.Existing) {
             binding.loopPumpStatusLayout.tempTarget.setTextColor(resourceHelper.gc(R.color.ribbonTextWarning))
             binding.loopPumpStatusLayout.tempTarget.setBackgroundColor(resourceHelper.gc(R.color.ribbonWarning))
-            binding.loopPumpStatusLayout.tempTarget.text = Profile.toTargetRangeString(tempTarget.value.lowTarget, tempTarget.value.highTarget, Constants.MGDL, units) + " " + dateUtil.untilString(tempTarget.value.end, resourceHelper)
+            binding.loopPumpStatusLayout.tempTarget.text = Profile.toTargetRangeString(tempTarget.value.lowTarget, tempTarget.value.highTarget, GlucoseUnit.MGDL, units) + " " + dateUtil.untilString(tempTarget.value.end, resourceHelper)
         } else {
             // If the target is not the same as set in the profile then oref has overridden it
             val targetUsed = lastRun?.constraintsProcessed?.targetBG ?: 0.0
 
-            if (targetUsed != 0.0 && abs(profile.targetMgdl - targetUsed) > 0.01) {
-                aapsLogger.debug("Adjusted target. Profile: ${profile.targetMgdl} APS: $targetUsed")
-                binding.loopPumpStatusLayout.tempTarget.text = Profile.toTargetRangeString(targetUsed, targetUsed, Constants.MGDL, units)
+            if (targetUsed != 0.0 && abs(profile.getTargetMgdl() - targetUsed) > 0.01) {
+                aapsLogger.debug("Adjusted target. Profile: ${profile.getTargetMgdl()} APS: $targetUsed")
+                binding.loopPumpStatusLayout.tempTarget.text = Profile.toTargetRangeString(targetUsed, targetUsed, GlucoseUnit.MGDL, units)
                 binding.loopPumpStatusLayout.tempTarget.setTextColor(resourceHelper.gc(R.color.ribbonTextWarning))
                 binding.loopPumpStatusLayout.tempTarget.setBackgroundColor(resourceHelper.gc(R.color.tempTargetBackground))
             } else {
                 binding.loopPumpStatusLayout.tempTarget.setTextColor(resourceHelper.gc(R.color.ribbonTextDefault))
                 binding.loopPumpStatusLayout.tempTarget.setBackgroundColor(resourceHelper.gc(R.color.ribbonDefault))
-                binding.loopPumpStatusLayout.tempTarget.text = Profile.toTargetRangeString(profile.targetLowMgdl, profile.targetHighMgdl, Constants.MGDL, units)
+                binding.loopPumpStatusLayout.tempTarget.text = Profile.toTargetRangeString(profile.getTargetLowMgdl(), profile.getTargetHighMgdl(), GlucoseUnit.MGDL, units)
             }
         }
 
         // Basal, TBR
         val activeTemp = iobCobCalculator.getTempBasalIncludingConvertedExtended(System.currentTimeMillis())
         binding.infoLayout.baseBasal.text = activeTemp?.let { "T:" + activeTemp.toStringShort() }
-            ?: resourceHelper.gs(R.string.pump_basebasalrate, profile.basal)
+            ?: resourceHelper.gs(R.string.pump_basebasalrate, profile.getBasal())
         binding.infoLayout.basalLayout.setOnClickListener {
-            var fullText = "${resourceHelper.gs(R.string.basebasalrate_label)}: ${resourceHelper.gs(R.string.pump_basebasalrate, profile.basal)}"
+            var fullText = "${resourceHelper.gs(R.string.basebasalrate_label)}: ${resourceHelper.gs(R.string.pump_basebasalrate, profile.getBasal())}"
             if (activeTemp != null)
                 fullText += "\n" + resourceHelper.gs(R.string.tempbasal_label) + ": " + activeTemp.toStringFull(profile, dateUtil)
             activity?.let {
@@ -734,7 +734,7 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
         binding.infoLayout.extendedLayout.visibility = (extendedBolus is ValueWrapper.Existing && !pump.isFakingTempsByExtendedBoluses).toVisibility()
 
         // Active profile
-        binding.loopPumpStatusLayout.activeProfile.text = profileFunction.getProfileNameWithDuration()
+        binding.loopPumpStatusLayout.activeProfile.text = profileFunction.getProfileNameWithRemainingTime()
         if (profile.percentage != 100 || profile.timeshift != 0) {
             binding.loopPumpStatusLayout.activeProfile.setBackgroundColor(resourceHelper.gc(R.color.ribbonWarning))
             binding.loopPumpStatusLayout.activeProfile.setTextColor(resourceHelper.gc(R.color.ribbonTextWarning))
@@ -820,7 +820,7 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
             if (_binding == null) return@launch
             val menuChartSettings = overviewMenus.setting
             prepareGraphsIfNeeded(menuChartSettings.size)
-            val graphData = GraphData(injector, binding.graphsLayout.bgGraph, iobCobCalculator, treatmentsPlugin)
+            val graphData = GraphData(injector, binding.graphsLayout.bgGraph, iobCobCalculator)
             val secondaryGraphsData: ArrayList<GraphData> = ArrayList()
 
             // do preparation in different thread
@@ -888,7 +888,7 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
                 // ------------------ 2nd graph
                 synchronized(graphLock) {
                     for (g in 0 until min(secondaryGraphs.size, menuChartSettings.size + 1)) {
-                        val secondGraphData = GraphData(injector, secondaryGraphs[g], iobCobCalculator, treatmentsPlugin)
+                        val secondGraphData = GraphData(injector, secondaryGraphs[g], iobCobCalculator)
                         var useABSForScale = false
                         var useIobForScale = false
                         var useCobForScale = false

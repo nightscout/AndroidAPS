@@ -3,6 +3,7 @@ package info.nightscout.androidaps.extensions
 import info.nightscout.androidaps.Constants
 import info.nightscout.androidaps.core.R
 import info.nightscout.androidaps.database.entities.TherapyEvent
+import info.nightscout.androidaps.interfaces.GlucoseUnit
 import info.nightscout.androidaps.plugins.general.nsclient.data.NSMbg
 import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.JsonHelper
@@ -34,8 +35,16 @@ fun TherapyEvent.GlucoseUnit.toConstant(): String =
     if (this == TherapyEvent.GlucoseUnit.MGDL) Constants.MGDL
     else Constants.MMOL
 
+fun TherapyEvent.GlucoseUnit.toMainUnit(): GlucoseUnit =
+    if (this == TherapyEvent.GlucoseUnit.MGDL) GlucoseUnit.MGDL
+    else GlucoseUnit.MMOL
+
 fun TherapyEvent.GlucoseUnit.Companion.fromConstant(units: String): TherapyEvent.GlucoseUnit =
     if (units == Constants.MGDL) TherapyEvent.GlucoseUnit.MGDL
+    else TherapyEvent.GlucoseUnit.MMOL
+
+fun TherapyEvent.GlucoseUnit.Companion.fromConstant(units: GlucoseUnit): TherapyEvent.GlucoseUnit =
+    if (units == GlucoseUnit.MGDL) TherapyEvent.GlucoseUnit.MGDL
     else TherapyEvent.GlucoseUnit.MMOL
 
 fun therapyEventFromNsMbg(mbg: NSMbg) =
@@ -103,9 +112,8 @@ fun TherapyEvent.toJson(): JSONObject =
             if (type == TherapyEvent.Type.ANNOUNCEMENT) it.put("isAnnouncement", true)
         }
 
-fun isEvent5minBack(list: List<TherapyEvent>, time: Long): Boolean {
-    for (i in list.indices) {
-        val event = list[i]
+fun List<TherapyEvent>.isTherapyEventEvent5minBack(time: Long): Boolean {
+    for (event in this) {
         if (event.timestamp <= time && event.timestamp > time - T.mins(5).msecs()) {
             return true
         }

@@ -33,7 +33,8 @@ import info.nightscout.androidaps.interfaces.Config;
 import info.nightscout.androidaps.Constants;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.data.IobTotal;
-import info.nightscout.androidaps.data.Profile;
+import info.nightscout.androidaps.interfaces.GlucoseUnit;
+import info.nightscout.androidaps.interfaces.Profile;
 import info.nightscout.androidaps.database.AppRepository;
 import info.nightscout.androidaps.database.entities.Bolus;
 import info.nightscout.androidaps.database.entities.GlucoseValue;
@@ -298,9 +299,9 @@ public class WatchUpdaterService extends WearableListenerService implements Goog
 
 
     private DataMap dataMapSingleBG(GlucoseValue lastBG, GlucoseStatus glucoseStatus) {
-        String units = profileFunction.getUnits();
+        GlucoseUnit units = profileFunction.getUnits();
         double convert2MGDL = 1.0;
-        if (units.equals(Constants.MMOL))
+        if (units.equals(GlucoseUnit.MMOL))
             convert2MGDL = Constants.MMOLL_TO_MGDL;
         double lowLine = defaultValueHelper.determineLowLine() * convert2MGDL;
         double highLine = defaultValueHelper.determineHighLine() * convert2MGDL;
@@ -314,7 +315,7 @@ public class WatchUpdaterService extends WearableListenerService implements Goog
 
         DataMap dataMap = new DataMap();
         dataMap.putString("sgvString", GlucoseValueExtensionKt.valueToUnitsString(lastBG, units));
-        dataMap.putString("glucoseUnits", units);
+        dataMap.putString("glucoseUnits", units.getAsText());
         dataMap.putLong("timestamp", lastBG.getTimestamp());
         if (glucoseStatus == null) {
             dataMap.putString("slopeArrow", "");
@@ -332,7 +333,7 @@ public class WatchUpdaterService extends WearableListenerService implements Goog
         return dataMap;
     }
 
-    private String deltastring(double deltaMGDL, double deltaMMOL, String units) {
+    private String deltastring(double deltaMGDL, double deltaMMOL, GlucoseUnit units) {
         String deltastring = "";
         if (deltaMGDL >= 0) {
             deltastring += "+";
@@ -341,7 +342,7 @@ public class WatchUpdaterService extends WearableListenerService implements Goog
         }
 
         boolean detailed = sp.getBoolean(R.string.key_wear_detailed_delta, false);
-        if (units.equals(Constants.MGDL)) {
+        if (units.equals(GlucoseUnit.MGDL)) {
             if (detailed) {
                 deltastring += DecimalFormatter.INSTANCE.to1Decimal(Math.abs(deltaMGDL));
             } else {
@@ -541,7 +542,6 @@ public class WatchUpdaterService extends WearableListenerService implements Goog
                             .collect(Collectors.toList());
 
             if (!predArray.isEmpty()) {
-                final String units = profileFunction.getUnits();
                 for (GlucoseValueDataPoint bg : predArray) {
                     if (bg.getData().getValue() < 40) continue;
                     predictions.add(predictionMap(bg.getData().getTimestamp(), bg.getData().getValue(), bg.getPredictionColor()));
@@ -695,7 +695,7 @@ public class WatchUpdaterService extends WearableListenerService implements Goog
                 currentBasal = generateBasalString();
 
                 //bgi
-                double bgi = -(bolusIob.activity + basalIob.activity) * 5 * Profile.fromMgdlToUnits(profile.getIsfMgdl(), profileFunction.getUnits());
+                double bgi = -(bolusIob.activity + basalIob.activity) * 5 * Profile.Companion.fromMgdlToUnits(profile.getIsfMgdl(), profileFunction.getUnits());
                 bgiString = "" + ((bgi >= 0) ? "+" : "") + DecimalFormatter.INSTANCE.to1Decimal(bgi);
 
                 status = generateStatusString(profile, currentBasal, iobSum, iobDetail, bgiString);

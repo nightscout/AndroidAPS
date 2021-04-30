@@ -9,6 +9,7 @@ import androidx.appcompat.app.AppCompatActivity
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.Constants
 import info.nightscout.androidaps.R
+import info.nightscout.androidaps.data.ProfileSealed
 import info.nightscout.androidaps.dialogs.ProfileSwitchDialog
 import info.nightscout.androidaps.events.EventPumpStatusChanged
 import info.nightscout.androidaps.interfaces.*
@@ -30,7 +31,6 @@ import info.nightscout.androidaps.setupwizard.elements.*
 import info.nightscout.androidaps.setupwizard.events.EventSWUpdate
 import info.nightscout.androidaps.utils.AndroidPermission
 import info.nightscout.androidaps.utils.CryptoUtil
-import info.nightscout.androidaps.utils.buildHelper.ConfigImpl
 import info.nightscout.androidaps.utils.extensions.isRunningTest
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 import info.nightscout.androidaps.utils.sharedPreferences.SP
@@ -57,7 +57,7 @@ class SWDefinition @Inject constructor(
     private val importExportPrefs: ImportExportPrefs,
     private val androidPermission: AndroidPermission,
     private val cryptoUtil: CryptoUtil,
-    private val config: ConfigImpl
+    private val config: Config
 ) {
 
     lateinit var activity: AppCompatActivity
@@ -268,13 +268,13 @@ class SWDefinition @Inject constructor(
             .label(R.string.adjustprofileinns))
         .add(SWFragment(injector, this)
             .add(NSProfileFragment()))
-        .validator { nsProfilePlugin.profile != null && nsProfilePlugin.profile!!.getDefaultProfile() != null && nsProfilePlugin.profile!!.getDefaultProfile()!!.isValid("StartupWizard") }
+        .validator { nsProfilePlugin.profile?.getDefaultProfile()?.let { ProfileSealed.Pure(it).isValid("StartupWizard", activePlugin.activePump, config, resourceHelper, rxBus)  } ?: false }
         .visibility { nsProfilePlugin.isEnabled() }
     private val screenLocalProfile = SWScreen(injector, R.string.localprofile)
         .skippable(false)
         .add(SWFragment(injector, this)
             .add(LocalProfileFragment()))
-        .validator { localProfilePlugin.profile?.getDefaultProfile()?.isValid("StartupWizard") == true }
+        .validator { localProfilePlugin.profile?.getDefaultProfile()?.let { ProfileSealed.Pure(it).isValid("StartupWizard", activePlugin.activePump, config, resourceHelper, rxBus)  } ?: false }
         .visibility { localProfilePlugin.isEnabled() }
     private val screenProfileSwitch = SWScreen(injector, R.string.careportal_profileswitch)
         .skippable(false)

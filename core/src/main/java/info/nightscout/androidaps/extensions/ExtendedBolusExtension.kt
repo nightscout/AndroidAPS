@@ -1,7 +1,7 @@
 package info.nightscout.androidaps.extensions
 
 import info.nightscout.androidaps.data.IobTotal
-import info.nightscout.androidaps.data.Profile
+import info.nightscout.androidaps.interfaces.Profile
 import info.nightscout.androidaps.database.embedments.InterfaceIDs
 import info.nightscout.androidaps.database.entities.Bolus
 import info.nightscout.androidaps.database.entities.ExtendedBolus
@@ -158,11 +158,11 @@ fun ExtendedBolus.iobCalc(time: Long, profile: Profile, lastAutosensResult: Auto
     val realDuration = getPassedDurationToTimeInMinutes(time)
     var sensitivityRatio = lastAutosensResult.ratio
     val normalTarget = 100.0
-    if (exercise_mode && isTempTarget && profile.targetMgdl >= normalTarget + 5) {
+    if (exercise_mode && isTempTarget && profile.getTargetMgdl() >= normalTarget + 5) {
         // w/ target 100, temp target 110 = .89, 120 = 0.8, 140 = 0.67, 160 = .57, and 200 = .44
         // e.g.: Sensitivity ratio set to 0.8 based on temp target of 120; Adjusting basal from 1.65 to 1.35; ISF from 58.9 to 73.6
         val c = half_basal_exercise_target - normalTarget
-        sensitivityRatio = c / (c + profile.targetMgdl - normalTarget)
+        sensitivityRatio = c / (c + profile.getTargetMgdl() - normalTarget)
     }
     if (realDuration > 0) {
         var netBasalRate: Double

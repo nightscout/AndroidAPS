@@ -14,9 +14,10 @@ import androidx.work.WorkerParameters
 import dagger.android.DaggerBroadcastReceiver
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.BuildConfig
+import info.nightscout.androidaps.data.ProfileSealed
 import info.nightscout.androidaps.interfaces.Config
 import info.nightscout.androidaps.database.AppRepository
-import info.nightscout.androidaps.events.EventProfileNeedsUpdate
+import info.nightscout.androidaps.events.EventProfileSwitchChanged
 import info.nightscout.androidaps.extensions.buildDeviceStatus
 import info.nightscout.androidaps.interfaces.ActivePlugin
 import info.nightscout.androidaps.interfaces.CommandQueueProvider
@@ -117,10 +118,11 @@ class KeepAliveReceiver : DaggerBroadcastReceiver() {
 
         private fun checkPump() {
             val pump = activePlugin.activePump
-            val profile = profileFunction.getProfile() ?: return
+            val ps = profileFunction.getRequestedProfile() ?: return
+            val profile = ProfileSealed.PS(ps)
             val lastConnection = pump.lastDataTime()
             val isStatusOutdated = lastConnection + STATUS_UPDATE_FREQUENCY < System.currentTimeMillis()
-            val isBasalOutdated = abs(profile.basal - pump.baseBasalRate) > pump.pumpDescription.basalStep
+            val isBasalOutdated = abs(profile.getBasal() - pump.baseBasalRate) > pump.pumpDescription.basalStep
             aapsLogger.debug(LTag.CORE, "Last connection: " + dateUtil.dateAndTimeString(lastConnection))
             // sometimes keep alive broadcast stops
             // as as workaround test if readStatus was requested before an alarm is generated
@@ -128,7 +130,7 @@ class KeepAliveReceiver : DaggerBroadcastReceiver() {
                 localAlertUtils.checkPumpUnreachableAlarm(lastConnection, isStatusOutdated, loopPlugin.isDisconnected)
             }
             if (!pump.isThisProfileSet(profile) && !commandQueue.isRunning(Command.CommandType.BASAL_PROFILE)) {
-                rxBus.send(EventProfileNeedsUpdate())
+                rxBus.send(EventProfileSwitchChanged())
             } else if (isStatusOutdated && !pump.isBusy()) {
                 lastReadStatus = System.currentTimeMillis()
                 commandQueue.readStatus("KeepAlive. Status outdated.", null)

@@ -19,6 +19,7 @@ import info.nightscout.androidaps.plugins.bus.RxBusWrapper
 import info.nightscout.androidaps.plugins.general.nsclient.events.EventNSClientRestart
 import info.nightscout.androidaps.plugins.profile.ns.events.EventNSProfileUpdateGUI
 import info.nightscout.androidaps.receivers.DataWorker
+import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 import info.nightscout.androidaps.utils.sharedPreferences.SP
 import org.json.JSONObject
@@ -32,6 +33,7 @@ class NSProfilePlugin @Inject constructor(
     private val rxBus: RxBusWrapper,
     resourceHelper: ResourceHelper,
     private val sp: SP,
+    private val dateUtil: DateUtil,
     config: Config
 ) : PluginBase(PluginDescription()
     .mainType(PluginType.PROFILE)
@@ -66,7 +68,7 @@ class NSProfilePlugin @Inject constructor(
         val profileString = sp.getStringOrNull("profile", null)
         if (profileString != null) {
             aapsLogger.debug(LTag.PROFILE, "Loaded profile: $profileString")
-            profile = ProfileStore(injector, JSONObject(profileString))
+            profile = ProfileStore(injector, JSONObject(profileString), dateUtil)
         } else {
             aapsLogger.debug(LTag.PROFILE, "Stored profile not found")
             // force restart of nsclient to fetch profile
@@ -85,6 +87,7 @@ class NSProfilePlugin @Inject constructor(
         @Inject lateinit var nsProfilePlugin: NSProfilePlugin
         @Inject lateinit var aapsLogger: AAPSLogger
         @Inject lateinit var rxBus: RxBusWrapper
+        @Inject lateinit var dateUtil: DateUtil
         @Inject lateinit var dataWorker: DataWorker
 
         init {
@@ -94,7 +97,7 @@ class NSProfilePlugin @Inject constructor(
         override fun doWork(): Result {
             val profileString = dataWorker.pickupJSONObject(inputData.getLong(DataWorker.STORE_KEY, -1))
                 ?: return Result.failure(workDataOf("Error" to "missing input data"))
-            nsProfilePlugin.profile = ProfileStore(injector, profileString)
+            nsProfilePlugin.profile = ProfileStore(injector, profileString, dateUtil)
             nsProfilePlugin.storeNSProfile()
             if (nsProfilePlugin.isEnabled()) {
                 rxBus.send(EventProfileStoreChanged())

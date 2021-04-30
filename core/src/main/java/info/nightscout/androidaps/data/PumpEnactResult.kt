@@ -2,6 +2,7 @@ package info.nightscout.androidaps.data
 
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.core.R
+import info.nightscout.androidaps.interfaces.Profile
 import info.nightscout.androidaps.utils.DecimalFormatter
 import info.nightscout.androidaps.utils.Round
 import info.nightscout.androidaps.utils.resources.ResourceHelper
@@ -147,7 +148,7 @@ class PumpEnactResult(injector: HasAndroidInjector) {
 
             isPercent          -> {
                 // Nightscout is expecting absolute value
-                val abs = Round.roundTo(profile.basal * percent / 100, 0.01)
+                val abs = Round.roundTo(profile.getBasal() * percent / 100, 0.01)
                 result.put("rate", abs)
                 result.put("duration", duration)
             }

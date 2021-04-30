@@ -5,7 +5,7 @@ import androidx.annotation.DrawableRes
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.Constants
 import info.nightscout.androidaps.automation.R
-import info.nightscout.androidaps.data.Profile
+import info.nightscout.androidaps.interfaces.Profile
 import info.nightscout.androidaps.data.PumpEnactResult
 import info.nightscout.androidaps.database.AppRepository
 import info.nightscout.androidaps.database.entities.TemporaryTarget
@@ -28,6 +28,7 @@ import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.JsonHelper
 import info.nightscout.androidaps.utils.JsonHelper.safeGetDouble
 import info.nightscout.androidaps.extensions.friendlyDescription
+import info.nightscout.androidaps.interfaces.GlucoseUnit
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.rxkotlin.plusAssign
@@ -75,7 +76,7 @@ class ActionStartTempTarget(injector: HasAndroidInjector) : Action(injector) {
     }
 
     override fun generateDialog(root: LinearLayout) {
-        val unitResId = if (value.units == Constants.MGDL) R.string.mgdl else R.string.mmol
+        val unitResId = if (value.units == GlucoseUnit.MGDL) R.string.mgdl else R.string.mmol
         LayoutBuilder()
             .add(LabelWithElement(resourceHelper, resourceHelper.gs(R.string.careportal_temporarytarget) + "\n[" + resourceHelper.gs(unitResId) + "]", "", value))
             .add(LabelWithElement(resourceHelper, resourceHelper.gs(R.string.duration_min_label), "", duration))
@@ -89,7 +90,7 @@ class ActionStartTempTarget(injector: HasAndroidInjector) : Action(injector) {
     override fun toJSON(): String {
         val data = JSONObject()
             .put("value", value.value)
-            .put("units", value.units)
+            .put("units", value.units.asText)
             .put("durationInMinutes", duration.getMinutes())
         return JSONObject()
             .put("type", this.javaClass.name)
@@ -99,7 +100,7 @@ class ActionStartTempTarget(injector: HasAndroidInjector) : Action(injector) {
 
     override fun fromJSON(data: String): Action {
         val o = JSONObject(data)
-        value.units = JsonHelper.safeGetString(o, "units", Constants.MGDL)
+        value.units = GlucoseUnit.fromText(JsonHelper.safeGetString(o, "units", Constants.MGDL))
         value.value = safeGetDouble(o, "value")
         duration.setMinutes(JsonHelper.safeGetInt(o, "durationInMinutes"))
         return this
@@ -114,7 +115,7 @@ class ActionStartTempTarget(injector: HasAndroidInjector) : Action(injector) {
     )
 
     override fun isValid(): Boolean =
-        if (value.units == Constants.MMOL) { // mmol
+        if (value.units == GlucoseUnit.MMOL) { // mmol
             value.value >= Constants.MIN_TT_MMOL &&
                 value.value <= Constants.MAX_TT_MMOL &&
                 duration.value > 0

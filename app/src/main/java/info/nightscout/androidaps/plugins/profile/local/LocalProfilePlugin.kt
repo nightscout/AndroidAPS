@@ -4,8 +4,10 @@ import androidx.fragment.app.FragmentActivity
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.Constants
 import info.nightscout.androidaps.R
-import info.nightscout.androidaps.data.Profile
+import info.nightscout.androidaps.data.ProfileSealed
+import info.nightscout.androidaps.data.PureProfile
 import info.nightscout.androidaps.events.EventProfileStoreChanged
+import info.nightscout.androidaps.extensions.blockFromJsonArray
 import info.nightscout.androidaps.interfaces.*
 import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.logging.LTag
@@ -13,6 +15,7 @@ import info.nightscout.androidaps.plugins.bus.RxBusWrapper
 import info.nightscout.androidaps.plugins.general.nsclient.NSUpload
 import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.DecimalFormatter
+import info.nightscout.androidaps.utils.HardLimits
 import info.nightscout.androidaps.utils.alertDialogs.OKDialog
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 import info.nightscout.androidaps.utils.sharedPreferences.SP
@@ -33,6 +36,8 @@ class LocalProfilePlugin @Inject constructor(
     private val sp: SP,
     private val profileFunction: ProfileFunction,
     private val nsUpload: NSUpload,
+    private val activePlugin: ActivePlugin,
+    private val hardLimits: HardLimits,
     private val dateUtil: DateUtil
 ) : PluginBase(PluginDescription()
     .mainType(PluginType.PROFILE)
@@ -91,8 +96,25 @@ class LocalProfilePlugin @Inject constructor(
 
     @Synchronized
     fun isValidEditState(): Boolean {
-        return createProfileStore().getDefaultProfile()?.isValid(resourceHelper.gs(R.string.localprofile), false)
-            ?: false
+        val pumpDescription = activePlugin.activePump.pumpDescription
+        with(profiles[currentProfileIndex]) {
+            if (dia < hardLimits.minDia() || dia > hardLimits.maxDia()) return false
+            if (name.isNullOrEmpty()) return false
+            if (blockFromJsonArray(ic, dateUtil)?.any { it.amount < hardLimits.minIC() || it.amount > hardLimits.maxIC() } != false) return false
+            if (blockFromJsonArray(isf, dateUtil)?.any { it.amount < HardLimits.MIN_ISF || it.amount > HardLimits.MAX_ISF } != false) return false
+            if (blockFromJsonArray(basal, dateUtil)?.any { it.amount < pumpDescription.basalMinimumRate || it.amount > 10.0 } != false) return false
+            val low = blockFromJsonArray(targetLow, dateUtil)
+            val high = blockFromJsonArray(targetHigh, dateUtil)
+            if (profileFunction.getUnits() == GlucoseUnit.MGDL) {
+                if (low?.any { it.amount < HardLimits.VERY_HARD_LIMIT_TARGET_BG[0].toDouble() || it.amount > HardLimits.VERY_HARD_LIMIT_TARGET_BG[1].toDouble() } != false) return false
+                if (high?.any { it.amount < HardLimits.VERY_HARD_LIMIT_TARGET_BG[0].toDouble() || it.amount > HardLimits.VERY_HARD_LIMIT_TARGET_BG[1].toDouble() } != false) return false
+            } else {
+                if (low?.any { it.amount < Profile.fromMgdlToUnits(HardLimits.VERY_HARD_LIMIT_TARGET_BG[0].toDouble(), GlucoseUnit.MMOL) || it.amount > Profile.fromMgdlToUnits(HardLimits.VERY_HARD_LIMIT_TARGET_BG[1].toDouble(), GlucoseUnit.MMOL) } != false) return false
+                if (high?.any { it.amount < Profile.fromMgdlToUnits(HardLimits.VERY_HARD_LIMIT_TARGET_BG[0].toDouble(), GlucoseUnit.MMOL) || it.amount > Profile.fromMgdlToUnits(HardLimits.VERY_HARD_LIMIT_TARGET_BG[1].toDouble(), GlucoseUnit.MMOL) } != false) return false
+            }
+            for (i in low.indices) if (low[i].amount > high[i].amount) return false
+        }
+        return true
     }
 
     @Synchronized
@@ -200,20 +222,22 @@ class LocalProfilePlugin @Inject constructor(
         createAndStoreConvertedProfile()
     }
 
-    fun copyFrom(profile: Profile, newName: String): SingleProfile {
+    fun copyFrom(pureProfile: PureProfile, newName: String): SingleProfile {
         var verifiedName = newName
         if (rawProfile?.getSpecificProfile(newName) != null) {
             verifiedName += " " + dateUtil.now().toString()
         }
+        val profile = ProfileSealed.Pure(pureProfile)
+        val pureJson = pureProfile.jsonObject
         val sp = SingleProfile()
         sp.name = verifiedName
-        sp.mgdl = profile.units == Constants.MGDL
-        sp.dia = profile.dia
-        sp.ic = JSONArray(profile.data.getJSONArray("carbratio").toString())
-        sp.isf = JSONArray(profile.data.getJSONArray("sens").toString())
-        sp.basal = JSONArray(profile.data.getJSONArray("basal").toString())
-        sp.targetLow = JSONArray(profile.data.getJSONArray("target_low").toString())
-        sp.targetHigh = JSONArray(profile.data.getJSONArray("target_high").toString())
+        sp.mgdl = profile.units == GlucoseUnit.MGDL
+        sp.dia = pureJson.getDouble("dia")
+        sp.ic = pureJson.getJSONArray("carbratio")
+        sp.isf = pureJson.getJSONArray("sens")
+        sp.basal = pureJson.getJSONArray("basal")
+        sp.targetLow = pureJson.getJSONArray("target_low")
+        sp.targetHigh = pureJson.getJSONArray("target_high")
         return sp
     }
 
@@ -276,7 +300,7 @@ class LocalProfilePlugin @Inject constructor(
         }
         val p = SingleProfile()
         p.name = Constants.LOCAL_PROFILE + free
-        p.mgdl = profileFunction.getUnits() == Constants.MGDL
+        p.mgdl = profileFunction.getUnits() == GlucoseUnit.MGDL
         p.dia = Constants.defaultDIA
         p.ic = JSONArray(defaultArray)
         p.isf = JSONArray(defaultArray)
@@ -346,13 +370,14 @@ class LocalProfilePlugin @Inject constructor(
             aapsLogger.error("Unhandled exception", e)
         }
 
-        return ProfileStore(injector, json)
+        return ProfileStore(injector, json, dateUtil)
     }
 
     override val profile: ProfileStore?
         get() = rawProfile
 
     override val profileName: String
-        get() = DecimalFormatter.to2Decimal(rawProfile?.getDefaultProfile()?.percentageBasalSum()
-            ?: 0.0) + "U "
+        get() = rawProfile?.getDefaultProfile()?.let {
+            DecimalFormatter.to2Decimal(ProfileSealed.Pure(it).percentageBasalSum()) + "U "
+        } ?: "INVALID"
 }

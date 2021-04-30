@@ -13,7 +13,6 @@ import info.nightscout.androidaps.database.entities.ValueWithUnit
 import info.nightscout.androidaps.database.transactions.*
 import info.nightscout.androidaps.extensions.*
 import info.nightscout.androidaps.interfaces.Config
-import info.nightscout.androidaps.interfaces.DatabaseHelperInterface
 import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.logging.LTag
 import info.nightscout.androidaps.logging.UserEntryLogger
@@ -39,7 +38,6 @@ class NSClientRemoveWorker(
     @Inject lateinit var sp: SP
     @Inject lateinit var config: Config
     @Inject lateinit var repository: AppRepository
-    @Inject lateinit var databaseHelper: DatabaseHelperInterface
     @Inject lateinit var rxBus: RxBusWrapper
     @Inject lateinit var uel: UserEntryLogger
 
@@ -159,7 +157,7 @@ class NSClientRemoveWorker(
                 }
 
             // old DB model
-            databaseHelper.deleteProfileSwitchById(nsId)
+            //databaseHelper.deleteProfileSwitchById(nsId)
         }
 
         return ret

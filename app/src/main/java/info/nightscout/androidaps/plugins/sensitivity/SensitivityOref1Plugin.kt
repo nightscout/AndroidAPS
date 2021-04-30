@@ -3,14 +3,13 @@ package info.nightscout.androidaps.plugins.sensitivity
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.Constants
 import info.nightscout.androidaps.R
-import info.nightscout.androidaps.data.Profile
 import info.nightscout.androidaps.database.AppRepository
 import info.nightscout.androidaps.database.entities.TherapyEvent
-import info.nightscout.androidaps.db.ProfileSwitch
-import info.nightscout.androidaps.extensions.isEvent5minBack
-import info.nightscout.androidaps.interfaces.DatabaseHelperInterface
+import info.nightscout.androidaps.extensions.isEPSEvent5minBack
+import info.nightscout.androidaps.extensions.isTherapyEventEvent5minBack
 import info.nightscout.androidaps.interfaces.PluginDescription
 import info.nightscout.androidaps.interfaces.PluginType
+import info.nightscout.androidaps.interfaces.Profile
 import info.nightscout.androidaps.interfaces.ProfileFunction
 import info.nightscout.androidaps.interfaces.Sensitivity.SensitivityType
 import info.nightscout.androidaps.logging.AAPSLogger
@@ -37,7 +36,6 @@ open class SensitivityOref1Plugin @Inject constructor(
     sp: SP,
     private val profileFunction: ProfileFunction,
     private val dateUtil: DateUtil,
-    private val databaseHelper: DatabaseHelperInterface,
     private val repository: AppRepository
 ) : AbstractSensitivityPlugin(PluginDescription()
     .mainType(PluginType.SENSITIVITY)
@@ -71,7 +69,7 @@ open class SensitivityOref1Plugin @Inject constructor(
             return AutosensResult()
         }
         val siteChanges = repository.getTherapyEventDataFromTime(fromTime, TherapyEvent.Type.CANNULA_CHANGE, true).blockingGet()
-        val profileSwitches = databaseHelper.getProfileSwitchEventsFromTime(fromTime, true)
+        val profileSwitches = repository.getEffectiveProfileSwitchDataFromTime(fromTime, true).blockingGet()
 
         //[0] = 8 hour
         //[1] = 24 hour
@@ -102,14 +100,14 @@ open class SensitivityOref1Plugin @Inject constructor(
                 var pastSensitivity = pastSensitivityArray[hourSegment]
 
                 // reset deviations after site change
-                if (isEvent5minBack(siteChanges, autosensData.time)) {
+                if (siteChanges.isTherapyEventEvent5minBack(autosensData.time)) {
                     deviationsArray.clear()
                     pastSensitivity += "(SITECHANGE)"
                     pastSensitivity += "(SITECHANGE)"
                 }
 
                 // reset deviations after profile switch
-                if (ProfileSwitch(injector).isEvent5minBack(profileSwitches, autosensData.time, true)) {
+                if (profileSwitches.isEPSEvent5minBack(autosensData.time)) {
                     deviationsArray.clear()
                     pastSensitivity += "(PROFILESWITCH)"
                 }
@@ -159,7 +157,7 @@ open class SensitivityOref1Plugin @Inject constructor(
             if (hourUsed == 1) sensResult = "(24 hours) "
             val ratioLimit = ""
             val deviations: Array<Double> = Array(deviationsArray.size) { i -> deviationsArray[i] }
-            val sens = profile.isfMgdl
+            val sens = profile.getIsfMgdl()
             aapsLogger.debug(LTag.AUTOSENS, "Records: $index   $pastSensitivity")
             Arrays.sort(deviations)
             val pSensitive = IobCobCalculatorPlugin.percentile(deviations, 0.50)
@@ -179,7 +177,7 @@ open class SensitivityOref1Plugin @Inject constructor(
                 else           -> sensResult += "Sensitivity normal"
             }
             aapsLogger.debug(LTag.AUTOSENS, sensResult)
-            val ratio = 1 + basalOff / profile.maxDailyBasal
+            val ratio = 1 + basalOff / profile.getMaxDailyBasal()
 
             //Update the data back to the parent
             sensResultArray[hourUsed] = sensResult

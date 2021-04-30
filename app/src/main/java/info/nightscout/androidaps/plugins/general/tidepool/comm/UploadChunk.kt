@@ -2,10 +2,9 @@ package info.nightscout.androidaps.plugins.general.tidepool.comm
 
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.database.AppRepository
+import info.nightscout.androidaps.database.entities.EffectiveProfileSwitch
 import info.nightscout.androidaps.database.entities.TemporaryBasal
-import info.nightscout.androidaps.db.ProfileSwitch
 import info.nightscout.androidaps.interfaces.ActivePlugin
-import info.nightscout.androidaps.interfaces.DatabaseHelperInterface
 import info.nightscout.androidaps.interfaces.ProfileFunction
 import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.logging.LTag
@@ -29,7 +28,6 @@ class UploadChunk @Inject constructor(
     private val aapsLogger: AAPSLogger,
     private val profileFunction: ProfileFunction,
     private val activePlugin: ActivePlugin,
-    private val databaseHelper: DatabaseHelperInterface,
     private val repository: AppRepository,
     private val dateUtil: DateUtil
 ) {
@@ -162,14 +160,14 @@ class UploadChunk @Inject constructor(
         return selection
     }
 
-    private fun newInstanceOrNull(ps: ProfileSwitch): ProfileElement? = try {
+    private fun newInstanceOrNull(ps: EffectiveProfileSwitch): ProfileElement? = try {
         ProfileElement(ps, activePlugin.activePump.serialNumber(), dateUtil)
     } catch (e: Throwable) {
         null
     }
 
     private fun getProfiles(start: Long, end: Long): List<ProfileElement> {
-        val pss = databaseHelper.getProfileSwitchEventsFromTime(start, end, true)
+        val pss = repository.getEffectiveProfileSwitchDataFromTimeToTime(start, end, true).blockingGet()
         val selection = LinkedList<ProfileElement>()
         for (ps in pss) {
             newInstanceOrNull(ps)?.let { selection.add(it) }

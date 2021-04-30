@@ -5,6 +5,8 @@ import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.core.R
 import info.nightscout.androidaps.data.IobTotal
 import info.nightscout.androidaps.database.entities.GlucoseValue
+import info.nightscout.androidaps.extensions.convertedToAbsolute
+import info.nightscout.androidaps.extensions.convertedToPercent
 import info.nightscout.androidaps.interfaces.ActivePlugin
 import info.nightscout.androidaps.interfaces.Constraint
 import info.nightscout.androidaps.interfaces.IobCobCalculator
@@ -16,8 +18,6 @@ import info.nightscout.androidaps.plugins.configBuilder.ConstraintChecker
 import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.DecimalFormatter
 import info.nightscout.androidaps.utils.HtmlHelper.fromHtml
-import info.nightscout.androidaps.extensions.convertedToAbsolute
-import info.nightscout.androidaps.extensions.convertedToPercent
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 import info.nightscout.androidaps.utils.sharedPreferences.SP
 import org.json.JSONException
@@ -388,7 +388,7 @@ open class APSResult @Inject constructor(val injector: HasAndroidInjector) {
                 percentMinChangeChange /= 100.0
                 val lowThreshold = 1 - percentMinChangeChange
                 val highThreshold = 1 + percentMinChangeChange
-                var change = rate / profile.basal
+                var change = rate / profile.getBasal()
                 if (activeTemp != null) change = rate / activeTemp.convertedToAbsolute(now, profile)
                 if (change < lowThreshold || change > highThreshold) {
                     aapsLogger.debug(LTag.APS, "TRUE: Outside allowed range " + change * 100.0 + "%")
