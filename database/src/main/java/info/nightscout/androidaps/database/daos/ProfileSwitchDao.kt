@@ -19,6 +19,12 @@ internal interface ProfileSwitchDao : ProfileSwitchDaoWorkaround {
     @Query("DELETE FROM $TABLE_PROFILE_SWITCHES")
     override fun deleteAllEntries()
 
+    @Query("SELECT * FROM $TABLE_PROFILE_SWITCHES WHERE timestamp = :timestamp AND referenceId IS NULL")
+    fun findByTimestamp(timestamp: Long): ProfileSwitch?
+
+    @Query("SELECT * FROM $TABLE_PROFILE_SWITCHES WHERE nightscoutId = :nsId AND referenceId IS NULL")
+    fun findByNSId(nsId: String): ProfileSwitch?
+
     @Query("SELECT * FROM $TABLE_PROFILE_SWITCHES WHERE timestamp <= :timestamp AND (timestamp + duration) > :timestamp AND referenceId IS NULL AND isValid = 1 ORDER BY timestamp DESC LIMIT 1")
     fun getTemporaryProfileSwitchActiveAt(timestamp: Long): Maybe<ProfileSwitch>
 
@@ -34,6 +40,16 @@ internal interface ProfileSwitchDao : ProfileSwitchDaoWorkaround {
     @Query("SELECT * FROM $TABLE_PROFILE_SWITCHES WHERE timestamp >= :timestamp AND isValid = 1 AND referenceId IS NULL ORDER BY timestamp ASC")
     fun getProfileSwitchDataFromTime(timestamp: Long): Single<List<ProfileSwitch>>
 
+    // This query will be used with v3 to get all changed records
+    @Query("SELECT * FROM $TABLE_PROFILE_SWITCHES WHERE id > :id AND referenceId IS NULL OR id IN (SELECT DISTINCT referenceId FROM $TABLE_PROFILE_SWITCHES WHERE id > :id) ORDER BY id ASC")
+    fun getModifiedFrom(id: Long): Single<List<ProfileSwitch>>
+
+    // for WS we need 1 record only
+    @Query("SELECT * FROM $TABLE_PROFILE_SWITCHES WHERE id > :id ORDER BY id ASC limit 1")
+    fun getNextModifiedOrNewAfter(id: Long): Maybe<ProfileSwitch>
+
+    @Query("SELECT * FROM $TABLE_PROFILE_SWITCHES WHERE id = :referenceId")
+    fun getCurrentFromHistoric(referenceId: Long): Maybe<ProfileSwitch>
 }
 
 internal fun ProfileSwitchDao.insertNewEntryImpl(entry: ProfileSwitch): Long {

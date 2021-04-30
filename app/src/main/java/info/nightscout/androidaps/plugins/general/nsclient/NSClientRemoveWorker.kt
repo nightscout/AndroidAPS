@@ -156,8 +156,20 @@ class NSClientRemoveWorker(
                     }
                 }
 
-            // old DB model
-            //databaseHelper.deleteProfileSwitchById(nsId)
+            // room  ProfileSwitch
+            repository.runTransactionForResult(InvalidateNsIdProfileSwitchTransaction(nsId))
+                .doOnError {
+                    aapsLogger.error(LTag.DATABASE, "Error while invalidating ProfileSwitch", it)
+                    ret = Result.failure(workDataOf("Error" to it.toString()))
+                }
+                .blockingGet()
+                .also { result ->
+                    result.invalidated.forEach {
+                        uel.log(
+                            Action.CAREPORTAL_REMOVED, Sources.NSClient,
+                            ValueWithUnit.Timestamp(it.timestamp))
+                    }
+                }
         }
 
         return ret

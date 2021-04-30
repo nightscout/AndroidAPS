@@ -10,8 +10,6 @@ public interface UploadQueueInterface {
 
     void add(DbRequest dbRequest);
 
-    void removeByNsClientIdIfExists(JSONObject record);
-
     void removeByMongoId(final String action, final String _id);
 
     String textList();

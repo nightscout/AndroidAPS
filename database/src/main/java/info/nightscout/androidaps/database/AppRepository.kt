@@ -170,6 +170,22 @@ open class AppRepository @Inject internal constructor(
 
     // PROFILE SWITCH
 
+    fun getNextSyncElementProfileSwitch(id: Long): Maybe<Pair<ProfileSwitch, Long>> =
+        database.profileSwitchDao.getNextModifiedOrNewAfter(id)
+            .flatMap { nextIdElement ->
+                val nextIdElemReferenceId = nextIdElement.referenceId
+                if (nextIdElemReferenceId == null) {
+                    Maybe.just(nextIdElement to nextIdElement.id)
+                } else {
+                    database.profileSwitchDao.getCurrentFromHistoric(nextIdElemReferenceId)
+                        .map { it to nextIdElement.id }
+                }
+            }
+
+    fun getModifiedProfileSwitchDataFromId(lastId: Long): Single<List<ProfileSwitch>> =
+        database.profileSwitchDao.getModifiedFrom(lastId)
+            .subscribeOn(Schedulers.io())
+
     fun getActiveProfileSwitch(timestamp: Long): ProfileSwitch? {
         val tps = database.profileSwitchDao.getTemporaryProfileSwitchActiveAt(timestamp)
             .subscribeOn(Schedulers.io())

@@ -54,4 +54,7 @@
     <string name="combo_tbr_count">TBR count</string>
     <string name="bolusstopped">Bolus stopped</string>
     <string name="bolusstopping">Stopping bolus</string>
+    <string name="combo_pump_serial" translatable="false">combo_pump_serial</string>
+    <string name="combo_tbrs_set" translatable="false">combo_tbrs_set</string>
+    <string name="combo_boluses_delivered" translatable="false">combo_boluses_delivered</string>
 </resources>
