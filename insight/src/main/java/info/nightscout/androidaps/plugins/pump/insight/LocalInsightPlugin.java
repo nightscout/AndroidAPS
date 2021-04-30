@@ -578,7 +578,7 @@ public class LocalInsightPlugin extends PumpPluginBase implements Pump, Constrai
                     bolusMessage.setDuration(0);
                     bolusMessage.setExtendedAmount(0);
                     bolusMessage.setImmediateAmount(insulin);
-                    bolusMessage.setVibration(sp.getBoolean(detailedBolusInfo.getBolusType() == DetailedBolusInfo.BolusType.SMB ? R.string.key_disable_vibration_auto : R.string.key_disable_vibration, false));
+                    bolusMessage.setVibration(sp.getBoolean(detailedBolusInfo.getBolusType() == DetailedBolusInfo.BolusType.SMB ? R.string.key_insight_disable_vibration_auto : R.string.key_insight_disable_vibration, false));
                     bolusID = connectionService.requestMessage(bolusMessage).await().getBolusId();
                     bolusCancelled = false;
                 }
@@ -687,7 +687,7 @@ public class LocalInsightPlugin extends PumpPluginBase implements Pump, Constrai
                     if (cancelTBRResult.getSuccess()) {
                         PumpEnactResult ebResult = setExtendedBolusOnly((absoluteRate - getBaseBasalRate()) / 60D
                                         * ((double) durationInMinutes), durationInMinutes,
-                                sp.getBoolean(R.string.key_disable_vibration_auto, false));
+                                sp.getBoolean(R.string.key_insight_disable_vibration_auto, false));
                         if (ebResult.getSuccess()) {
                             result.success(true)
                                     .enacted(true)
@@ -787,7 +787,7 @@ public class LocalInsightPlugin extends PumpPluginBase implements Pump, Constrai
     public PumpEnactResult setExtendedBolus(double insulin, int durationInMinutes) {
         PumpEnactResult result = cancelExtendedBolusOnly();
         if (result.getSuccess())
-            result = setExtendedBolusOnly(insulin, durationInMinutes, sp.getBoolean(R.string.key_disable_vibration, false));
+            result = setExtendedBolusOnly(insulin, durationInMinutes, sp.getBoolean(R.string.key_insight_disable_vibration, false));
         try {
             fetchStatus();
             readHistory();
@@ -1125,7 +1125,7 @@ public class LocalInsightPlugin extends PumpPluginBase implements Pump, Constrai
 
     @Override
     public boolean isFakingTempsByExtendedBoluses() {
-        return sp.getBoolean("insight_enable_tbr_emulation", false);
+        return sp.getBoolean(R.string.key_insight_enable_tbr_emulation, false);
     }
 
     @NonNull @Override
@@ -1257,7 +1257,7 @@ public class LocalInsightPlugin extends PumpPluginBase implements Pump, Constrai
     }
 
     private void processCannulaFilledEvent(String serial, CannulaFilledEvent event) {
-        if (!sp.getBoolean("insight_log_site_changes", false)) return;
+        if (!sp.getBoolean(R.string.key_insight_log_site_changes, false)) return;
         long timestamp = parseDate(event.getEventYear(), event.getEventMonth(), event.getEventDay(),
                 event.getEventHour(), event.getEventMinute(), event.getEventSecond()) + timeOffset;
         uploadCareportalEvent(timestamp, DetailedBolusInfo.EventType.CANNULA_CHANGE);
@@ -1287,7 +1287,7 @@ public class LocalInsightPlugin extends PumpPluginBase implements Pump, Constrai
     }
 
     private void processTubeFilledEvent(String serial, TubeFilledEvent event) {
-        if (!sp.getBoolean("insight_log_tube_changes", false)) return;
+        if (!sp.getBoolean(R.string.key_insight_log_tube_changes, false)) return;
         long timestamp = parseDate(event.getEventYear(), event.getEventMonth(), event.getEventDay(),
                 event.getEventHour(), event.getEventMinute(), event.getEventSecond()) + timeOffset;
         logNote(timestamp, resourceHelper.gs(R.string.tube_changed));
@@ -1302,7 +1302,7 @@ public class LocalInsightPlugin extends PumpPluginBase implements Pump, Constrai
     }
 
     private void processSniffingDoneEvent(String serial, SniffingDoneEvent event) {
-        if (!sp.getBoolean("insight_log_reservoir_changes", false)) return;
+        if (!sp.getBoolean(R.string.key_insight_log_reservoir_changes, false)) return;
         long timestamp = parseDate(event.getEventYear(), event.getEventMonth(), event.getEventDay(),
                 event.getEventHour(), event.getEventMinute(), event.getEventSecond()) + timeOffset;
         uploadCareportalEvent(timestamp, DetailedBolusInfo.EventType.INSULIN_CHANGE);
@@ -1317,7 +1317,7 @@ public class LocalInsightPlugin extends PumpPluginBase implements Pump, Constrai
     }
 
     private void processPowerUpEvent(String serial, PowerUpEvent event) {
-        if (!sp.getBoolean("insight_log_battery_changes", false)) return;
+        if (!sp.getBoolean(R.string.key_insight_log_battery_changes, false)) return;
         long timestamp = parseDate(event.getEventYear(), event.getEventMonth(), event.getEventDay(),
                 event.getEventHour(), event.getEventMinute(), event.getEventSecond()) + timeOffset;
         uploadCareportalEvent(timestamp, DetailedBolusInfo.EventType.PUMP_BATTERY_CHANGE);
@@ -1336,7 +1336,7 @@ public class LocalInsightPlugin extends PumpPluginBase implements Pump, Constrai
         switch (event.getNewValue()) {
             case STARTED:
                 lastStartEvent = timestamp + 10000L;                        // I don't now the reason of 10s offset, so I keep it as it was in original Insight Driver
-                if (sp.getBoolean("insight_log_operating_mode_changes", false))
+                if (sp.getBoolean(R.string.key_insight_log_operating_mode_changes, false))
                     logNote(timestamp, resourceHelper.gs(R.string.pump_started));
                 aapsLogger.debug("XXXX START Event TimeStamp: " + lastStartEvent + " HMS: " + dateUtil.dateAndTimeAndSecondsString(lastStartEvent));
                 break;
@@ -1356,11 +1356,11 @@ public class LocalInsightPlugin extends PumpPluginBase implements Pump, Constrai
                     );
                 lastStartEvent = 0;
                 aapsLogger.debug("XXXX STOP: " + lastStopEvent + " HMS: " + dateUtil.dateAndTimeAndSecondsString(lastStopEvent) + " ZeroTemp Duration (min): " + (duration)/60000);
-                if (sp.getBoolean("insight_log_operating_mode_changes", false))
+                if (sp.getBoolean(R.string.key_insight_log_operating_mode_changes, false))
                     logNote(timestamp, resourceHelper.gs(R.string.pump_stopped));
                 break;
             case PAUSED:
-                if (sp.getBoolean("insight_log_operating_mode_changes", false))
+                if (sp.getBoolean(R.string.key_insight_log_operating_mode_changes, false))
                     logNote(timestamp, resourceHelper.gs(R.string.pump_paused));
                 break;
         }
@@ -1501,7 +1501,7 @@ public class LocalInsightPlugin extends PumpPluginBase implements Pump, Constrai
     }
 
     private void processOccurrenceOfAlertEvent(OccurrenceOfAlertEvent event) {
-        if (!sp.getBoolean("insight_log_alerts", false)) return;
+        if (!sp.getBoolean(R.string.key_insight_log_alerts, false)) return;
         long timestamp = parseDate(event.getEventYear(), event.getEventMonth(), event.getEventDay(),
                 event.getEventHour(), event.getEventMinute(), event.getEventSecond()) + timeOffset;
         Integer code = null;
