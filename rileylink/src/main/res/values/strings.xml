@@ -79,6 +79,9 @@
     <!-- RileyLink - Preferences -->
     <string name="riley_link_show_battery_level">Show battery level reported by OrangeLink/EmaLink</string>
     <string name="riley_link_show_battery_level_summary">DOES NOT work with the original RileyLink. May not work with other RileyLink alternatives.</string>
+    <string name="orange_use_scanning_level">Use Scanning</string>
+    <string name="orange_use_scanning_level_summary">Scan before connecting to OrangeLink, it should improve connections (can also be used with other RileyLink clones, if needed)</string>
+    <string name="key_orange_use_scanning" translatable="false">pref_orange_use_scanning</string>
 
     <plurals name="duration_days">
         <item quantity="one">%1$d day</item>
