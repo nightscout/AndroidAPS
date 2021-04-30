@@ -596,7 +596,7 @@ public class LocalInsightPlugin extends PumpPluginBase implements Pump, Constrai
                         detailedBolusInfo.insulin,
                         detailedBolusInfo.getBolusType(),
                         bolusID,
-                        PumpType.ACCU_CHEK_INSIGHT,
+                        PumpType.ACCU_CHEK_INSIGHT_BLUETOOTH,
                         serialNumber());
                 while (true) {
                     synchronized ($bolusLock) {
@@ -755,7 +755,7 @@ public class LocalInsightPlugin extends PumpPluginBase implements Pump, Constrai
                     false,
                     PumpSync.TemporaryBasalType.NORMAL,
                     now + 2000,
-                    PumpType.ACCU_CHEK_INSIGHT,
+                    PumpType.ACCU_CHEK_INSIGHT_BLUETOOTH,
                     serialNumber()
             );
             lastTbr = new PumpSync.PumpState.TemporaryBasal(
@@ -862,7 +862,7 @@ public class LocalInsightPlugin extends PumpPluginBase implements Pump, Constrai
             pumpSync.syncStopTemporaryBasalWithPumpId(
                     now,
                     now,
-                    PumpType.ACCU_CHEK_INSIGHT,
+                    PumpType.ACCU_CHEK_INSIGHT_BLUETOOTH,
                     serialNumber()
             );
             lastTbr = new PumpSync.PumpState.TemporaryBasal(
@@ -1188,7 +1188,7 @@ public class LocalInsightPlugin extends PumpPluginBase implements Pump, Constrai
                     pumpSync.syncStopTemporaryBasalWithPumpId(
                             temporaryBasal.getTimestamp(),
                             temporaryBasal.getPumpId(),
-                            PumpType.ACCU_CHEK_INSIGHT,
+                            PumpType.ACCU_CHEK_INSIGHT_BLUETOOTH,
                             serial);
                 }
                 aapsLogger.debug("XXXX Sync Stop " + temporaryBasal.getTimestamp() + " date: " + dateUtil.dateAndTimeAndSecondsString(temporaryBasal.getTimestamp()) + " pumpId: " + temporaryBasal.getPumpId());
@@ -1202,7 +1202,7 @@ public class LocalInsightPlugin extends PumpPluginBase implements Pump, Constrai
                         temporaryBasal.isAbsolute(),
                         temporaryBasal.getType(),
                         temporaryBasal.getPumpId(),
-                        PumpType.ACCU_CHEK_INSIGHT,
+                        PumpType.ACCU_CHEK_INSIGHT_BLUETOOTH,
                         serial);
                 aapsLogger.debug("XXXX sync starttbr: " + temporaryBasal.getTimestamp() + " date: " + dateUtil.dateAndTimeAndSecondsString(temporaryBasal.getTimestamp()) + " duration: " + temporaryBasal.getDuration() / 60000 + " pumpId: " + temporaryBasal.getPumpId() + " rate: " + temporaryBasal.getRate() + " resultdb: " + resultdb);
                 lastTbr = temporaryBasal;
@@ -1266,7 +1266,7 @@ public class LocalInsightPlugin extends PumpPluginBase implements Pump, Constrai
                 DetailedBolusInfo.EventType.CANNULA_CHANGE,
                 "",
                 timestamp,
-                PumpType.ACCU_CHEK_INSIGHT,
+                PumpType.ACCU_CHEK_INSIGHT_BLUETOOTH,
                 serial);
     }
 
@@ -1282,7 +1282,7 @@ public class LocalInsightPlugin extends PumpPluginBase implements Pump, Constrai
                 event.getBasalTotal(),
                 0.0, // will be calculated automatically
                 null,
-                PumpType.ACCU_CHEK_INSIGHT,
+                PumpType.ACCU_CHEK_INSIGHT_BLUETOOTH,
                 serial);
     }
 
@@ -1297,7 +1297,7 @@ public class LocalInsightPlugin extends PumpPluginBase implements Pump, Constrai
                 DetailedBolusInfo.EventType.INSULIN_CHANGE,
                 "",
                 pumpID,
-                PumpType.ACCU_CHEK_INSIGHT,
+                PumpType.ACCU_CHEK_INSIGHT_BLUETOOTH,
                 serial);
     }
 
@@ -1312,7 +1312,7 @@ public class LocalInsightPlugin extends PumpPluginBase implements Pump, Constrai
                 DetailedBolusInfo.EventType.INSULIN_CHANGE,
                 "",
                 pumpID,
-                PumpType.ACCU_CHEK_INSIGHT,
+                PumpType.ACCU_CHEK_INSIGHT_BLUETOOTH,
                 serial);
     }
 
@@ -1326,7 +1326,7 @@ public class LocalInsightPlugin extends PumpPluginBase implements Pump, Constrai
                 DetailedBolusInfo.EventType.PUMP_BATTERY_CHANGE,
                 "",
                 null,
-                PumpType.ACCU_CHEK_INSIGHT,
+                PumpType.ACCU_CHEK_INSIGHT_BLUETOOTH,
                 serial);
     }
 
@@ -1351,7 +1351,7 @@ public class LocalInsightPlugin extends PumpPluginBase implements Pump, Constrai
                             false,
                             PumpSync.TemporaryBasalType.NORMAL,
                             lastStopEvent,
-                            PumpType.ACCU_CHEK_INSIGHT,
+                            PumpType.ACCU_CHEK_INSIGHT_BLUETOOTH,
                             serial
                     );
                 lastStartEvent = 0;
@@ -1413,7 +1413,7 @@ public class LocalInsightPlugin extends PumpPluginBase implements Pump, Constrai
                     false,
                     PumpSync.TemporaryBasalType.NORMAL,
                     now,
-                    PumpType.ACCU_CHEK_INSIGHT,
+                    PumpType.ACCU_CHEK_INSIGHT_BLUETOOTH,
                     serial
             );
         } else if (aapsTbr != null && PumpStateExtensionKt.getPlannedRemainingMinutes(aapsTbr) > 1 && activeTBR == null) {
@@ -1421,7 +1421,7 @@ public class LocalInsightPlugin extends PumpPluginBase implements Pump, Constrai
             pumpSync.syncStopTemporaryBasalWithPumpId(
                     now,
                     now,
-                    PumpType.ACCU_CHEK_INSIGHT,
+                    PumpType.ACCU_CHEK_INSIGHT_BLUETOOTH,
                     serialNumber());
         } else if (aapsTbr != null && activeTBR != null
                 && (aapsTbr.getRate() != activeTBR.getPercentage() ||
@@ -1431,7 +1431,7 @@ public class LocalInsightPlugin extends PumpPluginBase implements Pump, Constrai
             pumpSync.syncStopTemporaryBasalWithPumpId(
                     now - 1500,
                     now - 1500,
-                    PumpType.ACCU_CHEK_INSIGHT,
+                    PumpType.ACCU_CHEK_INSIGHT_BLUETOOTH,
                     serial
             );
             // Create TBR start record, starting now
@@ -1442,7 +1442,7 @@ public class LocalInsightPlugin extends PumpPluginBase implements Pump, Constrai
                     false,
                     PumpSync.TemporaryBasalType.NORMAL,
                     now,
-                    PumpType.ACCU_CHEK_INSIGHT,
+                    PumpType.ACCU_CHEK_INSIGHT_BLUETOOTH,
                     serial
             );
         }
@@ -1457,7 +1457,7 @@ public class LocalInsightPlugin extends PumpPluginBase implements Pump, Constrai
                     event.getImmediateAmount(),
                     null,
                     event.getBolusID(),
-                    PumpType.ACCU_CHEK_INSIGHT,
+                    PumpType.ACCU_CHEK_INSIGHT_BLUETOOTH,
                     serial);
         }
         if (event.getBolusType() == BolusType.EXTENDED || event.getBolusType() == BolusType.MULTIWAVE) {
@@ -1468,7 +1468,7 @@ public class LocalInsightPlugin extends PumpPluginBase implements Pump, Constrai
                         T.mins(event.getDuration()).msecs(),
                         true,
                         event.getBolusID(),
-                        PumpType.ACCU_CHEK_INSIGHT,
+                        PumpType.ACCU_CHEK_INSIGHT_BLUETOOTH,
                         serial);
         }
     }
@@ -1484,7 +1484,7 @@ public class LocalInsightPlugin extends PumpPluginBase implements Pump, Constrai
                     event.getImmediateAmount(),
                     null,
                     event.getBolusID(),
-                    PumpType.ACCU_CHEK_INSIGHT,
+                    PumpType.ACCU_CHEK_INSIGHT_BLUETOOTH,
                     serial);
         }
         if (event.getBolusType() == BolusType.EXTENDED || event.getBolusType() == BolusType.MULTIWAVE) {
@@ -1495,7 +1495,7 @@ public class LocalInsightPlugin extends PumpPluginBase implements Pump, Constrai
                         T.mins(event.getDuration()).msecs(),
                         true,
                         event.getBolusID(),
-                        PumpType.ACCU_CHEK_INSIGHT,
+                        PumpType.ACCU_CHEK_INSIGHT_BLUETOOTH,
                         serial);
         }
     }
@@ -1600,7 +1600,7 @@ public class LocalInsightPlugin extends PumpPluginBase implements Pump, Constrai
     }
 
     private void logNote(long date, String note) {
-        pumpSync.insertTherapyEventIfNewWithTimestamp(date, DetailedBolusInfo.EventType.NOTE, note, null, PumpType.ACCU_CHEK_INSIGHT, serialNumber());
+        pumpSync.insertTherapyEventIfNewWithTimestamp(date, DetailedBolusInfo.EventType.NOTE, note, null, PumpType.ACCU_CHEK_INSIGHT_BLUETOOTH, serialNumber());
     }
 
     private long parseRelativeDate(int year, int month, int day, int hour, int minute, int second, int relativeHour, int relativeMinute, int relativeSecond) {
@@ -1617,7 +1617,7 @@ public class LocalInsightPlugin extends PumpPluginBase implements Pump, Constrai
     }
 
     private void uploadCareportalEvent(long date, DetailedBolusInfo.EventType event) {
-        pumpSync.insertTherapyEventIfNewWithTimestamp(date, event, null, null, PumpType.ACCU_CHEK_INSIGHT, serialNumber());
+        pumpSync.insertTherapyEventIfNewWithTimestamp(date, event, null, null, PumpType.ACCU_CHEK_INSIGHT_BLUETOOTH, serialNumber());
     }
 
     @NonNull @Override
