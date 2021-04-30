@@ -403,7 +403,7 @@ open class LoopPlugin @Inject constructor(
                         val waiting = PumpEnactResult(injector)
                         waiting.queued = true
                         if (resultAfterConstraints.tempBasalRequested) lastRun.tbrSetByPump = waiting
-                        if (resultAfterConstraints.bolusRequested) lastRun.smbSetByPump = waiting
+                        if (resultAfterConstraints.bolusRequested()) lastRun.smbSetByPump = waiting
                         rxBus.send(EventLoopUpdateGui())
                         fabricPrivacy.logCustom("APSRequest")
                         applyTBRRequest(resultAfterConstraints, profile, object : Callback() {
@@ -600,7 +600,7 @@ open class LoopPlugin @Inject constructor(
     }
 
     private fun applySMBRequest(request: APSResult, callback: Callback?) {
-        if (!request.bolusRequested) {
+        if (!request.bolusRequested()) {
             return
         }
         val pump = activePlugin.activePump
