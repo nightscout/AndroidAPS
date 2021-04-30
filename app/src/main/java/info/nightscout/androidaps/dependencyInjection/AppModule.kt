@@ -21,6 +21,7 @@ import info.nightscout.androidaps.plugins.general.nsclient.UploadQueue
 import info.nightscout.androidaps.plugins.general.smsCommunicator.SmsCommunicatorPlugin
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.IobCobCalculatorPlugin
 import info.nightscout.androidaps.plugins.pump.PumpSyncImplementation
+import info.nightscout.androidaps.plugins.pump.common.sync.PumpSyncStorage
 import info.nightscout.androidaps.plugins.treatments.TreatmentsPlugin
 import info.nightscout.androidaps.queue.CommandQueue
 import info.nightscout.androidaps.utils.androidNotification.NotificationHolderImpl
@@ -71,6 +72,16 @@ open class AppModule {
         sp: SP,
         rxBus: RxBusWrapper
     ): UploadQueueAdminInterface = UploadQueue(aapsLogger, databaseHelper, context, sp, rxBus)
+
+    @Provides
+    @Singleton
+    fun providesPumpSyncStorage(
+        pumpSync: PumpSync,
+        sp: SP,
+        aapsLogger: AAPSLogger
+    ): PumpSyncStorage {
+        return PumpSyncStorage(pumpSync, sp, aapsLogger)
+    }
 
     @Module
     interface AppBindings {

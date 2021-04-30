@@ -51,8 +51,10 @@ class PumpHistoryResult(private val aapsLogger: AAPSLogger, searchEntry: PumpHis
                     }
 
                     //aapsLogger.debug(LTag.PUMPCOMM,"PE. Entry {} added.", unprocessedEntry);
+
                     validEntries.add(unprocessedEntry)
                 }
+                // TODO 5minutes back
             }
 
             SearchType.Date      -> {

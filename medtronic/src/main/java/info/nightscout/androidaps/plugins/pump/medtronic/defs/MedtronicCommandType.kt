@@ -58,7 +58,8 @@ enum class MedtronicCommandType
         7, R.string.medtronic_cmd_desc_get_time),  // 0x70
     GetBatteryStatus(0x72, "Get Battery Status", MedtronicDeviceType.All, MinimedCommandParameterType.NoParameters,
          0, R.string.medtronic_cmd_desc_get_battery_status), //
-    GetRemainingInsulin(0x73, "Read Remaining Insulin", MedtronicDeviceType.All, MinimedCommandParameterType.NoParameters, 2),  // 115
+    GetRemainingInsulin(0x73, "Read Remaining Insulin", MedtronicDeviceType.All, MinimedCommandParameterType.NoParameters,
+        2, R.string.medtronic_cmd_desc_get_remaining_insulin),  // 115
     SetBolus(0x42, "Set Bolus", MedtronicDeviceType.All, MinimedCommandParameterType.NoParameters,  //
         0, R.string.medtronic_cmd_desc_set_bolus),  // 66
 

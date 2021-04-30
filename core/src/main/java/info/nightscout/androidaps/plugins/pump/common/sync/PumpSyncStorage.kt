@@ -1,0 +1,154 @@
+package info.nightscout.androidaps.plugins.pump.common.sync
+
+import com.google.gson.Gson
+import com.google.gson.GsonBuilder
+import com.google.gson.reflect.TypeToken
+import info.nightscout.androidaps.data.DetailedBolusInfo
+import info.nightscout.androidaps.db.TemporaryBasal
+import info.nightscout.androidaps.interfaces.PumpSync
+import info.nightscout.androidaps.logging.AAPSLogger
+import info.nightscout.androidaps.utils.sharedPreferences.SP
+import java.lang.reflect.Type
+import javax.inject.Inject
+import javax.inject.Singleton
+
+/**
+ * This class is intended for Pump Drivers that use temporaryId and need way to pair records
+ */
+@Singleton
+class PumpSyncStorage @Inject constructor(
+    val pumpSync: PumpSync,
+    val sp: SP,
+    val aapsLogger: AAPSLogger
+) {
+
+    val pumpSyncStorageKey: String = "pump_sync_storage"
+    var pumpSyncStorage: MutableMap<String,MutableList<PumpDbEntry>> = mutableMapOf()
+    var TBR: String = "TBR"
+    var BOLUS: String = "BOLUS"
+    var storageInitialized: Boolean = false
+    var gson: Gson = GsonBuilder().create()
+
+
+    init {
+        initStorage()
+    }
+
+
+    fun initStorage() {
+        if (storageInitialized)
+            return
+
+        var loaded = false
+
+        if (sp.contains(pumpSyncStorageKey)) {
+            val jsonData: String = sp.getString("pump_sync_storage", "");
+
+            if (!jsonData.isBlank()) {
+
+                val pumpSyncStorageType: Type = object : TypeToken<MutableMap<String, MutableList<PumpDbEntry>>>() {}.getType()
+
+                val baseMap: MutableMap<String, MutableList<PumpDbEntry>> = gson.fromJson(jsonData, pumpSyncStorageType) //as MutableMap<String, MutableList<PumpDbEntry>>
+
+                pumpSyncStorage = baseMap
+
+                aapsLogger.debug(String.format("Loading Pump Sync Storage: boluses=%d, tbrs=%d.", pumpSyncStorage[BOLUS]!!.size, pumpSyncStorage[TBR]!!.size))
+                loaded = true
+            }
+        }
+
+        if (!loaded) {
+            pumpSyncStorage[BOLUS] = mutableListOf()
+            pumpSyncStorage[TBR] = mutableListOf()
+        }
+    }
+
+
+    fun saveStorage() {
+        if (!isStorageEmpty()) {
+            sp.putString(pumpSyncStorageKey, gson.toJson(pumpSyncStorage))
+            aapsLogger.debug(String.format("Saving Pump Sync Storage: boluses=%d, tbrs=%d.", pumpSyncStorage[BOLUS]!!.size, pumpSyncStorage[TBR]!!.size))
+        }
+    }
+
+
+    fun isStorageEmpty() : Boolean {
+        return pumpSyncStorage[BOLUS]!!.isEmpty() && pumpSyncStorage[TBR]!!.isEmpty()
+    }
+
+
+    fun getBoluses() : MutableList<PumpDbEntry> {
+        return pumpSyncStorage[BOLUS]!!;
+    }
+
+    fun getTBRs() : MutableList<PumpDbEntry> {
+        return pumpSyncStorage[TBR]!!;
+    }
+
+
+    //abstract fun generateTempId(timeMillis: Long): Long
+
+    fun addBolusWithTempId(detailedBolusInfo: DetailedBolusInfo, writeToInternalHistory: Boolean, creator: PumpSyncEntriesCreator): Boolean {
+        val temporaryId = creator.generateTempId(detailedBolusInfo.timestamp)
+        val response = pumpSync.addBolusWithTempId(
+            detailedBolusInfo.timestamp,
+            detailedBolusInfo.insulin,
+            temporaryId,
+            detailedBolusInfo.bolusType,
+            creator.model(),
+            creator.serialNumber())
+        if (response && writeToInternalHistory) {
+            var innerList: MutableList<PumpDbEntry> = pumpSyncStorage[BOLUS]!!
+
+            innerList.add(PumpDbEntry(temporaryId, detailedBolusInfo.timestamp, creator.model(), creator.serialNumber(), detailedBolusInfo))
+            pumpSyncStorage[BOLUS] = innerList
+            saveStorage()
+        }
+        return response
+    }
+
+    // TODO
+    fun addTemporaryBasalRateWithTempId(temporaryBasal: TemporaryBasal, writeToInternalHistory: Boolean, creator: PumpSyncEntriesCreator) : Boolean {
+        // val temporaryId = generateTempId(temporaryBasal.date)
+        // val response = pumpSync.addBolusWithTempId(temporaryBasal.timestamp, detailedBolusInfo.insulin,
+        // generateTempId(detailedBolusInfo.timestamp), detailedBolusInfo.getBolusType(),
+        // getPumpType(), serialNumber());
+        //
+        // if (response && writeToInternalHistory) {
+        //     driverHistory.put(temporaryId, new PumpDbEntry(temporaryId, model(), serialNumber(), detailedBolusInfo));
+        //     sp.putString(MedtronicConst.Statistics.InternalTemporaryDatabase, gson.toJson(driverHistory));
+        // }
+        //
+        // return response;
+        return false
+    }
+
+    fun removeBolusWithTemporaryId(temporaryId: Long) {
+        val bolusList = removeTemporaryId(temporaryId, pumpSyncStorage[BOLUS]!!)
+        pumpSyncStorage[BOLUS] = bolusList
+        saveStorage()
+    }
+
+    fun removeTemporaryBasalWithTemporaryId(temporaryId: Long) {
+        val tbrList = removeTemporaryId(temporaryId, pumpSyncStorage[TBR]!!)
+        pumpSyncStorage[TBR] = tbrList
+        saveStorage()
+    }
+
+    private fun removeTemporaryId(temporaryId: Long, list: MutableList<PumpDbEntry>): MutableList<PumpDbEntry> {
+        var dbEntry: PumpDbEntry? = null
+
+        for (pumpDbEntry in list) {
+            if (pumpDbEntry.temporaryId == temporaryId) {
+                dbEntry = pumpDbEntry
+            }
+        }
+
+        if (dbEntry!=null) {
+            list.remove(dbEntry)
+        }
+
+        return list
+    }
+
+}

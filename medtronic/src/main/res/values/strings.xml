@@ -105,6 +105,7 @@
     <string name="medtronic_cmd_desc_get_tbr">Get Temporary Basal</string>
     <string name="medtronic_cmd_desc_set_tbr">Set Temporary Basal</string>
     <string name="medtronic_cmd_desc_set_bolus">Set Bolus</string>
+    <string name="medtronic_cmd_desc_get_remaining_insulin">Get Remaining Insulin</string>
 
     <string name="medtronic_pump_status_pump_unreachable">Pump unreachable</string>
     <string name="medtronic_warning">Warning</string>  <!-- medtronic_warning -->

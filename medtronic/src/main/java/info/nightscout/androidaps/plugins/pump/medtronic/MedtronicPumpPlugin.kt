@@ -37,7 +37,9 @@ import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.service.Riley
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.service.tasks.ResetRileyLinkConfigurationTask
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.service.tasks.ServiceTaskExecutor
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.service.tasks.WakeAndTuneTask
+import info.nightscout.androidaps.plugins.pump.common.sync.PumpSyncEntriesCreator
 import info.nightscout.androidaps.plugins.pump.common.utils.DateTimeUtil
+import info.nightscout.androidaps.plugins.pump.common.sync.PumpSyncStorage
 import info.nightscout.androidaps.plugins.pump.medtronic.comm.history.pump.PumpHistoryEntry
 import info.nightscout.androidaps.plugins.pump.medtronic.comm.history.pump.PumpHistoryResult
 import info.nightscout.androidaps.plugins.pump.medtronic.data.MedtronicHistoryData
@@ -88,7 +90,8 @@ class MedtronicPumpPlugin @Inject constructor(
     private val serviceTaskExecutor: ServiceTaskExecutor,
     dateUtil: DateUtil,
     aapsSchedulers: AapsSchedulers,
-    pumpSync: PumpSync
+    pumpSync: PumpSync,
+    val pumpSyncStorage: PumpSyncStorage
 ) : PumpPluginAbstract(PluginDescription() //
     .mainType(PluginType.PUMP) //
     .fragmentClass(MedtronicFragment::class.java.name) //
@@ -99,7 +102,7 @@ class MedtronicPumpPlugin @Inject constructor(
     .description(R.string.description_pump_medtronic),  //
     PumpType.MEDTRONIC_522_722,  // we default to most basic model, correct model from config is loaded later
     injector, resourceHelper, aapsLogger, commandQueue, rxBus, activePlugin, sp, context, fabricPrivacy, dateUtil, aapsSchedulers, pumpSync
-), Pump, RileyLinkPumpDevice {
+), Pump, RileyLinkPumpDevice, PumpSyncEntriesCreator {
 
     private var rileyLinkMedtronicService: RileyLinkMedtronicService? = null
 
@@ -167,6 +170,8 @@ class MedtronicPumpPlugin @Inject constructor(
             sp.putLong(MedtronicConst.Statistics.FirstPumpStart, System.currentTimeMillis())
         }
         migrateSettings()
+
+        pumpSyncStorage.initStorage();
     }
 
     override fun triggerPumpConfigurationChangedEvent() {
@@ -482,7 +487,7 @@ class MedtronicPumpPlugin @Inject constructor(
 
     private fun isProfileSame(profile: Profile): Boolean {
         var invalid = false
-        val basalsByHour: Array<Double>? = medtronicPumpStatus.basalsByHour
+        val basalsByHour: DoubleArray? = medtronicPumpStatus.basalsByHour
         aapsLogger.debug(LTag.PUMP, "Current Basals (h):   "
             + (basalsByHour?.let { getProfilesByHourToString(it) } ?: "null"))
 
@@ -526,13 +531,12 @@ class MedtronicPumpPlugin @Inject constructor(
         rxBus.send(EventMedtronicPumpValuesChanged())
     }
 
-    override fun generateTempId(timeMillis: Long): Long {
-        return 0
+    override fun generateTempId(objectA: Any): Long {
+        val timestamp: Long = objectA as Long
+        return DateTimeUtil.toATechDate(timestamp)
     }
 
-    //    @Override public String getSerial() {
-    //        return null;
-    //    }
+
     private var bolusDeliveryType = BolusDeliveryType.Idle
 
     private enum class BolusDeliveryType {
@@ -629,12 +633,15 @@ class MedtronicPumpPlugin @Inject constructor(
                 detailedBolusInfo.timestamp = now
                 detailedBolusInfo.deliverAtTheLatest = now // not sure about that one
 
-                // TODO fix
-                if (usePumpSync) {
-                    addBolusWithTempId(detailedBolusInfo, true)
-                } else {
-                    activePlugin.activeTreatments.addToHistoryTreatment(detailedBolusInfo, true)
-                }
+                pumpSyncStorage.addBolusWithTempId(detailedBolusInfo, true, this)
+
+
+                // // TODO fix
+                // if (usePumpSync) {
+                //     pumpSyncStorage.addBolusWithTempId(detailedBolusInfo, true, this)
+                // } else {
+                //     activePlugin.activeTreatments.addToHistoryTreatment(detailedBolusInfo, true)
+                // }
 
                 // we subtract insulin, exact amount will be visible with next remainingInsulin update.
                 medtronicPumpStatus.reservoirRemainingUnits = medtronicPumpStatus.reservoirRemainingUnits - detailedBolusInfo.insulin
@@ -767,7 +774,7 @@ class MedtronicPumpPlugin @Inject constructor(
 
             // TODO fix
             if (usePumpSync) {
-                addTemporaryBasalRateWithTempId(tempStart, true)
+                pumpSyncStorage.addTemporaryBasalRateWithTempId(tempStart, true, this)
             } else {
                 activePlugin.activeTreatments.addToHistoryTempBasal(tempStart)
             }
@@ -834,7 +841,7 @@ class MedtronicPumpPlugin @Inject constructor(
 
         val debugHistory = false
         var targetDate: LocalDateTime? = null
-        if (lastPumpHistoryEntry == null) {
+        if (lastPumpHistoryEntry == null) {  // first read
             if (debugHistory) aapsLogger.debug(LTag.PUMP, logPrefix + "readPumpHistoryLogic(): lastPumpHistoryEntry: null")
             val lastPumpHistoryEntryTime = lastPumpEntryTime
             var timeMinus36h = LocalDateTime()
@@ -858,12 +865,9 @@ class MedtronicPumpPlugin @Inject constructor(
                 targetDate = if (timeMinus36h.isAfter(lastHistoryRecordTime)) timeMinus36h else lastHistoryRecordTime
                 if (debugHistory) aapsLogger.debug(LTag.PUMP, logPrefix + "readPumpHistoryLogic(): targetDate: " + targetDate)
             }
-        } else {
+        } else { // all other reads
             if (debugHistory) aapsLogger.debug(LTag.PUMP, logPrefix + "readPumpHistoryLogic(): lastPumpHistoryEntry: not null - " + medtronicUtil.gsonInstance.toJson(lastPumpHistoryEntry))
             medtronicHistoryData.setIsInInit(false)
-            // medtronicHistoryData.setLastHistoryRecordTime(lastPumpHistoryEntry.atechDateTime);
-
-            // targetDate = lastPumpHistoryEntry.atechDateTime;
         }
 
         //aapsLogger.debug(LTag.PUMP, "HST: Target Date: " + targetDate);
@@ -883,22 +887,22 @@ class MedtronicPumpPlugin @Inject constructor(
         medtronicHistoryData.filterNewEntries()
 
         // determine if first run, if yes detrmine how much of update do we need
-        // first run:
-        // get last hiostory entry, if not there download 1.5 days of data
-        // - there: check if last entry is older than 1.5 days
-        // - yes: download 1.5 days
-        // - no: download with last entry
-        // - not there: download 1.5 days
+        // - first run:
+        //   - get last history entry
+        //      - if not there download 1.5 days of data
+        //      - there: check if last entry is older than 1.5 days
+        //          - yes: download 1.5 days
+        //          - no: download with last entry  TODO 5min
+        //   - not there: download 1.5 days
         //
-        // upload all new entries to NightScout (TBR, Bolus)
-        // determine pump status
+        //    upload all new entries to NightScout (TBR, Bolus)
+        //    determine pump status
+        //    save last entry
         //
-        // save last entry
-        //
-        // not first run:
-        // update to last entry
-        // - save
-        // - determine pump status
+        // - not first run:
+        //    - update to last entry TODO 5min
+        //        - save
+        //        - determine pump status
     }
 
     private val lastPumpEntryTime: Long
@@ -1015,7 +1019,7 @@ class MedtronicPumpPlugin @Inject constructor(
 
             // TODO fix
             if (usePumpSync) {
-                addTemporaryBasalRateWithTempId(tempBasal, true)
+                pumpSyncStorage.addTemporaryBasalRateWithTempId(tempBasal, true, this)
             } else {
                 activePlugin.activeTreatments.addToHistoryTempBasal(tempBasal)
             }

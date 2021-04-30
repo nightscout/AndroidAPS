@@ -551,10 +551,13 @@ class MedtronicCommunicationManager  // This empty constructor must be kept, oth
                     errorResponse = check
                 }
 
-                var basalProfile: BasalProfile? = null
-                checkResponseRawContent(data, commandType) {
-                    basalProfile = medtronicConverter.decodeBasalProfile(medtronicPumpPlugin.pumpDescription.pumpType, data)
-                }
+
+                aapsLogger.debug(LTag.PUMPCOMM,"End Response: {}", ByteUtil.getHex(data))
+
+                var basalProfile: BasalProfile? = medtronicConverter.decodeBasalProfile(medtronicPumpPlugin.pumpDescription.pumpType, data)
+                // checkResponseRawContent(data, commandType) {
+                //     basalProfile = medtronicConverter.decodeBasalProfile(medtronicPumpPlugin.pumpDescription.pumpType, data)
+                // }
 
                 if (basalProfile != null) {
                     aapsLogger.debug(LTag.PUMPCOMM, String.format(Locale.ENGLISH, "Converted response for %s is %s.", commandType.name, basalProfile))

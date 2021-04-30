@@ -41,11 +41,10 @@ class MedtronicPumpStatus @Inject constructor(private val resourceHelper: Resour
             rileyLinkUtil.rileyLinkHistory.add(RLHistoryItem(pumpDeviceState, RileyLinkTargetDevice.MedtronicPump))
             rxBus.send(EventRileyLinkDeviceStatusChange(pumpDeviceState))
         }
-    var medtronicDeviceType: MedtronicDeviceType? = null
 
-    // fixme
-    var medtronicPumpMap: MutableMap<String, PumpType> = HashMap()
-    var medtronicDeviceTypeMap: MutableMap<String, MedtronicDeviceType> = HashMap()
+    var medtronicDeviceType: MedtronicDeviceType? = null
+    var medtronicPumpMap: MutableMap<String, PumpType> = mutableMapOf()
+    var medtronicDeviceTypeMap: MutableMap<String, MedtronicDeviceType> = mutableMapOf()
     var basalProfileStatus = BasalProfileStatus.NotInitialized
     var batteryType = BatteryType.None
 
@@ -98,16 +97,16 @@ class MedtronicPumpStatus @Inject constructor(private val resourceHelper: Resour
         }
 
     // Battery type
-    private var mapByDescription: MutableMap<String, BatteryType?> = HashMap()
+    private var batteryTypeByDescMap: MutableMap<String, BatteryType?> = HashMap()
 
     fun getBatteryTypeByDescription(batteryTypeStr: String?): BatteryType? {
-        if (mapByDescription.size == 0) {
+        if (batteryTypeByDescMap.size == 0) {
             for (value in BatteryType.values()) {
-                mapByDescription[resourceHelper.gs(value.description)] = value
+                batteryTypeByDescMap[resourceHelper.gs(value.description)] = value
             }
         }
-        return if (mapByDescription.containsKey(batteryTypeStr)) {
-            mapByDescription[batteryTypeStr]
+        return if (batteryTypeByDescMap.containsKey(batteryTypeStr)) {
+            batteryTypeByDescMap[batteryTypeStr]
         } else BatteryType.None
     }
 

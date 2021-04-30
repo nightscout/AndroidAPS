@@ -229,7 +229,7 @@ class BasalProfile {
         // return this.mRawData;
     }
 
-    fun getProfilesByHour(pumpType: PumpType): Array<Double> {
+    fun getProfilesByHour(pumpType: PumpType): DoubleArray {
         var entriesCopy: List<BasalProfileEntry>? = null
         try {
             entriesCopy = getEntries()
@@ -241,7 +241,7 @@ class BasalProfile {
             //FabricUtil.createEvent("MedtronicBasalProfileGetByHourError", null);
         }
 
-        val basalByHour = arrayOf<Double>()
+        val basalByHour = DoubleArray(24)
 
         if (entriesCopy == null || entriesCopy.size == 0) {
             for (i in 0..23) {
@@ -249,6 +249,7 @@ class BasalProfile {
             }
             return basalByHour
         }
+
         for (i in entriesCopy.indices) {
             val current = entriesCopy[i]
             var currentTime = if (current.startTime_raw % 2 == 0) current.startTime_raw.toInt() else current.startTime_raw - 1
@@ -301,7 +302,7 @@ class BasalProfile {
         }
 
         @JvmStatic
-        fun getProfilesByHourToString(data: Array<Double>): String {
+        fun getProfilesByHourToString(data: DoubleArray): String {
             val stringBuilder = StringBuilder()
             for (value in data) {
                 stringBuilder.append(String.format("%.3f", value))

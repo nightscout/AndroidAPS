@@ -23,7 +23,6 @@ import info.nightscout.androidaps.logging.LTag
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper
 import info.nightscout.androidaps.plugins.common.ManufacturerType
 import info.nightscout.androidaps.plugins.general.overview.events.EventOverviewBolusProgress
-import info.nightscout.androidaps.plugins.pump.common.data.PumpDbEntry
 import info.nightscout.androidaps.plugins.pump.common.data.PumpStatus
 import info.nightscout.androidaps.plugins.pump.common.defs.PumpDriverState
 import info.nightscout.androidaps.plugins.pump.common.defs.PumpType
@@ -56,14 +55,14 @@ abstract class PumpPluginAbstract protected constructor(
     var sp: SP,
     var context: Context,
     var fabricPrivacy: FabricPrivacy,
-    dateUtil: DateUtil,
-    aapsSchedulers: AapsSchedulers,
-    pumpSync: PumpSync
+    var dateUtil: DateUtil,
+    var aapsSchedulers: AapsSchedulers,
+    var pumpSync: PumpSync
 ) : PumpPluginBase(pluginDescription!!, injector!!, aapsLogger, resourceHelper, commandQueue), Pump, Constraints {
 
     private val disposable = CompositeDisposable()
     //protected override var injector: HasAndroidInjector? = null
-    protected var dateUtil: DateUtil
+    //protected var dateUtil: DateUtil
 
     // Pump capabilities
     final override var pumpDescription = PumpDescription()
@@ -82,8 +81,8 @@ abstract class PumpPluginAbstract protected constructor(
         }
 
 
-    protected var aapsSchedulers: AapsSchedulers
-    protected var pumpSync: PumpSync
+    //protected var aapsSchedulers: AapsSchedulers
+    //protected var pumpSync: PumpSync
     protected var gson = GsonBuilder().excludeFieldsWithoutExposeAnnotation().create()
 
     abstract fun initPumpStatusData()
@@ -344,12 +343,12 @@ abstract class PumpPluginAbstract protected constructor(
                 // bolus needed, ask pump to deliver it
                 deliverBolus(detailedBolusInfo)
             } else {
-
-                // TODO fix
                 // no bolus required, carb only treatment
-                activePlugin.activeTreatments.addToHistoryTreatment(detailedBolusInfo, true)
+                // TODO carb only bolus - DONE
+                pumpSync.syncCarbsWithTimestamp(System.currentTimeMillis(), detailedBolusInfo.carbs, null, model(), serialNumber());
+                // activePlugin.activeTreatments.addToHistoryTreatment(detailedBolusInfo, true)
                 val bolusingEvent = EventOverviewBolusProgress
-                bolusingEvent.t = EventOverviewBolusProgress.Treatment(0.0, 0, detailedBolusInfo.bolusType === DetailedBolusInfo.BolusType.SMB)
+                bolusingEvent.t = EventOverviewBolusProgress.Treatment(0.0, detailedBolusInfo.carbs.toInt(), detailedBolusInfo.bolusType === DetailedBolusInfo.BolusType.SMB)
                 bolusingEvent.percent = 100
                 rxBus.send(bolusingEvent)
                 aapsLogger.debug(LTag.PUMP, "deliverTreatment: Carb only treatment.")
@@ -386,48 +385,13 @@ abstract class PumpPluginAbstract protected constructor(
         return PumpEnactResult(injector).success(false).enacted(false).comment(resourceId)
     }
 
-    // PumpSync
-    var driverHistory: MutableMap<Long, PumpDbEntry> = HashMap()
 
-    abstract fun generateTempId(timeMillis: Long): Long
-
-    protected fun addBolusWithTempId(detailedBolusInfo: DetailedBolusInfo, writeToInternalHistory: Boolean): Boolean {
-        val temporaryId = generateTempId(detailedBolusInfo.timestamp)
-        val response = pumpSync.addBolusWithTempId(detailedBolusInfo.timestamp, detailedBolusInfo.insulin,
-            temporaryId, detailedBolusInfo.bolusType,
-            pumpType, serialNumber())
-        if (response && writeToInternalHistory) {
-            driverHistory[temporaryId] = PumpDbEntry(temporaryId, model(), serialNumber(), detailedBolusInfo)
-            sp.putString(MedtronicConst.Statistics.InternalTemporaryDatabase, gson.toJson(driverHistory))
-        }
-        return response
-    }
-
-    // TODO
-    protected fun addTemporaryBasalRateWithTempId(temporaryBasal: TemporaryBasal, b: Boolean) {
-        val temporaryId = generateTempId(temporaryBasal.date)
-        val response = pumpSync.addBolusWithTempId(temporaryBasal.timestamp, detailedBolusInfo.insulin,
-        generateTempId(detailedBolusInfo.timestamp), detailedBolusInfo.getBolusType(),
-        getPumpType(), serialNumber());
-
-        if (response && writeToInternalHistory) {
-            driverHistory.put(temporaryId, new PumpDbEntry(temporaryId, model(), serialNumber(), detailedBolusInfo));
-            sp.putString(MedtronicConst.Statistics.InternalTemporaryDatabase, gson.toJson(driverHistory));
-        }
-
-        return response;
-
-    }
-
-    fun removeTemporaryId(temporaryId: Long) {
-        driverHistory.remove(temporaryId)
-    }
 
     init {
         pumpDescription.setPumpDescription(pumpType)
         this.pumpType = pumpType
         this.dateUtil = dateUtil
         this.aapsSchedulers = aapsSchedulers
-        this.pumpSync = pumpSync
+        //this.pumpSync = pumpSync
     }
 }
