@@ -7,8 +7,10 @@ import info.nightscout.androidaps.data.DetailedBolusInfo
 import info.nightscout.androidaps.db.TemporaryBasal
 import info.nightscout.androidaps.interfaces.PumpSync
 import info.nightscout.androidaps.logging.AAPSLogger
+import info.nightscout.androidaps.logging.LTag
 import info.nightscout.androidaps.utils.sharedPreferences.SP
 import java.lang.reflect.Type
+import java.util.*
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -86,25 +88,45 @@ class PumpSyncStorage @Inject constructor(
     }
 
 
-    //abstract fun generateTempId(timeMillis: Long): Long
-
     fun addBolusWithTempId(detailedBolusInfo: DetailedBolusInfo, writeToInternalHistory: Boolean, creator: PumpSyncEntriesCreator): Boolean {
         val temporaryId = creator.generateTempId(detailedBolusInfo.timestamp)
-        val response = pumpSync.addBolusWithTempId(
+        val result = pumpSync.addBolusWithTempId(
             detailedBolusInfo.timestamp,
             detailedBolusInfo.insulin,
             temporaryId,
             detailedBolusInfo.bolusType,
             creator.model(),
             creator.serialNumber())
-        if (response && writeToInternalHistory) {
+
+        aapsLogger.debug(LTag.PUMP, String.format(Locale.ENGLISH, "addBolusWithTempId [date=%d, temporaryId=%d, insulin=%.2f, type=%s, pumpSerial=%s] - Result: %b",
+            detailedBolusInfo.timestamp, temporaryId, detailedBolusInfo.insulin, detailedBolusInfo.bolusType,
+            creator.serialNumber(), result))
+
+        if (detailedBolusInfo.carbs>0.0) {
+            addCarbs(PumpDbEntryCarbs(detailedBolusInfo, creator))
+        }
+
+        if (result && writeToInternalHistory) {
             var innerList: MutableList<PumpDbEntry> = pumpSyncStorage[BOLUS]!!
 
             innerList.add(PumpDbEntry(temporaryId, detailedBolusInfo.timestamp, creator.model(), creator.serialNumber(), detailedBolusInfo))
             pumpSyncStorage[BOLUS] = innerList
             saveStorage()
         }
-        return response
+        return result
+    }
+
+
+    fun addCarbs(carbsDto: PumpDbEntryCarbs) {
+        val result = pumpSync.syncCarbsWithTimestamp(
+            carbsDto.date,
+            carbsDto.carbs,
+            null,
+            carbsDto.pumpType,
+            carbsDto.serialNumber)
+
+        aapsLogger.debug(LTag.PUMP, String.format(Locale.ENGLISH, "syncCarbsWithTimestamp [date=%d, carbs=%.2f, pumpSerial=%s] - Result: %b",
+            carbsDto.date, carbsDto.carbs, carbsDto.serialNumber, result))
     }
 
     // TODO
@@ -122,6 +144,8 @@ class PumpSyncStorage @Inject constructor(
         // return response;
         return false
     }
+
+
 
     fun removeBolusWithTemporaryId(temporaryId: Long) {
         val bolusList = removeTemporaryId(temporaryId, pumpSyncStorage[BOLUS]!!)

@@ -28,5 +28,16 @@ data class PumpDbEntryBolus(var insulin: Double,
                             var carbs: Double,
                             var bolusType: DetailedBolusInfo.BolusType)
 
+data class PumpDbEntryCarbs(var date: Long,
+                            var carbs: Double,
+                            var pumpType: PumpType,
+                            var serialNumber: String,
+                            var pumpId: Long? = null) {
+    constructor(detailedBolusInfo: DetailedBolusInfo,
+                creator: PumpSyncEntriesCreator) : this(detailedBolusInfo.timestamp,
+                                                        detailedBolusInfo.carbs,
+                                                        creator.model(),
+                                                        creator.serialNumber())
+}
 
 data class PumpDbEntryTBR(var temporaryId: Long)

@@ -26,6 +26,9 @@ import info.nightscout.androidaps.plugins.general.overview.events.EventOverviewB
 import info.nightscout.androidaps.plugins.pump.common.data.PumpStatus
 import info.nightscout.androidaps.plugins.pump.common.defs.PumpDriverState
 import info.nightscout.androidaps.plugins.pump.common.defs.PumpType
+import info.nightscout.androidaps.plugins.pump.common.sync.PumpDbEntryCarbs
+import info.nightscout.androidaps.plugins.pump.common.sync.PumpSyncEntriesCreator
+import info.nightscout.androidaps.plugins.pump.common.sync.PumpSyncStorage
 import info.nightscout.androidaps.plugins.pump.medtronic.util.MedtronicConst
 import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.DecimalFormatter.to0Decimal
@@ -57,12 +60,11 @@ abstract class PumpPluginAbstract protected constructor(
     var fabricPrivacy: FabricPrivacy,
     var dateUtil: DateUtil,
     var aapsSchedulers: AapsSchedulers,
-    var pumpSync: PumpSync
-) : PumpPluginBase(pluginDescription!!, injector!!, aapsLogger, resourceHelper, commandQueue), Pump, Constraints {
+    var pumpSync: PumpSync,
+    var pumpSyncStorage: PumpSyncStorage
+) : PumpPluginBase(pluginDescription!!, injector!!, aapsLogger, resourceHelper, commandQueue), Pump, Constraints, PumpSyncEntriesCreator {
 
     private val disposable = CompositeDisposable()
-    //protected override var injector: HasAndroidInjector? = null
-    //protected var dateUtil: DateUtil
 
     // Pump capabilities
     final override var pumpDescription = PumpDescription()
@@ -81,8 +83,6 @@ abstract class PumpPluginAbstract protected constructor(
         }
 
 
-    //protected var aapsSchedulers: AapsSchedulers
-    //protected var pumpSync: PumpSync
     protected var gson = GsonBuilder().excludeFieldsWithoutExposeAnnotation().create()
 
     abstract fun initPumpStatusData()
@@ -343,10 +343,11 @@ abstract class PumpPluginAbstract protected constructor(
                 // bolus needed, ask pump to deliver it
                 deliverBolus(detailedBolusInfo)
             } else {
+                detailedBolusInfo.timestamp = System.currentTimeMillis()
+
                 // no bolus required, carb only treatment
-                // TODO carb only bolus - DONE
-                pumpSync.syncCarbsWithTimestamp(System.currentTimeMillis(), detailedBolusInfo.carbs, null, model(), serialNumber());
-                // activePlugin.activeTreatments.addToHistoryTreatment(detailedBolusInfo, true)
+                pumpSyncStorage.addCarbs(PumpDbEntryCarbs(detailedBolusInfo, this))
+
                 val bolusingEvent = EventOverviewBolusProgress
                 bolusingEvent.t = EventOverviewBolusProgress.Treatment(0.0, detailedBolusInfo.carbs.toInt(), detailedBolusInfo.bolusType === DetailedBolusInfo.BolusType.SMB)
                 bolusingEvent.percent = 100

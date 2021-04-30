@@ -91,7 +91,7 @@ class MedtronicPumpPlugin @Inject constructor(
     dateUtil: DateUtil,
     aapsSchedulers: AapsSchedulers,
     pumpSync: PumpSync,
-    val pumpSyncStorage: PumpSyncStorage
+    pumpSyncStorage: PumpSyncStorage
 ) : PumpPluginAbstract(PluginDescription() //
     .mainType(PluginType.PUMP) //
     .fragmentClass(MedtronicFragment::class.java.name) //
@@ -101,7 +101,7 @@ class MedtronicPumpPlugin @Inject constructor(
     .preferencesId(R.xml.pref_medtronic)
     .description(R.string.description_pump_medtronic),  //
     PumpType.MEDTRONIC_522_722,  // we default to most basic model, correct model from config is loaded later
-    injector, resourceHelper, aapsLogger, commandQueue, rxBus, activePlugin, sp, context, fabricPrivacy, dateUtil, aapsSchedulers, pumpSync
+    injector, resourceHelper, aapsLogger, commandQueue, rxBus, activePlugin, sp, context, fabricPrivacy, dateUtil, aapsSchedulers, pumpSync, pumpSyncStorage
 ), Pump, RileyLinkPumpDevice, PumpSyncEntriesCreator {
 
     private var rileyLinkMedtronicService: RileyLinkMedtronicService? = null
@@ -634,7 +634,6 @@ class MedtronicPumpPlugin @Inject constructor(
                 detailedBolusInfo.deliverAtTheLatest = now // not sure about that one
 
                 pumpSyncStorage.addBolusWithTempId(detailedBolusInfo, true, this)
-
 
                 // // TODO fix
                 // if (usePumpSync) {
