@@ -1,118 +1,110 @@
 package info.nightscout.androidaps.plugins.configBuilder
 
-import android.os.Bundle
-import com.google.firebase.analytics.FirebaseAnalytics
-import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.Constants
 import info.nightscout.androidaps.core.R
-import info.nightscout.androidaps.data.Profile
-import info.nightscout.androidaps.db.ProfileSwitch
-import info.nightscout.androidaps.db.Source
-import info.nightscout.androidaps.interfaces.ProfileStore
+import info.nightscout.androidaps.data.ProfileSealed
+import info.nightscout.androidaps.database.AppRepository
+import info.nightscout.androidaps.database.ValueWrapper
+import info.nightscout.androidaps.database.entities.ProfileSwitch
+import info.nightscout.androidaps.database.transactions.InsertOrUpdateProfileSwitch
+import info.nightscout.androidaps.extensions.fromConstant
 import info.nightscout.androidaps.interfaces.ActivePlugin
+import info.nightscout.androidaps.interfaces.GlucoseUnit
+import info.nightscout.androidaps.interfaces.Profile
 import info.nightscout.androidaps.interfaces.ProfileFunction
-import info.nightscout.androidaps.interfaces.TreatmentsInterface
+import info.nightscout.androidaps.interfaces.ProfileStore
 import info.nightscout.androidaps.logging.AAPSLogger
+import info.nightscout.androidaps.logging.LTag
 import info.nightscout.androidaps.utils.DateUtil
-import info.nightscout.androidaps.utils.FabricPrivacy
+import info.nightscout.androidaps.utils.T
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 import info.nightscout.androidaps.utils.sharedPreferences.SP
+import io.reactivex.disposables.CompositeDisposable
+import io.reactivex.rxkotlin.plusAssign
 import java.security.spec.InvalidParameterSpecException
 import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
 class ProfileFunctionImplementation @Inject constructor(
-    private val injector: HasAndroidInjector,
     private val aapsLogger: AAPSLogger,
     private val sp: SP,
     private val resourceHelper: ResourceHelper,
     private val activePlugin: ActivePlugin,
-    private val fabricPrivacy: FabricPrivacy,
+    private val repository: AppRepository,
     private val dateUtil: DateUtil
 ) : ProfileFunction {
+
+    private val disposable = CompositeDisposable()
 
     override fun getProfileName(): String =
         getProfileName(System.currentTimeMillis(), customized = true, showRemainingTime = false)
 
-    override fun getProfileName(customized: Boolean): String =
-        getProfileName(System.currentTimeMillis(), customized, showRemainingTime = false)
+    override fun getOriginalProfileName(): String =
+        getProfileName(System.currentTimeMillis(), customized = false, showRemainingTime = false)
 
-    override fun getProfileName(time: Long, customized: Boolean, showRemainingTime: Boolean): String {
+    override fun getProfileNameWithRemainingTime(): String =
+        getProfileName(System.currentTimeMillis(), customized = true, showRemainingTime = true)
+
+    fun getProfileName(time: Long, customized: Boolean, showRemainingTime: Boolean): String {
         var profileName = resourceHelper.gs(R.string.noprofileselected)
 
-        val activeTreatments = activePlugin.activeTreatments
-        val activeProfile = activePlugin.activeProfileSource
-
-        val profileSwitch = activeTreatments.getProfileSwitchFromHistory(time)
-        if (profileSwitch != null) {
-            if (profileSwitch.profileJson != null) {
-                profileName = if (customized) profileSwitch.customizedName else profileSwitch.profileName
-            } else {
-                activeProfile.profile?.let { profileStore ->
-                    val profile = profileStore.getSpecificProfile(profileSwitch.profileName)
-                    if (profile != null)
-                        profileName = profileSwitch.profileName
-                }
-            }
-
-            if (showRemainingTime && profileSwitch.durationInMinutes != 0) {
-                profileName += dateUtil.untilString(profileSwitch.originalEnd(), resourceHelper)
+        val profileSwitch = repository.getEffectiveProfileSwitchActiveAt(time).blockingGet()
+        if (profileSwitch is ValueWrapper.Existing) {
+            profileName = if (customized) profileSwitch.value.originalCustomizedName else profileSwitch.value.originalProfileName
+            if (showRemainingTime && profileSwitch.value.originalDuration != 0L) {
+                profileName += dateUtil.untilString(profileSwitch.value.originalEnd, resourceHelper)
             }
         }
         return profileName
     }
 
-    override fun getProfileNameWithDuration(): String =
-        getProfileName(System.currentTimeMillis(), customized = true, showRemainingTime = true)
-
-    override fun isProfileValid(from: String): Boolean =
-        getProfile()?.isValid(from) ?: false
+    override fun isProfileValid(from: String): Boolean = getProfile() != null
 
     override fun getProfile(): Profile? =
-        getProfile(System.currentTimeMillis())
+        getProfile(dateUtil.now())
 
-    override fun getProfile(time: Long): Profile? = getProfile(time, activePlugin.activeTreatments)
-
-    override fun getProfile(time: Long, activeTreatments: TreatmentsInterface): Profile? {
-        val activeProfile = activePlugin.activeProfileSource
-
-        //log.debug("Profile for: " + new Date(time).toLocaleString() + " : " + getProfileName(time));
-        val profileSwitch = activeTreatments.getProfileSwitchFromHistory(time)
-        if (profileSwitch != null) {
-            if (profileSwitch.profileJson != null) {
-                return profileSwitch.profileObject
-            } else if (activeProfile.profile != null) {
-                val profile = activeProfile.profile!!.getSpecificProfile(profileSwitch.profileName)
-                if (profile != null) return profile
-            }
-        }
-        if (activeTreatments.profileSwitchesFromHistory.size() > 0) {
-            val bundle = Bundle()
-            bundle.putString(FirebaseAnalytics.Param.ITEM_LIST_ID, "CaughtError")
-            bundle.putString(FirebaseAnalytics.Param.START_DATE, time.toString())
-            bundle.putString(FirebaseAnalytics.Param.ITEM_LIST_NAME, activeTreatments.profileSwitchesFromHistory.toString())
-            fabricPrivacy.logCustom(bundle)
-        }
-        aapsLogger.error("getProfile at the end: returning null")
-        return null
+    override fun getProfile(time: Long): Profile? {
+ //       aapsLogger.debug("XXXXXXXXXXXXXXX getProfile called for $time")
+        val ps = repository.getEffectiveProfileSwitchActiveAt(time).blockingGet()
+        return if (ps is ValueWrapper.Existing) ProfileSealed.EPS(ps.value)
+        else null
     }
 
-    override fun getUnits(): String =
-        sp.getString(R.string.key_units, Constants.MGDL)
+    override fun getRequestedProfile(): ProfileSwitch? = repository.getActiveProfileSwitch(dateUtil.now())
 
-    override fun prepareProfileSwitch(profileStore: ProfileStore, profileName: String, duration: Int, percentage: Int, timeShift: Int, date: Long): ProfileSwitch {
-        val profile = profileStore.getSpecificProfile(profileName)
+    override fun getUnits(): GlucoseUnit =
+        if (sp.getString(R.string.key_units, Constants.MGDL) == Constants.MGDL) GlucoseUnit.MGDL
+        else GlucoseUnit.MMOL
+
+    override fun createProfileSwitch(profileStore: ProfileStore, profileName: String, durationInMinutes: Int, percentage: Int, timeShiftInHours: Int, timestamp: Long) {
+        val pureProfile = profileStore.getSpecificProfile(profileName)
             ?: throw InvalidParameterSpecException(profileName)
-        val profileSwitch = ProfileSwitch(injector)
-        profileSwitch.date = date
-        profileSwitch.source = Source.USER
-        profileSwitch.profileName = profileName
-        profileSwitch.profileJson = profile.data.toString()
-        profileSwitch.durationInMinutes = duration
-        profileSwitch.isCPP = percentage != 100 || timeShift != 0
-        profileSwitch.timeshift = timeShift
-        profileSwitch.percentage = percentage
-        return profileSwitch
+        val ps = ProfileSwitch(
+            timestamp = timestamp,
+            basalBlocks = pureProfile.basalBlocks,
+            isfBlocks = pureProfile.isfBlocks,
+            icBlocks = pureProfile.icBlocks,
+            targetBlocks = pureProfile.targetBlocks,
+            glucoseUnit = ProfileSwitch.GlucoseUnit.fromConstant(pureProfile.glucoseUnit),
+            profileName = profileName,
+            timeshift = T.hours(timeShiftInHours.toLong()).msecs(),
+            percentage = percentage,
+            duration = T.mins(durationInMinutes.toLong()).msecs(),
+            insulinConfiguration = activePlugin.activeInsulin.insulinConfiguration)
+        disposable += repository.runTransactionForResult(InsertOrUpdateProfileSwitch(ps))
+            .subscribe({ result ->
+                result.inserted.forEach { aapsLogger.debug(LTag.DATABASE, "Inserted ProfileSwitch $it") }
+                result.updated.forEach { aapsLogger.debug(LTag.DATABASE, "Updated ProfileSwitch $it") }
+            }, {
+                aapsLogger.error(LTag.DATABASE, "Error while saving ProfileSwitch", it)
+            })
+    }
+
+    override fun createProfileSwitch(durationInMinutes: Int, percentage: Int, timeShiftInHours: Int) {
+        val profileStore = activePlugin.activeProfileSource.profile ?: return
+        val profileName = activePlugin.activeProfileSource.profile?.getDefaultProfileName()
+            ?: return
+        createProfileSwitch(profileStore, profileName, durationInMinutes, percentage, timeShiftInHours, dateUtil.now())
     }
 }

@@ -2,9 +2,10 @@ package info.nightscout.androidaps.extensions
 
 import info.nightscout.androidaps.Constants
 import info.nightscout.androidaps.core.R
-import info.nightscout.androidaps.data.Profile
+import info.nightscout.androidaps.interfaces.Profile
 import info.nightscout.androidaps.database.entities.TemporaryTarget
 import info.nightscout.androidaps.database.entities.TherapyEvent
+import info.nightscout.androidaps.interfaces.GlucoseUnit
 import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.DecimalFormatter
 import info.nightscout.androidaps.utils.JsonHelper
@@ -13,20 +14,20 @@ import info.nightscout.androidaps.utils.resources.ResourceHelper
 import org.json.JSONObject
 import java.util.concurrent.TimeUnit
 
-fun TemporaryTarget.lowValueToUnitsToString(units: String): String =
-    if (units == Constants.MGDL) DecimalFormatter.to0Decimal(this.lowTarget)
+fun TemporaryTarget.lowValueToUnitsToString(units: GlucoseUnit): String =
+    if (units == GlucoseUnit.MGDL) DecimalFormatter.to0Decimal(this.lowTarget)
     else DecimalFormatter.to1Decimal(this.lowTarget * Constants.MGDL_TO_MMOLL)
 
-fun TemporaryTarget.highValueToUnitsToString(units: String): String =
-    if (units == Constants.MGDL) DecimalFormatter.to0Decimal(this.highTarget)
+fun TemporaryTarget.highValueToUnitsToString(units: GlucoseUnit): String =
+    if (units == GlucoseUnit.MGDL) DecimalFormatter.to0Decimal(this.highTarget)
     else DecimalFormatter.to1Decimal(this.highTarget * Constants.MGDL_TO_MMOLL)
 
 fun TemporaryTarget.target(): Double =
     (this.lowTarget + this.highTarget) / 2
 
-fun TemporaryTarget.friendlyDescription(units: String, resourceHelper: ResourceHelper): String =
-    Profile.toTargetRangeString(lowTarget, highTarget, Constants.MGDL, units) +
-        units +
+fun TemporaryTarget.friendlyDescription(units: GlucoseUnit, resourceHelper: ResourceHelper): String =
+    Profile.toTargetRangeString(lowTarget, highTarget, GlucoseUnit.MGDL, units) +
+        units.asText +
         "@" + resourceHelper.gs(R.string.format_mins, TimeUnit.MILLISECONDS.toMinutes(duration)) + "(" + reason.text + ")"
 
 /*
@@ -43,7 +44,7 @@ fun temporaryTargetFromNsIdForInvalidating(nsId: String): TemporaryTarget =
     )!!
 
 fun temporaryTargetFromJson(jsonObject: JSONObject): TemporaryTarget? {
-    val units = JsonHelper.safeGetString(jsonObject, "units", Constants.MGDL)
+    val units = GlucoseUnit.fromText(JsonHelper.safeGetString(jsonObject, "units", Constants.MGDL))
     val timestamp = JsonHelper.safeGetLongAllowNull(jsonObject, "mills", null) ?: return null
     val duration = JsonHelper.safeGetLongAllowNull(jsonObject, "duration", null) ?: return null
     var low = JsonHelper.safeGetDouble(jsonObject, "targetBottom")
@@ -61,7 +62,7 @@ fun temporaryTargetFromJson(jsonObject: JSONObject): TemporaryTarget? {
 
     if (duration > 0L) {
         // not ending event
-        if (units == Constants.MMOL) {
+        if (units == GlucoseUnit.MMOL) {
             if (low < Constants.MIN_TT_MMOL) return null
             if (low > Constants.MAX_TT_MMOL) return null
             if (high < Constants.MIN_TT_MMOL) return null
@@ -87,7 +88,7 @@ fun temporaryTargetFromJson(jsonObject: JSONObject): TemporaryTarget? {
     return tt
 }
 
-fun TemporaryTarget.toJson(units: String, dateUtil: DateUtil): JSONObject =
+fun TemporaryTarget.toJson(units: GlucoseUnit, dateUtil: DateUtil): JSONObject =
     JSONObject()
         .put("eventType", TherapyEvent.Type.TEMPORARY_TARGET.text)
         .put("duration", T.msecs(duration).mins())
@@ -98,6 +99,6 @@ fun TemporaryTarget.toJson(units: String, dateUtil: DateUtil): JSONObject =
                 .put("reason", reason.text)
                 .put("targetBottom", Profile.fromMgdlToUnits(lowTarget, units))
                 .put("targetTop", Profile.fromMgdlToUnits(highTarget, units))
-                .put("units", units)
+                .put("units", units.asText)
             if (interfaceIDs.nightscoutId != null) it.put("_id", interfaceIDs.nightscoutId)
         }

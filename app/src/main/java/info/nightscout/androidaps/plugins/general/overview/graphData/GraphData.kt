@@ -9,14 +9,13 @@ import com.jjoe64.graphview.series.DataPoint
 import com.jjoe64.graphview.series.LineGraphSeries
 import com.jjoe64.graphview.series.Series
 import dagger.android.HasAndroidInjector
-import info.nightscout.androidaps.Constants
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.data.IobTotal
-import info.nightscout.androidaps.data.Profile
 import info.nightscout.androidaps.database.AppRepository
 import info.nightscout.androidaps.database.ValueWrapper
 import info.nightscout.androidaps.database.entities.Bolus
 import info.nightscout.androidaps.database.entities.GlucoseValue
+import info.nightscout.androidaps.extensions.target
 import info.nightscout.androidaps.interfaces.*
 import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.logging.LTag
@@ -24,7 +23,6 @@ import info.nightscout.androidaps.plugins.aps.openAPSSMB.SMBDefaults
 import info.nightscout.androidaps.plugins.general.overview.graphExtensions.*
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.AutosensResult
 import info.nightscout.androidaps.utils.*
-import info.nightscout.androidaps.extensions.target
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 import java.util.*
 import javax.inject.Inject
@@ -35,8 +33,7 @@ import kotlin.math.min
 class GraphData(
     injector: HasAndroidInjector,
     private val graph: GraphView,
-    private val iobCobCalculator: IobCobCalculator,
-    private val treatmentsPlugin: TreatmentsInterface
+    private val iobCobCalculator: IobCobCalculator
 ) {
 
     // IobCobCalculatorPlugin  Cannot be injected: HistoryBrowser
@@ -53,7 +50,7 @@ class GraphData(
     var maxY = Double.MIN_VALUE
     private var minY = Double.MAX_VALUE
     private var bgReadingsArray: List<GlucoseValue>? = null
-    private val units: String
+    private val units: GlucoseUnit
     private val series: MutableList<Series<*>> = ArrayList()
 
     init {
@@ -80,7 +77,7 @@ class GraphData(
         bgReadingsArray = repository.compatGetBgReadingsDataFromTime(fromTime, toTime, false).blockingGet()
         if (bgReadingsArray?.isEmpty() != false) {
             aapsLogger.debug("No BG data.")
-            maxY = if (units == Constants.MGDL) 180.0 else 10.0
+            maxY = if (units == GlucoseUnit.MGDL) 180.0 else 10.0
             minY = 0.0
             return
         }
@@ -102,12 +99,8 @@ class GraphData(
         addSeries(PointsWithLabelGraphSeries(Array(bgListArray.size) { i -> bgListArray[i] }))
     }
 
-    internal fun setNumVerticalLabels() {
-        graph.gridLabelRenderer.numVerticalLabels = if (units == Constants.MGDL) (maxY / 40 + 1).toInt() else (maxY / 2 + 1).toInt()
-    }
-
     private fun addUpperChartMargin(maxBgValue: Double) =
-        if (units == Constants.MGDL) Round.roundTo(maxBgValue, 40.0) + 80 else Round.roundTo(maxBgValue, 2.0) + 4
+        if (units == GlucoseUnit.MGDL) Round.roundTo(maxBgValue, 40.0) + 80 else Round.roundTo(maxBgValue, 2.0) + 4
 
     fun addInRangeArea(fromTime: Long, toTime: Long, lowLine: Double, highLine: Double) {
         val inRangeAreaSeries: AreaGraphSeries<DoubleDataPoint>
@@ -266,9 +259,9 @@ class GraphData(
             }
 
         // ProfileSwitch
-        treatmentsPlugin.profileSwitchesFromHistory.list
-            .filterTimeframe(fromTime, endTime)
-            .forEach(filteredTreatments::add)
+         repository.getEffectiveProfileSwitchDataFromTimeToTime(fromTime, endTime, true).blockingGet()
+             .map { EffectiveProfileSwitchDataPoint(it) }
+             .forEach(filteredTreatments::add)
 
         // Extended bolus
         if (!activePlugin.activePump.isFakingTempsByExtendedBoluses) {
@@ -282,7 +275,6 @@ class GraphData(
         }
 
         // Careportal
-//        databaseHelper.getCareportalEventsFromTime(fromTime - 6 * 60 * 60 * 1000, true)
         repository.compatGetTherapyEventDataFromToTime(fromTime - T.hours(6).msecs(), endTime).blockingGet()
             .map { TherapyEventDataPoint(it, resourceHelper, profileFunction, translator) }
             .filterTimeframe(fromTime, endTime)
@@ -404,12 +396,14 @@ class GraphData(
         var time = fromTime
         while (time <= toTime) {
             val profile = profileFunction.getProfile(time)
+            if (profile == null) {
+                time += 5 * 60 * 1000L
+                continue
+            }
             var iob = 0.0
             var absIob = 0.0
-            if (profile != null) {
-                iob = iobCobCalculator.calculateFromTreatmentsAndTemps(time, profile).iob
-                if (absScale) absIob = iobCobCalculator.calculateAbsInsulinFromTreatmentsAndTemps(time).iob
-            }
+            iob = iobCobCalculator.calculateFromTreatmentsAndTemps(time, profile).iob
+            if (absScale) absIob = iobCobCalculator.calculateAbsInsulinFromTreatmentsAndTemps(time).iob
             if (abs(lastIob - iob) > 0.02) {
                 if (abs(lastIob - iob) > 0.2) iobArray.add(ScaledDataPoint(time, lastIob, iobScale))
                 iobArray.add(ScaledDataPoint(time, iob, iobScale))
@@ -463,8 +457,12 @@ class GraphData(
         var time = fromTime
         while (time <= toTime) {
             val profile = profileFunction.getProfile(time)
+            if (profile == null) {
+                time += 5 * 60 * 1000L
+                continue
+            }
             var iob = 0.0
-            if (profile != null) iob = iobCobCalculator.calculateAbsInsulinFromTreatmentsAndTemps(time).iob
+            iob = iobCobCalculator.calculateAbsInsulinFromTreatmentsAndTemps(time).iob
             if (abs(lastIob - iob) > 0.02) {
                 if (abs(lastIob - iob) > 0.2) iobArray.add(ScaledDataPoint(time, lastIob, iobScale))
                 iobArray.add(ScaledDataPoint(time, iob, iobScale))
@@ -541,7 +539,11 @@ class GraphData(
         while (time <= toTime) {
             // if align Dev Scale with BGI scale, then calculate BGI value, else bgi = 0.0
             val bgi: Double = if (devBgiScale) {
-                val profile = profileFunction.getProfile(time) ?: continue
+                val profile = profileFunction.getProfile(time)
+                if (profile == null) {
+                    time += 5 * 60 * 1000L
+                    continue
+                }
                 total = iobCobCalculator.calculateFromTreatmentsAndTemps(time, profile)
                 total.activity * profile.getIsfMgdl(time) * 5.0
             } else 0.0
@@ -578,21 +580,14 @@ class GraphData(
     fun addRatio(fromTime: Long, toTime: Long, useForScale: Boolean, scale: Double) {
         val ratioArray: MutableList<ScaledDataPoint> = ArrayList()
         var maxRatioValueFound = 5.0                    //even if sens data equals 0 for all the period, minimum scale is between 95% and 105%
-        var minRatioValueFound = - maxRatioValueFound
+        var minRatioValueFound = -maxRatioValueFound
         val ratioScale = if (useForScale) Scale(100.0) else Scale()
         var time = fromTime
         while (time <= toTime) {
-<<<<<<<<< Temporary merge branch 1
             iobCobCalculator.ads.getAutosensDataAtTime(time)?.let { autosensData ->
-                ratioArray.add(ScaledDataPoint(time, autosensData.autosensResult.ratio - 1, ratioScale))
-                maxRatioValueFound = max(maxRatioValueFound, autosensData.autosensResult.ratio - 1)
-                minRatioValueFound = min(minRatioValueFound, autosensData.autosensResult.ratio - 1)
-=========
-            iobCobCalculatorPlugin.getAutosensData(time)?.let { autosensData ->
-                ratioArray.add(ScaledDataPoint(time, 100.0 * (autosensData.autosensResult.ratio - 1 ), ratioScale))
+                ratioArray.add(ScaledDataPoint(time, 100.0 * (autosensData.autosensResult.ratio - 1), ratioScale))
                 maxRatioValueFound = max(maxRatioValueFound, 100.0 * (autosensData.autosensResult.ratio - 1))
                 minRatioValueFound = min(minRatioValueFound, 100.0 * (autosensData.autosensResult.ratio - 1))
->>>>>>>>> Temporary merge branch 2
             }
             time += 5 * 60 * 1000L
         }
@@ -662,6 +657,10 @@ class GraphData(
                 paint.color = Color.WHITE
             })
         })
+    }
+
+    fun setNumVerticalLabels() {
+        graph.gridLabelRenderer.numVerticalLabels = if (units == GlucoseUnit.MGDL) (maxY / 40 + 1).toInt() else (maxY / 2 + 1).toInt()
     }
 
     fun formatAxis(fromTime: Long, endTime: Long) {

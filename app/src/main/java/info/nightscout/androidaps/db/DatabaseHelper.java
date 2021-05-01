@@ -16,31 +16,19 @@ import com.j256.ormlite.stmt.Where;
 import com.j256.ormlite.support.ConnectionSource;
 import com.j256.ormlite.table.TableUtils;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Collections;
-import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
-import java.util.concurrent.TimeUnit;
 
 import javax.inject.Inject;
 
-import info.nightscout.androidaps.dana.comm.RecordTypes;
-import info.nightscout.androidaps.data.Profile;
-import info.nightscout.androidaps.events.EventProfileNeedsUpdate;
 import info.nightscout.androidaps.events.EventRefreshOverview;
-import info.nightscout.androidaps.events.EventReloadProfileSwitchData;
 import info.nightscout.androidaps.interfaces.ActivePlugin;
 import info.nightscout.androidaps.interfaces.DatabaseHelperInterface;
-import info.nightscout.androidaps.interfaces.ProfileSource;
-import info.nightscout.androidaps.interfaces.ProfileStore;
 import info.nightscout.androidaps.logging.AAPSLogger;
 import info.nightscout.androidaps.logging.LTag;
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper;
@@ -48,7 +36,6 @@ import info.nightscout.androidaps.plugins.general.nsclient.NSUpload;
 import info.nightscout.androidaps.plugins.general.openhumans.OpenHumansUploader;
 import info.nightscout.androidaps.plugins.pump.virtual.VirtualPumpPlugin;
 import info.nightscout.androidaps.utils.DateUtil;
-import info.nightscout.androidaps.utils.PercentageSplitter;
 
 /**
  * This Helper contains all resource to provide a central DB management functionality. Only methods handling
@@ -75,9 +62,6 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 
     public static Long earliestDataChange = null;
 
-    private static final ScheduledExecutorService profileSwitchEventWorker = Executors.newSingleThreadScheduledExecutor();
-    private static ScheduledFuture<?> scheduledProfileSwitchEventPost = null;
-
     private int oldVersion = 0;
     private int newVersion = 0;
 
@@ -96,7 +80,6 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
             TableUtils.createTableIfNotExists(connectionSource, DbRequest.class);
             TableUtils.createTableIfNotExists(connectionSource, TemporaryBasal.class);
             TableUtils.createTableIfNotExists(connectionSource, ExtendedBolus.class);
-            TableUtils.createTableIfNotExists(connectionSource, ProfileSwitch.class);
             TableUtils.createTableIfNotExists(connectionSource, InsightHistoryOffset.class);
             TableUtils.createTableIfNotExists(connectionSource, InsightBolusID.class);
             TableUtils.createTableIfNotExists(connectionSource, InsightPumpID.class);
@@ -124,7 +107,6 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
                 TableUtils.dropTable(connectionSource, DbRequest.class, true);
                 TableUtils.dropTable(connectionSource, TemporaryBasal.class, true);
                 TableUtils.dropTable(connectionSource, ExtendedBolus.class, true);
-                TableUtils.dropTable(connectionSource, ProfileSwitch.class, true);
                 onCreate(database, connectionSource);
             } else if (oldVersion < 10) {
                 TableUtils.createTableIfNotExists(connectionSource, InsightHistoryOffset.class);
@@ -171,20 +153,17 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
             TableUtils.dropTable(connectionSource, DbRequest.class, true);
             TableUtils.dropTable(connectionSource, TemporaryBasal.class, true);
             TableUtils.dropTable(connectionSource, ExtendedBolus.class, true);
-            TableUtils.dropTable(connectionSource, ProfileSwitch.class, true);
             TableUtils.dropTable(connectionSource, OmnipodHistoryRecord.class, true);
             TableUtils.createTableIfNotExists(connectionSource, DanaRHistoryRecord.class);
             TableUtils.createTableIfNotExists(connectionSource, DbRequest.class);
             TableUtils.createTableIfNotExists(connectionSource, TemporaryBasal.class);
             TableUtils.createTableIfNotExists(connectionSource, ExtendedBolus.class);
-            TableUtils.createTableIfNotExists(connectionSource, ProfileSwitch.class);
             TableUtils.createTableIfNotExists(connectionSource, OmnipodHistoryRecord.class);
             updateEarliestDataChange(0);
         } catch (SQLException e) {
             aapsLogger.error("Unhandled exception", e);
         }
         virtualPumpPlugin.setFakingStatus(true);
-        scheduleProfileSwitchChange();
         new java.util.Timer().schedule(
                 new java.util.TimerTask() {
                     @Override
@@ -194,16 +173,6 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
                 },
                 3000
         );
-    }
-
-    public void resetProfileSwitch() {
-        try {
-            TableUtils.dropTable(connectionSource, ProfileSwitch.class, true);
-            TableUtils.createTableIfNotExists(connectionSource, ProfileSwitch.class);
-        } catch (SQLException e) {
-            aapsLogger.error("Unhandled exception", e);
-        }
-        scheduleProfileSwitchChange();
     }
 
     // ------------------ getDao -------------------------------------------
@@ -222,10 +191,6 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 
     private Dao<ExtendedBolus, Long> getDaoExtendedBolus() throws SQLException {
         return getDao(ExtendedBolus.class);
-    }
-
-    private Dao<ProfileSwitch, Long> getDaoProfileSwitch() throws SQLException {
-        return getDao(ProfileSwitch.class);
     }
 
     private Dao<InsightPumpID, Long> getDaoInsightPumpID() throws SQLException {
@@ -580,104 +545,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 
     // ---------------- ProfileSwitch handling ---------------
 
-    public List<ProfileSwitch> getProfileSwitchData(long from, boolean ascending) {
-        try {
-            Dao<ProfileSwitch, Long> daoProfileSwitch = getDaoProfileSwitch();
-            List<ProfileSwitch> profileSwitches;
-            QueryBuilder<ProfileSwitch, Long> queryBuilder = daoProfileSwitch.queryBuilder();
-            queryBuilder.orderBy("date", ascending);
-            queryBuilder.limit(100L);
-            Where where = queryBuilder.where();
-            where.ge("date", from);
-            PreparedQuery<ProfileSwitch> preparedQuery = queryBuilder.prepare();
-            profileSwitches = daoProfileSwitch.query(preparedQuery);
-            //add last one without duration
-            ProfileSwitch last = getLastProfileSwitchWithoutDuration();
-            if (last != null) {
-                if (!isInList(profileSwitches, last))
-                    profileSwitches.add(last);
-            }
-            return profileSwitches;
-        } catch (SQLException e) {
-            aapsLogger.error("Unhandled exception", e);
-        }
-        return new ArrayList<>();
-    }
-
-    boolean isInList(List<ProfileSwitch> profileSwitches, ProfileSwitch last) {
-        for (ProfileSwitch ps : profileSwitches) {
-            if (ps.isEqual(last)) return true;
-        }
-        return false;
-    }
-
-    public List<ProfileSwitch> getAllProfileSwitches() {
-        try {
-            return getDaoProfileSwitch().queryForAll();
-        } catch (SQLException e) {
-            aapsLogger.error("Unhandled exception", e);
-        }
-        return Collections.emptyList();
-    }
-
-    @Nullable
-    private ProfileSwitch getLastProfileSwitchWithoutDuration() {
-        try {
-            Dao<ProfileSwitch, Long> daoProfileSwitch = getDaoProfileSwitch();
-            List<ProfileSwitch> profileSwitches;
-            QueryBuilder<ProfileSwitch, Long> queryBuilder = daoProfileSwitch.queryBuilder();
-            queryBuilder.orderBy("date", false);
-            queryBuilder.limit(1L);
-            Where where = queryBuilder.where();
-            where.eq("durationInMinutes", 0);
-            PreparedQuery<ProfileSwitch> preparedQuery = queryBuilder.prepare();
-            profileSwitches = daoProfileSwitch.query(preparedQuery);
-            if (profileSwitches.size() > 0)
-                return profileSwitches.get(0);
-            else
-                return null;
-        } catch (SQLException e) {
-            aapsLogger.error("Unhandled exception", e);
-        }
-        return null;
-    }
-
-    public List<ProfileSwitch> getProfileSwitchEventsFromTime(long mills, boolean ascending) {
-        try {
-            Dao<ProfileSwitch, Long> daoProfileSwitch = getDaoProfileSwitch();
-            List<ProfileSwitch> profileSwitches;
-            QueryBuilder<ProfileSwitch, Long> queryBuilder = daoProfileSwitch.queryBuilder();
-            queryBuilder.orderBy("date", ascending);
-            queryBuilder.limit(100L);
-            Where where = queryBuilder.where();
-            where.ge("date", mills);
-            PreparedQuery<ProfileSwitch> preparedQuery = queryBuilder.prepare();
-            profileSwitches = daoProfileSwitch.query(preparedQuery);
-            return profileSwitches;
-        } catch (SQLException e) {
-            aapsLogger.error("Unhandled exception", e);
-        }
-        return new ArrayList<>();
-    }
-
-    public List<ProfileSwitch> getProfileSwitchEventsFromTime(long from, long to, boolean ascending) {
-        try {
-            Dao<ProfileSwitch, Long> daoProfileSwitch = getDaoProfileSwitch();
-            List<ProfileSwitch> profileSwitches;
-            QueryBuilder<ProfileSwitch, Long> queryBuilder = daoProfileSwitch.queryBuilder();
-            queryBuilder.orderBy("date", ascending);
-            queryBuilder.limit(100L);
-            Where where = queryBuilder.where();
-            where.between("date", from, to);
-            PreparedQuery<ProfileSwitch> preparedQuery = queryBuilder.prepare();
-            profileSwitches = daoProfileSwitch.query(preparedQuery);
-            return profileSwitches;
-        } catch (SQLException e) {
-            aapsLogger.error("Unhandled exception", e);
-        }
-        return new ArrayList<>();
-    }
-
+/*
     public boolean createOrUpdate(ProfileSwitch profileSwitch) {
         try {
             ProfileSwitch old;
@@ -767,7 +635,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
         scheduledProfileSwitchEventPost = profileSwitchEventWorker.schedule(task, sec, TimeUnit.SECONDS);
 
     }
-
+*/
  /*
 {
     "_id":"592fa43ed97496a80da913d2",
@@ -779,6 +647,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
     "NSCLIENT_ID":1496294454309,
 }
   */
+/*
 
     public void createProfileSwitchFromJsonIfNotExists(JSONObject trJson) {
         try {
@@ -800,9 +669,9 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
                 ProfileSource profileSource = activePlugin.getActiveProfileSource();
                 ProfileStore store = profileSource.getProfile();
                 if (store != null) {
-                    Profile profile = store.getSpecificProfile(profileSwitch.profileName);
+                    PureProfile profile = store.getSpecificProfile(profileSwitch.profileName);
                     if (profile != null) {
-                        profileSwitch.profileJson = profile.getData().toString();
+                        profileSwitch.profileJson = profile.getJsonObject().toString();
                         aapsLogger.debug(LTag.DATABASE, "Profile switch prefilled with JSON from local store");
                         // Update data in NS
                         nsUpload.updateProfileSwitch(profileSwitch, dateUtil);
@@ -850,7 +719,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
         }
         return null;
     }
-
+*/
     // ---------------- Insight history handling ---------------
 
     public void createOrUpdate(InsightHistoryOffset offset) {
@@ -1059,7 +928,6 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
     public long getCountOfAllRows() {
         try {
             return getDaoExtendedBolus().countOf()
-                    + getDaoProfileSwitch().countOf()
                     + getDaoTemporaryBasal().countOf();
         } catch (SQLException e) {
             aapsLogger.error("Unhandled exception", e);

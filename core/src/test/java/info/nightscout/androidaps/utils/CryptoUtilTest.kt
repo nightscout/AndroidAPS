@@ -23,7 +23,7 @@ fun assumeAES256isSupported(cryptoUtil: CryptoUtil) {
 @Suppress("SpellCheckingInspection")
 @PowerMockIgnore("javax.crypto.*")
 @RunWith(PowerMockRunner::class)
-class CryptoUtilTest: TestBase() {
+class CryptoUtilTest : TestBase() {
 
     private var cryptoUtil: CryptoUtil = CryptoUtil(aapsLogger)
 

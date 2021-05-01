@@ -2,16 +2,17 @@ package info.nightscout.androidaps.extensions
 
 import info.nightscout.androidaps.Constants
 import info.nightscout.androidaps.database.entities.GlucoseValue
+import info.nightscout.androidaps.interfaces.GlucoseUnit
 import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.DecimalFormatter
 import org.json.JSONObject
 
-fun GlucoseValue.valueToUnits(units: String): Double =
-    if (units == Constants.MGDL) value
+fun GlucoseValue.valueToUnits(units: GlucoseUnit): Double =
+    if (units == GlucoseUnit.MGDL) value
     else value * Constants.MGDL_TO_MMOLL
 
-fun GlucoseValue.valueToUnitsString(units: String): String =
-    if (units == Constants.MGDL) DecimalFormatter.to0Decimal(value)
+fun GlucoseValue.valueToUnitsString(units: GlucoseUnit): String =
+    if (units == GlucoseUnit.MGDL) DecimalFormatter.to0Decimal(value)
     else DecimalFormatter.to1Decimal(value * Constants.MGDL_TO_MMOLL)
 
 fun GlucoseValue.toJson(dateUtil: DateUtil): JSONObject =

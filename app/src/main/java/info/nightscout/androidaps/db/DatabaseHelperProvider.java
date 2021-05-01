@@ -88,10 +88,6 @@ public class DatabaseHelperProvider implements DatabaseHelperInterface {
         return MainApp.Companion.getDbHelper().findOmnipodHistoryRecordByPumpId(pumpId);
     }
 
-    @NonNull @Override public List<ProfileSwitch> getProfileSwitchData(long from, boolean ascending) {
-        return MainApp.Companion.getDbHelper().getProfileSwitchData(from, ascending);
-    }
-
     @Override public void createOrUpdate(@NonNull InsightBolusID record) {
         MainApp.Companion.getDbHelper().createOrUpdate(record);
     }
@@ -124,18 +120,6 @@ public class DatabaseHelperProvider implements DatabaseHelperInterface {
         return MainApp.Companion.getDbHelper().getPumpStoppedEvent(pumpSerial, before);
     }
 
-    @Override public void createOrUpdate(@NonNull ProfileSwitch profileSwitch) {
-        MainApp.Companion.getDbHelper().createOrUpdate(profileSwitch);
-    }
-
-    @Override public void deleteProfileSwitchById(@NonNull String _id) {
-        MainApp.Companion.getDbHelper().deleteProfileSwitchById(_id);
-    }
-
-    @Override public void createProfileSwitchFromJsonIfNotExists(@NonNull JSONObject trJson) {
-        MainApp.Companion.getDbHelper().createProfileSwitchFromJsonIfNotExists(trJson);
-    }
-
     @Override public void resetDatabases() {
         MainApp.Companion.getDbHelper().resetDatabases();
     }
@@ -144,28 +128,8 @@ public class DatabaseHelperProvider implements DatabaseHelperInterface {
         MainApp.Companion.getDbHelper().createOrUpdate(record);
     }
 
-    @Override public void delete(@NonNull ProfileSwitch profileSwitch) {
-        MainApp.Companion.getDbHelper().delete(profileSwitch);
-    }
-
-    @NonNull @Override public List<ProfileSwitch> getProfileSwitchEventsFromTime(long from, long to, boolean ascending) {
-        return MainApp.Companion.getDbHelper().getProfileSwitchEventsFromTime(from, to, ascending);
-    }
-
-    @NonNull @Override public List<ProfileSwitch> getProfileSwitchEventsFromTime(long mills, boolean ascending) {
-        return MainApp.Companion.getDbHelper().getProfileSwitchEventsFromTime(mills, ascending);
-    }
-
-    @NonNull @Override public List<ProfileSwitch> getAllProfileSwitches() {
-        return MainApp.Companion.getDbHelper().getAllProfileSwitches();
-    }
-
     @NonNull @Override public List<OHQueueItem> getAllOHQueueItems(long maxEntries) {
         return MainApp.Companion.getDbHelper().getAllOHQueueItems(maxEntries);
-    }
-
-    @Override public void resetProfileSwitch() {
-        MainApp.Companion.getDbHelper().resetProfileSwitch();
     }
 
     @Override public long getOHQueueSize() {

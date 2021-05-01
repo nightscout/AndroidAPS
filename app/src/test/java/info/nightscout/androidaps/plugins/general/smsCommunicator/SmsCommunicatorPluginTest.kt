@@ -14,11 +14,7 @@ import info.nightscout.androidaps.data.PumpEnactResult
 import info.nightscout.androidaps.database.AppRepository
 import info.nightscout.androidaps.database.entities.GlucoseValue
 import info.nightscout.androidaps.database.transactions.InsertTemporaryTargetAndCancelCurrentTransaction
-import info.nightscout.androidaps.interfaces.ActivePlugin
-import info.nightscout.androidaps.interfaces.CommandQueueProvider
-import info.nightscout.androidaps.interfaces.Constraint
-import info.nightscout.androidaps.interfaces.PluginType
-import info.nightscout.androidaps.interfaces.PumpDescription
+import info.nightscout.androidaps.interfaces.*
 import info.nightscout.androidaps.logging.UserEntryLogger
 import info.nightscout.androidaps.plugins.aps.loop.LoopPlugin
 import info.nightscout.androidaps.plugins.configBuilder.ConstraintChecker
@@ -162,7 +158,6 @@ class SmsCommunicatorPluginTest : TestBaseWithProfile() {
         }.`when`(commandQueue).extendedBolus(ArgumentMatchers.anyDouble(), ArgumentMatchers.anyInt(), ArgumentMatchers.any(Callback::class.java))
 
         `when`(activePlugin.activePump).thenReturn(virtualPumpPlugin)
-        `when`(activePlugin.activeTreatments).thenReturn(treatmentsInterface)
 
         `when`(virtualPumpPlugin.shortStatus(ArgumentMatchers.anyBoolean())).thenReturn("Virtual Pump")
         `when`(virtualPumpPlugin.isSuspended()).thenReturn(false)
@@ -171,11 +166,10 @@ class SmsCommunicatorPluginTest : TestBaseWithProfile() {
 
         `when`(iobCobCalculator.calculateIobFromBolus()).thenReturn(IobTotal(0))
         `when`(iobCobCalculator.calculateIobFromTempBasalsIncludingConvertedExtended()).thenReturn(IobTotal(0))
-        `when`(treatmentsInterface.service).thenReturn(treatmentService)
 
         `when`(activePlugin.activeProfileSource).thenReturn(localProfilePlugin)
 
-        `when`(profileFunction.getUnits()).thenReturn(Constants.MGDL)
+        `when`(profileFunction.getUnits()).thenReturn(GlucoseUnit.MGDL)
 
         `when`(otp.name()).thenReturn("User")
         `when`(otp.checkOTP(ArgumentMatchers.anyString())).thenReturn(OneTimePasswordValidationResult.OK)

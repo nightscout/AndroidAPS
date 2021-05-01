@@ -8,7 +8,6 @@ interface DatabaseHelperInterface {
 
     fun resetDatabases()
 
-    fun createOrUpdate(profileSwitch: ProfileSwitch)
     fun createOrUpdate(record: DanaRHistoryRecord)
     fun createOrUpdate(record: OmnipodHistoryRecord)
     fun createOrUpdate(record: InsightBolusID)
@@ -21,7 +20,6 @@ interface DatabaseHelperInterface {
     fun deleteAllDbRequests()
     fun deleteDbRequest(id: String): Int
     fun delete(extendedBolus: ExtendedBolus)
-    fun delete(profileSwitch: ProfileSwitch)
     fun deleteDbRequestbyMongoId(action: String, _id: String)
     fun getDbRequestIterator(): CloseableIterator<DbRequest>
     fun roundDateToSec(date: Long): Long
@@ -30,21 +28,13 @@ interface DatabaseHelperInterface {
     fun findTempBasalByPumpId(id: Long): TemporaryBasal?
     @Deprecated("Use new DB")
     fun getTemporaryBasalsDataFromTime(mills: Long, ascending: Boolean): List<TemporaryBasal>
-    fun getProfileSwitchEventsFromTime(from: Long, to: Long, ascending: Boolean): List<ProfileSwitch>
-    fun getProfileSwitchEventsFromTime(mills: Long, ascending: Boolean): List<ProfileSwitch>
     fun getAllOmnipodHistoryRecordsFromTimestamp(timestamp: Long, ascending: Boolean): List<OmnipodHistoryRecord>
     fun findOmnipodHistoryRecordByPumpId(pumpId: Long): OmnipodHistoryRecord?
-    fun getProfileSwitchData(from: Long, ascending: Boolean): List<ProfileSwitch>
     @Deprecated("Use new DB")
     fun getExtendedBolusByPumpId(pumpId: Long): ExtendedBolus?
-    fun getAllProfileSwitches(): List<ProfileSwitch>
     fun getAllOHQueueItems(maxEntries: Long): List<OHQueueItem>
-    fun resetProfileSwitch()
 
     // old DB model
-    fun deleteProfileSwitchById(_id: String)
-    fun createProfileSwitchFromJsonIfNotExists(trJson: JSONObject)
-
     fun getInsightBolusID(pumpSerial: String, bolusID: Int, timestamp: Long): InsightBolusID?
     fun getInsightHistoryOffset(pumpSerial: String): InsightHistoryOffset?
     fun getPumpStoppedEvent(pumpSerial: String, before: Long): InsightPumpID?

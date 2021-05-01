@@ -13,7 +13,7 @@ import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.*
 import info.nightscout.androidaps.activities.ErrorHelperActivity
 import info.nightscout.androidaps.data.DetailedBolusInfo
-import info.nightscout.androidaps.data.Profile
+import info.nightscout.androidaps.interfaces.Profile
 import info.nightscout.androidaps.data.PumpEnactResult
 import info.nightscout.androidaps.database.AppRepository
 import info.nightscout.androidaps.database.entities.TherapyEvent
@@ -292,7 +292,7 @@ open class LoopPlugin @Inject constructor(
             if (pump.pumpDescription.tempBasalStyle == PumpDescription.PERCENT && allowPercentage()) {
                 apsResult.usePercent = true
             }
-            apsResult.percent = (apsResult.rate / profile.basal * 100).toInt()
+            apsResult.percent = (apsResult.rate / profile.getBasal() * 100).toInt()
 
             // check rate for constraints
             val resultAfterConstraints = apsResult.newAndClone(injector)

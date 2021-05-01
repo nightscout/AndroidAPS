@@ -1,8 +1,8 @@
 package info.nightscout.androidaps.utils
 
 import dagger.android.HasAndroidInjector
-import info.nightscout.androidaps.Constants
 import info.nightscout.androidaps.R
+import info.nightscout.androidaps.interfaces.GlucoseUnit
 import info.nightscout.androidaps.plugins.general.automation.AutomationEvent
 import info.nightscout.androidaps.plugins.general.automation.AutomationPlugin
 import info.nightscout.androidaps.plugins.general.automation.actions.ActionAlarm
@@ -37,21 +37,21 @@ class CarbTimer @Inject constructor(
 
                 // Bg under 180 mgdl and dropping by 15 mgdl
                 list.add(TriggerConnector(injector, TriggerConnector.Type.AND).apply {
-                    list.add(TriggerBg(injector, 180.0, Constants.MGDL, Comparator.Compare.IS_LESSER))
-                    list.add(TriggerDelta(injector, InputDelta(resourceHelper, -15.0, -360.0, 360.0, 1.0, DecimalFormat("0"), InputDelta.DeltaType.DELTA), Constants.MGDL, Comparator.Compare.IS_EQUAL_OR_LESSER))
-                    list.add(TriggerDelta(injector, InputDelta(resourceHelper, -8.0, -360.0, 360.0, 1.0, DecimalFormat("0"), InputDelta.DeltaType.SHORT_AVERAGE), Constants.MGDL, Comparator.Compare.IS_EQUAL_OR_LESSER))
+                    list.add(TriggerBg(injector, 180.0, GlucoseUnit.MGDL, Comparator.Compare.IS_LESSER))
+                    list.add(TriggerDelta(injector, InputDelta(resourceHelper, -15.0, -360.0, 360.0, 1.0, DecimalFormat("0"), InputDelta.DeltaType.DELTA), GlucoseUnit.MGDL, Comparator.Compare.IS_EQUAL_OR_LESSER))
+                    list.add(TriggerDelta(injector, InputDelta(resourceHelper, -8.0, -360.0, 360.0, 1.0, DecimalFormat("0"), InputDelta.DeltaType.SHORT_AVERAGE), GlucoseUnit.MGDL, Comparator.Compare.IS_EQUAL_OR_LESSER))
                 })
                 // Bg under 160 mgdl and dropping by 9 mgdl
                 list.add(TriggerConnector(injector, TriggerConnector.Type.AND).apply {
-                    list.add(TriggerBg(injector, 160.0, Constants.MGDL, Comparator.Compare.IS_LESSER))
-                    list.add(TriggerDelta(injector, InputDelta(resourceHelper, -9.0, -360.0, 360.0, 1.0, DecimalFormat("0"), InputDelta.DeltaType.DELTA), Constants.MGDL, Comparator.Compare.IS_EQUAL_OR_LESSER))
-                    list.add(TriggerDelta(injector, InputDelta(resourceHelper, -5.0, -360.0, 360.0, 1.0, DecimalFormat("0"), InputDelta.DeltaType.SHORT_AVERAGE), Constants.MGDL, Comparator.Compare.IS_EQUAL_OR_LESSER))
+                    list.add(TriggerBg(injector, 160.0, GlucoseUnit.MGDL, Comparator.Compare.IS_LESSER))
+                    list.add(TriggerDelta(injector, InputDelta(resourceHelper, -9.0, -360.0, 360.0, 1.0, DecimalFormat("0"), InputDelta.DeltaType.DELTA), GlucoseUnit.MGDL, Comparator.Compare.IS_EQUAL_OR_LESSER))
+                    list.add(TriggerDelta(injector, InputDelta(resourceHelper, -5.0, -360.0, 360.0, 1.0, DecimalFormat("0"), InputDelta.DeltaType.SHORT_AVERAGE), GlucoseUnit.MGDL, Comparator.Compare.IS_EQUAL_OR_LESSER))
                 })
                 // Bg under 145 mgdl and dropping
                 list.add(TriggerConnector(injector, TriggerConnector.Type.AND).apply {
-                    list.add(TriggerBg(injector, 145.0, Constants.MGDL, Comparator.Compare.IS_LESSER))
-                    list.add(TriggerDelta(injector, InputDelta(resourceHelper, 0.0, -360.0, 360.0, 1.0, DecimalFormat("0"), InputDelta.DeltaType.DELTA), Constants.MGDL, Comparator.Compare.IS_EQUAL_OR_LESSER))
-                    list.add(TriggerDelta(injector, InputDelta(resourceHelper, 0.0, -360.0, 360.0, 1.0, DecimalFormat("0"), InputDelta.DeltaType.SHORT_AVERAGE), Constants.MGDL, Comparator.Compare.IS_EQUAL_OR_LESSER))
+                    list.add(TriggerBg(injector, 145.0, GlucoseUnit.MGDL, Comparator.Compare.IS_LESSER))
+                    list.add(TriggerDelta(injector, InputDelta(resourceHelper, 0.0, -360.0, 360.0, 1.0, DecimalFormat("0"), InputDelta.DeltaType.DELTA), GlucoseUnit.MGDL, Comparator.Compare.IS_EQUAL_OR_LESSER))
+                    list.add(TriggerDelta(injector, InputDelta(resourceHelper, 0.0, -360.0, 360.0, 1.0, DecimalFormat("0"), InputDelta.DeltaType.SHORT_AVERAGE), GlucoseUnit.MGDL, Comparator.Compare.IS_EQUAL_OR_LESSER))
                 })
             }
             actions.add(ActionAlarm(injector, resourceHelper.gs(R.string.time_to_eat)))

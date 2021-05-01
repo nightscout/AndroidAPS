@@ -12,7 +12,7 @@ import com.google.common.base.Joiner
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.Constants
 import info.nightscout.androidaps.R
-import info.nightscout.androidaps.data.Profile
+import info.nightscout.androidaps.interfaces.Profile
 import info.nightscout.androidaps.database.AppRepository
 import info.nightscout.androidaps.database.entities.ValueWithUnit
 import info.nightscout.androidaps.database.entities.TherapyEvent
@@ -29,6 +29,7 @@ import info.nightscout.androidaps.utils.T
 import info.nightscout.androidaps.utils.Translator
 import info.nightscout.androidaps.utils.alertDialogs.OKDialog
 import info.nightscout.androidaps.extensions.fromConstant
+import info.nightscout.androidaps.interfaces.GlucoseUnit
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.rxkotlin.plusAssign
@@ -151,7 +152,7 @@ class CareDialog : DialogFragmentWithDate() {
             }
         }
 
-        if (profileFunction.getUnits() == Constants.MMOL) {
+        if (profileFunction.getUnits() == GlucoseUnit.MMOL) {
             binding.bgunits.text = resourceHelper.gs(R.string.mmol)
             binding.bg.setParams(savedInstanceState?.getDouble("bg")
                 ?: bg, 2.0, 30.0, 0.1, DecimalFormat("0.0"), false, binding.okcancel.ok, bgTextWatcher)
@@ -173,7 +174,7 @@ class CareDialog : DialogFragmentWithDate() {
 
     override fun submit(): Boolean {
         val enteredBy = sp.getString("careportal_enteredby", "AndroidAPS")
-        val unitResId = if (profileFunction.getUnits() == Constants.MGDL) R.string.mgdl else R.string.mmol
+        val unitResId = if (profileFunction.getUnits() == GlucoseUnit.MGDL) R.string.mgdl else R.string.mmol
 
         eventTime -= eventTime % 1000
 
@@ -203,7 +204,7 @@ class CareDialog : DialogFragmentWithDate() {
             actions.add(resourceHelper.gs(R.string.treatments_wizard_bg_label) + ": " + Profile.toCurrentUnitsString(profileFunction, binding.bg.value) + " " + resourceHelper.gs(unitResId))
             therapyEvent.glucoseType = meterType
             therapyEvent.glucose = binding.bg.value
-            valuesWithUnit.add(ValueWithUnit.fromGlucoseUnit(binding.bg.value.toDouble(), profileFunction.getUnits()))
+            valuesWithUnit.add(ValueWithUnit.fromGlucoseUnit(binding.bg.value.toDouble(), profileFunction.getUnits().asText))
             valuesWithUnit.add(ValueWithUnit.TherapyEventMeterType(meterType))
         }
         if (options == EventType.NOTE || options == EventType.EXERCISE) {

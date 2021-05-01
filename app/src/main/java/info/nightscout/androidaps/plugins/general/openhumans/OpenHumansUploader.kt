@@ -222,20 +222,20 @@ class OpenHumansUploader @Inject constructor(
         put("isDeletion", deleted)
     }
 
-    @JvmOverloads
-    fun enqueueProfileSwitch(profileSwitch: ProfileSwitch, deleted: Boolean = false) = insertQueueItem("ProfileSwitches") {
-        put("date", profileSwitch.date)
-        put("isValid", profileSwitch.isValid)
-        put("source", profileSwitch.source)
-        put("nsId", profileSwitch._id)
-        put("isCPP", profileSwitch.isCPP)
-        put("timeshift", profileSwitch.timeshift)
-        put("percentage", profileSwitch.percentage)
-        put("profile", JSONObject(profileSwitch.profileJson))
-        put("profilePlugin", profileSwitch.profilePlugin)
-        put("durationInMinutes", profileSwitch.durationInMinutes)
-        put("isDeletion", deleted)
-    }
+    // @JvmOverloads
+    // fun enqueueProfileSwitch(profileSwitch: ProfileSwitch, deleted: Boolean = false) = insertQueueItem("ProfileSwitches") {
+    //     put("date", profileSwitch.date)
+    //     put("isValid", profileSwitch.isValid)
+    //     put("source", profileSwitch.source)
+    //     put("nsId", profileSwitch._id)
+    //     put("isCPP", profileSwitch.isCPP)
+    //     put("timeshift", profileSwitch.timeshift)
+    //     put("percentage", profileSwitch.percentage)
+    //     put("profile", JSONObject(profileSwitch.profileJson))
+    //     put("profilePlugin", profileSwitch.profilePlugin)
+    //     put("durationInMinutes", profileSwitch.durationInMinutes)
+    //     put("isDeletion", deleted)
+    // }
 
     // fun enqueueTotalDailyDose(tdd: TDD) = insertQueueItem("TotalDailyDoses") {
     //     put("double", tdd.date)
@@ -368,9 +368,9 @@ class OpenHumansUploader @Inject constructor(
 //            .andThen(Observable.defer { Observable.fromIterable(databaseHelper.getAllExtendedBoluses()) })
 //            .map { enqueueExtendedBolus(it); increaseCounter() }
 //            .ignoreElements()
-            .andThen(Observable.defer { Observable.fromIterable(databaseHelper.getAllProfileSwitches()) })
-            .map { enqueueProfileSwitch(it); increaseCounter() }
-            .ignoreElements()
+//             .andThen(Observable.defer { Observable.fromIterable(databaseHelper.getAllProfileSwitches()) })
+//             .map { enqueueProfileSwitch(it); increaseCounter() }
+//             .ignoreElements()
             // .andThen(Observable.defer { Observable.fromIterable(databaseHelper.getAllTDDs()) })
             // .map { enqueueTotalDailyDose(it); increaseCounter() }
             // .ignoreElements()

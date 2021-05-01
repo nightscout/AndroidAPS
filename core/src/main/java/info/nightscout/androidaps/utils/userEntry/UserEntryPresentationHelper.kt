@@ -9,6 +9,8 @@ import info.nightscout.androidaps.database.entities.UserEntry.Action
 import info.nightscout.androidaps.database.entities.UserEntry.ColorGroup
 import info.nightscout.androidaps.database.entities.UserEntry.Sources
 import info.nightscout.androidaps.database.entities.ValueWithUnit
+import info.nightscout.androidaps.interfaces.GlucoseUnit
+import info.nightscout.androidaps.interfaces.Profile
 import info.nightscout.androidaps.interfaces.ProfileFunction
 import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.DecimalFormatter
@@ -95,7 +97,7 @@ class UserEntryPresentationHelper @Inject constructor(
         Sources.Food                -> R.drawable.ic_food
         Sources.Stats               -> R.drawable.ic_cp_stats
         Sources.ConfigBuilder       -> R.drawable.ic_cogs
-        Sources.Overview            -> R.drawable.ic_notif_aaps
+        Sources.Overview            -> R.drawable.ic_home
         Sources.Aaps                -> R.drawable.ic_notif_aaps
         Sources.Unknown             -> R.drawable.ic_generic_icon
     }
@@ -125,12 +127,12 @@ class UserEntryPresentationHelper @Inject constructor(
         is ValueWithUnit.Timestamp             -> dateUtil.dateAndTimeAndSecondsString(valueWithUnit.value)
 
         is ValueWithUnit.Mgdl                  -> {
-            if (profileFunction.getUnits() == Constants.MGDL) DecimalFormatter.to0Decimal(valueWithUnit.value) + translator.translate(valueWithUnit)
+            if (profileFunction.getUnits() == GlucoseUnit.MGDL) DecimalFormatter.to0Decimal(valueWithUnit.value) + translator.translate(valueWithUnit)
             else DecimalFormatter.to1Decimal(valueWithUnit.value / Constants.MMOLL_TO_MGDL) + translator.translate(valueWithUnit)
         }
 
         is ValueWithUnit.Mmoll                 -> {
-            if (profileFunction.getUnits() == Constants.MGDL) DecimalFormatter.to0Decimal(valueWithUnit.value) + translator.translate(valueWithUnit)
+            if (profileFunction.getUnits() == GlucoseUnit.MGDL) DecimalFormatter.to0Decimal(valueWithUnit.value) + translator.translate(valueWithUnit)
             else DecimalFormatter.to1Decimal(valueWithUnit.value * Constants.MMOLL_TO_MGDL) + translator.translate(valueWithUnit)
         }
 
@@ -152,7 +154,7 @@ class UserEntryPresentationHelper @Inject constructor(
         csvString(R.string.careportal_note),
         csvString(R.string.ue_formated_string),
         csvString(R.string.event_time_label),
-        csvString(if (profileFunction.getUnits() == Constants.MGDL) R.string.mgdl else R.string.mmol),
+        csvString(if (profileFunction.getUnits() == GlucoseUnit.MGDL) R.string.mgdl else R.string.mmol),
         csvString(R.string.shortgram),
         csvString(R.string.insulin_unit_shortname),
         csvString(R.string.profile_ins_units_per_hour),
@@ -166,7 +168,7 @@ class UserEntryPresentationHelper @Inject constructor(
         val fullvalueWithUnitList = ArrayList<ValueWithUnit?>(entry.values)
         var timestampRec = "" + entry.timestamp
         var dateTimestampRev = dateUtil.dateAndTimeAndSecondsString(entry.timestamp)
-        var utcOffset = dateUtil.timeString(entry.utcOffset)
+        var utcOffset = dateUtil.timeStringFromSeconds((entry.utcOffset/1000).toInt())
         var action = csvString(entry.action)
         var therapyEvent = ""
         var source = translator.translate(entry.source)
@@ -197,15 +199,11 @@ class UserEntryPresentationHelper @Inject constructor(
                 is ValueWithUnit.TherapyEventType      -> therapyEvent = therapyEvent.addWithSeparator(translator.translate(valueWithUnit.value))
                 is ValueWithUnit.Timestamp             -> timestamp = dateUtil.dateAndTimeAndSecondsString(valueWithUnit.value)
 
-                is ValueWithUnit.Mgdl                  -> {
-                    bg = if (profileFunction.getUnits() == Constants.MGDL) DecimalFormatter.to0Decimal(valueWithUnit.value)
-                    else DecimalFormatter.to1Decimal(valueWithUnit.value / Constants.MMOLL_TO_MGDL)
-                }
+                is ValueWithUnit.Mgdl                  ->
+                    bg = Profile.toUnitsString(valueWithUnit.value, valueWithUnit.value * Constants.MMOLL_TO_MGDL, profileFunction.getUnits())
 
-                is ValueWithUnit.Mmoll                 -> {
-                    bg = if (profileFunction.getUnits() == Constants.MGDL) DecimalFormatter.to0Decimal(valueWithUnit.value)
-                    else DecimalFormatter.to1Decimal(valueWithUnit.value * Constants.MMOLL_TO_MGDL)
-                }
+                is ValueWithUnit.Mmoll                 ->
+                    bg = Profile.toUnitsString(valueWithUnit.value, valueWithUnit.value * Constants.MMOLL_TO_MGDL, profileFunction.getUnits())
 
                 ValueWithUnit.UNKNOWN                  -> Unit
             }

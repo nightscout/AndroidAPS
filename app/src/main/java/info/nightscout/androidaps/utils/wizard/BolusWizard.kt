@@ -9,7 +9,7 @@ import info.nightscout.androidaps.interfaces.Config
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.activities.ErrorHelperActivity
 import info.nightscout.androidaps.data.DetailedBolusInfo
-import info.nightscout.androidaps.data.Profile
+import info.nightscout.androidaps.interfaces.Profile
 import info.nightscout.androidaps.database.AppRepository
 import info.nightscout.androidaps.database.entities.BolusCalculatorResult
 import info.nightscout.androidaps.database.entities.ValueWithUnit
@@ -175,9 +175,9 @@ class BolusWizard @Inject constructor(
         this.quickWizard = quickWizard
 
         // Insulin from BG
-        sens = Profile.fromMgdlToUnits(profile.isfMgdl, profileFunction.getUnits())
-        targetBGLow = Profile.fromMgdlToUnits(profile.targetLowMgdl, profileFunction.getUnits())
-        targetBGHigh = Profile.fromMgdlToUnits(profile.targetHighMgdl, profileFunction.getUnits())
+        sens = Profile.fromMgdlToUnits(profile.getIsfMgdl(), profileFunction.getUnits())
+        targetBGLow = Profile.fromMgdlToUnits(profile.getTargetLowMgdl(), profileFunction.getUnits())
+        targetBGHigh = Profile.fromMgdlToUnits(profile.getTargetHighMgdl(), profileFunction.getUnits())
         if (useTT && tempTarget != null) {
             targetBGLow = Profile.fromMgdlToUnits(tempTarget.lowTarget, profileFunction.getUnits())
             targetBGHigh = Profile.fromMgdlToUnits(tempTarget.highTarget, profileFunction.getUnits())
@@ -201,7 +201,7 @@ class BolusWizard @Inject constructor(
         }
 
         // Insulin from carbs
-        ic = profile.ic
+        ic = profile.getIc()
         insulinFromCarbs = carbs / ic
         insulinFromCOB = if (useCob) (cob / ic) else 0.0
 
@@ -218,7 +218,7 @@ class BolusWizard @Inject constructor(
 
         // Insulin from superbolus for 2h. Get basal rate now and after 1h
         if (useSuperBolus) {
-            insulinFromSuperBolus = profile.basal
+            insulinFromSuperBolus = profile.getBasal()
             var timeAfter1h = System.currentTimeMillis()
             timeAfter1h += T.hours(1).msecs()
             insulinFromSuperBolus += profile.getBasal(timeAfter1h)

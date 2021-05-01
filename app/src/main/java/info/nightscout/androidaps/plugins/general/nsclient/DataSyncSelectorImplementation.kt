@@ -35,6 +35,7 @@ class DataSyncSelectorImplementation @Inject constructor(
         sp.remove(R.string.key_ns_temporary_basal_last_synced_id)
         sp.remove(R.string.key_ns_extended_bolus_last_synced_id)
         sp.remove(R.string.key_ns_therapy_event_last_synced_id)
+        sp.remove(R.string.key_ns_profile_switch_last_synced_id)
     }
 
     override fun confirmLastBolusIdIfGreater(lastSynced: Long) {
@@ -321,11 +322,11 @@ class DataSyncSelectorImplementation @Inject constructor(
             aapsLogger.info(LTag.DATABASE, "Loading DeviceStatus data Start: $startId ID: ${deviceStatus.id}")
             when {
                 // without nsId = create new
-                deviceStatus.interfaceIDs.nightscoutId == null  ->
+                deviceStatus.interfaceIDs.nightscoutId == null ->
                     nsClientPlugin.nsClientService?.dbAdd("devicestatus", deviceStatus.toJson(dateUtil), deviceStatus)
                 // with nsId = ignore
-                deviceStatus.interfaceIDs.nightscoutId != null  -> Any()
-             }
+                deviceStatus.interfaceIDs.nightscoutId != null -> Any()
+            }
             return true
         }
         return false
@@ -405,6 +406,42 @@ class DataSyncSelectorImplementation @Inject constructor(
                 }
                 return true
             }
+        }
+        return false
+    }
+
+    override fun confirmLastProfileSwitchIdIfGreater(lastSynced: Long) {
+        if (lastSynced > sp.getLong(R.string.key_ns_profile_switch_last_synced_id, 0)) {
+            aapsLogger.debug(LTag.NSCLIENT, "Setting ProfileSwitch data sync from $lastSynced")
+            sp.putLong(R.string.key_ns_profile_switch_last_synced_id, lastSynced)
+        }
+    }
+
+    override fun changedProfileSwitch(): List<ProfileSwitch> {
+        val startId = sp.getLong(R.string.key_ns_profile_switch_last_synced_id, 0)
+        return appRepository.getModifiedProfileSwitchDataFromId(startId).blockingGet().also {
+            aapsLogger.debug(LTag.NSCLIENT, "Loading ProfileSwitch data for sync from $startId. Records ${it.size}")
+        }
+    }
+
+    override fun processChangedProfileSwitchesCompat(): Boolean {
+        val startId = sp.getLong(R.string.key_ns_profile_switch_last_synced_id, 0)
+        appRepository.getNextSyncElementProfileSwitch(startId).blockingGet()?.let { eb ->
+            aapsLogger.info(LTag.DATABASE, "Loading ProfileSwitch data Start: $startId ID: ${eb.first.id} HistoryID: ${eb.second} ")
+            when {
+                // removed and not uploaded yet = ignore
+                !eb.first.isValid && eb.first.interfaceIDs.nightscoutId == null -> Any()
+                // removed and already uploaded = send for removal
+                !eb.first.isValid && eb.first.interfaceIDs.nightscoutId != null ->
+                    nsClientPlugin.nsClientService?.dbRemove("treatments", eb.first.interfaceIDs.nightscoutId, DataSyncSelector.PairProfileSwitch(eb.first, eb.second))
+                // existing without nsId = create new
+                eb.first.isValid && eb.first.interfaceIDs.nightscoutId == null  ->
+                    nsClientPlugin.nsClientService?.dbAdd("treatments", eb.first.toJson(dateUtil), DataSyncSelector.PairProfileSwitch(eb.first, eb.second))
+                // existing with nsId = update
+                eb.first.isValid && eb.first.interfaceIDs.nightscoutId != null  ->
+                    nsClientPlugin.nsClientService?.dbUpdate("treatments", eb.first.interfaceIDs.nightscoutId, eb.first.toJson(dateUtil), DataSyncSelector.PairProfileSwitch(eb.first, eb.second))
+            }
+            return true
         }
         return false
     }

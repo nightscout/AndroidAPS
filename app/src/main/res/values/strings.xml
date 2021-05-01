@@ -46,6 +46,7 @@
     <string name="key_ns_device_status_last_synced_id" translatable="false">ns_device_status_last_synced_id</string>
     <string name="key_ns_temporary_basal_last_synced_id" translatable="false">ns_temporary_basal_last_synced_id</string>
     <string name="key_ns_extended_bolus_last_synced_id" translatable="false">ns_extended_bolus_last_synced_id</string>
+    <string name="key_ns_profile_switch_last_synced_id" translatable="false">profile_switch_last_synced_id</string>
 
     <string name="treatmentssafety_title">Treatments safety</string>
     <string name="treatmentssafety_maxbolus_title">Max allowed bolus [U]</string>

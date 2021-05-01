@@ -14,7 +14,7 @@ import info.nightscout.androidaps.activities.NoSplashAppCompatActivity
 import info.nightscout.androidaps.dana.R
 import info.nightscout.androidaps.dana.comm.RecordTypes
 import info.nightscout.androidaps.dana.databinding.DanarHistoryActivityBinding
-import info.nightscout.androidaps.data.Profile
+import info.nightscout.androidaps.interfaces.Profile
 import info.nightscout.androidaps.db.DanaRHistoryRecord
 import info.nightscout.androidaps.events.EventDanaRSyncStatus
 import info.nightscout.androidaps.events.EventPumpStatusChanged

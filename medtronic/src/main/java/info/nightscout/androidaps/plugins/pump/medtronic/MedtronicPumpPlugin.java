@@ -30,7 +30,7 @@ import javax.inject.Singleton;
 import dagger.android.HasAndroidInjector;
 import info.nightscout.androidaps.activities.ErrorHelperActivity;
 import info.nightscout.androidaps.data.DetailedBolusInfo;
-import info.nightscout.androidaps.data.Profile;
+import info.nightscout.androidaps.interfaces.Profile;
 import info.nightscout.androidaps.data.PumpEnactResult;
 import info.nightscout.androidaps.db.Source;
 import info.nightscout.androidaps.db.TemporaryBasal;
@@ -679,9 +679,9 @@ public class MedtronicPumpPlugin extends PumpPluginAbstract implements Pump, Ril
 
         for (Profile.ProfileValue basalValue : profile.getBasalValues()) {
 
-            double basalValueValue = pumpDescription.getPumpType().determineCorrectBasalSize(basalValue.value);
+            double basalValueValue = pumpDescription.getPumpType().determineCorrectBasalSize(basalValue.getValue());
 
-            int hour = basalValue.timeAsSeconds / (60 * 60);
+            int hour = basalValue.getTimeAsSeconds() / (60 * 60);
 
             if (!MedtronicUtil.isSame(basalsByHour[hour], basalValueValue)) {
                 invalid = true;
