@@ -473,6 +473,7 @@ class OmnipodDashPumpPlugin @Inject constructor(
     ): PumpEnactResult {
         return Single.create<PumpEnactResult> { source ->
             Observable.concat(
+                podStateManager.observeNoActiveCommand(),
                 historyId.flatMapObservable { recordId ->
                     podStateManager.createActiveCommand(recordId).toObservable()
                 },

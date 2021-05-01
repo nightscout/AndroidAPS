@@ -19,6 +19,7 @@ import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.response.
 import info.nightscout.androidaps.utils.sharedPreferences.SP
 import io.reactivex.Completable
 import io.reactivex.Maybe
+import io.reactivex.Observable
 import java.io.Serializable
 import java.util.*
 import javax.inject.Inject
@@ -182,21 +183,37 @@ class OmnipodDashPodStateManagerImpl @Inject constructor(
         get() = podState.activeCommand
 
     @Synchronized
-    override fun createActiveCommand(historyId: String): Completable {
-        return if (activeCommand == null) {
+    override fun createActiveCommand(historyId: String) = Completable.create { source ->
+        if (activeCommand == null) {
             podState.activeCommand = OmnipodDashPodStateManager.ActiveCommand(
                 podState.messageSequenceNumber,
                 createdRealtime = SystemClock.elapsedRealtime(),
                 historyId = historyId
             )
-            Completable.complete()
+            source.onComplete()
         } else {
-            Completable.error(
+            source.onError(
                 java.lang.IllegalStateException(
                     "Trying to send a command " +
                         "and the last command was not confirmed"
                 )
             )
+        }
+    }
+
+    @Synchronized
+    override fun observeNoActiveCommand(): Observable<PodEvent> {
+        return Observable.defer {
+            if (activeCommand == null) {
+                Observable.empty()
+            } else {
+                Observable.error(
+                    java.lang.IllegalStateException(
+                        "Trying to send a command " +
+                            "and the last command was not confirmed"
+                    )
+                )
+            }
         }
     }
 
@@ -207,7 +224,7 @@ class OmnipodDashPodStateManagerImpl @Inject constructor(
                 // command was not sent
                 podState.activeCommand = null
             }
-         }
+        }
     }
 
     @Synchronized
@@ -219,7 +236,7 @@ class OmnipodDashPodStateManagerImpl @Inject constructor(
                     "$sequenceNumberOfLastProgrammingCommand $historyId"
             )
             if (createdRealtime >= lastStatusResponseReceived)
-                // we did not receive a valid response yet
+            // we did not receive a valid response yet
                 source.onComplete()
             else {
                 podState.activeCommand = null

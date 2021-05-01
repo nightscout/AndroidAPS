@@ -10,6 +10,7 @@ import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.response.
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.response.VersionResponse
 import io.reactivex.Completable
 import io.reactivex.Maybe
+import io.reactivex.Observable
 import java.io.Serializable
 import java.util.*
 
@@ -67,6 +68,7 @@ interface OmnipodDashPodStateManager {
 
     fun createActiveCommand(historyId: String): Completable
     fun updateActiveCommand(): Maybe<PodEvent>
+    fun observeNoActiveCommand(): Observable<PodEvent>
     fun maybeMarkActiveCommandFailed()
 
     data class ActiveCommand(
