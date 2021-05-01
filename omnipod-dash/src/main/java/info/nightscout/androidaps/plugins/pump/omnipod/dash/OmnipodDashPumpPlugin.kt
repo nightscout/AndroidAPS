@@ -2,7 +2,6 @@ package info.nightscout.androidaps.plugins.pump.omnipod.dash
 
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.data.DetailedBolusInfo
-import info.nightscout.androidaps.data.Profile
 import info.nightscout.androidaps.data.PumpEnactResult
 import info.nightscout.androidaps.interfaces.*
 import info.nightscout.androidaps.logging.AAPSLogger
@@ -41,7 +40,7 @@ class OmnipodDashPumpPlugin @Inject constructor(
     aapsLogger: AAPSLogger,
     resourceHelper: ResourceHelper,
     commandQueue: CommandQueueProvider
-) : PumpPluginBase(pluginDescription, injector, aapsLogger, resourceHelper, commandQueue), PumpInterface {
+) : PumpPluginBase(pluginDescription, injector, aapsLogger, resourceHelper, commandQueue), Pump {
 
     companion object {
 
@@ -230,7 +229,8 @@ class OmnipodDashPumpPlugin @Inject constructor(
         absoluteRate: Double,
         durationInMinutes: Int,
         profile: Profile,
-        enforceNew: Boolean
+        enforceNew: Boolean,
+        tbrType: PumpSync.TemporaryBasalType
     ): PumpEnactResult {
         // TODO history
         // TODO update Treatments
@@ -265,7 +265,8 @@ class OmnipodDashPumpPlugin @Inject constructor(
         percent: Int,
         durationInMinutes: Int,
         profile: Profile,
-        enforceNew: Boolean
+        enforceNew: Boolean,
+        tbrType: PumpSync.TemporaryBasalType
     ): PumpEnactResult {
         // TODO i18n
         return PumpEnactResult(injector).success(false).enacted(false)
